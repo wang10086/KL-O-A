@@ -3844,3 +3844,6 @@ th{ font-weight:normal;}
 #mingdan .mem-remark{ width:100px;}
 
 .btn-huise{ background:#999999;}
+#mkdir{ display:none;}
+#uploadfiles{ display:none;}
+.tip{ float:left; height:51px; line-height:45px; padding:0 12px;}

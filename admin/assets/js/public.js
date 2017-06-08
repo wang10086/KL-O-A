@@ -30,15 +30,18 @@ function ConfirmDel(url) {
 
 
 
-function opensearch(obj,w,h){
+function opensearch(obj,w,h,title){
 	//var elem = document.getElementById(obj);
+	if(!title){
+		var title = '搜索';	
+	}
 	art.dialog({
 		content:$('#'+obj).html(),
 		lock:true,
-		title: '搜索',
+		title: title,
 		width:w,
 		height:h,
-		okValue: '搜索',
+		okValue: '确定',
 		ok: function () {
 			$('.aui_content').find('input').filter(function(index) {
                 return $(this).val() == '';

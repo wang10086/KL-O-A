@@ -1137,6 +1137,58 @@ function cycle($bumen,$year,$type=1){
 	
 }
 
+
+/*API返回值*/
+function return_error($error){
+	$arr = explode("=",$error);
+	$status = array();
+	$status['status'] = $arr[0];
+	$status['msg']    = $arr[1];
+	return json_encode($status);
+}
+function return_success($success = '成功'){
+	$status = array();
+	$status['status'] = 0;
+	$status['msg']    = $success;
+	return json_encode($status);
+}
+
+
+function getTree($pid=0){
+	
+	global $str; 
+	 
+	$db = M('files');
+	$where = array();
+	$where['pid']          = $pid;
+	$where['file_type']    = 0;
+	
+	$list = $db->where($where)->order('`id` ASC')->select();
+	if($list){
+		foreach($list as $k =>$v){
+			$str[] = $list[$k];
+			getTree($v['id']);
+		}
+	}
+	
+	return $str;
+	
+}
+
+
+function fortext($no,$html='&nbsp;&nbsp;&nbsp;&nbsp;',$bu='├'){
+	
+	$return = '';
+	for($i=1;$i<=$no;$i++){
+		$return .= $html;
+	}
+	$return .=$bu;
+	return $return;
+}
+
+
+
+
 ?>
 
 

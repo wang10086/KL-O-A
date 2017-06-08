@@ -86,6 +86,12 @@ final class P {
 	
 	
 	
+	//错误
+	
+	const NOT_UPLOAD_DATA             =  '2000=未提交数据';   
+	const NOT_DEL_FILE_DATA           =  '2001=未删除任何文件';   
+	
+	
 }
 
 
