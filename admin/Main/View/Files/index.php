@@ -18,7 +18,13 @@
                         <div class="col-xs-12">
                             <div class="box">
                                 <div class="box-header">
-                                    <div class="tip">文件管理</div>
+                                    <div class="tip">
+                                    <a href="{:U('Files/index')}" class="file_tips">文件首页</a>
+                                    <foreach name="dir_path" item="v">
+                                    &gt; <a href="{:U('Files/index',array('pid'=>$v['id']))}" class="file_tips">{$v.file_name}</a>
+                                    </foreach>
+                                    
+                                    </div>
                                     <div class="box-tools pull-right">
                                     	 <a href="javascript:;" class="btn btn-danger btn-sm" onclick="javascript:opensearch('mkdir',400,120,'创建文件夹');"><i class="fa fa-folder-open"></i> 创建文件夹</a>
                                          <a href="javascript:;" class="btn btn-info btn-sm" onclick="uploadFile()"><i class="fa fa-upload"></i> 上传文件</a>
@@ -27,7 +33,7 @@
                                 <div class="box-body">
                                 <div  id="catfont">
                                     <a href="javascript:;" onClick="movefile()" class="btn btn-success" style="padding:6px 12px;"><i class="fa fa-random"></i> 移动</a>
-                                    <a href="" class="btn btn-warning" style="padding:6px 12px;"><i class="fa fa-unlock-alt"></i> 权限</a>
+                                    <a href="javascript:;" onClick="authfile()"  class="btn btn-warning" style="padding:6px 12px;"><i class="fa fa-unlock-alt"></i> 权限</a>
                                     <a href="javascript:;" onClick="delfile()"  class="btn btn-danger" style="padding:6px 12px;"><i class="fa fa-trash-o"></i> 删除</a>
                                 </div>
                                 <table class="table table-bordered dataTable fontmini" id="tablelist" style="margin-top:10px;">
@@ -47,8 +53,8 @@
                                         </td>
                                         <td><a href="{$row.url}" {$row.target}>{$row.file_name}</a></td>
                                         <td>{$row.file_type}</td>
-                                        <td>{$row.file_ext}</td>
-                                        <td>{:fsize($row['file_size'])}</td>
+                                        <td><if condition="$row['file_ext']">{$row.file_ext}</if></td>
+                                        <td><if condition="$row['file_size']">{:fsize($row['file_size'])}</if></td>
                                         <td>{$row.est_user}</td>
                                         <td>{$row.est_time|date='Y-m-d H:i:s',###}</td>
                                     </tr>
@@ -75,9 +81,6 @@
                 <div class="form-group col-md-12">
                     <input type="text" class="form-control" name="filename" placeholder="文件夹名称">
                 </div>
-                
-              
-                
                 </form>
             </div>
             
@@ -176,6 +179,55 @@
 				}
 	
 				
+			}
+			
+			
+			//配置权限
+			function authfile(){
+				var fid = '';
+				$('.accessdata').each(function(index, element) {
+					var checked = $(this).parent().attr('aria-checked');
+                    if(checked=='true'){
+						fid += $(this).val() + '.';	
+					}
+                });	
+				
+				if(fid){
+					//打开目录窗口
+					art.dialog.open("index.php?m=Main&c=Files&a=authfile&fid="+fid,{
+						lock:true,
+						title: '配置权限',
+						width:1000,
+						height:500,
+						okValue: '提交',
+						fixed: true,
+						ok: function () {
+							var files = this.iframe.contentWindow.gosubmint();	
+							/*
+							//保存数据
+							$.ajax({
+				               type: "POST",
+				               url: "<?php echo U('Files/move'); ?>",
+							   dataType:'json', 
+				               data: {files:files},
+				               success:function(data){
+									if(data.status==0){
+										location.reload();
+									}else{
+										alert('保存数据失败');
+									}
+									
+				               }
+				           });
+							*/
+						},
+						cancelValue:'取消',
+						cancel: function () {
+						}
+					});	
+				}else{
+					alert('请选择要配置权限的文件');	
+				}
 			}
 			
 			

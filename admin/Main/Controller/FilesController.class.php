@@ -55,19 +55,10 @@ class FilesController extends BaseController {
 		
 		$this->datalist = $datalist;
 		
+		//文件路径
+		$this->dir_path = array();	
+		if($this->pid) $this->dir_path = file_dir($this->pid); 
 		
-		/*
-		$where = array();
-		$where['o.audit_status'] = 1;
-		$where['p.id'] = array('gt',0);
-		
-		//分页
-		$pagecount = $db->table('__OP__ as o')->field('o.*')->join('__OP_COST__ as p on p.op_id = o.op_id')->group('o.op_id')->where($where)->count();
-		$page = new Page($pagecount, P::PAGE_SIZE);
-		$this->pages = $pagecount>P::PAGE_SIZE ? $page->show():'';
-
-        $this->lists = $db->table('__OP__ as o')->field('o.*')->join('__OP_COST__ as p on p.op_id = o.op_id')->group('o.op_id')->where($where)->limit($page->firstRow . ',' . $page->listRows)->order($this->orders('o.create_time'))->select();
-		*/
 		
 		$this->display('index');
     }
@@ -180,7 +171,7 @@ class FilesController extends BaseController {
 	}
 	
 	
-	
+	// @@@NODE-3###addres###删除文件###
 	public function delfile(){
 		
 		$db  = M('files');
@@ -205,12 +196,16 @@ class FilesController extends BaseController {
 	}
 	
 	
+	// @@@NODE-3###addres###移动文件选择界面###
 	public function movefile(){
 		
 		$this->fid   = I('fid','');
 		
+		//修正等级
+		up_file_level(0);
+		
 		$datalist = getTree(0);
-			
+	
 		foreach($datalist as $k=>$v){
 			
 			$datalist[$k]['tab']        = fortext($v['level']-1,'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;');
@@ -227,43 +222,28 @@ class FilesController extends BaseController {
 	public function move(){
 		
 		$db = M('files');
-		 
 		
 		$files      = I('files','');
 		
 		if($files){
 			
-			/*
-			$filelist = str_replace('.',',',trim('.',$files[0]['files']));
-			$dir      = $files[0]['dir'];
-			
-			
-			$where = array();
-			$where['id']  = array('in',$filelist);
-			//$where['id']  = array('neq',$dir);
-			
-			P($where);
-			
-			$data = array();
-			$data['pid']  = $dir;
-			
-			$db->data($data)->where($where)->save();
-			
-			P($db->GetLastSql());
-			*/
-			
-			
 			$filelist = $files[0]['files'];
 			$dir      = $files[0]['dir'];
 			
-			
+			$dir_path = file_dir($dir);
+			$dirid = array();
+			foreach($dir_path as $k=>$v){
+				$dirid[] = $v['id'];
+			}
 			
 			$newlist  = array();
 			$array    = explode('.',$filelist);
 			foreach($array as $v){
-				if($v && $v!=$dir){
+				//判断目标路径是否在该路径下
+				$in = in_array($v,$dirid);
+				if($v && $v!=$dir && !$in){
 					$newlist[] = $v;
-				}	
+				}
 			}
 			
 			$move = implode(',',$newlist);
@@ -271,29 +251,32 @@ class FilesController extends BaseController {
 			$where = array();
 			$where['id']  = array('in',$move);
 			
-			//获取目标等级
-			if($dir){
-				$upfile = $db->find($dir);
-				if($upfile)   $level = $upfile['level']+1;
-			}else{
-				$level  = 1;	
-			}
-			
 			$data = array();
 			$data['pid']    = $dir;
-			$data['level']  = $level;
 			
 			$db->data($data)->where($where)->save();
 			
+			up_file_level($dir);
 			
 			die(return_success());
 		}else{
 			die(return_error(P::NOT_UPLOAD_DATA));
 		}
-		
-		
-		
 	}
+	
+	
+	// @@@NODE-3###addres###打开权限配置界面###
+	public function authfile(){
+		
+		$this->roles =  M('role')->where('id>3')->select();
+		
+		$this->users =  M('account')->where('id>10')->order('id ASC')->select();
+			
+		$this->display('authfile');
+	}
+	
+	
+	
 	
     
 }

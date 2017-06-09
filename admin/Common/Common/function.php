@@ -1154,9 +1154,14 @@ function return_success($success = '成功'){
 }
 
 
+
+
 function getTree($pid=0){
 	
 	global $str; 
+	global $str_level; 
+	
+	$str_level = $str_level ? $str_level : 0;
 	 
 	$db = M('files');
 	$where = array();
@@ -1164,11 +1169,14 @@ function getTree($pid=0){
 	$where['file_type']    = 0;
 	
 	$list = $db->where($where)->order('`id` ASC')->select();
+	$str_level++;
 	if($list){
 		foreach($list as $k =>$v){
+			$list[$k]['str_level'] = $str_level;
 			$str[] = $list[$k];
 			getTree($v['id']);
 		}
+		
 	}
 	
 	return $str;
@@ -1186,6 +1194,87 @@ function fortext($no,$html='&nbsp;&nbsp;&nbsp;&nbsp;',$bu='├'){
 	return $return;
 }
 
+
+//获取文件路径
+function file_dir($fid){
+	
+	global $dir; 
+	global $dir_level; 
+	
+	$dir_level = $dir_level ? $dir_level : 10000;
+	
+	$db = M('files');
+	
+	//获取文件名
+	$data = $db->where(array('id'=>$fid))->find();
+	$dir[$dir_level]['id']        =  $data['id'];
+	$dir[$dir_level]['file_name'] =  $data['file_name'];
+	
+	$dir_level--;
+	
+	if($data['pid']!=0){
+		file_dir($data['pid']);
+	}
+	/*
+	$data = $db->where(array('id'=>$fid))->find();
+	$list = $db->where(array('id'=>$data['pid']))->find();
+	
+	if($list){
+		$dir[$list['id']] = $list['file_name'];
+	
+		if($list['pid']){
+			file_dir($list['pid']);
+		}
+	}
+	*/
+	
+	ksort($dir);
+	
+	return $dir;
+	 	
+}
+
+
+function up_file_level($fid){
+	
+	$db = M('files');
+	
+	
+	$data = $db->find($fid);
+	
+	if($data){
+		//修正自身等级
+		if($data['pid']){
+			$upfile = $db->find($data['pid']);
+			$level  = $upfile['level']+1;
+			
+		}else{
+			$level = 1;	
+		}
+		$db->data(array('level'=>$level))->where(array('id'=>$fid))->save();
+		
+		//查询是否有下级目录
+		$nextfile = $db->where(array('pid'=>$fid))->select();
+		foreach($nextfile as $k=>$v){
+			up_file_level($v['id']);	
+		}
+	
+		
+	}else{
+		$db->data(array('level'=>1))->where(array('pid'=>0))->save();	
+		
+		$nextfile = $db->where(array('pid'=>0))->select();
+		foreach($nextfile as $k=>$v){
+			up_file_level($v['id']);	
+		}
+		
+	}
+	
+	
+	
+	
+	
+}
 
 
 

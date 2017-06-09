@@ -171,7 +171,23 @@
                                 
                             </ul>
                         </li>
-                
+                		
+                        
+                        <if condition="rolemenu(array('Files/index'))">
+                        <li class="treeview {:ison(CONTROLLER_NAME, 'Sale')}">
+                            <a href="javascript:;">
+                                <i class="fa  fa-folder-open"></i>
+                                <span>文件管理</span>
+                                <i class="fa fa-angle-left pull-right"></i>
+                            </a>
+                            <ul class="treeview-menu">
+                            	<if condition="rolemenu(array('Files/index'))">
+                                	<li><a href="{:U('Files/index')}"><i class="fa fa-angle-right"></i> 文件管理</a></li>
+                                </if>
+                                
+                            </ul>
+                        </li>
+                        </if>
                         
                         <if condition="rolemenu(array('Customer/GEC','Customer/IC'))">
                         <li class="treeview {:on('Customer')}">

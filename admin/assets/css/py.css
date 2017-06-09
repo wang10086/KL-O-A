@@ -3847,3 +3847,10 @@ th{ font-weight:normal;}
 #mkdir{ display:none;}
 #uploadfiles{ display:none;}
 .tip{ float:left; height:51px; line-height:45px; padding:0 12px;}
+
+.tip a.file_tips{ color:#333333;}
+.tip a.file_tips:hover{ color:#3c8dbc;}
+
+.checkboxlist{ width:100%; height:auto !important; float:left; clear:both; margin-top:-10px;}
+.checkboxlist .unlist{ width:25%; height:30px; padding:10px 0; margin-top:10px; float:left; list-style:none; overflow:hidden;}
+.checkboxlist .uslist{ width:25%; height:30px; padding:10px 0; margin-top:10px; float:left; list-style:none; overflow:hidden;}
