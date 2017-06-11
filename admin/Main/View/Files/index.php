@@ -5,9 +5,10 @@
                 <section class="content-header">
                     <h1>文件管理</h1>
                     <ol class="breadcrumb">
-                        <li><a href="{:U('Index/index')}"><i class="fa fa-home"></i> 首页</a></li>
-                        <li><a href="{:U('Rbac/index')}"><i class="fa fa-gift"></i> {$_pagetitle_}</a></li>
-                        <li class="active">{$_action_}</li>
+                        <li><a href="{:U('Files/index')}"><i class="fa fa-home"></i> 首页</a></li>
+                        <foreach name="dir_path" item="v">
+                        <li><a href="{:U('Files/index',array('pid'=>$v['id']))}">{$v.file_name}</a></li>
+                        </foreach>
                     </ol>
                 </section>
 
