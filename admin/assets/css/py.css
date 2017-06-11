@@ -3852,5 +3852,5 @@ th{ font-weight:normal;}
 .tip a.file_tips:hover{ color:#3c8dbc;}
 
 .checkboxlist{ width:100%; height:auto !important; float:left; clear:both; margin-top:-10px;}
-.checkboxlist .unlist{ width:25%; height:30px; padding:10px 0; margin-top:10px; float:left; list-style:none; overflow:hidden;}
-.checkboxlist .uslist{ width:25%; height:30px; padding:10px 0; margin-top:10px; float:left; list-style:none; overflow:hidden;}
+.checkboxlist .unlist{ width:20%; height:30px; padding:10px 0; margin-top:10px; float:left; list-style:none; overflow:hidden;}
+.checkboxlist .uslist{ width:20%; height:30px; padding:10px 0; margin-top:10px; float:left; list-style:none; overflow:hidden;}
