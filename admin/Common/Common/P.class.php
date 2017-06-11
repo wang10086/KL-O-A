@@ -90,6 +90,8 @@ final class P {
 	
 	const NOT_UPLOAD_DATA             =  '2000=未提交数据';   
 	const NOT_DEL_FILE_DATA           =  '2001=未删除任何文件';   
+	const NOT_MOVE_FILES_DATA         =  '2002=未移动任何文件';
+	const NOT_AUTH_FILES_DATA         =  '2003=未设置任何权限';
 	
 	
 }

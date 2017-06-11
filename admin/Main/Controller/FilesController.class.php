@@ -29,6 +29,16 @@ class FilesController extends BaseController {
 		$where = array();
 		$where['pid']          = $this->pid;
 		
+		//权限识别
+		if (C('RBAC_SUPER_ADMIN') != cookie('userid')){
+			
+			$userid = cookie('userid');
+			$roleid = cookie('roleid');
+			
+			$where['_string'] = ' (auth_group like "%'.$roleid.'%")  OR ( auth_user like "%'.$userid.'")   OR ( est_user_id = '.$userid.') ';
+				
+		}
+		
 		//获取上级目录级别
 		if($this->pid){
 			$upfile = $db->find($this->pid);
@@ -260,7 +270,7 @@ class FilesController extends BaseController {
 			
 			die(return_success());
 		}else{
-			die(return_error(P::NOT_UPLOAD_DATA));
+			die(return_error(P::NOT_MOVE_FILES_DATA));
 		}
 	}
 	
@@ -268,13 +278,54 @@ class FilesController extends BaseController {
 	// @@@NODE-3###addres###打开权限配置界面###
 	public function authfile(){
 		
-		$this->roles =  M('role')->where('id>3')->select();
+		$this->fid   = I('fid','');	
 		
-		$this->users =  M('account')->where('id>10')->order('id ASC')->select();
-			
+		$this->roles = M('role')->where('id>3')->select();
+		
+		$this->users = M('account')->where('id>10')->order('id ASC')->select();
+	
 		$this->display('authfile');
 	}
 	
+	
+	
+	// @@@NODE-3###auth###保存权限###
+	public function auth(){
+		
+		$db = M('files');
+		
+		$files      = I('files','');
+		
+		if($files){
+			$filelist	= $files[0]['files'];
+			$rolse		= $files[0]['rolse'];
+			$users   	= $files[0]['users'];
+			
+			
+			$newlist  = array();
+			$array    = explode('.',$filelist);
+			foreach($array as $v){
+				if($v){
+					$newlist[] = $v;
+				}
+			}
+			
+			$move = implode(',',$newlist);
+			
+			$where = array();
+			$where['id']  = array('in',$move);
+			
+			$data = array();
+			$data['auth_group']    = $rolse;
+			$data['auth_user']     = $users;
+			
+			$db->data($data)->where($where)->save();
+			
+			die(return_success());
+		}else{
+			die(return_error(P::NOT_AUTH_FILES_DATA));
+		}
+	}
 	
 	
 	

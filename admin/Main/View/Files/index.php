@@ -19,22 +19,33 @@
                             <div class="box">
                                 <div class="box-header">
                                     <div class="tip">
-                                    <a href="{:U('Files/index')}" class="file_tips">文件首页</a>
+                                    <a href="{:U('Files/index')}" class="file_tips">首页</a>
                                     <foreach name="dir_path" item="v">
                                     &gt; <a href="{:U('Files/index',array('pid'=>$v['id']))}" class="file_tips">{$v.file_name}</a>
                                     </foreach>
                                     
                                     </div>
                                     <div class="box-tools pull-right">
+                                    	 <if condition="rolemenu(array('Files/mkdirs'))">
                                     	 <a href="javascript:;" class="btn btn-danger btn-sm" onclick="javascript:opensearch('mkdir',400,120,'创建文件夹');"><i class="fa fa-folder-open"></i> 创建文件夹</a>
+                                         </if>
+                                         <if condition="rolemenu(array('Files/upload'))">
                                          <a href="javascript:;" class="btn btn-info btn-sm" onclick="uploadFile()"><i class="fa fa-upload"></i> 上传文件</a>
+                                         </if>
+                                         
                                     </div>
                                 </div><!-- /.box-header -->
                                 <div class="box-body">
                                 <div  id="catfont">
+                                	<if condition="rolemenu(array('Files/movefile'))">
                                     <a href="javascript:;" onClick="movefile()" class="btn btn-success" style="padding:6px 12px;"><i class="fa fa-random"></i> 移动</a>
+                                    </if>
+                                    <if condition="rolemenu(array('Files/authfile'))">
                                     <a href="javascript:;" onClick="authfile()"  class="btn btn-warning" style="padding:6px 12px;"><i class="fa fa-unlock-alt"></i> 权限</a>
+                                    </if>
+                                    <if condition="rolemenu(array('Files/delfile'))">
                                     <a href="javascript:;" onClick="delfile()"  class="btn btn-danger" style="padding:6px 12px;"><i class="fa fa-trash-o"></i> 删除</a>
+                                    </if>
                                 </div>
                                 <table class="table table-bordered dataTable fontmini" id="tablelist" style="margin-top:10px;">
                                     <tr role="row" class="orders" >
@@ -203,11 +214,10 @@
 						fixed: true,
 						ok: function () {
 							var files = this.iframe.contentWindow.gosubmint();	
-							/*
 							//保存数据
 							$.ajax({
 				               type: "POST",
-				               url: "<?php echo U('Files/move'); ?>",
+				               url: "<?php echo U('Files/auth'); ?>",
 							   dataType:'json', 
 				               data: {files:files},
 				               success:function(data){
@@ -219,7 +229,6 @@
 									
 				               }
 				           });
-							*/
 						},
 						cancelValue:'取消',
 						cancel: function () {

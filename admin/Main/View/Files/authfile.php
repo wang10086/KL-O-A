@@ -66,17 +66,26 @@
 		<script type="text/javascript">
         window.gosubmint= function(){
 			var rs = new Array();
-			var file = '';
-			$('.selectdir').each(function(index, element) {
+			var rolse = '';
+			$('.roles_check').each(function(index, element) {
 				var checked = $(this).parent().attr('aria-checked');
 				if(checked=="true"){
-					file += $(this).attr('value');
+					rolse += '[' + $(this).attr('value') + '].';
+				}
+			});	
+			
+			var users = '';
+			$('.users_check').each(function(index, element) {
+				var checked = $(this).parent().attr('aria-checked');
+				if(checked=="true"){
+					users += '[' + $(this).attr('value') + '].';
 				}
 			});	
 			
 			var obj = {};
 				obj.files     = '{$fid}';
-				obj.dir       = file;
+				obj.rolse     = rolse;
+				obj.users     = users;
 				rs.push(obj);
 			return rs;	
 		 } 
