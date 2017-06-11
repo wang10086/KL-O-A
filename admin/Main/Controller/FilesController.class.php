@@ -95,18 +95,18 @@ class FilesController extends BaseController {
 			
 			
 			
-			if(!$db->where($data)->find()){
+			if($db->where($data)->find()){
 				
-				$data['est_time']    = time();
-				$data['est_user']    = cookie('name');
-				$data['est_user_id'] = cookie('userid');
-				$data['level']       = $level;
-				$db->add($data);
-				$this->success('创建成功！');
+				$data['file_name']    = $filename.'_'.rand(1000,9999);
 				
-			}else{
-				$this->error('创建失败，文件夹已存在');
 			}
+			
+			$data['est_time']    = time();
+			$data['est_user']    = cookie('name');
+			$data['est_user_id'] = cookie('userid');
+			$data['level']       = $level;
+			$db->add($data);
+			$this->success('创建成功！');
 			
 			
         }else{
