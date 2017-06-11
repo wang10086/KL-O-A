@@ -20,10 +20,23 @@
                             <div class="box">
                                 <div class="box-header">
                                     <div class="tip">
+                                    	<div  id="catfont">
+                                            <if condition="rolemenu(array('Files/movefile'))">
+                                            <a href="javascript:;" onClick="movefile()" class="btn btn-success" style="padding:6px 12px;"><i class="fa fa-random"></i> 移动</a>
+                                            </if>
+                                            <if condition="rolemenu(array('Files/authfile'))">
+                                            <a href="javascript:;" onClick="authfile()"  class="btn btn-warning" style="padding:6px 12px;"><i class="fa fa-unlock-alt"></i> 权限</a>
+                                            </if>
+                                            <if condition="rolemenu(array('Files/delfile'))">
+                                            <a href="javascript:;" onClick="delfile()"  class="btn btn-danger" style="padding:6px 12px;"><i class="fa fa-trash-o"></i> 删除</a>
+                                            </if>
+                                        </div>
+                                    <!--
                                     <a href="{:U('Files/index')}" class="file_tips">首页</a>
                                     <foreach name="dir_path" item="v">
                                     &gt; <a href="{:U('Files/index',array('pid'=>$v['id']))}" class="file_tips">{$v.file_name}</a>
                                     </foreach>
+                                    -->
                                     
                                     </div>
                                     <div class="box-tools pull-right">
@@ -37,17 +50,7 @@
                                     </div>
                                 </div><!-- /.box-header -->
                                 <div class="box-body">
-                                <div  id="catfont">
-                                	<if condition="rolemenu(array('Files/movefile'))">
-                                    <a href="javascript:;" onClick="movefile()" class="btn btn-success" style="padding:6px 12px;"><i class="fa fa-random"></i> 移动</a>
-                                    </if>
-                                    <if condition="rolemenu(array('Files/authfile'))">
-                                    <a href="javascript:;" onClick="authfile()"  class="btn btn-warning" style="padding:6px 12px;"><i class="fa fa-unlock-alt"></i> 权限</a>
-                                    </if>
-                                    <if condition="rolemenu(array('Files/delfile'))">
-                                    <a href="javascript:;" onClick="delfile()"  class="btn btn-danger" style="padding:6px 12px;"><i class="fa fa-trash-o"></i> 删除</a>
-                                    </if>
-                                </div>
+                                
                                 <table class="table table-bordered dataTable fontmini" id="tablelist" style="margin-top:10px;">
                                     <tr role="row" class="orders" >
                                     	<th width="40" style="text-align:center;"><input type="checkbox" id="accessdata"/></th>
