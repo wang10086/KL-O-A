@@ -88,23 +88,35 @@ class FilesController extends BaseController {
             $pid      = I('pid');
             $filename = I('filename');
 			
+			
 			//判断文件夹是否存在
 			$data = array();
 			$data['pid']          = $pid;
 			$data['file_name']    = $filename;
 			
-			
-			
+			//重复文件修正文件名
 			if($db->where($data)->find()){
-				
 				$data['file_name']    = $filename.'_'.rand(1000,9999);
-				
 			}
 			
+			//整理数据
 			$data['est_time']    = time();
 			$data['est_user']    = cookie('name');
 			$data['est_user_id'] = cookie('userid');
-			$data['level']       = $level;
+			
+			//继承父级目录权限
+			if($pid){
+				$p_file = $db->find($pid);
+				$data['auth_group']      = $p_file['auth_group'];
+				$data['auth_user']       = $p_file['auth_user'];
+				$data['level']           = $p_file['level']+1;
+			}else{
+				$data['auth_group']      = '';
+				$data['auth_user']       = '';
+				$data['level']           = 1;	
+			}
+			
+			
 			$db->add($data);
 			$this->success('创建成功！');
 			
@@ -157,7 +169,19 @@ class FilesController extends BaseController {
 				$data['est_user']      = cookie('name');
 				$data['est_user_id']   = cookie('userid');
 				$data['pid']           = $v['pid'];
-				$data['level']         = $v['level'];
+				
+				//继承父级目录权限
+				if($v['pid']){
+					$p_file = $db->find($v['pid']);
+					$data['auth_group']      = $p_file['auth_group'];
+					$data['auth_user']       = $p_file['auth_user'];
+					$data['level']           = $p_file['level']+1;
+				}else{
+					$data['auth_group']      = '';
+					$data['auth_user']       = '';
+					$data['level']           = 1;	
+				}
+			
 				
 				//判断文件夹是否存在,修正文件名
 				$where = array();
