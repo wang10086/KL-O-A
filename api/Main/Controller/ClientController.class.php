@@ -26,4 +26,20 @@ class ClientController extends BaseController {
 	
 	
 	
+	/****** 获取项目信息 ******/
+	public function op(){
+		
+		//获取解码后参数
+		$param = $this->param_data;
+		
+		$opid  = $param['opid'];
+		
+		$pro   = M('op')->field('id,project,op_id as opid,group_id as gid,status')->where(array('op_id'=>$opid))->find();
+		
+		echo return_result($pro);
+		
+	}
+	
+	
+	
 }
