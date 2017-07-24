@@ -32,6 +32,8 @@ class ClientController extends BaseController {
 		//获取解码后参数
 		$param = $this->param_data;
 		
+		$kinds   =  M('project_kind')->getField('id,name', true);
+			
 		$gid   = trim($param['gid']);
 		$opid  = trim($param['opid']);
 		
@@ -41,7 +43,9 @@ class ClientController extends BaseController {
 			$where = 'group_id = "'.$gid.'"';
 		}
 		
-		$pro   = M('op')->field('id,project,op_id as opid,group_id as gid,status,op_create_user as dept')->where($where)->find();
+		$pro   = M('op')->field('id,project,op_id as opid,group_id as gid,status,op_create_user as dept,kind')->where($where)->find();
+	
+		$pro['kind'] = $kinds[$pro['kind']];
 		
 		echo return_result($pro);
 		
