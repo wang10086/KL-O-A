@@ -32,9 +32,9 @@ class ClientController extends BaseController {
 		//获取解码后参数
 		$param = $this->param_data;
 		
-		$opid  = $param['opid'];
+		$opid  = trim($param['gid']);
 		
-		$pro   = M('op')->field('id,project,op_id as opid,group_id as gid,status,op_create_user as dept')->where(array('op_id'=>$opid))->find();
+		$pro   = M('op')->field('id,project,op_id as opid,group_id as gid,status,op_create_user as dept')->where(array('group_id'=>$opid))->find();
 		
 		echo return_result($pro);
 		
