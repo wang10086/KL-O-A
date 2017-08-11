@@ -320,6 +320,28 @@
                         </li>
                         </if>
                         
+                        <!--
+                        <if condition="rolemenu(array('Kpi/pdca','Kpi/qa'))">
+                        <li class="treeview {:ison(CONTROLLER_NAME, 'Kpi')}">
+                            <a href="javascript:;">
+                                <i class="fa fa-trophy"></i>
+                                <span>绩效管理</span>
+                                <i class="fa fa-angle-left pull-right"></i>
+                            </a>
+                            <ul class="treeview-menu">
+                            	<if condition="rolemenu(array('Kpi/pdca'))">
+                                	<li><a href="{:U('Kpi/pdca')}"><i class="fa fa-angle-right"></i> PDCA</a></li>
+                                </if>
+                                <if condition="rolemenu(array('Kpi/qa'))">
+                                	<li><a href="{:U('Kpi/qa')}"><i class="fa fa-angle-right"></i> 品质检查</a></li>
+                                </if> 
+                                <if condition="rolemenu(array('Kpi/sale'))">
+                                	<li><a href="{:U('Kpi/sale')}"><i class="fa fa-angle-right"></i> KPI</a></li>
+                                </if> 
+                            </ul>
+                        </li>
+                        </if>
+                        -->
                         
                         
                         

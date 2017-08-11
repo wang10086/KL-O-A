@@ -1288,6 +1288,17 @@ function up_file_level($fid){
 
 
 
+
+function username($userid){
+	if($userid){
+		$user = M('account')->find($userid);	
+		return $user['nickname'];
+	}else{
+		return '';	
+	}
+}
+
+
 ?>
 
 

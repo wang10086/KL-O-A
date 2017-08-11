@@ -3812,7 +3812,8 @@ th{ font-weight:normal;}
 
 #material{ padding:0; margin-top:-20px;}
 #material .form-control{ width:120px; float:left; margin-right:10px; border-radius:0;}
-#material .unitbox{ width:120px; margin-right:10px; float:left; clear:none; border:none; padding:0;}
+#material .unitbox{ float:left; clear:none; border:none; padding:0; line-height:42px;}
+#material .brunitbox{ float:left; clear:none; border:none; padding:0; line-height:21px;}
 #material .title{ width:22px; float:left; height:30px; line-height:30px; margin-left:-30px; text-align:right; position:relative; z-index:100;}
 #material .userlist { width:100%; height:auto !important; float:left; clear:both; padding-bottom:15px; border-bottom:1px solid #cccccc; margin-top:15px;}
 #material .input-group{ width:auto; float:left; height:34px; margin-right:10px; background:#ffffff; }
@@ -3854,3 +3855,26 @@ th{ font-weight:normal;}
 .checkboxlist{ width:100%; height:auto !important; float:left; clear:both; margin-top:-10px;}
 .checkboxlist .unlist{ width:20%; height:30px; padding:10px 0; margin-top:10px; float:left; list-style:none; overflow:hidden;}
 .checkboxlist .uslist{ width:20%; height:30px; padding:10px 0; margin-top:10px; float:left; list-style:none; overflow:hidden;}
+
+.rtxt{ line-height:32px;}
+
+#pdcalist{ padding:0;}
+#pdcalist .form-control{ width:120px; float:left; margin-right:10px; border-radius:0;}
+#pdcalist .unitbox{ width:120px; margin-right:10px; float:left; clear:none; border:none; padding:0;}
+#pdcalist .title{ width:22px; float:left; height:30px; line-height:30px; margin-left:-30px; text-align:right; position:relative; z-index:100;}
+#pdcalist .userlist { width:100%; height:auto !important; float:left; clear:both; padding-bottom:15px; border-bottom:1px solid #cccccc; margin-top:15px;}
+#pdcalist .input-group{ width:auto; float:left; height:34px; margin-right:10px; background:#ffffff; }
+#pdcalist .input-group span{ border:1px solid #cccccc; width:40px; background:#ffffff; }
+#pdcalist .input-group span.rr{margin-left:-1px;}
+#pdcalist .input-group span input{ margin-left:5px;}
+#pdcalist .btn{ padding:7px 12px; font-size:12px;} 
+#pdcalist td{ line-height:34px;}
+#pdcalist_val{ display:none}
+#pdcalist .longinput{ width:120px;}
+#pdcalist .pdcalist_name{ width:160px}  
+#pdcalist .stock{ width:60px; text-align:left; float:left; line-height:34px;}
+
+#pdcalist .line2{ line-height:18px; padding:15px 6px;text-align:center; }
+#pdcalist .line1{ line-height:18px; text-align:center; padding:3px;}
+#pdcalist th{ padding:0; margin:0; border:1px solid #dedede;}
+
