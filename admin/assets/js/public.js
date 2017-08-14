@@ -193,7 +193,7 @@ function art_show_msg(msg) {
 		width:400,
 		height:100,
 		fixed: true,
-		time: 2,
+		time: 5,
 		lock:true,
 		content: '<span style="width:100%; text-align:center; font-size:18px;float:left; clear:both;">'+msg+'</span>',
 		
