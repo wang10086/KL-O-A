@@ -185,3 +185,17 @@ function accDiv(arg1,arg2){
         return (r1/r2)*pow(10,t2-t1);  
     }  
 }
+
+
+function art_show_msg(msg) {
+	art.dialog({
+		title: '提示',
+		width:400,
+		height:100,
+		fixed: true,
+		time: 2,
+		lock:true,
+		content: '<span style="width:100%; text-align:center; font-size:18px;float:left; clear:both;">'+msg+'</span>',
+		
+	});
+}
