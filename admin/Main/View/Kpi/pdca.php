@@ -21,8 +21,8 @@
                                     <h3 class="box-title">{$_action_}</h3>
                                     <div class="box-tools pull-right">
                                     	 
-                                         <if condition="rolemenu(array('Kpi/editpdca'))">
-                                         <a href="{:U('Kpi/editpdca')}" class="btn btn-info btn-sm" ><i class="fa fa-upload"></i> 制定PDCA计划</a>
+                                         <if condition="rolemenu(array('Kpi/pdcainfo'))">
+                                         <a href="{:U('Kpi/pdcainfo')}" class="btn btn-info btn-sm" ><i class="fa fa-upload"></i> 制定PDCA计划</a>
                                          </if>
                                          
                                     </div>
@@ -60,9 +60,9 @@
                                         <td><if condition="$row['eva_time']">{$row.eva_time|date='Y-m-d H:i:s',###}</if></td>
                                         <td>{$row.total_score}</td>
                                         <td>{$row.status}</td>
-                                        <if condition="rolemenu(array('Kpi/editpdca'))">
+                                        <if condition="rolemenu(array('Kpi/pdcainfo'))">
                                         <td class="taskOptions">
-                                        <a href="{:U('Kpi/editpdca',array('id'=>$row['id']))}" title="维护" class="btn btn-info btn-smsm"><i class="fa fa-pencil"></i></a>
+                                        <a href="{:U('Kpi/pdcainfo',array('id'=>$row['id']))}" title="维护" class="btn btn-info btn-smsm"><i class="fa fa-pencil"></i></a>
                                         </td>
                                         </if>
                                         <if condition="rolemenu(array('Kpi/delpdca'))">

@@ -3874,7 +3874,7 @@ th{ font-weight:normal;}
 #pdcalist .pdcalist_name{ width:160px}  
 #pdcalist .stock{ width:60px; text-align:left; float:left; line-height:34px;}
 
-#pdcalist .line2{ line-height:18px; padding:15px 6px;text-align:center; }
+#pdcalist .line2{ line-height:18px; padding:15px 8px;text-align:center; }
 #pdcalist .line1{ line-height:18px; text-align:center; padding:3px;}
-#pdcalist th{ padding:0; margin:0; border:1px solid #dedede;}
-
+#pdcalist th{ padding:0; margin:0; border:1px solid #dedede; background:#eeeeee;}
+#pdcalist td{ line-height:18px; border:1px solid #dedede;}

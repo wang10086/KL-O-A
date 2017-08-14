@@ -32,6 +32,16 @@ class KpiController extends BaseController {
     }
 	
 	
+	// @@@NODE-3###accounting###PDCA计划###
+	public function pdcainfo(){
+		
+		
+		
+		$this->display('pdca_info');
+	}
+	
+    
+	
 	// @@@NODE-3###accounting###制定PDCA###
 	public function editpdca(){
 		
@@ -39,8 +49,6 @@ class KpiController extends BaseController {
 		
 		$this->display('editpdca');
 	}
-    
-	
  
     
 }

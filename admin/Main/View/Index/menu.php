@@ -343,6 +343,20 @@
                         </if>
                         -->
                         
+                        <li class="treeview {:ison(CONTROLLER_NAME, 'Kpi')}">
+                            <a href="javascript:;">
+                                <i class="fa fa-trophy"></i>
+                                <span>绩效管理</span>
+                                <i class="fa fa-angle-left pull-right"></i>
+                            </a>
+                            <ul class="treeview-menu">
+                                <li><a href=""><i class="fa fa-angle-right"></i> PDCA</a></li>
+                                <li><a href=""><i class="fa fa-angle-right"></i> 品质检查</a></li>
+                                <li><a href=""><i class="fa fa-angle-right"></i> KPI</a></li>
+                            </ul>
+                        </li>
+                        
+                        
                         
                         
                         <if condition="rolemenu(array('Chart/index'))">
