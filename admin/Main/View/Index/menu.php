@@ -350,9 +350,9 @@
                                 <i class="fa fa-angle-left pull-right"></i>
                             </a>
                             <ul class="treeview-menu">
-                                <li><a href="" onClick="art_show_msg('加班开发中，稍后呈现...')"><i class="fa fa-angle-right"></i> PDCA</a></li>
-                                <li><a href="" onClick="art_show_msg('加班开发中，稍后呈现...')"><i class="fa fa-angle-right"></i> 品质检查</a></li>
-                                <li><a href="" onClick="art_show_msg('加班开发中，稍后呈现...')"><i class="fa fa-angle-right"></i> KPI</a></li>
+                                <li><a href="javascript:;" onClick="art_show_msg('加班开发中，稍后呈现...')"><i class="fa fa-angle-right"></i> PDCA</a></li>
+                                <li><a href="javascript:;" onClick="art_show_msg('加班开发中，稍后呈现...')"><i class="fa fa-angle-right"></i> 品质检查</a></li>
+                                <li><a href="javascript:;" onClick="art_show_msg('加班开发中，稍后呈现...')"><i class="fa fa-angle-right"></i> KPI</a></li>
                             </ul>
                         </li>
                         
