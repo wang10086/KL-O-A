@@ -35,7 +35,12 @@ class KpiController extends BaseController {
 	// @@@NODE-3###accounting###PDCA计划###
 	public function pdcainfo(){
 		
+		$where = array();
+		$where['userid']      = cookie('userid');
 		
+		$lists = M('pdca_term')->where($where)->select();
+		
+		$this->lists = $lists;
 		
 		$this->display('pdca_info');
 	}
@@ -47,7 +52,59 @@ class KpiController extends BaseController {
 		
 		
 		
-		$this->display('editpdca');
+		if(isset($_POST['dosubmint'])){
+			
+			$editid   = I('editid');
+			$info      = I('info');
+			
+			//执行保存
+			if($editid){
+				$addinfo = M('pdca_term')->data($info)->where(array('id'=>$editid))->save();
+			}else{
+				$info['month']       = date('Ym');
+				$info['userid']      = cookie('userid');
+				$info['create_time'] = time();
+				$addinfo = M('pdca_term')->add($info);
+			}
+			
+			echo '<script>window.top.location.reload();</script>';
+			
+		
+		
+		}else{
+			
+			$id = I('id','');
+			if($id){
+				$this->row = M('pdca_term')->find($id);
+			}
+			$this->display('editpdca');
+		
+		}
+	}
+	
+	
+	
+	
+	// @@@NODE-3###accounting###PDCA项目详情###
+	public function pdcadetail(){
+		
+		$id = I('id','');
+		if($id){
+			$row = M('pdca_term')->find($id);
+			
+			$row['standard']    = $row['standard'] ? nl2br($row['standard']) : '无';
+			$row['method']      = $row['method'] ? nl2br($row['method']) : '无';
+			$row['emergency']   = $row['emergency'] ? nl2br($row['emergency']) : '无';
+			$row['complete']    = $row['complete'] ? nl2br($row['complete']) : '无';
+			$row['nocomplete']  = $row['nocomplete'] ? nl2br($row['nocomplete']) : '无';
+			$row['newstrategy'] = $row['newstrategy'] ? nl2br($row['newstrategy']) : '无';
+			
+			$this->row = $row;
+		}else{
+			echo '<script>art_show_msgd(\'PDCA项目不存在\');</script>';	
+		}
+		$this->display('pdca_detail');
+		
 	}
  
     

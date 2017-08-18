@@ -3878,3 +3878,13 @@ th{ font-weight:normal;}
 #pdcalist .line1{ line-height:18px; text-align:center; padding:3px;}
 #pdcalist th{ padding:0; margin:0; border:1px solid #dedede; background:#eeeeee;}
 #pdcalist td{ line-height:18px; border:1px solid #dedede;}
+
+.art_box-body{ padding:15px 0;}
+.h200{ height:200px;}
+
+.fromlist{ width:870px; height:auto  !important; float:left; clear:both; margin:0 15px; padding:10px 0; border-bottom:1px solid #dedede; }
+.fromlistbrbr{ border-bottom:2px solid #f39c12;}
+.fromlist .fromtitle{ width:100%; float:left; clear:both; color:#999;}
+.fromlist .formtexts{ float:left; clear:both; width:100%; font-size:14px; line-height:28px;}
+.fromlist h4{ font-size:16px; float:left; margin:0; padding:0; }
+.fromlist .fr{ float:right; font-size:14px;}
