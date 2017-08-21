@@ -25,6 +25,7 @@
                         </if>
                         
                         
+                        
                         <if condition="rolemenu(array('Op/index','Op/plans','Project/kind'))">
                         <li class="treeview {:ison(CONTROLLER_NAME, 'Op')}  {:ison(CONTROLLER_NAME, 'Project')}">
                             <a href="javascript:;">
@@ -249,7 +250,17 @@
                         </li>
                         </if>
                         
-                        
+                        <!--
+                        <if condition="rolemenu(array('Message/index'))">
+                            <li class="{:ison(CONTROLLER_NAME, 'Message')}">
+                                <a href="{:U('Message/index',array('type'=>0))}">
+                                    <i class="fa fa-envelope"></i> <span>系统消息</span> 
+                                    <?php $noread = no_read(); ?>
+                                    <if condition="$noread"><small class="badge pull-right bg-red" style="margin-right:10px;">{$noread}</small></if>
+                                </a>
+                            </li>
+                        </if>
+                        -->
                         
                         
                         <if condition="rolemenu(array('Rights/index','Rights/myreq'))">
@@ -329,6 +340,9 @@
                                 <i class="fa fa-angle-left pull-right"></i>
                             </a>
                             <ul class="treeview-menu">
+                            	<if condition="rolemenu(array('Kpi/pdcaresult'))">
+                            	<li><a href="{:U('Kpi/pdcaresult')}"><i class="fa fa-angle-right"></i> 考评结果</a></li>
+                                </if>
                             	<if condition="rolemenu(array('Kpi/pdca'))">
                                 	<li><a href="{:U('Kpi/pdca')}"><i class="fa fa-angle-right"></i> PDCA</a></li>
                                 </if>

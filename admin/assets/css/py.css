@@ -3882,9 +3882,20 @@ th{ font-weight:normal;}
 .art_box-body{ padding:15px 0;}
 .h200{ height:200px;}
 
-.fromlist{ width:870px; height:auto  !important; float:left; clear:both; margin:0 15px; padding:10px 0; border-bottom:1px solid #dedede; }
-.fromlistbrbr{ border-bottom:2px solid #f39c12;}
-.fromlist .fromtitle{ width:100%; float:left; clear:both; color:#999;}
-.fromlist .formtexts{ float:left; clear:both; width:100%; font-size:14px; line-height:28px;}
-.fromlist h4{ font-size:16px; float:left; margin:0; padding:0; }
-.fromlist .fr{ float:right; font-size:14px;}
+.fromlist{ height:auto  !important;margin:0 15px; padding:10px 0; border-top:1px solid #dedede; margin-top:-1px; overflow:hidden; }
+.fromlistbrbr{ border-bottom:2px solid #f39c12; height:40px; border-top:0 solid #dedede;}
+.fromlist .fromtitle{color:#999;}
+.fromlist .formtexts{font-size:14px; line-height:28px;}
+.fromlist h4{ font-size:16px;margin:0; padding:0; padding-bottom:6px; margin-top:-10px; }
+.fromlist .fr{font-size:14px; height:14px; line-height:14px; margin:0; padding:0; color:#999999;margin-right:20px; padding-right:20px; border-right:1px solid #cccccc;}
+.nobor{ border:0 solid #dedede;}
+
+.totalscore{ float:right; line-height:32px; }
+.totalscore i{font-size:24px; color:#ff3300;}
+
+.mqe{padding:15px 42px 15px 70px; height:50px; line-height:30px; border-bottom:1px solid #dedede; margin-top:-15px; position:relative; overflow:hidden;}
+.mqe i.lefts{ position:absolute; left:15px; top:16px; color:#f56954;}
+.mqe i.rights{ position:absolute; right:15px; top:15px; color:#999999;}
+.indexmarquee{ height:30px;}
+.indexmarquee a { margin: 0 30px 0 0; font-size:14px;text-decoration: none;}
+.indexmarquee a:hover { text-decoration: underline;}

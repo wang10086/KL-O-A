@@ -18,72 +18,83 @@
 
                 <!-- Main content -->
                 <section class="content">
-
+					
+                    
+                    
+                         
                     <!-- Small boxes (Stat box) -->
                     <div class="row">
-                    
-                    	 <div class="col-lg-3 col-xs-6">
-                            <!-- small box -->
-                            <div class="small-box bg-aqua">
-                                <div class="inner">
-                                    <h3>{$sum_plans}</h3>
-                                    <p>本月出团计划</p>
-                                </div>
-                                <div class="icon">
-                                    <i class="ion ion-flag"></i>
-                                </div>
-                                <a href="{:U('Op/index',array('status'=>1))}" class="small-box-footer">查看详情 <i class="fa fa-arrow-circle-right"></i></a>
+                    	
+                        <div class="mqe">
+                        	<i class="fa fa-bell lefts"> 公告：</i>
+                            <div class="indexmarquee">
+                                <a href="#">李宝库违法PDAC扣3分</a>
                             </div>
-                        </div><!-- ./col -->
-                        
-                         <div class="col-lg-3 col-xs-6">
-                            <!-- small box -->
-                            <div class="small-box bg-green">
-                                <div class="inner">
-                                    <h3>{$sum_project}</h3>
-                                    <p>项目数量</p>
+                            <i class="fa fa-bars rights"></i>
+                        </div>
+                        <div style="margin-top:15px;">
+                             <div class="col-lg-3 col-xs-6">
+                                <!-- small box -->
+                                <div class="small-box bg-aqua">
+                                    <div class="inner">
+                                        <h3>{$sum_plans}</h3>
+                                        <p>本月出团计划</p>
+                                    </div>
+                                    <div class="icon">
+                                        <i class="ion ion-flag"></i>
+                                    </div>
+                                    <a href="{:U('Op/index',array('status'=>1))}" class="small-box-footer">查看详情 <i class="fa fa-arrow-circle-right"></i></a>
                                 </div>
-                                <div class="icon">
-                                    <i class="ion ion-android-earth"></i>
+                            </div><!-- ./col -->
+                            
+                             <div class="col-lg-3 col-xs-6">
+                                <!-- small box -->
+                                <div class="small-box bg-green">
+                                    <div class="inner">
+                                        <h3>{$sum_project}</h3>
+                                        <p>项目数量</p>
+                                    </div>
+                                    <div class="icon">
+                                        <i class="ion ion-android-earth"></i>
+                                    </div>
+                                    <a href="{:U('Op/index')}"  class="small-box-footer">查看详情 <i class="fa fa-arrow-circle-right"></i></a>
                                 </div>
-                                <a href="{:U('Op/index')}"  class="small-box-footer">查看详情 <i class="fa fa-arrow-circle-right"></i></a>
-                            </div>
-                        </div><!-- ./col -->
-                        
-                        
-                        
-                    	<div class="col-lg-3 col-xs-6">
-                            <!-- small box -->
-                            <div class="small-box bg-yellow">
-                                <div class="inner">
-                                    <h3>{$sum_product}</h3>
-                                    <p>已成团项目数</p>
+                            </div><!-- ./col -->
+                            
+                            
+                            
+                            <div class="col-lg-3 col-xs-6">
+                                <!-- small box -->
+                                <div class="small-box bg-yellow">
+                                    <div class="inner">
+                                        <h3>{$sum_product}</h3>
+                                        <p>已成团项目数</p>
+                                    </div>
+                                    <div class="icon">
+                                        <i class="ion ion-ios7-navigate-outline"></i>
+                                    </div>
+                                    <a href="{:U('Op/index',array('status'=>1))}" class="small-box-footer">查看详情 <i class="fa fa-arrow-circle-right"></i></a>
                                 </div>
-                                <div class="icon">
-                                    <i class="ion ion-ios7-navigate-outline"></i>
+                            </div><!-- ./col -->
+                            
+                            
+                            
+                            <div class="col-lg-3 col-xs-6">
+                                <!-- small box -->
+                                <div class="small-box bg-red">
+                                    <div class="inner">
+                                        <h3>{$sum_audit}</h3>
+                                        <p>待审批申请</p>
+                                    </div>
+                                    <div class="icon">
+                                        <i class="ion ion-document-text"></i>
+                                    </div>
+                                    <a href="{:U('Rights/index',array('status'=>0))}" class="small-box-footer">查看详情 <i class="fa fa-arrow-circle-right"></i></a>
                                 </div>
-                                <a href="{:U('Op/index',array('status'=>1))}" class="small-box-footer">查看详情 <i class="fa fa-arrow-circle-right"></i></a>
-                            </div>
-                        </div><!-- ./col -->
+                            </div><!-- ./col -->
                         
                         
-                        
-                        <div class="col-lg-3 col-xs-6">
-                            <!-- small box -->
-                            <div class="small-box bg-red">
-                                <div class="inner">
-                                    <h3>{$sum_audit}</h3>
-                                    <p>待审批申请</p>
-                                </div>
-                                <div class="icon">
-                                    <i class="ion ion-document-text"></i>
-                                </div>
-                                <a href="{:U('Rights/index',array('status'=>0))}" class="small-box-footer">查看详情 <i class="fa fa-arrow-circle-right"></i></a>
-                            </div>
-                        </div><!-- ./col -->
-                        
-                        
-                       
+                        </div>
                         
                        
                     </div><!-- /.row -->

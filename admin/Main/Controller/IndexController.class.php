@@ -15,7 +15,7 @@ class IndexController extends BaseController {
 		$startday = date('Y-m-01', strtotime(date("Y-m-d")));
         $endday   = date('Y-m-d', strtotime("$startday +1 month -1 day"));
   
-		$this->sum_product  =  M('op')->where("`status`= 1")->count();
+		$this->sum_product  = M('op')->where("`status`= 1")->count();
 		$this->sum_project  = M('op')->count();
 		$this->sum_audit    = $this->_sum_audit;
 		$this->sum_plans    = M('op')->where("`departure` >= '$startday' and `departure`<= '$endday' and `status`= 1")->count();

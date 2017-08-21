@@ -2,6 +2,8 @@
 // 加载参数类
 import ('P', COMMON_PATH . 'Common/'); 
 use App\P;
+ulib('Pinyin');
+use Sys\Pinyin;
 
 /**
  * @brief  载入第三方类库
@@ -1286,9 +1288,7 @@ function up_file_level($fid){
 	
 }
 
-
-
-
+//获取用户姓名
 function username($userid){
 	if($userid){
 		$user = M('account')->find($userid);	
@@ -1298,6 +1298,103 @@ function username($userid){
 	}
 }
 
+
+//发送消息
+function send_msg($send,$title,$content,$url='',$user,$role=''){
+	$data = array();
+	$data['send_user']		 = $send;
+	$data['send_time']	 	 = time();
+	$data['title']		 	 = $title;
+	$data['content']		     = $content;
+	$data['msg_url']	 	     = $url;
+	$data['receive_user']	 = $user;
+	$data['receive_role']	 = $role;
+	$add = M('message')->add($data);
+	if($add){
+		return $add;	
+	}else{
+		return 0;		
+	}
+}
+
+
+//阅读消息
+function read_msg($msg_id){
+	$data = array();
+	$data['user_id']		 = cookie('userid');
+	$data['msg_id']		 	 = $msg_id;
+	
+	$isread = M('message_read')->where($data)->find();
+	if(!$isread){
+		$data['read_time']	 	 = time();
+		$add = M('message_read')->add($data);
+		if($add){
+			return $add;	
+		}else{
+			return 0;		
+		}
+	}else{
+		return 0;		
+	}
+}
+
+
+//阅读消息
+function del_msg($msg_id){
+	$data = array();
+	$data['user_id']		 = cookie('userid');
+	$data['msg_id']		 	 = $msg_id;
+	
+	$isread = M('message_read')->where($data)->find();
+	if(!$isread){
+		$data['read_time']	 = time();
+		$data['del']	 	 = 1;
+		M('message_read')->add($data);
+		
+	}else{
+		M('message_read')->where(array('id'=>$isread['id']))->data(array('del'=>1))->save();
+	}
+}
+
+
+//未读消息数量
+function no_read(){
+	$read     = M('message_read')->where(array('user_id'=>cookie('userid')))->Getfield('msg_id',true);
+	$readstr  = implode(',',$read);
+			
+	$where = '(receive_user like "%['.cookie('userid').']%"  OR  receive_role like "%['.cookie('roleid').']%") ';
+	if($readstr) $where .= ' AND id NOT IN ('.$readstr.')';
+			
+	$count = M('message')->where($where)->count();	
+	return $count;
+}
+
+
+//发送公告
+function send_notice($userid,$username,$title,$content,$url='',$source=0,$source_id=0){
+	$data = array();
+	$data['send_user_id']	 = $userid;
+	$data['send_user_name']	 = $username;
+	$data['send_time']	 	 = time();
+	$data['title']		 	 = $title;
+	$data['content']		     = $content;
+	$data['link_url']	 	 = $url;
+	$data['source']	         = $source;
+	$data['source_id']	     = $source_id;
+	$add = M('notice')->add($data);
+	if($add){
+		return $add;	
+	}else{
+		return 0;		
+	}
+}
+
+function strtopinyin($str){
+	$PinYin = new Pinyin();
+	$str = iconv("utf-8","gb2312",trim($str));
+	$pinyin = strtolower($PinYin->getFirstPY($str));
+	return $pinyin;
+}
 
 ?>
 

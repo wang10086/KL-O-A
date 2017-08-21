@@ -15,6 +15,7 @@
         <link href="__HTML__/css/jQueryUI/jquery-ui-1.10.3.custom.min.css" rel="stylesheet" type="text/css" />
         <!-- ArtDialog -->
         <link href="__HTML__/css/artDialog.css" rel="stylesheet" type="text/css"  />
+        <link href="__HTML__/comm/liMarquee/liMarquee.css" rel="stylesheet" type="text/css"  />
         <!-- Theme style -->
         <link href="__HTML__/css/py.css" rel="stylesheet" type="text/css" />
         <link href="__HTML__/comm/jquery.autocomplete.css" rel="stylesheet" type="text/css" />
@@ -44,10 +45,10 @@
         <script src="__HTML__/js/plugins/sparkline/jquery.sparkline.min.js" type="text/javascript"></script>
         <!-- iCheck -->
         <script src="__HTML__/js/plugins/iCheck/icheck.min.js" type="text/javascript"></script>
-        
+        <script src="__HTML__/comm/liMarquee/jquery.liMarquee.js" type="text/javascript"></script>
         <script src="__HTML__/comm/laydate/laydate.js"></script>
         <script src="__HTML__/comm/jquery.autocomplete.min.js"></script>
-		 <script type="text/javascript">
+		<script type="text/javascript">
         	//laydate.skin('molv');
         </script>
 
@@ -60,7 +61,7 @@
         <script src="__HTML__/js/iframeTools.js"></script> 
         <script src="__HTML__/comm/charts/highcharts.js" type="text/javascript"></script>
         <script src="__HTML__/comm/plupload/plupload.full.min.js" type="text/javascript"></script>
-		 <script src="__HTML__/comm/charts/modules/exporting.js" type="text/javascript"></script>
+		<script src="__HTML__/comm/charts/modules/exporting.js" type="text/javascript"></script>
 
     </head>
     <body class="skin-blue">

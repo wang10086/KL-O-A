@@ -26,7 +26,28 @@ class AjaxController extends Controller {
 		}
 		
 	}
-   
+    
+	
+	public function userkey(){
+		//整理关键字
+		$role = M('role')->GetField('id,role_name',true);
+		$user =  M('account')->select();
+		$key = array();
+		foreach($user as $k=>$v){
+			
+			$text = $v['nickname'].'-'.$role[$v['roleid']];
+			
+			$key[$k]['id']         = $v['id'];
+			$key[$k]['user_name']  = $v['nickname'];
+			$key[$k]['pinyin']     = strtopinyin($text);
+			$key[$k]['text']       = $text;
+			$key[$k]['role']       = $v['roleid'];
+			$key[$k]['role_name']  = $role[$v['roleid']];
+			//$key[$k]['post']       = $post;
+		}
+		
+		echo json_encode($key);	
+	}
    
   
 	

@@ -16,8 +16,11 @@
         <!-- ArtDialog -->
         <link href="__HTML__/css/artDialog.css" rel="stylesheet" type="text/css"  />
         <link href="__HTML__/css/artdialog/ui-dialog.css" rel="stylesheet" type="text/css" />
+        
+        <link href="__HTML__/comm/liMarquee/liMarquee.css" rel="stylesheet" type="text/css"  />
         <!-- Theme style -->
         <link href="__HTML__/css/py.css?v=1.0" rel="stylesheet" type="text/css" />
+        <link href="__HTML__/comm/jquery.autocomplete.css" rel="stylesheet" type="text/css" />
         <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
         <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
         <!--[if lt IE 9]>
@@ -43,6 +46,7 @@
         <script src="__HTML__/js/plugins/sparkline/jquery.sparkline.min.js" type="text/javascript"></script>
         <!-- iCheck -->
         <script src="__HTML__/js/plugins/iCheck/icheck.min.js" type="text/javascript"></script>
+        <script src="__HTML__/comm/liMarquee/jquery.liMarquee.js" type="text/javascript"></script>
         
         <script src="__HTML__/comm/laydate/laydate.js"></script>
         <script src="__HTML__/comm/jquery.autocomplete.min.js"></script>

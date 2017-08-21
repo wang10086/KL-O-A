@@ -14,39 +14,42 @@
             <div class="formtexts">
             	<h4>{$row.work_plan}</h4>
                 <span class="fr">完成时间：{$row.complete_time}</span>
-                <span class="fr">权重：{$row.weight}&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                <span class="fr">权重：{$row.weight}</span>
+                <span class="fr">评分：{$row.score}</span>
+                <span class="fr">编制人：{:username($row['userid'])}</span>
+                <span class="fr">编制时间：{$row.create_time|date='Y-m-d H:i:s',###}</span>
             </div>
         </div>
        
         
-        <div class="fromlist">
-            <label class="fromtitle">细项及标准：</label> 
-           <span class="formtexts">{$row.standard}</span>
+        <div class="fromlist nobor">
+            <div class="fromtitle">细项及标准：</div> 
+            <div class="formtexts">{$row.standard}</div>
         </div>
         
         <div class="fromlist">
-            <label class="fromtitle">执行方法：</label>
-            <span class="formtexts">{$row.method}</span>
+            <div class="fromtitle">执行方法：</div>
+            <div class="formtexts">{$row.method}</div>
         </div>
         
         <div class="fromlist">
-            <label class="fromtitle">应急问题处理：</label>
-            <span class="formtexts">{$row.emergency}</span>
+            <div class="fromtitle">应急问题处理：</div>
+            <div class="formtexts">{$row.emergency}</div>
         </div>
         
         <div class="fromlist">
-            <label class="fromtitle">新策略：</label>
-            <span class="formtexts">{$row.newstrategy}</span>
+            <div class="fromtitle">新策略：</div>
+            <div class="formtexts">{$row.newstrategy}</div>
         </div>
         
         <div class="fromlist">
-            <label class="fromtitle">新策略完成情况完成情况：</label>
-            <span class="formtexts">{$row.complete}</span>
+            <div class="fromtitle">新策略完成情况完成情况：</div>
+            <div class="formtexts">{$row.complete}</div>
         </div>
         
         <div class="fromlist">
-            <label class="fromtitle">新策略未完成情况：</label>
-            <span class="formtexts">{$row.nocomplete}</span>
+            <div class="fromtitle">新策略未完成情况：</div>
+            <div class="formtexts">{$row.nocomplete}</div>
         </div>
         </form>
         

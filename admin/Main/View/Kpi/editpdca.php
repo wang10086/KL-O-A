@@ -10,6 +10,8 @@
         <form method="post" action="{:U('Kpi/editpdca')}" name="myform" id="gosub">
         <input type="hidden" name="dosubmint" value="1">
         <input type="hidden" name="editid" value="{$row.id}">
+        <input type="hidden" name="info[pdcaid]" value="{$pdca.id}">
+        <input type="hidden" name="info[month]" value="{$pdca.month}">
         <div class="form-group box-float-6">
             <label>计划工作项目</label>
             <input type="text" name="info[work_plan]" id="work_plan" value="{$row.work_plan}"  class="form-control" />

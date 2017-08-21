@@ -9,7 +9,7 @@ return array(
     'DB_HOST'               =>  'localhost',   // 服务器地址
     'DB_NAME'               =>  'xuequoa',        // 数据库名
     'DB_USER'               =>  'root',        // 用户名
-    'DB_PWD'                =>  '',         // 密码
+    'DB_PWD'                =>  'xqwk#136013',         // 密码
     'DB_PORT'               =>  '3306',           // 端口
     'DB_PREFIX'             =>  'oa_',
 	
@@ -119,6 +119,9 @@ return array(
 	'AGE_LIST'       => array('1'=>'小学三年级以下亲子','2'=>'小学生','3'=>'初中生','4'=>'高中生','99'=>'其他'),
     
 	'MATERIAL_TYPE'  => array('1'=>'普通物资','2'=>'危险物资','3'=>'安全防护'),
+	
+	'PDCA_STATUS'    => array('0'=>'编辑中','1'=>'已申请评分','2'=>'已评分'),
+	
 	//锁屏时间
 	'LOCKSCREEN'     => 60*60*24,
 	

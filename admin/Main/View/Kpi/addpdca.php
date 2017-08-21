@@ -1,0 +1,32 @@
+<include file="Index:header_art" />
+
+	<script type="text/javascript">
+	window.gosubmint= function(){
+		$('#gosub').submit();
+	} 
+	</script>
+    
+    <div class="box-body art_box-body">
+        <form method="post" action="{:U('Kpi/addpdca')}" name="myform" id="gosub">
+        <input type="hidden" name="dosubmint" value="1">
+        <input type="hidden" name="editid" value="{$row.id}">
+        <div class="form-group box-float-6">
+            <label>月份</label>
+            <input type="text" name="info[month]" id="month" value="{$row.month}"  class="form-control" />
+        </div>
+        <div class="form-group box-float-6">
+            <label>编制人</label>
+            <input type="text" value="{:cookie('nickname')}"  class="form-control" readonly />
+        </div>
+        <div class="form-group box-float-12">
+            <label>PDCA描述</label>
+            <input type="text" name="info[title]" id="title" value="{$row.title}"  class="form-control" />
+        </div>
+        </form>
+        
+                             
+    </div>                  
+    
+    <include file="Index:footer" />
+        
+       

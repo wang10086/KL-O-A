@@ -21,8 +21,8 @@
                                     <h3 class="box-title">{$_action_}</h3>
                                     <div class="box-tools pull-right">
                                     	 
-                                         <if condition="rolemenu(array('Kpi/pdcainfo'))">
-                                         <a href="{:U('Kpi/pdcainfo')}" class="btn btn-info btn-sm" ><i class="fa fa-upload"></i> 制定PDCA计划</a>
+                                         <if condition="rolemenu(array('Kpi/addpdca'))">
+                                         <a href="javascript:;" onClick="add_pdca()" class="btn btn-info btn-sm" >新建PDCA</a>
                                          </if>
                                          
                                     </div>
@@ -31,16 +31,14 @@
                                 
                                 <table class="table table-bordered dataTable fontmini" id="tablelist" style="margin-top:10px;">
                                     <tr role="row" class="orders" >
-                                        <th class="sorting" width="60" data="month">月份</th>
-                                        <th class="sorting" data="title">标题</th>
-                                        <th class="sorting" data="tab_user_id">编制人</th>
-                                        <th class="sorting" data="tab_time">编制时间</th>
-                                        <th class="sorting" data="app_user_id">审批人</th>
-                                        <th class="sorting" data="app_time">审批时间</th>
-                                        <th class="sorting" data="eva_user_id">考评人</th>
-                                        <th class="sorting" data="eva_time">考评时间</th>
-                                        <th class="sorting" data="total_score">评分</th>
-                                        <th class="sorting" data="status">状态</th>
+                                        <th class="sorting" width="120" data="month">月份</th>
+                                        <th class="sorting" data="title">PDCA描述</th>
+                                        <th width="100" class="sorting" data="tab_user_id">编制人</th>
+                                        <th width="100" class="sorting" data="total_score">总分</th>
+                                        <th width="100" class="sorting" data="status">状态</th>
+                                        <if condition="rolemenu(array('Kpi/pdcainfo'))">
+                                        <th width="50" class="taskOptions">项目</th>
+                                        </if>
                                         <if condition="rolemenu(array('Kpi/editpdca'))">
                                         <th width="50" class="taskOptions">编辑</th>
                                         </if>
@@ -51,18 +49,18 @@
                                     <foreach name="lists" item="row"> 
                                     <tr>
                                         <td>{$row.month}</td>
-                                        <td>{$row.title}</td>
+                                        <td><a href="{:U('Kpi/pdcainfo',array('id'=>$row['id']))}" >{$row.title}</a></td>
                                         <td>{:username($row['tab_user_id'])}</td>
-                                        <td><if condition="$row['tab_time']">{$row.tab_time|date='Y-m-d H:i:s',###}</if></td>
-                                        <td>{:username($row['app_user_id'])}</td>
-                                        <td><if condition="$row['app_time']">{$row.app_time|date='Y-m-d H:i:s',###}</if></td>
-                                        <td>{:username($row['eva_user_id'])}</td>
-                                        <td><if condition="$row['eva_time']">{$row.eva_time|date='Y-m-d H:i:s',###}</if></td>
                                         <td>{$row.total_score}</td>
-                                        <td>{$row.status}</td>
+                                        <td>{$pdcasta.$row[status]}</td>
                                         <if condition="rolemenu(array('Kpi/pdcainfo'))">
                                         <td class="taskOptions">
-                                        <a href="{:U('Kpi/pdcainfo',array('id'=>$row['id']))}" title="维护" class="btn btn-info btn-smsm"><i class="fa fa-pencil"></i></a>
+                                        <a href="{:U('Kpi/pdcainfo',array('id'=>$row['id']))}" title="项目" class="btn btn-success btn-smsm"><i class="fa fa-ellipsis-h"></i></a>
+                                        </td>
+                                        </if>
+                                        <if condition="rolemenu(array('Kpi/editpdca'))">
+                                        <td class="taskOptions">
+                                        <a href="javascript:;" onClick="add_pdca({$row.id})" title="修改" class="btn btn-info btn-smsm"><i class="fa fa-pencil"></i></a>
                                         </td>
                                         </if>
                                         <if condition="rolemenu(array('Kpi/delpdca'))">
@@ -102,4 +100,26 @@
             
            
 
-<include file="Index:footer2" />
+	<include file="Index:footer2" />
+
+
+	<script>
+    //新建PDCA
+	function add_pdca(id) {
+		art.dialog.open('index.php?m=Main&c=Kpi&a=addpdca&id='+id,{
+			lock:true,
+			title: '新建PDCA',
+			width:800,
+			height:200,
+			okValue: '提交',
+			fixed: true,
+			ok: function () {
+				this.iframe.contentWindow.gosubmint();
+				return false;
+			},
+			cancelValue:'取消',
+			cancel: function () {
+			}
+		});	
+	}
+	</script>
