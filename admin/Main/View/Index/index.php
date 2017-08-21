@@ -28,7 +28,7 @@
                         <div class="mqe">
                         	<i class="fa fa-bell lefts"> 公告：</i>
                             <div class="indexmarquee">
-                                <a href="#">李宝库违法PDAC扣3分</a>
+                                <a href="#">测试数据</a>
                             </div>
                             <i class="fa fa-bars rights"></i>
                         </div>
