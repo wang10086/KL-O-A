@@ -62,7 +62,7 @@
                                             <td><if condition="$row['send_time']">{$row.send_time|date='y-m-d H:i',###}</if></td>
                                             
                                             <td class="taskOptions">
-                                            <button onClick="javascript:window.location.href='{:U('Message/info',array('id'=>$row['id']))}';" title="查看" class="btn btn-success btn-smsm"><i class="fa fa-calendar"></i></button>
+                                            <button onClick="msg_info({$row.id})" title="查看" class="btn btn-success btn-smsm"><i class="fa fa-calendar"></i></button>
                                             </td>
                                            
                                             <td class="taskOptions">

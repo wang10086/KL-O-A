@@ -216,3 +216,15 @@ function show_notice(id){
 		}
 	});	
 }
+
+function msg_info(id){
+	art.dialog.open('index.php?m=Main&c=Message&a=msginfo&id='+id,{
+		lock:true,
+		title: '消息',
+		width:900,
+		height:500,
+		cancelValue:'关闭',
+		cancel: function () {
+		}
+	});	
+}

@@ -100,9 +100,18 @@ class MessageController extends BasepubController {
 	
 	function noticeinfo(){
 		$id = I('id');
-		
 		$this->row = M('notice')->find($id);
 		$this->display('noticeinfo');
+	}
+	
+	
+	function msginfo(){
+		$id = I('id');
+		$row = M('message')->find($id);
+		$row['send_user'] = $row['send_user'] ? username($row['send_user']) : '系统消息';
+		
+		$this->row  = $row;
+		$this->display('msginfo');
 	}
 	
 	
