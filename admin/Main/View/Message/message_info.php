@@ -1,4 +1,4 @@
-		<include file="Index:header" />
+		<include file="Index:header2" />
         
         <div class="wrapper row-offcanvas row-offcanvas-left">
             <!-- Left side column. contains the logo and sidebar -->
@@ -56,7 +56,7 @@
         </div><!-- ./wrapper -->
         
         
-        <include file="Index:footer" />
+        <include file="footer2" />
         
        
         

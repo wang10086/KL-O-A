@@ -34,7 +34,7 @@
                                         月份：{$pdca.month} &nbsp;&nbsp;&nbsp;&nbsp;
                                         制表人：{:username($pdca['tab_user_id'])} &nbsp;&nbsp;&nbsp;&nbsp;
                                         </span> 
-                                        <span class="totalscore">总分合计：<i>90</i> 分</span>
+                                        <span class="totalscore">总分合计：<i id="fenshu">{$pdca.total_score}</i> 分</span>
                                         <div class="box-body table-responsive no-padding">
                                         <table class="table table-bordered dataTable fontmini" id="tablelist" style="margin-top:10px;">
                                             <tr role="row" class="orders" >
@@ -52,7 +52,7 @@
                                                 <td style="line-height:34px;">{$row.complete_time}</td>
                                                 <td style="line-height:34px;"><if condition="$row['create_time']">{$row.create_time|date='m-d H:i',###}</if></td>
                                                 <td style="line-height:34px;">{$row.weight}</td>
-                                                <td><input type="text" name="pdca[{$row.id}]" value="{$row.score}" class="form-control"></td>
+                                                <td><input type="text" name="pdca[{$row.id}]" value="{$row.score}" class="form-control unitscore" onChange="unitscore()"></td>
                                             </tr>
                                             </foreach>					
                                         </table> 
@@ -119,5 +119,19 @@
 			
 		});	
 	}
+	
+	
+	function unitscore(){
+		var total = 0;
+		$('.unitscore').each(function(index, element) {
+            var score = parseInt($(this).val());
+			if(!score){
+				score = 0;	
+			}
+			total += score;
+        });	
+		$('#fenshu').text(total);
+	}
+	
     </script>
 		

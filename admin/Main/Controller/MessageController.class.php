@@ -5,7 +5,7 @@ ulib('Page');
 use Sys\Page;
 use Sys\P;
 
-class MessageController extends BaseController {
+class MessageController extends BasepubController {
 	
 	//消息列表
 	public function index(){
@@ -44,7 +44,7 @@ class MessageController extends BaseController {
 		$datalist = M()->table('__MESSAGE__ as m')->field('m.*,r.user_id,r.read_time,r.del')->where($where)->join('__MESSAGE_READ__ as r on r.msg_id = m.id','LEFT')->limit($page->firstRow . ',' . $page->listRows)->order($this->orders('m.send_time'))->select();	
 		foreach($datalist as $k=>$v){
 			read_msg($v['id']); 
-			$datalist[$k]['send_user'] = $v['send_user'] ? GetUserName($v['send_user']) : '系统';
+			$datalist[$k]['send_user'] = $v['send_user'] ? username($v['send_user']) : '系统';
 		}
 		
 		$this->type     = $type;
@@ -98,6 +98,12 @@ class MessageController extends BaseController {
 	
 	
 	
+	function noticeinfo(){
+		$id = I('id');
+		
+		$this->row = M('notice')->find($id);
+		$this->display('noticeinfo');
+	}
 	
 	
 	

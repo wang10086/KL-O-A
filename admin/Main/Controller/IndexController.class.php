@@ -12,6 +12,7 @@ class IndexController extends BaseController {
     // @@@NODE-3###index###系统首页###
     public function index(){
 		
+		
 		$startday = date('Y-m-01', strtotime(date("Y-m-d")));
         $endday   = date('Y-m-d', strtotime("$startday +1 month -1 day"));
   
@@ -19,6 +20,10 @@ class IndexController extends BaseController {
 		$this->sum_project  = M('op')->count();
 		$this->sum_audit    = $this->_sum_audit;
 		$this->sum_plans    = M('op')->where("`departure` >= '$startday' and `departure`<= '$endday' and `status`= 1")->count();
+		
+		//获取公告
+		$this->notice = M('notice')->limit(20)->select();
+		
 		
 		$this->css('date');
 		//$this->js('date');

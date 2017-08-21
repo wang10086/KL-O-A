@@ -42,9 +42,6 @@
                                         <if condition="rolemenu(array('Kpi/editpdca'))">
                                         <th width="50" class="taskOptions">编辑</th>
                                         </if>
-                                        <if condition="rolemenu(array('Kpi/delpdca'))">
-                                        <th width="50" class="taskOptions">删除</th>
-                                        </if>
                                     </tr>
                                     <foreach name="lists" item="row"> 
                                     <tr>
@@ -59,16 +56,18 @@
                                         </td>
                                         </if>
                                         <if condition="rolemenu(array('Kpi/editpdca'))">
+                                        
                                         <td class="taskOptions">
+                                        <?php 
+										if(cookie('userid')==$row['tab_user_id']){
+										?>
                                         <a href="javascript:;" onClick="add_pdca({$row.id})" title="修改" class="btn btn-info btn-smsm"><i class="fa fa-pencil"></i></a>
+                                        <?php 
+										}
+										?>
                                         </td>
-                                        </if>
-                                        <if condition="rolemenu(array('Kpi/delpdca'))">
-                                        <td class="taskOptions">
-                                        <button onclick="javascript:ConfirmDel('{:U('Kpi/delpdca',array('id'=>$row['id']))}')" title="删除" class="btn btn-warning btn-smsm"><i class="fa fa-times"></i></button>
                                        
-                                        </td>
-                                        </if>
+                                       </if>
                                        
                                     </tr>
                                     </foreach>					
@@ -110,7 +109,7 @@
 			lock:true,
 			title: '新建PDCA',
 			width:800,
-			height:200,
+			height:400,
 			okValue: '提交',
 			fixed: true,
 			ok: function () {

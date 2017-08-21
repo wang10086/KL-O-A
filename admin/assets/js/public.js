@@ -203,3 +203,16 @@ function art_show_msg(msg,time) {
 		
 	});
 }
+
+
+function show_notice(id){
+	art.dialog.open('index.php?m=Main&c=Message&a=noticeinfo&id='+id,{
+		lock:true,
+		title: '公告',
+		width:900,
+		height:500,
+		cancelValue:'关闭',
+		cancel: function () {
+		}
+	});	
+}

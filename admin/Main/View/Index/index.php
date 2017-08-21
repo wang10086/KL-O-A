@@ -28,7 +28,9 @@
                         <div class="mqe">
                         	<i class="fa fa-bell lefts"> 公告：</i>
                             <div class="indexmarquee">
-                                <a href="#">测试数据</a>
+                            	<foreach name="notice" item="row">   
+                                <a href="javascript:;" onClick="show_notice({$row.id})">{$row.title}</a>
+                                </foreach>
                             </div>
                             <i class="fa fa-bars rights"></i>
                         </div>

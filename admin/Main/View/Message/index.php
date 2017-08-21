@@ -1,4 +1,4 @@
-		<include file="Index:header" />
+		<include file="Index:header2" />
         
         <div class="wrapper row-offcanvas row-offcanvas-left">
            
@@ -44,12 +44,8 @@
                                             <th class="sorting" data="m.title">标题</th>
                                             <th class="sorting" data="r.read_time" width="120">状态</th>
                                             <th class="sorting" data="m.send_time" width="120">发送时间</th>
-                                            <if condition="rolemenu('Message/info')">
                                             <th width="60" class="taskOptions">查看</th>
-                                            </if>
-                                            <if condition="rolemenu('Message/del')">
                                             <th width="60" class="taskOptions">删除</th>
-                                            </if>
                                             <!--
                                             <if condition="rolemenu('Delete/pro')">
                                             <th width="60" class="taskOptions">删除</th>
@@ -64,17 +60,14 @@
                                             <td>{$row.title}</td>
                                             <td><?php if($row['read_time']){ echo '已读';}else{ echo '<span class="red">未读</span>';} ?></td>
                                             <td><if condition="$row['send_time']">{$row.send_time|date='y-m-d H:i',###}</if></td>
-                                            <if condition="rolemenu('Message/info')">
+                                            
                                             <td class="taskOptions">
                                             <button onClick="javascript:window.location.href='{:U('Message/info',array('id'=>$row['id']))}';" title="查看" class="btn btn-success btn-smsm"><i class="fa fa-calendar"></i></button>
                                             </td>
-                                            </if>
                                            
-                                            <if condition="rolemenu('Message/del')">
                                             <td class="taskOptions">
                                             <button onClick="javascript:ConfirmDel('{:U('Message/del',array('id'=>$row['id']))}');" title="删除" class="btn btn-warning btn-smsm"><i class="fa fa-times"></i></button>
                                             </td>
-                                        	</if>
                                         </tr>
                                         </foreach>		
                                         
@@ -108,6 +101,6 @@
             </form>
         </div>
 
-        <include file="Index:footer" />
+        <include file="footer2" />
         
         

@@ -28,6 +28,11 @@ class KpiController extends BaseController {
 		$where = array();
 		$where['status'] = $this->type;
 		
+		if(C('RBAC_SUPER_ADMIN')==cookie('username') || cookie('roleid')==10){}else{
+			$where['tab_user_id'] = array('in',Rolerelation(cookie('roleid')));
+		}
+		
+		
 		//分页
 		$pagecount = $db->where($where)->count();
 		$page = new Page($pagecount, P::PAGE_SIZE);
@@ -52,6 +57,10 @@ class KpiController extends BaseController {
 		
 		$where = array();
 		
+		if(C('RBAC_SUPER_ADMIN')==cookie('username') || cookie('roleid')==10){}else{
+			$where['tab_user_id'] = array('in',Rolerelation(cookie('roleid')));
+		}
+		
 		//分页
 		$pagecount = $db->where($where)->count();
 		$page = new Page($pagecount, P::PAGE_SIZE);
@@ -73,7 +82,6 @@ class KpiController extends BaseController {
 	public function addpdca(){
 		
 		
-		
 		if(isset($_POST['dosubmint'])){
 			
 			$editid   = I('editid');
@@ -83,10 +91,17 @@ class KpiController extends BaseController {
 			if($editid){
 				$addinfo = M('pdca')->data($info)->where(array('id'=>$editid))->save();
 			}else{
-				//$info['month']       = date('Ym');
-				$info['tab_user_id'] = cookie('userid');
-				$info['tab_time']    = time();
-				$addinfo = M('pdca')->add($info);
+				
+				//判断月份是否存在
+				if(M('pdca')->where(array('month'=>$info['month'],'tab_user_id'=>cookie('userid')))->find()){
+					$this->error('改月已存在PDCA，您可以直接完善PDCA项目');	
+				}else{
+				
+					//$info['month']       = date('Ym');
+					$info['tab_user_id'] = cookie('userid');
+					$info['tab_time']    = time();
+					$addinfo = M('pdca')->add($info);
+				}
 			}
 			
 			echo '<script>window.top.location.reload();</script>';
@@ -139,12 +154,19 @@ class KpiController extends BaseController {
 		$id = I('pdcaid',0);
 		//查看PDCA状态
 		$pdca = M('pdca')->find($id);
+		
+		//判断是否有权限评分
+		if(cookie('roleid')!=$pdca['app_role']){
+			 $this->error('您没有权限评分');		
+		}
 			
 		if(isset($_POST['dosubmint'])){
 			
+			
+			
 			$total = 0;
-			$pdca = I('pdca');
-			foreach($pdca as $k=>$v){
+			$pdcadata = I('pdca');
+			foreach($pdcadata as $k=>$v){
 				//保存评分
 				M('pdca_term')->data(array('score'=>$v))->where(array('id'=>$k))->save();
 				$total += $v;
@@ -203,7 +225,14 @@ class KpiController extends BaseController {
 			$info      = I('info');
 			//执行保存
 			if($editid){
-				$addinfo = M('pdca_term')->data($info)->where(array('id'=>$editid))->save();
+				
+				$pdca = M('pdca')->find($info['pdcaid']);
+				//判断是否自己保存
+				if(cookie('userid')!=$pdca['tab_user_id']){
+					$this->error('您没有权限保存');
+				}else{
+					$addinfo = M('pdca_term')->data($info)->where(array('id'=>$editid))->save();
+				}
 			}else{
 				$info['userid']      = cookie('userid');
 				$info['create_time'] = time();
@@ -249,6 +278,23 @@ class KpiController extends BaseController {
 			echo '<script>art_show_msgd(\'PDCA项目不存在\');</script>';	
 		}
 		$this->display('pdca_detail');
+		
+	}
+	
+	
+	// @@@NODE-3###delpdcaterm###删除PDCA项目###
+	public function delpdcaterm(){
+		$id = I('id',0);
+		
+		$pdca = M('pdca_term')->find($id);
+		if($id && $pdca['userid']==cookie('userid')){
+			
+			//执行删除
+			$iddel = M('pdca_term')->delete($id);
+			$this->success('删除成功！');
+		}else{
+			$this->error('您没有权限删除');	
+		}
 		
 	}
 	
@@ -365,14 +411,12 @@ class KpiController extends BaseController {
 				$addinfo = M('qaqc')->add($info);
 				
 				//发送公告
-				$userid      = cookie('userid');
-				$username    = cookie('nickname');
 				$title       = $info['title'];
 				$content     = $info['reason'];
 				$url    	 = '';
 				$source      = 1;
 				$source_id   = $addinfo;
-				send_notice($userid,$username,$title,$content,$url,$source,$source_id);
+				send_notice($title,$content,$url,$source,$source_id);
 			}
 			
 			echo '<script>window.top.location.reload();</script>';

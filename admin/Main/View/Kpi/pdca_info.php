@@ -33,7 +33,14 @@
                                         制表人：{:username($pdca['tab_user_id'])} &nbsp;&nbsp;&nbsp;&nbsp;
                                         总分：{$pdca.total_score}
                                         </span> 
+                                        
+                                        <?php 
+										if(cookie('userid')==$pdca['tab_user_id'] && rolemenu(array('Kpi/editpdca'))){
+										?>
                                         <a href="javascript:;" class="btn btn-success btn-sm" style="float:right;"  onClick="edit_pdca(0)"><i class="fa fa-fw fa-plus"></i> 新增项目</a> 
+                                        <?php 
+										}
+										?>
                                         <div class="box-body table-responsive no-padding">
                                         <table class="table table-bordered dataTable fontmini" id="tablelist" style="margin-top:10px;">
                                             <tr role="row" class="orders" >
@@ -43,12 +50,16 @@
                                                 <th width="100">录入时间</th>
                                                 <th width="80">权重</th>
                                                 <th width="80">评分</th>
+                                                <?php 
+												if(cookie('userid')==$pdca['tab_user_id']){
+												?>
                                                 <if condition="rolemenu(array('Kpi/editpdca'))">
                                                 <th width="50" class="taskOptions">编辑</th>
                                                 </if>
                                                 <if condition="rolemenu(array('Kpi/delpdcaterm'))">
                                                 <th width="50" class="taskOptions">删除</th>
                                                 </if>
+                                                <?php } ?>
                                             </tr>
                                             <foreach name="lists" key="key" item="row"> 
                                             <tr>
@@ -58,7 +69,9 @@
                                                 <td><if condition="$row['create_time']">{$row.create_time|date='m-d H:i',###}</if></td>
                                                 <td>{$row.weight}</td>
                                                 <td>{$row.score}</td>
-                                                
+                                                <?php 
+												if(cookie('userid')==$pdca['tab_user_id']){
+												?>
                                                 <if condition="rolemenu(array('Kpi/editpdca'))">
                                                 <td class="taskOptions">
                                                 <a href="javascript:;" onClick="edit_pdca({$row.id})" title="编辑" class="btn btn-info btn-smsm"><i class="fa fa-pencil"></i></a>
@@ -70,7 +83,7 @@
                                                
                                                 </td>
                                                 </if>
-                                               
+                                                <?php } ?>
                                             </tr>
                                             </foreach>					
                                         </table> 
@@ -87,7 +100,7 @@
                                 </div><!-- /.box-body -->
                             </div><!-- /.box -->
                             <?php 
-							if($pdca['status']!=2){
+							if($pdca['status']==0 && cookie('userid')==$pdca['tab_user_id']){
 							?>
                             <form method="post" action="{:U('Kpi/applyscore')}" name="myform" id="myform">
                 			<input type="hidden" name="dosubmint" value="1">
@@ -118,7 +131,7 @@
 		art.dialog.open('index.php?m=Main&c=Kpi&a=editpdca&pdcaid='+pdcaid+'&id='+id,{
 			lock:true,
 			title: '新建PDCA项目',
-			width:'80%',
+			width:1000,
 			height:'90%',
 			okValue: '提交',
 			fixed: true,
@@ -138,7 +151,7 @@
 		art.dialog.open('index.php?m=Main&c=Kpi&a=pdcadetail&id='+id,{
 			lock:true,
 			title: 'PDCA项目详情',
-			width:900,
+			width:1000,
 			height:'90%',
 			fixed: true,
 			

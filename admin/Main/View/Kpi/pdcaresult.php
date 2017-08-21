@@ -39,17 +39,14 @@
                                             <th width="100" class="sorting" data="tab_user_id">编制人</th>
                                             <th width="100" class="sorting" data="total_score">总分</th>
                                             <th width="100" class="sorting" data="status">状态</th>
-                                            <?php 
-											if($row['status']==2){
-											?>
+                                            <!--
                                             <if condition="rolemenu(array('Kpi/expdca'))">
                                             <th width="50" class="taskOptions">导出</th>
                                             </if>
-                                            <?php }else{ ?>
+                                            -->
                                             <if condition="rolemenu(array('Kpi/score'))">
                                             <th width="50" class="taskOptions">评分</th>
                                             </if>
-                                            <?php } ?>
                                             
                                         </tr>
                                         <foreach name="lists" item="row"> 
@@ -59,21 +56,24 @@
                                             <td>{:username($row['tab_user_id'])}</td>
                                             <td>{$row.total_score}</td>
                                             <td>{$pdcasta.$row[status]}</td>
-                                            <?php 
-											if($row['status']==2){
-											?>
+                                            <!--
                                             <if condition="rolemenu(array('Kpi/expdca'))">
                                             <td class="taskOptions">
                                             <a href="{:U('Kpi/expdca',array('id'=>$row['id']))}" title="导出" class="btn btn-success btn-smsm"><i class="fa fa-arrow-circle-down"></i></a>
                                             </td>
                                             </if>
-                                            <?php }else{ ?>
+                                            -->
                                             <if condition="rolemenu(array('Kpi/score'))">
                                             <td class="taskOptions">
+                                            <?php 
+											if(cookie('roleid')==$row['app_role']){
+											?>
                                             <a href="{:U('Kpi/score',array('pdcaid'=>$row['id']))}" title="评分" class="btn btn-success btn-smsm"><i class="fa fa-check-circle"></i></a>
+                                            <?php 
+											}
+											?>
                                             </td>
                                             </if>
-                                            <?php } ?>
                                         </tr>
                                         </foreach>					
                                     </table>

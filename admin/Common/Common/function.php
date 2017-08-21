@@ -1371,13 +1371,13 @@ function no_read(){
 
 
 //发送公告
-function send_notice($userid,$username,$title,$content,$url='',$source=0,$source_id=0){
+function send_notice($title,$content,$url='',$source=0,$source_id=0,$userid=0,$username=''){
 	$data = array();
-	$data['send_user_id']	 = $userid;
-	$data['send_user_name']	 = $username;
+	$data['send_user_id']	 = $userid ? $userid : cookie('userid');
+	$data['send_user_name']	 = $username ? $username : cookie('nickname');
 	$data['send_time']	 	 = time();
 	$data['title']		 	 = $title;
-	$data['content']		     = $content;
+	$data['content']		 = $content;
 	$data['link_url']	 	 = $url;
 	$data['source']	         = $source;
 	$data['source_id']	     = $source_id;
@@ -1395,6 +1395,7 @@ function strtopinyin($str){
 	$pinyin = strtolower($PinYin->getFirstPY($str));
 	return $pinyin;
 }
+
 
 ?>
 

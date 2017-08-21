@@ -323,7 +323,7 @@ class RbacController extends BaseController {
     
                 $isadd = $db->add($info);
                 if($isadd) {
-                    $this->success('添加成功！',U('Rbac/node'));
+                    $this->success('添加成功！');
                 } else {
                     $this->error('添加失败：' . $db->getError());
                 }

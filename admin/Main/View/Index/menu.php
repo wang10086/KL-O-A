@@ -250,17 +250,14 @@
                         </li>
                         </if>
                         
-                        <!--
-                        <if condition="rolemenu(array('Message/index'))">
-                            <li class="{:ison(CONTROLLER_NAME, 'Message')}">
-                                <a href="{:U('Message/index',array('type'=>0))}">
-                                    <i class="fa fa-envelope"></i> <span>系统消息</span> 
-                                    <?php $noread = no_read(); ?>
-                                    <if condition="$noread"><small class="badge pull-right bg-red" style="margin-right:10px;">{$noread}</small></if>
-                                </a>
-                            </li>
-                        </if>
-                        -->
+                       
+                        <li class="{:ison(CONTROLLER_NAME, 'Message')}">
+                            <a href="{:U('Message/index',array('type'=>0))}">
+                                <i class="fa fa-envelope"></i> <span>系统消息</span> 
+                                <?php $noread = no_read(); ?>
+                                <if condition="$noread"><small class="badge pull-right bg-red" style="margin-right:10px;">{$noread}</small></if>
+                            </a>
+                        </li>
                         
                         
                         <if condition="rolemenu(array('Rights/index','Rights/myreq'))">
@@ -331,7 +328,7 @@
                         </li>
                         </if>
                         
-                        <!--
+                        
                         <if condition="rolemenu(array('Kpi/pdca','Kpi/qa'))">
                         <li class="treeview {:ison(CONTROLLER_NAME, 'Kpi')}">
                             <a href="javascript:;">
@@ -349,14 +346,14 @@
                                 <if condition="rolemenu(array('Kpi/qa'))">
                                 	<li><a href="{:U('Kpi/qa')}"><i class="fa fa-angle-right"></i> 品质检查</a></li>
                                 </if> 
-                                <if condition="rolemenu(array('Kpi/sale'))">
-                                	<li><a href="{:U('Kpi/sale')}"><i class="fa fa-angle-right"></i> KPI</a></li>
-                                </if> 
+                              
+                                	<li><a href="javascript:;" onClick="art_show_msg('加班开发中，稍后呈现...',5)"><i class="fa fa-angle-right"></i> KPI</a></li>
+                                
                             </ul>
                         </li>
                         </if>
-                        -->
                         
+                        <!--
                         <li class="treeview {:ison(CONTROLLER_NAME, 'Kpi')}">
                             <a href="javascript:;">
                                 <i class="fa fa-trophy"></i>
@@ -370,7 +367,7 @@
                                 <li><a href="javascript:;" onClick="art_show_msg('加班开发中，稍后呈现...',5)"><i class="fa fa-angle-right"></i> KPI</a></li>
                             </ul>
                         </li>
-                        
+                        -->
                         
                         
                         

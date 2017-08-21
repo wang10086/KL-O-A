@@ -90,7 +90,7 @@
 		art.dialog.open('index.php?m=Main&c=Kpi&a=addqa&id='+id,{
 			lock:true,
 			title: '发布品质检查信息',
-			width:'80%',
+			width:1000,
 			height:480,
 			okValue: '提交',
 			fixed: true,
