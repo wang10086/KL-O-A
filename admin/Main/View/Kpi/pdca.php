@@ -33,8 +33,8 @@
                                     <tr role="row" class="orders" >
                                         <th class="sorting" width="120" data="month">月份</th>
                                         <th class="sorting" data="title">PDCA描述</th>
-                                        <th width="100" class="sorting" data="tab_user_id">编制人</th>
-                                        <th width="100" class="sorting" data="total_score">总分</th>
+                                        <th width="100" class="sorting" data="tab_user_id">被考评人</th>
+                                        <th width="100" class="sorting" data="total_score">考评得分</th>
                                         <th width="100" class="sorting" data="status">状态</th>
                                         <if condition="rolemenu(array('Kpi/pdcainfo'))">
                                         <th width="50" class="taskOptions">项目</th>
