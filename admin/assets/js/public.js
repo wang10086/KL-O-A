@@ -18,9 +18,7 @@ $(document).ready(function(e) {
 	$('.inputdate').datepicker();
 	$('.inputdatetime').datetimepicker();
 	
-	$('.indexmarquee').liMarquee({
-		 runshort: false	
-	});
+	
 	
 });
 

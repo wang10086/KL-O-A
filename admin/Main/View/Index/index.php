@@ -352,7 +352,11 @@
 		}
 		
 		
-		
+		$(document).ready(function(e) {
+            $('.indexmarquee').liMarquee({
+				 runshort: false	
+			});
+        });
 		
 		
 		
