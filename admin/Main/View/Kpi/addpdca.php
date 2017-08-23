@@ -16,7 +16,7 @@
         </div>
         <div class="form-group box-float-6">
             <label>编制人</label>
-            <input type="text" value="{:cookie('nickname')}"  class="form-control" readonly />
+            <input type="text" value="<?php if($row){ echo username($row['tab_user_id']); }else{ echo cookie('nickname');} ?>"  class="form-control" readonly />
         </div>
         <div class="form-group box-float-12">
             <label>PDCA描述</label>

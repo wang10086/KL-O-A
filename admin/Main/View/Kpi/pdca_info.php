@@ -30,15 +30,24 @@
                                     <div class="content">
                                     	<span class="rtxt" style="margin-top:-10px;">
                                         月份：{$pdca.month} &nbsp;&nbsp;&nbsp;&nbsp;
-                                        制表人：{:username($pdca['tab_user_id'])} &nbsp;&nbsp;&nbsp;&nbsp;
-                                        总分：{$pdca.total_score}
+                                        被考评人：{:username($pdca['tab_user_id'])} &nbsp;&nbsp;&nbsp;&nbsp;
+                                        <?php 
+										if($pdca['status']==2){
+										?>
+                                        考评人：{:username($pdca['eva_user_id'])} &nbsp;&nbsp;&nbsp;&nbsp;
+                                        <?php 
+										}
+										?>
+                                        考评得分：{$pdca.total_score}
                                         </span> 
                                         
                                         <?php 
-										if(cookie('userid')==$pdca['tab_user_id'] && rolemenu(array('Kpi/editpdca'))){
+										if(cookie('userid')==$pdca['tab_user_id'] || cookie('roleid')==$pdca['app_role']){
+											if(rolemenu(array('Kpi/editpdca'))){
 										?>
                                         <a href="javascript:;" class="btn btn-success btn-sm" style="float:right;"  onClick="edit_pdca(0)"><i class="fa fa-fw fa-plus"></i> 新增项目</a> 
                                         <?php 
+											}
 										}
 										?>
                                         <div class="box-body table-responsive no-padding">
@@ -48,10 +57,10 @@
                                                 <th>工作项目</th>
                                                 <th width="180">完成时间</th>
                                                 <th width="100">录入时间</th>
-                                                <th width="80">权重</th>
-                                                <th width="80">评分</th>
+                                                <th width="100">权重分</th>
+                                                <th width="100">考评得分</th>
                                                 <?php 
-												if(cookie('userid')==$pdca['tab_user_id']){
+												if(cookie('userid')==$pdca['tab_user_id'] || cookie('roleid')==$pdca['app_role']){
 												?>
                                                 <if condition="rolemenu(array('Kpi/editpdca'))">
                                                 <th width="50" class="taskOptions">编辑</th>
@@ -70,7 +79,7 @@
                                                 <td>{$row.weight}</td>
                                                 <td>{$row.score}</td>
                                                 <?php 
-												if(cookie('userid')==$pdca['tab_user_id']){
+												if(cookie('userid')==$pdca['tab_user_id'] || cookie('roleid')==$pdca['app_role']){
 												?>
                                                 <if condition="rolemenu(array('Kpi/editpdca'))">
                                                 <td class="taskOptions">

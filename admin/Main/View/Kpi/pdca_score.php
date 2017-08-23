@@ -32,7 +32,15 @@
                                     <div class="content">
                                     	<span class="rtxt" style="margin-top:-10px;">
                                         月份：{$pdca.month} &nbsp;&nbsp;&nbsp;&nbsp;
-                                        制表人：{:username($pdca['tab_user_id'])} &nbsp;&nbsp;&nbsp;&nbsp;
+                                        被考评人：{:username($pdca['tab_user_id'])} &nbsp;&nbsp;&nbsp;&nbsp;
+                                        <?php 
+										if($pdca['status']==2){
+										?>
+                                        考评人：{:username($pdca['eva_user_id'])} &nbsp;&nbsp;&nbsp;&nbsp;
+                                        <?php 
+										}
+										?>
+                                        考评得分：{$pdca.total_score}
                                         </span> 
                                         <span class="totalscore">总分合计：<i id="fenshu">{$pdca.total_score}</i> 分</span>
                                         <div class="box-body table-responsive no-padding">
@@ -44,6 +52,12 @@
                                                 <th width="100">录入时间</th>
                                                 <th width="80">权重</th>
                                                 <th width="80">评分</th>
+                                                <if condition="rolemenu(array('Kpi/editpdca'))">
+                                                <th width="50" class="taskOptions">编辑</th>
+                                                </if>
+                                                <if condition="rolemenu(array('Kpi/delpdcaterm'))">
+                                                <th width="50" class="taskOptions">删除</th>
+                                                </if>
                                             </tr>
                                             <foreach name="lists" key="key" item="row"> 
                                             <tr>
@@ -53,6 +67,17 @@
                                                 <td style="line-height:34px;"><if condition="$row['create_time']">{$row.create_time|date='m-d H:i',###}</if></td>
                                                 <td style="line-height:34px;">{$row.weight}</td>
                                                 <td><input type="text" name="pdca[{$row.id}]" value="{$row.score}" class="form-control unitscore" onChange="unitscore()"></td>
+                                                <if condition="rolemenu(array('Kpi/editpdca'))">
+                                                <td class="taskOptions">
+                                                <a href="javascript:;" onClick="edit_pdca({$row.id})" title="编辑" class="btn btn-info btn-smsm"><i class="fa fa-pencil"></i></a>
+                                                </td>
+                                                </if>
+                                                <if condition="rolemenu(array('Kpi/delpdcaterm'))">
+                                                <td class="taskOptions">
+                                                <button onclick="javascript:ConfirmDel('{:U('Kpi/delpdcaterm',array('id'=>$row['id']))}')" title="删除" class="btn btn-warning btn-smsm"><i class="fa fa-times"></i></button>
+                                               
+                                                </td>
+                                                </if>
                                             </tr>
                                             </foreach>					
                                         </table> 

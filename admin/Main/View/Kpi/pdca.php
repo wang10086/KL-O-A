@@ -59,7 +59,7 @@
                                         
                                         <td class="taskOptions">
                                         <?php 
-										if(cookie('userid')==$row['tab_user_id']){
+										if(cookie('userid')==$row['tab_user_id'] || cookie('roleid')==$row['app_role']) {
 										?>
                                         <a href="javascript:;" onClick="add_pdca({$row.id})" title="修改" class="btn btn-info btn-smsm"><i class="fa fa-pencil"></i></a>
                                         <?php 

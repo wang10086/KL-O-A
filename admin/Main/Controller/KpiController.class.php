@@ -228,10 +228,10 @@ class KpiController extends BaseController {
 				
 				$pdca = M('pdca')->find($info['pdcaid']);
 				//判断是否自己保存
-				if(cookie('userid')!=$pdca['tab_user_id']){
-					$this->error('您没有权限保存');
-				}else{
+				if(cookie('userid')==$pdca['tab_user_id'] || cookie('roleid')==$pdca['app_role']){
 					$addinfo = M('pdca_term')->data($info)->where(array('id'=>$editid))->save();
+				}else{
+					$this->error('您没有权限保存');
 				}
 			}else{
 				$info['userid']      = cookie('userid');
@@ -274,6 +274,9 @@ class KpiController extends BaseController {
 			$row['score']       = $row['score'] ? $row['score'] : '未评分';
 			
 			$this->row = $row;
+			
+			$this->pdca       = M('pdca')->find($row['pdcaid']);
+			
 		}else{
 			echo '<script>art_show_msgd(\'PDCA项目不存在\');</script>';	
 		}
