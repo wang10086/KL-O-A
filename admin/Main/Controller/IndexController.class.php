@@ -180,9 +180,9 @@ class IndexController extends BaseController {
 					$info['update_time'] = time();
 					$info['ip'] = get_client_ip();
 					//加入随机字符串重组多重加密密码
-					$passwordinfo = password($password);
-					$info['password'] = $passwordinfo['password'];
-					$info['encrypt'] = $passwordinfo['encrypt'];
+					//$passwordinfo = password($password);
+					//$info['password'] = $passwordinfo['password'];
+					//$info['encrypt'] = $passwordinfo['encrypt'];
 	
 					$db->data($info)->where(array('id'=>$isdate['id']))->save();
 				
