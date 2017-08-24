@@ -15,7 +15,7 @@ class KpiController extends BaseController {
 	
 	// @@@NODE-3###pdcaresult###考评结果###
     public function pdcaresult(){
-        $this->title('PDCA');
+        $this->title('PDCA考评结果');
 		
 		$this->type = intval(I('type',2));
 		
@@ -69,6 +69,7 @@ class KpiController extends BaseController {
         $lists = $db->where($where)->limit($page->firstRow . ',' . $page->listRows)->order($this->orders('month'))->select();
 		foreach($lists as $k=>$v){
 			$lists[$k]['total_score']  = $v['status']!=2 ? '未评分':$v['total_score']; 	
+			$lists[$k]['kaoping']      = $v['eva_user_id'] ? username($v['eva_user_id']) : '未评分'; 	
 		}
 		
 		$this->lists    = $lists; 
@@ -128,7 +129,7 @@ class KpiController extends BaseController {
 		
 		$pdca = M('pdca')->find($id);
 		$pdca['total_score']  = $pdca['status']!=2 ? '未评分':$pdca['total_score'].'分'; 	
-		
+		$pdca['kaoping']      = $pdca['eva_user_id'] ? username($pdca['eva_user_id']) : '未评分'; 	
 		if($id && $pdca){
 			$where = array();
 			$where['pdcaid'] = $id;
@@ -282,6 +283,20 @@ class KpiController extends BaseController {
 		}
 		$this->display('pdca_detail');
 		
+	}
+	
+	// @@@NODE-3###delpdca###删除PDCA###
+	public function delpdca(){
+		$id = I('id',0);
+		
+		$pdca = M('pdca')->find($id);
+		if(cookie('userid')==$pdca['tab_user_id'] || cookie('roleid')==$pdca['app_role']) {
+			//执行删除
+			$iddel = M('pdca')->delete($id);
+			$this->success('删除成功！');
+		}else{
+			$this->error('您没有权限删除');	
+		}
 	}
 	
 	

@@ -31,9 +31,10 @@
                                 
                                 <table class="table table-bordered dataTable fontmini" id="tablelist" style="margin-top:10px;">
                                     <tr role="row" class="orders" >
-                                        <th class="sorting" width="120" data="month">月份</th>
-                                        <th class="sorting" data="title">PDCA描述</th>
+                                        <th class="sorting" data="month">月份</th>
+                                        <!-- <th class="sorting" data="title">PDCA描述</th> -->
                                         <th width="100" class="sorting" data="tab_user_id">被考评人</th>
+                                        <th width="100" class="sorting" data="tab_user_id">考评人</th>
                                         <th width="100" class="sorting" data="total_score">考评得分</th>
                                         <th width="100" class="sorting" data="status">状态</th>
                                         <if condition="rolemenu(array('Kpi/pdcainfo'))">
@@ -42,12 +43,17 @@
                                         <if condition="rolemenu(array('Kpi/editpdca'))">
                                         <th width="50" class="taskOptions">编辑</th>
                                         </if>
+                                        <if condition="rolemenu(array('Kpi/delpdca'))">
+                                        <th width="50" class="taskOptions">删除</th>
+                                        </if>
+
                                     </tr>
                                     <foreach name="lists" item="row"> 
                                     <tr>
-                                        <td>{$row.month}</td>
-                                        <td><a href="{:U('Kpi/pdcainfo',array('id'=>$row['id']))}" >{$row.title}</a></td>
+                                        <td><a href="{:U('Kpi/pdcainfo',array('id'=>$row['id']))}" >{$row.month}</a></td>
+                                        <!-- <td><a href="{:U('Kpi/pdcainfo',array('id'=>$row['id']))}" >{$row.title}</a></td> -->
                                         <td>{:username($row['tab_user_id'])}</td>
+                                        <td>{$row.kaoping}</td>
                                         <td>{$row.total_score}</td>
                                         <td>{$pdcasta.$row[status]}</td>
                                         <if condition="rolemenu(array('Kpi/pdcainfo'))">
@@ -56,7 +62,6 @@
                                         </td>
                                         </if>
                                         <if condition="rolemenu(array('Kpi/editpdca'))">
-                                        
                                         <td class="taskOptions">
                                         <?php 
 										if(cookie('userid')==$row['tab_user_id'] || cookie('roleid')==$row['app_role']) {
@@ -66,8 +71,18 @@
 										}
 										?>
                                         </td>
-                                       
-                                       </if>
+                                        </if>
+                                        <if condition="rolemenu(array('Kpi/delpdca'))">
+                                        <td class="taskOptions">
+                                        <?php 
+										if(cookie('userid')==$row['tab_user_id'] || cookie('roleid')==$row['app_role']) {
+										?>
+                                        <button onClick="javascript:ConfirmDel('{:U('Kpi/delpdca',array('id'=>$row['id']))}')" title="删除" class="btn btn-warning btn-smsm"><i class="fa fa-times"></i></button>
+                                        <?php 
+										}
+										?>
+                                        </td>
+                                        </if>
                                        
                                     </tr>
                                     </foreach>					
