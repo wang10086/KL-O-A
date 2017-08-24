@@ -23,10 +23,15 @@ class KpiController extends BaseController {
 			$this->error('数据不存在');	
 		}
 		
+		$kpr  = I('kpr');
+		$bkpr = I('bkpr');
+		
 		$db = M('pdca');
 		
 		$where = array();
 		$where['status'] = $this->type;
+		if($kpr)  $where['eva_user_id']    = $kpr;
+		if($bkpr) $where['tab_user_id']    = $bkpr;
 		
 		if(C('RBAC_SUPER_ADMIN')==cookie('username') || cookie('roleid')==10){}else{
 			$where['tab_user_id'] = array('in',Rolerelation(cookie('roleid')));
@@ -41,6 +46,7 @@ class KpiController extends BaseController {
         $lists = $db->where($where)->limit($page->firstRow . ',' . $page->listRows)->order($this->orders('month'))->select();
 		foreach($lists as $k=>$v){
 			$lists[$k]['total_score']  = $v['status']!=2 ? '未评分':$v['total_score']; 	
+			$lists[$k]['kaoping']      = $v['eva_user_id'] ? '<a href="'.U('Kpi/pdcaresult',array('kpr'=>$v['eva_user_id'],'type'=>$this->type)).'">'.username($v['eva_user_id']).'</a>' : '未评分'; 
 		}
 		
 		$this->lists    = $lists; 
@@ -53,9 +59,15 @@ class KpiController extends BaseController {
     public function pdca(){
         $this->title('PDCA');
 		
+		$kpr  = I('kpr');
+		$bkpr = I('bkpr');
+		
 		$db = M('pdca');
 		
 		$where = array();
+		if($kpr)  $where['eva_user_id']    = $kpr;
+		if($bkpr) $where['tab_user_id']    = $bkpr;
+		
 		
 		if(C('RBAC_SUPER_ADMIN')==cookie('username') || cookie('roleid')==10){}else{
 			$where['tab_user_id'] = array('in',Rolerelation(cookie('roleid')));
@@ -69,7 +81,7 @@ class KpiController extends BaseController {
         $lists = $db->where($where)->limit($page->firstRow . ',' . $page->listRows)->order($this->orders('month'))->select();
 		foreach($lists as $k=>$v){
 			$lists[$k]['total_score']  = $v['status']!=2 ? '未评分':$v['total_score']; 	
-			$lists[$k]['kaoping']      = $v['eva_user_id'] ? username($v['eva_user_id']) : '未评分'; 	
+			$lists[$k]['kaoping']      = $v['eva_user_id'] ? '<a href="'.U('Kpi/pdca',array('kpr'=>$v['eva_user_id'])).'">'.username($v['eva_user_id']).'</a>' : '未评分'; 	
 		}
 		
 		$this->lists    = $lists; 

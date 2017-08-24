@@ -52,7 +52,7 @@
                                     <tr>
                                         <td><a href="{:U('Kpi/pdcainfo',array('id'=>$row['id']))}" >{$row.month}</a></td>
                                         <!-- <td><a href="{:U('Kpi/pdcainfo',array('id'=>$row['id']))}" >{$row.title}</a></td> -->
-                                        <td>{:username($row['tab_user_id'])}</td>
+                                        <td><a href="{:U('Kpi/pdca',array('bkpr'=>$row['tab_user_id']))}">{:username($row['tab_user_id'])}</a></td>
                                         <td>{$row.kaoping}</td>
                                         <td>{$row.total_score}</td>
                                         <td>{$pdcasta.$row[status]}</td>

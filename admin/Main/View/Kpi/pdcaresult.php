@@ -54,16 +54,8 @@
                                         <tr>
                                             <td>{$row.month}</td>
                                             <td><a href="{:U('Kpi/pdcainfo',array('id'=>$row['id']))}" >{$row.title}</a></td>
-                                            <td>{:username($row['tab_user_id'])}</td>
-                                            <td>
-                                            <?php 
-											if($row['eva_user_id']){
-												echo username($row['eva_user_id']);
-											}else{
-												echo '未评分';	
-											}
-											?>
-                                            </td>
+                                            <td><a href="{:U('Kpi/pdcaresult',array('bkpr'=>$row['tab_user_id'],'type'=>$type))}">{:username($row['tab_user_id'])}</a></td>
+                                            <td>{$row.kaoping}</td>
                                             <td>{$row.total_score}</td>
                                             <td>{$pdcasta.$row[status]}</td>
                                             
