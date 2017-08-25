@@ -27,9 +27,11 @@
                             <div class="box">
                                 <div class="box-header">
                                     <h3 class="box-title">系统消息</h3>
+                                    <!--
                                     <div class="pull-right box-tools">
                                         <button class="btn btn-info btn-sm" onclick="javascript:opensearch('searchtext',300,80);"><i class="fa fa-search"></i></button>
                                     </div>
+                                    -->
                                 </div><!-- /.box-header -->
                                 <div class="box-body">
                                     <div class="btn-group" id="catfont">
