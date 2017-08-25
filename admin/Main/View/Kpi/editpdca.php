@@ -43,10 +43,10 @@
         </div>
         
         <div class="form-group box-float-12">
-            <label>新策略</label>
+            <label>完成情况及未完成原因</label>
             <textarea class="form-control" style="height:90px;" name="info[newstrategy]">{$row.newstrategy}</textarea>
         </div>
-        
+        <!--
         <div class="form-group box-float-12">
             <label>新策略完成情况完成情况</label>
             <textarea class="form-control" style="height:90px;" name="info[complete]">{$row.complete}</textarea>
@@ -56,6 +56,7 @@
             <label>新策略未完成情况</label>
             <textarea class="form-control" style="height:90px;" name="info[nocomplete]">{$row.nocomplete}</textarea>
         </div>
+        -->
         </form>
         
                              
