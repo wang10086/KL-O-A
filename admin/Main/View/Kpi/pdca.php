@@ -75,7 +75,7 @@
                                         <if condition="rolemenu(array('Kpi/editpdca'))">
                                         <td class="taskOptions">
                                         <?php 
-										if(cookie('userid')==$row['tab_user_id'] || cookie('userid')==$pdca['eva_user_id']) {
+										if(cookie('userid')==$row['tab_user_id'] || cookie('userid')==$pdca['eva_user_id'] || C('RBAC_SUPER_ADMIN')==cookie('username') || cookie('roleid')==10) {
 										?>
                                         <a href="javascript:;" onClick="add_pdca({$row.id})" title="修改" class="btn btn-info btn-smsm"><i class="fa fa-pencil"></i></a>
                                         <?php 
@@ -86,7 +86,7 @@
                                         <if condition="rolemenu(array('Kpi/delpdca'))">
                                         <td class="taskOptions">
                                         <?php 
-										if(cookie('userid')==$row['tab_user_id'] || cookie('userid')==$pdca['eva_user_id']) {
+										if(cookie('userid')==$row['tab_user_id'] || cookie('userid')==$pdca['eva_user_id'] || C('RBAC_SUPER_ADMIN')==cookie('username') || cookie('roleid')==10) {
 										?>
                                         <button onClick="javascript:ConfirmDel('{:U('Kpi/delpdca',array('id'=>$row['id']))}')" title="删除" class="btn btn-warning btn-smsm"><i class="fa fa-times"></i></button>
                                         <?php 
