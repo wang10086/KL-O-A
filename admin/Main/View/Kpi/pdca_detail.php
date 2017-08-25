@@ -42,12 +42,12 @@
             <div class="fromtitle">完成情况及未完成原因：</div>
             <div class="formtexts">{$row.newstrategy}</div>
         </div>
-        <!--
+        
         <div class="fromlist">
-            <div class="fromtitle">新策略完成情况完成情况：</div>
+            <div class="fromtitle">新策略：</div>
             <div class="formtexts">{$row.complete}</div>
         </div>
-        
+        <!--
         <div class="fromlist">
             <div class="fromtitle">新策略未完成情况：</div>
             <div class="formtexts">{$row.nocomplete}</div>
