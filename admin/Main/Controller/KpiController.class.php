@@ -315,6 +315,14 @@ class KpiController extends BaseController {
 				$addinfo = M('pdca_term')->add($info);
 			}
 			
+			//修正评分人信息
+			$pd  = M('pdca')->find($info['pdcaid']);
+			$us  = M('account')->find($pd['tab_user_id']);
+			$pfr = M('auth')->where(array('role_id'=>$us['roleid']))->find();
+			$eva_user_id  = $pfr ? $pfr['pdca_auth'] : 0;
+			M('pdca')->data(array('eva_user_id'=>$eva_user_id))->where(array('id'=>$info['pdcaid']))->save();
+				
+			
 			$data = array();
 			$data['status']  		  = 0;
 			$issave = M('pdca')->data($data)->where(array('id'=>$info['pdcaid']))->save();
