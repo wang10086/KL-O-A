@@ -478,6 +478,11 @@
                                     <if condition="rolemenu(array('Rbac/respriv_guide'))"> 
                                          <li class="{:on('Rbac/respriv_guide')}" ><a href="{:U('Rbac/respriv_guide')}"><i class="fa fa-angle-right"></i> 导游辅导员默认权限</a></li>
                                     </if>
+                                    
+                                    <if condition="rolemenu(array('Rbac/pdca_auth'))"> 
+                                         <li class="{:on('Rbac/pdca_auth')}" ><a href="{:U('Rbac/pdca_auth')}"><i class="fa fa-angle-right"></i> PDCA指定评分人</a></li>
+                                    </if>
+                                    
                                     <!--
                                     <if condition="rolemenu(array('Rbac/node'))">
                                         <li><a href="{:U('Index/index')}"><i class="fa fa-angle-right"></i> 缓存清理</a></li>

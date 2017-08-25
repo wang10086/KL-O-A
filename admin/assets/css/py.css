@@ -3899,3 +3899,6 @@ th{ font-weight:normal;}
 .indexmarquee{ height:30px;}
 .indexmarquee a { margin: 0 30px 0 0; font-size:14px;text-decoration: none;}
 .indexmarquee a:hover { text-decoration: underline;}
+.kjss{ float:left; padding:8px 10px; width:600px;}
+.kjss input{ float:left; width:200px;}
+.kjss button{ height:34px; border-radius:0; margin-left:10px;}

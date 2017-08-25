@@ -18,11 +18,22 @@
                         <div class="col-xs-12">
                             <div class="box">
                                 <div class="box-header">
-                                    <h3 class="box-title">{$_action_}</h3>
+                                	<div class="kjss">
+                                    	<form action="" method="get" id="searchform">
+                                        <input type="hidden" name="m" value="Main">
+                                        <input type="hidden" name="c" value="Kpi">
+                                        <input type="hidden" name="a" value="pdca">
+                                        <input type="hidden" name="bkpr" id="bkpr" value="">
+                                    	<input type="text" name="month" class="form-control" placeholder="月份" style="width:100px; margin-right:10px;"/>
+                                    	<input type="text" class="form-control keywords" placeholder="被考评人"/>
+                                        <button class="btn btn-info btn-sm" style="float:left;"><i class="fa fa-search"></i></button>
+                                        </form>
+                                    </div>
                                     <div class="box-tools pull-right">
                                     	 
+                                         
                                          <if condition="rolemenu(array('Kpi/addpdca'))">
-                                         <a href="javascript:;" onClick="add_pdca()" class="btn btn-info btn-sm" >新建PDCA</a>
+                                         <a href="javascript:;" onClick="add_pdca()" class="btn btn-sm btn-danger" ><i class="fa fa-plus"></i> 新建PDCA</a>
                                          </if>
                                          
                                     </div>
@@ -31,12 +42,12 @@
                                 
                                 <table class="table table-bordered dataTable fontmini" id="tablelist" style="margin-top:10px;">
                                     <tr role="row" class="orders" >
-                                        <th class="sorting" data="month">月份</th>
+                                        <th width="" class="sorting" data="month">月份</th>
                                         <!-- <th class="sorting" data="title">PDCA描述</th> -->
-                                        <th width="100" class="sorting" data="tab_user_id">被考评人</th>
-                                        <th width="100" class="sorting" data="tab_user_id">考评人</th>
-                                        <th width="100" class="sorting" data="total_score">考评得分</th>
-                                        <th width="100" class="sorting" data="status">状态</th>
+                                        <th width="" class="sorting" data="tab_user_id">被考评人</th>
+                                        <th width="" class="sorting" data="tab_user_id">考评人</th>
+                                        <th width="" class="sorting" data="total_score">考评得分</th>
+                                        <th width="" class="sorting" data="status">状态</th>
                                         <if condition="rolemenu(array('Kpi/pdcainfo'))">
                                         <th width="50" class="taskOptions">项目</th>
                                         </if>
@@ -64,7 +75,7 @@
                                         <if condition="rolemenu(array('Kpi/editpdca'))">
                                         <td class="taskOptions">
                                         <?php 
-										if(cookie('userid')==$row['tab_user_id'] || cookie('roleid')==$row['app_role']) {
+										if(cookie('userid')==$row['tab_user_id'] || cookie('userid')==$pdca['eva_user_id']) {
 										?>
                                         <a href="javascript:;" onClick="add_pdca({$row.id})" title="修改" class="btn btn-info btn-smsm"><i class="fa fa-pencil"></i></a>
                                         <?php 
@@ -75,7 +86,7 @@
                                         <if condition="rolemenu(array('Kpi/delpdca'))">
                                         <td class="taskOptions">
                                         <?php 
-										if(cookie('userid')==$row['tab_user_id'] || cookie('roleid')==$row['app_role']) {
+										if(cookie('userid')==$row['tab_user_id'] || cookie('userid')==$pdca['eva_user_id']) {
 										?>
                                         <button onClick="javascript:ConfirmDel('{:U('Kpi/delpdca',array('id'=>$row['id']))}')" title="删除" class="btn btn-warning btn-smsm"><i class="fa fa-times"></i></button>
                                         <?php 
@@ -100,16 +111,6 @@
             </aside><!-- /.right-side -->
             
             
-            <div id="mkdir">
-                <form method="post" action="{:U('Files/mkdirs')}" name="myform" id="gosub">
-            	<input type="hidden" name="dosubmit"  value="1">
-                <input type="hidden" name="pid" value="{$pid}">
-                <input type="hidden" name="level" value="{$level}">
-                <div class="form-group col-md-12">
-                    <input type="text" class="form-control" name="filename" placeholder="文件夹名称">
-                </div>
-                </form>
-            </div>
             
             
            
@@ -136,4 +137,22 @@
 			}
 		});	
 	}
+	
+	$(document).ready(function(e) {
+		var keywords = <?php echo $userkey; ?>;
+		
+		$(".keywords").autocomplete(keywords, {
+			 matchContains: true,
+			 highlightItem: false,
+			 formatItem: function(row, i, max, term) {
+				 return '<span style=" display:none">'+row.pinyin+'</span>'+row.text;
+			 },
+			 formatResult: function(row) {
+				 return row.user_name;
+			 }
+		}).result(function(event, item) {
+		   $('#bkpr').val(item.id);
+		});
+			
+	})
 	</script>

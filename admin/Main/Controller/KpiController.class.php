@@ -23,20 +23,29 @@ class KpiController extends BaseController {
 			$this->error('数据不存在');	
 		}
 		
-		$kpr  = I('kpr');
-		$bkpr = I('bkpr');
+		$kpr   = I('kpr');
+		$bkpr  = I('bkpr');
+		$month = I('month','');
 		
 		$db = M('pdca');
 		
-		$where = array();
+		$where = '';
+		$where .= '`status` = '.$this->type;
+		if($month) $where .= ' AND `month` = '.trim($month);
+		if($kpr)   $where .= ' AND `eva_user_id` = '.$kpr; 
+		if($bkpr)  $where .= ' AND `tab_user_id` = '.$bkpr; 
+		
+		/*
 		$where['status'] = $this->type;
 		if($kpr)  $where['eva_user_id']    = $kpr;
 		if($bkpr) $where['tab_user_id']    = $bkpr;
+		*/
 		
 		if(C('RBAC_SUPER_ADMIN')==cookie('username') || cookie('roleid')==10){}else{
-			$where['tab_user_id'] = array('in',Rolerelation(cookie('roleid')));
+			$where .= ' AND (`tab_user_id` in ('.Rolerelation(cookie('roleid')).') || `eva_user_id` = '.cookie('userid').')'; //['tab_user_id'] = array('in',Rolerelation(cookie('roleid')));
 		}
 		
+		//P($where);
 		
 		//分页
 		$pagecount = $db->where($where)->count();
@@ -45,12 +54,33 @@ class KpiController extends BaseController {
 
         $lists = $db->where($where)->limit($page->firstRow . ',' . $page->listRows)->order($this->orders('month'))->select();
 		foreach($lists as $k=>$v){
-			$lists[$k]['total_score']  = $v['status']!=2 ? '未评分':$v['total_score']; 	
+			$lists[$k]['total_score']  = $v['status']!=2 ? '<font color="#999">未评分</font>':$v['total_score']; 	
 			$lists[$k]['kaoping']      = $v['eva_user_id'] ? '<a href="'.U('Kpi/pdcaresult',array('kpr'=>$v['eva_user_id'],'type'=>$this->type)).'">'.username($v['eva_user_id']).'</a>' : '未评分'; 
 		}
 		
 		$this->lists    = $lists; 
 		$this->pdcasta  = C('PDCA_STATUS');
+		
+		
+		//整理关键字
+		if(C('RBAC_SUPER_ADMIN')==cookie('username') || cookie('roleid')==10){}else{
+			$userwhere = '`id` in ('.Rolerelation(cookie('roleid')).') || `id` = '.cookie('userid').'';
+		}
+		$role = M('role')->GetField('id,role_name',true);
+		$user =  M('account')->where($userwhere)->select();
+		$key = array();
+		foreach($user as $k=>$v){
+			$text = $v['nickname'].'-'.$role[$v['roleid']];
+			$key[$k]['id']         = $v['id'];
+			$key[$k]['user_name']  = $v['nickname'];
+			$key[$k]['pinyin']     = strtopinyin($text);
+			$key[$k]['text']       = $text;
+			$key[$k]['role']       = $v['roleid'];
+			$key[$k]['role_name']  = $role[$v['roleid']];
+		}
+		
+		$this->userkey =  json_encode($key);	
+		
 		
 		$this->display('pdcaresult');
     }
@@ -59,19 +89,21 @@ class KpiController extends BaseController {
     public function pdca(){
         $this->title('PDCA');
 		
-		$kpr  = I('kpr');
-		$bkpr = I('bkpr');
+		$kpr   = I('kpr');
+		$bkpr  = I('bkpr');
+		$month = I('month','');
 		
 		$db = M('pdca');
 		
-		$where = array();
-		if($kpr)  $where['eva_user_id']    = $kpr;
-		if($bkpr) $where['tab_user_id']    = $bkpr;
-		
-		
+		$where = '';
+		$where .= '1 = 1';
+		if($month) $where .= ' AND `month` = '.trim($month); 
+		if($kpr)   $where .= ' AND `eva_user_id` = '.$kpr; 
+		if($bkpr)  $where .= ' AND `tab_user_id` = '.$bkpr; 
 		if(C('RBAC_SUPER_ADMIN')==cookie('username') || cookie('roleid')==10){}else{
-			$where['tab_user_id'] = array('in',Rolerelation(cookie('roleid')));
+			$where .= ' AND (`tab_user_id` in ('.Rolerelation(cookie('roleid')).') || `eva_user_id` = '.cookie('userid').')';
 		}
+		
 		
 		//分页
 		$pagecount = $db->where($where)->count();
@@ -80,13 +112,35 @@ class KpiController extends BaseController {
 
         $lists = $db->where($where)->limit($page->firstRow . ',' . $page->listRows)->order($this->orders('month'))->select();
 		foreach($lists as $k=>$v){
-			$lists[$k]['total_score']  = $v['status']!=2 ? '未评分':$v['total_score']; 	
-			$lists[$k]['kaoping']      = $v['eva_user_id'] ? '<a href="'.U('Kpi/pdca',array('kpr'=>$v['eva_user_id'])).'">'.username($v['eva_user_id']).'</a>' : '未评分'; 	
+			$lists[$k]['total_score']  = $v['status']!=2 ? '<font color="#999">未评分</font>':$v['total_score']; 	
+			$lists[$k]['kaoping']      = $v['eva_user_id'] ? '<a href="'.U('Kpi/pdca',array('bkpr'=>$v['eva_user_id'])).'">'.username($v['eva_user_id']).'</a>' : '未评分'; 	
 		}
 		
 		$this->lists    = $lists; 
 		$this->pdcasta  = C('PDCA_STATUS');
 		
+		
+		
+		//整理关键字
+		if(C('RBAC_SUPER_ADMIN')==cookie('username') || cookie('roleid')==10){}else{
+			$userwhere = '`id` in ('.Rolerelation(cookie('roleid')).') || `id` = '.cookie('userid').'';
+		}
+		$role = M('role')->GetField('id,role_name',true);
+		$user =  M('account')->where($userwhere)->select();
+		$key = array();
+		foreach($user as $k=>$v){
+			$text = $v['nickname'].'-'.$role[$v['roleid']];
+			$key[$k]['id']         = $v['id'];
+			$key[$k]['user_name']  = $v['nickname'];
+			$key[$k]['pinyin']     = strtopinyin($text);
+			$key[$k]['text']       = $text;
+			$key[$k]['role']       = $v['roleid'];
+			$key[$k]['role_name']  = $role[$v['roleid']];
+		}
+		
+		$this->userkey =  json_encode($key);	
+			
+			
 		$this->display('pdca');
     }
 	
@@ -102,15 +156,23 @@ class KpiController extends BaseController {
 			
 			//执行保存
 			if($editid){
+				
+				//获取评分人信息
+				$pd  = M('pdca')->find($editid);
+				$us  = M('account')->find($pd['tab_user_id']);
+				$pfr = M('auth')->where(array('role_id'=>$us['roleid']))->find();
+				$info['eva_user_id']  = $pfr ? $pfr['pdca_auth'] : 0;
+				
 				$addinfo = M('pdca')->data($info)->where(array('id'=>$editid))->save();
 			}else{
-				
 				//判断月份是否存在
 				if(M('pdca')->where(array('month'=>$info['month'],'tab_user_id'=>cookie('userid')))->find()){
 					$this->error('改月已存在PDCA，您可以直接完善PDCA项目');	
 				}else{
-				
-					//$info['month']       = date('Ym');
+					
+					//获取评分人信息
+					$pfr = M('auth')->where(array('role_id'=>cookie('roleid')))->find();
+					$info['eva_user_id']  = $pfr ? $pfr['pdca_auth'] : 0;
 					$info['tab_user_id'] = cookie('userid');
 					$info['tab_time']    = time();
 					$addinfo = M('pdca')->add($info);
@@ -140,7 +202,7 @@ class KpiController extends BaseController {
 		$id = I('id',0);
 		
 		$pdca = M('pdca')->find($id);
-		$pdca['total_score']  = $pdca['status']!=2 ? '未评分':$pdca['total_score'].'分'; 	
+		$pdca['total_score']  = $pdca['status']!=2 ? '<font color="#999">未评分</font>':$pdca['total_score'].'分'; 	
 		$pdca['kaoping']      = $pdca['eva_user_id'] ? username($pdca['eva_user_id']) : '未评分'; 	
 		if($id && $pdca){
 			$where = array();
@@ -148,7 +210,7 @@ class KpiController extends BaseController {
 			
 			$lists = M('pdca_term')->where($where)->select();
 			foreach($lists as $K=>$v){
-				$lists[$K]['score']  = $v['score'] ? 	$v['score']  : '未评分';
+				$lists[$K]['score']  = $v['score'] ? 	$v['score']  : '<font color="#999">未评分</font>';
 			}
 			
 			$this->lists = $lists;
@@ -169,7 +231,7 @@ class KpiController extends BaseController {
 		$pdca = M('pdca')->find($id);
 		
 		//判断是否有权限评分
-		if(cookie('roleid')!=$pdca['app_role']){
+		if(cookie('userid')!=$pdca['eva_user_id']){
 			 $this->error('您没有权限评分');		
 		}
 			
@@ -188,7 +250,7 @@ class KpiController extends BaseController {
 			//保存总分
 			$data = array();
 			$data['status']  		  = 2;
-			$data['eva_user_id']      = cookie('userid');
+			//$data['eva_user_id']      = cookie('userid');
 			$data['eva_time'] 		  = time();
 			$data['total_score']      = $total;
 			$issave = M('pdca')->data($data)->where(array('id'=>$id))->save();
@@ -340,11 +402,20 @@ class KpiController extends BaseController {
 			if($pdca['status']!=2){
 				
 				//获取上级领导ID
-				$role = M('role')->find(cookie('roleid'));
+				//$role = M('role')->find(cookie('roleid'));
+				
+				
+				$us  = M('account')->find($pdca['tab_user_id']);
+				$pfr = M('auth')->where(array('role_id'=>$us['roleid']))->find();
+			
+				
+				
+				
 				
 				$data = array();
 				$data['status']         = 1;
-				$data['app_role']       = $role['pid'];     //审批部门
+				$data['eva_user_id']    = $pfr ? $pfr['pdca_auth'] : 0;
+				//$data['app_role']       = $role['pid'];     //审批部门
 				$data['app_time']       = time();           //申请时间
 				$apply = M('pdca')->data($data)->where(array('id'=>$pdcaid))->save();
 				if($apply){
@@ -355,8 +426,9 @@ class KpiController extends BaseController {
 						$title   = '['.$pdca['month'].'PDCA],已编制完毕，请您给予评分';
 						$content = $pdca['title'];
 						$url     = U('Kpi/score',array('pdcaid'=>$pdcaid));
-						$roleid  = '['.$role['pid'].']';
-						send_msg($uid,$title,$content,$url,'',$roleid);
+						//$roleid  = '['.$role['pid'].']';
+						$user    = '['.$pdca['eva_user_id'].']';
+						send_msg($uid,$title,$content,$url,$user);
 					}
 					
 					$this->success('已提交申请！');

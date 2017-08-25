@@ -964,6 +964,77 @@ class RbacController extends BaseController {
 	
 	*/
     
+	
+	
+	// @@@NODE-3###pdca_auth###PDCA评分人设置###
+    public function pdca_auth() {
+        $this->title('PDCA评分人设置');
+        
+        $roles =  get_roles();
+		foreach($roles as $k=>$v){
+			$auth = M('auth')->where(array('role_id'=>$v['id']))->find();
+			$roles[$k]['pdca'] = $auth ? '<span class="blue">'.username($auth['pdca_auth']).'<span>' : '<font color="#999">未设置</font>';
+		}
+		$this->roles = $roles;
+        $this->pages = '';
+        $this->display('pdca_auth');
+    }
+    
+	
+	
+	// @@@NODE-3###pdca_auth###指定PDCA评分人###
+    public function op_pdca_auth() {
+        if(isset($_POST['dosubmint'])){
+			
+			$info      = I('info');
+				
+			//判断数据是否存在
+			if(M('auth')->where(array('role_id'=>$info['role_id']))->find()){
+				$addinfo = M('auth')->data($info)->where(array('role_id'=>$info['role_id']))->save();
+			}else{
+				$addinfo = M('auth')->add($info);
+			}
+			
+			echo '<script>window.top.location.reload();</script>';
+			
+		
+		
+		}else{
+			
+			$id = I('id','');
+			if($id){
+				$this->role = M('role')->find($id);
+				$row  = M('auth')->where(array('role_id'=>$id))->find();
+				if($row){
+					$name = M('account')->find($row['pdca_auth']);
+					$row['pdca_auth_name'] = $name['nickname'];
+				}
+				$this->row = $row;
+			}
+			
+			
+			//整理关键字
+			$role = M('role')->GetField('id,role_name',true);
+			$user =  M('account')->select();
+			$key = array();
+			foreach($user as $k=>$v){
+				$text = $v['nickname'].'-'.$role[$v['roleid']];
+				$key[$k]['id']         = $v['id'];
+				$key[$k]['user_name']  = $v['nickname'];
+				$key[$k]['pinyin']     = strtopinyin($text);
+				$key[$k]['text']       = $text;
+				$key[$k]['role']       = $v['roleid'];
+				$key[$k]['role_name']  = $role[$v['roleid']];
+			}
+			
+			$this->userkey =  json_encode($key);	
+			
+			$this->roles   =  get_roles();
+			
+			$this->display('op_pdca_auth');
+		
+		}
+    }
     
     
 }

@@ -15,13 +15,7 @@
             	<h4>{$row.work_plan}</h4>
                 <span class="fr">完成时间：{$row.complete_time}</span>
                 <span class="fr">权重：{$row.weight}</span>
-                <?php 
-				if($pdca['status']==2){
-				?>
 				<span class="fr">考评人：{:username($pdca['eva_user_id'])}</span>
-				<?php 
-				}
-				?>
                 <span class="fr">考评得分：{$row.score}</span>
                 
                 <span class="fr" style="border:none;">编制时间：{$row.create_time|date='Y-m-d H:i:s',###}</span>

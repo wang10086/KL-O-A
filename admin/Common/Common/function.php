@@ -710,19 +710,19 @@ function tree_pad($level, $usespace = false) {
     }
 
     if ($level == 2) {
-        return '├';
+        return '<font color="#999">├</font>&nbsp;&nbsp;';
     }
 
     $tmpstr = '';
 
     for ($i=1; $i < $level - 1; $i++) {
         if ($usespace) {
-            $tmpstr .= '│&nbsp;&nbsp;';
+            $tmpstr .= '<font color="#999">│&nbsp;&nbsp;&nbsp;&nbsp;</font>';
         } else {
-            $tmpstr .= '│<span style="color:white;">─</span>';
+            $tmpstr .= '<font color="#999">│&nbsp;&nbsp;&nbsp;&nbsp;</font>';
         }
     }
-    $tmpstr .= '├';
+    $tmpstr .= '<font color="#999">├</font>&nbsp;&nbsp;';
     return $tmpstr;
 }
 

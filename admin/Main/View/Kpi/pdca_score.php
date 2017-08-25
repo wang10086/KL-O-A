@@ -33,13 +33,7 @@
                                     	<span class="rtxt" style="margin-top:-10px;">
                                         月份：{$pdca.month} &nbsp;&nbsp;&nbsp;&nbsp;
                                         被考评人：{:username($pdca['tab_user_id'])} &nbsp;&nbsp;&nbsp;&nbsp;
-                                        <?php 
-										if($pdca['status']==2){
-										?>
                                         考评人：{:username($pdca['eva_user_id'])} &nbsp;&nbsp;&nbsp;&nbsp;
-                                        <?php 
-										}
-										?>
                                         考评得分：{$pdca.total_score}
                                         </span> 
                                         <span class="totalscore">总分合计：<i id="fenshu">{$pdca.total_score}</i> 分</span>
