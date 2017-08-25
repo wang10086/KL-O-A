@@ -30,6 +30,7 @@ class FilesController extends BaseController {
 		$where['pid']          = $this->pid;
 		
 		//权限识别
+		/*
 		if (C('RBAC_SUPER_ADMIN') != cookie('userid')){
 			
 			$userid = cookie('userid');
@@ -38,6 +39,7 @@ class FilesController extends BaseController {
 			$where['_string'] = ' (auth_group like "%'.$roleid.'%")  OR ( auth_user like "%'.$userid.'")   OR ( est_user_id = '.$userid.') ';
 				
 		}
+		*/
 		
 		//获取上级目录级别
 		if($this->pid){
