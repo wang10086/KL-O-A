@@ -303,7 +303,7 @@ class KpiController extends BaseController {
 				
 				$pdca = M('pdca')->find($info['pdcaid']);
 				//判断是否自己保存
-				if(cookie('userid')==$pdca['tab_user_id'] || cookie('userid')==$pdca['eva_user_id']){
+				if(cookie('userid')==$pdca['tab_user_id'] || cookie('userid')==$pdca['eva_user_id'] || C('RBAC_SUPER_ADMIN')==cookie('username') || cookie('roleid')==10){
 					$addinfo = M('pdca_term')->data($info)->where(array('id'=>$editid))->save();
 				}else{
 					$this->error('您没有权限保存');
