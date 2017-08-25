@@ -22,9 +22,7 @@
                             <div class="box">
                                 <div class="box-header">
                                     <h3 class="box-title">{$_action_}</h3>
-                                    <div class="box-tools pull-right">
-                                         <a href="{:U('Rbac/addrole')}" class="btn btn-sm btn-danger"><i class="fa fa-plus"></i> 新增</a>
-                                    </div>
+                                    
                                 </div><!-- /.box-header -->
                                 <div class="box-body">
                                 <table class="table table-bordered dataTable fontmini" id="tablelist">
