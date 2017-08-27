@@ -82,6 +82,9 @@ class KpiController extends BaseController {
 		$kpr   = I('kpr');
 		$bkpr  = I('bkpr');
 		$month = I('month','');
+		$show  = I('show',0);
+		
+		if($show) $bkpr = cookie('userid');
 		
 		$db = M('pdca');
 		
@@ -106,6 +109,7 @@ class KpiController extends BaseController {
 			$lists[$k]['kaoping']      = $v['eva_user_id'] ? '<a href="'.U('Kpi/pdca',array('bkpr'=>$v['eva_user_id'])).'">'.username($v['eva_user_id']).'</a>' : '未评分'; 	
 		}
 		
+		$this->show     = $show;
 		$this->lists    = $lists; 
 		$this->pdcasta  = C('PDCA_STATUS');
 		

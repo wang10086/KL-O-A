@@ -33,7 +33,6 @@
                                     </div>
                                     <div class="box-tools pull-right">
                                     	 
-                                         
                                          <if condition="rolemenu(array('Kpi/addpdca'))">
                                          <a href="javascript:;" onClick="add_pdca()" class="btn btn-sm btn-danger" ><i class="fa fa-plus"></i> 新建PDCA</a>
                                          </if>
@@ -41,7 +40,13 @@
                                     </div>
                                 </div><!-- /.box-header -->
                                 <div class="box-body">
-                                
+                                	<div class="btn-group" id="catfont">
+                                        
+                                        <button onClick="window.location.href='{:U('Kpi/pdca',array('show'=>0))}'" class="btn <?php if($show==0){ echo 'btn-info';}else{ echo 'btn-default'; } ?>">全部PDCA</button>
+                                        <button onClick="window.location.href='{:U('Kpi/pdca',array('show'=>1))}'" class="btn <?php if($show==1){ echo 'btn-info';}else{ echo 'btn-default'; } ?>">我的PDCA</button>
+                                       
+                                    </div>
+                                    
                                 <table class="table table-bordered dataTable fontmini" id="tablelist" style="margin-top:10px;">
                                     <tr role="row" class="orders" >
                                         <th width="" class="sorting" data="month">月份</th>
