@@ -23,7 +23,7 @@
         </div>
         
         <div class="form-group box-float-3">
-            <label>权重</label>
+            <label>权重 <font color="#999">剩余权重分:</font><font color="#f30">{$shengyu}分</font></label>
             <input type="text" name="info[weight]" id="title" value="{$row.weight}"  class="form-control" />
         </div>
         

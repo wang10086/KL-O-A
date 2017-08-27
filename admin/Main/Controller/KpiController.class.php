@@ -355,6 +355,11 @@ class KpiController extends BaseController {
 			
 			if(!$info['work_plan'])  $this->error('计划工作项目标题未填写');
 			
+			
+			$sumweight  = M('pdca_term')->field('weight')->where(array('pdcaid'=>$info['pdcaid']))->sum('weight');
+			$shengyu  = 100-$sumweight;
+			if($info['weight']>$shengyu)   $this->error('月度总权重分不能大于100分');
+			
 			//执行保存
 			if($editid){
 				
@@ -391,6 +396,9 @@ class KpiController extends BaseController {
 			$pdcaid           = I('pdcaid',0);
 			$this->pdca       = M('pdca')->find($pdcaid);
 			$this->row        = M('pdca_term')->find($id);
+			$shengyu          = M('pdca_term')->field('weight')->where(array('pdcaid'=>$pdcaid))->sum('weight');
+			
+			$this->shengyu    = 100-$shengyu;
 			$this->display('editpdca');
 		}
 	}
@@ -470,13 +478,8 @@ class KpiController extends BaseController {
 				//获取上级领导ID
 				//$role = M('role')->find(cookie('roleid'));
 				
-				
 				$us  = M('account')->find($pdca['tab_user_id']);
 				$pfr = M('auth')->where(array('role_id'=>$us['roleid']))->find();
-			
-				
-				
-				
 				
 				$data = array();
 				$data['status']         = 1;
