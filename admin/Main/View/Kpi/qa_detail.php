@@ -13,7 +13,7 @@
         <div class="fromlist fromlistbrbr">
             <div class="formtexts">
             	<h4>{$row.title}</h4>
-                <span class="fr">月份：{$row.month}</span>
+                <span class="fr">执行月份：{$row.month}</span>
                 <span class="fr">类型：{$row.statusstr}</span>
                 <span class="fr">分数：{$row.score}</span>
 				<span class="fr">发布者：{:username($row['ins_user_id'])}</span>
