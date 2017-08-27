@@ -31,7 +31,7 @@
         </div>
         
         <div class="form-group box-float-3">
-            <label>奖惩分数</label>
+            <label>奖惩分数<font color="#999999">(整数不允许+-符号)</font></label>
             <input type="text" name="score" id="score" value="{$row.score}"  class="form-control" />
         </div>
         
