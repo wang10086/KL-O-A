@@ -19,17 +19,43 @@ $(document).ready(function(e) {
 	$('.inputdatetime').datetimepicker();
 	
 	
+	laydate.render({
+		elem: '.monthly',type: 'month',format: 'yyyyMM'
+	});
+		
 	
 });
 
-function ConfirmDel(url) {
+function ConfirmDel(url,msg) {
+	/*
 	if (confirm("真的要删除吗？")){
 		window.location.href=url;
 	}else{
 		return false;
 	}
-}
+	*/
+	
+	if(!msg){
+		var msg = '真的要删除吗？';	
+	}
+	
+	art.dialog({
+		title: '提示',
+		width:400,
+		height:100,
+		lock:true,
+		fixed: true,
+		content: '<span style="width:100%; text-align:center; font-size:18px;float:left; clear:both;">'+msg+'</span>',
+		ok: function () {
+			window.location.href=url;
+			//this.title('3秒后自动关闭').time(3);
+			return false;
+		},
+		cancelVal: '取消',
+		cancel: true //为true等价于function(){}
+	});
 
+}
 
 
 function opensearch(obj,w,h,title){

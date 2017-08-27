@@ -40,19 +40,19 @@
         
         <div class="fromlist">
             <div class="fromtitle">完成情况及未完成原因：</div>
-            <div class="formtexts">{$row.newstrategy}</div>
+            <div class="formtexts">{$row.complete}</div>
         </div>
         
         <div class="fromlist">
             <div class="fromtitle">新策略：</div>
-            <div class="formtexts">{$row.complete}</div>
+            <div class="formtexts">{$row.newstrategy}</div>
         </div>
-        <!--
+        
         <div class="fromlist">
-            <div class="fromtitle">新策略未完成情况：</div>
-            <div class="formtexts">{$row.nocomplete}</div>
+            <div class="fromtitle">考评人意见：</div>
+            <div class="formtexts">{$row.view}</div>
         </div>
-        -->
+        
         </form>
         
                              

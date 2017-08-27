@@ -20,9 +20,14 @@
             </div>
         </div>
         
-        <div class="form-group box-float-9">
+        <div class="form-group box-float-6">
             <label>接受奖惩人员<font color="#999999">（可通过姓名拼音快速检索）</font></label>
             <input type="text" name="info[rp_user_name]" value="{$row.rp_user_name}" id="rp_user_name"  class="form-control keywords" />
+        </div>
+        
+        <div class="form-group box-float-3">
+            <label>执行月份</label>
+            <input type="text" name="info[month]" id="month" value="{$row.month}"  class="form-control monthly" />
         </div>
         
         <div class="form-group box-float-3">

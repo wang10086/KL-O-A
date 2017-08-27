@@ -24,8 +24,10 @@
                                         <input type="hidden" name="c" value="Kpi">
                                         <input type="hidden" name="a" value="pdca">
                                         <input type="hidden" name="bkpr" id="bkpr" value="">
-                                    	<input type="text" name="month" class="form-control" placeholder="月份" style="width:100px; margin-right:10px;"/>
-                                    	<input type="text" class="form-control keywords" placeholder="被考评人"/>
+                                        <input type="hidden" name="kpr" id="kpr" value="">
+                                    	<input type="text" name="month" class="form-control monthly" placeholder="月份" style="width:100px; margin-right:10px;" />
+                                    	<input type="text" class="form-control keywords_bkpr" placeholder="被考评人"  style="width:180px; margin-right:10px;"/>
+                                        <input type="text" class="form-control keywords_kpr" placeholder="考评人"  style="width:180px;"/>
                                         <button class="btn btn-info btn-sm" style="float:left;"><i class="fa fa-search"></i></button>
                                         </form>
                                     </div>
@@ -141,7 +143,7 @@
 	$(document).ready(function(e) {
 		var keywords = <?php echo $userkey; ?>;
 		
-		$(".keywords").autocomplete(keywords, {
+		$(".keywords_bkpr").autocomplete(keywords, {
 			 matchContains: true,
 			 highlightItem: false,
 			 formatItem: function(row, i, max, term) {
@@ -152,6 +154,20 @@
 			 }
 		}).result(function(event, item) {
 		   $('#bkpr').val(item.id);
+		});
+		
+		
+		$(".keywords_kpr").autocomplete(keywords, {
+			 matchContains: true,
+			 highlightItem: false,
+			 formatItem: function(row, i, max, term) {
+				 return '<span style=" display:none">'+row.pinyin+'</span>'+row.text;
+			 },
+			 formatResult: function(row) {
+				 return row.user_name;
+			 }
+		}).result(function(event, item) {
+		   $('#kpr').val(item.id);
 		});
 			
 	})

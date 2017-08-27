@@ -3899,6 +3899,8 @@ th{ font-weight:normal;}
 .indexmarquee{ height:30px;}
 .indexmarquee a { margin: 0 30px 0 0; font-size:14px;text-decoration: none;}
 .indexmarquee a:hover { text-decoration: underline;}
-.kjss{ float:left; padding:8px 10px; width:600px;}
+.kjss{ float:left; padding:8px 10px; width:600px; position:relative;}
 .kjss input{ float:left; width:200px;}
 .kjss button{ height:34px; border-radius:0; margin-left:10px;}
+
+.biaoti{ font-size:16px; font-weight:normal; color:#333333; width:100%; border-bottom:1px solid #dedede; padding-bottom:15px; float:left; clear:both;}

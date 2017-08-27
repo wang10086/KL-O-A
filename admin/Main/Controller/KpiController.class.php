@@ -15,13 +15,8 @@ class KpiController extends BaseController {
 	
 	// @@@NODE-3###pdcaresult###考评结果###
     public function pdcaresult(){
-        $this->title('PDCA考评结果');
+        $this->title('绩效考评结果');
 		
-		$this->type = intval(I('type',2));
-		
-		if($this->type < 1 || $this->type >2){
-			$this->error('数据不存在');	
-		}
 		
 		$kpr   = I('kpr');
 		$bkpr  = I('bkpr');
@@ -29,23 +24,15 @@ class KpiController extends BaseController {
 		
 		$db = M('pdca');
 		
-		$where = '';
-		$where .= '`status` = '.$this->type;
+		$where = '1=1';
 		if($month) $where .= ' AND `month` = '.trim($month);
 		if($kpr)   $where .= ' AND `eva_user_id` = '.$kpr; 
 		if($bkpr)  $where .= ' AND `tab_user_id` = '.$bkpr; 
 		
-		/*
-		$where['status'] = $this->type;
-		if($kpr)  $where['eva_user_id']    = $kpr;
-		if($bkpr) $where['tab_user_id']    = $bkpr;
-		*/
-		
 		if(C('RBAC_SUPER_ADMIN')==cookie('username') || cookie('roleid')==10){}else{
-			$where .= ' AND (`tab_user_id` in ('.Rolerelation(cookie('roleid')).') || `eva_user_id` = '.cookie('userid').')'; //['tab_user_id'] = array('in',Rolerelation(cookie('roleid')));
+			$where .= ' AND (`tab_user_id` in ('.Rolerelation(cookie('roleid')).') || `eva_user_id` = '.cookie('userid').')';
 		}
 		
-		//P($where);
 		
 		//分页
 		$pagecount = $db->where($where)->count();
@@ -54,8 +41,10 @@ class KpiController extends BaseController {
 
         $lists = $db->where($where)->limit($page->firstRow . ',' . $page->listRows)->order($this->orders('month'))->select();
 		foreach($lists as $k=>$v){
-			$lists[$k]['total_score']  = $v['status']!=2 ? '<font color="#999">未评分</font>':$v['total_score']; 	
-			$lists[$k]['kaoping']      = $v['eva_user_id'] ? '<a href="'.U('Kpi/pdcaresult',array('kpr'=>$v['eva_user_id'],'type'=>$this->type)).'">'.username($v['eva_user_id']).'</a>' : '未评分'; 
+			$lists[$k]['total_score_show']  = $v['total_score'] ? $v['total_score'] : '<font color="#999999">未评分</font>'; 	
+			$lists[$k]['kaoping']           = $v['eva_user_id'] ? '<a href="'.U('Kpi/pdcaresult',array('kpr'=>$v['eva_user_id'])).'">'.username($v['eva_user_id']).'</a>' : ''; 
+			$lists[$k]['total_kpi_score']   = '<font color="#999999">待完善</font>';
+			$lists[$k]['total_qa_score']    = $v['total_qa_score']!=0 ? $v['total_qa_score'] : '<font color="#999999">无加扣分</font>';
 		}
 		
 		$this->lists    = $lists; 
@@ -82,6 +71,7 @@ class KpiController extends BaseController {
 		$this->userkey =  json_encode($key);	
 		
 		
+		$this->month = $month;
 		$this->display('pdcaresult');
     }
 	
@@ -202,7 +192,7 @@ class KpiController extends BaseController {
 		$id = I('id',0);
 		
 		$pdca = M('pdca')->find($id);
-		$pdca['total_score']  = $pdca['status']!=2 ? '<font color="#999">未评分</font>':$pdca['total_score'].'分'; 	
+		$pdca['total_score']  = $pdca['total_score'] ? $pdca['total_score'].'分' : '<font color="#999">未评分</font>'; 	
 		$pdca['kaoping']      = $pdca['eva_user_id'] ? username($pdca['eva_user_id']) : '未评分'; 	
 		if($id && $pdca){
 			$where = array();
@@ -289,6 +279,70 @@ class KpiController extends BaseController {
 		}
 	}
 	
+	
+	// @@@NODE-3###unitscore###单项PDCA评分###
+	public function unitscore(){
+		
+		$id = I('id',0);
+		$team = M('pdca_term')->find($id);
+		//查看PDCA状态
+		$pdca = M('pdca')->find($team['pdcaid']);
+		
+		//判断是否有权限评分
+		if(!$id || !$pdca || cookie('userid')!=$pdca['eva_user_id']){
+			 $this->error('您没有权限评分');		
+		}
+			
+		if(isset($_POST['dosubmint'])){
+			
+			//保存分数
+			$info = I('info');
+			M('pdca_term')->data($info)->where(array('id'=>$id))->save();
+			
+			//总分
+			$total = M('pdca_term')->where(array('pdcaid'=>$team['pdcaid']))->sum('score');
+			
+			
+			$data = array();
+			$data['eva_user_id']      = cookie('userid');
+			$data['eva_time'] 		  = time();
+			$data['total_score']      = $total;
+			
+			//判断是否全部打分完毕
+			$isall = M('pdca_term')->where(array('pdcaid'=>$team['pdcaid'],'score'=>0))->find();
+			if($isall){
+				$data['status']  		  = 1;
+			}else{
+				$data['status']  		  = 2;
+				//发送消息
+				$uid     = cookie('userid');
+				$title   = '您的['.$pdca['month'].'PDCA]已评分';
+				$content = '';
+				$url     = U('Kpi/pdcainfo',array('id'=>$team['pdcaid']));
+				$user    = '['.$pdca['tab_user_id'].']';
+				send_msg($uid,$title,$content,$url,$user,'');
+			}
+			
+			$issave = M('pdca')->data($data)->where(array('id'=>$team['pdcaid']))->save();
+			
+			echo '<script>window.top.location.reload();</script>';
+		
+		}else{
+		
+		
+			if($id && $team){
+				
+				$this->pdca  = $pdca;
+				$this->team  = $team;
+				$this->display('unitscore');
+				
+			}else{
+				$this->error('PDCA不存在');	
+			}
+		
+		}
+		
+	}
     
 	
 	// @@@NODE-3###editpdca###编辑PDCA计划###
@@ -298,6 +352,9 @@ class KpiController extends BaseController {
 			
 			$editid    = I('editid');
 			$info      = I('info');
+			
+			if(!$info['work_plan'])  $this->error('计划工作项目标题未填写');
+			
 			//执行保存
 			if($editid){
 				
@@ -354,6 +411,7 @@ class KpiController extends BaseController {
 			$row['complete']    = $row['complete'] ? nl2br($row['complete']) : '无';
 			$row['nocomplete']  = $row['nocomplete'] ? nl2br($row['nocomplete']) : '无';
 			$row['newstrategy'] = $row['newstrategy'] ? nl2br($row['newstrategy']) : '无';
+			$row['view']        = $row['view'] ? nl2br($row['view']) : '无';
 			$row['score']       = $row['score'] ? $row['score'] : '未评分';
 			
 			$this->row = $row;
@@ -429,14 +487,14 @@ class KpiController extends BaseController {
 				if($apply){
 					
 					//向审批人发送消息
-					if($role['pid']){
+					if($pdca['eva_user_id']){
 						$uid     = cookie('userid');
 						$title   = '['.$pdca['month'].'PDCA],已编制完毕，请您给予评分';
 						$content = $pdca['title'];
-						$url     = U('Kpi/score',array('pdcaid'=>$pdcaid));
+						$url     = U('Kpi/pdcainfo',array('id'=>$pdcaid));
 						//$roleid  = '['.$role['pid'].']';
 						$user    = '['.$pdca['eva_user_id'].']';
-						send_msg($uid,$title,$content,$url,$user);
+						$aaa = send_msg($uid,$title,$content,$url,$user);
 					}
 					
 					$this->success('已提交申请！');
@@ -467,15 +525,21 @@ class KpiController extends BaseController {
 		 
 		$db = M('qaqc');
 		
-		$this->type = intval(I('type',0));
+		$this->type   = intval(I('type',2));
+		$this->uid    = I('uid',0);
+		$this->month  = I('month','');
+		$this->user   = I('user','');
 		
-		if($this->type < 0 || $this->type >1){
+		if($this->type < 0 || $this->type >2){
 			$this->error('数据不存在');	
 		}
 		
 		
 		$where = array();
-		$where['status'] = $this->type;
+		if($this->type!=2) $where['status'] = $this->type;
+		if($this->uid)     $where['rp_user_id'] = $this->uid;
+		if($this->month)   $where['month'] = $this->month;
+		if($this->user)    $where['rp_user_name'] = array('like','%'.$this->user.'%');
 		
 		//分页
 		$pagecount = $db->where($where)->count();
@@ -484,8 +548,8 @@ class KpiController extends BaseController {
 
         $lists = $db->where($where)->limit($page->firstRow . ',' . $page->listRows)->order($this->orders('id'))->select();
 		foreach($lists as $k=>$v){
-			$lists[$k]['score']      = $v['status'] ? $v['red_score']:$v['inc_score']; 	
-			$lists[$k]['statusstr']  = $v['status'] ? '处罚':'奖励'; 	
+			$lists[$k]['score']      = $v['status'] ? '-'.$v['red_score']:'+'.$v['inc_score']; 	
+			$lists[$k]['statusstr']  = $v['status'] ? '<span class="red">处罚</span>':'<span class="green">奖励</span>'; 	
 		}
 		
 		$this->lists    = $lists; 
@@ -511,6 +575,10 @@ class KpiController extends BaseController {
 				$info['red_score'] = $score;
 			}
 			
+			if(!$info['rp_user_id'])  $this->error('接受奖惩人员不存在');	
+			if(!$info['month'])       $this->error('请输入执行月份');	
+			if(!$score)               $this->error('请填写奖惩分数');	
+			
 			//执行保存
 			if($editid){
 				$addinfo = M('qaqc')->data($info)->where(array('id'=>$editid))->save();
@@ -528,6 +596,10 @@ class KpiController extends BaseController {
 				$source_id   = $addinfo;
 				send_notice($title,$content,$url,$source,$source_id);
 			}
+			
+			
+			//修正绩效评分
+			qa_score_num($info['rp_user_id'],$info['month']);
 			
 			echo '<script>window.top.location.reload();</script>';
 			
@@ -566,4 +638,62 @@ class KpiController extends BaseController {
 		}
 	}
 	
+	
+	// @@@NODE-3###qadetail###查看品质检查详情###
+	public function qadetail(){
+		
+		$id = I('id','');
+		if($id){
+			$row = M('qaqc')->find($id);
+			
+			$row['reason']     = $row['reason'] ? nl2br($row['reason']) : '无';
+			$row['joint']      = $row['joint'] ? nl2br($row['joint']) : '无';
+			$row['score']      = $row['status'] ? '-'.$row['red_score']:'+'.$row['inc_score']; 	
+			$row['statusstr']  = $row['status'] ? '<span class="red">处罚</span>':'<span class="green">奖励</span>';
+			
+			$this->row = $row;
+			
+			$this->pdca       = M('pdca')->find($row['pdcaid']);
+			
+		}else{
+			echo '<script>art_show_msgd(\'品质检查信息不存在\');</script>';	
+		}
+		$this->display('qa_detail');
+		
+	}
+	
+	
+	// @@@NODE-3###revoke###撤销品质检查信息###
+	public function revoke(){
+		$id = I('id','');
+		
+		//获取品质检查信息
+		$qa = M('qaqc')->find($id);
+		
+		//撤销评分
+		if($id && $qa){
+			
+			//删除评分
+			$iddel = M('qaqc')->delete($id);
+			if($iddel){
+				//撤销公告
+				$where = array();
+				$where['source']     = 1;
+				$where['source_id']  = $id;
+				 M('notice')->where($where)->delete();
+				
+				//修正评分
+				qa_score_num($qa['rp_user_id'],$qa['month']);
+				
+				$this->success('撤销成功！');
+				
+			}else{
+				$this->error('撤销失败');	
+			}
+		}else{
+			$this->error('品质检查信息不存在');		
+		}
+		
+			
+	}
 }

@@ -54,6 +54,15 @@
                                                 <th width="100">权重分</th>
                                                 <th width="100">考评得分</th>
                                                 <?php 
+												if(cookie('userid')==$pdca['eva_user_id']){
+												?>
+                                                <if condition="rolemenu(array('Kpi/unitscore'))">
+                                                <th width="50" class="taskOptions">评分</th>
+                                                </if>
+                                                <?php 
+												}
+												?>
+                                                <?php 
 												if(cookie('userid')==$pdca['tab_user_id'] || cookie('userid')==$pdca['eva_user_id']){
 												?>
                                                 <if condition="rolemenu(array('Kpi/editpdca'))">
@@ -72,6 +81,17 @@
                                                 <td><if condition="$row['create_time']">{$row.create_time|date='m-d H:i',###}</if></td>
                                                 <td>{$row.weight}</td>
                                                 <td>{$row.score}</td>
+                                                <?php 
+												if(cookie('userid')==$pdca['eva_user_id']){
+												?>
+                                                <if condition="rolemenu(array('Kpi/unitscore'))">
+                                                <td class="taskOptions">
+                                                <a href="javascript:;" onClick="unitscore({$row.id})" title="评分" class="btn btn-success btn-smsm"><i class="fa fa-star"></i></a>
+                                                </td>
+                                                </if>
+                                                <?php 
+												}
+												?>
                                                 <?php 
 												if(cookie('userid')==$pdca['tab_user_id'] || cookie('userid')==$pdca['eva_user_id']){
 												?>
@@ -103,7 +123,7 @@
                                 </div><!-- /.box-body -->
                             </div><!-- /.box -->
                             <?php 
-							if($pdca['status']==0 && cookie('userid')==$pdca['tab_user_id']){
+							if($pdca['status']!=2 && cookie('userid')==$pdca['tab_user_id']){
 							?>
                             <form method="post" action="{:U('Kpi/applyscore')}" name="myform" id="myform">
                 			<input type="hidden" name="dosubmint" value="1">
@@ -136,6 +156,25 @@
 			title: '新建PDCA项目',
 			width:1000,
 			height:'90%',
+			okValue: '提交',
+			fixed: true,
+			ok: function () {
+				this.iframe.contentWindow.gosubmint();
+				return false;
+			},
+			cancelValue:'取消',
+			cancel: function () {
+			}
+		});	
+	}
+	
+	//单项评分
+	function unitscore(id) {
+		art.dialog.open('index.php?m=Main&c=Kpi&a=unitscore&id='+id,{
+			lock:true,
+			title: 'PDCA项目评分',
+			width:700,
+			height:300,
 			okValue: '提交',
 			fixed: true,
 			ok: function () {

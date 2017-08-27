@@ -25,11 +25,14 @@
                                         <input type="hidden" name="a" value="pdcaresult">
                                         <input type="hidden" name="type"  value="{$type}">
                                         <input type="hidden" name="bkpr" id="bkpr" value="">
-                                    	<input type="text" name="month" class="form-control" placeholder="月份" style="width:100px; margin-right:10px;"/>
-                                    	<input type="text" class="form-control keywords" placeholder="被考评人"/>
+                                        <input type="hidden" name="kpr" id="kpr" value="">
+                                    	<input type="text" name="month" class="form-control monthly" placeholder="月份" style="width:100px; margin-right:10px;"/>
+                                    	<input type="text" class="form-control keywords_bkpr" placeholder="被考评人"  style="width:180px; margin-right:10px;"/>
+                                        <input type="text" class="form-control keywords_kpr" placeholder="考评人"  style="width:180px;"/>
                                         <button class="btn btn-info btn-sm" style="float:left;"><i class="fa fa-search"></i></button>
                                         </form>
                                     </div>
+                                    <!--
                                     <div class="box-tools pull-right">
                                     	
                                          <div class="btn-group" id="catfont" style="margin-top:-3px;">
@@ -38,6 +41,7 @@
                                            
                                         </div>
                                     </div>
+                                    -->
                                 </div><!-- /.box-header -->
                                 <div class="box-body">
                                 
@@ -45,47 +49,35 @@
                                     
                                     <table class="table table-bordered dataTable fontmini" id="tablelist" style="margin-top:10px;">
                                         <tr role="row" class="orders" >
-                                            <th class="sorting" width="120" data="month">月份</th>
-                                            <th width="" class="sorting" data="tab_user_id">被考评人</th>
-                                            <th width="" class="sorting" data="eva_user_id">考评人</th>
-                                            <th width="" class="sorting" data="total_score">考评得分</th>
-                                            <th width="" class="sorting" data="status">状态</th>
-                                            <!--
-                                            <if condition="rolemenu(array('Kpi/expdca'))">
-                                            <th width="50" class="taskOptions">导出</th>
-                                            </if>
-                                            -->
-                                            <if condition="rolemenu(array('Kpi/score'))">
-                                            <th width="50" class="taskOptions">评分</th>
-                                            </if>
-                                            
+                                            <th class="sorting" width="14.28%" data="month">月份</th>
+                                            <th width="14.28%" class="sorting" data="tab_user_id">被考评人</th>
+                                            <th width="14.28%" class="sorting" data="eva_user_id">考评人</th>
+                                            <th width="14.28%" class="sorting" data="total_score">PDCA得分</th>
+                                            <th width="14.28%" class="sorting" data="total_qa_score">品质检查得分</th>
+                                            <th width="14.28%" class="sorting" data="total_kpi_score">KPI得分</th>
+                                            <!-- <th width="14.28%" class="sorting" data="sum_score">合计总分</th> -->
                                         </tr>
                                         <foreach name="lists" item="row"> 
                                         <tr>
-                                            <td><a href="{:U('Kpi/pdcainfo',array('id'=>$row['id']))}" >{$row.month}</a></td>
-                                            <td><a href="{:U('Kpi/pdcaresult',array('bkpr'=>$row['tab_user_id'],'type'=>$type))}">{:username($row['tab_user_id'])}</a></td>
+                                            <td>{$row.month}</a></td>
+                                            <td><a href="{:U('Kpi/pdcaresult',array('bkpr'=>$row['tab_user_id']))}">{:username($row['tab_user_id'])}</a></td>
                                             <td>{$row.kaoping}</td>
-                                            <td>{$row.total_score}</td>
-                                            <td>{$pdcasta.$row[status]}</td>
-                                            
-                                            <!--
-                                            <if condition="rolemenu(array('Kpi/expdca'))">
-                                            <td class="taskOptions">
-                                            <a href="{:U('Kpi/expdca',array('id'=>$row['id']))}" title="导出" class="btn btn-success btn-smsm"><i class="fa fa-arrow-circle-down"></i></a>
+                                            <td>
+                                            {$row.total_score_show} 
+                                            &nbsp;&nbsp;
+                                            <?php if($row['total_score']!=0){ ?>
+                                            <a href="{:U('Kpi/pdcainfo',array('id'=>$row['id']))}" style="float:right;">[详细]</a>
+                                            <?php } ?>
                                             </td>
-                                            </if>
-                                            -->
-                                            <if condition="rolemenu(array('Kpi/score'))">
-                                            <td class="taskOptions">
-                                            <?php 
-											if(cookie('userid')==$row['eva_user_id']){
-											?>
-                                            <a href="{:U('Kpi/score',array('pdcaid'=>$row['id']))}" title="评分" class="btn btn-success btn-smsm"><i class="fa fa-check-circle"></i></a>
-                                            <?php 
-											}
-											?>
+                                            <td>
+                                            {$row.total_qa_score}
+                                            &nbsp;&nbsp;
+                                            <?php if($row['total_qa_score']!=0){ ?>
+                                            <a href="{:U('Kpi/qa',array('uid'=>$row['tab_user_id'],'type'=>2,'month'=>$row['month']))}" style="float:right;">[详细]</a>
+                                            <?php } ?>
                                             </td>
-                                            </if>
+                                            <td>{$row.total_kpi_score}</td>
+                                            <!-- <td>{$row.sum_score}</td> -->
                                         </tr>
                                         </foreach>					
                                     </table>
@@ -130,7 +122,7 @@
 	$(document).ready(function(e) {
 		var keywords = <?php echo $userkey; ?>;
 		
-		$(".keywords").autocomplete(keywords, {
+		$(".keywords_bkpr").autocomplete(keywords, {
 			 matchContains: true,
 			 highlightItem: false,
 			 formatItem: function(row, i, max, term) {
@@ -141,6 +133,20 @@
 			 }
 		}).result(function(event, item) {
 		   $('#bkpr').val(item.id);
+		});
+		
+		
+		$(".keywords_kpr").autocomplete(keywords, {
+			 matchContains: true,
+			 highlightItem: false,
+			 formatItem: function(row, i, max, term) {
+				 return '<span style=" display:none">'+row.pinyin+'</span>'+row.text;
+			 },
+			 formatResult: function(row) {
+				 return row.user_name;
+			 }
+		}).result(function(event, item) {
+		   $('#kpr').val(item.id);
 		});
 			
 	})

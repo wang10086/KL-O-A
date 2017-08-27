@@ -16,7 +16,6 @@
         <!-- ArtDialog -->
         <link href="__HTML__/css/artDialog.css" rel="stylesheet" type="text/css"  />
         <link href="__HTML__/css/artdialog/ui-dialog.css" rel="stylesheet" type="text/css" />
-        
         <link href="__HTML__/comm/liMarquee/liMarquee.css" rel="stylesheet" type="text/css"  />
         <!-- Theme style -->
         <link href="__HTML__/css/py.css?v=1.0.5" rel="stylesheet" type="text/css" />
@@ -47,7 +46,6 @@
         <!-- iCheck -->
         <script src="__HTML__/js/plugins/iCheck/icheck.min.js" type="text/javascript"></script>
         <script src="__HTML__/comm/liMarquee/jquery.liMarquee.js" type="text/javascript"></script>
-        
         <script src="__HTML__/comm/laydate/laydate.js"></script>
         <script src="__HTML__/comm/jquery.autocomplete.min.js"></script>
 		 <script type="text/javascript">

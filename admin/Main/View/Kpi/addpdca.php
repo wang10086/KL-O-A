@@ -12,7 +12,7 @@
         <input type="hidden" name="editid" value="{$row.id}">
         <div class="form-group box-float-6">
             <label>月份</label>
-            <input type="text" name="info[month]" id="month" value="<?php if($row){ echo $row['month']; }else{ echo date('Ym');} ?>"  class="form-control" />
+            <input type="text" name="info[month]" id="month" value="<?php if($row){ echo $row['month']; }else{ echo date('Ym');} ?>"  class="form-control monthly" />
         </div>
         <div class="form-group box-float-6">
             <label>编制人</label>

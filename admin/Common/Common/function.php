@@ -1397,6 +1397,66 @@ function strtopinyin($str){
 }
 
 
+//创建PDCA
+function addpdca($user,$month){
+	
+	if($user && $month){
+		//判断PDCA是否存在、
+		$pdca = M('pdca')->where(array('tab_user_id'=>$user,'month'=>$month))->find();
+		
+		//获取用户信息
+		$us   = M('account')->find($user);
+		if(!$pdca){
+			//获取上级评分人信息
+			$pfr  = M('auth')->where(array('role_id'=>$us['roleid']))->find();
+			$info = array();
+			$info['month']        = $month;
+			$info['eva_user_id']  = $pfr ? $pfr['pdca_auth'] : 0;
+			$info['tab_user_id']  = $user;
+			$info['tab_time']     = time();
+			$pdcaid = M('pdca')->add($info);
+		}else{
+			$pdcaid = $pdca['id'];	
+		}
+	}else{
+		$pdcaid = 0;	
+	}
+	
+	return $pdcaid;
+}
+
+
+function qa_score_num($user,$month){
+	
+	if($user && $month){
+	
+		$pdcaid = addpdca($user,$month);
+		
+		$where = array();
+		$where['rp_user_id'] = $user;
+		$where['month']      = $month;
+		//获取加分情况
+		$inc_score = M('qaqc')->field('inc_score')->where($where)->sum('inc_score');
+		
+		//获取扣分情况
+		$red_score = M('qaqc')->field('red_score')->where($where)->sum('red_score');
+		
+		//总分
+		$sum = $inc_score - $red_score;
+		
+		$data = array();
+		$data['total_qa_score']  = $sum;
+		M('pdca')->data($data)->where(array('id'=>$pdcaid))->save();
+		
+		return true;	
+		
+	}else{
+		return false;	
+	}
+	
+	
+}
+
 ?>
 
 
