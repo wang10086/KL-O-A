@@ -18,7 +18,7 @@
         <link href="__HTML__/css/artdialog/ui-dialog.css" rel="stylesheet" type="text/css" />
         <link href="__HTML__/comm/liMarquee/liMarquee.css" rel="stylesheet" type="text/css"  />
         <!-- Theme style -->
-        <link href="__HTML__/css/py.css?v=1.0.5" rel="stylesheet" type="text/css" />
+        <link href="__HTML__/css/py.css?v=1.0.6" rel="stylesheet" type="text/css" />
         <link href="__HTML__/comm/jquery.autocomplete.css" rel="stylesheet" type="text/css" />
         <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
         <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -55,7 +55,7 @@
         <!-- AdminLTE App -->
         <?php echo $__additional_js__; ?>
         <?php echo $__additional_jscode__ ?>
-        <script src="__HTML__/js/public.js" type="text/javascript"></script>
+        <script src="__HTML__/js/public.js?v=1.0.6" type="text/javascript"></script>
         <script src="__HTML__/js/py/app.js" type="text/javascript"></script>
         <script src="__HTML__/js/artDialog.js"></script> 
         <script src="__HTML__/js/iframeTools.js"></script> 
