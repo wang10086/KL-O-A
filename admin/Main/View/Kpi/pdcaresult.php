@@ -65,9 +65,7 @@
                                             <td>
                                             {$row.total_score_show} 
                                             &nbsp;&nbsp;
-                                            <?php if($row['total_score']!=0){ ?>
                                             <a href="{:U('Kpi/pdcainfo',array('id'=>$row['id']))}" style="float:right;">[详细]</a>
-                                            <?php } ?>
                                             </td>
                                             <td>
                                             {$row.show_qa_score}
