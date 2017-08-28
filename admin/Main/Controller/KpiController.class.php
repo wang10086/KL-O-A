@@ -192,7 +192,7 @@ class KpiController extends BaseController {
 			}else{
 				//判断月份是否存在
 				if(M('pdca')->where(array('month'=>$info['month'],'tab_user_id'=>cookie('userid')))->find()){
-					$this->error('改月已存在PDCA，您可以直接完善PDCA项目');	
+					$this->error('该月已存在PDCA，您可以直接完善PDCA项目');	
 				}else{
 					
 					//获取评分人信息
@@ -389,9 +389,9 @@ class KpiController extends BaseController {
 			$info      = I('info');
 			
 			if(!$info['work_plan'])  $this->error('计划工作项目标题未填写');
-			
-			
-			
+			if(!$info['weight'])     $this->error('权重未填写');
+			if(!$info['standard'])   $this->error('细项及标准未填写');
+			if(!$info['complete'])   $this->error('完成情况及未完成原因未填写');
 			
 			
 			//执行保存

@@ -13,7 +13,7 @@
         <input type="hidden" name="info[pdcaid]" value="{$pdca.id}">
         <input type="hidden" name="info[month]" value="{$pdca.month}">
         <div class="form-group box-float-6">
-            <label>计划工作项目</label>
+            <label>计划工作项目 <font color="#FF3300">[必填]</font></label>
             <input type="text" name="info[work_plan]" id="work_plan" value="{$row.work_plan}"  class="form-control" />
         </div>
         
@@ -23,12 +23,12 @@
         </div>
         
         <div class="form-group box-float-3">
-            <label>权重 <font color="#999">剩余权重分:</font><font color="#f30">{$shengyu}分</font></label>
+            <label>权重 <font color="#FF3300">[必填]</font> <font color="#999">剩余权重分:</font><font color="#f30">{$shengyu}分</font></label>
             <input type="text" name="info[weight]" id="title" value="{$row.weight}"  class="form-control" />
         </div>
         
         <div class="form-group box-float-12">
-            <label>细项及标准</label> 
+            <label>细项及标准 <font color="#FF3300">[必填]</font></label> 
             <textarea class="form-control" style="height:90px;" name="info[standard]">{$row.standard}</textarea>
         </div>
         
@@ -43,7 +43,7 @@
         </div>
         
         <div class="form-group box-float-12">
-            <label>完成情况及未完成原因</label>
+            <label>完成情况及未完成原因 <font color="#FF3300">[必填]</font></label>
             <textarea class="form-control" style="height:90px;" name="info[complete]">{$row.complete}</textarea>
         </div>
         
