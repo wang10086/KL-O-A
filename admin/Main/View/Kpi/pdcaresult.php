@@ -28,7 +28,7 @@
                                         <input type="hidden" name="kpr" id="kpr" value="">
                                     	<input type="text" name="month" class="form-control monthly" placeholder="月份" style="width:100px; margin-right:10px;"/>
                                     	<input type="text" class="form-control keywords_bkpr" placeholder="被考评人"  style="width:180px; margin-right:10px;"/>
-                                        <input type="text" class="form-control keywords_kpr" placeholder="考评人"  style="width:180px;"/>
+                                        <!-- <input type="text" class="form-control keywords_kpr" placeholder="考评人"  style="width:180px;"/> -->
                                         <button class="btn btn-info btn-sm" style="float:left;"><i class="fa fa-search"></i></button>
                                         </form>
                                     </div>
@@ -49,19 +49,19 @@
                                     
                                     <table class="table table-bordered dataTable fontmini" id="tablelist" style="margin-top:10px;">
                                         <tr role="row" class="orders" >
-                                            <th class="sorting" width="14.28%" data="month">月份</th>
-                                            <th width="14.28%" class="sorting" data="tab_user_id">被考评人</th>
-                                            <th width="14.28%" class="sorting" data="eva_user_id">考评人</th>
-                                            <th width="14.28%" class="sorting" data="total_score">PDCA得分</th>
-                                            <th width="14.28%" class="sorting" data="total_qa_score">品质检查得分</th>
-                                            <th width="14.28%" class="sorting" data="total_kpi_score">KPI得分</th>
-                                            <!-- <th width="14.28%" class="sorting" data="sum_score">合计总分</th> -->
+                                            <th class="sorting" width="20%" data="month">月份</th>
+                                            <th width="20%" class="sorting" data="tab_user_id">被考评人</th>
+                                            <!-- <th width="20%" class="sorting" data="eva_user_id">考评人</th> -->
+                                            <th width="20%" class="sorting" data="total_score">PDCA加减分</th>
+                                            <th width="20%" class="sorting" data="total_qa_score">品质检查加减分</th>
+                                            <th width="20%" class="sorting" data="total_kpi_score">KPI加减分</th>
+                                            <!-- <th width="20%" class="sorting" data="sum_score">合计总分</th> -->
                                         </tr>
                                         <foreach name="lists" item="row"> 
                                         <tr>
                                             <td>{$row.month}</a></td>
                                             <td><a href="{:U('Kpi/pdcaresult',array('bkpr'=>$row['tab_user_id']))}">{:username($row['tab_user_id'])}</a></td>
-                                            <td>{$row.kaoping}</td>
+                                            <!--<td>{$row.kaoping}</td>-->
                                             <td>
                                             {$row.total_score_show} 
                                             &nbsp;&nbsp;

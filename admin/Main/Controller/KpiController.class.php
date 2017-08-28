@@ -42,7 +42,8 @@ class KpiController extends BaseController {
         $lists = $db->where($where)->limit($page->firstRow . ',' . $page->listRows)->order($this->orders('month'))->select();
 		foreach($lists as $k=>$v){
 			$lists[$k]['total_score_show']  = $v['total_score'] ? $v['total_score'] : '<font color="#999999">未评分</font>'; 	
-			$lists[$k]['kaoping']           = $v['eva_user_id'] ? '<a href="'.U('Kpi/pdcaresult',array('kpr'=>$v['eva_user_id'])).'">'.username($v['eva_user_id']).'</a>' : ''; 
+			//$lists[$k]['kaoping']           = $v['eva_user_id'] ? '<a href="'.U('Kpi/pdcaresult',array('kpr'=>$v['eva_user_id'])).'">'.username($v['eva_user_id']).'</a>' : ''; 
+			$lists[$k]['kaoping']           = $v['eva_user_id'] ? username($v['eva_user_id']) : ''; 
 			$lists[$k]['total_kpi_score']   = '<font color="#999999">待完善</font>';
 			$lists[$k]['total_qa_score']    = $v['total_qa_score']!=0 ? $v['total_qa_score'] : '<font color="#999999">无加扣分</font>';
 		}
