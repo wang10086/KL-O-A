@@ -72,7 +72,7 @@
                                         <!-- <td><a href="{:U('Kpi/pdcainfo',array('id'=>$row['id']))}" >{$row.title}</a></td> -->
                                         <td><a href="{:U('Kpi/pdca',array('bkpr'=>$row['tab_user_id']))}">{:username($row['tab_user_id'])}</a></td>
                                         <td>{$row.kaoping}</td>
-                                        <td>{$row.total_score}</td>
+                                        <td>{$row.total_score_show}</td>
                                         <td>{$pdcasta.$row[status]}</td>
                                         <if condition="rolemenu(array('Kpi/pdcainfo'))">
                                         <td class="taskOptions">

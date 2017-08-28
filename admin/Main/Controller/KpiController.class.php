@@ -41,7 +41,19 @@ class KpiController extends BaseController {
 
         $lists = $db->where($where)->limit($page->firstRow . ',' . $page->listRows)->order($this->orders('month'))->select();
 		foreach($lists as $k=>$v){
-			$lists[$k]['total_score_show']  = $v['total_score'] ? $v['total_score'] : '<font color="#999999">未评分</font>'; 	
+			
+			if($v['total_score']==0){
+				$totalshow = '<font color="#999">未评分</font>';	
+			}else{
+				$yu = 100-$v['total_score'];
+				if($yu){
+					$totalshow = '-'.$yu;	
+				}else{
+					$totalshow = '<font color="#999">无加扣分</font>';
+				}
+			}
+			
+			$lists[$k]['total_score_show']  = $totalshow; 	
 			//$lists[$k]['kaoping']           = $v['eva_user_id'] ? '<a href="'.U('Kpi/pdcaresult',array('kpr'=>$v['eva_user_id'])).'">'.username($v['eva_user_id']).'</a>' : ''; 
 			$lists[$k]['kaoping']           = $v['eva_user_id'] ? username($v['eva_user_id']) : ''; 
 			$lists[$k]['total_kpi_score']   = '<font color="#999999">待完善</font>';
@@ -98,6 +110,7 @@ class KpiController extends BaseController {
 			$where .= ' AND (`tab_user_id` in ('.Rolerelation(cookie('roleid')).') || `eva_user_id` = '.cookie('userid').')';
 		}
 		
+		//P($where);
 		
 		//分页
 		$pagecount = $db->where($where)->count();
@@ -106,7 +119,18 @@ class KpiController extends BaseController {
 
         $lists = $db->where($where)->limit($page->firstRow . ',' . $page->listRows)->order($this->orders('month'))->select();
 		foreach($lists as $k=>$v){
-			$lists[$k]['total_score']  = $v['status']!=2 ? '<font color="#999">未评分</font>':$v['total_score']; 	
+			if($v['total_score']==0){
+				$totalshow = '<font color="#999">未评分</font>';	
+			}else{
+				$yu = 100-$v['total_score'];
+				if($yu){
+					$totalshow = '-'.$yu;	
+				}else{
+					$totalshow = '<font color="#999">无加扣分</font>';
+				}
+			}
+			
+			$lists[$k]['total_score_show']  = $totalshow; 	
 			$lists[$k]['kaoping']      = $v['eva_user_id'] ? '<a href="'.U('Kpi/pdca',array('bkpr'=>$v['eva_user_id'])).'">'.username($v['eva_user_id']).'</a>' : '未评分'; 	
 		}
 		
@@ -361,14 +385,19 @@ class KpiController extends BaseController {
 			if(!$info['work_plan'])  $this->error('计划工作项目标题未填写');
 			
 			
-			$sumweight  = M('pdca_term')->field('weight')->where(array('pdcaid'=>$info['pdcaid']))->sum('weight');
-			$shengyu  = 100-$sumweight;
+			
 			
 			
 			//执行保存
 			if($editid){
 				
-				if($info['weight']>($shengyu-$info['weight']))   $this->error('月度总权重分不能大于100分');
+				$where = array();
+				$where['pdcaid'] = $info['pdcaid'];
+				$where['id']     = array('neq',$editid);
+				$sumweight       = M('pdca_term')->field('weight')->where($where)->sum('weight');
+				$shengyu         = 100-$sumweight;
+				
+				if($info['weight']>$shengyu)   $this->error('月度总权重分不能大于100分');
 				
 				$pdca = M('pdca')->find($info['pdcaid']);
 				//判断是否自己保存
@@ -379,6 +408,9 @@ class KpiController extends BaseController {
 				}
 			}else{
 				
+				$sumweight  = M('pdca_term')->field('weight')->where(array('pdcaid'=>$info['pdcaid']))->sum('weight');
+				$shengyu  = 100-$sumweight;
+			
 				if($info['weight']>$shengyu)   $this->error('月度总权重分不能大于100分');
 				
 				$info['userid']      = cookie('userid');
@@ -406,7 +438,11 @@ class KpiController extends BaseController {
 			$pdcaid           = I('pdcaid',0);
 			$this->pdca       = M('pdca')->find($pdcaid);
 			$this->row        = M('pdca_term')->find($id);
-			$shengyu          = M('pdca_term')->field('weight')->where(array('pdcaid'=>$pdcaid))->sum('weight');
+			
+			$where = array();
+			$where['pdcaid'] = $pdcaid;
+			if($id) $where['id']     = array('neq',$id);
+			$shengyu          = M('pdca_term')->field('weight')->where($where)->sum('weight');
 			
 			$this->shengyu    = 100-$shengyu;
 			$this->display('editpdca');
