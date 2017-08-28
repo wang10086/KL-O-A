@@ -53,7 +53,7 @@ class KpiController extends BaseController {
 			$sum_total_score += $v['total_qa_score'];
 			
 			//整理品质检查加减分
-			$lists[$k]['total_score_show']  = show_score($yu);
+			$lists[$k]['total_score_show']  = $v['status']!=2 ? '<font color="#999999">未评分</font>' : show_score($yu);
 			
 			//整理品质检查加减分
 			$lists[$k]['show_qa_score']     =  show_score($v['total_qa_score']);
