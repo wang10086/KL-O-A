@@ -42,22 +42,28 @@ class KpiController extends BaseController {
         $lists = $db->where($where)->limit($page->firstRow . ',' . $page->listRows)->order($this->orders('month'))->select();
 		foreach($lists as $k=>$v){
 			
-			if($v['total_score']==0){
-				$totalshow = '<font color="#999">未评分</font>';	
-			}else{
-				$yu = 100-$v['total_score'];
-				if($yu){
-					$totalshow = '-'.$yu;	
-				}else{
-					$totalshow = '<font color="#999">无加扣分</font>';
-				}
-			}
+			$sum_total_score = 0;
 			
-			$lists[$k]['total_score_show']  = $totalshow; 	
-			//$lists[$k]['kaoping']           = $v['eva_user_id'] ? '<a href="'.U('Kpi/pdcaresult',array('kpr'=>$v['eva_user_id'])).'">'.username($v['eva_user_id']).'</a>' : ''; 
-			$lists[$k]['kaoping']           = $v['eva_user_id'] ? username($v['eva_user_id']) : ''; 
+			$yu = $v['total_score']==0 ? 0 :$v['total_score']-100;
+			
+			//计算PDCA加减分
+			$sum_total_score += $yu;
+			
+			//品质检查加减分
+			$sum_total_score += $v['total_qa_score'];
+			
+			//整理品质检查加减分
+			$lists[$k]['total_score_show']  = show_score($yu);
+			
+			//整理品质检查加减分
+			$lists[$k]['show_qa_score']     =  show_score($v['total_qa_score']);
+			
+			//合计
+			$lists[$k]['sum_total_score']   =  show_score($sum_total_score);
+			
+			//KPI
 			$lists[$k]['total_kpi_score']   = '<font color="#999999">待完善</font>';
-			$lists[$k]['total_qa_score']    = $v['total_qa_score']!=0 ? $v['total_qa_score'] : '<font color="#999999">无加扣分</font>';
+			
 		}
 		
 		$this->lists    = $lists; 

@@ -49,13 +49,13 @@
                                     
                                     <table class="table table-bordered dataTable fontmini" id="tablelist" style="margin-top:10px;">
                                         <tr role="row" class="orders" >
-                                            <th class="sorting" width="20%" data="month">月份</th>
-                                            <th width="20%" class="sorting" data="tab_user_id">被考评人</th>
+                                            <th class="sorting" width="14.8%" data="month">月份</th>
+                                            <th width="14.8%" class="sorting" data="tab_user_id">被考评人</th>
                                             <!-- <th width="20%" class="sorting" data="eva_user_id">考评人</th> -->
-                                            <th width="20%" class="sorting" data="total_score">PDCA加减分</th>
-                                            <th width="20%" class="sorting" data="total_qa_score">品质检查加减分</th>
-                                            <th width="20%" class="sorting" data="total_kpi_score">KPI加减分</th>
-                                            <!-- <th width="20%" class="sorting" data="sum_score">合计总分</th> -->
+                                            <th width="14.8%" class="sorting" data="total_score">PDCA加减分</th>
+                                            <th width="14.8%" class="sorting" data="total_qa_score">品质检查加减分</th>
+                                            <th width="14.8%" class="sorting" data="total_kpi_score">KPI加减分</th>
+                                            <th width="14.8%" class="sorting">合计总分</th>
                                         </tr>
                                         <foreach name="lists" item="row"> 
                                         <tr>
@@ -70,14 +70,14 @@
                                             <?php } ?>
                                             </td>
                                             <td>
-                                            {$row.total_qa_score}
+                                            {$row.show_qa_score}
                                             &nbsp;&nbsp;
                                             <?php if($row['total_qa_score']!=0){ ?>
                                             <a href="{:U('Kpi/qa',array('uid'=>$row['tab_user_id'],'type'=>2,'month'=>$row['month']))}" style="float:right;">[详细]</a>
                                             <?php } ?>
                                             </td>
                                             <td>{$row.total_kpi_score}</td>
-                                            <!-- <td>{$row.sum_score}</td> -->
+                                            <td>{$row.sum_total_score}</td>
                                         </tr>
                                         </foreach>					
                                     </table>

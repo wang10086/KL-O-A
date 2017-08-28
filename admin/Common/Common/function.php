@@ -1457,6 +1457,19 @@ function qa_score_num($user,$month){
 	
 }
 
+
+function show_score($score){
+	if($score==0){
+		$return   = '<font color="#999999">无加扣分</font>';	
+	}elseif($score<0){
+		$return   = '<span class="red">'.$score.'<span>';
+	}else{
+		$return   = '<span class="green">+'.$score.'<span>';
+	}
+	
+	return $return;
+}
+
 ?>
 
 
