@@ -363,10 +363,12 @@ class KpiController extends BaseController {
 			
 			$sumweight  = M('pdca_term')->field('weight')->where(array('pdcaid'=>$info['pdcaid']))->sum('weight');
 			$shengyu  = 100-$sumweight;
-			if($info['weight']>$shengyu)   $this->error('月度总权重分不能大于100分');
+			
 			
 			//执行保存
 			if($editid){
+				
+				if($info['weight']>($shengyu-$info['weight']))   $this->error('月度总权重分不能大于100分');
 				
 				$pdca = M('pdca')->find($info['pdcaid']);
 				//判断是否自己保存
@@ -376,6 +378,9 @@ class KpiController extends BaseController {
 					$this->error('您没有权限保存');
 				}
 			}else{
+				
+				if($info['weight']>$shengyu)   $this->error('月度总权重分不能大于100分');
+				
 				$info['userid']      = cookie('userid');
 				$info['create_time'] = time();
 				$info['score']       = 0;
