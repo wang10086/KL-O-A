@@ -71,8 +71,9 @@ class KpiController extends BaseController {
 		
 		
 		//整理关键字
+		$userwhere = '`status`=0';
 		if(C('RBAC_SUPER_ADMIN')==cookie('username') || cookie('roleid')==10){}else{
-			$userwhere = '`id` in ('.Rolerelation(cookie('roleid')).') || `id` = '.cookie('userid').'';
+			$userwhere .= ' AND `id` in ('.Rolerelation(cookie('roleid')).') || `id` = '.cookie('userid').'';
 		}
 		$role = M('role')->GetField('id,role_name',true);
 		$user =  M('account')->where($userwhere)->select();
@@ -147,8 +148,9 @@ class KpiController extends BaseController {
 		
 		
 		//整理关键字
+		$userwhere = '`status`=0';
 		if(C('RBAC_SUPER_ADMIN')==cookie('username') || cookie('roleid')==10){}else{
-			$userwhere = '`id` in ('.Rolerelation(cookie('roleid')).') || `id` = '.cookie('userid').'';
+			$userwhere .= ' AND `id` in ('.Rolerelation(cookie('roleid')).') || `id` = '.cookie('userid').'';
 		}
 		$role = M('role')->GetField('id,role_name',true);
 		$user =  M('account')->where($userwhere)->select();
@@ -391,11 +393,12 @@ class KpiController extends BaseController {
 			if(!$info['work_plan'])  $this->error('计划工作项目标题未填写');
 			if(!$info['weight'])     $this->error('权重未填写');
 			if(!$info['standard'])   $this->error('细项及标准未填写');
-			if(!$info['complete'])   $this->error('完成情况及未完成原因未填写');
 			
 			
 			//执行保存
 			if($editid){
+				
+				if(!$info['complete'])   $this->error('完成情况及未完成原因未填写');
 				
 				$where = array();
 				$where['pdcaid'] = $info['pdcaid'];
@@ -674,7 +677,7 @@ class KpiController extends BaseController {
 			
 			//整理关键字
 			$role = M('role')->GetField('id,role_name',true);
-			$user =  M('account')->select();
+			$user =  M('account')->where(array('status'=>0))->select();
 			$key = array();
 			foreach($user as $k=>$v){
 				$text = $v['nickname'].'-'.$role[$v['roleid']];
