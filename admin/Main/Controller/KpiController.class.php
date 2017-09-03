@@ -53,7 +53,7 @@ class KpiController extends BaseController {
 			$sum_total_score += $v['total_qa_score'];
 			
 			//整理品质检查加减分
-			$lists[$k]['total_score_show']  = $v['status']!=2 ? '<font color="#999999">未评分</font>' : show_score($yu);
+			$lists[$k]['total_score_show']  = $v['status']!=5 ? '<font color="#999999">未评分</font>' : show_score($yu);
 			
 			//整理品质检查加减分
 			$lists[$k]['show_qa_score']     =  show_score($v['total_qa_score']);
@@ -165,6 +165,9 @@ class KpiController extends BaseController {
 			$key[$k]['role_name']  = $role[$v['roleid']];
 		}
 		
+		$this->month  		= $month;
+		$this->same_month   = date('Ym');
+		$this->next_month   = date('Ym',strtotime("+1 month"));
 		$this->userkey =  json_encode($key);	
 			
 			
@@ -228,9 +231,12 @@ class KpiController extends BaseController {
 		
 		$id = I('id',0);
 		
+		$pdcasta  = C('PDCA_STATUS');
+		
 		$pdca = M('pdca')->find($id);
 		$pdca['total_score']  = $pdca['total_score'] ? $pdca['total_score'].'分' : '<font color="#999">未评分</font>'; 	
 		$pdca['kaoping']      = $pdca['eva_user_id'] ? username($pdca['eva_user_id']) : '未评分'; 	
+		$pdca['status_str']   = $pdcasta[$pdca['status']]; 	
 		if($id && $pdca){
 			$where = array();
 			$where['pdcaid'] = $id;
@@ -242,6 +248,14 @@ class KpiController extends BaseController {
 			
 			$this->lists = $lists;
 			$this->pdca  = $pdca;
+			
+			$applist          = M('pdca_apply')->where(array('pdcaid'=>$id))->order('apply_time DESC')->select();
+			$pdcasta          = C('PDCA_STATUS');
+			foreach($applist as $k=>$v){
+				$applist[$k]['status'] = $pdcasta[$v['status']];	
+			}
+			$this->applist    = $applist;
+			
 			$this->display('pdca_info');
 			
 		}else{
@@ -347,10 +361,8 @@ class KpiController extends BaseController {
 			
 			//判断是否全部打分完毕
 			$isall = M('pdca_term')->where(array('pdcaid'=>$team['pdcaid'],'score'=>0))->find();
-			if($isall){
-				$data['status']  		  = 1;
-			}else{
-				$data['status']  		  = 2;
+			if(!$isall){
+				$data['status']  		  = 5;
 				//发送消息
 				$uid     = cookie('userid');
 				$title   = '您的['.$pdca['month'].'PDCA]已评分';
@@ -406,7 +418,7 @@ class KpiController extends BaseController {
 				$sumweight       = M('pdca_term')->field('weight')->where($where)->sum('weight');
 				$shengyu         = 100-$sumweight;
 				
-				if($info['weight']>$shengyu)   $this->error('月度总权重分不能大于100分');
+				//if($info['weight']>$shengyu)   $this->error('月度总权重分不能大于100分');
 				
 				$pdca = M('pdca')->find($info['pdcaid']);
 				//判断是否自己保存
@@ -436,9 +448,10 @@ class KpiController extends BaseController {
 			M('pdca')->data(array('eva_user_id'=>$eva_user_id))->where(array('id'=>$info['pdcaid']))->save();
 				
 			
-			$data = array();
-			$data['status']  		  = 0;
-			$issave = M('pdca')->data($data)->where(array('id'=>$info['pdcaid']))->save();
+			//如果是制表人保存，修正状态
+			if($pd['tab_user_id'] == cookie('userid')){
+				$issave = M('pdca')->data(array('status'=>0))->where(array('id'=>$info['pdcaid']))->save();
+			}
 			
 			echo '<script>window.top.location.reload();</script>';
 			
@@ -523,46 +536,74 @@ class KpiController extends BaseController {
 	// @@@NODE-3###applyscore###PDCA申请评分###
 	public function applyscore(){
 		
-		$pdcaid = I('pdcaid','');
+		$pdcaid     = I('pdcaid','');
+		$status     = I('status','');
+		$app_remark = I('app_remark','');
 		if(isset($_POST['dosubmint'])){
+			
+			if(!$status)   $this->error('请选择审批结果');	
 			
 			//查看PDCA状态
 			$pdca = M('pdca')->find($pdcaid);
-			if($pdca['status']!=2){
+			
 				
-				//获取上级领导ID
-				//$role = M('role')->find(cookie('roleid'));
+			$us   = M('account')->find($pdca['tab_user_id']);
+			$pfr  = M('auth')->where(array('role_id'=>$us['roleid']))->find();
+			
+			$data = array();
+			$data['status']         = $status;
+			$data['eva_user_id']    = $pfr ? $pfr['pdca_auth'] : 0;
+			//$data['app_role']     = $role['pid'];     //审批部门
+			$data['app_time']       = time();           //申请时间
+			$data['app_remark']     = $app_remark;      //审批时间
+			$apply = M('pdca')->data($data)->where(array('id'=>$pdcaid))->save();
+			if($apply){
 				
-				$us  = M('account')->find($pdca['tab_user_id']);
-				$pfr = M('auth')->where(array('role_id'=>$us['roleid']))->find();
-				
-				$data = array();
-				$data['status']         = 1;
-				$data['eva_user_id']    = $pfr ? $pfr['pdca_auth'] : 0;
-				//$data['app_role']       = $role['pid'];     //审批部门
-				$data['app_time']       = time();           //申请时间
-				$apply = M('pdca')->data($data)->where(array('id'=>$pdcaid))->save();
-				if($apply){
-					
-					//向审批人发送消息
-					if($pdca['eva_user_id']){
-						$uid     = cookie('userid');
-						$title   = '['.$pdca['month'].'PDCA],已编制完毕，请您给予评分';
-						$content = $pdca['title'];
-						$url     = U('Kpi/pdcainfo',array('id'=>$pdcaid));
-						//$roleid  = '['.$role['pid'].']';
-						$user    = '['.$pdca['eva_user_id'].']';
-						$aaa = send_msg($uid,$title,$content,$url,$user);
-					}
-					
-					$this->success('已提交申请！');
-				}else{
-					$this->error('申请失败');	
+				if($status==1){
+					$title   = '['.$pdca['month'].'PDCA],已编制完毕，请您审核';	
+					$user    = '['.$pdca['eva_user_id'].']';
+					$content = '';
+				}else if($status==4){
+					$title   = '['.$pdca['month'].'PDCA],已编制完毕，请您评分';	
+					$user = '['.$pdca['eva_user_id'].']';
+					$content = $app_remark;
+				}else if($status==2){
+					$title   = '['.$pdca['month'].'PDCA],已审核通过';	
+					$user = '['.$pdca['tab_user_id'].']';
+					$content = '';
+				}else if($status==3){
+					$title   = '['.$pdca['month'].'PDCA],审核未通过';	
+					$user = '['.$pdca['tab_user_id'].']';
+					$content = $app_remark;
 				}
 				
+				//发送消息
+				$uid  = cookie('userid');
+				$url  = U('Kpi/pdcainfo',array('id'=>$pdcaid));
+				send_msg($uid,$title,$content,$url,$user);
+				
+				//保存审核记录
+				if($status==2 || $status==3){
+					$myid = cookie('userid');
+					$data = array();
+					$data['pdcaid']         = $pdcaid;
+					$data['apply_user']     = $myid;
+					$data['apply_user_nme'] = cookie('nickname') ? cookie('nickname') : username($myid);
+					$data['apply_time']     = time();
+					$data['status']         = $status;
+					$data['remark']         = $app_remark;
+					M('pdca_apply')->add($data);
+					$this->success('已审核！');
+				}else{
+					
+					$this->success('已提交申请！');	
+				}
+				
+				
 			}else{
-				$this->error('该PDCA已评分');	
+				$this->error('申请失败');	
 			}
+				
 			
 			
 		}else{
@@ -570,6 +611,7 @@ class KpiController extends BaseController {
 			$pdcaid           = I('pdcaid',0);
 			$this->pdca       = M('pdca')->find($pdcaid);
 			$this->row        = M('pdca_term')->find($id);
+			
 			$this->display('editpdca');
 		}
 		

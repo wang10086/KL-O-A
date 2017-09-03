@@ -22,7 +22,12 @@
         </div>
         
         
-        <div class="form-group box-float-4" style="margin-top:15px;">
+        <div class="form-group box-float-6" style="margin-top:15px;">
+            <label>权重</label>
+            <input type="text" name="info[weight]" id="title" value="{$team.weight}"  class="form-control" />
+        </div>
+        
+        <div class="form-group box-float-6" style="margin-top:15px;">
             <label>评分 <font color="#999999">建议评分不大于权重分</font></label>
             <input type="text" name="info[score]" id="title" value="{$team.score}"  class="form-control" />
         </div>

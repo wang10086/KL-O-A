@@ -21,7 +21,7 @@
                             
                             <div class="box box-warning">
                                 <div class="box-header">
-                                    <h3 class="box-title">PDCA计划</h3>
+                                    <h3 class="box-title"><span class="red">{:username($pdca['tab_user_id'])} [{$pdca.month}]</span> PDCA计划</h3>
                                     <div class="box-tools pull-right">
                                     	
                                     </div>
@@ -32,7 +32,8 @@
                                         月份：{$pdca.month} &nbsp;&nbsp;&nbsp;&nbsp;
                                         被考评人：{:username($pdca['tab_user_id'])} &nbsp;&nbsp;&nbsp;&nbsp;
                                         考评人：{$pdca.kaoping} &nbsp;&nbsp;&nbsp;&nbsp;
-                                        考评得分：{$pdca.total_score}
+                                        考评得分：{$pdca.total_score} &nbsp;&nbsp;&nbsp;&nbsp;
+                                        状态：{$pdca.status_str}
                                         </span> 
                                         
                                         <?php 
@@ -122,21 +123,119 @@
                                     
                                 </div><!-- /.box-body -->
                             </div><!-- /.box -->
-                            <?php 
-							if($pdca['status']!=2 && cookie('userid')==$pdca['tab_user_id']){
-							?>
-                            <form method="post" action="{:U('Kpi/applyscore')}" name="myform" id="myform">
-                			<input type="hidden" name="dosubmint" value="1">
-                            <input type="hidden" name="pdcaid" value="{$pdca.id}">
-                            <div style="width:100%; text-align:center;">
-                            <button type="submit" class="btn btn-info btn-lg" id="lrpd">申请评分</button>
-                            </div>
-                            </form>
-                            <?php 
-							}
-							?>
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
                         </div><!--/.col (right) -->
+                        
+                        <?php 
+						if($pdca['status']<4 && ( cookie('userid')==$pdca['eva_user_id'] || cookie('userid')==$pdca['tab_user_id'] )){
+						?>
+                        <div class="col-md-12">
+                            <div class="box box-warning">
+                                <div class="box-header">
+                                    <h3 class="box-title">审核</h3>
+                                </div>
+                                <div class="box-body">
+                                	<?php 
+									if($pdca['status']==1 && cookie('userid')==$pdca['eva_user_id'] ){
+									?>
+                                    <form method="post" action="{:U('Kpi/applyscore')}" name="myform" id="myform">
+                                    <input type="hidden" name="dosubmint" value="1" />
+                                    <input type="hidden" name="pdcaid" value="{$pdca.id}">
+                                    <div class="form-group col-md-12" style=" margin-top:20px;">
+                                        <div class="checkboxlist" id="applycheckbox">
+                                        <input type="radio" name="status" value="2"> 通过 &nbsp;&nbsp;&nbsp;&nbsp;
+                                        <input type="radio" name="status" value="3"> 不通过
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="form-group col-md-12 select_2 ">
+                                    	<textarea class="form-control"  placeholder="不通过原因" name="app_remark" ></textarea>
+                                    </div>
+                                    
+                                    <div class="form-group col-md-12" style="text-align:center; margin-top:20px;">
+                                    <button type="submit" class="btn btn-info btn-lg" id="lrpd">保存</button>
+                                    </div>
+                                    
+                                    </form>
+                                    <?php } ?>
+                                    
+                                    
+                                    <?php 
+									if($pdca['status']==0 && cookie('userid')==$pdca['tab_user_id']){
+									?>
+									<form method="post" action="{:U('Kpi/applyscore')}" name="myform" id="myform">
+									<input type="hidden" name="dosubmint" value="1">
+									<input type="hidden" name="pdcaid" value="{$pdca.id}">
+									<input type="hidden" name="status" value="1">
+									<div class="form-group col-md-12" style="text-align:center; margin-top:20px;">
+									<button type="submit" class="btn btn-info btn-lg" id="lrpd">申请审核</button>
+									</div>
+									</form>
+									<?php 
+									}
+									?>
+									
+									<?php 
+									if($pdca['status']==2 && cookie('userid')==$pdca['tab_user_id']){
+									?>
+									<form method="post" action="{:U('Kpi/applyscore')}" name="myform" id="myform">
+									<input type="hidden" name="dosubmint" value="1">
+									<input type="hidden" name="pdcaid" value="{$pdca.id}">
+									<input type="hidden" name="status" value="4">
+									<div class="form-group col-md-12" style="text-align:center; margin-top:20px;">
+									<button type="submit" class="btn btn-info btn-lg" id="lrpd">申请评分</button>
+									</div>
+									</form>
+									<?php 
+									}
+									?>
+                            
+                            
+                                    
+                                    <div class="form-group col-md-12" id="apptab" style="margin-top:40px;">
+                                        <div class="box-body no-padding">
+                                            <table class="table">
+                                                <tr>
+                                                    <th width="150">审核日期</th>
+                                                    <th width="150">审核结果</th>
+                                                    <th width="150">审核者</th>
+                                                    <th>备注</th>
+                                                </tr>
+                                                <foreach name="applist" key="k" item="v">
+                                                <tr>
+                                                	<td><if condition="$v['apply_time']">{$v.apply_time|date='Y-m-d H:i',###}</if></td>
+                                                    <td>{$v.status}</td>
+                                                    <td>{$v.apply_user_nme}</td>
+                                                    <td>{$v.remark}</td>
+                                                </tr>
+                                                </foreach>
+                                            </table>
+                                        </div>
+                                    </div>
+                                    
+                                    
+                                    <div class="form-group">&nbsp;</div>
+                                    
+                                
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <?php 
+						}
+						?>
+                    
                     </div>   <!-- /.row -->
+                    
+                    
+                    
                     
                 </section><!-- /.content -->
                 
@@ -199,5 +298,20 @@
 			
 		});	
 	}
-    </script>
-		
+    
+	/*
+	$(document).ready(function(e) {
+		$('#applycheckbox').find('ins').each(function(index, element) {
+			$(this).click(function(){
+				if(index==0){
+					$('.select_1').show();
+					$('.select_2').hide();	
+				}else{
+					$('.select_2').show();
+					$('.select_1').hide();	
+				}
+			})
+		});
+	});
+	*/
+	</script>
