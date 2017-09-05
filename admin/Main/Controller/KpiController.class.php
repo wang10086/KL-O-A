@@ -181,7 +181,7 @@ class KpiController extends BaseController {
 		
 		if(isset($_POST['dosubmint'])){
 			
-			$editid   = I('editid');
+			$editid    = I('editid');
 			$info      = I('info');
 			
 			//执行保存

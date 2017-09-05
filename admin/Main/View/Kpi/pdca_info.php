@@ -231,6 +231,47 @@
                         <?php 
 						}
 						?>
+                        
+                        
+                        
+                        
+                        <?php 
+						if($pdca['status']==5 && ( cookie('userid')==$pdca['eva_user_id'] || cookie('userid')==$pdca['tab_user_id'] )){
+						?>
+                        <div class="col-md-12">
+                            <div class="box box-warning">
+                                <div class="box-header">
+                                    <h3 class="box-title">总结</h3>
+                                </div>
+                                <div class="box-body">
+                                	
+                                    <form method="post" action="{:U('Kpi/addpdca')}" name="myform" id="myform">
+                                    <input type="hidden" name="dosubmint" value="1" />
+                                    <input type="hidden" name="editid" value="{$pdca.id}">
+                                    
+                                    
+                                    <div class="form-group col-md-12 select_2 ">
+                                    	<textarea class="form-control"  placeholder="请您总结" name="info[summary]" style="height:300px;" >{$pdca.summary}</textarea>
+                                    </div>
+                                    
+                                    <div class="form-group col-md-12" style="text-align:center; margin-top:20px;">
+                                    <button type="submit" class="btn btn-info btn-lg" id="lrpd">保存</button>
+                                    </div>
+                                    
+                                    </form>
+                                    <?php } ?>
+                                    
+                                   
+                                    
+                                
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <?php 
+						}
+						?>
+                        
                     
                     </div>   <!-- /.row -->
                     
