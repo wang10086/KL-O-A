@@ -228,7 +228,7 @@ class CustomerController extends BaseController {
 		if(C('RBAC_SUPER_ADMIN')==cookie('username') || cookie('roleid')==10 || cookie('roleid')==28 || cookie('roleid')==11 || cookie('roleid')==30){
 			
 		}else{
-			$where['source'] = array('in',Rolerelation(cookie('roleid')));
+			$where['sales_person_uid'] = array('in',Rolerelation(cookie('roleid')));
 		}
 		
 		//分页
