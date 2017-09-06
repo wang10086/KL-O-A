@@ -72,7 +72,7 @@ class KpiController extends BaseController {
 		
 		//整理关键字
 		$userwhere = '`status`=0';
-		if(C('RBAC_SUPER_ADMIN')==cookie('username') || cookie('roleid')==10){}else{
+		if(C('RBAC_SUPER_ADMIN')==cookie('username') || cookie('roleid')==10 || cookie('roleid')==13 || cookie('roleid')==14 || cookie('roleid')==28 || cookie('roleid')==43){}else{
 			$userwhere .= ' AND `id` in ('.Rolerelation(cookie('roleid')).') || `id` = '.cookie('userid').'';
 		}
 		$role = M('role')->GetField('id,role_name',true);
@@ -113,7 +113,7 @@ class KpiController extends BaseController {
 		if($month) $where .= ' AND `month` = '.trim($month); 
 		if($kpr)   $where .= ' AND `eva_user_id` = '.$kpr; 
 		if($bkpr)  $where .= ' AND `tab_user_id` = '.$bkpr; 
-		if(C('RBAC_SUPER_ADMIN')==cookie('username') || cookie('roleid')==10){}else{
+		if(C('RBAC_SUPER_ADMIN')==cookie('username') || cookie('roleid')==10 || cookie('roleid')==13 || cookie('roleid')==14 || cookie('roleid')==28 || cookie('roleid')==43){}else{
 			$where .= ' AND (`tab_user_id` in ('.Rolerelation(cookie('roleid')).') || `eva_user_id` = '.cookie('userid').')';
 		}
 		
