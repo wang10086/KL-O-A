@@ -273,10 +273,10 @@ class KpiController extends BaseController {
 			if($total > 100){
 				$this->totalstr = '<span class="red" style="font-size:16px;">当前各项总分为'.$total.'，PDCA总分不允许超过100分！</span>';
 			}else if($total == 100){
-				$this->totalstr = '<span class="blue" style="font-size:16px;">当前各项总分为'.$total.'，该考评人本月不扣分！</span>';	
+				$this->totalstr = '<span class="blue" style="font-size:16px;">当前各项总分为'.$total.'，被考评人本月不扣分！</span>';	
 			}else{
 				$koufen = 100-$total;
-				$this->totalstr = '<span class="yellow" style="font-size:16px;">当前各项总分为'.$total.'，该考评人本月扣'.$koufen.'分！</span>';		
+				$this->totalstr = '<span class="yellow" style="font-size:16px;">当前各项总分为'.$total.'，被考评人本月扣'.$koufen.'分！</span>';		
 			}
 			
 			
