@@ -234,6 +234,25 @@
                         
                         
                         
+                        <?php 
+						if($pdca['status']==4 && cookie('userid')==$pdca['eva_user_id']){
+						?>
+						<form method="post" action="{:U('Kpi/score')}" name="myform" id="myform">
+						<input type="hidden" name="dosubmint" value="1">
+						<input type="hidden" name="pdcaid" value="{$pdca.id}">
+                        <div class="form-group col-md-12" style="text-align:center; margin-top:20px;">
+                        {$totalstr}
+                        </div>
+						<div class="form-group col-md-12" style="text-align:center; margin-top:20px;">
+						<button type="submit" class="btn btn-info btn-lg" id="lrpd">确定评分</button>
+						</div>
+						</form>
+						<?php 
+						}
+						?>
+                                    
+                        
+                        
                         
                         <?php 
 						if($pdca['status']==5 && ( cookie('userid')==$pdca['eva_user_id'] || cookie('userid')==$pdca['tab_user_id'] )){
@@ -251,8 +270,8 @@
                                     <input type="hidden" name="editid" value="{$pdca.id}">
                                     
                                     
-                                    <div class="form-group col-md-12 select_2 ">
-                                    	<textarea class="form-control"  placeholder="请您总结" name="info[summary]" style="height:300px;" >{$pdca.summary}</textarea>
+                                    <div class="form-group col-md-12 " style="margin-top:20px;">
+                                    	<textarea class="form-control"  placeholder="请您总结" name="info[summary]" style="height:200px;" >{$pdca.summary}</textarea>
                                     </div>
                                     
                                     <div class="form-group col-md-12" style="text-align:center; margin-top:20px;">
@@ -261,7 +280,7 @@
                                     
                                     </form>
                                     
-                                   
+                                    <div class="form-group">&nbsp;</div>
                                     
                                 
                                 </div>

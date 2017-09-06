@@ -262,6 +262,24 @@ class KpiController extends BaseController {
 			}
 			$this->applist    = $applist;
 			
+			
+			//获取已评总分信息
+			$total = 0;
+			$pdcadata = M('pdca_term')->where(array('pdcaid'=>$id))->select();
+			foreach($pdcadata as $k=>$v){
+				//合计总分
+				$total += $v['score'];
+			}
+			if($total > 100){
+				$this->totalstr = '<span class="red" style="font-size:16px;">当前各项总分为'.$total.'，PDCA总分不允许超过100分！</span>';
+			}else if($total == 100){
+				$this->totalstr = '<span class="blue" style="font-size:16px;">当前各项总分为'.$total.'，该考评人本月不扣分！</span>';	
+			}else{
+				$koufen = 100-$total;
+				$this->totalstr = '<span class="yellow" style="font-size:16px;">当前各项总分为'.$total.'，该考评人本月扣'.$koufen.'分！</span>';		
+			}
+			
+			
 			$this->display('pdca_info');
 			
 		}else{
@@ -272,6 +290,70 @@ class KpiController extends BaseController {
 	}
 	
 	// @@@NODE-3###pdcainfo###PDCA评分###
+	public function score(){
+		$id = I('pdcaid',0);
+		//查看PDCA状态
+		$pdca = M('pdca')->find($id);
+		
+		//判断是否有权限评分
+		if(cookie('userid')!=$pdca['eva_user_id']){
+			 $this->error('您没有权限评分');		
+		}
+			
+		if(isset($_POST['dosubmint'])){
+			
+			
+			
+			$total = 0;
+			$pdcadata = M('pdca_term')->where(array('pdcaid'=>$id))->select();
+			foreach($pdcadata as $k=>$v){
+				//合计总分
+				$total += $v['score'];
+			}
+			
+			if($total>100)   $this->error('总分不能超过100分');	
+			
+			
+			//保存总分
+			$data = array();
+			$data['status']  		  = 5;
+			$data['total_score']      = $total;
+			$issave = M('pdca')->data($data)->where(array('id'=>$id))->save();
+			if($issave){
+				
+				//发送消息
+				$uid     = cookie('userid');
+				$title   = '您的['.$pdca['month'].'PDCA]已评分';
+				$content = '';
+				$url     = U('Kpi/pdcainfo',array('id'=>$id));
+				$user    = '['.$pdca['tab_user_id'].']';
+				send_msg($uid,$title,$content,$url,$user,'');
+				
+				$this->success('已评分！');
+				
+			}else{
+				$this->error('保存评分失败');		
+			}
+		
+		}else{
+		
+		
+			if($id && $pdca){
+				$where = array();
+				$where['pdcaid'] = $id;
+				
+				$lists = M('pdca_term')->where($where)->select();
+				$this->lists = $lists;
+				$this->pdca  = $pdca;
+				$this->display('pdca_score');
+				
+			}else{
+				$this->error('PDCA不存在');	
+			}
+		
+		}
+	}
+	/*
 	public function score(){
 		$id = I('pdcaid',0);
 		//查看PDCA状态
@@ -335,6 +417,8 @@ class KpiController extends BaseController {
 		
 		}
 	}
+	*/
+	
 	
 	
 	// @@@NODE-3###unitscore###单项PDCA评分###
@@ -356,6 +440,7 @@ class KpiController extends BaseController {
 			$info = I('info');
 			M('pdca_term')->data($info)->where(array('id'=>$id))->save();
 			
+			/*
 			//总分
 			$total = M('pdca_term')->where(array('pdcaid'=>$team['pdcaid']))->sum('score');
 			
@@ -379,6 +464,7 @@ class KpiController extends BaseController {
 			}
 			
 			$issave = M('pdca')->data($data)->where(array('id'=>$team['pdcaid']))->save();
+			*/
 			
 			echo '<script>window.top.location.reload();</script>';
 		
@@ -416,7 +502,7 @@ class KpiController extends BaseController {
 			//执行保存
 			if($editid){
 				
-				if(!$info['complete'])   $this->error('完成情况及未完成原因未填写');
+				//if(!$info['complete'])   $this->error('完成情况及未完成原因未填写');
 				
 				$where = array();
 				$where['pdcaid'] = $info['pdcaid'];
@@ -456,7 +542,7 @@ class KpiController extends BaseController {
 			
 			//如果是制表人保存，修正状态
 			if($pd['tab_user_id'] == cookie('userid')){
-				$issave = M('pdca')->data(array('status'=>0))->where(array('id'=>$info['pdcaid']))->save();
+				$issave = M('pdca')->data(array('status'=>0,'total_score'=>0))->where(array('id'=>$info['pdcaid']))->save();
 			}
 			
 			echo '<script>window.top.location.reload();</script>';
@@ -561,7 +647,7 @@ class KpiController extends BaseController {
 			$data['eva_user_id']    = $pfr ? $pfr['pdca_auth'] : 0;
 			//$data['app_role']     = $role['pid'];     //审批部门
 			$data['app_time']       = time();           //申请时间
-			$data['app_remark']     = $app_remark;      //审批时间
+			if($app_remark) $data['app_remark']     = $app_remark;      //审批时间
 			$apply = M('pdca')->data($data)->where(array('id'=>$pdcaid))->save();
 			if($apply){
 				
