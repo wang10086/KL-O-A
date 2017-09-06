@@ -247,6 +247,7 @@
                                 	
                                     <form method="post" action="{:U('Kpi/addpdca')}" name="myform" id="myform">
                                     <input type="hidden" name="dosubmint" value="1" />
+                                    <input type="hidden" name="com" value="1" />
                                     <input type="hidden" name="editid" value="{$pdca.id}">
                                     
                                     

@@ -183,6 +183,7 @@ class KpiController extends BaseController {
 			
 			$editid    = I('editid');
 			$info      = I('info');
+			$com       = I('com',0);
 			
 			//执行保存
 			if($editid){
@@ -209,7 +210,12 @@ class KpiController extends BaseController {
 				}
 			}
 			
-			echo '<script>window.top.location.reload();</script>';
+			if($com){
+				$this->success('已保存！');
+			}else{
+				echo '<script>window.top.location.reload();</script>';
+			}
+			
 			
 		
 		
