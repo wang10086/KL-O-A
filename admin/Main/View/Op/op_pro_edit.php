@@ -20,7 +20,7 @@
 </div>
 
 <div class="form-group col-md-4">
-    <label>出团日期：</label><input type="text" name="info[departure]" value="{$op.departure}"  class="form-control" onclick="laydate({min: laydate.now()})" />
+    <label>出团日期：</label><input type="text" name="info[departure]" value="{$op.departure}"  class="form-control"/>
 </div>
 
 <div class="form-group col-md-4">
@@ -32,7 +32,7 @@
 </div>
 
 <div class="form-group col-md-4">
-    <label>立项时间：</label><input type="text" name="info[op_create_date]" value="{$op.op_create_date}" onclick="laydate()"class="form-control" />
+    <label>立项时间：</label><input type="text" name="info[op_create_date]" value="{$op.op_create_date}"class="form-control" />
 </div>
 
 
