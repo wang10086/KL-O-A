@@ -37,12 +37,14 @@
                                         </span> 
                                         
                                         <?php 
+										if($pdca['status'] < 5 || cookie('roleid')==10 || C('RBAC_SUPER_ADMIN')==cookie('username') ){
 										if(cookie('userid')==$pdca['tab_user_id'] || cookie('roleid')==$pdca['app_role']){
 											if(rolemenu(array('Kpi/editpdca'))){
 										?>
                                         <a href="javascript:;" class="btn btn-success btn-sm" style="float:right;"  onClick="edit_pdca(0)"><i class="fa fa-fw fa-plus"></i> 新增项目</a> 
                                         <?php 
 											}
+										}
 										}
 										?>
                                         <div class="box-body table-responsive no-padding">
@@ -55,7 +57,8 @@
                                                 <th width="100">权重分</th>
                                                 <th width="100">考评得分</th>
                                                 <?php 
-												if(cookie('userid')==$pdca['eva_user_id']){
+												if($pdca['status'] < 5 || cookie('roleid')==10 || C('RBAC_SUPER_ADMIN')==cookie('username') ){
+												if(cookie('userid')==$pdca['eva_user_id'] || cookie('roleid')==10 || C('RBAC_SUPER_ADMIN')==cookie('username') ){
 												?>
                                                 <if condition="rolemenu(array('Kpi/unitscore'))">
                                                 <th width="50" class="taskOptions">评分</th>
@@ -72,7 +75,7 @@
                                                 <if condition="rolemenu(array('Kpi/delpdcaterm'))">
                                                 <th width="50" class="taskOptions">删除</th>
                                                 </if>
-                                                <?php } ?>
+                                                <?php } }?>
                                             </tr>
                                             <foreach name="lists" key="key" item="row"> 
                                             <tr>
@@ -83,7 +86,8 @@
                                                 <td>{$row.weight}</td>
                                                 <td>{$row.score}</td>
                                                 <?php 
-												if(cookie('userid')==$pdca['eva_user_id']){
+												if($pdca['status'] < 5 || cookie('roleid')==10 || C('RBAC_SUPER_ADMIN')==cookie('username') ){
+												if(cookie('userid')==$pdca['eva_user_id'] || cookie('roleid')==10 || C('RBAC_SUPER_ADMIN')==cookie('username') ){
 												?>
                                                 <if condition="rolemenu(array('Kpi/unitscore'))">
                                                 <td class="taskOptions">
@@ -107,7 +111,7 @@
                                                
                                                 </td>
                                                 </if>
-                                                <?php } ?>
+                                                <?php } }?>
                                             </tr>
                                             </foreach>					
                                         </table> 

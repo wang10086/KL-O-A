@@ -53,7 +53,7 @@ class KpiController extends BaseController {
 			$sum_total_score += $v['total_qa_score'];
 			
 			//整理品质检查加减分
-			$lists[$k]['total_score_show']  = $v['status']!=5 ? '<font color="#999999">未评分</font>' : show_score($yu);
+			$lists[$k]['total_score_show']  = $v['status']!=5 ? '<font color="#999999">未完成评分</font>' : show_score($yu);
 			
 			//整理品质检查加减分
 			$lists[$k]['show_qa_score']     =  show_score($v['total_qa_score']);
@@ -249,7 +249,7 @@ class KpiController extends BaseController {
 			
 			$lists = M('pdca_term')->where($where)->select();
 			foreach($lists as $K=>$v){
-				$lists[$K]['score']  = $v['score'] ? 	$v['score']  : '<font color="#999">未评分</font>';
+				$lists[$K]['score']  = $v['score_status'] ? 	$v['score']  : '<font color="#999">未评分</font>';
 			}
 			
 			$this->lists = $lists;
@@ -268,7 +268,7 @@ class KpiController extends BaseController {
 			$pdcadata = M('pdca_term')->where(array('pdcaid'=>$id))->select();
 			foreach($pdcadata as $k=>$v){
 				//合计总分
-				$total += $v['score'];
+				$total += $v['score_status'] ? $v['score'] : $v['weight'];
 			}
 			if($total > 100){
 				$this->totalstr = '<span class="red" style="font-size:16px;">当前各项总分为'.$total.'，PDCA总分不允许超过100分！</span>';
@@ -276,7 +276,7 @@ class KpiController extends BaseController {
 				$this->totalstr = '<span class="blue" style="font-size:16px;">当前各项总分为'.$total.'，被考评人本月不扣分！</span>';	
 			}else{
 				$koufen = 100-$total;
-				$this->totalstr = '<span class="yellow" style="font-size:16px;">当前各项总分为'.$total.'，被考评人本月扣'.$koufen.'分！</span>';		
+				$this->totalstr = '<span class="yellow" style="font-size:16px;">被考评人本月已扣'.$koufen.'分！</span>';		
 			}
 			
 			
@@ -302,7 +302,9 @@ class KpiController extends BaseController {
 			
 		if(isset($_POST['dosubmint'])){
 			
-			
+			//判断是否全部评分
+			$isok = M('pdca_term')->where(array('pdcaid'=>$id,'score_status'=>0))->find();
+			if($isok) $this->error('请将所有项目打分完毕再确认');	 
 			
 			$total = 0;
 			$pdcadata = M('pdca_term')->where(array('pdcaid'=>$id))->select();
@@ -430,7 +432,7 @@ class KpiController extends BaseController {
 		$pdca = M('pdca')->find($team['pdcaid']);
 		
 		//判断是否有权限评分
-		if(!$id || !$pdca || cookie('userid')!=$pdca['eva_user_id']){
+		if(cookie('userid')==$pdca['eva_user_id'] || cookie('roleid')==10 || C('RBAC_SUPER_ADMIN')==cookie('username')){}else{
 			 $this->error('您没有权限评分');		
 		}
 			
@@ -438,33 +440,23 @@ class KpiController extends BaseController {
 			
 			//保存分数
 			$info = I('info');
+			$info['score_status']  = 1;
+			if($info['score'] > $info['weight'])  $this->error('评分不能超出权重分');	
+			
 			M('pdca_term')->data($info)->where(array('id'=>$id))->save();
 			
-			/*
-			//总分
-			$total = M('pdca_term')->where(array('pdcaid'=>$team['pdcaid']))->sum('score');
 			
-			
-			$data = array();
-			$data['eva_user_id']      = cookie('userid');
-			$data['eva_time'] 		  = time();
-			$data['total_score']      = $total;
-			
-			//判断是否全部打分完毕
-			$isall = M('pdca_term')->where(array('pdcaid'=>$team['pdcaid'],'score'=>0))->find();
-			if(!$isall){
-				$data['status']  		  = 5;
-				//发送消息
-				$uid     = cookie('userid');
-				$title   = '您的['.$pdca['month'].'PDCA]已评分';
-				$content = '';
-				$url     = U('Kpi/pdcainfo',array('id'=>$team['pdcaid']));
-				$user    = '['.$pdca['tab_user_id'].']';
-				send_msg($uid,$title,$content,$url,$user,'');
+			//汇总总分
+			$pdcalist = M('pdca_term')->where(array('pdcaid'=>$team['pdcaid']))->select();
+			$total = 0;
+			foreach($pdcalist as $k=>$v){
+				$total += $v['score_status']	? $v['score'] : $v['weight'];
 			}
 			
+			$data = array();
+			$data['total_score']      = $total;
 			$issave = M('pdca')->data($data)->where(array('id'=>$team['pdcaid']))->save();
-			*/
+			
 			
 			echo '<script>window.top.location.reload();</script>';
 		
