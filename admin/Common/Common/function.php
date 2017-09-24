@@ -912,6 +912,17 @@ function Roleinuser($id = 0,$check='role') {
 } 
 
 
+//获取用户信息
+function getuserinfo($user){
+	if($user){
+		$role = M('role')->GetField('id,role_name',true);
+		$user = M('account')->field('id as userid,nickname,roleid')->where('`id`="'.$user.'" OR `nickname` = "'.trim($user).'"')->find();	
+		$user['role_name'] = $role[$user['roleid']];
+		return $user;
+	}
+}
+
+
 //项目数量统计
 function op_sum($date,$type=1,$dept){
 	
@@ -1381,11 +1392,15 @@ function send_notice($title,$content,$url='',$source=0,$source_id=0,$userid=0,$u
 	$data['link_url']	 	 = $url;
 	$data['source']	         = $source;
 	$data['source_id']	     = $source_id;
-	$add = M('notice')->add($data);
-	if($add){
-		return $add;	
-	}else{
-		return 0;		
+	
+	//判断是否重复
+	if(!M('notice')->where(array('source'=>$source,'source_id'=>$source_id))->find()){
+		$add = M('notice')->add($data);
+		if($add){
+			return $add;	
+		}else{
+			return 0;		
+		}
 	}
 }
 
@@ -1432,14 +1447,21 @@ function qa_score_num($user,$month){
 	
 		$pdcaid = addpdca($user,$month);
 		
-		$where = array();
-		$where['rp_user_id'] = $user;
-		$where['month']      = $month;
 		//获取加分情况
-		$inc_score = M('qaqc')->field('inc_score')->where($where)->sum('inc_score');
+		$where = array();
+		$where['user_id']    = $user;
+		$where['month']      = $month;
+		$where['status']     = 1;
+		$where['type']       = 1;
+		$inc_score = M('qaqc_user')->field('score')->where($where)->sum('score');
 		
 		//获取扣分情况
-		$red_score = M('qaqc')->field('red_score')->where($where)->sum('red_score');
+		$where = array();
+		$where['user_id']    = $user;
+		$where['month']      = $month;
+		$where['status']     = 1;
+		$where['type']       = 0;
+		$red_score = M('qaqc_user')->field('score')->where($where)->sum('score');
 		
 		//总分
 		$sum = $inc_score - $red_score;

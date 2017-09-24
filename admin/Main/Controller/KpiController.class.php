@@ -729,11 +729,17 @@ class KpiController extends BaseController {
 		$pagecount = $db->where($where)->count();
 		$page = new Page($pagecount, P::PAGE_SIZE);
 		$this->pages = $pagecount>P::PAGE_SIZE ? $page->show():'';
-
+		
+		$stastr = array(
+			'0' => '<span>未审核</span>',
+			'1' => '<span class="green">审核通过</span>',
+			'2' => '<span class="red">审核未过</span>',
+		);
+		
         $lists = $db->where($where)->limit($page->firstRow . ',' . $page->listRows)->order($this->orders('id'))->select();
 		foreach($lists as $k=>$v){
-			$lists[$k]['score']      = $v['status'] ? '-'.$v['red_score']:'+'.$v['inc_score']; 	
-			$lists[$k]['statusstr']  = $v['status'] ? '<span class="red">处罚</span>':'<span class="green">奖励</span>'; 	
+			//$lists[$k]['score']      = $v['status'] ? '-'.$v['red_score']:'+'.$v['inc_score']; 	
+			$lists[$k]['statusstr']  = $stastr[$v['status']]; 	
 		}
 		
 		$this->lists    = $lists; 
@@ -746,59 +752,101 @@ class KpiController extends BaseController {
 	// @@@NODE-3###addpdca###发布品质检查###
 	public function addqa(){
 		
-		if(isset($_POST['dosubmint'])){
+		if(isset($_POST['dosubmit'])){
+			
 			
 			$editid   = I('editid');
 			$info     = I('info');
-			$score    = I('score');
-			if($info['status']==0){
-				$info['inc_score'] = $score;
-				$info['red_score'] = 0;
+			$qadata   = I('qadata');
+			
+			
+			//获取相关人员信息
+			if($info['rp_user_name']){
+				$user = getuserinfo($info['rp_user_name']);	
+				$info['rp_user_id']  = $user['userid'];
 			}else{
-				$info['inc_score'] = 0;
-				$info['red_score'] = $score;
+				$info['rp_user_id']  = 0;
+			}
+			if($info['ld_user_name']){
+				$user = getuserinfo($info['ld_user_name']);	
+				$info['ld_user_id']  = $user['userid'];
+			}else{
+				$info['ld_user_id']  = 0;
+			}
+			if($info['fd_user_name']){
+				$user = getuserinfo($info['fd_user_name']);	
+				$info['fd_user_id']  = $user['userid'];
+			}else{
+				$info['fd_user_id']  = 0;
+			}
+			if($info['ac_user_name']){
+				$user = getuserinfo($info['ac_user_name']);	
+				$info['ac_user_id']  = $user['userid'];
+			}else{
+				$info['ac_user_id']  = 0;
 			}
 			
-			if(!$info['rp_user_id'])  $this->error('接受奖惩人员不存在');	
-			if(!$info['month'])       $this->error('请输入执行月份');	
-			if(!$score)               $this->error('请填写奖惩分数');	
+			
 			
 			//执行保存
 			if($editid){
 				$addinfo = M('qaqc')->data($info)->where(array('id'=>$editid))->save();
+				$qaqc    = M('qaqc')->find($editid);
+				$qaqcid  = $editid;
+				$status  = $qaqc['status'];
 			}else{
-				$info['ins_user_id']    = cookie('userid');
-				$info['ins_user_name']  = cookie('nickname');
-				$info['ins_time']       = time();
-				$addinfo = M('qaqc')->add($info);
-				
-				//发送公告
-				$title       = $info['title'];
-				$content     = $info['reason'];
-				$url    	 = '';
-				$source      = 1;
-				$source_id   = $addinfo;
-				send_notice($title,$content,$url,$source,$source_id);
+				$info['create_time']       = time();
+				$info['status']            = 0;
+				$info['inc_user_id']       = cookie('userid');
+				$info['inc_user_name']     = cookie('name');
+				$qaqcid  = M('qaqc')->add($info);
+				$status  = 0;
 			}
 			
 			
-			//修正绩效评分
-			qa_score_num($info['rp_user_id'],$info['month']);
+			//保存相关人员信息
+			if(M('qaqc_user')->where(array('qaqc_id'=>$qaqcid))->find()){
+				M('qaqc_user')->where(array('qaqc_id'=>$qaqcid))->delete();
+			}
+			foreach($qadata as $k=>$v){
+				if($v['user_name']){
+					$user = getuserinfo($v['user_name']);	
+					$data = array();
+					$data['qaqc_id']      = $qaqcid;
+					$data['user_id']      = $user['userid'];
+					$data['user_name']    = $v['user_name'];
+					$data['type']  		  = $v['type'];
+					$data['month']  	  = $info['month'];
+					$data['score']  	  = $v['score'];
+					$data['remark']  	  = $v['remark'];
+					$data['status']       = $status;
+					$data['update_time']  = time();
+					
+					//判断是否存在
+					$where = array();
+					$where['qaqc_id']      = $qaqcid;
+					$where['user_id']      = $v['user_name'];
+					$is = M('qaqc_user')->where($where)->find();
+					if(!$is){
+						M('qaqc_user')->add($data);	
+					}
+					
+					
+				}
+			}
 			
-			echo '<script>window.top.location.reload();</script>';
+			
+			
+			$this->success('信息已保存！',I('referer'));
 			
 		
 		}else{
 			
 			$id = I('id','');
 			if($id){
-				$row = M('qaqc')->find($id);
-				if($row['status']==0){
-					$row['score']  = $row['inc_score'];
-				}else{
-					$row['score']  = $row['red_score'];
-				}
-				$this->row = $row;
+				$this->row      = M('qaqc')->find($id);
+				$this->userlist = M('qaqc_user')->where(array('qaqc_id'=>$id))->select();
+				
 			}
 			
 			//整理关键字
@@ -814,10 +862,141 @@ class KpiController extends BaseController {
 				$key[$k]['role']       = $v['roleid'];
 				$key[$k]['role_name']  = $role[$v['roleid']];
 			}
-			
 			$this->userkey =  json_encode($key);	
 			
-			$this->display('addqa');
+			$this->display('addqaqc');
+		
+		}
+	}
+	
+	
+	// @@@NODE-3###addpdca###审核品质检查###
+	public function appqa(){
+		
+		if(isset($_POST['dosubmit'])){
+			
+			
+			$editid   = I('editid');
+			$info     = I('info');
+			$qadata   = I('qadata');
+			
+			
+			//获取相关人员信息
+			if($info['rp_user_name']){
+				$user = getuserinfo($info['rp_user_name']);	
+				$info['rp_user_id']  = $user['userid'];
+			}else{
+				$info['rp_user_id']  = 0;
+			}
+			if($info['ld_user_name']){
+				$user = getuserinfo($info['ld_user_name']);	
+				$info['ld_user_id']  = $user['userid'];
+			}else{
+				$info['ld_user_id']  = 0;
+			}
+			if($info['fd_user_name']){
+				$user = getuserinfo($info['fd_user_name']);	
+				$info['fd_user_id']  = $user['userid'];
+			}else{
+				$info['fd_user_id']  = 0;
+			}
+			if($info['ac_user_name']){
+				$user = getuserinfo($info['ac_user_name']);	
+				$info['ac_user_id']  = $user['userid'];
+			}else{
+				$info['ac_user_id']  = 0;
+			}
+			
+			if($info['status']){
+				$info['ex_user_id']       = cookie('userid');
+				$info['ex_user_name']     = cookie('name');
+				$info['ex_time']          = time();
+			}
+			
+			
+			//执行保存
+			$addinfo = M('qaqc')->data($info)->where(array('id'=>$editid))->save();
+			$qaqc    = M('qaqc')->find($editid);
+			$qaqcid  = $editid;
+			$status  = $qaqc['status'];
+		
+			//保存相关人员信息
+			if(M('qaqc_user')->where(array('qaqc_id'=>$qaqcid))->find()){
+				M('qaqc_user')->where(array('qaqc_id'=>$qaqcid))->delete();
+			}
+			foreach($qadata as $k=>$v){
+				if($v['user_name']){
+					$user = getuserinfo($v['user_name']);	
+					$data = array();
+					$data['qaqc_id']      = $qaqcid;
+					$data['user_id']      = $user['userid'];
+					$data['user_name']    = $v['user_name'];
+					$data['type']  		  = $v['type'];
+					$data['month']  	  = $info['month'];
+					$data['score']  	  = $v['score'];
+					$data['remark']  	  = $v['remark'];
+					$data['status']       = $status;
+					$data['update_time']  = time();
+					
+					//判断是否存在
+					$where = array();
+					$where['qaqc_id']      = $qaqcid;
+					$where['user_id']      = $v['user_name'];
+					$is = M('qaqc_user')->where($where)->find();
+					if(!$is){
+						M('qaqc_user')->add($data);	
+					}
+					
+					//修正绩效评分
+					qa_score_num($user['userid'],$info['month']);
+					
+				}
+			}
+			
+			
+			//发送公告
+			$title       = $info['title'];
+			$content     = $info['chen'].'<br>'.$info['reason'].'<br>'.$info['verif'];
+			$url    	 = '';
+			$source      = 1;
+			$source_id   = $qaqcid;
+			send_notice($title,$content,$url,$source,$source_id);
+			
+			
+			$this->success('已审批！',I('referer'));
+			
+		
+		}else{
+			
+			$id = I('id','');
+			if($id){
+				$this->row      = M('qaqc')->find($id);
+				$this->userlist = M('qaqc_user')->where(array('qaqc_id'=>$id))->select();
+				
+				if(C('RBAC_SUPER_ADMIN')!=cookie('username') && cookie('roleid')!=10){
+					if($this->row['status']!=0) {
+						$this->error('该信息已审批');	
+					}
+				}
+				
+			}
+			
+			//整理关键字
+			$role = M('role')->GetField('id,role_name',true);
+			$user =  M('account')->where(array('status'=>0))->select();
+			$key = array();
+			foreach($user as $k=>$v){
+				$text = $v['nickname'].'-'.$role[$v['roleid']];
+				$key[$k]['id']         = $v['id'];
+				$key[$k]['user_name']  = $v['nickname'];
+				$key[$k]['pinyin']     = strtopinyin($text);
+				$key[$k]['text']       = $text;
+				$key[$k]['role']       = $v['roleid'];
+				$key[$k]['role_name']  = $role[$v['roleid']];
+			}
+			$this->userkey =  json_encode($key);	
+			
+			$this->display('appqaqc');
 		
 		}
 	}
@@ -826,14 +1005,20 @@ class KpiController extends BaseController {
 	// @@@NODE-3###qadetail###查看品质检查详情###
 	public function qadetail(){
 		
+		$stastr = array(
+			'0' => '<span>未审核</span>',
+			'1' => '<span class="green">审核通过</span>',
+			'2' => '<span class="red">审核未过</span>',
+		);
+		
 		$id = I('id','');
 		if($id){
 			$row = M('qaqc')->find($id);
 			
 			$row['reason']     = $row['reason'] ? nl2br($row['reason']) : '无';
-			$row['joint']      = $row['joint'] ? nl2br($row['joint']) : '无';
-			$row['score']      = $row['status'] ? '-'.$row['red_score']:'+'.$row['inc_score']; 	
-			$row['statusstr']  = $row['status'] ? '<span class="red">处罚</span>':'<span class="green">奖励</span>';
+			$row['chen']       = $row['chen'] ? nl2br($row['chen']) : '无';
+			$row['verif']      = $row['verif'] ? nl2br($row['verif']) : '无';
+			$row['statusstr']  = $stastr[$row['status']];
 			
 			$this->row = $row;
 			
@@ -851,6 +1036,13 @@ class KpiController extends BaseController {
 	public function revoke(){
 		$id = I('id','');
 		
+		M('qaqc')->delete($id);
+		M('qaqc_user')->where(array('qaqc_id'=>$id))->delete();
+		M('notice')->where(array('source'=>1,'source_id'=>$id))->delete();
+		
+		$this->success('撤销成功！');
+		
+		/*
 		//获取品质检查信息
 		$qa = M('qaqc')->find($id);
 		
@@ -877,7 +1069,7 @@ class KpiController extends BaseController {
 		}else{
 			$this->error('品质检查信息不存在');		
 		}
-		
+		*/
 			
 	}
 }

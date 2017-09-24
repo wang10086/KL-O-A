@@ -3902,3 +3902,18 @@ th{ font-weight:normal;}
 .kjss button{ height:34px; border-radius:0; margin-left:10px;}
 
 .biaoti{ font-size:16px; font-weight:normal; color:#333333; width:100%; border-bottom:1px solid #dedede; padding-bottom:15px; float:left; clear:both;}
+
+#qaqclist{ padding:0 0px;}
+#qaqclist .form-control{ width:120px; float:left; margin-right:10px; border-radius:0;}
+#qaqclist .unitbox{ width:120px; margin-right:10px; float:left; clear:none; border:none; padding:0;}
+#qaqclist .us{ width:200px;}
+#qaqclist .bz{ width:300px;}
+#qaqclist .title{ width:22px; float:left; height:30px; line-height:30px; margin-left:-30px; text-align:right;}
+#qaqclist .userlist { width:100%; height:auto !important; float:left; clear:both; padding-bottom:15px; border-bottom:1px solid #cccccc; margin-top:15px;}
+#qaqclist .input-group{ width:auto; float:left; height:34px; margin-right:10px; background:#ffffff; }
+#qaqclist .input-group span{ border:1px solid #cccccc; width:40px; background:#ffffff; }
+#qaqclist .input-group span.rr{margin-left:-1px;}
+#qaqclist .input-group span input{ margin-left:5px;}
+#qaqclist .btn{ padding:7px 12px; font-size:12px;} 
+#qaqclist td{ line-height:34px;}
+#qaqclist_val{ display:none}

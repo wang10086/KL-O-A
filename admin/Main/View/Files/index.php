@@ -66,7 +66,7 @@
                                     	<td align="center">
                                         <input type="checkbox"  value="{$row.id}" class="accessdata" />
                                         </td>
-                                        <td><a href="{$row.url}" {$row.target}>{$row.file_name}</a></td>
+                                        <td><a href="{$row.url}" {$row.target}>{$row.file_name}</a> <a href="">权限</a></td>
                                         <td>{$row.file_type}</td>
                                         <td><if condition="$row['file_ext']">{$row.file_ext}</if></td>
                                         <td><if condition="$row['file_size']">{:fsize($row['file_size'])}</if></td>

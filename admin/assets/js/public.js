@@ -15,14 +15,21 @@ $(document).ready(function(e) {
     });
 	
 	//全局日期时间插件
-	$('.inputdate').datepicker();
-	$('.inputdatetime').datetimepicker();
+	//$('.inputdate').datepicker();
+	//$('.inputdatetime').datetimepicker();
 	
 	
 	laydate.render({
 		elem: '.monthly',type: 'month',format: 'yyyyMM'
 	});
-		
+	
+	laydate.render({
+		elem: '.inputdatetime',type: 'datetime'
+	});
+	
+	laydate.render({
+		elem: '.inputdate'
+	});
 	
 });
 
@@ -49,6 +56,31 @@ function ConfirmDel(url,msg) {
 		ok: function () {
 			window.location.href=url;
 			//this.title('3秒后自动关闭').time(3);
+			return false;
+		},
+		cancelVal: '取消',
+		cancel: true //为true等价于function(){}
+	});
+
+}
+
+
+function ConfirmSub(obj,msg) {
+	if(!msg){
+		var msg = '您确定保存该信息吗？';	
+	}
+	
+	art.dialog({
+		title: '提示',
+		width:400,
+		height:100,
+		lock:true,
+		fixed: true,
+		content: '<span style="width:100%; text-align:center; font-size:18px;float:left; clear:both;">'+msg+'</span>',
+		ok: function () {
+			//window.location.href=url;
+			//this.title('3秒后自动关闭').time(3);
+			$('#'+obj).submit();
 			return false;
 		},
 		cancelVal: '取消',

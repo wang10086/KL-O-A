@@ -22,12 +22,13 @@
                                     <div class="box-tools pull-right">
                                     	 <a href="javascript:;" class="btn btn-info btn-sm" onclick="javascript:opensearch('searchtext',600,120);"><i class="fa fa-search"></i> 搜索</a>
                                          <if condition="rolemenu(array('Kpi/addqa'))">
-                                         <a href="javascript:;" onClick="add_qa()" class="btn btn-danger btn-sm" ><i class="fa fa-plus"></i> 发布</a>
+                                         <a href="{:U('Kpi/addqa')}" class="btn btn-danger btn-sm" ><i class="fa fa-plus"></i> 发布</a>
                                          </if>
                                          
                                     </div>
                                 </div><!-- /.box-header -->
                                 <div class="box-body">
+                                	<!--
                                 	<div class="btn-group" id="catfont">
                                         
                                         <button onClick="window.location.href='{:U('Kpi/qa',array('type'=>2))}'" class="btn <?php if($type==2){ echo 'btn-info';}else{ echo 'btn-default'; } ?>">全部</button>
@@ -35,17 +36,24 @@
                                         <button onClick="window.location.href='{:U('Kpi/qa',array('type'=>0))}'" class="btn <?php if($type==0){ echo 'btn-info';}else{ echo 'btn-default'; } ?>" >奖励</button>
                                        
                                     </div>
-                                   
+                                    -->
                                 <table class="table table-bordered dataTable fontmini" id="tablelist" style="margin-top:10px;">
                                     <tr role="row" class="orders" >
                                         <th class="sorting" width="60" data="id">ID</th>
                                         <th class="sorting" data="title">标题</th>
-                                        <th width="80" class="sorting" data="month">执行月份</th>
-                                        <th width="80" class="sorting" data="rp_user_name">奖惩人员</th>
-                                        <th width="140" class="sorting" data="rp_role_name">所属部门</th>
-                                        <th width="80" class="sorting" data="status">类型</th>
-                                        <th width="80">分数</th>
-                                        <th width="120" class="ins_time" data="status">发布时间</th>
+                                        <th width="80" class="sorting" data="month">绩效月份</th>
+                                        <th width="80" class="sorting" data="rp_user_name">责任人</th>
+                                        <th width="80" class="sorting" data="fd_user_name">发现者</th>
+                                        <th width="80" class="sorting" data="inc_user_name">发布者</th>
+                                        <th width="80" class="sorting" data="ex_user_name">审核者</th>
+                                        <th width="80" class="sorting" data="status">状态</th>
+                                        <th width="120" class="create_time" data="status">发布时间</th>
+                                        <if condition="rolemenu(array('Kpi/addqa'))">
+                                        <th width="50" class="taskOptions">编辑</th>
+                                        </if>
+                                        <if condition="rolemenu(array('Kpi/appqa'))">
+                                        <th width="50" class="taskOptions">审核</th>
+                                        </if>
                                         <if condition="rolemenu(array('Kpi/revoke'))">
                                         <th width="50" class="taskOptions">撤销</th>
                                         </if>
@@ -56,16 +64,46 @@
                                         <td><a href="javascript:;" onClick="qadetail({$row.id})" >{$row.title}</a></td>
                                         <td>{$row.month}</td>
                                         <td>{$row.rp_user_name}</td>
-                                        <td>{$row.rp_role_name}</td>
-                                        <td>{$row.statusstr}</td>
-                                        <td>{$row.score}</td>
-                                        <td><if condition="$row['ins_time']">{$row.ins_time|date='Y-m-d H:i',###}</if></td>
-                                        <if condition="rolemenu(array('Kpi/revoke'))">
+                                        <td>{$row.fd_user_name}</td>
+                                        <td>{$row.inc_user_name}</td>
+                                        <td>{$row.ex_user_name}</td>
+                                        <td><span title="{$row.ex_reason}">{$row.statusstr}</span></td>
+                                        <td><if condition="$row['create_time']">{$row.create_time|date='Y-m-d H:i',###}</if></td>
+                                        <if condition="rolemenu(array('Kpi/addqa'))">
                                         <td class="taskOptions">
-                                        <button onClick="javascript:ConfirmDel('{:U('Kpi/revoke',array('id'=>$row['id']))}','您真的要撤销吗？')" title="删除" class="btn btn-warning btn-smsm"><i class="fa fa-reply"></i></button>
+                                        <?php 
+                                        if($row['status']==0 || C('RBAC_SUPER_ADMIN')==cookie('username') || cookie('roleid')==10 ||  cookie('userid')==$row['inc_user_id']) {
+                                        ?>
+                                        <a href="{:U('Kpi/addqa',array('id'=>$row['id']))}"  title="修改" class="btn btn-info btn-smsm"><i class="fa fa-pencil"></i></a>
+                                        <?php 
+                                        }
+                                        ?>
                                         </td>
                                         </if>
-                                       
+                                        <if condition="rolemenu(array('Kpi/appqa'))">
+                                        <td class="taskOptions">
+                                        <?php 
+                                        if($row['status']==0 || C('RBAC_SUPER_ADMIN')==cookie('username') || cookie('roleid')==10 ) {
+                                        ?>
+                                        <a href="{:U('Kpi/appqa',array('id'=>$row['id']))}"  title="审核" class="btn btn-success btn-smsm"><i class="fa fa-check"></i></a>
+                                        <?php 
+                                        }
+                                        ?>
+                                        </td>
+                                        </if>
+                                        <if condition="rolemenu(array('Kpi/revoke'))">
+                                        <td class="taskOptions">
+                                        <?php 
+                                        if($row['status']==1 || C('RBAC_SUPER_ADMIN')==cookie('username') || cookie('roleid')==10) {
+                                        ?>
+                                        <button onClick="javascript:ConfirmDel('{:U('Kpi/revoke',array('id'=>$row['id']))}','您真的要撤销吗？')" title="删除" class="btn btn-warning btn-smsm"><i class="fa fa-reply"></i></button>
+                                        <?php 
+                                        }
+                                        ?>
+                                        </td>
+                                        
+                                        </if>
+                                        
                                     </tr>
                                     </foreach>					
                                 </table>
@@ -96,13 +134,6 @@
                     <input type="text" class="form-control" name="user" placeholder="奖惩人员">
                 </div>
                 
-                <div class="form-group col-md-4">
-                    <select  class="form-control"  name="type">
-                        <option value="2">类型</option>
-                        <option value="0">奖励</option>
-                        <option value="1">惩罚</option>
-                    </select>                   
-                </div>
                 
                 </form>
             </div>
