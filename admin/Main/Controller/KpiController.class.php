@@ -1038,8 +1038,18 @@ class KpiController extends BaseController {
 		$id = I('id','');
 		
 		M('qaqc')->delete($id);
-		M('qaqc_user')->where(array('qaqc_id'=>$id))->delete();
+		
+		//撤销评分
+		$list = M('qaqc_user')->where(array('qaqc_id'=>$id))->delete();
+		foreach($list as $k=>$v){
+			//修正绩效评分
+			M('qaqc_user')->where(array('id'=>$v['id']))->delete();
+			qa_score_num($v['user_id'],$v['month']);
+		}
+		
+		
 		M('notice')->where(array('source'=>1,'source_id'=>$id))->delete();
+		
 		
 		$this->success('撤销成功！');
 		
