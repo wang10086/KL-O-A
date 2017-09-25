@@ -42,6 +42,7 @@
                                 <div class="box-body">
                                     <div class="btn-group" id="catfont">
                                         <a href="{:U('Kpi/pdca')}" class="btn <?php if(!$month){ echo 'btn-info';}else{ echo 'btn-default'; } ?>">全部</a>
+                                        <a href="{:U('Kpi/pdca',array('month'=>$prev_month,'show'=>$show))}" class="btn <?php if($month==$prev_month){ echo 'btn-info';}else{ echo 'btn-default'; } ?>">{$prev_month}</a>
                                         <a href="{:U('Kpi/pdca',array('month'=>$same_month,'show'=>$show))}" class="btn <?php if($month==$same_month){ echo 'btn-info';}else{ echo 'btn-default'; } ?>">{$same_month}</a>
                                         <a href="{:U('Kpi/pdca',array('month'=>$next_month,'show'=>$show))}" class="btn <?php if($month==$next_month){ echo 'btn-info';}else{ echo 'btn-default'; } ?>">{$next_month}</a>
                                     </div>

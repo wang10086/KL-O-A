@@ -166,6 +166,7 @@ class KpiController extends BaseController {
 		}
 		
 		$this->month  		= $month;
+		$this->prev_month   = date('Ym',strtotime("-1 month"));
 		$this->same_month   = date('Ym');
 		$this->next_month   = date('Ym',strtotime("+1 month"));
 		$this->userkey =  json_encode($key);	
