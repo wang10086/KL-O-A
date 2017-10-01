@@ -1021,9 +1021,10 @@ class KpiController extends BaseController {
 			$row['verif']      = $row['verif'] ? nl2br($row['verif']) : '无';
 			$row['statusstr']  = $stastr[$row['status']];
 			
-			$this->row = $row;
+			$this->row         = $row;
+			$this->userlist    = M('qaqc_user')->where(array('qaqc_id'=>$id))->select();
 			
-			$this->pdca       = M('pdca')->find($row['pdcaid']);
+			$this->pdca        = M('pdca')->find($row['pdcaid']);
 			
 		}else{
 			echo '<script>art_show_msgd(\'品质检查信息不存在\');</script>';	

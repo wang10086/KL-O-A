@@ -29,7 +29,7 @@
                         	<i class="fa fa-bell lefts"> 公告：</i>
                             <div class="indexmarquee">
                             	<foreach name="notice" item="row">   
-                                <a href="javascript:;" onClick="show_notice({$row.id})">{$row.title}</a>
+                                <a href="javascript:;" <?php if($row['source']==1){ echo ' onClick="qadetail('.$row['source_id'].')"';}else{ echo 'onClick="show_notice('.$row['id'].')"';} ?> >{$row.title}</a>
                                 </foreach>
                             </div>
                             <i class="fa fa-bars rights"></i>
@@ -359,7 +359,17 @@
         });
 		
 		
-		
+		 //查看详情
+		function qadetail(id) {
+			art.dialog.open('index.php?m=Main&c=Kpi&a=qadetail&id='+id,{
+				lock:true,
+				title: '品质检查详情',
+				width:800,
+				height:'90%',
+				fixed: true,
+				
+			});	
+		}
 		
 		
 

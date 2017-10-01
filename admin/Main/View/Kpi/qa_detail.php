@@ -37,9 +37,29 @@
             <div class="formtexts">{$row.reason}</div>
         </div>
         
-        <div class="fromlist">
-            <div class="fromtitle">纠正措施的验证：</div>
+        <div class="fromlist ">
+            <div class="fromtitle">纠正措施验证：</div>
             <div class="formtexts">{$row.verif}</div>
+        </div>
+        
+        <div id="qaqclist" style="margin:15px; ">
+        	<table class="table" style="border-top:2px solid #f39c12; " >
+                <tr>
+                    <th width="15%">人员</th>
+                    <th width="15%">类型</th>
+                    <th width="15%">分数</th>
+                    <th>备注</th>
+                </tr>
+                
+            	<foreach name="userlist" key="k" item="v">
+            	<tr>
+                    <td style="padding:8px; line-height:24px;">{$v.user_name}</td>
+                    <td style="padding:8px; line-height:24px;"><?php if($v['type']==0){ echo '惩罚';}else{ echo '奖励';} ?></td>
+                    <td style="padding:8px; line-height:24px;"><?php if($v['type']==0){ echo '-';}else{ echo '+';} ?>{$v.score}分</td>
+                    <td style="padding:8px; line-height:24px;">{$v.remark}</td>
+                </tr>
+            	</foreach>
+            </table>
         </div>
                              
     </div>                  
