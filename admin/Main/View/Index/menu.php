@@ -346,10 +346,11 @@
                                 <if condition="rolemenu(array('Kpi/qa'))">
                                 	<li><a href="{:U('Kpi/qa')}"><i class="fa fa-angle-right"></i> 品质检查</a></li>
                                 </if> 
+                                <!--
                                 <if condition="rolemenu(array('Kpi/kpi'))">
                                 	<li><a href="{:U('Kpi/kpi')}"><i class="fa fa-angle-right"></i> 我的KPI</a></li>
                                 </if> 
-                                
+                                -->
                                 
                             </ul>
                         </li>
