@@ -351,6 +351,30 @@ class BaseController extends Controller {
 			 op_record($record);
 			 
 	    }
+		
+		
+		
+		// 回款审核
+	    if ($row['req_type'] == P::REQ_TYPE_HUIKUAN) {
+			$dstdata = M()->table('__' . strtoupper($row['req_table']) . '__')->where('id='.$row['req_id'])->find();
+			
+			$record = array();
+			$record['op_id']   = $dstdata['op_id'];
+			$record['optype']  = 10;
+			if($dst_status == P::AUDIT_STATUS_PASS){
+				
+				//计入结算
+				$set = M('op_settlement')->where(array('op_id'=>$dstdata['op_id']))->find();
+				$huikuan = $set['huikuan'] + $dstdata['huikuan'];
+				M('op_settlement')->data(array('huikuan'=>$huikuan))->where(array('op_id'=>$dstdata['op_id']))->save();
+				
+				$record['explain'] = '预算审核通过'; 
+			}else{
+				$record['explain'] = '预算审核未通过'; 
+			}
+			op_record($record);
+			
+	    }
 	    
 	    return M('audit_log')->where('id='.$id)->save($data);    
 	}

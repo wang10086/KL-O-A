@@ -1112,13 +1112,11 @@ class KpiController extends BaseController {
 		$where = '';
 		$where .= '1 = 1';
 		if($month) $where .= ' AND `month` = '.trim($month); 
-		if($kpr)   $where .= ' AND `	ex_user_id` = '.$kpr; 
+		if($kpr)   $where .= ' AND ` ex_user_id` = '.$kpr; 
 		if($bkpr)  $where .= ' AND `user_id` = '.$bkpr; 
 		if(C('RBAC_SUPER_ADMIN')==cookie('username') || cookie('roleid')==10 || cookie('roleid')==13 || cookie('roleid')==14 || cookie('roleid')==28 || cookie('roleid')==43){}else{
 			$where .= ' AND (`user_id` in ('.Rolerelation(cookie('roleid')).') || `ex_user_id` = '.cookie('userid').')';
 		}
-		
-		//P($where);
 		
 		//分页
 		$pagecount = $db->where($where)->count();
@@ -1144,7 +1142,7 @@ class KpiController extends BaseController {
 		
 		$this->show     = $show;
 		$this->lists    = $lists; 
-		$this->pdcasta  = C('PDCA_STATUS');
+		$this->pdcasta  = C('KPI_STATUS');
 		
 		
 		
@@ -1175,6 +1173,7 @@ class KpiController extends BaseController {
 			
 		$this->display('kpi');
     }
+	
 	
 	
 	// @@@NODE-3###addkpi###新建KPI###
@@ -1244,7 +1243,7 @@ class KpiController extends BaseController {
 		
 		$id = I('id',0);
 		
-		$pdcasta  = C('PDCA_STATUS');
+		$pdcasta  = C('KPI_STATUS');
 		
 		$kpi = M('kpi')->find($id);
 		$kpi['total_score']  = $kpi['score'] ? $kpi['score'].'分' : '<font color="#999">未评分</font>'; 	
@@ -1260,7 +1259,7 @@ class KpiController extends BaseController {
 			}
 			
 			$this->lists = $lists;
-			$this->kpi  = $kpi;
+			$this->kpi   = $kpi;
 			
 			
 			$applist          = M('pdca_apply')->where(array('kpiid'=>$id))->order('apply_time DESC')->select();
@@ -1362,34 +1361,33 @@ class KpiController extends BaseController {
 			$editid    = I('editid');
 			$info      = I('info');
 			
-			if(!$info['work_plan'])  $this->error('计划工作项目标题未填写');
-			if(!$info['weight'])     $this->error('权重未填写');
-			if(!$info['standard'])   $this->error('细项及标准未填写');
+			if(!$info['quota_title'])  $this->error('指标名称未填写');
+			if(!$info['weight'])       $this->error('权重未填写');
+			if(!$info['target'])       $this->error('目标未填写');
 			
 			
+			$kpi = M('kpi')->find($info['kpi_id']);
 			//执行保存
 			if($editid){
 				
 				//if(!$info['complete'])   $this->error('完成情况及未完成原因未填写');
 				
 				$where = array();
-				$where['pdcaid'] = $info['pdcaid'];
+				$where['kpi_id'] = $info['kpi_id'];
 				$where['id']     = array('neq',$editid);
-				$sumweight       = M('pdca_term')->field('weight')->where($where)->sum('weight');
+				$sumweight       = M('kpi_more')->field('weight')->where($where)->sum('weight');
 				$shengyu         = 100-$sumweight;
 				
 				//if($info['weight']>$shengyu)   $this->error('月度总权重分不能大于100分');
-				
-				$pdca = M('pdca')->find($info['pdcaid']);
 				//判断是否自己保存
-				if(cookie('userid')==$pdca['tab_user_id'] || cookie('userid')==$pdca['eva_user_id'] || C('RBAC_SUPER_ADMIN')==cookie('username') || cookie('roleid')==10){
-					$addinfo = M('pdca_term')->data($info)->where(array('id'=>$editid))->save();
+				if(cookie('userid')==$kpi['user_id'] || cookie('userid')==$pdca['mk_user_id'] || C('RBAC_SUPER_ADMIN')==cookie('username') || cookie('roleid')==10){
+					$addinfo = M('kpi_more')->data($info)->where(array('id'=>$editid))->save();
 				}else{
 					$this->error('您没有权限保存');
 				}
 			}else{
 				
-				$sumweight  = M('pdca_term')->field('weight')->where(array('pdcaid'=>$info['pdcaid']))->sum('weight');
+				$sumweight  = M('kpi_more')->field('weight')->where(array('kpi_id'=>$info['kpi_id']))->sum('weight');
 				$shengyu  = 100-$sumweight;
 			
 				if($info['weight']>$shengyu)   $this->error('月度总权重分不能大于100分');
@@ -1397,34 +1395,28 @@ class KpiController extends BaseController {
 				$info['userid']      = cookie('userid');
 				$info['create_time'] = time();
 				$info['score']       = 0;
-				$addinfo = M('pdca_term')->add($info);
+				$addinfo = M('kpi_more')->add($info);
 			}
 			
-			//修正评分人信息
-			$pd  = M('pdca')->find($info['pdcaid']);
-			$us  = M('account')->find($pd['tab_user_id']);
-			$pfr = M('auth')->where(array('role_id'=>$us['roleid']))->find();
-			$eva_user_id  = $pfr ? $pfr['pdca_auth'] : 0;
-			M('pdca')->data(array('eva_user_id'=>$eva_user_id))->where(array('id'=>$info['pdcaid']))->save();
-				
 			
+		
 			//如果是制表人保存，修正状态
-			if($pd['tab_user_id'] == cookie('userid')){
-				$issave = M('pdca')->data(array('status'=>0,'total_score'=>0))->where(array('id'=>$info['pdcaid']))->save();
+			if($kpi['user_id'] == cookie('userid')){
+				$issave = M('kpi')->data(array('status'=>0))->where(array('id'=>$info['kpi_id']))->save();
 			}
 			
 			echo '<script>window.top.location.reload();</script>';
 			
 		}else{
 			$id               = I('id','');
-			$pdcaid           = I('pdcaid',0);
-			$this->pdca       = M('pdca')->find($pdcaid);
-			$this->row        = M('pdca_term')->find($id);
+			$kpiid            = I('kpiid',0);
+			$this->kpi        = M('kpi')->find($kpiid);
+			$this->row        = M('kpi_more')->find($id);
 			
 			$where = array();
-			$where['pdcaid'] = $pdcaid;
+			$where['kpi_id'] = $kpiid;
 			if($id) $where['id']     = array('neq',$id);
-			$shengyu          = M('pdca_term')->field('weight')->where($where)->sum('weight');
+			$shengyu          = M('kpi_more')->field('weight')->where($where)->sum('weight');
 			
 			$this->shengyu    = 100-$shengyu;
 			$this->display('editkpi');

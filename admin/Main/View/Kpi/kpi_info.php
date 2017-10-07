@@ -3,7 +3,7 @@
             <aside class="right-side">
                 <!-- Content Header (Page header) -->
                 <section class="content-header">
-                    <h1>KPI项目计划</h1>
+                    <h1>KPI指标详情</h1>
                     <ol class="breadcrumb">
                         <li><a href="{:U('Index/index')}"><i class="fa fa-home"></i> 首页</a></li>
                         <li><a href="{:U('Kpi/kpi')}"><i class="fa fa-gift"></i> KPI</a></li>
@@ -21,7 +21,7 @@
                             
                             <div class="box box-warning">
                                 <div class="box-header">
-                                    <h3 class="box-title"><span class="red">{:username($kpi['user_id'])} [{$kpi.month}]</span> KPI计划</h3>
+                                    <h3 class="box-title">[{$kpi.month}]  {:username($kpi['user_id'])}KPI各项指标</h3>
                                     <div class="box-tools pull-right">
                                     	
                                     </div>
@@ -41,7 +41,7 @@
 										if(cookie('userid')==$kpi['user_id'] || cookie('roleid')==$kpi['app_role']){
 											if(rolemenu(array('Kpi/editkpi'))){
 										?>
-                                        <a href="javascript:;" class="btn btn-success btn-sm" style="float:right;"  onClick="edit_kpi(0)"><i class="fa fa-fw fa-plus"></i> 新增项目</a> 
+                                        <a href="javascript:;" class="btn btn-success btn-sm" style="float:right;"  onClick="edit_kpi(0)"><i class="fa fa-fw fa-plus"></i> 录入指标</a> 
                                         <?php 
 											}
 										}
@@ -51,10 +51,11 @@
                                         <table class="table table-bordered dataTable fontmini" id="tablelist" style="margin-top:10px;">
                                             <tr role="row" class="orders" >
                                                 <th width="50">序号</th>
-                                                <th>工作项目</th>
-                                                <th width="180">完成时间</th>
-                                                <th width="100">录入时间</th>
-                                                <th width="100">权重分</th>
+                                                <th>指标名称</th>
+                                                <th width="100">目标</th>
+                                                <th width="100">完成</th>
+                                                <th width="100">完成率</th>
+                                                <th width="100">权重</th>
                                                 <th width="100">考评得分</th>
                                                 <?php 
 												if($kpi['status'] < 5 || cookie('roleid')==10 || C('RBAC_SUPER_ADMIN')==cookie('username') ){
@@ -80,9 +81,10 @@
                                             <foreach name="lists" key="key" item="row"> 
                                             <tr>
                                                 <td align="center"><?php echo $key+1; ?></td>
-                                                <td><a href="javascript:;" onClick="kpi({$row.id})">{$row.work_plan}</a></td>
-                                                <td>{$row.complete_time}</td>
-                                                <td><if condition="$row['create_time']">{$row.create_time|date='m-d H:i',###}</if></td>
+                                                <td><a href="javascript:;" onClick="kpi({$row.id})">{$row.quota_title}</a></td>
+                                                <td>{$row.target}</td>
+                                                <td>{$row.complete}</td>
+                                                <td>{$row.complete_rate}</td>
                                                 <td>{$row.weight}</td>
                                                 <td>{$row.score}</td>
                                                 <?php 
@@ -311,14 +313,14 @@
 	<include file="Index:footer2" />
     
     <script>
-    //编辑KPI项目
+    //编辑KPI指标
 	function edit_kpi(id) {
 		var kpiid = '{$kpi.id}';
 		art.dialog.open('index.php?m=Main&c=Kpi&a=editkpi&kpiid='+kpiid+'&id='+id,{
 			lock:true,
-			title: '新建KPI项目',
+			title: '新建KPI指标',
 			width:1000,
-			height:'90%',
+			height:400,
 			okValue: '提交',
 			fixed: true,
 			ok: function () {
@@ -335,7 +337,7 @@
 	function unitscore(id) {
 		art.dialog.open('index.php?m=Main&c=Kpi&a=unitscore&id='+id,{
 			lock:true,
-			title: 'KPI项目评分',
+			title: 'KPI指标评分',
 			width:700,
 			height:300,
 			okValue: '提交',
@@ -351,11 +353,11 @@
 	}
 	
 	
-	 //查看KPI项目
+	 //查看KPI指标
 	function kpi(id) {
 		art.dialog.open('index.php?m=Main&c=Kpi&a=kpidetail&id='+id,{
 			lock:true,
-			title: 'KPI项目详情',
+			title: 'KPI指标详情',
 			width:1000,
 			height:'90%',
 			fixed: true,

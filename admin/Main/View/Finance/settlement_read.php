@@ -91,7 +91,7 @@
         <tr>
             <td width="33.33%">实际人数：{$settlement.renshu}</td>
             <td width="33.33%">实际收入：{$settlement.shouru}</td>
-            <td width="33.33%"></td>
+            <td width="33.33%">合同签订：<?php if($settlement['hetong']){ echo '已签订';}else{ echo '未签订';} ?></td>
         </tr>
         <tr>
             <td width="33.33%">毛利：{$settlement.maoli}</td>

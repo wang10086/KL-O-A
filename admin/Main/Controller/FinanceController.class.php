@@ -639,7 +639,113 @@ class FinanceController extends BaseController {
 			
 		}
 	}
+	
+	
+	
+	
+	// @@@NODE-3###huikuan###项目回款###
+    public function huikuan(){
+			
+		$opid = I('opid');
+		$id   = I('id');
+		if($id){
+			$budget = M('op_huikuan')->find($id);
+			$opid = $budget['op_id'];
+		}
+		if(!$opid) $this->error('项目不存在');	
+		
+		$op             = M('op')->where(array('op_id'=>$opid))->find();
+		$settlement     = M('op_settlement')->where(array('op_id'=>$opid))->find();
+		$huikuan        = M('op_huikuan')->where(array('op_id'=>$opid))->order('id DESC')->select();
+		foreach($huikuan as $k=>$v){
+			
+			$show        = '';
+			$show_user   = '';
+			$show_time   = '';
+			$show_reason = '';
+			
+			$where = array();
+			$where['req_type'] = P::REQ_TYPE_HUIKUAN;
+			$where['req_id']   = $v['id'];
+			$audit = M('audit_log')->where($where)->find();
+			if($audit['dst_status']==0){
+				$show = '未审批';
+				$show_user = '未审批';
+				$show_time = '等待审批';
+			}else if($audit['dst_status']==1){
+				$show = '<span class="green">已通过</span>';
+				$show_user = $audit['audit_uname'];
+				$show_time = date('Y-m-d H:i:s',$audit['audit_time']);
+			}else if($audit['dst_status']==2){
+				$show = '<span class="red">未通过</span>';
+				$show_user = $audit['audit_uname'];
+				$show_reason = $audit['audit_reason'];
+				$show_time = date('Y-m-d H:i:s',$audit['audit_time']);
+			}
+			$huikuan[$k]['showstatus']   = $show;
+			$huikuan[$k]['show_user']    = $show_user;
+			$huikuan[$k]['show_time']    = $show_time;
+			$huikuan[$k]['show_reason']  = $show_reason;
+		}
+		
 
+		$this->op             = $op;
+		$this->settlement     = $settlement;
+		$this->kinds          = M('project_kind')->getField('id,name', true);
+		$this->huikuan        = $huikuan; 
+	
+		
+		$this->display('huikuan');
+	}
+	
+	
+	
+	//@@@NODE-3###save_huikuan###保存回款###
+    public function save_huikuan(){
+		
+		$info            = I('info');
+		$referer         = I('referer');
+		$settlement      = I('settlement',0);
+		$num             = 0;
+		
+		//保存回款
+		if($settlement){
+			
+			if(!$info['huikuan'])      $this->error('本次回款金额不能为空');
+			if(!$info['type'])         $this->error('请选择回款类型');
+			$info['userid']       = cookie('userid');
+			$info['create_time']  = time();
+			$save = M('op_huikuan')->add($info);	
+			
+			//提交审核
+			$audit = M('audit_log')->where(array('req_type'=>P::REQ_TYPE_HUIKUAN,'req_id'=>$save))->find();
+			if(!$audit){
+				$this->request_audit(P::REQ_TYPE_HUIKUAN, $save);		
+			}
+			
+			if($save){
+				$record = array();
+				$record['op_id']   = $opid;
+				$record['optype']  = 9;
+				$record['explain'] = '保存回款';
+				op_record($record);
+				$this->success('已提交申请等待审批！');		
+			}else{
+				$this->error('保存失败');	
+			}
+		
+		}
+		
+
+	}
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	
  

@@ -83,7 +83,8 @@ final class P {
 	const REQ_TYPE_FEES               = 700;  // 费用申请
 	const REQ_TYPE_BUDGET             = 800;  // 项目预算申请
 	const REQ_TYPE_SETTLEMENT         = 801;  // 项目结算申请
-	
+	const REQ_TYPE_HUIKUAN            = 802;  // 项目回款申请
+
 	
 	
 	//错误
