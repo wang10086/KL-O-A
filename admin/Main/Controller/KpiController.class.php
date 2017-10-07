@@ -1084,4 +1084,510 @@ class KpiController extends BaseController {
 		*/
 			
 	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	/////////////////////////////////////////////////////////////////////////
+	
+	
+	// @@@NODE-3###kpi###KPI###
+    public function kpi(){
+        $this->title('KPI');
+		
+		$kpr   = I('kpr');
+		$bkpr  = I('bkpr');
+		$month = I('month','');
+		$show  = I('show',0);
+		
+		if($show) $bkpr = cookie('userid');
+		
+		$db = M('kpi');
+		
+		$where = '';
+		$where .= '1 = 1';
+		if($month) $where .= ' AND `month` = '.trim($month); 
+		if($kpr)   $where .= ' AND `	ex_user_id` = '.$kpr; 
+		if($bkpr)  $where .= ' AND `user_id` = '.$bkpr; 
+		if(C('RBAC_SUPER_ADMIN')==cookie('username') || cookie('roleid')==10 || cookie('roleid')==13 || cookie('roleid')==14 || cookie('roleid')==28 || cookie('roleid')==43){}else{
+			$where .= ' AND (`user_id` in ('.Rolerelation(cookie('roleid')).') || `ex_user_id` = '.cookie('userid').')';
+		}
+		
+		//P($where);
+		
+		//分页
+		$pagecount = $db->where($where)->count();
+		$page = new Page($pagecount, P::PAGE_SIZE);
+		$this->pages = $pagecount>P::PAGE_SIZE ? $page->show():'';
+
+        $lists = $db->where($where)->limit($page->firstRow . ',' . $page->listRows)->order($this->orders('month'))->select();
+		foreach($lists as $k=>$v){
+			if($v['total_score']==0){
+				$totalshow = '<font color="#999">未评分</font>';	
+			}else{
+				$yu = 100-$v['total_score'];
+				if($yu){
+					$totalshow = '-'.$yu;	
+				}else{
+					$totalshow = '<font color="#999">无加扣分</font>';
+				}
+			}
+			
+			$lists[$k]['total_score_show']  = $totalshow; 	
+			$lists[$k]['kaoping']      = $v['mk_user_id'] ? '<a href="'.U('Kpi/kpi',array('bkpr'=>$v['mk_user_id'])).'">'.username($v['mk_user_id']).'</a>' : '未评分'; 	
+		}
+		
+		$this->show     = $show;
+		$this->lists    = $lists; 
+		$this->pdcasta  = C('PDCA_STATUS');
+		
+		
+		
+		//整理关键字
+		$userwhere = '`status`=0';
+		if(C('RBAC_SUPER_ADMIN')==cookie('username') || cookie('roleid')==10){}else{
+			$userwhere .= ' AND `id` in ('.Rolerelation(cookie('roleid')).') || `id` = '.cookie('userid').'';
+		}
+		$role = M('role')->GetField('id,role_name',true);
+		$user =  M('account')->where($userwhere)->select();
+		$key = array();
+		foreach($user as $k=>$v){
+			$text = $v['nickname'].'-'.$role[$v['roleid']];
+			$key[$k]['id']         = $v['id'];
+			$key[$k]['user_name']  = $v['nickname'];
+			$key[$k]['pinyin']     = strtopinyin($text);
+			$key[$k]['text']       = $text;
+			$key[$k]['role']       = $v['roleid'];
+			$key[$k]['role_name']  = $role[$v['roleid']];
+		}
+		
+		$this->month  		= $month;
+		$this->prev_month   = date('Ym',strtotime("-1 month"));
+		$this->same_month   = date('Ym');
+		$this->next_month   = date('Ym',strtotime("+1 month"));
+		$this->userkey =  json_encode($key);	
+			
+			
+		$this->display('kpi');
+    }
+	
+	
+	// @@@NODE-3###addkpi###新建KPI###
+	public function addkpi(){
+		
+		
+		if(isset($_POST['dosubmint'])){
+			
+			$editid    = I('editid');
+			$info      = I('info');
+			$com       = I('com',0);
+			
+			//执行保存
+			if($editid){
+				
+				//获取评分人信息
+				$pd  = M('kpi')->find($editid);
+				$us  = M('account')->find($pd['user_id']);
+				$pfr = M('auth')->where(array('role_id'=>$us['roleid']))->find();
+				$info['ex_user_id']  = $pfr ? $pfr['pdca_auth'] : 0;
+				
+				$addinfo = M('kpi')->data($info)->where(array('id'=>$editid))->save();
+			}else{
+				//判断月份是否存在
+				if(M('kpi')->where(array('month'=>$info['month'],'user_id'=>cookie('userid')))->find()){
+					$this->error('该月已存在KPI，您可以直接完善KPI指标信息');	
+				}else{
+					
+					//获取评分人信息
+					$pfr = M('auth')->where(array('role_id'=>cookie('roleid')))->find();
+					$info['ex_user_id']     = $pfr ? $pfr['pdca_auth'] : 0;
+					$info['mk_user_id']     = $pfr ? $pfr['pdca_auth'] : 0;
+					$info['user_id']        = cookie('userid');
+					$info['user_name']      = cookie('name');
+					$info['role_id']        = cookie('roleid');
+					$info['status']         = 0;
+					$info['create_time']    = time();
+					$addinfo = M('kpi')->add($info);
+					
+				}
+			}
+			
+			if($com){
+				$this->success('已保存！');
+			}else{
+				echo '<script>window.top.location.reload();</script>';
+			}
+			
+			
+		
+		
+		}else{
+			
+			$id = I('id','');
+			if($id){
+				$this->row = M('kpi')->find($id);
+			}
+			$this->display('addkpi');
+		
+		}
+	}
+	
+	
+	
+	// @@@NODE-3###kpiinfo###KPI指标管理###
+	public function kpiinfo(){
+		
+		$id = I('id',0);
+		
+		$pdcasta  = C('PDCA_STATUS');
+		
+		$kpi = M('kpi')->find($id);
+		$kpi['total_score']  = $kpi['score'] ? $kpi['score'].'分' : '<font color="#999">未评分</font>'; 	
+		$kpi['kaoping']      = $kpi['mk_user_id'] ? username($kpi['mk_user_id']) : '未评分'; 	
+		$kpi['status_str']   = $pdcasta[$kpi['status']]; 	
+		if($id && $kpi){
+			$where = array();
+			$where['kpi_id'] = $id;
+			
+			$lists = M('kpi_more')->where($where)->select();
+			foreach($lists as $K=>$v){
+				$lists[$K]['score']  = $v['mk_time'] ? 	$v['score']  : '<font color="#999">未评分</font>';
+			}
+			
+			$this->lists = $lists;
+			$this->kpi  = $kpi;
+			
+			
+			$applist          = M('pdca_apply')->where(array('kpiid'=>$id))->order('apply_time DESC')->select();
+			$pdcasta          = C('PDCA_STATUS');
+			foreach($applist as $k=>$v){
+				$applist[$k]['status'] = $pdcasta[$v['status']];	
+			}
+			$this->applist    = $applist;
+			
+			
+			//获取已评总分信息
+			$total = 0;
+			$kpidata = M('kpi_more')->where(array('kpi_id'=>$id))->select();
+			foreach($kpidata as $k=>$v){
+				//合计总分
+				$total += $v['score_status'] ? $v['score'] : $v['weight'];
+			}
+			if($total > 100){
+				$this->totalstr = '<span class="red" style="font-size:16px;">当前各项总分为'.$total.'，KPI总分不允许超过100分！</span>';
+			}else if($total == 100){
+				$this->totalstr = '<span class="blue" style="font-size:16px;">当前各项总分为'.$total.'，被考评人本月不扣分！</span>';	
+			}else{
+				$koufen = 100-$total;
+				$this->totalstr = '<span class="yellow" style="font-size:16px;">被考评人本月已扣'.$koufen.'分！</span>';		
+			}
+			
+			
+			$this->display('kpi_info');
+			
+		}else{
+			$this->error('KPI不存在');	
+		}
+		
+		
+	}
+	
+	
+	
+	// @@@NODE-3###kpi_unitscore###单项KPI评分###
+	public function kpi_unitscore(){
+		
+		$id = I('id',0);
+		$team = M('pdca_term')->find($id);
+		//查看PDCA状态
+		$pdca = M('pdca')->find($team['pdcaid']);
+		
+		//判断是否有权限评分
+		if(cookie('userid')==$pdca['eva_user_id'] || cookie('roleid')==10 || C('RBAC_SUPER_ADMIN')==cookie('username')){}else{
+			 $this->error('您没有权限评分');		
+		}
+			
+		if(isset($_POST['dosubmint'])){
+			
+			//保存分数
+			$info = I('info');
+			$info['score_status']  = 1;
+			if($info['score'] > $info['weight'])  $this->error('评分不能超出权重分');	
+			
+			M('pdca_term')->data($info)->where(array('id'=>$id))->save();
+			
+			
+			//汇总总分
+			$pdcalist = M('pdca_term')->where(array('pdcaid'=>$team['pdcaid']))->select();
+			$total = 0;
+			foreach($pdcalist as $k=>$v){
+				$total += $v['score_status']	? $v['score'] : $v['weight'];
+			}
+			
+			$data = array();
+			$data['total_score']      = $total;
+			$issave = M('pdca')->data($data)->where(array('id'=>$team['pdcaid']))->save();
+			
+			
+			echo '<script>window.top.location.reload();</script>';
+		
+		}else{
+		
+		
+			if($id && $team){
+				
+				$this->pdca  = $pdca;
+				$this->team  = $team;
+				$this->display('kpi_unitscore');
+				
+			}else{
+				$this->error('KPI不存在');	
+			}
+		
+		}
+		
+	}
+    
+	
+	// @@@NODE-3###editkpi###编辑KPI指标###
+	public function editkpi(){
+		
+		if(isset($_POST['dosubmint'])){
+			
+			$editid    = I('editid');
+			$info      = I('info');
+			
+			if(!$info['work_plan'])  $this->error('计划工作项目标题未填写');
+			if(!$info['weight'])     $this->error('权重未填写');
+			if(!$info['standard'])   $this->error('细项及标准未填写');
+			
+			
+			//执行保存
+			if($editid){
+				
+				//if(!$info['complete'])   $this->error('完成情况及未完成原因未填写');
+				
+				$where = array();
+				$where['pdcaid'] = $info['pdcaid'];
+				$where['id']     = array('neq',$editid);
+				$sumweight       = M('pdca_term')->field('weight')->where($where)->sum('weight');
+				$shengyu         = 100-$sumweight;
+				
+				//if($info['weight']>$shengyu)   $this->error('月度总权重分不能大于100分');
+				
+				$pdca = M('pdca')->find($info['pdcaid']);
+				//判断是否自己保存
+				if(cookie('userid')==$pdca['tab_user_id'] || cookie('userid')==$pdca['eva_user_id'] || C('RBAC_SUPER_ADMIN')==cookie('username') || cookie('roleid')==10){
+					$addinfo = M('pdca_term')->data($info)->where(array('id'=>$editid))->save();
+				}else{
+					$this->error('您没有权限保存');
+				}
+			}else{
+				
+				$sumweight  = M('pdca_term')->field('weight')->where(array('pdcaid'=>$info['pdcaid']))->sum('weight');
+				$shengyu  = 100-$sumweight;
+			
+				if($info['weight']>$shengyu)   $this->error('月度总权重分不能大于100分');
+				
+				$info['userid']      = cookie('userid');
+				$info['create_time'] = time();
+				$info['score']       = 0;
+				$addinfo = M('pdca_term')->add($info);
+			}
+			
+			//修正评分人信息
+			$pd  = M('pdca')->find($info['pdcaid']);
+			$us  = M('account')->find($pd['tab_user_id']);
+			$pfr = M('auth')->where(array('role_id'=>$us['roleid']))->find();
+			$eva_user_id  = $pfr ? $pfr['pdca_auth'] : 0;
+			M('pdca')->data(array('eva_user_id'=>$eva_user_id))->where(array('id'=>$info['pdcaid']))->save();
+				
+			
+			//如果是制表人保存，修正状态
+			if($pd['tab_user_id'] == cookie('userid')){
+				$issave = M('pdca')->data(array('status'=>0,'total_score'=>0))->where(array('id'=>$info['pdcaid']))->save();
+			}
+			
+			echo '<script>window.top.location.reload();</script>';
+			
+		}else{
+			$id               = I('id','');
+			$pdcaid           = I('pdcaid',0);
+			$this->pdca       = M('pdca')->find($pdcaid);
+			$this->row        = M('pdca_term')->find($id);
+			
+			$where = array();
+			$where['pdcaid'] = $pdcaid;
+			if($id) $where['id']     = array('neq',$id);
+			$shengyu          = M('pdca_term')->field('weight')->where($where)->sum('weight');
+			
+			$this->shengyu    = 100-$shengyu;
+			$this->display('editkpi');
+		}
+	}
+	
+	
+	
+	
+	// @@@NODE-3###pdcadetail###查看KPI指标详情###
+	public function kpidetail(){
+		
+		$id = I('id','');
+		if($id){
+			$row = M('pdca_term')->find($id);
+			
+			$row['standard']    = $row['standard'] ? nl2br($row['standard']) : '无';
+			$row['method']      = $row['method'] ? nl2br($row['method']) : '无';
+			$row['emergency']   = $row['emergency'] ? nl2br($row['emergency']) : '无';
+			$row['complete']    = $row['complete'] ? nl2br($row['complete']) : '无';
+			$row['nocomplete']  = $row['nocomplete'] ? nl2br($row['nocomplete']) : '无';
+			$row['newstrategy'] = $row['newstrategy'] ? nl2br($row['newstrategy']) : '无';
+			$row['view']        = $row['view'] ? nl2br($row['view']) : '无';
+			$row['score']       = $row['score'] ? $row['score'] : '未评分';
+			
+			$this->row = $row;
+			
+			$this->pdca       = M('pdca')->find($row['pdcaid']);
+			
+		}else{
+			echo '<script>art_show_msgd(\'KPI指标信息不存在\');</script>';	
+		}
+		$this->display('kpi_detail');
+		
+	}
+	
+	// @@@NODE-3###delkpi###删除KPI###
+	public function delkpi(){
+		$id = I('id',0);
+		
+		$pdca = M('pdca')->find($id);
+		if(cookie('userid')==$pdca['tab_user_id'] || cookie('roleid')==$pdca['app_role']) {
+			//执行删除
+			$iddel = M('pdca')->delete($id);
+			$this->success('删除成功！');
+		}else{
+			$this->error('您没有权限删除');	
+		}
+	}
+	
+	
+	// @@@NODE-3###delkpiterm###删除KPI项目###
+	public function delkpiterm(){
+		$id = I('id',0);
+		
+		$pdca = M('pdca_term')->find($id);
+		if($id && $pdca['userid']==cookie('userid')){
+			
+			//执行删除
+			$iddel = M('pdca_term')->delete($id);
+			$this->success('删除成功！');
+		}else{
+			$this->error('您没有权限删除');	
+		}
+		
+	}
+	
+	
+	// @@@NODE-3###kpi_applyscore###KPI申请评分###
+	public function kpi_applyscore(){
+		
+		$kpiid      = I('kpiid','');
+		$status     = I('status','');
+		$app_remark = I('app_remark','');
+		if(isset($_POST['dosubmint'])){
+			
+			if(!$status)   $this->error('请选择审批结果');	
+			
+			//查看KPI状态
+			$kpi = M('kpi')->find($kpiid);
+			
+				
+			$us   = M('account')->find($pdca['user_id']);
+			$pfr  = M('auth')->where(array('role_id'=>$us['roleid']))->find();
+			
+			$data = array();
+			$data['status']         = $status;
+			$data['ex_user_id']    = $pfr ? $pfr['pdca_auth'] : 0;
+			$data['mk_user_id']    = $pfr ? $pfr['pdca_auth'] : 0;
+			$data['app_time']       = time();           //申请时间
+			if($app_remark) $data['app_remark']     = $app_remark;      //审批时间
+			$apply = M('kpi')->data($data)->where(array('id'=>$pdcaid))->save();
+			if($apply){
+				
+				if($status==1){
+					$title   = '['.$kpi['month'].'PDCA],已编制完毕，请您审核';	
+					$user    = '['.$kpi['ex_user_id'].']';
+					$content = '';
+				}else if($status==4){
+					$title   = '['.$kpi['month'].'PDCA],已编制完毕，请您评分';	
+					$user = '['.$kpi['mk_user_id'].']';
+					$content = $app_remark;
+				}else if($status==2){
+					$title   = '['.$kpi['month'].'PDCA],已审核通过';	
+					$user = '['.$kpi['user_id'].']';
+					$content = '';
+				}else if($status==3){
+					$title   = '['.$kpi['month'].'PDCA],审核未通过';	
+					$user = '['.$kpi['user_id'].']';
+					$content = $app_remark;
+				}
+				
+				//发送消息
+				$uid  = cookie('userid');
+				$url  = U('Kpi/kpiinfo',array('id'=>$kpiid));
+				send_msg($uid,$title,$content,$url,$user);
+				
+				//保存审核记录
+				if($status==2 || $status==3){
+					$myid = cookie('userid');
+					$data = array();
+					$data['kpiid']          = $kpiid;
+					$data['apply_user']     = $myid;
+					$data['apply_user_nme'] = cookie('nickname') ? cookie('nickname') : username($myid);
+					$data['apply_time']     = time();
+					$data['status']         = $status;
+					$data['remark']         = $app_remark;
+					M('pdca_apply')->add($data);
+					$this->success('已审核！');
+				}else{
+					
+					$this->success('已提交申请！');	
+				}
+				
+				
+			}else{
+				$this->error('申请失败');	
+			}
+				
+			
+			
+		}else{
+			$id               = I('id','');
+			$pdcaid           = I('pdcaid',0);
+			$this->kpi        = M('kpi')->find($pdcaid);
+			$this->row        = M('kpi_more')->find($id);
+			
+			$this->display('editkpi');
+		}
+		
+	}
+ 	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 }
