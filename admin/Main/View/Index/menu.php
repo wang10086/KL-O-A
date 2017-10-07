@@ -346,8 +346,10 @@
                                 <if condition="rolemenu(array('Kpi/qa'))">
                                 	<li><a href="{:U('Kpi/qa')}"><i class="fa fa-angle-right"></i> 品质检查</a></li>
                                 </if> 
-                              
-                                	<li><a href="javascript:;" onClick="art_show_msg('加班开发中，稍后呈现...',5)"><i class="fa fa-angle-right"></i> KPI</a></li>
+                                <if condition="rolemenu(array('Kpi/kpi'))">
+                                	<li><a href="{:U('Kpi/kpi')}"><i class="fa fa-angle-right"></i> 我的KPI</a></li>
+                                </if> 
+                                
                                 
                             </ul>
                         </li>
