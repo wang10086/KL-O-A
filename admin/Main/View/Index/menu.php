@@ -346,12 +346,13 @@
                                 <if condition="rolemenu(array('Kpi/qa'))">
                                 	<li><a href="{:U('Kpi/qa')}"><i class="fa fa-angle-right"></i> 品质检查</a></li>
                                 </if> 
-                                <!--
-                                <if condition="rolemenu(array('Kpi/kpi'))">
-                                	<li><a href="{:U('Kpi/kpi')}"><i class="fa fa-angle-right"></i> 我的KPI</a></li>
+                                
+                                <if condition="rolemenu(array('Kpi/kpiinfo'))">
+                                	<li><a href="{:U('Kpi/kpiinfo')}"><i class="fa fa-angle-right"></i> KPI</a></li>
                                 </if> 
-                                -->
+                                <!--
                                 <li><a href="javascript:;" onClick="art_show_msg('加班开发中，稍后呈现...',5)"><i class="fa fa-angle-right"></i> KPI</a></li>
+                                -->
                             </ul>
                         </li>
                         </if>
@@ -484,6 +485,11 @@
                                     
                                     <if condition="rolemenu(array('Rbac/pdca_auth'))"> 
                                          <li class="{:on('Rbac/pdca_auth')}" ><a href="{:U('Rbac/pdca_auth')}"><i class="fa fa-angle-right"></i> PDCA指定评分人</a></li>
+                                    </if>
+                                    
+                                    
+                                    <if condition="rolemenu(array('Rbac/kpi_quota'))"> 
+                                         <li class="{:on('Rbac/kpi_quota')}" ><a href="{:U('Rbac/kpi_quota')}"><i class="fa fa-angle-right"></i> KPI考核指标管理</a></li>
                                     </if>
                                     
                                     <!--

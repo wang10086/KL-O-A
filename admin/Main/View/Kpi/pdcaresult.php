@@ -74,7 +74,15 @@
                                             <a href="{:U('Kpi/qa',array('uid'=>$row['tab_user_id'],'type'=>2,'month'=>$row['month']))}" style="float:right;">[详细]</a>
                                             <?php } ?>
                                             </td>
-                                            <td>{$row.total_kpi_score}</td>
+                                            <td>
+                                            {$row.total_kpi_score}
+                                            &nbsp;&nbsp;
+                                            <?php 
+											$year = substr($row['month'],0,4);
+											$month = ltrim(substr($row['month'],4,2),0);
+											?>
+                                            <a href="{:U('Kpi/kpiinfo',array('uid'=>$row['tab_user_id'],'year'=>$year,'month'=>$month))}" style="float:right;">[详细]</a>
+                                            </td>
                                             <td>{$row.sum_total_score}</td>
                                         </tr>
                                         </foreach>					

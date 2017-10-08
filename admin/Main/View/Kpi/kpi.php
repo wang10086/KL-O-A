@@ -6,7 +6,7 @@
                     <h1><span class="red">{$month}</span> {$_action_}</h1>
                     <ol class="breadcrumb">
                         <li><a href="{:U('Index/index')}"><i class="fa fa-home"></i> 首页</a></li>
-                        <li><a href="{:U('Kpi/kpi')}"><i class="fa fa-gift"></i> {$_pagetitle_}</a></li>
+                        <li><a href="{:U('Kpi/pdca')}"><i class="fa fa-gift"></i> {$_pagetitle_}</a></li>
                         <li class="active">{$_action_}</li>
                     </ol>
                 </section>
@@ -22,7 +22,7 @@
                                     	<form action="" method="get" id="searchform">
                                         <input type="hidden" name="m" value="Main">
                                         <input type="hidden" name="c" value="Kpi">
-                                        <input type="hidden" name="a" value="kpi">
+                                        <input type="hidden" name="a" value="pdca">
                                         <input type="hidden" name="bkpr" id="bkpr" value="">
                                         <input type="hidden" name="kpr" id="kpr" value="">
                                     	<input type="text" name="month" class="form-control monthly" placeholder="月份" style="width:100px; margin-right:10px;" />
@@ -33,52 +33,79 @@
                                     </div>
                                     <div class="box-tools pull-right">
                                     	 
-                                         <if condition="rolemenu(array('Kpi/addkpi'))">
-                                         <a href="javascript:;" onClick="add_kpi()" class="btn btn-sm btn-danger" ><i class="fa fa-plus"></i> 新建KPI</a>
+                                         <if condition="rolemenu(array('Kpi/addpdca'))">
+                                         <a href="javascript:;" onClick="add_pdca()" class="btn btn-sm btn-danger" ><i class="fa fa-plus"></i> 新建PDCA</a>
                                          </if>
                                          
                                     </div>
                                 </div><!-- /.box-header -->
                                 <div class="box-body">
                                     <div class="btn-group" id="catfont">
-                                        <a href="{:U('Kpi/kpi')}" class="btn <?php if(!$month){ echo 'btn-info';}else{ echo 'btn-default'; } ?>">全部</a>
-                                        <a href="{:U('Kpi/kpi',array('month'=>$prev_month,'show'=>$show))}" class="btn <?php if($month==$prev_month){ echo 'btn-info';}else{ echo 'btn-default'; } ?>">{$prev_month}</a>
-                                        <a href="{:U('Kpi/kpi',array('month'=>$same_month,'show'=>$show))}" class="btn <?php if($month==$same_month){ echo 'btn-info';}else{ echo 'btn-default'; } ?>">{$same_month}</a>
-                                        <a href="{:U('Kpi/kpi',array('month'=>$next_month,'show'=>$show))}" class="btn <?php if($month==$next_month){ echo 'btn-info';}else{ echo 'btn-default'; } ?>">{$next_month}</a>
+                                        <a href="{:U('Kpi/pdca')}" class="btn <?php if(!$month){ echo 'btn-info';}else{ echo 'btn-default'; } ?>">全部</a>
+                                        <a href="{:U('Kpi/pdca',array('month'=>$prev_month,'show'=>$show))}" class="btn <?php if($month==$prev_month){ echo 'btn-info';}else{ echo 'btn-default'; } ?>">{$prev_month}</a>
+                                        <a href="{:U('Kpi/pdca',array('month'=>$same_month,'show'=>$show))}" class="btn <?php if($month==$same_month){ echo 'btn-info';}else{ echo 'btn-default'; } ?>">{$same_month}</a>
+                                        <a href="{:U('Kpi/pdca',array('month'=>$next_month,'show'=>$show))}" class="btn <?php if($month==$next_month){ echo 'btn-info';}else{ echo 'btn-default'; } ?>">{$next_month}</a>
                                     </div>
                                     
                                     <div class="btn-group" id="catfont" style="float:right;">
                                         
-                                        <a href="javascript:;" onClick="showme(this)" data="{$show}" class="btn <?php if($show==1){ echo 'btn-info';}else{ echo 'btn-default'; } ?>">我的KPI</a>
+                                        <a href="javascript:;" onClick="showme(this)" data="{$show}" class="btn <?php if($show==1){ echo 'btn-info';}else{ echo 'btn-default'; } ?>">我的PDCA</a>
                                         
                                     </div>
                                     <table class="table table-bordered dataTable fontmini" id="tablelist" style="margin-top:10px;">
                                         <tr role="row" class="orders" >
                                             <th width="" class="sorting" data="month">月份</th>
                                             <!-- <th class="sorting" data="title">PDCA描述</th> -->
-                                            <th width="" class="sorting" data="user_id">被考评人</th>
-                                            <th width="" class="sorting" data="mk_user_id">考评人</th>
-                                            <th width="" class="sorting" data="score">考评得分</th>
+                                            <th width="" class="sorting" data="tab_user_id">被考评人</th>
+                                            <th width="" class="sorting" data="tab_user_id">考评人</th>
+                                            <th width="" class="sorting" data="total_score">考评得分</th>
                                             <th width="" class="sorting" data="status">状态</th>
-                                            <if condition="rolemenu(array('Kpi/kpiinfo'))">
-                                            <th width="50" class="taskOptions">指标</th>
+                                            <if condition="rolemenu(array('Kpi/pdcainfo'))">
+                                            <th width="50" class="taskOptions">项目</th>
+                                            </if>
+                                            <if condition="rolemenu(array('Kpi/editpdca'))">
+                                            <th width="50" class="taskOptions">编辑</th>
+                                            </if>
+                                            <if condition="rolemenu(array('Kpi/delpdca'))">
+                                            <th width="50" class="taskOptions">删除</th>
                                             </if>
     
                                         </tr>
                                         <foreach name="lists" item="row"> 
                                         <tr>
-                                            <td><a href="{:U('Kpi/kpiinfo',array('id'=>$row['id']))}" >{$row.month}</a></td>
+                                            <td><a href="{:U('Kpi/pdcainfo',array('id'=>$row['id']))}" >{$row.month}</a></td>
                                             <!-- <td><a href="{:U('Kpi/pdcainfo',array('id'=>$row['id']))}" >{$row.title}</a></td> -->
-                                            <td><a href="{:U('Kpi/kpi',array('bkpr'=>$row['user_id']))}">{:username($row['user_id'])}</a></td>
+                                            <td><a href="{:U('Kpi/pdca',array('bkpr'=>$row['tab_user_id']))}">{:username($row['tab_user_id'])}</a></td>
                                             <td>{$row.kaoping}</td>
                                             <td>{$row.total_score_show}</td>
                                             <td>{$pdcasta.$row[status]}</td>
-                                            <if condition="rolemenu(array('Kpi/kpiinfo'))">
+                                            <if condition="rolemenu(array('Kpi/pdcainfo'))">
                                             <td class="taskOptions">
-                                            <a href="{:U('Kpi/kpiinfo',array('id'=>$row['id']))}" title="指标" class="btn btn-success btn-smsm"><i class="fa fa-ellipsis-h"></i></a>
+                                            <a href="{:U('Kpi/pdcainfo',array('id'=>$row['id']))}" title="项目" class="btn btn-success btn-smsm"><i class="fa fa-ellipsis-h"></i></a>
                                             </td>
                                             </if>
-                                            
+                                            <if condition="rolemenu(array('Kpi/editpdca'))">
+                                            <td class="taskOptions">
+                                            <?php 
+                                            if(cookie('userid')==$row['tab_user_id'] || cookie('userid')==$pdca['eva_user_id'] || C('RBAC_SUPER_ADMIN')==cookie('username') || cookie('roleid')==10) {
+                                            ?>
+                                            <a href="javascript:;" onClick="add_pdca({$row.id})" title="修改" class="btn btn-info btn-smsm"><i class="fa fa-pencil"></i></a>
+                                            <?php 
+                                            }
+                                            ?>
+                                            </td>
+                                            </if>
+                                            <if condition="rolemenu(array('Kpi/delpdca'))">
+                                            <td class="taskOptions">
+                                            <?php 
+                                            if(cookie('userid')==$row['tab_user_id'] || cookie('userid')==$pdca['eva_user_id'] || C('RBAC_SUPER_ADMIN')==cookie('username') || cookie('roleid')==10) {
+                                            ?>
+                                            <button onClick="javascript:ConfirmDel('{:U('Kpi/delpdca',array('id'=>$row['id']))}')" title="删除" class="btn btn-warning btn-smsm"><i class="fa fa-times"></i></button>
+                                            <?php 
+                                            }
+                                            ?>
+                                            </td>
+                                            </if>
                                            
                                         </tr>
                                         </foreach>					
@@ -105,10 +132,10 @@
 
 	<script>
     //新建PDCA
-	function add_kpi(id) {
-		art.dialog.open('index.php?m=Main&c=Kpi&a=addkpi&id='+id,{
+	function add_pdca(id) {
+		art.dialog.open('index.php?m=Main&c=Kpi&a=addpdca&id='+id,{
 			lock:true,
-			title: '新建KPI',
+			title: '新建PDCA',
 			width:800,
 			height:400,
 			okValue: '提交',
@@ -161,10 +188,10 @@
 		var data = $(obj).attr('data');
 		if(data==0){
 			$(obj).attr('data','1').removeClass('btn-default').addClass('btn-info');
-			window.location.href="{:U('Kpi/kpi',array('month'=>$month,'show'=>1))}";
+			window.location.href="{:U('Kpi/pdca',array('month'=>$month,'show'=>1))}";
 		}else{
 			$(obj).attr('data','0').removeClass('btn-info').addClass('btn-default');
-			window.location.href="{:U('Kpi/kpi',array('month'=>$month,'show'=>0))}";
+			window.location.href="{:U('Kpi/pdca',array('month'=>$month,'show'=>0))}";
 		}
 	}
 	</script>

@@ -1492,6 +1492,21 @@ function show_score($score){
 	return $return;
 }
 
+
+
+
+function getthemonth($date,$type=0){
+	$firstday = date('Y-m-01', strtotime($date));
+	$lastday = date('Y-m-d', strtotime("$firstday +1 month -1 day"));
+	
+	if($type==0){
+		return array(strtotime($firstday), strtotime($lastday)+86399);
+	}else{
+		return array($firstday, $lastday);
+	}
+   
+} 
+
 ?>
 
 

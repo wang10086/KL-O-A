@@ -12,46 +12,29 @@
         <input type="hidden" name="editid" value="{$row.id}">
         <div class="fromlist fromlistbrbr">
             <div class="formtexts">
-            	<h4>{$row.work_plan}</h4>
-                <span class="fr">完成时间：{$row.complete_time}</span>
-                <span class="fr">权重：{$row.weight}</span>
-				<span class="fr">考评人：{:username($pdca['eva_user_id'])}</span>
-                <span class="fr">考评得分：{$row.score}</span>
+            	<h4>{$row.quota_title}</h4>
+                <span class="fr">指标值：{$row.quota_value}</span>
+				<span class="fr">考核周期：{$row.cycle}</span>
                 
-                <span class="fr" style="border:none;">编制时间：{$row.create_time|date='Y-m-d H:i:s',###}</span>
             </div>
         </div>
        
         
         <div class="fromlist nobor">
-            <div class="fromtitle">细项及标准：</div> 
-            <div class="formtexts">{$row.standard}</div>
+            <div class="fromtitle">指标内容：</div> 
+            <div class="formtexts">{$row.quota_content}</div>
         </div>
         
         <div class="fromlist">
-            <div class="fromtitle">执行方法：</div>
+            <div class="fromtitle">衡量方法：</div>
             <div class="formtexts">{$row.method}</div>
         </div>
         
         <div class="fromlist">
-            <div class="fromtitle">应急问题处理：</div>
-            <div class="formtexts">{$row.emergency}</div>
+            <div class="fromtitle">实际得分计算：</div>
+            <div class="formtexts">{$row.calculate}</div>
         </div>
         
-        <div class="fromlist">
-            <div class="fromtitle">完成情况及未完成原因：</div>
-            <div class="formtexts">{$row.complete}</div>
-        </div>
-        
-        <div class="fromlist">
-            <div class="fromtitle">新策略：</div>
-            <div class="formtexts">{$row.newstrategy}</div>
-        </div>
-        
-        <div class="fromlist">
-            <div class="fromtitle">考评人意见：</div>
-            <div class="formtexts">{$row.view}</div>
-        </div>
         
         </form>
         

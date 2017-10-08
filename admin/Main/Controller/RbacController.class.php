@@ -1036,5 +1036,112 @@ class RbacController extends BaseController {
 		}
     }
     
+	
+	
+	
+	    // @@@NODE-3###kpi_quota###KPI指标管理###
+    public function kpi_quota(){
+    
+        $this->title('KPI指标管理');
+    
+        $db = M('kpi_config');
+       
+		//分页
+		$pagecount = $db->where($where)->count();
+		$page = new Page($pagecount, P::PAGE_SIZE);
+		$this->pages = $pagecount>P::PAGE_SIZE ? $page->show():'';
+		
+        $this->datalist = $db->where($where)->order($this->orders('id'))->limit($page->firstRow . ',' . $page->listRows)->select();
+        $this->display('kpi_quota');
+    }
+    
+    
+	
+    // @@@NODE-3###add_quota###编辑指标###
+    public function add_quota(){
+    
+        $this->title('编辑指标');
+         
+        $db = M('kpi_config');
+    
+        if(isset($_POST['dosubmit'])){
+            	
+            $info    = I('info','');
+            $id      = I('editid',0);
+			$referer = I('referer','');
+			$info['create_time'] = time();
+			
+            if(!$id){
+                $save = $db->add($info);
+            }else{
+                $save = $db->data($info)->where(array('id'=>$id))->save();
+            }
+			if($save){
+				$this->success('保存成功！',$referer);
+			}else{
+				$this->error('保存失败！',$referer);
+			}
+			 
+            	
+        }else{
+            $id = I('id', 0);
+            if($id) $this->row = $db->find($id);
+            $this->display('add_quota');
+        }
+    }
+    
+	
+	public function del_quota() {
+        $db = M('kpi_config');
+        $id = I('id', -1);
+        $iddel = $db->delete($id);
+        $this->success('删除成功！', U('Rbac/kpi_quota'));
+    }
+	
+	
+	
+	
+	 // @@@NODE-3###rolequto###选择角色适用KPI指标范围###
+    public function rolequto() {
+        $this->title('选择KPI考核指标');
+        if (isset($_POST['dosubmit'])) {
+    
+            $quto   = I('quto');
+            $roleid = I('roleid');
+         	
+			//删除
+			$iddel = M('kpi_role_quota')->where(array('roleid'=>$roleid))->delete();
+            foreach($quto as $k=>$v){
+				$data = array();
+				$data['roleid']	 = $roleid;
+				$data['quotaid']	 = $v;
+				M('kpi_role_quota')->add($data);
+			}
+			
+			$this->success('已成功保存！');
+            	
+        } else {
+            $roleid = I('roleid');
+            if (!$roleid) $this->error('非法操作！', U('Rbac/role'));
+            $this->roleid = $roleid;
+            	
+            $role = M('role')->find($roleid);
+            $this->rolename = $role['remark'];
+			
+			
+			$selected = M('kpi_role_quota')->where(array('roleid'=>$roleid))->select();
+            if($selected){
+				$sel = array();
+				foreach($selected as $k=>$v){
+					$sel[] = $v['quotaid'];
+				}	
+				$this->sel = $sel;
+			}
+            	
+            $this->datalist  = M('kpi_config')->select();
+            $this->display('rolequto');
+        }
+    }
+    
     
 }
