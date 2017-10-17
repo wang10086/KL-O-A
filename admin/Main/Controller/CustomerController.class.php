@@ -172,6 +172,11 @@ class CustomerController extends BaseController {
 			$to      = I('to');
 			$toid    = I('toid');
 			$gec     = I('gec');
+			
+			if(!$toid){
+				$user = M('account')->where(array('nickname'=>$to))->find();	
+				$toid = $user['id'];
+			}
 			$i = 0;
 			foreach($gec as $k=>$v){
 				$data = array();
