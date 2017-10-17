@@ -46,7 +46,7 @@
                                         </div>
                                         
                                         <div class="form-group col-md-4">
-                                            <label>出团日期：</label><input type="text" name="info[departure]"  class="form-control" />
+                                            <label>出团日期：</label><input type="text" name="info[departure]"  class="form-control inputdate" />
                                         </div>
                                         
                                         <div class="form-group col-md-4">
@@ -58,7 +58,7 @@
                                         </div>
                                         
                                         <div class="form-group col-md-4">
-                                            <label>立项时间：</label><input type="text" name="info[op_create_date]" class="form-control" />
+                                            <label>立项时间：</label><input type="text" name="info[op_create_date]" class="form-control inputdate_a" />
                                         </div>
                                         
                                         <div class="form-group col-md-4">

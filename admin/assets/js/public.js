@@ -31,6 +31,11 @@ $(document).ready(function(e) {
 		elem: '.inputdate'
 	});
 	
+	laydate.render({
+		elem: '.inputdate_a'
+	});
+	
+	
 });
 
 function ConfirmDel(url,msg) {
