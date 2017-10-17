@@ -22,7 +22,7 @@ class IndexController extends BaseController {
 		$this->sum_plans    = M('op')->where("`departure` >= '$startday' and `departure`<= '$endday' and `status`= 1")->count();
 		
 		//获取公告
-		$this->notice = M('notice')->limit(20)->select();
+		$this->notice = M('notice')->limit(10)->select();
 		
 		
 		$this->css('date');
