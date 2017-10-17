@@ -43,7 +43,7 @@
                                         <th class="sorting" data="title">标题</th>
                                         <th width="80" class="sorting" data="month">绩效月份</th>
                                         <th width="80" class="sorting" data="rp_user_name">责任人</th>
-                                        <th width="80" class="sorting" data="fd_user_name">发现者</th>
+                                        <!--<th width="80" class="sorting" data="fd_user_name">发现者</th>-->
                                         <th width="80" class="sorting" data="inc_user_name">发布者</th>
                                         <th width="80" class="sorting" data="ex_user_name">审核者</th>
                                         <th width="80" class="sorting" data="status">状态</th>
@@ -64,7 +64,7 @@
                                         <td><a href="javascript:;" onClick="qadetail({$row.id})" >{$row.title}</a></td>
                                         <td>{$row.month}</td>
                                         <td>{$row.rp_user_name}</td>
-                                        <td>{$row.fd_user_name}</td>
+                                        <!--<td>{$row.fd_user_name}</td>-->
                                         <td>{$row.inc_user_name}</td>
                                         <td>{$row.ex_user_name}</td>
                                         <td><span title="{$row.ex_reason}">{$row.statusstr}</span></td>
