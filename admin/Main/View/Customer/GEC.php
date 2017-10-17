@@ -21,6 +21,9 @@
                                     <h3 class="box-title">客户管理</h3>
                                     <div class="box-tools pull-right">
                                     	 <a href="javascript:;" class="btn btn-info btn-sm" onclick="javascript:opensearch('searchtext',700,160);"><i class="fa fa-search"></i> 搜索</a>
+                                         <if condition="rolemenu(array('Customer/GEC_transfer'))">
+                                         <a href="{:U('Customer/GEC_transfer')}" class="btn btn-sm btn-success"><i class="fa fa-refresh"></i> 交接客户</a>
+                                         </if>
                                          <if condition="rolemenu(array('Customer/GEC_edit'))">
                                          <a href="{:U('Customer/GEC_edit')}" class="btn btn-sm btn-danger"><i class="fa fa-plus"></i> 录入客户</a>
                                          </if>

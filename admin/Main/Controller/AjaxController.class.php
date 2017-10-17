@@ -49,6 +49,38 @@ class AjaxController extends Controller {
 		echo json_encode($key);	
 	}
    
-  
+  	
+	
+	public function customer(){
+		
+		$nm = I('nm');
+		
+		$db = M('customer_gec');
+		
+		$where = array();
+		$where['cm_name']  = $nm;
+		
+        $lists = $db->where($where)->select();
+		
+		$html = '';
+		foreach($lists as $k=>$v){
+			
+			$html .= '<tr>';
+			$html .= '<td><input type="checkbox" checked name="gec[]" value="'.$v['id'].'"></td>';
+			$html .= '<td>'.$v['id'].'</td>';
+			$html .= '<td>'.$v['company_name'].'</td>';
+			$html .= '<td>'.$v['type'].'</td>';
+			$html .= '<td>'.$v['contacts'].'</td>';
+			$html .= '<td>'.$v['contacts_tel'].'</td>';
+			$html .= '<td>'.$v['province'].'-'.$v['city'].'-'.$v['county'].'</td>';
+			$html .= '<td>'.$v['qianli'].'</td>';
+			$html .= '<td>'.$v['level'].'</td>';
+			$html .= '</tr>';
+			
+		}
+		
+		echo $html;	
+	}
+   
 	
 }

@@ -58,6 +58,8 @@ class CustomerController extends BaseController {
 			$lists[$k]['hezuocishu'] = $hz['create_time'] ? M('op')->where(array('customer'=>$v['company_name'],'audit_status'=>1))->count() : '';	
 		}
 		
+		
+		
 		$this->lists   = $lists;
 		
 		$this->display('GEC');
@@ -159,6 +161,49 @@ class CustomerController extends BaseController {
 		
 		
     }
+	
+	// @@@NODE-3###GEC_transfer###交接客户###
+	public function GEC_transfer(){
+		if(isset($_POST['dosubmint']) && $_POST['dosubmint']){
+			
+			$referer = I('referer');
+			$fm      = I('fm');
+			$fmid    = I('fmid');
+			$to      = I('to');
+			$toid    = I('toid');
+			$gec     = I('gec');
+			$i = 0;
+			foreach($gec as $k=>$v){
+				$data = array();
+				$data['cm_id']   = $toid;
+				$data['cm_name'] = $to;
+				$save = M('customer_gec')->data($data)->where(array('id'=>$v))->save();
+				if($save){
+					$i++;	
+				}
+			}
+			
+			$this->success('成功交接了'.$i.'条客户信息！',$referer);		
+			
+		}else{
+			
+			$role = M('role')->GetField('id,role_name',true);
+			$user =  M('account')->select();
+			$key = array();
+			foreach($user as $k=>$v){
+				$text = $v['nickname'].'-'.$role[$v['roleid']];
+				$key[$k]['id']         = $v['id'];
+				$key[$k]['user_name']  = $v['nickname'];
+				$key[$k]['pinyin']     = strtopinyin($text);
+				$key[$k]['text']       = $text;
+				$key[$k]['role']       = $v['roleid'];
+				$key[$k]['role_name']  = $role[$v['roleid']];
+			}
+			
+			$this->userkey = json_encode($key);	
+			$this->display('GEC_transfer');
+		}
+	}
 	
 	
 	// @@@NODE-3###GEC_viwe###编辑政企客户###
