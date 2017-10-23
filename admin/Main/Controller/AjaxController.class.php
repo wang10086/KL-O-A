@@ -81,6 +81,21 @@ class AjaxController extends Controller {
 		
 		echo $html;	
 	}
-   
+    
+	
+	// @@@NODE-3###updatekpi###更新KPI数据###
+	public function updatekpi(){
+		
+		$month  = I('month','');
+		$user   = I('uid',cookie('userid'));
+		
+		if($month && $user){
+			updatekpi($month,$user);
+			$this->success('获取完毕!');
+		}else{
+			$this->error('请求数据不正确');			
+		}
+		
+	}
 	
 }

@@ -41,18 +41,19 @@
                                         <textarea class="form-control" name="info[quota_content]" >{$row.quota_content}</textarea>
                                     </div>
                                     
-                                    
+                                    <!--
                                     <div class="form-group col-md-4">
                                         <label>指标值</label>
                                         <input class="form-control"  type="text" name="info[quota_value]"  value="{$row.quota_value}"/>
                                     </div>
+                                    -->
                                     
-                                    <div class="form-group col-md-4">
+                                    <div class="form-group col-md-6">
                                         <label>权重</label>
                                         <input class="form-control"  type="text" name="info[weight]"  value="{$row.weight}"/>
                                     </div>
                                     
-                                    <div class="form-group col-md-4">
+                                    <div class="form-group col-md-6">
                                         <label>考核周期</label>
                                         <input class="form-control"  type="text" name="info[cycle]"  value="{$row.cycle}"/>
                                     </div>

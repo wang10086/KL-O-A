@@ -58,6 +58,15 @@
                                         </if>
                                         
                                         <div class="form-group">
+                                            <label>岗位</label>
+                                            <select class="form-control" name="info[postid]">
+                                                <foreach name="posts" key="k" item="v">
+                                                <option value="{$k}">{$v}</option>
+                                                </foreach>
+                                            </select>
+                                        </div>
+                                        
+                                        <div class="form-group">
                                             <label>用户名</label>
                                             <input type="text" name="info[username]" id="username"  class="form-control" />
                                         </div>

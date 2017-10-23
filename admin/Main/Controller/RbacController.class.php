@@ -99,6 +99,7 @@ class RbacController extends BaseController {
             $id = I('id', 0);
             	
             $this->roles =  M('role')->where('id>3')->select();
+			$this->posts =  M('posts')->GetField('id,post_name',true);
             	
             if (!$id) {
                 $this->pagetitle = '新增用户';
@@ -1039,7 +1040,7 @@ class RbacController extends BaseController {
 	
 	
 	
-	    // @@@NODE-3###kpi_quota###KPI指标管理###
+	// @@@NODE-3###kpi_quota###KPI指标管理###
     public function kpi_quota(){
     
         $this->title('KPI指标管理');
@@ -1106,30 +1107,30 @@ class RbacController extends BaseController {
         $this->title('选择KPI考核指标');
         if (isset($_POST['dosubmit'])) {
     
-            $quto   = I('quto');
-            $roleid = I('roleid');
-         	
+            $quto    = I('quto');
+            $postid  = I('postid');
+         	$referer = I('referer','');
 			//删除
-			$iddel = M('kpi_role_quota')->where(array('roleid'=>$roleid))->delete();
+			$iddel = M('kpi_post_quota')->where(array('postid'=>$postid))->delete();
             foreach($quto as $k=>$v){
 				$data = array();
-				$data['roleid']	 = $roleid;
+				$data['postid']	 = $postid;
 				$data['quotaid']	 = $v;
-				M('kpi_role_quota')->add($data);
+				M('kpi_post_quota')->add($data);
 			}
 			
-			$this->success('已成功保存！');
+			$this->success('已成功保存！',$referer);
             	
         } else {
-            $roleid = I('roleid');
-            if (!$roleid) $this->error('非法操作！', U('Rbac/role'));
-            $this->roleid = $roleid;
+            $postid = I('postid');
+            if (!$postid) $this->error('非法操作！', U('Rbac/post'));
+            $this->postid = $postid;
             	
-            $role = M('role')->find($roleid);
-            $this->rolename = $role['remark'];
+            $post = M('posts')->find($postid);
+            $this->postname = $post['post_name'];
 			
 			
-			$selected = M('kpi_role_quota')->where(array('roleid'=>$roleid))->select();
+			$selected = M('kpi_post_quota')->where(array('postid'=>$postid))->select();
             if($selected){
 				$sel = array();
 				foreach($selected as $k=>$v){
@@ -1142,6 +1143,170 @@ class RbacController extends BaseController {
             $this->display('rolequto');
         }
     }
+	
+	
+	
+	// @@@NODE-3###post###岗位管理###
+    public function post(){
     
+        $this->title('岗位管理');
     
+        $db = M('posts');
+       
+		//分页
+		$pagecount = $db->where($where)->count();
+		$page = new Page($pagecount, P::PAGE_SIZE);
+		$this->pages = $pagecount>P::PAGE_SIZE ? $page->show():'';
+		
+        $this->datalist = $db->where($where)->order($this->orders('id'))->limit($page->firstRow . ',' . $page->listRows)->select();
+        $this->display('post');
+    }
+    
+	
+	// @@@NODE-3###addpost###编辑岗位###
+    public function addpost(){
+    
+        $this->title('编辑指标');
+         
+        $db = M('posts');
+    
+        if(isset($_POST['dosubmit'])){
+            	
+            $info    = I('info','');
+            $id      = I('editid',0);
+			$referer = I('referer','');
+			
+			
+            if(!$id){
+                $save = $db->add($info);
+            }else{
+                $save = $db->data($info)->where(array('id'=>$id))->save();
+            }
+			if($save){
+				$this->success('保存成功！',$referer);
+			}else{
+				$this->error('保存失败！',$referer);
+			}
+			 
+            	
+        }else{
+            $id = I('id', 0);
+            if($id) $this->row = $db->find($id);
+            $this->display('addpost');
+        }
+    }
+	
+	
+	// @@@NODE-3###kpi_data###配置KPI数据###
+	public function kpi_data(){
+		$this->title('配置KPI目标数据');
+         
+       $id    = I('id');
+		
+		$year  = I('year',date('Y'));
+		$month = I('month',date('m'));
+		$user  = I('uid',cookie('userid'));
+		
+		
+		$sta   = C('KPI_STATUS');
+		
+		if($id){
+			$kpi   = M('kpi')->where($where)->find($id);
+			$year  = $kpi['year'];
+			$month = ltrim(substr($kpi['month'],4,2),0);
+			$user  = $kpi['user_id'];
+		}else{
+			$where = array();
+			$where['month']   = $year.sprintf('%02s', $month);
+			$where['user_id'] = $user;
+			$kpi = M('kpi')->where($where)->find();
+		}
+		
+		
+		
+		$kpi['kaoping']      = $kpi['mk_user_id'] ? username($kpi['mk_user_id']) : '未评分'; 	
+		$kpi['score']        = $kpi['score'] ? $kpi['score'].'分' : '未评分'; 	
+		$kpi['status_str']   = $sta[$kpi['status']]; 	
+		
+		//考核指标
+		$lists = M('kpi_more')->where(array('kpi_id'=>$kpi['id']))->select();
+		foreach($lists as $K=>$v){
+			$lists[$K]['score']  = $v['score_status'] ?  $v['score']  : '<font color="#999">未评分</font>';
+		}
+		
+		//审核记录
+		$applist          = M('kpi_op_record')->where(array('kpi_id'=>$kpi['id']))->order('op_time DESC')->select();
+		
+		//用户信息
+		$post             = M('posts')->GetField('id,post_name',true);
+		$userinfo             = M('account')->find($user);
+		$userinfo['postname'] = $userinfo['postid'] ? $post[$userinfo['postid']] : '未配置岗位';
+		
+		$this->user       = $userinfo;
+		$this->uid        = $user;
+		$this->year       = $year;
+		$this->month      = $month;
+		$this->kpi        = $kpi;
+		$this->lists      = $lists;
+		$this->applist    = $applist;
+		$this->prveyear   = $year-1;
+		$this->nextyear   = $year+1;
+		$this->allmonth   = $year.sprintf('%02s', $month);
+        
+		$this->display('kpidata');
+	}
+	
+	
+	// @@@NODE-3###save_kpi_data###保存KPI指标数据###
+	public function save_kpi_data(){
+		$id = I('id','');
+		
+		if(isset($_POST['dosubmint'])){
+			$info = I('info');
+			foreach($info as $k=>$v){
+				
+				//获取原记录
+				$kpi = M('kpi_more')->find($k);
+				
+				//保存新数据
+				$v['start_date'] = strtotime($v['start_date']);
+				$v['end_date']   = strtotime($v['end_date']);
+				M('kpi_more')->data($v)->where(array('id'=>$k))->save();
+				
+				//保存更新记录
+				$remarks = '';
+				if($v['start_date']!=$kpi['start_date'])  $remarks.='考核开始日期由'.date('Y-m-d',$kpi['start_date']).'变更为'.date('Y-m-d',$v['start_date']).'；';
+				if($v['end_date']!=$kpi['end_date'])  $remarks.='考核结束日期由'.date('Y-m-d',$kpi['end_date']).'变更为'.date('Y-m-d',$v['end_date']).'；';
+				if($v['target']!=$kpi['target'])  $remarks.='目标由'.$kpi['target'].'变更为'.$v['target'].'；';
+				if($v['weight']!=$kpi['weight'])  $remarks.='权重由'.$kpi['weight'].'变更为'.$v['weight'].'；';
+				
+				if($remarks){
+					$data = array();
+					$data['kpi_id']        = $kpi['kpi_id'];
+					$data['op_user_id']    = cookie('userid');
+					$data['op_user_name']  = cookie('name');
+					$data['op_time']       = time();
+					$data['remarks']       = $kpi['quota_title'].'：'.$remarks;
+					M('kpi_op_record')->add($data);
+				}
+				
+			}
+		}
+		
+		$this->success('保存成功！');
+		
+	}
+	
+    
+	
+	// @@@NODE-3###del_kpi_data###删除考核指标###
+	public function del_kpi_data(){
+		$id = I('id','');
+		
+		M('kpi_more')->delete($id);
+		
+		
+		$this->success('删除成功！');
+		
+	}
 }

@@ -1507,6 +1507,195 @@ function getthemonth($date,$type=0){
    
 } 
 
+
+function set_month($date,$type=0){
+	$year   = substr($date,0,4);
+	$month  = substr($date,4,2);
+	
+	//开始日期
+	$enddate = $year.'-'.$month.'-25'.' 00:00:00';
+	
+	if($month == '01'){
+		$year = $year-1;
+		$prvemonth = '12';	
+	}else{
+		$prvemonth = $month-1;	
+	}
+	
+	//结束日期
+	$startdate = $year.'-'.sprintf('%02s', $prvemonth).'-25'.' 00:00:00';
+	
+	if($type){
+		$return = array($startdate,$enddate);
+	}else{
+		$return = array(strtotime($startdate),strtotime($enddate));
+	}
+	
+	return $return;
+}
+
+
+function addkpiinfo($year,$month,$user){
+	$yearm = $year.sprintf('%02s', $month);
+	
+	
+	//获取用户信息
+	$acc = M('account')->find($user);
+	
+	//判断月份是否存在
+	$where = array();
+	$where['month']   = $yearm;
+	$where['user_id'] = $user;
+	
+	//查询这个月的KPI信息
+	$kpi = M('kpi')->where($where)->find();
+	
+	//如果不存在新增
+	if(!$kpi){
+		//获取评分人信息
+		$pfr = M('auth')->where(array('role_id'=>$acc['roleid']))->find();
+		$info['ex_user_id']     = $pfr ? $pfr['pdca_auth'] : 0;
+		$info['mk_user_id']     = $pfr ? $pfr['pdca_auth'] : 0;
+		$info['user_id']        = $acc['id'];
+		$info['user_name']      = $acc['nickname'];
+		$info['role_id']        = $acc['roleid'];
+		$info['status']         = 0;
+		$info['year']           = $year;
+		$info['month']          = $yearm;
+		$info['create_time']    = time();
+		$kpiid = M('kpi')->add($info);
+	}else{
+		$kpiid = $kpi['id'];	
+	}
+	
+	
+			
+	//获取考核指标信息
+	$postid = $acc['postid'];
+	$quto   = M()->table('__KPI_POST_QUOTA__ as r')->field('c.*')->join('__KPI_CONFIG__ as c on c.id = r.quotaid')->where(array('r.postid'=>$postid))->select();
+	
+	if($quto){
+		foreach($quto as $k=>$v){
+			
+			
+			//整理数据
+			$data = array();
+			$data['user_id']       = $user;	
+			$data['kpi_id']        = $kpiid;
+			$data['year']          = $year;
+			$data['month']         = $yearm;
+			$data['quota_id']      = $v['id'];
+			$data['quota_title']   = $v['quota_title'];
+			$data['quota_content'] = $v['quota_content'];
+			$data['weight']        = $v['weight'];
+			$data['status']        = 0;
+			$data['create_time']   = time();
+			
+				
+			$where = array();
+			$where['month']     = $yearm;
+			$where['quota_id']  = $v['id'];
+			$where['kpi_id']    = $kpiid;
+			$more = M('kpi_more')->where($where)->find();
+			if(!$more){
+				$zhouqi = set_month($yearm);
+				$data['start_date']      = $zhouqi[0];
+				$data['end_date']        = $zhouqi[1];
+				M('kpi_more')->add($data);
+			}else{
+				M('kpi_more')->data($data)->where(array('id'=>$more['id']))->save();	
+			}
+			
+		}	
+	}
+		
+}
+
+
+
+function updatekpi($month,$user){
+	
+	$year  = substr($month,0,4);
+	$yue   = substr($month,4,2);
+	$ym    = getthemonth($year.'-'.$yue.'-01');
+	
+	$where = array();
+	$where['month']   = $month;
+	$where['user_id'] = $user;
+	
+	
+	$quto   = M('kpi_more')->where($where)->select();
+	
+	if($quto){
+		foreach($quto as $k=>$v){
+			
+			
+			//获取月度累计毛利额
+			if($v['quota_id']==1){
+				$where = array();
+				$where['b.audit_status'] = 1;
+				$where['b.create_time']  = array('between',$ym);
+				$where['o.create_user']  = $user;
+				$complete = M()->table('__OP_SETTLEMENT__ as b')->field('b.maoli')->join('__OP__ as o on b.op_id = o.op_id','LEFT')->where($where)->sum('b.maoli');
+			}
+			
+			
+			//获取累计毛利率
+			if($v['quota_id']==2){
+				$where = array();
+				$where['b.audit_status'] = 1;
+				$where['b.create_time']  = array('between',$ym);
+				$where['o.create_user']  = $user;
+				$maoli = M()->table('__OP_SETTLEMENT__ as b')->field('b.maoli')->join('__OP__ as o on b.op_id = o.op_id','LEFT')->where($where)->sum('b.maoli');
+				$shouru = M()->table('__OP_SETTLEMENT__ as b')->field('b.shouru')->join('__OP__ as o on b.op_id = o.op_id','LEFT')->where($where)->sum('b.shouru');
+				$complete = round(($maoli / $shouru)*100,2).'%';
+			}
+			
+			//获取回款及时率
+			if($v['quota_id']==3){
+				$where = array();
+				$where['b.audit_status'] = 1;
+				$where['b.create_time']  = array('between',$ym);
+				$where['o.create_user']  = $user;
+				$shouru = M()->table('__OP_SETTLEMENT__ as b')->field('b.shouru')->join('__OP__ as o on b.op_id = o.op_id','LEFT')->where($where)->sum('b.shouru');
+				$huikuan = M()->table('__OP_SETTLEMENT__ as b')->field('b.huikuan')->join('__OP__ as o on b.op_id = o.op_id','LEFT')->where($where)->sum('b.huikuan');
+				$complete = round(($huikuan / $shouru)*100,2).'%';
+			}
+			
+			//获取成团率
+			if($v['quota_id']==4){
+				$where = array();
+				$where['create_time']  = array('between',$ym);
+				$where['create_user']  = $user;
+				$zongxiangmu = M('op')->where($where)->count();
+				$where['group_id']     = array('neq','');
+				$chengtuan = M('op')->where($where)->count();
+				
+				$complete = round(($chengtuan / $zongxiangmu)*100,2).'%';
+			}
+			
+			//获取合同签订率（含家长协议书）
+			if($v['quota_id']==5){
+				$where = array();
+				$where['b.audit_status'] = 1;
+				$where['b.create_time']  = array('between',$ym);
+				$where['o.create_user']  = $user;
+				$xiangmu = M()->table('__OP_SETTLEMENT__ as b')->field('b.maoli')->join('__OP__ as o on b.op_id = o.op_id','LEFT')->where($where)->count();
+				$where['b.hetong']  = 1;
+				$hetong  = M()->table('__OP_SETTLEMENT__ as b')->field('b.maoli')->join('__OP__ as o on b.op_id = o.op_id','LEFT')->where($where)->count();
+				$complete = round(($hetong / $xiangmu)*100,2).'%';
+			}
+			
+			//保存数据
+			if($v['quota_id'] <=5 ){
+				M('kpi_more')->data(array('complete'=>$complete))->where(array('id'=>$v['id']))->save();	
+			}
+			
+		}	
+	}
+}
+
+
 ?>
 
 

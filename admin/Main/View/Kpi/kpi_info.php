@@ -55,7 +55,7 @@
                                         状态：{$kpi.status_str}
                                         </span> 
                                         
-                                        <a href="{:u('Kpi/addkpi',array('year'=>$year,'month'=>$month,'uid'=>$uid))}" class="btn btn-success btn-sm" style="float:right;"><i class="fa fa-fw  fa-refresh"></i></a> 
+                                        <a href="{:u('Ajax/updatekpi',array('month'=>$allmonth,'uid'=>$uid))}" class="btn btn-success btn-sm" style="float:right;"><i class="fa fa-fw  fa-refresh"></i> 更新指标数据</a>  
                                         
                                         
                                         <div class="box-body table-responsive no-padding">
@@ -63,22 +63,14 @@
                                             <tr role="row" class="orders" >
                                                 <th width="50">序号</th>
                                                 <th>指标名称</th>
+                                                <th width="160">周期</th>
                                                 <th width="100">目标</th>
                                                 <th width="100">完成</th>
                                                 <th width="100">完成率</th>
                                                 <th width="100">权重</th>
                                                 <th width="100">考评得分</th>
                                                 <?php 
-												if($kpi['status'] < 5 || cookie('roleid')==10 || C('RBAC_SUPER_ADMIN')==cookie('username') ){
-												if(cookie('userid')==$kpi['mk_user_id'] || cookie('roleid')==10 || C('RBAC_SUPER_ADMIN')==cookie('username') ){
-												?>
-                                                <if condition="rolemenu(array('Kpi/kpi_unitscore'))">
-                                                <th width="50" class="taskOptions">评分</th>
-                                                </if>
-                                                <?php 
-												}
-												?>
-                                                <?php 
+												if($kpi['status'] < 5 || cookie('roleid')==10 || C('RBAC_SUPER_ADMIN')==cookie('username') ){ 
 												if(cookie('userid')==$kpi['user_id'] || cookie('userid')==$kpi['mk_user_id']){
 												?>
                                                 <if condition="rolemenu(array('Kpi/editkpi'))">
@@ -91,6 +83,7 @@
                                             <tr>
                                                 <td align="center"><?php echo $key+1; ?></td>
                                                 <td><a href="javascript:;" onClick="kpi({$row.quota_id})">{$row.quota_title}</a></td>
+                                                <td>{$row.start_date|date='Y-m-d',###} 至 {$row.end_date|date='Y-m-d',###}</td>
                                                 <td>{$row.target}</td>
                                                 <td>{$row.complete}</td>
                                                 <td>{$row.complete_rate}</td>
@@ -98,17 +91,6 @@
                                                 <td>{$row.score}</td>
                                                 <?php 
 												if($kpi['status'] < 5 || cookie('roleid')==10 || C('RBAC_SUPER_ADMIN')==cookie('username') ){
-												if(cookie('userid')==$kpi['mk_user_id'] || cookie('roleid')==10 || C('RBAC_SUPER_ADMIN')==cookie('username') ){
-												?>
-                                                <if condition="rolemenu(array('Kpi/kpi_unitscore'))">
-                                                <td class="taskOptions">
-                                                <a href="javascript:;" onClick="unitscore({$row.id})" title="评分" class="btn btn-success btn-smsm"><i class="fa fa-star"></i></a>
-                                                </td>
-                                                </if>
-                                                <?php 
-												}
-												?>
-                                                <?php 
 												if(cookie('userid')==$kpi['user_id'] || cookie('userid')==$kpi['mk_user_id']){
 												?>
                                                 <if condition="rolemenu(array('Kpi/editkpi'))">
@@ -147,23 +129,27 @@
                         <div class="col-md-12">
                             <div class="box box-warning">
                                 <div class="box-body">
-                                
                                 	<?php 
 									if(!$kpi['id']){
 									?>
+                                    <p style="text-align:center; width:100%; font-size:18px; padding:40px 0;">暂未制定KPI指标</p>
+                                    <?php 
+									}
+									?>
+                                    <!--
+                                    <if condition="rolemenu(array('Kpi/addkpi'))">
+                                	
 									<form method="post" action="{:U('Kpi/addkpi')}" name="myform" id="myform">
 									<input type="hidden" name="dosubmint" value="1">
 									<input type="hidden" name="year" value="{$year}">
-									<input type="hidden" name="month" value="{$month}">
                                     <input type="hidden" name="uid" value="{$uid}">
 									<div class="form-group col-md-12" style="text-align:center; margin-top:20px;">
 									<button type="submit" class="btn btn-info btn-lg" id="lrpd">获取KPI数据</button>
 									</div>
 									</form>
-									<?php 
-									}
-									?>
-                                	
+									
+                                	</if>
+                                    -->
                                     
                                     <?php 
 									if($kpi['status']==0 && cookie('userid')==$kpi['user_id']){
@@ -307,7 +293,7 @@
 		var kpiid = '{$kpi.id}';
 		art.dialog.open('index.php?m=Main&c=Kpi&a=editkpi&kpiid='+kpiid+'&id='+id,{
 			lock:true,
-			title: '新建KPI指标',
+			title: '完成指标',
 			width:1000,
 			height:400,
 			okValue: '提交',

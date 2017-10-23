@@ -52,8 +52,6 @@
                                             <a href="{:U('Rbac/priv',array('roleid'=>$row['id']))}">配置权限</a>&nbsp; | &nbsp; 
                                             </if>
                                             
-                                            <a href="{:U('Rbac/rolequto',array('roleid'=>$row['id']))}">配置KPI考核指标</a>&nbsp; | &nbsp; 
-                                            
                                             <if condition="$row['pid'] gt 0" >
                                             <a onClick="return confirm('将要删除[{$row.role_name}]和所有的下属部门和角色，不可恢复，确认要删除吗？');" href="{:U('Rbac/delrole',array('id'=>$row['id']))}">删除</a>
                                             <else/>

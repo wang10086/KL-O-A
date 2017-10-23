@@ -59,8 +59,17 @@
                                             </foreach>
                                         </select>
                                     </div>
-                                    </if>
                                     
+                                    <div class="form-group col-md-6">
+                                        <label>岗位</label>
+                                        <select class="form-control" name="info[postid]">
+                                            <option value="0" <?php if ($row['postid']==0){ echo ' selected'; }?>>请选择</option>
+                                            <foreach name="posts" key="k" item="v">
+                                            <option value="{$k}" <?php if ($row['postid']==$k){ echo ' selected'; }?>>{$v}</option>
+                                            </foreach>
+                                        </select>
+                                    </div>
+                                    </if>
                                     
                                     <div class="form-group col-md-6">
                                         <label>姓名</label>
@@ -89,6 +98,8 @@
                                         <input class="form-control"  type="text"  name="info[email]" value="{$row.email}"/>
                                     </div>
 
+                                    <div class="form-group">&nbsp;</div>
+                                    <div class="form-group">&nbsp;</div>
                                     <div class="form-group">&nbsp;</div>
                                         
 

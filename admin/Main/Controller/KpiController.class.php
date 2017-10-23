@@ -1120,7 +1120,7 @@ class KpiController extends BaseController {
 		$where = '';
 		$where .= '1 = 1';
 		if($month) $where .= ' AND `month` = '.trim($month); 
-		if($kpr)   $where .= ' AND ` ex_user_id` = '.$kpr; 
+		if($kpr)   $where .= ' AND `ex_user_id` = '.$kpr; 
 		if($bkpr)  $where .= ' AND `user_id` = '.$bkpr; 
 		if(C('RBAC_SUPER_ADMIN')==cookie('username') || cookie('roleid')==10 || cookie('roleid')==13 || cookie('roleid')==14 || cookie('roleid')==28 || cookie('roleid')==43){}else{
 			$where .= ' AND (`user_id` in ('.Rolerelation(cookie('roleid')).') || `ex_user_id` = '.cookie('userid').')';
@@ -1189,145 +1189,22 @@ class KpiController extends BaseController {
 		
 		$year  = I('year','');
 		$month = I('month','');
-		$yearm = $year.sprintf('%02s', $month);
-		$ym    = getthemonth($year.'-'.$month.'-01');
 		$user  = I('uid',cookie('userid'));
 		
-		//获取用户信息
-		$acc = M('account')->find($user);
-		
-		//判断月份是否存在
-		$where = array();
-		$where['month']   = $yearm;
-		$where['user_id'] = $user;
-		
-		//查询这个月的KPI信息
-		$kpi = M('kpi')->where($where)->find();
-		
-		
-		
-		//如果不存在新增
-		if(!$kpi){
-			
-			
-			//获取评分人信息
-			$pfr = M('auth')->where(array('role_id'=>$acc['roleid']))->find();
-			$info['ex_user_id']     = $pfr ? $pfr['pdca_auth'] : 0;
-			$info['mk_user_id']     = $pfr ? $pfr['pdca_auth'] : 0;
-			$info['user_id']        = $acc['id'];
-			$info['user_name']      = $acc['nickname'];
-			$info['role_id']        = $acc['roleid'];
-			$info['status']         = 0;
-			$info['year']           = $year;
-			$info['month']          = $yearm;
-			$info['create_time']    = time();
-			$kpiid = M('kpi')->add($info);
+		if($month){
+			addkpiinfo($year,$month,$user);
 		}else{
-			$kpiid = $kpi['id'];	
+			for($i=1;$i<13;$i++){
+				addkpiinfo($year,$i,$user);
+			}
 		}
-		
-		
-				
-		//获取考核指标信息
-		$roleid = $acc['roleid'];
-		$quto   = M()->table('__KPI_ROLE_QUOTA__ as r')->field('c.*')->join('__KPI_CONFIG__ as c on c.id = r.quotaid')->where(array('r.roleid'=>$roleid))->select();
-		
-		if($quto){
-			foreach($quto as $k=>$v){
-				
-				
-				//获取月度累计毛利额
-				if($v['id']==1){
-					$where = array();
-					$where['b.audit_status'] = 1;
-					$where['b.create_time']  = array('between',$ym);
-					$where['o.create_user']  = $user;
-					$complete = M()->table('__OP_SETTLEMENT__ as b')->field('b.maoli')->join('__OP__ as o on b.op_id = o.op_id','LEFT')->where($where)->sum('b.maoli');
-				}
-				
-				
-				//获取累计毛利率
-				if($v['id']==2){
-					$where = array();
-					$where['b.audit_status'] = 1;
-					$where['b.create_time']  = array('between',$ym);
-					$where['o.create_user']  = $user;
-					$maoli = M()->table('__OP_SETTLEMENT__ as b')->field('b.maoli')->join('__OP__ as o on b.op_id = o.op_id','LEFT')->where($where)->sum('b.maoli');
-					$shouru = M()->table('__OP_SETTLEMENT__ as b')->field('b.shouru')->join('__OP__ as o on b.op_id = o.op_id','LEFT')->where($where)->sum('b.shouru');
-					$complete = round(($maoli / $shouru)*100,2).'%';
-				}
-				
-				//获取回款及时率
-				if($v['id']==3){
-					$where = array();
-					$where['b.audit_status'] = 1;
-					$where['b.create_time']  = array('between',$ym);
-					$where['o.create_user']  = $user;
-					$shouru = M()->table('__OP_SETTLEMENT__ as b')->field('b.shouru')->join('__OP__ as o on b.op_id = o.op_id','LEFT')->where($where)->sum('b.shouru');
-					$huikuan = M()->table('__OP_SETTLEMENT__ as b')->field('b.huikuan')->join('__OP__ as o on b.op_id = o.op_id','LEFT')->where($where)->sum('b.huikuan');
-					$complete = round(($huikuan / $shouru)*100,2).'%';
-				}
-				
-				//获取成团率
-				if($v['id']==4){
-					$where = array();
-					$where['create_time']  = array('between',$ym);
-					$where['create_user']  = $user;
-					$zongxiangmu = M('op')->where($where)->count();
-					$where['group_id']     = array('neq','');
-					$chengtuan = M('op')->where($where)->count();
-					
-					$complete = round(($chengtuan / $zongxiangmu)*100,2).'%';
-				}
-				
-				//获取合同签订率（含家长协议书）
-				if($v['id']==5){
-					$where = array();
-					$where['b.audit_status'] = 1;
-					$where['b.create_time']  = array('between',$ym);
-					$where['o.create_user']  = $user;
-					$xiangmu = M()->table('__OP_SETTLEMENT__ as b')->field('b.maoli')->join('__OP__ as o on b.op_id = o.op_id','LEFT')->where($where)->count();
-					$where['b.hetong']  = 1;
-					$hetong  = M()->table('__OP_SETTLEMENT__ as b')->field('b.maoli')->join('__OP__ as o on b.op_id = o.op_id','LEFT')->where($where)->count();
-					$complete = round(($hetong / $xiangmu)*100,2).'%';
-				}
-				
-				
-				//整理数据
-				$data = array();
-				$data['user_id']       = $user;	
-				$data['kpi_id']        = $kpiid;
-				$data['year']          = $year;
-				$data['month']         = $yearm;
-				$data['quota_id']      = $v['id'];
-				$data['quota_title']   = $v['quota_title'];
-				$data['quota_content'] = $v['quota_content'];
-				$data['weight']        = $v['weight'];
-				$data['complete']      = $complete ? $complete : '';
-				$data['status']        = 0;
-				$data['create_time']   = time();
-				
-				
-					
-				$where = array();
-				$where['month']     = $yearm;
-				$where['quota_id']  = $v['id'];
-				$where['kpi_id']    = $kpiid;
-				$more = M('kpi_more')->where($where)->find();
-				if(!$more){
-					M('kpi_more')->add($data);
-				}else{
-					M('kpi_more')->data($data)->where(array('id'=>$more['id']))->save();	
-				}
-				
-			}	
-		}
-		
-		
 		$this->success('获取成功!');
 				
 			
 	}
+	
+	
+	
 	
 	
 	
@@ -1384,6 +1261,7 @@ class KpiController extends BaseController {
 		$this->applist    = $applist;
 		$this->prveyear   = $year-1;
 		$this->nextyear   = $year+1;
+		$this->allmonth   = $year.sprintf('%02s', $month);
 		
 		$this->display('kpi_info');
 		

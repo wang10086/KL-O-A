@@ -11,7 +11,7 @@
                     <h1>分配KPI考核指标</h1>
                     <ol class="breadcrumb">
                         <li><a href="{:U('Index/index')}"><i class="fa fa-home"></i> 首页</a></li>
-                        <li><a href="{:U('User/role')}">角色管理</a></li>
+                        <li><a href="{:U('Rbac/post')}">岗位管理</a></li>
                     </ol>
                 </section>
 
@@ -26,13 +26,13 @@
                          <div class="col-md-12">
                             <div class="box">
                                 <div class="box-header">
-                                    <h3 class="box-title"><strong style="color:#ff3300;">{$rolename}</strong> 考核指标</h3>
+                                    <h3 class="box-title"><strong style="color:#ff3300;">{$postname}</strong> 考核指标</h3>
                                 </div><!-- /.box-header -->
                                 <div class="box-body">
                                 	<form name="myform" id="myform" action="{:U('Rbac/rolequto')}" method="post" >
-                                	<input  type="hidden" name="roleid" value="{$roleid}" />
+                                	<input  type="hidden" name="postid" value="{$postid}" />
                                 	<input type="hidden" name="dosubmit" value="1" />
-                                  
+                                    <input type="hidden" name="referer" value="<?php echo $_SERVER['HTTP_REFERER']; ?>" />
                                     <table class="table table-bordered dataTable fontmini">
                                     	<tr role="row">
 											<th style="text-align:center;" width="60">选择</th>
