@@ -49,8 +49,8 @@
                                 <div class="box-body">
                                     <div class="content">
                                     	<span class="rtxt" style="margin-top:-10px;">
-                                        月份：{$kpi.month} &nbsp;&nbsp;&nbsp;&nbsp;
-                                        被考核人：{:username($kpi['user_id'])} &nbsp;&nbsp;&nbsp;&nbsp;
+                                        月份：{$year}-{$month} &nbsp;&nbsp;&nbsp;&nbsp;
+                                        被考核人：{$user.nickname} &nbsp;&nbsp;&nbsp;&nbsp;
                                         所属岗位：{$user.postname}
                                         </span> 
                                         
