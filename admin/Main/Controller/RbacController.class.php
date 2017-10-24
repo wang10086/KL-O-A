@@ -36,9 +36,6 @@ class RbacController extends BaseController {
 		}
 		
 		
-		$roles = M('role')->GetField('id,role_name',true);
-		$posts = M('posts')->GetField('id,post_name',true);
-		
 		//分页
 		$pagecount      = $db->where($where)->count();
 		$page           = new Page($pagecount, P::PAGE_SIZE);
@@ -47,8 +44,8 @@ class RbacController extends BaseController {
         $this->users    = $db->relation(true)->where($where)->order($this->orders('id'))->limit($page->firstRow . ',' . $page->listRows)->select();
 		$this->rolelist = get_roles();
 		
-		$this->roles    = $roles;
-		$this->posts    = $posts;
+		$this->roles    = M('role')->GetField('id,role_name',true);
+		$this->posts    = M('posts')->GetField('id,post_name',true);
         $this->display('index');
     }
     
@@ -1218,11 +1215,17 @@ class RbacController extends BaseController {
 		$this->title('配置KPI目标数据');
 		
 		$db  = M('account');
-		$pid = I('pid',0);
+		$key      = I('key','');
+		$role     = I('role',0);
+		$post     = I('post',0);
 		
 		$where = array();
-		$where['postid'] = $pid;
-		$where['id']     = array('gt',11);
+		$where['status'] = array('neq',2);
+		$where['id'] = array('gt',3);
+		if($key)  $where['nickname'] = array('like','%'.$key.'%');
+		if($role) $where['roleid']  = $role;
+		if($post) $where['postid']  = $post;
+		
 		
 		$pagecount   = $db->where($where)->count();
 		$page        = new Page($pagecount, P::PAGE_SIZE);
@@ -1236,6 +1239,8 @@ class RbacController extends BaseController {
 		}
 		$this->userlist = $userlist;
 		$this->postlist = M('posts')->GetField('id,post_name',true);
+		$this->roles    = M('role')->GetField('id,role_name',true);
+		$this->posts    = M('posts')->GetField('id,post_name',true);
 		$this->display('kpiuser');
 	}
 	

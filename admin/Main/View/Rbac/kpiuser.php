@@ -20,7 +20,7 @@
 								<?php 
                                 foreach($postlist as $k=>$v){
                                     $par = array();
-                                    $par['pid']  = $k;
+                                    $par['post']  = $k;
                                     if($pid==$k){
                                         echo '<a href="'.U('Rbac/kpi_users',$par).'" class="btn btn-info" style="padding:8px 18px;">'.$v.'</a>';
                                     }else{
@@ -32,11 +32,9 @@
                             <div class="box">
                                 <div class="box-header">
                                     <h3 class="box-title">用户列表</h3>
-                                    <if condition="rolemenu(array('Rbac/adduser'))">
                                     <div class="box-tools pull-right">
-                                         <a href="{:U('Rbac/adduser')}" class="btn btn-sm btn-danger"><i class="fa fa-plus"></i> 新增用户</a>
+                                    	<a href="javascript:;" class="btn btn-info btn-sm" onclick="javascript:opensearch('searchtext',600,160);"><i class="fa fa-search"></i> 搜索</a>
                                     </div>
-                                    </if>
                                 </div><!-- /.box-header -->
                                 <div class="box-body">
 								<table class="table table-bordered dataTable fontmini" id="tablelist">
@@ -82,6 +80,37 @@
 			
   		</div>
 	</div>
+    
+    		<div id="searchtext">
+                <form action="" method="get" id="searchform">
+                <input type="hidden" name="m" value="Main">
+                <input type="hidden" name="c" value="Rbac">
+                <input type="hidden" name="a" value="kpi_users">
+                <div class="form-group col-md-12">
+                    <input type="text" class="form-control" name="key" placeholder="关键字">
+                </div>
+                
+                <div class="form-group col-md-6">
+                    <select class="form-control" name="role">
+                        <option value="0">所在部门</option>
+                        <foreach name="roles" key="k" item="v">
+                        <option value="{$k}">{$v}</option>
+                        </foreach>
+                    </select>
+                </div>
+                
+                <div class="form-group col-md-6">
+                    <select class="form-control" name="post">
+                        <option value="0">所属职位</option>
+                        <foreach name="posts" key="k" item="v">
+                        <option value="{$k}">{$v}</option>
+                        </foreach>
+                    </select>
+                </div>
+                
+                
+                </form>
+            </div>
 
 	<include file="Index:footer2" />
    
