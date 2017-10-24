@@ -1197,6 +1197,34 @@ class RbacController extends BaseController {
     }
 	
 	
+	// @@@NODE-3###kpi_users###配置KPI数据###
+	public function kpi_users(){
+		$this->title('配置KPI目标数据');
+		
+		$db  = M('account');
+		$pid = I('pid',0);
+		
+		$where = array();
+		$where['postid'] = $pid;
+		$where['id']     = array('gt',11);
+		
+		$pagecount   = $db->where($where)->count();
+		$page        = new Page($pagecount, P::PAGE_SIZE);
+		$this->pages = $pagecount>P::PAGE_SIZE ? $page->show():'';
+		
+		$role = M('role')->GetField('id,role_name',true);
+		
+		$userlist = $db->where($where)->order($this->orders('id'))->limit($page->firstRow . ',' . $page->listRows)->select();
+		foreach($userlist as $k=>$v){
+			$userlist[$k]['rolename'] = $role[$v['roleid']];	
+		}
+		$this->userlist = $userlist;
+		$this->postlist = M('posts')->GetField('id,post_name',true);
+		$this->display('kpiuser');
+	}
+	
+	
+	
 	// @@@NODE-3###kpi_data###配置KPI数据###
 	public function kpi_data(){
 		$this->title('配置KPI目标数据');
@@ -1240,7 +1268,7 @@ class RbacController extends BaseController {
 		//用户信息
 		$post             = M('posts')->GetField('id,post_name',true);
 		$userinfo             = M('account')->find($user);
-		$userinfo['postname'] = $userinfo['postid'] ? $post[$userinfo['postid']] : '未配置岗位';
+		$userinfo['postname'] = $userinfo['postid'] ? $post[$userinfo['postid']] : '<span class="red">未配置岗位</span>';
 		
 		$this->user       = $userinfo;
 		$this->uid        = $user;
@@ -1255,7 +1283,6 @@ class RbacController extends BaseController {
         
 		$this->display('kpidata');
 	}
-	
 	
 	// @@@NODE-3###save_kpi_data###保存KPI指标数据###
 	public function save_kpi_data(){

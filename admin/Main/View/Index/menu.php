@@ -494,8 +494,8 @@
                                          <li class="{:on('Rbac/kpi_quota')}" ><a href="{:U('Rbac/kpi_quota')}"><i class="fa fa-angle-right"></i> KPI考核指标管理</a></li>
                                     </if>
                                     
-                                    <if condition="rolemenu(array('Rbac/kpi_data'))"> 
-                                         <li class="{:on('Rbac/kpi_data')}" ><a href="{:U('Rbac/kpi_data')}"><i class="fa fa-angle-right"></i> 配置KPI数据</a></li>
+                                    <if condition="rolemenu(array('Rbac/kpi_users'))"> 
+                                         <li class="{:on('Rbac/kpi_users')}" ><a href="{:U('Rbac/kpi_users')}"><i class="fa fa-angle-right"></i> 配置KPI数据</a></li>
                                     </if>
                                     
                                     <!--

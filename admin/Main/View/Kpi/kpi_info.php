@@ -6,7 +6,7 @@
                     <h1>{$year}年度KPI - {$user.nickname} </h1>
                     <ol class="breadcrumb">
                         <li><a href="{:U('Index/index')}"><i class="fa fa-home"></i> 首页</a></li>
-                        <li><a href="{:U('Kpi/kpi')}"><i class="fa fa-gift"></i> KPI</a></li>
+                        <li><a href="{:U('Rbac/kpi_users')}"><i class="fa fa-gift"></i> KPI</a></li>
                     </ol>
                 </section>
 
@@ -63,7 +63,7 @@
                                             <tr role="row" class="orders" >
                                                 <th width="50">序号</th>
                                                 <th>指标名称</th>
-                                                <th width="160">周期</th>
+                                                <th width="180">周期</th>
                                                 <th width="100">目标</th>
                                                 <th width="100">完成</th>
                                                 <th width="100">完成率</th>
