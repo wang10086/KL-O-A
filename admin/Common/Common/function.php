@@ -1513,7 +1513,7 @@ function set_month($date,$type=0){
 	$month  = substr($date,4,2);
 	
 	//开始日期
-	$enddate = $year.'-'.$month.'-25'.' 00:00:00';
+	$enddate = $year.'-'.$month.'-26'.' 00:00:00';
 	
 	if($month == '01'){
 		$year = $year-1;
