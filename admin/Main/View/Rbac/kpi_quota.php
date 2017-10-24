@@ -33,7 +33,7 @@
                                         <th>指标名称</th>
                                         <th>考核周期</th>
                                         <th>权重</th>
-                                        <th>指标内容</th>
+                                        <!--<th>指标内容</th>-->
                                         <th width="140">更新时间</th>
                                         <if condition="rolemenu(array('Rbac/add_quota'))">
                                         <th width="60" class="taskOptions">编辑</th>
@@ -48,7 +48,7 @@
                                             <td>{$row.quota_title}</td>
                                             <td>{$row.cycle}</td>
                                             <td>{$row.weight}</td>
-                                            <td>{$row.quota_content}</td>
+                                            <!--<td>{$row.quota_content}</td>-->
                                             <td>{$row.create_time|date='Y-m-d H:i:s',###}</td>
                                             
                                             <if condition="rolemenu(array('Rbac/add_quota'))">
