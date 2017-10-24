@@ -1241,6 +1241,7 @@ class RbacController extends BaseController {
 		$this->postlist = M('posts')->GetField('id,post_name',true);
 		$this->roles    = M('role')->GetField('id,role_name',true);
 		$this->posts    = M('posts')->GetField('id,post_name',true);
+		$this->pid      = $post;
 		$this->display('kpiuser');
 	}
 	
