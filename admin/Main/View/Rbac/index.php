@@ -24,7 +24,8 @@
                                     <h3 class="box-title">用户列表</h3>
                                     <if condition="rolemenu(array('Rbac/adduser'))">
                                     <div class="box-tools pull-right">
-                                         <a href="{:U('Rbac/adduser')}" class="btn btn-sm btn-danger"><i class="fa fa-plus"></i> 新增用户</a>
+                                    	<a href="javascript:;" class="btn btn-info btn-sm" onclick="javascript:opensearch('searchtext',600,160);"><i class="fa fa-search"></i> 搜索</a>
+                                        <a href="{:U('Rbac/adduser')}" class="btn btn-sm btn-danger"><i class="fa fa-plus"></i> 新增用户</a>
                                     </div>
                                     </if>
                                 </div><!-- /.box-header -->
@@ -36,8 +37,6 @@
                                         <th class="sorting" data="nickname">姓名</th>
                                         <th class="sorting" data="">部门/角色</th>
                                         <th class="sorting" data="">类型</th>
-                                        <th class="sorting" data="mobile">手机号</th>
-                                        <th class="sorting" data="email">Email</th>
                                         <th class="sorting" data="update_time">最近登陆时间</th>
                                         <if condition="rolemenu(array('Rbac/password'))">
                                         <th width="60" class="taskOptions">密码</th>
@@ -61,8 +60,6 @@
                                             </foreach>
                                             </td>
                                             <td><?php if ($row['temp_user']==P::USER_TYPE_PART) {echo '兼职'; } else {echo '专职';} ?></td>
-                                            <td>{$row.mobile}</td>
-                                            <td>{$row.email}</td>
                                             <td><if condition="$row['update_time']">{$row.update_time|date='Y-m-d H:i:s',###}</if></td>
                                             <if condition="rolemenu(array('Rbac/password'))">
                                             <td class="taskOptions">
@@ -96,5 +93,37 @@
 
                 </section><!-- /.content -->
             </aside><!-- /.right-side -->
+            
+            
+            <div id="searchtext">
+                <form action="" method="get" id="searchform">
+                <input type="hidden" name="m" value="Main">
+                <input type="hidden" name="c" value="Rbac">
+                <input type="hidden" name="a" value="index">
+                <div class="form-group col-md-12">
+                    <input type="text" class="form-control" name="key" placeholder="关键字">
+                </div>
+                
+                <div class="form-group col-md-6">
+                    <select class="form-control" name="role">
+                        <option value="0">所在部门</option>
+                        <foreach name="roles" key="k" item="v">
+                        <option value="{$k}">{$v}</option>
+                        </foreach>
+                    </select>
+                </div>
+                
+                <div class="form-group col-md-6">
+                    <select class="form-control" name="post">
+                        <option value="0">所属职位</option>
+                        <foreach name="posts" key="k" item="v">
+                        <option value="{$k}">{$v}</option>
+                        </foreach>
+                    </select>
+                </div>
+                
+                
+                </form>
+            </div>
 
 <include file="Index:footer2" />
