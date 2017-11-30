@@ -81,7 +81,7 @@
                                         </div>
                                         
                                         <div class="form-group box-float-12">
-                                            <label>纠正措施验证</label>
+                                            <label>纠正措施及验证</label>
                                             <textarea class="form-control" style="height:90px;" name="info[verif]">{$row.verif}</textarea>
                                         </div>
 	                            	</div>
