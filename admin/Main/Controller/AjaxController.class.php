@@ -98,4 +98,20 @@ class AjaxController extends Controller {
 		
 	}
 	
+	
+	
+	// @@@NODE-3###getop###获取项目数据###
+	public function getop(){
+		
+		$gid	= I('gid','');
+		
+		$where	= array();
+		$where['o.group_id']	= trim($gid);
+		
+		$op = M()->table('__OP__ as o')->field('o.*,s.renshu,s.shouru')->join('__OP_SETTLEMENT__ as s on s.op_id = o.op_id')->where($where)->find();
+		
+		echo json_encode($op,true);
+		
+	}
+	
 }

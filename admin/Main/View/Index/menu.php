@@ -303,6 +303,23 @@
                         </if>
                         
                         
+                        <if condition="rolemenu(array('Contract/index'))">
+                        <li class="treeview {:ison(CONTROLLER_NAME, 'Contract')}">
+                            <a href="javascript:;">
+                                <i class="fa fa-book"></i>
+                                <span>合同管理</span>
+                                <i class="fa fa-angle-left pull-right"></i>
+                            </a>
+                            <ul class="treeview-menu">
+                            	
+                            	<if condition="rolemenu(array('Contract/index'))">
+                                    <li><a href="{:U('Contract/index')}"><i class="fa fa-angle-right"></i> 合同管理</a></li>
+                                </if>
+                                
+                            </ul>
+                        </li>
+                        </if>
+                        
                         <if condition="rolemenu(array('Finance/costacclist','Finance/budget','Finance/settlementlist'))">
                         <li class="treeview {:ison(CONTROLLER_NAME, 'Finance')}">
                             <a href="javascript:;">
