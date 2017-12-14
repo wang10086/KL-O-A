@@ -104,18 +104,22 @@
             <input type="hidden" name="m" value="Main">
             <input type="hidden" name="c" value="Contract">
             <input type="hidden" name="a" value="index">
-            <div class="form-group col-md-4">
+            <div class="form-group col-md-6">
                 <input type="text" class="form-control" name="key" placeholder="关键字">
             </div>
             
            
             
-            <div class="form-group col-md-4">
+            <div class="form-group col-md-6">
                 <input type="text" class="form-control" name="gid" placeholder="项目团号">
             </div>
             
-            <div class="form-group col-md-4">
+            <div class="form-group col-md-6">
                  <input type="text" class="form-control" name="opid" placeholder="项目编号">
+            </div>
+            
+            <div class="form-group col-md-6">
+                 <input type="text" class="form-control" name="cid" placeholder="合同编号">
             </div>
             
             </form>

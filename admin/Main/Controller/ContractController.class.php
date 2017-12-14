@@ -21,12 +21,14 @@ class ContractController extends BaseController {
 		
 		$opid	= I('opid',0);
 		$gid	= I('gid',0);
+		$cid	= I('cid','');
 		$key	= I('key','');
 		
 		$where = array();
 		if($key)	$where['c.pro_name']	= array('like','%'.$key.'%');
 		if($opid)	$where['c.op_id']		= $opid;
 		if($gid)	$where['c.group_id']	= $gid;
+		if($cid)	$where['c.contract_id']	= array('like','%'.$cid.'%');
 		
 		if(!rolemenu(array('Contract/confirm'))){
 			$where['c.create_user']	= cookie('userid');
