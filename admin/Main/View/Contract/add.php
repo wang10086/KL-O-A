@@ -55,6 +55,11 @@
                                         </div>
                                         
                                         <div class="form-group col-md-4">
+                                            <label>合同金额</label>
+                                            <input type="text" name="info[contract_amount]" id="contract_amount"   value="{$row.contract_amount}" class="form-control" />
+                                        </div>
+                                        
+                                        <div class="form-group col-md-4">
                                             <label>出团时间</label>
                                             <input type="text" name="info[dep_time]" id="dep_time"   value="{$row.dep_time}" class="form-control" />
                                         </div>
@@ -63,10 +68,7 @@
                                             <label>结束时间</label>
                                             <input type="text" name="info[end_time]" id="end_time"   value="{$row.end_time}" class="form-control" />
                                         </div>
-                                        <div class="form-group col-md-4">
-                                            <label>合同金额</label>
-                                            <input type="text" name="info[contract_amount]" id="contract_amount"   value="{$row.contract_amount}" class="form-control" />
-                                        </div>
+                                        
                                         
                                         
                                         <div class="form-group col-md-12">
