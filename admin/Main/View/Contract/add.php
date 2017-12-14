@@ -31,8 +31,8 @@
                                     
                                         <input type="hidden" name="dosubmit" value="1" />
                                         <input type="hidden" name="referer" value="<?php echo $_SERVER['HTTP_REFERER']; ?>" />
-                                        <if condition="$row"><input type="hidden" name="id" value="{$row.id}" /></if>
-                                        <input type="hidden" name="info[op_id]" id="op_id">
+                                        <input type="hidden" name="id" value="{$row.id}" />
+                                        
                                         <!-- text input -->
                                         
                                         <div class="col-md-4">
@@ -105,11 +105,14 @@ function getop(){
 			dataType:'json', 
 			data: {gid:gid},
 			success:function(data){
-				$('#proname').val(data.project);
-				$('#number').val(data.renshu);
-				$('#op_id').val(data.op_id);
-				$('#dep_time').val(data.departure);
-				$('#contract_amount').val(data.shouru);
+				if(data){
+					$('#proname').val(data.project);
+					$('#number').val(data.renshu);
+					$('#dep_time').val(data.departure);
+					$('#contract_amount').val(data.shouru);
+				}else{
+					art_show_msg('未获取到项目信息'); 
+				}
 			}
 		});	
    }else{

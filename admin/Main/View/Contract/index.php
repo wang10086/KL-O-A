@@ -39,12 +39,17 @@
                                             <th class="sorting" data="c.status" width="80">确认状态</th>
                                             <th class="sorting" data="c.create_time" width="120">创建时间</th>
                                             <th class="sorting" data="c.create_user_name" width="100">创建者</th>
+                                            <if condition="rolemenu(array('Contract/detail'))">
+                                            <th width="60" class="taskOptions">详情</th>
+                                            </if>
                                             <if condition="rolemenu(array('Contract/add'))">
                                             <th width="60" class="taskOptions">编辑</th>
-                                            </if> 
+                                            </if>
+                                            <!-- 
                                             <if condition="rolemenu(array('Contract/del'))">
                                             <th width="60" class="taskOptions">删除</th>
                                             </if> 
+                                            -->
                                         </tr>
                                         <foreach name="lists" item="row">                      
                                         <tr>
@@ -58,16 +63,23 @@
                                             <td>{$row.strstatus}</td>
                                             <td>{$row.create_time|date='y-m-d H:i',###}</td>
                                             <td>{$row.create_user_name}</td>
+                                            <if condition="rolemenu(array('Contract/detail'))">
+                                            <td class="taskOptions">
+                                            <button onClick="javascript:window.location.href='{:U('Contract/detail',array('id'=>$row['id']))}';" title="详情" class="btn btn-success  btn-smsm"><i class="fa  fa-building-o"></i></button>
+                                            </td>
+                                            </if>
                                             <if condition="rolemenu(array('Contract/add'))">
                                             <td class="taskOptions">
                                             <button onClick="javascript:window.location.href='{:U('Contract/add',array('id'=>$row['id']))}';" title="修改" class="btn btn-info btn-smsm"><i class="fa fa-pencil"></i></button>
                                             </td>
                                             </if>
+                                            <!--
                                             <if condition="rolemenu(array('Contract/del'))">
                                             <td class="taskOptions">
                                             <button onClick="javascript:ConfirmDel('{:U('Contract/del',array('id'=>$row['id']))}')" title="删除" class="btn btn-warning btn-smsm"><i class="fa fa-times"></i></button>
                                             </td>
                                             </if>
+                                            -->
                                         </tr>
                                         </foreach>		
                                         
@@ -90,8 +102,8 @@
         <div id="searchtext">
             <form action="" method="get" id="searchform">
             <input type="hidden" name="m" value="Main">
-            <input type="hidden" name="c" value="ScienceRes">
-            <input type="hidden" name="a" value="res">
+            <input type="hidden" name="c" value="Contract">
+            <input type="hidden" name="a" value="index">
             <div class="form-group col-md-4">
                 <input type="text" class="form-control" name="key" placeholder="关键字">
             </div>
@@ -99,22 +111,12 @@
            
             
             <div class="form-group col-md-4">
-                <select class="form-control" name="type">
-                    <option value="0">资源类型</option>
-                    <foreach name="reskind" key="k" item="v">
-                    <option value="{$k}">{$v}</option>
-                    </foreach>
-                </select>
+                <input type="text" class="form-control" name="gid" placeholder="项目团号">
             </div>
             
             <div class="form-group col-md-4">
-                    <select class="form-control" name="pro">
-                        <option value="0">适用业务类型</option>
-                        <foreach name="kinds" key="k" item="v">
-                        <option value="{$k}">{$v}</option>
-                        </foreach>
-                    </select>
-                </div>
+                 <input type="text" class="form-control" name="opid" placeholder="项目编号">
+            </div>
             
             </form>
         </div>
