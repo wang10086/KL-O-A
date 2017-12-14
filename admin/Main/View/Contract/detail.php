@@ -22,9 +22,11 @@
                      <div class="box box-warning" style="margin-top:15px;">
                         <div class="box-header">
                             <h3 class="box-title">
-                            {$row.pro_name}合同信息
+                            【{$row.group_id}】 合同信息
                             </h3>
+                            <?php if($row['contract_id']){ ?>
                             <h3 class="box-title pull-right" style="font-weight:normal; color:#333333;"><span class="green">合同编号：{$row.contract_id}</span></h3>
+                            <?php } ?>
                         </div><!-- /.box-header -->
                         <div class="box-body">
                             <div class="content">
