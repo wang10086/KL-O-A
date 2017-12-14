@@ -48,7 +48,9 @@
                                         <td width="33.33%">创建时间：{$row.create_time|date='Y-m-d H:i:s',###}</td>
                                         <td width="33.33%">创建者：{$row.create_user_name}</td>
                                     </tr>
-                                    
+                                    <tr>
+                                        <td colspan="3">备注信息：{$row.remarks}</td>
+                                    </tr>
                                 </table>
                             </div>
                             
