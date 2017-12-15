@@ -108,7 +108,7 @@ class AjaxController extends Controller {
 		$where	= array();
 		$where['o.group_id']	= trim($gid);
 		
-		$op = M()->table('__OP__ as o')->field('o.*,s.renshu,s.shouru')->join('__OP_SETTLEMENT__ as s on s.op_id = o.op_id')->where($where)->find();
+		$op = M()->table('__OP__ as o')->field('o.*,s.renshu,s.shouru')->join('__OP_SETTLEMENT__ as s on s.op_id = o.op_id','LEFT')->where($where)->find();
 		
 		echo json_encode($op,true);
 		
