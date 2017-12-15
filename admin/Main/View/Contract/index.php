@@ -30,15 +30,15 @@
                                 	<table class="table table-bordered dataTable fontmini" id="tablelist">
                                         <tr role="row" class="orders" >
                                         	<th class="sorting" data="c.pro_name">项目名称</th>
-                                            <th class="sorting" data="c.group_id" width="120">团号</th>
-                                            <th class="sorting" data="c.dep_time" width="120">出团时间</th>
-                                            <th class="sorting" data="c.number" width="80">人数</th>
-                                         	<th class="sorting" data="c.contract_amount" width="100">合同金额</th>
-                                            <th class="sorting" data="c.income_amount" width="100">回款金额</th>
-                                            <th class="sorting" data="c.contract_id" width="120">合同编号</th>
-                                            <th class="sorting" data="c.status" width="80">确认状态</th>
-                                            <th class="sorting" data="c.create_time" width="120">创建时间</th>
-                                            <th class="sorting" data="c.create_user_name" width="100">创建者</th>
+                                            <th class="sorting" data="c.group_id">团号</th>
+                                            <th class="sorting" data="c.dep_time">出团时间</th>
+                                            <th class="sorting" data="c.number">人数</th>
+                                         	<th class="sorting" data="c.contract_amount">合同金额</th>
+                                            <th class="sorting" data="c.income_amount">回款金额</th>
+                                            <th class="sorting" data="c.contract_id">合同编号</th>
+                                            <th class="sorting" data="c.status">确认状态</th>
+                                            <th class="sorting" data="c.create_time">创建时间</th>
+                                            <th class="sorting" data="c.create_user_name">创建者</th>
                                             <if condition="rolemenu(array('Contract/detail'))">
                                             <th width="60" class="taskOptions">详情</th>
                                             </if>
