@@ -31,7 +31,7 @@
                                         <tr role="row" class="orders" >
                                         	<th class="sorting" data="c.pro_name">项目名称</th>
                                             <th class="sorting" data="c.group_id">团号</th>
-                                            <th class="sorting" data="c.dep_time">出团时间</th>
+                                            <!--<th class="sorting" data="c.dep_time">出团时间</th>-->
                                             <th class="sorting" data="c.number">人数</th>
                                          	<th class="sorting" data="c.contract_amount">合同金额</th>
                                             <th class="sorting" data="c.income_amount">回款金额</th>
@@ -55,7 +55,7 @@
                                         <tr>
                                             <td><a href="{:U('Contract/detail', array('id'=>$row['id']))}">{$row.pro_name}</a></td>
                                             <td>{$row.group_id}</td>
-                                            <td>{$row.dep_time}</td>
+                                            <!--<td>{$row.dep_time}</td>-->
                                             <td>{$row.number}</td>
                                             <td>{$row.contract_amount}</td>
                                             <td>{$row.huikuan}</td>
