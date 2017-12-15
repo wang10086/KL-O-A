@@ -37,7 +37,7 @@
                                             <th class="sorting" data="c.income_amount">回款金额</th>
                                             <th class="sorting" data="c.contract_id">合同编号</th>
                                             <th class="sorting" data="c.status">确认状态</th>
-                                            <th class="sorting" data="c.create_time">创建时间</th>
+                                            <!--<th class="sorting" data="c.create_time">创建时间</th>-->
                                             <th class="sorting" data="c.create_user_name">创建者</th>
                                             <if condition="rolemenu(array('Contract/detail'))">
                                             <th width="60" class="taskOptions">详情</th>
@@ -61,7 +61,7 @@
                                             <td>{$row.huikuan}</td>
                                             <td>{$row.contract_id}</td>
                                             <td>{$row.strstatus}</td>
-                                            <td>{$row.create_time|date='y-m-d H:i',###}</td>
+                                            <!--<td>{$row.create_time|date='y-m-d H:i',###}</td>-->
                                             <td>{$row.create_user_name}</td>
                                             <if condition="rolemenu(array('Contract/detail'))">
                                             <td class="taskOptions">
