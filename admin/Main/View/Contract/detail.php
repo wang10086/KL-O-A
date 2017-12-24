@@ -80,12 +80,21 @@
                             <input type="hidden" name="id" value="{$row.id}">
                             <input type="hidden" name="referer" value="<?php echo $_SERVER['HTTP_REFERER']; ?>" />
                                 
-                            <div class="form-group col-md-12" style="margin-top:10px;">
+                            <div class="form-group col-md-8" style="margin-top:10px;">
                                 <div class="checkboxlist" id="applycheckbox" style="margin-top:10px;">
                                 <input type="checkbox" name="status" value="1" <?php if($row['status']==1){ echo 'checked';} ?> > 确认通过
                                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                 <input type="checkbox" name="seal" value="1" <?php if($row['seal']==1){ echo 'checked';} ?> > 我司已盖章 
+                               
                                 </div>
+                            </div>
+                            
+                            <div class="form-group col-md-4" style="margin-top:10px;">
+                            <select class="form-control" name="gbs" >
+                            	<option value="0">选择返回状态</option>
+                                <option value="1" <?php if($row['gbs']==1){ echo 'selected';} ?> >已返回综合部</option>
+                                <option value="2" <?php if($row['gbs']==2){ echo 'selected';} ?> >已返回财务部</option>
+                            </select>
                             </div>
                             
                             
@@ -119,6 +128,7 @@
                                     <tr>
                                         <td width="33.33%">是否盖章： {$row.strseal}</td>
                                         <td width="33.33%">合同编号：{$row.contract_id}</td>
+                                        <td width="33.33%">返回状态：{$row.gbstatus}</td>
                                     </tr>
                                     <tr>
                                         <td colspan="3">审核意见：{$row.confirm_remarks}</td>

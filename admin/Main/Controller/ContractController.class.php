@@ -76,9 +76,9 @@ class ContractController extends BaseController {
 			$where['group_id']	= $info['group_id'];
 			$where['id']		= array('neq',$id);
 			$isok	= $db->where($where)->find();
-			if($isok){
-				$this->error('该团已存在合同信息');	
-			}
+			//if($isok){
+			//	$this->error('该团已存在合同信息');	
+			//}
 			
             if(!$id){
 				$info['create_user']		= cookie('userid');
@@ -127,6 +127,7 @@ class ContractController extends BaseController {
 			$this->error('合同信息不存在');
 		}else{
 			
+			$gbsta = array('1'=>'合同已返回综合部','2'=>'合同已返回财务部');
 			
 			$opid = $row['op_id'];
 			
@@ -174,6 +175,7 @@ class ContractController extends BaseController {
 	
 			
 			$row['strseal']		= $row['seal'] ? '<span class="green">我司已盖章</span>' : '<span class="red">我司尚未盖章</span>';
+			$row['gbstatus']		= $row['gbs'] ? $gbsta[$row['gbs']] : '未返回';
 			$row['strstatus']	= $row['status'] ? '<span class="green">已确认</span>' : '<span class="red">未确认</span>';
 			$this->row			= $row;
 			$this->display('detail');
@@ -193,11 +195,13 @@ class ContractController extends BaseController {
 			$info	= I('info');
 			$status = I('status',0);
 			$seal	= I('seal',0);
+			$gbs	= I('gbs',0);
 			
 			$row	= $db->find($id);
 			if($id && $row){
 				$info['status']				= $status;
 				$info['seal']				= $seal;
+				$info['gbs']					= $gbs;
 				$info['confirm_user']		= cookie('userid');
 				$info['confirm_user_name']	= cookie('name');
 				$info['confirm_time']		= time();
