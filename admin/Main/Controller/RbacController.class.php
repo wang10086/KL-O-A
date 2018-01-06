@@ -15,7 +15,10 @@ class RbacController extends BaseController {
     
     // @@@NODE-3###index###用户列表###
     public function index(){
-    
+    	
+		//更新角色列表
+		update_userlist_role();
+		
         $this->title('用户列表');
     
         $db = D('account');
@@ -42,7 +45,6 @@ class RbacController extends BaseController {
 		$this->pages    = $pagecount>P::PAGE_SIZE ? $page->show():'';
 		
         $this->users    = $db->relation(true)->where($where)->order($this->orders('id'))->limit($page->firstRow . ',' . $page->listRows)->select();
-		$this->rolelist = get_roles();
 		
 		$this->roles    = M('role')->GetField('id,role_name',true);
 		$this->posts    = M('posts')->GetField('id,post_name',true);

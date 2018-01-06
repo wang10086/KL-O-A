@@ -1696,6 +1696,75 @@ function updatekpi($month,$user){
 }
 
 
+function get_role_link($roleid,$rtype = 0){
+	
+	global $rolegroup;
+	
+	$role = M('role')->find($roleid);
+	
+	$rolegroup[$role['id']] = $role['role_name'];	
+		
+	if($role['pid']!=0){
+		get_role_link($role['pid']);
+	}
+	
+	$return = array_reverse($rolegroup,true);
+	
+	if($rtype){
+		return $return;
+	}else{
+		$rid = array();
+		foreach($return as $k=>$v){
+			$rid[] = '['.$k.']';
+		}
+		return implode(',',$rid);
+		
+	}
+
+}
+
+
+function update_user_role($id){
+	
+	$db = M('account');
+	
+	$user = $db->field('id,roleid,group_role')->find($id);
+	
+	$info = array();
+	$info['group_role'] = get_role_link($user['roleid']);
+	
+	$save = $db->data($info)->where(array('id'=>$id))->save();
+	if($save){
+		return 0;	
+	}else{
+		return 1;	
+	}
+	
+}
+
+
+function update_userlist_role(){
+	
+	$db = M('account');
+	
+	$user = $db->field('id,roleid,group_role')->select();
+	
+	$i = 0;
+	foreach($user as $v){
+		
+		$save = update_user_role($v['id']);
+		global $rolegroup;
+		$rolegroup = array();
+		if($save==0){
+			$i++;	
+		}
+		
+	}
+	
+	return $i;
+	
+}
+
 ?>
 
 

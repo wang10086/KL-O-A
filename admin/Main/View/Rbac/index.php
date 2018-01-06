@@ -35,8 +35,8 @@
                                         <th class="sorting" data="id">ID</th>
                                         <th class="sorting" data="username">登录账号</th>
                                         <th class="sorting" data="nickname">姓名</th>
-                                        <th class="sorting" data="">部门/角色</th>
-                                        <th class="sorting" data="">类型</th>
+                                        <th class="sorting" data="group_role">部门/角色</th>
+                                        <th class="sorting" data="postid">岗位</th>
                                         <th class="sorting" data="update_time">最近登陆时间</th>
                                         <if condition="rolemenu(array('Rbac/password'))">
                                         <th width="60" class="taskOptions">密码</th>
@@ -53,13 +53,8 @@
                                             <td>{$row.id}</td>
                                             <td>{$row.username}</td>
                                             <td>{$row.nickname}</td>
-                                            <td>
-                                            <foreach name="row.role" item="r">
-                                            {:get_role_name($r['id'])}
-                                             &nbsp;
-                                            </foreach>
-                                            </td>
-                                            <td><?php if ($row['temp_user']==P::USER_TYPE_PART) {echo '兼职'; } else {echo '专职';} ?></td>
+                                            <td><a title="{:get_role_name($row['roleid'])}{$row.group_role}">{$roles[$row['roleid']]}</a></td>
+                                            <td>{$posts[$row['postid']]}</td>
                                             <td><if condition="$row['update_time']">{$row.update_time|date='Y-m-d H:i:s',###}</if></td>
                                             <if condition="rolemenu(array('Rbac/password'))">
                                             <td class="taskOptions">
