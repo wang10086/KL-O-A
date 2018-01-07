@@ -1538,6 +1538,67 @@ class KpiController extends BaseController {
 	
 	
 	
+	// @@@NODE-3###postkpi###部门KPI管理###
+	public function postkpi(){
+		
+		$id    = I('id');
+		
+		$year  = I('year',date('Y'));
+		$month = I('month',date('m'));
+		$user  = I('uid',cookie('userid'));
+		
+		
+		$sta   = C('KPI_STATUS');
+		
+		if($id){
+			$kpi   = M('kpi')->where($where)->find($id);
+			$year  = $kpi['year'];
+			$month = ltrim(substr($kpi['month'],4,2),0);
+			$user  = $kpi['user_id'];
+		}else{
+			$where = array();
+			$where['month']   = $year.sprintf('%02s', $month);
+			$where['user_id'] = $user;
+			$kpi = M('kpi')->where($where)->find();
+		}
+		
+		
+		
+		$kpi['kaoping']      = $kpi['mk_user_id'] ? username($kpi['mk_user_id']) : '未评分'; 	
+		$kpi['score']        = $kpi['score'] ? $kpi['score'].'分' : '未评分'; 	
+		$kpi['status_str']   = $sta[$kpi['status']]; 	
+		
+		//考核指标
+		$lists = M('kpi_more')->where(array('kpi_id'=>$kpi['id']))->select();
+		foreach($lists as $K=>$v){
+			$lists[$K]['score']  = $v['score_status'] ?  $v['score']  : '<font color="#999">未评分</font>';
+		}
+		
+		//审核记录
+		$applist          = M('pdca_apply')->where(array('kpiid'=>$kpi['id']))->order('apply_time DESC')->select();
+		foreach($applist as $k=>$v){
+			$applist[$k]['status'] = $sta[$v['status']];	
+		}
+		
+		//用户信息
+		$this->user       = M('account')->find($user);
+		
+		$this->uid        = $user;
+		$this->year       = $year;
+		$this->month      = $month;
+		$this->kpi        = $kpi;
+		$this->lists      = $lists;
+		$this->applist    = $applist;
+		$this->prveyear   = $year-1;
+		$this->nextyear   = $year+1;
+		$this->allmonth   = $year.sprintf('%02s', $month);
+		
+		$this->display('kpi_post');
+		
+		
+		
+		
+	}
 	
 	
 	

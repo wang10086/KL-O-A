@@ -31,12 +31,7 @@
                                             <a href="javascript:;" onClick="delfile()"  class="btn btn-danger" style="padding:6px 12px;"><i class="fa fa-trash-o"></i> 删除</a>
                                             </if>
                                         </div>
-                                    <!--
-                                    <a href="{:U('Files/index')}" class="file_tips">首页</a>
-                                    <foreach name="dir_path" item="v">
-                                    &gt; <a href="{:U('Files/index',array('pid'=>$v['id']))}" class="file_tips">{$v.file_name}</a>
-                                    </foreach>
-                                    -->
+                                    
                                     
                                     </div>
                                     <div class="box-tools pull-right">
@@ -50,7 +45,12 @@
                                     </div>
                                 </div><!-- /.box-header -->
                                 <div class="box-body">
-                                
+                                <div class="fileRoute">
+                                	<a href="{:U('Files/index')}" class="file_tips">首页</a>
+                                    <foreach name="dir_path" item="v">
+                                    &gt; <a href="{:U('Files/index',array('pid'=>$v['id']))}" class="file_tips">{$v.file_name}</a>
+                                    </foreach>
+                                </div>
                                 <table class="table table-bordered dataTable fontmini" id="tablelist" style="margin-top:10px;">
                                     <tr role="row" class="orders" >
                                     	<th width="40" style="text-align:center;"><input type="checkbox" id="accessdata"/></th>
@@ -66,7 +66,7 @@
                                     	<td align="center">
                                         <input type="checkbox"  value="{$row.id}" class="accessdata" />
                                         </td>
-                                        <td><a href="{$row.url}" {$row.target}>{$row.file_name}</a> <a href="">权限</a></td>
+                                        <td><a href="{$row.url}" {$row.target}>{$row.file_name}</a></td>
                                         <td>{$row.file_type}</td>
                                         <td><if condition="$row['file_ext']">{$row.file_ext}</if></td>
                                         <td><if condition="$row['file_size']">{:fsize($row['file_size'])}</if></td>

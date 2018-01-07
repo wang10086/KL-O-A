@@ -3917,3 +3917,7 @@ th{ font-weight:normal;}
 #qaqclist .btn{ padding:7px 12px; font-size:12px;} 
 #qaqclist td{ line-height:34px;}
 #qaqclist_val{ display:none}
+
+.fileRoute{ color:#999999; font-size:12px;}
+.fileRoute a{ color:#999999;}
+.fileRoute a:hover{ color:#999999;}

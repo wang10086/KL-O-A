@@ -11,8 +11,8 @@ final class P {
     // y:增加或删除功能模块时变更
     // x:小功能变更，批量BUG修复时变更
     // 其他：alpha 开发预览版本  beta 上线公测版本  release最终确定版本
-	const  VERSION         =   "v1.0.3";
-	const  VERSION_CODE    =   "20151010";
+	const  VERSION         =   "v1.0.7";
+	const  VERSION_CODE    =   "20180107";
 	const  VERSION_NAME    =   "";
 	const  SYSTEM_NAME     =   "科学国旅OA系统";
     

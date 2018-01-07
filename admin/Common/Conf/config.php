@@ -9,7 +9,7 @@ return array(
     'DB_HOST'               =>  'localhost',   // 服务器地址
     'DB_NAME'               =>  'xuequoa',        // 数据库名
     'DB_USER'               =>  'root',        // 用户名
-    'DB_PWD'                =>  '',         // 密码
+    'DB_PWD'                =>  'xqwk#136013',         // 密码
     'DB_PORT'               =>  '3306',           // 端口
     'DB_PREFIX'             =>  'oa_',
 	
@@ -78,7 +78,7 @@ return array(
 	'NOT_AUTH_MODULE'  => 'Api,Attachment', // 无需认证模块
 	'USER_AUTH_GATEWAY'=> '/Index/login',// 认证网关
 	//'RBAC_DB_DSN' //  数据库连接DSN
-	'NOT_AUTH_ACTION'  => 'login,logout,reg,backpassword,online',
+	'NOT_AUTH_ACTION'  => 'login,logout,reg,backpassword,online,postkpi',
 	'RBAC_ROLE_TABLE'  => 'oa_role', // 角色表名称
 	'RBAC_USER_TABLE'  => 'oa_role_user',  // 用户表名称
 	'RBAC_ACCESS_TABLE'=> 'oa_access', // 权限表名称

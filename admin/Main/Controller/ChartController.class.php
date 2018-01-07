@@ -500,5 +500,58 @@ class ChartController extends BaseController {
 	}
 	
 	
+	
+	//个人业绩排行榜
+	public function pplist(){
+		
+		$order		= I('order',1);
+		$db			= M('op');
+		$roles		= M('role')->GetField('id,role_name',true);
+		$orderby	= array('1'=>'zsr DESC','2'=>'zml DESC','3'=>'mll DESC','4'=>'ysr DESC','5'=>'yml DESC','6'=>'yll DESC');
+		
+		$where = array();
+		$where['b.audit_status'] = 1;
+		
+		$field = array();
+		$field[] =  'o.create_user';
+		$field[] =  'o.create_user_name';
+		$field[] =  'sum(b.shouru) as zsr';
+		$field[] =  'sum(b.maoli) as zml';
+		$field[] =  '(sum(b.maoli)/sum(b.shouru)) as mll';
+		$field[] =  'a.roleid';
+		
+        $lists = $db->table('__OP_SETTLEMENT__ as b')->field($field)->join('__OP__ as o on b.op_id = o.op_id','LEFT')->join('__ACCOUNT__ as a on a.id = o.create_user','LEFT')->where($where)->order($orderby[$order])->group('create_user')->select();
+		
+		foreach($lists as $k=>$v){
+			$lists[$k]['rolename'] 	=  $roles[$v['roleid']];	
+			$lists[$k]['mll'] 		=  (round($v['mll'],4)*100).'%';	
+			
+			//查询月度
+			$where = array();
+			$where['b.audit_status']	= 1;
+			$where['o.create_user']	= $v['create_user'];
+			$where['a.req_type']		= P::REQ_TYPE_SETTLEMENT;
+			$where['a.audit_time']	= array('gt',strtotime(date('Y-m-01',time())));
+			
+			
+			$field = array();
+			$field[] =  'sum(b.shouru) as ysr';
+			$field[] =  'sum(b.maoli) as yml';
+			$field[] =  '(sum(b.maoli)/sum(b.shouru)) as yll';
+			$users = $db->table('__OP_SETTLEMENT__ as b')->field($field)->join('__OP__ as o on b.op_id = o.op_id','LEFT')->join('__AUDIT_LOG__ as a on a.req_id = b.id','LEFT')->where($where)->find();
+			
+			$lists[$k]['ysr'] 		=  $users['ysr'] ? $users['ysr'] : '0.00';	
+			$lists[$k]['yml'] 		=  $users['yml'] ? $users['yml'] : '0.00';	;	
+			$lists[$k]['yll'] 		=  (round($users['yll'],4)*100).'%';	
+			
+			
+		}
+		
+		
+		$this->lists = $lists;
+		
+		$this->display('pplist');
+	}
+	
 }
 	
