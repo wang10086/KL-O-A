@@ -18,17 +18,20 @@
                             <div class="box">
                                 <div class="box-header">
                                     <h3 class="box-title">排行榜</h3>
-                                    <div class="box-tools pull-right">
-                                    	 <a href="{:U('Chart/pplist',array('order'=>1))}" class="btn btn-info btn-sm" > 按累计收入</a>
-                                         <a href="{:U('Chart/pplist',array('order'=>2))}" class="btn btn-info btn-sm" > 按累计毛利</a>
-                                         <a href="{:U('Chart/pplist',array('order'=>3))}" class="btn btn-info btn-sm" > 按累计毛利率</a>
-                                         <a href="{:U('Chart/pplist',array('order'=>4))}" class="btn btn-info btn-sm" > 按当月收入</a>
-                                         <a href="{:U('Chart/pplist',array('order'=>5))}" class="btn btn-info btn-sm" > 按当月毛利</a>
-                                         <a href="{:U('Chart/pplist',array('order'=>6))}" class="btn btn-info btn-sm" > 按当月毛利率</a>
-                                     </div>
-                                </div><!-- /.box-header -->
+                                </div>
                                 <div class="box-body">
-                                	<table class="table table-bordered dataTable fontmini" id="tablelist">
+                                
+                                	<div class="btn-group" id="catfont">
+                                        
+                                        <a href="{:U('Chart/pplist',array('order'=>1))}" class="btn <?php if($order==1){ echo 'btn-info';}else{ echo 'btn-default';} ?>">按累计收入</a>
+                                         <a href="{:U('Chart/pplist',array('order'=>2))}" class="btn <?php if($order==2){ echo 'btn-info';}else{ echo 'btn-default';} ?>">按累计毛利</a>
+                                         <a href="{:U('Chart/pplist',array('order'=>3))}" class="btn <?php if($order==3){ echo 'btn-info';}else{ echo 'btn-default';} ?>">按累计毛利率</a>
+                                         <a href="{:U('Chart/pplist',array('order'=>4))}" class="btn <?php if($order==4){ echo 'btn-info';}else{ echo 'btn-default';} ?>">按当月收入</a>
+                                         <a href="{:U('Chart/pplist',array('order'=>5))}" class="btn <?php if($order==5){ echo 'btn-info';}else{ echo 'btn-default';} ?>">按当月毛利</a>
+                                         <a href="{:U('Chart/pplist',array('order'=>6))}" class="btn <?php if($order==6){ echo 'btn-info';}else{ echo 'btn-default';} ?>">按当月毛利率</a>
+                                    </div>
+                                
+                                	<table class="table table-bordered dataTable fontmini" id="tablelist" style="margin-top:10px;"> 
                                         <tr role="row" class="orders" >
                                         	<th width="60" data="">名次</th>
                                             <th>姓名</th>
