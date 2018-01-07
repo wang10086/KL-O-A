@@ -3,10 +3,10 @@
             <aside class="right-side">
                 <!-- Content Header (Page header) -->
                 <section class="content-header">
-                    <h1>个人业绩排行榜</h1>
+                    <h1>团队总体业绩排行榜</h1>
                     <ol class="breadcrumb">
                         <li><a href="{:U('Index/index')}"><i class="fa fa-home"></i> 首页</a></li>
-                        <li class="active">个人业绩排行榜</li>
+                        <li class="active">团队总体业绩排行榜</li>
                     </ol>
                 </section>
 
@@ -17,7 +17,7 @@
                         <div class="col-xs-12">
                             <div class="box">
                                 <div class="box-header">
-                                    <h3 class="box-title">个人业绩排行榜（按已完成结算统计）</h3>
+                                    <h3 class="box-title">团队总体业绩排行榜</h3>
                                 </div>
                                 <div class="box-body">
                                 
