@@ -20,42 +20,43 @@
                                     <h3 class="box-title">个人业绩排行榜（按已完成结算统计）</h3>
                                 </div>
                                 <div class="box-body">
-                                
-                                	<div class="btn-group" id="catfont">
-                                        
-                                        <a href="{:U('Chart/pplist',array('order'=>1))}" class="btn <?php if($order==1){ echo 'btn-info';}else{ echo 'btn-default';} ?>">按累计收入</a>
-                                         <a href="{:U('Chart/pplist',array('order'=>2))}" class="btn <?php if($order==2){ echo 'btn-info';}else{ echo 'btn-default';} ?>">按累计毛利</a>
-                                         <a href="{:U('Chart/pplist',array('order'=>3))}" class="btn <?php if($order==3){ echo 'btn-info';}else{ echo 'btn-default';} ?>">按累计毛利率</a>
-                                         <a href="{:U('Chart/pplist',array('order'=>4))}" class="btn <?php if($order==4){ echo 'btn-info';}else{ echo 'btn-default';} ?>">按当月收入</a>
-                                         <a href="{:U('Chart/pplist',array('order'=>5))}" class="btn <?php if($order==5){ echo 'btn-info';}else{ echo 'btn-default';} ?>">按当月毛利</a>
-                                         <a href="{:U('Chart/pplist',array('order'=>6))}" class="btn <?php if($order==6){ echo 'btn-info';}else{ echo 'btn-default';} ?>">按当月毛利率</a>
+                                	
+                                    <div class="btn-group" id="catfont">
+                                        <a href="{:U('Chart/pplist')}" class="btn btn-info">个人业绩排行榜</a>
+                                        <a href="{:U('Chart/tplist')}" class="btn btn-default">团队总体业绩排行榜</a>
+                                        <a href="{:U('Chart/tpavglist')}" class="btn btn-default">团队人均排行榜</a>
                                     </div>
-                                
-                                	<table class="table table-bordered dataTable fontmini" id="tablelist" style="margin-top:10px;"> 
-                                        <tr role="row" class="orders" >
-                                        	<th width="60" data="">名次</th>
-                                            <th>姓名</th>
-                                            <th>所在部门</th>
-                                            <th width="10%">累计收入</th>
-                                            <th width="10%">累计毛利</th>
-                                         	<th width="10%">累计毛利率</th>
-                                            <th width="10%">当月收入</th>
-                                            <th width="10%">当月毛利</th>
-                                         	<th width="10%">当月毛利率</th>
-                                        </tr>
-                                        <foreach name="lists" item="row" key="k">                      
-                                        <tr>
-                                            <td><?php echo $k+1; ?></td>
-                                            <td>{$row.create_user_name}</td>
-                                            <td>{$row.rolename}</td>
-                                            <td>&yen; {$row.zsr}</td>
-                                            <td>&yen; {$row.zml}</td>
-                                            <td>{$row.mll}</td>
-                                            <td>&yen; {$row.ysr}</td>
-                                            <td>&yen; {$row.yml}</td>
-                                            <td>{$row.yll}</td>
-                                        </tr>
-                                        </foreach>		
+                                    
+                                    
+                                	<table id="example2" class="table table-bordered table-hover" style="margin-top:10px;">
+                                        <thead>
+                                            <tr role="row" class="orders" >
+                                            	<th width="40">序号</th>
+                                                <th>姓名</th>
+                                                <th width="12%">所在部门</th>
+                                                <th width="12%" class="orderth">累计收入(元)</th>
+                                                <th width="12%" class="orderth">累计毛利(元)</th>
+                                                <th width="12%" class="orderth">累计毛利率(%)</th>
+                                                <th width="12%" class="orderth">当月收入(元)</th>
+                                                <th width="12%" class="orderth">当月毛利(元)</th>
+                                                <th width="12%" class="orderth">当月毛利率(%)</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <foreach name="lists" item="row" key="k">                      
+                                            <tr>
+                                            	<td class="orderNo"><?php echo $k+1; ?></td>
+                                                <td>{$row.create_user_name}</td>
+                                                <td>{$row.rolename}</td>
+                                                <td>{$row.zsr}</td>
+                                                <td>{$row.zml}</td>
+                                                <td>{$row.mll}</td>
+                                                <td>{$row.ysr}</td>
+                                                <td>{$row.yml}</td>
+                                                <td>{$row.yll}</td>
+                                            </tr>
+                                            </foreach>	
+                                        </tbody>	
                                         
                                     </table>
                                 
@@ -72,54 +73,24 @@
             </aside><!-- /.right-side -->
 
         <include file="Index:footer2" />
-        
-        <div id="searchtext">
-            <form action="" method="get" id="searchform">
-            <input type="hidden" name="m" value="Main">
-            <input type="hidden" name="c" value="ScienceRes">
-            <input type="hidden" name="a" value="res">
-            <div class="form-group col-md-4">
-                <input type="text" class="form-control" name="key" placeholder="关键字">
-            </div>
-            
-           
-            
-            <div class="form-group col-md-4">
-                <select class="form-control" name="type">
-                    <option value="0">资源类型</option>
-                    <foreach name="reskind" key="k" item="v">
-                    <option value="{$k}">{$v}</option>
-                    </foreach>
-                </select>
-            </div>
-            
-            <div class="form-group col-md-4">
-                    <select class="form-control" name="pro">
-                        <option value="0">适用业务类型</option>
-                        <foreach name="kinds" key="k" item="v">
-                        <option value="{$k}">{$v}</option>
-                        </foreach>
-                    </select>
-                </div>
-            
-            </form>
-        </div>
         <script type="text/javascript">
-                function openform(obj){
-                    art.dialog.open(obj,{
-                        lock:true,
-                        id:'respriv',
-                        title: '权限分配',
-                        width:600,
-                        height:300,
-                        okValue: '提交',
-                        ok: function () {
-                            this.iframe.contentWindow.myform.submit();
-                            return false;
-                        },
-                        cancelValue:'取消',
-                        cancel: function () {
-                        }
-                    });	
-                } 
+		$('#example2').dataTable({
+			"bPaginate": false,
+			"bLengthChange": false,
+			"bFilter": false,
+			"bSort": true,
+			"bInfo": false,
+			"aaSorting" : [[3, "desc"]],
+			"bAutoWidth": true,
+			"aoColumnDefs": [{ "bSortable": false, "aTargets": [ 0,1,2] }]
+		});
+		
+		$(document).ready(function(e) {
+			$('.orderth').click(function(){
+				$('.orderNo').each(function(index, element) {
+					$(this).text(index+1);
+				});	
+			})
+		});
         </script>
+        

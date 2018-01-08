@@ -3921,3 +3921,6 @@ th{ font-weight:normal;}
 .fileRoute{ color:#999999; font-size:12px;}
 .fileRoute a{ color:#999999;}
 .fileRoute a:hover{ color:#999999;}
+
+
+th{outline: none;}

@@ -14,6 +14,7 @@
         <!-- jquery-ui style -->
         <link href="__HTML__/css/jQueryUI/jquery-ui-1.10.3.custom.min.css" rel="stylesheet" type="text/css" />
         <!-- ArtDialog -->
+        <link href="__HTML__/css/datatables/dataTables.bootstrap.css" rel="stylesheet" type="text/css" />
         <link href="__HTML__/css/artDialog.css" rel="stylesheet" type="text/css"  />
         <link href="__HTML__/comm/liMarquee/liMarquee.css" rel="stylesheet" type="text/css"  />
         <!-- Theme style -->
@@ -37,6 +38,9 @@
         <script src="__HTML__/js/plugins/jqueryui/jquery-ui-slide.min.js" type="text/javascript"></script>   
         <script src="__HTML__/js/plugins/jqueryui/jquery-ui-timepicker-addon.js" type="text/javascript"></script>     
         <!--artdialog-->
+        
+        <script src="__HTML__/js/plugins/datatables/jquery.dataTables.js" type="text/javascript"></script>
+        <script src="__HTML__/js/plugins/datatables/dataTables.bootstrap.js" type="text/javascript"></script>
        
         <!-- FORM -->
         <script src="__HTML__/js/plugins/form/formvalidator.js" type="text/javascript"></script>

@@ -1765,6 +1765,95 @@ function update_userlist_role(){
 	
 }
 
+//统计部门数据
+function tplist($roleid){
+	
+	$db			= M('op');
+	$roles		= M('role')->GetField('id,role_name',true);
+	
+	//获取部门人数
+	if($roleid==33){
+		$where = array();
+		$where['roleid'] = array('in','33,17,61');
+		$num = M('account')->where($where)->count();	
+	}else if($roleid==35){
+		$where = array();
+		$where['roleid'] = array('in','35,16,37,38,64');
+		$num = M('account')->where($where)->count();	
+	}else if($roleid==18){
+		$where = array();
+		$where['roleid'] = array('in','18,40,41,49,55,56,57,59,73,74');
+		$num = M('account')->where($where)->count();	
+	}else if($roleid==19){
+		$where = array();
+		$where['roleid'] = array('in','19,36');
+		$num = M('account')->where($where)->count();	
+	}else if($roleid==40){
+		$where = array();
+		$where['roleid'] = array('in','40,41,49');
+		$num = M('account')->where($where)->count();	
+	}else if($roleid==55){
+		$where = array();
+		$where['roleid'] = array('in','55,56,57');
+		$num = M('account')->where($where)->count();	
+	}
+	
+	
+	$where = array();
+	$where['b.audit_status']		= 1;
+	
+	if($roleid==40){
+		$where['a.group_role']	= array(array('like','%[40]%'), array('like','%[41]%'), array('like','%[49]%'),'or');
+	}else if($roleid==55){
+		$where['a.group_role']	= array(array('like','%[55]%'), array('like','%[56]%'), array('like','%[57]%'),'or');
+	}else{
+		$where['a.group_role']	= array('like','%['.$roleid.']%');
+	}
+	
+	$field = array();
+	$field[] =  'sum(b.shouru) as zsr';
+	$field[] =  'sum(b.maoli) as zml';
+	$field[] =  '(sum(b.maoli)/sum(b.shouru)) as mll';
+	
+	$lists = $db->table('__OP_SETTLEMENT__ as b')->field($field)->join('__OP__ as o on b.op_id = o.op_id','LEFT')->join('__ACCOUNT__ as a on a.id = o.create_user','LEFT')->where($where)->order('zsr DESC')->find();
+	$lists['mll']			= $lists['zml']>0 ?  sprintf("%.2f",$lists['mll']*100) : '0.00';	
+	
+	$lists['rjzsr']			= sprintf("%.2f",$lists['zsr']/$num);	
+	$lists['rjzml']			= sprintf("%.2f",$lists['zml']/$num);	
+	$lists['rjmll']			= sprintf("%.2f",($lists['rjzml']/$lists['rjzsr'])*100);	
+	
+	
+	//查询月度
+	$where = array();
+	$where['b.audit_status']	= 1;
+	if($roleid==40){
+		$where['a.group_role']	= array(array('like','%[40]%'), array('like','%[41]%'), array('like','%[49]%'),'or');
+	}else if($roleid==55){
+		$where['a.group_role']	= array(array('like','%[55]%'), array('like','%[56]%'), array('like','%[57]%'),'or');
+	}else{
+		$where['a.group_role']	= array('like','%['.$roleid.']%');
+	}
+	$where['l.req_type']		= 801;
+	$where['l.audit_time']	= array('gt',strtotime(date('Y-m-01',time())));
+	
+	$field = array();
+	$field[] =  'sum(b.shouru) as ysr';
+	$field[] =  'sum(b.maoli) as yml';
+	$field[] =  '(sum(b.maoli)/sum(b.shouru)) as yll';
+	$users = $db->table('__OP_SETTLEMENT__ as b')->field($field)->join('__OP__ as o on b.op_id = o.op_id','LEFT')->join('__AUDIT_LOG__ as l on l.req_id = b.id','LEFT')->join('__ACCOUNT__ as a on a.id = o.create_user','LEFT')->where($where)->find();
+	
+	$users['ysr'] 		= $users['ysr'] ? $users['ysr'] : '0.00';	
+	$users['yml'] 		= $users['yml'] ? $users['yml'] : '0.00';		
+	$users['yll'] 		= $users['yml']>0 ? sprintf("%.4f",$users['yll'])*100 : '0.00';	
+	$users['rjysr']		= sprintf("%.2f",$users['ysr']/$num);	
+	$users['rjyml']		= sprintf("%.2f",$users['yml']/$num);	
+	$users['rjyll']		= sprintf("%.2f",($users['rjyml']/$users['rjysr'])*100);	
+	$users['num']		= $num;
+	$users['rid']		= $roleid;
+	
+	return array_merge($lists, $users);
+}
+
 ?>
 
 
