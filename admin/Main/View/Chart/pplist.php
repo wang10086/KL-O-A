@@ -12,23 +12,19 @@
 
                 <!-- Main content -->
                 <section class="content">
-
-                    <div class="row">
+					
+                    <div class="btn-group" id="catfont">
+                        <a href="{:U('Chart/pplist')}" class="btn btn-info">个人业绩排行榜</a>
+                        <a href="{:U('Chart/tplist')}" class="btn btn-default">团队总体业绩排行榜</a>
+                        <a href="{:U('Chart/tpavglist')}" class="btn btn-default">团队人均排行榜</a>
+                    </div>
+                    
+                    <div class="row" style="margin-top:20px;">
                         <div class="col-xs-12">
-                            <div class="box">
-                                <div class="box-header">
-                                    <h3 class="box-title">个人业绩排行榜（按已完成结算统计）</h3>
-                                </div>
+                            <div class="box box-warning">
                                 <div class="box-body">
-                                	
-                                    <div class="btn-group" id="catfont">
-                                        <a href="{:U('Chart/pplist')}" class="btn btn-info">个人业绩排行榜</a>
-                                        <a href="{:U('Chart/tplist')}" class="btn btn-default">团队总体业绩排行榜</a>
-                                        <a href="{:U('Chart/tpavglist')}" class="btn btn-default">团队人均排行榜</a>
-                                    </div>
                                     
-                                    
-                                	<table id="example2" class="table table-bordered table-hover" style="margin-top:10px;">
+                                	 <table id="example2" class="table table-striped table-bordered table-hover" >
                                         <thead>
                                             <tr role="row" class="orders" >
                                             	<th width="40">序号</th>
@@ -61,9 +57,6 @@
                                     </table>
                                 
                                 </div><!-- /.box-body -->
-                                <div class="box-footer clearfix">
-                                	<div class="pagestyle">{$pages}</div>
-                                </div>
                             </div><!-- /.box -->
 
                         </div><!-- /.col -->
