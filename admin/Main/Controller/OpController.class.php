@@ -18,42 +18,47 @@ class OpController extends BaseController {
     public function index(){
         $this->title('出团计划列表');
 		
-		$db = M('op');
+		$db		= M('op');
 		
-		$title = I('title');         //项目团号
-		$opid = I('id');         //项目团号
-		$oid = I('oid');         //项目团号
-		$dest = I('dest');       //目的地
-		$ou = I('ou');           //立项人
-		$status = I('status','-1');   //成团状态
-		$as = I('as','-1');           //审核状态
-		$kind = I('kind');       //类型
-		$su = I('su');           //销售
-		$pin = I('pin');
-		$cus  = I('cus');
+		$title	= I('title');		//项目名称
+		$opid	= I('id');			//项目编号
+		$oid	= I('oid');			//项目团号
+		$dest	= I('dest');			//目的地
+		$ou		= I('ou');			//立项人
+		$status	= I('status','-1');	//成团状态
+		$as		= I('as','-1');		//审核状态
+		$kind	= I('kind');			//类型
+		$su		= I('su');			//销售
+		$pin	= I('pin');
+		$cus	= I('cus');			//客户单位
+		$jd		= I('jd');			//计调
 		
 		$where = array();
 		
-		if($title)   $where['project'] = array('like','%'.$title.'%');
-		if($oid)   $where['group_id'] = array('like','%'.$oid.'%');
-		if($opid)   $where['op_id'] = $opid;
-		if($dest)   $where['destination'] = $dest;
-		if($ou)     $where['create_user_name'] = $ou;
-		if($status!='-1') $where['status'] = $status;
-		if($as!='-1')     $where['audit_status'] = $as;
-		if($kind)   $where['kind'] = $kind;
-		if($su)     $where['sale_user'] = $su;
-		if($cus)     $where['customer'] = $cus;
-		if($pin==1) $where['create_user'] = cookie('userid');
-		
+		if($title)			$where['o.project']			= array('like','%'.$title.'%');
+		if($oid)				$where['o.group_id']			= array('like','%'.$oid.'%');
+		if($opid)			$where['o.op_id']			= $opid;
+		if($dest)			$where['o.destination']		= $dest;
+		if($ou)				$where['o.create_user_name']	= $ou;
+		if($status!='-1')	$where['o.status']			= $status;
+		if($as!='-1')		$where['o.audit_status']		= $as;
+		if($kind)			$where['o.kind']				= $kind;
+		if($su)				$where['o.sale_user']		= array('like','%'.$su.'%');
+		if($cus)				$where['o.customer']			= $cus;
+		if($pin==1)			$where['o.create_user']		= cookie('userid');
+		if($jd)				$where['a.nickname']			= array('like','%'.$jd.'%');
 		
 		//分页
-		$pagecount = $db->where($where)->count();
-		$page = new Page($pagecount, P::PAGE_SIZE);
-		$this->pages = $pagecount>P::PAGE_SIZE ? $page->show():'';
+		$pagecount		= $db->table('__OP__ as o')->field($field)->join('__OP_AUTH__ as u on u.op_id = o.op_id','LEFT')->join('__ACCOUNT__ as a on a.id = u.line','LEFT')->where($where)->count();
+		$page			= new Page($pagecount, P::PAGE_SIZE);
+		$this->pages	= $pagecount>P::PAGE_SIZE ? $page->show():'';
         
-        $lists = $db->where($where)->limit($page->firstRow . ',' . $page->listRows)->order($this->orders('create_time'))->select();
+       
+		$field	= 'o.*,a.nickname as jidiao';
+		$lists = $db->table('__OP__ as o')->field($field)->join('__OP_AUTH__ as u on u.op_id = o.op_id','LEFT')->join('__ACCOUNT__ as a on a.id = u.line','LEFT')->where($where)->limit($page->firstRow . ',' . $page->listRows)->order($this->orders('o.create_time'))->select();
+		
 		foreach($lists as $k=>$v){
+			
 			//判断项目是否审核通过
 			if($v['audit_status']==0) $lists[$k]['zhuangtai'] = '<span class="blue">未审核</span>';
 			if($v['audit_status']==1) $lists[$k]['zhuangtai'] = '<span class="blue">立项通过</span>';
@@ -70,7 +75,6 @@ class OpController extends BaseController {
 			if($jiesuan && $jiesuan['audit_status']==0) $lists[$k]['zhuangtai'] = '<span class="yellow">已提交结算</span>';
 			if($jiesuan['audit_status']==1) $lists[$k]['zhuangtai'] = '<span class="yellow">完成结算</span>';
 			if($jiesuan['audit_status']==2) $lists[$k]['zhuangtai'] = '<span class="yellow">结算未通过</span>';
-			
 			
 		}
 		$this->lists   =  $lists;

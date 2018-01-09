@@ -22,7 +22,7 @@
                                 <div class="box-header">
                                     <h3 class="box-title">项目计划列表</h3>
                                     <div class="box-tools pull-right">
-                                    	 <a href="javascript:;" class="btn btn-info btn-sm" onclick="javascript:opensearch('searchtext',600,160);"><i class="fa fa-search"></i> 搜索</a>
+                                    	 <a href="javascript:;" class="btn btn-info btn-sm" onclick="javascript:opensearch('searchtext',800,160);"><i class="fa fa-search"></i> 搜索</a>
                                          <a href="{:U('Op/plans')}" class="btn btn-sm btn-danger"><i class="fa fa-plus"></i> 新建项目计划</a>
                                     </div>
                                 </div><!-- /.box-header -->
@@ -36,30 +36,28 @@
                                 
                                 <table class="table table-bordered dataTable fontmini" id="tablelist" style="margin-top:10px;">
                                     <tr role="row" class="orders" >
-                                        <th class="sorting" width="100" data="op_id">编号</th>
-                                        <th class="sorting" data="status">团号</th>
-                                        <th class="sorting" data="project" width="160">项目名称</th>
-                                        <th class="sorting" data="number">人数</th>
+                                        <th class="sorting" width="80" data="o.op_id">编号</th>
+                                        <th class="sorting" data="o.status">团号</th>
+                                        <th class="sorting" data="o.project" width="160">项目名称</th>
+                                        <th class="sorting" data="o.number">人数</th>
                                         <!--
                                         <th class="sorting" data="sale_cost">销售价</th>
                                         <th class="sorting" data="peer_cost">同行价</th>
                                         -->
-                                        <th class="sorting" data="departure">出行时间</th>
-                                        <th class="sorting" data="days">天数</th>
-                                        <th class="sorting" width="80" data="destination">目的地</th>
-                                        <th class="sorting" width="80" data="kind">类型</th>
-                                        <!--
-                                        <th class="sorting" data="op_create_user">计调</th>
-                                        <th class="sorting" data="sale_user">销售</th>
-                                        -->
-                                        <th class="sorting" data="create_user_name">创建者</th>
-                                        <th class="sorting" data="audit_status">状态</th>
+                                        <th class="sorting" data="o.departure">出行时间</th>
+                                        <th class="sorting" data="o.days">天数</th>
+                                        <th class="sorting" width="80" data="o.destination">目的地</th>
+                                        <th class="sorting" width="80" data="o.kind">类型</th>
+                                        <th class="sorting" data="a.jidiao">计调</th>
+                                        <!-- <th class="sorting" data="o.sale_user">销售</th> -->
+                                        <th class="sorting" data="o.create_user_name">创建者</th>
+                                        <th class="sorting" data="o.audit_status">状态</th>
                                         <if condition="rolemenu(array('Op/plans_info'))">
-                                        <th width="50" class="taskOptions">跟进</th>
+                                        <th width="40" class="taskOptions">跟进</th>
                                         </if>
                                         
                                         <if condition="rolemenu(array('Op/delpro'))">
-                                        <th width="60" class="taskOptions">删除</th>
+                                        <th width="40" class="taskOptions">删除</th>
                                         </if> 
                                     </tr>
                                     <foreach name="lists" item="row"> 
@@ -76,10 +74,8 @@
                                         <td>{$row.days}天</td>
                                         <td><div class="tdbox_long" style="width:80px" title="{$row.destination}">{$row.destination}</div></td>
                                         <td><div class="tdbox_long" style="width:80px" title="<?php echo $kinds[$row['kind']]; ?>"><?php echo $kinds[$row['kind']]; ?></div></td>
-                                        <!--
-                                        <td>{$row.op_create_user}</td>
-                                        <td>{$row.sale_user}</td>
-                                        -->
+                                        <td>{$row.jidiao}</td>
+                                        <!-- <td>{$row.sale_user}</td> -->
                                         <td>{$row.create_user_name}</td>
                                         <td>{$row.zhuangtai}</td>
                                         <if condition="rolemenu(array('Op/plans_follow'))">
@@ -114,7 +110,7 @@
                 <input type="hidden" name="c" value="Op">
                 <input type="hidden" name="a" value="index">
                 
-                <div class="form-group col-md-4">
+                <div class="form-group col-md-12">
                     <input type="text" class="form-control" name="title" placeholder="项目名称">
                 </div>
                 
@@ -130,9 +126,7 @@
                     <input type="text" class="form-control" name="dest" placeholder="目的地">
                 </div>
                 
-                <div class="form-group col-md-4">
-                    <input type="text" class="form-control" name="ou" placeholder="立项人">
-                </div>
+                
                 
                 <div class="form-group col-md-4">
                     <select  class="form-control"  name="status">
@@ -159,7 +153,14 @@
                         </foreach>
                     </select>
                 </div>
-               
+               	
+                <div class="form-group col-md-4">
+                    <input type="text" class="form-control" name="ou" placeholder="立项人">
+                </div>
+                
+                <div class="form-group col-md-4">
+                    <input type="text" class="form-control" name="jd" placeholder="计调">
+                </div>
                 
                 <div class="form-group col-md-4">
                     <input type="text" class="form-control" name="su" placeholder="销售">
