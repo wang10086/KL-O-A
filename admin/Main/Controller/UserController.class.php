@@ -97,6 +97,9 @@ class UserController extends BaseController {
 		
 		//P($db->GetLastSql());
 		
+		
+		update_userlist_role();
+		
 		$this->display('index');
 		
     }
@@ -120,6 +123,9 @@ class UserController extends BaseController {
 			$info['ip'] = get_client_ip();
 			$info['username'] = trim($info['username']);
 			$isadd = $db->add($info);
+			
+			update_user_role($isadd);
+			
 			if($isadd) {
 				$data = array();
 				$data['role_id'] = $roleid;
@@ -161,6 +167,8 @@ class UserController extends BaseController {
 			}
 			if($id){
 				$isedit = $db->data($info)->where(array('id'=>$id))->save();
+				
+				update_user_role($id);
 				if($roleid){
 					$data = array();
 					$data['role_id'] = $roleid;
