@@ -25,6 +25,13 @@
                         </if>
                         
                         
+                        <li class="{:on('Chart')}">
+                            <a href="{:U('Chart/pplist')}">
+                                <i class="fa fa-signal"></i> <span>业绩排行榜</span>
+                            </a>
+                            
+                        </li>
+                        
                         
                         <if condition="rolemenu(array('Op/index','Op/plans','Project/kind'))">
                         <li class="treeview {:ison(CONTROLLER_NAME, 'Op')}  {:ison(CONTROLLER_NAME, 'Project')}">
@@ -417,15 +424,7 @@
                                 <if condition="rolemenu(array('Chart/finance'))">
                                     <li><a href="{:U('Chart/finance')}"><i class="fa fa-angle-right"></i> 项目结算统计</a></li>
                                 </if>
-                                <if condition="rolemenu(array('Chart/pplist'))">
-                                    <li><a href="{:U('Chart/pplist')}"><i class="fa fa-angle-right"></i> 个人业绩排行榜</a></li>
-                                </if>
-                                <if condition="rolemenu(array('Chart/tplist'))">
-                                    <li><a href="{:U('Chart/tplist')}"><i class="fa fa-angle-right"></i> 团队总体业绩排行榜</a></li>
-                                </if>
-                                <if condition="rolemenu(array('Chart/tpavglist'))">
-                                    <li><a href="{:U('Chart/tpavglist')}"><i class="fa fa-angle-right"></i> 团队人均排行榜</a></li>
-                                </if>
+                                
                                 <!--
                                 <if condition="rolemenu(array('Chart/customer'))">
                                     <li><a href="{:U('Chart/customer')}"><i class="fa fa-angle-right"></i> 客户统计</a></li>
