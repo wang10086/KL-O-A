@@ -42,7 +42,7 @@
                                             <foreach name="lists" item="row" key="k">                      
                                             <tr>
                                             	<td class="orderNo"><?php echo $k+1; ?></td>
-                                                <td>{$row.create_user_name}</td>
+                                                <td><a href="{:U('Chart/finance',array('xs'=>$row['create_user_name']))}">{$row.create_user_name}</a></td>
                                                 <td>{$row.rolename}</td>
                                                 <td>{$row.zsr}</td>
                                                 <td>{$row.zml}</td>
