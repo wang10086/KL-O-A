@@ -31,24 +31,47 @@
                                     <if condition="$row"><input type="hidden" name="id" value="{$row.id}" /></if>
                                     <!-- text input -->
                                     
-                                    <div class="form-group col-md-6" >
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    <div class="form-group col-md-3" >
                                         <label>登录账号</label>
                                         <input class="form-control"  type="text" name="info[username]"  <?php if($row){ echo 'disabled'; }?> id="username" value="{$row.username}"/>
                                     </div>
                                     
-                                    <div class="form-group col-md-6">
-                                        <label>账号类型</label>
-                                        <select  class="form-control"  name="info[temp_user]" required>
-                                            <option value="0" <?php if ($row && $row['temp_user'] == 0) echo ' selected'; ?>>专职</option>
-                                            <option value="1" <?php if ($row && $row['temp_user'] == 1) echo ' selected'; ?>>兼职</option>
-                                            <!-- 
-                                            <option value="2" <?php if ($row && $row['temp_user'] == 2) echo ' selected'; ?>>临时</option>
-                                             -->
-                                        </select>
+                                    <div class="form-group col-md-3">
+                                        <label>姓名</label>
+                                        <input class="form-control"  type="text" name="info[nickname]"  value="{$row.nickname}"/>
                                     </div>
                                     
+                                    <?php if(!$row){ ?>
+                                    <div class="form-group col-md-3">
+                                        <label>密码</label>
+                                        <input class="form-control"  type="password" name="password_1" value="" id="password_1"/>
+                                    </div>
+                                    
+                                    <div class="form-group col-md-3">
+                                        <label>确认密码</label>
+                                        <input class="form-control"  type="password" name="password_2" value="" id="password_2"/>
+                                    </div>
+                                    <?php } ?>
+                                    
+                                    <div class="form-group col-md-3">
+                                        <label>手机号</label>
+                                        <input class="form-control"  type="text" name="info[mobile]"  value="{$row.mobile}"/>
+                                    </div>
+                                   
+                                    <div class="form-group col-md-3">
+                                        <label>邮箱</label>
+                                        <input class="form-control"  type="text"  name="info[email]" value="{$row.email}"/>
+                                    </div>
+                                    
+                                    
                                     <if condition="rolemenu(array('Rbac/adduser'))">
-                                    <div class="form-group col-md-6">
+                                    <div class="form-group col-md-3">
                                         <label>角色</label>
                                         <select  class="form-control"  name="info[roleid]" required>
                                             <option value="0">请选择</option>
@@ -60,7 +83,8 @@
                                         </select>
                                     </div>
                                     
-                                    <div class="form-group col-md-6">
+                                    
+                                    <div class="form-group col-md-3">
                                         <label>岗位</label>
                                         <select class="form-control" name="info[postid]">
                                             <option value="0" <?php if ($row['postid']==0){ echo ' selected'; }?>>请选择</option>
@@ -69,34 +93,27 @@
                                             </foreach>
                                         </select>
                                     </div>
+                                    
+                                    <div class="form-group col-md-3">
+                                        <label>账号类型</label>
+                                        <select  class="form-control"  name="info[temp_user]" required>
+                                            <option value="0" <?php if ($row && $row['temp_user'] == 0) echo ' selected'; ?>>专职</option>
+                                            <option value="1" <?php if ($row && $row['temp_user'] == 1) echo ' selected'; ?>>兼职</option>
+                                            <!-- 
+                                            <option value="2" <?php if ($row && $row['temp_user'] == 2) echo ' selected'; ?>>临时</option>
+                                             -->
+                                        </select>
+                                    </div>
+                                    
+                                    <div class="form-group col-md-3">
+                                        <label>用户状态</label>
+                                        <select class="form-control" name="info[status]">
+                                        	<option <?php if($row['status']==0){ echo 'selected';}?> value="0">启用</option>
+                                            <option <?php if($row['status']==1){ echo 'selected';}?> value="1">停用</option>
+                                        </select>
+                                    </div>
+                                        
                                     </if>
-                                    
-                                    <div class="form-group col-md-6">
-                                        <label>姓名</label>
-                                        <input class="form-control"  type="text" name="info[nickname]"  value="{$row.nickname}"/>
-                                    </div>
-                                    
-                                    <?php if(!$row){ ?>
-                                    <div class="form-group col-md-6">
-                                        <label>密码</label>
-                                        <input class="form-control"  type="password" name="password_1" value="" id="password_1"/>
-                                    </div>
-                                    
-                                    <div class="form-group col-md-6">
-                                        <label>确认密码</label>
-                                        <input class="form-control"  type="password" name="password_2" value="" id="password_2"/>
-                                    </div>
-                                    <?php } ?>
-                                    
-                                    <div class="form-group col-md-6">
-                                        <label>手机号</label>
-                                        <input class="form-control"  type="text" name="info[mobile]"  value="{$row.mobile}"/>
-                                    </div>
-                                   
-                                    <div class="form-group col-md-6">
-                                        <label>邮箱</label>
-                                        <input class="form-control"  type="text"  name="info[email]" value="{$row.email}"/>
-                                    </div>
 
                                     <div class="form-group">&nbsp;</div>
                                     <div class="form-group">&nbsp;</div>

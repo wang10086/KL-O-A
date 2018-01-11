@@ -38,6 +38,7 @@
                                         <th class="sorting" data="group_role">部门/角色</th>
                                         <th class="sorting" data="postid">岗位</th>
                                         <th class="sorting" data="update_time">最近登陆时间</th>
+                                        <th class="sorting" data="status">状态</th>
                                         <if condition="rolemenu(array('Rbac/password'))">
                                         <th width="60" class="taskOptions">密码</th>
                                         </if>
@@ -56,6 +57,7 @@
                                             <td><a title="{:get_role_name($row['roleid'])}{$row.group_role}">{$roles[$row['roleid']]}</a></td>
                                             <td>{$posts[$row['postid']]}</td>
                                             <td><if condition="$row['update_time']">{$row.update_time|date='Y-m-d H:i:s',###}</if></td>
+                                            <td><?php if($row['status']==0){ echo '<span class="green">正常</span>';}else{ echo '<span class="red">停用</span>';} ?></td>
                                             <if condition="rolemenu(array('Rbac/password'))">
                                             <td class="taskOptions">
                                             <button onClick="javascript:window.location.href='{:U('Rbac/password',array('id'=>$row['id']))}';" title="修改密码" class="btn btn-success btn-smsm"><i class="fa fa-lock"></i></button>

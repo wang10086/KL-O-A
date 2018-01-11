@@ -24,7 +24,7 @@
                             <div class="box box-warning">
                                 
                                 <div class="box-body">
-                                	
+                                	<p>提示：以下累计数据从2018年1月1日起已完成结算项目中采集</p>
                                     <table id="example2" class="table table-striped table-bordered table-hover">
                                         <thead>
                                             <tr role="row" class="orders" >

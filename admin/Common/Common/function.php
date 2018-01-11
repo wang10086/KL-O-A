@@ -1775,31 +1775,37 @@ function tplist($roleid){
 	if($roleid==33){
 		$where = array();
 		$where['roleid'] = array('in','33,17,61');
+		$where['status'] = 0;
 		$num = M('account')->where($where)->count();	
 		$fzr = '王凯';
 	}else if($roleid==35){
 		$where = array();
 		$where['roleid'] = array('in','35,16,37,38,64');
+		$where['status'] = 0;
 		$num = M('account')->where($where)->count();	
 		$fzr = '石曼';
 	}else if($roleid==18){
 		$where = array();
 		$where['roleid'] = array('in','18,40,41,49,55,56,57,59,73,74');
+		$where['status'] = 0;
 		$num = M('account')->where($where)->count();	
 		$fzr = '许世伟';
 	}else if($roleid==19){
 		$where = array();
 		$where['roleid'] = array('in','19,36');
+		$where['status'] = 0;
 		$num = M('account')->where($where)->count();
 		$fzr = '杨开玖';	
 	}else if($roleid==40){
 		$where = array();
 		$where['roleid'] = array('in','40,41,49');
+		$where['status'] = 0;
 		$num = M('account')->where($where)->count();	
 		$fzr = '李军亮';	
 	}else if($roleid==55){
 		$where = array();
 		$where['roleid'] = array('in','55,56,57');
+		$where['status'] = 0;
 		$num = M('account')->where($where)->count();
 		$fzr = '徐恒';		
 	}
@@ -1807,7 +1813,8 @@ function tplist($roleid){
 	
 	$where = array();
 	$where['b.audit_status']		= 1;
-	
+	$where['l.req_type']			= 801;
+	$where['l.audit_time']			= array('gt',strtotime('2018-01-01 00:00:00'));
 	if($roleid==40){
 		$where['a.group_role']	= array(array('like','%[40]%'), array('like','%[41]%'), array('like','%[49]%'),'or');
 	}else if($roleid==55){
@@ -1821,12 +1828,14 @@ function tplist($roleid){
 	$field[] =  'sum(b.maoli) as zml';
 	$field[] =  '(sum(b.maoli)/sum(b.shouru)) as mll';
 	
-	$lists = $db->table('__OP_SETTLEMENT__ as b')->field($field)->join('__OP__ as o on b.op_id = o.op_id','LEFT')->join('__ACCOUNT__ as a on a.id = o.create_user','LEFT')->where($where)->order('zsr DESC')->find();
+	$lists = $db->table('__OP_SETTLEMENT__ as b')->field($field)->join('__OP__ as o on b.op_id = o.op_id','LEFT')->join('__ACCOUNT__ as a on a.id = o.create_user','LEFT')->join('__AUDIT_LOG__ as l on l.req_id = b.id','LEFT')->where($where)->order('zsr DESC')->find();
 	$lists['mll']			= $lists['zml']>0 ?  sprintf("%.2f",$lists['mll']*100) : '0.00';	
 	
+	$lists['zsr'] 			= $lists['zsr'] ? $lists['zsr'] : '0.00';	
+	$lists['zml'] 			= $lists['zml'] ? $lists['zml'] : '0.00';	
 	$lists['rjzsr']			= sprintf("%.2f",$lists['zsr']/$num);	
 	$lists['rjzml']			= sprintf("%.2f",$lists['zml']/$num);	
-	$lists['rjmll']			= sprintf("%.2f",($lists['rjzml']/$lists['rjzsr'])*100);	
+	$lists['rjmll']			= $lists['zml'] ? sprintf("%.2f",($lists['rjzml']/$lists['rjzsr'])*100) : '0.00';	
 	
 	
 	//查询月度
@@ -1840,7 +1849,7 @@ function tplist($roleid){
 		$where['a.group_role']	= array('like','%['.$roleid.']%');
 	}
 	$where['l.req_type']		= 801;
-	$where['l.audit_time']	= array('gt',strtotime(date('Y-m-01',time())));
+	$where['l.audit_time']		= array('gt',strtotime(date('Y-m-01',time())));
 	
 	$field = array();
 	$field[] =  'sum(b.shouru) as ysr';

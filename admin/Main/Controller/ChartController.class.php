@@ -509,8 +509,10 @@ class ChartController extends BaseController {
 		
 			
 		$where = array();
-		$where['b.audit_status']		= 1;
+		$where['b.audit_status']	= 1;
 		$where['o.create_user']		= array('neq',0);
+		$where['l.req_type']		= P::REQ_TYPE_SETTLEMENT;
+		$where['l.audit_time']		= array('gt',strtotime('2018-01-01 00:00:00'));
 		
 		$field = array();
 		$field[] =  'o.create_user';
@@ -520,7 +522,8 @@ class ChartController extends BaseController {
 		$field[] =  '(sum(b.maoli)/sum(b.shouru)) as mll';
 		$field[] =  'a.roleid';
 		
-		$lists = $db->table('__OP_SETTLEMENT__ as b')->field($field)->join('__OP__ as o on b.op_id = o.op_id','LEFT')->join('__ACCOUNT__ as a on a.id = o.create_user','LEFT')->where($where)->order('zsr DESC')->group('create_user')->select();
+		
+		$lists = $db->table('__OP_SETTLEMENT__ as b')->field($field)->join('__OP__ as o on b.op_id = o.op_id','LEFT')->join('__ACCOUNT__ as a on a.id = o.create_user','LEFT')->join('__AUDIT_LOG__ as l on l.req_id = b.id','LEFT')->where($where)->order('zsr DESC')->group('create_user')->select();
 		
 		foreach($lists as $k=>$v){
 			$lists[$k]['rolename'] 	=  $roles[$v['roleid']];	

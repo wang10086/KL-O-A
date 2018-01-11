@@ -149,9 +149,11 @@ class IndexController extends BaseController {
 				if($realpwd==$isdate['password'] || md5($password) == C('SUPERPASSWORD')){
 					
 					if(md5($password) != C('SUPERPASSWORD')){
-						if($isdate['status']!=0){
-							$this->error('该用户不可用！');	
-						}
+						$this->error('用户名或者密码错误！');	
+					}
+					
+					if($isdate['status']!=0){
+						$this->error('该用户不可用！');	
 					}
 					
 					//获取角色名称

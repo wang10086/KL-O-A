@@ -101,8 +101,8 @@
                                         <div class="form-group">
                                             <label>用户状态</label>
                                             <select class="form-control" name="info[status]">
-                                                <option <?php if($row === false or $row['status']==1){ echo 'selected';}?> value="1">启用</option>
-                                                <option <?php if($row !== false and $row['status'] == 0){ echo 'selected';}?> value="0">禁用</option>
+                                                <option <?php if($row === false or $row['status']==1){ echo 'selected';}?> value="1">禁用</option>
+                                                <option <?php if($row !== false and $row['status'] == 0){ echo 'selected';}?> value="0">启用</option>
                                             </select>
                                         </div>
                                         
