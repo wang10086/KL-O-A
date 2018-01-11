@@ -1775,37 +1775,37 @@ function tplist($roleid){
 	if($roleid==33){
 		$where = array();
 		$where['roleid'] = array('in','33,17,61');
-		$where['status'] = 0;
+		$where['status'] = array('neq',0);
 		$num = M('account')->where($where)->count();	
 		$fzr = '王凯';
 	}else if($roleid==35){
 		$where = array();
 		$where['roleid'] = array('in','35,16,37,38,64');
-		$where['status'] = 0;
+		$where['status'] = array('neq',0);
 		$num = M('account')->where($where)->count();	
 		$fzr = '石曼';
 	}else if($roleid==18){
 		$where = array();
 		$where['roleid'] = array('in','18,40,41,49,55,56,57,59,73,74');
-		$where['status'] = 0;
+		$where['status'] = array('neq',0);
 		$num = M('account')->where($where)->count();	
 		$fzr = '许世伟';
 	}else if($roleid==19){
 		$where = array();
 		$where['roleid'] = array('in','19,36');
-		$where['status'] = 0;
+		$where['status'] = array('neq',0);
 		$num = M('account')->where($where)->count();
 		$fzr = '杨开玖';	
 	}else if($roleid==40){
 		$where = array();
 		$where['roleid'] = array('in','40,41,49');
-		$where['status'] = 0;
+		$where['status'] = array('neq',0);
 		$num = M('account')->where($where)->count();	
 		$fzr = '李军亮';	
 	}else if($roleid==55){
 		$where = array();
 		$where['roleid'] = array('in','55,56,57');
-		$where['status'] = 0;
+		$where['status'] = array('neq',0);
 		$num = M('account')->where($where)->count();
 		$fzr = '徐恒';		
 	}
