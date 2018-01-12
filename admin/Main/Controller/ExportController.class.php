@@ -343,21 +343,25 @@ class ExportController extends BaseController {
 			$title[] = '天数';
 			$expdata[$k]['days'] = $v['days'];
 			
+			/*
 			//人数
 			$title[] = '人数';
 			$expdata[$k]['number'] = $v['number'];
+			*/
 			
 			//团款
-			$title[] = '团款';
+			$title[] = '结算收入';
 			$expdata[$k]['shouru'] = $v['shouru'];
 			
 			//税前毛利
-			$title[] = '税前毛利';
+			$title[] = '结算毛利';
 			$expdata[$k]['maoli'] = $v['maoli'];
 			
+			/*
 			//税后毛利
 			$title[] = '税后毛利';
 			$expdata[$k]['shuihou'] = $v['maoli'] -  sprintf("%.2f", ($v['maoli']*0.06));
+			*/
 			
 			//销售人员
 			$title[] = '销售人员';
