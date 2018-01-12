@@ -76,9 +76,9 @@
 			"bFilter": false,
 			"bSort": true,
 			"bInfo": false,
-			"aaSorting" : [[2, "desc"]],
+			"aaSorting" : [[4, "desc"]],
 			"bAutoWidth": true,
-			"aoColumnDefs": [{ "bSortable": false, "aTargets": [ 0,1 ] }]
+			"aoColumnDefs": [{ "bSortable": false, "aTargets": [ 0,1,2 ] }]
 		});
 		
 		$(document).ready(function(e) {

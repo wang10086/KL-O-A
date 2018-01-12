@@ -76,7 +76,7 @@
 			"bFilter": false,
 			"bSort": true,
 			"bInfo": false,
-			"aaSorting" : [[3, "desc"]],
+			"aaSorting" : [[4, "desc"]],
 			"bAutoWidth": true,
 			"aoColumnDefs": [{ "bSortable": false, "aTargets": [ 0,1,2 ] }]
 		});
