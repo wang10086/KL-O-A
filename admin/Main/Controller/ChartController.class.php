@@ -235,32 +235,32 @@ class ChartController extends BaseController {
 		
 		$where = array();
 		$where['b.audit'] = 1;
-		$where['a.req_type']	= 801;
+		$where['l.req_type']	= 801;
 		if($st && $et){
-			$where['a.audit_time'] = array('between',array(strtotime($st),strtotime($et)));	
+			$where['l.audit_time'] = array('between',array(strtotime($st),strtotime($et)));	
 			$this->onmoon    = $st.'至'.$et.'结算报表';
 		}else if($st){
-			$where['a.audit_time'] = array('gt',strtotime($st));		
+			$where['l.audit_time'] = array('gt',strtotime($st));		
 			$this->onmoon    = $st.'之后结算报表';
 		}else if($et){
-			$where['a.audit_time'] = array('lt',strtotime($et));	
+			$where['l.audit_time'] = array('lt',strtotime($et));	
 			$this->onmoon    = $et.'之前结算报表';	
 		}else if($yue){
-			$where['a.audit_time'] = array('between',array($moon['start'],$moon['end']));
+			$where['l.audit_time'] = array('between',array($moon['start'],$moon['end']));
 			$this->onmoon    = date('Y年m月份',$moon['start']).'结算报表';
 		}else{
 			$this->onmoon    = '结算报表';	
 		}
-		if($xs)   $where['o.create_user_name'] = array('like','%'.$xs.'%');
-		if($dept) $where['o.create_user'] = array('in',Rolerelation($dept,1));
+		if($xs)   $where['o.create_user_name']	= array('like','%'.$xs.'%');
+		if($dept) $where['a.group_role']		= array('like','%['.$dept.']%');
 		
 		
 		
-		$count = $db->table('__OP_SETTLEMENT__ as b')->field('b.*,o.project,o.group_id,o.number,o.customer,o.create_user_name,o.destination,o.days,o.remark,a.audit_time')->join('__OP__ as o on b.op_id = o.op_id','LEFT')->join('__AUDIT_LOG__ as a on a.req_id = b.id','LEFT')->where($where)->count();
+		$count = $db->table('__OP_SETTLEMENT__ as b')->field('b.*,o.project,o.group_id,o.number,o.customer,o.create_user_name,o.destination,o.days,o.remark,l.audit_time')->join('__OP__ as o on b.op_id = o.op_id','LEFT')->join('__AUDIT_LOG__ as l on l.req_id = b.id','LEFT')->join('__ACCOUNT__ as a on a.id = o.create_user','LEFT')->where($where)->count();
 		$page = new Page($count, P::PAGE_SIZE);
         $this->pages = $page->show();
 		
-		$datalist = $db->table('__OP_SETTLEMENT__ as b')->field('b.*,o.project,o.group_id,o.number,o.customer,o.create_user_name,o.destination,o.days,o.remark,a.audit_time')->join('__OP__ as o on b.op_id = o.op_id','LEFT')->join('__AUDIT_LOG__ as a on a.req_id = b.id','LEFT')->where($where)->limit($page->firstRow . ',' . $page->listRows)->order('a.audit_time DESC')->select();
+		$datalist = $db->table('__OP_SETTLEMENT__ as b')->field('b.*,o.project,o.group_id,o.number,o.customer,o.create_user_name,o.destination,o.days,o.remark,l.audit_time')->join('__OP__ as o on b.op_id = o.op_id','LEFT')->join('__AUDIT_LOG__ as l on l.req_id = b.id','LEFT')->join('__ACCOUNT__ as a on a.id = o.create_user','LEFT')->where($where)->limit($page->firstRow . ',' . $page->listRows)->order('l.audit_time DESC')->select();
 		foreach($datalist as $k=>$v){
 			$datalist[$k]['shuihou'] = $v['maoli'] -  sprintf("%.2f", ($v['maoli']*0.06));
 		}
@@ -279,6 +279,8 @@ class ChartController extends BaseController {
 		if($xs)     $url['xs']    = $xs;
 		if($dept)   $url['dept']  = $dept;
 		if($yue)    $url['month'] = $yue;
+		
+		$this->url = $url;
 		$this->exporturl = U('Export/chart_finance',$url);
 		
 		$this->display('finance');
