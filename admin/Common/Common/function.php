@@ -1870,6 +1870,33 @@ function tplist($roleid){
 	return array_merge($lists, $users);
 }
 
+
+
+//获取某时间段个人业绩
+function personal_income($userid,$time){
+	
+	
+	//$time = $time ? $time : strtotime(date('Y-m-01',time()));
+	//查询月度
+	$where = array();
+	$where['b.audit_status']	= 1;
+	$where['o.create_user']		= $userid;
+	$where['a.req_type']		= 801;
+	$where['a.audit_time']		= array('gt',$time);
+	
+	$field = array();
+	$field[] =  'sum(b.shouru) as zsr';
+	$field[] =  'sum(b.maoli) as zml';
+	$field[] =  '(sum(b.maoli)/sum(b.shouru)) as mll';
+	$users = M()->table('__OP_SETTLEMENT__ as b')->field($field)->join('__OP__ as o on b.op_id = o.op_id','LEFT')->join('__AUDIT_LOG__ as a on a.req_id = b.id','LEFT')->where($where)->find();
+	
+	$lists = array();
+	$lists['zsr'] 		=  $users['zsr'] ? $users['zsr'] : '0.00';	
+	$lists['zml'] 		=  $users['zml'] ? $users['zml'] : '0.00';		
+	$lists['mll'] 		=  $users['zml']>0 ? sprintf("%.4f",$users['mll'])*100 : '0.00';	
+	
+	return $lists;	
+}
 ?>
 
 

@@ -235,17 +235,18 @@ class ChartController extends BaseController {
 		
 		$where = array();
 		$where['b.audit'] = 1;
+		$where['a.req_type']	= 801;
 		if($st && $et){
-			$where['b.create_time'] = array('between',array(strtotime($st),strtotime($et)));	
+			$where['a.audit_time'] = array('between',array(strtotime($st),strtotime($et)));	
 			$this->onmoon    = $st.'至'.$et.'结算报表';
 		}else if($st){
-			$where['b.create_time'] = array('gt',strtotime($st));		
+			$where['a.audit_time'] = array('gt',strtotime($st));		
 			$this->onmoon    = $st.'之后结算报表';
 		}else if($et){
-			$where['b.create_time'] = array('lt',strtotime($et));	
+			$where['a.audit_time'] = array('lt',strtotime($et));	
 			$this->onmoon    = $et.'之前结算报表';	
 		}else if($yue){
-			$where['b.create_time'] = array('between',array($moon['start'],$moon['end']));
+			$where['a.audit_time'] = array('between',array($moon['start'],$moon['end']));
 			$this->onmoon    = date('Y年m月份',$moon['start']).'结算报表';
 		}else{
 			$this->onmoon    = '结算报表';	
@@ -254,11 +255,12 @@ class ChartController extends BaseController {
 		if($dept) $where['o.create_user'] = array('in',Rolerelation($dept,1));
 		
 		
-		$count = $db->table('__OP_SETTLEMENT__ as b')->field('b.*,o.project,o.group_id,o.number,o.customer,o.create_user_name,o.destination,o.days,o.remark')->join('__OP__ as o on b.op_id = o.op_id','LEFT')->where($where)->count();
+		
+		$count = $db->table('__OP_SETTLEMENT__ as b')->field('b.*,o.project,o.group_id,o.number,o.customer,o.create_user_name,o.destination,o.days,o.remark,a.audit_time')->join('__OP__ as o on b.op_id = o.op_id','LEFT')->join('__AUDIT_LOG__ as a on a.req_id = b.id','LEFT')->where($where)->count();
 		$page = new Page($count, P::PAGE_SIZE);
         $this->pages = $page->show();
 		
-		$datalist = $db->table('__OP_SETTLEMENT__ as b')->field('b.*,o.project,o.group_id,o.number,o.customer,o.create_user_name,o.destination,o.days,o.remark')->join('__OP__ as o on b.op_id = o.op_id','LEFT')->where($where)->limit($page->firstRow . ',' . $page->listRows)->order('b.create_time DESC')->select();
+		$datalist = $db->table('__OP_SETTLEMENT__ as b')->field('b.*,o.project,o.group_id,o.number,o.customer,o.create_user_name,o.destination,o.days,o.remark,a.audit_time')->join('__OP__ as o on b.op_id = o.op_id','LEFT')->join('__AUDIT_LOG__ as a on a.req_id = b.id','LEFT')->where($where)->limit($page->firstRow . ',' . $page->listRows)->order('a.audit_time DESC')->select();
 		foreach($datalist as $k=>$v){
 			$datalist[$k]['shuihou'] = $v['maoli'] -  sprintf("%.2f", ($v['maoli']*0.06));
 		}
@@ -504,6 +506,40 @@ class ChartController extends BaseController {
 	//个人业绩排行榜
 	public function pplist(){
 		
+		$db		= M('op');
+		$roles	= M('role')->GetField('id,role_name',true);
+		$where	= array();
+		$where['o.create_user']		= array('neq',0);
+		
+		
+		$field = array();
+		$field[] =  'o.create_user';
+		$field[] =  'o.create_user_name';
+		$field[] =  'a.roleid';
+		
+		$lists = $db->table('__OP_SETTLEMENT__ as b')->field($field)->join('__OP__ as o on b.op_id = o.op_id','LEFT')->join('__ACCOUNT__ as a on a.id = o.create_user','LEFT')->where($where)->group('create_user')->select();
+		
+		foreach($lists as $k=>$v){
+			
+			$lists[$k]['rolename'] 	=  $roles[$v['roleid']];	
+			
+			//查询2018年度总收入
+			$all = personal_income($v['create_user'],strtotime('2018-01-01 00:00:00'));
+			$lists[$k]['zsr'] = $all['zsr'];
+			$lists[$k]['zml'] = $all['zml'];
+			$lists[$k]['mll'] = $all['mll'];
+			
+			//查询当月总收入
+			$all = personal_income($v['create_user'],strtotime(date('Y-m-01',time())));
+			$lists[$k]['ysr'] = $all['zsr'];
+			$lists[$k]['yml'] = $all['zml'];
+			$lists[$k]['yll'] = $all['mll'];
+			
+			
+		}
+		
+		
+		/*
 		$db			= M('op');
 		$roles		= M('role')->GetField('id,role_name',true);
 		
@@ -549,7 +585,7 @@ class ChartController extends BaseController {
 		}
 		
 		
-		
+		*/
 		
 		$this->lists = $lists;
 		

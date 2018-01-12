@@ -41,8 +41,8 @@
                                         <tbody>
                                             <foreach name="lists" item="row" key="k">                      
                                             <tr>
-                                            	<td class="orderNo"><?php echo $k+1; ?></td>
-                                                <td><a href="{:U('Chart/finance',array('xs'=>$row['create_user_name']))}">{$row.create_user_name}</a></td>
+                                            	<td class="orderNo"></td>
+                                                <td><a href="{:U('Chart/finance',array('xs'=>$row['create_user_name'],'st'=>'2018-01-01'))}">{$row.create_user_name}</a></td>
                                                 <td>{$row.rolename}</td>
                                                 <td>{$row.zsr}</td>
                                                 <td>{$row.zml}</td>
@@ -73,12 +73,16 @@
 			"bFilter": false,
 			"bSort": true,
 			"bInfo": false,
-			"aaSorting" : [[3, "desc"]],
+			"aaSorting" : [[4, "desc"]],
 			"bAutoWidth": true,
 			"aoColumnDefs": [{ "bSortable": false, "aTargets": [ 0,1,2] }]
 		});
 		
 		$(document).ready(function(e) {
+			$('.orderNo').each(function(index, element) {
+				$(this).text(index+1);
+			});	
+				
 			$('.orderth').click(function(){
 				$('.orderNo').each(function(index, element) {
 					$(this).text(index+1);

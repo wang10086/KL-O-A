@@ -46,10 +46,10 @@
                                         <th>实际人数</th>
                                         <th>目的地</th>
                                         <th>天数</th>
-                                        <th>人数</th>
-                                        <th>团款</th>
-                                        <th>税前毛利</th>
-                                        <th>税后毛利</th>
+                                        <!--<th>人数</th>-->
+                                        <th>结算收入</th>
+                                        <th>结算毛利</th>
+                                        <!-- <th>税后毛利</th> -->
                                         <th>销售人员</th>
                                         <th>结算时间</th>
                                     </tr>
@@ -60,12 +60,12 @@
                                         <td>{$row.renshu}人</td>
                                         <td>{$row.destination}</td>
                                         <td>{$row.days}天</td>
-                                        <td>{$row.number}人</td>
+                                        <!-- <td>{$row.number}人</td>-->
                                         <td>{$row.shouru}</td>
                                         <td>{$row.maoli}</td>
-                                        <td>{$row.shuihou}</td>
+                                        <!-- <td>{$row.shuihou}</td> -->
                                         <td>{$row.create_user_name}</td>
-                                        <td>{$row.create_time|date='Y-m-d',###}</td>
+                                        <td>{$row.audit_time|date='Y-m-d',###}</td>
                                     </tr>
                                     </foreach>					
                                 </table>
