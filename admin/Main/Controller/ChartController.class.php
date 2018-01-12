@@ -512,12 +512,13 @@ class ChartController extends BaseController {
 		$roles	= M('role')->GetField('id,role_name',true);
 		$where	= array();
 		$where['o.create_user']		= array('neq',0);
-		
+		$where['a.status']			= 0;
 		
 		$field = array();
 		$field[] =  'o.create_user';
 		$field[] =  'o.create_user_name';
 		$field[] =  'a.roleid';
+		
 		
 		$lists = $db->table('__OP_SETTLEMENT__ as b')->field($field)->join('__OP__ as o on b.op_id = o.op_id','LEFT')->join('__ACCOUNT__ as a on a.id = o.create_user','LEFT')->where($where)->group('create_user')->select();
 		
