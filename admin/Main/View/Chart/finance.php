@@ -42,7 +42,7 @@
                                     </tr>
                                     <tr role="row" class="orders" >
                                         <th>团号</th>
-                                        <th width="20%">线路名称</th>
+                                        <th>线路名称</th>
                                         <th>实际人数</th>
                                         <th>目的地</th>
                                         <th>天数</th>

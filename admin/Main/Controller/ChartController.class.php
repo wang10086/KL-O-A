@@ -510,17 +510,18 @@ class ChartController extends BaseController {
 		
 		$db		= M('op');
 		$roles	= M('role')->GetField('id,role_name',true);
-		$where	= array();
-		$where['o.create_user']		= array('neq',0);
-		$where['a.status']			= 0;
+		
+		//查询所有业务人员信息
+		$where = array();
+		$where['status']			= 0;
+		$where['postid']			= array('in','1,2,4,31,32');
 		
 		$field = array();
-		$field[] =  'o.create_user';
-		$field[] =  'o.create_user_name';
-		$field[] =  'a.roleid';
+		$field[] =  'id as create_user';
+		$field[] =  'nickname as create_user_name';
+		$field[] =  'roleid';
 		
-		
-		$lists = $db->table('__OP_SETTLEMENT__ as b')->field($field)->join('__OP__ as o on b.op_id = o.op_id','LEFT')->join('__ACCOUNT__ as a on a.id = o.create_user','LEFT')->where($where)->group('create_user')->select();
+		$lists = M('account')->field($field)->where($where)->select();
 		
 		foreach($lists as $k=>$v){
 			
@@ -538,57 +539,7 @@ class ChartController extends BaseController {
 			$lists[$k]['yml'] = $all['zml'];
 			$lists[$k]['yll'] = $all['mll'];
 			
-			
 		}
-		
-		
-		/*
-		$db			= M('op');
-		$roles		= M('role')->GetField('id,role_name',true);
-		
-			
-		$where = array();
-		$where['b.audit_status']	= 1;
-		$where['o.create_user']		= array('neq',0);
-		$where['l.req_type']		= P::REQ_TYPE_SETTLEMENT;
-		$where['l.audit_time']		= array('gt',strtotime('2018-01-01 00:00:00'));
-		
-		$field = array();
-		$field[] =  'o.create_user';
-		$field[] =  'o.create_user_name';
-		$field[] =  'sum(b.shouru) as zsr';
-		$field[] =  'sum(b.maoli) as zml';
-		$field[] =  '(sum(b.maoli)/sum(b.shouru)) as mll';
-		$field[] =  'a.roleid';
-		
-		
-		$lists = $db->table('__OP_SETTLEMENT__ as b')->field($field)->join('__OP__ as o on b.op_id = o.op_id','LEFT')->join('__ACCOUNT__ as a on a.id = o.create_user','LEFT')->join('__AUDIT_LOG__ as l on l.req_id = b.id','LEFT')->where($where)->order('zsr DESC')->group('create_user')->select();
-		
-		foreach($lists as $k=>$v){
-			$lists[$k]['rolename'] 	=  $roles[$v['roleid']];	
-			$lists[$k]['mll'] 		=  $v['zml']>0 ?  sprintf("%.2f",$v['mll']*100) : '0.00';	
-			
-			//查询月度
-			$where = array();
-			$where['b.audit_status']	= 1;
-			$where['o.create_user']	= $v['create_user'];
-			$where['a.req_type']		= P::REQ_TYPE_SETTLEMENT;
-			$where['a.audit_time']	= array('gt',strtotime(date('Y-m-01',time())));
-			
-			$field = array();
-			$field[] =  'sum(b.shouru) as ysr';
-			$field[] =  'sum(b.maoli) as yml';
-			$field[] =  '(sum(b.maoli)/sum(b.shouru)) as yll';
-			$users = $db->table('__OP_SETTLEMENT__ as b')->field($field)->join('__OP__ as o on b.op_id = o.op_id','LEFT')->join('__AUDIT_LOG__ as a on a.req_id = b.id','LEFT')->where($where)->find();
-			
-			$lists[$k]['ysr'] 		=  $users['ysr'] ? $users['ysr'] : '0.00';	
-			$lists[$k]['yml'] 		=  $users['yml'] ? $users['yml'] : '0.00';		
-			$lists[$k]['yll'] 		=  $users['yml']>0 ? sprintf("%.4f",$users['yll'])*100 : '0.00';	
-			
-		}
-		
-		
-		*/
 		
 		$this->lists = $lists;
 		
