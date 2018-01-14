@@ -62,7 +62,7 @@
                                             <th rowspan="2">总分</th>
                                             
                                         </tr>
-                                        <tr>
+                                        <tr role="row" class="orders" >
                                         	<?php 
 											foreach($postlist as $k=>$v){
 												echo '<th width="70">得分</th><th width="70">权重</th>';	
