@@ -3924,3 +3924,6 @@ th{ font-weight:normal;}
 
 
 th{outline: none;}
+
+#tablecenter th{ text-align:center; vertical-align:middle;}
+#tablecenter td{ text-align:center; vertical-align:middle;}

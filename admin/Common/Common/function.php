@@ -1897,6 +1897,39 @@ function personal_income($userid,$time){
 	
 	return $lists;	
 }
+
+//获取自己下属员工ID
+function get_branch_user(){
+	
+	$post = M('posts')->GetField('id,post_name',true);
+	//获取属于员工信息
+	$where = array();
+	$where['group_role'] = array('like','%['.cookie('roleid').']%');
+	$userlist = M('account')->field('id,nickname,roleid,postid')->where($where)->select();
+	$uid = array();
+	$pid = array();
+	$dpid = '';
+	
+	foreach($userlist as $k=>$v){
+		$uid[]	= $v['id'];	
+		if($v['postid']){
+			$pid[$v['postid']]	= $post[$v['postid']];
+		}
+		if(!$dpid){
+			$dpid = 	$v['postid'];
+		}
+	}
+	
+	$return = array();
+	$return['uid']	= $uid;
+	$return['pid']	= $pid;
+	$return['dpid']	= $dpid;
+	
+	return $return;
+	
+	
+}
+
 ?>
 
 
