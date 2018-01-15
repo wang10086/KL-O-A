@@ -1806,7 +1806,7 @@ function tplist($roleid){
 	$where = array();
 	$where['b.audit_status']		= 1;
 	$where['l.req_type']			= 801;
-	$where['l.audit_time']			= array('gt',strtotime('2018-01-01 00:00:00'));
+	$where['l.audit_time']			= array('gt',strtotime('2018-01-01'));
 	$where['a.id']					= array('in',implode(',',$ulist));
 	
 	
@@ -1828,13 +1828,7 @@ function tplist($roleid){
 	//查询月度
 	$where = array();
 	$where['b.audit_status']	= 1;
-	if($roleid==40){
-		$where['a.group_role']	= array(array('like','%[40]%'), array('like','%[41]%'), array('like','%[49]%'),'or');
-	}else if($roleid==55){
-		$where['a.group_role']	= array(array('like','%[55]%'), array('like','%[56]%'), array('like','%[57]%'),'or');
-	}else{
-		$where['a.group_role']	= array('like','%['.$roleid.']%');
-	}
+	$where['a.id']				= array('in',implode(',',$ulist));
 	$where['l.req_type']		= 801;
 	$where['l.audit_time']		= array('gt',strtotime(date('Y-m-01',time())));
 	

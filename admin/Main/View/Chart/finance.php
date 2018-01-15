@@ -31,10 +31,9 @@
                                 <div class="box-body">
                                 <div class="btn-group" id="catfont">
                                     <a href="{:U('Chart/finance',array('month'=>$url['month'],'st'=>$url['st'],'et'=>$url['et']))}" <?php if(!$dept){ echo 'class="btn btn-info"';}else{ echo 'class="btn btn-default"';} ?> >所有部门</a>
-                                    <a href="{:U('Chart/finance',array('month'=>$url['month'],'st'=>$url['st'],'et'=>$url['et'],'dept'=>33))}" <?php if($dept==33){ echo 'class="btn btn-info"';}else{ echo 'class="btn btn-default"';} ?>>京区校外</a>
-                                    <a href="{:U('Chart/finance',array('month'=>$url['month'],'st'=>$url['st'],'et'=>$url['et'],'dept'=>35))}" <?php if($dept==35){ echo 'class="btn btn-info"';}else{ echo 'class="btn btn-default"';} ?>>京区校内</a>
-                                    <a href="{:U('Chart/finance',array('month'=>$url['month'],'st'=>$url['st'],'et'=>$url['et'],'dept'=>18))}" <?php if($dept==18){ echo 'class="btn btn-info"';}else{ echo 'class="btn btn-default"';} ?>>京外业务</a>
-                                    <a href="{:U('Chart/finance',array('month'=>$url['month'],'st'=>$url['st'],'et'=>$url['et'],'dept'=>19))}" <?php if($dept==19){ echo 'class="btn btn-info"';}else{ echo 'class="btn btn-default"';} ?>>常规旅游</a>
+                                    <foreach name="post" key="k" item="v">
+                                    <a href="{:U('Chart/finance',array('month'=>$url['month'],'st'=>$url['st'],'et'=>$url['et'],'dept'=>$k))}" <?php if($dept==$k){ echo 'class="btn btn-info"';}else{ echo 'class="btn btn-default"';} ?>>{$v}</a>
+                                    </foreach>
                                 </div>
                                 <table class="table table-bordered dataTable fontmini" id="tablelist" style="margin-top:10px;">
                                     <tr role="row" class="orders" >
