@@ -44,7 +44,7 @@
                                         <foreach name="lists" item="row" key="k">                      
                                             <tr>
                                                 <td class="orderNo"></td>
-                                                <td>{$row.rolename}</td>
+                                                <td><a href="{:U('Chart/finance',array('dept'=>$row['rid'],'st'=>'2018-01-01'))}">{$row.rolename}</a></td>
                                                 <td>{$row.num}</td>
                                                 <td>{$row.rjzsr}</td>
                                                 <td>{$row.rjzml}</td>
