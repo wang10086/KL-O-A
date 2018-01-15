@@ -1772,56 +1772,43 @@ function tplist($roleid){
 	$roles		= M('role')->GetField('id,role_name',true);
 	
 	//获取部门人数
+	$where = array();
 	if($roleid==33){
-		$where = array();
-		$where['roleid'] = array('in','33,17,61');
-		$where['status'] = array('eq',0);
-		$num = M('account')->where($where)->count();	
-		$fzr = '王凯';
+		$where['roleid'] = array('in','33,61');
+		$fzr = '赵舒丽';
+	}else if($roleid==17){
+		$where['roleid'] = array('in','17');
+		$fzr = '李保罗';
 	}else if($roleid==35){
-		$where = array();
 		$where['roleid'] = array('in','35,16,37,38,64');
-		$where['status'] = array('eq',0);
-		$num = M('account')->where($where)->count();	
 		$fzr = '石曼';
 	}else if($roleid==18){
-		$where = array();
-		$where['roleid'] = array('in','18,40,41,49,55,56,57,59,73,74');
-		$where['status'] = array('eq',0);
-		$num = M('account')->where($where)->count();	
+		$where['roleid'] = array('in','18,59,73,74');
 		$fzr = '许世伟';
 	}else if($roleid==19){
-		$where = array();
 		$where['roleid'] = array('in','19,36');
-		$where['status'] = array('eq',0);
-		$num = M('account')->where($where)->count();
 		$fzr = '杨开玖';	
 	}else if($roleid==40){
-		$where = array();
 		$where['roleid'] = array('in','40,41,49');
-		$where['status'] = array('eq',0);
-		$num = M('account')->where($where)->count();	
 		$fzr = '李军亮';	
 	}else if($roleid==55){
-		$where = array();
 		$where['roleid'] = array('in','55,56,57');
-		$where['status'] = array('eq',0);
-		$num = M('account')->where($where)->count();
 		$fzr = '徐恒';		
 	}
-	
+	$where['status'] = array('eq',0);
+	$users = M('account')->where($where)->select();	
+	$num   = count($users);
+	$ulist = array();
+	foreach($users as $k=>$v){
+		$ulist[] = $v['id'];
+	}
 	
 	$where = array();
 	$where['b.audit_status']		= 1;
 	$where['l.req_type']			= 801;
 	$where['l.audit_time']			= array('gt',strtotime('2018-01-01 00:00:00'));
-	if($roleid==40){
-		$where['a.group_role']	= array(array('like','%[40]%'), array('like','%[41]%'), array('like','%[49]%'),'or');
-	}else if($roleid==55){
-		$where['a.group_role']	= array(array('like','%[55]%'), array('like','%[56]%'), array('like','%[57]%'),'or');
-	}else{
-		$where['a.group_role']	= array('like','%['.$roleid.']%');
-	}
+	$where['a.id']					= array('in',implode(',',$ulist));
+	
 	
 	$field = array();
 	$field[] =  'sum(b.shouru) as zsr';

@@ -552,7 +552,7 @@ class ChartController extends BaseController {
 	public function tplist(){
 		
 		
-		$post = array('33'=>'京区校外中心','35'=>'京区校内中心','18'=>'京外业务中心','19'=>'常规旅游','40'=>'南京项目部','55'=>'武汉项目部');
+		$post = array('33'=>'京区校外中心-G端项目','17'=>'京区校外中心-C端项目','35'=>'京区校内中心','18'=>'京外业务中心-本部','19'=>'常规旅游','40'=>'京外业务中心-南京项目部','55'=>'京外业务中心-武汉项目部');
 		foreach($post as $k=>$v){
 			$lists[$k]				= tplist($k);	
 			$lists[$k]['rolename']	= $v;	
@@ -568,7 +568,7 @@ class ChartController extends BaseController {
 	public function tpavglist(){
 		
 		
-		$post = array('33'=>'京区校外中心','35'=>'京区校内中心','18'=>'京外业务中心','19'=>'常规旅游','40'=>'南京项目部','55'=>'武汉项目部');
+		$post = array('33'=>'京区校外中心-G端项目','17'=>'京区校外中心-C端项目','35'=>'京区校内中心','18'=>'京外业务中心-本部','19'=>'常规旅游','40'=>'京外业务中心-南京项目部','55'=>'京外业务中心-武汉项目部');
 		foreach($post as $k=>$v){
 			$lists[$k]				= tplist($k);	
 			$lists[$k]['rolename']	= $v;	

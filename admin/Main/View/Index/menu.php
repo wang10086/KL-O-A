@@ -370,10 +370,7 @@
                                 <if condition="rolemenu(array('Kpi/qa'))">
                                 	<li><a href="{:U('Kpi/qa')}"><i class="fa fa-angle-right"></i> 品质检查</a></li>
                                 </if> 
-                                
-                                <if condition="rolemenu(array('Kpi/kpiinfo'))">
-                                	<li><a href="{:U('Kpi/kpiinfo')}"><i class="fa fa-angle-right"></i> KPI</a></li>
-                                </if> 
+                                <li><a href="{:U('Kpi/postkpi')}"><i class="fa fa-angle-right"></i> KPI</a></li>
                                 <!--
                                 <li><a href="javascript:;" onClick="art_show_msg('加班开发中，稍后呈现...',5)"><i class="fa fa-angle-right"></i> KPI</a></li>
                                 -->
