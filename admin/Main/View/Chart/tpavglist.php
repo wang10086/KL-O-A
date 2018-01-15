@@ -30,7 +30,7 @@
                                             <tr role="row" class="orders" >
                                                 <th width="40" data="">序号</th>
                                                 <th>团队</th>
-                                                <th>计算人数(人)</th>
+                                                <th>累计计算人数（个）</th>
                                                 <th width="12%" class="orderth">累计人均收入(元)</th>
                                                 <th width="12%" class="orderth">累计人均毛利(元)</th>
                                                 <th width="12%" class="orderth">累计人均毛利率(%)</th>
