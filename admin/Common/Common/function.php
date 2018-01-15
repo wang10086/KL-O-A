@@ -1902,10 +1902,20 @@ function personal_income($userid,$time){
 function get_branch_user(){
 	
 	$post = M('posts')->GetField('id,post_name',true);
+	
+	//获取自己的岗位信息
+	$me = M('account')->find(cookie('userid'));
+	
 	//获取属于员工信息
 	$where = array();
-	$where['group_role'] = array('like','%['.cookie('roleid').']%');
-	$userlist = M('account')->field('id,nickname,roleid,postid')->where($where)->select();
+	
+	if(C('RBAC_SUPER_ADMIN')==cookie('username') || cookie('userid')==32 || cookie('userid')==38 || cookie('userid')==12 || cookie('userid')==11 ){}else{
+		$where['group_role']	= array('like','%['.cookie('roleid').']%');
+	}
+	
+	
+	$where['status']		= 0;
+	$userlist = M('account')->field('id,nickname,roleid,postid')->where($where)->order('postid ASC')->select();
 	$uid = array();
 	$pid = array();
 	$dpid = '';
@@ -1923,7 +1933,7 @@ function get_branch_user(){
 	$return = array();
 	$return['uid']	= $uid;
 	$return['pid']	= $pid;
-	$return['dpid']	= $dpid;
+	$return['dpid']	= $me['postid'] ? $me['postid'] : $dpid;
 	
 	return $return;
 	

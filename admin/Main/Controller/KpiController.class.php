@@ -1541,6 +1541,7 @@ class KpiController extends BaseController {
 	// @@@NODE-3###postkpi###部门KPI管理###
 	public function postkpi(){
 		
+		
 		$pnm = M('posts')->GetField('id,post_name',true);
 		$use = get_branch_user();
 		
@@ -1552,9 +1553,14 @@ class KpiController extends BaseController {
 		
 		//列举人员
 		$where = array();
-		$where['group_role']	= array('like','%['.cookie('roleid').']%');
+		if(C('RBAC_SUPER_ADMIN')==cookie('username') || cookie('userid')==32 || cookie('userid')==38 || cookie('userid')==12 || cookie('userid')==11 ){}else{
+			$where['group_role']	= array('like','%['.cookie('roleid').']%');
+		}
+		
 		$where['postid']		= $this->post;
+		$where['status']		= 0;
 		$userlist = M('account')->field('id,nickname,roleid,postid')->where($where)->select();
+		$check = 0;
 		foreach($userlist as $k=>$v){
 			//获取该用户KPI
 			$where = array();
@@ -1562,17 +1568,19 @@ class KpiController extends BaseController {
 			$where['user_id']	= $v['id'];
 			$kpi = M('kpi_more')->field('quota_id,quota_title,target,complete,weight,score')->where($where)->order('quota_id ASC')->select();
 			$userlist[$k]['kpi'] = $kpi;	
-			
+			if($kpi) $check++;
 			foreach($kpi as $kk=>$vv){
 				$postlist[$vv['quota_id']]	= $vv['quota_title'];
 			}
 		}
 		
-		
 		$this->title	= $this->year.$this->month.' - '.$pnm[$this->post].' - KPI考核';
 		$this->kpils	= $userlist;
 		$this->upost	= $use['pid'];
 		$this->postlist = $postlist;
+		$this->prveyear	= $this->year-1;
+		$this->nextyear	= $this->year+1;
+		$this->check 	= $check;
 		$this->display('kpi_post');
 		
 		

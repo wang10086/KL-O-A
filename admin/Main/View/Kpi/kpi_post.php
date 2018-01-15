@@ -19,7 +19,9 @@
                             
                                   
                             <div class="btn-group" id="catfont" style="padding-bottom:20px;">
-                            	<a href="{:U('Kpi/kpiinfo',array('year'=>$prveyear,'uid'=>$uid))}" class="btn btn-default" style="padding:8px 18px;">上一年</a>
+                            	<?php if($prveyear>2019){ ?>
+                                <a href="{:U('Kpi/postkpi',array('year'=>$prveyear,'month'=>'01','post'=>$post))}" class="btn btn-default" style="padding:8px 18px;">上一年</a>
+                                <?php } ?>
 								<?php 
                                 for($i=1;$i<13;$i++){
                                     $par = array();
@@ -33,51 +35,74 @@
                                     }
                                 }
                                 ?>
-                                <a href="{:U('Kpi/kpiinfo',array('year'=>$nextyear,'uid'=>$uid))}" class="btn btn-default" style="padding:8px 18px;">下一年</a>
+                                <?php if($year<date('Y')){ ?>
+                                <a href="{:U('Kpi/postkpi',array('year'=>$nextyear,'month'=>'01','post'=>$post))}" class="btn btn-default" style="padding:8px 18px;">下一年</a>
+                                <?php } ?>
                             </div>
                             
-                            <div class="box-tools pull-right">
-                            	<select class="form-control">
-                                	<foreach name="upost" key="k" item="v"> 
-                                	<option value="{$k}" <?php if($post==$k){ echo 'selected';} ?> >{$v}</option>
-                                    </foreach>
-                                </select>
-                            </div>
+                            
                                     
                             <div class="box box-warning">
                                 <div class="box-header">
                                     <h3 class="box-title">考核指标</h3>
+                                    <?php if($upost){ ?>
+                                    <div class="box-tools pull-right">
+                                        <select class="form-control"  onchange="window.location=this.value;">
+                                            
+                                            <foreach name="upost" key="k" item="v">
+                                            <?php 
+                                            $par = array();
+                                            $par['year']  = $year;
+                                            $par['month'] = $month;
+                                            $par['post']  = $k;
+                                            ?> 
+                                            <option value="{:U('Kpi/postkpi',$par)}" <?php if($post==$k){ echo 'selected';} ?> >{$v}</option>
+                                            </foreach>
+                                        </select>
+                                    </div>
+                                    <?php } ?>
                                 </div><!-- /.box-header -->
                                 <div class="box-body">
                                     	
                                     <table class="table table-bordered dataTable fontmini" id="tablecenter">
                                         <tr role="row" class="orders" >
-                                            <th rowspan="2" width="40">序号</th>
-                                            <th rowspan="2" width="80">被考评人</th>
-                                            <?php 
-											foreach($postlist as $k=>$v){
-												echo '<th colspan="2">'.$v.'</th>';	
+                                            <th <?php if($check){ echo 'rowspan="2"';} ?> width="40">序号</th>
+                                            <th <?php if($check){ echo 'rowspan="2"';} ?> style="text-align:left;">被考评人</th>
+                                            <?php
+											if($check){ 
+												foreach($postlist as $k=>$v){
+													$kp = explode('-',$v); 
+													echo '<th colspan="2">'.$kp[0].'</th>';	
+												}
+											}else{
+												echo '<th>KPI指标</th>';	
 											}
 											?>
-                                            <th rowspan="2">总分</th>
-                                            
+                                            <th <?php if($check){ echo 'rowspan="2"';} ?> width="80">总分</th>
                                         </tr>
+                                        <?php if($check){  ?>
                                         <tr role="row" class="orders" >
                                         	<?php 
 											foreach($postlist as $k=>$v){
-												echo '<th width="70">得分</th><th width="70">权重</th>';	
+												echo '<th >得分</th><th>权重</th>';	
 											}
 											?>
                                         </tr>
+                                        <?php } ?>
                                         <foreach name="kpils" key="key" item="row"> 
                                         <tr>
                                             <td align="center"><?php echo $key+1; ?></td>
-                                            <td><a href="javascript:;">{$row.nickname}</a></td>
+                                            <td style="text-align:left;"><a href="{:U('Kpi/kpiinfo',array('year'=>$year,'month'=>$month,'uid'=>$row['id']))}">{$row.nickname}</a></td>
                                             <?php 
 											$zf = 0;
-											foreach($kpils[$key]['kpi'] as $k=>$v){
-												echo '<th width="70">'.$v['score'].'</th><th width="70">'.$v['weight'].'</th>';	
-												$zf += $v['score'];
+											
+											if($kpils[$key]['kpi']){
+												foreach($kpils[$key]['kpi'] as $k=>$v){
+													echo '<th>'.$v['score'].'</th><th>'.$v['weight'].'</th>';	
+													$zf += $v['score'];
+												}
+											}else{
+												echo '<th colspan="'.(count($postlist)*2).'" style="color:#999999;">暂未获取KPI信息</th>';
 											}
 											?>
                                             <td align="center"><?php echo $zf; ?></td>
