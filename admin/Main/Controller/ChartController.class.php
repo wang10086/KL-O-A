@@ -606,5 +606,73 @@ class ChartController extends BaseController {
 		
 		$this->display('tpavglist');
 	}
+	
+	
+	//团队业绩详情
+	public function tpmore(){
+		
+		$post = array('33'=>'京区校外中心-G端项目','17'=>'京区校外中心-C端项目','35'=>'京区校内中心','18'=>'京外业务中心-本部','19'=>'常规旅游','40'=>'京外业务中心-南京项目部','55'=>'京外业务中心-武汉项目部');
+		$dept = I('dept');
+		
+		//获取部门人数
+		$where = array();
+		if($dept==33){
+			$rolist = array('in','33,61');
+		}else if($dept==17){
+			$rolist = array('in','17');
+		}else if($dept==35){
+			$rolist = array('in','35,16,37,38,64');
+		}else if($dept==18){
+			$rolist = array('in','18,59,73,74');
+		}else if($dept==19){
+			$rolist = array('in','19,36');
+		}else if($dept==40){
+			$rolist = array('in','40,41,49');
+		}else if($dept==55){
+			$rolist = array('in','55,56,57');
+		}
+		
+	
+	
+		$db		= M('op');
+		$roles	= M('role')->GetField('id,role_name',true);
+		
+		//查询所有业务人员信息
+		$where = array();
+		$where['roleid']			= $rolist;
+		$where['status']			= 0;
+		$where['postid']			= array('in','1,2,4,31,32');
+		
+		$field = array();
+		$field[] =  'id as create_user';
+		$field[] =  'nickname as create_user_name';
+		$field[] =  'roleid';
+		
+		$lists = M('account')->field($field)->where($where)->select();
+		
+		foreach($lists as $k=>$v){
+			
+			$lists[$k]['rolename'] 	=  $roles[$v['roleid']];	
+			
+			//查询2018年度总收入
+			$all = personal_income($v['create_user'],strtotime('2018-01-01 00:00:00'));
+			$lists[$k]['zsr'] = $all['zsr'];
+			$lists[$k]['zml'] = $all['zml'];
+			$lists[$k]['mll'] = $all['mll'];
+			
+			//查询当月总收入
+			$all = personal_income($v['create_user'],strtotime(date('Y-m-01',time())));
+			$lists[$k]['ysr'] = $all['zsr'];
+			$lists[$k]['yml'] = $all['zml'];
+			$lists[$k]['yll'] = $all['mll'];
+			
+		}
+		
+		$this->deptname = $post[$dept];
+		$this->lists = $lists;
+		
+		$this->display('tpmore');
+	}
+	
 }
 	
