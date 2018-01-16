@@ -30,13 +30,13 @@
                                             <tr role="row" class="orders" >
                                                 <th width="40" data="">序号</th>
                                                 <th>团队</th>
-                                                <th width="12%">负责人</th>
-                                                <th width="12%" class="orderth">累计收入(元)</th>
-                                                <th width="12%" class="orderth">累计毛利(元)</th>
-                                                <th width="12%" class="orderth">累计毛利率(%)</th>
-                                                <th width="12%" class="orderth">当月收入(元)</th>
-                                                <th width="12%" class="orderth">当月毛利(元)</th>
-                                                <th width="12%" class="orderth">当月毛利率(%)</th>
+                                                <th>负责人</th>
+                                                <th class="orderth">累计收入(元)</th>
+                                                <th class="orderth">累计毛利(元)</th>
+                                                <th class="orderth">累计毛利率(%)</th>
+                                                <th class="orderth">当月收入(元)</th>
+                                                <th class="orderth">当月毛利(元)</th>
+                                                <th class="orderth">当月毛利率(%)</th>
                                             </tr>
                                         </thead>
                                         
