@@ -1704,6 +1704,18 @@ function updatekpi($month,$user){
 				M('kpi_more')->data($data)->where(array('id'=>$v['id']))->save();	
 			}
 			
+			
+			//合计总分
+			$kpilist = M('kpi_more')->where(array('kpi_id'=>$v['kpi_id']))->select();
+			$total = 0;
+			foreach($kpilist as $k=>$v){
+				$total += $v['score_status']	? $v['score'] : $v['weight'];
+			}
+			$data = array();
+			$data['score']      = $total;
+			$issave = M('kpi')->data($data)->where(array('id'=>$v['kpi_id']))->save();
+			
+			
 		}	
 	}
 }
