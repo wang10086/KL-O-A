@@ -617,11 +617,13 @@ class ChartController extends BaseController {
 		$dept = I('dept');
 		
 		//获取部门人数
+		
+		//获取团队相关数据
 		$where = array();
-		if($dept==33){
-			$rolist = array('in','33,61');
+		if($dept==80){
+			$rolist = 80;//array('in','80');
 		}else if($dept==17){
-			$rolist = array('in','17');
+			$rolist = array('in','17,61');
 		}else if($dept==35){
 			$rolist = array('in','35,16,37,38,64');
 		}else if($dept==18){
@@ -631,8 +633,9 @@ class ChartController extends BaseController {
 		}else if($dept==40){
 			$rolist = array('in','40,41,49');
 		}else if($dept==55){
-			$rolist = array('in','55,56,57');
+			$where['roleid'] = array('in','55,56,57');
 		}
+		
 		
 	
 	
