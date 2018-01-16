@@ -59,7 +59,7 @@
                                         状态：{$kpi.status_str}
                                         </span> 
                                         
-                                        <a href="{:u('Ajax/updatekpi',array('month'=>$allmonth,'uid'=>$uid))}" class="btn btn-success btn-sm" style="float:right;"><i class="fa fa-fw  fa-refresh"></i> 更新指标数据</a>  
+                                        <a href="{:u('Ajax/updatekpi',array('month'=>$allmonth,'uid'=>$uid))}" class="btn btn-success btn-sm" style="float:right;"><i class="fa fa-fw  fa-refresh"></i> 更新数据</a>  
                                         
                                         
                                         <div class="box-body table-responsive no-padding">
