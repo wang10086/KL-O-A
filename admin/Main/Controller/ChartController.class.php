@@ -234,7 +234,7 @@ class ChartController extends BaseController {
 		//获取团队相关数据
 		$where = array();
 		if($dept==80){
-			$where['dept'] = array('in','80');
+			$where['dept'] = 80;//array('in','80');
 		}else if($dept==17){
 			$where['dept'] = array('in','17,61');
 		}else if($dept==35){

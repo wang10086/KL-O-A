@@ -1799,7 +1799,7 @@ function tplist($roleid){
 	//获取部门人数
 	$where = array();
 	if($roleid==80){
-		$where['roleid'] = array('in','80');
+		$where['roleid'] =  80; //array('in','80');
 		$fzr = '赵舒丽';
 	}else if($roleid==17){
 		$where['roleid'] = array('in','17,61');
