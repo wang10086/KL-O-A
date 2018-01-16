@@ -633,7 +633,7 @@ class ChartController extends BaseController {
 		}else if($dept==40){
 			$rolist = array('in','40,41,49');
 		}else if($dept==55){
-			$where['roleid'] = array('in','55,56,57');
+			$rolist = array('in','55,56,57');
 		}
 		
 		
