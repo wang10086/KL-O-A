@@ -1689,7 +1689,7 @@ function updatekpi($month,$user){
 			//保存数据
 			if($v['quota_id'] <=5 ){
 				
-				$rate = round(($complete / $v['target'])*100,2);
+				$rate = $v['target'] ? round(($complete / $v['target'])*100,2) : 100;
 				
 				$data = array();
 				$data['complete'] = $complete;
