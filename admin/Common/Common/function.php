@@ -1689,9 +1689,17 @@ function updatekpi($month,$user){
 			//保存数据
 			if($v['quota_id'] <=5 ){
 				
+				$rate = round(($complete / $v['target'])*100,2);
+				
 				$data = array();
 				$data['complete'] = $complete;
-				$data['complete_rate'] = round(($complete / $v['target'])*100,2)."%";
+				$data['complete_rate'] = $rate."%";
+				if($rate >= 100){
+					$data['score']	= $v['weight'] ? $v['weight'] : 0;
+				}else{
+					$data['score']	= round(($rate * $v['weight']) / 100,1);
+				}
+				$data['score_status']	= 1;
 				
 				M('kpi_more')->data($data)->where(array('id'=>$v['id']))->save();	
 			}
