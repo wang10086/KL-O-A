@@ -233,21 +233,23 @@ class ChartController extends BaseController {
 		
 		//获取团队相关数据
 		$where = array();
-		if($dept==33){
-			$where['roleid'] = array('in','33,61');
+		if($dept==80){
+			$where['dept'] = array('in','80');
 		}else if($dept==17){
-			$where['roleid'] = array('in','17');
+			$where['dept'] = array('in','17,61');
 		}else if($dept==35){
-			$where['roleid'] = array('in','35,16,37,38,64');
+			$where['dept'] = array('in','35,16,37,38,64');
 		}else if($dept==18){
-			$where['roleid'] = array('in','18,59,73,74');
+			$where['dept'] = array('in','18,59,73,74');
 		}else if($dept==19){
-			$where['roleid'] = array('in','19,36');
+			$where['dept'] = array('in','19,36');
 		}else if($dept==40){
-			$where['roleid'] = array('in','40,41,49');
+			$where['dept'] = array('in','40,41,49');
 		}else if($dept==55){
 			$where['roleid'] = array('in','55,56,57');
 		}
+		
+		
 		$where['status'] = array('eq',0);
 		$users = M('account')->where($where)->select();	
 		$ulist = array();
@@ -294,7 +296,7 @@ class ChartController extends BaseController {
 		
 		//获取月份的开始结束时间戳
 		//P($datalist);
-		$this->post = array('33'=>'京区校外G端','17'=>'京区校外C端','35'=>'京区校内','18'=>'京外业务本部','19'=>'常规旅游','40'=>'京外业务南京','55'=>'京外业务武汉');
+		$this->post = array('80'=>'京区校外中心-G端项目','17'=>'京区校外中心-C端项目','35'=>'京区校内中心','18'=>'京外业务中心-本部','19'=>'常规旅游','40'=>'京外业务中心-南京项目部','55'=>'京外业务中心-武汉项目部');
 		
 		$this->dept      = $dept;
 		$this->month     = I('month');
@@ -580,7 +582,7 @@ class ChartController extends BaseController {
 	public function tplist(){
 		
 		
-		$post = array('33'=>'京区校外中心-G端项目','17'=>'京区校外中心-C端项目','35'=>'京区校内中心','18'=>'京外业务中心-本部','19'=>'常规旅游','40'=>'京外业务中心-南京项目部','55'=>'京外业务中心-武汉项目部');
+		$post = array('80'=>'京区校外中心-G端项目','17'=>'京区校外中心-C端项目','35'=>'京区校内中心','18'=>'京外业务中心-本部','19'=>'常规旅游','40'=>'京外业务中心-南京项目部','55'=>'京外业务中心-武汉项目部');
 		foreach($post as $k=>$v){
 			$lists[$k]				= tplist($k);	
 			$lists[$k]['rolename']	= $v;	
@@ -596,7 +598,7 @@ class ChartController extends BaseController {
 	public function tpavglist(){
 		
 		
-		$post = array('33'=>'京区校外中心-G端项目','17'=>'京区校外中心-C端项目','35'=>'京区校内中心','18'=>'京外业务中心-本部','19'=>'常规旅游','40'=>'京外业务中心-南京项目部','55'=>'京外业务中心-武汉项目部');
+		$post = array('80'=>'京区校外中心-G端项目','17'=>'京区校外中心-C端项目','35'=>'京区校内中心','18'=>'京外业务中心-本部','19'=>'常规旅游','40'=>'京外业务中心-南京项目部','55'=>'京外业务中心-武汉项目部');
 		foreach($post as $k=>$v){
 			$lists[$k]				= tplist($k);	
 			$lists[$k]['rolename']	= $v;	
@@ -611,7 +613,7 @@ class ChartController extends BaseController {
 	//团队业绩详情
 	public function tpmore(){
 		
-		$post = array('33'=>'京区校外中心-G端项目','17'=>'京区校外中心-C端项目','35'=>'京区校内中心','18'=>'京外业务中心-本部','19'=>'常规旅游','40'=>'京外业务中心-南京项目部','55'=>'京外业务中心-武汉项目部');
+		$post = array('80'=>'京区校外中心-G端项目','17'=>'京区校外中心-C端项目','35'=>'京区校内中心','18'=>'京外业务中心-本部','19'=>'常规旅游','40'=>'京外业务中心-南京项目部','55'=>'京外业务中心-武汉项目部');
 		$dept = I('dept');
 		
 		//获取部门人数

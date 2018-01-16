@@ -1798,11 +1798,11 @@ function tplist($roleid){
 	
 	//获取部门人数
 	$where = array();
-	if($roleid==33){
-		$where['roleid'] = array('in','33,61');
+	if($roleid==80){
+		$where['roleid'] = array('in','80');
 		$fzr = '赵舒丽';
 	}else if($roleid==17){
-		$where['roleid'] = array('in','17');
+		$where['roleid'] = array('in','17,61');
 		$fzr = '李保罗';
 	}else if($roleid==35){
 		$where['roleid'] = array('in','35,16,37,38,64');
