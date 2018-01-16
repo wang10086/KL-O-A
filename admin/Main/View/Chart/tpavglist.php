@@ -30,13 +30,14 @@
                                             <tr role="row" class="orders" >
                                                 <th width="40" data="">序号</th>
                                                 <th>团队</th>
+                                                <th>当月人数（个）</th>
                                                 <th>累计计算人数（个）</th>
-                                                <th width="12%" class="orderth">累计人均收入(元)</th>
-                                                <th width="12%" class="orderth">累计人均毛利(元)</th>
-                                                <th width="12%" class="orderth">累计人均毛利率(%)</th>
-                                                <th width="12%" class="orderth">当月人均收入(元)</th>
-                                                <th width="12%" class="orderth">当月人均毛利(元)</th>
-                                                <th width="12%" class="orderth">当月人均毛利率(%)</th>
+                                                <th class="orderth">累计人均收入(元)</th>
+                                                <th class="orderth">累计人均毛利(元)</th>
+                                                <th class="orderth">累计人均毛利率(%)</th>
+                                                <th class="orderth">当月人均收入(元)</th>
+                                                <th class="orderth">当月人均毛利(元)</th>
+                                                <th class="orderth">当月人均毛利率(%)</th>
                                             </tr>
                                         </thead>
                                         
@@ -45,6 +46,7 @@
                                             <tr>
                                                 <td class="orderNo"></td>
                                                 <td><a href="{:U('Chart/tpmore',array('dept'=>$row['rid']))}">{$row.rolename}</a></td>
+                                                <td>{$row.num}</td>
                                                 <td>{$row.num}</td>
                                                 <td>{$row.rjzsr}</td>
                                                 <td>{$row.rjzml}</td>
@@ -76,9 +78,9 @@
 			"bFilter": false,
 			"bSort": true,
 			"bInfo": false,
-			"aaSorting" : [[4, "desc"]],
+			"aaSorting" : [[5, "desc"]],
 			"bAutoWidth": true,
-			"aoColumnDefs": [{ "bSortable": false, "aTargets": [ 0,1,2 ] }]
+			"aoColumnDefs": [{ "bSortable": false, "aTargets": [ 0,1,2,3 ] }]
 		});
 		
 		$(document).ready(function(e) {

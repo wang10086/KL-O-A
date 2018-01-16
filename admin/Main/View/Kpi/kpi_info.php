@@ -19,7 +19,9 @@
                             
                                   
                             <div class="btn-group" id="catfont" style="padding-bottom:20px;">
-                            	<a href="{:U('Kpi/kpiinfo',array('year'=>$prveyear,'uid'=>$uid))}" class="btn btn-default" style="padding:8px 18px;">上一年</a>
+                            	<?php if($prveyear>2019){ ?>
+                                <a href="{:U('Kpi/kpiinfo',array('year'=>$prveyear,'uid'=>$uid))}" class="btn btn-default" style="padding:8px 18px;">上一年</a>
+								<?php } ?>
 								<?php 
                                 for($i=1;$i<13;$i++){
                                     $par = array();
@@ -33,7 +35,9 @@
                                     }
                                 }
                                 ?>
+                                <?php if($year<date('Y')){ ?>
                                 <a href="{:U('Kpi/kpiinfo',array('year'=>$nextyear,'uid'=>$uid))}" class="btn btn-default" style="padding:8px 18px;">下一年</a>
+                                <?php } ?>
                             </div>
                                     
                             

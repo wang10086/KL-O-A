@@ -1688,7 +1688,12 @@ function updatekpi($month,$user){
 			
 			//保存数据
 			if($v['quota_id'] <=5 ){
-				M('kpi_more')->data(array('complete'=>$complete))->where(array('id'=>$v['id']))->save();	
+				
+				$data = array();
+				$data['complete'] = $complete;
+				$data['complete_rate'] = round(($complete / $v['target'])*100,2)."%";
+				
+				M('kpi_more')->data($data)->where(array('id'=>$v['id']))->save();	
 			}
 			
 		}	
