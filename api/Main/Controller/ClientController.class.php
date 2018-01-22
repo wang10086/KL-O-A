@@ -62,8 +62,6 @@ class ClientController extends BaseController {
 		
 		$PinYin = new Pinyin();
 		$company_name = iconv("utf-8","gb2312",trim($com['school_name']));
-		
-		
 	
 		//整理数据
 		$info	= array();
@@ -96,22 +94,24 @@ class ClientController extends BaseController {
 		$info['status']				= 1;
 		$info['com']				= 1;
 		
-		
 		$where = array();
 		$where['company_name']		= $com['school_name'];
 		$where['com']				= 1;
 		
 		//判断是否导入
+		$return = array();
 		$gec = M('customer_gec')->where($where)->find();
 		if($gec){
 			if($gec['status']==1){
-				M('customer_gec')->where(array('id'=>$gec['id']))->data($info)->save();
+				M('customer_gec')->where(array('id'=>$gec['id']))->data($info)->save();				
+				$return['msg'] = '数据已更新';
 			}
 		}else{
 			M('customer_gec')->add($info);
+			$return['msg'] = '导入成功';
 		}
 		
-		
+		echo return_result($return);
 		
 	}
 	
