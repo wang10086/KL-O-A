@@ -206,6 +206,10 @@
                             </a>
                             <ul class="treeview-menu">
                             
+                            	<if condition="rolemenu(array('Customer/o2o'))">
+                                	<li class="{:on('Customer/o2o')} {:on('Customer/o2o_apply')}"><a href="{:U('Customer/o2o')}"><i class="fa fa-angle-right"></i> 支撑服务校记录</a></li>
+                                </if>
+                            
                             	<if condition="rolemenu(array('Customer/GEC'))">
                                 	<li class="{:on('Customer/GEC')} {:on('Customer/GEC_edit')}"><a href="{:U('Customer/GEC')}"><i class="fa fa-angle-right"></i> 客户管理</a></li>
                                 </if>

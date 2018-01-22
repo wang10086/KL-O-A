@@ -14,6 +14,94 @@ class CustomerController extends BaseController {
     protected $_pagedesc_  = '';
     
 	
+	
+	// @@@NODE-3###o2o###支撑服务校记录###
+    public function o2o(){
+        $this->title('支撑服务校记录');
+		
+		
+		$db = M('customer_gec');
+		$keywords     = I('keywords');
+		$type         = I('type');
+		$cm           = I('cm');
+		$address      = I('address');
+		$province     = I('province');
+		$city         = I('city');
+		$county       = I('county');
+		$level        = I('level');
+		$qianli       = I('qianli');
+		
+		$where = array();
+		$where['status']	= 1;
+		$where['com']		= 1;
+		if($keywords)    $where['company_name'] = array('like','%'.$keywords.'%');
+		if($type)        $where['type'] = $type;
+		if($address)     $where['contacts_address'] = array('like','%'.$address.'%');
+		if($cm)          $where['cm_name'] = array('like','%'.$cm.'%');
+		if($province)    $where['province'] = array('like','%'.$province.'%');
+		if($city)        $where['city'] = array('like','%'.$city.'%');
+		if($county)      $where['county'] = array('like','%'.$county.'%');
+		if($level)       $where['level'] = array('like','%'.$level.'%');
+		if($qianli)      $where['qianli'] = array('like','%'.$qianli.'%');
+		
+		//分页
+		$pagecount = $db->where($where)->count();
+		$page = new Page($pagecount, P::PAGE_SIZE);
+		$this->pages = $pagecount>P::PAGE_SIZE ? $page->show():'';
+
+        $lists = $db->where($where)->limit($page->firstRow . ',' . $page->listRows)->order($this->orders('create_time'))->select();
+		foreach($lists as $k=>$v){
+			$hz = M('op')->where(array('customer'=>$v['company_name'],'audit_status'=>1))->order('create_time DESC')->find();	
+			$lists[$k]['hezuo'] = $hz['create_time'] ? '<a href="'.U('Op/index',array('cus'=>$v['company_name'])).'">'.date('Y-m-d',$hz['create_time']).'</a>' : '无结算记录';
+			$lists[$k]['hezuocishu'] = $hz['create_time'] ? M('op')->where(array('customer'=>$v['company_name'],'audit_status'=>1))->count() : '';	
+		}
+		
+		
+		$this->lists   = $lists;
+		
+		$this->display('o2o');
+    }
+	
+	// @@@NODE-3###GEC###分配客户###
+	public function o2o_apply(){
+		
+		$fid		= I('fid');
+		if(isset($_POST['dosubmit']) && $fid){
+			
+			$userid = I('userid');
+			$user	= M('account')->find($userid);
+			$fid	= str_replace(".",",",$fid);
+			
+			//保存数据
+			$data = array();
+			$data['cm_id']		= $userid;
+			$data['cm_name']	= $user['nickname'];
+			$data['status']		= 0;
+			M('customer_gec')->data($data)->where(array('id'=>array('in',$fid)))->save();
+			
+			echo '<script>window.top.location.reload();</script>';
+			
+		}else{
+			
+			//用户列表
+			$key		= I('key');
+			$db			= M('account');
+			$where		= array();
+			$where['postid'] = array('in','1,2,4,31,32');
+			if($key) $where['nickname'] = array('like','%'.$key.'%');
+			$pagecount = $db->where($where)->count();
+			$page = new Page($pagecount,6);
+			$this->pages = $pagecount>6 ? $page->show():'';
+			$this->lists = $db->where($where)->limit($page->firstRow . ',' . $page->listRows)->order($this->orders('roleid'))->select();
+			$this->role  =  M('role')->getField('id,role_name', true);
+			$this->fid   = $fid;
+			$this->display('o2o_apply');
+		}
+		
+		
+	}
+	
+	
     // @@@NODE-3###GEC###政企客户管理###
     public function GEC(){
         $this->title('政企客户管理');
