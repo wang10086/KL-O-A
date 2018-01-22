@@ -88,6 +88,7 @@ class CustomerController extends BaseController {
 			$db			= M('account');
 			$where		= array();
 			$where['postid'] = array('in','1,2,4,31,32');
+			$where['status'] = 0;
 			if($key) $where['nickname'] = array('like','%'.$key.'%');
 			$pagecount = $db->where($where)->count();
 			$page = new Page($pagecount,6);
