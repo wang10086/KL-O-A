@@ -31,6 +31,7 @@ class CustomerController extends BaseController {
 		$qianli       = I('qianli');
 		
 		$where = array();
+		$where['status']	= 0;
 		if($keywords)    $where['company_name'] = array('like','%'.$keywords.'%');
 		if($type)        $where['type'] = $type;
 		if($address)     $where['contacts_address'] = array('like','%'.$address.'%');
