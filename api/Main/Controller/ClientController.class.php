@@ -60,7 +60,6 @@ class ClientController extends BaseController {
 		
 		$com = $this->param_data;
 		
-		P('aaa');
 		$PinYin = new Pinyin();
 		$company_name = iconv("utf-8","gb2312",trim($com['school_name']));
 		
