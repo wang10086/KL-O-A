@@ -110,6 +110,7 @@
                     
                     <select  class="form-control"  name="type">
                         <option value="">客户类型</option>
+                        <option value="支撑服务校">支撑服务校</option>
                         <option value="学校">学校</option>
                         <option value="机构">机构</option>
                         <option value="政府">政府</option>
