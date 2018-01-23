@@ -67,7 +67,7 @@ class ClientController extends BaseController {
 		$info	= array();
 		$info['company_name']		= $com['school_name'];								//学校名称
 		$info['pinyin']				= strtolower($PinYin->getFirstPY($company_name));	//拼音	
-		$info['type']				= '学校';											//类型
+		$info['type']				= '支撑服务校';										//类型
 		$info['contacts']			= $com['contacts_name'];							//联系人     
 		$info['contacts_phone']		= $com['contacts_mobile'];							//联系人手机号
 		$info['post']				= $com['contacts_job'];								//联系人职位
