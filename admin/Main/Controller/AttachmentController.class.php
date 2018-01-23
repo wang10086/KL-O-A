@@ -175,6 +175,61 @@ class AttachmentController extends Controller {
     }
 	
 	
+	
+	public function upload_file ()
+	{
+		$db = M('attachment');
+		$upload = new Upload(C('UPLOAD_FILE_CFG'));
+		$info = $upload->upload();
+		$att = array();
+		$rs = array();
+
+		if ($info) {
+			foreach ($info as $row) {
+				$rs['rs'] = 'ok';
+				$rs['fileurl'] = $upload->rootPath . $row['savepath'] . $row['savename'];
+				if (in_array( strtolower($row['ext']), array('jpg','jpeg','png','gif','bmp','svg'))) {
+					// $rs['thumb']   = thumb($rs['fileurl'], C('DEFAULT_THUMB_W'), C('DEFAULT_THUMB_H'));
+					$att['isimage'] = 1;
+				} else {
+					$att['isimage'] = 0;
+				}
+
+				$att['filesize']    = $row['size'];
+				$att['fileext']     = $row['ext'];
+				$att['filename']    = $row['name'];
+				$att['filepath']    = $rs['fileurl'];
+				//$att['catid']       = I('catid');
+				$att['userid']      = session('userid');
+				$att['uploadtime']  = time();
+				$att['uploadip']    = get_client_ip();
+				//$att['rel_id']      = 0;
+				$att['hashcode']    = $row['md5'];
+
+				$aid = $db->add($att);
+				//P($db->GetLastSql());
+				$rs['aid'] = $aid;
+				$rs['ext'] = strtoupper($row['ext']);
+				if($rs['ext']=='JPG' || $rs['ext']=='PNG' || $rs['ext']=='GIF'){
+					$rs['thumb'] = thumb($rs['fileurl'],60,50);
+				}else{
+					$rs['thumb'] = '';
+				}
+				break;
+			}
+
+			echo json_encode($rs);
+
+		} else {
+			$rs['rs']  = 'err';
+			$rs['msg'] = '上传失败';
+			echo json_encode($rs);
+		}
+	}
+
+
+
+	
 }
 
 ?>       

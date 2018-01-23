@@ -28,7 +28,7 @@
                                     <h3 class="box-title">{$_action_}</h3>
                                 </div><!-- /.box-header -->
                                 <div class="box-body">
-                                    
+                                    <div class="content">
                                         <input type="hidden" name="dosubmit" value="1" />
                                         <input type="hidden" name="referer" value="<?php echo $_SERVER['HTTP_REFERER']; ?>" />
                                         <input type="hidden" name="id" value="{$row.id}" />
@@ -42,13 +42,10 @@
                                                 <span class="input-group-addon" style="width:32px;"><a href="javascript:;" onClick="getop();" >获取</a></span>
                                             </div>
                                         </div>
-                                        
                                         <div class="form-group  col-md-4">
                                             <label>项目名称</label>
                                             <input type="text" name="info[pro_name]" class="form-control" id="proname" value="{$row.pro_name}"/>
                                         </div>
-                                        
-                                        
                                         <div class="form-group col-md-4">
                                             <label>出团人数</label>
                                             <input type="text" name="info[number]" id="number"   value="{$row.number}" class="form-control" />
@@ -70,19 +67,60 @@
                                         </div>
                                         
                                         
-                                        
                                         <div class="form-group col-md-12">
                                             <label>备注</label>
                                             <textarea class="form-control" name="info[remarks]">{$row.remarks}</textarea>
                                         </div>
                                         
+                                        <div class="form-group col-md-12">
+                                        {:upload_m('uploadfile','files',$atts,'上传合同扫描件')}
+                                        </div>
+									
                                         
-                                        <div class="form-group">&nbsp;</div>
+                                        <div class="content" style="padding-top:0px;">
+                                            <div id="payment">
+                                                <div class="userlist">
+                                                    <div class="unitbox_20">回款金额(元)</div>
+                                                    <div class="unitbox_20">回款比例(%)</div>
+                                                    <div class="unitbox_20">计划回款时间</div>
+                                                    <div class="unitbox_40">备注</div>
+                                                </div>
+                                                
+                                                <div class="userlist" id="pretium_id">
+                                                    <span class="title">1</span>
+                                                    <div class="f_20">
+                                                    	<input type="text" class="form-control" name="payment[1][amount]" value="">
+                                                    </div>
+                                                    <div class="f_20">
+                                                    	<input type="text" class="form-control" name="payment[1][ratio]" value="">
+                                                    </div>
+                                                    <div class="f_20">
+                                                    	<input type="text" class="form-control" name="payment[1][return_time]" value="">
+                                                    </div>
+                                                    <div class="f_40">
+                                                    	<input type="text" class="form-control" name="payment[1][remarks]" value="">
+                                                    </div>
+                                                   
+                                                    <a href="javascript:;" class="btn btn-danger btn-flat" onclick="delbox('pretium_id')">删除</a>
+                                                </div>
+                                            </div>
+                                            <div id="pretium_val">1</div>
+                                            <div class="form-group col-md-12" id="useraddbtns">
+                                                <a href="javascript:;" class="btn btn-success btn-sm" onClick="add_payment()"><i class="fa fa-fw fa-plus"></i> 增加回款信息</a> 
+                                                 
+                                            </div>
+                                            <div class="form-group">&nbsp;</div>
+                                        </div>
                                         
-
+                                        
+                                    </div>
+                                </div>
                                     
-                                </div><!-- /.box-body -->
+                                    
                             </div><!-- /.box -->
+                            
+                            
+                            
                             <div id="formsbtn">
                             	<button type="submit" class="btn btn-info btn-lg" id="lrpd">保存</button>
                             </div>
@@ -121,4 +159,37 @@ function getop(){
 	   art_show_msg('请输入团号');  
    }
 }
+
+
+//新增汇款期
+function add_payment(){
+	var i = parseInt($('#payment_val').text())+1;
+
+	var html = '<div class="userlist" id="pretium_'+i+'">';
+		html += '<span class="title"></span>';
+		html += '<div class="f_20"><input type="text" class="form-control" name="payment['+i+'][amount]" value=""></div>';
+		html += '<div class="f_20"><input type="text" class="form-control" name="payment['+i+'][ratio]" value=""></div>';
+		html += '<div class="f_20"><input type="text" class="form-control" name="payment['+i+'][return_time]" value=""></div>';
+		html += '<div class="f_40"><input type="text" class="form-control" name="payment['+i+'][remarks]" value=""></div>';
+		html += '<a href="javascript:;" class="btn btn-danger btn-flat" onclick="delbox(\'pretium_'+i+'\')">删除</a>';
+		html += '</div>';
+	$('#payment').append(html);	
+	$('#payment_val').html(i);
+	orderno();
+}
+
+//编号
+function orderno(){
+	$('#payment').find('.title').each(function(index, element) {
+		$(this).text(parseInt(index)+1);
+	});
+}
+
+
+//移除
+function delbox(obj){
+	$('#'+obj).remove();
+	orderno();
+}
+	
 </script>

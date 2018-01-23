@@ -3927,3 +3927,34 @@ th{outline: none;}
 
 #tablecenter th{ text-align:center; vertical-align:middle;}
 #tablecenter td{ text-align:center; vertical-align:middle;}
+
+
+
+#payment{ padding:0 0px;}
+#payment .f_20{ width:20%; float:left; border-radius:0; padding-right:20px;}
+#payment .f_40{ width:40%; float:left;border-radius:0;padding-right:20px;}
+#payment .unitbox_20{ width:20%;float:left; clear:none; border:none; padding:0; padding-right:20px;}
+#payment .unitbox_40{ width:40%;float:left; clear:none; border:none; padding:0; padding-right:20px;}
+#payment .title{ width:22px; float:left; height:30px; line-height:30px; margin-left:-30px; text-align:right;}
+#payment .userlist { width:100%; height:auto !important; float:left; clear:both; padding-bottom:15px; border-bottom:1px solid #cccccc; margin-top:15px; padding-right:80px; position:relative;}
+#payment .userlist .btn{ position:absolute; right:0; top:0; width:80px; padding:7px 0;}
+#payment .input-group{ width:auto; float:left; height:34px; margin-right:10px; background:#ffffff; }
+#payment .input-group span{ border:1px solid #cccccc; width:40px; background:#ffffff; }
+#payment .input-group span.rr{margin-left:-1px;}
+#payment .input-group span input{ margin-left:5px;}
+#payment .btn{ padding:7px 12px; font-size:12px;} 
+#payment td{ line-height:34px;}
+#payment_val{ display:none}
+
+
+.uploadlist{ position:relative; height:50px; padding-left:65px; padding-right:25px; margin-top:5px;}
+.uploadlist .upimg{ width:60px; height:50px; position:absolute; left:0; top:0; border-radius:2px; overflow:hidden; background-color:#ccc; background-size:100% 100% ; background-repeat:no-repeat; background-position:center center; }
+.uploadlist .upimg img{ width:60px; height:50px;}
+.uploadlist .size{ position:absolute; left:0; bottom:0; background-color:rgba(0,0,0,0.4); color:#ffffff; font-size:11px; width:60px; height:20px; line-height:20px; text-align:center;}
+.uploadlist .ext{ position:absolute; left:0; top:0;color:#ffffff; font-size:12px; width:60px; height:30px; line-height:30px; font-size:14px; text-align:center; z-index:1;}
+.uploadlist .jindu{ width:100%; height:10px; float:left; clear:both; background:#fafafa; margin-top:6px; overflow:hidden;}
+.uploadlist .dels{ width:20px; height:50px; line-height:50px; text-align:center; text-align:cente; padding:0; color:#ffffff; cursor:pointer; position:absolute; right:0; top:0; background:#f39c12; border-radius:2px; font-size:14px;}
+.uploadlist .dels:hover{ opacity:.8;}
+.uploadlist .filename{ width:100%; height:20px; float:left; clear:both; line-height:20px; overflow:hidden; padding-bottom:10px; font-size:14px; }
+.uploadlist .uptime{ width:100%; height:20px; float:left; clear:both; font-size:12px;}
+.uploadlist .download{ height:20px; line-height:20px; font-size:12px;}
