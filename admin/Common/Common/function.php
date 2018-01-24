@@ -314,9 +314,9 @@ function upload_image($name,$uptext = '上传图片', $default = '', $multi = tr
 function upload_m($obj,$cont,$attr='',$btn='上传',$showbox="flist",$formname="attr",$filename="文件名称"){
 	
 	$html = '';
-	$html .= '<a href="javascript:;" id="'.$obj.'" class="btn btn-success btn-sm" style="margin:15px 0 0 15px;"><i class="fa fa-upload"></i> '.$btn.'</a>';
+	$html .= '<a href="javascript:;" id="'.$obj.'" class="btn btn-success btn-sm" style="margin:-10px 0 0 15px;"><i class="fa fa-upload"></i> '.$btn.'</a>';
     
-	$html .= '<div  id="flist" >';
+	$html .= '<div class="form-group col-md-12" style=" padding:10px 0;"  id="flist" >';
 	
 	if($attr){
 		
@@ -2045,6 +2045,73 @@ function get_branch_user(){
 	
 	
 }
+
+
+
+function save_aontract_art($releid,$data){
+	//处理图片
+	$where = array();
+	$where['cid']  = $releid;
+	
+	$db = M('contract_pic');
+	$id = array();
+	
+	if(is_array($data)){
+		foreach($data['filepath'] as $k=>$v){
+			
+			if($data['filepath'][$k]){
+				//保存数据
+				$info = array();	
+				$info['cid']        = $releid; 
+				$info['filename']	= $data['filename'][$k]; 
+				$info['filepath']  	= $data['filepath'][$k]; 
+				$info['fileid']		= $data['id'][$k]; 
+				$info['uptime']		= time(); 
+				$info['upuser']		= cookie('userid'); 
+				$info['upusername']	= cookie('nickname'); 
+				
+				//判断是否存在
+				$isup = $db->where(array('cid'=>$releid,'fileid'=>$data['id'][$k]))->find();
+				
+				if($isup){
+					$issave = $db->where(array('id'=>$isup['id']))->save($info);
+					$id[]	= $isup['id'];
+				}else{
+					$id[]	= $db->add($info);	
+				}
+				
+				
+				//更新图片库
+				$info = array();
+				$info['filename']	= $data['filename'][$k]; 
+				M('attachment')->data($info)->where(array('id'=>$data['id'][$k]))->save();
+			}
+			
+		}
+		$where['id']     = array('not in',implode(',',$id));
+	}
+	
+	//删除
+	$isdel = $db->where($where)->select();
+	if($isdel){
+		foreach($isdel as $k=>$v){
+			$db->where(array('id'=>$v['id']))->delete();
+		}	
+	}
+}
+
+
+function get_aontract_res($releid){
+	$attid	= array();
+	$db		= M('contract_pic');
+	$attachment = $db->field('fileid')->where(array('cid'=>$releid))->select();
+	foreach($attachment as $v){
+		$attid[] = 	$v['fileid'];
+	}
+	return implode(',',$attid);
+}
+
+
 
 ?>
 

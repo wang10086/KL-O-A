@@ -62,6 +62,7 @@ class ContractController extends BaseController {
         if(isset($_POST['dosubmit'])){
         
             $info		= I('info');
+			$attr		= I('attr');
             $referer	= I('referer');
 			
 			//根据团号获取项目信息
@@ -69,43 +70,46 @@ class ContractController extends BaseController {
 			if(!$op){
 				$this->error('未找到该团的项目信息');	
 			}
-			$info['op_id']		= $op['op_id'];
+			$info['op_id']			= $op['op_id'];
+			$info['update_time']	= time();
 			
 			//判断该团是否已创建合同
 			$where	= array();
 			$where['group_id']	= $info['group_id'];
 			$where['id']		= array('neq',$id);
 			$isok	= $db->where($where)->find();
-			//if($isok){
-			//	$this->error('该团已存在合同信息');	
-			//}
+			
 			
             if(!$id){
 				$info['create_user']		= cookie('userid');
 				$info['create_user_name']	= cookie('name');
 				$info['create_time']		= time();
-                $isadd = $db->add($info);
-                if($isadd) {
-                    $this->success('添加成功！',$referer);
-                } else {
-                    $this->error('添加失败：' . $db->getError());
-                }
+                $save	= $db->add($info);
+				$cid	= $save;
             }else{
-                $isedit = $db->data($info)->where(array('id'=>$id))->save();
-                if($isedit) {
-                    $this->success('修改成功！',$referer);
-                } else {
-                    $this->error('修改失败：' . $db->getError());
-                }
+                $save	= $db->data($info)->where(array('id'=>$id))->save();
+               	$cid	= $id;
             }
+			
+			//保存电子扫描件
+			save_aontract_art($cid,$attr);
+			
+			if($save) {
+				$this->success('保存成功！',$referer);
+			} else {
+				$this->error('保存失败：' . $db->getError());
+			}
             	
         }else{
 			
             if (!$id) {
-                $this->row = false;
+                $this->row	= false;
             } else {
-                $this->row = $db->find($id);
+                $this->row	= $db->find($id);
+				$this->atts = get_aontract_res($id);
             }
+			
+			
             $this->display('add');
         }
         
