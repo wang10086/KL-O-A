@@ -693,7 +693,7 @@ class FinanceController extends BaseController {
 		$this->settlement     = $settlement;
 		$this->kinds          = M('project_kind')->getField('id,name', true);
 		$this->huikuan        = $huikuan; 
-	
+		$this->huikuanlist	  = M('contract_pay')->where(array('op_id'=>$opid,'status'=>array('neq','2')))->order('id asc')->select();
 		
 		$this->display('huikuan');
 	}
@@ -703,18 +703,20 @@ class FinanceController extends BaseController {
 	//@@@NODE-3###save_huikuan###保存回款###
     public function save_huikuan(){
 		
-		$info            = I('info');
-		$referer         = I('referer');
-		$settlement      = I('settlement',0);
-		$num             = 0;
+		$info			= I('info');
+		$referer		= I('referer');
+		$settlement		= I('settlement',0);
+		$num			= 0;
+		
 		
 		//保存回款
 		if($settlement){
 			
-			if(!$info['huikuan'])      $this->error('本次回款金额不能为空');
-			if(!$info['type'])         $this->error('请选择回款类型');
-			$info['userid']       = cookie('userid');
-			$info['create_time']  = time();
+			if(!$info['huikuan'])	$this->error('本次回款金额不能为空');
+			if(!$info['type'])		$this->error('请选择回款类型');
+			$info['userid']			= cookie('userid');
+			$info['create_time']	= time();
+			$info['huikuan_time']	= strtotime($info['huikuan_time']);
 			$save = M('op_huikuan')->add($info);	
 			
 			//提交审核

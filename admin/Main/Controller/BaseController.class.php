@@ -364,9 +364,25 @@ class BaseController extends Controller {
 			if($dst_status == P::AUDIT_STATUS_PASS){
 				
 				//计入结算
-				$set = M('op_settlement')->where(array('op_id'=>$dstdata['op_id']))->find();
-				$huikuan = $set['huikuan'] + $dstdata['huikuan'];
+				$huikuan = M('op_huikuan')->where(array('op_id'=>$dstdata['op_id'],'audit_status'=>1))->sum('huikuan');
 				M('op_settlement')->data(array('huikuan'=>$huikuan))->where(array('op_id'=>$dstdata['op_id']))->save();
+				
+				//回款计划处理
+				if($dstdata['payid']){
+					$paydata		= array();
+					$pay		= M('contract_pay')->find($dstdata['payid']);
+					$pay_amount = $dstdata['huikuan']+$pay['pay_amount'];
+					if($pay_amount >= $pay['amount']){
+						$paydata['status'] = 2;	
+					}else{
+						$paydata['status'] = 1;		
+					}
+					$paydata['pay_amount'] = $pay_amount;
+					$paydata['pay_time']	= $dstdata['huikuan_time'];
+					
+					M('contract_pay')->where(array('id'=>$dstdata['payid']))->data($paydata)->save();
+				}
+				
 				
 				$record['explain'] = '预算审核通过'; 
 			}else{

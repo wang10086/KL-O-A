@@ -14,29 +14,41 @@ $(document).ready(function(e) {
 		}) 
     });
 	
-	//全局日期时间插件
-	//$('.inputdate').datepicker();
-	//$('.inputdatetime').datetimepicker();
 	
 	
-	laydate.render({
-		elem: '.monthly',type: 'month',format: 'yyyyMM'
-	});
-	
-	laydate.render({
-		elem: '.inputdatetime',type: 'datetime'
-	});
-	
-	laydate.render({
-		elem: '.inputdate'
-	});
-	
-	laydate.render({
-		elem: '.inputdate_a'
-	});
-	
+	relaydate();
 	
 });
+
+//全局日期时间插件
+function relaydate(){
+	$('.inputdate').each (function(idx, elm) {
+		laydate.render({
+			elem: elm
+		});
+	});
+	
+	$('.monthly').each (function(idx, elm) {
+		laydate.render({
+			elem: elm,type: 'month',format: 'yyyyMM'
+		});
+	});
+	
+	
+	$('.inputdatetime').each (function(idx, elm) {
+		laydate.render({
+			elem: elm,type: 'datetime'
+		});
+	});
+	
+	$('.inputdate_a').each (function(idx, elm) {
+		laydate.render({
+			elem: elm
+		});
+	});
+	
+}
+
 
 function ConfirmDel(url,msg) {
 	/*

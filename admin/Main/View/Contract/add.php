@@ -62,12 +62,12 @@
                                     
                                     <div class="form-group col-md-4">
                                         <label>出团时间</label>
-                                        <input type="text" name="info[dep_time]" id="dep_time"   value="{$row.dep_time}" class="form-control" />
+                                        <input type="text" name="info[dep_time]" id="dep_time"   value="{$row.dep_time}" class="form-control inputdate" />
                                     </div>
                                     
                                     <div class="form-group col-md-4">
                                         <label>结束时间</label>
-                                        <input type="text" name="info[end_time]" id="end_time"   value="{$row.end_time}" class="form-control" />
+                                        <input type="text"  name="info[end_time]" id="end_time"   value="{$row.end_time}" class="form-control inputdate" />
                                     </div>
                                     
                                     
@@ -84,7 +84,7 @@
                                     {:upload_m('uploadfile','files',$atts,'上传文件')}
                                     
                                     
-                                    <!--
+                                    
                                     <div class="content" style="padding-top:0px;">
                                     	<h2 style="font-size:16px; color:#ff3300; border-bottom:2px solid #dedede; padding-bottom:10px;">回款计划</h2>
                                         <div id="payment">
@@ -94,9 +94,32 @@
                                                 <div class="unitbox_20">计划回款时间</div>
                                                 <div class="unitbox_40">备注</div>
                                             </div>
-                                            
+                                            <?php if($pays){ ?>
+                                            <foreach name="pays" key="kk" item="pp"> 
+                                            <div class="userlist" id="pretium_8888{$pp.id}">
+                                                <span class="title"><?php echo $kk+1; ?></span>
+                                                <input type="hidden" name="payment[8888{$pp.id}][no]" class="payno"  value="{$pp.no}">
+                                                <input type="hidden" class="form-control" name="payment[8888{$pp.id}][pid]" value="{$pp.id}">
+                                                <div class="f_20">
+                                                    <input type="text" class="form-control" name="payment[8888{$pp.id}][amount]" value="{$pp.amount}">
+                                                </div>
+                                                <div class="f_20">
+                                                    <input type="text" class="form-control" name="payment[8888{$pp.id}][ratio]" value="{$pp.ratio}">
+                                                </div>
+                                                <div class="f_20">
+                                                    <input type="text" class="form-control inputdate"  name="payment[8888{$pp.id}][return_time]" value="<if condition="$pp['return_time']">{$pp.return_time|date='Y-m-d',###}</if>">
+                                                </div>
+                                                <div class="f_40">
+                                                    <input type="text" class="form-control" name="payment[8888{$pp.id}][remarks]" value="{$pp.remark}">
+                                                </div>
+                                               
+                                                <a href="javascript:;" class="btn btn-danger btn-flat" onclick="delbox('pretium_8888{$pp.id}')">删除</a>
+                                            </div>
+                                            </foreach>
+                                            <?php }else{ ?>
                                             <div class="userlist" id="pretium_id">
                                                 <span class="title">1</span>
+                                                <input type="hidden" name="payment[1][no]" class="payno" value="1">
                                                 <div class="f_20">
                                                     <input type="text" class="form-control" name="payment[1][amount]" value="">
                                                 </div>
@@ -104,7 +127,7 @@
                                                     <input type="text" class="form-control" name="payment[1][ratio]" value="">
                                                 </div>
                                                 <div class="f_20">
-                                                    <input type="text" class="form-control inputdate" name="payment[1][return_time]" value="">
+                                                    <input type="text" class="form-control inputdate"  name="payment[1][return_time]" value="">
                                                 </div>
                                                 <div class="f_40">
                                                     <input type="text" class="form-control" name="payment[1][remarks]" value="">
@@ -112,15 +135,15 @@
                                                
                                                 <a href="javascript:;" class="btn btn-danger btn-flat" onclick="delbox('pretium_id')">删除</a>
                                             </div>
+                                            <?php } ?>
                                         </div>
-                                        <div id="pretium_val">1</div>
+                                        <div id="payment_val">1</div>
                                         <div class="form-group col-md-12" id="useraddbtns">
                                             <a href="javascript:;" class="btn btn-success btn-sm" onClick="add_payment()"><i class="fa fa-fw fa-plus"></i> 增加回款信息</a> 
                                              
                                         </div>
                                         <div class="form-group">&nbsp;</div>
                                     </div>
-                                    -->
                                         
                                     
                                 </div>
@@ -176,9 +199,10 @@ function add_payment(){
 
 	var html = '<div class="userlist" id="pretium_'+i+'">';
 		html += '<span class="title"></span>';
+		html += '<input type="hidden" name="payment['+i+'][no]" class="payno" value="">';
 		html += '<div class="f_20"><input type="text" class="form-control" name="payment['+i+'][amount]" value=""></div>';
 		html += '<div class="f_20"><input type="text" class="form-control" name="payment['+i+'][ratio]" value=""></div>';
-		html += '<div class="f_20"><input type="text" class="form-control inputdate" name="payment['+i+'][return_time]" value=""></div>';
+		html += '<div class="f_20"><input type="text" class="form-control inputdate"  name="payment['+i+'][return_time]" value=""></div>';
 		html += '<div class="f_40"><input type="text" class="form-control" name="payment['+i+'][remarks]" value=""></div>';
 		html += '<a href="javascript:;" class="btn btn-danger btn-flat" onclick="delbox(\'pretium_'+i+'\')">删除</a>';
 		html += '</div>';
@@ -186,13 +210,21 @@ function add_payment(){
 	$('#payment_val').html(i);
 	orderno();
 	
+	relaydate();
 	
 }
+
+
+	
+	
 
 //编号
 function orderno(){
 	$('#payment').find('.title').each(function(index, element) {
 		$(this).text(parseInt(index)+1);
+	});
+	$('#payment').find('.payno').each(function(index, element) {
+		$(this).val(parseInt(index)+1);
 	});
 }
 

@@ -30,7 +30,11 @@
                         </div><!-- /.box-header -->
                         <div class="box-body">
                             <div class="content">
-                                <table width="100%" id="font-14" rules="none" border="0" cellpadding="0" cellspacing="0">
+                            	<div class="form-group col-md-12">
+                                    <h2 style="font-size:16px; color:#ff3300; border-bottom:2px solid #dedede; padding-bottom:10px;">合同信息</h2>
+                                </div>
+                                <div class="form-group col-md-12">
+                                <table width="100%" id="font-14" rules="none" border="0" cellpadding="0" cellspacing="0" style="margin-top:-15px;">
                                     <tr>
                                         <td colspan="3">项目名称：{$row.pro_name}</td>
                                     </tr>
@@ -54,6 +58,53 @@
                                         <td colspan="3">备注信息：{$row.remarks}</td>
                                     </tr>
                                 </table>
+                                </div>
+                                
+                                <div class="form-group col-md-12">
+                                    <h2 style="font-size:16px; color:#ff3300; border-bottom:2px solid #dedede; padding-bottom:10px;">合同电子扫描件</h2>
+                                </div>
+                                <div class="form-group col-md-12">
+                                	<div id="showimglist">
+                                        <foreach name="atts" key="k" item="v">
+                                        <a href="{$v.filepath}" target="_blank"><img src="{:thumb($v['filepath'])}" style="margin-right:15px; margin-top:15px;"></a>
+                                        </foreach>
+                                    </div>
+                                </div>
+                                
+                                
+                                <div class="form-group col-md-12">
+                                    <h2 style="font-size:16px; color:#ff3300; border-bottom:2px solid #dedede; padding-bottom:10px;">回款计划</h2>
+                                </div>
+                                
+                                
+                                <div class="form-group col-md-12">
+                                    <table class="table table-bordered dataTable "  style="margin-top:-20px;" id="tablelist">
+                                        <thead>
+                                            <tr>
+                                            	<th width="40" style="text-align:center;">编号</th>
+                                                <th width="120">回款金额(元)</th>
+                                                <th width="120">回款比例(%)</th>
+                                                <th width="180">计划回款时间</th>
+                                                <th>备注</th>
+                                                <th width="120">已回款金额(元)</th>
+                                                <th width="100">状态</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <foreach name="pays" key="k" item="v">
+                                                <tr class="userlist">
+                                                    <td style="text-align:center;">{$v.no}</td>
+                                                    <td>&yen; {$v.amount}</td>
+                                                    <td>{$v.ratio}</td>
+                                                    <td><if condition="$v['return_time']">{$v.return_time|date='Y-m-d',###}</if></td>
+                                                    <td>{$v.remark}</td>
+                                                    <td>&yen; {$v.pay_amount}</td>
+                                                    <td><?php if($v['status']==2){ echo '<span class="green">已回款</span>';}else if($v['status']==1){ echo '<span class="blue">待回款</span>';}else if($v['status']==0){ echo '<span class="red">未回款</span>';} ?></td>
+                                                </tr> 
+                                            </foreach>
+                                        </tbody>
+                                    </table>
+                                </div>
                             </div>
                             
                         </div><!-- /.box-body -->
@@ -151,6 +202,7 @@
                             <h3 class="box-title">项目回款</h3>
                         </div><!-- /.box-header -->
                         <div class="box-body">
+                        	<?php if($huikuanlist){ ?>
                             <form method="post" action="{:U('Finance/save_huikuan')}" name="myform" id="save_huikuan">
                             <input type="hidden" name="dosubmint" value="1">
                             <input type="hidden" name="info[op_id]" value="{$op.op_id}">
@@ -159,6 +211,15 @@
                             <input type="hidden" name="referer" value="<?php echo $_SERVER['HTTP_REFERER']; ?>" />
                             <div class="content" >
                                 <div style="width:100%; float:left;">
+                                	<div class="form-group col-md-12">
+                                        <label>回款计划：</label>
+                                        <select class="form-control" name="info[payid]">
+                                            <foreach name="huikuanlist" key="k" item="v">
+                                                <option value="{$v.id}">第{$v.no}笔 - {$v.amount}元 - {$v.remark}</option>
+                                            </foreach>
+                                        </select>
+                                    </div>
+                                	
                                     <div class="form-group col-md-4">
                                         <label>本次回款金额：</label>
                                         <input type="text" name="info[huikuan]" id="renshu" class="form-control" value=""/>
@@ -176,6 +237,11 @@
                                     </div>
                                     
                                     <div class="form-group col-md-4">
+                                        <label>收款日期：</label>
+                                        <input type="text" name="info[huikuan_time]" class="form-control inputdate" value=""/>
+                                    </div>
+                                    
+                                    <div class="form-group col-md-12">
                                         <label>备注：</label>
                                         <input type="text" name="info[remark]" id="remark" class="form-control" value=""/>
                                     </div>
@@ -188,6 +254,12 @@
                             </div>
                             
                             </form>  
+                            <?php }else{ ?>
+                            <?php if($pays){ ?>
+                            <div class="content" ><span style="padding:20px 0; float:left; clear:both; text-align:center; text-align:center; width:100%;">已全部回款</span></div>
+                            <?php }else{ ?>
+                            <div class="content" ><span style="padding:20px 0; float:left; clear:both; text-align:center; text-align:center; width:100%;">尚未制定回款计划</span></div>
+                            <?php }} ?>
                         </div>
                     </div>
                 </div>

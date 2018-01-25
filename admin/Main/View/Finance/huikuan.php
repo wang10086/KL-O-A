@@ -82,6 +82,7 @@
                                     <h3 class="box-title">项目回款</h3>
                                 </div><!-- /.box-header -->
                                 <div class="box-body">
+                                	<?php if($huikuanlist){ ?>
                                     <form method="post" action="{:U('Finance/save_huikuan')}" name="myform" id="save_huikuan">
                                     <input type="hidden" name="dosubmint" value="1">
                                     <input type="hidden" name="info[op_id]" value="{$op.op_id}">
@@ -90,6 +91,15 @@
                                     <input type="hidden" name="referer" value="<?php echo $_SERVER['HTTP_REFERER']; ?>" />
                                     <div class="content" >
                                         <div style="width:100%; float:left;">
+                                            <div class="form-group col-md-12">
+                                                <label>回款计划：</label>
+                                                <select class="form-control" name="info[payid]">
+                                                    <foreach name="huikuanlist" key="k" item="v">
+                                                        <option value="{$v.id}">第{$v.no}笔 - {$v.amount}元 - {$v.remark}</option>
+                                                    </foreach>
+                                                </select>
+                                            </div>
+                                            
                                             <div class="form-group col-md-4">
                                                 <label>本次回款金额：</label>
                                                 <input type="text" name="info[huikuan]" id="renshu" class="form-control" value=""/>
@@ -98,7 +108,7 @@
                                             <div class="form-group col-md-4">
                                                 <label>收款方式：</label>
                                                 <select class="form-control" name="info[type]">
-                                                	<option value="">选择</option>
+                                                    <option value="">选择</option>
                                                     <option value="转账">转账</option>
                                                     <option value="支票">支票</option>
                                                     <option value="现金">现金</option>
@@ -107,24 +117,32 @@
                                             </div>
                                             
                                             <div class="form-group col-md-4">
+                                                <label>收款日期：</label>
+                                                <input type="text" name="info[huikuan_time]" class="form-control inputdate" value=""/>
+                                            </div>
+                                            
+                                            <div class="form-group col-md-12">
                                                 <label>备注：</label>
                                                 <input type="text" name="info[remark]" id="remark" class="form-control" value=""/>
                                             </div>
                                             
                                             <div class="form-group col-md-12"  style="margin-top:50px; padding-bottom:20px; text-align:center;">
-                                            	<button class="btn btn-success btn-lg">保存并提交审核</button>
+                                                <button class="btn btn-success btn-lg">保存并提交审核</button>
                                             </div>
                                         </div>
                                         
                                     </div>
                                     
                                     </form>  
+                                    <?php }else{ ?>
+									<div class="content" ><span style="padding:20px 0; float:left; clear:both; text-align:center; text-align:center; width:100%;">项目尚未在合同管理中制定回款计划或已全部回款</span></div>
+									<?php } ?>
                                 </div>
                             </div>
                             
                             
                             
-                            
+                            <?php if($huikuan){ ?>
                              <div class="box box-warning">
                                 <div class="box-header">
                                     <h3 class="box-title">回款记录</h3>
@@ -138,7 +156,6 @@
                                                     <th width="120">回款方式</th>
                                                     <th width="180">申请时间</th>
                                                     <th>回款备注</th>
-                                                    
                                                     <th width="120">审批状态</th>
                                                     <th width="120">审批者</th>
                                                     <th width="">审批说明</th>
@@ -162,6 +179,7 @@
                                         
                                     </div>
                                 </div>
+                                <?php } ?>
                             </div>
 							<?php } ?> 
                             

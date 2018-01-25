@@ -2113,6 +2113,55 @@ function get_aontract_res($releid){
 
 
 
+function save_payment($releid,$data){
+	
+	//获取合同信息
+	$contract = M('contract')->find($releid);
+	
+	//处理图片
+	$where = array();
+	$where['cid']  = $releid;
+	
+	$db = M('contract_pay');
+	$id = array();
+	
+	if(is_array($data)){
+		foreach($data as $k=>$v){
+			
+			//保存数据
+			$info = array();	
+			$info['cid']        	= $releid; 
+			$info['no']				= $v['no']; 
+			$info['pro_name']		= $contract['pro_name']; 
+			$info['op_id']  		= $contract['op_id']; 
+			$info['amount']			= $v['amount']; 
+			$info['ratio']			= $v['ratio']; 
+			$info['return_time']	= strtotime($v['return_time']); 
+			$info['remark']			= $v['remarks']; 
+			$info['userid'] 		= cookie('userid');
+			
+			if($v['pid']){
+				$issave = $db->where(array('id'=>$v['pid']))->save($info);
+				$id[]	= $v['pid'];
+			}else{
+				$info['create_time'] 	= time();
+				$id[]	= $db->add($info);	
+			}
+			
+		}
+		$where['id']     = array('not in',implode(',',$id));
+	}
+	
+	//删除
+	$isdel = $db->where($where)->select();
+	if($isdel){
+		foreach($isdel as $k=>$v){
+			$db->where(array('id'=>$v['id']))->delete();
+		}	
+	}
+}
+
+
 ?>
 
 

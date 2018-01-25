@@ -29,6 +29,7 @@
                                 <div class="box-body">
                                 	<table class="table table-bordered dataTable fontmini" id="tablelist">
                                         <tr role="row" class="orders" >
+                                        	<th class="sorting" data="c.id">ID</th>
                                         	<th class="sorting" data="c.pro_name">项目名称</th>
                                             <th class="sorting" data="c.group_id">团号</th>
                                             <!--<th class="sorting" data="c.dep_time">出团时间</th>-->
@@ -53,6 +54,7 @@
                                         </tr>
                                         <foreach name="lists" item="row">                      
                                         <tr>
+                                        	<td>{$row.id}</td>
                                             <td><a href="{:U('Contract/detail', array('id'=>$row['id']))}">{$row.pro_name}</a></td>
                                             <td>{$row.group_id}</td>
                                             <!--<td>{$row.dep_time}</td>-->
