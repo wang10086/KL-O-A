@@ -1755,7 +1755,7 @@ function updatekpi($month,$user){
 			if($v['quota_id']==3){
 				
 				$where = array();
-				$where['pay_time']		= array('lt',$v['end_date']+86399);
+				$where['return_time']	= array('lt',$v['end_date']+86399);
 				$where['payee']			= $user;
 				$shouru		= M('contract_pay')->where($where)->sum('amount');
 				$huikuan	= M('contract_pay')->where($where)->sum('	pay_amount');
