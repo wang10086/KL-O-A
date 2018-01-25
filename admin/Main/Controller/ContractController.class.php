@@ -25,21 +25,21 @@ class ContractController extends BaseController {
 		$key	= I('key','');
 		
 		$where = array();
-		if($key)	$where['c.pro_name']	= array('like','%'.$key.'%');
-		if($opid)	$where['c.op_id']		= $opid;
-		if($gid)	$where['c.group_id']	= $gid;
-		if($cid)	$where['c.contract_id']	= array('like','%'.$cid.'%');
+		if($key)		$where['pro_name']		= array('like','%'.$key.'%');
+		if($opid)	$where['op_id']			= $opid;
+		if($gid)		$where['group_id']		= $gid;
+		if($cid)		$where['contract_id']	= array('like','%'.$cid.'%');
 		
 		if(!rolemenu(array('Contract/confirm'))){
-			$where['c.create_user']	= cookie('userid');
+			$where['create_user']	= cookie('userid');
 		}
 		
 		//分页
-		$pagecount = $db->table('__CONTRACT__ as c')->field('c.*,s.huikuan')->join('__OP_SETTLEMENT__ as s on s.op_id = c.op_id','LEFT')->where($where)->count();
+		$pagecount = $db->where($where)->count();
 		$page = new Page($pagecount, P::PAGE_SIZE);
 		$this->pages = $pagecount>P::PAGE_SIZE ? $page->show():'';
 
-        $lists = $db->table('__CONTRACT__ as c')->field('c.*,s.huikuan')->join('__OP_SETTLEMENT__ as s on s.op_id = c.op_id','LEFT')->where($where)->limit($page->firstRow . ',' . $page->listRows)->order($this->orders('c.create_time'))->select();
+        $lists = $db->where($where)->limit($page->firstRow . ',' . $page->listRows)->order($this->orders('create_time'))->select();
 		
 		foreach($lists as $k=>$v){
 			$lists[$k]['strstatus']	= $v['status'] ? '<span class="green">已确认</span>' : '<span class="red">未确认</span>';	
@@ -182,7 +182,7 @@ class ContractController extends BaseController {
 			$this->settlement		= $settlement;
 			$this->kinds			= M('project_kind')->getField('id,name', true);
 			$this->huikuan			= $huikuan; 
-			$this->atts 			= M('contract_pic')->where(array('cid'=>$id))->order('id asc')->select();
+			$this->atts				= M('contract_pic')->where(array('cid'=>$id))->order('id asc')->select();
 			$this->pays				= M('contract_pay')->where(array('cid'=>$id))->order('id asc')->select();
 			$this->huikuanlist		= M('contract_pay')->where(array('cid'=>$id,'status'=>array('neq','2')))->order('id asc')->select();
 			

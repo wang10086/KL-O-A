@@ -14,11 +14,11 @@
         	<?php if($jiesuan){ ?>
         	<foreach name="jiesuan" key="k" item="v">
             	<tr class="userlist">
-                    <td width="16.66%">{$v.title}</td>
-                    <td width="16.66%">&yen; {$v.unitcost}</td>
-                    <td width="16.66%">{$v.amount}</td>
-                    <td width="16.66%">&yen; {$v.total}</td>
-                    <td width="16.66%"><?php echo $kind[$v['type']] ?></td>
+                    <td width="">{$v.title}</td>
+                    <td width="150">&yen; {$v.unitcost}</td>
+                    <td width="150">{$v.amount}</td>
+                    <td width="150">&yen; {$v.total}</td>
+                    <td width="150"><?php echo $kind[$v['type']] ?></td>
                     <td>{$v.remark}</td>
                 </tr> 
            
@@ -32,11 +32,11 @@
                 if($shiyong){ 
             ?>
             	<tr class="userlist">
-                    <td width="16.66%">{$v.remark}</td>
-                    <td width="16.66%">&yen; {$v.cost}</td>
-                    <td width="16.66%">{$shiyong}</td>
-                    <td width="16.66%">&yen; <?php echo sprintf("%.2f", $v['cost']*$shiyong) ?></td>
-                    <td width="16.66%">物资</td>
+                    <td width="">{$v.remark}</td>
+                    <td width="150">&yen; {$v.cost}</td>
+                    <td width="150">{$shiyong}</td>
+                    <td width="150">&yen; <?php echo sprintf("%.2f", $v['cost']*$shiyong) ?></td>
+                    <td width="150">物资</td>
                     <td>未归还</td>
                 </tr> 
                 
@@ -46,11 +46,11 @@
                     $fy = sprintf("%.2f", $v['cost']/$v['m_stages']);
             ?>
             	<tr class="userlist">
-                    <td width="16.66%">{$v.remark}</td>
-                    <td width="16.66%">&yen; {$fy}</td>
-                    <td width="16.66%">{$jieyong}</td>
-                    <td width="16.66%">&yen; <?php echo sprintf("%.2f", $fy*$jieyong) ?></td>
-                    <td width="16.66%">物资</td>
+                    <td width="">{$v.remark}</td>
+                    <td width="150">&yen; {$fy}</td>
+                    <td width="150">{$jieyong}</td>
+                    <td width="150">&yen; <?php echo sprintf("%.2f", $fy*$jieyong) ?></td>
+                    <td width="150">物资</td>
                     <td>已归还，{$v.m_stages} 期</td>
                 </tr> 
                 
@@ -59,11 +59,11 @@
             }else{
             ?>
             	<tr class="userlist">
-                    <td width="16.66%">{$v.remark}</td>
-                    <td width="16.66%">&yen; {$v.cost}</td>
-                    <td width="16.66%">{$v.amount}</td>
-                    <td width="16.66%">&yen; {$v.total}</td>
-                    <td width="16.66%"><?php echo $costtype[$v['cost_type']] ?></td>
+                    <td width="">{$v.remark}</td>
+                    <td width="150">&yen; {$v.cost}</td>
+                    <td width="150">{$v.amount}</td>
+                    <td width="150">&yen; {$v.total}</td>
+                    <td width="150"><?php echo $costtype[$v['cost_type']] ?></td>
                     <td>{$v.beizhu}</td>
                 </tr> 
                 
@@ -91,7 +91,7 @@
         <tr>
             <td width="33.33%">实际人数：{$settlement.renshu}</td>
             <td width="33.33%">实际收入：{$settlement.shouru}</td>
-            <td width="33.33%">合同签订：<?php if($settlement['hetong']){ echo '已签订';}else{ echo '未签订';} ?></td>
+            <td width="33.33%"><!-- 合同签订：<?php if($settlement['hetong']){ echo '已签订';}else{ echo '未签订';} ?> --></td>
         </tr>
         <tr>
             <td width="33.33%">毛利：{$settlement.maoli}</td>

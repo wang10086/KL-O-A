@@ -39,6 +39,7 @@
                                 </div><!-- /.box-header -->
                                 <div class="box-body">
                                     <div class="content">
+                                    	<div class="form-group">
                                         <table width="100%" id="font-14" rules="none" border="0" cellpadding="0" cellspacing="0">
                                         	<tr>
                                             	<td colspan="3">项目名称：{$op.project}</td>
@@ -64,18 +65,66 @@
                                                 <td width="33.33%">毛利率：{$settlement.maolilv}</td>
                                                 <td width="33.33%">人均毛利：{$settlement.renjunmaoli}</td>
                                             </tr>
-                                            <tr>
-                                                <td width="33.33%">已回款金额：{$settlement.huikuan}</td>
-                                            </tr>
+                                            
                                             <?php } ?>
+                                            
+                                            <tr>
+                                                <td width="33.33%" colspan="3">总计回款：{$payment}</td>
+                                            </tr>
                                         </table>
+                                        </div>
+                                        
+                                        <?php if($pays){ ?>
+                                        
+                                        <div class="form-group">
+                                            <h2 style="font-size:16px; color:#ff3300; border-bottom:2px solid #dedede; padding-bottom:10px;">回款计划</h2>
+                                        </div>
+                                        
+                                        
+                                        <div class="form-group">
+                                            <table class="table table-bordered dataTable "  style="margin-top:-20px;" id="tablelist">
+                                                <thead>
+                                                    <tr>
+                                                    	<th width="150">合同编号</th>
+                                                        <th width="40" style="text-align:center;">序号</th>
+                                                        <th width="100">回款金额(元)</th>
+                                                        <th width="100">回款比例(%)</th>
+                                                        <th width="100">计划回款时间</th>
+                                                        <th>备注</th>
+                                                        <th width="100">已回款金额(元)</th>
+                                                        <th width="100">状态</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <foreach name="pays" key="k" item="v">
+                                                        <tr class="userlist">
+                                                        	<td><a href="{:U('Contract/detail',array('id'=>$v['cid']))}"><?php if($v['contract_id']){ echo $v['contract_id']; }else{ echo '未编号';} ?></a></td>
+                                                            <td style="text-align:center;">{$v.no}</td>
+                                                            <td>&yen; {$v.amount}</td>
+                                                            <td>{$v.ratio}</td>
+                                                            <td><if condition="$v['return_time']">{$v.return_time|date='Y-m-d',###}</if></td>
+                                                            <td>{$v.remark}</td>
+                                                            <td>&yen; {$v.pay_amount}</td>
+                                                            <td><?php if($v['status']==2){ echo '<span class="green">已回款</span>';}else if($v['status']==1){ echo '<span class="blue">待回款</span>';}else if($v['status']==0){ echo '<span class="red">未回款</span>';} ?></td>
+                                                        </tr> 
+                                                    </foreach>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        
+                                        <?php } ?>
+                                
                                     </div>
+                                    
+                                    
+                                    
+                                
                                     
                                 </div><!-- /.box-body -->
                             </div><!-- /.box -->
                             
                         	
-                            <?php if($settlement['audit_status']==1){ ?>
+                            
                             
                             <div class="box box-warning">
                                 <div class="box-header">
@@ -95,7 +144,7 @@
                                                 <label>回款计划：</label>
                                                 <select class="form-control" name="info[payid]">
                                                     <foreach name="huikuanlist" key="k" item="v">
-                                                        <option value="{$v.id}">第{$v.no}笔 - {$v.amount}元 - {$v.remark}</option>
+                                                        <option value="{$v.id}"><?php if($v['contract_id']){ echo $v['contract_id'].'  / '; } ?>第{$v.no}笔 / {$v.amount}元 / {$v.remark}</option>
                                                     </foreach>
                                                 </select>
                                             </div>
@@ -135,8 +184,11 @@
                                     
                                     </form>  
                                     <?php }else{ ?>
-									<div class="content" ><span style="padding:20px 0; float:left; clear:both; text-align:center; text-align:center; width:100%;">项目尚未在合同管理中制定回款计划或已全部回款</span></div>
-									<?php } ?>
+									<?php if($pays){ ?>
+                                    <div class="content" ><span style="padding:20px 0; float:left; clear:both; text-align:center; text-align:center; width:100%;">已全部回款</span></div>
+                                    <?php }else{ ?>
+                                    <div class="content" ><span style="padding:20px 0; float:left; clear:both; text-align:center; text-align:center; width:100%;">尚未制定回款计划</span></div>
+                                    <?php }} ?>
                                 </div>
                             </div>
                             
@@ -181,7 +233,7 @@
                                 </div>
                                 <?php } ?>
                             </div>
-							<?php } ?> 
+							
                             
                         </div><!--/.col (right) -->
                     </div>   <!-- /.row -->

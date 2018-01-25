@@ -29,17 +29,17 @@
                                 <div class="box-body">
                                 	<table class="table table-bordered dataTable fontmini" id="tablelist">
                                         <tr role="row" class="orders" >
-                                        	<th class="sorting" data="c.id">ID</th>
-                                        	<th class="sorting" data="c.pro_name">项目名称</th>
-                                            <th class="sorting" data="c.group_id">团号</th>
-                                            <!--<th class="sorting" data="c.dep_time">出团时间</th>-->
-                                            <th class="sorting" data="c.number">人数</th>
-                                         	<th class="sorting" data="c.contract_amount">合同金额</th>
-                                            <th class="sorting" data="c.income_amount">回款金额</th>
-                                            <th class="sorting" data="c.contract_id">合同编号</th>
-                                            <th class="sorting" data="c.status">确认状态</th>
-                                            <!--<th class="sorting" data="c.create_time">创建时间</th>-->
-                                            <th class="sorting" data="c.create_user_name">创建者</th>
+                                        	<th class="sorting" data="id">ID</th>
+                                        	<th class="sorting" data="pro_name">项目名称</th>
+                                            <th class="sorting" data="group_id">团号</th>
+                                            <!--<th class="sorting" data="dep_time">出团时间</th>-->
+                                            <th class="sorting" data="number">人数</th>
+                                         	<th class="sorting" data="contract_amount">合同金额</th>
+                                            <th class="sorting" data="payment">回款金额</th>
+                                            <th class="sorting" data="contract_id">合同编号</th>
+                                            <th class="sorting" data="status">确认状态</th>
+                                            <!--<th class="sorting" data="create_time">创建时间</th>-->
+                                            <th class="sorting" data="create_user_name">创建者</th>
                                             <if condition="rolemenu(array('Contract/detail'))">
                                             <th width="60" class="taskOptions">详情</th>
                                             </if>
@@ -60,7 +60,7 @@
                                             <!--<td>{$row.dep_time}</td>-->
                                             <td>{$row.number}</td>
                                             <td>{$row.contract_amount}</td>
-                                            <td>{$row.huikuan}</td>
+                                            <td>{$row.payment}</td>
                                             <td>{$row.contract_id}</td>
                                             <td>{$row.strstatus}</td>
                                             <!--<td>{$row.create_time|date='y-m-d H:i',###}</td>-->

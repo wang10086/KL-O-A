@@ -1753,13 +1753,14 @@ function updatekpi($month,$user){
 			
 			//获取回款及时率
 			if($v['quota_id']==3){
+				
 				$where = array();
-				$where['b.audit_status'] = 1;
-				$where['b.create_time']  = array('between',$ym);
-				$where['o.create_user']  = $user;
-				$shouru = M()->table('__OP_SETTLEMENT__ as b')->field('b.shouru')->join('__OP__ as o on b.op_id = o.op_id','LEFT')->where($where)->sum('b.shouru');
-				$huikuan = M()->table('__OP_SETTLEMENT__ as b')->field('b.huikuan')->join('__OP__ as o on b.op_id = o.op_id','LEFT')->where($where)->sum('b.huikuan');
+				$where['pay_time']		= array('lt',$v['end_date']+86399);
+				$where['payee']			= $user;
+				$shouru		= M('contract_pay')->where($where)->sum('amount');
+				$huikuan	= M('contract_pay')->where($where)->sum('	pay_amount');
 				$complete = round(($huikuan / $shouru)*100,2).'%';
+				
 			}
 			
 			//获取成团率
@@ -2116,7 +2117,8 @@ function get_aontract_res($releid){
 function save_payment($releid,$data){
 	
 	//获取合同信息
-	$contract = M('contract')->find($releid);
+	$contract	= M('contract')->find($releid);
+	$op			= M('op')->where(array('op_id'=>$contract['op_id']))->find();
 	
 	//处理图片
 	$where = array();
@@ -2128,17 +2130,20 @@ function save_payment($releid,$data){
 	if(is_array($data)){
 		foreach($data as $k=>$v){
 			
+			
+			
 			//保存数据
 			$info = array();	
-			$info['cid']        	= $releid; 
-			$info['no']				= $v['no']; 
-			$info['pro_name']		= $contract['pro_name']; 
+			$info['cid']			= $releid; 
+			$info['no']			= $v['no']; 
+			$info['pro_name']	= $contract['pro_name']; 
 			$info['op_id']  		= $contract['op_id']; 
-			$info['amount']			= $v['amount']; 
-			$info['ratio']			= $v['ratio']; 
+			$info['amount']		= $v['amount']; 
+			$info['ratio']		= $v['ratio']; 
 			$info['return_time']	= strtotime($v['return_time']); 
-			$info['remark']			= $v['remarks']; 
+			$info['remark']		= $v['remarks']; 
 			$info['userid'] 		= cookie('userid');
+			$info['payee']		= $op['create_user'];
 			
 			if($v['pid']){
 				$issave = $db->where(array('id'=>$v['pid']))->save($info);

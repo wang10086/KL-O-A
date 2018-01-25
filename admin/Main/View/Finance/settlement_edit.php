@@ -159,11 +159,13 @@
             <input type="text" name="info[shouru]" id="shouru" class="form-control" value="{$settlement.shouru}" onBlur="lilv()"/> 
         </div>
         <div class="form-group col-md-4">
+        	<!--
             <label>是否签订合同：</label>
             <select class="form-control" name="info[hetong]">
             	<option value="0" <?php if($settlement['hetong']==0){ echo 'selected';} ?> >未签订合同</option>
                 <option value="1" <?php if($settlement['hetong']==1){ echo 'selected';} ?>>已签订合同</option>
             </select>
+            -->
         </div>
     </div>
     <div style="width:100%;float:left;">

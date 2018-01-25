@@ -363,24 +363,26 @@ class BaseController extends Controller {
 			$record['optype']  = 10;
 			if($dst_status == P::AUDIT_STATUS_PASS){
 				
-				//计入结算
-				$huikuan = M('op_huikuan')->where(array('op_id'=>$dstdata['op_id'],'audit_status'=>1))->sum('huikuan');
-				M('op_settlement')->data(array('huikuan'=>$huikuan))->where(array('op_id'=>$dstdata['op_id']))->save();
+				
 				
 				//回款计划处理
 				if($dstdata['payid']){
-					$paydata		= array();
+					$paydata	= array();
 					$pay		= M('contract_pay')->find($dstdata['payid']);
 					$pay_amount = $dstdata['huikuan']+$pay['pay_amount'];
 					if($pay_amount >= $pay['amount']){
-						$paydata['status'] = 2;	
+						$paydata['status']	= 2;	
 					}else{
-						$paydata['status'] = 1;		
+						$paydata['status']	= 1;		
 					}
-					$paydata['pay_amount'] = $pay_amount;
-					$paydata['pay_time']	= $dstdata['huikuan_time'];
+					$paydata['pay_amount']	= $pay_amount;
+					$paydata['pay_time']		= $dstdata['huikuan_time'];
 					
 					M('contract_pay')->where(array('id'=>$dstdata['payid']))->data($paydata)->save();
+					
+					//计入结算
+					$huikuan = M('op_huikuan')->where(array('cid'=>$pay['cid'],'audit_status'=>1))->sum('huikuan');
+					M('contract')->data(array('payment'=>$huikuan))->where(array('id'=>$pay['cid']))->save();
 				}
 				
 				

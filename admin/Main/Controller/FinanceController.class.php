@@ -689,11 +689,16 @@ class FinanceController extends BaseController {
 		}
 		
 
-		$this->op             = $op;
-		$this->settlement     = $settlement;
-		$this->kinds          = M('project_kind')->getField('id,name', true);
-		$this->huikuan        = $huikuan; 
-		$this->huikuanlist	  = M('contract_pay')->where(array('op_id'=>$opid,'status'=>array('neq','2')))->order('id asc')->select();
+		$this->op    		= $op;
+		$this->settlement	= $settlement;
+		$this->kinds		= M('project_kind')->getField('id,name', true);
+		$this->payment		= M('contract_pay')->where(array('op_id'=>$opid))->sum('pay_amount'); 
+		$this->huikuan  		= $huikuan;
+		$this->huikuanlist	= M()->table('__CONTRACT_PAY__ as p')->field('p.*,c.contract_id')->join('__CONTRACT__ as c on c.id = p.cid','LEFT')->where(array('p.op_id'=>$opid,'p.status'=>array('neq','2')))->order('p.id asc')->select();
+		
+		
+		$this->pays 			= M()->table('__CONTRACT_PAY__ as p')->field('p.*,c.contract_id')->join('__CONTRACT__ as c on c.id = p.cid','LEFT')->where(array('p.op_id'=>$opid))->order('p.id asc')->select();
+		
 		
 		$this->display('huikuan');
 	}
@@ -710,33 +715,37 @@ class FinanceController extends BaseController {
 		
 		
 		//保存回款
-		if($settlement){
-			
-			if(!$info['huikuan'])	$this->error('本次回款金额不能为空');
-			if(!$info['type'])		$this->error('请选择回款类型');
-			$info['userid']			= cookie('userid');
-			$info['create_time']	= time();
-			$info['huikuan_time']	= strtotime($info['huikuan_time']);
-			$save = M('op_huikuan')->add($info);	
-			
-			//提交审核
-			$audit = M('audit_log')->where(array('req_type'=>P::REQ_TYPE_HUIKUAN,'req_id'=>$save))->find();
-			if(!$audit){
-				$this->request_audit(P::REQ_TYPE_HUIKUAN, $save);		
-			}
-			
-			if($save){
-				$record = array();
-				$record['op_id']   = $opid;
-				$record['optype']  = 9;
-				$record['explain'] = '保存回款';
-				op_record($record);
-				$this->success('已提交申请等待审批！');		
-			}else{
-				$this->error('保存失败');	
-			}
+		if(!$info['huikuan'])	$this->error('本次回款金额不能为空');
+		if(!$info['type'])		$this->error('请选择回款类型');
+		$info['userid']			= cookie('userid');
+		$info['create_time']		= time();
+		$info['huikuan_time']	= strtotime($info['huikuan_time']);
 		
+		if(!$info['cid']){
+			$cc = M('contract_pay')->find($info['payid']);	
+			$info['cid'] = $cc['cid'];
 		}
+		
+		$save = M('op_huikuan')->add($info);	
+		
+		//提交审核
+		$audit = M('audit_log')->where(array('req_type'=>P::REQ_TYPE_HUIKUAN,'req_id'=>$save))->find();
+		if(!$audit){
+			$this->request_audit(P::REQ_TYPE_HUIKUAN, $save);		
+		}
+		
+		if($save){
+			$record = array();
+			$record['op_id']   = $opid;
+			$record['optype']  = 9;
+			$record['explain'] = '保存回款';
+			op_record($record);
+			$this->success('已提交申请等待审批！');		
+		}else{
+			$this->error('保存失败');	
+		}
+		
+		
 		
 
 	}

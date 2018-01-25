@@ -50,7 +50,7 @@
                                         <td width="33.33%">结束时间：{$row.end_time}</td>
                                     </tr>
                                     <tr>
-                                    	<td width="33.33%">回款金额：&yen;{$settlement.yihuikuan}</td>
+                                    	<td width="33.33%">回款金额：&yen;{$row.payment}</td>
                                         <td width="33.33%">创建时间：{$row.create_time|date='Y-m-d H:i:s',###}</td>
                                         <td width="33.33%">创建者：{$row.create_user_name}</td>
                                     </tr>
@@ -81,7 +81,7 @@
                                     <table class="table table-bordered dataTable "  style="margin-top:-20px;" id="tablelist">
                                         <thead>
                                             <tr>
-                                            	<th width="40" style="text-align:center;">编号</th>
+                                            	<th width="40" style="text-align:center;">序号</th>
                                                 <th width="120">回款金额(元)</th>
                                                 <th width="120">回款比例(%)</th>
                                                 <th width="180">计划回款时间</th>
@@ -195,7 +195,7 @@
                 </div><!--/.col (right) -->
                 
                 
-                <?php if(rolemenu(array('Finance/save_huikuan')) && $settlement['audit_status']==1){ ?>
+                <?php if(rolemenu(array('Finance/save_huikuan'))){ ?>
                 <div class="col-md-12">
                     <div class="box box-warning">
                         <div class="box-header">
@@ -207,6 +207,7 @@
                             <input type="hidden" name="dosubmint" value="1">
                             <input type="hidden" name="info[op_id]" value="{$op.op_id}">
                             <input type="hidden" name="info[name]" value="{$op.project}">
+                            <input type="hidden" name="info[cid]" value="{$row.id}">
                             <input type="hidden" name="settlement" value="{$settlement.id}" />
                             <input type="hidden" name="referer" value="<?php echo $_SERVER['HTTP_REFERER']; ?>" />
                             <div class="content" >
@@ -215,7 +216,7 @@
                                         <label>回款计划：</label>
                                         <select class="form-control" name="info[payid]">
                                             <foreach name="huikuanlist" key="k" item="v">
-                                                <option value="{$v.id}">第{$v.no}笔 - {$v.amount}元 - {$v.remark}</option>
+                                                <option value="{$v.id}">{$row.contract_id} / 第{$v.no}笔 / {$v.amount}元 / {$v.remark}</option>
                                             </foreach>
                                         </select>
                                     </div>
