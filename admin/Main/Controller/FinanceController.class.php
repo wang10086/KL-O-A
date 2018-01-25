@@ -556,14 +556,16 @@ class FinanceController extends BaseController {
 	//@@@NODE-3###save_settlement###保存结算###
     public function save_settlement(){
 		
-		$db              = M('op_costacc');
-		$opid            = I('opid');
-		$costacc         = I('costacc');
-		$info            = I('info');
-		$resid           = I('resid');
-		$referer         = I('referer');
-		$settlement          = I('settlement',0);
-		$num             = 0;
+		$db				= M('op_costacc');
+		$opid			= I('opid');
+		$costacc		= I('costacc');
+		$info			= I('info');
+		$resid			= I('resid');
+		$referer		= I('referer');
+		$settlement		= I('settlement',0);
+		$num			= 0;
+		
+		
 		
 		//保存预算
 		if($opid && $costacc){
@@ -589,10 +591,8 @@ class FinanceController extends BaseController {
 			}	
 			
 			
-			
-			
 			if($settlement){
-				M('op_settlement')->data($info)->where(array('id'=>$settlement))->save();	
+				M('op_settlement')->data($info)->where(array('id'=>$settlement))->save();
 			}else{
 				$info['create_time'] = time();
 				M('op_settlement')->add($info);

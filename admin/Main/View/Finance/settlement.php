@@ -68,7 +68,7 @@
                                     <h3 class="box-title">项目结算</h3>
                                 </div><!-- /.box-header -->
                                 <div class="box-body">
-                                    <php> if($audit['dst_status']!=1){ </php>
+                                    <php> if($audit['dst_status']!=1 || cookie('userid')==11){ </php>
                                     <include file="settlement_edit" />
                                     <php> }else{ </php>
                                     <include file="settlement_read" />
@@ -79,7 +79,7 @@
                                             
                             <div id="formsbtn" style="padding-bottom:10px;">
                                 <div class="content">
-                                    <?php if($audit['dst_status']!=1){ ?>
+                                    <?php if($audit['dst_status']!=1 || cookie('userid')==11){ ?>
                                         <form method="post" action="{:U('Finance/appsettlement')}" name="myform" id="appsubmint">
                                         <input type="hidden" name="dosubmit" value="1">
                                         <input type="hidden" name="opid" value="{$op.op_id}">
