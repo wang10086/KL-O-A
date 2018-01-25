@@ -84,7 +84,7 @@
                                     {:upload_m('uploadfile','files',$atts,'上传文件')}
                                     
                                     
-                                    
+                                    <!--
                                     <div class="content" style="padding-top:0px;">
                                     	<h2 style="font-size:16px; color:#ff3300; border-bottom:2px solid #dedede; padding-bottom:10px;">回款计划</h2>
                                         <div id="payment">
@@ -120,6 +120,7 @@
                                         </div>
                                         <div class="form-group">&nbsp;</div>
                                     </div>
+                                    -->
                                         
                                     
                                 </div>
