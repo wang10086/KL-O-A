@@ -90,7 +90,7 @@
                 </div>
                 
                 <div class="form-group col-md-4">
-                    <input type="text" class="form-control" name="ou" placeholder="立项人">
+                    <input type="text" class="form-control" name="ou" placeholder="销售">
                 </div>
                 
                 <div class="form-group col-md-4">
