@@ -352,6 +352,10 @@
                                     <li><a href="{:U('Finance/settlementlist')}"><i class="fa fa-angle-right"></i> 项目结算</a></li>
                                 </if>
                                 
+                                <if condition="rolemenu(array('Finance/payment'))">
+                                    <li><a href="{:U('Finance/payment')}"><i class="fa fa-angle-right"></i> 回款管理</a></li>
+                                </if>
+                                
                             </ul>
                         </li>
                         </if>

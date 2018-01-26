@@ -752,6 +752,56 @@ class FinanceController extends BaseController {
 	
 	
 	
+	//@@@NODE-3###payment###回款管理###
+    public function payment(){
+		$this->title('回款管理');
+		
+		$db		= M('op');
+		
+		
+		$title	= I('title');         	//项目名称
+		$opid	= I('opid');         	//项目编号
+		$cid	= I('cid');         	//合同编号
+		$gid	= I('gid');         	//项目团号
+		$ou		= I('ou');           	//立项人
+		$as		= I('as','-1');   		//审核状态
+		
+		$where	= array();
+		if($title)			$where['o.project']				= array('like','%'.$title.'%');
+		if($opid)			$where['p.op_id']				= array('like','%'.$opid.'%');
+		if($cid)     		$where['c.contract_id']			= array('like','%'.$cid.'%');
+		if($gid)     		$where['c.group_id']			= array('like','%'.$gid.'%');
+		if($as!='-1')     	$where['p.status']				= $as;
+		if($ou)     		$where['o.create_user_name']	= array('like','%'.$ou.'%');
+		
+		//分页
+		$pagecount = $db->table('__CONTRACT_PAY__ as p')->join('__CONTRACT__ as c on c.id = p.cid','LEFT')->join('__OP__ as o on o.op_id = p.op_id','LEFT')->where($where)->count();
+		$page = new Page($pagecount, P::PAGE_SIZE);
+		$this->pages = $pagecount>P::PAGE_SIZE ? $page->show():'';
+
+        $lists = $db->table('__CONTRACT_PAY__ as p')->field('p.*,c.contract_id,c.group_id,o.project,o.project,o.create_user_name')->join('__CONTRACT__ as c on c.id = p.cid','LEFT')->join('__OP__ as o on o.op_id = p.op_id','LEFT')->where($where)->limit($page->firstRow . ',' . $page->listRows)->order($this->orders('p.return_time'))->select();
+		
+		
+		foreach($lists as $k=>$v){
+			
+			if($v['status']==0){
+				$status = '<span class="red">未回款</span>';	
+			}elseif($v['status']==1){
+				$status = '<span class="blue">回款中</span>';	
+			}elseif($v['status']==2){
+				$status = '<span class="green">已回款</span>';	
+			}
+			
+			$lists[$k]['strstatus'] = $status;
+		}
+		
+
+		$this->lists = $lists;
+		$this->display('payment');
+	}
+	
+	
+	
 	
 	
 	
