@@ -1553,9 +1553,11 @@ class KpiController extends BaseController {
 		
 		//列举人员
 		$where = array();
+		/*
 		if(C('RBAC_SUPER_ADMIN')==cookie('username') || cookie('userid')==32 || cookie('userid')==38 || cookie('userid')==12 || cookie('userid')==11 ){}else{
 			$where['group_role']	= array('like','%['.cookie('roleid').']%');
 		}
+		*/
 		
 		$where['postid']		= $this->post;
 		$where['status']		= 0;

@@ -537,7 +537,6 @@ class ChartController extends BaseController {
 	
 	//个人业绩排行榜
 	public function pplist(){
-		
 		$db		= M('op');
 		$roles	= M('role')->GetField('id,role_name',true);
 		
@@ -558,16 +557,16 @@ class ChartController extends BaseController {
 			$lists[$k]['rolename'] 	=  $roles[$v['roleid']];	
 			
 			//查询2018年度总收入
-			$all = personal_income($v['create_user'],strtotime('2018-01-01 00:00:00'));
+			$all = personal_income($v['create_user'],0);
 			$lists[$k]['zsr'] = $all['zsr'];
 			$lists[$k]['zml'] = $all['zml'];
 			$lists[$k]['mll'] = $all['mll'];
 			
-			//查询当月总收入
-			$all = personal_income($v['create_user'],strtotime(date('Y-m-01',time())));
-			$lists[$k]['ysr'] = $all['zsr'];
-			$lists[$k]['yml'] = $all['zml'];
-			$lists[$k]['yll'] = $all['mll'];
+			//查询当月总收入'
+			$mon = personal_income($v['create_user'],1);
+			$lists[$k]['ysr'] = $mon['zsr'];
+			$lists[$k]['yml'] = $mon['zml'];
+			$lists[$k]['yll'] = $mon['mll'];
 			
 		}
 		
@@ -603,6 +602,7 @@ class ChartController extends BaseController {
 			$lists[$k]				= tplist($k);	
 			$lists[$k]['rolename']	= $v;	
 		}
+		
 		
 		$this->lists = $lists;
 		
@@ -660,16 +660,16 @@ class ChartController extends BaseController {
 			$lists[$k]['rolename'] 	=  $roles[$v['roleid']];	
 			
 			//查询2018年度总收入
-			$all = personal_income($v['create_user'],strtotime('2018-01-01 00:00:00'));
+			$all = personal_income($v['create_user'],0);
 			$lists[$k]['zsr'] = $all['zsr'];
 			$lists[$k]['zml'] = $all['zml'];
 			$lists[$k]['mll'] = $all['mll'];
 			
 			//查询当月总收入
-			$all = personal_income($v['create_user'],strtotime(date('Y-m-01',time())));
-			$lists[$k]['ysr'] = $all['zsr'];
-			$lists[$k]['yml'] = $all['zml'];
-			$lists[$k]['yll'] = $all['mll'];
+			$mon = personal_income($v['create_user'],1);
+			$lists[$k]['ysr'] = $mon['zsr'];
+			$lists[$k]['yml'] = $mon['zml'];
+			$lists[$k]['yll'] = $mon['mll'];
 			
 		}
 		

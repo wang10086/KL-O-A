@@ -1891,6 +1891,31 @@ function update_userlist_role(){
 	
 }
 
+//获取上月25至本月25时间戳
+function twentyfive(){
+	
+	
+	$today = date('d',time());
+	if($today<25){
+		$firstday		= date("Y-m-25",strtotime('-1 month')); 
+		$lastday		= date("Y-m-25",time());
+	}else{
+		$firstday		= date("Y-m-25",time());
+		$lastday		= date("Y-m-25",strtotime('+1 month')); 
+	}
+	
+	if($firstday<'2018-01-01') $firstday = '2018-01-01';
+	$firsttime		= strtotime($firstday);
+	$lasttime		= strtotime($lastday)+86399;
+	
+	$return = array();
+	$return[0] = $firsttime;
+	$return[1] = $lasttime;
+	
+	
+	return $return;
+}
+
 //统计部门数据
 function tplist($roleid){
 	
@@ -1952,11 +1977,12 @@ function tplist($roleid){
 	
 	
 	//查询月度
+	$month = twentyfive();
 	$where = array();
 	$where['b.audit_status']	= 1;
 	$where['a.id']				= array('in',implode(',',$ulist));
 	$where['l.req_type']		= 801;
-	$where['l.audit_time']		= array('gt',strtotime(date('Y-m-01',time())));
+	$where['l.audit_time']		= array('between',array($month[0],$month[1]));
 	
 	$field = array();
 	$field[] =  'sum(b.shouru) as ysr';
@@ -1982,14 +2008,19 @@ function tplist($roleid){
 //获取某时间段个人业绩
 function personal_income($userid,$time){
 	
+	$month = twentyfive();
 	
-	//$time = $time ? $time : strtotime(date('Y-m-01',time()));
 	//查询月度
 	$where = array();
 	$where['b.audit_status']	= 1;
 	$where['o.create_user']		= $userid;
 	$where['a.req_type']		= 801;
-	$where['a.audit_time']		= array('gt',$time);
+	
+	if($time == 0){
+		$where['a.audit_time']		= array('gt',strtotime('2018-01-01 00:00:00')); 
+	}else{
+		$where['a.audit_time']		= array('between',$month); 
+	}
 	
 	$field = array();
 	$field[] =  'sum(b.shouru) as zsr';
