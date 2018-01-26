@@ -234,17 +234,17 @@ class ChartController extends BaseController {
 		//获取团队相关数据
 		$where = array();
 		if($dept==80){
-			$where['dept'] = 80;//array('in','80');
+			$where['roleid'] = 80;//array('in','80');
 		}else if($dept==17){
-			$where['dept'] = array('in','17,61');
+			$where['roleid'] = array('in','17,61');
 		}else if($dept==35){
-			$where['dept'] = array('in','35,16,37,38,64');
+			$where['roleid'] = array('in','35,16,37,38,64');
 		}else if($dept==18){
-			$where['dept'] = array('in','18,59,73,74');
+			$where['roleid'] = array('in','18,59,73,74');
 		}else if($dept==19){
-			$where['dept'] = array('in','19,36');
+			$where['roleid'] = array('in','19,36');
 		}else if($dept==40){
-			$where['dept'] = array('in','40,41,49');
+			$where['roleid'] = array('in','40,41,49');
 		}else if($dept==55){
 			$where['roleid'] = array('in','55,56,57');
 		}
