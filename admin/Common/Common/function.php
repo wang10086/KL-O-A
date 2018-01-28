@@ -2046,10 +2046,11 @@ function get_branch_user(){
 	
 	//获取属于员工信息
 	$where = array();
-	
+	/*
 	if(C('RBAC_SUPER_ADMIN')==cookie('username') || cookie('userid')==32 || cookie('userid')==38 || cookie('userid')==12 || cookie('userid')==11 ){}else{
 		$where['group_role']	= array('like','%['.cookie('roleid').']%');
 	}
+	*/
 	
 	
 	$where['status']		= 0;
