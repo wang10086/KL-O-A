@@ -1734,19 +1734,20 @@ function updatekpi($month,$user){
 			
 			
 			//获取月度累计毛利额
-			if($v['quota_id']==1){
+			if($v['quota_id']==1 || $v['quota_id']==8){
 				$where = array();
 				$where['b.audit_status']		= 1;
 				$where['o.create_user']		= $user;
 				$where['l.req_type']			= 801;
 				$where['l.audit_time']		= array('between',array($v['start_date'],$v['end_date']));
 				$complete = M()->table('__OP_SETTLEMENT__ as b')->field('b.maoli')->join('__OP__ as o on b.op_id = o.op_id','LEFT')->join('__AUDIT_LOG__ as l on l.req_id = b.id','LEFT')->where($where)->sum('b.maoli');
+				$complete = $complete ? $complete : 0;
 			}
 			
 		
 			
 			//获取累计毛利率
-			if($v['quota_id']==2){
+			if($v['quota_id']==2 || $v['quota_id']==9){
 				$where = array();
 				$where['b.audit_status']		= 1;
 				$where['o.create_user']		= $user;
@@ -1792,18 +1793,21 @@ function updatekpi($month,$user){
 				$complete = round(($hetong / $xiangmu)*100,2).'%';
 			}
 			
+			
+			$auto_quta = array(1,2,3,4,5,8,9);
+			
 			//保存数据
-			if($v['quota_id'] <=5 ){
+			if(in_array($v['quota_id'],$auto_quta)){
 				
+				//完成率
 				$rate = $v['target'] ? round(($complete / $v['target'])*100,2) : 100;
 				
-				//纠正100
+				//完成率纠正最高100%
 				$rate = $rate>100 ? 100 : $rate; 
 				
 				$data = array();
 				$data['complete'] = $complete;
 				$data['complete_rate'] = $rate."%";
-				
 				if($rate >= 100){
 					$data['score']	= $v['weight'] ? $v['weight'] : 0;
 				}else{
