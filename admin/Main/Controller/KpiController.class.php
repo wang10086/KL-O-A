@@ -1353,6 +1353,10 @@ class KpiController extends BaseController {
 					$info['complete'] = $info['complete'] ? $info['complete'] : 0;
 					
 					$rate = $km['target'] ? round(($info['complete'] / $km['target'])*100,2) : 100;
+					
+					//纠正100
+					$rate = $rate>100 ? 100 : $rate; 
+				
 					$info['complete_rate'] = $rate."%";
 					if($rate >= 100){
 						$info['score']	= $km['weight'] ? $km['weight'] : 0;
