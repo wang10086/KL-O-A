@@ -1218,6 +1218,9 @@ class KpiController extends BaseController {
 		$user  = I('uid',cookie('userid'));
 		
 		
+		//更新数据
+		updatekpi($year.$month,$user);
+		
 		$sta   = C('KPI_STATUS');
 		
 		if($id){
@@ -1602,6 +1605,10 @@ class KpiController extends BaseController {
 			$where = array();
 			$where['month']		= $this->year.$this->month;
 			$where['user_id']	= $v['id'];
+			
+			//更新数据
+			updatekpi($where['month'],$where['user_id']);
+			
 			$kpi = M('kpi_more')->field('quota_id,quota_title,target,complete,weight,score')->where($where)->order('quota_id ASC')->select();
 			$userlist[$k]['kpi'] = $kpi;	
 			if($kpi) $check++;
