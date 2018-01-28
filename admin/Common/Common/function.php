@@ -1715,9 +1715,11 @@ function addkpiinfo($year,$month,$user){
 
 function updatekpi($month,$user){
 	
+	/*
 	$year  = substr($month,0,4);
 	$yue   = substr($month,4,2);
 	$ym    = getthemonth($year.'-'.$yue.'-01');
+	*/
 	
 	$where = array();
 	$where['month']   = $month;
@@ -1725,6 +1727,7 @@ function updatekpi($month,$user){
 	
 	
 	$quto   = M('kpi_more')->where($where)->select();
+	
 	
 	if($quto){
 		foreach($quto as $k=>$v){
@@ -1736,12 +1739,11 @@ function updatekpi($month,$user){
 				$where['b.audit_status']		= 1;
 				$where['o.create_user']		= $user;
 				$where['l.req_type']			= 801;
-				$where['l.audit_time']		= array('between',array($quto['start_date'],$quto['end_date']));
-				
-	
+				$where['l.audit_time']		= array('between',array($v['start_date'],$v['end_date']));
 				$complete = M()->table('__OP_SETTLEMENT__ as b')->field('b.maoli')->join('__OP__ as o on b.op_id = o.op_id','LEFT')->join('__AUDIT_LOG__ as l on l.req_id = b.id','LEFT')->where($where)->sum('b.maoli');
 			}
 			
+		
 			
 			//获取累计毛利率
 			if($v['quota_id']==2){
@@ -1749,7 +1751,7 @@ function updatekpi($month,$user){
 				$where['b.audit_status']		= 1;
 				$where['o.create_user']		= $user;
 				$where['l.req_type']			= 801;
-				$where['l.audit_time']		= array('between',array($quto['start_date'],$quto['end_date']));
+				$where['l.audit_time']		= array('between',array($v['start_date'],$v['end_date']));
 				$maoli = M()->table('__OP_SETTLEMENT__ as b')->field('b.maoli')->join('__OP__ as o on b.op_id = o.op_id','LEFT')->join('__AUDIT_LOG__ as l on l.req_id = b.id','LEFT')->where($where)->sum('b.maoli');
 				$shouru = M()->table('__OP_SETTLEMENT__ as b')->field('b.shouru')->join('__OP__ as o on b.op_id = o.op_id','LEFT')->join('__AUDIT_LOG__ as l on l.req_id = b.id','LEFT')->where($where)->sum('b.shouru');
 				$complete = round(($maoli / $shouru)*100,2).'%';
@@ -1768,7 +1770,7 @@ function updatekpi($month,$user){
 			//获取成团率
 			if($v['quota_id']==4){
 				$where = array();
-				$where['create_time']  = array('between',array($quto['start_date'],$quto['end_date']));
+				$where['create_time']  = array('between',array($v['start_date'],$v['end_date']));
 				$where['create_user']  = $user;
 				$zongxiangmu = M('op')->where($where)->count();
 				$where['group_id']     = array('neq','');
@@ -1783,7 +1785,7 @@ function updatekpi($month,$user){
 				$where['b.audit_status']		= 1;
 				$where['o.create_user']		= $user;
 				$where['l.req_type']			= 801;
-				$where['l.audit_time']		= array('between',array($quto['start_date'],$quto['end_date']));
+				$where['l.audit_time']		= array('between',array($v['start_date'],$v['end_date']));
 				$xiangmu = M()->table('__OP_SETTLEMENT__ as b')->field('b.maoli')->join('__OP__ as o on b.op_id = o.op_id','LEFT')->join('__AUDIT_LOG__ as l on l.req_id = b.id','LEFT')->where($where)->count();
 				$where['b.hetong']  = 1;
 				$hetong  = M()->table('__OP_SETTLEMENT__ as b')->field('b.maoli')->join('__OP__ as o on b.op_id = o.op_id','LEFT')->join('__AUDIT_LOG__ as l on l.req_id = b.id','LEFT')->where($where)->count();
@@ -1795,9 +1797,13 @@ function updatekpi($month,$user){
 				
 				$rate = $v['target'] ? round(($complete / $v['target'])*100,2) : 100;
 				
+				//纠正100
+				$rate = $rate>100 ? 100 : $rate; 
+				
 				$data = array();
 				$data['complete'] = $complete;
 				$data['complete_rate'] = $rate."%";
+				
 				if($rate >= 100){
 					$data['score']	= $v['weight'] ? $v['weight'] : 0;
 				}else{
