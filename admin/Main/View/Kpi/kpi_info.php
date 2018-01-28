@@ -74,8 +74,8 @@
                                                 <th width="100">权重</th>
                                                 <th width="100">考评得分</th>
                                                 <?php 
-												if($kpi['status'] < 5 || cookie('roleid')==10 || C('RBAC_SUPER_ADMIN')==cookie('username') ){
-												if(cookie('roleid')==43 || cookie('roleid')==44 || cookie('userid')==$kpi['user_id'] || cookie('userid')==$kpi['mk_user_id']){
+												if(cookie('roleid')==10 || C('RBAC_SUPER_ADMIN')==cookie('username') ){
+												if(cookie('roleid')==43 || cookie('roleid')==44 ||  cookie('userid')==$kpi['mk_user_id']){
 												?>
                                                 <if condition="rolemenu(array('Kpi/editkpi'))">
                                                 <th width="50" class="taskOptions">编辑</th>
@@ -94,8 +94,8 @@
                                                 <td>{$row.weight}</td>
                                                 <td>{$row.score}</td>
                                                 <?php 
-												if($kpi['status'] < 5 || cookie('roleid')==10 || C('RBAC_SUPER_ADMIN')==cookie('username') ){
-												if(cookie('roleid')==43 || cookie('roleid')==44 || cookie('userid')==$kpi['user_id'] || cookie('userid')==$kpi['mk_user_id']){
+												if(cookie('roleid')==10 || C('RBAC_SUPER_ADMIN')==cookie('username') ){
+												if(cookie('roleid')==43 || cookie('roleid')==44 || cookie('userid')==$kpi['mk_user_id']){
 												?>
                                                 <if condition="rolemenu(array('Kpi/editkpi'))">
                                                 <td class="taskOptions">
