@@ -1733,40 +1733,42 @@ function updatekpi($month,$user){
 			//获取月度累计毛利额
 			if($v['quota_id']==1){
 				$where = array();
-				$where['b.audit_status'] = 1;
-				$where['b.create_time']  = array('between',$ym);
-				$where['o.create_user']  = $user;
-				$complete = M()->table('__OP_SETTLEMENT__ as b')->field('b.maoli')->join('__OP__ as o on b.op_id = o.op_id','LEFT')->where($where)->sum('b.maoli');
+				$where['b.audit_status']		= 1;
+				$where['o.create_user']		= $user;
+				$where['l.req_type']			= 801;
+				$where['l.audit_time']		= array('between',array($quto['start_date'],$quto['end_date']));
+				
+	
+				$complete = M()->table('__OP_SETTLEMENT__ as b')->field('b.maoli')->join('__OP__ as o on b.op_id = o.op_id','LEFT')->join('__AUDIT_LOG__ as l on l.req_id = b.id','LEFT')->where($where)->sum('b.maoli');
 			}
 			
 			
 			//获取累计毛利率
 			if($v['quota_id']==2){
 				$where = array();
-				$where['b.audit_status'] = 1;
-				$where['b.create_time']  = array('between',$ym);
-				$where['o.create_user']  = $user;
-				$maoli = M()->table('__OP_SETTLEMENT__ as b')->field('b.maoli')->join('__OP__ as o on b.op_id = o.op_id','LEFT')->where($where)->sum('b.maoli');
-				$shouru = M()->table('__OP_SETTLEMENT__ as b')->field('b.shouru')->join('__OP__ as o on b.op_id = o.op_id','LEFT')->where($where)->sum('b.shouru');
+				$where['b.audit_status']		= 1;
+				$where['o.create_user']		= $user;
+				$where['l.req_type']			= 801;
+				$where['l.audit_time']		= array('between',array($quto['start_date'],$quto['end_date']));
+				$maoli = M()->table('__OP_SETTLEMENT__ as b')->field('b.maoli')->join('__OP__ as o on b.op_id = o.op_id','LEFT')->join('__AUDIT_LOG__ as l on l.req_id = b.id','LEFT')->where($where)->sum('b.maoli');
+				$shouru = M()->table('__OP_SETTLEMENT__ as b')->field('b.shouru')->join('__OP__ as o on b.op_id = o.op_id','LEFT')->join('__AUDIT_LOG__ as l on l.req_id = b.id','LEFT')->where($where)->sum('b.shouru');
 				$complete = round(($maoli / $shouru)*100,2).'%';
 			}
 			
 			//获取回款及时率
 			if($v['quota_id']==3){
-				
 				$where = array();
 				$where['return_time']	= array('lt',$v['end_date']+86399);
 				$where['payee']			= $user;
 				$shouru		= M('contract_pay')->where($where)->sum('amount');
 				$huikuan	= M('contract_pay')->where($where)->sum('	pay_amount');
 				$complete = round(($huikuan / $shouru)*100,2).'%';
-				
 			}
 			
 			//获取成团率
 			if($v['quota_id']==4){
 				$where = array();
-				$where['create_time']  = array('between',$ym);
+				$where['create_time']  = array('between',array($quto['start_date'],$quto['end_date']));
 				$where['create_user']  = $user;
 				$zongxiangmu = M('op')->where($where)->count();
 				$where['group_id']     = array('neq','');
@@ -1778,12 +1780,13 @@ function updatekpi($month,$user){
 			//获取合同签订率（含家长协议书）
 			if($v['quota_id']==5){
 				$where = array();
-				$where['b.audit_status'] = 1;
-				$where['b.create_time']  = array('between',$ym);
-				$where['o.create_user']  = $user;
-				$xiangmu = M()->table('__OP_SETTLEMENT__ as b')->field('b.maoli')->join('__OP__ as o on b.op_id = o.op_id','LEFT')->where($where)->count();
+				$where['b.audit_status']		= 1;
+				$where['o.create_user']		= $user;
+				$where['l.req_type']			= 801;
+				$where['l.audit_time']		= array('between',array($quto['start_date'],$quto['end_date']));
+				$xiangmu = M()->table('__OP_SETTLEMENT__ as b')->field('b.maoli')->join('__OP__ as o on b.op_id = o.op_id','LEFT')->join('__AUDIT_LOG__ as l on l.req_id = b.id','LEFT')->where($where)->count();
 				$where['b.hetong']  = 1;
-				$hetong  = M()->table('__OP_SETTLEMENT__ as b')->field('b.maoli')->join('__OP__ as o on b.op_id = o.op_id','LEFT')->where($where)->count();
+				$hetong  = M()->table('__OP_SETTLEMENT__ as b')->field('b.maoli')->join('__OP__ as o on b.op_id = o.op_id','LEFT')->join('__AUDIT_LOG__ as l on l.req_id = b.id','LEFT')->where($where)->count();
 				$complete = round(($hetong / $xiangmu)*100,2).'%';
 			}
 			
