@@ -1345,8 +1345,38 @@ class KpiController extends BaseController {
 			//执行保存
 			if($editid){
 				
-				if(cookie('userid')==$kpi['user_id'] || cookie('userid')==$pdca['mk_user_id'] || C('RBAC_SUPER_ADMIN')==cookie('username') || cookie('roleid')==10){
+				if(cookie('roleid')==43 || cookie('roleid')==44 || cookie('userid')==$kpi['user_id'] || cookie('userid')==$pdca['mk_user_id'] || C('RBAC_SUPER_ADMIN')==cookie('username') || cookie('roleid')==10){
+					
+					$km = M('kpi_more')->find($editid);
+					
+					//合计完成率
+					$info['complete'] = $info['complete'] ? $info['complete'] : 0;
+					
+					$rate = $km['target'] ? round(($info['complete'] / $km['target'])*100,2) : 100;
+					$info['complete_rate'] = $rate."%";
+					if($rate >= 100){
+						$info['score']	= $km['weight'] ? $km['weight'] : 0;
+					}else{
+						$info['score']	= round(($rate * $km['weight']) / 100,1);
+					}
+					$info['score_status']	= 1;
+					
 					$addinfo = M('kpi_more')->data($info)->where(array('id'=>$editid))->save();
+					
+					//合计总分
+					$kpilist = M('kpi_more')->where(array('kpi_id'=>$km['kpi_id']))->select();
+					$total = 0;
+					foreach($kpilist as $k=>$v){
+						$total += $v['score_status']	? $v['score'] : $v['weight'];
+					}
+					$data = array();
+					$data['score']      = $total;
+					
+					if(cookie('roleid')==43 || cookie('roleid')==44){
+						$data['status'] = 5;	
+					}
+					$issave = M('kpi')->data($data)->where(array('id'=>$km['kpi_id']))->save();
+					
 				}else{
 					$this->error('您没有权限保存');
 				}
