@@ -19,13 +19,16 @@
                         	 <div class="btn-group" id="catfont" style="padding-bottom:20px;">
 								<?php 
                                 foreach($postlist as $k=>$v){
-                                    $par = array();
-                                    $par['post']  = $k;
-                                    if($pid==$k){
-                                        echo '<a href="'.U('Rbac/kpi_users',$par).'" class="btn btn-info" style="padding:8px 18px;">'.$v.'</a>';
-                                    }else{
-                                        echo '<a href="'.U('Rbac/kpi_users',$par).'" class="btn btn-default" style="padding:8px 18px;">'.$v.'</a>';
-                                    }
+									
+									if($v){
+										$par = array();
+										$par['post']  = $k;
+										if($pid==$k){
+											echo '<a href="'.U('Rbac/kpi_users',$par).'" class="btn btn-info" style="padding:8px 18px;">'.$v.'</a>';
+										}else{
+											echo '<a href="'.U('Rbac/kpi_users',$par).'" class="btn btn-default" style="padding:8px 18px;">'.$v.'</a>';
+										}
+									}
                                 }
                                 ?>
                             </div>
