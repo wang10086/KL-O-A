@@ -3961,3 +3961,4 @@ th{outline: none;}
 
 #showimglist{ width:100%; margin-top:-20px; padding-bottom:20px;}
 #showimglist img{ margin-top:10px; margin-top:15px;}
+#showimglist .fileext{ width:100px; height:100px; float:left; background:#3c8dbc; line-height:100px; text-align:center; color:#ffffff; font-size:16px;}

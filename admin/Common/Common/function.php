@@ -2216,6 +2216,21 @@ function save_payment($releid,$data){
 }
 
 
+//判断是否为图片
+function isimg($path){
+	if($path){
+		$file	= explode('.',$path);
+		$ext	= strtoupper($file[1]);
+		$extlist = array('JPG','PNG','GIF','JPEG');
+		if(in_array($ext,$extlist)){
+			return 0;
+		}else{
+			return $ext;	
+		}
+	}	
+}
+
+
 ?>
 
 

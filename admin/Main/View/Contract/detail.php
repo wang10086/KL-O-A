@@ -66,9 +66,11 @@
                                 <div class="form-group col-md-12">
                                 	<div id="showimglist">
                                         <foreach name="atts" key="k" item="v">
-											<?php if($v['filepath']){ ?>
-                                            <a href="{$v.filepath}" target="_blank"><img src="{:thumb($v['filepath'])}" style="margin-right:15px; margin-top:15px;"></a>
-                                            <?php } ?>
+											<?php if(isimg($v['filepath'])){ ?>
+                                            <a href="{$v.filepath}" target="_blank"><div class="fileext"><?php echo isimg($v['filepath']); ?></div></a>
+                                            <?php }else{ ?>
+											<a href="{$v.filepath}" target="_blank"><img src="{:thumb($v['filepath'],100,100)}" style="margin-right:15px; margin-top:15px;"></a>
+											<?php } ?>
                                         </foreach>
                                     </div>
                                 </div>
