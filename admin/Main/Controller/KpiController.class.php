@@ -106,7 +106,7 @@ class KpiController extends BaseController {
     // @@@NODE-3###pdca###PDCA###
     public function pdca(){
         $this->title('PDCA');
-		
+		$this->year = I('year',date('Y'));
 		$kpr   = I('kpr');
 		$bkpr  = I('bkpr');
 		$month = I('month','');
@@ -174,9 +174,8 @@ class KpiController extends BaseController {
 		}
 		
 		$this->month  		= $month;
-		$this->prev_month   = date('Ym',strtotime("-1 month"));
-		$this->same_month   = date('Ym');
-		$this->next_month   = date('Ym',strtotime("+1 month"));
+		$this->prveyear	= $this->year-1;
+		$this->nextyear	= $this->year+1;
 		$this->userkey =  json_encode($key);	
 			
 			
