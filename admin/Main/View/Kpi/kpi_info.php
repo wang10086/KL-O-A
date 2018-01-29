@@ -264,8 +264,8 @@
                                     <div class="form-group col-md-12" id="apptab" style="margin-top:40px;">
                                         <div class="box-body no-padding">
                                             <table class="table">
-                                                <tr>
-                                                    <th width="150">配置时间</th>
+                                                <tr class="orders">
+                                                    <th width="150">操作时间</th>
                                                     <th width="150">操作者</th>
                                                     <th>备注</th>
                                                 </tr>
