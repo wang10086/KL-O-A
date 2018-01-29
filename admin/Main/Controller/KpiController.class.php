@@ -1252,6 +1252,11 @@ class KpiController extends BaseController {
 			$applist[$k]['status'] = $sta[$v['status']];	
 		}
 		
+		
+		//操作记录
+		$applist          = M('kpi_op_record')->where(array('kpi_id'=>$kpi['id']))->order('op_time DESC')->select();
+		
+		
 		//用户信息
 		$this->user       = M('account')->find($user);
 		
@@ -1389,6 +1394,24 @@ class KpiController extends BaseController {
 						$data['status'] = 5;	
 					}
 					$issave = M('kpi')->data($data)->where(array('id'=>$km['kpi_id']))->save();
+					
+					
+					
+					//保存更新记录
+					$remarks = '';
+					if($info['complete']!=$km['complete'])  $remarks.='完成值'.$km['complete'].'变更为'.$info['complete'].'；';
+					
+					if($remarks){
+						$data = array();
+						$data['kpi_id']        = $km['kpi_id'];
+						$data['op_user_id']    = cookie('userid');
+						$data['op_user_name']  = cookie('name');
+						$data['op_time']       = time();
+						$data['remarks']       = $km['quota_title'].'：'.$remarks;
+						M('kpi_op_record')->add($data);
+					}
+				
+				
 					
 				}else{
 					$this->error('您没有权限保存');

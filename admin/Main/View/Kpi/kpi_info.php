@@ -231,7 +231,7 @@
 									}
 									?>
                         
-                            
+                            		<!--
                                     <?php if($applist){ ?>
                                     <div class="form-group col-md-12" id="apptab" style="margin-top:40px;">
                                         <div class="box-body no-padding">
@@ -256,6 +256,30 @@
                                     <?php 
 									}
 									?>
+                                    -->
+                                    
+                                    
+                                    
+                                    
+                                    <div class="form-group col-md-12" id="apptab" style="margin-top:40px;">
+                                        <div class="box-body no-padding">
+                                            <table class="table">
+                                                <tr>
+                                                    <th width="150">配置时间</th>
+                                                    <th width="150">操作者</th>
+                                                    <th>备注</th>
+                                                </tr>
+                                                <foreach name="applist" key="k" item="v">
+                                                <tr>
+                                                	<td><if condition="$v['op_time']">{$v.op_time|date='Y-m-d H:i',###}</if></td>
+                                                    <td>{$v.op_user_name}</td>
+                                                    <td>{$v.remarks}</td>
+                                                </tr>
+                                                </foreach>
+                                            </table>
+                                        </div>
+                                    </div>
+                                    
                                     
                                     <div class="form-group">&nbsp;</div>
                                     
