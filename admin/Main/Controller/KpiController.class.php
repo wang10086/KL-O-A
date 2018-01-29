@@ -1351,6 +1351,12 @@ class KpiController extends BaseController {
 					
 					$km = M('kpi_more')->find($editid);
 					
+					//总经理修改过后，取消自动同步
+					if(cookie('roleid')==10){
+						$info['automatic']	= 1;
+					}
+					
+					
 					//合计完成率
 					$info['complete'] = $info['complete'] ? $info['complete'] : 0;
 					
@@ -1378,7 +1384,8 @@ class KpiController extends BaseController {
 					$data = array();
 					$data['score']      = $total;
 					
-					if(cookie('roleid')==43 || cookie('roleid')==44){
+					//如果是人事或者总经理修改，直接审核通过
+					if(cookie('roleid')==43 || cookie('roleid')==44 || cookie('roleid')==10){
 						$data['status'] = 5;	
 					}
 					$issave = M('kpi')->data($data)->where(array('id'=>$km['kpi_id']))->save();

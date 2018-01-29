@@ -30,7 +30,7 @@
         
         <div class="form-group box-float-12">
             <label>完成</label> 
-            <input type="text"  class="form-control"  name="info[complete]" <?php if($row['quota_id']<6){ echo 'disabled';} ?> value="{$row.complete}">
+            <input type="text"  class="form-control"  name="info[complete]" value="{$row.complete}">
         </div>
         
        

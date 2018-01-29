@@ -1732,103 +1732,107 @@ function updatekpi($month,$user){
 	if($quto){
 		foreach($quto as $k=>$v){
 			
-			
-			//获取月度累计毛利额
-			if($v['quota_id']==1 || $v['quota_id']==8){
-				$where = array();
-				$where['b.audit_status']		= 1;
-				$where['o.create_user']		= $user;
-				$where['l.req_type']			= 801;
-				$where['l.audit_time']		= array('between',array($v['start_date'],$v['end_date']));
-				$complete = M()->table('__OP_SETTLEMENT__ as b')->field('b.maoli')->join('__OP__ as o on b.op_id = o.op_id','LEFT')->join('__AUDIT_LOG__ as l on l.req_id = b.id','LEFT')->where($where)->sum('b.maoli');
-				$complete = $complete ? $complete : 0;
-			}
-			
-		
-			
-			//获取累计毛利率
-			if($v['quota_id']==2 || $v['quota_id']==9){
-				$where = array();
-				$where['b.audit_status']		= 1;
-				$where['o.create_user']		= $user;
-				$where['l.req_type']			= 801;
-				$where['l.audit_time']		= array('between',array($v['start_date'],$v['end_date']));
-				$maoli = M()->table('__OP_SETTLEMENT__ as b')->field('b.maoli')->join('__OP__ as o on b.op_id = o.op_id','LEFT')->join('__AUDIT_LOG__ as l on l.req_id = b.id','LEFT')->where($where)->sum('b.maoli');
-				$shouru = M()->table('__OP_SETTLEMENT__ as b')->field('b.shouru')->join('__OP__ as o on b.op_id = o.op_id','LEFT')->join('__AUDIT_LOG__ as l on l.req_id = b.id','LEFT')->where($where)->sum('b.shouru');
-				$complete = round(($maoli / $shouru)*100,2).'%';
-			}
-			
-			//获取回款及时率
-			if($v['quota_id']==3){
-				$where = array();
-				$where['return_time']	= array('lt',$v['end_date']+86399);
-				$where['payee']			= $user;
-				$shouru		= M('contract_pay')->where($where)->sum('amount');
-				$huikuan	= M('contract_pay')->where($where)->sum('	pay_amount');
-				$complete = round(($huikuan / $shouru)*100,2).'%';
-			}
-			
-			//获取成团率
-			if($v['quota_id']==4){
-				$where = array();
-				$where['create_time']  = array('between',array($v['start_date'],$v['end_date']));
-				$where['create_user']  = $user;
-				$zongxiangmu = M('op')->where($where)->count();
-				$where['group_id']     = array('neq','');
-				$chengtuan = M('op')->where($where)->count();
-				
-				$complete = round(($chengtuan / $zongxiangmu)*100,2).'%';
-			}
-			
-			//获取合同签订率（含家长协议书）
-			if($v['quota_id']==5){
-				$where = array();
-				$where['b.audit_status']		= 1;
-				$where['o.create_user']		= $user;
-				$where['l.req_type']			= 801;
-				$where['l.audit_time']		= array('between',array($v['start_date'],$v['end_date']));
-				$xiangmu = M()->table('__OP_SETTLEMENT__ as b')->field('b.maoli')->join('__OP__ as o on b.op_id = o.op_id','LEFT')->join('__AUDIT_LOG__ as l on l.req_id = b.id','LEFT')->where($where)->count();
-				$where['b.hetong']  = 1;
-				$hetong  = M()->table('__OP_SETTLEMENT__ as b')->field('b.maoli')->join('__OP__ as o on b.op_id = o.op_id','LEFT')->join('__AUDIT_LOG__ as l on l.req_id = b.id','LEFT')->where($where)->count();
-				$complete = round(($hetong / $xiangmu)*100,2).'%';
-			}
+			if($v['automatic']==0){
 			
 			
-			$auto_quta = array(1,2,3,4,5,8,9);
-			
-			//保存数据
-			if(in_array($v['quota_id'],$auto_quta)){
-				
-				//完成率
-				$rate = $v['target'] ? round(($complete / $v['target'])*100,2) : 100;
-				
-				//完成率纠正最高100%
-				$rate = $rate>100 ? 100 : $rate; 
-				
-				$data = array();
-				$data['complete'] = $complete;
-				$data['complete_rate'] = $rate."%";
-				if($rate >= 100){
-					$data['score']	= $v['weight'] ? $v['weight'] : 0;
-				}else{
-					$data['score']	= round(($rate * $v['weight']) / 100,1);
+				//获取月度累计毛利额
+				if($v['quota_id']==1 || $v['quota_id']==8){
+					$where = array();
+					$where['b.audit_status']		= 1;
+					$where['o.create_user']		= $user;
+					$where['l.req_type']			= 801;
+					$where['l.audit_time']		= array('between',array($v['start_date'],$v['end_date']));
+					$complete = M()->table('__OP_SETTLEMENT__ as b')->field('b.maoli')->join('__OP__ as o on b.op_id = o.op_id','LEFT')->join('__AUDIT_LOG__ as l on l.req_id = b.id','LEFT')->where($where)->sum('b.maoli');
+					$complete = $complete ? $complete : 0;
 				}
-				$data['score_status']	= 1;
 				
-				M('kpi_more')->data($data)->where(array('id'=>$v['id']))->save();	
+			
+				
+				//获取累计毛利率
+				if($v['quota_id']==2 || $v['quota_id']==9){
+					$where = array();
+					$where['b.audit_status']		= 1;
+					$where['o.create_user']		= $user;
+					$where['l.req_type']			= 801;
+					$where['l.audit_time']		= array('between',array($v['start_date'],$v['end_date']));
+					$maoli = M()->table('__OP_SETTLEMENT__ as b')->field('b.maoli')->join('__OP__ as o on b.op_id = o.op_id','LEFT')->join('__AUDIT_LOG__ as l on l.req_id = b.id','LEFT')->where($where)->sum('b.maoli');
+					$shouru = M()->table('__OP_SETTLEMENT__ as b')->field('b.shouru')->join('__OP__ as o on b.op_id = o.op_id','LEFT')->join('__AUDIT_LOG__ as l on l.req_id = b.id','LEFT')->where($where)->sum('b.shouru');
+					$complete = round(($maoli / $shouru)*100,2).'%';
+				}
+				
+				//获取回款及时率
+				if($v['quota_id']==3){
+					$where = array();
+					$where['return_time']	= array('lt',$v['end_date']+86399);
+					$where['payee']			= $user;
+					$shouru		= M('contract_pay')->where($where)->sum('amount');
+					$huikuan	= M('contract_pay')->where($where)->sum('	pay_amount');
+					$complete = round(($huikuan / $shouru)*100,2).'%';
+				}
+				
+				//获取成团率
+				if($v['quota_id']==4){
+					$where = array();
+					$where['create_time']  = array('between',array($v['start_date'],$v['end_date']));
+					$where['create_user']  = $user;
+					$zongxiangmu = M('op')->where($where)->count();
+					$where['group_id']     = array('neq','');
+					$chengtuan = M('op')->where($where)->count();
+					
+					$complete = round(($chengtuan / $zongxiangmu)*100,2).'%';
+				}
+				
+				//获取合同签订率（含家长协议书）
+				if($v['quota_id']==5){
+					$where = array();
+					$where['b.audit_status']		= 1;
+					$where['o.create_user']		= $user;
+					$where['l.req_type']			= 801;
+					$where['l.audit_time']		= array('between',array($v['start_date'],$v['end_date']));
+					$xiangmu = M()->table('__OP_SETTLEMENT__ as b')->field('b.maoli')->join('__OP__ as o on b.op_id = o.op_id','LEFT')->join('__AUDIT_LOG__ as l on l.req_id = b.id','LEFT')->where($where)->count();
+					$where['b.hetong']  = 1;
+					$hetong  = M()->table('__OP_SETTLEMENT__ as b')->field('b.maoli')->join('__OP__ as o on b.op_id = o.op_id','LEFT')->join('__AUDIT_LOG__ as l on l.req_id = b.id','LEFT')->where($where)->count();
+					$complete = round(($hetong / $xiangmu)*100,2).'%';
+				}
+				
+				
+				$auto_quta = array(1,2,3,4,5,8,9);
+				
+				//保存数据
+				if(in_array($v['quota_id'],$auto_quta)){
+					
+					//完成率
+					$rate = $v['target'] ? round(($complete / $v['target'])*100,2) : 100;
+					
+					//完成率纠正最高100%
+					$rate = $rate>100 ? 100 : $rate; 
+					
+					$data = array();
+					$data['complete'] = $complete;
+					$data['complete_rate'] = $rate."%";
+					if($rate >= 100){
+						$data['score']	= $v['weight'] ? $v['weight'] : 0;
+					}else{
+						$data['score']	= round(($rate * $v['weight']) / 100,1);
+					}
+					$data['score_status']	= 1;
+					
+					M('kpi_more')->data($data)->where(array('id'=>$v['id']))->save();	
+				}
+				
+				
+				//合计总分
+				$kpilist = M('kpi_more')->where(array('kpi_id'=>$v['kpi_id']))->select();
+				$total = 0;
+				foreach($kpilist as $k=>$v){
+					$total += $v['score_status']	? $v['score'] : $v['weight'];
+				}
+				$data = array();
+				$data['score']      = $total;
+				$issave = M('kpi')->data($data)->where(array('id'=>$v['kpi_id']))->save();
+			
+			
 			}
-			
-			
-			//合计总分
-			$kpilist = M('kpi_more')->where(array('kpi_id'=>$v['kpi_id']))->select();
-			$total = 0;
-			foreach($kpilist as $k=>$v){
-				$total += $v['score_status']	? $v['score'] : $v['weight'];
-			}
-			$data = array();
-			$data['score']      = $total;
-			$issave = M('kpi')->data($data)->where(array('id'=>$v['kpi_id']))->save();
-			
 			
 		}	
 	}

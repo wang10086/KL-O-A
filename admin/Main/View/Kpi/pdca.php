@@ -41,15 +41,6 @@
                                 </div><!-- /.box-header -->
                                 <div class="box-body">
                                 
-                                	<!--
-                                    <div class="btn-group" id="catfont">
-                                        <a href="{:U('Kpi/pdca')}" class="btn <?php if(!$month){ echo 'btn-info';}else{ echo 'btn-default'; } ?>">全部</a>
-                                        <a href="{:U('Kpi/pdca',array('month'=>$prev_month,'show'=>$show))}" class="btn <?php if($month==$prev_month){ echo 'btn-info';}else{ echo 'btn-default'; } ?>">{$prev_month}</a>
-                                        <a href="{:U('Kpi/pdca',array('month'=>$same_month,'show'=>$show))}" class="btn <?php if($month==$same_month){ echo 'btn-info';}else{ echo 'btn-default'; } ?>">{$same_month}</a>
-                                        <a href="{:U('Kpi/pdca',array('month'=>$next_month,'show'=>$show))}" class="btn <?php if($month==$next_month){ echo 'btn-info';}else{ echo 'btn-default'; } ?>">{$next_month}</a>
-                                    </div>
-                                    -->
-                                    
                                     <div class="btn-group" id="catfont" style="padding-bottom:20px;">
 										<?php if($prveyear>2019){ ?>
                                         <a href="{:U('Kpi/pdca',array('year'=>$prveyear,'month'=>'01','show'=>$show))}" class="btn btn-default" style="padding:8px 18px;">上一年</a>
