@@ -66,7 +66,9 @@
                                 <div class="form-group col-md-12">
                                 	<div id="showimglist">
                                         <foreach name="atts" key="k" item="v">
-                                        <a href="{$v.filepath}" target="_blank"><img src="{:thumb($v['filepath'])}" style="margin-right:15px; margin-top:15px;"></a>
+											<?php if($v['filepath']){ ?>
+                                            <a href="{$v.filepath}" target="_blank"><img src="{:thumb($v['filepath'])}" style="margin-right:15px; margin-top:15px;"></a>
+                                            <?php } ?>
                                         </foreach>
                                     </div>
                                 </div>
