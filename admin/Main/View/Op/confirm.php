@@ -2,11 +2,11 @@
 
             <aside class="right-side">
                 <!-- Content Header (Page header) -->
-                <section class="content-header print">
-                    <h1>成本核算</h1>
+                <section class="content-header">
+                    <h1>项目出团确认</h1>
                     <ol class="breadcrumb">
                         <li><a href="{:U('Index/index')}"><i class="fa fa-home"></i> 首页</a></li>
-                        <li><a href="{:U('Finance/costacclist')}"><i class="fa fa-gift"></i> 成本核算</a></li>
+                        <li><a href="{:U('Op/confirm')}"><i class="fa fa-gift"></i> 项目结算</a></li>
                     </ol>
                 </section>
 
@@ -19,15 +19,15 @@
                         	 
                              <div class="btn-group no-print" id="catfont">
                                 <if condition="rolemenu(array('Op/plans_follow'))"><a href="{:U('Op/plans_follow',array('opid'=>$op['op_id']))}" class="btn btn-default">项目跟进</a></if>
-                                <if condition="rolemenu(array('Finance/costacc'))"><a href="{:U('Finance/costacc',array('opid'=>$op['op_id']))}" class="btn btn-info">成本核算</a></if>
-                                <if condition="rolemenu(array('Op/confirm'))"><a href="{:U('Op/confirm',array('opid'=>$op['op_id']))}" class="btn btn-default">出团确认</a></if>
+                                <if condition="rolemenu(array('Finance/costacc'))"><a href="{:U('Finance/costacc',array('opid'=>$op['op_id']))}" class="btn btn-default">成本核算</a></if>
+                                <if condition="rolemenu(array('Op/confirm'))"><a href="{:U('Op/confirm',array('opid'=>$op['op_id']))}" class="btn btn-info">出团确认</a></if>
                                 <if condition="rolemenu(array('Finance/op'))"><a href="{:U('Finance/op',array('opid'=>$op['op_id']))}" class="btn btn-default">项目预算</a></if>
                                 <if condition="rolemenu(array('Op/app_materials'))"><a href="{:U('Op/app_materials',array('opid'=>$op['op_id']))}" class="btn btn-default">申请物资</a></if>
-                                
+                               
                                 <!--
                                 <if condition="rolemenu(array('Sale/goods'))"><a href="{:U('Sale/goods',array('opid'=>$op['op_id']))}" class="btn btn-default">项目销售</a></if>
                                 -->
-                                <if condition="rolemenu(array('Finance/settlement'))"><a href="{:U('Finance/settlement',array('opid'=>$op['op_id']))}" class="btn btn-default">项目结算</a></if>
+                                <if condition="rolemenu(array('Finance/settlement'))"><a href="{:U('Finance/settlement',array('opid'=>$op['op_id']))}" class="btn btn-default ">项目结算</a></if>
                                 <if condition="rolemenu(array('Finance/huikuan'))"><a href="{:U('Finance/huikuan',array('opid'=>$op['op_id']))}" class="btn btn-default">项目回款</a></if>
                             </div>
                             
@@ -41,7 +41,6 @@
                                 </div><!-- /.box-header -->
                                 <div class="box-body">
                                     <div class="content">
-                                    	
                                         <table width="100%" id="font-14" rules="none" border="0" cellpadding="0" cellspacing="0">
                                         	<tr>
                                             	<td colspan="3">项目名称：{$op.project}</td>
@@ -57,18 +56,26 @@
                                                 <td width="33.33%">立项时间：{$op.op_create_date}</td>
                                             </tr>
                                         </table>
-                                    
                                     </div>
                                     
                                 </div><!-- /.box-body -->
                             </div><!-- /.box -->
                             
-                            <php> if($budget['audit']==0 && $op['line_id']){ </php>
-                            	<include file="costacc_edit" />
-                            <php> }else{ </php>
-                            	<include file="costacc_read" />
-                            <php> } </php>
-                        	
+                            
+                            <div class="box box-warning">
+                                <div class="box-header">
+                                    <h3 class="box-title">实际出团确认</h3>
+                                </div><!-- /.box-header -->
+                                <div class="box-body">
+                                
+									<?php if(!$confirm || cookie('roleid')==10 || C('RBAC_SUPER_ADMIN')==cookie('username') ){ ?>
+                                    <include file="confirm_edit" />
+                                    <?php }else{ ?>
+                                    <include file="confirm_read" />	
+                                    <?php }?>
+                                    
+                                </div>
+                            </div>
                             
                         </div><!--/.col (right) -->
                     </div>   <!-- /.row -->
@@ -82,67 +89,6 @@
 
 <include file="Index:footer2" />
 
-<script>
-	$(document).ready(function(e) {
-        cost_total();
-    });
-	//新成本核算项
-	function add_costacc(){
-		var i = parseInt($('#costacc_val').text())+1;
-
-		var html = '<div class="userlist cost_expense" id="costacc_'+i+'"><span class="title"></span><input type="text" class="form-control" name="costacc['+i+'][title]"><input type="text"  class="form-control cost" name="costacc['+i+'][unitcost]"  value="0"><input type="text" class="form-control amount" name="costacc['+i+'][amount]" value="1"><input type="text" class="form-control totalval" name="costacc['+i+'][total]"  value="0"><select class="form-control"  name="costacc['+i+'][type]" ><option value="1">物资</option><option value="2">专家辅导员</option><option value="3">合格供方</option><option value="4">其他</option></select><input type="text" class="form-control longinput" name="costacc['+i+'][remark]"><a href="javascript:;" class="btn btn-danger btn-flat" onclick="delbox(\'costacc_'+i+'\')">删除</a></div>';
-		$('#costacc').append(html);	
-		$('#costacc_val').html(i);
-		orderno();
-		cost_total();
-	}
-	
-	//编号
-	function orderno(){
-		$('#mingdan').find('.title').each(function(index, element) {
-            $(this).text(parseInt(index)+1);
-        });
-		$('#pretium').find('.title').each(function(index, element) {
-            $(this).text(parseInt(index)+1);
-        });
-		$('#costacc').find('.title').each(function(index, element) {
-            $(this).text(parseInt(index)+1);
-        });	
-	}
-	
-	//移除
-	function delbox(obj){
-		$('#'+obj).remove();
-		orderno();
-		cost_total();
-	}
-	
-	//更新成本核算
-	function cost_total(){
-		var costaccsum = 0;
-		$('.cost_expense').each(function(index, element) {
-            $(this).find('.cost').blur(function(){
-				var cost = $(this).val();
-				var amount = $(this).parent().find('.amount').val();
-				var ct = accMul(cost,amount);
-				$(this).parent().find('.totalval').val(ct.toFixed(2));
-				cost_total();
-			});
-			 $(this).find('.amount').blur(function(){
-				var amount = $(this).val();
-				var cost = $(this).parent().find('.cost').val();
-				var ct = accMul(cost,amount);
-				$(this).parent().find('.totalval').val(ct.toFixed(2));	
-				cost_total()
-			});
-        });	
-		$('.totalval').each(function(index, element) {
-            costaccsum += parseFloat($(this).val());	
-        });
-		$('#costaccsum').html('&yen; '+costaccsum.toFixed(2));	
-		$('#costaccsumval').val(costaccsum.toFixed(2));	
-	}
-</script>
 
      
 

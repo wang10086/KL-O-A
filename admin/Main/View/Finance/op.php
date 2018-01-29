@@ -20,6 +20,7 @@
                              <div class="btn-group no-print" id="catfont">
                                 <if condition="rolemenu(array('Op/plans_follow'))"><a href="{:U('Op/plans_follow',array('opid'=>$op['op_id']))}" class="btn btn-default">项目跟进</a></if>
                                 <if condition="rolemenu(array('Finance/costacc'))"><a href="{:U('Finance/costacc',array('opid'=>$op['op_id']))}" class="btn btn-default">成本核算</a></if>
+                                <if condition="rolemenu(array('Op/confirm'))"><a href="{:U('Op/confirm',array('opid'=>$op['op_id']))}" class="btn btn-default">出团确认</a></if>
                                 <if condition="rolemenu(array('Finance/op'))"><a href="{:U('Finance/op',array('opid'=>$op['op_id']))}" class="btn btn-info">项目预算</a></if>
                                 <if condition="rolemenu(array('Op/app_materials'))"><a href="{:U('Op/app_materials',array('opid'=>$op['op_id']))}" class="btn btn-default">申请物资</a></if>
                                 
@@ -47,10 +48,10 @@
                                             <tr>
                                             	<td width="33.33%">项目类型：<?php echo $kinds[$op['kind']]; ?></td>
                                                 <td width="33.33%">预计人数：{$op.number}人</td>
-                                                <td width="33.33%">出团日期：{$op.departure}</td>
+                                                <td width="33.33%">预计出团日期：{$op.departure}</td>
                                             </tr>
                                             <tr>
-                                            	<td width="33.33%">行程天数：{$op.days}天</td>
+                                            	<td width="33.33%">预计行程天数：{$op.days}天</td>
                                                 <td width="33.33%">目的地：{$op.destination}</td>
                                                 <td width="33.33%">立项时间：{$op.op_create_date}</td>
                                             </tr>
