@@ -1736,7 +1736,7 @@ function updatekpi($month,$user){
 			
 			
 				//获取月度累计毛利额
-				if($v['quota_id']==1 || $v['quota_id']==8){
+				if($v['quota_id']==1){
 					$where = array();
 					$where['b.audit_status']		= 1;
 					$where['o.create_user']		= $user;
@@ -1749,7 +1749,7 @@ function updatekpi($month,$user){
 			
 				
 				//获取累计毛利率
-				if($v['quota_id']==2 || $v['quota_id']==9){
+				if($v['quota_id']==2){
 					$where = array();
 					$where['b.audit_status']		= 1;
 					$where['o.create_user']		= $user;
@@ -1794,6 +1794,28 @@ function updatekpi($month,$user){
 					$hetong  = M()->table('__OP_SETTLEMENT__ as b')->field('b.maoli')->join('__OP__ as o on b.op_id = o.op_id','LEFT')->join('__AUDIT_LOG__ as l on l.req_id = b.id','LEFT')->where($where)->count();
 					$complete = round(($hetong / $xiangmu)*100,2).'%';
 				}
+				
+				if($v['quota_id']==8 || $v['quota_id']==9){
+					
+					if($user==23){
+						$ywdata = tplist(55,array($v['start_date'],$v['end_date']));		//徐恒
+					}else if($user==44){
+						$ywdata = tplist(18,array($v['start_date'],$v['end_date']));		//许世伟
+					}else if($user==84){
+						$ywdata = tplist(40,array($v['start_date'],$v['end_date']));		//李军亮
+					}else if($user==100){
+						$ywdata = tplist(35,array($v['start_date'],$v['end_date']));		//石曼
+					}
+					
+					if($v['quota_id']==8){
+						$complete = $ywdata['zml'];
+					}else{
+						$complete = $ywdata['mll'] ? $ywdata['mll'].'%' : '0.00%';	
+					}
+					
+					
+				}
+				
 				
 				
 				$auto_quta = array(1,2,3,4,5,8,9);
@@ -1934,7 +1956,7 @@ function twentyfive(){
 }
 
 //统计部门数据
-function tplist($roleid){
+function tplist($roleid,$times){
 	
 	$db			= M('op');
 	$roles		= M('role')->GetField('id,role_name',true);
@@ -1974,7 +1996,11 @@ function tplist($roleid){
 	$where = array();
 	$where['b.audit_status']		= 1;
 	$where['l.req_type']			= 801;
-	$where['l.audit_time']			= array('gt',strtotime('2018-01-01'));
+	if($times){
+		$where['l.audit_time']			= array('between',$times);
+	}else{
+		$where['l.audit_time']			= array('gt',strtotime('2018-01-01'));
+	}
 	$where['a.id']					= array('in',implode(',',$ulist));
 	
 	
