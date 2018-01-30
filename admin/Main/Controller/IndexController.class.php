@@ -250,7 +250,8 @@ class IndexController extends BaseController {
 		
 		$stime = strtotime(I('st'));
 		$etime = strtotime(I('et'));
-		$ywdata = tplist(35,array($stime,$etime));	
+		$uid = I('uid');
+		$ywdata = tplist($uid,array($stime,$etime));	
 		
 		P($ywdata);
 	}
