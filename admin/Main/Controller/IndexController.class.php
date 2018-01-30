@@ -245,4 +245,15 @@ class IndexController extends BaseController {
 	}
 	
 	
+	
+	public function test_kpi(){
+		
+		$stime = strtotime(I('st'));
+		$etime = strtotime(I('et'));
+		$ywdata = tplist(35,array($stime,$etime));	
+		
+		P($ywdata);
+	}
+	
+	
 }
