@@ -19,7 +19,7 @@
                         	 <div class="btn-group" id="catfont" style="padding-bottom:20px;">
 								
                                 <select class="form-control"  onchange="window.location=this.value;">
-                                    
+                                    <option value="{:U('Rbac/kpi_users')}">所有岗位</option>
                                     <foreach name="postlist" key="k" item="v">
                                     <?php 
                                     $par = array();
