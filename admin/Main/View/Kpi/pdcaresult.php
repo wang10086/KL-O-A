@@ -23,11 +23,8 @@
                                         <input type="hidden" name="m" value="Main">
                                         <input type="hidden" name="c" value="Kpi">
                                         <input type="hidden" name="a" value="pdcaresult">
-                                        <input type="hidden" name="type"  value="{$type}">
-                                        <input type="hidden" name="bkpr" id="bkpr" value="">
-                                        <input type="hidden" name="kpr" id="kpr" value="">
                                     	<input type="text" name="month" class="form-control monthly" placeholder="月份" style="width:100px; margin-right:10px;"/>
-                                    	<input type="text" class="form-control keywords_bkpr" placeholder="被考评人"  style="width:180px; margin-right:10px;"/>
+                                    	<input type="text" class="form-control keywords_bkpr" name="bkprnm" placeholder="被考评人"  style="width:180px; margin-right:10px;"/>
                                         <!-- <input type="text" class="form-control keywords_kpr" placeholder="考评人"  style="width:180px;"/> -->
                                         <button class="btn btn-info btn-sm" style="float:left;"><i class="fa fa-search"></i></button>
                                         </form>

@@ -18,28 +18,32 @@ class KpiController extends BaseController {
         $this->title('绩效考评结果');
 		
 		
-		$kpr   = I('kpr');
-		$bkpr  = I('bkpr');
-		$month = I('month','');
+		//$kpr   = I('kpr');
+		//$bkpr  = I('bkpr');
+		$bkprnm		= I('bkprnm','');
+		$month		= I('month','');
+		
+		
 		
 		$db = M('pdca');
 		
-		$where = '1=1';
-		if($month) $where .= ' AND `month` = '.trim($month);
-		if($kpr)   $where .= ' AND `eva_user_id` = '.$kpr; 
-		if($bkpr)  $where .= ' AND `tab_user_id` = '.$bkpr; 
+		$where = array();
+		if($month)		$where['p.month']	= trim($month);
+		if($bkprnm)		$where['a.nickname']	= array('like','%'.$bkprnm.'%'); 
 		
-		if(C('RBAC_SUPER_ADMIN')==cookie('username') || cookie('userid')==32 || cookie('userid')==38 || cookie('userid')==12 || cookie('userid')==13  || cookie('userid')==11 ){}else{
+		/*
+		if(C('RBAC_SUPER_ADMIN')==cookie('username') || cookie('userid')==32 || cookie('userid')==38 || cookie('userid')==12 || cookie('userid')==13  || cookie('userid')==11 || cookie('roleid')==43 || cookie('roleid')==44){}else{
 			$where .= ' AND (`tab_user_id` in ('.Rolerelation(cookie('roleid')).') || `eva_user_id` = '.cookie('userid').')';
 		}
+		*/
 		
 		
 		//分页
-		$pagecount = $db->where($where)->count();
+		$pagecount = M()->table('__PDCA__ as p')->field('p.*,a.nickname')->join('__ACCOUNT__ as a on a.id = p.tab_user_id')->where($where)->count();
 		$page = new Page($pagecount, P::PAGE_SIZE);
 		$this->pages = $pagecount>P::PAGE_SIZE ? $page->show():'';
 
-        $lists = $db->where($where)->limit($page->firstRow . ',' . $page->listRows)->order($this->orders('month'))->select();
+        $lists = M()->table('__PDCA__ as p')->field('p.*,a.nickname')->join('__ACCOUNT__ as a on a.id = p.tab_user_id')->where($where)->limit($page->firstRow . ',' . $page->listRows)->order($this->orders('month'))->select();
 		foreach($lists as $k=>$v){
 			
 			$sum_total_score = 0;
@@ -80,9 +84,11 @@ class KpiController extends BaseController {
 		
 		//整理关键字
 		$userwhere = '`status`=0';
+		/*
 		if(C('RBAC_SUPER_ADMIN')==cookie('username') || cookie('roleid')==10 || cookie('roleid')==13 || cookie('roleid')==14 || cookie('roleid')==28 || cookie('roleid')==43 || cookie('userid')==32 || cookie('userid')==38 || cookie('userid')==12 || cookie('userid')==11){}else{
 			$userwhere .= ' AND `id` in ('.Rolerelation(cookie('roleid')).') || `id` = '.cookie('userid').'';
 		}
+		*/
 		$role = M('role')->GetField('id,role_name',true);
 		$user =  M('account')->where($userwhere)->select();
 		$key = array();
