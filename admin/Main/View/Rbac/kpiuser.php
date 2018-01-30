@@ -17,20 +17,20 @@
                 	<div class="row">
                         <div class="col-xs-12">
                         	 <div class="btn-group" id="catfont" style="padding-bottom:20px;">
-								<?php 
-                                foreach($postlist as $k=>$v){
-									
-									if($v){
-										$par = array();
-										$par['post']  = $k;
-										if($pid==$k){
-											echo '<a href="'.U('Rbac/kpi_users',$par).'" class="btn btn-info" style="padding:8px 18px;">'.$v.'</a>';
-										}else{
-											echo '<a href="'.U('Rbac/kpi_users',$par).'" class="btn btn-default" style="padding:8px 18px;">'.$v.'</a>';
-										}
-									}
-                                }
-                                ?>
+								
+                                <select class="form-control"  onchange="window.location=this.value;">
+                                    
+                                    <foreach name="postlist" key="k" item="v">
+                                    <?php 
+                                    $par = array();
+                                    $par['year']  = $year;
+                                    $par['month'] = $month;
+                                    $par['post']  = $k;
+                                    ?> 
+                                    <if condition="$v"><option value="{:U('Rbac/kpi_users',$par)}" <?php if($pid==$k){ echo 'selected';} ?> >{$v}</option></if>
+                                    </foreach>
+                                </select>
+                                    
                             </div>
                             <div class="box">
                                 <div class="box-header">
