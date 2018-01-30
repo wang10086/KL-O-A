@@ -1795,6 +1795,7 @@ function updatekpi($month,$user){
 					$complete = round(($hetong / $xiangmu)*100,2).'%';
 				}
 				
+				//业务经理
 				if($v['quota_id']==8 || $v['quota_id']==9){
 					
 					if($user==23){
@@ -1825,35 +1826,22 @@ function updatekpi($month,$user){
 					
 					//完成率
 					$rate = $v['target'] ? round(($complete / $v['target'])*100,2) : 100;
-					
-					//完成率纠正最高100%
 					$rate = $rate>100 ? 100 : $rate; 
 					
 					$data = array();
-					$data['complete'] = $complete;
-					$data['complete_rate'] = $rate."%";
-					if($rate >= 100){
-						$data['score']	= $v['weight'] ? $v['weight'] : 0;
-					}else{
-						$data['score']	= round(($rate * $v['weight']) / 100,1);
-					}
+					$data['complete']		= $complete;
+					$data['complete_rate']	= $rate."%";
+					$data['score']			= round(($rate * $v['weight']) / 100,1);
 					$data['score_status']	= 1;
-					
 					M('kpi_more')->data($data)->where(array('id'=>$v['id']))->save();	
+					
 				}
 				
 			}
 			
 			//合计总分
-			$kpilist = M('kpi_more')->field('score,weight,score_status')->where(array('kpi_id'=>$v['kpi_id']))->select();
-			$total = 0;
-			foreach($kpilist as $kk=>$vv){
-				$total += $vv['score'];
-			}
-			$data = array();
-			$data['score']      = $total;
-			
-			$issave = M('kpi')->data($data)->where(array('id'=>$v['kpi_id']))->save();
+			$total	= M('kpi_more')->field('score,weight,score_status')->where(array('kpi_id'=>$v['kpi_id']))->sum('score');
+			$issave	= M('kpi')->data(array('score'=>$total))->where(array('id'=>$v['kpi_id']))->save();
 				
 			
 		}	

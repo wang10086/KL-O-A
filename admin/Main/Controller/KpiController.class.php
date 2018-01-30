@@ -1363,31 +1363,19 @@ class KpiController extends BaseController {
 					
 					
 					//合计完成率
-					$info['complete'] = $info['complete'] ? $info['complete'] : 0;
-					
 					$rate = $km['target'] ? round(($info['complete'] / $km['target'])*100,2) : 100;
-					
-					//纠正100
 					$rate = $rate>100 ? 100 : $rate; 
-				
-					$info['complete_rate'] = $rate."%";
-					if($rate >= 100){
-						$info['score']	= $km['weight'] ? $km['weight'] : 0;
-					}else{
-						$info['score']	= round(($rate * $km['weight']) / 100,1);
-					}
+					
+					$info['complete']		= $info['complete'] ? $info['complete'] : 0;
+					$info['complete_rate']	= $rate."%";
+					$info['score']			= round(($rate * $km['weight']) / 100,1);
 					$info['score_status']	= 1;
 					
 					$addinfo = M('kpi_more')->data($info)->where(array('id'=>$editid))->save();
 					
 					//合计总分
-					$kpilist = M('kpi_more')->where(array('kpi_id'=>$km['kpi_id']))->select();
-					$total = 0;
-					foreach($kpilist as $k=>$v){
-						//$total += $v['score_status']	? $v['score'] : $v['weight'];
-						$total += $v['score'];
-					}
-					$data = array();
+					$total	= M('kpi_more')->where(array('kpi_id'=>$km['kpi_id']))->sum('score');
+					$data	= array();
 					$data['score']      = $total;
 					
 					//如果是人事或者总经理修改，直接审核通过
