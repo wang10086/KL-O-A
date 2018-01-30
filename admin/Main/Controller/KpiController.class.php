@@ -1237,7 +1237,7 @@ class KpiController extends BaseController {
 		
 		
 		$kpi['kaoping']      = $kpi['mk_user_id'] ? username($kpi['mk_user_id']) : '未评分'; 	
-		$kpi['score']        = $kpi['score'] ? $kpi['score'].'分' : '未评分'; 	
+		$kpi['score']        = $kpi['mk_user_id'] ? $kpi['score'].'分' : '未评分'; 	
 		$kpi['status_str']   = $sta[$kpi['status']]; 	
 		
 		//考核指标
@@ -1384,7 +1384,8 @@ class KpiController extends BaseController {
 					$kpilist = M('kpi_more')->where(array('kpi_id'=>$km['kpi_id']))->select();
 					$total = 0;
 					foreach($kpilist as $k=>$v){
-						$total += $v['score_status']	? $v['score'] : $v['weight'];
+						//$total += $v['score_status']	? $v['score'] : $v['weight'];
+						$total += $v['score'];
 					}
 					$data = array();
 					$data['score']      = $total;
