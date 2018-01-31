@@ -19,7 +19,7 @@ class KpiController extends BaseController {
 		
 		
 		//$kpr   = I('kpr');
-		//$bkpr  = I('bkpr');
+		$bkpr  = I('bkpr');
 		$bkprnm		= I('bkprnm','');
 		$month		= I('month','');
 		
@@ -30,6 +30,7 @@ class KpiController extends BaseController {
 		$where = array();
 		if($month)		$where['p.month']	= trim($month);
 		if($bkprnm)		$where['a.nickname']	= array('like','%'.$bkprnm.'%'); 
+		if($bkpr)		$where['p.tab_user_id']	= $bkpr; 
 		
 		/*
 		if(C('RBAC_SUPER_ADMIN')==cookie('username') || cookie('userid')==32 || cookie('userid')==38 || cookie('userid')==12 || cookie('userid')==13  || cookie('userid')==11 || cookie('roleid')==43 || cookie('roleid')==44){}else{
@@ -48,7 +49,7 @@ class KpiController extends BaseController {
 			
 			$sum_total_score = 0;
 			
-			$yu = $v['total_score']==0 ? 0 : $v['total_score']-100;
+			$yu = $v['status']!=5 ? 0 : $v['total_score']-100;
 			
 			//计算PDCA加减分
 			$sum_total_score += $yu;
@@ -57,7 +58,7 @@ class KpiController extends BaseController {
 			$sum_total_score += $v['total_qa_score'];
 			
 			//整理品质检查加减分
-			$lists[$k]['total_score_show']  = $v['status']!=5 ? '<font color="#999999">未完成评分</font>' : show_score($yu);
+			$lists[$k]['total_score_show']  = $v['status']!=5 ? '<font color="#ff9900">未完成评分</font>' : show_score($yu);
 			
 			//整理品质检查加减分
 			$lists[$k]['show_qa_score']     =  show_score($v['total_qa_score']);
@@ -723,26 +724,32 @@ class KpiController extends BaseController {
 		 
 		$db = M('qaqc');
 		
-		$this->type   = intval(I('type',2));
+		//$this->type   = intval(I('type',2));
 		$this->uid    = I('uid',0);
 		$this->month  = I('month','');
 		$this->user   = I('user','');
 		
+		/*
 		if($this->type < 0 || $this->type >2){
 			$this->error('数据不存在');	
 		}
+		*/
 		
-		
-		$where = array();
-		if($this->type!=2) $where['status'] = $this->type;
-		if($this->uid)     $where['rp_user_id'] = $this->uid;
-		if($this->month)   $where['month'] = $this->month;
-		if($this->user)    $where['rp_user_name'] = array('like','%'.$this->user.'%');
-		
-		//分页
-		$pagecount = $db->where($where)->count();
-		$page = new Page($pagecount, P::PAGE_SIZE);
-		$this->pages = $pagecount>P::PAGE_SIZE ? $page->show():'';
+		if($this->uid || $this->user){
+			$where = array();
+			if($this->user)    $where['a.nickname'] = trim($this->user);
+			if($this->uid)     $where['u.user_id'] = $this->uid;
+			if($this->month)   $where['q.month'] = $this->month;
+			$lists		= M()->table('__QAQC_USER__ as u')->field('q.*')->join('__QAQC__ as q on q.id = u.qaqc_id')->join('__ACCOUNT__ as a on a.id = u.user_id')->where($where)->order($this->orders('id'))->group('u.qaqc_id')->select();
+			
+		}else{
+			$where = array();
+			if($this->month)   $where['month'] = $this->month;
+			$pagecount		= $db->where($where)->count();
+			$page			= new Page($pagecount, P::PAGE_SIZE);
+			$this->pages 	= $pagecount>P::PAGE_SIZE ? $page->show():'';
+			$lists			= $db->where($where)->limit($page->firstRow . ',' . $page->listRows)->order($this->orders('id'))->select();
+		}
 		
 		$stastr = array(
 			'0' => '<span>未审核</span>',
@@ -750,7 +757,8 @@ class KpiController extends BaseController {
 			'2' => '<span class="red">审核未过</span>',
 		);
 		
-        $lists = $db->where($where)->limit($page->firstRow . ',' . $page->listRows)->order($this->orders('id'))->select();
+		
+        
 		foreach($lists as $k=>$v){
 			//$lists[$k]['score']      = $v['status'] ? '-'.$v['red_score']:'+'.$v['inc_score']; 	
 			$lists[$k]['statusstr']  = $stastr[$v['status']]; 	
