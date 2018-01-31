@@ -39,11 +39,10 @@ class KpiController extends BaseController {
 		
 		
 		//分页
-		$pagecount = M()->table('__PDCA__ as p')->field('p.*,a.nickname')->join('__ACCOUNT__ as a on a.id = p.tab_user_id')->where($where)->count();
-		$page = new Page($pagecount, P::PAGE_SIZE);
-		$this->pages = $pagecount>P::PAGE_SIZE ? $page->show():'';
-
-        $lists = M()->table('__PDCA__ as p')->field('p.*,a.nickname')->join('__ACCOUNT__ as a on a.id = p.tab_user_id')->where($where)->limit($page->firstRow . ',' . $page->listRows)->order($this->orders('month'))->select();
+		$pagecount		= M()->table('__PDCA__ as p')->join('__ACCOUNT__ as a on a.id = p.tab_user_id')->where($where)->count();
+		$page			= new Page($pagecount, P::PAGE_SIZE);
+		$this->pages 	= $pagecount>P::PAGE_SIZE ? $page->show():'';
+        $lists 			= M()->table('__PDCA__ as p')->field('p.*,a.nickname')->join('__ACCOUNT__ as a on a.id = p.tab_user_id')->where($where)->limit($page->firstRow . ',' . $page->listRows)->order($this->orders('month'))->select();
 		foreach($lists as $k=>$v){
 			
 			$sum_total_score = 0;
@@ -75,7 +74,6 @@ class KpiController extends BaseController {
 			$lists[$k]['sum_total_score']   =  show_score($sum_total_score);
 			
 			
-			
 		}
 		
 		$this->lists    = $lists; 
@@ -83,14 +81,14 @@ class KpiController extends BaseController {
 		
 		
 		//整理关键字
-		$userwhere = '`status`=0';
 		/*
+		$userwhere = '`status`=0';
 		if(C('RBAC_SUPER_ADMIN')==cookie('username') || cookie('roleid')==10 || cookie('roleid')==13 || cookie('roleid')==14 || cookie('roleid')==28 || cookie('roleid')==43 || cookie('userid')==32 || cookie('userid')==38 || cookie('userid')==12 || cookie('userid')==11){}else{
 			$userwhere .= ' AND `id` in ('.Rolerelation(cookie('roleid')).') || `id` = '.cookie('userid').'';
 		}
 		*/
 		$role = M('role')->GetField('id,role_name',true);
-		$user =  M('account')->where($userwhere)->select();
+		$user =  M('account')->where(array('status'=>0))->select();
 		$key = array();
 		foreach($user as $k=>$v){
 			$text = $v['nickname'].'-'.$role[$v['roleid']];
@@ -113,10 +111,17 @@ class KpiController extends BaseController {
 		$this->display('pdcaresult');
     }
 	
+	
+	
+	
+	
+	
+	
+	
     // @@@NODE-3###pdca###PDCA###
     public function pdca(){
         $this->title('PDCA');
-		$this->year = I('year',date('Y'));
+		$year = I('year',date('Y'));
 		$kpr   = I('kpr');
 		$bkpr  = I('bkpr');
 		$month = I('month','');
@@ -131,10 +136,11 @@ class KpiController extends BaseController {
 		if($month) $where .= ' AND `month` = '.trim($month); 
 		if($kpr)   $where .= ' AND `eva_user_id` = '.$kpr; 
 		if($bkpr)  $where .= ' AND `tab_user_id` = '.$bkpr; 
+		/*
 		if(C('RBAC_SUPER_ADMIN')==cookie('username') || cookie('roleid')==10 || cookie('roleid')==14 || cookie('roleid')==28 || cookie('roleid')==43 || cookie('userid')==32 || cookie('userid')==38 || cookie('userid')==12 || cookie('userid')==13  || cookie('userid')==11){}else{
 			$where .= ' AND (`tab_user_id` in ('.Rolerelation(cookie('roleid')).') || `eva_user_id` = '.cookie('userid').')';
 		}
-		
+		*/
 		//P($where);
 		
 		//分页
@@ -157,6 +163,9 @@ class KpiController extends BaseController {
 			
 			$lists[$k]['total_score_show']  = $totalshow; 	
 			$lists[$k]['kaoping']      = $v['eva_user_id'] ? '<a href="'.U('Kpi/pdca',array('bkpr'=>$v['eva_user_id'])).'">'.username($v['eva_user_id']).'</a>' : '未评分'; 	
+			
+			//修正品质检查评分
+			qa_score_num($v['tab_user_id'],$v['month']);
 		}
 		
 		$this->show     = $show;
@@ -166,12 +175,8 @@ class KpiController extends BaseController {
 		
 		
 		//整理关键字
-		$userwhere = '`status`=0';
-		if(C('RBAC_SUPER_ADMIN')==cookie('username') || cookie('roleid')==10){}else{
-			$userwhere .= ' AND `id` in ('.Rolerelation(cookie('roleid')).') || `id` = '.cookie('userid').'';
-		}
-		$role = M('role')->GetField('id,role_name',true);
-		$user =  M('account')->where($userwhere)->select();
+		$role 		= M('role')->GetField('id,role_name',true);
+		$user 		= M('account')->where(array('status'=>0))->select();
 		$key = array();
 		foreach($user as $k=>$v){
 			$text = $v['nickname'].'-'.$role[$v['roleid']];
@@ -184,9 +189,10 @@ class KpiController extends BaseController {
 		}
 		
 		$this->month  		= $month;
-		$this->prveyear	= $this->year-1;
-		$this->nextyear	= $this->year+1;
-		$this->userkey =  json_encode($key);	
+		$this->year 			= $year;
+		$this->prveyear		= $year-1;
+		$this->nextyear		= $year+1;
+		$this->userkey 		= json_encode($key);	
 			
 			
 		$this->display('pdca');
