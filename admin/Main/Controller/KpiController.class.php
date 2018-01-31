@@ -804,10 +804,18 @@ class KpiController extends BaseController {
 			
 			//执行保存
 			if($editid){
-				$addinfo = M('qaqc')->data($info)->where(array('id'=>$editid))->save();
+				
 				$qaqc    = M('qaqc')->find($editid);
-				$qaqcid  = $editid;
-				$status  = $qaqc['status'];
+				
+				if($qaqc['status']==0 && ( C('RBAC_SUPER_ADMIN')==cookie('username') || cookie('roleid')==10 ||  cookie('userid')==$qaqc['inc_user_id'])) {
+					
+					$addinfo = M('qaqc')->data($info)->where(array('id'=>$editid))->save();
+					$qaqc    = M('qaqc')->find($editid);
+					$qaqcid  = $editid;
+					$status  = $qaqc['status'];
+				}else{
+					$this->error('您没有权限修改该信息');		
+				}
 			}else{
 				$info['create_time']       = time();
 				$info['status']            = 0;
