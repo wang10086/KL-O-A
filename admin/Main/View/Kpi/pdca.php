@@ -41,7 +41,7 @@
                                 </div><!-- /.box-header -->
                                 <div class="box-body">
                                 
-                                    <div class="btn-group" id="catfont" style="padding-bottom:20px;">
+                                    <div class="btn-group" id="catfont" style="padding-bottom:5px;">
 										<?php if($prveyear>2019){ ?>
                                         <a href="{:U('Kpi/pdca',array('year'=>$prveyear,'month'=>'01','show'=>$show))}" class="btn btn-default" style="padding:8px 18px;">上一年</a>
                                         <?php } ?>
@@ -51,7 +51,7 @@
 											$par['year']  = $year;
                                             $par['month'] = $year.str_pad($i,2,"0",STR_PAD_LEFT);
                                             $par['show']  = $show;
-                                            if($month==$i){
+                                            if($month==$year.str_pad($i,2,"0",STR_PAD_LEFT)){
                                                 echo '<a href="'.U('Kpi/pdca',$par).'" class="btn btn-info" style="padding:8px 18px;">'.$i.'月</a>';
                                             }else{
                                                 echo '<a href="'.U('Kpi/pdca',$par).'" class="btn btn-default" style="padding:8px 18px;">'.$i.'月</a>';

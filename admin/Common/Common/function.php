@@ -1568,7 +1568,11 @@ function qa_score_num($user,$month){
 		
 		$data = array();
 		$data['total_qa_score']  = $sum;
-		M('pdca')->data($data)->where(array('id'=>$pdcaid))->save();
+		
+		$where = array();
+		$where['tab_user_id'] = $user;
+		$where['month'] = $month;
+		M('pdca')->data($data)->where($where)->save();
 		
 		return true;	
 		

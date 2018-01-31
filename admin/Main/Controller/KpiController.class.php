@@ -17,11 +17,10 @@ class KpiController extends BaseController {
     public function pdcaresult(){
         $this->title('绩效考评结果');
 		
-		
-		//$kpr   = I('kpr');
-		$bkpr  = I('bkpr');
+		$year		= I('year',date('Y'));
+		$bkpr		= I('bkpr');
 		$bkprnm		= I('bkprnm','');
-		$month		= I('month','');
+		$month		= I('month',date('Ym'));
 		
 		
 		
@@ -105,8 +104,12 @@ class KpiController extends BaseController {
 		
 		$this->userkey =  json_encode($key);	
 		
-		
-		$this->month = $month;
+		$this->bkpr 		= $bkpr;
+		$this->bkprnm 	= $bkprnm;
+		$this->year 		= $year;
+		$this->month 	= $month;
+		$this->prveyear	= $year-1;
+		$this->nextyear	= $year+1;
 		$this->display('pdcaresult');
     }
 	
@@ -723,11 +726,11 @@ class KpiController extends BaseController {
 		$this->title('品质检查');
 		 
 		$db = M('qaqc');
-		
+		$this->year		= I('year',date('Y'));
 		//$this->type   = intval(I('type',2));
-		$this->uid    = I('uid',0);
-		$this->month  = I('month','');
-		$this->user   = I('user','');
+		$this->uid		= I('uid',0);
+		$this->month	= I('month',date('Ym'));
+		$this->user   	= I('user','');
 		
 		/*
 		if($this->type < 0 || $this->type >2){
@@ -765,7 +768,8 @@ class KpiController extends BaseController {
 		}
 		
 		$this->lists    = $lists; 
-		 
+		$this->prveyear	= $this->year-1;
+		$this->nextyear	= $this->year+1;
 		$this->display('qa');	
 	}
 	
@@ -1070,7 +1074,7 @@ class KpiController extends BaseController {
 		M('qaqc')->delete($id);
 		
 		//撤销评分
-		$list = M('qaqc_user')->where(array('qaqc_id'=>$id))->delete();
+		$list = M('qaqc_user')->where(array('qaqc_id'=>$id))->select();
 		foreach($list as $k=>$v){
 			//修正绩效评分
 			M('qaqc_user')->where(array('id'=>$v['id']))->delete();

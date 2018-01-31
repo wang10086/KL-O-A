@@ -24,7 +24,7 @@
                                         <input type="hidden" name="c" value="Kpi">
                                         <input type="hidden" name="a" value="pdcaresult">
                                     	<input type="text" name="month" class="form-control monthly" placeholder="月份" style="width:100px; margin-right:10px;"/>
-                                    	<input type="text" class="form-control keywords_bkpr" name="bkprnm" placeholder="被考评人"  style="width:180px; margin-right:10px;"/>
+                                    	<input type="text" class="form-control keywords_bkpr" name="bkprnm" placeholder="被考评人"  style="width:180px;"/>
                                         <!-- <input type="text" class="form-control keywords_kpr" placeholder="考评人"  style="width:180px;"/> -->
                                         <button class="btn btn-info btn-sm" style="float:left;"><i class="fa fa-search"></i></button>
                                         </form>
@@ -42,9 +42,29 @@
                                 </div><!-- /.box-header -->
                                 <div class="box-body">
                                 
-                                	
+                                	<div class="btn-group" id="catfont" style="padding-bottom:5px;">
+										<?php if($prveyear>2016){ ?>
+                                        <a href="{:U('Kpi/pdcaresult',array('year'=>$prveyear,'month'=>'01'))}" class="btn btn-default" style="padding:8px 18px;">上一年</a>
+                                        <?php } ?>
+                                        <?php 
+                                        for($i=1;$i<13;$i++){
+                                            $par = array();
+											$par['year']  	= $year;
+                                            $par['month'] 	= $year.str_pad($i,2,"0",STR_PAD_LEFT);
+                                            if($month==$year.str_pad($i,2,"0",STR_PAD_LEFT)){
+                                                echo '<a href="'.U('Kpi/pdcaresult',$par).'" class="btn btn-info" style="padding:8px 18px;">'.$i.'月</a>';
+                                            }else{
+                                                echo '<a href="'.U('Kpi/pdcaresult',$par).'" class="btn btn-default" style="padding:8px 18px;">'.$i.'月</a>';
+                                            }
+                                        }
+                                        ?>
+                                        <?php if($year<date('Y')){ ?>
+                                        <a href="{:U('Kpi/pdcaresult',array('year'=>$nextyear,'month'=>'01'))}" class="btn btn-default" style="padding:8px 18px;">下一年</a>
+                                        <?php } ?>
+                                    </div>
+                            
                                     
-                                    <table class="table table-bordered dataTable fontmini" id="tablelist" style="margin-top:10px;">
+                                    <table class="table table-bordered dataTable fontmini" id="tablelist" >
                                         <tr role="row" class="orders" >
                                             <th class="sorting" width="14.8%" data="month">月份</th>
                                             <th width="14.8%" class="sorting" data="tab_user_id">被考评人</th>

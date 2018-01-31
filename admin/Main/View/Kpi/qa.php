@@ -28,16 +28,29 @@
                                     </div>
                                 </div><!-- /.box-header -->
                                 <div class="box-body">
-                                	<!--
-                                	<div class="btn-group" id="catfont">
-                                        
-                                        <button onClick="window.location.href='{:U('Kpi/qa',array('type'=>2))}'" class="btn <?php if($type==2){ echo 'btn-info';}else{ echo 'btn-default'; } ?>">全部</button>
-                                        <button onClick="window.location.href='{:U('Kpi/qa',array('type'=>1))}'" class="btn <?php if($type==1){ echo 'btn-info';}else{ echo 'btn-default'; } ?>">处罚</button>
-                                        <button onClick="window.location.href='{:U('Kpi/qa',array('type'=>0))}'" class="btn <?php if($type==0){ echo 'btn-info';}else{ echo 'btn-default'; } ?>" >奖励</button>
-                                       
+                                	<div class="btn-group" id="catfont" style="padding-bottom:5px;">
+										<?php if($prveyear>2017){ ?>
+                                        <a href="{:U('Kpi/qa',array('year'=>$prveyear,'month'=>'01','user'=>$user,'uid'=>$uid))}" class="btn btn-default" style="padding:8px 18px;">上一年</a>
+                                        <?php } ?>
+                                        <?php 
+                                        for($i=1;$i<13;$i++){
+                                            $par = array();
+											$par['year']  	= $year;
+                                            $par['month'] 	= $year.str_pad($i,2,"0",STR_PAD_LEFT);
+                                            $par['user'] 	= $user;
+											$par['uid']		= $uid;
+                                            if($month==$year.str_pad($i,2,"0",STR_PAD_LEFT)){
+                                                echo '<a href="'.U('Kpi/qa',$par).'" class="btn btn-info" style="padding:8px 18px;">'.$i.'月</a>';
+                                            }else{
+                                                echo '<a href="'.U('Kpi/qa',$par).'" class="btn btn-default" style="padding:8px 18px;">'.$i.'月</a>';
+                                            }
+                                        }
+                                        ?>
+                                        <?php if($year<date('Y')){ ?>
+                                        <a href="{:U('Kpi/qa',array('year'=>$nextyear,'month'=>'01','user'=>$user,'uid'=>$uid))}" class="btn btn-default" style="padding:8px 18px;">下一年</a>
+                                        <?php } ?>
                                     </div>
-                                    -->
-                                <table class="table table-bordered dataTable fontmini" id="tablelist" style="margin-top:10px;">
+                                <table class="table table-bordered dataTable fontmini" id="tablelist">
                                     <tr role="row" class="orders" >
                                         <th class="sorting" width="60" data="id">ID</th>
                                         <th class="sorting" data="title">标题</th>
