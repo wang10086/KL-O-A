@@ -72,7 +72,7 @@
                                         <if condition="rolemenu(array('Kpi/addqa'))">
                                         <td class="taskOptions">
                                         <?php 
-                                        if($row['status']==0 || C('RBAC_SUPER_ADMIN')==cookie('username') || cookie('roleid')==10 ||  cookie('userid')==$row['inc_user_id']) {
+                                        if($row['status']==0 && ( C('RBAC_SUPER_ADMIN')==cookie('username') || cookie('roleid')==10 ||  cookie('userid')==$row['inc_user_id'])) {
                                         ?>
                                         <a href="{:U('Kpi/addqa',array('id'=>$row['id']))}"  title="修改" class="btn btn-info btn-smsm"><i class="fa fa-pencil"></i></a>
                                         <?php 
@@ -83,7 +83,7 @@
                                         <if condition="rolemenu(array('Kpi/appqa'))">
                                         <td class="taskOptions">
                                         <?php 
-                                        if($row['status']==0 || C('RBAC_SUPER_ADMIN')==cookie('username') || cookie('roleid')==10 ) {
+                                        if($row['status']==0 && ( C('RBAC_SUPER_ADMIN')==cookie('username') || cookie('roleid')==10 ) ) {
                                         ?>
                                         <a href="{:U('Kpi/appqa',array('id'=>$row['id']))}"  title="审核" class="btn btn-success btn-smsm"><i class="fa fa-check"></i></a>
                                         <?php 
@@ -94,7 +94,7 @@
                                         <if condition="rolemenu(array('Kpi/revoke'))">
                                         <td class="taskOptions">
                                         <?php 
-                                        if($row['status']==1 || C('RBAC_SUPER_ADMIN')==cookie('username') || cookie('roleid')==10) {
+                                        if($row['status']==1 && ( C('RBAC_SUPER_ADMIN')==cookie('username') || cookie('roleid')==10) ) {
                                         ?>
                                         <button onClick="javascript:ConfirmDel('{:U('Kpi/revoke',array('id'=>$row['id']))}','您真的要撤销吗？')" title="删除" class="btn btn-warning btn-smsm"><i class="fa fa-reply"></i></button>
                                         <?php 
