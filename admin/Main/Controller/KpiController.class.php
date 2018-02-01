@@ -1650,7 +1650,8 @@ class KpiController extends BaseController {
 		$where['postid']		= $this->post;
 		$where['status']		= 0;
 		$userlist = M('account')->field('id,nickname,roleid,postid')->where($where)->select();
-		$check = 0;
+		
+	
 		foreach($userlist as $k=>$v){
 			//获取该用户KPI
 			$where = array();
@@ -1662,11 +1663,12 @@ class KpiController extends BaseController {
 			
 			$kpi = M('kpi_more')->field('quota_id,quota_title,target,complete,weight,score')->where($where)->order('quota_id ASC')->select();
 			$userlist[$k]['kpi'] = $kpi;	
-			if($kpi) $check++;
-			foreach($kpi as $kk=>$vv){
-				$postlist[$vv['quota_id']]	= $vv['quota_title'];
-			}
+			
 		}
+		
+		//获取岗位考核指标
+		$postlist		= M()->table('__KPI_POST_QUOTA__ as p')->join('__KPI_CONFIG__ as c on c.id = p.quotaid')->where(array('p.postid'=>$this->post))->GetField('c.id,c.quota_title',true);
+		
 		
 		$this->title	= $this->year.$this->month.' - '.$pnm[$this->post].' - KPI考核';
 		$this->kpils	= $userlist;
@@ -1674,7 +1676,7 @@ class KpiController extends BaseController {
 		$this->postlist = $postlist;
 		$this->prveyear	= $this->year-1;
 		$this->nextyear	= $this->year+1;
-		$this->check 	= $check;
+		$this->check 	= count($postlist);
 		$this->display('kpi_post');
 		
 		
