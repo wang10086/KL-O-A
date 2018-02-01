@@ -98,7 +98,7 @@
                                         <if condition="rolemenu(array('Kpi/appqa'))">
                                         <td class="taskOptions">
                                         <?php 
-                                        if($row['status']==0 && ( C('RBAC_SUPER_ADMIN')==cookie('username') || cookie('roleid')==10 || cookie('userid')==38 ) ) {
+                                        if($row['status']==0 && ( C('RBAC_SUPER_ADMIN')==cookie('username') || cookie('roleid')==10 || cookie('userid')==38 || cookie('userid')==32 || cookie('userid')==12 || cookie('userid')==13 ) ) {
                                         ?>
                                         <a href="{:U('Kpi/appqa',array('id'=>$row['id']))}"  title="审核" class="btn btn-success btn-smsm"><i class="fa fa-check"></i></a>
                                         <?php 
