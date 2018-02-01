@@ -1789,13 +1789,13 @@ function updatekpi($month,$user){
 				//获取合同签订率（含家长协议书）
 				if($v['quota_id']==5){
 					$where = array();
-					$where['b.audit_status']		= 1;
+					$where['b.audit_status']	= 1;
 					$where['o.create_user']		= $user;
-					$where['l.req_type']			= 801;
+					$where['l.req_type']		= 801;
 					$where['l.audit_time']		= array('between',array($v['start_date'],$v['end_date']));
 					$xiangmu = M()->table('__OP_SETTLEMENT__ as b')->field('b.maoli')->join('__OP__ as o on b.op_id = o.op_id','LEFT')->join('__AUDIT_LOG__ as l on l.req_id = b.id','LEFT')->where($where)->count();
-					$where['b.hetong']  = 1;
-					$hetong  = M()->table('__OP_SETTLEMENT__ as b')->field('b.maoli')->join('__OP__ as o on b.op_id = o.op_id','LEFT')->join('__AUDIT_LOG__ as l on l.req_id = b.id','LEFT')->where($where)->count();
+					
+					$hetong  = M()->table('__CONTRACT__ as c')->field('c.*')->join('__OP_SETTLEMENT__ as b on b.op_id = c.op_id','LEFT')->join('__OP__ as o on o.op_id = c.op_id','LEFT')->join('__AUDIT_LOG__ as l on l.req_id = b.id','LEFT')->where($where)->count();
 					$complete = round(($hetong / $xiangmu)*100,2).'%';
 				}
 				
@@ -1810,6 +1810,8 @@ function updatekpi($month,$user){
 						$ywdata = tplist(40,array($v['start_date'],$v['end_date']));		//李军亮
 					}else if($user==100){
 						$ywdata = tplist(35,array($v['start_date'],$v['end_date']));		//石曼
+					}else if($user==59){
+						$ywdata = tplist(17,array($v['start_date'],$v['end_date']));		//李保罗
 					}
 					
 					if($v['quota_id']==8){
