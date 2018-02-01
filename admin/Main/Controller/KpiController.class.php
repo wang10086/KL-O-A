@@ -993,14 +993,15 @@ class KpiController extends BaseController {
 				}
 			}
 			
-			
-			//发送公告
-			$title       = $info['title'];
-			$content     = $info['chen'].'<br>'.$info['reason'].'<br>'.$info['verif'];
-			$url    	 = '';
-			$source      = 1;
-			$source_id   = $qaqcid;
-			send_notice($title,$content,$url,$source,$source_id);
+			if($info['status']==1){
+				//发送公告
+				$title       = $info['title'];
+				$content     = $info['chen'].'<br>'.$info['reason'].'<br>'.$info['verif'];
+				$url    	 = '';
+				$source      = 1;
+				$source_id   = $qaqcid;
+				send_notice($title,$content,$url,$source,$source_id);
+			}
 			
 			
 			$this->success('已审批！',I('referer'));
