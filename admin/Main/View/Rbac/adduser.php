@@ -89,7 +89,9 @@
                                         <select class="form-control" name="info[postid]">
                                             <option value="0" <?php if ($row['postid']==0){ echo ' selected'; }?>>请选择</option>
                                             <foreach name="posts" key="k" item="v">
-                                            <option value="{$k}" <?php if ($row['postid']==$k){ echo ' selected'; }?>>{$v}</option>
+                                                <if condition="$v">
+                                                <option value="{$k}" <?php if ($row['postid']==$k){ echo ' selected'; }?>>{$v}</option>
+                                                </if>
                                             </foreach>
                                         </select>
                                     </div>
