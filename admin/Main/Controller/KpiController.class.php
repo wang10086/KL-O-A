@@ -735,7 +735,7 @@ class KpiController extends BaseController {
 		$this->year		= I('year',date('Y'));
 		//$this->type   = intval(I('type',2));
 		$this->uid		= I('uid',0);
-		$this->month	= I('month',date('Ym'));
+		$this->month	= I('month');
 		$this->user   	= I('user','');
 		
 		/*

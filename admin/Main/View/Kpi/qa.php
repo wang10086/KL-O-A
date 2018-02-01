@@ -28,6 +28,7 @@
                                     </div>
                                 </div><!-- /.box-header -->
                                 <div class="box-body">
+                                	<!--
                                 	<div class="btn-group" id="catfont" style="padding-bottom:5px;">
 										<?php if($prveyear>2017){ ?>
                                         <a href="{:U('Kpi/qa',array('year'=>$prveyear,'month'=>'01','user'=>$user,'uid'=>$uid))}" class="btn btn-default" style="padding:8px 18px;">上一年</a>
@@ -50,6 +51,7 @@
                                         <a href="{:U('Kpi/qa',array('year'=>$nextyear,'month'=>'01','user'=>$user,'uid'=>$uid))}" class="btn btn-default" style="padding:8px 18px;">下一年</a>
                                         <?php } ?>
                                     </div>
+                                    -->
                                 <table class="table table-bordered dataTable fontmini" id="tablelist">
                                     <tr role="row" class="orders" >
                                         <th class="sorting" width="60" data="id">ID</th>
@@ -96,7 +98,7 @@
                                         <if condition="rolemenu(array('Kpi/appqa'))">
                                         <td class="taskOptions">
                                         <?php 
-                                        if($row['status']==0 && ( C('RBAC_SUPER_ADMIN')==cookie('username') || cookie('roleid')==10 ) ) {
+                                        if($row['status']==0 && ( C('RBAC_SUPER_ADMIN')==cookie('username') || cookie('roleid')==10 || cookie('userid')==38 ) ) {
                                         ?>
                                         <a href="{:U('Kpi/appqa',array('id'=>$row['id']))}"  title="审核" class="btn btn-success btn-smsm"><i class="fa fa-check"></i></a>
                                         <?php 
