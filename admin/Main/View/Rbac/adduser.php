@@ -112,6 +112,22 @@
                                             <option <?php if($row['status']==1){ echo 'selected';}?> value="1">停用</option>
                                         </select>
                                     </div>
+                                    
+                                    <div class="form-group col-md-3">
+                                        <label>入职时间</label>
+                                        <input class="form-control inputdate"  type="text"  name="info[entry_time]" value="<if condition="$row['entry_time']">{$row.entry_time|date='Y-m-d',###}</if>"/>
+                                    </div>
+                                        
+                                        
+                                    <div class="form-group col-md-3">
+                                        <label>是否转正</label>
+                                        <select class="form-control" name="info[formal]">
+                                        	<option <?php if($row['formal']==0){ echo 'selected';}?> value="0">请选择</option>
+                                        	<option <?php if($row['formal']==1){ echo 'selected';}?> value="1">正式员工</option>
+                                            <option <?php if($row['formal']==2){ echo 'selected';}?> value="2">试用员工</option>
+                                        </select>
+                                    </div>
+                                        
                                         
                                     </if>
 

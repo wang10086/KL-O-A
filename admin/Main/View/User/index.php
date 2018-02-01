@@ -42,8 +42,8 @@
                                             <th class="sorting" data="a.username">用户名</th>
                                             <th class="sorting" data="a.nickname">使用者</th>
                                             <th class="sorting" data="a.mobile">手机号</th>
-												 <th class="sorting" data="a.email">Email</th>
-												 <th class="sorting" data="a.update_time">最近登陆时间</th>
+											<th class="sorting" data="a.email">Email</th>
+											<th class="sorting" data="a.update_time">最近登陆时间</th>
                                             <th class="sorting" data="a.company_id">渠道</th>
                                             <th class="sorting" data="a.roleid">角色</th>
                                             

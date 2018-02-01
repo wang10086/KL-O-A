@@ -74,18 +74,19 @@ class RbacController extends BaseController {
         $db = M('account');
     
         if(isset($_POST['dosubmit'])){
-            	
+         
             $info = I('info','');
             $id = I('id',0);
 			$referer = I('referer','');
+			
+			$info['entry_time']	= $info['entry_time'] ? strtotime($info['entry_time']) : 0;
+			
             if(!$id){
-				$passwordinfo = password(I('password_1'));
-				$info['password'] = $passwordinfo['password'];
-				$info['encrypt'] = $passwordinfo['encrypt'];
-			    
-				//$info['roleid']  = intval($_POST['roles'][0]);
+				$passwordinfo		= password(I('password_1'));
+				$info['password']	= $passwordinfo['password'];
+				$info['encrypt']	= $passwordinfo['encrypt'];
                 $info['input_time'] = time();
-                $info['ip'] = get_client_ip();
+                $info['ip']			= get_client_ip();
                 $isadd = $db->add($info);
                 if($isadd) {
                     $data = array();
