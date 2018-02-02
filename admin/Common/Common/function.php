@@ -2175,7 +2175,7 @@ function team_new_customers($roleid,$times){
 	$return['mubiao'] 	= $mubiao;
 	$return['xinzeng'] 	= $xinzeng;
 	$return['erci'] 	= $erci;
-	$return['ratio'] 	= sprintf("%.4f",($xinzeng/count($lists)))*100;
+	$return['ratio'] 	= sprintf("%.4f",($xinzeng/$mubiao))*100;
 	$return['reratio'] 	= sprintf("%.4f",($erci/count($lists)))*100;
 	
 	return $return;
