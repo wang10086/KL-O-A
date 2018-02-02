@@ -1799,33 +1799,43 @@ function updatekpi($month,$user){
 					$complete = round(($hetong / $xiangmu)*100,2).'%';
 				}
 				
-				//业务经理
-				if($v['quota_id']==8 || $v['quota_id']==9){
+				//业务经理 月度累计毛利额-业务经理  6个月平均毛利率-业务经理 
+				if($v['quota_id']==8 || $v['quota_id']==9 || $v['quota_id']==10 || $v['quota_id']==11){
 					
-					if($user==23){
-						$ywdata = tplist(55,array($v['start_date'],$v['end_date']));		//徐恒
-					}else if($user==44){
-						$ywdata = tplist(18,array($v['start_date'],$v['end_date']));		//许世伟
-					}else if($user==84){
-						$ywdata = tplist(40,array($v['start_date'],$v['end_date']));		//李军亮
-					}else if($user==100){
-						$ywdata = tplist(35,array($v['start_date'],$v['end_date']));		//石曼
-					}else if($user==59){
-						$ywdata = tplist(17,array($v['start_date'],$v['end_date']));		//李保罗
+					$fzr = C('POST_TEAM_UID');
+					if($fzr[$user]){
+						
+						//获取具体团队数据
+						if($v['quota_id']==8){	
+							$ywdata = tplist($fzr[$user],array($v['start_date'],$v['end_date']));
+							$complete = $ywdata['zml'] ? $ywdata['zml'] : '0';
+						}
+						
+						if($v['quota_id']==9){
+							$ywdata = tplist($fzr[$user],array($v['start_date'],$v['end_date']));
+							$complete = $ywdata['mll'] ? $ywdata['mll'].'%' : '0.00%';	
+						}
+						
+						if($v['quota_id']==10){
+							$xkh = team_new_customers($fzr[$user],array($v['start_date'],$v['end_date']));
+							$complete = $xkh['ratio'] ? $xkh['ratio'].'%' : '0.00%';	
+						}
+						
+						if($v['quota_id']==11){
+							$xkh = team_new_customers($fzr[$user],array($v['start_date'],$v['end_date']));
+							$complete = $xkh['reratio'] ? $xkh['reratio'].'%' : '0.00%';	
+						}
+						
 					}
 					
-					if($v['quota_id']==8){
-						$complete = $ywdata['zml'];
-					}else{
-						$complete = $ywdata['mll'] ? $ywdata['mll'].'%' : '0.00%';	
-					}
 					
 					
 				}
 				
 				
 				
-				$auto_quta = array(1,2,3,4,5,8,9);
+				//已实现自动获取指标值
+				$auto_quta = array(1,2,3,4,5,8,9,10,11);
 				
 				//保存数据
 				if(in_array($v['quota_id'],$auto_quta)){
@@ -1955,30 +1965,13 @@ function tplist($roleid,$times){
 	$db			= M('op');
 	$roles		= M('role')->GetField('id,role_name',true);
 	
+	$post 		= C('POST_TEAM');
+	$postmore	= C('POST_TEAM_MORE');
+	$postfzr  	= C('POST_TEAM_FZR');
+	
 	//获取部门人数
 	$where = array();
-	if($roleid==80){
-		$where['roleid'] =  80; //array('in','80');
-		$fzr = '赵舒丽';
-	}else if($roleid==17){
-		$where['roleid'] = array('in','17,61');
-		$fzr = '李保罗';
-	}else if($roleid==35){
-		$where['roleid'] = array('in','35,16,37,38,64');
-		$fzr = '石曼';
-	}else if($roleid==18){
-		$where['roleid'] = array('in','18,59,73,74');
-		$fzr = '许世伟';
-	}else if($roleid==19){
-		$where['roleid'] = array('in','19,36');
-		$fzr = '杨开玖';	
-	}else if($roleid==40){
-		$where['roleid'] = array('in','40,41,49');
-		$fzr = '李军亮';	
-	}else if($roleid==55){
-		$where['roleid'] = array('in','55,56,57');
-		$fzr = '徐恒';		
-	}
+	$where['roleid'] = array('in',$postmore[$roleid]);
 	$where['status'] = array('eq',0);
 	$users = M('account')->where($where)->select();	
 	$num   = count($users);
@@ -1987,16 +1980,16 @@ function tplist($roleid,$times){
 		$ulist[] = $v['id'];
 	}
 	
+	//查询结算数据
 	$where = array();
 	$where['b.audit_status']		= 1;
 	$where['l.req_type']			= 801;
 	if($times){
-		$where['l.audit_time']			= array('between',$times);
+		$where['l.audit_time']		= array('between',$times);
 	}else{
-		$where['l.audit_time']			= array('gt',strtotime('2018-01-01'));
+		$where['l.audit_time']		= array('gt',strtotime('2018-01-01'));
 	}
 	$where['a.id']					= array('in',implode(',',$ulist));
-	
 	
 	$field = array();
 	$field[] =  'sum(b.shouru) as zsr';
@@ -2004,6 +1997,7 @@ function tplist($roleid,$times){
 	$field[] =  '(sum(b.maoli)/sum(b.shouru)) as mll';
 	
 	$lists = $db->table('__OP_SETTLEMENT__ as b')->field($field)->join('__OP__ as o on b.op_id = o.op_id','LEFT')->join('__ACCOUNT__ as a on a.id = o.create_user','LEFT')->join('__AUDIT_LOG__ as l on l.req_id = b.id','LEFT')->where($where)->order('zsr DESC')->find();
+	
 	$lists['mll']			= $lists['zml']>0 ?  sprintf("%.2f",$lists['mll']*100) : '0.00';	
 	
 	$lists['zsr'] 			= $lists['zsr'] ? $lists['zsr'] : '0.00';	
@@ -2035,7 +2029,7 @@ function tplist($roleid,$times){
 	$users['rjyll']		= sprintf("%.2f",($users['rjyml']/$users['rjysr'])*100);	
 	$users['num']		= $num;
 	$users['rid']		= $roleid;
-	$users['fzr']		= $fzr;
+	$users['fzr']		= $postfzr[$roleid];
 	
 	return array_merge($lists, $users);
 }
@@ -2113,6 +2107,78 @@ function get_branch_user(){
 	
 	return $return;
 	
+	
+}
+
+
+
+//统计部门时间段内新增客户数量
+function team_new_customers($roleid,$times){
+	
+	$db			= M();
+	$postmore	= C('POST_TEAM_MORE');
+	$asstime	= $times[0]-(86400*365);
+					
+	//获取至考核开始日期司龄1年以上的业务人员数
+	$where = array();
+	$where['roleid']		= array('in',$postmore[$roleid]);
+	$where['status']		= 0;
+	$where['entry_time']	= array('lt',$asstime);
+	$old					= M('account')->where($where)->GetField('id',true);	
+	$oldnum					= count($old) ? count($old) : 0;
+	
+	//获取至考核开始日期司龄1年以下的业务人员数
+	$where = array();
+	$where['roleid']		= array('in',$postmore[$roleid]);
+	$where['status']		= 0;
+	$where['entry_time']	= array('gt',$asstime);
+	$young					= M('account')->where($where)->GetField('id',true);	
+	$youngnum				= count($young) ? count($young) : 0;
+	
+	//应该成交的新客户数
+	$mubiao = ($oldnum*1*3)+($youngnum*0.5*3);
+				
+	//部门总人员名单
+	$ulist	= array_merge($old, $young);
+	
+	//查询结算数据
+	$where = array();
+	$where['b.audit_status']		= 1;
+	$where['l.req_type']			= 801;
+	$where['l.audit_time']			= array('between',$times);
+	$where['a.id']					= array('in',implode(',',$ulist));
+	$field 							= 'o.customer';
+	$lists = $db->table('__OP_SETTLEMENT__ as b')->field($field)->join('__OP__ as o on b.op_id = o.op_id','LEFT')->join('__ACCOUNT__ as a on a.id = o.create_user','LEFT')->join('__AUDIT_LOG__ as l on l.req_id = b.id','LEFT')->where($where)->group($field)->select();
+	
+	$xinzeng = 0;
+	$erci    = 0;
+	foreach($lists as $k=>$v){
+		
+		//查询该客户在考核前以前有没有产生过项目
+		$where = array();
+		$where['b.audit_status']		= 1;
+		$where['l.req_type']			= 801;
+		$where['l.audit_time']			= array('lt',$times[0]);
+		$where['a.id']					= array('in',implode(',',$ulist));
+		$where['o.customer']			= trim($v['customer']);
+		$check = $db->table('__OP_SETTLEMENT__ as b')->field($field)->join('__OP__ as o on b.op_id = o.op_id','LEFT')->join('__ACCOUNT__ as a on a.id = o.create_user','LEFT')->join('__AUDIT_LOG__ as l on l.req_id = b.id','LEFT')->where($where)->find();
+		if($check){
+			$erci++;
+		}else{
+			$xinzeng++;
+		}
+	}
+	
+	
+	$return = array();
+	$return['suoyou'] 	= count($lists);
+	$return['mubiao'] 	= $mubiao;
+	$return['xinzeng'] 	= $xinzeng;
+	$return['erci'] 	= $erci;
+	$return['ratio'] 	= sprintf("%.4f",($xinzeng/count($lists)))*100;
+	$return['reratio'] 	= sprintf("%.4f",($erci/count($lists)))*100;
+	
+	return $return;
 	
 }
 

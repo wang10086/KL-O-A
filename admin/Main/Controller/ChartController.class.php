@@ -222,34 +222,21 @@ class ChartController extends BaseController {
 	//财务统计
 	public function finance(){
 		
-		$db = M('op_settlement');
+		$db			= M('op_settlement');
+		$post 		= C('POST_TEAM');
+		$postmore	= C('POST_TEAM_MORE');
 		
 		//获取月份和部门
-		$st    = I('st',0);
-		$et    = I('et',0);
-		$xs    = I('xs');
-		$dept  = I('dept',0);
+		$st    		= I('st',0);
+		$et    		= I('et',0);
+		$xs    		= I('xs');
+		$dept  		= I('dept',0);
+		
 		
 		
 		//获取团队相关数据
 		$where = array();
-		if($dept==80){
-			$where['roleid'] = 80;//array('in','80');
-		}else if($dept==17){
-			$where['roleid'] = array('in','17,61');
-		}else if($dept==35){
-			$where['roleid'] = array('in','35,16,37,38,64');
-		}else if($dept==18){
-			$where['roleid'] = array('in','18,59,73,74');
-		}else if($dept==19){
-			$where['roleid'] = array('in','19,36');
-		}else if($dept==40){
-			$where['roleid'] = array('in','40,41,49');
-		}else if($dept==55){
-			$where['roleid'] = array('in','55,56,57');
-		}
-		
-		
+		$where['roleid'] = array('in',$postmore[$dept]);
 		$where['status'] = array('eq',0);
 		$users = M('account')->where($where)->select();	
 		$ulist = array();
@@ -296,12 +283,11 @@ class ChartController extends BaseController {
 		
 		//获取月份的开始结束时间戳
 		//P($datalist);
-		$this->post = array('80'=>'京区校外中心-G端项目','17'=>'京区校外中心-C端项目','35'=>'京区校内中心','18'=>'京外业务中心-本部','19'=>'常规旅游','40'=>'京外业务中心-南京项目部','55'=>'京外业务中心-武汉项目部');
-		
-		$this->dept      = $dept;
-		$this->month     = I('month');
-		$this->moon      = $yue ? $moon : month_phase(date('Ymd'));
-		$this->datalist  = $datalist;
+		$this->post		= $post;
+		$this->dept		= $dept;
+		$this->month	= I('month');
+		$this->moon		= $yue ? $moon : month_phase(date('Ymd'));
+		$this->datalist	= $datalist;
 		
 		$url = array();
 		if($st)     $url['st']    = $st;
@@ -581,11 +567,12 @@ class ChartController extends BaseController {
 	public function tplist(){
 		
 		
-		$post = array('80'=>'京区校外-G端','17'=>'京区校外-C端','35'=>'京区校内','18'=>'京外业务-本部','19'=>'常规旅游','40'=>'京外业务-南京','55'=>'京外业务-武汉');
+		$post = C('POST_TEAM');
 		foreach($post as $k=>$v){
 			$lists[$k]				= tplist($k);	
 			$lists[$k]['rolename']	= $v;	
 		}
+		
 		
 		$this->lists = $lists;
 		
@@ -597,7 +584,7 @@ class ChartController extends BaseController {
 	public function tpavglist(){
 		
 		
-		$post = array('80'=>'京区校外-G端','17'=>'京区校外-C端','35'=>'京区校内','18'=>'京外业务-本部','19'=>'常规旅游','40'=>'京外业务-南京','55'=>'京外业务-武汉');
+		$post = C('POST_TEAM');
 		foreach($post as $k=>$v){
 			$lists[$k]				= tplist($k);	
 			$lists[$k]['rolename']	= $v;	
@@ -613,40 +600,22 @@ class ChartController extends BaseController {
 	//团队业绩详情
 	public function tpmore(){
 		
-		$post = array('80'=>'京区校外-G端','17'=>'京区校外-C端','35'=>'京区校内','18'=>'京外业务-本部','19'=>'常规旅游','40'=>'京外业务-南京','55'=>'京外业务-武汉');
-		$dept = I('dept');
 		
-		//获取部门人数
+		$dept		= I('dept');
 		
-		//获取团队相关数据
-		$where = array();
-		if($dept==80){
-			$rolist = 80;//array('in','80');
-		}else if($dept==17){
-			$rolist = array('in','17,61');
-		}else if($dept==35){
-			$rolist = array('in','35,16,37,38,64');
-		}else if($dept==18){
-			$rolist = array('in','18,59,73,74');
-		}else if($dept==19){
-			$rolist = array('in','19,36');
-		}else if($dept==40){
-			$rolist = array('in','40,41,49');
-		}else if($dept==55){
-			$rolist = array('in','55,56,57');
-		}
+		$post 		= C('POST_TEAM');
+		$postmore	= C('POST_TEAM_MORE');
+		$db			= M('op');
+		$roles		= M('role')->GetField('id,role_name',true);
 		
-		
-	
-	
-		$db		= M('op');
-		$roles	= M('role')->GetField('id,role_name',true);
 		
 		//查询所有业务人员信息
 		$where = array();
-		$where['roleid']			= $rolist;
+		$where['roleid']			= array('in',$postmore[$dept]);
 		$where['status']			= 0;
-		$where['postid']			= array('in','1,2,4,31,32');
+		//$where['postid']			= array('in','1,2,4,31,32');
+		
+		
 		
 		$field = array();
 		$field[] =  'id as create_user';
@@ -654,7 +623,6 @@ class ChartController extends BaseController {
 		$field[] =  'roleid';
 		
 		$lists = M('account')->field($field)->where($where)->select();
-		
 		foreach($lists as $k=>$v){
 			
 			$lists[$k]['rolename'] 	=  $roles[$v['roleid']];	
