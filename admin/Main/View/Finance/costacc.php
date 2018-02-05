@@ -90,7 +90,21 @@
 	function add_costacc(){
 		var i = parseInt($('#costacc_val').text())+1;
 
-		var html = '<div class="userlist cost_expense" id="costacc_'+i+'"><span class="title"></span><input type="text" class="form-control" name="costacc['+i+'][title]"><input type="text"  class="form-control cost" name="costacc['+i+'][unitcost]"  value="0"><input type="text" class="form-control amount" name="costacc['+i+'][amount]" value="1"><input type="text" class="form-control totalval" name="costacc['+i+'][total]"  value="0"><select class="form-control"  name="costacc['+i+'][type]" ><option value="1">物资</option><option value="2">专家辅导员</option><option value="3">合格供方</option><option value="4">其他</option></select><input type="text" class="form-control longinput" name="costacc['+i+'][remark]"><a href="javascript:;" class="btn btn-danger btn-flat" onclick="delbox(\'costacc_'+i+'\')">删除</a></div>';
+		var html = '<div class="userlist cost_expense" id="costacc_'+i+'">';
+			html += '<span class="title"></span>';
+			html += '<input type="text" class="form-control" name="costacc['+i+'][title]">';
+			html += '<input type="text"  class="form-control cost" name="costacc['+i+'][unitcost]"  value="0">';
+			html += '<input type="text" class="form-control amount" name="costacc['+i+'][amount]" value="1">';
+			html += '<input type="text" class="form-control totalval" name="costacc['+i+'][total]"  value="0">';
+			html += '<select class="form-control"  name="costacc['+i+'][type]"  onChange="bijia(\'cc_bijia_'+i+'\',this)">';
+			<?php foreach($kind as $k=>$v){ ?>
+			html += '<option value="{$k}">{$v}</option>';
+			<?php } ?>
+			html += '</select>';
+			html += '<input type="text" class="form-control longinput" name="costacc['+i+'][remark]">';
+			html += '<a href="javascript:;" class="btn btn-danger btn-flat" onclick="delbox(\'costacc_'+i+'\')">删除</a>';
+			html += '<a href="javascript:;" class="btn btn-success btn-flat" id="cc_bijia_'+i+'" onClick="alert(\'开发中...\')" style="display:none;">比价</a>';
+			html += '</div>';
 		$('#costacc').append(html);	
 		$('#costacc_val').html(i);
 		orderno();
@@ -141,6 +155,16 @@
         });
 		$('#costaccsum').html('&yen; '+costaccsum.toFixed(2));	
 		$('#costaccsumval').val(costaccsum.toFixed(2));	
+	}
+	
+	
+	function bijia(obj,tt){
+		var z = $(tt).val();
+		if(z == 7 || z == 8 || z == 9){
+			$('#'+obj).show();
+		}else{
+			$('#'+obj).hide();
+		}
 	}
 </script>
 

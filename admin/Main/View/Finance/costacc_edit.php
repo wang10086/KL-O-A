@@ -26,14 +26,15 @@
                     <input type="text" class="form-control cost" name="costacc[888{$k}][unitcost]" value="{$v.unitcost}">
                     <input type="text" class="form-control amount" name="costacc[888{$k}][amount]" value="{$v.amount}">
                     <input type="text" class="form-control totalval" name="costacc[888{$k}][total]" value="{$v.total}">
-                    <select class="form-control"  name="costacc[888{$k}][type]" >
-                    	<option value="1" <?php if($v['type']==1){ echo 'selected';} ?> >物资</option>
-                        <option value="2" <?php if($v['type']==2){ echo 'selected';} ?> >专家辅导员</option>
-                        <option value="3" <?php if($v['type']==3){ echo 'selected';} ?> >合格供方</option>
-                        <option value="4" <?php if($v['type']==4){ echo 'selected';} ?> >其他</option>
+                    <select class="form-control"  name="costacc[888{$k}][type]" onChange="bijia('costacc_bijia_{$k}',this)" >
+                    	<foreach name="kind" key="kk" item="vv">
+                    	<option value="{$kk}" <?php if($kk==$v['type']){ echo 'selected';} ?> >{$vv}</option>
+                        </foreach>
+                        
                     </select>
                     <input type="text" class="form-control longinput" name="costacc[888{$k}][remark]" value="{$v.remark}">
                     <a href="javascript:;" class="btn btn-danger btn-flat" onclick="delbox('costacc_id_c_{$k}')">删除</a>
+                    <a href="javascript:;" class="btn btn-success btn-flat" id="costacc_bijia_{$k}" onClick="alert('开发中...')" style="display:none;">比价</a>
                 </div>
                 </foreach>
                 <?php }else if($mokuailist){ ?>
@@ -44,14 +45,14 @@
                     <input type="text" class="form-control cost" name="costacc[222{$k}][unitcost]" value="{$v.unitprice}">
                     <input type="text" class="form-control amount" name="costacc[222{$k}][amount]" value="{$v.amount}">
                     <input type="text" class="form-control totalval" name="costacc[222{$k}][total]" value="<?php echo $v['unitprice']*$v['amount'];?>">
-                    <select class="form-control"  name="costacc[222{$k}][type]" >
-                    	<option value="1" <?php if($v['type']==1){ echo 'selected';} ?> >物资</option>
-                        <option value="2" <?php if($v['type']==2){ echo 'selected';} ?> >专家辅导员</option>
-                        <option value="3" <?php if($v['type']==3){ echo 'selected';} ?> >合格供方</option>
-                        <option value="4" <?php if($v['type']==4){ echo 'selected';} ?> >其他</option>
+                    <select class="form-control"  name="costacc[222{$k}][type]" onChange="bijia('bijia_{$k}',this)" >
+                    	<foreach name="kind" key="kk" item="vv">
+                    	<option value="{$kk}" <?php if($kk==$v['type']){ echo 'selected';} ?> >{$vv}</option>
+                        </foreach>
                     </select>
                     <input type="text" class="form-control longinput" name="costacc[222{$k}][remark]" value="{$v.remarks}">
                     <a href="javascript:;" class="btn btn-danger btn-flat" onclick="delbox('costacc_id_d_{$k}')">删除</a>
+                    <a href="javascript:;" class="btn btn-success btn-flat" id="bijia_{$k}" onClick="alert('开发中...')" style="display:none;">比价</a>
                 </div>
                 </foreach>
                 
