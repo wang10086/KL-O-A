@@ -535,19 +535,19 @@ class FinanceController extends BaseController {
 		$op['show_reason']  = $show_reason;
 		
 		
-		$this->kind           = array('1'=>'物资','2'=>'专家辅导员','3'=>'合格供方','4'=>'其他');
-		$this->costtype       = array('1'=>'其他','2'=>'专家辅导员','3'=>'合格供方','4'=>'物资');
-		$this->op             = $op;
-		$this->costacc        = $costacc;
-		$this->jiesuan        = $jiesuan;
-		$this->budget         = $budget;
-		$this->settlement     = $settlement;
-		$this->qita           = $qita;
-		$this->audit          = $audit;
-		$this->business_depts = C('BUSINESS_DEPT');
-		$this->subject_fields = C('SUBJECT_FIELD');
-		$this->ages           = C('AGE_LIST');
-		$this->kinds          =  M('project_kind')->getField('id,name', true);
+		$this->kind				= C('COST_TYPE');
+		$this->costtype			= array('1'=>'其他','2'=>'专家辅导员','3'=>'合格供方','4'=>'物资');
+		$this->op				= $op;
+		$this->costacc			= $costacc;
+		$this->jiesuan			= $jiesuan;
+		$this->budget			= $budget;
+		$this->settlement		= $settlement;
+		$this->qita				= $qita;
+		$this->audit			= $audit;
+		$this->business_depts	= C('BUSINESS_DEPT');
+		$this->subject_fields	= C('SUBJECT_FIELD');
+		$this->ages 			= C('AGE_LIST');
+		$this->kinds			=  M('project_kind')->getField('id,name', true);
 		$this->display('settlement');
 	}
 	

@@ -22,10 +22,9 @@
                 <input type="text" class="form-control amount" name="costacc[2222{$k}][amount]" value="{$v.amount}">
                 <input type="text" class="form-control totalval" name="costacc[2222{$k}][total]" value="{$v.total}">
                 <select class="form-control"  name="costacc[2222{$k}][type]" >
-                    <option value="1" <?php if($v['type']==1){ echo 'selected';} ?> >物资</option>
-                    <option value="2" <?php if($v['type']==2){ echo 'selected';} ?> >专家辅导员</option>
-                    <option value="3" <?php if($v['type']==3){ echo 'selected';} ?> >合格供方</option>
-                    <option value="4" <?php if($v['type']==4){ echo 'selected';} ?> >其他</option>
+                    <foreach name="kind" key="kk" item="vv">
+                    <option value="{$kk}" <?php if($kk==$v['type']){ echo 'selected';} ?> >{$vv}</option>
+                    </foreach>
                 </select>
                 <input type="text" class="form-control longinput" name="costacc[2222{$k}][remark]" value="{$v.remark}">
                 <a href="javascript:;" class="btn btn-danger btn-flat" onclick="delbox('costacc_id_js_{$k}')">删除</a>
@@ -49,10 +48,9 @@
                 <input type="text" class="form-control amount" name="costacc[888{$k}][amount]" value="{$shiyong}">
                 <input type="text" class="form-control totalval" name="costacc[888{$k}][total]" value="<?php echo sprintf("%.2f", $v['cost']*$shiyong) ?>">
                 <select class="form-control"  name="costacc[888{$k}][type]" >
-                    <option value="1" selected >物资</option>
-                    <option value="2">专家辅导员</option>
-                    <option value="3">合格供方</option>
-                    <option value="4">其他</option>
+                    <foreach name="kind" key="kk" item="vv">
+                    <option value="{$kk}" <?php if($kk==$v['type']){ echo 'selected';} ?> >{$vv}</option>
+                    </foreach>
                 </select>
                 <input type="text" class="form-control longinput" readonly name="costacc[888{$k}][remark]" value="未归还">
                 <a href="javascript:;" class="btn btn-danger btn-flat" onclick="delbox('costacc_id_aa_{$k}')">删除</a>
