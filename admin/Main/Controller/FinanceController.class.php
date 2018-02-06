@@ -84,7 +84,7 @@ class FinanceController extends BaseController {
 		$op['show_time']  = $show_time;
 		$op['show_reason']  = $show_reason;
 		
-		$this->kind           = array('1'=>'物资','2'=>'专家辅导员','3'=>'合格供方','4'=>'其他');
+		$this->kind           = C('COST_TYPE');
 		$this->op             = $op;
 		$this->costacc        = $costacc;
 		$this->budget         = $budget;
