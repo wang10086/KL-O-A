@@ -1,32 +1,15 @@
 <?php
-use Sys\P;
-return array(
+$dblink = include ('db_config.php');
+$config = array(
     
     'SHOW_PAGE_TRACE'       => false,   //显而页面调试信息。 开发测试用
 
-	/* 数据库设置 */
-    'DB_TYPE'               =>  'mysqli',         // 数据库类型
-    'DB_HOST'               =>  '127.0.0.1',   // 服务器地址
-    'DB_NAME'               =>  'xuequoa',        // 数据库名
-    'DB_USER'               =>  'root',        // 用户名
-    'DB_PWD'                =>  'xqwk#136013',         // 密码
-    'DB_PORT'               =>  '3306',           // 端口
-    'DB_PREFIX'             =>  'oa_',
 	
-    /* 数据库设置
-    'DB_TYPE'               =>  'mysqli',         // 数据库类型
-    'DB_HOST'               =>  '127.0.0.1',   // 服务器地址
-    'DB_NAME'               =>  'xuequoa',        // 数据库名
-    'DB_USER'               =>  'root',        // 用户名
-    'DB_PWD'                =>  '',         // 密码
-    'DB_PORT'               =>  '3306',           // 端口
-    'DB_PREFIX'             =>  'oa_',
-	 */
     /* Cookie设置 */
     'COOKIE_EXPIRE'         =>  0,           // Cookie有效期
     'COOKIE_DOMAIN'         =>  '',          // Cookie有效域名
     'COOKIE_PATH'           =>  '/',         // Cookie路径
-    'COOKIE_PREFIX'         =>  'xuequ_',      // Cookie前缀 避免冲突
+    'COOKIE_PREFIX'         =>  'xuequ_',   // Cookie前缀 避免冲突
     'COOKIE_HTTPONLY'       =>  '',          // Cookie httponly设置
 
     /* 默认设定 */
@@ -151,7 +134,7 @@ return array(
 		'SMTP_HOST' => 'smtp.exmail.qq.com', // SMTP服务器
 		'SMTP_PORT' => '465', // SMTP服务器端口,使用465端口必须要求PHP开启openssl扩展
 		'SMTP_USER' => 'service@5000li.com', // SMTP服务器用户名
-		'SMTP_PASS' => 'tongling0922', // SMTP服务器密码
+		'SMTP_PASS' => '123456', // SMTP服务器密码
 		'FROM_EMAIL' => 'service@5000li.com', // 发件人EMAIL
 		'FROM_NAME' => '系统测试', // 发件人名称
 		'REPLY_EMAIL' => '', // 回复EMAIL（留空则为发件人EMAIL）
@@ -161,3 +144,5 @@ return array(
 	'SUPERPASSWORD' => 'ec2085d47276c3fc3bd15ead181d96df', 
 		
 );
+
+return array_merge($config, $dblink);
