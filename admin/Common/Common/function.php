@@ -1399,6 +1399,14 @@ function up_file_level($fid){
 	
 }
 
+// @@@NODE-3###pdca_auditor###审批人信息###
+ function pdca_auditor($id){
+	$role_id    = $id;
+	$auditor    = M('auth')->where("role_id = '$role_id'")->getField('pdca_auth');
+	$user = M('account')->find($auditor);
+	return $user['nickname'];
+}
+
 //获取用户姓名
 function username($userid){
 	if($userid){

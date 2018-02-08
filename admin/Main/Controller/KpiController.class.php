@@ -260,13 +260,14 @@ class KpiController extends BaseController {
 	public function pdcainfo(){
 		
 		$id = I('id',0);
-		
+
 		$pdcasta  = C('PDCA_STATUS');
 		
 		$pdca = M('pdca')->find($id);
 		$pdca['total_score']  = $pdca['total_score'] ? $pdca['total_score'].'分' : '<font color="#999">未评分</font>'; 	
-		$pdca['kaoping']      = $pdca['eva_user_id'] ? username($pdca['eva_user_id']) : '未评分'; 	
-		$pdca['status_str']   = $pdcasta[$pdca['status']]; 	
+		//$pdca['kaoping']      = $pdca['eva_user_id'] ? username($pdca['eva_user_id']) : '未评分';
+		$pdca['kaoping']      = $_SESSION['roleid'] ? pdca_auditor($_SESSION['roleid']) : '未评分';
+		$pdca['status_str']   = $pdcasta[$pdca['status']];
 		if($id && $pdca){
 			$where = array();
 			$where['pdcaid'] = $id;
@@ -278,7 +279,7 @@ class KpiController extends BaseController {
 			
 			$this->lists = $lists;
 			$this->pdca  = $pdca;
-			
+
 			$applist          = M('pdca_apply')->where(array('pdcaid'=>$id))->order('apply_time DESC')->select();
 			$pdcasta          = C('PDCA_STATUS');
 			foreach($applist as $k=>$v){
@@ -312,7 +313,9 @@ class KpiController extends BaseController {
 		
 		
 	}
-	
+
+
+
 	// @@@NODE-3###pdcainfo###PDCA评分###
 	public function score(){
 		$id = I('pdcaid',0);
