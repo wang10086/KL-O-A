@@ -386,7 +386,7 @@
                         </li>
                         </if>
 
-                        <if condition="rolemenu(array('worder/new','worder/manage','worder/project'))">
+                        <if condition="rolemenu(array('worder/new_worder','worder/manage','worder/project'))">
                             <li class="treeview {:ison(CONTROLLER_NAME, 'worder')}">
                                 <a href="javascript:;">
                                     <i class="fa fa-clipboard"></i>
@@ -395,8 +395,8 @@
                                 </a>
                                 <ul class="treeview-menu">
                                     <if condition="rolemenu(array('worder/new'))">
-                                        <!--<li><a href="{:U('worder/new')}"><i class="fa fa-angle-right"></i> 发起工单</a></li>-->
-                                        <li><a href="javascript:;" onClick="art_show_msg('加班开发中，稍后呈现...',5)"><i class="fa fa-angle-right"></i> 发起工单</a></li>
+                                        <li><a href="{:U('worder/new_worder')}"><i class="fa fa-angle-right"></i> 发起工单</a></li>
+                                        <!--<li><a href="javascript:;" onClick="art_show_msg('加班开发中，稍后呈现...',5)"><i class="fa fa-angle-right"></i> 发起工单</a></li>-->
                                     </if>
                                     <if condition="rolemenu(array('worder/manage'))">
                                         <!--<li><a href="{:U('worder/manage')}"><i class="fa fa-angle-right"></i> 管理工单</a></li>-->
