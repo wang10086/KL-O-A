@@ -15,7 +15,12 @@ class WorderController extends BaseController{
 
     //发起工单
     public function new_worder(){
-        $this->display('new_worder');
+        if (isset($_POST['dosubmit'])){
+
+        }else{
+
+            $this->display('new_worder');
+        }
     }
 
 }
