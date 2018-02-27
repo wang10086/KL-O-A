@@ -28,12 +28,21 @@ class SupplierResController extends BaseController {
 		
 		//分页
 		$pagecount = M('supplier')->where($where)->count();
+        //品控部经理添加读取列表权限
+        if (cookie('roleid')==47){
+            $pagecount = M('supplier')->where(1)->count();
+        }
 		$page = new Page($pagecount, P::PAGE_SIZE);
 		$this->pages = $pagecount>P::PAGE_SIZE ? $page->show():'';
         
         $this->reskind = M('supplierkind')->getField('id,name', true);
         $this->lists = M('supplier')->where($where)->limit($page->firstRow . ',' . $page->listRows)->order($this->orders('input_time'))->select();
-		
+        //品控部经理添加读取列表权限
+        if (cookie('roleid')==47){
+            $this->lists = M('supplier')->where(1)->limit($page->firstRow . ',' . $page->listRows)->order($this->orders('input_time'))->select();
+        }
+
+        echo M()->getlastsql();
 		//P(M('supplier')->getLastSql());
         $this->status = array(
                 P::AUDIT_STATUS_PASS        => '已通过',
