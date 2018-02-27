@@ -131,7 +131,7 @@ class CustomerController extends BaseController {
 		if($level)       $where['level'] = array('like','%'.$level.'%');
 		if($qianli)      $where['qianli'] = array('like','%'.$qianli.'%');
 		
-		if(C('RBAC_SUPER_ADMIN')==cookie('username') || cookie('roleid')==10 || cookie('roleid')==28 || cookie('roleid')==11 || cookie('roleid')==30){
+		if(C('RBAC_SUPER_ADMIN')==cookie('username') || cookie('roleid')==10 || cookie('roleid')==28 || cookie('roleid')==11 || cookie('roleid')==30 || cookie('roleid')==47){
 			
 		}else{
 			$where['cm_id'] = array('in',Rolerelation(cookie('roleid')));
@@ -156,7 +156,7 @@ class CustomerController extends BaseController {
     }
 	
 	
-	
+
 	
     public function op(){
       
