@@ -42,7 +42,6 @@ class SupplierResController extends BaseController {
             $this->lists = M('supplier')->where(1)->limit($page->firstRow . ',' . $page->listRows)->order($this->orders('input_time'))->select();
         }
 
-        echo M()->getlastsql();
 		//P(M('supplier')->getLastSql());
         $this->status = array(
                 P::AUDIT_STATUS_PASS        => '已通过',
