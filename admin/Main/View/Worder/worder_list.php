@@ -22,17 +22,15 @@
                                 <div class="box-header">
                                     <h3 class="box-title">工单计划列表</h3>
                                     <div class="box-tools pull-right">
-                                    	 <a href="javascript:;" class="btn btn-info btn-sm" onclick="javascript:opensearch('search_worder',800,160);"><i class="fa fa-search"></i> 搜索</a>
+                                    	 <a href="javascript:;" class="btn btn-info btn-sm" onclick="javascript:opensearch('searchtext',800,160);"><i class="fa fa-search"></i> 搜索</a>
                                          <a href="{:U('Worder/new_worder')}" class="btn btn-sm btn-danger"><i class="fa fa-plus"></i> 新建工单</a>
                                     </div>
                                 </div><!-- /.box-header -->
                                 <div class="box-body">
                                 
                                 <div class="btn-group" id="catfont">
-                                    <!--<a href="{:U('Worder/worder_list',array('pin'=>0))}" class="btn <?php /*if($pin==0){ echo 'btn-info';}else{ echo 'btn-default';} */?>">所有工单</a>
-                                    <a href="{:U('Worder/worder_my',array('pin'=>1))}" class="btn <?php /*if($pin==1){ echo 'btn-info';}else{ echo 'btn-default';} */?>">我的工单</a>-->
-                                    <a href=javascript:; class="btn <?php if($pin==0){ echo 'btn-info';}else{ echo 'btn-default';} ?>">所有工单</a>
-                                    <a href=javascript:; class="btn <?php if($pin==1){ echo 'btn-info';}else{ echo 'btn-default';} ?>">我的工单</a>
+                                    <a href="{:U('Worder/worder_list',array('pin'=>0))}" class="btn <?php if($pin==0){ echo 'btn-info';}else{ echo 'btn-default';} ?>">所有工单</a>
+                                    <a href="{:U('Worder/my_worder',array('pin'=>1))}" class="btn <?php if($pin==1){ echo 'btn-info';}else{ echo 'btn-default';} ?>">我的工单</a>
                                 </div>
                                 
                                 <table class="table table-bordered dataTable fontmini" id="tablelist" style="margin-top:10px;">
@@ -61,10 +59,10 @@
                                         <td>{$row.id}</td>
                                         <td>{$row.worder_title}</td>
                                         <td>{$row.worder_content}</td>
-                                        <td></td><!--类型-->
+                                        <td>{$row.type}</td>
                                         <td>{$row.ini_user_name}</td>
                                         <td>{$row.exe_user_name}</td>
-                                        <td></td><!--工单状态-->
+                                        <td>{$row.sta}</td>
                                         <td>{$row.create_time|date='Y-m-d H:i:s',###}</td>
                                         <td>{$row.complete_time|date='Y-m-d H:i:s',###}</td>
                                         <if condition="rolemenu(array('Worder/exe_worder'))">
@@ -93,7 +91,7 @@
             </aside><!-- /.right-side -->
             
             
-            <div id="search_worder">
+            <div id="searchtext">
                 <form action="" method="get" id="searchform">
                 <input type="hidden" name="m" value="Main">
                 <input type="hidden" name="c" value="Worder">
