@@ -1,5 +1,9 @@
 <include file="Index:header2" />
 
+<style>
+    .exe_worder{width: 300px;}
+</style>
+
             <aside class="right-side">
                 <!-- Content Header (Page header) -->
                 <section class="content-header">
@@ -28,84 +32,59 @@
                                     <div class="content">
                                     	
                                         <div class="form-group col-md-12">
-                                            <label>工单名称：</label><input type="text" name="info[project]" class="form-control" />
+                                            <label>工单名称：</label><input type="text" name="info[worder_title]" class="form-control" />
+                                        </div>
+
+                                        <div class="form-group col-md-12">
+                                            <label>工单内容：</label><textarea class="form-control"  name="info[worder_content]"></textarea>
                                         </div>
                                         
-                                        
-                                        <div class="form-group col-md-4">
+                                        <div class="form-group col-md-6">
                                             <label>工单类型：</label>
-                                            <select  class="form-control"  name="info[kind]" required>
-                                            <foreach name="kinds" item="v">
-                                                <option value="{$v.id}" <?php if ($row && ($v['id'] == $row['kind'])) echo ' selected'; ?> >{:tree_pad($v['level'], true)} {$v.name}</option>
+                                            <select  class="form-control"  name="info[worder_type]" required>
+                                            <foreach name="worder_type" key="k" item="v">
+                                                <!--<option value="{$k}" <?php /*if ($row && ($v['id'] == $row['kind'])) echo ' selected'; */?> >{:tree_pad($v['level'], true)} {$v.name}</option>-->
+                                                <option value="{$k}">{$v}</option>
                                             </foreach>
                                             </select> 
                                         </div>
                                         
+                                        <div class="form-group col-md-6">
+                                            <label>发起人员：</label>
+                                            <input type="text" class="form-control" name="info[ini_user_name]" value="{:session('nickname')}" readonly>
+                                        </div>
+
                                         <!--<div class="form-group col-md-4">
-                                            <label>预计人数：</label><input type="text" name="info[number]" class="form-control" />
-                                        </div>
-                                        
-                                        <div class="form-group col-md-4">
-                                            <label>出团日期：</label><input type="text" name="info[departure]"  class="form-control inputdate" />
-                                        </div>
-                                        
-                                        <div class="form-group col-md-4">
-                                            <label>行程天数：</label><input type="text" name="info[days]" class="form-control" />
-                                        </div>
-                                        
-                                        <div class="form-group col-md-4">
-                                            <label>目的地：</label><input type="text" name="info[destination]" class="form-control" />
-                                        </div>
-
-                                        <div class="form-group col-md-4">
-                                            <label>立项时间：</label><input type="text" name="info[op_create_date]" class="form-control inputdate_a" />
-                                        </div>
-                                        
-                                        <div class="form-group col-md-4">
-                                            <label>业务部门：</label>
-                                            <select  class="form-control" name="info[op_create_user]">
-                                            <foreach name="rolelist" key="k" item="v">
-                                                <option value="{$v}" <?php if($k==cookie('roleid')){ echo 'selected';} ?> >{$v}</option>
-                                            </foreach>
-                                            </select> 
-                                        </div>
-                                        
-                                        <div class="form-group col-md-4">
-                                            <label>客户单位：</label>
-                                            <!--
-                                            <input type="text" name="info[customer]" id="customer_name" value="" placeholder="您可以输入客户单位名称拼音首字母检索" class="form-control" />
-
-                                            <select  name="info[customer]" class="form-control">
-                                            	<option value="">请选择</option>
-                                                <foreach name="geclist"  item="v">
-                                                    <option value="{$v.company_name}"><?php echo strtoupper(substr($v['pinyin'], 0, 1 )); ?> - {$v.company_name}</option>
+                                            <label>工单优先级：</label>
+                                            <select  class="form-control"  name="info[kind]" required>
+                                                <foreach name="worder_type" key="key" item="value">
+                                                    <option value="{$key}">{$value}</option>
                                                 </foreach>
                                             </select>
                                         </div>-->
-                                        
-                                        <div class="form-group col-md-4">
-                                            <label>发起人员：</label>
-                                            <input type="text" class="form-control" name="info[sale_user]" value="{:session('nickname')}" readonly>
-                                        </div>
 
-                                        <div class="form-group col-md-4">
-                                            <label>工单级别：</label>
-                                            <select  class="form-control"  name="info[kind]" required>
-                                                <option value="1" >紧急</option>
-                                                <option value="2" >普通</option>
+                                        <div class="form-group col-md-12"></div>
+                                        <div class="form-group col-md-12">
+                                            <label>工单受理组/人：</label>&#12288;
+                                            <select name="info[exe_dept_id]" id="group" onchange="check_group()" class="exe_worder">
+                                                <option value="" disabled selected>请选择受理组</option>
+                                                <foreach name="group" item="v">
+                                                    <option value="{$v.id}">{:tree_pad($v['level'])}{$v.role_name}</option>
+                                                </foreach>
+                                            </select>
+                                            <select name="info[exe_user_id]" id="member" class="exe_worder">
+                                                <option value="" disabled selected>请选择员工姓名</option>
+
                                             </select>
                                         </div>
-                                        
+
+                                        <div class="form-group col-md-12"></div>
 
                                         <div class="form-group col-md-12">
-                                            <label>工单内容：</label><textarea class="form-control"  name="info[context]"></textarea>
+                                            <label>上传文件附件：</label>
+                                            {:upload_m('uploadfile','files','','上传文件附件')}
                                         </div>
-                                        
-                                        <div class="form-group col-md-12">
-                                            <label>工单说明：</label><textarea class="form-control"  name="info[remark]"></textarea>
-                                        </div>
-                                        
-                                       
+
                                     </div>
                                     
                                 </div><!-- /.box-body -->
@@ -126,24 +105,26 @@
 </div>
 
 <include file="Index:footer2" />
-		<!--
+
 		<script type="text/javascript">
-            function sousuo(){
-				var keywords = <?php echo $keywords; ?>;
-                $("#customer_name").autocomplete(keywords, {
-                     matchContains: true,
-                     highlightItem: false,
-                     formatItem: function(row, i, max, term) {
-                         return '<span style=" display:none">'+row.pinyin+'</span>'+row.company_name;
-                     },
-                     formatResult: function(row) {
-                         return row.company_name;
-                     }
-                });
-            };
-			
-			$(document).ready(function(e) {
-                sousuo();
-            });
+            function check_group(){
+                var id = $('#group').val();
+                $.ajax({
+                    type:"POST",
+                    url:"{:U('Worder/member')}",
+                    data:{id:id},
+                    success:function(msg){
+                        $("#member").empty();
+                        var count = msg.length;
+                        var i= 0;
+                        var b="";
+                        for(i=0;i<count;i++){
+                            b+="<option value='"+msg[i].id+"'>"+msg[i].nickname+"</option>";
+                        }
+                        $("#member").append(b);
+                    }
+                })
+
+            }
+
         </script>
-        -->
