@@ -1,13 +1,13 @@
 <include file="Index:header2" />
 
 <style>
-    .exe_worder{width: 300px;height: 34px;border-color: #DDDDDD;}
+    .exe_worder{width: 300px; height: 34px;}
 </style>
 
             <aside class="right-side">
                 <!-- Content Header (Page header) -->
                 <section class="content-header">
-                    <h1>发起工单</h1>
+                    <h1>执行工单</h1>
                     <ol class="breadcrumb">
                         <li><a href="{:U('Index/index')}"><i class="fa fa-home"></i> 首页</a></li>
                         <li><a href="javascript:;"><i class="fa fa-gift"></i> 工单计划</a></li>
@@ -16,8 +16,10 @@
 
                 <!-- Main content -->
                 <section class="content">
-                <form method="post" action="{:U('Worder/new_worder')}" name="myform" id="myform">
+                <form method="post" action="{:U('Worder/exe_worder')}" name="myform" id="myform">
                 <input type="hidden" name="dosubmint" value="1">
+                <input type="hidden" name="id" value="{$id}">
+                <input type="hidden" name="ini_user_id" value="{$data[ini_user_id]}">
                     <div class="row">
                          <!-- right column -->
                         <div class="col-md-12">
@@ -32,49 +34,41 @@
                                     <div class="content">
                                     	
                                         <div class="form-group col-md-12">
-                                            <label>工单名称：</label><input type="text" name="info[worder_title]" class="form-control" />
+                                            <label>工单名称：</label><input type="text" value="{$data[worder_title]}" class="form-control" readonly />
                                         </div>
 
                                         <div class="form-group col-md-12">
-                                            <label>工单内容：</label><textarea class="form-control"  name="info[worder_content]"></textarea>
+                                            <label>工单内容：</label><textarea class="form-control" readonly>{$data.worder_content}</textarea>
                                         </div>
                                         
                                         <div class="form-group col-md-6">
                                             <label>工单类型：</label>
-                                            <select  class="form-control"  name="info[worder_type]" required>
-                                            <foreach name="worder_type" key="k" item="v">
-                                                <option value="{$k}">{$v}</option>
-                                            </foreach>
-                                            </select> 
+                                            <input type="text" class="form-control" value="{$data['type']}" readonly>
                                         </div>
                                         
                                         <div class="form-group col-md-6">
-                                            <label>发起人员：</label>
-                                            <input type="text" class="form-control" name="info[ini_user_name]" value="{:session('nickname')}" readonly>
+                                            <label>工单申请时间：</label>
+                                            <input type="text" class="form-control" value="{$data.create_time|date='Y-m-d H:i:s',###}" readonly>
                                         </div>
 
-                                        <!--<div class="form-group col-md-4">
-                                            <label>工单优先级：</label>
-                                            <select  class="form-control"  name="info[kind]" required>
-                                                <foreach name="worder_type" key="key" item="value">
-                                                    <option value="{$key}">{$value}</option>
-                                                </foreach>
-                                            </select>
-                                        </div>-->
+                                        <div class="form-group col-md-6">
+                                            <label>工单发起人所在部门：</label>
+                                            <input type="text" class="form-control" value="{$data.ini_dept_name}" readonly>
+                                        </div>
 
-                                        <div class="form-group col-md-12"></div>
+                                        <div class="form-group col-md-6">
+                                            <label>工单发起人姓名：</label>
+                                            <input type="text" class="form-control" value="{$data.ini_user_name}" readonly>
+                                        </div>
+
                                         <div class="form-group col-md-12">
-                                            <label>工单受理组/人：</label>&#12288;
-                                            <select name="info[exe_dept_id]" id="group" onchange="check_group()" class="exe_worder">
-                                                <option value="" disabled selected>请选择受理组</option>
-                                                <foreach name="group" item="v">
-                                                    <option value="{$v.id}">{:tree_pad($v['level'])}{$v.role_name}</option>
-                                                </foreach>
-                                            </select>
-                                            <select name="info[exe_user_id]" id="member" class="exe_worder">
-                                                <option value="" disabled selected>请选择员工姓名</option>
+                                            <label>执行意见:</label>
+                                            <textarea class="form-control" name="exe_complete_content"></textarea>
+                                        </div>
 
-                                            </select>
+                                        <div class="form-group col-md-12">
+                                            <input type="checkbox" class="form-control" name="refuse" value="-1" >&#12288;
+                                            <label>拒绝该工单(如果有异议,可勾选此选项拒绝该工单)</label>
                                         </div>
 
                                         <div class="form-group col-md-12"></div>
@@ -91,7 +85,7 @@
                             
                            
                             <div style="width:100%; text-align:center;">
-                            <button type="submit" class="btn btn-info btn-lg" id="lrpd">发起工单</button>
+                            <button type="submit" class="btn btn-info btn-lg" id="lrpd">执行工单</button>
                             </div>
                         </div><!--/.col (right) -->
                     </div>   <!-- /.row -->

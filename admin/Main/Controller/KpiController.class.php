@@ -257,62 +257,61 @@ class KpiController extends BaseController {
 	
 	
 	// @@@NODE-3###pdcainfo###PDCA计划管理###
-	public function pdcainfo(){
-		
-		$id = I('id',0);
+    public function pdcainfo(){
 
-		$pdcasta  = C('PDCA_STATUS');
-		
-		$pdca = M('pdca')->find($id);
-		$pdca['total_score']  = $pdca['total_score'] ? $pdca['total_score'].'分' : '<font color="#999">未评分</font>'; 	
-		//$pdca['kaoping']      = $pdca['eva_user_id'] ? username($pdca['eva_user_id']) : '未评分';
-		$pdca['kaoping']      = $_SESSION['roleid'] ? pdca_auditor($_SESSION['roleid']) : '未评分';
-		$pdca['status_str']   = $pdcasta[$pdca['status']];
-		if($id && $pdca){
-			$where = array();
-			$where['pdcaid'] = $id;
-			
-			$lists = M('pdca_term')->where($where)->select();
-			foreach($lists as $K=>$v){
-				$lists[$K]['score']  = $v['score_status'] ? 	$v['score']  : '<font color="#999">未评分</font>';
-			}
-			
-			$this->lists = $lists;
-			$this->pdca  = $pdca;
+        $id = I('id',0);
 
-			$applist          = M('pdca_apply')->where(array('pdcaid'=>$id))->order('apply_time DESC')->select();
-			$pdcasta          = C('PDCA_STATUS');
-			foreach($applist as $k=>$v){
-				$applist[$k]['status'] = $pdcasta[$v['status']];	
-			}
-			$this->applist    = $applist;
-			
-			
-			//获取已评总分信息
-			$total = 0;
-			$pdcadata = M('pdca_term')->where(array('pdcaid'=>$id))->select();
-			foreach($pdcadata as $k=>$v){
-				//合计总分
-				$total += $v['score_status'] ? $v['score'] : $v['weight'];
-			}
-			if($total > 100){
-				$this->totalstr = '<span class="red" style="font-size:16px;">当前各项总分为'.$total.'，PDCA总分不允许超过100分！</span>';
-			}else if($total == 100){
-				$this->totalstr = '<span class="blue" style="font-size:16px;">当前各项总分为'.$total.'，被考评人本月不扣分！</span>';	
-			}else{
-				$koufen = 100-$total;
-				$this->totalstr = '<span class="yellow" style="font-size:16px;">被考评人本月已扣'.$koufen.'分！</span>';		
-			}
-			
-			
-			$this->display('pdca_info');
-			
-		}else{
-			$this->error('PDCA不存在');	
-		}
-		
-		
-	}
+        $pdcasta  = C('PDCA_STATUS');
+
+        $pdca = M('pdca')->find($id);
+        $pdca['total_score']  = $pdca['total_score'] ? $pdca['total_score'].'分' : '<font color="#999">未评分</font>';
+        $pdca['kaoping']      = $pdca['eva_user_id'] ? username($pdca['eva_user_id']) : '未评分';
+        $pdca['status_str']   = $pdcasta[$pdca['status']];
+        if($id && $pdca){
+            $where = array();
+            $where['pdcaid'] = $id;
+
+            $lists = M('pdca_term')->where($where)->select();
+            foreach($lists as $K=>$v){
+                $lists[$K]['score']  = $v['score_status'] ? 	$v['score']  : '<font color="#999">未评分</font>';
+            }
+
+            $this->lists = $lists;
+            $this->pdca  = $pdca;
+
+            $applist          = M('pdca_apply')->where(array('pdcaid'=>$id))->order('apply_time DESC')->select();
+            $pdcasta          = C('PDCA_STATUS');
+            foreach($applist as $k=>$v){
+                $applist[$k]['status'] = $pdcasta[$v['status']];
+            }
+            $this->applist    = $applist;
+
+
+            //获取已评总分信息
+            $total = 0;
+            $pdcadata = M('pdca_term')->where(array('pdcaid'=>$id))->select();
+            foreach($pdcadata as $k=>$v){
+                //合计总分
+                $total += $v['score_status'] ? $v['score'] : $v['weight'];
+            }
+            if($total > 100){
+                $this->totalstr = '<span class="red" style="font-size:16px;">当前各项总分为'.$total.'，PDCA总分不允许超过100分！</span>';
+            }else if($total == 100){
+                $this->totalstr = '<span class="blue" style="font-size:16px;">当前各项总分为'.$total.'，被考评人本月不扣分！</span>';
+            }else{
+                $koufen = 100-$total;
+                $this->totalstr = '<span class="yellow" style="font-size:16px;">被考评人本月已扣'.$koufen.'分！</span>';
+            }
+
+
+            $this->display('pdca_info');
+
+        }else{
+            $this->error('PDCA不存在');
+        }
+
+
+    }
 
 
 
