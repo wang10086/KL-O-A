@@ -1579,5 +1579,37 @@ class OpController extends BaseController {
 			$this->display('confirm');
 		}
 	}
+	
+	
+	
+	// @@@NODE-3###confirm###项目比价###
+	public  function  relprice(){
+		$opid 			= I('opid');
+		$relid			= I('relid');
+		$op				= M('op')->where(array('op_id'=>$opid))->find();
+	
+		
+		
+		if(isset($_POST['dosubmit']) && $_POST['dosubmit']){
+			
+			$info	= I('info');
+			//判断团号是否可用
+			
+			
+			
+			$this->success('保存成功！');
+		
+		}else{
+			
+			if($relid){
+				$rel = M('rel_price')->find($relid);
+			}
+			$this->b_name		= $rel['business_name'] ? $rel['business_name'] : $op['project'];
+			
+			$this->op 			= $op;
+			$this->rel			= $rel;
+			$this->display('relprice');
+		}
+	}
     
 }
