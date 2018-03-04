@@ -50,6 +50,9 @@
                                 <if condition="rolemenu(array('Project/kind'))">
                                 		<li class="{:on('Project/kind')} {:on('Project/addkind')}"><a href="{:U('Project/kind')}"><i class="fa fa-angle-right"></i> 项目类型</a></li>
                                 </if>
+                                <if condition="rolemenu(array('Op/relpricelist'))">
+                                		<li class="{:on('Op/relpricelist')} {:on('Op/relprice')}"><a href="{:U('Op/relpricelist')}"><i class="fa fa-angle-right"></i> 项目比价</a></li>
+                                </if>
                             </ul>
                         </li>
                         </if>

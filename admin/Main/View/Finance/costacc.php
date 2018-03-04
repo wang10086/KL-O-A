@@ -6,7 +6,7 @@
                     <h1>成本核算</h1>
                     <ol class="breadcrumb">
                         <li><a href="{:U('Index/index')}"><i class="fa fa-home"></i> 首页</a></li>
-                        <li><a href="{:U('Finance/costacclist')}"><i class="fa fa-gift"></i> 成本核算</a></li>
+                        <li><a href="{:U('Finance/costacclist')}" ><i class="fa fa-gift"></i> 成本核算</a></li>
                     </ol>
                 </section>
 
@@ -103,7 +103,7 @@
 			html += '</select>';
 			html += '<input type="text" class="form-control longinput" name="costacc['+i+'][remark]">';
 			html += '<a href="javascript:;" class="btn btn-danger btn-flat" onclick="delbox(\'costacc_'+i+'\')">删除</a>';
-			html += '<a href="javascript:;" class="btn btn-success btn-flat" id="cc_bijia_'+i+'" onClick="alert(\'开发中...\')" style="display:none;">比价</a>';
+			html += '<a href="javascript:;" class="btn btn-success btn-flat" id="cc_bijia_'+i+'" style="display:none;">比价</a>';
 			html += '</div>';
 		$('#costacc').append(html);	
 		$('#costacc_val').html(i);
@@ -161,6 +161,9 @@
 	function bijia(obj,tt){
 		var z = $(tt).val();
 		if(z == 7 || z == 8 || z == 9){
+			
+			var url = "{:U('Op/relpricelist')}"+"&opid={$op.op_id}&type="+z;
+			$('#'+obj).attr('href',url).attr('target','_blank');
 			$('#'+obj).show();
 		}else{
 			$('#'+obj).hide();

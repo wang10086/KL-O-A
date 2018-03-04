@@ -3951,6 +3951,32 @@ th{outline: none;}
 #payment_val{ display:none}
 
 
+
+#newlistbox{ padding:0 0px;}
+#newlistbox .f_20{ width:20%; float:left; border-radius:0; padding-right:20px;}
+#newlistbox .f_15{ width:15%; float:left; border-radius:0; padding-right:20px;}
+#newlistbox .f_25{ width:25%; float:left; border-radius:0; padding-right:20px;}
+#newlistbox .f_40{ width:40%; float:left;border-radius:0;padding-right:20px;}
+#newlistbox .f_60{ width:60%; float:left;border-radius:0;padding-right:20px;}
+#newlistbox .f_50{ width:50%; float:left;border-radius:0;}
+#newlistbox .unitbox_15{ width:15%;float:left; clear:none; border:none; padding:0; padding-right:20px;}
+#newlistbox .unitbox_20{ width:20%;float:left; clear:none; border:none; padding:0; padding-right:20px;}
+#newlistbox .unitbox_25{ width:25%;float:left; clear:none; border:none; padding:0; padding-right:20px;}
+#newlistbox .unitbox_40{ width:40%;float:left; clear:none; border:none; padding:0; padding-right:20px;}
+#newlistbox .unitbox_50{ width:50%;float:left; clear:none; border:none; padding:0; }
+#newlistbox .unitbox_60{ width:60%;float:left; clear:none; border:none; padding:0; padding-right:20px;}
+#newlistbox .title{ width:22px; float:left; height:30px; line-height:30px; margin-left:-30px; text-align:right;}
+#newlistbox .userlist { width:100%; height:auto !important; float:left; clear:both; padding-bottom:15px; border-bottom:1px solid #cccccc; margin-top:15px; position:relative;}
+#newlistbox .userlist .btn{ position:absolute; right:-26px; top:0px; padding:9px 4px; border-radius:2px; }
+#newlistbox .input-group{ width:auto; float:left; height:34px; margin-right:10px; background:#ffffff; }
+#newlistbox .input-group span{ border:1px solid #cccccc; width:40px; background:#ffffff; }
+#newlistbox .input-group span.rr{margin-left:-1px;}
+#newlistbox .input-group span input{ margin-left:5px;}
+#newlistbox .btn{ padding:7px 12px; font-size:12px;} 
+#newlistbox td{ line-height:34px;}
+#newlistbox_val{ display:none}
+
+
 .uploadlist{ position:relative; height:50px; padding-left:65px; padding-right:25px; margin-top:5px;}
 .uploadlist .upimg{ width:60px; height:50px; position:absolute; left:0; top:0; border-radius:2px; overflow:hidden; background-color:#ccc; background-size:100% 100% ; background-repeat:no-repeat; background-position:center center; }
 .uploadlist .upimg img{ width:60px; height:50px;}
@@ -3966,3 +3992,9 @@ th{outline: none;}
 #showimglist{ width:100%; margin-top:-20px; padding-bottom:20px;}
 #showimglist img{ margin-top:10px; margin-top:15px;}
 #showimglist .fileext{ width:100px; height:100px; float:left; background:#3c8dbc; line-height:100px; text-align:center; color:#ffffff; font-size:16px; margin-top:10px; margin-top:15px;}
+
+.contenthotbox{background:#f3f3f3; border-radius:4px; overflow:hidden; padding-bottom:25px;}
+.contentbot{padding:0 30px; margin-top:-20px;}
+.contentbot h2{font-size:16px; color:#ff9900; border-bottom:2px solid #dddddd; padding-bottom:10px;}
+.delxxx{ font-size:14px; margin-top:8px;}
+.reltitle{ color:#008d4c;}

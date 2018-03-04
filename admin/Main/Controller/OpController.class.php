@@ -1582,34 +1582,162 @@ class OpController extends BaseController {
 	
 	
 	
+	// @@@NODE-3###relpricelist###项目比价记录###
+    public function relpricelist(){
+        $this->title('项目比价记录');
+		
+		$db		= M('rel_price');
+		$kinds	= C('REL_TYPE');
+		
+		$title	= I('title');		//项目名称
+		$opid	= I('opid');			//项目编号
+		$op		= I('op');			//计调
+		$type 	= I('type');
+		
+		$where = array();
+		
+		if($title)			$where['business_name']			= array('like','%'.$title.'%');
+		if($op)				$where['op_user_name']			= array('like','%'.$op.'%');
+		if($opid)			$where['op_id']					= $opid;
+		if($type)			$where['type']					= $type;
+		
+		//分页
+		$pagecount		= $db->where($where)->count();
+		$page			= new Page($pagecount, P::PAGE_SIZE);
+		$this->pages	= $pagecount>P::PAGE_SIZE ? $page->show():'';
+        
+       
+		$lists = $db->where($where)->limit($page->firstRow . ',' . $page->listRows)->order($this->orders('create_time'))->select();
+		foreach($lists as $k=>$v){
+			$lists[$k]['kinds'] 			= $kinds[$v['type']];	
+			$lists[$k]['create_time'] 	= date('Y-m-d H:i:s',$v['create_time']);
+		}
+		
+		
+		$this->lists   		=  $lists;  
+		$this->kinds 		= C('REL_TYPE');
+		$this->opid 			= $opid;
+		$this->type 			= $type;
+		$this->display('relpricelist');
+    }
+	
+	
 	// @@@NODE-3###confirm###项目比价###
 	public  function  relprice(){
 		$opid 			= I('opid');
 		$relid			= I('relid');
+		$type 			= I('type');
 		$op				= M('op')->where(array('op_id'=>$opid))->find();
 	
 		
 		
-		if(isset($_POST['dosubmit']) && $_POST['dosubmit']){
+		if(isset($_POST['dosubmint']) && $_POST['dosubmint']){
 			
-			$info	= I('info');
-			//判断团号是否可用
+			$info		= I('info');
+			$com		= I('com');
+			$reid 		= I('reid');
+			
+			$info['op_user_id']		= cookie('userid');
+			$info['op_user_name']	= cookie('name');
+			
+			//保存主表
+			if($reid){
+				M('rel_price')->where(array('id'=>$reid))->data($info)->save();	
+			}else{
+				$info['create_time']		= time();
+				$reid = M('rel_price')->add($info);	
+			}
 			
 			
 			
-			$this->success('保存成功！');
+			$coms = array();
+			$list = array();
+			
+			foreach($com as $k=>$v){
+				//保存比价单位
+				$cominfo = array();
+				$cominfo['rel_id']			= $reid;
+				$cominfo['op_id']			= $info['op_id'];
+				$cominfo['company']			= $v['company'];
+				$cominfo['contacts']			= $v['contacts'];
+				$cominfo['contacts_tel']		= $v['contacts_tel'];
+				$cominfo['contacts_email']	= $v['contacts_email'];
+				$cominfo['checkout']			= 0;//isqual($v['company']);
+				if($v['comid']){
+					M('rel_price_com')->where(array('id'=>$v['comid']))->data($cominfo)->save();	
+					$comid 		= $v['comid'];
+					$coms[] 	= $v['comid'];
+				}else{
+					$comid 		= M('rel_price_com')->add($cominfo);	
+					$coms[] 	= $comid;
+				}
+				
+				//保存比价项目		
+				foreach($v['info'] as $kk=>$vv){
+					$termlist = array();
+					$termlist['op_id'] 			= $info['op_id'];
+					$termlist['rel_id'] 			= $reid;	
+					$termlist['rel_com_id']		= $comid;	
+					$termlist['term'] 			= $vv['term'];	
+					$termlist['term_standard']	= $vv['term_standard'];	
+					$termlist['price'] 			= $vv['price'];	
+					if($vv['id']){
+						M('rel_price_list')->where(array('id'=>$vv['id']))->data($termlist)->save();	
+						$list[]	= $vv['id'];
+					}else{
+						$list[]	= M('rel_price_list')->add($termlist);
+					}
+					
+				}	
+					
+			}
+			
+			//清除已删除单位和项目
+			$where = array();
+			$where['rel_id'] 	= $reid;
+			$where['id'] 		= array('not in',implode(',',$coms));
+			M('rel_price_com')->where($where)->delete();
+			
+			$where = array();
+			$where['rel_id'] 	= $reid;
+			$where['id'] 		= array('not in',implode(',',$list));
+			M('rel_price_list')->where($where)->delete();
+			
+			$this->success('保存成功！',I('referer',''));
 		
 		}else{
 			
 			if($relid){
 				$rel = M('rel_price')->find($relid);
+				$com = M('rel_price_com')->where(array('rel_id'=>$relid))->select();
+				foreach($com as $k=>$v){
+					$com[$k]['info'] = M('rel_price_list')->where(array('rel_id'=>$relid,'rel_com_id'=>$v['id']))->select();
+				}
 			}
-			$this->b_name		= $rel['business_name'] ? $rel['business_name'] : $op['project'];
 			
+			$this->kinds 		= C('REL_TYPE');
+			$this->b_name		= $rel['business_name'] ? $rel['business_name'] : $op['project'];
+			$this->op_id		= $rel['op_id'] ? $rel['op_id'] : $opid;
+			$this->vtype 		= $rel['type'] ? $rel['type'] : $type;
 			$this->op 			= $op;
 			$this->rel			= $rel;
+			$this->com 			= $com;
 			$this->display('relprice');
 		}
 	}
+	
+	
+
+	// @@@NODE-3###delrel###删除项目比价###
+    public function delrel(){
+		
+		$relid	= I('relid');
+		M('rel_price')->where(array('id'=>$relid))->delete();
+		M('rel_price_com')->where(array('rel_id'=>$relid))->delete();
+		M('rel_price_list')->where(array('rel_id'=>$relid))->delete();
+		
+		$this->success('删除成功！');
+		
+    }
     
 }
