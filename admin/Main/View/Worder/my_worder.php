@@ -48,11 +48,13 @@
                                         <th class="sorting" >工单完成时间</th>
                                         <!--<if condition="rolemenu(array('Worder/exe_worder'))">
                                         <th width="40" class="taskOptions">执行</th>
-                                        </if>-->
-                                        
+                                        </if>
+
                                         <if condition="rolemenu(array('Worder/del_worder'))">
                                         <th width="40" class="taskOptions">删除</th>
-                                        </if> 
+                                        </if> -->
+                                        <th width="40" class="taskOptions">操作</th>
+
                                     </tr>
                                     <foreach name="lists" item="row"> 
                                     <tr>
@@ -69,16 +71,21 @@
                                             <else />
                                             <td>{$row.complete_time|date='Y-m-d H:i:s',###}</td>
                                         </if>
-                                        <!--<if condition="rolemenu(array('Worder/exe_worder'))">
-                                        <td class="taskOptions">
-                                        <a href="{:U('Worder/exe_worder',array('id'=>$row['id']))}" title="执行" class="btn btn-info btn-smsm"><i class="fa fa-pencil"></i></a>
-                                        </td>
-                                        </if>-->
-                                        <if condition="rolemenu(array('Worder/del_worder'))">
-                                        <td class="taskOptions">
-                                        <button onClick="javascript:ConfirmDel('{:U('Worder/del_worder',array('id'=>$row['id']))}')" title="删除" class="btn btn-warning btn-smsm"><i class="fa fa-times"></i></button>
-                                        </td>
+                                        <!---->
+                                        <if condition="$row.exe_user_id eq cookie('userid')">
+                                            <if condition="rolemenu(array('Worder/exe_worder'))">
+                                                <td class="taskOptions">
+                                                    <a href="{:U('Worder/exe_worder',array('id'=>$row['id']))}" title="执行" class="btn btn-info btn-smsm"><i class="fa fa-pencil"></i></a>
+                                                </td>
+                                            </if>
+                                        <else />
+                                            <if condition="rolemenu(array('Worder/del_worder'))">
+                                                <td class="taskOptions">
+                                                    <button onClick="javascript:ConfirmDel('{:U('Worder/del_worder',array('id'=>$row['id']))}')" title="删除" class="btn btn-warning btn-smsm"><i class="fa fa-times"></i></button>
+                                                </td>
+                                            </if>
                                         </if>
+
                                     </tr>
                                     </foreach>					
                                 </table>

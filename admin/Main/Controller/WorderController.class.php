@@ -150,7 +150,20 @@ class WorderController extends BaseController{
             $where                  = array();
             $where['ini_user_id']   = $userid;  //我申请的工单
             //$where['exe_user_id']   = $userid;  //我执行的工单
-            $lists                  = M('worder')->where($where)->select();
+            $lists                  = M('worder')->where("ini_user_id = '$userid' or exe_user_id = '$userid'")->select();
+            foreach($lists as $k=>$v){
+                //判断工单类型
+                if($v['worder_type']==0) $lists[$k]['type'] = '维修工单';
+                if($v['worder_type']==1) $lists[$k]['type'] = '管理工单';
+                if($v['worder_type']==2) $lists[$k]['type'] = '质量工单';
+
+                //判断工单状态
+                if($v['status']==0)     $lists[$k]['sta'] = '未响应';
+                if($v['status']==1)     $lists[$k]['sta'] = '执行部门已响应';
+                if($v['status']==2)     $lists[$k]['sta'] = '执行部门已确认完成';
+                if($v['status']==3)     $lists[$k]['sta'] = '发起人已确认完成';
+                if($v['status']==-1)    $lists[$k]['sta'] = '拒绝或无效工单';
+            }
             $this->lists            = $lists;
             $pin                    = I('pin')?I('pin'):1;
             $this->pin              = $pin;
