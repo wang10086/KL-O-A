@@ -39,25 +39,34 @@
                                         	<th class="sorting" data="id">序号</th>
                                             <th class="sorting" data="req_type">申请类型</th>
                                             <th class="sorting" data="req_time">申请时间</th>
+                                            <th>团号</th>
                                             <th width="220">资源名称</th>
+                                            <th>计调人员</th>
+                                            <th>回款金额</th>
                                         	<th >备注</th>
                                         	<th>申请人</th>
                                         	<th >申请原因</th>
                                         	<th>审批状态</th>
                                         	<th>审批意见</th>
                                             <th >审批</th>
-                                           
                                         </tr>
                                         <foreach name="lists" item="row">                      
                                         <tr>
                                             <td>{$row.id}</a></td>
                                             <td>{$row.req_type_name}</td>
                                             <td>{$row.req_time|date='Y-m-d H:i:s',###}</td>
+                                            <if condition="$row['group_id']"><td>{$row['group_id']}</td>
+                                            <else />
+                                                <td>未成团</td>
+                                            </if>
+
                                             <td>
                                             <a href="<?php echo U($row['cfgdata']['view'], array('id'=>$row['req_id'])); ?>" target="_blank" title="{$row.resdata.name}">
                                             <div class="mores">{$row.resdata.name}</div>
                                             </a>
                                             </td>
+                                            <td>{$row.jidiao}</td>
+                                            <td>{$row.amount}</td>
                                             <td>{$row.other}</td>
                                             <td>{$row.req_uname}</td>
                                             <td>{$row.req_reason}</td>
