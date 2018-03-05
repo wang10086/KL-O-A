@@ -70,9 +70,13 @@
                                             <td>{$row.complete_time|date='Y-m-d H:i:s',###}</td>
                                         </if>
                                         <if condition="rolemenu(array('Worder/exe_worder'))">
-                                        <td class="taskOptions">
-                                        <a href="{:U('Worder/exe_worder',array('id'=>$row['id']))}" title="执行" class="btn btn-info btn-smsm"><i class="fa fa-pencil"></i></a>
-                                        </td>
+                                            <if condition="($row.sta eq '执行部门已确认完成') or ($row.sta eq '发起人已确认完成') or ($row.sta eq '拒绝或无效工单')">
+                                                <td class="taskOptions"></td>
+                                            <else />
+                                                <td class="taskOptions">
+                                                    <a href="{:U('Worder/exe_worder',array('id'=>$row['id']))}" title="执行" class="btn btn-info btn-smsm"><i class="fa fa-pencil"></i></a>
+                                                </td>
+                                            </if>
                                         </if>
                                         <if condition="rolemenu(array('Worder/del_worder'))">
                                         <td class="taskOptions">
