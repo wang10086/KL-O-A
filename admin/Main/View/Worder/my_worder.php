@@ -53,7 +53,9 @@
                                         <if condition="rolemenu(array('Worder/del_worder'))">
                                         <th width="40" class="taskOptions">删除</th>
                                         </if> -->
-                                        <th width="40" class="taskOptions">操作</th>
+                                        <if condition="rolemenu(array('Worder/exe_worder')) or rolemenu(array('Worder/del_worder'))">
+                                            <th width="40" class="taskOptions">操作</th>
+                                        </if>
 
                                     </tr>
                                     <foreach name="lists" item="row"> 
@@ -73,17 +75,17 @@
                                         </if>
                                         <!---->
                                         <if condition="$row.exe_user_id eq cookie('userid')">
-                                            <if condition="rolemenu(array('Worder/exe_worder'))">
                                                 <td class="taskOptions">
+                                                    <if condition="rolemenu(array('Worder/exe_worder'))">
                                                     <a href="{:U('Worder/exe_worder',array('id'=>$row['id']))}" title="执行" class="btn btn-info btn-smsm"><i class="fa fa-pencil"></i></a>
+                                                    </if>
                                                 </td>
-                                            </if>
                                         <else />
-                                            <if condition="rolemenu(array('Worder/del_worder'))">
-                                                <td class="taskOptions">
-                                                    <button onClick="javascript:ConfirmDel('{:U('Worder/del_worder',array('id'=>$row['id']))}')" title="删除" class="btn btn-warning btn-smsm"><i class="fa fa-times"></i></button>
-                                                </td>
-                                            </if>
+                                            <td class="taskOptions">
+                                                <if condition="rolemenu(array('Worder/del_worder'))">
+                                                <button onClick="javascript:ConfirmDel('{:U('Worder/del_worder',array('id'=>$row['id']))}')" title="删除" class="btn btn-warning btn-smsm"><i class="fa fa-times"></i></button>
+                                                </if>
+                                            </td>
                                         </if>
 
                                     </tr>
