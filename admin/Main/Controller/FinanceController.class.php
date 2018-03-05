@@ -359,7 +359,6 @@ class FinanceController extends BaseController {
 		
 
 		$this->lists = $lists;
-        //var_dump($this->lists);die;
 		$this->display('settlementlist');
     }
 	
