@@ -36,6 +36,7 @@
                                         <th class="sorting" data="maoli">毛利</th>
                                         <th class="sorting" data="maolilv">毛利率</th>
                                         <th class="sorting" data="renjunmaoli">人均毛利</th>
+                                        <th class="sorting" data="remark" width="300px">备注</th>
                                         <th class="sorting" data="hetong">合同签订</th>
                                         <th class="sorting" data="create_user_name">创建者</th>
                                         <th class="sorting" data="audit_status">状态</th>
@@ -54,6 +55,7 @@
                                         <td>&yen; {$row.maoli}</td>
                                         <td>{$row.maolilv}</td>
                                         <td>&yen; {$row.renjunmaoli}</td>
+                                        <td>{$row.remark}</td>
                                         <td><?php if($row['hetong']){ echo '已签订';} ?></td>
                                         <td>{$row.create_user_name}</td>
                                         <td>{$row.budget_audit_status}</td>
