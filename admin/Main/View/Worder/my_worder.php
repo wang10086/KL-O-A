@@ -76,11 +76,15 @@
                                         </if>
                                         <if condition="$pin eq 1">
                                             <td>
-                                                <if condition="rolemenu(array('Worder/revoke'))">
-                                                    <if condition="($row.sta neq '执行部门已确认完成') and ($row.sta neq '发起人已确认完成') and ($row.sta neq '拒绝或无效工单') and ($row.sta neq '已撤销')">
-                                                        <a href="{:U('Worder/revoke',array('id'=>$row['id']))}" title="撤销" class="btn btn-info btn-smsm"><i class="fa fa-reply"></i></a>
-                                                        <else />
 
+                                                <if condition="($row.sta neq '执行部门已确认完成') and ($row.sta neq '发起人已确认完成') and ($row.sta neq '拒绝或无效工单') and ($row.sta neq '已撤销')">
+                                                    <if condition="rolemenu(array('Worder/revoke'))">
+                                                    <a href="{:U('Worder/revoke',array('id'=>$row['id']))}" title="撤销" class="btn btn-info btn-smsm"><i class="fa fa-reply"></i></a>
+                                                    </if>
+                                                <else />
+                                                    <if condition="($row.sta eq '执行部门已确认完成') and (rolemenu(array('Worder/resure')))">
+                                                        <!--<a href="{:U('Worder/resure',array('id'=>$row['id']))}" title="确认完成" class="btn btn-info btn-smsm"><i class="fa fa-pencil"></i></a>-->
+                                                        <button onClick="javascript:{:open_audit($row['id'])}" title="确认执行" class="btn btn-success btn-sm"><i class="fa fa-check-circle-o"></i></button>
                                                     </if>
                                                 </if>
                                             </td>
