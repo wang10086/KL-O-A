@@ -373,7 +373,7 @@ function save_res($module,$releid,$data){
 			//保存数据
 			$info = array();
 			$info['module']        = $module;
-			$info['releid']        = $releid;
+			$info['rel_id']        = $releid;
 			$info['title']         = $data['title'][$k];
 			$info['tag']           = $data['tag'][$k];
 			$info['description']   = $data['desc'][$k];
