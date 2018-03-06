@@ -30,7 +30,8 @@
                                 
                                 <div class="btn-group" id="catfont">
                                     <a href="{:U('Worder/worder_list',array('pin'=>0))}" class="btn <?php if($pin==0){ echo 'btn-info';}else{ echo 'btn-default';} ?>">所有工单</a>
-                                    <a href="{:U('Worder/my_worder',array('pin'=>1))}" class="btn <?php if($pin==1){ echo 'btn-info';}else{ echo 'btn-default';} ?>">我的工单</a>
+                                    <a href="{:U('Worder/my_worder',array('pin'=>1))}" class="btn <?php if($pin==1){ echo 'btn-info';}else{ echo 'btn-default';} ?>">我的已申请工单</a>
+                                    <a href="{:U('Worder/my_worder',array('pin'=>2))}" class="btn <?php if($pin==2){ echo 'btn-info';}else{ echo 'btn-default';} ?>">我的待执行工单</a>
                                 </div>
                                 
                                 <table class="table table-bordered dataTable fontmini" id="tablelist" style="margin-top:10px;">
@@ -73,17 +74,24 @@
                                             <else />
                                             <td>{$row.complete_time|date='Y-m-d H:i:s',###}</td>
                                         </if>
-                                        <!---->
-                                        <if condition="$row.exe_user_id eq cookie('userid')">
-                                                <td class="taskOptions">
-                                                    <if condition="rolemenu(array('Worder/exe_worder'))">
-                                                    <a href="{:U('Worder/exe_worder',array('id'=>$row['id']))}" title="执行" class="btn btn-info btn-smsm"><i class="fa fa-pencil"></i></a>
+                                        <if condition="$pin eq 1">
+                                            <td>
+                                                <if condition="rolemenu(array('Worder/revoke'))">
+                                                    <if condition="($row.sta neq '执行部门已确认完成') and ($row.sta neq '发起人已确认完成') and ($row.sta neq '拒绝或无效工单') and ($row.sta neq '已撤销')">
+                                                        <a href="{:U('Worder/revoke',array('id'=>$row['id']))}" title="撤销" class="btn btn-info btn-smsm"><i class="fa fa-reply"></i></a>
+                                                        <else />
+
                                                     </if>
-                                                </td>
+                                                </if>
+                                            </td>
                                         <else />
-                                            <td class="taskOptions">
-                                                <if condition="rolemenu(array('Worder/del_worder'))">
-                                                <button onClick="javascript:ConfirmDel('{:U('Worder/del_worder',array('id'=>$row['id']))}')" title="删除" class="btn btn-warning btn-smsm"><i class="fa fa-times"></i></button>
+                                            <td>
+                                                <if condition="rolemenu(array('Worder/exe_worder'))">
+                                                    <if condition="($row.sta neq '执行部门已确认完成') and ($row.sta neq '发起人已确认完成') and ($row.sta neq '拒绝或无效工单') and ($row.sta neq '已撤销')">
+                                                        <a href="{:U('Worder/exe_worder',array('id'=>$row['id']))}" title="执行" class="btn btn-info btn-smsm"><i class="fa fa-pencil"></i></a>
+                                                        <else />
+
+                                                    </if>
                                                 </if>
                                             </td>
                                         </if>

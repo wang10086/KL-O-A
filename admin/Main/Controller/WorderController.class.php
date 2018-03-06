@@ -43,7 +43,7 @@ class WorderController extends BaseController{
                 $uid     = cookie('userid');
                 $title   = '您有来自['.$info['ini_dept_name'].'--'.$info['ini_user_name'].']的工单待执行!';
                 $content = '';
-                $url     = U('worder/my_worder',array('id'=>$info['exe_user_id']));
+                $url     = U('worder/my_worder',array('id'=>$info['exe_user_id'],'pin'=>2));
                 $user    = '['.$info['exe_user_id'].']';
                 send_msg($uid,$title,$content,$url,$user,'');
                 $this->success("发起工单成功!");
@@ -98,6 +98,7 @@ class WorderController extends BaseController{
             if($v['status']==2)     $lists[$k]['sta'] = '执行部门已确认完成';
             if($v['status']==3)     $lists[$k]['sta'] = '发起人已确认完成';
             if($v['status']==-1)    $lists[$k]['sta'] = '拒绝或无效工单';
+            if($v['status']==-2)    $lists[$k]['sta'] = '已撤销';
         }
         $this->lists    = $lists;
         $this->pin      = $pin;
@@ -151,11 +152,21 @@ class WorderController extends BaseController{
         if (isset($_POST['dosubmint'])){
 
         }else{
+            $db                     = M('worder');
+            $pin                    = I('pin',1);
             $userid                 = cookie('userid');
             $where                  = array();
-            $where['ini_user_id']   = $userid;  //我申请的工单
-            //$where['exe_user_id']   = $userid;  //我执行的工单
-            $lists                  = M('worder')->where("ini_user_id = '$userid' or exe_user_id = '$userid'")->select();
+            if ($pin == 1){
+                $where['ini_user_id']   = $userid;  //我申请的工单
+            }elseif ($pin == 2){
+                $where['exe_user_id']   = $userid;  //我执行的工单
+            }
+            //分页
+            $pagecount		= $db->where($where)->count();
+            $page			= new Page($pagecount, P::PAGE_SIZE);
+            $this->pages	= $pagecount>P::PAGE_SIZE ? $page->show():'';
+
+            $lists                  = $db->where($where)->limit($page->firstRow . ',' . $page->listRows)->order($this->orders('create_time'))->select();
             foreach($lists as $k=>$v){
                 //判断工单类型
                 if($v['worder_type']==0) $lists[$k]['type'] = '维修工单';
@@ -168,9 +179,9 @@ class WorderController extends BaseController{
                 if($v['status']==2)     $lists[$k]['sta'] = '执行部门已确认完成';
                 if($v['status']==3)     $lists[$k]['sta'] = '发起人已确认完成';
                 if($v['status']==-1)    $lists[$k]['sta'] = '拒绝或无效工单';
+                if($v['status']==-2)    $lists[$k]['sta'] = '已撤销';
             }
             $this->lists            = $lists;
-            $pin                    = I('pin')?I('pin'):1;
             $this->pin              = $pin;
             $this->display();
         }
@@ -184,6 +195,23 @@ class WorderController extends BaseController{
             $this->success('删除工单成功!');
         }else{
             $this->error('删除数据失败!');
+        }
+    }
+
+    //撤销工单
+    public function revoke(){
+        $id             = I('id');
+        $db             = M("worder");
+        $where          = array();
+        $where['id']    = $id;
+        $data           = array();
+        $data['status'] = -2;
+        $data['complete_time'] = NOW_TIME;
+        $res    = $db->where($where)->save($data);
+        if ($res){
+            $this->success('撤销工单成功!');
+        }else{
+            $this->error('撤销工单失败!请稍后重试!');
         }
     }
 }
