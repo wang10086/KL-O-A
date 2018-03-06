@@ -360,6 +360,38 @@ function upload_m($obj,$cont,$attr='',$btn='上传',$showbox="flist",$formname="
 	return $html;
 }
 
+function save_res($module,$releid,$data){
+	//处理图片
+	$where = array();
+	$where['module']  = $module;
+	$where['releid']  = $releid;
+
+	$tp_db = M('attachment');
+
+	if(is_array($data)){
+		foreach($data['id'] as $k=>$v){
+			//保存数据
+			$info = array();
+			$info['module']        = $module;
+			$info['releid']        = $releid;
+			$info['title']         = $data['title'][$k];
+			$info['tag']           = $data['tag'][$k];
+			$info['description']   = $data['desc'][$k];
+			$info['status']        = $data['status'][$k];
+			$info['filename']      = $data['filename'][$k];
+			$issave = $tp_db->where(array('id'=>$v))->save($info);
+		}
+		$where['id']     = array('not in',implode(',',$data['id']));
+	}
+
+	//查询要删除的图片
+	$isdel = $tp_db->where($where)->select();
+	if($isdel){
+		foreach($isdel as $k=>$v){
+			$tp_db->where(array('id'=>$v['id']))->delete();
+		}
+	}
+}
 
 function get_upload_m($attr=''){
 	

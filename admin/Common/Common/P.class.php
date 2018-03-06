@@ -85,6 +85,9 @@ final class P {
 	const REQ_TYPE_SETTLEMENT         = 801;  // 项目结算申请
 	const REQ_TYPE_HUIKUAN            = 802;  // 项目回款申请
 
+    const WORDER_INI                  = 11;   //用户发起工单时上传文件
+    const WORDER_EXE                  = 12;   //用户执行工单时上传文件
+
 	
 	
 	//错误

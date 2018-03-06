@@ -24,6 +24,8 @@ class WorderController extends BaseController{
             $info['ini_dept_name']  = $_SESSION['rolename'];
             $info['create_time']    = NOW_TIME;
             $info['plan_complete_time'] = NOW_TIME+(3600*24*5);
+            $attr                   = I('attr');
+
             $roleid                 = $info['exe_dept_id'];
             $userid                 = $info['exe_user_id'];
             if (!$roleid && !$userid){
@@ -35,6 +37,7 @@ class WorderController extends BaseController{
             $res = M('worder')->add($info);
             if ($res){
                 //保存附件信息
+                save_res(P::WORDER_INI,$res,$attr);
 
                 //发送信息
                 $uid     = cookie('userid');
@@ -110,9 +113,11 @@ class WorderController extends BaseController{
             $refuse                         = I('refuse');
             $info['status']                 = $refuse?$refuse:2; //执行部门确认完成
             $info['complete_time']          = NOW_TIME;
+            $attr                           = I('attr');
             $res = M('worder')->where("id = '$id'")->save($info);
             if ($res){
                 //保存上传附件
+                save_res(P::WORDER_INI,$res,$attr);
 
                 //向工单发起人推送消息
                 $uid     = cookie('userid');

@@ -75,7 +75,7 @@
 
                                         <div class="form-group col-md-12">
                                             <label>上传文件附件：</label>
-                                            {:upload_m('uploadfile','files','','上传文件附件')}
+                                            {:upload_m('uploadfile','files',$attr,'上传文件附件')}
                                         </div>
 
                                     </div>
