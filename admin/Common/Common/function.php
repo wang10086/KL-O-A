@@ -364,7 +364,7 @@ function save_res($module,$releid,$data){
 	//处理图片
 	$where = array();
 	$where['module']  = $module;
-	$where['releid']  = $releid;
+	$where['rel_id']  = $releid;
 
 	$tp_db = M('attachment');
 
