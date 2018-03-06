@@ -374,9 +374,6 @@ function save_res($module,$releid,$data){
 			$info = array();
 			$info['module']        = $module;
 			$info['rel_id']        = $releid;
-			$info['title']         = $data['title'][$k];
-			$info['tag']           = $data['tag'][$k];
-			$info['description']   = $data['desc'][$k];
 			$info['status']        = $data['status'][$k];
 			$info['filename']      = $data['filename'][$k];
 			$issave = $tp_db->where(array('id'=>$v))->save($info);
