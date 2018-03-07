@@ -82,8 +82,7 @@
                                                     <a href="{:U('Worder/revoke',array('id'=>$row['id']))}" title="撤销" class="btn btn-info btn-smsm"><i class="fa fa-reply"></i></a>
                                                     </if>
                                                 <else />
-                                                    <if condition="($row.sta eq '执行部门已确认完成') and (rolemenu(array('Worder/audit_resure')))">
-                                                        <!--<a href="{:U('Worder/audit_resure',array('id'=>$row['id']))}" title="确认完成" class="btn btn-info btn-smsm"><i class="fa fa-pencil"></i></a>-->
+                                                    <if condition="($row.sta eq '执行部门已确认完成') and (rolemenu(array('Worder/new_worder')))">
                                                         <button onClick="javascript:{:open_resure($row['id'])}" title="确认执行完成" class="btn btn-success btn-sm"><i class="fa fa-check-circle-o"></i></button>
                                                     </if>
                                                 </if>
