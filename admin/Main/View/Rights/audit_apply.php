@@ -18,7 +18,7 @@
                         <input type="radio" name="info[dst_status]" value="<?php echo P::AUDIT_STATUS_NOT_PASS ;?>"> 审批不通过
                         
                     </div>
-                    <?php 
+                    <?php
                     if ($req_type == P::REQ_TYPE_PRICE) {
                     ?>
                     <div class="form-group box-float-12">
@@ -32,7 +32,7 @@
                         <textarea class="form-control" name="info[audit_reason]" style="height:100px;" placeholder="审批意见"></textarea>
                     </div>
                 </form>
-            
+
             </div>
         </section>
         
