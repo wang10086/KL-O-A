@@ -58,7 +58,7 @@ class ExportController extends BaseController {
 		
 		$op           = M('op')->where($where)->find();
 		$costcc       = M('op_costacc')->field('title,unitcost,amount,total')->where(array('op_id'=>$opid,'status'=>1))->order('id')->select();
-		
+
 		$filename = $op['group_id'].'预算表';
 		
 		$data = array();
@@ -102,7 +102,7 @@ class ExportController extends BaseController {
 			$data['K107'] = $budget['maoli'];  //合计毛利润
 			$model = 'admin/assets/xls/yusuan_100.xls';
 		}
-		
+
         model_exportexcel($data,$filename,$model);
 		
 	}
