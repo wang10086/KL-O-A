@@ -949,6 +949,10 @@ function open_audit($audit_id) {
     return "open_audit('" . U('Rights/audit_apply', array('id'=>$audit_id)) ."')";
 }
 
+function open_resure($resure_id) {
+	return "open_resure('" . U('Worder/audit_resure', array('id'=>$resure_id)) ."')";
+}
+
 
 
 function opid($day=''){

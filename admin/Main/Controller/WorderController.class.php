@@ -214,4 +214,21 @@ class WorderController extends BaseController{
             $this->error('撤销工单失败!请稍后重试!');
         }
     }
+
+    //发起人确认工单执行
+    public function audit_resure(){
+        if (isset($_POST['dosubmit'])) {
+            $id     = I('id');
+            $info   = I('info');
+            if ($info['status'] == 3){
+                $res    = M('worder')->where("id = '$id'")->save($info);
+            }
+            $this->msg = "操作成功！";
+            $this->display('audit_ok');
+        } else {
+
+            $this->id = I('id');
+            $this->display('audit_resure');
+        }
+    }
 }

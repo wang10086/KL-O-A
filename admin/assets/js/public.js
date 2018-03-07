@@ -189,7 +189,25 @@ function open_audit (obj) {
 			cancel: function () {
 			}
 		});	
-} 
+}
+
+function open_resure (obj) {
+	art.dialog.open(obj, {
+		lock:true,
+		id:'audit_win',
+		title: '确认工单执行情况',
+		width:600,
+		height:300,
+		okValue: '提交',
+		ok: function () {
+			this.iframe.contentWindow.gosubmint();
+			return false;
+		},
+		cancelValue:'取消',
+		cancel: function () {
+		}
+	});
+}
 
 
 function open_req (obj) {
