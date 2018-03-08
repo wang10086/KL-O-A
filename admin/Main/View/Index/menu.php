@@ -274,6 +274,13 @@
                         </li>
                         
                         
+                        <li class="{:ison(CONTROLLER_NAME, 'Work')}">
+                            <a href="{:U('Work/record')}">
+                                <i class="fa fa-file"></i> <span>工作记录</span>
+                            </a>
+                        </li>
+                        
+                        
                         <if condition="rolemenu(array('Rights/index','Rights/myreq'))">
                         <li class="treeview {:on('Rights')}">
                             <a href="javascript:;">
@@ -337,7 +344,7 @@
                         <if condition="rolemenu(array('Finance/costacclist','Finance/budget','Finance/settlementlist'))">
                         <li class="treeview {:ison(CONTROLLER_NAME, 'Finance')}">
                             <a href="javascript:;">
-                                <i class="fa fa-calendar"></i>
+                                <i class="fa  fa-yen"></i>
                                 <span>财务管理</span>
                                 <i class="fa fa-angle-left pull-right"></i>
                             </a>

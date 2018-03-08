@@ -3998,3 +3998,5 @@ th{outline: none;}
 .contentbot h2{font-size:16px; color:#ff9900; border-bottom:2px solid #dddddd; padding-bottom:10px;}
 .delxxx{ font-size:14px; margin-top:8px;}
 .reltitle{ color:#008d4c;}
+
+.opencontent{ width:100%; height:auto !important; float:left; clear:both;}

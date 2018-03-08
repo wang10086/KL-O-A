@@ -131,6 +131,7 @@ class BasepubController extends Controller {
 	}
 	
 	
+	/*
 	protected final function request_audit($req_type, $req_id, $req_reason = '', $src_status = P::AUDIT_STATUS_NOT_AUDIT,  $req_uid = null, $req_uname = null)
 	{
 	    // 如果没有指定用户ID 则使用当前登录用户
@@ -323,6 +324,7 @@ class BasepubController extends Controller {
 	    
 	    return M('audit_log')->where('id='.$id)->save($data);    
 	}
+	*/
 }
 
 

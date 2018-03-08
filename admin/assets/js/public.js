@@ -172,6 +172,15 @@ function openimg(url){
 		});	
   }
 
+function opencontent(cont){
+		art.dialog({
+			width:600,
+			height:300,
+			title: '详情',
+			content: '<div class="opencontent">'+cont+'</div>',
+			lock: true
+		});	
+  }
 
 function open_audit (obj) {
 		art.dialog.open(obj, {
