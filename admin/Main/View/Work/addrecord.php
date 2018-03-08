@@ -3,7 +3,7 @@
             <aside class="right-side">
                 <!-- Content Header (Page header) -->
                 <section class="content-header">
-                    <h1>编辑工作记录</h1>
+                    <h1>新建工作记录</h1>
                     <ol class="breadcrumb">
                         <li><a href="{:U('Index/index')}"><i class="fa fa-home"></i> 首页</a></li>
                         <li><a href="{:U('Work/record')}"><i class="fa fa-gift"></i> 工作记录</a></li>
@@ -25,7 +25,7 @@
                             
                             <div class="box box-warning">
                                 <div class="box-header">
-                                    <h3 class="box-title">编辑工作记录</h3>
+                                    <h3 class="box-title">新建工作记录</h3>
                                 </div>
                                 <div class="box-body">
                                     <div class="content">
