@@ -159,7 +159,9 @@ class WorderController extends BaseController{
             if ($pin == 1){
                 $where['ini_user_id']   = $userid;  //我申请的工单
             }elseif ($pin == 2){
-                $where['exe_user_id']   = $userid;  //我执行的工单
+                $where['exe_user_id']   = $userid;  //我的待执行工单
+                $st                     = array(0,1,2);
+                $where['status']        = array('in',$st);
             }
             //分页
             $pagecount		= $db->where($where)->count();
