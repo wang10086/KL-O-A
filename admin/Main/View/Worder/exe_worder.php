@@ -62,6 +62,22 @@
                                         </div>
 
                                         <div class="form-group col-md-12">
+                                            <!--<label >相关文件：</label>-->
+                                            <h2 style="font-size:14px;  border-bottom:2px solid #dedede; padding-bottom:10px;">相关文件</h2>
+                                        </div>
+                                        <div class="form-group col-md-12">
+                                            <div id="showimglist">
+                                                <foreach name="atts" key="k" item="v">
+                                                    <?php if(isimg($v['filepath'])){ ?>
+                                                        <a href="{$v.filepath}" target="_blank"><div class="fileext"><?php echo isimg($v['filepath']); ?></div></a>
+                                                    <?php }else{ ?>
+                                                        <a href="{$v.filepath}" target="_blank"><img src="{:thumb($v['filepath'],100,100)}" style="margin-right:15px; margin-top:15px;"></a>
+                                                    <?php } ?>
+                                                </foreach>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group col-md-12">
                                             <label>执行意见:</label>
                                             <textarea class="form-control" name="exe_complete_content"></textarea>
                                         </div>

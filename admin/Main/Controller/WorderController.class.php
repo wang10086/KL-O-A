@@ -143,6 +143,9 @@ class WorderController extends BaseController{
             if($data['worder_type']==2) $data['type'] = '质量工单';
             $this->data         = $data;
             $this->id           = $id;
+            //获取上传文件
+            $this->atts         = get_res(P::WORDER_INI,$id);
+            var_dump($this->atts);die;
             $this->display();
         }
     }
