@@ -145,7 +145,6 @@ class WorderController extends BaseController{
             $this->id           = $id;
             //获取上传文件
             $this->atts         = get_res(P::WORDER_INI,$id);
-            var_dump($this->atts);die;
             $this->display();
         }
     }
