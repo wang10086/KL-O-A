@@ -87,6 +87,7 @@ final class P {
 
     const WORDER_INI                  = 11;   //用户发起工单时上传文件
     const WORDER_EXE                  = 12;   //用户执行工单时上传文件
+    const WORDER_PROJECT              = 100;  //用户执行工单时上传文件
 
 	
 	

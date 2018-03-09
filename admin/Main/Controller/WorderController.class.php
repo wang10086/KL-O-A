@@ -75,6 +75,7 @@ class WorderController extends BaseController{
         $pin                        = I('pin')?I('pin'):0;
 
         $where                      = array();
+        $where['worder_type']       = array('neq',P::WORDER_PROJECT);
 
         if ($worder_title)          $where['w.worder_title']        = array('like','%'.$worder_title.'%');
         if ($worder_content)        $where['w.worder_content']      = array('like','%'.$worder_content.'%');
@@ -158,6 +159,7 @@ class WorderController extends BaseController{
             $pin                    = I('pin',1);
             $userid                 = cookie('userid');
             $where                  = array();
+            $where['worder_type']       = array('neq',P::WORDER_PROJECT);
             if ($pin == 1){
                 $where['ini_user_id']   = $userid;  //我申请的工单
             }elseif ($pin == 2){
