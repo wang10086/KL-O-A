@@ -393,11 +393,12 @@ function save_res($module,$releid,$data){
 function get_res($module,$releid){
 	//获取默认素材
 	$attid = array();
-	$attachment = M('attachment')->field('id')->where(array('module'=>$module,'rel_id'=>$releid))->select();  //
+	$attachment = M('attachment')->where(array('module'=>$module,'rel_id'=>$releid))->select();  //
 	foreach($attachment as $v){
 		$attid[] = 	$v['id'];
 	}
-	return implode(',',$attid);
+	//return implode(',',$attid);
+	return $attachment;
 }
 
 
