@@ -412,8 +412,8 @@
                                         <!--<li><a href="javascript:;" onClick="art_show_msg('加班开发中，稍后呈现...',5)"><i class="fa fa-angle-right"></i> 管理工单</a></li>-->
                                     </if>
                                     <if condition="rolemenu(array('worder/project'))">
-                                        <!--<li><a href="{:U('worder/project')}"><i class="fa fa-angle-right"></i> 项目工单</a></li>-->
-                                        <li><a href="javascript:;" onClick="art_show_msg('加班开发中，稍后呈现...',5)"><i class="fa fa-angle-right"></i> 项目工单</a></li>
+                                        <li><a href="{:U('worder/project')}"><i class="fa fa-angle-right"></i> 项目工单</a></li>
+                                        <!--<li><a href="javascript:;" onClick="art_show_msg('加班开发中，稍后呈现...',5)"><i class="fa fa-angle-right"></i> 项目工单</a></li>-->
                                     </if>
                                     <!--
                                     <li><a href="javascript:;" onClick="art_show_msg('加班开发中，稍后呈现...',5)"><i class="fa fa-angle-right"></i> KPI</a></li>

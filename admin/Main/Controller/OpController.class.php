@@ -652,7 +652,12 @@ class OpController extends BaseController {
 			$data = array();
 			$data['line'] = $info;
 			$auth = M('op_auth')->where(array('op_id'=>$opid))->find();
-			if($auth){
+
+            //创建工单
+            $thing  = "行程方案";
+            project_worder($info,$opid,$thing);
+
+            if($auth){
 				M('op_auth')->data($data)->where(array('id'=>$auth['id']))->save();
 			}else{
 				$data['op_id'] = $opid;
@@ -697,13 +702,20 @@ class OpController extends BaseController {
 			$data = array();
 			$data['res'] = $info;
 			$auth = M('op_auth')->where(array('op_id'=>$opid))->find();
+
+            //创建工单
+            $thing  = "物资调度";
+            project_worder($info,$opid,$thing);
+
 			if($auth){
 				M('op_auth')->data($data)->where(array('id'=>$auth['id']))->save();
 			}else{
 				$data['op_id'] = $opid;
 				M('op_auth')->add($data);
 			}
-			
+
+
+
 			$record = array();
 			$record['op_id']   = $opid;
 			$record['optype']  = 2;
@@ -741,6 +753,11 @@ class OpController extends BaseController {
 			$data = array();
 			$data['guide'] = $info;
 			$auth = M('op_auth')->where(array('op_id'=>$opid))->find();
+
+            //创建工单
+            $thing  = "专家辅导员调度";
+            project_worder($info,$opid,$thing);
+
 			if($auth){
 				M('op_auth')->data($data)->where(array('id'=>$auth['id']))->save();
 			}else{
@@ -785,6 +802,11 @@ class OpController extends BaseController {
 			$data = array();
 			$data['material'] = $info;
 			$auth = M('op_auth')->where(array('op_id'=>$opid))->find();
+
+            //创建工单
+            $thing  = "合格供方调度";
+            project_worder($info,$opid,$thing);
+
 			if($auth){
 				M('op_auth')->data($data)->where(array('id'=>$auth['id']))->save();
 			}else{
@@ -829,6 +851,11 @@ class OpController extends BaseController {
 			$data = array();
 			$data['price'] = $info;
 			$auth = M('op_auth')->where(array('op_id'=>$opid))->find();
+
+            //创建工单
+            $thing  = "项目标价";
+            project_worder($info,$opid,$thing);
+
 			if($auth){
 				M('op_auth')->data($data)->where(array('id'=>$auth['id']))->save();
 			}else{

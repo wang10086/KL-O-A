@@ -77,8 +77,8 @@ class WorderController extends BaseController{
         $where                      = array();
         $where['worder_type']       = array('neq',P::WORDER_PROJECT);
 
-        if ($worder_title)          $where['w.worder_title']        = array('like','%'.$worder_title.'%');
-        if ($worder_content)        $where['w.worder_content']      = array('like','%'.$worder_content.'%');
+        if ($worder_title)          $where['worder_title']        = array('like','%'.$worder_title.'%');
+        if ($worder_content)        $where['worder_content']      = array('like','%'.$worder_content.'%');
         if ($pin==1)			        $where['o.create_user']		    = cookie('userid');
 
         //分页
@@ -142,6 +142,7 @@ class WorderController extends BaseController{
             if($data['worder_type']==0) $data['type'] = '维修工单';
             if($data['worder_type']==1) $data['type'] = '管理工单';
             if($data['worder_type']==2) $data['type'] = '质量工单';
+            if($data['worder_type']==100)$data['type']= '项目工单';
             $this->data         = $data;
             $this->id           = $id;
             //获取上传文件
@@ -159,11 +160,20 @@ class WorderController extends BaseController{
             $pin                    = I('pin',1);
             $userid                 = cookie('userid');
             $where                  = array();
-            $where['worder_type']       = array('neq',P::WORDER_PROJECT);
             if ($pin == 1){
-                $where['ini_user_id']   = $userid;  //我申请的工单
+                $where['worder_type']   = array('neq',P::WORDER_PROJECT);   //排除项目工单
+                $where['ini_user_id']   = $userid;                          //我申请的工单
             }elseif ($pin == 2){
-                $where['exe_user_id']   = $userid;  //我的待执行工单
+                $where['worder_type']   = array('neq',P::WORDER_PROJECT);
+                $where['exe_user_id']   = $userid;                          //我的待执行工单
+                $st                     = array(0,1,2);
+                $where['status']        = array('in',$st);
+            }elseif ($pin == 101){
+                $where['worder_type']   = array('eq',P::WORDER_PROJECT);   //项目工单
+                $where['ini_user_id']   = $userid;                         //我指派的项目工单
+            }elseif ($pin == 102){
+                $where['worder_type']   = array('eq',P::WORDER_PROJECT);
+                $where['exe_user_id']   = $userid;                          //我的待执行项目工单
                 $st                     = array(0,1,2);
                 $where['status']        = array('in',$st);
             }
@@ -178,6 +188,7 @@ class WorderController extends BaseController{
                 if($v['worder_type']==0) $lists[$k]['type'] = '维修工单';
                 if($v['worder_type']==1) $lists[$k]['type'] = '管理工单';
                 if($v['worder_type']==2) $lists[$k]['type'] = '质量工单';
+                if($v['worder_type']==100)$lists[$k]['type']= '项目工单';
 
                 //判断工单状态
                 if($v['status']==0)     $lists[$k]['sta'] = '未响应';
@@ -189,7 +200,11 @@ class WorderController extends BaseController{
             }
             $this->lists            = $lists;
             $this->pin              = $pin;
-            $this->display();
+            if ($pin == 1 or $pin == 2){
+                $this->display('my_worder');
+            }elseif ($pin ==101 or $pin == 102){
+                $this->display('my_pro_worder');
+            }
         }
     }
 
@@ -236,5 +251,46 @@ class WorderController extends BaseController{
             $this->id = I('id');
             $this->display('audit_resure');
         }
+    }
+
+    //项目工单
+    public function project(){
+        $this->title('工单管理');
+        $db                         = M('worder');
+        $worder_title               = I('worder_title');
+        $worder_content             = I('worder_content');
+        $pin                        = I('pin')?I('pin'):0;
+
+        $where                      = array();
+        $where['worder_type']       = array('eq',P::WORDER_PROJECT);
+
+        if ($worder_title)          $where['worder_title']        = array('like','%'.$worder_title.'%');
+        if ($worder_content)        $where['worder_content']      = array('like','%'.$worder_content.'%');
+        if ($pin==101)			    $where['o.create_user']		  = cookie('userid');
+
+        //分页
+        $pagecount		= $db->where($where)->count();
+        $page			= new Page($pagecount, P::PAGE_SIZE);
+        $this->pages	= $pagecount>P::PAGE_SIZE ? $page->show():'';
+
+        $lists          = $db->where($where)->limit($page->firstRow . ',' . $page->listRows)->order($this->orders('create_time'))->select();
+        foreach($lists as $k=>$v){
+            //判断工单类型
+            if($v['worder_type']==0) $lists[$k]['type'] = '维修工单';
+            if($v['worder_type']==1) $lists[$k]['type'] = '管理工单';
+            if($v['worder_type']==2) $lists[$k]['type'] = '质量工单';
+            if($v['worder_type']==100)$lists[$k]['type']= '项目工单';
+
+            //判断工单状态
+            if($v['status']==0)     $lists[$k]['sta'] = '未响应';
+            if($v['status']==1)     $lists[$k]['sta'] = '执行部门已响应';
+            if($v['status']==2)     $lists[$k]['sta'] = '执行部门已确认完成';
+            if($v['status']==3)     $lists[$k]['sta'] = '发起人已确认完成';
+            if($v['status']==-1)    $lists[$k]['sta'] = '拒绝或无效工单';
+            if($v['status']==-2)    $lists[$k]['sta'] = '已撤销';
+        }
+        $this->lists    = $lists;
+        $this->pin      = $pin;
+        $this->display();
     }
 }

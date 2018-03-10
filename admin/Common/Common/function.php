@@ -2370,6 +2370,42 @@ function isimg($path){
 }
 
 
+//创建项目工单
+function project_worder($exe_user_id,$pro_id,$thing){
+	$account_db     = M('account');
+	$role_db        = M('role');
+	$op_db 			= M('op');
+	$worder_db 		= M('worder');
+	$worder         = array();
+	$worder['exe_user_id']      = $exe_user_id;
+	$worder['exe_user_name']    = $account_db->where("id = '$exe_user_id'")->getfield('nickname');
+	$exe_dept_id                = $account_db->where("id = '$exe_user_id'")->getfield('roleid');
+	$worder['exe_dept_id']      = $exe_dept_id;
+	$worder['exe_dept_name']    = $role_db->where("id = '$exe_dept_id'")->getfield('role_name');
+	$pro 						= $op_db->where("op_id = '$pro_id'")->find();
+	$worder['worder_title']   	= $pro['project'];
+	$worder['worder_content']   = "处理事项为:".$thing."项目编号为".$pro_id;
+	$worder['worder_type']      = 100;     //项目工单
+	$worder['status']           = 0;
+	$worder['ini_user_id']      = $_SESSION['userid'];
+	$worder['ini_user_name'] 	= $_SESSION['username'];
+	$worder['ini_dept_id']      = $_SESSION['roleid'];
+	$worder['ini_dept_name']    = $_SESSION['rolename'];
+	$worder['create_time']      = NOW_TIME;
+	$worder['plan_complete_time'] = NOW_TIME+(3600*24*5);
+	$res = $worder_db->add($worder);
+	if ($res){
+		//发送系统通知消息
+		$uid     = cookie('userid');
+		$title   = '您有来自['.$worder['ini_dept_name'].'--'.$worder['ini_user_name'].']指派的负责['.$thing.']项目工单待执行!';
+		$content = '';
+		$url     = U('worder/my_worder',array('id'=>$worder['exe_user_id'],'pin'=>102));
+		$user    = '['.$worder['exe_user_id'].']';
+		send_msg($uid,$title,$content,$url,$user,'');
+	}
+
+}
+
 ?>
 
 
