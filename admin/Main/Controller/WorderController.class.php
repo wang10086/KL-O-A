@@ -110,6 +110,7 @@ class WorderController extends BaseController{
     public function exe_worder(){
         if (isset($_POST['dosubmint'])){
             $pin                            = I('pin');
+            if ($pin == 102){$pin = 101;};
             $id                             = I('id');
             $ini_user_id                    = I('ini_user_id');
             $info['exe_complete_content']   = I('exe_complete_content');  //审核意见
