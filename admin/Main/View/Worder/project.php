@@ -79,7 +79,7 @@
                                                         <a href="{:U('Worder/revoke',array('id'=>$row['id']))}" title="撤销" class="btn btn-info btn-smsm"><i class="fa fa-reply"></i></a>
                                                     </if>
                                                     <if condition="$row.exe_user_id eq cookie('userid') and (rolemenu(array('Worder/exe_worder')))">
-                                                        <a href="{:U('Worder/exe_worder',array('id'=>$row['id']))}" title="执行" class="btn btn-info btn-smsm"><i class="fa fa-pencil"></i></a>
+                                                        <a href="{:U('Worder/exe_worder',array('id'=>$row['id'],'pin'=>$pin))}" title="执行" class="btn btn-info btn-smsm"><i class="fa fa-pencil"></i></a>
                                                     </if>
                                                 </td>
                                             </if>

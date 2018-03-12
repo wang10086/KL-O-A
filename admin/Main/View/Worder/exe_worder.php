@@ -19,6 +19,7 @@
                 <form method="post" action="{:U('Worder/exe_worder')}" name="myform" id="myform">
                 <input type="hidden" name="dosubmint" value="1">
                 <input type="hidden" name="id" value="{$id}">
+                <input type="hidden" name="pin" value="{$pin}">
                 <input type="hidden" name="ini_user_id" value="{$data[ini_user_id]}">
                     <div class="row">
                          <!-- right column -->

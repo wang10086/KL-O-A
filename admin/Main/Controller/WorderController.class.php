@@ -79,7 +79,7 @@ class WorderController extends BaseController{
 
         if ($worder_title)          $where['worder_title']        = array('like','%'.$worder_title.'%');
         if ($worder_content)        $where['worder_content']      = array('like','%'.$worder_content.'%');
-        if ($pin==1)			        $where['o.create_user']		    = cookie('userid');
+        if ($pin==1)			    $where['o.create_user']		  = cookie('userid');
 
         //分页
         $pagecount		= $db->where($where)->count();
@@ -109,6 +109,7 @@ class WorderController extends BaseController{
     //执行工单
     public function exe_worder(){
         if (isset($_POST['dosubmint'])){
+            $pin                            = I('pin');
             $id                             = I('id');
             $ini_user_id                    = I('ini_user_id');
             $info['exe_complete_content']   = I('exe_complete_content');  //审核意见
@@ -127,7 +128,7 @@ class WorderController extends BaseController{
                 $exe_user_name = $_SESSION['nickname'];
                 $title   = '您有来自['.$exe_dept_name.'--'.$exe_user_name.']的工单执行反馈!';
                 $content = '';
-                $url     = U('worder/my_worder',array('id'=>$_SESSION['userid']));
+                $url     = U('worder/my_worder',array('id'=>$_SESSION['userid'],'pin'=>$pin));
                 $user    = '['.$ini_user_id.']';
                 send_msg($uid,$title,$content,$url,$user,'');
                 $this->success("执行成功!",U('Worder/worder_list'));
@@ -137,6 +138,7 @@ class WorderController extends BaseController{
         }else{
             $this->title('执行工单');
             $id                 = I('id');
+            $pin                = I('pin');
             $data               = M('worder')->where("id = '$id'")->find();
             //判断工单类型
             if($data['worder_type']==0) $data['type'] = '维修工单';
@@ -145,6 +147,7 @@ class WorderController extends BaseController{
             if($data['worder_type']==100)$data['type']= '项目工单';
             $this->data         = $data;
             $this->id           = $id;
+            $this->pin          = $pin;
             //获取上传文件
             $this->atts         = get_res(P::WORDER_INI,$id);
             $this->display();
@@ -158,6 +161,7 @@ class WorderController extends BaseController{
         }else{
             $db                     = M('worder');
             $pin                    = I('pin',1);
+            if ($pin == 0){$pin = 1;};
             $userid                 = cookie('userid');
             $where                  = array();
             if ($pin == 1){
