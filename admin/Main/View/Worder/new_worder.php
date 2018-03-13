@@ -1,8 +1,10 @@
 <include file="Index:header2" />
 
-<style>
-    .exe_worder{width: 300px;height: 34px;border-color: #DDDDDD;}
-</style>
+<script type="text/javascript">
+    window.onload = function(){
+        $('#in_group').hide();
+    }
+</script>
 
             <aside class="right-side">
                 <!-- Content Header (Page header) -->
@@ -53,17 +55,7 @@
                                             <input type="text" class="form-control" name="info[ini_user_name]" value="{:session('nickname')}" readonly>
                                         </div>
 
-                                        <!--<div class="form-group col-md-4">
-                                            <label>工单优先级：</label>
-                                            <select  class="form-control"  name="info[kind]" required>
-                                                <foreach name="worder_type" key="key" item="value">
-                                                    <option value="{$key}">{$value}</option>
-                                                </foreach>
-                                            </select>
-                                        </div>-->
-
-                                        <div class="form-group col-md-12"></div>
-                                        <div class="form-group col-md-12">
+                                        <!--<div class="form-group col-md-12">
                                             <label>工单受理组/人：</label>&#12288;
                                             <select name="info[exe_dept_id]" id="group" onchange="check_group()" class="exe_worder">
                                                 <option value="" disabled selected>请选择受理组</option>
@@ -75,6 +67,25 @@
                                                 <option value="" disabled selected>请选择员工姓名</option>
 
                                             </select>
+                                        </div>-->
+                                        <div class="form-group col-md-6">
+                                            <label>工单受理组/人：</label>
+                                            <select name="info[exe_dept_id]" id="group" onchange="check_group()" class="form-control">
+                                                <option value="" disabled selected>请选择受理组</option>
+                                                <foreach name="group" item="v">
+                                                    <option value="{$v.id}">{:tree_pad($v['level'])}{$v.role_name}</option>
+                                                </foreach>
+                                            </select>
+                                        </div>
+
+                                        <div id="in_group">
+                                            <div class="form-group col-md-6">
+                                                <label>项目类型：</label>
+                                                <select name="data[dept_id]" id="pro_tit" class="form-control">
+                                                    <option value="" disabled selected>请选择项目类型</option>
+
+                                                </select>
+                                            </div>
                                         </div>
 
                                         <div class="form-group col-md-12"></div>
@@ -105,25 +116,52 @@
 
 <include file="Index:footer2" />
 
-		<script type="text/javascript">
-            function check_group(){
-                var id = $('#group').val();
-                $.ajax({
-                    type:"POST",
-                    url:"{:U('Worder/member')}",
-                    data:{id:id},
-                    success:function(msg){
-                        $("#member").empty();
-                        var count = msg.length;
-                        var i= 0;
-                        var b="";
-                        for(i=0;i<count;i++){
-                            b+="<option value='"+msg[i].id+"'>"+msg[i].nickname+"</option>";
-                        }
-                        $("#member").append(b);
+    <!--<script type="text/javascript">
+            /*二级联动*/
+        function check_group(){
+            var id = $('#group').val();
+            $.ajax({
+                type:"POST",
+                url:"{:U('Worder/member')}",
+                data:{id:id},
+                success:function(msg){
+                    $("#member").empty();
+                    var count = msg.length;
+                    var i= 0;
+                    var b="";
+                    for(i=0;i<count;i++){
+                        b+="<option value='"+msg[i].id+"'>"+msg[i].nickname+"</option>";
                     }
-                })
+                    $("#member").append(b);
+                }
+            })
 
-            }
+        }
+    </script>-->
 
-        </script>
+    <script type="text/javascript">
+        function check_group(){
+             var id = $('#group').val();
+             $.ajax({
+                 type:"POST",
+                 url:"{:U('Worder/member')}",
+                 data:{id:id},
+                 success:function(msg){
+                     if (msg == 0){
+                         $('#in_group').hide();
+                     }else {
+                         $('#in_group').show();
+                         $("#pro_tit").empty();
+                         var count = msg.length;
+                         var i= 0;
+                         var b="";
+                         for(i=0;i<count;i++){
+                             b+="<option value='"+msg[i].id+"'>"+msg[i].pro_title+"</option>";
+                         }
+                         $("#pro_tit").append(b);
+                     }
+                 }
+             })
+
+        }
+    </script>

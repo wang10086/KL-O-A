@@ -60,10 +60,20 @@ class WorderController extends BaseController{
     }
 
     //ajax获取每组用户信息
-    public function member(){
+    /*public function member(){
         $id     = I('id');
         $users  = M('account')->where("roleid = '$id'")->select();
         $this->ajaxReturn($users,"JSON");
+    }*/
+    public function member(){
+        $id             = I('id');
+        $ids            = array_unique(M('worder_dept')->getfield("dept_id",true));
+        $depts          = M('worder_dept')->field('id,dept_id,pro_title')->where("dept_id = '$id'")->select();
+        if (in_array($id,$ids)){
+            $this->ajaxReturn($depts,"JSON");
+        }else{
+            echo 0;
+        }
     }
 
     //管理工单(工单列表)
@@ -297,5 +307,97 @@ class WorderController extends BaseController{
         $this->lists    = $lists;
         $this->pin      = $pin;
         $this->display();
+    }
+
+    //各部门工单项列表
+    public function dept_worder_list(){
+        $this->title('各部门工单项管理');
+        $db                         = M('worder_dept');
+        $dept                       = I('dept');
+        $pro_title                  = I('pro_title');
+
+        $where                      = array();
+        if ($dept)              $where['dept']          = array('like','%'.$dept.'%');
+        if ($pro_title)         $where['pro_title']     = array('like','%'.$pro_title.'%');
+
+        //分页
+        $pagecount		= $db->where($where)->count();
+        $page			= new Page($pagecount, P::PAGE_SIZE);
+        $this->pages	= $pagecount>P::PAGE_SIZE ? $page->show():'';
+
+        $lists          = $db->where($where)->limit($page->firstRow . ',' . $page->listRows)->order($this->orders('create_time'))->select();
+        foreach($lists as $k=>$v){
+            //判断工单类型
+            if($v['type']==0) $lists[$k]['type'] = '成熟产品';
+            if($v['type']==1) $lists[$k]['type'] = '新品';
+            if($v['type']==2) $lists[$k]['type'] = '定制产品';
+        }
+        $this->lists    = $lists;
+        $this->display();
+    }
+
+    //增加各部门工单项列表
+    public function dept_worder_add(){
+        if (isset($_POST['dosubmint'])){
+            $db                     = M('worder_dept');
+            $info                   = I('info');
+            $info['dept']           = M('role')->where("id = $info[dept_id]")->getfield('role_name');
+            $info['create_time']    = NOW_TIME;
+            $info['use_time']       = intval($info['use_time']);
+            if ($info['use_time'] == 0){
+                $this->error('完成时间格式填写错误');
+            }
+            $res = $db -> add($info);
+            if ($res){
+                $this->success('保存数据成功');
+            }else{
+                $this->error('保存数据失败');
+            }
+        }else{
+            $this->title('新增各部门工单项');
+            $this->group            =  get_roles();
+            $this->type             = C('WORDER_DEPT_TYPE');
+            $this->display();
+        }
+    }
+
+    //修改各部门工单项
+    public function dept_worder_upd(){
+        if (isset($_POST['dosubmint'])){
+            $db                     = M('worder_dept');
+            $id                     = I('id');
+            $info                   = I('info');
+            $info['dept']           = M('role')->where("id = $info[dept_id]")->getfield('role_name');
+            $info['use_time']       = intval($info['use_time']);
+            if ($info['use_time'] == 0){
+                $this->error('完成时间格式填写错误');
+            }
+            $res = $db ->where("id = '$id'")-> save($info);
+            if ($res){
+                $this->success('保存数据成功',U('Worder/dept_worder_list'));
+            }else{
+                $this->error('保存数据失败');
+            }
+        }else{
+            $this->title('修改各部门工单项');
+            $db         = M('worder_dept');
+            $id         = I('id');
+            $info       = $db->where("id = '$id'")->find();
+            $this->group=  get_roles();
+            $this->type = C('WORDER_DEPT_TYPE');
+            $this->info = $info;
+            $this->display();
+        }
+    }
+
+    //删除各部门工单项
+    public function dept_worder_del(){
+        $id  = I('id');
+        $res = M('worder_dept')->where("id = '$id'")->delete();
+        if($res){
+            $this->success('删除工单项成功!');
+        }else{
+            $this->error('删除数据失败!');
+        }
     }
 }

@@ -404,6 +404,9 @@
                                     <i class="fa fa-angle-left pull-right"></i>
                                 </a>
                                 <ul class="treeview-menu">
+                                    <if condition="rolemenu(array('worder/dept_worder_list'))">
+                                        <li><a href="{:U('worder/dept_worder_list')}"><i class="fa fa-angle-right"></i> 部门工单项管理</a></li>
+                                    </if>
                                     <if condition="rolemenu(array('worder/new_worder'))">
                                         <li><a href="{:U('worder/new_worder')}"><i class="fa fa-angle-right"></i> 发起工单</a></li>
                                     </if>
