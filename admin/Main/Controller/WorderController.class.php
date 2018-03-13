@@ -76,6 +76,12 @@ class WorderController extends BaseController{
         }
     }
 
+    public function dept(){
+        $id             = I('id');
+        $data           = M('worder_dept')->where("id = '$id'")->find();
+        $this->ajaxReturn($data,"JSON");
+    }
+
     //管理工单(工单列表)
     public function worder_list(){
         $this->title('工单管理');

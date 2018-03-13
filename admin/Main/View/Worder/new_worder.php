@@ -3,6 +3,7 @@
 <script type="text/javascript">
     window.onload = function(){
         $('#in_group').hide();
+        $('#dept').hide();
     }
 </script>
 
@@ -81,10 +82,20 @@
                                         <div id="in_group">
                                             <div class="form-group col-md-6">
                                                 <label>项目类型：</label>
-                                                <select name="data[dept_id]" id="pro_tit" class="form-control">
+                                                <select name="data[dept_id]" id="pro_tit" onchange="show_dept()" class="form-control">
                                                     <option value="" disabled selected>请选择项目类型</option>
 
                                                 </select>
+                                            </div>
+
+                                            <div id="dept">
+                                                <div class="form-group col-md-6">
+                                                    <label>工单类型：</label><input type="text" name="info[type]" class="form-control" />
+                                                </div>
+
+                                                <div class="form-group col-md-6">
+                                                    <label>完成所需时间：</label><input type="text" name="info[use_time]" class="form-control" />
+                                                </div>
                                             </div>
                                         </div>
 
@@ -162,6 +173,19 @@
                      }
                  }
              })
+        }
 
+        function show_dept(){
+            var id = $('#pro_tit').val();
+            $.ajax({
+                type:"POST",
+                url:"{:U('Worder/dept')}",
+                data:{id:id},
+                success:function(msg){
+                    $('#dept').show();
+                    msg.type     = $('#dept').attr(name="info[type]").val();
+                    msg.use_time = $('#dept').attr(name="info[use_time]").val();
+                }
+            })
         }
     </script>
