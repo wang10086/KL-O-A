@@ -1772,46 +1772,35 @@ function addkpiinfo($year,$month,$user){
 
 function updatekpi($month,$user){
 	
-	/*
-	$year  = substr($month,0,4);
-	$yue   = substr($month,4,2);
-	$ym    = getthemonth($year.'-'.$yue.'-01');
-	*/
-	
 	$where = array();
 	$where['month']   = $month;
 	$where['user_id'] = $user;
 	
-	
 	$quto   = M('kpi_more')->where($where)->select();
-	
 	
 	if($quto){
 		foreach($quto as $k=>$v){
 			
 			if($v['automatic']==0){
 			
-			
 				//获取月度累计毛利额
 				if($v['quota_id']==1){
 					$where = array();
 					$where['b.audit_status']		= 1;
-					$where['o.create_user']		= $user;
+					$where['o.create_user']			= $user;
 					$where['l.req_type']			= 801;
-					$where['l.audit_time']		= array('between',array($v['start_date'],$v['end_date']));
+					$where['l.audit_time']			= array('between',array($v['start_date'],$v['end_date']));
 					$complete = M()->table('__OP_SETTLEMENT__ as b')->field('b.maoli')->join('__OP__ as o on b.op_id = o.op_id','LEFT')->join('__AUDIT_LOG__ as l on l.req_id = b.id','LEFT')->where($where)->sum('b.maoli');
 					$complete = $complete ? $complete : 0;
 				}
-				
-			
 				
 				//获取累计毛利率
 				if($v['quota_id']==2){
 					$where = array();
 					$where['b.audit_status']		= 1;
-					$where['o.create_user']		= $user;
+					$where['o.create_user']			= $user;
 					$where['l.req_type']			= 801;
-					$where['l.audit_time']		= array('between',array($v['start_date'],$v['end_date']));
+					$where['l.audit_time']			= array('between',array($v['start_date'],$v['end_date']));
 					$maoli = M()->table('__OP_SETTLEMENT__ as b')->field('b.maoli')->join('__OP__ as o on b.op_id = o.op_id','LEFT')->join('__AUDIT_LOG__ as l on l.req_id = b.id','LEFT')->where($where)->sum('b.maoli');
 					$shouru = M()->table('__OP_SETTLEMENT__ as b')->field('b.shouru')->join('__OP__ as o on b.op_id = o.op_id','LEFT')->join('__AUDIT_LOG__ as l on l.req_id = b.id','LEFT')->where($where)->sum('b.shouru');
 					$complete = round(($maoli / $shouru)*100,2).'%';
@@ -1820,8 +1809,8 @@ function updatekpi($month,$user){
 				//获取回款及时率
 				if($v['quota_id']==3){
 					$where = array();
-					$where['return_time']	= array('lt',$v['end_date']+86399);
-					$where['payee']			= $user;
+					$where['return_time']			= array('lt',$v['end_date']+86399);
+					$where['payee']					= $user;
 					$shouru		= M('contract_pay')->where($where)->sum('amount');
 					$huikuan	= M('contract_pay')->where($where)->sum('	pay_amount');
 					$complete = round(($huikuan / $shouru)*100,2).'%';
@@ -1830,70 +1819,145 @@ function updatekpi($month,$user){
 				//获取成团率
 				if($v['quota_id']==4){
 					$where = array();
-					$where['create_time']  = array('between',array($v['start_date'],$v['end_date']));
-					$where['create_user']  = $user;
+					$where['create_time']  			= array('between',array($v['start_date'],$v['end_date']));
+					$where['create_user']  			= $user;
 					$zongxiangmu = M('op')->where($where)->count();
-					$where['group_id']     = array('neq','');
+					$where['group_id']     			= array('neq','');
 					$chengtuan = M('op')->where($where)->count();
-					
 					$complete = round(($chengtuan / $zongxiangmu)*100,2).'%';
 				}
 				
 				//获取合同签订率（含家长协议书）
 				if($v['quota_id']==5){
 					$where = array();
-					$where['b.audit_status']	= 1;
-					$where['o.create_user']		= $user;
-					$where['l.req_type']		= 801;
-					$where['l.audit_time']		= array('between',array($v['start_date'],$v['end_date']));
+					$where['b.audit_status']		= 1;
+					$where['o.create_user']			= $user;
+					$where['l.req_type']			= 801;
+					$where['l.audit_time']			= array('between',array($v['start_date'],$v['end_date']));
 					$xiangmu = M()->table('__OP_SETTLEMENT__ as b')->field('b.maoli')->join('__OP__ as o on b.op_id = o.op_id','LEFT')->join('__AUDIT_LOG__ as l on l.req_id = b.id','LEFT')->where($where)->count();
-					
 					$hetong  = M()->table('__CONTRACT__ as c')->field('c.*')->join('__OP_SETTLEMENT__ as b on b.op_id = c.op_id','LEFT')->join('__OP__ as o on o.op_id = c.op_id','LEFT')->join('__AUDIT_LOG__ as l on l.req_id = b.id','LEFT')->where($where)->count();
 					$complete = round(($hetong / $xiangmu)*100,2).'%';
 				}
 				
-				//业务经理 月度累计毛利额-业务经理  6个月平均毛利率-业务经理 
-				if($v['quota_id']==8 || $v['quota_id']==9 || $v['quota_id']==10 || $v['quota_id']==11){
-					
+				//业务经理 月度累计毛利额-业务经理  6个月平均毛利率-业务经理
+				if(in_array($v['quota_id'],array(8,9,10,11))){
 					$fzr = C('POST_TEAM_UID');
 					if($fzr[$user]){
-						
 						//获取具体团队数据
 						if($v['quota_id']==8){	
-							$ywdata = tplist($fzr[$user],array($v['start_date'],$v['end_date']));
-							$complete = $ywdata['zml'] ? $ywdata['zml'] : '0';
+							$ywdata 	= tplist($fzr[$user],array($v['start_date'],$v['end_date']));
+							$complete	= $ywdata['zml'] ? $ywdata['zml'] : '0';
 						}
-						
 						if($v['quota_id']==9){
-							$ywdata = tplist($fzr[$user],array($v['start_date'],$v['end_date']));
-							$complete = $ywdata['mll'] ? $ywdata['mll'].'%' : '0.00%';	
+							$ywdata 	= tplist($fzr[$user],array($v['start_date'],$v['end_date']));
+							$complete	= $ywdata['mll'] ? $ywdata['mll'].'%' : '0.00%';	
 						}
-						
 						if($v['quota_id']==10){
-							$xkh = team_new_customers($fzr[$user],array($v['start_date'],$v['end_date']));
-							$complete = $xkh['ratio'] ? $xkh['ratio'].'%' : '0.00%';	
+							$xkh		= team_new_customers($fzr[$user],array($v['start_date'],$v['end_date']));
+							$complete	= $xkh['ratio'] ? $xkh['ratio'].'%' : '0.00%';	
 						}
-						
 						if($v['quota_id']==11){
-							$xkh = team_new_customers($fzr[$user],array($v['start_date'],$v['end_date']));
-							$complete = $xkh['reratio'] ? $xkh['reratio'].'%' : '0.00%';	
+							$xkh		= team_new_customers($fzr[$user],array($v['start_date'],$v['end_date']));
+							$complete	= $xkh['reratio'] ? $xkh['reratio'].'%' : '0.00%';	
 						}
-						
 					}
-					
-					
-					
+				}
+				
+				//活动前要素准备不及时
+				if($v['quota_id']==16){
+					$rsum = user_work_record($user,$month,105);
+					if($rsum){
+						$rcom	= $rsum>=10 ? 0 : 100-($rsum*10);		
+					}else{
+						$rcom	= 100;
+					}
+					$complete	= $rcom.'%';
+				}
+				
+				//日常工作及时性
+				if(in_array($v['quota_id'],array(19,22,25,28,33,38,45,103))){
+					$rsum = user_work_record($user,$month,100);
+					switch($rsum){
+						case 0:
+							$complete = '100%';
+							break;
+						case 1:
+							$complete = '90%';
+							break;
+						case 2:
+							$complete = '80%';
+							break;
+						case 3:
+							$complete = '70%';
+							break;
+						default:
+							$complete = '0%';
+					}
+				}
+				
+				//活动前要素准备不及时
+				if(in_array($v['quota_id'],array(56,113))){
+					$rsum = user_work_record($user,$month,106);
+					if($rsum){
+						$rcom	= $rsum>=20 ? 0 : 100-($rsum*5);		
+					}else{
+						$rcom	= 100;
+					}
+					$complete	= $rcom.'%';
+				}
+				
+				//活动前要素准备不及时
+				if($v['quota_id']==92){
+					$rsum = user_work_record($user,$month,108);
+					if($rsum){
+						$rcom	= $rsum>=10 ? 0 : 100-($rsum*10);		
+					}else{
+						$rcom	= 100;
+					}
+					$complete	= $rcom.'%';
+				}
+				
+				//日常工作质量不合格
+				if(in_array($v['quota_id'],array(29,34,39,46,102))){
+					$rsum = user_work_record($user,$month,200);
+					if($v['quota_id']!=102){
+						switch($rsum){
+							case 0:
+								$complete = '100%';
+								break;
+							case 1:
+								$complete = '90%';
+								break;
+							case 2:
+								$complete = '80%';
+								break;
+							case 3:
+								$complete = '70%';
+								break;
+							default:
+								$complete = '0%';
+						}
+					}else{
+						switch($rsum){
+							case 0:
+								$complete = '100%';
+								break;
+							case 1:
+								$complete = '50%';
+								break;
+							default:
+								$complete = '0%';
+						}
+					}
 				}
 				
 				
-				
 				//已实现自动获取指标值
-				$auto_quta = array(1,2,3,4,5,8,9,10,11);
+				$auto_quta	= array(1,2,3,4,5,8,9,10,11,16,19,22,25,28,33,38,45,56,92,103,113,29,34,39,46,102);
 				
-				//保存数据
+				//计算完成率并保存数据
 				if(in_array($v['quota_id'],$auto_quta)){
 					
-					//完成率
 					$rate = $v['target'] ? round(($complete / $v['target'])*100,2) : 100;
 					$rate = $rate>100 ? 100 : $rate; 
 					
@@ -2404,6 +2468,23 @@ function project_worder($exe_user_id,$pro_id,$thing){
 		send_msg($uid,$title,$content,$url,$user,'');
 	}
 
+}
+
+
+//获取某个员工某项工作记录数
+function user_work_record($user,$month,$type){
+	
+	$db 	= M('work_record');
+	
+	$where 	= array();
+	$where['status'] 	= 0;
+	$where['month'] 	= $month;
+	$where['typeinfo'] 	= $type;
+	$where['user_id'] 	= $user;
+	
+	$sum 	= $db->where($where)->count();
+	
+	return $sum;
 }
 
 ?>

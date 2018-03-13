@@ -11,6 +11,7 @@ class WorkController extends BasepubController{
 	// @@@NODE-3###record###工作记录###
     public function record(){
 		
+		
         $this->title('工作记录');
 		
 		$db		= M('work_record');
@@ -78,6 +79,7 @@ class WorkController extends BasepubController{
 			if(!$info['user_id'])		$this->error('请输入工作人员信息无效' . $db->getError());	
 			if(!$info['month'])			$this->error('请输入工作月份' . $db->getError());	
 			if(!$info['type'])			$this->error('请选择工作记录类型' . $db->getError());	
+			if(!$info['typeinfo'])		$this->error('请选择工作记录详细类型' . $db->getError());	
 			if(!$info['title'])			$this->error('请输入记录标题' . $db->getError());	
 			if(!$info['content'])		$this->error('请输入记录内容' . $db->getError());	
 			
@@ -127,6 +129,7 @@ class WorkController extends BasepubController{
 		
 			
 			$this->kinds 		= C('REC_TYPE');
+			$this->kindinfo 	= C('REC_TYPE_INFO');
 			$this->rec			= M('work_record')->find($recid);
 			$this->display('addrecord');
 		}

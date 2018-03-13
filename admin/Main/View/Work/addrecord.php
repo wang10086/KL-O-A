@@ -36,21 +36,36 @@
                                             </div>
                                         </div>
                                     
-                                        <div class="form-group col-md-4">
+                                        <div class="form-group col-md-3">
                                             <label>工作人员：</label><input type="text" name="info[user_name]" class="form-control keywords_user"  value="{$rec.user_name}" />
                                         </div>
-                                        <div class="form-group col-md-4">
+                                        <div class="form-group col-md-3">
                                             <label>工作月份：</label><input type="text" name="info[month]" class="form-control monthly"  value="{$rec.month}" />
                                         </div>
-                                        <div class="form-group col-md-4">
+                                        <div class="form-group col-md-3">
                                             <label>记录类型：</label>
-                                            <select class="form-control" name="info[type]">
+                                            <select class="form-control" name="info[type]" onChange="selectkinds(this)">
                                             	<option value="0">请选择</option>
                                             	<foreach name="kinds" item="v" key="k">
                                             	<option value="{$k}" <?php if($k==$rec['type']){ echo 'selected';} ?> >{$v}</option>
                                                 </foreach>
                                             </select>
                                         </div>
+                                        
+                                        <div class="form-group col-md-3">
+                                            <label>具体类型：</label>
+                                            <select class="form-control" name="info[typeinfo]" id="kindinfo">
+                                            	<option value="0">请选择</option>
+                                            	<?php 
+												foreach($kindinfo as $k=>$v){
+													foreach($v as $kk=>$vv){
+														echo '<option value="'.$kk.'"  class="form-control selectkey" data="'.$k.'" style=" display:none;" > '.$vv.'</option>';	
+													}	
+												}
+												?>
+                                            </select>
+                                        </div>
+                                        
                                         <div class="form-group col-md-12">
                                             <label>记录标题：</label><input type="text" name="info[title]" class="form-control" value="{$rec.title}" />
                                         </div>
@@ -99,6 +114,19 @@
 		});
 		
 	})
+	
+	
+	function selectkinds(obj){
+		var k = $(obj).val();
+		$('#kindinfo').val('请选择');
+		$('.selectkey').each(function(index, element) {
+            if($(this).attr('data') == k){
+				$(this).show();	
+			}else{
+				$(this).hide();	
+			}
+        });	
+	}
 	
 </script>
 		
