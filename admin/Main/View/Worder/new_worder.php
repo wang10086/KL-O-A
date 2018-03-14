@@ -24,8 +24,8 @@
                     <div class="row">
                          <!-- right column -->
                         <div class="col-md-12">
-                                  
-                            
+
+
                             
                             <div class="box box-warning">
                                 <div class="box-header">
@@ -90,14 +90,16 @@
 
                                             <div id="dept">
                                                 <div class="form-group col-md-6">
-                                                    <label>工单类型：</label><input type="text" name="info[type]" class="form-control" />
+                                                    <label>工单类型：</label><input type="text" name="info[type]" class="form-control" readonly />
                                                 </div>
 
                                                 <div class="form-group col-md-6">
-                                                    <label>完成所需时间：</label><input type="text" name="info[use_time]" class="form-control" />
+                                                    <label>完成所需时间：</label><input type="text" name="info[use_time]" class="form-control" readonly />
                                                 </div>
                                             </div>
                                         </div>
+
+
 
                                         <div class="form-group col-md-12"></div>
 
@@ -151,28 +153,32 @@
     </script>-->
 
     <script type="text/javascript">
+
+
+
         function check_group(){
-             var id = $('#group').val();
-             $.ajax({
-                 type:"POST",
-                 url:"{:U('Worder/member')}",
-                 data:{id:id},
-                 success:function(msg){
-                     if (msg == 0){
-                         $('#in_group').hide();
-                     }else {
-                         $('#in_group').show();
-                         $("#pro_tit").empty();
-                         var count = msg.length;
-                         var i= 0;
-                         var b="";
-                         for(i=0;i<count;i++){
-                             b+="<option value='"+msg[i].id+"'>"+msg[i].pro_title+"</option>";
-                         }
-                         $("#pro_tit").append(b);
-                     }
-                 }
-             })
+            var id = $('#group').val();
+            $.ajax({
+                type:"POST",
+                url:"{:U('Worder/member')}",
+                data:{id:id},
+                success:function(msg){
+                    if (msg == 0){
+                        $('#in_group').hide();
+                    }else {
+                        $('#in_group').show();
+                        $('#pro_tit').empty();
+                        var count = msg.length;
+                        var i= 0;
+                        var b="";
+                        b+='<option value="" disabled selected>请选择项目类型</option>';
+                        for(i=0;i<count;i++){
+                            b+="<option value='"+msg[i].id+"'>"+msg[i].pro_title+"</option>";
+                        }
+                        $('#pro_tit').append(b);
+                    }
+                }
+            })
         }
 
         function show_dept(){
@@ -183,9 +189,11 @@
                 data:{id:id},
                 success:function(msg){
                     $('#dept').show();
-                    msg.type     = $('#dept').attr(name="info[type]").val();
-                    msg.use_time = $('#dept').attr(name="info[use_time]").val();
+                    $("input[name='info[type]']").val(msg.type_res);
+                    $("input[name='info[use_time]']").val(msg.use_time+"个工作日");
                 }
             })
         }
+
+
     </script>

@@ -79,6 +79,9 @@ class WorderController extends BaseController{
     public function dept(){
         $id             = I('id');
         $data           = M('worder_dept')->where("id = '$id'")->find();
+        if ($data['type'] == 0){$data['type_res'] = '成熟产品';}
+        if ($data['type'] == 1){$data['type_res'] = '新产品';}
+        if ($data['type'] == 2){$data['type_res'] = '定制产品';}
         $this->ajaxReturn($data,"JSON");
     }
 
