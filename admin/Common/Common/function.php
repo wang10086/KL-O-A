@@ -1839,6 +1839,20 @@ function updatekpi($month,$user){
 					$complete = round(($hetong / $xiangmu)*100,2).'%';
 				}
 				
+				
+				//地接、房、车性价比比选-计调专员，以项目创建时间为准
+				if(in_array($v['quota_id'],array(6,81))){
+					$where = array();
+					$where['o.create_time']			= array('between',array($v['start_date'],$v['end_date']));
+					$where['u.line']				= $user;
+					//获取周期内创建的项目数
+					$sj = M()->table('__OP_AUTH__ as u')->join('__OP__ as o on o.op_id = u.op_id','LEFT')->where($where)->count();
+					//获取已比价的项目数
+					$bj = M()->table('__REL_PRICE__ as p')->join('__OP__ as o on o.op_id = p.op_id','LEFT')->join('__OP_AUTH__ as u on u.op_id = p.op_id','LEFT')->where($where)->count();
+					$complete = $sj ? round(($bj / $sj)*100,2).'%' : '100%';
+				}
+				
+				
 				//业务经理 月度累计毛利额-业务经理  6个月平均毛利率-业务经理
 				if(in_array($v['quota_id'],array(8,9,10,11))){
 					$fzr = C('POST_TEAM_UID');
@@ -1863,6 +1877,42 @@ function updatekpi($month,$user){
 					}
 				}
 				
+				//月度累计预算准确度
+				if($v['quota_id']==15){
+					$where = array();
+					$where['s.audit_status']		= 1;
+					$where['u.line']				= $user;
+					$where['l.req_type']			= 801;
+					$where['l.audit_time']			= array('between',array($v['start_date'],$v['end_date']));
+					
+					//获取总的结算毛利
+					$js = M()->table('__OP_SETTLEMENT__ as s')
+							 ->join('__AUDIT_LOG__ as l on l.req_id = s.id','LEFT')
+							 ->join('__OP_AUTH__ as u 	on u.op_id  = o.op_id','LEFT')
+							 ->where($where)->sum('s.maoli');
+					
+					//获取总的预算毛利		 
+					$ys = M()->table('__OP_SETTLEMENT__ as s')
+							 ->join('__AUDIT_LOG__ as l on l.req_id = s.id','LEFT')
+							 ->join('__OP_AUTH__ as u 	on u.op_id  = o.op_id','LEFT')
+							 ->join('__OP_BUDGET__ as b on b.op_id  = s.op_id','LEFT')
+							 ->where($where)->sum('b.maoli');
+					
+					//定义比较区间
+					$v1 = intervalsn($ys,0.10);
+					$v2 = intervalsn($ys,0.15);
+					if($js > $v1[0] && $js<$v1[1]){
+						$complete = '100%';
+					}else if(($js < $v1[0] && $js > $v2[0]) || ($js > $v1[1] && $js < $v2[1]) ){
+						$complete = '80%';
+					}else{
+						$complete = '0%';	
+					}
+					
+					
+				}
+				
+				
 				//活动前要素准备不及时
 				if($v['quota_id']==16){
 					$rsum = user_work_record($user,$month,105);
@@ -1872,6 +1922,46 @@ function updatekpi($month,$user){
 						$rcom	= 100;
 					}
 					$complete	= $rcom.'%';
+				}
+				
+				
+				//帐、表、税准确性-财务经理
+				if($v['quota_id']==18){
+					$rsum = user_work_record($user,$month,205);
+					$complete	= $rsum ? '0%' : '100%';
+				}
+				
+				//开具发票、支票、汇票等准确-财务经理
+				if(in_array($v['quota_id'],array(20,23,26))){
+					$rsum = user_work_record($user,$month,206);
+					$complete	= $rsum ? '0%' : '100%';
+				}
+				
+				//帐帐相符、帐实相符-出纳员
+				if(in_array($v['quota_id'],array(21,24))){
+					$rsum = user_work_record($user,$month,207);
+					$complete	= $rsum ? '0%' : '100%';
+				}
+				
+				//办公环境及设施保障指标（OA）-综合部经理
+				if(in_array($v['quota_id'],array(27,32,37))){
+					$rsum = user_work_record($user,$month,208);
+					switch($rsum){
+						case 0:
+							$complete = '100%';
+							break;
+						case 1:
+							$complete = '90%';
+							break;
+						case 2:
+							$complete = '80%';
+							break;
+						case 3:
+							$complete = '70%';
+							break;
+						default:
+							$complete = '0%';
+					}
 				}
 				
 				//日常工作及时性
@@ -1951,9 +2041,138 @@ function updatekpi($month,$user){
 					}
 				}
 				
+				//中科教微信运营——市场文案
+				if($v['quota_id']==55){
+					
+					$koufen = 0;
+					
+					//发图出错
+					$sum = user_work_record($user,$month,209);
+					if($sum>1) 	$koufen += $sum*2;
+					
+					//一般文字出错
+					$sum = user_work_record($user,$month,211);
+					if($sum) 	$koufen += $sum*2;
+					
+					//发文不及时
+					$sum = user_work_record($user,$month,array('111','210'));
+					if($sum) 	$koufen += $sum*5;
+					
+					//汇总扣分数
+					$zongfen 	= 100-$koufen;
+					
+					$complete	= $zongfen>0 ? $zongfen : 0;
+				}
+				
+				
+				//网站维护--市场文案
+				if($v['quota_id']==57){
+					
+					//汇总记录次数
+					$sum = user_work_record($user,$month,array('212','213','112'));
+					
+					//汇总扣分数
+					$zongfen 	= 100-($sum*5);
+					
+					$complete	= $zongfen>0 ? $zongfen : 0;
+				}
+				
+				
+				//学趣微信--市场新媒体
+				if($v['quota_id']==58){
+					
+					$koufen = 0;
+					
+					//发图出错
+					$sum = user_work_record($user,$month,214);
+					if($sum>1) 	$koufen += $sum*3;
+					
+					//发文不及时或者文字错误
+					$sum = user_work_record($user,$month,array('113','215'));
+					if($sum) 	$koufen += $sum*5;
+					
+					//汇总扣分数
+					$zongfen 	= 100-$koufen;
+					
+					$complete	= $zongfen>0 ? $zongfen : 0;
+				}
+				
+				
+				//信息收集--市场新媒体
+				if($v['quota_id']==59){
+					
+					//汇总记录次数
+					$sum = user_work_record($user,$month,array('401','402'));
+					
+					//汇总扣分数
+					$zongfen 	= 100-($sum*2);
+					
+					$complete	= $zongfen>0 ? $zongfen : 0;
+				}
+				
+				
+				//每月新增10家物资采购方--采购经理
+				if($v['quota_id']==84){
+					
+					$where = array();
+					$where['input_time']  			= array('between',array($v['start_date'],$v['end_date']));
+					$where['input_uid']  			= $user;
+					$where['audit_status']  		= 1;
+					
+					$rsum = M('supplier')->where($where)->count();
+					$complete	= $rsum>10 ? '100%' : ($rsum*10).'%';
+				}
+				
+				
+				//活动前期准备--业务助理活动
+				if($v['quota_id']==87){
+					
+					//汇总记录次数
+					$sum = user_work_record($user,$month,403);
+					
+					//汇总扣分数
+					$zongfen 	= 100-($sum*2);
+					
+					$complete	= $zongfen>0 ? $zongfen : 0;
+				}
+				
+				
+				//文件归集整理工作--业务助理
+				if($v['quota_id']==89){
+					
+					//汇总记录次数
+					$sum = user_work_record($user,$month,array('114','216'));
+					
+					if($sum>3){
+						$complete	= 0;	
+					}else{
+						//汇总扣分数
+						$zongfen 	= 100-($sum*10);
+						$complete	= $zongfen>0 ? $zongfen : 0;
+					}
+				}
+				
+				
+				//完成领导交办的其他任务--业务助理
+				if($v['quota_id']==90){
+					
+					//汇总记录次数
+					$sum = user_work_record($user,$month,115);
+					
+					if($sum>3){
+						$complete	= 0;	
+					}else{
+						//汇总扣分数
+						$zongfen 	= 100-($sum*10);
+						$complete	= $zongfen>0 ? $zongfen : 0;
+					}
+				}
+				
+				
+				
 				
 				//已实现自动获取指标值
-				$auto_quta	= array(1,2,3,4,5,8,9,10,11,16,19,22,25,28,33,38,45,56,92,103,113,29,34,39,46,102);
+				$auto_quta	= array(1,2,3,4,5,6,81,8,9,10,11,15,16,18,20,23,26,21,24,27,32,37,19,22,25,28,33,38,45,103,56,113,92,29,34,39,46,102,55,57,58,59,84,87,89,90);
 				
 				//计算完成率并保存数据
 				if(in_array($v['quota_id'],$auto_quta)){
@@ -2479,14 +2698,27 @@ function user_work_record($user,$month,$type){
 	$where 	= array();
 	$where['status'] 	= 0;
 	$where['month'] 	= $month;
-	$where['typeinfo'] 	= $type;
 	$where['user_id'] 	= $user;
+	
+	if(is_array($type)){
+		$where['typeinfo'] 	= array('in',$type);
+	} else {
+		$where['typeinfo'] 	= $type;
+	}
 	
 	$sum 	= $db->where($where)->count();
 	
 	return $sum;
 }
 
+
+
+//处理区间值
+function intervalsn($value,$ratio){
+	$zhi 	= $value*$ratio;
+	$return = array($value-$zhi,$value+$zhi);
+	return $return;
+}
 ?>
 
 
