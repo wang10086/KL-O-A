@@ -239,7 +239,7 @@
             var header = '<div class="tasklist" id="task_ti_'+i+'"><a class="aui_close" href="javascript:;" onClick="del_timu(\'task_ti_'+i+'\')">×</a><div class="col-md-12 pd"><label class="titou"><strong>第<span class="tihao">'+i+'</span>天</strong></label>';*/
 
             var header = '<div class="tasklist" id="task_ti_'+i+'"><a class="aui_close" href="javascript:;" onClick="del_timu(\'task_ti_'+i+'\')">×</a><div class="col-md-12 pd"><label class="titou"><strong>工单受理组/人<span class="tihao">'+i+'</span></strong>:</label>';
-            var days = '<div class="form-group col-md-12 pd"> <select name="info['+i+'][exe_dept_id]" id="group_'+i+'" onchange="check_group('+i+')" class="form-control"> <option value="" disabled selected>请选择受理组</option> <foreach name="group" item="v"> <option value="{$v.id}">{:tree_pad($v[\'level\'])}{$v.role_name}</option> </foreach> </select> </div> <div id="in_group'+i+'" style="display: none"> <div class="form-group col-md-12"> <label>项目类型：</label> <select name="info['+i+'][dept_id]" id="pro_tit'+i+'" onchange="show_dept('+i+')" class="form-control"> <option value="" disabled selected>请选择项目类型</option> </select> </div> <div id="dept'+i+'"> <div class="form-group col-md-6"> <label>工单类型：</label><input type="text" name="info['+i+'][type]" class="form-control" readonly /> </div> <div class="form-group col-md-6"> <label>完成所需时间：</label><input type="text" name="info['+i+'][use_time]" class="form-control" readonly /> </div></div></div>';
+            var days = '<div class="form-group col-md-12 pd"> <select name="info['+i+'][exe_dept_id]" id="group_'+i+'" onchange="check_group('+i+')" class="form-control"> <option value="" disabled selected>请选择受理组</option> <foreach name="group" item="v"> <option value="{$v.id}">{:tree_pad($v[\'level\'])}{$v.role_name}</option> </foreach> </select> </div> <div id="in_group'+i+'" style="display: none"> <div class="form-group col-md-12"> <label>项目类型：</label> <select name="info['+i+'][dept_id]" id="pro_tit'+i+'" onchange="show_dept('+i+')" class="form-control"> <option value="" disabled selected>请选择项目类型</option> </select> </div> <div id="dept'+i+'"> <div class="form-group col-md-6"> <label>工单类型：</label><input type="text" name="info['+i+'][type]" id= "type'+i+'" class="form-control" readonly /> </div> <div class="form-group col-md-6"> <label>完成所需时间：</label><input type="text" name="info['+i+'][use_time]" id="use_time'+i+'" class="form-control" readonly /> </div></div></div>';
             var footer = '</div>';
 
             var html = header+days+footer;
@@ -262,12 +262,9 @@
             });
         }
 
+        //获取所有用户组
         function check_group(a){
-            /*var group = 'group_'+a;
-            var in_group = 'in_group'+a;
-            var pro_tit  = 'pro_tit'+a;*/
             var id = $("#group_"+a+"").val();
-            alert(id);
             $.ajax({
                 type:"POST",
                 url:"{:U('Worder/member')}",
@@ -292,17 +289,17 @@
             })
         }
 
+        //获取该用户组的工单项列表
         function show_dept(a){
             var pro_tit = 'pro_tit'+a;
-            var id = $('#pro_tit').val();
+            var id = $("#pro_tit"+a+"").val();
             $.ajax({
                 type:"POST",
                 url:"{:U('Worder/dept')}",
                 data:{id:id},
                 success:function(msg){
-                    $('"#dept'+a+'"').show();
-                    $("input[name='data[type]']").val(msg.type_res);
-                    $("input[name='data[use_time]']").val(msg.use_time+"个工作日");
+                    $("#type"+a+"").val(msg.type_res);
+                    $("#use_time"+a+"").val(msg.use_time);
                 }
             })
         }
