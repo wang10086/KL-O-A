@@ -17,6 +17,81 @@ class WorderController extends BaseController{
     public function new_worder(){
         if (isset($_POST['dosubmint'])){
 
+            $info           = I('info');
+            $exe_info       = I('exe_info');
+
+            $info['status']         = 0;
+            $info['ini_user_id']    = $_SESSION['userid'];
+            $info['ini_dept_id']    = $_SESSION['roleid'];
+            $info['ini_dept_name']  = $_SESSION['rolename'];
+            $info['create_time']    = NOW_TIME;
+            $info['plan_complete_time'] = NOW_TIME+(3600*24*5);
+            $attr                       = I('attr'); //获取上传文件
+            foreach ($exe_info as $v){
+                $roleid                 = $v['exe_dept_id'];
+                $wd_id                  = $v['wd_id'];
+                $info['exe_dept_id']    = $roleid;
+                $info['wd_id']          = $wd_id;
+                $info['exe_dept_name']  = M('role')->where("id = '$roleid'")->getfield('role_name');
+                //计划完成时间 $u_time单位为天
+                $u_time                 = M('worder_dept')->where("id = '$wd_id'")->getField('use_time');
+                $u_time                 = $u_time?intval($u_time):500;
+                $info['plan_complete_time']= NOW_TIME+(3600*24*$u_time);
+                //获取执行人信息
+
+                var_dump($info);
+            }
+            echo "<hr />";
+            //var_dump($exe_info);die;
+
+
+            $info                   = I('info');
+            $info['status']         = 0;
+            $info['ini_user_id']    = $_SESSION['userid'];
+            $info['ini_dept_id']    = $_SESSION['roleid'];
+            $info['ini_dept_name']  = $_SESSION['rolename'];
+            $info['create_time']    = NOW_TIME;
+            $info['plan_complete_time'] = NOW_TIME+(3600*24*5);
+            $attr                   = I('attr');
+
+            $roleid                 = $info['exe_dept_id'];
+            $userid                 = $info['exe_user_id'];
+            if (!$roleid && !$userid){
+                $this->error("工单受理组不能为空!");
+            }
+            //执行人部门名称
+            $info['exe_dept_name']  = M('role')->where("id = '$roleid'")->getfield('role_name');
+            $info['exe_user_name']  = M('account')->where("id = '$userid'")->getfield('nickname');
+            die;
+            $res = M('worder')->add($info);
+            if ($res){
+                //保存附件信息
+                save_res(P::WORDER_INI,$res,$attr);
+
+                //发送信息
+                $uid     = cookie('userid');
+                $title   = '您有来自['.$info['ini_dept_name'].'--'.$info['ini_user_name'].']的工单待执行!';
+                $content = '';
+                $url     = U('worder/my_worder',array('id'=>$info['exe_user_id'],'pin'=>2));
+                $user    = '['.$info['exe_user_id'].']';
+                send_msg($uid,$title,$content,$url,$user,'');
+                $this->success("发起工单成功!");
+            }else{
+                $this->error('保存失败!');
+            }
+
+        }else{
+            $this->title('发起工单');
+            $this->group            =  get_roles();
+            $this->worder_type      = C('WORDER_TYPE');
+            $this->display('new_worder');
+        }
+    }
+
+    //发起工单
+    public function new_worder_testAAAAAAA(){
+        if (isset($_POST['dosubmint'])){
+
             $info                   = I('info');
             $info['status']         = 0;
             $info['ini_user_id']    = $_SESSION['userid'];

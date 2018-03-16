@@ -56,6 +56,8 @@
                                             <input type="text" class="form-control" name="info[ini_user_name]" value="{:session('nickname')}" readonly>
                                         </div>
 
+                                        <div class="form-group col-md-6"></div>
+
                                         <!--<div class="form-group col-md-12">
                                             <label>工单受理组/人：</label>&#12288;
                                             <select name="info[exe_dept_id]" id="group" onchange="check_group()" class="exe_worder">
@@ -82,7 +84,7 @@
                                         <div id="in_group">
                                             <div class="form-group col-md-6">
                                                 <label>项目类型：</label>
-                                                <select name="data[dept_id]" id="pro_tit" onchange="show_dept()" class="form-control">
+                                                <select name="data[wd_id]" id="pro_tit" onchange="show_dept()" class="form-control">
                                                     <option value="" disabled selected>请选择项目类型</option>
 
                                                 </select>
@@ -99,7 +101,7 @@
                                             </div>
                                         </div>-->
 
-                                        <!--测试 ************************************start-->
+                                        <!-- ************************************start-->
                                         <div class="col-md-12">
 
                                             <div class="box box-success">
@@ -176,7 +178,7 @@
                                             </div><!-- /.box -->
 
                                         </div><!--/.col (right) -->
-                                        <!--测试 ******************************************************end-->
+                                        <!-- ******************************************************end-->
 
                                         <div class="form-group col-md-12"></div>
 
@@ -234,14 +236,9 @@
         function task(obj){
             var i = parseInt($('#task_val').text())+1;
 
-            /*var days = '<div class="input-group"><input type="text" placeholder="活动小标题" name="days['+i+'][remarks]" class="form-control"></div><div class="input-group pads"><input type="text" placeholder="地点安排" name="days['+i+'][citys]" class="form-control"></div><div class="input-group pads"><textarea class="form-control" placeholder="行程安排"  name="days['+i+'][content]"></textarea></div>';
-            //var days = '<div class="input-group pads"><textarea class="form-control" placeholder="行程内容"  name="days['+i+'][content]"></textarea></div><div class="input-group"></div>';
-            var header = '<div class="tasklist" id="task_ti_'+i+'"><a class="aui_close" href="javascript:;" onClick="del_timu(\'task_ti_'+i+'\')">×</a><div class="col-md-12 pd"><label class="titou"><strong>第<span class="tihao">'+i+'</span>天</strong></label>';*/
-
             var header = '<div class="tasklist" id="task_ti_'+i+'"><a class="aui_close" href="javascript:;" onClick="del_timu(\'task_ti_'+i+'\')">×</a><div class="col-md-12 pd"><label class="titou"><strong>工单受理组/人<span class="tihao">'+i+'</span></strong>:</label>';
-            var days = '<div class="form-group col-md-12 pd"> <select name="info['+i+'][exe_dept_id]" id="group_'+i+'" onchange="check_group('+i+')" class="form-control"> <option value="" disabled selected>请选择受理组</option> <foreach name="group" item="v"> <option value="{$v.id}">{:tree_pad($v[\'level\'])}{$v.role_name}</option> </foreach> </select> </div> <div id="in_group'+i+'" style="display: none"> <div class="form-group col-md-12"> <label>项目类型：</label> <select name="info['+i+'][dept_id]" id="pro_tit'+i+'" onchange="show_dept('+i+')" class="form-control"> <option value="" disabled selected>请选择项目类型</option> </select> </div> <div id="dept'+i+'"> <div class="form-group col-md-6"> <label>工单类型：</label><input type="text" name="info['+i+'][type]" id= "type'+i+'" class="form-control" readonly /> </div> <div class="form-group col-md-6"> <label>完成所需时间：</label><input type="text" name="info['+i+'][use_time]" id="use_time'+i+'" class="form-control" readonly /> </div></div></div>';
+            var days = '<div class="form-group col-md-12 pd"> <select name="exe_info['+i+'][exe_dept_id]" id="group_'+i+'" onchange="check_group('+i+')" class="form-control"> <option value="" disabled selected>请选择受理组</option> <foreach name="group" item="v"> <option value="{$v.id}">{:tree_pad($v[\'level\'])}{$v.role_name}</option> </foreach> </select> </div> <div id="in_group'+i+'" style="display: none"> <div class="form-group col-md-12"> <label>项目类型：</label> <select name="exe_info['+i+'][wd_id]" id="pro_tit'+i+'" onchange="show_dept('+i+')" class="form-control"> <option value="" disabled selected>请选择项目类型</option> </select> </div> <div id="dept'+i+'"> <div class="form-group col-md-6"> <label>工单类型：</label><input type="text" name="exe_info['+i+'][type]" id= "type'+i+'" class="form-control" readonly /> </div> <div class="form-group col-md-6"> <label>完成所需时间：</label><input type="text" name="exe_info['+i+'][use_time]" id="use_time'+i+'" class="form-control" readonly /> </div></div></div>';
             var footer = '</div>';
-
             var html = header+days+footer;
 
             $('#task_timu').append(html);
@@ -272,7 +269,6 @@
                 success:function(msg){
                     if (msg == 0){
                         $("#in_group"+a+"").hide();
-                        //$("#in_group"+a+"").css("display","none");
                     }else {
                         $("#in_group"+a+"").show();
                         $("#pro_tit"+a+"").empty();
