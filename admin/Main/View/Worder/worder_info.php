@@ -54,7 +54,7 @@
                                         <if condition="$info.response_time neq 0">
                                             <td width="33.33%">工单响应时间：{$info.response_time|date='Y-m-d H:i:s',###}</td>
                                             <else />
-                                            <td width="33.33%">工单响应时间：未响应</td>
+                                            <td width="33.33%">工单响应时间：<span class="red">未响应</span></td>
                                         </if>
                                     </tr>
                                     <tr>
@@ -82,56 +82,18 @@
                                 	<div id="showimglist">
                                         <foreach name="atts" key="k" item="v">
 											<?php if(isimg($v['filepath'])){ ?>
-                                            <a href="{$v.filepath}" target="_blank"><div class="fileext"><?php echo isimg($v['filepath']); ?></div></a>
+                                            <a href="{$v.filepath}" target="_blank" style="margin-right:10px;"><div class="fileext"><?php echo isimg($v['filepath']); ?></div></a>
                                             <?php }else{ ?>
-											<a href="{$v.filepath}" target="_blank"><img src="{:thumb($v['filepath'],100,100)}" style="margin-right:15px; margin-top:15px;"></a>
+											<a href="{$v.filepath}" target="_blank" style="margin-right:10px;"><img src="{:thumb($v['filepath'],100,100)}" style="margin-right:15px; margin-top:15px;"></a>
 											<?php } ?>
                                         </foreach>
                                     </div>
                                 </div>
-                                
-                                
-                                <!--<div class="form-group col-md-12">
-                                    <h2 style="font-size:16px; color:#ff3300; border-bottom:2px solid #dedede; padding-bottom:10px;">回款计划</h2>
-                                </div>
-                                
-                                
-                                <div class="form-group col-md-12">
-                                    <table class="table table-bordered dataTable "  style="margin-top:-20px;" id="tablelist">
-                                        <thead>
-                                            <tr>
-                                            	<th width="40" style="text-align:center;">序号</th>
-                                                <th width="120">回款金额(元)</th>
-                                                <th width="120">回款比例(%)</th>
-                                                <th width="180">计划回款时间</th>
-                                                <th>备注</th>
-                                                <th width="120">已回款金额(元)</th>
-                                                <th width="100">状态</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <foreach name="pays" key="k" item="v">
-                                                <tr class="userlist">
-                                                    <td style="text-align:center;">{$v.no}</td>
-                                                    <td>&yen; {$v.amount}</td>
-                                                    <td>{$v.ratio}</td>
-                                                    <td><if condition="$v['return_time']">{$v.return_time|date='Y-m-d',###}</if></td>
-                                                    <td>{$v.remark}</td>
-                                                    <td>&yen; {$v.pay_amount}</td>
-                                                    <td><?php /*if($v['status']==2){ echo '<span class="green">已回款</span>';}else if($v['status']==1){ echo '<span class="blue">待回款</span>';}else if($v['status']==0){ echo '<span class="red">未回款</span>';} */?></td>
-                                                </tr> 
-                                            </foreach>
-                                        </tbody>
-                                    </table>
-                                </div>-->
+
                             </div>
                             
                         </div><!-- /.box-body -->
                     </div><!-- /.box -->
-                    
-                    
-                    
-                    
                 </div><!--/.col (right) -->
                 
                 
@@ -140,46 +102,59 @@
                     <div class="box box-warning">
                         <div class="box-header">
                             <h3 class="box-title">工单确认信息</h3>
+                            <h3 class="box-title pull-right" style="font-weight:normal; color:#333333;">
+                                <?php  if($info['assign_name']){ ?>
+                                    负责人：{info.assign_name}
+                                <?php  }else{ ?>
+                                    <?php  if(rolemenu(array('Worder/assign_user'))){ ?>
+                                        <a href="javascript:;" onclick="javascript:assign('{:U('Worder/assign_user',array('opid'=>$op['op_id']))}','指派项目线路行程负责人');" style="color:#09F;">指派负责人</a>
+                                    <?php  }else{ ?>
+                                        暂未指派负责人
+                                    <?php  } ?>
+
+                                <?php  } ?>
+                            </h3>
                         </div>
                         <div class="box-body" style="padding-top:20px;" id="form_tip">
                         	
-                            <?php if(rolemenu(array('Contract/confirm'))){ ?>
-                        
-                           	<form method="post" action="{:U('Contract/confirm')}" name="myform" id="save_huikuan">
-                            <input type="hidden" name="dosubmint" value="1">
+                            <?php /*if(rolemenu(array('Worder/assign_user')) and $info['exe_user_id'] == cookie('userid')){ */?>
+                            <?php if(rolemenu(array('Worder/assign_user'))){ ?>
+
+                           	<form method="post" action="{:U('Worder/assign_user')}" name="myform" id="save_huikuan">
+                            <input type="hidden" name="do_exe" value="1">
                             <input type="hidden" name="id" value="{$row.id}">
                             <input type="hidden" name="referer" value="<?php echo $_SERVER['HTTP_REFERER']; ?>" />
                                 
-                            <div class="form-group col-md-8" style="margin-top:10px;">
+                            <div class="form-group col-md-12" style="margin-top:10px;">
                                 <div class="checkboxlist" id="applycheckbox" style="margin-top:10px;">
-                                <input type="checkbox" name="status" value="1" <?php if($row['status']==1){ echo 'checked';} ?> > 确认通过
+                                <input type="radio" name="info[status]" value="1" <?php if($row['status']==1){ echo 'checked';} ?> > 确认通过
                                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                <input type="checkbox" name="seal" value="1" <?php if($row['seal']==1){ echo 'checked';} ?> > 我司已盖章 
-                               
+                                <input type="radio" name="info[status]" value="-1" <?php if($row['status']==-1){ echo 'checked';} ?> > 拒绝该工单
+
                                 </div>
                             </div>
-                            
-                            <div class="form-group col-md-4" style="margin-top:10px;">
-                            <select class="form-control" name="gbs" >
-                            	<option value="0">选择返回状态</option>
-                                <option value="1" <?php if($row['gbs']==1){ echo 'selected';} ?> >已返回综合部</option>
-                                <option value="2" <?php if($row['gbs']==2){ echo 'selected';} ?> >已返回财务部</option>
-                            </select>
-                            </div>
-                            
-                            
+
+                            <!--<div class="form-group col-md-4" style="margin-top:10px;"></div>-->
+
                             <div class="form-group col-md-12">
                             	<div style="border-top:1px solid #dedede; margin-top:15px; padding-top:20px;">
-                                    <label>工单编号</label>
-                                    <input type="text" name="info[contract_id]" id="contract_id"   value="{$row.contract_id}" class="form-control" />
+                                    <label>工单类型</label>
+                                    <select class="form-control" name="info[wd_id]" >
+                                        <option value="" disabled selected>选择工单类型</option>
+                                        <foreach name="dept_list" item="v">
+                                            <option value="{$v.id}" <?php if($row['gbs']==1){ echo 'selected';} ?> >{$v.pro_title}</option>
+                                        </foreach>
+                                        <!--<option value="1" <?php /*if($row['gbs']==1){ echo 'selected';} */?> >已返回综合部</option>
+                                        <option value="2" <?php /*if($row['gbs']==2){ echo 'selected';} */?> >已返回财务部</option>-->
+                                    </select>
                                 </div>
                             </div>
-                            
+
                             <div class="form-group col-md-12">
                                 <label>审核意见</label>
-                                <textarea class="form-control" name="info[confirm_remarks]" >{$row.confirm_remarks}</textarea>
+                                <textarea class="form-control" name="info[exe_reply_content]" >{$row.exe_reply_content}</textarea>
                             </div>
-                            
+
                             <div class="form-group col-md-12"  style="margin-top:50px; padding-bottom:20px; text-align:center;">
                                 <button class="btn btn-success btn-lg">确认提交</button>
                             </div>
@@ -339,3 +314,22 @@
 
 <include file="Index:footer2" />
 
+<script type="text/javascript">
+    //指派责任人
+    function assign(url,title){
+        art.dialog.open(url,{
+            lock:true,
+            title: title,
+            width:800,
+            height:500,
+            okValue: '提交',
+            ok: function () {
+                this.iframe.contentWindow.gosubmint();
+                return false;
+            },
+            cancelValue:'取消',
+            cancel: function () {
+            }
+        });
+    }
+</script>

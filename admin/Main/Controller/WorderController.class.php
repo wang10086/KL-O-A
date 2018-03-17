@@ -257,6 +257,8 @@ class WorderController extends BaseController{
             $db             = M('worder');
             //$this->info     = $db->alias('w')->where(array('w.id'=>$id))->join("left join oa_worder_dept as d on d.id = w.wd_id")->find();
             $info           = $db->where(array('id'=>$id))->find();
+            $roleid         = cookie('roleid');
+            $this->dept_list= M('worder_dept')->field("id,pro_title")->where("dept_id = '$roleid'")->select();
 
             //判断工单类型
             if($info['worder_type']==0) $info['type'] = '维修工单';
@@ -273,12 +275,62 @@ class WorderController extends BaseController{
             if($info['status']==-2)     $info['sta'] = '已撤销';
 
             $this->info     = $info;
+            $this->atts     = get_res(P::WORDER_INI,$id);
             $wd_id          = $info['wd_id'];
-            if ($wd_id == 0){
-
-            }else{
+            if ($wd_id != 0){
                 $this->dept       = M('worder_dept')->where(array('id'=>$wd_id))->find();
             }
+            $this->display();
+        }
+    }
+
+    //执行人响应工单并指派工单
+    public function assign_user(){
+        $opid       = I('opid');
+        $info       = I('info');
+        $user       =  M('account')->getField('id,nickname', true);
+
+        if(isset($_POST['dosubmit']) && $info){
+die;
+            $data = array();
+            $data['line'] = $info;
+            $auth = M('op_auth')->where(array('op_id'=>$opid))->find();
+
+            //创建工单
+            $thing  = "行程方案";
+            project_worder($info,$opid,$thing);
+
+            if($auth){
+                M('op_auth')->data($data)->where(array('id'=>$auth['id']))->save();
+            }else{
+                $data['op_id'] = $opid;
+                M('op_auth')->add($data);
+            }
+
+            $record = array();
+            $record['op_id']   = $opid;
+            $record['optype']  = 2;
+            $record['explain'] = '指派【'.$user[$info].'】负责项目行程';
+            op_record($record);
+
+            echo '<script>window.top.location.reload();</script>';
+
+        }elseif (isset($_POST['do_exe'])){
+
+        }else{
+
+            //用户列表
+            $key = I('key');
+            $db = M('account');
+            $where = array();
+            $where['id'] = array('gt',3);
+            if($key) $where['nickname'] = array('like','%'.$key.'%');
+            $pagecount = $db->where($where)->count();
+            $page = new Page($pagecount,6);
+            $this->pages = $pagecount>6 ? $page->show():'';
+            $this->lists = $db->where($where)->limit($page->firstRow . ',' . $page->listRows)->order($this->orders('roleid'))->select();
+            $this->role  = M('role')->getField('id,role_name', true);
+            $this->opid = $opid;
             $this->display();
         }
     }
