@@ -65,6 +65,7 @@
                                                 <th>指标名称</th>
                                                 <th width="140">考核开始</th>
                                                 <th width="140">考核结束</th>
+                                                <th width="100">计划</th>
                                                 <th width="100">目标</th>
                                                 <th width="100">权重</th>
                                                 <th width="50" class="taskOptions">删除</th>
@@ -75,6 +76,7 @@
                                                 <td style="line-height:34px;"><a href="javascript:;" onClick="kpi({$row.quota_id})">{$row.quota_title}</a></td>
                                                 <td><input type="text" class="form-control" name="info[{$row.id}][start_date]" value="{$row.start_date|date='Y-m-d',###}"></td>
                                                 <td><input type="text" class="form-control" name="info[{$row.id}][end_date]" value="{$row.end_date|date='Y-m-d',###}"></td>
+                                                <td><input type="text" class="form-control" name="info[{$row.id}][plan]" value="{$row.plan}"></td>
                                                 <td><input type="text" class="form-control" name="info[{$row.id}][target]" value="{$row.target}"></td>
                                                 <td><input type="text" class="form-control" name="info[{$row.id}][weight]" value="{$row.weight}"></td>
                                                 <td   style="line-height:34px;" class="taskOptions">

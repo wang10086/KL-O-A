@@ -1062,7 +1062,10 @@ class RbacController extends BaseController {
         $this->title('KPI指标管理');
     
         $db = M('kpi_config');
-       
+       	
+		$where = array();
+		$where['id'] = array('in',array(12,30,31,35,36,40,41,43,44,47,48,49,50,51,53,54,65,66,67,82,83,86,88,95,97,100,101,107,108,111,112,91,96,68,79,80,52,60,61,62,63,64,85,93,94,98,99,105,106,109,110));
+		
 		//分页
 		$pagecount = $db->where($where)->count();
 		$page = new Page($pagecount, P::PAGE_SIZE);
@@ -1327,10 +1330,12 @@ class RbacController extends BaseController {
 				
 				//保存更新记录
 				$remarks = '';
-				if($v['start_date']!=$kpi['start_date'])  $remarks.='考核开始日期由'.date('Y-m-d',$kpi['start_date']).'变更为'.date('Y-m-d',$v['start_date']).'；';
-				if($v['end_date']!=$kpi['end_date'])  $remarks.='考核结束日期由'.date('Y-m-d',$kpi['end_date']).'变更为'.date('Y-m-d',$v['end_date']).'；';
-				if($v['target']!=$kpi['target'])  $remarks.='目标由'.$kpi['target'].'变更为'.$v['target'].'；';
-				if($v['weight']!=$kpi['weight'])  $remarks.='权重由'.$kpi['weight'].'变更为'.$v['weight'].'；';
+				if($v['start_date']!=$kpi['start_date']) $remarks.='考核开始日期由'.date('Y-m-d',$kpi['start_date']).'变更为'.date('Y-m-d',$v['start_date']).'；';
+				if($v['end_date']!=$kpi['end_date'])  	$remarks.='考核结束日期由'.date('Y-m-d',$kpi['end_date']).'变更为'.date('Y-m-d',$v['end_date']).'；';
+				if($v['plan']!=$kpi['plan'])  			$remarks.='计划由'.$kpi['plan'].'变更为'.$v['plan'].'；';
+				if($v['target']!=$kpi['target'])  		$remarks.='目标由'.$kpi['target'].'变更为'.$v['target'].'；';
+				if($v['weight']!=$kpi['weight'])  		$remarks.='权重由'.$kpi['weight'].'变更为'.$v['weight'].'；';
+				
 				
 				if($remarks){
 					$data = array();
