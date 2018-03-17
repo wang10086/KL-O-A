@@ -38,32 +38,21 @@
                                     <tr role="row" class="orders" >
                                         <th class="sorting" width="40" data="id">id</th>
                                         <th class="sorting" width="120" data="worder_title">工单标题</th>
-                                        <th class="sorting" data="worder_content">工单内容</th>
+                                        <!--<th class="sorting" data="worder_content">工单内容</th>-->
                                         <th class="sorting" width="80" data="worder_type">工单类型</th>
                                         <th class="sorting" width="80" data="init_user_name">发起人姓名</th>
-                                        <!--<th class="sorting" data='init_dept_name'>发起人部门</th>-->
                                         <th class="sorting" width="80"  data="exe_user_name">执行人姓名</th>
-                                        <!--<th class="sorting" width="80" data="exe_dept_name">执行人部门</th>-->
                                         <th class="sorting" width="80" data="status">工单状态</th>
                                         <th class="sorting" width="125" >工单创建时间</th>
                                         <th class="sorting" width="125" >工单完成时间</th>
-                                        <!--<if condition="rolemenu(array('Worder/exe_worder'))">
-                                        <th width="40" class="taskOptions">执行</th>
-                                        </if>
-
-                                        <if condition="rolemenu(array('Worder/del_worder'))">
-                                        <th width="40" class="taskOptions">删除</th>
-                                        </if> -->
-                                        <if condition="rolemenu(array('Worder/exe_worder')) or rolemenu(array('Worder/del_worder'))">
-                                            <th width="40" class="taskOptions">操作</th>
-                                        </if>
+                                        <th width="60" class="taskOptions">详情</th>
 
                                     </tr>
                                     <foreach name="lists" item="row"> 
                                     <tr>
                                         <td>{$row.id}</td>
                                         <td>{$row.worder_title}</td>
-                                        <td>{$row.worder_content}</td>
+                                        <!--<td>{$row.worder_content}</td>-->
                                         <td>{$row.type}</td>
                                         <td>{$row.ini_user_name}</td>
                                         <td>{$row.exe_user_name}</td>
@@ -74,9 +63,13 @@
                                             <else />
                                             <td>{$row.complete_time|date='Y-m-d H:i:s',###}</td>
                                         </if>
-                                        <if condition="$pin eq 1">
-                                            <td>
 
+                                        <td class="taskOptions">
+                                            <button onClick="javascript:window.location.href='{:U('Worder/worder_info',array('id'=>$row['id']))}';" title="详情" class="btn btn-success  btn-smsm"><i class="fa  fa-building-o"></i></button>
+                                        </td>
+
+                                        <!--<if condition="$pin eq 1">
+                                            <td>
                                                 <if condition="($row.sta neq '执行部门已确认完成') and ($row.sta neq '发起人已确认完成') and ($row.sta neq '拒绝或无效工单') and ($row.sta neq '已撤销')">
                                                     <if condition="rolemenu(array('Worder/revoke'))">
                                                     <a href="{:U('Worder/revoke',array('id'=>$row['id']))}" title="撤销" class="btn btn-info btn-smsm"><i class="fa fa-reply"></i></a>
@@ -97,7 +90,7 @@
                                                     </if>
                                                 </if>
                                             </td>
-                                        </if>
+                                        </if>-->
 
                                     </tr>
                                     </foreach>					

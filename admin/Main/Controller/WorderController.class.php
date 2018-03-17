@@ -129,9 +129,9 @@ class WorderController extends BaseController{
             if($v['worder_type']==2) $lists[$k]['type'] = '质量工单';
 
             //判断工单状态
-            if($v['status']==0)     $lists[$k]['sta'] = '未响应';
-            if($v['status']==1)     $lists[$k]['sta'] = '执行部门已响应';
-            if($v['status']==2)     $lists[$k]['sta'] = '执行部门已确认完成';
+            if($v['status']==0)     $lists[$k]['sta'] = '<span class="red">未响应</span>';
+            if($v['status']==1)     $lists[$k]['sta'] = '<span class="yellow">执行部门已响应</span>';
+            if($v['status']==2)     $lists[$k]['sta'] = '<span class="yellow">执行部门已确认完成</span>';
             if($v['status']==3)     $lists[$k]['sta'] = '发起人已确认完成';
             if($v['status']==-1)    $lists[$k]['sta'] = '拒绝或无效工单';
             if($v['status']==-2)    $lists[$k]['sta'] = '已撤销';
@@ -231,9 +231,9 @@ class WorderController extends BaseController{
                 if($v['worder_type']==100)$lists[$k]['type']= '项目工单';
 
                 //判断工单状态
-                if($v['status']==0)     $lists[$k]['sta'] = '未响应';
-                if($v['status']==1)     $lists[$k]['sta'] = '执行部门已响应';
-                if($v['status']==2)     $lists[$k]['sta'] = '执行部门已确认完成';
+                if($v['status']==0)     $lists[$k]['sta'] = '<span class="red">未响应</span>';
+                if($v['status']==1)     $lists[$k]['sta'] = '<span class="yellow">执行部门已响应</span>';
+                if($v['status']==2)     $lists[$k]['sta'] = '<span class="yellow">执行部门已确认完成</span>';
                 if($v['status']==3)     $lists[$k]['sta'] = '发起人已确认完成';
                 if($v['status']==-1)    $lists[$k]['sta'] = '拒绝或无效工单';
                 if($v['status']==-2)    $lists[$k]['sta'] = '已撤销';
@@ -245,6 +245,41 @@ class WorderController extends BaseController{
             }elseif ($pin ==101 or $pin == 102){
                 $this->display('my_pro_worder');
             }
+        }
+    }
+
+    //查看工单详情
+    public function worder_info(){
+        if (isset($_POST['dosubmint'])){
+
+        }else{
+            $id             = I('id');
+            $db             = M('worder');
+            //$this->info     = $db->alias('w')->where(array('w.id'=>$id))->join("left join oa_worder_dept as d on d.id = w.wd_id")->find();
+            $info           = $db->where(array('id'=>$id))->find();
+
+            //判断工单类型
+            if($info['worder_type']==0) $info['type'] = '维修工单';
+            if($info['worder_type']==1) $info['type'] = '管理工单';
+            if($info['worder_type']==2) $info['type'] = '质量工单';
+            if($info['worder_type']==100)$info['type']= '项目工单';
+
+            //判断工单状态
+            if($info['status']==0)      $info['sta'] = '<span class="red">未响应</span>';
+            if($info['status']==1)      $info['sta'] = '<span class="yellow">执行部门已响应</span>';
+            if($info['status']==2)      $info['sta'] = '<span class="yellow">执行部门已确认完成</span>';
+            if($info['status']==3)      $info['sta'] = '发起人已确认完成';
+            if($info['status']==-1)     $info['sta'] = '拒绝或无效工单';
+            if($info['status']==-2)     $info['sta'] = '已撤销';
+
+            $this->info     = $info;
+            $wd_id          = $info['wd_id'];
+            if ($wd_id == 0){
+
+            }else{
+                $this->dept       = M('worder_dept')->where(array('id'=>$wd_id))->find();
+            }
+            $this->display();
         }
     }
 
@@ -322,9 +357,9 @@ class WorderController extends BaseController{
             if($v['worder_type']==100)$lists[$k]['type']= '项目工单';
 
             //判断工单状态
-            if($v['status']==0)     $lists[$k]['sta'] = '未响应';
-            if($v['status']==1)     $lists[$k]['sta'] = '执行部门已响应';
-            if($v['status']==2)     $lists[$k]['sta'] = '执行部门已确认完成';
+            if($v['status']==0)     $lists[$k]['sta'] = '<span class="red">未响应</span>';
+            if($v['status']==1)     $lists[$k]['sta'] = '<span class="yellow">执行部门已响应</span>';
+            if($v['status']==2)     $lists[$k]['sta'] = '<span class="yellow">执行部门已确认完成</span>';
             if($v['status']==3)     $lists[$k]['sta'] = '发起人已确认完成';
             if($v['status']==-1)    $lists[$k]['sta'] = '拒绝或无效工单';
             if($v['status']==-2)    $lists[$k]['sta'] = '已撤销';

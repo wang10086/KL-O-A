@@ -47,16 +47,7 @@
                                         <th class="sorting" width="80" data="status">工单状态</th>
                                         <th class="sorting" >工单创建时间</th>
                                         <th class="sorting" >工单完成时间</th>
-                                        <!--<if condition="rolemenu(array('Worder/exe_worder'))">
-                                        <th width="40" class="taskOptions">执行</th>
-                                        </if>
-
-                                        <if condition="rolemenu(array('Worder/del_worder'))">
-                                        <th width="40" class="taskOptions">删除</th>
-                                        </if> -->
-                                        <if condition="rolemenu(array('Worder/exe_worder')) or rolemenu(array('Worder/del_worder'))">
-                                            <th width="40" class="taskOptions">操作</th>
-                                        </if>
+                                        <th width="60" class="taskOptions">详情</th>
 
                                     </tr>
                                     <foreach name="lists" item="row"> 
@@ -74,7 +65,12 @@
                                             <else />
                                             <td>{$row.complete_time|date='Y-m-d H:i:s',###}</td>
                                         </if>
-                                        <if condition="$pin eq 101">
+
+                                        <td class="taskOptions">
+                                            <button onClick="javascript:window.location.href='{:U('Worder/worder_info',array('id'=>$row['id']))}';" title="详情" class="btn btn-success  btn-smsm"><i class="fa  fa-building-o"></i></button>
+                                        </td>
+
+                                        <!--<if condition="$pin eq 101">
                                             <td>
 
                                                 <if condition="($row.sta neq '执行部门已确认完成') and ($row.sta neq '发起人已确认完成') and ($row.sta neq '拒绝或无效工单') and ($row.sta neq '已撤销')">
@@ -97,7 +93,7 @@
                                                     </if>
                                                 </if>
                                             </td>
-                                        </if>
+                                        </if>-->
 
                                     </tr>
                                     </foreach>					
