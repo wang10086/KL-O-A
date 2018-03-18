@@ -234,6 +234,137 @@ class CourController extends BaseController {
 	}
 	
 	
+	//培训记录
+	public function pptlist(){
+		
+		$db 			= M('cour_ppt');
+		$type 		= I('type','-1');
+		$keywords 	= I('keywords');
+		
+		$where 		= '';
+		
+		
+		//分页
+		$pagecount = $db->where($where)->count();
+		$page = new Page($pagecount, P::PAGE_SIZE);
+		$this->pages = $pagecount>P::PAGE_SIZE ? $page->show():'';
+		
+		$datalist = $db->where($where)->limit($page->firstRow . ',' . $page->listRows)->order($this->orders('id'))->select();	
+		
+		
+		$this->datalist 		= $datalist;
+		
+		$this->display('pptlist');
+		
+	}
+	
+	
+	
+	//新增记录
+	public function ppt_add(){
+		
+		if(isset($_POST['dosubmint'])){
+			
+			$info      = I('info');
+			$matter    = I('attr');
+			
+			if($info){
+				
+				//新增主表信息
+				$info['create_time'] 	= time();
+				$info['update_time'] 	= time();
+				$info['lecturer_uid']   = cookie('userid');
+				$info['lecturer_uname'] = cookie('name');
+				$info['lecture_date'] 	= $info['lecture_date'] ? strtotime($info['lecture_date']) : 0;
+				
+				$add = M('cour_ppt')->add($info);	
+				if($add){
+					
+					//保存课件材料
+					if($matter){
+						foreach($matter['id'] as $k=>$v){
+							$data = array();
+							$data['catid']  		= 318;
+							$data['rel_id'] 		= $add;
+							$data['filename']  	= $matter['filename'][$k];
+							M('attachment')->data($data)->where(array('id'=>$v))->save();
+						}	
+					}
+					
+					
+					$this->success('保存成功！',I('referer',''));	
+				}else{
+					$this->error('保存失败！',I('referer',''));			
+				}
+			}
+			
+		}else{
+			$this->courlist    = M('cour')->GetField('cour_id,subject',true);
+			$this->display('ppt_add');
+		}
+	}
+	
+	
+	
+	
+	
+	//修改记录
+	function ppt_edit(){
+		
+		if(isset($_POST['dosubmint'])){
+			
+			$ppt_id 		= I('ppt_id');
+			$info 		= I('info');
+			$matter 		= I('attr');
+			
+			if($info){
+				$info['update_time'] 	= time();
+				$info['lecture_date'] 	= $info['lecture_date'] ? strtotime($info['lecture_date']) : 0;
+				$edit = M('cour_ppt')->data($info)->where(array('id'=>$ppt_id))->save();	
+				if($edit){
+					
+					//保存课件材料
+					if($matter){
+						foreach($matter['id'] as $k=>$v){
+							$data = array();
+							$data['catid']    	= 318;
+							$data['rel_id']    	= $ppt_id;
+							$data['filename']  	= $matter['filename'][$k];
+							M('attachment')->data($data)->where(array('id'=>$v))->save();
+						}	
+					}
+					
+					$this->success('保存成功！',I('referer',''));	
+				}else{
+					$this->error('保存失败！',I('referer',''));			
+				}
+				
+			}
+			
+		}else{
+			$id = I('id',-1);
+			$row = M('cour_ppt')->find($id);
+			
+			
+			//获取默认素材
+			$attid = array();
+			$this->attachment = M('attachment')->field('id')->where(array('catid'=>318,'rel_id'=>$id))->select();  //
+			foreach($this->attachment as $v){
+				$attid[] = 	$v['id'];
+			}
+			
+		
+			
+			$this->row         = $row;
+			$this->atts        = implode(',',$attid);
+			$this->courlist    = M('cour')->GetField('cour_id,subject',true);
+			
+			$this->display('ppt_edit');
+		}
+			
+	}
+	
+	
 	
 	
 }
