@@ -29,7 +29,7 @@
                                     <h3 class="box-title">培训记录</h3>
                                     <div class="pull-right box-tools">
                                         <button class="btn btn-info btn-sm" onclick="javascript:opensearch('searchtext',500,160);"><i class="fa fa-search"></i> 搜索</button>
-                                        <button onClick="javascript:window.location.href='{:U('Cour/ppt_add')}';" class="btn btn-danger btn-sm"><i class="fa fa-plus"></i> 新增课件</button>
+                                        <button onClick="javascript:window.location.href='{:U('Cour/ppt_add')}';" class="btn btn-danger btn-sm"><i class="fa fa-plus"></i> 新增记录</button>
                                     </div>
                                 </div><!-- /.box-header -->
                                 <div class="box-body">
@@ -91,17 +91,9 @@
             <form action="" method="get" id="searchform">
             <input type="hidden" name="m" value="Main">
             <input type="hidden" name="c" value="Cour">
-            <input type="hidden" name="a" value="courlist">
-            <div class="form-group col-md-5">
-                <select  class="form-control"  name="type">
-                    <option value="-1">类型</option>
-                    <foreach name="typelist" key="k" item="v">
-                    <option value="{$k}">{$v}</option>
-                    </foreach>
-                </select>
-            </div>
+            <input type="hidden" name="a" value="pptlist">
             
-            <div class="form-group col-md-7">
+            <div class="form-group col-md-12">
                  <input type="text" name="keywords" placeholder="关键字" class="form-control">
             </div>
             

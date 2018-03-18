@@ -242,7 +242,7 @@ class CourController extends BaseController {
 		$keywords 	= I('keywords');
 		
 		$where 		= '';
-		
+		if($keywords)   $where .= '((`ppt_title` like "%'.$keywords.'%")  OR (`lecturer_uname` like "%'.$keywords.'%")  OR (`lecture_address` like "%'.$keywords.'%")) ';
 		
 		//分页
 		$pagecount = $db->where($where)->count();
