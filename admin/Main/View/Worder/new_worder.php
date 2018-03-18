@@ -58,49 +58,6 @@
 
                                         <div class="form-group col-md-6"></div>
 
-                                        <!--<div class="form-group col-md-12">
-                                            <label>工单受理组/人：</label>&#12288;
-                                            <select name="info[exe_dept_id]" id="group" onchange="check_group()" class="exe_worder">
-                                                <option value="" disabled selected>请选择受理组</option>
-                                                <foreach name="group" item="v">
-                                                    <option value="{$v.id}">{:tree_pad($v['level'])}{$v.role_name}</option>
-                                                </foreach>
-                                            </select>
-                                            <select name="info[exe_user_id]" id="member" class="exe_worder">
-                                                <option value="" disabled selected>请选择员工姓名</option>
-
-                                            </select>
-                                        </div>-->
-                                        <!--<div class="form-group col-md-6">
-                                            <label>工单受理组/人：</label>
-                                            <select name="info[exe_dept_id]" id="group" onchange="check_group()" class="form-control">
-                                                <option value="" disabled selected>请选择受理组</option>
-                                                <foreach name="group" item="v">
-                                                    <option value="{$v.id}">{:tree_pad($v['level'])}{$v.role_name}</option>
-                                                </foreach>
-                                            </select>
-                                        </div>
-
-                                        <div id="in_group">
-                                            <div class="form-group col-md-6">
-                                                <label>项目类型：</label>
-                                                <select name="data[wd_id]" id="pro_tit" onchange="show_dept()" class="form-control">
-                                                    <option value="" disabled selected>请选择项目类型</option>
-
-                                                </select>
-                                            </div>
-
-                                            <div id="dept">
-                                                <div class="form-group col-md-6">
-                                                    <label>工单类型：</label><input type="text" name="info[type]" class="form-control" readonly />
-                                                </div>
-
-                                                <div class="form-group col-md-6">
-                                                    <label>完成所需时间：</label><input type="text" name="info[use_time]" class="form-control" readonly />
-                                                </div>
-                                            </div>
-                                        </div>-->
-
                                         <!-- ************************************start-->
                                         <div class="col-md-12">
 
@@ -146,22 +103,6 @@
                                                                         <div class="form-group col-md-6">
                                                                             <label>完成所需时间：</label><input type="text" name="info[{$v.id}][use_time]" class="form-control" readonly />
                                                                         </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>-->
-
-                                                            <!--<div class="tasklist" id="task_a_{$v.id}">
-                                                                <a class="aui_close" href="javascript:;" onClick="del_timu('task_a_{$v.id}')">×</a>
-                                                                <div class="col-md-12 pd">
-                                                                    <label class="titou"><strong>第<span class="tihao">{$k+1}</span>天</strong></label>
-                                                                    <div class="input-group">
-                                                                        <input type="text" placeholder="活动小标题" name="days[{$v.id}1000][remarks]" class="form-control" value="{$v.remarks}">
-                                                                    </div>
-                                                                    <div class="input-group pads">
-                                                                        <input type="text" placeholder="所在城市" name="days[{$v.id}1000][citys]" class="form-control" value="{$v.citys}">
-                                                                    </div>
-                                                                    <div class="input-group pads">
-                                                                        <textarea class="form-control" placeholder="行程内容" name="days[{$v.id}1000][content]">{$v.content}</textarea>
                                                                     </div>
                                                                 </div>
                                                             </div>-->
@@ -264,7 +205,7 @@
             var id = $("#group_"+a+"").val();
             $.ajax({
                 type:"POST",
-                url:"{:U('Worder/member')}",
+                url:"{:U('Ajax/member')}",
                 data:{id:id},
                 success:function(msg){
                     if (msg == 0){
@@ -291,11 +232,11 @@
             var id = $("#pro_tit"+a+"").val();
             $.ajax({
                 type:"POST",
-                url:"{:U('Worder/dept')}",
+                url:"{:U('Ajax/dept')}",
                 data:{id:id},
                 success:function(msg){
                     $("#type"+a+"").val(msg.type_res);
-                    $("#use_time"+a+"").val(msg.use_time);
+                    $("#use_time"+a+"").val(msg.use_time+"个工作日");
                 }
             })
         }

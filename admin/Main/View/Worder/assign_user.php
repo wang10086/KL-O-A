@@ -51,9 +51,9 @@
             
             </div>
             
-            <form method="post" action="{:U('Op/assign_line')}" name="myform" id="gosub">
+            <form method="post" action="{:U('Worder/assign_user')}" name="myform" id="gosub">
             <input type="hidden" name="dosubmit" value="1">
-            <input type="hidden" name="opid" value="{$opid}">
+            <input type="hidden" name="id" value="{$opid}">
             <table class="table table-bordered dataTable fontmini" id="tablelist" style="margin-top:10px;">
                 <tr role="row" class="orders" >
                 	<th width="60" style="text-align:center">选择</th>
@@ -65,7 +65,7 @@
                 <foreach name="lists" item="row">                      
                 <tr class="guidelist">
                 	<td align="center">
-                    <input type="radio" name="info" value="{$row.id}"> 
+                    <input type="radio" name="info" value="{$row.id}">
                     </td>
                     <td>{$row.nickname}</td>
                     <td>{$row.mobile}</td>

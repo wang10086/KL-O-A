@@ -113,5 +113,27 @@ class AjaxController extends Controller {
 		echo json_encode($op,true);
 		
 	}
+
+	//工单管理获取当前worder_dept工单项信息
+    public function dept(){
+        $id             = I('id');
+        $data           = M('worder_dept')->where("id = '$id'")->find();
+        if ($data['type'] == 0){$data['type_res'] = '成熟产品';}
+        if ($data['type'] == 1){$data['type_res'] = '新产品';}
+        if ($data['type'] == 2){$data['type_res'] = '定制产品';}
+        $this->ajaxReturn($data,"JSON");
+    }
+
+    //工单获取所有的用户组信息
+    public function member(){
+        $id             = I('id');
+        $ids            = array_unique(M('worder_dept')->getfield("dept_id",true));
+        $depts          = M('worder_dept')->field('id,dept_id,pro_title')->where("dept_id = '$id'")->select();
+        if (in_array($id,$ids)){
+            $this->ajaxReturn($depts,"JSON");
+        }else{
+            echo 0;
+        }
+    }
 	
 }

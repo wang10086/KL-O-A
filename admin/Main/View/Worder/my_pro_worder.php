@@ -41,9 +41,7 @@
                                         <th class="sorting" width="160" data="worder_content">工单内容</th>
                                         <th class="sorting" data="worder_type">工单类型</th>
                                         <th class="sorting" data="init_user_name">发起人姓名</th>
-                                        <!--<th class="sorting" data='init_dept_name'>发起人部门</th>-->
                                         <th class="sorting" width="80"  data="exe_user_name">执行人姓名</th>
-                                        <!--<th class="sorting" width="80" data="exe_dept_name">执行人部门</th>-->
                                         <th class="sorting" width="80" data="status">工单状态</th>
                                         <th class="sorting" >工单创建时间</th>
                                         <th class="sorting" >工单完成时间</th>
@@ -53,7 +51,8 @@
                                     <foreach name="lists" item="row"> 
                                     <tr>
                                         <td>{$row.id}</td>
-                                        <td>{$row.worder_title}</td>
+                                        <td><a href="{:U('Worder/worder_info',array('id'=>$row['id']))}">{$row.worder_title}</a></td>
+                                        <!--<td>{$row.worder_title}</td>-->
                                         <td>{$row.worder_content}</td>
                                         <td>{$row.type}</td>
                                         <td>{$row.ini_user_name}</td>

@@ -54,7 +54,7 @@
                                     <foreach name="lists" item="row"> 
                                     <tr>
                                         <td>{$row.id}</td>
-                                        <td>{$row.worder_title}</td>
+                                        <td><a href="{:U('Worder/worder_info',array('id'=>$row['id']))}">{$row.worder_title}</a></td>
                                         <!--<td>{$row.worder_content}</td>-->
                                         <td>{$row.type}</td>
                                         <td>{$row.ini_user_name}</td>

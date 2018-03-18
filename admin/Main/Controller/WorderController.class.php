@@ -25,8 +25,8 @@ class WorderController extends BaseController{
             $info['ini_dept_id']    = $_SESSION['roleid'];
             $info['ini_dept_name']  = $_SESSION['rolename'];
             $info['create_time']    = NOW_TIME;
-            $attr                       = I('attr'); //获取上传文件
-            $worder_type                = $info['worder_type'];
+            $attr                   = I('attr'); //获取上传文件
+            $worder_type            = $info['worder_type'];
             if ($worder_type == P::WORDER_PROJECT){
                 $pin = 102;
             }else{
@@ -57,7 +57,7 @@ class WorderController extends BaseController{
                     $uid     = cookie('userid');
                     $title   = '您有来自['.$info['ini_dept_name'].'--'.$info['ini_user_name'].']的工单待执行!';
                     $content = '';
-                    $url     = U('worder/my_worder',array('id'=>$info['exe_user_id'],'pin'=>$pin));
+                    $url     = U('worder/worder_info',array('id'=>$res));
                     $user    = '['.$info['exe_user_id'].']';
                     send_msg($uid,$title,$content,$url,$user,'');
                     $this->success("发起工单成功!");
@@ -81,7 +81,7 @@ class WorderController extends BaseController{
         $users  = M('account')->where("roleid = '$id'")->select();
         $this->ajaxReturn($users,"JSON");
     }*/
-    public function member(){
+    /*public function member(){
         $id             = I('id');
         $ids            = array_unique(M('worder_dept')->getfield("dept_id",true));
         $depts          = M('worder_dept')->field('id,dept_id,pro_title')->where("dept_id = '$id'")->select();
@@ -99,7 +99,7 @@ class WorderController extends BaseController{
         if ($data['type'] == 1){$data['type_res'] = '新产品';}
         if ($data['type'] == 2){$data['type_res'] = '定制产品';}
         $this->ajaxReturn($data,"JSON");
-    }
+    }*/
 
     //管理工单(工单列表)
     public function worder_list(){
@@ -142,7 +142,7 @@ class WorderController extends BaseController{
     }
 
     //执行工单
-    public function exe_worder(){
+    /*public function exe_worder(){
         if (isset($_POST['dosubmint'])){
             $pin                            = I('pin');
             if ($pin == 102){$pin = 101;};
@@ -187,6 +187,31 @@ class WorderController extends BaseController{
             //获取上传文件
             $this->atts         = get_res(P::WORDER_INI,$id);
             $this->display();
+        }
+    }*/
+
+    public function exe_worder(){
+        if (isset($_POST['dosubmint'])){
+            $db                     = M('worder');
+            $id                     = I('id');
+            $ini_user_id            = $db->where(array('id'=>$id))->getField('ini_user_id');
+            $info                   = I('info');
+            $info['complete_time']  = NOW_TIME;
+            $res = $db->where(array('id'=>$id))->save($info);
+            if($res){
+                //向工单发起人推送消息
+                $uid     = cookie('userid');
+                $exe_dept_name = $_SESSION['rolename'];
+                $exe_user_name = $_SESSION['nickname'];
+                $title   = '您有来自['.$exe_dept_name.'--'.$exe_user_name.']的工单执行反馈!';
+                $content = '';
+                $url     = U('worder/worder_info',array('id'=>$id));
+                $user    = '['.$ini_user_id.']';
+                send_msg($uid,$title,$content,$url,$user,'');
+                $this->success("操作成功");
+            }else{
+                $this->error("数据保存失败");
+            }
         }
     }
 
@@ -250,6 +275,7 @@ class WorderController extends BaseController{
 
     //查看工单详情
     public function worder_info(){
+
         if (isset($_POST['dosubmint'])){
 
         }else{
@@ -274,11 +300,16 @@ class WorderController extends BaseController{
             if($info['status']==-1)     $info['sta'] = '拒绝或无效工单';
             if($info['status']==-2)     $info['sta'] = '已撤销';
 
+            $this->ids      = array_unique(M('worder_dept')->getfield("dept_id",true));
             $this->info     = $info;
             $this->atts     = get_res(P::WORDER_INI,$id);
             $wd_id          = $info['wd_id'];
             if ($wd_id != 0){
-                $this->dept       = M('worder_dept')->where(array('id'=>$wd_id))->find();
+                $dept           = M('worder_dept')->where(array('id'=>$wd_id))->find();
+                if ($dept['type']==0) $dept['n_type'] = '成熟产品';
+                if ($dept['type']==1) $dept['n_type'] = '新产品';
+                if ($dept['type']==2) $dept['n_type'] = '定制产品';
+                $this->dept     = $dept;
             }
             $this->display();
         }
@@ -286,36 +317,42 @@ class WorderController extends BaseController{
 
     //执行人响应工单并指派工单
     public function assign_user(){
-        $opid       = I('opid');
+
+        $opid       = I('id');
         $info       = I('info');
         $user       =  M('account')->getField('id,nickname', true);
 
         if(isset($_POST['dosubmit']) && $info){
-die;
-            $data = array();
-            $data['line'] = $info;
-            $auth = M('op_auth')->where(array('op_id'=>$opid))->find();
 
-            //创建工单
-            $thing  = "行程方案";
-            project_worder($info,$opid,$thing);
+            $assign_name        = M('account')->where(array('id'=>$info))->getField('nickname');
+            $data               = array();
+            $data['assign_id']  = $info;
+            $data['assign_name']= $assign_name;
+            $data['response_time'] = NOW_TIME;
+            $data['status']     = 1;//执行部门已响应
 
-            if($auth){
-                M('op_auth')->data($data)->where(array('id'=>$auth['id']))->save();
-            }else{
-                $data['op_id'] = $opid;
-                M('op_auth')->add($data);
+            $res = M('worder')->where(array('id'=>$opid))->save($data);
+            if ($res){
+                //发送系统通知消息
+                $uid     = cookie('userid');
+                $title   = '您有来自['.cookie('rolename').'--'.cookie('name').']指派的负责项目工单待执行!';
+                $content = '';
+                $url     = U('Worder/worder_info',array('id'=>$opid));
+                $user    = '['.$info.']';
+                send_msg($uid,$title,$content,$url,$user,'');
+                echo '<script>window.top.location.reload();</script>';
             }
 
-            $record = array();
-            $record['op_id']   = $opid;
-            $record['optype']  = 2;
-            $record['explain'] = '指派【'.$user[$info].'】负责项目行程';
-            op_record($record);
-
-            echo '<script>window.top.location.reload();</script>';
-
         }elseif (isset($_POST['do_exe'])){
+
+            $info                   = I('info');
+            $info['response_time']  = NOW_TIME;
+            $res = M('worder')->where(array('id'=>$opid))->save($info);
+            if ($res){
+                $this->success("已响应该工单");
+            }else{
+                $this->error("保存数据失败");
+            }
 
         }else{
 
@@ -330,7 +367,7 @@ die;
             $this->pages = $pagecount>6 ? $page->show():'';
             $this->lists = $db->where($where)->limit($page->firstRow . ',' . $page->listRows)->order($this->orders('roleid'))->select();
             $this->role  = M('role')->getField('id,role_name', true);
-            $this->opid = $opid;
+            $this->opid  = $opid;
             $this->display();
         }
     }
@@ -348,14 +385,14 @@ die;
 
     //撤销工单
     public function revoke(){
+
         $id             = I('id');
+        $info           = I('info');
         $db             = M("worder");
         $where          = array();
         $where['id']    = $id;
-        $data           = array();
-        $data['status'] = -2;
-        $data['complete_time'] = NOW_TIME;
-        $res    = $db->where($where)->save($data);
+        $info['complete_time'] = NOW_TIME;
+        $res    = $db->where($where)->save($info);
         if ($res){
             $this->success('撤销工单成功!');
         }else{
@@ -365,18 +402,17 @@ die;
 
     //发起人确认工单执行
     public function audit_resure(){
-        if (isset($_POST['dosubmit'])) {
+        if (isset($_POST['dosubmint'])) {
             $id     = I('id');
             $info   = I('info');
             if ($info['status'] == 3){
                 $res    = M('worder')->where("id = '$id'")->save($info);
+                if ($res){
+                    $this->success('操作成功!');
+                }else{
+                    $this->error('保存数据失败!请稍后重试!');
+                }
             }
-            $this->msg = "操作成功！";
-            $this->display('audit_ok');
-        } else {
-
-            $this->id = I('id');
-            $this->display('audit_resure');
         }
     }
 
