@@ -2185,22 +2185,21 @@ function updatekpi($month,$user){
 				//培训相关
 				if(in_array($v['quota_id'],array(111,107,83,66,54,44,12))){
 					
-					/*
 					//获取培训次数
 					$where = array();
-					$where['status']			= 0;
-					$where['input_time']		= array('between',array($v['start_date'],$v['end_date']));
+					$where['lecture_date']  		= array('between',array($v['start_date'],$v['end_date']));
+					$where['lecturer_uid']  		= $user;
 					$sum = M('cour_ppt')->where($where)->count();
 					
 					$complete = $v['plan'] ? round(($sum / $v['plan'])*100,2).'%' : '100%';
-					*/
+					
 				}
 				
 				
 				
 				
 				//已实现自动获取指标值
-				$auto_quta	= array(1,2,3,4,5,6,81,8,9,10,11,15,16,18,20,23,26,21,24,27,32,37,19,22,25,28,33,38,42,45,103,56,113,92,29,34,39,46,102,55,57,58,59,84,87,89,90);
+				$auto_quta	= array(1,2,3,4,5,6,81,8,9,10,11,15,16,18,20,23,26,21,24,27,32,37,19,22,25,28,33,38,42,45,103,56,113,92,29,34,39,46,102,55,57,58,59,84,87,89,90,111,107,83,66,54,44,12);
 				
 				//计算完成率并保存数据
 				if(in_array($v['quota_id'],$auto_quta)){
