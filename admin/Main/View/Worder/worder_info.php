@@ -134,7 +134,7 @@
                         </div>
                         <div class="box-body" style="padding-top:20px;" id="form_tip">
 
-                                <?php if ($info['status']==0 ){ ?>
+                                <?php if ($info['status']==0 || $info['status']==-3){ ?>
                                 <form method="post" action="{:U('Worder/assign_user')}" name="myform" id="save_huikuan">
                                 <input type="hidden" name="do_exe" value="1">
                                 <input type="hidden" name="id" value="{$info.id}">
@@ -284,7 +284,7 @@
                                         <div class="checkboxlist" id="applycheckbox" style="margin-top:10px;">
                                             <input type="radio" name="info[status]" value="3" > 该工单已执行完毕
                                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                            <input type="radio" name="info[status]" value="0" > 该工单未执行完毕
+                                            <input type="radio" name="info[status]" value="-3" > 该工单未执行完毕
 
                                         </div>
                                     </div>

@@ -137,6 +137,7 @@ class WorderController extends BaseController{
             if($v['status']==3)     $lists[$k]['sta'] = '发起人已确认完成';
             if($v['status']==-1)    $lists[$k]['sta'] = '拒绝或无效工单';
             if($v['status']==-2)    $lists[$k]['sta'] = '已撤销';
+            if($v['status']==-3)    $lists[$k]['sta'] = '<span class="red">需要做二次修改</span>';
         }
         $this->lists    = $lists;
         $this->pin      = $pin;
@@ -264,6 +265,7 @@ class WorderController extends BaseController{
                 if($v['status']==3)     $lists[$k]['sta'] = '发起人已确认完成';
                 if($v['status']==-1)    $lists[$k]['sta'] = '拒绝或无效工单';
                 if($v['status']==-2)    $lists[$k]['sta'] = '已撤销';
+                if($v['status']==-3)    $lists[$k]['sta'] = '<span class="red">需要做二次修改</span>';
             }
             $this->lists            = $lists;
             $this->pin              = $pin;
@@ -301,6 +303,7 @@ class WorderController extends BaseController{
             if($info['status']==3)      $info['sta'] = '发起人已确认完成';
             if($info['status']==-1)     $info['sta'] = '拒绝或无效工单';
             if($info['status']==-2)     $info['sta'] = '已撤销';
+            if($info['status']==-3)     $info['sta'] = '<span class="red">需要做二次修改</span>';
 
             $this->ids      = array_unique(M('worder_dept')->getfield("dept_id",true));
             $this->info     = $info;
@@ -407,9 +410,26 @@ class WorderController extends BaseController{
         if (isset($_POST['dosubmint'])) {
             $id     = I('id');
             $info   = I('info');
+            $ini_user_id    = cookie("userid");
             if ($info['status'] == 3){
                 $res    = M('worder')->where("id = '$id'")->save($info);
                 if ($res){
+                    $this->success('操作成功!');
+                }else{
+                    $this->error('保存数据失败!请稍后重试!');
+                }
+            }else{
+                $info['response_time']  = 0;
+                $info['complete_time']  = 0;
+                $res    = M('worder')->where("id = '$id'")->save($info);
+                if ($res){
+                    //发送系统通知消息
+                    $uid     = cookie('userid');
+                    $title   = '您有来自['.cookie('rolename').'--'.cookie('name').']返回的需要修改的工单!';
+                    $content = '';
+                    $url     = U('Worder/worder_info',array('id'=>$id));
+                    $user    = '['.$ini_user_id.']';
+                    send_msg($uid,$title,$content,$url,$user,'');
                     $this->success('操作成功!');
                 }else{
                     $this->error('保存数据失败!请稍后重试!');
@@ -453,6 +473,7 @@ class WorderController extends BaseController{
             if($v['status']==3)     $lists[$k]['sta'] = '发起人已确认完成';
             if($v['status']==-1)    $lists[$k]['sta'] = '拒绝或无效工单';
             if($v['status']==-2)    $lists[$k]['sta'] = '已撤销';
+            if($v['status']==-3)    $lists[$k]['sta'] = '<span class="red">需要做二次修改</span>';
         }
         $this->lists    = $lists;
         $this->pin      = $pin;
