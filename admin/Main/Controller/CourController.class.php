@@ -130,6 +130,7 @@ class CourController extends BaseController {
 					
 					//保存课件材料
 					if($matter){
+						
 						foreach($matter['id'] as $k=>$v){
 							$data = array();
 							$data['catid']  		= 317;
@@ -176,8 +177,9 @@ class CourController extends BaseController {
 				if($edit){
 					
 					//保存课件材料
+					M('attachment')->data(array('rel_id'=>0))->where(array('catid'=>317,'rel_id'=>$cour_id))->save();
+					
 					if($matter){
-					    //M('attachment')->data(array('rel_id'=>0))->where(array('rel_id'=>$cour_id))->save();
 						foreach($matter['id'] as $k=>$v){
 							$data = array();
 							$data['catid']    	= 317;
