@@ -58,7 +58,7 @@ class CourController extends BaseController {
 		//查询分类列表
 		$typelist = $db->where($where)->limit($page->firstRow . ',' . $page->listRows)->order($this->orders('type_id'))->select();	
 		foreach($typelist as $k=>$v){
-			$typelist[$k]['cnt'] = M('cour')->where(array('cour_type'=>$v['type_id']))->count();
+			$typelist[$k]['cnt'] = M('cour')->where(array('cour_type'=>$v['type_id'],'del'=>0))->count();
 		}
 		
 		
