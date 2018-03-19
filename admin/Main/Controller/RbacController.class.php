@@ -1063,9 +1063,10 @@ class RbacController extends BaseController {
     
         $db = M('kpi_config');
        	
-		$where = array();
-		$where['id'] = array('in',array(12,30,31,35,36,40,41,43,44,47,48,49,50,51,53,54,65,66,67,82,83,86,88,95,97,100,101,107,108,111,112,91,96,68,79,80,52,60,61,62,63,64,85,93,94,98,99,105,106,109,110));
-		
+		//$where = array();
+		//$where['id'] = array('in',array(12,30,31,35,36,40,41,43,44,47,48,49,50,51,53,54,65,66,67,82,83,86,88,95,97,100,101,107,108,111,112,91,96,68,79,80,52,60,61,62,63,64,85,93,94,98,99,105,106,109,110));
+		//$where = array();
+		//$where['quota_title'] = array('like','%培训%');
 		//分页
 		$pagecount = $db->where($where)->count();
 		$page = new Page($pagecount, P::PAGE_SIZE);
