@@ -410,7 +410,7 @@ class WorderController extends BaseController{
         if (isset($_POST['dosubmint'])) {
             $id     = I('id');
             $info   = I('info');
-            $ini_user_id    = cookie("userid");
+            $exe_user_id    = M('worder')->where(array('id'=>$id))->getfield('exe_user_id');
             if ($info['status'] == 3){
                 $res    = M('worder')->where("id = '$id'")->save($info);
                 if ($res){
@@ -428,7 +428,7 @@ class WorderController extends BaseController{
                     $title   = '您有来自['.cookie('rolename').'--'.cookie('name').']返回的需要修改的工单!';
                     $content = '';
                     $url     = U('Worder/worder_info',array('id'=>$id));
-                    $user    = '['.$ini_user_id.']';
+                    $user    = '['.$exe_user_id.']';
                     send_msg($uid,$title,$content,$url,$user,'');
                     $this->success('操作成功!');
                 }else{
