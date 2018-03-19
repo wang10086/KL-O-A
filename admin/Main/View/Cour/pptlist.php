@@ -44,7 +44,7 @@
                                             <if condition="rolemenu(array('Cour/ppt_edit'))">
                                             <th width="60" class="taskOptions">编辑</th>
                                             </if> 
-                                            <if condition="rolemenu(array('Cour/delcourse'))">
+                                            <if condition="rolemenu(array('Cour/delppt'))">
                                             <th width="60" class="taskOptions">删除</th>
                                             </if> 
                                         </tr>
@@ -62,9 +62,9 @@
                                             </td>
                                             </if>
                                             
-                                            <if condition="rolemenu(array('Cour/delcourse'))">
+                                            <if condition="rolemenu(array('Cour/delppt'))">
                                             <td class="taskOptions">
-                                            <a href="JavaScript:;"  onClick="javascript:ConfirmDel('{:U('Cour/delcourse',array('id'=>$row['cour_id']))}');" title="删除" class="btn btn-danger btn-smsm"><i class="fa fa-times"></i></a>
+                                            <a href="JavaScript:;"  onClick="javascript:ConfirmDel('{:U('Cour/delppt',array('id'=>$row['id']))}');" title="删除" class="btn btn-danger btn-smsm"><i class="fa fa-times"></i></a>
                                             </td>
                                             </if>
                                         </tr>

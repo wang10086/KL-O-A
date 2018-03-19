@@ -2189,6 +2189,7 @@ function updatekpi($month,$user){
 					$where = array();
 					$where['lecture_date']  		= array('between',array($v['start_date'],$v['end_date']));
 					$where['lecturer_uid']  		= $user;
+					$where['del']  				= 0;
 					$sum = M('cour_ppt')->where($where)->count();
 					
 					$complete = $v['plan'] ? round(($sum / $v['plan'])*100,2).'%' : '100%';

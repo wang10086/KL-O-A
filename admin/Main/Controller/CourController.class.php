@@ -243,8 +243,8 @@ class CourController extends BaseController {
 		$type 		= I('type','-1');
 		$keywords 	= I('keywords');
 		
-		$where 		= '';
-		if($keywords)   $where .= '((`ppt_title` like "%'.$keywords.'%")  OR (`lecturer_uname` like "%'.$keywords.'%")  OR (`lecture_address` like "%'.$keywords.'%")) ';
+		$where 		= '`del`=0 ';
+		if($keywords)   $where .= 'and ((`ppt_title` like "%'.$keywords.'%")  OR (`lecturer_uname` like "%'.$keywords.'%")  OR (`lecture_address` like "%'.$keywords.'%")) ';
 		
 		//分页
 		$pagecount = $db->where($where)->count();
@@ -367,6 +367,19 @@ class CourController extends BaseController {
 	}
 	
 	
+	
+	//删除记录
+	public function delppt(){
+		$id = I('id');
+		if($id){
+			M('cour_ppt')->where(array('id'=>$id))->data(array('del'=>'1'))->save();	
+			$this->success('删除成功！',I('referer',''));	
+		}else{
+			$this->error('删除失败！',I('referer',''));			
+		}
+	
+		
+	}
 	
 	
 }
