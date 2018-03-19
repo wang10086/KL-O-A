@@ -2694,7 +2694,8 @@ function project_worder($exe_user_id,$pro_id,$thing){
 		$uid     = cookie('userid');
 		$title   = '您有来自['.$worder['ini_dept_name'].'--'.$worder['ini_user_name'].']指派的负责['.$thing.']项目工单待执行!';
 		$content = '';
-		$url     = U('worder/my_worder',array('id'=>$worder['exe_user_id'],'pin'=>102));
+		//$url     = U('worder/my_worder',array('id'=>$worder['exe_user_id'],'pin'=>102));
+		$url     = U('worder/worder_info',array('id'=>$res));
 		$user    = '['.$worder['exe_user_id'].']';
 		send_msg($uid,$title,$content,$url,$user,'');
 	}
