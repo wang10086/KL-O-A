@@ -41,7 +41,9 @@ class WorderController extends BaseController{
                 //计划完成时间 $u_time单位为天
                 $u_time                 = M('worder_dept')->where("id = '$wd_id'")->getField('use_time');
                 $u_time                 = $u_time?intval($u_time):5;
-                $info['plan_complete_time']= NOW_TIME+(3600*24*$u_time);
+                //$info['plan_complete_time']= NOW_TIME+(3600*24*$u_time);
+                //计划完成时间 $u_time为工作日
+                $info['plan_complete_time']= strtotime(getAfterWorkDay($u_time));
                 //获取该角色执行人信息
                 $exe_user_info          = M('account')->field('id,nickname')->where("roleid = '$roleid' and status = '0'")->find();
                 $info['exe_user_id']    = $exe_user_info['id'];
@@ -548,4 +550,6 @@ class WorderController extends BaseController{
             $this->error('删除数据失败!');
         }
     }
+
+    
 }
