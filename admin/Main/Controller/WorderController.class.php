@@ -17,6 +17,9 @@ class WorderController extends BaseController{
     public function new_worder(){
         if (isset($_POST['dosubmint'])){
 
+            $data = I();
+            var_dump($data);die;
+
             $info           = I('info');
             $exe_info       = I('exe_info');
 
@@ -72,6 +75,22 @@ class WorderController extends BaseController{
             $this->title('发起工单');
             $this->group            =  get_roles();
             $this->worder_type      = C('WORDER_TYPE');
+
+            //整理关键字
+            $role = M('role')->GetField('id,role_name',true);
+            $user =  M('account')->where(array('status'=>0))->select();
+            $key = array();
+            foreach($user as $k=>$v){
+                $text = $v['nickname'].'-'.$role[$v['roleid']];
+                $key[$k]['id']         = $v['id'];
+                $key[$k]['user_name']  = $v['nickname'];
+                $key[$k]['pinyin']     = strtopinyin($text);
+                $key[$k]['text']       = $text;
+                $key[$k]['role']       = $v['roleid'];
+                $key[$k]['role_name']  = $role[$v['roleid']];
+            }
+            $this->userkey =  json_encode($key);
+
             $this->display('new_worder');
         }
     }
@@ -328,13 +347,15 @@ class WorderController extends BaseController{
         $user       =  M('account')->getField('id,nickname', true);
 
         if(isset($_POST['dosubmit']) && $info){
+            //$data = I();
+            //var_dump($data);die;
 
             $assign_name        = M('account')->where(array('id'=>$info))->getField('nickname');
             $data               = array();
             $data['assign_id']  = $info;
             $data['assign_name']= $assign_name;
             $data['response_time'] = NOW_TIME;
-            $data['status']     = 1;//执行部门已响应
+            $data['status']     = 0;//执行部门已响应
 
             $res = M('worder')->where(array('id'=>$opid))->save($data);
             if ($res){
