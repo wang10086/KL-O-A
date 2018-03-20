@@ -1,6 +1,7 @@
 <include file="Index:header2" />
 
 <script type="text/javascript">
+
     window.onload = function(i){
         $('#in_group').hide();
         $('#dept').hide();
@@ -58,7 +59,6 @@
 
                                         <div class="form-group col-md-6"></div>
 
-                                        <!-- ************************************start-->
                                         <div class="col-md-12">
 
                                             <div class="box box-success">
@@ -72,40 +72,11 @@
                                                     </div>
 
                                                     <div id="task_timu">
-                                                        <foreach name="days" key="k" item="v">
-
-                                                            <!--<div class="tasklist" id="task_a_{$v.id}">
-                                                                <a class="aui_close" href="javascript:;" onClick="del_timu('task_a_{$v.id}')">×</a>
-                                                                <div class="form-group col-md-6 pd">
-                                                                    <label>工单受理组/人<span class="tihao">{$k+1}</span>：</label>
-                                                                    <select name="info[{$v.id}][exe_dept_id]" id="group" onchange="check_group()" class="form-control">
-                                                                        <option value="" disabled selected>请选择受理组</option>
-                                                                        <foreach name="group" item="v">
-                                                                            <option value="{$v.id}">{:tree_pad($v['level'])}{$v.role_name}</option>
-                                                                        </foreach>
-                                                                    </select>
-                                                                </div>
-
-                                                                <div id="in_group">
-                                                                    <div class="form-group col-md-6">
-                                                                        <label>项目类型：</label>
-                                                                        <select name="info[{$v.id}][dept_id]" id="pro_tit" onchange="show_dept()" class="form-control">
-                                                                            <option value="" disabled selected>请选择项目类型</option>
-
-                                                                        </select>
-                                                                    </div>
-
-                                                                    <div id="dept">
-                                                                        <div class="form-group col-md-6">
-                                                                            <label>工单类型：</label><input type="text" name="info[{$v.id}][type]" class="form-control" readonly />
-                                                                        </div>
-
-                                                                        <div class="form-group col-md-6">
-                                                                            <label>完成所需时间：</label><input type="text" name="info[{$v.id}][use_time]" class="form-control" readonly />
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>-->
+                                                        <foreach name="exe_info" key="k" item="v">
+                                                            <div class="col-md-12">
+                                                                <input type="hidden" name="exe_info[{$v.id}][exe_user_id]" id="exe{$v.id}" value="">
+                                                                <input type="text" class="form-control keywords_exe" name="exe_info[{$v.id}][exe_user_name]" id="keywords_exe{$v.id}" onfocus="exeWorder({$v.id})"  placeholder="请输入执行人名称"  style="width:100%; margin-right:10px;"/>
+                                                            </div>
                                                         </foreach>
                                                     </div>
 
@@ -119,10 +90,9 @@
                                             </div><!-- /.box -->
 
                                         </div><!--/.col (right) -->
-                                        <!-- ******************************************************end-->
 
 
-                                        <div class="form-group col-md-12"></div>
+                                        <div class="form-group col-md-12" ></div>
 
                                         <div class="form-group col-md-12">
                                             <label>上传文件附件：</label>
@@ -133,8 +103,8 @@
                                     
                                 </div><!-- /.box-body -->
                             </div><!-- /.box -->
-                            
-                           
+
+
                             <div style="width:100%; text-align:center;">
                             <button type="submit" class="btn btn-info btn-lg" id="lrpd">发起工单</button>
                             </div>
@@ -152,35 +122,12 @@
 
     <script type="text/javascript">
 
-        /*function task(obj){
-            var i = parseInt($('#task_val').text())+1;
-
-            var header = '<div class="tasklist" id="task_ti_'+i+'"><a class="aui_close" href="javascript:;" onClick="del_timu(\'task_ti_'+i+'\')">×</a><div class="col-md-12 pd"><label class="titou"><strong>工单受理组/人<span class="tihao">'+i+'</span></strong>:</label>';
-            var days = '<div class="form-group col-md-12 pd"> <select name="exe_info['+i+'][exe_dept_id]" id="group_'+i+'" onchange="check_group('+i+')" class="form-control"> <option value="" disabled selected>请选择受理组</option> <foreach name="group" item="v"> <option value="{$v.id}">{:tree_pad($v[\'level\'])}{$v.role_name}</option> </foreach> </select> </div> <div id="in_group'+i+'" style="display: none"> <div class="form-group col-md-12"> <label>项目类型：</label> <select name="exe_info['+i+'][wd_id]" id="pro_tit'+i+'" onchange="show_dept('+i+')" class="form-control"> <option value="" disabled selected>请选择项目类型</option> </select> </div> <div id="dept'+i+'"> <div class="form-group col-md-6"> <label>工单类型：</label><input type="text" name="exe_info['+i+'][type]" id= "type'+i+'" class="form-control" readonly /> </div> <div class="form-group col-md-6"> <label>完成所需时间：</label><input type="text" name="exe_info['+i+'][use_time]" id="use_time'+i+'" class="form-control" readonly /> </div></div></div>';
-            var footer = '</div>';
-            var html = header+days+footer;
-
-            $('#task_timu').append(html);
-            $('#task_val').html(i);
-            //重编题号
-            $('.tihao').each(function(index, element) {
-                var no = index*1+1;
-                $(this).text(no);
-            });
-        }*/
-
         //添加多个工单执行人
         function task(obj){
             var i = parseInt($('#task_val').text())+1;
 
-            /*var header = '<div class="tasklist" id="task_ti_'+i+'"><a class="aui_close" href="javascript:;" onClick="del_timu(\'task_ti_'+i+'\')">×</a><div class="col-md-12 pd"><label class="titou"><strong>工单受理组/人<span class="tihao">'+i+'</span></strong>:</label>';
-            var days = '<div class="form-group col-md-12 pd"> <select name="exe_info['+i+'][exe_dept_id]" id="group_'+i+'" onchange="check_group('+i+')" class="form-control"> <option value="" disabled selected>请选择受理组</option> <foreach name="group" item="v"> <option value="{$v.id}">{:tree_pad($v[\'level\'])}{$v.role_name}</option> </foreach> </select> </div> <div id="in_group'+i+'" style="display: none"> <div class="form-group col-md-12"> <label>项目类型：</label> <select name="exe_info['+i+'][wd_id]" id="pro_tit'+i+'" onchange="show_dept('+i+')" class="form-control"> <option value="" disabled selected>请选择项目类型</option> </select> </div> <div id="dept'+i+'"> <div class="form-group col-md-6"> <label>工单类型：</label><input type="text" name="exe_info['+i+'][type]" id= "type'+i+'" class="form-control" readonly /> </div> <div class="form-group col-md-6"> <label>完成所需时间：</label><input type="text" name="exe_info['+i+'][use_time]" id="use_time'+i+'" class="form-control" readonly /> </div></div></div>';
-            var footer = '</div>';
-            var html = header+days+footer;*/
-
             var header = '<div class="tasklist" id="task_ti_'+i+'"><a class="aui_close" href="javascript:;" onClick="del_timu(\'task_ti_'+i+'\')">×</a><div class="col-md-12 pd"><label class="titou"><strong>工单受理组/人<span class="tihao">'+i+'</span></strong>:</label>';
-            /*var days = '<div class="form-group col-md-12 pd"> <select name="exe_info['+i+'][exe_dept_id]" id="group_'+i+'" onchange="check_group('+i+')" class="form-control"> <option value="" disabled selected>请选择受理组</option> <foreach name="group" item="v"> <option value="{$v.id}">{:tree_pad($v[\'level\'])}{$v.role_name}</option> </foreach> </select> </div> <div id="in_group'+i+'" style="display: none"> <div class="form-group col-md-12"> <label>项目类型：</label> <select name="exe_info['+i+'][wd_id]" id="pro_tit'+i+'" onchange="show_dept('+i+')" class="form-control"> <option value="" disabled selected>请选择项目类型</option> </select> </div> <div id="dept'+i+'"> <div class="form-group col-md-6"> <label>工单类型：</label><input type="text" name="exe_info['+i+'][type]" id= "type'+i+'" class="form-control" readonly /> </div> <div class="form-group col-md-6"> <label>完成所需时间：</label><input type="text" name="exe_info['+i+'][use_time]" id="use_time'+i+'" class="form-control" readonly /> </div></div></div>';*/
-            var days = '<div class="col-md-12 "> <input type="hidden" name="exe_info['+i+'][exe_user_id]" id="exe'+i+'" value=""> <input type="text" class="form-control keywords_exe" id="keywords_exe'+i+'" onfocus="test('+i+')" placeholder="请输入执行部门或执行人姓名"  style="width:100%; margin-right:10px;"/> </div>'
+            var days = '<div class="col-md-12"> <input type="hidden" name="exe_info['+i+'][exe_user_id]" id="exe'+i+'" value=""> <input type="text" class="form-control keywords_exe" id="keywords_exe'+i+'" name="exe_info['+i+'][exe_user_name]" onfocus="exeWorder('+i+')"  placeholder="请输入执行人姓名"  style="width:100%; margin-right:10px;"/> </div>'
             var footer = '</div>';
             var html = header+days+footer;
 
@@ -194,22 +141,22 @@
         }
 
         //搜索框输入工单执行人
-            function test(a) {
-                var keywords = <?php echo $userkey; ?>;
-                $("#keywords_exe" +a+ "").autocomplete(keywords, {
-                    matchContains: true,
-                    highlightItem: false,
-                    formatItem: function (row, i, max, term) {
-                        return '<span style=" display:none">' + row.pinyin + '</span>' + row.text;
-                    },
-                    formatResult: function (row) {
-                        return row.user_name;
-                    }
-                }).result(function (event, item) {
-                    $("#exe" + a + "").val(item.id);
-                });
-                console.log(keywords);
-            }
+        function exeWorder(a){
+            var keywords = <?php echo $userkey; ?>;
+            $("#keywords_exe"+a+"").autocomplete(keywords, {
+                matchContains: true,
+                highlightItem: false,
+                formatItem: function (row, i, max, term) {
+                    return '<span style=" display:none">' + row.pinyin + '</span>' + row.text;
+                },
+                formatResult: function (row) {
+                    return row.user_name;
+                }
+            }).result(function (event, item) {
+                $("#exe"+a+"").val(item.id);
+            });
+
+        }
 
 
         //移除题目

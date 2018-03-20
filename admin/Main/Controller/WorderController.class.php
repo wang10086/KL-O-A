@@ -17,9 +17,6 @@ class WorderController extends BaseController{
     public function new_worder(){
         if (isset($_POST['dosubmint'])){
 
-            $data = I();
-            var_dump($data);die;
-
             $info           = I('info');
             $exe_info       = I('exe_info');
 
@@ -29,28 +26,28 @@ class WorderController extends BaseController{
             $info['ini_dept_name']  = $_SESSION['rolename'];
             $info['create_time']    = NOW_TIME;
             $attr                   = I('attr'); //获取上传文件
-            $worder_type            = $info['worder_type'];
-            if ($worder_type == P::WORDER_PROJECT){
-                $pin = 102;
-            }else{
-                $pin = 2;
-            }
-            foreach ($exe_info as $v){
-                $roleid                 = $v['exe_dept_id'];
-                $wd_id                  = $v['wd_id'];
+
+            foreach($exe_info as $v){
+                $exe_user_id            = $v['exe_user_id'];
+                $exe_user_name          = $v['exe_user_name'];
+                if ($exe_user_id == ''){
+                    $wheres             = array();
+                    $where['nickname']  = array('like',"%.$exe_user_name.%");
+                    $exe_user_id        = M('account')->where(array('nickname'=>array('like','%'.$exe_user_name.'%')))->getField('id');
+                }
+                if (!$exe_user_id){
+                    $this->error('请输入正确的执行人信息!');
+                }
+
+                $data                   = M('account')->where(array('id'=>$exe_user_id))->find();
+                $info['exe_user_id']    = $exe_user_id;
+                $info['exe_user_name']  = $data[nickname];
+                $roleid                 = $data['roleid'];
+                $info['exe_dept_name']  = M('role')->where(array('id'=>$roleid))->getField('role_name');
                 $info['exe_dept_id']    = $roleid;
-                $info['wd_id']          = $wd_id;
-                $info['exe_dept_name']  = M('role')->where("id = '$roleid'")->getfield('role_name');
-                //计划完成时间 $u_time单位为天
-                $u_time                 = M('worder_dept')->where("id = '$wd_id'")->getField('use_time');
-                $u_time                 = $u_time?intval($u_time):5;
-                //$info['plan_complete_time']= NOW_TIME+(3600*24*$u_time);
+                $u_time                 = 5;    //默认5个工作日
                 //计划完成时间 $u_time为工作日
                 $info['plan_complete_time']= strtotime(getAfterWorkDay($u_time));
-                //获取该角色执行人信息
-                $exe_user_info          = M('account')->field('id,nickname')->where("roleid = '$roleid' and status = '0'")->find();
-                $info['exe_user_id']    = $exe_user_info['id'];
-                $info['exe_user_name']  = $exe_user_info['nickname'];
 
                 $res = M('worder')->add($info);
 
@@ -61,7 +58,7 @@ class WorderController extends BaseController{
                     //发送信息
                     $uid     = cookie('userid');
                     $title   = '您有来自['.$info['ini_dept_name'].'--'.$info['ini_user_name'].']的工单待执行!';
-                    $content = '';
+                    $content = $info['worder_content'];
                     $url     = U('worder/worder_info',array('id'=>$res));
                     $user    = '['.$info['exe_user_id'].']';
                     send_msg($uid,$title,$content,$url,$user,'');
