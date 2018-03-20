@@ -1996,7 +1996,7 @@ function updatekpi($month,$user){
 					$complete	= $rcom.'%';
 				}
 				
-				//活动前要素准备不及时
+				//票据及时性--采购经理
 				if($v['quota_id']==92){
 					$rsum = user_work_record($user,$month,108);
 					if($rsum){
@@ -2127,12 +2127,41 @@ function updatekpi($month,$user){
 				if($v['quota_id']==84){
 					
 					$where = array();
-					$where['input_time']  			= array('between',array($v['start_date'],$v['end_date']));
-					$where['input_uid']  			= $user;
+					$where['input_time']  		= array('between',array($v['start_date'],$v['end_date']));
+					$where['input_uid']  		= $user;
 					$where['audit_status']  		= 1;
 					
 					$rsum = M('supplier')->where($where)->count();
 					$complete	= $rsum>10 ? '100%' : ($rsum*10).'%';
+				}
+				
+				//新资源拓展--资源管理部（教务专员）
+				if(in_array($v['quota_id'],array(112,108,65))){
+					
+					$where = array();
+					$where['input_time']  		= array('between',array($v['start_date'],$v['end_date']));
+					$where['input_uid']  		= $user;
+					$where['audit_status']  		= 1;
+					
+					$rsum = M('supplier')->where($where)->count();
+					
+					$complete = $v['plan'] ? round(($rsum / $v['plan'])*100,2).'%' : '100%';
+					
+				}
+				
+				
+				//新产品模块开发数量
+				if(in_array($v['quota_id'],array(100,96))){
+					
+					$where = array();
+					$where['input_time']  		= array('between',array($v['start_date'],$v['end_date']));
+					$where['input_user']  		= $user;
+					$where['audit_status']  		= 1;
+					
+					$rsum = M('product')->where($where)->count();
+					
+					$complete = $v['plan'] ? round(($rsum / $v['plan'])*100,2).'%' : '100%';
+					
 				}
 				
 				
@@ -2183,7 +2212,7 @@ function updatekpi($month,$user){
 				
 				
 				//培训相关
-				if(in_array($v['quota_id'],array(111,107,83,66,54,44,12))){
+				if(in_array($v['quota_id'],array(111,107,83,66,54,44,12,95))){
 					
 					//获取培训次数
 					$where = array();
@@ -2200,7 +2229,7 @@ function updatekpi($month,$user){
 				
 				
 				//已实现自动获取指标值
-				$auto_quta	= array(1,2,3,4,5,6,81,8,9,10,11,15,16,18,20,23,26,21,24,27,32,37,19,22,25,28,33,38,42,45,103,56,113,92,29,34,39,46,102,55,57,58,59,84,87,89,90,111,107,83,66,54,44,12);
+				$auto_quta	= array(1,2,3,4,5,6,81,8,9,10,11,15,16,18,20,23,26,21,24,27,32,37,19,22,25,28,33,38,42,45,103,56,113,92,29,34,39,46,102,55,57,58,59,84,87,89,90,111,107,83,66,54,44,12,112,108,100,96,95,65);
 				
 				//计算完成率并保存数据
 				if(in_array($v['quota_id'],$auto_quta)){
