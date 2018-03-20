@@ -1,5 +1,13 @@
 <include file="Index:header2" />
 
+<link rel="stylesheet" type="text/css" href="__HTML__/pingfen/css/normalize.css" />
+<link rel="stylesheet" type="text/css" href="__HTML__/pingfen/css/default.css">
+<link rel="stylesheet" type="text/css" href="__HTML__/pingfen/css/demo.css" />
+<link href="http://cdn.bootcss.com/font-awesome/4.4.0/css/font-awesome.min.css" rel="stylesheet">
+<script src="__HTML__/pingfen/js/jquery-2.1.1.min.js"></script>
+<script src="__HTML__/pingfen/js/jquery.ratyli.js"></script>
+<script src="__HTML__/pingfen/js/demo.js"></script>
+
 <script type="text/javascript">
     window.onload = function(){
         $('#dept').hide();
@@ -244,8 +252,8 @@
                 </div><!--/.col (right) -->
 
                 <div class="col-md-12">
-                <?php /*if(rolemenu(array('Worder/new_worder'))){ */?>
-                <?php if(rolemenu(array('Worder/new_worder')) and $info['ini_user_id'] == cookie('userid')){ ?>
+                <?php if(rolemenu(array('Worder/new_worder'))){ ?>
+                <?php /*if(rolemenu(array('Worder/new_worder')) and $info['ini_user_id'] == cookie('userid')){ */?>
                     <div class="box box-warning">
                         <div class="box-header">
                             <if condition="$info['status']==0">
@@ -285,11 +293,21 @@
                                             <input type="radio" name="info[status]" value="3" > 该工单已执行完毕
                                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                             <input type="radio" name="info[status]" value="-3" > 该工单未执行完毕
-
                                         </div>
-                                    </div>
 
-                                    <div class="form-group col-md-12"></div>
+                                        <div class="form-group">&nbsp;</div>
+                                        <div class="form-group col-md-12">
+                                            <h2 style="font-size:16px; color:#ff3300; border-bottom:2px solid #dedede; padding-bottom:10px;">对该工单进行评分</h2>
+                                        </div>
+
+                                        <!--**********************pingfen start*********************-->
+                                        <div class="col-md-12 "  id="demo7">
+                                            <label>请您对本次的工单服务进行评价 :</label>
+                                            <span class="ratyli"></span>
+                                        </div>
+                                        <!--**********************pingfen end*********************-->
+
+                                    </div>
 
                                     <div class="form-group col-md-12"  style="margin-top:50px; padding-bottom:20px; text-align:center;">
                                         <button class="btn btn-success btn-lg">确认提交</button>
@@ -351,3 +369,7 @@
         })
     }
 </script>
+
+<!--**********************pingfen start*********************-->
+
+<!--**********************pingfen end*********************-->
