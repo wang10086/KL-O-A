@@ -215,7 +215,7 @@ class WorderController extends BaseController{
             $id                     = I('id');
             $ini_user_id            = $db->where(array('id'=>$id))->getField('ini_user_id');
             $info                   = I('info');
-            $info['complete_time']  = NOW_TIME;
+            $info['complete_time']  = 0;
             $res = $db->where(array('id'=>$id))->save($info);
             if($res){
                 //向工单发起人推送消息
@@ -428,6 +428,7 @@ class WorderController extends BaseController{
         if (isset($_POST['dosubmint'])) {
             $id     = I('id');
             $info   = I('info');
+            $info['complete_time']  = NOW_TIME;
             $exe_user_id    = M('worder')->where(array('id'=>$id))->getfield('exe_user_id');
             if ($info['status'] == 3){
                 $res    = M('worder')->where("id = '$id'")->save($info);
@@ -437,8 +438,11 @@ class WorderController extends BaseController{
                     $this->error('保存数据失败!请稍后重试!');
                 }
             }else{
+                //需要再次执行
                 $info['response_time']  = 0;
                 $info['complete_time']  = 0;
+                $info['assign_id']      = 0;
+                $info['assign_name']    = null;
                 $res    = M('worder')->where("id = '$id'")->save($info);
                 if ($res){
                     //发送系统通知消息

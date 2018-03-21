@@ -68,7 +68,7 @@
                                                 <div class="box-body" style="padding-top:20px;">
 
                                                     <div class="form-group col-md-12" id="addti_btn">
-                                                        <a href="javascript:;" class="btn btn-success btn-sm" onClick="task(1)" style="margin-right:10px;"><i class="fa fa-fw  fa-plus"></i> 添加工单受理组/人</a>
+                                                        <a href="javascript:;" class="btn btn-success btn-sm" onClick="task(1)" style="margin-right:10px;"><i class="fa fa-fw  fa-plus"></i> 添加工单受理人</a>
                                                     </div>
 
                                                     <div id="task_timu">
