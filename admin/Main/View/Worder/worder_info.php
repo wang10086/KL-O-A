@@ -252,8 +252,8 @@
                 </div><!--/.col (right) -->
 
                 <div class="col-md-12">
-                <?php if(rolemenu(array('Worder/new_worder'))){ ?>
-                <?php /*if(rolemenu(array('Worder/new_worder')) and $info['ini_user_id'] == cookie('userid')){ */?>
+                <?php /*if(rolemenu(array('Worder/new_worder'))){ */?>
+                <?php if(rolemenu(array('Worder/new_worder')) and $info['ini_user_id'] == cookie('userid')){ ?>
                     <div class="box box-warning">
                         <div class="box-header">
                             <if condition="$info['status']==0">
@@ -296,11 +296,12 @@
                                         </div>
 
                                         <div class="form-group">&nbsp;</div>
-                                        <div class="form-group col-md-12">
-                                            <h2 style="font-size:16px; color:#ff3300; border-bottom:2px solid #dedede; padding-bottom:10px;">对该工单进行评分</h2>
-                                        </div>
 
                                         <!--**********************pingfen start*********************-->
+                                        <!--<div class="form-group col-md-12">
+                                            <h2 style="font-size:16px; color:#ff3300; border-bottom:2px solid #dedede; padding-bottom:10px;">对该工单进行评分</h2>
+                                        </div>-->
+
                                         <!--<div class="col-md-12 "  id="demo7">
                                             <label>请您对本次的工单服务进行评价 :</label>
                                             <span class="ratyli"></span>
