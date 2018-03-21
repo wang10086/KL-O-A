@@ -364,8 +364,6 @@ class WorderController extends BaseController{
                 $this->success('已指派负责人!');
                 echo '<script>setTimeout(window.top.art.dialog({id:"closeart"}).close(),2000);</script>';
                 //echo '<script>window.top.art.dialog({id:"closeart"}).close();</script>';
-                //echo '<script>window.top.location.reload();</script>';
-                //echo '<script>document.location.reload();</script>';
             }
 
         }elseif (isset($_POST['do_exe'])){

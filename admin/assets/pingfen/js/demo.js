@@ -31,6 +31,7 @@ $(function() {
 	$("#demo7 .ratyli").ratyli({
 		onSignClick:function(value,target){
 			// sign click event callback
+			alert("AAAA");
 			alert("clicked: "+target);
 		},
 		onSignEnter:function(value,target){
