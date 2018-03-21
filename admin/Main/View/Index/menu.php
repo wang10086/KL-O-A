@@ -27,7 +27,7 @@
                         
                         <li class="{:on('Chart')}">
                             <a href="{:U('Chart/pplist')}">
-                                <i class="fa fa-signal"></i> <span>业绩排行榜</span>
+                                <i class="fa fa-signal"></i> <span>业绩排行</span>
                             </a>
                             
                         </li>
@@ -279,6 +279,28 @@
                                 <i class="fa fa-file"></i> <span>工作记录</span>
                             </a>
                         </li>
+                        
+                       
+                        
+                        <if condition="rolemenu(array('Inspect/record','Inspect/edit_ins'))">
+                        <li class="treeview {:ison(CONTROLLER_NAME, 'Inspect')}">
+                            <a href="javascript:;">
+                                <i class="fa fa-medkit"></i>
+                                <span>品控巡检</span>
+                                <i class="fa fa-angle-left pull-right"></i>
+                            </a>
+                            <ul class="treeview-menu">
+                                <if condition="rolemenu(array('Inspect/edit_ins'))">
+                                	<li><a href="{:U('Inspect/edit_ins')}"><i class="fa fa-angle-right"></i> 发布巡检记录</a></li>
+                                </if>
+                                <if condition="rolemenu(array('Inspect/record'))">
+                                	<li><a href="{:U('Inspect/record')}"><i class="fa fa-angle-right"></i> 巡检记录</a></li>
+                                </if>
+                                
+                            </ul>
+                        </li>
+                        </if>
+                        
                         
                         
                         <if condition="rolemenu(array('Cour/courlist','Cour/courtype','Cour/pptlist'))">
