@@ -1,12 +1,12 @@
 <include file="Index:header2" />
-
-<link rel="stylesheet" type="text/css" href="__HTML__/pingfen/css/normalize.css" />
+<!--评分插件-->
+<!--<link rel="stylesheet" type="text/css" href="__HTML__/pingfen/css/normalize.css" />
 <link rel="stylesheet" type="text/css" href="__HTML__/pingfen/css/default.css">
 <link rel="stylesheet" type="text/css" href="__HTML__/pingfen/css/demo.css" />
 <link href="http://cdn.bootcss.com/font-awesome/4.4.0/css/font-awesome.min.css" rel="stylesheet">
 <script src="__HTML__/pingfen/js/jquery-2.1.1.min.js"></script>
 <script src="__HTML__/pingfen/js/jquery.ratyli.js"></script>
-<script src="__HTML__/pingfen/js/demo.js"></script>
+<script src="__HTML__/pingfen/js/demo.js"></script>-->
 
 <script type="text/javascript">
     window.onload = function(){
