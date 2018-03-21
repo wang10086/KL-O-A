@@ -325,6 +325,54 @@ class BasepubController extends Controller {
 	    return M('audit_log')->where('id='.$id)->save($data);    
 	}
 	*/
+
+	/*########系统自动生成工单工作质量记录#########*/
+	public function worder_log(){
+        $worder_db          = M('worder');
+        $work_db            = M('');
+        $where              = array();
+        $sta                = array(0,1,2,-3);  //-3需要做二次修改
+        $where['status']    = array('in',$sta);
+        $time               = NOW_TIME;
+        $lists              = $worder_db->where($where)->select();
+        $wd_ids             = $work_db->getField('wd_id',true);
+        foreach ($lists as $v){
+            if ($v['plan_complete_time'] < $time){
+                $w_id           = $v['id'];
+                if (in_array($w_id,$wd_ids)){
+                    exit();
+                    //判断该工单是否已经记录 , 防止重复记录
+                }else{
+                    $info           = array();
+                    $info['year']   = date("Y");
+                    $info['month']  = date("Ym");
+                    $info['user_id']= $v['exe_user_id'];
+                    $info['user_name']  = $v['exe_user_name'];
+                    $info['dept_id']    = $v['exe_dept_id'];
+                    $info['dept_name']  = $v['exe_dept_name'];
+                    $info['title']      = $v['worder_title'];
+                    $info['content']    = $v['worder_content'];
+                    $info['type']       = 4;    //工作未完成
+                    $info['rec_user_id']= 0;    //记录者id 为系统自动生成
+                    //$info['typeinfo']
+                    //$info['rec_user_name']
+                    $info['rec_time']   = NOW_TIME;
+                    $info['status']     = 0;
+                    $info['wd_id']      = $w_id;
+                    $res = $work_db->add($info);
+                    if ($res){
+                        //发送系统通知消息
+                        $uid     = 0;
+                        $title   = '您有来自[系统自动生成的工作未完成记录],请及时处理!';
+                        $content = '';
+                        $url     = U('Work/record',array('com'=>1));
+                        $user    = '['.$info['user_id'].']';
+                        send_msg($uid,$title,$content,$url,$user,'');
+                    }
+                }
+            }
+        }
+    }
 }
 
 

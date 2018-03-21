@@ -42,8 +42,8 @@
         	<div id="selectbox">
             <form action="{:U('Worder/assign_user')}" method="get" id="feedbackform">
             <input type="hidden" name="m" value="Main">
-            <input type="hidden" name="c" value="Op">
-            <input type="hidden" name="a" value="assign_line">
+            <input type="hidden" name="c" value="Worder">
+            <input type="hidden" name="a" value="assign_user">
             <input type="hidden" name="opid" value="{$opid}">
             <input type="text" class="form-control" name="key"  placeholder="关键字" value="">
             <button type="submit" class="btn btn-success">搜索</button>
