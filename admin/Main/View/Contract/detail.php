@@ -31,7 +31,7 @@
                         <div class="box-body">
                             <div class="content">
                             	<div class="form-group col-md-12">
-                                    <h2 style="font-size:16px; color:#ff3300; border-bottom:2px solid #dedede; padding-bottom:10px;">合同信息</h2>
+                                    <h2 class="brh3">合同信息</h2>
                                 </div>
                                 <div class="form-group col-md-12">
                                 <table width="100%" id="font-14" rules="none" border="0" cellpadding="0" cellspacing="0" style="margin-top:-15px;">
@@ -61,7 +61,7 @@
                                 </div>
                                 
                                 <div class="form-group col-md-12">
-                                    <h2 style="font-size:16px; color:#ff3300; border-bottom:2px solid #dedede; padding-bottom:10px;">合同电子扫描件</h2>
+                                    <h2 class="brh3">合同电子扫描件</h2>
                                 </div>
                                 <div class="form-group col-md-12">
                                 	<div id="showimglist">
@@ -77,7 +77,7 @@
                                 
                                 
                                 <div class="form-group col-md-12">
-                                    <h2 style="font-size:16px; color:#ff3300; border-bottom:2px solid #dedede; padding-bottom:10px;">回款计划</h2>
+                                    <h2 class="brh3">回款计划</h2>
                                 </div>
                                 
                                 

@@ -19,22 +19,24 @@ class InspectController extends BaseController{
 		
 		$title		= I('title');		//项目名称
 		$type 		= I('type');
-		$id 		= I('id');
-		$uname  	= I('uname');
-		$rname  	= I('rname');
+		$id 			= I('id');
+		$uname  		= I('uname');
+		$rname  		= I('rname');
+		$dx  		= I('dx');
 		$problem 	= I('problem','-1');
 		$solve		= I('solve','-1');
 		
-		$where = array();
-		/*
-		if($id) 			$where['id']					= $id; 
-		if($title)			$where['title']					= array('like','%'.$title.'%');
-		if($type)			$where['type']					= $type;
-		if($uname)			$where['ins_uname']				= array('like','%'.$uname.'%');
-		if($rname)			$where['liable_uname']			= array('like','%'.$rname.'%');
-		if($problem!='-1') 	$where['problem']				= $problem; 
-		if($solve!='-1') 	$where['issolve']				= $solve; 
-		*/
+		$where = '1=1';
+		
+		if($id) 				$where			.= ' AND `id`=' .$id; 
+		if($title)			$where			.= ' AND `title` like \'%'.$title.'%\'';
+		if($type)			$where			.= ' AND `type`='.$type;
+		if($uname)			$where			.= ' AND `ins_uname` like \'%'.$uname.'%\'';
+		if($rname)			$where			.= ' AND `liable_uname` like \'%'.$rname.'%\'';
+		if($problem!='-1') 	$where			.= ' AND `problem`='.$problem;
+		if($solve!='-1') 	$where			.= ' AND `issolve`=' .$solve; 
+		if($dx)				$where 			.= ' AND (`group_id` like \'%'.$dx.'%\' OR `ins_dept_name` like \'%'.$dx.'%\' )';
+		
 		
 		//分页
 		$pagecount		= $db->where($where)->count();
@@ -46,7 +48,7 @@ class InspectController extends BaseController{
 		$problem 	= array('0'=>'<span class="green">正常</span>','1'=>'<span class="red">有问题</span>');
 		$issolve 	= array('0'=>'<span class="red">未解决</span>','1'=>'<span class="green">已解决</span>');
  
-		$lists 		= $db->where($where)->limit($page->firstRow . ',' . $page->listRows)->order($this->orders('rec_time'))->select();
+		$lists 		= $db->where($where)->limit($page->firstRow . ',' . $page->listRows)->order($this->orders('create_time'))->select();
 		foreach($lists as $k=>$v){
 			$lists[$k]['problem'] 		= $problem[$v['problem']];	
 			$lists[$k]['issolve'] 		= $v['problem'] ? $issolve[$v['issolve']] : '';	
@@ -61,7 +63,7 @@ class InspectController extends BaseController{
 		$this->lists   		= $lists;  
 		$this->solve 		= $solve;
 		$this->problem 		= $problem;
-		$this->type 		= $typestr;
+		$this->type 			= $typestr;
 		$this->display('record');
     }
 	
@@ -178,38 +180,31 @@ class InspectController extends BaseController{
 	// @@@NODE-3###addrecord###记录详情###
 	public  function  detail(){
 		
-		$insid			= I('insid');
-		$db				= M('inspect');
-		$typestr		= C('INS_TYPE');
-		$problem 		= array('0'=>'<span class="green">正常</span>','1'=>'<span class="red">有问题</span>');
-		$issolve 		= array('0'=>'<span class="red">未解决</span>','1'=>'<span class="green">已解决</span>');
-		$deptlist 		= M('role')->where('`id`>10')->GetField('id,role_name',true);
+		$insid				= I('insid');
+		$db					= M('inspect');
+		$typestr			= C('INS_TYPE');
+		$problem 			= array('0'=>'<span class="green">正常</span>','1'=>'<span class="red">有问题</span>');
+		$issolve 			= array('0'=>'<span class="red">未解决</span>','1'=>'<span class="green">已解决</span>');
+		$deptlist 			= M('role')->where('`id`>10')->GetField('id,role_name',true);
 		
 		
-		//获取默认素材
-		$attid = array();
-		$attachment = M('attachment')->field('id')->where(array('catid'=>321,'rel_id'=>$insid))->select();  //
-		foreach($attachment as $v){
-			$attid[] = 	$v['id'];
-		}
+		$row				= $db->find($insid);
 		
-		$row			= $db->find($insid);
-		
-		$row['problem'] 		= $problem[$row['problem']];	
-		$row['issolve'] 		= $row['problem'] ? $issolve[$row['issolve']] : '';	
-		$row['duixiang'] 		= $row['type']==1 ? $row['group_id'] : $row['ins_dept_name'];
-		$row['type'] 			= $typestr[$row['type']];	
+		$row['problem_str'] 	= $problem[$row['problem']];	
+		$row['issolve_str'] 	= $row['problem'] ? $issolve[$row['issolve']] : '';	
+		$row['duixiang'] 	= $row['type']==1 ? $row['group_id'] : $row['ins_dept_name'];
+		$row['type'] 		= $typestr[$row['type']];	
 		$row['create_time'] 	= date('Y-m-d H:i:s',$row['create_time']);
-		$row['ins_date'] 		= $row['ins_date'] ? date('Y-m-d',$row['ins_date']) : '';
+		$row['ins_date'] 	= $row['ins_date'] ? date('Y-m-d',$row['ins_date']) : '';
 		
 			
 		
-		$this->deptlist 	= $deptlist;
+		$this->deptlist 		= $deptlist;
 		$this->solve 		= $solve;
 		$this->problem 		= $problem;
-		$this->type 		= $typestr;
+		$this->type 			= $typestr;
 		$this->row			= $row;
-		$this->atts        	= implode(',',$attid);
+		$this->atts        	= M('attachment')->where(array('catid'=>321,'rel_id'=>$insid))->select(); 
 		$this->display('detail');
 	}
 	

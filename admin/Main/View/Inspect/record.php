@@ -56,7 +56,7 @@
                                     <foreach name="lists" item="row"> 
                                     <tr>
                                         <td>{$row.id}</td>
-                                        <td>{$row.title}</td>
+                                        <td><a href="{:U('Inspect/detail',array('insid'=>$row['id']))}">{$row.title}</a></td>
                                         <td>{$row.ins_date}</td>
                                         <td>{$row.type}</td>
                                         <td>{$row.duixiang}</td>
@@ -67,7 +67,7 @@
                                         
                                         <if condition="rolemenu(array('Inspect/detail'))">
                                         <td class="taskOptions">
-                                        <a href="{:U('Inspect/detail',array('insid'=>$row['id']))}" class="btn btn-warning btn-smsm"><i class="fa fa-times"></i></a>
+                                        <a href="{:U('Inspect/detail',array('insid'=>$row['id']))}" class="btn btn-success  btn-smsm"><i class="fa  fa-building-o"></i></a>
                                         </td>
                                         </if>
                                         
@@ -96,43 +96,31 @@
             <div id="searchtext">
                 <form action="" method="get" id="searchform">
                 <input type="hidden" name="m" value="Main">
-                <input type="hidden" name="c" value="Work">
+                <input type="hidden" name="c" value="Inspect">
                 <input type="hidden" name="a" value="record">
                 
-                <div class="form-group col-md-4">
+                <div class="form-group col-md-12">
                     <input type="text" class="form-control" name="title" placeholder="标题">
                 </div>
-                
-                
                 
                 <div class="form-group col-md-4">
                     <select class="form-control" name="type">
                         <option value="0">选择类型</option>
-                        <foreach name="kinds" item="v" key="k">
+                        <foreach name="type" item="v" key="k">
                         <option value="{$k}">{$v}</option>
                         </foreach>
                     </select>
                 </div>
                 
                 <div class="form-group col-md-4">
-                    <select class="form-control" name="status">
-                        <option value="-1">状态</option>
-                        <option value="0">正常</option>
-                        <option value="1">已撤销</option>
-                    </select>
+                    <input type="text" class="form-control" name="dx" placeholder="巡检对象">
                 </div>
                 
                 <div class="form-group col-md-4">
-                    <input type="text" class="form-control" name="month" placeholder="工作月份">
+                    <input type="text" class="form-control" name="uname" placeholder="巡检人员">
                 </div>
                 
-                <div class="form-group col-md-4">
-                    <input type="text" class="form-control" name="uname" placeholder="工作人员">
-                </div>
                 
-                <div class="form-group col-md-4">
-                    <input type="text" class="form-control" name="rname" placeholder="记录人员">
-                </div>
                 
                 
                 </form>

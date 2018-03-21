@@ -27,12 +27,15 @@
                                 </div>
                                 <div class="box-body">
                                     <div class="content">
+                                    
+                                    	<!--
                                     	<div class="form-group col-md-12">
                                             <div class="callout callout-danger">
                                                 <h4>提示！</h4>
                                                 <p>在记录前请务必跟当事人员核实，记录如果有误请您及时撤销，以免影响当事人绩效考核</p>
                                             </div>
                                         </div>
+                                        -->
                                     
                                         
                                         <div class="form-group col-md-3">
@@ -73,7 +76,7 @@
                                         
                                         <div class="form-group col-md-12">
                                             <label>巡检内容：</label>
-                                            <textarea name="info[content]"  class="form-control">{$row.content}</textarea>
+                                            <textarea name="info[content]"  class="form-control" style="height:100px;">{$row.content}</textarea>
                                         </div>
                                         
                                         <div class="form-group col-md-12" style="margin-top:15px;">
@@ -85,7 +88,7 @@
                                         </div>
                             
                                         <div class="form-group col-md-12 problembox" <?php if($row['problem']==0){ echo ' style="display:none;"';} ?>>
-                                            <textarea name="info[problem_desc]"  class="form-control" placeholder="问题描述">{$row.problem_desc}</textarea>
+                                            <textarea name="info[problem_desc]"  class="form-control" placeholder="问题描述" style="height:100px;">{$row.problem_desc}</textarea>
                                         </div>
                                         
                                         <div class="form-group col-md-12 problembox" style="margin-top:15px;<?php if($row['problem']==0){ echo ' display:none;';} ?>">
@@ -97,7 +100,7 @@
                                         </div>
                             
                                         <div class="form-group col-md-12 problembox issolvebox" <?php if($row['problem']==0){ echo ' style="display:none;"';} ?>>
-                                            <textarea name="info[resolvent]"  class="form-control"  placeholder="解决方案">{$row.resolvent}</textarea>
+                                            <textarea name="info[resolvent]"  class="form-control"  placeholder="解决方案" style="height:100px;">{$row.resolvent}</textarea>
                                         </div>
                                         
                                         <div class="form-group">&nbsp;</div>

@@ -29,7 +29,7 @@
                         <div class="box-body">
                             <div class="content">
                             	<div class="form-group col-md-12">
-                                    <h2 style="font-size:16px; color:#ff3300; border-bottom:2px solid #dedede; padding-bottom:10px;">巡检信息</h2>
+                                    <h2 class="brh3">巡检信息</h2>
                                 </div>
                                 <div class="form-group col-md-12">
                                 <table width="100%" id="font-14" rules="none" border="0" cellpadding="0" cellspacing="0" style="margin-top:-15px;">
@@ -38,21 +38,54 @@
                                         <td width="33.33%">巡检日期：{$row.ins_date}</td>
                                         <td width="33.33%">巡检类型：{$row.type}</td>
                                         <td width="33.33%">巡检对象：{$row.duixiang}</td>
-                                        
                                     </tr>
                                     <tr>
-                                        <td width="33.33%">巡检人员：{$row.ins_uname}</td>
-                                        <td width="33.33%">发布时间：{$row.create_time}</td>
-                                        <td width="33.33%"></td>
+                                        <td>巡检人员：{$row.ins_uname}</td>
+                                        <td>发布时间：{$row.create_time}</td>
+                                        <td></td>
                                     </tr>
                                     
                                 </table>
                                 </div>
                                 
-                                <div class="form-group col-md-12">
-                                    <h2 style="font-size:16px; color:#ff3300; border-bottom:2px solid #dedede; padding-bottom:10px;">巡检文件</h2>
+                                <div class="form-group col-md-12" style="margin-bottom:0;">
+                                    <h2 class="brh3">巡检内容</h2>
                                 </div>
                                 <div class="form-group col-md-12">
+                                    {$row.content}
+                                </div>
+                                
+                                
+                                <div class="form-group col-md-12" style="margin-bottom:0; margin-top:15px;">
+                                    <h2 class="brh3">巡检结果 <span style="float:right;">{$row.problem_str}</span></h2>
+                                </div>
+                                <div class="form-group col-md-12">
+                                	<?php 
+									if($row['problem']==1 || $row['problem_desc']){ 
+										echo $row['problem_desc'];
+									}else{
+										echo '未发现问题';	
+									}
+									?>
+                                    
+                                </div>
+                                
+                                <?php if($row['problem']==1){ ?>
+                                <div class="form-group col-md-12" style="margin-bottom:0; margin-top:15px;">
+                                    <h2 class="brh3">解决方案 <span style="float:right;">{$row.issolve_str}</span></h2>
+                                </div>
+                                <div class="form-group col-md-12">
+                                	{$row.resolvent}
+                                </div>
+                                <?php } ?>
+                                
+                                
+                                
+                                <if condition="$atts">
+                                <div class="form-group col-md-12" style="margin-bottom:0; margin-top:15px;">
+                                    <h2 class="brh3">巡检资料</h2>
+                                </div>
+                                <div class="form-group col-md-12" style=" padding-top:10px;">
                                 	<div id="showimglist">
                                         <foreach name="atts" key="k" item="v">
 											<?php if(isimg($v['filepath'])){ ?>
@@ -63,16 +96,13 @@
                                         </foreach>
                                     </div>
                                 </div>
+                                </if>
+                                
+                                <div class="form-group">&nbsp;</div>
+                                <div class="form-group">&nbsp;</div>
                                 
                                 
-                                <div class="form-group col-md-12" style="margin-bottom:0;">
-                                    <h2 style="font-size:16px; color:#ff3300; border-bottom:2px solid #dedede; padding-bottom:10px;">巡检内容</h2>
-                                </div>
                                 
-                                
-                                <div class="form-group col-md-12">
-                                    {$row.content}
-                                </div>
                             </div>
                             
                         </div><!-- /.box-body -->
