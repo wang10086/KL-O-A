@@ -253,7 +253,7 @@
 
                 <div class="col-md-12">
                 <?php /*if(rolemenu(array('Worder/new_worder'))){ */?>
-                <?php if(rolemenu(array('Worder/new_worder')) and $info['ini_user_id'] == cookie('userid')){ ?>
+                <?php if(rolemenu(array('Worder/new_worder')) and ($info['ini_user_id'] == cookie('userid'))){ ?>
                     <div class="box box-warning">
                         <div class="box-header">
                             <if condition="$info['status']==0">
