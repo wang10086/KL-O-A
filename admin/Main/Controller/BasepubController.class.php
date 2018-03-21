@@ -329,13 +329,14 @@ class BasepubController extends Controller {
 	/*########系统自动生成工单工作质量记录#########*/
 	public function worder_log(){
         $worder_db          = M('worder');
-        $work_db            = M('');
+        $work_db            = M('work_record');
         $where              = array();
         $sta                = array(0,1,2,-3);  //-3需要做二次修改
         $where['status']    = array('in',$sta);
         $time               = NOW_TIME;
         $lists              = $worder_db->where($where)->select();
         $wd_ids             = $work_db->getField('wd_id',true);
+
         foreach ($lists as $v){
             if ($v['plan_complete_time'] < $time){
                 $w_id           = $v['id'];

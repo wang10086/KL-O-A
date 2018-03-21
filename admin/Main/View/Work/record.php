@@ -53,7 +53,11 @@
                                         <td><a href="javascript:;" onClick="opencontent('{$row.content}')">{$row.title}</a></td>
                                         <td>{$row.kinds}</td>
                                         <td>{$row.rec_time}</td>
-                                        <td>{$row.rec_user_name}</td>
+                                        <if condition="$row.rec_user_name neq null">
+                                            <td>{$row.rec_user_name}</td>
+                                            <else />
+                                            <td>系统自动生成</td>
+                                        </if>
                                         <td>{$row.status}</td>
                                         
                                         <td class="taskOptions">
