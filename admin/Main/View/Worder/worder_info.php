@@ -343,6 +343,7 @@
             width:800,
             height:500,
             okValue: '提交',
+            id:'closeart',
             ok: function () {
                 this.iframe.contentWindow.gosubmint();
                 return false;
@@ -350,6 +351,7 @@
             cancelValue:'取消',
             cancel: function () {
             }
+
         });
     }
 

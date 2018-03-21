@@ -344,8 +344,6 @@ class WorderController extends BaseController{
         $user       =  M('account')->getField('id,nickname', true);
 
         if(isset($_POST['dosubmit']) && $info){
-            //$data = I();
-            //var_dump($data);die;
 
             $assign_name        = M('account')->where(array('id'=>$info))->getField('nickname');
             $data               = array();
@@ -363,7 +361,11 @@ class WorderController extends BaseController{
                 $url     = U('Worder/worder_info',array('id'=>$opid));
                 $user    = '['.$info.']';
                 send_msg($uid,$title,$content,$url,$user,'');
-                echo '<script>window.top.location.reload();</script>';
+                $this->success('已指派负责人!');
+                echo '<script>setTimeout(window.top.art.dialog({id:"closeart"}).close(),2000);</script>';
+                //echo '<script>window.top.art.dialog({id:"closeart"}).close();</script>';
+                //echo '<script>window.top.location.reload();</script>';
+                //echo '<script>document.location.reload();</script>';
             }
 
         }elseif (isset($_POST['do_exe'])){
