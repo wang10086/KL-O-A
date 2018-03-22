@@ -36,15 +36,15 @@
                                 
                                 <table class="table table-bordered dataTable fontmini" id="tablelist" style="margin-top:10px;">
                                     <tr role="row" class="orders" >
-                                        <th class="sorting" width="80" data="id">id</th>
-                                        <th class="sorting" data="worder_title">工单标题</th>
-                                        <th class="sorting" width="160" data="worder_content">工单内容</th>
-                                        <th class="sorting" data="worder_type">工单类型</th>
-                                        <th class="sorting" data="init_user_name">发起人姓名</th>
+                                        <th class="sorting" width="40" data="id">id</th>
+                                        <th class="sorting" width="120" data="worder_title">工单标题</th>
+                                        <!--<th class="sorting" data="worder_content">工单内容</th>-->
+                                        <th class="sorting" width="80" data="worder_type">工单类型</th>
+                                        <th class="sorting" width="80" data="init_user_name">发起人姓名</th>
                                         <th class="sorting" width="80"  data="exe_user_name">执行人姓名</th>
                                         <th class="sorting" width="80" data="status">工单状态</th>
-                                        <th class="sorting" >工单创建时间</th>
-                                        <th class="sorting" >工单完成时间</th>
+                                        <th class="sorting" width="125" >工单创建时间</th>
+                                        <th class="sorting" width="125" >工单完成时间</th>
                                         <th width="60" class="taskOptions">详情</th>
 
                                     </tr>
@@ -53,7 +53,7 @@
                                         <td>{$row.id}</td>
                                         <td><a href="{:U('Worder/worder_info',array('id'=>$row['id']))}">{$row.worder_title}</a></td>
                                         <!--<td>{$row.worder_title}</td>-->
-                                        <td>{$row.worder_content}</td>
+                                        <!--<td>{$row.worder_content}</td>-->
                                         <td>{$row.type}</td>
                                         <td>{$row.ini_user_name}</td>
                                         <td>{$row.exe_user_name}</td>
