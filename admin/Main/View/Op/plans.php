@@ -170,7 +170,7 @@
         //预计人数
         $("#number").formValidator({ onShow: "请输入预计人数", onCorrect: "格式正确", defaultValue:"0" })
             .inputValidator({min:1,onError:"输入的信息有误"})
-            .regexValidator({ regExp: "^\\d{1,5}$", onError: "格式不正确"});
+           // .regexValidator({ regExp: "^\\d{1,5}$", onError: "格式不正确"});
         //验证出团日期
         $("#departure").formValidator({onShow:"请选择你的出团日期",onFocus:"请选择出团日期",onCorrect:"已选择出团日期"})
             .inputValidator({type:"string",min:"2018-01-01",onErrorMin:"日期不能早期2018-01-01"})
@@ -194,8 +194,8 @@
         $("#customer").formValidator({onShow:"请选择业务部门",onFocus:"业务部门必须选择",onCorrect:"已选择",defaultValue:""})
             .inputValidator({min:1,onError: "请选择业务部门!"})
             .defaultPassed();
-        //项目名称
-        $("#project").formValidator({onShow:"请输入项目需求",onFocus:"请按正确格式填写项目需求",onCorrect:"已输入项目需求信息"})
+        //项目需求
+        $("#context").formValidator({onShow:"请输入项目需求",onFocus:"请按正确格式填写项目需求",onCorrect:"已输入项目需求信息"})
             .inputValidator({min:4,max:200,onErrorMin:"姓名长度太短",onError:"请按正确格式填写项目需求"});
 
     });
