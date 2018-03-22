@@ -370,6 +370,7 @@ class WorderController extends BaseController{
 
             $info                   = I('info');
             $info['response_time']  = NOW_TIME;
+            $info['complete_time']  = NOW_TIME;
             $res = M('worder')->where(array('id'=>$opid))->save($info);
             if ($res){
                 $this->success("已响应该工单");
@@ -428,7 +429,7 @@ class WorderController extends BaseController{
         if (isset($_POST['dosubmint'])) {
             $id     = I('id');
             $info   = I('info');
-            $info['complete_time']  = NOW_TIME;
+            $info['ini_confirm_time']  = NOW_TIME;
             $exe_user_id    = M('worder')->where(array('id'=>$id))->getfield('exe_user_id');
             if ($info['status'] == 3){
                 $res    = M('worder')->where("id = '$id'")->save($info);

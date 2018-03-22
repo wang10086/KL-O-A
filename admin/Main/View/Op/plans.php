@@ -28,46 +28,56 @@
                                     <div class="content">
                                     	
                                         <div class="form-group col-md-12">
-                                            <label>项目名称：</label><input type="text" name="info[project]" class="form-control" />
+                                            <label>项目名称(学校名称 + 地点 + 项目类型)：</label><input type="text" name="info[project]" class="form-control" id="project" />
+                                            <span class="form-group col-md-12"  id="projectTip"></span>
                                         </div>
-                                        
+
                                         
                                         <div class="form-group col-md-4">
                                             <label>项目类型：</label>
-                                            <select  class="form-control"  name="info[kind]" required>
-                                            <foreach name="kinds" item="v">
-                                                <option value="{$v.id}" <?php if ($row && ($v['id'] == $row['kind'])) echo ' selected'; ?> >{:tree_pad($v['level'], true)} {$v.name}</option>
-                                            </foreach>
-                                            </select> 
+                                            <select  class="form-control"  name="info[kind]" id="kind" required>
+                                                <option value="" selected disabled>请选择项目类型</option>
+                                                <foreach name="kinds" item="v">
+                                                    <option value="{$v.id}" <?php if ($row && ($v['id'] == $row['kind'])) echo ' selected'; ?> >{:tree_pad($v['level'], true)} {$v.name}</option>
+                                                </foreach>
+                                                </select>
+                                            <span id="kindTip" style="margin-right: 5px;"></span>
                                         </div>
                                         
                                         <div class="form-group col-md-4">
-                                            <label>预计人数：</label><input type="text" name="info[number]" class="form-control" />
+                                            <label>预计人数：</label><input type="text" name="info[number]" class="form-control" id="number" />
+                                            <div id="numberTip"></div>
                                         </div>
                                         
                                         <div class="form-group col-md-4">
-                                            <label>出团日期：</label><input type="text" name="info[departure]"  class="form-control inputdate" />
+                                            <label>出团日期：</label><input type="text" name="info[departure]"  class="form-control inputdate" id="departure" />
+                                            <span id="departureTip"></span>
                                         </div>
                                         
                                         <div class="form-group col-md-4">
-                                            <label>行程天数：</label><input type="text" name="info[days]" class="form-control" />
+                                            <label>行程天数：</label><input type="text" name="info[days]" class="form-control" id="days" />
+                                            <span id="daysTip"></span>
                                         </div>
                                         
                                         <div class="form-group col-md-4">
-                                            <label>目的地：</label><input type="text" name="info[destination]" class="form-control" />
+                                            <label>目的地：</label><input type="text" name="info[destination]" class="form-control" id="destination" />
+                                            <span id="destinationTip"></span>
                                         </div>
                                         
                                         <div class="form-group col-md-4">
-                                            <label>立项时间：</label><input type="text" name="info[op_create_date]" class="form-control inputdate_a" />
+                                            <label>立项时间：</label><input type="text" name="info[op_create_date]" class="form-control inputdate_a" id="op_create_date" />
+                                            <span id="op_create_dateTip"></span>
                                         </div>
                                         
                                         <div class="form-group col-md-4">
                                             <label>业务部门：</label>
-                                            <select  class="form-control" name="info[op_create_user]">
-                                            <foreach name="rolelist" key="k" item="v">
-                                                <option value="{$v}" <?php if($k==cookie('roleid')){ echo 'selected';} ?> >{$v}</option>
-                                            </foreach>
-                                            </select> 
+                                            <select  class="form-control" name="info[op_create_user]" id="op_create_user">
+                                                <option value="" selected disabled>请选择业务部门</option>
+                                                <foreach name="rolelist" key="k" item="v">
+                                                    <option value="{$v}" <?php if($k==cookie('roleid')){ echo 'selected';} ?> >{$v}</option>
+                                                </foreach>
+                                            </select>
+                                            <span id="op_create_userTip" style="margin-right: 5px;"></span>
                                         </div>
                                         
                                         <div class="form-group col-md-4">
@@ -75,12 +85,13 @@
                                             <!--
                                             <input type="text" name="info[customer]" id="customer_name" value="" placeholder="您可以输入客户单位名称拼音首字母检索" class="form-control" />
                                             -->
-                                            <select  name="info[customer]" class="form-control">
-                                            	<option value="">请选择</option>
+                                            <select  name="info[customer]" class="form-control" id="customer">
+                                                <option value="" selected disabled>请选择客户单位</option>
                                                 <foreach name="geclist"  item="v">
                                                     <option value="{$v.company_name}"><?php echo strtoupper(substr($v['pinyin'], 0, 1 )); ?> - {$v.company_name}</option>
                                                 </foreach>
                                             </select>
+                                            <span id="customerTip" style="margin-right: 5px;"></span>
                                         </div>
                                         
                                         <div class="form-group col-md-4">
@@ -91,7 +102,8 @@
                                         
 
                                         <div class="form-group col-md-12">
-                                            <label>项目背景：</label><textarea class="form-control"  name="info[context]"></textarea>
+                                            <label>项目需求(对市场部 、研发部 、计调部 、资源管理部等部门的需求)：</label><textarea class="form-control"  name="info[context]" id="context"></textarea>
+                                            <span id="contextTip"></span>
                                         </div>
                                         
                                         <div class="form-group col-md-12">
@@ -140,3 +152,51 @@
             });
         </script>
         -->
+<script type="text/javascript">
+    $(function(){
+        //初始化表单验证
+        $.formValidator.initConfig({formID:"myform",debug:true,onSuccess:function(){
+            $("#myform").submit();
+        },onError:function(){
+            alert("请完善相关信息")
+        }});
+        //项目名称
+        $("#project").formValidator({onShow:"请输入项目名称",onFocus:"请按正确格式填写项目名称",onCorrect:"已输入项目名称"})
+            .inputValidator({min:4,max:200,onErrorMin:"姓名长度太短",onError:"请按正确格式填写项目名称"});
+        //项目类型 【下拉列表框】
+        $("#kind").formValidator({onShow:"请选择项目类型",onFocus:"项目类型必须选择",onCorrect:"已选择",defaultValue:""})
+            .inputValidator({min:1,onError: "请选择项目类型!"})
+            .defaultPassed();
+        //预计人数
+        $("#number").formValidator({ onShow: "请输入预计人数", onCorrect: "格式正确", defaultValue:"0" })
+            .inputValidator({min:1,onError:"输入的信息有误"})
+            .regexValidator({ regExp: "^\\d{1,5}$", onError: "格式不正确"});
+        //验证出团日期
+        $("#departure").formValidator({onShow:"请选择你的出团日期",onFocus:"请选择出团日期",onCorrect:"已选择出团日期"})
+            .inputValidator({type:"string",min:"2018-01-01",onErrorMin:"日期不能早期2018-01-01"})
+            .functionValidator({fun:isDate});
+        //行程天数
+        $("#days").formValidator({ onShow: "请输入行程天数", onCorrect: "格式正确", defaultValue:"0" })
+            .inputValidator({min:1,onError:"输入的信息有误"})
+        //.regexValidator({ regExp: "^[0-9]{1,3}$",dataType:"enum", onError: "格式不正确"});
+        //目的地
+        $("#destination").formValidator({onShow:"请输入目的地信息",onFocus:"请输入目的地信息",onCorrect:"已输入目的地信息"})
+            .inputValidator({min:2,max:100,onErrorMin:"目的地信息长度太短",onError:"请输入有效的目的地信息"});
+        //立项时间
+        $("#departure").formValidator({onShow:"请选择你的立项时间",onFocus:"请选择立项时间",onCorrect:"已选择日期选择"})
+            .inputValidator({type:"string",min:"2018-01-01",onErrorMin:"日期不能早期2018-01-01"})
+            .functionValidator({fun:isDate});
+        //业务部门
+        $("#op_create_user").formValidator({onShow:"请选择业务部门",onFocus:"业务部门必须选择",onCorrect:"已选择",defaultValue:""})
+            .inputValidator({min:1,onError: "请选择业务部门!"})
+            .defaultPassed();
+        //客户单位
+        $("#customer").formValidator({onShow:"请选择业务部门",onFocus:"业务部门必须选择",onCorrect:"已选择",defaultValue:""})
+            .inputValidator({min:1,onError: "请选择业务部门!"})
+            .defaultPassed();
+        //项目名称
+        $("#project").formValidator({onShow:"请输入项目需求",onFocus:"请按正确格式填写项目需求",onCorrect:"已输入项目需求信息"})
+            .inputValidator({min:4,max:200,onErrorMin:"姓名长度太短",onError:"请按正确格式填写项目需求"});
+
+    });
+</script>
