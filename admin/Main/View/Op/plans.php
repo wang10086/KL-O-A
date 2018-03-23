@@ -196,7 +196,7 @@
             .defaultPassed();
         //项目需求
         $("#context").formValidator({onShow:"请输入项目需求",onFocus:"请按正确格式填写项目需求",onCorrect:"已输入项目需求信息"})
-            .inputValidator({min:4,max:200,onErrorMin:"姓名长度太短",onError:"请按正确格式填写项目需求"});
+            .inputValidator({min:4,max:500,onErrorMin:"姓名长度太短",onError:"请按正确格式填写项目需求"});
 
     });
 </script>
