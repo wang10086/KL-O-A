@@ -604,7 +604,10 @@
                                     <if condition="rolemenu(array('Rbac/pdca_auth'))"> 
                                          <li class="{:on('Rbac/pdca_auth')}" ><a href="{:U('Rbac/pdca_auth')}"><i class="fa fa-angle-right"></i> PDCA指定评分人</a></li>
                                     </if>
-                                    
+
+                                    <if condition="rolemenu(array('Rbac/woeder_auth'))">
+                                        <li class="{:on('Rbac/worder_auth')}" ><a href="{:U('Rbac/worder_auth')}"><i class="fa fa-angle-right"></i> 工单系统指定指派人</a></li>
+                                    </if>
                                     
                                     <if condition="rolemenu(array('Rbac/kpi_quota'))"> 
                                          <li class="{:on('Rbac/kpi_quota')}" ><a href="{:U('Rbac/kpi_quota')}"><i class="fa fa-angle-right"></i> KPI考核指标管理</a></li>

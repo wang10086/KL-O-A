@@ -45,8 +45,8 @@
                                         <th class="sorting" width="80" data="status">工单状态</th>
                                         <th class="sorting" width="125">工单创建时间</th>
                                         <th class="sorting" width="125">工单完成时间</th>
-                                        <th width="60" class="taskOptions">详情</th>
-
+                                        <th class="sorting" width="40" class="taskOptions">详情</th>
+                                        <th class="sorting" width="40" class="taskOptions">修改</th>
                                         <if condition="rolemenu(array('Worder/del_worder'))">
                                         <th width="40" class="taskOptions">删除</th>
                                         </if> 
@@ -70,7 +70,11 @@
                                         <td class="taskOptions">
                                             <button onClick="javascript:window.location.href='{:U('Worder/worder_info',array('id'=>$row['id']))}';" title="详情" class="btn btn-success  btn-smsm"><i class="fa  fa-building-o"></i></button>
                                         </td>
-
+                                        <td class="taskOptions">
+                                            <if condition="cookie('userid') eq $row['ini_user_id'] and $row['status'] eq 0">
+                                                <button onClick="javascript:window.location.href='{:U('Worder/worder_edit',array('id'=>$row['id']))}';" title="修改" class="btn btn-info  btn-smsm"><i class="fa  fa-pencil"></i></button>
+                                            </if>
+                                        </td>
                                         <if condition="rolemenu(array('Worder/del_worder'))">
                                         <td class="taskOptions">
                                         <button onClick="javascript:ConfirmDel('{:U('Worder/del_worder',array('id'=>$row['id']))}')" title="删除" class="btn btn-warning btn-smsm"><i class="fa fa-times"></i></button>

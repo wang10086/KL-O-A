@@ -46,6 +46,9 @@
                                         <th class="sorting" width="125" >工单创建时间</th>
                                         <th class="sorting" width="125" >工单完成时间</th>
                                         <th width="60" class="taskOptions">详情</th>
+                                        <if condition="$pin eq 101">
+                                            <th class="sorting" width="40" class="taskOptions">修改</th>
+                                        </if>
 
                                     </tr>
                                     <foreach name="lists" item="row"> 
@@ -69,30 +72,11 @@
                                             <button onClick="javascript:window.location.href='{:U('Worder/worder_info',array('id'=>$row['id']))}';" title="详情" class="btn btn-success  btn-smsm"><i class="fa  fa-building-o"></i></button>
                                         </td>
 
-                                        <!--<if condition="$pin eq 101">
-                                            <td>
-
-                                                <if condition="($row.sta neq '执行部门已确认完成') and ($row.sta neq '发起人已确认完成') and ($row.sta neq '拒绝或无效工单') and ($row.sta neq '已撤销')">
-                                                    <if condition="rolemenu(array('Worder/revoke'))">
-                                                    <a href="{:U('Worder/revoke',array('id'=>$row['id']))}" title="撤销" class="btn btn-info btn-smsm"><i class="fa fa-reply"></i></a>
-                                                    </if>
-                                                <else />
-                                                    <if condition="($row.sta eq '执行部门已确认完成') and (rolemenu(array('Worder/new_worder')))">
-                                                        <button onClick="javascript:{:open_resure($row['id'])}" title="确认执行完成" class="btn btn-success btn-sm"><i class="fa fa-check-circle-o"></i></button>
-                                                    </if>
-                                                </if>
-                                            </td>
-                                        <else />
-                                            <td>
-                                                <if condition="rolemenu(array('Worder/exe_worder'))">
-                                                    <if condition="($row.sta neq '执行部门已确认完成') and ($row.sta neq '发起人已确认完成') and ($row.sta neq '拒绝或无效工单') and ($row.sta neq '已撤销') and ($pin neq 0)">
-                                                        <a href="{:U('Worder/exe_worder',array('id'=>$row['id'],'pin'=>$pin))}" title="执行" class="btn btn-info btn-smsm"><i class="fa fa-pencil"></i></a>
-                                                        <else />
-                                                        <a href="{:U('Worder/exe_worder',array('id'=>$row['id']))}" title="执行" class="btn btn-info btn-smsm"><i class="fa fa-pencil"></i></a>
-                                                    </if>
-                                                </if>
-                                            </td>
-                                        </if>-->
+                                        <td class="taskOptions">
+                                            <if condition="(cookie('userid') eq $row['ini_user_id']) and ($row['status'] eq 0) and ($pin eq 101)">
+                                                <button onClick="javascript:window.location.href='{:U('Worder/worder_edit',array('id'=>$row['id']))}';" title="修改" class="btn btn-info  btn-smsm"><i class="fa  fa-pencil"></i></button>
+                                            </if>
+                                        </td>
 
                                     </tr>
                                     </foreach>					

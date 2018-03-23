@@ -1052,9 +1052,89 @@ class RbacController extends BaseController {
 		
 		}
     }
-    
-	
-	
+
+    // @@@NODE-3###worder_auth###指定部门工单执行人###
+    //如果部门只有一个人时, 不用指定 , 如果是多个人时需要指定
+    public function worder_auth(){
+        $this->title('工单执行人设置');
+        $r_ids = M('role')->getField('id',true);
+        //需要制定执行人的部门 (排除一个人的部门)
+        foreach ($r_ids as $v){
+            $list               = M('account')->where(array('roleid'=>$v,'status'=>0))->select();
+            $count              = count($list);
+            if ($count ==1){
+                //如果该部门只有一个人时 , 工单执行人就是其本人 , 求当前人员的id , 并赋值
+                $account_id     = M('account')->where(array('roleid'=>$v,'status'=>0))->getField('id');
+                $data['worder_auth'] = $account_id;
+                M('auth')->where(array('role_id'=>$v))->save($data);
+            }
+        }
+
+        $roles =  get_roles();
+        foreach($roles as $k=>$v){
+            $auth = M('auth')->where(array('role_id'=>$v['id']))->find();
+            $roles[$k]['worder'] = $auth ? '<span class="blue">'.username($auth['worder_auth']).'<span>' : '<font color="#999">未设置</font>';
+        }
+
+        $this->roles = $roles;
+        $this->pages = '';
+        $this->display('worder_auth');
+    }
+
+    // @@@NODE-3###pdca_auth###指定部门工单执行人###
+    public function op_worder_auth() {
+        if(isset($_POST['dosubmint'])){
+
+            $info      = I('info');
+
+            //判断数据是否存在
+            if(M('auth')->where(array('role_id'=>$info['role_id']))->find()){
+                $addinfo = M('auth')->data($info)->where(array('role_id'=>$info['role_id']))->save();
+            }else{
+                $addinfo = M('auth')->add($info);
+            }
+
+            echo '<script>window.top.location.reload();</script>';
+
+
+
+        }else{
+
+            $id = I('id','');
+            if($id){
+                $this->role = M('role')->find($id);
+                $row  = M('auth')->where(array('role_id'=>$id))->find();
+                if($row){
+                    $name = M('account')->find($row['pdca_auth']);
+                    $row['pdca_auth_name'] = $name['nickname'];
+                }
+                $this->row = $row;
+            }
+
+
+            //整理关键字
+            $role = M('role')->GetField('id,role_name',true);
+            $user =  M('account')->select();
+            $key = array();
+            foreach($user as $k=>$v){
+                $text = $v['nickname'].'-'.$role[$v['roleid']];
+                $key[$k]['id']         = $v['id'];
+                $key[$k]['user_name']  = $v['nickname'];
+                $key[$k]['pinyin']     = strtopinyin($text);
+                $key[$k]['text']       = $text;
+                $key[$k]['role']       = $v['roleid'];
+                $key[$k]['role_name']  = $role[$v['roleid']];
+            }
+
+            $this->userkey =  json_encode($key);
+
+            $this->roles   =  get_roles();
+
+            $this->display('op_worder_auth');
+
+        }
+    }
+
 	
 	// @@@NODE-3###kpi_quota###KPI指标管理###
     public function kpi_quota(){

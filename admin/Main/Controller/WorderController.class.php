@@ -396,6 +396,68 @@ class WorderController extends BaseController{
         }
     }
 
+    //修改工单
+    public function worder_edit(){
+        $this->title    = '修改工单';
+        $id             = I('id');
+        $db             = M('worder');
+        $list           = $db->where(array('id'=>$id))->find();
+        if (isset($_POST['dosubmint'])){
+
+            $info                   = I('info');
+            $info['status']         = 0;
+            $info['ini_user_id']    = $_SESSION['userid'];
+            $info['ini_dept_id']    = $_SESSION['roleid'];
+            $info['ini_dept_name']  = $_SESSION['rolename'];
+            $info['create_time']    = NOW_TIME;
+            $attr                   = I('attr'); //获取上传文件
+
+            $roleid                 = $info['exe_dept_id'];
+            $exe_user_id            = M('auth')->where(array('role_id'=>$roleid))->getField('worder_auth');
+            $exe_user_name          = M('account')->where(array('id'=>$exe_user_id))->getField('nickname');
+            $info['exe_user_id']    = $exe_user_id;
+            $info['exe_user_name']  = $exe_user_name;
+            $u_time                 = 5;    //默认5个工作日
+            //计划完成时间 $u_time为工作日
+            $info['plan_complete_time']= strtotime(getAfterWorkDay($u_time));
+            $res = M('worder')->where(array('id'=>$id))->save($info);
+
+            if ($res){
+                //保存附件信息
+                save_res(P::WORDER_INI,$res,$attr);
+
+                //发送信息
+                $uid     = cookie('userid');
+                $title   = '您有来自['.$info['ini_dept_name'].'--'.$info['ini_user_name'].']的工单待执行!';
+                $content = $info['worder_content'];
+                $url     = U('worder/worder_info',array('id'=>$res));
+                $user    = '['.$info['exe_user_id'].']';
+                send_msg($uid,$title,$content,$url,$user,'');
+                $this->success("修改工单成功!",U('Worder/worder_info',array('id'=>$id)));
+            }else{
+                $this->error('保存数据失败!');
+            }
+
+        }else{
+            $this->row          = $list;
+            $this->id           = $id;
+            $this->worder_type  = C('WORDER_TYPE');
+            $this->atts         = get_res(P::WORDER_INI,$id);
+
+            //整理部门关键字
+            $data   = M('role')->field("id,role_name")->select();
+            $key    = array();
+            foreach($data as $k=>$v){
+                $text           = $v['role_name'];
+                $key[$k]['id']  = $v['id'];
+                $key[$k]['pinyin'] = strtopinyin($text);
+                $key[$k]['text']       = $text;
+            }
+            $this->userkey = json_encode($key);
+            $this->display();
+        }
+    }
+
     public function del_worder(){
 
         $id = I('id');
