@@ -1107,10 +1107,11 @@ class RbacController extends BaseController {
                 if($row){
                     $name = M('account')->find($row['pdca_auth']);
                     $row['pdca_auth_name'] = $name['nickname'];
+                    $w_name = M('account')->find($row['worder_auth']);
+                    $row['worder_auth_name'] = $w_name['nickname'];
                 }
                 $this->row = $row;
             }
-
 
             //整理关键字
             $role = M('role')->GetField('id,role_name',true);

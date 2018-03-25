@@ -9,7 +9,7 @@
     <div class="box-body art_box-body">
         <form method="post" action="{:U('Rbac/op_worder_auth')}" name="myform" id="gosub">
         <input type="hidden" name="dosubmint" value="1">
-        <input type="hidden" name="info[pdca_auth]" id="pdca_auth" value="{$row.pdca_auth}">
+        <input type="hidden" name="info[worder_auth]" id="worder_auth" value="{$row.worder_auth}">
         
         <div class="form-group box-float-12">
             <label>部门</label>
@@ -21,7 +21,7 @@
         </div>
         <div class="form-group box-float-12">
             <label>评分人<font color="#999999">（可通过姓名拼音快速检索）</font></label>
-            <input type="text" value="{$row.pdca_auth_name}"  class="form-control keywords" />
+            <input type="text" value="{$row.worder_auth_name}"  class="form-control keywords" />
         </div>
         </form>
         
@@ -44,7 +44,7 @@
 				 return row.user_name;
 			 }
 		}).result(function(event, item) {
-		   $('#pdca_auth').val(item.id);
+		   $('#worder_auth').val(item.id);
 		});
 			
 	})
