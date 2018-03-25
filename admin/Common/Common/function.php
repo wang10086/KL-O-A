@@ -2226,10 +2226,126 @@ function updatekpi($month,$user){
 				}
 				
 				
+				//满意度考核-采购经理
+				if($v['quota_id']==114){
+					$rsum = user_work_record($user,$month,217);
+					switch($rsum){
+						case 0:
+							$complete = '100';
+							break;
+						case 1:
+							$complete = '90';
+							break;
+						case 2:
+							$complete = '80';
+							break;
+						default:
+							$complete = '0';
+					}
+				}
+				
+				
+				//物资采购合格率--采购经理
+				if($v['quota_id']==86){
+					$rsum = user_work_record($user,$month,217);
+					switch($rsum){
+						case 0:
+							$complete = '100';
+							break;
+						case 1:
+							$complete = '90';
+							break;
+						case 2:
+							$complete = '80';
+							break;
+						case 3:
+							$complete = '70';
+							break;
+						default:
+							$complete = '0';
+					}
+				}
+				
+				
+				//日常所有工作及时性--采购经理
+				if($v['quota_id']==85){
+					$rsum = user_work_record($user,$month,100);
+					switch($rsum){
+						case 0:
+							$complete = '100';
+							break;
+						case 1:
+							$complete = '90';
+							break;
+						case 2:
+							$complete = '80';
+							break;
+						default:
+							$complete = '0';
+					}
+				}
+				
+				//数据前端后端对接--市场PHP
+				if($v['quota_id']==64){
+					$rsum = user_work_record($user,$month,116);
+					switch($rsum){
+						case 0:
+							$complete = '100';
+							break;
+						case 1:
+							$complete = '90';
+							break;
+						case 2:
+							$complete = '80';
+							break;
+						default:
+							$complete = '0';
+					}
+				}
+				
+				
+				//前端网页实现--市场PHP
+				if($v['quota_id']==63){
+					$rsum = user_work_record($user,$month,117);
+					switch($rsum){
+						case 0:
+							$complete = '100';
+							break;
+						case 1:
+							$complete = '90';
+							break;
+						case 2:
+							$complete = '80';
+							break;
+						default:
+							$complete = '0';
+					}
+				}
+				
+				//前端网页实现--市场PHP
+				if($v['quota_id']==62){
+					$rsum = user_work_record($user,$month,118);
+					switch($rsum){
+						case 0:
+							$complete = '100';
+							break;
+						case 1:
+							$complete = '90';
+							break;
+						case 2:
+							$complete = '80';
+							break;
+						default:
+							$complete = '0';
+					}
+				}
+				
+				
+				
 				
 				
 				//已实现自动获取指标值
-				$auto_quta	= array(1,2,3,4,5,6,81,8,9,10,11,15,16,18,20,23,26,21,24,27,32,37,19,22,25,28,33,38,42,45,103,56,113,92,29,34,39,46,102,55,57,58,59,84,87,89,90,111,107,83,66,54,44,12,112,108,100,96,95,65);
+				$auto_quta	= array(1,2,3,4,5,6,81,8,9,10,11,15,16,18,20,23,26,21,24,27,32,37,19,22,25,28,33,38,42,45,103,56,113,92,29,34,39,46,102,55,57,58,59,84,87,89,90,111,107,83,66,54,44,12,112,108,100,96,95,65,114,86,85,64,63,62);
 				
 				//计算完成率并保存数据
 				if(in_array($v['quota_id'],$auto_quta)){
