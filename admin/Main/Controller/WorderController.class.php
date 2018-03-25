@@ -28,44 +28,40 @@ class WorderController extends BaseController{
             $attr                   = I('attr'); //获取上传文件
 
             foreach($exe_info as $v){
-                $exe_user_id            = $v['exe_user_id'];
-                $exe_user_name          = $v['exe_user_name'];
-                if ($exe_user_id == ''){
-                    $wheres             = array();
-                    $where['nickname']  = array('like',"%.$exe_user_name.%");
-                    $exe_user_id        = M('account')->where(array('nickname'=>array('like','%'.$exe_user_name.'%')))->getField('id');
+                $exe_dept_id            = $v['exe_dept_id'];
+                $exe_dept_name          = $v['exe_dept_name'];
+                if ($exe_dept_id != ''){
+                    $exe_user_id        = M('auth')->where(array('role_id'=>$exe_dept_id))->getField("worder_auth");
+                    $exe_user_name      = M('account')->where(array('id'=>array('eq',$exe_user_id)))->getField('nickname');
+
+                    $info['exe_user_id']    = $exe_user_id;
+                    $info['exe_user_name']  = $exe_user_name;
+                    $info['exe_dept_name']  = $exe_dept_name;
+                    $info['exe_dept_id']    = $exe_dept_id;
+                    $u_time                 = 5;    //默认5个工作日
+                    //计划完成时间 $u_time为工作日
+                    $info['plan_complete_time']= strtotime(getAfterWorkDay($u_time));
+                    $res = M('worder')->add($info);
+
+                    if ($res){
+                        //保存附件信息
+                        save_res(P::WORDER_INI,$res,$attr);
+
+                        //发送信息
+                        $uid     = cookie('userid');
+                        $title   = '您有来自['.$info['ini_dept_name'].'--'.$info['ini_user_name'].']的工单待执行!';
+                        $content = $info['worder_content'];
+                        $url     = U('worder/worder_info',array('id'=>$res));
+                        $user    = '['.$info['exe_user_id'].']';
+                        send_msg($uid,$title,$content,$url,$user,'');
+                        $this->success("发起工单成功!");
+                    }else{
+                        $this->error('保存失败!');
+                    }
                 }
-                if (!$exe_user_id){
-                    $this->error('请输入正确的执行人信息!');
-                }
-
-                $data                   = M('account')->where(array('id'=>$exe_user_id))->find();
-                $info['exe_user_id']    = $exe_user_id;
-                $info['exe_user_name']  = $data[nickname];
-                $roleid                 = $data['roleid'];
-                $info['exe_dept_name']  = M('role')->where(array('id'=>$roleid))->getField('role_name');
-                $info['exe_dept_id']    = $roleid;
-                $u_time                 = 5;    //默认5个工作日
-                //计划完成时间 $u_time为工作日
-                $info['plan_complete_time']= strtotime(getAfterWorkDay($u_time));
-
-                $res = M('worder')->add($info);
-
-                if ($res){
-                    //保存附件信息
-                    save_res(P::WORDER_INI,$res,$attr);
-
-                    //发送信息
-                    $uid     = cookie('userid');
-                    $title   = '您有来自['.$info['ini_dept_name'].'--'.$info['ini_user_name'].']的工单待执行!';
-                    $content = $info['worder_content'];
-                    $url     = U('worder/worder_info',array('id'=>$res));
-                    $user    = '['.$info['exe_user_id'].']';
-                    send_msg($uid,$title,$content,$url,$user,'');
-                    $this->success("发起工单成功!");
-                }else{
-                    $this->error('保存失败!');
-                }
+                /*if (!$exe_dept_id){
+                    $this->error("请输入执行部门信息");
+                }*/
             }
 
         }else{
@@ -73,20 +69,16 @@ class WorderController extends BaseController{
             $this->group            =  get_roles();
             $this->worder_type      = C('WORDER_TYPE');
 
-            //整理关键字
-            $role = M('role')->GetField('id,role_name',true);
-            $user =  M('account')->where(array('status'=>0))->select();
-            $key = array();
-            foreach($user as $k=>$v){
-                $text = $v['nickname'].'-'.$role[$v['roleid']];
-                $key[$k]['id']         = $v['id'];
-                $key[$k]['user_name']  = $v['nickname'];
-                $key[$k]['pinyin']     = strtopinyin($text);
+            //整理部门关键字
+            $role   = M('role')->field("id,role_name")->select();
+            $key    = array();
+            foreach($role as $k=>$v){
+                $text           = $v['role_name'];
+                $key[$k]['id']  = $v['id'];
+                $key[$k]['pinyin'] = strtopinyin($text);
                 $key[$k]['text']       = $text;
-                $key[$k]['role']       = $v['roleid'];
-                $key[$k]['role_name']  = $role[$v['roleid']];
             }
-            $this->userkey =  json_encode($key);
+            $this->userkey = json_encode($key);
 
             $this->display('new_worder');
         }

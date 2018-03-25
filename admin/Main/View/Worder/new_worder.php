@@ -2,10 +2,12 @@
 
 <script type="text/javascript">
 
-    window.onload = function(i){
-        $('#in_group').hide();
-        $('#dept').hide();
-    }
+    $(document).ready(function(i){
+        $('#task_ti_2').hide();
+        $('#task_ti_3').hide();
+        $('#task_ti_4').hide();
+        $('#task_ti_5').hide();
+    })
 </script>
 
             <aside class="right-side">
@@ -63,24 +65,61 @@
 
                                             <div class="box box-success">
                                                 <div class="box-header">
-                                                    <h3 class="box-title">工单受理组/人</h3>
+                                                    <h3 class="box-title">工单受理部门</h3>
                                                 </div>
                                                 <div class="box-body" style="padding-top:20px;">
 
                                                     <div class="form-group col-md-12" id="addti_btn">
-                                                        <a href="javascript:;" class="btn btn-success btn-sm" onClick="task(1)" style="margin-right:10px;"><i class="fa fa-fw  fa-plus"></i> 添加工单受理人</a>
+                                                        <a href="javascript:;" class="btn btn-success btn-sm" onClick="task(1)" style="margin-right:10px;"><i class="fa fa-fw  fa-plus"></i> 添加工单受理部门</a>
                                                     </div>
 
-                                                    <div id="task_timu">
-                                                        <foreach name="exe_info" key="k" item="v">
+                                                    <div class="tasklist" id="task_ti_1" >
+                                                        <div class="col-md-12 pd"><label class="titou"><strong>工单受理部门<span class="tihao">(必填)</span></strong>:</label>
+                                                        <div class="col-md-12">
+                                                            <input type="hidden" name="exe_info[1][exe_dept_id]" id="exe_1" value="">
+                                                            <input type="text" class="form-control keywords_exe" id="keywords_exe1" name="exe_info[1][exe_dept_name]"  placeholder="请输入执行部门名称"  style="width:100%; margin-right:10px;"/>
+                                                        </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="tasklist" id="task_ti_2"><a style="z-index: 1000" class="aui_close" href="javascript:;" onClick="del_timu('task_ti_2')">×</a>
+                                                        <div class="col-md-12 pd"><label class="titou"><strong>工单受理部门<span class="tihao">2</span></strong>:</label>
                                                             <div class="col-md-12">
-                                                                <input type="hidden" name="exe_info[{$v.id}][exe_user_id]" id="exe{$v.id}" value="">
-                                                                <input type="text" class="form-control keywords_exe" name="exe_info[{$v.id}][exe_user_name]" id="keywords_exe{$v.id}" onfocus="exeWorder({$v.id})"  placeholder="请输入执行人名称"  style="width:100%; margin-right:10px;"/>
+                                                                <input type="hidden" name="exe_info[2][exe_dept_id]" id="exe_2" value="">
+                                                                <input type="text" class="form-control keywords_exe" id="keywords_exe2" name="exe_info[2][exe_dept_name]"  placeholder="请输入执行部门名称"  style="width:100%; margin-right:10px;"/>
                                                             </div>
-                                                        </foreach>
+                                                        </div>
                                                     </div>
 
-                                                    <div style="display:none" id="task_val">0</div>
+                                                    <div class="tasklist" id="task_ti_3"><a style="z-index: 1000" class="aui_close" href="javascript:;" onClick="del_timu('task_ti_3')" >×</a>
+                                                        <div class="col-md-12 pd"><label class="titou"><strong>工单受理部门<span class="tihao">3</span></strong>:</label>
+                                                            <div class="col-md-12">
+                                                                <input type="hidden" name="exe_info[3][exe_dept_id]" id="exe_3" value="">
+                                                                <input type="text" class="form-control keywords_exe" id="keywords_exe3" name="exe_info[3][exe_dept_name]"  placeholder="请输入执行部门名称"  style="width:100%; margin-right:10px;"/>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="tasklist" id="task_ti_4" ><a style="z-index: 1000" class="aui_close" href="javascript:;"  onClick="del_timu('task_ti_4')">×</a>
+                                                        <div class="col-md-12 pd"><label class="titou"><strong>工单受理部门<span class="tihao">4</span></strong>:</label>
+                                                            <div class="col-md-12">
+                                                                <input type="hidden" name="exe_info[4][exe_dept_id]" id="exe_4" value="">
+                                                                <input type="text" class="form-control keywords_exe" id="keywords_exe4" name="exe_info[4][exe_dept_name]"  placeholder="请输入执行部门名称"  style="width:100%; margin-right:10px;"/>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="tasklist" id="task_ti_5"  ><a class="aui_close" style="z-index: 1000" href="javascript:;" onClick="del_timu('task_ti_5')">×</a>
+                                                        <div class="col-md-12 pd"><label class="titou"><strong>工单受理部门<span class="tihao">5</span></strong>:</label>
+                                                            <div class="col-md-12">
+                                                                <input type="hidden" name="exe_info[5][exe_dept_id]" id="exe_5" value="">
+                                                                <input type="text" class="form-control keywords_exe" id="keywords_exe5" name="exe_info[5][exe_dept_name]"  placeholder="请输入执行部门名称"  style="width:100%; margin-right:10px;"/>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+
+                                                    <div style="display:none" id="task_val">1</div>
 
                                                     <div id="daysbox"></div>
                                                     <div class="form-group">&nbsp;</div>
@@ -122,91 +161,95 @@
 
     <script type="text/javascript">
 
-        //添加多个工单执行人
+        //添加工单执行人
         function task(obj){
             var i = parseInt($('#task_val').text())+1;
-
-            var header = '<div class="tasklist" id="task_ti_'+i+'"><a class="aui_close" href="javascript:;" onClick="del_timu(\'task_ti_'+i+'\')">×</a><div class="col-md-12 pd"><label class="titou"><strong>工单受理组/人<span class="tihao">'+i+'</span></strong>:</label>';
-            var days = '<div class="col-md-12"> <input type="hidden" name="exe_info['+i+'][exe_user_id]" id="exe'+i+'" value=""> <input type="text" class="form-control keywords_exe" id="keywords_exe'+i+'" name="exe_info['+i+'][exe_user_name]" onfocus="exeWorder('+i+')"  placeholder="请输入执行人姓名"  style="width:100%; margin-right:10px;"/> </div>'
-            var footer = '</div>';
-            var html = header+days+footer;
-
-            $('#task_timu').append(html);
+            $("#task_ti_"+i+"").show();
             $('#task_val').html(i);
-            //重编题号
-            $('.tihao').each(function(index, element) {
-                var no = index*1+1;
-                $(this).text(no);
-            });
+            if (i >= 6){alert("不能再多了!");}
+            i+=1;
+
         }
 
         //搜索框输入工单执行人
-        function exeWorder(a){
+        $(document).ready(function(e){
             var keywords = <?php echo $userkey; ?>;
-            $("#keywords_exe"+a+"").autocomplete(keywords, {
+            $("#keywords_exe1").autocomplete(keywords, {
                 matchContains: true,
                 highlightItem: false,
                 formatItem: function (row, i, max, term) {
-                    return '<span style=" display:none">' + row.pinyin + '</span>' + row.text;
+                    return row.text;
                 },
                 formatResult: function (row) {
                     return row.user_name;
                 }
             }).result(function (event, item) {
-                $("#exe"+a+"").val(item.id);
+                $("#exe_1").val(item.id);
             });
 
-        }
+            //2
+            $("#keywords_exe2").autocomplete(keywords, {
+                matchContains: true,
+                highlightItem: false,
+                formatItem: function (row, i, max, term) {
+                    return row.text;
+                },
+                formatResult: function (row) {
+                    return row.user_name;
+                }
+            }).result(function (event, item) {
+                $("#exe_2").val(item.id);
+            });
+
+            //3
+            $("#keywords_exe3").autocomplete(keywords, {
+                matchContains: true,
+                highlightItem: false,
+                formatItem: function (row, i, max, term) {
+                    return row.text;
+                },
+                formatResult: function (row) {
+                    return row.user_name;
+                }
+            }).result(function (event, item) {
+                $("#exe_3").val(item.id);
+            });
+
+            //4
+            $("#keywords_exe4").autocomplete(keywords, {
+                matchContains: true,
+                highlightItem: false,
+                formatItem: function (row, i, max, term) {
+                    return row.text;
+                },
+                formatResult: function (row) {
+                    return row.user_name;
+                }
+            }).result(function (event, item) {
+                $("#exe_4").val(item.id);
+            });
+
+            //5
+            $("#keywords_exe5").autocomplete(keywords, {
+                matchContains: true,
+                highlightItem: false,
+                formatItem: function (row, i, max, term) {
+                    return row.text;
+                },
+                formatResult: function (row) {
+                    return row.user_name;
+                }
+            }).result(function (event, item) {
+                $("#exe_5").val(item.id);
+            });
+        })
 
 
         //移除题目
         function del_timu(obj){
             $('#'+obj).remove();
-            $('.tihao').each(function(index, element) {
-                var no = index*1+1;
-                $(this).text(no);
-            });
+
         }
 
-        //获取所有用户组
-        function check_group(a){
-            var id = $("#group_"+a+"").val();
-            $.ajax({
-                type:"POST",
-                url:"{:U('Ajax/member')}",
-                data:{id:id},
-                success:function(msg){
-                    if (msg == 0){
-                        $("#in_group"+a+"").hide();
-                    }else {
-                        $("#in_group"+a+"").show();
-                        $("#pro_tit"+a+"").empty();
-                        var count = msg.length;
-                        var i= 0;
-                        var b="";
-                        b+='<option value="" disabled selected>请选择项目类型</option>';
-                        for(i=0;i<count;i++){
-                            b+="<option value='"+msg[i].id+"'>"+msg[i].pro_title+"</option>";
-                        }
-                        $("#pro_tit"+a+"").append(b);
-                    }
-                }
-            })
-        }
-
-        //获取该用户组的工单项列表
-        function show_dept(a){
-            var pro_tit = 'pro_tit'+a;
-            var id = $("#pro_tit"+a+"").val();
-            $.ajax({
-                type:"POST",
-                url:"{:U('Ajax/dept')}",
-                data:{id:id},
-                success:function(msg){
-                    $("#type"+a+"").val(msg.type_res);
-                    $("#use_time"+a+"").val(msg.use_time+"个工作日");
-                }
-            })
-        }
 
     </script>
