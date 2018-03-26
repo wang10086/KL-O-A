@@ -1064,9 +1064,10 @@ class RbacController extends BaseController {
             $count              = count($list);
             if ($count ==1){
                 //如果该部门只有一个人时 , 工单执行人就是其本人 , 求当前人员的id , 并赋值
-                $account_id     = M('account')->where(array('roleid'=>$v,'status'=>0))->getField('id');
+                //第一次使用执行此代码(自动填充)
+                /*$account_id     = M('account')->where(array('roleid'=>$v,'status'=>0))->getField('id');
                 $data['worder_auth'] = $account_id;
-                M('auth')->where(array('role_id'=>$v))->save($data);
+                M('auth')->where(array('role_id'=>$v))->save($data);*/
             }
         }
 
