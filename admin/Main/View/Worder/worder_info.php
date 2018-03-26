@@ -341,7 +341,7 @@
                                     </tr>
                                     <foreach name="record" item="v">
                                         <tr>
-                                            <td style="padding:20px 0 0 0">{$v.op_time|date='Y-m-d H:i:s',###}</td>
+                                            <td style="padding:20px 0 0 0">{$v.time|date='Y-m-d H:i:s',###}</td>
                                             <td style="padding:20px 0 0 0">{$v.uname}</td>
                                             <td style="padding:20px 0 0 0">{$v.explain}</td>
                                         </tr>
