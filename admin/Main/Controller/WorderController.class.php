@@ -361,8 +361,15 @@ class WorderController extends BaseController{
         }elseif (isset($_POST['do_exe'])){
 
             $info                   = I('info');
-            $info['response_time']  = NOW_TIME;
-            $info['complete_time']  = NOW_TIME;
+            if ($info['status'] == -1){
+                //被拒绝工单 , 工单完成
+                $info['response_time']  = NOW_TIME;
+                $info['complete_time']  = NOW_TIME;
+                $info['ini_confirm_time']=NOW_TIME;
+            }else{
+                $info['response_time']  = NOW_TIME;
+                $info['complete_time']  = NOW_TIME;
+            }
             $res = M('worder')->where(array('id'=>$opid))->save($info);
             if ($res){
                 $this->success("已响应该工单");
@@ -384,7 +391,7 @@ class WorderController extends BaseController{
             $this->lists = $db->where($where)->limit($page->firstRow . ',' . $page->listRows)->order($this->orders('roleid'))->select();
             $this->role  = M('role')->getField('id,role_name', true);
             $this->opid  = $opid;
-            $this->display();
+            $this->display('assign_user');
         }
     }
 

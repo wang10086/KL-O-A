@@ -44,7 +44,7 @@
             <input type="hidden" name="m" value="Main">
             <input type="hidden" name="c" value="Worder">
             <input type="hidden" name="a" value="assign_user">
-            <input type="hidden" name="opid" value="{$opid}">
+            <input type="hidden" name="id" value="{$opid}">
             <input type="text" class="form-control" name="key"  placeholder="关键字" value="">
             <button type="submit" class="btn btn-success">搜索</button>
             </form>
