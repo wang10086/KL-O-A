@@ -996,6 +996,20 @@ function op_record($info){
 	}
 }
 
+//工单操作记录
+function worder_record($info){
+	$data = array();
+	$data = $info;
+	$data['uname'] = cookie('name');
+	$data['time'] = NOW_TIME;
+	$isok = M('worder_record')->add($data);
+	if($isok){
+		return true;
+	}else{
+		return false;
+	}
+}
+
 
 //汇总项目预算
 function opcost($opid){

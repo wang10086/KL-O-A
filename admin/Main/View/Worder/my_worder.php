@@ -46,9 +46,11 @@
                                         <th class="sorting" width="125" >工单创建时间</th>
                                         <th class="sorting" width="125" >工单完成时间</th>
                                         <th class="sorting" width="40" class="taskOptions">详情</th>
-                                        <if condition="$pin eq 1">
-                                            <th class="sorting" width="40" class="taskOptions">修改</th>
-                                        </if>
+                                        <th class="sorting" width="40" class="taskOptions">
+                                            <if condition="$pin eq 1">
+                                                修改
+                                            </if>
+                                        </th>
 
                                     </tr>
                                     <foreach name="lists" item="row"> 

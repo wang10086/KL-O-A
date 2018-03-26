@@ -47,6 +47,13 @@ class WorderController extends BaseController{
                         //保存附件信息
                         save_res(P::WORDER_INI,$res,$attr);
 
+                        //保存操作记录
+                        $record = array();
+                        $record['worder_id'] = $res;
+                        $record['type']     = 0;
+                        $record['explain']  = '新建工单';
+                        worder_record($record);
+
                         //发送信息
                         $uid     = cookie('userid');
                         $title   = '您有来自['.$info['ini_dept_name'].'--'.$info['ini_user_name'].']的工单待执行!';
@@ -210,6 +217,13 @@ class WorderController extends BaseController{
             $info['complete_time']  = 0;
             $res = $db->where(array('id'=>$id))->save($info);
             if($res){
+                //工单操作记录
+                $record = array();
+                $record['worder_id'] = $id;
+                $record['type']     = 5;
+                $record['explain']  = '执行部门完成该工单';
+                worder_record($record);
+
                 //向工单发起人推送消息
                 $uid     = cookie('userid');
                 $exe_dept_name = $_SESSION['rolename'];
@@ -236,21 +250,23 @@ class WorderController extends BaseController{
             if ($pin == 0){$pin = 1;};
             $userid                 = cookie('userid');
             $where                  = array();
+
             if ($pin == 1){
                 $where['worder_type']   = array('neq',P::WORDER_PROJECT);   //排除项目工单
                 $where['ini_user_id']   = $userid;                          //我申请的工单
             }elseif ($pin == 2){
                 $where['worder_type']   = array('neq',P::WORDER_PROJECT);
-                $where['exe_user_id']   = $userid;                          //我的待执行工单
-                $st                     = array(0,1,2);
+                $where['assign_id']   = $userid or $where['exe_user_id']   = $userid;    //我的待执行工单
+                //$where['exe_user_id']   = $userid;
+                $st                     = array(0,1,2,-3);
                 $where['status']        = array('in',$st);
             }elseif ($pin == 101){
                 $where['worder_type']   = array('eq',P::WORDER_PROJECT);   //项目工单
                 $where['ini_user_id']   = $userid;                         //我指派的项目工单
             }elseif ($pin == 102){
                 $where['worder_type']   = array('eq',P::WORDER_PROJECT);
-                $where['exe_user_id']   = $userid;                          //我的待执行项目工单
-                $st                     = array(0,1,2);
+                $where['exe_user_id']   = $userid or $where['assign_id']   = $userid;   //我的待执行项目工单
+                $st                     = array(0,1,2,-3);
                 $where['status']        = array('in',$st);
             }
             //分页
@@ -297,6 +313,7 @@ class WorderController extends BaseController{
             $info           = $db->where(array('id'=>$id))->find();
             $roleid         = cookie('roleid');
             $this->dept_list= M('worder_dept')->field("id,pro_title")->where("dept_id = '$roleid'")->select();
+            $this->record   = M('worder_record')->where(array('worder_id'=>$id))->order('id DESC')->select();
 
             //判断工单类型
             if($info['worder_type']==0) $info['type'] = '维修工单';
@@ -342,10 +359,17 @@ class WorderController extends BaseController{
             $data['assign_id']  = $info;
             $data['assign_name']= $assign_name;
             $data['response_time'] = NOW_TIME;
-            $data['status']     = 0;//执行部门已响应
+            $data['status']     = 1;//执行部门已响应
 
             $res = M('worder')->where(array('id'=>$opid))->save($data);
             if ($res){
+                //工单操作记录
+                $record = array();
+                $record['worder_id'] = $opid;
+                $record['type']     = 3;
+                $record['explain']  = '指派['.$assign_name.']为工单执行人';
+                worder_record($record);
+
                 //发送系统通知消息
                 $uid     = cookie('userid');
                 $title   = '您有来自['.cookie('rolename').'--'.cookie('name').']指派的负责项目工单待执行!';
@@ -366,9 +390,23 @@ class WorderController extends BaseController{
                 $info['response_time']  = NOW_TIME;
                 $info['complete_time']  = NOW_TIME;
                 $info['ini_confirm_time']=NOW_TIME;
+
+                //工单操作记录
+                $record = array();
+                $record['worder_id'] = $opid;
+                $record['type']      = -2;
+                $record['explain']   = '拒绝该工单';
+                worder_record($record);
             }else{
                 $info['response_time']  = NOW_TIME;
                 $info['complete_time']  = NOW_TIME;
+
+                //工单操作记录
+                $record = array();
+                $record['worder_id'] = $opid;
+                $record['type']      = 2;
+                $record['explain']   = '响应该工单';
+                worder_record($record);
             }
             $res = M('worder')->where(array('id'=>$opid))->save($info);
             if ($res){
@@ -425,6 +463,13 @@ class WorderController extends BaseController{
                 //保存附件信息
                 save_res(P::WORDER_INI,$res,$attr);
 
+                //工单操作记录
+                $record = array();
+                $record['worder_id'] = $id;
+                $record['type']      = 1;
+                $record['explain']   = '修改工单内容';
+                worder_record($record);
+
                 //发送信息
                 $uid     = cookie('userid');
                 $title   = '您有来自['.$info['ini_dept_name'].'--'.$info['ini_user_name'].']的工单待执行!';
@@ -462,6 +507,13 @@ class WorderController extends BaseController{
         $id = I('id');
         $res = M('worder')->where("id = '$id'")->delete();
         if($res){
+            //工单操作记录
+            $record = array();
+            $record['worder_id'] = $id;
+            $record['type']      = -100;
+            $record['explain']   = '删除该工单';
+            worder_record($record);
+
             $this->success('删除工单成功!');
         }else{
             $this->error('删除数据失败!');
@@ -476,9 +528,18 @@ class WorderController extends BaseController{
         $db             = M("worder");
         $where          = array();
         $where['id']    = $id;
-        $info['complete_time'] = NOW_TIME;
+        $info['complete_time']  = NOW_TIME;
+        $info['response_time']  = NOW_TIME;
+        $info['ini_confirm_time']=NOW_TIME;
         $res    = $db->where($where)->save($info);
         if ($res){
+            //工单操作记录
+            $record = array();
+            $record['worder_id'] = $id;
+            $record['type']      = -1;
+            $record['explain']   = '撤销该工单';
+            worder_record($record);
+
             $this->success('撤销工单成功!');
         }else{
             $this->error('撤销工单失败!请稍后重试!');
@@ -495,6 +556,13 @@ class WorderController extends BaseController{
             if ($info['status'] == 3){
                 $res    = M('worder')->where("id = '$id'")->save($info);
                 if ($res){
+                    //工单操作记录
+                    $record = array();
+                    $record['worder_id'] = $id;
+                    $record['type']      = 6;
+                    $record['explain']   = '发起人确认该工单已完成';
+                    worder_record($record);
+
                     $this->success('操作成功!');
                 }else{
                     $this->error('保存数据失败!请稍后重试!');
@@ -507,6 +575,13 @@ class WorderController extends BaseController{
                 $info['assign_name']    = null;
                 $res    = M('worder')->where("id = '$id'")->save($info);
                 if ($res){
+                    //工单操作记录
+                    $record = array();
+                    $record['worder_id'] = $id;
+                    $record['type']      = -3;
+                    $record['explain']   = '该工单需要二次执行';
+                    worder_record($record);
+
                     //发送系统通知消息
                     $uid     = cookie('userid');
                     $title   = '您有来自['.cookie('rolename').'--'.cookie('name').']返回的需要修改的工单!';

@@ -122,16 +122,19 @@
                 
                 
                 <div class="col-md-12">
-                    <?php if(rolemenu(array('Worder/assign_user')) and rolemenu(array('Worder/exe_worder'))  and $info['exe_user_id'] == cookie('userid')){ ?>
+                    <?php if(rolemenu(array('Worder/assign_user')) and rolemenu(array('Worder/exe_worder')) and ($info['exe_user_id'] == cookie('userid') || $info['assign_id'] == cookie('userid')) ){ ?>
                         <?php /*if(rolemenu(array('Worder/assign_user'))){ */?>
                     <div class="box box-warning">
                         <div class="box-header">
                             <h3 class="box-title">工单确认信息</h3>
                             <h3 class="box-title pull-right" style="font-weight:normal; color:#333333;">
                                 <?php  if($info['assign_name']){ ?>
-                                    负责人：{$info.assign_name}
+                                    负责人：{$info.assign_name} &#12288;&#12288;
+                                <?php  if(rolemenu(array('Worder/assign_user')) and($info['status']==0 || $info['status']==1) and ($info['assign_id'] == cookie('userid'))){ ?>
+                                    <a href="javascript:;" onclick="javascript:assign('{:U('Worder/assign_user',array('id'=>$info['id']))}','指派工单负责人');" style="color:#09F;">再次指派负责人</a>
+                                    <?php } ?>
                                 <?php  }else{ ?>
-                                    <?php  if(rolemenu(array('Worder/assign_user')) and($info['status']==0 || $info['status']==1)){ ?>
+                                    <?php  if(rolemenu(array('Worder/assign_user')) and($info['status']==0 || $info['status']==1 || $info['status']==-3) and $info['exe_user_id'] == cookie('userid')){ ?>
                                         <a href="javascript:;" onclick="javascript:assign('{:U('Worder/assign_user',array('id'=>$info['id']))}','指派工单负责人');" style="color:#09F;">指派负责人</a>
                                     <?php  }else{ ?>
                                         暂未指派负责人
@@ -323,7 +326,33 @@
                         </div>
                     </div>
                 <?php } ?>
+
+                    <div class="box box-warning">
+                        <div class="box-header">
+                            <h3 class="box-title">工单操作记录</h3>
+                        </div>
+                        <div class="box-body">
+                            <div class="content" style="padding:10px 30px;">
+                                <table rules="none" border="0">
+                                    <tr>
+                                        <th style="border-bottom:2px solid #06E0F3; font-weight:bold;" width="160">操作时间</th>
+                                        <th style="border-bottom:2px solid #06E0F3; font-weight:bold;" width="100">操作人</th>
+                                        <th style="border-bottom:2px solid #06E0F3; font-weight:bold;" width="500">操作说明</th>
+                                    </tr>
+                                    <foreach name="record" item="v">
+                                        <tr>
+                                            <td style="padding:20px 0 0 0">{$v.op_time|date='Y-m-d H:i:s',###}</td>
+                                            <td style="padding:20px 0 0 0">{$v.uname}</td>
+                                            <td style="padding:20px 0 0 0">{$v.explain}</td>
+                                        </tr>
+                                    </foreach>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
+
             </div>   <!-- /.row -->
             
         </section><!-- /.content -->
