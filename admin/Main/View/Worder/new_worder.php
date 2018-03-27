@@ -38,11 +38,11 @@
                                     <div class="content">
                                     	
                                         <div class="form-group col-md-12">
-                                            <label>工单名称：</label><input type="text" name="info[worder_title]" class="form-control" />
+                                            <label>工单名称：</label><input type="text" name="info[worder_title]" value="{$data.project}" class="form-control" />
                                         </div>
 
                                         <div class="form-group col-md-12">
-                                            <label>工单内容：</label><textarea class="form-control"  name="info[worder_content]"></textarea>
+                                            <label>工单内容：</label><textarea class="form-control"  name="info[worder_content]">{$data.context}</textarea>
                                         </div>
                                         
                                         <div class="form-group col-md-6">

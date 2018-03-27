@@ -143,7 +143,7 @@ class OpController extends BaseController {
 						M('customer_gec')->add($data);
 					}
 					*/
-					/*echo "<script>
+					echo "<script>
                         var a = confirm('立项成功,现在需要发送工单吗?')
                         if(a == true){
                             var url =  'index.php?m=Main&c=Worder&a=new_worder&op_id='+$addok;
@@ -152,8 +152,8 @@ class OpController extends BaseController {
                             var url =  'index.php?m=Main&c=Op&a=index';
                             window.location.href= url;
                         }
-                    </script>";*/
-					$this->success('保存成功！',U('Op/index'));
+                    </script>";
+					//$this->success('保存成功！',U('Op/index'));
 				}else{
 					$this->error('保存失败' . $db->getError());	
 				}

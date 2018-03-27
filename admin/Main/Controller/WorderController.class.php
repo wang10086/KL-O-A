@@ -78,10 +78,10 @@ class WorderController extends BaseController{
 
             //理想之后直接跳转发工单
             $op_id                  = I('op_id');
-            /*if ($op_id){
+            if ($op_id){
                 $data = M("op")->where(array('id'=>$op_id))->find();
-                var_dump($data);die;
-            }*/
+                $this->data = $data;
+            }
 
             //整理部门关键字
             $role   = M('role')->field("id,role_name")->select();
