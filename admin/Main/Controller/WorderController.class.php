@@ -359,7 +359,7 @@ class WorderController extends BaseController{
             $data['assign_id']  = $info;
             $data['assign_name']= $assign_name;
             $data['response_time'] = NOW_TIME;
-            $data['status']     = 1;//执行部门已响应
+            //$data['status']     = 1;//执行部门已响应
 
             $res = M('worder')->where(array('id'=>$opid))->save($data);
             if ($res){
