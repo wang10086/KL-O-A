@@ -118,7 +118,7 @@ class OpController extends BaseController {
 				$info['speed']       = 1;
 				$info['create_user'] = cookie('userid');
 				$info['create_user_name'] = cookie('name');
-				$addok  = $db->add($info);	
+				$addok  = $db->add($info);
 				$this->request_audit(P::REQ_TYPE_PROJECT_NEW, $addok);
 
 				if($addok){
@@ -143,8 +143,17 @@ class OpController extends BaseController {
 						M('customer_gec')->add($data);
 					}
 					*/
-					
-					$this->success('保存成功！',U('Op/index'));		
+					/*echo "<script>
+                        var a = confirm('立项成功,现在需要发送工单吗?')
+                        if(a == true){
+                            var url =  'index.php?m=Main&c=Worder&a=new_worder&op_id='+$addok;
+                            window.location.href= url;
+                        }else{
+                            var url =  'index.php?m=Main&c=Op&a=index';
+                            window.location.href= url;
+                        }
+                    </script>";*/
+					$this->success('保存成功！',U('Op/index'));
 				}else{
 					$this->error('保存失败' . $db->getError());	
 				}

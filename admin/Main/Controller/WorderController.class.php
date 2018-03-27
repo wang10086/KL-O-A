@@ -76,6 +76,13 @@ class WorderController extends BaseController{
             $this->group            =  get_roles();
             $this->worder_type      = C('WORDER_TYPE');
 
+            //理想之后直接跳转发工单
+            $op_id                  = I('op_id');
+            /*if ($op_id){
+                $data = M("op")->where(array('id'=>$op_id))->find();
+                var_dump($data);die;
+            }*/
+
             //整理部门关键字
             $role   = M('role')->field("id,role_name")->select();
             $key    = array();
