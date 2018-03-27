@@ -214,7 +214,7 @@ class WorderController extends BaseController{
             $id                     = I('id');
             $ini_user_id            = $db->where(array('id'=>$id))->getField('ini_user_id');
             $info                   = I('info');
-            $info['complete_time']  = 0;
+            $info['complete_time']  = NOW_TIME;
             $res = $db->where(array('id'=>$id))->save($info);
             if($res){
                 //工单操作记录
