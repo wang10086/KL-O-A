@@ -66,9 +66,9 @@ class WorderController extends BaseController{
                         $this->error('保存失败!');
                     }
                 }
-                if (!$exe_dept_id){
-                    $this->error("执行部门信息不能为空!");
-                }
+                /*if (!$exe_dept_id){
+                    $this->error("请输入正确的执行部门信息!");
+                }*/
             }
 
         }else{

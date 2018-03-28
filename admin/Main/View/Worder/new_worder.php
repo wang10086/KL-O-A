@@ -74,7 +74,7 @@
                                                     </div>
 
                                                     <div class="tasklist" id="task_ti_1" >
-                                                        <div class="col-md-12 pd"><label class="titou"><strong>工单受理部门<span class="tihao">(必填)</span></strong>:</label>
+                                                        <div class="col-md-12 pd"><label class="titou"><strong>工单受理部门<span class="tihao" style="color: red;">(必填)</span></strong>:</label>
                                                         <div class="col-md-12">
                                                             <input type="hidden" name="exe_info[1][exe_dept_id]" id="exe_1" value="">
                                                             <input type="text" class="form-control keywords_exe" id="keywords_exe1" name="exe_info[1][exe_dept_name]"  placeholder="请输入执行部门名称"  style="width:100%; margin-right:10px;"/>
