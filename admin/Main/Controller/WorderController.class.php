@@ -406,7 +406,6 @@ class WorderController extends BaseController{
                 worder_record($record);
             }else{
                 $info['response_time']  = NOW_TIME;
-                $info['complete_time']  = NOW_TIME;
 
                 //工单操作记录
                 $record = array();
