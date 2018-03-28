@@ -2386,9 +2386,19 @@ function updatekpi($month,$user){
 					$data['complete_rate']	= $rate."%";
 					$data['score']			= round(($rate * $v['weight']) / 100,1);
 					$data['score_status']	= 1;
-					M('kpi_more')->data($data)->where(array('id'=>$v['id']))->save();	
 					
+					
+				}else{
+					
+					$rate = 100;
+					$data = array();
+					//$data['complete']		= $complete;
+					//$data['complete_rate']	= $rate."%";
+					$data['score']			= round(($rate * $v['weight']) / 100,1);
+					$data['score_status']	= 1;
 				}
+				
+				M('kpi_more')->data($data)->where(array('id'=>$v['id']))->save();	
 				
 			}
 			
