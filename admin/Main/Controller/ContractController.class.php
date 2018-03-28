@@ -89,9 +89,23 @@ class ContractController extends BaseController {
 				$info['create_time']		= time();
                 $save	= $db->add($info);
 				$cid	= $save;
+
+                //保存操作记录
+                $record                 = array();
+                $record['contract_id']  = $save;
+                $record['type']         = 1;
+                $record['explain']      = '新建合同';
+                contract_record($record);
             }else{
                 $save	= $db->data($info)->where(array('id'=>$id))->save();
                	$cid	= $id;
+
+                //保存操作记录
+                $record                 = array();
+                $record['contract_id']  = $id;
+                $record['type']         = 2;
+                $record['explain']      = '修改合同内容';
+                contract_record($record);
             }
 			
 			//保存电子扫描件
@@ -191,6 +205,10 @@ class ContractController extends BaseController {
 			$row['gbstatus']		= $row['gbs'] ? $gbsta[$row['gbs']] : '未返回';
 			$row['strstatus']		= $row['status'] ? '<span class="green">已确认</span>' : '<span class="red">未确认</span>';
 			$this->row				= $row;
+
+            //合同操作记录
+            $this->record   = M('contract_record')->where(array('contract_id'=>$id))->order('id DESC')->select();
+
 			$this->display('detail');
 		}
 	}
@@ -220,6 +238,13 @@ class ContractController extends BaseController {
 				$info['confirm_time']		= time();
 				$isedit = $db->data($info)->where(array('id'=>$id))->save();
                 if($isedit) {
+                    //保存操作记录
+                    $record                 = array();
+                    $record['contract_id']  = $id;
+                    $record['type']         = 3;
+                    $record['explain']      = '确认合同信息';
+                    contract_record($record);
+
                     $this->success('已保存确认信息！',$referer);
                 } else {
                     $this->error('保存确认失败：' . $db->getError());

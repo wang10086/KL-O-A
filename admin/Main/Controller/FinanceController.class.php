@@ -712,8 +712,7 @@ class FinanceController extends BaseController {
 		$referer		= I('referer');
 		$settlement		= I('settlement',0);
 		$num			= 0;
-		
-		
+
 		//保存回款
 		if(!$info['huikuan'])	$this->error('本次回款金额不能为空');
 		if(!$info['type'])		$this->error('请选择回款类型');
@@ -726,8 +725,8 @@ class FinanceController extends BaseController {
 			$info['cid'] = $cc['cid'];
 		}
 		
-		$save = M('op_huikuan')->add($info);	
-		
+		$save = M('op_huikuan')->add($info);
+
 		//提交审核
 		$audit = M('audit_log')->where(array('req_type'=>P::REQ_TYPE_HUIKUAN,'req_id'=>$save))->find();
 		if(!$audit){
@@ -735,8 +734,15 @@ class FinanceController extends BaseController {
 		}
 		
 		if($save){
-			$record = array();
-			$record['op_id']   = $opid;
+            //保存合同操作记录
+            $c_record                 = array();
+            $c_record['contract_id']  = $info['cid'];
+            $c_record['type']         = 5;
+            $c_record['explain']      = '修改回款内容';
+            contract_record($c_record);
+
+            $record = array();
+			$record['op_id']   = $info['op_id'];
 			$record['optype']  = 9;
 			$record['explain'] = '保存回款';
 			op_record($record);

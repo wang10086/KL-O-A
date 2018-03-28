@@ -1010,6 +1010,20 @@ function worder_record($info){
 	}
 }
 
+//合同操作记录
+function contract_record($info){
+	$data = array();
+	$data = $info;
+	$data['uname'] = cookie('name');
+	$data['time'] = NOW_TIME;
+	$isok = M('contract_record')->add($data);
+	if($isok){
+		return true;
+	}else{
+		return false;
+	}
+}
+
 
 //汇总项目预算
 function opcost($opid){
