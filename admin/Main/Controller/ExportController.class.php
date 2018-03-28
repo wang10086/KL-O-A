@@ -111,7 +111,76 @@ class ExportController extends BaseController {
 	
 	
 	/*导出结算数据*/
-	public function settlement(){
+    public function settlement(){
+
+        $opid = I('opid');
+        if(!$opid) $this->error('项目不存在');
+
+        $where = array();
+        $where['op_id'] = $opid;
+
+        $settlement       = M('op_settlement')->where(array('op_id'=>$opid))->find();
+
+        if(!$settlement || $settlement['audit_status']!=1 ) $this->error('结算未审批通过');
+
+        $op           = M('op')->where($where)->find();
+        $costacc         = M('op_costacc')->field('title,unitcost,amount,total,remark')->where(array('op_id'=>$opid,'status'=>2))->order('id')->select();
+
+        $filename = $op['group_id'].'结算表';
+
+
+        $data = array();
+        $data['B2']   = $op['group_id'];  //团号
+        $data['E2']   = $op['customer'];  //客户单位
+        $data['J2']   = $op['sale_user'];  //销售人员
+        $data['L2']   = '';  //研发人员
+        $data['B3']   = $op['days'];  //天数
+        $data['D3']   = '';  //成人人数
+        $data['F3']   = '';  //儿童人数
+        $data['H3']   = $op['number'];  //合计人数
+        $data['J3']   = '';  //免费人数
+        $data['L3']   = $settlement['maolilv'];  //毛利率
+
+        $data['B5']   = '';  //报价
+        $data['D5']   = $settlement['renshu'];  //实际人数
+        $data['F5']   = $settlement['shouru'];  //实际应收款项
+        $data['J5']   = '';  //备注
+
+        $i = 8;
+        $j = 1;
+        foreach($costacc as $k=>$v){
+            //$data['A'.$i]  = $j;  //编号
+            $data['A'.$i]  = $v['title'];  //费用项
+            $data['C'.$i]  = $v['amount'];  //数量
+            $data['D'.$i]  = $v['unitcost'];  //单价
+            $data['E'.$i]  = $v['total'];  //合计
+            $data['k'.$i]  = $v['remark'];  //备注
+            $i++;
+            $j++;
+        }
+
+        if($j<=30){
+            $data['B39'] = $settlement['budget'];  //合计成本价格
+            $data['F39'] = $settlement['shouru'];  //合计报价
+            $data['K39'] = $settlement['maoli'];  //合计毛利润
+            $model = 'admin/assets/xls/jiesuan_30.xls';
+        }else if($j>30 && $j<=60){
+            $data['B69'] = $settlement['budget'];  //合计成本价格
+            $data['F69'] = $settlement['shouru'];  //合计报价
+            $data['K69'] = $settlement['maoli'];  //合计毛利润
+            $model = 'admin/assets/xls/jiesuan_60.xls';
+        }else if($j>60){
+            $data['B109'] = $settlement['budget'];  //合计成本价格
+            $data['F109'] = $settlement['shouru'];  //合计报价
+            $data['K109'] = $settlement['maoli'];  //合计毛利润
+            $model = 'admin/assets/xls/jiesuan_100.xls';
+        }
+
+        model_exportexcel($data,$filename,$model);
+
+    }
+
+	/*public function settlement(){
 		
 		$opid = I('opid');
 		if(!$opid) $this->error('项目不存在');	
@@ -177,7 +246,7 @@ class ExportController extends BaseController {
 		
         model_exportexcel($data,$filename,$model);
 		
-	}
+	}*/
 	
 	
 	
