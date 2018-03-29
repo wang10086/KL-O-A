@@ -59,7 +59,25 @@
                                             <input type="text" class="form-control" name="info[ini_user_name]" value="{:session('nickname')}" readonly>
                                         </div>
 
-                                        <div class="form-group col-md-6"></div>
+                                        <!--<div class="form-group col-md-12">
+                                            <label>工单紧急情况：</label>&#12288;
+                                            <input type="radio" class="form-control" name="info[urgent]" value="0" checked> &#12288;一般&#12288;&#12288;&#12288;
+                                            <input type="radio" class="form-control" name="info[urgent]" value="1" > &#12288;紧急
+                                        </div>
+
+                                        <div class="form-group col-md-12" id="hide_show">
+                                            <div class="form-group col-md-12">
+                                                <div class="callout callout-danger">
+                                                    <h4>提示！</h4>
+                                                    <p>该工单必须由相关领导审核后才能显示紧急状态 ! 每人每月只能发送不超过 3 次紧急工单 !</p>
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group col-md-12">
+                                                <label>紧急原因 <span style="color: red">(必填)</span>：</label>
+                                                <textarea name="info[urgent_cause]"  class="form-control" ></textarea>
+                                            </div>
+                                        </div>-->
 
                                         <div class="col-md-12">
 
@@ -160,6 +178,29 @@
 <include file="Index:footer2" />
 
     <script type="text/javascript">
+        //单选按钮绑定事件
+        $(function () {
+            /*var radios = $('input[name="info[urgent]"]');
+            var urgent = $('input:radio:checked').val();
+            if (urgent == 0){
+                $("#hide_show").hide();
+            }else {
+                $("#hide_show").show();
+            }*/
+
+            $('input[name=info[urgent]]').change(function(){
+                if (this.value == 0){
+                    alert("AAA");
+                }else {
+                    alert("BBB");
+                }
+            })
+
+        });
+
+        function urgent() {
+            alert(111);
+        }
 
         //添加工单执行人
         function task(obj){

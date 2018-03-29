@@ -50,8 +50,9 @@
                                 <div class="form-group col-md-12">
                                 <table width="100%" id="font-14" rules="none" border="0" cellpadding="0" cellspacing="0" style="margin-top:-15px;">
                                     <tr>
-                                        <td colspan="2">工单名称：{$info.worder_title}</td>
-                                        <td>工单类型 : {$info.type}</td>
+                                        <td width="33.33%">工单名称：{$info.worder_title}</td>
+                                        <td width="33.33%">工单类型 : {$info.type}</td>
+                                        <td width="33.33%">工单发起时间：{$info.create_time|date='Y-m-d H:i:s',###}</td>
                                     </tr>
                                     <tr>
                                         <td colspan="3">工单内容：{$info.worder_content}</td>
@@ -59,11 +60,6 @@
                                     <tr>
                                         <td width="33.33%">工单发起者姓名：{$info.ini_user_name}</td>
                                         <td width="33.33%">工单发起者职务：{$info.ini_dept_name}</td>
-                                        <td width="33.33%">工单发起时间：{$info.create_time|date='Y-m-d H:i:s',###}</td>
-                                    </tr>
-                                    <tr>
-                                        <td width="33.33%">工单执行者姓名：{$info.exe_user_name}</td>
-                                        <td width="33.33%">工单执行者职务：{$info.exe_dept_name}</td>
                                         <if condition="$info.response_time neq 0">
                                             <td width="33.33%">工单响应时间：{$info.response_time|date='Y-m-d H:i:s',###}</td>
                                             <else />
@@ -71,12 +67,21 @@
                                         </if>
                                     </tr>
                                     <tr>
-                                    	<td width="33.33%">工单状态：{$info.sta}</td>
+                                        <td width="33.33%">工单执行者姓名：{$info.exe_user_name}</td>
+                                        <td width="33.33%">工单执行者职务：{$info.exe_dept_name}</td>
+                                        <td width="33.33%">工单状态：{$info.sta}</td>
+                                    </tr>
+                                    <tr>
                                         <td width="33.33%">工单计划完成时间：{$info.plan_complete_time|date='Y-m-d H:i:s',###}</td>
                                         <if condition="$info.complete_time neq 0">
-                                            <td width="33.33%">工单实际完成时间：{$info.complete_time|date='Y-m-d H:i:s',###}</td>
+                                            <td width="33.33%">工单执行人完成时间：{$info.complete_time|date='Y-m-d H:i:s',###}</td>
                                             <else />
-                                            <td width="33.33%">工单实际完成时间：未完成</td>
+                                            <td width="33.33%">工单执行人完成时间：未完成</td>
+                                        </if>
+                                        <if condition="$info.ini_confirm_time neq 0">
+                                            <td width="33.33%">工单发起人确认完成时间：{$info.ini_confirm_time|date='Y-m-d H:i:s',###}</td>
+                                            <else />
+                                            <td width="33.33%">工单发起人确认完成时间：未完成</td>
                                         </if>
                                     </tr>
 
