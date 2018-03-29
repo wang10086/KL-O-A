@@ -2290,6 +2290,19 @@ function updatekpi($month,$user){
 				}
 				
 				
+				//重大责任事故控制--安全副经理员
+				if($v['quota_id']==48){
+					
+					//汇总记录次数
+					$sum = user_work_record($user,$month,218);
+					if($sum){
+						$complete	= 0;	
+					}else{
+						$complete	= 100;
+					}
+				}
+				
+				
 				
 				//培训相关
 				if(in_array($v['quota_id'],array(111,107,83,66,54,44,12,95))){
@@ -2421,11 +2434,61 @@ function updatekpi($month,$user){
 				}
 				
 				
+				//满意度调查--安全副经理
+				if($v['quota_id']==49){
+					
+					//获取当月出团项目数
+					$where = array();
+					$where['o.departure']			= array('between',array(date('Y-m-d',$v['start_date']),date('Y-m-d',$v['end_date'])));
+					
+					//当月出团项目数
+					$ops = M()->table('__OP__ as o')->where($where)->count();
+					
+					//已巡查的项目数
+					$ins = M()->table('__INSPECT__ as i')->join('__OP__ as o on i.group_id = o.group_id','LEFT')->where($where)->count();
+					
+					$sum = $ops - $ins;
+					
+					if($sum>3){
+						$complete	= 0;	
+					}else{
+						//汇总扣分数
+						$zongfen 	= 100-($sum*10);
+						$complete	= $zongfen>0 ? $zongfen : 0;
+					}
+					
+					
+				}
+				
+				//各业务平均毛利率--计调经理
+				if($v['quota_id']==80){
+					
+					
+					$zongfen	= 0;
+					//京区校内
+					$jqxn 		= business_dept_data(35,array($v['start_date'],$v['end_date']));
+					$zongfen 	+= absdata($jqxn['mll'],19.5);
+					
+					//京区校外
+					$jqxw		= business_dept_data(80,array($v['start_date'],$v['end_date']));
+					$zongfen 	+= absdata($jqxw['mll'],28);
+					
+					//京外业务
+					$jwyw		= business_dept_data(18,array($v['start_date'],$v['end_date']));
+					$zongfen 	+= absdata($jwyw['mll'],24.5);
+					
+					$complete 	= $zongfen ? round(($zongfen / 300)*100,2) : '100';
+										
+					
+				}
+				
+				
+				
 				
 				
 				
 				//已实现自动获取指标值
-				$auto_quta	= array(1,2,3,4,5,6,81,8,9,10,11,15,16,18,20,23,26,21,24,27,32,37,19,22,25,28,33,38,42,45,103,56,113,92,29,34,39,46,102,55,57,58,59,84,87,89,90,111,107,83,66,54,44,12,112,108,100,96,95,65,114,86,85,64,63,62,53,52,41,40);
+				$auto_quta	= array(1,2,3,4,5,6,81,8,9,10,11,15,16,18,20,23,26,21,24,27,32,37,19,22,25,28,33,38,42,45,103,56,113,92,29,34,39,46,102,55,57,58,59,84,87,89,90,111,107,83,66,54,44,12,112,108,100,96,95,65,114,86,85,64,63,62,53,52,41,40,49,80,48);
 				
 				//计算完成率并保存数据
 				if(in_array($v['quota_id'],$auto_quta)){
@@ -2665,6 +2728,50 @@ function personal_income($userid,$time){
 	
 	return $lists;	
 }
+
+
+
+//统计大业务部数据
+function business_dept_data($roleid,$times){
+	
+	$db			= M('op');
+	$roles		= M('role')->GetField('id,role_name',true);
+	
+	$postmore	= C('POST_TEAM_MORE_ALL');
+	
+	//获取部门人数
+	$where = array();
+	$where['roleid'] = array('in',$postmore[$roleid]);
+	$where['status'] = array('eq',0);
+	$users = M('account')->where($where)->select();	
+	$num   = count($users);
+	$ulist = array();
+	foreach($users as $k=>$v){
+		$ulist[] = $v['id'];
+	}
+	
+	//查询结算数据
+	$where = array();
+	$where['b.audit_status']		= 1;
+	$where['l.req_type']			= 801;
+	$where['l.audit_time']			= array('between',$times);
+	$where['a.id']					= array('in',implode(',',$ulist));
+	
+	$field = array();
+	$field[] =  'sum(b.shouru) as zsr';
+	$field[] =  'sum(b.maoli) as zml';
+	$field[] =  '(sum(b.maoli)/sum(b.shouru)) as mll';
+	
+	$lists = $db->table('__OP_SETTLEMENT__ as b')->field($field)->join('__OP__ as o on b.op_id = o.op_id','LEFT')->join('__ACCOUNT__ as a on a.id = o.create_user','LEFT')->join('__AUDIT_LOG__ as l on l.req_id = b.id','LEFT')->where($where)->order('zsr DESC')->find();
+	
+	$lists['mll']			= $lists['zml']>0 ?  sprintf("%.2f",$lists['mll']*100) : '0.00';	
+	
+
+	
+	return $lists;
+}
+
+
 
 //获取自己下属员工ID
 function get_branch_user(){
@@ -3015,6 +3122,19 @@ function afterWorkDay($start_timestamp='',$add_workday_num='',$holiday=[]){
 	$day=date('Y-m-d',($start_timestamp)+$i*(60*60*24));
 	return $day;
 
+}
+
+
+
+function absdata($val,$goal){
+	$score = abs(($val-$goal)/$goal)*100;
+	if($score<=10){
+		return 100;	
+	}else if($score>10 && $score<15){
+		return 80;	
+	}else{
+		return 0;	
+	}
 }
 
 
