@@ -1840,7 +1840,7 @@ function updatekpi($month,$user){
 					$where['return_time']			= array('lt',$v['end_date']+86399);
 					$where['payee']					= $user;
 					$shouru		= M('contract_pay')->where($where)->sum('amount');
-					$huikuan	= M('contract_pay')->where($where)->sum('	pay_amount');
+					$huikuan	= M('contract_pay')->where($where)->sum('pay_amount');
 					$complete = round(($huikuan / $shouru)*100,2).'%';
 				}
 				
