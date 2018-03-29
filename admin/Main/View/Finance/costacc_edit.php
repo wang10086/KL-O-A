@@ -34,7 +34,7 @@
                     </select>
                     <input type="text" class="form-control longinput" name="costacc[888{$k}][remark]" value="{$v.remark}">
                     <a href="javascript:;" class="btn btn-danger btn-flat" onclick="delbox('costacc_id_c_{$k}')">删除</a>
-                    <a href="javascript:;" class="btn btn-success btn-flat" id="costacc_bijia_{$k}" onClick="alert('开发中...')" style="display:none;">比价</a>
+                    <a href="javascript:;" class="btn btn-success btn-flat" id="costacc_bijia_{$k}" style="display:none;">比价</a>
                 </div>
                 </foreach>
                 <?php }else if($mokuailist){ ?>
@@ -52,7 +52,7 @@
                     </select>
                     <input type="text" class="form-control longinput" name="costacc[222{$k}][remark]" value="{$v.remarks}">
                     <a href="javascript:;" class="btn btn-danger btn-flat" onclick="delbox('costacc_id_d_{$k}')">删除</a>
-                    <a href="javascript:;" class="btn btn-success btn-flat" id="bijia_{$k}" onClick="alert('开发中...')" style="display:none;">比价</a>
+                    <a href="javascript:;" class="btn btn-success btn-flat" id="bijia_{$k}" style="display:none;">比价</a>
                 </div>
                 </foreach>
                 
