@@ -2,12 +2,6 @@
 
 <script type="text/javascript">
 
-    $(document).ready(function(i){
-        $('#task_ti_2').hide();
-        $('#task_ti_3').hide();
-        $('#task_ti_4').hide();
-        $('#task_ti_5').hide();
-    })
 </script>
 
             <aside class="right-side">
@@ -42,7 +36,7 @@
                                         </div>
 
                                         <div class="form-group col-md-12">
-                                            <label>工单内容：</label><textarea class="form-control"  name="info[worder_content]">{$data.context}</textarea>
+                                            <label>工单内容：</label><textarea class="form-control"  name="info[worder_content]" >{$data.context}</textarea>
                                         </div>
                                         
                                         <div class="form-group col-md-6">
@@ -60,12 +54,14 @@
                                         </div>
 
                                         <!--<div class="form-group col-md-12">
-                                            <label>工单紧急情况：</label>&#12288;
-                                            <input type="radio" class="form-control" name="info[urgent]" value="0" checked> &#12288;一般&#12288;&#12288;&#12288;
-                                            <input type="radio" class="form-control" name="info[urgent]" value="1" > &#12288;紧急
+                                            <label>工单紧急状态：</label>&#12288;
+                                                <input type="radio" class="form-control" name="urgent" value="0" onchange="urgent1()" checked> &#12288;一般&#12288;&#12288;&#12288;
+                                                <input type="radio" class="form-control" name="urgent" value="1" onchange="urgent1()"> &#12288;紧急
+                                            <input type="radio" class="form-control" name="urgent" value="0" checked> &#12288;一般&#12288;&#12288;&#12288;
+                                            <input type="radio" class="form-control" name="urgent" value="1" > &#12288;紧急
                                         </div>
 
-                                        <div class="form-group col-md-12" id="hide_show">
+                                        <div class="form-group col-md-12" id="urgent_con" >
                                             <div class="form-group col-md-12">
                                                 <div class="callout callout-danger">
                                                     <h4>提示！</h4>
@@ -75,7 +71,7 @@
 
                                             <div class="form-group col-md-12">
                                                 <label>紧急原因 <span style="color: red">(必填)</span>：</label>
-                                                <textarea name="info[urgent_cause]"  class="form-control" ></textarea>
+                                                <textarea name="info[urgent_cause]"  class="form-control" id="urgent_cause"></textarea>
                                             </div>
                                         </div>-->
 
@@ -176,31 +172,42 @@
 </div>
 
 <include file="Index:footer2" />
+<!--<script src="__HTML__/js/jquery-1.7.2.min.js"></script>-->
 
     <script type="text/javascript">
+        $(document).ready(function(i){
+            $('#task_ti_2').hide();
+            $('#task_ti_3').hide();
+            $('#task_ti_4').hide();
+            $('#task_ti_5').hide();
+            $('#urgent_con').hide();
+        })
+
         //单选按钮绑定事件
         $(function () {
-            /*var radios = $('input[name="info[urgent]"]');
-            var urgent = $('input:radio:checked').val();
-            if (urgent == 0){
-                $("#hide_show").hide();
-            }else {
-                $("#hide_show").show();
-            }*/
-
-            $('input[name=info[urgent]]').change(function(){
-                if (this.value == 0){
-                    alert("AAA");
-                }else {
-                    alert("BBB");
+            /*$("input[name='urgent']").on('change',function () {*/
+            $(":radio").click(function () {
+                var urgent = $('input:radio:checked').val();
+                if(urgent == 0){
+                    $("#urgent_con").hide()
+                    $("#urgent_cause").html('')
+                }else if(urgent == 1){
+                    $("#urgent_con").show()
                 }
             })
+        })
 
-        });
+        /*function urgent1() {
+            var urgent = $('input:radio:checked').val();
+            alert(urgent);
+            if(urgent == 0){
+                $("#urgent_con").hide()
+                $("#urgent_cause").html('')
+            }else if(urgent == 1){
+                $("#urgent_con").show()
+            }
 
-        function urgent() {
-            alert(111);
-        }
+        }*/
 
         //添加工单执行人
         function task(obj){

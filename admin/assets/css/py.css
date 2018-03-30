@@ -3993,6 +3993,9 @@ th{outline: none;}
 #showimglist img{ margin-top:10px; margin-top:15px;}
 #showimglist .fileext{ width:100px; height:100px; float:left; background:#3c8dbc; line-height:100px; text-align:center; color:#ffffff; font-size:16px; margin-top:15px; margin-right:10px;}
 
+.att-file{display: inline-block;  width: 100px;margin-right: 10px;}
+.satt-file{display: inline-block; position: relative; top: 0px;left: 0px; width: 100px; height: 20px;overflow: hidden;}
+
 .contenthotbox{background:#f3f3f3; border-radius:4px; overflow:hidden; padding-bottom:25px;}
 .contentbot{padding:0 30px; margin-top:-20px;}
 .contentbot h2{font-size:16px; color:#ff9900; border-bottom:2px solid #dddddd; padding-bottom:10px;}
