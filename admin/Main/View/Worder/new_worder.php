@@ -31,15 +31,11 @@
                                 <div class="box-body">
                                     <div class="content">
                                     	
-                                        <div class="form-group col-md-12">
+                                        <div class="form-group col-md-8">
                                             <label>工单名称：</label><input type="text" name="info[worder_title]" value="{$data.project}" class="form-control" />
                                         </div>
-
-                                        <div class="form-group col-md-12">
-                                            <label>工单内容：</label><textarea class="form-control"  name="info[worder_content]" >{$data.context}</textarea>
-                                        </div>
                                         
-                                        <div class="form-group col-md-6">
+                                        <div class="form-group col-md-4">
                                             <label>工单类型：</label>
                                             <select  class="form-control"  name="info[worder_type]" required>
                                             <foreach name="worder_type" key="k" item="v">
@@ -47,12 +43,19 @@
                                             </foreach>
                                             </select> 
                                         </div>
+
+                                        <div class="form-group col-md-12">
+                                            <label>工单内容：</label><textarea class="form-control"  name="info[worder_content]" >{$data.context}</textarea>
+                                        </div>
                                         
+                                        
+                                        <!--
                                         <div class="form-group col-md-6">
                                             <label>发起人员：</label>
                                             <input type="text" class="form-control" name="info[ini_user_name]" value="{:session('nickname')}" readonly>
                                         </div>
-
+										-->
+                                        
                                         <!--<div class="form-group col-md-12">
                                             <label>工单紧急状态：</label>&#12288;
                                                 <input type="radio" class="form-control" name="urgent" value="0" onchange="urgent1()" checked> &#12288;一般&#12288;&#12288;&#12288;
@@ -77,86 +80,86 @@
 
                                         <div class="col-md-12">
 
-                                            <div class="box box-success">
-                                                <div class="box-header">
-                                                    <h3 class="box-title">工单受理部门</h3>
-                                                </div>
-                                                <div class="box-body" style="padding-top:20px;">
-
-                                                    <div class="form-group col-md-12" id="addti_btn">
-                                                        <a href="javascript:;" class="btn btn-success btn-sm" onClick="task(1)" style="margin-right:10px;"><i class="fa fa-fw  fa-plus"></i> 添加工单受理部门</a>
-                                                    </div>
-
-                                                    <div class="tasklist" id="task_ti_1" >
-                                                        <div class="col-md-12 pd"><label class="titou"><strong>工单受理部门<span class="tihao" style="color: red;">(必填)</span></strong>:</label>
-                                                        <div class="col-md-12">
-                                                            <input type="hidden" name="exe_info[1][exe_dept_id]" id="exe_1" value="">
-                                                            <input type="text" class="form-control keywords_exe" id="keywords_exe1" name="exe_info[1][exe_dept_name]"  placeholder="请输入执行部门名称"  style="width:100%; margin-right:10px;"/>
-                                                        </div>
-                                                        </div>
-                                                    </div>
-
-                                                    <div class="tasklist" id="task_ti_2"><a style="z-index: 1000" class="aui_close" href="javascript:;" onClick="del_timu('task_ti_2')">×</a>
-                                                        <div class="col-md-12 pd"><label class="titou"><strong>工单受理部门<span class="tihao">2</span></strong>:</label>
-                                                            <div class="col-md-12">
-                                                                <input type="hidden" name="exe_info[2][exe_dept_id]" id="exe_2" value="">
-                                                                <input type="text" class="form-control keywords_exe" id="keywords_exe2" name="exe_info[2][exe_dept_name]"  placeholder="请输入执行部门名称"  style="width:100%; margin-right:10px;"/>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-
-                                                    <div class="tasklist" id="task_ti_3"><a style="z-index: 1000" class="aui_close" href="javascript:;" onClick="del_timu('task_ti_3')" >×</a>
-                                                        <div class="col-md-12 pd"><label class="titou"><strong>工单受理部门<span class="tihao">3</span></strong>:</label>
-                                                            <div class="col-md-12">
-                                                                <input type="hidden" name="exe_info[3][exe_dept_id]" id="exe_3" value="">
-                                                                <input type="text" class="form-control keywords_exe" id="keywords_exe3" name="exe_info[3][exe_dept_name]"  placeholder="请输入执行部门名称"  style="width:100%; margin-right:10px;"/>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-
-                                                    <div class="tasklist" id="task_ti_4" ><a style="z-index: 1000" class="aui_close" href="javascript:;"  onClick="del_timu('task_ti_4')">×</a>
-                                                        <div class="col-md-12 pd"><label class="titou"><strong>工单受理部门<span class="tihao">4</span></strong>:</label>
-                                                            <div class="col-md-12">
-                                                                <input type="hidden" name="exe_info[4][exe_dept_id]" id="exe_4" value="">
-                                                                <input type="text" class="form-control keywords_exe" id="keywords_exe4" name="exe_info[4][exe_dept_name]"  placeholder="请输入执行部门名称"  style="width:100%; margin-right:10px;"/>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-
-                                                    <div class="tasklist" id="task_ti_5"  ><a class="aui_close" style="z-index: 1000" href="javascript:;" onClick="del_timu('task_ti_5')">×</a>
-                                                        <div class="col-md-12 pd"><label class="titou"><strong>工单受理部门<span class="tihao">5</span></strong>:</label>
-                                                            <div class="col-md-12">
-                                                                <input type="hidden" name="exe_info[5][exe_dept_id]" id="exe_5" value="">
-                                                                <input type="text" class="form-control keywords_exe" id="keywords_exe5" name="exe_info[5][exe_dept_name]"  placeholder="请输入执行部门名称"  style="width:100%; margin-right:10px;"/>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-
-
-                                                    <div style="display:none" id="task_val">1</div>
-
-                                                    <div id="daysbox"></div>
-                                                    <div class="form-group">&nbsp;</div>
-                                                    <div class="form-group">&nbsp;</div>
-
-                                                </div>
-                                            </div><!-- /.box -->
+                                            
 
                                         </div><!--/.col (right) -->
 
 
                                         <div class="form-group col-md-12" ></div>
 
-                                        <div class="form-group col-md-12">
-                                            <label>上传文件附件：</label>
-                                            {:upload_m('uploadfile','files',$attr,'上传文件附件')}
-                                        </div>
+                                        {:upload_m('uploadfile','files',$attr,'上传文件附件')}
+                                       
 
                                     </div>
                                     
                                 </div><!-- /.box-body -->
                             </div><!-- /.box -->
+							
+                            
+                            <div class="box box-success">
+                                <div class="box-header">
+                                    <h3 class="box-title">工单受理部门</h3>
+                                </div>
+                                <div class="box-body" style="padding-top:20px;">
+									
+                                    <div class="content">
+                                    
+                                        <div class="form-group col-md-12" id="addti_btn">
+                                            <a href="javascript:;" class="btn btn-success btn-sm" onClick="task(1)" style="margin-right:10px;"><i class="fa fa-fw  fa-plus"></i> 添加工单受理部门</a>
+                                        </div>
+    
+                                        <div class="tasklist worder_box" id="task_ti_1" >
+                                            
+                                            <div class="col-md-12">
+                                                <input type="hidden" name="exe_info[1][exe_dept_id]" id="exe_1" value="">
+                                                <input type="text" class="form-control keywords_exe" id="keywords_exe1" name="exe_info[1][exe_dept_name]"  placeholder="请输入执行部门名称"  style="width:100%; margin-right:10px;"/>
+                                            </div>
+                                        </div>
+    
+                                        <div class="tasklist worder_box" id="task_ti_2">
+                                            <a class="worder_close" href="javascript:;" onClick="del_timu('task_ti_2')">×</a>
+                                       
+                                            <div class="col-md-12">
+                                                <input type="hidden" name="exe_info[2][exe_dept_id]" id="exe_2" value="">
+                                                <input type="text" class="form-control keywords_exe" id="keywords_exe2" name="exe_info[2][exe_dept_name]"  placeholder="请输入执行部门名称"  style="width:100%; margin-right:10px;"/>
+                                            </div>
+                                        </div>
+    
+                                        <div class="tasklist worder_box" id="task_ti_3">
+                                            <a class="worder_close" href="javascript:;" onClick="del_timu('task_ti_3')" >×</a>
+                                            <div class="col-md-12">
+                                                <input type="hidden" name="exe_info[3][exe_dept_id]" id="exe_3" value="">
+                                                <input type="text" class="form-control keywords_exe" id="keywords_exe3" name="exe_info[3][exe_dept_name]"  placeholder="请输入执行部门名称"  style="width:100%; margin-right:10px;"/>
+                                            </div>
+                                        </div>
+    
+                                        <div class="tasklist worder_box" id="task_ti_4" >
+                                            <a class="worder_close" href="javascript:;"  onClick="del_timu('task_ti_4')">×</a>
+                                            <div class="col-md-12">
+                                                <input type="hidden" name="exe_info[4][exe_dept_id]" id="exe_4" value="">
+                                                <input type="text" class="form-control keywords_exe" id="keywords_exe4" name="exe_info[4][exe_dept_name]"  placeholder="请输入执行部门名称"  style="width:100%; margin-right:10px;"/>
+                                            </div>
+                                        </div>
+    
+                                        <div class="tasklist worder_box" id="task_ti_5"  >
+                                            <a class="worder_close" href="javascript:;" onClick="del_timu('task_ti_5')">×</a>
+                                            <div class="col-md-12">
+                                                <input type="hidden" name="exe_info[5][exe_dept_id]" id="exe_5" value="">
+                                                <input type="text" class="form-control keywords_exe" id="keywords_exe5" name="exe_info[5][exe_dept_name]"  placeholder="请输入执行部门名称"  style="width:100%; margin-right:10px;"/>
+                                            </div>
+                                        </div>
+    
+    
+                                        <div style="display:none" id="task_val">1</div>
+    
+                                        <div id="daysbox"></div>
+                                        <div class="form-group">&nbsp;</div>
+                                        <div class="form-group">&nbsp;</div>
+                                    </div>
 
+                                </div>
+                            </div><!-- /.box -->
+                                            
 
                             <div style="width:100%; text-align:center;">
                             <button type="submit" class="btn btn-info btn-lg" id="lrpd">发起工单</button>

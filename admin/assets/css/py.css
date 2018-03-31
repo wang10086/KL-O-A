@@ -4006,3 +4006,7 @@ th{outline: none;}
 .brh3{font-size:14px; width:100%; color:#333333; border-bottom:1px solid #dedede; padding-bottom:10px;}
 .brh3r{font-size:14px; width:100%; color:#f56954;}
 .irs-from, .irs-to, .irs-single{ background:#ff3300;}
+
+.worder_box{ margin-top:20px;}
+.worder_close{ position:absolute; right:-10px; top:0; width:20px; height:34px; background:#ff3300; color:#ffffff; font-size:14px; text-align:center; line-height:34px; margin:0; padding:0;}
+.worder_close:hover{ color:#ffffff;}
