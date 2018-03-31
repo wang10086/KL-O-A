@@ -85,15 +85,22 @@
                                         </if>
                                     </tr>
 
+                                    <tr>
+                                        <if condition="$dept">
+                                        <td width="33.33%">工单项名称：{$dept.pro_title}</td>
+                                        <td width="33.33%">工单项类型：{$dept.n_type}</td>
+                                        </if>
+                                        <if condition="$info['assign_name']">
+                                            <td width="33.33%">被指派者名字：{$info['assign_name']}</td>
+                                        </if>
+                                    </tr>
+
+                                    <if condition="$info['urgent'] eq 1">
                                         <tr>
-                                            <if condition="$dept">
-                                            <td width="33.33%">工单项名称：{$dept.pro_title}</td>
-                                            <td width="33.33%">工单项类型：{$dept.n_type}</td>
-                                            </if>
-                                            <if condition="$info['assign_name']">
-                                                <td width="33.33%">被指派者名字：{$info['assign_name']}</td>
-                                            </if>
+                                            <td width="33.33%">是否是加急工单: <span style="color: red">加急工单</span></td>
+                                            <td colspan="2">工单加急原因: {$info.urgent_cause}</td>
                                         </tr>
+                                    </if>
 
                                     <if condition="$info['exe_reply_content'] neq null">
                                         <tr><td colspan="3">工单执行人响应工单回复：{$info.exe_reply_content}</td></tr>

@@ -27,6 +27,15 @@ class WorderController extends BaseController{
             $info['create_time']    = NOW_TIME;
             $attr                   = I('attr'); //获取上传文件
 
+            $arr_exe_dept_id        = array();
+            foreach ($exe_info as $v){
+                $arr_exe_dept_id[]  = $v['exe_dept_id'];
+            }
+            $arr_exe                = implode('',$arr_exe_dept_id);
+            if (!$arr_exe){
+                $this->error("请输入正确的工单受理组信息!");
+            }
+
             foreach($exe_info as $v){
                 $exe_dept_id            = $v['exe_dept_id'];
                 $exe_dept_name          = $v['exe_dept_name'];
@@ -66,9 +75,6 @@ class WorderController extends BaseController{
                         $this->error('保存失败!');
                     }
                 }
-                /*if (!$exe_dept_id){
-                    $this->error("请输入正确的执行部门信息!");
-                }*/
             }
 
         }else{
