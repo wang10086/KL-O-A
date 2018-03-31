@@ -338,7 +338,7 @@ class BasepubController extends Controller {
         $wd_ids             = $work_db->getField('wd_id',true);
 
         foreach ($lists as $v){
-            if ($v['plan_complete_time'] < $time){
+            if ($v['plan_complete_time'] < $time and $v['ini_confirm_time'] == 0){
                 $w_id           = $v['id'];
                 if (in_array($w_id,$wd_ids)){
                     exit();
