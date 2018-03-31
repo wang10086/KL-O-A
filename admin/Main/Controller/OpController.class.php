@@ -1563,7 +1563,7 @@ class OpController extends BaseController {
 	// @@@NODE-3###confirm###出团确认###
 	public  function  confirm(){
 		$opid = I('opid');
-		if(!$opid) $this->error('出团计划不存在');	
+		if(!$opid) $this->error('项目不存在');	
 		
 		$where = array();
 		$where['op_id'] = $opid;
@@ -1773,6 +1773,90 @@ class OpController extends BaseController {
 		M('rel_price_list')->where(array('rel_id'=>$relid))->delete();
 		
 		$this->success('删除成功！');
+		
+    }
+	
+	
+	
+	// @@@NODE-3###evaluate###项目评价###
+    public function evaluate(){
+		
+		$opid = I('opid');
+		if(!$opid) $this->error('项目不存在');	
+		
+		$where = array();
+		$where['op_id'] = $opid;
+		$op				= M('op')->where($where)->find();
+		
+		
+		if(isset($_POST['dosubmit']) && $_POST['dosubmit']){
+			
+			$info	= I('info');
+			
+			if(!$info[1]['evaluate']) 	$this->error('产品评价内容不能为空！');	
+			if(!$info[2]['evaluate']) 	$this->error('计调评价内容不能为空！');	
+			if(!$info[3]['evaluate']) 	$this->error('资源评价内容不能为空！');	
+			
+			//保存
+			foreach($info as $k=>$v){
+				
+				$data = array();
+				$data['op_id']			= $v['op_id'];
+				$data['eval_type']		= $v['eval_type'];
+				$data['liable_uid']		= $v['liable_uid'];
+				$data['liable_uname']	= $v['liable_uname'];
+				$data['score']			= $v['score'];
+				$data['evaluate']		= $v['evaluate'];
+				$data['eval_uid']		= cookie('userid');
+				$data['eval_uname']		= cookie('name');
+				$data['eval_time']		= time();
+				
+				$eval = M('op_eval')->where(array('op_id'=>$v['op_id'],'eval_type'=>$v['eval_type']))->find();
+				if($eval){
+					M('op_eval')->data($data)->where(array('op_id'=>$v['op_id'],'eval_type'=>$v['eval_type']))->save();
+				}else{
+					M('op_eval')->add($data);
+				}	
+			}
+			
+			
+			$this->success('保存成功！');
+		
+		}else{
+			
+			$this->kinds	= M('project_kind')->getField('id,name', true);
+			$this->op		= $op;
+			
+			$auth = M('op_auth')->where(array('op_id'=>$opid))->find();
+			//获取产品负责人信息
+			
+			$cp['uid'] 		= '';
+			$cp['uname'] 	= '';
+			
+			//获取计调负责人信息
+			$jd['uid'] 		= $auth['line'];
+			$jd['uname'] 	= username($auth['line']);
+			
+			//获取资源负责人信息
+			$zy['uid'] 		= $auth['res'];
+			$zy['uname'] 	= username($auth['res']);
+			
+			$this->cp 		= $cp;
+			$this->jd 		= $jd;
+			$this->zy 		= $zy;
+			
+			
+			$this->cpv 		= M('op_eval')->where(array('op_id'=>$opid,'eval_type'=>1))->find();
+			$this->jdv 		= M('op_eval')->where(array('op_id'=>$opid,'eval_type'=>2))->find();
+			$this->zyv 		= M('op_eval')->where(array('op_id'=>$opid,'eval_type'=>3))->find();
+			
+			$this->cps 		= $this->cpv ? $this->cpv['score'] : 100;
+			$this->jds 		= $this->jdv ? $this->jdv['score'] : 100;
+			$this->zys 		= $this->zyv ? $this->zyv['score'] : 100;
+			
+			$this->confirm 	= $confirm; 
+			$this->display('evaluate');
+		}
 		
     }
     

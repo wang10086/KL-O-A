@@ -1,7 +1,8 @@
+<!--
 <div class="box box-warning" id="chengtuan">
     <div class="box-header">
         <h3 class="box-title">成团确认</h3>
-    </div><!-- /.box-header -->
+    </div>
     <div class="box-body">
         <div class="content">
         	<?php if(count($pretium)>0){ ?>
@@ -32,5 +33,6 @@
 			echo '<div class="form-group col-md-12">请对项目标价后再确认是否成团！</div>';	
 			} ?>
         </div>
-    </div><!-- /.box-body -->
-</div><!-- /.box -->
+    </div>
+</div>
+-->

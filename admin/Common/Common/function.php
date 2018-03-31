@@ -1874,9 +1874,12 @@ function updatekpi($month,$user){
 					$where = array();
 					$where['create_time']  			= array('between',array($v['start_date'],$v['end_date']));
 					$where['create_user']  			= $user;
-					$zongxiangmu = M('op')->where($where)->count();
-					$where['group_id']     			= array('neq','');
-					$chengtuan = M('op')->where($where)->count();
+					$zongxiangmu	= M('op')->where($where)->count();
+					
+					$where = array();
+					$where['o.create_time']			= array('between',array($v['start_date'],$v['end_date']));
+					$where['o.create_user']			= $user;
+					$chengtuan		= M()->table('__OP_TEAM_CONFIRM__ as c')->join('__OP__ as o on o.op_id = c.op_id')->where($where)->count();
 					$complete = round(($chengtuan / $zongxiangmu)*100,2).'%';
 				}
 				
@@ -2464,13 +2467,13 @@ function updatekpi($month,$user){
 					
 					//获取当月出团项目数
 					$where = array();
-					$where['o.departure']			= array('between',array(date('Y-m-d',$v['start_date']),date('Y-m-d',$v['end_date'])));
+					$where['o.dep_time']		= array('between',array($v['start_date'],$v['end_date']));
 					
 					//当月出团项目数
-					$ops = M()->table('__OP__ as o')->where($where)->count();
+					$ops = M()->table('__OP_TEAM_CONFIRM__ as o')->where($where)->count();
 					
 					//已巡查的项目数
-					$ins = M()->table('__INSPECT__ as i')->join('__OP__ as o on i.group_id = o.group_id','LEFT')->where($where)->count();
+					$ins = M()->table('__INSPECT__ as i')->join('__OP_TEAM_CONFIRM__ as o on i.group_id = o.group_id','LEFT')->where($where)->count();
 					
 					$sum = $ops - $ins;
 					
