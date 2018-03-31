@@ -222,8 +222,11 @@ class WorderController extends BaseController{
             $ini_user_id            = $db->where(array('id'=>$id))->getField('ini_user_id');
             $info                   = I('info');
             $info['complete_time']  = NOW_TIME;
+            $attr                   = I('attr'); //获取上传文件
             $res = $db->where(array('id'=>$id))->save($info);
             if($res){
+                //保存新增附件信息
+                save_add_res(P::WORDER_EXE,$id,$attr);
                 //工单操作记录
                 $record = array();
                 $record['worder_id'] = $id;
@@ -340,6 +343,7 @@ class WorderController extends BaseController{
             $this->ids      = array_unique(M('worder_dept')->getfield("dept_id",true));
             $this->info     = $info;
             $this->atts     = get_res(P::WORDER_INI,$id);
+            $this->exe_atts = get_res(P::WORDER_EXE,$id);
             $wd_id          = $info['wd_id'];
             if ($wd_id != 0){
                 $dept           = M('worder_dept')->where(array('id'=>$wd_id))->find();
@@ -358,6 +362,7 @@ class WorderController extends BaseController{
         $opid       = I('id');
         $info       = I('info');
         $user       =  M('account')->getField('id,nickname', true);
+        $ini_user_id=  M('worder')->where(array('id'=>$opid))->getField('ini_user_id');
 
         if(isset($_POST['dosubmit']) && $info){
 
@@ -397,6 +402,14 @@ class WorderController extends BaseController{
                 $info['response_time']  = NOW_TIME;
                 $info['complete_time']  = NOW_TIME;
                 $info['ini_confirm_time']=NOW_TIME;
+
+                //发送系统通知消息
+                $uid     = cookie('userid');
+                $title   = '您有来自['.cookie('rolename').'--'.cookie('name').']的工单信息反馈!';
+                $content = '';
+                $url     = U('Worder/worder_info',array('id'=>$opid));
+                $user    = '['.$ini_user_id.']';
+                send_msg($uid,$title,$content,$url,$user,'');
 
                 //工单操作记录
                 $record = array();

@@ -113,11 +113,27 @@
 											<?php if(isimg($v['filepath'])){ ?>
                                             <div class="att-file">
                                                 <a href="{$v.filepath}" target="_blank" style="margin-right:10px;"><div class="fileext"><?php echo isimg($v['filepath']); ?></div></a>
-                                                <span class="satt-file"  >{$v.filename}</span>
+                                                <span class="att-file-name"  >{$v.filename}</span>
                                             </div>
                                             <?php }else{ ?>
-											<a href="{$v.filepath}" target="_blank" style="margin-right:10px;"><img src="{:thumb($v['filepath'],100,100)}" style="margin-right:15px; margin-top:15px;"></a>
+                                            <div class="att-file">
+											    <a href="{$v.filepath}" target="_blank" style="margin-right:10px;"><img src="{:thumb($v['filepath'],100,100)}" style="margin-right:15px; margin-top:15px;"></a>
+                                                <span class="att-file-name"  >{$v.filename}</span>
+                                            </div>
 											<?php } ?>
+                                        </foreach>
+                                        <foreach name="exe_atts" key="k" item="v">
+                                            <?php if(isimg($v['filepath'])){ ?>
+                                                <div class="att-file">
+                                                    <a href="{$v.filepath}" target="_blank" style="margin-right:10px;"><div class="fileext"><?php echo isimg($v['filepath']); ?></div></a>
+                                                    <span class="att-file-name"  >{$v.filename}</span>
+                                                </div>
+                                            <?php }else{ ?>
+                                                <div class="att-file">
+                                                    <a href="{$v.filepath}" target="_blank" style="margin-right:10px;"><img src="{:thumb($v['filepath'],100,100)}" style="margin-right:15px; margin-top:15px;"></a>
+                                                    <span class="att-file-name"  >{$v.filename}</span>
+                                                </div>
+                                            <?php } ?>
                                         </foreach>
                                     </div>
                                 </div>
@@ -240,6 +256,12 @@
                                     <div class="form-group col-md-12">
                                         <label>执行意见</label>
                                         <textarea class="form-control" name="info[exe_complete_content]" >{$row.exe_complete_content}</textarea>
+                                    </div>
+
+                                    <div class="form-group col-md-12"></div>
+                                    <div class="form-group col-md-12">
+                                        <label>上传文件附件：</label>
+                                        {:upload_m('uploadfile','files',$attr,'上传文件附件')}
                                     </div>
 
                                     <div class="form-group col-md-12"  style="margin-top:50px; padding-bottom:20px; text-align:center;">

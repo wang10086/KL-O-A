@@ -360,6 +360,7 @@ function upload_m($obj,$cont,$attr='',$btn='上传',$showbox="flist",$formname="
 	return $html;
 }
 
+//删除多余的图片
 function save_res($module,$releid,$data){
 	//处理图片
 	$where = array();
@@ -388,6 +389,30 @@ function save_res($module,$releid,$data){
 			$tp_db->where(array('id'=>$v['id']))->delete();
 		}
 	}
+}
+
+//增加图片 , 不删除原图片
+function save_add_res($module,$releid,$data){
+	//处理图片
+	$where = array();
+	$where['module']  = $module;
+	$where['rel_id']  = $releid;
+
+	$tp_db = M('attachment');
+
+	if(is_array($data)){
+		foreach($data['id'] as $k=>$v){
+			//保存数据
+			$info = array();
+			$info['module']        = $module;
+			$info['rel_id']        = $releid;
+			$info['status']        = $data['status'][$k];
+			$info['filename']      = $data['filename'][$k];
+			$issave = $tp_db->where(array('id'=>$v))->save($info);
+		}
+	}
+
+
 }
 
 function get_res($module,$releid){
