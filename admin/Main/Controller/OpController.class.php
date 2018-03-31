@@ -1796,6 +1796,7 @@ class OpController extends BaseController {
 			if(!$info[1]['evaluate']) 	$this->error('产品评价内容不能为空！');	
 			if(!$info[2]['evaluate']) 	$this->error('计调评价内容不能为空！');	
 			if(!$info[3]['evaluate']) 	$this->error('资源评价内容不能为空！');	
+			if(!$info[4]['evaluate']) 	$this->error('物资评价内容不能为空！');	
 			
 			//保存
 			foreach($info as $k=>$v){
@@ -1837,22 +1838,29 @@ class OpController extends BaseController {
 			$jd['uid'] 		= $auth['line'];
 			$jd['uname'] 	= username($auth['line']);
 			
+			//获取物资负责人信息
+			$wz['uid'] 		= $auth['res'];
+			$wz['uname'] 	= username($auth['res']);
+			
 			//获取资源负责人信息
-			$zy['uid'] 		= $auth['res'];
-			$zy['uname'] 	= username($auth['res']);
+			$zy['uid'] 		= $auth['material'];
+			$zy['uname'] 	= username($auth['material']);
 			
 			$this->cp 		= $cp;
 			$this->jd 		= $jd;
+			$this->wz 		= $wz;
 			$this->zy 		= $zy;
 			
 			
 			$this->cpv 		= M('op_eval')->where(array('op_id'=>$opid,'eval_type'=>1))->find();
 			$this->jdv 		= M('op_eval')->where(array('op_id'=>$opid,'eval_type'=>2))->find();
 			$this->zyv 		= M('op_eval')->where(array('op_id'=>$opid,'eval_type'=>3))->find();
+			$this->wzv 		= M('op_eval')->where(array('op_id'=>$opid,'eval_type'=>4))->find();
 			
 			$this->cps 		= $this->cpv ? $this->cpv['score'] : 100;
 			$this->jds 		= $this->jdv ? $this->jdv['score'] : 100;
 			$this->zys 		= $this->zyv ? $this->zyv['score'] : 100;
+			$this->wzs 		= $this->wzv ? $this->wzv['score'] : 100;
 			
 			$this->confirm 	= $confirm; 
 			$this->display('evaluate');

@@ -4,7 +4,11 @@
 <div class="content" style="padding-bottom:20px;">
 	
     <div class="form-group col-md-12">
-        <h2 class="brh3r">您对项目中产品进行打分</h2>
+        <h2 class="brh3r">您对项目中产品进行打分
+        <if condition="$cp['uname']">
+        <span style="font-weight:normal; color:#333; float:right;">产品负责人：{$cp.uname}</span>
+        </if>
+        </h2>
     </div>
     <div style="width:100%; float:left;">
     	<div class="form-group col-md-12">
@@ -22,7 +26,11 @@
     
     
     <div class="form-group col-md-12">
-        <h2 class="brh3r">您对项目中计调进行打分 <span style="font-weight:normal; color:#333; float:right;">计调负责人：{$jd.uname}</span></h2>
+        <h2 class="brh3r">您对项目中计调进行打分 
+        <if condition="$jd['uname']">
+        <span style="font-weight:normal; color:#333; float:right;">计调负责人：{$jd.uname}</span>
+        </if>
+        </h2>
     </div>
     <div style="width:100%; float:left;">
     	<div class="form-group col-md-12">
@@ -40,7 +48,11 @@
     
     
     <div class="form-group col-md-12">
-        <h2 class="brh3r">您对项目中资源进行打分 <span style="font-weight:normal; color:#333; float:right;">资源负责人：{$zy.uname}</span></h2>
+        <h2 class="brh3r">您对项目中资源进行打分 
+        <if condition="$zy['uname']">
+        <span style="font-weight:normal; color:#333; float:right;">资源负责人：{$zy.uname}</span>
+        </if>
+        </h2>
     </div>
     <div style="width:100%; float:left;">
     	<div class="form-group col-md-12">
@@ -52,6 +64,28 @@
         </div>    
         <div class="form-group col-md-12">
         	<textarea class="form-control" name="info[3][evaluate]" style=" height:100px;" placeholder="评价内容">{$zyv.evaluate}</textarea>
+            
+        </div>
+    </div>
+    
+    
+    <div class="form-group col-md-12">
+        <h2 class="brh3r">您对项目中物资进行打分 
+        <if condition="$wz['uname']">
+        <span style="font-weight:normal; color:#333; float:right;">物资负责人：{$wz.uname}</span>
+        </if>
+        </h2>
+    </div>
+    <div style="width:100%; float:left;">
+    	<div class="form-group col-md-12">
+        	<input type="hidden" name="info[4][op_id]" value="{$op.op_id}"/>
+        	<input type="hidden" name="info[4][eval_type]" value="4"/>
+            <input type="hidden" name="info[4][liable_uid]" value="{$wz.uid}"/>
+            <input type="hidden" name="info[4][liable_uname]" value="{$wz.uname}"/>
+        	<input id="range_4" type="text" name="info[4][score]" value=""/>
+        </div>    
+        <div class="form-group col-md-12">
+        	<textarea class="form-control" name="info[4][evaluate]" style=" height:100px;" placeholder="评价内容">{$wzv.evaluate}</textarea>
             
         </div>
     </div>
@@ -96,6 +130,16 @@
 			min: 0,
 			max: 100,
 			from: {$zys},
+			type: 'single',
+			step: 1,
+			postfix: "分",
+			prettify: false,
+			hasGrid: false
+		});
+		$("#range_4").ionRangeSlider({
+			min: 0,
+			max: 100,
+			from: {$wzs},
 			type: 'single',
 			step: 1,
 			postfix: "分",

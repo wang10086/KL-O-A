@@ -36,7 +36,7 @@
                             
                             <div class="box box-warning" style="margin-top:15px;">
                                 <div class="box-header">
-                                    <h3 class="box-title">请您对以下项目支撑人员评分</h3>
+                                    <h3 class="box-title">项目评价</h3>
                                 </div><!-- /.box-header -->
                                 <div class="box-body">
                                 
