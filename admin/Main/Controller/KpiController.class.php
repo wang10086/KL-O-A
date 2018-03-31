@@ -63,7 +63,12 @@ class KpiController extends BaseController {
 			
 			//获取KPI数据
 			$kpi = M('kpi')->where(array('month'=>$v['month'],'user_id'=>$v['tab_user_id']))->find();
-			$kpiscore = $kpi['score']-100;
+			if($kpi && $kpi['month']>=201803){
+				$kpiscore =  $kpi['score']-100;
+			}else{
+				$kpiscore =  0;	
+			}
+			
 			//KPI加减分
 			$sum_total_score += $kpiscore;
 			
