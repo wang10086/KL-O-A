@@ -46,6 +46,7 @@
 
                                         <div class="form-group col-md-12" id="group_id">
                                             <label>项目编号：</label><input type="text" name="info[op_id]" value="{$data.op_id}" class="form-control" />
+                                           <!-- <span class="input-group-addon" style="width:32px;"><a href="javascript:;" onClick="getop();" >获取</a></span>-->
                                         </div>
 
                                         <div class="form-group col-md-12">
