@@ -36,7 +36,7 @@
                                 
                                 <table class="table table-bordered dataTable fontmini" id="tablelist" style="margin-top:10px;">
                                     <tr role="row" class="orders" >
-                                        <th class="sorting" width="40" data="id">id</th>
+                                        <th class="sorting" width="80" data="id">id</th>
                                         <th class="sorting" width="120" data="worder_title">工单标题</th>
                                         <!--<th class="sorting" data="worder_content">工单内容</th>-->
                                         <th class="sorting" width="80" data="worder_type">工单类型</th>
@@ -44,7 +44,7 @@
                                         <th class="sorting" width="80"  data="exe_user_name">执行人姓名</th>
                                         <th class="sorting" width="80" data="status">工单状态</th>
                                         <th class="sorting" width="125" >工单创建时间</th>
-                                        <th class="sorting" width="125" >工单完成时间</th>
+                                        <!--<th class="sorting" width="125" >工单完成时间</th>-->
                                         <th width="40" class="taskOptions">详情</th>
                                         <th class="sorting" width="40" class="taskOptions">修改</th>
                                         
@@ -54,24 +54,19 @@
                                     </tr>
                                     <foreach name="lists" item="row"> 
                                     <tr>
-                                        <td>{$row.id}</td>
-                                        <td><a href="{:U('Worder/worder_info',array('id'=>$row['id']))}">{$row.worder_title}</a>
-                                            <if condition="($row.urgent eq 1) and ($row.status)">
-
-                                            </if>
-                                            <small class="badge pull-right bg-red" style="margin-right:6px;">加急</small>
-                                        </td>
+                                        <td>{$row.id}<if condition="(($row.urgent eq 2) and (in_array($row.status,array(0,1,2))))"><small class="badge pull-right bg-red" style="margin-right:4px;">加急</small></if></td>
+                                        <td><a href="{:U('Worder/worder_info',array('id'=>$row['id']))}">{$row.worder_title}</a></td>
                                         <!--<td>{$row.worder_content}</td>-->
                                         <td>{$row.type}</td>
                                         <td>{$row.ini_user_name}</td>
                                         <td>{$row.exe_user_name}</td>
                                         <td>{$row.sta}</td>
                                         <td>{$row.create_time|date='Y-m-d H:i:s',###}</td>
-                                        <if condition="$row.complete_time eq 0">
+                                        <!--<if condition="$row.complete_time eq 0">
                                             <td>未完成</td>
                                             <else />
                                             <td>{$row.complete_time|date='Y-m-d H:i:s',###}</td>
-                                        </if>
+                                        </if>-->
 
                                         <td class="taskOptions">
                                             <button onClick="javascript:window.location.href='{:U('Worder/worder_info',array('id'=>$row['id']))}';" title="详情" class="btn btn-success  btn-smsm"><i class="fa  fa-building-o"></i></button>
