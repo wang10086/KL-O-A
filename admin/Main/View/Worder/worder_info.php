@@ -116,7 +116,10 @@
                                                 <span class="satt-file"  >{$v.filename}</span>
                                             </div>
                                             <?php }else{ ?>
-											<a href="{$v.filepath}" target="_blank" style="margin-right:10px;"><img src="{:thumb($v['filepath'],100,100)}" style="margin-right:15px; margin-top:15px;"></a>
+                                                <div class="att-file">
+                                                    <a href="{$v.filepath}" target="_blank" style="margin-right:10px;"><img src="{:thumb($v['filepath'],100,100)}" style="margin-right:15px; margin-top:15px;"></a>
+                                                    <span class="satt-file"  >{$v.filename}</span>
+                                                </div>
 											<?php } ?>
                                         </foreach>
                                     </div>

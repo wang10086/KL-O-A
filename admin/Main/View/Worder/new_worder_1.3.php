@@ -16,7 +16,7 @@
 
                 <!-- Main content -->
                 <section class="content">
-                <form method="post" action="{:U('Worder/new_worder')}" name="myform" id="myform">
+                <form method="post" action="{:U('Worder/new_worder')}" name="myform" id="myform" onsubmit="return beforeSubmit(this)">
                 <input type="hidden" name="dosubmint" value="1">
                     <div class="row">
                          <!-- right column -->
@@ -53,7 +53,8 @@
                                             <input type="text" class="form-control" name="info[ini_user_name]" value="{:session('nickname')}" readonly>
                                         </div>
 
-                                        <div class="form-group col-md-12" id="urgentcheckbox" style="margin-top: 15px;">
+                                        <div class="form-group col-md-12">&nbsp;</div>
+                                        <div class="form-group col-md-12" id="urgentcheckbox">
                                             <label>工单紧急状态：</label>&#12288;
                                             <input type="radio" name="info[urgent]" value="0" <?php if($row['urgent']==0){ echo 'checked';} ?> > &#12288;一般
                                             &#12288;&#12288;&#12288;
@@ -171,7 +172,6 @@
 </div>
 
 <include file="Index:footer2" />
-<!--<script src="__HTML__/js/jquery-1.7.2.min.js"></script>-->
 
     <script type="text/javascript">
         $(document).ready(function(i){
@@ -194,13 +194,25 @@
             })
         })
 
+        //检验表单
+        function beforeSubmit(form){
+            var urgent = $("input[name=info['urgent']]:checked").val()
+            var u_cause= $("#urgent_cause").val();
+            if (urgent==1 && u_cause == ''){
+                alert("工单紧急原因不能为空!");
+                return false;
+            }else{
+                $("#myform").submit;
+            }
+        }
         //添加工单执行人
         function task(obj){
             var i = parseInt($('#task_val').text())+1;
             $("#task_ti_"+i+"").show();
             $('#task_val').html(i);
-            if (i >= 6){alert("不能再多了!");}
-            i+=1;
+            if (i >= 6){
+                alert("不能再多了!");}
+                i+=1;
 
         }
 
