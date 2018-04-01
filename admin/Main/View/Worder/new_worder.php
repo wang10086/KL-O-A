@@ -16,7 +16,7 @@
 
                 <!-- Main content -->
                 <section class="content">
-                <form method="post" action="{:U('Worder/new_worder')}" name="myform" id="myform">
+                    <form method="post" action="{:U('Worder/new_worder')}" name="myform" id="myform" onsubmit="return beforeSubmit(this)">
                 <input type="hidden" name="dosubmint" value="1">
                     <div class="row">
                          <!-- right column -->
@@ -37,31 +37,22 @@
                                         
                                         <div class="form-group col-md-4">
                                             <label>工单类型：</label>
-                                            <select  class="form-control"  name="info[worder_type]" required>
+                                            <select  class="form-control"  name="info[worder_type]" id="worder_type" onchange="chechWorderType()" required>
                                             <foreach name="worder_type" key="k" item="v">
                                                 <option value="{$k}">{$v}</option>
                                             </foreach>
                                             </select> 
                                         </div>
 
+                                        <div class="form-group col-md-12" id="group_id">
+                                            <label>项目编号：</label><input type="text" name="info[op_id]" value="{$data.op_id}" class="form-control" />
+                                        </div>
+
                                         <div class="form-group col-md-12">
                                             <label>工单内容：</label><textarea class="form-control"  name="info[worder_content]" >{$data.context}</textarea>
                                         </div>
-                                        
-                                        
-                                        <!--
-                                        <div class="form-group col-md-6">
-                                            <label>发起人员：</label>
-                                            <input type="text" class="form-control" name="info[ini_user_name]" value="{:session('nickname')}" readonly>
-                                        </div>
-<<<<<<< HEAD
 
-                                        <div class="form-group col-md-12" id="urgentcheckbox" style="margin-top: 15px;">
-=======
-										-->
-                                        
-                                        <!--<div class="form-group col-md-12">
->>>>>>> 4e771563ac5bfe550fd88adbd9deadbca7c94a46
+                                        <div class="form-group col-md-12" id="urgentcheckbox">
                                             <label>工单紧急状态：</label>&#12288;
                                             <input type="radio" name="info[urgent]" value="0" <?php if($row['urgent']==0){ echo 'checked';} ?> > &#12288;一般
                                             &#12288;&#12288;&#12288;
@@ -69,14 +60,14 @@
                                         </div>
 
                                         <div class="form-group col-md-12" id="urgent_con" >
-                                            <div class="form-group col-md-12">
-                                                <div class="callout callout-danger">
+                                            <div class="">
+                                                <div class="callout callout-danger ">
                                                     <h4>提示！</h4>
                                                     <p>该工单必须由相关领导审核后才能显示紧急状态 ! 每人每月只能发送不超过 3 次紧急工单 !</p>
                                                 </div>
                                             </div>
 
-                                            <div class="form-group col-md-12">
+                                            <div class="form-group ">
                                                 <label>紧急原因 <span style="color: red">(必填)</span>：</label>
                                                 <textarea name="info[urgent_cause]"  class="form-control" id="urgent_cause"></textarea>
                                             </div>
@@ -188,6 +179,7 @@
             $('#task_ti_4').hide();
             $('#task_ti_5').hide();
             $('#urgent_con').hide();
+            $('#group_id').hide();
 
             //单选按钮绑定事件
             $("#urgentcheckbox").find('ins').each(function (index,element) {
@@ -200,7 +192,39 @@
                     }
                 })
             })
+
+            var worder_type = $('#worder_type').val();
+            if(worder_type == 100){
+                $("#group_id").show();
+            }
         })
+
+        function chechWorderType(){
+            var worder_type = $('#worder_type').val();
+            if(worder_type == 100){
+                $("#group_id").show();
+            }else{
+                $("#group_id").hide();
+                //$("input[name='info[op_id]']").val('');
+            }
+        }
+
+        //检验表单
+        function beforeSubmit(form){
+            var urgent = $("input[name=info['urgent']]:checked").val()
+            var u_cause= $("#urgent_cause").val();
+            var worder_type = $('#worder_type').val();
+            var group_id = $("input[name='info[op_id]']").val();
+            if (urgent==1 && u_cause == ''){
+                alert("工单紧急原因不能为空!");
+                return false;
+            }else if(worder_type == 100 && group_id == ''){
+                alert("项目编号信息不能为空!");
+                return false;
+            }else{
+                $("#myform").submit;
+            }
+        }
 
         //添加工单执行人
         function task(obj){

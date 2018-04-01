@@ -22,6 +22,7 @@ class WorderController extends BaseController{
 
             $info['status']         = 0;
             $info['ini_user_id']    = $_SESSION['userid'];
+            $info['ini_user_name']  = $_SESSION['nickname'];
             $info['ini_dept_id']    = $_SESSION['roleid'];
             $info['ini_dept_name']  = $_SESSION['rolename'];
             $info['create_time']    = NOW_TIME;
@@ -162,7 +163,7 @@ class WorderController extends BaseController{
             if($v['status']==0)     $lists[$k]['sta'] = '<span class="red">未响应</span>';
             if($v['status']==1)     $lists[$k]['sta'] = '<span class="yellow">执行部门已响应</span>';
             if($v['status']==2)     $lists[$k]['sta'] = '<span class="yellow">执行部门已确认完成</span>';
-            if($v['status']==3)     $lists[$k]['sta'] = '发起人已确认完成';
+            if($v['status']==3)     $lists[$k]['sta'] = '<span class="green">发起人已确认完成</span>';
             if($v['status']==-1)    $lists[$k]['sta'] = '拒绝或无效工单';
             if($v['status']==-2)    $lists[$k]['sta'] = '已撤销';
             if($v['status']==-3)    $lists[$k]['sta'] = '<span class="red">需要做二次修改</span>';
@@ -302,7 +303,7 @@ class WorderController extends BaseController{
                 if($v['status']==0)     $lists[$k]['sta'] = '<span class="red">未响应</span>';
                 if($v['status']==1)     $lists[$k]['sta'] = '<span class="yellow">执行部门已响应</span>';
                 if($v['status']==2)     $lists[$k]['sta'] = '<span class="yellow">执行部门已确认完成</span>';
-                if($v['status']==3)     $lists[$k]['sta'] = '发起人已确认完成';
+                if($v['status']==3)     $lists[$k]['sta'] = '<span class="green">发起人已确认完成</span>';
                 if($v['status']==-1)    $lists[$k]['sta'] = '拒绝或无效工单';
                 if($v['status']==-2)    $lists[$k]['sta'] = '已撤销';
                 if($v['status']==-3)    $lists[$k]['sta'] = '<span class="red">需要做二次修改</span>';
@@ -341,7 +342,7 @@ class WorderController extends BaseController{
             if($info['status']==0)      $info['sta'] = '<span class="red">未响应</span>';
             if($info['status']==1)      $info['sta'] = '<span class="yellow">执行部门已响应</span>';
             if($info['status']==2)      $info['sta'] = '<span class="yellow">执行部门已确认完成</span>';
-            if($info['status']==3)      $info['sta'] = '发起人已确认完成';
+            if($info['status']==3)      $info['sta'] = '<span class="green">发起人已确认完成</span>';
             if($info['status']==-1)     $info['sta'] = '拒绝或无效工单';
             if($info['status']==-2)     $info['sta'] = '已撤销';
             if($info['status']==-3)     $info['sta'] = '<span class="red">需要做二次修改</span>';
@@ -396,8 +397,9 @@ class WorderController extends BaseController{
                 $user    = '['.$info.']';
                 send_msg($uid,$title,$content,$url,$user,'');
                 $this->success('已指派负责人!');
-                echo '<script>setTimeout(window.top.art.dialog({id:"closeart"}).close(),2000);</script>';
-                //echo '<script>window.top.art.dialog({id:"closeart"}).close();</script>';
+                //echo '<script>setTimeout(window.top.art.dialog({id:"closeart"}).close(),2000);</script>';
+                echo '<script>window.top.location.reload();</script>';
+
             }
 
         }elseif (isset($_POST['do_exe'])){
@@ -654,7 +656,7 @@ class WorderController extends BaseController{
             if($v['status']==0)     $lists[$k]['sta'] = '<span class="red">未响应</span>';
             if($v['status']==1)     $lists[$k]['sta'] = '<span class="yellow">执行部门已响应</span>';
             if($v['status']==2)     $lists[$k]['sta'] = '<span class="yellow">执行部门已确认完成</span>';
-            if($v['status']==3)     $lists[$k]['sta'] = '发起人已确认完成';
+            if($v['status']==3)     $lists[$k]['sta'] = '<span class="green">发起人已确认完成</span>';
             if($v['status']==-1)    $lists[$k]['sta'] = '拒绝或无效工单';
             if($v['status']==-2)    $lists[$k]['sta'] = '已撤销';
             if($v['status']==-3)    $lists[$k]['sta'] = '<span class="red">需要做二次修改</span>';

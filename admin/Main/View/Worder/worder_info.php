@@ -45,74 +45,67 @@
                         <div class="box-body">
                             <div class="content">
                             	<div class="form-group col-md-12">
-                                    <h2 style="font-size:16px; color:#ff3300; border-bottom:2px solid #dedede; padding-bottom:10px;">工单信息</h2>
+                                    <h2 style="font-size:16px; border-bottom:2px solid #dedede; padding-bottom:10px;">工单信息</h2>
                                 </div>
                                 <div class="form-group col-md-12">
                                 <table width="100%" id="font-14" rules="none" border="0" cellpadding="0" cellspacing="0" style="margin-top:-15px;">
                                     <tr>
-                                        <td width="33.33%">工单名称：{$info.worder_title}</td>
+                                        <td colspan="3">工单名称：{$info.worder_title}</td>
+                                    </tr>
+                                    <tr>
                                         <td width="33.33%">工单类型 : {$info.type}</td>
-                                        <td width="33.33%">工单发起时间：{$info.create_time|date='Y-m-d H:i:s',###}</td>
+                                        <td width="33.33%">发起时间：{$info.create_time|date='Y-m-d H:i:s',###}</td>
                                     </tr>
                                     <tr>
-                                        <td colspan="3">工单内容：{$info.worder_content}</td>
+                                        <td width="33.33%">发起者姓名：{$info.ini_user_name}</td>
+                                        <td width="33.33%">发起者职务：{$info.ini_dept_name}</td>
+                                        <td width="33.33%">计划完成时间：{$info.plan_complete_time|date='Y-m-d H:i:s',###}</td>
                                     </tr>
                                     <tr>
-                                        <td width="33.33%">工单发起者姓名：{$info.ini_user_name}</td>
-                                        <td width="33.33%">工单发起者职务：{$info.ini_dept_name}</td>
-                                        <if condition="$info.response_time neq 0">
-                                            <td width="33.33%">工单响应时间：{$info.response_time|date='Y-m-d H:i:s',###}</td>
-                                            <else />
-                                            <td width="33.33%">工单响应时间：<span class="red">未响应</span></td>
-                                        </if>
-                                    </tr>
-                                    <tr>
-                                        <td width="33.33%">工单执行者姓名：{$info.exe_user_name}</td>
-                                        <td width="33.33%">工单执行者职务：{$info.exe_dept_name}</td>
-                                        <td width="33.33%">工单状态：{$info.sta}</td>
-                                    </tr>
-                                    <tr>
-                                        <td width="33.33%">工单计划完成时间：{$info.plan_complete_time|date='Y-m-d H:i:s',###}</td>
-                                        <if condition="$info.complete_time neq 0">
-                                            <td width="33.33%">工单执行人完成时间：{$info.complete_time|date='Y-m-d H:i:s',###}</td>
-                                            <else />
-                                            <td width="33.33%">工单执行人完成时间：未完成</td>
-                                        </if>
-                                        <if condition="$info.ini_confirm_time neq 0">
-                                            <td width="33.33%">工单发起人确认完成时间：{$info.ini_confirm_time|date='Y-m-d H:i:s',###}</td>
-                                            <else />
-                                            <td width="33.33%">工单发起人确认完成时间：未完成</td>
-                                        </if>
-                                    </tr>
-
-                                    <tr>
-                                        <if condition="$dept">
-                                        <td width="33.33%">工单项名称：{$dept.pro_title}</td>
-                                        <td width="33.33%">工单项类型：{$dept.n_type}</td>
-                                        </if>
+                                        <td width="33.33%">执行者姓名：{$info.exe_user_name}</td>
+                                        <td width="33.33%">执行者职务：{$info.exe_dept_name}</td>
                                         <if condition="$info['assign_name']">
                                             <td width="33.33%">被指派者名字：{$info['assign_name']}</td>
+                                        </if>
+                                    </tr>
+                                    <tr>
+                                        <if condition="$dept">
+                                            <td width="33.33%">工单项名称：{$dept.pro_title}</td>
+                                            <td width="33.33%">工单项类型：{$dept.n_type}</td>
                                         </if>
                                     </tr>
 
                                     <if condition="$info['urgent'] eq 1">
                                         <tr>
-                                            <td width="33.33%">是否是加急工单: <span style="color: red">加急工单</span></td>
-                                            <td colspan="2">工单加急原因: {$info.urgent_cause}</td>
+                                            <td width="33.33%">是否加急: <span style="color: red">加急工单</span></td>
+                                            <td colspan="2">加急原因: {$info.urgent_cause}</td>
                                         </tr>
                                     </if>
 
                                     <if condition="$info['exe_reply_content'] neq null">
-                                        <tr><td colspan="3">工单执行人响应工单回复：{$info.exe_reply_content}</td></tr>
-                                    </if>
-                                    <if condition="$info['exe_complete_content'] neq null">
-                                        <tr><td colspan="3">工单执行人完成工单回复：{$info.exe_complete_content}</td></tr>
+                                        <tr><td colspan="3">执行人响应工单回复：{$info.exe_reply_content}</td></tr>
                                     </if>
                                 </table>
                                 </div>
+
+                                <div class="form-group col-md-12">
+                                    <h2 style="font-size:16px; border-bottom:2px solid #dedede; padding-bottom:10px;">工单内容</h2>
+                                </div>
+                                <div class="form-group col-md-12">
+                                    {$info.worder_content}
+                                </div>
+
+                                <div class="form-group col-md-12">
+                                        <h2 class="brh3" style="font-size:16px; border-bottom:2px solid #dedede; padding-bottom:10px;">工单状态<span style="float:right; font-size: 14px">{$info.sta}</span></h2>
+                                </div>
+                                <div class="form-group col-md-12">
+                                    <if condition="$info['exe_complete_content'] neq null">
+                                        <tr><td colspan="3">执行人完成工单回复：{$info.exe_complete_content}</td></tr>
+                                    </if>
+                                </div>
                                 
                                 <div class="form-group col-md-12">
-                                    <h2 style="font-size:16px; color:#ff3300; border-bottom:2px solid #dedede; padding-bottom:10px;">工单相关文件</h2>
+                                    <h2 style="font-size:16px; border-bottom:2px solid #dedede; padding-bottom:10px;">相关文件</h2>
                                 </div>
                                 <div class="form-group col-md-12">
                                 	<div id="showimglist">
@@ -123,17 +116,17 @@
                                                 <span class="att-file-name"  >{$v.filename}</span>
                                             </div>
                                             <?php }else{ ?>
-<<<<<<< HEAD
+
                                                 <div class="att-file">
                                                     <a href="{$v.filepath}" target="_blank" style="margin-right:10px;"><img src="{:thumb($v['filepath'],100,100)}" style="margin-right:15px; margin-top:15px;"></a>
                                                     <span class="satt-file"  >{$v.filename}</span>
                                                 </div>
-=======
+
                                             <div class="att-file">
 											    <a href="{$v.filepath}" target="_blank" style="margin-right:10px;"><img src="{:thumb($v['filepath'],100,100)}" style="margin-right:15px; margin-top:15px;"></a>
                                                 <span class="att-file-name"  >{$v.filename}</span>
                                             </div>
->>>>>>> 4e771563ac5bfe550fd88adbd9deadbca7c94a46
+
 											<?php } ?>
                                         </foreach>
                                         <foreach name="exe_atts" key="k" item="v">
