@@ -16,6 +16,12 @@
         <!-- ArtDialog -->
         <link href="__HTML__/css/datatables/dataTables.bootstrap.css" rel="stylesheet" type="text/css" />
         <link href="__HTML__/css/artDialog.css" rel="stylesheet" type="text/css"  />
+        <!-- Ion Slider -->
+        <link href="__HTML__/css/ionslider/ion.rangeSlider.css" rel="stylesheet" type="text/css" />
+        <!-- ion slider Nice -->
+        <link href="__HTML__/css/ionslider/ion.rangeSlider.skinNice.css" rel="stylesheet" type="text/css" />
+        <!-- bootstrap slider -->
+        <link href="__HTML__/css/bootstrap-slider/slider.css" rel="stylesheet" type="text/css" />
         <link href="__HTML__/comm/liMarquee/liMarquee.css" rel="stylesheet" type="text/css"  />
         <!-- Theme style -->
         <link href="__HTML__/css/py.css?v=1.0.8" rel="stylesheet" type="text/css" />
@@ -41,7 +47,8 @@
         
         <script src="__HTML__/js/plugins/datatables/jquery.dataTables.js" type="text/javascript"></script>
         <script src="__HTML__/js/plugins/datatables/dataTables.bootstrap.js" type="text/javascript"></script>
-       
+       	<script src="__HTML__/js/plugins/ionslider/ion.rangeSlider.min.js" type="text/javascript"></script>
+        <script src="__HTML__/js/plugins/bootstrap-slider/bootstrap-slider.js" type="text/javascript"></script>
         <!-- FORM -->
         <script src="__HTML__/js/plugins/form/formvalidator.js" type="text/javascript"></script>
         <script src="__HTML__/js/plugins/form/formvalidatorregex.js" type="text/javascript"></script>

@@ -3994,7 +3994,7 @@ th{outline: none;}
 #showimglist .fileext{ width:100px; height:100px; float:left; background:#3c8dbc; line-height:100px; text-align:center; color:#ffffff; font-size:16px; margin-top:15px; margin-right:10px;}
 
 .att-file{display: inline-block;  width: 100px;margin-right: 10px;}
-.satt-file{display: inline-block; position: relative; top: 0px;left: 0px; width: 100px; height: 20px;overflow: hidden;}
+.att-file-name{ width: 100px; height: 20px; line-height: 20px;  display: -webkit-box;  -webkit-box-orient: vertical;  -webkit-line-clamp: 2;  overflow: hidden;}
 
 .contenthotbox{background:#f3f3f3; border-radius:4px; overflow:hidden; padding-bottom:25px;}
 .contentbot{padding:0 30px; margin-top:-20px;}
@@ -4004,3 +4004,9 @@ th{outline: none;}
 
 .opencontent{ width:100%; height:auto !important; float:left; clear:both;}
 .brh3{font-size:14px; width:100%; color:#333333; border-bottom:1px solid #dedede; padding-bottom:10px;}
+.brh3r{font-size:14px; width:100%; color:#f56954;}
+.irs-from, .irs-to, .irs-single{ background:#ff3300;}
+
+.worder_box{ margin-top:20px;}
+.worder_close{ position:absolute; right:-10px; top:0; width:20px; height:34px; background:#ff3300; color:#ffffff; font-size:14px; text-align:center; line-height:34px; margin:0; padding:0;}
+.worder_close:hover{ color:#ffffff;}

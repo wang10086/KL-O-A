@@ -334,11 +334,13 @@ class BasepubController extends Controller {
         $sta                = array(0,1,2,-3);  //-3需要做二次修改
         $where['status']    = array('in',$sta);
         $time               = NOW_TIME;
+        $min_time           = $time-3600*24*60; //查询60天范围内的数据
+        $where['plan_complete_time'] = array('between',"$min_time,$time");
         $lists              = $worder_db->where($where)->select();
         $wd_ids             = $work_db->getField('wd_id',true);
 
         foreach ($lists as $v){
-            if ($v['plan_complete_time'] < $time){
+            if ($v['plan_complete_time'] < $time and $v['ini_confirm_time'] == 0){
                 $w_id           = $v['id'];
                 if (in_array($w_id,$wd_ids)){
                     exit();

@@ -360,6 +360,7 @@ function upload_m($obj,$cont,$attr='',$btn='上传',$showbox="flist",$formname="
 	return $html;
 }
 
+//删除多余的图片
 function save_res($module,$releid,$data){
 	//处理图片
 	$where = array();
@@ -388,6 +389,30 @@ function save_res($module,$releid,$data){
 			$tp_db->where(array('id'=>$v['id']))->delete();
 		}
 	}
+}
+
+//增加图片 , 不删除原图片
+function save_add_res($module,$releid,$data){
+	//处理图片
+	$where = array();
+	$where['module']  = $module;
+	$where['rel_id']  = $releid;
+
+	$tp_db = M('attachment');
+
+	if(is_array($data)){
+		foreach($data['id'] as $k=>$v){
+			//保存数据
+			$info = array();
+			$info['module']        = $module;
+			$info['rel_id']        = $releid;
+			$info['status']        = $data['status'][$k];
+			$info['filename']      = $data['filename'][$k];
+			$issave = $tp_db->where(array('id'=>$v))->save($info);
+		}
+	}
+
+
 }
 
 function get_res($module,$releid){
@@ -1849,9 +1874,12 @@ function updatekpi($month,$user){
 					$where = array();
 					$where['create_time']  			= array('between',array($v['start_date'],$v['end_date']));
 					$where['create_user']  			= $user;
-					$zongxiangmu = M('op')->where($where)->count();
-					$where['group_id']     			= array('neq','');
-					$chengtuan = M('op')->where($where)->count();
+					$zongxiangmu	= M('op')->where($where)->count();
+					
+					$where = array();
+					$where['o.create_time']			= array('between',array($v['start_date'],$v['end_date']));
+					$where['o.create_user']			= $user;
+					$chengtuan		= M()->table('__OP_TEAM_CONFIRM__ as c')->join('__OP__ as o on o.op_id = c.op_id')->where($where)->count();
 					$complete = round(($chengtuan / $zongxiangmu)*100,2).'%';
 				}
 				
@@ -1973,44 +2001,26 @@ function updatekpi($month,$user){
 				
 				//办公环境及设施保障指标（OA）-综合部经理
 				if(in_array($v['quota_id'],array(27,32,37))){
-					$rsum = user_work_record($user,$month,208);
-					switch($rsum){
-						case 0:
-							$complete = '100%';
-							break;
-						case 1:
-							$complete = '90%';
-							break;
-						case 2:
-							$complete = '80%';
-							break;
-						case 3:
-							$complete = '70%';
-							break;
-						default:
-							$complete = '0%';
+					$sum = user_work_record($user,$month,208);
+					if($sum>4){
+						$complete	= 0;	
+					}else{
+						$zongfen 	= 100-($sum*10);
+						$complete	= $zongfen>0 ? $zongfen : 0;
 					}
+					$complete = $complete.'%';
 				}
 				
 				//日常工作及时性
 				if(in_array($v['quota_id'],array(19,22,25,28,33,38,45,103))){
-					$rsum = user_work_record($user,$month,100);
-					switch($rsum){
-						case 0:
-							$complete = '100%';
-							break;
-						case 1:
-							$complete = '90%';
-							break;
-						case 2:
-							$complete = '80%';
-							break;
-						case 3:
-							$complete = '70%';
-							break;
-						default:
-							$complete = '0%';
+					$sum = user_work_record($user,$month,100);
+					if($sum>4){
+						$complete	= 0;	
+					}else{
+						$zongfen 	= 100-($sum*10);
+						$complete	= $zongfen>0 ? $zongfen : 0;
 					}
+					$complete = $complete.'%';
 				}
 				
 				//活动前要素准备不及时
@@ -2037,36 +2047,23 @@ function updatekpi($month,$user){
 				
 				//日常工作质量不合格
 				if(in_array($v['quota_id'],array(29,34,39,46,102))){
-					$rsum = user_work_record($user,$month,200);
+					$sum = user_work_record($user,$month,200);
 					if($v['quota_id']!=102){
-						switch($rsum){
-							case 0:
-								$complete = '100%';
-								break;
-							case 1:
-								$complete = '90%';
-								break;
-							case 2:
-								$complete = '80%';
-								break;
-							case 3:
-								$complete = '70%';
-								break;
-							default:
-								$complete = '0%';
+						if($sum>4){
+							$complete	= 0;	
+						}else{
+							$zongfen 	= 100-($sum*10);
+							$complete	= $zongfen>0 ? $zongfen : 0;
 						}
 					}else{
-						switch($rsum){
-							case 0:
-								$complete = '100%';
-								break;
-							case 1:
-								$complete = '50%';
-								break;
-							default:
-								$complete = '0%';
+						if($sum>1){
+							$complete	= 0;	
+						}else{
+							$zongfen 	= 100-($sum*50);
+							$complete	= $zongfen>0 ? $zongfen : 0;
 						}
 					}
+					$complete = $complete.'%';
 				}
 				
 				//中科教微信运营——市场文案
@@ -2303,7 +2300,6 @@ function updatekpi($month,$user){
 				}
 				
 				
-				
 				//培训相关
 				if(in_array($v['quota_id'],array(111,107,83,66,54,44,12,95))){
 					
@@ -2321,115 +2317,74 @@ function updatekpi($month,$user){
 				
 				//满意度考核-采购经理
 				if($v['quota_id']==114){
-					$rsum = user_work_record($user,$month,217);
-					switch($rsum){
-						case 0:
-							$complete = '100';
-							break;
-						case 1:
-							$complete = '90';
-							break;
-						case 2:
-							$complete = '80';
-							break;
-						default:
-							$complete = '0';
+					$sum = user_work_record($user,$month,217);
+					if($sum>3){
+						$complete	= 0;	
+					}else{
+						//汇总扣分数
+						$zongfen 	= 100-($sum*10);
+						$complete	= $zongfen>0 ? $zongfen : 0;
 					}
 				}
 				
 				
 				//物资采购合格率--采购经理
 				if($v['quota_id']==86){
-					$rsum = user_work_record($user,$month,217);
-					switch($rsum){
-						case 0:
-							$complete = '100';
-							break;
-						case 1:
-							$complete = '90';
-							break;
-						case 2:
-							$complete = '80';
-							break;
-						case 3:
-							$complete = '70';
-							break;
-						default:
-							$complete = '0';
+					$sum = user_work_record($user,$month,217);
+					if($sum>4){
+						$complete	= 0;	
+					}else{
+						//汇总扣分数
+						$zongfen 	= 100-($sum*10);
+						$complete	= $zongfen>0 ? $zongfen : 0;
 					}
 				}
 				
 				
 				//日常所有工作及时性--采购经理
 				if($v['quota_id']==85){
-					$rsum = user_work_record($user,$month,100);
-					switch($rsum){
-						case 0:
-							$complete = '100';
-							break;
-						case 1:
-							$complete = '90';
-							break;
-						case 2:
-							$complete = '80';
-							break;
-						default:
-							$complete = '0';
+					$sum = user_work_record($user,$month,100);
+					if($sum>3){
+						$complete	= 0;	
+					}else{
+						//汇总扣分数
+						$zongfen 	= 100-($sum*10);
+						$complete	= $zongfen>0 ? $zongfen : 0;
 					}
 				}
 				
 				//数据前端后端对接--市场PHP
 				if($v['quota_id']==64){
-					$rsum = user_work_record($user,$month,116);
-					switch($rsum){
-						case 0:
-							$complete = '100';
-							break;
-						case 1:
-							$complete = '90';
-							break;
-						case 2:
-							$complete = '80';
-							break;
-						default:
-							$complete = '0';
+					$sum = user_work_record($user,$month,116);
+					if($sum>3){
+						$complete	= 0;	
+					}else{
+						//汇总扣分数
+						$zongfen 	= 100-($sum*10);
+						$complete	= $zongfen>0 ? $zongfen : 0;
 					}
 				}
 				
 				
 				//前端网页实现--市场PHP
 				if($v['quota_id']==63){
-					$rsum = user_work_record($user,$month,117);
-					switch($rsum){
-						case 0:
-							$complete = '100';
-							break;
-						case 1:
-							$complete = '90';
-							break;
-						case 2:
-							$complete = '80';
-							break;
-						default:
-							$complete = '0';
+					$sum = user_work_record($user,$month,117);
+					if($sum>3){
+						$complete	= 0;	
+					}else{
+						$zongfen 	= 100-($sum*10);
+						$complete	= $zongfen>0 ? $zongfen : 0;
 					}
 				}
 				
 				//前端网页实现--市场PHP
 				if($v['quota_id']==62){
-					$rsum = user_work_record($user,$month,118);
-					switch($rsum){
-						case 0:
-							$complete = '100';
-							break;
-						case 1:
-							$complete = '90';
-							break;
-						case 2:
-							$complete = '80';
-							break;
-						default:
-							$complete = '0';
+					$sum = user_work_record($user,$month,118);
+					if($sum>3){
+						$complete	= 0;	
+					}else{
+						$zongfen 	= 100-($sum*10);
+						$complete	= $zongfen>0 ? $zongfen : 0;
 					}
 				}
 				
@@ -2439,13 +2394,13 @@ function updatekpi($month,$user){
 					
 					//获取当月出团项目数
 					$where = array();
-					$where['o.departure']			= array('between',array(date('Y-m-d',$v['start_date']),date('Y-m-d',$v['end_date'])));
+					$where['o.dep_time']		= array('between',array($v['start_date'],$v['end_date']));
 					
 					//当月出团项目数
-					$ops = M()->table('__OP__ as o')->where($where)->count();
+					$ops = M()->table('__OP_TEAM_CONFIRM__ as o')->where($where)->count();
 					
 					//已巡查的项目数
-					$ins = M()->table('__INSPECT__ as i')->join('__OP__ as o on i.group_id = o.group_id','LEFT')->where($where)->count();
+					$ins = M()->table('__INSPECT__ as i')->join('__OP_TEAM_CONFIRM__ as o on i.group_id = o.group_id','LEFT')->where($where)->count();
 					
 					$sum = $ops - $ins;
 					
@@ -2483,12 +2438,149 @@ function updatekpi($month,$user){
 				}
 				
 				
+				//物资采购验收率--采购经理
+				if($v['quota_id']==91){
+					//汇总记录次数
+					$sum = user_work_record($user,$month,204);
+					if($sum>3){
+						$complete	= 0;	
+					}else{
+						//汇总扣分数
+						$zongfen 	= 100-($sum*10);
+						$complete	= $zongfen>0 ? $zongfen : 0;
+					}
+				}
+				
+				
+				//日常所有工作及时性--计调经理
+				if($v['quota_id']==79){
+					//汇总记录次数
+					$sum = user_work($user,$month,1);
+					if($sum>2){
+						$complete	= 0;	
+					}else{
+						//汇总扣分数
+						$zongfen 	= 100-($sum*10);
+						$complete	= $zongfen>0 ? $zongfen : 0;
+					}
+				}
+				
+				
+				//安全隐患控制--安全副经理
+				if($v['quota_id']==47){
+					//汇总记录次数
+					$sum = user_work_record($user,$month,219);
+					$complete		= $sum ? 0 : 100;	
+				}
+				
+				
+				//员工满意度--综合部专员
+				if(in_array($v['quota_id'],array(36,31))){
+					//汇总记录次数
+					$sum = user_work($user,$month,3);
+					if($sum>3){
+						$complete	= 0;	
+					}else{
+						$nsum 		= $sum ? $sum-1 : 0;
+						//汇总扣分数
+						$zongfen 	= 100-($nsum*10);
+						$complete	= $zongfen>0 ? $zongfen : 0;
+					}
+				}
+				
+				//公司制度、文件管理执行率--综合部专员
+				if(in_array($v['quota_id'],array(35,30))){
+					//汇总记录次数
+					$sum = user_work_record($user,$month,220);
+					if($sum>2){
+						$complete	= 0;	
+					}else{
+						//汇总扣分数
+						$zongfen 	= 100-($sum*10);
+						$complete	= $zongfen>0 ? $zongfen : 0;
+					}
+				}
+				
+				
+				//业务人员满意度--计调经理
+				if($v['quota_id']==82){
+					
+					//获取当月出团项目数
+					$where = array();
+					$where['o.ret_time']		= array('between',array($v['start_date'],$v['end_date']));
+					$where['e.liable_uid']	= $user;
+					$where['e.eval_type']	= 2;
+					
+					//当月结束的团项目数
+					$cou = M()->table('__OP_EVAL__ as e')->join('__OP_TEAM_CONFIRM__ as o on o.op_id = e.op_id','LEFT')->where($where)->count();
+					
+					$sum = M()->table('__OP_EVAL__ as e')->join('__OP_TEAM_CONFIRM__ as o on o.op_id = e.op_id','LEFT')->where($where)->sum('score');
+					
+					//平均得分
+					$score = round($sum/($cou*100)*100);
+					if($score>=85 || !$cou){
+						$complete	= 100;	
+					}else{
+						$complete	= $score;	
+					}
+					
+				}
+				
+				
+				//资源配置质量--资源管理部（教务专员）
+				if(in_array($v['quota_id'],array(110,106,67))){
+					
+					//获取当月出团项目数
+					$where = array();
+					$where['o.dep_time']		= array('between',array($v['start_date'],$v['end_date']));
+					$where['e.liable_uid']	= $user;
+					$where['e.eval_type']	= 3;
+					
+					//当月结束的团项目数
+					$cou = M()->table('__OP_EVAL__ as e')->join('__OP_TEAM_CONFIRM__ as o on o.op_id = e.op_id','LEFT')->where($where)->count();
+					
+					$sum = M()->table('__OP_EVAL__ as e')->join('__OP_TEAM_CONFIRM__ as o on o.op_id = e.op_id','LEFT')->where($where)->sum('score');
+					
+					//平均得分
+					$score = round($sum/($cou*90)*100);
+					if($score>100 || !$cou){
+						$complete	= 100;	
+					}else{
+						$complete	= $score;	
+					}
+					
+				}
+				
+				
+				//产品方案完成质量---研发
+				if(in_array($v['quota_id'],array(99,94))){
+					
+					//获取当月出团项目数
+					$where = array();
+					$where['o.dep_time']		= array('between',array($v['start_date'],$v['end_date']));
+					$where['e.liable_uid']	= $user;
+					$where['e.eval_type']	= 1;
+					
+					//当月结束的团项目数
+					$cou = M()->table('__OP_EVAL__ as e')->join('__OP_TEAM_CONFIRM__ as o on o.op_id = e.op_id','LEFT')->where($where)->count();
+					
+					$sum = M()->table('__OP_EVAL__ as e')->join('__OP_TEAM_CONFIRM__ as o on o.op_id = e.op_id','LEFT')->where($where)->sum('score');
+					
+					//平均得分
+					$score = round($sum/($cou*90)*100);
+					if($score>100 || !$cou){
+						$complete	= 100;	
+					}else{
+						$complete	= $score;	
+					}
+					
+				}
 				
 				
 				
 				
 				//已实现自动获取指标值
-				$auto_quta	= array(1,2,3,4,5,6,81,8,9,10,11,15,16,18,20,23,26,21,24,27,32,37,19,22,25,28,33,38,42,45,103,56,113,92,29,34,39,46,102,55,57,58,59,84,87,89,90,111,107,83,66,54,44,12,112,108,100,96,95,65,114,86,85,64,63,62,53,52,41,40,49,80,48);
+				$auto_quta	= array(1,2,3,4,5,6,81,8,9,10,11,15,16,18,20,23,26,21,24,27,32,37,19,22,25,28,33,38,42,45,103,56,113,92,29,34,39,46,102,55,57,58,59,84,87,89,90,111,107,83,66,54,44,12,112,108,100,96,95,65,114,86,85,64,63,62,53,52,41,40,49,80,48,91,79,47,36,35,31,30,82,110,106,99,94,67);
 				
 				//计算完成率并保存数据
 				if(in_array($v['quota_id'],$auto_quta)){
@@ -3077,6 +3169,23 @@ function user_work_record($user,$month,$type){
 	} else {
 		$where['typeinfo'] 	= $type;
 	}
+	
+	$sum 	= $db->where($where)->count();
+	
+	return $sum;
+}
+
+
+//获取某个员工某项工作记录数
+function user_work($user,$month,$type){
+	
+	$db 	= M('work_record');
+	
+	$where 	= array();
+	$where['status'] 	= 0;
+	$where['month'] 		= $month;
+	$where['user_id'] 	= $user;
+	$where['type'] 		= $type;
 	
 	$sum 	= $db->where($where)->count();
 	

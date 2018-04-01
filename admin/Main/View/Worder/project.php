@@ -55,7 +55,12 @@
                                     <foreach name="lists" item="row"> 
                                     <tr>
                                         <td>{$row.id}</td>
-                                        <td><a href="{:U('Worder/worder_info',array('id'=>$row['id']))}">{$row.worder_title}</a></td>
+                                        <td><a href="{:U('Worder/worder_info',array('id'=>$row['id']))}">{$row.worder_title}</a>
+                                            <if condition="($row.urgent eq 1) and ($row.status)">
+
+                                            </if>
+                                            <small class="badge pull-right bg-red" style="margin-right:6px;">加急</small>
+                                        </td>
                                         <!--<td>{$row.worder_content}</td>-->
                                         <td>{$row.type}</td>
                                         <td>{$row.ini_user_name}</td>
