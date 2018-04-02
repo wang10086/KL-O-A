@@ -36,7 +36,7 @@
                                 
                                 <table class="table table-bordered dataTable fontmini" id="tablelist" style="margin-top:10px;">
                                     <tr role="row" class="orders" >
-                                        <th class="sorting" width="80" data="id">id</th>
+                                        <th class="sorting" width="60" data="id">id</th>
                                         <th class="sorting" width="120" data="worder_title">工单标题</th>
                                         <!--<th class="sorting" data="worder_content">工单内容</th>-->
                                         <th class="sorting" width="80" data="worder_type">工单类型</th>

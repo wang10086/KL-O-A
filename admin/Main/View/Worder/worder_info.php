@@ -55,6 +55,9 @@
                                     <tr>
                                         <td width="33.33%">工单类型 : {$info.type}</td>
                                         <td width="33.33%">发起时间：{$info.create_time|date='Y-m-d H:i:s',###}</td>
+                                        <if condition="$info['op_id']">
+                                            <td width="33.33%">项目编号:{$info.op_id}</td>
+                                        </if>
                                     </tr>
                                     <tr>
                                         <td width="33.33%">发起者姓名：{$info.ini_user_name}</td>
