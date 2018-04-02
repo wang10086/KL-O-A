@@ -180,6 +180,7 @@
                                 <form method="post" action="{:U('Worder/assign_user')}" name="myform" id="save_huikuan">
                                 <input type="hidden" name="do_exe" value="1">
                                 <input type="hidden" name="id" value="{$info.id}">
+                                <input type="hidden" name="unfinished" value="">
                                 <input type="hidden" name="referer" value="<?php echo $_SERVER['HTTP_REFERER']; ?>" />
 
                                 <div class="form-group col-md-12" style="margin-top:10px;">
@@ -434,6 +435,7 @@
                 $("#dept").show();
                 $("input[name='d_type']").val(msg.type_res);
                 $("input[name='use_time']").val(msg.use_time+"个工作日");
+                $("input[name='unfinished']").val(msg.unfinished);
             }
         })
     }

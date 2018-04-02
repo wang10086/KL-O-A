@@ -357,7 +357,7 @@ class BasepubController extends Controller {
                     $info['content']    = $v['worder_content'];
                     $info['type']       = 4;    //工作未完成
                     $info['rec_user_id']= 0;    //记录者id 为系统自动生成
-                    //$info['typeinfo']
+                    $info['typeinfo']   = $v['unfinished'];
                     //$info['rec_user_name']
                     $info['rec_time']   = NOW_TIME;
                     $info['status']     = 0;

@@ -405,6 +405,8 @@ class WorderController extends BaseController{
         }elseif (isset($_POST['do_exe'])){
 
             $info                   = I('info');
+            $unfinished             = I('unfinished');
+            $info['unfinished']     = $unfinished;
             if ($info['status'] == -1){
                 //被拒绝工单 , 工单完成
                 $info['response_time']  = NOW_TIME;
@@ -683,12 +685,30 @@ class WorderController extends BaseController{
         $this->pages	= $pagecount>P::PAGE_SIZE ? $page->show():'';
 
         $lists          = $db->where($where)->limit($page->firstRow . ',' . $page->listRows)->order($this->orders('create_time'))->select();
+        //工单未完成时处理方式(kpi取值)
+        $unfinish               = C('REC_TYPE_INFO');
+        $unfinished             = array();
+        foreach ($unfinish as $value){
+            foreach ($value as $k =>$v){
+                $unfinished[$k]       = $v;
+            }
+        }
+
         foreach($lists as $k=>$v){
             //判断工单类型
             if($v['type']==0) $lists[$k]['type'] = '成熟产品';
             if($v['type']==1) $lists[$k]['type'] = '新品';
             if($v['type']==2) $lists[$k]['type'] = '定制产品';
+
+            //工单未完成时处理方式(kpi取值)
+            $unfinished_id  = $v['unfinished'];
+            foreach ($unfinished as $key=>$value){
+                if ($unfinished_id == $key){
+                    $lists[$k]['unfinished_con'] = $value;
+                }
+            }
         }
+
         $this->lists    = $lists;
         $this->display();
     }
@@ -714,6 +734,14 @@ class WorderController extends BaseController{
             $this->title('新增各部门工单项');
             $this->group            =  get_roles();
             $this->type             = C('WORDER_DEPT_TYPE');
+            $unfinish               = C('REC_TYPE_INFO');
+            $unfinished             = array();
+            foreach ($unfinish as $value){
+                foreach ($value as $k =>$v){
+                    $unfinished[$k]       = $v;
+                }
+            }
+            $this->unfinished       = $unfinished;
             $this->display();
         }
     }
@@ -743,6 +771,14 @@ class WorderController extends BaseController{
             $this->group=  get_roles();
             $this->type = C('WORDER_DEPT_TYPE');
             $this->info = $info;
+            $unfinish               = C('REC_TYPE_INFO');
+            $unfinished             = array();
+            foreach ($unfinish as $value){
+                foreach ($value as $k =>$v){
+                    $unfinished[$k]       = $v;
+                }
+            }
+            $this->unfinished       = $unfinished;
             $this->display();
         }
     }

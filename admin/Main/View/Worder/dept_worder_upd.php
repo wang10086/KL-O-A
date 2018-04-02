@@ -3,7 +3,7 @@
             <aside class="right-side">
                 <!-- Content Header (Page header) -->
                 <section class="content-header">
-                    <h1>新增部门工单项</h1>
+                    <h1>修改部门工单项</h1>
                     <ol class="breadcrumb">
                         <li><a href="{:U('Index/index')}"><i class="fa fa-home"></i> 首页</a></li>
                         <li><a href="javascript:;"><i class="fa fa-gift"></i> 部门工单项</a></li>
@@ -54,6 +54,15 @@
                                             <label>完成时间(单位:天)</label><input type="text" name="info[use_time]" value="{$info['use_time']}" placeholder="请输入整数" class="form-control" />
                                         </div>
 
+                                        <div class="form-group col-md-6">
+                                            <label>未及时完成处理方式：</label>
+                                            <select  class="form-control"  name="info[unfinished]" required>
+                                                <foreach name="unfinished" key="k" item="v">
+                                                    <option value="{$k}" <?php if($k == $info['unfinished']){echo 'selected';} ?>>{$v}</option>
+                                                </foreach>
+                                            </select>
+                                        </div>
+
                                         <div class="form-group col-md-12"></div>
                                         <div class="form-group col-md-12"></div>
 
@@ -64,7 +73,7 @@
                             
                            
                             <div style="width:100%; text-align:center;">
-                            <button type="submit" class="btn btn-info btn-lg" id="lrpd">新增工单项</button>
+                            <button type="submit" class="btn btn-info btn-lg" id="lrpd">修改工单项</button>
                             </div>
                         </div><!--/.col (right) -->
                     </div>   <!-- /.row -->

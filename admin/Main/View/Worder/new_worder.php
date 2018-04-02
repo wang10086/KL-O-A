@@ -22,8 +22,6 @@
                          <!-- right column -->
                         <div class="col-md-12">
 
-
-                            
                             <div class="box box-warning">
                                 <div class="box-header">
                                     <h3 class="box-title">工单计划</h3>

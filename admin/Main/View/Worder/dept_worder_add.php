@@ -54,6 +54,15 @@
                                             <label>完成时间(单位:天)</label><input type="text" name="info[use_time]" placeholder="请输入整数" class="form-control" />
                                         </div>
 
+                                        <div class="form-group col-md-6">
+                                            <label>未及时完成处理方式：</label>
+                                            <select  class="form-control"  name="info[unfinished]" required>
+                                                <foreach name="unfinished" key="k" item="v">
+                                                    <option value="{$k}">{$v}</option>
+                                                </foreach>
+                                            </select>
+                                        </div>
+
                                         <div class="form-group col-md-12"></div>
                                         <div class="form-group col-md-12"></div>
 

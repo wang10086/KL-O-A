@@ -43,6 +43,7 @@
                                         <th class="sorting" width="160" data="type">工单类型</th>
                                         <th class="sorting" data="use_time">完成时间</th>
                                         <if condition="rolemenu(array('Worder/dept_worder_upd'))">
+                                        <th width="160" class="sorting">未及时完成处理方式</th>
                                         <th width="40" class="taskOptions">编辑</th>
                                         </if>
                                         
@@ -59,6 +60,7 @@
                                         <td>{$row.use_time}个工作日</td>
                                         <!--<td>{$row.use_time|date='Y-m-d H:i:s',###}</td>-->
                                         <if condition="rolemenu(array('Worder/dept_worder_upd'))">
+                                            <td>{$row.unfinished_con}</td>
                                             <td><a href="{:U('Worder/dept_worder_upd',array('id'=>$row['id']))}" title="编辑" class="btn btn-info btn-smsm"><i class="fa fa-pencil"></i></a></td>
                                         </if>
                                         <if condition="rolemenu(array('Worder/dept_worder_del'))">
