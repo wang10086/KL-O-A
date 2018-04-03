@@ -153,8 +153,34 @@
                         </div><!-- /.box-body -->
                     </div><!-- /.box -->
                 </div><!--/.col (right) -->
-                
-                
+
+                <div class="col-md-12">
+                    <?php if(rolemenu(array('Worder/urgent')) and ($info['urgent'] == 1) ){ ?>
+                    <div class="box box-warning">
+                        <div class="box-header">
+                            <h3 class="box-title">审核加急工单</h3>
+                        </div>
+                        <form method="post" action="{:U('Worder/urgent')}" name="myform1" >
+                        <input type="hidden" name="dosubmint" value="1">
+                        <input type="hidden" name="id" value="{$info.id}">
+                        <div class="box-body">
+                            <div class="form-group col-md-12" style="margin-top:10px; ">
+                                <div class="checkboxlist" id="applycheckbox" style="margin-top:10px;">
+                                    <input type="radio" name="info[urgent]" value="2" > 审核通过
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                    <input type="radio" name="info[urgent]" value="0" > 审核不通过
+                                </div>
+                            </div>
+                            <div class="form-group col-md-12"  style="margin-top:50px; padding-bottom:20px; text-align:center;">
+                                <button class="btn btn-success btn-lg">确认提交</button>
+                            </div>
+                            <div class="form-group">&nbsp;</div>
+                        </div>
+                        </form>
+                    </div>
+                    <?php } ?>
+                </div>
+
                 <div class="col-md-12">
                     <?php if(rolemenu(array('Worder/assign_user')) and rolemenu(array('Worder/exe_worder')) and ($info['exe_user_id'] == cookie('userid') || $info['assign_id'] == cookie('userid')) ){ ?>
                         <?php /*if(rolemenu(array('Worder/assign_user'))){ */?>

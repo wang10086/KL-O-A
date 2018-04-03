@@ -3129,7 +3129,7 @@ function project_worder($exe_user_id,$pro_id,$thing){
 	$worder['exe_dept_name']    = $role_db->where("id = '$exe_dept_id'")->getfield('role_name');
 	$pro 						= $op_db->where("op_id = '$pro_id'")->find();
 	$worder['worder_title']   	= $pro['project'];
-	$worder['worder_content']   = "处理事项为:".$thing."项目编号为".$pro_id;
+	$worder['worder_content']   = "处理事项为:".$thing."; 项目编号为".$pro_id;
 	$worder['worder_type']      = 100;     //项目工单
 	$worder['status']           = 0;
 	$worder['ini_user_id']      = $_SESSION['userid'];
@@ -3246,6 +3246,35 @@ function absdata($val,$goal){
 	}
 }
 
+function get_roleid($id=0){
+
+	global $str;
+	global $str_level;
+
+	$str_level = $str_level ? $str_level : 0;
+
+	$db = M('role');
+	$where = array();
+	$where['pid']          = $id;
+	$list = $db->where($where)->order('`id` ASC')->select();
+	$str_level++;
+	$aaa 	= array();
+	if($list){
+		foreach($list as $k =>$v){
+			$list[$k]['str_level'] = $str_level;
+			$str[] = $list[$k];
+			get_roleid($v['id']);
+		}
+
+	}
+
+	foreach ($str as $key=>$value){
+		$aaa[] 	= $value['id'];
+	}
+	return $aaa;
+	//return $str;
+
+}
 
 ?>
 

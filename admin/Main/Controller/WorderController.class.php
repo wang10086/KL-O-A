@@ -21,12 +21,33 @@ class WorderController extends BaseController{
             $exe_info       = I('exe_info');
 
             $info['status']         = 0;
-            $info['ini_user_id']    = $_SESSION['userid'];
-            $info['ini_user_name']  = $_SESSION['nickname'];
-            $info['ini_dept_id']    = $_SESSION['roleid'];
-            $info['ini_dept_name']  = $_SESSION['rolename'];
+            $info['ini_user_id']    = cookie('userid');
+            $info['ini_user_name']  = cookie('name');
+            $info['ini_dept_id']    = cookie('roleid');
+            $info['ini_dept_name']  = cookie('rolename');
             $info['create_time']    = NOW_TIME;
             $attr                   = I('attr'); //获取上传文件
+
+            //审核加急工单(公司副经理审批 , 每人每月不超过三条)
+            //求每个部门的紧急工单审核人(每个领导所管辖的roleid)
+            $urgent                 = $info['urgent'];
+            $yang                   = get_roleid(13);   //杨总
+            $qin                    = get_roleid(14);   //秦总
+            $wang                   = get_roleid(54);   //王总
+            $role_id                = cookie('roleid');
+            $count                  = array();
+            $count['ini_user_id']   = cookie('userid');
+            $count['urgent']        = 2;    //加急工单
+            //判断当月加急工单数量
+            $y                      = date("Y",time());
+            $m                      = date("m",time());
+            $t1                     = mktime(0,0,0,$m,1,$y); // 创建本月开始时间
+            $t2                     = NOW_TIME;
+            $count['create_time']   = array('between',"$t1,$t2");
+            $num = count(M('worder')->where($count)->select());
+            if ($num > 3){
+                $this->error("每月不能超过3条加急工单!");
+            }
 
             $arr_exe_dept_id        = array();
             foreach ($exe_info as $v){
@@ -63,6 +84,23 @@ class WorderController extends BaseController{
                         $record['type']     = 0;
                         $record['explain']  = '新建工单';
                         worder_record($record);
+
+                        //如果是加急工单 ,向对应的领导发送系统消息
+                        if ($urgent == 1){
+                            if (in_array($role_id,$yang)){
+                                $exe_uid        = 38;
+                            }elseif (in_array($role_id,$qin)){
+                                $exe_uid        = 12;
+                            }else{
+                                $exe_uid        = 32;
+                            }
+                            $uid     = cookie('userid');
+                            $title   = '您有来自['.$info['ini_dept_name'].'--'.$info['ini_user_name'].']申请的加急工单待审核!';
+                            $content = $info['worder_content'];
+                            $url     = U('worder/worder_info',array('id'=>$res));
+                            $user    = '['.$exe_uid.']';
+                            send_msg($uid,$title,$content,$url,$user,'');
+                        }
 
                         //发送信息
                         $uid     = cookie('userid');
@@ -158,6 +196,8 @@ class WorderController extends BaseController{
             if($v['worder_type']==0) $lists[$k]['type'] = '维修工单';
             if($v['worder_type']==1) $lists[$k]['type'] = '管理工单';
             if($v['worder_type']==2) $lists[$k]['type'] = '质量工单';
+            if($v['worder_type']==3) $lists[$k]['type'] = '其他工单';
+            if($v['worder_type']==100)$lists[$k]['type']= '项目工单';
 
             //判断工单状态
             if($v['status']==0)     $lists[$k]['sta'] = '<span class="red">未响应</span>';
@@ -212,6 +252,7 @@ class WorderController extends BaseController{
             if($data['worder_type']==0) $data['type'] = '维修工单';
             if($data['worder_type']==1) $data['type'] = '管理工单';
             if($data['worder_type']==2) $data['type'] = '质量工单';
+            if($data['worder_type']==3) $data['type'] = '其他工单';
             if($data['worder_type']==100)$data['type']= '项目工单';
             $this->data         = $data;
             $this->id           = $id;
@@ -297,6 +338,7 @@ class WorderController extends BaseController{
                 if($v['worder_type']==0) $lists[$k]['type'] = '维修工单';
                 if($v['worder_type']==1) $lists[$k]['type'] = '管理工单';
                 if($v['worder_type']==2) $lists[$k]['type'] = '质量工单';
+                if($v['worder_type']==3) $lists[$k]['type'] = '其他工单';
                 if($v['worder_type']==100)$lists[$k]['type']= '项目工单';
 
                 //判断工单状态
@@ -336,6 +378,7 @@ class WorderController extends BaseController{
             if($info['worder_type']==0) $info['type'] = '维修工单';
             if($info['worder_type']==1) $info['type'] = '管理工单';
             if($info['worder_type']==2) $info['type'] = '质量工单';
+            if($info['worder_type']==3) $info['type'] = '其他工单';
             if($info['worder_type']==100)$info['type']= '项目工单';
 
             //判断工单状态
@@ -652,6 +695,7 @@ class WorderController extends BaseController{
             if($v['worder_type']==0) $lists[$k]['type'] = '维修工单';
             if($v['worder_type']==1) $lists[$k]['type'] = '管理工单';
             if($v['worder_type']==2) $lists[$k]['type'] = '质量工单';
+            if($v['worder_type']==3) $lists[$k]['type'] = '其他工单';
             if($v['worder_type']==100)$lists[$k]['type']= '项目工单';
 
             //判断工单状态
@@ -794,5 +838,30 @@ class WorderController extends BaseController{
         }
     }
 
+    //审核加急工单
+    public function urgent(){
+        $id             = I('id');
+        $info           = I('info');
+        $data           = array();
+        $data['urgent'] = $info['urgent'];
+        $res        = M('worder')->where(array('id'=>$id))->save($data);
+        if ($res){
+            //工单操作记录
+            $record = array();
+            $record['worder_id'] = $id;
+            $record['type']      = 7;
+            if ($data['urgent'] == 2){
+                $record['explain']   = '工单通过加急审核';
+            }else{
+                $record['explain']   = '工单未通过加急审核';
+            }
+            worder_record($record);
+            $this->success("操作成功");
+
+        }else{
+
+            $this->error('操作失败');
+        }
+    }
 
 }
