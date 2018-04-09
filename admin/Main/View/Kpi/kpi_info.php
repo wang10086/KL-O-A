@@ -76,10 +76,12 @@
                                                 <th width="100">完成</th>
                                                 <th width="100">完成率</th>
                                                 <th width="100">权重</th>
+                                                
                                                 <th width="100">考评得分</th>
                                                 <?php 
 												if(cookie('roleid')==43 || cookie('roleid')==44 || cookie('userid')==$kpi['mk_user_id'] || cookie('roleid')==10 || C('RBAC_SUPER_ADMIN')==cookie('username') ){
 												?>
+                                                <th width="60">锁定</th>
                                                 <if condition="rolemenu(array('Kpi/editkpi'))">
                                                 <th width="50" class="taskOptions">编辑</th>
                                                 </if>
@@ -89,13 +91,16 @@
                                             <foreach name="lists" key="key" item="row"> 
                                             <tr>
                                                 <td align="center"><?php echo $key+1; ?></td>
-                                                <td><a href="javascript:;" onClick="kpi({$row.quota_id})">{$row.quota_title}</a></td>
+                                                <td><a href="javascript:;" onClick="kpi({$row.quota_id})">{$row.quota_title}</a> </td>
                                                 <td>{$row.start_date|date='Y-m-d',###} 至 {$row.end_date|date='Y-m-d',###}</td>
                                                 <td>{$row.target}</td>
                                                 <td>{$row.complete}</td>
                                                 <td>{$row.complete_rate}</td>
                                                 <td>{$row.weight}</td>
                                                 <td>{$row.score}</td>
+												<td><?php if($row['automatic']){ echo '<i class="fa fa-lock" style="color:#ff6600;font-size:14px;"></i>';} ?></td>
+                                                
+                                                
                                                 <?php 
 												
 												if(cookie('roleid')==43 || cookie('roleid')==44 || cookie('userid')==$kpi['mk_user_id'] || cookie('roleid')==10 || C('RBAC_SUPER_ADMIN')==cookie('username') ){
