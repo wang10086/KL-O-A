@@ -167,6 +167,7 @@
                                     <?php 
 									if($kpi['status']==0 && cookie('userid')==$kpi['user_id']){
 									?>
+                                    <!--
 									<form method="post" action="{:U('Kpi/kpi_applyscore')}" name="myform" id="myform">
 									<input type="hidden" name="dosubmint" value="1">
 									<input type="hidden" name="kpiid" value="{$kpi.id}">
@@ -175,6 +176,7 @@
 									<button type="submit" class="btn btn-info btn-lg" id="lrpd">申请审核</button>
 									</div>
 									</form>
+                                    -->
 									<?php 
 									}
 									?>
@@ -184,6 +186,7 @@
                                     <?php 
 									if($kpi['status']==1 && cookie('userid')==$kpi['ex_user_id'] ){
 									?>
+                                    <!--
                                     <form method="post" action="{:U('Kpi/kpi_applyscore')}" name="myform" id="myform">
                                     <input type="hidden" name="dosubmint" value="1" />
                                     <input type="hidden" name="kpiid" value="{$kpi.id}">
@@ -203,6 +206,7 @@
                                     </div>
                                     
                                     </form>
+                                    -->
                                     <?php } ?>
                                     
                                     
@@ -211,6 +215,7 @@
 									<?php 
 									if($kpi['status']==2 && cookie('userid')==$kpi['user_id']){
 									?>
+                                    <!--
 									<form method="post" action="{:U('Kpi/kpi_applyscore')}" name="myform" id="myform">
 									<input type="hidden" name="dosubmint" value="1">
 									<input type="hidden" name="kpiid" value="{$kpi.id}">
@@ -219,6 +224,7 @@
 									<button type="submit" class="btn btn-info btn-lg" id="lrpd">申请评分</button>
 									</div>
 									</form>
+                                    -->
 									<?php 
 									}
 									?>
@@ -227,6 +233,7 @@
                                     <?php 
 									if($kpi['status']==4 && cookie('userid')==$kpi['mk_user_id']){
 									?>
+                                    <!--
 									<form method="post" action="{:U('Kpi/kpi_score')}" name="myform" id="myform">
 									<input type="hidden" name="dosubmint" value="1">
 									<input type="hidden" name="kpiid" value="{$kpi.id}">
@@ -237,6 +244,7 @@
 									<button type="submit" class="btn btn-info btn-lg" id="lrpd">确定评分</button>
 									</div>
 									</form>
+                                    -->
 									<?php 
 									}
 									?>
