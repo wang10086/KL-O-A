@@ -78,10 +78,11 @@
                                                 <th width="100">权重</th>
                                                 
                                                 <th width="100">考评得分</th>
+                                                <th width="60">锁定</th>
                                                 <?php 
 												if(cookie('roleid')==43 || cookie('roleid')==44 || cookie('userid')==$kpi['mk_user_id'] || cookie('roleid')==10 || C('RBAC_SUPER_ADMIN')==cookie('username') ){
 												?>
-                                                <th width="60">锁定</th>
+                                                
                                                 <if condition="rolemenu(array('Kpi/editkpi'))">
                                                 <th width="50" class="taskOptions">编辑</th>
                                                 </if>
