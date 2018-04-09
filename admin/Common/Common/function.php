@@ -3301,8 +3301,14 @@ function kpilock($month,$uid){
 		$data['remarks']	= $uname.'【'.$month.'】KPI数据已锁定！';
 		
 		M('kpi_lock_record')->add($data);
+		
+		
+		return true;
 	
+	}else{
+		return false;	
 	}
+	
 	
 }
 

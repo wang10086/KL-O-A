@@ -1474,17 +1474,26 @@ class RbacController extends BaseController {
 			
 			
 			//校验
+			
+			$exe = 0;
+			
 			if(!$month || $month>=$tm)  	$this->error('月份未填写或超出！');
 			if($type){
 				if(!$uid)	 $this->error('请选择考核人员！');
-				kpilock($month,$uid);
+				$execute = kpilock($month,$uid);
+				if($execute) $exe ++;
 			}else{
 				foreach($user as $k=>$v){
-					kpilock($month,$v['id']);
+					$execute = kpilock($month,$v['id']);
+					if($execute) $exe ++;
 				}
 			}
+			if($exe){
+				$this->success('已成功锁定'.$exe.'人数据！');
+			}else{
+				$this->error('没有可锁定数据！');	
+			}
 			
-			$this->success('已成功锁定！');
 			
 			
 			
