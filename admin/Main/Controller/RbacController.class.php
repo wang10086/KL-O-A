@@ -1455,7 +1455,7 @@ class RbacController extends BaseController {
 	}
 	
 	
-	// @@@NODE-3###del_kpi_data###删除考核指标###
+	// @@@NODE-3###kpi_lockdata###锁定KPI数据###
 	public function kpi_lockdata(){
 		
 		$role = M('role')->GetField('id,role_name',true);
