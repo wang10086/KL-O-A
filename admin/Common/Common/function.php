@@ -3276,6 +3276,36 @@ function get_roleid($id=0){
 
 }
 
+
+function kpilock($month,$uid){
+	
+	$uname = username($uid);
+	
+	
+	$where = array();
+	$where['month']	 	= $month;
+	$where['user_id']	= $uid;
+	
+	$save = M('kpi_more')->where($where)->data(array('automatic'=>1))->save();
+	
+	if($save){
+	
+		
+		$data	= array();
+		$data['month']		= $month;
+		$data['uid']		= $uid;
+		$data['uname']		= $uname;
+		$data['op_time']	= time();
+		$data['op_uid']		= cookie('userid');
+		$data['op_uname']	= cookie('name');
+		$data['remarks']	= $uname.'【'.$month.'】KPI数据已锁定！';
+		
+		M('kpi_lock_record')->add($data);
+	
+	}
+	
+}
+
 ?>
 
 

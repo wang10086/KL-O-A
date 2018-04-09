@@ -617,6 +617,10 @@
                                          <li class="{:on('Rbac/kpi_users')}" ><a href="{:U('Rbac/kpi_users')}"><i class="fa fa-angle-right"></i> 配置KPI数据</a></li>
                                     </if>
                                     
+                                    <if condition="rolemenu(array('Rbac/kpi_lockdata'))"> 
+                                         <li class="{:on('Rbac/kpi_users')}" ><a href="{:U('Rbac/kpi_lockdata')}"><i class="fa fa-angle-right"></i> 锁定KPI数据</a></li>
+                                    </if>
+                                    
                                     <!--
                                     <if condition="rolemenu(array('Rbac/node'))">
                                         <li><a href="{:U('Index/index')}"><i class="fa fa-angle-right"></i> 缓存清理</a></li>

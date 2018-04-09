@@ -1453,4 +1453,64 @@ class RbacController extends BaseController {
 		$this->success('删除成功！');
 		
 	}
+	
+	
+	// @@@NODE-3###del_kpi_data###删除考核指标###
+	public function kpi_lockdata(){
+		
+		$role = M('role')->GetField('id,role_name',true);
+		$user =  M('account')->where(array('status'=>0))->select();
+			
+		if(isset($_POST['dosubmit'])){
+			
+			
+			$month 		= I('month',0);
+			$type 		= I('type',0);
+			$uname 		= I('uname','');
+			$uid 		= I('uid',0);
+			$referer 	= I('referer');
+			
+			$tm			= date('Ym');
+			
+			
+			//校验
+			if(!$month || $month>=$tm)  	$this->error('月份未填写或超出！');
+			if($type){
+				if(!$uid)	 $this->error('请选择考核人员！');
+				kpilock($month,$uid);
+			}else{
+				foreach($user as $k=>$v){
+					kpilock($month,$v['id']);
+				}
+			}
+			
+			$this->success('已成功锁定！');
+			
+			
+			
+		}else{
+		
+			
+			$key = array();
+			foreach($user as $k=>$v){
+				$text = $v['nickname'].'-'.$role[$v['roleid']];
+				$key[$k]['id']         = $v['id'];
+				$key[$k]['user_name']  = $v['nickname'];
+				$key[$k]['pinyin']     = strtopinyin($text);
+				$key[$k]['text']       = $text;
+				$key[$k]['role']       = $v['roleid'];
+				$key[$k]['role_name']  = $role[$v['roleid']];
+			}
+			
+			$this->userkey =  json_encode($key);	
+			
+			
+			$this->record = M('kpi_lock_record')->limit('100')->order('id DESC')->select();
+			
+			$this->display('kpi_lockdata');
+		
+		}
+		
+		
+	}
 }
