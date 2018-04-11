@@ -285,7 +285,7 @@ class OpController extends BaseController {
 	
 	// @@@NODE-3###plans_follow###项目跟进###
     public function plans_follow(){
-		
+
 		$opid = I('opid');
 		$id   = I('id');
 		if($id){
@@ -1610,7 +1610,11 @@ class OpController extends BaseController {
 			
 			$this->kinds	= M('project_kind')->getField('id,name', true);
 			$this->op		= $op;
-			
+
+            //人员列表
+            $stu_list       = M('op_member')->where(array('op_id'=>$opid))->select();
+            $this->stu_list = $stu_list;
+
 			$this->confirm 	= $confirm; 
 			$this->display('confirm');
 		}

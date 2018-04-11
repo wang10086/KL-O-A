@@ -448,6 +448,56 @@ class ExportController extends BaseController {
 		exportexcel($expdata,$title,'财务结算统计表'.date('YmdHis'));
 		
 	}
+
+    /*导出人员列表*/
+    public function member(){
+
+        $opid = I('opid');
+        if(!$opid) $this->error('项目不存在');
+
+        $where = array();
+        $where['op_id'] = $opid;
+
+        /*$settlement       = M('op_settlement')->where(array('op_id'=>$opid))->find();
+
+        if(!$settlement || $settlement['audit_status']!=1 ) $this->error('结算未审批通过');*/
+
+        $op           = M('op')->where($where)->find();
+        $member       = M('op_member')->where(array('op_id'=>$opid))->select();
+
+        $filename = $op['group_id'].'人员名单表';
+
+
+        $data = array();
+        $data['B2']   = $op['group_id'];  //团号
+        $data['E2']   = $op['customer'];  //客户单位
+        $data['J2']   = $op['number'];  //合计人数
+
+        $i = 4;
+        $j = 1;
+        foreach($member as $k=>$v){
+            //$data['A'.$i]  = $j;  //编号
+            $data['A'.$i]  = $v['name'];  //姓名
+            $data['C'.$i]  = $v['sex'];  //性别
+            $data['D'.$i]  = $v['number'];  //证件号
+            $data['E'.$i]  = $v['ecname'];  //家长姓名
+            $data['F'.$i]  = $v['ecmobile'];  //家长电话
+            $data['G'.$i]  = $v['remark'];  //备注
+            $i++;
+            $j++;
+        }
+
+        if($j<=30){
+            $model = 'admin/assets/xls/member_30.xls';
+        }else if($j>30 && $j<=60){
+            $model = 'admin/assets/xls/member_60.xls';
+        }else if($j>60){
+            $model = 'admin/assets/xls/member_100.xls';
+        }
+
+        model_exportexcel($data,$filename,$model);
+
+    }
 	
 }
 	

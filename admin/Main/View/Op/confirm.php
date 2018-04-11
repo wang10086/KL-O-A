@@ -34,9 +34,9 @@
                             
                              
                              <div class="box box-warning" style="margin-top:15px;">
-                                <div class="box-header">
+                                <div class="box-header" >
                                     <h3 class="box-title">
-                                    <php> if($op['status']==1){ echo '<span class="green">项目已成团</span>&nbsp;&nbsp; <span style="font-weight:normal; color:#ff3300;">（团号：'.$op['group_id'].'）</span>';}elseif($op['status']==2){ echo '<span class="red">项目不成团</span>&nbsp;&nbsp; <span style="font-weight:normal">（原因：'.$op['nogroup'].'）</span>';}else{ echo ' <span style=" color:#999999;">该项目暂未成团</span>';} </php>
+                                    <php> if($op['status']==1){ echo '<span class="green">项目已成团</span>&nbsp;&nbsp; <span style="font-weight:normal; color:#ff3300;"  id="print_1">（团号：'.$op['group_id'].'）</span>';}elseif($op['status']==2){ echo '<span class="red">项目不成团</span>&nbsp;&nbsp; <span style="font-weight:normal">（原因：'.$op['nogroup'].'）</span>';}else{ echo ' <span style=" color:#999999;">该项目暂未成团</span>';} </php>
                                     </h3>
                                     <h3 class="box-title pull-right" style="font-weight:normal; color:#333333;"><span class="green">项目编号：{$op.op_id}</span> &nbsp;&nbsp;创建者：{$op.create_user_name}</h3>
                                 </div><!-- /.box-header -->
@@ -77,7 +77,24 @@
                                     
                                 </div>
                             </div>
-                            
+
+
+                            <div class="box box-warning">
+                                <div class="box-header">
+                                    <h3 class="box-title">随团人员名单</h3>
+                                </div><!-- /.box-header -->
+                                <div class="box-body">
+                                    <?php if($stu_list){ ?>
+                                        <include file="confirm_name_list" />
+                                    <?php }else{ ?>
+                                        <div class="content" ><span style="padding:20px 0; float:left; clear:both; text-align:center; text-align:center; width:100%;">暂无人员信息!</span></div>
+                                    <?php } ?>
+
+                                </div>
+                            </div>
+
+
+
                         </div><!--/.col (right) -->
                     </div>   <!-- /.row -->
                     
