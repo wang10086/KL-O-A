@@ -342,7 +342,9 @@ class BasepubController extends Controller {
         foreach ($lists as $v){
             if ($v['plan_complete_time'] < $time and $v['ini_confirm_time'] == 0){
                 $w_id           = $v['id'];
-                if (in_array($w_id,$wd_ids)){
+                $exe_dept_id    = $v['exe_dept_id'];
+                $role_ids       = array(10,31,29);    //排除31计调部经理,29计调专员
+                if (in_array($w_id,$wd_ids) || in_array($exe_dept_id,$role_ids)){
                     exit();
                     //判断该工单是否已经记录 , 防止重复记录
                 }else{
