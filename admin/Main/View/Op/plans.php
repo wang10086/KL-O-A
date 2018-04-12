@@ -43,7 +43,7 @@
                                                 </select>
                                             <span id="kindTip" style="margin-right: 5px;"></span>
                                         </div>
-                                        
+
                                         <div class="form-group col-md-4">
                                             <label>预计人数：</label><input type="text" name="info[number]" class="form-control" id="number" />
                                             <div id="numberTip"></div>
