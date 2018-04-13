@@ -427,7 +427,7 @@ class OpController extends BaseController {
 			$this->tuanhao    = $tuanhao;
 		}
 		
-		
+
 		$this->kinds          = M('project_kind')->getField('id,name', true);
 		$this->user           = M('account')->where('`id`>3')->getField('id,nickname', true);
 		$this->rolelist       = M('role')->where('`id`>10')->getField('id,role_name', true);
@@ -1326,7 +1326,9 @@ class OpController extends BaseController {
 		$op['show_user']  = $show_user;
 		$op['show_time']  = $show_time;
 		$op['show_reason']  = $show_reason;
-		
+
+        $member               = M('op_member')->where(array('op_id'=>$opid))->order('id')->select();
+        $this->member         = $member;
 		$this->op             = $op;
 		$this->matelist       = $matelist;
 		$this->budget         = $budget;
@@ -1681,6 +1683,8 @@ class OpController extends BaseController {
 
             //人员列表
             $stu_list       = M('op_member')->where(array('op_id'=>$opid))->select();
+            $member         = M('op_member')->where(array('op_id'=>$opid))->order('id')->select();
+            $this->member   = $member;
             $this->stu_list = $stu_list;
 
 			$this->confirm 	= $confirm; 
@@ -1899,6 +1903,8 @@ class OpController extends BaseController {
 			
 			$this->kinds	= M('project_kind')->getField('id,name', true);
 			$this->op		= $op;
+            $member         = M('op_member')->where(array('op_id'=>$opid))->order('id')->select();
+            $this->member   = $member;
 			
 			$auth = M('op_auth')->where(array('op_id'=>$opid))->find();
 			//获取产品负责人信息

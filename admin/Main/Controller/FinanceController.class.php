@@ -83,7 +83,9 @@ class FinanceController extends BaseController {
 		$op['show_user']  = $show_user;
 		$op['show_time']  = $show_time;
 		$op['show_reason']  = $show_reason;
-		
+
+        $member               = M('op_member')->where(array('op_id'=>$opid))->order('id')->select();
+        $this->member         = $member;
 		$this->kind           = C('COST_TYPE');
 		$this->op             = $op;
 		$this->costacc        = $costacc;
@@ -143,7 +145,9 @@ class FinanceController extends BaseController {
 		$op['show_user']  = $show_user;
 		$op['show_time']  = $show_time;
 		$op['show_reason']  = $show_reason;
-		
+
+        $member                 = M('op_member')->where(array('op_id'=>$opid))->order('id')->select();
+        $this->member           = $member;
 		$this->kind				= C('COST_TYPE');
 		$this->op				= $op;
 		$this->budget			= $budget;
@@ -687,8 +691,9 @@ class FinanceController extends BaseController {
 			$huikuan[$k]['show_time']    = $show_time;
 			$huikuan[$k]['show_reason']  = $show_reason;
 		}
-		
 
+        $member             = M('op_member')->where(array('op_id'=>$opid))->order('id')->select();
+        $this->member       = $member;
 		$this->op    		= $op;
 		$this->settlement	= $settlement;
 		$this->kinds		= M('project_kind')->getField('id,name', true);
