@@ -90,7 +90,7 @@ class OpController extends BaseController {
 		$PinYin = new Pinyin();
 		
 		if(isset($_POST['dosubmint']) && $_POST['dosubmint']){
-			
+
 			$db             = M('op');
 			$op_cost_db     = M('op_cost');
 			$op_guide_db    = M('op_guide');
@@ -104,6 +104,10 @@ class OpController extends BaseController {
 			$supplier   = I('supplier');
 			$wuzi       = I('wuzi');
 
+            $exe_role_ids = I('exe');
+            if(!$exe_role_ids){
+                $this->error('工单受理部门不能为空');
+            }
 			if(!$info['customer']){
 				$this->error('客户单位不能为空' . $db->getError());	
 				die();	
@@ -146,7 +150,9 @@ class OpController extends BaseController {
 
 					//创建工单
                     $id                 = $info['kind'];
-                    $pid                = M('project_kind')->where(array('id'=>$id) )->getField('pid');
+                    $pro_info           = M('project_kind')->where(array('id'=>$id) )->find();
+                    $pid                = $pro_info['pid'];
+                    $pro_name           = $pro_info['name'];
                     $worder             = array();
                     $worder['op_id']    = M("op")->where(array('id'=>$addok))->getField('op_id');
                     $worder['worder_title']     = $info['project'];
@@ -161,37 +167,49 @@ class OpController extends BaseController {
                     $u_time                     = 5;    //默认5个工作日
                     //计划完成时间 $u_time为工作日
                     $worder['plan_complete_time']= strtotime(getAfterWorkDay($u_time));
+                    foreach($exe_role_ids as $v){
+                        $exe_dept_id        = $v;
+                        $exe_dept_name      = M('role')->where(array('id'=>$exe_dept_id))->getField('role_name');
+                        $exe_user_id        = M('auth')->where(array('role_id'=>$exe_dept_id))->getField("worder_auth");
+                        $exe_user_name      = M('account')->where(array('id'=>array('eq',$exe_user_id)))->getField('nickname');
+                        $worder['exe_dept_id']      = $exe_dept_id;
+                        $worder['exe_dept_name']    = $exe_dept_name;
+                        $worder['exe_user_id']      = $exe_user_id;
+                        $worder['exe_user_name']    = $exe_user_name;
+                        $res = M('worder')->add($worder);
+                        if($res){
+                            //保存操作记录
+                            $record = array();
+                            $record['worder_id'] = $res;
+                            $record['type']     = 0;
+                            $record['explain']  = '立项/创建工单';
+                            worder_record($record);
+                            //发送系统消息
+                            $uid     = cookie('userid');
+                            $title   = '您有来自['.$worder['ini_dept_name'].'--'.$worder['ini_user_name'].']的工单待执行!';
+                            $content = $worder['worder_content'];
+                            $url     = U('worder/worder_info',array('id'=>$res));
+                            $user    = '['.$worder['exe_user_id'].']';
+                            send_msg($uid,$title,$content,$url,$user,'');
+                        }
+                    }
+
+                    //发送立项消息提示[1线路(韩露) , 2课程(魏春竹) , 3其他(秦鸣)]
                     if($id == 1 || $pid ==1){
-                        $exe_dept_id            =  65;
-                        $worder['exe_dept_name']= '线路及活动组主管';
+                        $exe_d_id            =  65;
                     }elseif ($id ==2 || $pid ==2){
-                        $exe_dept_id            =  76;
-                        $worder['exe_dept_name']= '课程及小课题组组长';
+                        $exe_d_id            =  76;
                     }elseif ($id ==3 || $pid==3){
-                        $exe_dept_id            =  14;
-                        $worder['exe_dept_name']= '总经理助理';
+                        $exe_d_id            =  14;
                     }
-                    $exe_user_id        = M('auth')->where(array('role_id'=>$exe_dept_id))->getField("worder_auth");
-                    $exe_user_name      = M('account')->where(array('id'=>array('eq',$exe_user_id)))->getField('nickname');
-                    $worder['exe_dept_id']      = $exe_dept_id;
-                    $worder['exe_user_id']      = $exe_user_id;
-                    $worder['exe_user_name']    = $exe_user_name;
-                    $res = M('worder')->add($worder);
-                    if($res){
-                        //保存操作记录
-                        $record = array();
-                        $record['worder_id'] = $res;
-                        $record['type']     = 0;
-                        $record['explain']  = '立项/创建工单';
-                        worder_record($record);
-                        //发送系统消息
-                        $uid     = cookie('userid');
-                        $title   = '您有来自['.$worder['ini_dept_name'].'--'.$worder['ini_user_name'].']的工单待执行!';
-                        $content = $worder['worder_content'];
-                        $url     = U('worder/worder_info',array('id'=>$res));
-                        $user    = '['.$worder['exe_user_id'].']';
-                        send_msg($uid,$title,$content,$url,$user,'');
-                    }
+                    $exe_user_id        = M('auth')->where(array('role_id'=>$exe_d_id))->getField("worder_auth");
+                    //发送系统消息
+                    $uid     = cookie('userid');
+                    $title   = '您有来自['.$worder['ini_dept_name'].'--'.$worder['ini_user_name'].']的['.$pro_name.']项目!请注意跟进!';
+                    $content = $worder['worder_content'];
+                    $url     = U('Op/plans_follow',array('opid'=>$worder['op_id']));
+                    $user    = '['.$exe_user_id.']';
+                    send_msg($uid,$title,$content,$url,$user,'');
 
 					/*echo "<script>
                         var a = confirm('立项成功,现在需要发送工单吗?')
