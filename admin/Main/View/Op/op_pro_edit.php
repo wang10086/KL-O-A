@@ -61,10 +61,8 @@
     <input type="text" class="form-control" name="info[sale_user]" value="{$op.sale_user}" readonly>
 </div>
 
-
-
 <div class="form-group col-md-12">
-    <label>项目背景：</label><textarea class="form-control"  name="info[context]">{$op.context}</textarea>
+    <label>项目需求(对市场部 、研发部 、计调部 、资源管理部等部门的需求)：</label><textarea class="form-control"  name="info[context]">{$op.context}</textarea>
 </div>
 
 <div class="form-group col-md-12">

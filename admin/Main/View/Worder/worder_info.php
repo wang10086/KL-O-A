@@ -66,7 +66,7 @@
                                     </tr>
                                     <tr>
                                         <td width="33.33%">执行者姓名：{$info.exe_user_name}</td>
-                                        <td width="33.33%">执行者职务：{$info.exe_dept_name}</td>
+                                        <td width="33.33%">执行部门：{$info.exe_dept_name}</td>
                                         <if condition="$info['assign_name']">
                                             <td width="33.33%">被指派者名字：{$info['assign_name']}</td>
                                         </if>
