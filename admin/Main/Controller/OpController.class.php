@@ -250,8 +250,7 @@ class OpController extends BaseController {
 				}
 			}
 			//if($key) $this->keywords =  json_encode($key);
-			
-			
+
 			$this->geclist     = M('customer_gec')->field('id,pinyin,company_name')->where($where)->group("company_name")->order('pinyin ASC')->select();
 			$this->kinds       = get_project_kinds();
 			$this->userlist    =  M('account')->where('`id`>3')->getField('id,nickname', true);
@@ -450,7 +449,12 @@ class OpController extends BaseController {
 		$this->business_depts = C('BUSINESS_DEPT');
 		$this->subject_fields = C('SUBJECT_FIELD');
 		$this->ages           = C('AGE_LIST');
-		
+        $this->service_type   = C('SERVICE_TYPE');
+        $this->act_need       = C('ACT_NEED');
+        $this->job_name       = C('JOB_NAME');
+        $this->les_field       = C('LES_FIELD');
+        $this->act_field       = C('ACT_FIELD');
+
 		//客户名称关键字
 		$where = array();
 		if(C('RBAC_SUPER_ADMIN')==cookie('username') || cookie('roleid')==10 || cookie('roleid')==28 || cookie('roleid')==11 || cookie('roleid')==30){
@@ -460,9 +464,18 @@ class OpController extends BaseController {
 			$where['cm_id'] = array('in',Rolerelation(cookie('roleid')));
 		}
 		$this->geclist     = M('customer_gec')->field('id,pinyin,company_name')->where($where)->group("company_name")->order('pinyin ASC')->select();
-			
-			
-		
+
+        //人员名单关键字
+        $user   = M('account')->field("id,nickname")->where(array('status'=>0))->select();
+        $user_key    = array();
+        foreach($user as $k=>$v){
+            $text           = $v['nickname'];
+            $user_key[$k]['id']  = $v['id'];
+            $user_key[$k]['pinyin'] = strtopinyin($text);
+            $user_key[$k]['text']       = $text;
+        }
+        $this->userkey = json_encode($user_key);
+
 		$this->display('plans_edit');
 		
 	}
@@ -478,6 +491,7 @@ class OpController extends BaseController {
 			$op_guide_db    = M('op_guide');
 			$op_member_db   = M('op_member');
 			$op_supplier_db = M('op_supplier');
+            $op_res_db      = M('op_res');
 			
 			$opid       = I('opid');
 			$info       = I('info');
@@ -712,7 +726,13 @@ class OpController extends BaseController {
 			}
 			echo $num;
 								
-			
+			//保存资源需求单
+            if($opid && $savetype==11 ){
+                $info['op_id']      = $opid;
+                $info['ini_time']   = NOW_TIME;
+
+                var_dump($info);die;
+            }
 		}
 	
 	}

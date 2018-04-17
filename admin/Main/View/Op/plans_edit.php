@@ -86,7 +86,31 @@
                                 </div><!-- /.box-body -->
                             </div><!-- /.box -->
 
-                            
+                            <!--__________________start__________________-->
+                            <div class="box box-warning">
+                                <div class="box-header">
+                                    <h3 class="box-title">资源需求单</h3>
+                                    <!--<h3 class="box-title pull-right" style="font-weight:normal; color:#333333;">
+                                        <?php /* if($opauth && $opauth['guide']){ */?>
+                                            负责人：{$user.$opauth[guide]}
+                                        <?php /* }else{ */?>
+                                            <?php /* if(rolemenu(array('Op/assign_guide'))){ */?>
+                                                <a href="javascript:;" onclick="javascript:assign('{:U('Op/assign_guide',array('opid'=>$op['op_id']))}','指派专家辅导员负责人');" style="color:#09F;">指派负责人</a>
+                                            <?php /* }else{ */?>
+                                                暂未指派负责人
+                                            <?php /* } */?>
+                                        <?php /* } */?>
+                                    </h3>-->
+                                </div>
+                                <?php if(rolemenu(array('Op/public_save'))  && $budget['audit_status']==1 && $settlement['audit']!=1 && ($opauth['guide']==cookie('userid') || C('RBAC_SUPER_ADMIN')==cookie('username') || rolemenu(array('Op/assign_res')))){ ?>
+                                    <include file="op_res_need" />
+                                    <div class="form-group col-md-12"></div>
+                                <?php  }else{ ?>
+                                    <include file="op_res_need" />
+                                    <div class="form-group col-md-12"></div>
+                                <?php } ?>
+                            </div>
+                            <!--___________________end___________________-->
 
                            <?php  if($op['audit_status']==1){ ?> 
                             

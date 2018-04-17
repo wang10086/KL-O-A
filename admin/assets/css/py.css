@@ -4010,3 +4010,9 @@ th{outline: none;}
 .worder_box{ margin-top:20px;}
 .worder_close{ position:absolute; right:-10px; top:0; width:20px; height:34px; background:#ff3300; color:#ffffff; font-size:14px; text-align:center; line-height:34px; margin:0; padding:0;}
 .worder_close:hover{ color:#ffffff;}
+
+.checkboxs_400{  padding:5px 0; margin-right:20px; color:#333333; display: inline-block; width:400px; }
+.checkboxs_255{  padding:5px 0; margin-right:20px; color:#333333; display: inline-block; width:255px; }
+.checkboxs_100{  padding:5px 0; margin-right:20px; color:#333333; display: inline-block; width:100px; }
+.act_input{width: 100px; border: none; border-bottom: solid 1px;}
+.res_need_h2{font-size:16px; border-bottom:2px solid #dedede; padding-bottom:10px;}
