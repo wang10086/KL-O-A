@@ -26,13 +26,14 @@
                                 <!--
                                 <if condition="rolemenu(array('Sale/goods'))"><a href="{:U('Sale/goods',array('opid'=>$op['op_id']))}" class="btn btn-default">项目销售</a></if>
                                 -->
-                                 <if condition="rolemenu(array('Finance/settlement')) && (($op['create_time'] gt 1523721600) && $member) || ($op['create_time'] lt 1523721600)"><!--2018-04-15-->
-                                     <a href="{:U('Finance/settlement',array('opid'=>$op['op_id']))}" class="btn btn-default">项目结算</a>
+                                <if condition="rolemenu(array('Finance/settlement'))"><a href="{:U('Finance/settlement',array('opid'=>$op['op_id']))}" class="btn btn-default ">项目结算</a></if>
+
+                                 <if condition="rolemenu(array('Finance/huikuan')) && (($op['create_time'] gt 1523980800) && $member) || ($op['create_time'] lt 1523980800)"><!--2018-04-18-->
+                                     <a href="{:U('Finance/huikuan',array('opid'=>$op['op_id']))}" class="btn btn-default">项目回款</a>
                                      <else />
-                                     <a href="javascript:;" onclick="alert('请先填写随团人员信息名单!');" class="btn btn-default">项目结算</a>
+                                     <a href="javascript:;" onclick="alert('请先填写随团人员信息名单!');" class="btn btn-default">项目回款</a>
                                  </if>
-                                <!--<if condition="rolemenu(array('Finance/settlement'))"><a href="{:U('Finance/settlement',array('opid'=>$op['op_id']))}" class="btn btn-default ">项目结算</a></if>-->
-                                <if condition="rolemenu(array('Finance/huikuan'))"><a href="{:U('Finance/huikuan',array('opid'=>$op['op_id']))}" class="btn btn-default">项目回款</a></if>
+                                <!--<if condition="rolemenu(array('Finance/huikuan'))"><a href="{:U('Finance/huikuan',array('opid'=>$op['op_id']))}" class="btn btn-default">项目回款</a></if>-->
                                 <if condition="rolemenu(array('Op/evaluate'))"><a href="{:U('Op/evaluate',array('opid'=>$op['op_id']))}" class="btn btn-info">项目评价</a></if>
                             </div>
                             
