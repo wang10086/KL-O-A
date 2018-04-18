@@ -353,6 +353,7 @@ class OpController extends BaseController {
 	// @@@NODE-3###plans_follow###项目跟进###
     public function plans_follow(){
 
+        header('Content-Type:text/html;charset=utf-8');
 		$opid = I('opid');
 		$id   = I('id');
 		if($id){
@@ -384,7 +385,9 @@ class OpController extends BaseController {
 		$record     = M('op_record')->where(array('op_id'=>$opid))->order('id DESC')->select();
 		$budget     = M('op_budget')->where(array('op_id'=>$opid))->find();
 		$settlement = M('op_settlement')->where(array('op_id'=>$opid))->find();
-		
+        $resource   = M('op_res')->where(array('op_id'=>$opid))->find();
+        $res_money  = M('op_res_money')->where(array('op_res_id'=>$resource['id']))->select();
+
 		$where = array();
 		$where['req_type'] = P::REQ_TYPE_PROJECT_NEW;
 		$where['req_id']   = $op['id'];
@@ -425,7 +428,13 @@ class OpController extends BaseController {
 		}else{
 			$this->tuanhao    = $tuanhao;
 		}
-		
+
+		//项目需求单
+        $service_type         = explode(',',$resource['service_type']);
+        $act_need             = explode(',',$resource['act_need']);
+        $les_field            = explode(',',$resource['les_field']);
+        $act_field            = explode(',',$resource['act_field']);
+        $resource['cou_time'] = date('Y-m-d',$resource['cou_time']);
 
 		$this->kinds          = M('project_kind')->getField('id,name', true);
 		$this->user           = M('account')->where('`id`>3')->getField('id,nickname', true);
@@ -452,8 +461,15 @@ class OpController extends BaseController {
         $this->service_type   = C('SERVICE_TYPE');
         $this->act_need       = C('ACT_NEED');
         $this->job_name       = C('JOB_NAME');
-        $this->les_field       = C('LES_FIELD');
-        $this->act_field       = C('ACT_FIELD');
+        $this->les_field      = C('LES_FIELD');
+        $this->act_field      = C('ACT_FIELD');
+        $this->resource       = $resource;
+        $this->service_types  = $service_type;
+        $this->act_needs      = $act_need;
+        $this->les_fields     = $les_field;
+        $this->act_fields     = $act_field;
+        $this->job_names      = array_column($res_money,'job_name');
+        $this->res_money      = $res_money;
 
 		//客户名称关键字
 		$where = array();
@@ -492,6 +508,7 @@ class OpController extends BaseController {
 			$op_member_db   = M('op_member');
 			$op_supplier_db = M('op_supplier');
             $op_res_db      = M('op_res');
+            $op_res_money_db= M('op_res_money');
 			
 			$opid       = I('opid');
 			$info       = I('info');
@@ -728,10 +745,51 @@ class OpController extends BaseController {
 								
 			//保存资源需求单
             if($opid && $savetype==11 ){
+                header('Content-Type:text/html;charset=utf-8');
                 $info['op_id']      = $opid;
                 $info['ini_time']   = NOW_TIME;
+                $job_name           = I('job_name');
+                $job_money          = array_merge(array_filter(I('job_money')));
+                $service_types      = I('service_type');
+                $act_needs          = I('act_need');
+                $les_fields         = I('les_field');
+                $act_fields         = I('act_field');
+                $info['service_type']= implode(',',$service_types);
+                $info['act_need']   = implode(',',$act_needs);
+                $info['les_field']  = implode(',',$les_fields);
+                $info['act_field']  = implode(',',$act_fields);
+                $info['cou_time']   = strtotime($info['cou_time']);
 
-                var_dump($info);die;
+                $data = array();
+                foreach ($job_name as $key=>$value){
+                    foreach ($job_money as $k=>$v){
+                        if ($key == $k){
+                            $data[$key]['job_name'] = $value;
+                            $data[$key]['job_money'] = $v;
+                        }
+                    }
+                }
+
+                $res = $op_res_db->add($info);
+                if($res){
+                    foreach ($data as $v){
+                        $v['op_res_id'] = $res;
+                        $op_res_money_db->add($v);
+                    }
+
+                    $exe_dept_id        = 52;   //资源管理部经理
+                    $exe_user_id        = M('auth')->where(array('role_id'=>$exe_dept_id))->getField("worder_auth");
+                    //发送系统消息
+                    $uid     = cookie('userid');
+                    $title   = '您有来自['.session('rolename').'--'.$info['ini_user_name'].']的项目需求单!';
+                    $content = '项目编号: '.$opid;
+                    $url     = U('Op/plans_follow',array('opid'=>$info['op_id']));
+                    $user    = '['.$exe_user_id.']';
+                    send_msg($uid,$title,$content,$url,$user,'');
+
+                    $this->success('数据保存成功!');
+                }
+
             }
 		}
 	
