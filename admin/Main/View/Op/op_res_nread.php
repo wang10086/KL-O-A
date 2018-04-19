@@ -114,7 +114,7 @@
         <tr>
             <td colspan="5" class="td_con td">
                 <div class="form-group col-md-12">
-                    <label>资源配置反馈：</label><textarea class="form-control no-border-textarea" value="{$resource['res_back_need']}"  name="info[res_back_need]" readonly>{$resource['res_back_need']}</textarea>
+                    <label>资源配置反馈：</label><textarea class="form-control no-border-textarea" value="{$resource['zj_back_need']}"  name="info[zj_back_need]" readonly>{$resource['zj_back_need']}</textarea>
                 </div>
             </td>
         </tr>
@@ -137,7 +137,7 @@
         <tr>
             <td colspan="5" class="td_con td">
                 <div class="form-group col-md-12">
-                    <label>资源配置反馈：</label><textarea class="form-control no-border-textarea" value="{$resource['cou_back_need']}"  name="info[zj_back_need]" readonly>{$resource['cou_back_need']}</textarea>
+                    <label>资源配置反馈：</label><textarea class="form-control no-border-textarea" value="{$resource['cou_back_need']}"  name="info[cou_back_need]" readonly>{$resource['cou_back_need']}</textarea>
                 </div>
             </td>
         </tr>
@@ -168,10 +168,10 @@
         <tr>
             <td colspan="5" class="td_con td">
                 <div class="form-group col-md-12">
-                    <label>学科（如动物、植物、微生物、天文、地质等）：</label><span ><input class="act_input_500" type="text" name="info[res_need]" value="{$resource['res_need']}" class="form-control" readonly /></span>
+                    <label>学科（如动物、植物、微生物、天文、地质等）：</label><span ><input class="act_input_500" type="text" name="info[les_name]" value="{$resource['les_name']}" class="form-control" readonly /></span>
                 </div>
                 <div class="form-group col-md-12">
-                    <label>时间要求（每周几、几点至几点、多少周）：&#12288;&#12288;</label><span ><input class="act_input_500" type="text" name="info[res_need]" value="{$resource['res_need']}" class="form-control" readonly /></span>
+                    <label>时间要求（每周几、几点至几点、多少周）：&#12288;&#12288;</label><span ><input class="act_input_500" type="text" name="info[les_time]" value="{$resource['les_time']}" class="form-control" readonly /></span>
                 </div>
             </td>
         </tr>
@@ -185,7 +185,7 @@
         <tr>
             <td colspan="5" class="td_con td">
                 <div class="form-group col-md-12">
-                    <label>资源配置反馈：</label><textarea class="form-control no-border-textarea" value="{$resource['cou_back_need']}"  name="info[act_back_need]" readonly>{$resource['act_back_need']}</textarea>
+                    <label>资源配置反馈：</label><textarea class="form-control no-border-textarea" value="{$resource['act_back_need']}"  name="info[act_back_need]" readonly>{$resource['act_back_need']}</textarea>
                 </div>
             </td>
         </tr>

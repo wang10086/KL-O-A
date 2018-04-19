@@ -776,11 +776,13 @@ class OpController extends BaseController {
 
                 $saved_id = $op_res_db->where(array('op_id'=>$opid))->getField('id');
                 if ($saved_id){
-                    $res = $op_res_db->where(array('id'=>$saved_id))->save($info);
+                    $op_res_db->where(array('id'=>$saved_id))->save($info);
+                    $res = $saved_id;
                 }else{
                     $res = $op_res_db->add($info);
                 }
                 if($res){
+                    $op_res_money_db->where(array('op_res_id'=>$res))->delete();
                     foreach ($data as $v){
                         if ($v['job_name']) {
                             $v['op_res_id'] = $res;
