@@ -99,6 +99,8 @@
                                 <?php if(rolemenu(array('Op/public_save'))  && ($op['create_user'] == cookie('userid')) ){ ?>
                                     <include file="op_res_need" />
                                     <div class="form-group col-md-12"></div>
+                                <?php  }else if(rolemenu(array('Op/public_save'))  && ($resource['exe_user_id'] == cookie('userid')) ){ ?>
+
                                 <?php  }else{ ?>
                                     <?php if($resource){ ?>
                                         <include file="op_res_nread" />
