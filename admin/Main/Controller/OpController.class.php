@@ -105,9 +105,9 @@ class OpController extends BaseController {
 			$wuzi       = I('wuzi');
 
             $exe_role_ids = I('exe');
-            if(!$exe_role_ids){
+            /*if(!$exe_role_ids){
                 $this->error('工单受理部门不能为空');
-            }
+            }*/
 			if(!$info['customer']){
 				$this->error('客户单位不能为空' . $db->getError());	
 				die();	
@@ -167,30 +167,33 @@ class OpController extends BaseController {
                     $u_time                     = 5;    //默认5个工作日
                     //计划完成时间 $u_time为工作日
                     $worder['plan_complete_time']= strtotime(getAfterWorkDay($u_time));
-                    foreach($exe_role_ids as $v){
-                        $exe_dept_id        = $v;
-                        $exe_dept_name      = M('role')->where(array('id'=>$exe_dept_id))->getField('role_name');
-                        $exe_user_id        = M('auth')->where(array('role_id'=>$exe_dept_id))->getField("worder_auth");
-                        $exe_user_name      = M('account')->where(array('id'=>array('eq',$exe_user_id)))->getField('nickname');
-                        $worder['exe_dept_id']      = $exe_dept_id;
-                        $worder['exe_dept_name']    = $exe_dept_name;
-                        $worder['exe_user_id']      = $exe_user_id;
-                        $worder['exe_user_name']    = $exe_user_name;
-                        $res = M('worder')->add($worder);
-                        if($res){
-                            //保存操作记录
-                            $record = array();
-                            $record['worder_id'] = $res;
-                            $record['type']     = 0;
-                            $record['explain']  = '立项/创建工单';
-                            worder_record($record);
-                            //发送系统消息
-                            $uid     = cookie('userid');
-                            $title   = '您有来自['.$worder['ini_dept_name'].'--'.$worder['ini_user_name'].']的工单待执行!';
-                            $content = $worder['worder_content'];
-                            $url     = U('worder/worder_info',array('id'=>$res));
-                            $user    = '['.$worder['exe_user_id'].']';
-                            send_msg($uid,$title,$content,$url,$user,'');
+
+                    if($exe_role_ids){
+                        foreach($exe_role_ids as $v){
+                            $exe_dept_id        = $v;
+                            $exe_dept_name      = M('role')->where(array('id'=>$exe_dept_id))->getField('role_name');
+                            $exe_user_id        = M('auth')->where(array('role_id'=>$exe_dept_id))->getField("worder_auth");
+                            $exe_user_name      = M('account')->where(array('id'=>array('eq',$exe_user_id)))->getField('nickname');
+                            $worder['exe_dept_id']      = $exe_dept_id;
+                            $worder['exe_dept_name']    = $exe_dept_name;
+                            $worder['exe_user_id']      = $exe_user_id;
+                            $worder['exe_user_name']    = $exe_user_name;
+                            $res = M('worder')->add($worder);
+                            if($res){
+                                //保存操作记录
+                                $record = array();
+                                $record['worder_id'] = $res;
+                                $record['type']     = 0;
+                                $record['explain']  = '立项/创建工单';
+                                worder_record($record);
+                                //发送系统消息
+                                $uid     = cookie('userid');
+                                $title   = '您有来自['.$worder['ini_dept_name'].'--'.$worder['ini_user_name'].']的工单待执行!';
+                                $content = $worder['worder_content'];
+                                $url     = U('worder/worder_info',array('id'=>$res));
+                                $user    = '['.$worder['exe_user_id'].']';
+                                send_msg($uid,$title,$content,$url,$user,'');
+                            }
                         }
                     }
 
@@ -436,6 +439,18 @@ class OpController extends BaseController {
         $act_field            = explode(',',$resource['act_field']);
         $resource['cou_time'] = date('Y-m-d',$resource['cou_time']);
 
+        $job_name       = C('JOB_NAME');
+        $job_names      = array();
+        foreach($job_name as $key=>$value){
+            $job_names[$key]['job_name'] = $value;
+            foreach ($res_money as $k=>$v){
+                if ($value == $v['job_name']){
+                    $job_names[$key]['job_money']= $v['job_money'];
+                }
+            }
+            $job_names[$key]['job_money']= $job_names[$key]['job_money']?$job_names[$key]['job_money']:null;
+        }
+
 		$this->kinds          = M('project_kind')->getField('id,name', true);
 		$this->user           = M('account')->where('`id`>3')->getField('id,nickname', true);
 		$this->rolelist       = M('role')->where('`id`>10')->getField('id,role_name', true);
@@ -460,7 +475,6 @@ class OpController extends BaseController {
 		$this->ages           = C('AGE_LIST');
         $this->service_type   = C('SERVICE_TYPE');
         $this->act_need       = C('ACT_NEED');
-        $this->job_name       = C('JOB_NAME');
         $this->les_field      = C('LES_FIELD');
         $this->act_field      = C('ACT_FIELD');
         $this->resource       = $resource;
@@ -468,10 +482,10 @@ class OpController extends BaseController {
         $this->act_needs      = $act_need;
         $this->les_fields     = $les_field;
         $this->act_fields     = $act_field;
-        $this->job_names      = array_column($res_money,'job_name');
-        $this->res_money      = $res_money;
+        //$this->job_name      = array_filter(array_column($job_names,'job_money','job_name'));
+        $this->job_name       = array_column($job_names,'job_money','job_name');
 
-		//客户名称关键字
+        //客户名称关键字
 		$where = array();
 		if(C('RBAC_SUPER_ADMIN')==cookie('username') || cookie('roleid')==10 || cookie('roleid')==28 || cookie('roleid')==11 || cookie('roleid')==30){
 			$where['company_name'] = array('neq','');
@@ -748,8 +762,7 @@ class OpController extends BaseController {
                 header('Content-Type:text/html;charset=utf-8');
                 $info['op_id']      = $opid;
                 $info['ini_time']   = NOW_TIME;
-                $job_name           = I('job_name');
-                $job_money          = array_merge(array_filter(I('job_money')));
+                $data               = I('data');
                 $service_types      = I('service_type');
                 $act_needs          = I('act_need');
                 $les_fields         = I('les_field');
@@ -760,21 +773,18 @@ class OpController extends BaseController {
                 $info['act_field']  = implode(',',$act_fields);
                 $info['cou_time']   = strtotime($info['cou_time']);
 
-                $data = array();
-                foreach ($job_name as $key=>$value){
-                    foreach ($job_money as $k=>$v){
-                        if ($key == $k){
-                            $data[$key]['job_name'] = $value;
-                            $data[$key]['job_money'] = $v;
-                        }
-                    }
+                $saved_id = $op_res_db->where(array('op_id'=>$opid))->getField('id');
+                if ($saved_id){
+                    $res = $op_res_db->where(array('id'=>$saved_id))->save($info);
+                }else{
+                    $res = $op_res_db->add($info);
                 }
-
-                $res = $op_res_db->add($info);
                 if($res){
                     foreach ($data as $v){
-                        $v['op_res_id'] = $res;
-                        $op_res_money_db->add($v);
+                        if ($v['job_name']) {
+                            $v['op_res_id'] = $res;
+                            $op_res_money_db->add($v);
+                        }
                     }
 
                     $exe_dept_id        = 52;   //资源管理部经理
@@ -788,6 +798,8 @@ class OpController extends BaseController {
                     send_msg($uid,$title,$content,$url,$user,'');
 
                     $this->success('数据保存成功!');
+                }else{
+                    $this->error('数据保存失败!');
                 }
 
             }

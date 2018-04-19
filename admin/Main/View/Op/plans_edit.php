@@ -102,11 +102,12 @@
                                         <?php /* } */?>
                                     </h3>-->
                                 </div>
-                                <?php if(rolemenu(array('Op/public_save'))  && $budget['audit_status']==1 && $settlement['audit']!=1 && ($opauth['guide']==cookie('userid') || C('RBAC_SUPER_ADMIN')==cookie('username') || rolemenu(array('Op/assign_res')))){ ?>
+                                <?php /*if(rolemenu(array('Op/public_save'))  && ($op['create_user'] == cookie('userid')) ){ */?>
+                                <?php if(rolemenu(array('Op/public_save'))  && ($op['create_user'] == 1111111) ){ ?>
                                     <include file="op_res_need" />
                                     <div class="form-group col-md-12"></div>
                                 <?php  }else{ ?>
-                                    <include file="op_res_need" />
+                                    <include file="op_res_nread" />
                                     <div class="form-group col-md-12"></div>
                                 <?php } ?>
                             </div>

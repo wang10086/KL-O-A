@@ -85,15 +85,10 @@
                             <div class="form-group col-md-12">
                                 <div>需求:</div>
                                 <foreach name="job_name" key="k" item="v">
-                                    <span class="checkboxs_400"><input type="checkbox" name="job_name[]" <?php if(in_array($v,$job_names)){ echo 'checked';} ?>  value="{$v}">&nbsp; {$v} &#12288;
-                                        <foreach name="res_money" item="value">
-                                            <!--<if condition="$v eq $value['job_name']">-->
-                                                费用 :&nbsp;<input class="act_input" name="job_money[]" value="{$value.job_money}" type="text" />
-
-                                            <!--</if>-->
-
-                                        </foreach>
-                                        </span>&#12288;&#12288;
+                                    <!--<span class="checkboxs_400"><input type="checkbox" name="data[{$k}][job_name]" <?php /*if(in_array($v,$job_names)){ echo 'checked';} */?>  value="{$v}">&nbsp; {$v} &#12288;-->
+                                    <span class="checkboxs_400"><input type="checkbox" name="data[{$k}][job_name]" <?php if($v != null){ echo 'checked';} ?>  value="{$k}">&nbsp; {$k} &#12288;
+                                        费用 :&nbsp;<input class="act_input" name="data[{$k}][job_money]" value="{$v}" type="text" />
+                                    </span>&#12288;&#12288;
                                 </foreach>
                             </div>
 
