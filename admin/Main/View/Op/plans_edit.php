@@ -90,26 +90,24 @@
                             <div class="box box-warning">
                                 <div class="box-header">
                                     <h3 class="box-title">资源需求单</h3>
-                                    <!--<h3 class="box-title pull-right" style="font-weight:normal; color:#333333;">
-                                        <?php /* if($opauth && $opauth['guide']){ */?>
-                                            负责人：{$user.$opauth[guide]}
-                                        <?php /* }else{ */?>
-                                            <?php /* if(rolemenu(array('Op/assign_guide'))){ */?>
-                                                <a href="javascript:;" onclick="javascript:assign('{:U('Op/assign_guide',array('opid'=>$op['op_id']))}','指派专家辅导员负责人');" style="color:#09F;">指派负责人</a>
-                                            <?php /* }else{ */?>
-                                                暂未指派负责人
-                                            <?php /* } */?>
-                                        <?php /* } */?>
-                                    </h3>-->
+                                    <h3 class="box-title pull-right" style="font-weight:normal; color:#333333;">
+                                        <?php  if((rolemenu(array('Op/public_save'))  && ($op['create_user'] == cookie('userid'))) || $resource ){ ?>
+                                            <span id="res_but"><a href="javascript:;" onclick="show_res_need()" style="color:#09F;">显示</a></span>
+                                        <?php  } ?>
+                                    </h3>
                                 </div>
-                                <?php /*if(rolemenu(array('Op/public_save'))  && ($op['create_user'] == cookie('userid')) ){ */?>
-                                <?php if(rolemenu(array('Op/public_save'))  && ($op['create_user'] == 1111111) ){ ?>
+                                <?php if(rolemenu(array('Op/public_save'))  && ($op['create_user'] == cookie('userid')) ){ ?>
                                     <include file="op_res_need" />
                                     <div class="form-group col-md-12"></div>
                                 <?php  }else{ ?>
-                                    <include file="op_res_nread" />
-                                    <div class="form-group col-md-12"></div>
-                                <?php } ?>
+                                    <?php if($resource){ ?>
+                                        <include file="op_res_nread" />
+                                        <div class="form-group col-md-12"></div>
+                                    <?php  }else{ ?>
+                                        <div class="box-body ml20">
+                                            <div class="content" style="padding-top:40px;">  暂未填写物资需求单!</div>
+                                        </div>
+                                    <?php } } ?>
                             </div>
                             <!--___________________end___________________-->
 
@@ -858,7 +856,16 @@
 		});	
 	}
 	
-	
+	//物资需求单
+    function show_res_need(){
+        $("#res_need_table").show();
+        $('#res_but').html('<a href="javascript:;" onclick="hide_res_need()" style="color:#09F;">隐藏</a>');
+    }
+
+    function hide_res_need(){
+        $("#res_need_table").hide();
+        $('#res_but').html('<a href="javascript:;" onclick="show_res_need()" style="color:#09F;">显示</a>');
+    }
 </script>	
 
 

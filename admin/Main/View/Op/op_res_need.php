@@ -1,4 +1,10 @@
-<div class="box-body">
+<script type="text/javascript">
+    $(document).ready(function() {
+        $("#res_need_table").hide();
+    })
+</script>
+
+<div class="box-body" id="res_need_table" >
     <form method="post" action="<?php echo U('Op/public_save'); ?>" id="">
     <input type="hidden" name="dosubmint" value="1">
     <input type="hidden" name="opid" value="{$op.op_id}">
@@ -87,7 +93,7 @@
                                 <foreach name="job_name" key="k" item="v">
                                     <!--<span class="checkboxs_400"><input type="checkbox" name="data[{$k}][job_name]" <?php /*if(in_array($v,$job_names)){ echo 'checked';} */?>  value="{$v}">&nbsp; {$v} &#12288;-->
                                     <span class="checkboxs_400"><input type="checkbox" name="data[{$k}][job_name]" <?php if($v != null){ echo 'checked';} ?>  value="{$k}">&nbsp; {$k} &#12288;
-                                        费用 :&nbsp;<input class="act_input" name="data[{$k}][job_money]" value="{$v}" type="text" />
+                                        费用 :&nbsp;<input class="act_input_100" name="data[{$k}][job_money]" value="{$v}" type="text" />
                                     </span>&#12288;&#12288;
                                 </foreach>
                             </div>
@@ -109,7 +115,7 @@
                             </div>
 
                             <div class="form-group col-md-12">
-                                <label>特殊需求描述（专业、职称、上课时间、学历、性别、实施活动等）：</label><textarea class="form-control"  name="info[cou_special_need]">{$resource['cou_special_need']}</textarea>
+                                <label>特殊需求描述（具体活动如科技节项目数量、学趣班班次、夏令营营期等）：</label><textarea class="form-control"  name="info[cou_special_need]">{$resource['cou_special_need']}</textarea>
                             </div>
 
                             <div class="form-group col-md-12">

@@ -437,7 +437,8 @@ class OpController extends BaseController {
         $act_need             = explode(',',$resource['act_need']);
         $les_field            = explode(',',$resource['les_field']);
         $act_field            = explode(',',$resource['act_field']);
-        $resource['cou_time'] = date('Y-m-d',$resource['cou_time']);
+        if ($resource['cou_time']) $resource['cou_time'] = date('Y-m-d',$resource['cou_time']);
+
 
         $job_name       = C('JOB_NAME');
         $job_names      = array();

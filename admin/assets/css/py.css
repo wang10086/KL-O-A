@@ -4013,6 +4013,15 @@ th{outline: none;}
 
 .checkboxs_400{  padding:5px 0; margin-right:20px; color:#333333; display: inline-block; width:400px; }
 .checkboxs_255{  padding:5px 0; margin-right:20px; color:#333333; display: inline-block; width:255px; }
+.checkboxs_212{  padding:5px 0; margin-right:20px; color:#333333; display: inline-block; width:212px; }
 .checkboxs_100{  padding:5px 0; margin-right:20px; color:#333333; display: inline-block; width:100px; }
-.act_input{width: 100px; border: none; border-bottom: solid 1px;}
+.act_input_100{width: 100px; border: none; border-bottom: solid 1px;}
+.act_input_200{width: 200px; border: none; border-bottom: solid 1px;}
+.act_input_500{width: 500px; border: none; border-bottom: solid 1px;}
+.no-border-textarea{border: none; margin-bottom: -10px;}
+.inline-block{display: inline-block;}
+.ml20{margin-left: 20px;}
 .res_need_h2{font-size:16px; border-bottom:2px solid #dedede; padding-bottom:10px;}
+.td{border: solid 1px grey;}
+.td_title{text-align: center; width: 150px;}
+.td_con{padding-left: 10px;}
