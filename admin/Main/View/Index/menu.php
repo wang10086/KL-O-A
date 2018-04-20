@@ -34,7 +34,7 @@
                         
                         
                         <if condition="rolemenu(array('Op/index','Op/plans','Project/kind'))">
-                        <li class="treeview {:on('Op')}  {:on('Project')}">
+                        <li class="treeview {:ison(CONTROLLER_NAME,'Op')}  {:ison(CONTROLLER_NAME,'Project')}">
                             <a href="javascript:;">
                                 <i class="fa fa-shopping-cart"></i>
                                 <span>项目管理</span>
