@@ -9,8 +9,8 @@
     <input type="hidden" name="dosubmint" value="1">
     <input type="hidden" name="opid" value="{$op.op_id}">
     <input type="hidden" name="savetype" value="11">
-    <input type="hidden" name="info[ini_user_id]" value="{:session('userid')}" readonly>
-    <input type="hidden" name="info[ini_user_name]" value="{:session('nickname')}" readonly>
+    <!--<input type="hidden" name="info[ini_user_id]" value="{:session('userid')}" readonly>
+    <input type="hidden" name="info[ini_user_name]" value="{:session('nickname')}" readonly>-->
         <div class="row">
             <!-- right column -->
             <div class="col-md-12">
@@ -60,7 +60,7 @@
 
                             <div class="form-group col-md-12">
                                 <foreach name="service_type" key="k" item="v">
-                                    <span class="checkboxs_255"><input type="checkbox" name="service_type[]" <?php if(in_array($v,$service_types)){ echo 'checked';} ?>  value="{$v}" disabled="disabled">&nbsp; {$v}</span>&#12288;&#12288;
+                                    <span class="checkboxs_255"><input type="checkbox" name="service_type[]" <?php if(in_array($v,$service_types)){ echo 'checked';} ?>  value="{$v}">&nbsp; {$v}</span>&#12288;&#12288;
                                 </foreach>
                             </div>
 
@@ -72,7 +72,7 @@
                             <div class="form-group col-md-12">
                                 <label>活动需求：</label>
                                 <foreach name="act_need" key="k" item="v">
-                                <span class="checkboxs_100"><input type="checkbox" name="act_need[]" <?php if(in_array($v,$act_needs)){ echo 'checked';} ?>  value="{$v}" disabled="disabled">&nbsp; {$v}</span>&#12288;&#12288;
+                                <span class="checkboxs_100"><input type="checkbox" name="act_need[]" <?php if(in_array($v,$act_needs)){ echo 'checked';} ?>  value="{$v}">&nbsp; {$v}</span>&#12288;&#12288;
                                 </foreach>
                             </div>
 
@@ -96,7 +96,7 @@
                                 <div>需求:</div>
                                 <foreach name="job_name" key="k" item="v">
                                     <!--<span class="checkboxs_400"><input type="checkbox" name="data[{$k}][job_name]" <?php /*if(in_array($v,$job_names)){ echo 'checked';} */?>  value="{$v}">&nbsp; {$v} &#12288;-->
-                                    <span class="checkboxs_400"><input type="checkbox" name="data[{$k}][job_name]" <?php if($v != null){ echo 'checked';} ?>  value="{$k}" disabled="disabled">&nbsp; {$k} &#12288;
+                                    <span class="checkboxs_400"><input type="checkbox" name="data[{$k}][job_name]" <?php if($v != null){ echo 'checked';} ?>  value="{$k}">&nbsp; {$k} &#12288;
                                         费用 :&nbsp;<input class="act_input_100" name="data[{$k}][job_money]" value="{$v}" type="text" readonly />
                                     </span>&#12288;&#12288;
                                 </foreach>
@@ -137,14 +137,14 @@
                             <div class="form-group col-md-12">
                                 <div>课程领域</div>
                                 <foreach name="les_field" key="k" item="v">
-                                    <span class="checkboxs_255"><input type="checkbox" name="les_field[]" <?php if(in_array($v,$les_fields)){ echo 'checked';} ?>  value="{$v}" disabled="disabled">&nbsp; {$v}</span>&#12288;&#12288;
+                                    <span class="checkboxs_255"><input type="checkbox" name="les_field[]" <?php if(in_array($v,$les_fields)){ echo 'checked';} ?>  value="{$v}">&nbsp; {$v}</span>&#12288;&#12288;
                                 </foreach>
                             </div>
 
                             <div class="form-group col-md-12">
                                 <div>活动类型</div>
                                 <foreach name="act_field" key="k" item="v">
-                                    <span class="checkboxs_255"><input type="checkbox" name="act_field[]" <?php if(in_array($v,$act_fields)){ echo 'checked';} ?>  value="{$v}" disabled="disabled">&nbsp; {$v}</span>&#12288;&#12288;
+                                    <span class="checkboxs_255"><input type="checkbox" name="act_field[]" <?php if(in_array($v,$act_fields)){ echo 'checked';} ?>  value="{$v}">&nbsp; {$v}</span>&#12288;&#12288;
                                 </foreach>
                             </div>
 

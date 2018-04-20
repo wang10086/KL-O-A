@@ -486,6 +486,9 @@ class OpController extends BaseController {
         //$this->job_name      = array_filter(array_column($job_names,'job_money','job_name'));
         $this->job_name       = array_column($job_names,'job_money','job_name');
 
+        //资源需求单接收人员(资源管理部经理)
+        $this->men            = M('account')->field('id,nickname')->where(array('roleid'=>52))->find();
+
         //客户名称关键字
 		$where = array();
 		if(C('RBAC_SUPER_ADMIN')==cookie('username') || cookie('roleid')==10 || cookie('roleid')==28 || cookie('roleid')==11 || cookie('roleid')==30){
@@ -762,7 +765,6 @@ class OpController extends BaseController {
             if($opid && $savetype==11 ){
                 header('Content-Type:text/html;charset=utf-8');
                 $info['op_id']      = $opid;
-                $info['ini_time']   = NOW_TIME;
                 $data               = I('data');
                 $service_types      = I('service_type');
                 $act_needs          = I('act_need');
@@ -779,6 +781,7 @@ class OpController extends BaseController {
                     $op_res_db->where(array('id'=>$saved_id))->save($info);
                     $res = $saved_id;
                 }else{
+                    $info['ini_time']   = NOW_TIME;
                     $res = $op_res_db->add($info);
                 }
                 if($res){
@@ -790,15 +793,18 @@ class OpController extends BaseController {
                         }
                     }
 
-                    $exe_dept_id        = 52;   //资源管理部经理
-                    $exe_user_id        = M('auth')->where(array('role_id'=>$exe_dept_id))->getField("worder_auth");
-                    //发送系统消息
-                    $uid     = cookie('userid');
-                    $title   = '您有来自['.session('rolename').'--'.$info['ini_user_name'].']的项目需求单!';
-                    $content = '项目编号: '.$opid;
-                    $url     = U('Op/plans_follow',array('opid'=>$info['op_id']));
-                    $user    = '['.$exe_user_id.']';
-                    send_msg($uid,$title,$content,$url,$user,'');
+                    /*$exe_dept_id        = 52;   //资源管理部经理
+                    $exe_user_id        = M('auth')->where(array('role_id'=>$exe_dept_id))->getField("worder_auth");*/
+                    $exe_user_id        = $info['exe_user_id'];
+                    if (cookie('userid') != $info['exe_user_id']){
+                        //发送系统消息
+                        $uid     = cookie('userid');
+                        $title   = '您有来自['.session('rolename').'--'.$info['ini_user_name'].']的项目需求单!';
+                        $content = '项目编号: '.$opid;
+                        $url     = U('Op/plans_follow',array('opid'=>$info['op_id']));
+                        $user    = '['.$exe_user_id.']';
+                        send_msg($uid,$title,$content,$url,$user,'');
+                    }
 
                     $this->success('数据保存成功!');
                 }else{

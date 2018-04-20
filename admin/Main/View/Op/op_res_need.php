@@ -50,8 +50,10 @@
                             </div>
 
                             <div class="form-group col-md-4">
-                                <label>接收人员：</label><input type="text" class="form-control" name="info[exe_user_name]"  value="{$resource['exe_user_name']}" id="exe_u_name" />
-                                <input type="hidden" name="info[exe_user_id]" id="exe_u_id"  value="{$resource['exe_user_id']}" />
+                                <!--<label>接收人员：</label><input type="text" class="form-control" name="info[exe_user_name]"  value="{$resource['exe_user_name']}" id="exe_u_name" />
+                                <input type="hidden" name="info[exe_user_id]" id="exe_u_id"  value="{$resource['exe_user_id']}" />-->
+                                <label>接收人员：</label><input type="text" class="form-control" name="info[exe_user_name]"  value="{$men['nickname']}" id="exe_u_name" />
+                                <input type="hidden" name="info[exe_user_id]" id="exe_u_id"  value="{$men['id']}" />
                             </div>
 
                             <div class="form-group col-md-12">
