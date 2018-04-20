@@ -34,7 +34,7 @@
                                         
                                         <div class="form-group col-md-4">
                                             <label>项目类型：</label>
-                                            <select  class="form-control"  name="info[kind]" required>
+                                            <select  class="form-control"  name="info[kind_id]" required>
                                                 <option value="" selected disabled>请选择项目类型</option>
                                                 <foreach name="kinds" item="v">
                                                     <option value="{$v.id}" <?php if ($row && ($v['id'] == $row['kind'])) echo ' selected'; ?> >{:tree_pad($v['level'], true)} {$v.name}</option>
@@ -43,15 +43,15 @@
                                         </div>
 
                                         <div class="form-group col-md-4">
-                                            <label>学科领域：</label><input type="text" name="info[field]" class="form-control" />
+                                            <label>学科领域：</label><input type="text" name="info[field_id]" class="form-control" />
                                         </div>
                                         
                                         <div class="form-group col-md-4">
-                                            <label>学科分类：</label><input type="text" name="info[departure]"  class="form-control" />
+                                            <label>学科分类：</label><input type="text" name="info[type]"  class="form-control" />
                                         </div>
                                         
                                         <div class="form-group col-md-4">
-                                            <label>课时：</label><input type="text" name="info[days]" class="form-control" />
+                                            <label>课时：</label><input type="text" name="info[les_hours]" class="form-control" />
                                         </div>
 
                                         <div class="form-group col-md-4">

@@ -301,7 +301,7 @@ class ProjectController extends BaseController {
 
     //学科领域
     public function fields(){
-
+        $this->display('fields');
     }
     
 }

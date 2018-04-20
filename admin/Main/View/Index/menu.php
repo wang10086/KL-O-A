@@ -71,18 +71,12 @@
                                                 <li class="{:on('Project/lession')}"><a href="{:U('Project/lession')}"><i class="fa fa-angle-right"></i> 课程信息</a></li>
                                             </if>
                                             <if condition="rolemenu(array('Project/fields'))">
-                                                <!--<li class="{:on('Project/fields')}"><a href="{:U('Project/fields')}"><i class="fa fa-angle-right"></i> 学科领域</a></li>-->
-                                                <li><a href="javascript:;" onClick="art_show_msg('加班开发中，稍后呈现...',5)"><i class="fa fa-angle-right"></i> 学科领域</a></li>
+                                                <li class="{:on('Project/fields')}"><a href="{:U('Project/fields')}"><i class="fa fa-angle-right"></i> 学科领域</a></li>
+                                                <!--<li><a href="javascript:;" onClick="art_show_msg('加班开发中，稍后呈现...',5)"><i class="fa fa-angle-right"></i> 学科领域</a></li>-->
                                             </if>
                                         </ul>
                                     </li>
                                 </if>
-
-
-
-
-
-
                             </ul>
                         </li>
                         </if>
