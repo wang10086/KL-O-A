@@ -279,5 +279,29 @@ class ProjectController extends BaseController {
     
     }
     */
+
+    //线路课程
+    public function lession(){
+
+        $this->display('lession');
+    }
+
+    //增加相关线路.课程信息
+    public function lession_add(){
+        if (isset($_POST['dosubmit'])){
+
+
+        }else{
+
+            $this->les_types    = C('WORDER_DEPT_TYPE');
+            $this->kinds        = get_project_kinds();
+            $this->display();
+        }
+    }
+
+    //学科领域
+    public function fields(){
+
+    }
     
 }
