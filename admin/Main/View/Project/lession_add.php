@@ -27,7 +27,7 @@
                                 <div class="box-body">
                                     <div class="content">
                                     	
-                                        <div class="form-group col-md-12">
+                                        <div class="form-group col-md-4">
                                             <label>课程名称：</label><input type="text" name="info[name]" class="form-control" required />
                                         </div>
 
@@ -99,7 +99,7 @@
                             
                            
                             <div style="width:100%; text-align:center;">
-                            <button type="submit" class="btn btn-info btn-lg" id="lrpd">我要立项</button>
+                            <button type="submit" class="btn btn-info btn-lg" id="lrpd">确认添加</button>
                             </div>
                         </div><!--/.col (right) -->
                     </div>   <!-- /.row -->
