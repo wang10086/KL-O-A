@@ -86,7 +86,6 @@
                                 </div><!-- /.box-body -->
                             </div><!-- /.box -->
 
-                            <!--__________________start__________________-->
                             <div class="box box-warning">
                                 <div class="box-header">
                                     <h3 class="box-title">资源需求单</h3>
@@ -112,7 +111,6 @@
                                         </div>
                                     <?php } } ?>
                             </div>
-                            <!--___________________end___________________-->
 
                            <?php  if($op['audit_status']==1){ ?> 
                             

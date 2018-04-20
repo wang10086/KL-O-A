@@ -50,6 +50,9 @@
                                             <if condition="rolemenu(array('Material/add'))">
                                             <th width="60" class="taskOptions">编辑</th>
                                             </if>
+                                            <if condition="rolemenu(array('Material/del_material'))">
+                                                <th width="60" class="taskOptions">删除</th>
+                                            </if>
                                             
                                         </tr>
                                         <foreach name="lists" item="row">
@@ -70,6 +73,11 @@
                                             <td class="taskOptions">
                                             <button onClick="javascript:window.location.href='{:U('Material/add',array('id'=>$row['id']))}';" title="编辑" class="btn btn-info btn-smsm"><i class="fa fa-pencil"></i></button>
                                             </td>
+                                            </if>
+                                            <if condition="rolemenu(array('Material/del_material'))">
+                                                <td class="taskOptions">
+                                                    <a href="{:U('Material/del_material',array('id'=>$row['id']))}" onclick="return del()"><button title="删除" class="btn btn-info btn-smsm"><i class="fa fa-times"></i></button></a>
+                                                </td>
                                             </if>
                                             
                                         </tr>
@@ -118,6 +126,12 @@
 		<include file="Index:footer2" />
 
 		<script type="text/javascript">
+            function del(){
+                if(!confirm("确认要删除？")){
+                    window.event.returnValue = false;
+                }
+            }
+
             function sousuo(){
 				var keywords = <?php echo $keywords; ?>;
                 $("#material_name").autocomplete(keywords, {

@@ -115,6 +115,18 @@ class MaterialController extends BaseController {
 		$this->lists = $lists;
 		$this->display('stock');
 	}
+
+	//删除物资
+    public function del_material(){
+        $id     = I('id');
+        $db     = M('material');
+        $res    = $db->where(array('id'=>$id))->delete();
+        if($res){
+            $this->success('删除成功');
+        }else{
+            $this->error('删除失败');
+        }
+    }
 	
 	
 	// @@@NODE-3###into_record###物资入库记录###
