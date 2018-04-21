@@ -23,8 +23,8 @@
                                 <div class="box-header">
                                     <h3 class="box-title">课程信息</h3>
                                     <div class="box-tools pull-right">
-                                        <if condition="rolemenu(array('Project/fields_add'))">
-                                        <a href="javascript:;" onClick="javascript:{:open_field()}" class="btn btn-sm btn-danger"><i class="fa fa-plus"></i> 录入新领域</a>
+                                        <if condition="rolemenu(array('Project/types_add'))">
+                                        <a href="javascript:;" onClick="javascript:{:open_type()}" class="btn btn-sm btn-danger"><i class="fa fa-plus"></i> 录入新分类</a>
                                         </if>
                                     </div>
                                 </div><!-- /.box-header -->
@@ -33,7 +33,6 @@
                                     <div class="btn-group" id="catfont">
                                         <a href="{:U('Project/fields',array('pin'=>0))}" class="btn <?php if($pin==0){ echo 'btn-info';}else{ echo 'btn-default';} ?>">学科领域</a>
                                         <a href="{:U('Project/types',array('pin'=>1))}" class="btn <?php if($pin==1){ echo 'btn-info';}else{ echo 'btn-default';} ?>">学科分类</a>
-                                        <!-- <a href="{:U('Op/index',array('pin'=>2))}" class="btn <?php if($pin==2){ echo 'btn-info';}else{ echo 'btn-default';} ?>">我参与的项目</a> -->
                                     </div>
 
                                 <table class="table table-bordered dataTable fontmini" id="tablelist">
@@ -41,12 +40,13 @@
                                         <th class="sorting" data="id">ID</th>
                                         <!--<th class="sorting" data="name">课程名称</th>-->
                                         <th class="sorting" data="kind">项目类型</th>
-                                        <th class="sorting" data="">学科领域</th>
+                                        <th class="sorting" data="fname">学科领域</th>
+                                        <th class="sorting" data="tname">学科分类</th>
 
-                                        <if condition="rolemenu(array('Project/fields_add'))">
+                                        <if condition="rolemenu(array('Project/types_add'))">
                                         <th width="60" class="taskOptions">编辑</th>
                                         </if>
-                                        <if condition="rolemenu(array('Project/fields_del'))">
+                                        <if condition="rolemenu(array('Project/types_del'))">
                                         <th width="60" class="taskOptions">删除</th>
                                         </if>
                                     </tr>
@@ -57,15 +57,16 @@
                                             <!--<td>{:get_prj_kind_name($row[kind])}</td>-->
                                             <td>{$row[kind]}</td>
                                             <td>{$row.fname}</td>
-                                            
-                                            <if condition="rolemenu(array('Project/fields_add'))">
+                                            <td>{$row.tname}</td>
+
+                                            <if condition="rolemenu(array('Project/types_add'))">
                                             <td class="taskOptions">
-                                                <a href="javascript:;" onClick="javascript:{:open_field($row['id'])}"><button title="修改" class="btn btn-info btn-smsm"><i class="fa fa-pencil"></i></button></a>
+                                                <a href="javascript:;" onClick="javascript:{:open_type($row['id'])}"><button title="修改" class="btn btn-info btn-smsm"><i class="fa fa-pencil"></i></button></a>
                                             </td>
                                             </if>
-                                            <if condition="rolemenu(array('Project/fields_del'))">
+                                            <if condition="rolemenu(array('Project/types_del'))">
                                             <td class="taskOptions">
-                                            <button onClick="javascript:ConfirmDel('{:U('Project/fields_del',array('id'=>$row['id']))}');" title="删除" class="btn btn-warning btn-smsm"><i class="fa fa-times"></i></button>
+                                            <button onClick="javascript:ConfirmDel('{:U('Project/types_del',array('id'=>$row['id']))}');" title="删除" class="btn btn-warning btn-smsm"><i class="fa fa-times"></i></button>
                                             </td>
                                             </if>
                                          

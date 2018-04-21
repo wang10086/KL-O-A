@@ -237,6 +237,40 @@ function open_req (obj) {
 	});	
 }
 
+function open_field (obj) {
+	art.dialog.open(obj, {
+		lock:true,
+		title: '录入学科领域',
+		width:800,
+		height:400,
+		okValue: '提交',
+		ok: function () {
+			this.iframe.contentWindow.gosubmint();
+			return false;
+		},
+		cancelValue:'取消',
+		cancel: function () {
+		}
+	});
+}
+
+function open_type (obj) {
+	art.dialog.open(obj, {
+		lock:true,
+		title: '录入学科分类',
+		width:800,
+		height:400,
+		okValue: '提交',
+		ok: function () {
+			this.iframe.contentWindow.gosubmint();
+			return false;
+		},
+		cancelValue:'取消',
+		cancel: function () {
+		}
+	});
+}
+
 
 /**
  ** 乘法函数，用来得到精确的乘法结果

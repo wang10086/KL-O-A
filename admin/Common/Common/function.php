@@ -990,6 +990,13 @@ function open_resure($resure_id) {
 	return "open_resure('" . U('Worder/audit_resure', array('id'=>$resure_id)) ."')";
 }
 
+function open_field ($id) {
+	return "open_field('" .U('Project/fields_add',array('id'=>$id)) ."')";
+}
+
+function open_type ($id) {
+	return "open_type('" .U('Project/types_add',array('id'=>$id)) ."')";
+}
 
 
 function opid($day=''){

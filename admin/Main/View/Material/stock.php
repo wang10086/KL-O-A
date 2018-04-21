@@ -76,7 +76,7 @@
                                             </if>
                                             <if condition="rolemenu(array('Material/del_material'))">
                                                 <td class="taskOptions">
-                                                    <a href="{:U('Material/del_material',array('id'=>$row['id']))}" onclick="return del()"><button title="删除" class="btn btn-info btn-smsm"><i class="fa fa-times"></i></button></a>
+                                                    <button onClick="javascript:ConfirmDel('{:U('Material/del_material',array('id'=>$row['id']))}');" title="删除" class="btn btn-warning btn-smsm"><i class="fa fa-times"></i></button>
                                                 </td>
                                             </if>
                                             

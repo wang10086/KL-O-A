@@ -288,7 +288,7 @@ class ProjectController extends BaseController {
 
     //增加相关线路.课程信息
     public function lession_add(){
-        if (isset($_POST['dosubmit'])){
+        if (isset($_POST['dosubmint'])){
 
 
         }else{
@@ -301,7 +301,96 @@ class ProjectController extends BaseController {
 
     //学科领域
     public function fields(){
+        $pin	     = I('pin');
+        $this->pin   = $pin;
+        $this->lists = M('op_field')->order("id desc")->select();
         $this->display('fields');
     }
-    
+
+    //录入学科领域信息
+    public function fields_add(){
+        $id          = I('id');
+        $db          = M('op_field');
+
+        if(isset($_POST['dosubmint'])){
+            $info          = I('info');
+            $k_id          = $info['k_id'];
+            if (!$k_id){
+                $this->error('请选择项目类型!');
+            }
+            $info['kind']  = M('project_kind')->where(array('id'=>$k_id))->getField('name');
+            if ($id){
+                $db->where(array('id'=>$id))->save($info);
+            }else{
+                $db->add($info);
+            }
+            echo '<script>window.top.location.reload();</script>';
+        }else{
+            $row         = $db->where(array('id'=>$id))->find();
+            $this->row   = $row;
+            $this->kinds = get_project_kinds();
+            $this->display();
+        }
+    }
+
+    //删除学科领域信息
+    public function fields_del(){
+        $id     = I('id');
+        $db     = M('op_field');
+        $res    = $db->where(array('id'=>$id))->delete();
+        if($res){
+            $this->success('删除成功');
+        }else{
+            $this->error('删除失败');
+        }
+    }
+
+    //学科分类
+    public function types(){
+        $pin	     = I('pin');
+        $db          = M('op_type');
+        $this->pin   = $pin;
+        $this->lists = $db->order("id desc")->select();
+        $this->display('types');
+    }
+
+    //增加学科分类
+    public function types_add(){
+        $id          = I('id');
+        $db          = M('op_type');
+
+        if(isset($_POST['dosubmint'])){
+            $info          = I('info');
+            $k_id          = $info['k_id'];
+            $f_id          = $info['f_id'];
+            if (!$k_id){
+                $this->error('请选择项目类型!');
+            }
+            $info['kind']  = M('project_kind')->where(array('id'=>$k_id))->getField('name');
+            $info['fname'] = M('op_field')->where(array('id'=>$f_id))->getField('fname');
+            if ($id){
+                $db->where(array('id'=>$id))->save($info);
+            }else{
+                $db->add($info);
+            }
+            echo '<script>window.top.location.reload();</script>';
+        }else{
+            $row         = $db->where(array('id'=>$id))->find();
+            $this->row   = $row;
+            $this->kinds = get_project_kinds();
+            $this->display();
+        }
+    }
+
+    //删除学科分类信息
+    public function types_del(){
+        $id     = I('id');
+        $db     = M('op_type');
+        $res    = $db->where(array('id'=>$id))->delete();
+        if($res){
+            $this->success('删除成功');
+        }else{
+            $this->error('删除失败');
+        }
+    }
 }

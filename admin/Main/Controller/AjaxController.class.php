@@ -135,5 +135,13 @@ class AjaxController extends Controller {
             echo 0;
         }
     }
+
+    //获取所有的学科领域信息
+    public function fields(){
+        $id             = I('id');
+        $data           = M('op_field')->where("k_id = '$id'")->select();
+        $this->ajaxReturn($data,"JSON");
+
+    }
 	
 }
