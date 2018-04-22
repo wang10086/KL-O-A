@@ -34,16 +34,24 @@
                                         
                                         <div class="form-group col-md-4">
                                             <label>项目类型：</label>
-                                            <select  class="form-control"  name="info[kind_id]" required>
+                                            <select  class="form-control"  name="info[kind_id]" onchange="check_field()" id="k_id" required>
                                                 <option value="" selected disabled>请选择项目类型</option>
                                                 <foreach name="kinds" item="v">
                                                     <option value="{$v.id}" <?php if ($row && ($v['id'] == $row['kind'])) echo ' selected'; ?> >{:tree_pad($v['level'], true)} {$v.name}</option>
                                                 </foreach>
-                                                </select>
+                                            </select>
                                         </div>
 
                                         <div class="form-group col-md-4">
-                                            <label>学科领域：</label><input type="text" name="info[field_id]" class="form-control" />
+                                            <label>学科领域：</label>
+                                            <select  class="form-control"  name="info[f_id]" id="field">
+                                                <option value="" selected disabled>请选择项目类型</option>
+                                                <if condition="$row['f_id']">
+                                                    <option value="{$row.f_id}" >{$row.fname}</option>
+                                                    <else />
+                                                    <option value="" selected disabled>请选择学科领域</option>
+                                                </if>
+                                            </select>
                                         </div>
                                         
                                         <div class="form-group col-md-4">
@@ -63,34 +71,6 @@
                                                 </foreach>
                                             </select>
                                         </div>
-
-                                        <!--<div class="form-group col-md-4">
-                                            <label>立项时间：</label><input type="text" name="info[op_create_date]" class="form-control inputdate_a" />
-                                        </div>
-
-                                        <div class="form-group col-md-4">
-                                            <label>业务部门：</label>
-                                            <select  class="form-control" name="info[op_create_user]" >
-                                                <option value="" selected disabled>请选择业务部门</option>
-                                                <foreach name="rolelist" key="k" item="v">
-                                                    <option value="{$v}" <?php /*if($k==cookie('roleid')){ echo 'selected';} */?> >{$v}</option>
-                                                </foreach>
-                                            </select>
-                                        </div>
-
-                                        <div class="form-group col-md-4">
-                                            <label>客户单位：</label>
-
-                                            <input type="text" name="info[customer]" id="customer_name" value="" placeholder="您可以输入客户单位名称拼音首字母检索" class="form-control" />
-
-                                            <select  name="info[customer]" class="form-control">
-                                                <option value="" selected disabled>请选择客户单位</option>
-                                                <foreach name="geclist"  item="v">
-                                                    <option value="{$v.company_name}"><?php /*echo strtoupper(substr($v['pinyin'], 0, 1 )); */?> - {$v.company_name}</option>
-                                                </foreach>
-                                            </select>
-                                        </div>-->
-
                                        
                                     </div>
                                     
@@ -112,24 +92,32 @@
 </div>
 
 <include file="Index:footer2" />
-		<!--
-		<script type="text/javascript">
-            function sousuo(){
-				var keywords = <?php echo $keywords; ?>;
-                $("#customer_name").autocomplete(keywords, {
-                     matchContains: true,
-                     highlightItem: false,
-                     formatItem: function(row, i, max, term) {
-                         return '<span style=" display:none">'+row.pinyin+'</span>'+row.company_name;
-                     },
-                     formatResult: function(row) {
-                         return row.company_name;
-                     }
-                });
-            };
-			
-			$(document).ready(function(e) {
-                sousuo();
-            });
-        </script>
-        -->
+
+<script type="text/javascript">
+    function check_field(){
+        var kid = $('#k_id').val();
+        $.ajax({
+            type:"POST",
+            url:"{:U('Ajax/fields')}",
+            data:{id:kid},
+            success:function(msg){
+                if(msg){
+                    $("#field").empty();
+                    var count = msg.length;
+                    var i= 0;
+                    var b="";
+                    b+='<option value="" disabled selected>请选择学科领域</option>';
+                    for(i=0;i<count;i++){
+                        b+="<option value='"+msg[i].id+"'>"+msg[i].fname+"</option>";
+                    }
+                    $("#field").append(b);
+                }else{
+                    $("#field").empty();
+                    var b='<option value="" disabled selected>无学科领域信息</option>';
+                    $("#field").append(b);
+                }
+
+            }
+        })
+    }
+</script>
