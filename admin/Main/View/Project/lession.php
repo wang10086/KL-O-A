@@ -47,11 +47,12 @@
                                         <tr>
                                             <td>{$row.id}</td>
                                             <td><a href="{:U('Project/view', array('id'=>$row['id']))}">{$row.name}</a></td>
-                                            <td>{:get_prj_kind_name($row[kind])}</td>
-                                            <td>{$row.chief}</td>
-                                            <td>{$row.input_time|date='Y-m-d H:i:s',###}</td>
-                                            
-                                            <?php 
+                                            <td>{$row.kind}</td>
+                                            <td>{$row.field}</td>
+                                            <td>{$row.type}</td>
+                                            <td>{$row.les_hours}</td>
+
+                                            <?php /*
                                             if($row['audit_status']== P::AUDIT_STATUS_NOT_AUDIT){
                                                 $show  = '<td>等待审批</td>';	
                                             }else if($row['audit_status'] == P::AUDIT_STATUS_PASS){
@@ -60,15 +61,15 @@
                                                 $show  = '<td><span class="red">不通过</span></td>';	
                                             }
                                             echo $show;
-                                            ?>
+                                            */?>
                                             <if condition="rolemenu(array('Project/add'))">
                                             <td class="taskOptions">
-                                            <button onClick="javascript:window.location.href='{:U('Project/add',array('id'=>$row['id']))}';" title="修改" class="btn btn-info btn-smsm"><i class="fa fa-pencil"></i></button>
+                                            <button onClick="javascript:window.location.href='{:U('Project/lession_add',array('id'=>$row['id']))}';" title="修改" class="btn btn-info btn-smsm"><i class="fa fa-pencil"></i></button>
                                             </td>
                                             </if>
                                             <if condition="rolemenu(array('Project/del'))">
                                             <td class="taskOptions">
-                                            <button onClick="javascript:ConfirmDel('{:U('Project/del',array('id'=>$row['id']))}');" title="删除" class="btn btn-warning btn-smsm"><i class="fa fa-times"></i></button>
+                                            <button onClick="javascript:ConfirmDel('{:U('Project/lession_del',array('id'=>$row['id']))}');" title="删除" class="btn btn-warning btn-smsm"><i class="fa fa-times"></i></button>
                                             </td>
                                             </if>
                                          

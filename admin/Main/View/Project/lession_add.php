@@ -12,14 +12,13 @@
 
                 <!-- Main content -->
                 <section class="content">
-                <form method="post" action="{:U('Project/lines_add')}" name="myform" id="myform">
+                <form method="post" action="{:U('Project/lession_add')}" name="myform" id="myform">
                 <input type="hidden" name="dosubmint" value="1">
+                <input type="hidden" name="id" value="{$row.id}">
                     <div class="row">
                          <!-- right column -->
                         <div class="col-md-12">
-                                  
-                            
-                            
+
                             <div class="box box-warning">
                                 <div class="box-header">
                                     <h3 class="box-title">课程信息</h3>
@@ -28,26 +27,25 @@
                                     <div class="content">
                                     	
                                         <div class="form-group col-md-4">
-                                            <label>课程名称：</label><input type="text" name="info[name]" class="form-control" required />
+                                            <label>课程名称：</label><input type="text" name="info[name]" class="form-control" value="{$row.name}" required />
                                         </div>
 
                                         
                                         <div class="form-group col-md-4">
                                             <label>项目类型：</label>
-                                            <select  class="form-control"  name="info[kind_id]" onchange="check_field()" id="k_id" required>
+                                            <select  class="form-control"  name="info[kind_id]" onchange="check_field();check_type()" id="k_id" required>
                                                 <option value="" selected disabled>请选择项目类型</option>
                                                 <foreach name="kinds" item="v">
-                                                    <option value="{$v.id}" <?php if ($row && ($v['id'] == $row['kind'])) echo ' selected'; ?> >{:tree_pad($v['level'], true)} {$v.name}</option>
+                                                    <option value="{$v.id}" <?php if ($row && ($v['id'] == $row['kind_id'])) echo ' selected'; ?> >{:tree_pad($v['level'], true)} {$v.name}</option>
                                                 </foreach>
                                             </select>
                                         </div>
 
                                         <div class="form-group col-md-4">
                                             <label>学科领域：</label>
-                                            <select  class="form-control"  name="info[f_id]" id="field">
-                                                <option value="" selected disabled>请选择项目类型</option>
-                                                <if condition="$row['f_id']">
-                                                    <option value="{$row.f_id}" >{$row.fname}</option>
+                                            <select  class="form-control"  name="info[field_id]" onchange="check_type()" id="field">
+                                                <if condition="$row[field_id]">
+                                                    <option value="{$row.field_id}" >{$row.field}</option>
                                                     <else />
                                                     <option value="" selected disabled>请选择学科领域</option>
                                                 </if>
@@ -55,11 +53,19 @@
                                         </div>
                                         
                                         <div class="form-group col-md-4">
-                                            <label>学科分类：</label><input type="text" name="info[type]"  class="form-control" />
+                                            <label>学科分类：</label>
+                                            <!--<select  class="form-control"  name="info[field_id]" onfocus="check_type()" id="type">-->
+                                            <select  class="form-control"  name="info[type_id]"  id="type">
+                                                <if condition="$row['type_id']">
+                                                    <option value="{$row.type_id}" >{$row.type}</option>
+                                                    <else />
+                                                    <option value="" selected disabled>请选择学科分类</option>
+                                                </if>
+                                            </select>
                                         </div>
                                         
                                         <div class="form-group col-md-4">
-                                            <label>课时：</label><input type="text" name="info[les_hours]" class="form-control" />
+                                            <label>课时：</label><input type="text" name="info[les_hours]" class="form-control" value="{$row.les_hours}" />
                                         </div>
 
                                         <div class="form-group col-md-4">
@@ -67,7 +73,7 @@
                                             <select  name="info[les_type]" class="form-control">
                                                 <option value="" selected disabled>请选择课程类型</option>
                                                 <foreach name="les_types" key="k"  item="v">
-                                                    <option value="{$k}">{$v}</option>
+                                                    <option value="{$k}" <?php if ($row && ($k == $row['les_type'])) echo ' selected'; ?>>{$v}</option>
                                                 </foreach>
                                             </select>
                                         </div>
@@ -94,6 +100,7 @@
 <include file="Index:footer2" />
 
 <script type="text/javascript">
+    /*学科领域*/
     function check_field(){
         var kid = $('#k_id').val();
         $.ajax({
@@ -119,5 +126,36 @@
 
             }
         })
+    }
+
+    /*学科分类*/
+    function check_type(){
+        var kid = $("#k_id").val();
+        var fid = $("#field").val();
+        $.ajax({
+            type:"POST",
+            url:"{:U('Ajax/types')}",
+            data:{kid:kid,fid:fid},
+            success:function(msg){
+                console.log(msg);
+                if(msg){
+                    $("#type").empty();
+                    var count = msg.length;
+                    var i= 0;
+                    var b="";
+                    b+='<option value="" disabled selected>请选择学科分类</option>';
+                    for(i=0;i<count;i++){
+                        b+="<option value='"+msg[i].id+"'>"+msg[i].tname+"</option>";
+                    }
+                    $("#type").append(b);
+                }else{
+                    $("#type").empty();
+                    var b='<option value="" disabled selected>无学科分类信息</option>';
+                    $("#type").append(b);
+                }
+
+            }
+        })
+
     }
 </script>

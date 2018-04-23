@@ -282,20 +282,55 @@ class ProjectController extends BaseController {
 
     //线路课程
     public function lession(){
-
+        $this->lists = M('op_lession')->order("id desc")->select();
         $this->display('lession');
     }
 
     //增加相关线路.课程信息
     public function lession_add(){
-        if (isset($_POST['dosubmint'])){
+        $id                 = I('id');
+        $db             = M('op_lession');
 
+        if (isset($_POST['dosubmint'])){
+            $info           = I('info');
+            $kid            = $info['kind_id'];
+            $fid            = $info['field_id'];
+            $tid            = $info['type_id'];
+            $info['kind'] = M('project_kind')->where(array('id'=>$kid))->getField('name');
+            $info['field']= M('op_field')->where(array('id'=>$fid))->getField('fname');
+            $info['type'] = M('op_type')->where(array('id'=>$tid))->getField('tname');
+            if ($id){
+                $res = $db->where(array('id'=>$id))->save($info);
+            }else{
+                $res = $db->add($info);
+            }
+            if ($res){
+                $this->success('保存数据成功',U('Project/lession'));
+            }else{
+                $this->error('保存数据失败!');
+            }
 
         }else{
-
+            $row                = $db->where(array('id'=>$id))->find();
+            if($row['les_type']==0)     $row['les'] = '成熟产品';
+            if($row['les_type']==1)     $row['les'] = '新产品';
+            if($row['les_type']==2)     $row['les'] = '定制产品';
+            $this->row          = $row;
             $this->les_types    = C('WORDER_DEPT_TYPE');
             $this->kinds        = get_project_kinds();
             $this->display();
+        }
+    }
+
+    //删除相关线路.课程信息
+    public function lession_del(){
+        $id     = I('id');
+        $db     = M('op_lession');
+        $res    = $db->where(array('id'=>$id))->delete();
+        if($res){
+            $this->success('删除成功');
+        }else{
+            $this->error('删除失败');
         }
     }
 

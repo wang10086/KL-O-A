@@ -143,5 +143,17 @@ class AjaxController extends Controller {
         $this->ajaxReturn($data,"JSON");
 
     }
+
+    //获取学科分类
+    public function types(){
+        $kid            = I('kid');
+        $fid            = I('fid');
+        if ($fid){
+            $data       = M('op_type')->where(array('f_id'=>$fid))->select();
+        }else{
+            $data       = M('op_type')->where(array('k_id'=>$kid))->select();
+        }
+        $this->ajaxReturn($data,"JSON");
+    }
 	
 }
