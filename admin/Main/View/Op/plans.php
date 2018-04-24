@@ -28,7 +28,7 @@
                                     <div class="content">
                                     	
                                         <div class="form-group col-md-12">
-                                            <label>项目名称(学校名称 + 地点 + 项目类型)：</label><input type="text" name="info[project]" class="form-control" id="project" />
+                                            <label>项目名称(学校名称 + 地点 + 项目类型)：</label><input type="text" name="info[project]" class="form-control" id="project" required />
                                             <span class="form-group col-md-12"  id="projectTip"></span>
                                         </div>
 
@@ -44,28 +44,43 @@
                                             <span id="kindTip" style="margin-right: 5px;"></span>
                                         </div>
 
+
+                                        <!--<div id="show_hide">
+                                            <div class="form-group col-md-4">
+                                                <label>课程(线路)领域：</label>
+                                                <select  class="form-control"  name="info[field]" id="field" required>
+                                                    <option value="" selected disabled>请选择领域</option>
+                                                    <foreach name="field" item="v">
+                                                        <option value="{$v.id}" <?php /*if ($row && ($v['id'] == $row['field'])) echo ' selected'; */?> >{:tree_pad($v['level'], true)} {$v.name}</option>
+                                                    </foreach>
+                                                </select>
+                                                <span id="kindTip" style="margin-right: 5px;"></span>
+                                            </div>
+                                        </div>-->
+
+
                                         <div class="form-group col-md-4">
-                                            <label>预计人数：</label><input type="text" name="info[number]" class="form-control" id="number" />
+                                            <label>预计人数：</label><input type="text" name="info[number]" class="form-control" id="number" required />
                                             <div id="numberTip"></div>
                                         </div>
                                         
                                         <div class="form-group col-md-4">
-                                            <label>出团日期：</label><input type="text" name="info[departure]"  class="form-control inputdate" id="departure" />
+                                            <label>出团日期：</label><input type="text" name="info[departure]"  class="form-control inputdate" id="departure" required />
                                             <span id="departureTip"></span>
                                         </div>
                                         
                                         <div class="form-group col-md-4">
-                                            <label>行程天数：</label><input type="text" name="info[days]" class="form-control" id="days" />
+                                            <label>行程天数：</label><input type="text" name="info[days]" class="form-control" id="days" required />
                                             <span id="daysTip"></span>
                                         </div>
                                         
                                         <div class="form-group col-md-4">
-                                            <label>目的地：</label><input type="text" name="info[destination]" class="form-control" id="destination" />
+                                            <label>目的地：</label><input type="text" name="info[destination]" class="form-control" id="destination" required />
                                             <span id="destinationTip"></span>
                                         </div>
                                         
                                         <div class="form-group col-md-4">
-                                            <label>立项时间：</label><input type="text" name="info[op_create_date]" class="form-control inputdate_a" id="op_create_date" />
+                                            <label>立项时间：</label><input type="text" name="info[op_create_date]" class="form-control inputdate_a" id="op_create_date" required />
                                             <span id="op_create_dateTip"></span>
                                         </div>
                                         
@@ -85,7 +100,7 @@
                                             <!--
                                             <input type="text" name="info[customer]" id="customer_name" value="" placeholder="您可以输入客户单位名称拼音首字母检索" class="form-control" />
                                             -->
-                                            <select  name="info[customer]" class="form-control" id="customer">
+                                            <select  name="info[customer]" class="form-control" id="customer" required>
                                                 <option value="" selected disabled>请选择客户单位</option>
                                                 <foreach name="geclist"  item="v">
                                                     <option value="{$v.company_name}"><?php echo strtoupper(substr($v['pinyin'], 0, 1 )); ?> - {$v.company_name}</option>
@@ -102,7 +117,7 @@
                                         
 
                                         <div class="form-group col-md-12">
-                                            <label>项目需求(对市场部 、研发部 、计调部 、资源管理部等部门的需求)：</label><textarea class="form-control"  name="info[context]" id="context"></textarea>
+                                            <label>项目需求(对市场部 、研发部 、计调部 、资源管理部等部门的需求)：</label><textarea class="form-control"  name="info[context]" id="context" required></textarea>
                                             <span id="contextTip"></span>
                                         </div>
                                         

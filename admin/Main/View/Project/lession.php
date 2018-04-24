@@ -32,11 +32,11 @@
                                         <th class="sorting" data="id">ID</th>
                                         <th class="sorting" data="name">课程名称</th>
                                         <th class="sorting" data="kind">项目类型</th>
-                                        <th class="sorting" data="chief">所属领域</th>
-                                        <th class="sorting" data="">学科分类</th>
-                                        <th class="sorting" data="input_time">课时</th>
+                                        <th class="sorting" data="field">所属领域</th>
+                                        <th class="sorting" data="type">学科分类</th>
+                                        <th class="sorting" data="les_hours">课时</th>
                                      
-                                        <if condition="rolemenu(array('Project/add'))">
+                                        <if condition="rolemenu(array('Project/lession_add'))">
                                         <th width="60" class="taskOptions">编辑</th>
                                         </if>
                                         <if condition="rolemenu(array('Project/del'))">
@@ -46,7 +46,7 @@
                                     <foreach name="lists" item="row">
                                         <tr>
                                             <td>{$row.id}</td>
-                                            <td><a href="{:U('Project/view', array('id'=>$row['id']))}">{$row.name}</a></td>
+                                            <td><a href="javascript:;">{$row.name}</a></td>
                                             <td>{$row.kind}</td>
                                             <td>{$row.field}</td>
                                             <td>{$row.type}</td>
@@ -62,7 +62,7 @@
                                             }
                                             echo $show;
                                             */?>
-                                            <if condition="rolemenu(array('Project/add'))">
+                                            <if condition="rolemenu(array('Project/lession_add'))">
                                             <td class="taskOptions">
                                             <button onClick="javascript:window.location.href='{:U('Project/lession_add',array('id'=>$row['id']))}';" title="修改" class="btn btn-info btn-smsm"><i class="fa fa-pencil"></i></button>
                                             </td>

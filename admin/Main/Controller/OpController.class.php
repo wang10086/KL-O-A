@@ -212,18 +212,8 @@ class OpController extends BaseController {
                     $content = $worder['worder_content'];
                     $url     = U('Op/plans_follow',array('opid'=>$worder['op_id']));
                     $user    = '['.$exe_user_id.']';
-                    send_msg($uid,$title,$content,$url,$user,'');
+                    //send_msg($uid,$title,$content,$url,$user,'');
 
-					/*echo "<script>
-                        var a = confirm('立项成功,现在需要发送工单吗?')
-                        if(a == true){
-                            var url =  'index.php?m=Main&c=Worder&a=new_worder&op_id='+$addok;
-                            window.location.href= url;
-                        }else{
-                            var url =  'index.php?m=Main&c=Op&a=index';
-                            window.location.href= url;
-                        }
-                    </script>";*/
 					$this->success('保存成功！',U('Op/index'));
 				}else{
 					$this->error('保存失败' . $db->getError());	

@@ -47,36 +47,13 @@
                                 <if condition="rolemenu(array('Op/index'))">
                                     <li><a href="{:U('Op/index')}"><i class="fa fa-angle-right"></i> 项目管理</a></li>
                                 </if>
+                                <if condition="rolemenu(array('Project/kind'))">
+                                    <li class="{:on('Project/kind')} {:on('Project/addkind')}"><a href="{:U('Project/kind')}"><i class="fa fa-angle-right"></i> 项目类型</a></li>
+                                </if>
                                 <if condition="rolemenu(array('Op/relpricelist'))">
                                         <li class="{:on('Op/relpricelist')} {:on('Op/relprice')}"><a href="{:U('Op/relpricelist')}"><i class="fa fa-angle-right"></i> 项目比价</a></li>
                                 </if>
 
-                                <!--<if condition="rolemenu(array())">
-                                    <li class="treeview">
-                                        <ul class="treeview-menu">
-                                            <if condition="rolemenu(array())">
-                                            </if>
-                                        </ul>
-                                    </li>
-                                </if>-->
-
-                                <if condition="rolemenu(array('Project/kind','Project/lession','Project/fields'))">
-                                    <li class="treeview {:on('Project')} ">
-                                        <a href=""><i class="fa  fa-bars"></i> 项目资料</a>
-                                        <ul class="treeview-menu">
-                                            <if condition="rolemenu(array('Project/kind'))">
-                                                <li class="{:on('Project/kind')} {:on('Project/addkind')}"><a href="{:U('Project/kind')}"><i class="fa fa-angle-right"></i> 项目类型</a></li>
-                                            </if>
-                                            <if condition="rolemenu(array('Project/lession'))">
-                                                <li class="{:on('Project/lession')}"><a href="{:U('Project/lession')}"><i class="fa fa-angle-right"></i> 课程信息</a></li>
-                                            </if>
-                                            <if condition="rolemenu(array('Project/fields'))">
-                                                <li class="{:on('Project/fields')}"><a href="{:U('Project/fields')}"><i class="fa fa-angle-right"></i> 学科领域</a></li>
-                                                <!--<li><a href="javascript:;" onClick="art_show_msg('加班开发中，稍后呈现...',5)"><i class="fa fa-angle-right"></i> 学科领域</a></li>-->
-                                            </if>
-                                        </ul>
-                                    </li>
-                                </if>
                             </ul>
                         </li>
                         </if>
@@ -105,8 +82,8 @@
                         </if>
                         -->
                         
-                        <if condition="rolemenu(array('Product/index','Product/tpl','Product/line','Product/kind','Product/feedback'))">
-                        <li class="treeview {:on('Product')}">
+                        <if condition="rolemenu(array('Product/index','Product/tpl','Product/line','Product/kind','Product/feedback','Project/lession','Project/fields'))">
+                        <li class="treeview {:on('Product')} {:on('Project')}">
                             <a href="javascript:;">
                                 <i class="fa fa-globe"></i>
                                 <span>产品管理</span>
@@ -125,6 +102,32 @@
                                 <if condition="rolemenu(array('Product/line'))">
                                 		<li class="{:on('Product/line')} {:on('Product/add_line')}"><a href="{:U('Product/line')}"><i class="fa fa-angle-right"></i> 行程方案管理</a></li>
                                 </if>
+
+                                <!--<if condition="rolemenu(array())">
+                                    <li class="treeview">
+                                        <ul class="treeview-menu">
+                                            <if condition="rolemenu(array())">
+                                            </if>
+                                        </ul>
+                                    </li>
+                                </if>-->
+
+                                <if condition="rolemenu(array('Project/lession','Project/fields'))">
+                                    <li class="treeview {:on('Project/lession')} {:on('Project/fields')}">
+                                        <a href=""><i class="fa  fa-bars"></i> 课程资料</a>
+                                        <ul class="treeview-menu">
+
+                                            <if condition="rolemenu(array('Project/lession'))">
+                                                <li class="{:on('Project/lession')}"><a href="{:U('Project/lession')}"><i class="fa fa-angle-right"></i> 课程信息</a></li>
+                                            </if>
+                                            <if condition="rolemenu(array('Project/fields'))">
+                                                <li class="{:on('Project/fields')}"><a href="{:U('Project/fields')}"><i class="fa fa-angle-right"></i> 学科领域</a></li>
+                                                <!--<li><a href="javascript:;" onClick="art_show_msg('加班开发中，稍后呈现...',5)"><i class="fa fa-angle-right"></i> 学科领域</a></li>-->
+                                            </if>
+                                        </ul>
+                                    </li>
+                                </if>
+
                                 <!--
                                 <if condition="rolemenu(array('Product/kind'))">
                                 		<li class="{:on('Product/kind')} {:on('Product/addkind')}"><a href="{:U('Product/kind')}"><i class="fa fa-angle-right"></i> 线路类型管理</a></li>
