@@ -1837,7 +1837,7 @@ function updatekpi($month,$user){
 	$where['user_id'] = $user;
 	
 	$quto   = M('kpi_more')->where($where)->select();
-	
+
 	if($quto){
 		foreach($quto as $k=>$v){
 			
@@ -1896,7 +1896,9 @@ function updatekpi($month,$user){
 					$where['b.audit_status']		= 1;
 					$where['o.create_user']			= $user;
 					$where['l.req_type']			= 801;
-					$where['l.audit_time']			= array('between',array($v['start_date'],$v['end_date']));
+					$end_time 						= $v['end_date']+7*24*3600;
+					/*$where['l.audit_time']			= array('between',array($v['start_date'],$v['end_date']));*/
+					$where['l.audit_time']			= array('between',array($v['start_date'],$end_time));
 					$xiangmu = M()->table('__OP_SETTLEMENT__ as b')->field('b.maoli')->join('__OP__ as o on b.op_id = o.op_id','LEFT')->join('__AUDIT_LOG__ as l on l.req_id = b.id','LEFT')->where($where)->count();
 					$hetong  = M()->table('__CONTRACT__ as c')->field('c.*')->join('__OP_SETTLEMENT__ as b on b.op_id = c.op_id','LEFT')->join('__OP__ as o on o.op_id = c.op_id','LEFT')->join('__AUDIT_LOG__ as l on l.req_id = b.id','LEFT')->where($where)->count();
 					$complete = round(($hetong / $xiangmu)*100,2).'%';
