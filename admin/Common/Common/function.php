@@ -1896,8 +1896,7 @@ function updatekpi($month,$user){
 					$where['b.audit_status']		= 1;
 					$where['o.create_user']			= $user;
 					$where['l.req_type']			= 801;
-					$end_time 						= $v['end_date']-(7*86400);
-					$where['l.audit_time']			= array('between',array($v['start_date'],$v['end_date']));
+					$where['l.audit_time']			= array('between',array($v['start_date'],$v['end_date']-(7*86400)));
 					$xiangmu = M()->table('__OP_SETTLEMENT__ as b')->field('b.maoli')->join('__OP__ as o on b.op_id = o.op_id','LEFT')->join('__AUDIT_LOG__ as l on l.req_id = b.id','LEFT')->where($where)->count();//getField('b.op_id',true);
 					
 					$hetong  = M()->table('__CONTRACT__ as c')->field('c.*')->join('__OP_SETTLEMENT__ as b on b.op_id = c.op_id','LEFT')->join('__OP__ as o on o.op_id = c.op_id','LEFT')->join('__AUDIT_LOG__ as l on l.req_id = b.id','LEFT')->where($where)->count();
