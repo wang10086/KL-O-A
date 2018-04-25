@@ -36,7 +36,7 @@ class RightsController extends BaseController {
 		
 		
                 
-        foreach ($rs as $k => &$row) {
+        foreach ($rs as $k => $row) {
             $cfg = $cfgdb->where('req_type='.$row['req_type'])->find();
             $res = $resdb->table('__' . strtoupper($cfg['table']) . '__')->field($cfg['field'])->find($row['req_id']);
             $rs[$k]['cfgdata'] = $cfg;
@@ -55,16 +55,16 @@ class RightsController extends BaseController {
             $fid                = $row['req_id'];
             $budget             = M('op_huikuan')->find($fid);
             $opid               = $budget['op_id'];
-            $row['group_id']    = M('op')->where(array('op_id'=>$opid))->getfield('group_id');
+            $rs[$k]['group_id']    = M('op')->where(array('op_id'=>$opid))->getfield('group_id');
 
             //回款金额
-            $row['amount'] 	    = M('contract_pay')->where(array('op_id'=>$opid))->getfield('amount');
+            $rs[$k]['amount'] 	    = M('op_huikuan')->where(array('id'=>$row['req_uid']))->getfield('huikuan');
 
             //计调人员
-            $row['jidiao'] = M()->table('__OP__ as o')->join('__OP_AUTH__ as u on u.op_id = o.op_id','LEFT')->join('__ACCOUNT__ as a on a.id = u.line','LEFT')->where("o.op_id = $opid")->getfield('a.nickname');
+            $rs[$k]['jidiao'] = M()->table('__OP__ as o')->join('__OP_AUTH__ as u on u.op_id = o.op_id','LEFT')->join('__ACCOUNT__ as a on a.id = u.line','LEFT')->where("o.op_id = $opid")->getfield('a.nickname');
 
         }
-        
+		
         $this->lists = $rs;
         //var_dump($this->lists);die;
 		
