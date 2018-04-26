@@ -83,7 +83,7 @@
                                 </div><!-- /.box-body -->
                             </div><!-- /.box -->
 
-                            <!--<div class="box box-warning">
+                            <div class="box box-warning">
                                 <div class="box-header">
                                     <h3 class="box-title">上传附件</h3>
 
@@ -122,7 +122,7 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div>-->
+                            </div>
                             
                            
                             <div style="width:100%; text-align:center;">

@@ -299,18 +299,39 @@ class ProjectController extends BaseController {
             $fid            = $info['field_id'];
             $tid            = $info['type_id'];
 
-            
-
-
             $info['kind'] = M('project_kind')->where(array('id'=>$kid))->getField('name');
             $info['field']= M('op_field')->where(array('id'=>$fid))->getField('fname');
             $info['type'] = M('op_type')->where(array('id'=>$tid))->getField('tname');
+
+            //上传文件
+            $aids = join(',', I('resfiles'));
+            $newname = I('newname', null);
+
+            if ($aids) {
+                $info['att_id'] = $aids;
+            } else {
+                $info['att_id'] = '';
+            }
+
+            //修改附件文件名
+            $attdb = M('attachment');
+            foreach ($newname as $k => $v) {
+                $attdb->where("id=$k")->setField('filename', $v);
+            }
+
             if ($id){
-                $res = $db->where(array('id'=>$id))->save($info);
+                $db->where(array('id'=>$id))->save($info);
+                $res = $id;
             }else{
                 $res = $db->add($info);
             }
+
             if ($res){
+
+                if ($aids) {
+                    $attdb->where("id in ($aids)")->setField(array('rel_id' => $res, 'catid' => 4)); //'catid' => 4  课程管理文件
+                }
+
                 $this->success('保存数据成功',U('Project/lession'));
             }else{
                 $this->error('保存数据失败!');
@@ -324,6 +345,13 @@ class ProjectController extends BaseController {
             $this->row          = $row;
             $this->les_types    = C('WORDER_DEPT_TYPE');
             $this->kinds        = get_project_kinds();
+
+            //获取附件
+            if($row['att_id']){
+                $this->atts = M('attachment')->where("catid=4 and id in (" . $row['att_id']. ")")->select();
+            }else{
+                $this->atts = false;
+            }
             $this->display();
         }
     }
