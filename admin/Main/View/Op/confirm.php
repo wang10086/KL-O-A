@@ -75,7 +75,7 @@
                                 </div><!-- /.box-header -->
                                 <div class="box-body">
                                 
-									<?php if(!$confirm || cookie('roleid')==10 || C('RBAC_SUPER_ADMIN')==cookie('username') ){ ?>
+									<?php if(!$confirm || !$upd_num || cookie('roleid')==10 || C('RBAC_SUPER_ADMIN')==cookie('username') ){ ?>
                                     <include file="confirm_edit" />
                                     <?php }else{ ?>
                                     <include file="confirm_read" />	

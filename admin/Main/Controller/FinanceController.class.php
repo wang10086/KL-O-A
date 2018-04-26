@@ -537,8 +537,9 @@ class FinanceController extends BaseController {
 		$op['show_user']  = $show_user;
 		$op['show_time']  = $show_time;
 		$op['show_reason']  = $show_reason;
-		
-		
+
+        $member                 = M('op_member')->where(array('op_id'=>$opid))->order('id')->select();
+        $this->member           = $member;
 		$this->kind				= C('COST_TYPE');
 		$this->costtype			= array('1'=>'其他','2'=>'专家辅导员','3'=>'合格供方','4'=>'物资');
 		$this->op				= $op;

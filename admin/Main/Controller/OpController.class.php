@@ -1728,8 +1728,7 @@ class OpController extends BaseController {
 		$where['op_id'] = $opid;
 		$op				= M('op')->where($where)->find();
 		$confirm		= M('op_team_confirm')->where($where)->find();
-		
-		
+
 		if(isset($_POST['dosubmit']) && $_POST['dosubmit']){
 			
 			$info	= I('info');
@@ -1740,8 +1739,7 @@ class OpController extends BaseController {
 			$where['op_id']		= array('neq',$opid);
 			$check				= M('op')->where($where)->find();
 			if($check)  $this->error($info['group_id'].'团号已存在');	 
-			
-			
+
 			$info['op_id']			= $opid; 
 			$info['user_id']		= cookie('userid'); 
 			$info['user_name']		= cookie('nickname'); 
@@ -1750,7 +1748,8 @@ class OpController extends BaseController {
 			$info['confirm_time']	= time(); 
 			//判断是否已经确认
 			if($confirm){
-				M('op_team_confirm')->data($info)->where(array('op_id'=>$opid))->save();	
+                $info['upd_num']    = 1;    //用来判断修改次数
+                M('op_team_confirm')->data($info)->where(array('op_id'=>$opid))->save();
 			}else{
 				M('op_team_confirm')->add($info);	
 			}
@@ -1775,8 +1774,8 @@ class OpController extends BaseController {
             $member         = M('op_member')->where(array('op_id'=>$opid))->order('id')->select();
             $this->member   = $member;
             $this->stu_list = $stu_list;
-
-			$this->confirm 	= $confirm; 
+			$this->confirm 	= $confirm;
+            $this->upd_num  = $confirm['upd_num'];
 			$this->display('confirm');
 		}
 	}
