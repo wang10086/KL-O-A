@@ -21,7 +21,7 @@
                         <div class="col-xs-12">
                             <div class="box">
                                 <div class="box-header">
-                                    <h3 class="box-title">课程信息</h3>
+                                    <h3 class="box-title">学科分类</h3>
                                     <div class="box-tools pull-right">
                                         <if condition="rolemenu(array('Project/types_add'))">
                                         <a href="javascript:;" onClick="javascript:{:open_type()}" class="btn btn-sm btn-danger"><i class="fa fa-plus"></i> 录入新分类</a>
@@ -31,8 +31,9 @@
                                 <div class="box-body">
 
                                     <div class="btn-group" id="catfont">
-                                        <a href="{:U('Project/fields',array('pin'=>0))}" class="btn <?php if($pin==0){ echo 'btn-info';}else{ echo 'btn-default';} ?>">学科领域</a>
-                                        <a href="{:U('Project/types',array('pin'=>1))}" class="btn <?php if($pin==1){ echo 'btn-info';}else{ echo 'btn-default';} ?>">学科分类</a>
+                                        <a href="{:U('Project/lession',array('pin'=>0))}" class="btn <?php if($pin==0){ echo 'btn-info';}else{ echo 'btn-default';} ?>">课程信息</a>
+                                        <a href="{:U('Project/fields',array('pin'=>1))}" class="btn <?php if($pin==1){ echo 'btn-info';}else{ echo 'btn-default';} ?>">学科领域</a>
+                                        <a href="{:U('Project/types',array('pin'=>2))}" class="btn <?php if($pin==2){ echo 'btn-info';}else{ echo 'btn-default';} ?>">学科分类</a>
                                     </div>
 
                                 <table class="table table-bordered dataTable fontmini" id="tablelist">

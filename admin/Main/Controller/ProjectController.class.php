@@ -282,6 +282,8 @@ class ProjectController extends BaseController {
 
     //线路课程
     public function lession(){
+        $pin	     = I('pin');
+        $this->pin   = $pin;
         $this->lists = M('op_lession')->order("id desc")->select();
         $this->display('lession');
     }
@@ -289,13 +291,17 @@ class ProjectController extends BaseController {
     //增加相关线路.课程信息
     public function lession_add(){
         $id                 = I('id');
-        $db             = M('op_lession');
+        $db                 = M('op_lession');
 
         if (isset($_POST['dosubmint'])){
             $info           = I('info');
             $kid            = $info['kind_id'];
             $fid            = $info['field_id'];
             $tid            = $info['type_id'];
+
+            
+
+
             $info['kind'] = M('project_kind')->where(array('id'=>$kid))->getField('name');
             $info['field']= M('op_field')->where(array('id'=>$fid))->getField('fname');
             $info['type'] = M('op_type')->where(array('id'=>$tid))->getField('tname');
