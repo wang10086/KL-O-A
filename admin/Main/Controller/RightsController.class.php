@@ -58,7 +58,7 @@ class RightsController extends BaseController {
             $rs[$k]['group_id']    = M('op')->where(array('op_id'=>$opid))->getfield('group_id');
 
             //回款金额
-            $rs[$k]['amount'] 	    = M('op_huikuan')->where(array('id'=>$row['req_uid']))->getfield('huikuan');
+            $rs[$k]['amount'] 	    = M('op_huikuan')->where(array('id'=>$row['req_id']))->getfield('huikuan');
 
             //计调人员
             $rs[$k]['jidiao'] = M()->table('__OP__ as o')->join('__OP_AUTH__ as u on u.op_id = o.op_id','LEFT')->join('__ACCOUNT__ as a on a.id = u.line','LEFT')->where("o.op_id = $opid")->getfield('a.nickname');
