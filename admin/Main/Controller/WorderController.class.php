@@ -864,4 +864,57 @@ class WorderController extends BaseController{
         }
     }
 
+    /*审核工作记录*/
+    public function verify_record(){
+
+        $db             = M('work_record');
+        if(isset($_POST['dosubmint'])){
+            $info       = I('info');
+            $id         = I('id');
+            $res        = $db->where(array('id'=>$id))->save($info);
+            if ($res){
+                if ($info['status'] == 0){
+                    $data   = $db->where(array('id'=>$id))->find();
+                    //如果审核通过,向被记录人发送系统消息
+                    $send 		= $data['rec_user_id'];
+                    $title 		= '您有新的工作记录产生：'.$data['title'];
+                    $content 	= $data['content'];
+                    $user		= '['.$data['user_id'].']';
+                    $url		= U('Work/record',array('id'=>$id));
+                    send_msg($send,$title,$content,$url,$user);
+                }
+                $this->success("保存数据成功",U('Work/record'));
+            }else{
+                $this->error('保存数据失败',U('Work/record'));
+            }
+
+        }else{
+            $id             = I('id');
+            $info           = $db->where(array('id'=>$id))->find();
+            //判断状态
+            if($info['status']==0) $info['sta'] = '<span class="red">正常记录</span>';
+            if($info['status']==1) $info['sta'] = '<span class="green">已撤销或未通过审核</span>';
+            //纪录性质
+            $kinds 		    = C('REC_TYPE');
+            foreach ($kinds as $k=>$v){
+                if ($info['type'] == $k){
+                    $info['type_name'] = $v;
+                }
+            }
+            //详细分类
+            $kindinfo 	= C('REC_TYPE_INFO');
+            foreach ($kindinfo as $value){
+                foreach ($value as $k=>$v){
+                    /*$kf_name[$k] = $v;*/
+                    if ($info['typeinfo']==$k){
+                        $info['kf_name'] = $v;
+                    }
+                }
+            }
+            $uid            = $info['rec_user_id'];
+            $info['rec_dept_name'] = M('account')->alias('a')->where(array('a.id'=>$uid))->join("left join oa_role as r on r.id=a.roleid")->getField('r.role_name');
+            $this->info     = $info;
+            $this->display();
+        }
+    }
 }

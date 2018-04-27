@@ -284,7 +284,11 @@ class ProjectController extends BaseController {
     public function lession(){
         $pin	     = I('pin');
         $this->pin   = $pin;
-        $this->lists = M('op_lession')->order("id desc")->select();
+        $db          = M('op_lession');
+        $where       = array();
+        $page        = new Page($db->where($where)->count(), P::PAGE_SIZE);
+        $this->pages = $page->show();
+        $this->lists = $db->where($where)->limit($page->firstRow . ',' . $page->listRows)->order("id desc")->select();
         $this->display('lession');
     }
 
@@ -371,8 +375,12 @@ class ProjectController extends BaseController {
     //学科领域
     public function fields(){
         $pin	     = I('pin');
+        $db          = M('op_field');
         $this->pin   = $pin;
-        $this->lists = M('op_field')->order("id desc")->select();
+        $where       = array();
+        $page        = new Page($db->where($where)->count(), P::PAGE_SIZE);
+        $this->pages = $page->show();
+        $this->lists = $db->where($where)->limit($page->firstRow . ',' . $page->listRows)->order("id desc")->select();
         $this->display('fields');
     }
 
@@ -419,7 +427,10 @@ class ProjectController extends BaseController {
         $pin	     = I('pin');
         $db          = M('op_type');
         $this->pin   = $pin;
-        $this->lists = $db->order("id desc")->select();
+        $where       = array();
+        $page        = new Page($db->where($where)->count(), P::PAGE_SIZE);
+        $this->pages = $page->show();
+        $this->lists = $db->where($where)->limit($page->firstRow . ',' . $page->listRows)->order("id desc")->select();
         $this->display('types');
     }
 

@@ -42,6 +42,9 @@
                                         <th class="sorting" data="rec_time" width="120">发布时间</th>
                                         <th class="sorting" data="rec_user_name" width="80">记录人员</th>
                                         <th class="sorting" data="status" width="80">状态</th>
+                                        <if condition="rolemenu(array('worder/verify_record'))">
+                                            <th class="taskOptions"  width="80">审核</th>
+                                        </if>
                                         <th width="40" class="taskOptions">撤销</th>
                                     </tr>
                                     <foreach name="lists" item="row"> 
@@ -59,7 +62,11 @@
                                             <td>系统自动生成</td>
                                         </if>
                                         <td>{$row.status}</td>
-                                        
+                                        <if condition="rolemenu(array('worder/verify_record'))">
+                                            <td class="taskOptions">
+                                                <button onClick="javascript:window.location.href='{:U('worder/verify_record',array('id'=>$row['id']))}';" title="审核" class="btn btn-info btn-smsm"><i class="fa fa-pencil"></i></button>
+                                            </td>
+                                        </if>
                                         <td class="taskOptions">
                                         <button onClick="javascript:ConfirmDel('{:U('Work/revoke',array('recid'=>$row['id']))}','您确定撤销该记录吗？')" title="删除" class="btn btn-warning btn-smsm"><i class="fa fa-times"></i></button>
                                         </td>

@@ -44,7 +44,7 @@ class WorkController extends BasepubController{
 		$this->pages	= $pagecount>P::PAGE_SIZE ? $page->show():'';
         
 		
-		$sta = array('0'=>'<span class="green">正常</span>','1'=>'<span class="red">已撤销</span>');
+		$sta = array('0'=>'<span class="red">正常</span>','1'=>'<span class="green">已撤销或未通过审核</span>');
        
 		$lists = $db->where($where)->limit($page->firstRow . ',' . $page->listRows)->order($this->orders('rec_time'))->select();
 		foreach($lists as $k=>$v){
@@ -88,6 +88,7 @@ class WorkController extends BasepubController{
 			$info['rec_user_name']	= cookie('name');
 			$info['status']			= 0;
 			$info['year']			= substr($info['month'], 0, 4);
+            $info['status']         = 1;    //已撤销或未审核
 			
 			//保存主表
 			if($reid){
@@ -96,12 +97,16 @@ class WorkController extends BasepubController{
 				$info['rec_time']		= time();
 				$reid = $db->add($info);	
 			}
-			
+
+			//添加工作记录必须由品控部经理审核
+            $role_id    = 47;
+            $uid        = M('account')->where(array('roleid'=>$role_id))->getField('id');
+
 			$send 		= cookie('userid');
-			$title 		= '工作记录：'.$info['title'];
+			$title 		= '您有新的工作记录待审核：'.$info['title'];
 			$content 	= $info['content'];
-			$user		= '['.$info['user_id'].']';
-			$url		= U('Work/record',array('id'=>$reid));
+			$user		= '['.$uid.']';
+			$url		= U('Worder/verify_record',array('id'=>$reid));
 			
 			//发送消息
 			send_msg($send,$title,$content,$url,$user);
@@ -159,9 +164,7 @@ class WorkController extends BasepubController{
 		}else{
 			$this->error('您没有权限撤销' . $db->getError());
 		}
-		
-		
-		
+
 	}
 	
     
