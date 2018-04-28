@@ -1477,7 +1477,8 @@ class RbacController extends BaseController {
 			
 			$exe = 0;
 			
-			if(!$month || $month>=$tm)  	$this->error('月份未填写或超出！');
+			//if(!$month || $month>=$tm)  	$this->error('月份未填写或超出！');
+			if(!$month)  	$this->error('月份未填写或超出！');
 			if($type){
 				if(!$uid)	 $this->error('请选择考核人员！');
 				$execute = kpilock($month,$uid);
