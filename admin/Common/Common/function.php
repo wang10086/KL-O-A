@@ -1831,7 +1831,7 @@ function addkpiinfo($year,$month,$user){
 
 
 function updatekpi($month,$user){
-	
+
 	$where = array();
 	$where['month']   = $month;
 	$where['user_id'] = $user;
@@ -1851,9 +1851,41 @@ function updatekpi($month,$user){
 					$where['l.req_type']			= 801;
 					$where['l.audit_time']			= array('between',array($v['start_date'],$v['end_date']));
 					$complete = M()->table('__OP_SETTLEMENT__ as b')->field('b.maoli')->join('__OP__ as o on b.op_id = o.op_id','LEFT')->join('__AUDIT_LOG__ as l on l.req_id = b.id','LEFT')->where($where)->sum('b.maoli');
+
+					//57武汉项目部业务主管,41南京项目部业务主管roleid
+					//武汉项目部
+					$whe['postid']	= array('eq',1);
+					$whe['roleid'] 	= array('eq',57);
+					$wh_uids = M('account')->where($whe)->getField('id',true);
+					if (in_array($user,$wh_uids)){
+						$wh_where 					= array();
+						$wh_where['o.create_user'] 	= array('neq',$user);
+						$wh_where['o.destination'] 	= array('like',"%武汉%");
+						$wh_where['b.audit_status']	= 1;
+						$wh_where['l.req_type']		= 801;
+						$wh_where['l.audit_time']	= array('between',array($v['start_date'],$v['end_date']));
+						$wh_com = M()->table('__OP_SETTLEMENT__ as b')->field('b.maoli')->join('__OP__ as o on b.op_id = o.op_id','LEFT')->join('__AUDIT_LOG__ as l on l.req_id = b.id','LEFT')->where($wh_where)->sum('b.maoli');
+						$complete = $complete + $wh_com*30/100 ;
+					}
+
+					//南京项目部
+					$nj_whe['postid']	= array('eq',1);
+					$nj_whe['roleid'] 	= array('eq',41);
+					$nj_uids = M('account')->where($nj_whe)->getField('id',true);
+					if (in_array($user,$nj_uids)){
+						$nj_where 					= array();
+						$nj_where['o.create_user'] 	= array('neq',$user);
+						$nj_where['o.destination'] 	= array('like',"%武汉%");
+						$nj_where['b.audit_status']	= 1;
+						$nj_where['l.req_type']		= 801;
+						$nj_where['l.audit_time']	= array('between',array($v['start_date'],$v['end_date']));
+						$nj_com = M()->table('__OP_SETTLEMENT__ as b')->field('b.maoli')->join('__OP__ as o on b.op_id = o.op_id','LEFT')->join('__AUDIT_LOG__ as l on l.req_id = b.id','LEFT')->where($nj_where)->sum('b.maoli');
+						$complete = $complete + $nj_com*30/100 ;
+					}
+
 					$complete = $complete ? $complete : 0;
 				}
-				
+
 				//获取累计毛利率
 				if($v['quota_id']==2){
 					$where = array();
