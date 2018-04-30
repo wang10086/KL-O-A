@@ -1875,7 +1875,7 @@ function updatekpi($month,$user){
 					if (in_array($user,$nj_uids)){
 						$nj_where 					= array();
 						$nj_where['o.create_user'] 	= array('neq',$user);
-						$nj_where['o.destination'] 	= array('like',"%武汉%");
+						$nj_where['o.destination'] 	= array('like',"%南京%");
 						$nj_where['b.audit_status']	= 1;
 						$nj_where['l.req_type']		= 801;
 						$nj_where['l.audit_time']	= array('between',array($v['start_date'],$v['end_date']));

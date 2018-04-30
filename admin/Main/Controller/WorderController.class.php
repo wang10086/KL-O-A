@@ -905,7 +905,6 @@ class WorderController extends BaseController{
             $kindinfo 	= C('REC_TYPE_INFO');
             foreach ($kindinfo as $value){
                 foreach ($value as $k=>$v){
-                    /*$kf_name[$k] = $v;*/
                     if ($info['typeinfo']==$k){
                         $info['kf_name'] = $v;
                     }
