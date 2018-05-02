@@ -178,7 +178,6 @@
             url:"{:U('Ajax/types')}",
             data:{kid:kid,fid:fid},
             success:function(msg){
-                console.log(msg);
                 if(msg){
                     $("#type").empty();
                     var count = msg.length;
