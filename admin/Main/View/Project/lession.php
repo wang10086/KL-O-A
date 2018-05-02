@@ -108,7 +108,7 @@
             <select class="form-control" name="xmlx">
                 <option value="">项目类型</option>
                 <foreach name="kinds" item="v">
-                    <option value="{$v.id}">{$v.name}</option>
+                    <option value="{$v.id}">{:tree_pad($v['level'], true)} {$v.name}</option>
                 </foreach>
             </select>
         </div>
