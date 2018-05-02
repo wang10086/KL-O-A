@@ -155,5 +155,37 @@ class AjaxController extends Controller {
         }
         $this->ajaxReturn($data,"JSON");
     }
-	
+
+    //立项
+    public function line_or_lession(){
+        $id             = I('id');
+        $db             = M('project_kind');
+        $lession_db     = M('op_lession');
+        $field_db       = M('op_field');
+        $line_db        = M('product_line');
+        $line           = $db->where("id='1' or pid='1'")->getField('id',true);
+        $lession        = $db->where("id='2' or pid='2'")->getField('id',true);
+        if (in_array($id,$line)){
+            $data['line'] = $line_db->field("id,title")->where(array('kind'=>$id))->select();
+            $data['type'] = 1;
+            $this->ajaxReturn($data,"JSON");
+        }elseif (in_array($id,$lession)){
+            //$data['lession'] = $lession_db->field('id,name')->where(array('kind_id'=>$id))->select();
+            $data['field'] = $field_db->field('id,fname')->where(array('k_id'=>$id))->select();
+            $data['type']    = 2;
+            $this->ajaxReturn($data,"JSON");
+        }
+    }
+
+    public function lession(){
+        $db             = M('op_lession');
+        $fid            = I('fid');
+        $tid            = I('tid');
+        if ($tid){
+            $data       = $db->field('id,name')->where(array('type_id'=>$tid))->select();
+        }else{
+            $data       = $db->field('id,name')->where(array('field_id'=>$fid))->select();
+        }
+        $this->ajaxReturn($data,"JSON");
+    }
 }

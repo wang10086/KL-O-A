@@ -28,71 +28,95 @@
                                     <div class="content">
                                     	
                                         <div class="form-group col-md-12">
-                                            <label>项目名称(学校名称 + 地点 + 项目类型)：</label><input type="text" name="info[project]" class="form-control" id="project" required />
-                                            <span class="form-group col-md-12"  id="projectTip"></span>
+                                            <label>项目名称(学校名称 + 地点 + 项目类型)：</label><input type="text" name="info[project]" class="form-control" required />
                                         </div>
 
                                         
                                         <div class="form-group col-md-4">
                                             <label>项目类型：</label>
+                                            <!--<select  class="form-control"  name="info[kind]" id="kind" onchange="line_lession()" required>-->
                                             <select  class="form-control"  name="info[kind]" id="kind" required>
                                                 <option value="" selected disabled>请选择项目类型</option>
                                                 <foreach name="kinds" item="v">
-                                                    <option value="{$v.id}" <?php if ($row && ($v['id'] == $row['kind'])) echo ' selected'; ?> >{:tree_pad($v['level'], true)} {$v.name}</option>
+                                                    <option value="{$v.id}" >{:tree_pad($v['level'], true)} {$v.name}</option>
                                                 </foreach>
-                                                </select>
-                                            <span id="kindTip" style="margin-right: 5px;"></span>
+                                            </select>
                                         </div>
 
 
-                                        <!--<div id="show_hide">
+                                        <!--------------------------------------------line_lession_start------------------------------------------------------>
+                                        <!--<div id="lession">
                                             <div class="form-group col-md-4">
-                                                <label>课程(线路)领域：</label>
-                                                <select  class="form-control"  name="info[field]" id="field" required>
-                                                    <option value="" selected disabled>请选择领域</option>
+                                                <label>课程领域：</label>
+                                                <select  class="form-control"  name="field" id="field" onchange="check_type()">
+                                                    <option value="" selected disabled>课程领域：</option>
                                                     <foreach name="field" item="v">
-                                                        <option value="{$v.id}" <?php /*if ($row && ($v['id'] == $row['field'])) echo ' selected'; */?> >{:tree_pad($v['level'], true)} {$v.name}</option>
+                                                        <option value="{$v.id}" >{:tree_pad($v['level'], true)} {$v.name}</option>
                                                     </foreach>
                                                 </select>
-                                                <span id="kindTip" style="margin-right: 5px;"></span>
+                                            </div>
+
+                                            <div class="form-group col-md-4">
+                                                <label>学科分类：</label>
+                                                <select  class="form-control"  name="type"  id="type" onchange="check_lession()">
+                                                    <if condition="$row['type_id']">
+                                                        <option value="{$row.type_id}" >{$row.type}</option>
+                                                        <else />
+                                                        <option value="" selected disabled>请选择学科分类</option>
+                                                    </if>
+                                                </select>
+                                            </div>
+
+                                            <div class="form-group col-md-4">
+                                                <label>课程名称：</label>
+                                                <select  class="form-control"  name="lession"  id="les_name">
+                                                    <option value="" selected disabled>请选择课程名称</option>
+                                                </select>
+                                            </div>
+                                        </div>
+
+                                        <div id="line">
+                                            <div class="form-group col-md-4">
+                                                <label>线路名称：</label>
+                                                <select  class="form-control"  name="" id="" onchange="">
+                                                    <option value="" selected disabled>请选择线路名称</option>
+                                                    <foreach name="field" item="v">
+                                                        <option value="{$v.id}" >{:tree_pad($v['level'], true)} {$v.name}</option>
+                                                    </foreach>
+                                                </select>
                                             </div>
                                         </div>-->
+                                        <!----------------------------------------------line_lession_end------------------------------------------------------>
 
 
                                         <div class="form-group col-md-4">
-                                            <label>预计人数：</label><input type="text" name="info[number]" class="form-control" id="number" required />
-                                            <div id="numberTip"></div>
+                                            <label>预计人数：</label><input type="text" name="info[number]" class="form-control" required />
                                         </div>
                                         
                                         <div class="form-group col-md-4">
-                                            <label>出团日期：</label><input type="text" name="info[departure]"  class="form-control inputdate" id="departure" required />
-                                            <span id="departureTip"></span>
+                                            <label>出团日期：</label><input type="text" name="info[departure]"  class="form-control inputdate"  required />
                                         </div>
                                         
                                         <div class="form-group col-md-4">
-                                            <label>行程天数：</label><input type="text" name="info[days]" class="form-control" id="days" required />
-                                            <span id="daysTip"></span>
+                                            <label>行程天数：</label><input type="text" name="info[days]" class="form-control"  required />
                                         </div>
                                         
                                         <div class="form-group col-md-4">
-                                            <label>目的地：</label><input type="text" name="info[destination]" class="form-control" id="destination" required />
-                                            <span id="destinationTip"></span>
+                                            <label>目的地：</label><input type="text" name="info[destination]" class="form-control"  required />
                                         </div>
                                         
                                         <div class="form-group col-md-4">
-                                            <label>立项时间：</label><input type="text" name="info[op_create_date]" class="form-control inputdate_a" id="op_create_date" required />
-                                            <span id="op_create_dateTip"></span>
+                                            <label>立项时间：</label><input type="text" name="info[op_create_date]" class="form-control inputdate_a"  required />
                                         </div>
                                         
                                         <div class="form-group col-md-4">
                                             <label>业务部门：</label>
-                                            <select  class="form-control" name="info[op_create_user]" id="op_create_user">
+                                            <select  class="form-control" name="info[op_create_user]" >
                                                 <option value="" selected disabled>请选择业务部门</option>
                                                 <foreach name="rolelist" key="k" item="v">
                                                     <option value="{$v}" <?php if($k==cookie('roleid')){ echo 'selected';} ?> >{$v}</option>
                                                 </foreach>
                                             </select>
-                                            <span id="op_create_userTip" style="margin-right: 5px;"></span>
                                         </div>
                                         
                                         <div class="form-group col-md-4">
@@ -100,16 +124,15 @@
                                             <!--
                                             <input type="text" name="info[customer]" id="customer_name" value="" placeholder="您可以输入客户单位名称拼音首字母检索" class="form-control" />
                                             -->
-                                            <select  name="info[customer]" class="form-control" id="customer" required>
+                                            <select  name="info[customer]" class="form-control" required>
                                                 <option value="" selected disabled>请选择客户单位</option>
                                                 <foreach name="geclist"  item="v">
                                                     <option value="{$v.company_name}"><?php echo strtoupper(substr($v['pinyin'], 0, 1 )); ?> - {$v.company_name}</option>
                                                 </foreach>
                                             </select>
-                                            <span id="customerTip" style="margin-right: 5px;"></span>
                                         </div>
                                         
-                                        <div class="form-group col-md-4">
+                                        <div class="form-group col-md-4" id="sale">
                                             <label>销售人员：</label>
                                             <input type="text" class="form-control" name="info[sale_user]" value="{:session('nickname')}" readonly>
                                         </div>
@@ -153,72 +176,115 @@
 </div>
 
 <include file="Index:footer2" />
-		<!--
-		<script type="text/javascript">
-            function sousuo(){
-				var keywords = <?php echo $keywords; ?>;
-                $("#customer_name").autocomplete(keywords, {
-                     matchContains: true,
-                     highlightItem: false,
-                     formatItem: function(row, i, max, term) {
-                         return '<span style=" display:none">'+row.pinyin+'</span>'+row.company_name;
-                     },
-                     formatResult: function(row) {
-                         return row.company_name;
-                     }
-                });
-            };
-			
-			$(document).ready(function(e) {
-                sousuo();
-            });
-        </script>
-        -->
-<script type="text/javascript">
-    $(function(){
-        //初始化表单验证
-        $.formValidator.initConfig({formID:"myform",debug:true,onSuccess:function(){
-            $("#myform").submit();
-        },onError:function(){
-            alert("请完善相关信息")
-        }});
-        //项目名称
-        $("#project").formValidator({onShow:"请输入项目名称",onFocus:"请按正确格式填写项目名称",onCorrect:"已输入项目名称"})
-            .inputValidator({min:4,max:200,onErrorMin:"姓名长度太短",onError:"请按正确格式填写项目名称"});
-        //项目类型 【下拉列表框】
-        $("#kind").formValidator({onShow:"请选择项目类型",onFocus:"项目类型必须选择",onCorrect:"已选择",defaultValue:""})
-            .inputValidator({min:1,onError: "请选择项目类型!"})
-            .defaultPassed();
-        //预计人数
-        $("#number").formValidator({ onShow: "请输入预计人数", onCorrect: "格式正确", defaultValue:"0" })
-            .inputValidator({min:1,onError:"输入的信息有误"})
-           // .regexValidator({ regExp: "^\\d{1,5}$", onError: "格式不正确"});
-        //验证出团日期
-        $("#departure").formValidator({onShow:"请选择你的出团日期",onFocus:"请选择出团日期",onCorrect:"已选择出团日期"})
-            .inputValidator({type:"string",min:"2018-01-01",onErrorMin:"日期不能早期2018-01-01"})
-            .functionValidator({fun:isDate});
-        //行程天数
-        $("#days").formValidator({ onShow: "请输入行程天数", onCorrect: "格式正确", defaultValue:"0" })
-            .inputValidator({min:1,onError:"输入的信息有误"})
-        //.regexValidator({ regExp: "^[0-9]{1,3}$",dataType:"enum", onError: "格式不正确"});
-        //目的地
-        $("#destination").formValidator({onShow:"请输入目的地信息",onFocus:"请输入目的地信息",onCorrect:"已输入目的地信息"})
-            .inputValidator({min:2,max:100,onErrorMin:"目的地信息长度太短",onError:"请输入有效的目的地信息"});
-        //立项时间
-        $("#departure").formValidator({onShow:"请选择你的立项时间",onFocus:"请选择立项时间",onCorrect:"已选择日期选择"})
-            .inputValidator({type:"string",min:"2018-01-01",onErrorMin:"日期不能早期2018-01-01"})
-            .functionValidator({fun:isDate});
-        //业务部门
-        $("#op_create_user").formValidator({onShow:"请选择业务部门",onFocus:"业务部门必须选择",onCorrect:"已选择",defaultValue:""})
-            .inputValidator({min:1,onError: "请选择业务部门!"})
-            .defaultPassed();
-        //客户单位
-        $("#customer").formValidator({onShow:"请选择业务部门",onFocus:"业务部门必须选择",onCorrect:"已选择",defaultValue:""})
-            .inputValidator({min:1,onError: "请选择业务部门!"})
-            .defaultPassed();
-        //项目需求
-        $("#context").formValidator({onShow:"请输入项目需求",onFocus:"请按正确格式填写项目需求",onCorrect:"已输入项目需求信息"})
-            .inputValidator({min:4,max:500,onErrorMin:"姓名长度太短",onError:"请按正确格式填写项目需求"});
+    <script type="text/javascript">
 
-    });
+        $(function(){
+            $('#lession').hide();
+            $('#line').hide();
+        })
+
+        /*根据线路和课程显示不同模块*/
+        function line_lession(){
+            var kid = $("#kind").val();
+            $.ajax({
+                type:"POST",
+                url:"{:U('Ajax/line_or_lession')}",
+                data:{id:kid},
+                success: function(msg){
+                    if(msg.type == 1){
+                        $('#lession').hide();
+                        $('#field').val('');
+                        $('#type').val('');
+                        $('#les_name').val('');
+                        $('#line').show();
+                        $('#sale').hide();  //凑ui样式
+                    }else if(msg.type == 2){
+                        $('#line').hide();
+                        $('#sale').show();  //凑ui样式
+                        $('#lession').show();
+                        $("#type").empty();
+                        if(msg.field){
+                            var field = msg.field;
+                            $("#field").empty();
+                            var count = field.length;
+                            var i= 0;
+                            var b="";
+                            b+='<option value="" disabled selected>请选择学科领域</option>';
+                            for(i=0;i<count;i++){
+                                b+="<option value='"+field[i].id+"'>"+field[i].fname+"</option>";
+                            }
+                            $("#field").append(b);
+                        }else{
+                            $("#field").empty();
+                            var b='<option value="" disabled selected>无学科领域信息</option>';
+                            $("#field").append(b);
+                        }
+                        check_type();
+                    }
+                }
+            })
+        }
+
+        /*学科分类*/
+        function check_type(){
+            var kid = $("#kind").val();
+            var fid = $("#field").val();
+            $.ajax({
+                type:"POST",
+                url:"{:U('Ajax/types')}",
+                data:{kid:kid,fid:fid},
+                success:function(msg){
+                    if(msg){
+                        $("#type").empty();
+                        var count = msg.length;
+                        var i= 0;
+                        var b="";
+                        b+='<option value="" disabled selected>请选择学科分类</option>';
+                        for(i=0;i<count;i++){
+                            b+="<option value='"+msg[i].id+"'>"+msg[i].tname+"</option>";
+                        }
+                        $("#type").append(b);
+                    }else{
+                        $("#type").empty();
+                        var b='<option value="" disabled selected>无学科分类信息</option>';
+                        $("#type").append(b);
+                    }
+                    check_lession();
+
+                }
+            })
+
+        }
+
+        /*课程名称*/
+        function check_lession(){
+            var fid = $('#field').val();
+            var tid = $('#type').val();
+            $.ajax({
+                type:"POST",
+                url:"{:U('Ajax/lession')}",
+                data:{fid:fid,tid:tid},
+                success:function(msg){
+                    $("#les_name").empty();
+                    if(msg){
+                        var count = msg.length;
+                        var i= 0;
+                        var b="";
+                        b+='<option value="" disabled selected>请选择课程</option>';
+                        for(i=0;i<count;i++){
+                            b+="<option value='"+msg[i].id+"'>"+msg[i].name+"</option>";
+                        }
+                        $("#les_name").append(b);
+                    }else{
+                        $("#les_name").empty();
+                        var b='<option value="" disabled selected>无课程信息</option>';
+                        $("#les_name").append(b);
+                    }
+
+                }
+            })
+        }
+    </script>
+<script type="text/javascript">
+
 </script>
