@@ -23,6 +23,7 @@
                                 <div class="box-header">
                                     <h3 class="box-title">课程信息</h3>
                                     <div class="box-tools pull-right">
+                                        <a href="javascript:;" class="btn btn-info btn-sm" onclick="javascript:opensearch('searchtext',600,160);"><i class="fa fa-search"></i> 搜索</a>
                                          <a href="{:U('Project/lession_add')}" class="btn btn-sm btn-danger"><i class="fa fa-plus"></i> 录入新课程</a>
                                     </div>
                                 </div><!-- /.box-header -->
@@ -94,5 +95,24 @@
 
                 </section><!-- /.content -->
             </aside><!-- /.right-side -->
+
+<div id="searchtext">
+    <form action="" method="get" id="searchform">
+        <input type="hidden" name="m" value="Main">
+        <input type="hidden" name="c" value="Project">
+        <input type="hidden" name="a" value="lession">
+        <div class="form-group col-md-12">
+            <input type="text" class="form-control" name="key" placeholder="关键字">
+        </div>
+        <div class="form-group col-md-12">
+            <select class="form-control" name="xmlx">
+                <option value="">项目类型</option>
+                <foreach name="kinds" item="v">
+                    <option value="{$v.id}">{$v.name}</option>
+                </foreach>
+            </select>
+        </div>
+    </form>
+</div>
 
 <include file="Index:footer2" />

@@ -284,10 +284,15 @@ class ProjectController extends BaseController {
     public function lession(){
         $pin	     = I('pin');
         $this->pin   = $pin;
+        $key         = I('key');
+        $kind        = I('xmlx');
         $db          = M('op_lession');
         $where       = array();
+        if ($key) $where['name']        = array('like',"%".$key."%");
+        if ($kind) $where['kind_id']    = array('eq',$kind);
         $page        = new Page($db->where($where)->count(), P::PAGE_SIZE);
         $this->pages = $page->show();
+        $this->kinds = get_project_kinds();
         $this->lists = $db->where($where)->limit($page->firstRow . ',' . $page->listRows)->order("id desc")->select();
         $this->display('lession');
     }
