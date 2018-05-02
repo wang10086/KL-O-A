@@ -1852,7 +1852,7 @@ function updatekpi($month,$user){
 					$where['l.audit_time']			= array('between',array($v['start_date'],$v['end_date']));
 					$complete = M()->table('__OP_SETTLEMENT__ as b')->field('b.maoli')->join('__OP__ as o on b.op_id = o.op_id','LEFT')->join('__AUDIT_LOG__ as l on l.req_id = b.id','LEFT')->where($where)->sum('b.maoli');
 
-					//57武汉项目部业务主管,41南京项目部业务主管roleid
+					/*//57武汉项目部业务主管,41南京项目部业务主管roleid
 					//武汉项目部
 					$whe['postid']	= array('eq',1);
 					$whe['roleid'] 	= array('eq',57);
@@ -1881,7 +1881,7 @@ function updatekpi($month,$user){
 						$nj_where['l.audit_time']	= array('between',array($v['start_date'],$v['end_date']));
 						$nj_com = M()->table('__OP_SETTLEMENT__ as b')->field('b.maoli')->join('__OP__ as o on b.op_id = o.op_id','LEFT')->join('__AUDIT_LOG__ as l on l.req_id = b.id','LEFT')->where($nj_where)->sum('b.maoli');
 						$complete = $complete + $nj_com*30/100 ;
-					}
+					}*/
 
 					$complete = $complete ? $complete : 0;
 				}
