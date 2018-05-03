@@ -46,7 +46,7 @@
                                         <select  class="form-control"  name="info[kind]">
                                         <option value="0">请选择</option>
                                         <foreach name="kindlist" item="v">
-                                            <option value="{$v.id}">{$v.name}</option>
+                                            <option value="{$v.id}">{:tree_pad($v['level'], true)} {$v.name}</option>
                                         </foreach>
                                         </select>
                                     </div>

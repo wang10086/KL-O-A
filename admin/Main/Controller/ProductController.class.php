@@ -787,7 +787,8 @@ class ProductController extends BaseController {
             
          } else {
             
-			 $this->kindlist = M('project_kind')->select();
+			 //$this->kindlist = M('project_kind')->select();
+             $this->kindlist = get_project_kinds();
              $this->display('add_line');
          }
     }
@@ -886,7 +887,8 @@ class ProductController extends BaseController {
 			 $this->business_depts = C('BUSINESS_DEPT');
 		     $this->subject_fields = C('SUBJECT_FIELD');
 		     $this->ages           = C('AGE_LIST');
-			 $this->kindlist = M('product_kind')->select();
+			 //$this->kindlist = M('product_kind')->select();
+			 $this->kindlist = get_project_kinds();
              $this->display('edit_line');
          }
     }
