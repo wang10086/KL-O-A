@@ -34,7 +34,8 @@
                                         
                                         <div class="form-group col-md-4">
                                             <label>项目类型：</label>
-                                            <select  class="form-control"  name="info[kind]" id="kind" onchange="line_lession()" required>
+                                            <!--<select  class="form-control"  name="info[kind]" id="kind" onchange="line_lession()" required>-->
+                                            <select  class="form-control"  name="info[kind]" id="kind"  required>
                                                 <option value="" selected disabled>请选择项目类型</option>
                                                 <foreach name="kinds" item="v">
                                                     <option value="{$v.id}" >{:tree_pad($v['level'], true)} {$v.name}</option>
@@ -44,7 +45,7 @@
 
 
                                         <!--------------------------------------------line_lession_start------------------------------------------------------>
-                                        <div id="lession">
+                                        <!--<div id="lession">
                                             <div class="form-group col-md-4">
                                                 <label>课程领域：</label>
                                                 <select  class="form-control"  name="field" id="field" onchange="check_type()">
@@ -84,7 +85,7 @@
                                                     </foreach>
                                                 </select>
                                             </div>
-                                        </div>
+                                        </div>-->
                                         <!----------------------------------------------line_lession_end------------------------------------------------------>
 
 
@@ -93,11 +94,11 @@
                                         </div>
                                         
                                         <div class="form-group col-md-4">
-                                            <label>出团日期：</label><input type="text" name="info[departure]"  class="form-control inputdate"  required />
+                                            <label id="ctrq">出团日期：</label><input type="text" name="info[departure]"  class="form-control inputdate"  required />
                                         </div>
                                         
                                         <div class="form-group col-md-4">
-                                            <label>行程天数：</label><input type="text" name="info[days]" class="form-control"  required />
+                                            <label id="xcts">行程天数：</label><input type="text" name="info[days]" class="form-control"  required />
                                         </div>
                                         
                                         <div class="form-group col-md-4">
@@ -191,15 +192,21 @@
                 data:{id:kid},
                 success: function(msg){
                     if(msg.type == 1){
+                        //线路
                         $('#lession').hide();
+                        $('#ctrq').html('出团日期');
+                        $('#xcts').html('行程天数');
                         $('#field').val('');
                         $('#type').val('');
                         $('#les_name').val('');
                         $('#line').show();
                         $('#sale').hide();  //凑ui样式
                     }else if(msg.type == 2){
+                        //课程
                         $('#line').hide();
                         $('#sale').show();  //凑ui样式
+                        $('#ctrq').html('开课日期');
+                        $('#xcts').html('开课次数');
                         $('#lession').show();
                         $("#type").empty();
                         if(msg.field){
