@@ -111,8 +111,68 @@
                                    
                                 </div><!-- /.box-body -->
                             </div><!-- /.box -->
-                            
-                            
+
+                            <div class="box">
+                                <div class="box-header">
+                                    <h3 class="box-title">出团记录</h3>
+                                </div><!-- /.box-header -->
+                                <div class="box-body">
+
+
+                                    <div class="content" style="margin-top:10px;">
+                                        <table class="table table-bordered dataTable fontmini" id="tablelist">
+                                            <tr role="row" class="orders" >
+                                                <th class="sorting" data="op_id">项目编号</th>
+                                                <th class="sorting" data="group_id">项目团号</th>
+                                                <th class="sorting" data="project">项目名称</th>
+                                                <th class="sorting" data="cost">提成</th>
+                                                <th class="sorting" data="stu">状态</th>
+                                                <th class="sorting" data="remark">备注</th>
+
+                                                <!--<if condition="rolemenu(array(''))">
+                                                    <th width="60" class="taskOptions">编辑</th>
+                                                </if>
+                                                <if condition="rolemenu(array(''))">
+                                                    <th width="60" class="taskOptions">删除</th>
+                                                </if>-->
+                                            </tr>
+                                            <foreach name="guide" item="row">
+                                                <tr>
+                                                    <td>{$row.op_id}</td>
+                                                    <td>{$row.group_id}</td>
+                                                    <td><a href="javascript:;">{$row.project}</a></td>
+                                                    <td>{$row.cost}</td>
+                                                    <td>{$row.stu}</td>
+                                                    <td>{$row.remark}</td>
+
+                                                    <?php /*
+                                                if($row['audit_status']== P::AUDIT_STATUS_NOT_AUDIT){
+                                                    $show  = '<td>等待审批</td>';
+                                                }else if($row['audit_status'] == P::AUDIT_STATUS_PASS){
+                                                    $show  = '<td><span class="green">通过</span></td>';
+                                                }else if($row['audit_status'] == P::AUDIT_STATUS_NOT_PASS){
+                                                    $show  = '<td><span class="red">不通过</span></td>';
+                                                }
+                                                echo $show;
+                                                */?>
+                                                    <!--<if condition="rolemenu(array('Project/lession_add'))">
+                                                        <td class="taskOptions">
+                                                            <button onClick="javascript:window.location.href='{:U('Project/lession_add',array('id'=>$row['id']))}';" title="修改" class="btn btn-info btn-smsm"><i class="fa fa-pencil"></i></button>
+                                                        </td>
+                                                    </if>
+                                                    <if condition="rolemenu(array('Project/del'))">
+                                                        <td class="taskOptions">
+                                                            <button onClick="javascript:ConfirmDel('{:U('Project/lession_del',array('id'=>$row['id']))}');" title="删除" class="btn btn-warning btn-smsm"><i class="fa fa-times"></i></button>
+                                                        </td>
+                                                    </if>-->
+
+                                                </tr>
+                                            </foreach>
+                                        </table>
+                                    </div>
+
+                                </div><!-- /.box-body -->
+                            </div><!-- /.box -->
                             
                             
                         </div><!--/.col (right) -->
