@@ -18,8 +18,7 @@
                          <!-- right column -->
                         <div class="col-md-12">
                                   
-                            
-                            
+
                             <div class="box box-warning">
                                 <div class="box-header">
                                     <h3 class="box-title">项目计划</h3>
@@ -69,7 +68,7 @@
 
                                             <div class="form-group col-md-4">
                                                 <label>课程名称：</label>
-                                                <select  class="form-control"  name="lession"  id="les_name">
+                                                <select  class="form-control"  name="info[lession_id]"  id="les_name">
                                                     <option value="" selected disabled>请选择课程名称</option>
                                                 </select>
                                             </div>
@@ -78,7 +77,7 @@
                                         <div id="line">
                                             <div class="form-group col-md-4">
                                                 <label>线路名称：</label>
-                                                <select  class="form-control"  name="" id="" onchange="">
+                                                <select  class="form-control"  name="info[kind_id]" id="" onchange="">
                                                     <option value="" selected disabled>请选择线路名称</option>
                                                     <foreach name="field" item="v">
                                                         <option value="{$v.id}" >{:tree_pad($v['level'], true)} {$v.name}</option>
@@ -177,6 +176,9 @@
 
 <include file="Index:footer2" />
     <script type="text/javascript">
+        laydate.render({
+            elem: '.inputdate',theme: '#0099CC',type: 'datetime'
+        });
 
         $(function(){
             $('#lession').hide();
