@@ -51,7 +51,7 @@
                 </if>
                 <if condition="rolemenu(array('GuideRes/delreskind'))">
                 <td class="taskOptions">
-                <button onClick="javascript:ConfirmDel('{:U('GuideRes/delreskind',array('id'=>$row['id']))}" title="删除" class="btn btn-warning btn-smsm"><i class="fa fa-times"></i></button>
+                <button onClick="javascript:ConfirmDel('{:U('GuideRes/delreskind',array('id'=>$row['id']))}')" title="删除" class="btn btn-warning btn-smsm"><i class="fa fa-times"></i></button>
                 </td>
                 </if>
                 
