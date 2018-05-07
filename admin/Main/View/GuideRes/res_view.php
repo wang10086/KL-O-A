@@ -126,7 +126,7 @@
                                                 <th class="sorting" data="group_id">项目团号</th>
                                                 <th class="sorting" data="project">项目名称</th>
                                                 <th class="sorting" data="cost">提成</th>
-                                                <th class="sorting" data="stu">状态</th>
+                                                <th class="sorting" data="stu">项目状态</th>
                                                 <th class="sorting" data="remark">备注</th>
 
                                                 <!--<if condition="rolemenu(array(''))">
@@ -141,20 +141,10 @@
                                                     <td>{$row.op_id}</td>
                                                     <td>{$row.group_id}</td>
                                                     <td><a href="javascript:;">{$row.project}</a></td>
-                                                    <td>{$row.cost}</td>
+                                                    <td>¥{$row.cost}</td>
                                                     <td>{$row.stu}</td>
                                                     <td>{$row.remark}</td>
 
-                                                    <?php /*
-                                                if($row['audit_status']== P::AUDIT_STATUS_NOT_AUDIT){
-                                                    $show  = '<td>等待审批</td>';
-                                                }else if($row['audit_status'] == P::AUDIT_STATUS_PASS){
-                                                    $show  = '<td><span class="green">通过</span></td>';
-                                                }else if($row['audit_status'] == P::AUDIT_STATUS_NOT_PASS){
-                                                    $show  = '<td><span class="red">不通过</span></td>';
-                                                }
-                                                echo $show;
-                                                */?>
                                                     <!--<if condition="rolemenu(array('Project/lession_add'))">
                                                         <td class="taskOptions">
                                                             <button onClick="javascript:window.location.href='{:U('Project/lession_add',array('id'=>$row['id']))}';" title="修改" class="btn btn-info btn-smsm"><i class="fa fa-pencil"></i></button>
