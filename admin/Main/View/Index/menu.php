@@ -418,10 +418,10 @@
                                     <li><a href="{:U('Finance/payment')}"><i class="fa fa-angle-right"></i> 回款管理</a></li>
                                 </if>
 
-                                <!--<if condition="rolemenu(array('Finance/'))">-->
-                                    <!--<li><a href="{:U('Finance/')}"><i class="fa fa-angle-right"></i> 劳务费用</a></li>-->
-                                    <li><a href="javascript:;" onClick="art_show_msg('加班开发中，稍后呈现...',5)"><i class="fa fa-angle-right"></i> 劳务费用</a></li>
-                                <!--</if>-->
+                                <if condition="rolemenu(array('Finance/costlabour'))">
+                                    <li><a href="{:U('Finance/costlabour')}"><i class="fa fa-angle-right"></i> 劳务费用</a></li>
+                                    <!--<li><a href="javascript:;" onClick="art_show_msg('加班开发中，稍后呈现...',5)"><i class="fa fa-angle-right"></i> 劳务费用</a></li>-->
+                                </if>
                                 
                             </ul>
                         </li>

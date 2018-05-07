@@ -811,16 +811,63 @@ class FinanceController extends BaseController {
 		$this->lists = $lists;
 		$this->display('payment');
 	}
+
+    // @@@NODE-3###costapply###劳务费用###
+    public function costlabour(){
+        $this->title('劳务费用');
+        $key          = I('key');
+        $type         = I('type');
+        $sex         = I('sex');
+        $where = array();
+        $where['1'] = priv_where(P::REQ_TYPE_GUIDE_RES_V);
+        if($key)      $where['name'] = array('like','%'.$key.'%');
+        if($type)     $where['kind'] = $type;
+        if($sex)     $where['sex'] = $sex;
+
+        //分页
+        $pagecount = M('guide')->where($where)->count();
+        $page = new Page($pagecount, P::PAGE_SIZE);
+        $this->pages = $pagecount>P::PAGE_SIZE ? $page->show():'';
+
+        $this->reskind = M('guidekind')->getField('id,name', true);
+        $this->lists = M('guide')->where($where)->limit($page->firstRow . ',' . $page->listRows)->order($this->orders('input_time'))->select();
+        $this->status = array(
+            P::AUDIT_STATUS_PASS        => '已通过',
+            P::AUDIT_STATUS_NOT_AUDIT   => '待审批',
+            P::AUDIT_STATUS_NOT_PASS    => '未通过',
+        );
+
+    $this->display();
+    }
 	
+    // @@@NODE-3###res_view###劳务费用详情###
+    public function labour_detail () {
+        $this->title('劳务费用');
+
+        $id = I('id',0);
+        $row = M('guide')->find($id);
+        $this->row = $row;
+
+        //工作记录
+        $opids = M('guide as g')->join("left join __OP_GUIDE__ as o on o.guide_id = g.id ")->where(array('g.id'=>$id))->field('o.op_id')->select();
+        $opids = array_column($opids,'op_id');
+        foreach ($opids as $v){
+            $guide      = M()->table('__OP_GUIDE__ as g')->field('g.*,c.cost,p.group_id,p.project,s.audit_status')->join('__OP_COST__ as c on c.link_id=g.id')->join("left join __OP__ as p on p.op_id = g.op_id")->join("left join __OP_SETTLEMENT__ as s on s.op_id = g.op_id")->where(array('c.remark'=>$row['name']))->select();
+        }
+        foreach ($guide as $k=>$v){
+            if ($v['audit_status']==0) $guide[$k]['stu']  = '<span class="yellow">已提交结算</span>';
+            if ($v['audit_status']==1) $guide[$k]['stu']  = '<span class="green">完成结算</span>';
+            if ($v['audit_status']==2) $guide[$k]['stu']  = '<span class="yellow">结算未通过</span>';
+        }
+        $this->guide        = $guide;
+        $this->countcost    = array_sum(array_column($guide,'cost'));
+
+        $this->display('labour_detail');
+
+    }
+
+
 	
-	
-	
-	
-	
-	
-	
-	
-	
- 
+
     
 }
