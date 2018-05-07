@@ -86,12 +86,14 @@ class GuideResController extends BaseController {
         $opids = M('guide as g')->join("left join oa_op_guide as o on o.guide_id = g.id ")->where(array('g.id'=>$id))->field('o.op_id')->select();
         $opids = array_column($opids,'op_id');
         foreach ($opids as $v){
-            $guide      = M()->table('__OP_GUIDE__ as g')->field('g.*,c.cost,p.group_id,p.project,s.audit_status')->join('__OP_COST__ as c on c.link_id=g.id')->join("left join __OP__ as p on p.op_id = g.op_id")->join("left join __OP_SETTLEMENT__ as s on s.op_id = g.op_id")->where(array('c.remark'=>$row['name']))->select();
+            $guide      = M()->table('__OP_GUIDE__ as g')->field('g.*,c.cost,c.really_cost,c.upd_remark,p.group_id,p.project,s.audit_status')->join('__OP_COST__ as c on c.link_id=g.id')->join("left join __OP__ as p on p.op_id = g.op_id")->join("left join __OP_SETTLEMENT__ as s on s.op_id = g.op_id")->where(array('c.remark'=>$row['name']))->select();
         }
         foreach ($guide as $k=>$v){
             if ($v['audit_status']==0) $guide[$k]['stu']  = '<span class="yellow">已提交结算</span>';
             if ($v['audit_status']==1) $guide[$k]['stu']  = '<span class="green">完成结算</span>';
             if ($v['audit_status']==2) $guide[$k]['stu']  = '<span class="yellow">结算未通过</span>';
+            if ($v['really_cost'] == '0.00') $v['really_cost'] = null;
+            $guide[$k]['really_cost'] = $v['really_cost']?$v['really_cost']:$v['cost'];
         }
         $this->guide    = $guide;
 
@@ -245,7 +247,29 @@ class GuideResController extends BaseController {
         $iddel = $db->delete($id);
         $this->success('删除成功！');
     }
-    
+
+    // @@@NODE-3###delreskind###修改(讲师辅导员)实际所得金额###
+    public function upd_cost(){
+        if (isset($_POST['dosubmint'])){
+            $op_id          = I('op_id');
+            $remark         = I('remark');
+            $info           = I('info');
+            $db             = M('op_cost');
+            $where          = array();
+            $where['op_id'] = $op_id;
+            $where['remark']= $remark;
+            $res = $db->where($where)->save($info);
+            echo '<script>window.top.location.reload();</script>';
+        }else{
+            $op_id          = I('op_id');
+            $cost           = I('cost');
+            $name           = I('name');
+            $this->op_id    = $op_id;
+            $this->cost     = $cost;
+            $this->name     = $name;
+            $this->display('upd_cost');
+        }
+    }
     
 
     

@@ -125,14 +125,15 @@
                                                 <th class="sorting" data="op_id">项目编号</th>
                                                 <th class="sorting" data="group_id">项目团号</th>
                                                 <th class="sorting" data="project">项目名称</th>
-                                                <th class="sorting" data="cost">提成</th>
                                                 <th class="sorting" data="stu">项目状态</th>
+                                                <th class="sorting" data="cost">提成信息</th>
+                                                <th class="sorting" data="really_cost">实际提成</th>
                                                 <th class="sorting" data="remark">备注</th>
 
-                                                <!--<if condition="rolemenu(array(''))">
+                                                <if condition="rolemenu(array('GuideRes/upd_cost'))">
                                                     <th width="60" class="taskOptions">编辑</th>
                                                 </if>
-                                                <if condition="rolemenu(array(''))">
+                                                <!--<if condition="rolemenu(array(''))">
                                                     <th width="60" class="taskOptions">删除</th>
                                                 </if>-->
                                             </tr>
@@ -141,16 +142,23 @@
                                                     <td>{$row.op_id}</td>
                                                     <td>{$row.group_id}</td>
                                                     <td><a href="javascript:;">{$row.project}</a></td>
-                                                    <td>¥{$row.cost}</td>
                                                     <td>{$row.stu}</td>
-                                                    <td>{$row.remark}</td>
+                                                    <td>¥{$row.cost}</td>
+                                                    <if condition="$row[really_cost] eq $row[cost]">
+                                                        <td>¥{$row.really_cost}</td>
+                                                        <else />
+                                                        <td style="color:red;">¥{$row.really_cost}</td>
+                                                    </if>
+                                                    <td>{$row.upd_remark}</td>
 
-                                                    <!--<if condition="rolemenu(array('Project/lession_add'))">
+                                                    <if condition="rolemenu(array('GuideRes/upd_cost'))">
                                                         <td class="taskOptions">
-                                                            <button onClick="javascript:window.location.href='{:U('Project/lession_add',array('id'=>$row['id']))}';" title="修改" class="btn btn-info btn-smsm"><i class="fa fa-pencil"></i></button>
+                                                            <button onClick="javascript:{:open_cost($row['op_id'],$row['cost'],$row['name'])}" title="编辑" class="btn btn-info btn-smsm"><i class="fa fa-pencil"></i></button>
+                                                            <!--<button onClick="javascript:window.location.href='{:U('GuideRes/upd_cost',array('id'=>$row['id']))}';" title="修改" class="btn btn-info btn-smsm"><i class="fa fa-pencil"></i></button>-->
+                                                            <!--<a href="javascript:;" onClick="javascript:{:open_type()}" class="btn btn-sm btn-danger"><i class="fa fa-plus"></i> 录入新分类</a>-->
                                                         </td>
                                                     </if>
-                                                    <if condition="rolemenu(array('Project/del'))">
+                                                    <!--<if condition="rolemenu(array('Project/del'))">
                                                         <td class="taskOptions">
                                                             <button onClick="javascript:ConfirmDel('{:U('Project/lession_del',array('id'=>$row['id']))}');" title="删除" class="btn btn-warning btn-smsm"><i class="fa fa-times"></i></button>
                                                         </td>

@@ -271,6 +271,23 @@ function open_type (obj) {
 	});
 }
 
+function open_cost (obj) {
+	art.dialog.open(obj, {
+		lock:true,
+		title: '修改实际所得金额',
+		width:800,
+		height:400,
+		okValue: '提交',
+		ok: function () {
+			this.iframe.contentWindow.gosubmint();
+			return false;
+		},
+		cancelValue:'取消',
+		cancel: function () {
+		}
+	});
+}
+
 
 /**
  ** 乘法函数，用来得到精确的乘法结果

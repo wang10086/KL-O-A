@@ -998,6 +998,10 @@ function open_type ($id) {
 	return "open_type('" .U('Project/types_add',array('id'=>$id)) ."')";
 }
 
+function open_cost ($op_id,$cost,$name) {
+	return "open_cost('" .U('GuideRes/upd_cost',array('op_id'=>$op_id,'cost'=>$cost,'name'=>$name)) ."')";
+}
+
 
 function opid($day=''){
 	if($day){
