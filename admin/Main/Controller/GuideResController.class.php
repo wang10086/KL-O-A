@@ -82,7 +82,7 @@ class GuideResController extends BaseController {
 				P::AUDIT_STATUS_NOT_PASS    => '未通过',
         );
 
-        //工作记录
+        //出团记录
         $opids = M('guide as g')->join("left join oa_op_guide as o on o.guide_id = g.id ")->where(array('g.id'=>$id))->field('o.op_id')->select();
         $opids = array_column($opids,'op_id');
         foreach ($opids as $v){
@@ -94,6 +94,7 @@ class GuideResController extends BaseController {
             if ($v['audit_status']==2) $guide[$k]['stu']  = '<span class="yellow">结算未通过</span>';
             if ($v['really_cost'] == '0.00') $v['really_cost'] = null;
             $guide[$k]['really_cost'] = $v['really_cost']?$v['really_cost']:$v['cost'];
+            $guide[$k]['remark']      = $v['upd_remark']?"<span class='red'>$v[upd_remark]</span>":$v['remark'];
         }
         $this->guide    = $guide;
 

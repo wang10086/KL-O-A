@@ -149,7 +149,7 @@
                                                         <else />
                                                         <td style="color:red;">¥{$row.really_cost}</td>
                                                     </if>
-                                                    <td>{$row.upd_remark}</td>
+                                                    <td>{$row.remark}</td>
 
                                                     <if condition="rolemenu(array('GuideRes/upd_cost'))">
                                                         <td class="taskOptions">
