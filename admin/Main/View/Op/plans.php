@@ -33,8 +33,8 @@
                                         
                                         <div class="form-group col-md-4">
                                             <label>项目类型：</label>
-                                            <select  class="form-control"  name="info[kind]" id="kind" onchange="line_lession()" required>
-                                            <!--<select  class="form-control"  name="info[kind]" id="kind"  required>-->
+                                            <!--<select  class="form-control"  name="info[kind]" id="kind" onchange="line_lession()" required>-->
+                                            <select  class="form-control"  name="info[kind]" id="kind"  required>
                                                 <option value="" selected disabled>请选择项目类型</option>
                                                 <foreach name="kinds" item="v">
                                                     <option value="{$v.id}" >{:tree_pad($v['level'], true)} {$v.name}</option>
@@ -44,7 +44,7 @@
 
 
                                         <!--------------------------------------------line_lession_start------------------------------------------------------>
-                                        <div id="lession">
+                                        <!--<div id="lession">
                                             <div class="form-group col-md-4">
                                                 <label>课程领域：</label>
                                                 <select  class="form-control"  name="field" id="field" onchange="check_type()">
@@ -84,7 +84,7 @@
                                                     </foreach>
                                                 </select>
                                             </div>
-                                        </div>
+                                        </div>-->
                                         <!----------------------------------------------line_lession_end------------------------------------------------------>
 
 
