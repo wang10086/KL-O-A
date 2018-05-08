@@ -506,10 +506,14 @@ class FinanceController extends BaseController {
 					$costacc[$k]['m_outsum'] = $op_mate['outsum'];
 					$costacc[$k]['m_purchasesum'] = $op_mate['purchasesum'];
 					$costacc[$k]['m_returnsum'] = $op_mate['returnsum'];
-				}	
-			}	
-			
-			$qita   = M('op_costacc')->where(array('op_id'=>$opid,'status'=>1,'type'=>4))->order('id')->select();
+				}
+				if ($v['cost_type']==2){
+                    //专家辅导员
+                    $costacc[$k]['beizhu'] = M('op_guide')->where(array('op_id'=>$v['op_id'],'name'=>$v['remark']))->getField('remark');
+                }
+            }
+			//$qita   = M('op_costacc')->where(array('op_id'=>$opid,'status'=>1,'type'=>4))->order('id')->select();
+			$qita   = M('op_costacc')->where(array('op_id'=>$opid,'status'=>1))->order('id')->select();
 		}
 		$budget     = M('op_budget')->where(array('op_id'=>$opid))->find();
 		$settlement = M('op_settlement')->where(array('op_id'=>$opid))->find();

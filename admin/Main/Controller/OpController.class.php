@@ -449,9 +449,6 @@ class OpController extends BaseController {
         $lessions   = M('project_kind')->where("id ='2' or pid ='2'")->getField('id',true);
         $cgly       = M('project_kind')->where("name like '常规旅游'")->getField('id'); //从'其他'栏目中提取 '常规旅游'放入线路中
         $lines      = array_merge($line,$cgly);
-        /*var_dump($lines);
-        echo "<hr />";
-        var_dump($lessions);die;*/
 
 		$this->kinds          = M('project_kind')->getField('id,name', true);
 		$this->user           = M('account')->where('`id`>3')->getField('id,nickname', true);
