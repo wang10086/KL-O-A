@@ -504,7 +504,7 @@
 	
 	//选择导游辅导员
 	function selectguide() {
-		art.dialog.open('<?php echo U('Op/select_guide'); ?>',{
+		art.dialog.open('<?php echo U('Op/select_guide',array('opid'=>$opid)); ?>',{
 			lock:true,
 			title: '选择导游辅导员',
 			width:1000,

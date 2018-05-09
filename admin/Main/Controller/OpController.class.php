@@ -450,6 +450,7 @@ class OpController extends BaseController {
         $cgly       = M('project_kind')->where("name like '常规旅游'")->getField('id'); //从'其他'栏目中提取 '常规旅游'放入线路中
         $lines      = array_merge($line,$cgly);
 
+        $this->opid           = $opid;
 		$this->kinds          = M('project_kind')->getField('id,name', true);
 		$this->user           = M('account')->where('`id`>3')->getField('id,nickname', true);
 		$this->rolelist       = M('role')->where('`id`>10')->getField('id,role_name', true);
@@ -1279,7 +1280,11 @@ class OpController extends BaseController {
 		$kind = I('kind');
 		$key  = I('key');
 		$sex  = I('sex');
-		
+        $opid = I('opid');
+
+        //求项目类型,根据项目类型计算出所选专家的价格
+        $kid = M('op')->where(array('op_id'=>$opid))->getField('kind');
+
 		$where = array();
 		$where['1'] = priv_where(P::REQ_TYPE_GUIDE_RES_U);
 		if($kind) $where['kind'] = $kind;
@@ -1292,7 +1297,15 @@ class OpController extends BaseController {
 		$this->pages = $pagecount>25 ? $page->show():'';
         
         $this->reskind = M('guidekind')->getField('id,name', true);
-        $this->lists = M('guide')->where($where)->limit($page->firstRow . ',' . $page->listRows)->order($this->orders('input_time'))->select();
+        $lists = M('guide')->where($where)->limit($page->firstRow . ',' . $page->listRows)->order($this->orders('input_time'))->select();
+        foreach($lists as $k=>$v){
+            $gk_id  = $v['kind'];
+            $price  = M('guide_price')->where(array('kid'=>$kid,'gk_id'=>$gk_id))->getField('price');
+            //if($v['fee'] == '0.00') $v['fee'] = null;
+            $lists[$k]['fee'] = $price;
+
+        }
+        $this->lists = $lists;
 		
 		$this->display('select_guide');
 	}
