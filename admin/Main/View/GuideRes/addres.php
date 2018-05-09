@@ -82,10 +82,10 @@
                                         <input type="text" name="info[birthday]"  value="{$row.birthday}" onclick="laydate()" class="form-control" />
                                     </div>
                                     
-                                    <div class="form-group col-md-4">
+                                    <!--<div class="form-group col-md-4">
                                         <label>费用</label>
                                         <input type="text" name="info[fee]" id="fee"   value="{$row.fee}" class="form-control" />
-                                    </div>
+                                    </div>-->
                                     
                                     <div class="form-group col-md-4">
                                         <label>地区</label>
@@ -101,13 +101,7 @@
                                         <label>邮箱</label>
                                         <input type="text" name="info[email]" id="field"   value="{$row.email}" class="form-control" />
                                     </div>
-                                    
-                                    <div class="form-group col-md-8">
-                                        <label>擅长领域</label>
-                                        <input type="text" name="info[field]" id="field"   value="{$row.field}" class="form-control" />
-                                    </div>
-                                    
-                                    
+
                                     <div class="form-group col-md-4">
                                         <label>性质</label>
                                         <select  class="form-control"  name="info[type]" required>
@@ -115,49 +109,50 @@
                                             <option value="1" <?php if ($row && $row['type'] == 1) echo ' selected'; ?>>专职</option>
                                         </select>
                                     </div>
+                                    
+                                    <div class="form-group col-md-12">
+                                        <label>擅长领域</label>
+                                        <input type="text" name="info[field]" id="field"   value="{$row.field}" class="form-control" />
+                                    </div>
 
                                     <!-------------------------------------------start----------------------------------------------------->
                                     <!--<div class="content" style="padding-top:0px;">
-                                            <div id="pretium">
-                                                <div class="userlist">
-                                                    <div class="unitbox">价格名称</div>
-                                                    <div class="unitbox">销售价</div>
-                                                    <div class="unitbox">同行价</div>
-                                                    <div class="unitbox">包含成人人数</div>
-                                                    <div class="unitbox">包含儿童人数</div>
-                                                    <div class="unitbox">备注</div>
+                                            <div id="costium">
+                                                <div class="userlist form-title">
+                                                    <div class="costbox">所属分类</div>
+                                                    <div class="costbox">价格</div>
                                                 </div>
-                                                <?php /*if($pretium){ */?>
-                                                    <foreach name="pretium" key="k" item="v">
+                                                <?php /*if($cost){ */?>
+                                                    <foreach name="cost" key="k" item="v">
                                                         <div class="userlist" id="pretium_id_{$v.id}">
                                                             <span class="title"><?php /*echo $k+1; */?></span>
-                                                            <input type="hidden" name="resid[888{$v.id}][id]" value="{$v.id}" >
-                                                            <input type="text" class="form-control" name="pretium[888{$v.id}][pretium]" value="{$v.pretium}">
-                                                            <input type="text" class="form-control" name="pretium[888{$v.id}][sale_cost]" value="{$v.sale_cost}">
-                                                            <input type="text" class="form-control" name="pretium[888{$v.id}][peer_cost]" value="{$v.peer_cost}">
-                                                            <input type="text" class="form-control" name="pretium[888{$v.id}][adult]" value="{$v.adult}">
-                                                            <input type="text" class="form-control" name="pretium[888{$v.id}][children]" value="{$v.children}">
-                                                            <input type="text" class="form-control" name="pretium[888{$v.id}][remark]" value="{$v.remark}">
+                                                            <select  class="form-control"  name="cost[{$k}][kid]" required>
+                                                                <option value="" selected disabled>请选择费用类型</option>
+                                                                <foreach name="pro_kinds" item="value">
+                                                                    <option value="{$value.id}" <?php /*if ($cost && $v['kid'] == $value['id']) echo ' selected'; */?>>{:tree_pad($v['level'], true)} {$value.name}</option>
+                                                                </foreach>
+                                                            </select>
+                                                            <input type="text" class="form-control" name="cost[{$k}][price]" value="{$v.price}">
                                                             <a href="javascript:;" class="btn btn-danger btn-flat" onclick="delbox('pretium_id_{$v.id}')">删除</a>
                                                         </div>
                                                     </foreach>
                                                 <?php /*}else{ */?>
                                                     <div class="userlist" id="pretium_id">
                                                         <span class="title">1</span>
-                                                        <input type="text" class="form-control" name="pretium[888{$v.id}][pretium]" value="基础价">
-                                                        <input type="text" class="form-control" name="pretium[888{$v.id}][sale_cost]" value="">
-                                                        <input type="text" class="form-control" name="pretium[888{$v.id}][peer_cost]" value="">
-                                                        <input type="text" class="form-control" name="pretium[888{$v.id}][adult]" value="">
-                                                        <input type="text" class="form-control" name="pretium[888{$v.id}][children]" value="">
-                                                        <input type="text" class="form-control" name="pretium[888{$v.id}][remark]" value="">
+                                                        <select  class="form-control"  name="cost[1][kid]" required>
+                                                            <option value="" selected disabled>请选择费用类型</option>
+                                                            <foreach name="pro_kinds" item="v">
+                                                                <option value="{$v.id}" <?php /*if ($row && $row['type'] == 0) echo ' selected'; */?>>{:tree_pad($v['level'], true)} {$v.name}</option>
+                                                            </foreach>
+                                                        </select>
+                                                        <input type="text" class="form-control" name="cost[1][price]" value="">
                                                         <a href="javascript:;" class="btn btn-danger btn-flat" onclick="delbox('pretium_id')">删除</a>
                                                     </div>
                                                 <?php /*} */?>
                                             </div>
-                                            <div id="pretium_val">1</div>
+                                            <div id="costium_val">1</div>
                                             <div class="form-group col-md-12" id="useraddbtns">
                                                 <a href="javascript:;" class="btn btn-success btn-sm" onClick="add_pretium()"><i class="fa fa-fw fa-plus"></i> 新增价格信息</a>
-                                                <a href="javascript:;" class="btn btn-info btn-sm" onClick="javascript:save('save_info_price','<?php echo U('Op/public_save_price'); ?>',{$op.op_id});">保存</a>
                                             </div>
                                             <div class="form-group">&nbsp;</div>
                                         </div>-->
@@ -197,11 +192,10 @@
 <script>
     //新增价格政策
     function add_pretium(){
-        var i = parseInt($('#pretium_val').text())+1;
-
-        var html = '<div class="userlist" id="pretium_'+i+'"><span class="title"></span><input type="text" class="form-control" name="pretium['+i+'][pretium]"><input type="text"  class="form-control" name="pretium['+i+'][sale_cost]"><input type="text" class="form-control" name="pretium['+i+'][peer_cost]"><input type="number" class="form-control" name="pretium['+i+'][adult]"><input type="number" class="form-control" name="pretium['+i+'][children]"><input type="text" class="form-control" name="pretium['+i+'][remark]"><a href="javascript:;" class="btn btn-danger btn-flat" onclick="delbox(\'pretium_'+i+'\')">删除</a></div>';
-        $('#pretium').append(html);
-        $('#pretium_val').html(i);
+        var i = parseInt($('#costium_val').text())+1;
+        var html = '<div class="userlist" id="pretium_'+i+'"><span class="title"></span><select  class="form-control"  name="cost['+i+'][kid]" required> <option value="" selected disabled>请选择费用类型</option> <foreach name="pro_kinds" item="v"> <option value="{$v.id}" >{:tree_pad($v["level"], true)} {$v.name}</option> </foreach> </select><input type="text"  class="form-control" name="cost['+i+'][price]"><a href="javascript:;" class="btn btn-danger btn-flat" onclick="delbox(\'pretium_'+i+'\')">删除</a></div>';
+        $('#costium').append(html);
+        $('#costium_val').html(i);
         orderno();
     }
 
@@ -216,7 +210,7 @@
         $('#mingdan').find('.title').each(function(index, element) {
             $(this).text(parseInt(index)+1);
         });
-        $('#pretium').find('.title').each(function(index, element) {
+        $('#costium').find('.title').each(function(index, element) {
             $(this).text(parseInt(index)+1);
         });
         $('#costacc').find('.title').each(function(index, element) {

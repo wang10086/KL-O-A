@@ -3745,6 +3745,16 @@ a.iclose{background:url(../img/btn/min_icon.png) no-repeat 0px -30px;width:30px;
 #costaccsum{ color:#ff3300; font-size:18px; margin-top:18px;}
 #costaccsum_red{ color:#ff3300; font-size:18px; margin-top:18px;}
 
+#costium{ padding:0 0px;}
+#costium .form-control{ width:30%; float:left; margin-right:10px; border-radius:0;}
+#costium .costbox{ width: 30%; margin-right:10px; float:left; clear:none; border:none; padding:0;}
+#costium .title{ width:22px; float:left; height:30px; line-height:30px; margin-left:-30px; text-align:right;}
+#costium .form-title{border-bottom:1px solid #cccccc;}
+#costium .userlist { width:100%; height:auto !important; float:left; clear:both; padding-bottom:15px; /*border-bottom:1px solid #cccccc;*/ margin-top:15px;}
+#costium .btn{ padding:7px 12px; font-size:12px;}
+#costium td{ line-height:34px;}
+#costium_val{ display:none}
+
 #user_val{ display:none;}
 #daoyou {margin-top:0px; color:#09F; padding-bottom:0; margin-bottom:0;}
 #daoyou_val{ display:none;}

@@ -49,7 +49,7 @@ class GuideResController extends BaseController {
 
         $this->reskind = M('guidekind')->getField('id,name', true);
         $row = M('guide')->find($id);
-		
+
 		if($row){
 			$where = array();
 			$where['req_type'] = P::REQ_TYPE_GUIDE_RES_NEW;
@@ -81,6 +81,11 @@ class GuideResController extends BaseController {
                 P::AUDIT_STATUS_NOT_AUDIT   => '待审批',
 				P::AUDIT_STATUS_NOT_PASS    => '未通过',
         );
+
+        //价格
+        $kind   = $row['kind'];
+        $cost = M('guide_price as g')->field('g.*,k.name as kname')->join('inner join __PROJECT_KIND__ as k on g.kid = k.id')->where(array('g.gk_id'=>$kind))->select();
+        $this->cost     = $cost;
 
         //出团记录
         $opids = M('guide as g')->join("left join oa_op_guide as o on o.guide_id = g.id ")->where(array('g.id'=>$id))->field('o.op_id')->select();
@@ -120,13 +125,14 @@ class GuideResController extends BaseController {
     public function addres(){
         $this->title('新建/修改导游辅导员');
         
-        $db = M('guide');
-        $id = I('id', 0);
+        $db             = M('guide');
+        $guide_price_db = M('guide_price');
+        $id             = I('id', 0);
 
         if(isset($_POST['dosubmit'])){
-        
-            $info  = I('info');
-            $referer = I('referer');
+            $cost       = I('cost');
+            $info       = I('info');
+            $referer    = I('referer');
 			$info['experience'] = stripslashes($_POST['content']);
 			
             if(!$id){
@@ -135,7 +141,14 @@ class GuideResController extends BaseController {
 				$info['input_time']  = time();
                 $isadd = $db->add($info);
                 if($isadd) {
+                    foreach ($cost as $v){
+                        $v['gk_id']    = $isadd;
+                        $res = $guide_price_db->add($v);
+                    }
                     $this->request_audit(P::REQ_TYPE_GUIDE_RES_NEW, $isadd);
+                    if (!$res){
+                        $this->error('保存价格失败：' . $db->getError());
+                    }
                     $this->success('添加成功！',$referer);
                 } else {
                     $this->error('添加失败：' . $db->getError());
@@ -143,6 +156,14 @@ class GuideResController extends BaseController {
             }else{
                 $isedit = $db->data($info)->where(array('id'=>$id))->save();
                 if($isedit) {
+                    $guide_price_db->where(array('gk_id'=>$id))->delete();
+                    foreach ($cost as $v){
+                        $v['gk_id']    = $id;
+                        $res = $guide_price_db->add($v);
+                    }
+                    if (!$res){
+                        $this->error('保存价格失败：' . $db->getError());
+                    }
                     $this->success('修改成功！',$referer);
                 } else {
                     $this->error('修改失败：' . $db->getError());
@@ -150,8 +171,10 @@ class GuideResController extends BaseController {
             }
             	
         }else{
-            $this->kinds = M('guidekind')->where(array('type'=>P::RES_TYPE_GUIDE))->select();
-            
+            $this->kinds      = M('guidekind')->where(array('type'=>P::RES_TYPE_GUIDE))->select();
+            $this->pro_kinds  = get_project_kinds();
+            $this->cost       = $guide_price_db->where(array('gk_id'=>$id))->select();
+
             if (!$id) {
                 $this->row = false;
             } else {
@@ -271,9 +294,54 @@ class GuideResController extends BaseController {
             $this->display('upd_cost');
         }
     }
-    
 
-    
-    
+// @@@NODE-3###GuideRes/price###导游辅导员价格体系###
+    public function price(){
+        $kname  = I('kname');
+        $gkname = I('gkname');
+        $where  = array();
+        if ($kname) $where['k.name']    = array('like',"%$kname%");
+        if ($gkname) $where['gk.name'] = array('like',"%$gkname%");
+
+        //分页
+        $pagecount = M('guide_price')->where($where)->count();
+        $page = new Page($pagecount, P::PAGE_SIZE);
+        $this->pages = $pagecount>P::PAGE_SIZE ? $page->show():'';
+
+        $this->kinds      = M('guidekind')->where(array('type'=>P::RES_TYPE_GUIDE))->select();
+        $this->pro_kinds  = get_project_kinds();
+        $this->lists      = M('guide_price as p')->field('p.*,gk.name as gkname,k.name as kname')->join('left join __GUIDEKIND__ as gk on p.gk_id = gk.id')->join('left join __PROJECT_KIND__ as k on p.kid = k.id')->where($where)->limit($page->firstRow . ',' . $page->listRows)->order('p.id desc')->select();
+
+        $this->pagetitle = '导游辅导员价格体系';
+        $this->display('price');
+    }
+
+    // @@@NODE-3###GuideRes/addprice###添加/修改导游辅导员价格体系###
+    public function addprice(){
+        $db     = M('guide_price');
+        $id     = I('id');
+        if (isset($_POST['dosubmint'])){
+            $info = I('info');
+            if(!$id){
+                $res = $db->add($info);
+            }else{
+                $res = $db->where(array('id'=>$id))->save($info);
+            }
+            echo '<script>window.top.location.reload();</script>';
+        }
+        $this->row        = $db->where(array('id'=>$id))->find();
+        $this->kinds      = M('guidekind')->where(array('type'=>P::RES_TYPE_GUIDE))->select();
+        $this->pro_kinds  = get_project_kinds();
+        $this->display('addprice');
+    }
+
+    // @@@NODE-3###GuideRes/del_price###删除导游辅导员价格体系###
+    public function del_price(){
+        $db = M('guide_price');
+        $id = I('id');
+        $iddel = $db->delete($id);
+        $this->success('删除成功！');
+    }
+
     
 }

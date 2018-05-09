@@ -34,12 +34,12 @@
                                             <p>姓名：{$row.name}</p>
                                         </div>
                                         <div class="form-group col-md-4 viwe">
-                                            <p>类型：{$reskind[$row[kind]]}</p>
+                                            <p>职务：{$reskind[$row[kind]]}</p>
                                         </div>
                                         
-                                        <div class="form-group col-md-4 viwe">
+                                        <!--<div class="form-group col-md-4 viwe">
                                             <p>费用：{$row.fee}</p>
-                                        </div>
+                                        </div>-->
                                         
                                         <div class="form-group col-md-4 viwe">
                                             <p>性别：{$row.sex}</p>
@@ -88,10 +88,31 @@
                                             <p>审批时间：{$row.show_time}</p>
                                         </div>
                                         
-                                        <div class="form-group col-md-12 viwe">
+                                        <div class="form-group col-md-4 viwe">
                                             <p>擅长领域：{$row.field}</p>
                                         </div>
-                                        
+
+
+                                        <div class="content" style="padding-top:0px;">
+                                            <div id="costium">
+                                                <div class="userlist form-title">
+                                                    <div class="costbox">所属分类</div>
+                                                    <div class="costbox">价格</div>
+                                                </div>
+
+                                                <div class="userlist">
+                                                    <foreach name="cost" item="v">
+                                                        <div class="form-group col-md-12">
+                                                            <input type="text" class="form-control no-border" value="{$v.kname}">
+                                                            <input type="text" class="form-control no-border" value="￥{$v.price}">
+                                                        </div>
+                                                    </foreach>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">&nbsp;</div>
+                                        </div>
+
+
                                     </div>
                                     
                                 </div><!-- /.box-body -->
@@ -154,13 +175,11 @@
                                                     <if condition="rolemenu(array('GuideRes/upd_cost'))">
                                                         <td class="taskOptions">
                                                             <button onClick="javascript:{:open_cost($row['op_id'],$row['cost'],$row['name'])}" title="编辑" class="btn btn-info btn-smsm"><i class="fa fa-pencil"></i></button>
-                                                            <!--<button onClick="javascript:window.location.href='{:U('GuideRes/upd_cost',array('id'=>$row['id']))}';" title="修改" class="btn btn-info btn-smsm"><i class="fa fa-pencil"></i></button>-->
-                                                            <!--<a href="javascript:;" onClick="javascript:{:open_type()}" class="btn btn-sm btn-danger"><i class="fa fa-plus"></i> 录入新分类</a>-->
                                                         </td>
                                                     </if>
-                                                    <!--<if condition="rolemenu(array('Project/del'))">
+                                                    <!--<if condition="rolemenu(array('GuideRes/del'))">
                                                         <td class="taskOptions">
-                                                            <button onClick="javascript:ConfirmDel('{:U('Project/lession_del',array('id'=>$row['id']))}');" title="删除" class="btn btn-warning btn-smsm"><i class="fa fa-times"></i></button>
+                                                            <button onClick="javascript:ConfirmDel('{:U('GuideRes/del',array('id'=>$row['id']))}');" title="删除" class="btn btn-warning btn-smsm"><i class="fa fa-times"></i></button>
                                                         </td>
                                                     </if>-->
 

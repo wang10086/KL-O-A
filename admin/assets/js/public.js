@@ -254,6 +254,23 @@ function open_field (obj) {
 	});
 }
 
+function open_price (obj) {
+	art.dialog.open(obj, {
+		lock:true,
+		title: '导游辅导员管理',
+		width:800,
+		height:400,
+		okValue: '提交',
+		ok: function () {
+			this.iframe.contentWindow.gosubmint();
+			return false;
+		},
+		cancelValue:'取消',
+		cancel: function () {
+		}
+	});
+}
+
 function open_type (obj) {
 	art.dialog.open(obj, {
 		lock:true,

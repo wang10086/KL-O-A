@@ -181,6 +181,9 @@
                                         <if condition="rolemenu(array('GuideRes/reskind'))">
                                         <li class="{:on('GuideRes/reskind')} {:on('GuideRes/addreskind')} "><a href="{:U('GuideRes/reskind')}"><i class="fa fa-angle-right"></i> 导游辅导员分类</a></li>  
                                         </if>
+                                        <if condition="rolemenu(array('GuideRes/price'))">
+                                            <li class="{:on('GuideRes/price')} {:on('GuideRes/addprice')} "><a href="{:U('GuideRes/price')}"><i class="fa fa-angle-right"></i> 导游辅导员价格体系</a></li>
+                                        </if>
                                     </ul> 
                                 </li>
                                 </if>
