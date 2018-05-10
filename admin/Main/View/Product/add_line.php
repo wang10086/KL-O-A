@@ -1,220 +1,285 @@
 <include file="Index:header2" />
 
 
-			<aside class="right-side">
-                <!-- Content Header (Page header) -->
-                <section class="content-header">
-                    <h1>新增行程方案</h1>
-                    <ol class="breadcrumb">
-                        <li><a href="{:U('Index/index')}"><i class="fa fa-home"></i> 首页</a></li>
-                        <li><a href="{:U('Product/line')}"><i class="fa fa-gift"></i> 线路管理</a></li>
-                    </ol>
-                </section>
+        <aside class="right-side">
+            <!-- Content Header (Page header) -->
+            <section class="content-header">
+                <h1>新增行程方案</h1>
+                <ol class="breadcrumb">
+                    <li><a href="{:U('Index/index')}"><i class="fa fa-home"></i> 首页</a></li>
+                    <li><a href="{:U('Product/line')}"><i class="fa fa-gift"></i> 线路管理</a></li>
+                </ol>
+            </section>
 
-                <!-- Main content -->
-                <section class="content">
-                	<form method="post" action="{:U('Product/add_line')}" name="myform" id="myform">
-                    <div class="row">
-                        <!-- right column -->
-                        <div class="col-md-12">
-                            <!-- general form elements disabled -->
-                            <div class="box box-warning">
-                                <div class="box-header">
-                                    <h3 class="box-title">行程方案描述</h3>
-                                </div><!-- /.box-header -->
-                                <div class="box-body">
-                                    <input type="hidden" name="dosubmit" value="1" />
-                                    <input type="hidden" name="referer" value="<?php echo $_SERVER['HTTP_REFERER']; ?>" />
-                                    <!-- text input -->
-                                    <div class="form-group col-md-12">
-                                        <label>线路名称</label>
-                                        <input type="text" name="info[title]" id="title" class="form-control" />
-                                    </div>
-                                    
-                                    <div class="form-group col-md-4">
-                                        <label>目的地</label>
-                                        <input type="text" name="info[dest]" id="dest" class="form-control" />
-                                    </div>
-                                    
-                                    <div class="form-group col-md-4">
-                                        <label>行程天数</label>
-                                        <input type="text" name="info[days]" id="days" class="form-control" />
-                                    </div>
-                                    
-                                    <div class="form-group col-md-4">
-                                        <label>类型</label>
-                                        <select  class="form-control"  name="info[kind]">
-                                        <option value="0">请选择</option>
-                                        <foreach name="kindlist" item="v">
-                                            <option value="{$v.id}">{:tree_pad($v['level'], true)} {$v.name}</option>
+            <!-- Main content -->
+            <section class="content">
+                <form method="post" action="{:U('Product/add_line')}" name="myform" id="myform">
+                <div class="row">
+                    <!-- right column -->
+                    <div class="col-md-12">
+                        <!-- general form elements disabled -->
+                        <div class="box box-warning">
+                            <div class="box-header">
+                                <h3 class="box-title">行程方案描述</h3>
+                            </div><!-- /.box-header -->
+                            <div class="box-body">
+                                <input type="hidden" name="dosubmit" value="1" />
+                                <input type="hidden" name="referer" value="<?php echo $_SERVER['HTTP_REFERER']; ?>" />
+                                <!-- text input -->
+                                <div class="form-group col-md-8">
+                                    <label>线路名称</label>
+                                    <input type="text" name="info[title]" id="title" class="form-control" />
+                                </div>
+
+                                <div class="form-group col-md-4">
+                                    <label>线路种类</label>
+                                    <select  class="form-control"  name="info[type]" onchange="check_type()" id="line_type" required>
+                                        <option value="" selected disabled>请选择</option>
+                                        <foreach name="line_type" key="k" item="v">
+                                            <option value="{$k}"> {$v}</option>
                                         </foreach>
-                                        </select>
-                                    </div>
-                                    
-                                   
-                                    
-                                    <div class="form-group col-md-4">
-                                        <label>参考价格</label>
-                                        <input type="text" name="info[sales_price]" id="sales_price"   class="form-control" />
-                                    </div>
-                                    
-                                    <!--
-                                    <div class="form-group col-md-4">
-                                        <label>同行价格</label>
-                                        <input type="text" name="info[peer_price]" id="peer_price" class="form-control" />
-                                    </div>
-                                    -->
-                                    
-                                    
-                                    <div class="form-group col-md-8">
-                                        <label>备注</label>
-                                        <input type="text" name="info[remarks]" id="remarks" class="form-control" />
-                                    </div>
-                                    
-                                    <div class="form-group">&nbsp;</div>
-                                </div><!-- /.box-body -->
-                            </div><!-- /.box -->
-                           
-                        </div><!--/.col (right) -->
-                    </div>   <!-- /.row -->
-                    
-                    
-                    <div class="row">
-                        <!-- right column -->
-                        <div class="col-md-12">
-                            <!-- general form elements disabled -->
-                            <div class="box box-warning">
-                                <div class="box-header">
-                                    <h3 class="box-title">选择产品模块</h3>
-                                    <div class="box-tools pull-right">
-                                         
-                                         <a href="javascript:;" class="btn btn-danger btn-sm" onclick="selectmodel()">选择模块</a>
-                                    </div>
-                                </div><!-- /.box-header -->
-                                <div class="box-body">
-                                <table class="table table-bordered dataTable fontmini" id="tablelist" style="margin-top:10px;">
-                                    <tr role="row" class="orders" >
-                                        <th width="80">ID</th>
-                                        <th>模块名称</th>
-                                        <th width="120">专家</th>
-                                        <th width="50" class="taskOptions">删除</th>
+                                    </select>
+                                </div>
+
+                                <div class="form-group col-md-4">
+                                    <label>目的地</label>
+                                    <input type="text" name="info[dest]" id="dest" class="form-control" />
+                                </div>
+
+                                <div class="form-group col-md-4">
+                                    <label>行程天数</label>
+                                    <input type="text" name="info[days]" id="days" class="form-control" />
+                                </div>
+
+                                <div class="form-group col-md-4">
+                                    <label>类型</label>
+                                    <select  class="form-control"  name="info[kind]">
+                                    <option value="0">请选择</option>
+                                    <foreach name="kindlist" item="v">
+                                        <option value="{$v.id}">{:tree_pad($v['level'], true)} {$v.name}</option>
+                                    </foreach>
+                                    </select>
+                                </div>
+
+
+
+                                <div class="form-group col-md-4">
+                                    <label>参考价格</label>
+                                    <input type="text" name="info[sales_price]" id="sales_price"   class="form-control" />
+                                </div>
+
+                                <!--
+                                <div class="form-group col-md-4">
+                                    <label>同行价格</label>
+                                    <input type="text" name="info[peer_price]" id="peer_price" class="form-control" />
+                                </div>
+                                -->
+
+
+                                <div class="form-group col-md-8">
+                                    <label>备注</label>
+                                    <input type="text" name="info[remarks]" id="remarks" class="form-control" />
+                                </div>
+
+                                <div class="form-group">&nbsp;</div>
+                            </div><!-- /.box-body -->
+                        </div><!-- /.box -->
+
+                    </div><!--/.col (right) -->
+                </div>   <!-- /.row -->
+
+                <div class="row"  id="show_or_hide">
+
+                </div>   <!-- /.row -->
+
+                <div class="row">
+                    <!-- right column -->
+                    <div class="col-md-12">
+                        <!-- general form elements disabled -->
+                        <div class="box box-warning">
+                            <div class="box-header">
+                                <h3 class="box-title">选择产品模块</h3>
+                                <div class="box-tools pull-right">
+
+                                     <a href="javascript:;" class="btn btn-danger btn-sm" onclick="selectmodel()">选择模块</a>
+                                </div>
+                            </div><!-- /.box-header -->
+                            <div class="box-body">
+                            <table class="table table-bordered dataTable fontmini" id="tablelist" style="margin-top:10px;">
+                                <tr role="row" class="orders" >
+                                    <th width="80">ID</th>
+                                    <th>模块名称</th>
+                                    <th width="120">专家</th>
+                                    <th width="50" class="taskOptions">删除</th>
+                                </tr>
+
+                            </table>
+                            </div><!-- /.box-body -->
+                        </div><!-- /.box -->
+
+                    </div><!--/.col (right) -->
+                </div>   <!-- /.row -->
+
+
+
+                <div class="row">
+                    <!-- right column -->
+                    <div class="col-md-12">
+                        <!-- general form elements disabled -->
+                        <div class="box box-warning">
+                            <div class="box-header">
+                                <h3 class="box-title">选择产品模板</h3>
+                                <div class="box-tools pull-right">
+                                     <a href="javascript:;" class="btn btn-success btn-sm" onclick="selecttpl()">选择模板</a>
+                                </div>
+                            </div><!-- /.box-header -->
+                            <div class="box-body">
+                            <table class="table table-bordered dataTable fontmini" id="tablelist_model" style="margin-top:10px;">
+                                <tr role="row" class="orders" >
+                                    <th width="80">ID</th>
+                                    <th>模板名称</th>
+                                    <th width="120">专家</th>
+                                    <th width="50" class="taskOptions">删除</th>
+                                </tr>
+
+                            </table>
+                            </div><!-- /.box-body -->
+                        </div><!-- /.box -->
+
+                    </div><!--/.col (right) -->
+                </div>   <!-- /.row -->
+
+
+                <div class="box box-warning">
+                    <div class="box-header">
+                        <h3 class="box-title">上传附件</h3>
+
+                    </div>
+                    <div class="box-body">
+                        <div class="content">
+                            <div class="form-group col-md-12">
+                                <table id="flist" class="table" style="margin-top:10px;">
+                                    <tr>
+                                        <th align="left" width="45%">文件名称</th>
+                                        <th align="left" width="10%">大小</th>
+                                        <th align="left" width="30%">上传进度</th>
+                                        <th align="left" width="15%">操作</th>
                                     </tr>
-                                    
-                                </table>
-                                </div><!-- /.box-body -->
-                            </div><!-- /.box -->
-                           
-                        </div><!--/.col (right) -->
-                    </div>   <!-- /.row -->
-                    
-                    
-                    
-                    <div class="row">
-                        <!-- right column -->
-                        <div class="col-md-12">
-                            <!-- general form elements disabled -->
-                            <div class="box box-warning">
-                                <div class="box-header">
-                                    <h3 class="box-title">选择产品模板</h3>
-                                    <div class="box-tools pull-right">
-                                         <a href="javascript:;" class="btn btn-success btn-sm" onclick="selecttpl()">选择模板</a>
-                                    </div>
-                                </div><!-- /.box-header -->
-                                <div class="box-body">
-                                <table class="table table-bordered dataTable fontmini" id="tablelist_model" style="margin-top:10px;">
-                                    <tr role="row" class="orders" >
-                                        <th width="80">ID</th>
-                                        <th>模板名称</th>
-                                        <th width="120">专家</th>
-                                        <th width="50" class="taskOptions">删除</th>
-                                    </tr>
-                                    
-                                </table>
-                                </div><!-- /.box-body -->
-                            </div><!-- /.box -->
-                           
-                        </div><!--/.col (right) -->
-                    </div>   <!-- /.row -->
-                    
-                    
-                    <div class="box box-warning">
-                        <div class="box-header">
-                            <h3 class="box-title">上传附件</h3>
-                            
-                        </div>
-                        <div class="box-body">
-                            <div class="content">
-                                <div class="form-group col-md-12">
-                                    <table id="flist" class="table" style="margin-top:10px;">
-                                        <tr>
-                                            <th align="left" width="45%">文件名称</th>
-                                            <th align="left" width="10%">大小</th>
-                                            <th align="left" width="30%">上传进度</th>
-                                            <th align="left" width="15%">操作</th>
-                                        </tr>
-                                        <foreach name="atts" item="v">
-                                        <tr id="aid_{$v.id}" valign="middle"> 
-                                            <td><input type="text" name="newname[{$v.id}]" value="{$v.filename}" class="form-control"  /></td>
-                                            <td>{:fsize($v['filesize'])}</td>
-                                            <td>
-                                                <div class="progress sm"> 
-                                                    <div class="progress-bar progress-bar-aqua" rel="aid_{$v.id}"  role="progressbar" style="width: 100%;"  aria-valuemin="0" aria-valuemax="100">
-                                                    </div>
+                                    <foreach name="atts" item="v">
+                                    <tr id="aid_{$v.id}" valign="middle">
+                                        <td><input type="text" name="newname[{$v.id}]" value="{$v.filename}" class="form-control"  /></td>
+                                        <td>{:fsize($v['filesize'])}</td>
+                                        <td>
+                                            <div class="progress sm">
+                                                <div class="progress-bar progress-bar-aqua" rel="aid_{$v.id}"  role="progressbar" style="width: 100%;"  aria-valuemin="0" aria-valuemax="100">
                                                 </div>
-                                            </td>
-                                            <td><a class="btn btn-danger btn-xs " href="javascript:;" onclick="removeThisFile('aid_{$v.id}');"><i class="fa fa-times"></i>删除</a>&nbsp;&nbsp;&nbsp;&nbsp; <a class="btn btn-success btn-xs " href="{$v.filepath}" onclick=""><i class="fa fa-download"></i>下载</a></td>
-                                        </tr>        
-                                        </foreach>  
-                                    </table>
-                                     
-                                    <a href="javascript:;" id="pickupfile" class="btn btn-success btn-sm" style="margin-top:15px;"><i class="fa fa-upload"></i> 上传附件</a>
-                                    <div id="container" style="display:none;">
-                                        <foreach name="atts" item="v">
-                                        <input type="hidden" rel="aid_{$v.id}" name="resfiles[]" value="{$v.id}" />
-                                        </foreach>
-                                    </div>
+                                            </div>
+                                        </td>
+                                        <td><a class="btn btn-danger btn-xs " href="javascript:;" onclick="removeThisFile('aid_{$v.id}');"><i class="fa fa-times"></i>删除</a>&nbsp;&nbsp;&nbsp;&nbsp; <a class="btn btn-success btn-xs " href="{$v.filepath}" onclick=""><i class="fa fa-download"></i>下载</a></td>
+                                    </tr>
+                                    </foreach>
+                                </table>
+
+                                <a href="javascript:;" id="pickupfile" class="btn btn-success btn-sm" style="margin-top:15px;"><i class="fa fa-upload"></i> 上传附件</a>
+                                <div id="container" style="display:none;">
+                                    <foreach name="atts" item="v">
+                                    <input type="hidden" rel="aid_{$v.id}" name="resfiles[]" value="{$v.id}" />
+                                    </foreach>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    
-                    <div class="row">
-                    	<div class="col-md-12">
-                        		<div class="box box-success">
-                                <div class="box-header">
-                                    <h3 class="box-title">行程方案安排</h3>
-                                </div><!-- /.box-header -->
-                                <div class="box-body">
+                </div>
 
-                                    <div id="task_timu"></div>
-                                    
-                                    <div style="display:none" id="task_val">0</div>
-                                    
-                                    <div class="form-group col-md-12" id="addti_btn">
-                                        <a href="javascript:;" class="btn btn-success btn-sm" onClick="task(1)" style="margin-right:10px;"><i class="fa fa-fw  fa-plus"></i> 添加日程</a>
+                <div class="row">
+                    <div class="col-md-12">
+                            <div class="box box-success">
+                            <div class="box-header">
+                                <h3 class="box-title">行程方案安排</h3>
+                            </div><!-- /.box-header -->
+                            <div class="box-body">
+
+                                <div id="task_timu"></div>
+
+                                <div style="display:none" id="task_val">0</div>
+
+                                <div class="form-group col-md-12" id="addti_btn">
+                                    <a href="javascript:;" class="btn btn-success btn-sm" onClick="task(1)" style="margin-right:10px;"><i class="fa fa-fw  fa-plus"></i> 添加日程</a>
+                                </div>
+
+
+                                <div class="form-group">&nbsp;</div>
+                            </div><!-- /.box-body -->
+                        </div>
+
+                    </div>
+
+                    <div id="formsbtn">
+                        <button type="submit" class="btn btn-info btn-lg" id="lrpd">保存</button>
+                    </div>
+
+
+                </div>   <!-- /.row -->
+
+
+
+
+                </form>
+            </section><!-- /.content -->
+
+        </aside><!-- /.right-side -->
+
+        <div class="row"  id="hide"><!-- right column --><!--js引入使用-->
+            <div class="col-md-12"><!-- general form elements disabled -->
+                <div class="box box-warning">
+                    <div class="box-header">
+                        <h3 class="box-title">填写价格信息</h3>
+                    </div><!-- /.box-header -->
+                    <div class="box-body">
+                        <div class="content" style="padding-top:0px;">
+                            <div id="pretium">
+                                <div class="userlist form-title">
+                                    <div class="unitbox">名称</div>
+                                    <div class="unitbox">单价</div>
+                                    <div class="unitbox">数量</div>
+                                    <div class="unitbox">总价</div>
+                                    <div class="unitbox lp_remark">备注</div>
+                                </div>
+                                <?php if($cost){ ?>
+                                    <foreach name="cost" key="k" item="v">
+                                        <div class="userlist" id="pretium_id_{$v.id}">
+                                            <span class="title"><?php echo $k+1; ?></span>
+                                            <input type="text" class="form-control" name="cost[{$k}][pname]" value="{$v.pname}">
+                                            <input type="text" class="form-control" name="cost[{$k}][price]" value="{$v.price}">
+                                            <input type="text" class="form-control" name="cost[{$k}][num]" value="{$v.num}">
+                                            <input type="text" class="form-control" name="cost[{$k}][sum]" value="{$v.sum}">
+                                            <input type="text" class="form-control lp_remark" name="cost[{$k}][remark]" value="{$v.remark}">
+                                            <a href="javascript:;" class="btn btn-danger btn-flat" onclick="delbox('pretium_id_{$v.id}')">删除</a>
+                                        </div>
+                                    </foreach>
+                                <?php }else{ ?>
+                                    <div class="userlist" id="pretium_id">
+                                        <span class="title">1</span>
+                                        <input type="text" class="form-control" name="cost[1][pname]" value="">
+                                        <input type="text" class="form-control" name="cost[1][price]" value="">
+                                        <input type="text" class="form-control" name="cost[1][num]" value="">
+                                        <input type="text" class="form-control" name="cost[1][sum]" value="">
+                                        <input type="text" class="form-control lp_remark" name="cost[1][remark]" value="">
+                                        <a href="javascript:;" class="btn btn-danger btn-flat" onclick="delbox('pretium_id')">删除</a>
                                     </div>
-                                    
-                                    
-                                    <div class="form-group">&nbsp;</div>
-                                </div><!-- /.box-body -->
+                                <?php } ?>
                             </div>
-                            
+                            <div id="pretium_val">1</div>
+                            <div class="form-group col-md-12" id="useraddbtns">
+                                <a href="javascript:;" class="btn btn-success btn-sm" onClick="add_pretium()"><i class="fa fa-fw fa-plus"></i> 新增价格信息</a>
+                            </div>
+                            <div class="form-group">&nbsp;</div>
                         </div>
-                        
-                        <div id="formsbtn">
-                            <button type="submit" class="btn btn-info btn-lg" id="lrpd">保存</button>
-                        </div>
-                            
-                        
-                    </div>   <!-- /.row -->
-                    
-                    
-                    
-                    
-                 	</form>    
-                </section><!-- /.content -->
-                
-            </aside><!-- /.right-side -->
+                    </div><!-- /.box-body -->
+                </div><!-- /.box -->
+
+            </div><!--/.col (right) -->
+        </div>   <!-- /.row -->
 
   </div>
 </div>
@@ -222,6 +287,12 @@
 <include file="Index:footer2" />
 
 		<script type="text/javascript">
+
+            $(function () {
+                $('#hide').hide();
+                $('#show_or_hide').hide();
+            })
+
 		//选择模板
 		function selecttpl() {
 			var modelhtml = '';
@@ -401,9 +472,50 @@
 				$('input[rel=' + fid +']').remove();
 			}
 		}
-			
-        
-		</script>
+
+		//线路种类(普通行程 和 固定线路)
+        function check_type(){
+            var type = $('#line_type').val();
+            var lpcon= $('#hide').html();
+            if (type ==2){
+                $('#show_or_hide').show();
+                $('#show_or_hide').html(lpcon);
+            }else{
+                $('#show_or_hide').hide();
+                $('#show_or_hide').html('');
+            }
+        }
+
+
+        //新增价格政策
+        function add_pretium(){
+            var i = parseInt($('#pretium_val').text())+1;
+            var html = '<div class="userlist" id="pretium_'+i+'"><span class="title"></span><input type="text" class="form-control" name="cost['+i+'][pname]" value=""><input type="text"  class="form-control" name="cost['+i+'][price]"><input type="text"  class="form-control" name="cost['+i+'][num]"><input type="text"  class="form-control" name="cost['+i+'][sum]"><input type="text"  class="form-control lp_remark" name="cost['+i+'][remark]"><a href="javascript:;" class="btn btn-danger btn-flat" onclick="delbox(\'pretium_'+i+'\')">删除</a></div>';
+            $('#pretium').append(html);
+            $('#pretium_val').html(i);
+            orderno();
+        }
+
+        //移除
+        function delbox(obj){
+            $('#'+obj).remove();
+            orderno();
+        }
+
+        //编号
+        function orderno(){
+            $('#mingdan').find('.title').each(function(index, element) {
+                $(this).text(parseInt(index)+1);
+            });
+            $('#pretium').find('.title').each(function(index, element) {
+                $(this).text(parseInt(index)+1);
+            });
+            $('#costacc').find('.title').each(function(index, element) {
+                $(this).text(parseInt(index)+1);
+            });
+        }
+
+</script>
      
 
 

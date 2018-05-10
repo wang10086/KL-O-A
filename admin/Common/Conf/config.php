@@ -157,6 +157,9 @@ $config = array(
 	
 	//巡检类型
 	'INS_TYPE' => array('1'=>'业务巡检','2'=>'部门巡检'),
+
+    //线路类型
+    'LINE_TYPE'=> array('1'=>'普通行程','2'=>'固定线路'),
 	
 	//记录详情
 	'REC_TYPE_INFO' => array(

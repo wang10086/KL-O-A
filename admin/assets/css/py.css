@@ -3725,6 +3725,7 @@ a.iclose{background:url(../img/btn/min_icon.png) no-repeat 0px -30px;width:30px;
 #pretium .btn{ padding:7px 12px; font-size:12px;} 
 #pretium td{ line-height:34px;}
 #pretium_val{ display:none}
+#pretium .lp_remark{ width: 280px;}
 
 #costacc { padding:0 15px;}
 #costacc .form-control{ width:120px; float:left; margin-right:10px; border-radius:0;}
