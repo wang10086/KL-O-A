@@ -788,6 +788,7 @@ class ProductController extends BaseController {
          } else {
             
 			 //$this->kindlist = M('project_kind')->select();
+             $this->line_type= C('LINE_TYPE');
              $this->kindlist = get_project_kinds();
              $this->display('add_line');
          }
