@@ -28,7 +28,7 @@
                                 <!-- text input -->
                                 <div class="form-group col-md-8">
                                     <label>线路名称</label>
-                                    <input type="text" name="info[title]" id="title" class="form-control" />
+                                    <input type="text" name="info[title]" id="title" class="form-control" required />
                                 </div>
 
                                 <div class="form-group col-md-4">
@@ -43,7 +43,7 @@
 
                                 <div class="form-group col-md-4">
                                     <label>目的地</label>
-                                    <input type="text" name="info[dest]" id="dest" class="form-control" />
+                                    <input type="text" name="info[dest]" id="dest" class="form-control" required />
                                 </div>
 
                                 <div class="form-group col-md-4">
@@ -250,9 +250,9 @@
                                         <div class="userlist" id="pretium_id_{$v.id}">
                                             <span class="title"><?php echo $k+1; ?></span>
                                             <input type="text" class="form-control" name="cost[{$k}][pname]" value="{$v.pname}">
-                                            <input type="text" class="form-control" name="cost[{$k}][price]" value="{$v.price}">
-                                            <input type="text" class="form-control" name="cost[{$k}][num]" value="{$v.num}">
-                                            <input type="text" class="form-control" name="cost[{$k}][sum]" value="{$v.sum}">
+                                            <input type="text" class="form-control" name="cost[{$k}][price]" value="{$v.price}" id="price_{$k+1}">
+                                            <input type="text" class="form-control" name="cost[{$k}][num]" value="{$v.num}" id="num_{$k+1}" onblur="sum_price('{$k+1}')">
+                                            <input type="text" class="form-control" name="cost[{$k}][sum]" value="{$v.sum}" id="sum_{$k+1}">
                                             <input type="text" class="form-control lp_remark" name="cost[{$k}][remark]" value="{$v.remark}">
                                             <a href="javascript:;" class="btn btn-danger btn-flat" onclick="delbox('pretium_id_{$v.id}')">删除</a>
                                         </div>
@@ -261,9 +261,9 @@
                                     <div class="userlist" id="pretium_id">
                                         <span class="title">1</span>
                                         <input type="text" class="form-control" name="cost[1][pname]" value="">
-                                        <input type="text" class="form-control" name="cost[1][price]" value="">
-                                        <input type="text" class="form-control" name="cost[1][num]" value="">
-                                        <input type="text" class="form-control" name="cost[1][sum]" value="">
+                                        <input type="text" class="form-control" name="cost[1][price]" value="" id="price_1">
+                                        <input type="text" class="form-control" name="cost[1][num]" value=""  id="num_1" onblur="sum_price(1)">
+                                        <input type="text" class="form-control" name="cost[1][sum]" value="" id="sum_1">
                                         <input type="text" class="form-control lp_remark" name="cost[1][remark]" value="">
                                         <a href="javascript:;" class="btn btn-danger btn-flat" onclick="delbox('pretium_id')">删除</a>
                                     </div>
@@ -490,7 +490,7 @@
         //新增价格政策
         function add_pretium(){
             var i = parseInt($('#pretium_val').text())+1;
-            var html = '<div class="userlist" id="pretium_'+i+'"><span class="title"></span><input type="text" class="form-control" name="cost['+i+'][pname]" value=""><input type="text"  class="form-control" name="cost['+i+'][price]"><input type="text"  class="form-control" name="cost['+i+'][num]"><input type="text"  class="form-control" name="cost['+i+'][sum]"><input type="text"  class="form-control lp_remark" name="cost['+i+'][remark]"><a href="javascript:;" class="btn btn-danger btn-flat" onclick="delbox(\'pretium_'+i+'\')">删除</a></div>';
+            var html = '<div class="userlist" id="pretium_'+i+'"><span class="title"></span><input type="text" class="form-control" name="cost['+i+'][pname]" value=""><input type="text"  class="form-control" name="cost['+i+'][price]" id="price_'+i+'"><input type="text"  class="form-control" name="cost['+i+'][num]" id="num_'+i+'" onblur="sum_price('+i+')"><input type="text"  class="form-control" name="cost['+i+'][sum]" id="sum_'+i+'"><input type="text"  class="form-control lp_remark" name="cost['+i+'][remark]"><a href="javascript:;" class="btn btn-danger btn-flat" onclick="delbox(\'pretium_'+i+'\')">删除</a></div>';
             $('#pretium').append(html);
             $('#pretium_val').html(i);
             orderno();
@@ -515,6 +515,16 @@
             });
         }
 
+        //求总价
+        function sum_price(i){
+            var price   = $("#price_"+i).val();
+            var num     = $("#num_"+i).val();
+            if(price && num){
+                $("#sum_"+i).val(price*num);
+            }else{
+                $("#sum_"+i).val(price);
+            }
+        }
 </script>
      
 

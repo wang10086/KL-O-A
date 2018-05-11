@@ -715,14 +715,15 @@ class ProductController extends BaseController {
     public function add_line() {
         $this->title('新增线路');
          if (isset($_POST['dosubmit'])) {
-             $info = I('info');
-			 $referer = I('referer');
-             $pro = I('pro');
+             $info      = I('info');
+			 $referer   = I('referer');
+             $pro       = I('pro');
 			 $pro_model = I('pro_model');
-			 $days = I('days');
+			 $days      = I('days');
 			 
-			 $aids = join(',', I('resfiles'));
-			 $newname = I('newname', null);
+			 $aids      = join(',', I('resfiles'));
+			 $newname   = I('newname', null);
+             $cost      = I('cost');  //固定线路价格信息
              
              if ($aids) {
                  $info['att_id'] = $aids;
@@ -780,6 +781,19 @@ class ProductController extends BaseController {
 						 M('product_line_days')->add($data);
 					 }		 
 			     }
+			     if($cost){
+                     //固定线路价格信息
+                     foreach($cost as $v){
+                         $data = array();
+                         $data['line_id']   = $line_id;
+                         $data['pname']     = $v['pname'];
+                         $data['price']     = $v['price'];
+                         $data['num']       = $v['num'];
+                         $data['sum']       = $v['sum'];
+                         $data['remark']    = $v['remark'];
+                         M('product_line_price')->add($data);
+                     }
+                 }
 			 }
 			 
                  
@@ -801,17 +815,17 @@ class ProductController extends BaseController {
     public function edit_line() {
          $this->title('修改线路');
          if (isset($_POST['dosubmit'])) {
-             $info = I('info');
-			 $referer = I('referer');
-             $pro = I('pro');
+             $info      = I('info');
+			 $referer   = I('referer');
+             $pro       = I('pro');
 			 $pro_model = I('pro_model');
-			 $days = I('days');
-			 $line_id = I('line_id');
-			 
-			 
-			 $aids = join(',', I('resfiles'));
-			 $newname = I('newname', null);
-             
+			 $days      = I('days');
+			 $line_id   = I('line_id');
+             $cost      = I('cost');
+
+             $aids      = join(',', I('resfiles'));
+			 $newname   = I('newname', null);
+
              if ($aids) {
                  $info['att_id'] = $aids;
              } else {
@@ -864,6 +878,19 @@ class ProductController extends BaseController {
 					 M('product_line_days')->add($data);
 				 }		 
 			 }
+             M('product_line_price')->where(array('line_id'=>$line_id))->delete();
+			 if ($cost){
+                 foreach ($cost as $v){
+                     $data = array();
+                     $data['line_id']   = $line_id;
+                     $data['pname']     = $v['pname'];
+                     $data['price']     = $v['price'];
+                     $data['num']       = $v['num'];
+                     $data['sum']       = $v['sum'];
+                     $data['remark']    = $v['remark'];
+                     M('product_line_price')->add($data);
+                 }
+             }
 			
              $this->success('保存成功！', $referer); 
             
@@ -889,7 +916,9 @@ class ProductController extends BaseController {
 		     $this->subject_fields = C('SUBJECT_FIELD');
 		     $this->ages           = C('AGE_LIST');
 			 //$this->kindlist = M('product_kind')->select();
-			 $this->kindlist = get_project_kinds();
+			 $this->kindlist       = get_project_kinds();
+             $this->line_type      = C('LINE_TYPE');
+             $this->cost           = M('product_line_price')->where(array('line_id'=>$id))->select();
              $this->display('edit_line');
          }
     }
