@@ -94,9 +94,62 @@
                             <div class="box-header">
                                 <h3 class="box-title">填写价格信息</h3>
                             </div><!-- /.box-header -->
+
+                            <div class="box-body mb-50">
+                                <div class="content" style="padding-top:0px;">
+                                    <div id="choose">
+                                        <h3 class="price-title">可选价格信息(住宿,车辆信息)</h3>
+                                        <div class="userlist form-title">
+                                            <div class="unitbox">星级</div>
+                                            <div class="unitbox">人数</div>
+                                            <div class="unitbox">价格</div>
+                                            <div class="unitbox lp_remark">备注</div>
+                                        </div>
+                                        <?php if($carHotel){ ?>
+                                            <foreach name="carHotel" key="k" item="v">
+                                                <div class="userlist no-border" id="choose_id_{$v.id}">
+                                                    <span class="title"><?php echo $k+1; ?></span>
+                                                    <select  class="form-control"  name="carHotel[{$k}][start]">
+                                                        <foreach name="hotel_start" key="key" item="value">
+                                                            <option value="{$key}" <?php if($v['start']==$key) echo 'selected'; ?>>{$value}</option>
+                                                        </foreach>
+                                                    </select>
+                                                    <input type="text" class="form-control" name="carHotel[{$k}][num]" value="{$v.num}">
+                                                    <input type="text" class="form-control" name="carHotel[{$k}][price]" value="{$v.price}"  id="check_carhotel">
+                                                    <input type="text" class="form-control lp_remark" name="carHotel[{$k}][remark]" value="{$v.remark}">
+                                                    <a href="javascript:;" class="btn btn-danger btn-flat" onclick="delbox('choose_id_{$v.id}')">删除</a>
+                                                </div>
+                                            </foreach>
+                                        <?php }else{ ?>
+                                            <div class="userlist no-border" id="choose_id">
+                                                <span class="title">1</span>
+                                                <select  class="form-control"  name="carHotel[1][start]">
+                                                    <option value="" selected disabled>请选择</option>
+                                                    <foreach name="hotel_start" key="k" item="v">
+                                                        <option value="{$k}">{$v}</option>
+                                                    </foreach>
+                                                </select>
+                                                <!--<input type="text" class="form-control" name="carHotel[1][start]" value="">-->
+                                                <input type="text" class="form-control" name="carHotel[1][num]" value="">
+                                                <input type="text" class="form-control" name="carHotel[1][price]" value="">
+                                                <input type="text" class="form-control lp_remark" name="carHotel[1][remark]" value="">
+                                                <a href="javascript:;" class="btn btn-danger btn-flat" onclick="delbox('choose_id')">删除</a>
+                                            </div>
+                                        <?php } ?>
+                                    </div>
+
+                                    <div id="choose_val">1</div>
+                                    <div class="form-group col-md-12" id="useraddbtns">
+                                        <a href="javascript:;" class="btn btn-success btn-sm" onClick="add_choose()"><i class="fa fa-fw fa-plus"></i> 可选价格信息</a>
+                                    </div>
+                                    <div class="form-group">&nbsp;</div>
+                                </div>
+                            </div><!-- /.box-body -->
+
                             <div class="box-body">
                                 <div class="content" style="padding-top:0px;">
                                     <div id="pretium">
+                                        <h3 class="price-title">常规价格信息</h3>
                                         <div class="userlist form-title">
                                             <div class="unitbox">名称</div>
                                             <div class="unitbox">单价</div>
@@ -130,7 +183,7 @@
                                     </div>
                                     <div id="pretium_val">1</div>
                                     <div class="form-group col-md-12" id="useraddbtns">
-                                        <a href="javascript:;" class="btn btn-success btn-sm" onClick="add_pretium()"><i class="fa fa-fw fa-plus"></i> 新增价格信息</a>
+                                        <a href="javascript:;" class="btn btn-success btn-sm" onClick="add_pretium()"><i class="fa fa-fw fa-plus"></i> 常规价格信息</a>
                                     </div>
                                     <div class="form-group">&nbsp;</div>
                                 </div>
@@ -289,15 +342,20 @@
 
         </aside><!-- /.right-side -->
 
+        <!----------------------------start------------------------------->
         <div class="row"  id="hide"><!-- right column --><!--js引入使用-->
             <div class="col-md-12"><!-- general form elements disabled -->
                 <div class="box box-warning">
                     <div class="box-header">
                         <h3 class="box-title">填写价格信息</h3>
                     </div><!-- /.box-header -->
+
+
+
                     <div class="box-body">
                         <div class="content" style="padding-top:0px;">
                             <div id="pretium">
+                                <h3 class="price-title">常规价格信息</h3>
                                 <div class="userlist form-title">
                                     <div class="unitbox">名称</div>
                                     <div class="unitbox">单价</div>
@@ -307,7 +365,7 @@
                                 </div>
                                 <?php if($cost){ ?>
                                     <foreach name="cost" key="k" item="v">
-                                        <div class="userlist" id="pretium_id_{$v.id}">
+                                        <div class="userlist no-border" id="pretium_id_{$v.id}">
                                             <span class="title"><?php echo $k+1; ?></span>
                                             <input type="text" class="form-control" name="cost[{$k}][pname]" value="{$v.pname}">
                                             <input type="text" class="form-control" name="cost[{$k}][price]" value="{$v.price}" id="price_{$k+1}">
@@ -318,7 +376,7 @@
                                         </div>
                                     </foreach>
                                 <?php }else{ ?>
-                                    <div class="userlist" id="pretium_id">
+                                    <div class="userlist no-border" id="pretium_id">
                                         <span class="title">1</span>
                                         <input type="text" class="form-control" name="cost[1][pname]" value="">
                                         <input type="text" class="form-control" name="cost[1][price]" value="" id="price_1">
@@ -331,7 +389,7 @@
                             </div>
                             <div id="pretium_val">1</div>
                             <div class="form-group col-md-12" id="useraddbtns">
-                                <a href="javascript:;" class="btn btn-success btn-sm" onClick="add_pretium()"><i class="fa fa-fw fa-plus"></i> 新增价格信息</a>
+                                <a href="javascript:;" class="btn btn-success btn-sm" onClick="add_pretium()"><i class="fa fa-fw fa-plus"></i> 常规价格信息</a>
                             </div>
                             <div class="form-group">&nbsp;</div>
                         </div>
@@ -340,6 +398,7 @@
 
             </div><!--/.col (right) -->
         </div>   <!-- /.row -->
+        <!------------------------------end----------------------------->
 
   </div>
 </div>
@@ -350,7 +409,8 @@
             $(function () {
                 $('#hide').hide();
                 var cost = $('#check_cost').val();
-                if(cost){
+                var carhotel = $('#check_carhotel').val();
+                if(cost || carhotel){
                     $('#show_or_hide').show();
                 }else{
                     $('#show_or_hide').html('');
@@ -565,9 +625,18 @@
             //新增价格政策
             function add_pretium(){
                 var i = parseInt($('#pretium_val').text())+1;
-                var html = '<div class="userlist" id="pretium_'+i+'"><span class="title"></span><input type="text" class="form-control" name="cost['+i+'][pname]" value=""><input type="text"  class="form-control" name="cost['+i+'][price]" id="price_'+i+'"><input type="text"  class="form-control" name="cost['+i+'][num]" id="num_'+i+'" onblur="sum_price('+i+')"><input type="text"  class="form-control" name="cost['+i+'][sum]" id="sum_'+i+'"><input type="text"  class="form-control lp_remark" name="cost['+i+'][remark]"><a href="javascript:;" class="btn btn-danger btn-flat" onclick="delbox(\'pretium_'+i+'\')">删除</a></div>';
+                var html = '<div class="userlist no-border" id="pretium_'+i+'"><span class="title"></span><input type="text" class="form-control" name="cost['+i+'][pname]" value=""><input type="text"  class="form-control" name="cost['+i+'][price]" id="price_'+i+'"><input type="text"  class="form-control" name="cost['+i+'][num]" id="num_'+i+'" onblur="sum_price('+i+')"><input type="text"  class="form-control" name="cost['+i+'][sum]" id="sum_'+i+'"><input type="text"  class="form-control lp_remark" name="cost['+i+'][remark]"><a href="javascript:;" class="btn btn-danger btn-flat" onclick="delbox(\'pretium_'+i+'\')">删除</a></div>';
                 $('#pretium').append(html);
                 $('#pretium_val').html(i);
+                orderno();
+            }
+
+            //新增可选(星级)价格政策
+            function add_choose(){
+                var i = parseInt($('#choose_val').text())+1;
+                var html = '<div class="userlist no-border" id="choose_'+i+'"><span class="title"></span> <select  class="form-control"  name="carHotel['+i+'][start]"> <option value="" selected disabled>请选择</option> <foreach name="hotel_start" key="k" item="v"> <option value="{$k}">{$v}</option> </foreach> </select> <input type="text"  class="form-control" name="carHotel['+i+'][num]" ><input type="text"  class="form-control" name="carHotel['+i+'][price]" ><input type="text"  class="form-control lp_remark" name="carHotel['+i+'][remark]"><a href="javascript:;" class="btn btn-danger btn-flat" onclick="delbox(\'choose_'+i+'\')">删除</a></div>';
+                $('#choose').append(html);
+                $('#choose_val').html(i);
                 orderno();
             }
 
@@ -579,15 +648,15 @@
 
             //编号
             function orderno(){
-                $('#mingdan').find('.title').each(function(index, element) {
+                $('#choose').find('.title').each(function(index, element) {
                     $(this).text(parseInt(index)+1);
                 });
                 $('#pretium').find('.title').each(function(index, element) {
                     $(this).text(parseInt(index)+1);
                 });
-                $('#costacc').find('.title').each(function(index, element) {
+                /*$('#costacc').find('.title').each(function(index, element) {
                     $(this).text(parseInt(index)+1);
-                });
+                });*/
             }
 
             //求总价

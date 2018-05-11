@@ -724,6 +724,7 @@ class ProductController extends BaseController {
 			 $aids      = join(',', I('resfiles'));
 			 $newname   = I('newname', null);
              $cost      = I('cost');  //固定线路价格信息
+             $carHotel  = I('carHotel');
              
              if ($aids) {
                  $info['att_id'] = $aids;
@@ -794,6 +795,18 @@ class ProductController extends BaseController {
                          M('product_line_price')->add($data);
                      }
                  }
+
+                 if($carHotel){
+                     foreach($carHotel as $v){
+                         $data = array();
+                         $data['line_id']   = $line_id;
+                         $data['start']     = $v['start'];
+                         $data['num']       = $v['num'];
+                         $data['price']     = $v['price'];
+                         $data['remark']    = $v['remark'];
+                         M('product_line_carhotel')->add($data);
+                     }
+                 }
 			 }
 			 
                  
@@ -803,6 +816,7 @@ class ProductController extends BaseController {
             
 			 //$this->kindlist = M('project_kind')->select();
              $this->line_type= C('LINE_TYPE');
+             $this->hotel_start = C('HOTEL_START');
              $this->kindlist = get_project_kinds();
              $this->display('add_line');
          }
@@ -822,6 +836,7 @@ class ProductController extends BaseController {
 			 $days      = I('days');
 			 $line_id   = I('line_id');
              $cost      = I('cost');
+             $carHotel  = I('carHotel');
 
              $aids      = join(',', I('resfiles'));
 			 $newname   = I('newname', null);
@@ -891,6 +906,18 @@ class ProductController extends BaseController {
                      M('product_line_price')->add($data);
                  }
              }
+             M('product_line_carhotel')->where(array('line_id'=>$line_id))->delete();
+             if ($carHotel){
+                 foreach ($carHotel as $v){
+                     $data = array();
+                     $data['line_id']   = $line_id;
+                     $data['start']     = $v['start'];
+                     $data['num']       = $v['num'];
+                     $data['price']     = $v['price'];
+                     $data['remark']    = $v['remark'];
+                     M('product_line_carhotel')->add($data);
+                 }
+             }
 			
              $this->success('保存成功！', $referer); 
             
@@ -919,6 +946,8 @@ class ProductController extends BaseController {
 			 $this->kindlist       = get_project_kinds();
              $this->line_type      = C('LINE_TYPE');
              $this->cost           = M('product_line_price')->where(array('line_id'=>$id))->select();
+             $this->carHotel       = M('product_line_carhotel')->where(array('line_id'=>$id))->select();
+             $this->hotel_start    = C('HOTEL_START');
              $this->display('edit_line');
          }
     }

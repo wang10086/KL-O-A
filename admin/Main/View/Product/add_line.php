@@ -246,7 +246,7 @@
                                     <div class="unitbox">价格</div>
                                     <div class="unitbox lp_remark">备注</div>
                                 </div>
-                                <?php if($cost){ ?>
+                                <?php if($carHotel){ ?>
                                     <foreach name="carHotel" key="k" item="v">
                                         <div class="userlist no-border" id="choose_id_{$v.id}">
                                             <span class="title"><?php echo $k+1; ?></span>
@@ -346,11 +346,6 @@
                 //正常
                 $('#hide').hide();
                 $('#show_or_hide').hide();
-
-                //测试
-                /*var hide = $('#hide').html();
-                $('#show_or_hide').html(hide);
-                $('#show_or_hide').show();*/
             })
 
 		//选择模板
@@ -558,7 +553,7 @@
         //新增可选(星级)价格政策
         function add_choose(){
             var i = parseInt($('#choose_val').text())+1;
-            var html = '<div class="userlist no-border" id="choose_'+i+'"><span class="title"></span> <select  class="form-control"  name="carHotel['+i+'][pname]"> <option value="" selected disabled>请选择</option> <foreach name="hotel_start" key="k" item="v"> <option value="{$k}">{$v}</option> </foreach> </select> <input type="text"  class="form-control" name="carHotel['+i+'][price]" ><input type="text"  class="form-control" name="carHotel['+i+'][sum]" ><input type="text"  class="form-control lp_remark" name="carHotel['+i+'][remark]"><a href="javascript:;" class="btn btn-danger btn-flat" onclick="delbox(\'choose_'+i+'\')">删除</a></div>';
+            var html = '<div class="userlist no-border" id="choose_'+i+'"><span class="title"></span> <select  class="form-control"  name="carHotel['+i+'][start]"> <option value="" selected disabled>请选择</option> <foreach name="hotel_start" key="k" item="v"> <option value="{$k}">{$v}</option> </foreach> </select> <input type="text"  class="form-control" name="carHotel['+i+'][num]" ><input type="text"  class="form-control" name="carHotel['+i+'][price]" ><input type="text"  class="form-control lp_remark" name="carHotel['+i+'][remark]"><a href="javascript:;" class="btn btn-danger btn-flat" onclick="delbox(\'choose_'+i+'\')">删除</a></div>';
             $('#choose').append(html);
             $('#choose_val').html(i);
             orderno();
