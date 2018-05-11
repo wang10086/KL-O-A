@@ -33,8 +33,8 @@
 
                                     <div class="form-group col-md-4">
                                         <label>项目类型：</label>
-                                        <select  class="form-control"  name="info[kind]" id="kind" onchange="line_lession()" required>
-                                        <!--<select  class="form-control"  name="info[kind]" id="kind"  required>-->
+                                        <!--<select  class="form-control"  name="info[kind]" id="kind" onchange="line_lession()" required>-->
+                                        <select  class="form-control"  name="info[kind]" id="kind"  required>
                                             <option value="" selected disabled>请选择项目类型</option>
                                             <foreach name="kinds" item="v">
                                                 <option value="{$v.id}" >{:tree_pad($v['level'], true)} {$v.name}</option>
@@ -42,13 +42,9 @@
                                         </select>
                                     </div>
 
-
-                                    <!--------------------------------------------line_lession_start------------------------------------------------------>
                                     <div id="lession_or_line">
 
                                     </div>
-                                    <!----------------------------------------------line_lession_end------------------------------------------------------>
-
 
                                     <div class="form-group col-md-4">
                                         <label>预计人数：</label><input type="text" name="info[number]" class="form-control" required />

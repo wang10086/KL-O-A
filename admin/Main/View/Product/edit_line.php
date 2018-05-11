@@ -342,7 +342,6 @@
 
         </aside><!-- /.right-side -->
 
-        <!----------------------------start------------------------------->
         <div class="row"  id="hide"><!-- right column --><!--js引入使用-->
             <div class="col-md-12"><!-- general form elements disabled -->
                 <div class="box box-warning">
@@ -398,7 +397,6 @@
 
             </div><!--/.col (right) -->
         </div>   <!-- /.row -->
-        <!------------------------------end----------------------------->
 
   </div>
 </div>
