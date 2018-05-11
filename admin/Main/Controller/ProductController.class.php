@@ -930,9 +930,9 @@ class ProductController extends BaseController {
 		 $row =  M('product_line')->find($id);
 		 if($row){
 			 
-			 $kind = M('product_kind')->find($row['kind']);
+			 $kind = M('project_kind')->find($row['kind']);
 			 $row['kind_name'] = $kind['name'];
-			 
+
 			 $this->pro_list = M()->field('t.*,p.*')->table('__PRODUCT_LINE_TPL__ as t')->join('__PRODUCT__ as p on p.id=t.pro_id')->where(array('t.line_id'=>$id,'t.type'=>1))->select(); 
 			 
 			 $this->pro_model_list = M()->field('t.*,p.*')->table('__PRODUCT_LINE_TPL__ as t')->join('__PRODUCT_MODEL__ as p on p.id=t.pro_id')->where(array('t.line_id'=>$id,'t.type'=>2))->select(); 

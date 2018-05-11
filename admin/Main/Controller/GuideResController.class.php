@@ -134,21 +134,14 @@ class GuideResController extends BaseController {
             $info       = I('info');
             $referer    = I('referer');
 			$info['experience'] = stripslashes($_POST['content']);
-			
+
             if(!$id){
 				$info['input_uid'] = session('userid');
 				$info['input_uname'] = session('nickname');
 				$info['input_time']  = time();
                 $isadd = $db->add($info);
                 if($isadd) {
-                    foreach ($cost as $v){
-                        $v['gk_id']    = $isadd;
-                        $res = $guide_price_db->add($v);
-                    }
                     $this->request_audit(P::REQ_TYPE_GUIDE_RES_NEW, $isadd);
-                    if (!$res){
-                        $this->error('保存价格失败：' . $db->getError());
-                    }
                     $this->success('添加成功！',$referer);
                 } else {
                     $this->error('添加失败：' . $db->getError());
@@ -156,14 +149,6 @@ class GuideResController extends BaseController {
             }else{
                 $isedit = $db->data($info)->where(array('id'=>$id))->save();
                 if($isedit) {
-                    $guide_price_db->where(array('gk_id'=>$id))->delete();
-                    foreach ($cost as $v){
-                        $v['gk_id']    = $id;
-                        $res = $guide_price_db->add($v);
-                    }
-                    if (!$res){
-                        $this->error('保存价格失败：' . $db->getError());
-                    }
                     $this->success('修改成功！',$referer);
                 } else {
                     $this->error('修改失败：' . $db->getError());
