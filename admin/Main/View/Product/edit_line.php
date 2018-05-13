@@ -349,7 +349,56 @@
                         <h3 class="box-title">填写价格信息</h3>
                     </div><!-- /.box-header -->
 
+                    <div class="box-body mb-50">
+                        <div class="content" style="padding-top:0px;">
+                            <div id="choose">
+                                <h3 class="price-title">可选价格信息(住宿,车辆信息)</h3>
+                                <div class="userlist form-title">
+                                    <div class="unitbox">星级</div>
+                                    <div class="unitbox">人数</div>
+                                    <div class="unitbox">价格</div>
+                                    <div class="unitbox lp_remark">备注</div>
+                                </div>
+                                <?php if($carHotel){ ?>
+                                    <foreach name="carHotel" key="k" item="v">
+                                        <div class="userlist no-border" id="choose_id_{$v.id}">
+                                            <span class="title"><?php echo $k+1; ?></span>
+                                            <select  class="form-control"  name="carHotel[{$k}][start]">
+                                                <foreach name="hotel_start" key="key" item="value">
+                                                    <option value="{$key}" <?php if($v['start']==$key) echo 'selected'; ?>>{$value}</option>
+                                                </foreach>
+                                            </select>
+                                            <input type="text" class="form-control" name="carHotel[{$k}][num]" value="{$v.num}">
+                                            <input type="text" class="form-control" name="carHotel[{$k}][price]" value="{$v.price}">
+                                            <input type="text" class="form-control lp_remark" name="carHotel[{$k}][remark]" value="{$v.remark}">
+                                            <a href="javascript:;" class="btn btn-danger btn-flat" onclick="delbox('choose_id_{$v.id}')">删除</a>
+                                        </div>
+                                    </foreach>
+                                <?php }else{ ?>
+                                    <div class="userlist no-border" id="choose_id">
+                                        <span class="title">1</span>
+                                        <select  class="form-control"  name="carHotel[1][start]">
+                                            <option value="" selected disabled>请选择</option>
+                                            <foreach name="hotel_start" key="k" item="v">
+                                                <option value="{$k}">{$v}</option>
+                                            </foreach>
+                                        </select>
+                                        <!--<input type="text" class="form-control" name="carHotel[1][start]" value="">-->
+                                        <input type="text" class="form-control" name="carHotel[1][num]" value="">
+                                        <input type="text" class="form-control" name="carHotel[1][price]" value="">
+                                        <input type="text" class="form-control lp_remark" name="carHotel[1][remark]" value="">
+                                        <a href="javascript:;" class="btn btn-danger btn-flat" onclick="delbox('choose_id')">删除</a>
+                                    </div>
+                                <?php } ?>
+                            </div>
 
+                            <div id="choose_val">1</div>
+                            <div class="form-group col-md-12" id="useraddbtns">
+                                <a href="javascript:;" class="btn btn-success btn-sm" onClick="add_choose()"><i class="fa fa-fw fa-plus"></i> 可选价格信息</a>
+                            </div>
+                            <div class="form-group">&nbsp;</div>
+                        </div>
+                    </div><!-- /.box-body -->
 
                     <div class="box-body">
                         <div class="content" style="padding-top:0px;">
