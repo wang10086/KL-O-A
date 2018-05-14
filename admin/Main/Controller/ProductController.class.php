@@ -973,11 +973,23 @@ class ProductController extends BaseController {
 				$this->atts = false;
 			}
 			
-			 $this->days_list = M('product_line_days')->where(array('line_id'=>$id))->select();
+			 $this->days_list   = M('product_line_days')->where(array('line_id'=>$id))->select();
+             $this->price_list  = M('product_line_price')->where(array('line_id'=>$id))->select();
+             $hotel_start       = C('HOTEL_START');
+             $carhotel_list     = M('product_line_carhotel')->where(array('line_id'=>$id))->select();
+             foreach ($carhotel_list as $key=>$value){
+                 foreach ($hotel_start as $k=>$v){
+                     if($value['start'] == $k){
+                         $carhotel_list[$key]['start_name'] = $v;
+                     }
+                 }
+             }
+             $this->count_price = array_sum(array_map(function($val){return $val['sum'];}, $this->price_list));
+             $this->count_carhotel = array_sum(array_map(function($val){return $val['price'];}, $carhotel_list));
+             $this->carhotel_list  = $carhotel_list;
 			 $this->business_depts = C('BUSINESS_DEPT');
 		 	 $this->subject_fields = C('SUBJECT_FIELD');
 			 $this->ages           = C('AGE_LIST');
-		 	 
 			 $this->row = $row;
 		 	 $this->display('view_line');	
 		 

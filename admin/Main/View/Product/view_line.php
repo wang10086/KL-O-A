@@ -67,7 +67,81 @@
                            
                         </div><!--/.col (right) -->
                     </div>   <!-- /.row -->
-                    
+
+                    <if condition="$price_list || $carhotel_list">
+                        <div class="row"><!-- right column --><!--js引入使用-->
+                            <div class="col-md-12"><!-- general form elements disabled -->
+                                <div class="box box-warning">
+                                    <div class="box-header">
+                                        <h3 class="box-title">价格信息</h3>
+                                    </div><!-- /.box-header -->
+
+                                    <div class="box-body mb-50">
+                                        <div class="content" style="padding-top:0px;">
+                                            <div id="choose">
+                                                <h3 class="price-title">可选价格信息(住宿,车辆信息)</h3>
+                                                <div class="userlist form-title">
+                                                    <div class="unitbox">星级</div>
+                                                    <div class="unitbox">人数</div>
+                                                    <div class="unitbox">价格</div>
+                                                    <div class="unitbox lp_remark">备注</div>
+                                                </div>
+                                                <foreach name="carhotel_list" key="k" item="v">
+                                                    <div class="userlist no-border" id="choose_id_{$v.id}">
+                                                        <span class="title"><?php echo $k+1; ?></span>
+                                                        <input type="text" class="form-control no-border"  value="{$v.start_name}">
+                                                        <input type="text" class="form-control no-border"  value="{$v.num}">
+                                                        <input type="text" class="form-control no-border"  value="￥{$v.price}">
+                                                        <input type="text" class="form-control no-border lp_remark" value="{$v.remark}">
+                                                    </div>
+                                                </foreach>
+                                                <div class="userlist no-border">
+                                                    <input type="text" class="form-control no-border"  >
+                                                    <input type="text" class="form-control no-border"  >
+                                                    <input type="text" class="form-control no-border"  value="￥{$count_carhotel}">
+                                                    <input type="text" class="form-control no-border lp_remark" >
+                                                </div>
+                                            </div>
+                                            <div class="form-group">&nbsp;</div>
+                                        </div>
+                                    </div><!-- /.box-body -->
+
+                                    <div class="box-body">
+                                        <div class="content" style="padding-top:0px;">
+                                            <div id="pretium">
+                                                <h3 class="price-title">常规价格信息</h3>
+                                                <div class="userlist form-title">
+                                                    <div class="unitbox">名称</div>
+                                                    <div class="unitbox">单价</div>
+                                                    <div class="unitbox">数量</div>
+                                                    <div class="unitbox">总价</div>
+                                                    <div class="unitbox lp_remark">备注</div>
+                                                </div>
+                                                    <foreach name="price_list" key="k" item="v">
+                                                        <div class="userlist no-border">
+                                                            <span class="title"><?php echo $k+1; ?></span>
+                                                            <input type="text" class="form-control no-border" value="{$v.pname}" >
+                                                            <input type="text" class="form-control no-border" value="￥{$v.price}" >
+                                                            <input type="text" class="form-control no-border" value="{$v.num}">
+                                                            <input type="text" class="form-control no-border" value="￥{$v.sum}" >
+                                                            <input type="text" class="form-control no-border lp_remark" value="{$v.remark}" >
+                                                        </div>
+                                                    </foreach>
+                                                <div class="userlist no-border">
+                                                    <input type="text" class="form-control no-border"  >
+                                                    <input type="text" class="form-control no-border"  >
+                                                    <input type="text" class="form-control no-border" >
+                                                    <input type="text" class="form-control no-border" value="￥{$count_price}" >
+                                                    <input type="text" class="form-control no-border lp_remark"  >
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div><!-- /.box-body -->
+                                </div><!-- /.box -->
+
+                            </div><!--/.col (right) -->
+                        </div>   <!-- /.row -->
+                    </if>
                     
                     <div class="row">
                         <!-- right column -->
