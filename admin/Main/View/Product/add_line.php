@@ -461,7 +461,7 @@
 				filters : {
 					max_file_size : '10mb',
 					mime_types: [
-						{title : "Files", extensions : "jpg,jpeg,png,zip,rar,7z,doc,docx,ppt,pptx,xls,xlsx,txt"}
+						{title : "Files", extensions : "jpg,jpeg,png,zip,rar,7z,doc,docx,ppt,pptx,xls,xlsx,txt,pdf"}
 					]
 				},
 	
