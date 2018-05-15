@@ -338,7 +338,8 @@
                                         <h3 class="box-title">人员名单</h3>
                                     </div>
                                     <div class="box-body">
-                                        <?php  if((cookie('userid') == $op['create_user'] || C('RBAC_SUPER_ADMIN')==cookie('username')) && $settlement['audit']!=1){ ?>
+                                        <?php /* if((cookie('userid') == $op['create_user'] || C('RBAC_SUPER_ADMIN')==cookie('username')) && $settlement['audit']!=1){ */?>
+                                        <?php  if((cookie('userid') == $op['create_user'] || C('RBAC_SUPER_ADMIN')==cookie('username')) && $huikuan_status!=2){ ?>
                                         <include file="op_member_edit" />
                                         <?php  }else{ ?>
                                         <include file="op_member" />

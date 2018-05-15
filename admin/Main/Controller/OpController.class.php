@@ -484,6 +484,7 @@ class OpController extends BaseController {
         $this->act_fields     = $act_field;
         //$this->job_name      = array_filter(array_column($job_names,'job_money','job_name'));
         $this->job_name       = array_column($job_names,'job_money','job_name');
+        $this->huikuan_status = M('contract_pay')->where(array('op_id'=>$opid))->getField('status');
 
         //资源需求单接收人员(资源管理部经理)
         $this->men            = M('account')->field('id,nickname')->where(array('roleid'=>52))->find();
