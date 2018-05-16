@@ -42,22 +42,22 @@
                                     <div class="col-md-4">
                                         <label>项目团号</label>
                                         <div class="input-group">
-                                            <input type="text"  name="info[group_id]" placeholder="团号" class="form-control" value="{$row.group_id}" id="groupid">
+                                            <input type="text"  name="info[group_id]" placeholder="团号" class="form-control" value="{$row.group_id}" id="groupid" required>
                                             <span class="input-group-addon" style="width:32px;"><a href="javascript:;" onClick="getop();" >获取</a></span>
                                         </div>
                                     </div>
                                     <div class="form-group  col-md-4">
                                         <label>项目名称</label>
-                                        <input type="text" name="info[pro_name]" class="form-control" id="proname" value="{$row.pro_name}"/>
+                                        <input type="text" name="info[pro_name]" class="form-control" id="proname" value="{$row.pro_name}" required />
                                     </div>
                                     <div class="form-group col-md-4">
                                         <label>出团人数</label>
-                                        <input type="text" name="info[number]" id="number"   value="{$row.number}" class="form-control" />
+                                        <input type="text" name="info[number]" id="number"   value="{$row.number}" class="form-control" required />
                                     </div>
                                     
                                     <div class="form-group col-md-4">
                                         <label>合同金额</label>
-                                        <input type="text" name="info[contract_amount]" id="contract_amount"   value="{$row.contract_amount}" class="form-control" />
+                                        <input type="text" name="info[contract_amount]" id="contract_amount"   value="{$row.contract_amount}" class="form-control" required />
                                     </div>
                                     
                                     <div class="form-group col-md-4">
