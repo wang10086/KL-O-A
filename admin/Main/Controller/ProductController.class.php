@@ -1,10 +1,10 @@
 <?php
 namespace Main\Controller;
 use Sys\P;
-
+ulib('Pinyin');
 ulib('Page');
 use Sys\Page;
-
+use Sys\Pinyin;
 
 // @@@NODE-2###Product###产品管理###
 class ProductController extends BaseController {
@@ -714,13 +714,16 @@ class ProductController extends BaseController {
 	// @@@NODE-3###add_line###新增线路###
     public function add_line() {
         $this->title('新增线路');
+        $PinYin = new Pinyin();
          if (isset($_POST['dosubmit'])) {
              $info      = I('info');
 			 $referer   = I('referer');
              $pro       = I('pro');
 			 $pro_model = I('pro_model');
 			 $days      = I('days');
-			 
+             $title     = iconv("utf-8","gb2312",trim($info['title']));
+             $info['pinyin'] = strtolower($PinYin->getFirstPY($title));
+
 			 $aids      = join(',', I('resfiles'));
 			 $newname   = I('newname', null);
              $cost      = I('cost');  //固定线路价格信息
@@ -828,6 +831,7 @@ class ProductController extends BaseController {
 	// @@@NODE-3###edit_line###修改线路###
     public function edit_line() {
          $this->title('修改线路');
+        $PinYin = new Pinyin();
          if (isset($_POST['dosubmit'])) {
              $info      = I('info');
 			 $referer   = I('referer');
@@ -837,6 +841,8 @@ class ProductController extends BaseController {
 			 $line_id   = I('line_id');
              $cost      = I('cost');
              $carHotel  = I('carHotel');
+             $title     = iconv("utf-8","gb2312",trim($info['title']));
+             $info['pinyin'] = strtolower($PinYin->getFirstPY($title));
 
              $aids      = join(',', I('resfiles'));
 			 $newname   = I('newname', null);

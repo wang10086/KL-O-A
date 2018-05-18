@@ -197,7 +197,7 @@ class KpiController extends BaseController {
 		$this->year 			= $year;
 		$this->prveyear		= $year-1;
 		$this->nextyear		= $year+1;
-		$this->userkey 		= json_encode($key);	
+		$this->userkey 		= json_encode($key);
 			
 			
 		$this->display('pdca');

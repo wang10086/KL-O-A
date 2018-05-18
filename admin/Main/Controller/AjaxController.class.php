@@ -164,8 +164,10 @@ class AjaxController extends Controller {
         $field_db       = M('op_field');
         $line_db        = M('product_line');
         $line           = $db->where("id='1' or pid='1'")->getField('id',true);
+        $cgly           = M('project_kind')->where("name like '%常规旅游%'")->getField('id',true); //从'其他'栏目中提取 '常规旅游'放入线路中
+        $lines          = array_merge($line,$cgly);
         $lession        = $db->where("id='2' or pid='2'")->getField('id',true);
-        if (in_array($id,$line)){
+        if (in_array($id,$lines)){
             $data['line'] = $line_db->field("id,title")->where(array('kind'=>$id))->select();
             $data['type'] = 1;
             $this->ajaxReturn($data,"JSON");
@@ -187,5 +189,13 @@ class AjaxController extends Controller {
             $data       = $db->field('id,name')->where(array('field_id'=>$fid))->select();
         }
         $this->ajaxReturn($data,"JSON");
+    }
+
+    public function gui_price(){
+        $db             = M('guide_pricekind');
+        $pk_id          = I('kid');
+        $data           = $db->where(array('pk_id'=>$pk_id))->select();
+        $this->ajaxReturn($data,'JSON');
+
     }
 }

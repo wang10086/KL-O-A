@@ -295,9 +295,22 @@ class GuideResController extends BaseController {
 
         $this->kinds      = M('guidekind')->where(array('type'=>P::RES_TYPE_GUIDE))->select();
         $this->pro_kinds  = get_project_kinds();
-        $this->lists      = M('guide_price as p')->field('p.*,gk.name as gkname,k.name as kname')->join('left join __GUIDEKIND__ as gk on p.gk_id = gk.id')->join('left join __PROJECT_KIND__ as k on p.kid = k.id')->where($where)->limit($page->firstRow . ',' . $page->listRows)->order('p.id desc')->select();
-
-        $this->pagetitle = '导游辅导员价格体系';
+        $lists            = M('guide_price as p')
+            ->field('p.*,gk.name as gkname,k.name as kname,gpi.id as gpi_id,gpi.price as gpprice,gpk.name as gpname')
+            ->join('left join __GUIDEKIND__ as gk on p.gk_id = gk.id')->join('left join __PROJECT_KIND__ as k on p.kid = k.id')
+            ->join('left join __GUIDE_PRICEINFO__ as gpi on gpi.guide_price_id = p.id')
+            ->join('left join __GUIDE_PRICEKIND__ as gpk on gpi.price_kind_id = gpk.id')
+            ->where($where)
+            ->limit($page->firstRow . ',' . $page->listRows)
+            ->order('p.id desc')
+            ->select();
+        foreach ($lists as $k=>$v){
+            if ($v['price'] == '0.00') $v['price'] = null;
+            $lists[$k]['price'] = $v['price']?$v['price']:$v['gpprice'];
+        }
+        $this->lists      = $lists;
+        $this->pagetitle  = '导游辅导员价格体系';
+        $this->pin        = 0;
         $this->display('price');
     }
 
@@ -307,26 +320,115 @@ class GuideResController extends BaseController {
         $id     = I('id');
         if (isset($_POST['dosubmint'])){
             $info = I('info');
+            $data = I('data');
+
+            if(!$id){
+                $res = $db->add($info);
+                foreach ($data as $k=>$v){
+                    $data[$k]['guide_price_id'] = $res;
+                }
+                $del    = $res;
+            }else{
+                $res = $db->where(array('id'=>$id))->save($info);
+                foreach ($data as $k=>$v){
+                    $data[$k]['guide_price_id'] = $id;
+                }
+                $del    = $id;
+            }
+            if ($res){
+                M('guide_priceinfo')->where(array('guide_price_id'=>$del))->delete();
+                foreach ($data as $v){
+                    M('guide_priceinfo')->add($v);
+                }
+                $this->success('保存数据成功',U('GuideRes/price'));
+            }else{
+                $this->error('保存数据失败!');
+            }
+            //echo '<script>window.top.location.reload();</script>';
+        }else{
+            $row              = $db->where(array('id'=>$id))->find();
+            $this->row        = $row;
+            $kid            = $row['kid'];
+            $this->dataPrice  = M('guide_pricekind')->where(array('pk_id'=>$kid))->select();
+            $pricelists       = M()->table('__GUIDE_PRICEINFO__ as i')
+                                    ->field('i.*,k.id as kid,k.pk_id,k.name')
+                                    ->join('left join __GUIDE_PRICEKIND__ as k on i.price_kind_id = k.id')
+                                    ->where(array('i.guide_price_id'=>$id))
+                                    ->select();
+            if ($pricelists){
+                $this->judge  = 1;
+            }else{
+                $this->judge  = 0;
+            }
+            $this->pricelists = $pricelists;
+            $this->kinds      = M('guidekind')->where(array('type'=>P::RES_TYPE_GUIDE))->select();
+            $this->pro_kinds  = get_project_kinds();
+            $this->kjj        = M('project_kind')->where("name like '%科技节%'")->getField('id');  //科技节
+            $this->dxly       = M('project_kind')->where("name like '%冬夏令营%'")->getField('id');  //冬夏令营
+            $this->khyxs      = M('project_kind')->where("name like '%课后一小时%'")->getField('id');  //课后一小时
+            $this->display('addprice');
+        }
+    }
+
+    // @@@NODE-3###GuideRes/del_price###删除导游辅导员价格体系###
+    public function del_price(){
+        $db     = M('guide_price');
+        $id     = I('id');
+        $gpi_id = I('gpi_id');
+        if ($gpi_id){
+            M('guide_priceinfo')->delete($gpi_id);
+        }else{
+            $db->delete($id);
+        }
+
+        $this->success('删除成功！');
+    }
+
+    // @@@NODE-3###GuideRes/priceKind###费用分类(时长等信息)###
+    public function priceKind(){
+        $this->pin      = 1;
+        $db             = M('guide_pricekind');
+        $pk_name        = I('pk_name');
+        $name           = I('name');
+        $where          = array();
+        if ($pk_name) $where['pk_name']     = array('like',"%$pk_name%");
+        if ($name) $where['name']           = array('like',"%$name%");
+
+        //分页
+        $pagecount = $db->where($where)->count();
+        $page = new Page($pagecount, P::PAGE_SIZE);
+        $this->pages = $pagecount>P::PAGE_SIZE ? $page->show():'';
+
+        $this->lists    = $db->where($where)->limit($page->firstRow . ',' . $page->listRows)->select();
+        $this->pagetitle  = '导游辅导员价格体系';
+        $this->display();
+    }
+
+    public function addPriceKind(){
+        $db     = M('guide_pricekind');
+        $id     = I('id');
+        if (isset($_POST['dosubmint'])){
+            $info           = I('info');
+            $pk_id          = $info['pk_id'];
+            $info['pk_name']= M('project_kind')->where(array('id'=>$pk_id))->getField('name');
             if(!$id){
                 $res = $db->add($info);
             }else{
                 $res = $db->where(array('id'=>$id))->save($info);
             }
             echo '<script>window.top.location.reload();</script>';
+        }else{
+            $this->pro_kinds  = get_project_kinds();
+            $this->row        = $db->where(array('id'=>$id))->find();
+            $this->display();
         }
-        $this->row        = $db->where(array('id'=>$id))->find();
-        $this->kinds      = M('guidekind')->where(array('type'=>P::RES_TYPE_GUIDE))->select();
-        $this->pro_kinds  = get_project_kinds();
-        $this->display('addprice');
     }
 
-    // @@@NODE-3###GuideRes/del_price###删除导游辅导员价格体系###
-    public function del_price(){
-        $db = M('guide_price');
+    // @@@NODE-3###GuideRes/del_priceKind###删除价格分类###
+    public function del_priceKind(){
+        $db = M('guide_pricekind');
         $id = I('id');
         $iddel = $db->delete($id);
         $this->success('删除成功！');
     }
-
-    
 }

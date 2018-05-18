@@ -1002,8 +1002,12 @@ function open_cost ($op_id,$cost,$name) {
 	return "open_cost('" .U('GuideRes/upd_cost',array('op_id'=>$op_id,'cost'=>$cost,'name'=>$name)) ."')";
 }
 
-function open_price ($id) {
+/*function open_price ($id) {
 	return "open_price('" .U('GuideRes/addprice',array('id'=>$id)) ."')";
+}*/
+
+function open_priceKind ($id) {
+	return "open_priceKind('" .U('GuideRes/addPriceKind',array('id'=>$id)) ."')";
 }
 
 
