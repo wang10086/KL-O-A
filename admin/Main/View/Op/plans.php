@@ -33,8 +33,8 @@
 
                                     <div class="form-group col-md-4">
                                         <label>项目类型：</label>
-                                        <!--<select  class="form-control"  name="info[kind]" id="kind" onchange="line_lession()" required>-->
-                                        <select  class="form-control"  name="info[kind]" id="kind"  required>
+                                        <select  class="form-control"  name="info[kind]" id="kind" onchange="line_lession()" required>
+                                        <!--<select  class="form-control"  name="info[kind]" id="kind"  required>-->
                                             <option value="" selected disabled>请选择项目类型</option>
                                             <foreach name="kinds" item="v">
                                                 <option value="{$v.id}" >{:tree_pad($v['level'], true)} {$v.name}</option>
@@ -160,17 +160,14 @@
             </div>
         </div>
 
-        <div id="line_con">
+        <div  id="line_con">
             <div class="form-group col-md-4">
                 <label>线路名称：</label>
-                <select  class="form-control"  name="info[kind_id]" id="" onchange="">
-                    <option value="" selected disabled>请选择线路名称</option>
-                    <foreach name="field" item="v">
-                        <option value="{$v.id}" >{:tree_pad($v['level'], true)} {$v.name}</option>
-                    </foreach>
-                </select>
+                <input type="text" name="line" id="lineName" value="" placeholder="您可以输入名称或拼音首字母检索" class="form-control" />
+                <input type="hidden" name="info[line_id]" id="line_id">
             </div>
         </div>
+
         <!----------------------------------------------line_lession_end------------------------------------------------------>
 			
   </div>
@@ -204,6 +201,7 @@
                         $('#ctrq').html('出团日期');
                         $('#xcts').html('行程天数');
                         $('#sale').hide();  //凑ui样式
+                        autocom();
                     }else if(msg.type == 2){
                         //课程
                         var lession = $('#lession_con').html();
@@ -294,6 +292,26 @@
                 }
             })
         }
+
+        function autocom(e) {
+            var keywords = <?php echo $linelist; ?>;
+
+            $("#lineName").autocomplete(keywords, {
+                matchContains: true,
+                highlightItem: false,
+                formatItem: function(row, i, max, term) {
+                    return '<span style=" display:none">'+row.pinyin+'</span>'+row.title;
+                },
+                formatResult: function(row) {
+                    return row.title;
+                }
+            }).result(function(event, item) {
+                $('#lineName').val(item.title);
+                $('#line_id').val(item.id);
+            });
+
+        }
+
     </script>
 <script type="text/javascript">
 

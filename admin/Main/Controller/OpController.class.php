@@ -12,14 +12,14 @@ class OpController extends BaseController {
     
     protected $_pagetitle_ = '计调操作';
     protected $_pagedesc_  = '';
-    
-	
+
+
     // @@@NODE-3###index###出团计划列表###
     public function index(){
         $this->title('出团计划列表');
-		
+
 		$db		= M('op');
-		
+
 		$title	= I('title');		//项目名称
 		$opid	= I('id');			//项目编号
 		$oid	= I('oid');			//项目团号
@@ -32,9 +32,9 @@ class OpController extends BaseController {
 		$pin	= I('pin');
 		$cus	= I('cus');			//客户单位
 		$jd		= I('jd');			//计调
-		
+
 		$where = array();
-		
+
 		if($title)			$where['o.project']			= array('like','%'.$title.'%');
 		if($oid)				$where['o.group_id']			= array('like','%'.$oid.'%');
 		if($opid)			$where['o.op_id']			= $opid;
@@ -47,40 +47,40 @@ class OpController extends BaseController {
 		if($cus)				$where['o.customer']			= $cus;
 		if($pin==1)			$where['o.create_user']		= cookie('userid');
 		if($jd)				$where['a.nickname']			= array('like','%'.$jd.'%');
-		
+
 		//分页
 		$pagecount		= $db->table('__OP__ as o')->field($field)->join('__OP_AUTH__ as u on u.op_id = o.op_id','LEFT')->join('__ACCOUNT__ as a on a.id = u.line','LEFT')->where($where)->count();
 		$page			= new Page($pagecount, P::PAGE_SIZE);
 		$this->pages	= $pagecount>P::PAGE_SIZE ? $page->show():'';
-        
-       
+
+
 		$field	= 'o.*,a.nickname as jidiao';
 		$lists = $db->table('__OP__ as o')->field($field)->join('__OP_AUTH__ as u on u.op_id = o.op_id','LEFT')->join('__ACCOUNT__ as a on a.id = u.line','LEFT')->where($where)->limit($page->firstRow . ',' . $page->listRows)->order($this->orders('o.create_time'))->select();
-		
+
 		foreach($lists as $k=>$v){
-			
+
 			//判断项目是否审核通过
 			if($v['audit_status']==0) $lists[$k]['zhuangtai'] = '<span class="blue">未审核</span>';
 			if($v['audit_status']==1) $lists[$k]['zhuangtai'] = '<span class="blue">立项通过</span>';
 			if($v['audit_status']==2) $lists[$k]['zhuangtai'] = '<span class="blue">立项未通过</span>';
-			
+
 			//判断预算是否通过
 			$yusuan = M('op_budget')->where(array('op_id'=>$v['op_id']))->find();
 			if($yusuan && $yusuan['audit_status']==0) $lists[$k]['zhuangtai'] = '<span class="green">已提交预算</span>';
 			if($yusuan['audit_status']==1) $lists[$k]['zhuangtai'] = '<span class="green">预算通过</span>';
 			if($yusuan['audit_status']==2) $lists[$k]['zhuangtai'] = '<span class="green">预算未通过</span>';
-			
+
 			//判断结算是否通过
 			$jiesuan = M('op_settlement')->where(array('op_id'=>$v['op_id']))->find();
 			if($jiesuan && $jiesuan['audit_status']==0) $lists[$k]['zhuangtai'] = '<span class="yellow">已提交结算</span>';
 			if($jiesuan['audit_status']==1) $lists[$k]['zhuangtai'] = '<span class="yellow">完成结算</span>';
 			if($jiesuan['audit_status']==2) $lists[$k]['zhuangtai'] = '<span class="yellow">结算未通过</span>';
-			
+
 		}
 		$this->lists   =  $lists;
 		$this->kinds   =  M('project_kind')->getField('id,name', true);
-		$this->pin     = $pin;  
-		
+		$this->pin     = $pin;
+
 		$this->display('index');
     }
 	
@@ -122,8 +122,9 @@ class OpController extends BaseController {
 				$info['speed']       = 1;
 				$info['create_user'] = cookie('userid');
 				$info['create_user_name'] = cookie('name');
+                $info['audit_status'] = 1; //项目不用审核,默认通过
 				$addok  = $db->add($info);
-				$this->request_audit(P::REQ_TYPE_PROJECT_NEW, $addok);
+				//$this->request_audit(P::REQ_TYPE_PROJECT_NEW, $addok);
 
 				if($addok){
 					$record = array();
@@ -243,7 +244,16 @@ class OpController extends BaseController {
 				}
 			}
 			//if($key) $this->keywords =  json_encode($key);
-
+            //固定线路
+            $linelist   = M('product_line')->field('id,title,pinyin')->where(array('type'=>2))->select();
+            foreach ($linelist as $v){
+                if(!$v['pinyin']){
+                    $title = iconv("utf-8","gb2312",trim($v['title']));
+                    $pinyin = strtolower($PinYin->getFirstPY($title));
+                    M('product_line')->data(array('pinyin'=>$pinyin))->where(array('id'=>$v['id']))->save();
+                }
+            }
+            $this->linelist    = json_encode($linelist);
 			$this->geclist     = M('customer_gec')->field('id,pinyin,company_name')->where($where)->group("company_name")->order('pinyin ASC')->select();
 			$this->kinds       = get_project_kinds();
 			$this->userlist    =  M('account')->where('`id`>3')->getField('id,nickname', true);
@@ -357,7 +367,7 @@ class OpController extends BaseController {
 			$where['op_id'] = $opid;
 			$op   = M('op')->where($where)->find();	
 		}
-		
+
 		if(!$op){
 			$this->error('项目不存在');	
 		}
@@ -373,7 +383,6 @@ class OpController extends BaseController {
 		$pretium    = M('op_pretium')->where(array('op_id'=>$opid))->order('id')->select();
 		$costacc    = M('op_costacc')->where(array('op_id'=>$opid))->order('id')->select();
 		
-		$days       = M('op_line_days')->where(array('op_id'=>$opid))->select();
 		$opauth     = M('op_auth')->where(array('op_id'=>$opid))->find();
 		$record     = M('op_record')->where(array('op_id'=>$opid))->order('id DESC')->select();
 		$budget     = M('op_budget')->where(array('op_id'=>$opid))->find();
@@ -381,7 +390,19 @@ class OpController extends BaseController {
         $resource   = M('op_res')->where(array('op_id'=>$opid))->find();
         $res_money  = M('op_res_money')->where(array('op_res_id'=>$resource['id']))->select();
 
-		$where = array();
+        //根据line_id判断是普通线路还是固定线路
+        $line_id    = $op['line_id'];
+        $line_type  = M('product_line')->where(array('id'=>$line_id))->getField('type');
+        if ($line_type == 2){
+            //固定线路
+            $days = M('product_line_days')->where(array('line_id'=>$line_id))->select();
+            $days['op_id'] = $opid;
+        } else{
+            //普通行程
+            $days       = M('op_line_days')->where(array('op_id'=>$opid))->select();
+        }
+
+        $where = array();
 		$where['req_type'] = P::REQ_TYPE_PROJECT_NEW;
 		$where['req_id']   = $op['id'];
 		$audit = M('audit_log')->where($where)->find();
@@ -447,8 +468,12 @@ class OpController extends BaseController {
         $kind       = $op['kind'];
         $line       = M('project_kind')->where("id ='1' or pid ='1'")->getField('id',true);
         $lessions   = M('project_kind')->where("id ='2' or pid ='2'")->getField('id',true);
-        $cgly       = M('project_kind')->where("name like '常规旅游'")->getField('id'); //从'其他'栏目中提取 '常规旅游'放入线路中
+        $cgly       = M('project_kind')->where("name like '%常规旅游%'")->getField('id',true); //从'其他'栏目中提取 '常规旅游'放入线路中
         $lines      = array_merge($line,$cgly);
+        $fixed_lineids  = M('product_line')->where(array('type'=>2))->getField('id',true);    //固定线路
+        if (in_array($line_id,$fixed_lineids)){
+            $this->isFixedLine = 1;
+        }
 
         $this->opid           = $opid;
 		$this->kinds          = M('project_kind')->getField('id,name', true);
@@ -484,6 +509,7 @@ class OpController extends BaseController {
         $this->act_fields     = $act_field;
         //$this->job_name      = array_filter(array_column($job_names,'job_money','job_name'));
         $this->job_name       = array_column($job_names,'job_money','job_name');
+        $this->xuhao          = 1;
         $this->huikuan_status = M('contract_pay')->where(array('op_id'=>$opid))->getField('status');
 
         //资源需求单接收人员(资源管理部经理)

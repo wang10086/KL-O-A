@@ -132,7 +132,11 @@
                                     </div>
                                     <div class="box-body">
                                         <?php if(rolemenu(array('Op/public_save_line')) && $settlement['audit']!=1  && ($opauth['line']==cookie('userid')|| C('RBAC_SUPER_ADMIN')==cookie('username') ||rolemenu(array('Op/assign_line')))){ ?>
-                                        <include file="op_line_edit" />
+                                            <?php if($isFixedLine){ ?>
+                                                <include file="op_line" />
+                                            <?php }else{ ?>
+                                                <include file="op_line_edit" />
+                                            <?php } ?>
                                         <?php }else{ ?>
                                         <include file="op_line" />
                                         <?php  } ?>
