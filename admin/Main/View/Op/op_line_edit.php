@@ -61,21 +61,22 @@
                                 <?php if($guide_price){ ?>
                                     <foreach name="guide_price" key="k" item="v">
                                         <div class="userlist no-border" id="tcs_id_{$v.id}">
-                                            <span class="title"><?php echo $k+1; ?></span>
-                                            <select  class="form-control w-150"  name="data[{$k}][guide_kind_id]" id="se_{$k+1}" onchange="getPrice({$k+1})">
+                                            <div id="tcs_val">0</div>
+                                            <script>{++$k}; var n = parseInt($('#tcs_val').text());n++;$('#tcs_val').text(n);</script>
+                                            <span class="title"><?php echo $k; ?></span>
+                                            <select  class="form-control w-150"  name="data[{$k}][guide_kind_id]" id="se_{$k}" onchange="getPrice({$k})">
                                                 <foreach name="guide_kind" key="key" item="value">
                                                     <option value="{$key}" <?php if($v['guide_kind_id']==$key) echo 'selected'; ?>>{$value}</option>
                                                 </foreach>
                                             </select>
-                                            <select  class="form-control w-150 gpk"  name="data[{$k}][gpk_id]" id="gpk_id_{$k+1}" onchange="getPrice({$k+1})">
+                                            <select  class="form-control w-150 gpk"  name="data[{$k}][gpk_id]" id="gpk_id_{$k}" onchange="getPrice({$k})">
                                                 <foreach name="price_kind" key="key" item="value">
                                                     <option value="{$key}" <?php if($v['gpk_id']==$key) echo 'selected'; ?>>{$value}</option>
                                                 </foreach>
                                             </select>
-                                            <!--<input type="text" class="form-control" name="data[{$k}][gpk_id]" value="{$v.start}">-->
-                                            <input type="text" class="form-control" name="data[{$k}][num]" value="{$v.num}" id="num_{$K+1}" onblur="getTotal({$k+1})">
-                                            <input type="text" class="form-control" name="data[{$k}][price]" value="{$v.price}" id="dj_{$k+1}">
-                                            <input type="text" class="form-control" name="data[{$k}][total]" value="{$v.total}" id="total_{$k+1}">
+                                            <input type="text" class="form-control" name="data[{$k}][num]" value="{$v.num}" id="num_{$k}" onblur="getTotal({$k})">
+                                            <input type="text" class="form-control" name="data[{$k}][price]" value="{$v.price}" id="dj_{$k}">
+                                            <input type="text" class="form-control" name="data[{$k}][total]" value="{$v.total}" id="total_{$k}">
                                             <input type="text" class="form-control lp_remark" name="data[{$k}][remark]" value="{$v.remark}">
                                             <a href="javascript:;" class="btn btn-danger btn-flat" onclick="deltcsbox('tcs_id_{$v.id}')">删除</a>
                                         </div>
@@ -98,11 +99,11 @@
                                         <input type="text" class="form-control" name="data[1][total]" id="total_1" value="">
                                         <input type="text" class="form-control lp_remark" name="data[1][remark]" value="">
                                         <a href="javascript:;" class="btn btn-danger btn-flat" onclick="deltcsbox('tcs_id')">删除</a>
+                                        <div id="tcs_val">1</div>
                                     </div>
                                 <?php } ?>
                             </div>
 
-                            <div id="tcs_val">1</div>
                             <div class="form-group col-md-12" id="useraddbtns">
                                 <a href="javascript:;" class="btn btn-success btn-sm" onClick="add_tcs()"><i class="fa fa-fw fa-plus"></i> 人员信息</a>
                                 <a  href="javascript:;" class="btn btn-info btn-sm" onClick="javascript:save('tcs_need_form','<?php echo U('Op/public_save'); ?>',{$op.op_id});">保存</a>
