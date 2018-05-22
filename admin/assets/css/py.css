@@ -3768,6 +3768,20 @@ a.iclose{background:url(../img/btn/min_icon.png) no-repeat 0px -30px;width:30px;
 #costium td{ line-height:34px;}
 #costium_val{ display:none}
 
+.tcs_need_h2{font-size: 14px;padding-bottom: 10px;display: inline-block;margin-right: 20px;}
+.tcscon{    padding: 0 12px;  overflow: auto; margin-top: -35px; overflow:-Scroll;overflow-y:hidden;}
+.ml-12{margin-left: 12px;}
+#tcs{ padding:0 0px;}
+#tcs .form-control{ width:120px; float:left; margin-right:10px; border-radius:0;}
+#tcs .unitbox{ width:120px; margin-right:10px; float:left; clear:none; border:none; padding:0;}
+#tcs .w-150{ width:150px;}
+#tcs .title{ width:22px; float:left; height:30px; line-height:30px; margin-left:-30px; text-align:right;}
+#tcs .userlist { width:100%; height:auto !important; float:left; clear:both; padding-bottom:15px; border-bottom:1px solid #cccccc; margin-top:15px;}
+#tcs .btn{ padding:7px 12px; font-size:12px;}
+#tcs td{ line-height:34px;}
+#tcs_val{ display:none}
+#tcs .lp_remark{ width: 280px;}
+
 #user_val{ display:none;}
 #daoyou {margin-top:0px; color:#09F; padding-bottom:0; margin-bottom:0;}
 #daoyou_val{ display:none;}
@@ -4048,3 +4062,4 @@ th{outline: none;}
 .td{border: solid 1px grey;}
 .td_title{text-align: center; width: 150px;}
 .td_con{padding-left: 10px;}
+

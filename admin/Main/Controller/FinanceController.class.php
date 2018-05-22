@@ -144,8 +144,19 @@ class FinanceController extends BaseController {
 		$op['showstatus'] = $show;
 		$op['show_user']  = $show_user;
 		$op['show_time']  = $show_time;
-		$op['show_reason']  = $show_reason;
+		$op['show_reason']= $show_reason;
+        $guide_price      = M('op_guide_price')->where(array('op_id'=>$opid))->select();
+        $tit              = M()->table('__OP_GUIDE_PRICE__ as gp')->field('gp.*,gk.name as gkn,gpk.name as gkpn')->join('left join __GUIDEKIND__ as gk on gk.id = gp.guide_kind_id')->join('left join __GUIDE_PRICEKIND__ as gpk on gpk.id = gp.gpk_id')->where(array('gp.op_id'=>$opid))->select();
+        foreach ($guide_price as & $v){
+            $v['type']    = 2;  //专家辅导员
+            foreach ($tit as $value){
+                if($v['guide_kind_id'] == $value['guide_kind_id'] && $v['gpk_id'] == $value['gpk_id']){
+                    $v['title']   = $value['gkn'].'['.$value['gkpn'].']';
+                }
+            }
+        }
 
+        $this->guide_price      = $guide_price;
         $member                 = M('op_member')->where(array('op_id'=>$opid))->order('id')->select();
         $this->member           = $member;
 		$this->kind				= C('COST_TYPE');
@@ -173,9 +184,12 @@ class FinanceController extends BaseController {
 		$info            = I('info');
 		$resid           = I('resid');
 		$referer         = I('referer');
+        $guideprice      = I('guideprice');
 		$num             = 0;
-		
-		//保存成本核算
+		$costacc         = array_merge($guideprice,$costacc);
+        //var_dump($costacc);die;
+
+        //保存成本核算
 		if($opid && $costacc){
 			
 			$delid = array();

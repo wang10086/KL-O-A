@@ -130,41 +130,47 @@
         </aside><!-- /.right-side -->
 
         <!--------------------------------------------line_lession_start------------------------------------------------------>
-        <div id="lession_con">
-            <div class="form-group col-md-4">
-                <label>课程领域：</label>
-                <select  class="form-control"  name="field" id="field" onchange="check_type()">
-                    <option value="" selected disabled>课程领域：</option>
-                    <foreach name="field" item="v">
-                        <option value="{$v.id}" >{:tree_pad($v['level'], true)} {$v.name}</option>
-                    </foreach>
-                </select>
+        <div id="hide">
+            <div id="pub_con">
+
             </div>
 
-            <div class="form-group col-md-4">
-                <label>学科分类：</label>
-                <select  class="form-control"  name="type"  id="type" onchange="check_lession()">
-                    <if condition="$row['type_id']">
-                        <option value="{$row.type_id}" >{$row.type}</option>
-                        <else />
-                        <option value="" selected disabled>请选择学科分类</option>
-                    </if>
-                </select>
+            <div id="lession_con">
+                <div class="form-group col-md-4">
+                    <label>课程领域：</label>
+                    <select  class="form-control"  name="field" id="field" onchange="check_type()">
+                        <option value="" selected disabled>课程领域：</option>
+                        <foreach name="field" item="v">
+                            <option value="{$v.id}" >{:tree_pad($v['level'], true)} {$v.name}</option>
+                        </foreach>
+                    </select>
+                </div>
+
+                <div class="form-group col-md-4">
+                    <label>学科分类：</label>
+                    <select  class="form-control"  name="type"  id="type" onchange="check_lession()">
+                        <if condition="$row['type_id']">
+                            <option value="{$row.type_id}" >{$row.type}</option>
+                            <else />
+                            <option value="" selected disabled>请选择学科分类</option>
+                        </if>
+                    </select>
+                </div>
+
+                <div class="form-group col-md-4">
+                    <label>课程名称：</label>
+                    <select  class="form-control"  name="info[lession_id]"  id="les_name">
+                        <option value="" selected disabled>请选择课程名称</option>
+                    </select>
+                </div>
             </div>
 
-            <div class="form-group col-md-4">
-                <label>课程名称：</label>
-                <select  class="form-control"  name="info[lession_id]"  id="les_name">
-                    <option value="" selected disabled>请选择课程名称</option>
-                </select>
-            </div>
-        </div>
-
-        <div  id="line_con">
-            <div class="form-group col-md-4">
-                <label>线路名称：</label>
-                <input type="text" name="line" id="lineName" value="" placeholder="您可以输入名称或拼音首字母检索" class="form-control" />
-                <input type="hidden" name="info[line_id]" id="line_id">
+            <div  id="line_con">
+                <div class="form-group col-md-4">
+                    <label>线路名称：</label>
+                    <input type="text" name="line" id="lineName" value="" placeholder="您可以输入名称或拼音首字母检索" class="form-control" />
+                    <input type="hidden" name="info[line_id]" id="line_id">
+                </div>
             </div>
         </div>
 
@@ -180,9 +186,10 @@
         });
 
         $(function(){
-            $('#lession_or_line').hide();
+            /*$('#lession_or_line').hide();
             $('#lession_con').hide();
-            $('#line_con').hide();
+            $('#line_con').hide();*/
+            $('#hide').hide();
         })
 
         /*根据线路和课程显示不同模块*/
@@ -228,6 +235,11 @@
                             $("#field").append(b);
                         }
                         check_type();
+                    }else{
+                        $('#lession_or_line').html('');
+                        $('#ctrq').html('出团日期');
+                        $('#xcts').html('行程天数');
+                        $('#sale').show();  //凑ui样式
                     }
                 }
             })

@@ -511,6 +511,13 @@ class OpController extends BaseController {
         $this->job_name       = array_column($job_names,'job_money','job_name');
         $this->xuhao          = 1;
         $this->huikuan_status = M('contract_pay')->where(array('op_id'=>$opid))->getField('status');
+        $this->guide_kind     = M('guidekind')->getField('id,name',true);
+        $this->guide_price    = M('op_guide_price')->where(array('op_id'=>$opid))->select();
+        if ($this->guide_price) {
+            $this->rad = 1;
+        }else{
+            $this->rad = 0;
+        }
 
         //资源需求单接收人员(资源管理部经理)
         $this->men            = M('account')->field('id,nickname')->where(array('roleid'=>52))->find();
@@ -553,8 +560,10 @@ class OpController extends BaseController {
 			$op_supplier_db = M('op_supplier');
             $op_res_db      = M('op_res');
             $op_res_money_db= M('op_res_money');
-			
-			$opid       = I('opid');
+            $op_guide_price_db = M('op_guide_price');
+
+
+            $opid       = I('opid');
 			$info       = I('info');
 			$guide      = I('guide');
 			$member     = I('member');
@@ -785,8 +794,7 @@ class OpController extends BaseController {
 					$i++;
 				}	
 			}
-			echo $num;
-								
+
 			//保存资源需求单
             if($opid && $savetype==11 ){
                 header('Content-Type:text/html;charset=utf-8');
@@ -811,6 +819,7 @@ class OpController extends BaseController {
                     $res = $op_res_db->add($info);
                 }
                 if($res){
+                    $num++;
                     $op_res_money_db->where(array('op_res_id'=>$res))->delete();
                     foreach ($data as $v){
                         if ($v['job_name']) {
@@ -832,17 +841,27 @@ class OpController extends BaseController {
                         send_msg($uid,$title,$content,$url,$user,'');
                     }
 
-                    $this->success('数据保存成功!');
-                }else{
-                    $this->error('数据保存失败!');
                 }
 
             }
-		}
+
+            //保存辅导员/教师,专家需求
+            if($opid && $savetype==12 ){
+                $data = I('data');
+                $op_guide_price_db->where(array('op_id'=>$opid))->delete();
+                foreach($data as $k=>$v){
+                    $v['op_id'] = $opid;
+                    $savein = $op_guide_price_db->add($v);
+                    if($savein) $num++;
+                }
+            }
+
+            echo $num;
+        }
 	
 	}
-	
-	
+
+
 	//@@@NODE-3###assign_line###指派人员跟进线路行程信息###
     public function assign_line(){
 		$opid       = I('opid');

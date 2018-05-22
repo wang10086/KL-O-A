@@ -17,7 +17,27 @@
                     <div class="unitbox">类型</div>
                     <div class="unitbox longinput">备注</div>
                 </div>
-                <?php if($costacc){ ?>
+                <?php if($guide_price && !$costacc && !$mokuailist){ ?>
+                    <foreach name="guide_price" key="k" item="v">
+                       <!-- <div class="userlist cost_expense" id="costacc_id_c_{$k}">-->
+                        <div class="userlist cost_expense" >
+                            <span class="title"><?php echo $k+1; ?></span>
+                            <input type="text" class="form-control" name="guideprice[888{$k}][title]" value="{$v.title}">
+                            <input type="text" class="form-control cost" name="guideprice[888{$k}][unitcost]" value="{$v.price}">
+                            <input type="text" class="form-control amount" name="guideprice[888{$k}][amount]" value="{$v.num}">
+                            <input type="text" class="form-control totalval" name="guideprice[888{$k}][total]" value="{$v.total}">
+                            <select class="form-control"  name="guideprice[888{$k}][type]" onChange="bijia('costacc_bijia_{$k}',this)" >
+                                <foreach name="kind" key="kk" item="vv">
+                                    <option value="{$kk}" <?php if($kk==$v['type']){ echo 'selected';} ?> >{$vv}</option>
+                                </foreach>
+
+                            </select>
+                            <input type="text" class="form-control longinput" name="guideprice[888{$k}][remark]" value="{$v.remark}">
+                            <a href="javascript:;" class="btn btn-danger btn-flat" onclick="delbox('costacc_id_c_{$k}')">删除</a>
+                            <a href="javascript:;" class="btn btn-success btn-flat" id="costacc_bijia_{$k}" style="display:none;">比价</a>
+                        </div>
+                    </foreach>
+                <?php } elseif($costacc){ ?>
                 <foreach name="costacc" key="k" item="v">
                 <div class="userlist cost_expense" id="costacc_id_c_{$k}">
                     <span class="title"><?php echo $k+1; ?></span>

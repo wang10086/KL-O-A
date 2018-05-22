@@ -86,30 +86,32 @@
                                 </div><!-- /.box-body -->
                             </div><!-- /.box -->
 
-                            <div class="box box-warning">
-                                <div class="box-header">
-                                    <h3 class="box-title">资源需求单</h3>
-                                    <h3 class="box-title pull-right" style="font-weight:normal; color:#333333;">
-                                        <?php  if((rolemenu(array('Op/public_save'))  && ($op['create_user'] == cookie('userid'))) || $resource ){ ?>
-                                            <span id="res_but"><a href="javascript:;" onclick="show_res_need()" style="color:#09F;">显示</a></span>
-                                        <?php  } ?>
-                                    </h3>
-                                </div>
-                                <?php if(rolemenu(array('Op/public_save'))  && ($op['create_user'] == cookie('userid')) ){ ?>
-                                    <include file="op_res_need" />
-                                    <div class="form-group col-md-12"></div>
-                                <?php  }else if(rolemenu(array('Op/public_save'))  && ($resource['exe_user_id'] == cookie('userid')) ){ ?>
-                                    <include file="op_res_nback" />
-                                    <div class="form-group col-md-12"></div>
-                                <?php  }else{ ?>
-                                    <?php if($resource){ ?>
-                                        <include file="op_res_nread" />
+                            <div  id="hide_div">
+                                <div class="box box-warning">
+                                    <div class="box-header">
+                                        <h3 class="box-title">资源需求单</h3>
+                                        <h3 class="box-title pull-right" style="font-weight:normal; color:#333333;">
+                                            <?php  if((rolemenu(array('Op/public_save'))  && ($op['create_user'] == cookie('userid'))) || $resource ){ ?>
+                                                <span id="res_but"><a href="javascript:;" onclick="show_res_need()" style="color:#09F;">显示</a></span>
+                                            <?php  } ?>
+                                        </h3>
+                                    </div>
+                                    <?php if(rolemenu(array('Op/public_save'))  && ($op['create_user'] == cookie('userid')) ){ ?>
+                                        <include file="op_res_need" />
+                                        <div class="form-group col-md-12"></div>
+                                    <?php  }else if(rolemenu(array('Op/public_save'))  && ($resource['exe_user_id'] == cookie('userid')) ){ ?>
+                                        <include file="op_res_nback" />
                                         <div class="form-group col-md-12"></div>
                                     <?php  }else{ ?>
-                                        <div class="box-body ml20">
-                                            <div class="content" style="padding-top:40px;">  暂未填写物资需求单!</div>
-                                        </div>
-                                    <?php } } ?>
+                                        <?php if($resource){ ?>
+                                            <include file="op_res_nread" />
+                                            <div class="form-group col-md-12"></div>
+                                        <?php  }else{ ?>
+                                            <div class="box-body ml20">
+                                                <div class="content" style="padding-top:40px;">  暂未填写物资需求单!</div>
+                                            </div>
+                                        <?php } } ?>
+                                </div>
                             </div>
 
                            <?php  if($op['audit_status']==1){ ?> 
@@ -433,9 +435,62 @@
 
 <include file="Index:footer2" />
 
-<script type="text/javascript"> 
-	
-	//新增名单
+<script type="text/javascript">
+    var price_kind = '';
+    var opid    = {$opid};
+
+    $(function(){
+        $('#hide_div').html('');
+        var rad     = {$rad};
+
+        $.ajax({
+            type:"POST",
+            url:"{:U('Ajax/get_gpk')}",
+            data:{opid:opid},
+            success:function(msg){
+                if(msg){
+                    price_kind = msg;
+                    $(".gpk").empty();
+                    var count = msg.length;
+                    var i= 0;
+                    var b="";
+                    b+='<option value="" disabled selected>请选择</option>';
+                    for(i=0;i<count;i++){
+                        b+="<option value='"+msg[i].id+"'>"+msg[i].name+"</option>";
+                    }
+                    $(".gpk").append(b);
+                    //获取职能类型信息
+                    assign_option(1);
+                }else{
+                    $(".gpk").empty();
+                    var b='<option value="" disabled selected>无数据</option>';
+                    $(".gpk").append(b);
+                    assign_option(1);
+                }
+            }
+        })
+
+        if (rad == 1){
+            $('#tcs_need_form').show();
+        }else{
+            $('#tcs_need_form').hide();
+        }
+
+        //是否需要辅导员/教师/专家
+        $('#tcscheckbox').find('ins').each(function(index, element) {
+            $(this).click(function(){
+                if(index==0){
+                    $('#tcs_need_form').hide();
+                }else{
+                    $('#tcs_need_form').show();
+                }
+            })
+        });
+    })
+
+
+
+    //新增名单
 	function adduser(){
 		var i = parseInt($('#user_val').text())+1;
 
@@ -764,7 +819,7 @@
 		 setTimeout("history.go(0)",1000);
 		/*
 		if(id=='save_line_days'){
-			$.get("<?php echo U('Op/public_ajax_material'); ?>",{id:opid}, function(result){
+			$.get("<?php /*echo U('Op/public_ajax_material'); */?>",{id:opid}, function(result){
 				$('#opmaterial').find('tbody').html(result);
 			});
 		}
@@ -871,6 +926,77 @@
     function hide_res_need(){
         $("#res_need_table").hide();
         $('#res_but').html('<a href="javascript:;" onclick="show_res_need()" style="color:#09F;">显示</a>');
+    }
+
+    //新增辅导员/教师、专家
+    function add_tcs(){
+        var i = parseInt($('#tcs_val').text())+1;
+        var html = '<div class="userlist no-border" id="tcs_'+i+'">' +
+            '<span class="title"></span> ' +
+            '<select  class="form-control w-150"  name="data['+i+'][guide_kind_id]" id="se_'+i+'" onchange="getPrice('+i+')"><option value="" selected disabled>请选择</option> <foreach name="guide_kind" key="k" item="v"> <option value="{$k}">{$v}</option></foreach></select> ' +
+            '<select  class="form-control w-150 gpk"  name="data['+i+'][gpk_id]" id="gpk_id_'+i+'" onchange="getPrice('+i+')"><option value="" selected disabled>请选择</option> <foreach name="hotel_start" key="k" item="v"> <option value="{$k}">{$v}</option></foreach></select> ' +
+            '<input type="text"  class="form-control" name="data['+i+'][num]" id="num_'+i+'" onblur="getTotal('+i+')" > ' +
+            '<input type="text" class="form-control" name="data['+i+'][price]" id="dj_'+i+'" value="">' +
+            '<input type="text"  class="form-control" name="data['+i+'][total]" id="total_'+i+'">' +
+            '<input type="text"  class="form-control lp_remark" name="data['+i+'][remark]">' +
+            '<a href="javascript:;" class="btn btn-danger btn-flat" onclick="deltcsbox(\'tcs_'+i+'\')">删除</a></div>';
+        $('#tcs').append(html);
+        $('#tcs_val').html(i);
+        assign_option(i);
+        ordertcs();
+    }
+
+    function assign_option(a){
+        if(price_kind){
+            $("#gpk_id_"+a).empty();
+            var count = price_kind.length;
+            var i= 0;
+            var b="";
+            b+='<option value="" disabled selected>请选择</option>';
+            for(i=0;i<count;i++){
+                b+="<option value='"+price_kind[i].id+"'>"+price_kind[i].name+"</option>";
+            }
+            $("#gpk_id_"+a).append(b);
+        }else{
+            $("#gpk_id_"+a).empty();
+            var b='<option value="" disabled selected>无数据</option>';
+            $("#gpk_id_"+a).append(b);
+        }
+    }
+
+    //获取单价信息
+    function getPrice(a){
+        var guide_kind_id = $('#se_'+a).val();
+        var gpk_id        = $('#gpk_id_'+a).val();
+        $.ajax({
+            type:'POST',
+            url:"{:U('Ajax/getPrice')}",
+            data:{guide_kind_id:guide_kind_id,gpk_id:gpk_id,opid:opid},
+            success:function(msg){
+                $('#dj_'+a).val(msg);
+            }
+        })
+    }
+
+    //获取人数,计算出总价格\
+    function getTotal(a){
+        var num     = parseInt($('#num_'+a).val());
+        var price   = parseFloat($('#dj_'+a).val());
+        var total   = num*price;
+        $('#total_'+a).val(total);
+    }
+
+    //移除
+    function deltcsbox(obj){
+        $('#'+obj).remove();
+        ordertcs();
+    }
+
+    //重编题号
+    function ordertcs(){
+        $('#tcs').find('.title').each(function(index, element) {
+            $(this).text(parseInt(index)+1);
+        });
     }
 </script>	
 
