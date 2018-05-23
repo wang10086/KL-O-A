@@ -186,8 +186,12 @@ class FinanceController extends BaseController {
 		$referer         = I('referer');
         $guideprice      = I('guideprice');
 		$num             = 0;
-		$costacc         = array_merge($guideprice,$costacc);
-        //var_dump($costacc);die;
+        if(!$costacc){
+            $costacc = array();
+            foreach ($guideprice as $v){
+                $costacc[] = $v;
+            }
+        }
 
         //保存成本核算
 		if($opid && $costacc){
