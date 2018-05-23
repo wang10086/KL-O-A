@@ -51,7 +51,7 @@
                                     </div>
 
                                     <div class="form-group col-md-4">
-                                        <label id="ctrq">出团日期：</label><input type="text" name="info[departure]"  class="form-control inputdate"  required />
+                                        <label id="ctrq">计划出团日期：</label><input type="text" name="info[departure]"  class="form-control inputdate"  required />
                                     </div>
 
                                     <div class="form-group col-md-4">

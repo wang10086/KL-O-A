@@ -2,6 +2,7 @@
 <input type="hidden" name="dosubmint" value="1">
 <input type="hidden" name="opid" value="{$op.op_id}">
 <input type="hidden" name="savetype" value="10">
+<input type="hidden" name="upd_times" value="{$op.upd_times}">
 <div class="form-group col-md-12" style="margin-top:20px;">
     <label>项目名称：</label><input type="text" name="info[project]"  value="{$op.project}" class="form-control" />
 </div>
@@ -20,7 +21,7 @@
 </div>
 
 <div class="form-group col-md-4">
-    <label>出团日期：</label><input type="text" name="info[departure]" value="{$op.departure}"  class="form-control inputdate"/>
+    <label>计划出团日期：</label><input type="text" name="info[departure]" value="{$op.departure}"  class="form-control inputdate"/>
 </div>
 
 <div class="form-group col-md-4">
@@ -70,6 +71,10 @@
 </div>
 
 <div class="form-group col-md-12" id="addti_btn">
-    <a  href="javascript:;" class="btn btn-info btn-sm" onClick="javascript:save('save_op_info','<?php echo U('Op/public_save'); ?>',{$op.op_id});">保存</a>
+    <if condition="$op.upd_times eq 2">
+        <input type="submit" class="btn btn-info btn-sm" value="提交">
+        <else />
+        <a  href="javascript:;" class="btn btn-info btn-sm" onClick="javascript:save('save_op_info','<?php echo U('Op/public_save'); ?>',{$op.op_id});">保存</a>
+    </if>
 </div>
 </form>

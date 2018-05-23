@@ -1922,15 +1922,35 @@ function updatekpi($month,$user){
 				
 				//获取成团率
 				if($v['quota_id']==4){
-					$where = array();
+					//总项目
+					/*$where = array();
 					$where['create_time']  			= array('between',array($v['start_date'],$v['end_date']));
 					$where['create_user']  			= $user;
 					$zongxiangmu	= M('op')->where($where)->count();
-					
+
+					//实际成团
 					$where = array();
 					$where['o.create_time']			= array('between',array($v['start_date'],$v['end_date']));
 					$where['o.create_user']			= $user;
-					$chengtuan		= M()->table('__OP_TEAM_CONFIRM__ as c')->join('__OP__ as o on o.op_id = c.op_id')->where($where)->count();
+					$chengtuan		= M()->table('__OP_TEAM_CONFIRM__ as c')->join('__OP__ as o on o.op_id = c.op_id')->where($where)->count();*/
+
+					//当月实际成团数量
+					$where = array();
+					$where['tc.dep_time'] 				= array('between',array($v['start_date'],$v['end_date']));
+					$where['op.create_user']  			= $user;
+					$chengtuan	= M()->table('__OP__ as op')->join('left join __OP_TEAM_CONFIRM__ as tc on op.op_id = tc.op_id')->where($where)->count();
+
+					//计划当月出团数量
+					$zxm_lists = array();
+					$lists 								= M('op')->select();
+					foreach ($lists as & $val){
+						$val['departure'] 				= strtotime($val['departure']);
+						if($v['start_date']<$val['departure'] && $val['departure']<$v['end_date'] && $val['create_user']==$user){
+							$zxm_lists[] = $val;
+						}
+					}
+					$zongxiangmu = count($zxm_lists);
+
 					$complete = round(($chengtuan / $zongxiangmu)*100,2).'%';
 				}
 				
