@@ -329,6 +329,9 @@ class GuideResController extends BaseController {
                 }
                 $del    = $res;
             }else{
+                if ($data){
+                    $info['price'] = null;
+                }
                 $res = $db->where(array('id'=>$id))->save($info);
                 foreach ($data as $k=>$v){
                     $data[$k]['guide_price_id'] = $id;

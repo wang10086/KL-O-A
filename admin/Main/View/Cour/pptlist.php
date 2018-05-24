@@ -52,7 +52,8 @@
                                         
                                         <tr>
                                             <td>{$row.id}</td>
-                                            <td><a href="{:U('Cour/info',array('id'=>$row['id']))}">{$row.lecturer_uname}</a></td>
+                                            <!--<td><a href="{:U('Cour/info',array('id'=>$row['id']))}">{$row.ppt_title}</a></td>-->
+                                            <td><a href="javascript:;">{$row.ppt_title}</a></td>
                                             <td><?php echo $row['lecture_date'] ? date('Y-m-d',$row['lecture_date']) : ''; ?></td>
                                             <td>{$row.lecturer_uname}</td>
                                             <td><if condition="$row['create_time']">{$row.create_time|date='y-m-d H:i',###}</if></td>

@@ -520,7 +520,7 @@ class KpiController extends BaseController {
 			if(!$info['work_plan'])  $this->error('计划工作项目标题未填写');
 			if(!$info['weight'])     $this->error('权重未填写');
 			if(!$info['standard'])   $this->error('细项及标准未填写');
-			if(!$info['complete'])   $this->error('完成情况及未完成原因');
+			//if(!$info['complete'])   $this->error('完成情况及未完成原因');
 
 			
 			//执行保存

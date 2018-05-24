@@ -761,19 +761,11 @@ class OpController extends BaseController {
 			if($opid && $savetype==10 ){
 				
 				$op = M('op')->where(array('op_id'=>$opid))->find();
-				/*if($op['status']=='0' || cookie('roleid')==10){*/
-                //保存成团
-                $upd_times      = I('upd_times');
-                if ($upd_times ==0){
-                    $info['upd_times'] = 1;
-                }elseif ($upd_times ==1){
-                    $info['upd_times'] = 2;
-                }else{
-                    $this->error('您已经修改超过次数了,不能反复修改!');
+				if($op['status']=='0' || cookie('roleid')==10) {
+                    //保存成团
+                    $issave = M('op')->data($info)->where(array('op_id' => $opid))->save();
+                    if ($issave) $num++;
                 }
-                //var_dump($upd_times);die;
-                $issave = M('op')->data($info)->where(array('op_id'=>$opid))->save();
-                if($issave) $num++;
 				if($num){
 					$record = array();
 					$record['op_id']   = $opid;
