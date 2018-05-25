@@ -1864,37 +1864,6 @@ function updatekpi($month,$user){
 					$where['l.audit_time']			= array('between',array($v['start_date'],$v['end_date']));
 					$complete = M()->table('__OP_SETTLEMENT__ as b')->field('b.maoli')->join('__OP__ as o on b.op_id = o.op_id','LEFT')->join('__AUDIT_LOG__ as l on l.req_id = b.id','LEFT')->where($where)->sum('b.maoli');
 
-					/*//57武汉项目部业务主管,41南京项目部业务主管roleid
-					//武汉项目部
-					$whe['postid']	= array('eq',1);
-					$whe['roleid'] 	= array('eq',57);
-					$wh_uids = M('account')->where($whe)->getField('id',true);
-					if (in_array($user,$wh_uids)){
-						$wh_where 					= array();
-						$wh_where['o.create_user'] 	= array('neq',$user);
-						$wh_where['o.destination'] 	= array('like',"%武汉%");
-						$wh_where['b.audit_status']	= 1;
-						$wh_where['l.req_type']		= 801;
-						$wh_where['l.audit_time']	= array('between',array($v['start_date'],$v['end_date']));
-						$wh_com = M()->table('__OP_SETTLEMENT__ as b')->field('b.maoli')->join('__OP__ as o on b.op_id = o.op_id','LEFT')->join('__AUDIT_LOG__ as l on l.req_id = b.id','LEFT')->where($wh_where)->sum('b.maoli');
-						$complete = $complete + $wh_com*30/100 ;
-					}
-
-					//南京项目部
-					$nj_whe['postid']	= array('eq',1);
-					$nj_whe['roleid'] 	= array('eq',41);
-					$nj_uids = M('account')->where($nj_whe)->getField('id',true);
-					if (in_array($user,$nj_uids)){
-						$nj_where 					= array();
-						$nj_where['o.create_user'] 	= array('neq',$user);
-						$nj_where['o.destination'] 	= array('like',"%南京%");
-						$nj_where['b.audit_status']	= 1;
-						$nj_where['l.req_type']		= 801;
-						$nj_where['l.audit_time']	= array('between',array($v['start_date'],$v['end_date']));
-						$nj_com = M()->table('__OP_SETTLEMENT__ as b')->field('b.maoli')->join('__OP__ as o on b.op_id = o.op_id','LEFT')->join('__AUDIT_LOG__ as l on l.req_id = b.id','LEFT')->where($nj_where)->sum('b.maoli');
-						$complete = $complete + $nj_com*30/100 ;
-					}*/
-
 					$complete = $complete ? $complete : 0;
 				}
 
@@ -1922,36 +1891,35 @@ function updatekpi($month,$user){
 				
 				//获取成团率
 				if($v['quota_id']==4){
-					//总项目
-					/*$where = array();
-					$where['create_time']  			= array('between',array($v['start_date'],$v['end_date']));
-					$where['create_user']  			= $user;
-					$zongxiangmu	= M('op')->where($where)->count();
 
-					//实际成团
-					$where = array();
-					$where['o.create_time']			= array('between',array($v['start_date'],$v['end_date']));
-					$where['o.create_user']			= $user;
-					$chengtuan		= M()->table('__OP_TEAM_CONFIRM__ as c')->join('__OP__ as o on o.op_id = c.op_id')->where($where)->count();*/
-
-					//当月实际成团数量
-					$where = array();
-					$where['tc.dep_time'] 				= array('between',array($v['start_date'],$v['end_date']));
-					$where['op.create_user']  			= $user;
-					$chengtuan	= M()->table('__OP__ as op')->join('left join __OP_TEAM_CONFIRM__ as tc on op.op_id = tc.op_id')->where($where)->count();
-
-					//计划当月出团数量
-					$zxm_lists = array();
-					$lists 								= M('op')->select();
+					//计划出团日期在当前考核周期三个月之前一个月的总团数
+					$zxm 					= array();
+					$where 					= array();
+					$where['create_user'] 	= $user;
+					$lists 					= M('op')->where($where)->select();
 					foreach ($lists as & $val){
-						$val['departure'] 				= strtotime($val['departure']);
-						if($v['start_date']<$val['departure'] && $val['departure']<$v['end_date'] && $val['create_user']==$user){
-							$zxm_lists[] = $val;
+						$val['departure'] 	= strtotime($val['departure']);
+						if($v['start_date']-90*24*3600<$val['departure'] && $val['departure']<$v['end_date']-90*24*3600 && $val['create_user']==$user){
+							$zxm[] = $val;
 						}
 					}
-					$zongxiangmu = count($zxm_lists);
+					$zongxiangmu = count($zxm);
 
-					$complete = round(($chengtuan / $zongxiangmu)*100,2).'%';
+					//求这些团中未成团的个数
+					$ct 			= array();
+					foreach ($zxm as $value){
+						if ($value['group_id']){
+							$ct[] 		= $value;
+						}
+					}
+					$chengtuan 		= count($ct);
+
+					//当月未有团时默认满分
+					if($zongxiangmu ==0){
+						$complete = "100%";
+					}else{
+						$complete = round(($chengtuan / $zongxiangmu)*100,2).'%';
+					}
 				}
 				
 				//获取合同签订率（含家长协议书）
