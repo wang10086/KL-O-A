@@ -2010,22 +2010,22 @@ function updatekpi($month,$user){
 					$where = array();
 					$where['s.audit_status']		= 1;
 					$where['u.line']				= $user;
-					$where['l.req_type']			= 801;
+					//$where['l.req_type']			= 801;
 					$where['l.audit_time']			= array('between',array($v['start_date'],$v['end_date']));
 					
 					//获取总的结算毛利
 					$js = M()->table('__OP_SETTLEMENT__ as s')
 							 ->join('__AUDIT_LOG__ as l on l.req_id = s.id','LEFT')
-							 ->join('__OP_AUTH__ as u 	on u.op_id  = o.op_id','LEFT')
+							 ->join('__OP_AUTH__ as u 	on u.op_id  = s.op_id','LEFT')
 							 ->where($where)->sum('s.maoli');
 					
 					//获取总的预算毛利		 
 					$ys = M()->table('__OP_SETTLEMENT__ as s')
 							 ->join('__AUDIT_LOG__ as l on l.req_id = s.id','LEFT')
-							 ->join('__OP_AUTH__ as u 	on u.op_id  = o.op_id','LEFT')
+							 ->join('__OP_AUTH__ as u 	on u.op_id  = s.op_id','LEFT')
 							 ->join('__OP_BUDGET__ as b on b.op_id  = s.op_id','LEFT')
 							 ->where($where)->sum('b.maoli');
-					
+
 					//定义比较区间
 					$v1 = intervalsn($ys,0.10);
 					$v2 = intervalsn($ys,0.15);
@@ -2036,8 +2036,7 @@ function updatekpi($month,$user){
 					}else{
 						$complete = '0%';	
 					}
-					
-					
+
 				}
 				
 				
