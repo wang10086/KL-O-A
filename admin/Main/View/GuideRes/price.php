@@ -31,7 +31,7 @@
 
                                     <div class="btn-group" id="catfont">
                                         <a href="{:U('GuideRes/price',array('pin'=>0))}" class="btn <?php if($pin==0){ echo 'btn-info';}else{ echo 'btn-default';} ?>">价格体系</a>
-                                        <a href="{:U('GuideRes/priceKind',array('pin'=>1))}" class="btn <?php if($pin==1){ echo 'btn-info';}else{ echo 'btn-default';} ?>">费用分类</a>
+                                        <a href="{:U('GuideRes/priceKind',array('pin'=>1))}" class="btn <?php if($pin==1){ echo 'btn-info';}else{ echo 'btn-default';} ?>">职能分类</a>
                                     </div>
 
                                 	<table class="table table-bordered dataTable fontmini" id="tablelist">

@@ -42,14 +42,14 @@
 
                                     <div class="btn-group" id="catfont">
                                         <a href="{:U('GuideRes/price',array('pin'=>0))}" class="btn <?php if($pin==0){ echo 'btn-info';}else{ echo 'btn-default';} ?>">价格体系</a>
-                                        <a href="{:U('GuideRes/priceKind',array('pin'=>1))}" class="btn <?php if($pin==1){ echo 'btn-info';}else{ echo 'btn-default';} ?>">费用分类</a>
+                                        <a href="{:U('GuideRes/priceKind',array('pin'=>1))}" class="btn <?php if($pin==1){ echo 'btn-info';}else{ echo 'btn-default';} ?>">职能分类</a>
                                     </div>
 
                                 	<table class="table table-bordered dataTable fontmini" id="tablelist">
                                         <tr role="row" class="orders" >
                                         	<th class="sorting" data="id">ID</th>
                                             <th class="sorting" data="pk_name">项目类型</th>
-                                            <th class="sorting" data="name">费用类型明细</th>
+                                            <th class="sorting" data="name">职能类型</th>
                                             <if condition="rolemenu(array('GuideRes/addPriceKind'))">
                                                 <th width="60" class="taskOptions">编辑</th>
                                             </if>

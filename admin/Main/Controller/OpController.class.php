@@ -1829,7 +1829,17 @@ class OpController extends BaseController {
 			$data = array();
 			$data['group_id']	= $info['group_id'];
 			$data['status']		= 1;
-			M('op')->data($data)->where(array('op_id'=>$opid))->save();	
+            $data['tcs_stu']    = 2;    //已确认需求(已成团)
+			M('op')->data($data)->where(array('op_id'=>$opid))->save();
+
+            //给教务专员发送系统新消息  81
+            /*$jwzy_ids= M('account')->where(array('roleid'=>81,'status'=>0))->getField('id',true);
+            $uid     = cookie('userid');
+            $title   = '您有来自['.$worder['ini_dept_name'].'--'.$worder['ini_user_name'].']的专家辅导员待安排!';
+            $content = $worder['worder_content'];
+            $url     = U('worder/worder_info',array('id'=>$res));
+            $user    = '['.$worder['exe_user_id'].']';
+            send_msg($uid,$title,$content,$url,$user,'');*/
 			
 			
 			$this->success('保存成功！');
