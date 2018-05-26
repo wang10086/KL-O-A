@@ -521,6 +521,12 @@ class OpController extends BaseController {
 
         //资源需求单接收人员(资源管理部经理)
         $this->men            = M('account')->field('id,nickname')->where(array('roleid'=>52))->find();
+        $this->tcs = M()->table('__OP_GUIDE_PRICE__ as gp')
+            ->field('gp.*,gk.name as gkname,gpk.name as gpkname')
+            ->join('left join __GUIDEKIND__ as gk on gp.guide_kind_id = gk.id')
+            ->join('left join __GUIDE_PRICEKIND__ as gpk on gp.gpk_id = gpk.id')
+            ->where(array('gp.op_id'=>$opid))
+            ->select();
 
         //客户名称关键字
 		$where = array();

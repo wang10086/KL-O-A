@@ -75,7 +75,7 @@
                                                 </foreach>
                                             </select>
                                             <input type="text" class="form-control" style="width:10%" name="data[{$k}][num]" value="{$v.num}" id="num_{$k}" onblur="getTotal({$k})">
-                                            <input type="text" class="form-control" style="width:10%" name="data[{$k}][price]" value="{$v.price}" id="dj_{$k}">
+                                            <input type="text" class="form-control" style="width:10%" name="data[{$k}][price]" value="{$v.price}" id="dj_{$k}" onblur="getTotal({$k})">
                                             <input type="text" class="form-control" style="width:10%" name="data[{$k}][total]" value="{$v.total}" id="total_{$k}">
                                             <input type="text" class="form-control" style="width:20%" name="data[{$k}][remark]" value="{$v.remark}">
                                             <a href="javascript:;" class="btn btn-danger btn-flat" onclick="deltcsbox('tcs_id_{$v.id}')">删除</a>
@@ -95,7 +95,7 @@
                                             <option value="" selected disabled>请选择</option>
                                         </select>
                                         <input type="text" class="form-control" style="width:10%" name="data[1][num]" id="num_1" onblur="getTotal(1)" value="">
-                                        <input type="text" class="form-control" style="width:10%" name="data[1][price]" id="dj_1" value="">
+                                        <input type="text" class="form-control" style="width:10%" name="data[1][price]" id="dj_1" onblur="getTotal(1)" value="">
                                         <input type="text" class="form-control" style="width:10%" name="data[1][total]" id="total_1" value="">
                                         <input type="text" class="form-control" style="width:20%" name="data[1][remark]" value="">
                                         <a href="javascript:;" class="btn btn-danger btn-flat" onclick="deltcsbox('tcs_id')">删除</a>
