@@ -933,12 +933,12 @@
         var i = parseInt($('#tcs_val').text())+1;
         var html = '<div class="userlist no-border" id="tcs_'+i+'">' +
             '<span class="title"></span> ' +
-            '<select  class="form-control w-150"  name="data['+i+'][guide_kind_id]" id="se_'+i+'" onchange="getPrice('+i+')"><option value="" selected disabled>请选择</option> <foreach name="guide_kind" key="k" item="v"> <option value="{$k}">{$v}</option></foreach></select> ' +
-            '<select  class="form-control w-150 gpk"  name="data['+i+'][gpk_id]" id="gpk_id_'+i+'" onchange="getPrice('+i+')"><option value="" selected disabled>请选择</option> <foreach name="hotel_start" key="k" item="v"> <option value="{$k}">{$v}</option></foreach></select> ' +
-            '<input type="text"  class="form-control" name="data['+i+'][num]" id="num_'+i+'" onblur="getTotal('+i+')" > ' +
-            '<input type="text" class="form-control" name="data['+i+'][price]" id="dj_'+i+'" value="">' +
-            '<input type="text"  class="form-control" name="data['+i+'][total]" id="total_'+i+'">' +
-            '<input type="text"  class="form-control lp_remark" name="data['+i+'][remark]">' +
+            '<select  class="form-control" style="width:15%" name="data['+i+'][guide_kind_id]" id="se_'+i+'" onchange="getPrice('+i+')"><option value="" selected disabled>请选择</option> <foreach name="guide_kind" key="k" item="v"> <option value="{$k}">{$v}</option></foreach></select> ' +
+            '<select  class="form-control gpk" style="width:15%" name="data['+i+'][gpk_id]" id="gpk_id_'+i+'" onchange="getPrice('+i+')"><option value="" selected disabled>请选择</option> <foreach name="hotel_start" key="k" item="v"> <option value="{$k}">{$v}</option></foreach></select> ' +
+            '<input type="text"  class="form-control" style="width:10%" name="data['+i+'][num]" id="num_'+i+'" onblur="getTotal('+i+')" > ' +
+            '<input type="text"  class="form-control" style="width:10%" name="data['+i+'][price]" id="dj_'+i+'" value="" onblur="getTotal('+i+')">' +
+            '<input type="text"  class="form-control" style="width:10%" name="data['+i+'][total]" id="total_'+i+'">' +
+            '<input type="text"  class="form-control" style="width:20%" name="data['+i+'][remark]">' +
             '<a href="javascript:;" class="btn btn-danger btn-flat" onclick="deltcsbox(\'tcs_'+i+'\')">删除</a></div>';
         $('#tcs').append(html);
         $('#tcs_val').html(i);
