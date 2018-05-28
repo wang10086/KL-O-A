@@ -1940,11 +1940,17 @@ function updatekpi($month,$user){
 				if(in_array($v['quota_id'],array(6,81))){
 					$where = array();
 					$where['o.create_time']			= array('between',array($v['start_date'],$v['end_date']));
+					$bj_type 						= array(9,7,8);		//'9'=>'地接社','7'=>'旅游车队','8'=>'酒店'
+					$where['c.type'] 				= array('in',$bj_type);
 					$where['u.line']				= $user;
-					//获取周期内创建的项目数
-					$sj = M()->table('__OP_AUTH__ as u')->join('__OP__ as o on o.op_id = u.op_id','LEFT')->where($where)->count();
+					//获取周期内创建的项目数(op_costacc)
+					//$sj = M()->table('__OP_AUTH__ as u')->join('__OP__ as o on o.op_id = u.op_id','LEFT')->where($where)->count();
+					//获取需要比价的项(类型为地接 , 旅游车队 , 酒店的项)
+					$sj_op = M()->table('__OP_AUTH__ as u')->field('o.op_id')->join('__OP__ as o on o.op_id = u.op_id','LEFT')->join('__OP_COSTACC__ as c on c.op_id = o.op_id','LEFT')->where($where)->select();
+					$sj = count(array_unique(array_column($sj_op,'op_id')));
 					//获取已比价的项目数
-					$bj = M()->table('__REL_PRICE__ as p')->join('__OP__ as o on o.op_id = p.op_id','LEFT')->join('__OP_AUTH__ as u on u.op_id = p.op_id','LEFT')->where($where)->count();
+					$bj_op = M()->table('__REL_PRICE__ as p')->field('o.op_id')->join('__OP__ as o on o.op_id = p.op_id','LEFT')->join('__OP_AUTH__ as u on u.op_id = p.op_id','LEFT')->join('__OP_COSTACC__ as c on c.op_id = o.op_id','LEFT')->where($where)->select();
+					$bj = count(array_unique(array_column($bj_op,'op_id')));
 					$complete = $sj ? round(($bj / $sj)*100,2).'%' : '100%';
 				}
 				
