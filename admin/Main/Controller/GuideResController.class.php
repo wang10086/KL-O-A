@@ -159,6 +159,7 @@ class GuideResController extends BaseController {
             $this->kinds      = M('guidekind')->where(array('type'=>P::RES_TYPE_GUIDE))->select();
             $this->pro_kinds  = get_project_kinds();
             $this->cost       = $guide_price_db->where(array('gk_id'=>$id))->select();
+            $this->apply_to   = C('APPLY_TO');
 
             if (!$id) {
                 $this->row = false;

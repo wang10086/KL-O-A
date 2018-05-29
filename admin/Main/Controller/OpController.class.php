@@ -258,6 +258,7 @@ class OpController extends BaseController {
 			$this->kinds       = get_project_kinds();
 			$this->userlist    =  M('account')->where('`id`>3')->getField('id,nickname', true);
 			$this->rolelist    =  M('role')->where('`id`>10')->getField('id,role_name', true);
+            $this->apply_to    = C('APPLY_TO');
 			$this->title('出团计划');
 			$this->display('plans');
 		}
@@ -513,6 +514,7 @@ class OpController extends BaseController {
         $this->huikuan_status = M('contract_pay')->where(array('op_id'=>$opid))->getField('status');
         $this->guide_kind     = M('guidekind')->getField('id,name',true);
         $this->guide_price    = M('op_guide_price')->where(array('op_id'=>$opid))->select();
+        $this->apply_to       = C('APPLY_TO');
         if ($this->guide_price) {
             $this->rad = 1;
         }else{

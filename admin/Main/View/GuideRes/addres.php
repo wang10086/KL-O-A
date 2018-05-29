@@ -73,8 +73,14 @@
                                     </div>
                                     
                                     <div class="form-group col-md-4">
-                                        <label>年级</label>
-                                        <input type="text" name="info[grade]" id="grade"   value="{$row.grade}" class="form-control" />
+                                        <label>适合人群</label>
+                                        <!--<input type="text" name="info[grade]" id="grade"   value="{$row.grade}" class="form-control" />-->
+                                        <select  class="form-control"  name="info[grade]" required>
+                                            <option value="" selected disabled>请选择适合人群</option>
+                                            <foreach name="apply_to" key="k" item="v">
+                                                <option value="{$k}" <?php if ($row && ($k == $row['grade'])) echo ' selected'; ?> >{$v}</option>
+                                            </foreach>
+                                        </select>
                                     </div>
                                     
                                     <div class="form-group col-md-4">

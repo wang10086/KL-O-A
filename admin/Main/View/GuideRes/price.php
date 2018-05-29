@@ -39,7 +39,7 @@
                                         	<th class="sorting" data="id">ID</th>
                                             <th class="sorting" data="gkname">职务</th>
                                             <th class="sorting" data="kname">项目类型</th>
-                                            <th class="sorting" data="gpname">费用分类</th>
+                                            <th class="sorting" data="gpname">职能类型</th>
                                         	<th class="sorting" data="price">费用</th>
                                             <if condition="rolemenu(array('GuideRes/addprice'))">
                                                 <th width="60" class="taskOptions">编辑</th>

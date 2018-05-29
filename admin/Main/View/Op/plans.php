@@ -26,15 +26,25 @@
                             <div class="box-body">
                                 <div class="content">
 
-                                    <div class="form-group col-md-12">
+                                    <div class="form-group col-md-8">
                                         <label>项目名称(学校名称 + 地点 + 项目类型)：</label><input type="text" name="info[project]" class="form-control" required />
                                     </div>
 
+                                    <div class="form-group col-md-4">
+                                        <label>适合人群：</label>
+                                        <select  class="form-control"  name="info[apply_to]" required>
+                                            <!--<select  class="form-control"  name="info[kind]" id="kind"  required>-->
+                                            <option value="" selected disabled>请选择适合人群</option>
+                                            <foreach name="apply_to" key="k" item="v">
+                                                <option value="{$k}" <?php if ($row && ($k == $row['grade'])) echo ' selected'; ?> >{$v}</option>
+                                            </foreach>
+                                        </select>
+                                    </div>
 
                                     <div class="form-group col-md-4">
                                         <label>项目类型：</label>
-                                        <select  class="form-control"  name="info[kind]" id="kind" onchange="line_lession()" required>
-                                        <!--<select  class="form-control"  name="info[kind]" id="kind"  required>-->
+                                        <!--<select  class="form-control"  name="info[kind]" id="kind" onchange="line_lession()" required>-->
+                                        <select  class="form-control"  name="info[kind]" id="kind"  required>
                                             <option value="" selected disabled>请选择项目类型</option>
                                             <foreach name="kinds" item="v">
                                                 <option value="{$v.id}" >{:tree_pad($v['level'], true)} {$v.name}</option>

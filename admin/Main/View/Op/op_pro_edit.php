@@ -2,8 +2,18 @@
 <input type="hidden" name="dosubmint" value="1">
 <input type="hidden" name="opid" value="{$op.op_id}">
 <input type="hidden" name="savetype" value="10">
-<div class="form-group col-md-12" style="margin-top:20px;">
+<div class="form-group col-md-8" >
     <label>项目名称：</label><input type="text" name="info[project]"  value="{$op.project}" class="form-control" />
+</div>
+
+<div class="form-group col-md-4">
+    <label>适合人群：</label>
+    <select  class="form-control"  name="info[apply_to]" required>
+        <option value="" selected disabled>请选择适合人群</option>
+        <foreach name="apply_to" key="k" item="v">
+            <option value="{$k}" <?php if ($op && ($k == $op['apply_to'])) echo ' selected'; ?> >{$v}</option>
+        </foreach>
+    </select>
 </div>
 
 <div class="form-group col-md-4">
