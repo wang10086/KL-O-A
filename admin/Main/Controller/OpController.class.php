@@ -857,11 +857,21 @@ class OpController extends BaseController {
             if($opid && $savetype==12 ){
                 $data = I('data');
                 $savedel = $op_guide_price_db->where(array('op_id'=>$opid))->delete();
+                $upd_tcs = array();
+                $upd_tcs['tcs_stu'] = 0;
+                $db->where(array('op_id'=>$opid))->save($upd_tcs);
                 if ($savedel)  $num++;
                 foreach($data as $k=>$v){
                     $v['op_id'] = $opid;
                     $savein     = $op_guide_price_db->add($v);
-                    $info['tcs_stu'] = 1;   //需要专家辅导员
+                    //修改专家辅导员状态
+                    $group_id = $db->where(array('op_id'=>$opid))->getField('group_id');
+                    if ($group_id){
+                        $info['tcs_stu'] = 2;
+                        //发送系统消息
+                    }else{
+                        $info['tcs_stu'] = 1;   //需要专家辅导员
+                    }
                     $db->where(array('op_id'=>$opid))->save($info);
                     if($savein) $num++;
                 }
@@ -1837,7 +1847,9 @@ class OpController extends BaseController {
 			$data = array();
 			$data['group_id']	= $info['group_id'];
 			$data['status']		= 1;
-            $data['tcs_stu']    = 2;    //已确认需求(已成团)
+            if($op['tcs_stu'] ==1){
+                $data['tcs_stu']    = 2;    //已确认需求(已成团)
+            }
 			M('op')->data($data)->where(array('op_id'=>$opid))->save();
 
             //给教务专员发送系统新消息  81
