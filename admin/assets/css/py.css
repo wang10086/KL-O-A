@@ -3768,7 +3768,7 @@ a.iclose{background:url(../img/btn/min_icon.png) no-repeat 0px -30px;width:30px;
 #costium td{ line-height:34px;}
 #costium_val{ display:none}
 
-.tcs_need_h2{font-size: 14px;padding-bottom: 10px;display: inline-block;margin-right: 20px;}
+.tcs_need_h2{font-size: 14px;padding-bottom: 10px;display: inline-block;margin-right: 20px;font-weight: 600;margin-top: 35px;}
 .tcscon{    padding: 0 12px;  overflow: auto; margin-top: -35px; overflow:-Scroll;overflow-y:hidden;}
 .ml-12{margin-left: 12px;}
 #tcs{ padding:0 0px;}
@@ -4061,3 +4061,4 @@ th{outline: none;}
 .td_title{text-align: center; width: 150px;}
 .td_con{padding-left: 10px;}
 
+.lit-title{width:100%; border-bottom:1px solid #dedede; padding-bottom:10px; font-weight:bold; margin-top: 20px;}

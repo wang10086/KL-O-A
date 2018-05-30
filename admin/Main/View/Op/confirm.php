@@ -71,7 +71,7 @@
                             
                             <div class="box box-warning">
                                 <div class="box-header">
-                                    <h3 class="box-title">实际出团确认</h3>
+                                    <h3 class="box-title">实际成团确认</h3>
                                 </div><!-- /.box-header -->
                                 <div class="box-body">
                                 
@@ -113,7 +113,11 @@
 
 <include file="Index:footer2" />
 
-
+<script>
+    laydate.render({
+        elem: '.inputdate_a',theme: '#0099CC',type: 'datetime'
+    });
+</script>
      
 
 

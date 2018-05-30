@@ -1816,6 +1816,7 @@ class OpController extends BaseController {
 		$where['op_id'] = $opid;
 		$op				= M('op')->where($where)->find();
 		$confirm		= M('op_team_confirm')->where($where)->find();
+        $upd_num        = $confirm['upd_num'];
 
 		if(isset($_POST['dosubmit']) && $_POST['dosubmit']){
 			
@@ -1833,11 +1834,16 @@ class OpController extends BaseController {
 			$info['user_name']		= cookie('nickname'); 
 			$info['dep_time']		= $info['dep_time'] ? strtotime($info['dep_time']) : 0;
 			$info['ret_time']		= $info['ret_time'] ? strtotime($info['ret_time']) : 0;
-			$info['confirm_time']	= time(); 
+			$info['tcs_time']		= $info['tcs_time'] ? strtotime($info['tcs_time']) : 0;
+			$info['confirm_time']	= time();
 			//判断是否已经确认
 			if($confirm){
-                $info['upd_num']    = 1;    //用来判断修改次数
-                M('op_team_confirm')->data($info)->where(array('op_id'=>$opid))->save();
+                if($upd_num == 1){
+                    $this->error('您已经修改过一次了,不能反复修改!');
+                }else{
+                    $info['upd_num']    = 1;    //用来判断修改次数
+                    M('op_team_confirm')->data($info)->where(array('op_id'=>$opid))->save();
+                }
 			}else{
 				M('op_team_confirm')->add($info);	
 			}

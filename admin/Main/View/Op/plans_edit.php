@@ -118,7 +118,7 @@
                             
                                 <div class="box box-warning">
                                     <div class="box-header">
-                                        <h3 class="box-title">行程方案</h3>
+                                        <h3 class="box-title">行程方案及资源配置</h3>
                                         <h3 class="box-title pull-right" style="font-weight:normal; color:#333333;">
                                         <?php  if($opauth && $opauth['line']){ ?>
                                         负责人：{$user.$opauth[line]}
