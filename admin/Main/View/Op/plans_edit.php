@@ -966,6 +966,7 @@
             data:{guide_kind_id:guide_kind_id,gpk_id:gpk_id,opid:opid},
             success:function(msg){
                 $('#dj_'+a).val(msg);
+                getTotal(a);
             }
         })
     }

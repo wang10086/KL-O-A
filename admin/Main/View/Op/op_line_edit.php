@@ -69,9 +69,9 @@
                                                     <option value="{$key}" <?php if($v['guide_kind_id']==$key) echo 'selected'; ?>>{$value}</option>
                                                 </foreach>
                                             </select>
-                                            <select  class="form-control gpk" style="width:15%"  name="data[{$k}][gpk_id]" id="gpk_id_{$k}" onchange="getPrice({$k})">
+                                            <select  class="form-control" style="width:15%"  name="data[{$k}][gpk_id]" id="gpk_id_{$k}" onchange="getPrice({$k})">
                                                 <foreach name="price_kind" key="key" item="value">
-                                                    <option value="{$key}" <?php if($v['gpk_id']==$key) echo 'selected'; ?>>{$value}</option>
+                                                    <option value="{$value.id}" <?php if($v['gpk_id']==$value['id']) echo 'selected'; ?>>{$value.name}</option>
                                                 </foreach>
                                             </select>
                                             <input type="text" class="form-control" style="width:10%" name="data[{$k}][num]" value="{$v.num}" id="num_{$k}" onblur="getTotal({$k})">

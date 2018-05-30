@@ -475,7 +475,9 @@ class OpController extends BaseController {
         if (in_array($line_id,$fixed_lineids)){
             $this->isFixedLine = 1;
         }
-
+        //获取职能类型
+        $priceKind = M()->table('__GUIDE_PRICEKIND__ as gpk')->field('gpk.id,gpk.name')->join('left join __OP__ as op on gpk.pk_id = op.kind')->where(array("op.op_id"=>$opid))->select();
+        $this->price_kind     = $priceKind;
         $this->opid           = $opid;
 		$this->kinds          = M('project_kind')->getField('id,name', true);
 		$this->user           = M('account')->where('`id`>3')->getField('id,nickname', true);
