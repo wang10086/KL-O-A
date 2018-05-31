@@ -117,6 +117,8 @@
     laydate.render({
         elem: '.inputdate_a',theme: '#0099CC',type: 'datetime'
     });
+
+
 </script>
      
 
