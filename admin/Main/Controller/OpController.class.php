@@ -852,7 +852,6 @@ class OpController extends BaseController {
                     }
 
                 }
-
             }
 
             //保存辅导员/教师,专家需求
@@ -870,11 +869,17 @@ class OpController extends BaseController {
                     $group_id = $db->where(array('op_id'=>$opid))->getField('group_id');
                     if ($group_id){
                         $info['tcs_stu'] = 2;
-                        //发送系统消息
                     }else{
                         $info['tcs_stu'] = 1;   //需要专家辅导员
                     }
-                    $db->where(array('op_id'=>$opid))->save($info);
+                    $res = $db->where(array('op_id'=>$opid))->save($info);
+                    if ($res){
+                        $record = array();
+                        $record['op_id']   = $opid;
+                        $record['optype']  = 4;
+                        $record['explain'] = '填写专家辅导员资源需求';
+                        op_record($record);
+                    }
                     if($savein) $num++;
                 }
             }
@@ -1862,17 +1867,29 @@ class OpController extends BaseController {
 				M('op_team_confirm')->add($info);	
 			}
 
-			M('op_guide_price')->where(array('op_id'=>$opid))->delete();
+			$num = 0;
+			$res = M('op_guide_price')->where(array('op_id'=>$opid))->delete();
+            if ($res){
+                $num++;
+            }
             if ($data){
                 foreach($data as $k=>$v){
                     $v['op_id'] = $opid;
                     M('op_guide_price')->add($v);
+                    $num++;
                 }
+            }
+            if ($num != 0){
+                $record = array();
+                $record['op_id']   = $opid;
+                $record['optype']  = 4;
+                $record['explain'] = '成团确认--确认专家辅导员资源需求';
+                op_record($record);
             }
 			
 			//修正项目中团号
 			$infos = array();
-			$infos['group_id']	= $info['group_id'];
+			$infos['group_id']	    = $info['group_id'];
 			$infos['status']		= 1;
             if($op['tcs_stu'] ==1){
                 $infos['tcs_stu']    = 2;    //已确认需求(已成团)
