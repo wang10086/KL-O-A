@@ -33,23 +33,22 @@
             <input type="text" name="info[days]"  class="form-control" value="{$confirm.days}" />  
         </div>
     </div>
-    <div style="width:100%;float:left;">
-        <div class="form-group col-md-6">
-            <label>活动时间(请填写具体时间)：</label>
-            <input type="text" name="info[tcs_time]" class="form-control inputdate_a" value="<if condition="$confirm['tcs_time']">{$confirm.tcs_time|date='Y-m-d H:i:s',###}</if>"/>
-        </div>
-
-        <div class="form-group col-md-6">
-            <label>活动地点：</label>
-            <input type="text" name="info[address]"  class="form-control" value="{$confirm.address}" />
-        </div>
-    </div>
 
     <div class="form-group col-md-12"  style="margin-top:20px;">
         <label class="lit-title" >辅导员/教师、专家需求</label>
     </div>
-    <div class="form-group col-md-12"></div>
+    <!--<div class="form-group col-md-12"></div>-->
     <div style="width:100%;float:left;">
+            <div class="form-group col-md-6">
+                <label>活动时间(请填写具体时间)：</label>
+                <input type="text" name="info[tcs_time]" class="form-control inputdate_a" value="<if condition="$confirm['tcs_time']">{$confirm.tcs_time|date='Y-m-d H:i:s',###}</if>"/>
+            </div>
+
+            <div class="form-group col-md-6">
+                <label>活动地点：</label>
+                <input type="text" name="info[address]"  class="form-control" value="{$confirm.address}" />
+            </div>
+        <div class="form-group col-md-12"></div>
 
         <include file="op_tcs_need_edit" />
 

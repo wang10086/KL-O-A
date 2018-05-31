@@ -206,9 +206,10 @@ class AjaxController extends Controller {
 
     public function getPrice(){
         $opid           = I('opid');
-        $guide_kind_id  = I('guide_kind_id');
+        $guide_id       = I('guide_id');
+        $guide_kind_id  = I('guide_kind_id')?I('guide_kind_id'):M('guide')->where(array('id'=>$guide_id))->getField('kind');
         $gpk_id         = I('gpk_id');
-        $kind_id        = M('op')->where(array('op_id'=>$opid))->getField('kind');
+        $kind_id        = I('pro_kind')?I('pro_kind'):M('op')->where(array('op_id'=>$opid))->getField('kind');
         $priceinfo      = M('guide_price')->field('id,price')->where(array('gk_id'=>$guide_kind_id,'kid'=>$kind_id))->find(); //没有详细分类从guide_price表取数据
         $price_a        = $priceinfo['price'];
         $gp_id          = $priceinfo['id'];
@@ -219,4 +220,20 @@ class AjaxController extends Controller {
         $this->ajaxReturn($price,'JSON');
 
     }
+
+    /*public function get_guide_price(){
+        //$opid           = I('opid');
+       // $kind_id        = I('pro_kind')?I('pro_kind'):M('op')->where(array('op_id'=>$opid))->getField('kind');    //kind_id
+        //$gpk_id         = I('gpk_id');    //$gpk_id
+        //$guide_id       = I('guide_id');
+       // $guide_kind_id  = I('guide_kind_id')?I('guide_kind_id'):M('guide')->where(array('id'=>$guide_id))->getField('kind');
+        $priceinfo      = M('guide_price')->field('id,price')->where(array('gk_id'=>$guide_kind_id,'kid'=>$kind_id))->find(); //没有详细分类从guide_price表取数据
+        $price_a        = $priceinfo['price'];
+        $gp_id          = $priceinfo['id'];
+        $price_b        = M('guide_priceinfo')->where(array('guide_price_id'=>$gp_id,'price_kind_id'=>$gpk_id))->getField('price'); //有详细分类从guide_priceinfo表取数据
+        if($price_a == '0.00') $price_a = null;
+        $price_b = $price_b?$price_b:'0.00';
+        $price = $price_a?$price_a:$price_b;
+        $this->ajaxReturn($price,'JSON');
+    }*/
 }

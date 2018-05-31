@@ -879,6 +879,18 @@ class OpController extends BaseController {
                 }
             }
 
+            //保存辅导员/教师,专家需求信息
+            if($opid && $savetype==13 ){
+                $data = I('data');
+                $savedel = $op_guide_price_db->where(array('op_id'=>$opid))->delete();
+                if ($savedel)  $num++;
+                foreach($data as $k=>$v){
+                    $v['op_id'] = $opid;
+                    $savein     = $op_guide_price_db->add($v);
+                    if($savein) $num++;
+                }
+            }
+
             echo $num;
         }
 	
@@ -1807,55 +1819,6 @@ class OpController extends BaseController {
 		//	echo 0;	
 		//}
 	}
-	/*8888888888888888888888888start88888888888888888888888888888*/
-    public function detail(){
-        $db         = M('op');
-        $id         = I('id');
-        $list       = M()->field('op.*,pl.title as line_name')->table('__OP__ as op')->join('left join __PRODUCT_LINE__ as pl on op.line_id = pl.id')->where(array('op.id'=>$id))->find();
-        $opid       = $list['op_id'];
-        $guide      = M()->table('__OP_GUIDE__ as g')->field('g.*,c.cost,c.amount,c.total,c.gpk_id')->join('__OP_COST__ as c on c.link_id=g.id')->where(array('g.op_id'=>$opid,'c.op_id'=>$opid,'c.cost_type'=>2))->order('g.id')->select();
-
-        //获取职能类型
-        $priceKind = M()->table('__GUIDE_PRICEKIND__ as gpk')->field('gpk.id,gpk.name')->join('left join __OP__ as op on gpk.pk_id = op.kind')->where(array("op.op_id"=>$opid))->select();
-        //判断项目是否审核通过
-        if($list['audit_status']==0) $list['zhuangtai'] = '<span class="blue">未审核</span>';
-        if($list['audit_status']==1) $list['zhuangtai'] = '<span class="blue">立项通过</span>';
-        if($list['audit_status']==2) $list['zhuangtai'] = '<span class="blue">立项未通过</span>';
-
-        //判断预算是否通过
-        $yusuan = M('op_budget')->where(array('op_id'=>$list['op_id']))->find();
-        if($yusuan && $yusuan['audit_status']==0) $list['zhuangtai'] = '<span class="green">已提交预算</span>';
-        if($yusuan['audit_status']==1) $list['zhuangtai'] = '<span class="green">预算通过</span>';
-        if($yusuan['audit_status']==2) $list['zhuangtai'] = '<span class="green">预算未通过</span>';
-
-        //判断结算是否通过
-        $jiesuan = M('op_settlement')->where(array('op_id'=>$list['op_id']))->find();
-        if($jiesuan && $jiesuan['audit_status']==0) $list['zhuangtai'] = '<span class="yellow">已提交结算</span>';
-        if($jiesuan['audit_status']==1) $list['zhuangtai'] = '<span class="yellow">完成结算</span>';
-        if($jiesuan['audit_status']==2) $list['zhuangtai'] = '<span class="yellow">结算未通过</span>';
-
-        //判断专家辅导员状态
-        if($list['tcs_stu']==1) $list['tcs'] = '<span class="yellow">已提出需求(未成团)</span>';
-        if($list['tcs_stu']==2) $list['tcs'] = '<span class="red">待确认需求</span>';
-        if($list['tcs_stu']==3) $list['tcs'] = '<span class="green">已安排人员</span>';
-        if($list['tcs_stu']==4) $list['tcs'] = '已核实人员';
-
-        $this->tcs_need = M()->table('__OP_GUIDE_PRICE__ as gp')
-            ->field('gp.*,gk.name as gkname,gpk.name as gpkname')
-            ->join('left join __GUIDEKIND__ as gk on gp.guide_kind_id = gk.id')
-            ->join('left join __GUIDE_PRICEKIND__ as gpk on gp.gpk_id = gpk.id')
-            ->where(array('gp.op_id'=>$opid))
-            ->select();
-        $this->pro_kind     = $db->where(array('op_id'=>$opid))->getField('kind');
-        $this->guide_kind   = M('guidekind')->getField('id,name',true);
-        $this->guide_price  = M('op_guide_price')->where(array('op_id'=>$opid))->select();
-        $this->price_kind   = $priceKind;
-        $this->row          = $list;
-        $this->guide        = $guide;
-        $this->opid         = $opid;
-        $this->display();
-    }
-	/*888888888888888888888888888end888888888888888888888888888*/
 
 	// @@@NODE-3###confirm###出团确认###
 	public  function  confirm(){
@@ -1869,8 +1832,9 @@ class OpController extends BaseController {
         $upd_num        = $confirm['upd_num'];
 
 		if(isset($_POST['dosubmit']) && $_POST['dosubmit']){
-			
+
 			$info	= I('info');
+            $data   = I('data');
 			
 			//判断团号是否可用
 			$where = array();
@@ -1897,16 +1861,23 @@ class OpController extends BaseController {
 			}else{
 				M('op_team_confirm')->add($info);	
 			}
-			
+
+			M('op_guide_price')->where(array('op_id'=>$opid))->delete();
+            if ($data){
+                foreach($data as $k=>$v){
+                    $v['op_id'] = $opid;
+                    M('op_guide_price')->add($v);
+                }
+            }
 			
 			//修正项目中团号
-			$data = array();
-			$data['group_id']	= $info['group_id'];
-			$data['status']		= 1;
+			$infos = array();
+			$infos['group_id']	= $info['group_id'];
+			$infos['status']		= 1;
             if($op['tcs_stu'] ==1){
-                $data['tcs_stu']    = 2;    //已确认需求(已成团)
+                $infos['tcs_stu']    = 2;    //已确认需求(已成团)
             }
-			M('op')->data($data)->where(array('op_id'=>$opid))->save();
+			M('op')->data($infos)->where(array('op_id'=>$opid))->save();
 
             //给教务专员发送系统新消息  81
             /*$jwzy_ids= M('account')->where(array('roleid'=>81,'status'=>0))->getField('id',true);
@@ -1928,8 +1899,9 @@ class OpController extends BaseController {
             $this->guide_price  = M('op_guide_price')->where(array('op_id'=>$opid))->select();
             $this->guide_kind   = M('guidekind')->getField('id,name',true);
             //获取职能类型
-            $priceKind = M()->table('__GUIDE_PRICEKIND__ as gpk')->field('gpk.id,gpk.name')->join('left join __OP__ as op on gpk.pk_id = op.kind')->where(array("op.op_id"=>$opid))->select();
+            $priceKind          = M()->table('__GUIDE_PRICEKIND__ as gpk')->field('gpk.id,gpk.name')->join('left join __OP__ as op on gpk.pk_id = op.kind')->where(array("op.op_id"=>$opid))->select();
             $this->price_kind   = $priceKind;
+            $this->fields       = C('GUI_FIELDS');
 
             //人员列表
             $stu_list       = M('op_member')->where(array('op_id'=>$opid))->select();
