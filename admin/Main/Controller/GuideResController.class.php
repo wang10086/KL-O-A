@@ -130,9 +130,12 @@ class GuideResController extends BaseController {
         $id             = I('id', 0);
 
         if(isset($_POST['dosubmit'])){
+
             $cost       = I('cost');
             $info       = I('info');
             $referer    = I('referer');
+            $info['grade']      = implode(',',I('grade'));
+            $info['field']      = implode(',',I('fields'));
 			$info['experience'] = stripslashes($_POST['content']);
 
             if(!$id){
@@ -160,6 +163,7 @@ class GuideResController extends BaseController {
             $this->pro_kinds  = get_project_kinds();
             $this->cost       = $guide_price_db->where(array('gk_id'=>$id))->select();
             $this->apply_to   = C('APPLY_TO');
+            $this->fields     = C('GUI_FIELDS');
 
             if (!$id) {
                 $this->row = false;
@@ -169,6 +173,9 @@ class GuideResController extends BaseController {
                     $this->error('无此数据！', U('GuideRes/res'));
                 }
             }
+            $this->arr_apply  = explode(',',$this->row['grade']);
+            $this->arr_field  = explode(',',$this->row['field']);
+
             $this->display('addres');
         }
         

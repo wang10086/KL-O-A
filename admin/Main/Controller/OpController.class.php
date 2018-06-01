@@ -374,7 +374,7 @@ class OpController extends BaseController {
 		}
 		
 		$pro        = M('product')->find($op['product_id']);
-		$guide      = M()->table('__OP_GUIDE__ as g')->field('g.*,c.cost,c.amount,c.total')->join('__OP_COST__ as c on c.link_id=g.id')->where(array('g.op_id'=>$opid,'c.op_id'=>$opid,'c.cost_type'=>2))->order('g.id')->select();
+		$guide      = M()->table('__OP_GUIDE__ as g')->field('g.*,c.cost,c.amount,c.total,c.gpk_id,gui.tel')->join('__OP_COST__ as c on c.link_id=g.id')->join('left join __GUIDE__ as gui on g.guide_id = gui.id')->where(array('g.op_id'=>$opid,'c.op_id'=>$opid,'c.cost_type'=>2))->order('g.id')->select();
 		$supplier   = M()->table('__OP_SUPPLIER__ as s')->field('s.id as sid,s.op_id,s.supplier_id,s.supplier_name,s.city,s.kind,s.remark as sremark,c.*')->join('__OP_COST__ as c on c.link_id=s.id')->where(array('s.op_id'=>$opid,'c.op_id'=>$opid,'c.cost_type'=>3))->order('sid')->select();
 		$member     = M('op_member')->where(array('op_id'=>$opid))->order('id')->select();
 		$costlist   = M('op_cost')->where(array('op_id'=>$opid))->order('cost_type')->select();
@@ -475,6 +475,16 @@ class OpController extends BaseController {
         if (in_array($line_id,$fixed_lineids)){
             $this->isFixedLine = 1;
         }
+        $guide_pk_id= M('guide_pricekind')->field('id,name')->select();
+        $sum_cost = 0;
+        foreach ($guide as & $v){
+            $sum_cost += $v['total'];
+            foreach ($guide_pk_id as $val){
+                if ($v['gpk_id'] == $val['id']){
+                    $v['gpk_name'] = $val['name'];
+                }
+            }
+        }
         //获取职能类型
         $priceKind = M()->table('__GUIDE_PRICEKIND__ as gpk')->field('gpk.id,gpk.name')->join('left join __OP__ as op on gpk.pk_id = op.kind')->where(array("op.op_id"=>$opid))->select();
         $this->price_kind     = $priceKind;
@@ -486,6 +496,7 @@ class OpController extends BaseController {
 		$this->pro            = $pro;
 		$this->budget         = $budget;
 		$this->guide          = $guide;
+        $this->sum_cost       = $sum_cost;
 		$this->settlement     = $settlement;
 		$this->supplier       = $supplier;
 		$this->member         = $member;
