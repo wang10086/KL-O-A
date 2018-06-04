@@ -6,31 +6,31 @@
     <div style="width:100%; float:left;">
         <div class="form-group col-md-4">
             <label>项目团号：</label>
-            <input type="text" name="info[group_id]" id="renshu" class="form-control" value="<?php if($confirm['group_id']){ echo $confirm['group_id'];}else{ echo $op['group_id'];} ?>" />
+            <input type="text" name="info[group_id]" id="renshu" class="form-control" value="<?php if($confirm['group_id']){ echo $confirm['group_id'];}else{ echo $op['group_id'];} ?>" required />
         </div>
         
         <div class="form-group col-md-4">
             <label>实际出团成人数：</label>
-            <input type="text" name="info[num_adult]" id="shouru" class="form-control" value="{$confirm.num_adult}"/> 
+            <input type="text" name="info[num_adult]" id="shouru" class="form-control" value="{$confirm.num_adult}" required />
         </div>
         <div class="form-group col-md-4">
             <label>实际出团儿童数：</label>
-            <input type="text" name="info[num_children]" id="shouru" class="form-control" value="{$confirm.num_children}"/> 
+            <input type="text" name="info[num_children]" id="shouru" class="form-control" value="{$confirm.num_children}"required />
         </div>
     </div>
     <div style="width:100%;float:left;">
         <div class="form-group col-md-4">
             <label>实际出发时间：</label>
-            <input type="text" name="info[dep_time]" id="shouru" class="form-control inputdate" value="<if condition="$confirm['dep_time']">{$confirm.dep_time|date='Y-m-d',###}</if>"/> 
+            <input type="text" name="info[dep_time]" id="shouru" class="form-control inputdate" value="<if condition="$confirm['dep_time']">{$confirm.dep_time|date='Y-m-d',###}</if>" required />
         </div>
         <div class="form-group col-md-4">
             <label>实际返回时间：</label>
-            <input type="text" name="info[ret_time]" id="shouru" class="form-control inputdate" value="<if condition="$confirm['ret_time']">{$confirm.ret_time|date='Y-m-d',###}</if>"/> 
+            <input type="text" name="info[ret_time]" id="shouru" class="form-control inputdate" value="<if condition="$confirm['ret_time']">{$confirm.ret_time|date='Y-m-d',###}</if>" required />
         </div>
         
         <div class="form-group col-md-4">
             <label>实际天数：</label>
-            <input type="text" name="info[days]"  class="form-control" value="{$confirm.days}" />  
+            <input type="text" name="info[days]"  class="form-control" value="{$confirm.days}" required />
         </div>
     </div>
 
@@ -41,12 +41,12 @@
     <div style="width:100%;float:left;">
             <div class="form-group col-md-6">
                 <label>活动时间(请填写具体时间)：</label>
-                <input type="text" name="info[tcs_time]" class="form-control inputdate_a" value="<if condition="$confirm['tcs_time']">{$confirm.tcs_time|date='Y-m-d H:i:s',###}</if>"/>
+                <input type="text" name="info[tcs_time]" class="form-control inputdate_a" value="<if condition="$confirm['tcs_time']">{$confirm.tcs_time|date='Y-m-d H:i:s',###}</if>" required />
             </div>
 
             <div class="form-group col-md-6">
                 <label>活动地点：</label>
-                <input type="text" name="info[address]"  class="form-control" value="{$confirm.address}" />
+                <input type="text" name="info[address]"  class="form-control" value="{$confirm.address}" required />
             </div>
         <div class="form-group col-md-12"></div>
 

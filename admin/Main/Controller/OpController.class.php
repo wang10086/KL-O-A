@@ -1878,7 +1878,7 @@ class OpController extends BaseController {
                     M('op_team_confirm')->data($info)->where(array('op_id'=>$opid))->save();
                 }
 			}else{
-				M('op_team_confirm')->add($info);	
+				M('op_team_confirm')->add($info);
 			}
 
 			$num = 0;
@@ -1911,14 +1911,15 @@ class OpController extends BaseController {
 			M('op')->data($infos)->where(array('op_id'=>$opid))->save();
 
             //给教务专员发送系统新消息  81
-            /*$jwzy_ids= M('account')->where(array('roleid'=>81,'status'=>0))->getField('id',true);
-            $uid     = cookie('userid');
-            $title   = '您有来自['.$worder['ini_dept_name'].'--'.$worder['ini_user_name'].']的专家辅导员待安排!';
-            $content = $worder['worder_content'];
-            $url     = U('worder/worder_info',array('id'=>$res));
-            $user    = '['.$worder['exe_user_id'].']';
-            send_msg($uid,$title,$content,$url,$user,'');*/
-			
+            $jwzy_ids= M('account')->where(array('roleid'=>81,'status'=>0))->getField('id',true);
+            foreach ($jwzy_ids as $v){
+                $uid     = cookie('userid');
+                $title   = '您有来自'.$op['create_user_name'].'的团号为['.$info['group_id'].']的团待安排专家辅导员!';
+                $content = '项目编号:'.$op['op_id'].';团号:'.$info['group_id'].';请登录"辅导员/教师、专家管理系统完成相关操作(如其他同事已完成操作,请忽略)!"';
+                $url     = 'http://tcs.kexueyou.com/op.php?m=Main&c=Task&a=detail&id='.$op['id'];
+                $user    = '['.$v.']';
+                send_msg($uid,$title,$content,$url,$user,'');
+            }
 			
 			$this->success('保存成功！');
 		
