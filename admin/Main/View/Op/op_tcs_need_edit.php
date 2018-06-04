@@ -62,7 +62,7 @@
                                         <select  class="form-control" style="width:12%"  name="data[1][gpk_id]" id="gpk_id_1" onchange="getPrice(1)">
                                             <option value="" selected disabled>请选择</option>
                                         </select>
-                                        <select  class="form-control" style="width:12%"  name="data[{$k}][field]">
+                                        <select  class="form-control" style="width:12%"  name="data[1][field]">
                                             <option value="" selected disabled>请选择</option>
                                             <foreach name="fields" key="key" item="value">
                                                 <option value="{$key}" <?php if($v['field']==$key) echo 'selected'; ?>>{$value}</option>
@@ -80,14 +80,12 @@
 
                             <div class="form-group col-md-12" id="useraddbtns">
                                 <a href="javascript:;" class="btn btn-success btn-sm" onClick="add_tcs()"><i class="fa fa-fw fa-plus"></i> 人员信息</a>
-                                <!--<a  href="javascript:;" class="btn btn-info btn-sm" onClick="javascript:save('tcs_need_form','<?php /*echo U('Op/public_save'); */?>',{$op.op_id});">保存</a>-->
                             </div>
                             <div class="form-group">&nbsp;</div>
                         </div>
                     </div><!-- /.box-body -->
 
                     <div style="width:100%; text-align:center;">
-                        <!--<a  href="javascript:;" class="btn btn-info btn-sm" onClick="javascript:save('tcs_need_form','<?php /*echo U('Op/public_save'); */?>',{$op.op_id});">保存</a>-->
                     </div>
                 </div><!--/.col (right) -->
             </div>

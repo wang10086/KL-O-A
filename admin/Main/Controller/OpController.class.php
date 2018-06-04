@@ -408,9 +408,12 @@ class OpController extends BaseController {
 		$where['req_id']   = $op['id'];
 		$audit = M('audit_log')->where($where)->find();
 		if($audit['dst_status']==0){
-			$show = '未审批';
+			/*$show = '未审批';
 			$show_user = '未审批';
-			$show_time = '等待审批';
+			$show_time = '等待审批';*/
+            $show = '系统默认通过';
+            $show_user = '系统默认';
+            $show_time = date('Y-m-d H:i:s',$op['create_time']);
 		}else if($audit['dst_status']==1){
 			$show = '<span class="green">已通过</span>';
 			$show_user = $audit['audit_uname'];
@@ -1851,7 +1854,7 @@ class OpController extends BaseController {
 
 			$info	= I('info');
             $data   = I('data');
-			
+
 			//判断团号是否可用
 			$where = array();
 			$where['group_id']	= $info['group_id'];
