@@ -16,11 +16,20 @@ class OpController extends BaseController {
     //初始化
     public function _initialize(){
         //获取出团确认时填写实际出团日期在当天的团
-        //求当天的起始时间戳
-        $dayBegin = strtotime(date('Y-m-d',time()));
-       // $dayBegin
-        //$lists = M()->table('__OP__ as op')->join('left join __OP_TEAM_CONFIRM__ as c on op.op_id=c.op_id')
+        $arr_opid = M('op_settlement')->where(array('audit_status'=>1))->getField('op_id',true); //已经做过结算的团op_id
+        $where    = array();
+        $where['op.op_id']       = array('not in',$arr_opid);
+        $where['op.tcs_stu']     = array('neq',0);
+        $lists    = M()->table('__OP__ as op')->field('op.*,c.tcs_end_time')->join('left join __OP_TEAM_CONFIRM__ as c on op.op_id=c.op_id')->where($where)->select();
+        foreach ($lists as $v){
+            //出团确认结束4个小时候自动改变辅导员/教师,专家状态
+            if((time()-$v['tcs_end_time']>4*60*60) && $v['tcs_stu']==3){
+                $info['tcs_stu'] = 4;
+                M('op')->where(array('op_id'=>$v['op_id']))->save($info);
+            }
+        }
     }
+
 
     // @@@NODE-3###index###出团计划列表###
     public function index(){
