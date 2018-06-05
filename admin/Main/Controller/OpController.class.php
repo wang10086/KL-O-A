@@ -1893,12 +1893,12 @@ class OpController extends BaseController {
 			$info['confirm_time']	= time();
 			//判断是否已经确认
 			if($confirm){
-                /*if($upd_num == 1){
+                if($upd_num == 1){
                     $this->error('您已经修改过一次了,不能反复修改!');
-                }else{*/
+                }else{
                     $info['upd_num']    = 1;    //用来判断修改次数
                     M('op_team_confirm')->data($info)->where(array('op_id'=>$opid))->save();
-               /* }*/
+                }
 			}else{
 				M('op_team_confirm')->add($info);
 			}
