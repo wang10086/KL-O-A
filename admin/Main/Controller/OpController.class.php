@@ -480,11 +480,11 @@ class OpController extends BaseController {
         }
         $guide_pk_id= M('guide_pricekind')->field('id,name')->select();
         $sum_cost = 0;
-        foreach ($guide as & $v){
+        foreach ($guide as $k=>$v){
             $sum_cost += $v['total'];
             foreach ($guide_pk_id as $val){
                 if ($v['gpk_id'] == $val['id']){
-                    $v['gpk_name'] = $val['name'];
+                    $guide[$k]['gpk_name'] = $val['name'];
                 }
             }
         }
@@ -498,7 +498,6 @@ class OpController extends BaseController {
 		$this->op             = $op;
 		$this->pro            = $pro;
 		$this->budget         = $budget;
-		$this->guide          = $guide;
         $this->sum_cost       = $sum_cost;
 		$this->settlement     = $settlement;
 		$this->supplier       = $supplier;
@@ -524,6 +523,8 @@ class OpController extends BaseController {
         $this->act_needs      = $act_need;
         $this->les_fields     = $les_field;
         $this->act_fields     = $act_field;
+        $this->guide          = $guide;
+
         //$this->job_name      = array_filter(array_column($job_names,'job_money','job_name'));
         $this->job_name       = array_column($job_names,'job_money','job_name');
         $this->xuhao          = 1;
@@ -567,7 +568,7 @@ class OpController extends BaseController {
         }
         $this->userkey = json_encode($user_key);
 
-		$this->display('plans_edit');
+        $this->display('plans_edit');
 		
 	}
 	

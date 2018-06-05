@@ -22,7 +22,7 @@
                 <td><a href="javascript:;" onClick="open_guide({$v.guide_id},'{$v.name}')">{$v.name}</a> <i class="fa  fa-calendar" style="color:#3CF; margin-left:8px; cursor:pointer;" onClick="course({$v.guide_id},{$op.op_id})"></i></td>
                 <td>{$v.tel}</td>
                 <td>{$v.kind}</td>
-                <td>aaaa</td>
+                <td>{$v.gpk_name}</td>
                 <td>{$v.sex}</td>
                 <td>&yen;{$v.cost}</td>
                 <td>{$v.amount}</td>
