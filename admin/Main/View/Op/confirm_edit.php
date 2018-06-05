@@ -41,7 +41,7 @@
     <div style="width:100%;float:left;">
             <div class="form-group col-md-6">
                 <label>活动时间(请填写具体时间)：</label>
-                <input type="text" name="info[tcs_time]" class="form-control inputdate_a" value="<if condition="$confirm['tcs_time']">{$confirm.tcs_time|date='Y-m-d H:i:s',###}</if>" required />
+                <input type="text" name="tcs_time" class="form-control inputdate_a" value="<if condition="$confirm['tcs_time']">{$confirm.tcs_time}</if>" required />
             </div>
 
             <div class="form-group col-md-6">

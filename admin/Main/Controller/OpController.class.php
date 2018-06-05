@@ -13,6 +13,14 @@ class OpController extends BaseController {
     protected $_pagetitle_ = '计调操作';
     protected $_pagedesc_  = '';
 
+    //初始化
+    public function _initialize(){
+        //获取出团确认时填写实际出团日期在当天的团
+        //求当天的起始时间戳
+        $dayBegin = strtotime(date('Y-m-d',time()));
+       // $dayBegin
+        //$lists = M()->table('__OP__ as op')->join('left join __OP_TEAM_CONFIRM__ as c on op.op_id=c.op_id')
+    }
 
     // @@@NODE-3###index###出团计划列表###
     public function index(){
@@ -1853,8 +1861,11 @@ class OpController extends BaseController {
 
 		if(isset($_POST['dosubmit']) && $_POST['dosubmit']){
 
-			$info	= I('info');
-            $data   = I('data');
+			$info	    = I('info');
+            $data       = I('data');
+            $tcs_time   = I('tcs_time');
+            $tcs_begin_time = $info['ret_time'].' '.substr($tcs_time,0,8);
+            $tcs_end_time   = $info['ret_time'].' '.substr($tcs_time,11,8);
 
 			//判断团号是否可用
 			$where = array();
@@ -1868,7 +1879,8 @@ class OpController extends BaseController {
 			$info['user_name']		= cookie('nickname'); 
 			$info['dep_time']		= $info['dep_time'] ? strtotime($info['dep_time']) : 0;
 			$info['ret_time']		= $info['ret_time'] ? strtotime($info['ret_time']) : 0;
-			$info['tcs_time']		= $info['tcs_time'] ? strtotime($info['tcs_time']) : 0;
+            $info['tcs_begin_time'] = strtotime($tcs_begin_time);
+            $info['tcs_end_time']   = strtotime($tcs_end_time);
 			$info['confirm_time']	= time();
 			//判断是否已经确认
 			if($confirm){
@@ -1925,7 +1937,12 @@ class OpController extends BaseController {
 			$this->success('保存成功！');
 		
 		}else{
-			
+            if ($confirm){
+                $tcs_begin_time  = substr(date('Y-m-d H:i:s',$confirm['tcs_begin_time']),11,8);
+                $tcs_end_time    = substr(date('Y-m-d H:i:s',$confirm['tcs_end_time']),11,8);
+                $confirm['tcs_time'] = $tcs_begin_time.' - '.$tcs_end_time;
+            }
+
 			$this->kinds	= M('project_kind')->getField('id,name', true);
 			$this->op		= $op;
             //辅导员/教师、专家
