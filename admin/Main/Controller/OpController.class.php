@@ -1873,8 +1873,9 @@ class OpController extends BaseController {
 			$info	    = I('info');
             $data       = I('data');
             $tcs_time   = I('tcs_time');
-            $tcs_begin_time = $info['ret_time'].' '.substr($tcs_time,0,8);
-            $tcs_end_time   = $info['ret_time'].' '.substr($tcs_time,11,8);
+            $in_day         = I('in_day');
+            $tcs_begin_time = $in_day.' '.substr($tcs_time,0,8);
+            $tcs_end_time   = $in_day.' '.substr($tcs_time,11,8);
 
 			//判断团号是否可用
 			$where = array();
@@ -1923,7 +1924,7 @@ class OpController extends BaseController {
                 op_record($record);
             }
 			
-			//修正项目中团号
+			//修正tcs项目中状态
 			$infos = array();
 			$infos['group_id']	    = $info['group_id'];
 			$infos['status']		= 1;
@@ -1947,9 +1948,11 @@ class OpController extends BaseController {
 		
 		}else{
             if ($confirm){
+                $in_day          = substr(date('Y-m-d H:i:s',$confirm['tcs_begin_time']),0,10);
                 $tcs_begin_time  = substr(date('Y-m-d H:i:s',$confirm['tcs_begin_time']),11,8);
                 $tcs_end_time    = substr(date('Y-m-d H:i:s',$confirm['tcs_end_time']),11,8);
                 $confirm['tcs_time'] = $tcs_begin_time.' - '.$tcs_end_time;
+                $confirm['in_day']   = $in_day;
             }
 
 			$this->kinds	= M('project_kind')->getField('id,name', true);
