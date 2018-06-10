@@ -505,9 +505,6 @@ class FinanceController extends BaseController {
 		$where['op_id'] = $opid;
 		
 		$op         = M('op')->where($where)->find();
-        if ($op['tcs_stu'] && $op['tcs_stu']!=5){
-            $this->error('暂未核实专家辅导员出团信息!');
-        }
 
 		$jiesuan    = M('op_costacc')->where(array('op_id'=>$opid,'status'=>2))->order('id')->select();
 		if(count($jiesuan)==0){
