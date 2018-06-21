@@ -34,36 +34,12 @@
         </div>
     </div>
 
-    <div class="form-group col-md-12"  style="margin-top:20px;">
-        <label class="lit-title" >辅导员/教师、专家需求</label>
-    </div>
-    <!--<div class="form-group col-md-12"></div>-->
-    <div style="width:100%;float:left;">
-            <div class="form-group col-md-4">
-                <label>活动日期：</label>
-                <input type="text" name="in_day" class="form-control inputdate" value="{$confirm.in_day}" required />
-            </div>
-
-            <div class="form-group col-md-4">
-                <label>活动时间(请填写具体时间段)：</label>
-                <input type="text" name="tcs_time" class="form-control inputdate_a" value="<if condition="$confirm['tcs_time']">{$confirm.tcs_time}</if>" required />
-            </div>
-
-            <div class="form-group col-md-4">
-                <label>活动地点：</label>
-                <input type="text" name="info[address]"  class="form-control" value="{$confirm.address}" required />
-            </div>
-        <div class="form-group col-md-12"></div>
-
-        <include file="op_tcs_need_edit" />
-
-    </div>
 
 </div>
 
 <div id="formsbtn" style="padding-bottom:10px;margin-top:0;">
     <div class="content" style="margin-top:0;">
-        <div id="formsbtn" style="padding-bottom:20px; color:#ff3300;">请确认该项目已经出团，认真填写相关数据，不可反复修改</div>
+        <div id="formsbtn" style="padding-bottom:20px; color:#ff3300;">请确认该项目已经出团，认真填写相关数据，成团基本信息不可反复修改</div>
                                     
         <button type="s" class="btn btn-info btn-lg" style=" padding-left:40px; padding-right:40px; margin-right:10px;">保存确认</button>
     </div>

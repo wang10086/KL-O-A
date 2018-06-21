@@ -84,21 +84,20 @@
                                 </div>
                             </div>
 
-
                             <div class="box box-warning">
                                 <div class="box-header">
-                                    <h3 class="box-title">随团人员名单</h3>
+                                    <h3 class="box-title">辅导员/教师、专家需求</h3>
                                 </div><!-- /.box-header -->
                                 <div class="box-body">
-                                    <?php if($stu_list){ ?>
-                                        <include file="confirm_name_list" />
+
+                                    <?php if($jiesuan ){ ?>
+                                        <include file="op_tcs_need_edit" />
                                     <?php }else{ ?>
-                                        <div class="content" ><span style="padding:20px 0; float:left; clear:both; text-align:center; text-align:center; width:100%;">暂无人员信息!</span></div>
-                                    <?php } ?>
+                                        <include file="op_tcs_need_edit" />
+                                    <?php }?>
 
                                 </div>
                             </div>
-
 
 
                         </div><!--/.col (right) -->
@@ -233,6 +232,31 @@
             $(this).text(parseInt(index)+1);
         });
     }
+
+    //保存信息
+    function save(id,url,opid){
+        $.ajax({
+            type: "POST",
+            url: url,
+            dataType:'json',
+            data: $('#'+id).serialize(),
+            success:function(data){
+                if(parseInt(data)>0){
+                    art.dialog.alert('保存成功','success');
+                }else{
+                    art.dialog.alert('保存失败','warning');
+                }
+            }
+        });
+
+        setTimeout("history.go(0)",1000);
+
+    }
+
+    function add_confirm(){
+
+    }
+
 </script>
      
 

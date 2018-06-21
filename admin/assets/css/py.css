@@ -17,6 +17,7 @@ a:focus {
   color: #72afd2;
   
 }
+
 /* Layouts */
 .wrapper {
   min-height: 100%;
@@ -4063,3 +4064,6 @@ th{outline: none;}
 
 .lit-title{width:100%; border-bottom:1px solid #dedede; padding-bottom:10px; font-weight:bold; margin-top: 20px;}
 .lm_c{float:left; color:#666;  padding:5px 0; margin-right:20px; color:#333333;}
+
+.mt10{margin-top: 10px;}
+.ml20{margin-left: 29px;}
