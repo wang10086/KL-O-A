@@ -928,6 +928,12 @@ class OpController extends BaseController {
                 }
             }
 
+            //保存辅导员/教师,专家需求信息
+            if($opid && $savetype==14 ){
+                $aaa = I();
+                var_dump($aaa);die;
+            }
+
             echo $num;
         }
 	

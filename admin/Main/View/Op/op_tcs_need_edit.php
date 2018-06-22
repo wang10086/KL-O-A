@@ -1,7 +1,8 @@
 <form method="post" action="{:U('Op/public_save')}" id="tcs_need_form">
     <input type="hidden" name="dosubmint" value="1">
     <input type="hidden" name="opid" value="{$op.op_id}">
-    <input type="hidden" name="savetype" value="13">
+    <!--<input type="hidden" name="savetype" value="13">-->
+    <input type="hidden" name="savetype" value="14">
 <div class="content">
 
 <div class="form-group col-md-12"  style="margin-top:20px;">
@@ -121,6 +122,7 @@
     <div class="form-group ml20">
         <a href="javascript:;" class="btn btn-warning btn-sm" onClick="add_confirm()"><i class="fa fa-fw fa-plus"></i> 活动需求</a>
         <a  href="javascript:;" class="btn btn-info btn-sm" onClick="javascript:save('tcs_need_form','<?php echo U('Op/public_save'); ?>',{$op.op_id});">保存</a>
+        <input type="submit" value="提交AAAA">
         <p class="mt10">说明 : 添加活动需求主要是针对课后一小时等长线活动使用!</p>
     </div>
 </div>
@@ -151,7 +153,7 @@
     function add_confirm(){
         var m = parseInt($('#number').val())+1;
         var i = parseInt($('#tcs_val').text())+1;
-        var html ='<div class="form-group col-md-4"> <label>活动日期：</label> <input type="text" name="info['+m+'][in_day]" class="form-control inputdate" value="" required /> </div>'+
+        var html ='<div class="form-group col-md-12" id="longline_'+m+'"><div class="form-group col-md-4"> <label>活动日期：</label> <input type="text" name="info['+m+'][in_day]" class="form-control inputdate" value="" required /> </div>'+
         '<div class="form-group col-md-4"> <label>活动时间(请填写具体时间段)：</label> <input type="text" name="info['+m+'][tcs_time]" class="form-control inputdate_a" value="<if condition="$confirm['tcs_time']">{$confirm.tcs_time}</if>" required /> </div>'+
         '<div class="form-group col-md-4"> <label>活动地点：</label> <input type="text" name="info['+m+'][address]"  class="form-control" value="" required /> </div> <div class="form-group col-md-12"></div>'+
         '<div class="userlist no-border" id="tcs_'+i+'">' +
@@ -165,7 +167,7 @@
         '<input type="text"  class="form-control" style="width:8%" name="data['+i+'][total]" id="total_'+i+'">' +
         '<input type="text"  class="form-control" style="width:18%" name="data['+i+'][remark]">' +
         '<a href="javascript:;" class="btn btn-danger btn-flat" onclick="deltcsbox(\'tcs_'+i+'\')">删除</a></div>'+
-        '</div> </div> <div class="form-group col-md-12" id="useraddbtns"> <a href="javascript:;" class="btn btn-success btn-sm" onClick="add_lltcs('+m+')"><i class="fa fa-fw fa-plus"></i> 人员信息</a><a href="javascript:;" class="btn btn-danger btn-flat" onclick="delllbox(\'tcs_'+i+'\')">删除</a></div> </div> <div class="form-group col-md-12">&nbsp;</div> </div> </div> </div> </div> </div> </div>'
+        '</div> </div> <div class="form-group col-md-12" id="useraddbtns"> <a href="javascript:;" class="btn btn-success btn-sm" onClick="add_lltcs('+m+')"><i class="fa fa-fw fa-plus"></i> 人员信息</a><a href="javascript:;" class="btn btn-danger btn-flat" onclick="delllbox(\'longline_'+m+'\')">删除</a></div> </div> <div class="form-group col-md-12">&nbsp;</div> </div> </div> </div> </div> </div> </div></div>'
 
         $('#longline').append(html);
         $('#number').val(m);
@@ -186,6 +188,12 @@
         $('#lltcs'+m).append(html);
         $('#tcs_val').html(i);
         assign_option(i);
+        orderno();
+    }
+
+    //移除
+    function delllbox(obj){
+        $('#'+obj).remove();
         orderno();
     }
 </script>

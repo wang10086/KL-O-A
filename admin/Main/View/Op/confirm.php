@@ -88,7 +88,7 @@
                                 <div class="box-header">
                                     <h3 class="box-title">辅导员/教师、专家需求</h3>
                                 </div><!-- /.box-header -->
-                                <div class="box-body">
+                                <div class="box-body" >
                                     <?php if($jiesuan ){ ?>
                                         <include file="op_tcs_need_edit" />
                                     <?php }else{ ?>
