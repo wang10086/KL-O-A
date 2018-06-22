@@ -1872,10 +1872,10 @@ class OpController extends BaseController {
 
 			$info	    = I('info');
             $data       = I('data');
-            $tcs_time   = I('tcs_time');
+            /*$tcs_time   = I('tcs_time');
             $in_day         = I('in_day');
             $tcs_begin_time = $in_day.' '.substr($tcs_time,0,8);
-            $tcs_end_time   = $in_day.' '.substr($tcs_time,11,8);
+            $tcs_end_time   = $in_day.' '.substr($tcs_time,11,8);*/
 
 			//判断团号是否可用
 			$where = array();
@@ -1889,8 +1889,8 @@ class OpController extends BaseController {
 			$info['user_name']		= cookie('nickname'); 
 			$info['dep_time']		= $info['dep_time'] ? strtotime($info['dep_time']) : 0;
 			$info['ret_time']		= $info['ret_time'] ? strtotime($info['ret_time']) : 0;
-            $info['tcs_begin_time'] = strtotime($tcs_begin_time);
-            $info['tcs_end_time']   = strtotime($tcs_end_time);
+            /*$info['tcs_begin_time'] = strtotime($tcs_begin_time);
+            $info['tcs_end_time']   = strtotime($tcs_end_time);*/
 			$info['confirm_time']	= time();
 			//判断是否已经确认
 			if($confirm){
@@ -1964,6 +1964,9 @@ class OpController extends BaseController {
             $priceKind          = M()->table('__GUIDE_PRICEKIND__ as gpk')->field('gpk.id,gpk.name')->join('left join __OP__ as op on gpk.pk_id = op.kind')->where(array("op.op_id"=>$opid))->select();
             $this->price_kind   = $priceKind;
             $this->fields       = C('GUI_FIELDS');
+
+            $jiesuan            = M('op_costacc')->where(array('op_id'=>$opid,'status'=>2))->select();
+            $this->jiesuan      = $jiesuan;
 
             //人员列表
             $stu_list       = M('op_member')->where(array('op_id'=>$opid))->select();
