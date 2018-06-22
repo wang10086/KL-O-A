@@ -3772,13 +3772,13 @@ a.iclose{background:url(../img/btn/min_icon.png) no-repeat 0px -30px;width:30px;
 .tcs_need_h2{font-size: 14px;padding-bottom: 10px;display: inline-block;margin-right: 20px;font-weight: 600;margin-top: 35px;}
 .tcscon{    padding: 0 12px;  overflow: auto; margin-top: -35px; overflow:-Scroll;overflow-y:hidden;}
 .ml-12{margin-left: 12px;}
-#tcs{ padding:0 0px;}
-#tcs .form-control{ width:120px; float:left; margin-right:10px; border-radius:0;}
-#tcs .unitbox{ width:120px; margin-right:10px; float:left; clear:none; border:none; padding:0;}
-#tcs .title{ width:22px; float:left; height:30px; line-height:30px; margin-left:-30px; text-align:right;}
-#tcs .userlist { width:100%; height:auto !important; float:left; clear:both; padding-bottom:15px; border-bottom:1px solid #cccccc; margin-top:15px;}
-#tcs .btn{ padding:7px 12px; font-size:12px;}
-#tcs td{ line-height:34px;}
+.tcs{ padding:0 0px;}
+.tcs .form-control{ width:120px; float:left; margin-right:10px; border-radius:0;}
+.tcs .unitbox{ width:120px; margin-right:10px; float:left; clear:none; border:none; padding:0;}
+.tcs .title{ width:22px; float:left; height:30px; line-height:30px; margin-left:-30px; text-align:right;}
+.tcs .userlist { width:100%; height:auto !important; float:left; clear:both; padding-bottom:15px; border-bottom:1px solid #cccccc; margin-top:15px;}
+.tcs .btn{ padding:7px 12px; font-size:12px;}
+.tcs td{ line-height:34px;}
 #tcs_val{ display:none}
 
 #user_val{ display:none;}
@@ -4056,6 +4056,7 @@ th{outline: none;}
 .act_input_500{width: 500px; border: none; border-bottom: solid 1px;}
 .no-border-textarea{border: none; margin-bottom: -10px;}
 .inline-block{display: inline-block;}
+.mt10{margin-top: 10px;}
 .ml20{margin-left: 20px;}
 .res_need_h2{font-size:16px; border-bottom:2px solid #dedede; padding-bottom:10px;}
 .td{border: solid 1px grey;}
@@ -4065,5 +4066,3 @@ th{outline: none;}
 .lit-title{width:100%; border-bottom:1px solid #dedede; padding-bottom:10px; font-weight:bold; margin-top: 20px;}
 .lm_c{float:left; color:#666;  padding:5px 0; margin-right:20px; color:#333333;}
 
-.mt10{margin-top: 10px;}
-.ml20{margin-left: 29px;}
