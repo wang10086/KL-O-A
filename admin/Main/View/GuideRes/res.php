@@ -39,16 +39,16 @@
                                         	<th class="sorting" data="fee">费用</th>
                                             <th class="sorting" data="type">性质</th>
                                             <th class="sorting" data="">录入时间</th>
-                                          
+
                                         	<th>审批状态</th>
                                             <if condition="rolemenu(array('GuideRes/addres'))">
                                             <th width="60" class="taskOptions">编辑</th>
-                                            </if> 
+                                            </if>
                                             <if condition="rolemenu(array('GuideRes/delres'))">
                                             <th width="60" class="taskOptions">删除</th>
-                                            </if> 
+                                            </if>
                                         </tr>
-                                        <foreach name="lists" item="row">                      
+                                        <foreach name="lists" item="row">
                                         <tr>
                                             <td><a href="{:U('GuideRes/res_view', array('id'=>$row['id']))}">{$row.name}</a></td>
                                             <td><?php echo $reskind[$row['kind']]; ?></td>
@@ -59,22 +59,22 @@
                                             <td>{$row.fee}</td>
                                             <td><?php if ($row['type']==1) {echo '专职'; } else {echo '兼职';} ?></td>
                                             <td><if condition="$row['input_time']">{$row.input_time|date='Y-m-d H:i:s',###}</if></td>
-                                           <?php 
+                                           <?php
                                             if($row['audit_status']== P::AUDIT_STATUS_NOT_AUDIT){
-                                                $show  = '<td>等待审批</td>';	
+                                                $show  = '<td>等待审批</td>';
                                             }else if($row['audit_status'] == P::AUDIT_STATUS_PASS){
-                                                $show  = '<td><span class="green">通过</span></td>';	
+                                                $show  = '<td><span class="green">通过</span></td>';
                                             }else if($row['audit_status'] == P::AUDIT_STATUS_NOT_PASS){
-                                                $show  = '<td><span class="red">不通过</span></td>';	
+                                                $show  = '<td><span class="red">不通过</span></td>';
                                             }
                                             echo $show;
                                             ?>
-                                            
+
                                             <if condition="rolemenu(array('GuideRes/addres'))">
                                             <td class="taskOptions">
-                                            
+
                                             <button onClick="javascript:window.location.href='{:U('GuideRes/addres',array('id'=>$row['id']))}';" title="修改" class="btn btn-info btn-smsm"><i class="fa fa-pencil"></i></button>
-                                            
+
                                             <!--
                                             <button onClick="openform('{:U('Rights/grant',array('res'=>'cas_res','resid'=>$row['id']))}');" title="修改" class="btn btn-info btn-smsm"><i class="fa fa-pencil"></i></button>
                                             -->
@@ -86,10 +86,10 @@
                                             </td>
                                             </if>
                                         </tr>
-                                        </foreach>		
-                                        
+                                        </foreach>
+
                                     </table>
-                                
+
                                 </div><!-- /.box-body -->
                                 <div class="box-footer clearfix">
                                 	<div class="pagestyle">{$pages}</div>
