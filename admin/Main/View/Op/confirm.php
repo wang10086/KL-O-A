@@ -116,11 +116,11 @@
         elem: '.inputdate_a',theme: '#0099CC',type: 'datetime'
     });*/
     //时间范围
-    laydate.render({
+    /*laydate.render({
         elem: '.inputdate_a'
         ,type: 'time'
         ,range: true
-    });
+    });*/
 
 
     var price_kind = '';

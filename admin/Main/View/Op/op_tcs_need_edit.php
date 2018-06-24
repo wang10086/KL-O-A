@@ -18,7 +18,7 @@
 
     <div class="form-group col-md-4">
         <label>活动时间(请填写具体时间段)：</label>
-        <input type="text" name="info[1][tcs_time]" class="form-control inputdate_a" value="<if condition="$confirm['tcs_time']">{$confirm.tcs_time}</if>" required />
+        <input type="text" name="info[1][tcs_time]" class="form-control inputdate_b" value="<if condition="$confirm['tcs_time']">{$confirm.tcs_time}</if>" required />
     </div>
 
     <div class="form-group col-md-4">
@@ -154,12 +154,12 @@
         var m = parseInt($('#number').val())+1;
         var i = parseInt($('#tcs_val').text())+1;
         var html ='<div class="form-group col-md-12" id="longline_'+m+'"><div class="form-group col-md-4"> <label>活动日期：</label> <input type="text" name="info['+m+'][in_day]" class="form-control inputdate" value="" required /> </div>'+
-        '<div class="form-group col-md-4"> <label>活动时间(请填写具体时间段)：</label> <input type="text" name="info['+m+'][tcs_time]" class="form-control inputdate_a" value="<if condition="$confirm['tcs_time']">{$confirm.tcs_time}</if>" required /> </div>'+
+        '<div class="form-group col-md-4"> <label>活动时间(请填写具体时间段)：</label> <input type="text" name="info['+m+'][tcs_time]" class="form-control inputdate_b" value="<if condition="$confirm['tcs_time']">{$confirm.tcs_time}</if>" required /> </div>'+
         '<div class="form-group col-md-4"> <label>活动地点：</label> <input type="text" name="info['+m+'][address]"  class="form-control" value="" required /> </div> <div class="form-group col-md-12"></div>'+
-        '<div class="userlist no-border" id="tcs_'+i+'">' +
+        '<div class="userlist no-border" id="tcs_'+i+'" class="tcs">' +
         '<span class="title"></span> ' +
         '<div class="tcsbox"> <div class="row"> <div class="col-md-12"> <div class="tcscon"> <div class="box-body mb-50"> <div class="content" style="padding-top:0px;"> <div id="lltcs_'+m+'" class="tcs"> <div class="userlist form-title"> <div class="unitbox" style="width:12%">职务</div> <div class="unitbox" style="width:12%">职能类型</div> <div class="unitbox" style="width:12%">所属领域</div> <div class="unitbox" style="width:5%">人数</div> <div class="unitbox" style="width:8%">单价</div> <div class="unitbox" style="width:8%">合计</div> <div class="unitbox" style="width:18%">备注</div> </div> '+
-        '<select  class="form-control" style="width:12%" name="data['+i+'][guide_kind_id]" id="se_'+i+'" onchange="getPrice('+i+')"><option value="" selected disabled>请选择</option> <foreach name="guide_kind" key="k" item="v"> <option value="{$k}">{$v}</option></foreach></select> ' +
+        '<div class="userlist no-border" id="tcs_id_{11111}"><select  class="form-control" style="width:12%" name="data['+i+'][guide_kind_id]" id="se_'+i+'" onchange="getPrice('+i+')"><option value="" selected disabled>请选择</option> <foreach name="guide_kind" key="k" item="v"> <option value="{$k}">{$v}</option></foreach></select> ' +
         '<select  class="form-control gpk" style="width:12%" name="data['+i+'][gpk_id]" id="gpk_id_'+i+'" onchange="getPrice('+i+')"><option value="" selected disabled>请选择</option> <foreach name="hotel_start" key="k" item="v"> <option value="{$k}">{$v}</option></foreach></select> ' +
         '<select  class="form-control" style="width:12%"  name="data['+i+'][field]"><option value="" selected disabled>请选择</option> <foreach name="fields" key="key" item="value"> <option value="{$key}">{$value}</option> </foreach> </select>'+
         '<input type="text"  class="form-control" style="width:5%" name="data['+i+'][num]" id="num_'+i+'" value="1" onblur="getTotal('+i+')" > ' +
@@ -167,10 +167,11 @@
         '<input type="text"  class="form-control" style="width:8%" name="data['+i+'][total]" id="total_'+i+'">' +
         '<input type="text"  class="form-control" style="width:18%" name="data['+i+'][remark]">' +
         '<a href="javascript:;" class="btn btn-danger btn-flat" onclick="deltcsbox(\'tcs_'+i+'\')">删除</a></div>'+
-        '</div> </div> <div class="form-group col-md-12" id="useraddbtns"> <a href="javascript:;" class="btn btn-success btn-sm" onClick="add_lltcs('+m+')"><i class="fa fa-fw fa-plus"></i> 人员信息</a><a href="javascript:;" class="btn btn-danger btn-flat" onclick="delllbox(\'longline_'+m+'\')">删除</a></div> </div> <div class="form-group col-md-12">&nbsp;</div> </div> </div> </div> </div> </div> </div></div>'
+        '</div> </div> <div class="form-group col-md-12" id="useraddbtns"> <a href="javascript:;" class="btn btn-success btn-sm" onClick="add_lltcs('+m+')"><i class="fa fa-fw fa-plus"></i> 人员信息</a><a href="javascript:;" class="btn btn-warning btn-sm ml-12" onclick="delllbox(\'longline_'+m+'\')">删除</a></div> </div> <div class="form-group col-md-12">&nbsp;</div> </div> </div> </div> </div> </div> </div></div>'
 
         $('#longline').append(html);
         $('#number').val(m);
+        relaydate();
     }
 
     function add_lltcs(m){
@@ -185,7 +186,7 @@
             '<input type="text"  class="form-control" style="width:8%" name="data['+i+'][total]" id="total_'+i+'">' +
             '<input type="text"  class="form-control" style="width:18%" name="data['+i+'][remark]">' +
             '<a href="javascript:;" class="btn btn-danger btn-flat" onclick="deltcsbox(\'tcs_'+i+'\')">删除</a></div>';
-        $('#lltcs'+m).append(html);
+        $('#lltcs_'+m).append(html);
         $('#tcs_val').html(i);
         assign_option(i);
         orderno();

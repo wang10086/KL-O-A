@@ -46,7 +46,14 @@ function relaydate(){
 			elem: elm
 		});
 	});
-	
+
+	lay('.inputdate_b').each(function() {
+		laydate.render({
+			elem: this
+			,type: 'time'
+			,range: true
+		});
+	});
 }
 
 
