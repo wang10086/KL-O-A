@@ -12,10 +12,12 @@
                 <th class="sorting" data="" width="80">单次价格</th>
                 <th class="sorting" data="" width="80">合计价格</th>
                 <th class="sorting" data="">备注</th>
-                <!--<th width="60" class="taskOptions">查看</th>-->
+                <th width="60" class="taskOptions">编辑</th>
             </tr>
             <foreach name="{guide_price}" item="row">
                 <tr>
+                    <input type="hidden" name="confirm_id" value="{$row.cid}">
+                    <input type="hidden" name="price_id" value="{$row.pid}">
                     <td>{$row.in_day|date='Y-m-d',###}</td>
                     <td>{$row.tcs_begin_time|date='H:i:s',###}--{$row.tcs_end_time|date='H:i:s',###}</td>
                     <td>{$row.address}</td>
@@ -26,6 +28,7 @@
                     <td>&yen;{$row.price}</td>
                     <td>&yen;{$row.total}</td>
                     <td>{$row.remark}</td>
+                    <td></td>
                 </tr>
             </foreach>
         </table>
