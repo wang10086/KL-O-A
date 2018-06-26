@@ -19,9 +19,9 @@
                     <td>{$row.in_day|date='Y-m-d',###}</td>
                     <td>{$row.tcs_begin_time|date='H:i:s',###}--{$row.tcs_end_time|date='H:i:s',###}</td>
                     <td>{$row.address}</td>
-                    <td>{$row.}</td>
-                    <td>{$row.}</td>
-                    <td>{$row.}</td>
+                    <td>{$row.zhiwu}</td>
+                    <td>{$row.zhineng}</td>
+                    <td>{$row.lingyu}</td>
                     <td>{$row.num}</td>
                     <td>&yen;{$row.price}</td>
                     <td>&yen;{$row.total}</td>

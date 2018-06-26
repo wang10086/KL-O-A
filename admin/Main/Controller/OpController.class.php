@@ -1974,28 +1974,38 @@ class OpController extends BaseController {
 			$this->success('保存成功！');
 		
 		}else{
-            if ($confirm){
-                $in_day          = substr(date('Y-m-d H:i:s',$confirm['tcs_begin_time']),0,10);
-                $tcs_begin_time  = substr(date('Y-m-d H:i:s',$confirm['tcs_begin_time']),11,8);
-                $tcs_end_time    = substr(date('Y-m-d H:i:s',$confirm['tcs_end_time']),11,8);
-                $confirm['tcs_time'] = $tcs_begin_time.' - '.$tcs_end_time;
-                $confirm['in_day']   = $in_day;
-            }
 
-			$this->kinds	= M('project_kind')->getField('id,name', true);
-			$this->op		= $op;
-            //辅导员/教师、专家
-            /*$this->guide_price  = M('op_guide_price')->where(array('op_id'=>$opid))->select();*/
-            $this->guide_price  = M()->table('__OP_GUIDE_CONFIRM__ as c')->join('left join __OP_GUIDE_PRICE__ as p on p.confirm_id = c.id')->where(array('c.op_id'=>$opid,'p.op_id'=>$opid))->select();
-
+            $this->op		    = $op;
+            $this->kinds	    = M('project_kind')->getField('id,name', true);
             $this->guide_kind   = M('guidekind')->getField('id,name',true);
             //获取职能类型
             $priceKind          = M()->table('__GUIDE_PRICEKIND__ as gpk')->field('gpk.id,gpk.name')->join('left join __OP__ as op on gpk.pk_id = op.kind')->where(array("op.op_id"=>$opid))->select();
             $this->price_kind   = $priceKind;
             $this->fields       = C('GUI_FIELDS');
-
             $jiesuan            = M('op_costacc')->where(array('op_id'=>$opid,'status'=>2))->select();
             $this->jiesuan      = $jiesuan;
+
+            //辅导员/教师、专家
+            /*$this->guide_price  = M('op_guide_price')->where(array('op_id'=>$opid))->select();*/
+            $guide_price        = M()->table('__OP_GUIDE_CONFIRM__ as c')->field('c.id as cid,c.*,p.id as pid,p.*')->join('left join __OP_GUIDE_PRICE__ as p on p.confirm_id = c.id')->where(array('c.op_id'=>$opid,'p.op_id'=>$opid))->select();
+            foreach ($guide_price as $k=>$v){
+                //职务信息
+                foreach ($this->guide_kind as $key=>$value){
+                    if ($v['guide_kind_id'] == $key){
+                        $guide_price[$k]['zhiwu'] = $value;
+                    }
+                }
+
+                //职能类型
+
+                //所属领域
+                foreach ($this->fields as $key=>$value){
+                    if ($v['field'] == $key){
+                        $guide_price[$k]['lingyu'] = $value;
+                    }
+                }
+            }
+            $this->guide_price  = $guide_price;
 
             //人员列表
             $stu_list       = M('op_member')->where(array('op_id'=>$opid))->select();
