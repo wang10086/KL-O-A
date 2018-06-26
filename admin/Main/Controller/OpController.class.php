@@ -16,7 +16,7 @@ class OpController extends BaseController {
     //初始化
     public function _initialize(){
         //获取出团确认时填写实际出团日期在当天的团
-        $arr_opid = M('op_settlement')->where(array('audit_status'=>1))->getField('op_id',true); //已经做过结算的团op_id
+       /* $arr_opid = M('op_settlement')->where(array('audit_status'=>1))->getField('op_id',true); //已经做过结算的团op_id
         $where    = array();
         $where['op.op_id']       = array('not in',$arr_opid);
         $where['op.tcs_stu']     = array('neq',0);
@@ -27,7 +27,7 @@ class OpController extends BaseController {
                 $info['tcs_stu'] = 4;
                 M('op')->where(array('op_id'=>$v['op_id']))->save($info);
             }
-        }
+        }*/
     }
 
 
@@ -918,14 +918,35 @@ class OpController extends BaseController {
 
             //保存辅导员/教师,专家需求信息
             if($opid && $savetype==13 ){
-                $data = I('data');
+                $data           = I('data');
+                $in_day         = I('in_day');
+                $tcs_time       = I('tcs_time');
+                $address        = I('address');
+                $tcs_begin_time = $in_day.' '.substr($tcs_time,0,8);
+                $tcs_end_time   = $in_day.' '.substr($tcs_time,11,8);
+                $info['in_day']         = strtotime($in_day);
+                $info['tcs_begin_time'] = strtotime($tcs_begin_time);
+                $info['tcs_end_time']   = strtotime($tcs_end_time);
+                $info['address']        = $address;
+                $info['op_id']          = $opid;
+                $con_res = M('op_guide_confirm')->add($info);
+                if ($con_res){
+                    foreach($data as $k=>$v){
+                        $v['op_id']      = $opid;
+                        $v['confirm_id'] = $con_res;
+                        $savein          = $op_guide_price_db->add($v);
+                        if($savein) $num++;
+                    }
+                }
+
+                /*$data = I('data');
                 $savedel = $op_guide_price_db->where(array('op_id'=>$opid))->delete();
                 if ($savedel)  $num++;
                 foreach($data as $k=>$v){
                     $v['op_id'] = $opid;
                     $savein     = $op_guide_price_db->add($v);
                     if($savein) $num++;
-                }
+                }*/
             }
 
             //保存辅导员/教师,专家需求信息
@@ -1964,7 +1985,9 @@ class OpController extends BaseController {
 			$this->kinds	= M('project_kind')->getField('id,name', true);
 			$this->op		= $op;
             //辅导员/教师、专家
-            $this->guide_price  = M('op_guide_price')->where(array('op_id'=>$opid))->select();
+            /*$this->guide_price  = M('op_guide_price')->where(array('op_id'=>$opid))->select();*/
+            $this->guide_price  = M()->table('__OP_GUIDE_CONFIRM__ as c')->join('left join __OP_GUIDE_PRICE__ as p on p.confirm_id = c.id')->where(array('c.op_id'=>$opid,'p.op_id'=>$opid))->select();
+
             $this->guide_kind   = M('guidekind')->getField('id,name',true);
             //获取职能类型
             $priceKind          = M()->table('__GUIDE_PRICEKIND__ as gpk')->field('gpk.id,gpk.name')->join('left join __OP__ as op on gpk.pk_id = op.kind')->where(array("op.op_id"=>$opid))->select();
