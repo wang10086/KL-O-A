@@ -2271,5 +2271,19 @@ class OpController extends BaseController {
 		}
 		
     }
+
+    //修改辅导员需求信息
+    public function edit_tcs_need(){
+        $confirm_id     = I('confirm_id');
+        $price_id       = I('price_id');
+
+        $this->opid         = I('opid');
+        $this->guide_kind   = M('guidekind')->getField('id,name',true);
+        //获取职能类型
+        $priceKind          = M()->table('__GUIDE_PRICEKIND__ as gpk')->field('gpk.id,gpk.name')->join('left join __OP__ as op on gpk.pk_id = op.kind')->where(array("op.op_id"=>$opid))->select();
+        $this->price_kind   = $priceKind;
+        $this->fields       = C('GUI_FIELDS');
+        $this->display();
+    }
     
 }

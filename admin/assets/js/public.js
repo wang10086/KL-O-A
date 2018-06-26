@@ -295,6 +295,23 @@ function open_priceKind (obj) {
 	});
 }
 
+function open_edit_tcs_need (obj) {
+	art.dialog.open(obj, {
+		lock:true,
+		title: '导游辅导员需求管理',
+		width:900,
+		height:600,
+		okValue: '提交',
+		ok: function () {
+			this.iframe.contentWindow.gosubmint();
+			return false;
+		},
+		cancelValue:'取消',
+		cancel: function () {
+		}
+	});
+}
+
 function open_type (obj) {
 	art.dialog.open(obj, {
 		lock:true,
