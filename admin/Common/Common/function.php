@@ -1742,8 +1742,9 @@ function set_month($date,$type=0){
 	$month  = substr($date,4,2);
 	
 	//开始日期
-	$enddate = $year.'-'.$month.'-25'.' 00:00:00';
-	
+	//$enddate = $year.'-'.$month.'-25'.' 00:00:00';
+	$enddate = $year.'-'.$month.'-25'.' 23:59:00';
+
 	if($month == '01'){
 		$year = $year-1;
 		$prvemonth = '12';	
@@ -2772,7 +2773,7 @@ function tplist($roleid,$times){
 	$where = array();
 	$where['roleid'] = array('in',$postmore[$roleid]);
 	$where['status'] = array('eq',0);
-	$users = M('account')->where($where)->select();	
+	$users = M('account')->where($where)->select();
 	$num   = count($users);
 	$ulist = array();
 	foreach($users as $k=>$v){
