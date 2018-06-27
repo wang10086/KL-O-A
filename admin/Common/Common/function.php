@@ -1745,8 +1745,7 @@ function set_month($date,$type=0){
 	$month  = substr($date,4,2);
 	
 	//开始日期
-	//$enddate = $year.'-'.$month.'-25'.' 00:00:00';
-	$enddate = $year.'-'.$month.'-25'.' 23:59:00';
+	$enddate = $year.'-'.$month.'-25'.' 00:00:00';
 
 	if($month == '01'){
 		$year = $year-1;
@@ -1865,7 +1864,7 @@ function updatekpi($month,$user){
 					$where['b.audit_status']		= 1;
 					$where['o.create_user']			= $user;
 					$where['l.req_type']			= 801;
-					$where['l.audit_time']			= array('between',array($v['start_date'],$v['end_date']));
+					$where['l.audit_time']			= array('between',array($v['start_date'],$v['end_date']+86399));
 					$complete = M()->table('__OP_SETTLEMENT__ as b')->field('b.maoli')->join('__OP__ as o on b.op_id = o.op_id','LEFT')->join('__AUDIT_LOG__ as l on l.req_id = b.id','LEFT')->where($where)->sum('b.maoli');
 
 					$complete = $complete ? $complete : 0;
@@ -1877,7 +1876,7 @@ function updatekpi($month,$user){
 					$where['b.audit_status']		= 1;
 					$where['o.create_user']			= $user;
 					$where['l.req_type']			= 801;
-					$where['l.audit_time']			= array('between',array($v['start_date'],$v['end_date']));
+					$where['l.audit_time']			= array('between',array($v['start_date'],$v['end_date']+86399));
 					$maoli = M()->table('__OP_SETTLEMENT__ as b')->field('b.maoli')->join('__OP__ as o on b.op_id = o.op_id','LEFT')->join('__AUDIT_LOG__ as l on l.req_id = b.id','LEFT')->where($where)->sum('b.maoli');
 					$shouru = M()->table('__OP_SETTLEMENT__ as b')->field('b.shouru')->join('__OP__ as o on b.op_id = o.op_id','LEFT')->join('__AUDIT_LOG__ as l on l.req_id = b.id','LEFT')->where($where)->sum('b.shouru');
 					$complete = round(($maoli / $shouru)*100,2).'%';
@@ -1943,7 +1942,7 @@ function updatekpi($month,$user){
 				//地接、房、车性价比比选-计调专员，以项目创建时间为准
 				if(in_array($v['quota_id'],array(6,81))){
 					$where = array();
-					$where['o.create_time']			= array('between',array($v['start_date'],$v['end_date']));
+					$where['o.create_time']			= array('between',array($v['start_date'],$v['end_date']+86399));
 					$bj_type 						= array(9,7,8);		//'9'=>'地接社','7'=>'旅游车队','8'=>'酒店'
 					$where['c.type'] 				= array('in',$bj_type);
 					$where['u.line']				= $user;
@@ -1965,19 +1964,19 @@ function updatekpi($month,$user){
 					if($fzr[$user]){
 						//获取具体团队数据
 						if($v['quota_id']==8){	
-							$ywdata 	= tplist($fzr[$user],array($v['start_date'],$v['end_date']));
+							$ywdata 	= tplist($fzr[$user],array($v['start_date'],$v['end_date']+86399));
 							$complete	= $ywdata['zml'] ? $ywdata['zml'] : '0';
 						}
 						if($v['quota_id']==9){
-							$ywdata 	= tplist($fzr[$user],array($v['start_date'],$v['end_date']));
+							$ywdata 	= tplist($fzr[$user],array($v['start_date'],$v['end_date']+86399));
 							$complete	= $ywdata['mll'] ? $ywdata['mll'].'%' : '0.00%';	
 						}
 						if($v['quota_id']==10){
-							$xkh		= team_new_customers($fzr[$user],array($v['start_date'],$v['end_date']));
+							$xkh		= team_new_customers($fzr[$user],array($v['start_date'],$v['end_date']+86399));
 							$complete	= $xkh['ratio'] ? $xkh['ratio'].'%' : '0.00%';	
 						}
 						if($v['quota_id']==11){
-							$xkh		= team_new_customers($fzr[$user],array($v['start_date'],$v['end_date']));
+							$xkh		= team_new_customers($fzr[$user],array($v['start_date'],$v['end_date']+86399));
 							$complete	= $xkh['reratio'] ? $xkh['reratio'].'%' : '0.00%';	
 						}
 					}
@@ -1989,7 +1988,7 @@ function updatekpi($month,$user){
 					$where['s.audit_status']		= 1;
 					$where['u.line']				= $user;
 					//$where['l.req_type']			= 801;
-					$where['l.audit_time']			= array('between',array($v['start_date'],$v['end_date']));
+					$where['l.audit_time']			= array('between',array($v['start_date'],$v['end_date']+86399));
 					
 					//获取总的结算毛利
 					$js = M()->table('__OP_SETTLEMENT__ as s')
@@ -2145,7 +2144,7 @@ function updatekpi($month,$user){
 					//获取招聘人数
 					$where = array();
 					$where['status']			= 0;
-					$where['input_time']		= array('between',array($v['start_date'],$v['end_date']));
+					$where['input_time']		= array('between',array($v['start_date'],$v['end_date']+86399));
 					$sum = M('account')->where($where)->count();
 					
 					$complete = $v['plan'] ? round(($sum / $v['plan'])*100,2).'%' : '100%';
@@ -2201,7 +2200,7 @@ function updatekpi($month,$user){
 				if($v['quota_id']==84){
 					
 					$where = array();
-					$where['input_time']  		= array('between',array($v['start_date'],$v['end_date']));
+					$where['input_time']  		= array('between',array($v['start_date'],$v['end_date']+86399));
 					$where['input_uid']  		= $user;
 					$where['audit_status']  		= 1;
 					
@@ -2213,7 +2212,7 @@ function updatekpi($month,$user){
 				if(in_array($v['quota_id'],array(112,108,65))){
 					
 					$where = array();
-					$where['input_time']  		= array('between',array($v['start_date'],$v['end_date']));
+					$where['input_time']  		= array('between',array($v['start_date'],$v['end_date']+86399));
 					$where['input_uid']  		= $user;
 					$where['audit_status']  		= 1;
 					
@@ -2228,7 +2227,7 @@ function updatekpi($month,$user){
 				if(in_array($v['quota_id'],array(100,96))){
 					
 					$where = array();
-					$where['input_time']  		= array('between',array($v['start_date'],$v['end_date']));
+					$where['input_time']  		= array('between',array($v['start_date'],$v['end_date']+86399));
 					$where['input_user']  		= $user;
 					$where['audit_status']  		= 1;
 					
@@ -2354,7 +2353,7 @@ function updatekpi($month,$user){
 					
 					//获取培训次数
 					$where = array();
-					$where['lecture_date']  		= array('between',array($v['start_date'],$v['end_date']));
+					$where['lecture_date']  		= array('between',array($v['start_date'],$v['end_date']+86399));
 					$where['lecturer_uid']  		= $user;
 					$where['del']  				= 0;
 					$sum = M('cour_ppt')->where($where)->count();
@@ -2443,7 +2442,7 @@ function updatekpi($month,$user){
 					
 					//获取当月出团项目数
 					$where = array();
-					$where['o.dep_time']		= array('between',array($v['start_date'],$v['end_date']));
+					$where['o.dep_time']		= array('between',array($v['start_date'],$v['end_date']+86399));
 					
 					//当月出团项目数
 					$ops = M()->table('__OP_TEAM_CONFIRM__ as o')->where($where)->count();
@@ -2470,15 +2469,15 @@ function updatekpi($month,$user){
 					
 					$zongfen	= 0;
 					//京区校内
-					$jqxn 		= business_dept_data(35,array($v['start_date'],$v['end_date']));
+					$jqxn 		= business_dept_data(35,array($v['start_date'],$v['end_date']+86399));
 					$zongfen 	+= absdata($jqxn['mll'],19.5);
 					
 					//京区校外
-					$jqxw		= business_dept_data(80,array($v['start_date'],$v['end_date']));
+					$jqxw		= business_dept_data(80,array($v['start_date'],$v['end_date']+86399));
 					$zongfen 	+= absdata($jqxw['mll'],28);
 					
 					//京外业务
-					$jwyw		= business_dept_data(18,array($v['start_date'],$v['end_date']));
+					$jwyw		= business_dept_data(18,array($v['start_date'],$v['end_date']+86399));
 					$zongfen 	+= absdata($jwyw['mll'],24.5);
 					
 					$complete 	= $zongfen ? round(($zongfen / 300)*100,2) : '100';
@@ -2556,7 +2555,7 @@ function updatekpi($month,$user){
 					
 					//获取当月出团项目数
 					$where = array();
-					$where['o.ret_time']		= array('between',array($v['start_date'],$v['end_date']));
+					$where['o.ret_time']		= array('between',array($v['start_date'],$v['end_date']+86399));
 					$where['e.liable_uid']	= $user;
 					$where['e.eval_type']	= 2;
 					
@@ -2581,7 +2580,7 @@ function updatekpi($month,$user){
 					
 					//获取当月出团项目数
 					$where = array();
-					$where['o.dep_time']		= array('between',array($v['start_date'],$v['end_date']));
+					$where['o.dep_time']		= array('between',array($v['start_date'],$v['end_date']+86399));
 					$where['e.liable_uid']	= $user;
 					$where['e.eval_type']	= 3;
 					
@@ -2606,7 +2605,7 @@ function updatekpi($month,$user){
 					
 					//获取当月出团项目数
 					$where = array();
-					$where['o.dep_time']		= array('between',array($v['start_date'],$v['end_date']));
+					$where['o.dep_time']		= array('between',array($v['start_date'],$v['end_date']+86399));
 					$where['e.liable_uid']	= $user;
 					$where['e.eval_type']	= 1;
 					
