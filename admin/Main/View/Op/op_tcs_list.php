@@ -12,7 +12,9 @@
                 <th class="sorting" data="" width="80">单次价格</th>
                 <th class="sorting" data="" width="80">合计价格</th>
                 <th class="sorting" data="">备注</th>
-                <th width="60" class="taskOptions">编辑</th>
+                <if condition="rolemenu(array('Op/edit_tcs_need'))">
+                    <th width="60" class="taskOptions">编辑</th>
+                </if>
             </tr>
             <foreach name="{guide_price}" item="row">
                 <tr>
@@ -28,7 +30,12 @@
                     <td>&yen;{$row.price}</td>
                     <td>&yen;{$row.total}</td>
                     <td>{$row.remark}</td>
-                    <td></td>
+                    <if condition="rolemenu(array('Op/edit_tcs_need'))">
+                        <td class="taskOptions">
+                            <!--<a href="javascript:;" onClick="javascript:{:open_edit_tcs_need($row['cid'],$row['pid'],$op['op_id'])}" ><button onClick="javascript:;" title="修改" class="btn btn-info btn-smsm"><i class="fa fa-pencil"></i></button></a>-->
+                            <a href="javascript:;" onClick="javascript:;" ><button onClick="javascript:;" title="修改" class="btn btn-info btn-smsm"><i class="fa fa-pencil"></i></button></a>
+                        </td>
+                    </if>
                 </tr>
             </foreach>
         </table>
