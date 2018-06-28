@@ -278,7 +278,11 @@
                                         </h3>
                                     </div>
 
-                                    <include file="op_res_guide" />
+                                    <?php if(rolemenu(array('Op/public_save'))  && $budget['audit_status']==1 && $settlement['audit']!=1 && ($opauth['guide']==cookie('userid') || C('RBAC_SUPER_ADMIN')==cookie('username') || rolemenu(array('Op/assign_res')))){ ?>
+                                        <include file="op_res_guide_edit" />
+                                    <?php  }else{ ?>
+                                        <include file="op_res_guide" />
+                                    <?php } ?>
 
                                 </div>
 
