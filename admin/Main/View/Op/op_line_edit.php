@@ -78,7 +78,7 @@
                                             <input type="text" class="form-control" style="width:10%" name="data[{$k}][price]" value="{$v.price}" id="dj_{$k}" onblur="getTotal({$k})">
                                             <input type="text" class="form-control" style="width:10%" name="data[{$k}][total]" value="{$v.total}" id="total_{$k}">
                                             <input type="text" class="form-control" style="width:20%" name="data[{$k}][remark]" value="{$v.remark}">
-                                            <a href="javascript:;" class="btn btn-danger btn-flat" onclick="deltcsbox('tcs_id_{$v.id}')">删除</a>
+                                            <a href="javascript:;" class="btn btn-danger btn-flat" onclick="delbox('tcs_id_{$v.id}')">删除</a>
                                         </div>
                                     </foreach>
                                 <?php }else{ ?>
@@ -98,7 +98,7 @@
                                         <input type="text" class="form-control" style="width:10%" name="data[1][price]" id="dj_1" onblur="getTotal(1)" value="">
                                         <input type="text" class="form-control" style="width:10%" name="data[1][total]" id="total_1" value="">
                                         <input type="text" class="form-control" style="width:20%" name="data[1][remark]" value="">
-                                        <a href="javascript:;" class="btn btn-danger btn-flat" onclick="deltcsbox('tcs_id')">删除</a>
+                                        <a href="javascript:;" class="btn btn-danger btn-flat" onclick="delbox('tcs_id')">删除</a>
                                         <div id="tcs_val">1</div>
                                     </div>
                                 <?php } ?>

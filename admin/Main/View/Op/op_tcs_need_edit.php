@@ -72,7 +72,7 @@
                                         <input type="text" class="form-control" style="width:8%" name="data[1][price]" id="dj_1" onblur="getTotal(1)" value="">
                                         <input type="text" class="form-control" style="width:8%" name="data[1][total]" id="total_1" value="">
                                         <input type="text" class="form-control" style="width:18%" name="data[1][remark]" value="">
-                                        <a href="javascript:;" class="btn btn-danger btn-flat" onclick="deltcsbox('tcs_id')">删除</a>
+                                        <a href="javascript:;" class="btn btn-danger btn-flat" onclick="delbox('tcs_id')">删除</a>
                                         <div id="tcs_val">1</div>
                                     </div>
 

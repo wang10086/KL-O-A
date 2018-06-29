@@ -521,7 +521,10 @@
         });
 		$('#costacc').find('.title').each(function(index, element) {
             $(this).text(parseInt(index)+1);
-        });	
+        });
+        $('#tcs').find('.title').each(function(index, element) {
+            $(this).text(parseInt(index)+1);
+        });
 	}
 	
 	//移除
@@ -935,11 +938,11 @@
             '<input type="text"  class="form-control" style="width:10%" name="data['+i+'][price]" id="dj_'+i+'" value="" onblur="getTotal('+i+')">' +
             '<input type="text"  class="form-control" style="width:10%" name="data['+i+'][total]" id="total_'+i+'">' +
             '<input type="text"  class="form-control" style="width:20%" name="data['+i+'][remark]">' +
-            '<a href="javascript:;" class="btn btn-danger btn-flat" onclick="deltcsbox(\'tcs_'+i+'\')">删除</a></div>';
+            '<a href="javascript:;" class="btn btn-danger btn-flat" onclick="delbox(\'tcs_'+i+'\')">删除</a></div>';
         $('#tcs').append(html);
         $('#tcs_val').html(i);
         assign_option(i);
-        ordertcs();
+        orderno();
     }
 
     function assign_option(a){
@@ -983,18 +986,7 @@
         $('#total_'+a).val(total);
     }
 
-    //移除
-    function deltcsbox(obj){
-        $('#'+obj).remove();
-        ordertcs();
-    }
 
-    //重编题号
-    function ordertcs(){
-        $('#tcs').find('.title').each(function(index, element) {
-            $(this).text(parseInt(index)+1);
-        });
-    }
 </script>	
 
 
