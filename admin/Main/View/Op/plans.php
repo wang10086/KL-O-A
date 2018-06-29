@@ -12,7 +12,7 @@
 
             <!-- Main content -->
             <section class="content">
-            <form method="post" action="{:U('Op/plans')}" name="myform" id="myform">
+            <form method="post" action="{:U('Op/plans')}" name="myform" id="save_plans">
             <input type="hidden" name="dosubmint" value="1">
                 <div class="row">
                      <!-- right column -->
@@ -69,12 +69,22 @@
                                     </div>
 
                                     <div class="form-group col-md-4">
-                                        <label>目的地：</label><input type="text" name="info[destination]" class="form-control"  required />
+                                        <label>目的地省份</label>
+                                        <select  class="form-control"  name="province" id="province" required >
+                                            <option value="" disabled selected>请选择</option>
+                                            <foreach name="provinces" key="k" item="v">
+                                                <option value="{$v}" <?php if ($area && ($area['province'] == $v)) echo ' selected'; ?> >{$v}</option>
+                                            </foreach>
+                                        </select>
                                     </div>
 
                                     <div class="form-group col-md-4">
-                                        <label>立项时间：</label><input type="text" name="info[op_create_date]" class="form-control inputdate_a"  required />
+                                        <label>详细地址：</label><input type="text" name="addr" class="form-control"  required />
                                     </div>
+
+                                    <!--<div class="form-group col-md-4">
+                                        <label>立项时间：</label><input type="text" name="info[op_create_date]" class="form-control inputdate_a"  required />
+                                    </div>-->
 
                                     <div class="form-group col-md-4">
                                         <label>业务部门：</label>
@@ -107,31 +117,56 @@
 
 
                                     <div class="form-group col-md-12">
-                                        <label>项目需求(对市场部 、研发部 、计调部 、资源管理部等部门的需求)：</label><textarea class="form-control"  name="info[context]" id="context" required></textarea>
+                                        <label>备注：</label><textarea class="form-control"  name="info[context]" id="context"></textarea>
                                         <span id="contextTip"></span>
                                     </div>
 
-                                    <div class="form-group col-md-12">
+                                    <!--<div class="form-group col-md-12">
                                         <label>项目说明：</label><textarea class="form-control"  name="info[remark]"></textarea>
-                                    </div>
+                                    </div>-->
 
-                                    <div class="form-group col-md-12">
+                                    <!--<div class="form-group col-md-12">
                                         <label>工单接收部门：</label>
-                                        <input type="checkbox" name="exe[]" value="45">&nbsp;市场部 &#12288;<!--市场部经理roleid-->
-                                        <!--<input type="checkbox" name="exe[]" value="31">&nbsp;计调部 &#12288;--><!--计调部经理roleid-->
-                                        <input type="checkbox" name="exe[]" value="15">&nbsp;研发部 &#12288;<!--研发部经理roleid-->
-                                        <input type="checkbox" name="exe[]" value="52">&nbsp;资源管理部&#12288;<!--资源管理部经理roleid-->
-                                    </div>
+                                        <input type="checkbox" name="exe[]" value="45">&nbsp;市场部 &#12288;
+                                        <input type="checkbox" name="exe[]" value="31">&nbsp;计调部 &#12288;
+                                        <input type="checkbox" name="exe[]" value="15">&nbsp;研发部 &#12288;
+                                        <input type="checkbox" name="exe[]" value="52">&nbsp;资源管理部&#12288;
+                                    </div>-->
 
+                                </div>
+
+                                <div style="width:100%; text-align:center;">
+                                    <button type="submit" class="btn btn-info btn-lg" id="lrpd">我要立项</button>
+                                    <!--<a  href="javascript:;" class="btn btn-info btn-lg" id="lrpd" onClick="javascript:save('save_plans','<?php /*echo U('Op/plans'); */?>');">我要立项</a>-->
                                 </div>
 
                             </div><!-- /.box-body -->
                         </div><!-- /.box -->
 
 
-                        <div style="width:100%; text-align:center;">
-                        <button type="submit" class="btn btn-info btn-lg" id="lrpd">我要立项</button>
+
+                        <div class="box box-warning">
+                            <div class="box-header">
+                                <h3 class="box-title">行程方案及资源需求</h3>
+                                <h3 class="box-title pull-right" style="font-weight:normal; color:#333333;">
+                                        负责人：<?php echo cookie('name') ?>
+                                </h3>
+                            </div>
+                            <div class="box-body">
+                                <?php if(rolemenu(array('Op/public_save_line')) && $settlement['audit']!=1  && ($opauth['line']==cookie('userid')|| C('RBAC_SUPER_ADMIN')==cookie('username') ||rolemenu(array('Op/assign_line')))){ ?>
+                                    <?php if($isFixedLine){ ?>
+                                        <include file="op_line" />
+                                    <?php }else{ ?>
+                                        <include file="op_line_edit" />
+                                    <?php } ?>
+                                <?php }else{ ?>
+                                    <include file="op_line" />
+                                <?php  } ?>
+                                <div class="form-group">&nbsp;</div>
+                            </div>
                         </div>
+
+
                     </div><!--/.col (right) -->
                 </div>   <!-- /.row -->
                 </form>

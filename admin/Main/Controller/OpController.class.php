@@ -120,6 +120,8 @@ class OpController extends BaseController {
 			$cost       = I('cost');
 			$supplier   = I('supplier');
 			$wuzi       = I('wuzi');
+            $province   = I('province');
+            $addr       = I('addr');
 
             $exe_role_ids = I('exe');
             /*if(!$exe_role_ids){
@@ -135,8 +137,10 @@ class OpController extends BaseController {
 				$opid = opid();
 
 				$info['create_time'] = time();
-				$info['op_id']       = $opid;
-				$info['speed']       = 1;
+                $info['op_id']       = $opid;
+                $info['speed']       = 1;
+                $info['op_create_date'] = date('Y-m-d',time());
+                $info['destination'] = $province.'--'.$addr;
 				$info['create_user'] = cookie('userid');
 				$info['create_user_name'] = cookie('name');
                 $info['audit_status'] = 1; //项目不用审核,默认通过
@@ -270,6 +274,7 @@ class OpController extends BaseController {
                     M('product_line')->data(array('pinyin'=>$pinyin))->where(array('id'=>$v['id']))->save();
                 }
             }
+            $this->provinces   = M('provinces')->getField('id,name',true);
             $this->linelist    = json_encode($linelist);
 			$this->geclist     = M('customer_gec')->field('id,pinyin,company_name')->where($where)->group("company_name")->order('pinyin ASC')->select();
 			$this->kinds       = get_project_kinds();

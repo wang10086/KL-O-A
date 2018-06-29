@@ -72,12 +72,12 @@
 </div>
 
 <div class="form-group col-md-12">
-    <label>项目需求(对市场部 、研发部 、计调部 、资源管理部等部门的需求)：</label><textarea class="form-control"  name="info[context]">{$op.context}</textarea>
+    <label>备注：</label><textarea class="form-control"  name="info[context]">{$op.context}</textarea>
 </div>
 
-<div class="form-group col-md-12">
+<!--<div class="form-group col-md-12">
     <label>项目说明：</label><textarea class="form-control"  name="info[remark]">{$op.remark}</textarea>
-</div>
+</div>-->
 
 <div class="form-group col-md-12" id="addti_btn">
     <a  href="javascript:;" class="btn btn-info btn-sm" onClick="javascript:save('save_op_info','<?php echo U('Op/public_save'); ?>',{$op.op_id});">保存</a>
