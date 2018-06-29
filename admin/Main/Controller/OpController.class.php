@@ -232,7 +232,7 @@ class OpController extends BaseController {
                     $user    = '['.$exe_user_id.']';
                     //send_msg($uid,$title,$content,$url,$user,'');
 
-					$this->success('保存成功！',U('Op/index'));
+					$this->success('保存成功！',U('Op/plans_follow',array('opid'=>$opid)));
 				}else{
 					$this->error('保存失败' . $db->getError());	
 				}
@@ -1009,8 +1009,177 @@ class OpController extends BaseController {
 			$this->display('assign_line');
 		}
 	}
-	
-	
+
+    //@@@NODE-3###assign_hesuan###指派人员跟进成本核算###
+    public function assign_hesuan(){
+        $opid       = I('opid');
+        $info       = I('info');
+        $user      =  M('account')->getField('id,nickname', true);
+
+        if(isset($_POST['dosubmit']) && $info){
+
+            $data = array();
+            $data['hesuan'] = $info;
+            $auth = M('op_auth')->where(array('op_id'=>$opid))->find();
+
+            //创建工单
+            $thing  = "行程方案";
+            //project_worder($info,$opid,$thing);
+
+            if($auth){
+                M('op_auth')->data($data)->where(array('id'=>$auth['id']))->save();
+            }else{
+                $data['op_id'] = $opid;
+                M('op_auth')->add($data);
+            }
+
+            //发送消息
+            $uid     = cookie('userid');
+            $title   = cookie('name').'指派您跟进成本核算';
+            $content = '项目编号: '.$opid;
+            $url     = U('Finance/costacc',array('opid'=>$opid));
+            $users    = '['.$info.']';
+            send_msg($uid,$title,$content,$url,$users,'');
+
+            $record = array();
+            $record['op_id']   = $opid;
+            $record['optype']  = 2;
+            $record['explain'] = '指派【'.$user[$info].'】跟进成本核算';
+            op_record($record);
+
+            echo '<script>window.top.location.reload();</script>';
+
+        }else{
+
+            //用户列表
+            $key = I('key');
+            $db = M('account');
+            $where = array();
+            $where['id'] = array('gt',3);
+            if($key) $where['nickname'] = array('like','%'.$key.'%');
+            $pagecount = $db->where($where)->count();
+            $page = new Page($pagecount,6);
+            $this->pages = $pagecount>6 ? $page->show():'';
+            $this->lists = $db->where($where)->limit($page->firstRow . ',' . $page->listRows)->order($this->orders('roleid'))->select();
+            $this->role  = M('role')->getField('id,role_name', true);
+            $this->opid = $opid;
+            $this->display('assign_hesuan');
+        }
+    }
+
+    //@@@NODE-3###assign_yusuan###指派人员跟进项目预算###
+    public function assign_yusuan(){
+        $opid       = I('opid');
+        $info       = I('info');
+        $user       =  M('account')->getField('id,nickname', true);
+
+        if(isset($_POST['dosubmit']) && $info){
+
+            $data = array();
+            $data['yusuan'] = $info;
+            $auth = M('op_auth')->where(array('op_id'=>$opid))->find();
+
+            //创建工单
+            $thing  = "行程方案";
+            //project_worder($info,$opid,$thing);
+
+            if($auth){
+                M('op_auth')->data($data)->where(array('id'=>$auth['id']))->save();
+            }else{
+                $data['op_id'] = $opid;
+                M('op_auth')->add($data);
+            }
+
+            //发送消息
+            $uid     = cookie('userid');
+            $title   = cookie('name').'指派您跟进项目预算';
+            $content = '项目编号: '.$opid;
+            $url     = U('Finance/op',array('opid'=>$opid));
+            $users    = '['.$info.']';
+            send_msg($uid,$title,$content,$url,$users,'');
+
+            $record = array();
+            $record['op_id']   = $opid;
+            $record['optype']  = 2;
+            $record['explain'] = '指派【'.$user[$info].'】跟进项目预算';
+            op_record($record);
+
+            echo '<script>window.top.location.reload();</script>';
+
+        }else{
+
+            //用户列表
+            $key = I('key');
+            $db = M('account');
+            $where = array();
+            $where['id'] = array('gt',3);
+            if($key) $where['nickname'] = array('like','%'.$key.'%');
+            $pagecount = $db->where($where)->count();
+            $page = new Page($pagecount,6);
+            $this->pages = $pagecount>6 ? $page->show():'';
+            $this->lists = $db->where($where)->limit($page->firstRow . ',' . $page->listRows)->order($this->orders('roleid'))->select();
+            $this->role  = M('role')->getField('id,role_name', true);
+            $this->opid = $opid;
+            $this->display('assign_yusuan');
+        }
+    }
+
+    //@@@NODE-3###assign_yusuan###指派人员跟进项目预算###
+    public function assign_jiesuan(){
+        $opid       = I('opid');
+        $info       = I('info');
+        $user       =  M('account')->getField('id,nickname', true);
+
+        if(isset($_POST['dosubmit']) && $info){
+
+            $data = array();
+            $data['jiesuan'] = $info;
+            $auth = M('op_auth')->where(array('op_id'=>$opid))->find();
+
+            //创建工单
+            $thing  = "行程方案";
+            //project_worder($info,$opid,$thing);
+
+            if($auth){
+                M('op_auth')->data($data)->where(array('id'=>$auth['id']))->save();
+            }else{
+                $data['op_id'] = $opid;
+                M('op_auth')->add($data);
+            }
+
+            //发送消息
+            $uid     = cookie('userid');
+            $title   = cookie('name').'指派您跟进项目结算';
+            $content = '项目编号: '.$opid;
+            $url     = U('Finance/settlement',array('opid'=>$opid));
+            $users    = '['.$info.']';
+            send_msg($uid,$title,$content,$url,$users,'');
+
+            $record = array();
+            $record['op_id']   = $opid;
+            $record['optype']  = 2;
+            $record['explain'] = '指派【'.$user[$info].'】跟进项目结算';
+            op_record($record);
+
+            echo '<script>window.top.location.reload();</script>';
+
+        }else{
+
+            //用户列表
+            $key = I('key');
+            $db = M('account');
+            $where = array();
+            $where['id'] = array('gt',3);
+            if($key) $where['nickname'] = array('like','%'.$key.'%');
+            $pagecount = $db->where($where)->count();
+            $page = new Page($pagecount,6);
+            $this->pages = $pagecount>6 ? $page->show():'';
+            $this->lists = $db->where($where)->limit($page->firstRow . ',' . $page->listRows)->order($this->orders('roleid'))->select();
+            $this->role  = M('role')->getField('id,role_name', true);
+            $this->opid = $opid;
+            $this->display('assign_jiesuan');
+        }
+    }
 	
 	//@@@NODE-3###assign_res###指派人员跟进资源调度###
     public function assign_res(){

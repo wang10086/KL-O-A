@@ -120,16 +120,7 @@
                                     <div class="box-header">
                                         <h3 class="box-title">行程方案及资源需求</h3>
                                         <h3 class="box-title pull-right" style="font-weight:normal; color:#333333;">
-                                        <?php  if($opauth && $opauth['line']){ ?>
-                                        负责人：{$user.$opauth[line]}
-                                        <?php  }else{ ?>
-                                        	<?php  if(rolemenu(array('Op/assign_line'))){ ?>
-                                        	<a href="javascript:;" onclick="javascript:assign('{:U('Op/assign_line',array('opid'=>$op['op_id']))}','指派项目线路行程负责人');" style="color:#09F;">指派负责人</a>
-                                            <?php  }else{ ?>
-                                            暂未指派负责人
-                                            <?php  } ?>
-                                            
-										<?php  } ?>
+                                        负责人：{$op.sale_user}
                                         </h3>
                                     </div>
                                     <div class="box-body">
@@ -150,11 +141,22 @@
                                  <div class="box box-warning">
                                     <div class="box-header">
                                         <h3 class="box-title">成本核算</h3>
-                                        <if condition="rolemenu(array('Finance/costacc'))">
+                                        <!--<if condition="rolemenu(array('Finance/costacc'))">
                                         <h3 class="box-title pull-right" style="font-weight:normal; color:#333333;">
                                         	<a href="{:U('Finance/costacc',array('opid'=>$op['op_id']))}" style="color:#09F;">编辑成本</a>
                                         </h3>
-                                        </if>
+                                        </if>-->
+                                        <h3 class="box-title pull-right" style="font-weight:normal; color:#333333;">
+                                        <?php  if($opauth && $opauth['hesuan']){ ?>
+                                            负责人：{$user.$opauth[hesuan]}
+                                        <?php  }else{ ?>
+                                            <?php  if(rolemenu(array('Op/assign_hesuan'))){ ?>
+                                                <a href="javascript:;" onclick="javascript:assign('{:U('Op/assign_hesuan',array('opid'=>$op['op_id']))}','指派成本核算负责人');" style="color:#09F;">指派负责人</a>
+                                            <?php  }else{ ?>
+                                                暂未指派负责人
+                                            <?php  } ?>
+                                        <?php  } ?>
+                                        </h3>
                                     </div>
                                     <div class="box-body">
                                     	
@@ -218,11 +220,22 @@
                                 <div class="box box-warning">
                                     <div class="box-header">
                                         <h3 class="box-title">项目预算</h3>
-                                        <if condition="rolemenu(array('Finance/op'))">
+                                        <!--<if condition="rolemenu(array('Finance/op'))">
                                         <h3 class="box-title pull-right" style="font-weight:normal; color:#333333;">
                                         	<a href="{:U('Finance/op',array('opid'=>$op['op_id']))}" style="color:#09F;">编辑预算</a>
                                         </h3>
-                                        </if>
+                                        </if>-->
+                                        <h3 class="box-title pull-right" style="font-weight:normal; color:#333333;">
+                                            <?php  if($opauth && $opauth['yusuan']){ ?>
+                                                负责人：{$user.$opauth[yusuan]}
+                                            <?php  }else{ ?>
+                                                <?php  if(rolemenu(array('Op/assign_yusuan'))){ ?>
+                                                    <a href="javascript:;" onclick="javascript:assign('{:U('Op/assign_yusuan',array('opid'=>$op['op_id']))}','指派项目预算负责人');" style="color:#09F;">指派负责人</a>
+                                                <?php  }else{ ?>
+                                                    暂未指派负责人
+                                                <?php  } ?>
+                                            <?php  } ?>
+                                        </h3>
                                     </div>
                                     <div class="box-body">
                                         <div class="content" style="padding-top:40px;">
@@ -230,7 +243,7 @@
 												if($op['costacc']=='0.00'){
 													echo '<div class="form-group col-md-4">请先核算成本！</div>';
 												}else{
-													echo '<div class="form-group col-md-4">暂未确认预算，<a href="'.U('Finance/op',array('opid'=>$op['op_id'])).'">立即确认预算</a>！</div>';
+                                                    echo '<div class="form-group col-md-4">暂未确认预算<a href="'.U('Finance/op',array('opid'=>$op['op_id'])).'">，立即确认预算</a>！</div>';
 												}
                                             
                                             }else{ ?>
@@ -353,19 +366,28 @@
                                 <div class="box box-warning">
                                     <div class="box-header">
                                         <h3 class="box-title">项目结算</h3>
-                                        <if condition="rolemenu(array('Finance/op'))">
+                                        <!--<if condition="rolemenu(array('Finance/op'))">
                                         <h3 class="box-title pull-right" style="font-weight:normal; color:#333333;">
                                         	<a href="{:U('Finance/settlement',array('opid'=>$op['op_id']))}" style="color:#09F;">编辑结算</a>
                                         </h3>
-                                        </if>
+                                        </if>-->
+                                        <h3 class="box-title pull-right" style="font-weight:normal; color:#333333;">
+                                            <?php  if($opauth && $opauth['jiesuan']){ ?>
+                                                负责人：{$user.$opauth[jiesuan]}
+                                            <?php  }else{ ?>
+                                                <?php  if(rolemenu(array('Op/assign_jiesuan'))){ ?>
+                                                    <a href="javascript:;" onclick="javascript:assign('{:U('Op/assign_jiesuan',array('opid'=>$op['op_id']))}','指派项目结算负责人');" style="color:#09F;">指派负责人</a>
+                                                <?php  }else{ ?>
+                                                    暂未指派负责人
+                                                <?php  } ?>
+                                            <?php  } ?>
+                                        </h3>
                                     </div>
                                     <div class="box-body">
                                         <div class="content" style="padding-top:40px;">
-                                        	<?php if(!$settlement){ ?>
-                                            <div class="form-group col-md-4">
-                                            暂未结算
-                                            </div>
-                                            <?php }else{ ?>
+                                        	<?php if(!$settlement){
+                                                echo '<div class="form-group col-md-4">暂未结算<a href="'.U('Finance/settlement',array('opid'=>$op['op_id'])).'">，立即编辑结算</a>！</div>';
+                                             }else{ ?>
                                             <div class="form-group col-md-4">
                                                 <label>实际人数：{$settlement.renshu}</label>
                                             </div>
