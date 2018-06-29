@@ -135,37 +135,13 @@
 
                                 </div>
 
-                                <div style="width:100%; text-align:center;">
-                                    <button type="submit" class="btn btn-info btn-lg" id="lrpd">我要立项</button>
-                                    <!--<a  href="javascript:;" class="btn btn-info btn-lg" id="lrpd" onClick="javascript:save('save_plans','<?php /*echo U('Op/plans'); */?>');">我要立项</a>-->
-                                </div>
-
                             </div><!-- /.box-body -->
                         </div><!-- /.box -->
 
-
-
-                        <div class="box box-warning">
-                            <div class="box-header">
-                                <h3 class="box-title">行程方案及资源需求</h3>
-                                <h3 class="box-title pull-right" style="font-weight:normal; color:#333333;">
-                                        负责人：<?php echo cookie('name') ?>
-                                </h3>
-                            </div>
-                            <div class="box-body">
-                                <?php if(rolemenu(array('Op/public_save_line')) && $settlement['audit']!=1  && ($opauth['line']==cookie('userid')|| C('RBAC_SUPER_ADMIN')==cookie('username') ||rolemenu(array('Op/assign_line')))){ ?>
-                                    <?php if($isFixedLine){ ?>
-                                        <include file="op_line" />
-                                    <?php }else{ ?>
-                                        <include file="op_line_edit" />
-                                    <?php } ?>
-                                <?php }else{ ?>
-                                    <include file="op_line" />
-                                <?php  } ?>
-                                <div class="form-group">&nbsp;</div>
-                            </div>
+                        <div style="width:100%; text-align:center;">
+                            <button type="submit" class="btn btn-info btn-lg" id="lrpd">我要立项</button>
+                            <!--<a  href="javascript:;" class="btn btn-info btn-lg" id="lrpd" onClick="javascript:save('save_plans','<?php /*echo U('Op/plans'); */?>');">我要立项</a>-->
                         </div>
-
 
                     </div><!--/.col (right) -->
                 </div>   <!-- /.row -->
