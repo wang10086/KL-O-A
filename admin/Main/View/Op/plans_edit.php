@@ -285,9 +285,15 @@
                                     <div class="box-header">
                                         <h3 class="box-title">专家辅导员调度</h3>
                                         <h3 class="box-title pull-right" style="font-weight:normal; color:#333333;">
-                                        <?php  if($opauth && $opauth['guide']){ ?>
-                                        负责人：{$user.$opauth[guide]}
-                                        <?php  } ?>
+                                            <?php  if($opauth && $opauth['guide']){ ?>
+                                                负责人：{$user.$opauth[guide]}
+                                            <?php  }else{ ?>
+                                                <?php  if(rolemenu(array('Op/assign_guide'))){ ?>
+                                                    <a href="javascript:;" onclick="javascript:assign('{:U('Op/assign_guide',array('opid'=>$op['op_id']))}','指派专家辅导员负责人');" style="color:#09F;">指派负责人</a>
+                                                <?php  }else{ ?>
+                                                    暂未指派负责人
+                                                <?php  } ?>
+                                            <?php  } ?>
                                         </h3>
                                     </div>
 
