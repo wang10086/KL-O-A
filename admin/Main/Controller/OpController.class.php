@@ -113,6 +113,7 @@ class OpController extends BaseController {
 			$op_guide_db    = M('op_guide');
 			$op_member_db   = M('op_member');
 			$op_supplier_db = M('op_supplier');
+            $op_auth_db     = M('op_auth');
 			
 			$info       = I('info');
 			$guide      = I('guide');
@@ -148,6 +149,11 @@ class OpController extends BaseController {
 				//$this->request_audit(P::REQ_TYPE_PROJECT_NEW, $addok);
 
 				if($addok){
+                    $data           = array();
+                    $data['line']   = cookie('userid');
+                    $data['op_id']  = $opid;
+                    $op_auth_db->add($data);
+
 					$record = array();
 					$record['op_id']   = $opid;
 					$record['optype']  = 1;
