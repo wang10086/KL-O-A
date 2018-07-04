@@ -133,6 +133,12 @@
                                         <?php }else{ ?>
                                         <include file="op_line" />
                                         <?php  } ?>
+
+                                        <?php if($op['create_user']==cookie('userid') || C('RBAC_SUPER_ADMIN')==cookie('username') ||rolemenu(array('Op/assign_line')) || cookie('roleid')==10){ ?>
+                                            <include file="op_tcs_sure_edit" />
+                                        <?php }else{ ?>
+                                            <include file="op_tcs_sure_read" />
+                                        <?php } ?>
                                         <div class="form-group">&nbsp;</div>
                                     </div>
                                 </div>
