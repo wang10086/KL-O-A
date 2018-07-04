@@ -1,32 +1,34 @@
 <?php if($guide_price){ ?>
     <include file="op_tcs_list" />
+
 <?php } ?>
 
 <form method="post" action="{:U('Op/public_save')}" id="tcs_need_form">
     <input type="hidden" name="dosubmint" value="1">
     <input type="hidden" name="opid" value="{$op.op_id}">
     <input type="hidden" name="savetype" value="13">
+    <input type="hidden" name="confirm_id" value="" id="confirm_id">
 <div class="content">
 
     <div class="form-group col-md-12" >
-        <label class="lit-title" >辅导员/教师、专家需求</label>
+        <label class="lit-title" id="fdy_lit-title">添加辅导员/教师、专家需求</label>
     </div>
 
     <div class="form-group col-md-12" id="longline">
         <input type="hidden" value="1" id="number">
         <div class="form-group col-md-4">
             <label>活动日期：</label>
-            <input type="text" name="in_day" class="form-control inputdate" value="" required />
+            <input type="text" name="in_day" class="form-control inputdate" id="in_day" value="" required />
         </div>
 
         <div class="form-group col-md-4">
             <label>活动时间(请填写具体时间段)：</label>
-            <input type="text" name="tcs_time" class="form-control inputdate_b" value="" required />
+            <input type="text" name="tcs_time" class="form-control inputdate_b" id="tcs_time" value="" required />
         </div>
 
         <div class="form-group col-md-4">
             <label>活动地点：</label>
-            <input type="text" name="address"  class="form-control" value="" required />
+            <input type="text" name="address"  class="form-control" id="address" value="" required />
         </div>
         <div class="form-group col-md-12"></div>
 
@@ -40,7 +42,7 @@
                             <div class="content" style="padding-top:0px;">
                                 <div id="tcs" class="tcs">
                                     <!--<h3 class="price-title">辅导员/教师、专家需求</h3>-->
-                                    <div class="userlist form-title">
+                                    <div class="userlist form-title" id="tcs_title">
                                         <div class="unitbox" style="width:12%">职务</div>
                                         <div class="unitbox" style="width:12%">职能类型</div>
                                         <div class="unitbox" style="width:12%">所属领域</div>
@@ -80,7 +82,8 @@
 
                                 <div class="form-group col-md-12" id="useraddbtns">
                                     <a href="javascript:;" class="btn btn-success btn-sm" onClick="add_tcs()"><i class="fa fa-fw fa-plus"></i> 人员信息</a>
-                                    <a  href="javascript:;" class="btn btn-info btn-sm" onClick="javascript:save('tcs_need_form','<?php echo U('Op/public_save'); ?>',{$op.op_id});">保存</a>
+                                    <!--<a  href="javascript:;" class="btn btn-info btn-sm" onClick="javascript:save('tcs_need_form','<?php /*echo U('Op/public_save'); */?>',{$op.op_id});">保存</a>-->
+                                    <input type="submit" class="btn btn-info btn-sm" value="保存">
 
                                 </div>
                                 <div class="form-group col-md-12">&nbsp;</div>
@@ -96,6 +99,8 @@
 
 </form>
 
+<script>
 
+</script>
 
 

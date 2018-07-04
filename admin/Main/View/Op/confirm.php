@@ -119,35 +119,38 @@
 
         $(function(){
 
-            $.ajax({
-                type:"POST",
-                url:"{:U('Ajax/get_gpk')}",
-                data:{opid:opid},
-                success:function(msg){
-                    if(msg){
-                        price_kind = msg;
-                        $(".gpk").empty();
-                        var count = msg.length;
-                        var i= 0;
-                        var b="";
-                        b+='<option value="" disabled selected>请选择</option>';
-                        for(i=0;i<count;i++){
-                            b+="<option value='"+msg[i].id+"'>"+msg[i].name+"</option>";
-                        }
-                        $(".gpk").append(b);
-                        //获取职能类型信息
-                        assign_option(1);
-                    }else{
-                        $(".gpk").empty();
-                        var b='<option value="" disabled selected>无数据</option>';
-                        $(".gpk").append(b);
-                        assign_option(1);
-                    }
-                }
-            })
-
+            get_gpk();
         })
 
+    function get_gpk(){
+
+        $.ajax({
+            type:"POST",
+            url:"{:U('Ajax/get_gpk')}",
+            data:{opid:opid},
+            success:function(msg){
+                if(msg){
+                    price_kind = msg;
+                    $(".gpk").empty();
+                    var count = msg.length;
+                    var i= 0;
+                    var b="";
+                    b+='<option value="" disabled selected>请选择</option>';
+                    for(i=0;i<count;i++){
+                        b+="<option value='"+msg[i].id+"'>"+msg[i].name+"</option>";
+                    }
+                    $(".gpk").append(b);
+                    //获取职能类型信息
+                    assign_option(1);
+                }else{
+                    $(".gpk").empty();
+                    var b='<option value="" disabled selected>无数据</option>';
+                    $(".gpk").append(b);
+                    assign_option(1);
+                }
+            }
+        })
+    }
 
     //新增辅导员/教师、专家
     function add_tcs(){
@@ -161,7 +164,7 @@
             '<input type="text"  class="form-control" style="width:8%" name="data['+i+'][price]" id="dj_'+i+'" value="" onblur="getTotal('+i+')">' +
             '<input type="text"  class="form-control" style="width:8%" name="data['+i+'][total]" id="total_'+i+'">' +
             '<input type="text"  class="form-control" style="width:18%" name="data['+i+'][remark]">' +
-            '<a href="javascript:;" class="btn btn-danger btn-flat" onclick="deltcsbox(\'tcs_'+i+'\')">删除</a></div>';
+            '<a href="javascript:;" class="btn btn-danger btn-flat" onclick="delbox(\'tcs_'+i+'\')">删除</a></div>';
         $('#tcs').append(html);
         $('#tcs_val').html(i);
         assign_option(i);
@@ -210,7 +213,7 @@
     }
 
     //移除
-    function deltcsbox(obj){
+    function delbox(obj){
         $('#'+obj).remove();
         orderno();
     }
@@ -242,6 +245,85 @@
 
     }
 
+    function upd_tcs_need(confirm_id,op_id){
+        var confirm_id  = confirm_id;
+        var op_id       = op_id;
+        $('#fdy_lit-title').text('编辑辅导员/教师、专家需求');
+        $.ajax({
+            type:"POST",
+            url:"{:U('Ajax/get_tcs_need')}",
+            data:{confirm_id:confirm_id,op_id:op_id},
+            success:function (msg) {
+                console.log(msg);
+                var in_day  = msg[0].in_day;
+                var in_days = timestampToDay(in_day);
+                $('#in_day').val(in_days);
+                var begin_time  = msg[0].tcs_begin_time;
+                var begin       = timestampToTime(begin_time);
+                var end_time    = msg[0].tcs_end_time;
+                var end         = timestampToTime(end_time);
+                var time        = begin+' - '+end;
+                $('#tcs_time').val(time);
+                $('#address').val(msg[0].address);
+                $('#confirm_id').val(msg[0].confirm_id);
+
+                var con = '';
+                for (var j=0; j<msg.length; j++){
+                    var i = parseInt(Math.random()*100000)+j;
+                    con += '<div class="userlist no-border" id="tcs_'+ i +'">'+
+                        '<span class="title">'+(j+1)+'</span>'+
+                        '<select  class="form-control" style="width:12%"  name="data['+i+'][guide_kind_id]" id="se_'+i+'" onchange="getPrice('+i+')">'+
+                        '<foreach name="guide_kind" key="k" item="v">'+
+                        '<option value="{$k}" <?php if('+msg[j].guide_kind_id+'== $k) echo "selected"; ?>>{$v}</option>'+
+                        '</foreach>'+
+                        '</select>'+
+                        '<select  class="form-control gpk" style="width:12%"  name="data['+i+'][gpk_id]" id="gpk_id_'+i+'" onchange="getPrice('+i+')">'+
+                        '</select>'+
+                        '<select  class="form-control" style="width:12%"  name="data['+i+'][field]">'+
+                        '<foreach name="fields" key="key" item="value">'+
+                        '<option value="{$key}" <?php if('+msg[j].field+'==$key) echo "selected"; ?>>{$value}</option>'+
+                        '</foreach>'+
+                        '</select>'+
+                        '<input type="text" class="form-control" style="width:5%" name="data['+i+'][num]" id="num_'+i+'" onblur="getTotal('+i+')" value="'+msg[j].num+'">'+
+                        '<input type="text" class="form-control" style="width:8%" name="data['+i+'][price]" id="dj_'+i+'" onblur="getTotal('+i+')" value="'+msg[j].price+'">'+
+                        '<input type="text" class="form-control" style="width:8%" name="data['+i+'][total]" id="total_'+i+'" value="'+msg[j].total+'">'+
+                        '<input type="text" class="form-control" style="width:18%" name="data['+i+'][remark]" value="'+msg[j].remark+'">'+
+                        '<a href="javascript:;" class="btn btn-danger btn-flat" onclick="delbox(\'tcs_'+i+'\')">删除</a>'+
+                        '<div id="tcs_val">1</div></div>';
+                }
+                $('#tcs_id').hide();
+                var tcs_title = '<div class="userlist form-title" id="tcs_title">'+$('#tcs_title').html()+'</div>';
+                $('#tcs').html(tcs_title);
+                $('#tcs').append(con);
+                get_gpk();
+            }
+        })
+
+    }
+
+    function timestampToDay(timestamp) {
+        var date = new Date(timestamp * 1000);//时间戳为10位需*1000，时间戳为13位的话不需乘1000
+        Y = date.getFullYear() + '-';
+        M = (date.getMonth()+1 < 10 ? '0'+(date.getMonth()+1) : date.getMonth()+1) + '-';
+        D = date.getDate() + ' ';
+        h = date.getHours() + ':';
+        m = date.getMinutes() + ':';
+        s = date.getSeconds();
+        //return Y+M+D+h+m+s;
+        return Y+M+D;
+    }
+
+    function timestampToTime(timestamp) {
+        var date = new Date(timestamp * 1000);//时间戳为10位需*1000，时间戳为13位的话不需乘1000
+        Y = date.getFullYear() + '-';
+        M = (date.getMonth()+1 < 10 ? '0'+(date.getMonth()+1) : date.getMonth()+1) + '-';
+        D = date.getDate() + ' ';
+        h = date.getHours() + ':';
+        m = date.getMinutes() + ':';
+        s = date.getSeconds();
+        //return Y+M+D+h+m+s;
+        return h+m+s;
+    }
 
 
 </script>

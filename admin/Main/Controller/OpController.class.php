@@ -929,10 +929,12 @@ class OpController extends BaseController {
 
             //保存辅导员/教师,专家需求信息
             if($opid && $savetype==13 ){
+
                 $data           = I('data');
                 $in_day         = I('in_day');
                 $tcs_time       = I('tcs_time');
                 $address        = I('address');
+                $confirm_id     = I('confirm_id');
                 $tcs_begin_time = $in_day.' '.substr($tcs_time,0,8);
                 $tcs_end_time   = $in_day.' '.substr($tcs_time,11,8);
                 $info['in_day']         = strtotime($in_day);
@@ -940,31 +942,30 @@ class OpController extends BaseController {
                 $info['tcs_end_time']   = strtotime($tcs_end_time);
                 $info['address']        = $address;
                 $info['op_id']          = $opid;
-                $con_res = M('op_guide_confirm')->add($info);
-                if ($con_res){
+
+                if ($confirm_id){
+                    $res = M('op_guide_confirm')->where(array('id'=>$confirm_id))->save($info);
+                }else{
+                    $confirm_id = M('op_guide_confirm')->add($info);
+                }
+                if ($confirm_id){
+                    $res = $op_guide_price_db->where(array('op_id'=>$opid,'confirm_id'=>$confirm_id))->delete();
+                    if ($res) $num++;
                     foreach($data as $k=>$v){
                         $v['op_id']      = $opid;
-                        $v['confirm_id'] = $con_res;
+                        $v['confirm_id'] = $confirm_id;
                         $savein          = $op_guide_price_db->add($v);
                         if($savein) $num++;
                     }
                 }
-
-                /*$data = I('data');
-                $savedel = $op_guide_price_db->where(array('op_id'=>$opid))->delete();
-                if ($savedel)  $num++;
-                foreach($data as $k=>$v){
-                    $v['op_id'] = $opid;
-                    $savein     = $op_guide_price_db->add($v);
-                    if($savein) $num++;
-                }*/
+                if ($num){
+                    $this->success('保存成功');
+                }else{
+                    $this->error('保存失败');
+                }
             }
 
-            //保存辅导员/教师,专家需求信息
-            if($opid && $savetype==14 ){
-                $aaa = I();
-                var_dump($aaa);die;
-            }
+
 
             echo $num;
         }
@@ -2140,16 +2141,17 @@ class OpController extends BaseController {
             }
 			M('op')->data($infos)->where(array('op_id'=>$opid))->save();
 
-            //给教务专员发送系统新消息  81
-            $jwzy_ids= M('account')->where(array('roleid'=>81,'status'=>0))->getField('id',true);
-            foreach ($jwzy_ids as $v){
+            //给教务组长 roleid  102
+            /*$jwzy_ids= M('account')->where(array('roleid'=>81,'status'=>0))->getField('id',true);
+            foreach ($jwzy_ids as $v){*/
                 $uid     = cookie('userid');
                 $title   = '您有来自'.$op['create_user_name'].'的团号为['.$info['group_id'].']的团待安排专家辅导员!';
                 $content = '项目编号:'.$op['op_id'].';团号:'.$info['group_id'].';请登录"辅导员/教师、专家管理系统完成相关操作(如其他同事已完成操作,请忽略)!"';
                 $url     = 'http://tcs.kexueyou.com/op.php?m=Main&c=Task&a=detail&id='.$op['id'];
-                $user    = '['.$v.']';
-                send_msg($uid,$title,$content,$url,$user,'');
-            }
+                $user    = '';
+                $roleid  = 102; //教务组长
+                send_msg($uid,$title,$content,$url,$user,$roleid);
+            /*}*/
 			
 			$this->success('保存成功！');
 		

@@ -33,7 +33,7 @@
                     <if condition="rolemenu(array('Op/edit_tcs_need'))">
                         <td class="taskOptions">
                             <!--<a href="javascript:;" onClick="javascript:{:open_edit_tcs_need($row['cid'],$row['pid'],$op['op_id'])}" ><button onClick="javascript:;" title="修改" class="btn btn-info btn-smsm"><i class="fa fa-pencil"></i></button></a>-->
-                            <a href="javascript:;" onClick="javascript:;" ><button onClick="javascript:;" title="修改" class="btn btn-info btn-smsm"><i class="fa fa-pencil"></i></button></a>
+                            <a href="javascript:;" onClick="upd_tcs_need({$row.cid},{$row.op_id})" ><button onClick="javascript:;" title="修改" class="btn btn-info btn-smsm"><i class="fa fa-pencil"></i></button></a>
                         </td>
                     </if>
                 </tr>

@@ -236,4 +236,13 @@ class AjaxController extends Controller {
         $price = $price_a?$price_a:$price_b;
         $this->ajaxReturn($price,'JSON');
     }*/
+
+    public function get_tcs_need(){
+        $opid       = I('op_id');
+        $confirm_id = I('confirm_id');
+        $lists      = M()->table('__OP_GUIDE_CONFIRM__ as c')->join('left join __OP_GUIDE_PRICE__ as p on p.confirm_id = c.id')->where(array('p.op_id'=>$opid,'c.op_id'=>$opid,'c.id'=>$confirm_id))->select();
+        $a = M()->getlastsql();
+
+        $this->ajaxReturn($lists,'JSON');
+    }
 }
