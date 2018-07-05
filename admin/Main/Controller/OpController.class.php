@@ -2106,26 +2106,6 @@ class OpController extends BaseController {
 			}else{
 				M('op_team_confirm')->add($info);
 			}
-
-			/*$num = 0;
-			$res = M('op_guide_price')->where(array('op_id'=>$opid))->delete();
-            if ($res){
-                $num++;
-            }
-            if ($data){
-                foreach($data as $k=>$v){
-                    $v['op_id'] = $opid;
-                    M('op_guide_price')->add($v);
-                    $num++;
-                }
-            }
-            if ($num != 0){
-                $record = array();
-                $record['op_id']   = $opid;
-                $record['optype']  = 4;
-                $record['explain'] = '成团确认--确认专家辅导员资源需求';
-                op_record($record);
-            }*/
 			
 			//修正tcs项目中状态
 			$infos = array();
