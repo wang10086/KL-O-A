@@ -908,22 +908,22 @@ class OpController extends BaseController {
                 foreach($data as $k=>$v){
                     $v['op_id'] = $opid;
                     $savein     = $op_guide_price_db->add($v);
-                    //修改专家辅导员状态
-                    $group_id = $db->where(array('op_id'=>$opid))->getField('group_id');
-                    if ($group_id){
-                        $info['tcs_stu'] = 2;
-                    }else{
-                        $info['tcs_stu'] = 1;   //需要专家辅导员
-                    }
-                    $res = $db->where(array('op_id'=>$opid))->save($info);
-                    if ($res){
-                        $record = array();
-                        $record['op_id']   = $opid;
-                        $record['optype']  = 4;
-                        $record['explain'] = '填写专家辅导员资源需求';
-                        op_record($record);
-                    }
                     if($savein) $num++;
+                }
+                //修改专家辅导员状态
+                $group_id = $db->where(array('op_id'=>$opid))->getField('group_id');
+                if ($group_id){
+                    $info['tcs_stu'] = 2;
+                }else{
+                    $info['tcs_stu'] = 1;   //需要专家辅导员
+                }
+                $res = $db->where(array('op_id'=>$opid))->save($info);
+                if ($res){
+                    $record = array();
+                    $record['op_id']   = $opid;
+                    $record['optype']  = 4;
+                    $record['explain'] = '填写专家辅导员资源需求';
+                    op_record($record);
                 }
             }
 
@@ -2080,10 +2080,6 @@ class OpController extends BaseController {
 
 			$info	    = I('info');
             $data       = I('data');
-            /*$tcs_time   = I('tcs_time');
-            $in_day         = I('in_day');
-            $tcs_begin_time = $in_day.' '.substr($tcs_time,0,8);
-            $tcs_end_time   = $in_day.' '.substr($tcs_time,11,8);*/
 
 			//判断团号是否可用
 			$where = array();
@@ -2097,8 +2093,6 @@ class OpController extends BaseController {
 			$info['user_name']		= cookie('nickname'); 
 			$info['dep_time']		= $info['dep_time'] ? strtotime($info['dep_time']) : 0;
 			$info['ret_time']		= $info['ret_time'] ? strtotime($info['ret_time']) : 0;
-            /*$info['tcs_begin_time'] = strtotime($tcs_begin_time);
-            $info['tcs_end_time']   = strtotime($tcs_end_time);*/
 			$info['confirm_time']	= time();
 			//判断是否已经确认
 			if($confirm){
@@ -2112,7 +2106,7 @@ class OpController extends BaseController {
 				M('op_team_confirm')->add($info);
 			}
 
-			$num = 0;
+			/*$num = 0;
 			$res = M('op_guide_price')->where(array('op_id'=>$opid))->delete();
             if ($res){
                 $num++;
@@ -2130,7 +2124,7 @@ class OpController extends BaseController {
                 $record['optype']  = 4;
                 $record['explain'] = '成团确认--确认专家辅导员资源需求';
                 op_record($record);
-            }
+            }*/
 			
 			//修正tcs项目中状态
 			$infos = array();
@@ -2142,8 +2136,6 @@ class OpController extends BaseController {
 			M('op')->data($infos)->where(array('op_id'=>$opid))->save();
 
             //给教务组长 roleid  102
-            /*$jwzy_ids= M('account')->where(array('roleid'=>81,'status'=>0))->getField('id',true);
-            foreach ($jwzy_ids as $v){*/
                 $uid     = cookie('userid');
                 $title   = '您有来自'.$op['create_user_name'].'的团号为['.$info['group_id'].']的团待安排专家辅导员!';
                 $content = '项目编号:'.$op['op_id'].';团号:'.$info['group_id'].';请登录"辅导员/教师、专家管理系统完成相关操作(如其他同事已完成操作,请忽略)!"';
@@ -2151,8 +2143,7 @@ class OpController extends BaseController {
                 $user    = '';
                 $roleid  = 102; //教务组长
                 send_msg($uid,$title,$content,$url,$user,$roleid);
-            /*}*/
-			
+
 			$this->success('保存成功！');
 		
 		}else{

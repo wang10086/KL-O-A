@@ -4,7 +4,7 @@
     <input type="radio" name="need-tcs-or-not" value="1" <?php if($rad==1){ echo 'checked';} ?>> &#8194;需要
 </div>
 
-<form method="post" action="" id="tcs_need_form">
+<form method="post" action="{:U('Op/public_save')}" id="tcs_sure_form">
     <div class="tcsbox">
         <input type="hidden" name="dosubmint" value="1">
         <input type="hidden" name="opid" value="{$op.op_id}">
@@ -74,14 +74,13 @@
 
                             <div class="form-group col-md-12" id="useraddbtns">
                                 <a href="javascript:;" class="btn btn-success btn-sm" onClick="add_tcs()"><i class="fa fa-fw fa-plus"></i> 人员信息</a>
-                                <a  href="javascript:;" class="btn btn-info btn-sm" onClick="javascript:save('tcs_need_form','<?php echo U('Op/public_save'); ?>',{$op.op_id});">保存</a>
+                                <a  href="javascript:;" class="btn btn-info btn-sm" onClick="javascript:save('tcs_sure_form','<?php echo U('Op/public_save'); ?>',{$op.op_id});">保存</a>
                             </div>
                             <div class="form-group">&nbsp;</div>
                         </div>
                     </div><!-- /.box-body -->
 
                     <div style="width:100%; text-align:center;">
-                        <!--<a  href="javascript:;" class="btn btn-info btn-sm" onClick="javascript:save('tcs_need_form','<?php /*echo U('Op/public_save'); */?>',{$op.op_id});">保存</a>-->
                     </div>
                 </div><!--/.col (right) -->
             </div>
