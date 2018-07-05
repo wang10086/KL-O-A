@@ -910,22 +910,14 @@ class OpController extends BaseController {
                     $savein     = $op_guide_price_db->add($v);
                     if($savein) $num++;
                 }
-                //修改专家辅导员状态
+                /*//修改专家辅导员状态
                 $group_id = $db->where(array('op_id'=>$opid))->getField('group_id');
                 if ($group_id){
                     $info['tcs_stu'] = 2;
                 }else{
                     $info['tcs_stu'] = 1;   //需要专家辅导员
                 }
-                $res = $db->where(array('op_id'=>$opid))->save($info);
-
-                if ($res){
-                    $record = array();
-                    $record['op_id']   = $opid;
-                    $record['optype']  = 4;
-                    $record['explain'] = '填写专家辅导员资源需求';
-                    op_record($record);
-                }
+                $res = $db->where(array('op_id'=>$opid))->save($info);*/
 
                 //数据转存至op_guide_confirm表
                 $confirm    = M('op_guide_confirm')->where(array('op_id'=>$opid))->find();
@@ -933,7 +925,15 @@ class OpController extends BaseController {
                     $confirm            = array();
                     $confirm['op_id']   = $opid;
                     $confirm['tcs_stu'] = 1;    //待要专家辅导员(未成团)
-                    M('op_guide_confirm')->add($confirm);
+                    $res =M('op_guide_confirm')->add($confirm);
+                }
+
+                if ($res){
+                    $record = array();
+                    $record['op_id']   = $opid;
+                    $record['optype']  = 4;
+                    $record['explain'] = '填写专家辅导员资源需求';
+                    op_record($record);
                 }
 
             }
