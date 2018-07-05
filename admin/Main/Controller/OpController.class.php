@@ -949,6 +949,7 @@ class OpController extends BaseController {
                     $confirm_id = M('op_guide_confirm')->add($info);
                 }
                 if ($confirm_id){
+                    $op_guide_price_db->where(array('op_id'=>$opid,'confirm_id'=>0))->delete();
                     $res = $op_guide_price_db->where(array('op_id'=>$opid,'confirm_id'=>$confirm_id))->delete();
                     if ($res) $num++;
                     foreach($data as $k=>$v){

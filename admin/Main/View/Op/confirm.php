@@ -90,9 +90,9 @@
                                 </div><!-- /.box-header -->
                                 <div class="box-body" >
                                     <?php if(!$jiesuan && ($op['create_user']==cookie('userid') || C('RBAC_SUPER_ADMIN')==cookie('username') || cookie('roleid')==10)){ ?>
-                                        <include file="op_tcs_need_edit" />
+                                        <include file="confirm_tcs_need_edit" />
                                     <?php }else{ ?>
-                                        <include file="op_tcs_need_read" />
+                                        <include file="confirm_tcs_need_read" />
                                     <?php }?>
 
                                 </div>
