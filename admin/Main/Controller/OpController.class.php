@@ -918,6 +918,7 @@ class OpController extends BaseController {
                     $info['tcs_stu'] = 1;   //需要专家辅导员
                 }
                 $res = $db->where(array('op_id'=>$opid))->save($info);
+
                 if ($res){
                     $record = array();
                     $record['op_id']   = $opid;
@@ -925,6 +926,16 @@ class OpController extends BaseController {
                     $record['explain'] = '填写专家辅导员资源需求';
                     op_record($record);
                 }
+
+                //数据转存至op_guide_confirm表
+                $confirm    = M('op_guide_confirm')->where(array('op_id'=>$opid))->find();
+                if (!$confirm){
+                    $confirm            = array();
+                    $confirm['op_id']   = $opid;
+                    $confirm['tcs_stu'] = 1;    //待要专家辅导员(未成团)
+                    M('op_guide_confirm')->add($confirm);
+                }
+
             }
 
             //保存辅导员/教师,专家需求信息
@@ -942,6 +953,9 @@ class OpController extends BaseController {
                 $info['tcs_end_time']   = strtotime($tcs_end_time);
                 $info['address']        = $address;
                 $info['op_id']          = $opid;
+                $info['tcs_stu']        = 2;    //已确认需求(已成团)
+
+                M('op_guide_confirm')->where(array('op_id'=>$opid,'tcs_stu'=>1))->delete();
 
                 if ($confirm_id){
                     $res = M('op_guide_confirm')->where(array('id'=>$confirm_id))->save($info);
