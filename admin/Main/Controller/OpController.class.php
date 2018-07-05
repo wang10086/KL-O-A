@@ -955,28 +955,32 @@ class OpController extends BaseController {
                 $info['op_id']          = $opid;
                 $info['tcs_stu']        = 2;    //已确认需求(已成团)
 
-                M('op_guide_confirm')->where(array('op_id'=>$opid,'tcs_stu'=>1))->delete();
+                if ($data){
+                    M('op_guide_confirm')->where(array('op_id'=>$opid,'tcs_stu'=>1))->delete();
 
-                if ($confirm_id){
-                    $res = M('op_guide_confirm')->where(array('id'=>$confirm_id))->save($info);
-                }else{
-                    $confirm_id = M('op_guide_confirm')->add($info);
-                }
-                if ($confirm_id){
-                    $op_guide_price_db->where(array('op_id'=>$opid,'confirm_id'=>0))->delete();
-                    $res = $op_guide_price_db->where(array('op_id'=>$opid,'confirm_id'=>$confirm_id))->delete();
-                    if ($res) $num++;
-                    foreach($data as $k=>$v){
-                        $v['op_id']      = $opid;
-                        $v['confirm_id'] = $confirm_id;
-                        $savein          = $op_guide_price_db->add($v);
-                        if($savein) $num++;
+                    if ($confirm_id){
+                        $res = M('op_guide_confirm')->where(array('id'=>$confirm_id))->save($info);
+                    }else{
+                        $confirm_id = M('op_guide_confirm')->add($info);
                     }
-                }
-                if ($num){
-                    $this->success('保存成功');
+                    if ($confirm_id){
+                        $op_guide_price_db->where(array('op_id'=>$opid,'confirm_id'=>0))->delete();
+                        $res = $op_guide_price_db->where(array('op_id'=>$opid,'confirm_id'=>$confirm_id))->delete();
+                        if ($res) $num++;
+                        foreach($data as $k=>$v){
+                            $v['op_id']      = $opid;
+                            $v['confirm_id'] = $confirm_id;
+                            $savein          = $op_guide_price_db->add($v);
+                            if($savein) $num++;
+                        }
+                    }
+                    if ($num){
+                        $this->success('保存成功');
+                    }else{
+                        $this->error('保存失败');
+                    }
                 }else{
-                    $this->error('保存失败');
+                    $this->error('请填写完整信息!');
                 }
             }
 
