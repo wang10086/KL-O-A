@@ -1,4 +1,4 @@
-<form method="post" action="" name="myform" id="save_line_days">
+<form method="post" action="{:U('Op/public_save_line')}" name="myform" id="save_line_days">
 <input type="hidden" name="dosubmint" value="1">
 <input type="hidden" name="opid" value="{$op.op_id}">
 <input type="hidden" name="savetype" value="6">

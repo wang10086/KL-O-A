@@ -53,17 +53,17 @@ class OpController extends BaseController {
 		$where = array();
 
 		if($title)			$where['o.project']			= array('like','%'.$title.'%');
-		if($oid)				$where['o.group_id']			= array('like','%'.$oid.'%');
+		if($oid)			$where['o.group_id']		= array('like','%'.$oid.'%');
 		if($opid)			$where['o.op_id']			= $opid;
 		if($dest)			$where['o.destination']		= $dest;
-		if($ou)				$where['o.create_user_name']	= $ou;
+		if($ou)				$where['o.create_user_name']= $ou;
 		if($status!='-1')	$where['o.status']			= $status;
-		if($as!='-1')		$where['o.audit_status']		= $as;
-		if($kind)			$where['o.kind']				= $kind;
+		if($as!='-1')		$where['o.audit_status']	= $as;
+		if($kind)			$where['o.kind']			= $kind;
 		if($su)				$where['o.sale_user']		= array('like','%'.$su.'%');
-		if($cus)				$where['o.customer']			= $cus;
+		if($cus)			$where['o.customer']	    = $cus;
 		if($pin==1)			$where['o.create_user']		= cookie('userid');
-		if($jd)				$where['a.nickname']			= array('like','%'.$jd.'%');
+		if($jd)				$where['a.nickname']		= array('like','%'.$jd.'%');
 
 		//分页
 		$pagecount		= $db->table('__OP__ as o')->field($field)->join('__OP_AUTH__ as u on u.op_id = o.op_id','LEFT')->join('__ACCOUNT__ as a on a.id = u.line','LEFT')->where($where)->count();
@@ -1051,6 +1051,8 @@ class OpController extends BaseController {
 
             $data = array();
             $data['hesuan'] = $info;
+            $data['yusuan'] = $info;
+            $data['jiesuan']= $info;
             $auth = M('op_auth')->where(array('op_id'=>$opid))->find();
 
             //创建工单
@@ -1155,7 +1157,7 @@ class OpController extends BaseController {
         }
     }
 
-    //@@@NODE-3###assign_yusuan###指派人员跟进项目预算###
+    //@@@NODE-3###assign_jiesuan###指派人员跟进项目预算###
     public function assign_jiesuan(){
         $opid       = I('opid');
         $info       = I('info');
@@ -1469,9 +1471,9 @@ class OpController extends BaseController {
 		
 		//保存线路
 		$isadd = M('op')->data(array('line_id'=>$line_id))->where(array('op_id'=>$opid))->save();
-		
+
 		if($isadd)  $num++;
-		
+
 		//删除历史日程
 		$del = M('op_line_days')->where(array('op_id'=>$opid))->delete();
 		if($del) $num++;
