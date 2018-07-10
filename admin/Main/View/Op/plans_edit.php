@@ -115,14 +115,27 @@
                             </div>
 
                            <?php  if($op['audit_status']==1){ ?>
-                               <!--------------------start---------------------------->
+
                                <div class="box box-warning">
                                    <div class="box-header">
-                                       <h3 class="box-title">资源需求</h3>
+                                       <h3 class="box-title">行程方案及资源需求</h3>
                                        <h3 class="box-title pull-right" style="font-weight:normal; color:#333333;">
                                            负责人：{$op.sale_user}
                                        </h3>
                                    </div>
+                                   <div class="box-body">
+                                       <?php if(rolemenu(array('Op/public_save_line')) && $settlement['audit']!=1  && ($opauth['line']==cookie('userid')|| C('RBAC_SUPER_ADMIN')==cookie('username') ||rolemenu(array('Op/assign_line')))){ ?>
+                                           <?php if($isFixedLine){ ?>
+                                               <include file="op_line" />
+                                           <?php }else{ ?>
+                                               <include file="op_line_edit" />
+                                           <?php } ?>
+                                       <?php }else{ ?>
+                                           <include file="op_line" />
+                                       <?php  } ?>
+
+                                   </div>
+
                                    <div class="box-body">
                                        <?php if($op['create_user']==cookie('userid') || C('RBAC_SUPER_ADMIN')==cookie('username') ||rolemenu(array('Op/assign_line')) || cookie('roleid')==10){ ?>
                                            <include file="op_tcs_sure_edit" />
@@ -132,38 +145,6 @@
                                        <div class="form-group">&nbsp;</div>
                                    </div>
                                </div>
-
-
-                                <div class="box box-warning">
-                                    <div class="box-header">
-                                        <h3 class="box-title">行程方案</h3>
-                                        <h3 class="box-title pull-right" style="font-weight:normal; color:#333333;">
-                                            <?php  if($opauth && $opauth['line']){ ?>
-                                                负责人：{$user.$opauth[line]}
-                                            <?php  }else{ ?>
-                                                <?php  if(rolemenu(array('Op/assign_line'))){ ?>
-                                                    <a href="javascript:;" onclick="javascript:assign('{:U('Op/assign_line',array('opid'=>$op['op_id']))}','指派行程方案负责人');" style="color:#09F;">指派负责人</a>
-                                                <?php  }else{ ?>
-                                                    暂未指派负责人
-                                                <?php  } ?>
-                                            <?php  } ?>
-                                        </h3>
-                                    </div>
-                                    <div class="box-body">
-                                        <?php if(rolemenu(array('Op/public_save_line')) && $settlement['audit']!=1  && ($opauth['line']==cookie('userid')|| C('RBAC_SUPER_ADMIN')==cookie('username') ||rolemenu(array('Op/assign_line')))){ ?>
-                                            <?php if($isFixedLine){ ?>
-                                                <include file="op_line" />
-                                            <?php }else{ ?>
-                                                <include file="op_line_edit" />
-                                            <?php } ?>
-                                        <?php }else{ ?>
-                                        <include file="op_line" />
-                                        <?php  } ?>
-
-                                        <div class="form-group">&nbsp;</div>
-                                    </div>
-                                </div>
-                               <!---------------------end----------------------------->
                                 
                                  <div class="box box-warning">
                                     <div class="box-header">
