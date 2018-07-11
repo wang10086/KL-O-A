@@ -301,7 +301,11 @@
 		
 		//根据日期、任务编号、任务内容在页面上创建任务节点
 		function buildTask(buildDate, taskId, taskInfo) {
-			$("#" + buildDate).parent().append("<a href='index.php?m=Main&c=Sale&a=goods&opid="+taskId+"' title='" + taskInfo + "' class='task_blue' target='_blank'>" + taskInfo + "</a>");
+            <?php if(cookie('roleid')==10 || cookie('username')==C('RBAC_SUPER_ADMIN')){ ?>
+                $("#" + buildDate).parent().append("<a href='index.php?m=Main&c=Op&a=plans_follow&opid="+taskId+"' title='" + taskInfo + "' class='task_blue' target='_blank'>" + taskInfo + "</a>");
+            <?php }else{ ?>
+                $("#" + buildDate).parent().append("<a href='index.php?m=Main&c=Sale&a=goods&opid="+taskId+"' title='" + taskInfo + "' class='task_blue' target='_blank'>" + taskInfo + "</a>");
+            <?php } ?>
 		}
 		
 		//判断是否闰年返回每月天数
