@@ -559,6 +559,7 @@ class OpController extends BaseController {
         $this->huikuan_status = M('contract_pay')->where(array('op_id'=>$opid))->getField('status');
         $this->guide_kind     = M('guidekind')->getField('id,name',true);
         $this->guide_price    = M('op_guide_price')->where(array('op_id'=>$opid))->select();
+        $this->guide_confirm  = M()->table('__OP_GUIDE_CONFIRM__ as c')->field('c.id as cid,c.*,p.id as pid,p.*')->join('left join __OP_GUIDE_PRICE__ as p on p.confirm_id = c.id')->where(array('c.op_id'=>$opid,'p.op_id'=>$opid))->select();
         $this->apply_to       = C('APPLY_TO');
         if ($this->guide_price) {
             $this->rad = 1;
@@ -946,9 +947,12 @@ class OpController extends BaseController {
                 $tcs_time       = I('tcs_time');
                 $address        = I('address');
                 $confirm_id     = I('confirm_id');
-                $tcs_begin_time = $in_day.' '.substr($tcs_time,0,8);
-                $tcs_end_time   = $in_day.' '.substr($tcs_time,11,8);
-                $info['in_day']         = strtotime($in_day);
+                $in_begin_day   = substr($in_day,0,10);
+                $in_end_day     = substr($in_day,13,10);
+                $tcs_begin_time = $in_end_day.' '.substr($tcs_time,0,8);
+                $tcs_end_time   = $in_end_day.' '.substr($tcs_time,11,8);
+                $info['in_begin_day']   = strtotime($in_begin_day);
+                $info['in_day']         = strtotime($in_end_day);
                 $info['tcs_begin_time'] = strtotime($tcs_begin_time);
                 $info['tcs_end_time']   = strtotime($tcs_end_time);
                 $info['address']        = $address;
@@ -956,8 +960,6 @@ class OpController extends BaseController {
                 $info['tcs_stu']        = 2;    //已确认需求(已成团)
 
                 if ($data){
-                    M('op_guide_confirm')->where(array('op_id'=>$opid,'tcs_stu'=>1))->delete();
-
                     if ($confirm_id){
                         $res = M('op_guide_confirm')->where(array('id'=>$confirm_id))->save($info);
                     }else{
@@ -2180,6 +2182,9 @@ class OpController extends BaseController {
                 }
             }
             $this->guide_price  = $guide_price;
+
+            //项目跟进时提出的需求信息
+            $this->guide_need   = M('op_guide_price')->where(array('op_id'=>$opid))->select();
 
             //人员列表
             $stu_list       = M('op_member')->where(array('op_id'=>$opid))->select();

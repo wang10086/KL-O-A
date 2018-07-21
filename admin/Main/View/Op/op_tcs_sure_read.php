@@ -8,6 +8,7 @@
                     <tr>
                         <th width="">职务</th>
                         <th width="">职能类型</th>
+                        <th width="">天数</th>
                         <th width="">人数</th>
                         <th width="">单价</th>
                         <th width="">总价</th>
@@ -19,6 +20,7 @@
                         <tr class="userlist" id="supplier_id_103">
                             <td width="14%">{$v.gkname}</td>
                             <td width="14%">{$v.gpkname}</td>
+                            <td width="14%">{$v.days}</td>
                             <td width="14%">{$v.num}</td>
                             <td width="14%">&yen; {$v.price}</td>
                             <td width="14%">&yen; {$v.total}</td>

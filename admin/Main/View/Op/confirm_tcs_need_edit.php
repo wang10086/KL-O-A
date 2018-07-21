@@ -17,8 +17,8 @@
     <div class="form-group col-md-12" id="longline">
         <input type="hidden" value="1" id="number">
         <div class="form-group col-md-4">
-            <label>实施日期：</label>
-            <input type="text" name="in_day" class="form-control inputdate" id="in_day" value="" required />
+            <label>实施日期(实例:2018-08-08 - 2018-08-08)：</label>
+            <input type="text" name="in_day" class="form-control between_day" id="in_day" value="" required />
         </div>
 
         <div class="form-group col-md-4">
@@ -46,37 +46,70 @@
                                         <div class="unitbox" style="width:12%">职务</div>
                                         <div class="unitbox" style="width:12%">职能类型</div>
                                         <div class="unitbox" style="width:12%">所属领域</div>
+                                        <div class="unitbox" style="width:5%">天数</div>
                                         <div class="unitbox" style="width:5%">人数</div>
                                         <div class="unitbox" style="width:8%">单价</div>
                                         <div class="unitbox" style="width:8%">合计</div>
                                         <div class="unitbox" style="width:18%">备注</div>
                                     </div>
+                                    <?php if($guide_price){ ?>
+                                        <div class="userlist no-border" id="tcs_id">
+                                            <span class="title">1</span>
+                                            <select  class="form-control" style="width:12%"  name="data[1][guide_kind_id]" id="se_1" onchange="getPrice(1)">
+                                                <option value="" selected disabled>请选择</option>
+                                                <foreach name="guide_kind" key="k" item="v">
+                                                    <option value="{$k}">{$v}</option>
+                                                </foreach>
+                                            </select>
 
-                                    <div class="userlist no-border" id="tcs_id">
-                                        <span class="title">1</span>
-                                        <select  class="form-control" style="width:12%"  name="data[1][guide_kind_id]" id="se_1" onchange="getPrice(1)">
-                                            <option value="" selected disabled>请选择</option>
-                                            <foreach name="guide_kind" key="k" item="v">
-                                                <option value="{$k}">{$v}</option>
-                                            </foreach>
-                                        </select>
-
-                                        <select  class="form-control" style="width:12%"  name="data[1][gpk_id]" id="gpk_id_1" onchange="getPrice(1)">
-                                            <option value="" selected disabled>请选择</option>
-                                        </select>
-                                        <select  class="form-control" style="width:12%"  name="data[1][field]">
-                                            <option value="" selected disabled>请选择</option>
-                                            <foreach name="fields" key="key" item="value">
-                                                <option value="{$key}" <?php if($v['field']==$key) echo 'selected'; ?>>{$value}</option>
-                                            </foreach>
-                                        </select>
-                                        <input type="text" class="form-control" style="width:5%" name="data[1][num]" id="num_1" onblur="getTotal(1)" value="1">
-                                        <input type="text" class="form-control" style="width:8%" name="data[1][price]" id="dj_1" onblur="getTotal(1)" value="">
-                                        <input type="text" class="form-control" style="width:8%" name="data[1][total]" id="total_1" value="">
-                                        <input type="text" class="form-control" style="width:18%" name="data[1][remark]" value="">
-                                        <a href="javascript:;" class="btn btn-danger btn-flat" onclick="delbox('tcs_id')">删除</a>
-                                        <div id="tcs_val">1</div>
-                                    </div>
+                                            <select  class="form-control" style="width:12%"  name="data[1][gpk_id]" id="gpk_id_1" onchange="getPrice(1)">
+                                                <option value="" selected disabled>请选择</option>
+                                            </select>
+                                            <select  class="form-control" style="width:12%"  name="data[1][field]">
+                                                <option value="" selected disabled>请选择</option>
+                                                <foreach name="fields" key="key" item="value">
+                                                    <option value="{$key}" <?php if($v['field']==$key) echo 'selected'; ?>>{$value}</option>
+                                                </foreach>
+                                            </select>
+                                            <input type="text" class="form-control" style="width:5%" name="data[1][days]" id="days_1" onblur="getTotal(1)" value="1">
+                                            <input type="text" class="form-control" style="width:5%" name="data[1][num]" id="num_1" onblur="getTotal(1)" value="1">
+                                            <input type="text" class="form-control" style="width:8%" name="data[1][price]" id="dj_1" onblur="getTotal(1)" value="">
+                                            <input type="text" class="form-control" style="width:8%" name="data[1][total]" id="total_1" value="">
+                                            <input type="text" class="form-control" style="width:18%" name="data[1][remark]" value="">
+                                            <a href="javascript:;" class="btn btn-danger btn-flat" onclick="delbox('tcs_id')">删除</a>
+                                            <div id="tcs_val">1</div>
+                                        </div>
+                                    <?php }else{ ?>
+                                        <foreach name="guide_need" key="k" item="v">
+                                            <div class="userlist no-border" id="tcs_id_{$v.id}">
+                                                <div id="tcs_val">0</div>
+                                                <script>{++$k}; var n = parseInt($('#tcs_val').text());n++;$('#tcs_val').text(n);</script>
+                                                <span class="title"><?php echo $k; ?></span>
+                                                <select  class="form-control" style="width:12%"  name="data[{$k}][guide_kind_id]" id="se_{$k}" onchange="getPrice({$k})">
+                                                    <foreach name="guide_kind" key="key" item="value">
+                                                        <option value="{$key}" <?php if($v['guide_kind_id']==$key) echo 'selected'; ?>>{$value}</option>
+                                                    </foreach>
+                                                </select>
+                                                <select  class="form-control" style="width:12%"  name="data[{$k}][gpk_id]" id="gpk_id_{$k}" onchange="getPrice({$k})">
+                                                    <foreach name="price_kind" key="key" item="value">
+                                                        <option value="{$value.id}" <?php if($v['gpk_id']==$value['id']) echo 'selected'; ?>>{$value.name}</option>
+                                                    </foreach>
+                                                </select>
+                                                <select  class="form-control" style="width:12%"  name="data[{$k}][field]">
+                                                    <option value="" selected disabled>请选择</option>
+                                                    <foreach name="fields" key="key" item="value">
+                                                        <option value="{$key}" <?php if($v['field']==$key) echo 'selected'; ?>>{$value}</option>
+                                                    </foreach>
+                                                </select>
+                                                <input type="text" class="form-control" style="width:5%" name="data[{$k}][days]" value="{$v.days}" id="days_{$k}" onblur="getTotal({$k})">
+                                                <input type="text" class="form-control" style="width:5%" name="data[{$k}][num]" value="{$v.num}" id="num_{$k}" onblur="getTotal({$k})">
+                                                <input type="text" class="form-control" style="width:8%" name="data[{$k}][price]" value="{$v.price}" id="dj_{$k}" onblur="getTotal({$k})">
+                                                <input type="text" class="form-control" style="width:8%" name="data[{$k}][total]" value="{$v.total}" id="total_{$k}">
+                                                <input type="text" class="form-control" style="width:18%" name="data[{$k}][remark]" value="{$v.remark}">
+                                                <a href="javascript:;" class="btn btn-danger btn-flat" onclick="delbox('tcs_id_{$v.id}')">删除</a>
+                                            </div>
+                                        </foreach>
+                                    <?php } ?>
 
                                 </div>
 

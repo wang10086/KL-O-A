@@ -27,26 +27,29 @@ function relaydate(){
 			elem: elm
 		});
 	});
-	
+
+	//月份
 	$('.monthly').each (function(idx, elm) {
 		laydate.render({
 			elem: elm,type: 'month',format: 'yyyyMM'
 		});
 	});
 	
-	
+	//一天具体时间点
 	$('.inputdatetime').each (function(idx, elm) {
 		laydate.render({
 			elem: elm,type: 'datetime'
 		});
 	});
-	
+
+	//某一天(同inputdate)
 	$('.inputdate_a').each (function(idx, elm) {
 		laydate.render({
 			elem: elm
 		});
 	});
 
+	//一天内某个时间段
 	lay('.inputdate_b').each(function() {
 		laydate.render({
 			elem: this
@@ -54,7 +57,16 @@ function relaydate(){
 			,range: true
 		});
 	});
+
+	//日期范围(某几天之间)
+	lay('.between_day').each(function() {
+		laydate.render({
+			elem: this
+			,range: true
+		});
+	});
 }
+
 
 
 function ConfirmDel(url,msg) {

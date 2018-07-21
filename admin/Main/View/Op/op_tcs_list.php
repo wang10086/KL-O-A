@@ -8,7 +8,8 @@
                 <th class="sorting" data="">职务信息</th>
                 <th class="sorting" data="">职能类型</th>
                 <th class="sorting" data="">所属领域</th>
-                <th class="sorting" data="" width="80">人数</th>
+                <th class="sorting" data="" width="50">天数</th>
+                <th class="sorting" data="" width="50">人数</th>
                 <th class="sorting" data="" width="80">单次价格</th>
                 <th class="sorting" data="" width="80">合计价格</th>
                 <th class="sorting" data="">备注</th>
@@ -20,12 +21,19 @@
                 <tr>
                     <input type="hidden" name="confirm_id" value="{$row.cid}">
                     <input type="hidden" name="price_id" value="{$row.pid}">
-                    <td>{$row.in_day|date='Y-m-d',###}</td>
+                    <td>
+                    <if condition="$row.in_begin_day neq 0">
+                        {$row.in_begin_day|date='Y-m-d',###} - {$row.in_day|date='Y-m-d',###}
+                        <else />
+                        {$row.in_day|date='Y-m-d',###}
+                    </if>
+                    </td>
                     <td>{$row.tcs_begin_time|date='H:i:s',###}--{$row.tcs_end_time|date='H:i:s',###}</td>
                     <td>{$row.address}</td>
                     <td>{$row.zhiwu}</td>
                     <td>{$row.zhineng}</td>
                     <td>{$row.lingyu}</td>
+                    <td>{$row.days}</td>
                     <td>{$row.num}</td>
                     <td>&yen;{$row.price}</td>
                     <td>&yen;{$row.total}</td>

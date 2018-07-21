@@ -137,7 +137,7 @@
                                    </div>
 
                                    <div class="box-body">
-                                       <?php if($op['create_user']==cookie('userid') || C('RBAC_SUPER_ADMIN')==cookie('username') ||rolemenu(array('Op/assign_line')) || cookie('roleid')==10){ ?>
+                                       <?php if($op['create_user']==cookie('userid') || C('RBAC_SUPER_ADMIN')==cookie('username') ||rolemenu(array('Op/assign_line')) || cookie('roleid')==10 || !$guide_confirm){ ?>
                                            <include file="op_tcs_sure_edit" />
                                        <?php }else{ ?>
                                            <include file="op_tcs_sure_read" />
@@ -296,20 +296,16 @@
                                             <?php  if($opauth && $opauth['guide']){ ?>
                                                 负责人：{$user.$opauth[guide]}
                                             <?php  }else{ ?>
-                                                <?php  if(rolemenu(array('Op/assign_guide'))){ ?>
+                                                <?php /* if(rolemenu(array('Op/assign_guide'))){ */?><!--
                                                     <a href="javascript:;" onclick="javascript:assign('{:U('Op/assign_guide',array('opid'=>$op['op_id']))}','指派专家辅导员负责人');" style="color:#09F;">指派负责人</a>
-                                                <?php  }else{ ?>
+                                                <?php /* }else{ */?>
                                                     暂未指派负责人
-                                                <?php  } ?>
+                                                --><?php /* } */?>
                                             <?php  } ?>
                                         </h3>
                                     </div>
-
-                                    <?php if(rolemenu(array('Op/public_save'))  && $budget['audit_status']==1 && $settlement['audit']!=1 && ($opauth['guide']==cookie('userid') || C('RBAC_SUPER_ADMIN')==cookie('username') || rolemenu(array('Op/assign_res')))){ ?>
-                                        <include file="op_res_guide_edit" />
-                                    <?php  }else{ ?>
+                                    
                                         <include file="op_res_guide" />
-                                    <?php } ?>
 
                                 </div>
 
@@ -970,7 +966,8 @@
             '<span class="title"></span> ' +
             '<select  class="form-control" style="width:15%" name="data['+i+'][guide_kind_id]" id="se_'+i+'" onchange="getPrice('+i+')"><option value="" selected disabled>请选择</option> <foreach name="guide_kind" key="k" item="v"> <option value="{$k}">{$v}</option></foreach></select> ' +
             '<select  class="form-control gpk" style="width:15%" name="data['+i+'][gpk_id]" id="gpk_id_'+i+'" onchange="getPrice('+i+')"><option value="" selected disabled>请选择</option> <foreach name="hotel_start" key="k" item="v"> <option value="{$k}">{$v}</option></foreach></select> ' +
-            '<input type="text"  class="form-control" style="width:10%" name="data['+i+'][num]" id="num_'+i+'" onblur="getTotal('+i+')" > ' +
+            '<input type="text"  class="form-control" style="width:6%" name="data['+i+'][days]" id="days_'+i+'" onblur="getTotal('+i+')" > ' +
+            '<input type="text"  class="form-control" style="width:6%" name="data['+i+'][num]" id="num_'+i+'" onblur="getTotal('+i+')" > ' +
             '<input type="text"  class="form-control" style="width:10%" name="data['+i+'][price]" id="dj_'+i+'" value="" onblur="getTotal('+i+')">' +
             '<input type="text"  class="form-control" style="width:10%" name="data['+i+'][total]" id="total_'+i+'">' +
             '<input type="text"  class="form-control" style="width:20%" name="data['+i+'][remark]">' +
@@ -1017,8 +1014,9 @@
     //获取人数,计算出总价格\
     function getTotal(a){
         var num     = parseInt($('#num_'+a).val());
+        var days    = parseInt($('#days_'+a).val());
         var price   = parseFloat($('#dj_'+a).val());
-        var total   = num*price;
+        var total   = num*price*days;
         $('#total_'+a).val(total);
     }
 

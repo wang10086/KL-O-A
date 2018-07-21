@@ -22,7 +22,8 @@
                                 <div class="userlist form-title">
                                     <div class="unitbox" style="width:15%">职务</div>
                                     <div class="unitbox" style="width:15%">职能类型</div>
-                                    <div class="unitbox" style="width:10%">人数</div>
+                                    <div class="unitbox" style="width:6%">天数</div>
+                                    <div class="unitbox" style="width:6%">人数</div>
                                     <div class="unitbox" style="width:10%">单价</div>
                                     <div class="unitbox" style="width:10%">合计</div>
                                     <div class="unitbox" style="width:20%">备注</div>
@@ -43,7 +44,8 @@
                                                     <option value="{$value.id}" <?php if($v['gpk_id']==$value['id']) echo 'selected'; ?>>{$value.name}</option>
                                                 </foreach>
                                             </select>
-                                            <input type="text" class="form-control" style="width:10%" name="data[{$k}][num]" value="{$v.num}" id="num_{$k}" onblur="getTotal({$k})">
+                                            <input type="text" class="form-control" style="width:6%" name="data[{$k}][days]" value="{$v.days}" id="days_{$k}" onblur="getTotal({$k})">
+                                            <input type="text" class="form-control" style="width:6%" name="data[{$k}][num]" value="{$v.num}" id="num_{$k}" onblur="getTotal({$k})">
                                             <input type="text" class="form-control" style="width:10%" name="data[{$k}][price]" value="{$v.price}" id="dj_{$k}" onblur="getTotal({$k})">
                                             <input type="text" class="form-control" style="width:10%" name="data[{$k}][total]" value="{$v.total}" id="total_{$k}">
                                             <input type="text" class="form-control" style="width:20%" name="data[{$k}][remark]" value="{$v.remark}">
@@ -63,7 +65,8 @@
                                         <select  class="form-control" style="width:15%"  name="data[1][gpk_id]" id="gpk_id_1" onchange="getPrice(1)">
                                             <option value="" selected disabled>请选择</option>
                                         </select>
-                                        <input type="text" class="form-control" style="width:10%" name="data[1][num]" id="num_1" onblur="getTotal(1)" value="">
+                                        <input type="text" class="form-control" style="width:6%" name="data[1][days]" id="days_1" onblur="getTotal(1)" value="1">
+                                        <input type="text" class="form-control" style="width:6%" name="data[1][num]" id="num_1" onblur="getTotal(1)" value="1">
                                         <input type="text" class="form-control" style="width:10%" name="data[1][price]" id="dj_1" onblur="getTotal(1)" value="">
                                         <input type="text" class="form-control" style="width:10%" name="data[1][total]" id="total_1" value="">
                                         <input type="text" class="form-control" style="width:20%" name="data[1][remark]" value="">

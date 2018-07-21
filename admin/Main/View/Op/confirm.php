@@ -89,11 +89,11 @@
                                     <h3 class="box-title">辅导员/教师、专家需求</h3>
                                 </div><!-- /.box-header -->
                                 <div class="box-body" >
-                                    <?php /*if(!$jiesuan && ($op['create_user']==cookie('userid') || C('RBAC_SUPER_ADMIN')==cookie('username') || cookie('roleid')==10)){ */?>
+                                    <?php if(!$jiesuan && ($op['create_user']==cookie('userid') || C('RBAC_SUPER_ADMIN')==cookie('username') || cookie('roleid')==10)){ ?>
                                         <include file="confirm_tcs_need_edit" />
-                                    <?php /*}else{ */?><!--
+                                    <?php }else{ ?>
                                         <include file="confirm_tcs_need_read" />
-                                    --><?php /*}*/?>
+                                    <?php }?>
 
                                 </div>
                             </div>
@@ -160,7 +160,8 @@
             '<select  class="form-control" style="width:12%" name="data['+i+'][guide_kind_id]" id="se_'+i+'" onchange="getPrice('+i+')"><option value="" selected disabled>请选择</option> <foreach name="guide_kind" key="k" item="v"> <option value="{$k}">{$v}</option></foreach></select> ' +
             '<select  class="form-control gpk" style="width:12%" name="data['+i+'][gpk_id]" id="gpk_id_'+i+'" onchange="getPrice('+i+')"><option value="" selected disabled>请选择</option> <foreach name="hotel_start" key="k" item="v"> <option value="{$k}">{$v}</option></foreach></select> ' +
             '<select  class="form-control" style="width:12%"  name="data['+i+'][field]"><option value="" selected disabled>请选择</option> <foreach name="fields" key="key" item="value"> <option value="{$key}">{$value}</option> </foreach> </select>'+
-            '<input type="text"  class="form-control" style="width:5%" name="data['+i+'][num]" id="num_'+i+'" value="1" onblur="getTotal('+i+')" > ' +
+            '<input type="text"  class="form-control" style="width:5%" name="data['+i+'][days]" id="days_'+i+'" value="1" onblur="getTotal('+i+')" >'+
+            '<input type="text"  class="form-control" style="width:5%" name="data['+i+'][num]"  id="num_'+i+'" value="1" onblur="getTotal('+i+')" > ' +
             '<input type="text"  class="form-control" style="width:8%" name="data['+i+'][price]" id="dj_'+i+'" value="" onblur="getTotal('+i+')">' +
             '<input type="text"  class="form-control" style="width:8%" name="data['+i+'][total]" id="total_'+i+'">' +
             '<input type="text"  class="form-control" style="width:18%" name="data['+i+'][remark]">' +
@@ -208,7 +209,8 @@
     function getTotal(a){
         var num     = parseInt($('#num_'+a).val());
         var price   = parseFloat($('#dj_'+a).val());
-        var total   = num*price;
+        var days    = parseInt($('#days_'+a).val());
+        var total   = num*price*days;
         $('#total_'+a).val(total);
     }
 
@@ -254,9 +256,15 @@
             url:"{:U('Ajax/get_tcs_need')}",
             data:{confirm_id:confirm_id,op_id:op_id},
             success:function (msg) {
-                console.log(msg);
-                var in_day  = msg[0].in_day;
-                var in_days = timestampToDay(in_day);
+                var begin_day   = msg[0].in_begin_day;
+                var end_day     = msg[0].in_day;
+                if (begin_day != 0){
+                    var in_begin_day= timestampToDay(begin_day);
+                }else{
+                    var in_begin_day= timestampToDay(end_day);
+                }
+                var in_end_day  = timestampToDay(end_day);
+                var in_days     = in_begin_day+' - '+in_end_day;
                 $('#in_day').val(in_days);
                 var begin_time  = msg[0].tcs_begin_time;
                 var begin       = timestampToTime(begin_time);
