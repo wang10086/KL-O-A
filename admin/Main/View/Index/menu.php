@@ -46,9 +46,6 @@
                                 <if condition="rolemenu(array('Op/index'))">
                                     <li><a href="{:U('Op/index')}"><i class="fa fa-angle-right"></i> 项目管理</a></li>
                                 </if>
-                                <if condition="rolemenu(array('Project/kind'))">
-                                    <li class="{:on('Project/kind')} {:on('Project/addkind')}"><a href="{:U('Project/kind')}"><i class="fa fa-angle-right"></i> 项目类型</a></li>
-                                </if>
                                 <if condition="rolemenu(array('Op/relpricelist'))">
                                         <li class="{:on('Op/relpricelist')} {:on('Op/relprice')}"><a href="{:U('Op/relpricelist')}"><i class="fa fa-angle-right"></i> 项目比价</a></li>
                                 </if>
@@ -120,7 +117,81 @@
                             </ul>
                         </li>
                         </if>
-                        
+                        <!------------------------------start-------------------------------------------------->
+                        <li class="treeview {:on('Product')} {:on('Project')} {:on('Project/lession')} {:on('Project/fields')} {:on('Project/types')}">
+                            <a href="javascript:;">
+                                <i class="fa fa-globe"></i>
+                                <span>新产品管理</span>
+                                <i class="fa fa-angle-left pull-right"></i>
+                            </a>
+                            <ul class="treeview-menu">
+
+                                <if condition="rolemenu(array('ScienceRes/res','ScienceRes/addres','ScienceRes/reskind'))">
+                                    <li class="treeview {:on('ScienceRes')}{:on('Project/kind')}">
+                                        <a href=""><i class="fa  fa-check-square-o"></i> 标准产品管理</a>
+                                        <ul class="treeview-menu">
+                                            <if condition="rolemenu(array(''))">
+                                                <li class="{:on('')}"><a href="{:U('')}"><i class="fa fa-angle-right"></i> 产品模块</a></li>
+                                            </if>
+                                            <if condition="rolemenu(array(''))">
+                                                <li class="{:on('')}"><a href="{:U('')}"><i class="fa fa-angle-right"></i> 产品模板</a></li>
+                                            </if>
+                                            <if condition="rolemenu(array('Project/kind'))">
+                                                <li class="{:on('Project/kind')} {:on('Project/addkind')}"><a href="{:U('Project/kind')}"><i class="fa fa-angle-right"></i> 项目类型</a></li>
+                                            </if>
+                                        </ul>
+                                    </li>
+                                </if>
+
+
+                                <if condition="rolemenu(array('SupplierRes/res','SupplierRes/addres','SupplierRes/reskind'))">
+                                    <li class="treeview  {:on('SupplierRes')}">
+                                        <a href=""><i class="fa fa-plane"></i> 校园科技节</a>
+                                        <ul class="treeview-menu">
+
+                                            <if condition="rolemenu(array(''))">
+                                                <li class="{:on('')}"><a href="{:U('')}"><i class="fa fa-angle-right"></i> 产品模板</a></li>
+                                            </if>
+
+                                            <if condition="rolemenu(array('',''))">
+                                                <li class="{:on('')} {:on('')}"><a href="{:U('')}"><i class="fa fa-angle-right"></i> 产品模块</a></li>
+                                            </if>
+                                        </ul>
+                                    </li>
+                                </if>
+
+                                <if condition="rolemenu(array('GuideRes/res'))">
+                                    <li class="treeview  {:on('GuideRes')}">
+                                        <a href=""><i class="fa fa-star"></i> 科学博物园</a>
+                                        <ul class="treeview-menu">
+                                            <if condition="rolemenu(array(''))">
+                                                <li class="{:on('')} "><a href="{:U('')}"><i class="fa fa-angle-right"></i> 产品模板</a></li>
+                                            </if>
+                                            <if condition="rolemenu(array(''))">
+                                                <li class="{:on('')} {:on('')} "><a href="{:U('')}"><i class="fa fa-angle-right"></i> 产品模块</a></li>
+                                            </if>
+                                        </ul>
+                                    </li>
+                                </if>
+
+                                <if condition="rolemenu(array('GuideRes/res'))">
+                                    <li class="treeview  {:on('GuideRes')}">
+                                        <a href=""><i class="fa fa-ticket"></i> 研学旅行</a>
+                                        <ul class="treeview-menu">
+                                            <if condition="rolemenu(array(''))">
+                                                <li class="{:on('')} "><a href="{:U('')}"><i class="fa fa-angle-right"></i> 产品模板</a></li>
+                                            </if>
+                                            <if condition="rolemenu(array(''))">
+                                                <li class="{:on('')} "><a href="{:U('')}"><i class="fa fa-angle-right"></i> 产品模块</a></li>
+                                            </if>
+                                        </ul>
+                                    </li>
+                                </if>
+
+                            </ul>
+                        </li>
+                        <!-------------------------------end--------------------------------------------------->
+
                         
                        
                         <li class="treeview {:on('ScienceRes')} {:on('GuideRes')} {:on('SupplierRes')}">
