@@ -86,13 +86,13 @@
                                 <i class="fa fa-angle-left pull-right"></i>
                             </a>
                             <ul class="treeview-menu">
-                            	
-                                <if condition="rolemenu(array('Product/index'))">
-                                    <li class="{:on('Product/index')} {:on('Product/add')}"><a href="{:U('Product/index')}"><i class="fa fa-angle-right"></i> 产品模块管理</a></li>
-                                </if>
-                                
+
                                 <if condition="rolemenu(array('Product/tpl'))">
                                     <li class="{:on('Product/tpl')} {:on('Product/addtpl')}"><a href="{:U('Product/tpl')}"><i class="fa fa-angle-right"></i> 产品模板管理</a></li>
+                                </if>
+
+                                <if condition="rolemenu(array('Product/index'))">
+                                    <li class="{:on('Product/index')} {:on('Product/add')}"><a href="{:U('Product/index')}"><i class="fa fa-angle-right"></i> 产品模块管理</a></li>
                                 </if>
                                 
                                 <if condition="rolemenu(array('Product/line'))">
