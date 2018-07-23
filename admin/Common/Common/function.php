@@ -1923,8 +1923,9 @@ function updatekpi($month,$user){
 					}else{
 						$complete = round(($chengtuan / $zongxiangmu)*100,2).'%';
 					}
+
 				}
-				
+
 				//获取合同签订率（含家长协议书）
 				if($v['quota_id']==5){
 					/*$where = array();
@@ -1941,8 +1942,8 @@ function updatekpi($month,$user){
 					$xiangmu_list	= M()->table('__OP__ as o')->field('o.op_id,c.dep_time')->join('left join __OP_TEAM_CONFIRM__ as c on o.op_id=c.op_id')->where($where)->select();
 					$xiangmu 		= count($xiangmu_list);
 					$hetong 		= 0;
-					foreach ($xiangmu_list as $k=>$v){
-						$hetong_list = M('contract')->where(array('op_id'=>$v['op_id'],'status'=>1,'confirm_time'=>array('lt',$v['dep_time'])))->find();
+					foreach ($xiangmu_list as $key=>$value){
+						$hetong_list = M('contract')->where(array('op_id'=>$value['op_id'],'status'=>1,'confirm_time'=>array('lt',$value['dep_time'])))->find();
 						if ($hetong_list) $hetong++;
 					}
 					$complete = $xiangmu ? round(($hetong / $xiangmu)*100,2).'%' : 0 .'%';
@@ -2633,10 +2634,8 @@ function updatekpi($month,$user){
 					}
 					
 				}
-				
-				
-				
-				
+
+
 				//已实现自动获取指标值
 				$auto_quta	= array(1,2,3,4,5,6,81,8,9,10,11,15,16,18,20,23,26,21,24,27,32,37,19,22,25,28,33,38,42,45,103,56,113,92,29,34,39,46,102,55,57,58,59,84,87,89,90,111,107,83,66,54,44,12,112,108,100,96,95,65,114,86,85,64,63,62,53,52,41,40,49,80,48,91,79,47,36,35,31,30,82,110,106,99,94,67);
 				
@@ -2651,7 +2650,7 @@ function updatekpi($month,$user){
 					$data['complete_rate']	= $rate."%";
 					$data['score']			= round(($rate * $v['weight']) / 100,1);
 					$data['score_status']	= 1;
-					
+
 					
 				}else{
 					
@@ -2672,7 +2671,8 @@ function updatekpi($month,$user){
 			$issave	= M('kpi')->data(array('score'=>$total))->where(array('id'=>$v['kpi_id']))->save();
 				
 			
-		}	
+		}
+		
 	}
 }
 
