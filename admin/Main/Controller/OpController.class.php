@@ -963,7 +963,14 @@ class OpController extends BaseController {
                     if ($confirm_id){
                         $res = M('op_guide_confirm')->where(array('id'=>$confirm_id))->save($info);
                     }else{
-                        $confirm_id = M('op_guide_confirm')->add($info);
+                        //更改项目跟进时提出的需求信息
+                        $list       = M('op_guide_confirm')->where(array('op_id'=>$opid,'tcs_stu'=>1))->find();
+                        if ($list){
+                            $confirm_id = $list['id'];
+                            $res    = M('op_guide_confirm')->where(array('id'=>$confirm_id))->save($info);
+                        }else{
+                            $confirm_id = M('op_guide_confirm')->add($info);
+                        }
                     }
                     if ($confirm_id){
                         $op_guide_price_db->where(array('op_id'=>$opid,'confirm_id'=>0))->delete();
