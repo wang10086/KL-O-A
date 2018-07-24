@@ -296,16 +296,21 @@
                                             <?php  if($opauth && $opauth['guide']){ ?>
                                                 负责人：{$user.$opauth[guide]}
                                             <?php  }else{ ?>
-                                                <?php /* if(rolemenu(array('Op/assign_guide'))){ */?><!--
+                                                <?php  if(rolemenu(array('Op/assign_guide'))){ ?>
                                                     <a href="javascript:;" onclick="javascript:assign('{:U('Op/assign_guide',array('opid'=>$op['op_id']))}','指派专家辅导员负责人');" style="color:#09F;">指派负责人</a>
-                                                <?php /* }else{ */?>
+                                                <?php  }else{ ?>
                                                     暂未指派负责人
-                                                --><?php /* } */?>
+                                                <?php  } ?>
                                             <?php  } ?>
                                         </h3>
                                     </div>
                                     
+
+                                    <?php  if(rolemenu(array('Op/assign_guide'))){ ?>
+                                        <include file="op_res_guide_edit" />
+                                    <?php  }else{ ?>
                                         <include file="op_res_guide" />
+                                    <?php } ?>
 
                                 </div>
 
