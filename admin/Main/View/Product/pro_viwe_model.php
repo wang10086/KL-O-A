@@ -96,14 +96,16 @@
                                             <th>文件名</th>
                                             <th>文件类型</th>
                                             <th>文件大小</th>
+                                            <th>上传时间</th>
                                             <th style="width: 80px">下载</th>
                                         </tr>
                                         <foreach name="atts" key="k" item="row">
                                         <tr>
                                             <td><?php echo $k+1; ?></td>
-                                            <td>{$row.filename}</td>
+                                            <td><a href="javascript:;">{$row.filename}</a></td>
                                             <td>{$row.fileext}</td>
                                             <td><?php echo sprintf("%.1f", $row['filesize']/1024); ?>K</td>
+                                            <td>{$row.uploadtime|date='Y-m-d',###}</td>
                                             <td><a href="{$row.filepath}" class="badge bg-red">下载</a></td>
                                         </tr>
                                         </foreach>

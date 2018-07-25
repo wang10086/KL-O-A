@@ -103,6 +103,10 @@
                                     <li class="{:on('Project/lession')} {:on('Project/fields')}"><a href="{:U('Project/lession')}"><i class="fa fa-angle-right"></i> 课程信息管理</a></li>
                                 </if>
 
+                                <if condition="rolemenu(array('Project/kind'))">
+                                    <li class="{:on('Project/kind')} {:on('Project/addkind')}"><a href="{:U('Project/kind')}"><i class="fa fa-angle-right"></i> 项目类型管理</a></li>
+                                </if>
+
                                 <!--
                                 <if condition="rolemenu(array('Product/kind'))">
                                 		<li class="{:on('Product/kind')} {:on('Product/addkind')}"><a href="{:U('Product/kind')}"><i class="fa fa-angle-right"></i> 线路类型管理</a></li>
@@ -118,7 +122,7 @@
                         </li>
                         </if>
                         <!------------------------------start-------------------------------------------------->
-                        <li class="treeview {:on('Product')} {:on('Project')} {:on('Project/lession')} {:on('Project/fields')} {:on('Project/types')}">
+                        <!--<li class="treeview {:on('Product')} {:on('Project')} {:on('Project/lession')} {:on('Project/fields')} {:on('Project/types')}">
                             <a href="javascript:;">
                                 <i class="fa fa-globe"></i>
                                 <span>新产品管理</span>
@@ -189,7 +193,7 @@
                                 </if>
 
                             </ul>
-                        </li>
+                        </li>-->
                         <!-------------------------------end--------------------------------------------------->
 
                         
