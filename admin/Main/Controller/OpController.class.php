@@ -901,7 +901,7 @@ class OpController extends BaseController {
             //保存辅导员/教师,专家需求
             if($opid && $savetype==12 ){
                 $data = I('data');
-                $savedel = $op_guide_price_db->where(array('op_id'=>$opid))->delete();
+                $savedel = $op_guide_price_db->where(array('op_id'=>$opid,'confirm_id'=>0))->delete();
                 $upd_tcs = array();
                 $upd_tcs['tcs_stu'] = 0;
                 $db->where(array('op_id'=>$opid))->save($upd_tcs);
