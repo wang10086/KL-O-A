@@ -953,8 +953,8 @@ class OpController extends BaseController {
                 $tcs_end_time   = $in_end_day.' '.substr($tcs_time,11,8);
                 $info['in_begin_day']   = strtotime($in_begin_day);
                 $info['in_day']         = strtotime($in_end_day);
-                $info['tcs_begin_time'] = strtotime($tcs_begin_time);
-                $info['tcs_end_time']   = strtotime($tcs_end_time);
+                $info['tcs_begin_time'] = strtotime($tcs_begin_time)?strtotime($tcs_begin_time):0;
+                $info['tcs_end_time']   = strtotime($tcs_end_time)?strtotime($tcs_end_time):0;
                 $info['address']        = $address;
                 $info['op_id']          = $opid;
                 $info['tcs_stu']        = 2;    //已确认需求(已成团)

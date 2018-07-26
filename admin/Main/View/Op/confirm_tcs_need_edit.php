@@ -16,17 +16,17 @@
 
     <div class="form-group col-md-12" id="longline">
         <input type="hidden" value="1" id="number">
-        <div class="form-group col-md-4">
+        <div class="form-group col-md-6">
             <label>实施日期(实例:2018-08-08 - 2018-08-08)：</label>
             <input type="text" name="in_day" class="form-control between_day" id="in_day" value="" required />
         </div>
 
-        <div class="form-group col-md-4">
+        <!--<div class="form-group col-md-4">
             <label>实施时间(请填写具体时间段)：</label>
             <input type="text" name="tcs_time" class="form-control inputdate_b" id="tcs_time" value="" required />
-        </div>
+        </div>-->
 
-        <div class="form-group col-md-4">
+        <div class="form-group col-md-6">
             <label>实施地点：</label>
             <input type="text" name="address"  class="form-control" id="address" value="" required />
         </div>
