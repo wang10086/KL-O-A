@@ -8,11 +8,11 @@
                 <th width="">姓名</th>
                 <!--<th width="100">联系方式</th>-->
                 <th width="20%">职务类型</th>
-                <th width="15%">职能类型</th>
+                <!--<th width="15%">职能类型</th>-->
                 <th width="10%">性别</th>
-                <!--<th width="10%">费用</th>
-                <th width="10%">数量</th>-->
-                <th width="10%">合计</th>
+                <th width="10%">费用</th>
+                <th width="10%">数量</th>
+                <th width="10%">实际所得金额</th>
                 <th width="20%">备注</th>
             </tr>
         </thead>
@@ -22,19 +22,18 @@
                 <td><a href="javascript:;" onClick="open_guide({$v.guide_id},'{$v.name}')">{$v.name}</a> <i class="fa  fa-calendar" style="color:#3CF; margin-left:8px; cursor:pointer;" onClick="course({$v.guide_id},{$op.op_id})"></i></td>
                 <!--<td>{$v.tel}</td>-->
                 <td>{$v.kind}</td>
-                <td>{$v.gpk_name}</td>
+                <!--<td>{$v.gpk_name}</td>-->
                 <td>{$v.sex}</td>
-                <!--<td>&yen;{$v.cost}</td>
-                <td>{$v.amount}</td>-->
+                <td>&yen;{$v.price}</td>
+                <td>{$v.num}</td>
                 <!--<td class="total">&yen;{$v.total}</td>-->
-                <td class="total">&yen;<?php echo $v['cost']*$v['amount']; ?></td>
+                <td class="total">&yen;{$v.really_cost}</td>
                 <td>{$v.remark}</td>
             </tr>
             </foreach>
             <tr>
-                <!--<td></td>
+
                 <td></td>
-                <td></td>-->
                 <td></td>
                 <td></td>
                 <td></td>

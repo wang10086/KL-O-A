@@ -402,8 +402,8 @@ class OpController extends BaseController {
 		}
 		
 		$pro        = M('product')->find($op['product_id']);
-		$guide      = M()->table('__OP_GUIDE__ as g')->field('g.*,c.cost,c.amount,c.total,c.gpk_id,gui.tel')->join('__OP_COST__ as c on c.link_id=g.id')->join('left join __GUIDE__ as gui on g.guide_id = gui.id')->where(array('g.op_id'=>$opid,'c.op_id'=>$opid,'c.cost_type'=>2))->order('g.id')->select();
-		$supplier   = M()->table('__OP_SUPPLIER__ as s')->field('s.id as sid,s.op_id,s.supplier_id,s.supplier_name,s.city,s.kind,s.remark as sremark,c.*')->join('__OP_COST__ as c on c.link_id=s.id')->where(array('s.op_id'=>$opid,'c.op_id'=>$opid,'c.cost_type'=>3))->order('sid')->select();
+		$guide      = M()->table('__GUIDE_PAY__ as p')->field('g.*,p.guide_id,p.op_id,p.num,p.price,p.total,p.really_cost,p.remark,k.name as kind')->join('left join __GUIDE__ as g on p.guide_id=g.id')->join('left join __GUIDEKIND__ as k on g.kind=k.id')->where(array('p.op_id'=>$opid))->select();
+        $supplier   = M()->table('__OP_SUPPLIER__ as s')->field('s.id as sid,s.op_id,s.supplier_id,s.supplier_name,s.city,s.kind,s.remark as sremark,c.*')->join('__OP_COST__ as c on c.link_id=s.id')->where(array('s.op_id'=>$opid,'c.op_id'=>$opid,'c.cost_type'=>3))->order('sid')->select();
 		$member     = M('op_member')->where(array('op_id'=>$opid))->order('id')->select();
 		$costlist   = M('op_cost')->where(array('op_id'=>$opid))->order('cost_type')->select();
 		$shouru     = $op['sale_cost']*$op['number'];
