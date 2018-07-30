@@ -29,10 +29,10 @@
                                 </div><!-- /.box-header -->
                                 <div class="box-body">
                                 <div class="btn-group" id="catfont">
-                                    <button onClick="javascript:window.location.href='{:U('Product/index',array('status'=>'-1'))}';" class="btn <?php if($status=='-1'){ echo 'btn-info';}else{ echo 'btn-default';} ?>">所有的</button>
-                                    <button onClick="javascript:window.location.href='{:U('Product/index',array('status'=>0))}';" class="btn <?php if($status==0){ echo 'btn-info';}else{ echo 'btn-default';} ?>">未审批</button>
-                                    <button onClick="javascript:window.location.href='{:U('Product/index',array('status'=>1))}';" class="btn <?php if($status==1){ echo 'btn-info';}else{ echo 'btn-default';} ?>">已通过</button>
-                                    <button onClick="javascript:window.location.href='{:U('Product/index',array('status'=>2))}';" class="btn <?php if($status==2){ echo 'btn-info';}else{ echo 'btn-default';} ?>">未通过</button>
+                                    <button onClick="javascript:window.location.href='{:U('Product/index',array('status'=>'-1'))}';" class="btn <?php if($status=='-1'){ echo 'btn-info';}else{ echo 'btn-default';} ?>">校园科技节</button>
+                                    <button onClick="javascript:window.location.href='{:U('Product/index',array('status'=>0))}';" class="btn <?php if($status==0){ echo 'btn-info';}else{ echo 'btn-default';} ?>">课后一小时</button>
+                                    <button onClick="javascript:window.location.href='{:U('Product/index',array('status'=>1))}';" class="btn <?php if($status==1){ echo 'btn-info';}else{ echo 'btn-default';} ?>">科学博物园</button>
+                                    <button onClick="javascript:window.location.href='{:U('Product/index',array('status'=>2))}';" class="btn <?php if($status==2){ echo 'btn-info';}else{ echo 'btn-default';} ?>">小课题</button>
                                    
                                 </div>
                                 <table class="table table-bordered dataTable fontmini" id="tablelist" style="margin-top:10px;">

@@ -18,15 +18,15 @@ class ProductController extends BaseController {
         $this->title('产品模块列表');
 		
 		$key          = I('key');
-		$status       = I('status','-1');
+		//$status       = I('status','-1');
 		$pro          = I('pro');
 		$zj           = I('zj');
 		$age          = I('age');
 		
 		$db = M('product');
-		$this->status = $status;
+		//$this->status = $status;
 		$where = array();
-		if($this->status != '-1') $where['p.audit_status'] = $this->status;
+		//if($this->status != '-1') $where['p.audit_status'] = $this->status;
 		if($key)    $where['p.title'] = array('like','%'.$key.'%');
 		if($pro)    $where['p.business_dept'] = array('like','%'.$pro.'%');
 		if($age)    $where['p.age'] = array('like','%'.$age.'%');
@@ -69,7 +69,10 @@ class ProductController extends BaseController {
     public function add() {
         $this->title('添加产品');
 		if (isset($_POST['dosubmit'])) {
-			 
+
+            $data = I();
+            var_dump($data);die;
+
              $info = I('info');
 			 $referer = I('referer');
 			 $material = I('material');
