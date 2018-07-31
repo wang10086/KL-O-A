@@ -3665,10 +3665,10 @@ a.iclose{background:url(../img/btn/min_icon.png) no-repeat 0px -30px;width:30px;
   font-weight: 800;
   float: left;
   cursor: default;}
-.unitcontent{ width:100%; float:left; clear:both; height:auto !important; padding:6px 0;}
+/*.unitcontent{ width:100%; float:left; clear:both; height:auto !important; padding:6px 0;}
 .unitbox{ border-top:1px solid #eeeeee; margin-top:20px; padding:15px 0; width:100%; float:left; clear:both; height:auto !important;}
 .bor-bot{ border-bottom:1px solid #dedede; width:100%; float:left; clear:both; padding-bottom:8px; margin-top:8px; height:auto !important;}
-.bor-bot strong{ border-left:4px solid #09C; padding-left:6px;}
+.bor-bot strong{ border-left:4px solid #09C; padding-left:6px;}*/
 
 #start_train { background:#ffffff;}
 #start_train h1{ font-size:24px; font-family:'微软雅黑'; margin:0; padding:0; text-align:center; color:rgb(245, 105, 84);}

@@ -66,12 +66,10 @@ class ProductController extends BaseController {
     
 	
     // @@@NODE-3###add###添加产品###
-    public function add() {
+    /***********************bak_start**************************/
+    public function add__bak() {
         $this->title('添加产品');
 		if (isset($_POST['dosubmit'])) {
-
-            $data = I();
-            var_dump($data);die;
 
              $info = I('info');
 			 $referer = I('referer');
@@ -202,14 +200,159 @@ class ProductController extends BaseController {
 			//物料关键字
 			$key =  M('material')->field('id,pinyin,material')->where(array('asset'=>0))->select();
 			if($key) $this->keywords =  json_encode($key);
-			
+
 			$this->subject_fields = C('SUBJECT_FIELD');
 			$this->projects       = M('project')->where(array('status'=>1))->select();
 				
 			$this->display('add');
 		}
     }
-    
+    /***********************bak_end**************************/
+
+    public function add() {
+        $this->title('添加产品');
+        if (isset($_POST['dosubmit'])) {
+
+
+
+            $info = I('info');
+            $referer = I('referer');
+            $material = I('material');
+            $resid = I('resid');
+            $business_dept = I('business_dept');
+            $age = I('age');
+            $res = I('res');
+            $info['content'] = stripslashes($_POST['content']);
+            $info['business_dept'] = implode(',',array_unique($business_dept));
+            $info['age'] = implode(',',array_unique($age));
+            $info['supplier'] = implode(',',array_unique($res));
+            $id = I('id');
+
+            $aids = join(',', I('resfiles'));
+
+            $newname = I('newname', null);
+
+            if ($aids) {
+                $info['att_id'] = $aids;
+            } else {
+                $info['att_id'] = '';
+            }
+
+            //修改附件文件名
+            $attdb = M('attachment');
+            foreach ($newname as $k => $v) {
+                $attdb->where("id=$k")->setField('filename', $v);
+            }
+
+
+            if ($id) {
+                //修改
+                M('product')->where("id=$id")->data($info)->save();
+                if ($aids) {
+                    $attdb->where("id in ($aids)")->setField('rel_id', $id);
+                }
+
+                //修改物资信息
+                $delid = array();
+                foreach($material as $k=>$v){
+                    $data = array();
+                    $data = $v;
+                    $data['material'] = trim($v['material']);
+                    if($data['material']){
+                        if($resid && $resid[$k]['id']){
+                            $edits = M('product_material')->data($data)->where(array('id'=>$resid[$k]['id']))->save();
+                            $delid[] = $resid[$k]['id'];
+                        }else{
+                            $data['product_id'] = $id;
+                            $delid[] = M('product_material')->add($data);
+                        }
+                    }
+                }
+
+                $where = array();
+                $where['product_id'] = $id;
+                if($delid) $where['id'] = array('not in',$delid);
+                $del = M('product_material')->where($where)->delete();
+
+                $this->success('修改成功！', $referer);
+            } else {
+
+                //保存
+                $info['input_user'] = session('userid');
+                $info['input_uname'] = session('nickname');
+                $info['input_time']  = time();
+
+                $rel_id = M('product')->add($info);
+                if ($aids) {
+                    $attdb->where("id in ($aids)")->setField('rel_id', $rel_id);
+                }
+
+                $this->request_audit(P::REQ_TYPE_PRODUCT_NEW, $rel_id);
+
+                //保存物资信息
+                foreach($material as $k=>$v){
+                    $data = array();
+                    $data = $v;
+                    $data['product_id'] = $rel_id;
+                    if($data['material']){
+                        M('product_material')->add($data);
+                    }
+                }
+
+                $this->success('保存成功！', $referer);
+            }
+        } else {
+            $id = I('id');
+
+            $this->row = M('product')->find($id);
+
+            if($this->row){
+                if ($this->row['att_id']) {
+                    $this->atts = M('attachment')->where("catid=1 and id in (" . $this->row['att_id']. ")")->select();
+                } else {
+                    $this->atts = false;
+                }
+                $this->material = M('product_material')->where(array('product_id'=>$id))->select();
+
+                $depts = explode(',',$this->row['business_dept']);
+                $kinds = M('project_kind')->getField('id,name');
+                $deptlist = array();
+                foreach($depts as $k=>$v){
+                    $deptlist[$k]['id'] = $v;
+                    $deptlist[$k]['name'] = $kinds[$v];
+                }
+
+                $ages = explode(',',$this->row['age']);
+                $ageval = C('AGE_LIST');
+                $agelist = array();
+                foreach($ages as $k=>$v){
+                    $agelist[$k]['id'] = $v;
+                    $agelist[$k]['name'] = $ageval[$v];
+                }
+
+
+                $sp = array();
+                $sp['id'] = array('IN',$this->row['supplier']);
+                $this->supplier = M('cas_res')->where($sp)->select();
+                $this->reskind = M('reskind')->getField('id,name', true);
+                $this->deptlist = unique_arr($deptlist);
+                $this->agelist  = unique_arr($agelist);
+
+
+            }
+
+            //物料关键字
+            $key =  M('material')->field('id,pinyin,material')->where(array('asset'=>0))->select();
+            if($key) $this->keywords =  json_encode($key);
+
+            $this->product_from   = C('PRODUCT_FROM');
+            $this->product_type   = C('PRODUCT_TYPE');
+            $this->subject_fields = C('SUBJECT_FIELD');
+            $this->projects       = M('project')->where(array('status'=>1))->select();
+
+            $this->display('add');
+        }
+    }
     
     // @@@NODE-3###select_ages###模板选择适用年龄###
 	public function select_ages(){

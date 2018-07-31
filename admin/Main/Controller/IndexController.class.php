@@ -154,8 +154,7 @@ class IndexController extends BaseController {
 						}
 					}
 					
-					
-					
+
 					//获取角色名称
 					$role = M('role')->find($isdate['roleid']);
 					
@@ -177,7 +176,7 @@ class IndexController extends BaseController {
 					cookie('roleid',$isdate['roleid'],36000);
 					cookie('rolename',$role['role_name'],36000);
 					cookie('comid',$isdate['comid'],36000);
-					cookie('nickname',$isdate['nickname'],3600);
+					cookie('nickname',$isdate['nickname'],36000);
 					
 					$info['update_time'] = time();
 					$info['ip'] = get_client_ip();

@@ -30,29 +30,16 @@
                                     <input type="hidden" name="dosubmit" value="1" />
                                     <input type="hidden" name="referer" value="<?php echo $_SERVER['HTTP_REFERER']; ?>" />
                                     <if condition="$row"><input type="hidden" name="id" value="{$row.id}" /></if>
-                                    <if condition="$row">
-                                        <input type="hidden" name="info[input_uname]" value="{$row.input_uname}" class="form-control" readonly />
-                                    <else />
-                                        <input type="hidden" name="info[input_uname]" value="{:session('nickname')}" class="form-control" readonly />
-                                    </if>
                                     <!-- text input -->
                                     
-                                    <div class="form-group col-md-6">
+                                    <div class="form-group col-md-12">
                                         <label>产品模块名称</label>
                                         <input type="text" name="info[title]" id="title" value="{$row.title}"  class="form-control" />
                                     </div>
-
-                                    <div class="form-group col-md-6">
-                                        <label>类别</label>
-                                        <select  class="form-control"  name="info[type]">
-                                            <option value="0">请选择</option>
-                                            <foreach name="product_type" key="k" item="v">
-                                                <option value="{$k}" <?php if ($row && ($k == $row['type'])) echo ' selected'; ?> >{$v}</option>
-                                            </foreach>
-                                        </select>
-                                    </div>
-
-                                    <div class="form-group col-md-6">
+                                    
+                                    
+                                   
+                                    <div class="form-group col-md-4">
                                         <label>科学领域</label>
                                         <select  class="form-control"  name="info[subject_field]">
                                         <option value="0">请选择</option>
@@ -62,28 +49,24 @@
                                         </select>
                                     </div>
                                     
-                                    <!--<div class="form-group col-md-4">
+                                    
+                                    
+                                    
+                                    <div class="form-group col-md-4">
                                         <label>参考成本价</label>
                                         <input type="text" name="info[sales_price]" id="sales_price"   value="{$row.sales_price}" class="form-control" />
-                                    </div>-->
-                                    <div class="form-group col-md-6">
-                                        <label>来源</label>
-                                        <select  class="form-control"  name="info[from]">
-                                            <option value="0">请选择</option>
-                                            <foreach name="product_from" key="k" item="v">
-                                                <option value="{$k}" <?php if ($row && ($k == $row['from'])) echo ' selected'; ?> >{$v}</option>
-                                            </foreach>
-                                        </select>
                                     </div>
                                     
-                                    <!--<div class="form-group col-md-4">
+                                    
+                                    
+                                    <div class="form-group col-md-4">
                                         <label>研发专家</label>
-                                        <?php /*if ($row) { */?>
-                                            <input type="text" name="info[input_uname]" id="input_uname"   value="{$row.input_uname}" class="form-control" readonly />
-                                        <?php /*} else { */?>
-                                            <input type="text" name="info[input_uname]" id="input_uname"   value="{:session('nickname')}" class="form-control" readonly />
-                                        <?php /*} */?>
-                                    </div>-->
+                                        <?php if ($row) { ?>
+                                        <input type="text" name="info[input_uname]" id="input_uname"   value="{$row.input_uname}" class="form-control" readonly />
+                                        <?php } else { ?>
+                                        <input type="text" name="info[input_uname]" id="input_uname"   value="{:session('nickname')}" class="form-control" readonly />
+                                        <?php } ?>
+                                    </div>
                                     
                                     
                                     <div class="form-group col-md-12">
@@ -106,27 +89,16 @@
                                         
                                         </div>
                                     </div>
-
-                                    <div class="form-group col-md-12"></div>
                                     
                                     
-                                    <!--<div class="form-group col-md-12">
-                                        <label>产品简介</label>
-                                        <?php /*echo editor('content',$row['content']); */?>
-                                    </div>-->
+                                    
+                                    
                                     <div class="form-group col-md-12">
-                                        <label>产品简介</label>
-                                        <textarea name="content"  rows="4" style="width:100%"></textarea>
-                                    </div>
-
-                                    <div class="form-group col-md-12"></div>
-
-                                    <div class="form-group col-md-12">
-                                        <label>原理及实施要求</label>
+                                        <label>产品模块介绍</label>
                                         <?php echo editor('content',$row['content']); ?>
                                     </div>
-
-                                    <!-- <div class="form-group col-md-12">
+                                    
+                                    <div class="form-group col-md-12">
                                     <table class="table table-striped" id="supplierlist" >
                                     	<thead>
                                             <tr role="row">
@@ -151,7 +123,7 @@
                                     
                                     <div class="form-group col-md-12" >
                                         <a href="javascript:;" class="btn btn-success btn-sm" style="margin-top:15px;" onclick="add_supplier()"><i class="fa fa-fw fa-plus"></i> 关联科普资源</a>
-                                    </div>-->
+                                    </div>
                                     
                                     <div class="form-group">&nbsp;</div>
                                     
@@ -163,7 +135,7 @@
                             
                             <div class="box box-warning">
                                 <div class="box-header">
-                                    <h3 class="box-title">材料及价格</h3>
+                                    <h3 class="box-title">模块费用清单</h3>
                                 </div>
                                 <div class="box-body">
                                     <div class="content">
@@ -171,27 +143,10 @@
                                         	<style type="text/css">
 											#material .material_name{ width:120px;}
                                             #material .longinput{ width:100px;}
-
-                                            #material{ padding:0; margin-top:-20px;}
-                                            #material .form-control{ width:120px; float:left; margin-right:10px; border-radius:0;}
-                                            #material .unitbox{ float:left; clear:none; border:none; padding:0; line-height:42px;}
-                                            #material .brunitbox{ float:left; clear:none; border:none; padding:0; line-height:21px;}
-                                            #material .title{ width:22px; float:left; height:30px; line-height:30px; margin-left:-30px; text-align:right; position:relative; z-index:100;}
-                                            #material .userlist { width:100%; height:auto !important; float:left; clear:both; padding-bottom:15px; border-bottom:1px solid #cccccc; margin-top:15px;}
-                                            #material .input-group{ width:auto; float:left; height:34px; margin-right:10px; background:#ffffff; }
-                                            #material .input-group span{ border:1px solid #cccccc; width:40px; background:#ffffff; }
-                                            #material .input-group span.rr{margin-left:-1px;}
-                                            #material .input-group span input{ margin-left:5px;}
-                                            #material .btn{ padding:7px 12px; font-size:12px;}
-                                            #material td{ line-height:34px;}
-                                            #material_val{ display:none}
-                                            #material .longinput{ width:100px;}
-                                            #material .material_name{ width:120px}
-                                            #material .stock{ width:60px; text-align:left; float:left; line-height:34px;}
                                             </style>
                                             <div id="material">
                                                 <div class="userlist" id="material_id">
-                                                    <div class="unitbox material_name">材料名称</div>
+                                                    <div class="unitbox material_name">物资名称</div>
                                                     <div class="unitbox longinput">规格</div>
                                                     <div class="unitbox">数量</div>
                                                     <div class="unitbox">参考单价</div>
@@ -226,12 +181,6 @@
                                                     <input type="text" class="form-control longinput" name="material[0][spec]">
                                                     <input type="text" class="form-control" name="material[0][amount]">
                                                     <input type="text" class="form-control" name="material[0][unitprice]">
-                                                    <select class="form-control"  name="material[888{$v.id}][type]" >
-                                                        <option value="1" <?php if($v['type']==1){ echo 'selected';} ?> >物资</option>
-                                                        <option value="2" <?php if($v['type']==2){ echo 'selected';} ?> >专家辅导员</option>
-                                                        <option value="3" <?php if($v['type']==3){ echo 'selected';} ?> >合格供方</option>
-                                                        <option value="4" <?php if($v['type']==4){ echo 'selected';} ?> >其他</option>
-                                                    </select>
                                                     <input type="text" class="form-control longinput" name="material[0][channel]">
                                                     <input type="text" class="form-control longinput" name="material[0][remarks]">
                                                     <a href="javascript:;" class="btn btn-danger btn-flat" onclick="delbox('material_id')">删除</a>
