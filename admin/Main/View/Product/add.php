@@ -169,33 +169,16 @@
                                     <div class="content">
                                         <div class="content" style="padding-top:0px;">
                                         	<style type="text/css">
-											#material .material_name{ width:120px;}
+											#material .material_name{ width:120px;margin-right: 10px;}
                                             #material .longinput{ width:100px;}
-
-                                            #material{ padding:0; margin-top:-20px;}
-                                            #material .form-control{ width:120px; float:left; margin-right:10px; border-radius:0;}
-                                            #material .unitbox{ float:left; clear:none; border:none; padding:0; line-height:42px;}
-                                            #material .brunitbox{ float:left; clear:none; border:none; padding:0; line-height:21px;}
-                                            #material .title{ width:22px; float:left; height:30px; line-height:30px; margin-left:-30px; text-align:right; position:relative; z-index:100;}
-                                            #material .userlist { width:100%; height:auto !important; float:left; clear:both; padding-bottom:15px; border-bottom:1px solid #cccccc; margin-top:15px;}
-                                            #material .input-group{ width:auto; float:left; height:34px; margin-right:10px; background:#ffffff; }
-                                            #material .input-group span{ border:1px solid #cccccc; width:40px; background:#ffffff; }
-                                            #material .input-group span.rr{margin-left:-1px;}
-                                            #material .input-group span input{ margin-left:5px;}
-                                            #material .btn{ padding:7px 12px; font-size:12px;}
-                                            #material td{ line-height:34px;}
-                                            #material_val{ display:none}
-                                            #material .longinput{ width:100px;}
-                                            #material .material_name{ width:120px}
-                                            #material .stock{ width:60px; text-align:left; float:left; line-height:34px;}
                                             </style>
                                             <div id="material">
                                                 <div class="userlist" id="material_id">
                                                     <div class="unitbox material_name">材料名称</div>
                                                     <div class="unitbox longinput">规格</div>
-                                                    <div class="unitbox">数量</div>
-                                                    <div class="unitbox">参考单价</div>
-                                                    <div class="unitbox">类型</div>
+                                                    <div class="unitbox material_name">数量</div>
+                                                    <div class="unitbox material_name">参考单价</div>
+                                                    <div class="unitbox material_name">类型</div>
                                                     <div class="unitbox longinput">购买途径</div>
                                                     <div class="unitbox longinput">备注</div>
                                                 </div>
@@ -252,12 +235,23 @@
                             
                             <div class="box box-warning">
                                 <div class="box-header">
-                                    <h3 class="box-title">上传附件</h3>
+                                    <h3 class="box-title">上传资料</h3>
                                     
                                 </div>
                                 <div class="box-body">
                                     <div class="content">
-                                    	<div class="form-group col-md-12">
+                                        <div class="form-group col-md-12">
+                                            <label style="margin: 0 0 0 -17px;font-weight: 600;">上传图片</label>
+                                            {:upload_m('uploadfile','files','','上传图片')}
+                                        </div>
+
+                                        <div style="display:none" id="task_val">0</div>
+                                        <label style="margin: 0 0 0 -17px;font-weight: 600;">上传相关附件</label>
+                                        {:upload_m('daysfile','daysfiles',$atts,'&nbsp;上传附件资料','daysbox','daypic','附件名称')}
+                                        <div id="daysbox"></div>
+
+                                    	<!--<div class="form-group col-md-12">
+                                            <label style="margin: 0 0 0 -17px;font-weight: 600;">上传相关附件</label>
                                             <table id="flist" class="table" style="margin-top:10px;">
                                             	<tr>
                                                 	<th align="left" width="45%">文件名称</th>
@@ -286,7 +280,7 @@
                                                 <input type="hidden" rel="aid_{$v.id}" name="resfiles[]" value="{$v.id}" />
                                                 </foreach>
                                             </div>
-                                        </div>
+                                        </div>-->
                                     </div>
                                 </div>
                             </div>

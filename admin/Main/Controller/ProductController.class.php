@@ -22,6 +22,7 @@ class ProductController extends BaseController {
 		$pro          = I('pro');
 		$zj           = I('zj');
 		$age          = I('age');
+        var_dump($pro);
 		
 		$db = M('product');
 		//$this->status = $status;
@@ -212,8 +213,8 @@ class ProductController extends BaseController {
     public function add() {
         $this->title('添加产品');
         if (isset($_POST['dosubmit'])) {
-
-
+            $a = I();
+            var_dump($a);die;
 
             $info = I('info');
             $referer = I('referer');

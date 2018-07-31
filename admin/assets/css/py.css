@@ -3866,7 +3866,7 @@ th{ font-weight:normal;}
 #material td{ line-height:34px;}
 #material_val{ display:none}
 #material .longinput{ width:120px;}
-#material .material_name{ width:160px}  
+#material .material_name{ width:160px;}
 #material .stock{ width:60px; text-align:left; float:left; line-height:34px;}
 
 #pro_ages_text,#pro_kinds_text{ width:100%;padding-bottom:12px; margin-top:-5px; border-bottom:1px solid #dedede;}
