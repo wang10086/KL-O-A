@@ -24,19 +24,14 @@
                                     <h3 class="box-title">{$_action_}</h3>
                                     <div class="box-tools pull-right">
                                     	<a href="javascript:;" class="btn btn-info btn-sm" onclick="javascript:opensearch('searchtext',600,160);"><i class="fa fa-search"></i> 搜索</a>
-                                        <a href="{:U('Product/add')}" class="btn btn-sm btn-danger"><i class="fa fa-plus"></i> 新建产品模块</a>
+                                        <a href="{:U('Product/add',array('business_dept'=>$pro))}" class="btn btn-sm btn-danger"><i class="fa fa-plus"></i> 新建产品模块</a>
                                     </div>
                                 </div><!-- /.box-header -->
                                 <div class="box-body">
                                 <div class="btn-group" id="catfont">
-                                    <foreach name="kinds" key="k" item="v">
-                                        <button onClick="javascript:window.location.href='{:U('Product/index',array('pro'=>$k))}';" class="btn <?php if($status==$k){ echo 'btn-info';}else{ echo 'btn-default';} ?>">{$v}</button>
+                                    <foreach name="business_dept" key="k" item="v">
+                                        <button onClick="javascript:window.location.href='{:U('Product/index',array('pro'=>$k))}';" class="btn <?php if($pro==$k){ echo 'btn-info';}else{ echo 'btn-default';} ?>">{$v}</button>
                                     </foreach>
-                                    <!--<button onClick="javascript:window.location.href='{:U('Product/index',array('status'=>'-1'))}';" class="btn <?php /*if($status=='-1'){ echo 'btn-info';}else{ echo 'btn-default';} */?>">校园科技节</button>
-                                    <button onClick="javascript:window.location.href='{:U('Product/index',array('status'=>0))}';" class="btn <?php /*if($status==0){ echo 'btn-info';}else{ echo 'btn-default';} */?>">课后一小时</button>
-                                    <button onClick="javascript:window.location.href='{:U('Product/index',array('status'=>1))}';" class="btn <?php /*if($status==1){ echo 'btn-info';}else{ echo 'btn-default';} */?>">科学博物园</button>
-                                    <button onClick="javascript:window.location.href='{:U('Product/index',array('status'=>2))}';" class="btn <?php /*if($status==2){ echo 'btn-info';}else{ echo 'btn-default';} */?>">小课题</button>-->
-
                                 </div>
                                 <table class="table table-bordered dataTable fontmini" id="tablelist" style="margin-top:10px;">
                                     <tr role="row" class="orders" >

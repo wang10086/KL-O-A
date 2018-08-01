@@ -29,17 +29,17 @@
                                 <div class="box-body">
                                     <input type="hidden" name="dosubmit" value="1" />
                                     <input type="hidden" name="referer" value="<?php echo $_SERVER['HTTP_REFERER']; ?>" />
+                                    <input type="hidden" name="business_dept" value="{$business_dept}">
                                     <if condition="$row"><input type="hidden" name="id" value="{$row.id}" /></if>
                                     <if condition="$row">
-                                        <input type="hidden" name="info[input_uname]" value="{$row.input_uname}" class="form-control" readonly />
+                                        <input type="hidden" name="info[input_uname]" value="{$row.input_uname}" class="form-control"  />
                                     <else />
-                                        <input type="hidden" name="info[input_uname]" value="{:session('nickname')}" class="form-control" readonly />
+                                        <input type="hidden" name="info[input_uname]" value="{:session('nickname')}" class="form-control"  />
                                     </if>
-                                    <!-- text input -->
-                                    
+
                                     <div class="form-group col-md-6">
                                         <label>产品模块名称</label>
-                                        <input type="text" name="info[title]" id="title" value="{$row.title}"  class="form-control" />
+                                        <input type="text" name="info[title]" id="title" value="{$row.title}"  class="form-control" required />
                                     </div>
 
                                     <div class="form-group col-md-6">
@@ -76,16 +76,6 @@
                                         </select>
                                     </div>
                                     
-                                    <!--<div class="form-group col-md-4">
-                                        <label>研发专家</label>
-                                        <?php /*if ($row) { */?>
-                                            <input type="text" name="info[input_uname]" id="input_uname"   value="{$row.input_uname}" class="form-control" readonly />
-                                        <?php /*} else { */?>
-                                            <input type="text" name="info[input_uname]" id="input_uname"   value="{:session('nickname')}" class="form-control" readonly />
-                                        <?php /*} */?>
-                                    </div>-->
-                                    
-                                    
                                     <div class="form-group col-md-12">
                                         <label><a href="javascript:;" onClick="selectages()">选择适用年龄</a> <span style="color:#999999">(选择后您可以点击删除)</span></label>
                                         <div id="pro_ages_text">
@@ -96,7 +86,7 @@
                                     </div>
                                     
                                     
-                                    <div class="form-group col-md-12">
+                                    <!--<div class="form-group col-md-12">
                                         <label><a href="javascript:;" onClick="selectkinds()">选择适用项目类型</a> <span style="color:#999999">(选择后您可以点击删除)</span></label>
                                         <div id="pro_kinds_text">
                                         
@@ -105,24 +95,12 @@
                                         </foreach>
                                         
                                         </div>
-                                    </div>
-
-                                    <div class="form-group col-md-12"></div>
-                                    
-                                    
-                                    <!--<div class="form-group col-md-12">
-                                        <label>产品简介</label>
-                                        <?php /*echo editor('content',$row['content']); */?>
                                     </div>-->
-                                    <div class="form-group col-md-12">
-                                        <label>产品简介</label>
-                                        <textarea name="content"  rows="4" style="width:100%"></textarea>
-                                    </div>
 
                                     <div class="form-group col-md-12"></div>
 
                                     <div class="form-group col-md-12">
-                                        <label>原理及实施要求</label>
+                                        <label>产品简介</label>
                                         <?php echo editor('content',$row['content']); ?>
                                     </div>
 
@@ -241,17 +219,28 @@
                                 <div class="box-body">
                                     <div class="content">
                                         <div class="form-group col-md-12">
-                                            <label style="margin: 0 0 0 -17px;font-weight: 600;">上传图片</label>
-                                            {:upload_m('uploadfile','files','','上传图片')}
+                                            <label class="upload_label">上传原理及实施要求</label>
+                                            {:upload_m('theory_file','theory_files','','上传原理及实施要求','theory_box','theory','文件名称')}
+                                            <span style="line-height:30px; margin-left:15px; margin-top:15px; color:#999999;">请选择小于80M的文件，支持JPG / GIF / PNG / DOC / XLS / PDF / ZIP / RAR文件类型</span>
+                                            <div id="theory_box"></div>
                                         </div>
 
-                                        <div style="display:none" id="task_val">0</div>
-                                        <label style="margin: 0 0 0 -17px;font-weight: 600;">上传相关附件</label>
-                                        {:upload_m('daysfile','daysfiles',$atts,'&nbsp;上传附件资料','daysbox','daypic','附件名称')}
-                                        <div id="daysbox"></div>
+                                        <div class="form-group col-md-12">
+                                            <label class="upload_label">上传图片</label>
+                                            {:upload_m('pic_file','pic_files','','上传图片','pic_box','pic','图片名称')}
+                                            <span style="line-height:30px; margin-left:15px; margin-top:15px; color:#999999;">请选择不超过3张图片文件</span>
+                                            <div id="pic_box"></div>
+                                        </div>
+
+                                        <div class="form-group col-md-12">
+                                        <label class="upload_label">上传相关视频</label>
+                                        {:upload_m('video_file','video_files',$atts,'&nbsp;上传视频资料','video_box','video','视频名称')}
+                                        <span style="line-height:30px; margin-left:15px; margin-top:15px; color:#999999;">请选择小于80M的文件，支持JPG / GIF / PNG / DOC / XLS / PDF / ZIP / RAR文件类型</span>
+                                        <div id="video_box"></div>
+                                        </div>
 
                                     	<!--<div class="form-group col-md-12">
-                                            <label style="margin: 0 0 0 -17px;font-weight: 600;">上传相关附件</label>
+                                            <label class="upload_label">上传相关附件</label>
                                             <table id="flist" class="table" style="margin-top:10px;">
                                             	<tr>
                                                 	<th align="left" width="45%">文件名称</th>

@@ -377,6 +377,7 @@ function save_res($module,$releid,$data){
 			$info['rel_id']        = $releid;
 			$info['status']        = $data['status'][$k];
 			$info['filename']      = $data['filename'][$k];
+			$info['filepath']      = $data['filepath'][$k];
 			$issave = $tp_db->where(array('id'=>$v))->save($info);
 		}
 		$where['id']     = array('not in',implode(',',$data['id']));

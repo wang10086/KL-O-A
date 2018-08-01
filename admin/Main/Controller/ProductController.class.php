@@ -18,16 +18,13 @@ class ProductController extends BaseController {
         $this->title('产品模块列表');
 		
 		$key          = I('key');
-		//$status       = I('status','-1');
-		$pro          = I('pro');
+		$pro          = I('pro',54);//默认研学旅行
 		$zj           = I('zj');
 		$age          = I('age');
-        var_dump($pro);
-		
-		$db = M('product');
-		//$this->status = $status;
-		$where = array();
-		//if($this->status != '-1') $where['p.audit_status'] = $this->status;
+
+		$db           = M('product');
+		$this->pro    = $pro;
+		$where        = array();
 		if($key)    $where['p.title'] = array('like','%'.$key.'%');
 		if($pro)    $where['p.business_dept'] = array('like','%'.$pro.'%');
 		if($age)    $where['p.age'] = array('like','%'.$age.'%');
@@ -37,8 +34,8 @@ class ProductController extends BaseController {
         $page = new Page($db->table('__PRODUCT__ as p')->where($where)->count(), P::PAGE_SIZE);
         $this->pages = $page->show();
 		$lists = $db->table('__PRODUCT__ as p')->field('p.*')->where($where)->limit($page->firstRow . ',' . $page->listRows)->order($this->orders('p.id'))->select();
-		$kinds = M('project_kind')->getField('id,name');
-		foreach($lists as $k=>$v){
+        $kinds = M('project_kind')->getField('id,name');
+        foreach($lists as $k=>$v){
 			$depts = explode(',',$v['business_dept']);
 			$deptval = array();
 			foreach($depts as $kk=>$vv){
@@ -47,10 +44,15 @@ class ProductController extends BaseController {
 			
 			$lists[$k]['dept'] = implode(',',$deptval);	
 		}
-		$this->lists = $lists;
-		
-		$this->ages           = C('AGE_LIST');
-		$this->kinds  = $kinds;
+		$this->lists    = $lists;
+		$this->ages     = C('AGE_LIST');
+        $this->kinds    = $kinds;
+
+        //导航栏
+        $kind_ids       = array(54,55,56,60,61,62);
+        $where          = array();
+        $where['id']    = array('in',$kind_ids);
+        $this->business_dept = M('project_kind')->where($where)->getField('id,name');
 
 		$this->display('index');
     }
@@ -210,12 +212,55 @@ class ProductController extends BaseController {
     }
     /***********************bak_end**************************/
 
+    //新增资讯
+    public function pic_add(){
+
+        if(isset($_POST['dosubmit'])){
+
+            $info   = I('info','');
+            $infos  = I('attr');
+            $lm		= I('lm');
+            $conpic = I("daypic");
+            /*$daypic = I('daypic');*/
+
+            $info['col']			= implode(',',$lm);
+            $info['pic']			= $infos['filepath'][0];
+            $info['pic_id']			= $infos['id'][0];
+            $info['create_time']	= time();
+            $info['update_time']	= time();
+            $info['type']			= 0;
+            $info['module']         = P::TYPE_PIC_NEWS;
+            /*$info['content']		= stripslashes($_POST['content']);*/
+            if(!$info['title']){
+                $this->error('标题不能为空！');
+            }else{
+
+                $isadd = M('article')->add($info);
+                if($isadd){
+
+                    //保存上传标题图片
+                    save_res(P::TYPE_NEWS,$isadd,$infos);
+                    //保存上传内容大图片
+                    save_res(P::TYPE_PIC_NEWS,$isadd,$conpic);
+
+                    $this->success('添加成功！',I('referer',''));
+                }else{
+                    $this->error('添加失败！',I('referer',''));
+                }
+            }
+
+        }else{
+
+            $this->display('pic_add');
+        }
+    }
+
     public function add() {
         $this->title('添加产品');
-        if (isset($_POST['dosubmit'])) {
-            $a = I();
-            var_dump($a);die;
 
+        if (isset($_POST['dosubmit'])) {
+
+            $attdb = M('attachment');
             $info = I('info');
             $referer = I('referer');
             $material = I('material');
@@ -224,12 +269,22 @@ class ProductController extends BaseController {
             $age = I('age');
             $res = I('res');
             $info['content'] = stripslashes($_POST['content']);
-            $info['business_dept'] = implode(',',array_unique($business_dept));
+            $info['business_dept'] = $business_dept;
             $info['age'] = implode(',',array_unique($age));
             $info['supplier'] = implode(',',array_unique($res));
             $id = I('id');
 
-            $aids = join(',', I('resfiles'));
+            //上传文件
+            $theory     = I('theory');  //原理及实施要求
+            $pic        = I('pic');     //图片
+            $video      = I('video');   //视频
+            $theory_ids = $theory['id'];
+            $pic_ids    = $pic['id'];
+            $video_ids  = $video['id'];
+            $resfiles   = array_merge($theory_ids,$pic_ids,$video_ids);
+
+            $aids = implode(',', $resfiles);
+            var_dump($aids);die('sss');
 
             $newname = I('newname', null);
 
@@ -239,19 +294,17 @@ class ProductController extends BaseController {
                 $info['att_id'] = '';
             }
 
-            //修改附件文件名
-            $attdb = M('attachment');
-            foreach ($newname as $k => $v) {
-                $attdb->where("id=$k")->setField('filename', $v);
-            }
-
+            //保存上传标题图片
+            save_res(P::UPLOAD_PIC,$isadd,$theory);
+            //保存上传内容大图片
+            save_res(P::UPLOAD_THEORY,$isadd,$pic);
+            //保存视频文件
+            save_res(P::UPLOAD_VIDEO,$isadd,$video);
 
             if ($id) {
+                $isadd = $id;
                 //修改
                 M('product')->where("id=$id")->data($info)->save();
-                if ($aids) {
-                    $attdb->where("id in ($aids)")->setField('rel_id', $id);
-                }
 
                 //修改物资信息
                 $delid = array();
@@ -283,10 +336,7 @@ class ProductController extends BaseController {
                 $info['input_uname'] = session('nickname');
                 $info['input_time']  = time();
 
-                $rel_id = M('product')->add($info);
-                if ($aids) {
-                    $attdb->where("id in ($aids)")->setField('rel_id', $rel_id);
-                }
+                $isadd = M('product')->add($info);
 
                 $this->request_audit(P::REQ_TYPE_PRODUCT_NEW, $rel_id);
 
@@ -303,9 +353,10 @@ class ProductController extends BaseController {
                 $this->success('保存成功！', $referer);
             }
         } else {
-            $id = I('id');
-
-            $this->row = M('product')->find($id);
+            $id                  = I('id');
+            $business_dept       = I('business_dept');
+            $this->business_dept = $business_dept;
+            $this->row           = M('product')->find($id);
 
             if($this->row){
                 if ($this->row['att_id']) {
