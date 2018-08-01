@@ -282,24 +282,13 @@ class ProductController extends BaseController {
             $pic_ids    = $pic['id'];
             $video_ids  = $video['id'];
             $resfiles   = array_merge($theory_ids,$pic_ids,$video_ids);
-
-            $aids = implode(',', $resfiles);
-            var_dump($aids);die('sss');
-
-            $newname = I('newname', null);
+            $aids       = implode(',', $resfiles);
 
             if ($aids) {
                 $info['att_id'] = $aids;
             } else {
                 $info['att_id'] = '';
             }
-
-            //保存上传标题图片
-            save_res(P::UPLOAD_PIC,$isadd,$theory);
-            //保存上传内容大图片
-            save_res(P::UPLOAD_THEORY,$isadd,$pic);
-            //保存视频文件
-            save_res(P::UPLOAD_VIDEO,$isadd,$video);
 
             if ($id) {
                 $isadd = $id;
@@ -328,7 +317,6 @@ class ProductController extends BaseController {
                 if($delid) $where['id'] = array('not in',$delid);
                 $del = M('product_material')->where($where)->delete();
 
-                $this->success('修改成功！', $referer);
             } else {
 
                 //保存
@@ -338,19 +326,31 @@ class ProductController extends BaseController {
 
                 $isadd = M('product')->add($info);
 
-                $this->request_audit(P::REQ_TYPE_PRODUCT_NEW, $rel_id);
+                $this->request_audit(P::REQ_TYPE_PRODUCT_NEW, $isadd);
 
                 //保存物资信息
                 foreach($material as $k=>$v){
                     $data = array();
                     $data = $v;
-                    $data['product_id'] = $rel_id;
+                    $data['product_id'] = $isadd;
                     if($data['material']){
                         M('product_material')->add($data);
                     }
                 }
 
+            }
+
+            if ($isadd){
+                //保存上传标题图片
+                save_res(P::UPLOAD_PIC,$isadd,$pic,1);
+                //保存上传附件(原理及实施要求)
+                save_res(P::UPLOAD_THEORY,$isadd,$theory,1);
+                //保存视频文件
+                save_res(P::UPLOAD_VIDEO,$isadd,$video,1);
+
                 $this->success('保存成功！', $referer);
+            }else{
+                $this->success('保存失败！');
             }
         } else {
             $id                  = I('id');
@@ -360,9 +360,13 @@ class ProductController extends BaseController {
 
             if($this->row){
                 if ($this->row['att_id']) {
-                    $this->atts = M('attachment')->where("catid=1 and id in (" . $this->row['att_id']. ")")->select();
+                    $this->theory = get_res(P::UPLOAD_THEORY,$id);
+                    $this->pic    = get_res(P::UPLOAD_PIC,$id);
+                    $this->video  = get_res(P::UPLOAD_VIDEO,$id);
                 } else {
-                    $this->atts = false;
+                    $this->theory = false;
+                    $this->pic    = false;
+                    $this->video  = false;
                 }
                 $this->material = M('product_material')->where(array('product_id'=>$id))->select();
 
@@ -523,8 +527,6 @@ class ProductController extends BaseController {
 				}
 				
 				$this->request_audit(P::REQ_TYPE_PRODUCT_MODEL, $rel_id);
-				
-				
 				$this->success('保存成功！', $referer); 
 			}
 		} else {
@@ -661,10 +663,20 @@ class ProductController extends BaseController {
 			
 			//获取附件
 			if($row['att_id']){
-				$this->atts = M('attachment')->where("catid=1 and id in (" . $row['att_id']. ")")->select();
+				$atts         = M('attachment')->where("catid=1 and id in (" . $row['att_id']. ")")->select();
+                $this->theory = get_res(P::UPLOAD_THEORY,$id);
+                $this->pic    = get_res(P::UPLOAD_PIC,$id);
+                $this->theory = get_res(P::UPLOAD_VIDEO,$id);
 			}else{
 				$this->atts = false;
 			}
+
+			foreach ($atts as $k=>$v){
+                if ($v['module']==P::UPLOAD_PIC)    $atts[$k]['type'] = "<span class='green'>图片文件</span>";
+                if ($v['module']==P::UPLOAD_THEORY) $atts[$k]['type'] = "<span class='yellow'>原理及实施要求</span>";
+                if ($v['module']==P::UPLOAD_VIDEO)  $atts[$k]['type'] = "<span class='red'>视频文件</span>";
+            }
+            $this->atts         = $atts;
 
 			$material = M('product_material')->where(array('product_id'=>$id))->select();
 			

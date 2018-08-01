@@ -32,6 +32,7 @@
                                         <div class="form-group col-md-12 viwe">
                                             <p>产品名称：{$row.title}</p>
                                         </div>
+
                                         <div class="form-group col-md-12 viwe">
                                             <p>适用项目：{$row.dept}</p>
                                         </div>
@@ -68,8 +69,15 @@
                                         <div class="form-group col-md-4 viwe">
                                             <p>审批时间：{$row.show_time}</p>
                                         </div>
-                                        
-                                        
+
+                                        <div class="form-group col-md-12 viwe">
+                                            <p style="display: inline-block;">相关图片：</p>
+                                            <div style=" height: 120px; ">
+                                                <foreach name="pic" item="v">
+                                                    <a href="/{$v['filepath']}" target="_blank"> <img src="/{$v['filepath']}" height="100" width="100" style="margin: 10px 0 0 15px;"></a>
+                                                </foreach>
+                                            </div>
+                                        </div>
                                         
                                     </div>
                                     
@@ -171,6 +179,7 @@
                                             <th style="width: 50px">编号</th>
                                             <th>文件名</th>
                                             <th>文件类型</th>
+                                            <th>文件种类</th>
                                             <th>文件大小</th>
                                             <th style="width: 80px">下载</th>
                                         </tr>
@@ -178,9 +187,10 @@
                                         <tr>
                                             <td><?php echo $k+1; ?></td>
                                             <td>{$row.filename}</td>
+                                            <td>{$row.type}</td>
                                             <td>{$row.fileext}</td>
                                             <td><?php echo sprintf("%.1f", $row['filesize']/1024); ?>K</td>
-                                            <td><a href="{$row.filepath}" class="badge bg-red">下载</a></td>
+                                            <td><a href="{$row.filepath}" class="badge bg-red" target="_blank">下载</a></td>
                                         </tr>
                                         </foreach>
                                     </table>

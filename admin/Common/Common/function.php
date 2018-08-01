@@ -361,7 +361,7 @@ function upload_m($obj,$cont,$attr='',$btn='上传',$showbox="flist",$formname="
 }
 
 //删除多余的图片
-function save_res($module,$releid,$data){
+function save_res($module,$releid,$data,$catid='0'){
 	//处理图片
 	$where = array();
 	$where['module']  = $module;
@@ -374,6 +374,7 @@ function save_res($module,$releid,$data){
 			//保存数据
 			$info = array();
 			$info['module']        = $module;
+			$info['catid']         = $catid;
 			$info['rel_id']        = $releid;
 			$info['status']        = $data['status'][$k];
 			$info['filename']      = $data['filename'][$k];

@@ -220,21 +220,21 @@
                                     <div class="content">
                                         <div class="form-group col-md-12">
                                             <label class="upload_label">上传原理及实施要求</label>
-                                            {:upload_m('theory_file','theory_files','','上传原理及实施要求','theory_box','theory','文件名称')}
+                                            {:upload_m('theory_file','theory_files',$theory,'上传原理及实施要求','theory_box','theory','文件名称')}
                                             <span style="line-height:30px; margin-left:15px; margin-top:15px; color:#999999;">请选择小于80M的文件，支持JPG / GIF / PNG / DOC / XLS / PDF / ZIP / RAR文件类型</span>
                                             <div id="theory_box"></div>
                                         </div>
 
                                         <div class="form-group col-md-12">
                                             <label class="upload_label">上传图片</label>
-                                            {:upload_m('pic_file','pic_files','','上传图片','pic_box','pic','图片名称')}
+                                            {:upload_m('pic_file','pic_files',$pic,'上传图片','pic_box','pic','图片名称')}
                                             <span style="line-height:30px; margin-left:15px; margin-top:15px; color:#999999;">请选择不超过3张图片文件</span>
                                             <div id="pic_box"></div>
                                         </div>
 
                                         <div class="form-group col-md-12">
                                         <label class="upload_label">上传相关视频</label>
-                                        {:upload_m('video_file','video_files',$atts,'&nbsp;上传视频资料','video_box','video','视频名称')}
+                                        {:upload_m('video_file','video_files',$video,'&nbsp;上传视频资料','video_box','video','视频名称')}
                                         <span style="line-height:30px; margin-left:15px; margin-top:15px; color:#999999;">请选择小于80M的文件，支持JPG / GIF / PNG / DOC / XLS / PDF / ZIP / RAR文件类型</span>
                                         <div id="video_box"></div>
                                         </div>
