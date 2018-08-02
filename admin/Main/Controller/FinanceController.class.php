@@ -508,8 +508,17 @@ class FinanceController extends BaseController {
         /*if ($op['tcs_stu'] && $op['tcs_stu']!=5){
             $this->error('暂未核实专家辅导员出团信息!');
         }*/
+        $settlement = M('op_settlement')->where(array('op_id'=>$opid))->find();
 
-		$jiesuan    = M('op_costacc')->where(array('op_id'=>$opid,'status'=>2))->order('id')->select();
+        $jiesuan_all        = M('op_costacc')->where(array('op_id'=>$opid,'status'=>2))->order('id')->select();
+		$jiesuan_no_guide   = M('op_costacc')->where(array('op_id'=>$opid,'status'=>2,'type'=>array('neq',2)))->order('id')->select();
+        $yusuan_guide       = M('op_cost')->field('op_id,remark as title, cost as unitcost,amount,really_cost as total,upd_remark as remark,cost_type as type')->where(array('op_id'=>$opid,'cost_type'=>2))->select();
+        if ($settlement && $settlement['audit'] && $settlement['audit_status']==1 || cookie('userid')==11){
+            $jiesuan        = $jiesuan_all;
+        }else{
+            $jiesuan        = array_merge($yusuan_guide,$jiesuan_no_guide);
+        }
+
 		if(count($jiesuan)==0){
 			$costacc    = M('op_cost')->where(array('op_id'=>$opid))->order('cost_type')->select();
 			foreach($costacc as $k=>$v){
@@ -540,8 +549,6 @@ class FinanceController extends BaseController {
 			$qita   = M('op_costacc')->where(array('op_id'=>$opid,'status'=>1,'type'=>4))->order('id')->select();
 		}
         $budget     = M('op_budget')->where(array('op_id'=>$opid))->find();
-		$settlement = M('op_settlement')->where(array('op_id'=>$opid))->find();
-
 		
 		$where = array();
 		$where['req_type'] = P::REQ_TYPE_SETTLEMENT;
