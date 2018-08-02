@@ -355,19 +355,23 @@ class ProductController extends BaseController {
         } else {
             $id                  = I('id');
             $business_dept       = I('business_dept');
-            $this->business_dept = $business_dept;
             $this->row           = M('product')->find($id);
+            $this->business_dept = $this->row['business_dept']?$this->row['business_dept']:$business_dept;
 
             if($this->row){
                 if ($this->row['att_id']) {
-                    $this->theory = get_res(P::UPLOAD_THEORY,$id);
-                    $this->pic    = get_res(P::UPLOAD_PIC,$id);
-                    $this->video  = get_res(P::UPLOAD_VIDEO,$id);
+                    $theory       = get_res(P::UPLOAD_THEORY,$id);
+                    $pic          = get_res(P::UPLOAD_PIC,$id);
+                    $video        = get_res(P::UPLOAD_VIDEO,$id);
+                    $this->theory = array_column($theory,'id');
+                    $this->pic    = array_column($pic,'id');
+                    $this->video  = array_column($video,'id');
                 } else {
                     $this->theory = false;
                     $this->pic    = false;
                     $this->video  = false;
                 }
+
                 $this->material = M('product_material')->where(array('product_id'=>$id))->select();
 
                 $depts = explode(',',$this->row['business_dept']);
