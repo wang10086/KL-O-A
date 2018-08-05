@@ -18,7 +18,7 @@ class ProductController extends BaseController {
         $this->title('产品模块列表');
 		
 		$key          = I('key');
-		$pro          = I('pro',54);//默认研学旅行
+		$pro          = I('pro');
 		$zj           = I('zj');
 		$age          = I('age');
 
@@ -212,66 +212,23 @@ class ProductController extends BaseController {
     }
     /***********************bak_end**************************/
 
-    //新增资讯
-    public function pic_add(){
-
-        if(isset($_POST['dosubmit'])){
-
-            $info   = I('info','');
-            $infos  = I('attr');
-            $lm		= I('lm');
-            $conpic = I("daypic");
-            /*$daypic = I('daypic');*/
-
-            $info['col']			= implode(',',$lm);
-            $info['pic']			= $infos['filepath'][0];
-            $info['pic_id']			= $infos['id'][0];
-            $info['create_time']	= time();
-            $info['update_time']	= time();
-            $info['type']			= 0;
-            $info['module']         = P::TYPE_PIC_NEWS;
-            /*$info['content']		= stripslashes($_POST['content']);*/
-            if(!$info['title']){
-                $this->error('标题不能为空！');
-            }else{
-
-                $isadd = M('article')->add($info);
-                if($isadd){
-
-                    //保存上传标题图片
-                    save_res(P::TYPE_NEWS,$isadd,$infos);
-                    //保存上传内容大图片
-                    save_res(P::TYPE_PIC_NEWS,$isadd,$conpic);
-
-                    $this->success('添加成功！',I('referer',''));
-                }else{
-                    $this->error('添加失败！',I('referer',''));
-                }
-            }
-
-        }else{
-
-            $this->display('pic_add');
-        }
-    }
-
     public function add() {
         $this->title('添加产品');
 
         if (isset($_POST['dosubmit'])) {
 
-            $attdb = M('attachment');
-            $info = I('info');
-            $referer = I('referer');
-            $material = I('material');
-            $resid = I('resid');
-            $business_dept = I('business_dept');
-            $age = I('age');
-            $res = I('res');
-            $info['content'] = stripslashes($_POST['content']);
+            $attdb              = M('attachment');
+            $info               = I('info');
+            $referer            = I('referer');
+            $material           = I('material');
+            $resid              = I('resid');
+            $business_dept      = I('business_dept');
+            $age                = I('age');
+            $res                = I('res');
+            $info['content']    = stripslashes($_POST['content']);
             $info['business_dept'] = $business_dept;
-            $info['age'] = implode(',',array_unique($age));
-            $info['supplier'] = implode(',',array_unique($res));
+            $info['age']        = implode(',',array_unique($age));
+            $info['supplier']   = implode(',',array_unique($res));
             $id = I('id');
 
             //上传文件
@@ -281,7 +238,17 @@ class ProductController extends BaseController {
             $theory_ids = $theory['id'];
             $pic_ids    = $pic['id'];
             $video_ids  = $video['id'];
-            $resfiles   = array_merge($theory_ids,$pic_ids,$video_ids);
+            //$resfiles   = array_merge($theory_ids,$pic_ids,$video_ids);
+            $resfiles   = array();
+            foreach ($theory_ids as $k=>$v){
+                $resfiles[] = $v;
+            }
+            foreach ($pic_ids as $k=>$v){
+                $resfiles[]   = $v;
+            }
+            foreach ($video_ids as $k=>$v){
+                $resfiles[]   = $v;
+            }
             $aids       = implode(',', $resfiles);
 
             if ($aids) {

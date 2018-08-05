@@ -29,6 +29,7 @@
                                 </div><!-- /.box-header -->
                                 <div class="box-body">
                                 <div class="btn-group" id="catfont">
+                                    <button onClick="javascript:window.location.href='{:U('Product/index')}';" class="btn <?php if($pro==''){ echo 'btn-info';}else{ echo 'btn-default';} ?>">全部产品</button>
                                     <foreach name="business_dept" key="k" item="v">
                                         <button onClick="javascript:window.location.href='{:U('Product/index',array('pro'=>$k))}';" class="btn <?php if($pro==$k){ echo 'btn-info';}else{ echo 'btn-default';} ?>">{$v}</button>
                                     </foreach>

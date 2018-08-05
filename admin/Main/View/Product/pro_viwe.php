@@ -72,11 +72,15 @@
 
                                         <div class="form-group col-md-12 viwe">
                                             <p style="display: inline-block;">相关图片：</p>
+                                            <?php if($pic){ ?>
                                             <div style=" height: 120px; ">
                                                 <foreach name="pic" item="v">
                                                     <a href="/{$v['filepath']}" target="_blank"> <img src="/{$v['filepath']}" height="100" width="100" style="margin: 10px 0 0 15px;"></a>
                                                 </foreach>
                                             </div>
+                                            <?php }else{ ?>
+                                                <div style="height: 80px;line-height: 80px;margin-left: 20px;">暂无图片信息!</div>
+                                            <?php } ?>
                                         </div>
                                         
                                     </div>
@@ -94,7 +98,7 @@
                                     	<div class="form-group col-md-12 viwe">{$row.content}</div>
                                         
                                     </div>
-                                   
+
                                 </div><!-- /.box-body -->
                             </div><!-- /.box -->
                             <?php } ?>
