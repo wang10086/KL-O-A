@@ -48,7 +48,7 @@
                                         <td>564654</td>
                                         <td>&yen; 5888.00</td>
                                         <td>&yen; 500.00</td>
-                                        <td>&yen; <if condition="($row.achievements_status eq 1)">+</if><if condition="($row.achievements_status eq 2)">-</if><if condition="($row.achievements_status eq 3)"></if>{$row.achievements}</td>
+                                        <td>&yen; 9000.00<if condition="($row.achievements_status eq 1)">+</if><if condition="($row.achievements_status eq 2)">-</if><if condition="($row.achievements_status eq 3)"></if>{$row.achievements}</td>
                                         <td>&yen; 899.00</td>
                                         <td>&yen; 588888.00(元)</td>
                                         <td><a href="{:U('Salary/salarydetails',array('id'=>$row['id']))}" class="btn btn-info btn-smsm"><i class="fa fa-pencil"></i>查看详情</a></td>
