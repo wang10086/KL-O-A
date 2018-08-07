@@ -487,7 +487,7 @@
                                     </li>
                                 </if>
 
-                                <if condition="rolemenu(array('Salary/salaryindex'，'Salary/salarydetails'))">
+                                <if condition="rolemenu(array('Salary/salaryindex','Salary/salarydetails'))">
                                     <li class="treeview {:ison(CONTROLLER_NAME, 'Salary')}">
                                         <a href="javascript:;">
                                             <i class="fa fa-plane"></i>
