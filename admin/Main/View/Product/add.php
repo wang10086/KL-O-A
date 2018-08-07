@@ -215,7 +215,7 @@
                                                 <?php }else{ ?>
                                                 <div class="userlist" id="material_id">
                                                     <span class="title">1</span>
-                                                    <input type="text" class="form-control material_name" name="material[0][material]">
+                                                    <input type="text" class="form-control material_name" name="material[0][material]" onblur="check_ptype()">
                                                     <input type="text" class="form-control longinput" name="material[0][spec]">
                                                     <input type="text" class="form-control amount" name="material[0][amount]" onblur="total()">
                                                     <input type="text" class="form-control cost" name="material[0][unitprice]" onblur="total()">
@@ -427,7 +427,14 @@
             $('input[rel=' + fid +']').remove();
 		}
 	}
-	
+
+	//检查核算模式
+    function check_ptype(){
+        var hesuan_result = $('#hesuan_result').val();
+        if(!hesuan_result){
+            alert('请选择核算模式');
+        }
+    }
 	
 	//新增物资
 	function add_material(){
