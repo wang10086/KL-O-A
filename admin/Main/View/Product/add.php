@@ -464,19 +464,23 @@
 				var cost = $(this).val();
 				var amount = $(this).parent().find('.amount').val();
 				$(this).parent().find('.total').val(accMul(cost,amount));
+
+                $('.total').each(function(index, element) {
+                    hesuan_sum += parseFloat($(this).val());
+                    $('#produce_price').val(hesuan_sum);
+                });
 			});
 			 $(this).find('.amount').blur(function(){
 				var amount = $(this).val();
 				var cost = $(this).parent().find('.cost').val();
 				$(this).parent().find('.total').val(accMul(cost,amount));
+
+                 $('.total').each(function(index, element) {
+                     hesuan_sum += parseFloat($(this).val());
+                     $('#produce_price').val(hesuan_sum);
+                 });
 			});
 
-            $('.total').each(function(index, element) {
-                hesuan_sum += parseFloat($(this).val());
-                console.log(hesuan_sum);
-            });
-            //$('#produce_price').html(hesuan_sum);
-            $('#produce_price').val(hesuan_sum);
         });
 	}
 
