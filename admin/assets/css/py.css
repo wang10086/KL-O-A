@@ -3865,9 +3865,11 @@ th{ font-weight:normal;}
 #material .btn{ padding:7px 12px; font-size:12px;} 
 #material td{ line-height:34px;}
 #material_val{ display:none}
-#material .longinput{ width:120px;}
-#material .material_name{ width:160px;}
+/*#material .longinput{ width:120px;}
+#material .material_name{ width:160px;}*/
 #material .stock{ width:60px; text-align:left; float:left; line-height:34px;}
+#material .material_name{ width:120px;margin-right: 10px;}
+#material .longinput{ width:100px;}
 
 #pro_ages_text,#pro_kinds_text{ width:100%;padding-bottom:12px; margin-top:-5px; border-bottom:1px solid #dedede;}
 .unitbtns{ margin-right:10px;}

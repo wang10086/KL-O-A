@@ -1,7 +1,7 @@
 <div class="form-group col-md-12 ml-12" id="tcscheckbox">
     <h2 class="tcs_need_h2">辅导员/教师、专家需求</h2>
-    <input type="radio" name="need-tcs-or-not" value="0" onclick="hide_con()" <?php if($rad==0){ echo 'checked';} ?>> &#8194;不需要 &#12288;&#12288;&#12288;
-    <input type="radio" name="need-tcs-or-not" value="1" onclick="show_con()" <?php if($rad==1){ echo 'checked';} ?>> &#8194;需要
+    <input type="radio" name="need-tcs-or-not" value="0"  <?php if($rad==0){ echo 'checked';} ?>> &#8194;不需要 &#12288;&#12288;&#12288;
+    <input type="radio" name="need-tcs-or-not" value="1"  <?php if($rad==1){ echo 'checked';} ?>> &#8194;需要
 </div>
 
 <!--<form method="post" action="{:U('Op/public_save')}" id="tcs_sure_form">-->
