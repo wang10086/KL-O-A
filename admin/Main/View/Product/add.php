@@ -61,11 +61,7 @@
                                         </foreach>
                                         </select>
                                     </div>
-                                    
-                                    <!--<div class="form-group col-md-4">
-                                        <label>参考成本价</label>
-                                        <input type="text" name="info[sales_price]" id="sales_price"   value="{$row.sales_price}" class="form-control" />
-                                    </div>-->
+
                                     <div class="form-group col-md-6">
                                         <label>来源</label>
                                         <select  class="form-control"  name="info[from]">
@@ -146,37 +142,24 @@
                                 <div class="box-body">
                                     <div class="content">
                                         <div class="content" style="padding-top:0px;">
-                                            <style>
-                                                .produce_hesuan{width: 100%;  padding: 12px 0;  margin: 5px 0;  border-top: 1px solid #dedede; }
 
-
-                                                #material{ padding:0; margin-top:-20px;}
-                                                #material .form-control{ width:110px; float:left; margin-right:10px; border-radius:0;}
-                                                #material .unitbox{ float:left; clear:none; border:none; padding:0; line-height:42px;}
-                                                #material .brunitbox{ float:left; clear:none; border:none; padding:0; line-height:21px;}
-                                                #material .title{ width:22px; float:left; height:30px; line-height:30px; margin-left:-30px; text-align:right; position:relative; z-index:100;}
-                                                #material .userlist { width:100%; height:auto !important; float:left; clear:both; padding-bottom:15px; border-bottom:1px solid #cccccc; margin-top:15px;}
-                                                #material .input-group{ width:auto; float:left; height:34px; margin-right:10px; background:#ffffff; }
-                                                #material .input-group span{ border:1px solid #cccccc; width:40px; background:#ffffff; }
-                                                #material .input-group span.rr{margin-left:-1px;}
-                                                #material .input-group span input{ margin-left:5px;}
-                                                #material .btn{ padding:7px 12px; font-size:12px;}
-                                                #material td{ line-height:34px;}
-                                                #material_val{ display:none}
-                                                /*#material .longinput{ width:120px;}
-                                                #material .material_name{ width:160px;}*/
-                                                #material .stock{ width:60px; text-align:left; float:left; line-height:34px;}
-                                                #material .material_name{ width:110px;margin-right: 10px;}
-                                                #material .longinput{ width:90px;}
-
-                                            </style>
                                             <div class="form-group">
                                                 <label>核算模式</label>
                                                 <div class="produce_hesuan" id="product_hesuan">
-                                                    <span><input type="radio" class="hesuan_type mt10" name="hesuan" value="1" <?php if($rad==1){ echo 'checked';} ?>>&#12288;按项目核算</span>
-                                                    <span class="ml20"><input type="radio"  name="hesuan" value="2" <?php if($rad==2){ echo 'checked';} ?>>&#12288;按人数核算</span>
-                                                    <span class="ml20"><input type="radio"  name="hesuan" value="3" <?php if($rad==3){ echo 'checked';} ?>>&#12288;按批次核算</span>
-                                                    <span class="ml20" style="margin-left: 50px;" id="hesuan_result"></span>
+                                                    <span><input type="radio" class="hesuan_type mt10" name="info[reckon_mode]" value="1" <?php if($row['reckon_mode']==1){ echo 'checked';} ?>>&#12288;按项目核算</span>
+                                                    <span class="ml20"><input type="radio"  name="info[reckon_mode]" value="2" <?php if($row['reckon_mode']==2){ echo 'checked';} ?>>&#12288;按人数核算</span>
+                                                    <span class="ml20"><input type="radio"  name="info[reckon_mode]" value="3" <?php if($row['reckon_mode']==3){ echo 'checked';} ?>>&#12288;按批次核算</span>
+                                                    <?php if($row && $row['sales_price']){ ?>
+                                                        <?php if($row['reckon_mode']==1){ ?>
+                                                            <span class="ml50" id="hesuan_result"><input type="text" class="under-line-input" name="info[sales_price]" id="produce_price" value="{$row.sales_price}">元/项</span>
+                                                        <?php }elseif($row['reckon_mode']==2){ ?>
+                                                            <span class="ml50" id="hesuan_result"><input type="text" class="under-line-input" name="info[sales_price]" id="produce_price" value="{$row.sales_price}">元/人</span>
+                                                        <?php }elseif($row['reckon_mode']==3){ ?>
+                                                            <span class="ml50" id="hesuan_result"><input type="text" class="under-line-input" name="info[sales_price]" id="produce_price" value="{$row.sales_price}">元/批</span>
+                                                        <?php } ?>
+                                                    <?php }else{ ?>
+                                                    <span class="ml50" id="hesuan_result"></span>
+                                                    <?php } ?>
                                                 </div>
                                             </div>
 
@@ -333,11 +316,11 @@
         $('#product_hesuan').find('ins').each(function(index, element) {
             $(this).click(function(){
                 if(index==0){
-                    $('#hesuan_result').html('<input type="text" style="border-top: none;border-left: none; border-right: none; border-bottom: 1px solid #dedede" id="produce_price">元/项');
+                    $('#hesuan_result').html('<input type="text" class="under-line-input" name="info[sales_price]" id="produce_price">元/项');
                 }else if (index==1){
-                    $('#hesuan_result').html('<input type="text" style="border-top: none;border-left: none; border-right: none; border-bottom: 1px solid #dedede" id="produce_price">元/人');
+                    $('#hesuan_result').html('<input type="text" class="under-line-input" name="info[sales_price]" id="produce_price">元/人');
                 }else if (index==2){
-                    $('#hesuan_result').html('<input type="text" style="border-top: none;border-left: none; border-right: none; border-bottom: 1px solid #dedede" id="produce_price">元/批');
+                    $('#hesuan_result').html('<input type="text" class="under-line-input" name="info[sales_price]" id="produce_price">元/批');
                 }
             })
         });

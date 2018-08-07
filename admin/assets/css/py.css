@@ -3852,8 +3852,10 @@ th{ font-weight:normal;}
 #task_title h4{ font-family:'微软雅黑'; font-size:14px; padding:10px 25px 0 30px;}
 #orderxx h3{ font-size:14px; color:#ff3300; font-family:'微软雅黑'; margin-left:15px;}
 
+.produce_hesuan{width: 100%;  padding: 12px 0;  margin: 5px 0;  border-top: 1px solid #dedede; }
+.under-line-input{border-top: none;border-left: none; border-right: none; border-bottom: 1px solid #dedede}
 #material{ padding:0; margin-top:-20px;}
-#material .form-control{ width:120px; float:left; margin-right:10px; border-radius:0;}
+#material .form-control{ width:110px; float:left; margin-right:10px; border-radius:0;}
 #material .unitbox{ float:left; clear:none; border:none; padding:0; line-height:42px;}
 #material .brunitbox{ float:left; clear:none; border:none; padding:0; line-height:21px;}
 #material .title{ width:22px; float:left; height:30px; line-height:30px; margin-left:-30px; text-align:right; position:relative; z-index:100;}
@@ -3862,14 +3864,14 @@ th{ font-weight:normal;}
 #material .input-group span{ border:1px solid #cccccc; width:40px; background:#ffffff; }
 #material .input-group span.rr{margin-left:-1px;}
 #material .input-group span input{ margin-left:5px;}
-#material .btn{ padding:7px 12px; font-size:12px;} 
+#material .btn{ padding:7px 12px; font-size:12px;}
 #material td{ line-height:34px;}
 #material_val{ display:none}
 /*#material .longinput{ width:120px;}
 #material .material_name{ width:160px;}*/
 #material .stock{ width:60px; text-align:left; float:left; line-height:34px;}
-#material .material_name{ width:120px;margin-right: 10px;}
-#material .longinput{ width:100px;}
+#material .material_name{ width:110px;margin-right: 10px;}
+#material .longinput{ width:90px;}
 
 #pro_ages_text,#pro_kinds_text{ width:100%;padding-bottom:12px; margin-top:-5px; border-bottom:1px solid #dedede;}
 .unitbtns{ margin-right:10px;}
@@ -4068,6 +4070,7 @@ th{outline: none;}
 .inline-block{display: inline-block;}
 .mt10{margin-top: 10px;}
 .ml20{margin-left: 20px;}
+.ml50{margin-left: 50px;}
 .res_need_h2{font-size:16px; border-bottom:2px solid #dedede; padding-bottom:10px;}
 .td{border: solid 1px grey;}
 .td_title{text-align: center; width: 150px;}

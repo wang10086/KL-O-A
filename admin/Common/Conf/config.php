@@ -180,6 +180,9 @@ $config = array(
     //产品来源
     'PRODUCT_FROM'  => array('1'=>'自研','2'=>'外采'),
 
+    //产品核算模式
+    'RECKON_MODE'   => array('1'=>'按项目核算','2'=>'按人数核算 ','3'=>'按批次核算'),
+
 	//记录详情
 	'REC_TYPE_INFO' => array(
 		'1'=>array(

@@ -61,10 +61,10 @@
                                             <td>{$row.id}</td>
                                             <td><div style="width:200px;"><a href="{:U('Product/view', array('id'=>$row['id']))}" title="{$row.title}">{$row.title}</a></div></td>
                                             <td>{$ptype[$row['type']]}</td>
-                                            <td>{$row.dept}</td>
-                                            <td>{$pfrom[$row['from']]}</td>
-                                            <td>{$ages[$row['age']]}</td>
                                             <td>{$subject_fields[$row[subject_field]]}</td>
+                                            <td>{$pfrom[$row['from']]}</td>
+                                            <td>{$row['in_ages']}</td>
+                                            <td>{$reckon_mode[$row[reckon_mode]]}</td>
                                             <!--<td>{$row.input_uname}</td>-->
                                             <!--<td></td>
                                             <td></td>-->
