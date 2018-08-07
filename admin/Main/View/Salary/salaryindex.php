@@ -65,8 +65,10 @@
 
                         </div><!-- /.col -->
                      </div>
+
                 </section><!-- /.content -->
             </aside><!-- /.right-side -->
+
 
             <div id="searchtext">
                 <form action="{:U('Salary/salaryadd')}" method="post" id="searchform">
