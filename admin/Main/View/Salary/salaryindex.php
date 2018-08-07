@@ -21,6 +21,7 @@
                                 <div class="box-header">
                                     <h3 class="box-title">人员薪资列表</h3>
                                     <div class="box-tools pull-right">
+                                        <a href="{:U('Salary/salaryadd')}" class="btn btn-sm btn-danger"><i class="fa fa-plus"></i> 新增顶级分类</a>
                                     	 <a href="javascript:;" class="btn btn-info btn-sm" onclick="javascript:opensearch('searchtext',700,160);"><i class="fa fa-search"></i> 搜索</a>
                                          
                                     </div>
@@ -29,37 +30,30 @@
                                 
                                 <table class="table table-bordered dataTable fontmini" id="tablelist" style="margin-top:10px;">
                                     <tr role="row" class="orders" >
-                                        <th class="sorting" data="op_id">编号</th>
+                                        <th class="sorting" data="op_id">ID</th>
                                         <th class="sorting" data="group_id">姓名</th>
-                                        <th class="sorting" data="project">部门</th>
-                                        <th class="sorting" data="number">职位</th>
-                                        <th class="sorting" data="shouru">员工类别</th>
-                                        <th class="sorting" data="maoli">应发工资</th>
-                                       
+                                        <th class="sorting" data="group_id">员工编号</th>
+                                        <th class="sorting" data="project">岗位薪酬标准</th>
+                                        <th class="sorting" data="number">考勤扣款</th>
+                                        <th class="sorting" data="number">绩效增减</th>
+                                        <th class="sorting" data="shouru">应发工资</th>
+                                        <th class="sorting" data="maoli">各项扣款</th>
                                         <th width="50" class="taskOptions">详情</th>
                                         </if>
                                         
                                     </tr>
-                                    <foreach name="lists" item="row"> 
+                                    <foreach name="list" item="row">
                                     <tr>
-                                        <td>{$row.op_id}</td>
-                                        <td>{$row.group_id}</td>
-                                        <td><div class="tdbox_long"><a href="{:U('Finance/op',array('opid'=>$row['op_id']))}" title="{$row.project}">{$row.project}</a></div></td>
-                                        <td>{$row.number}人</td>
-                                        <td>&yen; {$row.shouru}</td>
-                                        <td>&yen; {$row.maoli}</td>
-                                        <td>{$row.maolilv}</td>
-                                        <td>&yen; {$row.renjunmaoli}</td>
-                                        
-                                        <td>{$row.xinzhi}</td>
-                                        <td>{$row.create_user_name}</td>
-                                        <td>{$row.budget_audit_status}</td>
-                                        <if condition="rolemenu(array('Finance/op'))">
-                                        <td class="taskOptions">
-                                        <a href="{:U('Finance/op',array('opid'=>$row['op_id']))}" title="详情" class="btn btn-info btn-smsm"><i class="fa fa-pencil"></i></a>
-                                        </td>
-                                        </if>
-                                       
+                                        <td>{$row.id}</td>
+                                        <td>{$row.user_name}</td>
+                                        <td>{$row.employee_member}</td>
+                                        <td>&yen; {$row.wages}</td>
+                                        <td>&yen; {$row.deduction_money}</td>
+                                        <td>&yen; <if condition="($row.achievements_status eq 1)">+</if><if condition="($row.achievements_status eq 2)">-</if><if condition="($row.achievements_status eq 3)"></if>{$row.achievements}</td>
+                                        <td>&yen; {$row.post_tax_wage}</td>
+                                        <td>&yen; {$row.deduction_money}(考勤扣款)+&yen; {$row.personal_income_tax}(个人所得税)+&yen; {$row.year_end_personal_income_tax}(年终奖个税)+&yen; {$row.trade_union_fee}(工会会费)+&yen; {$row.insu_money}(五险一金)=&yen; {$row._money}(元)</td>
+                                        <td><a href="{:U('Salary/salarydetails',array('id'=>$row['id']))}" class="btn btn-info btn-smsm"><i class="fa fa-pencil"></i>查看详情</a></td>
+
                                     </tr>
                                     </foreach>					
                                 </table>
@@ -71,33 +65,34 @@
 
                         </div><!-- /.col -->
                      </div>
-
                 </section><!-- /.content -->
             </aside><!-- /.right-side -->
-            
-            
+
             <div id="searchtext">
-                <form action="" method="get" id="searchform">
-                
+                <form action="{:U('Salary/salaryadd')}" method="post" id="searchform">
+
                 <div class="form-group col-md-3">
                     <input type="text" class="form-control" name="oid" placeholder="编号">
                 </div>
-                
+
                 <div class="form-group col-md-3">
                     <input type="text" class="form-control" name="name" placeholder="名字">
                 </div>
-                
+
                 <div class="form-group col-md-3">
                     <input type="text" class="form-control" name="department" placeholder="部门">
                 </div>
-                    <div class="form-group col-md-3">
-                        <input type="text" class="form-control" name="position" placeholder="职位">
-                    </div>
-                    <div class="form-group col-md-3">
-                        <input type="text" class="form-control" name="staff_style" placeholder="类别">
-                    </div>
-               
-                
+                <div class="form-group col-md-3">
+                    <input type="text" class="form-control" name="position" placeholder="职位">
+                </div>
+                <div class="form-group col-md-3">
+                    <input type="text" class="form-control" name="staff_style" placeholder="类别">
+                </div>
+                <div class="form-group col-md-3">
+                    <input type="text" class="form-control" name="department" placeholder="年月份">
+                </div>
+
+
                 </form>
             </div>
 
