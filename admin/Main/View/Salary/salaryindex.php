@@ -42,6 +42,18 @@
                                         </if>
                                         
                                     </tr>
+                                    <tr>
+                                        <td>122</td>
+                                        <td>刘金磊</td>
+                                        <td>564654</td>
+                                        <td>&yen; 5888.00</td>
+                                        <td>&yen; 500.00</td>
+                                        <td>&yen; <if condition="($row.achievements_status eq 1)">+</if><if condition="($row.achievements_status eq 2)">-</if><if condition="($row.achievements_status eq 3)"></if>{$row.achievements}</td>
+                                        <td>&yen; 899.00</td>
+                                        <td>&yen; 588888.00(元)</td>
+                                        <td><a href="{:U('Salary/salarydetails',array('id'=>$row['id']))}" class="btn btn-info btn-smsm"><i class="fa fa-pencil"></i>查看详情</a></td>
+
+                                    </tr>
                                     <foreach name="list" item="row">
                                     <tr>
                                         <td>{$row.id}</td>
@@ -55,7 +67,7 @@
                                         <td><a href="{:U('Salary/salarydetails',array('id'=>$row['id']))}" class="btn btn-info btn-smsm"><i class="fa fa-pencil"></i>查看详情</a></td>
 
                                     </tr>
-                                    </foreach>					
+                                    </foreach>
                                 </table>
                                 </div><!-- /.box-body -->
                                  <div class="box-footer clearfix">
@@ -71,31 +83,52 @@
 
 
             <div id="searchtext">
-                <form action="{:U('Salary/salaryadd')}" method="post" id="searchform">
+                <form action="{:U('Salary/salaryindex')}" method="post" id="searchform">
 
                 <div class="form-group col-md-3">
-                    <input type="text" class="form-control" name="oid" placeholder="编号">
+                    <input type="text" class="form-control" name="id" placeholder="ID编号">
+                </div>
+                    <div class="form-group col-md-3">
+                        <input type="text" class="form-control" name="employee_member" placeholder="员工编号">
+                    </div>
+
+                <div class="form-group col-md-3">
+                    <input type="text" class="form-control" name="name" placeholder="员工姓名">
                 </div>
 
                 <div class="form-group col-md-3">
-                    <input type="text" class="form-control" name="name" placeholder="名字">
-                </div>
-
-                <div class="form-group col-md-3">
-                    <input type="text" class="form-control" name="department" placeholder="部门">
-                </div>
-                <div class="form-group col-md-3">
-                    <input type="text" class="form-control" name="position" placeholder="职位">
-                </div>
-                <div class="form-group col-md-3">
-                    <input type="text" class="form-control" name="staff_style" placeholder="类别">
+                    <select name="staff_style" class="form-control">
+                        <option value="0">员工类别</option>
+                        <option value="1">新入职</option>
+                        <option value="2">转正</option>
+                        <option value="3">正式</option>
+                        <option value="4">实习</option>
+                        <option value="6">试用</option>
+                        <option value="7">劳务</option>
+                    </select>
                 </div>
                 <div class="form-group col-md-3">
-                    <input type="text" class="form-control" name="department" placeholder="年月份">
+                    <input type="date" class="form-control" name="salary_time" placeholder="年月" id="nowTime">
                 </div>
-
 
                 </form>
             </div>
 
 <include file="Index:footer2" />
+<script type="text/javascript">
+    function current(){
+        var d=new Date(),str='';
+        str +=d.getFullYear()+'年'; //获取当前年份
+        str +=d.getMonth()+1+'月'; //获取当前月份（0——11）
+        //str +=d.getDate()+'日';
+        //str +=d.getHours()+'时';
+        //str +=d.getMinutes()+'分';
+        //str +=d.getSeconds()+'秒';
+        return str;
+    }
+    setInterval(function(){
+        $("#nowTime").html(current)
+    },1000); //显示时分秒，并且秒数可以跳动
+
+    //$("#nowTime").html(current);
+</script>

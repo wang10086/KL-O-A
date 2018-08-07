@@ -23,12 +23,10 @@
                            
                             <div class="box">
                                 <div class="box-header">
-
                                     <h3 class="box-title">信息描述</h3>
-
                                 </div><!-- /.box-header -->
                                 <div class="box-body">
-                                	
+
                                     <div class="content">
 
                                         <div class="form-group col-md-4 viwe">
