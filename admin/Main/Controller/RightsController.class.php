@@ -64,7 +64,7 @@ class RightsController extends BaseController {
             $rs[$k]['jidiao'] = M()->table('__OP__ as o')->join('__OP_AUTH__ as u on u.op_id = o.op_id','LEFT')->join('__ACCOUNT__ as a on a.id = u.line','LEFT')->where("o.op_id = $opid")->getfield('a.nickname');
 
         }
-		
+
         $this->lists = $rs;
         //var_dump($this->lists);die;
 		

@@ -125,9 +125,7 @@ class OpController extends BaseController {
             $addr       = I('addr');
 
             $exe_role_ids = I('exe');
-            /*if(!$exe_role_ids){
-                $this->error('工单受理部门不能为空');
-            }*/
+
 			if(!$info['customer']){
 				$this->error('客户单位不能为空' . $db->getError());	
 				die();	
@@ -1480,8 +1478,18 @@ class OpController extends BaseController {
 		
 		//保存线路
 		$isadd = M('op')->data(array('line_id'=>$line_id))->where(array('op_id'=>$opid))->save();
-
-		if($isadd)  $num++;
+		if($isadd){
+            $auth_line  = M('op_auth')->where(array('op_id'=>$opid))->find();
+            $auth       = array();
+            $auth['line']= cookie('userid');
+            if ($auth_line){
+                M('op_auth')->where(array('op_id'=>$opid))->save($auth);
+            }else{
+                $auth['op_id'] = $opid;
+                M('op_auth')->add($auth);
+            }
+            $num++;
+        }
 
 		//删除历史日程
 		$del = M('op_line_days')->where(array('op_id'=>$opid))->delete();
