@@ -413,8 +413,8 @@
 
 	//检查核算模式
     function check_ptype(){
-        var hesuan_result = $('#hesuan_result').val();
-        if(!hesuan_result){
+        var hesuan_result = $('#hesuan_result').html();
+        if(hesuan_result==''){
             alert('请选择核算模式');
         }
     }

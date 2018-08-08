@@ -24,14 +24,17 @@
                                     <h3 class="box-title">{$_action_}</h3>
                                     <div class="box-tools pull-right">
                                     	<a href="javascript:;" class="btn btn-info btn-sm" onclick="javascript:opensearch('searchtext',600,160);"><i class="fa fa-search"></i> 搜索</a>
-                                        <a href="{:U('Product/add',array('business_dept'=>$pro))}" class="btn btn-sm btn-danger"><i class="fa fa-plus"></i> 新建产品模块</a>
+                                        <?php if ($pro){ ?>
+                                            <a href="{:U('Product/add',array('business_dept'=>$pro))}" class="btn btn-sm btn-danger"><i class="fa fa-plus"></i> 新建产品模块</a>
+                                        <?php } ?>
                                     </div>
                                 </div><!-- /.box-header -->
                                 <div class="box-body">
                                 <div class="btn-group" id="catfont">
-                                    <button onClick="javascript:window.location.href='{:U('Product/index')}';" class="btn <?php if($pro==''){ echo 'btn-info';}else{ echo 'btn-default';} ?>">全部产品</button>
+                                   <a href="{:U('Product/index')}" class="btn <?php if($pro==''){ echo 'btn-info';}else{ echo 'btn-default';} ?>">全部产品</a>
                                     <foreach name="business_dept" key="k" item="v">
-                                        <button onClick="javascript:window.location.href='{:U('Product/index',array('pro'=>$k))}';" class="btn <?php if($pro==$k){ echo 'btn-info';}else{ echo 'btn-default';} ?>">{$v}</button>
+                                        <!--<button onClick="javascript:window.location.href='{:U('Product/index',array('pro'=>$k))}';" class="btn <?php /*if($pro==$k){ echo 'btn-info';}else{ echo 'btn-default';} */?>">{$v}</button>-->
+                                        <a href="{:U('Product/index',array('pro'=>$k))}" class="btn <?php if($pro==$k){ echo 'btn-info';}else{ echo 'btn-default';} ?>">{$v}</a>
                                     </foreach>
                                 </div>
                                 <table class="table table-bordered dataTable fontmini" id="tablelist" style="margin-top:10px;">
@@ -42,8 +45,11 @@
                                         <th class="sorting" data="p.subject_field" style="width: 100px;">科学领域</th>
                                         <th class="sorting" data="p.from">来源</th>
                                         <th class="sorting" data="p.age">适用年龄</th>
-                                        <!--<th class="sorting" data="p.input_uname">专家</th>-->
-                                        <th class="sorting">核算方式</th>
+                                        <?php if ($pro){ ?>
+                                            <th class="sorting">核算方式</th>
+                                        <?php }else{ ?>
+                                            <th class="sorting">业务类型</th>
+                                        <?php } ?>
                                         <!--<th class="sorting">参考单价</th>
                                         <th class="sorting">数量</th>-->
                                         <th class="sorting" data="p.sales_price">参考成本价</th>
@@ -64,8 +70,14 @@
                                             <td>{$subject_fields[$row[subject_field]]}</td>
                                             <td>{$pfrom[$row['from']]}</td>
                                             <td>{$row['in_ages']}</td>
-                                            <td>{$reckon_mode[$row[reckon_mode]]}</td>
-                                            <!--<td>{$row.input_uname}</td>-->
+                                            <td>
+                                                <?php if ($pro){ ?>
+                                                    {$reckon_mode[$row[reckon_mode]]}
+                                                <?php }else{ ?>
+                                                    {$row['dept']}
+                                                <?php } ?>
+                                            </td>
+
                                             <!--<td></td>
                                             <td></td>-->
                                             <td>{$row.sales_price}</td>

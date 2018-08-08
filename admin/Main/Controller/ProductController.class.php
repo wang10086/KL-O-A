@@ -50,6 +50,7 @@ class ProductController extends BaseController {
 			$lists[$k]['dept']      = implode(',',$deptval);
 			$lists[$k]['in_ages']   = implode(',',$in_ages);
 		}
+
 		$this->lists    = $lists;
         $this->ptype    = C('PRODUCT_TYPE');
         $this->pfrom    = C('PRODUCT_FROM');
