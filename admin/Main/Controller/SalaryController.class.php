@@ -33,21 +33,15 @@ class SalaryController extends BaseController {
                  $sql .= "$k = '$val' AND ";
              }
              $sql = substr($sql,0,-4);//去除最后一个 AND
-             $count = count(M()->query($sql));//分页数量
-             $page = new Page($count,5);
-             $pages = $page->show();
-             $sql .="WHERE oa_salary.account_id = oa_account.id ORDER BY oa_salary.createtime DESC LIMIT $page->firstRow,$page->listRows";
-             $list = M()->query($sql);//分页页数
-//             print_r($list);die;
-             if(!$list)$this->success('您的输入条件不存在！', U('Salary/salaryindex'));
-
+             $sql .="WHERE oa_salary.account_id = oa_account.id ORDER BY oa_salary.createtime DESC";
          }else{
-             $count = M('salary')->alias('a')->field('*,a.id as sid')->join('oa_account b on a.account_id = b.id')->count();//数据数量
-             $business_depts = C('BUSINESS_DEPT');//调用config
-             $page = new Page($count,5);//显示的页数
-             $pages = $page->show();//分页
-             $list = M('salary')->alias('a')->field('*,a.id as sid')->join('oa_account b on a.account_id = b.id')->limit($page->firstRow.','.$page->listRows)->select();//分页数据
+             $sql = "SELECT *,oa_salary.id as sid FROM oa_salary LEFT JOIN oa_account ON oa_salary.account_id = oa_account.id ORDER BY oa_salary.createtime DESC";
          }
+         $count = count(M()->query($sql));
+         $page = new Page($count,12);
+         $pages = $page->show();
+         $list = M()->query($sql." LIMIT ".$page->firstRow.",".$page->listRows);//分页页数
+         if(!$list)$this->success('您的输入条件不存在！', U('Salary/salaryindex'));
          foreach ($list as $key => $val){
              $list[$key]['_subsidy'] = $list[$key]['bonus']+$list[$key]['housing_subsidy']+$list[$key]['other_subsidie']+$list[$key]['subsidy'];//奖金+住房补贴+其他补贴+其他补助
              $insurance_id['id'] = $list[$key]['insurance_id'];
