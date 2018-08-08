@@ -52,7 +52,7 @@
                                         <td>&yen; 3000.00</td>
                                         <td>&yen; 200.00</td>
                                         <td><if condition="($row.achievements_status eq 1)">+ </if><if condition="($row.achievements_status eq 2)">-</if><if condition="($row.achievements_status eq 3)"></if>&yen; 200.00</td>
-                                        <td>&yen; {$row.post_tax_wage}</td>
+                                        <td>&yen; 888.00</td>
 
                                         <td>&yen; 100.00</td>
                                         <td>&yen; 122.00</td>
@@ -70,12 +70,12 @@
                                         <td>&yen; {$row.wages}</td>
                                         <td>&yen; {$row.deduction_money}</td>
                                         <td><if condition="($row.achievements_status eq 1)">+ </if><if condition="($row.achievements_status eq 2)">-</if><if condition="($row.achievements_status eq 3)"></if>&yen; {$row.achievements}</td>
-                                        <td>&yen; {$row.post_tax_wage}</td>
+                                        <td>&yen; {$row._subsidy}</td>
 
                                         <td>&yen; {$row.post_tax_wage}</td>
-                                        <td>&yen; {$row._money}</td>
+                                        <td>&yen; {$row._taxation}</td>
                                         <td style="width:100px">&yen; {$row.post_tax_wage}</td>
-                                        <td><?php echo date('Y-m-d',$row['salary_time']) ?></td>
+                                        <td><?php echo date('Y-m',$row['salary_time']) ?></td>
                                         <td><a href="{:U('Salary/salarydetails',array('id'=>$row['id']))}" class="btn btn-info btn-smsm"><i class="fa fa-pencil"></i>查看详情</a></td>
 
                                     </tr>
@@ -83,7 +83,7 @@
                                 </table>
                                 </div><!-- /.box-body -->
                                  <div class="box-footer clearfix">
-                                	<div class="pagestyle">{$pages}</div>
+                                	<div class="pagestyle">{$page}</div>
                                 </div>
                             </div><!-- /.box -->
 
@@ -108,17 +108,6 @@
                     <input type="text" class="form-control" name="name" placeholder="员工姓名">
                 </div>
 
-                <div class="form-group col-md-3">
-                    <select name="staff_style" class="form-control">
-                        <option value="0">员工类别</option>
-                        <option value="1">新入职</option>
-                        <option value="2">转正</option>
-                        <option value="3">正式</option>
-                        <option value="4">实习</option>
-                        <option value="6">试用</option>
-                        <option value="7">劳务</option>
-                    </select>
-                </div>
                 <div class="form-group col-md-3">
                     <input type="date" class="form-control" name="salary_time" placeholder="年月" id="nowTime">
                 </div>
