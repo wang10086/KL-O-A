@@ -488,56 +488,43 @@ class FinanceController extends BaseController {
 			
 		}
 	}
-	
-	
-	// @@@NODE-3###settlement###项目结算###
+
+    // @@@NODE-3###settlement###项目结算###now
     public function settlement(){
-			
-		$opid = I('opid');
-		$id   = I('id');
-		if($id){
-			$budget = M('op_settlement')->find($id);
-			$opid = $budget['op_id'];
-		}
-		if(!$opid) $this->error('项目不存在');	
-		
-		$where = array();
-		$where['op_id'] = $opid;
-		
-		$op         = M('op')->where($where)->find();
-        /*if ($op['tcs_stu'] && $op['tcs_stu']!=5){
-            $this->error('暂未核实专家辅导员出团信息!');
-        }*/
-        $settlement = M('op_settlement')->where(array('op_id'=>$opid))->find();
 
-        $jiesuan_all        = M('op_costacc')->where(array('op_id'=>$opid,'status'=>2))->order('id')->select();
-		$jiesuan_no_guide   = M('op_costacc')->where(array('op_id'=>$opid,'status'=>2,'type'=>array('neq',2)))->order('id')->select();
-        $yusuan_guide       = M('op_cost')->field('op_id,remark as title, cost as unitcost,amount,really_cost as total,upd_remark as remark,cost_type as type')->where(array('op_id'=>$opid,'cost_type'=>2))->select();
-        if ($settlement && $settlement['audit'] && $settlement['audit_status']==1 || cookie('userid')==11){
-            $jiesuan        = $jiesuan_all;
-        }else{
-            $jiesuan        = array_merge($yusuan_guide,$jiesuan_no_guide);
+        $opid = I('opid');
+        $id   = I('id');
+        if($id){
+            $budget = M('op_settlement')->find($id);
+            $opid = $budget['op_id'];
         }
+        if(!$opid) $this->error('项目不存在');
 
-		if(count($jiesuan)==0){
-			$costacc    = M('op_cost')->where(array('op_id'=>$opid))->order('cost_type')->select();
-			foreach($costacc as $k=>$v){
-				if($v['cost_type']==3){
-					$op_supplier = M('op_supplier')->find($v['link_id']);
-					$costacc[$k]['beizhu'] = $op_supplier['remark'];
-				}
-				if($v['cost_type']==4){
-					//查询物资价格
-					$mate = M('material')->where(array('material'=>$v['remark']))->find();
-					$costacc[$k]['cost'] = $mate['price'];
-					$costacc[$k]['m_stages'] = $mate['stages'];
-					//查询物资出入库记录
-					$op_mate = M('op_material')->find($v['link_id']);
-					$costacc[$k]['m_outsum'] = $op_mate['outsum'];
-					$costacc[$k]['m_purchasesum'] = $op_mate['purchasesum'];
-					$costacc[$k]['m_returnsum'] = $op_mate['returnsum'];
-				}
-				if ($v['cost_type']==2){
+        $where = array();
+        $where['op_id'] = $opid;
+
+        $op         = M('op')->where($where)->find();
+
+        $jiesuan    = M('op_costacc')->where(array('op_id'=>$opid,'status'=>2))->order('id')->select();
+        if(count($jiesuan)==0){
+            $costacc    = M('op_cost')->where(array('op_id'=>$opid))->order('cost_type')->select();
+            foreach($costacc as $k=>$v){
+                if($v['cost_type']==3){
+                    $op_supplier = M('op_supplier')->find($v['link_id']);
+                    $costacc[$k]['beizhu'] = $op_supplier['remark'];
+                }
+                if($v['cost_type']==4){
+                    //查询物资价格
+                    $mate = M('material')->where(array('material'=>$v['remark']))->find();
+                    $costacc[$k]['cost'] = $mate['price'];
+                    $costacc[$k]['m_stages'] = $mate['stages'];
+                    //查询物资出入库记录
+                    $op_mate = M('op_material')->find($v['link_id']);
+                    $costacc[$k]['m_outsum'] = $op_mate['outsum'];
+                    $costacc[$k]['m_purchasesum'] = $op_mate['purchasesum'];
+                    $costacc[$k]['m_returnsum'] = $op_mate['returnsum'];
+                }
+                if ($v['cost_type']==2){
                     //专家辅导员  //获取专家辅导员实际提成
                     $really_cost            = M('op_cost')->where(array('op_id'=>$v['op_id'],'remark'=>$v['remark']))->find();
                     $g                      = M('op_guide')->where(array('op_id'=>$v['op_id'],'name'=>$v['remark']))->getField('remark');
@@ -546,51 +533,52 @@ class FinanceController extends BaseController {
                     $costacc[$k]['beizhu']  = $really_cost['upd_remark']?$really_cost['upd_remark']:$g;
                 }
             }
-			$qita   = M('op_costacc')->where(array('op_id'=>$opid,'status'=>1,'type'=>4))->order('id')->select();
-		}
+            $qita   = M('op_costacc')->where(array('op_id'=>$opid,'status'=>1,'type'=>4))->order('id')->select();
+        }
         $budget     = M('op_budget')->where(array('op_id'=>$opid))->find();
-		
-		$where = array();
-		$where['req_type'] = P::REQ_TYPE_SETTLEMENT;
-		$where['req_id']   = $settlement['id'];
-		$audit = M('audit_log')->where($where)->find();
-		if($audit['dst_status']==0){
-			$show = '未审批';
-			$show_user = '未审批';
-			$show_time = '等待审批';
-		}else if($audit['dst_status']==1){
-			$show = '<span class="green">已通过</span>';
-			$show_user = $audit['audit_uname'];
-			$show_time = date('Y-m-d H:i:s',$audit['audit_time']);
-		}else if($audit['dst_status']==2){
-			$show = '<span class="red">未通过</span>';
-			$show_user = $audit['audit_uname'];
-			$show_reason = $audit['audit_reason'];
-			$show_time = date('Y-m-d H:i:s',$audit['audit_time']);
-		}
-		$op['showstatus'] = $show;
-		$op['show_user']  = $show_user;
-		$op['show_time']  = $show_time;
-		$op['show_reason']  = $show_reason;
+        $settlement = M('op_settlement')->where(array('op_id'=>$opid))->find();
+
+
+        $where = array();
+        $where['req_type'] = P::REQ_TYPE_SETTLEMENT;
+        $where['req_id']   = $settlement['id'];
+        $audit = M('audit_log')->where($where)->find();
+        if($audit['dst_status']==0){
+            $show = '未审批';
+            $show_user = '未审批';
+            $show_time = '等待审批';
+        }else if($audit['dst_status']==1){
+            $show = '<span class="green">已通过</span>';
+            $show_user = $audit['audit_uname'];
+            $show_time = date('Y-m-d H:i:s',$audit['audit_time']);
+        }else if($audit['dst_status']==2){
+            $show = '<span class="red">未通过</span>';
+            $show_user = $audit['audit_uname'];
+            $show_reason = $audit['audit_reason'];
+            $show_time = date('Y-m-d H:i:s',$audit['audit_time']);
+        }
+        $op['showstatus'] = $show;
+        $op['show_user']  = $show_user;
+        $op['show_time']  = $show_time;
+        $op['show_reason']  = $show_reason;
 
         $member                 = M('op_member')->where(array('op_id'=>$opid))->order('id')->select();
         $this->member           = $member;
-		$this->kind				= C('COST_TYPE');
-		$this->costtype			= array('1'=>'其他','2'=>'专家辅导员','3'=>'合格供方','4'=>'物资');
-		$this->op				= $op;
-		$this->costacc			= $costacc;
-		$this->jiesuan			= $jiesuan;
-		$this->budget			= $budget;
-		$this->settlement		= $settlement;
-		$this->qita				= $qita;
-		$this->audit			= $audit;
-		$this->business_depts	= C('BUSINESS_DEPT');
-		$this->subject_fields	= C('SUBJECT_FIELD');
-		$this->ages 			= C('AGE_LIST');
-		$this->kinds			=  M('project_kind')->getField('id,name', true);
-		$this->display('settlement');
-	}
-	
+        $this->kind				= C('COST_TYPE');
+        $this->costtype			= array('1'=>'其他','2'=>'专家辅导员','3'=>'合格供方','4'=>'物资');
+        $this->op				= $op;
+        $this->costacc			= $costacc;
+        $this->jiesuan			= $jiesuan;
+        $this->budget			= $budget;
+        $this->settlement		= $settlement;
+        $this->qita				= $qita;
+        $this->audit			= $audit;
+        $this->business_depts	= C('BUSINESS_DEPT');
+        $this->subject_fields	= C('SUBJECT_FIELD');
+        $this->ages 			= C('AGE_LIST');
+        $this->kinds			=  M('project_kind')->getField('id,name', true);
+        $this->display('settlement');
+    }
 	
 	
 	//@@@NODE-3###save_settlement###保存结算###
@@ -604,8 +592,6 @@ class FinanceController extends BaseController {
 		$referer		= I('referer');
 		$settlement		= I('settlement',0);
 		$num			= 0;
-		
-		
 		
 		//保存预算
 		if($opid && $costacc){
