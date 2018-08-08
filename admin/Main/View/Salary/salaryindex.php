@@ -6,10 +6,10 @@
                     <h1>员工薪资</h1>
                     <ol class="breadcrumb">
                         <li><a href="{:U('Index/index')}"><i class="fa fa-home"></i> 首页</a></li>
-                        <li><a href="{:U('Salary/salaryindex')}"><i class="fa fa-gift"></i>{$ptitle}</a></li>
-                        <li class="active">{$title}</li>
+                        <li><a href="{:U('Salary/salaryindex')}"><i class="fa fa-gift"></i>人力管理</a></li>
+                        <li class="active">员工薪资</li>
                     </ol>
-                    </ol>
+
                 </section>
 
                 <!-- Main content -->
@@ -21,7 +21,7 @@
                                 <div class="box-header">
                                     <h3 class="box-title">人员薪资列表</h3>
                                     <div class="box-tools pull-right">
-                                        <a href="{:U('Salary/salaryadd')}" class="btn btn-sm btn-danger"><i class="fa fa-plus"></i> 新增顶级分类</a>
+
                                     	 <a href="javascript:;" class="btn btn-info btn-sm" onclick="javascript:opensearch('searchtext',700,160);"><i class="fa fa-search"></i> 搜索</a>
                                          
                                     </div>
@@ -36,34 +36,46 @@
                                         <th class="sorting" data="project">岗位薪酬标准</th>
                                         <th class="sorting" data="number">考勤扣款</th>
                                         <th class="sorting" data="number">绩效增减</th>
+                                        <th class="sorting" data="shouru">补助/奖金</th>
                                         <th class="sorting" data="shouru">应发工资</th>
-                                        <th class="sorting" data="maoli">各项扣款</th>
+                                        <th class="sorting" data="maoli">税费扣款</th>
+                                        <th width="50" class="taskOptions">实发工资</th>
+                                        <th width="50" class="taskOptions">薪资月份</th>
                                         <th width="50" class="taskOptions">详情</th>
                                         </if>
                                         
                                     </tr>
                                     <tr>
-                                        <td>122</td>
+                                        <td>1</td>
                                         <td>刘金磊</td>
-                                        <td>564654</td>
-                                        <td>&yen; 5888.00</td>
-                                        <td>&yen; 500.00</td>
-                                        <td>&yen; 9000.00<if condition="($row.achievements_status eq 1)">+</if><if condition="($row.achievements_status eq 2)">-</if><if condition="($row.achievements_status eq 3)"></if>{$row.achievements}</td>
-                                        <td>&yen; 899.00</td>
-                                        <td>&yen; 588888.00(元)</td>
+                                        <td>zx123456</td>
+                                        <td>&yen; 3000.00</td>
+                                        <td>&yen; 200.00</td>
+                                        <td><if condition="($row.achievements_status eq 1)">+ </if><if condition="($row.achievements_status eq 2)">-</if><if condition="($row.achievements_status eq 3)"></if>&yen; 200.00</td>
+                                        <td>&yen; {$row.post_tax_wage}</td>
+
+                                        <td>&yen; 100.00</td>
+                                        <td>&yen; 122.00</td>
+                                        <td style="width:100px">&yen; 300.00</td>
+                                        <td>2018-08</td>
                                         <td><a href="{:U('Salary/salarydetails',array('id'=>$row['id']))}" class="btn btn-info btn-smsm"><i class="fa fa-pencil"></i>查看详情</a></td>
 
                                     </tr>
+
                                     <foreach name="list" item="row">
                                     <tr>
-                                        <td>{$row.id}</td>
-                                        <td>{$row.user_name}</td>
+                                        <td>{$row.sid}</td>
+                                        <td>{$row.nickname}</td>
                                         <td>{$row.employee_member}</td>
                                         <td>&yen; {$row.wages}</td>
                                         <td>&yen; {$row.deduction_money}</td>
-                                        <td>&yen; <if condition="($row.achievements_status eq 1)">+</if><if condition="($row.achievements_status eq 2)">-</if><if condition="($row.achievements_status eq 3)"></if>{$row.achievements}</td>
+                                        <td><if condition="($row.achievements_status eq 1)">+ </if><if condition="($row.achievements_status eq 2)">-</if><if condition="($row.achievements_status eq 3)"></if>&yen; {$row.achievements}</td>
                                         <td>&yen; {$row.post_tax_wage}</td>
-                                        <td>&yen; {$row.deduction_money}(考勤扣款)+&yen; {$row.personal_income_tax}(个人所得税)+&yen; {$row.year_end_personal_income_tax}(年终奖个税)+&yen; {$row.trade_union_fee}(工会会费)+&yen; {$row.insu_money}(五险一金)=&yen; {$row._money}(元)</td>
+
+                                        <td>&yen; {$row.post_tax_wage}</td>
+                                        <td>&yen; {$row._money}</td>
+                                        <td style="width:100px">&yen; {$row.post_tax_wage}</td>
+                                        <td><?php echo date('Y-m-d',$row['salary_time']) ?></td>
                                         <td><a href="{:U('Salary/salarydetails',array('id'=>$row['id']))}" class="btn btn-info btn-smsm"><i class="fa fa-pencil"></i>查看详情</a></td>
 
                                     </tr>
@@ -115,20 +127,3 @@
             </div>
 
 <include file="Index:footer2" />
-<script type="text/javascript">
-    function current(){
-        var d=new Date(),str='';
-        str +=d.getFullYear()+'年'; //获取当前年份
-        str +=d.getMonth()+1+'月'; //获取当前月份（0——11）
-        //str +=d.getDate()+'日';
-        //str +=d.getHours()+'时';
-        //str +=d.getMinutes()+'分';
-        //str +=d.getSeconds()+'秒';
-        return str;
-    }
-    setInterval(function(){
-        $("#nowTime").html(current)
-    },1000); //显示时分秒，并且秒数可以跳动
-
-    //$("#nowTime").html(current);
-</script>

@@ -6,12 +6,12 @@
                 <!-- Content Header (Page header) -->
                 <section class="content-header">
                     <h1>
-                        员工资详情
+                        员工薪资详情
                     </h1>
                     <ol class="breadcrumb">
                         <li><a href="{:U('Index/index')}"><i class="fa fa-home"></i> 首页</a></li>
                         <li><a href="{:U('Salary/salaryindex')}"><i class="fa fa-gift"></i> 员工薪资</a></li>
-                        <li class="active">员工资详情</li>
+                        <li class="active">员工薪资详情</li>
                     </ol>
                 </section>
 
@@ -23,7 +23,7 @@
                            
                             <div class="box">
                                 <div class="box-header">
-                                    <h3 class="box-title">信息描述</h3>
+                                    <h3 class="box-title">基本信息</h3>
                                 </div><!-- /.box-header -->
                                 <div class="box-body">
 
@@ -63,36 +63,139 @@
                                         <div class="form-group col-md-4 viwe">
                                             <p>离职时间：<?php echo date('Y-m-d',$user['quit_time']) ?></p>
                                         </div>
+                                        <div class="form-group col-md-4 viwe">
+                                            <p>工资发放时间：<?php echo date('Y-m',$row['salary_time']) ?></p>
+                                        </div>
+                                        <div class="form-group col-md-4 viwe">
+                                            <p>档案所属：文化传播中心</p>
+                                        </div>
                                         
                                     </div>
+                                    <div>
+                                        <div class="box-header" style="margin-left: -10px">
+                                            <h3 class="box-title">一 、岗位薪酬 = 基本工资 + 绩效工资</h3>
+                                        </div><!-- /.box-header --><br />
+                                        <div class="content">
+                                            <div class="form-group col-md-4 viwe">
+                                                <p>岗位薪酬标准：{$row.wages}（元）</p>
+                                            </div>
+
+                                            <div class="form-group col-md-4 viwe">
+                                                <p>其中基本工资标准：{$row.base_pay}</p>
+                                            </div>
+
+                                            <div class="form-group col-md-4 viwe">
+                                                <p>其中绩效工资标准：{$row.merit_pay}</p>
+                                            </div>
+
+                                            <div class="form-group col-md-4 viwe">
+                                                <p>考勤扣款：{$row.deduction_money} </p>
+                                            </div>
+                                            <div class="form-group col-md-4 viwe">
+                                                <p>应发基本工资：{$row.money_pay} </p>
+                                            </div>
+                                            <table class="table table-bordered dataTable fontmini">
+                                                <tr role="row" class="orders" >
+                                                    <th class="sorting" data="op_id">考勤/扣款</th>
+                                                    <th class="sorting" data="op_id">迟到/早退（15分钟以内）</th>
+                                                    <th class="sorting" data="group_id">迟到/早退（15分钟~2小时）</th>
+                                                    <th class="sorting" data="group_id">事假</th>
+                                                    <th class="sorting" data="project">病假</th>
+                                                    <th class="sorting" class="project">矿工</th>
+
+                                                </tr>
+
+                                                    <tr>
+                                                        <td>次数</td>
+                                                        <td>{$row.user_name}</td>
+                                                        <td>{$row.employee_member}</td>
+                                                        <td>&yen; {$row.wages}</td>
+                                                        <td>&yen; {$row.wages}</td>
+                                                        <td>&yen; {$row.deduction_money}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>扣款</td>
+                                                        <td>{$row.user_name}</td>
+                                                        <td>{$row.employee_member}</td>
+                                                        <td>&yen; {$row.wages}</td>
+                                                        <td>&yen; {$row.wages}</td>
+                                                        <td>&yen; {$row.deduction_money}</td>
+                                                    </tr>
+                                            </table><br />
+                                            <div class="form-group col-md-4 viwe">
+                                                <p>绩效增减：{$row.base_pay}</p>
+                                            </div>
+
+                                            <div class="form-group col-md-4 viwe">
+                                                <p>应发绩效工资：{$row.merit_pay}</p>
+                                            </div>
+                                            <table class="table table-bordered dataTable fontmini" id="tablelist" style="margin-top:10px;">
+                                                <tr role="row" class="orders" >
+                                                    <th class="sorting" data="op_id">绩效项目</th>
+                                                    <th class="sorting" data="op_id">PDCA</th>
+                                                    <th class="sorting" data="group_id">品质检查</th>
+                                                    <th class="sorting" data="group_id">KPI</th>
+
+
+                                                </tr>
+
+                                                <tr>
+                                                    <td>得分</td>
+                                                    <td>{$row.user_name}</td>
+                                                    <td>{$row.employee_member}</td>
+                                                    <td>&yen; {$row.wages}</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>提成</td>
+                                                    <td>{$row.user_name}</td>
+                                                    <td>{$row.employee_member}</td>
+                                                    <td>&yen; {$row.wages}</td>
+                                                </tr>
+                                            </table>
+                                        </div>
+
+                                    </div>
+
                                     <div class="content">
-
+                                        <div class="box-header" style="margin-left: -25px">
+                                            <h3 class="box-title">二 、提成/补助/奖金</h3>
+                                        </div><!-- /.box-header --><br />
+                                        <h5 style="color:#FF3333">业务人员提成</h5><br/>
                                         <div class="form-group col-md-4 viwe">
-                                            <p>岗位薪酬：{$row.wages}</p>
+                                            <p>目标任务：{$row.total_percentage}</p>
                                         </div>
-
                                         <div class="form-group col-md-4 viwe">
-                                            <p>基本工资：{$row.base_pay}</p>
+                                            <p>季度完成：{$row.money_pay} </p>
                                         </div>
-
                                         <div class="form-group col-md-4 viwe">
-                                            <p>考勤扣款：{$row.deduction_money} </p>
-                                        </div>
-
+                                            <p>业绩提成：{$row.total_percentage}</p>
+                                        </div><br/><br/><br/>
+                                        <h5 style="color:#FF3333">其他人员提成</h5><br/>
                                         <div class="form-group col-md-4 viwe">
-                                            <p>绩效工资：{$row.merit_pay}</p>
+                                            <p>目标任务：{$row.total_percentage}</p>
                                         </div>
-
                                         <div class="form-group col-md-4 viwe">
-                                            <p>绩效增减：<?php if($row['achievements_status']==1){ echo "+";}elseif($row['achievements_status']==2){echo "-";}elseif($row['achievements_status']==3){echo '';} ?>{$row.achievements}</p>
+                                            <p>季度完成：{$row.money_pay} </p>
                                         </div>
-
                                         <div class="form-group col-md-4 viwe">
                                             <p>业绩提成：{$row.total_percentage}</p>
                                         </div>
-
+                                        <div class="form-group col-md-4 viwe">
+                                            <p>目标任务：{$row.total_percentage}</p>
+                                        </div>
+                                        <div class="form-group col-md-4 viwe">
+                                            <p>季度完成：{$row.money_pay} </p>
+                                        </div>
+                                        <div class="form-group col-md-4 viwe">
+                                            <p>业绩提成：{$row.total_percentage}</p>
+                                        </div>
                                     </div>
+
+
                                     <div class="content">
+                                        <div class="box-header" style="margin-left: -25px">
+                                            <h3 class="box-title">计税保险</h3>
+                                        </div><!-- /.box-header --><br />
 
                                         <div class="form-group col-md-4 viwe">
                                             <p>奖金：{$row.bonus}</p>
@@ -107,19 +210,12 @@
                                         </div>
 
                                         <div class="form-group col-md-4 viwe">
-                                            <p>应发工资：{$row.money_pay} </p>
-                                        </div>
-
-                                        <div class="form-group col-md-4 viwe">
                                             <p>计税工资：{$row.tax_payroll}</p>
                                         </div>
 
                                         <div class="form-group col-md-4 viwe">
                                             <p>年终奖计税工资：{$row.year_end_money}</p>
                                         </div>
-
-                                    </div>
-                                    <div class="content">
 
                                         <div class="form-group col-md-4 viwe">
                                             <p>个人所得税：{$row.personal_income_tax}</p>
@@ -141,10 +237,6 @@
                                             <p>税后工资：{$row.post_tax_wage}</p>
                                         </div>
 
-
-
-                                    </div>
-                                    <div class="content">
                                         <div class="form-group col-md-4 viwe">
                                             <p>社会保险（公司部分)：{$row.company_social_insurance}</p>
                                         </div>
