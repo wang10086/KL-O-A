@@ -61,11 +61,7 @@
                                         </foreach>
                                         </select>
                                     </div>
-                                    
-                                    <!--<div class="form-group col-md-4">
-                                        <label>参考成本价</label>
-                                        <input type="text" name="info[sales_price]" id="sales_price"   value="{$row.sales_price}" class="form-control" />
-                                    </div>-->
+
                                     <div class="form-group col-md-6">
                                         <label>来源</label>
                                         <select  class="form-control"  name="info[from]">
@@ -146,16 +142,34 @@
                                 <div class="box-body">
                                     <div class="content">
                                         <div class="content" style="padding-top:0px;">
-                                        	<style type="text/css">
-											#material .material_name{ width:120px;margin-right: 10px;}
-                                            #material .longinput{ width:100px;}
-                                            </style>
+
+                                            <div class="form-group">
+                                                <label>核算模式</label>
+                                                <div class="produce_hesuan" id="product_hesuan">
+                                                    <span><input type="radio" class="hesuan_type mt10" name="info[reckon_mode]" value="1" <?php if($row['reckon_mode']==1){ echo 'checked';} ?>>&#12288;按项目核算</span>
+                                                    <span class="ml20"><input type="radio"  name="info[reckon_mode]" value="2" <?php if($row['reckon_mode']==2){ echo 'checked';} ?>>&#12288;按人数核算</span>
+                                                    <span class="ml20"><input type="radio"  name="info[reckon_mode]" value="3" <?php if($row['reckon_mode']==3){ echo 'checked';} ?>>&#12288;按批次核算</span>
+                                                    <?php if($row && $row['sales_price']){ ?>
+                                                        <?php if($row['reckon_mode']==1){ ?>
+                                                            <span class="ml50" id="hesuan_result"><input type="text" class="under-line-input" name="info[sales_price]" id="produce_price" value="{$row.sales_price}">元/项</span>
+                                                        <?php }elseif($row['reckon_mode']==2){ ?>
+                                                            <span class="ml50" id="hesuan_result"><input type="text" class="under-line-input" name="info[sales_price]" id="produce_price" value="{$row.sales_price}">元/人</span>
+                                                        <?php }elseif($row['reckon_mode']==3){ ?>
+                                                            <span class="ml50" id="hesuan_result"><input type="text" class="under-line-input" name="info[sales_price]" id="produce_price" value="{$row.sales_price}">元/批</span>
+                                                        <?php } ?>
+                                                    <?php }else{ ?>
+                                                    <span class="ml50" id="hesuan_result"></span>
+                                                    <?php } ?>
+                                                </div>
+                                            </div>
+
                                             <div id="material">
                                                 <div class="userlist" id="material_id">
                                                     <div class="unitbox material_name">材料名称</div>
                                                     <div class="unitbox longinput">规格</div>
                                                     <div class="unitbox material_name">数量</div>
                                                     <div class="unitbox material_name">参考单价</div>
+                                                    <div class="unitbox material_name">合计价格</div>
                                                     <div class="unitbox material_name">类型</div>
                                                     <div class="unitbox longinput">购买途径</div>
                                                     <div class="unitbox longinput">备注</div>
@@ -167,8 +181,9 @@
                                                     <input type="hidden" name="resid[888{$v.id}][id]" value="{$v.id}" >
                                                     <input type="text" class="form-control material_name" name="material[888{$v.id}][material]" value="{$v.material}">
                                                     <input type="text" class="form-control longinput" name="material[888{$v.id}][spec]" value="{$v.spec}">
-                                                    <input type="text" class="form-control" name="material[888{$v.id}][amount]" value="{$v.amount}">
-                                                    <input type="text" class="form-control" name="material[888{$v.id}][unitprice]" value="{$v.unitprice}">
+                                                    <input type="text" class="form-control amount" name="material[888{$v.id}][amount]" value="{$v.amount}" onblur="total()">
+                                                    <input type="text" class="form-control cost" name="material[888{$v.id}][unitprice]" value="{$v.unitprice}" onblur="total()">
+                                                    <input type="text" class="form-control total" name="material[888{$v.id}][total]" value="{$v.total}">
                                                     <select class="form-control"  name="material[888{$v.id}][type]" >
                                                         <option value="1" <?php if($v['type']==1){ echo 'selected';} ?> >物资</option>
                                                         <option value="2" <?php if($v['type']==2){ echo 'selected';} ?> >专家辅导员</option>
@@ -183,10 +198,11 @@
                                                 <?php }else{ ?>
                                                 <div class="userlist" id="material_id">
                                                     <span class="title">1</span>
-                                                    <input type="text" class="form-control material_name" name="material[0][material]">
+                                                    <input type="text" class="form-control material_name" name="material[0][material]" onblur="check_ptype()">
                                                     <input type="text" class="form-control longinput" name="material[0][spec]">
-                                                    <input type="text" class="form-control" name="material[0][amount]">
-                                                    <input type="text" class="form-control" name="material[0][unitprice]">
+                                                    <input type="text" class="form-control amount" name="material[0][amount]" onblur="total()">
+                                                    <input type="text" class="form-control cost" name="material[0][unitprice]" onblur="total()">
+                                                    <input type="text" class="form-control total" name="material[0][total]">
                                                     <select class="form-control"  name="material[888{$v.id}][type]" >
                                                         <option value="1" <?php if($v['type']==1){ echo 'selected';} ?> >物资</option>
                                                         <option value="2" <?php if($v['type']==2){ echo 'selected';} ?> >专家辅导员</option>
@@ -295,7 +311,20 @@
 
 <script type="text/javascript"> 
 
-	$(document).ready(function() {	
+	$(document).ready(function() {
+        //是否需要辅导员/教师/专家
+        $('#product_hesuan').find('ins').each(function(index, element) {
+            $(this).click(function(){
+                if(index==0){
+                    $('#hesuan_result').html('<input type="text" class="under-line-input" name="info[sales_price]" id="produce_price">元/项');
+                }else if (index==1){
+                    $('#hesuan_result').html('<input type="text" class="under-line-input" name="info[sales_price]" id="produce_price">元/人');
+                }else if (index==2){
+                    $('#hesuan_result').html('<input type="text" class="under-line-input" name="info[sales_price]" id="produce_price">元/批');
+                }
+            })
+        });
+
 		$('#supplierlist').show();
 		var uploader = new plupload.Uploader({
 			runtimes : 'html5,flash,silverlight,html4',
@@ -381,13 +410,20 @@
             $('input[rel=' + fid +']').remove();
 		}
 	}
-	
+
+	//检查核算模式
+    function check_ptype(){
+        var hesuan_result = $('#hesuan_result').html();
+        if(hesuan_result==''){
+            alert('请选择核算模式');
+        }
+    }
 	
 	//新增物资
 	function add_material(){
 		var i = parseInt($('#material_val').text())+1;
 
-		var html = '<div class="userlist" id="material_'+i+'"><span class="title"></span><input type="text" class="form-control material_name" name="material['+i+'][material]"><input type="text" class="form-control longinput" name="material['+i+'][spec]" value=""><input type="text" class="form-control amount" name="material['+i+'][amount]"><input type="text" class="form-control" name="material['+i+'][unitprice]"><select class="form-control"  name="material['+i+'][type]" ><option value="1">物资</option><option value="2">专家辅导员</option><option value="3">合格供方</option><option value="4">其他</option></select><input type="text" class="form-control longinput" name="material['+i+'][channel]" value=""><input type="text" class="form-control longinput" name="material['+i+'][remarks]"><a href="javascript:;" class="btn btn-danger btn-flat" onclick="delbox(\'material_'+i+'\')">删除</a></div>';
+		var html = '<div class="userlist" id="material_'+i+'"><span class="title"></span><input type="text" class="form-control material_name" name="material['+i+'][material]"><input type="text" class="form-control longinput" name="material['+i+'][spec]" value=""><input type="text" class="form-control amount" name="material['+i+'][amount]" onblur="total()"><input type="text" class="form-control cost" name="material['+i+'][unitprice]" onblur="total()"><input type="text" class="form-control total" name="material['+i+'][total]"><select class="form-control"  name="material['+i+'][type]" ><option value="1">物资</option><option value="2">专家辅导员</option><option value="3">合格供方</option><option value="4">其他</option></select><input type="text" class="form-control longinput" name="material['+i+'][channel]" value=""><input type="text" class="form-control longinput" name="material['+i+'][remarks]"><a href="javascript:;" class="btn btn-danger btn-flat" onclick="delbox(\'material_'+i+'\')">删除</a></div>';
 		$('#material').append(html);	
 		$('#material_val').html(i);
 		orderno();
@@ -411,24 +447,33 @@
 	}
 	
 	//更新价格与数量
-	/*
 	function total(){
 		$('.userlist').each(function(index, element) {
+            var hesuan_sum = 0;
             $(this).find('.cost').blur(function(){
 				var cost = $(this).val();
 				var amount = $(this).parent().find('.amount').val();
-				$(this).parent().find('.total').val(accMul(cost,amount));	
+				$(this).parent().find('.total').val(accMul(cost,amount));
+
+                $('.total').each(function(index, element) {
+                    hesuan_sum += parseFloat($(this).val());
+                    $('#produce_price').val(hesuan_sum);
+                });
 			});
 			 $(this).find('.amount').blur(function(){
 				var amount = $(this).val();
 				var cost = $(this).parent().find('.cost').val();
-				$(this).parent().find('.total').val(accMul(cost,amount));	
+				$(this).parent().find('.total').val(accMul(cost,amount));
+
+                 $('.total').each(function(index, element) {
+                     hesuan_sum += parseFloat($(this).val());
+                     $('#produce_price').val(hesuan_sum);
+                 });
 			});
-			
-        });		
+
+        });
 	}
-	*/
-	
+
 	
 	//选择适用年龄
 	function selectages() {
