@@ -13,24 +13,6 @@ class OpController extends BaseController {
     protected $_pagetitle_ = '计调操作';
     protected $_pagedesc_  = '';
 
-    //初始化
-    public function _initialize(){
-        //获取出团确认时填写实际出团日期在当天的团
-       /* $arr_opid = M('op_settlement')->where(array('audit_status'=>1))->getField('op_id',true); //已经做过结算的团op_id
-        $where    = array();
-        $where['op.op_id']       = array('not in',$arr_opid);
-        $where['op.tcs_stu']     = array('neq',0);
-        $lists    = M()->table('__OP__ as op')->field('op.*,c.tcs_end_time')->join('left join __OP_TEAM_CONFIRM__ as c on op.op_id=c.op_id')->where($where)->select();
-        foreach ($lists as $v){
-            //出团确认结束4个小时候自动改变辅导员/教师,专家状态
-            if((time()-$v['tcs_end_time']>4*60*60) && $v['tcs_stu']==3){
-                $info['tcs_stu'] = 4;
-                M('op')->where(array('op_id'=>$v['op_id']))->save($info);
-            }
-        }*/
-    }
-
-
     // @@@NODE-3###index###出团计划列表###
     public function index(){
         $this->title('出团计划列表');
@@ -387,6 +369,8 @@ class OpController extends BaseController {
 		$opid = I('opid');
 		$id   = I('id');
 		if($id){
+            $where      = array();
+            $where['id']= $id;
 			$op   = M('op')->where($where)->find($id);
 			$opid = $op['op_id'];		
 		}else if($opid){
@@ -539,6 +523,9 @@ class OpController extends BaseController {
 		$this->record         = $record;
 		$this->business_depts = C('BUSINESS_DEPT');
 		$this->subject_fields = C('SUBJECT_FIELD');
+        $this->product_type   = C('PRODUCT_TYPE');
+        $this->product_from   = C('PRODUCT_FROM');
+        $this->reckon_mode    = C('RECKON_MODE');
 		$this->ages           = C('AGE_LIST');
         $this->service_type   = C('SERVICE_TYPE');
         $this->act_need       = C('ACT_NEED');
@@ -1602,12 +1589,12 @@ class OpController extends BaseController {
 	
 	// @@@NODE-3###select_product###选择产品模板###
 	public function select_product(){
-		
+
 		$key          = I('key');
 		$status       = I('status','-1');
 		$kind         = I('kind','-1');
 		$mdd          = I('mdd');
-		
+
 		$db = M('product_line');
 		$this->status = $status;
 		$this->kind   = $kind;
@@ -1622,11 +1609,43 @@ class OpController extends BaseController {
         $this->pages = $pagecount>25 ? $page->show():'';
 		$this->lists = $db->where($where)->limit($page->firstRow . ',' . $page->listRows)->order($this->orders('input_time'))->select();
 		$this->kindlist = M('project_kind')->select();
-		
+
 		$this->display('select_product');
-		
 	}
-	
+
+    // @@@NODE-3###select_product###选择产品模块###
+    public function select_product_module(){
+
+        $opid         = I('opid');
+        $key          = I('key');
+        $type         = I('type');
+        $subject_field= I('subject_field');
+        $from         = I('from');
+        $kind         = M('op')->where(array('op_id'=>$opid))->getField('kind');
+
+        $db = M('product');
+        $this->opid   = $opid;
+        $where = array();
+        $where['audit_status']      = 1;
+        if($kind)   $where['business_dept']= $kind;
+        if($key)    $where['title'] = array('like','%'.$key.'%');
+        if ($type)  $where['type']  = array('eq',$type);
+        if ($from)  $where['from']  = array('eq',$type);
+        if ($subject_field)  $where['subject_field']  = array('eq',$subject_field);
+
+        $page = new Page($db->where($where)->count(),25);
+        $this->pages = $pagecount>25 ? $page->show():'';
+        $lists       = $db->where($where)->limit($page->firstRow . ',' . $page->listRows)->order($this->orders('input_time'))->select();
+
+        $this->lists          = $lists;
+        $this->product_type   = C('PRODUCT_TYPE');
+        $this->subject_fields = C('SUBJECT_FIELD');
+        $this->product_from   = C('PRODUCT_FROM');
+        $this->kindlist       = M('project_kind')->select();
+
+        $this->display('select_product_module');
+
+    }
 	
 	// @@@NODE-3###select_guide###选择导游辅导员###
 	public function select_guide(){

@@ -37,8 +37,8 @@
                                 <!--<if condition="rolemenu(array('Finance/huikuan'))"><a href="{:U('Finance/huikuan',array('opid'=>$op['op_id']))}" class="btn btn-default">项目回款</a></if>-->
                                 <if condition="rolemenu(array('Op/evaluate'))"><a href="{:U('Op/evaluate',array('opid'=>$op['op_id']))}" class="btn btn-default">项目评价</a></if>
                             </div>
-                            
-                            
+
+                            行程方案及资源需求
                             <div class="box box-warning" style="margin-top:15px;">
                                 <div class="box-header">
                                     <h3 class="box-title">
@@ -124,15 +124,21 @@
                                        </h3>
                                    </div>
                                    <div class="box-body">
-                                       <?php if(rolemenu(array('Op/public_save_line')) && $settlement['audit']!=1  && ($opauth['line']==cookie('userid')|| C('RBAC_SUPER_ADMIN')==cookie('username') ||rolemenu(array('Op/assign_line')))){ ?>
-                                           <?php if($isFixedLine){ ?>
-                                               <include file="op_line" />
-                                           <?php }else{ ?>
-                                               <include file="op_line_edit" />
+                                       <?php if ($op['kind']==56){ ?>
+                                           <?php if( C('RBAC_SUPER_ADMIN')==cookie('username')){ ?>
+                                                <include file="op_product_edit" />
                                            <?php } ?>
                                        <?php }else{ ?>
-                                           <include file="op_line" />
-                                       <?php  } ?>
+                                           <?php if(rolemenu(array('Op/public_save_line')) && $settlement['audit']!=1  && ($opauth['line']==cookie('userid')|| C('RBAC_SUPER_ADMIN')==cookie('username') ||rolemenu(array('Op/assign_line')))){ ?>
+                                               <?php if($isFixedLine){ ?>
+                                                   <include file="op_line" />
+                                               <?php }else{ ?>
+                                                   <include file="op_line_edit" />
+                                               <?php } ?>
+                                           <?php }else{ ?>
+                                               <include file="op_line" />
+                                           <?php  } ?>
+                                       <?php } ?>
 
                                    </div>
 
@@ -623,9 +629,58 @@
 			}
 		});	
 	}
-	
-	
-	//选择合格供方
+
+    //选择校园科技节产品
+    function selectproduct() {
+        art.dialog.open("<?php echo U('Op/select_product_module',array('opid'=>$opid)); ?>",{
+            lock:true,
+            title: '选择产品模块',
+            width:1000,
+            height:500,
+            okValue: '提交',
+            fixed: true,
+            ok: function () {
+                var origin = artDialog.open.origin;
+                var product = this.iframe.contentWindow.gosubmint();
+                var product_html = '';
+                for (var j = 0; j < product.length; j++) {
+                    if (product[j].id) {
+                        var i = parseInt(Math.random()*100000)+j;
+                        var cost = '<input type="hidden" name="cost['+i+'][item]" value="'+product[j].kind+'">' +
+                            '<input type="hidden" name="cost['+i+'][cost_type]" value="2">' +
+                            '<input type="hidden" name="cost['+i+'][remark]" value="'+product[j].name+'">' +
+                            '<input type="hidden" name="cost['+i+'][relevant_id]" value="'+product[j].id+'">';
+                        product_html += '<tr class="expense" id="product_'+i+'">' +
+                            '<td>'+cost+'<input type="hidden" name="product['+i+'][product_id]" value="'+product[j].id+'">' +
+                            '<input type="hidden" name="product['+i+'][name]" value="'+product[j].name+'">' +
+                            '<input type="hidden" name="product['+i+'][kind]" value="'+product[j].kind+'">' +
+                            '<input type="hidden" name="product['+i+'][subject_field]" value="'+product[j].subject_field+'">' +
+                            '<a href="javascript:;" onClick="open_product('+product[j].id+',\''+product[j].title+'\')">'+product[j].title+'</a></td>' +
+                            '<td>'+product[j].type+'</td>' +
+                            '<td>'+product[j].subject_field+'</td>' +
+                            '<td>'+product[j].from+'</td>' +
+                            '<td>'+product[j].age+'</td>' +
+                            '<td>'+product[j].reckon_mode+'</td>' +
+                            '<td><input type="text" name="cost['+i+'][sales_price]" placeholder="价格" value="'+product[j].sales_price+'" class="form-control min_input cost" /></td>' +
+                            '<td><span>X</span></td>' +
+                            '<td><input type="text" name="cost['+i+'][amount]" placeholder="数量" value="1" class="form-control min_input amount" /></td>' +
+                            '<td class="total">&yen;'+product[j].fee*1+'</td>' +
+                            '<td><a href="javascript:;" class="btn btn-danger btn-flat" onclick="delbox(\'product_'+i+'\')">删除</a></td></tr>';
+                    };
+                }
+                $('#productlist').show();
+                $('#nonetext').hide();
+                $('#productlist').find('tbody').append(product_html);
+                total();
+            },
+            cancelValue:'取消',
+            cancel: function () {
+            }
+        });
+    }
+
+
+    //选择合格供方
 	function selectsupplier() {
 		art.dialog.open('<?php echo U('Op/select_supplier'); ?>',{
 			lock:true,
@@ -655,9 +710,7 @@
 			}
 		});	
 	}
-	
-	
-	
+
 	
 	//导入名单
 	function importuser() {
@@ -695,8 +748,7 @@
 		});	
 	}
 	
-	
-	
+
 	//物资申请
 	function selectmaterial() {
 		art.dialog.open('<?php echo U('Op/select_material'); ?>',{
@@ -728,10 +780,7 @@
 		});	
 	}
 	
-	
-	
-	
-	
+
 	//查看供方信息
 	function open_supplier(url,title) {
 		art.dialog.open('index.php?m=Main&c=SupplierRes&a=res_view&viewtype=1&id='+url,{
@@ -743,8 +792,7 @@
 		});	
 	}
 	
-	
-	
+
 	//查看专家辅导员信息
 	function open_guide(url,title) {
 		art.dialog.open('index.php?m=Main&c=GuideRes&a=res_view&viewtype=1&id='+url,{
@@ -756,10 +804,7 @@
 		});	
 	}
 	
-	
-	
-	
-	
+
 	//增加日程
 	function task(obj){
 		
