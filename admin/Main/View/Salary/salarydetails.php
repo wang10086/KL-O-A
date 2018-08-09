@@ -144,7 +144,7 @@
                                                     <td>&yen; {$row.wages}</td>
                                                 </tr>
                                                 <tr>
-                                                    <td>提成</td>
+                                                    <td>增减</td>
                                                     <td>{$row.user_name}</td>
                                                     <td>{$row.employee_member}</td>
                                                     <td>&yen; {$row.wages}</td>
@@ -168,7 +168,7 @@
                                         <div class="form-group col-md-4 viwe">
                                             <p>业绩提成：{$row.total_percentage}</p>
                                         </div><br/><br/><br/>
-                                        <h5 style="color:#FF3333">其他人员提成（计调、研发、资源）</h5><br/>
+                                        <h5 style="color:#000000;">&nbsp;&nbsp;&nbsp;&nbsp;其他人员提成（计调、研发、资源）： （元）</h5><br/>
                                         <div class="form-group col-md-4 viwe">
                                             <p>带团补助（课时费）：{$row.total_percentage}</p>
                                         </div>
@@ -309,7 +309,7 @@
                                         <table class="table table-bordered dataTable fontmini" id="tablelist" style="margin-top:10px;">
                                             <tr>
                                                 <td>项目</td>
-                                                <td>价格</td>
+                                                <td>金额</td>
                                             </tr>
                                             <tr>
                                                 <td>房屋住宿</td>
@@ -319,19 +319,21 @@
                                     </div>
                                     <div class="content">
                                         <div class="box-header" style="margin-left: -20px">
-                                            <h3 class="box-title">六 、实发工资  共计 <u>9999.99</u> 元</h3>
+                                            <h3 class="box-title">六 、实发工资  共计 <u>9999.99</u> 元</h3><p style="margin-top: 15px;">(实发工资=岗位薪酬+提成/补助/奖金-五险一金-个税及工会会费、代扣代缴)</p>
                                         </div><!-- /.box-header --><br />
                                         <!--   1+2-3-5    -->
                                         <table class="table table-bordered dataTable fontmini"  style="margin-left:-15px;">
                                             <tr role="row" class="orders" >
                                                 <th class="sorting" data="op_id">实发工资</th>
                                                 <th class="sorting" data="op_id">岗位薪酬</th>
+                                                <th class="sorting" data="op_id">提成/补助/奖金</th>
                                                 <th class="sorting" data="group_id">五险一金</th>
                                                 <th class="sorting" data="group_id">个税及工会会费、代扣代缴</th>
                                             </tr>
                                             <tr>
                                                 <td>10000.00</td>
                                                 <td>{$row.user_name}</td>
+                                                <td>{$row.employee_member}</td>
                                                 <td>{$row.employee_member}</td>
                                                 <td>&yen; {$row.wages}</td>
                                             </tr>
