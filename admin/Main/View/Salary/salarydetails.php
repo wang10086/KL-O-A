@@ -319,7 +319,7 @@
                                     </div>
                                     <div class="content">
                                         <div class="box-header" style="margin-left: -20px">
-                                            <h3 class="box-title">六 、实发工资  共计 <u>9999.99</u> 元</h3><p style="margin-top: 15px;">(实发工资=岗位薪酬+提成/补助/奖金-五险一金-个税及工会会费、代扣代缴)</p>
+                                            <h3 class="box-title">六 、实发工资  共计 <u>9999.99</u> 元</h3><p style="margin-top: 15px;">(实发工资=岗位薪酬+提成/补助/奖金-员工五险一金-个税及工会会费、代扣代缴)</p>
                                         </div><!-- /.box-header --><br />
                                         <!--   1+2-3-5    -->
                                         <table class="table table-bordered dataTable fontmini"  style="margin-left:-15px;">
@@ -327,7 +327,7 @@
                                                 <th class="sorting" data="op_id">实发工资</th>
                                                 <th class="sorting" data="op_id">岗位薪酬</th>
                                                 <th class="sorting" data="op_id">提成/补助/奖金</th>
-                                                <th class="sorting" data="group_id">五险一金</th>
+                                                <th class="sorting" data="group_id">员工五险一金</th>
                                                 <th class="sorting" data="group_id">个税及工会会费、代扣代缴</th>
                                             </tr>
                                             <tr>

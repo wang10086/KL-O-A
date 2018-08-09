@@ -101,9 +101,9 @@
                                         <select  class="form-control"  name="info[temp_user]" required>
                                             <option value="0" <?php if ($row && $row['temp_user'] == 0) echo ' selected'; ?>>专职</option>
                                             <option value="1" <?php if ($row && $row['temp_user'] == 1) echo ' selected'; ?>>兼职</option>
-                                            <!-- 
-                                            <option value="2" <?php if ($row && $row['temp_user'] == 2) echo ' selected'; ?>>临时</option>
-                                             -->
+
+                                            <option value="2" <?php if ($row && $row['temp_user'] == 2) echo ' selected'; ?>>劳务</option>
+
                                         </select>
                                     </div>
                                     
