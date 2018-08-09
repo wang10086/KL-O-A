@@ -60,10 +60,17 @@ class SalaryController extends BaseController {
      * 员工详情页
      */
     public function salarydetails(){
-//        $id = $_GET['id'];
+        $id = $_GET['id'];
 //        if(is_numeric($id)){
-//            $list = M()->table('oa_salary s,oa_salary_insurance i,oa_salary_attendance at,oa_account a,oa_posts p,oa_role r')->where("oa_salary.id=$id and s.account_id=a.id and a.insurance_id=i.id and s.attendance_id=at.id and a.roleid=r.id and a.postid=p.id")->find();
-//            echo M()->getLastSql();
+//           // $list = M()->table('oa_salary as s,oa_salary_insurance as i,oa_salary_attendance as at,oa_account as a,oa_posts as p,oa_role as r')->where("s.id=$id and s.account_id=a.id and s.insurance_id=i.id and s.attendance_id=at.id and a.roleid=r.id and a.postid=p.id")->find();
+////            echo M()->getLastSql();
+//                $list = M('salary')->field('*,oa_salary.id as sid')->where('sid='.$id)->field('oa_salary.id as sid,*')
+//                                                        ->join('oa_salary on oa_salary.account_id=oa_account.id')
+//                                                        ->join('oa_salary on oa_salary.insurance_id=oa_salary_insurance.id')
+//                                                        ->join('oa_salary on oa_salary.attendance_id=oa_salary_attendance.id')
+//                                                        ->join('oa_account on oa_account.roleid=oa_role.id')
+//                                                        ->join('oa_account on oa_account.postid=oa_posts.id')
+//                                                        ->find();echo M()->getLastSql();
 //            print_r($list);die;
 //        }else{
 //            $this->success('您的数据有误!请重新选择！', U('Salary/salaryindex'));

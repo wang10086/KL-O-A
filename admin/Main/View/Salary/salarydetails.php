@@ -34,7 +34,7 @@
                                         </div>
                                         
                                         <div class="form-group col-md-4 viwe">
-                                            <p>员工名字：{$user.user_name}</p>
+                                            <p>员工姓名：{$user.user_name}</p>
                                         </div>
                                         
                                         <div class="form-group col-md-4 viwe">
@@ -46,7 +46,7 @@
                                         </div>
                                         
                                         <div class="form-group col-md-4 viwe">
-                                            <p>员工职位：{$user.position}</p>
+                                            <p>员工岗位：{$user.position}</p>
                                         </div>
                                         
                                         <div class="form-group col-md-4 viwe">

@@ -1,5 +1,5 @@
 <include file="Index:header2" />
-
+<script src="__HTML__/js/public.js?v=1.0.6" type="text/javascript"></script>
             <aside class="right-side">
                 <!-- Content Header (Page header) -->
                 <section class="content-header">
@@ -31,12 +31,12 @@
                                 <table class="table table-bordered dataTable fontmini" id="tablelist" style="margin-top:10px;">
                                     <tr role="row" class="orders" >
                                         <th class="sorting" data="op_id">ID</th>
-                                        <th class="sorting" data="group_id">姓名</th>
+                                        <th class="sorting" data="group_id">员工姓名</th>
                                         <th class="sorting" data="group_id">员工编号</th>
                                         <th class="sorting" data="project">岗位薪酬标准</th>
                                         <th class="sorting" data="number">考勤扣款</th>
                                         <th class="sorting" data="number">绩效增减</th>
-                                        <th class="sorting" data="shouru">补助/奖金</th>
+                                        <th class="sorting" data="shouru">提成/补助/奖金</th>
                                         <th class="sorting" data="shouru">应发工资</th>
                                         <th class="sorting" data="maoli">税费扣款</th>
                                         <th width="50" class="taskOptions">实发工资</th>
@@ -76,7 +76,7 @@
                                         <td>&yen; {$row._taxation}</td>
                                         <td style="width:100px">&yen; {$row.post_tax_wage}</td>
                                         <td><?php echo date('Y-m',$row['salary_time']) ?></td>
-                                        <td><a href="{:U('Salary/salarydetails',array('id'=>$row['id']))}" class="btn btn-info btn-smsm"><i class="fa fa-pencil"></i>查看详情</a></td>
+                                        <td><a href="{:U('Salary/salarydetails',array('id'=>$row['sid']))}" class="btn btn-info btn-smsm"><i class="fa fa-pencil"></i>查看详情</a></td>
 
                                     </tr>
                                     </foreach>
@@ -95,6 +95,8 @@
 
 
             <div id="searchtext">
+                <script src="__HTML__/js/public.js?v=1.0.6" type="text/javascript"></script>
+
                 <form action="{:U('Salary/salaryindex')}" method="post" id="searchform">
 
                 <div class="form-group col-md-3">
@@ -109,10 +111,13 @@
                 </div>
 
                 <div class="form-group col-md-3">
-                    <input type="date" class="form-control" name="salary_time" placeholder="年月" id="nowTime">
+                    <input type="text" name="month" class="form-control monthly" placeholder="月份" style="width:100px; margin-right:10px;"/>
+<!--                    <input type="date" class="form-control" name="salary_time" placeholder="年月" id="nowTime">-->
                 </div>
 
                 </form>
             </div>
 
 <include file="Index:footer2" />
+
+
