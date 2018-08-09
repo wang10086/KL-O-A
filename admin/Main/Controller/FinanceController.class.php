@@ -406,7 +406,7 @@ class FinanceController extends BaseController {
 	
 	//@@@NODE-3###save_appcost###保存预算###
     public function save_appcost(){
-		
+
 		$db              = M('op_costacc');
 		$opid            = I('opid');
 		$costacc         = I('costacc');
@@ -457,6 +457,18 @@ class FinanceController extends BaseController {
 			$record['optype']  = 8;
 			$record['explain'] = '保存预算';
 			op_record($record);
+
+            $auth_line      = M('op_auth')->where(array('op_id'=>$opid))->find();
+            $auth           = array();
+            $auth['line']   = cookie('userid');
+            $auth['yusuan'] = cookie('userid');
+            if ($auth_line){
+                M('op_auth')->where(array('op_id'=>$opid))->save($auth);
+            }else{
+                $auth['op_id'] = $opid;
+                M('op_auth')->add($auth);
+            }
+
 			$this->success('保存成功！');   
 		}else{
 			$this->error('保存失败');	
