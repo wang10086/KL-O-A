@@ -316,11 +316,11 @@
         $('#product_hesuan').find('ins').each(function(index, element) {
             $(this).click(function(){
                 if(index==0){
-                    $('#hesuan_result').html('<input type="text" class="under-line-input" name="info[sales_price]" id="produce_price">元/项');
+                    $('#hesuan_result').html('<input type="text" class="under-line-input" name="info[sales_price]" id="produce_price" value="{$row.sales_price}" >元/项');
                 }else if (index==1){
-                    $('#hesuan_result').html('<input type="text" class="under-line-input" name="info[sales_price]" id="produce_price">元/人');
+                    $('#hesuan_result').html('<input type="text" class="under-line-input" name="info[sales_price]" id="produce_price" value="{$row.sales_price}" >元/人');
                 }else if (index==2){
-                    $('#hesuan_result').html('<input type="text" class="under-line-input" name="info[sales_price]" id="produce_price">元/批');
+                    $('#hesuan_result').html('<input type="text" class="under-line-input" name="info[sales_price]" id="produce_price" value="{$row.sales_price}" >元/批');
                 }
             })
         });
