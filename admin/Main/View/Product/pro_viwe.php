@@ -40,25 +40,30 @@
                                         <div class="form-group col-md-12 viwe">
                                             <p>适用年龄：{$row.ages}</p>
                                         </div>
-                                        
+
                                         <div class="form-group col-md-4 viwe">
-                                            <p>科学领域：{$subject_fields[$row[subject_field]]}</p>
+                                            <p>核算模式：{$reckon_mode[$row['reckon_mode']]}</p>
                                         </div>
-                                        
                                         
                                         <div class="form-group col-md-4 viwe">
                                             <p>参考成本价：<span class="red">&yen; {$row.sales_price}</span></p>
                                         </div>
                                         
                                         <div class="form-group col-md-4 viwe">
+                                            <p>模块类别：{$type[$row['type']]}</p>
+                                        </div>
+
+                                        <div class="form-group col-md-4 viwe">
+                                            <p>科学领域：{$subject_fields[$row[subject_field]]}</p>
+                                        </div>
+
+                                        <div class="form-group col-md-4 viwe">
+                                            <p>产品来源：{$from[$row['from']]}</p>
+                                        </div>
+
+                                        <div class="form-group col-md-4 viwe">
                                             <p>研发专家：{$row.input_uname}</p>
                                         </div>
-										
-                                        <!--
-                                        <div class="form-group col-md-4 viwe">
-                                            <p>发布时间：{$row.input_time|date='Y-m-d H:i:s',###}</p>
-                                        </div>
-                                        -->
 
                                         <div class="form-group col-md-4 viwe">
                                             <p>审批状态：{$row.showstatus}</p>

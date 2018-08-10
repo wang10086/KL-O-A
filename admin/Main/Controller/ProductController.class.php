@@ -532,7 +532,10 @@ class ProductController extends BaseController {
 		$this->business_depts = C('BUSINESS_DEPT');
 		$this->subject_fields = C('SUBJECT_FIELD');
 		$this->ages           = C('AGE_LIST');
-			 
+        $this->reckon_mode    = C('RECKON_MODE');
+        $this->type           = C('PRODUCT_TYPE');
+        $this->from           = C('PRODUCT_FROM');
+
 		$this->display('pro_viwe');
         
     	
