@@ -1,4 +1,4 @@
-<div class="box-body">
+<div class="box-body" style="margin-bottom: -40px;">
     <form method="post" action="<?php echo U('Op/public_save'); ?>" id="save_product">
     <input type="hidden" name="dosubmint" value="1">
     <input type="hidden" name="opid" value="{$op.op_id}">
@@ -10,14 +10,14 @@
             <tr>
                 <th width="100">模块</th>
                 <th width="80">类别</th>
-                <th width="80">科学领域</th>
+                <th width="120">科学领域</th>
                 <th width="80">来源</th>
-                <th width="80">适合年龄</th>
-                <th width="80">核算方式</th>
+                <th width="120">适合年龄</th>
+                <th width="100">核算方式</th>
                 <th width="100">参考价</th>
                 <th width="20">&nbsp;</th>
-                <th width="160">数量</th>
-                <th width="160">参考费用</th>
+                <th width="50">数量</th>
+                <th width="100">参考费用</th>
                 <th width="80">删除</th>
             </tr>
         </thead>

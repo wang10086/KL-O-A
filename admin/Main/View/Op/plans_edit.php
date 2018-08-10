@@ -642,6 +642,7 @@
             ok: function () {
                 var origin = artDialog.open.origin;
                 var product = this.iframe.contentWindow.gosubmint();
+                console.log(product);
                 var product_html = '';
                 for (var j = 0; j < product.length; j++) {
                     if (product[j].id) {
@@ -657,14 +658,14 @@
                             '<input type="hidden" name="product['+i+'][subject_field]" value="'+product[j].subject_field+'">' +
                             '<a href="javascript:;" onClick="open_product('+product[j].id+',\''+product[j].title+'\')">'+product[j].title+'</a></td>' +
                             '<td>'+product[j].type+'</td>' +
-                            '<td>'+product[j].subject_field+'</td>' +
+                            '<td>'+product[j].subject_fields+'</td>' +
                             '<td>'+product[j].from+'</td>' +
                             '<td>'+product[j].age+'</td>' +
                             '<td>'+product[j].reckon_mode+'</td>' +
                             '<td><input type="text" name="cost['+i+'][sales_price]" placeholder="价格" value="'+product[j].sales_price+'" class="form-control min_input cost" /></td>' +
                             '<td><span>X</span></td>' +
                             '<td><input type="text" name="cost['+i+'][amount]" placeholder="数量" value="1" class="form-control min_input amount" /></td>' +
-                            '<td class="total">&yen;'+product[j].fee*1+'</td>' +
+                            '<td class="total">&yen;'+product[j].sales_price*1+'</td>' +
                             '<td><a href="javascript:;" class="btn btn-danger btn-flat" onclick="delbox(\'product_'+i+'\')">删除</a></td></tr>';
                     };
                 }

@@ -8,6 +8,12 @@
 					var obj = {};
 					obj.id             = $(element).find("input[name=id]").val();
 					obj.title          = $(element).find("input[name=title]").val();
+					obj.age            = $(element).find("input[name=age]").val();
+					obj.type           = $(element).find("input[name=type]").val();
+					obj.from           = $(element).find("input[name=from]").val();
+					obj.subject_fields = $(element).find("input[name=subject_fields]").val();
+					obj.sales_price    = $(element).find("input[name=sales_price]").val();
+					obj.reckon_mode    = $(element).find("input[name=reckon_mode]").val();
 					rs.push(obj);
 				}
 			});
@@ -53,12 +59,12 @@
             <table class="table table-bordered dataTable fontmini" id="tablelist" style="margin-top:10px;">
                 <tr role="row" class="orders" >
                 	<th width="50" style="text-align:center">选择</th>
-                    <th class="sorting" data="title">线路名称</th>
-                    <th class="sorting" data="dest">目的地</th>
-                    <th class="sorting" data="days">天数</th>
-                    <th class="sorting" data="sales_price">参考价格</th>
-                    <!-- <th class="sorting" data="peer_price">同行价</th> -->
-                    <th class="sorting" data="input_uname">发布者</th>
+                    <th class="sorting" data="title">模块名称</th>
+                    <th class="sorting" data="type">类别</th>
+                    <th class="sorting" data="subject_field">科学领域</th>
+                    <th class="sorting" data="from">来源</th>
+                    <th class="sorting" data="age">适用年龄</th>
+                    <th class="sorting" data="sales_price">参考价</th>
                 </tr>
                 <foreach name="lists" item="row">
                     <tr class="productlist">
@@ -66,18 +72,19 @@
                         <input type="checkbox"  name="product" value="{$row.id}">
                         <input type="hidden" name="id" value="{$row.id}">
                         <input type="hidden" name="title" value="{$row.title}">
-                        <input type="hidden" name="business" value="{$business_depts[$row[business_dept]]}">
-                        <input type="hidden" name="subject" value="{$subject_fields[$row[subject_field]]}">
-                        <input type="hidden" name="age" value="{$ages[$row[age]]}">
+                        <input type="hidden" name="type" value="{$product_type[$row[type]]}">
+                        <input type="hidden" name="from" value="{$product_from[$row[from]]}">
+                        <input type="hidden" name="subject_fields" value="{$subject_fields[$row[subject_field]]}">
+                        <input type="hidden" name="age" value="{$row['agelist']}">
+                        <input type="hidden" name="reckon_mode" value="{$row['reckon_modelist']}">
                         <input type="hidden" name="sales_price" value="{$row.sales_price}">
-                        <input type="hidden" name="peer_price" value="{$row.peer_price}">
                         </td>
                         <td><a href="{:U('Product/view_line', array('id'=>$row['id']))}" target="_blank">{$row.title}</a></td>
-                        <td>{$row.dest}</td>
-                        <td>{$row.days}</td>
-                        <td>{$row.sales_price}</td>
-                        <!-- <td>{$row.peer_price}</td> -->
-                        <td>{$row.input_uname}</td>
+                        <td>{$product_type[$row[type]]}</td>
+                        <td>{$subject_fields[$row[subject_field]]}</td>
+                        <td>{$product_from[$row[from]]}</td>
+                        <td>{$row['agelist']}</td>
+                        <td>{$row['sales_price']}</td>
                     </tr>
                 </foreach>										
             </table>

@@ -1257,8 +1257,7 @@ class OpController extends BaseController {
 			$this->display('assign_res');
 		}
 	}
-	
-	
+
 	//@@@NODE-3###assign_res###指派人员跟进导游辅导员调度###
     public function assign_guide(){
 		$opid       = I('opid');
@@ -1306,8 +1305,7 @@ class OpController extends BaseController {
 			$this->display('assign_guide');
 		}
 	}
-	
-	
+
 	//@@@NODE-3###assign_res###指派人员跟进导游辅导员调度###
     public function assign_material(){
 		$opid       = I('opid');
@@ -1355,8 +1353,7 @@ class OpController extends BaseController {
 			$this->display('assign_material');
 		}
 	}
-	
-	
+
 	//@@@NODE-3###assign_price###指派人员制定价格###
     public function assign_price(){
 		$opid       = I('opid');
@@ -1403,9 +1400,7 @@ class OpController extends BaseController {
 			$this->display('assign_price');
 		}
 	}
-	
-	
-	
+
 	//@@@NODE-3###public_save_price###保存项目价格###
     public function public_save_price(){
 		
@@ -1448,13 +1443,7 @@ class OpController extends BaseController {
 			
 		echo $num;
 	}
-	
-	
-	
-	
-	
-	
-	
+
 	// @@@NODE-3###public_save_line###保存线路###
     public function public_save_line(){
 			
@@ -1543,8 +1532,7 @@ class OpController extends BaseController {
 		
 		echo $num;
 	}
-	
-	
+
 	// @@@NODE-3###public_ajax_line###获取线路日程###
 	public function public_ajax_line(){
 		$db = M('product_line_days');
@@ -1557,9 +1545,7 @@ class OpController extends BaseController {
 		}
 		
 	}
-	
-	
-	
+
 	// @@@NODE-3###public_ajax_material###获取模块物资信息###
 	public function public_ajax_material(){
 		/*
@@ -1585,8 +1571,7 @@ class OpController extends BaseController {
 		}
 		
 	}
-	
-	
+
 	// @@@NODE-3###select_product###选择产品模板###
 	public function select_product(){
 
@@ -1637,10 +1622,33 @@ class OpController extends BaseController {
         $this->pages = $pagecount>25 ? $page->show():'';
         $lists       = $db->where($where)->limit($page->firstRow . ',' . $page->listRows)->order($this->orders('input_time'))->select();
 
+        $ageval      = C('AGE_LIST');
+        $reckon_mode = C('RECKON_MODE');
+        foreach ($lists as $k=>$v){
+            $agelist = array();
+            $ages    = explode(',',$v['age']);
+
+            foreach($ageval as $key=>$value){
+                if (in_array($key,$ages)){
+                    $agelist[] = $value;
+                }
+            }
+            $lists[$k]['agelist'] = implode(',',$agelist);
+            foreach ($reckon_mode as $key=>$value){
+                if ($v['reckon_mode']==$key){
+                    $lists[$k]['reckon_modelist'] = $value;
+                }else{
+                    $lists[$k]['reckon_modelist'] = "<span class='red'>未定</span>";
+                }
+            }
+            if (!$v['sales_price']) $lists[$k]['sales_price'] = '0.00';
+        }
+
         $this->lists          = $lists;
         $this->product_type   = C('PRODUCT_TYPE');
         $this->subject_fields = C('SUBJECT_FIELD');
         $this->product_from   = C('PRODUCT_FROM');
+        $this->ages           = C('AGE_LIST');
         $this->kindlist       = M('project_kind')->select();
 
         $this->display('select_product_module');
@@ -1661,7 +1669,7 @@ class OpController extends BaseController {
 		$where['1'] = priv_where(P::REQ_TYPE_GUIDE_RES_U);
 		if($kind) $where['kind'] = $kind;
 		if($key)  $where['name'] = array('like','%'.$key.'%');
-		if($sex)  $where['sex'] = $sex;
+		if($sex)  $where['sex']  = $sex;
 		
 		//分页
 		$pagecount = M('guide')->where($where)->count();
@@ -2031,6 +2039,7 @@ class OpController extends BaseController {
 			M('op_settlement')->where(array('op_id'=>$opid))->delete();
 			M('op_supplier')->where(array('op_id'=>$opid))->delete();
 			M('order')->where(array('op_id'=>$opid))->delete();
+            M('guide_pay')->where(array('op_id'=>$opid))->delete();
 			
 			//删除主项目
 			M('op')->delete($id);
