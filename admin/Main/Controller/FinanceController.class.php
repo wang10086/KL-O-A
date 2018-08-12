@@ -167,6 +167,8 @@ class FinanceController extends BaseController {
 		$this->subject_fields	= C('SUBJECT_FIELD');
 		$this->ages				= C('AGE_LIST');
 		$this->kinds			= M('project_kind')->getField('id,name', true);
+        $this->productList      = M('op_costacc')->where(array('op_id'=>$opid,'type'=>5,'status'=>0))->select();
+
 		$this->display('costacc');
 	}
 	

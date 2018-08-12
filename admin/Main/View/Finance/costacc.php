@@ -70,11 +70,11 @@
                                 </div><!-- /.box-body -->
                             </div><!-- /.box -->
                             
-                            <php> if($budget['audit']==0 && $op['line_id']){ </php>
+                            <?php if($budget['audit']==0 && ($op['line_id'] || $productList)){ ?>
                             	<include file="costacc_edit" />
-                            <php> }else{ </php>
+                            <?php }else{ ?>
                             	<include file="costacc_read" />
-                            <php> } </php>
+                            <?php } ?>
                         	
                             
                         </div><!--/.col (right) -->

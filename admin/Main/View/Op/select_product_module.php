@@ -23,10 +23,10 @@
        
         <section class="content">
         	<div id="selectbox">
-            <form action="{:U('Op/select_product_module')}" method="get" id="feedbackform">
+            <form action="{:U('Op/select_module')}" method="get" id="feedbackform">
             <input type="hidden" name="m" value="Main">
             <input type="hidden" name="c" value="Op">
-            <input type="hidden" name="a" value="select_product_module">
+            <input type="hidden" name="a" value="select_module">
             <input type="hidden" name="opid" value="{$opid}">
             
             <input type="text" class="form-control" name="key"  placeholder="关键字">

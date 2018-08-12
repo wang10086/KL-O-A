@@ -38,7 +38,6 @@
                                 <if condition="rolemenu(array('Op/evaluate'))"><a href="{:U('Op/evaluate',array('opid'=>$op['op_id']))}" class="btn btn-default">项目评价</a></if>
                             </div>
 
-                            行程方案及资源需求
                             <div class="box box-warning" style="margin-top:15px;">
                                 <div class="box-header">
                                     <h3 class="box-title">
@@ -125,8 +124,10 @@
                                    </div>
                                    <div class="box-body">
                                        <?php if ($op['kind']==56){ ?>
-                                           <?php if( C('RBAC_SUPER_ADMIN')==cookie('username')){ ?>
+                                           <?php if(rolemenu(array('Op/select_module') && (!$yusuan || $settlement['audit']!=1)) && ($op['create_user']==cookie('userid') ||C('RBAC_SUPER_ADMIN')==cookie('username') ||cookie('roleid')==10)){ ?>
                                                 <include file="op_product_edit" />
+                                           <?php }else{ ?>
+                                               <include file="op_product_read" />
                                            <?php } ?>
                                        <?php }else{ ?>
                                            <?php if(rolemenu(array('Op/public_save_line')) && $settlement['audit']!=1  && ($opauth['line']==cookie('userid')|| C('RBAC_SUPER_ADMIN')==cookie('username') ||rolemenu(array('Op/assign_line')))){ ?>
@@ -632,7 +633,7 @@
 
     //选择校园科技节产品
     function selectproduct() {
-        art.dialog.open("<?php echo U('Op/select_product_module',array('opid'=>$opid)); ?>",{
+        art.dialog.open("<?php echo U('Op/select_module',array('opid'=>$opid)); ?>",{
             lock:true,
             title: '选择产品模块',
             width:1000,
@@ -642,29 +643,23 @@
             ok: function () {
                 var origin = artDialog.open.origin;
                 var product = this.iframe.contentWindow.gosubmint();
-                console.log(product);
                 var product_html = '';
                 for (var j = 0; j < product.length; j++) {
                     if (product[j].id) {
                         var i = parseInt(Math.random()*100000)+j;
-                        var cost = '<input type="hidden" name="cost['+i+'][item]" value="'+product[j].kind+'">' +
-                            '<input type="hidden" name="cost['+i+'][cost_type]" value="2">' +
-                            '<input type="hidden" name="cost['+i+'][remark]" value="'+product[j].name+'">' +
-                            '<input type="hidden" name="cost['+i+'][relevant_id]" value="'+product[j].id+'">';
+                        var costacc = '<input type="hidden" name="costacc['+i+'][type]" value="5">' +
+                            '<input type="hidden" name="costacc['+i+'][title]" value="'+product[j].title+'">' +
+                            '<input type="hidden" name="costacc['+i+'][product_id]" value="'+product[j].id+'">';
                         product_html += '<tr class="expense" id="product_'+i+'">' +
-                            '<td>'+cost+'<input type="hidden" name="product['+i+'][product_id]" value="'+product[j].id+'">' +
-                            '<input type="hidden" name="product['+i+'][name]" value="'+product[j].name+'">' +
-                            '<input type="hidden" name="product['+i+'][kind]" value="'+product[j].kind+'">' +
-                            '<input type="hidden" name="product['+i+'][subject_field]" value="'+product[j].subject_field+'">' +
-                            '<a href="javascript:;" onClick="open_product('+product[j].id+',\''+product[j].title+'\')">'+product[j].title+'</a></td>' +
+                            '<td>'+costacc+ '<a href="javascript:;" onClick="open_product('+product[j].id+',\''+product[j].title+'\')">'+product[j].title+'</a></td>' +
                             '<td>'+product[j].type+'</td>' +
                             '<td>'+product[j].subject_fields+'</td>' +
                             '<td>'+product[j].from+'</td>' +
                             '<td>'+product[j].age+'</td>' +
                             '<td>'+product[j].reckon_mode+'</td>' +
-                            '<td><input type="text" name="cost['+i+'][sales_price]" placeholder="价格" value="'+product[j].sales_price+'" class="form-control min_input cost" /></td>' +
+                            '<td><input type="text" name="costacc['+i+'][unitcost]" placeholder="价格" value="'+product[j].sales_price+'" class="form-control min_input cost" readonly /></td>' +
                             '<td><span>X</span></td>' +
-                            '<td><input type="text" name="cost['+i+'][amount]" placeholder="数量" value="1" class="form-control min_input amount" /></td>' +
+                            '<td><input type="text" name="costacc['+i+'][amount]" placeholder="数量" value="1" class="form-control min_input amount" /></td>' +
                             '<td class="total">&yen;'+product[j].sales_price*1+'</td>' +
                             '<td><a href="javascript:;" class="btn btn-danger btn-flat" onclick="delbox(\'product_'+i+'\')">删除</a></td></tr>';
                     };

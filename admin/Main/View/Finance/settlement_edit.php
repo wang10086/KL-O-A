@@ -104,6 +104,7 @@
                     <option value="2">专家辅导员</option>
                     <option value="3">合格供方</option>
                     <option value="4">其他</option>
+                    <option value="5">产品模块</option>
                 </select>
                 <input type="text" class="form-control longinput" readonly name="costacc[9999{$k}][remark]" value="已归还，{$v.m_stages} 期">
                 <a href="javascript:;" class="btn btn-danger btn-flat" onclick="delbox('costacc_id_ab_{$k}')">删除</a>
@@ -123,6 +124,7 @@
                     <option value="2" <?php if($v['cost_type']==2){ echo 'selected';} ?> >专家辅导员</option>
                     <option value="3" <?php if($v['cost_type']==3){ echo 'selected';} ?> >合格供方</option>
                     <option value="4" <?php if($v['cost_type']==4){ echo 'selected';} ?> >其他</option>
+                    <option value="5" <?php if($v['cost_type']==5){ echo 'selected';} ?> >产品模块</option>
                 </select>
                 <input type="text" class="form-control longinput" name="costacc[7777{$k}][remark]" value="{$v.beizhu}">
                 <a href="javascript:;" class="btn btn-danger btn-flat" onclick="delbox('costacc_id_ac_{$k}')">删除</a>
@@ -140,6 +142,7 @@
                 <option value="2" <?php if($v['cost_type']==2){ echo 'selected';} ?> >专家辅导员</option>
                 <option value="3" <?php if($v['cost_type']==3){ echo 'selected';} ?> >合格供方</option>
                 <option value="4" <?php if($v['cost_type']==4){ echo 'selected';} ?> >其他</option>
+                <option value="5" <?php if($v['cost_type']==5){ echo 'selected';} ?> >产品模块</option>
             </select>
             <input type="text" class="form-control longinput" name="costacc[7777{$k}][remark]" value="{$v.beizhu}">
             <a href="javascript:;" class="btn btn-danger btn-flat" onclick="delbox('costacc_id_a_{$k}')">删除</a>
@@ -163,6 +166,7 @@
                 <option value="2">专家辅导员</option>
                 <option value="3">合格供方</option>
                 <option value="4" selected>其他</option>
+                <option value="5">产品模块</option>
             </select>
             <input type="text" class="form-control longinput" name="costacc[4444{$k}][remark]" value="{$v.remark}">
             <a href="javascript:;" class="btn btn-danger btn-flat" onclick="delbox('costacc_id_x_{$k}')">删除</a>

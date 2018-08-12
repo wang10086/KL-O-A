@@ -393,7 +393,8 @@ class OpController extends BaseController {
 		$wuzi       = M()->table('__OP_MATERIAL__ as m')->field('c.*,m.*')->join('__OP_COST__ as c on m.id=c.link_id')->where(array('m.op_id'=>$opid,'c.op_id'=>$opid,'c.cost_type'=>4))->order('m.id')->select();
 		$pretium    = M('op_pretium')->where(array('op_id'=>$opid))->order('id')->select();
 		$costacc    = M('op_costacc')->where(array('op_id'=>$opid))->order('id')->select();
-		
+		$yusuan     = M('op_costacc')->where(array('op_id'=>$opid,'status'=>1))->order('id')->select();
+
 		$opauth     = M('op_auth')->where(array('op_id'=>$opid))->find();
 		$record     = M('op_record')->where(array('op_id'=>$opid))->order('id DESC')->select();
 		$budget     = M('op_budget')->where(array('op_id'=>$opid))->find();
@@ -537,8 +538,21 @@ class OpController extends BaseController {
         $this->les_fields     = $les_field;
         $this->act_fields     = $act_field;
         $this->guide          = $guide;
+        $product_need         = M()->table('__OP_COSTACC__ as c')->field('c.*,p.from,p.subject_field,p.type as ptype,p.age,p.reckon_mode')->join('left join __PRODUCT__ as p on c.product_id=p.id')->where(array('c.op_id'=>$opid,'c.type'=>5,'c.status'=>0))->select();
+        foreach ($product_need as $k=>$v){
+            $ages             = explode(',',$v['age']);
+            $age_list         = array();
+            foreach ($this->ages as $key=>$value){
+                if (in_array($key,$ages)){
+                    $age_list[]= $value;
+                }
+            }
+            $product_need[$k]['age_list'] = implode(',',$age_list);
+        }
+        $this->product_need   = $product_need;
+        $this->yusuan         = $yusuan;
 
-        //$this->job_name      = array_filter(array_column($job_names,'job_money','job_name'));
+            //$this->job_name      = array_filter(array_column($job_names,'job_money','job_name'));
         $this->job_name       = array_column($job_names,'job_money','job_name');
         $this->xuhao          = 1;
         $this->huikuan_status = M('contract_pay')->where(array('op_id'=>$opid))->getField('status');
@@ -613,8 +627,7 @@ class OpController extends BaseController {
 			$days       = I('days');
 			$resid      = I('resid');
 			$num        = 0;
-			
-			
+
 			//保存专家辅导员信息
 			if($opid && $savetype==2 ){
 				$delid = array();
@@ -979,6 +992,44 @@ class OpController extends BaseController {
             }
 
 
+            //保存项目跟进校园科技节产品模块需求
+            if($opid && $savetype==14 ){
+                $costacc    = I('costacc');
+                $resid      = I('resid');
+
+                M('op_product')->where(array('op_id'=>$opid))->delete();
+                foreach ($costacc as $k=>$v){
+                    $v['op_id']     = $opid;
+                    $v['total']     = floatval($v['unitcost'])*intval($v['amount']);
+                    $v['status']    = 0;    //核算
+
+                    if($resid && $resid[$k]['id']){
+                        $edits      = M('op_costacc')->data($v)->where(array('id'=>$resid[$k]['id']))->save();
+                        $delid[]    = $resid[$k]['id'];
+                        $num++;
+                    }else{
+                        $savein     = M('op_costacc')->add($v);
+                        $delid[]    = $savein;
+                        if($savein) $num++;
+                    }
+                    $del            = M('op_costacc')->where(array('op_id'=>$opid,'type'=>5,'status'=>0,'id'=>array('not in',$delid)))->delete();
+                    if ($del) $num++;
+
+                    $data           = array();
+                    $data['op_id']  = $opid;
+                    $data['product_id'] = $v['product_id'];
+                    $data['amount'] = $v['amount'];
+                    $res = M('op_product')->add($data);
+                    if ($res) $num++;
+                }
+                if ($num){
+                    $record = array();
+                    $record['op_id']   = $opid;
+                    $record['optype']  = 4;
+                    $record['explain'] = '填写项目模块信息';
+                    op_record($record);
+                }
+            }
 
             echo $num;
         }
@@ -1599,7 +1650,7 @@ class OpController extends BaseController {
 	}
 
     // @@@NODE-3###select_product###选择产品模块###
-    public function select_product_module(){
+    public function select_module(){
 
         $opid         = I('opid');
         $key          = I('key');
