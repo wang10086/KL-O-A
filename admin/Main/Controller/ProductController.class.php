@@ -190,6 +190,9 @@ class ProductController extends BaseController {
             $business_dept       = I('business_dept');
             $this->row           = M('product')->find($id);
             $this->business_dept = $this->row['business_dept']?$this->row['business_dept']:$business_dept;
+            if ($business_dept != $this->business_dept){
+                $this->pro_kind  = 1;
+            }
 
             if($this->row){
                 if ($this->row['att_id']) {
@@ -242,6 +245,7 @@ class ProductController extends BaseController {
             $this->product_type   = C('PRODUCT_TYPE');
             $this->subject_fields = C('SUBJECT_FIELD');
             $this->projects       = M('project')->where(array('status'=>1))->select();
+            $this->kinds          = M('project_kind')->field('id,name')->where(array('pid'=>array('neq',0)))->select();
 
             $this->display('add');
         }

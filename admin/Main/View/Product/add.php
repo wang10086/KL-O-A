@@ -80,8 +80,17 @@
                                         </foreach>
                                         </div>
                                     </div>
-                                    
-                                    
+
+                                    <?php if ($pro_kind){ ?>
+                                        <div class="form-group col-md-12">
+                                        <label>项目类型</label>
+                                            <div>
+                                                <foreach name="kinds" item="v">
+                                                    <span class="ml20" style="display: inline-block;line-height: 30px;"><input type="radio" name="kind" value="{$v['id']}"> &nbsp;{$v['name']}</span>
+                                                </foreach>
+                                            </div>
+                                        </div>
+                                    <?php } ?>
                                     <!--<div class="form-group col-md-12">
                                         <label><a href="javascript:;" onClick="selectkinds()">选择适用项目类型</a> <span style="color:#999999">(选择后您可以点击删除)</span></label>
                                         <div id="pro_kinds_text">
