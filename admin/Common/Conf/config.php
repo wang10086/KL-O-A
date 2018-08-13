@@ -183,6 +183,9 @@ $config = array(
     //产品核算模式
     'RECKON_MODE'   => array('1'=>'按项目核算','2'=>'按人数核算 ','3'=>'按批次核算'),
 
+    //需要做产品模块化的项(56=>校园科技节)
+    'ARR_PRODUCT'   => array(56),
+
 	//记录详情
 	'REC_TYPE_INFO' => array(
 		'1'=>array(

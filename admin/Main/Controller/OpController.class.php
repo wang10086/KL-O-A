@@ -552,14 +552,15 @@ class OpController extends BaseController {
         $this->product_need   = $product_need;
         $this->yusuan         = $yusuan;
 
-            //$this->job_name      = array_filter(array_column($job_names,'job_money','job_name'));
+        //$this->job_name      = array_filter(array_column($job_names,'job_money','job_name'));
         $this->job_name       = array_column($job_names,'job_money','job_name');
         $this->xuhao          = 1;
         $this->huikuan_status = M('contract_pay')->where(array('op_id'=>$opid))->getField('status');
         $this->guide_kind     = M('guidekind')->getField('id,name',true);
-        $this->guide_price    = M('op_guide_price')->where(array('op_id'=>$opid))->select();
         $this->guide_confirm  = M()->table('__OP_GUIDE_CONFIRM__ as c')->field('c.id as cid,c.*,p.id as pid,p.*')->join('left join __OP_GUIDE_PRICE__ as p on p.confirm_id = c.id')->where(array('c.op_id'=>$opid,'p.op_id'=>$opid))->select();
         $this->apply_to       = C('APPLY_TO');
+
+        $this->guide_price    = M('op_guide_price')->where(array('op_id'=>$opid))->select();
         if ($this->guide_price) {
             $this->rad = 1;
         }else{
@@ -898,7 +899,9 @@ class OpController extends BaseController {
 
             //保存辅导员/教师,专家需求
             if($opid && $savetype==12 ){
-                $data = I('data');
+                $data   = I('data');
+                $op     = $db->where(array('op_id'=>$opid))->find();
+
                 $savedel = $op_guide_price_db->where(array('op_id'=>$opid,'confirm_id'=>0))->delete();
                 $upd_tcs = array();
                 $upd_tcs['tcs_stu'] = 0;
@@ -909,6 +912,26 @@ class OpController extends BaseController {
                     $savein     = $op_guide_price_db->add($v);
                     if($savein) $num++;
                 }
+
+                //产品模块化,直接保存到核算costacc表(56=>校园科技节)
+                $arr_product    = C('ARR_PRODUCT');
+                if (in_array($op['kind'],$arr_product)){
+                    M('op_costacc')->where(array('op_id'=>$opid,'type'=>2,'status'=>0))->delete();
+                    foreach ($data as $k=>$v){
+                        $data   = array();
+                        $data['op_id']  = $opid;
+                        $data['title']  = '注册辅导员/教师';
+                        $data['unitcost']=$v['price'];
+                        $data['amount'] = $v['num'];
+                        $data['total']  = $v['total'];
+                        $data['remark'] = $v['remark'];
+                        $data['type']   = 2;    //专家辅导员
+                        $data['status'] = 0;    //核算
+                        $savein = M('op_costacc')->add($data);
+                        if ($savein) $num++;
+                    }
+                }
+
                 /*//修改专家辅导员状态
                 $group_id = $db->where(array('op_id'=>$opid))->getField('group_id');
                 if ($group_id){
@@ -1684,14 +1707,8 @@ class OpController extends BaseController {
                     $agelist[] = $value;
                 }
             }
-            $lists[$k]['agelist'] = implode(',',$agelist);
-            foreach ($reckon_mode as $key=>$value){
-                if ($v['reckon_mode']==$key){
-                    $lists[$k]['reckon_modelist'] = $value;
-                }else{
-                    $lists[$k]['reckon_modelist'] = "<span class='red'>未定</span>";
-                }
-            }
+            $lists[$k]['agelist']           = implode(',',$agelist);
+            $lists[$k]['reckon_modelist']   = $reckon_mode[$v['reckon_mode']]?$reckon_mode[$v['reckon_mode']]:"<span class='red'>未定</span>";
             if (!$v['sales_price']) $lists[$k]['sales_price'] = '0.00';
         }
 
