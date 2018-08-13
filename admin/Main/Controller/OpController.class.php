@@ -559,6 +559,7 @@ class OpController extends BaseController {
         $this->guide_kind     = M('guidekind')->getField('id,name',true);
         $this->guide_confirm  = M()->table('__OP_GUIDE_CONFIRM__ as c')->field('c.id as cid,c.*,p.id as pid,p.*')->join('left join __OP_GUIDE_PRICE__ as p on p.confirm_id = c.id')->where(array('c.op_id'=>$opid,'p.op_id'=>$opid))->select();
         $this->apply_to       = C('APPLY_TO');
+        $this->arr_product    = C('ARR_PRODUCT');
 
         $this->guide_price    = M('op_guide_price')->where(array('op_id'=>$opid))->select();
         if ($this->guide_price) {

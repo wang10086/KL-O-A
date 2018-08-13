@@ -159,7 +159,6 @@ class ProductController extends BaseController {
                 $info['input_time']  = time();
 
                 $isadd = M('product')->add($info);
-
                 $this->request_audit(P::REQ_TYPE_PRODUCT_NEW, $isadd);
 
                 //保存物资信息

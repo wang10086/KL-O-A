@@ -123,7 +123,7 @@
                                        </h3>
                                    </div>
                                    <div class="box-body">
-                                       <?php if ($op['kind']==56){ ?>
+                                       <?php if (in_array($op['kind'],$arr_product)){ ?>
                                            <?php if(rolemenu(array('Op/select_module') && (!$yusuan || $settlement['audit']!=1)) && ($op['create_user']==cookie('userid') ||C('RBAC_SUPER_ADMIN')==cookie('username') ||cookie('roleid')==10)){ ?>
                                                 <include file="op_product_edit" />
                                            <?php }else{ ?>
@@ -140,7 +140,6 @@
                                                <include file="op_line" />
                                            <?php  } ?>
                                        <?php } ?>
-
                                    </div>
 
                                    <div class="box-body">
