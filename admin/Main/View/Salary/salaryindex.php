@@ -111,7 +111,7 @@
                 </div>
 
                 <div class="form-group col-md-3">
-                    <input type="text" name="month" class="form-control monthly" placeholder="月份" style="width:100px; margin-right:10px;"/>
+                    <input type="date" name="month" class="form-control monthly" placeholder="月份" style="width:100px; margin-right:10px;"/>
 <!--                    <input type="date" class="form-control" name="salary_time" placeholder="年月" id="nowTime">-->
                 </div>
 

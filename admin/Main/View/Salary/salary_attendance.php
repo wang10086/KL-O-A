@@ -22,7 +22,7 @@
                                 <div class="box-header">
                                     <h3 class="box-title">考勤列表</h3>
                                     <div class="box-tools pull-right">
-                                    	 <a href="javascript:;" class="btn btn-info btn-sm" onclick="javascript:opensearch('searchtext',600,160);"><i class="fa fa-search"></i> 搜索</a>
+                                        <a href="javascript:;" class="btn btn-info btn-sm" onclick="javascript:opensearch('searchtext',700,160);"><i class="fa fa-search"></i> 搜索</a>
                                     </div>
                                 </div><!-- /.box-header -->
                                 <div class="box-body">
@@ -51,10 +51,10 @@
                                             <td>1.5</td>
                                             <td>2.5</td>
                                             <td>330.00</td>
-                                            <td><a href="">编辑</a></td>
+                                            <td><a href="{:U('Salary/salary_edtior',array('tid'=>1,'sid'=>1))}">编辑</a></td>
                                         </tr>
                                         <foreach name="list" item="row">
-                                        <tr>
+                                        <tr id="salary_edtior">
                                             <td>{$row.sid}</td>
                                             <td>{$row.nickname}</td>
                                             <td>{$row.employee_member}</td>
@@ -65,7 +65,8 @@
                                             <td>{$row.sick_leave}</td>
                                             <td>{$row.absenteeism}</td>
                                             <td>{$row.withdrawing}</td>
-                                            <td><a id="attendance_edito" class="($row.sid)">编辑</a></td>
+                                        <td><a href="{:U('Salary/salary_edtior',array('tid'=>$row['tid'],'sid'=>$row['sid']))}">编辑</a></td>
+
                                         </tr>
                                         </foreach>		
                                         
@@ -82,40 +83,32 @@
 
                 </section><!-- /.content -->
             </aside><!-- /.right-side -->
-
-        <include file="Index:footer2" />
-        
         <div id="searchtext">
-            <form action="" method="get" id="searchform">
-            <input type="hidden" name="m" value="Main">
-            <input type="hidden" name="c" value="ScienceRes">
-            <input type="hidden" name="a" value="res">
-            <div class="form-group col-md-4">
-                <input type="text" class="form-control" name="key" placeholder="关键字">
-            </div>
-            
-           
-            
-            <div class="form-group col-md-4">
-                <select class="form-control" name="type">
-                    <option value="0">资源类型</option>
-                    <foreach name="reskind" key="k" item="v">
-                    <option value="{$k}">{$v}</option>
-                    </foreach>
-                </select>
-            </div>
-            
-            <div class="form-group col-md-4">
-                    <select class="form-control" name="pro">
-                        <option value="0">适用业务类型</option>
-                        <foreach name="kinds" key="k" item="v">
-                        <option value="{$k}">{$v}</option>
-                        </foreach>
-                    </select>
+            <script src="__HTML__/js/public.js?v=1.0.6" type="text/javascript"></script>
+
+            <form action="{:U('Salary/salary_attendance')}" method="post" id="searchform">
+
+                <div class="form-group col-md-3">
+                    <input type="text" class="form-control" name="id" placeholder="ID编号">
                 </div>
-            
+                <div class="form-group col-md-3">
+                    <input type="text" class="form-control" name="employee_member" placeholder="员工编号">
+                </div>
+
+                <div class="form-group col-md-3">
+                    <input type="text" class="form-control" name="nickname" placeholder="员工姓名">
+                </div>
+
+                <div class="form-group col-md-3">
+                    <input type="date" name="grant_time" class="form-control monthly" placeholder="月份" style="width:100px; margin-right:10px;"/>
+                    <!--                    <input type="date" class="form-control" name="salary_time" placeholder="年月" id="nowTime">-->
+                </div>
+
             </form>
         </div>
+
+        <include file="Index:footer2" />
+
 
         <script type="text/javascript">
                 function openform(obj){
@@ -136,25 +129,5 @@
                     });	
                 }
 
-
-
-                 $('#attendance_edito').click(function(){
-
-                        var html = "<div style='color:red'>这是测试的弹窗</div>";
-                        var html .="";
-//                     $(this).dialog(html);
-                        var button ="<input type='button' value='确定' /><input type='button' value='取消' />";
-                        var win = new Window({
-
-                            width : 400, //宽度
-                            height : 300, //高度
-                            title : '测试弹窗', //标题
-                            content : html, //内容
-                            isMask : false, //是否遮罩
-                            buttons : button, //按钮
-                            isDrag:true, //是否移动
-
-                    })
-                });
 
         </script>
