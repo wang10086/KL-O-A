@@ -245,4 +245,42 @@ class AjaxController extends Controller {
 
         $this->ajaxReturn($lists,'JSON');
     }
+    public function department(){//职位 判断
+        $name = $_POST['name'];
+        $post = $_POST['post'];
+        $substrr = mb_substr($post,-5,4,"UTF-8");
+        $substr = mb_substr($post,-4,4,"UTF-8");
+        $subst = mb_substr($post,-3,4,"UTF-8");
+        $subs = mb_substr($post,-2,4,"UTF-8");
+        for($i=1;$i<100000;$i++){
+
+            if($substrr == "总经理助理"){
+                $count = $i+3;
+            }elseif($substrr !=="总经理助理" && $substr == "副总经理"){
+                $count = $i+1;
+            }elseif($substrr !=="总经理助理" && $substr !== "副总经理" && $subst =="总经理"){
+                $count = $i;
+            }elseif($substrr !=="总经理助理" && $substr !== "副总经理" && $subst !=="总经理" && $subst =="副经理"){
+                $count = $i+1;
+            }elseif($substrr !=="总经理助理" && $substr !== "副总经理" && $subst !=="总经理" && $subst !== "副经理" && $subs == "经理"){
+                if($name =='H'){//资源管理部 and 安全品控部  判断
+                    $data = array('result'=>'0','msg' =>"此职位暂时空置,请联系管理员!");
+                    $this->ajaxReturn($data);
+//                    return json_encode($date);die;
+                }
+                $count = $i;
+            }elseif($substrr !=="总经理助理" && $substr !== "副总经理" && $subst !=="总经理" && $subst !== "副经理" && $subs !== "经理" && $subs == "主管"){
+                $count = $i+3;
+            }else{
+                $count = $i+4;
+            }
+            $new_member=$name.sprintf("%03d",$count);
+            $member = M('account')->where("employee_member='$new_member'")->find();
+            if(!$member){
+                $data = array('result'=>'1','msg' =>$new_member);
+                //return json_encode($data);die;
+                return $this->ajaxReturn($data);
+            }
+        }
+    }
 }

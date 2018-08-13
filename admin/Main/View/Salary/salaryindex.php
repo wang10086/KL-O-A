@@ -75,7 +75,7 @@
                                         <td>&yen; {$row.post_tax_wage}</td>
                                         <td>&yen; {$row._taxation}</td>
                                         <td style="width:100px">&yen; {$row.post_tax_wage}</td>
-                                        <td><?php echo date('Y-m',$row['salary_time']) ?></td>
+                                        <td><?php echo date('Y-m',$row['grant_time']) ?></td>
                                         <td><a href="{:U('Salary/salarydetails',array('id'=>$row['sid']))}" class="btn btn-info btn-smsm"><i class="fa fa-pencil"></i>查看详情</a></td>
 
                                     </tr>

@@ -58,7 +58,11 @@
                                         <input class="form-control"  type="password" name="password_2" value="" id="password_2"/>
                                     </div>
                                     <?php } ?>
-                                    
+                                    <div class="form-group col-md-3">
+                                        <label>员工编号</label>
+                                        <input class="form-control employee_member"  type="text" name="info[employee_member]" />
+                                    </div>
+
                                     <div class="form-group col-md-3">
                                         <label>手机号</label>
                                         <input class="form-control"  type="text" name="info[mobile]"  value="{$row.mobile}"/>
@@ -82,12 +86,19 @@
                                             </foreach>
                                         </select>
                                     </div>
-                                    
-                                    
+
+                                        <div class="form-group col-md-3">
+                                            <label>部门</label>
+                                            <select  class="form-control department1"  name="departmentid" required>
+                                                <foreach name="department" item="d">
+                                                <option value="{$d.id}"  id="{$d.letter}" <?php if ($d['department'] == $d['department']) echo ' selected'; ?>>{$d.department}</option>
+                                                </foreach>
+                                            </select>
+                                        </div>
+
                                     <div class="form-group col-md-3">
                                         <label>岗位</label>
-                                        <select class="form-control" name="info[postid]">
-                                            <option value="0" <?php if ($row['postid']==0){ echo ' selected'; }?>>请选择</option>
+                                        <select class="form-control" name="info[postid]" id="post1">
                                             <foreach name="posts" key="k" item="v">
                                                 <if condition="$v">
                                                 <option value="{$k}" <?php if ($row['postid']==$k){ echo ' selected'; }?>>{$v}</option>
@@ -97,21 +108,10 @@
                                     </div>
                                     
                                     <div class="form-group col-md-3">
-                                        <label>账号类型</label>
-                                        <select  class="form-control"  name="info[temp_user]" required>
-                                            <option value="0" <?php if ($row && $row['temp_user'] == 0) echo ' selected'; ?>>专职</option>
-                                            <option value="1" <?php if ($row && $row['temp_user'] == 1) echo ' selected'; ?>>兼职</option>
-
-                                            <option value="2" <?php if ($row && $row['temp_user'] == 2) echo ' selected'; ?>>劳务</option>
-
-                                        </select>
-                                    </div>
-                                    
-                                    <div class="form-group col-md-3">
-                                        <label>用户状态</label>
+                                        <label>员工状态</label>
                                         <select class="form-control" name="info[status]">
-                                        	<option <?php if($row['status']==0){ echo 'selected';}?> value="0">启用</option>
-                                            <option <?php if($row['status']==1){ echo 'selected';}?> value="1">停用</option>
+                                        	<option <?php if($row['status']==0){ echo 'selected';}?> value="0">在职</option>
+                                            <option <?php if($row['status']==1){ echo 'selected';}?> value="1">离职</option>
                                         </select>
                                     </div>
                                     
@@ -119,16 +119,30 @@
                                         <label>入职时间</label>
                                         <input class="form-control inputdate"  type="text"  name="info[entry_time]" value="<if condition="$row['entry_time']">{$row.entry_time|date='Y-m-d',###}</if>"/>
                                     </div>
+                                    <div class="form-group col-md-3">
+                                        <label>离职时间</label>
+                                        <input class="form-control inputdate"  type="text"  name="end_time" value="<if condition="$row['entry_time']">{$row.entry_time|date='Y-m-d',###}</if>" />
+                                    </div>
                                         
                                         
                                     <div class="form-group col-md-3">
-                                        <label>是否转正</label>
+                                        <label>员工类别</label>
                                         <select class="form-control" name="info[formal]">
-                                        	<option <?php if($row['formal']==0){ echo 'selected';}?> value="0">请选择</option>
-                                        	<option <?php if($row['formal']==1){ echo 'selected';}?> value="1">正式员工</option>
-                                            <option <?php if($row['formal']==2){ echo 'selected';}?> value="2">试用员工</option>
+                                        	<option <?php if($row['formal']==0){ echo 'selected';}?> value="0">正式员工</option>
+                                            <option <?php if($row['formal']==1){ echo 'selected';}?> value="1">试用员工</option>
+                                            <option <?php if($row['formal']==2){ echo 'selected';}?> value="2">劳务员工</option>
+                                            <option <?php if($row['formal']==3){ echo 'selected';}?> value="3">实习员工</option>
                                         </select>
                                     </div>
+                                <div class="form-group col-md-3">
+                                    <label>档案所属</label>
+                                    <select class="form-control" name="info[archives]">
+                                        <option <?php if($row['archives']==0){ echo 'selected';}?> value="0">请选择</option>
+                                        <option <?php if($row['archives']==1){ echo 'selected';}?> value="1">中心</option>
+                                        <option <?php if($row['archives']==2){ echo 'selected';}?> value="2">科旅</option>
+                                        <option <?php if($row['archives']==3){ echo 'selected';}?> value="3">科行</option>
+                                    </select>
+                                </div>
                                         
                                         
                                     </if>
@@ -196,5 +210,29 @@
 		$("#password_2").formValidator({onshow:"请再次输入密码",onfocus:"请再次输入密码",oncorrect:"&nbsp;"}).inputValidator({min:1,onerror:"确认密码不能为空"}).compareValidator({desid:"password_1",operateor:"=",onerror:"与上面密码不一致，请重新输入"});
 
 	});
+
+    $('#post1').mouseleave(function() {
+        var name = $('.department1 option').attr("id");
+        var post1 = $('#post1 option:selected').text();
+        if(post1=="" || name==""){
+            die;
+        }else{
+            $.ajax({
+                url : "{:U('Ajax/department')}",
+                type : "POST",
+                async: true,
+                data : {'name':name,'post':post1},
+                dataType : "JSON",
+                success : function(data) {
+                   if(data.result == '1'){
+                       $('.employee_member').val(data.msg);
+                    }
+                    if(data.result == '0'){
+                        alert(data.msg);
+                    }
+                }
+            });
+        }
+    });
 	</script>
 <?php } ?>

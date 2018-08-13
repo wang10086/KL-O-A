@@ -60,21 +60,33 @@ class SalaryController extends BaseController {
      * 员工详情页
      */
     public function salarydetails(){
-        $id = $_GET['id'];
+//        $id = $_GET['id'];
+//
 //        if(is_numeric($id)){
-//           // $list = M()->table('oa_salary as s,oa_salary_insurance as i,oa_salary_attendance as at,oa_account as a,oa_posts as p,oa_role as r')->where("s.id=$id and s.account_id=a.id and s.insurance_id=i.id and s.attendance_id=at.id and a.roleid=r.id and a.postid=p.id")->find();
-////            echo M()->getLastSql();
-//                $list = M('salary')->field('*,oa_salary.id as sid')->where('sid='.$id)->field('oa_salary.id as sid,*')
-//                                                        ->join('oa_salary on oa_salary.account_id=oa_account.id')
-//                                                        ->join('oa_salary on oa_salary.insurance_id=oa_salary_insurance.id')
-//                                                        ->join('oa_salary on oa_salary.attendance_id=oa_salary_attendance.id')
-//                                                        ->join('oa_account on oa_account.roleid=oa_role.id')
-//                                                        ->join('oa_account on oa_account.postid=oa_posts.id')
-//                                                        ->find();echo M()->getLastSql();
-//            print_r($list);die;
+//            $list = M()->table('oa_salary as S')->join('oa_salary_attendance as T on T.id=S.attendance_id')->join('oa_account as A on A.id=S.account_id')->join('oa_salary_department as D on D.id=A.departmentid')->join('oa_posts as P on A.postid=P.id')->field('*,S.id as sid')->where("s.id='$id'")->find();
+////            echo M()->getLastSql(); print_r($list);die;
 //        }else{
 //            $this->success('您的数据有误!请重新选择！', U('Salary/salaryindex'));
 //        }
+//        $this->assign('row',$list);
+        $this->display();
+    }
+
+
+    /**
+     * @salary_attendance
+     * 考勤列表
+     */
+    public function salary_attendance(){
+
+//        $count = M()->table('oa_salary_attendance as T')->join('oa_salary as S on T.salary_id=S.id')->join('oa_account as A on A.id=S.account_id')->field('*,S.id as sid')->count();
+//        $page = new Page($count,12);
+//        $pages = $page->show();
+//        $list = M()->table('oa_salary_attendance as T')->join('oa_salary as S on T.salary_id=S.id')->join('oa_account as A on A.id=S.account_id')->field('*,S.id as sid')->limit("$page->firstRow","$page->listRows")->select();
+////        echo M()->getLastSql();
+////        print_r($list);die;
+//        $this->assign('list',$list);
+//        $this->assign('page',$pages);
         $this->display();
     }
 

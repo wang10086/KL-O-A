@@ -487,7 +487,7 @@
                                     </li>
                                 </if>
 
-                                <if condition="rolemenu(array('Salary/salaryindex','Salary/salarydetails'))">
+                                <if condition="rolemenu(array('Salary/salaryindex','Salary/salarydetails','Salary/salary_attendance'))">
                                     <li class="treeview {:ison(CONTROLLER_NAME, 'Salary')}">
                                         <a href="javascript:;">
                                             <i class="fa fa-plane"></i>
@@ -495,8 +495,11 @@
                                         </a>
                                         <ul class="treeview-menu">
 
-                                            <if condition="rolemenu(array('Salary/salaryindex'))">
+                                            <if condition="rolemenu(array('Salary/salaryindex','Salary/salary_attendance'))">
                                                 <li class="{:on('Salary/salaryindex')}"><a href="{:U('Salary/salaryindex')}"><i class="fa fa-angle-right"></i>员工薪资</a></li>
+                                            </if>
+                                            <if condition="rolemenu(array('Salary/salaryindex'))">
+                                                <li class="{:on('Salary/salaryindex')}"><a href="{:U('Salary/salary_attendance')}"><i class="fa fa-angle-right"></i>员工考勤</a></li>
                                             </if>
 
                                         </ul>

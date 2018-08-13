@@ -87,6 +87,8 @@ class RbacController extends BaseController {
 				$info['encrypt']	= $passwordinfo['encrypt'];
                 $info['input_time'] = time();
                 $info['ip']			= get_client_ip();
+                $info['end_time']   = strtotime($_POST['end_time']);//离职时间
+                $info['departmentid'] = $_POST['departmentid'];//部门id
                 $isadd = $db->add($info);
                 if($isadd) {
                     $data = array();
@@ -98,7 +100,9 @@ class RbacController extends BaseController {
                     $this->error('添加失败：' . $db->getError());
                 }
             }else{
-                //$info['update_time'] = time();
+                $info['update_time'] = time();
+                $info['end_time']   = strtotime($_POST['end_time']);//离职时间
+                $info['departmentid'] = $_POST['departmentid'];//部门id
                 $isedit = $db->data($info)->where(array('id'=>$id))->save();
                 $data = array();
 				$data['role_id']  =  $info['roleid'];
@@ -116,6 +120,7 @@ class RbacController extends BaseController {
             	
             $this->roles =  M('role')->where('id>3')->select();
 			$this->posts =  M('posts')->GetField('id,post_name',true);
+            $department = M('salary_department')->select();//新添加部门
             	
             if (!$id) {
                 $this->pagetitle = '新增用户';
@@ -129,6 +134,7 @@ class RbacController extends BaseController {
                     $this->error('查无此人！', U('Rbac/index'));
                 }
             }
+            $this->assign('department',$department);
             $this->display('adduser');
         }
     }
