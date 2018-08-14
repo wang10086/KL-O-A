@@ -86,7 +86,7 @@
                                         <label>项目类型</label>
                                             <div>
                                                 <foreach name="kinds" item="v">
-                                                    <span class="ml20" style="display: inline-block;line-height: 30px;"><input type="radio" name="kind" value="{$v['id']}"> &nbsp;{$v['name']}</span>
+                                                    <span class="ml20" style="display: inline-block;line-height: 30px;"><input type="radio" name="pro"  value="{$v['id']}" <?php if($row['business_dept']==$v['id'])  echo "checked"; ?>> &nbsp;{$v['name']}</span>
                                                 </foreach>
                                             </div>
                                         </div>
