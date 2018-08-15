@@ -16,6 +16,7 @@
                         <td style="padding:20px 0 0 0">{$v.uname}</td>
                         <td style="padding:20px 0 0 0">{$v.explain}</td>
                     </tr>
+                        </foreach>
             </table>
         </div>
     </div>

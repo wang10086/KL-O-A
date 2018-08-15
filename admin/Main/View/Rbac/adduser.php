@@ -23,17 +23,18 @@
                             <div class="box box-warning">
                                 <div class="box-header">
                                     <h3 class="box-title">新增用户</h3>
+                                    <div class="box-tools pull-right">
+                                        <a href="{:U('Salary/salary_add_department')}" class="btn btn-sm btn-danger"><i class="fa fa-plus"></i> 添加部门</a>
+                                    </div>
                                 </div><!-- /.box-header -->
+
                                 <div class="box-body" id="tab_1">
                                     
                                     <input type="hidden" name="dosubmit" value="1" />
                                     <input type="hidden" name="referer" value="<?php echo $_SERVER['HTTP_REFERER']; ?>" />
                                     <if condition="$row"><input type="hidden" name="id" value="{$row.id}" /></if>
                                     <!-- text input -->
-                                    
-                                    
-                                    
-                                    
+
                                     
                                     
                                     
@@ -60,7 +61,7 @@
                                     <?php } ?>
                                     <div class="form-group col-md-3">
                                         <label>员工编号</label>
-                                        <input class="form-control employee_member"  type="text" name="info[employee_member]" />
+                                        <input class="form-control employee_member"  type="text" name="info[employee_member]"  value="{$row.employee_member}"/>
                                     </div>
 
                                     <div class="form-group col-md-3">
@@ -119,21 +120,22 @@
                                         <label>入职时间</label>
                                         <input class="form-control inputdate"  type="text"  name="info[entry_time]" value="<if condition="$row['entry_time']">{$row.entry_time|date='Y-m-d',###}</if>"/>
                                     </div>
-                                    <div class="form-group col-md-3">
-                                        <label>离职时间</label>
-                                        <input class="form-control inputdate"  type="text"  name="end_time" value="<if condition="$row['entry_time']">{$row.entry_time|date='Y-m-d',###}</if>" />
-                                    </div>
-                                        
-                                        
-                                    <div class="form-group col-md-3">
-                                        <label>员工类别</label>
-                                        <select class="form-control" name="info[formal]">
-                                        	<option <?php if($row['formal']==0){ echo 'selected';}?> value="0">正式员工</option>
-                                            <option <?php if($row['formal']==1){ echo 'selected';}?> value="1">试用员工</option>
-                                            <option <?php if($row['formal']==2){ echo 'selected';}?> value="2">劳务员工</option>
-                                            <option <?php if($row['formal']==3){ echo 'selected';}?> value="3">实习员工</option>
+<!--                                    <div class="form-group col-md-3">-->
+<!--                                        <label>离职时间</label>-->
+<!--                                        <input class="form-control inputdate"  type="text"  name="end_time" value="<if condition="$row['entry_time']">{$row.entry_time|date='Y-m-d',###}</if>" />-->
+<!--                                    </div>-->
+
+
+                                <div class="form-group col-md-3">
+                                    <label>员工类别</label>
+                                    <select class="form-control" name="info[formal]">
+                                        <option value=" ">请选择</option>
+                                        <option <?php if($row['formal']==1){ echo 'selected';}?> value="1">正式员工</option>
+                                        <option <?php if($row['formal']==2){ echo 'selected';}?> value="2">试用员工</option>
+                                        <option <?php if($row['formal']==3){ echo 'selected';}?> value="3">劳务员工</option>
+                                        <option <?php if($row['formal']==4){ echo 'selected';}?> value="4">实习员工</option>
                                         </select>
-                                    </div>
+                                </div>
                                 <div class="form-group col-md-3">
                                     <label>档案所属</label>
                                     <select class="form-control" name="info[archives]">
@@ -212,7 +214,7 @@
 	});
 
     $('#post1').mouseleave(function() {
-        var name = $('.department1 option').attr("id");
+        var name = $('.department1 option:selected').attr("id");
         var post1 = $('#post1 option:selected').text();
         if(post1=="" || name==""){
             die;
