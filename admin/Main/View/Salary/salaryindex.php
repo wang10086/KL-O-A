@@ -21,7 +21,7 @@
                                 <div class="box-header">
                                     <h3 class="box-title">人员薪资列表</h3>
                                     <div class="box-tools pull-right">
-
+                                        <a href="{:U('Salary/salary_add')}" class="btn btn-sm btn-danger"><i class="fa fa-plus"></i> 新增岗位薪酬</a>
                                     	 <a href="javascript:;" class="btn btn-info btn-sm" onclick="javascript:opensearch('searchtext',700,160);"><i class="fa fa-search"></i> 搜索</a>
                                          
                                     </div>

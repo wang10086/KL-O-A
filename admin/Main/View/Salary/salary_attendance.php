@@ -8,7 +8,7 @@
                     </h1>
                     <ol class="breadcrumb">
                         <li><a href="{:U('Index/index')}"><i class="fa fa-home"></i> 首页</a></li>
-                        <li><a href="{:U('ScienceRes/res')}"><i class="fa fa-gift"></i> 人力资源</a></li>
+                        <li><a href="{:U('Salary/salaryindex')}"><i class="fa fa-gift"></i> 人力资源</a></li>
                         <li class="active">员工考勤</li>
                     </ol>
                 </section>

@@ -62,7 +62,7 @@ class SalaryController extends BaseController {
      * 员工详情页
      */
     public function salarydetails(){
-//        $id = $_GET['id'];
+//        $id = trim($_GET['id']);
 //
 //        if(is_numeric($id)){
 //            $list = M()->table('oa_salary as S')->join('oa_salary_attendance as T on T.id=S.attendance_id')->join('oa_account as A on A.id=S.account_id')->join('oa_salary_department as D on D.id=A.departmentid')->join('oa_posts as P on A.postid=P.id')->field('*,S.id as sid')->where("s.id='$id'")->find();
@@ -81,7 +81,7 @@ class SalaryController extends BaseController {
      */
     public function salary_attendance(){
 
-
+//
 //        $count = M()->table('oa_salary_attendance as T')->join('oa_salary as S on T.salary_id=S.id')->join('oa_account as A on A.id=S.account_id')->field('*,S.id as sid')->count();
 //        $page = new Page($count,12);
 //        $pages = $page->show();
@@ -107,7 +107,7 @@ class SalaryController extends BaseController {
 //
 //            $list = M()->table('oa_salary_attendance as T')->join('oa_salary as S on T.salary_id=S.id')->join('oa_account as A on A.id=S.account_id')->where($sql)->field('*,S.id as sid,T.id as tid')->limit("$page->firstRow","$page->listRows")->select();
 //        }else{
-//            $list = M()->table('oa_salary_attendance as T')->join('oa_salary as S on T.salary_id=S.id')->join('oa_account as A on A.id=S.account_id')->field('*,S.id as sid,T.id as tid')->limit("$page->firstRow","$page->listRows")->select();
+//            $list = M()->table('oa_salary_attendance as T')->join('oa_salary as S on T.salary_id=S.id')->join('oa_account as A on A.id=S.account_id')->field('*,S.id as sid,T.id as tid')v->select();
 //        }
 //
 ////        echo M()->getLastSql();
@@ -123,8 +123,8 @@ class SalaryController extends BaseController {
      */
     public function salary_edtior(){
 //        if(IS_POST){
-//            $info = $_POST['info'];
-//            $where['id'] = $_POST['id'];
+//            $info = trim($_POST['info']);
+//            $where['id'] = trim($_POST['id']);
 //            $data = array_filter($info);
 //            $attend_r = M('salary_attendance')->where($where)->save($data);
 ////            echo M()->getLastSql();
@@ -143,6 +143,96 @@ class SalaryController extends BaseController {
 //        }
 //        $this->assign('list',$attend_r);
         $this->display();
+    }
+
+    /**
+     * salary_add 添加数据
+     * oa_post 岗位
+     * department_name 部门
+     */
+    public function salary_add(){
+
+        if(IS_POST){
+            $type = trim($_POST['type']);
+            if($type == 'salary') {
+
+            }else{
+                $add['op_time'] = time();
+                $add['nickname'] = $_SESSION['nickname'];
+                $add['optype'] = 11;//添加岗位薪酬变动
+                $status = $_POST['status'];
+                if($status==1){
+                    $add['explain'] = '添加入职信息';
+                }elseif($status==2){
+                    $add['explain'] = '添加转正信息';
+                }elseif($status==3){
+                    $add['explain'] = '添加调岗信息';
+                }elseif($status==4){
+                    $add['explain'] = '添加离职信息';
+                }elseif($status==5){
+                    $add['explain'] = '添加调薪信息';
+                }
+
+                $isok = M('op_record')->add($add);
+                if(!$isok){
+                    $this->error('添加失败!请重新添加！', U('Salary/salary_adde'));die;
+                }
+            }
+            $where['A.id'] = trim($_POST['id']);
+            $where['A.employee_member'] = trim($_POST['employee_member']);
+            $where['A.nickname'] = trim($_POST['nickname']);
+            $where['D.department'] = trim($_POST['departmen']);
+            $where['P.posts'] = trim($_POST['post']);
+            $all = $_POST['all'];
+            $where = array_filter($where);
+//            print_r($where);die;
+            if($all == '所有'){
+                $count = M()->table('oa_account as A')->join('oa_posts as P on A.postid=P.id')->join('oa_salary_department as D on D.id=A.departmentid')->count();
+                $page = new Page($count,12);
+                $pages = $page->show();
+                $account_r = M()->table('oa_account as A')->join('oa_posts as P on A.postid=P.id')->join('oa_salary_department as D on D.id=A.departmentid')->field('A.id as aid,A.departmentid,A.employee_member,A.nickname,A.entry_time,D.department,P.post_name')->limit("$page->firstRow","$page->listRows")->select();
+            }else{
+
+                $count = M()->table('oa_account as A')->join('oa_posts as P on A.postid=P.id')->join('oa_salary_department as D on D.id=A.departmentid')->where($where)->count();
+                $page = new Page($count,12);
+                $pages = $page->show();
+                $account_r = M()->table('oa_account as A')->join('oa_posts as P on A.postid=P.id')->join('oa_salary_department as D on D.id=A.departmentid')->field('A.id as aid,A.employee_member,A.departmentid,A.employee_member,A.nickname,A.entry_time,D.department,P.post_name')->where($where)->select();
+//                echo M()->getLastSql();
+            }
+            if(!$account_r || $account_r==""){
+                $this->error('请添加员工编码或者员工部门！', U('Rbac/index'));die;
+            }
+
+        }
+        $sum = M('op_record')->where('optype=11')->count();
+        $pag = new Page($sum,12);
+        $pagese = $pag->show();
+        $record_r = M('op_record')->where('optype=11')->order('op_time desc')->limit("$pag->firstRow","$pag->listRows")->select();
+        //echo M()->getLastSql();
+//        print_r($record_r);die;
+        $this->assign('pages',$pagese);
+        $this->assign('record',$record_r);
+        $this->assign('list',$account_r);
+        $this->display();
+    }
+
+    /**
+     * salary_record 操作记录
+     * $count 数量
+     * $pages 分页
+     * $record_r 分页数据
+     */
+
+    public function record_list(){
+        $count = M('op_record')->where('optype=11')->count();
+        $page = new Page($count,12);
+        $pages = $page->show();
+        $record_r = M('op_record')->where('optype=11')->order('op_time desc')->limit("$page->firstRow","$page->listRows")->select();
+        //echo M()->getLastSql();
+//        print_r($record_r);die;
+        $this->assign('page',$pages);
+        $this->assign('record',$record_r);
+        $this->display('record_list');
     }
 
 }

@@ -10,7 +10,7 @@
                     </h1>
                     <ol class="breadcrumb">
                         <li><a href="{:U('Index/index')}"><i class="fa fa-home"></i> 首页</a></li>
-                        <li><a href="{:U('Rbac/index')}"><i class="fa fa-gift"></i> 人力资源</a></li>
+                        <li><a href="{:U('Salary/salaryindex')}"><i class="fa fa-gift"></i> 人力资源</a></li>
                         <li class="active">员工考勤编辑</li>
                     </ol>
                 </section>

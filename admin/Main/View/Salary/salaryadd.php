@@ -10,7 +10,7 @@
                     </h1>
                     <ol class="breadcrumb">
                         <li><a href="{:U('Index/index')}"><i class="fa fa-home"></i> 首页</a></li>
-                        <li><a href="{:U('Project/index')}"><i class="fa fa-gift"></i> {$_pagetitle_}</a></li>
+                        <li><a href="{:U('Salary/salaryindex')}"><i class="fa fa-gift"></i> {$_pagetitle_}</a></li>
                         <li class="active">{$_action_}</li>
                     </ol>
                 </section>
