@@ -10,7 +10,8 @@
         <link href="__HTML__/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
         <!-- Theme style -->
         <link href="__HTML__/css/py.css" rel="stylesheet" type="text/css" />
-
+        <!-- staff style 员工心声-->
+        <link href="__HTML__/css/staff.css" rel="stylesheet" type="text/css" />
         <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
         <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
         <!--[if lt IE 9]>
@@ -38,6 +39,8 @@
             </form>
   
         </div>
+
+        <a href="{:U('Staff/index')}"><div class="employee-aspirations">员工心声</div></a>
 
 
         <!-- jQuery 1.11.1 -->
