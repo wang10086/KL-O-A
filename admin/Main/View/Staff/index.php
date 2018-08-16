@@ -1,6 +1,6 @@
 <include file="header" />
 <style>
-    .staff{  width: 100%;  /*height:auto !important;*/ height: 100%;  margin: 0;  background-color:#dceffe;  float:left; clear:both; }
+    .staff{  width: 100%;  height:auto !important; /*height: 100%;*/  margin: 0;  background-color:#dceffe;  float:left; clear:both; }
     .staff-con{ width:1200px; margin:0 auto; overflow: hidden;  padding: 20px;}
     .mt20{margin-top: 20px;}
     .actlbox{ width:870px; height:auto !important; float:left; clear:both; padding-bottom:40px; overflow:hidden;}
@@ -15,25 +15,26 @@
     .actrbox .unrel .reltit h2{ line-height:40px; font-size:16px; color:#333333; margin: auto;}
     .cont ul{margin-top: 48px;}
     .cont ul li{padding: 4px 6px 10px 15px;}
+    .lbox{height: 150px; border-top: solid 1px #cccccc; padding: 20px 10px;}
 </style>
 <div class="staff">
     <div class="staff-con mt20" style="background-color:  #eeeeee;">
         <div style="background-color:  #eeeeee;"></div>
         <div class="actlbox">
-            <div style="height: 150px; border: solid 1px red; ">
-                aaa
+            <div class="lbox">
+                匿名游客:
             </div>
-            <div style="height: 150px; border: solid 1px red;" class="mt10">
-                aaa
+            <div class="lbox mt10">
+                匿名游客:
             </div>
-            <div style="height: 150px; border: solid 1px red;" class="mt10">
-                aaa
+            <div class="lbox mt10">
+                匿名游客:
             </div>
-            <div style="height: 150px; border: solid 1px red;" class="mt10">
-                aaa
+            <div class="lbox mt10">
+                匿名游客:
             </div>
-            <div style="height: 150px; border: solid 1px red;" class="mt10">
-                aaa
+            <div class="lbox mt10">
+                匿名游客:
             </div>
         </div>
 
