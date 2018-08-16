@@ -65,15 +65,15 @@ class SalaryController extends BaseController {
      * 员工详情页
      */
     public function salarydetails(){
-        $id = trim($_GET['id']);
-
-        if(is_numeric($id)){
-            $list = M()->table('oa_salary as S')->join('oa_salary_attendance as T on T.id=S.attendance_id')->join('oa_account as A on A.id=S.account_id')->join('oa_salary_department as D on D.id=A.departmentid')->join('oa_posts as P on A.postid=P.id')->field('*,S.id as sid')->where("s.id='$id'")->find();
-//            echo M()->getLastSql(); print_r($list);die;
-        }else{
-            $this->success('您的数据有误!请重新选择！', U('Salary/salaryindex'));
-        }
-        $this->assign('row',$list);
+//        $id = trim($_GET['id']);
+//
+//        if(is_numeric($id)){
+//            $list = M()->table('oa_salary as S')->join('oa_salary_attendance as T on T.id=S.attendance_id')->join('oa_account as A on A.id=S.account_id')->join('oa_salary_department as D on D.id=A.departmentid')->join('oa_posts as P on A.postid=P.id')->field('*,S.id as sid')->where("s.id='$id'")->find();
+////            echo M()->getLastSql(); print_r($list);die;
+//        }else{
+//            $this->success('您的数据有误!请重新选择！', U('Salary/salaryindex'));die;
+//        }
+//        $this->assign('row',$list);
         $this->display();
     }
 
