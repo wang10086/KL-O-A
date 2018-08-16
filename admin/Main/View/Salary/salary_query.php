@@ -56,9 +56,10 @@
                                                     <th class="sorting" data="group_id" style="width:10em;">员工部门</th>
                                                     <th class="sorting" data="project" style="width:10em;">员工岗位</th>
                                                     <th class="sorting" data="number" style="width:10em;">入职时间</th>
-                                                    <th class="sorting" data="number" style="width:20em;">试用期岗位薪酬标准</th>
-                                                    <th class="sorting" data="shouru" style="width:20em;">试用期基效比</th>
-                                                    <th class="sorting" data="shouru" style="width:8em;">操作</th>
+                                                    <th class="sorting" data="number" style="width:15em;">试用期岗位薪酬标准</th>
+                                                    <th class="sorting" data="shouru" style="width:15em;">试用期基效比</th>
+                                                    <th class="sorting" data="shouru" style="width:15em;">工资发放年月</th>
+                                                    <th class="sorting" data="shouru" style="width:15em;">操作</th>
                                                     </if>
 
                                                 </tr>
@@ -71,9 +72,15 @@
                                                         <td>{$row.department}</td>
                                                         <td>{$row.post_name}</td>
                                                         <td><?php echo date('Y-m-d',$row['entry_time'])?></td>
-                                                        <td class="salary_probation">&nbsp;&nbsp;&nbsp;<input type="text" name="probation"></td>
-                                                        <td class="salary_basic"><input type="text" style="width:5em" name="basic" class="salary_basic1"> : <input type="text" name="achievements" style="width:5em" class="salary_basic2"></td>
-                                                        <td class="salary_entry"><input type="button" value="保存" style="background-color:#00acd6;font-size:1.5em;"></td>
+                                                        <td class="salary_probation"><input type="text" name="probation" class="form-control"/></td>
+                                                        <td class="salary_basic">
+                                                            <input type="text" style="width:5em" name="basic" class="salary_basic1"> :
+                                                            <input type="text" name="achievements" style="width:5em" class="salary_basic2">
+                                                        </td>
+                                                        <td><input type="text" name="month" class="form-control monthly" /></td>
+                                                        <td class="salary_entry">
+                                                            <input type="button" value="保存" style="background-color:#00acd6;font-size:1.5em;" class="salary_butt1"> |
+                                                            <input type="button" value="编辑" style="background-color:#00acd6;font-size:1.5em;" class="salary_butt1"></td>
                                                     </tr>
                                                 </foreach>
                                             </table>
@@ -101,6 +108,7 @@
                                                     <th class="sorting" data="shouru" style="width:14em;">试用期基效比</th>
                                                     <th class="sorting" data="shouru" style="width:14em;">转正后期岗位薪酬标准</th>
                                                     <th class="sorting" data="shouru" style="width:14em;">转正后期基效比</th>
+                                                    <th class="sorting" data="shouru" style="width:20em;">工资发放年月</th>
                                                     <th class="sorting" data="shouru" style="width:8em;">操作</th>
                                                     </if>
 
@@ -116,9 +124,13 @@
                                                         <td><?php echo date('Y-m-d',$row['entry_time'])?></td>
                                                         <td>{$row.aid}</td>
                                                         <td>{$row.aid}</td>
-                                                        <td>&nbsp;&nbsp;&nbsp;<input type="text"></td>
-                                                        <td>&nbsp;&nbsp;&nbsp;<input type="text"></td>
-                                                        <td>&nbsp;&nbsp;&nbsp;<input type="button" value="保存" style="background-color:#00acd6;font-size:1.5em;"></td>
+                                                        <td><input type="text" name="name" class="form-control" /></td>
+                                                        <td class="salary_basic">
+                                                            <input type="text" style="width:5em" name="basic" class="salary_basic1"> :
+                                                            <input type="text" name="achievements" style="width:5em" class="salary_basic2">
+                                                        </td>
+                                                        <td><input type="text" name="month" class="form-control monthly" /></td>
+                                                        <td><input type="submit" value="保存" class="form-control" style="background-color:#00acd6;font-size:1.5em;" /></td>
                                                     </tr>
                                                 </foreach>
 
@@ -334,24 +346,31 @@
             $('#salary_change').show();//调薪
         }
     }
-    $('.salary_entry').click(function(){
-        var salary_aid = $(this).parent('tr').children('.salary_aid').text();//用户id
-        var probation = $(this).parent('tr').children('.salary_probation').children('input').val();//标准薪资
-        var achievements = $(this).prev().children('.salary_basic1').val();//基本薪资比
-        var basic = $(this).prev().children('.salary_basic2').val();//绩效薪资比
+    $('.salary_butt1').click(function(){
+        if($(this).val()=='保存'){
+            var sum = 1;
+        }
+        if($(this).val()=='编辑'){
+            var sum = 2;
+        }
+        var salary_aid = $(this).parent('.salary_entry').parent('tr').children('.salary_aid').text();//用户id
+        var probation = $(this).parent('.salary_entry').parent('tr').children('.salary_probation').children('input').val();//标准薪资
+        var achievements = $(this).parent('.salary_entry').parent('tr').children('.salary_basic').children('.salary_basic1').val();//基本薪资比
+        var basic = $(this).parent('.salary_entry').parent('tr').children('.salary_basic').children('.salary_basic2').val();//绩效薪资比
+        var monthly = $(this).parent('.salary_entry').prev().children('.monthly').val();//绩发放的工资月份
         $.ajax({
             type: "post",
             url: "{:U('Salary/salary_add')}", //url
-            data: {'account_id':salary_aid,'standard_salary':probation,'basic_salary':achievements,'performance_salary':basic},
+            data: {'account_id':salary_aid,'standard_salary':probation,'basic_salary':achievements,'performance_salary':basic,'grant_time':monthly,'status':sum},
             dataType: "json", //数据格式
             success: function (data) {
                if(data.sum==1){
-                   $(this).prev().children('.salary_basic1').val(data.cont.basic_salary);
-                   $(this).prev().children('.salary_basic2').val(data.cont.performance_salary);
-                   $(this).parent('tr').children('.salary_probation').children('input').val(data.cont.standard_salary);
-                   $(this).parent('tr').children('.salary_aid').html(data.cont.account_id);
-                   $(this).children('input').css('background-color','#99FF33');
-                   $(this).children('input').val("已保存");
+//                   $(this).prev().children('.salary_basic1').val(data.cont.basic_salary);
+//                   $(this).prev().children('.salary_basic2').val(data.cont.performance_salary);
+//                   $(this).parent('tr').children('.salary_probation').children('input').val(data.cont.standard_salary);
+//                   $(this).parent('tr').children('.salary_aid').html(data.cont.account_id);
+//                   $(this).children('input').css('background-color','#99FF33');
+//                   $(this).children('input').val("已保存");
                }
                if(data.sum==0){
                    alert(data.msg);
