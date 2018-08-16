@@ -40,7 +40,7 @@
   
         </div>
 
-        <a href="{:U('Staff/index')}"><div class="employee-aspirations">员工心声</div></a>
+        <!--<a href="{:U('Staff/index')}"><div class="employee-aspirations">员工心声</div></a>-->
 
 
         <!-- jQuery 1.11.1 -->
