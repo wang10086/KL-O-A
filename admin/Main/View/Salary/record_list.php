@@ -19,5 +19,8 @@
                         </foreach>
             </table>
         </div>
+        <div class="box-footer clearfix">
+            <div class="pagestyle">{$pages}</div>
+        </div>
     </div>
 </div>

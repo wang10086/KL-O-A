@@ -50,16 +50,15 @@
 
                                             <table class="table table-bordered dataTable fontmini" id="tablelist" style="margin-top:10px;">
                                                 <tr role="row" class="orders" >
-                                                    <th class="sorting" data="op_id"  style="width:8em;">ID</th>
-                                                    <th class="sorting" data="group_id" style="width:10em;">员工姓名</th>
-                                                    <th class="sorting" data="group_id" style="width:10em;">员工编号</th>
-                                                    <th class="sorting" data="group_id" style="width:10em;">员工部门</th>
-                                                    <th class="sorting" data="project" style="width:10em;">员工岗位</th>
-                                                    <th class="sorting" data="number" style="width:10em;">入职时间</th>
-                                                    <th class="sorting" data="number" style="width:15em;">试用期岗位薪酬标准</th>
-                                                    <th class="sorting" data="shouru" style="width:15em;">试用期基效比</th>
-                                                    <th class="sorting" data="shouru" style="width:15em;">工资发放年月</th>
-                                                    <th class="sorting" data="shouru" style="width:15em;">操作</th>
+                                                    <th class="sorting" data="op_id"  style="width:6em;">ID</th>
+                                                    <th class="sorting" data="group_id" style="width:12em;">员工姓名</th>
+                                                    <th class="sorting" data="group_id" style="width:12em;">员工编号</th>
+                                                    <th class="sorting" data="group_id" style="width:12em;">员工部门</th>
+                                                    <th class="sorting" data="project" style="width:12em;">员工岗位</th>
+                                                    <th class="sorting" data="number" style="width:12em;">入职时间</th>
+                                                    <th class="sorting" data="number" style="width:16em;">试用期岗位薪酬标准</th>
+                                                    <th class="sorting" data="shouru" style="width:16em;">试用期基效比</th>
+                                                    <th class="sorting" data="shouru" style="width:12em;">操作</th>
                                                     </if>
 
                                                 </tr>
@@ -72,15 +71,16 @@
                                                         <td>{$row.department}</td>
                                                         <td>{$row.post_name}</td>
                                                         <td><?php echo date('Y-m-d',$row['entry_time'])?></td>
-                                                        <td class="salary_probation"><input type="text" name="probation" class="form-control"/></td>
+                                                        <td class="salary_probation"><input type="text" class="form-control" value="{$row.standard_salary}" /></td>
                                                         <td class="salary_basic">
-                                                            <input type="text" style="width:5em" name="basic" class="salary_basic1"> :
-                                                            <input type="text" name="achievements" style="width:5em" class="salary_basic2">
+                                                            <input type="text" style="width:5em" class="salary_basic1" value="{$row.basic_salary}" /> :
+                                                            <input type="text" style="width:5em" class="salary_basic2" value="{$row.performance_salary}" />
                                                         </td>
-                                                        <td><input type="text" name="month" class="form-control monthly" /></td>
                                                         <td class="salary_entry">
-                                                            <input type="button" value="保存" style="background-color:#00acd6;font-size:1.5em;" class="salary_butt1"> |
-                                                            <input type="button" value="编辑" style="background-color:#00acd6;font-size:1.5em;" class="salary_butt1"></td>
+                                                            <input type="hidden" class="salary_type" value="1"/>
+                                                            <input type="button" value="保存" style="background-color:#00acd6;font-size:1em;" class="salary_butt1 salary_butt3"> |
+                                                            <input type="button" value="编辑" style="background-color:#00acd6;font-size:1em;" class="salary_butt1 salary_butt2">
+                                                        </td>
                                                     </tr>
                                                 </foreach>
                                             </table>
@@ -108,29 +108,30 @@
                                                     <th class="sorting" data="shouru" style="width:14em;">试用期基效比</th>
                                                     <th class="sorting" data="shouru" style="width:14em;">转正后期岗位薪酬标准</th>
                                                     <th class="sorting" data="shouru" style="width:14em;">转正后期基效比</th>
-                                                    <th class="sorting" data="shouru" style="width:20em;">工资发放年月</th>
-                                                    <th class="sorting" data="shouru" style="width:8em;">操作</th>
+                                                    <th class="sorting" data="shouru" style="width:6em;">操作</th>
                                                     </if>
 
                                                 </tr>
 
                                                 <foreach name="list" item="row">
                                                     <tr>
-                                                        <td>{$row.aid}</td>
+                                                        <td class="salary_aid {$row.aid}">{$row.aid}</td>
                                                         <td>{$row.nickname}</td>
                                                         <td>{$row.employee_member}</td>
                                                         <td>{$row.department}</td>
                                                         <td>{$row.post_name}</td>
                                                         <td><?php echo date('Y-m-d',$row['entry_time'])?></td>
-                                                        <td>{$row.aid}</td>
-                                                        <td>{$row.aid}</td>
+                                                        <td>{$row.standard_salary}</td>
+                                                        <td>{$row.basic_salary} <?php if(!empty($row['basic_salary'])){echo ":";} ?> {$row.performance_salary} </td>
                                                         <td><input type="text" name="name" class="form-control" /></td>
                                                         <td class="salary_basic">
-                                                            <input type="text" style="width:5em" name="basic" class="salary_basic1"> :
-                                                            <input type="text" name="achievements" style="width:5em" class="salary_basic2">
+                                                            <input type="text" style="width:5em" class="salary_basic1" /> :
+                                                            <input type="text" style="width:5em" class="salary_basic2" />
                                                         </td>
-                                                        <td><input type="text" name="month" class="form-control monthly" /></td>
-                                                        <td><input type="submit" value="保存" class="form-control" style="background-color:#00acd6;font-size:1.5em;" /></td>
+                                                        <td class="salary_entry">
+                                                            <input type="hidden" class="salary_type" value="2"/>
+                                                            <input type="button" value="保存" style="background-color:#00acd6;font-size:1em;" class="salary_butt1 salary_butt2">
+                                                        </td>
                                                     </tr>
                                                 </foreach>
 
@@ -168,15 +169,23 @@
                                                         <td>{$row.aid}</td>
                                                         <td>{$row.nickname}</td>
                                                         <td>{$row.employee_member}</td>
-                                                        <td></td>
-                                                        <td></td>
-                                                        <td >&nbsp;&nbsp;&nbsp;<input type="text"></td>
-                                                        <td>&nbsp;&nbsp;&nbsp;<input type="text"></td>
-                                                        <td></td>
-                                                        <td></td>
-                                                        <td>&nbsp;&nbsp;&nbsp;<input type="text"></td>
-                                                        <td>&nbsp;&nbsp;&nbsp;<input type="text"></td>
-                                                        <td>&nbsp;&nbsp;&nbsp;<input type="button" value="保存" style="background-color:#00acd6;font-size:1.5em;"></td>
+                                                        <td>{$row.department}</td>
+                                                        <td>{$row.post_name}</td>
+                                                        <input type="hidden" name="aid" class="form-control salary_sid" value="{$row.aid}"/>
+                                                        <td ><input type="text" name="department" class="form-control salary_current_department" /></td>
+                                                        <td><input type="text" name="name" class="form-control salary_present_post" /></td>
+                                                        <td>{$row.standard_salary}</td>
+                                                        <td>{$row.basic_salary} <?php if(!empty($row['basic_salary'])){echo ":";} ?> {$row.performance_salary} </td>
+                                                        <td><input type="text" name="name" class="form-control salary_present_salary" /></td>
+                                                        <td class="salary_basic">
+                                                            <input type="text" style="width:5em" class="salary_basic1" /> :
+                                                            <input type="text" style="width:5em" class="salary_basic2" />
+                                                        </td>
+                                                        <td class="salary_entry">
+                                                            <input type="hidden" class="salary_type" value="2"/>
+                                                            <input type="hidden" class="salary_status" value="2"/>
+                                                            <input type="button" value="保存" style="background-color:#00acd6;font-size:1em;" class="salary_butt4">
+                                                        </td>
                                                     </tr>
                                                 </foreach>
                                             </table>
@@ -213,8 +222,8 @@
                                                         <td>{$row.employee_member}</td>
                                                         <td>{$row.department}</td>
                                                         <td>{$row.post_name}</td>
-                                                        <td></td>
-                                                        <td></td>
+                                                        <td>{$row.standard_salary}</td>
+                                                        <td>{$row.basic_salary} <?php if(!empty($row['basic_salary'])){echo ":";} ?> {$row.performance_salary} </td>
                                                         <td>&nbsp;&nbsp;&nbsp;<input type="date"></td>
                                                         <td>&nbsp;&nbsp;&nbsp;<input type="button" value="保存" style="background-color:#00acd6;font-size:1.5em;"></td>
                                                     </tr>
@@ -256,8 +265,8 @@
                                                         <td>{$row.employee_member}</td>
                                                         <td>{$row.department}</td>
                                                         <td>{$row.post_name}</td>
-                                                        <td></td>
-                                                        <td></td>
+                                                        <td>{$row.standard_salary}</td>
+                                                        <td>{$row.basic_salary} <?php if(!empty($row['basic_salary'])){echo ":";} ?> {$row.performance_salary} </td>
                                                         <td>&nbsp;&nbsp;&nbsp;<input type="text"></td>
                                                         <td>&nbsp;&nbsp;&nbsp;<input type="text"></td>
                                                         <td>&nbsp;&nbsp;&nbsp;<input type="button" value="保存" style="background-color:#00acd6;font-size:1.5em;"></td>
@@ -308,7 +317,7 @@
 
 
 <include file="Index:footer2" />
-<script> var h = 1;
+<script>
     function salary_entry(obj){
         if(obj==1){
             $('#salary_entry').show();//入职
@@ -346,37 +355,56 @@
             $('#salary_change').show();//调薪
         }
     }
+
     $('.salary_butt1').click(function(){
-        if($(this).val()=='保存'){
-            var sum = 1;
+
+        var type = $(this).parents('td').find('.salary_type').val();
+
+        if(($(this).val()=='保存' && type == 1) || $(this).val()=='保存'){
+            var count = 1;
         }
-        if($(this).val()=='编辑'){
-            var sum = 2;
+        if($(this).val()=='编辑' || (type == 2 && $(this).val()=='保存')){
+            var count = 2;
         }
-        var salary_aid = $(this).parent('.salary_entry').parent('tr').children('.salary_aid').text();//用户id
-        var probation = $(this).parent('.salary_entry').parent('tr').children('.salary_probation').children('input').val();//标准薪资
-        var achievements = $(this).parent('.salary_entry').parent('tr').children('.salary_basic').children('.salary_basic1').val();//基本薪资比
-        var basic = $(this).parent('.salary_entry').parent('tr').children('.salary_basic').children('.salary_basic2').val();//绩效薪资比
-        var monthly = $(this).parent('.salary_entry').prev().children('.monthly').val();//绩发放的工资月份
+
+        var salary_aid = $(this).parents('tr').children('.salary_aid').text();//用户id
+        var probation = $(this).parents('tr').find('input').val();//标准薪资
+        var achievements = $(this).parents('tr').find('.salary_basic1').val();//基本薪资比
+        var basic = $(this).parents('tr').find('.salary_basic2').val();//绩效薪资比
         $.ajax({
             type: "post",
             url: "{:U('Salary/salary_add')}", //url
-            data: {'account_id':salary_aid,'standard_salary':probation,'basic_salary':achievements,'performance_salary':basic,'grant_time':monthly,'status':sum},
+            data: {'account_id':salary_aid,'standard_salary':probation,'basic_salary':achievements,'performance_salary':basic,'status':count,'type':type},
             dataType: "json", //数据格式
             success: function (data) {
                if(data.sum==1){
-//                   $(this).prev().children('.salary_basic1').val(data.cont.basic_salary);
-//                   $(this).prev().children('.salary_basic2').val(data.cont.performance_salary);
-//                   $(this).parent('tr').children('.salary_probation').children('input').val(data.cont.standard_salary);
-//                   $(this).parent('tr').children('.salary_aid').html(data.cont.account_id);
-//                   $(this).children('input').css('background-color','#99FF33');
-//                   $(this).children('input').val("已保存");
+                   alert(data.msg);
+                   if(count==2 && type == 2){
+                       $('.'+salary_aid).parent('tr').find('.salary_butt2').val("已保存");
+                       $('.'+salary_aid).parent('tr').find('.salary_butt2').css('background-color','#00FF66');
+                       $('.'+salary_aid).parent('tr').find('.salary_butt2').addClass('salary_butt1 salary_butt2');
+                   }
+                   if(count==1){
+                       $('#'+salary_aid).parent('tr').find('.salary_butt3').val("已保存");
+                       $('#'+salary_aid).parent('tr').find('.salary_butt3').css('background-color','#00FF66');
+                       $('#'+salary_aid).parent('tr').find('.salary_butt3').addClass('salary_butt1 salary_butt3');
+                   }
+                   if(count==2){
+                       $('#'+salary_aid).parent('tr').find('.salary_butt2').val("已编辑");
+                       $('#'+salary_aid).parent('tr').find('.salary_butt2').css('background-color','#00FF66');
+                       $('#'+salary_aid).parent('tr').find('.salary_butt2').addClass('salary_butt1 salary_butt2');
+                   }
                }
                if(data.sum==0){
                    alert(data.msg);
                }
             }
         });
+    })
+
+    $('.salary_butt4').click(function(){
+        var type = $(this).parents('tr').find('.salary_type').val();//状态s
+        var status = $(this).parents('tr').find('.salary_statu').val();//判断状态
     })
 
 </script>

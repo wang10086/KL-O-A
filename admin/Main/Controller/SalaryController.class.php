@@ -131,7 +131,7 @@ class SalaryController extends BaseController {
             if(!$attend_r){
                 $this->error('您的数据编辑失败!请重新编辑！', U('Salary/salary_attendance'));die;
             }else{
-                $this->salary_info(7,12);//操作记录 编辑
+                $info = salary_info(12,7);//操作记录 编辑
                 $this->success('编辑数据成功！', U('Salary/salary_attendance'));die;
             }
         }elseif(IS_GET){
@@ -177,6 +177,15 @@ class SalaryController extends BaseController {
                 $pages = $page->show();
                 $account_r = M()->table('oa_account as A')->join('oa_posts as P on A.postid=P.id')->join('oa_salary_department as D on D.id=A.departmentid')->field('A.id as aid,A.employee_member,A.departmentid,A.employee_member,A.nickname,A.entry_time,D.department,P.post_name')->where($where)->select();
             }
+            foreach($account_r as $key => $val){
+                $aid['account_id'] = $account_r[$key]['aid'];
+                $salary = M('salary')->where($aid)->find();
+                $account_r[$key]['account_id'] = $salary['account_id'];
+                $account_r[$key]['standard_salary'] = $salary['standard_salary'];
+                $account_r[$key]['basic_salary'] = $salary['basic_salary'];
+                $account_r[$key]['performance_salary'] = $salary['performance_salary'];
+
+            }
             if(!$account_r || $account_r==""){$this->error('请添加员工编码或者员工部门！', U('Rbac/index'));die;}
         }
         $sum = M('op_record')->where('optype=11')->count();//操作记录数量
@@ -190,16 +199,17 @@ class SalaryController extends BaseController {
         $this->display();
     }
 
+
     /**
      *  echo M()->getLastSql();
      * salary_info 操作记录 函数
      */
 
-    private function salary_info($status,$type){
+    function salary_info($status,$type){
         $add['op_time'] = time();
-        $add['nickname'] = $_SESSION['nickname'];
-        $add['optype'] = $type;//添加岗位薪酬变动
-        switch ($status){
+        $add['uname'] = $_SESSION['nickname'];
+        $add['optype'] = $status;//添加岗位薪酬变动
+        switch ($type){
             case 1:
                 $add['explain'] = '添加入职信息';
                 break;
@@ -237,6 +247,8 @@ class SalaryController extends BaseController {
                 break;
             case 13:
                 $add['explain'] = '添加部门信息';
+                break;
+            default:
                 break;
         }
         $isok = M('op_record')->add($add);
@@ -302,36 +314,62 @@ class SalaryController extends BaseController {
 
     /**
      * salary_add 添加岗位工资 基效比例
-     *
+     * $status 1 保存  2 编辑
      */
     public function salary_add(){
-
         if(IS_POST){
-            $add['account_id'] = trim($_POST['account_id']);
+            $id['account_id'] = trim($_POST['account_id']);
+            $add['type'] = trim($_POST['type']);
             $add['standard_salary'] = trim($_POST['standard_salary']);
             $add['basic_salary'] = trim($_POST['basic_salary']);
             $add['performance_salary'] = trim($_POST['performance_salary']);
-            $add['grant_time'] = trim(strtotime(date('Y-m',strtotime($_POST['grant_time']))));
-            $add = array_filter($add);
-            $salary_x = M('salary')->where($add)->find();
-            $salary_r = M('salary')->where($add)->find();
-            if($salary_r){
+//            $add['grant_time'] = trim(strtotime(date('Y-m',strtotime($_POST['grant_time']))));//数据从月份开始
+            if(!is_numeric($id['account_id']) || !is_numeric($add['standard_salary']) || !is_numeric($add['basic_salary']) || !is_numeric($add['performance_salary']) ||  !is_numeric($add['type'])){
                 $sum = 0;
-                $msg = "请不要重复添加数据!";
+                $msg = "数据不能留空白或填写错误!";
                 echo json_encode(array('sum'=>$sum,'msg'=>$msg));die;
             }
-            $add['createtime'] = time();
-            $salary_w = M('salary')->add($add);
-            if($salary_r){
-                $this->salary_info(11,1);
-                $sum = 1;
-                $msg = "恭喜你添加成功!";
-                $cont = $add;
-            }else{
+            $add = array_filter($add);
+            $status = trim($_POST['status']);
+            if(empty($id['account_id'])){
                 $sum = 0;
                 $msg = "您添加数据失败!请重新添加!";
+                echo json_encode(array('sum'=>$sum,'msg'=>$msg));die;
             }
-            echo json_encode(array('sum'=>$sum,'msg'=>$msg,'cont'=>$cont));die;
+            if($status==1){//保存
+                $add['account_id'] = $id['account_id'];
+                $salary_r = M('salary')->where($id)->find();
+                if($salary_r){
+                    $sum = 0;
+                    $msg = "请不要重复添加数据!";
+                    echo json_encode(array('sum'=>$sum,'msg'=>$msg));die;
+                }
+                $add['createtime'] = time();
+                $salary_w = M('salary')->add($add);
+                if($salary_w){
+                    $info = $this->salary_info(11,1);
+                    $sum  = 1;
+                    $msg  = "恭喜你添加成功!";
+                    echo json_encode(array('sum'=>$sum,'msg'=>$msg));die;
+                }else{
+                    $sum = 0;
+                    $msg = "您添加数据失败!请重新添加!";
+                    echo json_encode(array('sum'=>$sum,'msg'=>$msg));die;
+                }
+            }
+            if($status==2){//编辑
+                $salary_x = M('salary')->where($id)->save($add);
+                if($salary_x){
+                    $info = $this->salary_info(11,6);
+                    $sum  = 1;
+                    $msg  = "恭喜您修改成功!";
+                    echo json_encode(array('sum'=>$sum,'msg'=>$msg));die;
+                }else{
+                    $sum = 0;
+                    $msg = "修改数据失败!请重新修改!";
+                    echo json_encode(array('sum'=>$sum,'msg'=>$msg));die;
+                }
+            }
         }
     }
     /**
