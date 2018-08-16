@@ -26,6 +26,7 @@
         <!-- Theme style -->
         <link href="__HTML__/css/py.css?v=1.0.8" rel="stylesheet" type="text/css" />
         <link href="__HTML__/comm/jquery.autocomplete.css" rel="stylesheet" type="text/css" />
+        <link href="__HTML__/css/staff.css?v=1.0.0" rel="stylesheet" type="text/css" />
         <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
         <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
         <!--[if lt IE 9]>
