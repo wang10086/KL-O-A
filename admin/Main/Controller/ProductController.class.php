@@ -19,17 +19,21 @@ class ProductController extends BaseController {
 		
 		$key          = I('key');
 		$pro          = I('pro');
-		$zj           = I('zj');
+        $type         = I('type');
+        $fields       = I('subject_field');
+        $from         = I('from');
 		$age          = I('age');
 
 		$db           = M('product');
 		$this->pro    = $pro;
 		$where        = array();
-		if($key)    $where['p.title'] = array('like','%'.$key.'%');
-		if($pro)    $where['p.business_dept'] = array('like','%'.$pro.'%');
-		if($age)    $where['p.age'] = array('like','%'.$age.'%');
-		if($zj)     $where['p.input_uname'] = array('like','%'.$zj.'%');
-		
+		if($key)    $where['p.title']           = array('like','%'.$key.'%');
+		if($pro)    $where['p.business_dept']   = array('like','%'.$pro.'%');
+		if($age)    $where['p.age']             = array('like','%'.$age.'%');
+        if($type)   $where['p.type']            = array('eq',$type);
+        if($from)   $where['p.from']            = array('eq',$from);
+        if($fields) $where['p.subject_field']   = array('eq',$fields);
+
 		$business_depts = C('BUSINESS_DEPT');
         $page = new Page($db->table('__PRODUCT__ as p')->where($where)->count(), P::PAGE_SIZE);
         $this->pages = $page->show();
@@ -55,6 +59,7 @@ class ProductController extends BaseController {
         $this->ptype    = C('PRODUCT_TYPE');
         $this->pfrom    = C('PRODUCT_FROM');
         $this->kinds    = $kinds;
+        $this->ages     = C('AGE_LIST');
         $this->reckon_mode      = C('RECKON_MODE');
         $this->subject_fields   = C('SUBJECT_FIELD');
 

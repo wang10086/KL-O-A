@@ -123,60 +123,46 @@
                 <input type="hidden" name="m" value="Main">
                 <input type="hidden" name="c" value="Product">
                 <input type="hidden" name="a" value="index">
+                <input type="hidden" name="pro" value="{$pro}">
                 <div class="form-group col-md-12">
                     <input type="text" class="form-control" name="key" placeholder="关键字">
                 </div>
                 
-                <div class="form-group col-md-4">
-                    <select class="form-control" name="pro">
-                        <option value="0">适用业务类型</option>
-                        <foreach name="kinds" key="k" item="v">
+                <div class="form-group col-md-6">
+                    <select class="form-control" name="type">
+                        <option value="">类别</option>
+                        <foreach name="ptype" key="k" item="v">
                         <option value="{$k}">{$v}</option>
                         </foreach>
                     </select>
                 </div>
+
+                <div class="form-group col-md-6">
+                    <select class="form-control" name="subject_field">
+                        <option value="">领域</option>
+                        <foreach name="subject_fields" key="k" item="v">
+                            <option value="{$k}">{$v}</option>
+                        </foreach>
+                    </select>
+                </div>
+
+                <div class="form-group col-md-6">
+                    <select class="form-control" name="from">
+                        <option value="">来源</option>
+                        <foreach name="pfrom" key="k" item="v">
+                            <option value="{$k}">{$v}</option>
+                        </foreach>
+                    </select>
+                </div>
                 
-                <div class="form-group col-md-4">
+                <div class="form-group col-md-6">
                     <select class="form-control" name="age">
-                        <option value="0">适用年龄</option>
+                        <option value="">适用年龄</option>
                         <foreach name="ages" key="k" item="v">
                         <option value="{$k}">{$v}</option>
                         </foreach>
                     </select>
                 </div>
-                
-                <div class="form-group col-md-4">
-                    <input type="text" class="form-control" name="zj" placeholder="专家">
-                </div>
-                <!--
-                <div class="form-group col-md-4">
-                    <select class="form-control" name="pro">
-                        <option value="0">适用项目类型</option>
-                        <foreach name="project" key="k" item="v">
-                        <option value="{$k}">{$v}</option>
-                        </foreach>
-                    </select>
-                </div>
-                
-                <div class="form-group col-md-4">
-                    <select class="form-control" name="bus">
-                        <option value="0">业务部门</option>
-                        <foreach name="business_depts" key="k" item="v">
-                        <option value="{$k}">{$v}</option>
-                        </foreach>
-                    </select>
-                </div>
-                
-                
-                <div class="form-group col-md-4">
-                    <select class="form-control" name="age">
-                        <option value="0">适用年龄</option>
-                        <foreach name="ages" key="k" item="v">
-                        <option value="{$k}">{$v}</option>
-                        </foreach>
-                    </select>
-                </div>
-                -->
                 
                 </form>
             </div>
