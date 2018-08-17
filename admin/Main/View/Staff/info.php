@@ -64,14 +64,14 @@
                                     </form>
 
 
-                                    <div class="form-group col-md-12">
+                                    <div class="form-group col-md-12" id="box">
                                         <label class="straff-tit">回帖信息</label>
                                         <foreach name="huifu" key="k" item="v">
                                             <div class="form-group col-md-12 mb0">
                                                {$k+1}、<span style="display: inline-block;">{$v.content}</span>
                                             </div>
 
-                                            <div class="note-info">
+                                            <div class="note-info" class="nei">
                                                 <span class="note-xq ml20">作者：匿名游客</span>
                                                 |<span class="note-xq ml10">发布时间：{$v.send_time|date='Y-m-d H:i:s',###}</span>
                                                 | <span class="note-xq ml10">点赞：<a href="javascript:;" id="zan-logo_{$v.id}" onclick="zan({$v.id})"><i class="fa fa-thumbs-o-up"></i></a></span>
@@ -79,6 +79,8 @@
                                             </div>
                                         </foreach>
                                     </div>
+
+                                    <a href="javascript:void(0)" class="showa">展开</a>
 
                                 </div><!-- /.box-body -->
                             </div><!-- /.box -->
@@ -127,7 +129,6 @@
         var id= i;
 
         if(a == b){
-            alert(111);
             $.ajax({
                 type:"POST",
                 url:"{:U('Ajax/staff')}",
@@ -142,10 +143,28 @@
                 }
             })
         }else{
-            alert(22);
 
             $('#zan-logo_'+i).html('<i class="fa fa-thumbs-up"></i>');
         }
     }
+
+    //更多,收起
+    $(document).ready(function(){
+        var oHeight = $('.nei').height();//获取里面div的高度
+        oldHeight=oHeight;//把里面div的高度赋值给外面的div
+        var newHeight = $("#box").css({height:"100px"});//这个是加载后给外面div设置的一个高度(显示内容的区域)
+        if(oHeight<100){//如果里面div的高度小于100的话也就是说内容不多的时候把更多按钮隐藏
+            $('.showa').css('display','none')
+        }
+        $(".showa").click(function(){
+            if(parseInt($("#box").height())==oldHeight){
+                $("#box").animate({height:"100px"});
+                $(this).html("展开");
+            }else{
+                $("#box").animate({height:oldHeight});
+                $(this).html("收起");
+            }
+        });
+    });
 </script>
 		 
