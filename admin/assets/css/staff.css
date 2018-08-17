@@ -1,8 +1,8 @@
 dl,dt,dd,ul,ol,li{padding:0;margin:0;border:0;}
 ul{list-style:none; list-style-type:none; margin:0; padding:0;}
 .employee-aspirations{  height: 50px;  line-height: 50px;  width: 200px;  text-align: center;   position:fixed;  bottom:20px;  right:30px;  font-size: 22px;  background-color: #2fcfff !important;  border-radius: 3px;  border: 1px solid transparent;  color: #fff;  }
-.staff{  width: 100%;  height:auto !important; /*height: 100%;*/  margin: 0;  background-color:#dceffe;  float:left; clear:both; }
-.staff-con{ width:1200px; margin:0 auto; overflow: hidden;  padding: 20px;}
+.staff{  width: 100%;  /*height:auto !important;*/ height: 100%;  margin: 0;  background-color:#dceffe;  float:left; clear:both; }
+.staff-con{ width:1200px; height: 100%; margin:0 auto; overflow: hidden;  padding: 20px;}
 .mt20{margin-top: 20px;}
 .actlbox{ width:870px; height:auto !important; float:left; clear:both; padding-bottom:40px; overflow:hidden;}
 .actlbox h1{  width:100%; float:left; clear:both; text-align:center; color:#333333; font-weight: 400;font-style: normal;font-size: 20px;}

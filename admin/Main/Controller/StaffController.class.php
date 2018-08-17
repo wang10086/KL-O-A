@@ -77,9 +77,48 @@ class StaffController extends Controller{
         $list['content']= htmlspecialchars_decode($list['content']);
         $this->list     = $list;
 
+        $token              = md5(uniqid(rand(), true));
+        $_SESSION['token']  = $token;
+        $this->token        = $token;
+
         $hot_tiezi      = $this->get_hot_tiezi(6);
         $this->hot_tiezi= $hot_tiezi;
 
+        $huifu          = M('staff')->where(array('pid'=>$id))->order('send_time desc, good_num desc')->select();
+        foreach ($huifu as $k=>$v){
+            $huifu[$k]['content'] = htmlspecialchars_decode($v['content']);
+        }
+        $this->huifu    = $huifu;
+
         $this->display();
+    }
+
+    public function save_staff(){
+        $db             = M('staff');
+        $id             = I('id');
+
+        if (isset($_POST['dosubmit']) && isset($_POST['token'])){
+            $token              = I('token');
+            if ($token == $_SESSION['token']){
+                $info           = array();
+                $info['pid']    = $id;
+                $info['content']= stripslashes(I('content'));
+                $info['send_time']= NOW_TIME;
+                $res = $db->add($info);
+
+                $data           = array();
+                $com_num        = $db->where(array('id'=>$id))->getField('com_num');
+                $data['com_num']= $com_num + 1;
+                $db->where(array('id'=>$id))->save($data);
+                if ($res){
+                    $this->success('发布成功',U('Staff/info',array('id'=>$id)));
+                }else{
+                    $this->error('数据保存失败');
+                }
+            }else{
+
+                $this->error('非法数据');
+            }
+        }
     }
 }

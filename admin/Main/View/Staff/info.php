@@ -1,7 +1,17 @@
 <include file="header" />
-<style>
 
+<script>
+    $(function(){
+        $('#myform').hide();
+
+    })
+</script>
+
+<style>
+.straff-tit{font-weight: 600;}
+    .mb0{margin-bottom: 0}
 </style>
+
 <div class="staff">
     <div class="staff-con" style="background-color:  #eeeeee;">
         <div class="img-header">
@@ -26,24 +36,25 @@
                                     <h3 class="box-title">发布帖子</h3>
                                 </div><!-- /.box-header -->
                                 <div class="box-body">
-                                    <div class="form-group col-md-12">
-                                        <label>帖子详情</label>
+                                    <div class="form-group col-md-12 mb0">
+                                        <label class="straff-tit">帖子详情</label>
                                         {$list.content}
                                     </div>
 
                                     <div class="note-info">
                                         <span class="note-xq ml20">作者：匿名游客</span>
-                                        |<span class="note-xq ml10">发布时间：{$v.send_time|date='Y-m-d H:i:s',###}</span>
-                                        | <span class="note-xq ml10">点赞：<i class="fa fa- thumbs-o-up"></i></span>
+                                        |<span class="note-xq ml10">发布时间：{$list.send_time|date='Y-m-d H:i:s',###}</span>
+                                        | <span class="note-xq ml10">点赞：<a href="javascript:;" id="zan-logo_{$list.id}" onclick="zan({$list.id})"><i class="fa fa-thumbs-o-up"></i></a></span>
                                         | <span class="note-xq ml10"><a href="javascript:;" onclick="show_form()">回复</a></span>
                                     </div>
 
 
-                                    <form method="post" action="{:U('Staff/add')}" name="myform" id="myform">
+                                    <form method="post" action="{:U('Staff/save_staff')}" name="myform" id="myform">
                                         <input type="hidden" name="dosubmit" value="1" />
                                         <input type="hidden" name="token" value="{$token}">
+                                        <input type="hidden" name="id" value="{$list.id}">
                                         <div class="form-group col-md-12">
-                                            <label>回复内容</label>
+                                            <label class="straff-tit">回复内容</label>
                                             <?php echo editor('content',''); ?>
                                         </div>
 
@@ -53,7 +64,21 @@
                                     </form>
 
 
-                                    <div class="form-group">&nbsp;</div>
+                                    <div class="form-group col-md-12">
+                                        <label class="straff-tit">回帖信息</label>
+                                        <foreach name="huifu" key="k" item="v">
+                                            <div class="form-group col-md-12 mb0">
+                                               {$k+1}、<span style="display: inline-block;">{$v.content}</span>
+                                            </div>
+
+                                            <div class="note-info">
+                                                <span class="note-xq ml20">作者：匿名游客</span>
+                                                |<span class="note-xq ml10">发布时间：{$v.send_time|date='Y-m-d H:i:s',###}</span>
+                                                | <span class="note-xq ml10">点赞：<a href="javascript:;" id="zan-logo_{$v.id}" onclick="zan({$v.id})"><i class="fa fa-thumbs-o-up"></i></a></span>
+                                                <!--| <span class="note-xq ml10"><a href="javascript:;" onclick="show_form()">回复</a></span>-->
+                                            </div>
+                                        </foreach>
+                                    </div>
 
                                 </div><!-- /.box-body -->
                             </div><!-- /.box -->
@@ -94,6 +119,33 @@
 
     function show_form(){
         $('#myform').show();
+    }
+
+    function zan(i){
+        var a = $('#zan-logo_'+i).html();
+        var b = '<i class="fa fa-thumbs-o-up"></i>';
+        var id= i;
+
+        if(a == b){
+            alert(111);
+            $.ajax({
+                type:"POST",
+                url:"{:U('Ajax/staff')}",
+                data:{id:id},
+                success:function(msg){
+                    if(msg){
+                        $('#zan-logo_'+i).html('<i class="fa fa-thumbs-up"></i>');
+                    }else{
+                       alert('点赞失败');
+                    }
+
+                }
+            })
+        }else{
+            alert(22);
+
+            $('#zan-logo_'+i).html('<i class="fa fa-thumbs-up"></i>');
+        }
     }
 </script>
 		 
