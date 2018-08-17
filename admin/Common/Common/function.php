@@ -3368,9 +3368,83 @@ function kpilock($month,$uid){
 	}else{
 		return false;	
 	}
-	
-	
+
 }
+
+/**
+ *  echo M()->getLastSql();
+ * salary_info 操作记录 函数
+ */
+function salary_info($status,$type){
+	$add['op_time'] = time();
+	$add['uname'] = $_SESSION['nickname'];
+	$add['optype'] = $status;//添加岗位薪酬变动
+	switch ($type){
+		case 1:
+			$add['explain'] = '添加入职信息';
+			break;
+		case 2:
+			$add['explain'] = '添加转正信息';
+			break;
+		case 3:
+			$add['explain'] = '添加调岗信息';
+			break;
+		case 4:
+			$add['explain'] = '添加离职信息';
+			break;
+		case 5:
+			$add['explain'] = '添加调薪信息';
+			break;
+		case 6:
+			$add['explain'] = '修改入职信息';
+			break;
+		case 7:
+			$add['explain'] = '修改转正信息';
+			break;
+		case 8:
+			$add['explain'] = '修改调岗信息';
+			break;
+		case 9:
+			$add['explain'] = '修改离职信息';
+			break;
+		case 10:
+			$add['explain'] = '修改调薪信息';
+			break;
+		case 11:
+			$add['explain'] = '添加考勤信息';
+		case 12:
+			$add['explain'] = '修改考勤信息';
+			break;
+		case 13:
+			$add['explain'] = '添加部门信息';
+			break;
+		default:
+			break;
+	}
+	$isok = M('op_record')->add($add);
+	if(!$isok){
+		$this->error('添加失败!请重新添加！', U('Salary/salary_query'));die;
+	}
+}
+
+function query_posts(){//查询岗位
+	return M('posts')->select();
+
+}
+function query_department(){//部门
+return M('salary_department')->select();
+
+}
+function code_number($number){
+	if(!is_numeric($number)){
+		$sum  = 0;
+		$msg  = "格式错误!请重新提交!";
+		echo json_encode(array('sum'=>$sum,'msg'=>$msg));die;
+	}else{
+		return $number;
+	}
+}
+
 
 ?>
 

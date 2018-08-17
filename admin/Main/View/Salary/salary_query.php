@@ -149,42 +149,53 @@
 
                                             <table class="table table-bordered dataTable fontmini" id="tablelist" style="margin-top:10px;">
                                                 <tr role="row" class="orders" >
-                                                    <th class="sorting" data="op_id"  style="width:8em;">ID</th>
-                                                    <th class="sorting" data="group_id" style="width:10em;">员工姓名</th>
-                                                    <th class="sorting" data="group_id" style="width:10em;">员工编号</th>
-                                                    <th class="sorting" data="group_id" style="width:10em;">原部门</th>
+                                                    <th class="sorting" data="op_id"  style="width:5em;">ID</th>
+                                                    <th class="sorting" data="group_id" style="width:7em;">员工姓名</th>
+                                                    <th class="sorting" data="group_id" style="width:5em;">员工编号</th>
+                                                    <th class="sorting" data="group_id" style="width:8em;">原部门</th>
                                                     <th class="sorting" data="project" style="width:10em;">原岗位</th>
-                                                    <th class="sorting" data="number" style="width:10em;">现部门</th>
+                                                    <th class="sorting" data="number" style="width:15em;">现部门</th>
                                                     <th class="sorting" data="number" style="width:15em;">现岗位</th>
-                                                    <th class="sorting" data="shouru" style="width:15em;">原岗位薪酬标准</th>
-                                                    <th class="sorting" data="shouru" style="width:15em;">原基效比</th>
+                                                    <th class="sorting" data="shouru" style="width:10em;">原岗位薪酬标准</th>
+                                                    <th class="sorting" data="shouru" style="width:8em;">原基效比</th>
                                                     <th class="sorting" data="shouru" style="width:15em;">现岗位薪酬标准</th>
                                                     <th class="sorting" data="shouru" style="width:15em;">现基效比</th>
-                                                    <th class="sorting" data="shouru" style="width:8em;">操作</th>
+                                                    <th class="sorting" data="shouru" style="width:5em;">操作</th>
                                                     </if>
 
                                                 </tr>
                                                 <foreach name="list" item="row">
                                                     <tr>
-                                                        <td>{$row.aid}</td>
+                                                        <td id ="salary_adjustment_<?php echo $row['aid'];?>">{$row.aid}</td>
                                                         <td>{$row.nickname}</td>
                                                         <td>{$row.employee_member}</td>
                                                         <td>{$row.department}</td>
                                                         <td>{$row.post_name}</td>
                                                         <input type="hidden" name="aid" class="form-control salary_sid" value="{$row.aid}"/>
-                                                        <td ><input type="text" name="department" class="form-control salary_current_department" /></td>
-                                                        <td><input type="text" name="name" class="form-control salary_present_post" /></td>
+                                                        <td>
+                                                            <select class="form-control salary_current_department">
+                                                                <foreach name="department" item="dep">
+                                                                    <option value ="{$dep.id}">{$dep.department}</option>
+                                                                </foreach>
+                                                            </select>
+                                                        </td>
+                                                        <td>
+                                                            <select class="form-control salary_present_post">
+                                                                <foreach name="posts" item="p">
+                                                                    <option value ="{$p.id}">{$p.post_name}</option>
+                                                                </foreach>
+                                                            </select>
+                                                        </td>
                                                         <td>{$row.standard_salary}</td>
                                                         <td>{$row.basic_salary} <?php if(!empty($row['basic_salary'])){echo ":";} ?> {$row.performance_salary} </td>
-                                                        <td><input type="text" name="name" class="form-control salary_present_salary" /></td>
+                                                        <td><input type="text" class="form-control salary_present_salary" /></td>
                                                         <td class="salary_basic">
                                                             <input type="text" style="width:5em" class="salary_basic1" /> :
                                                             <input type="text" style="width:5em" class="salary_basic2" />
                                                         </td>
                                                         <td class="salary_entry">
-                                                            <input type="hidden" class="salary_type" value="2"/>
-                                                            <input type="hidden" class="salary_status" value="2"/>
-                                                            <input type="button" value="保存" style="background-color:#00acd6;font-size:1em;" class="salary_butt4">
+                                                            <input type="hidden" class="salary_status" value="1"/>
+                                                            <input type="button" value="保存" style="background-color:#00acd6;font-size:1em;" class="salary_adjustment_butt4">
                                                         </td>
                                                     </tr>
                                                 </foreach>
@@ -224,11 +235,12 @@
                                                         <td>{$row.post_name}</td>
                                                         <td>{$row.standard_salary}</td>
                                                         <td>{$row.basic_salary} <?php if(!empty($row['basic_salary'])){echo ":";} ?> {$row.performance_salary} </td>
-                                                        <td>&nbsp;&nbsp;&nbsp;<input type="date"></td>
-                                                        <td>&nbsp;&nbsp;&nbsp;<input type="button" value="保存" style="background-color:#00acd6;font-size:1.5em;"></td>
+                                                        <td> <input type="date" name="month" class="form-control salary_monthly" placeholder="月份" style="width:16em; margin-right:10px;"/></td>
+                                                        <input type="hidden" name="aid" class="form-control salary_sid" value="{$row.aid}"/>
+                                                        <input type="hidden" class="salary_status" value="2"/>
+                                                        <td>&nbsp;&nbsp;&nbsp;<input type="button" value="保存" style="background-color:#00acd6;font-size:1.5em;" class="salary_adjustment_butt4"></td>
                                                     </tr>
                                                 </foreach>
-
 
                                             </table>
                                         </div>
@@ -378,33 +390,58 @@
             dataType: "json", //数据格式
             success: function (data) {
                if(data.sum==1){
-                   alert(data.msg);
-                   if(count==2 && type == 2){
-                       $('.'+salary_aid).parent('tr').find('.salary_butt2').val("已保存");
-                       $('.'+salary_aid).parent('tr').find('.salary_butt2').css('background-color','#00FF66');
-                       $('.'+salary_aid).parent('tr').find('.salary_butt2').addClass('salary_butt1 salary_butt2');
-                   }
-                   if(count==1){
-                       $('#'+salary_aid).parent('tr').find('.salary_butt3').val("已保存");
-                       $('#'+salary_aid).parent('tr').find('.salary_butt3').css('background-color','#00FF66');
-                       $('#'+salary_aid).parent('tr').find('.salary_butt3').addClass('salary_butt1 salary_butt3');
-                   }
-                   if(count==2){
-                       $('#'+salary_aid).parent('tr').find('.salary_butt2').val("已编辑");
-                       $('#'+salary_aid).parent('tr').find('.salary_butt2').css('background-color','#00FF66');
-                       $('#'+salary_aid).parent('tr').find('.salary_butt2').addClass('salary_butt1 salary_butt2');
-                   }
+                   alert(data.msg);die;
+
                }
                if(data.sum==0){
-                   alert(data.msg);
+                   alert(data.msg);die;
                }
             }
         });
-    })
+    });
 
-    $('.salary_butt4').click(function(){
-        var type = $(this).parents('tr').find('.salary_type').val();//状态s
-        var status = $(this).parents('tr').find('.salary_statu').val();//判断状态
-    })
+    $('.salary_adjustment_butt4').click(function(){
+
+        var status = $(this).parents('tr').find('.salary_status').val();//判断状态
+        var aid = $(this).parents('tr').find('.salary_sid').val();//用户id
+        if(status==1){
+            var department = $(this).parents('tr').find('.salary_current_department').val();//部门
+            var posts = $(this).parents('tr').find('.salary_present_post').val();//岗位
+            var salary = $(this).parents('tr').find('.salary_present_salary').val();//岗位薪酬
+            var basic1 = $(this).parents('tr').find('.salary_basic1').val();//岗位基本薪酬
+            var basic2 = $(this).parents('tr').find('.salary_basic2').val();//岗位绩效薪酬}
+            $.ajax({
+                type: "post",
+                url: "{:U('Salary/addPost')}", //url
+                data: {'account_id':aid,'department':department,'posts':posts,'salary':salary,'basic1':basic1,'basic2':basic2,'status':status},
+                dataType: "json", //数据格式
+                success: function (data) {
+                    if(data.sum==1){
+                        alert(data.msg);die;
+                    }
+                    if(data.sum==0){
+                        alert(data.msg);die;
+                    }
+                }
+            });
+        }
+        if(status==2){
+            var data  = $(this).parents('tr').find('.salary_monthly').val();//时间
+            $.ajax({
+                type: "post",
+                url: "{:U('Salary/addPost')}", //url
+                data: {'account_id':aid,'status':status,'data':data},
+                dataType: "json", //数据格式
+                success: function (data) {
+                    if(data.sum==1){
+                        alert(data.msg);die;
+                    }
+                    if(data.sum==0){
+                        alert(data.msg);die;
+                    }
+                }
+            });
+        }
+    });
 
 </script>
