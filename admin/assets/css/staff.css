@@ -24,7 +24,7 @@ ul{list-style:none; list-style-type:none; margin:0; padding:0;}
 .notice-tit{font-size: 16px;}
 
 .staff-name{font-weight: 600;}
-.note-con{display: -webkit-box;-webkit-box-orient: vertical;-webkit-line-clamp: 2;overflow: hidden; color: #716d6d;}
+.note-con{display: -webkit-box;-webkit-box-orient: vertical;-webkit-line-clamp: 2;overflow: hidden; color: #716d6d; height: 43px; font-size: 14px;}
 .note-info{ width: auto;   margin-bottom: 35px; padding-bottom: 8px;color: #716d6d;}
 .note-xq{font-size: 12px; margin-right: 10px;}
 .rtop-box{width: 100%; height: 80px; border: solid 1px #cccccc; background-color: #52ABD7;}
