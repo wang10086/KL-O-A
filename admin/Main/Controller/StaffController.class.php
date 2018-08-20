@@ -38,18 +38,24 @@ class StaffController extends Controller{
 
         if (isset($_POST['dosubmit']) && isset($_POST['token'])){
             $token          = I('token');
-            if ($token == $_SESSION['token']){
-                $info           = array();
-                $info['content']= stripslashes(I('content'));
-                $info['send_time']= NOW_TIME;
-                $res = M('staff')->add($info);
-                if ($res){
-                    $this->success('发布成功',U('Staff/index'));
+            $arr_ip         = C('ARR_IP');
+            $ip             = get_client_ip();
+            if (in_array($ip,$arr_ip)){
+                if ($token == $_SESSION['token']){
+                    $info           = array();
+                    $info['content']= stripslashes(I('content'));
+                    $info['send_time']= NOW_TIME;
+                    $res = M('staff')->add($info);
+                    if ($res){
+                        $this->success('发布成功',U('Staff/index'));
+                    }else{
+                        $this->error('数据保存失败');
+                    }
                 }else{
-                    $this->error('数据保存失败');
+
+                    $this->error('非法数据');
                 }
             }else{
-
                 $this->error('非法数据');
             }
         }else{
@@ -100,24 +106,30 @@ class StaffController extends Controller{
 
         if (isset($_POST['dosubmit']) && isset($_POST['token'])){
             $token              = I('token');
-            if ($token == $_SESSION['token']){
-                $info           = array();
-                $info['pid']    = $id;
-                $info['content']= stripslashes(I('content'));
-                $info['send_time']= NOW_TIME;
-                $res = $db->add($info);
+            $arr_ip             = C('ARR_IP');
+            $ip                 = get_client_ip();
+            if (in_array($ip,$arr_ip)){
+                if ($token == $_SESSION['token']){
+                    $info           = array();
+                    $info['pid']    = $id;
+                    $info['content']= stripslashes(I('content'));
+                    $info['send_time']= NOW_TIME;
+                    $res = $db->add($info);
 
-                $data           = array();
-                $com_num        = $db->where(array('id'=>$id))->getField('com_num');
-                $data['com_num']= $com_num + 1;
-                $db->where(array('id'=>$id))->save($data);
-                if ($res){
-                    $this->success('发布成功',U('Staff/info',array('id'=>$id)));
+                    $data           = array();
+                    $com_num        = $db->where(array('id'=>$id))->getField('com_num');
+                    $data['com_num']= $com_num + 1;
+                    $db->where(array('id'=>$id))->save($data);
+                    if ($res){
+                        $this->success('发布成功',U('Staff/info',array('id'=>$id)));
+                    }else{
+                        $this->error('数据保存失败');
+                    }
                 }else{
-                    $this->error('数据保存失败');
+
+                    $this->error('非法数据');
                 }
             }else{
-
                 $this->error('非法数据');
             }
         }
