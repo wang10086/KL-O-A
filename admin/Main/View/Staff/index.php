@@ -12,8 +12,8 @@
             <div class="con-header">
                 <h4 class="notice-tit">温馨提示 :</h4>
                 <p class="ml20">1.本贴吧采用不记名方式 ; </p>
-                <p class="ml20">2.本贴吧采用不记名方式 ; </p>
-                <p class="ml20">3.本贴吧采用不记名方式 ; </p>
+                <p class="ml20">2.如果您对本公司有任何意见或建议,欢迎来此吐槽 ; </p>
+                <p class="ml20">3.欢迎提出您宝贵的意见和建议! </p>
             </div>
 
             <foreach name="list" item="v">

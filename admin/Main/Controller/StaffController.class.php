@@ -121,4 +121,16 @@ class StaffController extends Controller{
             }
         }
     }
+
+    public function del_staff(){
+        $id     = I('id');
+        $res    = M('staff')->where(array('id'=>$id))->delete();
+        M('staff')->where(array('pid'=>$id))->delete();
+        if ($res){
+            $this->success('删除成功');
+        }else{
+            $this->error('删除失败');
+        }
+    }
+
 }

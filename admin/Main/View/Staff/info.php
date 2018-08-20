@@ -46,41 +46,44 @@
                                         |<span class="note-xq ml10">发布时间：{$list.send_time|date='Y-m-d H:i:s',###}</span>
                                         | <span class="note-xq ml10">点赞：<a href="javascript:;" id="zan-logo_{$list.id}" onclick="zan({$list.id})"><i class="fa fa-thumbs-o-up"></i></a></span>
                                         | <span class="note-xq ml10"><a href="javascript:;" onclick="show_form()">回复</a></span>
-                                    </div>
+                                        | <span class="note-xq ml10"><a href="javascript:ConfirmDel('{:U('Staff/del_staff',array('id'=>$list['id']))}')" onclick="">删除</a></span>
 
-
-                                    <form method="post" action="{:U('Staff/save_staff')}" name="myform" id="myform">
-                                        <input type="hidden" name="dosubmit" value="1" />
-                                        <input type="hidden" name="token" value="{$token}">
-                                        <input type="hidden" name="id" value="{$list.id}">
-                                        <div class="form-group col-md-12">
-                                            <label class="straff-tit">回复内容</label>
-                                            <?php echo editor('content',''); ?>
-                                        </div>
-
-                                        <div id="formsbtn">
-                                            <button type="submit" class="btn btn-info btn-lg" id="lrpd">保存</button>
-                                        </div>
-                                    </form>
-
-
-                                    <div class="form-group col-md-12" id="box">
-                                        <label class="straff-tit">回帖信息</label>
-                                        <foreach name="huifu" key="k" item="v">
-                                            <div class="form-group col-md-12 mb0">
-                                               {$k+1}、<span style="display: inline-block;">{$v.content}</span>
+                                        <form method="post" action="{:U('Staff/save_staff')}" name="myform" id="myform" class="mt20">
+                                            <input type="hidden" name="dosubmit" value="1" />
+                                            <input type="hidden" name="token" value="{$token}">
+                                            <input type="hidden" name="id" value="{$list.id}">
+                                            <div class="form-group col-md-12">
+                                                <label class="straff-tit">回复内容</label>
+                                                <?php echo editor('content',''); ?>
                                             </div>
 
-                                            <div class="note-info" class="nei">
-                                                <span class="note-xq ml20">作者：匿名游客</span>
-                                                |<span class="note-xq ml10">发布时间：{$v.send_time|date='Y-m-d H:i:s',###}</span>
-                                                | <span class="note-xq ml10">点赞：<a href="javascript:;" id="zan-logo_{$v.id}" onclick="zan({$v.id})"><i class="fa fa-thumbs-o-up"></i></a></span>
-                                                <!--| <span class="note-xq ml10"><a href="javascript:;" onclick="show_form()">回复</a></span>-->
+                                            <div id="formsbtn">
+                                                <button type="submit" class="btn btn-info btn-lg" id="lrpd">保存</button>
                                             </div>
-                                        </foreach>
+                                        </form>
+
+                                        <div class="form-group col-md-12 mb0 mt20">
+                                            <label class="straff-tit">回帖信息</label>
+                                        </div>
+                                        <div class="note-info">
+                                            <foreach name="huifu" key="k" item="v">
+                                                <div class="form-group col-md-12 mb0">
+                                                    {$k+1}、<span style="display: inline-block;">{$v.content}</span>
+                                                </div>
+
+                                                <div class="note-info" >
+                                                    <span class="note-xq ml20">作者：匿名游客</span>
+                                                    |<span class="note-xq ml10">发布时间：{$v.send_time|date='Y-m-d H:i:s',###}</span>
+                                                    | <span class="note-xq ml10">点赞：<a href="javascript:;" id="zan-logo_{$v.id}" onclick="zan({$v.id})"><i class="fa fa-thumbs-o-up"></i></a></span>
+                                                    | <span class="note-xq ml10"><a href="javascript:ConfirmDel('{:U('Staff/del_staff',array('id'=>$v['id']))}')" onclick="">删除</a></span>
+                                                    <!--| <span class="note-xq ml10"><a href="javascript:;" onclick="show_form()">回复</a></span>-->
+                                                </div>
+                                            </foreach>
+                                        </div>
+                                        <div class="form-group col-md-12">&nbsp;</div>
+
                                     </div>
 
-                                    <!--<a href="javascript:void(0)" class="showa">展开</a>-->
 
                                 </div><!-- /.box-body -->
                             </div><!-- /.box -->
@@ -148,23 +151,5 @@
         }
     }
 
-    //更多,收起
-    $(document).ready(function(){
-        var oHeight = $('.nei').height();//获取里面div的高度
-        oldHeight=oHeight;//把里面div的高度赋值给外面的div
-        var newHeight = $("#box").css({height:"100px"});//这个是加载后给外面div设置的一个高度(显示内容的区域)
-        if(oHeight<100){//如果里面div的高度小于100的话也就是说内容不多的时候把更多按钮隐藏
-            $('.showa').css('display','none')
-        }
-        $(".showa").click(function(){
-            if(parseInt($("#box").height())==oldHeight){
-                $("#box").animate({height:"100px"});
-                $(this).html("展开");
-            }else{
-                $("#box").animate({height:oldHeight});
-                $(this).html("收起");
-            }
-        });
-    });
 </script>
 		 
