@@ -94,7 +94,7 @@
                                             
                                             <if condition="rolemenu(array('Product/add'))">
                                             <td class="taskOptions">
-                                            <button onClick="javascript:window.location.href='{:U('Product/add',array('id'=>$row['id'],'pro'=>$pro))}';" title="修改" class="btn btn-info btn-smsm"><i class="fa fa-pencil"></i></button>
+                                            <button onClick="javascript:window.location.href='{:U('Product/add',array('id'=>$row['id'],'business_dept'=>$pro))}';" title="修改" class="btn btn-info btn-smsm"><i class="fa fa-pencil"></i></button>
                                             </td>
                                             </if>
                                             <if condition="rolemenu(array('Product/del'))">
