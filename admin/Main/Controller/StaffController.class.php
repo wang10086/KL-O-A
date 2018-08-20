@@ -14,8 +14,6 @@ use Sys\P;
 class StaffController extends Controller{
 
     public function index(){
-        $ip = get_client_ip();
-        var_dump($ip);
 
         $db         = M('staff');
 
