@@ -3375,52 +3375,11 @@ function kpilock($month,$uid){
  *  echo M()->getLastSql();
  * salary_info 操作记录 函数
  */
-function salary_info($status,$type){
+function salary_info($status,$cont){
 	$add['op_time'] = time();
 	$add['uname'] = $_SESSION['nickname'];
 	$add['optype'] = $status;//添加岗位薪酬变动
-	switch ($type){
-		case 1:
-			$add['explain'] = '添加入职信息';
-			break;
-		case 2:
-			$add['explain'] = '添加转正信息';
-			break;
-		case 3:
-			$add['explain'] = '添加调岗信息';
-			break;
-		case 4:
-			$add['explain'] = '添加离职信息';
-			break;
-		case 5:
-			$add['explain'] = '添加调薪信息';
-			break;
-		case 6:
-			$add['explain'] = '修改入职信息';
-			break;
-		case 7:
-			$add['explain'] = '修改转正信息';
-			break;
-		case 8:
-			$add['explain'] = '修改调岗信息';
-			break;
-		case 9:
-			$add['explain'] = '修改离职信息';
-			break;
-		case 10:
-			$add['explain'] = '修改调薪信息';
-			break;
-		case 11:
-			$add['explain'] = '添加考勤信息';
-		case 12:
-			$add['explain'] = '修改考勤信息';
-			break;
-		case 13:
-			$add['explain'] = '添加部门信息';
-			break;
-		default:
-			break;
-	}
+	$add['explain'] = $cont;
 	$isok = M('op_record')->add($add);
 	if(!$isok){
 		$this->error('添加失败!请重新添加！', U('Salary/salary_query'));die;
