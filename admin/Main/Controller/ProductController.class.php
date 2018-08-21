@@ -95,11 +95,10 @@ class ProductController extends BaseController {
             $material           = I('material');
             $resid              = I('resid');
             $business_dept      = I('business_dept');   //模块类型
-            $pro                = I('pro');             //模块类型
             $age                = I('age');
             $res                = I('res');
             $info['content']    = stripslashes($_POST['content']);
-            $info['business_dept'] = $pro?$pro:$business_dept;
+            $info['business_dept'] = $business_dept;
             $info['age']        = implode(',',array_unique($age));
             $info['supplier']   = implode(',',array_unique($res));
             $id                 = I('id');
@@ -193,10 +192,10 @@ class ProductController extends BaseController {
             }
         } else {
             $id                  = I('id');
-            $business_dept       = I('pro');
+            $business_dept       = I('business_dept');
             $this->row           = M('product')->find($id);
             $this->business_dept = $business_dept?$business_dept:$this->row['business_dept'];
-            if ($business_dept != $this->row['business_dept'] || !$this->row['business_dept']){
+            if (($business_dept != $this->row['business_dept'] && $this->row['business_dept']) || (!$this->row['business_dept'] && !$business_dept)){
                 $this->pro_kind  = 1;
             }
 

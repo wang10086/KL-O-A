@@ -283,4 +283,15 @@ class AjaxController extends Controller {
             }
         }
     }
+
+    public function staff(){
+        $db         = M('staff');
+        $id         = I('id');
+        $good_num   = $db->where(array('id'=>$id))->getField('good_num');
+
+        $info       = array();
+        $info['good_num'] = $good_num+1;
+        $db->where(array('id'=>$id))->save($info);
+        //return $this->ajaxReturn($info['good_num']);
+    }
 }

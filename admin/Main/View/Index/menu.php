@@ -193,7 +193,7 @@
 
 
                         <if condition="rolemenu(array('Files/index'))">
-                        <li class="treeview {:ison(CONTROLLER_NAME, 'Sale')}">
+                        <li class="treeview {:ison(CONTROLLER_NAME, 'Files')}">
                             <a href="javascript:;">
                                 <i class="fa  fa-folder-open"></i>
                                 <span>文件管理</span>
@@ -203,7 +203,15 @@
                             	<if condition="rolemenu(array('Files/index'))">
                                 	<li><a href="{:U('Files/index')}"><i class="fa fa-angle-right"></i> 文件管理</a></li>
                                 </if>
-
+                                <if condition="rolemenu(array('Files/index'))">
+                                    <li class="{:on('Files/index')}"><a href="{:U('Files/index',array('pid'=>43))}"><i class="fa fa-angle-right"></i> 公司管理手册</a></li>
+                                </if>
+                                <if condition="rolemenu(array('Files/index'))">
+                                    <li class="{:on('Files/index')}"><a href="{:U('Files/index',array('pid'=>44))}"><i class="fa fa-angle-right"></i> 部门工作手册</a></li>
+                                </if>
+                                <if condition="rolemenu(array('Files/index'))">
+                                    <li class="{:on('Files/index')}"><a href="{:U('Files/index',array('pid'=>45))}"><i class="fa fa-angle-right"></i> 岗位作业指导书</a></li>
+                                </if>
                             </ul>
                         </li>
                         </if>

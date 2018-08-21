@@ -1,22 +1,49 @@
 dl,dt,dd,ul,ol,li{padding:0;margin:0;border:0;}
 ul{list-style:none; list-style-type:none; margin:0; padding:0;}
 .employee-aspirations{  height: 50px;  line-height: 50px;  width: 200px;  text-align: center;   position:fixed;  bottom:20px;  right:30px;  font-size: 22px;  background-color: #2fcfff !important;  border-radius: 3px;  border: 1px solid transparent;  color: #fff;  }
-.staff{  width: 100%;  height:auto !important; /*height: 100%;*/  margin: 0;  background-color:#dceffe;  float:left; clear:both; }
-.staff-con{ width:1200px; margin:0 auto; overflow: hidden;  padding: 20px;}
+.staff{  width: 100%;  /*height:auto !important;*/ height: 100%;  margin: 0;  background-color:#dceffe;  float:left; clear:both; }
+.staff-con{ width:1200px; /*height: 100%;*/ margin:0 auto; overflow: hidden;  padding: 20px;}
 .mt20{margin-top: 20px;}
-.actlbox{ width:870px; height:auto !important; float:left; clear:both; padding-bottom:40px; overflow:hidden;}
+.actlbox{ width:870px; float:left; clear:both; padding-bottom:40px; overflow:hidden; min-height: -webkit-fill-available;  }
 .actlbox h1{  width:100%; float:left; clear:both; text-align:center; color:#333333; font-weight: 400;font-style: normal;font-size: 20px;}
 .actlbox .newscon{ width:100%; height:auto !important; float:left; clear:both; color:#333333;}
 .actlbox .newscon p{ font-size:14px; line-height:24px; margin:0; padding:0; padding-bottom:20px; text-indent:28px; text-align:justify;}
 .actlbox .morepic{ width:915px; float:left; clear:both;}
 .actlbox .morepic img{ width:282px; height:180px; margin-right:20px; margin-top:20px; display: inline-block;}
-.actrbox{ width:285px; height:auto !important; float:right; clear:right; overflow:hidden;}
-.actrbox .unrel{ width:265px; min-height:300px; float:left; clear:both; background:#eeeeee;}
+.actrbox{ width:285px; height:auto !important; float:right; clear:right; overflow:hidden; }
+.actrbox .unrel{ width:265px; min-height:260px; float:left; clear:both; background:#eeeeee; }
 .actrbox .unrel .reltit{ width:255px; height:40px; float:left; margin:0 15px; border-bottom:1px solid #cccccc;}
 .actrbox .unrel .reltit h2{ line-height:40px; font-size:16px; color:#333333; margin: auto;}
 .cont ul{margin-top: 48px;}
-.cont ul li{padding: 4px 6px 10px 15px;}
-.lbox{height: 100px; border-top: solid 1px #cccccc; padding: 15px 10px;}
+.cont ul li{padding: 4px 6px 10px 15px;width: 250px; margin-bottom: 3px;}
+.cont ul li a{color: #716d6d;  height: 25px; line-height: 25px; width: 255px; display: block; display: -webkit-box;  -webkit-box-orient: vertical;  -webkit-line-clamp: 1;  overflow: hidden; }
+.note-time{ color: #716d6d; font-size: 12px;}
+.lbox{height: 100px; border-top: solid 1px #cccccc; padding:10px 10px 15px 10px; margin-bottom: 10px;}
 .img-header{width: 1200px;height: 100px; margin: -20px;  margin-bottom: 10px; background:url(../img/staff-header.png) }
 .con-header{width: 1200px;height: auto !important; margin: 10px -20px 20px 0; }
 .notice-tit{font-size: 16px;}
+
+.staff-name{font-weight: 600;}
+.note-con{display: -webkit-box;-webkit-box-orient: vertical;-webkit-line-clamp: 2;overflow: hidden; color: #716d6d; height: 43px; font-size: 14px;}
+.note-info{ width: auto;   margin-bottom: 15px; padding-bottom: 8px;color: #716d6d;}
+.note-xq{font-size: 12px; margin-right: 10px;}
+.rtop-box{width: 100%; height: 80px; border: solid 1px #cccccc; background-color: #52ABD7;}
+.rtop-left{margin-left: 10px;position: absolute;  top: -17px;   font-size: 80px;  color: rgba(0, 0, 0, 0.15);}
+.rtop-right{float: right; clear: both; margin-right: 15px; line-height: 80px; font-size: 35px;  color: rgba(0, 0, 0, 0.15);}
+.small-box:hover .rtop-left {
+    animation-name: tansformAnimation;
+    animation-duration: .5s;
+    animation-iteration-count: 1;
+    animation-timing-function: ease;
+    animation-fill-mode: forwards;
+    -webkit-animation-name: tansformAnimation;
+    -webkit-animation-duration: .5s;
+    -webkit-animation-iteration-count: 1;
+    -webkit-animation-timing-function: ease;
+    -webkit-animation-fill-mode: forwards;
+    -moz-animation-name: tansformAnimation;
+    -moz-animation-duration: .5s;
+    -moz-animation-iteration-count: 1;
+    -moz-animation-timing-function: ease;
+    -moz-animation-fill-mode: forwards;
+}

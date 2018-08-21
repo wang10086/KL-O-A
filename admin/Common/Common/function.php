@@ -1945,7 +1945,9 @@ function updatekpi($month,$user){
 					$xiangmu 		= count($xiangmu_list);
 					$hetong 		= 0;
 					foreach ($xiangmu_list as $key=>$value){
-						$hetong_list = M('contract')->where(array('op_id'=>$value['op_id'],'status'=>1,'confirm_time'=>array('lt',$value['dep_time'])))->find();
+						//出团后5天内完成上传
+						$time 		= $value['dep_time'] + 5*24*3600;
+						$hetong_list = M('contract')->where(array('op_id'=>$value['op_id'],'status'=>1,'confirm_time'=>array('lt',$time)))->find();
 						if ($hetong_list) $hetong++;
 					}
 					$complete = $xiangmu ? round(($hetong / $xiangmu)*100,2).'%' : 0 .'%';
