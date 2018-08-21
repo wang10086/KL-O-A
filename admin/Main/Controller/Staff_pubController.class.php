@@ -9,7 +9,6 @@ use Think\Controller;
 ulib('Page');
 use Sys\Page;
 use Sys\P;
-use Think\Verify;
 
 //员工心声
 class StaffController extends Controller{
@@ -145,39 +144,6 @@ class StaffController extends Controller{
         }else{
             $this->error('删除失败');
         }
-    }
-
-    public function login(){
-
-        //校验验证码
-        $verify     = new Verify();
-        if(!$verify->check($yzm_code)){
-            /*die(return_msg('n','您输入的验证码有误,请重新输入！'));*/
-        }
-
-        $this->display();
-    }
-
-    function verify(){
-        //自定义配置项
-        $config = array(
-            'fontSize'  => 16,
-            'length'    => 4,
-            'useCurve'  =>  false,            // 是否画混淆曲线
-            'useNoise'  =>  true,            // 是否添加杂点
-            'imageH'    =>  40,              // 验证码图片高度
-            'imageW'    =>  120,             // 验证码图片宽度
-        );
-        ob_clean();
-        $verify = new Verify($config);
-        $verify->entry();
-    }
-
-    public function reg(){
-
-        $a = I();
-        var_dump($a);
-        $this->display();
     }
 
 }
