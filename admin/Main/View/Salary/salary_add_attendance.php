@@ -36,37 +36,36 @@
 
                                         <table class="table table-bordered dataTable fontmini" id="tablelist" style="margin-top:10px;">
                                             <tr role="row" class="orders" >
-                                                <th class="sorting" data="op_id"  style="width:5em;">ID</th>
-                                                <th class="sorting" data="group_id" style="width:8em;">员工姓名</th>
-                                                <th class="sorting" data="group_id" style="width:8em;">员工编号</th>
-                                                <th class="sorting" data="group_id" style="width:8em;">员工部门</th>
-                                                <th class="sorting" data="project" style="width:8em;">员工岗位</th>
-                                                <th class="sorting" data="number" style="width:8em;">入职时间</th>
-                                                <th class="sorting" data="number" style="width:12em;">迟到/早退(15分钟)</th>
-                                                <th class="sorting" data="number" style="width:12em;">迟到/早退(30分钟)</th>
-                                                <th class="sorting" data="shouru" style="width:8em;">事假</th>
-                                                <th class="sorting" data="shouru" style="width:8em;">病假</th>
-                                                <th class="sorting" data="shouru" style="width:8em;">旷工</th>
-                                                <th class="sorting" data="shouru" style="width:8em;">扣款</th>
-                                                <th class="sorting" data="shouru" style="width:8em;">操作</th>
+                                                <th class="sorting" style="width:4em;">ID</th>
+                                                <th class="sorting" style="width:5em;">员工姓名</th>
+                                                <th class="sorting" style="width:5em;">员工编号</th>
+                                                <th class="sorting" style="width:6em;">员工部门</th>
+                                                <th class="sorting" style="width:8em;">员工岗位</th>
+                                                <th class="sorting" style="width:12em;">迟到/早退(15分钟)</th>
+                                                <th class="sorting" style="width:12em;">迟到/早退(30分钟)</th>
+                                                <th class="sorting" style="width:5em;">事假</th>
+                                                <th class="sorting" style="width:5em;">病假</th>
+                                                <th class="sorting" style="width:5em;">旷工</th>
+                                                <th class="sorting" style="width:5em;">扣款</th>
+                                                <th class="sorting" style="width:6em;">操作</th>
                                                 </if>
                                             </tr>
 
                                             <foreach name="list" item="row">
-                                                <tr>
+                                                <tr class="salary_tr">
                                                     <td>{$row.aid}</td>
                                                     <td>{$row.nickname}</td>
                                                     <td>{$row.employee_member}</td>
                                                     <td>{$row.department}</td>
                                                     <td>{$row.post_name}</td>
-                                                    <td><?php echo date('Y-m-d',$row['entry_time'])?></td>
-                                                    <td>&nbsp;&nbsp;&nbsp;<input type="text"></td>
-                                                    <td>&nbsp;&nbsp;&nbsp;<input type="text"></td>
-                                                    <td>&nbsp;&nbsp;&nbsp;<input type="text"></td>
-                                                    <td>&nbsp;&nbsp;&nbsp;<input type="text"></td>
-                                                    <td>&nbsp;&nbsp;&nbsp;<input type="text"></td>
-                                                    <td>&nbsp;&nbsp;&nbsp;</td>
-                                                    <td>&nbsp;&nbsp;&nbsp;<input type="button" value="保存" style="background-color:#00acd6;font-size:1.5em;"></td>
+                                                    <td><input type="text" name="aid" class="form-control late1" value="{$row.salary_attendance.late1}"/></td>
+                                                    <td><input type="text" name="aid" class="form-control late2" value="{$row.salary_attendance.late2}"/></td>
+                                                    <td><input type="text" name="aid" class="form-control leave_absence" value="{$row.salary_attendance.leave_absence}"/></td>
+                                                    <td><input type="text" name="aid" class="form-control sick_leave" value="{$row.salary_attendance.sick_leave}"/></td>
+                                                    <td><input type="text" name="aid" class="form-control absenteeism" value="{$row.salary_attendance.absenteeism}"/></td>
+                                                    <input type="hidden" class="salary_add_hidden" value="{$row.salary.standard_salary}">
+                                                    <td class="salary_add_withdrawing"></td>
+                                                    <td><input type="button" value="保存" style="background-color:#00acd6;font-size:1em;" class="salary_add_button"></td>
                                                 </tr>
                                             </foreach>
                                         </table>
@@ -110,43 +109,33 @@
 
 
 <include file="Index:footer2" />
-<script> var h = 1;
-    function salary_entry(obj){
-        if(obj==1){
-            $('#salary_entry').show();//入职
-            $('#salary_formal').hide();//转正
-            $('#salary_adjustment').hide();//调岗
-            $('#salary_quit').hide();//离职
-            $('#salary_change').hide();//调薪
-        }
-        if(obj==2){
-            $('#salary_entry').hide();//入职
-            $('#salary_formal').show();//转正
-            $('#salary_adjustment').hide();//调岗
-            $('#salary_quit').hide();//离职
-            $('#salary_change').hide();//调薪
-        }
-        if(obj==3){
-            $('#salary_entry').hide();//入职
-            $('#salary_formal').hide();//转正
-            $('#salary_adjustment').show();//调岗
-            $('#salary_quit').hide();//离职
-            $('#salary_change').hide();//调薪
-        }
-        if(obj==4){
-            $('#salary_entry').hide();//入职
-            $('#salary_formal').hide();//转正
-            $('#salary_adjustment').hide();//调岗
-            $('#salary_quit').show();//离职
-            $('#salary_change').hide();//调薪
-        }
-        if(obj==5){
-            $('#salary_entry').hide();//入职
-            $('#salary_formal').hide();//转正
-            $('#salary_adjustment').hide();//调岗
-            $('#salary_quit').hide();//离职
-            $('#salary_change').show();//调薪
-        }
-    }
+<script>
+    $(function () {
+        $(document).click(function(event){
+            $('.salary_tr').each(function () {
+                var late1 = $(this).find(".late1").val();
+                var late2 = $(this).find(".late2").val();
+                var leave_absence =$(this).find(".leave_absence").val();
+                var sick_leave = $(this).find(".sick_leave").val();
+                var absenteeism = $(this).find(".absenteeism").val();
+                var salary_add_hidden =$(this).find(".salary_add_hidden").val();
+                var sum = late1*10+late2*30+(salary_add_hidden/21.75)*leave_absence+(salary_add_hidden/21.75)*0.8*sick_leave+(salary_add_hidden/21.75)*absenteeism*2;
+               // var salary_add_withdrawing = $(".salary_add_withdrawing").text();
+                $(this).find('.salary_add_withdrawing').text(sum.toFixed(2));
+            });
+
+        });
+    });
+
+
+//        $(".salary_add").change(function () {
+//            $(this).('.salary_add_withdrawing').html(1111);
+//        }).change();
+//    })
+
+    $('.salary_add_button').click(function(){
+        alert("有效果");die;;
+    })
+
 
 </script>

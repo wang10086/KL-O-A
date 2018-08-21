@@ -131,7 +131,7 @@
                                     <select class="form-control" name="info[formal]">
                                         <option value=" ">请选择</option>
                                         <option <?php if($row['formal']==1){ echo 'selected';}?> value="1">正式员工</option>
-                                        <option <?php if($row['formal']==2){ echo 'selected';}?> value="2">试用员工</option>
+                                        <option <?php if($row['formal']==2){ echo 'selected';}?> value="0">试用员工</option>
                                         <option <?php if($row['formal']==3){ echo 'selected';}?> value="3">劳务员工</option>
                                         <option <?php if($row['formal']==4){ echo 'selected';}?> value="4">实习员工</option>
                                         </select>

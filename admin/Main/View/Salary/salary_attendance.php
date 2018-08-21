@@ -39,21 +39,8 @@
                                             <th>病假(天)</th>
                                             <th>旷工(天)</th>
                                             <th>考勤扣款(元)</th>
-                                            <th>操作</th>
                                         </tr>
-                                        <tr>
-                                            <td>1</td>
-                                            <td>风萧萧</td>
-                                            <td>Z001</td>
-                                            <td>2018-06</td>
-                                            <td>2</td>
-                                            <td>2</td>
-                                            <td>3</td>
-                                            <td>1.5</td>
-                                            <td>2.5</td>
-                                            <td>330.00</td>
-                                            <td><a href="{:U('Salary/salary_edtior',array('tid'=>1,'sid'=>1))}">编辑</a></td>
-                                        </tr>
+
                                         <foreach name="list" item="row">
                                         <tr id="salary_edtior">
                                             <td>{$row.sid}</td>
@@ -66,7 +53,6 @@
                                             <td>{$row.sick_leave}</td>
                                             <td>{$row.absenteeism}</td>
                                             <td>{$row.withdrawing}</td>
-                                        <td><a href="{:U('Salary/salary_edtior',array('tid'=>$row['tid'],'sid'=>$row['sid']))}">编辑</a></td>
 
                                         </tr>
                                         </foreach>		

@@ -59,7 +59,7 @@
                                             <td><a title="{:get_role_name($row['roleid'])}{$row.group_role}">{$roles[$row['roleid']]}</a></td>
                                             <td>{$posts[$row['postid']]}</td>
                                             <td><if condition="$row['entry_time']">{$row.entry_time|date='Y-m-d',###}</if></td>
-                                            <td><?php if($row['formal']==1){ echo '<span class="green">正式</span>';}else if($row['formal']==2){ echo '<span class="red">试用</span>';} ?></td>
+                                            <td><?php if($row['formal']==1){ echo '<span class="green">正式</span>';}else if($row['formal']==0){ echo '<span class="red">试用</span>';}else if($row['formal']==3){ echo '<span class="red">劳务</span>';}else if($row['formal']==4){ echo '<span class="red">,实习</span>';} ?></td>
                                             <td><if condition="$row['update_time']">{$row.update_time|date='Y-m-d H:i:s',###}</if></td>
                                             <td><?php if($row['status']==0){ echo '<span class="green">正常</span>';}else{ echo '<span class="red">停用</span>';} ?></td>
                                             <if condition="rolemenu(array('Rbac/password'))">
