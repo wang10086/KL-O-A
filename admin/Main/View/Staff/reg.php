@@ -42,21 +42,23 @@
             </nav>
         </header>
 
+        <span id="a"></span>
         <div class="form-box" id="registe-box">
             <div class="header">注册</div>
             <form method="post" action="{:U('Staff/reg')}" name="myform" id="myform">
+            <!--<form method="post" action="{:U('Staff/reg')}" name="myform">-->
                 <input type="hidden" name="dosubmit" value="1" />
                 <div class="box-body">
                     <div class="loginfrom gbg">
                         <ul>
                             <li>
                                 <label>昵称</label>
-                                <input type="text" class="text" name="info[username]" id="username" placeholder="请输入用户名" datatype="*2-8" nullmsg="请输入用户名！" onblur="check_username()">
+                                <input type="text" class="text" name="info[nickname]" id="nickname" placeholder="请输入用户名" datatype="*2-8" nullmsg="请输入用户名！" >
                                 <span class="Validform_checktip"></span>
                             </li>
                             <li>
                                 <label>登录账号</label>
-                                <input type="text" class="text mobile-input" id="mobile" name="info[mobile]" placeholder="请输入登录账号" datatype="*2-8" nullmsg="请输入登录账号！" />
+                                <input type="text" class="text" id="username" name="info[username]" placeholder="请输入登录账号" datatype="*2-8" nullmsg="请输入登录账号！" onblur="check_username()" />
                                 <span class="Validform_checktip"></span>
                             </li>
                             <li  class="need">
@@ -72,7 +74,7 @@
                             <li>
                                 <label>验证码</label>
                                 <input type="text" class="code" name="info[yzm_code]" placeholder="请输入验证码" datatype="*4-4" maxlength="4" nullmsg="请输入验证码">
-                                <img src="{:U('Staff/verify')}" class="yzmcode" onclick="this.src='{:U('Staff/verify')}'+'?'+Math.random()"  title="点击刷新">
+                                <img src="{:U('Staff/verify')}" class="yzmcode" onclick="this.src='{:U('Staff/verify')}'+'&'+Math.random()"  title="点击刷新">
                                 <span class="Validform_checktip"></span>
                             </li>
                         </ul>
@@ -112,7 +114,7 @@
                         var obj = eval(data);
                         if(obj.status == 'y'){
                             showmsg('提示',obj.info);
-                            setTimeout("window.location.href='{:U('Index/login')}'",1500);
+                            setTimeout("window.location.href='{:U('Staff/login')}'",1500);
                         }else{
                             showmsg('提示',obj.info);
                         }
@@ -130,7 +132,7 @@
                     //验证用户名
                     $.ajax({
                         type: "POST",
-                        url: "{:U('Ajax/check_username')}",
+                        url: "{:U('Staff/check_username')}",
                         dataType:'json',
                         data:{username:username},
                         success:function(msg){

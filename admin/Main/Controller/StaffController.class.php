@@ -176,7 +176,7 @@ class StaffController extends Controller{
     public function reg(){
 
         $a = I();
-        var_dump($a);
+        //var_dump($a);
         $this->display();
     }
 
