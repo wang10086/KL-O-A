@@ -81,7 +81,7 @@
 
                     <div class="footer" style="margin-top:0;">
                         <button type="submit" class="btn bg-olive btn-block" style="width:200px; margin:0 auto 10px auto;">提交</button>
-                        <div style="text-align:center"><a href="{:U('Staff/login')}">已有账号</a> &nbsp;&nbsp;|&nbsp;&nbsp;<a href="{:U('Staff/index')}">游客登陆</a></div>
+                        <div style="text-align:center"><a href="{:U('Staff/login')}">已有账号</a> &nbsp;&nbsp;|&nbsp;&nbsp;<a href="{:U('Staff/index')}">游客登录</a></div>
                     </div>
 
                 </div><!-- /.box-body -->

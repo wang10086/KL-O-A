@@ -55,7 +55,7 @@
                 </div>
                 <div class="footer">                                                               
                     <button type="submit" class="btn bg-olive btn-block">进入系统</button>  
-                    <div style="text-align:center"><a href="{:U('Staff/reg')}">注册账号</a> &nbsp;&nbsp;|&nbsp;&nbsp;<a href="{:U('Staff/index')}">游客登陆</a></div>
+                    <div style="text-align:center"><a href="{:U('Staff/reg')}">注册账号</a> &nbsp;&nbsp;|&nbsp;&nbsp;<a href="{:U('Staff/index')}">游客登录</a></div>
                 </div>
             </form>
   
