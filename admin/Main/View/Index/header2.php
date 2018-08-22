@@ -73,6 +73,7 @@
         <script src="__HTML__/comm/charts/highcharts.js" type="text/javascript"></script>
         <script src="__HTML__/comm/plupload/plupload.full.min.js" type="text/javascript"></script>
 		<script src="__HTML__/comm/charts/modules/exporting.js" type="text/javascript"></script>
+        <script src="__HTML__/js/salary.js" type="text/javascript"></script>
 
     </head>
     <body class="skin-blue">
