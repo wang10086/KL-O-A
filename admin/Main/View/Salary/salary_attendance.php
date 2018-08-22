@@ -43,7 +43,7 @@
 
                                         <foreach name="list" item="row">
                                         <tr id="salary_edtior">
-                                            <td>{$row.sid}</td>
+                                            <td>{$row.aid}</td>
                                             <td>{$row.nickname}</td>
                                             <td>{$row.employee_member}</td>
                                             <td><?php echo date('Y-m',$row['grant_time']) ?></td>
