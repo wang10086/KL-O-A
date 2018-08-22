@@ -1,6 +1,6 @@
 <?php use Sys\P; ?>
 <!DOCTYPE html>
-<html style="height: 100%">
+<html style="min-height: 100%">
     <head>
         <meta charset="UTF-8">
         <title><?php echo P::SYSTEM_NAME; ?></title>

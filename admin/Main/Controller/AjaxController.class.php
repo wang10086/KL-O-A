@@ -286,6 +286,7 @@ class AjaxController extends Controller {
 
     public function staff(){
         $db         = M('staff');
+        $zan_db     = M('staff_zan');
         $id         = I('id');
         $good_num   = $db->where(array('id'=>$id))->getField('good_num');
 
@@ -293,5 +294,10 @@ class AjaxController extends Controller {
         $info['good_num'] = $good_num+1;
         $db->where(array('id'=>$id))->save($info);
         //return $this->ajaxReturn($info['good_num']);
+        $data             = array();
+        $data['staff_id'] = $id;
+        $data['youke']    = cookie('staff_youke');
+        $data['zan_time'] = NOW_TIME;
+        $zan_db->add($data);
     }
 }

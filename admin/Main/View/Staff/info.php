@@ -42,12 +42,17 @@
                                     </div>
 
                                     <div class="note-info">
-                                        <span class="note-xq ml20">作者：匿名游客</span>
+                                        <span class="note-xq ml20">作者：{$list.username}</span>
                                         |<span class="note-xq ml10">发布时间：{$list.send_time|date='Y-m-d H:i:s',###}</span>
-                                        | <span class="note-xq ml10">点赞：<a href="javascript:;" id="zan-logo_{$list.id}" onclick="zan({$list.id})"><i class="fa fa-thumbs-o-up"></i></a></span>
+                                        <if condition="$list['zan']">
+                                            | <span class="note-xq ml10">点赞：<a href="javascript:;" id="zan-logo_{$list.id}" onclick="zan({$list.id})"><i class="fa fa-thumbs-o-up"></i></a></span>
+                                            <else />
+                                            | <span class="note-xq ml10">点赞：<a href="javascript:;"><i class="fa fa-thumbs-up"></i></a></span>
+                                        </if>
                                         | <span class="note-xq ml10"><a href="javascript:;" onclick="show_form()">回复</a></span>
+                                        <?php if($list['youke']==cookie('staff_youke') || cookie('staff_username')=='qiaofeng'){ ?>
                                         | <span class="note-xq ml10"><a href="javascript:ConfirmDel('{:U('Staff/del_staff',array('id'=>$list['id']))}')" onclick="">删除</a></span>
-
+                                        <?php } ?>
                                         <form method="post" action="{:U('Staff/save_staff')}" name="myform" id="myform" class="mt20">
                                             <input type="hidden" name="dosubmit" value="1" />
                                             <input type="hidden" name="token" value="{$token}">
@@ -68,15 +73,20 @@
                                         <div class="note-info">
                                             <foreach name="huifu" key="k" item="v">
                                                 <div class="form-group col-md-12 mb0">
-                                                    {$k+1}、<span style="display: inline-block;">{$v.content}</span>
+                                                    {$k+1}、<span>{$v.content}</span>
                                                 </div>
 
                                                 <div class="note-info" >
-                                                    <span class="note-xq ml20">作者：匿名游客</span>
+                                                    <span class="note-xq ml20">作者：{$v.username}</span>
                                                     |<span class="note-xq ml10">发布时间：{$v.send_time|date='Y-m-d H:i:s',###}</span>
-                                                    | <span class="note-xq ml10">点赞：<a href="javascript:;" id="zan-logo_{$v.id}" onclick="zan({$v.id})"><i class="fa fa-thumbs-o-up"></i></a></span>
+                                                    <if condition="$v['zan']">
+                                                        | <span class="note-xq ml10">点赞：<a href="javascript:;" id="zan-logo_{$v.id}" onclick="zan({$v.id})"><i class="fa fa-thumbs-o-up"></i></a></span>
+                                                        <else />
+                                                        | <span class="note-xq ml10">点赞：<a href="javascript:;" ><i class="fa fa-thumbs-up"></i></a></span>
+                                                    </if>
+                                                    <?php if($v['youke']==cookie('staff_youke') || cookie('staff_username')=='qiaofeng'){ ?>
                                                     | <span class="note-xq ml10"><a href="javascript:ConfirmDel('{:U('Staff/del_staff',array('id'=>$v['id']))}')" onclick="">删除</a></span>
-                                                    <!--| <span class="note-xq ml10"><a href="javascript:;" onclick="show_form()">回复</a></span>-->
+                                                    <?php } ?>
                                                 </div>
                                             </foreach>
                                         </div>
