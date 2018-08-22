@@ -353,7 +353,67 @@ class FilesController extends BaseController {
 		}
 	}
 	
-	
+	//公司管理手册
+    public function company(){
+        $this->title('公司管理手册');
+
+        $db = M('files');
+
+        //定义配置
+        $this->type            = array('0'=>'文件夹','1'=>'文档');
+
+        //取参
+        $this->pid             = I('pid',0);
+
+        //查询条件
+        $where = array();
+        $where['pid']          = $this->pid;
+
+        //权限识别
+        /*
+        if (C('RBAC_SUPER_ADMIN') != cookie('userid')){
+
+            $userid = cookie('userid');
+            $roleid = cookie('roleid');
+
+            $where['_string'] = ' (auth_group like "%'.$roleid.'%")  OR ( auth_user like "%'.$userid.'")   OR ( est_user_id = '.$userid.') ';
+
+        }
+        */
+
+        //获取上级目录级别
+        if($this->pid){
+            $upfile = $db->find($this->pid);
+            if(!$upfile || $upfile['file_type']){
+                $this->error('目录不存在');
+                die();
+            }
+            if($upfile)   $this->level = $upfile['level']+1;
+        }else{
+            $this->level  = 1;
+        }
+
+        $datalist = $db->where($where)->order($this->orders('file_type'))->select();
+        foreach($datalist as $k=>$v){
+            $datalist[$k]['file_type']	 = $this->type[$v['file_type']];
+            if($v['file_type']==0){
+                $datalist[$k]['url']         = U('Files/index',array('pid'=>$v['id']));
+                $datalist[$k]['target']      = '';
+            }else{
+                $datalist[$k]['url']         = $v['file_path'];
+                $datalist[$k]['target']      = 'target="_blank"';
+            }
+        }
+
+        $this->datalist = $datalist;
+
+        //文件路径
+        $this->dir_path = array();
+        if($this->pid) $this->dir_path = file_dir($this->pid);
+
+
+        $this->display('company');
+    }
 	
     
 }
