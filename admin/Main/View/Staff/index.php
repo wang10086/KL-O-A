@@ -1,7 +1,5 @@
 <include file="header" />
-<style>
 
-</style>
 <div class="staff">
     <div class="staff-con" style="background-color:  #eeeeee;">
         <div class="img-header">
@@ -18,10 +16,10 @@
 
             <foreach name="list" item="v">
                 <div class="lbox">
-                    <span class="staff-name">『 匿名游客 』</span>:
+                    <span class="staff-name">『 {$v.username} 』</span>:
                     <a href="{:U('staff/info',array('id'=>$v['id']))}"><span class="note-con"><?php echo $v['content']; ?></span></a>
                     <div class="note-info">
-                        <span class="note-xq">作者：匿名游客</span>|<span class="note-xq ml10">发布时间：{$v.send_time|date='Y-m-d H:i:s',###}</span>| <span class="note-xq ml10">点赞数量：{$v.good_num}</span>
+                        <span class="note-xq">作者：{$v.username}</span>|<span class="note-xq ml10">发布时间：{$v.send_time|date='Y-m-d H:i:s',###}</span>| <span class="note-xq ml10">点赞数量：{$v.good_num}</span>
                     </div>
                 </div>
             </foreach>

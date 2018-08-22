@@ -46,7 +46,6 @@
         <div class="form-box" id="registe-box">
             <div class="header">注册</div>
             <form method="post" action="{:U('Staff/reg')}" name="myform" id="myform">
-            <!--<form method="post" action="{:U('Staff/reg')}" name="myform">-->
                 <input type="hidden" name="dosubmit" value="1" />
                 <div class="box-body">
                     <div class="loginfrom gbg">
@@ -73,7 +72,7 @@
                             </li>
                             <li>
                                 <label>验证码</label>
-                                <input type="text" class="code" name="info[yzm_code]" placeholder="请输入验证码" datatype="*4-4" maxlength="4" nullmsg="请输入验证码">
+                                <input type="text" class="code" name="yzm_code" placeholder="请输入验证码" datatype="*4-4" maxlength="4" nullmsg="请输入验证码">
                                 <img src="{:U('Staff/verify')}" class="yzmcode" onclick="this.src='{:U('Staff/verify')}'+'&'+Math.random()"  title="点击刷新">
                                 <span class="Validform_checktip"></span>
                             </li>
@@ -82,7 +81,6 @@
 
                     <div class="footer" style="margin-top:0;">
                         <button type="submit" class="btn bg-olive btn-block" style="width:200px; margin:0 auto 10px auto;">提交</button>
-                        <!--<input type="submit" value="提交AAA">-->
                         <div style="text-align:center"><a href="{:U('Staff/login')}">已有账号</a> &nbsp;&nbsp;|&nbsp;&nbsp;<a href="{:U('Staff/index')}">游客登陆</a></div>
                     </div>
 
@@ -112,7 +110,7 @@
                     ajaxPost:true,
                     callback:function(data){
                         var obj = eval(data);
-                        if(obj.status == 'y'){
+                        if(obj.status == '1'){
                             showmsg('提示',obj.info);
                             setTimeout("window.location.href='{:U('Staff/login')}'",1500);
                         }else{
