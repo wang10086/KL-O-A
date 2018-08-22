@@ -9,9 +9,9 @@
         <div class="actlbox">
             <div class="con-header">
                 <h4 class="notice-tit">温馨提示 :</h4>
-                <p class="ml20">1.本贴吧采用不记名方式 ; </p>
-                <p class="ml20">2.如果您对本公司有任何意见或建议,欢迎来此吐槽 ; </p>
-                <p class="ml20">3.欢迎提出您宝贵的意见和建议! </p>
+                <p class="ml20">1.本贴吧采用不记名方式！不记名方式！不记名方式！ </p>
+                <p class="ml20">2.如果您在工作或生活中遇到任何愉快(或不愉快)的事情,欢迎来此吐槽 ! </p>
+                <p class="ml20">3.本贴吧只在公司网络环境下有效！ </p>
             </div>
 
             <foreach name="list" item="v">
