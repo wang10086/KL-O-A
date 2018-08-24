@@ -1,67 +1,4 @@
-<?php use Sys\P; ?>
-<!DOCTYPE html>
-<html>
-    <head>
-        <meta charset="UTF-8">
-        <title><?php echo P::SYSTEM_NAME; ?></title>
-        <meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>
-        <!-- bootstrap 3.0.2 -->
-        <link href="__HTML__/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
-        <!-- font Awesome -->
-        <link href="__HTML__/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
-        <!-- Ionicons -->
-        <link href="__HTML__/css/ionicons.min.css" rel="stylesheet" type="text/css" />
-        <!-- jquery-ui style -->
-        <link href="__HTML__/css/jQueryUI/jquery-ui-1.10.3.custom.min.css" rel="stylesheet" type="text/css" />
-        <!-- ArtDialog -->
-        <link href="__HTML__/css/artDialog.css" rel="stylesheet" type="text/css"  />
-        <link href="__HTML__/css/artdialog/ui-dialog.css" rel="stylesheet" type="text/css" />
-        <!-- Theme style -->
-        <link href="__HTML__/css/py.css" rel="stylesheet" type="text/css" />
-        <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
-        <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-        <!--[if lt IE 9]>
-          <script src="__HTML__/js/html5shiv.min.js"></script>
-          <script src="__HTML__/js/respond.min.js"></script>
-        <![endif]-->
-        <?php echo PHP_EOL . $__additional_css__ ?>
-		 <!-- jQuery 1.11.1 -->
-        <script src="__HTML__/js/jquery-1.7.2.min.js"></script>
-        <!-- Bootstrap -->
-        <script src="__HTML__/js/bootstrap.min.js" type="text/javascript"></script>
-        <!--JqueryUI-->
-        <script src="__HTML__/js/plugins/jqueryui/jquery-ui.js" type="text/javascript"></script>       
-        <!--timepicker-->
-        <script src="__HTML__/js/plugins/jqueryui/jquery-ui-slide.min.js" type="text/javascript"></script>   
-        <script src="__HTML__/js/plugins/jqueryui/jquery-ui-timepicker-addon.js" type="text/javascript"></script>     
-        <!--artdialog-->
-       
-        <!-- FORM -->
-        <script src="__HTML__/js/plugins/form/formvalidator.js" type="text/javascript"></script>
-        <script src="__HTML__/js/plugins/form/formvalidatorregex.js" type="text/javascript"></script>
-        <!-- Sparkline -->
-        <script src="__HTML__/js/plugins/sparkline/jquery.sparkline.min.js" type="text/javascript"></script>
-        <!-- iCheck -->
-        <script src="__HTML__/js/plugins/iCheck/icheck.min.js" type="text/javascript"></script>
-        
-        <script src="__HTML__/comm/laydate/laydate.js"></script>
-        <script src="__HTML__/comm/jquery.autocomplete.min.js"></script>
-		 <script type="text/javascript">
-        	//laydate.skin('molv');
-        </script>
-
-        <!-- AdminLTE App -->
-        <?php echo $__additional_js__; ?>
-        <?php echo $__additional_jscode__ ?>
-        <script src="__HTML__/js/public.js" type="text/javascript"></script>
-        <script src="__HTML__/js/py/app.js" type="text/javascript"></script>
-        <script src="__HTML__/js/artDialog.js"></script> 
-        <script src="__HTML__/js/iframeTools.js"></script> 
-        <script src="__HTML__/comm/plupload/plupload.full.min.js" type="text/javascript"></script>
-        <script src="__HTML__/comm/charts/highcharts.js" type="text/javascript"></script>
-		<script src="__HTML__/comm/charts/modules/exporting.js" type="text/javascript"></script>
-    </head>
-    <body>
+<include file="Index:header2" />
 
 		<script type="text/javascript">
         window.gosubmint= function(){
@@ -79,25 +16,69 @@
 			return rs;	
 		 } 
         </script>
-       
-        <div class="form-group col-md-12">
-        	<a href="javascript:;" id="pickupfile" class="btn btn-success btn-sm" style="margin-top:15px; float:left;"><i class="fa fa-upload"></i> 选择文件</a>   
-            <span style="line-height:30px; float:left;margin-left:15px; margin-top:15px; color:#999999;">请选择小于100M的文件，支持JPG / GIF / PNG / DOC / XLS / PDF / ZIP / RAR文件类型</span>
-            <form method="post" action="" name="myform" id="myform">
-            
-            <table id="flist" class="table" style="margin-top:15px; float:left; clear:both; border-top:1px solid #dedede;">
-                <tr>
-                    <th align="left" width="">文件名称</th>
-                    <th align="left" width="100">大小</th>
-                    <th align="left" width="30%">上传进度</th>
-                    <th align="left" width="60">操作</th>
-                </tr>
-                
-            </table>
-            <div id="container" style="display:none;"></div>
-            </form>
-        </div>
+<aside class="right-side">
+    <section class="content-header">
+        <h1>文件管理</h1>
+        <ol class="breadcrumb">
+            <li><a href="{:U('Files/index')}"><i class="fa fa-home"></i> 首页</a></li>
+            <li><a href="javascript:;">上传文件</a></li>
+        </ol>
+    </section>
 
+    <section class="content">
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="box">
+                <div class="box-header">
+                    <h3 class="box-title">上传文件</h3>
+                </div><!-- /.box-header -->
+                <form method="post" action="{:U('Files/savefile')}" name="myform" id="myform">
+                <div class=" content ">
+                    <div class="col-md-12">
+                        <lebal class="upload-lebal">所属部门<span>(不填写默认全部部门)</span></lebal>
+                        <foreach name="department" key="k" item="v">
+                            <span class="lebal-span"><input type="checkbox" value="{$k}" name="department[]"> &nbsp;{$v}</span>
+                        </foreach>
+                    </div>
+                    <div class="col-md-12 mt10">
+                        <lebal class="upload-lebal">所属岗位<span>(不填写默认全部岗位)</span></lebal>
+                        <foreach name="posts" key="k" item="v">
+                            <span class="lebal-span"><input type="checkbox" value="{$v['id']}" name="posts[]"> &nbsp;{$v['post_name']}</span>
+                        </foreach>
+                    </div>
+                    <div class="col-md-12 mt10">
+                        <lebal class="upload-lebal">文件类型<span>(不填写默认全部类型)</span></lebal>
+                        <foreach name="file_tag" key="k" item="v">
+                            <span class="lebal-span"><input type="checkbox" value="{$k}" name="file_tag[]"> &nbsp;{$v}</span>
+                        </foreach>
+                    </div>
+
+                    <div class="form-group col-md-12"></div>
+                    <div class="form-group col-md-12">
+                        <a href="javascript:;" id="pickupfile" class="btn btn-success btn-sm" style="margin-top:15px; float:left;"><i class="fa fa-upload"></i> 选择文件</a>
+                        <span style="line-height:30px; float:left;margin-left:15px; margin-top:15px; color:#999999;">请选择小于100M的文件，支持JPG / GIF / PNG / DOC / XLS / PDF / ZIP / RAR文件类型</span>
+
+                        <table id="flist" class="table" style="margin-top:15px; float:left; clear:both; border-top:1px solid #dedede;">
+                            <tr>
+                                <th align="left" width="">文件名称</th>
+                                <th align="left" width="100">大小</th>
+                                <th align="left" width="30%">上传进度</th>
+                                <th align="left" width="60">操作</th>
+                            </tr>
+
+                        </table>
+                        <div id="container" style="display:none;"></div>
+                    </div>
+                    <div id="formsbtn">
+                        <button type="submit" class="btn btn-info btn-lg" id="lrpd">保存</button>
+                    </div>
+                </div>
+                </form>
+                </div>
+            </div>
+        </div>
+        </section>
+</aside>
 
         <include file="Index:footer" />
         

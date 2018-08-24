@@ -209,8 +209,8 @@
                                 <if condition="rolemenu(array('Files/index'))">
                                     <li class="{:on('Files/index')}"><a href="{:U('Files/index',array('pid'=>44))}"><i class="fa fa-angle-right"></i> 部门工作手册</a></li>
                                 </if>
-                                <if condition="rolemenu(array('Files/index'))">
-                                    <li class="{:on('Files/index')}"><a href="{:U('Files/index',array('pid'=>45))}"><i class="fa fa-angle-right"></i> 岗位作业指导书</a></li>
+                                <if condition="rolemenu(array('Files/instruction'))">
+                                    <li class="{:on('Files/instruction')}"><a href="{:U('Files/instruction',array('pid'=>45))}"><i class="fa fa-angle-right"></i> 岗位作业指导书</a></li>
                                 </if>
                             </ul>
                         </li>

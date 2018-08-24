@@ -79,7 +79,7 @@
                         <input type="hidden" name="reckon_mode" value="{$row['reckon_modelist']}">
                         <input type="hidden" name="sales_price" value="{$row.sales_price}">
                         </td>
-                        <td><a href="{:U('Product/view_line', array('id'=>$row['id']))}" target="_blank">{$row.title}</a></td>
+                        <td><a href="{:U('Product/view', array('id'=>$row['id']))}" target="_blank">{$row.title}</a></td>
                         <td>{$product_type[$row[type]]}</td>
                         <td>{$subject_fields[$row[subject_field]]}</td>
                         <td>{$product_from[$row[from]]}</td>

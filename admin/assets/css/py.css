@@ -4083,3 +4083,10 @@ th{outline: none;}
 
 .upload_label{margin: 0 0 0 -17px;font-weight: 600;}
 
+.content-neck{ margin: -10px 0 10px;height: 40px;}
+.content-neck-body{display: inline-block;line-height: 40px; height: 34px;margin-right: 30px;}
+.content-neck-body select{  width:150px; height: 25px;}
+.search-btn{height: 30px; line-height: 16px;}
+.upload-lebal{line-height: 30px; font-weight: 600; display: block;}
+.upload-lebal span{line-height: 30px; color:#999999;}
+.lebal-span{display: inline-block; margin-right: 20px; min-width: 100px; line-height: 25px;}

@@ -138,22 +138,26 @@ class FilesController extends BaseController {
 		
 		$this->pid    = I('pid',0);
 		$this->level  = I('level',1);
-		
+        $this->department   = M('salary_department')->getField('id,department',true);           //部门
+        $this->posts        = M('posts')->where(array('post_name'=>array('neq','')))->select(); //岗位
+        $this->file_tag     = C('FILE_TAG');
+
 		$this->display('upload');
-  
 	}
  	
 	
 	// @@@NODE-3###addres###保存上传文件###
 	public function savefile(){
-		
+
 		$db = M('files');
-		 
+        $department = implode(',',I('department',''));
+        $posts      = implode(',',I('posts',''));
+        $file_tag   = implode(',',I('file_tag',''));
 		$filename   = I('filename','');
 		$fileid     = I('fileid',0);
 		$pid        = I('pid',0);
 		$level      = I('level',1);
-		
+
 		$files      = I('files','');
 		if($files){
 			foreach($files as $v){
@@ -171,6 +175,9 @@ class FilesController extends BaseController {
 				$data['est_user']      = cookie('name');
 				$data['est_user_id']   = cookie('userid');
 				$data['pid']           = $v['pid'];
+                $data['department']    = $department;
+                $data['posts']         = $posts;
+                $data['file_tag']      = $file_tag;
 				
 				//继承父级目录权限
 				if($v['pid']){
@@ -197,11 +204,14 @@ class FilesController extends BaseController {
 				$save = $db->add($data);
 			}
 			
-			die(return_success());
-		}else{
-			die(return_error(P::NOT_UPLOAD_DATA));
-		}
-		
+			//die(return_success());
+            //die(return_error(P::NOT_UPLOAD_DATA));
+        }
+		if ($save){
+            $this->success("上传成功");
+        }else{
+            $this->error('上传失败');
+        }
 		
 		
 	}
@@ -413,6 +423,19 @@ class FilesController extends BaseController {
 
 
         $this->display('company');
+    }
+
+    //岗位作业指导书
+    public function instruction(){
+
+        $department         = I('department');
+        $posts              = I('posts');
+
+        $this->department   = M('salary_department')->getField('id,department',true);           //部门
+        //$this->posts        = M('posts')->getField('id,post_name',true);
+        $this->posts        = M('posts')->where(array('post_name'=>array('neq','')))->select(); //岗位
+
+        $this->display();
     }
 	
     
