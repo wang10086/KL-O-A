@@ -33,6 +33,8 @@
                     <h3 class="box-title">上传文件</h3>
                 </div><!-- /.box-header -->
                 <form method="post" action="{:U('Files/savefile')}" name="myform" id="myform">
+                    <input type="hidden" name="pid" value="{$pid}">
+                    <input type="hidden" name="level" value="{$level}">
                 <div class=" content ">
                     <div class="col-md-12">
                         <lebal class="upload-lebal">所属部门<span>(不填写默认全部部门)</span></lebal>

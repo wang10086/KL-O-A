@@ -40,7 +40,7 @@
                                          </if>
                                          <if condition="rolemenu(array('Files/upload'))">
                                          <!--<a href="javascript:;" class="btn btn-info btn-sm" onclick="uploadFile()"><i class="fa fa-upload"></i> 上传文件</a>-->
-                                         <a href="{:U('Files/upload')}" class="btn btn-info btn-sm"><i class="fa fa-upload"></i> 上传文件</a>
+                                         <a href="{:U('Files/upload',array('pid'=>$pid,'level'=>$level))}" class="btn btn-info btn-sm"><i class="fa fa-upload"></i> 上传文件</a>
                                          </if>
                                          
                                     </div>
