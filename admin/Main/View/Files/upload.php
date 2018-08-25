@@ -47,9 +47,9 @@
                         </foreach>
                     </div>
                     <div class="col-md-12 mt10">
-                        <lebal class="upload-lebal">文件类型<span>(不填写默认全部类型)</span></lebal>
+                        <lebal class="upload-lebal">文件类型</lebal>
                         <foreach name="file_tag" key="k" item="v">
-                            <span class="lebal-span"><input type="checkbox" value="{$k}" name="file_tag[]"> &nbsp;{$v}</span>
+                            <span class="lebal-span"><input type="radio" value="{$k}" name="file_tag"> &nbsp;{$v}</span>
                         </foreach>
                     </div>
 

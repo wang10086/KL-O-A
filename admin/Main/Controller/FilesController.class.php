@@ -150,15 +150,35 @@ class FilesController extends BaseController {
 	public function savefile(){
 
 		$db = M('files');
-        $department = implode(',',I('department',''));
-        $posts      = implode(',',I('posts',''));
-        $file_tag   = implode(',',I('file_tag',''));
-		$filename   = I('filename','');
+        $department = I('department');
+        $posts      = I('posts');
+        if ($department){
+            foreach ($department as $k=>$v){
+                $department[$k] = '['.$v.']';
+            }
+        }
+        if ($posts){
+            foreach ($posts as $k=>$v){
+                $posts[$k] = '['.$v.']';
+            }
+        }
+
+        $department = $department?implode(',',$department):'';
+        $posts      = $posts?implode(',',$posts):'';
+        $file_tag   = I('file_tag',0);
+		$filename   = I('newname','');
 		$fileid     = I('fileid',0);
 		$pid        = I('pid',0);
 		$level      = I('level',1);
 
-		$files      = I('files','');
+        $files              = array();
+        foreach ($fileid as $k=>$v){
+            $files[$v]['level']     = $level[$k];
+            $files[$v]['filename']  = $filename[$k];
+            $files[$v]['fileid']    = $fileid[$k];
+            $files[$v]['pid']       = $pid[$k];
+        }
+
 		if($files){
 			foreach($files as $v){
 				//查找数据
@@ -203,14 +223,14 @@ class FilesController extends BaseController {
 				//保存
 				$save = $db->add($data);
 			}
-			
 			//die(return_success());
             //die(return_error(P::NOT_UPLOAD_DATA));
+
         }
 		if ($save){
-            $this->success("上传成功");
+            $this->success("上传成功",U('Files/index'));
         }else{
-            $this->error('上传失败');
+            $this->error('请选择文件');
         }
 		
 		
@@ -431,8 +451,43 @@ class FilesController extends BaseController {
         $department         = I('department');
         $posts              = I('posts');
 
+        $db                 = M('files');
+        if (cookie('roleid')==10 || C('RBAC_SUPER_ADMIN')==cookie('username')){
+            $where          = array();
+            if($department) $where['department'] = array('like',"'%['.$department.']%'");
+            if ($posts)     $where['posts']      = array('like',"'%['.$posts.']%'");
+
+        }else{
+            $where              = array();
+            $where['department']= cookie('department');
+            $where['posts']     = cookie('posts');
+        }
+        //部门职责
+        $where['file_tag']      = 1;
+        $pagecount = $db->where($where)->count();
+        $page = new Page($pagecount, P::PAGE_SIZE);
+        $this->zhize_pages = $pagecount>P::PAGE_SIZE ? $page->show():'';
+        $this->zhize            = $db->where($where)->limit($page->firstRow.','.$page->listRows)->order($this->orders('est_time'))->select();
+        //岗位说明
+        $where['file_tag']      = 2;
+        $pagecount = $db->where($where)->count();
+        $page = new Page($pagecount, P::PAGE_SIZE);
+        $this->shuoming_pages = $pagecount>P::PAGE_SIZE ? $page->show():'';
+        $this->shuoming         = $db->where($where)->limit($page->firstRow.','.$page->listRows)->order($this->orders('est_time'))->select();
+        //相关规程
+        $where['file_tag']      = 3;
+        $pagecount = $db->where($where)->count();
+        $page = new Page($pagecount, P::PAGE_SIZE);
+        $this->guicheng_pages = $pagecount>P::PAGE_SIZE ? $page->show():'';
+        $this->guicheng         = $db->where($where)->limit($page->firstRow.','.$page->listRows)->order($this->orders('est_time'))->select();
+        //相关制度
+        $where['file_tag']      = 4;
+        $pagecount = $db->where($where)->count();
+        $page = new Page($pagecount, P::PAGE_SIZE);
+        $this->zhidu_pages = $pagecount>P::PAGE_SIZE ? $page->show():'';
+        $this->zhidu            = $db->where($where)->limit($page->firstRow.','.$page->listRows)->order($this->orders('est_time'))->select();
+
         $this->department   = M('salary_department')->getField('id,department',true);           //部门
-        //$this->posts        = M('posts')->getField('id,post_name',true);
         $this->posts        = M('posts')->where(array('post_name'=>array('neq','')))->select(); //岗位
 
         $this->display();

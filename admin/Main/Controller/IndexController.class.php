@@ -169,7 +169,9 @@ class IndexController extends BaseController {
 					session('rolename',$role['role_name']);
 					session('comid',$isdate['comid']);
 					session('nickname',$isdate['nickname']);
-					
+					session('departmentid',$isdate['departmentid']);
+					session('posts',$isdate['posts']);
+
 					cookie('userid',$isdate['id'],36000);
 					cookie('username',$username,36000);	
 					cookie('name',$isdate['nickname'],36000);	
@@ -177,7 +179,9 @@ class IndexController extends BaseController {
 					cookie('rolename',$role['role_name'],36000);
 					cookie('comid',$isdate['comid'],36000);
 					cookie('nickname',$isdate['nickname'],36000);
-					
+					cookie('departmentid',$isdate['departmentid'],36000);
+					cookie('posts',$isdate['posts'],36000);
+
 					$info['update_time'] = time();
 					$info['ip'] = get_client_ip();
 					//加入随机字符串重组多重加密密码

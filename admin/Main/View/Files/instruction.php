@@ -64,7 +64,7 @@
                                         <th width="100" class="sorting" data="est_user">创建者</th>
                                         <th width="160" class="sorting" data="est_time">创建时间</th>
                                     </tr>
-                                    <foreach name="datalist" item="row"> 
+                                    <foreach name="zhize" item="row">
                                     <tr>
                                     	<td align="center">{$row.id}</td>
                                         <td><a href="{$row.url}" {$row.target}>{$row.file_name}</a></td>
@@ -78,7 +78,7 @@
                                 </table>
                                 </div><!-- /.box-body -->
                                  <div class="box-footer clearfix">
-                                	<div class="pagestyle">{$pages}</div>
+                                	<div class="pagestyle">{$zhize_pages}</div>
                                 </div>
                             </div><!-- /.box -->
 
@@ -102,7 +102,7 @@
                                             <th width="100" class="sorting" data="est_user">创建者</th>
                                             <th width="160" class="sorting" data="est_time">创建时间</th>
                                         </tr>
-                                        <foreach name="datalist" item="row">
+                                        <foreach name="shuoming" item="row">
                                             <tr>
                                                 <td align="center">{$row.id}</td>
                                                 <td><a href="{$row.url}" {$row.target}>{$row.file_name}</a></td>
@@ -116,7 +116,7 @@
                                     </table>
                                 </div><!-- /.box-body -->
                                 <div class="box-footer clearfix">
-                                    <div class="pagestyle">{$pages}</div>
+                                    <div class="pagestyle">{$shuoming_pages}</div>
                                 </div>
                             </div><!-- /.box -->
                         </div><!-- /.col -->
@@ -139,7 +139,7 @@
                                             <th width="100" class="sorting" data="est_user">创建者</th>
                                             <th width="160" class="sorting" data="est_time">创建时间</th>
                                         </tr>
-                                        <foreach name="datalist" item="row">
+                                        <foreach name="guicheng" item="row">
                                             <tr>
                                                 <td align="center">{$row.id}</td>
                                                 <td><a href="{$row.url}" {$row.target}>{$row.file_name}</a></td>
@@ -153,7 +153,7 @@
                                     </table>
                                 </div><!-- /.box-body -->
                                 <div class="box-footer clearfix">
-                                    <div class="pagestyle">{$pages}</div>
+                                    <div class="pagestyle">{$guicheng_pages}</div>
                                 </div>
                             </div><!-- /.box -->
                         </div><!-- /.col -->
@@ -176,7 +176,7 @@
                                             <th width="100" class="sorting" data="est_user">创建者</th>
                                             <th width="160" class="sorting" data="est_time">创建时间</th>
                                         </tr>
-                                        <foreach name="datalist" item="row">
+                                        <foreach name="zhidu" item="row">
                                             <tr>
                                                 <td align="center">{$row.id}</td>
                                                 <td><a href="{$row.url}" {$row.target}>{$row.file_name}</a></td>
@@ -190,7 +190,7 @@
                                     </table>
                                 </div><!-- /.box-body -->
                                 <div class="box-footer clearfix">
-                                    <div class="pagestyle">{$pages}</div>
+                                    <div class="pagestyle">{$zhidu_pages}</div>
                                 </div>
                             </div><!-- /.box -->
                         </div><!-- /.col -->
