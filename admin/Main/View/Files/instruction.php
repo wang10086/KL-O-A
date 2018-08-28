@@ -14,7 +14,7 @@
 
                 <!-- Main content -->
                 <section class="content">
-                    <form action="" method="post">
+                    <form action="{:U('File/instruction')}" method="post">
                         <div class="col-xs-12 content-neck">
                             <div class="content-neck-body">
                                 <lebal>部门</lebal>&emsp14;

@@ -38,8 +38,9 @@
                 <div class=" content ">
                     <div class="col-md-12">
                         <lebal class="upload-lebal">所属部门<span>(不填写默认全部部门)</span></lebal>
+                        <span class="lebal-span"><input type="checkbox" onclick="checkboxOnclick(this)"> &nbsp;全选</span>
                         <foreach name="department" key="k" item="v">
-                            <span class="lebal-span"><input type="checkbox" value="{$k}" name="department[]"> &nbsp;{$v}</span>
+                            <span class="lebal-span"><input type="checkbox" value="{$k}" name="department[]" class="dep"> &nbsp;{$v}</span>
                         </foreach>
                     </div>
                     <div class="col-md-12 mt10">
@@ -178,5 +179,23 @@
 				$('input[rel=' + fid +']').remove();
 			}
 		}
+
+		function check_all(ele){
+            alert('aaa');
+            alert(ele);
+        }
+
+        function checkboxOnclick(checkbox){
+
+            if ( checkbox.checked == true){
+                alert('aaa');
+
+            }else{
+                alert('bbb');
+
+            }
+
+        }
+
         </script>
         

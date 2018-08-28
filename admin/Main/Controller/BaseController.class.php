@@ -352,7 +352,21 @@ class BaseController extends Controller {
 			 
 	    }
 		
-		
+		//结算审核
+        if ($row['req_type'] == P::REQ_TYPE_SETTLEMENT) {
+            $dstdata = M()->table('__' . strtoupper($row['req_table']) . '__')->where('id='.$row['req_id'])->find();
+
+            $record = array();
+            $record['op_id']   = $dstdata['op_id'];
+            $record['optype']  = 10;
+            if($dst_status == P::AUDIT_STATUS_PASS){
+                $record['explain'] = '结算审核通过';
+            }else{
+                $record['explain'] = '结算审核未通过';
+            }
+            op_record($record);
+
+        }
 		
 		// 回款审核
 	    if ($row['req_type'] == P::REQ_TYPE_HUIKUAN) {
@@ -386,9 +400,9 @@ class BaseController extends Controller {
 				}
 				
 				
-				$record['explain'] = '预算审核通过'; 
+				$record['explain'] = '回款审核通过';
 			}else{
-				$record['explain'] = '预算审核未通过'; 
+				$record['explain'] = '回款审核未通过';
 			}
 			op_record($record);
 			

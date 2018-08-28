@@ -193,7 +193,7 @@
 
 
                         <if condition="rolemenu(array('Files/index'))">
-                        <li class="treeview {:ison(CONTROLLER_NAME, 'Files')}">
+                        <li class="treeview {:ison(CONTROLLER_NAME, 'Files')} {:on('File')}">
                             <a href="javascript:;">
                                 <i class="fa  fa-folder-open"></i>
                                 <span>文件管理</span>
@@ -203,15 +203,11 @@
                             	<if condition="rolemenu(array('Files/index'))">
                                 	<li class="{:on('Files/index')}"><a href="{:U('Files/index')}"><i class="fa fa-angle-right"></i> 文件管理</a></li>
                                 </if>
-                                <if condition="rolemenu(array('Files/company'))">
-                                    <li class="{:on('Files/company')}"><a href="{:U('Files/company',array('pid'=>43))}"><i class="fa fa-angle-right"></i> 公司管理手册</a></li>
-                                </if>
+                                    <li class="{:on('File/company')}"><a href="{:U('File/company',array('pid'=>43))}"><i class="fa fa-angle-right"></i> 公司管理手册</a></li>
                                 <if condition="rolemenu(array('Files/index'))">
                                     <li class="{:on('Files/index')}"><a href="{:U('Files/index',array('pid'=>44))}"><i class="fa fa-angle-right"></i> 部门工作手册</a></li>
                                 </if>
-                                <if condition="rolemenu(array('Files/instruction'))">
-                                    <li class="{:on('Files/instruction')}"><a href="{:U('Files/instruction',array('pid'=>45))}"><i class="fa fa-angle-right"></i> 岗位作业指导书</a></li>
-                                </if>
+                                    <li class="{:on('File/instruction')}"><a href="{:U('File/instruction',array('pid'=>45))}"><i class="fa fa-angle-right"></i> 岗位作业指导书</a></li>
                             </ul>
                         </li>
                         </if>
