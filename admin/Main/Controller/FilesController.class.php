@@ -384,6 +384,35 @@ class FilesController extends BaseController {
 	}
 
 
+    // @@@NODE-3###auth###编辑文件###
+    public function upd_file(){
+        $id         = I('id');
+        $db         = M('files');
+        $file       = $db->where(array('id'=>$id))->find();
+        if ($file['file_type']=='0'){
+            $this->error('不能直接编辑文件夹');
+        }
+
+        if (isset($_POST['dosubmit'])){
+
+        }else{
+            $this->pid    = I('pid',0);
+            $this->level  = I('level',1);
+            $this->department   = M('salary_department')->getField('id,department',true);           //部门
+            $this->posts        = M('posts')->where(array('post_name'=>array('neq','')))->select(); //岗位
+            $this->file_tag     = C('FILE_TAG');
+
+            $file['department'] = str_replace('[','',$file['department']);
+            $file['department'] = str_replace(']','',$file['department']);
+            $file['posts']      = str_replace('[','',$file['posts']);
+            $file['posts']      = str_replace(']','',$file['posts']);
+            $file['department'] = explode(',',$file['department']);
+            $file['posts']      = explode(',',$file['posts']);
+            $this->file         = $file;
+
+            $this->display();
+        }
+    }
 	
     
 }

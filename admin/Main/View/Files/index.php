@@ -57,10 +57,13 @@
                                     	<th width="40" style="text-align:center;"><input type="checkbox" id="accessdata"/></th>
                                         <th class="sorting" data="file_name">文件名称</th>
                                         <th width="100" class="sorting" data="file_type">文件类型</th>
-                                        <th width="100" class="sorting" data="file_ext">文件格式</th>
-                                        <th width="100" class="sorting" data="file_size">文件大小</th>
+                                        <th width="80" class="sorting" data="file_ext">文件格式</th>
+                                        <th width="80" class="sorting" data="file_size">文件大小</th>
                                         <th width="100" class="sorting" data="est_user">创建者</th>
                                         <th width="160" class="sorting" data="est_time">创建时间</th>
+                                        <if condition="rolemenu(array('Files/upd_file'))">
+                                            <th width="80" class="taskOptions" data="">编辑文件</th>
+                                        </if>
                                     </tr>
                                     <foreach name="datalist" item="row"> 
                                     <tr>
@@ -73,6 +76,11 @@
                                         <td><if condition="$row['file_size']">{:fsize($row['file_size'])}</if></td>
                                         <td>{$row.est_user}</td>
                                         <td>{$row.est_time|date='Y-m-d H:i:s',###}</td>
+                                        <if condition="rolemenu(array('Files/upd_file'))">
+                                            <td class="taskOptions">
+                                                <a href="{:U('Files/upd_file',array('id'=>$row['id']))}" title="编辑" class="btn btn-info btn-smsm"><i class="fa fa-pencil"></i></a>
+                                            </td>
+                                        </if>
                                     </tr>
                                     </foreach>					
                                 </table>
