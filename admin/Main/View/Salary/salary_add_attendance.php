@@ -73,6 +73,9 @@
                                             </foreach>
                                         </table>
                                     </div>
+                                    <div class="box-footer clearfix">
+                                        <div class="pagestyle">{$page}</div>
+                                    </div>
                                 </div><!-- /.box -->
                         </div><!-- /.col -->
                      </div>
@@ -104,10 +107,13 @@
 
                             </form>
                         </div>
-<br><br><br>
                 </section><!-- /.content -->
                 <!--   操作历史 -->
-                <include file="record_list" />
+
+                <div class="salary_history_page">
+
+                </div>
+
             </aside><!-- /.right-side -->
 
 
@@ -132,7 +138,28 @@
             });
 
         });
+
+        $.ajax({
+            url:"{:U('Salary/salary_list')}",
+            type:"GET",
+            data:{'status':12},
+            dataType:"html",
+            success:function(result){
+                $('.salary_history_page').html(result);
+            }
+        });
     });
+    function salary_list(page){
+        $.ajax({
+            url:"{:U('Salary/salary_list')}",
+            type:"GET",
+            data:{'status':12,'page':page},
+            dataType:"html",
+            success:function(result){
+                $('.salary_history_page').html(result);
+            }
+        });
+    }
 
     $('.salary_add_button').click(function(){
         var late1 = $(this).parents('tr').find(".late1").val();
@@ -145,7 +172,7 @@
         var money = $(this).parents('tr').find(".lowest_wage").val();//北京最低工资标准的80%是病假扣费
         $.ajax({
             type: "post",
-            url: "{:U('Salary/salaryattendance')}", //url
+            url: "{:U('Ajax/salaryattendance')}", //url
             data: {'account_id':account_id,'late1':late1,'late2':late2,'leave_absence':leave_absence,'sick_leave':sick_leave,'absenteeism':absenteeism,'withdrawing':withdrawing,'money':money},
             dataType: "json", //数据格式
             success: function (data) {

@@ -61,9 +61,6 @@
                                         </div>
 
                                         <div class="form-group col-md-4 viwe">
-                                            <p>离职时间：<?php echo date('Y-m-d',$user['quit_time']) ?></p>
-                                        </div>
-                                        <div class="form-group col-md-4 viwe">
                                             <p>工资发放时间：<?php echo date('Y-m',$row['salary_time']) ?></p>
                                         </div>
                                         <div class="form-group col-md-4 viwe">

@@ -300,4 +300,209 @@ class AjaxController extends Controller {
         $data['zan_time'] = NOW_TIME;
         $zan_db->add($data);
     }
+
+
+    /**
+     * salary_add 添加岗位工资 基效比例
+     * $status 1 入职   2 转正 3 调岗 4 离职 5 调薪
+     */
+    public function salary_add(){
+        if(IS_POST){
+            $add['type']        = code_number(trim($_POST['type']));
+            $add['account_id']  = code_number(trim($_POST['account_id']));
+            if($add['type'] == 3){
+                $aid['id'] = $add['account_id'];
+                $account['departmentid']        = code_number(trim($_POST['department']));//部门
+                $account['postid']              = code_number(trim($_POST['posts']));//岗位
+                $query = M('account')->where($aid)->save($account);
+                if(!$query){
+                    $sum = 0;
+                    $msg = "信息添加失败!";
+                    echo json_encode(array('sum'=>$sum,'msg'=>$msg));die;
+                }
+            }
+            if($add['type'] == 4){
+                $salary['id']        = $add['account_id'];
+                $account['end_time'] = strtotime(trim($_POST['data']));
+                $account = array_filter($account);
+                $query = M('account')->where($salary)->save($account);
+                if($query){
+                    $sum = 0;
+                    $msg = "信息添加失败!";
+                    echo json_encode(array('sum'=>$sum,'msg'=>$msg));die;
+                }else{
+                    $cont = "添加离职信息, 离职日期: ".$_POST['data'];
+                    $info = salary_info(11,$cont);
+                    $sum  = 1;
+                    $msg  = "恭喜你添加成功!";
+                    echo json_encode(array('sum'=>$sum,'msg'=>$msg));die;
+                }
+            }
+            $add['standard_salary']     = code_number(trim($_POST['standard_salary']));
+            $add['basic_salary']        = code_number(trim($_POST['basic_salary']));
+            $add['performance_salary']  = code_number(trim($_POST['performance_salary']));
+            $add['createtime'] = time();
+            $add = array_filter($add);
+
+            $id['account_id'] = $add['account_id'];
+            $salar_r = M('salary')->field('id,type,status')->where($id)->order('id desc')->find();
+            if($salar_r){
+
+                if(strlen($add['type'])!==1 || strlen($add['basic_salary'])!==1 || strlen($add['performance_salary'])!==1){
+                    $sum = 0;
+                    $msg = "数据有误!请查证后提交!";
+                    echo json_encode(array('sum'=>$sum,'msg'=>$msg));die;
+                }
+                if($salar_r['status'] ==1){
+                    $id['id']                   = $salar_r['id'];
+                    $save['standard_salary']    = $add['standard_salary'];
+                    $save['basic_salary']       = $add['basic_salary'];
+                    $save['performance_salary'] = $add['performance_salary'];
+                    $salary_w = M('salary')->where($id)->save($save);
+                    $uecont = "修改";
+                }
+                if($salar_r['status'] ==2){
+                    $salary_w = M('salary')->add($add);
+                    $uecont = "添加";
+                }
+            }else{
+                $salary_w = M('salary')->add($add);
+                $uecont = "添加";
+            }
+            if($salary_w){
+                if($add['type'] ==1){
+                    $cot = "入职";
+                }
+                if($add['type'] ==2){
+                    $cot = "转正";
+                }
+                if($add['type'] ==3){
+                    $cot = "调岗";
+                }
+                if($add['type'] ==5){
+                    $cot = "调薪";
+                }
+                $cont = $uecont.$cot."信息: 岗位薪酬=".$add['standard_salary'].";绩效比=".$add['basic_salary'].":".$add['performance_salary'];
+                $info = salary_info(11,$cont);
+                $sum  = 1;
+                $msg  = "恭喜你".$uecont."成功!";
+                echo json_encode(array('sum'=>$sum,'msg'=>$msg));die;
+            }else{
+                $sum = 0;
+                $msg = "您".$uecont."数据失败!请重新".$uecont."!";
+                echo json_encode(array('sum'=>$sum,'msg'=>$msg));die;
+            }
+        }
+    }
+
+    /**
+     * salaryattendance 添加考勤录入
+     * $account_r 查询工资标准
+     * strip_tags 去掉php 和html 标签
+     */
+    public function salaryattendance(){
+
+        if(IS_POST){
+            $user['account_id']     = code_number(trim($_POST['account_id']));//用户id
+            $add['late1']           = code_number(trim($_POST['late1']));//15分钟以内
+            $add['late2']           = code_number(trim($_POST['late2']));//15~2小时以内
+            $add['leave_absence']   = code_number(trim($_POST['leave_absence']));//事假
+            $add['sick_leave']      = code_number(trim($_POST['sick_leave']));//病假
+            $add['absenteeism']     = code_number(trim($_POST['absenteeism']));//矿工
+            $add['lowest_wage']     = code_number(trim($_POST['money']));//北京最低工资标准
+            $add['createtime']      = time();
+            $withdrawing            = (float)code_number(trim($_POST['withdrawing']));//传过来的总价格
+            $account_r = M('salary_attendance')->field('id,status')->where($user)->order('id desc')->find();
+            $salary = M('salary')->field('id,standard_salary')->where($user)->order('id desc')->find();
+
+            if($account_r && $salary){//$add['withdrawing']
+                $add['withdrawing'] = floor(($add['late1']*10+$add['late2']*30+($salary['standard_salary']/21.75)*$add['leave_absence']+($add['lowest_wage']/21.75)*0.2+($salary['standard_salary']/21.75)*$add['absenteeism']*2)*100)/100;
+
+                if($add['withdrawing'] !== $withdrawing){
+//                    var_dump($add); var_dump($withdrawing);die;
+                    $sum = 0;
+                    $msg = "考勤数据添加失败!请重新添加!";
+                    echo json_encode(array('sum'=>$sum,'msg'=>$msg));die;
+                }
+                if($account_r['status'] == 1){
+                    $id['id'] = $account_r['id'];
+                    $cot = "添加";
+                    $account_w = M('salary_attendance')->where($id)->save($add);
+                }
+                if($account_r['status'] == 2){
+                    $add['account_id'] = $user['account_id'];
+                    $cot = "修改";
+                    $account_w = M('salary_attendance')->add($add);
+                }
+                if(!$account_w){
+                    $sum = 0;
+                    $msg = "考勤添加失败!请重新添加!";
+                    echo json_encode(array('sum'=>$sum,'msg'=>$msg));die;
+                }
+            }else{
+                if($salary){
+                    $add['withdrawing'] = floor(($add['late1']*10+$add['late2']*30+($salary['standard_salary']/21.75)*$add['leave_absence']+($add['lowest_wage']/21.75)*0.2+($salary['standard_salary']/21.75)*$add['absenteeism']*2)*100)/100;
+                    $add['account_id'] = $user['account_id'];
+                    $cot = "添加";
+                    $account_w = M('salary_attendance')->add($add);
+                }else{
+                    $sum = 0;
+                    $msg = "考勤数据添加失败!请先添加薪酬标准信息!";
+                    echo json_encode(array('sum'=>$sum,'msg'=>$msg));die;
+                }
+            }
+            if($account_w){
+                $cont = $cot."考勤信息,扣款：".$add['withdrawing']." （元）" ;
+                $info = salary_info(12,$cont);
+                $sum = 1;
+                $msg = "考勤数据添加成功!";
+                echo json_encode(array('sum'=>$sum,'msg'=>$msg));die;
+            }
+            $sum = 0;
+            $msg = "考勤数据添加失败!";
+            echo json_encode(array('sum'=>$sum,'msg'=>$msg));die;
+        }
+    }
+
+    /**
+     *Ajaxbonusquery 添加提成 奖金
+     *
+     *
+     */
+    public function Ajaxbonusquery(){
+
+        $where['account_id']   = code_number(trim(I('account_id')));
+        $where['bonus']        = code_number(trim(I('bonus_bonus')));
+        $where['extract']      = code_number(trim(I('extract')));
+        $where['annual_bonus'] = code_number(trim(I('yearend')));
+
+        $bonus_r = M('salary_bonus')->where($where)->order('id desc')->find();
+        if($bonus_r){
+           if($bonus_r['status']==1){
+               $id['id'] = $bonus_r['id'];
+               $id['status'] = $bonus_r['status'];
+               $bouns_W = M('salary_bonus')->where($id)->save($where);
+           }
+           if($bonus_r['status']==2){
+               $where['createtime']   = time();
+               $bouns_W = M('salary_bonus')->add($where);
+           }
+        }else{
+            $where['createtime']   = time();
+            $bouns_W = M('salary_bonus')->add($where);
+        }
+        if($bouns_W){
+            $cont = "添加：提成:".$where['extract'].";奖金:".$where['bonus'].";年终:".$where['annual_bonus']." （元）" ;
+            $info = salary_info(11,$cont);
+            $sum = 1;
+            $msg = "添加数据成功!";
+            echo json_encode(array('sum'=>$sum,'msg'=>$msg));die;
+        }else{
+            $sum = 0;
+            $msg = "添加数据失败!请重新添加!";
+            echo json_encode(array('sum'=>$sum,'msg'=>$msg));die;
+        }
+
+    }
+
 }
