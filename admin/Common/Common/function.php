@@ -2021,13 +2021,14 @@ function updatekpi($month,$user){
 					//定义比较区间
 					$v1 = intervalsn($ys,0.10);
 					$v2 = intervalsn($ys,0.15);
-					if($js > $v1[0] && $js<$v1[1]){
+					/*if($js > $v1[0] && $js<$v1[1]){
 						$complete = '100%';
 					}else if(($js < $v1[0] && $js > $v2[0]) || ($js > $v1[1] && $js < $v2[1]) ){
 						$complete = '80%';
 					}else{
 						$complete = '0%';	
-					}
+					}*/
+					$complete = '100%';
 
 				}
 				
