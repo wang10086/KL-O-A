@@ -36,6 +36,13 @@
 
                             </div>
 
+                            <!--提成/奖金/补助-->
+                            <div class="salary_search_extract">
+
+                                <include file="Salary:salary_insurance" />
+
+                            </div>
+
 
                         </div><!-- /.col -->
                      </div>

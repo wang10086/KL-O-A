@@ -222,14 +222,21 @@ class SalaryController extends BaseController {
                     $account_r[$key]['basic_salary']        = $salary['basic_salary'];
                     $account_r[$key]['performance_salary']  = $salary['performance_salary'];
                     $salary_bonus = M('salary_bonus')->where($aid)->order('id desc')->field('id,bonus,extract,annual_bonus')->find();
-                    $account_r[$key]['bonus_id']            =$salary_bonus['id'];
-                    $account_r[$key]['extract']             =$salary_bonus['extract'];
-                    $account_r[$key]['bonus']               =$salary_bonus['bonus'];
-                    $account_r[$key]['annual_bonus']        =$salary_bonus['annual_bonus'];
+                    $account_r[$key]['bonus_id']            = $salary_bonus['id'];
+                    $account_r[$key]['extract']             = $salary_bonus['extract'];
+                    $account_r[$key]['bonus']               = $salary_bonus['bonus'];
+                    $account_r[$key]['annual_bonus']        = $salary_bonus['annual_bonus'];
+                    $subsidy_r = M('salary_subsidy')->where($aid)->order('id desc')->find();
+                    $account_r[$key]['subsidy']             = $subsidy_r['id'];
+                    $account_r[$key]['housing_subsidy']     = $subsidy_r['housing_subsidy'];
+                    $account_r[$key]['foreign_subsidies']   = $subsidy_r['foreign_subsidies'];
+                    $account_r[$key]['computer_subsidy']    = $subsidy_r['computer_subsidy'];
 
                 }
+
                 if(!$account_r || $account_r==""){$this->error('请添加员工编码或者员工部门！', U('Salary/salary_query'));die;}
             }
+
             $status        = trim(I('status'));
             if($status==1){
                 $_SESSION['page']   = $pages;

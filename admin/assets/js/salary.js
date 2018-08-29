@@ -181,7 +181,7 @@ function salary_hide(number){
  * 录入提成/补助/奖金 保存
  */
 $('.salary_bonus_butt1').click(function (){
-    var url = "index.php?m=Main&c=Ajax&a=Ajaxbonusquery";
+    var url = "index.php?m=Main&c=Ajax&a=Ajax_Bonus_Query";
     var account_id  = $(this).parents('tr').find('.salary_table_extract').text();//用户id
     var extract     = $(this).parents('tr').find('.salary_bonus_extract').val();//提成
     var bonus_bonus = $(this).parents('tr').find('.salary_bonus_bonus').val();//奖金
@@ -190,6 +190,31 @@ $('.salary_bonus_butt1').click(function (){
         type: "post",
         url: url, //url
         data: {'account_id':account_id,'extract':extract,'bonus_bonus':bonus_bonus,'yearend':yearend},
+        dataType: "json", //数据格式
+        success: function (data) {
+            if(data.sum==1){
+                alert(data.msg);die;
+            }
+            if(data.sum==0){
+                alert(data.msg);die;
+            }
+        }
+    });
+
+})
+/**
+ * 变动各项补助
+ */
+$('.salary_subsidy_butt1').click(function (){
+    var url                 = "index.php?m=Main&c=Ajax&a=Ajax_subsidy_Query";
+    var account_id          = $(this).parents('tr').find('.salary_table_extract1').text();//用户id
+    var housing_subsidy     = $(this).parents('tr').find('.salary_subsidy_housingt').val();//住房补贴
+    var foreign_subsidies   = $(this).parents('tr').find('.salary_subsidy_foreign').val();//外地补贴
+    var computer_subsidy    = $(this).parents('tr').find('.salary_subsidy_computer').val();//电脑补贴
+    $.ajax({
+        type: "post",
+        url: url, //url
+        data: {'account_id':account_id,'housing_subsidy':housing_subsidy,'foreign_subsidies':foreign_subsidies,'computer_subsidy':computer_subsidy},
         dataType: "json", //数据格式
         success: function (data) {
             if(data.sum==1){

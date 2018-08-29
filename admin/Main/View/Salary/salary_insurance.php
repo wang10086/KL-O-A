@@ -3,12 +3,13 @@
 <div class="box">
     <div class="box-header">
         <div class="box-tools pull-left">
-            <h3 style="color:blue"><b>提成/补助/奖金</h3>
-            <h4 style="margin:-1.8em 0em 0em 11em">操作事项</h4>
-            <select name="some" class="btn btn-info" style="margin:-3em 0em 0em 21em;" id="salary_id_hidden1">
+            <h3 style="color:blue"><b>&nbsp;&nbsp;&nbsp;五险一金</h3>
+            <h4 style="margin:-1.8em 0em 0em 8em">操作事项</h4>
+            <select name="some" class="btn btn-info" style="margin:-3em 0em 0em 17em;" id="salary_insurance">
                 <option value="0" <?php if($type=="" || $type==0 ){echo 'selected';}?>>选择操作</option>
-                <option value="1" onclick="salary_hide(1)" <?php if($type==6){echo 'selected';}?>>录入提成/奖金</option>
-                <option value="2" onclick="salary_hide(2)" <?php if($type==7){echo 'selected';}?>>变动各项补助</option>
+                <option value="1" onclick="salary_hide(1)" <?php if($type==8){echo 'selected';}?>>录入提成/奖金</option>
+                <option value="2" onclick="salary_hide(2)" <?php if($type==9){echo 'selected';}?>>变动各项补助</option>
+                <option value="3" onclick="salary_hide(3)" <?php if($type==10){echo 'selected';}?>>变动各项补助</option>
             </select>
         </div>
     </div>
@@ -18,7 +19,7 @@
             <div id="table_salary_percentage1" >
                 <div style="float: left;margin-left: 2em;">
                     <label>选择人员：</label>
-                    <a href="javascript:;" class="btn btn-info btn-sm" onclick="javascript:opensearch('searchtext_1',700,160);"><i class="fa fa-search"></i> 搜索</a> (提示: 选择不到人员或基本信息不完整、错误时，请在“员工管理”->"人员管理"页面添加或编辑信息)<br><br>
+                    <a href="javascript:;" class="btn btn-info btn-sm" onclick="javascript:opensearch('searchtext_2',700,160);"><i class="fa fa-search"></i> 搜索</a> (提示: 选择不到人员或基本信息不完整、错误时，请在“员工管理”->"人员管理"页面添加或编辑信息)<br><br>
                     <table class="table table-bordered"  style="margin-top:10px;">
                         <tr role="row" class="orders">
                             <th class="sorting" data="op_id"  style="width:8em;">ID</th>
