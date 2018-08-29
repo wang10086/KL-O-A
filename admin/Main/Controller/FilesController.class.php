@@ -395,8 +395,25 @@ class FilesController extends BaseController {
 
         if (isset($_POST['dosubmit'])){
             $info               = I('info');
-            $info['department'] = implode(',',I('department'));
-            $info['posts']      = implode(',',I('posts'));
+            $department         = I('department');
+            $posts              = I('posts');
+
+            if ($department){
+                foreach ($department as $k=>$v){
+                    $department[$k] = '['.$v.']';
+                }
+            }
+            if ($posts){
+                foreach ($posts as $k=>$v){
+                    $posts[$k]  = '['.$v.']';
+                }
+            }
+
+            $department         = $department?implode(',',$department):'';
+            $posts              = $posts?implode(',',$posts):'';
+            $info['department'] = $department;
+            $info['posts']      = $posts;
+
             $res = $db->where(array('id'=>$id))->save($info);
             if ($res){
                 $this->success('修改成功',U('Files/index',array('pid'=>$info['pid'])));

@@ -50,7 +50,7 @@
                                             | <span class="note-xq ml10">点赞：<a href="javascript:;"><i class="fa fa-thumbs-up"></i></a></span>
                                         </if>
                                         | <span class="note-xq ml10"><a href="javascript:;" onclick="show_form()">回复</a></span>
-                                        <?php if($list['youke']==cookie('staff_youke') || cookie('staff_username')=='qiaofeng'){ ?>
+                                        <?php if($list['youke']==cookie('staff_youke') || cookie('staff_username')=='qiaofeng' || cookie('staff_username')=='admins'){ ?>
                                         | <span class="note-xq ml10"><a href="javascript:ConfirmDel('{:U('Staff/del_staff',array('id'=>$list['id']))}')" onclick="">删除</a></span>
                                         <?php } ?>
                                         <form method="post" action="{:U('Staff/save_staff')}" name="myform" id="myform" class="mt20">

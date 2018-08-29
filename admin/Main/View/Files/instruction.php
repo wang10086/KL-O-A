@@ -14,31 +14,33 @@
 
                 <!-- Main content -->
                 <section class="content">
-                    <form action="{:U('File/instruction')}" method="post">
-                        <div class="col-xs-12 content-neck">
-                            <div class="content-neck-body">
-                                <lebal>部门</lebal>&emsp14;
-                                <select name="department" >
-                                    <option value="">请选择</option>
-                                    <foreach name="department" key="k" item="v">
-                                        <option value="{$k}">{$v}</option>
-                                    </foreach>
-                                </select>
-                            </div>
+                    <if condition="C('RBAC_SUPER_ADMIN')==cookie('username') || cookie('roleid')==10">
+                        <form action="{:U('File/instruction')}" method="post">
+                            <div class="col-xs-12 content-neck">
+                                <div class="content-neck-body">
+                                    <lebal>部门</lebal>&emsp14;
+                                    <select name="department" >
+                                        <option value="">请选择</option>
+                                        <foreach name="department" key="k" item="v">
+                                            <option value="{$k}">{$v}</option>
+                                        </foreach>
+                                    </select>
+                                </div>
 
-                            <div class="content-neck-body">
-                                <lebal>岗位</lebal>&emsp14;
-                                <select name="posts" >
-                                    <option value="">请选择</option>
-                                    <foreach name="posts" item="v">
-                                        <option value="{$v['id']}">{$v['post_name']}</option>
-                                    </foreach>
-                                </select>
-                            </div>
+                                <div class="content-neck-body">
+                                    <lebal>岗位</lebal>&emsp14;
+                                    <select name="posts" >
+                                        <option value="">请选择</option>
+                                        <foreach name="posts" item="v">
+                                            <option value="{$v['id']}">{$v['post_name']}</option>
+                                        </foreach>
+                                    </select>
+                                </div>
 
-                            <input type="submit" class="btn btn-info search-btn" value="确定">
-                        </div>
-                    </form>
+                                <input type="submit" class="btn btn-info search-btn" value="确定">
+                            </div>
+                        </form>
+                    </if>
 
                     <div class="row">
                         <div class="col-xs-12">
@@ -67,7 +69,7 @@
                                     <foreach name="zhize" item="row">
                                     <tr>
                                     	<td align="center">{$row.id}</td>
-                                        <td><a href="{$row.url}" {$row.target}>{$row.file_name}</a></td>
+                                        <td><a href="{$row.file_path}" target="_blank">{$row.file_name}</a></td>
                                         <td>{$row.file_type}</td>
                                         <td><if condition="$row['file_ext']">{$row.file_ext}</if></td>
                                         <td><if condition="$row['file_size']">{:fsize($row['file_size'])}</if></td>
@@ -105,7 +107,7 @@
                                         <foreach name="shuoming" item="row">
                                             <tr>
                                                 <td align="center">{$row.id}</td>
-                                                <td><a href="{$row.url}" {$row.target}>{$row.file_name}</a></td>
+                                                <td><a href="{$row.file_path}" target="_blank">{$row.file_name}</a></td>
                                                 <td>{$row.file_type}</td>
                                                 <td><if condition="$row['file_ext']">{$row.file_ext}</if></td>
                                                 <td><if condition="$row['file_size']">{:fsize($row['file_size'])}</if></td>
@@ -142,7 +144,7 @@
                                         <foreach name="guicheng" item="row">
                                             <tr>
                                                 <td align="center">{$row.id}</td>
-                                                <td><a href="{$row.url}" {$row.target}>{$row.file_name}</a></td>
+                                                <td><a href="{$row.file_path}" target="_blank">{$row.file_name}</a></td>
                                                 <td>{$row.file_type}</td>
                                                 <td><if condition="$row['file_ext']">{$row.file_ext}</if></td>
                                                 <td><if condition="$row['file_size']">{:fsize($row['file_size'])}</if></td>
@@ -179,7 +181,7 @@
                                         <foreach name="zhidu" item="row">
                                             <tr>
                                                 <td align="center">{$row.id}</td>
-                                                <td><a href="{$row.url}" {$row.target}>{$row.file_name}</a></td>
+                                                <td><a href="{$row.file_path}" target="_blank">{$row.file_name}</a></td>
                                                 <td>{$row.file_type}</td>
                                                 <td><if condition="$row['file_ext']">{$row.file_ext}</if></td>
                                                 <td><if condition="$row['file_size']">{:fsize($row['file_size'])}</if></td>
