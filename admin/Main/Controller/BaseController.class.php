@@ -352,21 +352,7 @@ class BaseController extends Controller {
 			 
 	    }
 		
-		//结算审核
-        if ($row['req_type'] == P::REQ_TYPE_SETTLEMENT) {
-            $dstdata = M()->table('__' . strtoupper($row['req_table']) . '__')->where('id='.$row['req_id'])->find();
-
-            $record = array();
-            $record['op_id']   = $dstdata['op_id'];
-            $record['optype']  = 10;
-            if($dst_status == P::AUDIT_STATUS_PASS){
-                $record['explain'] = '结算审核通过';
-            }else{
-                $record['explain'] = '结算审核未通过';
-            }
-            op_record($record);
-
-        }
+		
 		
 		// 回款审核
 	    if ($row['req_type'] == P::REQ_TYPE_HUIKUAN) {
@@ -400,9 +386,9 @@ class BaseController extends Controller {
 				}
 				
 				
-				$record['explain'] = '回款审核通过';
+				$record['explain'] = '预算审核通过'; 
 			}else{
-				$record['explain'] = '回款审核未通过';
+				$record['explain'] = '预算审核未通过'; 
 			}
 			op_record($record);
 			
@@ -410,6 +396,58 @@ class BaseController extends Controller {
 	    
 	    return M('audit_log')->where('id='.$id)->save($data);    
 	}
+
+	/**
+     * ajaxPageHtml 分页
+     * $count 总数 $page当前页面 $limit显示条数 $fan方法名
+	 */
+    public function ajaxPageHtml($count,$page,$limit,$fan){
+        $total = ceil($count/$limit);
+        if ($total == 1) {
+            return $str;
+        }
+        $b5page = $page-5;
+        $n5page = $page+5;
+        if($page-5 <= 0){
+            $b5page = 1;
+            $n5page = $b5page+10;
+        }else if($page+5 > $total){
+            $b5page = $total-10;
+            if ($b5page <= 0) {
+                $b5page = 1;
+            }
+            $n5page = $total;
+        }
+
+        $str = '<div class="pagestyle"><ul><li class="active"><a href="javascript:;">总共'.$total.' 条</a></li>';
+        if ($page != 1) {
+            $str .= "<li class='pageunit'><a href='javascript:;' onclick='(".$fan."("."1))'>首 页</a></li>";
+            $str .= "<li class='pageunit'><a href='javascript:;' onclick='(".$fan."(".($page-1)."))'>上一页</a></li>";
+        }else{
+            $str .= "<li class='active'><a href='javascript:;'>首 页</a></li>";
+            $str .= "<li class='active'><a href='javascript:;'>上一页</a></li>";
+        }
+        for ($i=1; $i <= $total; $i++) {
+            if($i>=$b5page && $i<=$n5page){
+                if ($page == $i) {
+                    $str .= "<li class='active'><a class='act' href='javascript:;'>$i</a></li>";
+                }else{
+                    $str .= "<li class='pageunit'><a href='javascript:;' onclick='(".$fan."(".$i."))'>$i</a></li>";
+                }
+            }
+        }
+        if ($page != $total) {
+            $str .= "<li class='pageunit'><a href='javascript:;' onclick='(".$fan."(".($page+1)."))'>下一页</a></li>";
+            $str .= "<li class='pageunit'><a href='javascript:;' onclick='(".$fan."(".$total."))'>末 页</a></li>";
+        }else{
+            $str .= "<li class='active'><a href='javascript:;'>下一页</a></li>";
+            $str .= "<li class='active'><a href='javascript:;'>末 页</a></li>";
+        }
+        $str .= '<li class="active"><a href="javascript:;">当前'.$page.'/'.$total.' 页</a></li></ul></div>';
+        return $str;
+    }
+
+
 }
 
 
