@@ -394,10 +394,19 @@ class FilesController extends BaseController {
         }
 
         if (isset($_POST['dosubmit'])){
+            $info               = I('info');
+            $info['department'] = implode(',',I('department'));
+            $info['posts']      = implode(',',I('posts'));
+            $res = $db->where(array('id'=>$id))->save($info);
+            if ($res){
+                $this->success('修改成功',U('Files/index',array('pid'=>$info['pid'])));
+            }else{
+                $this->error('数据保存失败');
+            }
 
         }else{
-            $this->pid    = I('pid',0);
-            $this->level  = I('level',1);
+            $this->pid          = I('pid',0);
+            $this->level        = I('level',1);
             $this->department   = M('salary_department')->getField('id,department',true);           //部门
             $this->posts        = M('posts')->where(array('post_name'=>array('neq','')))->select(); //岗位
             $this->file_tag     = C('FILE_TAG');

@@ -33,41 +33,55 @@
                     <h3 class="box-title">编辑文件</h3>
                 </div><!-- /.box-header -->
                 <form method="post" action="{:U('Files/upd_file')}" name="myform" id="myform">
-                    <input type="hidden" name="pid" value="{$pid}">
-                    <input type="hidden" name="level" value="{$level}">
+                    <input type="hidden" name="dosubmit" value="1">
+                    <input type="hidden" name="id" value="{$file['id']}">
+                    <input type="hidden" name="info[pid]" value="{$file['pid']}">
+                    <input type="hidden" name="info[level]" value="{$file['level']}">
                 <div class=" content ">
-                    <div class="col-md-12" id="departmentcheckbox">
+                    <div class="col-md-12">
                         <lebal class="upload-lebal">所属部门<span></span></lebal>
-                        <span class="lebal-span" style="margin-right: 6px"><input type="checkbox"> &nbsp;全选</span>
+                        <span class="lebal-span" style="margin-right: 6px"><input type="checkbox" id="departmentcheckbox"> &nbsp;全选</span>
                         <foreach name="department" key="k" item="v">
                             <span class="lebal-span"><input type="checkbox" value="{$k}" name="department[]" class="departmentcheckbox" <?php if (in_array($k,$file['department'])) echo "checked"; ?>> &nbsp;{$v}</span>
                         </foreach>
                     </div>
-                    <div class="col-md-12 mt10" id="postscheckbox">
+                    <div class="col-md-12 mt10">
                         <lebal class="upload-lebal">所属岗位<span></span></lebal>
-                        <span class="lebal-span" style="margin-right: 6px"><input type="checkbox"> &nbsp;全选</span>
+                        <span class="lebal-span" style="margin-right: 6px"><input type="checkbox" id="postscheckbox"> &nbsp;全选</span>
                         <foreach name="posts" key="k" item="v">
-                            <span class="lebal-span"><input type="checkbox" value="{$v['id']}" name="posts[]" class="postscheckbox" <?php if (in_array($k,$file['posts'])) echo "checked"; ?>> &nbsp;{$v['post_name']}</span>
+                            <span class="lebal-span"><input type="checkbox" value="{$v['id']}" name="posts[]" class="postscheckbox" <?php if (in_array($v['id'],$file['posts'])) echo "checked"; ?>> &nbsp;{$v['post_name']}</span>
                         </foreach>
                     </div>
                     <div class="col-md-12 mt10">
                         <lebal class="upload-lebal">文件类型</lebal>
                         <foreach name="file_tag" key="k" item="v">
-                            <span class="lebal-span"><input type="radio" value="{$k}" name="file_tag" <?php if ($k==$file['file_tag']) echo "checked"; ?>> &nbsp;{$v}</span>
+                            <span class="lebal-span"><input type="radio" value="{$k}" name="info[file_tag]" <?php if ($k==$file['file_tag']) echo "checked"; ?>> &nbsp;{$v}</span>
                         </foreach>
                     </div>
 
                     <div class="form-group col-md-12">&nbsp;</div>
                     <div class="form-group col-md-12">
                         <!--<a href="javascript:;" id="pickupfile" class="btn btn-success btn-sm" style="margin-top:15px; float:left;"><i class="fa fa-upload"></i> 选择文件</a>
-                        <span style="line-height:30px; float:left;margin-left:15px; margin-top:15px; color:#999999;">请选择小于100M的文件，支持JPG / GIF / PNG / DOC / XLS / PDF / ZIP / RAR文件类型</span>
--->
+                        <span style="line-height:30px; float:left;margin-left:15px; margin-top:15px; color:#999999;">请选择小于100M的文件，支持JPG / GIF / PNG / DOC / XLS / PDF / ZIP / RAR文件类型</span>-->
                         <table id="flist" class="table" style="margin-top:15px; float:left; clear:both; border-top:1px solid #dedede;">
                             <tr>
                                 <th align="left" width="">文件名称</th>
                                 <th align="left" width="100">大小</th>
                                 <th align="left" width="30%">上传进度</th>
-                                <th align="left" width="60">操作</th>
+                                <!--<th align="left" width="60">操作</th>-->
+                            </tr>
+
+                            <tr id="{$file['id']}"  valign="middle" class="un_upload">
+                                <td class="iptval">
+                                    <input type="text" name="info[file_name]" value="{$file['file_name']}" class="form-control file_val" />
+                                </td>
+                                <td> <?php echo round($file[file_size]/1024,2); ?>Kb</td>
+                                <td>
+                                    <div class="progress sm">
+                                        <div class="progress-bar progress-bar-aqua" rel="{$file['id']}"  role="progressbar"  aria-valuemin="0" aria-valuemax="100"></div>
+                                    </div>
+                                </td>
+                                <!--<td><a class="btn btn-danger btn-xs " href="javascript:;" onclick="removeThisFile({$file['id']});"><i class="fa fa-times"></i>删除</a></td>-->
                             </tr>
 
                         </table>

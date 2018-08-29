@@ -36,16 +36,16 @@
                     <input type="hidden" name="pid" value="{$pid}">
                     <input type="hidden" name="level" value="{$level}">
                 <div class=" content ">
-                    <div class="col-md-12" id="departmentcheckbox">
+                    <div class="col-md-12">
                         <lebal class="upload-lebal">所属部门<span></span></lebal>
-                        <span class="lebal-span" style="margin-right: 6px"><input type="checkbox"> &nbsp;全选</span>
+                        <span class="lebal-span" style="margin-right: 6px"><input type="checkbox" id="departmentcheckbox"> &nbsp;全选</span>
                         <foreach name="department" key="k" item="v">
                             <span class="lebal-span"><input type="checkbox" value="{$k}" name="department[]" class="departmentcheckbox"> &nbsp;{$v}</span>
                         </foreach>
                     </div>
-                    <div class="col-md-12 mt10" id="postscheckbox">
+                    <div class="col-md-12 mt10">
                         <lebal class="upload-lebal">所属岗位<span></span></lebal>
-                        <span class="lebal-span" style="margin-right: 6px"><input type="checkbox"> &nbsp;全选</span>
+                        <span class="lebal-span" style="margin-right: 6px"><input type="checkbox" id="postscheckbox"> &nbsp;全选</span>
                         <foreach name="posts" key="k" item="v">
                             <span class="lebal-span"><input type="checkbox" value="{$v['id']}" name="posts[]" class="postscheckbox"> &nbsp;{$v['post_name']}</span>
                         </foreach>
