@@ -75,8 +75,8 @@
                             <th class="sorting" data="group_id" style="width:8em;">档案所属</th>
                             <th class="sorting" data="group_id" style="width:8em;">员工部门</th>
                             <th class="sorting" data="project" style="width:8em;">员工岗位</th>
-                            <th class="sorting" data="number" style="width:14em;">原医疗保险比例</th>
-                            <th class="sorting" data="number" style="width:14em;">现医疗保险比例</th>
+                            <th class="sorting" data="number" style="width:14em;">原养老保险比例</th>
+                            <th class="sorting" data="number" style="width:14em;">现养老保险比例</th>
                             <th class="sorting" data="shouru" style="width:11em;">原失业保险比例</th>
                             <th class="sorting" data="shouru" style="width:11em;">现失业保险比例</th>
                             <th class="sorting" data="number" style="width:11em;">原公积金比例</th>
@@ -122,10 +122,8 @@
                             <th class="sorting" data="project" style="width:8em;">员工岗位</th>
                             <th class="sorting" data="number" style="width:14em;">原医疗保险比例</th>
                             <th class="sorting" data="number" style="width:14em;">现医疗保险比例</th>
-                            <th class="sorting" data="shouru" style="width:11em;">原失业保险比例</th>
-                            <th class="sorting" data="shouru" style="width:11em;">现失业保险比例</th>
-                            <th class="sorting" data="number" style="width:11em;">原公积金比例</th>
-                            <th class="sorting" data="number" style="width:10em;">现公积金比例</th>
+                            <th class="sorting" data="shouru" style="width:11em;">原大额医疗保险比例</th>
+                            <th class="sorting" data="shouru" style="width:11em;">现大额医疗保险比例</th>
                             <th class="sorting" data="shouru" style="width:10em;">操作</th>
                         </tr>
 
@@ -136,8 +134,6 @@
                                 <td><?php if($lst['archives']==1){echo "中心";}elseif($lst['archives']==2){echo "科旅";}elseif($lst['archives']==3){echo "科行";}?></td>
                                 <td>{$lst.department}</td>
                                 <td>{$lst.post_name}</td>
-                                <td>{$lst.post_name}</td>
-                                <td><input type="text" style="float:left;" class="form-control salary_bonus_extract" value="{$lst.extract}" /></td>
                                 <td>{$lst.post_name}</td>
                                 <td><input type="text" style="float:left;" class="form-control salary_bonus_bonus" value="{$lst.bonus}" /></td>
                                 <td>{$lst.post_name}</td>
@@ -153,7 +149,8 @@
                 </div>
             </div>
 
-            <div id="table_salary_insurance4" >
+
+            <div id="table_salary_insurance2" >
                 <div style="float: left;margin-left: 2em;">
                     <label>选择人员：</label>
                     <a href="javascript:;" class="btn btn-info btn-sm" onclick="javascript:opensearch('searchtext_2',700,160);"><i class="fa fa-search"></i> 搜索</a> (提示: 选择不到人员或基本信息不完整、错误时，请在“员工管理”->"人员管理"页面添加或编辑信息)<br><br>
@@ -164,8 +161,8 @@
                             <th class="sorting" data="group_id" style="width:8em;">档案所属</th>
                             <th class="sorting" data="group_id" style="width:8em;">员工部门</th>
                             <th class="sorting" data="project" style="width:8em;">员工岗位</th>
-                            <th class="sorting" data="number" style="width:14em;">原医疗保险比例</th>
-                            <th class="sorting" data="number" style="width:14em;">现医疗保险比例</th>
+                            <th class="sorting" data="number" style="width:14em;">原养老保险比例</th>
+                            <th class="sorting" data="number" style="width:14em;">现养老保险比例</th>
                             <th class="sorting" data="shouru" style="width:11em;">原失业保险比例</th>
                             <th class="sorting" data="shouru" style="width:11em;">现失业保险比例</th>
                             <th class="sorting" data="number" style="width:11em;">原公积金比例</th>
@@ -196,6 +193,7 @@
 
                 </div>
             </div>
+
 
             <div id="table_salary_insurance5" >
                 <div style="float: left;margin-left: 2em;">
@@ -208,13 +206,15 @@
                             <th class="sorting" data="group_id" style="width:8em;">档案所属</th>
                             <th class="sorting" data="group_id" style="width:8em;">员工部门</th>
                             <th class="sorting" data="project" style="width:8em;">员工岗位</th>
-                            <th class="sorting" data="number" style="width:14em;">原医疗保险比例</th>
-                            <th class="sorting" data="number" style="width:14em;">现医疗保险比例</th>
-                            <th class="sorting" data="shouru" style="width:11em;">原失业保险比例</th>
-                            <th class="sorting" data="shouru" style="width:11em;">现失业保险比例</th>
-                            <th class="sorting" data="number" style="width:11em;">原公积金比例</th>
-                            <th class="sorting" data="number" style="width:10em;">现公积金比例</th>
-                            <th class="sorting" data="shouru" style="width:10em;">操作</th>
+                            <th class="sorting" data="number" style="width:12em;">原医疗比例</th>
+                            <th class="sorting" data="number" style="width:12em;">现医疗比例</th>
+                            <th class="sorting" data="shouru" style="width:12em;">原生育比例</th>
+                            <th class="sorting" data="shouru" style="width:12em;">现生育比例</th>
+                            <th class="sorting" data="number" style="width:11em;">原工伤比例</th>
+                            <th class="sorting" data="number" style="width:10em;">现工伤比例</th>
+                            <th class="sorting" data="number" style="width:15em;">原大额医疗比例</th>
+                            <th class="sorting" data="number" style="width:15em;">现大额医疗比例</th>
+                            <th class="sorting" data="shouru" style="width:12em;">操作</th>
                         </tr>
 
                         <foreach name="rows" item="lst">
@@ -228,6 +228,8 @@
                                 <td><input type="text" style="float:left;" class="form-control salary_bonus_extract" value="{$lst.extract}" /></td>
                                 <td>{$lst.post_name}</td>
                                 <td><input type="text" style="float:left;" class="form-control salary_bonus_bonus" value="{$lst.bonus}" /></td>
+                                <td>{$lst.post_name}</td>
+                                <td><input type="text" style="float:left;" class="form-control salary_bonus_yearend" value="{$lst.annual_bonus}" /></td>
                                 <td>{$lst.post_name}</td>
                                 <td><input type="text" style="float:left;" class="form-control salary_bonus_yearend" value="{$lst.annual_bonus}" /></td>
                                 <td> <input type="button" class="form-control salary_bonus_butt1" value="添加" style="background-color:#00acd6;font-size:1em;" /></td>
