@@ -203,9 +203,11 @@
                             	<if condition="rolemenu(array('Files/index'))">
                                 	<li class="{:on('Files/index')}"><a href="{:U('Files/index')}"><i class="fa fa-angle-right"></i> 文件管理</a></li>
                                 </if>
-                                    <li class="{:on('File/company')}"><a href="{:U('File/company',array('pid'=>43))}"><i class="fa fa-angle-right"></i> 公司管理手册</a></li>
+                                    <li><a href="javascript:;" onClick="art_show_msg('加班开发中，稍后呈现...',5)"><i class="fa fa-angle-right"></i> 公司管理手册</a></li>
+                                   <!-- <li class="{:on('File/company')}"><a href="{:U('File/company',array('pid'=>43))}"><i class="fa fa-angle-right"></i> 公司管理手册</a></li>-->
                                 <if condition="rolemenu(array('Files/index'))">
-                                    <li class="{:on('Files/index')}"><a href="{:U('Files/index',array('pid'=>44))}"><i class="fa fa-angle-right"></i> 部门工作手册</a></li>
+                                    <li><a href="javascript:;" onClick="art_show_msg('加班开发中，稍后呈现...',5)"><i class="fa fa-angle-right"></i> 部门工作手册</a></li>
+                                    <!--<li class="{:on('Files/index')}"><a href="{:U('Files/index',array('pid'=>44))}"><i class="fa fa-angle-right"></i> 部门工作手册</a></li>-->
                                 </if>
                                     <li class="{:on('File/instruction')}"><a href="{:U('File/instruction',array('pid'=>45))}"><i class="fa fa-angle-right"></i> 岗位作业指导书</a></li>
                             </ul>

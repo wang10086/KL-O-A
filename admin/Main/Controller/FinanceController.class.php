@@ -464,6 +464,7 @@ class FinanceController extends BaseController {
             $auth           = array();
             $auth['line']   = cookie('userid');
             $auth['yusuan'] = cookie('userid');
+            $auth['material'] = cookie('userid');
             if ($auth_line){
                 M('op_auth')->where(array('op_id'=>$opid))->save($auth);
             }else{

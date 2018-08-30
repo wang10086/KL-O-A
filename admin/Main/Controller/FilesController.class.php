@@ -75,9 +75,7 @@ class FilesController extends BaseController {
 		$this->display('index');
     }
 	
-	
-	
-	
+
 	// @@@NODE-3###addres###创建文件夹###
     public function mkdirs(){
         $this->title('创建文件夹');
@@ -130,9 +128,7 @@ class FilesController extends BaseController {
         
     }
     
-	
-	
-	
+
 	// @@@NODE-3###addres###上传界面###
     public function upload(){
 		
@@ -282,8 +278,7 @@ class FilesController extends BaseController {
 		$this->display('movefile');
 	}
 	
-	
-	
+
 	// @@@NODE-3###addres###移动文件###
 	public function move(){
 		
@@ -343,8 +338,7 @@ class FilesController extends BaseController {
 		$this->display('authfile');
 	}
 	
-	
-	
+
 	// @@@NODE-3###auth###保存权限###
 	public function auth(){
 		

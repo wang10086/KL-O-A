@@ -23,7 +23,9 @@ class IndexController extends BaseController {
 		
 		//获取公告
 		$this->notice = M('notice')->limit(10)->order('id desc')->select();
-		
+        //$time               = NOW_TIME-24*3600*80;
+		//$this->notice = M('notice')->where(array('send_time'=>array('gt',$time)))->order('id desc')->select();
+
 		
 		$this->css('date');
 		//$this->js('date');
