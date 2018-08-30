@@ -202,9 +202,11 @@ $('.salary_bonus_butt1').click(function (){
     });
 
 })
+
 /**
  * 变动各项补助
  */
+
 $('.salary_subsidy_butt1').click(function (){
     var url                 = "index.php?m=Main&c=Ajax&a=Ajax_subsidy_Query";
     var account_id          = $(this).parents('tr').find('.salary_table_extract1').text();//用户id

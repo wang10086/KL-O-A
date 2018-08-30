@@ -206,13 +206,13 @@ class SalaryController extends BaseController {
                     $count      = $this->salary_count(1,$where);
                     $page       = new Page($count,4);
                     $pages      = $page->show();
-                    $account_r  = M()->table('oa_account as A')->join('oa_posts as P on A.postid=P.id')->join('oa_salary_department as D on D.id=A.departmentid')->field('A.id as aid,A.departmentid,A.employee_member,A.nickname,A.entry_time,D.department,P.post_name')->limit("$page->firstRow","$page->listRows")->select();
+                    $account_r  = M()->table('oa_account as A')->join('oa_posts as P on A.postid=P.id')->join('oa_salary_department as D on D.id=A.departmentid')->field('A.id as aid,A.departmentid,A.employee_member,A.nickname,A.entry_time,A.archives,D.department,P.post_name')->limit("$page->firstRow","$page->listRows")->select();
                 }
                 if(count($where) !==0){
                     $count      = $this->salary_count(2,$where);
                     $page       = new Page($count,4);
                     $pages      = $page->show();
-                    $account_r  = M()->table('oa_account as A')->join('oa_posts as P on A.postid=P.id')->join('oa_salary_department as D on D.id=A.departmentid')->field('A.id as aid,A.employee_member,A.departmentid,A.employee_member,A.nickname,A.entry_time,D.department,P.post_name')->where($where)->limit("$page->firstRow","$page->listRows")->select();
+                    $account_r  = M()->table('oa_account as A')->join('oa_posts as P on A.postid=P.id')->join('oa_salary_department as D on D.id=A.departmentid')->field('A.id as aid,A.employee_member,A.departmentid,A.employee_member,A.nickname,A.entry_time,A.archives,D.department,P.post_name')->where($where)->limit("$page->firstRow","$page->listRows")->select();
                 }
                 foreach($account_r as $key => $val){
                     $aid['account_id']                      = $account_r[$key]['aid'];
@@ -328,46 +328,5 @@ class SalaryController extends BaseController {
         $this->display();
     }
 
-//    /**
-//     * SalaryExtractBonus 提成 奖金 搜索 分页
-//     */
-//    public function salary_extract_bonus(){
-//        if(IS_POST){
-//            $add1['A.account_id']      = trim($_POST['id']);//用户id
-//            $add1['A.employee_member'] = trim($_POST['employee_member']);//编码
-//            $add1['A.nickname']        = trim($_POST['nickname']);//昵称
-//            $add2['department']        = trim($_POST['departmen']);//部门
-//            $add2['post_name']         = trim($_POST['posts']);//职位
-//            $all                       = trim($_POST['all']);//所有
-//            $add1 = array_filter($add1);
-//            $add2 = array_filter($add2);
-//
-//            if(count($add1) !== 0 || count($add2)!==0){
-//                unset($all);
-//                if(!empty($add2['department'])){
-//
-//                    $add1['A.departmentid'] = M('salary_department')->where('department='.$add2['department'])->field('id')->find();
-//                }
-//                if(!empty($add2['post_name'])){
-//
-//                    $add1['A.postid']       = M('posts')->where('post_name='.$add2['post_name'])->field('id')->find();
-//                }
-//                $account_r = M()->table('oa_account as A')->join('oa_posts as P on A.postid=P.id')->join('oa_salary_department as D on D.id=A.departmentid')->field('A.id as aid,A.employee_member,A.departmentid,A.employee_member,A.nickname,A.entry_time,D.department,P.post_name')->where($add1)->order('A.id desc')->limit(($page-1)*$limit,$limit)->select();
-//            }
-//            if($all =="所有"){
-//                $account_r = M()->table('oa_account as A')->join('oa_posts as P on A.postid=P.id')->join('oa_salary_department as D on D.id=A.departmentid')->field('A.id as aid,A.employee_member,A.departmentid,A.employee_member,A.nickname,A.entry_time,D.department,P.post_name')->order('A.id desc')->limit(($page-1)*$limit,$limit)->select();
-//            }
-//            $count = count($account_r);
-//            $page = I('page',1,'int');
-//            $limit = 5;
-//            $fan = 'SalaryExtractBonus';
-//
-//            $page_str = $this->ajaxPageHtml($sum,$page,$limit,$fan);//数据总数 当前页面 显示条数 方法名
-//
-//            $this->assign('pages',$page_str);//分页
-//            $this->assign('record',$record_r);//显示内容
-//        }
-//        $this->display();
-//    }
 
 }

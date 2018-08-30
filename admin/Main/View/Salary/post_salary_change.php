@@ -5,7 +5,7 @@
         <div class="box-tools pull-left">
             <h3 style="color:blue"><b>岗位薪酬变动</h3>
             <h4 style="margin:-1.8em 0em 0em 10em">变动事项</h4>
-            <select name="some" class="btn btn-info btn-sm" style="margin:-3.5em 0em 0em 22em;" id="salary_id_hidden">
+            <select name="some" class="btn btn-info btn-sm" style="margin:-3.5em 0em 0em 22em;width:10em;width:11em;" id="salary_id_hidden">
                 <option value="0">选择操作</option>
                 <option value="1" onclick="salary_entry(1)" <?php if($type==1 || $type==0 || $type==""){echo 'selected';}?>>入职</option>
                 <option value="2" onclick="salary_entry(2)" <?php if($type==2){echo 'selected';}?>>转正</option>

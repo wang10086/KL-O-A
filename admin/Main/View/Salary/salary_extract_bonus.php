@@ -5,7 +5,7 @@
         <div class="box-tools pull-left">
             <h3 style="color:blue"><b>提成/补助/奖金</h3>
             <h4 style="margin:-1.8em 0em 0em 11em">操作事项</h4>
-            <select name="some" class="btn btn-info" style="margin:-3em 0em 0em 21em;" id="salary_id_hidden1">
+            <select name="some" class="btn btn-info" style="margin:-3em 0em 0em 21em;width:10em;" id="salary_id_hidden1">
                 <option value="0" <?php if($type=="" || $type==0 ){echo 'selected';}?>>选择操作</option>
                 <option value="1" onclick="salary_hide(1)" <?php if($type==6){echo 'selected';}?>>录入提成/奖金</option>
                 <option value="2" onclick="salary_hide(2)" <?php if($type==7){echo 'selected';}?>>变动各项补助</option>
