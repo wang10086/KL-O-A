@@ -1,6 +1,6 @@
 
 <!--提成/奖金/补助-->
-<div class="box">
+<div class="box1">
     <div class="box-header">
         <div class="box-tools pull-left">
             <h3 style="color:blue"><b>&nbsp;&nbsp;&nbsp;五险一金</h3>
@@ -18,7 +18,7 @@
     <div class="box-body">
         <div class="btn-group"><br>
 
-            <div id="table_salary_insurance" >
+            <div id="table_salary_insurance1" >
                 <div style="float: left;margin-left: 2em;">
                     <label>选择人员：</label>
                     <a href="javascript:;" class="btn btn-info btn-sm" onclick="javascript:opensearch('searchtext_2',700,160);"><i class="fa fa-search"></i> 搜索</a> (提示: 选择不到人员或基本信息不完整、错误时，请在“员工管理”->"人员管理"页面添加或编辑信息)<br><br>
@@ -26,7 +26,6 @@
                         <tr role="row" class="orders">
                             <th class="sorting" data="op_id"  style="width:6em;">ID</th>
                             <th class="sorting" data="group_id" style="width:8em;">员工姓名</th>
-                            <th class="sorting" data="group_id" style="width:8em;">档案所属</th>
                             <th class="sorting" data="group_id" style="width:8em;">员工部门</th>
                             <th class="sorting" data="project" style="width:8em;">员工岗位</th>
                             <th class="sorting" data="number" style="width:14em;">生育/工伤/医疗原基数</th>
@@ -38,11 +37,10 @@
                             <th class="sorting" data="shouru" style="width:10em;">操作</th>
                         </tr>
 
-                        <foreach name="rows" item="lst">
+                        <foreach name="insurance" item="lst">
                             <tr>
                                 <td class="salary_table_extract">{$lst.aid}</td>
                                 <td>{$lst.nickname}</td>
-                                <td><?php if($lst['archives']==1){echo "中心";}elseif($lst['archives']==2){echo "科旅";}elseif($lst['archives']==3){echo "科行";}?></td>
                                 <td>{$lst.department}</td>
                                 <td>{$lst.post_name}</td>
                                 <td>{$lst.post_name}</td>
@@ -56,7 +54,7 @@
                         </foreach>
                     </table>
                     <div class="box-footer clearfix">
-                        <div class="pagestyle">{$page2}</div>
+                        <div class="pagestyle">{$page3}</div>
                     </div>
 
                 </div>
@@ -72,7 +70,6 @@
                         <tr role="row" class="orders">
                             <th class="sorting" data="op_id"  style="width:6em;">ID</th>
                             <th class="sorting" data="group_id" style="width:8em;">员工姓名</th>
-                            <th class="sorting" data="group_id" style="width:8em;">档案所属</th>
                             <th class="sorting" data="group_id" style="width:8em;">员工部门</th>
                             <th class="sorting" data="project" style="width:8em;">员工岗位</th>
                             <th class="sorting" data="number" style="width:14em;">原养老保险比例</th>
@@ -84,11 +81,10 @@
                             <th class="sorting" data="shouru" style="width:10em;">操作</th>
                         </tr>
 
-                        <foreach name="rows" item="lst">
+                        <foreach name="insurance" item="lst">
                             <tr>
                                 <td class="salary_table_extract">{$lst.aid}</td>
                                 <td>{$lst.nickname}</td>
-                                <td><?php if($lst['archives']==1){echo "中心";}elseif($lst['archives']==2){echo "科旅";}elseif($lst['archives']==3){echo "科行";}?></td>
                                 <td>{$lst.department}</td>
                                 <td>{$lst.post_name}</td>
                                 <td>{$lst.post_name}</td>
@@ -102,7 +98,7 @@
                         </foreach>
                     </table>
                     <div class="box-footer clearfix">
-                        <div class="pagestyle">{$page2}</div>
+                        <div class="pagestyle">{$page3}</div>
                     </div>
 
                 </div>
@@ -117,7 +113,6 @@
                         <tr role="row" class="orders">
                             <th class="sorting" data="op_id"  style="width:6em;">ID</th>
                             <th class="sorting" data="group_id" style="width:8em;">员工姓名</th>
-                            <th class="sorting" data="group_id" style="width:8em;">档案所属</th>
                             <th class="sorting" data="group_id" style="width:8em;">员工部门</th>
                             <th class="sorting" data="project" style="width:8em;">员工岗位</th>
                             <th class="sorting" data="number" style="width:14em;">原医疗保险比例</th>
@@ -127,11 +122,10 @@
                             <th class="sorting" data="shouru" style="width:10em;">操作</th>
                         </tr>
 
-                        <foreach name="rows" item="lst">
+                        <foreach name="insurance" item="lst">
                             <tr>
                                 <td class="salary_table_extract">{$lst.aid}</td>
                                 <td>{$lst.nickname}</td>
-                                <td><?php if($lst['archives']==1){echo "中心";}elseif($lst['archives']==2){echo "科旅";}elseif($lst['archives']==3){echo "科行";}?></td>
                                 <td>{$lst.department}</td>
                                 <td>{$lst.post_name}</td>
                                 <td>{$lst.post_name}</td>
@@ -143,14 +137,14 @@
                         </foreach>
                     </table>
                     <div class="box-footer clearfix">
-                        <div class="pagestyle">{$page2}</div>
+                        <div class="pagestyle">{$page3}</div>
                     </div>
 
                 </div>
             </div>
 
 
-            <div id="table_salary_insurance2" >
+            <div id="table_salary_insurance4" >
                 <div style="float: left;margin-left: 2em;">
                     <label>选择人员：</label>
                     <a href="javascript:;" class="btn btn-info btn-sm" onclick="javascript:opensearch('searchtext_2',700,160);"><i class="fa fa-search"></i> 搜索</a> (提示: 选择不到人员或基本信息不完整、错误时，请在“员工管理”->"人员管理"页面添加或编辑信息)<br><br>
@@ -158,7 +152,6 @@
                         <tr role="row" class="orders">
                             <th class="sorting" data="op_id"  style="width:6em;">ID</th>
                             <th class="sorting" data="group_id" style="width:8em;">员工姓名</th>
-                            <th class="sorting" data="group_id" style="width:8em;">档案所属</th>
                             <th class="sorting" data="group_id" style="width:8em;">员工部门</th>
                             <th class="sorting" data="project" style="width:8em;">员工岗位</th>
                             <th class="sorting" data="number" style="width:14em;">原养老保险比例</th>
@@ -170,11 +163,10 @@
                             <th class="sorting" data="shouru" style="width:10em;">操作</th>
                         </tr>
 
-                        <foreach name="rows" item="lst">
+                        <foreach name="insurance" item="lst">
                             <tr>
                                 <td class="salary_table_extract">{$lst.aid}</td>
                                 <td>{$lst.nickname}</td>
-                                <td><?php if($lst['archives']==1){echo "中心";}elseif($lst['archives']==2){echo "科旅";}elseif($lst['archives']==3){echo "科行";}?></td>
                                 <td>{$lst.department}</td>
                                 <td>{$lst.post_name}</td>
                                 <td>{$lst.post_name}</td>
@@ -188,7 +180,7 @@
                         </foreach>
                     </table>
                     <div class="box-footer clearfix">
-                        <div class="pagestyle">{$page2}</div>
+                        <div class="pagestyle">{$page3}</div>
                     </div>
 
                 </div>
@@ -203,7 +195,6 @@
                         <tr role="row" class="orders">
                             <th class="sorting" data="op_id"  style="width:6em;">ID</th>
                             <th class="sorting" data="group_id" style="width:8em;">员工姓名</th>
-                            <th class="sorting" data="group_id" style="width:8em;">档案所属</th>
                             <th class="sorting" data="group_id" style="width:8em;">员工部门</th>
                             <th class="sorting" data="project" style="width:8em;">员工岗位</th>
                             <th class="sorting" data="number" style="width:12em;">原医疗比例</th>
@@ -217,11 +208,10 @@
                             <th class="sorting" data="shouru" style="width:12em;">操作</th>
                         </tr>
 
-                        <foreach name="rows" item="lst">
+                        <foreach name="insurance" item="lst">
                             <tr>
                                 <td class="salary_table_extract">{$lst.aid}</td>
                                 <td>{$lst.nickname}</td>
-                                <td><?php if($lst['archives']==1){echo "中心";}elseif($lst['archives']==2){echo "科旅";}elseif($lst['archives']==3){echo "科行";}?></td>
                                 <td>{$lst.department}</td>
                                 <td>{$lst.post_name}</td>
                                 <td>{$lst.post_name}</td>
@@ -237,7 +227,7 @@
                         </foreach>
                     </table>
                     <div class="box-footer clearfix">
-                        <div class="pagestyle">{$page2}</div>
+                        <div class="pagestyle">{$page3}</div>
                     </div>
 
                 </div>

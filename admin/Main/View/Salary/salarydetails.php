@@ -187,22 +187,24 @@
                                             <h3 class="box-title">三 、员工五险一金</h3>
                                         </div><br>
                                         <div class="box-body">
-                                            <table class="table table-bordered dataTable fontmini" id="tablelist">
-                                                <tr role="row" class="orders" >
+                                            <table class="table table-bordered dataTable fontmini" id="tablelist" style="text-align: center">
+                                                <tr role="row" class="orders">
                                                     <th></th>
-                                                    <th>生育保险</th>
-                                                    <th>工伤保险</th>
-                                                    <th>养老保险</th>
-                                                    <th>医疗保险</th>
-                                                    <th>失业保险</th>
-                                                    <th>公积金</th>
+                                                    <th style="text-align: center">生育保险</th>
+                                                    <th style="text-align: center">工伤保险</th>
+                                                    <th style="text-align: center">养老保险</th>
+                                                    <th style="text-align: center">医疗保险</th>
+                                                    <th style="text-align: center">大额医疗</th>
+                                                    <th style="text-align: center">失业保险</th>
+                                                    <th style="text-align: center">公积金</th>
                                                 </tr>
                                                 <tr>
                                                     <td>基数</td>
                                                     <td>{$insurance.birth}</td>
                                                     <td>{$insurance.injury}</td>
-                                                    <td>&yen;{$insurance.pension}</td>
-                                                    <td>&yen;{$insurance.medical_care}</td>
+                                                    <td>{$insurance.pension}</td>
+                                                    <td>{$insurance.medical_care}</td>
+                                                    <td style="text-align: center">---</td>
                                                     <td>{$insurance.unemployment}</td>
                                                     <td>{$insurance.accumulation_fund}</td>
                                                 </tr>
@@ -210,8 +212,9 @@
                                                     <td>比例</td>
                                                     <td>{$insurance.birth}</td>
                                                     <td>{$insurance.injury}</td>
-                                                    <td>&yen;{$insurance.pension}</td>
-                                                    <td>&yen;{$insurance.medical_care}</td>
+                                                    <td>{$insurance.pension}</td>
+                                                    <td>{$insurance.medical_care}</td>
+                                                    <td style="text-align: center">---</td>
                                                     <td>{$insurance.unemployment}</td>
                                                     <td>{$insurance.accumulation_fund}</td>
                                                 </tr>
@@ -219,8 +222,9 @@
                                                     <td>金额</td>
                                                     <td>{$insurance.birth}</td>
                                                     <td>{$insurance.injury}</td>
-                                                    <td>&yen;{$insurance.pension}</td>
-                                                    <td>&yen;{$insurance.medical_care}</td>
+                                                    <td>{$insurance.pension}</td>
+                                                    <td>{$insurance.medical_care}</td>
+                                                    <td>{$insurance.unemployment}</td>
                                                     <td>{$insurance.unemployment}</td>
                                                     <td>{$insurance.accumulation_fund}</td>
                                                 </tr>
@@ -232,22 +236,24 @@
                                             <h3 class="box-title">四 、公司五险一金</h3>
                                         </div><br>
                                         <div class="box-body">
-                                            <table class="table table-bordered dataTable fontmini" id="tablelist">
+                                            <table class="table table-bordered dataTable fontmini" id="tablelist" style="text-align: center">
                                                 <tr role="row" class="orders" >
                                                     <th></th>
-                                                    <th>生育保险</th>
-                                                    <th>工伤保险</th>
-                                                    <th>养老保险</th>
-                                                    <th>医疗保险</th>
-                                                    <th>失业保险</th>
-                                                    <th>公积金</th>
+                                                    <th style="text-align: center">生育保险</th>
+                                                    <th style="text-align: center">工伤保险</th>
+                                                    <th style="text-align: center">养老保险</th>
+                                                    <th style="text-align: center">医疗保险</th>
+                                                    <th style="text-align: center">大额医疗</th>
+                                                    <th style="text-align: center">失业保险</th>
+                                                    <th style="text-align: center">公积金</th>
                                                 </tr>
                                                 <tr>
                                                     <td>基数</td>
                                                     <td>{$insurance.birth}</td>
                                                     <td>{$insurance.injury}</td>
-                                                    <td>&yen;{$insurance.pension}</td>
-                                                    <td>&yen;{$insurance.medical_care}</td>
+                                                    <td>{$insurance.pension}</td>
+                                                    <td>{$insurance.medical_care}</td>
+                                                    <td>---</td>
                                                     <td>{$insurance.unemployment}</td>
                                                     <td>{$insurance.accumulation_fund}</td>
                                                 </tr>
@@ -255,8 +261,9 @@
                                                     <td>比例</td>
                                                     <td>{$insurance.birth}</td>
                                                     <td>{$insurance.injury}</td>
-                                                    <td>&yen;{$insurance.pension}</td>
-                                                    <td>&yen;{$insurance.medical_care}</td>
+                                                    <td>{$insurance.pension}</td>
+                                                    <td>{$insurance.medical_care}</td>
+                                                    <td>---</td>
                                                     <td>{$insurance.unemployment}</td>
                                                     <td>{$insurance.accumulation_fund}</td>
                                                 </tr>
@@ -264,8 +271,9 @@
                                                     <td>金额</td>
                                                     <td>{$insurance.birth}</td>
                                                     <td>{$insurance.injury}</td>
-                                                    <td>&yen;{$insurance.pension}</td>
-                                                    <td>&yen;{$insurance.medical_care}</td>
+                                                    <td>{$insurance.pension}</td>
+                                                    <td>{$insurance.medical_care}</td>
+                                                    <td>{$insurance.medical_care}</td>
                                                     <td>{$insurance.unemployment}</td>
                                                     <td>{$insurance.accumulation_fund}</td>
                                                 </tr>

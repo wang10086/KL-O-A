@@ -239,27 +239,17 @@ class SalaryController extends BaseController {
 
             $status        = trim(I('status'));
             if($status==1){
-                $_SESSION['page']   = $pages;
-                $_SESSION['list']   = $account_r;
                 $this->assign('page',$pages);//数据分页
                 $this->assign('list',$account_r);//数据
-            }else{
-                $page  = $_SESSION['page'];
-                $list  = $_SESSION['list'];
-                $this->assign('page',$page);//数据分页
-                $this->assign('list',$list);//数据
             }
             if($status==2){
-                $_SESSION['page2']  = $pages;
-                $_SESSION['rows']   = $account_r;
                 $this->assign('page2',$pages);//数据分页
                 $this->assign('rows',$account_r);//数据
-            }else{
-                $page2  = $_SESSION['page2'];
-                $rows   = $_SESSION['rows'];
-                $this->assign('page2',$page2);//数据分页
-                $this->assign('rows',$rows);//数据
             }
+        if($status==3){
+            $this->assign('page3',$pages);//数据分页
+            $this->assign('insurance',$account_r);//数据
+        }
         $this->assign('type',$type);//数据
         $this->assign('department',query_department());//部门
         $this->assign('posts',query_posts());//岗位
