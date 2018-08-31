@@ -1,6 +1,6 @@
 $(function(){
 
-    <!--默认打开调用页面  岗位薪酬变动-->
+    <!--默认打开调用页面  列表显示div-->
     var url ="index.php?m=Main&c=Salary&a=salary_list";
     $.ajax({
         url:url,
@@ -11,16 +11,27 @@ $(function(){
             $('#salary_history_page1').html(result);
         }
     });
-    var num = $('#salary_id_hidden').val();
+    var num  = $('#salary_id_hidden').val();
     var cont = $('#salary_id_hidden1').val();
+    var sum  = $('#salary_insurance').val();
     if (num < 6){
         salary_entry(num);
+        if(num==0){
+            $('#salary_entry').show();
+        }
     }
     if (5<cont<8) {
+        if(num==0){
+            $('#table_salary_percentage1').show();
+        }
         salary_hide(cont);
     }
-
-
+    if (7<sum<13 || sum==0) {
+        salary_insurance(sum);
+        if(sum==0){
+            $('#table_salary_insurance1').show();
+        }
+    }
 })
 function salary_list(page){//ajax 分页效果(岗位薪酬变动)
     var url ="index.php?m=Main&c=Salary&a=salary_list";
@@ -36,7 +47,7 @@ function salary_list(page){//ajax 分页效果(岗位薪酬变动)
 }
 
 
-    //岗位薪酬变动
+    //岗位薪酬变动 显示|隐藏
     function salary_entry(obj) {
         $('#salary_entry').hide();
         $('#salary_entry').siblings().hide();
@@ -180,44 +191,19 @@ function salary_list(page){//ajax 分页效果(岗位薪酬变动)
         $('#searchform1').append(html);
     }
 
-    /**
-     * 录入提成/补助/奖金 保存
-     */
-    $('.salary_bonus_butt1').click(function () {
-        var url = "index.php?m=Main&c=Ajax&a=Ajax_Bonus_Query";
-        var account_id = $(this).parents('tr').find('.salary_table_extract').text();//用户id
-        var extract = $(this).parents('tr').find('.salary_bonus_extract').val();//提成
-        var bonus_bonus = $(this).parents('tr').find('.salary_bonus_bonus').val();//奖金
-        var yearend = $(this).parents('tr').find('.salary_bonus_yearend').val();//年终
-        $.ajax({
-            type: "post",
-            url: url, //url
-            data: {'account_id': account_id, 'extract': extract, 'bonus_bonus': bonus_bonus, 'yearend': yearend},
-            dataType: "json", //数据格式
-            success: function (data) {
-                if (data.sum == 1) {
-                    alert(data.msg);
-                    return false;
-                }
-                if (data.sum == 0) {
-                    alert(data.msg);
-                    return false;
-                }
-            }
-        });
 
-    })
 
     /**
-     * 变动各项补助
+     * 变动各项补助 | 提成/奖金/年终
      */
 
-    $('.salary_subsidy_butt1').click(function () {
+    $('.salary_subsidy_butt').click(function () {
         var url = "index.php?m=Main&c=Ajax&a=Ajax_subsidy_Query";
-        var account_id = $(this).parents('tr').find('.salary_table_extract1').text();//用户id
-        var housing_subsidy = $(this).parents('tr').find('.salary_subsidy_housingt').val();//住房补贴
-        var foreign_subsidies = $(this).parents('tr').find('.salary_subsidy_foreign').val();//外地补贴
-        var computer_subsidy = $(this).parents('tr').find('.salary_subsidy_computer').val();//电脑补贴
+        var statu = $(this).parents('tr').find('.status').val();//状态 1 提成奖金 2 补贴
+        var account_id = $(this).parents('tr').find('.salary_table_extract').text();//用户id
+        var housing_subsidy = $(this).parents('tr').find('.salary_bonus_extract').val();//住房补贴  | 提成
+        var foreign_subsidies = $(this).parents('tr').find('.salary_bonus_bonus').val();//外地补贴 | 奖金
+        var computer_subsidy = $(this).parents('tr').find('.salary_bonus_yearend').val();//电脑补贴 | 年终
         $.ajax({
             type: "post",
             url: url, //url
@@ -225,7 +211,8 @@ function salary_list(page){//ajax 分页效果(岗位薪酬变动)
                 'account_id': account_id,
                 'housing_subsidy': housing_subsidy,
                 'foreign_subsidies': foreign_subsidies,
-                'computer_subsidy': computer_subsidy
+                'computer_subsidy': computer_subsidy,
+                'statu':statu,
             },
             dataType: "json", //数据格式
             success: function (data) {
@@ -255,5 +242,35 @@ function salary_list(page){//ajax 分页效果(岗位薪酬变动)
         html += '</div>';
         $('#searchform2').append(html);
     }
+    $('.salary_insurance_butt').click(function(){
+        var url         = "index.php?m=Main&c=Ajax&a=Ajax_subsidy_Query";
+        var account_id  = $(this).parents('tr').find('.salary_table_insurance').text();//uid
+        var injury      = $(this).parents('tr').find('.salary_insurance_injury').val();//生育/工伤/医疗 基数
+        var pension     = $(this).parents('tr').find('.salary_insurance_pension').val();//养老/失业 基数
+        var ratio       = $(this).parents('tr').find('.salary_insurance_ratio').val();//公积金 基数
+        var stat        = $(this).parents('tr').find('.status').val();//状态
+        $.ajax({
+            type: "post",
+            url: url, //url
+            data: {
+                'account_id': account_id,
+                'injury_base': injury,
+                'pension_base': pension,
+                'medical_care_base': ratio,
+                'statu':stat,
+            },
+            dataType: "json", //数据格式
+            success: function (data) {
+                if (data.sum == 1) {
+                    alert(data.msg);
+                    return false;
+                }
+                if (data.sum == 0) {
+                    alert(data.msg);
+                    return false;
+                }
+            }
+        });
+    })
 
 

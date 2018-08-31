@@ -42,7 +42,9 @@
                                 <td><input type="text" style="float:left;" class="form-control salary_bonus_extract" value="{$lst.extract}" /></td>
                                 <td><input type="text" style="float:left;" class="form-control salary_bonus_bonus" value="{$lst.bonus}" /></td>
                                 <td><input type="text" style="float:left;" class="form-control salary_bonus_yearend" value="{$lst.annual_bonus}" /></td>
-                                <td> <input type="button" class="form-control salary_bonus_butt1" value="添加" style="background-color:#00acd6;font-size:1em;" /></td>
+                                <input type="hidden" class="status" value="1">
+
+                                <td> <input type="button" class="form-control salary_subsidy_butt" value="添加" style="background-color:#00acd6;font-size:1em;" /></td>
                             </tr>
                         </foreach>
                     </table>
@@ -75,18 +77,19 @@
                         </tr>
                         <foreach name="rows" item="lst">
                             <tr>
-                                <td class="salary_table_extract1">{$lst.aid}</td>
+                                <td class="salary_table_extract">{$lst.aid}</td>
                                 <td>{$lst.nickname}</td>
                                 <td>{$lst.employee_member}</td>
                                 <td>{$lst.department}</td>
                                 <td>{$lst.post_name}</td>
                                 <td>{$lst.housing_subsidy}</td>
-                                <td><input type="text" style="float:left;" class="form-control salary_subsidy_housingt" value="{$lst.housing_subsidy}" /></td>
+                                <td><input type="text" style="float:left;" class="form-control salary_bonus_extract" value="{$lst.housing_subsidy}" /></td>
                                 <td>{$lst.foreign_subsidies}</td>
-                                <td><input type="text" style="float:left;" class="form-control salary_subsidy_foreign" value="{$lst.foreign_subsidies}" /></td>
+                                <td><input type="text" style="float:left;" class="form-control salary_bonus_bonus" value="{$lst.foreign_subsidies}" /></td>
                                 <td>{$lst.computer_subsidy}</td>
-                                <td><input type="text" style="float:left;" class="form-control salary_subsidy_computer" value="{$lst.computer_subsidy}" /></td>
-                                <td><input type="button" class="form-control salary_subsidy_butt1" value="添加" style="background-color:#00acd6;font-size:1em;" /></td>
+                                <td><input type="text" style="float:left;" class="form-control salary_bonus_yearend" value="{$lst.computer_subsidy}" /></td>
+                                <input type="hidden" class="status" value="2">
+                                <td><input type="button" class="form-control salary_subsidy_butt" value="添加" style="background-color:#00acd6;font-size:1em;" /></td>
                             </tr>
                         </foreach>
 
