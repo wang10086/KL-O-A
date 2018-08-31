@@ -447,7 +447,7 @@ class AjaxController extends Controller {
                     $account_w = M('salary_attendance')->add($add);
                 }else{
                     $sum = 0;
-                    $msg = "考勤数据添加失败!请先添加薪酬标准信息!";
+                    $msg = "考勤数据编辑失败!请先编辑薪酬标准信息!";
                     echo json_encode(array('sum'=>$sum,'msg'=>$msg));die;
                 }
             }
@@ -455,134 +455,115 @@ class AjaxController extends Controller {
                 $cont = $cot."考勤信息,扣款：".$add['withdrawing']." （元）" ;
                 $info = salary_info(12,$cont);
                 $sum = 1;
-                $msg = "考勤数据添加成功!";
+                $msg = "考勤数据编辑成功!";
                 echo json_encode(array('sum'=>$sum,'msg'=>$msg));die;
             }
             $sum = 0;
-            $msg = "考勤数据添加失败!";
+            $msg = "考勤数据编辑失败!";
             echo json_encode(array('sum'=>$sum,'msg'=>$msg));die;
         }
     }
 
+
     /**
-     *Ajaxbonusquery 添加提成 奖金
-     *
+     *Ajax_subsidy_Query 补贴 |提成
+     *$type 1 提成 2 补贴
+     * salary_bonus提成
+     * salary_subsidy补贴
      */
-    public function Ajaxbonusquery(){
-
-        $uid['account_id']     = code_number(trim(I('account_id')));
-        $where['bonus']        = code_number(trim(I('bonus_bonus')));
-        $where['extract']      = code_number(trim(I('extract')));
-        $where['annual_bonus'] = code_number(trim(I('yearend')));
-
-        $bonus_r = M('salary_bonus')->where($uid)->order('id desc')->find();
-        if($bonus_r){
-           if($bonus_r['status']==1){
-               $uid['id'] = $bonus_r['id'];
-               $bouns_W = M('salary_bonus')->where($uid)->save($where);
-           }
-           if($bonus_r['status']==2){
-               $where['createtime']   = time();
-               $where['account_id'] = $uid['account_id'];
-               $bouns_W = M('salary_bonus')->add($where);
-           }
-
-        }else{
-            $where['account_id'] = $uid['account_id'];
-            $where['createtime']   = time();
-            $bouns_W = M('salary_bonus')->add($where);
+    public function Ajax_subsidy_Query(){
+        $type                             = code_number(trim($_POST['statu']));
+        $uid['account_id']                = code_number(trim($_POST['account_id']));
+        if($type==1){//提成/奖金
+            $where['bonus']               = code_number(trim($_POST['housing_subsidy']));
+            $where['extract']             = code_number(trim($_POST['foreign_subsidies']));
+            $where['annual_bonus']        = code_number(trim($_POST['computer_subsidy']));
         }
-        if($bouns_W){
-            $cont = "添加：提成:".$where['extract'].";奖金:".$where['bonus'].";年终:".$where['annual_bonus']." （元）" ;
-            $info = salary_info(11,$cont);
-            $sum = 1;
-            $msg = "添加数据成功!";
-            echo json_encode(array('sum'=>$sum,'msg'=>$msg));die;
-        }else{
-            $sum = 0;
-            $msg = "添加数据失败!请重新添加!";
-            echo json_encode(array('sum'=>$sum,'msg'=>$msg));die;
+        if($type==2){//补贴
+            $where['housing_subsidy']     = code_number(trim($_POST['housing_subsidy']));
+            $where['foreign_subsidies']   = code_number(trim($_POST['foreign_subsidies']));
+            $where['computer_subsidy']    = code_number(trim($_POST['computer_subsidy']));
         }
 
-    }
-    /**
-     *Ajax_Bonus_Query 添加提成 奖金
-     *
-     */
-    public function Ajax_Bonus_Query(){
-        $uid['account_id']     = code_number(trim(I('account_id')));
-        $where['bonus']        = code_number(trim(I('bonus_bonus')));
-        $where['extract']      = code_number(trim(I('extract')));
-        $where['annual_bonus'] = code_number(trim(I('yearend')));
-
-        $bonus_r = M('salary_bonus')->where($uid)->order('id desc')->find();
-        if($bonus_r){
-            if($bonus_r['status']==1){
-                $uid['id'] = $bonus_r['id'];
-                $bouns_W = M('salary_bonus')->where($uid)->save($where);
+        if($type==1){$subsidy_r = M('salary_bonus')->where($uid)->order('id desc')->find();}
+        if($type==2){$subsidy_r = M('salary_subsidy')->where($uid)->order('id desc')->find();}
+        if($subsidy_r){
+            if($subsidy_r['status'] == 1){
+                $uid['id'] = $subsidy_r['id'];
+                if($type==1){$subsidy_W = M('salary_bonus')->where($uid)->save($where);}
+                if($type==2){$subsidy_W = M('salary_subsidy')->where($uid)->save($where);}
+                $content = "修改";
             }
-            if($bonus_r['status']==2){
+            if($subsidy_r['status'] == 2){
+                $uid['id'] = $subsidy_r['id'];
                 $where['createtime']    = time();
                 $where['account_id']    = $uid['account_id'];
-                $bouns_W = M('salary_bonus')->add($where);
+                if($type==1){$subsidy_W = M('salary_bonus')->add($where);}
+                if($type==2){$subsidy_W = M('salary_subsidy')->add($where);}
+                $content = "添加";
             }
-
         }else{
             $where['account_id']        = $uid['account_id'];
             $where['createtime']        = time();
-            $bouns_W = M('salary_bonus')->add($where);
+            if($type==1){$subsidy_W  = M('salary_bonus')->add($where);}
+            if($type==2){$subsidy_W  = M('salary_subsidy')->add($where);}
+            $content = "添加";
         }
-        if($bouns_W){
-            $cont = "添加：提成:".$where['extract'].";奖金:".$where['bonus'].";年终:".$where['annual_bonus']." （元）" ;
+        if($subsidy_W){
+            if($type==1){
+                $cont = $content."：提成:".$where['extract'].";奖金:".$where['bonus'].";年终:".$where['annual_bonus']." （元）" ;
+            }
+            if($type==2){
+                $cont = $content."：房补:".$where['housing_subsidy'].";外地补:".$where['foreign_subsidies'].";电脑补:".$where['computer_subsidy']." （元）" ;
+            }
             $info = salary_info(11,$cont);
             $sum = 1;
-            $msg = "添加数据成功!";
+            $msg = "编辑数据成功!";
             echo json_encode(array('sum'=>$sum,'msg'=>$msg));die;
         }else{
             $sum = 0;
-            $msg = "添加数据失败!请重新添加!";
+            $msg = "编辑数据失败!请重新编辑!";
             echo json_encode(array('sum'=>$sum,'msg'=>$msg));die;
         }
     }
 
-    /**
-     *Ajax_subsidy_Query 补贴
-     *
-     */
-    public function Ajax_subsidy_Query(){
-        $uid['account_id']            = code_number(trim(I('account_id')));
-        $where['housing_subsidy']     = code_number(trim(I('housing_subsidy')));
-        $where['foreign_subsidies']   = code_number(trim(I('foreign_subsidies')));
-        $where['computer_subsidy']    = code_number(trim(I('computer_subsidy')));
+    public function Ajax_Insurance_Query(){
+        $statu                = code_number(trim($_POST['statu']));//状态
+        $where['account_id']  = code_number(trim($_POST['account_id']));//用户id
 
-        $subsidy_r = M('salary_subsidy')->where($uid)->order('id desc')->find();
-        if($subsidy_r){
-            if($subsidy_r['status']==1){
-                $uid['id'] = $subsidy_r['id'];
-                $subsidy_W = M('salary_subsidy')->where($uid)->save($where);
+        $insurance  = M('salary_insurance')->where($where)->order('id desc')->find();
+        if($insurance){
+            if($insurance['status']==1){
+                if($statu==1){
+                    $add['birth_base']              = code_number(trim($_POST['injury_base']));//生育 基数
+                    $add['injury_base']             = $add['birth_base'];//工伤 基数
+                    $add['medical_care_base']       = $add['birth_base'];//医疗 基数
+                    $add['pension_base']            = code_number(trim($_POST['pension_base']));//养老 基数
+                    $add['unemployment_base']       = $add['pension_base'];//失业 基数
+                    $add['accumulation_fund_ratio'] = code_number(trim($_POST['medical_care_base']));//公积金 基数
+                }
+
+            }elseif($insurance['status']==2){
+
+            }else{
+                $sum = 0;
+                $msg = "编辑数据失败!请重新编辑!";
+                echo json_encode(array('sum'=>$sum,'msg'=>$msg));die;
             }
-            if($subsidy_r['status']==2){
-                $where['createtime']  = time();
-                $where['account_id']  = $uid['account_id'];
-                $subsidy_W = M('salary_subsidy')->add($where);
+        }else{
+            if($statu==1){
+
+            }elseif($statu==2){
+
+            }else{
+                $sum = 0;
+                $msg = "编辑数据失败!请重新编辑!";
+                echo json_encode(array('sum'=>$sum,'msg'=>$msg));die;
             }
 
-        }else{
-            $where['account_id']    = $uid['account_id'];
-            $where['createtime']    = time();
-            $subsidy_W = M('salary_subsidy')->add($where);
         }
-        if($subsidy_W){
-            $cont = "添加：房补:".$where['housing_subsidy'].";外地补:".$where['foreign_subsidies'].";电脑补:".$where['computer_subsidy']." （元）" ;
-            $info = salary_info(11,$cont);
-            $sum = 1;
-            $msg = "添加数据成功!";
-            echo json_encode(array('sum'=>$sum,'msg'=>$msg));die;
-        }else{
-            $sum = 0;
-            $msg = "添加数据失败!请重新添加!";
-            echo json_encode(array('sum'=>$sum,'msg'=>$msg));die;
-        }
+
+
 
     }
 

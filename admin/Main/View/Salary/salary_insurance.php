@@ -1,6 +1,6 @@
 
 <!--提成/奖金/补助-->
-<div class="box1">
+<div class="box">
     <div class="box-header">
         <div class="box-tools pull-left">
             <h3 style="color:blue"><b>&nbsp;&nbsp;&nbsp;五险一金</h3>
@@ -39,17 +39,18 @@
 
                         <foreach name="insurance" item="lst">
                             <tr>
-                                <td class="salary_table_extract">{$lst.aid}</td>
+                                <td class="salary_table_insurance">{$lst.aid}</td>
                                 <td>{$lst.nickname}</td>
                                 <td>{$lst.department}</td>
                                 <td>{$lst.post_name}</td>
-                                <td>{$lst.post_name}</td>
-                                <td><input type="text" style="float:left;" class="form-control salary_bonus_extract" value="{$lst.extract}" /></td>
-                                <td>{$lst.post_name}</td>
-                                <td><input type="text" style="float:left;" class="form-control salary_bonus_bonus" value="{$lst.bonus}" /></td>
-                                <td>{$lst.post_name}</td>
-                                <td><input type="text" style="float:left;" class="form-control salary_bonus_yearend" value="{$lst.annual_bonus}" /></td>
-                                <td> <input type="button" class="form-control salary_bonus_butt1" value="添加" style="background-color:#00acd6;font-size:1em;" /></td>
+                                <td>{$lst.insurance1.injury_base}</td>
+                                <td><input type="text" style="float:left;" class="form-control salary_insurance_injury" value="{$lst.insurance1.injury_base}" /></td>
+                                <td>{$lst.insurance1.pension_base}</td>
+                                <td><input type="text" style="float:left;" class="form-control salary_insurance_pension" value="{$lst.insurance1.pension_base}" /></td>
+                                <td>{$lst.insurance1.accumulation_fund_ratio}</td>
+                                <td><input type="text" style="float:left;" class="form-control salary_insurance_ratio" value="{$lst.insurance1.accumulation_fund_ratio}" /></td>
+                                <input type="hidden" class="status" value="1">
+                                <td> <input type="button" class="form-control salary_insurance_butt" value="添加" style="background-color:#00acd6;font-size:1em;" /></td>
                             </tr>
                         </foreach>
                     </table>
@@ -83,17 +84,18 @@
 
                         <foreach name="insurance" item="lst">
                             <tr>
-                                <td class="salary_table_extract">{$lst.aid}</td>
+                                <td class="salary_table_insurance">{$lst.aid}</td>
                                 <td>{$lst.nickname}</td>
                                 <td>{$lst.department}</td>
                                 <td>{$lst.post_name}</td>
                                 <td>{$lst.post_name}</td>
-                                <td><input type="text" style="float:left;" class="form-control salary_bonus_extract" value="{$lst.extract}" /></td>
+                                <td><input type="text" style="float:left;" class="form-control salary_insurance_extract" value="{$lst.extract}" /></td>
                                 <td>{$lst.post_name}</td>
-                                <td><input type="text" style="float:left;" class="form-control salary_bonus_bonus" value="{$lst.bonus}" /></td>
+                                <td><input type="text" style="float:left;" class="form-control salary_insurance_bonus" value="{$lst.bonus}" /></td>
                                 <td>{$lst.post_name}</td>
-                                <td><input type="text" style="float:left;" class="form-control salary_bonus_yearend" value="{$lst.annual_bonus}" /></td>
-                                <td> <input type="button" class="form-control salary_bonus_butt1" value="添加" style="background-color:#00acd6;font-size:1em;" /></td>
+                                <td><input type="text" style="float:left;" class="form-control salary_insurance_yearend" value="{$lst.annual_bonus}" /></td>
+                                <input type="hidden" class="status" value="2">
+                                <td> <input type="button" class="form-control salary_insurance_butt" value="添加" style="background-color:#00acd6;font-size:1em;" /></td>
                             </tr>
                         </foreach>
                     </table>
@@ -117,22 +119,23 @@
                             <th class="sorting" data="project" style="width:8em;">员工岗位</th>
                             <th class="sorting" data="number" style="width:14em;">原医疗保险比例</th>
                             <th class="sorting" data="number" style="width:14em;">现医疗保险比例</th>
-                            <th class="sorting" data="shouru" style="width:11em;">原大额医疗保险比例</th>
-                            <th class="sorting" data="shouru" style="width:11em;">现大额医疗保险比例</th>
+                            <th class="sorting" data="shouru" style="width:11em;">原大额医疗保险金额</th>
+                            <th class="sorting" data="shouru" style="width:11em;">现大额医疗保险金额</th>
                             <th class="sorting" data="shouru" style="width:10em;">操作</th>
                         </tr>
 
                         <foreach name="insurance" item="lst">
                             <tr>
-                                <td class="salary_table_extract">{$lst.aid}</td>
+                                <td class="salary_table_insurance">{$lst.aid}</td>
                                 <td>{$lst.nickname}</td>
                                 <td>{$lst.department}</td>
                                 <td>{$lst.post_name}</td>
                                 <td>{$lst.post_name}</td>
-                                <td><input type="text" style="float:left;" class="form-control salary_bonus_bonus" value="{$lst.bonus}" /></td>
+                                <td><input type="text" style="float:left;" class="form-control salary_insurance_extract" value="{$lst.bonus}" /></td>
                                 <td>{$lst.post_name}</td>
-                                <td><input type="text" style="float:left;" class="form-control salary_bonus_yearend" value="{$lst.annual_bonus}" /></td>
-                                <td> <input type="button" class="form-control salary_bonus_butt1" value="添加" style="background-color:#00acd6;font-size:1em;" /></td>
+                                <td><input type="text" style="float:left;" class="form-control salary_insurance_bonus" value="{$lst.annual_bonus}" /></td>
+                                <input type="hidden" class="status" value="3">
+                                <td> <input type="button" class="form-control salary_insurance_butt" value="添加" style="background-color:#00acd6;font-size:1em;" /></td>
                             </tr>
                         </foreach>
                     </table>
@@ -165,17 +168,18 @@
 
                         <foreach name="insurance" item="lst">
                             <tr>
-                                <td class="salary_table_extract">{$lst.aid}</td>
+                                <td class="salary_table_insurance">{$lst.aid}</td>
                                 <td>{$lst.nickname}</td>
                                 <td>{$lst.department}</td>
                                 <td>{$lst.post_name}</td>
                                 <td>{$lst.post_name}</td>
-                                <td><input type="text" style="float:left;" class="form-control salary_bonus_extract" value="{$lst.extract}" /></td>
+                                <td><input type="text" style="float:left;" class="form-control salary_insurance_extract" value="{$lst.extract}" /></td>
                                 <td>{$lst.post_name}</td>
-                                <td><input type="text" style="float:left;" class="form-control salary_bonus_bonus" value="{$lst.bonus}" /></td>
+                                <td><input type="text" style="float:left;" class="form-control salary_insurance_bonus" value="{$lst.bonus}" /></td>
                                 <td>{$lst.post_name}</td>
-                                <td><input type="text" style="float:left;" class="form-control salary_bonus_yearend" value="{$lst.annual_bonus}" /></td>
-                                <td> <input type="button" class="form-control salary_bonus_butt1" value="添加" style="background-color:#00acd6;font-size:1em;" /></td>
+                                <td><input type="text" style="float:left;" class="form-control salary_insurance_yearend" value="{$lst.annual_bonus}" /></td>
+                                <input type="hidden" class="status" value="4">
+                                <td> <input type="button" class="form-control salary_insurance_butt" value="添加" style="background-color:#00acd6;font-size:1em;" /></td>
                             </tr>
                         </foreach>
                     </table>
@@ -203,26 +207,27 @@
                             <th class="sorting" data="shouru" style="width:12em;">现生育比例</th>
                             <th class="sorting" data="number" style="width:11em;">原工伤比例</th>
                             <th class="sorting" data="number" style="width:10em;">现工伤比例</th>
-                            <th class="sorting" data="number" style="width:15em;">原大额医疗比例</th>
-                            <th class="sorting" data="number" style="width:15em;">现大额医疗比例</th>
+                            <th class="sorting" data="number" style="width:15em;">原大额医疗金额</th>
+                            <th class="sorting" data="number" style="width:15em;">现大额医疗金额</th>
                             <th class="sorting" data="shouru" style="width:12em;">操作</th>
                         </tr>
 
                         <foreach name="insurance" item="lst">
                             <tr>
-                                <td class="salary_table_extract">{$lst.aid}</td>
+                                <td class="salary_table_insurance">{$lst.aid}</td>
                                 <td>{$lst.nickname}</td>
                                 <td>{$lst.department}</td>
                                 <td>{$lst.post_name}</td>
                                 <td>{$lst.post_name}</td>
-                                <td><input type="text" style="float:left;" class="form-control salary_bonus_extract" value="{$lst.extract}" /></td>
+                                <td><input type="text" style="float:left;" class="form-control salary_insurance_extract" value="{$lst.extract}" /></td>
                                 <td>{$lst.post_name}</td>
-                                <td><input type="text" style="float:left;" class="form-control salary_bonus_bonus" value="{$lst.bonus}" /></td>
+                                <td><input type="text" style="float:left;" class="form-control salary_insurance_bonus" value="{$lst.bonus}" /></td>
                                 <td>{$lst.post_name}</td>
-                                <td><input type="text" style="float:left;" class="form-control salary_bonus_yearend" value="{$lst.annual_bonus}" /></td>
+                                <td><input type="text" style="float:left;" class="form-control salary_insurance_yearend" value="{$lst.annual_bonus}" /></td>
                                 <td>{$lst.post_name}</td>
-                                <td><input type="text" style="float:left;" class="form-control salary_bonus_yearend" value="{$lst.annual_bonus}" /></td>
-                                <td> <input type="button" class="form-control salary_bonus_butt1" value="添加" style="background-color:#00acd6;font-size:1em;" /></td>
+                                <td><input type="text" style="float:left;" class="form-control salary_insurance_yearend" value="{$lst.annual_bonus}" /></td>
+                                <input type="hidden" class="status" value="5">
+                                <td> <input type="button" class="form-control salary_insurance_butt" value="添加" style="background-color:#00acd6;font-size:1em;" /></td>
                             </tr>
                         </foreach>
                     </table>

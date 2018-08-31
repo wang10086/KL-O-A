@@ -216,21 +216,26 @@ class SalaryController extends BaseController {
                 }
                 foreach($account_r as $key => $val){
                     $aid['account_id']                      = $account_r[$key]['aid'];
-                    $salary = M('salary')->where($aid)->order('id desc')->find();
+                    $salary = M('salary')->where($aid)->order('id desc')->find();//岗位薪资
                     $account_r[$key]['account_id']          = $salary['account_id'];
                     $account_r[$key]['standard_salary']     = $salary['standard_salary'];
                     $account_r[$key]['basic_salary']        = $salary['basic_salary'];
                     $account_r[$key]['performance_salary']  = $salary['performance_salary'];
-                    $salary_bonus = M('salary_bonus')->where($aid)->order('id desc')->field('id,bonus,extract,annual_bonus')->find();
+                    $salary_bonus = M('salary_bonus')->where($aid)->order('id desc')->find();//提成/奖金
                     $account_r[$key]['bonus_id']            = $salary_bonus['id'];
                     $account_r[$key]['extract']             = $salary_bonus['extract'];
                     $account_r[$key]['bonus']               = $salary_bonus['bonus'];
                     $account_r[$key]['annual_bonus']        = $salary_bonus['annual_bonus'];
-                    $subsidy_r = M('salary_subsidy')->where($aid)->order('id desc')->find();
+                    $subsidy_r = M('salary_subsidy')->where($aid)->order('id desc')->find();//补贴
                     $account_r[$key]['subsidy']             = $subsidy_r['id'];
                     $account_r[$key]['housing_subsidy']     = $subsidy_r['housing_subsidy'];
                     $account_r[$key]['foreign_subsidies']   = $subsidy_r['foreign_subsidies'];
                     $account_r[$key]['computer_subsidy']    = $subsidy_r['computer_subsidy'];
+
+                    $aid['status']                          = 1;//公司
+                    $account_r[$key]['insurance1'] = M('salary_insurance')->where($aid)->order('id desc')->find();//五险一金
+                    $aid['status']                          = 2;//私人
+                    $account_r[$key]['insurance2'] = M('salary_insurance')->where($aid)->order('id desc')->find();//五险一金
 
                 }
 
