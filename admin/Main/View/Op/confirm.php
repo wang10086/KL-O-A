@@ -291,6 +291,7 @@
                         '<option value="{$key}" <?php if('+msg[j].field+'==$key) echo "selected"; ?>>{$value}</option>'+
                         '</foreach>'+
                         '</select>'+
+                        '<input type="text"  class="form-control" style="width:5%" name="data['+i+'][days]" id="days_'+i+'" onblur="getTotal('+i+')" value="'+msg[j].days+'"  >'+
                         '<input type="text" class="form-control" style="width:5%" name="data['+i+'][num]" id="num_'+i+'" onblur="getTotal('+i+')" value="'+msg[j].num+'">'+
                         '<input type="text" class="form-control" style="width:8%" name="data['+i+'][price]" id="dj_'+i+'" onblur="getTotal('+i+')" value="'+msg[j].price+'">'+
                         '<input type="text" class="form-control" style="width:8%" name="data['+i+'][total]" id="total_'+i+'" value="'+msg[j].total+'">'+

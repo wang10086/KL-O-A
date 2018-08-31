@@ -561,7 +561,7 @@ class OpController extends BaseController {
         $this->apply_to       = C('APPLY_TO');
         $this->arr_product    = C('ARR_PRODUCT');
 
-        $this->guide_price    = M('op_guide_price')->where(array('op_id'=>$opid))->select();
+        $this->guide_price    = M('op_guide_price')->where(array('op_id'=>$opid,'confirm_id'=>'0'))->select();
         if ($this->guide_price) {
             $this->rad = 1;
         }else{
@@ -1006,6 +1006,11 @@ class OpController extends BaseController {
                         }
                     }
                     if ($num){
+                        $record = array();
+                        $record['op_id']   = $opid;
+                        $record['optype']  = 4;
+                        $record['explain'] = '成团后确认辅导员资源需求(增加/编辑)';
+                        op_record($record);
                         $this->success('保存成功');
                     }else{
                         $this->error('保存失败');
