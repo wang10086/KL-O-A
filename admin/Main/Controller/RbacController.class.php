@@ -25,29 +25,32 @@ class RbacController extends BaseController {
        	$where = array();
 		
 		if(rolemenu(array('Rbac/adduser'))){
-			$key      = I('key','');
-			$role     = I('role',0);
-			$post     = I('post',0);
+			$key            = I('key','');
+            $departmentid   = I('departmentid',0);
+			$role           = I('role',0);
+			$post           = I('post',0);
 			
 			$where['status'] = array('neq',2);
 			$where['id'] = array('gt',3);
-			if($key)  $where['nickname'] = array('like','%'.$key.'%');
-			if($role) $where['roleid']  = $role;
-			if($post) $where['postid']  = $post;
+			if($key)            $where['nickname']      = array('like','%'.$key.'%');
+            if($departmentid)   $where['departmentid']  = $departmentid;
+			if($role)           $where['roleid']        = $role;
+			if($post)           $where['postid']        = $post;
 		}else{
-			$where['id'] = cookie('userid');
+			$where['id']    = cookie('userid');
 		}
 		
 		
 		//分页
-		$pagecount      = $db->where($where)->count();
-		$page           = new Page($pagecount, P::PAGE_SIZE);
-		$this->pages    = $pagecount>P::PAGE_SIZE ? $page->show():'';
+		$pagecount          = $db->where($where)->count();
+		$page               = new Page($pagecount, P::PAGE_SIZE);
+		$this->pages        = $pagecount>P::PAGE_SIZE ? $page->show():'';
 		
-        $this->users    = $db->relation(true)->where($where)->order($this->orders('id'))->limit($page->firstRow . ',' . $page->listRows)->select();
+        $this->users        = $db->relation(true)->where($where)->order($this->orders('id'))->limit($page->firstRow . ',' . $page->listRows)->select();
 		
-		$this->roles    = M('role')->GetField('id,role_name',true);
-		$this->posts    = M('posts')->GetField('id,post_name',true);
+		$this->roles        = M('role')->GetField('id,role_name',true);
+		$this->posts        = M('posts')->GetField('id,post_name',true);
+        $this->department   = M('salary_department')->getField('id,department',true);
         $this->display('index');
     }
     
@@ -1271,6 +1274,7 @@ class RbacController extends BaseController {
 		$this->pages = $pagecount>P::PAGE_SIZE ? $page->show():'';
 		
         $this->datalist = $db->where($where)->order($this->orders('id'))->limit($page->firstRow . ',' . $page->listRows)->select();
+        $this->department   = M('salary_department')->getField('id,department',true);
         $this->display('post');
     }
     
@@ -1303,7 +1307,8 @@ class RbacController extends BaseController {
             	
         }else{
             $id = I('id', 0);
-            if($id) $this->row = $db->find($id);
+            if($id) $this->row  = $db->find($id);
+            $this->department   = M('salary_department')->getField('id,department',true);
             $this->display('addpost');
         }
     }

@@ -101,13 +101,22 @@
                 <input type="hidden" name="m" value="Main">
                 <input type="hidden" name="c" value="Rbac">
                 <input type="hidden" name="a" value="index">
-                <div class="form-group col-md-12">
+                <div class="form-group col-md-6">
                     <input type="text" class="form-control" name="key" placeholder="关键字">
+                </div>
+
+                <div class="form-group col-md-6">
+                    <select class="form-control" name="departmentid">
+                        <option value="0">所在部门</option>
+                        <foreach name="department" key="k" item="v">
+                            <option value="{$k}">{$v}</option>
+                        </foreach>
+                    </select>
                 </div>
                 
                 <div class="form-group col-md-6">
                     <select class="form-control" name="role">
-                        <option value="0">所在部门</option>
+                        <option value="0">所属角色</option>
                         <foreach name="roles" key="k" item="v">
                         <option value="{$k}">{$v}</option>
                         </foreach>

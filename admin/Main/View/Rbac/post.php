@@ -31,6 +31,7 @@
                                     <tr role="row">
                                         <th width="60">ID</th>
                                         <th>岗位名称</th>
+                                        <th>部门名称</th>
                                         <if condition="rolemenu(array('Rbac/addpost'))">
                                         <th width="60" class="taskOptions">编辑</th>
                                         </if>
@@ -42,10 +43,10 @@
                                         <tr>
                                             <td>{$row.id}</td>
                                             <td>{$row.post_name}</td>
-                                            
+                                            <td>{$department.$row[departmentid]}</td>
                                             <if condition="rolemenu(array('Rbac/addpost'))">
                                             <td class="taskOptions">
-                                            <a href="{:U('Rbac/addpost',array('id'=>$row['id']))}" title="修改" class="btn btn-info btn-smsm"><i class="fa fa-pencil"></i></button>
+                                            <a href="{:U('Rbac/addpost',array('id'=>$row['id']))}" title="修改" class="btn btn-info btn-smsm"><i class="fa fa-pencil"></i></a>
                                             </td>
                                             </if>
                                             

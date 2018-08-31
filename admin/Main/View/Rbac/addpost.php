@@ -27,12 +27,20 @@
                                     <h3 class="box-title">编辑岗位</h3>
                                 </div><!-- /.box-header -->
                                 <div class="box-body" id="tab_1">
-                                    
-                                    
-                                    
+
                                     <div class="form-group col-md-12">
                                         <label>岗位名称</label>
                                         <input class="form-control"  type="text" name="info[post_name]"  value="{$row.post_name}"/>
+                                    </div>
+
+                                    <div class="form-group col-md-12">
+                                        <label>所属部门</label>
+                                        <select class="form-control" name="info[departmentid]">
+                                            <option value="0">请选择</option>
+                                            <foreach name="department" key="k" item="v">
+                                                <option value="{$k}" <?php if ($row['departmentid']==$k) echo "selected"; ?>>{$v}</option>
+                                            </foreach>
+                                        </select>
                                     </div>
                                     
                                     
