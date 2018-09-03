@@ -111,8 +111,8 @@
                                     <div class="form-group col-md-3">
                                         <label>职位</label>
                                         <select class="form-control" name="info[position_id]" required>
+                                            <option value="0">请选择</option>
                                             <foreach name="position" key="k" item="v">
-                                                <option value="0">请选择</option>
                                                 <if condition="$v">
                                                     <option value="{$k}" <?php if ($row['position_id']==$k){ echo ' selected'; }?>>{$v}</option>
                                                 </if>
