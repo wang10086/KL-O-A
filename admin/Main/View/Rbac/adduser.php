@@ -69,11 +69,10 @@
                                         <input class="form-control"  type="text" name="info[mobile]"  value="{$row.mobile}"/>
                                     </div>
                                    
-                                    <div class="form-group col-md-3">
+                                    <!--<div class="form-group col-md-3">
                                         <label>邮箱</label>
                                         <input class="form-control"  type="text"  name="info[email]" value="{$row.email}"/>
-                                    </div>
-                                    
+                                    </div>-->
                                     
                                     <if condition="rolemenu(array('Rbac/adduser'))">
                                     <div class="form-group col-md-3">
@@ -91,18 +90,31 @@
                                         <div class="form-group col-md-3">
                                             <label>部门</label>
                                             <select  class="form-control department1"  name="departmentid" onchange="get_department()" required>
+                                                <option value="0">请选择</option>
                                                 <foreach name="department" item="d">
-                                                <option value="{$d.id}"  id="{$d.letter}" <?php if ($d['department'] == $d['department']) echo ' selected'; ?>>{$d.department}</option>
+                                                <option value="{$d.id}"  id="{$d.letter}" <?php if ($row['departmentid'] == $d['id']) echo ' selected'; ?>>{$d.department}</option>
                                                 </foreach>
                                             </select>
                                         </div>
 
                                     <div class="form-group col-md-3">
                                         <label>岗位</label>
-                                        <select class="form-control" name="info[postid]" id="post1" onchange="get_department()">
+                                        <select class="form-control" name="info[postid]" id="post1" onchange="get_department()" required>
                                             <foreach name="posts" key="k" item="v">
                                                 <if condition="$v">
                                                 <option value="{$k}" <?php if ($row['postid']==$k){ echo ' selected'; }?>>{$v}</option>
+                                                </if>
+                                            </foreach>
+                                        </select>
+                                    </div>
+
+                                    <div class="form-group col-md-3">
+                                        <label>职位</label>
+                                        <select class="form-control" name="info[position_id]" required>
+                                            <foreach name="position" key="k" item="v">
+                                                <option value="0">请选择</option>
+                                                <if condition="$v">
+                                                    <option value="{$k}" <?php if ($row['position_id']==$k){ echo ' selected'; }?>>{$v}</option>
                                                 </if>
                                             </foreach>
                                         </select>
@@ -214,29 +226,6 @@
 	});
     <?php } ?>
 
-    /*$('#post1').change(function() {
-        var name = $('.department1 option:selected').attr("id");
-        var post1 = $('#post1 option:selected').text();
-        if(post1=="" || name==""){
-            die;
-        }else{
-            $.ajax({
-                url : "{:U('Ajax/department')}",
-                type : "POST",
-                async: true,
-                data : {'name':name,'post':post1},
-                dataType : "JSON",
-                success : function(data) {
-                   if(data.result == '1'){
-                       $('.employee_member').val(data.msg);
-                    }
-                    if(data.result == '0'){
-                        alert(data.msg);
-                    }
-                }
-            });
-        }
-    });*/
 
     function get_department() {
         var name = $('.department1 option:selected').attr("id");

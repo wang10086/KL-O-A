@@ -121,9 +121,10 @@ class RbacController extends BaseController {
         }else{
             $id = I('id', 0);
             	
-            $this->roles =  M('role')->where('id>3')->select();
-			$this->posts =  M('posts')->GetField('id,post_name',true);
-            $department = M('salary_department')->select();//新添加部门
+            $this->roles    = M('role')->where('id>3')->select();
+			$this->posts    = M('posts')->GetField('id,post_name',true);
+            $this->position = M('position')->getField('id,position_name',true);
+            $department     = M('salary_department')->select();//新添加部门
             	
             if (!$id) {
                 $this->pagetitle = '新增用户';
