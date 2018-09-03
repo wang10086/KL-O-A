@@ -90,7 +90,7 @@
 
                                         <div class="form-group col-md-3">
                                             <label>部门</label>
-                                            <select  class="form-control department1"  name="departmentid" required>
+                                            <select  class="form-control department1"  name="departmentid" onchange="get_department()" required>
                                                 <foreach name="department" item="d">
                                                 <option value="{$d.id}"  id="{$d.letter}" <?php if ($d['department'] == $d['department']) echo ' selected'; ?>>{$d.department}</option>
                                                 </foreach>
@@ -99,7 +99,7 @@
 
                                     <div class="form-group col-md-3">
                                         <label>岗位</label>
-                                        <select class="form-control" name="info[postid]" id="post1">
+                                        <select class="form-control" name="info[postid]" id="post1" onchange="get_department()">
                                             <foreach name="posts" key="k" item="v">
                                                 <if condition="$v">
                                                 <option value="{$k}" <?php if ($row['postid']==$k){ echo ' selected'; }?>>{$v}</option>
@@ -171,9 +171,9 @@
 
 
 <include file="Index:footer2" />
- <?php if(!$row){ ?>
 <script type="text/javascript">
-	$(document).ready(function(){
+    <?php if(!$row){ ?>
+    $(document).ready(function(){
 		$.formValidator.initConfig({autotip:true,formid:"myform",onerror:function(msg){}});
 		$("#username").formValidator({onshow:"4-20位字符，可由英文、数字组成",onfocus:"4-20位字符，可由英文、数字组成"}).inputValidator({min:4,max:20,onerror:""}).regexValidator({regexp:"ps_username",datatype:"enum",onerror:"4-20位字符，可由中文、英文、数字组成"}).ajaxValidator({
 			type : "get",
@@ -212,8 +212,9 @@
 		$("#password_2").formValidator({onshow:"请再次输入密码",onfocus:"请再次输入密码",oncorrect:"&nbsp;"}).inputValidator({min:1,onerror:"确认密码不能为空"}).compareValidator({desid:"password_1",operateor:"=",onerror:"与上面密码不一致，请重新输入"});
 
 	});
+    <?php } ?>
 
-    $('#post1').mouseleave(function() {
+    /*$('#post1').change(function() {
         var name = $('.department1 option:selected').attr("id");
         var post1 = $('#post1 option:selected').text();
         if(post1=="" || name==""){
@@ -235,6 +236,29 @@
                 }
             });
         }
-    });
+    });*/
+
+    function get_department() {
+        var name = $('.department1 option:selected').attr("id");
+        var post1 = $('#post1 option:selected').text();
+        if(post1=="" || name==""){
+            die;
+        }else{
+            $.ajax({
+                url : "{:U('Ajax/department')}",
+                type : "POST",
+                async: true,
+                data : {'name':name,'post':post1},
+                dataType : "JSON",
+                success : function(data) {
+                    if(data.result == '1'){
+                        $('.employee_member').val(data.msg);
+                    }
+                    if(data.result == '0'){
+                        alert(data.msg);
+                    }
+                }
+            });
+        }
+    }
 	</script>
-<?php } ?>
