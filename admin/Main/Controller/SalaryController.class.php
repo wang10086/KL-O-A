@@ -247,10 +247,14 @@ class SalaryController extends BaseController {
                 $this->assign('page2',$pages);//数据分页
                 $this->assign('rows',$account_r);//数据
             }
-        if($status==3){
-            $this->assign('page3',$pages);//数据分页
-            $this->assign('insurance',$account_r);//数据
-        }
+            if($status==3){
+                $this->assign('page3',$pages);//数据分页
+                $this->assign('insurance',$account_r);//数据
+            }
+            if($status==4){
+                $this->assign('page4',$pages);//数据分页
+                $this->assign('withholding',$account_r);//数据
+            }
         $this->assign('type',$type);//数据
         $this->assign('department',query_department());//部门
         $this->assign('posts',query_posts());//岗位

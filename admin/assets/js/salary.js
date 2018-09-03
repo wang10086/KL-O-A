@@ -14,22 +14,29 @@ $(function(){
     var num  = $('#salary_id_hidden').val();
     var cont = $('#salary_id_hidden1').val();
     var sum  = $('#salary_insurance').val();
-    if (num < 6){
+    var number  = $('#salary_withholding_selected').val();
+    if (num < 6 || num==0){
         salary_entry(num);
         if(num==0){
             $('#salary_entry').show();
         }
     }
-    if (5<cont<8) {
-        if(num==0){
+    if (cont<3|| cont==0 ) {
+        salary_hide(cont);
+        if(cont==0){
             $('#table_salary_percentage1').show();
         }
-        salary_hide(cont);
     }
-    if (7<sum<13 || sum==0) {
+    if (sum<6 || sum==0) {
         salary_insurance(sum);
         if(sum==0){
             $('#table_salary_insurance1').show();
+        }
+    }
+    if(number<3 || number==0 ){
+        salary_withholding(number);
+        if(number==0){
+            $('#salary_withholding1').show();
         }
     }
 })
@@ -275,6 +282,17 @@ function salary_list(page){//ajax 分页效果(岗位薪酬变动)
             }
         });
     })
+function salary_withholding(obj) {
+    $('#salary_withholding1').hide();
+    $('#salary_withholding2').hide();
+    $('#salary_withholding' + obj).show();
 
+    $('#salary_withholding_show').closest("div").remove();
+    var count = obj+12;
+    var html = '<div class="form-group col-md-3">';
+    html += '<input type="hidden" name="typeval" value="' + count + '" id="salary_withholding_show">';
+    html += '</div>';
+    $('#salary_withholding_num').append(html);
+}
 
 

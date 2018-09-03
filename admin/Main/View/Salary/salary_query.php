@@ -43,6 +43,12 @@
 
                             </div>
 
+                            <!--代扣代缴-->
+                            <div class="salary_search_extract" >
+
+                                <include file="Salary:salary_withholding" />
+
+                            </div>
 
                         </div><!-- /.col -->
                      </div>
