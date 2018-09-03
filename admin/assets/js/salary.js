@@ -242,13 +242,15 @@ function salary_list(page){//ajax 分页效果(岗位薪酬变动)
         html += '</div>';
         $('#searchform2').append(html);
     }
+
     $('.salary_insurance_butt').click(function(){
-        var url         = "index.php?m=Main&c=Ajax&a=Ajax_subsidy_Query";
+        var url         = "index.php?m=Main&c=Ajax&a=Ajax_Insurance_Query";
         var account_id  = $(this).parents('tr').find('.salary_table_insurance').text();//uid
         var injury      = $(this).parents('tr').find('.salary_insurance_injury').val();//生育/工伤/医疗 基数
         var pension     = $(this).parents('tr').find('.salary_insurance_pension').val();//养老/失业 基数
         var ratio       = $(this).parents('tr').find('.salary_insurance_ratio').val();//公积金 基数
         var stat        = $(this).parents('tr').find('.status').val();//状态
+        var big_price       = $(this).parents('tr').find('.salary_insurance_price').val();//大额医疗
         $.ajax({
             type: "post",
             url: url, //url
@@ -256,8 +258,9 @@ function salary_list(page){//ajax 分页效果(岗位薪酬变动)
                 'account_id': account_id,
                 'injury_base': injury,
                 'pension_base': pension,
-                'medical_care_base': ratio,
+                'accumulation_fund_base': ratio,
                 'statu':stat,
+                'big_price':big_price,
             },
             dataType: "json", //数据格式
             success: function (data) {
@@ -272,5 +275,6 @@ function salary_list(page){//ajax 分页效果(岗位薪酬变动)
             }
         });
     })
+
 
 

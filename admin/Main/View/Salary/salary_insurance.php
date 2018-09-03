@@ -18,6 +18,7 @@
     <div class="box-body">
         <div class="btn-group"><br>
 
+                <!-- 调整社保/医保基数-->
             <div id="table_salary_insurance1" >
                 <div style="float: left;margin-left: 2em;">
                     <label>选择人员：</label>
@@ -43,12 +44,12 @@
                                 <td>{$lst.nickname}</td>
                                 <td>{$lst.department}</td>
                                 <td>{$lst.post_name}</td>
-                                <td>{$lst.insurance1.injury_base}</td>
-                                <td><input type="text" style="float:left;" class="form-control salary_insurance_injury" value="{$lst.insurance1.injury_base}" /></td>
-                                <td>{$lst.insurance1.pension_base}</td>
-                                <td><input type="text" style="float:left;" class="form-control salary_insurance_pension" value="{$lst.insurance1.pension_base}" /></td>
-                                <td>{$lst.insurance1.accumulation_fund_ratio}</td>
-                                <td><input type="text" style="float:left;" class="form-control salary_insurance_ratio" value="{$lst.insurance1.accumulation_fund_ratio}" /></td>
+                                <td>{$lst.insurance.injury_base}</td>
+                                <td><input type="text" style="float:left;" class="form-control salary_insurance_injury" value="{$lst.insurance.injury_base}" /></td>
+                                <td>{$lst.insurance.pension_base}</td>
+                                <td><input type="text" style="float:left;" class="form-control salary_insurance_pension" value="{$lst.insurance.pension_base}" /></td>
+                                <td>{$lst.insurance.accumulation_fund_base}</td>
+                                <td><input type="text" style="float:left;" class="form-control salary_insurance_ratio" value="{$lst.insurance.accumulation_fund_base}" /></td>
                                 <input type="hidden" class="status" value="1">
                                 <td> <input type="button" class="form-control salary_insurance_butt" value="添加" style="background-color:#00acd6;font-size:1em;" /></td>
                             </tr>
@@ -62,7 +63,7 @@
             </div>
 
 
-
+            <!-- 调整员工社保/公积金比例-->
             <div id="table_salary_insurance2" >
                 <div style="float: left;margin-left: 2em;">
                     <label>选择人员：</label>
@@ -88,12 +89,12 @@
                                 <td>{$lst.nickname}</td>
                                 <td>{$lst.department}</td>
                                 <td>{$lst.post_name}</td>
-                                <td>{$lst.post_name}</td>
-                                <td><input type="text" style="float:left;" class="form-control salary_insurance_extract" value="{$lst.extract}" /></td>
-                                <td>{$lst.post_name}</td>
-                                <td><input type="text" style="float:left;" class="form-control salary_insurance_bonus" value="{$lst.bonus}" /></td>
-                                <td>{$lst.post_name}</td>
-                                <td><input type="text" style="float:left;" class="form-control salary_insurance_yearend" value="{$lst.annual_bonus}" /></td>
+                                <td>{$lst.insurance.pension_ratio}</td>
+                                <td><input type="text" style="float:left;" class="form-control salary_insurance_injury" value="{$lst.insurance.pension_ratio}" /></td>
+                                <td>{$lst.insurance.unemployment_ratio}</td>
+                                <td><input type="text" style="float:left;" class="form-control salary_insurance_pension" value="{$lst.insurance.unemployment_rati}" /></td>
+                                <td>{$lst.insurance.accumulation_fund_ratio}</td>
+                                <td><input type="text" style="float:left;" class="form-control salary_insurance_ratio" value="{$lst.insurance.accumulation_fund_ratio}" /></td>
                                 <input type="hidden" class="status" value="2">
                                 <td> <input type="button" class="form-control salary_insurance_butt" value="添加" style="background-color:#00acd6;font-size:1em;" /></td>
                             </tr>
@@ -106,7 +107,7 @@
                 </div>
             </div>
 
-
+            <!-- 调整员工医保比例-->
             <div id="table_salary_insurance3" >
                 <div style="float: left;margin-left: 2em;">
                     <label>选择人员：</label>
@@ -130,10 +131,10 @@
                                 <td>{$lst.nickname}</td>
                                 <td>{$lst.department}</td>
                                 <td>{$lst.post_name}</td>
-                                <td>{$lst.post_name}</td>
-                                <td><input type="text" style="float:left;" class="form-control salary_insurance_extract" value="{$lst.bonus}" /></td>
-                                <td>{$lst.post_name}</td>
-                                <td><input type="text" style="float:left;" class="form-control salary_insurance_bonus" value="{$lst.annual_bonus}" /></td>
+                                <td>{$lst.insurance.medical_care_ratio}</td>
+                                <td><input type="text" style="float:left;" class="form-control salary_insurance_injury" value="{$lst.insurance.medical_care_ratio}" /></td>
+                                <td>{$lst.insurance.big_price}</td>
+                                <td><input type="text" style="float:left;" class="form-control salary_insurance_pension" value="{$lst.insurance.big_price}" /></td>
                                 <input type="hidden" class="status" value="3">
                                 <td> <input type="button" class="form-control salary_insurance_butt" value="添加" style="background-color:#00acd6;font-size:1em;" /></td>
                             </tr>
@@ -146,7 +147,7 @@
                 </div>
             </div>
 
-
+            <!-- 调整公司社保/公积金比例-->
             <div id="table_salary_insurance4" >
                 <div style="float: left;margin-left: 2em;">
                     <label>选择人员：</label>
@@ -172,12 +173,12 @@
                                 <td>{$lst.nickname}</td>
                                 <td>{$lst.department}</td>
                                 <td>{$lst.post_name}</td>
-                                <td>{$lst.post_name}</td>
-                                <td><input type="text" style="float:left;" class="form-control salary_insurance_extract" value="{$lst.extract}" /></td>
-                                <td>{$lst.post_name}</td>
-                                <td><input type="text" style="float:left;" class="form-control salary_insurance_bonus" value="{$lst.bonus}" /></td>
-                                <td>{$lst.post_name}</td>
-                                <td><input type="text" style="float:left;" class="form-control salary_insurance_yearend" value="{$lst.annual_bonus}" /></td>
+                                <td>{$lst.insurance.company_pension_ratio}</td>
+                                <td><input type="text" style="float:left;" class="form-control salary_insurance_injury" value="{$lst.insurance.company_pension_ratio}" /></td>
+                                <td>{$lst.insurance.company_unemployment_ratio}</td>
+                                <td><input type="text" style="float:left;" class="form-control salary_insurance_pension" value="{$lst.insurance.company_unemployment_ratio}" /></td>
+                                <td>{$lst.insurance.company_accumulation_fund_ratio}</td>
+                                <td><input type="text" style="float:left;" class="form-control salary_insurance_ratio" value="{$lst.insurance.company_accumulation_fund_ratio}" /></td>
                                 <input type="hidden" class="status" value="4">
                                 <td> <input type="button" class="form-control salary_insurance_butt" value="添加" style="background-color:#00acd6;font-size:1em;" /></td>
                             </tr>
@@ -190,7 +191,8 @@
                 </div>
             </div>
 
-
+            <!-- 调整公司医保比例
+            -->
             <div id="table_salary_insurance5" >
                 <div style="float: left;margin-left: 2em;">
                     <label>选择人员：</label>
@@ -218,14 +220,14 @@
                                 <td>{$lst.nickname}</td>
                                 <td>{$lst.department}</td>
                                 <td>{$lst.post_name}</td>
-                                <td>{$lst.post_name}</td>
-                                <td><input type="text" style="float:left;" class="form-control salary_insurance_extract" value="{$lst.extract}" /></td>
-                                <td>{$lst.post_name}</td>
-                                <td><input type="text" style="float:left;" class="form-control salary_insurance_bonus" value="{$lst.bonus}" /></td>
-                                <td>{$lst.post_name}</td>
-                                <td><input type="text" style="float:left;" class="form-control salary_insurance_yearend" value="{$lst.annual_bonus}" /></td>
-                                <td>{$lst.post_name}</td>
-                                <td><input type="text" style="float:left;" class="form-control salary_insurance_yearend" value="{$lst.annual_bonus}" /></td>
+                                <td>{$lst.insurance.company_medical_care_ratio}</td>
+                                <td><input type="text" style="float:left;" class="form-control salary_insurance_injury" value="{$lst.insurance.company_medical_care_ratio}" /></td>
+                                <td>{$lst.insurance.company_birth_ratio}</td>
+                                <td><input type="text" style="float:left;" class="form-control salary_insurance_pension" value="{$lst.insurance.company_birth_ratio}" /></td>
+                                <td>{$lst.insurance.company_injury_ratio}</td>
+                                <td><input type="text" style="float:left;" class="form-control salary_insurance_ratio" value="{$lst.insurance.company_injury_ratio}" /></td>
+                                <td>{$lst.insurance.company_big_price}</td>
+                                <td><input type="text" style="float:left;" class="form-control salary_insurance_price" value="{$lst.insurance.company_big_price}" /></td>
                                 <input type="hidden" class="status" value="5">
                                 <td> <input type="button" class="form-control salary_insurance_butt" value="添加" style="background-color:#00acd6;font-size:1em;" /></td>
                             </tr>

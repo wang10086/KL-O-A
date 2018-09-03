@@ -231,11 +231,7 @@ class SalaryController extends BaseController {
                     $account_r[$key]['housing_subsidy']     = $subsidy_r['housing_subsidy'];
                     $account_r[$key]['foreign_subsidies']   = $subsidy_r['foreign_subsidies'];
                     $account_r[$key]['computer_subsidy']    = $subsidy_r['computer_subsidy'];
-
-                    $aid['status']                          = 1;//公司
-                    $account_r[$key]['insurance1'] = M('salary_insurance')->where($aid)->order('id desc')->find();//五险一金
-                    $aid['status']                          = 2;//私人
-                    $account_r[$key]['insurance2'] = M('salary_insurance')->where($aid)->order('id desc')->find();//五险一金
+                    $account_r[$key]['insurance'] = M('salary_insurance')->where($aid)->order('id desc')->find();//五险一金
 
                 }
 

@@ -22,7 +22,7 @@
 
 
                             <!--岗位薪酬变动 -->
-                            <div class="btn-group" id="salary_add_backcolor"><br>
+                            <div class="btn-group salary_search_extract" id="salary_add_backcolor"><br>
 
                                 <include file="post_salary_change" />
 
@@ -37,7 +37,7 @@
                             </div>
 
                             <!--五险一金-->
-                            <div class="salary_search_extract">
+                            <div class="salary_search_extract" >
 
                                 <include file="Salary:salary_insurance" />
 

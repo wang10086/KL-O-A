@@ -527,44 +527,116 @@ class AjaxController extends Controller {
         }
     }
 
+    /**
+     * Ajax_Insurance_Query
+     * 举例: company_birth 生育保险 金额 (公司)
+     *  birth 生育保险 金额 (个人)
+     * $statu 1 调整社保/医保基数 2调整员工社保/公积金比例 3调整员工医保比例
+     * 4调整公司社保/公积金比例 5调整公司医保比例
+     */
     public function Ajax_Insurance_Query(){
-        $statu                = code_number(trim($_POST['statu']));//状态
-        $where['account_id']  = code_number(trim($_POST['account_id']));//用户id
 
+        $statu                                      = code_number(trim($_POST['statu']));//状态
+        $where['account_id']                        = code_number(trim($_POST['account_id']));//用户id
+        $injury_base                                = code_number(trim($_POST['injury_base']));
+        $pension_base                               = code_number(trim($_POST['pension_base']));
+        if($statu==3){//当状态是3时,有两个值
+        }else{
+            $accumulation_fund_base                 = code_number(trim($_POST['accumulation_fund_base']));
+            if($statu==5){
+                $big_price                          = code_number(trim($_POST['big_price']));
+            }
+        }
+        $this->salary_statu($statu,$where,$injury_base,$pension_base,$accumulation_fund_base,$big_price);
+
+    }
+
+    protected function salary_type($statu,$cont,$add){//五险一金
+        if($statu == 1){//调整社保/医保基数
+            $content        = $cont."：生育/工伤/医疗:".$add['birth_base'].";养老/失业:".$add['pension_base'].";公积金:".$add['accumulation_fund_ratio']." （元）" ;
+        }
+        if($statu == 2){//调整员工社保/公积金比例
+            $content        = $cont."：个人养老比例:".$add['pension_ratio'].";个人失业比例:".$add['unemployment_ratio'].";个人公积金比例:".$add['accumulation_fund_care']." （元）" ;
+        }
+        if($statu == 3){//调整员工社保/公积金比例
+            $content        = $cont."：医疗个人比例:".$add['medical_care_ratio'].";大额医疗个人比例:".$add['big_price']. "（元）" ;
+        }
+        if($statu == 4){//调整员工社保/公积金比例
+            $content        = $cont."：公司养老比例:".$add['company_pension_ratio'].";公司失业比例:".$add['company_unemployment_ratio'].";公司公积金比例:".$add['company_accumulation_fund_ratio']." （元）" ;
+        }
+        if($statu == 5){//调整员工社保/公积金比例
+            $content        = $cont."：公司医疗比例:".$add['company_medical_care_ratio'].";公司生育比例:".$add['company_birth_ratio'].";公司工伤比例:".$add['company_injury_ratio'].";公司大额比例:".$add['company_big_price']." （元）" ;
+        }
+        $info   = salary_info(11,$content);
+        $sum    = 1;
+        $msg    = $cont."数据成功!";
+        echo json_encode(array('sum'=>$sum,'msg'=>$msg));die;
+    }
+
+    protected function salary_statu($statu,$where,$injury_base,$pension_base,$accumulation_fund_base,$big_price){//五险一金判断是否要更改还是添加
+        if($statu == 1){
+            $add['birth_base']                      = $injury_base;//生育 基数(个人)
+            $add['company_birth_base']              = $injury_base;//生育 基数(公司)
+            $add['injury_base']                     = $injury_base;//工伤 基数(个人)
+            $add['company_injury_base']             = $injury_base;//工伤 基数(公司)
+            $add['medical_care_base']               = $injury_base;//医疗 基数(个人)
+            $add['company_medical_care_base']       = $injury_base;//医疗 基数(公司)
+            $add['pension_base']                    = $pension_base;//养老 基数(个人)
+            $add['company_pension_base']            = $pension_base;//养老 基数(公司)
+            $add['unemployment_base']               = $pension_base;//失业 基数(个人)
+            $add['company_unemployment_base']       = $pension_base;//失业 基数(公司)
+            $add['accumulation_fund_base']          = $accumulation_fund_base;//公积金 基数(个人)
+            $add['company_accumulation_fund_base']  = $accumulation_fund_base;//公积金 基数(公司)
+        }
+        if($statu == 2){
+            $add['pension_ratio']                   = $injury_base;//养老 比例(个人)
+            $add['unemployment_ratio']              = $pension_base;//失业 比例(个人)
+            $add['accumulation_fund_ratio']         = $accumulation_fund_base;//公积金 比例(个人)
+        }
+        if($statu==3){
+            $add['medical_care_ratio']              = $injury_base;//医疗 比例(个人)
+            $add['big_price']                       = $pension_base;//大额医疗 比例(个人)
+        }
+        if($statu == 4){
+            $add['company_pension_ratio']           = $injury_base;//养老 比例(公司)
+            $add['company_unemployment_ratio']      = $pension_base;//失业 比例(公司)
+            $add['company_accumulation_fund_ratio'] = $accumulation_fund_base;//公积金 比例(公司)
+        }
+        if($statu == 5){
+            $add['company_medical_care_ratio']      = $injury_base;//医疗 比例(公司)
+            $add['company_birth_ratio']             = $pension_base;//生育 比例(公司)
+            $add['company_injury_ratio']            = $accumulation_fund_base;//工伤 比例(公司)
+            $add['company_big_price']               = $big_price;//大额 比例(公司)
+        }
         $insurance  = M('salary_insurance')->where($where)->order('id desc')->find();
         if($insurance){
-            if($insurance['status']==1){
-                if($statu==1){
-                    $add['birth_base']              = code_number(trim($_POST['injury_base']));//生育 基数
-                    $add['injury_base']             = $add['birth_base'];//工伤 基数
-                    $add['medical_care_base']       = $add['birth_base'];//医疗 基数
-                    $add['pension_base']            = code_number(trim($_POST['pension_base']));//养老 基数
-                    $add['unemployment_base']       = $add['pension_base'];//失业 基数
-                    $add['accumulation_fund_ratio'] = code_number(trim($_POST['medical_care_base']));//公积金 基数
-                }
-
-            }elseif($insurance['status']==2){
-
-            }else{
-                $sum = 0;
-                $msg = "编辑数据失败!请重新编辑!";
-                echo json_encode(array('sum'=>$sum,'msg'=>$msg));die;
+            if($insurance['status'] ==  1){//判断能否修改
+                $cont           = "修改";
+                $id['id'] = $insurance['id'];
+                $oinsurance_w   = M('salary_insurance')->where($id)->save($add);
+            }
+            if($insurance['status'] ==  2){//添加
+                $cont               = "添加";
+                $add['account_id']  = $where['account_id'];
+                $add['createtime']  = time();
+                $oinsurance_w       = M('salary_insurance')->add($add);
             }
         }else{
-            if($statu==1){
-
-            }elseif($statu==2){
-
-            }else{
-                $sum = 0;
-                $msg = "编辑数据失败!请重新编辑!";
-                echo json_encode(array('sum'=>$sum,'msg'=>$msg));die;
+            if($statu<6 && 0<$statu){
+                $cont               = "添加";
+                $add['account_id']  = $where['account_id'];
+                $add['createtime']  = time();
+                $oinsurance_w = M('salary_insurance')->add($add);
             }
-
         }
-
-
-
+        if($oinsurance_w){//添加/修改 成功
+            if(!empty($cont)){
+                $this->salary_type($statu,$cont,$add);
+            }
+        }
+        $sum = 0;
+        $msg = "编辑数据失败!请重新编辑!";
+        echo json_encode(array('sum'=>$sum,'msg'=>$msg));die;
     }
 
 

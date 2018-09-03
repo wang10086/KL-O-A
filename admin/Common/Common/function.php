@@ -3397,7 +3397,7 @@ function query_department(){//部门
 return M('salary_department')->select();
 
 }
-function code_number($number){
+function code_number($number){//数字验证
 	if(!is_numeric($number)){
 		$sum  = 0;
 		$msg  = "格式错误!请重新提交!";
