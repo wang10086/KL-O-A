@@ -105,16 +105,7 @@
         <div class="form-group col-md-3">
             <input type="text" class="form-control" name="nickname" placeholder="员工姓名">
         </div>
-        <div class="form-group col-md-3">
-            <input type="text" class="form-control" name="departmen" placeholder="部门">
-        </div>
-        <div class="form-group col-md-3">
-            <input type="text" class="form-control" name="posts" placeholder="岗位">
-        </div>
         <input type="hidden" name="status" value="4">
-        <div class="form-group col-md-3">
-            <input type="text" class="form-control" name="all" placeholder="输入'所有' 查询所有">
-        </div>
 
     </form>
 </div>

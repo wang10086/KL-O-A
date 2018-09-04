@@ -232,12 +232,19 @@ class SalaryController extends BaseController {
                     $account_r[$key]['foreign_subsidies']   = $subsidy_r['foreign_subsidies'];
                     $account_r[$key]['computer_subsidy']    = $subsidy_r['computer_subsidy'];
                     $account_r[$key]['insurance'] = M('salary_insurance')->where($aid)->order('id desc')->find();//五险一金
+                    $income = M('salary_income')->where($aid)->order('id desc')->find();//其他收入
 
+                    if($income){
+                        $account_r[$key]['income'] = M('salary_income')->where($wher)->order('id desc')->select();//其他收入
+                    }
+                    $withholding = M('salary_withholding')->where($aid)->order('id desc')->find();//代扣代缴
+                    if($withholding){
+                        $query['token'] = $withholding['token'];
+                        $account_r[$key]['withholding'] = M('salary_withholding')->where($query)->order('id desc')->select();//代扣代缴
+                    }
                 }
-
                 if(!$account_r || $account_r==""){$this->error('请添加员工编码或者员工部门！', U('Salary/salary_query'));die;}
             }
-
             $status        = trim(I('status'));
             if($status==1){
                 $this->assign('page',$pages);//数据分页
@@ -252,7 +259,6 @@ class SalaryController extends BaseController {
                 $this->assign('insurance',$account_r);//数据
             }
             if($status==4){
-                $this->assign('page4',$pages);//数据分页
                 $this->assign('withholding',$account_r);//数据
             }
         $this->assign('type',$type);//数据

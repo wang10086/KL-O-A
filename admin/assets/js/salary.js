@@ -198,8 +198,6 @@ function salary_list(page){//ajax 分页效果(岗位薪酬变动)
         $('#searchform1').append(html);
     }
 
-
-
     /**
      * 变动各项补助 | 提成/奖金/年终
      */
@@ -233,11 +231,9 @@ function salary_list(page){//ajax 分页效果(岗位薪酬变动)
                 }
             }
         });
-
     })
 
-
-    function salary_insurance(obj) {
+    function salary_insurance(obj) {// 添加搜索提交状态
         $('#table_salary_insurance1').hide();
         $('#table_salary_insurance1').siblings().hide();
         $('#table_salary_insurance' + obj).show();
@@ -245,12 +241,13 @@ function salary_list(page){//ajax 分页效果(岗位薪酬变动)
         $('#salary_hidden_show3').closest("div").remove();
         var count = obj + 7;
         var html = '<div class="form-group col-md-3">';
-        html += '<input type="hidden" name="typeval" value="' + count + '" id="salary_hidden_show3">';
-        html += '</div>';
+            html += '<input type="hidden" name="typeval" value="' + count + '" id="salary_hidden_show3">';
+            html += '</div>';
         $('#searchform2').append(html);
+        return false;
     }
 
-    $('.salary_insurance_butt').click(function(){
+    $('.salary_insurance_butt').click(function(){//添加数据 五险一金
         var url         = "index.php?m=Main&c=Ajax&a=Ajax_Insurance_Query";
         var account_id  = $(this).parents('tr').find('.salary_table_insurance').text();//uid
         var injury      = $(this).parents('tr').find('.salary_insurance_injury').val();//生育/工伤/医疗 基数
@@ -282,17 +279,34 @@ function salary_list(page){//ajax 分页效果(岗位薪酬变动)
             }
         });
     })
-function salary_withholding(obj) {
+function salary_withholding(obj) {//显示隐藏代扣代缴
     $('#salary_withholding1').hide();
-    $('#salary_withholding2').hide();
-    $('#salary_withholding' + obj).show();
-
+    $('#salary_withholding1').siblings().hide();
+    $('#salary_withholding'+obj).show();
     $('#salary_withholding_show').closest("div").remove();
     var count = obj+12;
     var html = '<div class="form-group col-md-3">';
-    html += '<input type="hidden" name="typeval" value="' + count + '" id="salary_withholding_show">';
-    html += '</div>';
+        html += '<input type="hidden" name="typeval" value="' + count + '" id="salary_withholding_show">';
+        html += '</div>';
     $('#salary_withholding_num').append(html);
+    return false;
 }
 
+$('.withholding_click').click(function(){//添加新项目
+   var id = $(this).parents('.salary_add_table').find('.withholding_id').text();
+    if(isNaN(id.substring(4))){//判断有无用户
+        alert("请先添加用户!");return false;
+    }
+    var htm =  '<tr class="add_withholding_list">';
+        htm += '<td><input type="text" name="name" class="form-control" /></td>';
+        htm += '<td><input type="text" name="money" class="form-control" /></td>';
+        htm += '<td><input type="button" class="form-control withholding_ueditor" value="删除项目" style="background-color:#00acd6;font-size:1em;"></td>';
+        htm += '</tr>';
+    $(this).parents('.salary_add_table').find('.table-bordered').append(htm);
+    return false;
+});
 
+
+$('.withholding_delete').click(function(){//删除无用的项目
+    $(this).parents('.add_withholding_list').remove();alert(1111);
+});
