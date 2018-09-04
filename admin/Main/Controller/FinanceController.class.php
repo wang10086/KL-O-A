@@ -145,7 +145,7 @@ class FinanceController extends BaseController {
 		$op['show_user']  = $show_user;
 		$op['show_time']  = $show_time;
 		$op['show_reason']= $show_reason;
-        $guide_price      = M('op_guide_price')->where(array('op_id'=>$opid))->select();
+        $guide_price      = M('op_guide_price')->where(array('op_id'=>$opid,'confirm_id'=>0))->select();
         $tit              = M()->table('__OP_GUIDE_PRICE__ as gp')->field('gp.*,gk.name as gkn,gpk.name as gkpn')->join('left join __GUIDEKIND__ as gk on gk.id = gp.guide_kind_id')->join('left join __GUIDE_PRICEKIND__ as gpk on gpk.id = gp.gpk_id')->where(array('gp.op_id'=>$opid))->select();
         foreach ($guide_price as & $v){
             $v['type']    = 2;  //专家辅导员
