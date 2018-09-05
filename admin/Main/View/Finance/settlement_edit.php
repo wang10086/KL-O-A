@@ -67,84 +67,70 @@
         
         <foreach name="costacc" key="k" item="v">
         <?php 
-		if($v['cost_type']==4){
-			$shiyong = $v['m_outsum']-$v['m_returnsum'];
-			$jieyong = $v['m_returnsum'];
-			if($shiyong){ 
-		?>
+		if($v['type']==4){ ?>
             <div class="userlist cost_expense" id="costacc_id_aa_{$k}">
                 <span class="title"></span>
                 <input type="hidden" name="resid[888{$k}][id]" value="0" >
-                <input type="text" class="form-control" name="costacc[888{$k}][title]" value="{$v.remark}">
-                <input type="text" class="form-control cost" name="costacc[888{$k}][unitcost]" value="{$v.cost}">
-                <input type="text" class="form-control amount" name="costacc[888{$k}][amount]" value="{$shiyong}">
-                <input type="text" class="form-control totalval" name="costacc[888{$k}][total]" value="<?php echo sprintf("%.2f", $v['cost']*$shiyong) ?>">
+                <input type="text" class="form-control" name="costacc[888{$k}][title]" value="{$v.title}">
+                <input type="text" class="form-control cost" name="costacc[888{$k}][unitcost]" value="{$v.unitcost}">
+                <input type="text" class="form-control amount" name="costacc[888{$k}][amount]" value="{$v.amount}">
+                <input type="text" class="form-control totalval" name="costacc[888{$k}][total]" value="{$v.total}">
                 <select class="form-control"  name="costacc[888{$k}][type]" >
                     <foreach name="kind" key="kk" item="vv">
                     <option value="{$kk}" <?php if($kk==$v['type']){ echo 'selected';} ?> >{$vv}</option>
                     </foreach>
                 </select>
-                <input type="text" class="form-control longinput" readonly name="costacc[888{$k}][remark]" value="未归还">
+                <input type="text" class="form-control longinput" name="costacc[888{$k}][remark]" value="{$remark}">
                 <a href="javascript:;" class="btn btn-danger btn-flat" onclick="delbox('costacc_id_aa_{$k}')">删除</a>
             </div>
-        <?php 
-			}
-			if($jieyong && $v['m_stages']>1){
-				$fy = sprintf("%.2f", $v['cost']/$v['m_stages']);
-		?>
-        	<div class="userlist cost_expense" id="costacc_id_ab_{$k}">
-                <span class="title"></span>
-                <input type="hidden" name="resid[9999{$k}][id]" value="0" >
-                <input type="text" class="form-control" name="costacc[9999{$k}][title]" value="{$v.remark}">
-                <input type="text" class="form-control cost" name="costacc[9999{$k}][unitcost]" value="{$fy}">
-                <input type="text" class="form-control amount" name="costacc[9999{$k}][amount]" value="{$jieyong}">
-                <input type="text" class="form-control totalval" name="costacc[9999{$k}][total]" value="<?php echo sprintf("%.2f", $fy*$jieyong) ?>">
-                <select class="form-control"  name="costacc[9999{$k}][type]" >
-                    <option value="1" selected >物资</option>
-                    <option value="2">专家辅导员</option>
-                    <option value="3">合格供方</option>
-                    <option value="4">其他</option>
-                    <option value="5">产品模块</option>
-                </select>
-                <input type="text" class="form-control longinput" readonly name="costacc[9999{$k}][remark]" value="已归还，{$v.m_stages} 期">
-                <a href="javascript:;" class="btn btn-danger btn-flat" onclick="delbox('costacc_id_ab_{$k}')">删除</a>
-            </div>
-        <?php	
-			}
-		}elseif ($v['cost_type']==2){ ?>
-            <div class="userlist cost_expense" id="costacc_id_ac_{$k}">
-                <span class="title"></span>
-                <input type="hidden" name="resid[7777{$k}][id]" value="0" >
-                <input type="text" class="form-control" name="costacc[7777{$k}][title]" value="{$v.remark}" readonly>
-                <input type="text" class="form-control cost" name="costacc[7777{$k}][unitcost]" value="{$v.cost}" readonly>
-                <input type="text" class="form-control amount" name="costacc[7777{$k}][amount]" value="{$v.amount}" readonly>
-                <input type="text" class="form-control totalval" name="costacc[7777{$k}][total]" value="{$v.total}" readonly>
-                <select class="form-control"  name="costacc[7777{$k}][type]">
-                    <option value="1" <?php if($v['cost_type']==1){ echo 'selected';} ?> >物资</option>
-                    <option value="2" <?php if($v['cost_type']==2){ echo 'selected';} ?> >专家辅导员</option>
-                    <option value="3" <?php if($v['cost_type']==3){ echo 'selected';} ?> >合格供方</option>
-                    <option value="4" <?php if($v['cost_type']==4){ echo 'selected';} ?> >其他</option>
-                    <option value="5" <?php if($v['cost_type']==5){ echo 'selected';} ?> >产品模块</option>
-                </select>
-                <input type="text" class="form-control longinput" name="costacc[7777{$k}][remark]" value="{$v.beizhu}">
-                <a href="javascript:;" class="btn btn-danger btn-flat" onclick="delbox('costacc_id_ac_{$k}')">删除</a>
-            </div>
+
+        <?php }elseif ($v['type']==2){ ?>
+            <?php if (cookie('userid')==11){ ?>
+                <div class="userlist cost_expense" id="costacc_id_ac_{$k}">
+                    <span class="title"></span>
+                    <input type="hidden" name="resid[7777{$k}][id]" value="0" >
+                    <input type="text" class="form-control" name="costacc[7777{$k}][title]" value="{$v.title}">
+                    <input type="text" class="form-control cost" name="costacc[7777{$k}][unitcost]" value="{$v.unitcost}">
+                    <input type="text" class="form-control amount" name="costacc[7777{$k}][amount]" value="{$v.amount}">
+                    <input type="text" class="form-control totalval" name="costacc[7777{$k}][total]" value="{$v.total}">
+                    <select class="form-control"  name="costacc[7777{$k}][type]">
+                        <foreach name="cost_type" key="kk" item="vv">
+                            <option value="{$kk}" <?php if ($v['type']==$kk) {echo "selected";} ?> >{$vv}</option>
+                        </foreach>
+                    </select>
+                    <input type="text" class="form-control longinput" name="costacc[7777{$k}][remark]" value="{$v.remark}">
+                    <a href="javascript:;" class="btn btn-danger btn-flat" onclick="delbox('costacc_id_ac_{$k}')">删除</a>
+                </div>
+            <?php }else{ ?>
+                <div class="userlist cost_expense" id="costacc_id_ac_{$k}">
+                    <span class="title"></span>
+                    <input type="hidden" name="resid[7777{$k}][id]" value="0" >
+                    <input type="text" class="form-control" name="costacc[7777{$k}][title]" value="{$v.title}" readonly>
+                    <input type="text" class="form-control cost" name="costacc[7777{$k}][unitcost]" value="{$v.unitcost}" readonly>
+                    <input type="text" class="form-control amount" name="costacc[7777{$k}][amount]" value="{$v.amount}" readonly>
+                    <input type="text" class="form-control totalval" name="costacc[7777{$k}][total]" value="{$v.total}" readonly>
+                    <select class="form-control"  name="costacc[7777{$k}][type]">
+                        <foreach name="cost_type" key="kk" item="vv">
+                            <option value="{$kk}" <?php if ($v['type']==$kk) {echo "selected";} ?> >{$vv}</option>
+                        </foreach>
+                    </select>
+                    <input type="text" class="form-control longinput" name="costacc[7777{$k}][remark]" value="{$v.remark}" readonly>
+                </div>
+            <?php } ?>
         <?php }else{ ?>
         <div class="userlist cost_expense" id="costacc_id_a_{$k}">
             <span class="title"></span>
             <input type="hidden" name="resid[7777{$k}][id]" value="0" >
-            <input type="text" class="form-control" name="costacc[7777{$k}][title]" value="{$v.remark}">
-            <input type="text" class="form-control cost" name="costacc[7777{$k}][unitcost]" value="{$v.cost}">
+            <input type="text" class="form-control" name="costacc[7777{$k}][title]" value="{$v.title}">
+            <input type="text" class="form-control cost" name="costacc[7777{$k}][unitcost]" value="{$v.unitcost}">
             <input type="text" class="form-control amount" name="costacc[7777{$k}][amount]" value="{$v.amount}">
             <input type="text" class="form-control totalval" name="costacc[7777{$k}][total]" value="{$v.total}">
             <select class="form-control"  name="costacc[7777{$k}][type]" >
-                <option value="1" <?php if($v['cost_type']==1){ echo 'selected';} ?> >物资</option>
-                <option value="2" <?php if($v['cost_type']==2){ echo 'selected';} ?> >专家辅导员</option>
-                <option value="3" <?php if($v['cost_type']==3){ echo 'selected';} ?> >合格供方</option>
-                <option value="4" <?php if($v['cost_type']==4){ echo 'selected';} ?> >其他</option>
-                <option value="5" <?php if($v['cost_type']==5){ echo 'selected';} ?> >产品模块</option>
+                <foreach name="cost_type" key="kk" item="vv">
+                    <option value="{$kk}" <?php if ($v['type']==$kk) {echo "selected";} ?> >{$vv}</option>
+                </foreach>
             </select>
-            <input type="text" class="form-control longinput" name="costacc[7777{$k}][remark]" value="{$v.beizhu}">
+            <input type="text" class="form-control longinput" name="costacc[7777{$k}][remark]" value="{$v.remark}">
             <a href="javascript:;" class="btn btn-danger btn-flat" onclick="delbox('costacc_id_a_{$k}')">删除</a>
         </div>
         <?php } ?>
@@ -153,7 +139,7 @@
         
         <?php } ?>
         
-        <foreach name="qita" key="k" item="v">
+        <!--<foreach name="qita" key="k" item="v">
         <div class="userlist cost_expense" id="costacc_id_x_{$k}">
             <span class="title"></span>
             <input type="hidden" name="resid[4444{$k}][id]" value="0" >
@@ -171,7 +157,7 @@
             <input type="text" class="form-control longinput" name="costacc[4444{$k}][remark]" value="{$v.remark}">
             <a href="javascript:;" class="btn btn-danger btn-flat" onclick="delbox('costacc_id_x_{$k}')">删除</a>
         </div>
-        </foreach>
+        </foreach>-->
     </div>
     <div id="costacc_sum">
         <div class="userlist">

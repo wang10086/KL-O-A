@@ -522,8 +522,25 @@ class FinanceController extends BaseController {
 
         $jiesuan    = M('op_costacc')->where(array('op_id'=>$opid,'status'=>2))->order('id')->select();
         if(count($jiesuan)==0){
-            $costacc    = M('op_cost')->where(array('op_id'=>$opid))->order('cost_type')->select();
-            foreach($costacc as $k=>$v){
+            $costa        = M('op_costacc')->where(array('op_id'=>$opid,'status'=>1,'type'=>array('neq',2)))->order('type')->select();
+            $guide        = M()->table('__GUIDE_PAY__ as p')->field('g.name,p.op_id,p.num,p.price,p.total,p.really_cost,p.remark')->join('left join __GUIDE__ as g on p.guide_id = g.id')->where(array('p.op_id'=>$opid))->select();
+            $costacc      = array();
+            foreach ($guide as $k=>$v){
+                $data['op_id']     = $v['op_id'];
+                $data['title']     = $v['name'];
+                $data['unitcost']  = $v['price'];
+                $data['amount']    = $v['num'];
+                $data['total']     = $v['really_cost'];
+                $data['type']      = 2;
+                $data['remark']    = $v['remark'];
+                $costacc[]         = $data;
+            }
+            foreach ($costa as $v){
+                $costacc[]          = $v;
+            }
+
+            //$costacc    = M('op_cost')->where(array('op_id'=>$opid))->order('cost_type')->select();
+            /*foreach($costacc as $k=>$v){
                 if($v['cost_type']==3){
                     $op_supplier = M('op_supplier')->find($v['link_id']);
                     $costacc[$k]['beizhu'] = $op_supplier['remark'];
@@ -548,7 +565,7 @@ class FinanceController extends BaseController {
                     $costacc[$k]['beizhu']  = $really_cost['upd_remark']?$really_cost['upd_remark']:$g;
                 }
             }
-            $qita   = M('op_costacc')->where(array('op_id'=>$opid,'status'=>1,'type'=>4))->order('id')->select();
+            $qita   = M('op_costacc')->where(array('op_id'=>$opid,'status'=>1,'type'=>4))->order('id')->select();*/
         }
         $budget     = M('op_budget')->where(array('op_id'=>$opid))->find();
         $settlement = M('op_settlement')->where(array('op_id'=>$opid))->find();
@@ -592,6 +609,7 @@ class FinanceController extends BaseController {
         $this->subject_fields	= C('SUBJECT_FIELD');
         $this->ages 			= C('AGE_LIST');
         $this->kinds			=  M('project_kind')->getField('id,name', true);
+        $this->cost_type        = C('COST_TYPE');
         $this->display('settlement');
     }
 	

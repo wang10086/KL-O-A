@@ -114,18 +114,27 @@
                     </select>
                 </div>
                 
-                <div class="form-group col-md-6">
+                <!--<div class="form-group col-md-6">
                     <select class="form-control" name="role">
                         <option value="0">所属角色</option>
                         <foreach name="roles" key="k" item="v">
                         <option value="{$k}">{$v}</option>
                         </foreach>
                     </select>
+                </div>-->
+
+                <div class="form-group col-md-6">
+                    <select class="form-control" name="position_id">
+                        <option value="0">所属职位</option>
+                        <foreach name="positions" key="k" item="v">
+                            <option value="{$k}">{$v}</option>
+                        </foreach>
+                    </select>
                 </div>
                 
                 <div class="form-group col-md-6">
                     <select class="form-control" name="post">
-                        <option value="0">所属职位</option>
+                        <option value="0">所属岗位</option>
                         <foreach name="posts" key="k" item="v">
                         <option value="{$k}">{$v}</option>
                         </foreach>

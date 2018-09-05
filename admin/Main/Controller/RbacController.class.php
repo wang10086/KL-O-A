@@ -27,15 +27,20 @@ class RbacController extends BaseController {
 		if(rolemenu(array('Rbac/adduser'))){
 			$key            = I('key','');
             $departmentid   = I('departmentid',0);
-			$role           = I('role',0);
+			//$role           = I('role',0);
 			$post           = I('post',0);
-			
+            $position_id    = I('position_id',0);
+            $arr            = $this->public_get_positions($position_id);
+            $position_ids   = array_column($arr,'id');
+            $position_ids[] = $position_id;
+
 			$where['status'] = array('neq',2);
 			$where['id'] = array('gt',3);
 			if($key)            $where['nickname']      = array('like','%'.$key.'%');
             if($departmentid)   $where['departmentid']  = $departmentid;
-			if($role)           $where['roleid']        = $role;
+			//if($role)           $where['roleid']        = $role;
 			if($post)           $where['postid']        = $post;
+            if ($position_id)   $where['position_id']   = array('in',$position_id);
 		}else{
 			$where['id']    = cookie('userid');
 		}
@@ -51,8 +56,41 @@ class RbacController extends BaseController {
 		$this->roles        = M('role')->GetField('id,role_name',true);
 		$this->posts        = M('posts')->GetField('id,post_name',true);
         $this->department   = M('salary_department')->getField('id,department',true);
+        $this->positions    = M('position')->getField('id,position_name',true);
         $this->display('index');
     }
+
+    function public_get_positions($pid=0){
+
+        global $str;
+
+        $db = M('position');
+        $where = array();
+        $where['pid']    = $pid;
+
+        $list = $db->field('id')->where($where)->select();
+        if($list){
+            foreach($list as $k =>$v){
+                $str[] = $list[$k];
+                $this->public_get_positions($v['id']);
+            }
+        }
+        return $str;
+
+    }
+
+    /*public function public_get_positions(){
+        $id = 1;
+        $ids            = array();
+        $db             = M('position');
+        $ids            = $db->where("id = '$id' or pid = '$id'")->getField('id',true);
+        foreach ($ids as $v){
+            $ids      = $db->where("pid = '$v'")->getField('id',true);
+
+        }
+        echo M()->getlastsql();
+        var_dump($ids);die;
+    }*/
     
 	
 	public function public_checkname_ajax(){
