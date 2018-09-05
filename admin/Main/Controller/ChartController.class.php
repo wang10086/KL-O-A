@@ -6,10 +6,10 @@ use Sys\Page;
 use Sys\P;
 
 class ChartController extends BaseController {
-	
-	
-	
-	
+
+
+
+
 	//整体分析
 	public function index(){
 		
@@ -529,7 +529,8 @@ class ChartController extends BaseController {
 		//查询所有业务人员信息
 		$where = array();
 		$where['status']			= 0;
-		$where['postid']			= array('in','1,2,4,31,32');
+		//$where['postid']			= array('in','1,2,4,31,32');
+        $where['position_id']       = array('in','1,5,6,7,8,9,10');
 		
 		$field = array();
 		$field[] =  'id as create_user';
@@ -537,7 +538,7 @@ class ChartController extends BaseController {
 		$field[] =  'roleid';
 		
 		$lists = M('account')->field($field)->where($where)->select();
-		
+
 		foreach($lists as $k=>$v){
 			
 			$lists[$k]['rolename'] 	=  $roles[$v['roleid']];	
