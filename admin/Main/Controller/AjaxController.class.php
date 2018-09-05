@@ -551,7 +551,10 @@ class AjaxController extends Controller {
 
     }
 
-    protected function salary_type($statu,$cont,$add){//五险一金
+    /**
+     * salary_type 五险一金操作历史数据添加
+     */
+    protected function salary_type($statu,$cont,$add){
         if($statu == 1){//调整社保/医保基数
             $content        = $cont."：生育/工伤/医疗:".$add['birth_base'].";养老/失业:".$add['pension_base'].";公积金:".$add['accumulation_fund_ratio']." （元）" ;
         }
@@ -573,7 +576,11 @@ class AjaxController extends Controller {
         echo json_encode(array('sum'=>$sum,'msg'=>$msg));die;
     }
 
-    protected function salary_statu($statu,$where,$injury_base,$pension_base,$accumulation_fund_base,$big_price){//五险一金判断是否要更改还是添加
+
+    /**
+     * salary_statu 五险一金判断是否要更改还是添加
+     */
+    protected function salary_statu($statu,$where,$injury_base,$pension_base,$accumulation_fund_base,$big_price){
         if($statu == 1){
             $add['birth_base']                      = $injury_base;//生育 基数(个人)
             $add['company_birth_base']              = $injury_base;//生育 基数(公司)
@@ -638,6 +645,170 @@ class AjaxController extends Controller {
         $msg = "编辑数据失败!请重新编辑!";
         echo json_encode(array('sum'=>$sum,'msg'=>$msg));die;
     }
+
+
+    public function Ajax_withholding_income(){
+        if(IS_POST){
+            $arr     = trim($_POST['arr']);//数据数组
+            $status  = code_number(trim($_POST['status']));//状态
+
+            $content = array_filter(explode("|", $arr));//去除空数组+分隔字符串
+            $time = time();
+            $add['createtime']   = $time;
+            if($status==1){//代扣代缴状态
+                $table =  M('salary_withholding');//代扣代缴状态
+            }
+            if($status==2) {//其他收入
+                $table = M('salary_income');//其他收入
+            }
+            foreach($content as $key =>$val){//循环数据
+                $str  = explode(",", $val);//分隔字符串
+                $str  = array_filter($str);//去除空数组空字段
+                $where['account_id'] = $str[2];
+
+                if($status==1){//代扣代缴
+                    $add['project_name']  = $str[0];
+                    $add['money']         = $str[1];
+                    $add['account_id']    = $str[2];
+                    $add['token']         = $time.$str[2];
+                }
+                if($status==2){//其他收入
+                    $add['income_name']   = $str[0];
+                    $add['income_money']  = $str[1];
+                    $add['account_id']    = $str[2];
+                    $add['income_token']  = $time.$str[2];
+                }
+                $with = $table->where($where)->order('id desc')->find();//查询 代扣代缴状态/其他收入
+                if($with){
+                    if($status==1){
+                        $save['token'] = $with['token'];
+                        $conten = "代扣代缴";
+                    }
+                    if($status==2){
+                        $save['income_token'] = $with['income_token'];
+                        $conten = "其他收入";
+                    }
+                    if($with['status'] ==1){
+                        $cot = "编辑";
+                    $with_add = $table->where($save)->save($add);//添加新的数据
+                        if(!$with_add){
+                            $sum = 0;
+                            $msg = "编辑数据失败!请重新编辑!";
+                            echo json_encode(array('sum'=>$sum,'msg'=>$msg));die;
+                        }else{
+
+                        }
+                    }
+                    if($with['status'] ==2){
+                        $with_add = $table->add($add);
+                        $cot = "添加";
+                        if(!$with_add){
+                            $sum = 0;
+                            $msg = "编辑数据失败!请重新编辑!";
+                            echo json_encode(array('sum'=>$sum,'msg'=>$msg));die;
+                        }
+                    }
+                }else{
+                    if($status==1 || $status==2){
+                        $cot = "添加";
+                        $with_add = $table->add($add);
+                        if(!$with_add){
+                            $sum = 0;
+                            $msg = "编辑数据失败!请重新编辑!";
+                            echo json_encode(array('sum'=>$sum,'msg'=>$msg));die;
+                        }
+                    }
+                }
+                $content = $conten.":".$cot."项目名称:".$str[0].";金额:".$str[1].";（元）" ;
+                $info    = salary_info(11,$content);
+            }
+            $sum    = 1;
+            $msg    = $cot."数据成功!";
+            echo json_encode(array('sum'=>$sum,'msg'=>$msg));die;
+        }
+    }
+
+
+//    /**
+//     * Ajax_withholding_income 添加 代扣代缴/其他收入
+//     * $status 1代扣代缴变动  2其他收入变动
+//     */
+//    public function Ajax_withholding_income(){
+//        if(IS_POST){
+//            $arr     = trim($_POST['arr']);//数据数组
+//            $status  = code_number(trim($_POST['status']));//状态
+//
+//            $content = array_filter(explode("|", $arr));//去除空数组+分隔字符串
+//            $time = time();
+//            $add['createtime']   = $time;
+//            foreach($content as $key =>$val){//循环数据
+//                $str  = explode(",", $val);//分隔字符串
+//                $str  = array_filter($str);//去除空数组空字段
+//                $where['account_id'] = $str[2];
+//
+//                if($status==1){//代扣代缴
+//                    $add['project_name'] = $str[0];
+//                    $add['money']        = $str[1];
+//                    $add['account_id']   = $str[2];
+//                    $add['token']        = $time.$str[0];
+//                    $table =  M('salary_withholding');//代扣代缴状态
+//                }
+//                if($status==2){//其他收入
+//                    $add['income_name']   = $str[0];
+//                    $add['income_money']  = $str[1];
+//                    $add['account_id']    = $str[2];
+//                    $add['income_token']  = $time.$str[0];
+//                    $table = M('salary_income');//其他收入
+//                }
+//                $with = $table->where($where)->order('id desc')->find();//查询 代扣代缴状态/其他收入
+//                if($with){
+//                    if($status==1){
+//                        $save['token'] = $with['token'];
+//                    }
+//                    if($status==2){
+//                        $save['income_token'] = $with['income_token'];
+//                    }
+//                    if($with['status'] ==1){
+//                        $with_del = $table->where($save)->delete();//删除填写错误的
+//                        if($with_del){
+//                            $with_add = $table->add($add);//添加新的数据
+//                            if($with_add){
+//                                $content  =" 修改:项目名称 ：".$str[0].";金额 :".$str[1]."（元）" ;
+//                                $info     = salary_info(11,$content);
+//                                $sum      = 1;
+//                                $msg      = "修改数据成功!";
+//                                echo json_encode(array('sum'=>$sum,'msg'=>$msg));die;
+//                            }
+//                        }
+//                    }
+//                    if($with['status'] ==2){
+//                        $with_add = $table->add($add);
+//                        if($with_add){
+//                            $content  = $cont."添加:项目名称 ：".$str[0].";金额 :".$str[1]."（元）" ;
+//                            $info     = salary_info(11,$content);
+//                            $sum      = 1;
+//                            $msg      = "添加数据成功!";
+//                            echo json_encode(array('sum'=>$sum,'msg'=>$msg));die;
+//                        }
+//                    }
+//                }else{
+//                    if($status==1 || $status==2){
+//                        $with_add = $table->add($add);
+//                        if($with_add){
+//                            $content  = "添加:项目名称 ：".$str[0].";金额 :".$str[1]."（元）" ;
+//                            $info     = salary_info(11,$content);
+//                            $sum    = 1;
+//                            $msg    = "添加数据成功!";
+//                            echo json_encode(array('sum'=>$sum,'msg'=>$msg));die;
+//                        }
+//                    }
+//                }
+//                $sum = 0;
+//                $msg = "编辑数据失败!请重新编辑!";
+//                echo json_encode(array('sum'=>$sum,'msg'=>$msg));die;
+//            }
+//        }
+//    }
 
 
 }

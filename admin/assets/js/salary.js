@@ -15,29 +15,25 @@ $(function(){
     var cont = $('#salary_id_hidden1').val();
     var sum  = $('#salary_insurance').val();
     var number  = $('#salary_withholding_selected').val();
-    if (num < 6 || num==0){
+    if (num < 6 && num>0){//岗位
         salary_entry(num);
-        if(num==0){
-            $('#salary_entry').show();
-        }
+    }else{
+        $('#salary_entry').show();
     }
-    if (cont<3|| cont==0 ) {
+    if (cont<3 && cont>0 ) {//提成
         salary_hide(cont);
-        if(cont==0){
-            $('#table_salary_percentage1').show();
-        }
+    }else{
+        $('#table_salary_percentage1').show();
     }
-    if (sum<6 || sum==0) {
+    if (sum<6 && sum>0) {//五险
         salary_insurance(sum);
-        if(sum==0){
-            $('#table_salary_insurance1').show();
-        }
+    }else{
+        $('#table_salary_insurance1').show();
     }
-    if(number<3 || number==0 ){
+    if(number<3 && number>0 ){//代扣代缴
         salary_withholding(number);
-        if(number==0){
-            $('#salary_withholding1').show();
-        }
+    }else{
+        $('#salary_withholding1').show();
     }
 })
 function salary_list(page){//ajax 分页效果(岗位薪酬变动)
@@ -300,13 +296,50 @@ $('.withholding_click').click(function(){//添加新项目
     var htm =  '<tr class="add_withholding_list">';
         htm += '<td><input type="text" name="name" class="form-control" /></td>';
         htm += '<td><input type="text" name="money" class="form-control" /></td>';
-        htm += '<td><input type="button" class="form-control withholding_ueditor" value="删除项目" style="background-color:#00acd6;font-size:1em;"></td>';
+        htm += '<td><input type="button" class="form-control withholding_delete" value="删除项目" style="background-color:#00acd6;font-size:1em;" /></td>';
         htm += '</tr>';
     $(this).parents('.salary_add_table').find('.table-bordered').append(htm);
+    withholding_delete();
     return false;
 });
 
+$('.withholding_delete').click(function(){//删除无用的项目 前期自动添加项目
+    $(this).parents('.add_withholding_list').remove();
+});
+function withholding_delete() {
+    $('.withholding_delete').click(function(){//删除无用的项目 后期手动添加项目
+        $(this).parents('.add_withholding_list').remove();
+    });
+}
 
-$('.withholding_delete').click(function(){//删除无用的项目
-    $(this).parents('.add_withholding_list').remove();alert(1111);
+
+$('.salary_withholding_butt').click(function(){
+    var url = "index.php?m=Main&c=Ajax&a=Ajax_withholding_income";
+    var arr = new Array();
+    $(this).parents('.salary_add_table').find('.add_withholding_list').each(function(){
+        arr += $(this).find('.withholding_project_name').val()+",";//项目名称
+        arr += $(this).find('.withholding_money').val()+",";//金额
+        arr += $(this).find('.withholding_id').val()+","+"|";//用户id
+    });
+    var status = $(this).parents('.salary_add_table').find('.withholding_status').val();//状态
+    $.ajax({
+        type: "post",
+        url: url, //url
+        data: {
+            'status': status,
+            'arr': arr,
+        },
+        dataType: "json", //数据格式
+        success: function (data) {
+            if (data.sum == 1) {
+                alert(data.msg);
+                return false;
+            }
+            if (data.sum == 0) {
+                alert(data.msg);
+                return false;
+            }
+        }
+    });
+
 });

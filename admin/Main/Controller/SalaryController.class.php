@@ -235,6 +235,7 @@ class SalaryController extends BaseController {
                     $income = M('salary_income')->where($aid)->order('id desc')->find();//其他收入
 
                     if($income){
+                        $wher['income_token'] = $income['income_token'];
                         $account_r[$key]['income'] = M('salary_income')->where($wher)->order('id desc')->select();//其他收入
                     }
                     $withholding = M('salary_withholding')->where($aid)->order('id desc')->find();//代扣代缴
