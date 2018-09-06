@@ -43,6 +43,9 @@
 
         <a href="{:U('Staff/login')}"><div class="employee-aspirations"><i class="fa fa-hand-o-right"></i>&emsp14;员工心声</div></a>
 
+        <div class="unbox copy">
+            版权所有 &copy; 中科教科学教育平台 <a href="http://www.miitbeian.gov.cn">京ICP备12018327号</a>  &nbsp; <!--京公网安备110402500027号-->
+        </div>
 
         <!-- jQuery 1.11.1 -->
         <script src="__HTML__/js/jquery-1.11.1.min.js"></script>

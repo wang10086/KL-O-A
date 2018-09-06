@@ -4090,3 +4090,6 @@ th{outline: none;}
 .upload-lebal{line-height: 30px; font-weight: 600; display: block;}
 .upload-lebal span{line-height: 30px; color:#999999;}
 .lebal-span{display: inline-block; margin-right: 10px; min-width: 180px; line-height: 25px;}
+
+.copy{background-color: #00a65a; height: 48px; line-height: 48px; width: 100%; text-align: center; position: fixed; bottom: 0;}
+.copy a {color:#ffffff;}
