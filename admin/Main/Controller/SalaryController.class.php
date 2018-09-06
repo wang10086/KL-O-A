@@ -73,8 +73,7 @@ class SalaryController extends BaseController {
         $user_info['account'] = M('account')->field('id,business,employee_member,departmentid,nickname,postid,entry_time,formal,archives,status')->where($uid)->find();
         $user_info['account'] += M('salary_department')->where('id='.$user_info['account']['departmentid'])->field('department')->find();
         $user_info['account'] += M('posts')->where('id='.$user_info['account']['postid'])->field('post_name')->find();
-//        print_r($user_info);die;
-        $month = '201807';
+
         $this->assign('info',$user_info);
         $this->display();
     }
