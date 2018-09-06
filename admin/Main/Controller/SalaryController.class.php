@@ -75,7 +75,6 @@ class SalaryController extends BaseController {
         $user_info['account'] += M('posts')->where('id='.$user_info['account']['postid'])->field('post_name')->find();
 //        print_r($user_info);die;
         $month = '201807';
-        Year_month($month);
         $this->assign('info',$user_info);
         $this->display();
     }
