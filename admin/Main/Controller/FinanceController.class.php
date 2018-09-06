@@ -522,8 +522,10 @@ class FinanceController extends BaseController {
 
         $jiesuan    = M('op_costacc')->where(array('op_id'=>$opid,'status'=>2))->order('id')->select();
         if(count($jiesuan)==0){
-            $costa        = M('op_costacc')->where(array('op_id'=>$opid,'status'=>1,'type'=>array('neq',2)))->order('type')->select();
             $guide        = M()->table('__GUIDE_PAY__ as p')->field('g.name,p.op_id,p.num,p.price,p.total,p.really_cost,p.remark')->join('left join __GUIDE__ as g on p.guide_id = g.id')->where(array('p.op_id'=>$opid))->select();
+            $costa        = M('op_costacc')->where(array('op_id'=>$opid,'status'=>1,'type'=>array('neq',2)))->order('type')->select();
+            $op_supplier  = M()->table('__OP_SUPPLIER__ as s')->field('s.op_id,s.supplier_name as title,c.cost as unitcost,c.amount,c.total,c.cost_type as type,s.remark')->join('left join __OP_COST__ as c on c.link_id=s.id')->where(array('s.op_id'=>$opid,'c.op_id' => $opid))->select();
+
             $costacc      = array();
             foreach ($guide as $k=>$v){
                 $data['op_id']     = $v['op_id'];
@@ -538,14 +540,17 @@ class FinanceController extends BaseController {
             foreach ($costa as $v){
                 $costacc[]          = $v;
             }
+            foreach ($op_supplier as $v){
+                $costacc[]          = $v;
+            }
 
-            //$costacc    = M('op_cost')->where(array('op_id'=>$opid))->order('cost_type')->select();
-            /*foreach($costacc as $k=>$v){
-                if($v['cost_type']==3){
+            /*$costacc    = M('op_cost')->where(array('op_id'=>$opid))->order('cost_type')->select();
+            foreach($costacc as $k=>$v){
+                if($v['type']==3){
                     $op_supplier = M('op_supplier')->find($v['link_id']);
                     $costacc[$k]['beizhu'] = $op_supplier['remark'];
                 }
-                if($v['cost_type']==4){
+                if($v['type']==4){
                     //查询物资价格
                     $mate = M('material')->where(array('material'=>$v['remark']))->find();
                     $costacc[$k]['cost'] = $mate['price'];
@@ -565,7 +570,7 @@ class FinanceController extends BaseController {
                     $costacc[$k]['beizhu']  = $really_cost['upd_remark']?$really_cost['upd_remark']:$g;
                 }
             }
-            $qita   = M('op_costacc')->where(array('op_id'=>$opid,'status'=>1,'type'=>4))->order('id')->select();*/
+            //$qita   = M('op_costacc')->where(array('op_id'=>$opid,'status'=>1,'type'=>4))->order('id')->select();*/
         }
         $budget     = M('op_budget')->where(array('op_id'=>$opid))->find();
         $settlement = M('op_settlement')->where(array('op_id'=>$opid))->find();
