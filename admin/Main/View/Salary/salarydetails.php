@@ -30,41 +30,41 @@
                                     <div class="content">
 
                                         <div class="form-group col-md-4 viwe">
-                                            <p>员工ID：{$user.id}</p>
+                                            <p>员工ID：{$info['account'].id}</p>
                                         </div>
                                         
                                         <div class="form-group col-md-4 viwe">
-                                            <p>员工姓名：{$user.user_name}</p>
+                                            <p>员工姓名：{$info['account'].nickname}</p>
                                         </div>
                                         
                                         <div class="form-group col-md-4 viwe">
-                                            <p>员工编号：{$user.employee_member} </p>
+                                            <p>员工编号：{$info['account'].employee_member} </p>
                                         </div>
                                         
                                         <div class="form-group col-md-4 viwe">
-                                            <p>员工部门：{$user.department}</p>
+                                            <p>员工部门：{$info['account'].department}</p>
                                         </div>
                                         
                                         <div class="form-group col-md-4 viwe">
-                                            <p>员工岗位：{$user.position}</p>
+                                            <p>员工岗位：{$info['account'].post_name}</p>
                                         </div>
                                         
                                         <div class="form-group col-md-4 viwe">
-                                            <p>员工类别：<?php if($user['staff_style']==1){ echo '新入职';}elseif($user['staff_style']==2){ echo'转正';}elseif($user['staff_style']==3){ echo'正式';}elseif($user['staff_style']==4){ echo'实习';}elseif($user['staff_style']==5){ echo'离职';}elseif($user['staff_style']==6){ echo'试用';}elseif($user['staff_style']==7){ echo'劳务';}?></p>
+                                            <p>员工类别：<?php if($info['account']['formal']==0){ echo '转正';}elseif($info['account']['formal']==1){ echo'未转正';}elseif($info['account']['formal']==2){ echo'劳务';}elseif($info['account']['formal']==3){ echo'实习';}?></p>
                                         </div>
                                         <div class="form-group col-md-4 viwe">
-                                            <p>员工状态：<?php if($user['style']==1){ echo "在职";}elseif($user['style']==2){echo "离职";} ?></p>
+                                            <p>员工状态：<?php if($info['account']['status']==0){ echo "在职";}elseif($inf['account']['status']==1){echo "离职";} ?></p>
                                         </div>
 
                                         <div class="form-group col-md-4 viwe">
-                                            <p>入职时间：<?php echo date('Y-m-d',$user['entry_time']) ?></p>
+                                            <p>入职时间：<?php echo date('Y-m-d',$info['account']['entry_time']) ?></p>
                                         </div>
 
                                         <div class="form-group col-md-4 viwe">
-                                            <p>工资发放时间：<?php echo date('Y-m',$row['salary_time']) ?></p>
+                                            <p>工资发放月份：<input type="text" class="wages_grant_time monthly" style="width:10em;"></p>
                                         </div>
                                         <div class="form-group col-md-4 viwe">
-                                            <p>档案所属：文化传播中心</p>
+                                            <p>档案所属：<?php if($info['account']['archives']==1){ echo '中心';}elseif($info['account']['archives']==2){ echo'科旅';}elseif($info['account']['archives']==3){ echo'科行';}?></p>
                                         </div>
                                         
                                     </div>

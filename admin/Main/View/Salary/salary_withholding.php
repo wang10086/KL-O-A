@@ -27,7 +27,7 @@
                         <foreach name="withholding" item="wit">
                             <div style="font-size:13px;">
                                 <div class="form-group col-md-6 viwe">
-                                    <p>ID ：{$wit.aid} </p>
+                                    <p class="fom_id">ID ：{$wit.aid} </p>
                                 </div>
                                 <div class="form-group col-md-6 viwe">
                                     <p>姓名 ：{$wit.nickname}</p>
@@ -86,7 +86,7 @@
                         <foreach name="withholding" item="wit">
                             <div style="font-size:13px;">
                                 <div class="form-group col-md-6 viwe">
-                                    <p>ID ：{$wit.aid} </p>
+                                    <p class="fom_id">ID ：{$wit.aid} </p>
                                 </div>
                                 <div class="form-group col-md-6 viwe">
                                     <p>姓名 ：{$wit.nickname}</p>

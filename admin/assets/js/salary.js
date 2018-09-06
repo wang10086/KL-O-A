@@ -289,13 +289,15 @@ function salary_withholding(obj) {//显示隐藏代扣代缴
 }
 
 $('.withholding_click').click(function(){//添加新项目
-   var id = $(this).parents('.salary_add_table').find('.withholding_id').text();
-    if(isNaN(id.substring(4))){//判断有无用户
+   var aid = $(this).parents('.salary_add_table').find('.fom_id').text();
+    if(isNaN(aid.substring(4))){//判断有无用户
         alert("请先添加用户!");return false;
     }
+    var id = aid.substring(4);
     var htm =  '<tr class="add_withholding_list">';
-        htm += '<td><input type="text" name="name" class="form-control" /></td>';
-        htm += '<td><input type="text" name="money" class="form-control" /></td>';
+        htm += '<td><input type="text" name="name" class="form-control withholding_project_name" /></td>';
+        htm += '<td><input type="text" name="money" class="form-control withholding_money" /></td>';
+        htm += '<input type="hidden"  class="form-control withholding_id" value="'+id+'" />';
         htm += '<td><input type="button" class="form-control withholding_delete" value="删除项目" style="background-color:#00acd6;font-size:1em;" /></td>';
         htm += '</tr>';
     $(this).parents('.salary_add_table').find('.table-bordered').append(htm);
@@ -317,13 +319,16 @@ $('.salary_withholding_butt').click(function(){
     var url = "index.php?m=Main&c=Ajax&a=Ajax_withholding_income";
     var arr = new Array();
     $(this).parents('.salary_add_table').find('.add_withholding_list').each(function(){
-        arr += $(this).find('.withholding_project_name').val()+",";//项目名称
-        arr += $(this).find('.withholding_money').val()+",";//金额
-        arr += $(this).find('.withholding_id').val()+","+"|";//用户id
+        var name = $(this).find('.withholding_project_name').val();//项目名称
+        var money = $(this).find('.withholding_money').val();//金额
+        var id = $(this).find('.withholding_id').val();//用户id
+        arr += name+",";
+        arr += money+",";
+        arr += id+","+"|";
     });
     var status = $(this).parents('.salary_add_table').find('.withholding_status').val();//状态
     $.ajax({
-        type: "post",
+        type: "POST",
         url: url, //url
         data: {
             'status': status,
@@ -341,5 +346,4 @@ $('.salary_withholding_butt').click(function(){
             }
         }
     });
-
 });

@@ -65,15 +65,18 @@ class SalaryController extends BaseController {
      * 员工详情页
      */
     public function salarydetails(){
-//        $id = trim($_GET['id']);
-//
-//        if(is_numeric($id)){
-//            $list = M()->table('oa_salary as S')->join('oa_salary_attendance as T on T.id=S.attendance_id')->join('oa_account as A on A.id=S.account_id')->join('oa_salary_department as D on D.id=A.departmentid')->join('oa_posts as P on A.postid=P.id')->field('*,S.id as sid')->where("s.id='$id'")->find();
-////            echo M()->getLastSql(); print_r($list);die;
-//        }else{
-//            $this->success('您的数据有误!请重新选择！', U('Salary/salaryindex'));die;
-//        }
-//        $this->assign('row',$list);
+        if(!is_numeric(trim($_GET['id']))){
+            $this->error('您的数据有误!请重新选择！', U('Salary/salarydetails'));die;
+        }
+
+        $uid['id'] = trim($_GET['id']);
+        $user_info['account'] = M('account')->field('id,business,employee_member,departmentid,nickname,postid,entry_time,formal,archives,status')->where($uid)->find();
+        $user_info['account'] += M('salary_department')->where('id='.$user_info['account']['departmentid'])->field('department')->find();
+        $user_info['account'] += M('posts')->where('id='.$user_info['account']['postid'])->field('post_name')->find();
+//        print_r($user_info);die;
+        $month = '201807';
+        Year_month($month);
+        $this->assign('info',$user_info);
         $this->display();
     }
 
