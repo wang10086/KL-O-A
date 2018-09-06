@@ -4087,9 +4087,10 @@ th{outline: none;}
 .content-neck-body{display: inline-block;line-height: 40px; height: 34px;margin-right: 30px;}
 .content-neck-body select{  width:150px; height: 25px;}
 .search-btn{height: 30px; line-height: 16px;}
+
 .upload-lebal{line-height: 30px; font-weight: 600; display: block;}
 .upload-lebal span{line-height: 30px; color:#999999;}
 .lebal-span{display: inline-block; margin-right: 10px; min-width: 180px; line-height: 25px;}
 
-.copy{background-color: #00a65a; height: 48px; line-height: 48px; width: 100%; text-align: center; position: fixed; bottom: 0;}
+.copy{background-color: #3D9970; height: 48px; line-height: 48px; width: 100%; text-align: center; position: fixed; bottom: 0;}
 .copy a {color:#ffffff;}
