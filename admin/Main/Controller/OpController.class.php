@@ -492,7 +492,7 @@ class OpController extends BaseController {
         $guide_pk_id= M('guide_pricekind')->field('id,name')->select();
         $sum_cost = 0;
         foreach ($guide as $k=>$v){
-            $sum_cost += $v['total'];
+            $sum_cost += $v['really_cost'];
             foreach ($guide_pk_id as $val){
                 if ($v['gpk_id'] == $val['id']){
                     $guide[$k]['gpk_name'] = $val['name'];
