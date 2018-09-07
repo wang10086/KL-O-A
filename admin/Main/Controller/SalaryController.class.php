@@ -74,7 +74,19 @@ class SalaryController extends BaseController {
         $where['id']                    = trim($_GET['id']);
         $account_id['datetime']         = trim($_GET['datetime']);
         $account_id['account_id']       = $where['id'];//用户
+        $wages                          = $this->query_wages($where,$account_id);
+        $user_info                      = $wages[0];//工资信息
+        $type                           = $wages[1];// 页面状态
 
+        $this->assign('info',$user_info);
+        $this->assign('type',$type);
+        $this->display();
+    }
+
+    /**
+     *query_wages 查询工资
+     */
+    private function query_wages($where,$account_id){
         $wages_month                    = sql_query(1,'*','oa_salary_wages_month',$account_id,1,1);//工资关联是否生成
         if($wages_month){//判断生成
 
@@ -101,7 +113,6 @@ class SalaryController extends BaseController {
             $user_info['withholding']   = sql_query(1,'*','oa_salary_withholding',$withholding,1,1);//代扣代缴
 
             $type                       = 1;//状态成功 前台判断
-            $user_info['month']         = $wages_month;//工资关联
 
         }else{
             unset($account_id['datetime']);
@@ -113,7 +124,6 @@ class SalaryController extends BaseController {
             $posts_r['id']              = $user_info['account'][0]['postid'];
             $user_info['posts']         = sql_query(1,'*','oa_posts',$posts_r,1,1);//查询岗位
 
-            $type                       = 0;//状态失败 前台判断
             $user_info['salary']        = sql_query(1,'*','oa_salary',$account_id,1,1);//岗位薪酬
             $user_info['attendance']    = sql_query(1,'*','oa_salary_attendance',$account_id,1,1);//员工考核
             $user_info['bonus']         = sql_query(1,'*','oa_salary_bonus',$account_id,1,1);//提成/奖金/年终奖
@@ -121,20 +131,12 @@ class SalaryController extends BaseController {
             $user_info['insurance']     = sql_query(1,'*','oa_salary_insurance',$account_id,1,1);//五险一金表
             $user_info['subsidy']       = sql_query(1,'*','oa_salary_subsidy',$account_id,1,0);//补贴
             $user_info['withholding']   = sql_query(1,'*','oa_salary_withholding',$account_id,1,1);//代扣代缴
+            $type['type']               = 0;//状态失败 前台判断
 
         }
-//        print_r($user_info);die;
-
-        $this->assign('info',$user_info);
-        $this->assign('type',$type);
-        $this->display();
-    }
-
-    /**
-     *query_wages 查询工资
-     */
-    private function query_wages(){
-
+        $content[0]                     = $user_info;
+        $content[1]                     = $type;
+        return $content;
     }
 
 
