@@ -3,7 +3,7 @@
         <h3 class="box-title">成本核算</h3>
     </div><!-- /.box-header -->
     <div class="box-body">
-    	<?php if($op['line_id']){ ?>
+    	<?php if($op['line_id'] || $op['produ']){ ?>
         <div class="content" style="padding-top:0px;">
         	
             <table class="table table-striped" id="font-14-p">

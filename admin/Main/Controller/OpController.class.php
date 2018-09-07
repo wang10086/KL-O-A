@@ -2114,6 +2114,9 @@ class OpController extends BaseController {
 			M('op_supplier')->where(array('op_id'=>$opid))->delete();
 			M('order')->where(array('op_id'=>$opid))->delete();
             M('guide_pay')->where(array('op_id'=>$opid))->delete();
+            M('op_guide_price')->where(array('op_id'=>$opid))->delete();
+            M('op_team_confirm')->where(array('op_id'=>$opid))->delete();
+            M('op_guide_confirm')->where(array('op_id'=>$opid))->delete();
 			
 			//删除主项目
 			M('op')->delete($id);

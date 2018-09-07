@@ -158,7 +158,7 @@ class RightsController extends BaseController {
         $id = I('id');
         $info = I('info');
         $req_type = I('req_type');
-        
+
         if (isset($_POST['dosubmit'])) {
             $rs = $this->do_audit($id, $info['audit_reason'], $info['dst_status'], $info['param']);
             $this->rs = $rs;

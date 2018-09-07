@@ -48,8 +48,10 @@ class FinanceController extends BaseController {
 		
 		$where = array();
 		$where['op_id'] = $opid;
-		
+
+        $isCost     = M('op_costacc')->where(array('op_id'=>$opid))->count();
 		$op         = M('op')->where($where)->find();
+        $op['costacc'] = $isCost;
 		$costacc    = M('op_costacc')->where(array('op_id'=>$opid,'status'=>1))->order('id')->select();
 		if(count($costacc)==0){
 			$costacc = 	M('op_costacc')->where(array('op_id'=>$opid,'status'=>0))->order('id')->select();
@@ -59,7 +61,7 @@ class FinanceController extends BaseController {
 		}
 		
 		$budget     = M('op_budget')->where(array('op_id'=>$opid))->find();
-		$budget['xz'] = explode(',',$budget['xinzhi']);	
+		$budget['xz'] = explode(',',$budget['xinzhi']);
 		
 		$where = array();
 		$where['req_type'] = P::REQ_TYPE_BUDGET;
@@ -114,8 +116,10 @@ class FinanceController extends BaseController {
 		
 		$where = array();
 		$where['op_id'] = $opid;
-		
+
+        $isCost     = M('op_costacc')->where(array('op_id'=>$opid,'product_id'=>array('neq','0')))->count();
 		$op         = M('op')->where($where)->find();
+        $op['produ']= $isCost;
 		$costacc    = M('op_costacc')->where(array('op_id'=>$opid,'status'=>0))->order('id')->select();
 		if($op['line_id']){
 			$mokuai     = M('product_line_tpl')->where(array('line_id'=>$op['line_id'],'type'=>1))->getField('pro_id',true);
