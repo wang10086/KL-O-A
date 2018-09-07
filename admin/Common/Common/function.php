@@ -3379,33 +3379,174 @@ function kpilock($month,$uid){
  * salary_info 操作记录 函数
  */
 function salary_info($status,$cont){
-	$add['op_time'] = time();
-	$add['uname'] = $_SESSION['nickname'];
-	$add['optype'] = $status;//添加岗位薪酬变动
-	$add['explain'] = $cont;
+
+	$add['op_time'] 	= time();
+	$add['uname'] 		= $_SESSION['nickname'];
+	$add['optype'] 		= $status;//添加岗位薪酬变动
+	$add['explain'] 	= $cont;
+
 	$isok = M('op_record')->add($add);
 	if(!$isok){
+
 		$this->error('添加失败!请重新添加！', U('Salary/salary_query'));die;
+
 	}
 }
 
 function query_posts(){//查询岗位
+
 	return M('posts')->select();
 
 }
 function query_department(){//部门
+
 return M('salary_department')->select();
 
 }
 function code_number($number){//数字验证
+
 	if(!is_numeric($number)){
-		$sum  = 0;
-		$msg  = "格式错误!请重新提交!";
+
+		$sum  	= 0;
+		$msg  	= "格式错误!请重新提交!";
 		echo json_encode(array('sum'=>$sum,'msg'=>$msg));die;
+
 	}else{
+
 		return $number;
 	}
 }
+
+/**
+ * sql_query 查询数据
+ * $status 1 查询 2添加 3删除  4 修改
+ * $field 查询字段（修改时作修改的字段）  $table 查询表 $where 查询条件
+ * $order 1倒叙 2正常  $type (1 查询一条  默认查询所有)
+ */
+
+function sql_query($status,$field,$table,$where,$order,$type){
+
+	if(empty($status) || empty($table)){
+
+			return 0;
+	}
+	if($status == 1){//查看
+
+		$add_sql 	= sql_sel($status,$field,$table,$where,$order,$type);
+
+	}
+	if($status == 2){//添加
+
+		$add_sql 	= sql_add($status,$field,$table,$where,$order,$type);
+
+	}
+	if($status == 3){//删除
+
+		$add_sql 	= sql_del($status,$field,$table,$where,$order,$type);
+	}
+	if($status == 4){//修改
+
+		$add_sql 	= sql_upd($status,$field,$table,$where,$order,$type);
+	}
+
+	$sql 			= M()->query($add_sql);
+	return $sql;
+
+}
+
+function sql_sel($status,$field,$table,$where,$order,$type){//查询
+
+
+
+	$add_sql 			= 'SELECT ';
+
+	if(!empty($field) && $field !== 0){
+
+		$add_sql 		.= $field.' ';
+	}
+	$add_sql 			.='FROM '.$table.' ';
+
+	if(!empty($where) && $where !== 0){
+
+		$add_sql 		.='WHERE';
+
+		foreach($where as $key => $val){
+
+			$add_sql 	.= " $key='$val' ";
+			$add_sql 	.= 'AND ';
+		}
+	}
+	$add_sql = substr($add_sql,0,-4);
+	if($order == 1){
+		$add_sql 		.= 'ORDER BY id DESC';
+	}
+	if($order == 2){
+		$add_sql 		.= 'ORDER BY id ASC';
+	}
+	if($type == 1){
+		$add_sql 		.=' LIMIT 1';
+	}
+
+	return $add_sql;
+}
+
+function sql_add($status,$field,$table,$where,$order,$type){//添加
+
+	$add_sql 			= 'INSERT INTO ';
+	$add_sql 			.=$table.' ';
+	if(!empty($where) && $where !== 0){
+		$str			= "";
+		$vales     		= "";
+		foreach($where as $key => $val){
+			$str 		.= $key.',';
+			$vales 		.= "'$val','";
+		}
+		$str 			= substr($str,0,-1);
+		$add_sql 		.= '('.$str.') values ';
+		$add_sql 		.= '('.$val.')';
+	}
+	return $add_sql;
+}
+
+
+function sql_del($status,$field,$table,$where,$order,$type){//删除
+
+	$add_sql 			= 'DELETE FROM '.$table.' ';
+
+	if(!empty($where) && $where !== 0){
+		$add_sql 		.='WHERE';
+		foreach($where as $key => $val){
+			$add_sql 	.= " $key='$val' ";
+			$add_sql 	.= 'AND ';
+		}
+		$add_sql = substr($add_sql,0,-4);
+	}
+	return $add_sql;
+}
+
+
+function sql_upd($status,$field,$table,$where,$order,$type){//修改
+
+	$add_sql 			= 'UPDATE '.$table.'SET ';
+	if(!empty($field) && $field !== 0){
+		foreach($field as $k => $v){
+			$add_sql 	.= " $k='$v'";
+			$add_sql 	.= ',';
+		}
+		$add_sql = substr($add_sql,0,-1);
+	}
+	if(!empty($where) && $where !== 0){
+		$add_sql 		.=' WHERE';
+		foreach($where as $key => $val){
+			$add_sql 	.= " $key='$val' ";
+			$add_sql 	.= 'AND ';
+		}
+		$add_sql 		= substr($add_sql,0,-4);
+
+	}
+	return $add_sql;
+}
+
 
 
 ?>

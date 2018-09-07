@@ -61,21 +61,80 @@ class SalaryController extends BaseController {
 
 
     /**
-     * @salarydetails
-     * 员工详情页
+     * @salarydetails员工详情页
+     * sql_query 调用自封装函数
+     * sql_query参数（1查2增3删4修,查询字段,表名,条件,1倒叙2正常顺序,1查一条0所有）
      */
     public function salarydetails(){
-        if(!is_numeric(trim($_GET['id']))){
-            $this->error('您的数据有误!请重新选择！', U('Salary/salarydetails'));die;
+
+        if(!is_numeric(trim($_GET['id'])) && !is_numeric(trim($_GET['datetime']))){
+            $this->error('您的数据有误!请重新选择！');die;
         }
 
-        $uid['id'] = trim($_GET['id']);
-        $user_info['account'] = M('account')->field('id,business,employee_member,departmentid,nickname,postid,entry_time,formal,archives,status')->where($uid)->find();
-        $user_info['account'] += M('salary_department')->where('id='.$user_info['account']['departmentid'])->field('department')->find();
-        $user_info['account'] += M('posts')->where('id='.$user_info['account']['postid'])->field('post_name')->find();
+        $where['id']                    = trim($_GET['id']);
+        $account_id['datetime']         = trim($_GET['datetime']);
+        $account_id['account_id']       = $where['id'];//用户
+
+        $wages_month                    = sql_query(1,'*','oa_salary_wages_month',$account_id,1,1);//工资关联是否生成
+        if($wages_month){//判断生成
+
+            $account['id']              = $wages_month[0]['account_id'];
+            $department['id']           = $wages_month[0]['department_id'];
+            $posts['id']                = $wages_month[0]['posts_id'];
+            $salary['id']               = $wages_month[0]['salary_id'];
+            $attendance['id']           = $wages_month[0]['attendance_id'];
+            $bonus['id']                = $wages_month[0]['bonus_id'];
+            $income['id']               = $wages_month[0]['income_id'];
+            $insurance['id']            = $wages_month[0]['insurance_id'];
+            $subsidy['id']              = $wages_month[0]['subsidy_id'];
+            $withholding['id']          = $wages_month[0]['withholding_id'];
+
+            $user_info['account']       = sql_query(1,'*','oa_account',$account,2,1);//查询用户表
+            $user_info['department']    = sql_query(1,'*','oa_salary_department',$department,1,1);//查询部门
+            $user_info['posts']         = sql_query(1,'*','oa_posts',$posts,1,1);//查询岗位
+            $user_info['salary']        = sql_query(1,'*','oa_salary',$salary,1,1);//岗位薪酬
+            $user_info['attendance']    = sql_query(1,'*','oa_salary_attendance',$attendance,1,1);//员工考核
+            $user_info['bonus']         = sql_query(1,'*','oa_salary_bonus',$bonus,1,1);//提成/奖金/年终奖
+            $user_info['income']        = sql_query(1,'*','oa_salary_income',$income,1,0);//其他收入
+            $user_info['insurance']     = sql_query(1,'*','oa_salary_insurance',$insurance,1,1);//五险一金表
+            $user_info['subsidy']       = sql_query(1,'*','oa_salary_subsidy',$subsidy,1,0);//补贴
+            $user_info['withholding']   = sql_query(1,'*','oa_salary_withholding',$withholding,1,1);//代扣代缴
+
+            $type                       = 1;//状态成功 前台判断
+            $user_info['month']         = $wages_month;//工资关联
+
+        }else{
+            unset($account_id['datetime']);
+            $user_info['account']       = sql_query(1,'*','oa_account',$where,2,1);//查询用户表
+
+            $department_r['id']         = $user_info['account'][0]['departmentid'];//部门
+            $user_info['department']    = sql_query(1,'*','oa_salary_department',$department_r,1,1);//查询部门
+
+            $posts_r['id']              = $user_info['account'][0]['postid'];
+            $user_info['posts']         = sql_query(1,'*','oa_posts',$posts_r,1,1);//查询岗位
+
+            $type                       = 0;//状态失败 前台判断
+            $user_info['salary']        = sql_query(1,'*','oa_salary',$account_id,1,1);//岗位薪酬
+            $user_info['attendance']    = sql_query(1,'*','oa_salary_attendance',$account_id,1,1);//员工考核
+            $user_info['bonus']         = sql_query(1,'*','oa_salary_bonus',$account_id,1,1);//提成/奖金/年终奖
+            $user_info['income']        = sql_query(1,'*','oa_salary_income',$account_id,1,0);//其他收入
+            $user_info['insurance']     = sql_query(1,'*','oa_salary_insurance',$account_id,1,1);//五险一金表
+            $user_info['subsidy']       = sql_query(1,'*','oa_salary_subsidy',$account_id,1,0);//补贴
+            $user_info['withholding']   = sql_query(1,'*','oa_salary_withholding',$account_id,1,1);//代扣代缴
+
+        }
+//        print_r($user_info);die;
 
         $this->assign('info',$user_info);
+        $this->assign('type',$type);
         $this->display();
+    }
+
+    /**
+     *query_wages 查询工资
+     */
+    private function query_wages(){
+
     }
 
 
@@ -89,22 +148,22 @@ class SalaryController extends BaseController {
             $this->error('时间查询暂时未开通!请使用其它查询！', U('Salary/salary_attendance'));die;
         }
         if(IS_POST){//搜索列表结果
-            $where['A.id']                 = trim($_POST['id']);//用户id
-            $where['A.employee_member']    = trim($_POST['employee_member']);//编码
-            $where['A.nickname']           = trim($_POST['nickname']);//昵称
+            $where['A.id']                  = trim($_POST['id']);//用户id
+            $where['A.employee_member']     = trim($_POST['employee_member']);//编码
+            $where['A.nickname']            = trim($_POST['nickname']);//昵称
             $where['A.status'] = 0;
-           //$where['grant_time']          = trim($_POST['grant_time']);
-            $where = array_filter($where);
-            $count = M()->table('oa_account as A')->join('oa_salary_attendance as B on A.id=B.account_id')->where($where)->count();
-            $page = new Page($count,12);
-            $pages = $page->show();
-            $account_r = M()->table('oa_account as A')->join('oa_salary_attendance as B on A.id=B.account_id')->where($where)->field('A.id as aid,A.employee_member,A.nickname,B.late1,B.late2,B.leave_absence,B.sick_leave,B.absenteeism,B.withdrawing')->limit("$page->firstRow","$page->listRows")->order('B.id desc')->select();
+           //$where['grant_time']           = trim($_POST['grant_time']);
+            $where                          = array_filter($where);
+            $count                          = M()->table('oa_account as A')->join('oa_salary_attendance as B on A.id=B.account_id')->where($where)->count();
+            $page                           = new Page($count,12);
+            $pages                          = $page->show();
+            $account_r                      = M()->table('oa_account as A')->join('oa_salary_attendance as B on A.id=B.account_id')->where($where)->field('A.id as aid,A.employee_member,A.nickname,B.late1,B.late2,B.leave_absence,B.sick_leave,B.absenteeism,B.withdrawing')->limit("$page->firstRow","$page->listRows")->order('B.id desc')->select();
 
         }else{//默认列表结果
-            $count = M()->table('oa_account as A')->join('oa_salary_attendance as B on A.id=B.account_id')->count();
-            $page = new Page($count,12);
-            $pages = $page->show();
-            $account_r = M()->table('oa_account as A')->join('oa_salary_attendance as B on A.id=B.account_id')->field('A.id as aid,A.employee_member,A.nickname,B.late1,B.late2,B.leave_absence,B.sick_leave,B.absenteeism,B.withdrawing')->limit("$page->firstRow","$page->listRows")->order('B.id desc')->select();
+            $count                          = M()->table('oa_account as A')->join('oa_salary_attendance as B on A.id=B.account_id')->count();
+            $page                           = new Page($count,12);
+            $pages                          = $page->show();
+            $account_r                      = M()->table('oa_account as A')->join('oa_salary_attendance as B on A.id=B.account_id')->field('A.id as aid,A.employee_member,A.nickname,B.late1,B.late2,B.leave_absence,B.sick_leave,B.absenteeism,B.withdrawing')->limit("$page->firstRow","$page->listRows")->order('B.id desc')->select();
 
         }
         $this->assign('list',$account_r);
@@ -118,10 +177,10 @@ class SalaryController extends BaseController {
      */
     public function salary_edtior(){
         if(IS_POST){
-            $info = trim($_POST['info']);
-            $where['id'] = trim($_POST['id']);
-            $data = array_filter($info);
-            $attend_r = M('salary_attendance')->where($where)->save($data);
+            $info               = trim($_POST['info']);
+            $where['id']        = trim($_POST['id']);
+            $data               = array_filter($info);
+            $attend_r           = M('salary_attendance')->where($where)->save($data);
 //            echo M()->getLastSql();
             if(!$attend_r){
                 $this->error('您的数据编辑失败!请重新编辑！', U('Salary/salary_attendance'));die;
@@ -130,9 +189,9 @@ class SalaryController extends BaseController {
                 $this->success('编辑数据成功！', U('Salary/salary_attendance'));die;
             }
         }elseif(IS_GET){
-            $sid['salary_id'] = trim($_GET['sid']);//薪资id
-            $sid['id'] = trim($_GET['tid']);//考核id
-            $attend_r = M('salary_attendance')->where($sid)->find();
+            $sid['salary_id']   = trim($_GET['sid']);//薪资id
+            $sid['id']          = trim($_GET['tid']);//考核id
+            $attend_r           = M('salary_attendance')->where($sid)->find();
             if(!$attend_r){
                 $this->error('您的数据有误!请重新选择！', U('Salary/salary_attendance'));die;
             }
@@ -149,33 +208,40 @@ class SalaryController extends BaseController {
      * optype=12 考勤记录
      */
     public function salary_add_attendance(){
-            $where['A.id'] = trim($_POST['id']);
-            $where['A.employee_member'] = trim($_POST['employee_member']);
-            $where['A.nickname'] = trim($_POST['nickname']);
-            $where['D.department'] = trim($_POST['departmen']);
-            $posts['post_name'] = trim($_POST['posts']);
+            $where['A.id']                              = trim($_POST['id']);
+            $where['A.employee_member']                 = trim($_POST['employee_member']);
+            $where['A.nickname']                        = trim($_POST['nickname']);
+            $where['D.department']                      = trim($_POST['departmen']);
+            $posts['post_name']                         = trim($_POST['posts']);
             $all = $_POST['all'];
             if($posts['post_name'] !==""){
-                $postid = M('posts')->where($posts)->find();
-                $where['postid'] = $postid['id'];
+                $postid                                 = M('posts')->where($posts)->find();
+                $where['postid']                        = $postid['id'];
             }
-            $where = array_filter($where);
+            $where                                      = array_filter($where);
 
             if($all == '所有'){
-                $count = $this->salary_count(1,$where);
-                $page = new Page($count,16);
-                $pages = $page->show();
-                $account_r = M()->table('oa_account as A')->join('oa_posts as P on A.postid=P.id')->join('oa_salary_department as D on D.id=A.departmentid')->field('A.id as aid,A.departmentid,A.employee_member,A.nickname,A.entry_time,D.department,P.post_name')->limit("$page->firstRow","$page->listRows")->select();
+
+                $count                                  = $this->salary_count(1,$where);
+                $page                                   = new Page($count,16);
+                $pages                                  = $page->show();
+
+                $account_r                              = M()->table('oa_account as A')->join('oa_posts as P on A.postid=P.id')->join('oa_salary_department as D on D.id=A.departmentid')->field('A.id as aid,A.departmentid,A.employee_member,A.nickname,A.entry_time,D.department,P.post_name')->limit("$page->firstRow","$page->listRows")->select();
+
             }else{
-                $count = $this->salary_count(1,$where);
-                $page = new Page($count,16);
-                $pages = $page->show();
-                $account_r = M()->table('oa_account as A')->join('oa_posts as P on A.postid=P.id')->join('oa_salary_department as D on D.id=A.departmentid')->field('A.id as aid,A.employee_member,A.departmentid,A.employee_member,A.nickname,A.entry_time,D.department,P.post_name')->where($where)->limit("$page->firstRow","$page->listRows")->select();
+
+                $count                                  = $this->salary_count(1,$where);
+                $page                                   = new Page($count,16);
+                $pages                                  = $page->show();
+
+                $account_r                              = M()->table('oa_account as A')->join('oa_posts as P on A.postid=P.id')->join('oa_salary_department as D on D.id=A.departmentid')->field('A.id as aid,A.employee_member,A.departmentid,A.employee_member,A.nickname,A.entry_time,D.department,P.post_name')->where($where)->limit("$page->firstRow","$page->listRows")->select();
+
             }
+
             foreach($account_r as $key => $val){
-                $aid['account_id'] = $account_r[$key]['aid'];
-                $account_r[$key]['salary_attendance'] = M('salary_attendance')->where($aid)->order('id desc')->find();
-                $account_r[$key]['salary'] = M('salary')->field('id as salary_id,standard_salary')->where($aid)->order('id desc')->find();
+                $aid['account_id']                      = $account_r[$key]['aid'];
+                $account_r[$key]['salary_attendance']   = M('salary_attendance')->where($aid)->order('id desc')->find();
+                $account_r[$key]['salary']              = M('salary')->field('id as salary_id,standard_salary')->where($aid)->order('id desc')->find();
             }
             if(!$account_r || $account_r == ""){$this->error('请添加员工编码或者员工部门！', U('Rbac/index'));die;}
         $this->assign('page',$pages);//数据分页
@@ -191,76 +257,98 @@ class SalaryController extends BaseController {
     public function salary_query(){
 
             $type = trim(I('typeval'));
-            $where['A.id']              = trim(I('id'));
-            $where['A.employee_member'] = trim(I('employee_member'));
-            $where['A.nickname']        = trim(I('nickname'));
-            $where['D.department']      = trim(I('departmen'));
-            $posts['post_name']         = trim(I('posts'));
+            $where['A.id']                                  = trim(I('id'));
+            $where['A.employee_member']                     = trim(I('employee_member'));
+            $where['A.nickname']                            = trim(I('nickname'));
+            $where['D.department']                          = trim(I('departmen'));
+            $posts['post_name']                             = trim(I('posts'));
             $all = trim(I('all'));
+
             if($posts['post_name'] !==""){
-                $postid = M('posts')->where($posts)->find();
-                $where['postid'] = $postid['id'];
+
+                $postid                                     = M('posts')->where($posts)->find();
+                $where['postid']                            = $postid['id'];
             }
             $where = array_filter($where);
-            if(count($where) !==0 || $all !==""){
+
+            if(count($where) !== 0 || $all !== ""){
+
                 if($all == '所有'){
-                    $count      = $this->salary_count(1,$where);
-                    $page       = new Page($count,4);
-                    $pages      = $page->show();
-                    $account_r  = M()->table('oa_account as A')->join('oa_posts as P on A.postid=P.id')->join('oa_salary_department as D on D.id=A.departmentid')->field('A.id as aid,A.departmentid,A.employee_member,A.nickname,A.entry_time,A.archives,D.department,P.post_name')->limit("$page->firstRow","$page->listRows")->select();
+                    $count                                  = $this->salary_count(1,$where);
+                    $page                                   = new Page($count,4);
+                    $pages                                  = $page->show();
+
+                    $account_r                              = M()->table('oa_account as A')->join('oa_posts as P on A.postid=P.id')->join('oa_salary_department as D on D.id=A.departmentid')->field('A.id as aid,A.departmentid,A.employee_member,A.nickname,A.entry_time,A.archives,D.department,P.post_name')->limit("$page->firstRow","$page->listRows")->select();
+
                 }
-                if(count($where) !==0){
-                    $count      = $this->salary_count(2,$where);
-                    $page       = new Page($count,4);
-                    $pages      = $page->show();
-                    $account_r  = M()->table('oa_account as A')->join('oa_posts as P on A.postid=P.id')->join('oa_salary_department as D on D.id=A.departmentid')->field('A.id as aid,A.employee_member,A.departmentid,A.employee_member,A.nickname,A.entry_time,A.archives,D.department,P.post_name')->where($where)->limit("$page->firstRow","$page->listRows")->select();
+                if(count($where) !== 0){
+
+                    $count                                  = $this->salary_count(2,$where);
+                    $page                                   = new Page($count,4);
+                    $pages                                  = $page->show();
+
+                    $account_r                              = M()->table('oa_account as A')->join('oa_posts as P on A.postid=P.id')->join('oa_salary_department as D on D.id=A.departmentid')->field('A.id as aid,A.employee_member,A.departmentid,A.employee_member,A.nickname,A.entry_time,A.archives,D.department,P.post_name')->where($where)->limit("$page->firstRow","$page->listRows")->select();
+
                 }
                 foreach($account_r as $key => $val){
+
                     $aid['account_id']                      = $account_r[$key]['aid'];
+
                     $salary = M('salary')->where($aid)->order('id desc')->find();//岗位薪资
+
                     $account_r[$key]['account_id']          = $salary['account_id'];
                     $account_r[$key]['standard_salary']     = $salary['standard_salary'];
                     $account_r[$key]['basic_salary']        = $salary['basic_salary'];
                     $account_r[$key]['performance_salary']  = $salary['performance_salary'];
-                    $salary_bonus = M('salary_bonus')->where($aid)->order('id desc')->find();//提成/奖金
+
+                    $salary_bonus   = M('salary_bonus')->where($aid)->order('id desc')->find();//提成/奖金
+
                     $account_r[$key]['bonus_id']            = $salary_bonus['id'];
                     $account_r[$key]['extract']             = $salary_bonus['extract'];
                     $account_r[$key]['bonus']               = $salary_bonus['bonus'];
                     $account_r[$key]['annual_bonus']        = $salary_bonus['annual_bonus'];
-                    $subsidy_r = M('salary_subsidy')->where($aid)->order('id desc')->find();//补贴
+
+                    $subsidy_r      = M('salary_subsidy')->where($aid)->order('id desc')->find();//补贴
+
                     $account_r[$key]['subsidy']             = $subsidy_r['id'];
                     $account_r[$key]['housing_subsidy']     = $subsidy_r['housing_subsidy'];
                     $account_r[$key]['foreign_subsidies']   = $subsidy_r['foreign_subsidies'];
                     $account_r[$key]['computer_subsidy']    = $subsidy_r['computer_subsidy'];
+
                     $account_r[$key]['insurance'] = M('salary_insurance')->where($aid)->order('id desc')->find();//五险一金
-                    $income = M('salary_income')->where($aid)->order('id desc')->find();//其他收入
+
+                    $income         = M('salary_income')->where($aid)->order('id desc')->find();//其他收入
 
                     if($income){
-                        $wher['income_token'] = $income['income_token'];
-                        $account_r[$key]['income'] = M('salary_income')->where($wher)->order('id desc')->select();//其他收入
+
+                        $wher['income_token']               = $income['income_token'];
+                        $account_r[$key]['income']          = M('salary_income')->where($wher)->order('id desc')->select();//其他收入
+
                     }
-                    $withholding = M('salary_withholding')->where($aid)->order('id desc')->find();//代扣代缴
+
+                    $withholding                            = M('salary_withholding')->where($aid)->order('id desc')->find();//代扣代缴
                     if($withholding){
-                        $query['token'] = $withholding['token'];
-                        $account_r[$key]['withholding'] = M('salary_withholding')->where($query)->order('id desc')->select();//代扣代缴
+
+                        $query['token']                     = $withholding['token'];
+                        $account_r[$key]['withholding']     = M('salary_withholding')->where($query)->order('id desc')->select();//代扣代缴
                     }
                 }
                 if(!$account_r || $account_r==""){$this->error('请添加员工编码或者员工部门！', U('Salary/salary_query'));die;}
             }
-            $status        = trim(I('status'));
-            if($status==1){
+            $status                                         = trim(I('status'));
+            if($status == 1){
                 $this->assign('page',$pages);//数据分页
                 $this->assign('list',$account_r);//数据
             }
-            if($status==2){
+            if($status == 2){
                 $this->assign('page2',$pages);//数据分页
                 $this->assign('rows',$account_r);//数据
             }
-            if($status==3){
+            if($status == 3){
                 $this->assign('page3',$pages);//数据分页
                 $this->assign('insurance',$account_r);//数据
             }
-            if($status==4){
+            if($status == 4){
                 $this->assign('withholding',$account_r);//数据
             }
         $this->assign('type',$type);//数据
@@ -274,10 +362,10 @@ class SalaryController extends BaseController {
      *salary_count 查询数量
      */
     private function salary_count($sum,$where){
-        if($sum==1){
+        if($sum == 1){
             $count = M()->table('oa_account as A')->join('oa_posts as P on A.postid=P.id')->join('oa_salary_department as D on D.id=A.departmentid')->count();
         }
-        if($sum==2){
+        if($sum == 2){
             $count = M()->table('oa_account as A')->join('oa_posts as P on A.postid=P.id')->join('oa_salary_department as D on D.id=A.departmentid')->where($where)->count();
         }
         return $count;
@@ -290,21 +378,31 @@ class SalaryController extends BaseController {
      */
     public function salary_add_department(){
         if(IS_POST){
-            $where['department'] = trim($_POST['department']);//部门名称
-            $add['letter'] = trim($_POST['letter']);//大写字母
+            $where['department']    = trim($_POST['department']);//部门名称
+            $add['letter']          = trim($_POST['letter']);//大写字母
             if(!preg_match('/^[A-Z]+$/', $add['letter'])){
+
                 $this->error('请添加大写字母！', U('Salary/salary_add_department'));die;
+
             }
-            $department_r = M('salary_department')->where($where)->find();
-            $department_r1 = M('salary_department')->where($add)->find();
+
+            $department_r           = M('salary_department')->where($where)->find();
+            $department_r1          = M('salary_department')->where($add)->find();
+
             if($department_r || $department_r1){
+
                 $this->error('请不要重复添加部门或字母！', U('Salary/salary_add_department'));die;
+
             }
-            $add['department'] = trim($_POST['department']);//部门名称
-            $department = M('salary_department')->add($add);
+            $add['department']      = trim($_POST['department']);//部门名称
+            $department             = M('salary_department')->add($add);
+
             if($department){
+
                 $this->success('添加部门成功！', U('Salary/salary_add_department'));die;
+
             }else{
+
                 $this->error('添加部门失败！请重写添加！', U('Salary/salary_add_department'));die;
             }
         }
@@ -315,15 +413,15 @@ class SalaryController extends BaseController {
      * record_list 数据操作记录
      */
     public function salary_list(){
-        $status = trim(I('status'));
-        $sum = M('op_record')->where('optype='.$status)->count();//操作记录数量
-        $page = I('page',1,'int');
-        $limit = 8;
-        $fan = 'salary_list';
+        $status     = trim(I('status'));
+        $sum        = M('op_record')->where('optype='.$status)->count();//操作记录数量
+        $page       = I('page',1,'int');
+        $limit      = 8;
+        $fan        = 'salary_list';
 
-        $record_r = M('op_record')->where('optype='.$status)->order('op_time desc')->limit(($page-1)*$limit,$limit)->select();//操作记录
+        $record_r   = M('op_record')->where('optype='.$status)->order('op_time desc')->limit(($page-1)*$limit,$limit)->select();//操作记录
         //$count,$page,$limit,$fan
-        $page_str = $this->ajaxPageHtml($sum,$page,$limit,$fan);//数据总数 当前页面 显示条数 方法名
+        $page_str   = $this->ajaxPageHtml($sum,$page,$limit,$fan);//数据总数 当前页面 显示条数 方法名
 
         $this->assign('pages',$page_str);//操作记录分页
         $this->assign('record',$record_r);//操作记录
