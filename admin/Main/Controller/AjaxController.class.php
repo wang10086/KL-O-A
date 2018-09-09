@@ -810,4 +810,11 @@ class AjaxController extends Controller {
         }
     }
 
+    public function get_posts(){
+        $departmentid   = I('departmentid');
+        $db             = M('posts');
+        $lists          = $db->field('id,post_name')->where(array('departmentid'=>$departmentid))->select();
+        $this->ajaxReturn($lists);
+    }
+
 }

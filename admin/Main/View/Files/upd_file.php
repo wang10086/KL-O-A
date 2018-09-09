@@ -38,14 +38,15 @@
                     <input type="hidden" name="info[pid]" value="{$file['pid']}">
                     <input type="hidden" name="info[level]" value="{$file['level']}">
                 <div class=" content ">
-                    <div class="col-md-12">
+                    <div class="col-md-12" id="departmentid">
                         <lebal class="upload-lebal">所属部门<span></span></lebal>
-                        <span class="lebal-span" style="margin-right: 6px"><input type="checkbox" id="departmentcheckbox"> &nbsp;全选</span>
+                        <!--<span class="lebal-span" style="margin-right: 6px"><input type="checkbox" id="departmentcheckbox"> &nbsp;全选</span>-->
                         <foreach name="department" key="k" item="v">
-                            <span class="lebal-span"><input type="checkbox" value="{$k}" name="department[]" class="departmentcheckbox" <?php if (in_array($k,$file['department'])) echo "checked"; ?>> &nbsp;{$v}</span>
+                            <!--<span class="lebal-span"><input type="checkbox" value="{$k}" name="department[]" class="departmentcheckbox"> &nbsp;{$v}</span>-->
+                            <span class="lebal-span"><input type="radio" value="{$k}" name="department[]" class="departmentcheckbox" <?php if (in_array($k,$file['department'])) {echo 'checked';} ?>> &nbsp;{$v}</span>
                         </foreach>
                     </div>
-                    <div class="col-md-12 mt10">
+                    <div class="col-md-12 mt10" id="postid">
                         <lebal class="upload-lebal">所属岗位<span></span></lebal>
                         <span class="lebal-span" style="margin-right: 6px"><input type="checkbox" id="postscheckbox"> &nbsp;全选</span>
                         <foreach name="posts" key="k" item="v">
@@ -181,15 +182,47 @@
 			});
 	
 			uploader.init();
+            reload();
 
+            $('#departmentid').find('ins').each(function(index, element) {
+                $(this).click(function(){
+                    var departmentid = $(this).prev().val();
+                    $.ajax({
+                        type: 'POST',
+                        url: "{:U('Ajax/get_posts')}",
+                        dataType: 'JSON',
+                        data: {departmentid: departmentid},
+                        success: function (msg) {
+                            var html = '<lebal class="upload-lebal">所属岗位<span></span></lebal>';
+                            if (msg) {
+                                html += '<span class="lebal-span"><input type="checkbox" id="postscheckbox" class="delem-checkbox"> &nbsp;全选</span>'
+                                for (var i = 0; i<msg.length; i++) {
+                                    html += '<span class="lebal-span"><input type="checkbox" value="'+msg[i].id+'" name="posts[]" class="postscheckbox delem-checkbox "> &nbsp;'+msg[i].post_name+'</span>';
+                                }
+                            }else{
+                                html += '<span class="lebal-span" style="margin-right: 10px">暂无岗位信息!</span>'
+                            }
+                            $('#postid').html(html);
+                            //reload();
+                            checkAll();
+                        },
+                        error: function () {
+                            alert('数据获取失败');
+                        }
+                    })
+                })
+            });
+				
+        });
 
+        function reload(){
             //所属部门
-            $('#departmentcheckbox').on('ifChecked', function() {
-                $('.departmentcheckbox').iCheck('check');
-            });
-            $('#departmentcheckbox').on('ifUnchecked', function() {
-                $('.departmentcheckbox').iCheck('uncheck');
-            });
+            /*$('#departmentcheckbox').on('ifChecked', function() {
+             $('.departmentcheckbox').iCheck('check');
+             });
+             $('#departmentcheckbox').on('ifUnchecked', function() {
+             $('.departmentcheckbox').iCheck('uncheck');
+             });*/
 
             //所属岗位
             $('#postscheckbox').on('ifChecked', function() {
@@ -198,9 +231,18 @@
             $('#postscheckbox').on('ifUnchecked', function() {
                 $('.postscheckbox').iCheck('uncheck');
             });
-	
-				
-        });
+        }
+
+        function checkAll(){
+            $('#postscheckbox').click(function () {
+                if ($(this).attr('checked')){
+                    //$('.postscheckbox').iCheck('check');
+                    $('.postscheckbox').prop('checked','checked');
+                }else {
+                    $('.postscheckbox').removeAttr('checked');
+                }
+            })
+        }
 		
 		function removeThisFile(fid) {
 			if (confirm('确定要删除此附件吗？')) {

@@ -419,7 +419,7 @@ class FilesController extends BaseController {
             $this->pid          = I('pid',0);
             $this->level        = I('level',1);
             $this->department   = M('salary_department')->getField('id,department',true);           //部门
-            $this->posts        = M('posts')->where(array('post_name'=>array('neq','')))->select(); //岗位
+            //$this->posts        = M('posts')->where(array('post_name'=>array('neq','')))->select(); //岗位
             $this->file_tag     = C('FILE_TAG');
 
             $file['department'] = str_replace('[','',$file['department']);
@@ -429,6 +429,7 @@ class FilesController extends BaseController {
             $file['department'] = explode(',',$file['department']);
             $file['posts']      = explode(',',$file['posts']);
             $this->file         = $file;
+            $this->posts        = M('posts')->where(array('id'=>array('in',$file['posts'])))->select();
 
             $this->display();
         }

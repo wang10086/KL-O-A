@@ -4094,3 +4094,5 @@ th{outline: none;}
 
 .copy{background-color: #3D9970; height: 48px; line-height: 48px; width: 100%; text-align: center; position: fixed; bottom: 0;}
 .copy a {color:#ffffff;}
+
+.delem-checkbox{  width:18px; height: 18px; background-color: #ffffff; background: rgba(255, 255, 255, 0.7) url(iCheck/minimal/minimal.png) no-repeat;}
