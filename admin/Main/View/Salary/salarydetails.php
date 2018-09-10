@@ -42,11 +42,11 @@
                                         </div>
                                         
                                         <div class="form-group col-md-4 viwe">
-                                            <p>员工部门：{$info['account'].department}</p>
+                                            <p>员工部门：{$info['department'].department}</p>
                                         </div>
                                         
                                         <div class="form-group col-md-4 viwe">
-                                            <p>员工岗位：{$info['account'].post_name}</p>
+                                            <p>员工岗位：{$info['posts'].post_name}</p>
                                         </div>
                                         
                                         <div class="form-group col-md-4 viwe">
@@ -60,9 +60,16 @@
                                             <p>入职时间：<?php echo date('Y-m-d',$info['account']['entry_time']) ?></p>
                                         </div>
 
+                                        <?php if($type == 2){ ?>
                                         <div class="form-group col-md-4 viwe">
                                             <p>工资发放月份：<input type="text" class="wages_grant_time monthly" style="width:10em;"></p>
                                         </div>
+                                        <?php }?>
+                                        <?php if($type == 1){ ?>
+                                            <div class="form-group col-md-4 viwe">
+                                                <p>工资发放月份：{$info['month'].datetime}</p>
+                                            </div>
+                                        <?php }?>
                                         <div class="form-group col-md-4 viwe">
                                             <p>档案所属：<?php if($info['account']['archives']==1){ echo '中心';}elseif($info['account']['archives']==2){ echo'科旅';}elseif($info['account']['archives']==3){ echo'科行';}?></p>
                                         </div>
@@ -74,22 +81,22 @@
                                         </div><!-- /.box-header --><br>
                                         <div class="content">
                                             <div class="form-group col-md-4 viwe">
-                                                <p>岗位薪酬标准：{$row.wages}（元）</p>
+                                                <p>岗位薪酬标准：{$info['salary'].standard_salary}（元）</p>
                                             </div>
 
                                             <div class="form-group col-md-4 viwe">
-                                                <p>其中基本工资标准：{$row.base_pay}</p>
+                                                <p>其中基本工资标准：{$info['calculation']['basic']}（元）</p>
                                             </div>
 
                                             <div class="form-group col-md-4 viwe">
-                                                <p>其中绩效工资标准：{$row.merit_pay}</p>
+                                                <p>其中绩效工资标准：{$info['calculation']['achievements']}（元）</p>
                                             </div>
 
                                             <div class="form-group col-md-4 viwe">
-                                                <p>考勤扣款：{$row.deduction_money} </p>
+                                                <p>考勤扣款：{$info['attendance'].withdrawing}（元） </p>
                                             </div>
                                             <div class="form-group col-md-4 viwe">
-                                                <p>应发基本工资：{$row.money_pay} </p>
+                                                <p>应发基本工资：{$info['calculation']['grant']}（元）</p>
                                             </div>
                                             <table class="table table-bordered dataTable fontmini">
                                                 <tr role="row" class="orders" >
@@ -104,19 +111,19 @@
 
                                                     <tr>
                                                         <td>次数</td>
-                                                        <td>{$row.user_name}</td>
-                                                        <td>{$row.employee_member}</td>
-                                                        <td>&yen; {$row.wages}</td>
-                                                        <td>&yen; {$row.wages}</td>
-                                                        <td>&yen; {$row.deduction_money}</td>
+                                                        <td>{$info['attendance']['late1']}</td>
+                                                        <td>{$info['attendance']['late2']}</td>
+                                                        <td>{$info['attendance']['leave_absence']}</td>
+                                                        <td>{$info['attendance']['sick_leave']}</td>
+                                                        <td>{$info['attendance']['absenteeism']}</td>
                                                     </tr>
                                                     <tr>
                                                         <td>扣款</td>
-                                                        <td>{$row.user_name}</td>
-                                                        <td>{$row.employee_member}</td>
-                                                        <td>&yen; {$row.wages}</td>
-                                                        <td>&yen; {$row.wages}</td>
-                                                        <td>&yen; {$row.deduction_money}</td>
+                                                        <td>{$info['attendance']['late1']*10}</td>
+                                                        <td>{$info['attendance']['late2']*30}</td>
+                                                        <td><?php echo  floor($info['calculation']['basic']/21.75*$info['attendance']['leave_absence']*100)/100;?></td>
+                                                        <td><?php echo  floor($info['attendance']['lowest_wage']/21.75*$info['attendance']['sick_leave']*20)/100;?></td>
+                                                        <td><?php echo  floor($info['calculation']['basic']/21.75*$info['attendance']['absenteeism']*200)/100;?></td>
                                                     </tr>
                                             </table><br />
                                             <div class="form-group col-md-4 viwe">
@@ -126,7 +133,7 @@
                                             <div class="form-group col-md-4 viwe">
                                                 <p>应发绩效工资：{$row.merit_pay}</p>
                                             </div>
-                                            <table class="table table-bordered dataTable fontmini" id="tablelist" style="margin-top:10px;">
+                                            <table class="table table-bordered dataTable fontmini" style="margin-top:10px;">
                                                 <tr role="row" class="orders" >
                                                     <th class="sorting" data="op_id">绩效项目</th>
                                                     <th class="sorting" data="op_id">PDCA</th>
@@ -136,15 +143,29 @@
 
                                                 <tr>
                                                     <td>得分</td>
-                                                    <td>{$row.user_name}</td>
-                                                    <td>{$row.employee_member}</td>
-                                                    <td>&yen; {$row.wages}</td>
+                                                    <td>{$info['score'][0].total_score_show}<a href="{:U('Kpi/pdcainfo',array('id'=>$info['score'][0]['id']))}" style="float:right;">[详细]</td>
+                                                    <td>
+                                                        {$info['score'][0].show_qa_score}
+                                                        <?php if($info['score'][0]['total_qa_score']!=0){ ?>
+                                                        <a href="{:U('Kpi/qa',array('uid'=>$info['score'][0]['tab_user_id'],'type'=>2,'month'=>$info['score'][0]['month']))}" style="float:right;">[详细]
+                                                        </a>
+                                                        <?php } ?>
+                                                    </td>
+                                                    <td>
+                                                        {$info['score'][0].total_kpi_score}
+                                                        <?php
+                                                        $year = substr($info['score'][0]['month'],0,4);
+                                                        $month = ltrim(substr($info['score'][0]['month'],4,2),0);
+                                                        ?>
+                                                        <a href="{:U('Kpi/kpiinfo',array('uid'=>$info['score'][0]['tab_user_id'],'year'=>$year,'month'=>$month))}" style="float:right;">[详细]
+                                                        </a>
+                                                    </td>
                                                 </tr>
                                                 <tr>
                                                     <td>增减</td>
-                                                    <td>{$row.user_name}</td>
-                                                    <td>{$row.employee_member}</td>
-                                                    <td>&yen; {$row.wages}</td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
                                                 </tr>
                                             </table>
                                         </div>

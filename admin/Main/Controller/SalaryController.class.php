@@ -62,26 +62,103 @@ class SalaryController extends BaseController {
 
     /**
      * @salarydetails员工详情页
+     * 参数id 用户id  datetime年月
      * sql_query 调用自封装函数
      * sql_query参数（1查2增3删4修,查询字段,表名,条件,1倒叙2正常顺序,1查一条0所有）
      */
     public function salarydetails(){
 
-        if(!is_numeric(trim($_GET['id'])) && !is_numeric(trim($_GET['datetime']))){
+        if(!is_numeric(trim($_GET['id'])) || !is_numeric(trim($_GET['datetime']))){
             $this->error('您的数据有误!请重新选择！');die;
         }
 
         $where['id']                    = trim($_GET['id']);
         $account_id['datetime']         = trim($_GET['datetime']);
         $account_id['account_id']       = $where['id'];//用户
-        $wages                          = $this->query_wages($where,$account_id);
-        $user_info                      = $wages[0];//工资信息
-        $type                           = $wages[1];// 页面状态
+        $wages                          = $this->query_wages($where,$account_id);//所有详细信息
+        foreach($wages as $key =>$val){//变为一维数组
+            foreach($val as $ke =>$va){
+                foreach($va as $k =>$v){
+                    $user_info[$ke]= $v;
+                }
+            }
+        }
+        // kpi  pdca 品质检查
+        $que = array();
+        $que['p.tab_user_id']           = $where['id'];//用户id
+        $que['p.month']                 = $account_id['datetime'] ;//查询年月
+        $user_info['score']             = $this->query_score($que);
 
+        $user_info['calculation']       = $this->calculation($user_info);//计算岗位工资和考勤
+        $type                           = $wages[1]['type'];// 页面状态
+
+//        print_r($user_info);die;
         $this->assign('info',$user_info);
         $this->assign('type',$type);
         $this->display();
     }
+
+    /**
+     * sql_query
+     * $que['p.tab_user_id'] 用户id
+     * $que['a.nickname'] 用户昵称
+     *$que['p.month'] 查询年月
+     */
+    private function query_score($que){
+        $lists 			= M()->table('__PDCA__ as p')->field('p.*,a.nickname')->join('__ACCOUNT__ as a on a.id = p.tab_user_id')->where($que)->select();
+        foreach($lists as $k=>$v){
+
+            $sum_total_score = 0;
+
+            $yu = $v['status']!=5 ? 0 : $v['total_score']-100;
+
+            //计算PDCA加减分
+            $sum_total_score += $yu;
+
+            //品质检查加减分
+            $sum_total_score += $v['total_qa_score'];
+
+            //整理品质检查加减分
+            $lists[$k]['total_score_show']  = $v['status']!=5 ? '<font color="#ff9900">未完成评分</font>' : show_score($yu);
+
+            //整理品质检查加减分
+            $lists[$k]['show_qa_score']     =  show_score($v['total_qa_score']);
+
+            //获取KPI数据
+            $kpi = M('kpi')->where(array('month'=>$v['month'],'user_id'=>$v['tab_user_id']))->find();
+            if($kpi && $kpi['month']>=201803){
+                $kpiscore =  $kpi['score']-100;
+            }else{
+                $kpiscore =  0;
+            }
+
+            //KPI加减分
+            $sum_total_score += $kpiscore;
+
+            //KPI
+            $lists[$k]['total_kpi_score']   = show_score($kpiscore);
+
+            //合计
+            $lists[$k]['sum_total_score']   =  show_score($sum_total_score);
+
+
+        }
+        return $lists;
+
+    }
+
+    /**
+     * calculation ['basic']基本工资
+     * ['achievements']绩效
+     * ['grant'] 应发工资
+     */
+    private function calculation ($user_info){
+        $info['basic']          = $user_info['salary']['standard_salary']*$user_info['salary']['basic_salary']/10;//基本工资
+        $info['achievements']   = $user_info['salary']['standard_salary']*$user_info['salary']['performance_salary']/10;//绩效
+        $info['grant']          = $user_info['salary']['standard_salary']*$user_info['salary']['basic_salary']/10-$user_info['attendance']['withdrawing'];//应发工资
+        return $info;
+
+}
 
     /**
      *query_wages 查询工资
@@ -101,9 +178,11 @@ class SalaryController extends BaseController {
             $subsidy['id']              = $wages_month[0]['subsidy_id'];
             $withholding['id']          = $wages_month[0]['withholding_id'];
 
+            $user_info['month']         = $wages_month;
             $user_info['account']       = sql_query(1,'*','oa_account',$account,2,1);//查询用户表
             $user_info['department']    = sql_query(1,'*','oa_salary_department',$department,1,1);//查询部门
             $user_info['posts']         = sql_query(1,'*','oa_posts',$posts,1,1);//查询岗位
+
             $user_info['salary']        = sql_query(1,'*','oa_salary',$salary,1,1);//岗位薪酬
             $user_info['attendance']    = sql_query(1,'*','oa_salary_attendance',$attendance,1,1);//员工考核
             $user_info['bonus']         = sql_query(1,'*','oa_salary_bonus',$bonus,1,1);//提成/奖金/年终奖
@@ -112,7 +191,9 @@ class SalaryController extends BaseController {
             $user_info['subsidy']       = sql_query(1,'*','oa_salary_subsidy',$subsidy,1,0);//补贴
             $user_info['withholding']   = sql_query(1,'*','oa_salary_withholding',$withholding,1,1);//代扣代缴
 
-            $type                       = 1;//状态成功 前台判断
+
+
+            $type                       = 2;//状态成功 前台判断
 
         }else{
             unset($account_id['datetime']);
@@ -131,8 +212,7 @@ class SalaryController extends BaseController {
             $user_info['insurance']     = sql_query(1,'*','oa_salary_insurance',$account_id,1,1);//五险一金表
             $user_info['subsidy']       = sql_query(1,'*','oa_salary_subsidy',$account_id,1,0);//补贴
             $user_info['withholding']   = sql_query(1,'*','oa_salary_withholding',$account_id,1,1);//代扣代缴
-            $type['type']               = 0;//状态失败 前台判断
-
+            $type['type']               = 1;//状态失败 前台判断
         }
         $content[0]                     = $user_info;
         $content[1]                     = $type;
