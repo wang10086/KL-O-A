@@ -385,6 +385,7 @@ class OpController extends BaseController {
 		
 		$pro        = M('product')->find($op['product_id']);
 		$guide      = M()->table('__GUIDE_PAY__ as p')->field('g.*,p.guide_id,p.op_id,p.num,p.price,p.total,p.really_cost,p.remark,k.name as kind')->join('left join __GUIDE__ as g on p.guide_id=g.id')->join('left join __GUIDEKIND__ as k on g.kind=k.id')->where(array('p.op_id'=>$opid))->select();
+        $guide_old  = M('op_cost')->field('remark as name, cost as price, amount as num,total as really_cost')->where(array('op_id'=>$opid,'cost_type'=>2))->select();
         $supplier   = M()->table('__OP_SUPPLIER__ as s')->field('s.id as sid,s.op_id,s.supplier_id,s.supplier_name,s.city,s.kind,s.remark as sremark,c.*')->join('__OP_COST__ as c on c.link_id=s.id')->where(array('s.op_id'=>$opid,'c.op_id'=>$opid,'c.cost_type'=>3))->order('sid')->select();
 		$member     = M('op_member')->where(array('op_id'=>$opid))->order('id')->select();
 		$costlist   = M('op_cost')->where(array('op_id'=>$opid))->order('cost_type')->select();
@@ -499,6 +500,15 @@ class OpController extends BaseController {
                 }
             }
         }
+        $sum_cost_old = 0;
+        foreach ($guide_old as $k=>$v){
+            $sum_cost_old += $v['really_cost'];
+            foreach ($guide_pk_id as $val){
+                if ($v['gpk_id'] == $val['id']){
+                    $guide[$k]['gpk_name'] = $val['name'];
+                }
+            }
+        }
         //获取职能类型
         $priceKind = M()->table('__GUIDE_PRICEKIND__ as gpk')->field('gpk.id,gpk.name')->join('left join __OP__ as op on gpk.pk_id = op.kind')->where(array("op.op_id"=>$opid))->select();
         $this->price_kind     = $priceKind;
@@ -509,7 +519,7 @@ class OpController extends BaseController {
 		$this->op             = $op;
 		$this->pro            = $pro;
 		$this->budget         = $budget;
-        $this->sum_cost       = $sum_cost;
+        $this->sum_cost       = $sum_cost?$sum_cost:$sum_cost_old;
 		$this->settlement     = $settlement;
 		$this->supplier       = $supplier;
 		$this->member         = $member;
@@ -537,7 +547,7 @@ class OpController extends BaseController {
         $this->act_needs      = $act_need;
         $this->les_fields     = $les_field;
         $this->act_fields     = $act_field;
-        $this->guide          = $guide;
+        $this->guide          = $guide?$guide:$guide_old;
         $product_need         = M()->table('__OP_COSTACC__ as c')->field('c.*,p.from,p.subject_field,p.type as ptype,p.age,p.reckon_mode')->join('left join __PRODUCT__ as p on c.product_id=p.id')->where(array('c.op_id'=>$opid,'c.type'=>5,'c.status'=>0))->select();
         foreach ($product_need as $k=>$v){
             $ages             = explode(',',$v['age']);
