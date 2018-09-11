@@ -72,7 +72,7 @@ class SalaryController extends BaseController {
             $this->error('您的数据有误!请重新选择！');die;
         }
 
-        $where['id']                    = trim($_GET['id']);
+        $where['id']                    = trim($_GET['id']);//用户account_id
         $account_id['datetime']         = trim($_GET['datetime']);
         $account_id['account_id']       = $where['id'];//用户
         $wages                          = $this->query_wages($where,$account_id);//所有详细信息
@@ -83,12 +83,56 @@ class SalaryController extends BaseController {
                 }
             }
         }
+
+        //kpi 目标任务 完成 提成
+        $month1 = array(1,2,4,5,7,8,10,11);//不显示的月份
+        $month2 = array(3,6,9);//显示的月份
+
+//        $id    = I('id');
+//
+//        $year  = I('year',date('Y'));
+//        $month = I('month',date('m'));
+//        $user  = I('uid',cookie('userid'));
+//
+//
+//        //更新数据
+//        updatekpi($year.$month,$user);
+//
+//        $sta   = C('KPI_STATUS');
+//
+//        if($id){
+//            $kpi   = M('kpi')->where($where)->find($id);
+//            $year  = $kpi['year'];
+//            $month = ltrim(substr($kpi['month'],4,2),0);
+//            $user  = $kpi['user_id'];
+//        }else{
+//            $where = array();
+//            $where['month']   = $year.sprintf('%02s', $month);
+//            $where['user_id'] = $user;
+//            $kpi = M('kpi')->where($where)->find();
+//        }
+//
+//
+//
+//        $kpi['kaoping']      = $kpi['mk_user_id'] ? username($kpi['mk_user_id']) : '未评分';
+//        $kpi['score']        = $kpi['mk_user_id'] ? $kpi['score'].'分' : '未评分';
+//        $kpi['status_str']   = $sta[$kpi['status']];
+//
+//        //考核指标
+//        $lists = M('kpi_more')->where(array('kpi_id'=>$kpi['id']))->select();
+//        foreach($lists as $K=>$v){
+//            $lists[$K]['score']  = $v['score_status'] ?  $v['score']  : '<font color="#999">未评分</font>';
+//        }
+
+
+
+
         // kpi  pdca 品质检查
-        $que = array();
+        $que                            = array();
         $que['p.tab_user_id']           = $where['id'];//用户id
         $que['p.month']                 = $account_id['datetime'] ;//查询年月
         $user_info['score']             = $this->query_score($que);
-
+        print_r($user_info);die;
         $user_info['calculation']       = $this->calculation($user_info);//计算岗位工资和考勤
         $type                           = $wages[1]['type'];// 页面状态
 
@@ -165,7 +209,7 @@ class SalaryController extends BaseController {
      */
     private function query_wages($where,$account_id){
         $wages_month                    = sql_query(1,'*','oa_salary_wages_month',$account_id,1,1);//工资关联是否生成
-        if($wages_month){//判断生成
+        if($wages_month){//判断生成  判断是否有权限
 
             $account['id']              = $wages_month[0]['account_id'];
             $department['id']           = $wages_month[0]['department_id'];
@@ -191,11 +235,9 @@ class SalaryController extends BaseController {
             $user_info['subsidy']       = sql_query(1,'*','oa_salary_subsidy',$subsidy,1,0);//补贴
             $user_info['withholding']   = sql_query(1,'*','oa_salary_withholding',$withholding,1,1);//代扣代缴
 
-
-
             $type                       = 2;//状态成功 前台判断
 
-        }else{
+        }else{//可以加判断是否是当前用户
             unset($account_id['datetime']);
             $user_info['account']       = sql_query(1,'*','oa_account',$where,2,1);//查询用户表
 

@@ -37,6 +37,8 @@ $(function(){
     }
 
 
+
+
 })
 function salary_list(page){//ajax 分页效果(岗位薪酬变动)
     var url ="index.php?m=Main&c=Salary&a=salary_list";

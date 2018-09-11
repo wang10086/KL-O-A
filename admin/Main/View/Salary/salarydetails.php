@@ -127,11 +127,11 @@
                                                     </tr>
                                             </table><br />
                                             <div class="form-group col-md-4 viwe">
-                                                <p>绩效增减：{$row.base_pay}</p>
+                                                <p class="salary_achievements_decrease">绩效增减：0.00 (元)</p>
                                             </div>
 
                                             <div class="form-group col-md-4 viwe">
-                                                <p>应发绩效工资：{$row.merit_pay}</p>
+                                                <p class="salary_should_paid">应发绩效工资：0.00 (元)</p>
                                             </div>
                                             <table class="table table-bordered dataTable fontmini" style="margin-top:10px;">
                                                 <tr role="row" class="orders" >
@@ -143,15 +143,15 @@
 
                                                 <tr>
                                                     <td>得分</td>
-                                                    <td>{$info['score'][0].total_score_show}<a href="{:U('Kpi/pdcainfo',array('id'=>$info['score'][0]['id']))}" style="float:right;">[详细]</td>
-                                                    <td>
+                                                    <td class="salary_detali_td1">{$info['score'][0].total_score_show}<a href="{:U('Kpi/pdcainfo',array('id'=>$info['score'][0]['id']))}" style="float:right;">[详细]</td>
+                                                    <td class="salary_detali_td2">
                                                         {$info['score'][0].show_qa_score}
                                                         <?php if($info['score'][0]['total_qa_score']!=0){ ?>
                                                         <a href="{:U('Kpi/qa',array('uid'=>$info['score'][0]['tab_user_id'],'type'=>2,'month'=>$info['score'][0]['month']))}" style="float:right;">[详细]
                                                         </a>
                                                         <?php } ?>
                                                     </td>
-                                                    <td>
+                                                    <td class="salary_detali_td3">
                                                         {$info['score'][0].total_kpi_score}
                                                         <?php
                                                         $year = substr($info['score'][0]['month'],0,4);
@@ -163,9 +163,9 @@
                                                 </tr>
                                                 <tr>
                                                     <td>增减</td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td></td>
+                                                    <td class="salary_detali_score_td1">0.00 (元)</td>
+                                                    <td class="salary_detali_score_td2">0.00 (元)</td>
+                                                    <td class="salary_detali_score_td3">0.00 (元)</td>
                                                 </tr>
                                             </table>
                                         </div>
@@ -377,3 +377,72 @@
 
             
 <include file="Index:footer2" />
+<script>
+   $(function(){
+       var score1 = $('.salary_detali_td1').html();
+       var score2 = $('.salary_detali_td2').html();
+       var score3 = $('.salary_detali_td3').html();
+
+       var str_score1 = $.trim((((score1.replace('<span class="red">','')).replace('</span>','')).split("<span>"))[0]);//去除多余的标签
+       var str_score2 = $.trim((((score2.replace('<span class="red">','')).replace('</span>','')).split("<span>"))[0]);//去除多余的标签
+       var str_score3 = $.trim((((score3.replace('<span class="red">','')).replace('</span>','')).split("<span>"))[0]);//去除多余的标签
+       var achievements = "<?php echo $info['calculation']['achievements'];?>";//绩效工资
+       var str_score1_Addition      = str_score1.substring(0,1)//;获取加减号
+       var str_score1_subtraction   = str_score1.substring(1);//获取绩效增减分
+
+       var str_score2_Addition      = str_score2.substring(0,1);
+       var str_score2_subtraction   = str_score2.substring(1);
+
+       var str_score3_Addition      = str_score3.substring(0,1);
+       var str_score3_subtraction   = str_score3.substring(1);
+
+       var score_Addition = achievements/100;//获取每分金额
+       var score=100;//公一百分
+       var td1="";
+       if(str_score1_Addition=='+'){
+           score = score+str_score1_subtraction;//加分计算
+           td1 = str_score1_Addition+score_Addition*str_score1_subtraction+' (元)';//分数金额计算
+       }
+       if(str_score1_Addition=='-'){
+           score = score-str_score1_subtraction;//减分计算
+           td1 = str_score1_Addition+score_Addition*str_score1_subtraction+' (元)';//分数金额计算
+       }
+       if(str_score1_Addition !=='+' && str_score1_Addition !=='-'){
+           td1 = '0.00 (元)';
+       }
+       var td2 = "";
+       $('.salary_detali_score_td1').html(td1);
+       if(str_score2_Addition=='+'){
+           score = score+str_score2_subtraction;
+           td2 = str_score2_Addition+score_Addition*str_score2_subtraction+' (元)';
+       }
+       if(str_score2_Addition=='-'){
+           score = score-str_score2_subtraction;
+           td2 = str_score2_Addition+score_Addition*str_score2_subtraction+' (元)';
+       }
+       if(str_score2_Addition !=='+' && str_score2_Addition !=='-'){
+           td2 = '0.00 (元)';
+       }
+       $('.salary_detali_score_td2').html(td2);
+       var td3 = "";
+       if(str_score3_Addition=='+'){
+           score = score+str_score3_subtraction;
+           td3 = str_score3_Addition+score_Addition*str_score3_subtraction+' (元)';
+       }
+       if(str_score3_Addition=='-'){
+           score = score-str_score3_subtraction;
+           td3 = str_score3_Addition+score_Addition*str_score3_subtraction+' (元)';
+       }
+       if(str_score3_Addition !=='+' && str_score3_Addition !=='-'){
+           td3 = '0.00 (元)';
+       }
+       $('.salary_detali_score_td3').html(td3);
+
+       var money = '应发绩效工资 : '+score_Addition*score+' (元)';
+       var subtraction = '绩效增减 : '+(achievements-score_Addition*score)+' (元)';
+       $('.salary_should_paid').html(money);//应得绩效工资
+       $('.salary_achievements_decrease').html(subtraction);//绩效增减
+
+   })
+
+</script>
