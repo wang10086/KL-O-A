@@ -178,13 +178,13 @@
                                         </div><!-- /.box-header --><br>
                                         <h5 style="color:#FF3333">业务人员提成</h5><br/>
                                         <div class="form-group col-md-4 viwe">
-                                            <p>目标任务：{$row.total_percentage}</p>
+                                            <p>目标任务：{$info['list'].target} (元)</p>
                                         </div>
                                         <div class="form-group col-md-4 viwe">
-                                            <p>季度完成：{$row.money_pay} </p>
+                                            <p>季度完成：{$info['list'].complete} (元)</p>
                                         </div>
                                         <div class="form-group col-md-4 viwe">
-                                            <p>业绩提成：{$row.total_percentage}</p>
+                                            <p>业绩提成：{$info['list']['total']} (元)</p>
                                         </div><br/><br/><br/>
                                         <h5 style="color:#000000;">&nbsp;&nbsp;&nbsp;&nbsp;其他人员提成（计调、研发、资源）： （元）</h5><br/>
                                         <div class="form-group col-md-4 viwe">
@@ -397,7 +397,7 @@
        var str_score3_subtraction   = str_score3.substring(1);
 
        var score_Addition = achievements/100;//获取每分金额
-       var score=100;//公一百分
+       var score=100;//共一百分
        var td1="";
        if(str_score1_Addition=='+'){
            score = score+str_score1_subtraction;//加分计算

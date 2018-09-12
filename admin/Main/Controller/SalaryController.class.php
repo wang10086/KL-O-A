@@ -83,56 +83,13 @@ class SalaryController extends BaseController {
                 }
             }
         }
-
-        //kpi 目标任务 完成 提成
-        $month1 = array(1,2,4,5,7,8,10,11);//不显示的月份
-        $month2 = array(3,6,9);//显示的月份
-
-//        $id    = I('id');
-//
-//        $year  = I('year',date('Y'));
-//        $month = I('month',date('m'));
-//        $user  = I('uid',cookie('userid'));
-//
-//
-//        //更新数据
-//        updatekpi($year.$month,$user);
-//
-//        $sta   = C('KPI_STATUS');
-//
-//        if($id){
-//            $kpi   = M('kpi')->where($where)->find($id);
-//            $year  = $kpi['year'];
-//            $month = ltrim(substr($kpi['month'],4,2),0);
-//            $user  = $kpi['user_id'];
-//        }else{
-//            $where = array();
-//            $where['month']   = $year.sprintf('%02s', $month);
-//            $where['user_id'] = $user;
-//            $kpi = M('kpi')->where($where)->find();
-//        }
-//
-//
-//
-//        $kpi['kaoping']      = $kpi['mk_user_id'] ? username($kpi['mk_user_id']) : '未评分';
-//        $kpi['score']        = $kpi['mk_user_id'] ? $kpi['score'].'分' : '未评分';
-//        $kpi['status_str']   = $sta[$kpi['status']];
-//
-//        //考核指标
-//        $lists = M('kpi_more')->where(array('kpi_id'=>$kpi['id']))->select();
-//        foreach($lists as $K=>$v){
-//            $lists[$K]['score']  = $v['score_status'] ?  $v['score']  : '<font color="#999">未评分</font>';
-//        }
-
-
-
+        $user_info['list'] = $this->salary_kpi_month($account_id,$where,$account_id['datetime']); //目标任务 完成 提成
 
         // kpi  pdca 品质检查
-        $que                            = array();
         $que['p.tab_user_id']           = $where['id'];//用户id
         $que['p.month']                 = $account_id['datetime'] ;//查询年月
         $user_info['score']             = $this->query_score($que);
-        print_r($user_info);die;
+
         $user_info['calculation']       = $this->calculation($user_info);//计算岗位工资和考勤
         $type                           = $wages[1]['type'];// 页面状态
 
@@ -143,24 +100,76 @@ class SalaryController extends BaseController {
     }
 
     /**
+     * salary_kpi_month 季度
+     * kpi 目标任务 完成 提成
+     */
+    private function salary_kpi_month($account_id,$where,$datetime){
+
+        //kpi 目标任务 完成 提成
+        $month                      = (int)substr($datetime,4);
+        $year                       = (int)substr($datetime,0,4);
+        $query['user_id']           = $where['id'];
+        if($month<10){
+            $year                   = $year.'0';
+        }
+       if($month == 3 || $month == 6 || $month == 9 ||$month == 12){
+           $count                   = 0;
+           $sum                     = 0;
+           $i                       = $month-3;
+           for($i;$i<$month;$month--){
+               $query['month']      = $year.$month;
+               $kpi                 = M('kpi')->where($query)->find();
+               if($kpi){
+                   $lists           = M('kpi_more')->where(array('kpi_id'=>$kpi['id']))->find();
+                   if($lists){
+                       if($lists['automatic'] == 0){
+                           $this->error('KPI暂未锁定!请锁定后查看信息！');die;
+                       }
+                   }else{
+                       $this->error('您的数据有误!请重新选择！');die;
+                   }
+               }else{
+                   $this->error('您的数据有误!请重新选择！');die;
+               }
+               $count               += $lists['target'];//季度目标
+               $sum                 += $lists['complete'];//季度完成
+           }
+           $number = $sum/$count;//项目季度百分比
+           if($number <= 1){
+              $Total = $sum*0.05;//不超过100%
+           }
+          if(1<$number && $number <=1.5){
+               $Total = $sum*(($number-1)*0.2+0.05);//超过100% 不到150%
+           }
+           if(1.5 < $number){
+               $Total = $sum*(($number-1.5)*0.25+(1.5-1)*0.2+0.05);//超过150%
+           }
+           $content['target'] = $count;
+           $content['complete'] = $sum;
+           $content['total'] = ((int)($Total*100))/100;//保留两位小数
+        }
+        return $content;
+    }
+
+    /**
      * sql_query
      * $que['p.tab_user_id'] 用户id
      * $que['a.nickname'] 用户昵称
      *$que['p.month'] 查询年月
      */
     private function query_score($que){
-        $lists 			= M()->table('__PDCA__ as p')->field('p.*,a.nickname')->join('__ACCOUNT__ as a on a.id = p.tab_user_id')->where($que)->select();
+        $lists 			                    = M()->table('__PDCA__ as p')->field('p.*,a.nickname')->join('__ACCOUNT__ as a on a.id = p.tab_user_id')->where($que)->select();
         foreach($lists as $k=>$v){
 
-            $sum_total_score = 0;
+            $sum_total_score                = 0;
 
-            $yu = $v['status']!=5 ? 0 : $v['total_score']-100;
+            $yu                             = $v['status'] !=5 ? 0 : $v['total_score']-100;
 
             //计算PDCA加减分
-            $sum_total_score += $yu;
+            $sum_total_score                += $yu;
 
             //品质检查加减分
-            $sum_total_score += $v['total_qa_score'];
+            $sum_total_score                += $v['total_qa_score'];
 
             //整理品质检查加减分
             $lists[$k]['total_score_show']  = $v['status']!=5 ? '<font color="#ff9900">未完成评分</font>' : show_score($yu);
@@ -169,22 +178,21 @@ class SalaryController extends BaseController {
             $lists[$k]['show_qa_score']     =  show_score($v['total_qa_score']);
 
             //获取KPI数据
-            $kpi = M('kpi')->where(array('month'=>$v['month'],'user_id'=>$v['tab_user_id']))->find();
+            $kpi                            = M('kpi')->where(array('month'=>$v['month'],'user_id'=>$v['tab_user_id']))->find();
             if($kpi && $kpi['month']>=201803){
-                $kpiscore =  $kpi['score']-100;
+                $kpiscore                   =  $kpi['score']-100;
             }else{
-                $kpiscore =  0;
+                $kpiscore                   =  0;
             }
 
             //KPI加减分
-            $sum_total_score += $kpiscore;
+            $sum_total_score                += $kpiscore;
 
             //KPI
             $lists[$k]['total_kpi_score']   = show_score($kpiscore);
 
             //合计
             $lists[$k]['sum_total_score']   =  show_score($sum_total_score);
-
 
         }
         return $lists;
@@ -202,7 +210,7 @@ class SalaryController extends BaseController {
         $info['grant']          = $user_info['salary']['standard_salary']*$user_info['salary']['basic_salary']/10-$user_info['attendance']['withdrawing'];//应发工资
         return $info;
 
-}
+    }
 
     /**
      *query_wages 查询工资
