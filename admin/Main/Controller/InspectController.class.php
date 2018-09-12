@@ -207,7 +207,13 @@ class InspectController extends BaseController{
 		$this->atts        	= M('attachment')->where(array('catid'=>321,'rel_id'=>$insid))->select(); 
 		$this->display('detail');
 	}
-	
+
+	//顾客满意度
+    public function score(){
+
+        $lists = M('op')->order($this->orders('create_time'))->select();
+        $this->display();
+    }
 	
     
 }

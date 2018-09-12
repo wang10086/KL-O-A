@@ -296,7 +296,7 @@
 
 
 
-                        <if condition="rolemenu(array('Inspect/record','Inspect/edit_ins'))">
+                        <if condition="rolemenu(array('Inspect/record','Inspect/edit_ins','Inspect/score'))">
                         <li class="treeview {:ison(CONTROLLER_NAME, 'Inspect')}">
                             <a href="javascript:;">
                                 <i class="fa fa-medkit"></i>
@@ -309,6 +309,9 @@
                                 </if>
                                 <if condition="rolemenu(array('Inspect/record'))">
                                 	<li><a href="{:U('Inspect/record')}"><i class="fa fa-angle-right"></i> 巡检记录</a></li>
+                                </if>
+                                <if condition="rolemenu(array('Inspect/score'))">
+                                    <li><a href="{:U('Inspect/score')}"><i class="fa fa-angle-right"></i> 顾客满意度</a></li>
                                 </if>
 
                             </ul>
