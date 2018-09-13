@@ -225,10 +225,10 @@ class SalaryController extends BaseController {
             $salary['id']               = $wages_month[0]['salary_id'];
             $attendance['id']           = $wages_month[0]['attendance_id'];
             $bonus['id']                = $wages_month[0]['bonus_id'];
-            $income['id']               = $wages_month[0]['income_id'];
+            $income['income_token']     = $wages_month[0]['income_token'];
             $insurance['id']            = $wages_month[0]['insurance_id'];
             $subsidy['id']              = $wages_month[0]['subsidy_id'];
-            $withholding['id']          = $wages_month[0]['withholding_id'];
+            $withholding['token']       = $wages_month[0]['withholding_token'];
 
             $user_info['month']         = $wages_month;
             $user_info['account']       = sql_query(1,'*','oa_account',$account,2,1);//查询用户表
@@ -238,30 +238,28 @@ class SalaryController extends BaseController {
             $user_info['salary']        = sql_query(1,'*','oa_salary',$salary,1,1);//岗位薪酬
             $user_info['attendance']    = sql_query(1,'*','oa_salary_attendance',$attendance,1,1);//员工考核
             $user_info['bonus']         = sql_query(1,'*','oa_salary_bonus',$bonus,1,1);//提成/奖金/年终奖
-            $user_info['income']        = sql_query(1,'*','oa_salary_income',$income,1,0);//其他收入
+            $user_info['income'][]      = sql_query(1,'*','oa_salary_income',$income,1,0);//其他收入
             $user_info['insurance']     = sql_query(1,'*','oa_salary_insurance',$insurance,1,1);//五险一金表
             $user_info['subsidy']       = sql_query(1,'*','oa_salary_subsidy',$subsidy,1,0);//补贴
-            $user_info['withholding']   = sql_query(1,'*','oa_salary_withholding',$withholding,1,1);//代扣代缴
+            $user_info['withholding'][] = sql_query(1,'*','oa_salary_withholding',$withholding,1,0);//代扣代缴
 
-            $type                       = 2;//状态成功 前台判断
+            $type['type']               = 2;//状态成功 前台判断
 
         }else{//可以加判断是否是当前用户
             unset($account_id['datetime']);
             $user_info['account']       = sql_query(1,'*','oa_account',$where,2,1);//查询用户表
-
             $department_r['id']         = $user_info['account'][0]['departmentid'];//部门
             $user_info['department']    = sql_query(1,'*','oa_salary_department',$department_r,1,1);//查询部门
-
             $posts_r['id']              = $user_info['account'][0]['postid'];
             $user_info['posts']         = sql_query(1,'*','oa_posts',$posts_r,1,1);//查询岗位
 
             $user_info['salary']        = sql_query(1,'*','oa_salary',$account_id,1,1);//岗位薪酬
             $user_info['attendance']    = sql_query(1,'*','oa_salary_attendance',$account_id,1,1);//员工考核
             $user_info['bonus']         = sql_query(1,'*','oa_salary_bonus',$account_id,1,1);//提成/奖金/年终奖
-            $user_info['income']        = sql_query(1,'*','oa_salary_income',$account_id,1,0);//其他收入
+            $user_info['income'][]      = sql_query(1,'*','oa_salary_income',$account_id,1,0);//其他收入
             $user_info['insurance']     = sql_query(1,'*','oa_salary_insurance',$account_id,1,1);//五险一金表
             $user_info['subsidy']       = sql_query(1,'*','oa_salary_subsidy',$account_id,1,0);//补贴
-            $user_info['withholding']   = sql_query(1,'*','oa_salary_withholding',$account_id,1,1);//代扣代缴
+            $user_info['withholding'][] = sql_query(1,'*','oa_salary_withholding',$account_id,1,0);//代扣代缴
             $type['type']               = 1;//状态失败 前台判断
         }
         $content[0]                     = $user_info;
@@ -560,6 +558,16 @@ class SalaryController extends BaseController {
 
         $this->display();
     }
+
+//=ROUND(// v7=
+//IF((V7)<=5000,0,IF((V7-5000)<=3000,3%*(V7-5000),
+//IF((V7-5000)<=12000,10%*(V7-5000)-210,
+//IF((V7-5000)<=25000,20%*(V7-5000)-1410,
+//IF((V7-5000)<=35000,25%*(V7-5000)-2660,
+//IF((V7-5000)<=55000,30%*(V7-5000)-4410,
+//IF((V7-5000)<=80000,35%*(V7-5000)-7160,
+//IF((V7-5000)>80000,45%*(V7-5000)-15160)
+//    ))))))),2)
 
 
 }

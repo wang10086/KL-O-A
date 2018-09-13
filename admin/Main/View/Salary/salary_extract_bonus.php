@@ -39,8 +39,8 @@
                                 <td>{$lst.employee_member}</td>
                                 <td>{$lst.department}</td>
                                 <td>{$lst.post_name}</td>
-                                <td><input type="text" style="float:left;" class="form-control salary_bonus_extract" value="{$lst.extract}" /></td>
-                                <td><input type="text" style="float:left;" class="form-control salary_bonus_bonus" value="{$lst.bonus}" /></td>
+                                <td><input type="text" style="float:left;" class="form-control salary_bonus_extract" placeholder="带团补助" /></td>
+                                <td><input type="text" style="float:left;" class="form-control salary_bonus_bonus" placeholder="其他人员提成" /></td>
                                 <td><input type="text" style="float:left;" class="form-control salary_bonus_yearend" value="{$lst.annual_bonus}" /></td>
                                 <input type="hidden" class="status" value="1">
 

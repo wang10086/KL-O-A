@@ -58,7 +58,7 @@
                                         <td>&yen; 122.00</td>
                                         <td style="width:100px">&yen; 300.00</td>
                                         <td>2018-08</td>
-                                        <td><a href="{:U('Salary/salarydetails',array('id'=>$row['id']))}" class="btn btn-info btn-smsm"><i class="fa fa-pencil"></i>查看详情</a></td>
+                                        <td><a href="{:U('Salary/salarydetails',array('id'=>100,'datetime'=>201806))}" class="btn btn-info btn-smsm"><i class="fa fa-pencil"></i>查看详情</a></td>
 
                                     </tr>
 
