@@ -211,7 +211,36 @@ class InspectController extends BaseController{
 	//顾客满意度
     public function score(){
 
-        $lists = M('op')->order($this->orders('create_time'))->select();
+        //分页
+        $pagecount		= M()->table('__OP__ as o')->field('o.*,c.ret_time')->join('left join __OP_TEAM_CONFIRM__ as c on c.op_id=o.op_id')->order($this->orders('o.create_time'))->count();
+        $page			= new Page($pagecount, P::PAGE_SIZE);
+        $this->pages	= $pagecount>P::PAGE_SIZE ? $page->show():'';
+
+        $lists = M()->table('__OP__ as o')->field('o.*,c.ret_time')->join('left join __OP_TEAM_CONFIRM__ as c on c.op_id=o.op_id')->limit($page->firstRow . ',' . $page->listRows)->order($this->orders('o.create_time'))->select();
+        foreach ($lists as $k=>$v){
+            $op_id          = $v['op_id'];
+            $number         = $v['number'];
+            $guide_manager  = M()->table('__OP_GUIDE_CONFIRM__ as c')->field('g.name')->join('left join __GUIDE__ as g on g.id = c.charity_id')->where(array('c.op_id'=>$op_id,'c.charity_id'=>array('neq',0)))->select();
+            $lists[$k]['guide_manager'] = $guide_manager?implode(',',array_column($guide_manager,'name')):'<span class="blue">待定</span>';
+
+            $charity        = M('op_guide_confirm')->where(array('op_id'=>$op_id,'charity_id'=>array('neq',0)))->getField('id',true);
+            $score_list     = M()->table('__TCS_SCORE_USER__ as u')->join('left join __TCS_SCORE__ as s on s.uid=u.id')->where(array('u.confirm_id'=>array('in',$charity)))->select();
+            $yg_num         = intval($number/3);    //应完成人数,只要1/3的人投票即完成
+            $sj_num         = count($score_list);   //实际投票人数
+
+            if (!$charity){
+                $charity_status = "<span class='red'>未安排</span>";
+            }elseif ($charity && !$score_list){
+                $charity_status = "<span class='yellow'>已安排调查</span>";
+            }elseif($charity && $score_list && $sj_num<$yg_num){
+                $charity_status = "<span class='yellow'>未完成调查</span>";
+            }else{
+                $charity_status = "<span class='green'>已完成调查</span>";
+            }
+            $lists[$k]["charity_status"] = $charity_status;
+        }
+
+        $this->lists    = $lists;
         $this->display();
     }
 	

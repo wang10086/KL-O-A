@@ -46,19 +46,16 @@
                                         <td><?php if($row['status']==1){ echo "<span class='green'>".$row['group_id']."</span>";}elseif($row['status']==2){ echo "<span class='red' title='".$row['nogroup']."'>不成团</span>";}else{ echo '未成团';} ?></td>
                                         <td><div class="tdbox_long"><a href="{:U('Op/plans_follow',array('opid'=>$row['op_id']))}" title="{$row.project}">{$row.project}</a></div></td>
                                         <td>{$row.number}人</td>
-                                        <!--
-                                        <td><?php if($row['sale_cost']){ ?>&yen;{$row.sale_cost}<?php } ?></td>
-                                        <td><?php if($row['peer_cost']){ ?>&yen;{$row.peer_cost}<?php } ?></td>
-                                        -->
-                                        <td>{$row.departure}</td>
+
+                                        <td>{$row.ret_time|date='Y-m-d',###}</td>
                                          <td>{$row.sale_user}</td>
-                                        <td>{$row.days}天</td>
-                                        <td><div class="tdbox_long" style="width:80px" title="{$row.destination}">{$row.destination}</div></td>
+                                        <td>{$row.guide_manager}</td>
+                                        <td><div class="tdbox_long" style="width:80px">{$row.charity_status}</div></td>
                                         <td><div class="tdbox_long" style="width:80px" title="<?php echo $kinds[$row['kind']]; ?>"><?php echo $kinds[$row['kind']]; ?></div></td>
 
                                         <if condition="rolemenu(array('Op/plans_follow'))">
                                         <td class="taskOptions">
-                                        <a href="{:U('Op/plans_follow',array('opid'=>$row['op_id']))}" title="详情" class="btn btn-info btn-smsm"><i class="fa fa-pencil"></i></a>
+                                        <a href="{:U('Score/detail',array('opid'=>$row['op_id']))}" title="详情" class="btn btn-info btn-smsm"><i class="fa fa-pencil"></i></a>
                                         </td>
                                         </if>
                                     </tr>
