@@ -12,50 +12,8 @@ class SalaryController extends BaseController {
      * employee_member 员工编号 salary_time 发工资时间
      */
      public function salaryindex(){
-//         if(IS_POST){//传值判断
-//             $where['id'] = trim($_POST['id']);
-//             $where['nickname'] = trim($_POST['name']);
-//             $where['grant_time'] = trim($_POST['month']);
-//             $where['employee_member'] = trim($_POST['employee_member']);
-//             $where = array_filter($where);//去空数组键和值
-//             if(!empty($where['grant_time'])){
-//                 $time = strtotime(date('Y-m',strtotime($where['grant_time'])));//转换年月时间戳
-//                 unset($where['grant_time']);
-//                 $where['grant_time'] = $time;
-//             }
-//             $sql = "SELECT *,oa_salary.id as sid FROM oa_salary LEFT JOIN oa_account ON ";
-//             foreach($where as $key =>$val){//判断条件
-//                 if($key=='nickname'){
-//                     $k = "oa_account.$key";
-//                 }elseif($key=='employee_member'){
-//                     $k = "oa_account.$key";
-//                 }else{
-//                     $k = "oa_salary.$key";
-//                 }
-//                 $sql .= "$k = '$val' AND ";
-//             }
-//             $sql = substr($sql,0,-4);//去除最后一个 AND
-//             $sql .="WHERE oa_salary.account_id = oa_account.id ORDER BY oa_account.employee_member ASC";
-//         }else{
-//             $sql = "SELECT *,oa_salary.id as sid FROM oa_salary LEFT JOIN oa_account ON oa_salary.account_id = oa_account.id ORDER BY oa_account.employee_member ASC";
-//         }
-//         $count = count(M()->query($sql));
-//         $page = new Page($count,12);
-//         $pages = $page->show();
-//         $list = M()->query($sql." LIMIT ".$page->firstRow.",".$page->listRows);//分页页数
-//         if(!$list){
-//             $this->success('您的输入条件不存在！', U('Salary/salaryindex'));die;
-//         }else{
-//             foreach ($list as $key => $val){
-//                 $list[$key]['_subsidy'] = $list[$key]['bonus']+$list[$key]['housing_subsidy']+$list[$key]['other_subsidie']+$list[$key]['subsidy'];//奖金+住房补贴+其他补贴+其他补助
-//                 $insurance_id['id'] = $list[$key]['insurance_id'];
-//                 $insurance = M('salary_insurance')->where($insurance_id)->find();
-//                 //年终奖个税+年终奖个税+工会会费 + 五险一金 = 税费扣款
-//                 $list[$key]['_taxation'] = $list[$key]['personal_income_tax']+$list[$key]['year_end_personal_income_tax']+$list[$key]['trade_union_fee']+$insurance['birth']+$insurance['injury']+$insurance['pension']+$insurance['medical_care']+$insurance['unemployment']+$insurance['accumulation_fund'];
-//             }
-//         }
-//         $this->assign('list',$list);
-//         $this->assign('page',$pages);
+
+
          $this->display();
     }
 
@@ -136,17 +94,17 @@ class SalaryController extends BaseController {
            }
            $number = $sum/$count;//项目季度百分比
            if($number <= 1){
-              $Total = $sum*0.05;//不超过100%
+              $Total                = $sum*0.05;//不超过100%
            }
           if(1<$number && $number <=1.5){
-               $Total = $sum*(($number-1)*0.2+0.05);//超过100% 不到150%
+               $Total               = $sum*(($number-1)*0.2+0.05);//超过100% 不到150%
            }
            if(1.5 < $number){
-               $Total = $sum*(($number-1.5)*0.25+(1.5-1)*0.2+0.05);//超过150%
+               $Total               = $sum*(($number-1.5)*0.25+(1.5-1)*0.2+0.05);//超过150%
            }
-           $content['target'] = $count;
-           $content['complete'] = $sum;
-           $content['total'] = ((int)($Total*100))/100;//保留两位小数
+           $content['target']       = $count;
+           $content['complete']     = $sum;
+           $content['total']        = ((int)($Total*100))/100;//保留两位小数
         }
         return $content;
     }
@@ -445,9 +403,9 @@ class SalaryController extends BaseController {
                     $account_r[$key]['foreign_subsidies']   = $subsidy_r['foreign_subsidies'];
                     $account_r[$key]['computer_subsidy']    = $subsidy_r['computer_subsidy'];
 
-                    $account_r[$key]['insurance'] = M('salary_insurance')->where($aid)->order('id desc')->find();//五险一金
+                    $account_r[$key]['insurance']           = M('salary_insurance')->where($aid)->order('id desc')->find();//五险一金
 
-                    $income         = M('salary_income')->where($aid)->order('id desc')->find();//其他收入
+                    $income                                 = M('salary_income')->where($aid)->order('id desc')->find();//其他收入
 
                     if($income){
 
@@ -550,7 +508,6 @@ class SalaryController extends BaseController {
         $fan        = 'salary_list';
 
         $record_r   = M('op_record')->where('optype='.$status)->order('op_time desc')->limit(($page-1)*$limit,$limit)->select();//操作记录
-        //$count,$page,$limit,$fan
         $page_str   = $this->ajaxPageHtml($sum,$page,$limit,$fan);//数据总数 当前页面 显示条数 方法名
 
         $this->assign('pages',$page_str);//操作记录分页
@@ -558,16 +515,5 @@ class SalaryController extends BaseController {
 
         $this->display();
     }
-
-//=ROUND(// v7=
-//IF((V7)<=5000,0,IF((V7-5000)<=3000,3%*(V7-5000),
-//IF((V7-5000)<=12000,10%*(V7-5000)-210,
-//IF((V7-5000)<=25000,20%*(V7-5000)-1410,
-//IF((V7-5000)<=35000,25%*(V7-5000)-2660,
-//IF((V7-5000)<=55000,30%*(V7-5000)-4410,
-//IF((V7-5000)<=80000,35%*(V7-5000)-7160,
-//IF((V7-5000)>80000,45%*(V7-5000)-15160)
-//    ))))))),2)
-
 
 }

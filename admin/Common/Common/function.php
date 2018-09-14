@@ -3547,8 +3547,3 @@ function sql_upd($status,$field,$table,$where,$order,$type){//修改
 	return $add_sql;
 }
 
-
-
-?>
-
-

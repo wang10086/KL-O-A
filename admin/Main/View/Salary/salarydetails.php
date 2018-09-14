@@ -305,7 +305,7 @@
 
                                     <div class="content">
                                         <div class="box-header" style="margin-left: -20px">
-                                            <h3 class="box-title">五 、个税及工会会费、代扣代缴  共计 <u>30000.00</u> 元</h3>
+                                            <h3 class="box-title">五 、个税及工会会费、代扣代缴  共计 <u class="salary_individual_totala">0.00</u>  元</h3>
                                         </div><!-- /.box-header --><br><br>
 
                                         <div class="form-group col-md-4 viwe">
@@ -318,11 +318,11 @@
                                         </div>
 
                                         <div class="form-group col-md-4 viwe">
-                                            <p>个人所得税：{$row.other_subsidie} </p>
+                                            <p class="salary_individual_tax_assessment1">个人所得税：0.00 (元)</p>
                                         </div>
 
                                         <div class="form-group col-md-4 viwe">
-                                            <p>年终奖计税：{$row.tax_payroll}</p>
+                                            <p class="salary_individual_tax_assessment2">年终奖计税：0.00 (元)</p>
                                         </div>
 
                                         <div class="form-group col-md-4 viwe">
@@ -378,17 +378,52 @@
                                                 <td>{$info['salary'].standard_salary} (元)</td>
                                                 <td class="salary_subsidy1">0.00 (元)</td>
                                                 <td class="five_risks">0.00 (元)</td>
-                                                <td>&yen; {$row.wages}</td>
+                                                <td class="salary_individual_totala1">0.00 (元)</td>
                                             </tr>
                                         </table>
+                                        <br><br><br>
 
+
+                                        <!--   确定保存数据 -->
+                                        <?php if($type==1){?>
+                                        <br>
+                                        <div id="searchtex_color_salary" >
+                                            <form action="{:U('Salary/salary_query')}" method="post" id="salary_withholding_num1">
+                                                <input type="hidden" value="">
+                                                <input type="hidden" value="">
+                                                <input type="hidden" value="">
+                                                <input type="hidden" value="">
+                                                <input type="hidden" value="">
+                                                <input type="hidden" value="">
+                                                <input type="hidden" value="">
+                                                <input type="hidden" value="">
+                                                <input type="hidden" value="">
+                                                <input type="hidden" value="">
+                                                <input type="hidden" value="">
+                                                <input type="hidden" value="">
+                                                <input type="hidden" value="">
+                                                <input type="hidden" value="">
+                                                <input type="hidden" value="">
+                                                <input type="hidden" value="">
+
+                                                <div style="width:20em;margin:0 auto" >
+                                                    <input type="submit" class="form-control" value="保存数据" style="background-color:#00acd6;">
+                                                </div>
+                                            </form>
+                                        </div>
+                                        <?php }?>
                                     </div>
                                 </div><!-- /.box-body -->
                             </div><!-- /.box -->
+
+
+
+
                         </div><!--/.col (right) -->
                     </div>   <!-- /.row -->
                 </section><!-- /.content -->
             </aside><!-- /.right-side -->
+
   </div>
 </div>
 
@@ -475,13 +510,86 @@
 
        //个税计税工资
         var content                 ="<?php echo $info['insurance']['birth_base']*$info['insurance']['birth_ratio']+$info['insurance']['injury_base']*$info['insurance']['injury_ratio']+$info['insurance']['pension_base']*$info['insurance']['pension_ratio']+$info['insurance']['medical_care_base']*$info['insurance']['medical_care_ratio']+$info['insurance']['big_price']+$info['insurance']['unemployment_base']*$info['insurance']['unemployment_ratio']+$info['insurance']['accumulation_fund_base']*$info['insurance']['accumulation_fund_ratio'];?>";//五险一金
-       var content1                 = count-Number(content);
-       content1                     = '个税计税工资 ： '+content1+' (元)';
-       $('.salary_individual_tax_assessment').html(content1);
+       var content1                 = count-Number(content);//个税计税工资
+       var content2                 = '个税计税工资 ： '+content1+' (元)';
+       $('.salary_individual_tax_assessment').html(content2);
 
        var content_str              = content+' (元)';
        $('.five_risks').html(content_str);//实发工资 -> 五险一金
 
+       //个人所得税
+        if(content1 <= 5000){
+            var counting            = '0.00';
+        }else{
+            var  cout               = content1-5000;
+
+            if(cout <= 3000){
+                var counting        = cout*0.03;
+            }
+            if(cout > 3000 && cout <= 12000){
+                var counting        = cout*0.10-210;
+            }
+            if(cout > 12000 && cout <= 25000){
+                var counting        = cout*0.20-1410;
+            }
+            if(cout > 25000 && cout <= 35000){
+                var counting        = cout*0.25-2660;
+            }
+            if(cout > 35000 && cout <= 55000){
+                var counting        = cout*0.30-4410;
+            }
+            if(cout > 55000 && cout <= 80000){
+                var counting        = cout*0.35-7160;
+            }
+            if(cout > 80000){
+                var counting        = cout*0.45-15160;
+            }
+        }
+       var Tax_counting = '个人所得税 : '+counting+' (元)';
+       $('.salary_individual_tax_assessment1').html(Tax_counting);
+
+       //年终奖计税
+       var bonus_money              = "<?php echo $info['bonus']['annual_bonus'];?>";//年中奖
+       var bonus_price              = Number(bonus_money)/12;
+
+       if(bonus_price < 1500){
+           var price1               = bonus_price*0.03;
+       }
+       if(bonus_price > 1500 && bonus_price < 4500){
+           var price1               = bonus_price*0.1-105;
+       }
+
+       if(bonus_price > 4500 && bonus_price < 9000){
+           var price1               = bonus_price*0.2-555;
+       }
+
+       if(bonus_price > 9000 && bonus_price < 35000){
+           var price1               = bonus_price*0.25-1055;
+       }
+
+       if(bonus_price > 35000 && bonus_price < 55000){
+           var price1               = bonus_price*0.3-2755;
+       }
+
+       if(bonus_price > 55000 && bonus_price < 80000){
+           var price1               = bonus_price*0.35-5505;
+       }
+
+       if(bonus_price>80000){
+           var price1               = bonus_price*0.45-13505;
+       }
+       var price2                   = (Math.floor(price1*100))/100;
+       var price3                   ='年终奖计税 : '+price2+' (元)';
+
+       $('.salary_individual_tax_assessment2').html(price3);
+
+       //实发工资 个税及工会会费、代扣代缴
+       var count1                   = "<?php echo($info['calculation']['basic']-500)*0.01;?>";
+       var count_sum                = (Math.floor((count-content1+counting+price2+Number(count1))*100))/100;
+       $('.salary_individual_totala').html(count_sum);
+
+       var count_sum1 = count_sum+' (元)';
+       $('.salary_individual_totala1').html(count_sum1);
 
    })
 
