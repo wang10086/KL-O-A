@@ -208,7 +208,7 @@ class InspectController extends BaseController{
 		$this->display('detail');
 	}
 
-	//顾客满意度
+	// @@@NODE-3###score###顾客满意度###
     public function score(){
 
         //分页
@@ -223,7 +223,7 @@ class InspectController extends BaseController{
             $guide_manager  = M()->table('__OP_GUIDE_CONFIRM__ as c')->field('g.name')->join('left join __GUIDE__ as g on g.id = c.charity_id')->where(array('c.op_id'=>$op_id,'c.charity_id'=>array('neq',0)))->select();
             $lists[$k]['guide_manager'] = $guide_manager?implode(',',array_column($guide_manager,'name')):'<span class="blue">待定</span>';
 
-            $charity        = M('op_guide_confirm')->where(array('op_id'=>$op_id,'charity_id'=>array('neq',0)))->getField('id',true);
+            $charity        = $this->public_get_confirm_id($op_id);
             $score_list     = M()->table('__TCS_SCORE_USER__ as u')->join('left join __TCS_SCORE__ as s on s.uid=u.id')->where(array('u.confirm_id'=>array('in',$charity)))->select();
             $yg_num         = intval($number/3);    //应完成人数,只要1/3的人投票即完成
             $sj_num         = count($score_list);   //实际投票人数
@@ -238,10 +238,59 @@ class InspectController extends BaseController{
                 $charity_status = "<span class='green'>已完成调查</span>";
             }
             $lists[$k]["charity_status"] = $charity_status;
+
+            //只要有不满意的就需要追责
+            $where          = array();
+            $where['u.confirm_id']  = array('in',$charity);
+            $where['s.solve']       = array('eq',0);
+            $where['_string']       = "s.stay = 1 or s.travel = 1 or s.content = 1 or s.food = 1 or s.bus = 1 or s.driver = 1 or s.guide = 1 or s.teacher = 1";
+            $zhuize         = M()->table('__TCS_SCORE_USER__ as u')->join('left join __TCS_SCORE__ as s on s.uid=u.id')->where($where)->count();
+            $lists[$k]['zhuize'] = $zhuize;
+
         }
 
         $this->lists    = $lists;
         $this->display();
+    }
+
+    public function public_get_confirm_id($op_id){
+        $charity        = M('op_guide_confirm')->where(array('op_id'=>$op_id,'charity_id'=>array('neq',0)))->getField('id',true);
+        return $charity;
+    }
+
+    // @@@NODE-3###blame###顾客满意度追责###
+    public function blame(){
+        if (isset($_POST['dosubmint'])){
+            $info                   = I('info');
+            $score_id               = I('score_id');
+            if ($score_id){
+                $info['solve_time'] = NOW_TIME;
+                $res = M('tcs_score')->where(array('id'=>$score_id))->save($info);
+                if ($res){
+                    $this->success('数据保存成功');
+                }else{
+                    $this->error('数据保存失败');
+                }
+            }else{
+                $this->error('数据保存失败');
+            }
+        }else{
+            $op_id                  = I('op_id');
+            $confirm_id             = $this->public_get_confirm_id($op_id);
+            $where                  = array();
+            $where['u.confirm_id']  = array('in',$confirm_id);
+            $where['s.solve']       = array('eq',0);
+            $where['_string']       = "s.stay = 1 or s.travel = 1 or s.content = 1 or s.food = 1 or s.bus = 1 or s.driver = 1 or s.guide = 1 or s.teacher = 1";
+            $zhuize                 = M()->table('__TCS_SCORE_USER__ as u')
+                ->field('u.*,s.id as score_id,s.stay,s.travel,s.content,s.food,s.bus,s.driver,s.guide,s.teacher,s.suggest,s.problem,s.solve,s.resolvent,c.in_begin_day,c.in_day,c.address')
+                ->join('left join __TCS_SCORE__ as s on s.uid=u.id')
+                ->join('left join __OP_GUIDE_CONFIRM__ as c on c.id = u.confirm_id')
+                ->where($where)->select();
+            $this->score_stu        = C('SCORE_STU');
+            $this->lists            = $zhuize;
+
+            $this->display();
+        }
     }
 	
     

@@ -197,6 +197,15 @@ $config = array(
     //文件标签
     'FILE_TAG'      =>array('1'=>'部门职责','2'=>'岗位说明','3'=>'相关规程','4'=>'相关制度'),
 
+    //满意度状态
+    'SCORE_STU'     =>array(
+        '5'     => '<span class="green">非常满意</span>',
+        '4'     => '<span class="green">满意</span>',
+        '3'     => '<span class="blue">一般</span>',
+        '2'     => '<span class="yellow">不满意</span>',
+        '1'     => '<span class="red">非常不满意</span>'
+    ),
+
 	//记录详情
 	'REC_TYPE_INFO' => array(
 		'1'=>array(
