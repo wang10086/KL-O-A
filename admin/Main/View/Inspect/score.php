@@ -60,9 +60,9 @@
                                         </if>
                                         </td>
 
-                                        <if condition="rolemenu(array('Op/plans_follow'))">
+                                        <if condition="rolemenu(array('Inspect/score_info'))">
                                         <td class="taskOptions">
-                                        <a href="{:U('Score/detail',array('opid'=>$row['op_id']))}" title="详情" class="btn btn-info btn-smsm"><i class="fa fa-pencil"></i></a>
+                                        <a href="{:U('Inspect/score_info',array('opid'=>$row['op_id']))}" title="详情" class="btn btn-info btn-smsm"><i class="fa fa-bars"></i></a>
                                         </td>
                                         </if>
                                     </tr>

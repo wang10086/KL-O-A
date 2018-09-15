@@ -210,18 +210,29 @@ class InspectController extends BaseController{
 
 	// @@@NODE-3###score###顾客满意度###
     public function score(){
+        $title	= I('title');		//项目名称
+        $opid	= I('id');			//项目编号
+        $oid	= I('oid');			//项目团号
+        $ou		= I('ou');			//立项人
+
+        $where = array();
+
+        if($title)			$where['o.project']			= array('like','%'.$title.'%');
+        if($oid)			$where['o.group_id']		= array('like','%'.$oid.'%');
+        if($opid)			$where['o.op_id']			= $opid;
+        if($ou)				$where['o.create_user_name']= $ou;
 
         //分页
-        $pagecount		= M()->table('__OP__ as o')->field('o.*,c.ret_time')->join('left join __OP_TEAM_CONFIRM__ as c on c.op_id=o.op_id')->order($this->orders('o.create_time'))->count();
+        $pagecount		= M()->table('__OP__ as o')->field('o.*,c.ret_time')->join('left join __OP_TEAM_CONFIRM__ as c on c.op_id=o.op_id')->where($where)->order($this->orders('o.create_time'))->count();
         $page			= new Page($pagecount, P::PAGE_SIZE);
         $this->pages	= $pagecount>P::PAGE_SIZE ? $page->show():'';
 
-        $lists = M()->table('__OP__ as o')->field('o.*,c.ret_time')->join('left join __OP_TEAM_CONFIRM__ as c on c.op_id=o.op_id')->limit($page->firstRow . ',' . $page->listRows)->order($this->orders('o.create_time'))->select();
+        $lists = M()->table('__OP__ as o')->field('o.*,c.ret_time')->join('left join __OP_TEAM_CONFIRM__ as c on c.op_id=o.op_id')->limit($page->firstRow . ',' . $page->listRows)->where($where)->order($this->orders('o.create_time'))->select();
         foreach ($lists as $k=>$v){
             $op_id          = $v['op_id'];
             $number         = $v['number'];
             $guide_manager  = M()->table('__OP_GUIDE_CONFIRM__ as c')->field('g.name')->join('left join __GUIDE__ as g on g.id = c.charity_id')->where(array('c.op_id'=>$op_id,'c.charity_id'=>array('neq',0)))->select();
-            $lists[$k]['guide_manager'] = $guide_manager?implode(',',array_column($guide_manager,'name')):'<span class="blue">待定</span>';
+            $lists[$k]['guide_manager'] = $guide_manager?implode(',',array_unique(array_column($guide_manager,'name'))):'<span class="blue">待定</span>';
 
             $charity        = $this->public_get_confirm_id($op_id);
             $score_list     = M()->table('__TCS_SCORE_USER__ as u')->join('left join __TCS_SCORE__ as s on s.uid=u.id')->where(array('u.confirm_id'=>array('in',$charity)))->select();
@@ -265,6 +276,7 @@ class InspectController extends BaseController{
             $score_id               = I('score_id');
             if ($score_id){
                 $info['solve_time'] = NOW_TIME;
+                $info['solver_uid'] = cookie('userid');
                 $res = M('tcs_score')->where(array('id'=>$score_id))->save($info);
                 if ($res){
                     $this->success('数据保存成功');
@@ -288,10 +300,83 @@ class InspectController extends BaseController{
                 ->where($where)->select();
             $this->score_stu        = C('SCORE_STU');
             $this->lists            = $zhuize;
+            $op                     = M('op')->where(array('op_id'=>$op_id))->find();
+            $this->op               = $op;
 
             $this->display();
         }
     }
-	
+
+    // @@@NODE-3###score_info###记录详情###
+    public function score_info(){
+        $op_id          = I('opid');
+        if (!$op_id){
+            $this->error("数据获取失败");
+        }
+
+        $this->op       = M('op')->where(array('op_id'=>$op_id))->find();
+        $list           = M('op_guide_confirm')->field('id,score_num')->where(array('op_id'=>$op_id))->select();
+        $score_num      = array_sum(array_column($list,'score_num'));
+        $lists          = M()->table('__TCS_SCORE__ as s')
+            ->field('s.*,u.mobile,u.confirm_id,c.in_begin_day,c.in_day,c.address')
+            ->join('left join __TCS_SCORE_USER__ as u on u.id = s.uid')
+            ->join('left join __OP_GUIDE_CONFIRM__ as c on c.id = u.confirm_id')
+            ->where(array('u.op_id'=>$op_id))
+            ->select();
+
+        foreach ($lists as $k=>$v){
+            if ($v['solve']==1){
+                $status     = '已处理';
+            }else{
+                if ($v['solve']==0 && ($v['stay'] ==1 || $v['food'] ==1 || $v['bus'] ==1 || $v['travel'] ==1 || $v['content'] ==1 || $v['driver'] ==1 || $v['guide'] ==1 || $v['teacher'] ==1)){
+                    $status = '<span class="red">未处理</span>';
+                }else{
+                    $status = '无需处理';
+                }
+            }
+            $lists[$k]['status'] = $status;
+        }
+        $average            = array();
+        $average['stay']    = round(array_sum(array_column($lists,'stay'))/$score_num,2);
+        $average['food']    = round(array_sum(array_column($lists,'food'))/$score_num,2);
+        $average['bus']     = round(array_sum(array_column($lists,'bus'))/$score_num,2);
+        $average['travel']  = round(array_sum(array_column($lists,'travel'))/$score_num,2);
+        $average['content'] = round(array_sum(array_column($lists,'content'))/$score_num,2);
+        $average['driver']  = round(array_sum(array_column($lists,'driver'))/$score_num,2);
+        $average['guide']   = round(array_sum(array_column($lists,'guide'))/$score_num,2);
+        $average['teacher'] = round(array_sum(array_column($lists,'teacher'))/$score_num,2);
+        $average['score_num'] = $score_num;
+        $this->average      = $average;
+        $this->lists        = $lists;
+        $this->score_stu    = C('SCORE_STU');
+
+        $this->display();
+    }
+
+    public function score_detail(){
+        $id                 = I('id');
+        $info               = M()->table('__TCS_SCORE__ as s')
+            ->field('s.*,u.mobile,o.project,acc.nickname')
+            ->join('__TCS_SCORE_USER__ as u on u.id = s.uid')
+            ->join('left join __OP__ as o on o.op_id= u.op_id')
+            ->join('left join __ACCOUNT__ as acc on acc.id= s.solver_uid')
+            ->where(array('s.id'=>$id))
+            ->find();
+
+        if ($info['solve']==1){
+            $status         = '已处理';
+        }else{
+            if ($info['solve']==0 && ($info['stay'] ==1 || $info['food'] ==1 || $info['bus'] ==1 || $info['travel'] ==1 || $info['content'] ==1 || $info['driver'] ==1 || $info['guide'] ==1 || $info['teacher'] ==1)){
+                $status     = '<span class="red">未处理</span>';
+            }else{
+                $status     = '无需处理';
+            }
+        }
+        $info['status']     = $status;
+        $this->row          = $info;
+        $this->score_stu    = C('SCORE_STU');
+
+        $this->display();
+    }
     
 }
