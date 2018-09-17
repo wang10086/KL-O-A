@@ -39,7 +39,7 @@
                         <td>{$row.status}</td>
 
                         <td class="taskOptions">
-                            <button class="btn btn-info btn-smsm" onclick="show_score({$row.id})"><i class="fa fa-pencil"></i></button>
+                            <button class="btn btn-info btn-smsm" onclick="show_score({$row.id})"><i class="fa fa-bars"></i></button>
                         </td>
 
                     </tr>
@@ -47,6 +47,10 @@
             </table>
         </div>
 
+    </div>
+
+    <div class="box-footer clearfix">
+        <div class="pagestyle">{$pages}</div>
     </div>
 
 </div><!--/.col (right) -->

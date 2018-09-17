@@ -293,11 +293,19 @@ class InspectController extends BaseController{
             $where['u.confirm_id']  = array('in',$confirm_id);
             $where['s.solve']       = array('eq',0);
             $where['_string']       = "s.stay = 1 or s.travel = 1 or s.content = 1 or s.food = 1 or s.bus = 1 or s.driver = 1 or s.guide = 1 or s.teacher = 1";
+
+            //分页
+            $pagecount		        = M()->table('__TCS_SCORE_USER__ as u')->field('u.*,s.id as score_id,s.stay,s.travel,s.content,s.food,s.bus,s.driver,s.guide,s.teacher,s.suggest,s.problem,s.solve,s.resolvent,c.in_begin_day,c.in_day,c.address')->join('left join __TCS_SCORE__ as s on s.uid=u.id')->join('left join __OP_GUIDE_CONFIRM__ as c on c.id = u.confirm_id')->where($where)->count();
+            $page			        = new Page($pagecount, P::PAGE_SIZE);
+            $this->pages	        = $pagecount>P::PAGE_SIZE ? $page->show():'';
+
             $zhuize                 = M()->table('__TCS_SCORE_USER__ as u')
                 ->field('u.*,s.id as score_id,s.stay,s.travel,s.content,s.food,s.bus,s.driver,s.guide,s.teacher,s.suggest,s.problem,s.solve,s.resolvent,c.in_begin_day,c.in_day,c.address')
                 ->join('left join __TCS_SCORE__ as s on s.uid=u.id')
                 ->join('left join __OP_GUIDE_CONFIRM__ as c on c.id = u.confirm_id')
-                ->where($where)->select();
+                ->where($where)
+                ->limit($page->firstRow.','.$page->listRows)
+                ->select();
             $this->score_stu        = C('SCORE_STU');
             $this->lists            = $zhuize;
             $op                     = M('op')->where(array('op_id'=>$op_id))->find();
@@ -317,11 +325,18 @@ class InspectController extends BaseController{
         $this->op       = M('op')->where(array('op_id'=>$op_id))->find();
         $list           = M('op_guide_confirm')->field('id,score_num')->where(array('op_id'=>$op_id))->select();
         $score_num      = array_sum(array_column($list,'score_num'));
+
+        //分页
+        $pagecount		= M()->table('__TCS_SCORE__ as s')->field('s.*,u.mobile,u.confirm_id,c.in_begin_day,c.in_day,c.address')->join('left join __TCS_SCORE_USER__ as u on u.id = s.uid')->join('left join __OP_GUIDE_CONFIRM__ as c on c.id = u.confirm_id')->where(array('u.op_id'=>$op_id))->count();
+        $page			= new Page($pagecount, P::PAGE_SIZE);
+        $this->pages	= $pagecount>P::PAGE_SIZE ? $page->show():'';
+
         $lists          = M()->table('__TCS_SCORE__ as s')
             ->field('s.*,u.mobile,u.confirm_id,c.in_begin_day,c.in_day,c.address')
             ->join('left join __TCS_SCORE_USER__ as u on u.id = s.uid')
             ->join('left join __OP_GUIDE_CONFIRM__ as c on c.id = u.confirm_id')
             ->where(array('u.op_id'=>$op_id))
+            ->limit($page->firstRow.','.$page->listRows)
             ->select();
 
         foreach ($lists as $k=>$v){
@@ -353,6 +368,7 @@ class InspectController extends BaseController{
         $this->display();
     }
 
+    // @@@NODE-3###score_detail###每条评分详情###
     public function score_detail(){
         $id                 = I('id');
         $info               = M()->table('__TCS_SCORE__ as s')

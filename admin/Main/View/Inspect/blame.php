@@ -98,6 +98,10 @@
                                 </div>
                             </div>
 
+                            <div class="box-footer clearfix">
+                                <div class="pagestyle">{$pages}</div>
+                            </div>
+
                         </div><!--/.col (right) -->
                     </div>   <!-- /.row -->
                 </section><!-- /.content -->
