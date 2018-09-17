@@ -31,7 +31,7 @@
                                 <div class="btn-group" id="catfont">
                                     <a href="{:U('Op/index',array('pin'=>0))}" class="btn <?php if($pin==0){ echo 'btn-info';}else{ echo 'btn-default';} ?>">所有项目</a>
                                     <a href="{:U('Op/index',array('pin'=>1))}" class="btn <?php if($pin==1){ echo 'btn-info';}else{ echo 'btn-default';} ?>">我的项目</a>
-                                    <!-- <a href="{:U('Op/index',array('pin'=>2))}" class="btn <?php if($pin==2){ echo 'btn-info';}else{ echo 'btn-default';} ?>">我参与的项目</a> -->
+                                    <a href="{:U('Op/index',array('pin'=>2))}" class="btn <?php if($pin==2){ echo 'btn-info';}else{ echo 'btn-default';} ?>">我的核算报价</a>
                                 </div>
                                 
                                 <table class="table table-bordered dataTable fontmini" id="tablelist" style="margin-top:10px;">
@@ -109,6 +109,7 @@
                 <input type="hidden" name="m" value="Main">
                 <input type="hidden" name="c" value="Op">
                 <input type="hidden" name="a" value="index">
+                <input type="hidden" name="pin" value="{$pin}">
                 
                 <div class="form-group col-md-12">
                     <input type="text" class="form-control" name="title" placeholder="项目名称">

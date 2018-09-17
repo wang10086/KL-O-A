@@ -45,9 +45,14 @@ class OpController extends BaseController {
 		if($su)				$where['o.sale_user']		= array('like','%'.$su.'%');
 		if($cus)			$where['o.customer']	    = $cus;
 		if($pin==1)			$where['o.create_user']		= cookie('userid');
-		if($jd)				$where['a.nickname']		= array('like','%'.$jd.'%');
+        if($jd)				$where['a.nickname']		= array('like','%'.$jd.'%');
+        $where['o.type']                                = 1;
+        if($pin==2){
+                            $where['o.create_user']		= cookie('userid');
+                            $where['o.type']            = '0';
+        }
 
-		//分页
+        //分页
 		$pagecount		= $db->table('__OP__ as o')->field($field)->join('__OP_AUTH__ as u on u.op_id = o.op_id','LEFT')->join('__ACCOUNT__ as a on a.id = u.line','LEFT')->where($where)->count();
 		$page			= new Page($pagecount, P::PAGE_SIZE);
 		$this->pages	= $pagecount>P::PAGE_SIZE ? $page->show():'';
@@ -914,9 +919,6 @@ class OpController extends BaseController {
                 $op     = $db->where(array('op_id'=>$opid))->find();
 
                 $savedel = $op_guide_price_db->where(array('op_id'=>$opid,'confirm_id'=>0))->delete();
-                $upd_tcs = array();
-                $upd_tcs['tcs_stu'] = 0;
-                $db->where(array('op_id'=>$opid))->save($upd_tcs);
                 if ($savedel)  $num++;
                 foreach($data as $k=>$v){
                     $v['op_id'] = $opid;
@@ -925,8 +927,8 @@ class OpController extends BaseController {
                 }
 
                 //产品模块化,直接保存到核算costacc表(56=>校园科技节)
-                $arr_product    = C('ARR_PRODUCT');
-                if (in_array($op['kind'],$arr_product)){
+                //$arr_product    = C('ARR_PRODUCT');
+                //if (in_array($op['kind'],$arr_product)){
                     M('op_costacc')->where(array('op_id'=>$opid,'type'=>2,'status'=>0))->delete();
                     foreach ($data as $k=>$v){
                         $data   = array();
@@ -941,16 +943,7 @@ class OpController extends BaseController {
                         $savein = M('op_costacc')->add($data);
                         if ($savein) $num++;
                     }
-                }
-
-                /*//修改专家辅导员状态
-                $group_id = $db->where(array('op_id'=>$opid))->getField('group_id');
-                if ($group_id){
-                    $info['tcs_stu'] = 2;
-                }else{
-                    $info['tcs_stu'] = 1;   //需要专家辅导员
-                }
-                $res = $db->where(array('op_id'=>$opid))->save($info);*/
+                //}
 
                 //数据转存至op_guide_confirm表
                 $confirm    = M('op_guide_confirm')->where(array('op_id'=>$opid))->find();
@@ -971,7 +964,7 @@ class OpController extends BaseController {
 
             }
 
-            //保存辅导员/教师,专家需求信息
+            //保存辅导员/教师,专家具体需求信息
             if($opid && $savetype==13 ){
 
                 $data           = I('data');
@@ -2245,16 +2238,15 @@ class OpController extends BaseController {
                     M('op_team_confirm')->data($info)->where(array('op_id'=>$opid))->save();
                 }
 			}else{
+                $op_info            = array();
+                $op_info['type']    = 1;
+                M('op')->where(array('op_id'=>$opid))->save($op_info);
 				M('op_team_confirm')->add($info);
 			}
-			
-			//修正tcs项目中状态
+
 			$infos = array();
 			$infos['group_id']	    = $info['group_id'];
 			$infos['status']		= 1;
-            if($op['tcs_stu'] ==1){
-                $infos['tcs_stu']    = 2;    //已确认需求(已成团)
-            }
 			M('op')->data($infos)->where(array('op_id'=>$opid))->save();
 
             //给教务组长 roleid  102
@@ -2575,7 +2567,8 @@ class OpController extends BaseController {
         $confirm_id     = I('confirm_id');
         $price_id       = I('price_id');
 
-        $this->opid         = I('opid');
+        $opid               = I('opid');
+        $this->opid         = $opid;
         $this->guide_kind   = M('guidekind')->getField('id,name',true);
         //获取职能类型
         $priceKind          = M()->table('__GUIDE_PRICEKIND__ as gpk')->field('gpk.id,gpk.name')->join('left join __OP__ as op on gpk.pk_id = op.kind')->where(array("op.op_id"=>$opid))->select();
@@ -2583,5 +2576,5 @@ class OpController extends BaseController {
         $this->fields       = C('GUI_FIELDS');
         $this->display();
     }
-    
+
 }
