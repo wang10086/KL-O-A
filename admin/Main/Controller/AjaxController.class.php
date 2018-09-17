@@ -817,4 +817,40 @@ class AjaxController extends Controller {
         $this->ajaxReturn($lists);
     }
 
+    public function Ajax_salary_details_add(){
+        $add['createtime']                  = time();//创建时间
+        $add['account_id']                  = code_number($_POST['account_id']);//用户id
+        $add['datetime']                    = code_number($_POST['datetime']);//发放日期
+        $add['salary_id']                   = code_number($_POST['salary_id']);//岗位工资id
+        $add['attendance_id']               = code_number($_POST['attendance_id']);//考勤id
+        $add['bonus_id']                    = $_POST['bonus_id'];//提成/奖金/年终奖 id
+        $add['department_id']               = code_number($_POST['department_id']);//部门id
+        $add['post_id']                     = code_number($_POST['post_id']);//职务
+        $add['income_token']                = $_POST['income_token1'];//其他收入
+        $add['insurance_id']                = code_number($_POST['insurance_id']);//五险一金表
+        $add['subsidy_id']                  = $_POST['subsidy_id'];//补贴
+        $add['withholding_token']           = $_POST['withholding_token'];//代扣代缴
+        $add['money']                       = code_number($_POST['Payroll']);//实发工资
+        $add['standard']                    = code_number($_POST['standard']);//岗位标准薪资
+        $add['withdrawing']                 = $_POST['withdrawing'];//考勤扣款
+        $add['Achievements_withdrawing']    = $_POST['Achievements_withdrawing'];//绩效扣款
+        $add['Subsidy']                     = $_POST['Subsidy'];//带团补助
+        $add['total']                       = $_POST['total1'];//提成
+        $add['Should_distributed']          = code_number($_POST['count']);//应发工资
+        $add['risks']                       = code_number($_POST['content']);//五险一金
+        $add['Withhold']                    = $_POST['count_sum'];//代扣代缴
+        $oa_salary_wages_month = M('salary_wages_month')->add($add);
+        if($oa_salary_wages_month){
+            $oa_salary = M('salary')->where(array('id'=>$add['salary_id']))->save(array('status'=>2));
+            $sum                    = 1;
+            $msg                    = "保存数据成功!";
+            echo json_encode(array('sum' => $sum, 'msg' => $msg));die;
+        }else{
+            $sum                    = 0;
+            $msg                    = "保存数据失败!请重新保存!";
+            echo json_encode(array('sum' => $sum, 'msg' => $msg));die;
+        }
+
+    }
+
 }
