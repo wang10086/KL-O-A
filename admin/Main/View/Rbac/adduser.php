@@ -155,6 +155,7 @@
                                         <option <?php if($row['archives']==1){ echo 'selected';}?> value="1">中心</option>
                                         <option <?php if($row['archives']==2){ echo 'selected';}?> value="2">科旅</option>
                                         <option <?php if($row['archives']==3){ echo 'selected';}?> value="3">科行</option>
+                                        <option <?php if($row['archives']==4){ echo 'selected';}?> value="4">行管局</option>
                                     </select>
                                 </div>
                                         

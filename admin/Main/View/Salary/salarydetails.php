@@ -60,16 +60,10 @@
                                             <p>入职时间：<?php echo date('Y-m-d',$info['account']['entry_time']) ?></p>
                                         </div>
 
-                                        <?php if($type == 1){ ?>
-                                        <div class="form-group col-md-4 viwe searchtex_color_salary1">
-                                            <p>工资发放月份：<input type="text" class="monthly" style="width:10em;"></p>
+                                        <div class="form-group col-md-4 viwe searchtex_color_salary2">
+                                            <p>工资发放月份：{$info['month'].datetime}</p>
                                         </div>
-                                        <?php }?>
-                                        <?php if($type == 2){ ?>
-                                            <div class="form-group col-md-4 viwe searchtex_color_salary2">
-                                                <p>工资发放月份：{$info['month'].datetime}</p>
-                                            </div>
-                                        <?php }?>
+
                                         <div class="form-group col-md-4 viwe">
                                             <p>档案所属：<?php if($info['account']['archives']==1){ echo '中心';}elseif($info['account']['archives']==2){ echo'科旅';}elseif($info['account']['archives']==3){ echo'科行';}?></p>
                                         </div>
@@ -381,18 +375,8 @@
                                                 <td class="salary_individual_totala1">0.00 (元)</td>
                                             </tr>
                                         </table>
-                                        <br><br><br>
-
-
-                                        <!--   确定保存数据 -->
-                                        <?php if($type==1){?>
                                         <br>
-                                        <div class="searchtex_color_salary" style="width:20em;margin:0 auto" >
 
-                                            <input type="submit" class="form-control" value="保存数据" style="background-color:#00acd6;">
-
-                                        </div>
-                                        <?php }?>
                                     </div>
                                 </div><!-- /.box-body -->
                             </div><!-- /.box -->
@@ -619,69 +603,69 @@
        $('.salary_Payroll1').html(Payroll1);
 
 
-    $('.searchtex_color_salary').click(function(){
-        //提交数据状态
-        var account_id              = "{$info['account']['id']}";//用户id
-        var datetime                = Number($('.searchtex_color_salary1 .monthly').val());//发放日期
-        var salary_id               = "{$info['salary']['id']}";//岗位工资id
-        var attendance_id           = "{$info['attendance']['id']}";//考勤id
-        var bonus_id                = "{$info['bonus']['id']}";//提成/奖金/年终奖 id
-        var department_id           = "{$info['account']['departmentid']}";//部门id
-        var post_id                 = "{$info['account']['postid']}";//职务
-        var income_token1           = "{$info['income'][0]['income_token']}";//其他收入
-        var insurance_id            = "{$info['insurance']['id']}";//五险一金表
-        var subsidy_id              = "{$info['subsidy']['id']}";//补贴
-        var withholding_token       = "{$info['withholding'][0]['token']}";//代扣代缴
-        Payroll;//实发工资
-        var standard                = "{$info['salary'].standard_salary}";//岗位标准薪资
-        var withdrawing             = "{$info['attendance'].withdrawing}";//考勤扣款
-        var Achieve_withdrawing     = Number(achievements-score_Addition*score);//绩效扣款
-        var Subsidy                 = "{$info['bonus']['extract']}";//带团补助
-        var total1                  = "{$info['list']['total']}";//提成
-        count ;//应发工资
-        content;//五险一金
-        count_sum;//代扣代缴
-        if(account_id=="" || datetime=="" || salary_id=="" || attendance_id=="" || department_id=="" || post_id=="" || income_token1=="" || insurance_id=="" || Payroll=="" || standard==""|| count=="" || content==""){
-            alert("数据不完整!请填写完整后提交!");return false;
-        }
-        var url                         = "index.php?m=Main&c=Ajax&a=Ajax_salary_details_add";
-        $.ajax({
-            type: "POST",
-            url: url, //url
-            data: {
-                'account_id':Number(account_id),
-                'datetime':Number(datetime),
-                'salary_id':Number(salary_id),
-                'attendance_id':Number(attendance_id),
-                'bonus_id':Number(bonus_id),
-                'department_id':Number(department_id),
-                'post_id':Number(post_id),
-                'income_token1':Number(income_token1),
-                'insurance_id':Number(insurance_id),
-                'subsidy_id':Number(subsidy_id),
-                'withholding_token':Number(withholding_token),
-                'Payroll':Number(Payroll),
-                'standard':Number(standard),
-                'withdrawing':Number(withdrawing),
-                'Achievements_withdrawing':Number(Achieve_withdrawing),
-                'Subsidy':Number(Subsidy),
-                'total1':Number(total1),
-                'count':Number(count),
-                'content':Number(content),
-                'count_sum':Number(count_sum),
-            },
-            dataType: "json", //数据格式
-            success: function (data) {
-                if (data.sum == 1) {
-                    alert(data.msg);
-                    return false;
-                }
-                if (data.sum == 0) {
-                    alert(data.msg);
-                    return false;
-                }
-            }
-        });
-    })
+//    $('.searchtex_color_salary').click(function(){
+//        //提交数据状态
+//        var account_id              = "{$info['account']['id']}";//用户id
+//        var datetime                = Number($('.searchtex_color_salary1 .monthly').val());//发放日期
+//        var salary_id               = "{$info['salary']['id']}";//岗位工资id
+//        var attendance_id           = "{$info['attendance']['id']}";//考勤id
+//        var bonus_id                = "{$info['bonus']['id']}";//提成/奖金/年终奖 id
+//        var department_id           = "{$info['account']['departmentid']}";//部门id
+//        var post_id                 = "{$info['account']['postid']}";//职务
+//        var income_token1           = "{$info['income'][0]['income_token']}";//其他收入
+//        var insurance_id            = "{$info['insurance']['id']}";//五险一金表
+//        var subsidy_id              = "{$info['subsidy']['id']}";//补贴
+//        var withholding_token       = "{$info['withholding'][0]['token']}";//代扣代缴
+//        Payroll;//实发工资
+//        var standard                = "{$info['salary'].standard_salary}";//岗位标准薪资
+//        var withdrawing             = "{$info['attendance'].withdrawing}";//考勤扣款
+//        var Achieve_withdrawing     = Number(achievements-score_Addition*score);//绩效扣款
+//        var Subsidy                 = "{$info['bonus']['extract']}";//带团补助
+//        var total1                  = "{$info['list']['total']}";//提成
+//        count ;//应发工资
+//        content;//五险一金
+//        count_sum;//代扣代缴
+//        if(account_id=="" || datetime=="" || salary_id=="" || attendance_id=="" || department_id=="" || post_id=="" || income_token1=="" || insurance_id=="" || Payroll=="" || standard==""|| count=="" || content==""){
+//            alert("数据不完整!请填写完整后提交!");return false;
+//        }
+//        var url                         = "index.php?m=Main&c=Ajax&a=Ajax_salary_details_add";
+//        $.ajax({
+//            type: "POST",
+//            url: url, //url
+//            data: {
+//                'account_id':Number(account_id),
+//                'datetime':Number(datetime),
+//                'salary_id':Number(salary_id),
+//                'attendance_id':Number(attendance_id),
+//                'bonus_id':Number(bonus_id),
+//                'department_id':Number(department_id),
+//                'post_id':Number(post_id),
+//                'income_token1':Number(income_token1),
+//                'insurance_id':Number(insurance_id),
+//                'subsidy_id':Number(subsidy_id),
+//                'withholding_token':Number(withholding_token),
+//                'Payroll':Number(Payroll),
+//                'standard':Number(standard),
+//                'withdrawing':Number(withdrawing),
+//                'Achievements_withdrawing':Number(Achieve_withdrawing),
+//                'Subsidy':Number(Subsidy),
+//                'total1':Number(total1),
+//                'count':Number(count),
+//                'content':Number(content),
+//                'count_sum':Number(count_sum),
+//            },
+//            dataType: "json", //数据格式
+//            success: function (data) {
+//                if (data.sum == 1) {
+//                    alert(data.msg);
+//                    return false;
+//                }
+//                if (data.sum == 0) {
+//                    alert(data.msg);
+//                    return false;
+//                }
+//            }
+//        });
+//    })
 
 </script>

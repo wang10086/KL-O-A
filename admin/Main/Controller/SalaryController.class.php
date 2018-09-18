@@ -7,13 +7,43 @@ use Sys\Page;
 class SalaryController extends BaseController {
 
     /**
-     * @salaryindex
-     * id id    name名字
-     * employee_member 员工编号 salary_time 发工资时间
+     * @salaryindex 工资列表
+     *
      */
      public function salaryindex(){
-
-
+         if(IS_POST){
+             $where['account_id']               = trim($_POST['id']);
+             $member                            = trim($_POST['employee_member']);
+             $name                              = trim($_POST['name']);
+             $where['datetime']                 = trim($_POST['month']);
+             $where                             = array_filter($where);
+             if(!empty($member) || !empty($name)) {
+                 $query['nickname']             = $name;
+                 $query['employee_member']      = $member;
+                 $query                         = array_filter($query);
+                 $account                       = M('account')->where($query)->getField('id');
+                 if ($account) {
+                     if ($where['account_id'] !== "") {
+                         if ($where['account_id'] !== $account) {
+                             $this->error('您的数据有误!请重新选择！');die;
+                         }
+                     } else {
+                         $where['account_id']   = $account;
+                     }
+                 }
+             }
+         }
+         $where['status']                       = 1;//审核通过
+         $count                                 = M('salary_wages_month')->where($where)->count();
+         $page                                  = new Page($count,15);
+         $pages                                 = $page->show();
+         $info                                  = M('salary_wages_month')->where($where)->limit("$page->firstRow","$page->listRows")->order('datetime desc')->select();//工资生成数据
+         foreach($info as $key =>$value){
+             $info[$key]                        += M('account')->where(array('id'=>$value['account_id']))->find();//用户数据
+         }
+//print_r($info);die;
+         $this->assign('info',$info);
+         $this->assign('page',$pages);
          $this->display();
     }
 
@@ -33,6 +63,7 @@ class SalaryController extends BaseController {
         $where['id']                    = trim($_GET['id']);//用户account_id
         $account_id['datetime']         = trim($_GET['datetime']);
         $account_id['account_id']       = $where['id'];//用户
+        $account_id['status']           = 1;//审核通过
         $wages                          = $this->query_wages($where,$account_id);//所有详细信息
         foreach($wages as $key =>$val){//变为一维数组
             foreach($val as $ke =>$va){
@@ -87,7 +118,7 @@ class SalaryController extends BaseController {
                        $this->error('您的数据有误!请重新选择！');die;
                    }
                }else{
-                   $this->error('您的数据有误!请重新选择！');die;
+                   return 0;
                }
                $count               += $lists['target'];//季度目标
                $sum                 += $lists['complete'];//季度完成
@@ -201,24 +232,25 @@ class SalaryController extends BaseController {
             $user_info['subsidy']       = sql_query(1,'*','oa_salary_subsidy',$subsidy,1,0);//补贴
             $user_info['withholding'][] = sql_query(1,'*','oa_salary_withholding',$withholding,1,0);//代扣代缴
 
-            $type['type']               = 2;//状态成功 前台判断
+//            $type['type']               = 2;//状态成功 前台判断
 
         }else{//可以加判断是否是当前用户
-            unset($account_id['datetime']);
-            $user_info['account']       = sql_query(1,'*','oa_account',$where,2,1);//查询用户表
-            $department_r['id']         = $user_info['account'][0]['departmentid'];//部门
-            $user_info['department']    = sql_query(1,'*','oa_salary_department',$department_r,1,1);//查询部门
-            $posts_r['id']              = $user_info['account'][0]['postid'];
-            $user_info['posts']         = sql_query(1,'*','oa_posts',$posts_r,1,1);//查询岗位
-
-            $user_info['salary']        = sql_query(1,'*','oa_salary',$account_id,1,1);//岗位薪酬
-            $user_info['attendance']    = sql_query(1,'*','oa_salary_attendance',$account_id,1,1);//员工考核
-            $user_info['bonus']         = sql_query(1,'*','oa_salary_bonus',$account_id,1,1);//提成/奖金/年终奖
-            $user_info['income'][]      = sql_query(1,'*','oa_salary_income',$account_id,1,0);//其他收入
-            $user_info['insurance']     = sql_query(1,'*','oa_salary_insurance',$account_id,1,1);//五险一金表
-            $user_info['subsidy']       = sql_query(1,'*','oa_salary_subsidy',$account_id,1,0);//补贴
-            $user_info['withholding'][] = sql_query(1,'*','oa_salary_withholding',$account_id,1,0);//代扣代缴
-            $type['type']               = 1;//状态失败 前台判断
+            $this->error('您的数据有误!请重新选择!');die;
+//            unset($account_id['datetime']);
+//            $user_info['account']       = sql_query(1,'*','oa_account',$where,2,1);//查询用户表
+//            $department_r['id']         = $user_info['account'][0]['departmentid'];//部门
+//            $user_info['department']    = sql_query(1,'*','oa_salary_department',$department_r,1,1);//查询部门
+//            $posts_r['id']              = $user_info['account'][0]['postid'];
+//            $user_info['posts']         = sql_query(1,'*','oa_posts',$posts_r,1,1);//查询岗位
+//
+//            $user_info['salary']        = sql_query(1,'*','oa_salary',$account_id,1,1);//岗位薪酬
+//            $user_info['attendance']    = sql_query(1,'*','oa_salary_attendance',$account_id,1,1);//员工考核
+//            $user_info['bonus']         = sql_query(1,'*','oa_salary_bonus',$account_id,1,1);//提成/奖金/年终奖
+//            $user_info['income'][]      = sql_query(1,'*','oa_salary_income',$account_id,1,0);//其他收入
+//            $user_info['insurance']     = sql_query(1,'*','oa_salary_insurance',$account_id,1,1);//五险一金表
+//            $user_info['subsidy']       = sql_query(1,'*','oa_salary_subsidy',$account_id,1,0);//补贴
+//            $user_info['withholding'][] = sql_query(1,'*','oa_salary_withholding',$account_id,1,0);//代扣代缴
+//            $type['type']               = 1;//状态失败 前台判断
         }
         $content[0]                     = $user_info;
         $content[1]                     = $type;

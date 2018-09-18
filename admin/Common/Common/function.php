@@ -3432,21 +3432,21 @@ function sql_query($status,$field,$table,$where,$order,$type){
 	}
 	if($status == 1){//查看
 
-		$add_sql 	= sql_sel($status,$field,$table,$where,$order,$type);
+		$add_sql 	= sql_sel($field,$table,$where,$order,$type);
 
 	}
 	if($status == 2){//添加
 
-		$add_sql 	= sql_add($status,$field,$table,$where,$order,$type);
+		$add_sql 	= sql_add($table,$where);
 
 	}
 	if($status == 3){//删除
 
-		$add_sql 	= sql_del($status,$field,$table,$where,$order,$type);
+		$add_sql 	= sql_del($table,$where);
 	}
 	if($status == 4){//修改
 
-		$add_sql 	= sql_upd($status,$field,$table,$where,$order,$type);
+		$add_sql 	= sql_upd($field,$table,$where);
 	}
 
 	$sql 			= M()->query($add_sql);
@@ -3454,7 +3454,7 @@ function sql_query($status,$field,$table,$where,$order,$type){
 
 }
 
-function sql_sel($status,$field,$table,$where,$order,$type){//查询
+function sql_sel($field,$table,$where,$order,$type){//查询
 
 
 
@@ -3490,7 +3490,7 @@ function sql_sel($status,$field,$table,$where,$order,$type){//查询
 	return $add_sql;
 }
 
-function sql_add($status,$field,$table,$where,$order,$type){//添加
+function sql_add($table,$where){//添加
 
 	$add_sql 			= 'INSERT INTO ';
 	$add_sql 			.=$table.' ';
@@ -3509,7 +3509,7 @@ function sql_add($status,$field,$table,$where,$order,$type){//添加
 }
 
 
-function sql_del($status,$field,$table,$where,$order,$type){//删除
+function sql_del($table,$where){//删除
 
 	$add_sql 			= 'DELETE FROM '.$table.' ';
 
@@ -3525,7 +3525,7 @@ function sql_del($status,$field,$table,$where,$order,$type){//删除
 }
 
 
-function sql_upd($status,$field,$table,$where,$order,$type){//修改
+function sql_upd($field,$table,$where){//修改
 
 	$add_sql 			= 'UPDATE '.$table.'SET ';
 	if(!empty($field) && $field !== 0){
