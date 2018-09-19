@@ -129,35 +129,57 @@
     function p(s){ //时间格式
         return s < 10 ? '0' + s : s;
     }
-   $('.salary_moduser1').click(function(){
-
-       var myDate = new Date();
-       //获取当前年
-       var year=myDate.getFullYear();
-        //获取当前月
-       var month=myDate.getMonth()+1;
-       var now=year+'-'+p(month)+"-"+p(20);
-//       alert(now);
-        if(!msg){
-            var msg = '将生成'+now+'月份工资表，操作前请确认所有数据录入事项均已完成！';
+    function Atime(m,d){
+        if(d <= 10){
+            return m-1;
+        }else{
+            return m;
         }
-        art.dialog({
-            title: '生成工资表',
-            width:400,
-            height:100,
-            lock:true,
-            fixed: true,
-            content: '<span style="width:100%; text-align:center; font-size:18px;float:left; clear:both;">'+msg+'</span>',
-            okValue:'数据录入',
-            ok: function () {
-                //window.location.href=url;
-                //this.title('3秒后自动关闭').time(3);
-                $('#'+obj).submit();
-                return false;
-            },
-            cancelValue: '确定',
-            cancel: function () {
-            }
-        });
+
+    }
+   $('.salary_moduser1').click(function(){
+       var myDate       = new Date();
+       var year         = myDate.getFullYear();//获取当前年
+       var month        = myDate.getMonth()+1;//获取当前月
+       var date         = myDate.getDate();//当前日
+       var Appointime   = Atime(month,date);//工资月分
+       var currenttime  = year+''+p(Appointime);//当前时间
+
+       var msg = '将生成'+' '+currenttime+' '+'月份工资表，操作前请确认所有数据录入事项均已完成！';
+       var url ="{:U('Salary/salary_excel_list')}";
+       var url1 ="{:U('Salary/salary_query')}";
+       art.dialog({
+               content:msg,
+           lock:true,
+           title: "生成工资表",
+           width:'500px',
+           height:'200px',
+           button:[
+               {name:'生成工资发放表',
+                   class:'aui_state_highlight',
+                   callback:function(){
+                       window.location.href=url;
+                       return false;
+                   }
+               },
+               {name:'录入数据',
+                   class:'aui_state_highlight',
+                   callback:function(){
+                       window.location.href=url1;
+                       return false;
+                   }
+               }
+               ],
+
+           cancelValue:'取消',
+           cancel: function () {
+           }
+       }).show();
+
+       $('.aui_buttons button').addClass('aui_state_highlight');
+
     })
+
+
+
 </script>
