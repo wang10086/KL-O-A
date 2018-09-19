@@ -43,7 +43,8 @@
                                             <tr>
                                             	<td class="orderNo"></td>
                                                 <td><a href="{:U('Chart/finance',array('xs'=>$row['create_user_name'],'st'=>'2018-01-01'))}">{$row.create_user_name}</a></td>
-                                                <td>{$row.rolename}</td>
+                                                <!--<td>{$row.rolename}</td>-->
+                                                <td>{$row.department}</td>
                                                 <td>{$row.zsr}</td>
                                                 <td>{$row.zml}</td>
                                                 <td>{$row.mll}</td>

@@ -525,6 +525,7 @@ class ChartController extends BaseController {
 	public function pplist(){
 		$db		= M('op');
 		$roles	= M('role')->GetField('id,role_name',true);
+        $dep    = M('salary_department')->getField('id,department',true);
 		
 		//查询所有业务人员信息
 		$where = array();
@@ -536,12 +537,14 @@ class ChartController extends BaseController {
 		$field[] =  'id as create_user';
 		$field[] =  'nickname as create_user_name';
 		$field[] =  'roleid';
+        $field[] =  'departmentid';
 		
 		$lists = M('account')->field($field)->where($where)->select();
 
 		foreach($lists as $k=>$v){
 			
-			$lists[$k]['rolename'] 	=  $roles[$v['roleid']];	
+			$lists[$k]['rolename'] 	=  $roles[$v['roleid']];
+            $lists[$k]['department']=  $dep[$v['departmentid']];
 			
 			//查询2018年度总收入
 			$all = personal_income($v['create_user'],0);
@@ -556,7 +559,7 @@ class ChartController extends BaseController {
 			$lists[$k]['yll'] = $mon['mll'];
 			
 		}
-		
+
 		$this->lists = $lists;
 		
 		$this->display('pplist');
