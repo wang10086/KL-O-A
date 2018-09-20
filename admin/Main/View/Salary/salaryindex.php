@@ -146,7 +146,7 @@
        var currenttime  = year+''+p(Appointime);//当前时间
 
        var msg = '将生成'+' '+currenttime+' '+'月份工资表，操作前请确认所有数据录入事项均已完成！';
-       var url ="{:U('Salary/salary_excel_list')}";
+       var url ='/index.php?m=Main&c=Salary&a=salary_excel_list&datetime='+currenttime;
        var url1 ="{:U('Salary/salary_query')}";
        art.dialog({
                content:msg,

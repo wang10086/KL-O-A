@@ -556,21 +556,31 @@ class SalaryController extends BaseController {
      */
     public function salary_excel_list(){
 
-            $archives    = trim($_GET['archives']);
+        $archives           = trim($_GET['archives']);
+        $datetime           = trim($_GET['datetime']);
         if(!empty($archives)){
             if(!is_numeric($archives)){
-
                 $this->error('您的数据有误！请重新选择！');die;
             }
-            $info       = $this->salary_excel_sql($archives);//员工信息
+            $info           = $this->salary_excel_sql($archives);//员工信息
+            $sum            = $this->countmoney($archives);//部门合计
+            $summoney       = $this->summoney($sum); //总合计
+
         }else{//没有传送至
-
-            $info       = $this->salary_excel_sql();//员工信息
+            $info           = $this->salary_excel_sql();//员工信息
+            $sum            = $this->countmoney();//部门合计
+            $summoney       = $this->summoney($sum); //总合计
         }
-
-//        print_r($info);die;
-        $this->assign('info',$info);//操作记录
-        $this->assign('type',$archives);//操作记录
+        $statu="";
+        $status="";
+//        print_r($summoney);die;
+        $this->assign('info',$info);//员工信息
+        $this->assign('type',$archives);//状态
+        $this->assign('sum',$sum);//部门合计
+        $this->assign('count',$summoney);//部门合计
+        $this->assign('time',$datetime);//表时间
+        $this->assign('stat',$statu);//状态
+        $this->assign('status',$status);//状态
         $this->display();
     }
 
@@ -578,150 +588,254 @@ class SalaryController extends BaseController {
      * @salary_excel_sql
      */
     private function salary_excel_sql($archives){
-        $where['status']                    = 0;
-        $where['archives']                  = $archives;
+        $where['status']                            = 0;
+        $where['archives']                          = $archives;
         $where = array_filter($where);
-        $info                               =  M('account')->where($where)->order('employee_member ASC')->select();//个人数据
+        $info                                       =  M('account')->where($where)->order('employee_member ASC')->select();//个人数据
        foreach($info as $k => $v){//去除编码空的数据
-           if($v['employee_member']==""){
+           if($v['employee_member'] == ""){
                 unset($info[$k]);
            }
        }
         foreach($info as $key =>$val) {//薪资详情
-            $user_info[$key]['account']     = $val;
-            $id['account_id']               = $val['id'];
-            $department['id']               = $val['departmentid'];//部门
-            $user_info[$key]['department']  = sql_query(1,'*','oa_salary_department',$department,1,1);//查询部门
-            $posts['id']                    = $val['postid'];
-            $user_info[$key]['posts']       = sql_query(1,'*','oa_posts',$posts,1,1);//查询岗位
+            $user_info[$key]['account']             = $val;
+            $id['account_id']                       = $val['id'];
+            $department['id']                       = $val['departmentid'];//部门
+            $user_info[$key]['department']          = sql_query(1,'*','oa_salary_department',$department,1,1);//查询部门
+            $posts['id']                            = $val['postid'];
+            $user_info[$key]['posts']               = sql_query(1,'*','oa_posts',$posts,1,1);//查询岗位
 
-            $user_info[$key]['salary']      = sql_query(1, '*', 'oa_salary',$id, 1, 1);//岗位薪酬
-            $user_info[$key]['attendance']  = sql_query(1, '*', 'oa_salary_attendance',$id, 1, 1);//员工考核
-            $user_info[$key]['bonus']       = sql_query(1, '*', 'oa_salary_bonus',$id, 1, 1);//提成/奖金/年终奖
-            $income                         = sql_query(1, '*', 'oa_salary_income',$id, 1, 1);//其他收入
+            $user_info[$key]['salary']              = sql_query(1, '*', 'oa_salary',$id, 1, 1);//岗位薪酬
+            $user_info[$key]['attendance']          = sql_query(1, '*', 'oa_salary_attendance',$id, 1, 1);//员工考核
+            $user_info[$key]['bonus']               = sql_query(1, '*', 'oa_salary_bonus',$id, 1, 1);//提成/奖金/年终奖
+            $income                                 = sql_query(1, '*', 'oa_salary_income',$id, 1, 1);//其他收入
 
             if ($income) {
-                $token['income_token']      = $income['income_token'];
-                $token['account_id']        = $val['id'];
-                $token = array_filter($token);
-                $user_info[$key]['income'] = sql_query(1, '*', 'oa_salary_income', $token, 1, 0);//其他收入所有项目
-                $countmoney=0;
+                $token['income_token']              = $income['income_token'];
+                $token['account_id']                = $val['id'];
+                $token                              = array_filter($token);
+                $user_info[$key]['income']          = sql_query(1, '*', 'oa_salary_income', $token, 1, 0);//其他收入所有项目
+                $countmoney                         = 0;
                 foreach($user_info[$key]['income'] as $ke =>$va){
-                    $countmoney += $va['income_money'];
+                    $countmoney                     += $va['income_money'];
 
                 }
-                $user_info[$key]['Other'] = $countmoney;//其他补款
+                $user_info[$key]['Other']           = $countmoney;//其他补款
             }
-            $user_info[$key]['insurance'] = sql_query(1, '*', 'oa_salary_insurance', $id, 1, 1);//五险一金表
+            $user_info[$key]['insurance']           = sql_query(1, '*', 'oa_salary_insurance', $id, 1, 1);//五险一金表
 
-            $user_info[$key]['insurance_Total'] = $user_info[$key]['insurance'][0]['medical_care_base']*$user_info[$key]['insurance'][0]['medical_care_ratio']+$user_info[$key]['insurance'][0]['pension_base']*$user_info[$key]['insurance'][0]['pension_ratio']+$user_info[$key]['insurance'][0]['unemployment_base']*$user_info[$key]['insurance'][0]['unemployment_ratio']+$user_info[$key]['insurance'][0]['accumulation_fund_base']*$user_info[$key]['insurance'][0]['accumulation_fund_ratio'];//五险一金
+            $user_info[$key]['insurance_Total']     = $user_info[$key]['insurance'][0]['medical_care_base']*$user_info[$key]['insurance'][0]['medical_care_ratio']+$user_info[$key]['insurance'][0]['pension_base']*$user_info[$key]['insurance'][0]['pension_ratio']+$user_info[$key]['insurance'][0]['unemployment_base']*$user_info[$key]['insurance'][0]['unemployment_ratio']+$user_info[$key]['insurance'][0]['accumulation_fund_base']*$user_info[$key]['insurance'][0]['accumulation_fund_ratio'];//五险一金
 //            print_r($user_info[166]);die;
-            $user_info[$key]['subsidy'] = sql_query(1, '*', 'oa_salary_subsidy', $id, 1, 1);//补贴
-            $withholding = sql_query(1, '*', 'oa_salary_withholding', $id, 1, 1);//代扣代缴
+            $user_info[$key]['subsidy']             = sql_query(1, '*', 'oa_salary_subsidy', $id, 1, 1);//补贴
+            $withholding                            = sql_query(1, '*', 'oa_salary_withholding', $id, 1, 1);//代扣代缴
             if ($withholding) {
-                $wit['token'] = $withholding['token'];
-                $wit['account_id'] = $val['id'];
-                $wit = array_filter($wit);
-                $user_info[$key]['withholding'] = sql_query(1, '*', 'oa_salary_withholding', $wit, 1, 0);//代扣代缴
+                $wit['token']                       = $withholding['token'];
+                $wit['account_id']                  = $val['id'];
+                $wit                                = array_filter($wit);
+                $user_info[$key]['withholding']     = sql_query(1, '*', 'oa_salary_withholding', $wit, 1, 0);//代扣代缴
             }
             // kpi  pdca 品质检查
-            $que['p.tab_user_id']           = $val['id'];//用户id
-            $time_Y = date('Y');
-            $time_M = date('m');
-            $time_D = date('d');
+            $que['p.tab_user_id']                   = $val['id'];//用户id
+            $time_Y                                 = date('Y');
+            $time_M                                 = date('m');
+            $time_D                                 = date('d');
             if($time_D < 10){
-                $time_M = $time_M-1;
+                $time_M                             = $time_M-1;
             }
-//            $que['p.month']                 = $time_Y.$time_M ;//查询年月
-            $que['p.month']='201806';
-            $user            = $this->query_score($que);//绩效增减
-            $use1 = str_replace(array('<span class="red">','<span>','<span class="green">','</span>'),"",$user[0]['total_score_show']);//PDCA
-            $use2 = str_replace(array('<span class="red">','<span>','<span class="green">','</span>'),"",$user[0]['show_qa_score']);//品质检查
-            $use3 = str_replace(array('<span class="red">','<span>','<span class="green">','</span>'),"",$user[0]['sum_total_score']);//KPI
-            $money = $user_info[$key]['salary'][0]['standard_salary']/10*$user_info[$key]['salary'][0]['performance_salary']/100;//绩效金额
-            $branch =100;//给总共100分
+//            $que['p.month']                       = $time_Y.$time_M ;//查询年月
+            $que['p.month']                         ='201806';
+            $user                                   = $this->query_score($que);//绩效增减
+            $use1                                   = str_replace(array('<span class="red">','<span>','<span class="green">','</span>'),"",$user[0]['total_score_show']);//PDCA
+            $use2                                   = str_replace(array('<span class="red">','<span>','<span class="green">','</span>'),"",$user[0]['show_qa_score']);//品质检查
+            $use3                                   = str_replace(array('<span class="red">','<span>','<span class="green">','</span>'),"",$user[0]['sum_total_score']);//KPI
+            $money                                  = $user_info[$key]['salary'][0]['standard_salary']/10*$user_info[$key]['salary'][0]['performance_salary']/100;//绩效金额
+            $branch                                 =100;//给总共100分
             if(substr($use1,0,1)=='-' && is_numeric(substr($use1,1))){
                 $user_info[$key]['Achievements']['total_score_show'] = $use1;//pdca分数
-                $branch = $branch-substr($use1,1);
+                $branch                             = $branch-substr($use1,1);
             }
             if(substr($use2,0,1)=='-' && is_numeric(substr($use2,1))){
                 $user_info[$key]['Achievements']['show_qa_score'] = $use2;//品质检查分数
-                $branch = $branch-substr($use2,1);
+                $branch                             = $branch-substr($use2,1);
             }
             if(substr($use3,0,1)=='-' && is_numeric(substr($use3,1))){
                 $user_info[$key]['Achievements']['sum_total_score'] = $use3;//KPI分数
-                $branch = $branch-substr($use3,1);
+                $branch                             = $branch-substr($use3,1);
             }
             if(substr($use1,0,1)=='+' && is_numeric(substr($use1,1))){
                 $user_info[$key]['Achievements']['total_score_show'] = $use1;//pdca分数
-                $branch = $branch-substr($use1,1);
+                $branch                             = $branch-substr($use1,1);
             }
             if(substr($use2,0,1)=='+' && is_numeric(substr($use2,1))){
                 $user_info[$key]['Achievements']['show_qa_score'] = $use2;//品质检查分数
-                $branch = $branch-substr($use2,1);
+                $branch                             = $branch-substr($use2,1);
             }
             if(substr($use3,0,1)=='+' && is_numeric(substr($use3,1))){
                 $user_info[$key]['Achievements']['sum_total_score'] = $use3;//KPI分数
-                $branch = $branch-substr($use3,1);
+                $branch                             = $branch-substr($use3,1);
             }
             if($branch>100){//判断加减金额
-               $achievements = '+'.(($branch-100)*$money);
+               $achievements                        = '+'.(($branch-100)*$money);
             }
             if($branch<100){//判断加减金额
-                $achievements = '-'.((100-$branch)*$money);
+                $achievements                       = '-'.((100-$branch)*$money);
             }
-            if($achievements=='-0' || $achievements=='+0'){
+            if($achievements =='-0' || $achievements == '+0'){
                 $achievements=0;
             }
             $user_info[$key]['Achievements']['count_money'] = $achievements;//绩效增减金额
 
-            $user_info[$key]['Extract'] = $this->salary_kpi_month($val['id'],$que['p.month']); //目标任务 完成 提成
+            $user_info[$key]['Extract']             = $this->salary_kpi_month($val['id'],$que['p.month']); //目标任务 完成 提成
 
-            $user_info[$key]['tax_counting'] = $user_info[$key]['salary'][0]['standard_salary']/10*$user_info[$key]['salary'][0]['performance_salary']+($user_info[$key]['Achievements']['count_money'])-$user_info[$key]['insurance_Total'];//计税工资
+            $user_info[$key]['tax_counting']        = $user_info[$key]['salary'][0]['standard_salary']/10*$user_info[$key]['salary'][0]['performance_salary']+($user_info[$key]['Achievements']['count_money'])-$user_info[$key]['insurance_Total'];//计税工资
 
             //个人所得税
             if($user_info[$key]['tax_counting'] <= 5000){
-                $counting            = '0';
+                $counting                           = '0';
             }else{
-                $cout               = $user_info[$key]['tax_counting']-5000;
+                $cout                               = $user_info[$key]['tax_counting']-5000;
 
                 if($cout <= 3000){
-                    $counting        = $cout*0.03;
+                    $counting                       = $cout*0.03;
                 }
                 if($cout > 3000 && $cout <= 12000){
-                    $counting        = $cout*0.10-210;
+                    $counting                       = $cout*0.10-210;
                 }
                 if($cout > 12000 && $cout <= 25000){
-                    $counting        = $cout*0.20-1410;
+                    $counting                       = $cout*0.20-1410;
                 }
                 if($cout > 25000 && $cout <= 35000){
-                    $counting        = $cout*0.25-2660;
+                    $counting                       = $cout*0.25-2660;
                 }
                 if($cout > 35000 && $cout <= 55000){
-                    $counting        = $cout*0.30-4410;
+                    $counting                       = $cout*0.30-4410;
                 }
                 if($cout > 55000 && $cout <= 80000){
-                    $counting        = $cout*0.35-7160;
+                    $counting                       = $cout*0.35-7160;
                 }
                 if($cout > 80000){
-                    $counting        = $cout*0.45-15160;
+                    $counting                       = $cout*0.45-15160;
                 }
-                $counting = ((int)($counting*100))/100;
+                $counting                           = ((int)($counting*100))/100;
             }
-            $user_info[$key]['personal_tax'] = $counting;//个人所得税
-            $user_info[$key]['Labour'] = ($user_info[$key]['salary'][0]['standard_salary']/10*$user_info[$key]['salary'][0]['basic_salary']-500)*0.01;//工会会费
+            $user_info[$key]['personal_tax']        = $counting;//个人所得税
+            $user_info[$key]['Labour']              = ($user_info[$key]['salary'][0]['standard_salary']/10*$user_info[$key]['salary'][0]['basic_salary']-500)*0.01;//工会会费
+
+            $Year_end                               = ($user_info[$key]['bonus'][0]['annual_bonus'])/12;
+
+            if($Year_end < 1500){
+                $price1                             = $Year_end*0.03;
+            }
+            if($Year_end > 1500 && $Year_end < 4500){
+                $price1                             = $Year_end*0.1-105;
+            }
+            if($Year_end > 4500 && $Year_end < 9000){
+                $price1                             = $Year_end*0.2-555;
+            }
+            if($Year_end > 9000 && $Year_end < 35000){
+                $price1                             = $Year_end*0.25-1055;
+            }
+            if($Year_end > 35000 && $Year_end < 55000){
+                $price1                             = $Year_end*0.3-2755;
+            }
+            if($Year_end > 55000 && $Year_end < 80000){
+                $price1                             = $Year_end*0.35-5505;
+            }
+            if($Year_end>80000){
+                $price1                             = $Year_end*0.45-13505;
+            }
+            $price2                                 = ((int)($price1*100))/100;//年终奖计税
+
             $summoney=0;
-            foreach($user_info[$key]['withholding'] as $key =>$val){
-                $summoney += (int)$val['money'];
-
+            foreach($user_info[$key]['withholding'] as $keys =>$vals){
+                $summoney                           += (int)$val['money'];
             }
-            $user_info[$key]['summoney'] = $summoney;//代扣代缴总费用
-//            var Tax_counting = '个人所得税 : '+(Math.floor(counting*100))/100+' (元)';
-//            if($archives==100){print_r($user_info);die;}
+            $user_info[$key]['summoney']            = $summoney;//代扣代缴总费用
 
+            $user_info[$key]['yearend']             = $price2;//年终奖计税
+
+            //实发工资=应发工资-考勤扣款+绩效增减+提成+奖金-代扣代缴+带团补助+年终奖-年终奖计税+住房补贴+外地补贴+电脑补贴-五险一金-个人所得税-工会会费+其他补款-大额医保
+            $user_info[$key]['real_wages']          = $user_info[$key]['salary'][0]['standard_salary']-$user_info[$key]['attendance'][0]['withdrawing']+($achievements)+$user_info[$key]['Extract']['total']+$user_info[$key]['bonus'][0]['bonus']-$summoney+$user_info[$key]['bonus'][0]['extract']+$user_info[$key]['bonus'][0]['annual_bonus']-$price2+$user_info[$key]['subsidy'][0]['housing_subsidy']+$user_info[$key]['subsidy'][0]['foreign_subsidies']+$user_info[$key]['subsidy'][0]['computer_subsidy']-$user_info[$key]['insurance_Total']-$counting-$user_info[$key]['Labour']+$countmoney-$user_info[$key]['insurance'][0]['big_price'];
         }
 //        print_r($user_info[166]);die;
         return $user_info;
+    }
+
+    /**
+     * countmoney 部门合计
+     */
+    private function countmoney($archives){
+        $where['status']                                    = 0;
+        $where['archives']                                  = $archives;
+        $where = array_filter($where);
+        $info1                                              =  M('account')->where($where)->group('departmentid')->order('employee_member ASC')->select();//个人数据
+
+        foreach($info1 as $k => $v){//去除编码空的数据
+            if($v['employee_member'] == ""){//去空
+                unset($info1[$k]);
+            }else{
+                $query['departmentid']                      = $v['departmentid'];
+                $list                                       = $this->salary_excel_sql($archives);//获取薪资信息
+                foreach($list as $key =>$val){
+                    if($val['department'][0]['id']==$v['departmentid']){
+                        $sum[$k]['name']                    = '合计';
+                        $sum[$k]['department']              = $val['department'][0]['department'];//部门
+                        $sum[$k]['standard_salary']         += $val['salary'][0]['standard_salary'];//标准薪资
+                        $sum[$k]['basic']                   += $val['salary'][0]['standard_salary']/10*$val['salary'][0]['basic_salary'];//基本薪资
+                        $sum[$k]['withdrawing']             += $val['attendance'][0]['withdrawing'];//考勤扣款
+                        $sum[$k]['performance_salary']      += $val['salary'][0]['standard_salary']/10*$val['salary'][0]['performance_salary'];//绩效薪资
+                        $sum[$k]['count_money']             += $val['Achievements']['count_money'];//绩效增减
+                        $sum[$k]['total']                   += $val['Extract']['total'];//业绩提成
+                        $sum[$k]['bonus']                   += $val['bonus'][0]['bonus'];// 奖金
+                        $sum[$k]['housing_subsidy']         += $val['subsidy'][0]['housing_subsidy'];//住房补贴
+                        $sum[$k]['Other']                   += $val['Other'];//其他补款
+                        $sum[$k]['Should']                  += $performance_salary+($val['Achievements']['count_money']);//应发工资
+                        $sum[$k]['care']                    += $val['insurance'][0]['medical_care_base']*$val['insurance'][0]['medical_care_ratio'];//医疗保险
+                        $sum[$k]['pension']                 += $val['insurance'][0]['pension_base']*$val['insurance'][0]['pension_ratio'];//养老保险
+                        $sum[$k]['unemployment']            += $val['insurance'][0]['unemployment_base']*$val['insurance'][0]['unemployment_ratio'];// 失业保险
+                        $sum[$k]['accumulation']            += $val['insurance'][0]['accumulation_fund_base']*$val['insurance'][0]['accumulation_fund_ratio'];//公积金
+                        $sum[$k]['insurance_Total']         += $val['insurance_Total'];//个人保险合计
+                        $sum[$k]['tax_counting']            += $val['tax_counting'];//计税工资
+                        $sum[$k]['personal_tax']            += $val['personal_tax'];//个人所得税
+                        $sum[$k]['summoney']                += $val['summoney'];//税后扣款
+                        $sum[$k]['Labour']                  += $val['Labour'];//工会会费
+                        $sum[$k]['real_wages']              += $val['real_wages'];// 实发工资
+                    }
+                }
+            }
+        }
+        return $sum;
+    }
+
+    /**
+     * summoney 部门合计
+     */
+    private function summoney($sum){
+        $cout['name']                                = '总合计';
+        foreach($sum as $key => $val){
+            $cout['standard_salary']                 += $val['standard_salary'];//标准薪资
+            $cout['basic']                           += $val['basic'];//基本薪资
+            $cout['withdrawing']                     += $val['withdrawing'];//考勤扣款
+            $cout['performance_salary']              += $val['performance_salary'];//绩效薪资
+            $cout['count_money']                     += $val['count_money'];//绩效增减
+            $cout['total']                           += $val['total'];//业绩提成
+            $cout['bonus']                           += $val['bonus'];//奖金
+            $cout['housing_subsidy']                 += $val['housing_subsidy'];//住房补贴
+            $cout['Other']                           += $val['Other'];//其他补款
+            $cout['Should']                          += $val['Should'];//应发工资
+            $cout['care']                            += $val['care'];//医疗保险
+            $cout['pension']                         += $val['pension'];//养老保险
+            $cout['unemployment']                    += $val['unemployment'];//失业保险
+            $cout['accumulation']                    += $val['accumulation'];//公积金
+            $cout['insurance_Total']                 += $val['insurance_Total'];//个人保险合计
+            $cout['tax_counting']                    += $val['tax_counting'];//计税工资
+            $cout['personal_tax']                    += $val['personal_tax'];//个人所得税
+            $cout['summoney']                        += $val['summoney'];//税后扣款
+            $cout['Labour']                          += $val['Labour'];//工会会费
+            $cout['real_wages']                      += $val['real_wages'];//实发工资
+
+        }
+        return $cout;
     }
 
 }
