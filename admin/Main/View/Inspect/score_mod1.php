@@ -11,45 +11,77 @@
     </div>
     <div class="box-body">
         <div class="content">
-            <div class="col-md-8">
-                <p>项目名称：{$op.project}</p>
+            <div class="form-group" style="margin-bottom: 50px;">
+                <div class="col-md-4">
+                    <p><span class="score-black">项目名称：</span>{$op.project}</p>
+                </div>
+
+                <div class="col-md-4">
+                    <p><span class="score-black">评分次数：</span>{$average.score_num}&emsp;次</p>
+                </div>
+
+                <div class="col-md-4">
+                    <p><span class="score-black">总得分率：</span>{$average.sum_score}</p>
+                </div>
             </div>
 
-            <div class="col-md-4">
-                <p>评分次数：{$average.score_num}&emsp;次</p>
-            </div>
+            <?php if (in_array($kind,$score_kind2)){ ?>
+                <div class="form-group col-md-4">
+                    <p>课程深度：{$average.depth}&emsp;分</p>
+                </div>
 
-            <div class="form-group col-md-4">
-                <p>住宿：{$average.stay}&emsp;分</p>
-            </div>
+                <div class="form-group col-md-4">
+                    <p>课程专业性：{$average.major}&emsp;分</p>
+                </div>
 
-            <div class="form-group col-md-4">
-                <p>用餐：{$average.food}&emsp;分</p>
-            </div>
+                <div class="form-group col-md-4">
+                    <p>课程趣味性：{$average.interest}&emsp;分</p>
+                </div>
 
-            <div class="form-group col-md-4">
-                <p>车况：{$average.bus}&emsp;分</p>
-            </div>
+                <div class="form-group col-md-4">
+                    <p>材料及设备：{$average.material}&emsp;分</p>
+                </div>
 
-            <div class="form-group col-md-4">
-                <p>行程安排：{$average.travel}&emsp;分</p>
-            </div>
+                <div class="form-group col-md-4">
+                    <p>专家/讲师：{$average.teacher}&emsp;分</p>
+                </div>
 
-            <div class="form-group col-md-4">
-                <p>活动内容：{$average.content}&emsp;分</p>
-            </div>
+                <div class="form-group col-md-4">
+                    <p>辅导员：{$average.guide}&emsp;分</p>
+                </div>
+            <?php }else{ ?>
+                <div class="form-group col-md-4">
+                    <p>住宿：{$average.stay}&emsp;分</p>
+                </div>
 
-            <div class="form-group col-md-4">
-                <p>司机服务：{$average.driver}&emsp;分</p>
-            </div>
+                <div class="form-group col-md-4">
+                    <p>用餐：{$average.food}&emsp;分</p>
+                </div>
 
-            <div class="form-group col-md-4">
-                <p>辅导员/领队：{$average.guide}&emsp;分</p>
-            </div>
+                <div class="form-group col-md-4">
+                    <p>车况：{$average.bus}&emsp;分</p>
+                </div>
 
-            <div class="form-group col-md-4">
-                <p>教师/专家：{$average.teacher}&emsp;分</p>
-            </div>
+                <div class="form-group col-md-4">
+                    <p>行程安排：{$average.travel}&emsp;分</p>
+                </div>
+
+                <div class="form-group col-md-4">
+                    <p>活动内容：{$average.content}&emsp;分</p>
+                </div>
+
+                <div class="form-group col-md-4">
+                    <p>司机服务：{$average.driver}&emsp;分</p>
+                </div>
+
+                <div class="form-group col-md-4">
+                    <p>辅导员/领队：{$average.guide}&emsp;分</p>
+                </div>
+
+                <div class="form-group col-md-4">
+                    <p>教师/专家：{$average.teacher}&emsp;分</p>
+                </div>
+            <?php } ?>
         </div>
 
     </div>

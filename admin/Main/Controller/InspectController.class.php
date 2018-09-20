@@ -349,8 +349,14 @@ class InspectController extends BaseController{
                     $status = '无需处理';
                 }
             }
-            $lists[$k]['status'] = $status;
+            $lists[$k]['status']    = $status;
+            $lists[$k]['sum_score'] = $v['stay']+$v['travel']+$v['content']+$v['food']+$v['bus']+$v['driver']+$v['guide']+$v['teacher']+$v['depth']+$v['major']+$v['interest']+$v['material'];
         }
+
+        $kind               = M('op')->where(array('op_id'=>$op_id))->getField('kind');
+        $score_kind1        = array_keys(C('SCORE_KIND1'));
+        $score_kind2        = array_keys(C('SCORE_KIND2'));
+
         $average            = array();
         $average['stay']    = round(array_sum(array_column($lists,'stay'))/$score_num,2);
         $average['food']    = round(array_sum(array_column($lists,'food'))/$score_num,2);
@@ -360,7 +366,18 @@ class InspectController extends BaseController{
         $average['driver']  = round(array_sum(array_column($lists,'driver'))/$score_num,2);
         $average['guide']   = round(array_sum(array_column($lists,'guide'))/$score_num,2);
         $average['teacher'] = round(array_sum(array_column($lists,'teacher'))/$score_num,2);
-        $average['score_num'] = $score_num;
+
+        $average['depth']   = round(array_sum(array_column($lists,'depth'))/$score_num,2);
+        $average['major']   = round(array_sum(array_column($lists,'major'))/$score_num,2);
+        $average['interest'] = round(array_sum(array_column($lists,'interest'))/$score_num,2);
+        $average['material'] = round(array_sum(array_column($lists,'material'))/$score_num,2);
+        $average['score_num']= $score_num;
+        if (in_array($kind,$score_kind1)) $sum = 8*5*$score_num; //考核8项, 每项5分, 满分总分
+        if (in_array($kind,$score_kind2)) $sum = 6*5*$score_num; //考核6项, 每项5分, 满分总分
+        $average['sum_score'] = (round(array_sum(array_column($lists,'sum_score'))/$sum,2)*100).'%';
+        $this->kind         = $kind;
+        $this->score_kind1  = $score_kind1;
+        $this->score_kind2  = $score_kind2;
         $this->average      = $average;
         $this->lists        = $lists;
         $this->score_stu    = C('SCORE_STU');
