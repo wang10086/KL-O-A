@@ -21,6 +21,8 @@
                         <!--评分详情-->
                         <include file="score_mod2" />
 
+                        <!--追责-->
+                        <include file="score_mod3" />
 
                     </div>   <!-- /.row -->
                 </section><!-- /.content -->
@@ -34,7 +36,36 @@
 
 <script>
 	$(document).ready(function(e) {
-		$('#zhuize').hide();
+        var score_pro = <?php echo $score_pro; ?>;
+        console.log(score_pro);
+
+        if (score_pro) {
+            $('#zhuize').show();
+            $('textarea[name="info[problem]"]').html(score_pro.problem);
+            $('textarea[name="info[resolvent]"]').html(score_pro.resolvent);
+            $('#problemcheckbox').find('ins').each(function(index,ele){
+                if (score_pro.solve == 1){
+                    $('input[name="info[solve]"][value="1"]').parent('div').addClass('checked');
+                    $('input[name="info[solve]"][value="0"]').parent('div').removeClass('checked');
+                }else{
+                    $('input[name="info[solve]"][value="0"]').parent('div').addClass('checked');
+                    $('input[name="info[solve]"][value="1"]').parent('div').removeClass('checked');
+                }
+            })
+        }else{
+            $('#zhuize').hide();
+        }
+
+        $('#is_blame').find('ins').each(function (index,ele) {
+            $(this).click(function () {
+                if (index == 0){
+                    $('#zhuize').hide();
+                }else{
+                    $('#zhuize').show();
+                    $('.issolvebox').hide();
+                }
+            })
+        })
 
         $('#problemcheckbox').find('ins').each(function(index, element){
             $(this).click(function () {

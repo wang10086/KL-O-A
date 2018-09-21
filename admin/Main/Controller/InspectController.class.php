@@ -270,7 +270,7 @@ class InspectController extends BaseController{
     }
 
     // @@@NODE-3###blame###顾客满意度追责###
-    public function blame(){
+    /*public function blame(){
         if (isset($_POST['dosubmint'])){
             $info                   = I('info');
             $score_id               = I('score_id');
@@ -312,6 +312,40 @@ class InspectController extends BaseController{
             $this->op               = $op;
 
             $this->display();
+        }
+    }*/
+
+    public function blame(){
+        if (isset($_POST['dosubmint'])){
+
+            $op_id                  = I('op_id');
+            $info                   = I('info');
+            if ($op_id){
+                $list               = M('tcs_score_problem')->where(array('op_id'=>$op_id))->find();
+                $info['op_id']      = $op_id;
+                $info['solve_time'] = NOW_TIME;
+                $info['solver_uid'] = cookie('userid');
+                if ($list){
+                    $id             = $list['id'];
+                    $res            = M('tcs_score_problem')->where(array('id'=>$id))->save($info);
+                }else{
+                    $res            = M('tcs_score_problem')->where(array('op_id'=>$op_id))->add($info);
+                }
+                if ($res){
+
+                    $record = array();
+                    $record['op_id']   = $op_id;
+                    $record['optype']  = 4;
+                    $record['explain'] = '评分结果追责';
+                    op_record($record);
+
+                    $this->success('数据保存成功');
+                }else{
+                    $this->error('数据保存失败');
+                }
+            }else{
+                $this->error('数据保存失败');
+            }
         }
     }
 
@@ -375,12 +409,22 @@ class InspectController extends BaseController{
         if (in_array($kind,$score_kind1)) $sum = 8*5*$score_num; //考核8项, 每项5分, 满分总分
         if (in_array($kind,$score_kind2)) $sum = 6*5*$score_num; //考核6项, 每项5分, 满分总分
         $average['sum_score'] = (round(array_sum(array_column($lists,'sum_score'))/$sum,2)*100).'%';
+        $row                = M('tcs_score_problem')->where(array('op_id'=>$op_id))->find();
+        $this->score_pro    = json_encode($row);
+        if ($this->score_pro){
+            $this->rad      = 1;
+        }else{
+            $this->rad      = 0;
+        }
+
         $this->kind         = $kind;
         $this->score_kind1  = $score_kind1;
         $this->score_kind2  = $score_kind2;
         $this->average      = $average;
         $this->lists        = $lists;
+        $this->op_id        = $op_id;
         $this->score_stu    = C('SCORE_STU');
+
 
         $this->display();
     }
