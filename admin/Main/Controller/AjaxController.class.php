@@ -810,74 +810,115 @@ class AjaxController extends Controller {
         }
     }
 
-    public function get_posts(){
+    public function get_posts(){//获取部门
         $departmentid   = I('departmentid');
         $db             = M('posts');
         $lists          = $db->field('id,post_name')->where(array('departmentid'=>$departmentid))->select();
         $this->ajaxReturn($lists);
     }
 
-    public function Ajax_salary_details_add(){
-        $add['createtime']                          = time();//创建时间
-        $add['account_id']                          = code_number($_POST['account_id']);//用户id
-        $add['datetime']                            = code_number($_POST['datetime']);//发放日期
-        $add['salary_id']                           = code_number($_POST['salary_id']);//岗位工资id
-        $add['attendance_id']                       = code_number($_POST['attendance_id']);//考勤id
-        $add['bonus_id']                            = $_POST['bonus_id'];//提成/奖金/年终奖 id
-        $add['department_id']                       = code_number($_POST['department_id']);//部门id
-        $add['post_id']                             = code_number($_POST['post_id']);//职务
-        $add['income_token']                        = $_POST['income_token1'];//其他收入
-        $add['insurance_id']                        = code_number($_POST['insurance_id']);//五险一金表
-        $add['subsidy_id']                          = $_POST['subsidy_id'];//补贴
-        $add['withholding_token']                   = $_POST['withholding_token'];//代扣代缴
-        $add['money']                               = code_number($_POST['Payroll']);//实发工资
-        $add['standard']                            = code_number($_POST['standard']);//岗位标准薪资
-        $add['withdrawing']                         = $_POST['withdrawing'];//考勤扣款
-        $add['Achievements_withdrawing']            = $_POST['Achievements_withdrawing'];//绩效扣款
-        $add['Subsidy']                             = $_POST['Subsidy'];//带团补助
-        $add['total']                               = $_POST['total1'];//提成
-        $add['Should_distributed']                  = code_number($_POST['count']);//应发工资
-        $add['risks']                               = code_number($_POST['content']);//五险一金
-        $add['Withhold']                            = $_POST['count_sum'];//代扣代缴
 
-        $save['status']                             = 2;
-        $month                                      = sql_query(2,0,'oa_salary_wages_month',$add);
-        if($month){
-            $where['id']                            = $add['salary_id'];
-            $salary                                 = sql_query(4,$save,'oa_salary',$where);
-            if($salary){
-                $where['id']                        = $add['attendance_id'];
-                $attendance                         = sql_query(4,$save,'oa_salary_attendance',$where);
-                if($attendance){
-                    $where['id']                    = $add['bonus_id'];
-                    $bonus                          = sql_query(4,$save,'oa_salary_bonus',$where);
-                    if($bonus){
-                        $whe['income_token']        = $add['income_token'];
-                        $income                     = sql_query(4,$save,'oa_salary_income',$whe);
-                        if($income){
-                            $where['id']            = $add['insurance_id'];
-                            $insurance              = sql_query(4,$save,'oa_salary_insurance',$where);
-                            if($insurance){
-                                $where['id']        = $add['subsidy_id'];
-                                $subsidy            = sql_query(4,$save,'oa_salary_subsidy',$where);
-                                if($subsidy){
-                                    $whe['token']   = $add['withholding_token'];
-                                    $withholding    = sql_query(4,$save,'oa_salary_withholding',$whe);
-                                    if($withholding){
-                                        $sum        = 1;
-                                        $msg        = "保存数据成功!";
-                                        echo json_encode(array('sum' => $sum, 'msg' => $msg));die;
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
+    //保存提交审核数据
+    public function Ajax_salary_details_add(){
+//        if($_SESSION['userid']!==77){
+//            $sum                        = 0;
+//            $msg                        = "您没有权限提交数据!";
+//            echo json_encode(array('sum' => $sum, 'msg' => $msg));die;
+//        }
+        $datetime                       = trim($_POST['datetime']);//表数据时间
+        $content                        = trim($_POST['content']);//去除左右空字符 提交申请表数据
+        $coutdepartment                 = trim($_POST['coutdepartment']);//去除左右空字符 提交申请表部门数据
+        $total                          = trim($_POST['totals_num']);//去除左右空字符 提交申请表所有数据
+        $count                          = explode(",",str_replace(array("¥"),"",$content));//去除特殊字符并分隔
+        $partment                       = explode(",",str_replace(array("¥"),"",$coutdepartment));//去除特殊字符并分隔
+        $tol                            = explode(",",str_replace(array("¥"),"",$total));//去除特殊字符并分隔
+        array_pop($count);                array_pop($partment);        array_pop($tol);
+        $cont                           = count($count);//计算数量
+        $partment_num                   = count($partment);//计算数量
+
+        $pan = M('salary_wages_month')->where('datetime='.$datetime)->find();
+        if($pan){
+            $sum                        = 0;
+            $msg                        = "请不要重复提交数据!";
+            echo json_encode(array('sum' => $sum, 'msg' => $msg));die;
+        }
+        for($i=0;$i<$cont/36;$i++){//计算没多少条一个数组
+            for($num=$i*36;$num<36*$i+36;$num++){//计算分组字段的长度
+                $array[$i][$num%36] = $count[$num];//[数组数量][多少条的数据]
             }
         }
-            $sum                    = 0;
-            $msg                    = "保存数据失败!请重新保存!";
+        foreach($array as $key => $val){
+            trim($val);
+            $add['performance_salary']      = $val[7];  $add['account_id']  = $val[0];  $add['user_name']     = $val[1];  $add['post_name']      = $val[2];
+            $add['Achievements_withdrawing']= $val[8];  $add['department']  = $val[3];  $add['standard']      = $val[4];  $add['basic_salary']   = $val[5];
+            $add['housing_subsidy']         = $val[11]; $add['withdrawing'] = $val[6];  $add['total']         = $val[9];  $add['bonus']          = $val[10];
+            $add['Should_distributed']      = $val[13]; $add['Other']       = $val[12]; $add['medical_care']  = $val[14]; $add['pension_ratio']  = $val[15];
+            $add['accumulation_fund']       = $val[17]; $add['unemployment']= $val[16]; $add['tax_counting']  = $val[19]; $add['personal_tax']   = $val[20];
+            $add['insurance_Total']         = $val[18]; $add['summoney']    = $val[21]; $add['Labour']        = $val[22]; $add['real_wages']     = $val[23];
+            $add['attendance_id']           = $val[25]; $add['salary_id']   = $val[24]; $add['bonus_id']      = $val[26]; $add['income_token']   = $val[27];
+            $add['withholding_token']       = $val[30]; $add['insurance_id']= $val[28]; $add['subsidy_id']    = $val[29]; $add['show_qa_score']  = $val[32];
+            $add['total_score_show']        = $val[31]; $add['target']      = $val[34]; $add['complete']      = $val[35]; $add['sum_total_score']= $val[33];
+            $add['datetime']                = $datetime;$add['createtime']  = time();
+            $add                              = array_filter($add);
+
+            $month = M('salary_wages_month')->add($add);
+            if(!$month){
+                $sum                        = 0;
+                $msg                        = "数据提交失败!请重新提交!";
+                echo json_encode(array('sum' => $sum, 'msg' => $msg));die;
+            }
+        }
+        for($n=0;$n<$partment_num/22;$n++){//计算没多少条一个数组
+            for($sum=$n*22;$sum<22*$n+22;$sum++){//计算分组字段的长度
+                $arr[$n][$sum%22] = $partment[$sum];//[数组数量][多少条的数据]
+            }
+        }
+        foreach($arr as $k => $v){
+            $where['name']            = $v[0];   $where['department']         = $v[1];    $where['standard_salary'] = $v[2];    $where['basic']          = $v[3];
+            $where['withdrawing']     = $v[4];   $where['performance_salary'] = $v[5];    $where['count_money']     = $v[6];    $where['total']          = $v[7];
+            $where['bonus']           = $v[8];   $where['housing_subsidy']    = $v[9];    $where['Other']           = $v[10];   $where['Should']         = $v[11];
+            $where['care']            = $v[12];  $where['pension']            = $v[13];   $where['unemployment']    = $v[14];   $where['accumulation']   = $v[15];
+            $where['insurance_Total'] = $v[16];  $where['tax_counting']       = $v[17];   $where['personal_tax']    = $v[18];   $where['summoney']       = $v[19];
+            $where['Labour']          = $v[20];  $where['real_wages']         = $v[21];   $where['datetime']        = $datetime;$where['createtime']     = time();
+            $depart_tol               = M('salary_departmen_count')->add($where);
+            if(!$depart_tol){
+                $sum                  = 0;
+                $msg                  = "数据提交失败!请重新提交!";
+                echo json_encode(array('sum' => $sum, 'msg' => $msg));die;
+            }
+        }
+        $save['name']                 = $tol[0]; $save['standard_salary']     = $tol[1];  $save['basic']            = $tol[2];  $save['withdrawing']     = $tol[2];
+        $save['performance_salary']   = $tol[4]; $save['count_money']         = $tol[5];  $save['total']            = $tol[6];  $save['bonus']           = $tol[7];
+        $save['housing_subsidy']      = $tol[8]; $save['Other']               = $tol[9];  $save['Should']           = $tol[10]; $save['care']            = $tol[11];
+        $save['pension']              = $tol[12];$save['unemployment']        = $tol[13]; $save['accumulation']     = $tol[14]; $save['insurance_Total'] = $tol[15];
+        $save['tax_counting']         = $tol[16];$save['personal_tax']        = $tol[17]; $save['summoney']         = $tol[18]; $save['Labour']          = $tol[19];
+        $save['real_wages']           = $tol[20];$save['datetime']            = $datetime;$save['createtime']       = time();
+        $money = M('salary_count_money')->add($save);
+        if(!$money){
+            $sum                      = 0;
+            $msg                      = "数据提交失败!请重新提交!";
             echo json_encode(array('sum' => $sum, 'msg' => $msg));die;
+        }
+        $status['status'] = 2;
+
+        $salary_w                     = M('salary')->where(array('id='.$add['salary_id']))->save($status);
+
+        $attendance_w                 = M('salary_attendance')->where(array('id='.$add['attendance_id']))->save($status);
+
+        $bonus_w                      = M('salary_bonus')->where(array('id='.$add['bonus_id']))->save($status);
+
+        $income_w                     = M('salary_income')->where(array('income_token='.$add['income_token']))->save($status);
+
+        $insurance_w                  = M('salary_insurance')->where(array('id='.$add['insurance_id']))->save($status);
+
+        $subsidy_w                    = M('salary_subsidy')->where(array('id='.$add['subsidy_id']))->save($status);
+
+        $withholding_w                = M('salary_withholding')->where(array('token='.$add['withholding_token']))->save($status);
+        if($withholding_w && $salary_w && $attendance_w && $bonus_w && $income_w && $insurance_w && $subsidy_w){
+            $sum                      = 1;
+            $msg                      = "提交审核成功!";
+            echo json_encode(array('sum' => $sum, 'msg' => $msg));die;
+        }
     }
 
 }
