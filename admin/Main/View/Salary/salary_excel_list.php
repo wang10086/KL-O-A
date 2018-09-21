@@ -20,16 +20,9 @@
                             <div class="box" style="width:180em;">
                                 <div class="box-header">
                                     <h3 class="box-title">员工薪资列表</h3>
-
+                                    <a  class="btn btn-info" style="width:8em; margin: 0.5em 0em 0em 2em;"> <?php if($status=="" || $status==0){echo "待提交审核";}elseif($status==1){echo "待提交批准";}elseif($status==2){echo "待批准";}elseif($status==3){echo "已批准";}?></a>
+                                    <a href="javascript:;" class="btn btn-info btn-sm" onclick="javascript:opensearch('searchtext',700,160);" style="margin: 0.7em 0em 0em 3em;" ><i class="fa fa-search"></i> 搜索</a>
                                 </div><!-- /.box-header --><br>
-                                <div  style="margin-left:20em;">
-                                        <a href="{:U('Salary/salary_excel_list')}" class="btn <?php if($status=="" || $status==0){ echo 'btn-info';}else{ echo 'btn-default';} ?>" style="width:10em;">待提交审核</a>
-                                        <a href="{:U('Salary/salary_excel_list',array('status'=>1))}" class="btn <?php if($status==1){ echo 'btn-info';}else{ echo 'btn-default';} ?>" style="width:10em;">待提交批准</a>
-                                        <a href="{:U('Salary/salary_excel_list',array('status'=>2))}" class="btn <?php if($status==2){ echo 'btn-info';}else{ echo 'btn-default';} ?>" style="width:10em;">待批准</a>
-                                        <a href="{:U('Salary/salary_excel_list',array('status'=>3))}" class="btn <?php if($status==3){ echo 'btn-info';}else{ echo 'btn-default';} ?>" style="width:10em;">已批准</a>
-                                </div><!-- /.box-header --><br>
-                                <div class="box-header">
-                                </div><br>
                                 <div class="box-body">
                                     <div class="btn-group" id="catfont">
                                         <a href="{:U('Salary/salary_excel_list')}" class="btn <?php if($type=="" || $type==0){ echo 'btn-info';}else{ echo 'btn-default';} ?>">所有</a>
@@ -42,7 +35,7 @@
                                 <br><br>
                                     <div class="btn-group">
                                         <table class="table table-bordered dataTablev">
-                                            <tr role="row" class="orders" >
+                                            <tr role="row" class="orders">
                                                 <th class="sorting" style="width:8em">ID</th>
                                                 <th class="sorting" style="width:8em">员工姓名</th>
                                                 <th class="sorting" style="width:8em">岗位名称</th>
@@ -66,11 +59,12 @@
                                                 <th class="sorting" style="width:10em">个人所得税</th>
                                                 <th class="sorting" style="width:8em">税后扣款</th>
                                                 <th class="sorting" style="width:8em">工会会费</th>
+
                                                 <th class="sorting" style="width:8em">实发工资</th>
                                             </tr>
 
                                             <foreach name="info" item="info">
-                                            <tr class="excel_list_money2">
+                                            <tr class="excel_list_money1">
                                                 <td>{$info['account']['id']}</td>
                                                 <td>{$info['account']['nickname']}</td>
                                                 <td>{$info['posts'][0]['post_name']}</td>
@@ -95,25 +89,18 @@
                                                 <td>&yen; {$info['summoney']}</td>
                                                 <td>&yen; {$info['Labour']}</td>
                                                 <td>&yen; {$info['real_wages']}</td>
-
-                                                <td style="display:none">{$info['account']['departmentid']}</td>
-                                                <td style="display:none">{$info['account']['postid']}</td>
                                                 <td style="display:none">{$info['salary'][0]['id']}</td>
-                                                <td style="display:none">{$info['salary'][0]['standard_salary']}</td>
                                                 <td style="display:none">{$info['attendance'][0]['id']}</td>
                                                 <td style="display:none">{$info['bonus'][0]['id']}</td>
                                                 <td style="display:none">{$info['income'][0]['income_token']}</td>
                                                 <td style="display:none">{$info['insurance'][0]['id']}</td>
-                                                <td style="display:none">{$info['Extract']['total']+$info['insurance'][0]['big_price']}</td>
                                                 <td style="display:none">{$info['subsidy'][0]['id']}</td>
                                                 <td style="display:none">{$info['withholding'][0]['token']}</td>
                                                 <td style="display:none">{$info['Achievements']['total_score_show']}</td>
                                                 <td style="display:none">{$info['Achievements']['show_qa_score']}</td>
                                                 <td style="display:none">{$info['Achievements']['sum_total_score']}</td>
-                                                <td style="display:none">{$info['Achievements']['count_money']}</td>
                                                 <td style="display:none">{$info['Extract']['target']}</td>
                                                 <td style="display:none">{$info['Extract']['complete']}</td>
-                                                <td style="display:none">{$info['yearend']}</td>
                                             </tr>
                                             </foreach>
                                             <foreach name="sum" item="sum">
@@ -142,8 +129,8 @@
                                                 <td>&yen; {$sum['real_wages']}</td>
                                             </tr>
                                             </foreach>
-                                                <tr>
-                                                    <td colspan="3" style="text-align: center;">{$count['name']}</td>
+                                                <tr class="excel_list_money3">
+                                                    <td colspan="4" style="text-align: center;">{$count['name']}</td>
                                                     <td>&yen; {$count['standard_salary']}</td>
                                                     <td>&yen; {$count['basic']}</td>
                                                     <td>&yen; {$count['withdrawing']}</td>
@@ -173,8 +160,8 @@
                                 </div>
                                 <div>
 <!--                                  --><?php //if($stat="" && $userid==77){?>
-                                        <a  class="btn btn-info salary_excel1_submit" style="width:10em;margin-left:45em;">提交审核</a>
-<!--                                    --><?php //}?>
+                                    <a  class="btn btn-info salary_excel1_submit" style="width:10em;margin-left:45em;">提交审核</a>
+<!--                                                                        --><?php //}?>
                                     <?php if($stat=1 && $userid ==55){?>
                                         <a  class="btn btn-info salary_excel1_submit" style="width:10em;margin-left:45em;">提交批准</a>
                                         <a  class="btn btn-info salary_excel1_submit" style="width:10em;">驳回</a>
@@ -194,23 +181,12 @@
 
 
             <div id="searchtext">
-                <script src="__HTML__/js/public.js?v=1.0.6" type="text/javascript"></script>
+<!--                <script src="__HTML__/js/public.js?v=1.0.6" type="text/javascript"></script>-->
 
-                <form action="{:U('Salary/salaryindex')}" method="post" id="searchform">
+                <form action="{:U('Salary/salary_excel_list')}" method="post" id="searchform">
 
-                <div class="form-group col-md-3">
-                    <input type="text" class="form-control" name="id" placeholder="ID编号">
-                </div>
-                    <div class="form-group col-md-3">
-                        <input type="text" class="form-control" name="employee_member" placeholder="员工编号">
-                    </div>
-
-                <div class="form-group col-md-3">
-                    <input type="text" class="form-control" name="name" placeholder="员工姓名">
-                </div>
-
-                <div class="form-group col-md-3">
-                    <input type="text" name="month" class="form-control monthly" placeholder="年月/201806" />
+                <div class="form-group col-md-6" style="margin:2em 0em 0em 10em;">
+                    <input type="text" name="month" class="form-control monthly" placeholder="搜索工资表年月格式 : 201806" style="text-align: center;"/>
 <!--                    <input type="date" class="form-control" name="salary_time" placeholder="年月" id="nowTime">-->
                 </div>
 
@@ -221,5 +197,51 @@
 
 <include file="Index:footer2" />
 <script>
+        //    提交数据
+    $('.salary_excel1_submit').click(function(){
+        var count           = new Array();
+        var content         = new Array();
+        var totals_num      = new Array();
+        var url             = "index.php?m=Main&c=Ajax&a=Ajax_salary_details_add";
+        $('.excel_list_money1').each(function(){
+            $(this).children('td').each(function(){
+                var cont    = $(this).text();
+                count       += cont + ',';
+            });
+        });
+        $('.excel_list_money2').each(function(){
+            $(this).children('td').each(function(){
+                var sum    = $(this).text();
+                content    += sum + ',';
+            });
+        });
+        $('.excel_list_money3').each(function(){
+            $(this).children('td').each(function(){
+                var num    = $(this).text();
+                totals_num += num + ',';
+            });
+        });
+        $.ajax({
+            type: "POST",
+            url: url, //url
+            data: {
+                'content'       :count,
+                'datetime'      :<?php echo $time;?>,
+                'coutdepartment':content,
+                'totals_num'    :totals_num,
+            },
+            dataType: "json", //数据格式
+            success: function (data) {
+                if (data.sum == 1) {
+                    alert(data.msg);
+                    return false;
+                }
+                if (data.sum == 0) {
+                    alert(data.msg);
+                    return false;
+                }
+            }
+        });
+    });
 
 </script>

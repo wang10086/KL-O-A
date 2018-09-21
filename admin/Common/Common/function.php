@@ -3499,11 +3499,11 @@ function sql_add($table,$where){//添加
 		$vales     		= "";
 		foreach($where as $key => $val){
 			$str 		.= $key.',';
-			$vales 		.= "'$val','";
+			$vales 		.= "$val','";
 		}
 		$str 			= substr($str,0,-1);
 		$add_sql 		.= '('.$str.') values ';
-		$add_sql 		.= '('.$val.')';
+		$add_sql 		.= '('.$vales.')';
 	}
 	return $add_sql;
 }
