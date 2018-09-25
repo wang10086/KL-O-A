@@ -2269,7 +2269,7 @@ class OpController extends BaseController {
             $priceKind          = M()->table('__GUIDE_PRICEKIND__ as gpk')->field('gpk.id,gpk.name')->join('left join __OP__ as op on gpk.pk_id = op.kind')->where(array("op.op_id"=>$opid))->select();
             $this->price_kind   = $priceKind;
             $this->fields       = C('GUI_FIELDS');
-            $jiesuan            = M('op_costacc')->where(array('op_id'=>$opid,'status'=>2))->select();
+            $jiesuan            = M('op_settlement')->where(array('op_id'=>$opid,'audit_status'=>1))->find(); //结算审批通过
             $this->jiesuan      = $jiesuan;
 
             //辅导员/教师、专家
