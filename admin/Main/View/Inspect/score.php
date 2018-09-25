@@ -37,7 +37,7 @@
                                          <th class="sorting" data="o.sale_user">业务人员</th>
                                         <th class="sorting" data="o.guide_manager">调查人员</th>
                                         <th class="taskOptions" width="80" data="o.charity_status">满意度状态</th>
-                                        <th class="taskOptions" width="80" data="o.zhuize">是否追责</th>
+                                        <!--<th class="taskOptions" width="80" data="o.zhuize">是否追责</th>-->
                                         <th class="taskOptions">详情</th>
                                     </tr>
 
@@ -52,13 +52,13 @@
                                          <td>{$row.sale_user}</td>
                                         <td>{$row.guide_manager}</td>
                                         <td><div class="tdbox_long" style="width:80px">{$row.charity_status}</div></td>
-                                        <td>
+                                        <!--<td>
                                         <if condition="$row['zhuize'] gt 0">
                                             <div class="tdbox_long" style="width:80px" title="追责"><a href="{:U('Inspect/blame',array('op_id'=>$row['op_id']))}" class="btn btn-sm btn-hover" style="hover: red;"><span class="red">需要</span></a></div>
                                         <else />
                                             <span class="green">不需要</span>
                                         </if>
-                                        </td>
+                                        </td>-->
 
                                         <if condition="rolemenu(array('Inspect/score_info'))">
                                         <td class="taskOptions">

@@ -28,7 +28,7 @@
                         <th class="sorting" data="s.teacher">教师/专家</th>
                     <?php } ?>
                     <th>意见建议</th>
-                    <th>处理结果</th>
+                    <!--<th>处理结果</th>-->
                     <th width="40" class="taskOptions">详情</th>
                 </tr>
                 <foreach name="lists" item="row">
@@ -54,7 +54,7 @@
                             <td>{$score_stu.$row[teacher]}</td>
                         <?php } ?>
                         <td>{$row['suggest']}</td>
-                        <td>{$row.status}</td>
+                        <!--<td>{$row.status}</td>-->
 
                         <td class="taskOptions">
                             <button class="btn btn-info btn-smsm" onclick="show_score({$row.id})"><i class="fa fa-bars"></i></button>

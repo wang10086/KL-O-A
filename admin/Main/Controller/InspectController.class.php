@@ -173,9 +173,9 @@ class InspectController extends BaseController{
 			$this->display('edit_ins');
 		}
 	}
-	
-	
-	
+
+
+
 	
 	// @@@NODE-3###addrecord###记录详情###
 	public  function  detail(){
@@ -227,17 +227,26 @@ class InspectController extends BaseController{
         $page			= new Page($pagecount, P::PAGE_SIZE);
         $this->pages	= $pagecount>P::PAGE_SIZE ? $page->show():'';
 
+        $score_kind1    = array_keys(C('SCORE_KIND1')); //旅行类至少十分之一人投票
+        $score_kind2    = array_keys(C('SCORE_KIND2')); //课程类至少一人投票
         $lists = M()->table('__OP__ as o')->field('o.*,c.ret_time')->join('left join __OP_TEAM_CONFIRM__ as c on c.op_id=o.op_id')->limit($page->firstRow . ',' . $page->listRows)->where($where)->order($this->orders('o.create_time'))->select();
         foreach ($lists as $k=>$v){
             $op_id          = $v['op_id'];
             $number         = $v['number'];
+            $project_kind   = M('op')->where(array('op_id'=>$op_id))->getField('kind');
             $guide_manager  = M()->table('__OP_GUIDE_CONFIRM__ as c')->field('g.name')->join('left join __GUIDE__ as g on g.id = c.charity_id')->where(array('c.op_id'=>$op_id,'c.charity_id'=>array('neq',0)))->select();
             $lists[$k]['guide_manager'] = $guide_manager?implode(',',array_unique(array_column($guide_manager,'name'))):'<span class="blue">待定</span>';
 
             $charity        = $this->public_get_confirm_id($op_id);
             $score_list     = M()->table('__TCS_SCORE_USER__ as u')->join('left join __TCS_SCORE__ as s on s.uid=u.id')->where(array('u.confirm_id'=>array('in',$charity)))->select();
-            $yg_num         = intval($number/3);    //应完成人数,只要1/3的人投票即完成
-            $sj_num         = count($score_list);   //实际投票人数
+
+            if (in_array($project_kind,$score_kind1)) {
+                $yg_num         = intval($number/10);    //应完成人数,只要1/10的人投票即完成
+                $sj_num         = count($score_list);   //实际投票人数
+            }else{
+                $yg_num         = 1;                     //只要有一人投票
+                $sj_num         = count($score_list);   //实际投票人数
+            }
 
             if (!$charity){
                 $charity_status = "<span class='red'>未安排</span>";
@@ -251,12 +260,12 @@ class InspectController extends BaseController{
             $lists[$k]["charity_status"] = $charity_status;
 
             //只要有不满意的就需要追责
-            $where          = array();
+            /*$where          = array();
             $where['u.confirm_id']  = array('in',$charity);
             $where['s.solve']       = array('eq',0);
             $where['_string']       = "s.stay = 1 or s.travel = 1 or s.content = 1 or s.food = 1 or s.bus = 1 or s.driver = 1 or s.guide = 1 or s.teacher = 1";
             $zhuize         = M()->table('__TCS_SCORE_USER__ as u')->join('left join __TCS_SCORE__ as s on s.uid=u.id')->where($where)->count();
-            $lists[$k]['zhuize'] = $zhuize;
+            $lists[$k]['zhuize'] = $zhuize;*/
 
         }
 
@@ -374,7 +383,7 @@ class InspectController extends BaseController{
             ->select();
 
         foreach ($lists as $k=>$v){
-            if ($v['solve']==1){
+            /*if ($v['solve']==1){
                 $status     = '已处理';
             }else{
                 if ($v['solve']==0 && ($v['stay'] ==1 || $v['food'] ==1 || $v['bus'] ==1 || $v['travel'] ==1 || $v['content'] ==1 || $v['driver'] ==1 || $v['guide'] ==1 || $v['teacher'] ==1)){
@@ -383,7 +392,7 @@ class InspectController extends BaseController{
                     $status = '无需处理';
                 }
             }
-            $lists[$k]['status']    = $status;
+            $lists[$k]['status']    = $status;*/
             $lists[$k]['sum_score'] = $v['stay']+$v['travel']+$v['content']+$v['food']+$v['bus']+$v['driver']+$v['guide']+$v['teacher']+$v['depth']+$v['major']+$v['interest']+$v['material'];
         }
 
@@ -405,7 +414,7 @@ class InspectController extends BaseController{
         $average['major']   = round(array_sum(array_column($lists,'major'))/$score_num,2);
         $average['interest'] = round(array_sum(array_column($lists,'interest'))/$score_num,2);
         $average['material'] = round(array_sum(array_column($lists,'material'))/$score_num,2);
-        $average['score_num']= $score_num;
+        $average['score_num']= $score_num?$score_num:'0';
         if (in_array($kind,$score_kind1)) $sum = 8*5*$score_num; //考核8项, 每项5分, 满分总分
         if (in_array($kind,$score_kind2)) $sum = 6*5*$score_num; //考核6项, 每项5分, 满分总分
         $average['sum_score'] = (round(array_sum(array_column($lists,'sum_score'))/$sum,2)*100).'%';
@@ -440,7 +449,7 @@ class InspectController extends BaseController{
             ->where(array('s.id'=>$id))
             ->find();
 
-        if ($info['solve']==1){
+        /*if ($info['solve']==1){
             $status         = '已处理';
         }else{
             if ($info['solve']==0 && ($info['stay'] ==1 || $info['food'] ==1 || $info['bus'] ==1 || $info['travel'] ==1 || $info['content'] ==1 || $info['driver'] ==1 || $info['guide'] ==1 || $info['teacher'] ==1)){
@@ -449,7 +458,7 @@ class InspectController extends BaseController{
                 $status     = '无需处理';
             }
         }
-        $info['status']     = $status;
+        $info['status']     = $status;*/
         $this->row          = $info;
         $this->score_stu    = C('SCORE_STU');
 

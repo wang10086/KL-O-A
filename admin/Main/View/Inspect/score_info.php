@@ -13,6 +13,7 @@
                 <!-- Main content -->
                 <section class="content">
                      <!-- right column -->
+                    <?PHP if ($average['score_num']) { ?>
                     <div class="col-md-12">
 
                         <!--综合评分-->
@@ -25,6 +26,9 @@
                         <include file="score_mod3" />
 
                     </div>   <!-- /.row -->
+                    <?php }else{ ?>
+                        <include file="score_mod_noscore" />
+                    <?php } ?>
                 </section><!-- /.content -->
                 
             </aside><!-- /.right-side -->

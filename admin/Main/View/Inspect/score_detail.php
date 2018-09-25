@@ -30,7 +30,7 @@
              <div class="form-group box-float-12" style="padding-left:0;">意见建议：{$row.suggest}</div>
         </div>
         
-        <div class="fromlist nobor" style="margin-top:10px;">
+        <!--<div class="fromlist nobor" style="margin-top:10px;">
             <div class="formtexts">
                 <span class="fr">处理人员：{$row.nickname}</span>
                 <if condition="$row['solve_time']">
@@ -38,7 +38,7 @@
                 </if>
                 <span class="fr" style="border:none;">处理结果：{$row.status}</span>
             </div>
-        </div>
+        </div>-->
 
         <div class="fromlist">
             <div class="fromtitle">原因分析：</div>
