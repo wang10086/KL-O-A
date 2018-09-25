@@ -826,6 +826,16 @@ class AjaxController extends Controller {
 //            echo json_encode(array('sum' => $sum, 'msg' => $msg));die;
 //        }
         $datetime                       = trim($_POST['datetime']);//表数据时间
+        if($datetime=="" || $datetime ==null || $datetime==false){
+            $time_Y                     = date('Y');
+            $time_M                     = date('m');
+            $time_D                     = date('d');
+            if($time_D < 10){
+                $time_M                 = $time_M-1;
+            }
+            $datetime                   = $time_Y.$time_M ;//查询年月
+            
+        }
         $content                        = trim($_POST['content']);//去除左右空字符 提交申请表数据
         $coutdepartment                 = trim($_POST['coutdepartment']);//去除左右空字符 提交申请表部门数据
         $total                          = trim($_POST['totals_num']);//去除左右空字符 提交申请表所有数据
@@ -835,7 +845,6 @@ class AjaxController extends Controller {
         array_pop($count);                array_pop($partment);        array_pop($tol);
         $cont                           = count($count);//计算数量
         $partment_num                   = count($partment);//计算数量
-
         $pan = M('salary_wages_month')->where('datetime='.$datetime)->find();
         if($pan){
             $sum                        = 0;
@@ -858,14 +867,28 @@ class AjaxController extends Controller {
             $add['attendance_id']           = $val[25]; $add['salary_id']   = $val[24]; $add['bonus_id']      = $val[26]; $add['income_token']   = $val[27];
             $add['withholding_token']       = $val[30]; $add['insurance_id']= $val[28]; $add['subsidy_id']    = $val[29]; $add['show_qa_score']  = $val[32];
             $add['total_score_show']        = $val[31]; $add['target']      = $val[34]; $add['complete']      = $val[35]; $add['sum_total_score']= $val[33];
-            $add['datetime']                = $datetime;$add['createtime']  = time();
+            $add['datetime']                = $datetime;$add['createtime']  = time();   $add['status']        = 2;
             $add                              = array_filter($add);
-
             $month = M('salary_wages_month')->add($add);
             if(!$month){
                 $sum                        = 0;
                 $msg                        = "数据提交失败!请重新提交!";
                 echo json_encode(array('sum' => $sum, 'msg' => $msg));die;
+            }else{
+                $status['status'] = 2;
+                $salary_w                     = M('salary')->where(array('id='.$add['salary_id']))->save($status);
+
+                $attendance_w                 = M('salary_attendance')->where(array('id='.$add['attendance_id']))->save($status);
+
+                $bonus_w                      = M('salary_bonus')->where(array('id='.$add['bonus_id']))->save($status);
+
+                $income_w                     = M('salary_income')->where(array('income_token='.$add['income_token']))->save($status);
+
+                $insurance_w                  = M('salary_insurance')->where(array('id='.$add['insurance_id']))->save($status);
+
+                $subsidy_w                    = M('salary_subsidy')->where(array('id='.$add['subsidy_id']))->save($status);
+
+                $withholding_w                = M('salary_withholding')->where(array('token='.$add['withholding_token']))->save($status);
             }
         }
         for($n=0;$n<$partment_num/22;$n++){//计算没多少条一个数组
@@ -880,6 +903,7 @@ class AjaxController extends Controller {
             $where['care']            = $v[12];  $where['pension']            = $v[13];   $where['unemployment']    = $v[14];   $where['accumulation']   = $v[15];
             $where['insurance_Total'] = $v[16];  $where['tax_counting']       = $v[17];   $where['personal_tax']    = $v[18];   $where['summoney']       = $v[19];
             $where['Labour']          = $v[20];  $where['real_wages']         = $v[21];   $where['datetime']        = $datetime;$where['createtime']     = time();
+            $where['status']          = 2;
             $depart_tol               = M('salary_departmen_count')->add($where);
             if(!$depart_tol){
                 $sum                  = 0;
@@ -887,38 +911,105 @@ class AjaxController extends Controller {
                 echo json_encode(array('sum' => $sum, 'msg' => $msg));die;
             }
         }
-        $save['name']                 = $tol[0]; $save['standard_salary']     = $tol[1];  $save['basic']            = $tol[2];  $save['withdrawing']     = $tol[2];
+        $save['name']                 = $tol[0]; $save['standard_salary']     = $tol[1];  $save['basic']            = $tol[2];  $save['withdrawing']     = $tol[3];
         $save['performance_salary']   = $tol[4]; $save['count_money']         = $tol[5];  $save['total']            = $tol[6];  $save['bonus']           = $tol[7];
         $save['housing_subsidy']      = $tol[8]; $save['Other']               = $tol[9];  $save['Should']           = $tol[10]; $save['care']            = $tol[11];
         $save['pension']              = $tol[12];$save['unemployment']        = $tol[13]; $save['accumulation']     = $tol[14]; $save['insurance_Total'] = $tol[15];
         $save['tax_counting']         = $tol[16];$save['personal_tax']        = $tol[17]; $save['summoney']         = $tol[18]; $save['Labour']          = $tol[19];
-        $save['real_wages']           = $tol[20];$save['datetime']            = $datetime;$save['createtime']       = time();
+        $save['real_wages']           = $tol[20];$save['datetime']            = $datetime;$save['createtime']       = time();   $save['status']         = 2;
         $money = M('salary_count_money')->add($save);
-        if(!$money){
-            $sum                      = 0;
-            $msg                      = "数据提交失败!请重新提交!";
-            echo json_encode(array('sum' => $sum, 'msg' => $msg));die;
-        }
-        $status['status'] = 2;
-
-        $salary_w                     = M('salary')->where(array('id='.$add['salary_id']))->save($status);
-
-        $attendance_w                 = M('salary_attendance')->where(array('id='.$add['attendance_id']))->save($status);
-
-        $bonus_w                      = M('salary_bonus')->where(array('id='.$add['bonus_id']))->save($status);
-
-        $income_w                     = M('salary_income')->where(array('income_token='.$add['income_token']))->save($status);
-
-        $insurance_w                  = M('salary_insurance')->where(array('id='.$add['insurance_id']))->save($status);
-
-        $subsidy_w                    = M('salary_subsidy')->where(array('id='.$add['subsidy_id']))->save($status);
-
-        $withholding_w                = M('salary_withholding')->where(array('token='.$add['withholding_token']))->save($status);
-        if($withholding_w && $salary_w && $attendance_w && $bonus_w && $income_w && $insurance_w && $subsidy_w){
+        if($money){
             $sum                      = 1;
             $msg                      = "提交审核成功!";
             echo json_encode(array('sum' => $sum, 'msg' => $msg));die;
         }
+        $sum                      = 0;
+        $msg                      = "数据提交失败!请重新提交!";
+        echo json_encode(array('sum' => $sum, 'msg' => $msg));die;
     }
+
+    /**
+     * 提交数据 / 批准
+     */
+    public function Ajax_salary_details_upgrade(){
+//        if($_SESSION['userid']!==11 ||$_SESSION['userid']!==55){
+//            $sum                      = 0;
+//            $msg                      = "您的权限不够!请联系管理员！";
+//            echo json_encode(array('sum' => $sum, 'msg' => $msg));die;
+//        }
+
+        $wages_month_id = explode(',',trim($_POST['wages_month_id']));
+        $departmen_id = explode(',',trim($_POST['departmen_id']));
+        $count_money_id = trim($_POST['count_money_id']);
+        $status ['status']= trim($_POST['status']);
+        array_pop($wages_month_id);array_pop($departmen_id);
+        foreach($wages_month_id as $key =>$val ){
+            $id ['id'] = $val;
+            $oa_salary_wages_month = M('salary_wages_month')->where($id)->save($status);
+        }
+        foreach($departmen_id as $k => $v ){
+            $where ['id'] = $v;
+            $departmen_count = M('salary_departmen_count')->where($where)->save($status);
+        }
+        $count_money = M('salary_count_money')->where('id='.$count_money_id)->save($status);
+        if($count_money){
+            $sum                      = 1;
+            $msg                      = "提交批准成功!";
+            echo json_encode(array('sum' => $sum, 'msg' => $msg));die;
+        }else{
+            $sum                      = 0;
+            $msg                      = "提交批准失败!";
+            echo json_encode(array('sum' => $sum, 'msg' => $msg));die;
+        }
+    }
+
+    /**
+     * 驳回
+     */
+    public function post_error(){
+        $wages_month_id = explode(',',trim($_POST['wages_month_id']));
+        $departmen_id = explode(',',trim($_POST['departmen_id']));
+        $count_money_id = trim($_POST['count_money_id']);
+        $status ['status']= trim($_POST['status']);
+        array_pop($wages_month_id);array_pop($departmen_id);
+
+        foreach($wages_month_id as $key =>$val ){
+            $id ['id'] = $val;
+            $wages_month_id = M('salary_wages_month')->where($id)->find();
+            $salary_w                     = M('salary')->where(array('id='.$wages_month_id['salary_id']))->save($status);
+
+            $attendance_w                 = M('salary_attendance')->where(array('id='.$wages_month_id['attendance_id']))->save($status);
+
+            $bonus_w                      = M('salary_bonus')->where(array('id='.$wages_month_id['bonus_id']))->save($status);
+
+            $income_w                     = M('salary_income')->where(array('income_token='.$wages_month_id['income_token']))->save($status);
+
+            $insurance_w                  = M('salary_insurance')->where(array('id='.$wages_month_id['insurance_id']))->save($status);
+
+            $subsidy_w                    = M('salary_subsidy')->where(array('id='.$wages_month_id['subsidy_id']))->save($status);
+
+            $withholding_w                = M('salary_withholding')->where(array('token='.$wages_month_id['withholding_token']))->save($status);
+
+            $wages_month_del = M('salary_wages_month')->where($id)->delete();
+
+        }
+
+        foreach($departmen_id as $k => $v ){
+            $where ['id'] = $v;
+            $departmen_count = M('salary_departmen_count')->where($where)->delete();
+        }
+        $count_money = M('salary_count_money')->where('id='.$count_money_id)->delete();
+        if($count_money){
+            $sum                      = 1;
+            $msg                      = "驳回成功!";
+            echo json_encode(array('sum' => $sum, 'msg' => $msg));die;
+        }else{
+            $sum                      = 0;
+            $msg                      = "驳回失败!";
+            echo json_encode(array('sum' => $sum, 'msg' => $msg));die;
+        }
+
+    }
+
 
 }

@@ -33,16 +33,17 @@
                                     <tr role="row" class="orders" >
                                         <th class="sorting" data="op_id">ID</th>
                                         <th class="sorting" data="group_id">员工姓名</th>
-                                        <th class="sorting" data="group_id">员工编号</th>
+                                        <th class="sorting" data="group_id">员工部门</th>
                                         <th class="sorting" data="project">岗位薪酬标准</th>
                                         <th class="sorting" data="shouru">考勤扣款</th>
                                         <th class="sorting" data="number">绩效增减</th>
                                         <th class="sorting" data="shouru">带团补助</th>
                                         <th class="sorting" data="shouru">提成/补助/奖金</th>
+
                                         <th class="sorting" data="shouru">应发工资</th>
                                         <th class="sorting" data="maoli">五险一金</th>
                                         <th class="sorting" data="number">代扣代缴</th>
-                                        <th class="sorting" data="number">实际工资</th>
+                                        <th class="sorting" data="number">实发工资</th>
                                         <th width="50" class="taskOptions">薪资月份</th>
                                         <th width="50" class="taskOptions">详情</th>
                                         </if>
@@ -52,20 +53,20 @@
 
                                     <foreach name="info" item="info">
                                     <tr>
-                                        <td>{$info.account_id}</td>
-                                        <td>{$info.nickname}</td>
-                                        <td>{$info.employee_member}</td>
+                                        <td>{$info.id}</td>
+                                        <td>{$info.user_name}</td>
+                                        <td>{$info.department}</td>
                                         <td>&yen; {$info.standard}</td>
                                         <td>&yen; {$info.withdrawing}</td>
                                         <td>&yen; {$info.Achievements_withdrawing}</td>
                                         <td>&yen; {$info.Subsidy}</td>
                                         <td>&yen; {$info.total}</td>
                                         <td>&yen; {$info.Should_distributed}</td>
-                                        <td>&yen; {$info.risks}</td>
-                                        <td>&yen; {$info.Withhold}</td>
-                                        <td>&yen; {$info.money}</td>
-                                        <td>{$info.datetime}</td>
-                                        <td><a href="{:U('Salary/salarydetails',array('id'=>$info['account_id'],'datetime'=>$info['datetime']))}" class="btn btn-info btn-smsm"><i class="fa fa-pencil"></i>查看详情</a></td>
+                                        <td>&yen; {$info.insurance_Total}</td>
+                                        <td>&yen; {$info.summoney}</td>
+                                        <td>&yen; {$info.real_wages}</td>
+                                        <td> {$info.datetime}</td>
+                                        <td><a href="{:U('Salary/salarydetails',array('id'=>$info['id'],'datetime'=>$info['datetime']))}" class="btn btn-info btn-smsm"><i class="fa fa-pencil"></i>查看详情</a></td>
 
                                     </tr>
                                     </foreach>
@@ -92,7 +93,7 @@
                     <input type="text" class="form-control" name="id" placeholder="ID编号">
                 </div>
                     <div class="form-group col-md-3">
-                        <input type="text" class="form-control" name="employee_member" placeholder="员工编号">
+                        <input type="text" class="form-control" name="employee_member" placeholder="部门">
                     </div>
 
                 <div class="form-group col-md-3">

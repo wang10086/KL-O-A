@@ -20,7 +20,7 @@
                             <div class="box" style="width:180em;">
                                 <div class="box-header">
                                     <h3 class="box-title">员工薪资列表</h3>
-                                    <a  class="btn btn-info" style="width:8em; margin: 0.5em 0em 0em 2em;"> <?php if($status=="" || $status==0){echo "待提交审核";}elseif($status==1){echo "待提交批准";}elseif($status==2){echo "待批准";}elseif($status==3){echo "已批准";}?></a>
+                                    <a  class="btn btn-info" style="width:8em; margin: 0.5em 0em 0em 2em;"> <?php if($status=="" || $status==0 || $status==1){echo "待提交审核";}elseif($status==2){echo "待提交批准";}elseif($status==3){echo "待批准";}elseif($status==4){echo "已批准";}?></a>
                                     <a href="javascript:;" class="btn btn-info btn-sm" onclick="javascript:opensearch('searchtext',700,160);" style="margin: 0.7em 0em 0em 3em;" ><i class="fa fa-search"></i> 搜索</a>
                                 </div><!-- /.box-header --><br>
                                 <div class="box-body">
@@ -69,10 +69,12 @@
                                                 <td>{$info['account']['nickname']}</td>
                                                 <td>{$info['posts'][0]['post_name']}</td>
                                                 <td>{$info['department'][0]['department']}</td>
+
                                                 <td>&yen; {$info['salary'][0]['standard_salary']}</td>
                                                 <td>&yen; {$info['salary'][0]['standard_salary']/10*$info['salary'][0]['basic_salary']}</td>
                                                 <td>&yen; {$info['attendance'][0]['withdrawing']}</td>
                                                 <td>&yen; {$info['salary'][0]['standard_salary']/10*$info['salary'][0]['performance_salary']}</td>
+
                                                 <td>&yen; {$info['Achievements']['count_money']}</td>
                                                 <td>&yen; {$info['Extract']['total']}</td>
                                                 <td>&yen; {$info['bonus'][0]['bonus']}</td>
@@ -102,6 +104,7 @@
                                                 <td style="display:none">{$info['Extract']['target']}</td>
                                                 <td style="display:none">{$info['Extract']['complete']}</td>
                                             </tr>
+                                                <th class="list_salary_detail1" style="display: none">{$info['wages_mont_id']}</th>
                                             </foreach>
                                             <foreach name="sum" item="sum">
                                             <tr class="excel_list_money2">
@@ -128,6 +131,7 @@
                                                 <td>&yen; {$sum['Labour']}</td>
                                                 <td>&yen; {$sum['real_wages']}</td>
                                             </tr>
+                                                <th class="list_salary_detail2" style="display: none">{$sum['id']}</th>
                                             </foreach>
                                                 <tr class="excel_list_money3">
                                                     <td colspan="4" style="text-align: center;">{$count['name']}</td>
@@ -152,24 +156,23 @@
                                                     <td>&yen; {$count['Labour']}</td>
                                                     <td>&yen; {$count['real_wages']}</td>
                                                 </tr>
+                                            <th class="list_salary_detail3" style="display: none">{$count['id']}</th>
                                         </table>
                                     </div>
                                 </div><!-- /.box-body -->
-                                 <div class="box-footer clearfix">
-                                	<div class="pagestyle">{$page}</div>
-                                </div>
-                                <div>
-<!--                                  --><?php //if($stat="" && $userid==77){?>
-                                    <a  class="btn btn-info salary_excel1_submit" style="width:10em;margin-left:45em;">提交审核</a>
-<!--                                                                        --><?php //}?>
-                                    <?php if($stat=1 && $userid ==55){?>
-                                        <a  class="btn btn-info salary_excel1_submit" style="width:10em;margin-left:45em;">提交批准</a>
-                                        <a  class="btn btn-info salary_excel1_submit" style="width:10em;">驳回</a>
-                                    <?php }?>
-                                    <?php if($stat=2 && $userid ==11){?>
-                                        <a  class="btn btn-info salary_excel1_submit" style="width:10em;margin-left:45em;">批准</a>
-                                        <a  class="btn btn-info salary_excel1_submit" style="width:10em;">驳回</a>
-                                    <?php }?>
+
+                                <div><br><br>
+<!--                                  --><?php //if(($status="1" || $status=="" || $status==null || $status==false ) && $userid==77){?>
+<!--                                                                        <a  class="btn btn-info salary_excel1_submit" style="width:10em;margin-left:45em;">提交审核</a>-->
+<!--                                                                      --><?php //}?>
+<!--                                    --><?php //if($status=2 && $userid ==55){?>
+<!--                                        <a  class="btn btn-info salary_excel1_submit1" style="width:10em;margin-left:45em;">提交批准</a>-->
+<!--                                        <a  class="btn btn-info salary_excel1_submit2" style="width:10em;">驳回</a>-->
+<!--                                    --><?php //}?>
+<!--                                    --><?php //if($status=3 && $userid ==11){?>
+                                        <a  class="btn btn-info salary_excel1_submit3" style="width:10em;margin-left:45em;">批准</a>
+                                        <a  class="btn btn-info salary_excel1_submit2" style="width:10em;">驳回</a>
+<!--                                    --><?php //}?>
                                     </div><br><br>
                             </div><!-- /.box -->
 
@@ -226,7 +229,7 @@
             url: url, //url
             data: {
                 'content'       :count,
-                'datetime'      :<?php echo $time;?>,
+                'datetime'      :"<?php echo $time;?>",
                 'coutdepartment':content,
                 'totals_num'    :totals_num,
             },
@@ -244,4 +247,114 @@
         });
     });
 
+    $('.salary_excel1_submit1').click(function(){
+        var wages_month_id ="";
+        var departmen_id ="";
+        $('.list_salary_detail1').each(function(){
+           var text = $(this).text();
+            wages_month_id +=text+',';
+        })
+        $('.list_salary_detail2').each(function(){
+            var txt = $(this).text();
+            departmen_id +=txt+',';
+        })
+        var count_money_id = $('.list_salary_detail3').text();
+
+        $.ajax({
+            type: "POST",
+            url:  "index.php?m=Main&c=Ajax&a=Ajax_salary_details_upgrade",
+            data: {
+                'wages_month_id' : wages_month_id,
+                'departmen_id' : departmen_id,
+                'count_money_id' : count_money_id,
+                'status':3,
+
+            },
+            dataType: "json", //数据格式
+            success: function (data) {
+                if (data.sum == 1) {
+                    alert(data.msg);
+                    return false;
+                }
+                if (data.sum == 0) {
+                    alert(data.msg);
+                    return false;
+                }
+            }
+        });
+    })
+
+
+        $('.salary_excel1_submit3').click(function(){
+            var wages_month_id ="";
+            var departmen_id ="";
+            $('.list_salary_detail1').each(function(){
+                var text = $(this).text();
+                wages_month_id +=text+',';
+            })
+            $('.list_salary_detail2').each(function(){
+                var txt = $(this).text();
+                departmen_id +=txt+',';
+            })
+            var count_money_id = $('.list_salary_detail3').text();
+
+            $.ajax({
+                type: "POST",
+                url:  "index.php?m=Main&c=Ajax&a=Ajax_salary_details_upgrade",
+                data: {
+                    'wages_month_id' : wages_month_id,
+                    'departmen_id' : departmen_id,
+                    'count_money_id' : count_money_id,
+                    'status':4,
+
+                },
+                dataType: "json", //数据格式
+                success: function (data) {
+                    if (data.sum == 1) {
+                        alert(data.msg);
+                        return false;
+                    }
+                    if (data.sum == 0) {
+                        alert(data.msg);
+                        return false;
+                    }
+                }
+            });
+        })
+    $('.salary_excel1_submit2').click(function(){
+        var wages_month_id ="";
+        var departmen_id ="";
+        $('.list_salary_detail1').each(function(){
+            var text = $(this).text();
+            wages_month_id +=text+',';
+        })
+        $('.list_salary_detail2').each(function(){
+            var txt = $(this).text();
+            departmen_id +=txt+',';
+        })
+        var count_money_id = $('.list_salary_detail3').text();
+
+        $.ajax({
+            type: "POST",
+            url:  "index.php?m=Main&c=Ajax&a=post_error",
+            data: {
+                'wages_month_id' : wages_month_id,
+                'departmen_id' : departmen_id,
+                'count_money_id' : count_money_id,
+                'status':1,
+
+            },
+            dataType: "json", //数据格式
+            success: function (data) {
+                if (data.sum == 1) {
+                    alert(data.msg);
+                    return false;
+                }
+                if (data.sum == 0) {
+                    alert(data.msg);
+                    return false;
+                }
+            }
+        });
+    })
 </script>
