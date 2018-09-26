@@ -851,24 +851,25 @@ class AjaxController extends Controller {
             $msg                        = "请不要重复提交数据!";
             echo json_encode(array('sum' => $sum, 'msg' => $msg));die;
         }
-        for($i=0;$i<$cont/36;$i++){//计算没多少条一个数组
-            for($num=$i*36;$num<36*$i+36;$num++){//计算分组字段的长度
-                $array[$i][$num%36] = $count[$num];//[数组数量][多少条的数据]
+        for($i=0;$i<$cont/39;$i++){//计算没多少条一个数组
+            for($num=$i*39;$num<39*$i+39;$num++){//计算分组字段的长度
+                $array[$i][$num%39] = $count[$num];//[数组数量][多少条的数据]
             }
         }
         foreach($array as $key => $val){
             trim($val);
-            $add['performance_salary']      = $val[7];  $add['account_id']  = $val[0];  $add['user_name']     = $val[1];  $add['post_name']      = $val[2];
-            $add['Achievements_withdrawing']= $val[8];  $add['department']  = $val[3];  $add['standard']      = $val[4];  $add['basic_salary']   = $val[5];
-            $add['housing_subsidy']         = $val[11]; $add['withdrawing'] = $val[6];  $add['total']         = $val[9];  $add['bonus']          = $val[10];
-            $add['Should_distributed']      = $val[13]; $add['Other']       = $val[12]; $add['medical_care']  = $val[14]; $add['pension_ratio']  = $val[15];
-            $add['accumulation_fund']       = $val[17]; $add['unemployment']= $val[16]; $add['tax_counting']  = $val[19]; $add['personal_tax']   = $val[20];
-            $add['insurance_Total']         = $val[18]; $add['summoney']    = $val[21]; $add['Labour']        = $val[22]; $add['real_wages']     = $val[23];
-            $add['attendance_id']           = $val[25]; $add['salary_id']   = $val[24]; $add['bonus_id']      = $val[26]; $add['income_token']   = $val[27];
-            $add['withholding_token']       = $val[30]; $add['insurance_id']= $val[28]; $add['subsidy_id']    = $val[29]; $add['show_qa_score']  = $val[32];
-            $add['total_score_show']        = $val[31]; $add['target']      = $val[34]; $add['complete']      = $val[35]; $add['sum_total_score']= $val[33];
-            $add['datetime']                = $datetime;$add['createtime']  = time();   $add['status']        = 2;
-            $add                              = array_filter($add);
+            $add['performance_salary']      = $val[7];  $add['account_id']  = $val[0];  $add['user_name']   = $val[1];  $add['post_name']      = $val[2];
+            $add['Achievements_withdrawing']= $val[8];  $add['department']  = $val[3];  $add['standard']    = $val[4];  $add['basic_salary']   = $val[5];
+            $add['housing_subsidy']         = $val[11]; $add['withdrawing'] = $val[6];  $add['total']       = $val[9];  $add['bonus']          = $val[10];
+            $add['Should_distributed']      = $val[13]; $add['Other']       = $val[12]; $add['medical_care']= $val[14]; $add['pension_ratio']  = $val[15];
+            $add['accumulation_fund']       = $val[17]; $add['unemployment']= $val[16]; $add['tax_counting']= $val[19]; $add['personal_tax']   = $val[20];
+            $add['insurance_Total']         = $val[18]; $add['summoney']    = $val[21]; $add['Labour']      = $val[22]; $add['real_wages']     = $val[23];
+            $add['attendance_id']           = $val[25]; $add['salary_id']   = $val[24]; $add['bonus_id']    = $val[26]; $add['income_token']   = $val[27];
+            $add['withholding_token']       = $val[30]; $add['insurance_id']= $val[28]; $add['subsidy_id']  = $val[29]; $add['show_qa_score']  = $val[32];
+            $add['total_score_show']        = $val[31]; $add['target']      = $val[34]; $add['complete']    = $val[35]; $add['sum_total_score']= $val[33];
+            $add['datetime']                = $datetime;$add['createtime']  = time();   $add['status']      = 2;        $add['yearend']        = $val[36];
+            $add['Subsidy']                 = $val[37]; $add['welfare']     = $val[38];
+            $add                            = array_filter($add);
             $month = M('salary_wages_month')->add($add);
             if(!$month){
                 $sum                        = 0;
@@ -876,19 +877,13 @@ class AjaxController extends Controller {
                 echo json_encode(array('sum' => $sum, 'msg' => $msg));die;
             }else{
                 $status['status'] = 2;
-                $salary_w                     = M('salary')->where(array('id='.$add['salary_id']))->save($status);
-
-                $attendance_w                 = M('salary_attendance')->where(array('id='.$add['attendance_id']))->save($status);
-
-                $bonus_w                      = M('salary_bonus')->where(array('id='.$add['bonus_id']))->save($status);
-
-                $income_w                     = M('salary_income')->where(array('income_token='.$add['income_token']))->save($status);
-
-                $insurance_w                  = M('salary_insurance')->where(array('id='.$add['insurance_id']))->save($status);
-
-                $subsidy_w                    = M('salary_subsidy')->where(array('id='.$add['subsidy_id']))->save($status);
-
-                $withholding_w                = M('salary_withholding')->where(array('token='.$add['withholding_token']))->save($status);
+                $salary_w                   = M('salary')->where(array('id='.$add['salary_id']))->save($status);
+                $attendance_w               = M('salary_attendance')->where(array('id='.$add['attendance_id']))->save($status);
+                $bonus_w                    = M('salary_bonus')->where(array('id='.$add['bonus_id']))->save($status);
+                $income_w                   = M('salary_income')->where(array('income_token='.$add['income_token']))->save($status);
+                $insurance_w                = M('salary_insurance')->where(array('id='.$add['insurance_id']))->save($status);
+                $subsidy_w                  = M('salary_subsidy')->where(array('id='.$add['subsidy_id']))->save($status);
+                $withholding_w              = M('salary_withholding')->where(array('token='.$add['withholding_token']))->save($status);
             }
         }
         for($n=0;$n<$partment_num/22;$n++){//计算没多少条一个数组
@@ -897,34 +892,34 @@ class AjaxController extends Controller {
             }
         }
         foreach($arr as $k => $v){
-            $where['name']            = $v[0];   $where['department']         = $v[1];    $where['standard_salary'] = $v[2];    $where['basic']          = $v[3];
-            $where['withdrawing']     = $v[4];   $where['performance_salary'] = $v[5];    $where['count_money']     = $v[6];    $where['total']          = $v[7];
-            $where['bonus']           = $v[8];   $where['housing_subsidy']    = $v[9];    $where['Other']           = $v[10];   $where['Should']         = $v[11];
-            $where['care']            = $v[12];  $where['pension']            = $v[13];   $where['unemployment']    = $v[14];   $where['accumulation']   = $v[15];
-            $where['insurance_Total'] = $v[16];  $where['tax_counting']       = $v[17];   $where['personal_tax']    = $v[18];   $where['summoney']       = $v[19];
-            $where['Labour']          = $v[20];  $where['real_wages']         = $v[21];   $where['datetime']        = $datetime;$where['createtime']     = time();
-            $where['status']          = 2;
-            $depart_tol               = M('salary_departmen_count')->add($where);
+            $where['name']           = $v[0]; $where['department']        = $v[1]; $where['standard_salary']= $v[2];    $where['basic']       = $v[3];
+            $where['withdrawing']    = $v[4]; $where['performance_salary']= $v[5]; $where['count_money']    = $v[6];    $where['total']       = $v[7];
+            $where['bonus']          = $v[8]; $where['housing_subsidy']   = $v[9]; $where['Other']          = $v[10];   $where['Should']      = $v[11];
+            $where['care']           = $v[12];$where['pension']           = $v[13];$where['unemployment']   = $v[14];   $where['accumulation']= $v[15];
+            $where['insurance_Total']= $v[16];$where['tax_counting']      = $v[17];$where['personal_tax']   = $v[18];   $where['summoney']    = $v[19];
+            $where['Labour']         = $v[20];$where['real_wages']        = $v[21];$where['datetime']       = $datetime;$where['createtime']  = time();
+            $where['status']         = 2;
+            $depart_tol              = M('salary_departmen_count')->add($where);
             if(!$depart_tol){
-                $sum                  = 0;
-                $msg                  = "数据提交失败!请重新提交!";
+                $sum                 = 0;
+                $msg                 = "数据提交失败!请重新提交!";
                 echo json_encode(array('sum' => $sum, 'msg' => $msg));die;
             }
         }
-        $save['name']                 = $tol[0]; $save['standard_salary']     = $tol[1];  $save['basic']            = $tol[2];  $save['withdrawing']     = $tol[3];
-        $save['performance_salary']   = $tol[4]; $save['count_money']         = $tol[5];  $save['total']            = $tol[6];  $save['bonus']           = $tol[7];
-        $save['housing_subsidy']      = $tol[8]; $save['Other']               = $tol[9];  $save['Should']           = $tol[10]; $save['care']            = $tol[11];
-        $save['pension']              = $tol[12];$save['unemployment']        = $tol[13]; $save['accumulation']     = $tol[14]; $save['insurance_Total'] = $tol[15];
-        $save['tax_counting']         = $tol[16];$save['personal_tax']        = $tol[17]; $save['summoney']         = $tol[18]; $save['Labour']          = $tol[19];
-        $save['real_wages']           = $tol[20];$save['datetime']            = $datetime;$save['createtime']       = time();   $save['status']         = 2;
+        $save['name']               = $tol[0]; $save['standard_salary']   = $tol[1];  $save['basic']       = $tol[2];  $save['withdrawing']    = $tol[3];
+        $save['performance_salary'] = $tol[4]; $save['count_money']       = $tol[5];  $save['total']       = $tol[6];  $save['bonus']          = $tol[7];
+        $save['housing_subsidy']    = $tol[8]; $save['Other']             = $tol[9];  $save['Should']      = $tol[10]; $save['care']           = $tol[11];
+        $save['pension']            = $tol[12];$save['unemployment']      = $tol[13]; $save['accumulation']= $tol[14]; $save['insurance_Total']= $tol[15];
+        $save['tax_counting']       = $tol[16];$save['personal_tax']      = $tol[17]; $save['summoney']    = $tol[18]; $save['Labour']         = $tol[19];
+        $save['real_wages']         = $tol[20];$save['datetime']          = $datetime;$save['createtime']  = time();   $save['status']         = 2;
         $money = M('salary_count_money')->add($save);
         if($money){
-            $sum                      = 1;
-            $msg                      = "提交审核成功!";
+            $sum                    = 1;
+            $msg                    = "提交审核成功!";
             echo json_encode(array('sum' => $sum, 'msg' => $msg));die;
         }
-        $sum                      = 0;
-        $msg                      = "数据提交失败!请重新提交!";
+        $sum                       = 0;
+        $msg                       = "数据提交失败!请重新提交!";
         echo json_encode(array('sum' => $sum, 'msg' => $msg));die;
     }
 
@@ -991,7 +986,6 @@ class AjaxController extends Controller {
             $withholding_w                = M('salary_withholding')->where(array('token='.$wages_month_id['withholding_token']))->save($status);
 
             $wages_month_del = M('salary_wages_month')->where($id)->delete();
-
         }
 
         foreach($departmen_id as $k => $v ){

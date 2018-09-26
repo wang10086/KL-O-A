@@ -51,12 +51,12 @@
                                 <td><?php echo date('Y-m-d',$row['entry_time'])?></td>
                                 <td class="salary_probation"><input type="text" class="form-control" value="{$row.standard_salary}" /></td>
                                 <td class="salary_basic" style="text-align: center">
-                                    <input type="text" style="width:5em;float:left;" class="form-control salary_basic1" value="{$row.basic_salary}" />
+                                    <input type="text" style="width:5em;float:left;" class="form-control salary_basic1" value="{$row.basic_salary}" placeholder="例 : 7"/>
                                     :
-                                    <input type="text" style="width:5em;float:right;" class="form-control salary_basic2" value="{$row.performance_salary}" />
+                                    <input type="text" style="width:5em;float:right;" class="form-control salary_basic2" value="{$row.performance_salary}" placeholder="例 : 3" />
                                 </td>
                                 <td class="salary_entry">
-                                    <input type="hidden" class="salary_type" value="1"/>
+                                    <input type="hidden" class="salary_type" value="1" />
                                     <input type="button" class="form-control salary_butt1" value="添加" style="background-color:#00acd6;font-size:1em;" />
                                 </td>
                             </tr>
@@ -293,4 +293,26 @@
         </div><!-- /.box -->
     </div>
 </div>
+<script>
+    var count1 =0;
+    $('.salary_basic2').click(function(){
+        count1++;
+        if((count1%2) ==1){
+            var html = '<div><h6 style="color:red;width:40em;" class="add111"><b>第一个空格是基本工资比率; 第二空格是绩效工资比率;总共10;例如 7:3</b></h6></div>';
+            $(this).parents('table').after(html);
+        }else{
+            $('.add111').remove();
+        }
 
+    })
+    $('.salary_basic1').click(function(){
+        count1++;
+        if((count1%2) ==1){
+            var html = '<div><h6 style="color:red;width:40em;" class="add111"><b>第一个空格是基本工资比率; 第二空格是绩效工资比率;总共10;例如 7:3</b></h6></div>';
+            $(this).parents('table').after(html);
+        }else{
+            $('.add111').remove();
+        }
+
+    })
+</script>

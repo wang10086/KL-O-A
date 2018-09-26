@@ -100,6 +100,7 @@
                             </tr>
                         </foreach>
                     </table>
+                    <div><h6 style="color:red;width:40em;"><b>医疗比例以百分比为标准; 例如: 0.03</b></h6></div>
                     <div class="box-footer clearfix">
                         <div class="pagestyle">{$page3}</div>
                     </div>
@@ -140,6 +141,7 @@
                             </tr>
                         </foreach>
                     </table>
+                    <div><h6 style="color:red;width:40em;"><b>医疗比例以百分比为标准; 例如: 0.03</b></h6></div>
                     <div class="box-footer clearfix">
                         <div class="pagestyle">{$page3}</div>
                     </div>
@@ -184,6 +186,7 @@
                             </tr>
                         </foreach>
                     </table>
+                    <div><h6 style="color:red;width:40em;"><b>医疗比例以百分比为标准; 例如: 0.03</b></h6></div>
                     <div class="box-footer clearfix">
                         <div class="pagestyle">{$page3}</div>
                     </div>
@@ -233,6 +236,7 @@
                             </tr>
                         </foreach>
                     </table>
+                    <div><h6 style="color:red;width:40em;"><b>医疗比例以百分比为标准; 例如: 0.03</b></h6></div>
                     <div class="box-footer clearfix">
                         <div class="pagestyle">{$page3}</div>
                     </div>

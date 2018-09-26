@@ -80,7 +80,7 @@
                                                 <td>&yen; {$info['bonus'][0]['bonus']}</td>
                                                 <td>&yen; {$info['subsidy'][0]['housing_subsidy']}</td>
                                                 <td>&yen; {$info['Other']}</td>
-                                                <td>&yen; {$info['salary'][0]['standard_salary']/10*$info['salary'][0]['performance_salary']+$info['Achievements']['count_money']}</td>
+                                                <td>&yen; {$info['Should']}</td>
                                                 <td>&yen; {$info['insurance'][0]['medical_care_base']*$info['insurance'][0]['medical_care_ratio']}</td>
                                                 <td>&yen; {$info['insurance'][0]['pension_base']*$info['insurance'][0]['pension_ratio']}</td>
                                                 <td>&yen; {$info['insurance'][0]['unemployment_base']*$info['insurance'][0]['unemployment_ratio']}</td>
@@ -103,6 +103,9 @@
                                                 <td style="display:none">{$info['Achievements']['sum_total_score']}</td>
                                                 <td style="display:none">{$info['Extract']['target']}</td>
                                                 <td style="display:none">{$info['Extract']['complete']}</td>
+                                                <td style="display:none">{$info['yearend']}</td>
+                                                <td style="display:none">{$info['bonus'][0]['extract']}</td>
+                                                <td style="display:none">{$info['welfare']}</td>
                                             </tr>
                                                 <th class="list_salary_detail1" style="display: none">{$info['wages_mont_id']}</th>
                                             </foreach>
@@ -162,17 +165,17 @@
                                 </div><!-- /.box-body -->
 
                                 <div><br><br>
-                                  <?php if(($status="1" || $status=="" || $status==null || $status==false ) && $userid==77){?>
+<!--                                  --><?php //if(($status="1" || $status=="" || $status==null || $status==false ) && $userid==77){?>
                                                                         <a  class="btn btn-info salary_excel1_submit" style="width:10em;margin-left:45em;">提交审核</a>
-                                                                      <?php }?>
+<!--                                                                      --><?php //}?>
                                     <?php if($status=2 && $userid ==55){?>
                                         <a  class="btn btn-info salary_excel1_submit1" style="width:10em;margin-left:45em;">提交批准</a>
                                         <a  class="btn btn-info salary_excel1_submit2" style="width:10em;">驳回</a>
                                     <?php }?>
-<!--                                    --><?php //if($status=3 && $userid ==11){?>
+                                    <?php if($status=3 && $userid ==11){?>
                                         <a  class="btn btn-info salary_excel1_submit3" style="width:10em;margin-left:45em;">批准</a>
                                         <a  class="btn btn-info salary_excel1_submit2" style="width:10em;">驳回</a>
-<!--                                    --><?php //}?>
+                                    <?php }?>
                                     </div><br><br>
                             </div><!-- /.box -->
 
