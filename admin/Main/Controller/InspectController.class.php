@@ -419,6 +419,7 @@ class InspectController extends BaseController{
         if (in_array($kind,$score_kind2)) $sum = 6*5*$score_num; //考核6项, 每项5分, 满分总分
         $average['sum_score'] = (round(array_sum(array_column($lists,'sum_score'))/$sum,2)*100).'%';
         $row                = M('tcs_score_problem')->where(array('op_id'=>$op_id))->find();
+        $this->row          = $row;
         $this->score_pro    = json_encode($row);
         if ($this->score_pro){
             $this->rad      = 1;

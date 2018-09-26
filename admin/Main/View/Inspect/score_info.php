@@ -23,8 +23,11 @@
                         <include file="score_mod2" />
 
                         <!--追责-->
-                        <include file="score_mod3" />
-
+                        <?php if( C('RBAC_SUPER_ADMIN')==cookie('username') || cookie('userid') == 11 || cookie('userid') == $op['create_user'] || cookie('userid') == 26 ){ ?>
+                            <include file="score_mod_blame_edit" />
+                        <?php }else{ ?>
+                            <include file="score_mod_blame_read" />
+                        <?php } ?>
                     </div>   <!-- /.row -->
                     <?php }else{ ?>
                         <include file="score_mod_noscore" />
@@ -41,7 +44,6 @@
 <script>
 	$(document).ready(function(e) {
         var score_pro = <?php echo $score_pro; ?>;
-        console.log(score_pro);
 
         if (score_pro) {
             $('#zhuize').show();
