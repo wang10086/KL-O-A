@@ -69,16 +69,17 @@ class SalaryController extends BaseController {
 //
 //        }else{
 //            $id['account_id'] = $_SESSION['userid'];
+
 //
 //        }
-
         $id['id']                               = trim($_GET['id']);
         $id['datetime']                         = trim($_GET['datetime']);
         $user_info1                             = M('salary_wages_month')->where($id)->find();
-        if(!$user_info1){
-            $this->error('您查找的数据有误!请重新选择！');die;
-        }
+//        if(!$user_info1){
+//            $this->error('您查找的数据有误!请重新选择！');die;
+//        }
         $user_info['wages_month']               = $user_info1;
+        $uid = $user_info1['account_id'];
 
         $user_info['account']                   = M('account')->where(array('id='.$user_info1['account_id']))->find();
 
@@ -100,7 +101,7 @@ class SalaryController extends BaseController {
         $que['p.month']                         = $id['datetime'];
 
         $user_info['fen']                       = $this->query_score($que);
-
+        $user_info['kpi']                       = $this->salary_kpi_month($user_info1['account_id'],$id['datetime']);
         $this->assign('info',$user_info);
         $this->display();
     }
@@ -224,38 +225,38 @@ class SalaryController extends BaseController {
     /**
      *query_wages 查询工资
      */
-    private function query_wages($where,$account_id){
-        $wages_month                    = sql_query(1,'*','oa_salary_wages_month',$account_id,1,1);//工资关联是否生成
-        if($wages_month){//判断生成  判断是否有权限
-
-            $account['id']              = $wages_month[0]['account_id'];
-            $department['id']           = $wages_month[0]['department_id'];
-            $posts['id']                = $wages_month[0]['posts_id'];
-            $salary['id']               = $wages_month[0]['salary_id'];
-            $attendance['id']           = $wages_month[0]['attendance_id'];
-            $bonus['id']                = $wages_month[0]['bonus_id'];
-            $income['income_token']     = $wages_month[0]['income_token'];
-            $insurance['id']            = $wages_month[0]['insurance_id'];
-            $subsidy['id']              = $wages_month[0]['subsidy_id'];
-            $withholding['token']       = $wages_month[0]['withholding_token'];
-
-            $user_info['month']         = $wages_month;
-            $user_info['account']       = sql_query(1,'*','oa_account',$account,2,1);//查询用户表
-            $user_info['department']    = sql_query(1,'*','oa_salary_department',$department,1,1);//查询部门
-            $user_info['posts']         = sql_query(1,'*','oa_posts',$posts,1,1);//查询岗位
-
-            $user_info['salary']        = sql_query(1,'*','oa_salary',$salary,1,1);//岗位薪酬
-            $user_info['attendance']    = sql_query(1,'*','oa_salary_attendance',$attendance,1,1);//员工考核
-            $user_info['bonus']         = sql_query(1,'*','oa_salary_bonus',$bonus,1,1);//提成/奖金/年终奖
-            $user_info['income'][]      = sql_query(1,'*','oa_salary_income',$income,1,0);//其他收入
-            $user_info['insurance']     = sql_query(1,'*','oa_salary_insurance',$insurance,1,1);//五险一金表
-            $user_info['subsidy']       = sql_query(1,'*','oa_salary_subsidy',$subsidy,1,0);//补贴
-            $user_info['withholding'][] = sql_query(1,'*','oa_salary_withholding',$withholding,1,0);//代扣代缴
-
-//            $type['type']               = 2;//状态成功 前台判断
-
-        }else{//可以加判断是否是当前用户
-            $this->error('您的数据有误!请重新选择!');die;
+//    private function query_wages($where,$account_id){
+//        $wages_month                    = sql_query(1,'*','oa_salary_wages_month',$account_id,1,1);//工资关联是否生成
+//        if($wages_month){//判断生成  判断是否有权限
+//
+//            $account['id']              = $wages_month[0]['account_id'];
+//            $department['id']           = $wages_month[0]['department_id'];
+//            $posts['id']                = $wages_month[0]['posts_id'];
+//            $salary['id']               = $wages_month[0]['salary_id'];
+//            $attendance['id']           = $wages_month[0]['attendance_id'];
+//            $bonus['id']                = $wages_month[0]['bonus_id'];
+//            $income['income_token']     = $wages_month[0]['income_token'];
+//            $insurance['id']            = $wages_month[0]['insurance_id'];
+//            $subsidy['id']              = $wages_month[0]['subsidy_id'];
+//            $withholding['token']       = $wages_month[0]['withholding_token'];
+//
+//            $user_info['month']         = $wages_month;
+//            $user_info['account']       = sql_query(1,'*','oa_account',$account,2,1);//查询用户表
+//            $user_info['department']    = sql_query(1,'*','oa_salary_department',$department,1,1);//查询部门
+//            $user_info['posts']         = sql_query(1,'*','oa_posts',$posts,1,1);//查询岗位
+//
+//            $user_info['salary']        = sql_query(1,'*','oa_salary',$salary,1,1);//岗位薪酬
+//            $user_info['attendance']    = sql_query(1,'*','oa_salary_attendance',$attendance,1,1);//员工考核
+//            $user_info['bonus']         = sql_query(1,'*','oa_salary_bonus',$bonus,1,1);//提成/奖金/年终奖
+//            $user_info['income'][]      = sql_query(1,'*','oa_salary_income',$income,1,0);//其他收入
+//            $user_info['insurance']     = sql_query(1,'*','oa_salary_insurance',$insurance,1,1);//五险一金表
+//            $user_info['subsidy']       = sql_query(1,'*','oa_salary_subsidy',$subsidy,1,0);//补贴
+//            $user_info['withholding'][] = sql_query(1,'*','oa_salary_withholding',$withholding,1,0);//代扣代缴
+//
+////            $type['type']               = 2;//状态成功 前台判断
+//
+//        }else{//可以加判断是否是当前用户
+//            $this->error('您的数据有误!请重新选择!');die;
 //            unset($account_id['datetime']);
 //            $user_info['account']       = sql_query(1,'*','oa_account',$where,2,1);//查询用户表
 //            $department_r['id']         = $user_info['account'][0]['departmentid'];//部门
@@ -271,11 +272,11 @@ class SalaryController extends BaseController {
 //            $user_info['subsidy']       = sql_query(1,'*','oa_salary_subsidy',$account_id,1,0);//补贴
 //            $user_info['withholding'][] = sql_query(1,'*','oa_salary_withholding',$account_id,1,0);//代扣代缴
 //            $type['type']               = 1;//状态失败 前台判断
-        }
-        $content[0]                     = $user_info;
-
-        return $content;
-    }
+//        }
+//        $content[0]                     = $user_info;
+//
+//        return $content;
+//    }
 
 
     /**
@@ -627,7 +628,6 @@ class SalaryController extends BaseController {
         $this->assign('time',$datetime);//表时间
 //        print_r($summoney);die;
         $this->assign('status',$status);//提交状态
-        $this->assign('stat',$stat);//状态
         $this->display();
     }
 
@@ -937,5 +937,53 @@ class SalaryController extends BaseController {
         }
         return $cout;
     }
+
+/**
+ * 导出 excel
+ */
+//    public function excel(){
+//        //引入PHPExcel库文件
+//        Vendor('PHPExcel.Classes.PHPExcel');
+//        //创建对象
+//        $excel = new PHPExcel();
+//        //Excel表格式,这里简略写了8列
+//        $letter = array('A','B','C','D','E','F','F','G');
+//        //表头数组
+//        $tableheader = array('序号','客栈名称','客栈地址','座机','手机','QQ','邮箱');
+//        //填充表头信息
+//        for($i = 0;$i < count($tableheader);$i++) {
+//            $excel->getActiveSheet()->setCellValue("$letter[$i]1","$tableheader[$i]");
+//        }
+//        //表格数组
+//        $data = array(
+//            array('1','B','C','D','E','F','G'),
+//            array('2','B','C','D','E','F','G'),
+//            array('3','B','C','D','E','F','G'),
+//            array('4','B','C','D','E','F','G'),
+//            array('5','B','C','D','E','F','G'),
+//            array('6','B','C','D','E','F','G'),
+//            array('7','B','C','D','E','F','G'),
+//        );
+//        //填充表格信息
+//        for ($i = 2;$i <= count($data) + 1;$i++) {
+//            $j = 0;
+//            foreach ($data[$i - 2] as $key=>$value) {
+//                $excel->getActiveSheet()->setCellValue("$letter[$j]$i","$value");
+//                $j++;
+//            }
+//        }
+//        //创建Excel输入对象
+//        $write = new PHPExcel_Writer_Excel5($excel);
+//        header("Pragma: public");
+//        header("Expires: 0");
+//        header("Cache-Control:must-revalidate, post-check=0, pre-check=0");
+//        header("Content-Type:application/force-download");
+//        header("Content-Type:application/vnd.ms-execl");
+//        header("Content-Type:application/octet-stream");
+//        header("Content-Type:application/download");;
+//        header('Content-Disposition:attachment;filename="客栈信息.xls"');
+//        header("Content-Transfer-Encoding:binary");
+//        $write->save('php://output');
+//    }
 
 }

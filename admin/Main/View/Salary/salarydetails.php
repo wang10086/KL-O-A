@@ -172,13 +172,13 @@
                                         </div><!-- /.box-header --><br>
                                         <h5 style="color:#FF3333">业务人员提成</h5><br/>
                                         <div class="form-group col-md-4 viwe">
-                                            <p>目标任务：{$info['wages_month'].target} (元)</p>
+                                            <p>目标任务：{$info['kpi']['target']} (元)</p>
                                         </div>
                                         <div class="form-group col-md-4 viwe">
-                                            <p>季度完成：{$info['wages_month'].complete} (元)</p>
+                                            <p>季度完成：{$info['kpi']['complete']} (元)</p>
                                         </div>
                                         <div class="form-group col-md-4 viwe">
-                                            <p>业绩提成：{$info['wages_month']['total']} (元)</p>
+                                            <p>业绩提成：{$info['kpi']['total']} (元)</p>
                                         </div><br/><br/><br/>
                                         <h5 style="color:#000000;">&nbsp;&nbsp;&nbsp;&nbsp;其他人员提成（计调、研发、资源）：{$info['wages_month'].bonus} （元）</h5><br/>
                                         <div class="form-group col-md-4 viwe">
