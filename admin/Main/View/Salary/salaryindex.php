@@ -60,7 +60,7 @@
                                                 <td>&yen; {$info.withdrawing}</td>
                                                 <td>&yen; {$info.Achievements_withdrawing}</td>
                                                 <td>&yen; {$info.Subsidy}</td>
-                                                <td>&yen; {$info.total}</td>
+                                                <td>&yen; {$info.welfare}</td>
                                                 <td>&yen; {$info.Should_distributed}</td>
                                                 <td>&yen; {$info.insurance_Total}</td>
                                                 <td>&yen; {$info.summoney}</td>
