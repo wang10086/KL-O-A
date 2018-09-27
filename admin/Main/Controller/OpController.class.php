@@ -134,10 +134,6 @@ class OpController extends BaseController {
 				//$this->request_audit(P::REQ_TYPE_PROJECT_NEW, $addok);
 
 				if($addok){
-                    /*$data           = array();
-                    $data['line']   = cookie('userid');
-                    $data['op_id']  = $opid;
-                    $op_auth_db->add($data);*/
 
 					$record = array();
 					$record['op_id']   = $opid;
@@ -2223,7 +2219,8 @@ class OpController extends BaseController {
 			$check				= M('op')->where($where)->find();
 			if($check)  $this->error($info['group_id'].'团号已存在');	 
 
-			$info['op_id']			= $opid; 
+			$info['op_id']			= $opid;
+            $info['group_id']       = trim($info['group_id']);
 			$info['user_id']		= cookie('userid'); 
 			$info['user_name']		= cookie('nickname'); 
 			$info['dep_time']		= $info['dep_time'] ? strtotime($info['dep_time']) : 0;

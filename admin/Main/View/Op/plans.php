@@ -125,13 +125,14 @@
                                         <label>项目说明：</label><textarea class="form-control"  name="info[remark]"></textarea>
                                     </div>-->
 
-                                    <!--<div class="form-group col-md-12">
+                                    <div class="form-group col-md-12">
                                         <label>工单接收部门：</label>
-                                        <input type="checkbox" name="exe[]" value="45">&nbsp;市场部 &#12288;
+                                        <!--<input type="checkbox" name="exe[]" value="45">&nbsp;市场部 &#12288;
                                         <input type="checkbox" name="exe[]" value="31">&nbsp;计调部 &#12288;
                                         <input type="checkbox" name="exe[]" value="15">&nbsp;研发部 &#12288;
-                                        <input type="checkbox" name="exe[]" value="52">&nbsp;资源管理部&#12288;
-                                    </div>-->
+                                        <input type="checkbox" name="exe[]" value="52">&nbsp;资源管理部&#12288;-->
+                                        <input type="checkbox" name="exe[]" value="93">&nbsp;资源管理部&#12288;
+                                    </div>
 
                                 </div>
 
