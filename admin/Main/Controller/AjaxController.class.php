@@ -817,7 +817,6 @@ class AjaxController extends Controller {
         $this->ajaxReturn($lists);
     }
 
-
     //保存提交审核数据
     public function Ajax_salary_details_add(){
         if($_SESSION['userid']!==77){
