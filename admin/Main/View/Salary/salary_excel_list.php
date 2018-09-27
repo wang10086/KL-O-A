@@ -22,7 +22,7 @@
                                     <h3 class="box-title">员工薪资列表</h3>
                                     <a  class="btn btn-info" style="width:8em; margin: 0.5em 0em 0em 2em;"> <?php if($status=="" || $status==0 || $status==1){echo "待提交审核";}elseif($status==2){echo "待提交批准";}elseif($status==3){echo "待批准";}elseif($status==4){echo "已批准";}?></a>
                                     <a href="javascript:;" class="btn btn-info btn-sm" onclick="javascript:opensearch('searchtext',700,160);" style="margin: 0.7em 0em 0em 3em;" ><i class="fa fa-search"></i> 搜索</a>
-                                    <a  class="btn btn-info btn-sm" href="{:U('Salary/exportExcel')}" style="margin: 0.7em 0em 0em 3em;" ><i class="fa fa-search12"></i>导出 Excel</a>
+                                    <a  class="btn btn-info btn-sm Salaey_export_Excel" style="margin: 0.7em 0em 0em 3em;" ><i class="fa fa-search12"></i>导出 Excel</a>
                                 </div><!-- /.box-header --><br>
                                 <div class="box-body">
                                     <div class="btn-group" id="catfont">
@@ -190,7 +190,7 @@
             <div id="searchtext">
 <!--                <script src="__HTML__/js/public.js?v=1.0.6" type="text/javascript"></script>-->
 
-                <form action="{:U('Salary/salary_excel_list')}" method="get" id="searchform">
+                <form action="{:U('Salary/salary_excel_list')}" method="post" id="searchform">
 
                 <div class="form-group col-md-6" style="margin:2em 0em 0em 10em;">
                     <input type="text" name="month" class="form-control monthly" placeholder="搜索工资表年月格式 : 201806" style="text-align: center;"/>
@@ -324,7 +324,7 @@
                     }
                 }
             });
-        })
+        });
     $('.salary_excel1_submit2').click(function(){
         var wages_month_id ="";
         var departmen_id ="";
@@ -347,6 +347,56 @@
                 'count_money_id' : count_money_id,
                 'status':1,
 
+            },
+            dataType: "json", //数据格式
+            success: function (data) {
+                if (data.sum == 1) {
+                    alert(data.msg);
+                    return false;
+                }
+                if (data.sum == 0) {
+                    alert(data.msg);
+                    return false;
+                }
+            }
+        });
+    })
+
+    $('.Salaey_export_Excel').click(function(){
+        var join1 =new Array();
+        var Excel1 =new Array();
+        var join2 =new Array();
+        var Excel2 =new Array();
+        var join3 =new Array();
+        var Excel3 =new Array();
+        $('.excel_list_money1').each(function(){
+            $(this).children('td').each(function(){
+                var txt = $(this).text();
+                join1 += txt +',';
+            });
+            Excel1 += join1 +'&';
+        });
+        $('.excel_list_money2').each(function(){
+            $(this).children('td').each(function(){
+                var txt = $(this).text();
+                join2 += txt +',';
+            });
+            Excel2 += join2 +'&';
+        });
+        $('.excel_list_money3').each(function(){
+            $(this).children('td').each(function(){
+                var txt = $(this).text();
+                join3 += txt +',';
+            });
+            Excel3 += join3 +'&';
+        });
+        $.ajax({
+            type: "POST",
+            url: "index.php?m=Main&c=Ajax&a=Ajax_exportExcel", //url
+            data: {
+                'Excel1':Excel1,
+                'Excel2':Excel2,
+                'Excel3':Excel3,
             },
             dataType: "json", //数据格式
             success: function (data) {

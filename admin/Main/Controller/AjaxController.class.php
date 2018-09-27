@@ -929,7 +929,7 @@ class AjaxController extends Controller {
     public function Ajax_salary_details_upgrade(){
         if($_SESSION['userid']!==11 ||$_SESSION['userid']!==55){
             $sum                      = 0;
-            $msg                      = "您的权限不够!请联系管理员！";
+            $msg                      = "您的权限不足!请联系管理员！";
             echo json_encode(array('sum' => $sum, 'msg' => $msg));die;
         }
 
@@ -967,6 +967,9 @@ class AjaxController extends Controller {
         $count_money_id = trim($_POST['count_money_id']);
         $status ['status']= trim($_POST['status']);
         array_pop($wages_month_id);array_pop($departmen_id);
+        if($_SESSION['userid'] !==11 || $_SESSION['userid'] !==11){
+            $this->error('您的权限不足！请联系管理员！');die;
+        }
 
         foreach($wages_month_id as $key =>$val ){
             $id ['id'] = $val;
@@ -1003,6 +1006,102 @@ class AjaxController extends Controller {
             echo json_encode(array('sum' => $sum, 'msg' => $msg));die;
         }
 
+    }
+
+    /**
+     * 导出 excel
+     */
+    function Ajax_exportExcel(){
+        $Excel1 = explode('&',I('Excel1'));//分割成数组 删除最后一个
+        $Excel2 = explode('&',I('Excel2'));//分割成数组 删除最后一个
+        $Excel3 = explode('&',I('Excel3'));//分割成数组 删除最后一个
+        array_pop($Excel1);array_pop($Excel2);array_pop($Excel3);
+        foreach($Excel1 as $key => $val){
+           $explod =  explode(',',$val);//根据 ',' 分割
+            foreach($explod as $k => $v){
+                if($k>23){ // $explod 键大于23 的没有用处
+                    unset($explod[$k]);//删除
+                }else{
+                    $sum                = $k+1;//键从1 开始
+                    if($sum==1){
+                        $info               = M('account')->where('id='.$v)->find();//已经提交数据
+                        $number             = $info['ID_number'];
+                        $card_number        = $info['Salary_card_number'];
+                    }
+                    if($sum>2){
+                        $data1[3]        = $number;//插入身份证信息
+                        $data1[4]        = $card_number;//插入银行卡信息
+                        $data1[$sum+2]   = $v;
+                    }else{
+                        $data1[$sum]     = $v;
+                    }
+                }
+            }
+            $Excel_data[$key+1] = $data1;
+            $number_sum = $key+1;
+        }
+        foreach($Excel2 as $key => $val){
+            $explod =  explode(',',$val);//根据 ',' 分割
+            foreach($explod as $k =>$v){
+                $data2[$k+1] = $v;
+            }
+            array_pop($data2);
+            $Excel_data[$number_sum+$key] = $data2;
+        }
+        print_r($Excel_data);die;
+
+        $dateti['datetime'] ='201809';
+        $setTitle = $dateti['datetime'].'工资发放表';
+        $info                = M('salary_wages_month')->where($dateti)->select();//已经提交数据
+
+
+        if(!$info){
+            $this->error('您选择的数据不存在！');die;
+        }else{
+            $status = (int)$info[0]['status'];
+            if($status!==4){
+                $this->error('数据未审批！请联系审批部门或管理员！');die;
+            }else{
+                $sum                        = M('salary_departmen_count')->where($dateti)->select();
+                $summoney                   = M('salary_count_money')->where($dateti)->find();
+
+            }
+        }
+
+        $list= array('1'=>'ID','2'=>'员工姓名','3'=>'身份证号','4'=>'工资卡号','3'=>'岗位名称','4'=>'所属部门','5'=>'岗位薪酬标准','6'=>'其中基本工资标准','7'=>'考勤扣款','8'=>'其中绩效工资标准','9'=>'绩效增减','10'=>'业绩提成','11'=>'奖金','12'=>'住房补贴','13'=>'其他补款','14'=>'应发工资','15'=>'医疗保险','16'=>'养老保险','17'=>'失业保险','18'=>'公积金','19'=>'个人保险合计','20'=>'计税工资','21'=>'个人所得税','22'=>'税后扣款','23'=>'工会会费','24'=>'实发工资');
+
+
+        $titlname    =    [array('1'=>1222,'2'=>2244),'订单号','消费用户','订单金额','订单数量','支付状态','订单时间'];
+
+        exportExcel($titlname,$list,$setTitle,'');
+
+        if ( empty($columName) || empty($list) ) {
+            return '列名或者内容不能为空';
+        }
+
+        if ( count($list[0]) != count($columName) ) {
+            return '列名跟数据的列不一致';
+        }
+
+        //实例化PHPExcel类
+        $PHPExcel    =    new PHPExcel();
+        //获得当前sheet对象
+        $PHPSheet    =    $PHPExcel    ->    getActiveSheet();
+        //定义sheet名称
+        $PHPSheet    ->    setTitle($setTitle);//导出的表名
+
+        //excel的列 这么多够用了吧？不够自个加 AA AB AC ……
+        $letter        =   [
+            'A','B','C','D','E','F','G','H','I','J','K','L','M',
+            'N','O','P','Q','R','S','T','U','V','W','X','Y','Z'
+        ];
+
+        //生成2007版本的xlsx
+        $PHPWriter = PHPExcel_IOFactory::createWriter($PHPExcel,'Excel2007');
+        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        header('Content-Disposition: attachment;filename='.$setTitle.'.xlsx');
+        header('Cache-Control: max-age=0');
+        $PHPWriter->save("php://output");
     }
 
 

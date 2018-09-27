@@ -29,9 +29,9 @@ class SalaryController extends BaseController {
              }
          }
 
-       if($_SESSION['userid']!==11 ||$_SESSION['userid']!==55 || $_SESSION['userid']!==77 || $_SESSION['userid']!==32 || $_SESSION['userid']!==38 || $_SESSION['userid']!==12){
+       if($_SESSION['userid']==11 ||$_SESSION['userid']==55 || $_SESSION['userid']==77 || $_SESSION['userid']==32 || $_SESSION['userid']==38 || $_SESSION['userid']==12){
 
-           $this->error('数据未审批！请联系审批部门或管理员！');die;
+
 
         }else{
 
@@ -69,8 +69,8 @@ class SalaryController extends BaseController {
             $this->error('您的数据有误!请重新选择！');die;
         }
 
-        if($_SESSION['userid']!==11 ||$_SESSION['userid']!==55 || $_SESSION['userid']!==77 || $_SESSION['userid']!==32 || $_SESSION['userid']!==38 || $_SESSION['userid']!==12){
-            $this->error('数据未审批！请联系审批部门或管理员！');die;
+        if($_SESSION['userid']==11 ||$_SESSION['userid']==55 || $_SESSION['userid']==77 || $_SESSION['userid']==32 || $_SESSION['userid']==38 || $_SESSION['userid']==12){
+
         }else{
 
             $id['account_id'] = $_SESSION['userid'];
@@ -257,7 +257,7 @@ class SalaryController extends BaseController {
 
             if($_SESSION['userid']!==11 ||$_SESSION['userid']!==55 || $_SESSION['userid']!==77 || $_SESSION['userid']!==32 || $_SESSION['userid']!==38 || $_SESSION['userid']!==12){
 
-                $this->error('数据未审批！请联系审批部门或管理员！');die;
+                $this->error('您的权限不足！');die;
 
             }
             $info               = trim($_POST['info']);
@@ -459,7 +459,7 @@ class SalaryController extends BaseController {
     public function salary_add_department(){
         if($_SESSION['userid']!==11 ||$_SESSION['userid']!==55 || $_SESSION['userid']!==77 || $_SESSION['userid']!==32 || $_SESSION['userid']!==38 || $_SESSION['userid']!==12){
 
-            $this->error('数据未审批！请联系审批部门或管理员！');die;
+            $this->error('您的权限不足！');die;
         }
         if(IS_POST){
             $where['department']    = trim($_POST['department']);//部门名称
@@ -516,10 +516,10 @@ class SalaryController extends BaseController {
      * @salary_excel_list 生成工资表
      */
     public function salary_excel_list(){//判断权限
-        if($_SESSION['userid']!==11 ||$_SESSION['userid']!==55 || $_SESSION['userid']!==77 || $_SESSION['userid']!==32 || $_SESSION['userid']!==38 || $_SESSION['userid']!==12){
-
-            $this->error('数据未审批！请联系审批部门或管理员！');die;
-        }
+//        if($_SESSION['userid']!==11 ||$_SESSION['userid']!==55 || $_SESSION['userid']!==77 || $_SESSION['userid']!==32 || $_SESSION['userid']!==38 || $_SESSION['userid']!==12){
+//
+//            $this->error('您的权限不足！');die;
+//        }
         $monthly                        = trim(I('month'));
         $archives                       = trim(I('archives'));
         $datetime                       = trim(I('datetime'));
@@ -783,8 +783,8 @@ class SalaryController extends BaseController {
             $price2                                 = ((int)($price1*100))/100;//年终奖计税
 
             $user_info[$key]['yearend']             = $price2;//年终奖计税
-            // 提成 + 奖金+带团补助+年终奖+
-            $user_info[$key]['welfare']             = $user_info[$key]['Extract']['total']+$user_info[$key]['bonus'][0]['bonus']+$user_info[$key]['bonus'][0]['extract']+$user_info[$key]['bonus'][0]['annual_bonus']+$user_info[$key]['subsidy'][0]['housing_subsidy']+$user_info[$key]['subsidy'][0]['foreign_subsidies']+$user_info[$key]['subsidy'][0]['computer_subsidy'];
+            // 提成 + 奖金+带团补助+年终奖+住房补贴+外地补贴+电脑补贴
+            $user_info[$key]['welfare']             = $user_info[$key]['Extract']['total']+$user_info[$key]['bonus'][0]['bonus']+$user_info[$key]['bonus'][0]['extract']+$user_info[$key]['bonus'][0]['annual_bonus']+$user_info[$key]['subsidy'][0]['housing_subsidy']+$user_info[$key]['subsidy'][0]['foreign_subsidies']+$user_info[$key]['subsidy'][0]['computer_subsidy'];//提成补助奖金
 
 
             //应发工资 = 岗位工资-考勤扣款+绩效增减+季度提成+奖金+年终奖-年终奖计税+外地补贴+电脑补贴+其他补款
@@ -902,76 +902,6 @@ class SalaryController extends BaseController {
 
         }
         return $cout;
-    }
-
-/**
- * 导出 excel
- */
-    function exportExcel($fileName='demo'){
-
-        $dateti['datetime'] ='201809';
-        $setTitle = $dateti['datetime'].'工资发放表';
-        $info                = M('salary_wages_month')->where($dateti)->select();//已经提交数据
-
-        if(!$info){
-            $this->error('您选择的数据不存在！');die;
-        }else{
-            $status = (int)$info[0]['status'];
-            if($status!==4){
-                $this->error('数据未审批！请联系审批部门或管理员！');die;
-            }else{
-                $sum                        = M('salary_departmen_count')->where($dateti)->select();
-                $summoney                   = M('salary_count_money')->where($dateti)->find();
-
-            }
-        }
-
-        $list= array('1'=>'ID','2'=>'员工姓名','3'=>'岗位名称','4'=>'所属部门','5'=>'岗位薪酬标准','6'=>'其中基本工资标准','7'=>'考勤扣款','8'=>'其中绩效工资标准','9'=>'绩效增减','10'=>'业绩提成','11'=>'奖金','12'=>'住房补贴','13'=>'其他补款','14'=>'应发工资','15'=>'医疗保险','16'=>'养老保险','17'=>'失业保险','18'=>'公积金','19'=>'个人保险合计','20'=>'计税工资','21'=>'个人所得税','22'=>'税后扣款','23'=>'工会会费','24'=>'实发工资');
-
-
-
-        $titlname    =    ['订单号','消费用户','订单金额','订单数量','支付状态','订单时间'];
-        exportExcel($titlname,$list,$setTitle,'');
-        if ( empty($columName) || empty($list) ) {
-            return '列名或者内容不能为空';
-        }
-
-        if ( count($list[0]) != count($columName) ) {
-            return '列名跟数据的列不一致';
-        }
-
-        //实例化PHPExcel类
-        $PHPExcel    =    new PHPExcel();
-        //获得当前sheet对象
-        $PHPSheet    =    $PHPExcel    ->    getActiveSheet();
-        //定义sheet名称
-        $PHPSheet    ->    setTitle($setTitle);//导出的表名
-
-        //excel的列 这么多够用了吧？不够自个加 AA AB AC ……
-        $letter        =   [
-            'A','B','C','D','E','F','G','H','I','J','K','L','M',
-            'N','O','P','Q','R','S','T','U','V','W','X','Y','Z'
-        ];
-        //把列名写入第1行 A1 B1 C1 ...
-
-        for ($i=0; $i < count($list); $i++) {
-            //$letter[$i]1 = A1 B1 C1  $letter[$i] = 列1 列2 列3
-            $PHPSheet->setCellValue("$letter[$i]1","$columName[$i]");
-        }
-        //内容第2行开始
-        foreach ($list as $key => $val) {
-            //array_values 把一维数组的键转为0 1 2 3 ..
-            foreach (array_values($val) as $key2 => $val2) {
-                //$letter[$key2].($key+2) = A2 B2 C2 ……
-                $PHPSheet->setCellValue($letter[$key2].($key+2),$val2);
-            }
-        }
-        //生成2007版本的xlsx
-        $PHPWriter = PHPExcel_IOFactory::createWriter($PHPExcel,'Excel2007');
-        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-        header('Content-Disposition: attachment;filename='.$fileName.'.xlsx');
-        header('Cache-Control: max-age=0');
-        $PHPWriter->save("php://output");
     }
 
 }
