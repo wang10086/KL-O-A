@@ -820,11 +820,11 @@ class AjaxController extends Controller {
 
     //保存提交审核数据
     public function Ajax_salary_details_add(){
-//        if($_SESSION['userid']!==77){
-//            $sum                        = 0;
-//            $msg                        = "您没有权限提交数据!";
-//            echo json_encode(array('sum' => $sum, 'msg' => $msg));die;
-//        }
+        if($_SESSION['userid']!==77){
+            $sum                        = 0;
+            $msg                        = "您没有权限提交数据!";
+            echo json_encode(array('sum' => $sum, 'msg' => $msg));die;
+        }
         $datetime                       = trim($_POST['datetime']);//表数据时间
         if($datetime=="" || $datetime ==null || $datetime==false){
             $time_Y                     = date('Y');
@@ -883,6 +883,7 @@ class AjaxController extends Controller {
                 $income_w                   = M('salary_income')->where(array('income_token='.$add['income_token']))->save($status);
                 $insurance_w                = M('salary_insurance')->where(array('id='.$add['insurance_id']))->save($status);
                 $subsidy_w                  = M('salary_subsidy')->where(array('id='.$add['subsidy_id']))->save($status);
+
                 $withholding_w              = M('salary_withholding')->where(array('token='.$add['withholding_token']))->save($status);
             }
         }
@@ -927,11 +928,11 @@ class AjaxController extends Controller {
      * 提交数据 / 批准
      */
     public function Ajax_salary_details_upgrade(){
-//        if($_SESSION['userid']!==11 ||$_SESSION['userid']!==55){
-//            $sum                      = 0;
-//            $msg                      = "您的权限不够!请联系管理员！";
-//            echo json_encode(array('sum' => $sum, 'msg' => $msg));die;
-//        }
+        if($_SESSION['userid']!==11 ||$_SESSION['userid']!==55){
+            $sum                      = 0;
+            $msg                      = "您的权限不够!请联系管理员！";
+            echo json_encode(array('sum' => $sum, 'msg' => $msg));die;
+        }
 
         $wages_month_id = explode(',',trim($_POST['wages_month_id']));
         $departmen_id = explode(',',trim($_POST['departmen_id']));

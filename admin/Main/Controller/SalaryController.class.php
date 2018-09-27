@@ -29,14 +29,14 @@ class SalaryController extends BaseController {
              }
          }
 
-//        if($_SESSION['userid']!==11 ||$_SESSION['userid']!==55 || $_SESSION['userid']!==77){//判断权限
-//
-//        }else{
-//            $userid['account_id'] = $_SESSION['userid'];
-//            if($where['account_id']!==$_SESSION['userid']){
-//                $this->error('您只能查看自己的工资！');die;
-//            }
-//        }
+       if($_SESSION['userid']!==11 ||$_SESSION['userid']!==55 || $_SESSION['userid']!==77 || $_SESSION['userid']!==32 || $_SESSION['userid']!==38 || $_SESSION['userid']!==12){
+
+        }else{
+            $userid['account_id'] = $_SESSION['userid'];
+            if($where['account_id']!==$_SESSION['userid']){
+                $this->error('您只能查看自己的工资！');die;
+            }
+        }
 
          $count = M('salary_wages_month')->where($userid)->count();
 
@@ -65,19 +65,18 @@ class SalaryController extends BaseController {
             $this->error('您的数据有误!请重新选择！');die;
         }
 
-//        if($_SESSION['userid']!==11 ||$_SESSION['userid']!==55 || $_SESSION['userid']!==77){//判断权限
-//
-//        }else{
-//            $id['account_id'] = $_SESSION['userid'];
+        if($_SESSION['userid']!==11 ||$_SESSION['userid']!==55 || $_SESSION['userid']!==77 || $_SESSION['userid']!==32 || $_SESSION['userid']!==38 || $_SESSION['userid']!==12){
 
-//
-//        }
+        }else{
+
+            $id['account_id'] = $_SESSION['userid'];
+        }
         $id['id']                               = trim($_GET['id']);
         $id['datetime']                         = trim($_GET['datetime']);
         $user_info1                             = M('salary_wages_month')->where($id)->find();
-//        if(!$user_info1){
-//            $this->error('您查找的数据有误!请重新选择！');die;
-//        }
+        if(!$user_info1){
+            $this->error('您查找的数据有误!请重新选择！');die;
+        }
         $user_info['wages_month']               = $user_info1;
         $uid = $user_info1['account_id'];
 
@@ -99,7 +98,7 @@ class SalaryController extends BaseController {
         $que['a.nickname']                      = $user_info1['nickname'];
         $que['p.tab_user_id']                   = $user_info1['account_id'];
         $que['p.month']                         = $id['datetime'];
-
+//print_r($user_info);die;
         $user_info['fen']                       = $this->query_score($que);
         $user_info['kpi']                       = $this->salary_kpi_month($user_info1['account_id'],$id['datetime']);
         $this->assign('info',$user_info);
@@ -209,74 +208,6 @@ class SalaryController extends BaseController {
 
     }
 
-    /**
-     * calculation ['basic']基本工资
-     * ['achievements']绩效
-     * ['grant'] 应发工资
-     */
-//    private function calculation ($user_info){
-//        $info['basic']          = $user_info['salary']['standard_salary']*$user_info['salary']['basic_salary']/10;//基本工资
-//        $info['achievements']   = $user_info['salary']['standard_salary']*$user_info['salary']['performance_salary']/10;//绩效
-//        $info['grant']          = $user_info['salary']['standard_salary']*$user_info['salary']['basic_salary']/10-$user_info['attendance']['withdrawing'];//应发工资
-//        return $info;
-//
-//    }
-
-    /**
-     *query_wages 查询工资
-     */
-//    private function query_wages($where,$account_id){
-//        $wages_month                    = sql_query(1,'*','oa_salary_wages_month',$account_id,1,1);//工资关联是否生成
-//        if($wages_month){//判断生成  判断是否有权限
-//
-//            $account['id']              = $wages_month[0]['account_id'];
-//            $department['id']           = $wages_month[0]['department_id'];
-//            $posts['id']                = $wages_month[0]['posts_id'];
-//            $salary['id']               = $wages_month[0]['salary_id'];
-//            $attendance['id']           = $wages_month[0]['attendance_id'];
-//            $bonus['id']                = $wages_month[0]['bonus_id'];
-//            $income['income_token']     = $wages_month[0]['income_token'];
-//            $insurance['id']            = $wages_month[0]['insurance_id'];
-//            $subsidy['id']              = $wages_month[0]['subsidy_id'];
-//            $withholding['token']       = $wages_month[0]['withholding_token'];
-//
-//            $user_info['month']         = $wages_month;
-//            $user_info['account']       = sql_query(1,'*','oa_account',$account,2,1);//查询用户表
-//            $user_info['department']    = sql_query(1,'*','oa_salary_department',$department,1,1);//查询部门
-//            $user_info['posts']         = sql_query(1,'*','oa_posts',$posts,1,1);//查询岗位
-//
-//            $user_info['salary']        = sql_query(1,'*','oa_salary',$salary,1,1);//岗位薪酬
-//            $user_info['attendance']    = sql_query(1,'*','oa_salary_attendance',$attendance,1,1);//员工考核
-//            $user_info['bonus']         = sql_query(1,'*','oa_salary_bonus',$bonus,1,1);//提成/奖金/年终奖
-//            $user_info['income'][]      = sql_query(1,'*','oa_salary_income',$income,1,0);//其他收入
-//            $user_info['insurance']     = sql_query(1,'*','oa_salary_insurance',$insurance,1,1);//五险一金表
-//            $user_info['subsidy']       = sql_query(1,'*','oa_salary_subsidy',$subsidy,1,0);//补贴
-//            $user_info['withholding'][] = sql_query(1,'*','oa_salary_withholding',$withholding,1,0);//代扣代缴
-//
-////            $type['type']               = 2;//状态成功 前台判断
-//
-//        }else{//可以加判断是否是当前用户
-//            $this->error('您的数据有误!请重新选择!');die;
-//            unset($account_id['datetime']);
-//            $user_info['account']       = sql_query(1,'*','oa_account',$where,2,1);//查询用户表
-//            $department_r['id']         = $user_info['account'][0]['departmentid'];//部门
-//            $user_info['department']    = sql_query(1,'*','oa_salary_department',$department_r,1,1);//查询部门
-//            $posts_r['id']              = $user_info['account'][0]['postid'];
-//            $user_info['posts']         = sql_query(1,'*','oa_posts',$posts_r,1,1);//查询岗位
-//
-//            $user_info['salary']        = sql_query(1,'*','oa_salary',$account_id,1,1);//岗位薪酬
-//            $user_info['attendance']    = sql_query(1,'*','oa_salary_attendance',$account_id,1,1);//员工考核
-//            $user_info['bonus']         = sql_query(1,'*','oa_salary_bonus',$account_id,1,1);//提成/奖金/年终奖
-//            $user_info['income'][]      = sql_query(1,'*','oa_salary_income',$account_id,1,0);//其他收入
-//            $user_info['insurance']     = sql_query(1,'*','oa_salary_insurance',$account_id,1,1);//五险一金表
-//            $user_info['subsidy']       = sql_query(1,'*','oa_salary_subsidy',$account_id,1,0);//补贴
-//            $user_info['withholding'][] = sql_query(1,'*','oa_salary_withholding',$account_id,1,0);//代扣代缴
-//            $type['type']               = 1;//状态失败 前台判断
-//        }
-//        $content[0]                     = $user_info;
-//
-//        return $content;
-//    }
 
 
     /**
@@ -317,7 +248,14 @@ class SalaryController extends BaseController {
      * salary_attendance 考勤
      */
     public function salary_edtior(){
+
         if(IS_POST){
+
+            if($_SESSION['userid']!==11 ||$_SESSION['userid']!==55 || $_SESSION['userid']!==77 || $_SESSION['userid']!==32 || $_SESSION['userid']!==38 || $_SESSION['userid']!==12){
+            $sum                      = 0;
+            $msg                      = "您的权限不够!请联系管理员！";
+            echo json_encode(array('sum' => $sum, 'msg' => $msg));die;
+            }
             $info               = trim($_POST['info']);
             $where['id']        = trim($_POST['id']);
             $data               = array_filter($info);
@@ -340,9 +278,6 @@ class SalaryController extends BaseController {
         $this->assign('list',$attend_r);
         $this->display();
     }
-
-
-
 
     /**
      * salary_add_attendance 考勤数据录入搜索结果与操作记录
@@ -518,6 +453,11 @@ class SalaryController extends BaseController {
      * salary_add_department 添加部门
      */
     public function salary_add_department(){
+        if($_SESSION['userid']!==11 ||$_SESSION['userid']!==55 || $_SESSION['userid']!==77 || $_SESSION['userid']!==32 || $_SESSION['userid']!==38 || $_SESSION['userid']!==12){
+            $sum                      = 0;
+            $msg                      = "您的权限不够!请联系管理员！";
+            echo json_encode(array('sum' => $sum, 'msg' => $msg));die;
+        }
         if(IS_POST){
             $where['department']    = trim($_POST['department']);//部门名称
             $add['letter']          = trim($_POST['letter']);//大写字母
@@ -573,23 +513,37 @@ class SalaryController extends BaseController {
      * @salary_excel_list 生成工资表
      */
     public function salary_excel_list(){//判断权限
-//        if($_SESSION['userid']!==11 ||$_SESSION['userid']!==55 || $_SESSION['userid']!==77){
-//            $sum                      = 0;
-//            $msg                      = "您的权限不够!请联系管理员！";
-//            echo json_encode(array('sum' => $sum, 'msg' => $msg));die;
-//        }
-        $monthly                        = trim($_POST['month']);
-        $archives                       = trim($_GET['archives']);
+        if($_SESSION['userid']!==11 ||$_SESSION['userid']!==55 || $_SESSION['userid']!==77 || $_SESSION['userid']!==32 || $_SESSION['userid']!==38 || $_SESSION['userid']!==12){
+            $sum                      = 0;
+            $msg                      = "您的权限不够!请联系管理员！";
+            echo json_encode(array('sum' => $sum, 'msg' => $msg));die;
+        }
+        $monthly                        = trim(I('month'));
+        $archives                       = trim(I('archives'));
+        $datetime                       = trim(I('datetime'));
         if(is_numeric($monthly)){
-            $dateti['datetime']         =$monthly;
+            $dateti['datetime']         = $monthly;
             $wages_month                = M('salary_wages_month')->where($dateti)->select();//已经提交数据
             if(!$wages_month){
-                $this->error('您选择的数据不存在！');die;
+            $this->error('您选择的数据不存在！');die;
+            }
+            if(is_numeric($archives)){
+                foreach($wages_month as $kkey =>$vval){
+                    $accid['id'] = $vval['account_id'];
+                    $accid['archives'] = $archives;
+                    $account = M('account')->where($accid)->find();
+                    if(!$account){
+                            unset($wages_month[$kkey]);
+                    }else{
+                        $wage[] = $vval;
+                    }
+                }
+                unset($wages_month);
+                $wages_month = $wage;
             }
             $info                       = $this->arraysplit($wages_month);
             $sum                        = M('salary_departmen_count')->where($dateti)->select();
             $summoney                   = M('salary_count_money')->where($dateti)->find();
-            $datetime                   = $monthly;
             $status                     = $wages_month[0]['status'];
         }else{
             if(!empty($archives)){
@@ -601,7 +555,6 @@ class SalaryController extends BaseController {
                 $summoney               = $this->summoney($sum); //总合计
 
             }else{
-                $datetime               = trim($_GET['datetime']);
                 $wages_month            = M('salary_wages_month')->where('status=3')->select();//已经提交数据
                 if(!$wages_month){
                     $wages_month        = M('salary_wages_month')->where('status=2')->select();//已经提交数据
@@ -636,7 +589,7 @@ class SalaryController extends BaseController {
     /**
      *  数组拆分
      */
-    function arraysplit($wages_month){
+    private function arraysplit($wages_month){
 
         foreach($wages_month as $key => $val){
             $list[$key]['wages_mont_id']     = $val['id'];
@@ -730,18 +683,20 @@ class SalaryController extends BaseController {
                 }
                 $user_info[$key]['Other']           = $countmoney;//其他补款
             }
-            $user_info[$key]['insurance']           = sql_query(1, '*', 'oa_salary_insurance', $id, 1, 1);//五险一金表
+            $user_info[$key]['insurance']           = sql_query(1, '*', 'oa_salary_insurance', $id, 1,1);//五险一金表
 
             $user_info[$key]['insurance_Total']     = $user_info[$key]['insurance'][0]['medical_care_base']*$user_info[$key]['insurance'][0]['medical_care_ratio']+$user_info[$key]['insurance'][0]['pension_base']*$user_info[$key]['insurance'][0]['pension_ratio']+$user_info[$key]['insurance'][0]['unemployment_base']*$user_info[$key]['insurance'][0]['unemployment_ratio']+$user_info[$key]['insurance'][0]['accumulation_fund_base']*$user_info[$key]['insurance'][0]['accumulation_fund_ratio'];//五险一金
 
 //            print_r($user_info[166]);die;
-            $user_info[$key]['subsidy']             = sql_query(1, '*', 'oa_salary_subsidy', $id, 1, 1);//补贴
-            $withholding                            = sql_query(1, '*', 'oa_salary_withholding', $id, 1, 1);//代扣代缴
+            $user_info[$key]['subsidy']             = sql_query(1, '*', 'oa_salary_subsidy', $id,1,1);//补贴
+            $withholding                            = sql_query(1, '*', 'oa_salary_withholding', $id,1,1);//代扣代缴
+
             if ($withholding) {
-                $wit['token']                       = $withholding['token'];
+                $wit['token']                       = $withholding[0]['token'];
                 $wit['account_id']                  = $val['id'];
                 $wit                                = array_filter($wit);
-                $withh                              = sql_query(1, '*', 'oa_salary_withholding', $wit, 1, 0);//代扣代缴
+                $withh                              = sql_query(1, '*', 'oa_salary_withholding',$wit,1,0);//代扣代缴
+                $user_info[$key]['withholding']     = $withh;
                 foreach($withh as $kk =>$vv){
                     $user_info[$key]['summoney']    += $vv['money']; //总代扣代缴
                 }
@@ -798,38 +753,6 @@ class SalaryController extends BaseController {
 
             $user_info[$key]['Extract']             = $this->salary_kpi_month($val['id'],$que['p.month']); //目标任务 完成 提成
 
-            $user_info[$key]['tax_counting']        = $user_info[$key]['salary'][0]['standard_salary']/10*$user_info[$key]['salary'][0]['performance_salary']+($user_info[$key]['Achievements']['count_money'])-$user_info[$key]['insurance_Total'];//计税工资
-
-            //个人所得税
-            if($user_info[$key]['tax_counting'] <= 5000){
-                $counting                           = '0';
-            }else{
-                $cout                               = $user_info[$key]['tax_counting']-5000;
-
-                if($cout <= 3000){
-                    $counting                       = $cout*0.03;
-                }
-                if($cout > 3000 && $cout <= 12000){
-                    $counting                       = $cout*0.10-210;
-                }
-                if($cout > 12000 && $cout <= 25000){
-                    $counting                       = $cout*0.20-1410;
-                }
-                if($cout > 25000 && $cout <= 35000){
-                    $counting                       = $cout*0.25-2660;
-                }
-                if($cout > 35000 && $cout <= 55000){
-                    $counting                       = $cout*0.30-4410;
-                }
-                if($cout > 55000 && $cout <= 80000){
-                    $counting                       = $cout*0.35-7160;
-                }
-                if($cout > 80000){
-                    $counting                       = $cout*0.45-15160;
-                }
-                $counting                           = ((int)($counting*100))/100;
-            }
-            $user_info[$key]['personal_tax']        = $counting;//个人所得税
             $user_info[$key]['Labour']              = ($user_info[$key]['salary'][0]['standard_salary']/10*$user_info[$key]['salary'][0]['basic_salary']-500)*0.01;//工会会费
 
             $Year_end                               = ($user_info[$key]['bonus'][0]['annual_bonus'])/12;
@@ -861,8 +784,38 @@ class SalaryController extends BaseController {
             // 提成 + 奖金+带团补助+年终奖+
             $user_info[$key]['welfare']             = $user_info[$key]['Extract']['total']+$user_info[$key]['bonus'][0]['bonus']+$user_info[$key]['bonus'][0]['extract']+$user_info[$key]['bonus'][0]['annual_bonus']+$user_info[$key]['subsidy'][0]['housing_subsidy']+$user_info[$key]['subsidy'][0]['foreign_subsidies']+$user_info[$key]['subsidy'][0]['computer_subsidy'];
 
-            //应发工资 = 岗位工资-考勤扣款
+
+            //应发工资 = 岗位工资-考勤扣款+绩效增减+季度提成+奖金+年终奖-年终奖计税+外地补贴+电脑补贴+其他补款
             $user_info[$key]['Should'] = $user_info[$key]['salary'][0]['standard_salary']-$user_info[$key]['attendance'][0]['withdrawing']+$achievements+$user_info[$key]['Extract']['total']+$user_info[$key]['bonus'][0]['bonus']+$user_info[$key]['bonus'][0]['annual_bonus']-$price2+$user_info[$key]['subsidy'][0]['housing_subsidy']+$user_info[$key]['subsidy'][0]['foreign_subsidies']+$countmoney;
+
+            $user_info[$key]['tax_counting']        = $user_info[$key]['Should']-$user_info[$key]['insurance_Total'];//计税工资
+
+            //个人所得税
+            if($user_info[$key]['tax_counting'] <= 5000){
+                $counting                           = '0';
+            }else{
+                $cout                               = $user_info[$key]['tax_counting']-5000;
+
+
+                if($cout <= 3000){
+                    $countin                        = $cout*0.03;
+
+                }elseif($cout > 3000 && $cout <= 12000){
+                    $countin                        = $cout*0.10-210;
+                }elseif($cout > 12000 && $cout <= 25000){
+                    $countin                        = $cout*0.20-1410;
+                }elseif($cout > 25000 && $cout <= 35000){
+                    $countin                        = $cout*0.25-2660;
+                }elseif($cout > 35000 && $cout <= 55000){
+                    $countin                        = $cout*0.30-4410;
+                }elseif($cout > 55000 && $cout <= 80000){
+                    $countin                        = $cout*0.35-7160;
+                }elseif($cout > 80000){
+                    $countin                        = $cout*0.45-15160;
+                }
+                $counting                           = ((int)($countin*100))/100;
+            }
+            $user_info[$key]['personal_tax']        = $counting;//个人所得税
 
             //实发工资=岗位工资-考勤扣款+绩效增减+提成+奖金-代扣代缴+带团补助+年终奖-年终奖计税+住房补贴+外地补贴+电脑补贴-五险一金-个人所得税-工会会费+其他补款-大额医保
             $user_info[$key]['real_wages']          = $user_info[$key]['salary'][0]['standard_salary']-$user_info[$key]['attendance'][0]['withdrawing']+$achievements+$user_info[$key]['Extract']['total']+$user_info[$key]['bonus'][0]['bonus']-$user_info[$key]['summoney']+$user_info[$key]['bonus'][0]['extract']+$user_info[$key]['bonus'][0]['annual_bonus']-$price2+$user_info[$key]['subsidy'][0]['housing_subsidy']+$user_info[$key]['subsidy'][0]['foreign_subsidies']+$user_info[$key]['subsidy'][0]['computer_subsidy']-$user_info[$key]['insurance_Total']-$counting-$user_info[$key]['Labour']+$countmoney-$user_info[$key]['insurance'][0]['big_price'];
@@ -919,7 +872,7 @@ class SalaryController extends BaseController {
     }
 
     /**
-     * summoney 部门合计
+     * summoney 总合计
      */
     private function summoney($sum){
         $cout['name']                                = '总合计';
@@ -952,49 +905,71 @@ class SalaryController extends BaseController {
 /**
  * 导出 excel
  */
-//    public function excel(){
-//        //引入PHPExcel库文件
-//        Vendor('PHPExcel.Classes.PHPExcel');
-//        //创建对象
-//        $excel = new PHPExcel();
-//        //Excel表格式,这里简略写了8列
-//        $letter = array('A','B','C','D','E','F','F','G');
-//        //表头数组
-//        $tableheader = array('序号','客栈名称','客栈地址','座机','手机','QQ','邮箱');
-//        //填充表头信息
-//        for($i = 0;$i < count($tableheader);$i++) {
-//            $excel->getActiveSheet()->setCellValue("$letter[$i]1","$tableheader[$i]");
-//        }
-//        //表格数组
-//        $data = array(
-//            array('1','B','C','D','E','F','G'),
-//            array('2','B','C','D','E','F','G'),
-//            array('3','B','C','D','E','F','G'),
-//            array('4','B','C','D','E','F','G'),
-//            array('5','B','C','D','E','F','G'),
-//            array('6','B','C','D','E','F','G'),
-//            array('7','B','C','D','E','F','G'),
-//        );
-//        //填充表格信息
-//        for ($i = 2;$i <= count($data) + 1;$i++) {
-//            $j = 0;
-//            foreach ($data[$i - 2] as $key=>$value) {
-//                $excel->getActiveSheet()->setCellValue("$letter[$j]$i","$value");
-//                $j++;
+//    function exportExcel($fileName='demo'){
+//
+//        $dateti['datetime'] ='201809';
+//        $setTitle = $dateti['datetime'].'工资发放表';
+//        $info                = M('salary_wages_month')->where($dateti)->select();//已经提交数据
+//
+//        if(!$info){
+//            $this->error('您选择的数据不存在！');die;
+//        }else{
+//            $status = (int)$info[0]['status'];
+//            if($status!==4){
+//                $this->error('数据未审批！请联系审批部门或管理员！');die;
+//            }else{
+//                $sum                        = M('salary_departmen_count')->where($dateti)->select();
+//                $summoney                   = M('salary_count_money')->where($dateti)->find();
+//
 //            }
 //        }
-//        //创建Excel输入对象
-//        $write = new PHPExcel_Writer_Excel5($excel);
-//        header("Pragma: public");
-//        header("Expires: 0");
-//        header("Cache-Control:must-revalidate, post-check=0, pre-check=0");
-//        header("Content-Type:application/force-download");
-//        header("Content-Type:application/vnd.ms-execl");
-//        header("Content-Type:application/octet-stream");
-//        header("Content-Type:application/download");;
-//        header('Content-Disposition:attachment;filename="客栈信息.xls"');
-//        header("Content-Transfer-Encoding:binary");
-//        $write->save('php://output');
+//
+//        $list= array('1'=>'ID','2'=>'员工姓名','3'=>'岗位名称','4'=>'所属部门','5'=>'岗位薪酬标准','6'=>'其中基本工资标准','7'=>'考勤扣款','8'=>'其中绩效工资标准','9'=>'绩效增减','10'=>'业绩提成','11'=>'奖金','12'=>'住房补贴','13'=>'其他补款','14'=>'应发工资','15'=>'医疗保险','16'=>'养老保险','17'=>'失业保险','18'=>'公积金','19'=>'个人保险合计','20'=>'计税工资','21'=>'个人所得税','22'=>'税后扣款','23'=>'工会会费','24'=>'实发工资');
+//
+//
+//
+//        $titlname    =    ['订单号','消费用户','订单金额','订单数量','支付状态','订单时间'];
+//        exportExcel($titlname,$list,$setTitle,'');
+//        if ( empty($columName) || empty($list) ) {
+//            return '列名或者内容不能为空';
+//        }
+//
+//        if ( count($list[0]) != count($columName) ) {
+//            return '列名跟数据的列不一致';
+//        }
+//
+//        //实例化PHPExcel类
+//        $PHPExcel    =    new PHPExcel();
+//        //获得当前sheet对象
+//        $PHPSheet    =    $PHPExcel    ->    getActiveSheet();
+//        //定义sheet名称
+//        $PHPSheet    ->    setTitle($setTitle);//导出的表名
+//
+//        //excel的列 这么多够用了吧？不够自个加 AA AB AC ……
+//        $letter        =   [
+//            'A','B','C','D','E','F','G','H','I','J','K','L','M',
+//            'N','O','P','Q','R','S','T','U','V','W','X','Y','Z'
+//        ];
+//        //把列名写入第1行 A1 B1 C1 ...
+//
+//        for ($i=0; $i < count($list); $i++) {
+//            //$letter[$i]1 = A1 B1 C1  $letter[$i] = 列1 列2 列3
+//            $PHPSheet->setCellValue("$letter[$i]1","$columName[$i]");
+//        }
+//        //内容第2行开始
+//        foreach ($list as $key => $val) {
+//            //array_values 把一维数组的键转为0 1 2 3 ..
+//            foreach (array_values($val) as $key2 => $val2) {
+//                //$letter[$key2].($key+2) = A2 B2 C2 ……
+//                $PHPSheet->setCellValue($letter[$key2].($key+2),$val2);
+//            }
+//        }
+//        //生成2007版本的xlsx
+//        $PHPWriter = PHPExcel_IOFactory::createWriter($PHPExcel,'Excel2007');
+//        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+//        header('Content-Disposition: attachment;filename='.$fileName.'.xlsx');
+//        header('Cache-Control: max-age=0');
+//        $PHPWriter->save("php://output");
 //    }
 
 }

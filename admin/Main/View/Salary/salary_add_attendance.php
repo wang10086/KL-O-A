@@ -43,7 +43,7 @@
                                                 <th class="sorting" style="width:8em;">员工岗位</th>
                                                 <th class="sorting" style="width:12em;">迟到/早退(15分钟)</th>
                                                 <th class="sorting" style="width:12em;">迟到/早退(2小时)</th>
-                                                <th class="sorting" style="width:5em;">事假</th>
+                                                <th class="sorting" style="width:5em;">事假/缺勤</th>
                                                 <th class="sorting" style="width:5em;">病假</th>
                                                 <th class="sorting" style="width:10em;">北京最低工资标准</th>
                                                 <th class="sorting" style="width:5em;">旷工</th>

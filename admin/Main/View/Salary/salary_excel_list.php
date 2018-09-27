@@ -22,6 +22,7 @@
                                     <h3 class="box-title">员工薪资列表</h3>
                                     <a  class="btn btn-info" style="width:8em; margin: 0.5em 0em 0em 2em;"> <?php if($status=="" || $status==0 || $status==1){echo "待提交审核";}elseif($status==2){echo "待提交批准";}elseif($status==3){echo "待批准";}elseif($status==4){echo "已批准";}?></a>
                                     <a href="javascript:;" class="btn btn-info btn-sm" onclick="javascript:opensearch('searchtext',700,160);" style="margin: 0.7em 0em 0em 3em;" ><i class="fa fa-search"></i> 搜索</a>
+                                    <a  class="btn btn-info btn-sm" href="{:U('Salary/exportExcel')}" style="margin: 0.7em 0em 0em 3em;" ><i class="fa fa-search12"></i>导出 Excel</a>
                                 </div><!-- /.box-header --><br>
                                 <div class="box-body">
                                     <div class="btn-group" id="catfont">
@@ -165,9 +166,9 @@
                                 </div><!-- /.box-body -->
 
                                 <div><br><br>
-<!--                                  --><?php //if(($status="1" || $status=="" || $status==null || $status==false ) && $userid==77){?>
+                                  <?php if(($status="1" || $status=="" || $status==null || $status==false ) && $userid==77){?>
                                                                         <a  class="btn btn-info salary_excel1_submit" style="width:10em;margin-left:45em;">提交审核</a>
-<!--                                                                      --><?php //}?>
+                                                                      <?php }?>
                                     <?php if($status=2 && $userid ==55){?>
                                         <a  class="btn btn-info salary_excel1_submit1" style="width:10em;margin-left:45em;">提交批准</a>
                                         <a  class="btn btn-info salary_excel1_submit2" style="width:10em;">驳回</a>
@@ -189,7 +190,7 @@
             <div id="searchtext">
 <!--                <script src="__HTML__/js/public.js?v=1.0.6" type="text/javascript"></script>-->
 
-                <form action="{:U('Salary/salary_excel_list')}" method="post" id="searchform">
+                <form action="{:U('Salary/salary_excel_list')}" method="get" id="searchform">
 
                 <div class="form-group col-md-6" style="margin:2em 0em 0em 10em;">
                     <input type="text" name="month" class="form-control monthly" placeholder="搜索工资表年月格式 : 201806" style="text-align: center;"/>

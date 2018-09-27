@@ -356,7 +356,7 @@
                                     </div>
                                     <div class="content">
                                         <div class="box-header" style="margin-left: -20px">
-                                            <h3 class="box-title">六 、实发工资  共计 <u class="salary_Payroll">0.00</u> 元</h3><p style="margin-top: 15px;">(实发工资=岗位薪酬+提成/补助/奖金-员工五险一金-个税及工会会费、代扣代缴)</p>
+                                            <h3 class="box-title">六 、实发工资  共计 <u class="salary_Payroll">{$info['wages_month']['real_wages']}</u> 元</h3><p style="margin-top: 15px;">(实发工资=岗位薪酬+提成/补助/奖金-员工五险一金-个税及工会会费、代扣代缴)</p>
                                         </div><!-- /.box-header --><br />
                                         <!--   1+2-3-5    -->
                                         <table class="table table-bordered dataTable fontmini"  style="margin-left:-15px;">

@@ -158,7 +158,15 @@
                                         <option <?php if($row['archives']==4){ echo 'selected';}?> value="4">行管局</option>
                                     </select>
                                 </div>
-                                        
+                                <div class="form-group col-md-3">
+                                    <label>身份证号</label>
+                                    <input class="form-control"  type="text" name="info[ID_number]"  value="{$row.ID_number}"/>
+                                </div>
+
+                                <div class="form-group col-md-3">
+                                    <label>工资卡号</label>
+                                    <input class="form-control"  type="text" name="info[Salary_card_number]"  value="{$row.Salary_card_number}"/>
+                                </div>
                                         
                                     </if>
 
