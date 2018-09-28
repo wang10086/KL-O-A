@@ -348,6 +348,18 @@ class InspectController extends BaseController{
                     $record['explain'] = '评分结果追责';
                     op_record($record);
 
+                    //安全品控部经理发送系统消息uid 26(李岩),173(蔡金龙)
+                    $safe = array(26,173);
+                    $op          = M('op')->where(array('op_id'=>$op_id))->find();
+                    foreach ($safe as $k=>$v) {
+                        $uid     = cookie('userid');
+                        $title   = '您有来自['.$op['project'].']项目追责,请及时跟进!';
+                        $content = '';
+                        $url     = U('Inspect/score_info',array('opid'=>$op_id));
+                        $user    = '['.$v.']';
+                        send_msg($uid,$title,$content,$url,$user,'');
+                    }
+
                     $this->success('数据保存成功');
                 }else{
                     $this->error('数据保存失败');
@@ -443,7 +455,7 @@ class InspectController extends BaseController{
     public function score_detail(){
         $id                 = I('id');
         $info               = M()->table('__TCS_SCORE__ as s')
-            ->field('s.*,u.mobile,o.project,acc.nickname')
+            ->field('s.*,u.mobile,o.project,o.kind,acc.nickname')
             ->join('__TCS_SCORE_USER__ as u on u.id = s.uid')
             ->join('left join __OP__ as o on o.op_id= u.op_id')
             ->join('left join __ACCOUNT__ as acc on acc.id= s.solver_uid')
@@ -460,6 +472,14 @@ class InspectController extends BaseController{
             }
         }
         $info['status']     = $status;*/
+        $score_kind1        = C('SCORE_KIND1'); //线路类
+        $score_kind2        = C('SCORE_KIND2'); //课程类
+        if (in_array($info['kind'],$score_kind1)){
+            $kind           = 1;
+        }else{
+            $kind           = 2;
+        }
+        $this->kind         = $kind;
         $this->row          = $info;
         $this->score_stu    = C('SCORE_STU');
 

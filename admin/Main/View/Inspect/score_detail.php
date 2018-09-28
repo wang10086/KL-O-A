@@ -18,15 +18,25 @@
         </div>
         
         <div class="fromlist fromlistbrbr"  style=" padding:15px 0 0 0;">
-             <div class="form-group box-float-4" style="padding-left:0;">房：{$score_stu.$row[stay]}</div>
-             <div class="form-group box-float-4" style="padding-left:0;">餐：{$score_stu.$row[food]}</div>
-             <div class="form-group box-float-4" style="padding-left:0;">车：{$score_stu.$row[bus]}</div>
-             <div class="form-group box-float-4" style="padding-left:0;">行程安排：{$score_stu.$row[travel]}</div>
-             <div class="form-group box-float-4" style="padding-left:0;">活动内容：{$score_stu.$row[content]}</div>
-             <div class="form-group box-float-4" style="padding-left:0;">司机：{$score_stu.$row[driver]}</div>
-             <div class="form-group box-float-4" style="padding-left:0;">辅导员/领队：{$score_stu.$row[guide]}</div>
-             <div class="form-group box-float-4" style="padding-left:0;">教师/专家：{$score_stu.$row[teacher]}</div>
-             <div class="form-group box-float-4" style="padding-left:0;"></div>
+            <if condition="$kind eq 1">
+                <div class="form-group box-float-4" style="padding-left:0;">房：{$score_stu.$row[stay]}</div>
+                <div class="form-group box-float-4" style="padding-left:0;">餐：{$score_stu.$row[food]}</div>
+                <div class="form-group box-float-4" style="padding-left:0;">车：{$score_stu.$row[bus]}</div>
+                <div class="form-group box-float-4" style="padding-left:0;">行程安排：{$score_stu.$row[travel]}</div>
+                <div class="form-group box-float-4" style="padding-left:0;">活动内容：{$score_stu.$row[content]}</div>
+                <div class="form-group box-float-4" style="padding-left:0;">司机：{$score_stu.$row[driver]}</div>
+                <div class="form-group box-float-4" style="padding-left:0;">辅导员/领队：{$score_stu.$row[guide]}</div>
+                <div class="form-group box-float-4" style="padding-left:0;">教师/专家：{$score_stu.$row[teacher]}</div>
+                <div class="form-group box-float-4" style="padding-left:0;"></div>
+            <else />
+                <div class="form-group box-float-4" style="padding-left:0;">课程深度：{$score_stu.$row[depth]}</div>
+                <div class="form-group box-float-4" style="padding-left:0;">课程专业性：{$score_stu.$row[major]}</div>
+                <div class="form-group box-float-4" style="padding-left:0;">课程趣味性：{$score_stu.$row[interest]}</div>
+                <div class="form-group box-float-4" style="padding-left:0;">专家/讲师：{$score_stu.$row[teacher]}</div>
+                <div class="form-group box-float-4" style="padding-left:0;">辅导员：{$score_stu.$row[guide]}</div>
+                <div class="form-group box-float-4" style="padding-left:0;">材料及设备：{$score_stu.$row[material]}</div>
+            </if>
+
              <div class="form-group box-float-12" style="padding-left:0;">意见建议：{$row.suggest}</div>
         </div>
         
