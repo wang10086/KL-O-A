@@ -539,32 +539,32 @@ class OpController extends BaseController {
         $this->product_from   = C('PRODUCT_FROM');
         $this->reckon_mode    = C('RECKON_MODE');
 		$this->ages           = C('AGE_LIST');
-        $this->service_type   = C('SERVICE_TYPE');
+        $this->guide          = $guide?$guide:$guide_old;
+
+        /*$this->service_type   = C('SERVICE_TYPE');
         $this->act_need       = C('ACT_NEED');
         $this->les_field      = C('LES_FIELD');
-        $this->act_field      = C('ACT_FIELD');
-        $this->resource       = $resource;
+        $this->act_field      = C('ACT_FIELD');*/
+        /*$this->resource       = $resource;
         $this->service_types  = $service_type;
         $this->act_needs      = $act_need;
         $this->les_fields     = $les_field;
-        $this->act_fields     = $act_field;
-        $this->guide          = $guide?$guide:$guide_old;
-        $product_need         = M()->table('__OP_COSTACC__ as c')->field('c.*,p.from,p.subject_field,p.type as ptype,p.age,p.reckon_mode')->join('left join __PRODUCT__ as p on c.product_id=p.id')->where(array('c.op_id'=>$opid,'c.type'=>5,'c.status'=>0))->select();
-        foreach ($product_need as $k=>$v){
-            $ages             = explode(',',$v['age']);
-            $age_list         = array();
-            foreach ($this->ages as $key=>$value){
-                if (in_array($key,$ages)){
-                    $age_list[]= $value;
-                }
-            }
-            $product_need[$k]['age_list'] = implode(',',$age_list);
-        }
-        $this->product_need   = $product_need;
-        $this->yusuan         = $yusuan;
+        $this->act_fields     = $act_field;*/
+        /* $product_need         = M()->table('__OP_COSTACC__ as c')->field('c.*,p.from,p.subject_field,p.type as ptype,p.age,p.reckon_mode')->join('left join __PRODUCT__ as p on c.product_id=p.id')->where(array('c.op_id'=>$opid,'c.type'=>5,'c.status'=>0))->select();
+         foreach ($product_need as $k=>$v){
+             $ages             = explode(',',$v['age']);
+             $age_list         = array();
+             foreach ($this->ages as $key=>$value){
+                 if (in_array($key,$ages)){
+                     $age_list[]= $value;
+                 }
+             }
+             $product_need[$k]['age_list'] = implode(',',$age_list);
+         }
+         $this->product_need   = $product_need;
+         $this->job_name       = array_column($job_names,'job_money','job_name');*/
 
-        //$this->job_name      = array_filter(array_column($job_names,'job_money','job_name'));
-        $this->job_name       = array_column($job_names,'job_money','job_name');
+        $this->yusuan         = $yusuan;
         $this->xuhao          = 1;
         $this->huikuan_status = M('contract_pay')->where(array('op_id'=>$opid))->getField('status');
         $this->guide_kind     = M('guidekind')->getField('id,name',true);
@@ -585,7 +585,7 @@ class OpController extends BaseController {
             ->field('gp.*,gk.name as gkname,gpk.name as gpkname')
             ->join('left join __GUIDEKIND__ as gk on gp.guide_kind_id = gk.id')
             ->join('left join __GUIDE_PRICEKIND__ as gpk on gp.gpk_id = gpk.id')
-            ->where(array('gp.op_id'=>$opid))
+            ->where(array('gp.op_id'=>$opid,'gp.confirm_id'=>'0'))
             ->select();
 
         //客户名称关键字
@@ -2294,6 +2294,17 @@ class OpController extends BaseController {
             //项目跟进时提出的需求信息
             $this->guide_need   = M('op_guide_price')->where(array('op_id'=>$opid))->select();
 
+            //人员名单关键字
+            $user   = M('account')->field("id,nickname")->where(array('status'=>0))->select();
+            $user_key    = array();
+            foreach($user as $k=>$v){
+                $text           = $v['nickname'];
+                $user_key[$k]['id']  = $v['id'];
+                $user_key[$k]['pinyin'] = strtopinyin($text);
+                $user_key[$k]['text']       = $text;
+            }
+            $this->userkey = json_encode($user_key);
+
             //人员列表
             $stu_list       = M('op_member')->where(array('op_id'=>$opid))->select();
             $member         = M('op_member')->where(array('op_id'=>$opid))->order('id')->select();
@@ -2301,6 +2312,13 @@ class OpController extends BaseController {
             $this->stu_list = $stu_list;
 			$this->confirm 	= $confirm;
             $this->upd_num  = $confirm['upd_num'];
+            $this->op_kind  = $op['kind'];
+           /* $this->service_type   = C('SERVICE_TYPE');*/
+            $this->act_need       = C('ACT_NEED');
+            $this->les_field      = C('LES_FIELD');
+            $this->act_field      = C('ACT_FIELD');
+            $this->apply_to       = C('APPLY_TO');
+
 			$this->display('confirm');
 		}
 	}
