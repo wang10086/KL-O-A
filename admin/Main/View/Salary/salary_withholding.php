@@ -9,6 +9,7 @@
                 <option value="0" <?php if($type==0|| $type=="" ){echo 'selected';}?>>选择操作</option>
                 <option value="1" onclick="salary_withholding(1)" <?php if($type==13){echo 'selected';}?>>代扣代缴变动</option>
                 <option value="2" onclick="salary_withholding(2)" <?php if($type==14){echo 'selected';}?>>其他收入变动</option>
+                <option value="3" onclick="salary_withholding(3)" <?php if($type==15){echo 'selected';}?>>工会会费</option>
             </select>
         </div>
     </div><!-- /.box-header -->
@@ -132,6 +133,48 @@
 
                     </div>
                 </div>
+
+
+            <div id="salary_withholding3" style="display:none">
+                <div style="float: left;margin-left: 2em;">
+                    <label>选择人员：</label>
+                    <a href="javascript:;" class="btn btn-info btn-sm" onclick="javascript:opensearch('searchtext_4',700,160);"><i class="fa fa-search"></i> 搜索</a> (提示: 选择不到人员或基本信息不完整、错误时，请在“员工管理”->"人员管理"页面添加或编辑信息)<br><br>
+
+                    <table class="table table-bordered dataTable fontmini" id="tablelist" style="margin-top:10px;">
+                        <tr role="row" class="orders" >
+                            <th class="sorting" data="op_id"  style="width:6em;">ID</th>
+                            <th class="sorting" data="group_id" style="width:8em;">员工姓名</th>
+                            <th class="sorting" data="group_id" style="width:8em;">员工编号</th>
+                            <th class="sorting" data="group_id" style="width:10em;">部门</th>
+                            <th class="sorting" data="project" style="width:12em;">岗位</th>
+                            <th class="sorting" data="number" style="width:12em;">原工会会费</th>
+                            <th class="sorting" data="shouru" style="width:12em;">现工会会费</th>
+                            <th class="sorting" data="shouru" style="width:8em;">操作</th>
+                            </if>
+
+                        </tr>
+                        <foreach name="withhold" item="inf">
+                        <tr>
+                            <td class="salary_aid" >{$inf.aid}</td>
+                            <td>{$inf.nickname}</td>
+                            <td>{$inf.employee_member}</td>
+                            <td>{$inf.department}</td>
+                            <td>{$inf.post_name}</td>
+                            <td>{$inf.standard_salary}</td>
+                            <td class="salary_basic" style="text-align: center">
+                                <input type="text" style="width:5em;float:right;" class="form-control salary_basic2" value="{$inf.performance_salary}" />
+                            </td>
+                            <td class="salary_entry">
+                                <input type="hidden" class="salary_type" value="5"/>
+                                <input type="button" class="form-control salary_butt1" value="添加" style="background-color:#00acd6;font-size:1em;" />
+                            </td>
+                        </tr>
+                        </foreach>
+
+                    </table>
+
+                </div>
+            </div>
 
 
         </div><!-- /.box -->

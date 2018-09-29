@@ -109,3 +109,24 @@
 
     </form>
 </div>
+
+<!--工会会费-->
+<div id="searchtext_4">
+    <script src="__HTML__/js/public.js?v=1.0.6" type="text/javascript"></script>
+
+    <form action="{:U('Salary/salary_query')}" method="post" id="salary_withholding_num">
+
+        <div class="form-group col-md-3">
+            <input type="text" class="form-control" name="id" placeholder="ID编号">
+        </div>
+        <div class="form-group col-md-3">
+            <input type="text" class="form-control" name="employee_member" placeholder="员工编号">
+        </div>
+
+        <div class="form-group col-md-3">
+            <input type="text" class="form-control" name="nickname" placeholder="员工姓名">
+        </div>
+        <input type="hidden" name="status" value="5">
+
+    </form>
+</div>

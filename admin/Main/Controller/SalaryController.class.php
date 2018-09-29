@@ -29,7 +29,7 @@ class SalaryController extends BaseController {
              }
          }
 
-       if($_SESSION['userid']==11 ||$_SESSION['userid']==55 || $_SESSION['userid']==77 || $_SESSION['userid']==32 || $_SESSION['userid']==38 || $_SESSION['userid']==12){
+       if($_SESSION['userid']==11 ||$_SESSION['userid']==55 || $_SESSION['userid']==77 || $_SESSION['userid']==32 || $_SESSION['userid']==38 || $_SESSION['userid']==12  || $_SESSION['userid']!==1){
 
 
 
@@ -69,7 +69,7 @@ class SalaryController extends BaseController {
             $this->error('您的数据有误!请重新选择！');die;
         }
 
-        if($_SESSION['userid']==11 ||$_SESSION['userid']==55 || $_SESSION['userid']==77 || $_SESSION['userid']==32 || $_SESSION['userid']==38 || $_SESSION['userid']==12){
+        if($_SESSION['userid']==11 ||$_SESSION['userid']==55 || $_SESSION['userid']==77 || $_SESSION['userid']==32 || $_SESSION['userid']==38 || $_SESSION['userid']==12  || $_SESSION['userid']!==1){
 
         }else{
 
@@ -255,7 +255,7 @@ class SalaryController extends BaseController {
 
         if(IS_POST){
 
-            if($_SESSION['userid']!==11 ||$_SESSION['userid']!==55 || $_SESSION['userid']!==77 || $_SESSION['userid']!==32 || $_SESSION['userid']!==38 || $_SESSION['userid']!==12){
+            if($_SESSION['userid']!==11 ||$_SESSION['userid']!==55 || $_SESSION['userid']!==77 || $_SESSION['userid']!==32 || $_SESSION['userid']!==38 || $_SESSION['userid']!==12  || $_SESSION['userid']!==1){
 
                 $this->error('您的权限不足！');die;
 
@@ -345,7 +345,6 @@ class SalaryController extends BaseController {
             $all = trim(I('all'));
 
             if($posts['post_name'] !==""){
-
                 $postid                                     = M('posts')->where($posts)->find();
                 $where['postid']                            = $postid['id'];
             }
@@ -431,6 +430,10 @@ class SalaryController extends BaseController {
             if($status == 4){
                 $this->assign('withholding',$account_r);//数据
             }
+            if($status == 5){
+                $this->assign('withholding',$account_r);//数据
+
+            }
         $this->assign('type',$type);//数据
         $this->assign('department',query_department());//部门
         $this->assign('posts',query_posts());//岗位
@@ -457,7 +460,7 @@ class SalaryController extends BaseController {
      * salary_add_department 添加部门
      */
     public function salary_add_department(){
-        if($_SESSION['userid']!==11 ||$_SESSION['userid']!==55 || $_SESSION['userid']!==77 || $_SESSION['userid']!==32 || $_SESSION['userid']!==38 || $_SESSION['userid']!==12){
+        if($_SESSION['userid']!==11 ||$_SESSION['userid']!==55 || $_SESSION['userid']!==77 || $_SESSION['userid']!==32 || $_SESSION['userid']!==38 || $_SESSION['userid']!==12 || $_SESSION['userid']!==1){
 
             $this->error('您的权限不足！');die;
         }
@@ -516,7 +519,7 @@ class SalaryController extends BaseController {
      * @salary_excel_list 生成工资表
      */
     public function salary_excel_list(){//判断权限
-//        if($_SESSION['userid']!==11 ||$_SESSION['userid']!==55 || $_SESSION['userid']!==77 || $_SESSION['userid']!==32 || $_SESSION['userid']!==38 || $_SESSION['userid']!==12){
+//        if($_SESSION['userid']!==11 ||$_SESSION['userid']!==55 || $_SESSION['userid']!==77 || $_SESSION['userid']!==32 || $_SESSION['userid']!==38 || $_SESSION['userid']!==12  || $_SESSION['userid']!==1){
 //
 //            $this->error('您的权限不足！');die;
 //        }
@@ -582,7 +585,14 @@ class SalaryController extends BaseController {
         $this->assign('info',$info);//员工信息
         $this->assign('type',$archives);//状态
         $this->assign('sum',$sum);//部门合计
-        $this->assign('count',$summoney);//部门合计
+        $this->assign('count',$summoney);//总合计
+
+        $this->assign('monthly',$monthly);//总合计
+
+        $this->assign('inf',$info);//员工信息
+        $this->assign('su',$sum);//部门合计
+        $this->assign('coun',$summoney);//总合计
+
         $this->assign('time',$datetime);//表时间
         $this->assign('status',$status);//提交状态
         $this->display();
@@ -594,47 +604,48 @@ class SalaryController extends BaseController {
     private function arraysplit($wages_month){
 
         foreach($wages_month as $key => $val){
-            $list[$key]['wages_mont_id']     = $val['id'];
-            $list[$key]['account']['id']          = $val['account_id'];
-            $list[$key]['account']['nickname']   = $val['user_name'];
-            $list[$key]['department'][0]['department'] = $val['department'];
-            $list[$key]['posts'][0]['post_name'] = $val['post_name'];
-            $list[$key]['salary'][0]['standard_salary'] = $val['standard'];
-            $list[$key]['salary'][0]['basic_salary'] = ((int)($val['basic_salary']/$val['standard']*1000))/100;
-            $list[$key]['salary'][0]['performance_salary'] =  ((int)($val['performance_salary']/$val['standard']*1000))/100;
 
-            $list[$key]['salary'][0]['id'] = $val['salary_id'];
-            $list[$key]['attendance'][0]['id'] = $val['attendance_id'];
-            $list[$key]['attendance'][0]['withdrawing'] = $val['withdrawing'];
-            $list[$key]['bonus'][0]['id'] = $val['bonus_id'];
-            $list[$key]['bonus'][0]['bonus'] = $val['bonus'];
-            $list[$key]['income'][0]['income_token'] = $val['income_token'];
-            $list[$key]['Other'] = $val['Other'];
-            $list[$key]['insurance'][0]['id'] = $val['insurance_id'];
-            $list[$key]['insurance_Total'] = $val['insurance_Total'];
-            $list[$key]['insurance'][0]['medical_care_base'] = $val['medical_care'];
-            $list[$key]['insurance'][0]['pension_base'] = $val['pension_ratio'];
-            $list[$key]['insurance'][0]['unemployment_base'] = $val['unemployment'];
-            $list[$key]['insurance'][0]['accumulation_fund_base'] = $val['accumulation_fund'];
-            $list[$key]['insurance'][0]['medical_care_ratio'] = 1;
-            $list[$key]['insurance'][0]['pension_ratio'] = 1;
-            $list[$key]['insurance'][0]['unemployment_ratio'] = 1;
-            $list[$key]['insurance'][0]['accumulation_fund_ratio'] = 1;
-            $list[$key]['subsidy'][0]['id'] = $val['subsidy_id'];
-            $list[$key]['subsidy'][0]['housing_subsidy'] = $val['housing_subsidy'];
-            $list[$key]['withholding'][0]['token'] = $val['withholding_token'];
-            $list[$key]['Extract']['target'] = $val['target'];
-            $list[$key]['Extract']['complete'] = $val['complete'];
-            $list[$key]['Extract']['total'] = $val['total'];
-            $list[$key]['tax_counting'] = $val['tax_counting'];
-            $list[$key]['personal_tax']= $val['personal_tax'];
-            $list[$key]['Labour'] = $val['Labour'];
-            $list[$key]['summoney'] = $val['summoney'];
-            $list[$key]['real_wages'] = $val['real_wages'];
-            $list[$key]['Achievements']['sum_total_score'] = $val['sum_total_score'];
-            $list[$key]['Achievements']['total_score_show'] = $val['total_score_show'];
-            $list[$key]['Achievements']['show_qa_score'] = $val['show_qa_score'];
-            $list[$key]['Achievements']['count_money'] = $val['Achievements_withdrawing'];
+            $list[$key]['wages_mont_id']                            = $val['id'];
+            $list[$key]['account']['id']                            = $val['account_id'];
+            $list[$key]['account']['nickname']                      = $val['user_name'];
+            $list[$key]['department'][0]['department']              = $val['department'];
+            $list[$key]['posts'][0]['post_name']                    = $val['post_name'];
+            $list[$key]['salary'][0]['standard_salary']             = $val['standard'];
+            $list[$key]['salary'][0]['basic_salary']                = ((int)($val['basic_salary']/$val['standard']*1000))/100;
+            $list[$key]['salary'][0]['performance_salary']          = ((int)($val['performance_salary']/$val['standard']*1000))/100;
+
+            $list[$key]['salary'][0]['id']                          = $val['salary_id'];
+            $list[$key]['attendance'][0]['id']                      = $val['attendance_id'];
+            $list[$key]['attendance'][0]['withdrawing']             = $val['withdrawing'];
+            $list[$key]['bonus'][0]['id']                           = $val['bonus_id'];
+            $list[$key]['bonus'][0]['bonus']                        = $val['bonus'];
+            $list[$key]['income'][0]['income_token']                = $val['income_token'];
+            $list[$key]['Other']                                    = $val['Other'];
+            $list[$key]['insurance'][0]['id']                       = $val['insurance_id'];
+            $list[$key]['insurance_Total']                          = $val['insurance_Total'];
+            $list[$key]['insurance'][0]['medical_care_base']        = $val['medical_care'];
+            $list[$key]['insurance'][0]['pension_base']             = $val['pension_ratio'];
+            $list[$key]['insurance'][0]['unemployment_base']        = $val['unemployment'];
+            $list[$key]['insurance'][0]['accumulation_fund_base']   = $val['accumulation_fund'];
+            $list[$key]['insurance'][0]['medical_care_ratio']       = 1;
+            $list[$key]['insurance'][0]['pension_ratio']            = 1;
+            $list[$key]['insurance'][0]['unemployment_ratio']       = 1;
+            $list[$key]['insurance'][0]['accumulation_fund_ratio']  = 1;
+            $list[$key]['subsidy'][0]['id']                         = $val['subsidy_id'];
+            $list[$key]['subsidy'][0]['housing_subsidy']            = $val['housing_subsidy'];
+            $list[$key]['withholding'][0]['token']                  = $val['withholding_token'];
+            $list[$key]['Extract']['target']                        = $val['target'];
+            $list[$key]['Extract']['complete']                      = $val['complete'];
+            $list[$key]['Extract']['total']                         = $val['total'];
+            $list[$key]['tax_counting']                             = $val['tax_counting'];
+            $list[$key]['personal_tax']                             = $val['personal_tax'];
+            $list[$key]['Labour']                                   = $val['Labour'];
+            $list[$key]['summoney']                                 = $val['summoney'];
+            $list[$key]['real_wages']                               = $val['real_wages'];
+            $list[$key]['Achievements']['sum_total_score']          = $val['sum_total_score'];
+            $list[$key]['Achievements']['total_score_show']         = $val['total_score_show'];
+            $list[$key]['Achievements']['show_qa_score']            = $val['show_qa_score'];
+            $list[$key]['Achievements']['count_money']              = $val['Achievements_withdrawing'];
         }
         return $list;
     }
@@ -902,6 +913,64 @@ class SalaryController extends BaseController {
 
         }
         return $cout;
+    }
+
+    /**
+     * 导出 excel
+     */
+    public function Ajax_exportExcel(){
+
+        $Excel1                             = I('Excel1');//分割成数组 删除最后一个
+        $Excel2                             = I('Excel2');//分割成数组 删除最后一个
+        $Excel3[0]                          = I('Excel3');//分割成数组 删除最后一个
+        $datetime                           = I('datetime');
+        $Excel1_count = count($Excel1);
+        $Excel2_count = count($Excel2);
+        for($i=0;$i<$Excel1_count/24;$i++){//计算没多少条一个数组
+            for($num=$i*24;$num<24*$i+24;$num++){//计算分组字段的长度
+                $array[$i][$num%24] = $Excel1[$num];//[数组数量][多少条的数据]
+            }
+        }
+
+        for($i=0;$i<$Excel2_count/22;$i++){//计算没多少条一个数组
+            for($num=$i*22;$num<22*$i+22;$num++){//计算分组字段的长度
+                $arr[$i][$num%22] = $Excel2[$num];//[数组数量][多少条的数据]
+            }
+        }
+        foreach($array as $key => $val){
+            foreach($val as $k => $v){
+                if($k==0) {
+                    $info = M('account')->where('id=' . $v)->find();//已经提交数据
+                    $number = $info['ID_number'];
+                    $card_number = $info['Salary_card_number'];
+                }
+                if($k>3){
+                    $data1[4]           = $number;//插入身份证信息
+                    $data1[5]           = $card_number;//插入银行卡信息
+                    $data1[$k+2] = trim($v);
+                }else{
+                    $data1[$k]        = trim($v);
+                }
+            }
+            $Excel_data[0]= array('1'=>'ID','2'=>'员工姓名','3'=>'岗位名称','4'=>'所属部门','5'=>'身份证号','6'=>'工资卡号','7'=>'岗位薪酬标准','8'=>'其中基本工资标准','9'=>'考勤扣款','10'=>'其中绩效工资标准','11'=>'绩效增减','12'=>'业绩提成','13'=>'奖金','14'=>'住房补贴','15'=>'其他补款','16'=>'应发工资','17'=>'医疗保险','18'=>'养老保险','19'=>'失业保险','20'=>'公积金','21'=>'个人保险合计','22'=>'计税工资','23'=>'个人所得税','24'=>'税后扣款','25'=>'工会会费','26'=>'实发工资');
+
+            $Excel_data[$key+1] = $data1;
+        }
+        $Excel_data = array_merge($Excel_data,$arr,$Excel3);
+
+        if($datetime=="" || $datetime ==null || $datetime==false){
+            $time_Y                     = date('Y');
+            $time_M                     = date('m');
+            $time_D                     = date('d');
+            if($time_D < 10){
+                $time_M                 = $time_M-1;
+            }
+            $datetime                   = $time_Y.$time_M ;//查询年月
+        }
+        $setTitle                           = $datetime.'工资发放表';
+
+        exportexcel($Excel_data,$setTitle,$setTitle);
+
     }
 
 }
