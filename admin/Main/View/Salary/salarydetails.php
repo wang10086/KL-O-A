@@ -180,9 +180,9 @@
                                         <div class="form-group col-md-4 viwe">
                                             <p>业绩提成：{$info['kpi']['total']} (元)</p>
                                         </div><br/><br/><br/>
-                                        <h5 style="color:#000000;">&nbsp;&nbsp;&nbsp;&nbsp;其他人员提成（计调、研发、资源）：{$info['wages_month'].bonus} （元）</h5><br/>
+                                        <h5 style="color:#000000;">&nbsp;&nbsp;&nbsp;&nbsp;其他人员提成（计调、研发、资源）：{$info['bonus']['bonus']}（元）</h5><br/>
                                         <div class="form-group col-md-4 viwe">
-                                            <p>带团补助（课时费）：{$info['bonus'].extract}</p>
+                                            <p>带团补助（课时费）：{$info['total']}</p>
                                         </div>
                                         <div class="form-group col-md-4 viwe">
                                             <p>住房补助：{$info['wages_month'].housing_subsidy} </p>

@@ -173,7 +173,7 @@
                                                 <td>&yen; {$info['tax_counting']}</td>
                                                 <td>&yen; {$info['personal_tax']}</td>
                                                 <td>&yen; {$info['summoney']}</td>
-                                                <td>&yen; {$info['Labour']}</td>
+                                                <td>&yen; {$info['labour']['Labour_money']}</td>
                                                 <td>&yen; {$info['real_wages']}</td>
                                                 <td style="display:none">{$info['salary'][0]['id']}</td>
                                                 <td style="display:none">{$info['attendance'][0]['id']}</td>
@@ -190,6 +190,7 @@
                                                 <td style="display:none">{$info['yearend']}</td>
                                                 <td style="display:none">{$info['bonus'][0]['extract']}</td>
                                                 <td style="display:none">{$info['welfare']}</td>
+                                                <td style="display:none">{$info['labour']['id']}</td>
                                             </tr>
                                                 <th class="list_salary_detail1" style="display: none">{$info['wages_mont_id']}</th>
                                             </foreach>

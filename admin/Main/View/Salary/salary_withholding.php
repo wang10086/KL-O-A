@@ -134,7 +134,7 @@
                     </div>
                 </div>
 
-
+                <!-- 工会会费-->
             <div id="salary_withholding3" style="display:none">
                 <div style="float: left;margin-left: 2em;">
                     <label>选择人员：</label>
@@ -160,13 +160,12 @@
                             <td>{$inf.employee_member}</td>
                             <td>{$inf.department}</td>
                             <td>{$inf.post_name}</td>
-                            <td>{$inf.standard_salary}</td>
-                            <td class="salary_basic" style="text-align: center">
-                                <input type="text" style="width:5em;float:right;" class="form-control salary_basic2" value="{$inf.performance_salary}" />
+                            <td>{$inf['Labour']['Labour_money']}</td>
+                            <td class="salary_basic">
+                                <input type="text" class="form-control salary_basic2" value="" />
                             </td>
                             <td class="salary_entry">
-                                <input type="hidden" class="salary_type" value="5"/>
-                                <input type="button" class="form-control salary_butt1" value="添加" style="background-color:#00acd6;font-size:1em;" />
+                                <input type="button" class="form-control salary_button22" value="添加" style="background-color:#00acd6;font-size:1em;" />
                             </td>
                         </tr>
                         </foreach>
@@ -180,3 +179,12 @@
         </div><!-- /.box -->
     </div>
 </div>
+<script>
+    var stat = <?php echo $stau;?>;
+    if(stat==5){
+        $('#salary_withholding3').show();
+        $('#salary_withholding1').hide();
+        $('#salary_withholding2').hide();
+    }
+
+</script>

@@ -482,9 +482,10 @@ class AjaxController extends Controller {
         $type                               = code_number(trim($_POST['statu']));
         $uid['account_id']                  = code_number(trim($_POST['account_id']));
         if($type == 1){//提成/奖金
-            $where['bonus']                 = code_number(trim($_POST['housing_subsidy']));
-            $where['extract']               = code_number(trim($_POST['foreign_subsidies']));
-            $where['annual_bonus']          = code_number(trim($_POST['computer_subsidy']));
+
+            $where['extract']               = code_number(trim($_POST['housing_subsidy']));//提成
+            $where['bonus']                 = code_number(trim($_POST['foreign_subsidies']));//奖金
+            $where['annual_bonus']          = code_number(trim($_POST['computer_subsidy']));//年终奖
         }
         if($type == 2){//补贴
             $where['housing_subsidy']       = code_number(trim($_POST['housing_subsidy']));
@@ -833,7 +834,6 @@ class AjaxController extends Controller {
                 $time_M                 = $time_M-1;
             }
             $datetime                   = $time_Y.$time_M ;//查询年月
-            
         }
         $content                        = trim($_POST['content']);//去除左右空字符 提交申请表数据
         $coutdepartment                 = trim($_POST['coutdepartment']);//去除左右空字符 提交申请表部门数据
@@ -850,9 +850,9 @@ class AjaxController extends Controller {
             $msg                        = "请不要重复提交数据!";
             echo json_encode(array('sum' => $sum, 'msg' => $msg));die;
         }
-        for($i=0;$i<$cont/39;$i++){//计算没多少条一个数组
-            for($num=$i*39;$num<39*$i+39;$num++){//计算分组字段的长度
-                $array[$i][$num%39] = $count[$num];//[数组数量][多少条的数据]
+        for($i=0;$i<$cont/40;$i++){//计算没多少条一个数组
+            for($num=$i*40;$num<40*$i+40;$num++){//计算分组字段的长度
+                $array[$i][$num%40] = $count[$num];//[数组数量][多少条的数据]
             }
         }
         foreach($array as $key => $val){
@@ -867,7 +867,7 @@ class AjaxController extends Controller {
             $add['withholding_token']       = $val[30]; $add['insurance_id']= $val[28]; $add['subsidy_id']  = $val[29]; $add['show_qa_score']  = $val[32];
             $add['total_score_show']        = $val[31]; $add['target']      = $val[34]; $add['complete']    = $val[35]; $add['sum_total_score']= $val[33];
             $add['datetime']                = $datetime;$add['createtime']  = time();   $add['status']      = 2;        $add['yearend']        = $val[36];
-            $add['Subsidy']                 = $val[37]; $add['welfare']     = $val[38];
+            $add['Subsidy']                 = $val[37]; $add['welfare']     = $val[38]; $add['labour_id']     = $val[39];
             $add                            = array_filter($add);
             $month = M('salary_wages_month')->add($add);
             if(!$month){
@@ -882,7 +882,7 @@ class AjaxController extends Controller {
                 $income_w                   = M('salary_income')->where(array('income_token='.$add['income_token']))->save($status);
                 $insurance_w                = M('salary_insurance')->where(array('id='.$add['insurance_id']))->save($status);
                 $subsidy_w                  = M('salary_subsidy')->where(array('id='.$add['subsidy_id']))->save($status);
-
+                $labour_w                   = M('salary_labour')->where(array('id='.$add['labour_id']))->save($status);
                 $withholding_w              = M('salary_withholding')->where(array('token='.$add['withholding_token']))->save($status);
             }
         }
@@ -1006,6 +1006,49 @@ class AjaxController extends Controller {
             echo json_encode(array('sum' => $sum, 'msg' => $msg));die;
         }
 
+    }
+
+    public function salary_list_Labour(){//添加工会会费
+
+        $where['account_id']                = code_number(trim(I('uid')));
+        $Labour_money                       = trim(I('money'));
+        if(empty($Labour_money)){
+            $sum                            = 0;
+            $msg                            = "添加工会会费失败!";
+            echo json_encode(array('sum' => $sum, 'msg' => $msg));die;
+        }else{
+            $where['status'] = 1;
+            $Labour                         = M('salary_labour')->where($where)->order('id desc')->find();
+            if($Labour){
+                $id['id']                   = $Labour['id'];
+                $save['Labour_money']       = $Labour_money;
+               $Labour_w                    =  M('salary_labour')->where($id)->save($save);
+                if($Labour_w){
+                    $sum                    = 1;
+                    $msg                    = "修改工会会费成功!";
+                    $cot = '修改会费 : '.$Labour_money;
+                    salary_info(11,$cot);
+                    echo json_encode(array('sum' => $sum, 'msg' => $msg));die;
+                }
+            }else{
+                $where['Labour_money']      = $Labour_money;
+                $where['createtime']        = time();
+                //print_r($where);die;
+                $add                        =  M('salary_labour')->add($where);
+                if($add){
+                    $cot = '添加会费 : '.$Labour_money;
+                    salary_info(11,$cot);
+                    $sum                    = 1;
+                    $msg                    = "修改工会会费成功!";
+                    echo json_encode(array('sum' => $sum, 'msg' => $msg));die;
+                }else{
+                    $sum                    = 0;
+                    $msg                    = "添加工会会费失败2!";
+                    echo json_encode(array('sum' => $sum, 'msg' => $msg));die;
+                }
+            }
+
+        }
     }
 
 

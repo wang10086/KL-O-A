@@ -30,13 +30,11 @@ $(function(){
     }else{
         $('#table_salary_insurance1').show();
     }
-    if(number<3 && number>0 ){//代扣代缴
-        salary_withholding(number);
+    if(number<4 && number>0 ){//代扣代缴
+            salary_withholding(number);
     }else{
         $('#salary_withholding1').show();
     }
-
-
 
 
 })
@@ -80,6 +78,29 @@ function salary_list(page){//ajax 分页效果(岗位薪酬变动)
         $(' #searchform').append(html);
 
         }
+
+$('.salary_button22').click(function(){//工会会费
+    var url ="index.php?m=Main&c=Ajax&a=salary_list_Labour";
+    var uid = $(this).parents('tr').find('.salary_aid').text();
+    var money = $(this).parents('tr').find('.salary_basic2').val();
+    $.ajax({
+        url:url,
+        type:"post",
+        data:{'uid':uid,'money':money},
+        dataType:"json",
+        success: function (data) {
+            if (data.sum == 1) {
+                alert(data.msg);
+                return false;
+            }
+            if (data.sum == 0) {
+                alert(data.msg);
+                return false;
+            }
+        }
+    });
+})
+
 
 //岗位薪酬变动 保存信息
     $('.salary_butt1').click(function () {

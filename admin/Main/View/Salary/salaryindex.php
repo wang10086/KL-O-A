@@ -39,7 +39,6 @@
                                             <th class="sorting" data="number">绩效增减</th>
                                             <th class="sorting" data="shouru">带团补助</th>
                                             <th class="sorting" data="shouru">提成/补助/奖金</th>
-
                                             <th class="sorting" data="shouru">应发工资</th>
                                             <th class="sorting" data="maoli">五险一金</th>
                                             <th class="sorting" data="number">代扣代缴</th>
@@ -59,7 +58,7 @@
                                                 <td>&yen; {$info.standard}</td>
                                                 <td>&yen; {$info.withdrawing}</td>
                                                 <td>&yen; {$info.Achievements_withdrawing}</td>
-                                                <td>&yen; {$info.Subsidy}</td>
+                                                <td>&yen; {$info.total}</td>
                                                 <td>&yen; {$info.welfare}</td>
                                                 <td>&yen; {$info.Should_distributed}</td>
                                                 <td>&yen; {$info.insurance_Total}</td>
