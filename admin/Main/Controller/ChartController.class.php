@@ -243,7 +243,7 @@ class ChartController extends BaseController {
 		foreach($users as $k=>$v){
 			$ulist[] = $v['id'];
 		}
-		
+
 		
 		$yue   = I('month');
 		$moon  = month_phase($yue);
@@ -272,11 +272,12 @@ class ChartController extends BaseController {
 		
 		
 		
-		$count = $db->table('__OP_SETTLEMENT__ as b')->field('b.*,o.project,o.group_id,o.number,o.customer,o.create_user_name,o.destination,o.days,o.remark,l.audit_time')->join('__OP__ as o on b.op_id = o.op_id','LEFT')->join('__AUDIT_LOG__ as l on l.req_id = b.id','LEFT')->join('__ACCOUNT__ as a on a.id = o.create_user','LEFT')->where($where)->count();
+		$counts = $db->table('__OP_SETTLEMENT__ as b')->group('o.op_id')->field('b.*,o.project,o.group_id,o.number,o.customer,o.create_user_name,o.destination,o.days,o.remark,l.audit_time')->join('__OP__ as o on b.op_id = o.op_id','LEFT')->join('__AUDIT_LOG__ as l on l.req_id = b.id','LEFT')->join('__ACCOUNT__ as a on a.id = o.create_user','LEFT')->where($where)->select();
+        $count = count($counts);
 		$page = new Page($count, P::PAGE_SIZE);
         $this->pages = $page->show();
 		
-		$datalist = $db->table('__OP_SETTLEMENT__ as b')->field('b.*,o.project,o.group_id,o.number,o.customer,o.create_user_name,o.destination,o.days,o.remark,l.audit_time')->join('__OP__ as o on b.op_id = o.op_id','LEFT')->join('__AUDIT_LOG__ as l on l.req_id = b.id','LEFT')->join('__ACCOUNT__ as a on a.id = o.create_user','LEFT')->where($where)->limit($page->firstRow . ',' . $page->listRows)->order('l.audit_time DESC')->select();
+		$datalist = $db->table('__OP_SETTLEMENT__ as b')->group('o.op_id')->field('b.*,o.project,o.group_id,o.number,o.customer,o.create_user_name,o.destination,o.days,o.remark,l.audit_time')->join('__OP__ as o on b.op_id = o.op_id','LEFT')->join('__AUDIT_LOG__ as l on l.req_id = b.id','LEFT')->join('__ACCOUNT__ as a on a.id = o.create_user','LEFT')->where($where)->limit($page->firstRow . ',' . $page->listRows)->order('l.audit_time DESC')->select();
 		foreach($datalist as $k=>$v){
 			$datalist[$k]['shuihou'] = $v['maoli'] -  sprintf("%.2f", ($v['maoli']*0.06));
 		}
