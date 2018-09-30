@@ -464,7 +464,7 @@
 <!--                            </ul>-->
 <!--                        </li>-->
 <!--                        </if>-->
-                        <li class="treeview {:on('Kpi')} {:on('Rbac')} {:on('Cour')}">
+                        <li class="treeview {:on('Kpi')} {:on('Rbac')} {:on('Cour')} {:on('Salary')}">
                             <a href="javascript:;" onclick="displaynone()">
                                 <i class="fa fa-sitemap"></i>
                                 <span>人力资源</span>

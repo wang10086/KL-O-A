@@ -85,26 +85,25 @@
 
                             <form action="{:U('Salary/salary_add_attendance')}" method="post" id="searchform">
 
-                                <div class="form-group col-md-3">
+                                <div class="form-group col-md-4">
                                     <input type="text" class="form-control" name="id" placeholder="ID编号">
                                 </div>
-                                <div class="form-group col-md-3">
+                                <div class="form-group col-md-4">
                                     <input type="text" class="form-control" name="employee_member" placeholder="员工编号">
                                 </div>
 
-                                <div class="form-group col-md-3">
+                                <div class="form-group col-md-4">
                                     <input type="text" class="form-control" name="nickname" placeholder="员工姓名">
                                 </div>
-                                <div class="form-group col-md-3">
+                                <div class="form-group col-md-4">
                                     <input type="text" class="form-control" name="departmen" placeholder="部门">
                                 </div>
-                                <div class="form-group col-md-3">
+                                <div class="form-group col-md-4">
                                     <input type="text" class="form-control" name="posts" placeholder="岗位">
                                 </div>
-                                <div class="form-group col-md-3">
+                                <div class="form-group col-md-4">
                                     <input type="text" class="form-control" name="all" placeholder="输入'所有' 查询所有">
                                 </div>
-
                             </form>
                         </div>
                 </section><!-- /.content -->
