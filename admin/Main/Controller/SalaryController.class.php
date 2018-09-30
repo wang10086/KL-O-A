@@ -14,14 +14,14 @@ class SalaryController extends BaseController {
 
          $userid['status'] = 4;
 
-         $userid['account_id']              = trim($_POST['id']);
+         $userid['account_id']                  = trim($_POST['id']);
 
-         $userid['department']              = trim($_POST['employee_member']);
-         $userid['user_name']               = trim($_POST['name']);
-         $userid['datetime']                = trim($_POST['month']);
-         $userid                            = array_filter($userid);
+         $userid['department']                  = trim($_POST['employee_member']);
+         $userid['user_name']                   = trim($_POST['name']);
+         $userid['datetime']                    = trim($_POST['month']);
+         $userid                                = array_filter($userid);
 
-       if($_SESSION['userid']==11 ||$_SESSION['userid']==55 || $_SESSION['userid']==77 || $_SESSION['userid']==32 || $_SESSION['userid']==38 || $_SESSION['userid']==12  || $_SESSION['userid']!==1){
+       if($_SESSION['userid']==11 ||$_SESSION['userid']==55 || $_SESSION['userid']==77 || $_SESSION['userid']==32 || $_SESSION['userid']==38 || $_SESSION['userid']==12  || $_SESSION['userid']==1){
 
         }else{
 
@@ -29,7 +29,7 @@ class SalaryController extends BaseController {
 
                 $this->error('您只能查看自己的工资！');die;
             }
-            $userid['account_id'] = $_SESSION['userid'];
+            $userid['account_id']               = $_SESSION['userid'];
         }
 
          $count = M('salary_wages_month')->where($userid)->count();
@@ -59,12 +59,6 @@ class SalaryController extends BaseController {
             $this->error('您的数据有误!请重新选择！');die;
         }
 
-        if($_SESSION['userid']==11 ||$_SESSION['userid']==55 || $_SESSION['userid']==77 || $_SESSION['userid']==32 || $_SESSION['userid']==38 || $_SESSION['userid']==12  || $_SESSION['userid']!==1){
-
-        }else{
-
-            $id['account_id'] = $_SESSION['userid'];
-        }
         $id['id']                               = trim($_GET['id']);
         $id['datetime']                         = trim($_GET['datetime']);
         $user_info1                             = M('salary_wages_month')->where($id)->find();//工资表
@@ -215,12 +209,24 @@ class SalaryController extends BaseController {
      * grant_time  年月份搜索
      */
     public function salary_attendance(){
+        if($_SESSION['userid']==11 ||$_SESSION['userid']==55 || $_SESSION['userid']==77 || $_SESSION['userid']==32 || $_SESSION['userid']==38 || $_SESSION['userid']==12  || $_SESSION['userid']!==1){
+
+            $where['A.account_id'] = trim($_POST['id']);//编码
+        }else{
+            $uid = trim($_POST['id']);//编码
+
+            if($uid!==$_SESSION['userid']){
+
+                $this->error('您只能查看自己的工资！');die;
+            }
+            $where['A.account_id'] = $_SESSION['userid'];
+        }
 
         if($_POST['grant_time']){//年月搜索
             $this->error('时间查询暂时未开通!请使用其它查询！', U('Salary/salary_attendance'));die;
         }
         if(IS_POST){//搜索列表结果
-            $where['A.id']                  = trim($_POST['id']);//用户id
+
             $where['A.employee_member']     = trim($_POST['employee_member']);//编码
             $where['A.nickname']            = trim($_POST['nickname']);//昵称
             $where['A.status'] = 0;
@@ -251,11 +257,6 @@ class SalaryController extends BaseController {
 
         if(IS_POST){
 
-            if($_SESSION['userid']!==11 ||$_SESSION['userid']!==55 || $_SESSION['userid']!==77 || $_SESSION['userid']!==32 || $_SESSION['userid']!==38 || $_SESSION['userid']!==12  || $_SESSION['userid']!==1){
-
-                $this->error('您的权限不足！');die;
-
-            }
             $info               = trim($_POST['info']);
             $where['id']        = trim($_POST['id']);
             $data               = array_filter($info);
@@ -528,10 +529,6 @@ class SalaryController extends BaseController {
      * @salary_excel_list 生成工资表
      */
     public function salary_excel_list(){//判断权限
-//        if($_SESSION['userid']!==11 ||$_SESSION['userid']!==55 || $_SESSION['userid']!==77 || $_SESSION['userid']!==32 || $_SESSION['userid']!==38 || $_SESSION['userid']!==12  || $_SESSION['userid']!==1){
-//
-//            $this->error('您的权限不足！');die;
-//        }
         $monthly                        = trim(I('month'));
         $archives                       = trim(I('archives'));
         $datetime                       = trim(I('datetime'));
@@ -685,7 +682,10 @@ class SalaryController extends BaseController {
             $posts['id']                            = $val['postid'];
             $user_info[$key]['posts']               = sql_query(1,'*','oa_posts',$posts,1,1);//查询岗位
             $user_info[$key]['salary']              = sql_query(1,'*','oa_salary',$id, 1, 1);//岗位薪酬
-            $user_info[$key]['attendance']          = sql_query(1,'*','oa_salary_attendance',$id, 1, 1);//员工考核
+
+            $att_id['account_id']                   = $val['id'];
+            $att_id['status']                       = (int)1;
+            $user_info[$key]['attendance']          = sql_query(1,'*','oa_salary_attendance',$att_id, 1, 1);//员工考核
             $user_info[$key]['bonus']               = sql_query(1,'*','oa_salary_bonus',$id, 1, 1);//提成/奖金/年终奖
             $user_info[$key]['labour']              = M('salary_labour')->where($id)->order('id desc')->find();//工会会费
             if(count($user_info[$key]['salary'])==0){
@@ -702,13 +702,12 @@ class SalaryController extends BaseController {
                 foreach($user_info[$key]['income'] as $ke =>$va){
                     $countmoney                     += $va['income_money'];
                 }
-                $user_info[$key]['Other']           = $countmoney;//其他补款
             }
             $user_info[$key]['insurance']           = sql_query(1, '*', 'oa_salary_insurance', $id, 1,1);//五险一金表
 
-            $user_info[$key]['insurance_Total']     = floor($user_info[$key]['insurance'][0]['medical_care_base']*$user_info[$key]['insurance'][0]['medical_care_ratio']+$user_info[$key]['insurance'][0]['pension_base']*$user_info[$key]['insurance'][0]['pension_ratio']+$user_info[$key]['insurance'][0]['unemployment_base']*$user_info[$key]['insurance'][0]['unemployment_ratio']+$user_info[$key]['insurance'][0]['accumulation_fund_base']*$user_info[$key]['insurance'][0]['accumulation_fund_ratio']+$user_info[$key]['insurance'][0]['big_price']);//五险一金
+            $user_info[$key]['insurance_Total']     = $user_info[$key]['insurance'][0]['pension_ratio']*$user_info[$key]['insurance'][0]['pension_base']+$user_info[$key]['insurance'][0]['medical_care_ratio']*$user_info[$key]['insurance'][0]['medical_care_base']+$user_info[$key]['insurance'][0]['unemployment_ratio']*$user_info[$key]['insurance'][0]['unemployment_base']+round($user_info[$key]['insurance'][0]['accumulation_fund_ratio']*$user_info[$key]['insurance'][0]['accumulation_fund_base'])+$user_info[$key]['insurance'][0]['big_price'];//五险一金
+            $user_info[$key]['accumulation']     = round($user_info[$key]['insurance'][0]['accumulation_fund_ratio']*$user_info[$key]['insurance'][0]['accumulation_fund_base']);
 
-//            print_r($user_info[$key]['insurance_Total']);die;
             $user_info[$key]['subsidy']             = sql_query(1, '*', 'oa_salary_subsidy', $id,1,1);//补贴
             $withholding                            = sql_query(1, '*', 'oa_salary_withholding', $id,1,1);//代扣代缴
 
@@ -734,7 +733,7 @@ class SalaryController extends BaseController {
             $user                                   = $this->query_score($que);//绩效增减
             $use1                                   = str_replace(array('<span class="red">','<span>','<span class="green">','</span>'),"",$user[0]['total_score_show']);//PDCA
             $use2                                   = str_replace(array('<span class="red">','<span>','<span class="green">','</span>'),"",$user[0]['show_qa_score']);//品质检查
-            $use3                                   = str_replace(array('<span class="red">','<span>','<span class="green">','</span>'),"",$user[0]['sum_total_score']);//KPI
+            $use3                                   = str_replace(array('<span class="red">','<span>','<span class="green">','</span>'),"",$user[0]['total_kpi_score']);//KPI
             $money                                  = $user_info[$key]['salary'][0]['standard_salary']/10*$user_info[$key]['salary'][0]['performance_salary']/100;//绩效金额
             $branch                                 =100;//给总共100分
             if(substr($use1,0,1)=='-' && is_numeric(substr($use1,1))){
@@ -809,12 +808,15 @@ class SalaryController extends BaseController {
             $price2                                 = ((int)($price1*100))/100;//年终奖计税
 
             $user_info[$key]['yearend']             = $price2;//年终奖计税
+
+            //其他补款 = 其他补贴变动 + 外地补贴 + 电脑补贴
+            $user_info[$key]['Other']               = $countmoney+$user_info[$key]['subsidy'][0]['foreign_subsidies']+$user_info[$key]['subsidy'][0]['computer_subsidy'];
             // 提成 + 奖金+带团补助+年终奖+住房补贴+外地补贴+电脑补贴
-            $user_info[$key]['welfare']             = $extract+$user_info[$key]['bonus'][0]['bonus']+$user_info[$key]['bonus'][0]['annual_bonus']+$user_info[$key]['subsidy'][0]['housing_subsidy']+$user_info[$key]['subsidy'][0]['foreign_subsidies']+$user_info[$key]['subsidy'][0]['computer_subsidy'];//提成补助奖金
+            $user_info[$key]['welfare']             = $extract+$user_info[$key]['bonus'][0]['bonus']+$user_info[$key]['bonus'][0]['annual_bonus']+$user_info[$key]['subsidy'][0]['housing_subsidy']+$user_info[$key]['Other'];//提成补助奖金
 
 
-            //应发工资 = 岗位工资-考勤扣款+绩效增减+季度提成+奖金+年终奖-年终奖计税+外地补贴+电脑补贴+其他补款
-            $user_info[$key]['Should'] = $user_info[$key]['salary'][0]['standard_salary']-$user_info[$key]['attendance'][0]['withdrawing']+$extract+$user_info[$key]['bonus'][0]['bonus']+$user_info[$key]['bonus'][0]['annual_bonus']-$price2+$user_info[$key]['subsidy'][0]['housing_subsidy']+$user_info[$key]['subsidy'][0]['foreign_subsidies']+$countmoney;
+            //应发工资 = 岗位工资-考勤扣款+绩效增减+季度提成+奖金+年终奖-年终奖计税+住房补贴+其他补款
+            $user_info[$key]['Should'] = $user_info[$key]['salary'][0]['standard_salary']-$user_info[$key]['attendance'][0]['withdrawing']+$extract+$user_info[$key]['bonus'][0]['bonus']+$user_info[$key]['bonus'][0]['annual_bonus']-$price2+$user_info[$key]['subsidy'][0]['housing_subsidy']+$user_info[$key]['Other'];
 
             $user_info[$key]['tax_counting']        = $user_info[$key]['Should']-$user_info[$key]['insurance_Total'];//计税工资
 
@@ -823,7 +825,6 @@ class SalaryController extends BaseController {
                 $counting                           = '0';
             }else{
                 $cout                               = $user_info[$key]['tax_counting']-5000;
-
 
                 if($cout <= 3000){
                     $countin                        = $cout*0.03;
@@ -846,10 +847,9 @@ class SalaryController extends BaseController {
             $user_info[$key]['personal_tax']        = $counting;//个人所得税
 
             //实发工资=岗位工资-考勤扣款+绩效增减+提成(带团补助)+奖金-代扣代缴+年终奖-年终奖计税+住房补贴+外地补贴+电脑补贴-五险一金-个人所得税-工会会费+其他补款
-            $user_info[$key]['real_wages']          = $user_info[$key]['salary'][0]['standard_salary']-$user_info[$key]['attendance'][0]['withdrawing']+$extract+$user_info[$key]['bonus'][0]['bonus']-$user_info[$key]['summoney']+$user_info[$key]['bonus'][0]['annual_bonus']-$price2+$user_info[$key]['subsidy'][0]['housing_subsidy']+$user_info[$key]['subsidy'][0]['foreign_subsidies']+$user_info[$key]['subsidy'][0]['computer_subsidy']-$user_info[$key]['insurance_Total']-$counting-$user_info[$key]['labour']['Labour_money']+$countmoney;
+            $user_info[$key]['real_wages']          = $user_info[$key]['salary'][0]['standard_salary']-$user_info[$key]['attendance'][0]['withdrawing']+$extract+$user_info[$key]['bonus'][0]['bonus']-$user_info[$key]['summoney']+$user_info[$key]['bonus'][0]['annual_bonus']-$price2+$user_info[$key]['subsidy'][0]['housing_subsidy']-$user_info[$key]['insurance_Total']-$counting-$user_info[$key]['labour']['Labour_money']+$user_info[$key]['Other'];
 
         }
-//        print_r($user_info);die;
         return $user_info;
     }
 
@@ -890,7 +890,7 @@ class SalaryController extends BaseController {
                         $sum[$k]['tax_counting']            += $val['tax_counting'];//计税工资
                         $sum[$k]['personal_tax']            += $val['personal_tax'];//个人所得税
                         $sum[$k]['summoney']                += $val['summoney'];//税后扣款
-                        $sum[$k]['Labour']                  += $val['Labour'];//工会会费
+                        $sum[$k]['Labour']                  += $val['labour']['Labour_money'];//工会会费
                         $sum[$k]['real_wages']              += $val['real_wages'];// 实发工资
                     }
                 }
@@ -905,6 +905,7 @@ class SalaryController extends BaseController {
     private function summoney($sum){
         $cout['name']                                = '总合计';
         foreach($sum as $key => $val){
+//            print_r($val);die;
             $cout['standard_salary']                 += $val['standard_salary'];//标准薪资
             $cout['basic']                           += $val['basic'];//基本薪资
             $cout['withdrawing']                     += $val['withdrawing'];//考勤扣款
@@ -985,7 +986,5 @@ class SalaryController extends BaseController {
         $setTitle                           = $datetime.'工资发放表';
 
         exportexcel($Excel_data,$setTitle,$setTitle);
-
     }
-
 }

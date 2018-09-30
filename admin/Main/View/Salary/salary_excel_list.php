@@ -16,9 +16,9 @@
                 <section class="content" >
 
                     <div class="row">
-                        <div class="col-xs-12">
-                            <div class="box" style="width:180em;">
-                                <div class="box-header">
+                        <div class="col-xs-12" >
+                            <div class="box" >
+                                <div class="box-header" >
                                     <h3 class="box-title">员工薪资列表</h3>
                                     <a  class="btn btn-info" style="width:8em; margin: 0.5em 0em 0em 2em;"> <?php if($status=="" || $status==0 || $status==1){echo "待提交审核";}elseif($status==2){echo "待提交批准";}elseif($status==3){echo "待批准";}elseif($status==4){echo "已批准";}?></a>
                                     <a href="javascript:;" class="btn btn-info btn-sm" onclick="javascript:opensearch('searchtext',700,160);" style="margin: 0.7em 0em 0em 3em;" ><i class="fa fa-search"></i> 搜索</a>
@@ -37,17 +37,17 @@
                                             <input type="text" value="{$inf['Extract']['total']}" name="Excel1[]"  style="display:none" />
                                             <input type="text" value="{$inf['bonus'][0]['bonus']}" name="Excel1[]"  style="display:none" />
                                             <input type="text" value="{$inf['subsidy'][0]['housing_subsidy']}" name="Excel1[]"  style="display:none" />
-                                            <input type="text" value="{$inf['Other']}" name="Excel1[]"  style="display:none" />
+                                            <input type="text" value="{$inf['Other']}</td>" name="Excel1[]"  style="display:none" />
                                             <input type="text" value="{$inf['Should']}" name="Excel1[]"  style="display:none" />
-                                            <input type="text" value="{$inf['insurance'][0]['medical_care_base']*$inf['insurance'][0]['medical_care_ratio']}" name="Excel1[]"  style="display:none" />
+                                            <input type="text" value="{$inf['insurance'][0]['medical_care_base']*$inf['insurance'][0]['medical_care_ratio']+$inf['insurance'][0]['big_price']}" name="Excel1[]"  style="display:none" />
                                             <input type="text" value="{$inf['insurance'][0]['pension_base']*$inf['insurance'][0]['pension_ratio']}" name="Excel1[]"  style="display:none" />
                                             <input type="text" value="{$inf['insurance'][0]['unemployment_base']*$inf['insurance'][0]['unemployment_ratio']}" name="Excel1[]"  style="display:none" />
-                                            <input type="text" value="{$inf['insurance'][0]['accumulation_fund_base']*$inf['insurance'][0]['accumulation_fund_ratio']}" name="Excel1[]"  style="display:none" />
+                                            <input type="text" value="{$inf['accumulation']}" name="Excel1[]"  style="display:none" />
                                             <input type="text" value="{$inf['insurance_Total']}" name="Excel1[]"  style="display:none" />
                                             <input type="text" value="{$inf['tax_counting']}" name="Excel1[]"  style="display:none" />
                                             <input type="text" value="{$inf['personal_tax']}" name="Excel1[]"  style="display:none" />
                                             <input type="text" value="{$inf['summoney']}" name="Excel1[]"  style="display:none" />
-                                            <input type="text" value="{$inf['Labour']}" name="Excel1[]"  style="display:none" />
+                                            <input type="text" value="{$inf['labour']['Labour_money']}" name="Excel1[]"  style="display:none" />
                                             <input type="text" value="{$inf['real_wages']}" name="Excel1[]"  style="display:none" />
                                         </foreach>
 
@@ -105,8 +105,8 @@
 
 
                                 </div><!-- /.box-header --><br>
-                                <div class="box-body">
-                                    <div class="btn-group" id="catfont">
+                                <div class="box-body" style="height:45em;width:110em float:left;overflow:auto;">
+                                    <div class="btn-group" id="catfont" >
                                         <a href="{:U('Salary/salary_excel_list')}" class="btn <?php if($type=="" || $type==0){ echo 'btn-info';}else{ echo 'btn-default';} ?>">所有</a>
                                         <a href="{:U('Salary/salary_excel_list',array('archives'=>1,'month'=> $monthly))}" class="btn <?php if($type==1){ echo 'btn-info';}else{ echo 'btn-default';} ?>">中心</a>
                                         <a href="{:U('Salary/salary_excel_list',array('archives'=>2,'month'=> $monthly))}" class="btn <?php if($type==2){ echo 'btn-info';}else{ echo 'btn-default';} ?>">科旅</a>
@@ -115,7 +115,7 @@
                                     </div>
 
                                 <br><br>
-                                    <div class="btn-group">
+                                    <div class="btn-group" style="height:45em;width:200em;">
                                         <table class="table table-bordered dataTablev">
                                             <tr role="row" class="orders">
                                                 <th class="sorting" style="width:8em;background-color:#00acd6;">ID</th>
@@ -138,7 +138,7 @@
                                                 <th class="sorting" style="width:8em;background-color:#00acd6;">公积金</th>
                                                 <th class="sorting" style="width:12em;background-color:#00acd6;">个人保险合计</th>
                                                 <th class="sorting" style="width:8em;background-color:#00acd6;">计税工资</th>
-                                                <th class="sorting" style="width:10em">个人所得税</th>
+                                                <th class="sorting" style="width:10em;background-color:#00acd6;">个人所得税</th>
                                                 <th class="sorting" style="width:8em;background-color:#00acd6;">税后扣款</th>
                                                 <th class="sorting" style="width:8em;background-color:#00acd6;">工会会费</th>
 
@@ -165,10 +165,10 @@
                                                 <td>&yen; {$info['subsidy'][0]['housing_subsidy']}</td>
                                                 <td>&yen; {$info['Other']}</td>
                                                 <td>&yen; {$info['Should']}</td>
-                                                <td>&yen; {$info['insurance'][0]['medical_care_base']*$info['insurance'][0]['medical_care_ratio']}</td>
+                                                <td>&yen; {$info['insurance'][0]['medical_care_base']*$info['insurance'][0]['medical_care_ratio']+$info['insurance'][0]['big_price']}</td>
                                                 <td>&yen; {$info['insurance'][0]['pension_base']*$info['insurance'][0]['pension_ratio']}</td>
                                                 <td>&yen; {$info['insurance'][0]['unemployment_base']*$info['insurance'][0]['unemployment_ratio']}</td>
-                                                <td>&yen; {$info['insurance'][0]['accumulation_fund_base']*$info['insurance'][0]['accumulation_fund_ratio']}</td>
+                                                <td>&yen; {$info['accumulation']}</td>
                                                 <td>&yen; {$info['insurance_Total']}</td>
                                                 <td>&yen; {$info['tax_counting']}</td>
                                                 <td>&yen; {$info['personal_tax']}</td>

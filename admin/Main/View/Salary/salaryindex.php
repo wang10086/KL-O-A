@@ -21,9 +21,15 @@
                                 <div class="box-header">
                                     <h3 class="box-title">人员薪资列表</h3>
                                     <div class="box-tools pull-right">
-                                        <a href="{:U('Salary/salary_query')}" class="btn btn-sm btn-danger"><i class="fa fa-plus"></i> 数据录入</a>
+                                        <if condition="rolemenu(array('Salary/salary_query'))">
+                                            <a href="{:U('Salary/salary_query')}" class="btn btn-sm btn-danger"><i class="fa fa-plus"></i> 数据录入</a>
+                                        </if>
+
                                     	 <a href="javascript:;" class="btn btn-info btn-sm" onclick="javascript:opensearch('searchtext',700,160);"><i class="fa fa-search"></i> 搜索</a>
-                                        <a class="btn btn-sm salary_moduser1" style="background-color:#398439;border: #398439"><i class="fa fa-plus"></i>生成工资表</a>
+                                        <if condition="rolemenu(array('Salary/salary_excel_list','Salary/salary_query'))">
+                                            <a class="btn btn-sm salary_moduser1" style="background-color:#398439;border: #398439"><i class="fa fa-plus"></i>生成工资表</a>
+                                        </if>
+
                                          
                                     </div>
                                 </div><!-- /.box-header -->
