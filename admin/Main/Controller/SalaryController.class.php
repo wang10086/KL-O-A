@@ -280,10 +280,10 @@ class SalaryController extends BaseController {
     }
 
     /**
-     * salary_add_attendan 考勤数据录入搜索结果与操作记录
+     * salary_add_attendance 考勤数据录入搜索结果与操作记录
      * optype=12 考勤记录
      */
-    public function salary_add_attendan(){
+    public function salary_add_attendance(){
             $where['A.id']                              = trim($_POST['id']);
             $where['A.employee_member']                 = trim($_POST['employee_member']);
             $where['A.nickname']                        = trim($_POST['nickname']);
@@ -460,19 +460,15 @@ class SalaryController extends BaseController {
 
 
     /**
-     * salary_add_departmen 添加部门
+     * salary_add_department 添加部门
      */
-    public function salary_add_departmen(){
-        if($_SESSION['userid']!==11 ||$_SESSION['userid']!==55 || $_SESSION['userid']!==77 || $_SESSION['userid']!==32 || $_SESSION['userid']!==38 || $_SESSION['userid']!==12 || $_SESSION['userid']!==1){
-
-            $this->error('您的权限不足！');die;
-        }
-        if(IS_POST){
+    public function salary_add_department(){
+        if(isset($_POST['dosubmint'])){
             $where['department']    = trim($_POST['department']);//部门名称
             $add['letter']          = trim($_POST['letter']);//大写字母
             if(!preg_match('/^[A-Z]+$/', $add['letter'])){
 
-                $this->error('请添加大写字母！', U('Salary/salary_add_departmen'));die;
+                $this->error('请添加大写字母！', U('Salary/salary_add_department'));die;
 
             }
 
@@ -481,7 +477,7 @@ class SalaryController extends BaseController {
 
             if($department_r || $department_r1){
 
-                $this->error('请不要重复添加部门或字母！', U('Salary/salary_add_departmen'));die;
+                $this->error('请不要重复添加部门或字母！', U('Salary/salary_add_department'));die;
 
             }
             $add['department']      = trim($_POST['department']);//部门名称
@@ -489,14 +485,24 @@ class SalaryController extends BaseController {
 
             if($department){
 
-                $this->success('添加部门成功！', U('Salary/salary_add_departmen'));die;
+                $this->success('添加部门成功！', U('Salary/salary_add_department'));die;
 
             }else{
 
-                $this->error('添加部门失败！请重写添加！', U('Salary/salary_add_departmen'));die;
+                $this->error('添加部门失败！请重写添加！', U('Salary/salary_add_department'));die;
             }
+        }else{
+            $db             = M('salary_department');
+
+            //分页
+            $pagecount		= $db->count();
+            $page			= new Page($pagecount, 5);
+            $this->pages	= $pagecount>P::PAGE_SIZE ? $page->show():'';
+
+            //$this->lists    = $db->limit($page->firstRow,$page->listRows)->select();
+            $this->lists    = $db->select();
+            $this->display();
         }
-        $this->display();
     }
 
     /**

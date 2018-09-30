@@ -24,7 +24,9 @@
                                 <div class="box-header">
                                     <h3 class="box-title">新增用户</h3>
                                     <div class="box-tools pull-right">
-                                        <a href="{:U('Salary/salary_add_department')}" class="btn btn-sm btn-danger"><i class="fa fa-plus"></i> 添加部门</a>
+                                        <if condition="rolemenu(array('Salary/salary_add_department'))">
+                                            <a href="{:U('Salary/salary_add_department')}" class="btn btn-sm btn-danger"><i class="fa fa-plus"></i> 添加部门</a>
+                                        </if>
                                     </div>
                                 </div><!-- /.box-header -->
 
