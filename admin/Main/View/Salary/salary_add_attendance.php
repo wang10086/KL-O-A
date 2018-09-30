@@ -47,6 +47,7 @@
                                                 <th class="sorting" style="width:5em;">病假</th>
                                                 <th class="sorting" style="width:10em;">北京最低工资标准</th>
                                                 <th class="sorting" style="width:5em;">旷工</th>
+                                                <th class="sorting" style="width:10em;">入/离职实勤天数</th>
                                                 <th class="sorting" style="width:5em;">扣款</th>
                                                 <th class="sorting" style="width:6em;">操作</th>
                                                 </if>
@@ -65,6 +66,7 @@
                                                     <td><input type="text" name="aid" class="form-control sick_leave" value="{$row.salary_attendance.sick_leave}"/></td>
                                                     <td><input type="text" name="aid" class="form-control lowest_wage" value="" /></td>
                                                     <td><input type="text" name="aid" class="form-control absenteeism" value="{$row.salary_attendance.absenteeism}"/></td>
+                                                    <td><input type="text" class="form-control salary_add_date" value="{$row.salary_attendance.Entry_data}"></td>
                                                     <input type="hidden" class="salary_add_aid" value="{$row.aid}">
                                                     <input type="hidden" class="salary_add_hidden" value="{$row.salary.standard_salary}">
                                                     <td class="salary_add_withdrawing">0.00</td>
@@ -123,15 +125,17 @@
     $(function () {
         $(document).click(function(event){
             $('.salary_tr').each(function () {
-                var late1 = $(this).find(".late1").val();
-                var late2 = $(this).find(".late2").val();
-                var leave_absence =$(this).find(".leave_absence").val();
-                var sick_leave = $(this).find(".sick_leave").val();
-                var absenteeism = $(this).find(".absenteeism").val();
-                var salary_add_hidden = $(this).find(".salary_add_hidden").val();
-                var money = $(this).find(".lowest_wage").val();;//北京最低工资标准的80%是病假扣费
-                var sum = late1*10+late2*30+(salary_add_hidden/21.75)*leave_absence+(money/21.75)*0.2*sick_leave+(salary_add_hidden/21.75)*absenteeism*2;
-                var count = Math.floor(sum*100)/100;
+                var late1               = Number($(this).find(".late1").val());// 早退 15分钟以
+                var late2               = Number($(this).find(".late2").val());//早退 15分钟以上
+                var leave_absence       = Number($(this).find(".leave_absence").val());
+                var sick_leave          = Number($(this).find(".sick_leave").val());//病假 天数
+                var absenteeism         = Number($(this).find(".absenteeism").val());//事假 天数
+                var salary_add_hidden   = Number($(this).find(".salary_add_hidden").val());
+                var salary_date         = Number($(this).find(".salary_add_date").val());//入离职天数
+                var money               = Number($(this).find(".lowest_wage").val());//北京最低工资标准的80%是病假扣费
+
+                var sum                 = late1*10+late2*30+(salary_add_hidden/21.75)*leave_absence+(money/21.75)*0.2*sick_leave+(salary_add_hidden/21.75)*absenteeism*2+((salary_add_hidden/21.75)*salary_date);//*(1-(salary_date/21.75));
+                var count               = Number(Math.floor(sum*100)/100);
                // var salary_add_withdrawing = $(".salary_add_withdrawing").text();
                 $(this).find('.salary_add_withdrawing').text(count);
             });
@@ -161,18 +165,19 @@
     }
 
     $('.salary_add_button').click(function(){
-        var late1 = $(this).parents('tr').find(".late1").val();
-        var late2 = $(this).parents('tr').find(".late2").val();
-        var leave_absence =$(this).parents('tr').find(".leave_absence").val();
-        var sick_leave = $(this).parents('tr').find(".sick_leave").val();
-        var absenteeism = $(this).parents('tr').find(".absenteeism").val();
-        var withdrawing = $(this).parents('tr').find(".salary_add_withdrawing").text();
-        var account_id = $(this).parents('tr').find(".salary_add_aid").val();
-        var money = $(this).parents('tr').find(".lowest_wage").val();//北京最低工资标准的80%是病假扣费
+        var late1               = $(this).parents('tr').find(".late1").val();
+        var late2               = $(this).parents('tr').find(".late2").val();
+        var leave_absence       = $(this).parents('tr').find(".leave_absence").val();
+        var sick_leave          = $(this).parents('tr').find(".sick_leave").val();
+        var absenteeism         = $(this).parents('tr').find(".absenteeism").val();
+        var withdrawing         = $(this).parents('tr').find(".salary_add_withdrawing").text();
+        var account_id          = $(this).parents('tr').find(".salary_add_aid").val();
+        var salary_date         = $(this).parents('tr').find(".salary_add_date").val();//入离职天数
+        var money               = $(this).parents('tr').find(".lowest_wage").val();//北京最低工资标准的80%是病假扣费
         $.ajax({
             type: "post",
             url: "{:U('Ajax/salaryattendance')}", //url
-            data: {'account_id':account_id,'late1':late1,'late2':late2,'leave_absence':leave_absence,'sick_leave':sick_leave,'absenteeism':absenteeism,'withdrawing':withdrawing,'money':money},
+            data: {'account_id':account_id,'late1':late1,'late2':late2,'leave_absence':leave_absence,'sick_leave':sick_leave,'absenteeism':absenteeism,'salary_date':salary_date,'withdrawing':withdrawing,'money':money},
             dataType: "json", //数据格式
             success: function (data) {
                 if(data.sum==1){

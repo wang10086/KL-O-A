@@ -408,12 +408,14 @@ class AjaxController extends Controller {
     public function salaryattendance(){
 
         if(IS_POST){
+
             $user['account_id']         = code_number(trim($_POST['account_id']));//用户id
             $add['late1']               = code_number(trim($_POST['late1']));//15分钟以内
             $add['late2']               = code_number(trim($_POST['late2']));//15~2小时以内
             $add['leave_absence']       = code_number(trim($_POST['leave_absence']));//事假
             $add['sick_leave']          = code_number(trim($_POST['sick_leave']));//病假
             $add['absenteeism']         = code_number(trim($_POST['absenteeism']));//矿工
+            $add['Entry_data']          = trim($_POST['salary_date']);//入离职天数
             $add['lowest_wage']         = code_number(trim($_POST['money']));//北京最低工资标准
             $add['createtime']          = time();
             $withdrawing                = (float)code_number(trim($_POST['withdrawing']));//传过来的总价格
@@ -421,7 +423,7 @@ class AjaxController extends Controller {
             $salary                     = M('salary')->field('id,standard_salary')->where($user)->order('id desc')->find();
 
             if($account_r && $salary){//$add['withdrawing']
-                $add['withdrawing']     = floor(($add['late1']*10+$add['late2']*30+($salary['standard_salary']/21.75)*$add['leave_absence']+($add['lowest_wage']/21.75)*0.2+($salary['standard_salary']/21.75)*$add['absenteeism']*2)*100)/100;
+                $add['withdrawing']     = floor(($add['late1']*10+$add['late2']*30+($salary['standard_salary']/21.75)*$add['leave_absence']+($add['lowest_wage']/21.75)*0.2+($salary['standard_salary']/21.75)*$add['absenteeism']*2+(($salary['standard_salary']/21.75)*$add['Entry_data']))*100)/100;
 
                 if($add['withdrawing'] !== $withdrawing){
 //                    var_dump($add); var_dump($withdrawing);die;
@@ -446,8 +448,7 @@ class AjaxController extends Controller {
                 }
             }else{
                 if($salary){
-
-                    $add['withdrawing'] = floor(($add['late1']*10+$add['late2']*30+($salary['standard_salary']/21.75)*$add['leave_absence']+($add['lowest_wage']/21.75)*0.2+($salary['standard_salary']/21.75)*$add['absenteeism']*2)*100)/100;
+                    $add['withdrawing'] = floor(($add['late1']*10+$add['late2']*30+($salary['standard_salary']/21.75)*$add['leave_absence']+($add['lowest_wage']/21.75)*0.2+($salary['standard_salary']/21.75)*$add['absenteeism']*2+(($salary['standard_salary']/21.75)*$add['Entry_data']))*100)/100;
 
                     $add['account_id']  = $user['account_id'];
                     $cot                = "添加";
@@ -967,7 +968,7 @@ class AjaxController extends Controller {
         $count_money_id                     = trim($_POST['count_money_id']);
         $status ['status']                  = trim($_POST['status']);
         array_pop($wages_month_id);array_pop($departmen_id);
-        if($_SESSION['userid'] !==11 || $_SESSION['userid'] !==11){
+        if($_SESSION['userid'] !==11 || $_SESSION['userid'] !==55){
             $this->error('您的权限不足！请联系管理员！');die;
         }
 
