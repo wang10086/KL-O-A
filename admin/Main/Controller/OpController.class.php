@@ -1126,6 +1126,7 @@ class OpController extends BaseController {
             $data['hesuan'] = $info;
             $data['yusuan'] = $info;
             $data['jiesuan']= $info;
+            $data['line']   = $info;
             $auth = M('op_auth')->where(array('op_id'=>$opid))->find();
 
             //创建工单
@@ -2315,8 +2316,8 @@ class OpController extends BaseController {
             $this->op_kind  = $op['kind'];
            /* $this->service_type   = C('SERVICE_TYPE');*/
             $this->act_need       = C('ACT_NEED');
-            $this->les_field      = C('LES_FIELD');
-            $this->act_field      = C('ACT_FIELD');
+            $this->task_field      = C('LES_FIELD');
+            /*$this->act_field      = C('ACT_FIELD');*/
             $this->apply_to       = C('APPLY_TO');
 
 			$this->display('confirm');
