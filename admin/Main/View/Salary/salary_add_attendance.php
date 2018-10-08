@@ -66,7 +66,7 @@
                                                     <td><input type="text" name="aid" class="form-control sick_leave" value="{$row.salary_attendance.sick_leave}"/></td>
                                                     <td><input type="text" name="aid" class="form-control lowest_wage" value="" /></td>
                                                     <td><input type="text" name="aid" class="form-control absenteeism" value="{$row.salary_attendance.absenteeism}"/></td>
-                                                    <td><input type="text" class="form-control salary_add_date" value="{$row.salary_attendance.Entry_data}"></td>
+                                                    <td><input type="text" class="form-control salary_add_date" value="{$row.salary_attendance.entry_data}"></td>
                                                     <input type="hidden" class="salary_add_aid" value="{$row.aid}">
                                                     <input type="hidden" class="salary_add_hidden" value="{$row['salary']['standard_salary']*$row['salary']['basic_salary']/10}">
                                                     <td class="salary_add_withdrawing">0.00</td>

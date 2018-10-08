@@ -232,7 +232,17 @@ class SalaryController extends BaseController {
             $where                          = array_filter($where);
             if($_POST['grant_time']){//年月搜索
 
-            $this->error('时间查询暂时未开通!请使用其它查询！', U('Salary/salary_attendance'));die;
+                $month_time['datetime'] = date('Ym',strtotime($_POST['grant_time']));
+                $accou = M('salary_wages_month')->where($month_time)->find();
+                $where['B.id'] = $accou['attendance_id'];
+                $where['A.id'] = $accou['account_id'];
+                $account_r                      = M()->table('oa_account as A')->join('oa_salary_attendance as B on A.id=B.account_id')->where($where)->field('A.id as aid,A.employee_member,A.nickname,B.createtime,B.late1,B.late2,B.leave_absence,B.sick_leave,B.absenteeism,B.withdrawing')->order('B.id desc')->select();
+                $account_r .= $accou['datetime'];
+
+                $this->assign('list',$account_r);
+                $this->display();die;
+
+//            $this->error('时间查询暂时未开通!请使用其它查询！', U('Salary/salary_attendance'));die;
             }
             $count                          = M()->table('oa_account as A')->join('oa_salary_attendance as B on A.id=B.account_id')->where($where)->count();
             $page                           = new Page($count,12);
@@ -257,6 +267,7 @@ class SalaryController extends BaseController {
             $account_r[$key]['attendance_time'] = $time_Y.'-'.$time_M;
         }
 
+//        print_r($account_r);die;
         $this->assign('list',$account_r);
         $this->assign('page',$pages);
         $this->display();
@@ -866,6 +877,7 @@ class SalaryController extends BaseController {
             $user_info[$key]['real_wages']          = $user_info[$key]['salary'][0]['standard_salary']-$user_info[$key]['attendance'][0]['withdrawing']+$extract+$user_info[$key]['bonus'][0]['bonus']-$user_info[$key]['summoney']+$user_info[$key]['bonus'][0]['annual_bonus']-$price2+$user_info[$key]['subsidy'][0]['housing_subsidy']-$user_info[$key]['insurance_Total']-$counting-$user_info[$key]['labour']['Labour_money']+$user_info[$key]['Other'];
 
         }
+//        print_r($user_info);die;
         return $user_info;
     }
 

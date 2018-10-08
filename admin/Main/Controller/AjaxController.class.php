@@ -415,20 +415,20 @@ class AjaxController extends Controller {
             $add['leave_absence']       = code_number(trim($_POST['leave_absence']));//事假
             $add['sick_leave']          = code_number(trim($_POST['sick_leave']));//病假
             $add['absenteeism']         = code_number(trim($_POST['absenteeism']));//矿工
-            $add['Entry_data']          = trim($_POST['salary_date']);//入离职天数
+            $add['entry_data']          = trim($_POST['salary_date']);//入离职天数
             $add['lowest_wage']         = code_number(trim($_POST['money']));//北京最低工资标准
             $add['createtime']          = time();
             $withdrawing                = code_number(trim($_POST['withdrawing']));//传过来的总价格
             $account_r                  = M('salary_attendance')->field('id,status')->where($user)->order('id desc')->find();
             $salary                     = M('salary')->where($user)->order('id desc')->find();
 
-            if($account_r && $salary){//$add['withdrawing']
+            if($account_r && $salary){// 15分钟以内 15~2小时以内  事假
 
-                $add['withdrawing']     = floor(($add['late1']*10+$add['late2']*30+($salary['standard_salary']*$salary['basic_salary']/10/21.75)*$add['leave_absence']+($add['lowest_wage']/21.75)*0.8+($salary['standard_salary']*$salary['basic_salary']/10/21.75)*$add['absenteeism']*2+(($salary['standard_salary']*$salary['basic_salary']/10/21.75)*$add['Entry_data']))*100)/100;
+                $add['withdrawing']     = floor(($add['late1']*10+$add['late2']*30+($salary['standard_salary']*$salary['basic_salary']/10/21.75)*$add['leave_absence']+($add['lowest_wage']/21.75)*0.8*$add['sick_leave']+($salary['standard_salary']*$salary['basic_salary']/10/21.75)*$add['absenteeism']*2+(($salary['standard_salary']*$salary['basic_salary']/10/21.75)*$add['entry_data']))*100)/100;
 
                 if($add['withdrawing'] !== $withdrawing){
                     $sum                = 0;
-                    $msg                = "考勤数据添加失败!请重新添加1!";
+                    $msg                = "考勤数据添加失败!请重新添加1";
                     echo json_encode(array('sum'=>$sum,'msg'=>$msg));die;
                 }
                 if($account_r['status'] == 1){
@@ -448,7 +448,7 @@ class AjaxController extends Controller {
                 }
             }else{
                 if($salary){
-                    $add['withdrawing'] = floor(($add['late1']*10+$add['late2']*30+(($salary['standard_salary']*$salary['basic_salary']/10)/21.75)*$add['leave_absence']+($add['lowest_wage']/21.75)*0.8+(($salary['standard_salary']*$salary['basic_salary']/10)/21.75)*$add['absenteeism']*2+((($salary['standard_salary']*$salary['basic_salary'])/21.75)*$add['Entry_data']))*100)/100;
+                    $add['withdrawing'] = floor(($add['late1']*10+$add['late2']*30+(($salary['standard_salary']*$salary['basic_salary']/10)/21.75)*$add['leave_absence']+($add['lowest_wage']/21.75)*0.8+(($salary['standard_salary']*$salary['basic_salary']/10)/21.75)*$add['absenteeism']*2+((($salary['standard_salary']*$salary['basic_salary'])/21.75)*$add['entry_data']))*100)/100;
 
                     $add['account_id']  = $user['account_id'];
                     $cot                = "添加";

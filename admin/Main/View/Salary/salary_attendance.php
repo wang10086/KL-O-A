@@ -55,7 +55,7 @@
                                             <td>{$row.leave_absence}</td>
                                             <td>{$row.sick_leave}</td>
                                             <td>{$row.absenteeism}</td>
-                                            <td>{$row.Entry_data}</td>
+                                            <td>{$row.entry_data}</td>
                                             <td>{$row.withdrawing}</td>
 
                                         </tr>
