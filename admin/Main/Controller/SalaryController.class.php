@@ -705,17 +705,15 @@ class SalaryController extends BaseController {
             if(count($user_info[$key]['salary'])==0){
                 unset($user_info[$key]);continue;
             }
-            $income                                 = sql_query(1, '*', 'oa_salary_income',$id, 1, 1);//其他收入
-
+            $income                                 = sql_query(1, '*', 'oa_salary_income',$id, 1,1);//其他收入
             if ($income) {
-                $token['income_token']              = $income['income_token'];
-                $token['account_id']                = $val['id'];
-                $token                              = array_filter($token);
-                $user_info[$key]['income']          = sql_query(1, '*', 'oa_salary_income', $token, 1, 0);//其他收入所有项目
+                $token['income_token']              = $income[0]['income_token'];
+                $user_info[$key]['income']          = sql_query(1, '*', 'oa_salary_income', $token, 1,0);//其他收入所有项目
                 $countmoney                         = 0;
                 foreach($user_info[$key]['income'] as $ke =>$va){
                     $countmoney                     += $va['income_money'];
                 }
+
             }
             $user_info[$key]['insurance']           = sql_query(1, '*', 'oa_salary_insurance', $id, 1,1);//五险一金表
 
@@ -825,6 +823,7 @@ class SalaryController extends BaseController {
 
             //其他补款 = 其他补贴变动 + 外地补贴 + 电脑补贴
             $user_info[$key]['Other']               = $countmoney+$user_info[$key]['subsidy'][0]['foreign_subsidies']+$user_info[$key]['subsidy'][0]['computer_subsidy'];
+//            print_r($user_info);die;
             // 提成 + 奖金+带团补助+年终奖+住房补贴+外地补贴+电脑补贴
             $user_info[$key]['welfare']             = $extract+$user_info[$key]['bonus'][0]['bonus']+$user_info[$key]['bonus'][0]['annual_bonus']+$user_info[$key]['subsidy'][0]['housing_subsidy']+$user_info[$key]['Other'];//提成补助奖金
 

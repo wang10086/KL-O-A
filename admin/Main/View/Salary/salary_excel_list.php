@@ -141,7 +141,6 @@
                                                 <th class="sorting" style="width:10em;background-color:#00acd6;">个人所得税</th>
                                                 <th class="sorting" style="width:8em;background-color:#00acd6;">税后扣款</th>
                                                 <th class="sorting" style="width:8em;background-color:#00acd6;">工会会费</th>
-
                                                 <th class="sorting" style="width:8em;background-color:#00acd6;">实发工资</th>
                                             </tr>
 
@@ -453,5 +452,17 @@
         $(".excel_list_money2:even").css("background","#95BDD4");
         $(".excel_list_money2:odd").css("background","lightskyblue");
         $('.excel_list_money3').css("background","#339900");
+
+    $('tr').click(function(){
+        $(".excel_list_money1:even").css("background","#95BDD4");
+        $(".excel_list_money1:odd").css("background","lightskyblue");
+        $(".excel_list_money2:even").css("background","#95BDD4");
+        $(".excel_list_money2:odd").css("background","lightskyblue");
+        $('.excel_list_money3').css("background","#339900");
+        var color = $(this).css('background-color');
+        if(color !=="#CC0033"){
+            $(this).css("background","#CC0033");
+        }
+    })
 
 </script>
