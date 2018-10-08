@@ -423,7 +423,7 @@ class AjaxController extends Controller {
             $salary                     = M('salary')->field('id,standard_salary')->where($user)->order('id desc')->find();
 
             if($account_r && $salary){//$add['withdrawing']
-                $add['withdrawing']     = floor(($add['late1']*10+$add['late2']*30+($salary['standard_salary']/21.75)*$add['leave_absence']+($add['lowest_wage']/21.75)*0.2+($salary['standard_salary']/21.75)*$add['absenteeism']*2+(($salary['standard_salary']/21.75)*$add['Entry_data']))*100)/100;
+                $add['withdrawing']     = floor(($add['late1']*10+$add['late2']*30+(($salary['standard_salary']*$salary['basic_salary'])/21.75)*$add['leave_absence']+($add['lowest_wage']/21.75)*0.2+(($salary['standard_salary']*$salary['basic_salary'])/21.75)*$add['absenteeism']*2+((($salary['standard_salary']*$salary['basic_salary'])/21.75)*$add['Entry_data']))*100)/100;
 
                 if($add['withdrawing'] !== $withdrawing){
 //                    var_dump($add); var_dump($withdrawing);die;
@@ -448,7 +448,7 @@ class AjaxController extends Controller {
                 }
             }else{
                 if($salary){
-                    $add['withdrawing'] = floor(($add['late1']*10+$add['late2']*30+($salary['standard_salary']/21.75)*$add['leave_absence']+($add['lowest_wage']/21.75)*0.2+($salary['standard_salary']/21.75)*$add['absenteeism']*2+(($salary['standard_salary']/21.75)*$add['Entry_data']))*100)/100;
+                    $add['withdrawing'] = floor(($add['late1']*10+$add['late2']*30+(($salary['standard_salary']*$salary['basic_salary']/10)/21.75)*$add['leave_absence']+($add['lowest_wage']/21.75)*0.8+(($salary['standard_salary']*$salary['basic_salary']/10)/21.75)*$add['absenteeism']*2+((($salary['standard_salary']*$salary['basic_salary'])/21.75)*$add['Entry_data']))*100)/100;
 
                     $add['account_id']  = $user['account_id'];
                     $cot                = "添加";

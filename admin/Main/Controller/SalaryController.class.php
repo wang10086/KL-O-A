@@ -318,9 +318,10 @@ class SalaryController extends BaseController {
             foreach($account_r as $key => $val){
                 $aid['account_id']                      = $account_r[$key]['aid'];
                 $account_r[$key]['salary_attendance']   = M('salary_attendance')->where($aid)->order('id desc')->find();
-                $account_r[$key]['salary']              = M('salary')->field('id as salary_id,standard_salary')->where($aid)->order('id desc')->find();
+                $account_r[$key]['salary']              = M('salary')->where($aid)->order('id desc')->find();
             }
             if(!$account_r || $account_r == ""){$this->error('请添加员工编码或者员工部门！', U('Rbac/index'));die;}
+
         $this->assign('page',$pages);//数据分页
         $this->assign('list',$account_r);
         $this->display();

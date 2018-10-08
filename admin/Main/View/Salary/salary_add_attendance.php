@@ -43,7 +43,7 @@
                                                 <th class="sorting" style="width:8em;">员工岗位</th>
                                                 <th class="sorting" style="width:12em;">迟到/早退(15分钟)</th>
                                                 <th class="sorting" style="width:12em;">迟到/早退(2小时)</th>
-                                                <th class="sorting" style="width:5em;">事假/缺勤</th>
+                                                <th class="sorting" style="width:5em;">事假</th>
                                                 <th class="sorting" style="width:5em;">病假</th>
                                                 <th class="sorting" style="width:10em;">北京最低工资标准</th>
                                                 <th class="sorting" style="width:5em;">旷工</th>
@@ -68,7 +68,7 @@
                                                     <td><input type="text" name="aid" class="form-control absenteeism" value="{$row.salary_attendance.absenteeism}"/></td>
                                                     <td><input type="text" class="form-control salary_add_date" value="{$row.salary_attendance.Entry_data}"></td>
                                                     <input type="hidden" class="salary_add_aid" value="{$row.aid}">
-                                                    <input type="hidden" class="salary_add_hidden" value="{$row.salary.standard_salary}">
+                                                    <input type="hidden" class="salary_add_hidden" value="{$row['salary']['standard_salary']*$row['salary']['basic_salary']/10}">
                                                     <td class="salary_add_withdrawing">0.00</td>
                                                     <td><input type="button" value="保存" style="background-color:#00acd6;font-size:1em;" class="salary_add_button"></td>
                                                 </tr>
@@ -127,20 +127,21 @@
             $('.salary_tr').each(function () {
                 var late1               = Number($(this).find(".late1").val());// 早退 15分钟以
                 var late2               = Number($(this).find(".late2").val());//早退 15分钟以上
-                var leave_absence       = Number($(this).find(".leave_absence").val());
+                var leave_absence       = Number($(this).find(".leave_absence").val());//事假
                 var sick_leave          = Number($(this).find(".sick_leave").val());//病假 天数
-                var absenteeism         = Number($(this).find(".absenteeism").val());//事假 天数
-                var salary_add_hidden   = Number($(this).find(".salary_add_hidden").val());
+                var absenteeism         = Number($(this).find(".absenteeism").val());//旷工
+                var salary_add_hidden   = Number($(this).find(".salary_add_hidden").val());//基本薪资标准
                 var salary_date         = Number($(this).find(".salary_add_date").val());//入离职天数
                 var money               = Number($(this).find(".lowest_wage").val());//北京最低工资标准的80%是病假扣费
 
-                var sum                 = late1*10+late2*30+(salary_add_hidden/21.75)*leave_absence+(money/21.75)*0.2*sick_leave+(salary_add_hidden/21.75)*absenteeism*2+((salary_add_hidden/21.75)*salary_date);//*(1-(salary_date/21.75));
+                var sum                 = late1*10+late2*30+(salary_add_hidden/21.75)*leave_absence+(money/21.75)*0.8*sick_leave+(salary_add_hidden/21.75)*absenteeism*2+((salary_add_hidden/21.75)*salary_date);
+
                 var count               = Number(Math.floor(sum*100)/100);
                // var salary_add_withdrawing = $(".salary_add_withdrawing").text();
                 $(this).find('.salary_add_withdrawing').text(count);
             });
 
-        });
+        });  alert(sum);
 
         $.ajax({
             url:"{:U('Salary/salary_list')}",
