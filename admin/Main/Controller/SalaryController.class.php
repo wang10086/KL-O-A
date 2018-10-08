@@ -717,7 +717,7 @@ class SalaryController extends BaseController {
             $user_info[$key]['insurance']           = sql_query(1, '*', 'oa_salary_insurance', $id, 1,1);//五险一金表
 
             $user_info[$key]['insurance_Total']     = $user_info[$key]['insurance'][0]['pension_ratio']*$user_info[$key]['insurance'][0]['pension_base']+$user_info[$key]['insurance'][0]['medical_care_ratio']*$user_info[$key]['insurance'][0]['medical_care_base']+$user_info[$key]['insurance'][0]['unemployment_ratio']*$user_info[$key]['insurance'][0]['unemployment_base']+round($user_info[$key]['insurance'][0]['accumulation_fund_ratio']*$user_info[$key]['insurance'][0]['accumulation_fund_base'])+$user_info[$key]['insurance'][0]['big_price'];//五险一金
-            $user_info[$key]['accumulation']     = round($user_info[$key]['insurance'][0]['accumulation_fund_ratio']*$user_info[$key]['insurance'][0]['accumulation_fund_base']);
+            $user_info[$key]['accumulation']     = round(($user_info[$key]['insurance'][0]['accumulation_fund_ratio']*$user_info[$key]['insurance'][0]['accumulation_fund_base']),0);
 
             $user_info[$key]['subsidy']             = sql_query(1, '*', 'oa_salary_subsidy', $id,1,1);//补贴
             $withholding                            = sql_query(1, '*', 'oa_salary_withholding', $id,1,1);//代扣代缴
@@ -901,7 +901,7 @@ class SalaryController extends BaseController {
                         $sum[$k]['care']                    += $val['insurance'][0]['medical_care_base']*$val['insurance'][0]['medical_care_ratio'];//医疗保险
                         $sum[$k]['pension']                 += $val['insurance'][0]['pension_base']*$val['insurance'][0]['pension_ratio'];//养老保险
                         $sum[$k]['unemployment']            += $val['insurance'][0]['unemployment_base']*$val['insurance'][0]['unemployment_ratio'];// 失业保险
-                        $sum[$k]['accumulation']            += $val['insurance'][0]['accumulation_fund_base']*$val['insurance'][0]['accumulation_fund_ratio'];//公积金
+                        $sum[$k]['accumulation']            += round($val['insurance'][0]['accumulation_fund_base']*$val['insurance'][0]['accumulation_fund_ratio']);//公积金
                         $sum[$k]['insurance_Total']         += $val['insurance_Total'];//个人保险合计
                         $sum[$k]['tax_counting']            += $val['tax_counting'];//计税工资
                         $sum[$k]['personal_tax']            += $val['personal_tax'];//个人所得税
@@ -935,7 +935,7 @@ class SalaryController extends BaseController {
             $cout['care']                            += $val['care'];//医疗保险
             $cout['pension']                         += $val['pension'];//养老保险
             $cout['unemployment']                    += $val['unemployment'];//失业保险
-            $cout['accumulation']                    += $val['accumulation'];//公积金
+            $cout['accumulation']                    += round($val['accumulation']);//公积金
             $cout['insurance_Total']                 += $val['insurance_Total'];//个人保险合计
             $cout['tax_counting']                    += $val['tax_counting'];//计税工资
             $cout['personal_tax']                    += $val['personal_tax'];//个人所得税
