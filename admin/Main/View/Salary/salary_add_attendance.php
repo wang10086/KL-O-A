@@ -134,7 +134,7 @@
                 var salary_date         = Number($(this).find(".salary_add_date").val());//入离职天数
                 var money               = Number($(this).find(".lowest_wage").val());//北京最低工资标准的80%是病假扣费
 
-                var sum                 = late1*10+late2*30+(salary_add_hidden/21.75)*leave_absence+(money/21.75)*0.8*sick_leave+(salary_add_hidden/21.75)*absenteeism*2+((salary_add_hidden/21.75)*salary_date);
+                var sum                 = late1*10+late2*30+(salary_add_hidden/21.75)*leave_absence+(salary_add_hidden-(money*0.8))/21.75*sick_leave+(salary_add_hidden/21.75)*absenteeism*2+((salary_add_hidden/21.75)*salary_date);
 
                 var count               = Number(Math.floor(sum*100)/100);
                // var salary_add_withdrawing = $(".salary_add_withdrawing").text();

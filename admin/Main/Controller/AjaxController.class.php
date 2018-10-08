@@ -424,7 +424,7 @@ class AjaxController extends Controller {
 
             if($account_r && $salary){// 15分钟以内 15~2小时以内  事假
 
-                $add['withdrawing']     = floor(($add['late1']*10+$add['late2']*30+($salary['standard_salary']*$salary['basic_salary']/10/21.75)*$add['leave_absence']+($add['lowest_wage']/21.75)*0.8*$add['sick_leave']+($salary['standard_salary']*$salary['basic_salary']/10/21.75)*$add['absenteeism']*2+(($salary['standard_salary']*$salary['basic_salary']/10/21.75)*$add['entry_data']))*100)/100;
+                $add['withdrawing']     = floor(($add['late1']*10+$add['late2']*30+($salary['standard_salary']*$salary['basic_salary']/10/21.75)*$add['leave_absence']+(($salary['standard_salary']*$salary['basic_salary']/10)-$add['lowest_wage']*0.8)/21.75*$add['sick_leave']+($salary['standard_salary']*$salary['basic_salary']/10/21.75)*$add['absenteeism']*2+(($salary['standard_salary']*$salary['basic_salary']/10/21.75)*$add['entry_data']))*100)/100;
 
                 if($account_r['status'] == 1){
                     $id['id']           = $account_r['id'];
@@ -443,7 +443,7 @@ class AjaxController extends Controller {
                 }
             }else{
                 if($salary){
-                    $add['withdrawing'] = floor(($add['late1']*10+$add['late2']*30+(($salary['standard_salary']*$salary['basic_salary']/10)/21.75)*$add['leave_absence']+($add['lowest_wage']/21.75)*0.8+(($salary['standard_salary']*$salary['basic_salary']/10)/21.75)*$add['absenteeism']*2+((($salary['standard_salary']*$salary['basic_salary'])/21.75)*$add['entry_data']))*100)/100;
+                    $add['withdrawing'] = floor(($add['late1']*10+$add['late2']*30+(($salary['standard_salary']*$salary['basic_salary']/10)/21.75)*$add['leave_absence']+(($salary['standard_salary']*$salary['basic_salary']/10)-$add['lowest_wage']*0.8)/21.75*$add['sick_leave']+(($salary['standard_salary']*$salary['basic_salary']/10)/21.75)*$add['absenteeism']*2+((($salary['standard_salary']*$salary['basic_salary'])/21.75)*$add['entry_data']))*100)/100;
 
                     $add['account_id']  = $user['account_id'];
                     $cot                = "添加";
