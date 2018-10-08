@@ -426,11 +426,6 @@ class AjaxController extends Controller {
 
                 $add['withdrawing']     = floor(($add['late1']*10+$add['late2']*30+($salary['standard_salary']*$salary['basic_salary']/10/21.75)*$add['leave_absence']+($add['lowest_wage']/21.75)*0.8*$add['sick_leave']+($salary['standard_salary']*$salary['basic_salary']/10/21.75)*$add['absenteeism']*2+(($salary['standard_salary']*$salary['basic_salary']/10/21.75)*$add['entry_data']))*100)/100;
 
-                if($add['withdrawing'] !== $withdrawing){
-                    $sum                = 0;
-                    $msg                = "考勤数据添加失败!请重新添加1";
-                    echo json_encode(array('sum'=>$sum,'msg'=>$msg));die;
-                }
                 if($account_r['status'] == 1){
                     $id['id']           = $account_r['id'];
                     $cot                = "添加";
