@@ -423,7 +423,7 @@ class AjaxController extends Controller {
             $salary                     = M('salary')->field('id,standard_salary')->where($user)->order('id desc')->find();
 
             if($account_r && $salary){//$add['withdrawing']
-                $add['withdrawing']     = floor(($add['late1']*10+$add['late2']*30+(($salary['standard_salary']*$salary['basic_salary'])/21.75)*$add['leave_absence']+($add['lowest_wage']/21.75)*0.2+(($salary['standard_salary']*$salary['basic_salary'])/21.75)*$add['absenteeism']*2+((($salary['standard_salary']*$salary['basic_salary'])/21.75)*$add['Entry_data']))*100)/100;
+                $add['withdrawing']     = floor(($add['late1']*10+$add['late2']*30+(($salary['standard_salary']*$salary['basic_salary'])/21.75)*$add['leave_absence']+($add['lowest_wage']/21.75)*0.8+(($salary['standard_salary']*$salary['basic_salary'])/21.75)*$add['absenteeism']*2+((($salary['standard_salary']*$salary['basic_salary'])/21.75)*$add['Entry_data']))*100)/100;
 
                 if($add['withdrawing'] !== $withdrawing){
 //                    var_dump($add); var_dump($withdrawing);die;
@@ -974,21 +974,6 @@ class AjaxController extends Controller {
 
         foreach($wages_month_id as $key =>$val ){
             $id ['id']                      = $val;
-            $wages_month_id                 = M('salary_wages_month')->where($id)->find();
-            $salary_w                       = M('salary')->where(array('id='.$wages_month_id['salary_id']))->save($status);
-
-            $attendance_w                   = M('salary_attendance')->where(array('id='.$wages_month_id['attendance_id']))->save($status);
-
-            $bonus_w                        = M('salary_bonus')->where(array('id='.$wages_month_id['bonus_id']))->save($status);
-
-            $income_w                       = M('salary_income')->where(array('income_token='.$wages_month_id['income_token']))->save($status);
-
-            $insurance_w                    = M('salary_insurance')->where(array('id='.$wages_month_id['insurance_id']))->save($status);
-
-            $subsidy_w                      = M('salary_subsidy')->where(array('id='.$wages_month_id['subsidy_id']))->save($status);
-
-            $withholding_w                  = M('salary_withholding')->where(array('token='.$wages_month_id['withholding_token']))->save($status);
-
             $wages_month_del                = M('salary_wages_month')->where($id)->delete();
         }
 
