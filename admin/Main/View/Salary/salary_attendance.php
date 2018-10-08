@@ -49,7 +49,7 @@
                                             <td>{$row.aid}</td>
                                             <td>{$row.nickname}</td>
                                             <td>{$row.employee_member}</td>
-                                            <td><?php echo date('Y-m',$row['grant_time']) ?></td>
+                                            <td><?php echo $row['attendance_time']; ?></td>
                                             <td>{$row.late1}</td>
                                             <td>{$row.late2}</td>
                                             <td>{$row.leave_absence}</td>

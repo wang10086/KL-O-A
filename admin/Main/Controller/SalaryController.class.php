@@ -213,18 +213,16 @@ class SalaryController extends BaseController {
 
             $where['A.account_id'] = trim($_POST['id']);//编码
         }else{
-            $uid = trim($_POST['id']);//编码
+            $uid                            = trim($_POST['id']);//编码
 
             if($uid!==$_SESSION['userid']){
 
                 $this->error('您只能查看自己的工资！');die;
             }
-            $where['A.account_id'] = $_SESSION['userid'];
+            $where['A.account_id']          = $_SESSION['userid'];
         }
 
-        if($_POST['grant_time']){//年月搜索
-            $this->error('时间查询暂时未开通!请使用其它查询！', U('Salary/salary_attendance'));die;
-        }
+
         if(IS_POST){//搜索列表结果
 
             $where['A.employee_member']     = trim($_POST['employee_member']);//编码
@@ -232,18 +230,33 @@ class SalaryController extends BaseController {
             $where['A.status'] = 0;
            //$where['grant_time']           = trim($_POST['grant_time']);
             $where                          = array_filter($where);
+            if($_POST['grant_time']){//年月搜索
+
+            $this->error('时间查询暂时未开通!请使用其它查询！', U('Salary/salary_attendance'));die;
+            }
             $count                          = M()->table('oa_account as A')->join('oa_salary_attendance as B on A.id=B.account_id')->where($where)->count();
             $page                           = new Page($count,12);
             $pages                          = $page->show();
-            $account_r                      = M()->table('oa_account as A')->join('oa_salary_attendance as B on A.id=B.account_id')->where($where)->field('A.id as aid,A.employee_member,A.nickname,B.late1,B.late2,B.leave_absence,B.sick_leave,B.absenteeism,B.withdrawing')->limit("$page->firstRow","$page->listRows")->order('B.id desc')->select();
+            $account_r                      = M()->table('oa_account as A')->join('oa_salary_attendance as B on A.id=B.account_id')->where($where)->field('A.id as aid,A.employee_member,A.nickname,B.createtime,B.late1,B.late2,B.leave_absence,B.sick_leave,B.absenteeism,B.withdrawing')->limit("$page->firstRow","$page->listRows")->order('B.id desc')->select();
 
         }else{//默认列表结果
             $count                          = M()->table('oa_account as A')->join('oa_salary_attendance as B on A.id=B.account_id')->count();
             $page                           = new Page($count,12);
             $pages                          = $page->show();
-            $account_r                      = M()->table('oa_account as A')->join('oa_salary_attendance as B on A.id=B.account_id')->field('A.id as aid,A.employee_member,A.nickname,B.late1,B.late2,B.leave_absence,B.sick_leave,B.absenteeism,B.withdrawing')->limit("$page->firstRow","$page->listRows")->order('B.id desc')->select();
+            $account_r                      = M()->table('oa_account as A')->join('oa_salary_attendance as B on A.id=B.account_id')->field('A.id as aid,A.employee_member,A.nickname,B.createtime,B.late1,B.late2,B.leave_absence,B.sick_leave,B.absenteeism,B.withdrawing')->limit("$page->firstRow","$page->listRows")->order('B.id desc')->select();
 
         }
+        foreach($account_r as $key =>$val){
+            $time                  = $val['createtime'];//用户id
+            $time_Y                                 = date('Y',$time);
+            $time_M                                 = date('m',$time);
+            $time_D                                 = date('d',$time);
+            if($time_D < 10){
+                $time_M                             = $time_M-1;
+            }
+            $account_r[$key]['attendance_time'] = $time_Y.'-'.$time_M;
+        }
+
         $this->assign('list',$account_r);
         $this->assign('page',$pages);
         $this->display();

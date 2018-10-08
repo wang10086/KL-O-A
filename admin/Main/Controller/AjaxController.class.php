@@ -418,17 +418,17 @@ class AjaxController extends Controller {
             $add['Entry_data']          = trim($_POST['salary_date']);//入离职天数
             $add['lowest_wage']         = code_number(trim($_POST['money']));//北京最低工资标准
             $add['createtime']          = time();
-            $withdrawing                = (float)code_number(trim($_POST['withdrawing']));//传过来的总价格
+            $withdrawing                = code_number(trim($_POST['withdrawing']));//传过来的总价格
             $account_r                  = M('salary_attendance')->field('id,status')->where($user)->order('id desc')->find();
-            $salary                     = M('salary')->field('id,standard_salary')->where($user)->order('id desc')->find();
+            $salary                     = M('salary')->where($user)->order('id desc')->find();
 
             if($account_r && $salary){//$add['withdrawing']
-                $add['withdrawing']     = floor(($add['late1']*10+$add['late2']*30+(($salary['standard_salary']*$salary['basic_salary'])/21.75)*$add['leave_absence']+($add['lowest_wage']/21.75)*0.8+(($salary['standard_salary']*$salary['basic_salary'])/21.75)*$add['absenteeism']*2+((($salary['standard_salary']*$salary['basic_salary'])/21.75)*$add['Entry_data']))*100)/100;
+
+                $add['withdrawing']     = floor(($add['late1']*10+$add['late2']*30+($salary['standard_salary']*$salary['basic_salary']/10/21.75)*$add['leave_absence']+($add['lowest_wage']/21.75)*0.8+($salary['standard_salary']*$salary['basic_salary']/10/21.75)*$add['absenteeism']*2+(($salary['standard_salary']*$salary['basic_salary']/10/21.75)*$add['Entry_data']))*100)/100;
 
                 if($add['withdrawing'] !== $withdrawing){
-//                    var_dump($add); var_dump($withdrawing);die;
                     $sum                = 0;
-                    $msg                = "考勤数据添加失败!请重新添加!";
+                    $msg                = "考勤数据添加失败!请重新添加1!";
                     echo json_encode(array('sum'=>$sum,'msg'=>$msg));die;
                 }
                 if($account_r['status'] == 1){
