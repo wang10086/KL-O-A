@@ -713,7 +713,6 @@ class SalaryController extends BaseController {
                 foreach($user_info[$key]['income'] as $ke =>$va){
                     $countmoney                     += $va['income_money'];
                 }
-
             }
             $user_info[$key]['insurance']           = sql_query(1, '*', 'oa_salary_insurance', $id, 1,1);//五险一金表
 
@@ -740,6 +739,9 @@ class SalaryController extends BaseController {
             $time_D                                 = date('d');
             if($time_D < 10){
                 $time_M                             = $time_M-1;
+                if($time_M < 10){
+                    $time_M = '0'.$time_M;
+                }
             }
             $que['p.month']                         = $time_Y.$time_M ;//查询年月
             $user                                   = $this->query_score($que);//绩效增减
@@ -782,6 +784,7 @@ class SalaryController extends BaseController {
                 $achievements=0;
             }
             $user_info[$key]['Achievements']['count_money'] = $achievements;//绩效增减金额
+//            print_r($achievements);die;
 
             // 判断是否是业务人员
             $position_id['id']                      = $val['position_id'];
