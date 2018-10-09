@@ -726,7 +726,8 @@ class SalaryController extends BaseController {
             }
             $user_info[$key]['insurance']           = sql_query(1, '*', 'oa_salary_insurance', $id, 1,1);//五险一金表
 
-            $user_info[$key]['insurance_Total']     = $user_info[$key]['insurance'][0]['pension_ratio']*$user_info[$key]['insurance'][0]['pension_base']+$user_info[$key]['insurance'][0]['medical_care_ratio']*$user_info[$key]['insurance'][0]['medical_care_base']+$user_info[$key]['insurance'][0]['unemployment_ratio']*$user_info[$key]['insurance'][0]['unemployment_base']+round($user_info[$key]['insurance'][0]['accumulation_fund_ratio']*$user_info[$key]['insurance'][0]['accumulation_fund_base'])+$user_info[$key]['insurance'][0]['big_price'];//五险一金
+            $user_info[$key]['insurance_Total']     = round(($user_info[$key]['insurance'][0]['pension_ratio']*$user_info[$key]['insurance'][0]['pension_base']+$user_info[$key]['insurance'][0]['medical_care_ratio']*$user_info[$key]['insurance'][0]['medical_care_base']+$user_info[$key]['insurance'][0]['unemployment_ratio']*$user_info[$key]['insurance'][0]['unemployment_base']+round($user_info[$key]['insurance'][0]['accumulation_fund_ratio']*$user_info[$key]['insurance'][0]['accumulation_fund_base'])+$user_info[$key]['insurance'][0]['big_price']),2);//五险一金
+
             $user_info[$key]['accumulation']     = round(($user_info[$key]['insurance'][0]['accumulation_fund_ratio']*$user_info[$key]['insurance'][0]['accumulation_fund_base']),0);
 
             $user_info[$key]['subsidy']             = sql_query(1, '*', 'oa_salary_subsidy', $id,1,1);//补贴
@@ -736,9 +737,9 @@ class SalaryController extends BaseController {
                 $wit['token']                       = $withholding[0]['token'];
                 $wit['account_id']                  = $val['id'];
                 $wit                                = array_filter($wit);
-                $withh                              = sql_query(1, '*', 'oa_salary_withholding',$wit,1,0);//代扣代缴
-                $user_info[$key]['withholding']     = $withh;
-                foreach($withh as $kk =>$vv){
+                $user_info[$key]['withholding']     = sql_query(1, '*', 'oa_salary_withholding',$wit,1,0);//代扣代缴
+
+                foreach($user_info[$key]['withholding'] as $kk =>$vv){
                     $user_info[$key]['summoney']    += $vv['money']; //总代扣代缴
                 }
             }
@@ -802,22 +803,20 @@ class SalaryController extends BaseController {
             if($Year_end>80000){
                 $price1                             = $Year_end*0.45-13505;
             }
-            $price2                                 = (round($price1*100))/100;//年终奖计税
-
-            $user_info[$key]['yearend']             = $price2;//年终奖计税
+            $user_info[$key]['yearend']             = round($price1,2);//年终奖计税
 
             //其他补款 = 其他补贴变动 + 外地补贴 + 电脑补贴
-            $user_info[$key]['Other']               = $countmoney+$user_info[$key]['subsidy'][0]['foreign_subsidies']+$user_info[$key]['subsidy'][0]['computer_subsidy'];
-            $ttl[$key]['sum']=$user_info[$key]['Other'];
+            $user_info[$key]['Other']               = round(($countmoney+$user_info[$key]['subsidy'][0]['foreign_subsidies']+$user_info[$key]['subsidy'][0]['computer_subsidy']),2);
+
 
             // 提成 + 奖金+带团补助+年终奖+住房补贴+外地补贴+电脑补贴
-            $user_info[$key]['welfare']             = $extract+$user_info[$key]['bonus'][0]['bonus']+$user_info[$key]['bonus'][0]['annual_bonus']+$user_info[$key]['subsidy'][0]['housing_subsidy']+$user_info[$key]['Other'];//提成补助奖金
+            $user_info[$key]['welfare']             = round(($extract+$user_info[$key]['bonus'][0]['bonus']+$user_info[$key]['bonus'][0]['annual_bonus']+$user_info[$key]['subsidy'][0]['housing_subsidy']+$user_info[$key]['Other']),2);//提成补助奖金
 
 
             //应发工资 = 岗位工资-考勤扣款+绩效增减+季度提成+奖金+年终奖-年终奖计税+住房补贴+其他补款
-            $user_info[$key]['Should'] = $user_info[$key]['salary'][0]['standard_salary']-$user_info[$key]['attendance'][0]['withdrawing']+$extract+$user_info[$key]['bonus'][0]['bonus']+$user_info[$key]['bonus'][0]['annual_bonus']-$price2+$user_info[$key]['subsidy'][0]['housing_subsidy']+$user_info[$key]['Other'];
+            $user_info[$key]['Should'] = round(($user_info[$key]['salary'][0]['standard_salary']-$user_info[$key]['attendance'][0]['withdrawing']+$extract+$user_info[$key]['bonus'][0]['bonus']+$user_info[$key]['bonus'][0]['annual_bonus']-$user_info[$key]['yearend']+$user_info[$key]['subsidy'][0]['housing_subsidy']+$user_info[$key]['Other']),2);
 
-            $user_info[$key]['tax_counting']        = $user_info[$key]['Should']-$user_info[$key]['insurance_Total'];//计税工资
+            $user_info[$key]['tax_counting']        = round(($user_info[$key]['Should']-$user_info[$key]['insurance_Total']),2);//计税工资
 
             //个人所得税
             if($user_info[$key]['tax_counting'] <= 5000){
@@ -841,12 +840,12 @@ class SalaryController extends BaseController {
                 }elseif($cout > 80000){
                     $countin                        = $cout*0.45-15160;
                 }
-                $counting                           = (round($countin*100))/100;
+                $counting                           = round($countin,2);
             }
             $user_info[$key]['personal_tax']        = $counting;//个人所得税
 
             //实发工资=岗位工资-考勤扣款+绩效增减+提成(带团补助)+奖金-代扣代缴+年终奖-年终奖计税+住房补贴+外地补贴+电脑补贴-五险一金-个人所得税-工会会费+其他补款
-            $user_info[$key]['real_wages']          = $user_info[$key]['salary'][0]['standard_salary']-$user_info[$key]['attendance'][0]['withdrawing']+$extract+$user_info[$key]['bonus'][0]['bonus']-$user_info[$key]['summoney']+$user_info[$key]['bonus'][0]['annual_bonus']-$price2+$user_info[$key]['subsidy'][0]['housing_subsidy']-$user_info[$key]['insurance_Total']-$counting-$user_info[$key]['labour']['Labour_money']+$user_info[$key]['Other'];
+            $user_info[$key]['real_wages']          = round(($user_info[$key]['salary'][0]['standard_salary']-$user_info[$key]['attendance'][0]['withdrawing']+$extract+$user_info[$key]['bonus'][0]['bonus']-$user_info[$key]['summoney']+$user_info[$key]['bonus'][0]['annual_bonus']-$user_info[$key]['yearend']+$user_info[$key]['subsidy'][0]['housing_subsidy']-$user_info[$key]['insurance_Total']-$counting-$user_info[$key]['labour']['Labour_money']+$user_info[$key]['Other']),2);
 
         }
         return $user_info;

@@ -465,4 +465,14 @@
         }
     })
 
+//    $('table tr th').click(function(){
+//        var index = $("table th").index(this);
+//        $(".excel_list_money2 td").eq(index).css('background',"#FFCC66");
+//        $(".excel_list_money3 td").eq(index).css('background',"#FFCC66");
+////        $(".excel_list_money2").children('td:eq('+index+')').css('background',"#FFCC66");
+////        $(".excel_list_money2").children('td:eq('+index+')').css('background',"#FFCC66");
+////        $(".excel_list_money3").children().eq(index).css('background',"#FFCC66");
+//        alert(index);
+//    })
+
 </script>
