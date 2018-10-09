@@ -459,20 +459,27 @@
         $(".excel_list_money2:even").css("background","#95BDD4");
         $(".excel_list_money2:odd").css("background","lightskyblue");
         $('.excel_list_money3').css("background","#339900");
-        var color = $(this).css('background-color');
-        if(color !=="#CC0033"){
-            $(this).css("background","#CC0033");
-        }
+        $(this).css("background","#CC0033");
+
     })
 
-//    $('table tr th').click(function(){
-//        var index = $("table th").index(this);
-//        $(".excel_list_money2 td").eq(index).css('background',"#FFCC66");
-//        $(".excel_list_money3 td").eq(index).css('background',"#FFCC66");
-////        $(".excel_list_money2").children('td:eq('+index+')').css('background',"#FFCC66");
-////        $(".excel_list_money2").children('td:eq('+index+')').css('background',"#FFCC66");
-////        $(".excel_list_money3").children().eq(index).css('background',"#FFCC66");
-//        alert(index);
-//    })
+    $('table tr th').click(function(){
+        var index = $("table tr th").index(this);
+
+        $(".excel_list_money1").each(function(){
+            $(this).children('td').css('background','none');
+            $(this).children('td:eq('+index+')').css('background',"rgba(0,0,255,0.3)");
+
+        })
+
+        $(".excel_list_money2").each(function(){
+            $(this).children('td').css('background','none');
+            $(this).children('td:eq('+index+')').css('background',"rgba(0,0,255,0.3)");
+        })
+        $(".excel_list_money3").each(function(){
+            $(this).children('td').css('background','none');
+            $(this).children('td:eq('+index+')').css('background',"rgba(0,0,255,0.3)");
+        })
+    })
 
 </script>
