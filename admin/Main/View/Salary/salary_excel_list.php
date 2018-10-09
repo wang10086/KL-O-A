@@ -465,13 +465,10 @@
 
     $('table tr th').click(function(){
         var index = $("table tr th").index(this);
-
         $(".excel_list_money1").each(function(){
             $(this).children('td').css('background','none');
             $(this).children('td:eq('+index+')').css('background',"rgba(0,0,255,0.3)");
-
         })
-
         $(".excel_list_money2").each(function(){
             $(this).children('td').css('background','none');
             $(this).children('td:eq('+index+')').css('background',"rgba(0,0,255,0.3)");
