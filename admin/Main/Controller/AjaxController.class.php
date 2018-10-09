@@ -415,7 +415,7 @@ class AjaxController extends Controller {
             $add['leave_absence']       = code_number(trim($_POST['leave_absence']));//事假
             $add['sick_leave']          = code_number(trim($_POST['sick_leave']));//病假
             $add['absenteeism']         = code_number(trim($_POST['absenteeism']));//矿工
-            $add['entry_data']          = trim($_POST['salary_date']);//入离职天数
+            $add['entry_data']          = trim($_POST['salary_date']);//离职天数
             $add['lowest_wage']         = code_number(trim($_POST['money']));//北京最低工资标准
             $add['createtime']          = time();
             $withdrawing                = code_number(trim($_POST['withdrawing']));//传过来的总价格
@@ -424,7 +424,7 @@ class AjaxController extends Controller {
 
             if($account_r && $salary){// 15分钟以内 15~2小时以内  事假
 
-                $add['withdrawing']     = floor(($add['late1']*10+$add['late2']*30+($salary['standard_salary']*$salary['basic_salary']/10/21.75)*$add['leave_absence']+(($salary['standard_salary']*$salary['basic_salary']/10)-$add['lowest_wage']*0.8)/21.75*$add['sick_leave']+($salary['standard_salary']*$salary['basic_salary']/10/21.75)*$add['absenteeism']*2+(($salary['standard_salary']*$salary['basic_salary']/10/21.75)*$add['entry_data']))*100)/100;
+                $add['withdrawing']     = round(($add['late1']*10+$add['late2']*30+($salary['standard_salary']*$salary['basic_salary']/10/21.75)*$add['leave_absence']+(($salary['standard_salary']*$salary['basic_salary']/10)-$add['lowest_wage']*0.8)/21.75*$add['sick_leave']+($salary['standard_salary']*$salary['basic_salary']/10/21.75)*$add['absenteeism']*2+($salary['standard_salary']/21.75*$add['entry_data'])),2);
 
                 if($account_r['status'] == 1){
                     $id['id']           = $account_r['id'];
@@ -443,7 +443,7 @@ class AjaxController extends Controller {
                 }
             }else{
                 if($salary){
-                    $add['withdrawing'] = floor(($add['late1']*10+$add['late2']*30+(($salary['standard_salary']*$salary['basic_salary']/10)/21.75)*$add['leave_absence']+(($salary['standard_salary']*$salary['basic_salary']/10)-$add['lowest_wage']*0.8)/21.75*$add['sick_leave']+(($salary['standard_salary']*$salary['basic_salary']/10)/21.75)*$add['absenteeism']*2+((($salary['standard_salary']*$salary['basic_salary'])/21.75)*$add['entry_data']))*100)/100;
+                    $add['withdrawing'] = round(($add['late1']*10+$add['late2']*30+($salary['standard_salary']*$salary['basic_salary']/10/21.75)*$add['leave_absence']+(($salary['standard_salary']*$salary['basic_salary']/10)-$add['lowest_wage']*0.8)/21.75*$add['sick_leave']+($salary['standard_salary']*$salary['basic_salary']/10/21.75)*$add['absenteeism']*2+($salary['standard_salary']/21.75*$add['entry_data'])),2);
 
                     $add['account_id']  = $user['account_id'];
                     $cot                = "添加";
@@ -993,38 +993,52 @@ class AjaxController extends Controller {
 
         $where['account_id']                = code_number(trim(I('uid')));
         $Labour_money                       = trim(I('money'));
+        $status                             = trim(I('status'));
+        if($status==1){
+            $cot = "合并计税";
+        }else{
+            $cot = "工会会费";
+        }
         if(empty($Labour_money)){
             $sum                            = 0;
-            $msg                            = "添加工会会费失败!";
+            $msg                            = "添加".$cot."失败!";
             echo json_encode(array('sum' => $sum, 'msg' => $msg));die;
         }else{
             $where['status'] = 1;
             $Labour                         = M('salary_labour')->where($where)->order('id desc')->find();
             if($Labour){
                 $id['id']                   = $Labour['id'];
-                $save['Labour_money']       = $Labour_money;
+                if($status==1){
+                    $save['merge_counting'] = $Labour_money;
+                }else{
+                    $save['Labour_money']   = $Labour_money;
+                }
                $Labour_w                    =  M('salary_labour')->where($id)->save($save);
                 if($Labour_w){
                     $sum                    = 1;
-                    $msg                    = "修改工会会费成功!";
-                    $cot = '修改会费 : '.$Labour_money;
+                    $msg                    = "修改".$cot."成功!";
+                    $cot = $cot.' : '.$Labour_money;
                     salary_info(11,$cot);
                     echo json_encode(array('sum' => $sum, 'msg' => $msg));die;
                 }
             }else{
-                $where['Labour_money']      = $Labour_money;
+                if($status==1){
+                    $save['merge_counting'] = $Labour_money;
+                }else{
+                    $save['Labour_money']   = $Labour_money;
+                }
                 $where['createtime']        = time();
                 //print_r($where);die;
                 $add                        =  M('salary_labour')->add($where);
                 if($add){
-                    $cot = '添加会费 : '.$Labour_money;
+                    $cot = $cot.' : '.$Labour_money;
                     salary_info(11,$cot);
                     $sum                    = 1;
-                    $msg                    = "修改工会会费成功!";
+                    $msg                    = "修改".$cot."成功!";
                     echo json_encode(array('sum' => $sum, 'msg' => $msg));die;
                 }else{
                     $sum                    = 0;
-                    $msg                    = "添加工会会费失败2!";
+                    $msg                    = "添加".$cot."失败!";
                     echo json_encode(array('sum' => $sum, 'msg' => $msg));die;
                 }
             }

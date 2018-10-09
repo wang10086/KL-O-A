@@ -30,7 +30,7 @@ $(function(){
     }else{
         $('#table_salary_insurance1').show();
     }
-    if(number<4 && number>0 ){//代扣代缴
+    if(number<5 && number>0 ){//代扣代缴
             salary_withholding(number);
     }else{
         $('#salary_withholding1').show();
@@ -83,10 +83,11 @@ $('.salary_button22').click(function(){//工会会费
     var url ="index.php?m=Main&c=Ajax&a=salary_list_Labour";
     var uid = $(this).parents('tr').find('.salary_aid').text();
     var money = $(this).parents('tr').find('.salary_basic2').val();
+    var status = $(this).parents('tr').find('.salary_basic3').val();
     $.ajax({
         url:url,
         type:"post",
-        data:{'uid':uid,'money':money},
+        data:{'uid':uid,'money':money,'status':status},
         dataType:"json",
         success: function (data) {
             if (data.sum == 1) {
