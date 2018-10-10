@@ -342,11 +342,11 @@
         $('.list_salary_detail1').each(function(){
            var text = $(this).text();
             wages_month_id +=text+',';
-        })
+        });
         $('.list_salary_detail2').each(function(){
             var txt = $(this).text();
             departmen_id +=txt+',';
-        })
+        });
         var count_money_id = $('.list_salary_detail3').text();
 
         $.ajax({
@@ -371,7 +371,7 @@
                 }
             }
         });
-    })
+    });
 
 
         $('.salary_excel1_submit3').click(function(){
@@ -380,11 +380,11 @@
             $('.list_salary_detail1').each(function(){
                 var text = $(this).text();
                 wages_month_id +=text+',';
-            })
+            });
             $('.list_salary_detail2').each(function(){
                 var txt = $(this).text();
                 departmen_id +=txt+',';
-            })
+            });
             var count_money_id = $('.list_salary_detail3').text();
 
             $.ajax({
@@ -416,11 +416,11 @@
         $('.list_salary_detail1').each(function(){
             var text = $(this).text();
             wages_month_id +=text+',';
-        })
+        });
         $('.list_salary_detail2').each(function(){
             var txt = $(this).text();
             departmen_id +=txt+',';
-        })
+        });
         var count_money_id = $('.list_salary_detail3').text();
 
         $.ajax({
@@ -445,38 +445,50 @@
                 }
             }
         });
-    })
-
+    });
+    function excel_list_color(){
         $(".excel_list_money1:even").css("background","#95BDD4");
         $(".excel_list_money1:odd").css("background","lightskyblue");
         $(".excel_list_money2:even").css("background","#95BDD4");
         $(".excel_list_money2:odd").css("background","lightskyblue");
         $('.excel_list_money3').css("background","#339900");
+    }
 
+    var  cum = 0;
+    var  cun = 0;
     $('tr').click(function(){
-        $(".excel_list_money1:even").css("background","#95BDD4");
-        $(".excel_list_money1:odd").css("background","lightskyblue");
-        $(".excel_list_money2:even").css("background","#95BDD4");
-        $(".excel_list_money2:odd").css("background","lightskyblue");
-        $('.excel_list_money3').css("background","#339900");
-        $(this).css("background","#CC0033");
+        cum++;
+        var m = $("table tr").index(this);
+        excel_list_color();
+        if(cum%2==1 || cun!==m){
+            $(this).css("background","#CC0033");
+            cun = m;
+        }else{
+            if(cun!==m){
+                $(this).css("background","#CC0033");
+            }
+        }
 
-    })
+    });
 
+        var cont = 0;
+        var mun  = 0;
     $('table tr th').click(function(){
+        cont++;
         var index = $("table tr th").index(this);
-        $(".excel_list_money1").each(function(){
-            $(this).children('td').css('background','none');
-            $(this).children('td:eq('+index+')').css('background',"rgba(0,0,255,0.3)");
-        })
-        $(".excel_list_money2").each(function(){
-            $(this).children('td').css('background','none');
-            $(this).children('td:eq('+index+')').css('background',"rgba(0,0,255,0.3)");
-        })
-        $(".excel_list_money3").each(function(){
-            $(this).children('td').css('background','none');
-            $(this).children('td:eq('+index+')').css('background',"rgba(0,0,255,0.3)");
-        })
-    })
+        if(cont%2==1 || mun!==index){
+            $("tr").each(function(){
+                $(this).children('td').css('background','none');
+                $(this).children('td:eq('+index+')').css('background',"rgba(0,0,255,0.3)");
+            });
+            mun = index;
+        }else{
+            $("tr").each(function(){
+                $(this).children('td').css('background','none');
+            });
+        }
+    });
 
+
+excel_list_color();
 </script>
