@@ -130,13 +130,11 @@
                             <div class="form-group col-md-12">
                                 <label>具体需求描述（课题周期、是否参赛、预算价格等）：</label><textarea class="form-control"  name="info[task_special_need]">{$resource['task_special_need']}</textarea>
                             </div>
-
-
-
                         </div>
 
                 <div style="width:100%; text-align:center;">
-                    <button type="submit" class="btn btn-info btn-lg" id="lrpd">提交</button>
+                    <!--<button type="submit" class="btn btn-info btn-lg" id="lrpd">提交</button>-->
+                    <a  href="javascript:;" class="btn btn-info btn-lg" onClick="javascript:save('res_need_table','<?php echo U('Op/public_save'); ?>');">保存</a>
                 </div>
             </div><!--/.col (right) -->
         </div>
@@ -189,8 +187,8 @@
 
                 <div class="form-group col-md-12" id="is_handson">
                     <label>动手实践：</label>
-                    <span class="checkboxs_400"><input type="radio" name="info[handson]" <?php if($info['handson']==1){ echo 'checked';} ?>  value="1">&nbsp; 是<span id="handson">，费用标准：<input type="text" name="info[lession_price]" style="border: none; border-bottom: solid 1px;"></span></span>&#12288;&#12288;
-                    <span class="checkboxs_255"><input type="radio" name="info[handson]" <?php if($info['handson']==0){ echo 'checked';} ?>  value="0">&nbsp; 否</span>&#12288;&#12288;
+                    <span class="checkboxs_400"><input type="radio" name="info[handson]" <?php if($resource['handson']==1){ echo 'checked';} ?>  value="1">&nbsp; 是<span id="handson">，费用标准：<input type="text" name="info[lession_price]" value="{$resource['lession_price']}" style="border: none; border-bottom: solid 1px;"></span></span>&#12288;&#12288;
+                    <span class="checkboxs_255"><input type="radio" name="info[handson]" <?php if($resource['handson']==0){ echo 'checked';} ?>  value="0">&nbsp; 否</span>&#12288;&#12288;
                 </div>
 
                 <div class="form-group col-md-12">
@@ -200,7 +198,7 @@
             </div>
 
             <div style="width:100%; text-align:center;">
-                <button type="submit" class="btn btn-info btn-lg" id="lrpd">提交</button>
+                <a  href="javascript:;" class="btn btn-info btn-lg" onClick="javascript:save('after_lession','<?php echo U('Op/public_save'); ?>');">保存</a>
             </div>
         </div>
     </div>

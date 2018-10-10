@@ -871,38 +871,38 @@ class OpController extends BaseController {
                 $info['act_need']   = implode(',',$act_needs);
                 $info['task_field'] = implode(',',$task_fields);
 
-                $saved_id = $op_res_db->where(array('op_id'=>$opid))->getField('id');
-                if ($saved_id){
-                    $op_res_db->where(array('id'=>$saved_id))->save($info);
-                    $res = $saved_id;
-                }else{
-                    $info['create_time']   = NOW_TIME;
-                    $res = $op_res_db->add($info);
-                }
-                if($res){
-                    $num++;
-                    $op_res_money_db->where(array('op_res_id'=>$res))->delete();
-                    foreach ($data as $v){
-                        if ($v['job_name']) {
-                            $v['op_res_id'] = $res;
-                            $op_res_money_db->add($v);
+                if ($info['exe_user_id']){
+                    $saved_id = $op_res_db->where(array('op_id'=>$opid))->getField('id');
+                    if ($saved_id){
+                        $op_res_db->where(array('id'=>$saved_id))->save($info);
+                        $res = $saved_id;
+                    }else{
+                        $info['create_time']   = NOW_TIME;
+                        $res = $op_res_db->add($info);
+                    }
+                    if($res){
+                        $num++;
+                        $op_res_money_db->where(array('op_res_id'=>$res))->delete();
+                        foreach ($data as $v){
+                            if ($v['job_name']) {
+                                $v['op_res_id'] = $res;
+                                $op_res_money_db->add($v);
+                            }
+                        }
+
+                        $exe_user_id        = $info['exe_user_id'];
+                        if (cookie('userid') != $info['exe_user_id']){
+                            //发送系统消息
+                            $uid     = cookie('userid');
+                            $title   = '您有来自['.session('rolename').'--'.$info['ini_user_name'].']的资源需求单!';
+                            $content = '项目编号: '.$opid;
+                            $url     = U('Op/plans_follow',array('opid'=>$info['op_id']));
+                            $user    = '['.$exe_user_id.']';
+                            send_msg($uid,$title,$content,$url,$user,'');
                         }
                     }
-
-                    /*$exe_dept_id        = 52;   //资源管理部经理
-                    $exe_user_id        = M('auth')->where(array('role_id'=>$exe_dept_id))->getField("worder_auth");*/
-                    $exe_user_id        = $info['exe_user_id'];
-                    if (cookie('userid') != $info['exe_user_id']){
-                        //发送系统消息
-                        $uid     = cookie('userid');
-                        $title   = '您有来自['.session('rolename').'--'.$info['ini_user_name'].']的资源需求单!';
-                        $content = '项目编号: '.$opid;
-                        $url     = U('Op/plans_follow',array('opid'=>$info['op_id']));
-                        $user    = '['.$exe_user_id.']';
-                        send_msg($uid,$title,$content,$url,$user,'');
-                    }
-
                 }
+
             }
 
             //保存辅导员/教师,专家需求
@@ -2273,9 +2273,6 @@ class OpController extends BaseController {
                 $this->act_needs    = explode(',',$resource['act_need']);
                 $this->men          = M('account')->field('id,nickname')->where(array('id'=>$resource['exe_user_id']))->find();
             }
-
-            //var_dump($resource);
-            //die;
 
             //辅导员/教师、专家
             /*$this->guide_price  = M('op_guide_price')->where(array('op_id'=>$opid))->select();*/
