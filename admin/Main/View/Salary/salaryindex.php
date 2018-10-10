@@ -140,6 +140,9 @@
         if(d <= 10){
             return m-1;
         }else{
+            if(d <= 15){
+                return m-1;
+            }
             return m;
         }
 
