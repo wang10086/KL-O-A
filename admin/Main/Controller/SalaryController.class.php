@@ -734,21 +734,24 @@ class SalaryController extends BaseController {
                 $time_M = $time_M-1;
             }
             if($time_D < 10){
-                $time_M                             = '0'.$time_M;
+                $que['p.month']                    = $time_Y.'0'.$time_M;//查询年月
+            }else{
+                $que['p.month']                    = $time_Y.$time_M;//查询年月
             }
 
-            $que['p.month']                         = $time_Y.$time_M ;//查询年月
+            $que['p.month']                         = $time_Y.'0'.$time_M ;//查询年月
             $user                                   = $this->query_score($que);//绩效增减
             $use1                                   = trim(str_replace(array('<font color="#999999">','</font>','无加扣分','<span class="red">','</span>','<span>','<font color="#ff9900">','未完成评分'),"",$user[0]['total_score_show']));//PDCA
             $use2                                   = trim(str_replace(array('<font color="#999999">','</font>','无加扣分','<span class="red">','</span>','<span>','<font color="#ff9900">','未完成评分'),"",$user[0]['show_qa_score']));//品质检查
             $use3                                   = trim(str_replace(array('<font color="#999999">','</font>','无加扣分','<span class="red">','</span>','<span>','<font color="#ff9900">','未完成评分'),"",$user[0]['total_kpi_score']));//KPI
             $money                                  = $user_info[$key]['salary'][0]['standard_salary']/10*$user_info[$key]['salary'][0]['performance_salary'];//绩效金额
             $branch                                 = 100;//给总共100分
+
             $f = $use1+$use2+$use3;//获得总分
             if(substr($f,0,1)=='-'){
-                $user_info[$key]['Achievements']['count_money'] = '-'.(round(($money/$branch*(substr($f,1))),2));
+                $user_info[$key]['Achievements']['count_money'] = (round(($money/$branch*(substr($f,1))),2));
             }elseif($f < 0){
-                $user_info[$key]['Achievements']['count_money'] = '+'.(round(($money/$branch*(substr($f,1))),2));
+                $user_info[$key]['Achievements']['count_money'] = (round(($money/$branch*(substr($f,1))),2));
             }
 
             $user_info[$key]['Achievements']['total_score_show']    = $use1;//pdca分数
@@ -834,6 +837,7 @@ class SalaryController extends BaseController {
             $user_info[$key]['real_wages']          = round(($user_info[$key]['salary'][0]['standard_salary']-$user_info[$key]['attendance'][0]['withdrawing']+$extract+$user_info[$key]['bonus'][0]['bonus']-$user_info[$key]['summoney']+$user_info[$key]['bonus'][0]['annual_bonus']-$user_info[$key]['yearend']+$user_info[$key]['subsidy'][0]['housing_subsidy']-$user_info[$key]['insurance_Total']-$counting-$user_info[$key]['labour']['Labour_money']+$user_info[$key]['Other']),2);
 
         }
+       
         return $user_info;
     }
 
