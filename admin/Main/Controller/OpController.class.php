@@ -401,8 +401,8 @@ class OpController extends BaseController {
 		$record     = M('op_record')->where(array('op_id'=>$opid))->order('id DESC')->select();
 		$budget     = M('op_budget')->where(array('op_id'=>$opid))->find();
 		$settlement = M('op_settlement')->where(array('op_id'=>$opid))->find();
-        $resource   = M('op_res')->where(array('op_id'=>$opid))->find();
-        $res_money  = M('op_res_money')->where(array('op_res_id'=>$resource['id']))->select();
+        //$resource   = M('op_res')->where(array('op_id'=>$opid))->find();
+       // $res_money  = M('op_res_money')->where(array('op_res_id'=>$resource['id']))->select();
 
         //根据line_id判断是普通线路还是固定线路
         $line_id    = $op['line_id'];
@@ -460,7 +460,7 @@ class OpController extends BaseController {
 			$this->tuanhao    = $tuanhao;
 		}
 
-		//项目需求单
+		/*//项目需求单
         $service_type         = explode(',',$resource['service_type']);
         $act_need             = explode(',',$resource['act_need']);
         $les_field            = explode(',',$resource['les_field']);
@@ -478,7 +478,7 @@ class OpController extends BaseController {
                 }
             }
             $job_names[$key]['job_money']= $job_names[$key]['job_money']?$job_names[$key]['job_money']:null;
-        }
+        }*/
 
         //项目类型
         //线路1 , 课程 2 , 其他 3
@@ -549,8 +549,10 @@ class OpController extends BaseController {
         $this->service_types  = $service_type;
         $this->act_needs      = $act_need;
         $this->les_fields     = $les_field;
-        $this->act_fields     = $act_field;*/
-        /* $product_need         = M()->table('__OP_COSTACC__ as c')->field('c.*,p.from,p.subject_field,p.type as ptype,p.age,p.reckon_mode')->join('left join __PRODUCT__ as p on c.product_id=p.id')->where(array('c.op_id'=>$opid,'c.type'=>5,'c.status'=>0))->select();
+        $this->act_fields     = $act_field;
+        $this->job_name       = array_column($job_names,'job_money','job_name');*/
+
+         $product_need         = M()->table('__OP_COSTACC__ as c')->field('c.*,p.from,p.subject_field,p.type as ptype,p.age,p.reckon_mode')->join('left join __PRODUCT__ as p on c.product_id=p.id')->where(array('c.op_id'=>$opid,'c.type'=>5,'c.status'=>0))->select();
          foreach ($product_need as $k=>$v){
              $ages             = explode(',',$v['age']);
              $age_list         = array();
@@ -561,9 +563,7 @@ class OpController extends BaseController {
              }
              $product_need[$k]['age_list'] = implode(',',$age_list);
          }
-         $this->product_need   = $product_need;
-         $this->job_name       = array_column($job_names,'job_money','job_name');*/
-
+        $this->product_need  = $product_need;
         $this->yusuan         = $yusuan;
         $this->xuhao          = 1;
         $this->huikuan_status = M('contract_pay')->where(array('op_id'=>$opid))->getField('status');
@@ -580,7 +580,7 @@ class OpController extends BaseController {
         }
 
         //资源需求单接收人员(资源管理部经理)
-        $this->men            = M('account')->field('id,nickname')->where(array('roleid'=>52))->find();
+        //$this->men            = M('account')->field('id,nickname')->where(array('roleid'=>52))->find();
         $this->tcs = M()->table('__OP_GUIDE_PRICE__ as gp')
             ->field('gp.*,gk.name as gkname,gpk.name as gpkname')
             ->join('left join __GUIDEKIND__ as gk on gp.guide_kind_id = gk.id')
@@ -862,25 +862,21 @@ class OpController extends BaseController {
 
 			//保存资源需求单
             if($opid && $savetype==11 ){
+
                 header('Content-Type:text/html;charset=utf-8');
                 $info['op_id']      = $opid;
-                $data               = I('data');
-                $service_types      = I('service_type');
+                $info['in_time']    = strtotime($info['in_time']);
                 $act_needs          = I('act_need');
-                $les_fields         = I('les_field');
-                $act_fields         = I('act_field');
-                $info['service_type']= implode(',',$service_types);
+                $task_fields        = I('task_field');
                 $info['act_need']   = implode(',',$act_needs);
-                $info['les_field']  = implode(',',$les_fields);
-                $info['act_field']  = implode(',',$act_fields);
-                $info['cou_time']   = strtotime($info['cou_time']);
+                $info['task_field'] = implode(',',$task_fields);
 
                 $saved_id = $op_res_db->where(array('op_id'=>$opid))->getField('id');
                 if ($saved_id){
                     $op_res_db->where(array('id'=>$saved_id))->save($info);
                     $res = $saved_id;
                 }else{
-                    $info['ini_time']   = NOW_TIME;
+                    $info['create_time']   = NOW_TIME;
                     $res = $op_res_db->add($info);
                 }
                 if($res){
@@ -899,7 +895,7 @@ class OpController extends BaseController {
                     if (cookie('userid') != $info['exe_user_id']){
                         //发送系统消息
                         $uid     = cookie('userid');
-                        $title   = '您有来自['.session('rolename').'--'.$info['ini_user_name'].']的项目需求单!';
+                        $title   = '您有来自['.session('rolename').'--'.$info['ini_user_name'].']的资源需求单!';
                         $content = '项目编号: '.$opid;
                         $url     = U('Op/plans_follow',array('opid'=>$info['op_id']));
                         $user    = '['.$exe_user_id.']';
@@ -2269,6 +2265,17 @@ class OpController extends BaseController {
             $this->fields       = C('GUI_FIELDS');
             $jiesuan            = M('op_settlement')->where(array('op_id'=>$opid,'audit_status'=>1))->find(); //结算审批通过
             $this->jiesuan      = $jiesuan;
+            $resource           = M('op_res')->where(array('op_id'=>$opid))->find();
+            $this->resource     = $resource;
+            if ($resource) {
+                $this->rad          = 1;
+                $this->task_fields  = explode(',',$resource['task_field']);
+                $this->act_needs    = explode(',',$resource['act_need']);
+                $this->men          = M('account')->field('id,nickname')->where(array('id'=>$resource['exe_user_id']))->find();
+            }
+
+            //var_dump($resource);
+            //die;
 
             //辅导员/教师、专家
             /*$this->guide_price  = M('op_guide_price')->where(array('op_id'=>$opid))->select();*/
@@ -2296,15 +2303,15 @@ class OpController extends BaseController {
             $this->guide_need   = M('op_guide_price')->where(array('op_id'=>$opid))->select();
 
             //人员名单关键字
-            $user   = M('account')->field("id,nickname")->where(array('status'=>0))->select();
-            $user_key    = array();
+            $user       = M('account')->field("id,nickname")->where(array('status'=>0))->select();
+            $user_key   = array();
             foreach($user as $k=>$v){
-                $text           = $v['nickname'];
-                $user_key[$k]['id']  = $v['id'];
+                $text                   = $v['nickname'];
+                $user_key[$k]['id']     = $v['id'];
                 $user_key[$k]['pinyin'] = strtopinyin($text);
-                $user_key[$k]['text']       = $text;
+                $user_key[$k]['text']   = $text;
             }
-            $this->userkey = json_encode($user_key);
+            $this->userkey  = json_encode($user_key);
 
             //人员列表
             $stu_list       = M('op_member')->where(array('op_id'=>$opid))->select();
@@ -2314,11 +2321,9 @@ class OpController extends BaseController {
 			$this->confirm 	= $confirm;
             $this->upd_num  = $confirm['upd_num'];
             $this->op_kind  = $op['kind'];
-           /* $this->service_type   = C('SERVICE_TYPE');*/
-            $this->act_need       = C('ACT_NEED');
-            $this->task_field      = C('LES_FIELD');
-            /*$this->act_field      = C('ACT_FIELD');*/
-            $this->apply_to       = C('APPLY_TO');
+            $this->act_need = C('ACT_NEED');
+            $this->task_field = C('LES_FIELD');
+            $this->apply_to = C('APPLY_TO');
 
 			$this->display('confirm');
 		}

@@ -2640,9 +2640,35 @@ function updatekpi($month,$user){
 					
 				}
 
+                //月度顾客满意度
+                if($v['quota_id']==124){
+
+                    //获取当月已评分的团
+                    $where = array();
+                    $where['s.input_time']	= array('between',array($v['start_date'],$v['end_date']+86399));
+                    $where['o.create_user'] = $user;
+                    $lists = M()->table('__TCS_SCORE__ as s')->field('u.op_id,o.kind,s.stay,s.travel,s.content,s.food,s.bus,s.driver,s.guide,s.teacher,s.teacher,s.depth,s.major,s.interest,s.material')->join('left join __TCS_SCORE_USER__ as u on u.id = s.uid')->join('__OP__ as o on o.op_id = u.op_id','left')->where($where)->select();
+
+                    //无项目的，得0分；有项目，但无调查项目的，得100分。
+                    $wheres = array();
+                    $wheres['c.ret_time']   = array('between',array($v['start_date'],$v['end_date']+86399));
+                    $wheres['o.create_user'] = $user;
+                    $oplist = M()->table('__OP__ as o')->join('__OP_TEAM_CONFIRM__ as c on c.op_id = o.op_id','left')->where($wheres)->select();
+
+                    $average = get_manyidu($lists);
+
+                    //平均得分(如果得分>72%,得分100, 如果小于72%,以72%作为满分求百分比)
+                    $score = round(($average*100/72)*100);
+
+                    if($average>0.72 || !$oplist){
+                        $complete	= 100;
+                    }else{
+                        $complete	= $score;
+                    }
+                }
 
 				//已实现自动获取指标值
-				$auto_quta	= array(1,2,3,4,5,6,81,8,9,10,11,15,16,18,20,23,26,21,24,27,32,37,19,22,25,28,33,38,42,45,103,56,113,92,29,34,39,46,102,55,57,58,59,84,87,89,90,111,107,83,66,54,44,12,112,108,100,96,95,65,114,86,85,64,63,62,53,52,41,40,49,80,48,91,79,47,36,35,31,30,82,110,106,99,94,67);
+				$auto_quta	= array(1,2,3,4,5,6,81,8,9,10,11,15,16,18,20,23,26,21,24,27,32,37,19,22,25,28,33,38,42,45,103,56,113,92,29,34,39,46,102,55,57,58,59,84,87,89,90,111,107,83,66,54,44,12,112,108,100,96,95,65,114,86,85,64,63,62,53,52,41,40,49,80,48,91,79,47,36,35,31,30,82,110,106,99,94,67,124);
 				
 				//计算完成率并保存数据
 				if(in_array($v['quota_id'],$auto_quta)){
@@ -2679,6 +2705,27 @@ function updatekpi($month,$user){
 		}
 
 	}
+}
+
+//客户满意度
+function get_manyidu($lists){
+    $opids      = array_unique(array_column($lists,'op_id'));
+    $score_kind1= array_keys(C('SCORE_KIND1'));
+    $score_kind2= array_keys(C('SCORE_KIND2'));
+
+    $zongfen    = 0;
+    $defen      = 0;
+    foreach ($opids as $k=>$v){
+        $kind               = M('op')->where(array('op_id'=>$v))->getField('kind');
+
+        foreach ($lists as $kk=>$vv){
+            if (in_array($kind,$score_kind1)) $zongfen += 8*5; //考核8项, 每项5分, 满分总分
+            if (in_array($kind,$score_kind2)) $zongfen += 6*5; //考核6项, 每项5分, 满分总分
+            $defen += $vv['stay']+$vv['travel']+$vv['content']+$vv['food']+$vv['bus']+$vv['driver']+$vv['guide']+$vv['teacher']+$vv['depth']+$vv['major']+$vv['interest']+$vv['material'];
+        }
+    }
+    $score      = round($defen/$zongfen,2);
+    return $score;
 }
 
 

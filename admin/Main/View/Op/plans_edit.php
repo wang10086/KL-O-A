@@ -988,17 +988,6 @@
 			fixed: true,
 		});	
 	}
-	
-	//物资需求单
-    function show_res_need(){
-        $("#res_need_table").show();
-        $('#res_but').html('<a href="javascript:;" onclick="hide_res_need()" style="color:#09F;">隐藏</a>');
-    }
-
-    function hide_res_need(){
-        $("#res_need_table").hide();
-        $('#res_but').html('<a href="javascript:;" onclick="show_res_need()" style="color:#09F;">显示</a>');
-    }
 
     //新增辅导员/教师、专家
     function add_tcs(){
