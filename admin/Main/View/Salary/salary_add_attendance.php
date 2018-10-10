@@ -44,6 +44,7 @@
                                                 <th class="sorting" style="width:12em;">迟到/早退(15分钟)</th>
                                                 <th class="sorting" style="width:12em;">迟到/早退(2小时)</th>
                                                 <th class="sorting" style="width:5em;">事假</th>
+                                                <th class="sorting" style="width:5em;">年假</th>
                                                 <th class="sorting" style="width:5em;">病假</th>
                                                 <th class="sorting" style="width:10em;">北京最低工资标准</th>
                                                 <th class="sorting" style="width:5em;">旷工</th>
@@ -63,6 +64,7 @@
                                                     <td><input type="text" name="aid" class="form-control late1" value="{$row.salary_attendance.late1}"/></td>
                                                     <td><input type="text" name="aid" class="form-control late2" value="{$row.salary_attendance.late2}"/></td>
                                                     <td><input type="text" name="aid" class="form-control leave_absence" value="{$row.salary_attendance.leave_absence}"/></td>
+                                                    <td><input type="text" name="aid" class="form-control year_leave" value=""/></td>
                                                     <td><input type="text" name="aid" class="form-control sick_leave" value="{$row.salary_attendance.sick_leave}"/></td>
                                                     <td><input type="text" name="aid" class="form-control lowest_wage" value="" /></td>
                                                     <td><input type="text" name="aid" class="form-control absenteeism" value="{$row.salary_attendance.absenteeism}"/></td>
@@ -176,10 +178,11 @@
         var account_id          = $(this).parents('tr').find(".salary_add_aid").val();
         var salary_date         = $(this).parents('tr').find(".salary_add_date").val();//入离职天数
         var money               = $(this).parents('tr').find(".lowest_wage").val();//北京最低工资标准的80%是病假扣费
+        var year_leave          = $(this).parents('tr').find(".year_leave").val();//年假
         $.ajax({
             type: "post",
             url: "{:U('Ajax/salaryattendance')}", //url
-            data: {'account_id':account_id,'late1':late1,'late2':late2,'leave_absence':leave_absence,'sick_leave':sick_leave,'absenteeism':absenteeism,'salary_date':salary_date,'withdrawing':withdrawing,'money':money},
+            data: {'account_id':account_id,'late1':late1,'late2':late2,'leave_absence':leave_absence,'sick_leave':sick_leave,'absenteeism':absenteeism,'salary_date':salary_date,'withdrawing':withdrawing,'money':money,'year_leave':year_leave},
             dataType: "json", //数据格式
             success: function (data) {
                 if(data.sum==1){

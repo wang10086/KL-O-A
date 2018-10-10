@@ -38,6 +38,7 @@
                                             <th>迟到/早退(15min以内次数)</th>
                                             <th>迟到/早退(15min以上次数)</th>
                                             <th>事假(天)</th>
+                                            <th>年假(天)</th>
                                             <th>病假(天)</th>
                                             <th>旷工(天)</th>
                                             <th>缺勤天数</th>
@@ -48,16 +49,16 @@
                                         <tr id="salary_edtior">
                                             <td>{$row.aid}</td>
                                             <td>{$row.nickname}</td>
-                                            <td>{$row.employee_member}</td>
-                                            <td><?php echo $row['attendance_time']; ?></td>
-                                            <td>{$row.late1}</td>
-                                            <td>{$row.late2}</td>
-                                            <td>{$row.leave_absence}</td>
-                                            <td>{$row.sick_leave}</td>
-                                            <td>{$row.absenteeism}</td>
-                                            <td>{$row.entry_data}</td>
-                                            <td>{$row.withdrawing}</td>
-
+                                            <td>{$row.member}</td>
+                                            <td>{$row.datetime}</td>
+                                            <td>{$row['attendance'].late1}</td>
+                                            <td>{$row['attendance'].late2}</td>
+                                            <td>{$row['attendance'].leave_absence}</td>
+                                            <td>{$row.year}</td>
+                                            <td>{$row['attendance'].sick_leave}</td>
+                                            <td>{$row['attendance'].absenteeism}</td>
+                                            <td>{$row['attendance'].entry_data}</td>
+                                            <td>{$row['attendance'].withdrawing}</td>
                                         </tr>
                                         </foreach>		
                                         
@@ -81,9 +82,6 @@
 
                 <div class="form-group col-md-3">
                     <input type="text" class="form-control" name="id" placeholder="ID编号">
-                </div>
-                <div class="form-group col-md-3">
-                    <input type="text" class="form-control" name="employee_member" placeholder="员工编号">
                 </div>
 
                 <div class="form-group col-md-3">

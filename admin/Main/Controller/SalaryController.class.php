@@ -209,65 +209,45 @@ class SalaryController extends BaseController {
      * grant_time  年月份搜索
      */
     public function salary_attendance(){
+
         if($_SESSION['userid']==11 ||$_SESSION['userid']==55 || $_SESSION['userid']==77 || $_SESSION['userid']==32 || $_SESSION['userid']==38 || $_SESSION['userid']==12  || $_SESSION['userid']!==1){
 
-            $where['A.account_id'] = trim($_POST['id']);//编码
+            $where['account_id']           = trim($_POST['id']);//编码
         }else{
-            $uid                            = trim($_POST['id']);//编码
-
+            $uid                           = trim($_POST['id']);//编码
             if($uid!==$_SESSION['userid']){
-
                 $this->error('您只能查看自己的工资！');die;
             }
-            $where['A.account_id']          = $_SESSION['userid'];
+            $where['account_id']           = $_SESSION['userid'];
         }
 
+        $where['user_name']                = trim($_POST['nickname']);//昵称
+        if(!empty($_POST['grant_time'])){
+            $where['datetime']                 = date('Ym',strtotime($_POST['grant_time']));//时间
+        }
+        $where['status']                   = 4;//状态
+        $where                             = array_filter($where);
+        $count                             = M('salary_wages_month')->where($where)->count();
 
-        if(IS_POST){//搜索列表结果
+        $page                              = new Page($count,12);
+        $pages                             = $page->show();
+        $accou                             = M('salary_wages_month')->where($where)->limit("$page->firstRow","$page->listRows")->select();
 
-            $where['A.employee_member']     = trim($_POST['employee_member']);//编码
-            $where['A.nickname']            = trim($_POST['nickname']);//昵称
-            $where['A.status'] = 0;
-           //$where['grant_time']           = trim($_POST['grant_time']);
-            $where                          = array_filter($where);
-            if($_POST['grant_time']){//年月搜索
-
-                $month_time['datetime'] = date('Ym',strtotime($_POST['grant_time']));
-                $accou = M('salary_wages_month')->where($month_time)->find();
-                $where['B.id'] = $accou['attendance_id'];
-                $where['A.id'] = $accou['account_id'];
-                $account_r                      = M()->table('oa_account as A')->join('oa_salary_attendance as B on A.id=B.account_id')->where($where)->field('A.id as aid,A.employee_member,A.nickname,B.createtime,B.late1,B.late2,B.leave_absence,B.sick_leave,B.absenteeism,B.withdrawing')->order('B.id desc')->select();
-                $account_r .= $accou['datetime'];
-
-                $this->assign('list',$account_r);
-                $this->display();die;
-
-//            $this->error('时间查询暂时未开通!请使用其它查询！', U('Salary/salary_attendance'));die;
+        foreach($accou as $key => $val) {
+            $account['id']                 = $val['attendance_id'];
+            $account_r[$key]['attendance'] = M('salary_attendance')->where($account)->find();
+            $account_r[$key]['datetime']   = $val['datetime'];
+            $account_r[$key]['nickname']   = $val['user_name'];
+            $account_r[$key]['aid']        = $val['account_id'];
+            $acc['id']                     = $val['account_id'];
+            $oa_account                    = M('account')->where($acc)->field('employee_member')->find();
+            $cor['account_id']             = $val['account_id'];
+            $account_r[$key]['member']     = $oa_account['employee_member'];
+            $yea                           = M('salary_attendance')->where($cor)->field('year_leave')->select();
+            foreach($yea as $k => $v){
+                $account_r[$key]['year']  += $v['year_leave'];
             }
-            $count                          = M()->table('oa_account as A')->join('oa_salary_attendance as B on A.id=B.account_id')->where($where)->count();
-            $page                           = new Page($count,12);
-            $pages                          = $page->show();
-            $account_r                      = M()->table('oa_account as A')->join('oa_salary_attendance as B on A.id=B.account_id')->where($where)->field('A.id as aid,A.employee_member,A.nickname,B.createtime,B.late1,B.late2,B.leave_absence,B.sick_leave,B.absenteeism,B.withdrawing')->limit("$page->firstRow","$page->listRows")->order('B.id desc')->select();
-
-        }else{//默认列表结果
-            $count                          = M()->table('oa_account as A')->join('oa_salary_attendance as B on A.id=B.account_id')->count();
-            $page                           = new Page($count,12);
-            $pages                          = $page->show();
-            $account_r                      = M()->table('oa_account as A')->join('oa_salary_attendance as B on A.id=B.account_id')->field('A.id as aid,A.employee_member,A.nickname,B.createtime,B.late1,B.late2,B.leave_absence,B.sick_leave,B.absenteeism,B.withdrawing')->limit("$page->firstRow","$page->listRows")->order('B.id desc')->select();
-
         }
-        foreach($account_r as $key =>$val){
-            $time                  = $val['createtime'];//用户id
-            $time_Y                                 = date('Y',$time);
-            $time_M                                 = date('m',$time);
-            $time_D                                 = date('d',$time);
-            if($time_D < 10){
-                $time_M                             = $time_M-1;
-            }
-            $account_r[$key]['attendance_time'] = $time_Y.'-'.$time_M;
-        }
-
-//        print_r($account_r);die;
         $this->assign('list',$account_r);
         $this->assign('page',$pages);
         $this->display();
@@ -748,9 +728,17 @@ class SalaryController extends BaseController {
             $time_Y                                 = date('Y');
             $time_M                                 = date('m');
             $time_D                                 = date('d');
-            if($time_D < 10){
-                $time_M                             = '0'.($time_M-1);
+//            if($time_D < 10){
+//                $time_M                             = '0'.($time_M-1);
+//            }
+
+            if($time_D < 16){
+                $time_M = $time_M-1;
             }
+            if($time_D < 10){
+                $time_M                             = '0'.$time_M;
+            }
+
             $que['p.month']                         = $time_Y.$time_M ;//查询年月
             $user                                   = $this->query_score($que);//绩效增减
             $use1                                   = trim(str_replace(array('<font color="#999999">','</font>','无加扣分','<span class="red">','</span>','<span>','<font color="#ff9900">','未完成评分'),"",$user[0]['total_score_show']));//PDCA
@@ -975,8 +963,15 @@ class SalaryController extends BaseController {
             $time_Y                     = date('Y');
             $time_M                     = date('m');
             $time_D                     = date('d');
+//            if($time_D < 10){
+//                $time_M                 = $time_M-1;
+//            }
+
+            if($time_D < 16){
+                $time_M = $time_M-1;
+            }
             if($time_D < 10){
-                $time_M                 = $time_M-1;
+                $time_M                             = '0'.$time_M;
             }
             $datetime                   = $time_Y.$time_M ;//查询年月
         }

@@ -417,7 +417,9 @@ class AjaxController extends Controller {
             $add['absenteeism']         = code_number(trim($_POST['absenteeism']));//矿工
             $add['entry_data']          = trim($_POST['salary_date']);//离职天数
             $add['lowest_wage']         = code_number(trim($_POST['money']));//北京最低工资标准
+            $add['year_leave']          = code_number(trim($_POST['year_leave']));//北京最低工资标准;//年假
             $add['createtime']          = time();
+
             $withdrawing                = code_number(trim($_POST['withdrawing']));//传过来的总价格
             $account_r                  = M('salary_attendance')->field('id,status')->where($user)->order('id desc')->find();
             $salary                     = M('salary')->where($user)->order('id desc')->find();
@@ -826,8 +828,14 @@ class AjaxController extends Controller {
             $time_Y                     = date('Y');
             $time_M                     = date('m');
             $time_D                     = date('d');
+//            if($time_D < 10){
+//                $time_M                 = $time_M-1;
+//            }
+            if($time_D < 16){
+                $time_M = $time_M-1;
+            }
             if($time_D < 10){
-                $time_M                 = $time_M-1;
+                $time_M                             = '0'.$time_M;
             }
             $datetime                   = $time_Y.$time_M ;//查询年月
         }
