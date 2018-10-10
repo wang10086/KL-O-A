@@ -1,4 +1,5 @@
 <include file="Index:header2" />
+
 <script src="__HTML__/js/public.js?v=1.0.6" type="text/javascript"></script>
             <aside class="right-side">
                 <!-- Content Header (Page header) -->
@@ -195,7 +196,7 @@
                                             </foreach>
 
                                             <foreach name="sum" item="sum">
-                                            <tr class="excel_list_money2">
+                                            <tr class="excel_list_money2 salary_table_color01">
                                                 <td colspan="3" style="text-align: center;">{$sum['name']}</td>
                                                 <td>{$sum['department']}</td>
                                                 <td>&yen; {$sum['standard_salary']}</td>
@@ -461,22 +462,27 @@
         var m = $("table tr").index(this);
         excel_list_color();
         if(cum%2==1 || cun!==m){
-            $(this).css("background","#CC0033");
+            if(cum%2==1 && cun==m){
+                 $(this).css("background","#CC0033");
+            }else{
+                $(this).css("background","#CC0033");
+            }
             cun = m;
         }else{
             if(cun!==m){
                 $(this).css("background","#CC0033");
             }
         }
-
     });
 
-        var cont = 0;
-        var mun  = 0;
+
+    var cont = 0;
+    var mun  = 0;
     $('table tr th').click(function(){
         cont++;
         var index = $("table tr th").index(this);
         if(cont%2==1 || mun!==index){
+
             $("tr").each(function(){
                 $(this).children('td').css('background','none');
                 $(this).children('td:eq('+index+')').css('background',"rgba(0,0,255,0.3)");
