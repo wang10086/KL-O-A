@@ -128,8 +128,9 @@ class SalaryController extends BaseController {
 //                           $this->error('KPI暂未锁定!请锁定后查看信息！');
                            return 0;
                        }
-                   }else{
-                       $this->error('您的数据有误!请重新选择！');die;
+                   }
+                   else{
+                       return 0;
                    }
                }else{
                    return 0;
