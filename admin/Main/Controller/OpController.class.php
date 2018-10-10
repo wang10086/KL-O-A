@@ -890,6 +890,12 @@ class OpController extends BaseController {
                             }
                         }
 
+                        $record = array();
+                        $record['op_id']   = $opid;
+                        $record['optype']  = 4;
+                        $record['explain'] = '填写资源需求单';
+                        op_record($record);
+
                         $exe_user_id        = $info['exe_user_id'];
                         if (cookie('userid') != $info['exe_user_id']){
                             //发送系统消息
