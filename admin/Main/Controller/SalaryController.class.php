@@ -563,9 +563,6 @@ class SalaryController extends BaseController {
             $status                     = $wages_month[0]['status'];
         }else{
             if(!empty($archives)){
-                if(!is_numeric($archives)){
-                    $this->error('您的数据有误！请重新选择！');die;
-                }
                 $info                   = $this->salary_excel_sql($archives);//员工信息
                 $sum                    = $this->countmoney($archives,$info);//部门合计
                 $summoney               = $this->summoney($sum); //总合计
