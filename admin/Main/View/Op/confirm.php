@@ -161,7 +161,7 @@
             $(this).click(function () {
                 if(index == 1){
                     if (!group_id){
-                        alert('该项目未成团!');
+                        art.dialog.alert('该项目未成团','warning');
                          return;
                     }else {
                         if (op_kind == 60) {
@@ -328,6 +328,20 @@
         setTimeout("history.go(0)",1000);
 
     }
+
+    artDialog.alert = function (content, status) {
+        return artDialog({
+            id: 'Alert',
+            icon: status,
+            width:300,
+            height:120,
+            fixed: true,
+            lock: true,
+            time: 1,
+            content: content,
+            ok: true
+        });
+    };
 
     function upd_tcs_need(confirm_id,op_id){
         var confirm_id  = confirm_id;
