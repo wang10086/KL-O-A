@@ -74,14 +74,36 @@
                                     <h3 class="box-title">实际成团确认</h3>
                                 </div><!-- /.box-header -->
                                 <div class="box-body">
-                                
 									<?php if(!$confirm || !$upd_num || cookie('roleid')==10 || C('RBAC_SUPER_ADMIN')==cookie('username') ){ ?>
                                     <include file="confirm_edit" />
                                     <?php }else{ ?>
                                     <include file="confirm_read" />	
                                     <?php }?>
-                                    
                                 </div>
+                            </div>
+
+                            <div class="box box-warning">
+                                <div class="box-header">
+                                    <h3 class="box-title">资源需求单</h3>
+                                    <h3 class="box-title pull-right" style="font-weight:normal; color:#333333;">
+                                        <?php  if((rolemenu(array('Op/public_save'))  && ($op['create_user'] == cookie('userid'))) || $resource ){ ?>
+                                            <span id="res_but"><a href="javascript:;" onclick="hide_res_need()" style="color:#09F;">隐藏</a></span>
+                                        <?php  } ?>
+                                    </h3>
+                                </div>
+                                <div class="box-body" id="resource">
+                                    <?php if(!$jiesuan && ($op['create_user']==cookie('userid') || C('RBAC_SUPER_ADMIN')==cookie('username') || cookie('roleid')==10)){ ?>
+                                        <div class="form-group col-md-12 ml-12" id="res-need-or-not">
+                                            <h2 class="tcs_need_h2">资源需求</h2>
+                                            <input type="radio" name="need-tcs-or-not" value="0"  <?php if($rad==0){ echo 'checked';} ?>> &#8194;不需要 &#12288;&#12288;&#12288;
+                                            <input type="radio" name="need-tcs-or-not" value="1"  <?php if($rad==1){ echo 'checked';} ?>> &#8194;需要
+                                        </div>
+                                        <include file="op_res_need" />
+                                    <?php }else{ ?>
+                                        <include file="op_res_nread" />
+                                    <?php }?>
+                                    <div class="form-group">&nbsp;</div>
+                                </div><!-- /.box-body -->
                             </div>
 
                             <div class="box box-warning">
@@ -110,16 +132,77 @@
 
 <include file="Index:footer2" />
 
-<script>
+<script type="text/javascript">
 
     var price_kind = '';
-    var opid    = <?php echo $op['op_id']; ?>;
-    var fields  = <?php echo $fields; ?>
+    var opid        = <?php echo $op['op_id']; ?>;
+    var fields      = <?php echo $fields; ?>;
+    var group_id    = "<?php echo $op['group_id']; ?>";
+    var op_kind     = <?php echo $op_kind;?>;
+    var resource    = "<?php echo $resource['op_id']; ?>";
 
-        $(function(){
+    $(function(){
+        get_gpk();
 
-            get_gpk();
+        if (resource && op_kind != 60){
+            $('#res-need-or-not').html('');
+            $('#after_lession').html('');
+            $('#res_need_table').show();
+        }else if (resource && op_kind == 60){
+            $('#res-need-or-not').html('');
+            $('#after_lession').show();
+            $('#res_need_table').html('');
+        }else{
+            $('#custom').hide();
+            $('#handson').hide();
+        }
+
+        $('#res-need-or-not').find('ins').each(function (index,ele) {
+            $(this).click(function () {
+                if(index == 1){
+                    if (!group_id){
+                        alert('该项目未成团!');
+                         return;
+                    }else {
+                        if (op_kind == 60) {
+                            $('#after_lession').show();
+                            $('#res_need_table').html('');
+                        }else{
+                            $('#after_lession').html('');
+                            $('#res_need_table').show();
+                        }
+                    }
+
+                }else{
+                    $('#after_lession').hide();
+                    $('#res_need_table').hide();
+                }
+            })
         })
+
+        $('#is_custom').find('ins').each(function (index,ele) {
+            $(this).click(function () {
+                if(index == 1){
+                    $('#custom').hide();
+                    $('input[name="res_name"]').val('');
+                }else {
+                    $('#custom').show();
+                }
+            })
+        })
+
+        $('#is_handson').find('ins').each(function (index,ele) {
+            $(this).click(function () {
+                if(index == 1){
+                    $('#handson').hide();
+                    $('input[name="info[lession_price]"]').val('');
+                }else {
+                    $('#handson').show();
+                }
+            })
+        })
+
+    })
 
     function get_gpk(){
 
@@ -333,6 +416,54 @@
         return h+m+s;
     }
 
+    //物资需求单
+    function show_res_need(){
+        if (op_kind != 60){
+            $("#res_need_table").show();
+        }else{
+            $('#after_lession').show();
+        }
+        $('#res_but').html('<a href="javascript:;" onclick="hide_res_need()" style="color:#09F;">隐藏</a>');
+    }
+
+    function hide_res_need(){
+        if (op_kind != 60){
+            $("#res_need_table").hide();
+        }else{
+            $('#after_lession').hide();
+        }
+        $('#res_but').html('<a href="javascript:;" onclick="show_res_need()" style="color:#09F;">显示</a>');
+    }
+
+    //保存信息
+    function save(id,url){
+        $.ajax({
+            type: "POST",
+            url: url,
+            dataType:'json',
+            data: $('#'+id).serialize(),
+            success:function(data){
+                if(parseInt(data)>0){
+                    art.dialog.alert('保存成功','success');
+                }else{
+                    art.dialog.alert('保存失败','warning');
+                }
+            }
+        });
+
+        setTimeout("history.go(0)",1000);
+    }
+
+    //打印
+    function print_part(){
+        var op_kind = <?php echo $op_kind; ?>;
+        if (op_kind == 60){
+            document.body.innerHTML=document.getElementById('after_lession').innerHTML;
+        }else{
+            document.body.innerHTML=document.getElementById('res_need_table').innerHTML;
+        }
+        window.print();
+    }
 
 </script>
      

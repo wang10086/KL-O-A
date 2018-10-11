@@ -902,7 +902,7 @@ class OpController extends BaseController {
                             $uid     = cookie('userid');
                             $title   = '您有来自['.session('rolename').'--'.$info['ini_user_name'].']的资源需求单!';
                             $content = '项目编号: '.$opid;
-                            $url     = U('Op/plans_follow',array('opid'=>$info['op_id']));
+                            $url     = U('Op/res_feedback',array('opid'=>$info['op_id']));
                             $user    = '['.$exe_user_id.']';
                             send_msg($uid,$title,$content,$url,$user,'');
                         }
@@ -1058,6 +1058,24 @@ class OpController extends BaseController {
                     $record['optype']  = 4;
                     $record['explain'] = '填写项目模块信息';
                     op_record($record);
+                }
+            }
+
+            //保存资源配置回复信息
+            if ($opid && $savetype==15){
+                $res_id                 = I('res_id');
+                $info['feedback_time']  = NOW_TIME;
+                $where                  = array();
+                $where['id']            = $res_id;
+                $res = $op_res_db->where($where)->save($info);
+                if ($res){
+                    $record = array();
+                    $record['op_id']   = $opid;
+                    $record['optype']  = 4;
+                    $record['explain'] = '填写资源需求反馈信息';
+                    op_record($record);
+
+                    $num++;
                 }
             }
 
@@ -2331,7 +2349,26 @@ class OpController extends BaseController {
 			$this->display('confirm');
 		}
 	}
-	
+
+    // @@@NODE-3###res_feedback###资源配置情况反馈###
+    public function res_feedback(){
+        $op_id              = I('opid');
+        $op                 = M('op')->where(array('op_id'=>$op_id))->find();
+        $this->op           = $op;
+        $resource           = M('op_res')->where(array('op_id'=>$op_id))->find();
+        $this->op_kind      = $op['kind'];
+        $this->resource     = $resource;
+        $this->act_need     = C('ACT_NEED');
+        $this->task_field   = C('LES_FIELD');
+        if ($resource) {
+            $this->rad          = 1;
+            $this->task_fields  = explode(',',$resource['task_field']);
+            $this->act_needs    = explode(',',$resource['act_need']);
+            $this->men          = M('account')->field('id,nickname')->where(array('id'=>$resource['exe_user_id']))->find();
+        }
+
+        $this->display();
+    }
 	
 	
 	// @@@NODE-3###relpricelist###项目比价记录###
