@@ -158,11 +158,11 @@ class SalaryController extends BaseController {
            }
            $content['target']       = $count;
            $content['complete']     = $sum;
-           $content['total']        = ((int)($Total*100))/100;//保留两位小数
+           $content['total']        = round($Total,2);//保留两位小数
         }else{
-           $content['target']       = 0.00;
-           $content['complete']     = 0.00;
-           $content['total']        = 0.00;//保留两位小数
+           $content['target']       = '0.00';
+           $content['complete']     = '0.00';
+           $content['total']        = '0.00';//保留两位小数
        }
         return $content;
     }
@@ -773,13 +773,16 @@ class SalaryController extends BaseController {
             // 判断是否是业务人员
             $position_id['id']                      = $val['position_id'];
             $position                               = sql_query(1,'*','oa_position',$position_id,1,1);//职位
-            $strstr = $position[0]['position_name'];
+            $strstr                                 = $position[0]['position_name'];
 
-            if(strstr($strstr,'S')==false){
-                $user_info[$key]['Extract']['total']= $user_info[$key]['bonus'][0]['extract'];
-            }else{
-                $user_info[$key]['Extract']         = $this->salary_kpi_month($val['id'],$que['p.month']); //目标任务 完成 提成
+
+            $user_bonus                             = $user_info[$key]['bonus'][0]['extract'];//提成
+
+            if(strstr($strstr,'S')!==false){
+                $user_info[$key]['Extract']         = $this->salary_kpi_month($val['id'],$que['p.month']); //业务人员 目标任务 完成 提成
             }
+            $user_info[$key]['Extract']['total']    = $user_info[$key]['Extract']['total']+$user_bonus;//提成相加
+
             $extract                                = $user_info[$key]['Extract']['total'];
 
             $Year_end                               = ($user_info[$key]['bonus'][0]['annual_bonus'])/12;
@@ -850,7 +853,7 @@ class SalaryController extends BaseController {
             $user_info[$key]['real_wages']          = round(($user_info[$key]['salary'][0]['standard_salary']-$user_info[$key]['attendance'][0]['withdrawing']+$extract+$user_info[$key]['bonus'][0]['bonus']-$user_info[$key]['summoney']+$user_info[$key]['bonus'][0]['annual_bonus']-$user_info[$key]['yearend']+$user_info[$key]['subsidy'][0]['housing_subsidy']-$user_info[$key]['insurance_Total']-$counting-$user_info[$key]['labour']['Labour_money']+$user_info[$key]['Other']+$user_info[$key]['Achievements']['count_money']),2);
 
         }
-       
+        print_r($user_info[29]);die;
         return $user_info;
     }
 
