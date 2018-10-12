@@ -593,13 +593,13 @@ class SalaryController extends BaseController {
                         $info           = $this->arraysplit($wages_month);
                         $sum            = M('salary_departmen_count')->where('datetime='.$wages_month[0]['datetime'])->select();
                         $summoney       = M('salary_count_money')->where('datetime='.$wages_month[0]['datetime'])->find();
-                        $status         = $wages_month[0]['status'];
+                        $status         = 2;
                     }
                 }else{
                     $info               = $this->arraysplit($wages_month);
                     $sum                = M('salary_departmen_count')->where('datetime='.$wages_month[0]['datetime'])->select();
                     $summoney           = M('salary_count_money')->where('datetime='.$wages_month[0]['datetime'])->find();
-                    $status             = $wages_month[0]['status'];
+                    $status             = 3;
                 }
             }
         }
