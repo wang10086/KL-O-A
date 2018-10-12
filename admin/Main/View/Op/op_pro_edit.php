@@ -2,7 +2,7 @@
 <input type="hidden" name="dosubmint" value="1">
 <input type="hidden" name="opid" value="{$op.op_id}">
 <input type="hidden" name="savetype" value="10">
-<div class="form-group col-md-8" >
+<div class="form-group col-md-4" >
     <label>项目名称：</label><input type="text" name="info[project]"  value="{$op.project}" class="form-control" />
 </div>
 
@@ -64,6 +64,15 @@
         </foreach>
     </select>
                                             
+</div>
+
+<div class="form-group col-md-4">
+    <label>是否是内部地接</label>
+    <select  name="info[in_dijie]" class="form-control" required>
+        <option value="" disabled>--请选择--</option>
+        <option value="1" <?php if ($op['in_dijie'] ==1){echo 'selected';} ?> >是</option>：
+        <option value="2" <?php if ($op['in_dijie'] ==2 || !$op['in_dijie']){echo 'selected';} ?> >否</option>
+    </select>
 </div>
 
 <div class="form-group col-md-4">

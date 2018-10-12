@@ -268,6 +268,7 @@ class OpController extends BaseController {
 			$this->userlist    =  M('account')->where('`id`>3')->getField('id,nickname', true);
 			$this->rolelist    =  M('role')->where('`id`>10')->getField('id,role_name', true);
             $this->apply_to    = C('APPLY_TO');
+            $this->dijie_names = C('DIJIE_NAME');
 			$this->title('出团计划');
 			$this->display('plans');
 		}
