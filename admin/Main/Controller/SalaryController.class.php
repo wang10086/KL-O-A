@@ -603,6 +603,8 @@ class SalaryController extends BaseController {
                 }
             }
         }
+        $userid = $_SESSION['userid'];//用户id
+
         $this->assign('info',$info);//员工信息
         $this->assign('type',$archives);//状态
         $this->assign('sum',$sum);//部门合计
@@ -616,6 +618,7 @@ class SalaryController extends BaseController {
 
         $this->assign('time',$datetime);//表时间
         $this->assign('status',$status);//提交状态
+        $this->assign('userid',$userid);//提交状态
         $this->display();
     }
 

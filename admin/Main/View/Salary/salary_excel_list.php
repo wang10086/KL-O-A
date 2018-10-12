@@ -199,7 +199,7 @@
                                 <foreach name="sum" item="sum">
                                     <tr class="excel_list_money2">
                                         <td colspan="3" style="text-align: center;">{$sum['name']}</td>
-                                        <td>{$sum['department']}</td>
+                                        <td>{$status}++{$sum['department']}</td>
                                         <td>&yen; <?PHP echo sprintf("%.2f",$sum['standard_salary']);?></td>
                                         <td>&yen; <?PHP echo sprintf("%.2f",$sum['basic']);?></td>
                                         <td>&yen; <?php echo sprintf("%.2f",$sum['withdrawing']);?></td>
@@ -253,7 +253,7 @@
                     </div><!-- /.box-body -->
 
                     <div><br><br>
-                        <?php if(($status="1" || $status=="" || $status==null || $status==false ) && $userid==77){?>
+                        <?php if($status=1 && $userid==77){?>
                             <a  class="btn btn-info salary_excel1_submit" style="width:10em;margin-left:45em;">提交审核</a>
                         <?php }?>
                         <?php if($status=2 && $userid ==55){?>
