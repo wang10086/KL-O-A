@@ -199,7 +199,7 @@
                                 <foreach name="sum" item="sum">
                                     <tr class="excel_list_money2">
                                         <td colspan="3" style="text-align: center;">{$sum['name']}</td>
-                                        <td>{$status}++{$sum['department']}</td>
+                                        <td>{$sum['department']}</td>
                                         <td>&yen; <?PHP echo sprintf("%.2f",$sum['standard_salary']);?></td>
                                         <td>&yen; <?PHP echo sprintf("%.2f",$sum['basic']);?></td>
                                         <td>&yen; <?php echo sprintf("%.2f",$sum['withdrawing']);?></td>
