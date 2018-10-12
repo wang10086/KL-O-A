@@ -818,11 +818,7 @@ class AjaxController extends Controller {
 
     //保存提交审核数据
     public function Ajax_salary_details_add(){
-        if($_SESSION['userid']!==77){
-            $sum                        = 0;
-            $msg                        = "您没有权限提交数据!";
-            echo json_encode(array('sum' => $sum, 'msg' => $msg));die;
-        }
+       
         $datetime                       = trim($_POST['datetime']);//表数据时间
         if($datetime=="" || $datetime ==null || $datetime==false){
             $time_Y                     = date('Y');
