@@ -119,30 +119,31 @@
                                     <div class="btn-group" style="height:45em;width:200em;">
                                         <table class="table table-bordered dataTablev">
                                             <tr role="row" class="orders">
-                                                <th class="sorting" style="width:8em;background-color:#00acd6;">ID</th>
-                                                <th class="sorting" style="width:8em;background-color:#00acd6;">员工姓名</th>
-                                                <th class="sorting" style="width:8em;background-color:#00acd6;">岗位名称</th>
-                                                <th class="sorting" style="width:8em;background-color:#00acd6;">所属部门</th>
-                                                <th class="sorting" style="width:12em;background-color:#00acd6;">岗位薪酬标准</th>
-                                                <th class="sorting" style="width:12em;background-color:#00acd6;">其中基本工资标准</th>
-                                                <th class="sorting" style="width:8em;background-color:#00acd6;">考勤扣款</th>
-                                                <th class="sorting" style="width:12em;background-color:#00acd6;">其中绩效工资标准</th>
-                                                <th class="sorting" style="width:8em;background-color:#00acd6;">绩效增减</th>
-                                                <th class="sorting" style="width:8em;background-color:#00acd6;">业绩提成</th>
-                                                <th class="sorting" style="width:8em;background-color:#00acd6;">奖金</th>
-                                                <th class="sorting" style="width:8em;background-color:#00acd6;">住房补贴</th>
-                                                <th class="sorting" style="width:8em;background-color:#00acd6;">其他补款</th>
-                                                <th class="sorting" style="width:8em;background-color:#00acd6;">应发工资</th>
-                                                <th class="sorting" style="width:8em;background-color:#00acd6;">医疗保险</th>
-                                                <th class="sorting" style="width:8em;background-color:#00acd6;">养老保险</th>
-                                                <th class="sorting" style="width:8em;background-color:#00acd6;">失业保险</th>
-                                                <th class="sorting" style="width:8em;background-color:#00acd6;">公积金</th>
-                                                <th class="sorting" style="width:12em;background-color:#00acd6;">个人保险合计</th>
-                                                <th class="sorting" style="width:8em;background-color:#00acd6;">计税工资</th>
-                                                <th class="sorting" style="width:10em;background-color:#00acd6;">个人所得税</th>
-                                                <th class="sorting" style="width:8em;background-color:#00acd6;">税后扣款</th>
-                                                <th class="sorting" style="width:8em;background-color:#00acd6;">工会会费</th>
-                                                <th class="sorting" style="width:8em;background-color:#00acd6;">实发工资</th>
+                                                <th class="sorting" style="width:8em;background-color:#66CCFF;">ID</th>
+                                                <th class="sorting" style="width:8em;background-color:#66CCFF;">员工姓名</th>
+                                                <th class="sorting" style="width:8em;background-color:#66CCFF;">岗位名称</th>
+                                                <th class="sorting" style="width:8em;background-color:#66CCFF;">所属部门</th>
+                                                <th class="sorting" style="width:12em;background-color:#66CCFF;">岗位薪酬标准</th>
+                                                <th class="sorting" style="width:12em;background-color:#66CCFF;">其中基本工资标准</th>
+                                                <th class="sorting" style="width:8em;background-color:#66CCFF;">考勤扣款</th>
+                                                <th class="sorting" style="width:12em;background-color:#66CCFF;">其中绩效工资标准</th>
+                                                <th class="sorting" style="width:8em;background-color:#66CCFF;">绩效增减</th>
+                                                <th class="sorting" style="width:8em;background-color:#66CCFF;">业绩提成</th>
+                                                <th class="sorting" style="width:8em;background-color:#66CCFF;">奖金</th>
+                                                <th class="sorting" style="width:8em;background-color:#66CCFF;">住房补贴</th>
+                                                <th class="sorting" style="width:8em;background-color:#66CCFF;">其他补款</th>
+                                                <th class="sorting" style="width:8em;background-color:#66CCFF;">应发工资</th>
+                                                <th class="sorting" style="width:8em;background-color:#66CCFF;">医疗保险</th>
+                                                <th class="sorting" style="width:8em;background-color:#66CCFF;">养老保险</th>
+                                                <th class="sorting" style="width:8em;background-color:#66CCFF;">失业保险</th>
+                                                <th class="sorting" style="width:8em;background-color:#66CCFF;">公积金</th>
+                                                <th class="sorting" style="width:12em;background-color:#66CCFF;">个人保险合计</th>
+                                                <th class="sorting" style="width:8em;background-color:#66CCFF;">计税工资</th>
+                                                <th class="sorting" style="width:10em;background-color:#66CCFF;">个人所得税</th>
+                                                <th class="sorting" style="width:8em;background-color:#66CCFF;">税后扣款</th>
+                                                <th class="sorting" style="width:8em;background-color:#66CCFF;">工会会费</th>
+                                                <th class="sorting" style="width:8em;background-color:#66CCFF;">实发工资</th>
+
                                             </tr>
 
                                             <foreach name="info" item="info">
@@ -150,7 +151,7 @@
 
                                             <tr class="excel_list_money1">
                                                 <td>{$info['account']['id']}</td>
-                                                <td>{$info['account']['nickname']}</td>
+                                                <td style="color:#3399FF;">{$info['account']['nickname']}</td>
                                                 <td>{$info['posts'][0]['post_name']}</td>
                                                 <td>{$info['department'][0]['department']}</td>
 
@@ -196,7 +197,7 @@
                                             </foreach>
 
                                             <foreach name="sum" item="sum">
-                                            <tr class="excel_list_money2 salary_table_color01">
+                                            <tr class="excel_list_money2">
                                                 <td colspan="3" style="text-align: center;">{$sum['name']}</td>
                                                 <td>{$sum['department']}</td>
                                                 <td>&yen; {$sum['standard_salary']}</td>
@@ -448,11 +449,12 @@
         });
     });
     function excel_list_color(){
-        $(".excel_list_money1:even").css("background","#95BDD4");
-        $(".excel_list_money1:odd").css("background","lightskyblue");
-        $(".excel_list_money2:even").css("background","#95BDD4");
-        $(".excel_list_money2:odd").css("background","lightskyblue");
-        $('.excel_list_money3').css("background","#339900");
+        $('.excel_list_money3').css("background","#66CCFF");
+        $(".excel_list_money2:odd").css("background","#F8F8F8");
+        $(".excel_list_money2:even").css("background","#FFFFFF");
+        $(".excel_list_money1:odd").css("background","#F8F8F8");
+        $(".excel_list_money1:even").css("background","#FFFFFF");
+
     }
 
     var  cum = 0;
@@ -475,26 +477,51 @@
         }
     });
 
+        var cont    = 0;
+        var num     = 0;
+        $('table tr th').click(function(){
+            cont++;
+            var index = $("table tr th").index(this);
 
-    var cont = 0;
-    var mun  = 0;
-    $('table tr th').click(function(){
-        cont++;
-        var index = $("table tr th").index(this);
-        if(cont%2==1 || mun!==index){
+            if(cont%2==1 || num!==index){
 
-            $("tr").each(function(){
-                $(this).children('td').css('background','none');
-                $(this).children('td:eq('+index+')').css('background',"rgba(0,0,255,0.3)");
-            });
-            mun = index;
-        }else{
-            $("tr").each(function(){
-                $(this).children('td').css('background','none');
-            });
-        }
-    });
-
+                $("tr").each(function(){
+                    var clas =  $(this).prop('class');
+                    if(clas == 'excel_list_money2'){
+                        if(index>0){
+                            if(index ==1 || index == 2){
+                                num =null;
+                            }else{
+                                num = index-2;
+                            }
+                        }
+                    }else{
+                        if(clas == 'excel_list_money3'){
+                            if(index>0){
+                                if(index==1 || index==2 || index==3){
+                                    num=null;
+                                }else{
+                                    num = index-3;
+                                }
+                            }
+                        }else{
+                            num = index;
+                        }
+                    }
+                    $(this).children('td').css('background','none');
+                    $(this).children('td:eq('+num+')').css('background',"rgba(0,0,255,0.3)");
+                    if(cont%2==0 && mun==index){alert();
+                        $("tr").each(function(){
+                            $(this).children('td').css('background','none');
+                        });
+                    }
+                });
+            }else{
+                $("tr").each(function(){
+                    $(this).children('td').css('background','none');
+                });
+            }
+        });
 
 excel_list_color();
 </script>
