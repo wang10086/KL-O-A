@@ -705,6 +705,7 @@ class SalaryController extends BaseController {
             $list[$key]['Should']                                   = $val['Should_distributed'];
             $list[$key]['accumulation']                             = $val['accumulation_fund'];
             $list[$key]['labour']['Labour_money']                   = $val['Labour'];
+
         }
         return $list;
     }
