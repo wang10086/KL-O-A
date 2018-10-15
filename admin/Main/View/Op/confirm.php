@@ -86,7 +86,7 @@
                                 <div class="box-header">
                                     <h3 class="box-title">资源需求单</h3>
                                     <h3 class="box-title pull-right" style="font-weight:normal; color:#333333;">
-                                        <?php  if((rolemenu(array('Op/public_save'))  && ($op['create_user'] == cookie('userid'))) || $resource ){ ?>
+                                        <?php  if((rolemenu(array('Op/public_save')) && $op['group_id'] && ($op['create_user'] == cookie('userid'))) || $resource ){ ?>
                                             <span id="res_but"><a href="javascript:;" onclick="hide_res_need()" style="color:#09F;">隐藏</a></span>
                                         <?php  } ?>
                                     </h3>

@@ -541,6 +541,7 @@ class OpController extends BaseController {
         $this->reckon_mode    = C('RECKON_MODE');
 		$this->ages           = C('AGE_LIST');
         $this->guide          = $guide?$guide:$guide_old;
+        $this->dijie_names    = C('DIJIE_NAME');
 
         /*$this->service_type   = C('SERVICE_TYPE');
         $this->act_need       = C('ACT_NEED');
@@ -827,7 +828,7 @@ class OpController extends BaseController {
 			if($opid && $savetype==10 ){
 				
 				$op = M('op')->where(array('op_id'=>$opid))->find();
-				if($op['status']=='0' || cookie('roleid')==10) {
+				if($op['status']=='0' || cookie('roleid')==10 || C('RBAC_SUPER_ADMIN')==cookie('username')) {
                     //保存成团
                     $issave = M('op')->data($info)->where(array('op_id' => $opid))->save();
                     if ($issave) $num++;
@@ -2254,21 +2255,63 @@ class OpController extends BaseController {
                     $this->error('您已经修改过一次了,不能反复修改!');
                 }else{
                     $info['upd_num']    = 1;    //用来判断修改次数
-                    M('op_team_confirm')->data($info)->where(array('op_id'=>$opid))->save();
+                    $res = M('op_team_confirm')->data($info)->where(array('op_id'=>$opid))->save();
                 }
 			}else{
                 $op_info            = array();
                 $op_info['type']    = 1;
                 M('op')->where(array('op_id'=>$opid))->save($op_info);
-				M('op_team_confirm')->add($info);
+				$res = M('op_team_confirm')->add($info);
 			}
 
-			$infos = array();
-			$infos['group_id']	    = $info['group_id'];
-			$infos['status']		= 1;
-			M('op')->data($infos)->where(array('op_id'=>$opid))->save();
+			if ($res) {
+                //如果是内部地接, 生成一个新地接团
+                if ($op['in_dijie'] == 1) {
+                    $new_op             = array();
+                    $new_op['project']  = '【地接团】'.$op['project'];
+                    $new_op['op_id']    = opid();
+                    $groupid            = $op['dijie_name'].date('Ymd',time());
+                    //团号信息
+                    $count_groupids     = M('op')->where(array('group_id'=>array('like','%'.$groupid.'%')))->count();
+                    $new_op['group_id'] = $count_groupids?$groupid.'-'.$count_groupids:$groupid;
+                    $new_op['number']       = $op['number'];
+                    $new_op['departure']    = $op['departure'];
+                    $new_op['days']         = $op['days'];
+                    $new_op['destination']  = $op['destination'];
+                    $new_op['destination']  = NOW_TIME;
+                    $new_op['status']       = 1; //已成团
+                    $new_op['context']      = '地接项目';
+                    $new_op['create_user']  = C('DIJIE_CREATE_USER')[$op['dijie_name']];
+                    $new_op['create_user_name'] = M('account')->where(array('id'=>$new_op['create_user']))->getField('nickname');
+                    $new_op['kind']         = $op['kind'];
+                    $new_op['sale_user']    = $op['sale_user'];
+                    $group                  = M('op')->where(array('op_id'=>$opid))->getField('group_id');
+                    $group                  = strtoupper(substr($group,0,4));
+                    $arr_group              = array('JQXN','JQXW','JWYW');
+                    if (in_array($group,$arr_group)){
+                        $new_op['customer'] = '北京总部';
+                    }else{
+                        $new_op['customer'] = C('DIJIE_NAME')[$group];
+                    }
+                    $new_op['']         = $op[''];
+                    $new_op['']         = $op[''];
 
-            //给教务组长 roleid  102
+                    //var_dump($new_op);die;
+
+
+                }
+                $infos = array();
+                $infos['group_id']	    = $info['group_id'];
+                $infos['status']		= 1;
+                M('op')->data($infos)->where(array('op_id'=>$opid))->save();
+
+                $record                 = array();
+                $record['op_id']        = $opid;
+                $record['optype']       = 4;
+                $record['explain']      = '填写成团确认信息';
+                op_record($record);
+
+                //给教务组长 roleid  102
                 $uid     = cookie('userid');
                 $title   = '您有来自'.$op['create_user_name'].'的团号为['.$info['group_id'].']的团待安排专家辅导员!';
                 $content = '项目编号:'.$op['op_id'].';团号:'.$info['group_id'].';请登录"辅导员/教师、专家管理系统完成相关操作(如其他同事已完成操作,请忽略)!"';
@@ -2277,8 +2320,10 @@ class OpController extends BaseController {
                 $roleid  = 102; //教务组长
                 send_msg($uid,$title,$content,$url,$user,$roleid);
 
-			$this->success('保存成功！');
-		
+                $this->success('保存成功！');
+            }else{
+                $this->error('保存信息失败');
+            }
 		}else{
 
             $this->op		    = $op;
