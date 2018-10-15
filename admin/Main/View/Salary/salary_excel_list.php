@@ -165,7 +165,7 @@
                                         <td>&yen; <?PHP echo sprintf("%.2f",$info['bonus'][0]['bonus']);?></td>
                                         <td>&yen; <?PHP echo sprintf("%.2f",$info['subsidy'][0]['housing_subsidy']);?></td>
                                         <td>&yen; <?PHP echo sprintf("%.2f",$info['Other']);?></td>
-                                        <td>&yen; <?PHP echo sprintf("%.2f",$info['Should']);?></td>
+                                        <td>&yen; {$info['Should']}</td>
                                         <td>&yen; <?PHP echo sprintf("%.3f",($info['insurance'][0]['medical_care_base']*$info['insurance'][0]['medical_care_ratio']+$info['insurance'][0]['big_price']));?></td>
                                         <td>&yen; <?PHP echo sprintf("%.3f",($info['insurance'][0]['pension_base']*$info['insurance'][0]['pension_ratio']));?></td>
                                         <td>&yen; <?PHP echo sprintf("%.3f",($info['insurance'][0]['unemployment_base']*$info['insurance'][0]['unemployment_ratio']));?></td>
