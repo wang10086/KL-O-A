@@ -703,6 +703,8 @@ class SalaryController extends BaseController {
             $list[$key]['Achievements']['show_qa_score']            = $val['show_qa_score'];
             $list[$key]['Achievements']['count_money']              = $val['Achievements_withdrawing'];
             $list[$key]['Should']                                   = $val['Should_distributed'];
+            $list[$key]['accumulation']                             = $val['accumulation_fund'];
+            $list[$key]['labour']['Labour_money']                   = $val['Labour'];
         }
         return $list;
     }
