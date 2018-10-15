@@ -818,6 +818,13 @@ class AjaxController extends Controller {
 
     //保存提交审核数据
     public function Ajax_salary_details_add(){
+        if($_SESSION['userid']=='77'){
+
+        }else{
+            $sum                            = 0;
+            $msg                            = "您的权限不足!请联系管理员！";
+            echo json_encode(array('sum' => $sum, 'msg' => $msg));die;
+        }
         $datetime                       = trim($_POST['datetime']);//表数据时间
         if($datetime=="" || $datetime ==null || $datetime==false){
             $time_Y                     = date('Y');
@@ -828,11 +835,12 @@ class AjaxController extends Controller {
 //            }
             if($time_D < 16){
                 $time_M = $time_M-1;
+                if($time_M < 10) {
+                    $datetime                    = $time_Y.'0'.$time_M;//查询年月
+                }else{
+                    $datetime                    = $time_Y.$time_M;//查询年月
+                }
             }
-            if($time_D < 10){
-                $time_M                             = '0'.$time_M;
-            }
-            $datetime                   = $time_Y.$time_M ;//查询年月
         }
         $content                        = trim($_POST['content']);//去除左右空字符 提交申请表数据
         $coutdepartment                 = trim($_POST['coutdepartment']);//去除左右空字符 提交申请表部门数据
@@ -926,7 +934,8 @@ class AjaxController extends Controller {
      * 提交数据 / 批准
      */
     public function Ajax_salary_details_upgrade(){
-        if($_SESSION['userid']!==11 ||$_SESSION['userid']!==55){
+        if($_SESSION['userid']=='11' ||$_SESSION['userid']=='55' ){
+        }else{
             $sum                            = 0;
             $msg                            = "您的权限不足!请联系管理员！";
             echo json_encode(array('sum' => $sum, 'msg' => $msg));die;
@@ -966,10 +975,13 @@ class AjaxController extends Controller {
         $count_money_id                     = trim($_POST['count_money_id']);
         $status ['status']                  = trim($_POST['status']);
         array_pop($wages_month_id);array_pop($departmen_id);
-        if($_SESSION['userid'] !==11 || $_SESSION['userid'] !==55){
-            $this->error('您的权限不足！请联系管理员！');die;
-        }
+        if($_SESSION['userid'] == '11' || $_SESSION['userid'] == '55'){
 
+        }else{
+            $sum                            = 0;
+            $msg                            = "您的权限不足！请联系管理员！";
+            echo json_encode(array('sum' => $sum, 'msg' => $msg));die;
+        }
         foreach($wages_month_id as $key =>$val ){
             $id ['id']                      = $val;
             $wages_month_del                = M('salary_wages_month')->where($id)->delete();
@@ -986,7 +998,7 @@ class AjaxController extends Controller {
             echo json_encode(array('sum' => $sum, 'msg' => $msg));die;
         }else{
             $sum                            = 0;
-            $msg                            = "驳回失败!";
+            $msg                            = "驳回失败!".$count_money_id;
             echo json_encode(array('sum' => $sum, 'msg' => $msg));die;
         }
 

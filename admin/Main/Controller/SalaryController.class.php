@@ -596,6 +596,7 @@ class SalaryController extends BaseController {
                         $status         = 2;
                     }
                 }else{
+
                     $info               = $this->arraysplit($wages_month);
                     $sum                = M('salary_departmen_count')->where('datetime='.$wages_month[0]['datetime'])->select();
                     $summoney           = M('salary_count_money')->where('datetime='.$wages_month[0]['datetime'])->find();
@@ -679,7 +680,6 @@ class SalaryController extends BaseController {
      */
     private function salary_excel_sql($archives){
 
-        $where['status']                            = 0;
         $where['archives']                          = $archives;
         if($archives==null || $archives==false){
             unset($where['archives']);
@@ -747,25 +747,28 @@ class SalaryController extends BaseController {
 
             if($time_D < 16){
                 $time_M = $time_M-1;
+                if($time_M < 10) {
+                    $que['p.month']                    = $time_Y.'0'.$time_M;//查询年月
+                }else{
+                    $que['p.month']                    = $time_Y.$time_M;//查询年月
+                }
             }
-            if($time_D < 10){
-                $que['p.month']                    = $time_Y.'0'.$time_M;//查询年月
-            }else{
-                $que['p.month']                    = $time_Y.$time_M;//查询年月
-            }
-
-            $que['p.month']                         = $time_Y.'0'.$time_M ;//查询年月
             $user                                   = $this->query_score($que);//绩效增减
+
             $use1                                   = trim(str_replace(array('<font color="#999999">','</font>','无加扣分','<span class="red">','</span>','<span>','<font color="#ff9900">','未完成评分'),"",$user[0]['total_score_show']));//PDCA
             $use2                                   = trim(str_replace(array('<font color="#999999">','</font>','无加扣分','<span class="red">','</span>','<span>','<font color="#ff9900">','未完成评分'),"",$user[0]['show_qa_score']));//品质检查
             $use3                                   = trim(str_replace(array('<font color="#999999">','</font>','无加扣分','<span class="red">','</span>','<span>','<font color="#ff9900">','未完成评分'),"",$user[0]['total_kpi_score']));//KPI
             $money                                  = $user_info[$key]['salary'][0]['standard_salary']/10*$user_info[$key]['salary'][0]['performance_salary'];//绩效金额
             $branch                                 = 100;//给总共100分
 
+            if($val['formal']==2 || $val['formal']==4) {
+                $use1 = 0;
+            }
             $f = $use1+$use2+$use3;//获得总分
+
             if(substr($f,0,1)=='-'){
                 $user_info[$key]['Achievements']['count_money'] = (substr($f,0,1)).(round(($money/$branch*(substr($f,1))),2));
-            }elseif($f < 0){
+            }else{
                 $user_info[$key]['Achievements']['count_money'] = (substr($f,0,1)).(round(($money/$branch*(substr($f,1))),2));
             }
 
@@ -860,7 +863,6 @@ class SalaryController extends BaseController {
      * countmoney 部门合计
      */
     private function countmoney($archives,$list){
-        $where['status']                                    = 0;
         $where['archives']                                  = $archives;
         $where = array_filter($where);
         $info1                                              =  M('account')->where($where)->group('departmentid')->order('employee_member ASC')->select();//个人数据
@@ -986,11 +988,12 @@ class SalaryController extends BaseController {
 
             if($time_D < 16){
                 $time_M = $time_M-1;
+                if($time_M < 10) {
+                    $datetime                    = $time_Y.'0'.$time_M;//查询年月
+                }else{
+                    $datetime                    = $time_Y.$time_M;//查询年月
+                }
             }
-            if($time_D < 10){
-                $time_M                             = '0'.$time_M;
-            }
-            $datetime                   = $time_Y.$time_M ;//查询年月
         }
         $setTitle                           = $datetime.'工资发放表';
 

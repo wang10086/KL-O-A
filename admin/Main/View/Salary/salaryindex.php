@@ -137,15 +137,11 @@
         return s < 10 ? '0' + s : s;
     }
     function Atime(m,d){
-        if(d <= 10){
-            return m-1;
-        }else{
-            if(d <= 15){
-                return m-1;
-            }
-            return m;
-        }
 
+        if(d < 16){
+            m = m-1;
+                return  m;//查询年月
+        }
     }
    $('.salary_moduser1').click(function(){
        var myDate       = new Date();

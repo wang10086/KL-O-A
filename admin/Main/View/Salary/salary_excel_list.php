@@ -350,7 +350,6 @@
             departmen_id +=txt+',';
         });
         var count_money_id = $('.list_salary_detail3').text();
-
         $.ajax({
             type: "POST",
             url:  "index.php?m=Main&c=Ajax&a=Ajax_salary_details_upgrade",
