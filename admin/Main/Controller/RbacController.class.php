@@ -176,6 +176,7 @@ class RbacController extends BaseController {
                     $this->error('查无此人！', U('Rbac/index'));
                 }
             }
+
             $this->assign('department',$department);
             $this->display('adduser');
         }

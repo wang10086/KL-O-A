@@ -468,7 +468,11 @@
                             <a href="javascript:;" onclick="displaynone()">
                                 <i class="fa fa-sitemap"></i>
                                 <span>人力资源</span>
-                                <i class="fa fa-angle-left pull-right"></i>
+                                <?php if($salary_datetime){ ?>
+                                    <small class="badge pull-right bg-red" style="margin-right:6px;">{$salary_datetime}</small>
+                                <?php }else{ ?>
+                                    <i class="fa fa-angle-left pull-right"></i>
+                                <?php } ?>
                             </a>
                             <ul class="treeview-menu">
 

@@ -461,6 +461,44 @@ class BaseController extends Controller {
         return $str;
     }
 
+    public function salary_datetime(){
+        if($_SESSION['userid']==11 ||$_SESSION['userid']==55 || $_SESSION['userid']==77){//判断人员
+
+            $time_Y                                 = date('Y');
+            $time_M                                 = date('m');
+            $time_D                                 = date('d');
+            if($time_D < 16){
+                $time_M = $time_M-1;
+                if($time_M < 10) {
+                    $que['datetime']                    = $time_Y.'0'.$time_M;//查询年月
+                }else{
+                    $que['datetime']                    = $time_Y.$time_M;//查询年月
+                }
+            }
+            switch ($_SESSION['userid'])
+            {
+                case 77:
+                    $money = M('salary_count_money')->where($que)->count();
+                    if(!$money){
+                        $count = 1;
+                    }
+                    return $count;$_SESSION['salary_satus'] = $count;break;
+                case 11:
+                    $money = M('salary_count_money')->where('status=3')->count();
+                    if(!$money){
+                        $count = $money;
+                    }
+                    return $count;$_SESSION['salary_satus'] = $count;break;
+                case 55:
+                    $money = M('salary_count_money')->where('status=3')->count();
+                    if(!$money){
+                        $count = $money;
+                    }
+                    return $count; $_SESSION['salary_satus'] = $count; break;
+            }
+        }
+    }
+
 
 }
 

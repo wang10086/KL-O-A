@@ -7,8 +7,8 @@ use Sys\P;
 
 // @@@NODE-2###Index###系统登录###
 class IndexController extends BaseController {
-   
-   
+
+
     // @@@NODE-3###index###系统首页###
     public function index(){
 		
@@ -19,6 +19,7 @@ class IndexController extends BaseController {
 		$this->sum_product  = M('op')->where("`status`= 1")->count();
 		$this->sum_project  = M('op')->count();
 		$this->sum_audit    = $this->_sum_audit;
+        $this->assign('salary_datetime',$this->salary_datetime());//人力资源
 		$this->sum_plans    = M('op')->where("`departure` >= '$startday' and `departure`<= '$endday' and `status`= 1")->count();
 		
 		//获取公告

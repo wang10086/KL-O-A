@@ -978,6 +978,12 @@ class AjaxController extends Controller {
 
         foreach($wages_month_id as $key =>$val ){
             $id ['id']                      = $val;
+            $wages_query =  M('salary_wages_month')->where($id)->find();
+            if($wages_query){
+                $att['id'] =  $wages_query['attendance_id'];
+                $stat['status'] =1;
+                $attend = M('salary_attendance')->where($att)->save($stat);
+            }
             $wages_month_del                = M('salary_wages_month')->where($id)->delete();
         }
 

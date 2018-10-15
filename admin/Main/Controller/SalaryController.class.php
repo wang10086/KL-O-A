@@ -6,45 +6,6 @@ ulib('Page');
 use Sys\Page;
 class SalaryController extends BaseController {
 
-
-//    public function salary_datetime(){
-//        if($_SESSION['userid']==11 ||$_SESSION['userid']==55 || $_SESSION['userid']==77){//判断人员
-//
-//            $time_Y                                 = date('Y');
-//            $time_M                                 = date('m');
-//            $time_D                                 = date('d');
-//            if($time_D < 16){
-//                $time_M = $time_M-1;
-//                if($time_M < 10) {
-//                    $que['datetime']                    = $time_Y.'0'.$time_M;//查询年月
-//                }else{
-//                    $que['datetime']                    = $time_Y.$time_M;//查询年月
-//                }
-//            }
-//            switch ($_SESSION['userid'])
-//            {
-//                case 77:
-//                    $money = M('salary_count_money')->where($que)->count();
-//                    if(!$money){
-//                        $count = 1;
-//                    }
-//                     return $count;break;
-//                case 11:
-//                    $money = M('salary_count_money')->where('status=3')->count();
-//                    if(!$money){
-//                        $count = $money;
-//                    }
-//                    return $count;break;
-//                case 55:
-//                    $money = M('salary_count_money')->where('status=3')->count();
-//                    if(!$money){
-//                        $count = $money;
-//                    }
-//                    return $count;  break;
-//            }
-//        }
-//    }
-
     /**
      * @salaryindex 工资列表
      *
@@ -300,6 +261,7 @@ class SalaryController extends BaseController {
                 $account_r[$key]['year']  += $v['year_leave'];
             }
         }
+
         $this->assign('list',$account_r);
         $this->assign('page',$pages);
         $this->display();
@@ -495,6 +457,7 @@ class SalaryController extends BaseController {
 //                print_r($account_r);die;
 
         }
+
         $this->assign('type',$type);//数据
         $this->assign('department',query_department());//部门
         $this->assign('posts',query_posts());//岗位
@@ -558,6 +521,7 @@ class SalaryController extends BaseController {
             $this->pages	= $pagecount>P::PAGE_SIZE ? $page->show():'';
 
             //$this->lists    = $db->limit($page->firstRow,$page->listRows)->select();
+
             $this->lists    = $db->select();
             $this->display();
         }
@@ -796,6 +760,7 @@ class SalaryController extends BaseController {
                     $que['p.month']                    = $time_Y.$time_M;//查询年月
                 }
             }
+
             $user                                   = $this->query_score($que);//绩效增减
 
             $use1                                   = trim(str_replace(array('<font color="#999999">','</font>','无加扣分','<span class="red">','</span>','<span>','<font color="#ff9900">','未完成评分'),"",$user[0]['total_score_show']));//PDCA
@@ -804,8 +769,8 @@ class SalaryController extends BaseController {
             $money                                  = $user_info[$key]['salary'][0]['standard_salary']/10*$user_info[$key]['salary'][0]['performance_salary'];//绩效金额
             $branch                                 = 100;//给总共100分
 
-            if($val['formal']==2 || $val['formal']==4) {
-                $use1 = 0;
+            if($val['formal']==0 || $val['formal']==4) {
+                $use3 = 0;
             }
             $f = $use1+$use2+$use3;//获得总分
 
@@ -899,7 +864,6 @@ class SalaryController extends BaseController {
             $user_info[$key]['real_wages']          = round(($user_info[$key]['salary'][0]['standard_salary']-$user_info[$key]['attendance'][0]['withdrawing']+$extract+$user_info[$key]['bonus'][0]['bonus']-$user_info[$key]['summoney']+$user_info[$key]['bonus'][0]['annual_bonus']-$user_info[$key]['yearend']+$user_info[$key]['subsidy'][0]['housing_subsidy']-$user_info[$key]['insurance_Total']-$counting-$user_info[$key]['labour']['Labour_money']+$user_info[$key]['Other']+$user_info[$key]['Achievements']['count_money']),2);
 
         }
-//        print_r($user_info[100]['Should']);die;
         return $user_info;
     }
 
