@@ -40,8 +40,8 @@
                         <lebal class="upload-lebal">所属部门<span></span></lebal>
                         <!--<span class="lebal-span" style="margin-right: 6px"><input type="checkbox" id="departmentcheckbox"> &nbsp;全选</span>-->
                         <foreach name="department" key="k" item="v">
-                            <!--<span class="lebal-span"><input type="checkbox" value="{$k}" name="department[]" class="departmentcheckbox"> &nbsp;{$v}</span>-->
-                            <span class="lebal-span"><input type="radio" value="{$k}" name="department[]" class="departmentcheckbox" <?php if ($departmentid == $k) {echo 'checked';} ?>> &nbsp;{$v}</span>
+                            <span class="lebal-span"><input type="checkbox" value="{$k}" name="department[]" class="departmentcheckbox"> &nbsp;{$v}</span>
+                            <!--<span class="lebal-span"><input type="radio" value="{$k}" name="department[]" class="departmentcheckbox" <?php /*if ($departmentid == $k) {echo 'checked';} */?>> &nbsp;{$v}</span>-->
                         </foreach>
                     </div>
 
@@ -174,9 +174,19 @@
             reload();
 
             $('#postid').html('');
+            var departmentids = '';
             $('#departmentid').find('ins').each(function(index, element) {
                 $(this).click(function(){
-                    var departmentid = $(this).prev().val();
+                    var departmentid = '['+$(this).prev().val()+']';
+                    alert(departmentid);
+                    var reg = RegExp(/departmentid,/);
+                    if (departmentids.match(departmentid)) {
+                        alert('in');
+                        alert(departmentids);
+                    }else{
+                        departmentids += '['+$(this).prev().val()+'],';
+                        alert('out');
+                    }
                    $.ajax({
                        type: 'POST',
                        url: "{:U('Ajax/get_posts')}",
