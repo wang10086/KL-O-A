@@ -256,10 +256,10 @@
                         <?php if($status==1 && $userid== 77){?>
                             <a  class="btn btn-info salary_excel1_submit" style="width:10em;margin-left:45em;">提交审核</a>
                         <?php }?>
-                        <?php if($status==2 && $userid == 55){?>
+<!--                        --><?php //if($status==2 && $userid == 55){?>
                             <a  class="btn btn-info salary_excel1_submit1" style="width:10em;margin-left:45em;">提交批准</a>
                             <a  class="btn btn-info salary_excel1_submit2" style="width:10em;">驳回</a>
-                        <?php }?>
+<!--                        --><?php //}?>
                         <?php if($status==3 && $userid == 11){?>
                             <a  class="btn btn-info salary_excel1_submit3" style="width:10em;margin-left:45em;">批准</a>
                             <a  class="btn btn-info salary_excel1_submit2" style="width:10em;">驳回</a>
