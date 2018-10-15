@@ -975,13 +975,7 @@ class AjaxController extends Controller {
         $count_money_id                     = trim($_POST['count_money_id']);
         $status ['status']                  = trim($_POST['status']);
         array_pop($wages_month_id);array_pop($departmen_id);
-        if($_SESSION['userid'] == '11' || $_SESSION['userid'] == '55'){
-
-        }else{
-            $sum                            = 0;
-            $msg                            = "您的权限不足！请联系管理员！";
-            echo json_encode(array('sum' => $sum, 'msg' => $msg));die;
-        }
+       
         foreach($wages_month_id as $key =>$val ){
             $id ['id']                      = $val;
             $wages_month_del                = M('salary_wages_month')->where($id)->delete();

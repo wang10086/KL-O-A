@@ -6,6 +6,37 @@ ulib('Page');
 use Sys\Page;
 class SalaryController extends BaseController {
 
+
+//    public function salary_datetime(){
+//        if($_SESSION['userid']==11 ||$_SESSION['userid']==55 || $_SESSION['userid']==77){//判断人员
+//
+//            $time_Y                                 = date('Y');
+//            $time_M                                 = date('m');
+//            $time_D                                 = date('d');
+//            if($time_D < 16){
+//                $time_M = $time_M-1;
+//                if($time_M < 10) {
+//                    $que['datetime']                    = $time_Y.'0'.$time_M;//查询年月
+//                }else{
+//                    $que['datetime']                    = $time_Y.$time_M;//查询年月
+//                }
+//            }
+//
+//            if($_SESSION['userid']==77){//人事 是否有
+//                $money = M('salary_count_money')->where($que)->count();
+//                if(!$money){
+//                    $count = 1;
+//                }
+//            }elseif(){
+//
+//            }
+//
+//
+//        }
+//
+//
+//}
+
     /**
      * @salaryindex 工资列表
      *
