@@ -482,19 +482,24 @@ class BaseController extends Controller {
                     if(!$money){
                         $count = 1;
                     }
-                    return $count;$_SESSION['salary_satus'] = $count;break;
+
+                    $_SESSION['salary_satus'] = $count;
+                    return $count;break;
                 case 11:
                     $money = M('salary_count_money')->where('status=3')->count();
                     if(!$money){
                         $count = $money;
                     }
-                    return $count;$_SESSION['salary_satus'] = $count;break;
+                    $_SESSION['salary_satus'] = $count;
+
+                    return $count;break;
                 case 55:
                     $money = M('salary_count_money')->where('status=3')->count();
                     if(!$money){
                         $count = $money;
                     }
-                    return $count; $_SESSION['salary_satus'] = $count; break;
+                    $_SESSION['salary_satus'] = $count;
+                    return $count;  break;
             }
         }
     }
