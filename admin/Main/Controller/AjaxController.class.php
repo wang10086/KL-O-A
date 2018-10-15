@@ -921,6 +921,7 @@ class AjaxController extends Controller {
         $save['real_wages']         = $tol[20];$save['datetime']          = $datetime;$save['createtime']  = time();   $save['status']         = 2;
         $money = M('salary_count_money')->add($save);
         if($money){
+            $_SESSION['salary_satus'] = '';
             $sum                    = 1;
             $msg                    = "提交审核成功!";
             echo json_encode(array('sum' => $sum, 'msg' => $msg));die;
@@ -957,6 +958,7 @@ class AjaxController extends Controller {
         $count_money                        = M('salary_count_money')->where('id='.$count_money_id)->save($status);
         if($count_money){
             $sum                            = 1;
+            $_SESSION['salary_satus']       = '';
             $msg                            = "提交批准成功!";
             echo json_encode(array('sum' => $sum, 'msg' => $msg));die;
         }else{
