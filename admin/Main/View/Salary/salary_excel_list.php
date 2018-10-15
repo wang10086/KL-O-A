@@ -157,7 +157,7 @@
 
                                         <td>&yen; {$info['salary'][0]['standard_salary']}</td>
                                         <td>&yen; <?PHP echo sprintf("%.2f",($info['salary'][0]['standard_salary']/10*$info['salary'][0]['basic_salary']));?></td>
-                                        <td>&yen;<?php if($info['attendance'][0]['withdrawing']==""){echo "0.00";}else{echo $info['attendance'][0]['withdrawing'];}?></td>
+                                        <td>&yen; <?php echo sprintf("%.2f",($info['attendance'][0]['withdrawing']));?></td>
                                         <td>&yen; <?PHP echo sprintf("%.2f",($info['salary'][0]['standard_salary']/10*$info['salary'][0]['performance_salary']));?></td>
 
                                         <td>&yen; <?PHP echo sprintf("%.2f",$info['Achievements']['count_money']);?></td>

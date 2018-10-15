@@ -21,21 +21,29 @@ class SalaryController extends BaseController {
 //                    $que['datetime']                    = $time_Y.$time_M;//查询年月
 //                }
 //            }
-//
-//            if($_SESSION['userid']==77){//人事 是否有
-//                $money = M('salary_count_money')->where($que)->count();
-//                if(!$money){
-//                    $count = 1;
-//                }
-//            }elseif(){
-//
+//            switch ($_SESSION['userid'])
+//            {
+//                case 77:
+//                    $money = M('salary_count_money')->where($que)->count();
+//                    if(!$money){
+//                        $count = 1;
+//                    }
+//                     return $count;break;
+//                case 11:
+//                    $money = M('salary_count_money')->where('status=3')->count();
+//                    if(!$money){
+//                        $count = $money;
+//                    }
+//                    return $count;break;
+//                case 55:
+//                    $money = M('salary_count_money')->where('status=3')->count();
+//                    if(!$money){
+//                        $count = $money;
+//                    }
+//                    return $count;  break;
 //            }
-//
-//
 //        }
-//
-//
-//}
+//    }
 
     /**
      * @salaryindex 工资列表
