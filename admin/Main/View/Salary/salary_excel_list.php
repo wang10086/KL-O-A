@@ -108,11 +108,12 @@
                     </div><!-- /.box-header --><br>
                     <div class="box-body" style="height:45em;width:110em float:left;overflow:auto;">
                         <div class="btn-group" id="catfont" >
+<!--                            'month'=> $count['datetime']-->
                             <a href="{:U('Salary/salary_excel_list')}" class="btn <?php if($type=="" || $type==0){ echo 'btn-info';}else{ echo 'btn-default';} ?>">所有</a>
-                            <a href="{:U('Salary/salary_excel_list',array('archives'=>1,'month'=> $monthly))}" class="btn <?php if($type==1){ echo 'btn-info';}else{ echo 'btn-default';} ?>">中心</a>
-                            <a href="{:U('Salary/salary_excel_list',array('archives'=>2,'month'=> $monthly))}" class="btn <?php if($type==2){ echo 'btn-info';}else{ echo 'btn-default';} ?>">科旅</a>
-                            <a href="{:U('Salary/salary_excel_list',array('archives'=>3,'month'=> $monthly))}" class="btn <?php if($type==3){ echo 'btn-info';}else{ echo 'btn-default';} ?>">科行</a>
-                            <a href="{:U('Salary/salary_excel_list',array('archives'=>4,'month'=> $monthly))}" class="btn <?php if($type==4){ echo 'btn-info';}else{ echo 'btn-default';} ?>">行管局</a>
+                            <a href="{:U('Salary/salary_excel_list',array('archives'=>1,'month'=>$count['datetime']))}" class="btn <?php if($type==1){ echo 'btn-info';}else{ echo 'btn-default';} ?>">中心</a>
+                            <a href="{:U('Salary/salary_excel_list',array('archives'=>2,'month'=>$count['datetime']))}" class="btn <?php if($type==2){ echo 'btn-info';}else{ echo 'btn-default';} ?>">科旅</a>
+                            <a href="{:U('Salary/salary_excel_list',array('archives'=>3,'month'=>$count['datetime']))}" class="btn <?php if($type==3){ echo 'btn-info';}else{ echo 'btn-default';} ?>">科行</a>
+                            <a href="{:U('Salary/salary_excel_list',array('archives'=>4,'month'=>$count['datetime']))}" class="btn <?php if($type==4){ echo 'btn-info';}else{ echo 'btn-default';} ?>">行管局</a>
                         </div>
 
                         <br><br>

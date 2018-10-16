@@ -553,30 +553,38 @@ class SalaryController extends BaseController {
         $monthly                        = trim(I('month'));
         $archives                       = trim(I('archives'));
         $datetime                       = trim(I('datetime'));
-        if(is_numeric($monthly)){
+
+        if(is_numeric($monthly) && is_numeric($archives)){
             $dateti['datetime']         = $monthly;
-            $wages_month                = M('salary_wages_month')->where($dateti)->select();//已经提交数据
-            if(!$wages_month){
-                $this->error('您选择的数据不存在！');die;
-            }
-            if(is_numeric($archives)){
-                foreach($wages_month as $kkey =>$vval){
-                    $accid['id'] = $vval['account_id'];
-                    $accid['archives'] = $archives;
-                    $account = M('account')->where($accid)->find();
-                    if(!$account){
-                        unset($wages_month[$kkey]);
-                    }else{
-                        $wage[] = $vval;
-                    }
-                }
-                unset($wages_month);
-                $wages_month = $wage;
-            }
-            $info                       = $this->arraysplit($wages_month);
-            $sum                        = M('salary_departmen_count')->where($dateti)->select();
-            $summoney                   = M('salary_count_money')->where($dateti)->find();
-            $status                     = $wages_month[0]['status'];
+            $sql = 'SELECT * FROM oa_salary_wages_month as month, oa_account as account where month.account_id=account.id AND account.archives='.$archives.' AND month.datetime='.$monthly;
+            $user_info = M()->query($sql);
+            $info                       = $this->arraysplit($user_info);
+            $sum                        = $this->countmoney($archives,$info,1);//部门合计
+            $summoney                   = $this->summoney($sum); //总合计
+            $status                     = $user_info[0]['status'];
+
+//            $wages_month                = M('salary_wages_month')->where($dateti)->select();//已经提交数据
+//            if(!$wages_month){
+//                $this->error('您选择的数据不存在！');die;
+//            }
+//            if(is_numeric($archives)){
+//                foreach($wages_month as $kkey =>$vval){
+//                    $accid['id'] = $vval['account_id'];
+//                    $accid['archives'] = $archives;
+//                    $account = M('account')->where($accid)->find();
+//                    if(!$account){
+//                        unset($wages_month[$kkey]);
+//                    }else{
+//                        $wage[] = $vval;
+//                    }
+//                }
+//                unset($wages_month);
+//                $wages_month = $wage;
+//            }
+//            $info                       = $this->arraysplit($wages_month);
+//            $sum                        = $this->countmoney($archives,$info);//部门合计
+//            $summoney                   = $this->summoney($sum); //总合计
+//            $status                     = $wages_month[0]['status']; print_r($info);die;
         }else{
             if(!empty($archives)){
                 $info                   = $this->salary_excel_sql($archives);//员工信息
@@ -607,14 +615,13 @@ class SalaryController extends BaseController {
                 }
             }
         }
+
         $userid = $_SESSION['userid'];//用户id
 
         $this->assign('info',$info);//员工信息
         $this->assign('type',$archives);//状态
         $this->assign('sum',$sum);//部门合计
         $this->assign('count',$summoney);//总合计
-
-        $this->assign('monthly',$monthly);//总合计
 
         $this->assign('inf',$info);//员工信息
         $this->assign('su',$sum);//部门合计
@@ -637,11 +644,11 @@ class SalaryController extends BaseController {
             $list[$key]['account']['id']                            = $val['account_id'];
             $list[$key]['account']['nickname']                      = $val['user_name'];
             $list[$key]['department'][0]['department']              = $val['department'];
+            $list[$key]['department'][0]['id']              = $val['departmentid'];
             $list[$key]['posts'][0]['post_name']                    = $val['post_name'];
             $list[$key]['salary'][0]['standard_salary']             = $val['standard'];
             $list[$key]['salary'][0]['basic_salary']                = ((int)($val['basic_salary']/$val['standard']*1000))/100;
             $list[$key]['salary'][0]['performance_salary']          = ((int)($val['performance_salary']/$val['standard']*1000))/100;
-
             $list[$key]['salary'][0]['id']                          = $val['salary_id'];
             $list[$key]['attendance'][0]['id']                      = $val['attendance_id'];
             $list[$key]['attendance'][0]['withdrawing']             = $val['withdrawing'];
@@ -870,8 +877,9 @@ class SalaryController extends BaseController {
 
     /**
      * countmoney 部门合计
+     * $archives $list  $status 分类状态 信息 判定
      */
-    private function countmoney($archives,$list){
+    private function countmoney($archives,$list,$status){
         $where['archives']                                  = $archives;
         $where = array_filter($where);
         $info1                                              =  M('account')->where($where)->group('departmentid')->order('employee_member ASC')->select();//个人数据
@@ -882,8 +890,9 @@ class SalaryController extends BaseController {
             }else{
                 $query['departmentid']                      = $v['departmentid'];
                 foreach($list as $key =>$val){
+
                     if($val['department'][0]['id']==$v['departmentid']){
-                        $sum[$k]['name']                    = '合计';
+                        $sum[$k]['name']                    = '部门合计';
                         $sum[$k]['department']              = $val['department'][0]['department'];//部门
                         $sum[$k]['standard_salary']         += $val['salary'][0]['standard_salary'];//标准薪资
                         $sum[$k]['basic']                   += $val['salary'][0]['standard_salary']/10*$val['salary'][0]['basic_salary'];//基本薪资

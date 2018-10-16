@@ -192,8 +192,8 @@
                         </li>
 
 
-                        <if condition="rolemenu(array('Files/index'))">
-                        <li class="treeview {:ison(CONTROLLER_NAME, 'Files')} {:on('File')}">
+                        <if condition="rolemenu(array('Files/index','Approval/Approval_Index'))">
+                        <li class="treeview {:ison(CONTROLLER_NAME, 'Files')} {:on('File')} {:on('Approval')}">
                             <a href="javascript:;">
                                 <i class="fa  fa-folder-open"></i>
                                 <span>文件管理</span>
@@ -210,9 +210,9 @@
                                     <!--<li class="{:on('Files/index')}"><a href="{:U('Files/index',array('pid'=>44))}"><i class="fa fa-angle-right"></i> 部门工作手册</a></li>-->
                                 </if>
                                     <li class="{:on('File/instruction')}"><a href="{:U('File/instruction',array('pid'=>45))}"><i class="fa fa-angle-right"></i> 岗位作业指导书</a></li>
-                                <if condition="rolemenu(array('Approval/approval_index'))">
-                                    <li class="{:on('Approval/approval_index')}">
-                                        <a href="{:U('Approval/approval_index')}">
+                                <if condition="rolemenu(array('Approval/Approval_Index'))">
+                                    <li class="{:on('Approval/Approval_Index')}">
+                                        <a href="{:U('Approval/Approval_Index')}">
                                             <i class="fa fa-angle-right"></i> 文件审批
                                         </a>
                                     </li>
