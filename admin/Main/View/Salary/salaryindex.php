@@ -138,7 +138,7 @@
     }
     function Atime(m,d){
 
-        if(d < 16){
+        if(d < 18){
             m = m-1;
                 return  m;//查询年月
         }

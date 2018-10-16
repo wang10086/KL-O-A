@@ -210,6 +210,13 @@
                                     <!--<li class="{:on('Files/index')}"><a href="{:U('Files/index',array('pid'=>44))}"><i class="fa fa-angle-right"></i> 部门工作手册</a></li>-->
                                 </if>
                                     <li class="{:on('File/instruction')}"><a href="{:U('File/instruction',array('pid'=>45))}"><i class="fa fa-angle-right"></i> 岗位作业指导书</a></li>
+                                <if condition="rolemenu(array('Approval/approval_index'))">
+                                    <li class="{:on('Approval/approval_index')}">
+                                        <a href="{:U('Approval/approval_index')}">
+                                            <i class="fa fa-angle-right"></i> 文件审批
+                                        </a>
+                                    </li>
+                                </if>
                             </ul>
                         </li>
                         </if>

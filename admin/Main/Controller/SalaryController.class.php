@@ -709,6 +709,7 @@ class SalaryController extends BaseController {
 
             $att_id['account_id']                   = $val['id'];
             $att_id['status']                       = 1;
+
             $user_info[$key]['attendance']          = sql_query(1,'*','oa_salary_attendance',$att_id, 1, 1);//员工考核
             $user_info[$key]['bonus']               = sql_query(1,'*','oa_salary_bonus',$id, 1, 1);//提成/奖金/年终奖
             $user_info[$key]['labour']              = M('salary_labour')->where($id)->order('id desc')->find();//工会会费
@@ -752,7 +753,7 @@ class SalaryController extends BaseController {
 //                $time_M                             = '0'.($time_M-1);
 //            }
 
-            if($time_D < 16){
+            if($time_D < 18){
                 $time_M = $time_M-1;
                 if($time_M < 10) {
                     $que['p.month']                    = $time_Y.'0'.$time_M;//查询年月
@@ -994,7 +995,7 @@ class SalaryController extends BaseController {
 //                $time_M                 = $time_M-1;
 //            }
 
-            if($time_D < 16){
+            if($time_D < 18){
                 $time_M = $time_M-1;
                 if($time_M < 10) {
                     $datetime                    = $time_Y.'0'.$time_M;//查询年月
