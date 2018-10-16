@@ -819,6 +819,13 @@ class AjaxController extends Controller {
         $this->ajaxReturn($lists);
     }
 
+    public function get_this_posts(){//获取部门
+        $departmentid   = I('departmentid');
+        $db             = M('posts');
+        $lists          = $db->field('id,post_name')->where(array('departmentid'=>$departmentid))->select();
+        $this->ajaxReturn($lists);
+    }
+
     //保存提交审核数据
     public function Ajax_salary_details_add(){
         if($_SESSION['userid']=='77'){

@@ -40,10 +40,8 @@
                 <div class=" content ">
                     <div class="col-md-12" id="departmentid">
                         <lebal class="upload-lebal">所属部门<span></span></lebal>
-                        <!--<span class="lebal-span" style="margin-right: 6px"><input type="checkbox" id="departmentcheckbox"> &nbsp;全选</span>-->
                         <foreach name="department" key="k" item="v">
-                            <!--<span class="lebal-span"><input type="checkbox" value="{$k}" name="department[]" class="departmentcheckbox"> &nbsp;{$v}</span>-->
-                            <span class="lebal-span"><input type="radio" value="{$k}" name="department[]" class="departmentcheckbox" <?php if (in_array($k,$file['department'])) {echo 'checked';} ?>> &nbsp;{$v}</span>
+                            <span class="lebal-span"><input type="checkbox" value="{$k}" name="department[]" class="departmentcheckbox" <?php if (in_array($k,$file['department'])) {echo 'checked';} ?>> &nbsp;{$v}</span>
                         </foreach>
                     </div>
                     <div class="col-md-12 mt10" id="postid">
@@ -184,14 +182,20 @@
 			uploader.init();
             reload();
 
+            var departmentids = "<?php echo $departmentids; ?>";
             $('#departmentid').find('ins').each(function(index, element) {
                 $(this).click(function(){
-                    var departmentid = $(this).prev().val();
+                    var departmentid = '['+$(this).prev().val()+']';
+                    if (departmentids.indexOf(departmentid) !='-1') {
+                        departmentids = departmentids.replace(departmentid+',','')
+                    }else{
+                        departmentids += '['+$(this).prev().val()+'],';
+                    }
                     $.ajax({
                         type: 'POST',
                         url: "{:U('Ajax/get_posts')}",
                         dataType: 'JSON',
-                        data: {departmentid: departmentid},
+                        data: {departmentids: departmentids},
                         success: function (msg) {
                             var html = '<lebal class="upload-lebal">所属岗位<span></span></lebal>';
                             if (msg) {

@@ -19,8 +19,8 @@
                             <div class="col-xs-12 content-neck">
                                 <div class="content-neck-body">
                                     <lebal>部门</lebal>&emsp14;
-                                    <select name="department" >
-                                        <option value="">请选择</option>
+                                    <select name="department" onchange="get_depart()" id="department">
+                                        <option value="" selected disabled>请选择</option>
                                         <foreach name="departments" key="k" item="v">
                                             <option value="{$k}" <?php if ($dep==$k) echo "selected"; ?>>{$v}</option>
                                         </foreach>
@@ -29,12 +29,7 @@
 
                                 <div class="content-neck-body">
                                     <lebal>岗位</lebal>&emsp14;
-                                    <select name="posts" >
-                                        <option value="">请选择</option>
-                                        <foreach name="posts" item="v">
-                                            <option value="{$v['id']}" <?php if ($post==$v['id']) echo "selected"; ?>>{$v['post_name']}</option>
-                                        </foreach>
-                                    </select>
+                                    <select name="posts" id="posts"></select>
                                 </div>
 
                                 <input type="submit" class="btn btn-info search-btn" value="确定">
@@ -204,3 +199,31 @@
 
 
 <include file="Index:footer2" />
+
+<script type="text/javascript">
+    $(function () {
+        get_depart();
+    })
+
+    function get_depart() {
+        var departmentid = $('#department').val();
+        $.ajax({
+            type: 'POST',
+            url : "{:U('Ajax/get_this_posts')}",
+            dataType: 'JSON',
+            data:{departmentid:departmentid},
+            success: function (msg) {
+                if (msg){
+                    var count   = msg.length;
+                    var html    = '<option value=""  selected disabled>请选择</option>';
+                    for(i=0;i<count;i++){
+                        html += '<option value="'+msg[i].id+'">'+msg[i].post_name+'</option>';
+                    }
+                }else{
+                    var html='<option value="" disabled selected>无数据</option>';
+                }
+                $('#posts').html(html);
+            }
+        })
+    }
+</script>

@@ -41,18 +41,11 @@
                         <!--<span class="lebal-span" style="margin-right: 6px"><input type="checkbox" id="departmentcheckbox"> &nbsp;全选</span>-->
                         <foreach name="department" key="k" item="v">
                             <span class="lebal-span"><input type="checkbox" value="{$k}" name="department[]" class="departmentcheckbox"> &nbsp;{$v}</span>
-                            <!--<span class="lebal-span"><input type="radio" value="{$k}" name="department[]" class="departmentcheckbox" <?php /*if ($departmentid == $k) {echo 'checked';} */?>> &nbsp;{$v}</span>-->
                         </foreach>
                     </div>
 
+                    <div class="col-md-12 mt10" id="postid"></div>
 
-                    <div class="col-md-12 mt10" id="postid">
-                        <!--<lebal class="upload-lebal">所属岗位<span></span></lebal>
-                        <span class="lebal-span" style="margin-right: 6px"><input type="checkbox" id="postscheckbox"> &nbsp;全选</span>
-                        <foreach name="posts" key="k" item="v">
-                            <span class="lebal-span"><input type="checkbox" value="{$v['id']}" name="posts[]" class="postscheckbox"> &nbsp;{$v['post_name']}</span>
-                        </foreach>-->
-                    </div>
                     <div class="col-md-12 mt10">
                         <lebal class="upload-lebal">文件类型</lebal>
                         <foreach name="file_tag" key="k" item="v">
