@@ -2266,7 +2266,7 @@ class OpController extends BaseController {
 
 			if ($res) {
                 //如果是内部地接, 生成一个新地接团
-                if ($op['in_dijie'] == 1) {
+                if ($op['in_dijie'] == 1 && !$op['dijie_opid']) {
                     $new_op             = array();
                     $new_op['project']  = '【地接团】'.$op['project'];
                     $new_op['op_id']    = opid();
@@ -2278,13 +2278,14 @@ class OpController extends BaseController {
                     $new_op['departure']    = $op['departure'];
                     $new_op['days']         = $op['days'];
                     $new_op['destination']  = $op['destination'];
-                    $new_op['destination']  = NOW_TIME;
+                    $new_op['create_time']  = NOW_TIME;
                     $new_op['status']       = 1; //已成团
                     $new_op['context']      = '地接项目';
+                    $new_op['audit_status'] = 1; //默认审核通过
                     $new_op['create_user']  = C('DIJIE_CREATE_USER')[$op['dijie_name']];
                     $new_op['create_user_name'] = M('account')->where(array('id'=>$new_op['create_user']))->getField('nickname');
                     $new_op['kind']         = $op['kind'];
-                    $new_op['sale_user']    = $op['sale_user'];
+                    $new_op['sale_user']    = $new_op['create_user_name'];
                     $group                  = M('op')->where(array('op_id'=>$opid))->getField('group_id');
                     $group                  = strtoupper(substr($group,0,4));
                     $arr_group              = array('JQXN','JQXW','JWYW');
@@ -2293,22 +2294,43 @@ class OpController extends BaseController {
                     }else{
                         $new_op['customer'] = C('DIJIE_NAME')[$group];
                     }
-                    $new_op['']         = $op[''];
-                    $new_op['']         = $op[''];
+                    $new_op['op_create_date'] = date('Y-m-d',time());
+                    $new_op['op_create_user'] = M()->table('__ACCOUNT__ as a')->join('left join __ROLE__ as r on r.id = a.roleid')->where(array('a.id'=>$new_op['create_user']))->getField('r.role_name');
+                    $new_op['apply_to']       = $op['apply_to'];
+                    $new_op['type']           = 1; //1=>已成团, (所有的费用带入系统预算)
 
-                    //var_dump($new_op);die;
+                    //地接成团确认
+                    $dijie_confirm            = array();
+                    $dijie_confirm['op_id']   = $new_op['op_id'];
+                    $dijie_confirm['group_id']= $new_op['group_id'];
+                    $dijie_confirm['dep_time']= $op['dep_time'];
+                    $dijie_confirm['ret_time']= $new_op['ret_time'];
+                    $dijie_confirm['num_adult']   = $new_op['num_adult'];
+                    $dijie_confirm['num_children']   = $new_op['num_children'];
+                    $dijie_confirm['days']   = $new_op['days'];
+                    $dijie_confirm['user_id']   = $new_op['create_user'];
+                    $dijie_confirm['user_name']   = $new_op['user_name'];
+                    $dijie_confirm['confirm_time']   = NOW_TIME;
+                    M('op')->add($new_op);
+                    M('op_team_confirm')->add($dijie_confirm);
 
-
+                    $record                 = array();
+                    $record['op_id']        = $new_op['op_id'];
+                    $record['optype']       = 4;
+                    $record['explain']      = '创建地接项目并成团';
+                    op_record($record);
                 }
+
                 $infos = array();
                 $infos['group_id']	    = $info['group_id'];
                 $infos['status']		= 1;
+                $infos['dijie_opid']    = $new_op['op_id'];
                 M('op')->data($infos)->where(array('op_id'=>$opid))->save();
 
                 $record                 = array();
                 $record['op_id']        = $opid;
                 $record['optype']       = 4;
-                $record['explain']      = '填写成团确认信息';
+                $record['explain']      = '成团确认';
                 op_record($record);
 
                 //给教务组长 roleid  102
