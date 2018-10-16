@@ -810,9 +810,12 @@ class AjaxController extends Controller {
     }
 
     public function get_posts(){//获取部门
-        $departmentid   = I('departmentid');
+        $departmentids  = I('departmentids');
+        $arr            = array_filter(explode(',',$departmentids));
+        $arr            = str_replace('[','',$arr);
+        $arr            = str_replace(']','',$arr);
         $db             = M('posts');
-        $lists          = $db->field('id,post_name')->where(array('departmentid'=>$departmentid))->select();
+        $lists          = $db->field('id,post_name')->where(array('departmentid'=>array('in',$arr)))->select();
         $this->ajaxReturn($lists);
     }
 

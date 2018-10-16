@@ -2650,17 +2650,17 @@ function updatekpi($month,$user){
                     $lists = M()->table('__TCS_SCORE__ as s')->field('u.op_id,o.kind,s.stay,s.travel,s.content,s.food,s.bus,s.driver,s.guide,s.teacher,s.teacher,s.depth,s.major,s.interest,s.material')->join('left join __TCS_SCORE_USER__ as u on u.id = s.uid')->join('__OP__ as o on o.op_id = u.op_id','left')->where($where)->select();
 
                     //无项目的，得0分；有项目，但无调查项目的，得100分。
-                    $wheres = array();
-                    $wheres['c.ret_time']   = array('between',array($v['start_date'],$v['end_date']+86399));
-                    $wheres['o.create_user'] = $user;
-                    $oplist = M()->table('__OP__ as o')->join('__OP_TEAM_CONFIRM__ as c on c.op_id = o.op_id','left')->where($wheres)->select();
+                    //$wheres = array();
+                    //$wheres['c.ret_time']   = array('between',array($v['start_date'],$v['end_date']+86399));
+                    //$wheres['o.create_user'] = $user;
+                    //$oplist = M()->table('__OP__ as o')->join('__OP_TEAM_CONFIRM__ as c on c.op_id = o.op_id','left')->where($wheres)->select();
 
                     $average = get_manyidu($lists);
 
                     //平均得分(如果得分>72%,得分100, 如果小于72%,以72%作为满分求百分比)
                     $score = round(($average*100/72)*100);
 
-                    if($average>0.72 || !$oplist){
+                    if($average>0.72 || !$lists){
                         $complete	= 100;
                     }else{
                         $complete	= $score;

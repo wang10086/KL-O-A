@@ -178,20 +178,16 @@
             $('#departmentid').find('ins').each(function(index, element) {
                 $(this).click(function(){
                     var departmentid = '['+$(this).prev().val()+']';
-                    alert(departmentid);
-                    var reg = RegExp(/departmentid,/);
-                    if (departmentids.match(departmentid)) {
-                        alert('in');
-                        alert(departmentids);
+                    if (departmentids.indexOf(departmentid) !='-1') {
+                        departmentids = departmentids.replace(departmentid+',','')
                     }else{
                         departmentids += '['+$(this).prev().val()+'],';
-                        alert('out');
                     }
                    $.ajax({
                        type: 'POST',
                        url: "{:U('Ajax/get_posts')}",
                        dataType: 'JSON',
-                       data: {departmentid: departmentid},
+                       data: {departmentids: departmentids},
                        success: function (msg) {
                            var html = '<lebal class="upload-lebal">所属岗位<span></span></lebal>';
                            if (msg) {
