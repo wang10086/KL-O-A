@@ -563,28 +563,6 @@ class SalaryController extends BaseController {
             $summoney                   = $this->summoney($sum); //总合计
             $status                     = $user_info[0]['status'];
 
-//            $wages_month                = M('salary_wages_month')->where($dateti)->select();//已经提交数据
-//            if(!$wages_month){
-//                $this->error('您选择的数据不存在！');die;
-//            }
-//            if(is_numeric($archives)){
-//                foreach($wages_month as $kkey =>$vval){
-//                    $accid['id'] = $vval['account_id'];
-//                    $accid['archives'] = $archives;
-//                    $account = M('account')->where($accid)->find();
-//                    if(!$account){
-//                        unset($wages_month[$kkey]);
-//                    }else{
-//                        $wage[] = $vval;
-//                    }
-//                }
-//                unset($wages_month);
-//                $wages_month = $wage;
-//            }
-//            $info                       = $this->arraysplit($wages_month);
-//            $sum                        = $this->countmoney($archives,$info);//部门合计
-//            $summoney                   = $this->summoney($sum); //总合计
-//            $status                     = $wages_month[0]['status']; print_r($info);die;
         }else{
             if(!empty($archives)){
                 $info                   = $this->salary_excel_sql($archives);//员工信息
@@ -592,6 +570,7 @@ class SalaryController extends BaseController {
                 $summoney               = $this->summoney($sum); //总合计
 
             }else{
+
                 $wages_month            = M('salary_wages_month')->where('status=3')->select();//已经提交数据
                 if(!$wages_month){
                     $wages_month        = M('salary_wages_month')->where('status=2')->select();//已经提交数据
@@ -684,7 +663,7 @@ class SalaryController extends BaseController {
             $list[$key]['Should']                                   = $val['Should_distributed'];
             $list[$key]['accumulation']                             = $val['accumulation_fund'];
             $list[$key]['labour']['Labour_money']                   = $val['Labour'];
-
+            $list[$key]['datetime']                                 = $val['datetime'];
         }
         return $list;
     }
@@ -866,6 +845,7 @@ class SalaryController extends BaseController {
                 }
                 $counting                           = round($countin,2);
             }
+            $user_info[$key]['datetime']            = $que['p.month'];//现在日期
             $user_info[$key]['personal_tax']        = $counting;//个人所得税
 
             //实发工资=岗位工资-考勤扣款+绩效增减+提成(带团补助)+奖金-代扣代缴+年终奖-年终奖计税+住房补贴+外地补贴+电脑补贴-五险一金-个人所得税-工会会费+其他补款
@@ -914,6 +894,7 @@ class SalaryController extends BaseController {
                         $sum[$k]['summoney']                += $val['summoney'];//税后扣款
                         $sum[$k]['Labour']                  += $val['labour']['Labour_money'];//工会会费
                         $sum[$k]['real_wages']              += $val['real_wages'];// 实发工资
+                        $sum[$k]['datetime']                 = $val['datetime'];
                     }
                 }
             }
@@ -927,7 +908,6 @@ class SalaryController extends BaseController {
     private function summoney($sum){
         $cout['name']                                = '总合计';
         foreach($sum as $key => $val){
-//            print_r($val);die;
             $cout['standard_salary']                 += $val['standard_salary'];//标准薪资
             $cout['basic']                           += $val['basic'];//基本薪资
             $cout['withdrawing']                     += $val['withdrawing'];//考勤扣款
@@ -948,7 +928,7 @@ class SalaryController extends BaseController {
             $cout['summoney']                        += $val['summoney'];//税后扣款
             $cout['Labour']                          += $val['Labour'];//工会会费
             $cout['real_wages']                      += $val['real_wages'];//实发工资
-
+            $cout['datetime']                         = $val['datetime'];
         }
         return $cout;
     }
