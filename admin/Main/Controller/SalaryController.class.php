@@ -556,12 +556,12 @@ class SalaryController extends BaseController {
 
         if(is_numeric($monthly) && is_numeric($archives)){
             $dateti['datetime']         = $monthly;
-            $sql = 'SELECT * FROM oa_salary_wages_month as month, oa_account as account where month.account_id=account.id AND account.archives='.$archives.' AND month.datetime='.$monthly;
+            $sql = 'SELECT *,month.status as mstatus FROM oa_salary_wages_month as month, oa_account as account where month.account_id=account.id AND account.archives='.$archives.' AND month.datetime='.$monthly;
             $user_info = M()->query($sql);
             $info                       = $this->arraysplit($user_info);
             $sum                        = $this->countmoney($archives,$info,1);//部门合计
             $summoney                   = $this->summoney($sum); //总合计
-            $status                     = $user_info[0]['status'];
+            $status                     = $user_info[0]['mstatus'];
 
         }else{
             if(!empty($archives)){
