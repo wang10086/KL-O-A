@@ -598,7 +598,7 @@
 			}
 		});	
 	}
-	
+
 	
 	//选择导游辅导员
 	function selectguide() {

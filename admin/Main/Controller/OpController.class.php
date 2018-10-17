@@ -2303,22 +2303,34 @@ class OpController extends BaseController {
                     $dijie_confirm            = array();
                     $dijie_confirm['op_id']   = $new_op['op_id'];
                     $dijie_confirm['group_id']= $new_op['group_id'];
-                    $dijie_confirm['dep_time']= $op['dep_time'];
-                    $dijie_confirm['ret_time']= $new_op['ret_time'];
-                    $dijie_confirm['num_adult']   = $new_op['num_adult'];
-                    $dijie_confirm['num_children']   = $new_op['num_children'];
-                    $dijie_confirm['days']   = $new_op['days'];
+                    $dijie_confirm['dep_time']= $confirm['dep_time'];
+                    $dijie_confirm['ret_time']= $confirm['ret_time'];
+                    $dijie_confirm['num_adult']   = $confirm['num_adult'];
+                    $dijie_confirm['num_children']   = $confirm['num_children'];
+                    $dijie_confirm['days']   = $confirm['days'];
                     $dijie_confirm['user_id']   = $new_op['create_user'];
                     $dijie_confirm['user_name']   = $new_op['user_name'];
                     $dijie_confirm['confirm_time']   = NOW_TIME;
-                    M('op')->add($new_op);
-                    M('op_team_confirm')->add($dijie_confirm);
+                    $opres = M('op')->add($new_op);
+                    if ($opres) {
+                        M('op_team_confirm')->add($dijie_confirm);
 
-                    $record                 = array();
-                    $record['op_id']        = $new_op['op_id'];
-                    $record['optype']       = 4;
-                    $record['explain']      = '创建地接项目并成团';
-                    op_record($record);
+                        //系统消息提醒
+                        $uid     = cookie('userid');
+                        $title   = '您有来自【'.$op['project'].'】的地接团，请及时跟进!';
+                        $content = '项目名称：'.$new_op['project'].'；团号：'.$new_op['group_id'].'；请及时跟进！"';
+                        $url     = U('Op/plans_follow',array('opid'=>$new_op['op_id']));
+                        $user    = '['.$new_op['create_user'].']';
+                        $roleid  = '';
+                        send_msg($uid,$title,$content,$url,$user,$roleid);
+
+                        $record                 = array();
+                        $record['op_id']        = $new_op['op_id'];
+                        $record['optype']       = 4;
+                        $record['explain']      = '创建地接项目并成团';
+                        op_record($record);
+                    }
+
                 }
 
                 $infos = array();
@@ -2367,7 +2379,6 @@ class OpController extends BaseController {
             }
 
             //辅导员/教师、专家
-            /*$this->guide_price  = M('op_guide_price')->where(array('op_id'=>$opid))->select();*/
             $guide_price        = M()->table('__OP_GUIDE_CONFIRM__ as c')->field('c.id as cid,c.*,p.id as pid,p.*')->join('left join __OP_GUIDE_PRICE__ as p on p.confirm_id = c.id')->where(array('c.op_id'=>$opid,'p.op_id'=>$opid))->select();
             foreach ($guide_price as $k=>$v){
                 //职务信息
@@ -2417,6 +2428,31 @@ class OpController extends BaseController {
 			$this->display('confirm');
 		}
 	}
+
+    // @@@NODE-3###change_op###项目交接###
+    public function change_op(){
+        if (isset($_POST['dosubmit'])) {
+            $op_id                  = I('opid');
+            $info                   = I('info');
+            $info['sale_user']      = $info['create_user_name'];
+            $info['op_create_user'] = M()->table('__ACCOUNT__ as a')->join('__ROLE__ as r on r.id = a.roleid','left')->where(array('a.id'=>$info['create_user']))->getField('r.role_name');
+            $res = M('op')->where(array('op_id'=>$op_id))->save($info);
+        }else{
+            //人员名单关键字
+            $user       = M('account')->field("id,nickname")->where(array('status'=>0))->select();
+            $user_key   = array();
+            foreach($user as $k=>$v){
+                $text                   = $v['nickname'];
+                $user_key[$k]['id']     = $v['id'];
+                $user_key[$k]['pinyin'] = strtopinyin($text);
+                $user_key[$k]['text']   = $text;
+            }
+            $this->userkey  = json_encode($user_key);
+
+            $this->opid = I('opid');
+            $this->display();
+        }
+    }
 
     // @@@NODE-3###res_feedback###资源配置情况反馈###
     public function res_feedback(){
