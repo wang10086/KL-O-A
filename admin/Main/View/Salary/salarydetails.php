@@ -111,14 +111,16 @@
                                                         <td>{$info['attendance']['sick_leave']}</td>
                                                         <td>{$info['attendance']['absenteeism']}</td>
                                                     </tr>
-                                                    <tr>
-                                                        <td>扣款</td>
-                                                        <td>{$info['attendance']['late1']*10}</td>
-                                                        <td>{$info['attendance']['late2']*30}</td>
-                                                        <td><?php echo  floor($info['wages_month']['standard']/21.75*$info['attendance']['leave_absence']*100)/100;?></td>
-                                                        <td><?php echo  floor($info['attendance']['lowest_wage']/21.75*$info['attendance']['sick_leave']*20)/100;?></td>
-                                                        <td><?php echo  floor($info['wages_month']['standard']/21.75*$info['attendance']['leave_absence']*100)/50;?></td>
-                                                    </tr>
+
+                                                <tr>
+                                                    <td>扣款</td>
+                                                    <td>{$info['attendance']['late1']*10}</td>
+                                                    <td>{$info['attendance']['late2']*30}</td>
+                                                    <td><?php echo  floor($info['wages_month']['basic_salary']/21.75*$info['attendance']['leave_absence']*100)/100;?></td>
+                                                    <td><?php echo  floor(($info['wages_month']['performance_salary']-($info['attendance']['lowest_wage']*0.8))/21.75*$info['attendance']['sick_leave']*100)/100?></td>
+                                                    <td><?php echo  floor($info['wages_month']['basic_salary']/21.75*$info['attendance']['absenteeism']*2*100)/100;?></td>
+                                                </tr>
+
                                             </table><br />
                                             <div class="form-group col-md-4 viwe">
                                                 <p>绩效增减：{$info['wages_month']['Achievements_withdrawing']} (元)</p>

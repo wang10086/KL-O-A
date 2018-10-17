@@ -36,22 +36,17 @@
                     <input type="hidden" name="pid" value="{$pid}">
                     <input type="hidden" name="level" value="{$level}">
                 <div class=" content ">
-                    <div class="col-md-12" id="departmentid">
-                        <lebal class="upload-lebal">所属部门<span></span></lebal>
-                        <!--<span class="lebal-span" style="margin-right: 6px"><input type="checkbox" id="departmentcheckbox"> &nbsp;全选</span>-->
-                        <foreach name="department" key="k" item="v">
-                            <span class="lebal-span"><input type="checkbox" value="{$k}" name="department[]" class="departmentcheckbox"> &nbsp;{$v}</span>
-                            <!--<span class="lebal-span"><input type="radio" value="{$k}" name="department[]" class="departmentcheckbox" <?php /*if ($departmentid == $k) {echo 'checked';} */?>> &nbsp;{$v}</span>-->
+                    <div class="col-md-12" id="departmentid" >
+                        <lebal class="upload-lebal">选择审批人<span></span></lebal>
+
+                        <foreach name="personnel" item="v">
+                            <span style="padding:1em;"><input type="checkbox" value="{$v.id}" name="department[]"> &nbsp;{$v.nickname}</span>
+
                         </foreach>
                     </div>
 
-
                     <div class="col-md-12 mt10" id="postid">
-                        <!--<lebal class="upload-lebal">所属岗位<span></span></lebal>
-                        <span class="lebal-span" style="margin-right: 6px"><input type="checkbox" id="postscheckbox"> &nbsp;全选</span>
-                        <foreach name="posts" key="k" item="v">
-                            <span class="lebal-span"><input type="checkbox" value="{$v['id']}" name="posts[]" class="postscheckbox"> &nbsp;{$v['post_name']}</span>
-                        </foreach>-->
+
                     </div>
                     <div class="col-md-12 mt10">
                         <lebal class="upload-lebal">文件类型</lebal>
@@ -171,49 +166,6 @@
 	
 			uploader.init();
 
-            reload();
-
-            $('#postid').html('');
-            var departmentids = '';
-            $('#departmentid').find('ins').each(function(index, element) {
-                $(this).click(function(){
-                    var departmentid = '['+$(this).prev().val()+']';
-                    alert(departmentid);
-                    var reg = RegExp(/departmentid,/);
-                    if (departmentids.match(departmentid)) {
-                        alert('in');
-                        alert(departmentids);
-                    }else{
-                        departmentids += '['+$(this).prev().val()+'],';
-                        alert('out');
-                    }
-                   $.ajax({
-                       type: 'POST',
-                       url: "{:U('Ajax/get_posts')}",
-                       dataType: 'JSON',
-                       data: {departmentid: departmentid},
-                       success: function (msg) {
-                           var html = '<lebal class="upload-lebal">所属岗位<span></span></lebal>';
-                           if (msg) {
-                               html += '<span class="lebal-span"><input type="checkbox" id="postscheckbox" class="delem-checkbox"> &nbsp;全选</span>'
-                               for (var i = 0; i<msg.length; i++) {
-                                   html += '<span class="lebal-span"><input type="checkbox" value="'+msg[i].id+'" name="posts[]" class="postscheckbox delem-checkbox"> &nbsp;'+msg[i].post_name+'</span>';
-                               }
-                           }else{
-                                html += '<span class="lebal-span" style="margin-right: 10px">暂无岗位信息!</span>'
-                           }
-                           $('#postid').html(html);
-                           //reload();
-                           checkAll();
-                       },
-                       error: function () {
-                           alert('数据获取失败');
-                       }
-                   })
-                })
-            });
-				
-        });
 
         function reload(){
             //所属部门
@@ -233,16 +185,6 @@
             });
         }
 
-        function checkAll(){
-            $('#postscheckbox').click(function () {
-                if ($(this).attr('checked')){
-                    //$('.postscheckbox').iCheck('check');
-                    $('.postscheckbox').prop('checked','checked');
-                }else {
-                    $('.postscheckbox').removeAttr('checked');
-                }
-            })
-        }
 
 		function removeThisFile(fid) {
 			if (confirm('确定要删除此附件吗？')) {

@@ -11,4 +11,10 @@ class ApprovalController extends BaseController {
         $this->display();
     }
 
+    public function Approval_Upload(){
+        $this->personnel = personnel();
+
+        $this->display();
+    }
+
  }

@@ -3594,3 +3594,8 @@ function sql_upd($field,$table,$where){//修改
 	return $add_sql;
 }
 
+function personnel(){//所有人员名称 id
+    return M('account')->field('id,nickname')->where('status=0 and id>2')->select();
+
+}
+
