@@ -475,6 +475,7 @@ class BaseController extends Controller {
                     $que['datetime']                    = $time_Y.$time_M;//查询年月
                 }
             }
+
             switch ($_SESSION['userid'])
             {
                 case 77:
@@ -482,28 +483,27 @@ class BaseController extends Controller {
                     if(!$money){
                         $count = 1;
                     }
-
                     $_SESSION['salary_satus'] = $count;
-                    return $count;break;
-                case 11:
-                    $money = M('salary_count_money')->where('status=3')->count();
-                    if(!$money){
-                        $count = $money;
-                    }
-                    $_SESSION['salary_satus'] = $count;
-
                     return $count;break;
                 case 55:
-                    $money = M('salary_count_money')->where('status=3')->count();
-                    if(!$money){
+                    $status['status']  = 2;
+                    $money = M('salary_count_money')->where($status)->count();
+                    if($money){
                         $count = $money;
+                        $_SESSION['salary_satus'] = $count;
                     }
-                    $_SESSION['salary_satus'] = $count;
+                    return $count;break;
+                case 11:
+                    $status['status']  = 3;
+                    $money = M('salary_count_money')->where($status)->count();
+                    if($money){
+                        $count = $money;
+                        $_SESSION['salary_satus'] = $count;
+                    }
                     return $count;  break;
             }
         }
     }
-
 
 }
 

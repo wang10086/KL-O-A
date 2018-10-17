@@ -23,16 +23,12 @@
                                     </div>
                                 </div><!-- /.box-header -->
                                 <div class="box-body">
-                                <div class="fileRoute">
-                                	<a href="{:U('Files/index')}" class="file_tips">首页</a>
-                                    <foreach name="dir_path" item="v">
-                                    &gt; <a href="{:U('Approval/Approval_Index')}" class="file_tips">文件审批</a>
-                                    </foreach>
-                                </div>
-                                <table class="table table-bordered dataTable fontmini" id="tablelist" style="margin-top:10px;">
-                                    <tr role="row" class="orders" >
 
-                                    	<th style="text-align:center;width:6em;"><input type="checkbox" id="Approval_checkbox"/></th>
+                                <table class="table table-bordered dataTable"  style="margin-top:10px;">
+                                    <tr role="row" class="orders" >
+                                    	<th style="text-align:center;width:6em;"/>
+                                            <input type="checkbox" id="Approval_check"/>
+                                        </th>
                                         <th style="text-align:center;width:10em;"><b>拟稿人姓名</b></th>
                                         <th style="text-align:center;width:10em;"><b>单位部门</b></th>
                                         <th style="text-align:center;width:10em;"><b>文件名称</b></th>
@@ -43,7 +39,7 @@
                                     </tr>
                                     <tr>
                                     	<td align="center">
-                                            <input type="checkbox"  value="" class="Approval_checkbox" />
+                                            <input type="checkbox" class="Approval_check" />
                                         </td>
                                         <td style="text-align:center;color:#3399FF;">刘金垒</td>
                                         <td style="text-align:center;">天龙八部</td>
@@ -78,55 +74,66 @@
                 </div>
                 </form>
             </div>
-            
-            
-           
-            
-            <script type="text/javascript">
-                $('#Approval_checkbox').click(function(){
-                    $('.Approval_checkbox').each(){
-
-                    }
-                })
-
-
-			//上传
-			function uploadFile() {
-				art.dialog.open("{:U('Files/upload',array('pid'=>$pid,'level'=>$level))}",{
-					lock:true,
-					title: '上传文件',
-					width:800,
-					height:500,
-					okValue: '提交',
-					fixed: true,
-					ok: function () {
-
-						//获取上传数据
-						var files = this.iframe.contentWindow.gosubmint();
-						//保存数据
-						$.ajax({
-			               type: "POST",
-			               url: "<?php echo U('Files/savefile'); ?>",
-						   dataType:'json',
-			               data: {files:files},
-			               success:function(data){
-								if(data.status==0){
-									location.reload();
-								}else{
-									alert('保存数据失败');
-								}
-
-			               }
-			           });
-
-					},
-					cancelValue:'取消',
-					cancel: function () {
-					}
-				});
-			}
-
-
-			</script>
 
 <include file="Index:footer2" />
+
+<script type="text/javascript">
+
+
+    $(document).ready(function(e) {
+        //选择
+        $('#Approval_check').on('ifChecked', function() {
+            $('.Approval_check').iCheck('check');
+        });
+        $('#Approval_check').on('ifUnchecked', function() {
+            $('.Approval_check').iCheck('uncheck');
+        });
+    });
+
+  //  $('#Approval_checkbox .icheckbox_minimal').click(function(){alert(111);
+//                    var clas = $(this).prop('class');
+//                    alert(clas);
+//                    if(clas=='icheckbox_minimal hover checked'){
+//                        $('tr .Approval_checkbox div').toggleClass('icheckbox_minimal checked');
+//                    }
+  //  });
+
+
+    //上传
+    function uploadFile() {
+        art.dialog.open("{:U('Files/upload',array('pid'=>$pid,'level'=>$level))}",{
+            lock:true,
+            title: '上传文件',
+            width:800,
+            height:500,
+            okValue: '提交',
+            fixed: true,
+            ok: function () {
+
+                //获取上传数据
+                var files = this.iframe.contentWindow.gosubmint();
+                //保存数据
+                $.ajax({
+                    type: "POST",
+                    url: "<?php echo U('Files/savefile'); ?>",
+                    dataType:'json',
+                    data: {files:files},
+                    success:function(data){
+                        if(data.status==0){
+                            location.reload();
+                        }else{
+                            alert('保存数据失败');
+                        }
+
+                    }
+                });
+
+            },
+            cancelValue:'取消',
+            cancel: function () {
+            }
+        });
+    }
+
+
+</script>

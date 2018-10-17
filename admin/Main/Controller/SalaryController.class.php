@@ -562,6 +562,9 @@ class SalaryController extends BaseController {
             $sum                        = $this->countmoney($archives,$info,1);//部门合计
             $summoney                   = $this->summoney($sum); //总合计
             $status                     = $user_info[0]['mstatus'];
+            if($status=="" || $status==0){
+                $status=1;
+            }
 
         }else{
             if(!empty($archives)){
