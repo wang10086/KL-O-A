@@ -572,8 +572,14 @@ class SalaryController extends BaseController {
                 $sum                    = $this->countmoney($archives,$info);//部门合计
                 $summoney               = $this->summoney($sum); //总合计
 
+            }elseif(is_numeric($monthly)){
+                $dateti['datetime']     = $monthly;
+                $wages_month            = M('salary_wages_month')->where($dateti)->select();//已经提交数据
+                $info                   = $this->arraysplit($wages_month);
+                $sum                    = M('salary_departmen_count')->where($dateti)->select();
+                $summoney               = M('salary_count_money')->where($dateti)->find();
+                $status                 = $wages_month[0]['status'];
             }else{
-
                 $wages_month            = M('salary_wages_month')->where('status=3')->select();//已经提交数据
                 if(!$wages_month){
                     $wages_month        = M('salary_wages_month')->where('status=2')->select();//已经提交数据
