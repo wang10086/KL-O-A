@@ -882,27 +882,27 @@ class SalaryController extends BaseController {
 
                     if($val['department'][0]['id']==$v['departmentid']){
                         $sum[$k]['name']                    = '部门合计';
-                        $sum[$k]['department']              = $val['department'][0]['department'];//部门
-                        $sum[$k]['standard_salary']         += $val['salary'][0]['standard_salary'];//标准薪资
-                        $sum[$k]['basic']                   += $val['salary'][0]['standard_salary']/10*$val['salary'][0]['basic_salary'];//基本薪资
-                        $sum[$k]['withdrawing']             += $val['attendance'][0]['withdrawing'];//考勤扣款
-                        $sum[$k]['performance_salary']      += $val['salary'][0]['standard_salary']/10*$val['salary'][0]['performance_salary'];//绩效薪资
-                        $sum[$k]['count_money']             += $val['Achievements']['count_money'];//绩效增减
-                        $sum[$k]['total']                   += $val['Extract']['total'];//业绩提成
-                        $sum[$k]['bonus']                   += $val['bonus'][0]['bonus'];// 奖金
-                        $sum[$k]['housing_subsidy']         += $val['subsidy'][0]['housing_subsidy'];//住房补贴
-                        $sum[$k]['Other']                   += $val['Other'];//其他补款
-                        $sum[$k]['Should']                  += $val['Should'];//应发工资
-                        $sum[$k]['care']                    += $val['insurance'][0]['medical_care_base']*$val['insurance'][0]['medical_care_ratio'];//医疗保险
-                        $sum[$k]['pension']                 += $val['insurance'][0]['pension_base']*$val['insurance'][0]['pension_ratio'];//养老保险
-                        $sum[$k]['unemployment']            += $val['insurance'][0]['unemployment_base']*$val['insurance'][0]['unemployment_ratio'];// 失业保险
-                        $sum[$k]['accumulation']            += round($val['insurance'][0]['accumulation_fund_base']*$val['insurance'][0]['accumulation_fund_ratio']);//公积金
-                        $sum[$k]['insurance_Total']         += $val['insurance_Total'];//个人保险合计
-                        $sum[$k]['tax_counting']            += $val['tax_counting'];//计税工资
-                        $sum[$k]['personal_tax']            += $val['personal_tax'];//个人所得税
-                        $sum[$k]['summoney']                += $val['summoney'];//税后扣款
-                        $sum[$k]['Labour']                  += $val['labour']['Labour_money'];//工会会费
-                        $sum[$k]['real_wages']              += $val['real_wages'];// 实发工资
+                        $sum[$k]['department']              =  $val['department'][0]['department'];//部门
+                        $sum[$k]['standard_salary']         += round($val['salary'][0]['standard_salary']);//标准薪资
+                        $sum[$k]['basic']                   += round($val['salary'][0]['standard_salary']/10*$val['salary'][0]['basic_salary'],2);//基本薪资
+                        $sum[$k]['withdrawing']             += round($val['attendance'][0]['withdrawing'],2);//考勤扣款
+                        $sum[$k]['performance_salary']      += round($val['salary'][0]['standard_salary']/10*$val['salary'][0]['performance_salary'],2);//绩效薪资
+                        $sum[$k]['count_money']             += round($val['Achievements']['count_money'],2);//绩效增减
+                        $sum[$k]['total']                   += round($val['Extract']['total'],2);//业绩提成
+                        $sum[$k]['bonus']                   += round($val['bonus'][0]['bonus'],2);// 奖金
+                        $sum[$k]['housing_subsidy']         += round($val['subsidy'][0]['housing_subsidy'],2);//住房补贴
+                        $sum[$k]['Other']                   += round($val['Other'],2);//其他补款
+                        $sum[$k]['Should']                  += round($val['Should'],2);//应发工资
+                        $sum[$k]['care']                    += round($val['insurance'][0]['medical_care_base']*$val['insurance'][0]['medical_care_ratio'],3);//医疗保险
+                        $sum[$k]['pension']                 += round($val['insurance'][0]['pension_base']*$val['insurance'][0]['pension_ratio']);//养老保险
+                        $sum[$k]['unemployment']            += round($val['insurance'][0]['unemployment_base']*$val['insurance'][0]['unemployment_ratio'],3);// 失业保险
+                        $sum[$k]['accumulation']            += round($val['insurance'][0]['accumulation_fund_base']*$val['insurance'][0]['accumulation_fund_ratio'],3);//公积金
+                        $sum[$k]['insurance_Total']         += round($val['insurance_Total'],3);//个人保险合计
+                        $sum[$k]['tax_counting']            += round($val['tax_counting'],2);//计税工资
+                        $sum[$k]['personal_tax']            += round($val['personal_tax'],2);//个人所得税
+                        $sum[$k]['summoney']                += round($val['summoney'],2);//税后扣款
+                        $sum[$k]['Labour']                  += round($val['labour']['Labour_money'],2);//工会会费
+                        $sum[$k]['real_wages']              += round($val['real_wages'],2);// 实发工资
                         $sum[$k]['datetime']                 = $val['datetime'];
                     }
                 }
@@ -917,26 +917,26 @@ class SalaryController extends BaseController {
     private function summoney($sum){
         $cout['name']                                = '总合计';
         foreach($sum as $key => $val){
-            $cout['standard_salary']                 += $val['standard_salary'];//标准薪资
-            $cout['basic']                           += $val['basic'];//基本薪资
-            $cout['withdrawing']                     += $val['withdrawing'];//考勤扣款
-            $cout['performance_salary']              += $val['performance_salary'];//绩效薪资
-            $cout['count_money']                     += $val['count_money'];//绩效增减
-            $cout['total']                           += $val['total'];//业绩提成
-            $cout['bonus']                           += $val['bonus'];//奖金
-            $cout['housing_subsidy']                 += $val['housing_subsidy'];//住房补贴
-            $cout['Other']                           += $val['Other'];//其他补款
-            $cout['Should']                          += $val['Should'];//应发工资
-            $cout['care']                            += $val['care'];//医疗保险
-            $cout['pension']                         += $val['pension'];//养老保险
-            $cout['unemployment']                    += $val['unemployment'];//失业保险
-            $cout['accumulation']                    += round($val['accumulation']);//公积金
-            $cout['insurance_Total']                 += $val['insurance_Total'];//个人保险合计
-            $cout['tax_counting']                    += $val['tax_counting'];//计税工资
-            $cout['personal_tax']                    += $val['personal_tax'];//个人所得税
-            $cout['summoney']                        += $val['summoney'];//税后扣款
-            $cout['Labour']                          += $val['Labour'];//工会会费
-            $cout['real_wages']                      += $val['real_wages'];//实发工资
+            $cout['standard_salary']                 += round($val['standard_salary'],2);//标准薪资
+            $cout['basic']                           += round($val['basic'],2);//基本薪资
+            $cout['withdrawing']                     += round($val['withdrawing'],2);//考勤扣款
+            $cout['performance_salary']              += round($val['performance_salary'],2);//绩效薪资
+            $cout['count_money']                     += round($val['count_money'],2);//绩效增减
+            $cout['total']                           += round($val['total'],2);//业绩提成
+            $cout['bonus']                           += round($val['bonus'],2);//奖金
+            $cout['housing_subsidy']                 += round($val['housing_subsidy'],2);//住房补贴
+            $cout['Other']                           += round($val['Other'],2);//其他补款
+            $cout['Should']                          += round($val['Should'],2);//应发工资
+            $cout['care']                            += round($val['care'],3);//医疗保险
+            $cout['pension']                         += round($val['pension'],3);//养老保险
+            $cout['unemployment']                    += round($val['unemployment'],3);//失业保险
+            $cout['accumulation']                    += round($val['accumulation'],2);//公积金
+            $cout['insurance_Total']                 += round($val['insurance_Total'],3);//个人保险合计
+            $cout['tax_counting']                    += round($val['tax_counting'],2);//计税工资
+            $cout['personal_tax']                    += round($val['personal_tax'],2);//个人所得税
+            $cout['summoney']                        += round($val['summoney'],2);//税后扣款
+            $cout['Labour']                          += round($val['Labour'],2);//工会会费
+            $cout['real_wages']                      += round($val['real_wages'],2);//实发工资
             $cout['datetime']                         = $val['datetime'];
         }
         return $cout;
