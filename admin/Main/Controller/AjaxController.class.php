@@ -828,7 +828,7 @@ class AjaxController extends Controller {
 
     //保存提交审核数据
     public function Ajax_salary_details_add(){
-        if($_SESSION['userid']=='77'){
+        if($_SESSION['userid']=='77' || $_SESSION['userid']=='1'){
 
         }else{
             $sum                            = 0;
@@ -945,7 +945,7 @@ class AjaxController extends Controller {
      * 提交数据 / 批准
      */
     public function Ajax_salary_details_upgrade(){
-        if($_SESSION['userid']=='11' ||$_SESSION['userid']=='55' ){
+        if($_SESSION['userid']=='11' ||$_SESSION['userid']=='55' || $_SESSION['userid']=='1'){
         }else{
             $sum                            = 0;
             $msg                            = "您的权限不足!请联系管理员！";

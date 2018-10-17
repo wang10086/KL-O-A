@@ -50,7 +50,7 @@
                                         </div>
 
                                         <div class="form-group col-md-4 viwe">
-                                            <p>员工类别：<?php if($info['account']['formal']==0){ echo '转正';}elseif($info['account']['formal']==1){ echo'未转正';}elseif($info['account']['formal']==2){ echo'劳务';}elseif($info['account']['formal']==3){ echo'实习';}?></p>
+                                            <p>员工类别：<?php if($info['account']['formal']==0){ echo '试用';}elseif($info['account']['formal']==1){ echo'正式';}elseif($info['account']['formal']==3){ echo'劳务';}elseif($info['account']['formal']==4){ echo'实习';}?></p>
                                         </div>
                                         <div class="form-group col-md-4 viwe">
                                             <p>员工状态：<?php if($info['account']['status']==0){ echo "在职";}elseif($inf['account']['status']==1){echo "离职";} ?></p>
@@ -105,20 +105,20 @@
 
                                                     <tr>
                                                         <td>次数</td>
-                                                        <td>{$info['attendance']['late1']}</td>
-                                                        <td>{$info['attendance']['late2']}</td>
-                                                        <td>{$info['attendance']['leave_absence']}</td>
-                                                        <td>{$info['attendance']['sick_leave']}</td>
-                                                        <td>{$info['attendance']['absenteeism']}</td>
+                                                        <td><?php echo  round($info['attendance']['late1'],2);?></td>
+                                                        <td><?php echo  round($info['attendance']['late2'],2);?></td>
+                                                        <td><?php echo  round($info['attendance']['leave_absence'],2);?></td>
+                                                        <td><?php echo  round($info['attendance']['sick_leave'],2);?></td>
+                                                        <td><?php echo  round($info['attendance']['absenteeism'],2);?></td>
                                                     </tr>
 
                                                 <tr>
                                                     <td>扣款</td>
                                                     <td>{$info['attendance']['late1']*10}</td>
                                                     <td>{$info['attendance']['late2']*30}</td>
-                                                    <td><?php echo  floor($info['wages_month']['basic_salary']/21.75*$info['attendance']['leave_absence']*100)/100;?></td>
-                                                    <td><?php echo  floor(($info['wages_month']['performance_salary']-($info['attendance']['lowest_wage']*0.8))/21.75*$info['attendance']['sick_leave']*100)/100?></td>
-                                                    <td><?php echo  floor($info['wages_month']['basic_salary']/21.75*$info['attendance']['absenteeism']*2*100)/100;?></td>
+                                                    <td><?php echo  round($info['wages_month']['basic_salary']/21.75*$info['attendance']['leave_absence'],2);?></td>
+                                                    <td><?php echo  round(($info['wages_month']['performance_salary']-($info['attendance']['lowest_wage']*0.8))/21.75*$info['attendance']['sick_leave'],2)?></td>
+                                                    <td><?php echo  round($info['wages_month']['basic_salary']/21.75*$info['attendance']['absenteeism']*2,2);?></td>
                                                 </tr>
 
                                             </table><br />
@@ -160,8 +160,9 @@
                                                 <tr>
                                                     <td>增减</td>
                                                     <td class="salary_detali_score_td1">{$info['wages_month']['performance_salary']/100*$info['wages_month']['total_score_show']} (元)</td>
-                                                    <td class="salary_detali_score_td2">{$info['wages_month']['performance_salary']/100*$info['wages_month']['sum_total_score']} (元)</td>
                                                     <td class="salary_detali_score_td3">{$info['wages_month']['performance_salary']/100*$info['wages_month']['show_qa_score']}(元)</td>
+                                                    <td class="salary_detali_score_td2">{$info['wages_month']['performance_salary']/100*$info['wages_month']['sum_total_score']} (元)</td>
+
                                                 </tr>
                                             </table>
                                         </div>
@@ -184,7 +185,7 @@
                                         </div><br/><br/><br/>
                                         <h5 style="color:#000000;">&nbsp;&nbsp;&nbsp;&nbsp;其他人员提成（计调、研发、资源）：{$info['bonus']['bonus']}（元）</h5><br/>
                                         <div class="form-group col-md-4 viwe">
-                                            <p>带团补助（课时费）：{$info['total']}</p>
+                                            <p>带团补助（课时费）：{$info['bonus']['extract']}</p>
                                         </div>
                                         <div class="form-group col-md-4 viwe">
                                             <p>住房补助：{$info['wages_month'].housing_subsidy} </p>

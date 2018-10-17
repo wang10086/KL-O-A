@@ -68,18 +68,24 @@
         <include file="Index:footer" />
         
    <script type="text/javascript">
-//            var html = "<lebal class='upload-lebal'>已选审批人<span></span></lebal>";
-//       $('#Approvel_uploadtid ').each(function(){
-//           $(this).hasClass('checked');
-//
-//           alert($(this).hasClass('checked'));
-//
-//       });
-            $('#Approvel_uploadtid a').on('ifChecked', function() {
-                var html += $(this).html();
-                $('#Approvel_upload_postid').html(html);
 
+            var html ='';
+            html += '<lebal class="upload-lebal">已选审批人<span></span></lebal>';
+            $('#Approvel_uploadtid a').on('ifChecked', function() {
+                $('#Approvel_uploadtid a').each(function(){
+                        var  check = $(this).find('.checked');
+                        if(check !=="checked"){
+                            html += $(this).html();
+                        }
+                        alert(check);
+                    });
+//                html += $(this).html();
+                console.log(html);
+//                html += $(this).html();
+                $('#Approvel_upload_postid').html(html);
             });
+
+
 
    </script>
         

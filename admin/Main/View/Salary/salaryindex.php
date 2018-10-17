@@ -58,7 +58,7 @@
                                         <foreach name="info" item="info">
 
                                             <tr>
-                                                <td>{$info.id}</td>
+                                                <td>{$info.account_id}</td>
                                                 <td>{$info.user_name}</td>
                                                 <td>{$info.department}</td>
                                                 <td>&yen; {$info.standard}</td>

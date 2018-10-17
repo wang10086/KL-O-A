@@ -25,19 +25,12 @@ class SalaryController extends BaseController {
 
         }else{
 
-            if($userid['account_id']!==$_SESSION['userid']){
-
-                $this->error('您只能查看自己的工资！');die;
-            }
             $userid['account_id']               = $_SESSION['userid'];
         }
 
         $count = M('salary_wages_month')->where($userid)->count();
-
         $page                                  = new Page($count,15);
-
         $pages                                 = $page->show();
-
         $info = M('salary_wages_month')->where($userid)->limit("$page->firstRow","$page->listRows")->order('datetime desc')->select();//工资生成数据
 //         print_r($info);die;
 
@@ -74,18 +67,16 @@ class SalaryController extends BaseController {
 
         $user_info['bonus']                     = M('salary_bonus')->where(array('id='.$user_info1['bonus_id']))->find();//提成/奖金
 
-        $que['a.nickname']                      = $user_info1['nickname'];
-        $que['p.tab_user_id']                   = $user_info1['account_id'];
+        $que['p.tab_user_id']                   = $uid;
         $que['p.month']                         = $id['datetime'];
         $user_info['fen']                       = $this->query_score($que); //绩效增减
 
         $position_id['id']                      = $user_info['account']['position_id'];
         $position                               = sql_query(1,'*','oa_position',$position_id,1,1);//职位
         $strstr                                 = $position[0]['position_name'];
-        if(strstr($strstr,'S')==false){
-            $user_info['total']                 = $user_info['bonus']['extract'];
-        }else{
-            $user_info['kpi']                   = $this->salary_kpi_month($user_info1['account_id'],$id['datetime']);// kpi 季度提成
+
+        if(strstr($strstr,'S')!==false){
+            $user_info['kpi']                   = $this->salary_kpi_month($uid,$que['p.month']); //业务人员 目标任务 完成 提成
         }
 
         $user_info['income']                    = M('salary_income')->where(array('income_token='.$user_info1['income_token']))->select();//其他收入
@@ -96,6 +87,7 @@ class SalaryController extends BaseController {
 
         $user_info['withholding']               = M('salary_withholding')->where(array('token='.$user_info1['withholding_token']))->select();//代扣代缴
 
+//print_r($user_info);die;
         $this->assign('info',$user_info);
         $this->display();
     }
@@ -160,12 +152,13 @@ class SalaryController extends BaseController {
             $content['complete']     = $sum;
             $content['total']        = round($Total,2);//保留两位小数
         }else{
-            $content['target']       = '0.00';
-            $content['complete']     = '0.00';
+            $content['target']       = $lists['target'];//季度目标
+            $content['complete']     = $lists['complete'];//季度完成
             $content['total']        = '0.00';//保留两位小数
         }
         return $content;
     }
+
 
     /**
      * sql_query
@@ -756,7 +749,6 @@ class SalaryController extends BaseController {
                     $que['p.month']                    = $time_Y.$time_M;//查询年月
                 }
             }
-
             $user                                   = $this->query_score($que);//绩效增减
 
             $use1                                   = trim(str_replace(array('<font color="#999999">','</font>','无加扣分','<span class="red">','</span>','<span>','<font color="#ff9900">','未完成评分'),"",$user[0]['total_score_show']));//PDCA
@@ -786,7 +778,6 @@ class SalaryController extends BaseController {
             $strstr                                 = $position[0]['position_name'];
 
             $user_bonus                             = $user_info[$key]['bonus'][0]['extract'];//提成
-
             if(strstr($strstr,'S')!==false){
                 $user_info[$key]['Extract']         = $this->salary_kpi_month($val['id'],$que['p.month']); //业务人员 目标任务 完成 提成
             }
