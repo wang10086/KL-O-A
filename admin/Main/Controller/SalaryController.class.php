@@ -47,6 +47,12 @@ class SalaryController extends BaseController {
      * sql_query参数（1查2增3删4修,查询字段,表名,条件,1倒叙2正常顺序,1查一条0所有）
      */
     public function salarydetails(){
+        if($_SESSION['userid']==1 || $_SESSION['userid']===55|| $_SESSION['userid']===77 || $_SESSION['userid']===11){
+
+        }else{
+            $this->error('详情表正在更新!暂时无法操作！');die;
+        }
+
 
         if(!is_numeric(trim($_GET['id'])) || !is_numeric(trim($_GET['datetime']))){
             $this->error('您的数据有误!请重新选择！');die;
