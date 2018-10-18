@@ -134,6 +134,16 @@ class OpController extends BaseController {
 				//$this->request_audit(P::REQ_TYPE_PROJECT_NEW, $addok);
 
 				if($addok){
+                    $data = array();
+                    $data['hesuan'] = cookie('userid');
+                    $auth = M('op_auth')->where(array('op_id'=>$opid))->find();
+
+                    if($auth){
+                        M('op_auth')->data($data)->where(array('id'=>$auth['id']))->save();
+                    }else{
+                        $data['op_id'] = $opid;
+                        M('op_auth')->add($data);
+                    }
 
 					$record = array();
 					$record['op_id']   = $opid;
@@ -542,6 +552,7 @@ class OpController extends BaseController {
 		$this->ages           = C('AGE_LIST');
         $this->guide          = $guide?$guide:$guide_old;
         $this->dijie_names    = C('DIJIE_NAME');
+        $this->change         = M('op')->where(array('dijie_opid'=>$opid))->find();
 
         /*$this->service_type   = C('SERVICE_TYPE');
         $this->act_need       = C('ACT_NEED');
@@ -1137,7 +1148,7 @@ class OpController extends BaseController {
 	}
 
     //@@@NODE-3###assign_hesuan###指派人员跟进成本核算###
-    public function assign_hesuan(){
+    /*public function assign_hesuan(){
         $opid       = I('opid');
         $info       = I('info');
         $user      =  M('account')->getField('id,nickname', true);
@@ -1194,7 +1205,7 @@ class OpController extends BaseController {
             $this->opid = $opid;
             $this->display('assign_hesuan');
         }
-    }
+    }*/
 
     //@@@NODE-3###assign_yusuan###指派人员跟进项目预算###
     public function assign_yusuan(){
@@ -1206,6 +1217,8 @@ class OpController extends BaseController {
 
             $data = array();
             $data['yusuan'] = $info;
+            $data['jiesuan']= $info;
+            $data['line']   = $info;
             $auth = M('op_auth')->where(array('op_id'=>$opid))->find();
 
             //创建工单
@@ -1240,13 +1253,15 @@ class OpController extends BaseController {
             //用户列表
             $key = I('key');
             $db = M('account');
-            $where = array();
-            $where['id'] = array('gt',3);
+            $where          = array();
+            $where['id']    = array('gt',3);
+            $where['status']= array('eq',0);    //1=>停用, 2=>删除
             if($key) $where['nickname'] = array('like','%'.$key.'%');
             $pagecount = $db->where($where)->count();
             $page = new Page($pagecount,6);
             $this->pages = $pagecount>6 ? $page->show():'';
             $this->lists = $db->where($where)->limit($page->firstRow . ',' . $page->listRows)->order($this->orders('roleid'))->select();
+
             $this->role  = M('role')->getField('id,role_name', true);
             $this->opid = $opid;
             $this->display('assign_yusuan');
@@ -1297,8 +1312,9 @@ class OpController extends BaseController {
             //用户列表
             $key = I('key');
             $db = M('account');
-            $where = array();
-            $where['id'] = array('gt',3);
+            $where          = array();
+            $where['id']    = array('gt',3);
+            $where['status']= array('eq',0);    //1=>停用, 2=>删除
             if($key) $where['nickname'] = array('like','%'.$key.'%');
             $pagecount = $db->where($where)->count();
             $page = new Page($pagecount,6);
@@ -2314,6 +2330,16 @@ class OpController extends BaseController {
                     $opres = M('op')->add($new_op);
                     if ($opres) {
                         M('op_team_confirm')->add($dijie_confirm);
+                        $data = array();
+                        $data['hesuan'] = $new_op['create_user'];
+                        $auth = M('op_auth')->where(array('op_id'=>$new_op['op_id']))->find();
+
+                        if($auth){
+                            M('op_auth')->data($data)->where(array('id'=>$auth['id']))->save();
+                        }else{
+                            $data['op_id'] = $new_op['op_id'];
+                            M('op_auth')->add($data);
+                        }
 
                         //系统消息提醒
                         $uid     = cookie('userid');
@@ -2434,9 +2460,36 @@ class OpController extends BaseController {
         if (isset($_POST['dosubmit'])) {
             $op_id                  = I('opid');
             $info                   = I('info');
-            $info['sale_user']      = $info['create_user_name'];
-            $info['op_create_user'] = M()->table('__ACCOUNT__ as a')->join('__ROLE__ as r on r.id = a.roleid','left')->where(array('a.id'=>$info['create_user']))->getField('r.role_name');
-            $res = M('op')->where(array('op_id'=>$op_id))->save($info);
+            if ($info['create_user']){
+                $info['sale_user']      = $info['create_user_name'];
+                $info['op_create_user'] = M()->table('__ACCOUNT__ as a')->join('__ROLE__ as r on r.id = a.roleid','left')->where(array('a.id'=>$info['create_user']))->getField('r.role_name');
+                $res = M('op')->where(array('op_id'=>$op_id))->save($info);
+                if ($res){
+                    $data = array();
+                    $data['hesuan'] = $info['create_user'];
+                    $auth = M('op_auth')->where(array('op_id'=>$op_id))->find();
+
+                    if($auth){
+                        M('op_auth')->data($data)->where(array('id'=>$auth['id']))->save();
+                    }else{
+                        $data['op_id'] = $op_id;
+                        M('op_auth')->add($data);
+                    }
+
+                    $record                 = array();
+                    $record['op_id']        = $op_id;
+                    $record['optype']       = 4;
+                    $record['explain']      = '项目交接给'.$info['create_user_name'].'';
+                    op_record($record);
+
+                    $this->msg = '操作成功!';
+                }else{
+                    $this->msg = '操作失败!';
+                }
+            }else{
+                $this->msg = '人员信息错误!';
+            }
+            $this->display('audit_ok');
         }else{
             //人员名单关键字
             $user       = M('account')->field("id,nickname")->where(array('status'=>0))->select();

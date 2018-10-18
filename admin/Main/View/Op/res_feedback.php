@@ -90,6 +90,20 @@
         setTimeout("history.go(0)",1000);
     }
 
+    artDialog.alert = function (content, status) {
+        return artDialog({
+            id: 'Alert',
+            icon: status,
+            width:300,
+            height:120,
+            fixed: true,
+            lock: true,
+            time: 1,
+            content: content,
+            ok: true
+        });
+    };
+
     function print_part(){
         var op_kind = <?php echo $op_kind; ?>;
         if (op_kind == 60){

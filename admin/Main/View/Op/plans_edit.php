@@ -53,7 +53,11 @@
 										echo ' <span style=" color:#999999;">该项目暂未成团</span>';
 									} ?>
                                     </h3>
-                                    <h3 class="box-title pull-right" style="font-weight:normal; color:#333333;"><span class="green">项目编号：{$op.op_id}</span> &nbsp;&nbsp;创建者：{$op.create_user_name}</h3>
+                                    <h3 class="box-title pull-right" style="font-weight:normal; color:#333333;"><span class="green">项目编号：{$op.op_id}</span> &nbsp;&nbsp;创建者：{$op.create_user_name}
+                                        <?php if (rolemenu(array('Op/change_op')) && (C('RBAC_SUPER_ADMIN')==cookie('username') || cookie('roleid')==10 || ($change &&$op['create_user']==cookie('userid')))){ ?>
+                                            <span  style=" border: solid 1px #00acd6; padding: 0 5px; border-radius: 5px; background-color: #00acd6; color: #ffffff; margin-left: 20px" onClick="open_change({$op['op_id']})" title="交接该团" class="">交接该团</span>
+                                        <?php } ?>
+                                    </h3>
                                     
                                 </div><!-- /.box-header -->
                                 <div class="box-body">
@@ -599,7 +603,7 @@
 		});	
 	}
 
-	
+
 	//选择导游辅导员
 	function selectguide() {
 		art.dialog.open('<?php echo U('Op/select_guide',array('opid'=>$opid)); ?>',{
@@ -1050,6 +1054,25 @@
         $('#total_'+a).val(total);
     }
 
+    //项目交接
+    function open_change (opid) {
+        art.dialog.open('<?php echo U('Op/change_op',array('opid'=>$opid)) ?>', {
+            lock:true,
+            id: 'change',
+            title: '项目交接',
+            width:600,
+            height:300,
+            okValue: '提交',
+            ok: function () {
+                this.iframe.contentWindow.gosubmint();
+                location.reload();
+                return false;
+            },
+            cancelValue:'取消',
+            cancel: function () {
+            }
+        });
+    }
 
 </script>	
 

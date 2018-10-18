@@ -100,7 +100,7 @@
                                     </div>
 
                                     <div class="form-group col-md-4">
-                                        <label>是否是内部地接</label>
+                                        <label>是否本公司其他项目部地接</label>
                                         <select  name="info[in_dijie]" class="form-control" id="dijie" onchange="is_or_not_dijie()" required>
                                             <option value="" selected disabled>--请选择--</option>
                                             <option value="1">是</option>：

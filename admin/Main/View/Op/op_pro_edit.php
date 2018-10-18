@@ -67,7 +67,7 @@
     </div>
 
     <div class="form-group col-md-4">
-        <label>是否是内部地接</label>
+        <label>是否本公司其他项目部地接</label>
         <select  name="info[in_dijie]" class="form-control" required id="dijie" onchange="is_or_not_dijie()">
             <option value="" disabled>--请选择--</option>
             <option value="1" <?php if ($op['in_dijie'] ==1){echo 'selected';} ?> >是</option>：
@@ -83,9 +83,6 @@
 
     <div class="form-group col-md-12" id="addti_btn">
         <a  href="javascript:;" class="btn btn-info btn-sm" onClick="javascript:save('save_op_info','<?php echo U('Op/public_save'); ?>',{$op.op_id});">保存</a>
-        <?php if (C('RBAC_SUPER_ADMIN')==cookie('username') || cookie('roleid')==10 || ($op['in_dijie']==1 &&$op['create_user']==cookie('userid') && $settlement['audit']!=1)){ ?>
-        <a  href="javascript:;" onClick="open_change({$op['op_id']})" title="交接该团" class="btn btn-warning btn-sm">交接该团</a>
-        <?php } ?>
     </div>
 </form>
 
@@ -115,26 +112,6 @@
         }else{
             $('#dijie_or_sale').html(sale);
         }
-    }
-
-    //项目交接
-    function open_change (opid) {
-        art.dialog.open('<?php echo U('Op/change_op',array('opid'=>$opid)) ?>', {
-            lock:true,
-            id: 'change',
-            title: '项目交接',
-            width:500,
-            height:200,
-            okValue: '提交',
-            ok: function () {
-                this.iframe.contentWindow.gosubmint();
-                location.reload();
-                return false;
-            },
-            cancelValue:'取消',
-            cancel: function () {
-            }
-        });
     }
 
 </script>
