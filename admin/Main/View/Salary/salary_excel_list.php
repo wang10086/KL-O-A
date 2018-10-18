@@ -23,7 +23,9 @@
                         <h3 class="box-title">员工薪资列表</h3>
                         <a  class="btn btn-info" style="width:8em; margin: 0.5em 0em 0em 2em;"> <?php if($status=="" || $status==0 || $status==1){echo "待提交审核";}elseif($status==2){echo "待提交批准";}elseif($status==3){echo "待批准";}elseif($status==4){echo "已批准";}?></a>
                         <a href="javascript:;" class="btn btn-info btn-sm" onclick="javascript:opensearch('searchtext',700,160);" style="margin: 0.7em 0em 0em 3em;" ><i class="fa fa-search"></i> 搜索</a>
-                        <form action="{:U('Salary/Ajax_exportExcel')}" method="POST">
+<!--                        <a  href="{:U('Salary/salary_exportExcel',array('datetime'=>$coun['datetime'],'type'=>$type))}" class="btn btn-info btn-sm" style="margin:-4.6em 0em 0em 24em;" />导出 Excel</a>-->
+
+                        <form action="{:U('Salary/salary_exportExcel')}" method="POST">
 
                             <foreach name="inf" item="inf" style="display:none">
                                 <input type="text" value="{$inf['account']['id']}" name="Excel1[]"  style="display:none" />
@@ -31,14 +33,14 @@
                                 <input type="text" value="{$inf['posts'][0]['post_name']}" name="Excel1[]"  style="display:none" />
                                 <input type="text" value="{$inf['department'][0]['department']}" name="Excel1[]"  style="display:none" />
                                 <input type="text" value="{$inf['salary'][0]['standard_salary']}" name="Excel1[]"  style="display:none" />
-                                <input type="text" value="<?PHP echo sprintf("%.2f",($inf['salary'][0]['standard_salary']/10*$inf['salary'][0]['basic_salary']));?>" name="Excel1[]"  style="display:none" />
+                                <input type="text" value="{$inf['salary'][0]['standard_salary']/10*$inf['salary'][0]['basic_salary']};?>" name="Excel1[]"  style="display:none" />
                                 <input type="text" value="{$inf['attendance'][0]['withdrawing']}" name="Excel1[]"  style="display:none" />
                                 <input type="text" value="{$inf['salary'][0]['standard_salary']/10*$inf['salary'][0]['performance_salary']}" name="Excel1[]"  style="display:none" />
                                 <input type="text" value="{$inf['Achievements']['count_money']}" name="Excel1[]"  style="display:none" />
                                 <input type="text" value="{$inf['Extract']['total']}" name="Excel1[]"  style="display:none" />
                                 <input type="text" value="{$inf['bonus'][0]['bonus']}" name="Excel1[]"  style="display:none" />
                                 <input type="text" value="{$inf['subsidy'][0]['housing_subsidy']}" name="Excel1[]"  style="display:none" />
-                                <input type="text" value="{$inf['Other']}</td>" name="Excel1[]"  style="display:none" />
+                                <input type="text" value="{$inf['Other']}" name="Excel1[]"  style="display:none" />
                                 <input type="text" value="{$inf['Should']}" name="Excel1[]"  style="display:none" />
                                 <input type="text" value="{$inf['insurance'][0]['medical_care_base']*$inf['insurance'][0]['medical_care_ratio']+$inf['insurance'][0]['big_price']}" name="Excel1[]"  style="display:none" />
                                 <input type="text" value="{$inf['insurance'][0]['pension_base']*$inf['insurance'][0]['pension_ratio']}" name="Excel1[]"  style="display:none" />
@@ -55,8 +57,8 @@
                             <foreach name="su" item="su" style="display:none">
                                 <input type="text" value="{$su['name']}" name="Excel2[]" style="display:none" />
                                 <input type="text" value="{$su['department']}" name="Excel2[]" style="display:none" />
-                                <input type="text" value="<?PHP echo sprintf("%.2f",$su['standard_salary']);?>" name="Excel2[]" style="display:none" />
-                                <input type="text" value="<?PHP echo sprintf("%.2f",$su['basic']);?>" name="Excel2[]" style="display:none" />
+                                <input type="text" value="{$su['standard_salary']}" name="Excel2[]" style="display:none" />
+                                <input type="text" value="{$su['basic']}" name="Excel2[]" style="display:none" />
                                 <input type="text" value="{$su['withdrawing']}" name="Excel2[]" style="display:none" />
                                 <input type="text" value="{$su['performance_salary']}" name="Excel2[]" style="display:none" />
                                 <input type="text" value="{$su['count_money']}" name="Excel2[]" style="display:none" />
@@ -78,8 +80,8 @@
 
                             </foreach>
                             <input type="text" value="{$coun['name']}" name="Excel3[]" style="display:none" />
-                            <input type="text" value="<?PHP echo sprintf("%.2f",$coun['standard_salary']);?>" name="Excel3[]" style="display:none" />
-                            <input type="text" value="<?PHP echo sprintf("%.2f",$coun['basic']);?>" name="Excel3[]" style="display:none" />
+                            <input type="text" value="{$coun['standard_salary']}" name="Excel3[]" style="display:none" />
+                            <input type="text" value="{$coun['basic']}" name="Excel3[]" style="display:none" />
                             <input type="text" value="{$coun['withdrawing']}" name="Excel3[]" style="display:none" />
                             <input type="text" value="{$coun['performance_salary']}" name="Excel3[]" style="display:none" />
                             <input type="text" value="{$coun['count_money']}" name="Excel3[]" style="display:none" />
@@ -102,7 +104,6 @@
                             <input type="text" value="{$coun['datetime']}" name="datetime"  style="display:none" />
                             <input type="submit" value="导出 Excel" class="btn btn-info btn-sm" style="margin:-4.6em 0em 0em 24em;" />
                         </form>
-
 
 
                     </div><!-- /.box-header --><br>
@@ -522,6 +523,43 @@
             });
         }
     });
+
+
+//    var content1 ='';
+//    var content2 ='';
+//    var content3 ='';
+//
+//    $('#Excel_id').click(function(){
+//        $('table .excel_list_money1').each(function(){
+//            content1 += $(this).children('td').text();
+//        });
+//        $('.excel_list_money2').each(function(){
+//            content2 += $(this).text();
+//        });
+//        $('.excel_list_money3').each(function(){
+//            content3 += $(this).text();
+//        });
+//        $.ajax({
+//            type: "POST",
+//            url:  "index.php?m=Main&c=Salary&a=salary_exportExcel",
+//            data: {
+//                'Excel1' : content1,
+//                'Excel2' : content2,
+//                'Excel3' : content3,
+//            },
+//            dataType: "json", //数据格式
+//            success: function (data) {
+//                if (data.sum == 1) {
+//                    alert(data.msg);
+//                    return false;
+//                }
+//                if (data.sum == 0) {
+//                    alert(data.msg);
+//                    return false;
+//                }
+//            }
+//        });
+//    });
 
     excel_list_color();
 </script>

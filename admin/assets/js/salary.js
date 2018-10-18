@@ -228,8 +228,9 @@ $('.salary_button22').click(function(){//工会会费
         var url = "index.php?m=Main&c=Ajax&a=Ajax_subsidy_Query";
         var statu = $(this).parents('tr').find('.status').val();//状态 1 提成奖金 2 补贴
         var account_id = $(this).parents('tr').find('.salary_table_extract').text();//用户id
-        var housing_subsidy = $(this).parents('tr').find('.salary_bonus_extract').val();//住房补贴  | 提成
-        var foreign_subsidies = $(this).parents('tr').find('.salary_bonus_bonus').val();//外地补贴 | 奖金
+        var housing_subsidy = $(this).parents('tr').find('.salary_bonus_extract').val();//住房补贴  | 带团补助
+        var foreign_subsidies = $(this).parents('tr').find('.salary_bonus_bonus').val();//外地补贴 | 其他提成
+        var foreign_bonus = $(this).parents('tr').find('.salary_bonus1_bonus').val();//奖金
         var computer_subsidy = $(this).parents('tr').find('.salary_bonus_yearend').val();//电脑补贴 | 年终
         $.ajax({
             type: "post",
@@ -239,6 +240,7 @@ $('.salary_button22').click(function(){//工会会费
                 'housing_subsidy': housing_subsidy,
                 'foreign_subsidies': foreign_subsidies,
                 'computer_subsidy': computer_subsidy,
+                'foreign_bonus':foreign_bonus,
                 'statu':statu,
             },
             dataType: "json", //数据格式

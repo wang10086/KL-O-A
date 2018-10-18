@@ -481,14 +481,15 @@ class AjaxController extends Controller {
         $uid['account_id']                  = code_number(trim($_POST['account_id']));
         if($type == 1){//提成/奖金
 
-            $where['extract']               = code_number(trim($_POST['housing_subsidy']));//提成
-            $where['bonus']                 = code_number(trim($_POST['foreign_subsidies']));//奖金
+            $where['extract']               = code_number(trim($_POST['housing_subsidy']));//带团补助
+            $where['bonus']                 = code_number(trim($_POST['foreign_subsidies']));//其他人员提成
             $where['annual_bonus']          = code_number(trim($_POST['computer_subsidy']));//年终奖
+            $where['foreign_bonus']         = code_number(trim($_POST['foreign_bonus']));//奖金
         }
         if($type == 2){//补贴
-            $where['housing_subsidy']       = code_number(trim($_POST['housing_subsidy']));
-            $where['foreign_subsidies']     = code_number(trim($_POST['foreign_subsidies']));
-            $where['computer_subsidy']      = code_number(trim($_POST['computer_subsidy']));
+            $where['housing_subsidy']       = code_number(trim($_POST['housing_subsidy']));//住房补贴
+            $where['foreign_subsidies']     = code_number(trim($_POST['foreign_subsidies']));//外地补贴
+            $where['computer_subsidy']      = code_number(trim($_POST['computer_subsidy']));//电脑补贴
         }
 
         if($type == 1){$subsidy_r             = M('salary_bonus')->where($uid)->order('id desc')->find();}

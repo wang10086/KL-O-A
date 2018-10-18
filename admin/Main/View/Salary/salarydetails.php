@@ -90,7 +90,7 @@
                                                 <p>考勤扣款：{$info['wages_month'].withdrawing}（元） </p>
                                             </div>
                                             <div class="form-group col-md-4 viwe">
-                                                <p>应发基本工资：{$info['wages_month']['basic_salary']-$info['wages_month'].withdrawing}（元）</p>
+                                                <p>应发基本工资：<?PHP echo sprintf("%.2f",$info['wages_month']['basic_salary']-$info['wages_month']['withdrawing']);?>（元）</p>
                                             </div>
                                             <table class="table table-bordered dataTable fontmini">
                                                 <tr role="row" class="orders" >
@@ -99,7 +99,8 @@
                                                     <th class="sorting" data="group_id">迟到/早退（15分钟~2小时）</th>
                                                     <th class="sorting" data="group_id">事假</th>
                                                     <th class="sorting" data="project">病假</th>
-                                                    <th class="sorting" class="project">矿工</th>
+                                                    <th class="sorting" class="project">旷工</th>
+                                                    <th class="sorting" class="project">缺勤天数</th>
 
                                                 </tr>
 
@@ -110,6 +111,7 @@
                                                         <td><?php echo  round($info['attendance']['leave_absence'],2);?></td>
                                                         <td><?php echo  round($info['attendance']['sick_leave'],2);?></td>
                                                         <td><?php echo  round($info['attendance']['absenteeism'],2);?></td>
+                                                        <td><?php echo  round($info['attendance']['entry_data'],2);?></td>
                                                     </tr>
 
                                                 <tr>
@@ -117,8 +119,9 @@
                                                     <td>{$info['attendance']['late1']*10}</td>
                                                     <td>{$info['attendance']['late2']*30}</td>
                                                     <td><?php echo  round($info['wages_month']['basic_salary']/21.75*$info['attendance']['leave_absence'],2);?></td>
-                                                    <td><?php echo  round(($info['wages_month']['performance_salary']-($info['attendance']['lowest_wage']*0.8))/21.75*$info['attendance']['sick_leave'],2)?></td>
+                                                    <td><?php echo  round(($info['wages_month']['basic_salary']-($info['attendance']['lowest_wage']*0.8))/21.75*$info['attendance']['sick_leave'],2);?></td>
                                                     <td><?php echo  round($info['wages_month']['basic_salary']/21.75*$info['attendance']['absenteeism']*2,2);?></td>
+                                                    <td><?php echo round($info['wages_month']['standard']/21.75*$info['attendance']['entry_data'],2);?></td>
                                                 </tr>
 
                                             </table><br />
@@ -127,7 +130,7 @@
                                             </div>
 
                                             <div class="form-group col-md-4 viwe">
-                                                <p >应发绩效工资：{$info['wages_month']['performance_salary']-$info['wages_month']['Achievements_withdrawing']} (元)</p>
+                                                <p >应发绩效工资：{$info['wages_month']['Should_distributed']} (元)</p>
                                             </div>
                                             <table class="table table-bordered dataTable fontmini" style="margin-top:10px;">
                                                 <tr role="row" class="orders" >
@@ -175,29 +178,29 @@
                                         </div><!-- /.box-header --><br>
                                         <h5 style="color:#FF3333">业务人员提成</h5><br/>
                                         <div class="form-group col-md-4 viwe">
-                                            <p>目标任务：{$info['kpi']['target']} (元)</p>
+                                            <p>目标任务：<?PHP echo sprintf("%.2f",$info['kpi']['target']);?> (元)</p>
                                         </div>
                                         <div class="form-group col-md-4 viwe">
-                                            <p>季度完成：{$info['kpi']['complete']} (元)</p>
+                                            <p>季度完成：<?PHP echo sprintf("%.2f",$info['kpi']['complete']);?> (元)</p>
                                         </div>
                                         <div class="form-group col-md-4 viwe">
-                                            <p>业绩提成：{$info['kpi']['total']} (元)</p>
+                                            <p>业绩提成：<?PHP echo sprintf("%.2f",$info['kpi']['total']);?> (元)</p>
                                         </div><br/><br/><br/>
-                                        <h5 style="color:#000000;">&nbsp;&nbsp;&nbsp;&nbsp;其他人员提成（计调、研发、资源）：{$info['bonus']['bonus']}（元）</h5><br/>
+                                        <h5 style="color:#000000;">&nbsp;&nbsp;&nbsp;&nbsp;其他人员提成（计调、研发、资源）：<?PHP echo sprintf("%.2f",$info['bonus']['extract']);?>（元）</h5><br/>
                                         <div class="form-group col-md-4 viwe">
-                                            <p>带团补助（课时费）：{$info['bonus']['extract']}</p>
+                                            <p>带团补助（课时费）：<?PHP echo sprintf("%.2f",$info['bonus']['bonus']);?></p>
                                         </div>
                                         <div class="form-group col-md-4 viwe">
-                                            <p>住房补助：{$info['wages_month'].housing_subsidy} </p>
+                                            <p>住房补助：<?PHP echo sprintf("%.2f",$info['wages_month']['housing_subsidy']);?> </p>
                                         </div>
                                         <div class="form-group col-md-4 viwe">
-                                            <p>外地补贴：{$info['subsidy'].foreign_subsidies}</p>
+                                            <p>外地补贴：<?PHP echo sprintf("%.2f",$info['subsidy']['foreign_subsidies']);?></p>
                                         </div>
                                         <div class="form-group col-md-4 viwe">
-                                            <p>电脑补贴：{$info['subsidy'].computer_subsidy}</p>
+                                            <p>电脑补贴：<?PHP echo sprintf("%.2f",$info['subsidy']['computer_subsidy']);?></p>
                                         </div>
                                         <div class="form-group col-md-4 viwe">
-                                            <p>年终奖：{$info['bonus'].annual_bonus} </p>
+                                            <p>年终奖：<?PHP echo sprintf("%.2f",$info['bonus']['annual_bonus']);?> </p>
                                         </div>
                                     </div>
                                     <div class="content" style="margin-left: -25px">
@@ -302,28 +305,28 @@
 
                                     <div class="content">
                                         <div class="box-header" style="margin-left: -20px">
-                                            <h3 class="box-title">五 、个税及工会会费、代扣代缴  共计 <u class="salary_individual_totala">{$info['wages_month']['tax_counting']+$info['wages_month']['personal_tax']+$info['wages_month']['Labour']-$info['wages_month']['summoney']+$info['wages_month']['Other']}</u>  元</h3>
+                                            <h3 class="box-title">五 、个税及工会会费、代扣代缴  共计 <u class="salary_individual_totala"><?PHP echo sprintf("%.2f",($info['wages_month']['summoney']+$info['wages_month']['personal_tax']+$info['bonus']['annual_bonus']+$info['wages_month']['Labour']));?></u>  元</h3>
                                         </div><!-- /.box-header --><br><br>
 
                                         <div class="form-group col-md-4 viwe">
                                             <!--   岗位薪酬 +  提成/补助/奖金     -->
-                                            <p class="salary_aggregate_should">应发工资合计：{$info['wages_month']['basic_salary']-$info['wages_month']['withdrawing']+$info['wages_month']['performance_salary']-$info['wages_month']['Achievements_withdrawing']+$info['wages_month']['total']+$info['wages_month']['bonus']+$info['bonus']['extract']+$info['wages_month']['housing_subsid']+$info['subsidy']['foreign_subsidies']+$info['subsidy']['computer_subsidy']+$info['bonus']['annual_bonus']}(元)</p>
+                                            <p class="salary_aggregate_should">应发工资合计：<?PHP echo sprintf("%.2f",$info['wages_month']['Should_distributed']);?>(元)</p>
                                         </div>
                                         <!--   应发工资合计  - 员工五险一金 + 其他收入     -->
                                         <div class="form-group col-md-4 viwe">
-                                            <p class="salary_individual_tax_assessment">个税计税工资：{$info['wages_month']['tax_counting']} (元)</p>
+                                            <p class="salary_individual_tax_assessment">个税计税工资：<?PHP echo sprintf("%.2f",$info['wages_month']['tax_counting']);?> (元)</p>
                                         </div>
 
                                         <div class="form-group col-md-4 viwe">
-                                            <p class="salary_individual_tax_assessment1">个人所得税：{$info['wages_month']['personal_tax']}(元)</p>
+                                            <p class="salary_individual_tax_assessment1">个人所得税：<?PHP echo sprintf("%.2f",$info['wages_month']['personal_tax']);?>(元)</p>
                                         </div>
 
                                         <div class="form-group col-md-4 viwe">
-                                            <p class="salary_individual_tax_assessment2">{$info['bonus']['annual_bonus']}(元)</p>
+                                            <p class="salary_individual_tax_assessment2">年终计税：<?PHP echo sprintf("%.2f",$info['wages_month']['yearend']);?>(元)</p>
                                         </div>
 
                                         <div class="form-group col-md-4 viwe">
-                                            <p>工会会费：{$info['wages_month']['Labour']}(元)</p>
+                                            <p>工会会费：<?PHP echo sprintf("%.2f",$info['wages_month']['Labour']);?>(元)</p>
                                         </div>
 
                                     </div>
@@ -359,7 +362,7 @@
                                     </div>
                                     <div class="content">
                                         <div class="box-header" style="margin-left: -20px">
-                                            <h3 class="box-title">六 、实发工资  共计 <u class="salary_Payroll">{$info['wages_month']['real_wages']}</u> 元</h3><p style="margin-top: 15px;">(实发工资=岗位薪酬+提成/补助/奖金-员工五险一金-个税及工会会费、代扣代缴)</p>
+                                            <h3 class="box-title">六 、实发工资  共计 <u class="salary_Payroll">{$info['wages_month']['real_wages']}</u> 元</h3><p style="margin-top: 15px;">(实发工资=岗位薪酬+提成/补助/奖金+绩效增减-考勤扣款-员工五险一金-个税及工会会费、代扣代缴)</p>
                                         </div><!-- /.box-header --><br />
                                         <!--   1+2-3-5    -->
                                         <table class="table table-bordered dataTable fontmini"  style="margin-left:-15px;">
@@ -367,15 +370,20 @@
                                                 <th class="sorting" data="op_id">实发工资</th>
                                                 <th class="sorting" data="op_id">岗位薪酬</th>
                                                 <th class="sorting" data="op_id">提成/补助/奖金</th>
+                                                <th class="sorting" data="op_id">绩效增减</th>
+                                                <th class="sorting" data="op_id">考勤扣款</th>
                                                 <th class="sorting" data="group_id">员工五险一金</th>
                                                 <th class="sorting" data="group_id">个税及工会会费、代扣代缴</th>
                                             </tr>
                                             <tr>
                                                 <td class="salary_Payroll1">{$info['wages_month']['real_wages']}</td>
                                                 <td>{$info['wages_month']['standard']} (元)</td>
-                                                <td class="salary_subsidy1">{$info['wages_month']['total']+$info['wages_month']['bonus']+$info['bonus']['extract']+$info['wages_month']['housing_subsidy']+$info['subsidy']['foreign_subsidies']+$info['subsidy']['computer_subsidy']+$info['bonus']['annual_bonus']} (元)</td>
+                                                <td class="salary_subsidy1">{$info['wages_month']['welfare']} (元)</td>
+                                                <td class="salary_subsidy1">{$info['wages_month']['Achievements_withdrawing']} (元)</td>
+                                                <td class="salary_subsidy1">{$info['wages_month']['withdrawing']} (元)</td>
+
                                                 <td class="five_risks">{$info['wages_month']['insurance_Total']} (元)</td>
-                                                <td class="salary_individual_totala1">0.00 (元)</td>
+                                                <td class="salary_individual_totala1"><?PHP echo sprintf("%.2f",($info['wages_month']['summoney']+$info['wages_month']['personal_tax']+$info['bonus']['annual_bonus']+$info['wages_month']['Labour']));?> (元)</td>
                                             </tr>
                                         </table>
                                         <br>
@@ -395,41 +403,3 @@
 
             
 <include file="Index:footer2" />
-<script>
-
-       //年终奖计税
-       var bonus_mone              = $('.salary_individual_tax_assessment2').text();//年中奖
-       var bonus_money = bonus_mone.replace('(元)','');
-       var bonus_price              = Number(bonus_money)/12;
-
-       if(bonus_price < 1500){
-           var price1               = bonus_price*0.03;
-       }
-       if(bonus_price > 1500 && bonus_price < 4500){
-           var price1               = bonus_price*0.1-105;
-       }
-       if(bonus_price > 4500 && bonus_price < 9000){
-           var price1               = bonus_price*0.2-555;
-       }
-       if(bonus_price > 9000 && bonus_price < 35000){
-           var price1               = bonus_price*0.25-1055;
-       }
-       if(bonus_price > 35000 && bonus_price < 55000){
-           var price1               = bonus_price*0.3-2755;
-       }
-       if(bonus_price > 55000 && bonus_price < 80000){
-           var price1               = bonus_price*0.35-5505;
-       }
-       if(bonus_price>80000){
-           var price1               = bonus_price*0.45-13505;
-       }
-       var price2                   = (Math.floor(price1*100))/100;
-       var price3                   ='年终奖计税 : '+price2+' (元)';
-//
-       $('.salary_individual_tax_assessment2').html(price3);
-
-       var com =Number(<?php echo $info['wages_month']['tax_counting']+$info['wages_month']['personal_tax']+$info['wages_month']['Labour']-$info['wages_month']['summoney']+$info['wages_month']['Other']?>)+price2;
-       $('.salary_individual_totala').html(com);
-       $('.salary_individual_totala1').html(com);
-
-</script>

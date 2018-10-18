@@ -139,7 +139,7 @@
                 var num                 = Number($(this).find(".salary_add_hidden11").val());//岗位薪资
                 var sum                 = late1*10+late2*30+(salary_add_hidden/21.75)*leave_absence+(salary_add_hidden-(money*0.8))/21.75*sick_leave+(salary_add_hidden/21.75)*absenteeism*2+(num/21.75*salary_date);
 
-                var count               = Number(Math.floor(sum*100)/100);
+                var count               = Number(Math.round(sum,2));
                // var salary_add_withdrawing = $(".salary_add_withdrawing").text();
                 $(this).find('.salary_add_withdrawing').text(count);
             });
