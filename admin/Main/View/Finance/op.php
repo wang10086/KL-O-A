@@ -158,30 +158,36 @@
 	
 	//更新成本核算
 	function cost_total(){
-		var costaccsum = 0;
-		$('.cost_expense').each(function(index, element) {
-            $(this).find('.cost').blur(function(){
-				var cost = $(this).val();
-				var amount = $(this).parent().find('.amount').val();
-				var ct = accMul(cost,amount);
-				$(this).parent().find('.totalval').val(ct.toFixed(2));
-				cost_total();
-			});
-			 $(this).find('.amount').blur(function(){
-				var amount = $(this).val();
-				var cost = $(this).parent().find('.cost').val();
-				var ct = accMul(cost,amount);
-				$(this).parent().find('.totalval').val(ct.toFixed(2));	
-				cost_total()
-			});
-        });	
-		$('.totalval').each(function(index, element) {
-            costaccsum += parseFloat($(this).val());	
-        });
+        var costaccsum = get_costaccsum();
+
 		$('#costaccsum').html('&yen; '+costaccsum.toFixed(2));	
 		$('#costaccsumval').val(costaccsum.toFixed(2));	
 		lilv();
 	}
+
+	function get_costaccsum() {
+        var costaccsum = 0;
+        $('.cost_expense').each(function(index, element) {
+            $(this).find('.cost').blur(function(){
+                var cost = $(this).val();
+                var amount = $(this).parent().find('.amount').val();
+                var ct = accMul(cost,amount);
+                $(this).parent().find('.totalval').val(ct.toFixed(2));
+                cost_total();
+            });
+            $(this).find('.amount').blur(function(){
+                var amount = $(this).val();
+                var cost = $(this).parent().find('.cost').val();
+                var ct = accMul(cost,amount);
+                $(this).parent().find('.totalval').val(ct.toFixed(2));
+                cost_total()
+            });
+        });
+        $('.totalval').each(function(index, element) {
+            costaccsum += parseFloat($(this).val());
+        });
+        return costaccsum;
+    }
 	
 	
 	
@@ -227,6 +233,18 @@
 			return false;
 		}
 	}
+
+	var is_dijie    = <?php echo $is_dijie; ?>;
+    var dijie_cost  = <?php echo $dijie_cost; ?>;
+    function beforeOpSubmit(from) {
+        var costaccsum = get_costaccsum();
+        if (is_dijie != 0 && costaccsum > dijie_cost) {
+            art.dialog.alert('本团为地接团,您的费用超过了组团方的地接预算,请联系组团方！','warning');
+            return false;
+        }else{
+            from.submit();
+        }
+    }
 </script>
 
      

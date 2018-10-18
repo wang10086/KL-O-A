@@ -103,7 +103,7 @@
 			html += '<input type="text"  class="form-control cost" name="costacc['+i+'][unitcost]"  value="0">';
 			html += '<input type="text" class="form-control amount" name="costacc['+i+'][amount]" value="1">';
 			html += '<input type="text" class="form-control totalval" name="costacc['+i+'][total]"  value="0">';
-			html += '<select class="form-control"  name="costacc['+i+'][type]"  onChange="bijia(\'cc_bijia_'+i+'\',this)">';
+			html += '<select class="form-control dijie"  name="costacc['+i+'][type]"  onChange="bijia(\'cc_bijia_'+i+'\',this)">';
 			<?php foreach($kind as $k=>$v){ ?>
 			html += '<option value="{$k}">{$v}</option>';
 			<?php } ?>
@@ -176,6 +176,22 @@
 			$('#'+obj).hide();
 		}
 	}
+
+	var is_dijie = <?php echo $is_dijie; ?>;
+    function beforeSubmit(from) {
+        var result='';
+        var dijie = '[13]'; /*13内部地接*/
+        $('.dijie').each(function () {
+            result = result + '['+$(this).val()+'],';
+        })
+
+        if (is_dijie==1 && result.indexOf(dijie)==-1){
+            art.dialog.alert('本团是内部地接团，请填写内部地接费用!','warning');
+            return false;
+        }else{
+            from.submit();
+        }
+    }
 </script>
 
      

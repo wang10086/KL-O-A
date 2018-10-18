@@ -97,6 +97,13 @@ class FinanceController extends BaseController {
 		$this->subject_fields = C('SUBJECT_FIELD');
 		$this->ages           = C('AGE_LIST');
 		$this->kinds          =  M('project_kind')->getField('id,name', true);
+        $is_dijie             = M('op')->where(array('dijie_opid'=>$opid))->getField('op_id');
+        $this->is_dijie       = $is_dijie?$is_dijie:0;
+        if ($is_dijie){
+            $dijie_cost       = M('op_costacc')->where(array('op_id'=>$is_dijie,'type'=>13,'status'=>0))->getField('total');
+        }
+        $this->dijie_cost     = $dijie_cost?$dijie_cost:0;
+
 		$this->display('op');
 	}
 	
@@ -172,6 +179,7 @@ class FinanceController extends BaseController {
 		$this->ages				= C('AGE_LIST');
 		$this->kinds			= M('project_kind')->getField('id,name', true);
         $this->productList      = M('op_costacc')->where(array('op_id'=>$opid,'type'=>5,'status'=>0))->select();
+        $this->is_dijie         = $op['in_dijie'];
 
 		$this->display('costacc');
 	}
