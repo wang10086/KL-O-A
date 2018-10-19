@@ -932,6 +932,7 @@ class AjaxController extends Controller {
         $save['pension']            = $tol[12];$save['unemployment']      = $tol[13]; $save['accumulation']= $tol[14]; $save['insurance_Total']= $tol[15];
         $save['tax_counting']       = $tol[16];$save['personal_tax']      = $tol[17]; $save['summoney']    = $tol[18]; $save['Labour']         = $tol[19];
         $save['real_wages']         = $tol[20];$save['datetime']          = $datetime;$save['createtime']  = time();   $save['status']         = 2;
+        $save['examine_user_id']    = $_SESSION['userid'];
         $money = M('salary_count_money')->add($save);
         if($money){
             $_SESSION['salary_satus'] = '';
@@ -968,15 +969,31 @@ class AjaxController extends Controller {
             $where ['id']                   = $v;
             $departmen_count                = M('salary_departmen_count')->where($where)->save($status);
         }
+        if($_SESSION['userid']=='11'){
+            $status['approval_time']        = time();
+            $status['approval_user_id']     = $_SESSION['userid'];
+        }elseif($_SESSION['userid']=='55'){
+            $status['submission_time']      = time();
+            $status['submission_user_id']   = $_SESSION['userid'];
+        }
+
         $count_money                        = M('salary_count_money')->where('id='.$count_money_id)->save($status);
         if($count_money){
             $sum                            = 1;
             $_SESSION['salary_satus']       = '';
-            $msg                            = "提交批准成功!";
+            if($_SESSION['userid']=='11'){
+                $msg                        = "批准成功!";
+            }elseif($_SESSION['userid']=='55'){
+                $msg                       = "提交批准成功!";
+            }
             echo json_encode(array('sum' => $sum, 'msg' => $msg));die;
         }else{
+            if($_SESSION['userid']=='11'){
+                $msg                        = "批准失败!";
+            }elseif($_SESSION['userid']=='55'){
+                $msg                        = "提交批准失败!";
+            }
             $sum                            = 0;
-            $msg                            = "提交批准失败!";
             echo json_encode(array('sum' => $sum, 'msg' => $msg));die;
         }
     }
