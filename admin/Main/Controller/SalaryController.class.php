@@ -1071,7 +1071,6 @@ class SalaryController extends BaseController {
         $Excel_data[1]                  = array('1'=>'ID','2'=>'员工姓名','3'=>'岗位名称','4'=>'所属部门','5'=>'身份证号','6'=>'工资卡号','7'=>'岗位薪酬标准','8'=>'其中基本工资标准','9'=>'考勤扣款','10'=>'其中绩效工资标准','11'=>'绩效增减','12'=>'业绩提成','13'=>'奖金','14'=>'住房补贴','15'=>'其他补款','16'=>'应发工资','17'=>'医疗保险','18'=>'养老保险','19'=>'失业保险','20'=>'公积金','21'=>'个人保险合计','22'=>'计税工资','23'=>'个人所得税','24'=>'税后扣款','25'=>'工会会费','26'=>'实发工资');
 
         $_SESSION['username'];
-        print_r($_SESSION);die;
 
         $Excel_content                  = array_merge($Excel_data,$info_user1,$info_user2,$info_user3);
         exportexcel($Excel_content,$setTitle,$setTitle);
