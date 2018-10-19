@@ -59,7 +59,7 @@ class FinanceController extends BaseController {
 				$costacc[$k]['id'] = 0;	
 			}
 		}
-		
+
 		$budget     = M('op_budget')->where(array('op_id'=>$opid))->find();
 		$budget['xz'] = explode(',',$budget['xinzhi']);
 		
@@ -90,7 +90,6 @@ class FinanceController extends BaseController {
         $this->member         = $member;
 		$this->kind           = C('COST_TYPE');
 		$this->op             = $op;
-		$this->costacc        = $costacc;
 		$this->budget         = $budget;
 		$this->audit          = $audit;
 		$this->business_depts = C('BUSINESS_DEPT');
@@ -99,12 +98,31 @@ class FinanceController extends BaseController {
 		$this->kinds          =  M('project_kind')->getField('id,name', true);
         $is_dijie             = M('op')->where(array('dijie_opid'=>$opid))->getField('op_id');
         $this->is_dijie       = $is_dijie?$is_dijie:0;
-        if ($is_dijie){
-            $dijie_cost       = M('op_costacc')->where(array('op_id'=>$is_dijie,'type'=>13,'status'=>0))->getField('total');
+        $is_zutuan            = $op['in_dijie'];
+        $this->is_zutuan      = $is_zutuan;
+        if ($is_zutuan == 1){
+            $dijie_shouru     = M('op_budget')->where(array('op_id'=>$op['dijie_opid'],'audit_status'=>1))->getField('shouru');
+            $op_types         = array_column($costacc,'type');
+            if (!in_array(13,$op_types)){
+                $arr                = array();
+                $arr['id']          = 0;
+                $arr['op_id']       = $opid;
+                $arr['title']       = '地接费用';
+                $arr['unitcost']    = $dijie_shouru;
+                $arr['amount']      = 1;
+                $arr['total']       = $dijie_shouru;
+                $arr['remark']      = '地接费用';
+                $arr['type']        = 13;   //内部地接
+                $arr['status']      = 0;
+                $arr['del_status']  = 0;
+                $arr['product_id']  = 0;
+            }
+            $costacc[]        = $arr;
         }
-        $this->dijie_cost     = $dijie_cost?$dijie_cost:0;
+        $this->dijie_shouru   = $dijie_shouru?$dijie_shouru:0;
 
-		$this->display('op');
+        $this->costacc        = $costacc;
+        $this->display('op');
 	}
 	
 	

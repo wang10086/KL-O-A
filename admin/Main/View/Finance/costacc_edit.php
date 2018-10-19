@@ -1,4 +1,5 @@
-<form method="post" action="{:U('Finance/save_costacc')}" name="myform" onsubmit="return beforeSubmit(this)">
+<form method="post" action="{:U('Finance/save_costacc')}" name="myform">
+<!--<form method="post" action="{:U('Finance/save_costacc')}" name="myform" onsubmit="return beforeSubmit(this)">-->
 <input type="hidden" name="dosubmint" value="1">
 <input type="hidden" name="opid" value="{$op.op_id}">
 <input type="hidden" name="referer" value="<?php echo $_SERVER['HTTP_REFERER']; ?>" />
@@ -26,7 +27,7 @@
                     <input type="text" class="form-control cost" name="costacc[888{$k}][unitcost]" value="{$v.unitcost}">
                     <input type="text" class="form-control amount" name="costacc[888{$k}][amount]" value="{$v.amount}">
                     <input type="text" class="form-control totalval" name="costacc[888{$k}][total]" value="{$v.total}">
-                    <select class="form-control dijie"  name="costacc[888{$k}][type]" onChange="bijia('costacc_bijia_{$k}',this)" >
+                    <select class="form-control"  name="costacc[888{$k}][type]" onChange="bijia('costacc_bijia_{$k}',this)" >
                     	<foreach name="kind" key="kk" item="vv">
                     	<option value="{$kk}" <?php if($kk==$v['type']){ echo 'selected';} ?> >{$vv}</option>
                         </foreach>
@@ -46,7 +47,7 @@
                                 <input type="text" class="form-control cost" name="costacc[888{$k}][unitcost]" value="{$v.price}">
                                 <input type="text" class="form-control amount" name="costacc[888{$k}][amount]" value="{$v.num}">
                                 <input type="text" class="form-control totalval" name="costacc[888{$k}][total]" value="{$v.total}">
-                                <select class="form-control dijie"  name="costacc[888{$k}][type]" onChange="bijia('costacc_bijia_{$k}',this)" >
+                                <select class="form-control"  name="costacc[888{$k}][type]" onChange="bijia('costacc_bijia_{$k}',this)" >
                                     <foreach name="kind" key="kk" item="vv">
                                         <option value="{$kk}" <?php if($kk==$v['type']){ echo 'selected';} ?> >{$vv}</option>
                                     </foreach>
@@ -66,7 +67,7 @@
                             <input type="text" class="form-control cost" name="costacc[222{$k}][unitcost]" value="{$v.unitprice}">
                             <input type="text" class="form-control amount" name="costacc[222{$k}][amount]" value="{$v.amount}">
                             <input type="text" class="form-control totalval" name="costacc[222{$k}][total]" value="<?php echo $v['unitprice']*$v['amount'];?>">
-                            <select class="form-control dijie"  name="costacc[222{$k}][type]" onChange="bijia('bijia_{$k}',this)" >
+                            <select class="form-control"  name="costacc[222{$k}][type]" onChange="bijia('bijia_{$k}',this)" >
                                 <foreach name="kind" key="kk" item="vv">
                                 <option value="{$kk}" <?php if($kk==$v['type']){ echo 'selected';} ?> >{$vv}</option>
                                 </foreach>

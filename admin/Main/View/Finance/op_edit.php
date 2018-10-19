@@ -1,4 +1,4 @@
-<form method="post" action="{:U('Finance/save_appcost')}" name="myform" id="save_appcost" onsubmit="return beforeOpSubmit(this)">
+<form method="post" action="{:U('Finance/save_appcost')}" name="myform" id="save_appcost">
 <input type="hidden" name="dosubmint" value="1">
 <input type="hidden" name="opid" value="{$op.op_id}">
 <input type="hidden" name="referer" value="<?php echo $_SERVER['HTTP_REFERER']; ?>" />

@@ -76,11 +76,18 @@
                                     <h3 class="box-title">项目预算</h3>
                                 </div><!-- /.box-header -->
                                 <div class="box-body">
-                                    <php> if($audit['dst_status']!=1){ </php>
-                                    <include file="op_edit" />
-                                    <php> }else{ </php>
-                                    <include file="op_read" />
-                                    <php> } </php>
+                                    <?php if($is_zutuan == 1){ ?>
+                                        <?php if ($dijie_shouru && $audit['dst_status']!=1){ ?>
+                                            <include file="op_edit" />
+                                        <?php }else{ ?>
+                                            <include file="op_read" />
+                                        <?php } ?>
+                                    <?php }else{ ?>
+                                        <?php if($audit['dst_status']!=1){ ?>
+                                        <include file="op_edit" />
+                                        <?php }else{ ?>
+                                        <include file="op_read" />
+                                    <?php } } ?>
                                 </div>
                             </div>
                             
@@ -223,8 +230,15 @@
 		if (confirm("您确认要提交审批吗？")){
 			var renshu   = parseInt($('#renshu').val());        //人数
 			var shouru   = parseInt($('#shouru').val());        //收入
+            var maolilv  = toPoint($('#maolilv').val());        //毛利率
+            var is_dijie = <?php echo $is_dijie; ?>;            //内部地接毛利率不能大于10%
 			if(shouru && renshu){
-				$('#appsubmint').submit();
+                if (is_dijie != 0 && maolilv > 0.1){
+                    art.dialog.alert('该团为内部地接团,毛利额不能超过10%');
+                    return false;
+                }else{
+                    $('#appsubmint').submit();
+                }
 			}else{
 				alert('请填写人数和预算收入');
 				return false;
@@ -234,17 +248,14 @@
 		}
 	}
 
-	var is_dijie    = <?php echo $is_dijie; ?>;
-    var dijie_cost  = <?php echo $dijie_cost; ?>;
-    function beforeOpSubmit(from) {
-        var costaccsum = get_costaccsum();
-        if (is_dijie != 0 && costaccsum > dijie_cost) {
-            art.dialog.alert('本团为地接团,您的费用超过了组团方的地接预算,请联系组团方！','warning');
-            return false;
-        }else{
-            from.submit();
-        }
+	//百分数转化为小数
+    function toPoint(percent){
+        var str=percent.replace("%","");
+            str= str/100;
+        var res = str.toFixed(2);
+        return res;
     }
+
 </script>
 
      
