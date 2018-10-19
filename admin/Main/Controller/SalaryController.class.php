@@ -13,18 +13,14 @@ class SalaryController extends BaseController {
     public function salaryindex(){
 
         $userid['status'] = 4;
-
         $userid['account_id']                  = trim($_POST['id']);
-
         $userid['department']                  = trim($_POST['employee_member']);
         $userid['user_name']                   = trim($_POST['name']);
         $userid['datetime']                    = trim($_POST['month']);
         $userid                                = array_filter($userid);
 
         if($_SESSION['userid']==11 ||$_SESSION['userid']==55 || $_SESSION['userid']==77 || $_SESSION['userid']==32 || $_SESSION['userid']==38 || $_SESSION['userid']==12  || $_SESSION['userid']==1){
-
         }else{
-
             $userid['account_id']               = $_SESSION['userid'];
         }
 
@@ -65,7 +61,7 @@ class SalaryController extends BaseController {
         $user_info['wages_month']               = $user_info1;
         $uid                                    = $user_info1['account_id'];
 
-        $user_info['account']                   = M('account')->where(array('id='.$user_info1['account_id']))->find();//用户表
+        $user_info['account']                   = user_table($user_info1['account_id']);//用户表
 
         $user_info['attendance']                = M('salary_attendance')->where(array('id='.$user_info1['attendance_id']))->find();//员工考核表
 
@@ -234,7 +230,7 @@ class SalaryController extends BaseController {
             $account_r[$key]['nickname']   = $val['user_name'];
             $account_r[$key]['aid']        = $val['account_id'];
             $acc['id']                     = $val['account_id'];
-            $oa_account                    = M('account')->where($acc)->field('employee_member')->find();
+            $oa_account                    = user_table($val['account_id']);
             $cor['account_id']             = $val['account_id'];
             $account_r[$key]['member']     = $oa_account['employee_member'];
             $yea                           = M('salary_attendance')->where($cor)->field('year_leave')->select();
@@ -465,42 +461,36 @@ class SalaryController extends BaseController {
         if(isset($_POST['dosubmint'])){
             $where['department']    = trim($_POST['department']);//部门名称
             $add['letter']          = trim($_POST['letter']);//大写字母
+
             if(!preg_match('/^[A-Z]+$/', $add['letter'])){
-
                 $this->error('请添加大写字母！', U('Salary/salary_add_department'));die;
-
             }
 
             $department_r           = M('salary_department')->where($where)->find();
             $department_r1          = M('salary_department')->where($add)->find();
 
             if($department_r || $department_r1){
-
                 $this->error('请不要重复添加部门或字母！', U('Salary/salary_add_department'));die;
-
             }
             $add['department']      = trim($_POST['department']);//部门名称
             $department             = M('salary_department')->add($add);
 
             if($department){
-
                 $this->success('添加部门成功！', U('Salary/salary_add_department'));die;
-
             }else{
-
                 $this->error('添加部门失败！请重写添加！', U('Salary/salary_add_department'));die;
             }
         }else{
-            $db             = M('salary_department');
+            $db                     = M('salary_department');
 
             //分页
-            $pagecount		= $db->count();
-            $page			= new Page($pagecount, 5);
-            $this->pages	= $pagecount>P::PAGE_SIZE ? $page->show():'';
+            $pagecount		        = $db->count();
+            $page			        = new Page($pagecount, 5);
+            $this->pages	        = $pagecount>P::PAGE_SIZE ? $page->show():'';
 
             //$this->lists    = $db->limit($page->firstRow,$page->listRows)->select();
 
-            $this->lists    = $db->select();
+            $this->lists            = $db->select();
             $this->display();
         }
     }
@@ -925,58 +915,67 @@ class SalaryController extends BaseController {
      */
     public function salary_exportExcel(){
 
-        $datetim   = I('datetime');
-        $type       = I('type');
-
+        $datetim                            = I('datetime');
+        $type                               = I('type');
         if(is_numeric($datetim)){
-            $time_Y                     = date('Y');
-            $time_M                     = date('m');
-            $time_D                     = date('d');
+            $time_Y                         = date('Y');
+            $time_M                         = date('m');
+            $time_D                         = date('d');
     //            if($time_D < 10){
     //                $time_M                 = $time_M-1;
     //            }
             if($time_D < 18){
-                $time_M = $time_M-1;
+                $time_M                     = $time_M-1;
                 if($time_M < 10) {
-                    $time               = $time_Y.'0'.$time_M;
-                    $datetime           = $time_Y.'年0'.$time_M.'月';//查询年月
+                    $datetime               = $time_Y.'年0'.$time_M.'月';//查询年月
                 }else{
-                    $time               = $time_Y.$time_M;
-                    $datetime           = $time_Y.'年'.$time_M.'月';//查询年月
+                    $datetime               = $time_Y.'年'.$time_M.'月';//查询年月
                 }
             }else{
-                $time                   = $time_Y.$time_M;
-                $datetime               = $time_Y.'年'.$time_M.'月';//查询年月
+                $datetime                   = $time_Y.'年'.$time_M.'月';//查询年月
             }
-            $month = M('salary_wages_month')->where('datetime='.$datetim)->find();
-            if(!$month){
+            $money                          = M('salary_count_money')->where('datetime='.$datetim)->find();
+            if(!$money){
                 unset($datetim);
+            }else{
+                $examine_user_id            = user_table($money['examine_user_id']);//提交人
+                $submission_user_id         = user_table($money['submission_user_id']);//审批人
+                $approval_user_id           = user_table($money['approval_user_id']);//批准人
             }
         }
         if(is_numeric($datetim) && is_numeric($type)){//没有数据
-            $sql = 'SELECT *,month.status as mstatus FROM oa_salary_wages_month as month, oa_account as account where month.account_id=account.id AND account.archives='.$type.' AND month.datetime='.$datetime;
-            $user_info = M()->query($sql);
-            $info                       = $this->arraysplit($user_info);
-            $sum                        = $this->countmoney($type,$info,1);//部门合计
-            $summoney                   = $this->summoney($sum); //总合计
+            $sql                            = 'SELECT *,month.status as mstatus FROM oa_salary_wages_month as month, oa_account as account where month.account_id=account.id AND account.archives='.$type.' AND month.datetime='.$datetim;
+            $user_info                      = M()->query($sql);
+            $info                           = $this->arraysplit($user_info);
+            $sum                            = $this->countmoney($type,$info,1);//部门合计
+            $summoney                       = $this->summoney($sum); //总合计
+            $examine_name                   = $examine_user_id['nickname'];//提交人
+            $submissin_name                 = $submission_user_id['nickname'];//审批人
+            $approval_name                  = $approval_user_id['nickname'];//批准人
+            $approval_time                  = $money['approval_time'];//批准时间
         }elseif(is_numeric($datetim)){//有时间
-            $dateti['datetime']     = $datetime;
-            $wages_month            = M('salary_wages_month')->where($dateti)->select();//已经提交数据
-            $info                   = $this->arraysplit($wages_month);
-            $sum                    = M('salary_departmen_count')->where($dateti)->select();
-            $summoney               = M('salary_count_money')->where($dateti)->find();
+            $dateti['datetime']             = $datetim;
+            $wages_month                    = M('salary_wages_month')->where($dateti)->select();//已经提交数据
+            $info                           = $this->arraysplit($wages_month);
+            $sum                            = M('salary_departmen_count')->where($dateti)->select();
+            $summoney                       = M('salary_count_money')->where($dateti)->find();
+            $examine_name                   = $examine_user_id['nickname'];//提交人
+            $submissin_name                 = $submission_user_id['nickname'];//审批人
+            $approval_name                  = $approval_user_id['nickname'];//批准人
+            $approval_time                  = $summoney['approval_time'];//批准时间
+
         }elseif(is_numeric($type)) {//有状态
-            $info                   = $this->salary_excel_sql($type);//员工信息
-            $sum                    = $this->countmoney($type,$info);//部门合计
-            $summoney               = $this->summoney($sum); //总合计
+            $info                           = $this->salary_excel_sql($type);//员工信息
+            $sum                            = $this->countmoney($type,$info);//部门合计
+            $summoney                       = $this->summoney($sum); //总合计
         }else{//没时间 没状态
-            $info = $this->salary_excel_sql();//员工信息
-            $sum = $this->countmoney('', $info);//部门合计
+            $info                           = $this->salary_excel_sql();//员工信息
+            $sum                            = $this->countmoney('', $info);//部门合计
             $summoney = $this->summoney($sum); //总合计
         }
 
         foreach($info as $key => $val){
-            $account                    = M('account')->where('id='.$val['account']['id'])->find();
+            $account                    = user_table($val['account']['id']);
             $info_user1[$key][0]        = $val['account']['id'];
             $info_user1[$key][1]        = $account['nickname'];
             $info_user1[$key][2]        = $val['posts'][0]['post_name'];
@@ -1060,18 +1059,21 @@ class SalaryController extends BaseController {
         $info_user3[$key][24]           = $summoney['Labour'];
         $info_user3[$key][25]           = $summoney['real_wages'];
         if($datetim){
-            $datetime = $datetime;
+            $datetime = $datetim;
         }else{
             $datetime                   = $summoney['datetime'];
+        }
+        if(!empty($examine_name) && !empty($submissin_name) && !empty($approval_name) && !empty($approval_time)){//判断是否批准
+            $Approver[0] = array('0'=>'','1'=>'','2'=>'','3'=>'提交审核 ：'.$examine_name,'4'=>'','5'=>'','6'=>'','7'=>'审核通过 ：'.$submissin_name,'8'=>'','9'=>'','10'=>'','11'=>'批准通过 ：'.$approval_name,'12'=>'','13'=>'','14'=>'','15'=>'批准日期 ：'.date('Y年m月d日',$approval_time));
+        }else{
+            $Approver[0] = array('0'=>'','1'=>'','2'=>'','3'=>'制表人 ：'.$_SESSION['username'],'4'=>'','5'=>'','6'=>'','7'=>'制表日期 ：'.date('Y年m月d日',time()));
         }
 
         $setTitle                       = $datetime.'工资发放表';
         $Excel_data[0]                  = array('0'=>'1',''=>'','2'=>'','3'=>'','4'=>$setTitle);
         $Excel_data[1]                  = array('1'=>'ID','2'=>'员工姓名','3'=>'岗位名称','4'=>'所属部门','5'=>'身份证号','6'=>'工资卡号','7'=>'岗位薪酬标准','8'=>'其中基本工资标准','9'=>'考勤扣款','10'=>'其中绩效工资标准','11'=>'绩效增减','12'=>'业绩提成','13'=>'奖金','14'=>'住房补贴','15'=>'其他补款','16'=>'应发工资','17'=>'医疗保险','18'=>'养老保险','19'=>'失业保险','20'=>'公积金','21'=>'个人保险合计','22'=>'计税工资','23'=>'个人所得税','24'=>'税后扣款','25'=>'工会会费','26'=>'实发工资');
 
-        $_SESSION['username'];
-
-        $Excel_content                  = array_merge($Excel_data,$info_user1,$info_user2,$info_user3);
+        $Excel_content                  = array_merge($Excel_data,$info_user1,$info_user2,$info_user3,$Approver);
         exportexcel($Excel_content,$setTitle,$setTitle);
     }
 

@@ -3598,4 +3598,7 @@ function personnel(){//所有人员名称 id
     return M('account')->field('id,nickname')->where('status=0 and id>2')->select();
 
 }
+function user_table($where){//查询用户
+    return M('account')->where('id='.$where)->find();
+}
 

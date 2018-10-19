@@ -986,7 +986,6 @@ class AjaxController extends Controller {
             }elseif($_SESSION['userid']=='55'){
                 $msg                       = "提交批准成功!";
             }
-            echo json_encode(array('sum' => $sum, 'msg' => $msg));die;
         }else{
             if($_SESSION['userid']=='11'){
                 $msg                        = "批准失败!";
@@ -994,8 +993,8 @@ class AjaxController extends Controller {
                 $msg                        = "提交批准失败!";
             }
             $sum                            = 0;
-            echo json_encode(array('sum' => $sum, 'msg' => $msg));die;
         }
+        echo json_encode(array('sum' => $sum, 'msg' => $msg));die;
     }
 
     /**
