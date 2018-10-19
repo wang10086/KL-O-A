@@ -734,6 +734,8 @@ class SalaryController extends BaseController {
                 }else{
                     $que['p.month']                    = $time_Y.$time_M;//查询年月
                 }
+            }else{
+                $que['p.month']                    = $time_Y.$time_M;//查询年月
             }
             $user                                   = $this->query_score($que);//绩效增减
 
@@ -923,193 +925,153 @@ class SalaryController extends BaseController {
      * 导出 excel
      */
     public function salary_exportExcel(){
-        $Excel1                             = $_POST['Excel1'];//分割成数组 删除最后一个
-        $Excel2                             = $_POST['Excel2'];//分割成数组 删除最后一个
-        $Excel3[0]                          = $_POST['Excel3'];//分割成数组 删除最后一个
-        $datetime                           = $_POST['datetime'];
-//        print_r($Excel1);print_r($Excel2);print_r($Excel3);die;
-        $Excel1_count = count($Excel1);
-        $Excel2_count = count($Excel2);
-        for($i=0;$i<$Excel1_count/24;$i++){//计算没多少条一个数组
-            for($num=$i*24;$num<24*$i+24;$num++){//计算分组字段的长度
-                $array[$i][$num%24] = $Excel1[$num];//[数组数量][多少条的数据]
-            }
-        }
 
-        for($i=0;$i<$Excel2_count/22;$i++){//计算没多少条一个数组
-            for($num=$i*22;$num<22*$i+22;$num++){//计算分组字段的长度
-                $arr[$i][$num%22] = $Excel2[$num];//[数组数量][多少条的数据]
-            }
-        }
-        foreach($array as $key => $val){
-            foreach($val as $k => $v){
-                if($k==0) {
-                    $info = M('account')->where('id=' . $v)->find();//已经提交数据
-                    $number = $info['ID_number'];
-                    $card_number = $info['Salary_card_number'];
-                }
-                if($k>3){
-                    $data1[4]           = $number;//插入身份证信息
-                    $data1[5]           = $card_number;//插入银行卡信息
-                    $data1[$k+2] = trim($v);
-                }else{
-                    $data1[$k]        = trim($v);
-                }
-            }
-            $Excel_data[0]= array('1'=>'ID','2'=>'员工姓名','3'=>'岗位名称','4'=>'所属部门','5'=>'身份证号','6'=>'工资卡号','7'=>'岗位薪酬标准','8'=>'其中基本工资标准','9'=>'考勤扣款','10'=>'其中绩效工资标准','11'=>'绩效增减','12'=>'业绩提成','13'=>'奖金','14'=>'住房补贴','15'=>'其他补款','16'=>'应发工资','17'=>'医疗保险','18'=>'养老保险','19'=>'失业保险','20'=>'公积金','21'=>'个人保险合计','22'=>'计税工资','23'=>'个人所得税','24'=>'税后扣款','25'=>'工会会费','26'=>'实发工资');
+        $datetim   = I('datetime');
+        $type       = I('type');
 
-            $Excel_data[$key+1] = $data1;
-        }
-
-        $Excel_data = array_merge($Excel_data,$arr,$Excel3);
-
-        if(empty($datetime)){
+        if(is_numeric($datetim)){
             $time_Y                     = date('Y');
             $time_M                     = date('m');
             $time_D                     = date('d');
-//            if($time_D < 10){
-//                $time_M                 = $time_M-1;
-//            }
-
+    //            if($time_D < 10){
+    //                $time_M                 = $time_M-1;
+    //            }
             if($time_D < 18){
                 $time_M = $time_M-1;
                 if($time_M < 10) {
-                    $datetime                    = $time_Y.'0'.$time_M;//查询年月
+                    $time               = $time_Y.'0'.$time_M;
+                    $datetime           = $time_Y.'年0'.$time_M.'月';//查询年月
                 }else{
-                    $datetime                    = $time_Y.$time_M;//查询年月
+                    $time               = $time_Y.$time_M;
+                    $datetime           = $time_Y.'年'.$time_M.'月';//查询年月
                 }
+            }else{
+                $time                   = $time_Y.$time_M;
+                $datetime               = $time_Y.'年'.$time_M.'月';//查询年月
+            }
+            $month = M('salary_wages_month')->where('datetime='.$datetim)->find();
+            if(!$month){
+                unset($datetim);
             }
         }
+        if(is_numeric($datetim) && is_numeric($type)){//没有数据
+            $sql = 'SELECT *,month.status as mstatus FROM oa_salary_wages_month as month, oa_account as account where month.account_id=account.id AND account.archives='.$type.' AND month.datetime='.$datetime;
+            $user_info = M()->query($sql);
+            $info                       = $this->arraysplit($user_info);
+            $sum                        = $this->countmoney($type,$info,1);//部门合计
+            $summoney                   = $this->summoney($sum); //总合计
+        }elseif(is_numeric($datetim)){//有时间
+            $dateti['datetime']     = $datetime;
+            $wages_month            = M('salary_wages_month')->where($dateti)->select();//已经提交数据
+            $info                   = $this->arraysplit($wages_month);
+            $sum                    = M('salary_departmen_count')->where($dateti)->select();
+            $summoney               = M('salary_count_money')->where($dateti)->find();
+        }elseif(is_numeric($type)) {//有状态
+            $info                   = $this->salary_excel_sql($type);//员工信息
+            $sum                    = $this->countmoney($type,$info);//部门合计
+            $summoney               = $this->summoney($sum); //总合计
+        }else{//没时间 没状态
+            $info = $this->salary_excel_sql();//员工信息
+            $sum = $this->countmoney('', $info);//部门合计
+            $summoney = $this->summoney($sum); //总合计
+        }
 
-        $setTitle                           = $datetime.' 工资发放表';
-        exportexcel($Excel_data,$setTitle,$setTitle);
+        foreach($info as $key => $val){
+            $account                    = M('account')->where('id='.$val['account']['id'])->find();
+            $info_user1[$key][0]        = $val['account']['id'];
+            $info_user1[$key][1]        = $account['nickname'];
+            $info_user1[$key][2]        = $val['posts'][0]['post_name'];
+            $info_user1[$key][3]        = $val['department'][0]['department'];
+            $info_user1[$key][4]        = $account['ID_number'];
+            $info_user1[$key][5]        = $account['Salary_card_number'];
+            $info_user1[$key][6]        = $val['salary'][0]['standard_salary'];
+            $info_user1[$key][7]        = $val['salary'][0]['standard_salary']/10*$val['salary'][0]['basic_salary'];
+            $info_user1[$key][8]        = $val['attendance'][0]['withdrawing'];
+            $info_user1[$key][9]        = $val['salary'][0]['standard_salary']/10*$val['salary'][0]['performance_salary'];
+            $info_user1[$key][10]       = $val['Achievements']['count_money'];
+            $info_user1[$key][11]       = $val['Extract']['total'];
+            $info_user1[$key][12]       = $val['bonus'][0]['bonus'];
+            $info_user1[$key][13]       = $val['subsidy'][0]['housing_subsidy'];
+            $info_user1[$key][14]       = $val['Other'];
+            $info_user1[$key][15]       = $val['Should'];
+            $info_user1[$key][16]       = $val['insurance'][0]['medical_care_base']*$val['insurance'][0]['medical_care_ratio']+$val['insurance'][0]['big_price'];
+            $info_user1[$key][17]       = $val['insurance'][0]['pension_base']*$val['insurance'][0]['pension_ratio'];
+            $info_user1[$key][18]       = $val['insurance'][0]['unemployment_base']*$val['insurance'][0]['unemployment_ratio'];
+            $info_user1[$key][19]       = $val['accumulation'];
+            $info_user1[$key][20]       = $val['insurance_Total'];
+            $info_user1[$key][21]       = $val['tax_counting'];
+            $info_user1[$key][22]       = $val['personal_tax'];
+            $info_user1[$key][23]       = $val['summoney'];
+            $info_user1[$key][24]       = $val['labour']['Labour_money'];
+            $info_user1[$key][25]       = $val['real_wages'];
+        }
+        foreach($sum as $key => $val){
+            $info_user2[$key][0]        = $val['name'];
+            $info_user2[$key][1]        = '';
+            $info_user2[$key][2]        = '';
+            $info_user2[$key][3]        = $val['department'];
+            $info_user2[$key][4]        = '';
+            $info_user2[$key][5]        = '';
+            $info_user2[$key][6]        = $val['standard_salary'];
+            $info_user2[$key][7]        = $val['basic'];
+            $info_user2[$key][8]        = $val['withdrawing'];
+            $info_user2[$key][9]        = $val['performance_salary'];
+            $info_user2[$key][10]       = $val['count_money'];
+            $info_user2[$key][11]       = $val['total'];
+            $info_user2[$key][12]       = $val['bonus'];
+            $info_user2[$key][13]       = $val['housing_subsidy'];
+            $info_user2[$key][14]       = $val['Other'];
+            $info_user2[$key][15]       = $val['Should'];
+            $info_user2[$key][16]       = $val['care'];
+            $info_user2[$key][17]       = $val['pension'];
+            $info_user2[$key][18]       = $val['unemployment'];
+            $info_user2[$key][19]       = $val['accumulation'];
+            $info_user2[$key][20]       = $val['insurance_Total'];
+            $info_user2[$key][21]       = $val['tax_counting'];
+            $info_user2[$key][22]       = $val['personal_tax'];
+            $info_user2[$key][23]       = $val['summoney'];
+            $info_user2[$key][24]       = $val['Labour'];
+            $info_user2[$key][25]       = $val['real_wages'];
+        }
+
+        $info_user3[$key][0]            = $summoney['name'];
+        $info_user3[$key][1]            = '';
+        $info_user3[$key][2]            = '';
+        $info_user3[$key][3]            = '';
+        $info_user3[$key][4]            = '';
+        $info_user3[$key][5]            = '';
+        $info_user3[$key][6]            = $summoney['standard_salary'];
+        $info_user3[$key][7]            = $summoney['basic'];
+        $info_user3[$key][8]            = $summoney['withdrawing'];
+        $info_user3[$key][9]            = $summoney['performance_salary'];
+        $info_user3[$key][10]           = $summoney['count_money'];
+        $info_user3[$key][11]           = $summoney['total'];
+        $info_user3[$key][12]           = $summoney['bonus'];
+        $info_user3[$key][13]           = $summoney['housing_subsidy'];
+        $info_user3[$key][14]           = $summoney['Other'];
+        $info_user3[$key][15]           = $summoney['Should'];
+        $info_user3[$key][16]           = $summoney['care'];
+        $info_user3[$key][17]           = $summoney['pension'];
+        $info_user3[$key][18]           = $summoney['unemployment'];
+        $info_user3[$key][19]           = $summoney['accumulation'];
+        $info_user3[$key][20]           = $summoney['insurance_Total'];
+        $info_user3[$key][21]           = $summoney['tax_counting'];
+        $info_user3[$key][22]           = $summoney['personal_tax'];
+        $info_user3[$key][23]           = $summoney['summoney'];
+        $info_user3[$key][24]           = $summoney['Labour'];
+        $info_user3[$key][25]           = $summoney['real_wages'];
+        if($datetim){
+            $datetime = $datetime;
+        }else{
+            $datetime                   = $summoney['datetime'];
+        }
+
+        $setTitle                       = $datetime.'工资发放表';
+        $Excel_data[0]                  = array('0'=>'1',''=>'','2'=>'','3'=>'','4'=>$setTitle);
+        $Excel_data[1]                  = array('1'=>'ID','2'=>'员工姓名','3'=>'岗位名称','4'=>'所属部门','5'=>'身份证号','6'=>'工资卡号','7'=>'岗位薪酬标准','8'=>'其中基本工资标准','9'=>'考勤扣款','10'=>'其中绩效工资标准','11'=>'绩效增减','12'=>'业绩提成','13'=>'奖金','14'=>'住房补贴','15'=>'其他补款','16'=>'应发工资','17'=>'医疗保险','18'=>'养老保险','19'=>'失业保险','20'=>'公积金','21'=>'个人保险合计','22'=>'计税工资','23'=>'个人所得税','24'=>'税后扣款','25'=>'工会会费','26'=>'实发工资');
+
+        $Excel_content                  = array_merge($Excel_data,$info_user1,$info_user2,$info_user3);
+        exportexcel($Excel_content,$setTitle,$setTitle);
     }
-
-
-    /**
-     * 导出 excel
-     */
-//    public function salary_exportExcel(){
-//
-//        $datetime   = I('datetime');
-//        $type       = I('type');
-//
-//        if(!empty($datetime) && !empty($type)){//没有数据
-//            $sql = 'SELECT *,month.status as mstatus FROM oa_salary_wages_month as month, oa_account as account where month.account_id=account.id AND account.archives='.$type.' AND month.datetime='.$datetime;
-//            $user_info = M()->query($sql);
-//            $info                       = $this->arraysplit($user_info);
-//            $sum                        = $this->countmoney($type,$info,1);//部门合计
-//            $summoney                   = $this->summoney($sum); //总合计
-//        }elseif(is_numeric($datetime)){//有时间
-//            $dateti['datetime']     = $datetime;
-//            $wages_month            = M('salary_wages_month')->where($dateti)->select();//已经提交数据
-//            $info                   = $this->arraysplit($wages_month);
-//            $sum                    = M('salary_departmen_count')->where($dateti)->select();
-//            $summoney               = M('salary_count_money')->where($dateti)->find();
-//        }elseif(is_numeric($type)) {//有状态
-//            $info                   = $this->salary_excel_sql($type);//员工信息
-//            $sum                    = $this->countmoney($type,$info);//部门合计
-//            $summoney               = $this->summoney($sum); //总合计
-//        }elseif(empty($datetime) && empty($type)) {//没时间 没状态
-//            $info = $this->salary_excel_sql();//员工信息
-//            $sum = $this->countmoney('', $info);//部门合计
-//            $summoney = $this->summoney($sum); //总合计
-//        }
-//
-//        foreach($info as $key => $val){
-//            $info_user[$key][''] = $val[''];
-//            $info_user[$key][''] = $val[''];
-//            $info_user[$key][''] = $val[''];
-//            $info_user[$key][''] = $val[''];
-//            $info_user[$key][''] = $val[''];
-//            $info_user[$key][''] = $val[''];
-//            $info_user[$key][''] = $val[''];
-//            $info_user[$key][''] = $val[''];
-//            $info_user[$key][''] = $val[''];
-//            $info_user[$key][''] = $val[''];
-//            $info_user[$key][''] = $val[''];
-//            $info_user[$key][''] = $val[''];
-//            $info_user[$key][''] = $val[''];
-//            $info_user[$key][''] = $val[''];
-//            $info_user[$key][''] = $val[''];
-//            $info_user[$key][''] = $val[''];
-//            $info_user[$key][''] = $val[''];
-//            $info_user[$key][''] = $val[''];
-//            $info_user[$key][''] = $val[''];
-//            $info_user[$key][''] = $val[''];
-//            $info_user[$key][''] = $val[''];
-//            $info_user[$key][''] = $val[''];
-//            $info_user[$key][''] = $val[''];
-//            $info_user[$key][''] = $val[''];
-//            $info_user[$key][''] = $val[''];
-//            $info_user[$key][''] = $val[''];
-//            $info_user[$key][''] = $val[''];
-//            $sun = $key;
-//        }
-//        foreach($sum as $key => $val){
-//            $info_user[$key+$sun][''] = $val[''];
-//            $info_user[$key+$sun][''] = $val[''];
-//            $info_user[$key+$sun][''] = $val[''];
-//            $info_user[$key+$sun][''] = $val[''];
-//            $info_user[$key+$sun][''] = $val[''];
-//            $info_user[$key+$sun][''] = $val[''];
-//            $info_user[$key+$sun][''] = $val[''];
-//            $info_user[$key+$sun][''] = $val[''];
-//            $info_user[$key+$sun][''] = $val[''];
-//            $info_user[$key+$sun][''] = $val[''];
-//            $info_user[$key+$sun][''] = $val[''];
-//            $info_user[$key+$sun][''] = $val[''];
-//            $info_user[$key+$sun][''] = $val[''];
-//            $info_user[$key+$sun][''] = $val[''];
-//            $info_user[$key+$sun][''] = $val[''];
-//            $info_user[$key+$sun][''] = $val[''];
-//            $info_user[$key+$sun][''] = $val[''];
-//            $info_user[$key+$sun][''] = $val[''];
-//            $info_user[$key+$sun][''] = $val[''];
-//            $info_user[$key+$sun][''] = $val[''];
-//            $info_user[$key+$sun][''] = $val[''];
-//            $info_user[$key+$sun][''] = $val[''];
-//            $info_user[$key+$sun][''] = $val[''];
-//            $info_user[$key+$sun][''] = $val[''];
-//            $info_user[$key+$sun][''] = $val[''];
-//            $info_user[$key+$sun][''] = $val[''];
-//            $info_user[$key+$sun][''] = $val[''];
-//            $sum = $key+$su;
-//        }
-//
-//        foreach($summoney as $key => $val){
-//            $info_user[$key+$sum][''] = $val[''];
-//            $info_user[$key+$sum][''] = $val[''];
-//            $info_user[$key+$sum][''] = $val[''];
-//            $info_user[$key+$sum][''] = $val[''];
-//            $info_user[$key+$sum][''] = $val[''];
-//            $info_user[$key+$sum][''] = $val[''];
-//            $info_user[$key+$sum][''] = $val[''];
-//            $info_user[$key+$sum][''] = $val[''];
-//            $info_user[$key+$sum][''] = $val[''];
-//            $info_user[$key+$sum][''] = $val[''];
-//            $info_user[$key+$sum][''] = $val[''];
-//            $info_user[$key+$sum][''] = $val[''];
-//            $info_user[$key+$sum][''] = $val[''];
-//            $info_user[$key+$sum][''] = $val[''];
-//            $info_user[$key+$sum][''] = $val[''];
-//            $info_user[$key+$sum][''] = $val[''];
-//            $info_user[$key+$sum][''] = $val[''];
-//            $info_user[$key+$sum][''] = $val[''];
-//            $info_user[$key+$sum][''] = $val[''];
-//            $info_user[$key+$sum][''] = $val[''];
-//            $info_user[$key+$sum][''] = $val[''];
-//            $info_user[$key+$sum][''] = $val[''];
-//            $info_user[$key+$sum][''] = $val[''];
-//            $info_user[$key+$sum][''] = $val[''];
-//            $info_user[$key+$sum][''] = $val[''];
-//            $info_user[$key+$sum][''] = $val[''];
-//            $info_user[$key+$sum][''] = $val[''];
-//        }
-//
-//        $Excel_data[0]= array('1'=>'ID','2'=>'员工姓名','3'=>'岗位名称','4'=>'所属部门','5'=>'身份证号','6'=>'工资卡号','7'=>'岗位薪酬标准','8'=>'其中基本工资标准','9'=>'考勤扣款','10'=>'其中绩效工资标准','11'=>'绩效增减','12'=>'业绩提成','13'=>'奖金','14'=>'住房补贴','15'=>'其他补款','16'=>'应发工资','17'=>'医疗保险','18'=>'养老保险','19'=>'失业保险','20'=>'公积金','21'=>'个人保险合计','22'=>'计税工资','23'=>'个人所得税','24'=>'税后扣款','25'=>'工会会费','26'=>'实发工资');
-//        print_r($info);die;
-//    }
-
 
 }

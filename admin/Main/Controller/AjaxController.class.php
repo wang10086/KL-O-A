@@ -851,6 +851,8 @@ class AjaxController extends Controller {
                 }else{
                     $datetime                    = $time_Y.$time_M;//查询年月
                 }
+            }else{
+                $datetime                    = $time_Y.$time_M;//查询年月
             }
         }
         $content                        = trim($_POST['content']);//去除左右空字符 提交申请表数据
