@@ -1075,7 +1075,7 @@ class AjaxController extends Controller {
                     $save['Labour_money']   = $Labour_money;
                 }
                 $where['createtime']        = time();
-                //print_r($where);die;
+
                 $add                        =  M('salary_labour')->add($where);
                 if($add){
                     $cot = $cot.' : '.$Labour_money;

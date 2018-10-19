@@ -32,7 +32,6 @@ class SalaryController extends BaseController {
         $page                                  = new Page($count,15);
         $pages                                 = $page->show();
         $info = M('salary_wages_month')->where($userid)->limit("$page->firstRow","$page->listRows")->order('datetime desc')->select();//工资生成数据
-//         print_r($info);die;
 
         $this->assign('info',$info);
         $this->assign('page',$pages);
