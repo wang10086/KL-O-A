@@ -130,7 +130,7 @@
                                             </div>
 
                                             <div class="form-group col-md-4 viwe">
-                                                <p >应发绩效工资：{$info['wages_month']['Should_distributed']} (元)</p>
+                                                <p >应发绩效工资：{$info['wages_month']['performance_salary']+$info['wages_month']['Achievements_withdrawing']} (元)</p>
                                             </div>
                                             <table class="table table-bordered dataTable fontmini" style="margin-top:10px;">
                                                 <tr role="row" class="orders" >
