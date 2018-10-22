@@ -829,7 +829,8 @@ class AjaxController extends Controller {
 
     //保存提交审核数据
     public function Ajax_salary_details_add(){
-        if($_SESSION['userid']=='77' || $_SESSION['userid']=='1'){
+        $user_id = (int)$_SESSION['userid'];
+        if($user_id['userid']==77 || $user_id==1){
 
         }else{
             $sum                            = 0;
@@ -932,7 +933,7 @@ class AjaxController extends Controller {
         $save['pension']            = $tol[12];$save['unemployment']      = $tol[13]; $save['accumulation']= $tol[14]; $save['insurance_Total']= $tol[15];
         $save['tax_counting']       = $tol[16];$save['personal_tax']      = $tol[17]; $save['summoney']    = $tol[18]; $save['Labour']         = $tol[19];
         $save['real_wages']         = $tol[20];$save['datetime']          = $datetime;$save['createtime']  = time();   $save['status']         = 2;
-        $save['examine_user_id']    = $_SESSION['userid'];
+        $save['examine_user_id']    = $user_id;
         $money = M('salary_count_money')->add($save);
         if($money){
             $_SESSION['salary_satus'] = '';
@@ -949,7 +950,8 @@ class AjaxController extends Controller {
      * 提交数据 / 批准
      */
     public function Ajax_salary_details_upgrade(){
-        if($_SESSION['userid']=='11' ||$_SESSION['userid']=='55' || $_SESSION['userid']=='1'){
+        $user_id = (int)$_SESSION['userid'];
+        if($user_id=='11' ||$user_id=='55' || $user_id=='1'){
         }else{
             $sum                            = 0;
             $msg                            = "您的权限不足!请联系管理员！";
@@ -969,27 +971,27 @@ class AjaxController extends Controller {
             $where ['id']                   = $v;
             $departmen_count                = M('salary_departmen_count')->where($where)->save($status);
         }
-        if($_SESSION['userid']=='11'){
+        if($user_id=='11'){
             $status['approval_time']        = time();
-            $status['approval_user_id']     = $_SESSION['userid'];
-        }elseif($_SESSION['userid']=='55'){
+            $status['approval_user_id']     = $user_id;
+        }elseif($user_id=='55'){
             $status['submission_time']      = time();
-            $status['submission_user_id']   = $_SESSION['userid'];
+            $status['submission_user_id']   = $user_id;
         }
 
         $count_money                        = M('salary_count_money')->where('id='.$count_money_id)->save($status);
         if($count_money){
             $sum                            = 1;
             $_SESSION['salary_satus']       = '';
-            if($_SESSION['userid']=='11'){
+            if($user_id==11){
                 $msg                        = "批准成功!";
-            }elseif($_SESSION['userid']=='55'){
+            }elseif($user_id==55){
                 $msg                       = "提交批准成功!";
             }
         }else{
-            if($_SESSION['userid']=='11'){
+            if($user_id==11){
                 $msg                        = "批准失败!";
-            }elseif($_SESSION['userid']=='55'){
+            }elseif($user_id==55){
                 $msg                        = "提交批准失败!";
             }
             $sum                            = 0;

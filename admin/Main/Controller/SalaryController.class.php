@@ -19,9 +19,11 @@ class SalaryController extends BaseController {
         $userid['datetime']                    = trim($_POST['month']);
         $userid                                = array_filter($userid);
 
-        if($_SESSION['userid']==11 ||$_SESSION['userid']==55 || $_SESSION['userid']==77 || $_SESSION['userid']==32 || $_SESSION['userid']==38 || $_SESSION['userid']==12  || $_SESSION['userid']==1){
+        $user_id = (int)$_SESSION['userid'];
+
+        if($user_id==11 ||$user_id==55 || $user_id==77 || $user_id==32 || $user_id==38 || $user_id==12  || $user_id==1){
         }else{
-            $userid['account_id']               = $_SESSION['userid'];
+            $userid['account_id']               = $user_id;
         }
 
         $count = M('salary_wages_month')->where($userid)->count();
@@ -42,7 +44,8 @@ class SalaryController extends BaseController {
      * sql_query参数（1查2增3删4修,查询字段,表名,条件,1倒叙2正常顺序,1查一条0所有）
      */
     public function salarydetails(){
-        if($_SESSION['userid']==1 || $_SESSION['userid']===55|| $_SESSION['userid']===77 || $_SESSION['userid']===11){
+        $userid = (int)$_SESSION['userid'];
+        if($userid==1 || $userid===55|| $userid===77 || $userid===11 || $userid==38 || $userid==12){
 
         }else{
             $this->error('详情表正在更新!暂时无法操作！');die;
@@ -199,16 +202,17 @@ class SalaryController extends BaseController {
      * grant_time  年月份搜索
      */
     public function salary_attendance(){
+        $userid = (int)$_SESSION['userid'];
 
-        if($_SESSION['userid']==11 ||$_SESSION['userid']==55 || $_SESSION['userid']==77 || $_SESSION['userid']==32 || $_SESSION['userid']==38 || $_SESSION['userid']==12  || $_SESSION['userid']!==1){
+        if($userid==11 ||$userid==55 || $userid==77 || $userid==32 || $userid==38 || $userid==12  || $userid!==1){
 
             $where['account_id']           = trim($_POST['id']);//编码
         }else{
             $uid                           = trim($_POST['id']);//编码
-            if($uid!==$_SESSION['userid']){
+            if($uid!==$userid){
                 $this->error('您只能查看自己的工资！');die;
             }
-            $where['account_id']           = $_SESSION['userid'];
+            $where['account_id']           = $userid;
         }
 
         $where['user_name']                = trim($_POST['nickname']);//昵称
@@ -572,7 +576,7 @@ class SalaryController extends BaseController {
             }
         }
 
-        $userid = $_SESSION['userid'];//用户id
+        $userid = (int)$_SESSION['userid'];//用户id
 
         $this->assign('info',$info);//员工信息
         $this->assign('type',$archives);//状态
