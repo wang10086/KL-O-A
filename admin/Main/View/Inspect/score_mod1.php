@@ -27,6 +27,10 @@
 
             <?php if (in_array($kind,$score_kind2)){ ?>
                 <div class="form-group col-md-4">
+                    <p>前期沟通：{$average.before_sell}&emsp;分</p>
+                </div>
+
+                <div class="form-group col-md-4">
                     <p>课程深度：{$average.depth}&emsp;分</p>
                 </div>
 
@@ -49,7 +53,51 @@
                 <div class="form-group col-md-4">
                     <p>辅导员：{$average.guide}&emsp;分</p>
                 </div>
+            <?php }elseif(in_array($kind,$score_kind3)){ ?>
+                <div class="form-group col-md-4">
+                    <p>前期沟通：{$average.before_sell}&emsp;分</p>
+                </div>
+
+                <div class="form-group col-md-4">
+                    <p>新媒体推广：{$average.new_media}&emsp;分</p>
+                </div>
+
+                <div class="form-group col-md-4">
+                    <p>内容专业性：{$average.major}&emsp;分</p>
+                </div>
+
+                <div class="form-group col-md-4">
+                    <p>住宿：{$average.stay}&emsp;分</p>
+                </div>
+
+                <div class="form-group col-md-4">
+                    <p>用餐：{$average.food}&emsp;分</p>
+                </div>
+
+                <div class="form-group col-md-4">
+                    <p>场地：{$average.travel}&emsp;分</p>
+                </div>
+
+                <div class="form-group col-md-4">
+                    <p>车况：{$average.bus}&emsp;分</p>
+                </div>
+
+                <div class="form-group col-md-4">
+                    <p>司机服务：{$average.driver}&emsp;分</p>
+                </div>
+
+                <div class="form-group col-md-4">
+                    <p>辅导员/领队：{$average.guide}&emsp;分</p>
+                </div>
+
+                <div class="form-group col-md-4">
+                    <p>材料及设备：{$average.material}&emsp;分</p>
+                </div>
             <?php }else{ ?>
+                <div class="form-group col-md-4">
+                    <p>前期沟通：{$average.before_sell}&emsp;分</p>
+                </div>
+
                 <div class="form-group col-md-4">
                     <p>住宿：{$average.stay}&emsp;分</p>
                 </div>

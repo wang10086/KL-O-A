@@ -38,7 +38,9 @@
                                         <th class="sorting" data="o.guide_manager">调查人员</th>
                                         <th class="taskOptions" width="80" data="o.charity_status">满意度状态</th>
                                         <!--<th class="taskOptions" width="80" data="o.zhuize">是否追责</th>-->
+                                        <if condition="rolemenu(array('Inspect/score_info'))">
                                         <th class="taskOptions">详情</th>
+                                        </if>
                                     </tr>
 
                                     <foreach name="lists" item="row"> 

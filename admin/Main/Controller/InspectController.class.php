@@ -405,47 +405,52 @@ class InspectController extends BaseController{
                 }
             }
             $lists[$k]['status']    = $status;*/
-            $lists[$k]['sum_score'] = $v['stay']+$v['travel']+$v['content']+$v['food']+$v['bus']+$v['driver']+$v['guide']+$v['teacher']+$v['depth']+$v['major']+$v['interest']+$v['material'];
+            $lists[$k]['sum_score'] = $v['before_sell']+$v['new_media']+$v['stay']+$v['travel']+$v['content']+$v['food']+$v['bus']+$v['driver']+$v['guide']+$v['teacher']+$v['depth']+$v['major']+$v['interest']+$v['material'];
         }
 
-        $kind               = M('op')->where(array('op_id'=>$op_id))->getField('kind');
-        $score_kind1        = array_keys(C('SCORE_KIND1'));
-        $score_kind2        = array_keys(C('SCORE_KIND2'));
+        $kind                   = M('op')->where(array('op_id'=>$op_id))->getField('kind');
+        $score_kind1            = array_keys(C('SCORE_KIND1'));
+        $score_kind2            = array_keys(C('SCORE_KIND2'));
+        $score_kind3            = array_keys(C('SCORE_KIND3'));
 
-        $average            = array();
-        $average['stay']    = round(array_sum(array_column($lists,'stay'))/$score_num,2);
-        $average['food']    = round(array_sum(array_column($lists,'food'))/$score_num,2);
-        $average['bus']     = round(array_sum(array_column($lists,'bus'))/$score_num,2);
-        $average['travel']  = round(array_sum(array_column($lists,'travel'))/$score_num,2);
-        $average['content'] = round(array_sum(array_column($lists,'content'))/$score_num,2);
-        $average['driver']  = round(array_sum(array_column($lists,'driver'))/$score_num,2);
-        $average['guide']   = round(array_sum(array_column($lists,'guide'))/$score_num,2);
-        $average['teacher'] = round(array_sum(array_column($lists,'teacher'))/$score_num,2);
+        $average                = array();
+        $average['before_sell'] = round(array_sum(array_column($lists,'before_sell'))/$score_num,2);
+        $average['new_media']   = round(array_sum(array_column($lists,'new_media'))/$score_num,2);
+        $average['stay']        = round(array_sum(array_column($lists,'stay'))/$score_num,2);
+        $average['food']        = round(array_sum(array_column($lists,'food'))/$score_num,2);
+        $average['bus']         = round(array_sum(array_column($lists,'bus'))/$score_num,2);
+        $average['travel']      = round(array_sum(array_column($lists,'travel'))/$score_num,2);
+        $average['content']     = round(array_sum(array_column($lists,'content'))/$score_num,2);
+        $average['driver']      = round(array_sum(array_column($lists,'driver'))/$score_num,2);
+        $average['guide']       = round(array_sum(array_column($lists,'guide'))/$score_num,2);
+        $average['teacher']     = round(array_sum(array_column($lists,'teacher'))/$score_num,2);
 
-        $average['depth']   = round(array_sum(array_column($lists,'depth'))/$score_num,2);
-        $average['major']   = round(array_sum(array_column($lists,'major'))/$score_num,2);
-        $average['interest'] = round(array_sum(array_column($lists,'interest'))/$score_num,2);
-        $average['material'] = round(array_sum(array_column($lists,'material'))/$score_num,2);
-        $average['score_num']= $score_num?$score_num:'0';
-        if (in_array($kind,$score_kind1)) $sum = 8*5*$score_num; //考核8项, 每项5分, 满分总分
-        if (in_array($kind,$score_kind2)) $sum = 6*5*$score_num; //考核6项, 每项5分, 满分总分
-        $average['sum_score'] = (round(array_sum(array_column($lists,'sum_score'))/$sum,2)*100).'%';
-        $row                = M('tcs_score_problem')->where(array('op_id'=>$op_id))->find();
-        $this->row          = $row;
-        $this->score_pro    = json_encode($row);
+        $average['depth']       = round(array_sum(array_column($lists,'depth'))/$score_num,2);
+        $average['major']       = round(array_sum(array_column($lists,'major'))/$score_num,2);
+        $average['interest']    = round(array_sum(array_column($lists,'interest'))/$score_num,2);
+        $average['material']    = round(array_sum(array_column($lists,'material'))/$score_num,2);
+        $average['score_num']   = $score_num?$score_num:'0';
+        if (in_array($kind,$score_kind1)) $sum = 9*5*$score_num; //考核9项, 每项5分, 满分总分
+        if (in_array($kind,$score_kind2)) $sum = 7*5*$score_num; //考核7项, 每项5分, 满分总分
+        if (in_array($kind,$score_kind3)) $sum = 10*5*$score_num; //考核10项, 每项5分, 满分总分
+        $average['sum_score']   = (round(array_sum(array_column($lists,'sum_score'))/$sum,2)*100).'%';
+        $row                    = M('tcs_score_problem')->where(array('op_id'=>$op_id))->find();
+        $this->row              = $row;
+        $this->score_pro        = json_encode($row);
         if ($this->score_pro){
-            $this->rad      = 1;
+            $this->rad          = 1;
         }else{
-            $this->rad      = 0;
+            $this->rad          = 0;
         }
 
-        $this->kind         = $kind;
-        $this->score_kind1  = $score_kind1;
-        $this->score_kind2  = $score_kind2;
-        $this->average      = $average;
-        $this->lists        = $lists;
-        $this->op_id        = $op_id;
-        $this->score_stu    = C('SCORE_STU');
+        $this->kind             = $kind;
+        $this->score_kind1      = $score_kind1;
+        $this->score_kind2      = $score_kind2;
+        $this->score_kind3      = $score_kind3;
+        $this->average          = $average;
+        $this->lists            = $lists;
+        $this->op_id            = $op_id;
+        $this->score_stu        = C('SCORE_STU');
 
 
         $this->display();
