@@ -108,6 +108,7 @@ class SalaryController extends BaseController {
             }
         }
         if($month == 3 || $month == 6 || $month == 9 ||$month == 12 || $type==2){
+//        if($month == 3 || $month == 6 || $month == 9 ||$month == 12){
             $count                   = 0;
             $sum                     = 0;
             $i                       = $month-3;
@@ -138,7 +139,11 @@ class SalaryController extends BaseController {
             }
             $content['target']       = $count;
             $content['complete']     = $sum;
-            $content['total']        = round($Total,2);//保留两位小数
+            if($month == 3 || $month == 6 || $month == 9 ||$month == 12){
+                $content['total']        = round($Total,2);//保留两位小数
+            }else{
+                $content['total']        = '0.00';//保留两位小数
+            }
         }else{
             $content['target']       = '0.00';//季度目标
             $content['complete']     = '0.00';//季度完成
