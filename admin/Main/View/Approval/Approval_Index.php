@@ -1,5 +1,6 @@
 <include file="Index:header2" />
 
+
             <aside class="right-side">
                 <!-- Content Header (Page header) -->
                 <section class="content-header">
@@ -30,25 +31,38 @@
                                             <input type="checkbox" id="Approval_check"/>
                                         </th>
                                         <th style="text-align:center;width:10em;"><b>拟稿人姓名</b></th>
-                                        <th style="text-align:center;width:10em;"><b>单位部门</b></th>
-                                        <th style="text-align:center;width:10em;"><b>文件名称</b></th>
+                                        <th style="text-align:center;width:10em;"><b>原文件名称</b></th>
                                         <th style="text-align:center;width:10em;"><b>创建时间</b></th>
-                                        <th style="text-align:center;width:10em;"><b>文件格式</b></th>
-                                        <th style="text-align:center;width:10em;"><b>文件页码</b></th>
+                                        <th style="text-align:center;width:10em;"><b>修改后文件名称</b></th>
+                                        <th style="text-align:center;width:10em;"><b>修改时间</b></th>
+                                        <th style="text-align:center;width:5em;"><b>文件格式</b></th>
+                                        <th style="text-align:center;width:5em;"><b>文件大小</b></th>
+                                        <th style="text-align:center;width:5em;"><b>状态</b></th>
                                         <th style="text-align:center;width:10em;"><b>操作</b></th>
                                     </tr>
+                                    <foreach name="file" item="f">
                                     <tr>
                                     	<td align="center">
                                             <input type="checkbox" class="Approval_check" />
                                         </td>
-                                        <td style="text-align:center;color:#3399FF;">刘金垒</td>
-                                        <td style="text-align:center;">天龙八部</td>
-                                        <td style="text-align:center;">人生理想空谈</td>
-                                        <td style="text-align:center;">208809</td>
-                                        <td style="text-align:center;">docx</td>
-                                        <td style="text-align:center;">5</td>
-                                        <td style="text-align:center;"><a href="">查看</a></td>
+                                        <td style="text-align:center;color:#3399FF;">{$f['account_name']}</td>
+                                        <td style="text-align:center;" >
+                                            <a href="{$f['file_url']}">{$f['file_name']}.{$f['file_format']}
+                                            </a>
+                                        </td>
+                                        <td style="text-align:center;"><?php echo date('Y-m-d H:i:s',$f['createtime']);?></td>
+
+                                        <td style="text-align:center;">{$f['file_format']}</td>
+                                        <td style="text-align:center;">{$f['file_size']}</td>
+
+                                        <td style="text-align:center;">{$f['file_format']}</td>
+                                        <td style="text-align:center;">{$f['file_size']}</td>
+                                        <td style="text-align:center;"><?php if($f['status']==1){echo "待批注";}elseif($f['status']==2){echo "待批准";}elseif($f['status']==3){echo "通过";}?></td>
+                                        <td style="text-align:center;">
+                                            <a href="{:U('Approval/Approval_Update',array('id'=>$f['id']))}">查看详情</a>
+                                        </td>
                                     </tr>
+                                        </foreach>
 
                                 </table>
                                 </div><!-- /.box-body -->
@@ -89,51 +103,5 @@
             $('.Approval_check').iCheck('uncheck');
         });
     });
-
-  //  $('#Approval_checkbox .icheckbox_minimal').click(function(){alert(111);
-//                    var clas = $(this).prop('class');
-//                    alert(clas);
-//                    if(clas=='icheckbox_minimal hover checked'){
-//                        $('tr .Approval_checkbox div').toggleClass('icheckbox_minimal checked');
-//                    }
-  //  });
-
-
-    //上传
-    function uploadFile() {
-        art.dialog.open("{:U('Files/upload',array('pid'=>$pid,'level'=>$level))}",{
-            lock:true,
-            title: '上传文件',
-            width:800,
-            height:500,
-            okValue: '提交',
-            fixed: true,
-            ok: function () {
-
-                //获取上传数据
-                var files = this.iframe.contentWindow.gosubmint();
-                //保存数据
-                $.ajax({
-                    type: "POST",
-                    url: "<?php echo U('Files/savefile'); ?>",
-                    dataType:'json',
-                    data: {files:files},
-                    success:function(data){
-                        if(data.status==0){
-                            location.reload();
-                        }else{
-                            alert('保存数据失败');
-                        }
-
-                    }
-                });
-
-            },
-            cancelValue:'取消',
-            cancel: function () {
-            }
-        });
-    }
-
 
 </script>
