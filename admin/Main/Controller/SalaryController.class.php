@@ -104,45 +104,96 @@ class SalaryController extends BaseController {
         }
         if($year==20180){
             if($month==10 || $month==9){
-                $month = $month-1;
+                $month              = $month-1;
             }
         }
-        if($month == 3 || $month == 6 || $month == 9 ||$month == 12 || $type==2){
-            $count                   = 0;
-            $sum                     = 0;
-            $i                       = $month-3;
-            for($i;$i<$month;$month--){
-                $query['month']      = $year.$month;
-                $kpi                 = M('kpi')->where($query)->find();
+        if($type==2){
+            $query['month'] = $year.$month;
+            if($month == 3 || $month == 6 || $month == 9 || $month == 12){
+                $count                   = 0;
+                $sum                     = 0;
+                $i                       = $month-3;
+                for($i;$i<$month;$month--){
+                    $query['month']      = $year.$month;
+                    $kpi                 = M('kpi')->where($query)->find();
 
+                    if($kpi){
+                        $lists           = M('kpi_more')->where(array('kpi_id'=>$kpi['id']))->find();
+                        if(!$lists || $lists['automatic'] == 0){
+                            return 0;
+                        }
+                    }else{
+                        return 0;
+                    }
+                    $count               += $lists['target'];//季度目标
+                    $sum                 += $lists['complete'];//季度完成
+                }
+                $number = $sum/$count;//项目季度百分比
+                if($number <= 1){
+                    $Total                = $sum*0.05;//不超过100%
+                }
+                if(1<$number && $number  <= 1.5){
+                    $Total                = $sum*(($number-1)*0.2+0.05);//超过100% 不到150%
+                }
+                if(1.5 < $number){
+                    $Total                = $sum*(($number-1.5)*0.25+(1.5-1)*0.2+0.05);//超过150%
+                }
+                $content['target']          = $count;
+                $content['complete']        = $sum;
+                $content['total']           = round($Total,2);//保留两位小数
+            }else{
+                $kpi                      = M('kpi')->where($query)->find();
                 if($kpi){
-                    $lists           = M('kpi_more')->where(array('kpi_id'=>$kpi['id']))->find();
+                    $lists                = M('kpi_more')->where(array('kpi_id'=>$kpi['id']))->find();
                     if(!$lists || $lists['automatic'] == 0){
                         return 0;
                     }
                 }else{
                     return 0;
                 }
-                $count               += $lists['target'];//季度目标
-                $sum                 += $lists['complete'];//季度完成
+                $content['target']        = $lists['target'];//季度目标
+                $content['complete']      = $lists['complete'];//季度完成
+                $content['total']         = '0.00';//保留两位小数
             }
-            $number = $sum/$count;//项目季度百分比
+            return $content;
+        }
+        if($month == 3 || $month == 6 || $month == 9 ||$month == 12){
+//        if($month == 3 || $month == 6 || $month == 9 ||$month == 12){
+            $count                      = 0;
+            $sum                        = 0;
+            $i                          = $month-3;
+            for($i;$i<$month;$month--){
+                $query['month']         = $year.$month;
+                $kpi                    = M('kpi')->where($query)->find();
+
+                if($kpi){
+                    $lists              = M('kpi_more')->where(array('kpi_id'=>$kpi['id']))->find();
+                    if(!$lists || $lists['automatic'] == 0){
+                        return 0;
+                    }
+                }else{
+                    return 0;
+                }
+                $count                  += $lists['target'];//季度目标
+                $sum                    += $lists['complete'];//季度完成
+            }
+            $number                     = $sum/$count;//项目季度百分比
             if($number <= 1){
-                $Total                = $sum*0.05;//不超过100%
+                $Total                  = $sum*0.05;//不超过100%
             }
             if(1<$number && $number <=1.5){
-                $Total               = $sum*(($number-1)*0.2+0.05);//超过100% 不到150%
+                $Total                  = $sum*(($number-1)*0.2+0.05);//超过100% 不到150%
             }
             if(1.5 < $number){
-                $Total               = $sum*(($number-1.5)*0.25+(1.5-1)*0.2+0.05);//超过150%
+                $Total                  = $sum*(($number-1.5)*0.25+(1.5-1)*0.2+0.05);//超过150%
             }
-            $content['target']       = $count;
-            $content['complete']     = $sum;
-            $content['total']        = round($Total,2);//保留两位小数
+            $content['target']          = $count;
+            $content['complete']        = $sum;
+            $content['total']           = round($Total,2);//保留两位小数
         }else{
-            $content['target']       = '0.00';//季度目标
-            $content['complete']     = '0.00';//季度完成
-            $content['total']        = '0.00';//保留两位小数
+            $content['target']          = '0.00';//季度目标
+            $content['complete']        = '0.00';//季度完成
+            $content['total']           = '0.00';//保留两位小数
         }
         return $content;
     }

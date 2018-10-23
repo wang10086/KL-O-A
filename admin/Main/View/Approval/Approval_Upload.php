@@ -24,7 +24,7 @@
                         <lebal class="upload-lebal">选择审批人<span></span></lebal>
 
                         <foreach name="personnel" item="v">
-                            <a style="padding:1em;"><input type="checkbox" value="{$v.id}" name="department[]"> &nbsp;{$v.nickname}</a>
+                            <a style="padding:1em;" class="{$v.id}"><input type="checkbox" value="{$v.id}" name="department[]" checkbox=""> &nbsp;{$v.nickname}</a>
                         </foreach>
                     </div>
 
@@ -69,20 +69,16 @@
         
    <script type="text/javascript">
 
-            var html ='';
-            html += '<lebal class="upload-lebal">已选审批人<span></span></lebal>';
             $('#Approvel_uploadtid a').on('ifChecked', function() {
-                $('#Approvel_uploadtid a').each(function(){
-                        var  check = $(this).find('.checked');
-                        if(check !=="checked"){
-                            html += $(this).html();
-                        }
-                        alert(check);
-                    });
-//                html += $(this).html();
-                console.log(html);
-//                html += $(this).html();
+                var html ='';
+                html += '<lebal class="upload-lebal">已选审批人<span></span></lebal>';
+                $('input:checkbox:checked').each(function () {
+                             //$(this).val();//获取input值
+                        html+= $(this).parents('a').html();
+                });
+                alert($(this).html());
                 $('#Approvel_upload_postid').html(html);
+
             });
 
 
