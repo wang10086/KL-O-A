@@ -412,7 +412,7 @@
                         </li>
                         </if>
 
-                        <if condition="rolemenu(array('Finance/costacclist','Finance/budget','Finance/settlementlist'))">
+                        <if condition="rolemenu(array('Finance/costacclist','Finance/budget','Finance/settlementlist','Finance/payment','Finance/costlabour'))">
                         <li class="treeview {:ison(CONTROLLER_NAME, 'Finance')}">
                             <a href="javascript:;">
                                 <i class="fa  fa-yen"></i>
@@ -420,6 +420,18 @@
                                 <i class="fa fa-angle-left pull-right"></i>
                             </a>
                             <ul class="treeview-menu">
+
+                                <li class="treeview {:on('Finance/jiekuan')}">
+                                    <if condition="rolemenu(array('Finance/jiekuan'))">
+                                        <a href=""><i class="fa  fa-check-circle"></i> 财务审批</a>
+                                    </if>
+                                    <ul class="treeview-menu">
+                                        <if condition="rolemenu(array('Finance/jiekuan'))">
+                                            <!--<li class="{:on('Finance/jiekuan')}"><a href="{:U('Finance/jiekuan')}"><i class="fa fa-angle-right"></i> 团内支出借款</a></li>-->
+                                            <li><a href="javascript:;" onclick="art_show_msg('加班开发中,稍后呈现......',5)"><i class="fa fa-angle-right"></i>团内支出借款</a></li>
+                                        </if>
+                                    </ul>
+                                </li>
 
                             	<if condition="rolemenu(array('Finance/costacclist'))">
                                     <li><a href="{:U('Finance/costacclist')}"><i class="fa fa-angle-right"></i> 成本核算</a></li>
