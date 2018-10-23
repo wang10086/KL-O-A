@@ -1,7 +1,8 @@
 <script type="text/javascript">
     $(document).ready(function() {
-        $("#res_need_table").hide();
+        $('#res_need_table').hide();
         $('#after_lession').hide();
+        $('#design').hide();
 
         var op_kind     = <?php echo $op_kind;?>;
         if (op_kind == 60) {
@@ -12,6 +13,7 @@
     })
 </script>
 
+<!--业务实施需求单 (一)-->
     <form method="post" action="<?php echo U('Op/public_save'); ?>" id="res_need_table">
     <input type="hidden" name="dosubmint" value="1">
     <input type="hidden" name="opid" value="{$op.op_id}">
@@ -140,6 +142,7 @@
         </div>
     </form>
 
+<!--业务实施需求单 (二)-->
 <form method="post" action="<?php echo U('Op/public_save'); ?>" id="after_lession">
     <input type="hidden" name="dosubmint" value="1">
     <input type="hidden" name="opid" value="{$op.op_id}">
@@ -204,9 +207,93 @@
     </div>
 </form>
 
+<!--委托设计工作交接单 设计部-->
+<form method="post" action="<?php echo U('Op/public_save'); ?>" id="design">
+    <input type="hidden" name="dosubmint" value="1">
+    <input type="hidden" name="opid" value="{$op.op_id}">
+    <input type="hidden" name="savetype" value="16">
+    <div class="row">
+        <!-- right column -->
+        <div class="form-group col-md-12">
+            <div class="content">
+
+                <div class="form-group col-md-4">
+                    <label>项目名称：</label><input type="text" name="info[project]" value="<?php echo $design['project']?$design['project']:$op['project'] ?>" class="form-control" />
+                </div>
+
+                <div class="form-group col-md-4">
+                    <label>考核编码：</label><input type="text" name="info[check_coding]" value="{$design['check_coding']}" class="form-control" />
+                </div>
+
+                <div class="form-group col-md-4">
+                    <label>交稿时间：</label><input type="text" name="info[finish_time]" value="<?php echo $design['finish_time']; ?>" class="form-control inputdate" />
+                </div>
+
+                <div class="form-group col-md-4">
+                    <label>成品尺寸：</label><input type="text" name="info[goods_size]" value="{$design['goods_size']}" class="form-control" placeholder="展开尺寸" />
+                </div>
+
+                <div class="form-group col-md-4">
+                    <label>接收人员：</label><input type="text" class="form-control" name="info[exe_user_name]"  value="{$design['exe_user_name']}" id="exe_user_name" />
+                    <input type="hidden" name="info[exe_user_id]" id="exe_user_id"  value="{$design['exe_user_id']}" />
+                </div>
+
+                <div class="form-group col-md-4">
+                    <label>填表人：</label><input type="text" name="info[ini_user_name]" value="{:session('nickname')}" class="form-control" readonly />
+                    <input type="hidden" name="info[ini_user_id]" value="{:session('userid')}" class="form-control" readonly />
+                </div>
+
+                <div class="form-group col-md-12" id="is_pingban">
+                    <label>是否拼版：</label>
+                    <span class="checkboxs_100"><input type="radio" name="info[pingban]" <?php if($design['pingban']==0){ echo 'checked';} ?>  value="0">&nbsp; 否</span>&#12288;&#12288;
+                    <span class="checkboxs_500"><input type="radio" name="info[pingban]" <?php if($design['pingban']==1){ echo 'checked';} ?>  value="1">&nbsp; 是
+                        <span id="pingban">，拼版尺寸：<input type="text" name="info[pinban_size]" value="{$design['pinban_size']}" style="border: none; border-bottom: solid 1px;"> &#12288;&#12288;
+                        <input type="radio" name="info[chuxue]" value="含出血" <?php if($design['chuxue']=='含出血'){ echo 'checked';} ?>>&nbsp;含出血 &#12288;&#12288;
+                        <input type="radio" name="info[chuxue]" value="不含出血" <?php if($design['chuxue']=='不含出血'){ echo 'checked';} ?>>&nbsp;不含出血
+                        </span>
+                    </span>&#12288;&#12288;
+                </div>
+
+                <div class="form-group col-md-12">
+                    <label>输出要求：</label>
+                    <input type="radio" name="info[output]" value="1" <?php if($design['output']==1){ echo 'checked';} ?> >&nbsp;出片打样 &#12288;&#12288;
+                    <input type="radio" name="info[output]" value="2" <?php if($design['output']==2){ echo 'checked';} ?> >&nbsp;喷绘&#12288;&#12288;
+                    <input type="radio" name="info[output]" value="3" <?php if($design['output']==3){ echo 'checked';} ?> >&nbsp;只提供电子文件&#12288;文件格式：<input type="text" name="info[file_type]" value="{$design['file_type']}" style="border: none; border-bottom: solid 1px;"> &#12288;&#12288;
+                </div>
+
+                <div class="form-group col-md-12">
+                    <label>提供内容：</label>
+                    <input type="text" name="info[give_con]" value="{$design['give_con']}" style="border: none; border-bottom: solid 1px; min-width: 200px;"  placeholder="文字(文件名称)"> &#12288;&#12288;
+                    图片：<input type="text" name="info[give_pic]" value="{$design['give_pic']}" style="border: none; border-bottom: solid 1px; width: 80px">张&nbsp;(&nbsp;
+                    <input type="radio" name="info[pic_type]" value="印刷品">&nbsp;印刷品 &#12288;&#12288;
+                    <input type="radio" name="info[pic_type]" value="电子文件">&nbsp;电子文件) &#12288;
+                </div>
+
+                <div class="form-group col-md-12">
+                    <label>设计要求及内容：</label><textarea class="form-control"  name="info[pecial_need]">{$design['pecial_need']}</textarea>
+                </div>
+
+                <div class="form-group col-md-12">
+                    <label>备注：</label><textarea class="form-control"  name="info[remark]">{$design['remark']}</textarea>
+                </div>
+
+                <div class="form-group col-md-12">
+                    <label>提示：</label><p>成稿后部门负责人最终确认签字(部门负责人审核通过后该需求单才能到达相关人员手中)。</p>
+                </div>
+
+            </div>
+
+            <div style="width:100%; text-align:center;">
+                <a  href="javascript:;" class="btn btn-info btn-lg" onClick="javascript:save('design','<?php echo U('Op/public_save'); ?>');">保存</a>
+                <!--<input type="submit" value="提交AAA">-->
+            </div>
+        </div>
+    </div>
+</form>
+
 <script type="text/javascript">
+    var keywords = <?php echo $userkey; ?>;
     $(document).ready(function(e){
-        var keywords = <?php echo $userkey; ?>;
         $("#exe_u_name").autocomplete(keywords, {
             matchContains: true,
             highlightItem: false,
@@ -218,6 +305,19 @@
             }
         }).result(function (event, item) {
             $("#exe_u_id").val(item.id);
+        });
+
+        $("#exe_user_name").autocomplete(keywords, {
+            matchContains: true,
+            highlightItem: false,
+            formatItem: function(row, i, max, term) {
+                return '<span style=" display:none">'+row.pinyin+'</span>'+row.text;
+            },
+            formatResult: function(row) {
+                return row.text;
+            }
+        }).result(function (event, item) {
+            $("#exe_user_id").val(item.id);
         });
     });
 

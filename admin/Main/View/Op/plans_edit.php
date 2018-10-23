@@ -90,36 +90,8 @@
                                 </div><!-- /.box-body -->
                             </div><!-- /.box -->
 
-                            <div  id="hide_div">
-                                <div class="box box-warning">
-                                    <div class="box-header">
-                                        <h3 class="box-title">资源需求单</h3>
-                                        <h3 class="box-title pull-right" style="font-weight:normal; color:#333333;">
-                                            <?php  if((rolemenu(array('Op/public_save'))  && ($op['create_user'] == cookie('userid'))) || $resource ){ ?>
-                                                <span id="res_but"><a href="javascript:;" onclick="show_res_need()" style="color:#09F;">显示</a></span>
-                                            <?php  } ?>
-                                        </h3>
-                                    </div>
-                                    <?php if(rolemenu(array('Op/public_save'))  && ($op['create_user'] == cookie('userid')) ){ ?>
-                                        <include file="op_res_need" />
-                                        <div class="form-group col-md-12"></div>
-                                    <?php  }else if(rolemenu(array('Op/public_save'))  && ($resource['exe_user_id'] == cookie('userid')) ){ ?>
-                                        <include file="op_res_nback" />
-                                        <div class="form-group col-md-12"></div>
-                                    <?php  }else{ ?>
-                                        <?php if($resource){ ?>
-                                            <include file="op_res_nread" />
-                                            <div class="form-group col-md-12"></div>
-                                        <?php  }else{ ?>
-                                            <div class="box-body ml20">
-                                                <div class="content" style="padding-top:40px;">  暂未填写物资需求单!</div>
-                                            </div>
-                                        <?php } } ?>
-                                </div>
-                            </div>
 
                            <?php  if($op['audit_status']==1){ ?>
-
                                <div class="box box-warning">
                                    <div class="box-header">
                                        <h3 class="box-title">行程方案及资源需求</h3>

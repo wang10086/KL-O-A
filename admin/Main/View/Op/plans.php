@@ -26,7 +26,7 @@
                             <div class="box-body">
                                 <div class="content">
 
-                                    <div class="form-group col-md-4">
+                                    <div class="form-group col-md-8">
                                         <label>项目名称(学校名称 + 地点 + 项目类型)：</label><input type="text" name="info[project]" class="form-control" required />
                                     </div>
 
@@ -76,15 +76,15 @@
                                         <label>详细地址：</label><input type="text" name="addr" class="form-control"  required />
                                     </div>
 
-                                    <div class="form-group col-md-4">
+                                    <!--<div class="form-group col-md-4">
                                         <label>业务部门：</label>
                                         <select  class="form-control" name="info[op_create_user]" >
                                             <option value="" selected disabled>请选择业务部门</option>
                                             <foreach name="rolelist" key="k" item="v">
-                                                <option value="{$v}" <?php if($k==cookie('roleid')){ echo 'selected';} ?> >{$v}</option>
+                                                <option value="{$v}" <?php /*if($k==cookie('roleid')){ echo 'selected';} */?> >{$v}</option>
                                             </foreach>
                                         </select>
-                                    </div>
+                                    </div>-->
 
                                     <div class="form-group col-md-4">
                                         <label>客户单位：</label>
@@ -120,13 +120,19 @@
                                         <span id="contextTip"></span>
                                     </div>
 
-                                    <div class="form-group col-md-12">
+                                    <!--<div class="form-group col-md-12">
                                         <label>工单接收部门：</label>
-                                        <!--<input type="checkbox" name="exe[]" value="45">&nbsp;市场部 &#12288;
+                                        <input type="checkbox" name="exe[]" value="45">&nbsp;市场部 &#12288;
                                         <input type="checkbox" name="exe[]" value="31">&nbsp;计调部 &#12288;
                                         <input type="checkbox" name="exe[]" value="15">&nbsp;研发部 &#12288;
-                                        <input type="checkbox" name="exe[]" value="52">&nbsp;资源管理部&#12288;-->
+                                        <input type="checkbox" name="exe[]" value="52">&nbsp;资源管理部&#12288;
                                         <input type="checkbox" name="exe[]" value="93">&nbsp;资源管理部&#12288;
+                                    </div>-->
+
+                                    <div class="form-group col-md-12">
+                                        <label>工单接收人：</label>
+                                        <input type="text" name="exe_user_name" class="form-control userkeywords">
+                                        <input type="hidden" name="exe_user_id" id="exe_user">
                                     </div>
 
                                 </div>
@@ -157,6 +163,21 @@
 
         $(function () {
             $('#dijie_name').hide();
+
+            var keywords = <?php echo $userkey; ?>;
+            $(".userkeywords").autocomplete(keywords, {
+                matchContains: true,
+                highlightItem: false,
+                formatItem: function(row, i, max, term) {
+                    return '<span style=" display:none">'+row.pinyin+'</span>'+row.text;
+                },
+                formatResult: function(row) {
+                    return row.user_name;
+                }
+            }).result(function(event, item) {
+                $('#exe_user').val(item.id);
+            });
+
         })
 
        function is_or_not_dijie(){

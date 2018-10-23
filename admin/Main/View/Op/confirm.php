@@ -94,10 +94,17 @@
                                 <div class="box-body" id="resource">
                                     <?php if(!$jiesuan && ($op['create_user']==cookie('userid') || C('RBAC_SUPER_ADMIN')==cookie('username') || cookie('roleid')==10)){ ?>
                                         <div class="form-group col-md-12 ml-12" id="res-need-or-not">
-                                            <h2 class="tcs_need_h2">资源需求</h2>
+                                            <h2 class="tcs_need_h2">资源需求：</h2>
                                             <input type="radio" name="need-tcs-or-not" value="0"  <?php if($rad==0){ echo 'checked';} ?>> &#8194;不需要 &#12288;&#12288;&#12288;
                                             <input type="radio" name="need-tcs-or-not" value="1"  <?php if($rad==1){ echo 'checked';} ?>> &#8194;需要
                                         </div>
+                                        <div class="form-group col-md-12 ml-12" id="res_type" style="margin-top: -30px;">
+                                            <h2 class="tcs_need_h2">资源需求单类型：</h2>
+                                            <input type="radio" name="res_type" value="1"> &nbsp;业务实施需求单 &#12288;
+                                            <input type="radio" name="res_type" value="2"> &nbsp;委托设计工作交接单 &#12288;
+                                            <input type="radio" name="res_type" value="3"> &nbsp;业务实施计划单
+                                        </div>
+
                                         <include file="op_res_need" />
                                     <?php }else{ ?>
                                         <include file="op_res_nread" />
@@ -142,17 +149,20 @@
     var resource    = "<?php echo $resource['op_id']; ?>";
 
     $(function(){
-        get_gpk();
+       // get_gpk();
 
         if (resource && op_kind != 60){
             $('#res-need-or-not').html('');
+            $('#res_type').html('');
             $('#after_lession').html('');
             $('#res_need_table').show();
         }else if (resource && op_kind == 60){
             $('#res-need-or-not').html('');
+            $('#res_type').html('');
             $('#after_lession').show();
             $('#res_need_table').html('');
         }else{
+            $('#res_type').hide();
             $('#custom').hide();
             $('#handson').hide();
         }
@@ -164,18 +174,15 @@
                         art.dialog.alert('该项目未成团','warning');
                          return;
                     }else {
-                        if (op_kind == 60) {
-                            $('#after_lession').show();
-                            $('#res_need_table').html('');
-                        }else{
-                            $('#after_lession').html('');
-                            $('#res_need_table').show();
-                        }
+                        $('#res_type').show();
+                        get_res_type();
                     }
 
                 }else{
                     $('#after_lession').hide();
                     $('#res_need_table').hide();
+                    $('#res_type').hide();
+                    $('#design').hide();
                 }
             })
         })
@@ -202,9 +209,57 @@
             })
         })
 
+        $('#is_pingban').find('ins').each(function (index,ele) {
+            $(this).click(function () {
+                var pingban = $(this).prev('input').val();
+                if (pingban == 1){
+                    $('#pingban').show();
+                }else if(pingban == 0){
+                    $('#pingban').hide();
+                }
+            })
+        })
+
     })
 
-    function get_gpk(){
+    function get_res_type(){
+        $('#res_type').find('ins').each(function (index,ele) {
+            $(this).click(function () {
+                var type = $(this).prev('input').val();
+                if(type == 2){
+                    //委托设计工作交接单
+                    var pingban = <?php echo $design['pingban']; ?>;
+                    if (pingban == 1) {
+                        $('#pingban').show();
+                    }else{
+                        $('#pingban').hide();
+                    }
+                    $('#design').show();
+                    $('#after_lession').hide();
+                    $('#res_need_table').hide();
+                }else if(type == 3) {
+                    //业务实施计划单
+                    alert('业务实施计划单');
+
+                    $('#after_lession').hide();
+                    $('#res_need_table').hide();
+                    $('#design').hide();
+                }else{
+                    //业务实施需求单
+                    if (op_kind == 60) {
+                        $('#after_lession').show();
+                        $('#res_need_table').html('');
+                    }else{
+                        $('#after_lession').html('');
+                        $('#res_need_table').show();
+                    }
+                    $('#design').hide();
+                }
+            })
+        })
+    }
+
+    /*function get_gpk(){
 
         $.ajax({
             type:"POST",
@@ -232,7 +287,7 @@
                 }
             }
         })
-    }
+    }*/
 
     //新增辅导员/教师、专家
     function add_tcs(){

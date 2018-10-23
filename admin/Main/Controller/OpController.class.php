@@ -103,15 +103,21 @@ class OpController extends BaseController {
 
 			
 			$info       = I('info');
-			$guide      = I('guide');
-			$member     = I('member');
-			$cost       = I('cost');
-			$supplier   = I('supplier');
-			$wuzi       = I('wuzi');
+            $guide      = I('guide');
+            $member     = I('member');
+            $cost       = I('cost');
+            $supplier   = I('supplier');
+            $wuzi       = I('wuzi');
             $province   = I('province');
             $addr       = I('addr');
+            $info['op_create_user'] = cookie('rolename');
+            if ($info['in_dijie'] == 1) {
+                $info['project'] = '【发起团】'.$info['project'];
+            }
 
-            $exe_role_ids = I('exe');
+            //$exe_role_ids = I('exe');
+            $exe_user_id    = I('exe_user_id');
+            $exe_user_name  = I('exe_user_name');
 
 			if(!$info['customer']){
 				$this->error('客户单位不能为空' . $db->getError());	
@@ -187,51 +193,32 @@ class OpController extends BaseController {
                     //计划完成时间 $u_time为工作日
                     $worder['plan_complete_time']= strtotime(getAfterWorkDay($u_time));
 
-                    if($exe_role_ids){
-                        foreach($exe_role_ids as $v){
-                            $exe_dept_id        = $v;
-                            $exe_dept_name      = M('role')->where(array('id'=>$exe_dept_id))->getField('role_name');
-                            $exe_user_id        = M('auth')->where(array('role_id'=>$exe_dept_id))->getField("worder_auth");
-                            $exe_user_name      = M('account')->where(array('id'=>array('eq',$exe_user_id)))->getField('nickname');
-                            $worder['exe_dept_id']      = $exe_dept_id;
-                            $worder['exe_dept_name']    = $exe_dept_name;
-                            $worder['exe_user_id']      = $exe_user_id;
-                            $worder['exe_user_name']    = $exe_user_name;
-                            $res = M('worder')->add($worder);
-                            if($res){
-                                //保存操作记录
-                                $record = array();
-                                $record['worder_id'] = $res;
-                                $record['type']     = 0;
-                                $record['explain']  = '立项/创建工单';
-                                worder_record($record);
-                                //发送系统消息
-                                $uid     = cookie('userid');
-                                $title   = '您有来自['.$worder['ini_dept_name'].'--'.$worder['ini_user_name'].']的工单待执行!';
-                                $content = $worder['worder_content'];
-                                $url     = U('worder/worder_info',array('id'=>$res));
-                                $user    = '['.$worder['exe_user_id'].']';
-                                send_msg($uid,$title,$content,$url,$user,'');
-                            }
+                    if($exe_user_id){
+                        $exe_user_id        = $exe_user_id;
+                        $exe_user_name      = $exe_user_name;
+                        $exe_dept_id        = M('account')->where(array('id'=>$exe_user_id))->getField('roleid');
+                        $exe_dept_name      = M('role')->where(array('id'=>$exe_dept_id))->getField('role_name');
+                        $worder['exe_dept_id']      = $exe_dept_id;
+                        $worder['exe_dept_name']    = $exe_dept_name;
+                        $worder['exe_user_id']      = $exe_user_id;
+                        $worder['exe_user_name']    = $exe_user_name;
+                        $res = M('worder')->add($worder);
+                        if($res){
+                            //保存操作记录
+                            $record = array();
+                            $record['worder_id'] = $res;
+                            $record['type']     = 0;
+                            $record['explain']  = '立项/创建工单';
+                            worder_record($record);
+                            //发送系统消息
+                            $uid     = cookie('userid');
+                            $title   = '您有来自['.$worder['ini_dept_name'].'--'.$worder['ini_user_name'].']的工单待执行!';
+                            $content = $worder['worder_content'];
+                            $url     = U('worder/worder_info',array('id'=>$res));
+                            $user    = '['.$worder['exe_user_id'].']';
+                            send_msg($uid,$title,$content,$url,$user,'');
                         }
                     }
-
-                    //发送立项消息提示[1线路(韩露) , 2课程(魏春竹) , 3其他(秦鸣)]
-                    if($id == 1 || $pid ==1){
-                        $exe_d_id            =  65;
-                    }elseif ($id ==2 || $pid ==2){
-                        $exe_d_id            =  76;
-                    }elseif ($id ==3 || $pid==3){
-                        $exe_d_id            =  14;
-                    }
-                    $exe_user_id        = M('auth')->where(array('role_id'=>$exe_d_id))->getField("worder_auth");
-                    //发送系统消息
-                    $uid     = cookie('userid');
-                    $title   = '您有来自['.$worder['ini_dept_name'].'--'.$worder['ini_user_name'].']的['.$pro_name.']项目!请注意跟进!';
-                    $content = $worder['worder_content'];
-                    $url     = U('Op/plans_follow',array('opid'=>$worder['op_id']));
-                    $user    = '['.$exe_user_id.']';
-                    //send_msg($uid,$title,$content,$url,$user,'');
 
 					$this->success('保存成功！',U('Op/plans_follow',array('opid'=>$opid)));
 				}else{
@@ -271,8 +258,10 @@ class OpController extends BaseController {
                     M('product_line')->data(array('pinyin'=>$pinyin))->where(array('id'=>$v['id']))->save();
                 }
             }
-            $this->provinces   = M('provinces')->getField('id,name',true);
             $this->linelist    = json_encode($linelist);
+
+            $this->userkey     = get_userkey();
+            $this->provinces   = M('provinces')->getField('id,name',true);
 			$this->geclist     = M('customer_gec')->field('id,pinyin,company_name')->where($where)->group("company_name")->order('pinyin ASC')->select();
 			$this->kinds       = get_project_kinds();
 			$this->userlist    =  M('account')->where('`id`>3')->getField('id,nickname', true);
@@ -1088,6 +1077,29 @@ class OpController extends BaseController {
                     $record['explain'] = '填写资源需求反馈信息';
                     op_record($record);
 
+                    $num++;
+                }
+            }
+
+            //保存委托设计工作交接单
+            if ($opid && $savetype==16){
+
+                $info['op_id']       = $opid;
+                $info['create_time'] = NOW_TIME;
+                $info['finish_time'] = strtotime($info['finish_time']);
+                if (!$info['exe_user_id']){
+                    $this->error('请填写接收人员信息');
+                    die;
+                }
+                $list = M('op_design')->where(array('op_id'=>$opid))->find();
+                if ($list) {
+                    $res = M('op_design')->where(array('id'=>$list['id']))->save($info);
+                }else{
+                    $res = M('op_design')->add($info);
+                }
+                if ($res) {
+                    $num++;
+                }else{
                     $num++;
                 }
             }
@@ -2236,7 +2248,7 @@ class OpController extends BaseController {
 	}
 
 	// @@@NODE-3###confirm###出团确认###
-	public  function  confirm(){
+	public  function confirm(){
 		$opid = I('opid');
 		if(!$opid) $this->error('项目不存在');	
 		
@@ -2450,6 +2462,7 @@ class OpController extends BaseController {
             $this->act_need = C('ACT_NEED');
             $this->task_field = C('LES_FIELD');
             $this->apply_to = C('APPLY_TO');
+            $this->design   = M('op_design')->where(array('op_id'=>$opid))->find();    //委托设计工作交接单
 
 			$this->display('confirm');
 		}
@@ -2569,7 +2582,7 @@ class OpController extends BaseController {
 	
 	
 	// @@@NODE-3###confirm###项目比价###
-	public  function  relprice(){
+	public  function relprice(){
 		$opid 			= I('opid');
 		$relid			= I('relid');
 		$type 			= I('type');
