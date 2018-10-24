@@ -228,7 +228,7 @@
                 var type = $(this).prev('input').val();
                 if(type == 2){
                     //委托设计工作交接单
-                    var pingban = <?php echo $design['pingban']; ?>;
+                    var pingban = <?php echo $design['pingban']?$design['pingban']:0; ?>;
                     if (pingban == 1) {
                         $('#pingban').show();
                     }else{
