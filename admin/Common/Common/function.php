@@ -3602,7 +3602,7 @@ function user_table($where){//查询用户
     return M('account')->where('id='.$where)->find();
 }
 
-//获取用户信息(模糊匹配)
+//获取用户信息(用户名+角色)
 function get_userkey(){
     //整理关键字
     $role = M('role')->GetField('id,role_name',true);
@@ -3617,6 +3617,18 @@ function get_userkey(){
         $key[$k]['role']       = $v['roleid'];
         $key[$k]['role_name']  = $role[$v['roleid']];
     }
-
     return json_encode($key);
+}
+
+//获取用户信息(用户名)
+function get_username(){
+    $user       = M('account')->field("id,nickname")->where(array('status'=>0))->select();
+    $user_key   = array();
+    foreach($user as $k=>$v){
+        $text                   = $v['nickname'];
+        $user_key[$k]['id']     = $v['id'];
+        $user_key[$k]['pinyin'] = strtopinyin($text);
+        $user_key[$k]['text']   = $text;
+    }
+    return json_encode($user_key);
 }
