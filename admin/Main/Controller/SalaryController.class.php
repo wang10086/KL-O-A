@@ -450,7 +450,7 @@ class SalaryController extends BaseController {
         }
         if($status == 2){
             $this->assign('page2',$pages);//数据分页
-            $this->assign('rows',$account_r);//数据1
+            $this->assign('rows',$account_r);//数据admin
         }
         if($status == 3){
             $this->assign('page3',$pages);//数据分页
