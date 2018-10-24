@@ -8,12 +8,13 @@ class ApprovalController extends BaseController {
 
     //首页显示
     public function Approval_Index(){
-        $count = M('approval_flie')->count();
-        $page                                  = new Page($count,10);
-        $pages                                 = $page->show();
-        $approval = M('approval_flie')->limit("$page->firstRow","$page->listRows")->order('createtime desc')->select();
-        $this->file = $approval;
-        $this->pages = $pages;
+        $count                  = M('approval_flie')->count();
+        $page                   = new Page($count,10);
+        $pages                  = $page->show();
+        $approval               = M('approval_flie')->limit("$page->firstRow","$page->listRows")->order('createtime desc')->select();
+        $update                 = D('Approval')->approval_update_sql($approval);//循环更改文件数据
+        $this->file             = $update;
+        $this->pages            = $pages;
         $this->display();
     }
 
@@ -40,16 +41,17 @@ class ApprovalController extends BaseController {
         $judge                  = $approval->approval_upload('approval_flie',$user_id,$style);
 
         if($judge==1){
-            $this->success('保存文件数据成功!');//最后一次错误
+            $this->success('保存文档数据成功!');//最后一次错误
         }else{
-            $this->error('保存文件数据失败!');//最后一次错误
+            $this->error('保存文档数据失败!');//最后一次错误
         }
     }
 
     //文件详情
     public function Approval_Update(){
         $id                     = I('id');//文件id
-        $this->approval_file    = D('Approval')->approval_update($id);
+        $file[0]                = D('Approval')->approval_update($id);
+        $this->approval_file    = D('Approval')->approval_update_sql($file);//循环更改文件数据
         $this->display();
     }
 

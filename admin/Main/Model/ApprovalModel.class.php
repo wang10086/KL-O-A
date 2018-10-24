@@ -14,16 +14,10 @@
             }else{
                 $userid                                     ='';
                 foreach($user_id as $key =>$val){
-                    if(!is_numeric($val)){
-                        return 0;die;
-                    }
                     $userid                                 .= $val.',';
                 }
                 $userid                                     = substr($userid,0,-1);
                 $add_approval['file_account_id']            = $userid;
-            }
-            if(empty($userid)){
-                return 0;die;
             }
             $upload                                         = new \Think\Upload();// 实例化上传类
             $upload->maxSize                                = 31457280000 ;// 设置附件上传大小
@@ -40,9 +34,20 @@
                 $add_approval['file_format']                = $info['file']['ext'];
                 $add_approval['file_name']                  = substr($info['file']['savename'],0,strlen($info['file']['savename'])-4);
                 $add_approval['file_url']                   = substr($upload->rootPath,2).$info['file']['savepath'].$info['file']['savename'];
-//print_r($add_approval);die;
+                if($style==1){//判断是否已经有数据
+                    $where['file_id']                       = $user_id;
+                    $files                                  = M($table)->where($where)->find();
+                    if($files){
+                        $add_approval['update_time']        = time();
+                        unset($add_approval['createtime']);
+                        $update                             = M($table)->where($where)->save($add_approval);
+                        if($update){
+                            return 1;die;
+                        }
+                        return 0;die;
+                    }
+                }
                 $upload                                     = M($table)->add($add_approval);
-
                 if($upload){
                     if(empty($_COOKIE['xuequ_approval'])){
                         $approval                           = $add_approval['createtime'].','.$add_approval['file_size'].','.$add_approval['file_format'].','.$info['file']['savename'];
@@ -56,7 +61,17 @@
            return 0;die;
         }
 
+        public function approval_update_sql($approval){//查询update_file
+            foreach($approval as $key => $val){
+                $where['file_id'] = $val['id'];
+                $update[$key]['file']   = $val;
+                $update[$key]['flie_update'] = M('approval_flie_update')->where($where)->find();
+            }
+            return $update;
+        }
         public function approval_update($id){
-            return M('approval_flie')->where('id='.$id)->find();
+            $file = M('approval_flie')->where('id='.$id)->find();
+            return $file;
+
         }
     }

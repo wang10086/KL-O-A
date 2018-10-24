@@ -27,6 +27,7 @@
                             <th class="sorting" data="group_id" style="width:12em;">员工部门</th>
                             <th class="sorting" data="project" style="width:13em;">员工岗位</th>
                             <th class="sorting" data="number" style="width:12em;">带团补助</th>
+
                             <th class="sorting" data="number" style="width:12em;">其他人员提成</th>
                             <th class="sorting" data="number" style="width:12em;">奖金</th>
                             <th class="sorting" data="shouru" style="width:12em;">年终奖</th>
@@ -40,7 +41,8 @@
                                 <td>{$lst.employee_member}</td>
                                 <td>{$lst.department}</td>
                                 <td>{$lst.post_name}</td>
-                                <td><input type="text" style="float:left;" class="form-control salary_bonus_extract" placeholder="带团补助" /></td>
+                                <td><input type="text" style="float:left;" class="form-control salary_bonus_extract" placeholder="带团补助" value="11" readonly /></td>
+
                                 <td><input type="text" style="float:left;" class="form-control salary_bonus_bonus" placeholder="其他人员提成" /></td>
                                 <td><input type="text" style="float:left;" class="form-control salary_bonus1_bonus" placeholder="奖金" /></td>
                                 <td><input type="text" style="float:left;" class="form-control salary_bonus_yearend" value="{$lst.annual_bonus}" /></td>

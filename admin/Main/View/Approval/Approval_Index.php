@@ -34,6 +34,7 @@
                                         <th style="text-align:center;width:10em;"><b>原文件名称</b></th>
                                         <th style="text-align:center;width:10em;"><b>创建时间</b></th>
                                         <th style="text-align:center;width:10em;"><b>修改后文件名称</b></th>
+                                        <th style="text-align:center;width:10em;"><b>修改人姓名</b></th>
                                         <th style="text-align:center;width:10em;"><b>修改时间</b></th>
                                         <th style="text-align:center;width:5em;"><b>文件格式</b></th>
                                         <th style="text-align:center;width:5em;"><b>文件大小</b></th>
@@ -45,21 +46,34 @@
                                     	<td align="center">
                                             <input type="checkbox" class="Approval_check" />
                                         </td>
-                                        <td style="text-align:center;color:#3399FF;">{$f['account_name']}</td>
+                                        <td style="text-align:center;color:#3399FF;">{$f['file']['account_name']}</td>
                                         <td style="text-align:center;" >
-                                            <a href="{$f['file_url']}">{$f['file_name']}.{$f['file_format']}
+                                            <a href="{$f['file']['file_url']}">
+                                                <?php if(!empty($f['file']['file_name']) && !empty($f['file']['file_format'])){echo $f['file']['file_name'].'.'.$f['file']['file_format'];}?>
                                             </a>
                                         </td>
-                                        <td style="text-align:center;"><?php echo date('Y-m-d H:i:s',$f['createtime']);?></td>
-
-                                        <td style="text-align:center;">{$f['file_format']}</td>
-                                        <td style="text-align:center;">{$f['file_size']}</td>
-
-                                        <td style="text-align:center;">{$f['file_format']}</td>
-                                        <td style="text-align:center;">{$f['file_size']}</td>
-                                        <td style="text-align:center;"><?php if($f['status']==1){echo "待批注";}elseif($f['status']==2){echo "待批准";}elseif($f['status']==3){echo "通过";}?></td>
                                         <td style="text-align:center;">
-                                            <a href="{:U('Approval/Approval_Update',array('id'=>$f['id']))}">查看详情</a>
+                                            <?php if(!empty($f['file']['createtime'])){echo date('Y-m-d H:i:s',$f['file']['createtime']);}?>
+                                        </td>
+                                        <td style="text-align:center;">
+                                            <a href="{$f['flie_update']['file_url']}">
+                                                <?php if(!empty($f['flie_update']['file_name']) && !empty($f['flie_update']['file_format'])){echo $f['flie_update']['file_name'].'.'.$f['flie_update']['file_format'];}?>
+                                            </a>
+                                        </td>
+                                        <td style="text-align:center;">{$f['flie_update']['account_name']}</td>
+                                        <td style="text-align:center;">
+                                            <?php if(!empty($f['flie_update']['update_time'])){echo date('Y-m-d H:i:s',$f['flie_update']['update_time']);}?>
+                                        </td>
+
+                                        <td style="text-align:center;">{$f['file']['file_format']}</td>
+                                        <td style="text-align:center;">{$f['file']['file_size']}</td>
+                                        <td style="text-align:center;">
+                                            <?php if($f['file']['status']==1){echo "待批注";}elseif($f['file']['status']==2){echo "待批准";}elseif($f['file']['status']==3){echo "通过";}?>
+                                        </td>
+                                        <td style="text-align:center;">
+                                            <a href="{:U('Approval/Approval_Update',array('id'=>$f['file']['id']))}">
+                                                查看详情
+                                            </a>
                                         </td>
                                     </tr>
                                         </foreach>

@@ -842,10 +842,8 @@ class AjaxController extends Controller {
             $time_Y                     = date('Y');
             $time_M                     = date('m');
             $time_D                     = date('d');
-//            if($time_D < 10){
-//                $time_M                 = $time_M-1;
-//            }
-            if($time_D < 18){
+
+            if($time_D < 10){
                 $time_M = $time_M-1;
                 if($time_M < 10) {
                     $datetime                    = $time_Y.'0'.$time_M;//查询年月

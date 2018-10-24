@@ -53,36 +53,48 @@
                                                 <input type="hidden" name="user_id" value="{$approval_file['id']}">
                                                 <input type="hidden" name="style" value="1">
                                             </a>
-                                            <button type="submit" id="approval_file_upload" style="width:6em;height:2.8em;background-color:#00acd6;border-radius:7px;font-size:1em;color:#ffffff;margin-left:1em;margin-top:1em;margin-top:-1em;">保 存</button>
+                                            <button type="submit" style="float:left;width:6em;height:2.4em;background-color:#00acd6;border-radius:6px;font-size:1.2em;color:#ffffff;margin-left:1em;margin-top:-0.1em;line-height:0em;">保 存</button>
                                             </form>
                                     </div>
                                 </div><!-- /.box-header -->
                                 <div class="box-body">
 
-
-                                    <div >
                                         <table class="table table-bordered">
-                                            <tr class="orders">
-                                                <th class="sorting">ID</th>
-                                                <th class="sorting">上传者</th>
-                                                <th class="sorting">文件名称</th>
-                                                <th class="sorting">文件大小</th>
-                                                <th class="sorting">文件格式</th>
-                                                <th class="sorting">上传时间</th>
+                                            <tr class="orders" style="text-align:center;">
+                                                <th class="sorting" style="text-align:center;width:10em;"><b>ID</b></th>
+                                                <th class="sorting" style="text-align:center;width:10em;"><b>上传者</b></th>
+                                                <th class="sorting" style="text-align:center;width:10em;"><b>文件名称</b></th>
+                                                <th class="sorting" style="text-align:center;width:10em;"><b>修改后文件名称</b></th>
+                                                <th class="sorting" style="text-align:center;width:10em;"><b>修改人姓名</b></th>
+                                                <th class="sorting" style="text-align:center;width:10em;"><b>修改时间</b></th>
+                                                <th class="sorting" style="text-align:center;width:10em;"><b>文件大小</b></th>
+                                                <th class="sorting" style="text-align:center;width:10em;"><b>文件格式</b></th>
+                                                <th class="sorting" style="text-align:center;width:10em;"><b>上传时间</b></th>
                                             </tr>
-                                            <tr>
-                                                <td>{$approval_file['account_id']}</td>
-                                                <td>{$approval_file['account_name']}</td>
-                                                <td>{$approval_file['file_name']}.{$approval_file['file_format']}</td>
-                                                <td>{$approval_file['file_size']}</td>
-                                                <td>{$approval_file['file_format']}</td>
-                                                <td><?php echo date('Y-m-d',$approval_file['createtime'])?></td>
-                                            </tr>
-
-
-                                    </div>
-
-
+                                            <foreach name="approval_file" item="f">
+                                                <tr style="text-align:center;">
+                                                    <td >{$f['file']['account_id']}</td>
+                                                    <td>{$f['file']['account_name']}</td>
+                                                    <td>
+                                                        <a href="{$f['file']['file_url']}">
+                                                            <?php if(!empty($f['file']['file_name']) && !empty($f['file']['file_format'])){echo $f['file']['file_name'].'.'.$f['file']['file_format'];}?>
+                                                        </a>
+                                                    </td>
+                                                    <td style="text-align:center;">
+                                                        <a href="{$f['flie_update']['file_url']}">
+                                                            <?php if(!empty($f['flie_update']['file_name']) && !empty($f['flie_update']['file_format'])){echo $f['flie_update']['file_name'].'.'.$f['flie_update']['file_format'];}?>
+                                                        </a>
+                                                    </td>
+                                                    <td style="text-align:center;">{$f['flie_update']['account_name']}</td>
+                                                    <td style="text-align:center;">
+                                                        <?php if(!empty($f['flie_update']['update_time'])){echo date('Y-m-d H:i:s',$f['flie_update']['update_time']);}?>
+                                                    </td>
+                                                    <td>{$f['file']['file_size']}</td>
+                                                    <td>{$f['file']['file_format']}</td>
+                                                    <td><?php if(!empty($f['file']['createtime'])){echo date('Y-m-d',$f['file']['createtime']);}?></td>
+                                                </tr>
+                                            </foreach>
+                                        </table>
 
                                 </div><!-- /.box-body -->
                               
