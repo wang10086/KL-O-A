@@ -379,7 +379,7 @@ class SalaryController extends BaseController {
             if(count($where) !== 0){
                 $count                                  = $this->salary_count(2,$where);
             }
-            $page                                       = new Page($count,100);
+            $page                                       = new Page($count,4);
             $pages                                      = $page->show();
             $account_r                                  = M()->table('oa_account as A')->join('oa_posts as P on A.postid=P.id')->join('oa_salary_department as D on D.id=A.departmentid')->field('A.id as aid,A.employee_member,A.guide_id,A.departmentid,A.employee_member,A.nickname,A.entry_time,A.archives,D.department,P.post_name')->where($where)->limit("$page->firstRow","$page->listRows")->select();
             foreach($account_r as $key => $val){
@@ -406,10 +406,10 @@ class SalaryController extends BaseController {
 //                if(!empty((int)$val['guide_id']) && (int)$val['guide_id']!==0){
 //                    $price = 0;
 //
-//                    $aa                 = array();
-//                    $aa['guide_id']     = $val['guide_id'];
-//                    $aa['sure_time']    = array('between',"$firstday_time,$lastday_time");
-//                   $guide_pay =  M('guide_pay')->where($aa)->select();
+//                    $guide_array                = array();
+//                    $guide_array['guide_id']     = $val['guide_id'];
+//                    $guide_array['sure_time']    = array('between',"$firstday_time,$lastday_time");
+//                   $guide_pay =  M('guide_pay')->where($guide_array)->select();
 //
 //                    if($guide_pay){
 //                        foreach($guide_pay as $k => $v){
@@ -440,7 +440,8 @@ class SalaryController extends BaseController {
                 }
             }
             if(!$account_r || $account_r==""){$this->error('请添加员工编码或者员工部门！', U('Salary/salary_query'));die;}
-        } print_r($ttt[3]);die;//guide_id  really_cost  sure_time
+        }
+        //print_r($ttt[3]);die;//guide_id  really_cost  sure_time
         $status                                         = trim(I('status'));
         if($status == 1){
             $this->assign('page',$pages);//数据分页
