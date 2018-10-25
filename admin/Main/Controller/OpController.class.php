@@ -1214,11 +1214,11 @@ class OpController extends BaseController {
                         }else{
                             $data['plan_id']   = $plan_id;
                             $data['op_id']     = $opid;
-                            $delid = M('op_work_plan_lists')->add($data);
-                            $delid[]           = $delid;
+                            $res = M('op_work_plan_lists')->add($data);
+                            $delid[]           = $res;
                         }
                     }
-                    
+
                     $where          = array();
                     $where['op_id'] = $opid;
                     if ($delid) $where['id'] = array('not in',$delid);
