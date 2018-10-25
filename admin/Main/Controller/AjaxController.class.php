@@ -286,19 +286,19 @@ class AjaxController extends Controller {
     }
 
     public function staff(){
-        $db         = M('staff');
-        $zan_db     = M('staff_zan');
-        $id         = I('id');
-        $good_num   = $db->where(array('id'=>$id))->getField('good_num');
+        $db                 = M('staff');
+        $zan_db             = M('staff_zan');
+        $id                 = I('id');
+        $good_num           = $db->where(array('id'=>$id))->getField('good_num');
 
-        $info       = array();
-        $info['good_num'] = $good_num+1;
+        $info               = array();
+        $info['good_num']   = $good_num+1;
         $db->where(array('id'=>$id))->save($info);
         //return $this->ajaxReturn($info['good_num']);
-        $data             = array();
-        $data['staff_id'] = $id;
-        $data['youke']    = cookie('staff_youke');
-        $data['zan_time'] = NOW_TIME;
+        $data               = array();
+        $data['staff_id']   = $id;
+        $data['youke']      = cookie('staff_youke');
+        $data['zan_time']   = NOW_TIME;
         $zan_db->add($data);
     }
 
@@ -309,8 +309,8 @@ class AjaxController extends Controller {
      */
     public function salary_add(){
         if(IS_POST){
-                $add['type']                    = code_number(trim($_POST['type']));
-                $add['account_id']              = code_number(trim($_POST['account_id']));
+                $add['type']                    = (int)(code_number(trim($_POST['type'])));
+                $add['account_id']              = (int)(code_number(trim($_POST['account_id'])));
             if($add['type'] == 3){
                 $aid['id']                      = $add['account_id'];
                 $account['departmentid']        = code_number(trim($_POST['department']));//部门
@@ -408,8 +408,7 @@ class AjaxController extends Controller {
     public function salaryattendance(){
 
         if(IS_POST){
-
-            $user['account_id']         = code_number(trim($_POST['account_id']));//用户id
+            $user['account_id']         = (int)(code_number(trim($_POST['account_id'])));//用户id
             $add['late1']               = code_number(trim($_POST['late1']));//15分钟以内
             $add['late2']               = code_number(trim($_POST['late2']));//15~2小时以内
             $add['leave_absence']       = code_number(trim($_POST['leave_absence']));//事假
@@ -419,21 +418,20 @@ class AjaxController extends Controller {
             $add['lowest_wage']         = code_number(trim($_POST['money']));//北京最低工资标准
             $add['year_leave']          = code_number(trim($_POST['year_leave']));//北京最低工资标准;//年假
             $add['createtime']          = time();
-
             $withdrawing                = code_number(trim($_POST['withdrawing']));//传过来的总价格
+            
             $account_r                  = M('salary_attendance')->field('id,status')->where($user)->order('id desc')->find();
             $salary                     = M('salary')->where($user)->order('id desc')->find();
 
+            $add['withdrawing']         = round(($add['late1']*10+$add['late2']*30+($salary['standard_salary']*$salary['basic_salary']/10/21.75)*$add['leave_absence']+(($salary['standard_salary']*$salary['basic_salary']/10)-$add['lowest_wage']*0.8)/21.75*$add['sick_leave']+($salary['standard_salary']*$salary['basic_salary']/10/21.75)*$add['absenteeism']*2+($salary['standard_salary']/21.75*$add['entry_data'])),2);
+
             if($account_r && $salary){// 15分钟以内 15~2小时以内  事假
-
-                $add['withdrawing']     = round(($add['late1']*10+$add['late2']*30+($salary['standard_salary']*$salary['basic_salary']/10/21.75)*$add['leave_absence']+(($salary['standard_salary']*$salary['basic_salary']/10)-$add['lowest_wage']*0.8)/21.75*$add['sick_leave']+($salary['standard_salary']*$salary['basic_salary']/10/21.75)*$add['absenteeism']*2+($salary['standard_salary']/21.75*$add['entry_data'])),2);
-
-                if($account_r['status'] == 1){
+                if((int)$account_r['status'] == 1){
                     $id['id']           = $account_r['id'];
                     $cot                = "添加";
                     $account_w          = M('salary_attendance')->where($id)->save($add);
                 }
-                if($account_r['status'] == 2){
+                if((int)$account_r['status'] == 2){
                     $add['account_id']  = $user['account_id'];
                     $cot = "修改";
                     $account_w          = M('salary_attendance')->add($add);
@@ -445,8 +443,6 @@ class AjaxController extends Controller {
                 }
             }else{
                 if($salary){
-                    $add['withdrawing'] = round(($add['late1']*10+$add['late2']*30+($salary['standard_salary']*$salary['basic_salary']/10/21.75)*$add['leave_absence']+(($salary['standard_salary']*$salary['basic_salary']/10)-$add['lowest_wage']*0.8)/21.75*$add['sick_leave']+($salary['standard_salary']*$salary['basic_salary']/10/21.75)*$add['absenteeism']*2+($salary['standard_salary']/21.75*$add['entry_data'])),2);
-
                     $add['account_id']  = $user['account_id'];
                     $cot                = "添加";
                     $account_w          = M('salary_attendance')->add($add);
@@ -477,8 +473,8 @@ class AjaxController extends Controller {
      * salary_subsidy补贴
      */
     public function Ajax_subsidy_Query(){
-        $type                               = code_number(trim($_POST['statu']));
-        $uid['account_id']                  = code_number(trim($_POST['account_id']));
+        $type                               = (int)(code_number(trim($_POST['statu'])));
+        $uid['account_id']                  = (int)(code_number(trim($_POST['account_id'])));
         if($type == 1){//提成/奖金
 
             $where['extract']               = code_number(trim($_POST['housing_subsidy']));//带团补助
@@ -492,34 +488,30 @@ class AjaxController extends Controller {
             $where['computer_subsidy']      = code_number(trim($_POST['computer_subsidy']));//电脑补贴
         }
 
-        if($type == 1){$subsidy_r             = M('salary_bonus')->where($uid)->order('id desc')->find();}
-
-        if($type == 2){$subsidy_r             = M('salary_subsidy')->where($uid)->order('id desc')->find();}
+        if($type == 1){$subsidy_r           = M('salary_bonus')->where($uid)->order('id desc')->find();}
+        if($type == 2){$subsidy_r           = M('salary_subsidy')->where($uid)->order('id desc')->find();}
 
         if($subsidy_r){
 
             if($subsidy_r['status'] == 1){
-                $uid['id'] = $subsidy_r['id'];
-                if($type == 1){$subsidy_W     = M('salary_bonus')->where($uid)->save($where);}
-                if($type == 2){$subsidy_W     = M('salary_subsidy')->where($uid)->save($where);}
+                $uid['id']                  = $subsidy_r['id'];
+                if($type == 1){$subsidy_W   = M('salary_bonus')->where($uid)->save($where);}
+                if($type == 2){$subsidy_W   = M('salary_subsidy')->where($uid)->save($where);}
                 $content = "修改";
             }
             if($subsidy_r['status'] == 2){
-
                 $uid['id']                  = $subsidy_r['id'];
                 $where['createtime']        = time();
                 $where['account_id']        = $uid['account_id'];
-                if($type == 1){$subsidy_W     = M('salary_bonus')->add($where);}
-                if($type == 2){$subsidy_W     = M('salary_subsidy')->add($where);}
+                if($type == 1){$subsidy_W   = M('salary_bonus')->add($where);}
+                if($type == 2){$subsidy_W   = M('salary_subsidy')->add($where);}
                 $content = "添加";
             }
-
         }else{
-
             $where['account_id']            = $uid['account_id'];
             $where['createtime']            = time();
-            if($type == 1){$subsidy_W         = M('salary_bonus')->add($where);}
-            if($type == 2){$subsidy_W         = M('salary_subsidy')->add($where);}
+            if($type == 1){$subsidy_W       = M('salary_bonus')->add($where);}
+            if($type == 2){$subsidy_W       = M('salary_subsidy')->add($where);}
             $content = "添加";
         }
 
@@ -551,8 +543,8 @@ class AjaxController extends Controller {
      */
     public function Ajax_Insurance_Query(){
 
-        $statu                                      = code_number(trim($_POST['statu']));//状态
-        $where['account_id']                        = code_number(trim($_POST['account_id']));//用户id
+        $statu                                      = (int)(code_number(trim($_POST['statu'])));//状态
+        $where['account_id']                        = (int)(code_number(trim($_POST['account_id'])));//用户id
         $injury_base                                = code_number(trim($_POST['injury_base']));
         $pension_base                               = code_number(trim($_POST['pension_base']));
         if($statu == 3){//当状态是3时,有两个值
@@ -642,12 +634,12 @@ class AjaxController extends Controller {
         }
         $insurance                                  = M('salary_insurance')->where($where)->order('id desc')->find();
         if($insurance){
-            if($insurance['status'] ==  1){//判断能否修改
+            if((int)$insurance['status'] ==  1){//判断能否修改
                 $cont                               = "修改";
                 $id['id']                           = $insurance['id'];
                 $oinsurance_w                       = M('salary_insurance')->where($id)->save($add);
             }
-            if($insurance['status'] ==  2){//添加
+            if((int)$insurance['status'] ==  2){//添加
                 $cont                               = "添加";
                 $add['account_id']                  = $where['account_id'];
                 $add['createtime']                  = time();
@@ -739,7 +731,7 @@ class AjaxController extends Controller {
     public function Ajax_withholding_income(){
         if(IS_POST){
             $arr                            = trim($_POST['arr']);//数据数组
-            $status                         = code_number(trim($_POST['status']));//状态
+            $status                         = (int)(code_number(trim($_POST['status'])));//状态
 
             $content                        = array_filter(explode("|", $arr));//去除空数组+分隔字符串
             $time                           = time();
@@ -747,16 +739,13 @@ class AjaxController extends Controller {
                 $conten                     = "代扣代缴";
                 $table                      =  M('salary_withholding');//代扣代缴状态
             }
-
             if($status == 2) {//其他收入
                 $conten                     = "其他收入";
                 $table                      = M('salary_income');//其他收入
             }
-
             $reg                            = $this->withholding_income_addstr($status,$content,$time);
             $add                            = $reg[0];
             $where                          = $reg[1];
-
             $with                           = $table->where($where)->order('id desc')->find();//查询 代扣代缴状态/其他收入
             if($with){
                 if ($status == 1) {
@@ -837,22 +826,9 @@ class AjaxController extends Controller {
             $msg                            = "您的权限不足!请联系管理员！";
             echo json_encode(array('sum' => $sum, 'msg' => $msg));die;
         }
-        $datetime                       = trim($_POST['datetime']);//表数据时间
+        $datetime                           = trim($_POST['datetime']);//表数据时间
         if($datetime=="" || $datetime ==null || $datetime==false){
-            $time_Y                     = date('Y');
-            $time_M                     = date('m');
-            $time_D                     = date('d');
-
-            if($time_D < 10){
-                $time_M = $time_M-1;
-                if($time_M < 10) {
-                    $datetime                    = $time_Y.'0'.$time_M;//查询年月
-                }else{
-                    $datetime                    = $time_Y.$time_M;//查询年月
-                }
-            }else{
-                $datetime                    = $time_Y.$time_M;//查询年月
-            }
+            $datetime                       = datetime(date('Y'),date('m'),date('d'),1);;
         }
         $content                        = trim($_POST['content']);//去除左右空字符 提交申请表数据
         $coutdepartment                 = trim($_POST['coutdepartment']);//去除左右空字符 提交申请表部门数据
@@ -949,7 +925,7 @@ class AjaxController extends Controller {
      */
     public function Ajax_salary_details_upgrade(){
         $user_id = (int)$_SESSION['userid'];
-        if($user_id=='11' ||$user_id=='55' || $user_id=='1'){
+        if($user_id==11 ||$user_id==55 || $user_id==1){
         }else{
             $sum                            = 0;
             $msg                            = "您的权限不足!请联系管理员！";
@@ -969,7 +945,7 @@ class AjaxController extends Controller {
             $where ['id']                   = $v;
             $departmen_count                = M('salary_departmen_count')->where($where)->save($status);
         }
-        if($user_id=='11'){
+        if($user_id==11){
             $status['approval_time']        = time();
             $status['approval_user_id']     = $user_id;
         }elseif($user_id=='55'){
@@ -1037,9 +1013,9 @@ class AjaxController extends Controller {
 
     public function salary_list_Labour(){//添加工会会费
 
-        $where['account_id']                = code_number(trim(I('uid')));
+        $where['account_id']                = (int)(code_number(trim(I('uid'))));
         $Labour_money                       = trim(I('money'));
-        $status                             = trim(I('status'));
+        $status                             = (int)(trim(I('status')));
         if($status==1){
             $cot = "合并计税";
         }else{
