@@ -75,7 +75,6 @@
                     <div class="content no-print">
                         <!--<button class="btn btn-default" onclick="window.print();"><i class="fa fa-print"></i> 打印</button>-->
                         <button class="btn btn-default" onclick="print_part();"><i class="fa fa-print"></i> 打印</button>
-                        <!--<a href="{:U('Export/member',array('opid'=>$op['op_id']))}" class="btn btn-default"><i class="fa fa-arrow-circle-down"></i> 导出</a>-->
                     </div>
                 </div>
             </div><!--/.col (right) -->
@@ -223,7 +222,6 @@
                     <div class="content no-print">
                         <!--<button class="btn btn-default" onclick="window.print();"><i class="fa fa-print"></i> 打印</button>-->
                         <button class="btn btn-default" onclick="print_part();"><i class="fa fa-print"></i> 打印</button>
-                        <!--<a href="{:U('Export/member',array('opid'=>$op['op_id']))}" class="btn btn-default"><i class="fa fa-arrow-circle-down"></i> 导出</a>-->
                     </div>
                 </div>
             </div><!--/.col (right) -->

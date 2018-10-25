@@ -1086,10 +1086,12 @@ class OpController extends BaseController {
 
                 $info['op_id']       = $opid;
                 $info['create_time'] = NOW_TIME;
-                $info['finish_time'] = strtotime($info['finish_time']);
+                $info['need_time'] = strtotime($info['need_time']);
                 if (!$info['exe_user_id']){
                     $this->error('请填写接收人员信息');
-                    die;
+                }
+                if (!$info['audit_user_id']){
+                    $this->error('请填写审核人员信息');
                 }
                 $list = M('op_design')->where(array('op_id'=>$opid))->find();
                 if ($list) {
@@ -1098,9 +1100,78 @@ class OpController extends BaseController {
                     $res = M('op_design')->add($info);
                 }
                 if ($res) {
-                    $num++;
+                    //发送审核系统消息
+                    $audit_user_id        = $info['audit_user_id'];
+                    $op      = M('op')->where(array('op_id'=>$opid))->find();
+                    //发送系统消息
+                    $uid     = cookie('userid');
+                    $title   = '您有来自['.session('rolename').'--'.$info['ini_user_name'].']委托设计工作交接单待审核!';
+                    $content = '项目名称：'.$op['project'].';团号：'.$op['group_id'];
+                    $url     = U('Op/res_audit',array('opid'=>$info['op_id']));
+                    $user    = '['.$audit_user_id.']';
+                    send_msg($uid,$title,$content,$url,$user,'');
+
+                    $record = array();
+                    $record['op_id']   = $opid;
+                    $record['optype']  = 4;
+                    $record['explain'] = '填写/修改委托设计工作交接单';
+                    op_record($record);
+
+                    $this->success('保存成功!');
                 }else{
-                    $num++;
+                    $this->error('保存数据失败');
+                }
+            }
+
+            //保存"审核"委托设计工作交接单
+            if ($opid && $savetype==17){
+                $design_id      = I('design_id');
+                if (!$info){
+                    $this->error('审核信息有误!');
+                }
+                $info['audit_time'] = NOW_TIME;
+                $res = M('op_design')->where(array('id'=>$design_id))->save($info);
+                if ($res) {
+                    $record = array();
+                    $record['op_id']   = $opid;
+                    $record['optype']  = 4;
+                    $record['explain'] = '审核委托设计工作交接单';
+                    op_record($record);
+
+                    if ($info['audit_status'] == P::AUDIT_STATUS_PASS){
+                        $list    = M('op_design')->where(array('id'=>$design_id))->find();
+                        $exe_user_id = $list['exe_user_id'];
+                        $op      = M('op')->where(array('op_id'=>$opid))->find();
+                        //发送系统消息
+                        $uid     = cookie('userid');
+                        $title   = '您有来自['.session('rolename').'--'.$list['ini_user_name'].']委托设计工作交接单!';
+                        $content = '项目名称：'.$op['project'].';团号：'.$op['group_id'];
+                        $url     = U('Op/res_audit',array('opid'=>$list['op_id']));
+                        $user    = '['.$exe_user_id.']';
+                        send_msg($uid,$title,$content,$url,$user,'');
+                    }
+
+                    $this->success('审核成功');
+                }else{
+                    $this->error('保存数据失败');
+                }
+            }
+
+            ////保存"完成"委托设计工作交接单
+            if ($opid && $savetype==18){
+                $design_id          = I('design_id');
+                $info['finish_time']= NOW_TIME;
+                $res = M('op_design')->where(array('id'=>$design_id))->save($info);
+                if ($res) {
+                    $record = array();
+                    $record['op_id']   = $opid;
+                    $record['optype']  = 4;
+                    $record['explain'] = '完成委托设计工作交接单';
+                    op_record($record);
+
+                    $this->success('保存成功');
+                }else{
+                    $this->error('保存失败');
                 }
             }
 
@@ -1109,6 +1180,39 @@ class OpController extends BaseController {
 	
 	}
 
+
+	//@@@NODE-3###res_audit###审核委托设计工作交接单###
+    public function res_audit(){
+        if (isset($_POST['dosubmint'])){
+            $design_id      = I('designed');
+        }else{
+            $opid            = I('opid');
+            $design          = M('op_design')->where(array('op_id'=>$opid))->find();
+            if (!$design){
+                $this->error('暂无数据信息');
+            }
+            $this->design    = $design;
+            $this->op        = M('op')->where(array('op_id'=>$opid))->find();
+            $user_info       = M()->table('__ACCOUNT__ as a')
+                ->field('a.mobile,d.department,o.create_user_name')
+                ->join('__OP__ as o on o.create_user = a.id','left')
+                ->join('__SALARY_DEPARTMENT__ as d on d.id = a.departmentid')
+                ->where(array('o.op_id'=>$opid))
+                ->find();
+            $this->user_info   = $user_info;
+            $this->output_info = array(
+                '1'=>'出片打样',
+                '2'=>'喷绘',
+                '3'=>'只提供电子文件'
+            );
+            $this->audit_status = array (
+                P::AUDIT_STATUS_NOT_AUDIT  => '<span class="yellow">未审核</span>',
+                P::AUDIT_STATUS_PASS       => '<span class="green">审核通过</span>',
+                P::AUDIT_STATUS_NOT_PASS   => '<span class="red">未通过</span>',
+            );
+            $this->display();
+        }
+    }
 
 	//@@@NODE-3###assign_line###指派人员跟进线路行程信息###
     public function assign_line(){
@@ -2441,15 +2545,7 @@ class OpController extends BaseController {
             $this->guide_need   = M('op_guide_price')->where(array('op_id'=>$opid))->select();
 
             //人员名单关键字
-            $user       = M('account')->field("id,nickname")->where(array('status'=>0))->select();
-            $user_key   = array();
-            foreach($user as $k=>$v){
-                $text                   = $v['nickname'];
-                $user_key[$k]['id']     = $v['id'];
-                $user_key[$k]['pinyin'] = strtopinyin($text);
-                $user_key[$k]['text']   = $text;
-            }
-            $this->userkey  = json_encode($user_key);
+            $this->userkey      = get_username();
 
             //人员列表
             $stu_list       = M('op_member')->where(array('op_id'=>$opid))->select();

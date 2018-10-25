@@ -226,7 +226,7 @@
                 </div>
 
                 <div class="form-group col-md-4">
-                    <label>交稿时间：</label><input type="text" name="info[finish_time]" value="<?php echo $design['finish_time']; ?>" class="form-control inputdate" />
+                    <label>计划交稿时间：</label><input type="text" name="info[need_time]" value="{$design.need_time|date='Y-m-d',### }" class="form-control inputdate" />
                 </div>
 
                 <div class="form-group col-md-4">
@@ -279,13 +279,15 @@
 
                 <div class="form-group col-md-12">
                     <label>提示：</label><p>成稿后部门负责人最终确认签字(部门负责人审核通过后该需求单才能到达相关人员手中)。</p>
+                    <input type="text" name="info[audit_user_name]" value="{$design['audit_user_name']}" class="form-control" placeholder="审核人员" id="audit_user_name" />
+                    <input type="hidden" name="info[audit_user_id]" value="{$design['audit_user_id']}" class="form-control" id="audit_user_id" />
                 </div>
 
             </div>
 
             <div style="width:100%; text-align:center;">
-                <a  href="javascript:;" class="btn btn-info btn-lg" onClick="javascript:save('design','<?php echo U('Op/public_save'); ?>');">保存</a>
-                <!--<input type="submit" value="提交AAA">-->
+                <!--<a  href="javascript:;" class="btn btn-info btn-lg" onClick="javascript:save('design','<?php /*echo U('Op/public_save'); */?>');">保存</a>-->
+                <input type="submit" class="btn btn-info btn-lg" value="提交">
             </div>
         </div>
     </div>
@@ -318,6 +320,19 @@
             }
         }).result(function (event, item) {
             $("#exe_user_id").val(item.id);
+        });
+
+        $("#audit_user_name").autocomplete(keywords, {
+            matchContains: true,
+            highlightItem: false,
+            formatItem: function(row, i, max, term) {
+                return '<span style=" display:none">'+row.pinyin+'</span>'+row.text;
+            },
+            formatResult: function(row) {
+                return row.text;
+            }
+        }).result(function (event, item) {
+            $("#audit_user_id").val(item.id);
         });
     });
 
