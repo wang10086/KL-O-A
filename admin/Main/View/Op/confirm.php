@@ -183,6 +183,7 @@
                     $('#res_need_table').hide();
                     $('#res_type').hide();
                     $('#design').hide();
+                    $('#work_plan').hide();
                 }
             })
         })
@@ -237,10 +238,11 @@
                     $('#design').show();
                     $('#after_lession').hide();
                     $('#res_need_table').hide();
+                    $('#work_plan').hide();
                 }else if(type == 3) {
                     //业务实施计划单
-                    alert('业务实施计划单');
 
+                    $('#work_plan').show();
                     $('#after_lession').hide();
                     $('#res_need_table').hide();
                     $('#design').hide();
@@ -254,6 +256,7 @@
                         $('#res_need_table').show();
                     }
                     $('#design').hide();
+                    $('#work_plan').hide();
                 }
             })
         })
@@ -360,6 +363,10 @@
     //编号
     function orderno(){
         $('#tcs').find('.title').each(function(index, element) {
+            $(this).text(parseInt(index)+1);
+        });
+
+        $('#plans').find('.title').each(function(index, element) {
             $(this).text(parseInt(index)+1);
         });
     }

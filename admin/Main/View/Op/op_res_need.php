@@ -3,6 +3,7 @@
         $('#res_need_table').hide();
         $('#after_lession').hide();
         $('#design').hide();
+        $('#work_plan').hide();
 
         var op_kind     = <?php echo $op_kind;?>;
         if (op_kind == 60) {
@@ -279,7 +280,7 @@
 
                 <div class="form-group col-md-12">
                     <label>提示：</label><p>成稿后部门负责人最终确认签字(部门负责人审核通过后该需求单才能到达相关人员手中)。</p>
-                    <input type="text" name="info[audit_user_name]" value="{$design['audit_user_name']}" class="form-control" placeholder="审核人员" id="audit_user_name" />
+                    <input type="text" name="info[audit_user_name]" value="{$design['audit_user_name']}" class="form-control" placeholder="审核人员" id="audit_user_name" required />
                     <input type="hidden" name="info[audit_user_id]" value="{$design['audit_user_id']}" class="form-control" id="audit_user_id" />
                 </div>
 
@@ -293,47 +294,128 @@
     </div>
 </form>
 
+<!--业务实施计划单 计调部-->
+<form method="post" action="<?php echo U('Op/public_save'); ?>" id="work_plan">
+    <input type="hidden" name="dosubmint" value="1">
+    <input type="hidden" name="opid" value="{$op.op_id}">
+    <input type="hidden" name="savetype" value="19">
+    <div class="row">
+        <!-- right column -->
+        <div class="form-group col-md-12">
+            <div class="content">
+
+                <div class="form-group col-md-4">
+                    <label>业务单位：</label><input type="text" value="{$user_info.department}" class="form-control" />
+                    <input type="hidden" name="info[departmentid]" value="{$user_info.departmentid}">
+                </div>
+
+                <div class="form-group col-md-4">
+                    <label>实施时间：</label><input type="text" name="between_time" value="{$plan_between_time}" class="form-control between_day" />
+                </div>
+
+                <div class="form-group col-md-4">
+                    <label>业务名称：</label><input type="text" name="info[project]" value="<?php echo $work_plan['project']?$work_plan['project']:$op['project']; ?>" class="form-control" />
+                </div>
+
+                <div class="form-group col-md-4">
+                    <label>销售人员：</label><input type="text" name="info[sale_user]" value="<?php echo $work_plan['sale_user']?$work_plan['sale_user']:$op['sale_user']; ?>" class="form-control" readonly />
+                </div>
+
+                <div class="form-group col-md-4">
+                    <label>人数：</label><input type="text" name="info[num]" value="{$work_plan['num']}" class="form-control" />
+                </div>
+
+                <div class="form-group col-md-4">
+                    <label>向顾客报价：</label><input type="text" name="info[price]" value="{$work_plan['price']}" class="form-control" />
+                </div>
+
+                <div class="form-group col-md-4">
+                    <label>估计毛利：</label><input type="text" name="info[maoli]" value="{$work_plan['maoli']}" class="form-control" />
+                </div>
+
+                <div class="form-group col-md-4">
+                    <label>接收人员：</label><input type="text" class="form-control" name="info[exe_user_name]"  value="{$work_plan['exe_user_name']}" id="do_user_name" required />
+                    <input type="hidden" name="info[exe_user_id]" id="do_user_id"  value="{$work_plan['exe_user_id']}" />
+                </div>
+
+                <div class="form-group col-md-4">
+                    <label>填表人：</label><input type="text" name="info[ini_user_name]" value="<?php echo $work_plan['ini_user_name']?$work_plan['ini_user_name']:session('nickname'); ?>" class="form-control" readonly />
+                    <input type="hidden" name="info[ini_user_id]" value="<?php echo $work_plan['ini_user_id']?$work_plan['ini_user_id']:session('userid'); ?>" class="form-control" readonly />
+                </div>
+
+                <div class="form-group col-md-12">
+                    <label>后附：</label>
+                    <span><input type="checkbox" name="additive[]" <?php if(in_array(1,$additive)){ echo 'checked';} ?>  value="1">&nbsp; 行程或方案</span>&#12288;&#12288;
+                    <span class="ml50"><input type="checkbox" name="additive[]" <?php if(in_array(2,$additive)){ echo 'checked';} ?>  value="2">&nbsp; 需解决大交通的《人员信息表》</span>
+                    <span class="ml50"><input type="checkbox" name="additive[]" <?php if(in_array(3,$additive)){ echo 'checked';} ?>  value="3">&nbsp; 其他</span>
+                </div>
+
+                <div class="form-group col-md-12">
+                    <h2 class="tcs_need_h2">业务实施需计调操作具体内容：</h2>
+
+                    <include file="work_plans_edit" />
+
+                </div>
+
+                <div class="form-group col-md-12">
+                    <label>提示：</label><p>成稿后部门负责人最终确认签字(部门负责人审核通过后该需求单才能到达相关人员手中)。</p>
+                    <input type="text" name="info[audit_user_name]" value="{$work_plan['audit_user_name']}" class="form-control" placeholder="审核人员" id="plans_audit_user_name" required />
+                    <input type="hidden" name="info[audit_user_id]" value="{$work_plan['audit_user_id']}" class="form-control" id="plans_audit_user_id" />
+                </div>
+            </div>
+
+            <div style="width:100%; text-align:center;">
+                <input type="submit" class="btn btn-info btn-lg" value="提交">
+            </div>
+        </div>
+    </div>
+</form>
+
 <script type="text/javascript">
     var keywords = <?php echo $userkey; ?>;
     $(document).ready(function(e){
-        $("#exe_u_name").autocomplete(keywords, {
-            matchContains: true,
-            highlightItem: false,
-            formatItem: function(row, i, max, term) {
-                return '<span style=" display:none">'+row.pinyin+'</span>'+row.text;
-            },
-            formatResult: function(row) {
-                return row.text;
-            }
-        }).result(function (event, item) {
-            $("#exe_u_id").val(item.id);
-        });
-
-        $("#exe_user_name").autocomplete(keywords, {
-            matchContains: true,
-            highlightItem: false,
-            formatItem: function(row, i, max, term) {
-                return '<span style=" display:none">'+row.pinyin+'</span>'+row.text;
-            },
-            formatResult: function(row) {
-                return row.text;
-            }
-        }).result(function (event, item) {
-            $("#exe_user_id").val(item.id);
-        });
-
-        $("#audit_user_name").autocomplete(keywords, {
-            matchContains: true,
-            highlightItem: false,
-            formatItem: function(row, i, max, term) {
-                return '<span style=" display:none">'+row.pinyin+'</span>'+row.text;
-            },
-            formatResult: function(row) {
-                return row.text;
-            }
-        }).result(function (event, item) {
-            $("#audit_user_id").val(item.id);
-        });
+        autocom('exe_u_name','exe_u_id');
+        autocom('exe_user_name','exe_user_id');
+        autocom('audit_user_name','audit_user_id');
+        autocom('do_user_name','do_user_id');
+        autocom('plans_audit_user_name','plans_audit_user_id');
     });
+
+    function autocom(username,userid){
+        $("#"+username+"").autocomplete(keywords, {
+            matchContains: true,
+            highlightItem: false,
+            formatItem: function(row, i, max, term) {
+                return '<span style=" display:none">'+row.pinyin+'</span>'+row.text;
+            },
+            formatResult: function(row) {
+                return row.text;
+            }
+        }).result(function (event, item) {
+            $("#"+userid+"").val(item.id);
+        });
+    }
+
+    //新增
+    function add_plans(){
+        var i = parseInt($('#plans_val').text())+1;
+
+        var html = '<div class="userlist cost_expense" id="plans_'+i+'">';
+        html += '<span class="title"></span>';
+        html += '<input type="text" class="form-control" name="plans['+i+'][content]">';
+        html += '<input type="text" class="form-control totalval" name="plans['+i+'][standard]" >';
+        html += '<input type="text" class="form-control" name="plans['+i+'][remark]">';
+        html += '<a href="javascript:;" class="btn btn-danger btn-flat" onclick="delbox(\'plans_'+i+'\')">删除</a>';
+        html += '</div>';
+        $('#plans').append(html);
+        $('#plans_val').html(i);
+        orderno();
+    }
+
+    //移除
+    function delbox(obj){
+        $('#'+obj).remove();
+        orderno();
+    }
 
 </script>

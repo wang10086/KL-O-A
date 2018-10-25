@@ -1114,7 +1114,7 @@ class OpController extends BaseController {
                     $record = array();
                     $record['op_id']   = $opid;
                     $record['optype']  = 4;
-                    $record['explain'] = '填写/修改委托设计工作交接单';
+                    $record['explain'] = '填写/修改委托设计工作交接单(设计)';
                     op_record($record);
 
                     $this->success('保存成功!');
@@ -1172,6 +1172,78 @@ class OpController extends BaseController {
                     $this->success('保存成功');
                 }else{
                     $this->error('保存失败');
+                }
+            }
+
+            //保存业务实施计划单
+            if ($opid && $savetype==19){
+
+                $between_time       = I('between_time');
+                $additive           = I('additive');
+                $plan_lists         = I('plans');
+                $begin_time         = strtotime(substr($between_time,0,10));
+                $end_time           = strtotime(substr($between_time,-10,10));
+                $info['op_id']      = $opid;
+                $info['begin_time'] = $begin_time;
+                $info['end_time']   = $end_time;
+                $info['additive']   = implode(',',$additive);
+                $info['create_time']= NOW_TIME;
+
+                if (!$info['exe_user_id']){
+                    $this->error('请填写接收人员信息');
+                }
+                if (!$info['audit_user_id']){
+                    $this->error('请填写审核人员信息');
+                }
+                $planed = M('op_work_plans')->where(array('op_id'=>$opid))->find();
+                if ($planed) {
+                    $plan_id    = $planed['id'];
+                    $res        = M('op_work_plans')->where(array('id'=>$plan_id))->save($info);
+                }else{
+                    $res        = M('op_work_plans')->add($info);
+                    $plan_id    = $res;
+                }
+
+                if ($res) {
+                    foreach ($plan_lists as $k=>$v){
+                        $data   = array();
+                        $data   = $v;
+                        if ($resid && $resid[$k]['id']){
+                            M('op_work_plan_lists')->where(array('id'=>$resid[$k]['id']))->save($data);
+                            $delid[] = $resid[$k]['id'];
+                        }else{
+                            $data['plan_id']   = $plan_id;
+                            $data['op_id']     = $opid;
+                            $delid = M('op_work_plan_lists')->add($data);
+                            $delid[]           = $delid;
+                        }
+                    }
+                    
+                    $where          = array();
+                    $where['op_id'] = $opid;
+                    if ($delid) $where['id'] = array('not in',$delid);
+                    M('op_work_plan_lists')->where($where)->delete();
+
+                    //发送审核系统消息
+                    $audit_user_id = $info['audit_user_id'];
+                    $op      = M('op')->where(array('op_id'=>$opid))->find();
+                    //发送系统消息
+                    $uid     = cookie('userid');
+                    $title   = '您有来自['.session('rolename').'--'.$info['ini_user_name'].']业务实施计划单待审核!';
+                    $content = '项目名称：'.$op['project'].';团号：'.$op['group_id'];
+                    $url     = U('Op/res_audit',array('opid'=>$info['op_id']));
+                    $user    = '['.$audit_user_id.']';
+                    send_msg($uid,$title,$content,$url,$user,'');
+
+                    $record = array();
+                    $record['op_id']   = $opid;
+                    $record['optype']  = 4;
+                    $record['explain'] = '填写/修改业务实施计划单(计调)';
+                    op_record($record);
+
+                    $this->success('保存成功!');
+                }else{
+                    $this->error('保存数据失败');
                 }
             }
 
@@ -2400,7 +2472,8 @@ class OpController extends BaseController {
                 //如果是内部地接, 生成一个新地接团
                 if ($op['in_dijie'] == 1 && !$op['dijie_opid']) {
                     $new_op             = array();
-                    $new_op['project']  = '【地接团】'.$op['project'];
+                    $project            = '【地接团】'.$op['project'];
+                    $new_op['project']  = str_replace('【发起团】','',$project);
                     $new_op['op_id']    = opid();
                     $groupid            = $op['dijie_name'].date('Ymd',time());
                     //团号信息
@@ -2437,12 +2510,12 @@ class OpController extends BaseController {
                     $dijie_confirm['group_id']= $new_op['group_id'];
                     $dijie_confirm['dep_time']= $confirm['dep_time'];
                     $dijie_confirm['ret_time']= $confirm['ret_time'];
-                    $dijie_confirm['num_adult']   = $confirm['num_adult'];
-                    $dijie_confirm['num_children']   = $confirm['num_children'];
-                    $dijie_confirm['days']   = $confirm['days'];
-                    $dijie_confirm['user_id']   = $new_op['create_user'];
-                    $dijie_confirm['user_name']   = $new_op['user_name'];
-                    $dijie_confirm['confirm_time']   = NOW_TIME;
+                    $dijie_confirm['num_adult']     = $confirm['num_adult'];
+                    $dijie_confirm['num_children']  = $confirm['num_children'];
+                    $dijie_confirm['days']          = $confirm['days'];
+                    $dijie_confirm['user_id']       = $new_op['create_user'];
+                    $dijie_confirm['user_name']     = $new_op['user_name'];
+                    $dijie_confirm['confirm_time']  = NOW_TIME;
                     $opres = M('op')->add($new_op);
                     if ($opres) {
                         M('op_team_confirm')->add($dijie_confirm);
@@ -2476,9 +2549,11 @@ class OpController extends BaseController {
                 }
 
                 $infos = array();
+                if ($new_op['op_id']){
+                    $infos['dijie_opid']= $new_op['op_id'];
+                }
                 $infos['group_id']	    = $info['group_id'];
                 $infos['status']		= 1;
-                $infos['dijie_opid']    = $new_op['op_id'];
                 M('op')->data($infos)->where(array('op_id'=>$opid))->save();
 
                 $record                 = array();
@@ -2559,6 +2634,17 @@ class OpController extends BaseController {
             $this->task_field = C('LES_FIELD');
             $this->apply_to = C('APPLY_TO');
             $this->design   = M('op_design')->where(array('op_id'=>$opid))->find();    //委托设计工作交接单
+            $work_plan          = M('op_work_plans')->where(array('op_id'=>$opid))->find();//业务实施计划单
+            $this->work_plan= $work_plan;
+            $this->additive = explode(',',$work_plan['additive']);
+            $this->plan_between_time = $work_plan['begin_time']?date('Y-m-d',$work_plan['begin_time']).' - '.date('Y-m-d',$work_plan['end_time']):'';
+            $this->plans    = M('op_work_plan_lists')->where(array('plan_id'=>$work_plan['id']))->select();
+            $this->user_info= M()->table('__OP__ as o')
+                ->field('a.*,d.department')
+                ->join('__ACCOUNT__ as a on a.id = o.create_user')
+                ->join('__SALARY_DEPARTMENT__ as d on d.id = a.departmentid')
+                ->where(array('o.op_id'=>$opid))
+                ->find();
 
 			$this->display('confirm');
 		}

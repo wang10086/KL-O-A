@@ -4099,3 +4099,12 @@ th{outline: none;}
 
 .delem-checkbox{  width:18px; height: 18px; background-color: #ffffff; background: rgba(255, 255, 255, 0.7) url(iCheck/minimal/minimal.png) no-repeat;}
 .score-black{font-weight: 600;}
+
+#plans { padding:0 15px;}
+#plans .form-control{ width:250px; float:left; margin-right:10px; border-radius:0;}
+#plans .unitbox{ width:250px; margin-right:10px; float:left; clear:none; border:none; padding:0;}
+#plans .title{ width:22px; float:left; height:30px; line-height:30px; margin-left:-30px; text-align:right;}
+#plans .userlist { width:100%; height:auto !important; float:left; clear:both; padding-bottom:15px; border-bottom:1px solid #cccccc; margin-top:15px;}
+#plans .btn{ padding:7px 12px; font-size:12px;}
+#plans td{ line-height:34px;}
+#plans_val{ display:none}
