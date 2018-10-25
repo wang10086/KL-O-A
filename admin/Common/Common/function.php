@@ -3468,7 +3468,7 @@ function code_number($number){//数字验证
  * sql_query 查询数据
  * $status 1 查询 2添加 3删除  4 修改
  * $field 查询字段（修改时作修改的字段）  $table 查询表 $where 查询条件
- * $order 1倒叙 2正常  $type (1 查询一条  默认查询所有)
+ * $order 1倒叙 2正常  $type (1 查询一条  2 默认查询所有)
  */
 
 function sql_query($status,$field,$table,$where,$order,$type){
@@ -3502,8 +3502,6 @@ function sql_query($status,$field,$table,$where,$order,$type){
 }
 
 function sql_sel($field,$table,$where,$order,$type){//查询
-
-
 
 	$add_sql 			= 'SELECT ';
 
@@ -3600,6 +3598,34 @@ function personnel(){//所有人员名称 id
 }
 function user_table($where){//查询用户
     return M('account')->where('id='.$where)->find();
+}
+
+function datetime($time_Y,$time_M,$time_D,$type){//获取年月日
+
+    if($type==1){
+        if($time_D < 10){
+            $time_M = $time_M-1;
+            if($time_M < 10) {
+                $que                 = $time_Y.'0'.$time_M;//查询年月
+            }else{
+                $que                 = $time_Y.$time_M;//查询年月
+            }
+        }else{
+            $que                     = $time_Y.$time_M;//查询年月
+        }
+    }elseif($type==2){
+        if($time_D < 10){
+            $time_M                     = $time_M-1;
+            if($time_M < 10) {
+                $que               = $time_Y.'年0'.$time_M.'月';//查询年月
+            }else{
+                $que               = $time_Y.'年'.$time_M.'月';//查询年月
+            }
+        }else{
+            $que                   = $time_Y.'年'.$time_M.'月';//查询年月
+        }
+    }
+    return $que;
 }
 
 //获取用户信息(模糊匹配)
