@@ -36,58 +36,120 @@
                                 </div><!-- /.box-header -->
                                 <div class="box-body">
 
-                                <include file="op_res_design" />
+                                <?php if ($type == 1) { ?>
+                                    <!--委托设计工作交接单-->
+                                    <include file="op_res_design" />
 
-                                <?php if($design['audit_user_id'] == cookie('userid') && $design['audit_status'] != P::AUDIT_STATUS_PASS){ ?>
-                                    <form method="post" action="{:U('op/public_save')}" id="audit_design">
-                                        <input type="hidden" name="dosubmint" value="1">
-                                        <input type="hidden" name="opid" value="{$op.op_id}">
-                                        <input type="hidden" name="design_id" value="{$design.id}">
-                                        <input type="hidden" name="savetype" value="17">
-                                        <div class="content">
-                                            <div class="form-group col-md-12">
-                                                <label>审核需求信息：</label>
-                                                <input type="radio" name="info[audit_status]" value="1" <?php if ($design['audit_status'] == 1){echo 'checked';} ?>> &emsp;通过&emsp;&emsp;&emsp;
-                                                <input type="radio" name="info[audit_status]" value="2" <?php if ($design['audit_status'] == 2){echo 'checked';} ?>> &emsp;不通过
-                                            </div>
-                                        </div>
-
-                                        <div style="width:100%; text-align:center;">
-                                            <input type="submit" class="btn btn-info btn-lg" value = '提交'>
-                                        </div>
-                                    </form>
-                                <?php } ?>
-
-                                <?php if($design['exe_user_id'] == cookie('userid') && $design['status'] != 1){ ?>
-                                    <form method="post" action="{:U('op/public_save')}" id="audit_design">
-                                        <input type="hidden" name="dosubmint" value="1">
-                                        <input type="hidden" name="opid" value="{$op.op_id}">
-                                        <input type="hidden" name="design_id" value="{$design.id}">
-                                        <input type="hidden" name="savetype" value="18">
-                                        <div class="content">
-                                            <div class="form-group col-md-12">
-                                                <div class="callout callout-danger">
-                                                    <h4>提示！</h4>
-                                                    <p>工作完成后请及时填写完成信息，以免影响您的绩效考核!</p>
+                                    <?php if($design['audit_user_id'] == cookie('userid') && $design['audit_status'] != P::AUDIT_STATUS_PASS){ ?>
+                                        <form method="post" action="{:U('op/public_save')}" id="audit_design">
+                                            <input type="hidden" name="dosubmint" value="1">
+                                            <input type="hidden" name="opid" value="{$op.op_id}">
+                                            <input type="hidden" name="design_id" value="{$design.id}">
+                                            <input type="hidden" name="type" value="{$type}">
+                                            <input type="hidden" name="savetype" value="17">
+                                            <div class="content">
+                                                <div class="form-group col-md-12">
+                                                    <label>审核需求信息：</label>
+                                                    <input type="radio" name="info[audit_status]" value="1" <?php if ($design['audit_status'] == 1){echo 'checked';} ?>> &emsp;通过&emsp;&emsp;&emsp;
+                                                    <input type="radio" name="info[audit_status]" value="2" <?php if ($design['audit_status'] == 2){echo 'checked';} ?>> &emsp;不通过
                                                 </div>
                                             </div>
 
-                                            <div class="form-group col-md-12">
-                                                <label>完成情况：</label>
-                                                <input type="radio" name="info[status]" value="0" <?php if ($design['status'] == 0){echo 'checked';} ?>> &emsp;未完成&emsp;&emsp;&emsp;
-                                                <input type="radio" name="info[status]" value="1" <?php if ($design['status'] == 1){echo 'checked';} ?>> &emsp;已完成
+                                            <div style="width:100%; text-align:center;">
+                                                <input type="submit" class="btn btn-info btn-lg" value = '提交'>
                                             </div>
-                                            <div class="form-group col-md-12">
-                                                <label>备注：</label>
-                                                <textarea class="form-control"  name="info[exe_remark]">{$design['exe_remark']}</textarea>
-                                            </div>
-                                        </div>
+                                        </form>
+                                    <?php } ?>
 
-                                        <div style="width:100%; text-align:center;">
-                                            <input type="submit" class="btn btn-info btn-lg" value = '提交'>
-                                        </div>
-                                    </form>
+                                    <?php if($design['exe_user_id'] == cookie('userid') && $design['status'] != 1){ ?>
+                                        <form method="post" action="{:U('op/public_save')}" id="audit_design">
+                                            <input type="hidden" name="dosubmint" value="1">
+                                            <input type="hidden" name="opid" value="{$op.op_id}">
+                                            <input type="hidden" name="design_id" value="{$design.id}">
+                                            <input type="hidden" name="type" value="{$type}">
+                                            <input type="hidden" name="savetype" value="18">
+                                            <div class="content">
+                                                <div class="form-group col-md-12">
+                                                    <div class="callout callout-danger">
+                                                        <h4>提示！</h4>
+                                                        <p>工作完成后请及时填写完成信息，以免影响您的绩效考核!</p>
+                                                    </div>
+                                                </div>
+
+                                                <div class="form-group col-md-12">
+                                                    <label>完成情况：</label>
+                                                    <input type="radio" name="info[status]" value="0" <?php if ($design['status'] == 0){echo 'checked';} ?>> &emsp;未完成&emsp;&emsp;&emsp;
+                                                    <input type="radio" name="info[status]" value="1" <?php if ($design['status'] == 1){echo 'checked';} ?>> &emsp;已完成
+                                                </div>
+                                                <div class="form-group col-md-12">
+                                                    <label>备注：</label>
+                                                    <textarea class="form-control"  name="info[exe_remark]">{$design['exe_remark']}</textarea>
+                                                </div>
+                                            </div>
+
+                                            <div style="width:100%; text-align:center;">
+                                                <input type="submit" class="btn btn-info btn-lg" value = '提交'>
+                                            </div>
+                                        </form>
+                                    <?php } ?>
+                                <?php }else{ ?>
+                                    <!--业务实施计划单-->
+                                    <include file="op_res_work_plan" />
+                                    <?php if($work_plan['audit_user_id'] == cookie('userid') && $work_plan['audit_status'] != P::AUDIT_STATUS_PASS){ ?>
+                                        <form method="post" action="{:U('op/public_save')}" id="audit_design">
+                                            <input type="hidden" name="dosubmint" value="1">
+                                            <input type="hidden" name="opid" value="{$op.op_id}">
+                                            <input type="hidden" name="plan_id" value="{$work_plan.id}">
+                                            <input type="hidden" name="type" value="{$type}">
+                                            <input type="hidden" name="savetype" value="17">
+                                            <div class="content">
+                                                <div class="form-group col-md-12">
+                                                    <label>审核需求信息：</label>
+                                                    <input type="radio" name="info[audit_status]" value="1" <?php if ($work_plan['audit_status'] == 1){echo 'checked';} ?>> &emsp;通过&emsp;&emsp;&emsp;
+                                                    <input type="radio" name="info[audit_status]" value="2" <?php if ($work_plan['audit_status'] == 2){echo 'checked';} ?>> &emsp;不通过
+                                                </div>
+                                            </div>
+
+                                            <div style="width:100%; text-align:center;">
+                                                <input type="submit" class="btn btn-info btn-lg" value = '提交'>
+                                            </div>
+                                        </form>
+                                    <?php } ?>
+
+                                    <?php if($work_plan['exe_user_id'] == cookie('userid') && $work_plan['status'] != 1){ ?>
+                                        <form method="post" action="{:U('op/public_save')}" id="audit_design">
+                                            <input type="hidden" name="dosubmint" value="1">
+                                            <input type="hidden" name="opid" value="{$op.op_id}">
+                                            <input type="hidden" name="plan_id" value="{$work_plan.id}">
+                                            <input type="hidden" name="type" value="{$type}">
+                                            <input type="hidden" name="savetype" value="18">
+                                            <div class="content">
+                                                <div class="form-group col-md-12">
+                                                    <div class="callout callout-danger">
+                                                        <h4>提示！</h4>
+                                                        <p>工作完成后请及时填写完成信息，以免影响您的绩效考核!</p>
+                                                    </div>
+                                                </div>
+
+                                                <div class="form-group col-md-12">
+                                                    <label>完成情况：</label>
+                                                    <input type="radio" name="info[status]" value="0" <?php if ($work_plan['status'] == 0){echo 'checked';} ?>> &emsp;未完成&emsp;&emsp;&emsp;
+                                                    <input type="radio" name="info[status]" value="1" <?php if ($work_plan['status'] == 1){echo 'checked';} ?>> &emsp;已完成
+                                                </div>
+                                                <div class="form-group col-md-12">
+                                                    <label>备注：</label>
+                                                    <textarea class="form-control"  name="info[exe_remark]">{$work_plan['exe_remark']}</textarea>
+                                                </div>
+                                            </div>
+
+                                            <div style="width:100%; text-align:center;">
+                                                <input type="submit" class="btn btn-info btn-lg" value = '提交'>
+                                            </div>
+                                        </form>
+                                    <?php } ?>
                                 <?php } ?>
+
+
                                     
                                 </div><!-- /.box-body -->
                             </div><!-- /.box -->

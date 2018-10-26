@@ -86,7 +86,7 @@
                                 <div class="box-header">
                                     <h3 class="box-title">资源需求单</h3>
                                     <h3 class="box-title pull-right" style="font-weight:normal; color:#333333;">
-                                        <?php  if((rolemenu(array('Op/public_save')) && $op['group_id'] && ($op['create_user'] == cookie('userid'))) || $resource ){ ?>
+                                        <?php  if((rolemenu(array('Op/public_save')) && $op['group_id'] && ($op['create_user'] == cookie('userid'))) && ($resource  || $work_plan || $design) || C('RBAC_SUPER_ADMIN')==cookie('username') || cookie('userid') == 11 ){ ?>
                                             <span id="res_but"><a href="javascript:;" onclick="hide_res_need()" style="color:#09F;">隐藏</a></span>
                                         <?php  } ?>
                                     </h3>
@@ -147,20 +147,23 @@
     var group_id    = "<?php echo $op['group_id']; ?>";
     var op_kind     = <?php echo $op_kind;?>;
     var resource    = "<?php echo $resource['op_id']; ?>";
+    var design      = "<?php echo $design['id']; ?>";
+    var work_plan   = "<?php echo $work_plan['id']; ?>";
 
     $(function(){
        // get_gpk();
 
-        if (resource && op_kind != 60){
-            $('#res-need-or-not').html('');
-            $('#res_type').html('');
-            $('#after_lession').html('');
-            $('#res_need_table').show();
-        }else if (resource && op_kind == 60){
-            $('#res-need-or-not').html('');
-            $('#res_type').html('');
-            $('#after_lession').show();
-            $('#res_need_table').html('');
+        if (resource || design || work_plan){
+            if (op_kind == 60){
+                $('#res-need-or-not').html('');
+                $('#after_lession').show();
+                $('#res_need_table').html('');
+            }else{
+                $('#res-need-or-not').html('');
+                $('#after_lession').html('');
+                $('#res_need_table').show();
+            }
+            get_res_type();
         }else{
             $('#res_type').hide();
             $('#custom').hide();
@@ -494,6 +497,7 @@
 
     //物资需求单
     function show_res_need(){
+        $('#tcs_need_h2').next('div').addClass('checked');
         if (op_kind != 60){
             $("#res_need_table").show();
         }else{
@@ -503,11 +507,7 @@
     }
 
     function hide_res_need(){
-        if (op_kind != 60){
-            $("#res_need_table").hide();
-        }else{
-            $('#after_lession').hide();
-        }
+        $('.hideAll').hide();
         $('#res_but').html('<a href="javascript:;" onclick="show_res_need()" style="color:#09F;">显示</a>');
     }
 
@@ -538,6 +538,11 @@
         }else{
             document.body.innerHTML=document.getElementById('res_need_table').innerHTML;
         }
+        window.print();
+    }
+
+    function print_design(){
+        document.body.innerHTML=document.getElementById('design').innerHTML;
         window.print();
     }
 

@@ -1107,7 +1107,7 @@ class OpController extends BaseController {
                     $uid     = cookie('userid');
                     $title   = '您有来自['.session('rolename').'--'.$info['ini_user_name'].']委托设计工作交接单待审核!';
                     $content = '项目名称：'.$op['project'].';团号：'.$op['group_id'];
-                    $url     = U('Op/res_audit',array('opid'=>$info['op_id']));
+                    $url     = U('Op/res_audit',array('opid'=>$info['op_id'],'type'=>1));
                     $user    = '['.$audit_user_id.']';
                     send_msg($uid,$title,$content,$url,$user,'');
 
@@ -1123,30 +1123,44 @@ class OpController extends BaseController {
                 }
             }
 
-            //保存"审核"委托设计工作交接单
+            //保存"审核"委托设计工作交接单 + 业务实施计划单
             if ($opid && $savetype==17){
-                $design_id      = I('design_id');
+                $type           = I('type');
                 if (!$info){
                     $this->error('审核信息有误!');
                 }
-                $info['audit_time'] = NOW_TIME;
-                $res = M('op_design')->where(array('id'=>$design_id))->save($info);
+                if ($type == 1){
+                    //保存审核委托设计工作交接单
+                    $design_id      = I('design_id');
+                    $info['audit_time'] = NOW_TIME;
+                    $res = M('op_design')->where(array('id'=>$design_id))->save($info);
+                }else{
+                    //保存业务实施计划单
+                    $plan_id    = I('plan_id');
+                    $info['audit_time'] = NOW_TIME;
+                    $res = M('op_work_plans')->where(array('id'=>$plan_id))->save($info);
+                }
                 if ($res) {
                     $record = array();
                     $record['op_id']   = $opid;
                     $record['optype']  = 4;
-                    $record['explain'] = '审核委托设计工作交接单';
+                    if ($type == 1) {
+                        $record['explain'] = '审核委托设计工作交接单';
+                        $list    = M('op_design')->where(array('id'=>$design_id))->find();
+                    }else{
+                        $record['explain'] = '审核业务实施计划单';
+                        $list    = M('op_work_plans')->where(array('id'=>$plan_id))->find();
+                    }
                     op_record($record);
 
                     if ($info['audit_status'] == P::AUDIT_STATUS_PASS){
-                        $list    = M('op_design')->where(array('id'=>$design_id))->find();
                         $exe_user_id = $list['exe_user_id'];
                         $op      = M('op')->where(array('op_id'=>$opid))->find();
                         //发送系统消息
                         $uid     = cookie('userid');
                         $title   = '您有来自['.session('rolename').'--'.$list['ini_user_name'].']委托设计工作交接单!';
                         $content = '项目名称：'.$op['project'].';团号：'.$op['group_id'];
-                        $url     = U('Op/res_audit',array('opid'=>$list['op_id']));
+                        $url     = U('Op/res_audit',array('opid'=>$list['op_id'],'type'=>$type));
                         $user    = '['.$exe_user_id.']';
                         send_msg($uid,$title,$content,$url,$user,'');
                     }
@@ -1155,18 +1169,31 @@ class OpController extends BaseController {
                 }else{
                     $this->error('保存数据失败');
                 }
+
             }
 
             ////保存"完成"委托设计工作交接单
             if ($opid && $savetype==18){
-                $design_id          = I('design_id');
-                $info['finish_time']= NOW_TIME;
-                $res = M('op_design')->where(array('id'=>$design_id))->save($info);
+                $type               = I('type');
+                if ($type == 1) {
+                    $design_id          = I('design_id');
+                    $info['finish_time']= NOW_TIME;
+                    $res = M('op_design')->where(array('id'=>$design_id))->save($info);
+                }else{
+                    //保存业务实施计划单
+                    $plan_id    = I('plan_id');
+                    $info['finish_time'] = NOW_TIME;
+                    $res = M('op_work_plans')->where(array('id'=>$plan_id))->save($info);
+                }
                 if ($res) {
                     $record = array();
                     $record['op_id']   = $opid;
                     $record['optype']  = 4;
-                    $record['explain'] = '完成委托设计工作交接单';
+                    if ($type ==1) {
+                        $record['explain'] = '完成委托设计工作交接单';
+                    }else{
+                        $record['explain'] = '完成保存业务实施计划单';
+                    }
                     op_record($record);
 
                     $this->success('保存成功');
@@ -1230,8 +1257,8 @@ class OpController extends BaseController {
                     //发送系统消息
                     $uid     = cookie('userid');
                     $title   = '您有来自['.session('rolename').'--'.$info['ini_user_name'].']业务实施计划单待审核!';
-                    $content = '项目名称：'.$op['project'].';团号：'.$op['group_id'];
-                    $url     = U('Op/res_audit',array('opid'=>$info['op_id']));
+                    $content = '项目名称：'.$op['project'].';&nbsp;团号：'.$op['group_id'];
+                    $url     = U('Op/res_audit',array('opid'=>$info['op_id'],'type'=>2));
                     $user    = '['.$audit_user_id.']';
                     send_msg($uid,$title,$content,$url,$user,'');
 
@@ -1258,14 +1285,26 @@ class OpController extends BaseController {
         if (isset($_POST['dosubmint'])){
             $design_id      = I('designed');
         }else{
-            $opid            = I('opid');
-            $design          = M('op_design')->where(array('op_id'=>$opid))->find();
-            if (!$design){
+            $opid           = I('opid');
+            $design         = M('op_design')->where(array('op_id'=>$opid))->find();         //委托设计工作交接单
+            $work_plan      = M('op_work_plans')->where(array('op_id'=>$opid))->find();     //业务实施计划单
+            $plan_lists     = M('op_work_plan_lists')->where(array('plan_id'=>$work_plan['id']))->select();
+            $this->work_plan= $work_plan;
+            $this->additive = explode(',',$work_plan['additive']);
+            $additive_con   = array(
+                '1'         => '行程或方案',
+                '2'         => '需解决大交通的《人员信息表》',
+                '3'         => '其他'
+            );
+            $this->additive_con = $additive_con;
+            $this->plan_lists= $plan_lists;
+            $this->type     = I('type');
+            if (!$design && !$work_plan){
                 $this->error('暂无数据信息');
             }
-            $this->design    = $design;
-            $this->op        = M('op')->where(array('op_id'=>$opid))->find();
-            $user_info       = M()->table('__ACCOUNT__ as a')
+            $this->design   = $design;
+            $this->op       = M('op')->where(array('op_id'=>$opid))->find();
+            $user_info      = M()->table('__ACCOUNT__ as a')
                 ->field('a.mobile,d.department,o.create_user_name')
                 ->join('__OP__ as o on o.create_user = a.id','left')
                 ->join('__SALARY_DEPARTMENT__ as d on d.id = a.departmentid')
@@ -1282,6 +1321,7 @@ class OpController extends BaseController {
                 P::AUDIT_STATUS_PASS       => '<span class="green">审核通过</span>',
                 P::AUDIT_STATUS_NOT_PASS   => '<span class="red">未通过</span>',
             );
+
             $this->display();
         }
     }
@@ -2638,13 +2678,31 @@ class OpController extends BaseController {
             $this->work_plan= $work_plan;
             $this->additive = explode(',',$work_plan['additive']);
             $this->plan_between_time = $work_plan['begin_time']?date('Y-m-d',$work_plan['begin_time']).' - '.date('Y-m-d',$work_plan['end_time']):'';
-            $this->plans    = M('op_work_plan_lists')->where(array('plan_id'=>$work_plan['id']))->select();
+            $this->plan_lists = M('op_work_plan_lists')->where(array('plan_id'=>$work_plan['id']))->select();
+
             $this->user_info= M()->table('__OP__ as o')
-                ->field('a.*,d.department')
+                ->field('a.*,d.department,o.create_user_name')
                 ->join('__ACCOUNT__ as a on a.id = o.create_user')
                 ->join('__SALARY_DEPARTMENT__ as d on d.id = a.departmentid')
                 ->where(array('o.op_id'=>$opid))
                 ->find();
+            $this->output_info = array(
+                '1'=>'出片打样',
+                '2'=>'喷绘',
+                '3'=>'只提供电子文件'
+            );
+            $this->audit_status = array (
+                P::AUDIT_STATUS_NOT_AUDIT  => '<span class="yellow">未审核</span>',
+                P::AUDIT_STATUS_PASS       => '<span class="green">审核通过</span>',
+                P::AUDIT_STATUS_NOT_PASS   => '<span class="red">未通过</span>',
+            );
+            $this->additive = explode(',',$work_plan['additive']);
+            $additive_con   = array(
+                '1'         => '行程或方案',
+                '2'         => '需解决大交通的《人员信息表》',
+                '3'         => '其他'
+            );
+            $this->additive_con = $additive_con;
 
 			$this->display('confirm');
 		}

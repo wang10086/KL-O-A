@@ -69,7 +69,7 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td class="td_title" colspan="6" style="text-align: left">审核状态：{$audit_status[$design['audit_status']]}&emsp;&emsp;审核人：{$design['audit_user_name']}&emsp;&emsp;审核时间：{$design['audit_time']|date='Y-m-d H:i:s',###}</td>
+                                <td class="td_title" colspan="6" style="text-align: left">审核状态：{$audit_status[$design['audit_status']]}&emsp;&emsp;审核人：{$design['audit_user_name']}&emsp;&emsp;审核时间：<?php echo $design['audit_time']?date('Y-m-d H:i:s',$design['audit_time']):'未审核'; ?></td>
                             </tr>
                         </table>
                     </div>

@@ -5,8 +5,8 @@
             <div class="unitbox">标准</div>
             <div class="unitbox">备注</div>
         </div>
-        <?php if($plans){ ?>
-        <foreach name="plans" key="k" item="v">
+        <?php if($plan_lists){ ?>
+        <foreach name="plan_lists" key="k" item="v">
         <div class="userlist cost_expense" id="plans_id_c_{$k}">
             <span class="title"><?php echo $k+1; ?></span>
             <input type="hidden" name="resid[888{$k}][id]" value="{$v.id}" >
