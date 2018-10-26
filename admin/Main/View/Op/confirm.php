@@ -497,7 +497,6 @@
 
     //物资需求单
     function show_res_need(){
-        $('#tcs_need_h2').next('div').addClass('checked');
         if (op_kind != 60){
             $("#res_need_table").show();
         }else{
