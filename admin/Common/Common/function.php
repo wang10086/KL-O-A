@@ -3611,6 +3611,7 @@ function user_table($where){//查询用户
                     $que                 = $time_Y.'0'.$time_M;//查询年月
                 }else{
                     $que                 = $time_Y.$time_M;//查询年月
+
                 }
             }else{
                 $que                     = $time_Y.$time_M;//查询年月
@@ -3628,6 +3629,29 @@ function user_table($where){//查询用户
             }
         }
         return $que;
+    }
+
+    //带团补助  $month 查询年月 例如:201809
+    function Acquisition_Team_Subsidy($month,$guide_id){
+
+        $firstday                           = date('Y-m-27', strtotime("$month -1 month"));//获取第一天
+        $lastday                            = date('Y-m-27', strtotime("$firstday +1 month -1 day"));//获取最后一天
+        $firstday_time                      = strtotime($firstday);//当月第一天时间戳
+        $lastday_time                       = strtotime($lastday);//当月最后一天时间戳
+
+        if(!empty($guide_id) && ($guide_id)!==0){
+            $price                          = 0;
+            $guide_array                    = array();
+            $guide_array['guide_id']        = $guide_id;
+            $guide_array['sure_time']       = array('between',"$firstday_time,$lastday_time");
+            $guide_pay                      =  M('guide_pay')->where($guide_array)->select();
+            if($guide_pay){
+                foreach($guide_pay as $k => $v){
+                    $price                  += $v['really_cost'];
+                }
+            }
+        }
+        return $price;
     }
 
 //获取用户信息(用户名+角色)

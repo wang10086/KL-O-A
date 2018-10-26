@@ -41,7 +41,7 @@
                                 <td>{$lst.employee_member}</td>
                                 <td>{$lst.department}</td>
                                 <td>{$lst.post_name}</td>
-                                <td><input type="text" style="float:left;" class="form-control salary_bonus_extract" placeholder="带团补助" value="11" readonly /></td>
+                                <td><input type="text" style="float:left;" class="form-control salary_bonus_extract" placeholder="带团补助" value="<?php if($lst['extract']==0 || $lst['extract']==""){echo 0;}else{echo $lst['extract'];}?>" readonly /></td>
 
                                 <td><input type="text" style="float:left;" class="form-control salary_bonus_bonus" placeholder="其他人员提成" /></td>
                                 <td><input type="text" style="float:left;" class="form-control salary_bonus1_bonus" placeholder="奖金" /></td>

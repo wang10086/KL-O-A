@@ -49,9 +49,11 @@ class ApprovalController extends BaseController {
 
     //文件详情
     public function Approval_Update(){
-        $id                     = I('id');//文件id
+        $id                     = trim(I('id'));//文件id
         $file[0]                = D('Approval')->approval_update($id);
+        $this->id               = $id;
         $this->approval_file    = D('Approval')->approval_update_sql($file);//循环更改文件数据
+
         $this->display();
     }
 

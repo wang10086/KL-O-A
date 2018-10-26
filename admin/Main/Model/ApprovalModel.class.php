@@ -10,7 +10,8 @@
                 $table                                = 'approval_flie_update';
                 $add_approval['update_time']          = time();
                 $userid                               = $user_id;
-                $add_approval['file_id']              = $userid;
+                $add_approval['file_id']              = $user_id;
+
             }else{
                 $userid                               ='';
                 foreach($user_id as $key =>$val){
@@ -38,7 +39,6 @@
                     $where['file_id']                 = $user_id;
                     $files                            = M($table)->where($where)->find();
                     if($files){
-                        $add_approval['update_time']  = time();
                         unset($add_approval['createtime']);
                         $update                       = M($table)->where($where)->save($add_approval);
                         if($update){
@@ -72,6 +72,5 @@
         public function approval_update($id){
             $file = M('approval_flie')->where('id='.$id)->find();
             return $file;
-
         }
     }

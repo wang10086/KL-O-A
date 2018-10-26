@@ -30,6 +30,7 @@
                                     	<th style="text-align:center;width:6em;"/>
                                             <input type="checkbox" id="Approval_check"/>
                                         </th>
+                                        <th style="text-align:center;width:6em;"><b> ID </b></th>
                                         <th style="text-align:center;width:10em;"><b>拟稿人姓名</b></th>
                                         <th style="text-align:center;width:10em;"><b>原文件名称</b></th>
                                         <th style="text-align:center;width:10em;"><b>创建时间</b></th>
@@ -46,6 +47,7 @@
                                     	<td align="center">
                                             <input type="checkbox" class="Approval_check" />
                                         </td>
+                                        <td style="text-align:center;">{$f['file']['id']}</td>
                                         <td style="text-align:center;color:#3399FF;">{$f['file']['account_name']}</td>
                                         <td style="text-align:center;" >
                                             <a href="{$f['file']['file_url']}">
