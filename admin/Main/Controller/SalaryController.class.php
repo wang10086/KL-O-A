@@ -301,7 +301,6 @@ class SalaryController extends BaseController {
             $where['id']        = trim($_POST['id']);
             $data               = array_filter($info);
             $attend_r           = M('salary_attendance')->where($where)->save($data);
-//            echo M()->getLastSql();
             if(!$attend_r){
                 $this->error('您的数据编辑失败!请重新编辑！', U('Salary/salary_attendance'));die;
             }else{
@@ -385,7 +384,7 @@ class SalaryController extends BaseController {
             foreach($account_r as $key => $val){
                 $aid['account_id']                      = $account_r[$key]['aid'];
                 $whe['account_id']                      = $aid['account_id'];
-                $whe['status']                          = 1;
+                $whe['status']                          = (int)1;
                 $account_r[$key]['Labour']              = M('salary_labour')->where($whe)->find();
                 $salary                                 = M('salary')->where($aid)->order('id desc')->find();//岗位薪资
                 $account_r[$key]['account_id']          = $salary['account_id'];
@@ -395,31 +394,10 @@ class SalaryController extends BaseController {
                 $salary_bonus                           = M('salary_bonus')->where($aid)->order('id desc')->find();//提成/奖金
                 $account_r[$key]['bonus_id']            = $salary_bonus['id'];
 
+                $month                                  = datetime(date('Y'),date('m'),date('d'),1);//获取201810月份
+                $account_r[$key]['extract']             = round(Acquisition_Team_Subsidy($month,(int)$val['guide_id']),2);//带团补助
+//              $account_r[$key]['extract']             = $salary_bonus['extract'];
 
-
-                $month = datetime(date('Y'),date('m'),date('d'),1);//获取201810月份
-                $firstday = date('Y-m-01', strtotime($month));//获取第一天
-                $lastday = date('Y-m-d', strtotime("$firstday +1 month -1 day"));//获取最后一天
-                $firstday_time = strtotime($firstday);//当月第一天时间戳
-                $lastday_time = strtotime($lastday);//当月最后一天时间戳
-//
-//                if(!empty((int)$val['guide_id']) && (int)$val['guide_id']!==0){
-//                    $price = 0;
-//
-//                    $guide_array                = array();
-//                    $guide_array['guide_id']     = $val['guide_id'];
-//                    $guide_array['sure_time']    = array('between',"$firstday_time,$lastday_time");
-//                   $guide_pay =  M('guide_pay')->where($guide_array)->select();
-//
-//                    if($guide_pay){
-//                        foreach($guide_pay as $k => $v){
-//                            $price    += $v['really_cost'];
-//                        }
-//                        $ttt[$key]['pp'] = $price;
-//                    }
-//                }
-
-                $account_r[$key]['extract']             = $salary_bonus['extract'];//admin
                 $account_r[$key]['bonus']               = $salary_bonus['bonus'];
                 $account_r[$key]['annual_bonus']        = $salary_bonus['annual_bonus'];
                 $subsidy_r                              = M('salary_subsidy')->where($aid)->order('id desc')->find();//补贴
@@ -441,7 +419,7 @@ class SalaryController extends BaseController {
             }
             if(!$account_r || $account_r==""){$this->error('请添加员工编码或者员工部门！', U('Salary/salary_query'));die;}
         }
-        //print_r($ttt[3]);die;//guide_id  really_cost  sure_time
+
         $status                                         = trim(I('status'));
         if($status == 1){
             $this->assign('page',$pages);//数据分页
@@ -449,7 +427,7 @@ class SalaryController extends BaseController {
         }
         if($status == 2){
             $this->assign('page2',$pages);//数据分页
-            $this->assign('rows',$account_r);//数据admin
+            $this->assign('rows',$account_r);//数据
         }
         if($status == 3){
             $this->assign('page3',$pages);//数据分页
@@ -462,7 +440,6 @@ class SalaryController extends BaseController {
             $this->assign('withhold',$account_r);//数据
             $this->assign('stau',$status);//数据
         }
-
         $this->assign('type',$type);//数据
         $this->assign('department',query_department());//部门
         $this->assign('posts',query_posts());//岗位
@@ -496,7 +473,6 @@ class SalaryController extends BaseController {
             if(!preg_match('/^[A-Z]+$/', $add['letter'])){
                 $this->error('请添加大写字母！', U('Salary/salary_add_department'));die;
             }
-
             $department_r           = M('salary_department')->where($where)->find();
             $department_r1          = M('salary_department')->where($add)->find();
 
@@ -696,34 +672,49 @@ class SalaryController extends BaseController {
             $att_id['account_id']                   = $val['id'];
             $att_id['status']                       = 1;
             $user_info[$key]['attendance']          = sql_query(1,'*','oa_salary_attendance',$att_id, 1, 1);//员工考核
+            $user_bonus                             = sql_query(1,'*','oa_salary_bonus',$att_id, 1, 1);//提成/奖金/年终奖
+
+            $generate_month                         = datetime(date('Y'),date('m'),date('d'),1);//获取当前年月
+            $bonus_extract                          = Acquisition_Team_Subsidy($generate_month,(int)$val['guide_id']);//带团补助
+
+            if(count($user_bonus)==1 && is_numeric($bonus_extract) && $bonus_extract!==0){//带团补助已有信息
+                $bonus_save['extract']              = $bonus_extract;
+                $bonus                              = M('salary_bonus')->where($att_id)->save($bonus_save);//添加带团补助
+            }elseif(count($user_bonus)==0 && is_numeric($bonus_extract) && $bonus_extract!==0){//带团补助未有信息
+                $bonus_save['account_id']           = (int)$val['id'];
+                $bonus_save['createtime']           = time();
+                $bonus_save['extract']              = $bonus_extract;
+                $bonus                              = M('salary_bonus')->add($bonus_save);//添加带团补助
+            }
             $user_info[$key]['bonus']               = sql_query(1,'*','oa_salary_bonus',$att_id, 1, 1);//提成/奖金/年终奖
+
             $user_info[$key]['labour']              = M('salary_labour')->where($id)->order('id desc')->find();//工会会费
             if(count($user_info[$key]['salary'])==0){
                 unset($user_info[$key]);continue;
             }
-            $income                                 = sql_query(1, '*', 'oa_salary_income',$id, 1,1);//其他收入
+            $income                                 = sql_query(1,'*','oa_salary_income',$id, 1,1);//其他收入
             $countmoney                             = 0;
             if ($income) {
                 $token['income_token']              = $income[0]['income_token'];
-                $user_info[$key]['income']          = sql_query(1, '*', 'oa_salary_income', $token,1,2);//其他收入所有项目
+                $user_info[$key]['income']          = sql_query(1,'*','oa_salary_income', $token,1,2);//其他收入所有项目
                 foreach($user_info[$key]['income'] as $ke =>$va){
                     $countmoney                     += $va['income_money'];
                 }
             }
-            $user_info[$key]['insurance']           = sql_query(1, '*', 'oa_salary_insurance', $id, 1,1);//五险一金表
+            $user_info[$key]['insurance']           = sql_query(1,'*','oa_salary_insurance', $id, 1,1);//五险一金表
 
             $user_info[$key]['insurance_Total']     = round(($user_info[$key]['insurance'][0]['pension_ratio']*$user_info[$key]['insurance'][0]['pension_base']+$user_info[$key]['insurance'][0]['medical_care_ratio']*$user_info[$key]['insurance'][0]['medical_care_base']+$user_info[$key]['insurance'][0]['unemployment_ratio']*$user_info[$key]['insurance'][0]['unemployment_base']+round($user_info[$key]['insurance'][0]['accumulation_fund_ratio']*$user_info[$key]['insurance'][0]['accumulation_fund_base'])+$user_info[$key]['insurance'][0]['big_price']),2);//五险一金
 
             $user_info[$key]['accumulation']        = round(($user_info[$key]['insurance'][0]['accumulation_fund_ratio']*$user_info[$key]['insurance'][0]['accumulation_fund_base']),0);
 
-            $user_info[$key]['subsidy']             = sql_query(1, '*', 'oa_salary_subsidy', $id,1,1);//补贴
-            $withholding                            = sql_query(1, '*', 'oa_salary_withholding', $id,1,1);//代扣代缴
+            $user_info[$key]['subsidy']             = sql_query(1,'*','oa_salary_subsidy', $id,1,1);//补贴
+            $withholding                            = sql_query(1,'*','oa_salary_withholding', $id,1,1);//代扣代缴
 
             if ($withholding) {
                 $wit['token']                       = $withholding[0]['token'];
                 $wit['account_id']                  = $val['id'];
                 $wit                                = array_filter($wit);
-                $user_info[$key]['withholding']     = sql_query(1, '*', 'oa_salary_withholding',$wit,1,2);//代扣代缴
+                $user_info[$key]['withholding']     = sql_query(1,'*','oa_salary_withholding',$wit,1,2);//代扣代缴
 
                 foreach($user_info[$key]['withholding'] as $kk =>$vv){
                     $user_info[$key]['summoney']    += $vv['money']; //总代扣代缴
@@ -920,7 +911,7 @@ class SalaryController extends BaseController {
         $datetim                            = I('datetime');
         $type                               = I('type');
         if(is_numeric($datetim)){
-            $datetime                       =  datetime(date('Y'),date('m'),date('d'),2);
+            $datetime                       = datetime(date('Y'),date('m'),date('d'),2);
             $money                          = M('salary_count_money')->where('datetime='.$datetim)->find();
             if(!$money){
                 unset($datetim);
