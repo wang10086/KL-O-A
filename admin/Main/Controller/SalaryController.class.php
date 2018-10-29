@@ -55,7 +55,7 @@ class SalaryController extends BaseController {
         $uid                                    = (int)$user_info1['account_id'];
         $userid = (int)$_SESSION['userid'];
 
-        if($userid==1 || $userid===55|| $userid===77 || $userid===11 || $userid==38 || $userid==12 || $user_id==32){
+        if($userid==1 || $userid===55|| $userid===77 || $userid===11 || $userid==38 || $userid==12 || $userid==32){
 
         }else{
             if($uid!==$userid){

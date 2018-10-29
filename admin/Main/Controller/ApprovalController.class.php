@@ -58,15 +58,10 @@ class ApprovalController extends BaseController {
         $approval_file          = D('Approval')->approval_update_sql($file);//循环更改文件数据
         $myfile = fopen($file[0]['file_url'], "r") or die("Unable to open file!");
         $file_r= fread($myfile,filesize($approval_file[0]['file']['file_url']));
-        $givenText = iconv('gbk', 'utf-8', $file_r); // 注释掉上面行后添加这行
-        $text = new PHPWord_Section_Text($givenText, $styleFont, $styleParagraph);
-        $this->_elementCollection[] = $text;
+
         fclose($myfile);
-
-//        $str = file_get_contents($approval_file[0]['file']['file_url']);
-
 //        print_r(fclose($myfile));die;
-        $this->assign('file_r',$replace);
+        $this->assign('file_r',$file_r);
         $this->assign('approval_file',$approval_file);
         $this->display();
     }
