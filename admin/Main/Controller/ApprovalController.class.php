@@ -18,7 +18,6 @@ class ApprovalController extends BaseController {
         $this->display();
     }
 
-
     //选择审批人
     public function Approval_Upload(){
         $arr                    = explode(",",$_COOKIE['xuequ_approval']);
@@ -38,7 +37,7 @@ class ApprovalController extends BaseController {
         $user_id                = $_POST['user_id'];
         $style                  = $_POST['style'];
         $approval               = D('Approval');
-        $judge                  = $approval->approval_upload('approval_flie',$user_id,$style);
+        $judge                  = $approval->approval_upload('oa_approval_flie',$user_id,$style);
 
         if($judge==1){
             $this->success('保存文档数据成功!');//最后一次错误
@@ -49,11 +48,16 @@ class ApprovalController extends BaseController {
 
     //文件详情
     public function Approval_Update(){
-        $id                     = trim(I('id'));//文件id
+        $id = trim(I('id'));//文件id
+        if(!is_numeric($id)){
+
+            $this->error('您选择文件错误！请重新选择!', U('Approval/Approval_Index'));die;
+        }
         $file[0]                = D('Approval')->approval_update($id);
         $this->id               = $id;
-        $this->approval_file    = D('Approval')->approval_update_sql($file);//循环更改文件数据
-
+        $approval_file          = D('Approval')->approval_update_sql($file);//循环更改文件数据
+//        print_r($approval_file);die;
+        $this->assign('approval_file',$approval_file);
         $this->display();
     }
 

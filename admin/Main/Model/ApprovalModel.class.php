@@ -4,7 +4,12 @@
     use Sys\P;
     class ApprovalModel extends Model{
 
-        //文件上传审批
+
+        /**
+         * 文件上传审批
+         * $table 上传文件表名 $user_id 审批人
+         * $style 状态 1 approval_flie_update表添加 默认 approval_flie 表
+         */
         public function approval_upload($table,$user_id,$style){
             if($style==1){
                 $table                                = 'approval_flie_update';
@@ -60,8 +65,11 @@
             }
            return 0;die;
         }
-
-        public function approval_update_sql($approval){//查询update_file
+        /**
+         * 查询 approval_flie_update 文件修改表
+         * $approval 文件的信息 二维数组
+         */
+        public function approval_update_sql($approval){
             foreach($approval as $key => $val){
                 $where['file_id']               = $val['id'];
                 $update[$key]['file']           = $val;
@@ -69,8 +77,28 @@
             }
             return $update;
         }
+        /**
+         * 查询 approval_flie表的文件信息
+         * $id 文件 id
+         */
         public function approval_update($id){
             $file = M('approval_flie')->where('id='.$id)->find();
+            $user_id= explode(',',$file['file_account_id']);
+            foreach($user_id as $key => $val){
+                $userinfo['user'][$key]['username'] = username($val);
+            }
+            $file = array_merge($file,$userinfo);
             return $file;
+        }
+
+
+        /**
+         * 查询选取人员信息
+         * $id 文件 id
+         */
+        public function user_info($file){
+
+            $user_info = explode(',',$file['file_account_id']);
+
         }
     }

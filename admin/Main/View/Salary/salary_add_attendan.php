@@ -134,7 +134,7 @@
                 var salary_add_hidden   = $(this).find(".salary_add_hidden").val();
                 var money               = $(this).find(".lowest_wage").val();;//北京最低工资标准的80%是病假扣费
                 var sum                 = late1*10+late2*30+(salary_add_hidden/21.75)*leave_absence+(money/21.75)*0.2*sick_leave+(salary_add_hidden/21.75)*absenteeism*2;
-                var count               = Math.floor(sum*100)/100;
+                var count               = Math.round(sum*100)/100;
                // var salary_add_withdrawing = $(".salary_add_withdrawing").text();
                 $(this).find('.salary_add_withdrawing').text(count);
             });

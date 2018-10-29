@@ -57,21 +57,22 @@
                                         </form>
                                 </div>
                             </div><!-- /.box-header -->
-                            <div class="box-body">
+                            <foreach name="approval_file" item="f">
+                                <div class="box-body">
 
-                                <table class="table table-bordered">
-                                    <tr class="orders" style="text-align:center;">
-                                        <th class="sorting" style="text-align:center;width:6em;"><b>ID</b></th>
-                                        <th class="sorting" style="text-align:center;width:10em;"><b>上传者</b></th>
-                                        <th class="sorting" style="text-align:center;width:10em;"><b>文件名称</b></th>
-                                        <th class="sorting" style="text-align:center;width:10em;"><b>修改后文件名称</b></th>
-                                        <th class="sorting" style="text-align:center;width:10em;"><b>修改人姓名</b></th>
-                                        <th class="sorting" style="text-align:center;width:10em;"><b>修改时间</b></th>
-                                        <th class="sorting" style="text-align:center;width:10em;"><b>文件大小</b></th>
-                                        <th class="sorting" style="text-align:center;width:10em;"><b>文件格式</b></th>
-                                        <th class="sorting" style="text-align:center;width:10em;"><b>上传时间</b></th>
-                                    </tr>
-                                    <foreach name="approval_file" item="f">
+                                    <table class="table table-bordered">
+                                        <tr class="orders" style="text-align:center;">
+                                            <th class="sorting" style="text-align:center;width:6em;"><b>ID</b></th>
+                                            <th class="sorting" style="text-align:center;width:10em;"><b>上传者</b></th>
+                                            <th class="sorting" style="text-align:center;width:10em;"><b>文件名称</b></th>
+                                            <th class="sorting" style="text-align:center;width:10em;"><b>修改后文件名称</b></th>
+                                            <th class="sorting" style="text-align:center;width:10em;"><b>修改人姓名</b></th>
+                                            <th class="sorting" style="text-align:center;width:10em;"><b>修改时间</b></th>
+                                            <th class="sorting" style="text-align:center;width:10em;"><b>文件大小</b></th>
+                                            <th class="sorting" style="text-align:center;width:10em;"><b>文件格式</b></th>
+                                            <th class="sorting" style="text-align:center;width:10em;"><b>上传时间</b></th>
+                                        </tr>
+
                                         <tr style="text-align:center;">
                                             <td >{$f['file']['account_id']}</td>
                                             <td>{$f['file']['account_name']}</td>
@@ -93,70 +94,42 @@
                                             <td>{$f['file']['file_format']}</td>
                                             <td><?php if(!empty($f['file']['createtime'])){echo date('Y-m-d H:i:s',$f['file']['createtime']);}?></td>
                                         </tr>
-                                    </foreach>
-                                </table><br><br>
-                                <div class="box-header">
-                                    <div class="form-group  col-md-6">
-                                        <label>
-                                            <b style="font-size:1.3em;color:#09F;padding:2em;">已选批注人员 : </b>
-                                        </label><br><br>
-                                        <div style="margin-left:2em;">
-                                            <span style="padding:1em;">1111</span>
-                                            <span style="padding:1em;">1111</span>
-                                            <span style="padding:1em;">1111</span>
-                                            <span style="padding:1em;">1111</span>
-                                            <span style="padding:1em;">1111</span>
-                                            <span style="padding:1em;">1111</span>
-                                            <span style="padding:1em;">1111</span>
-                                            <span style="padding:1em;">1111</span>
-                                            <span style="padding:1em;">1111</span>
-                                            <span style="padding:1em;">1111</span>
-                                            <span style="padding:1em;">1111</span>
-                                            <span style="padding:1em;">1111</span>
+                                    </table><br><br>
+                                    <div class="box-header">
+                                        <div class="form-group  col-md-6">
+                                            <label>
+                                                <b style="font-size:1.3em;color:#09F;padding:2em;">已选审批人员 : </b>
+                                            </label><br><br>
+                                            <div style="margin-left:2em;">
+                                                <foreach name="f['file']['user']" item="n">
+                                                    <span style="padding:1em;">{$n['username']}</span>
+                                                </foreach>
                                             </div>
 
-                                    </div>
-                                    <div class="form-group col-md-6">
-                                        <label>
-                                            <b style="font-size:1.3em;color:#09F;padding:2em;">已批注人员 : </b>
-                                        </label><br><br>
-                                        <div style="margin-left:2em;">
-                                            <span style="padding:1em;">1111</span>
-                                            <span style="padding:1em;">1111</span>
-                                            <span style="padding:1em;">1111</span>
-                                            <span style="padding:1em;">1111</span>
-                                            <span style="padding:1em;">1111</span>
-                                            <span style="padding:1em;">1111</span>
-                                            <span style="padding:1em;">1111</span>
-                                            <span style="padding:1em;">1111</span>
-                                            <span style="padding:1em;">1111</span>
-                                            <span style="padding:1em;">1111</span>
-                                            <span style="padding:1em;">1111</span>
-                                            <span style="padding:1em;">1111</span>
                                         </div>
-                                    </div>
-                                 </div>
-<!--                                <div class="box-header">-->
-<!--                                    <div style="text-align:center;">-->
-<!--                                        <div style="font-size:1.3em;color:#09F;padding:2em;">-->
-<!--                                           <b>已选批注人员</b>-->
-<!--                                        </div>-->
-<!--                                        <div style="width:60em;height:10em;border:1px solid #09f;padding:2em;margin:0 auto">-->
-<!--                                            111-->
-<!--                                        </div>-->
-<!--                                    </div>-->
-<!--                                    <div style="text-align:center;">-->
-<!--                                        <div style="font-size:1.3em;color:#09F;padding:2em;">-->
-<!--                                            <b>已批注人员</b>-->
-<!--                                        </div>-->
-<!--                                        <div style="width:60em;height:10em;border:1px solid #09f;padding:2em;margin:0 auto">-->
-<!--                                            111-->
-<!--                                        </div>-->
-<!--                                    </div>-->
-<!--                                </div>-->
+                                        <div class="form-group col-md-6">
+                                            <label>
+                                                <b style="font-size:1.3em;color:#09F;padding:2em;">已审批人员 : </b>
+                                            </label><br><br>
+                                            <div style="margin-left:2em;">
+                                                <span style="padding:1em;">1111</span>
+                                                <span style="padding:1em;">1111</span>
+                                                <span style="padding:1em;">1111</span>
+                                                <span style="padding:1em;">1111</span>
+                                                <span style="padding:1em;">1111</span>
+                                                <span style="padding:1em;">1111</span>
+                                                <span style="padding:1em;">1111</span>
+                                                <span style="padding:1em;">1111</span>
+                                                <span style="padding:1em;">1111</span>
+                                                <span style="padding:1em;">1111</span>
+                                                <span style="padding:1em;">1111</span>
+                                                <span style="padding:1em;">1111</span>
+                                            </div>
+                                        </div>
+                                     </div>
 
-                            </div><!-- /.box-body -->
-
+                                </div>
+                            </foreach>
                         </div><!-- /.box -->
 
                     </div><!-- /.col -->

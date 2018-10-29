@@ -74,13 +74,13 @@
                                 <th align="left" width="30%">上传时间</th>
                             </tr>
                             <foreach name="cooki" item="c">
-                            <tr>
-                                <td align="left" width="30%"><?php if(!empty($c['3']) && !empty($c['2'])){echo $c['3'].'.'.$c['2'];}?></td>
-                                <td align="left" width="20%">{$c['2']}</td>
-                                <td align="left" width="20%">{$c['1']}</td>
-                                <td align="left" width="30%"><?php if(!empty($c['0'])){echo date('Y-m-d H:i:s',$c['0']);}?></td>
-                            </tr>
-                                </foreach>
+                                <tr>
+                                    <td align="left" width="30%"><?php if(!empty($c['3']) && !empty($c['2'])){echo $c['3'].'.'.$c['2'];}?></td>
+                                    <td align="left" width="20%">{$c['2']}</td>
+                                    <td align="left" width="20%">{$c['1']}</td>
+                                    <td align="left" width="30%"><?php if(!empty($c['0'])){echo date('Y-m-d H:i:s',$c['0']);}?></td>
+                                </tr>
+                            </foreach>
                         </table>
                        
                     </div>
