@@ -71,9 +71,10 @@
          */
         public function approval_update_sql($approval){
             foreach($approval as $key => $val){
-                $where['file_id']               = $val['id'];
-                $update[$key]['file']           = $val;
-                $update[$key]['flie_update']    = M('approval_flie_update')->where($where)->find();
+                $where['file_id']                   = $val['id'];
+                $update[$key]['file']               = $val;
+                $update[$key]['flie_update']        = M('approval_flie_update')->where($where)->find();
+                $update[$key]['flie_annotation']    = M('annotation_file')->where($where)->select();
             }
             return $update;
         }
@@ -82,12 +83,12 @@
          * $id 文件 id
          */
         public function approval_update($id){
-            $file = M('approval_flie')->where('id='.$id)->find();
-            $user_id= explode(',',$file['file_account_id']);
+            $file                                   = M('approval_flie')->where('id='.$id)->find();
+            $user_id                                = explode(',',$file['file_account_id']);
             foreach($user_id as $key => $val){
                 $userinfo['user'][$key]['username'] = username($val);
             }
-            $file = array_merge($file,$userinfo);
+            $file                                   = array_merge($file,$userinfo);
             return $file;
         }
 

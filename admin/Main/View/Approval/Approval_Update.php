@@ -60,6 +60,7 @@
                             <foreach name="approval_file" item="f">
                                 <div class="box-body">
 
+                                    <!-- 文件信息-->
                                     <table class="table table-bordered">
                                         <tr class="orders" style="text-align:center;">
                                             <th class="sorting" style="text-align:center;width:6em;"><b>ID</b></th>
@@ -95,38 +96,57 @@
                                             <td><?php if(!empty($f['file']['createtime'])){echo date('Y-m-d H:i:s',$f['file']['createtime']);}?></td>
                                         </tr>
                                     </table><br><br>
+
+                                    <!-- 已选审批人员  已审批人员-->
                                     <div class="box-header">
                                         <div class="form-group  col-md-6">
                                             <label>
-                                                <b style="font-size:1.3em;color:#09F;padding:2em;">已选审批人员 : </b>
+                                                <b style="font-size:1.3em;color:#09F;padding:2em;letter-spacing:0.2em;">已选审批人员 : </b>
                                             </label><br><br>
-                                            <div style="margin-left:2em;">
+                                            <div style="margin-left:5em;">
                                                 <foreach name="f['file']['user']" item="n">
-                                                    <span style="padding:1em;">{$n['username']}</span>
+                                                    <span style="padding:1em;">
+                                                        <b>
+                                                            {$n['username']}
+                                                        </b>
+                                                    </span>
                                                 </foreach>
                                             </div>
-
                                         </div>
                                         <div class="form-group col-md-6">
                                             <label>
-                                                <b style="font-size:1.3em;color:#09F;padding:2em;">已审批人员 : </b>
+                                                <b style="font-size:1.3em;color:#09F;padding:2em;letter-spacing:0.2em;">已审批人员 : </b>
                                             </label><br><br>
-                                            <div style="margin-left:2em;">
-                                                <span style="padding:1em;">1111</span>
-                                                <span style="padding:1em;">1111</span>
-                                                <span style="padding:1em;">1111</span>
-                                                <span style="padding:1em;">1111</span>
-                                                <span style="padding:1em;">1111</span>
-                                                <span style="padding:1em;">1111</span>
-                                                <span style="padding:1em;">1111</span>
-                                                <span style="padding:1em;">1111</span>
-                                                <span style="padding:1em;">1111</span>
-                                                <span style="padding:1em;">1111</span>
-                                                <span style="padding:1em;">1111</span>
-                                                <span style="padding:1em;">1111</span>
+                                            <div style="margin-left:5em;">
+                                                <foreach name="f['flie_annotation']" item="an">
+                                                    <span style="padding:1em;">
+                                                        <b>
+                                                            {$an['account_name']}
+                                                        </b>
+                                                    </span>
+                                                </foreach>
                                             </div>
                                         </div>
-                                     </div>
+                                    </div><br><br>
+
+                                    <!-- 文件 和 批注信息-->
+                                    <div class="box-header">
+                                        <div class="form-group col-md-6">
+                                            <label>
+                                                <b style="font-size:1.3em;color:#09F;padding:2em;letter-spacing:0.2em;">上传文件 : </b>
+                                            </label><br><br>
+                                            <div style="margin-left:5em;width:50em;height:45em;border:1px solid red">
+
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-md-6">
+                                            <label>
+                                                <b style="font-size:1.3em;color:#09F;padding:2em;letter-spacing:0.2em;">审批批注 : </b>
+                                            </label><br><br>
+                                            <div style="margin-left:5em;width:50em;height:45em;border:1px solid red">
+                                            </div>
+                                        </div>
+                                    </div>
 
                                 </div>
                             </foreach>

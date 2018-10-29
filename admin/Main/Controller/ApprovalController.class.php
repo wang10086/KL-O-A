@@ -50,13 +50,18 @@ class ApprovalController extends BaseController {
     public function Approval_Update(){
         $id = trim(I('id'));//文件id
         if(!is_numeric($id)){
-
             $this->error('您选择文件错误！请重新选择!', U('Approval/Approval_Index'));die;
         }
         $file[0]                = D('Approval')->approval_update($id);
         $this->id               = $id;
         $approval_file          = D('Approval')->approval_update_sql($file);//循环更改文件数据
-//        print_r($approval_file);die;
+//        $myfile = fopen($file[0]['file_url'], "r") or die("Unable to open file!");
+//        echo fread($myfile,filesize($approval_file[0]['file']['file_url']));
+//        fclose($myfile);
+
+        $str = file_get_contents($approval_file[0]['file']['file_url']);
+
+//        print_r(fclose($myfile));die;
         $this->assign('approval_file',$approval_file);
         $this->display();
     }

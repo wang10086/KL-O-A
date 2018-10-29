@@ -692,7 +692,7 @@ class SalaryController extends BaseController {
             if(count($user_info[$key]['salary'])==0){
                 unset($user_info[$key]);continue;
             }
-            $income                                 = sql_query(1,'*','oa_salary_income',$id, 1,1);//其他收入
+            $income                                 = sql_query(1,'*','oa_salary_income',$att_id, 1,1);//其他收入
             $countmoney                             = 0;
             if ($income) {
                 $token['income_token']              = $income[0]['income_token'];
