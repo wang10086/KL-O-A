@@ -48,7 +48,7 @@ class ApprovalController extends BaseController {
 
     //文件详情
     public function Approval_Update(){
-        header("Content-Type: text/html; charset=gb2312");
+
         $id = trim(I('id'));//文件id
         if(!is_numeric($id)){
             $this->error('您选择文件错误！请重新选择!', U('Approval/Approval_Index'));die;
@@ -56,12 +56,32 @@ class ApprovalController extends BaseController {
         $file[0]                = D('Approval')->approval_update($id);
         $this->id               = $id;
         $approval_file          = D('Approval')->approval_update_sql($file);//循环更改文件数据
-        $myfile = fopen($file[0]['file_url'], "r") or die("Unable to open file!");
-        $file_r= fread($myfile,filesize($approval_file[0]['file']['file_url']));
 
-        fclose($myfile);
-//        print_r(fclose($myfile));die;
-        $this->assign('file_r',$file_r);
+//        $myfile = fopen($file[0]['file_url'], "r") or die("Unable to open file!");
+//        $file_r= fread($myfile,filesize($file[0]['file_url']));
+//        $content = mb_convert_encoding($file_r, "utf8", "auto");
+
+
+        // 首先建立一个指向新COM组件的索引
+        $word = new COM("word.application") or die("Can't start Word!");
+// 显示目前正在使用的Word的版本号
+echo "Loading Word, v. {$word->Version}<br>";
+//打开一个文档
+$word->Documents->OPen("d:\myweb\muban.doc");
+//读取文档内容
+$test= $word->ActiveDocument->content->Text;
+
+        
+
+
+        print_r($test);die;
+        fclose($content);
+
+
+
+
+
+        $this->assign('file_r',$content);
         $this->assign('approval_file',$approval_file);
         $this->display();
     }

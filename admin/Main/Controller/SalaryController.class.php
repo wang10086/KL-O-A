@@ -337,6 +337,7 @@ class SalaryController extends BaseController {
         }
         $where                                      = array_filter($where);
         $where['status']                            = array('neq',2);
+
         $count                                      = $this->salary_count(1,$where);
         $page                                       = new Page($count,16);
         $pages                                      = $page->show();
@@ -410,7 +411,7 @@ class SalaryController extends BaseController {
                 $income                                 = M('salary_income')->where($aid)->order('id desc')->find();//其他收入
                 if($income){
                     $wher['income_token']               = $income['income_token'];
-                    $account_r[$key]['pp']['yy']        = sql_query(1,'*','oa_salary_income',$wher,1,2);//其他收入
+                    $account_r[$key]['Other']        = sql_query(1,'*','oa_salary_income',$wher,1,2);//其他收入
                 }
                 $withholding                            = M('salary_withholding')->where($aid)->order('id desc')->find();//代扣代缴
                 if($withholding){
@@ -422,6 +423,7 @@ class SalaryController extends BaseController {
         }
 
         $status                                         = trim(I('status'));
+//        print_r($account_r);print_r($status);die;
         if($status == 1){
             $this->assign('page',$pages);//数据分页
             $this->assign('list',$account_r);//数据
@@ -656,6 +658,7 @@ class SalaryController extends BaseController {
         if($archives==null || $archives==false){
             unset($where['archives']);
         }
+        $where['status'] = array('neq',2);
         $info                                       =  M('account')->where($where)->order('employee_member ASC')->select();//个人数据
         foreach($info as $k => $v){//去除编码空的数据
             if($v['employee_member'] == ""){
@@ -824,6 +827,7 @@ class SalaryController extends BaseController {
             //实发工资=岗位工资-考勤扣款+绩效增减+提成(带团补助)+奖金-代扣代缴+年终奖-年终奖计税+住房补贴+外地补贴+电脑补贴-五险一金-个人所得税-工会会费+其他补款
             $user_info[$key]['real_wages']          = round(($user_info[$key]['salary'][0]['standard_salary']-$user_info[$key]['attendance'][0]['withdrawing']+$extract+$user_info[$key]['bonus'][0]['bonus']-$user_info[$key]['summoney']+$user_info[$key]['bonus'][0]['annual_bonus']-$user_info[$key]['yearend']+$user_info[$key]['subsidy'][0]['housing_subsidy']-$user_info[$key]['insurance_Total']-$counting-$user_info[$key]['labour']['Labour_money']+$user_info[$key]['Other']+$user_info[$key]['Achievements']['count_money']+$user_info[$key]['bonus'][0]['foreign_bonus']),2);
         }
+
         return $user_info;
     }
 

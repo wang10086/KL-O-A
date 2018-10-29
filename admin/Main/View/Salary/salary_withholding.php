@@ -115,7 +115,7 @@
                                     <th class="sorting" data="shouru" style="width:8em;">操作</th>
                                     <input type="hidden"  class="form-control withholding_status" value="2" />
                                 </tr>
-                                <foreach name="wit.income" item="inc">
+                                <foreach name="wit.Other" item="inc">
                                     <tr class="add_withholding_list">
                                         <td><input type="text"  class="form-control withholding_project_name" value="{$inc.income_name}" /></td>
                                         <td><input type="text"  class="form-control withholding_money" value="{$inc.income_money}" /></td>

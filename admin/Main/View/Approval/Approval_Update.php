@@ -1,5 +1,4 @@
 <include file="Index:header2" />
-
 <style>
     .file {
         position: relative;
@@ -131,24 +130,24 @@
 
                                     <!-- 文件 和 批注信息-->
                                     <div class="box-header">
-                                        <div class="form-group col-md-6" style="float:left;">
+                                        <div class="form-group col-md-6" style="float:left;width:70em;height:100em;">
                                             <label>
                                                 <b style="font-size:1.3em;color:#09F;padding:2em;letter-spacing:0.2em;">上传文件 : </b>
-                                            </label>
-                                            <div style="margin-left:5em;width:50em;height:45em;border:1px solid red;overflow-y:scroll;overflow-x:scroll;word-wrap:break-word;">
+                                            </label><br><br>
+                                            <div style="margin-left:4em;border:1px solid red;height:90em;overflow-y:scroll;padding:2em;overflow-x:scroll;word-wrap:break-word;">
                                                 {$file_r}
                                             </div>
                                         </div>
-                                        <div class="form-group col-md-6" style="float:right;margin:-47.1em -30em 0px 0px;">
+                                        <div class="form-group col-md-6" style="float:right;width:45em;height:100em;">
                                             <label>
                                                 <b style="font-size:1.3em;color:#09F;padding:2em;letter-spacing:0.2em;">审批批注 : </b>
-                                            </label>
-                                            <div style="margin-left:5em;width:50em;height:45em;border:1px solid red;overflow-y:scroll;overflow-x:scroll;word-wrap:break-word;">
+                                            </label><br><br>
+                                            <div style="margin-left:4em;padding:2em;height:90em;border:1px solid red;overflow-y:scroll;overflow-x:scroll;word-wrap:break-word;">
                                                 11111111111111111111111111111111111111111111111111111111111
                                             </div>
                                         </div>
                                     </div>
-
+                                    <br><br><br><br><br><br><br><br><br><br>
                                 </div>
                             </foreach>
                         </div><!-- /.box -->
