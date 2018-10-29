@@ -5,6 +5,26 @@
     </div>
     <div class="box-body">
         <div class="content">
+            <div class="form-group" style="margin-bottom: 50px;">
+                <div class="col-md-2">
+                    <span class="score-black">分值说明：</span>
+                </div>
+                <div class="col-md-2">
+                    <span>5分=>非常满意</span>
+                </div>
+                <div class="col-md-2">
+                    <span>4分=>满意</span>
+                </div>
+                <div class="col-md-2">
+                    <span>3分=>一般</span>
+                </div>
+                <div class="col-md-2">
+                    <span>2分=>不满意</span>
+                </div>
+                <div class="col-md-2">
+                    <span>1分=>非常不满意</span>
+                </div>
+            </div>
             <table class="table table-bordered dataTable fontmini" id="tablelist" >
                 <tr role="row" class="orders" >
                     <th class="sorting" width="80" data="c.in_begin_day">活动日期</th>
@@ -50,34 +70,34 @@
                         <td>{$row.address}</a></td>
                         <td>{$row.mobile}</td>
                         <?php if (in_array($kind,$score_kind2)){ ?>
-                            <td>{$score_stu.$row[before_sell]}</td>
-                            <td>{$score_stu.$row[depth]}</td>
-                            <td>{$score_stu.$row[major]}</td>
-                            <td>{$score_stu.$row[interest]}</td>
-                            <td>{$score_stu.$row[material]}</td>
-                            <td>{$score_stu.$row[teacher]}</td>
-                            <td>{$score_stu.$row[guide]}</td>
+                            <td>{$row.before_sell}</td>
+                            <td>{$row.depth}</td>
+                            <td>{$row.major}</td>
+                            <td>{$row.interest}</td>
+                            <td>{$row.material}</td>
+                            <td>{$row.teacher}</td>
+                            <td>{$row.guide}</td>
                         <?php }elseif(in_array($kind,$score_kind3)){ ?>
-                            <td>{$score_stu.$row[before_sell]}</td>
-                            <td>{$score_stu.$row[new_media]}</td>
-                            <td>{$score_stu.$row[major]}</td>
-                            <td>{$score_stu.$row[stay]}</td>
-                            <td>{$score_stu.$row[food]}</td>
-                            <td>{$score_stu.$row[travel]}</td>
-                            <td>{$score_stu.$row[bus]}</td>
-                            <td>{$score_stu.$row[driver]}</td>
-                            <td>{$score_stu.$row[guide]}</td>
-                            <td>{$score_stu.$row[material]}</td>
+                            <td>{$row.before_sell}</td>
+                            <td>{$row.new_media}</td>
+                            <td>{$row.major}</td>
+                            <td>{$row.stay}</td>
+                            <td>{$row.food}</td>
+                            <td>{$row.travel}</td>
+                            <td>{$row.bus}</td>
+                            <td>{$row.driver}</td>
+                            <td>{$row.guide}</td>
+                            <td>{$row.material}</td>
                         <?php }else{ ?>
-                            <td>{$score_stu.$row[before_sell]}</td>
-                            <td>{$score_stu.$row[stay]}</td>
-                            <td>{$score_stu.$row[food]}</td>
-                            <td>{$score_stu.$row[bus]}</td>
-                            <td>{$score_stu.$row[travel]}</td>
-                            <td>{$score_stu.$row[content]}</td>
-                            <td>{$score_stu.$row[driver]}</td>
-                            <td>{$score_stu.$row[guide]}</td>
-                            <td>{$score_stu.$row[teacher]}</td>
+                            <td>{$row.before_sell}</td>
+                            <td>{$row.stay}</td>
+                            <td>{$row.food}</td>
+                            <td>{$row.bus}</td>
+                            <td>{$row.travel}</td>
+                            <td>{$row.content}</td>
+                            <td>{$row.driver}</td>
+                            <td>{$row.guide}</td>
+                            <td>{$row.teacher}</td>
                         <?php } ?>
                         <td>{$row['suggest']}</td>
                         <!--<td>{$row.status}</td>-->

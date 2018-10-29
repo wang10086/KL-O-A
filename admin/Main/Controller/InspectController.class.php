@@ -450,7 +450,7 @@ class InspectController extends BaseController{
         $this->average          = $average;
         $this->lists            = $lists;
         $this->op_id            = $op_id;
-        $this->score_stu        = C('SCORE_STU');
+        //$this->score_stu        = C('SCORE_STU');
 
 
         $this->display();
@@ -460,29 +460,22 @@ class InspectController extends BaseController{
     public function score_detail(){
         $id                 = I('id');
         $info               = M()->table('__TCS_SCORE__ as s')
-            ->field('s.*,u.mobile,o.project,o.kind,acc.nickname')
-            ->join('__TCS_SCORE_USER__ as u on u.id = s.uid')
-            ->join('left join __OP__ as o on o.op_id= u.op_id')
-            ->join('left join __ACCOUNT__ as acc on acc.id= s.solver_uid')
+            ->field('s.*,u.mobile,o.project,o.kind')
+            ->join('__TCS_SCORE_USER__ as u on u.id = s.uid','left')
+            ->join('join __OP__ as o on o.op_id= u.op_id','left')
             ->where(array('s.id'=>$id))
             ->find();
 
-        /*if ($info['solve']==1){
-            $status         = '已处理';
-        }else{
-            if ($info['solve']==0 && ($info['stay'] ==1 || $info['food'] ==1 || $info['bus'] ==1 || $info['travel'] ==1 || $info['content'] ==1 || $info['driver'] ==1 || $info['guide'] ==1 || $info['teacher'] ==1)){
-                $status     = '<span class="red">未处理</span>';
-            }else{
-                $status     = '无需处理';
-            }
-        }
-        $info['status']     = $status;*/
-        $score_kind1        = C('SCORE_KIND1'); //线路类
-        $score_kind2        = C('SCORE_KIND2'); //课程类
-        if (in_array($info['kind'],$score_kind1)){
-            $kind           = 1;
-        }else{
+        $score_kind1        = array_keys(C('SCORE_KIND1')); //线路类
+        $score_kind2        = array_keys(C('SCORE_KIND2')); //课程类
+        $score_kind3        = array_keys(C('SCORE_KIND3')); //亲自旅行 , 冬夏令营
+
+        if (in_array($info['kind'],$score_kind2)){
             $kind           = 2;
+        }elseif (in_array($info['kind'],$score_kind3)){
+            $kind           = 3;
+        }else{
+            $kind           = 1;
         }
         $this->kind         = $kind;
         $this->row          = $info;
