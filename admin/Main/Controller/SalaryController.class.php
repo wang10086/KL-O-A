@@ -92,7 +92,7 @@ class SalaryController extends BaseController {
         //kpi 目标任务 完成 提成
         $month                           = (int)substr($datetime,4);
         $year                            = (int)substr($datetime,0,4);
-        $query['user_id']                = $where;
+        $query['user_id']                = 44;
 
         if($year==2018){
             if($month==10 || $month==9){
@@ -164,6 +164,9 @@ class SalaryController extends BaseController {
             }
             return $content;
         }
+        if($type==2){
+
+        }
         if($month == 3 || $month == 6 || $month == 9 ||$month == 12){
             $count                        = 0;
             $sum                          = 0;
@@ -185,23 +188,30 @@ class SalaryController extends BaseController {
                 $mont1                     =  $year.($month-1).'26';//开始月
                 $mont2                     =  $year.$month.'26';//结束月
                 $sum                      += monthly_Finance($user['nickname'],$mont1,$mont2);//季度完成
-
                 $count                    += $lists['target'];//季度目标
-//                $sum                      += $lists['complete'];//季度完成
+               // $sum                      += $lists['complete'];//季度完成
             }
             $number                        = $sum/$count;//项目季度百分比
             if($number <= 1){
                 $Total                     = $sum*0.05;//不超过100%
             }
             if(1<$number && $number <=1.5){
-                $Total                     = $sum*(($number-1)*0.2+0.05);//超过100% 不到150%
+                $Total                     = $count*0.05+($sum-$count)*0.2;//超过100% 不到150%
+              //$Total                     = $sum*(($number-1)*0.2+0.05);
             }
             if(1.5 < $number){
-                $Total                     = $sum*(($number-1.5)*0.25+(1.5-1)*0.2+0.05);//超过150%
+                $tot    = $count*0.05;//100%以内
+                $tt     = ($count*1.5-$count)*0.2;//100%以上 150% 以内
+                $yy     = ($sum-$count*1.5)*0.25;//150% 以上
+                $Total  = $tot+$tt+$yy;
+
+               //$Total                     = $sum*(($number-1.5)*0.25+(1.5-1)*0.2+0.05);//超过150%
             }
+
             $content['target']             = $count;
             $content['complete']           = $sum;
             $content['total']              = round($Total,2);//保留两位小数
+
         }else{
             $content['target']             = '0.00';//季度目标
             $content['complete']           = '0.00';//季度完成
@@ -792,7 +802,6 @@ class SalaryController extends BaseController {
             if(strstr($strstr,'S')!==false){
                 $user_info[$key]['Extract']         = $this->salary_kpi_month($val['id'],$que['p.month'],1); //业务人员 目标任务 完成 提成
             }
-
             $user_info[$key]['Extract']['total']    = $user_info[$key]['Extract']['total']+$user_bonus;//提成相加
 
             $extract                                = $user_info[$key]['Extract']['total'];
@@ -863,6 +872,7 @@ class SalaryController extends BaseController {
             //实发工资=岗位工资-考勤扣款+绩效增减+提成(带团补助)+奖金-代扣代缴+年终奖-年终奖计税+住房补贴+外地补贴+电脑补贴-五险一金-个人所得税-工会会费+其他补款
             $user_info[$key]['real_wages']          = round(($user_info[$key]['salary'][0]['standard_salary']-$user_info[$key]['attendance'][0]['withdrawing']+$extract+$user_info[$key]['bonus'][0]['bonus']-$user_info[$key]['summoney']+$user_info[$key]['bonus'][0]['annual_bonus']-$user_info[$key]['yearend']+$user_info[$key]['subsidy'][0]['housing_subsidy']-$user_info[$key]['insurance_Total']-$counting-$user_info[$key]['labour']['Labour_money']+$user_info[$key]['Other']+$user_info[$key]['Achievements']['count_money']+$user_info[$key]['bonus'][0]['foreign_bonus']),2);
         }
+//        print_r($user_info);die;
 
         return $user_info;
     }

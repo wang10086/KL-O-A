@@ -49,7 +49,7 @@ class ApprovalController extends BaseController {
 
     //文件详情
     public function Approval_Update(){
-//
+
 //        Vendor('PHPWord.PHPWord');//引入wordphp文件
 //        $PHPWord = new \PHPWord();//初始化PHPWord对象
 
@@ -62,30 +62,18 @@ class ApprovalController extends BaseController {
         $approval_file          = D('Approval')->approval_update_sql($file);//循环更改文件数据
 
 
-        $word = new \COM("word.application") or die("Can't start Word!");
+//        $myfile = fopen($file[0]['file_url'], "rb") or die("Unable to open file!");
+//        $file_r= fread($myfile,filesize($file[0]['file_url']));//
+//        $content = mb_convert_encoding($file_r, "utf8", "auto");
+//        fclose($content);
 
 
-//        $document = $PHPWord->loadTemplate($approval_file[0]['file']['file_url']);
-        $word->Documents->open($approval_file[0]['file']['file_url']);
+        $fh = fopen($file[0]['file_url'], "rb");
+//仅读取前面的8个字节
+        $head = fread($fh, 8);
+        fclose($fh);
 
-        $test= $word->ActiveDocument->content->Text;
-
-        print_r($word);die;
-
-        $myfile = fopen($file[0]['file_url'], "r") or die("Unable to open file!");
-        $file_r= fread($myfile,filesize($file[0]['file_url']));
-        $content = mb_convert_encoding($file_r, "utf8", "auto");
-
-
-        $content = wordwrap($file_r,filesize($file[0]['file_url'],"<br>\n",TRUE));
-
-
-
-
-
-        print_r($content);die;
-        fclose($content);
-
+        print_r($fh);die;
 
 
 
