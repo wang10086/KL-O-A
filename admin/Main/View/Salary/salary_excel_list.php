@@ -200,8 +200,10 @@
 
     <form action="{:U('Salary/salary_excel_list')}" method="post" id="searchform">
 
-        <div class="form-group col-md-6" style="margin:2em 0em 0em 10em;">
+        <div class="form-group col-md-5" style="margin:1em 0em 0em 10em;">
             <input type="text" name="month" class="form-control monthly" placeholder="搜索工资表年月格式 : 201806" style="text-align: center;"/>
+            <br>
+            <input type="text" name="name" class="form-control" placeholder="搜索员工姓名" style="text-align: center;"/>
             <!--                    <input type="date" class="form-control" name="salary_time" placeholder="年月" id="nowTime">-->
         </div>
 

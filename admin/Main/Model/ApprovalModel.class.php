@@ -18,19 +18,21 @@
                 $add_approval['file_id']              = $user_id;
 
             }else{
-                $userid                               ='';
+                $userid                               = '';
                 foreach($user_id as $key =>$val){
                     $userid                           .= $val.',';
                 }
                 $userid                               = substr($userid,0,-1);
                 $add_approval['file_account_id']      = $userid;
             }
+
             $upload                                   = new \Think\Upload();// 实例化上传类
             $upload->maxSize                          = 31457280000 ;// 设置附件上传大小
             $upload->exts                             = array('doc','docx','pdf');// 设置附件上传类型
             $upload->rootPath                         = './upload/'; // 设置附件上传根目录
             $upload->subName                          = array('date', 'Ym');//文件upload下的文件名
             $info                                     =  $upload->upload();//上传文件
+
             if($info){
                 //文件信息保存
                 $add_approval['createtime']           = time();
@@ -68,6 +70,7 @@
         /**
          * 查询 approval_flie_update 文件修改表
          * $approval 文件的信息 二维数组
+         *   echo M($table)->getLastSql();
          */
         public function approval_update_sql($approval){
             foreach($approval as $key => $val){

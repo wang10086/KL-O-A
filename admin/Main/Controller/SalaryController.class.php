@@ -81,6 +81,8 @@ class SalaryController extends BaseController {
         $this->display();
     }
 
+
+
     /**
      * salary_kpi_month 季度
      * kpi 目标任务 完成 提成
@@ -118,8 +120,14 @@ class SalaryController extends BaseController {
                     }else{
                         return 0;
                     }
+                    //季度完成
+                    $user                 = M('account')->where('id='.$query['user_id'])->find();
+                    $mont1                =  $year.($month-1).'26';//开始月
+                    $mont2                =  $year.$month.'26';//结束月
+                    $sum_user             = monthly_Finance($user['nickname'],$mont1,$mont2);//季度完成
+
                     $count               += $lists['target'];//季度目标
-                    $sum                 += $lists['complete'];//季度完成
+                    $sum                 += $sum_user;//季度完成
                 }
                 $number = $sum/$count;//项目季度百分比
                 if($number <= 1){
@@ -144,8 +152,14 @@ class SalaryController extends BaseController {
                 }else{
                     return 0;
                 }
+                //季度完成
+                $user                     = M('account')->where('id='.$query['user_id'])->find();
+                $mont1                    =  $year.($month-1).'26';//开始月
+                $mont2                    =  $year.$month.'26';//结束月
+                $sum_user                 = monthly_Finance($user['nickname'],$mont1,$mont2);//季度完成
+
                 $content['target']        = $lists['target'];//季度目标
-                $content['complete']      = $lists['complete'];//季度完成
+                $content['complete']      = $sum_user;//季度完成
                 $content['total']         = '0.00';//保留两位小数
             }
             return $content;
@@ -157,17 +171,23 @@ class SalaryController extends BaseController {
             for($i;$i<$month;$month--){
                 $query['month']           = $year.$month;
                 $kpi                      = M('kpi')->where($query)->find();
-
                 if($kpi){
                     $lists                = M('kpi_more')->where(array('kpi_id'=>$kpi['id']))->find();
+
                     if(!$lists || $lists['automatic'] == 0){
                         return 0;
                     }
                 }else{
                     return 0;
                 }
+                //季度完成
+                $user                      = M('account')->where('id='.$query['user_id'])->find();
+                $mont1                     =  $year.($month-1).'26';//开始月
+                $mont2                     =  $year.$month.'26';//结束月
+                $sum                      += monthly_Finance($user['nickname'],$mont1,$mont2);//季度完成
+
                 $count                    += $lists['target'];//季度目标
-                $sum                      += $lists['complete'];//季度完成
+//                $sum                      += $lists['complete'];//季度完成
             }
             $number                        = $sum/$count;//项目季度百分比
             if($number <= 1){
@@ -397,7 +417,8 @@ class SalaryController extends BaseController {
                 $account_r[$key]['bonus_id']            = $salary_bonus['id'];
 
                 $month                                  = datetime(date('Y'),date('m'),date('d'),1);//获取201810月份
-                $account_r[$key]['extract']             = round(Acquisition_Team_Subsidy($month,(int)$val['guide_id']),2);//带团补助
+                $account_r[$key]['extract']             = round(Acquisition_Team_Subsidy($month,$val['guide_id']),2);//带团补助
+
 //              $account_r[$key]['extract']             = $salary_bonus['extract'];
 
                 $account_r[$key]['bonus']               = $salary_bonus['bonus'];
@@ -423,7 +444,6 @@ class SalaryController extends BaseController {
         }
 
         $status                                         = trim(I('status'));
-//        print_r($account_r);print_r($status);die;
         if($status == 1){
             $this->assign('page',$pages);//数据分页
             $this->assign('list',$account_r);//数据
@@ -531,9 +551,13 @@ class SalaryController extends BaseController {
         $monthly                        = trim(I('month'));
         $archives                       = trim(I('archives'));
         $datetime                       = trim(I('datetime'));
+        $name                           = trim(I('name'));//名字
         if(is_numeric($monthly) && is_numeric($archives)){
             $dateti['datetime']         = $monthly;
-            $sql                        = 'SELECT *,month.status as mstatus FROM oa_salary_wages_month as month, oa_account as account where month.account_id=account.id AND account.archives='.$archives.' AND month.datetime='.$monthly;
+                $sql                    = 'SELECT *,month.status as mstatus FROM oa_salary_wages_month as month, oa_account as account where month.account_id=account.id AND account.archives='.$archives.' AND month.datetime='.$monthly;
+            if($name!==""){
+                $sql .= ' AND month.user_name='.$name;
+            }
             $user_info = M()->query($sql);
             $info                       = $this->arraysplit($user_info);
             $sum                        = $this->countmoney($archives,$info,1);//部门合计
@@ -544,22 +568,33 @@ class SalaryController extends BaseController {
             }
         }else{
             if(!empty($archives)){
-                $info                   = $this->salary_excel_sql($archives);//员工信息
+                $info                   = $this->salary_excel_sql($archives,$name);//员工信息
                 $sum                    = $this->countmoney($archives,$info);//部门合计
                 $summoney               = $this->summoney($sum); //总合计
             }elseif(is_numeric($monthly)){
                 $dateti['datetime']     = $monthly;
+                if($name!==""){
+                    $dateti['user_name']= $name;
+                }
                 $wages_month            = M('salary_wages_month')->where($dateti)->select();//已经提交数据
                 $info                   = $this->arraysplit($wages_month);
                 $sum                    = M('salary_departmen_count')->where($dateti)->select();
                 $summoney               = M('salary_count_money')->where($dateti)->find();
                 $status                 = $wages_month[0]['status'];
             }else{
-                $wages_month            = M('salary_wages_month')->where('status=3')->select();//已经提交数据
+                $wher['status']     = 3;
+                if($name!==""){
+                    $wher['user_name']  = $name;
+                }
+                $wages_month        = M('salary_wages_month')->where($wher)->select();//已经提交数据
                 if(!$wages_month){
-                    $wages_month        = M('salary_wages_month')->where('status=2')->select();//已经提交数据
+                    $wher['status']     = 2;
+                    if($name!==""){
+                        $wher['user_name']  = $name;
+                    }
+                    $wages_month        = M('salary_wages_month')->where($wher)->select();//已经提交数据
                     if(!$wages_month) {
-                        $info           = $this->salary_excel_sql();//员工信息
+                        $info           = $this->salary_excel_sql($archives,$name);//员工信息
                         $sum            = $this->countmoney('',$info);//部门合计
                         $summoney       = $this->summoney($sum); //总合计
                         $status         = 1;
@@ -652,8 +687,10 @@ class SalaryController extends BaseController {
     /**
      * @salary_excel_sql
      */
-    private function salary_excel_sql($archives){
-
+    private function salary_excel_sql($archives,$name){
+            if($name!==""){
+                $where['nickname'] = $name;
+            }
         $where['archives']                          = $archives;
         if($archives==null || $archives==false){
             unset($where['archives']);
@@ -680,11 +717,10 @@ class SalaryController extends BaseController {
 
             $generate_month                         = datetime(date('Y'),date('m'),date('d'),1);//获取当前年月
             $bonus_extract                          = Acquisition_Team_Subsidy($generate_month,(int)$val['guide_id']);//带团补助
-
-            if(count($user_bonus)==1 && is_numeric($bonus_extract) && $bonus_extract!==0){//带团补助已有信息
+            if(count($user_bonus)==1){//带团补助已有信息
                 $bonus_save['extract']              = $bonus_extract;
                 $bonus                              = M('salary_bonus')->where($att_id)->save($bonus_save);//添加带团补助
-            }elseif(count($user_bonus)==0 && is_numeric($bonus_extract) && $bonus_extract!==0){//带团补助未有信息
+            }elseif(count($user_bonus)==0 || $user_bonus==""){//带团补助未有信息
                 $bonus_save['account_id']           = (int)$val['id'];
                 $bonus_save['createtime']           = time();
                 $bonus_save['extract']              = $bonus_extract;
