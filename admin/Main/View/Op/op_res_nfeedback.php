@@ -69,6 +69,9 @@
                                     </div>
                                 </td>
                             </tr>
+                            <tr>
+                                <td class="td_title" colspan="6" style="text-align: left">审核状态：{$audit_status[$resource['audit_status']]}&emsp;&emsp;审核人：{$resource['audit_user_name']}&emsp;&emsp;审核时间：<?php echo $resource['audit_time']?date('Y-m-d H:i:s',$resource['audit_time']):'未审核'; ?></td>
+                            </tr>
                         </table>
                     </div>
 
@@ -215,6 +218,9 @@
                                         <textarea class="form-control no-border-textarea"  name="info[res_feedback]" readonly>{$resource['res_feedback']}</textarea>
                                     </div>
                                 </td>
+                            </tr>
+                            <tr>
+                                <td class="td_title" colspan="6" style="text-align: left">审核状态：{$audit_status[$resource['audit_status']]}&emsp;&emsp;审核人：{$resource['audit_user_name']}&emsp;&emsp;审核时间：<?php echo $resource['audit_time']?date('Y-m-d H:i:s',$resource['audit_time']):'未审核'; ?></td>
                             </tr>
                         </table>
                     </div>

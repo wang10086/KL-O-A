@@ -254,6 +254,12 @@ $config = array(
 
     ),
 
+    'AUDIT_STATUS'  => array(
+        '0' => '未审核',
+        '1' => '审核通过',
+        '2' => '审核未通过',
+    ),
+
 	//记录详情
 	'REC_TYPE_INFO' => array(
 		'1'=>array(

@@ -627,7 +627,7 @@ class OpController extends BaseController {
 			$op_member_db   = M('op_member');
 			$op_supplier_db = M('op_supplier');
             $op_res_db      = M('op_res');
-            $op_res_money_db= M('op_res_money');
+            //$op_res_money_db= M('op_res_money');
             $op_guide_price_db = M('op_guide_price');
 
 
@@ -873,7 +873,7 @@ class OpController extends BaseController {
                 $info['act_need']   = implode(',',$act_needs);
                 $info['task_field'] = implode(',',$task_fields);
 
-                if ($info['exe_user_id']){
+                if ($info['audit_user_id']){
                     $saved_id = $op_res_db->where(array('op_id'=>$opid))->getField('id');
                     if ($saved_id){
                         $op_res_db->where(array('id'=>$saved_id))->save($info);
@@ -884,13 +884,13 @@ class OpController extends BaseController {
                     }
                     if($res){
                         $num++;
-                        $op_res_money_db->where(array('op_res_id'=>$res))->delete();
+                        /*$op_res_money_db->where(array('op_res_id'=>$res))->delete();
                         foreach ($data as $v){
                             if ($v['job_name']) {
                                 $v['op_res_id'] = $res;
                                 $op_res_money_db->add($v);
                             }
-                        }
+                        }*/
 
                         $record = array();
                         $record['op_id']   = $opid;
@@ -898,14 +898,15 @@ class OpController extends BaseController {
                         $record['explain'] = '填写资源需求单';
                         op_record($record);
 
-                        $exe_user_id        = $info['exe_user_id'];
-                        if (cookie('userid') != $info['exe_user_id']){
+                        $audit_user_id        = $info['audit_user_id'];
+                        if (cookie('userid') != $info['audit_user_id']){
+                            $op      = M('op')->where(array('op_id'=>$opid))->find();
                             //发送系统消息
                             $uid     = cookie('userid');
-                            $title   = '您有来自['.session('rolename').'--'.$info['ini_user_name'].']的资源需求单!';
-                            $content = '项目编号: '.$opid;
+                            $title   = '您有来自['.session('rolename').'--'.$info['ini_user_name'].']的资源需求单待审核!';
+                            $content = '项目名称：'.$op['project'].'；团号：'.$op['group_id'];
                             $url     = U('Op/res_feedback',array('opid'=>$info['op_id']));
-                            $user    = '['.$exe_user_id.']';
+                            $user    = '['.$audit_user_id.']';
                             send_msg($uid,$title,$content,$url,$user,'');
                         }
                     }
@@ -1063,7 +1064,49 @@ class OpController extends BaseController {
                 }
             }
 
-            //保存资源配置回复信息
+            //审核资源配置信息(审核15)
+            if ($opid && $savetype==20){
+                if ($info['audit_status'] && $info['exe_user_id']){
+                    $res_id                 = I('res_id');
+                    $info['audit_time']     = NOW_TIME;
+                    $where                  = array();
+                    $where['id']            = $res_id;
+                    $res = $op_res_db->where($where)->save($info);
+                    if ($res){
+                        $status     = C('AUDIT_STATUS');
+                        $op         = M('op')->where(array('op_id'=>$opid))->find();
+                        if ($info['audit_status'] == 1){
+                            //审核通过(发送系统消息)
+                            $uid     = cookie('userid');
+                            $title   = '您有来自['.session('rolename').'--'.session('nickname').']的资源需求单!';
+                            $content = '项目名称：'.$op['project'].'；团号：'.$op['group_id'];
+                            $url     = U('Op/res_feedback',array('opid'=>$opid));
+                            $user    = '['.$info['exe_user_id'].']';
+                            send_msg($uid,$title,$content,$url,$user,'');
+                        }else{
+                            $ini_user_id = $op_res_db->where(array('id'=>$res_id))->getField('ini_user_id');
+                            //审核不通过
+                            $uid     = cookie('userid');
+                            $title   = '您有来自['.session('rolename').'--'.session('nickname').']审核结果通知!';
+                            $content = '项目名称：'.$op['project'].'；团号：'.$op['group_id'].'；审核结果：'.$status[$info["audit_status"]];
+                            $url     = U('Op/confirm',array('opid'=>$opid));
+                            $user    = '['.$ini_user_id.']';
+                            send_msg($uid,$title,$content,$url,$user,'');
+                        }
+
+                        //操作记录
+                        $record = array();
+                        $record['op_id']   = $opid;
+                        $record['optype']  = 4;
+                        $record['explain'] = '审核资源需求反馈信息['.$status[$info["audit_status"]].']';
+                        op_record($record);
+
+                        $num++;
+                    }
+                }
+            }
+
+            //保存资源配置回复信息(完成)
             if ($opid && $savetype==15){
                 $res_id                 = I('res_id');
                 $info['feedback_time']  = NOW_TIME;
@@ -1106,7 +1149,7 @@ class OpController extends BaseController {
                     //发送系统消息
                     $uid     = cookie('userid');
                     $title   = '您有来自['.session('rolename').'--'.$info['ini_user_name'].']委托设计工作交接单待审核!';
-                    $content = '项目名称：'.$op['project'].';团号：'.$op['group_id'];
+                    $content = '项目名称：'.$op['project'].'；团号：'.$op['group_id'];
                     $url     = U('Op/res_audit',array('opid'=>$info['op_id'],'type'=>1));
                     $user    = '['.$audit_user_id.']';
                     send_msg($uid,$title,$content,$url,$user,'');
@@ -1159,7 +1202,7 @@ class OpController extends BaseController {
                         //发送系统消息
                         $uid     = cookie('userid');
                         $title   = '您有来自['.session('rolename').'--'.$list['ini_user_name'].']委托设计工作交接单!';
-                        $content = '项目名称：'.$op['project'].';团号：'.$op['group_id'];
+                        $content = '项目名称：'.$op['project'].'；团号：'.$op['group_id'];
                         $url     = U('Op/res_audit',array('opid'=>$list['op_id'],'type'=>$type));
                         $user    = '['.$exe_user_id.']';
                         send_msg($uid,$title,$content,$url,$user,'');
@@ -2605,7 +2648,7 @@ class OpController extends BaseController {
                 //给教务组长 roleid  102
                 $uid     = cookie('userid');
                 $title   = '您有来自'.$op['create_user_name'].'的团号为['.$info['group_id'].']的团待安排专家辅导员!';
-                $content = '项目编号:'.$op['op_id'].';团号:'.$info['group_id'].';请登录"辅导员/教师、专家管理系统完成相关操作(如其他同事已完成操作,请忽略)!"';
+                $content = '项目编号:'.$op['op_id'].'；团号:'.$info['group_id'].';请登录"辅导员/教师、专家管理系统完成相关操作(如其他同事已完成操作,请忽略)!"';
                 $url     = 'http://tcs.kexueyou.com/op.php?m=Main&c=Task&a=detail&id='.$op['id'];
                 $user    = '';
                 $roleid  = 102; //教务组长
@@ -2776,6 +2819,14 @@ class OpController extends BaseController {
             $this->act_needs    = explode(',',$resource['act_need']);
             $this->men          = M('account')->field('id,nickname')->where(array('id'=>$resource['exe_user_id']))->find();
         }
+
+        //人员名单关键字
+        $this->userkey      = get_username();
+        $this->audit_status = array (
+            P::AUDIT_STATUS_NOT_AUDIT  => '<span class="yellow">未审核</span>',
+            P::AUDIT_STATUS_PASS       => '<span class="green">审核通过</span>',
+            P::AUDIT_STATUS_NOT_PASS   => '<span class="red">未通过</span>',
+        );
 
         $this->display();
     }
