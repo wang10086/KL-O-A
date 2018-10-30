@@ -1930,14 +1930,6 @@ function updatekpi($month,$user){
 
 				//获取合同签订率（含家长协议书）
 				if($v['quota_id']==5){
-					/*$where = array();
-					$where['b.audit_status']		= 1;
-					$where['o.create_user']			= $user;
-					$where['l.req_type']			= 801;
-					$where['l.audit_time']			= array('between',array($v['start_date'],$v['end_date']-(7*86400)));
-					$xiangmu = M()->table('__OP_SETTLEMENT__ as b')->field('b.maoli')->join('__OP__ as o on b.op_id = o.op_id','LEFT')->join('__AUDIT_LOG__ as l on l.req_id = b.id','LEFT')->where($where)->count();//getField('b.op_id',true);
-					$hetong  = M()->table('__CONTRACT__ as c')->field('c.*')->join('__OP_SETTLEMENT__ as b on b.op_id = c.op_id','LEFT')->join('__OP__ as o on o.op_id = c.op_id','LEFT')->join('__AUDIT_LOG__ as l on l.req_id = b.id','LEFT')->where($where)->count();
-					$complete = $xiangmu ? round(($hetong / $xiangmu)*100,2).'%' : 0 .'%';*/
 					$where 							= array();
 					$where['o.create_user']			= $user;
 					$where['c.dep_time']			= array('between',array($v['start_date'],$v['end_date']+86399));
@@ -2667,8 +2659,35 @@ function updatekpi($month,$user){
                     }
                 }
 
+                //业务人员满意度（研发质量)
+                if ($v['quota_id']==129){
+                    $where = array();
+                    $where['s.input_time']	= array('between',array($v['start_date'],$v['end_date']+86399));
+                    $lists = M()->table('__TCS_SCORE_USER__ as u')
+                        ->field('u.confirm_id,s.*,o.kind')
+                        ->join('__TCS_SCORE__ as s on s.uid = u.id','left')
+                        ->join('__OP__ as o on o.op_id = u.op_id')
+                        ->where($where)
+                        ->select();
+
+                    //合格率>0.9(满分)
+                    $hegelv = get_hegelv($lists);
+                    if($hegelv>0.9 || !$lists){
+                        $complete	= 100;
+                    }else{
+                        $complete	= (round($hegelv/0.9,2)*100).'%';
+                    }
+                }
+
+                /*//工作及时率
+                if ($v['quota_id']==130){
+                    $where = array();
+                    $where['s.input_time']	= array('between',array($v['start_date'],$v['end_date']+86399));
+
+                }*/
+
 				//已实现自动获取指标值
-				$auto_quta	= array(1,2,3,4,5,6,81,8,9,10,11,15,16,18,20,23,26,21,24,27,32,37,19,22,25,28,33,38,42,45,103,56,113,92,29,34,39,46,102,55,57,58,59,84,87,89,90,111,107,83,66,54,44,12,112,108,100,96,95,65,114,86,85,64,63,62,53,52,41,40,49,80,48,91,79,47,36,35,31,30,82,110,106,99,94,67,124);
+				$auto_quta	= array(1,2,3,4,5,6,81,8,9,10,11,15,16,18,20,23,26,21,24,27,32,37,19,22,25,28,33,38,42,45,103,56,113,92,29,34,39,46,102,55,57,58,59,84,87,89,90,111,107,83,66,54,44,12,112,108,100,96,95,65,114,86,85,64,63,62,53,52,41,40,49,80,48,91,79,47,36,35,31,30,82,110,106,99,94,67,124,129);
 				
 				//计算完成率并保存数据
 				if(in_array($v['quota_id'],$auto_quta)){
@@ -2705,6 +2724,41 @@ function updatekpi($month,$user){
 		}
 
 	}
+}
+
+//根据项目类型不同考核内容不同(研发)
+function get_hegelv($lists){
+    $score_kind1        = array_keys(C('SCORE_KIND1')); //线路类
+    $score_kind2        = array_keys(C('SCORE_KIND2')); //课程类
+    $score_kind3        = array_keys(C('SCORE_KIND3')); //亲自旅行 , 冬夏令营
+
+    $hege_list          = array();
+    foreach ($lists as $k=>$v){
+        if (in_array($v['kind'],$score_kind2)){
+            //考核研发(3项:课程深度、课程专业性、课程趣味性)
+            $n          = 3;
+            $defen      = $v['depth']+ $v['major']+ $v['interest'];
+        }elseif (in_array($v['kind'],$score_kind3)){
+            //考核研发(项1:内容专业性)
+            $n          = 1;
+            $defen      = $v['major'];
+        }else{
+            //考核研发(1项:)
+            $n          = 1;
+            $defen      = $v['content'];
+        }
+        $zongfen        = 5*$n;
+        $ratio          = round($defen/$zongfen,2);
+        //大于72%即为合格
+        if ($ratio >= 0.72){
+            $hege_list[]= $v;
+        }
+    }
+    $hegetuanshu        = count($hege_list);
+    $zongtuanshu        = count($lists);
+    $hegelv             = round($hegetuanshu/$zongtuanshu,2);
+
+    return $hegelv;
 }
 
 //客户满意度
