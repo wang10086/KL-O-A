@@ -92,7 +92,7 @@ class SalaryController extends BaseController {
         //kpi 目标任务 完成 提成
         $month                           = (int)substr($datetime,4);
         $year                            = (int)substr($datetime,0,4);
-        $query['user_id']                = 44;
+        $query['user_id']                = $where;
 
         if($year==2018){
             if($month==10 || $month==9){
@@ -129,15 +129,18 @@ class SalaryController extends BaseController {
                     $count               += $lists['target'];//季度目标
                     $sum                 += $sum_user;//季度完成
                 }
-                $number = $sum/$count;//项目季度百分比
+                $number                        = $sum/$count;//项目季度百分比
                 if($number <= 1){
-                    $Total                = $sum*0.05;//不超过100%
+                    $Total                     = $sum*0.05;//不超过100%
                 }
-                if(1<$number && $number  <= 1.5){
-                    $Total                = $sum*(($number-1)*0.2+0.05);//超过100% 不到150%
+                if(1<$number && $number <=1.5){
+                    $Total                     = $count*0.05+($sum-$count)*0.2;//超过100% 不到150%
                 }
                 if(1.5 < $number){
-                    $Total                = $sum*(($number-1.5)*0.25+(1.5-1)*0.2+0.05);//超过150%
+                    $tot    = $count*0.05;//100%以内
+                    $tt     = ($count*1.5-$count)*0.2;//100%以上 150% 以内
+                    $yy     = ($sum-$count*1.5)*0.25;//150% 以上
+                    $Total  = $tot+$tt+$yy;
                 }
                 $content['target']        = $count;
                 $content['complete']      = $sum;
@@ -197,15 +200,12 @@ class SalaryController extends BaseController {
             }
             if(1<$number && $number <=1.5){
                 $Total                     = $count*0.05+($sum-$count)*0.2;//超过100% 不到150%
-              //$Total                     = $sum*(($number-1)*0.2+0.05);
             }
             if(1.5 < $number){
                 $tot    = $count*0.05;//100%以内
                 $tt     = ($count*1.5-$count)*0.2;//100%以上 150% 以内
                 $yy     = ($sum-$count*1.5)*0.25;//150% 以上
-                $Total  = $tot+$tt+$yy;
-
-               //$Total                     = $sum*(($number-1.5)*0.25+(1.5-1)*0.2+0.05);//超过150%
+                $Total  = round($tot+$tt+$yy,2);
             }
 
             $content['target']             = $count;
