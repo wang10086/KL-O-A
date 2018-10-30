@@ -37,17 +37,21 @@ class ApprovalController extends BaseController {
         $user_id                = $_POST['user_id'];
         $style                  = $_POST['style'];
         $approval               = D('Approval');
-        $judge                  = $approval->approval_upload('oa_approval_flie',$user_id,$style);
+        $judge                  = $approval->approval_upload('approval_flie',$user_id,$style);
 
         if($judge==1){
             $this->success('保存文档数据成功!');//最后一次错误
         }else{
+
             $this->error('保存文档数据失败!');//最后一次错误
         }
     }
 
     //文件详情
     public function Approval_Update(){
+
+//        Vendor('PHPWord.PHPWord');//引入wordphp文件
+//        $PHPWord = new \PHPWord();//初始化PHPWord对象
 
         $id = trim(I('id'));//文件id
         if(!is_numeric($id)){
@@ -57,26 +61,19 @@ class ApprovalController extends BaseController {
         $this->id               = $id;
         $approval_file          = D('Approval')->approval_update_sql($file);//循环更改文件数据
 
-//        $myfile = fopen($file[0]['file_url'], "r") or die("Unable to open file!");
-//        $file_r= fread($myfile,filesize($file[0]['file_url']));
+
+//        $myfile = fopen($file[0]['file_url'], "rb") or die("Unable to open file!");
+//        $file_r= fread($myfile,filesize($file[0]['file_url']));//
 //        $content = mb_convert_encoding($file_r, "utf8", "auto");
+//        fclose($content);
 
 
-        // 首先建立一个指向新COM组件的索引
-        $word = new COM("word.application") or die("Can't start Word!");
-// 显示目前正在使用的Word的版本号
-echo "Loading Word, v. {$word->Version}<br>";
-//打开一个文档
-$word->Documents->OPen("d:\myweb\muban.doc");
-//读取文档内容
-$test= $word->ActiveDocument->content->Text;
+        $fh = fopen($file[0]['file_url'], "rb");
+//仅读取前面的8个字节
+        $head = fread($fh, 8);
+        fclose($fh);
 
-        
-
-
-        print_r($test);die;
-        fclose($content);
-
+        print_r($fh);die;
 
 
 
