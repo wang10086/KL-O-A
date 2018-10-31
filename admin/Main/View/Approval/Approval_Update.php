@@ -135,7 +135,8 @@
                                                 <b style="font-size:1.3em;color:#09F;padding:2em;letter-spacing:0.2em;">上传文件 : </b>
                                             </label><br><br>
                                             <div style="margin-left:4em;border:1px solid red;height:90em;overflow-y:scroll;padding:2em;overflow-x:scroll;word-wrap:break-word;">
-                                                {$file_r}
+                                                <iframe src="view.officeapps.live.com/op/view.aspx?src={$url}"style="margin-left:4em;border:1px solid red;height:90em;overflow-y:scroll;padding:2em;overflow-x:scroll;word-wrap:break-word;width:45em;"></iframe>
+
                                             </div>
                                         </div>
                                         <div class="form-group col-md-6" style="float:right;width:45em;height:100em;">
@@ -143,7 +144,7 @@
                                                 <b style="font-size:1.3em;color:#09F;padding:2em;letter-spacing:0.2em;">审批批注 : </b>
                                             </label><br><br>
                                             <div style="margin-left:4em;padding:2em;height:90em;border:1px solid red;overflow-y:scroll;overflow-x:scroll;word-wrap:break-word;">
-                                                11111111111111111111111111111111111111111111111111111111111
+
                                             </div>
                                         </div>
                                     </div>

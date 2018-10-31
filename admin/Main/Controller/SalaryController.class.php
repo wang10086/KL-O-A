@@ -207,7 +207,6 @@ class SalaryController extends BaseController {
                 $yy     = ($sum-$count*1.5)*0.25;//150% 以上
                 $Total  = round($tot+$tt+$yy,2);
             }
-
             $content['target']             = $count;
             $content['complete']           = $sum;
             $content['total']              = round($Total,2);//保留两位小数
@@ -217,6 +216,7 @@ class SalaryController extends BaseController {
             $content['complete']           = '0.00';//季度完成
             $content['total']              = '0.00';//保留两位小数
         }
+
         return $content;
     }
 
@@ -802,10 +802,19 @@ class SalaryController extends BaseController {
             if(strstr($strstr,'S')!==false){
                 $user_info[$key]['Extract']         = $this->salary_kpi_month($val['id'],$que['p.month'],1); //业务人员 目标任务 完成 提成
             }
+//            if($user_info[$key]['bonus'][0]['annual_bonus']!==0 && !empty($user_info[$key]['bonus'][0]['annual_bonus'])){
+//                $Year_end = $user_info[$key]['Extract']['total'];
+//                 unset($user_info[$key]['Extract']['total']);
+//                $user_info[$key]['Extract']['total']= $user_bonus;
+//
+//            }else{//如果做季度提成可以变为奖金放开屏蔽即可
+//                 $user_info[$key]['Extract']['total']    = $user_info[$key]['Extract']['total']+$user_bonus;//提成相加
+//            }
             $user_info[$key]['Extract']['total']    = $user_info[$key]['Extract']['total']+$user_bonus;//提成相加
 
             $extract                                = $user_info[$key]['Extract']['total'];
 
+//            $Year_end                               = $Year_end;//如果做季度提成可以变为奖金放开屏蔽即可
             $Year_end                               = ($user_info[$key]['bonus'][0]['annual_bonus'])/12;
 
             if($Year_end < 1500){
@@ -868,12 +877,11 @@ class SalaryController extends BaseController {
             }
             $user_info[$key]['datetime']            = $que['p.month'];//现在日期
             $user_info[$key]['personal_tax']        = $counting;//个人所得税
-//            $tt[$key]['Extract'] = $user_info[$key]['Extract'];
+
             //实发工资=岗位工资-考勤扣款+绩效增减+提成(带团补助)+奖金-代扣代缴+年终奖-年终奖计税+住房补贴+外地补贴+电脑补贴-五险一金-个人所得税-工会会费+其他补款
             $user_info[$key]['real_wages']          = round(($user_info[$key]['salary'][0]['standard_salary']-$user_info[$key]['attendance'][0]['withdrawing']+$extract+$user_info[$key]['bonus'][0]['bonus']-$user_info[$key]['summoney']+$user_info[$key]['bonus'][0]['annual_bonus']-$user_info[$key]['yearend']+$user_info[$key]['subsidy'][0]['housing_subsidy']-$user_info[$key]['insurance_Total']-$counting-$user_info[$key]['labour']['Labour_money']+$user_info[$key]['Other']+$user_info[$key]['Achievements']['count_money']+$user_info[$key]['bonus'][0]['foreign_bonus']),2);
         }
 //        print_r($user_info);die;
-
         return $user_info;
     }
 

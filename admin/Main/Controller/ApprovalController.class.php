@@ -50,9 +50,6 @@ class ApprovalController extends BaseController {
     //文件详情
     public function Approval_Update(){
 
-//        Vendor('PHPWord.PHPWord');//引入wordphp文件
-//        $PHPWord = new \PHPWord();//初始化PHPWord对象
-
         $id = trim(I('id'));//文件id
         if(!is_numeric($id)){
             $this->error('您选择文件错误！请重新选择!', U('Approval/Approval_Index'));die;
@@ -61,24 +58,8 @@ class ApprovalController extends BaseController {
         $this->id               = $id;
         $approval_file          = D('Approval')->approval_update_sql($file);//循环更改文件数据
 
+        $this-> url = $_SERVER['DOCUMENT_ROOT'].'/'.$approval_file[0]['file']['file_url'];
 
-//        $myfile = fopen($file[0]['file_url'], "rb") or die("Unable to open file!");
-//        $file_r= fread($myfile,filesize($file[0]['file_url']));//
-//        $content = mb_convert_encoding($file_r, "utf8", "auto");
-//        fclose($content);
-
-
-        $fh = fopen($file[0]['file_url'], "rb");
-//仅读取前面的8个字节
-        $head = fread($fh, 8);
-        fclose($fh);
-
-        print_r($fh);die;
-
-
-
-
-        $this->assign('file_r',$content);
         $this->assign('approval_file',$approval_file);
         $this->display();
     }
