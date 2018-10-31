@@ -135,7 +135,7 @@
                                                 <b style="font-size:1.3em;color:#09F;letter-spacing:0.2em;">上传文件 : </b>
                                             </label><br><br>
                                             <div style="height:100em;border:1px solid red;overflow-y:scroll;overflow-x:scroll;word-wrap:break-word;">
-                                                <iframe src="view.officeapps.live.com/op/view.aspx?src={$url}"style="margin-left:4em;border:1px solid red;overflow-y:scroll;padding:2em;overflow-x:scroll;word-wrap:break-word;width:63em;height:99em;"></iframe>
+                                                <iframe src="view.officeapps.live.com/op/view.aspx?src={$url}"style="border:1px solid red;overflow-y:scroll;padding:2em;overflow-x:scroll;word-wrap:break-word;width:67em;height:99em;"></iframe>
                                             </div>
 
                                         </div>
