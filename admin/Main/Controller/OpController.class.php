@@ -1087,7 +1087,7 @@ class OpController extends BaseController {
                             $ini_user_id = $op_res_db->where(array('id'=>$res_id))->getField('ini_user_id');
                             //审核不通过
                             $uid     = cookie('userid');
-                            $title   = '您有来自['.session('rolename').'--'.session('nickname').']审核结果通知!';
+                            $title   = '您有来自['.session('rolename').'--'.session('nickname').']的资源需求单审核结果通知!';
                             $content = '项目名称：'.$op['project'].'；团号：'.$op['group_id'].'；审核结果：'.$status[$info["audit_status"]];
                             $url     = U('Op/confirm',array('opid'=>$opid));
                             $user    = '['.$ini_user_id.']';
@@ -1130,9 +1130,6 @@ class OpController extends BaseController {
                 $info['op_id']       = $opid;
                 $info['create_time'] = NOW_TIME;
                 $info['need_time'] = strtotime($info['need_time']);
-                if (!$info['exe_user_id']){
-                    $this->error('请填写接收人员信息');
-                }
                 if (!$info['audit_user_id']){
                     $this->error('请填写审核人员信息');
                 }
@@ -1184,7 +1181,8 @@ class OpController extends BaseController {
                     $res = M('op_work_plans')->where(array('id'=>$plan_id))->save($info);
                 }
                 if ($res) {
-                    $record = array();
+                    $status     = C('AUDIT_STATUS');
+                    $record     = array();
                     $record['op_id']   = $opid;
                     $record['optype']  = 4;
                     if ($type == 1) {
@@ -1195,16 +1193,33 @@ class OpController extends BaseController {
                         $list    = M('op_work_plans')->where(array('id'=>$plan_id))->find();
                     }
                     op_record($record);
+                    $op      = M('op')->where(array('op_id'=>$opid))->find();
 
                     if ($info['audit_status'] == P::AUDIT_STATUS_PASS){
                         $exe_user_id = $list['exe_user_id'];
-                        $op      = M('op')->where(array('op_id'=>$opid))->find();
                         //发送系统消息
                         $uid     = cookie('userid');
                         $title   = '您有来自['.session('rolename').'--'.$list['ini_user_name'].']委托设计工作交接单!';
                         $content = '项目名称：'.$op['project'].'；团号：'.$op['group_id'];
                         $url     = U('Op/res_audit',array('opid'=>$list['op_id'],'type'=>$type));
                         $user    = '['.$exe_user_id.']';
+                        send_msg($uid,$title,$content,$url,$user,'');
+                    }else{
+                        if ($type ==1){
+                            //工作交接单
+                            $ini_user_id = M('op_design')->where(array('id'=>$design_id))->getField('ini_user_id');
+                            $name        = '委托设计工作交接单';
+                        }else{
+                            //业务实施计划单
+                            $ini_user_id = M('op_work_plans')->where(array('id'=>$plan_id))->getField('ini_user_id');
+                            $name        = '业务实施计划单';
+                        }
+                        //审核不通过
+                        $uid     = cookie('userid');
+                        $title   = '您有来自['.session('rolename').'--'.session('nickname').']的'.$name.'审核结果通知!';
+                        $content = '项目名称：'.$op['project'].'；团号：'.$op['group_id'].'；审核结果：'.$status[$info["audit_status"]];
+                        $url     = U('Op/confirm',array('opid'=>$opid));
+                        $user    = '['.$ini_user_id.']';
                         send_msg($uid,$title,$content,$url,$user,'');
                     }
 
@@ -1364,6 +1379,9 @@ class OpController extends BaseController {
                 P::AUDIT_STATUS_PASS       => '<span class="green">审核通过</span>',
                 P::AUDIT_STATUS_NOT_PASS   => '<span class="red">未通过</span>',
             );
+
+            //人员名单关键字
+            $this->userkey      = get_username();
 
             $this->display();
         }

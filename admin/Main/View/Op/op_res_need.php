@@ -47,7 +47,7 @@
                     </div>
 
                     <div class="form-group col-md-4">
-                        <label>实施时间：</label><input type="text" name="info[in_time]" value="<?php echo $resource['in_time']?date('Y-m-d H:i',$resource['in_time']): date('Y-m-d H:i:s',$confirm['dep_time']); ?>" class="form-control inputdatetime" />
+                        <label>实施时间：</label><input type="text" name="info[in_time]" value="<?php echo $resource['in_time']?date('Y-m-d H:i',$resource['in_time']): ''; ?>" class="form-control inputdatetime" />
                     </div>
 
                     <div class="form-group col-md-4">
@@ -231,7 +231,7 @@
             <div class="form-group col-md-12">
                 <div class="content">
 
-                    <div class="form-group col-md-4">
+                    <div class="form-group col-md-8">
                         <label>项目名称：</label><input type="text" name="info[project]" value="<?php echo $design['project']?$design['project']:$op['project'] ?>" class="form-control" />
                     </div>
 
@@ -240,17 +240,17 @@
                     </div>
 
                     <div class="form-group col-md-4">
-                        <label>计划交稿时间：</label><input type="text" name="info[need_time]" value="{$design.need_time|date='Y-m-d',### }" class="form-control inputdate" />
+                        <label>计划交稿时间：</label><input type="text" name="info[need_time]" value="<?php echo $design['need_time']?date('Y-m-d',$design['need_time']):''; ?>" class="form-control inputdate" />
                     </div>
 
                     <div class="form-group col-md-4">
                         <label>成品尺寸：</label><input type="text" name="info[goods_size]" value="{$design['goods_size']}" class="form-control" placeholder="展开尺寸" />
                     </div>
 
-                    <div class="form-group col-md-4">
+                    <!--<div class="form-group col-md-4">
                         <label>接收人员：</label><input type="text" class="form-control" name="info[exe_user_name]"  value="{$design['exe_user_name']}" id="exe_user_name" />
                         <input type="hidden" name="info[exe_user_id]" id="exe_user_id"  value="{$design['exe_user_id']}" />
-                    </div>
+                    </div>-->
 
                     <div class="form-group col-md-4">
                         <label>填表人：</label><input type="text" name="info[ini_user_name]" value="{:session('nickname')}" class="form-control" readonly />
@@ -395,8 +395,9 @@
     var keywords = <?php echo $userkey; ?>;
     $(document).ready(function(e){
         /*autocom('exe_u_name','exe_u_id');
-        autocom('do_user_name','do_user_id');*/
-        autocom('exe_user_name','exe_user_id');
+        * autocom('exe_user_name','exe_user_id');
+         */
+        autocom('do_user_name','do_user_id');
 
         autocom('res_audit_user_name','res_audit_user_id');
         autocom('lession_audit_user_name','lession_audit_user_id');

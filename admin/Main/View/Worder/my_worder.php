@@ -37,7 +37,7 @@
                                 <table class="table table-bordered dataTable fontmini" id="tablelist" style="margin-top:10px;">
                                     <tr role="row" class="orders" >
                                         <th class="sorting" width="60" data="id">id</th>
-                                        <th class="sorting" width="120" data="worder_title">工单标题</th>
+                                        <th class="sorting" width="200" data="worder_title">工单标题</th>
                                         <!--<th class="sorting" data="worder_content">工单内容</th>-->
                                         <th class="sorting" width="80" data="worder_type">工单类型</th>
                                         <th class="sorting" width="80" data="init_user_name">发起人姓名</th>
@@ -46,11 +46,7 @@
                                         <th class="sorting" width="125" >工单创建时间</th>
                                         <!--<th class="sorting" width="125" >工单完成时间</th>-->
                                         <th class="sorting" width="40" class="taskOptions">详情</th>
-                                        <th class="sorting" width="40" class="taskOptions">
-                                            <if condition="$pin eq 1">
-                                                修改
-                                            </if>
-                                        </th>
+                                        <th class="sorting" width="40" class="taskOptions">修改</th>
 
                                     </tr>
                                     <foreach name="lists" item="row"> 

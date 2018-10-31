@@ -37,7 +37,7 @@
                                 <div class="box-body">
 
                                 <?php if ($type == 1) { ?>
-                                    <!--委托设计工作交接单-->
+                                    <!--委托设计工作交接单--设计-->
                                     <include file="op_res_design" />
 
                                     <?php if($design['audit_user_id'] == cookie('userid') && $design['audit_status'] != P::AUDIT_STATUS_PASS){ ?>
@@ -53,6 +53,13 @@
                                                     <input type="radio" name="info[audit_status]" value="1" <?php if ($design['audit_status'] == 1){echo 'checked';} ?>> &emsp;通过&emsp;&emsp;&emsp;
                                                     <input type="radio" name="info[audit_status]" value="2" <?php if ($design['audit_status'] == 2){echo 'checked';} ?>> &emsp;不通过
                                                 </div>
+
+                                                <div class="form-group col-md-12">
+                                                    <label>指派负责人：</label>
+                                                    <input type="text" name="info[exe_user_name]" value="{$design['exe_user_name']}" class="form-control" placeholder="执行人员" id="design_exe_user_name" required />
+                                                    <input type="hidden" name="info[exe_user_id]" value="{$design['exe_user_id']}" class="form-control" id="design_exe_user_id" />
+                                                </div>
+
                                             </div>
 
                                             <div style="width:100%; text-align:center;">
@@ -93,7 +100,7 @@
                                         </form>
                                     <?php } ?>
                                 <?php }else{ ?>
-                                    <!--业务实施计划单-->
+                                    <!--业务实施计划单--计调-->
                                     <include file="op_res_work_plan" />
                                     <?php if($work_plan['audit_user_id'] == cookie('userid') && $work_plan['audit_status'] != P::AUDIT_STATUS_PASS){ ?>
                                         <form method="post" action="{:U('op/public_save')}" id="audit_design">
@@ -167,6 +174,27 @@
 <include file="Index:footer2" />
 
 <script>
+    var keywords = <?php echo $userkey; ?>;
+    $(document).ready(function(e){
+        autocom('design_exe_user_name','design_exe_user_id');
+    });
+
+    function autocom(username,userid){
+        $("#"+username+"").autocomplete(keywords, {
+            matchContains: true,
+            highlightItem: false,
+            formatItem: function(row, i, max, term) {
+                return '<span style=" display:none">'+row.pinyin+'</span>'+row.text;
+            },
+            formatResult: function(row) {
+                return row.text;
+            }
+        }).result(function (event, item) {
+            $("#"+userid+"").val(item.id);
+        });
+    }
+
+
     function print_design(){
         document.body.innerHTML=document.getElementById('design').innerHTML;
         window.print();
