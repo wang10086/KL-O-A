@@ -27,7 +27,7 @@
         text-decoration: none;
     }
 </style>
-        <aside class="right-side">
+        <aside class="right-side" >
             <!-- Content Header (Page header) -->
             <section class="content-header">
                 <h1>文件详情</h1>
@@ -42,7 +42,7 @@
             <section class="content">
 
                 <div class="row">
-                    <div class="col-xs-12">
+                    <div class="col-xs-12" style="width: 120em;">
                         <div class="box">
                             <div class="box-header">
                                 <div class="tip" style="padding: 5px 12px;">
@@ -98,7 +98,7 @@
 
                                     <!-- 已选审批人员  已审批人员-->
                                     <div class="box-header">
-                                        <div class="form-group  col-md-6">
+                                        <div class="form-group  col-md-6" >
                                             <label>
                                                 <b style="font-size:1.3em;color:#09F;padding:2em;letter-spacing:0.2em;">已选审批人员 : </b>
                                             </label><br><br>
@@ -129,29 +129,27 @@
                                     </div><br><br>
 
                                     <!-- 文件 和 批注信息-->
-                                    <div class="box-header">
-                                        <div class="form-group col-md-6" style="margin: 0em 0em 0em 0em;">
+                                    <div class="box-header" style="width: 117em;">
+                                        <div class="form-group col-md-6">
                                             <label>
                                                 <b style="font-size:1.3em;color:#09F;letter-spacing:0.2em;">上传文件 : </b>
                                             </label><br><br>
-                                            <div style="width:65em;height:90em;margin-top:1em;">
-                                                <iframe src="https://view.officeapps.live.com/op/view.aspx?src={$url}" style="overflow-y:scroll;overflow-x:scroll;word-wrap:break-word;width:65em;height:90em;">
+                                            <div style="width:65em;height:83em;overflow: hidden;border:solid 2px #d2d5d8;">
+                                                <iframe src="https://view.officeapps.live.com/op/view.aspx?src={$url}" style="overflow-y:scroll;overflow-x:scroll;word-wrap:break-word;margin-top:-6em;width:65em;height:92em;">
                                                 </iframe>
                                             </div>
-
-
                                         </div>
 
-                                        <div class="form-group col-md-6" style="float:right;width:45em;">
+                                        <div class="form-group col-md-6" style="float:right;width:50em;">
                                             <label>
-                                                <b style="font-size:1.3em;color:#09F;padding:2em;letter-spacing:0.2em;">审批批注 : </b>
+                                                <b style="font-size:1.3em;color:#09F;padding:1em;letter-spacing:0.2em;">审批批注 : </b>
                                             </label><br><br>
-                                            <div style="margin-left:2em;padding:2em;height:100em;border:1px solid red;overflow-y:scroll;overflow-x:scroll;word-wrap:break-word;">
+                                            <textarea  style="margin-left:2em;padding:1em;height:83em;border:solid 2px #d2d5d8;overflow-y:scroll;overflow-x:scroll;word-wrap:break-word;">
 
-                                            </div>
+                                            </textarea >
                                         </div>
-                                    </div>
-                                    <br><br><br><br><br><br><br><br><br><br>
+                                    </div><br>
+
                                 </div>
                             </foreach>
                         </div><!-- /.box -->
