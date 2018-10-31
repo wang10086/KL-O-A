@@ -130,20 +130,21 @@
 
                                     <!-- 文件 和 批注信息-->
                                     <div class="box-header">
-                                        <div class="form-group col-md-6" style="float:left;width:70em;height:100em;">
+                                        <div class="form-group col-md-6" style="float:left;width:70em;">
                                             <label>
-                                                <b style="font-size:1.3em;color:#09F;padding:2em;letter-spacing:0.2em;">上传文件 : </b>
+                                                <b style="font-size:1.3em;color:#09F;letter-spacing:0.2em;">上传文件 : </b>
                                             </label><br><br>
-                                            <div style="margin-left:4em;border:1px solid red;height:90em;overflow-y:scroll;padding:2em;overflow-x:scroll;word-wrap:break-word;">
-                                                <iframe src="view.officeapps.live.com/op/view.aspx?src={$url}"style="margin-left:4em;border:1px solid red;height:90em;overflow-y:scroll;padding:2em;overflow-x:scroll;word-wrap:break-word;width:45em;"></iframe>
-
+                                            <div style="height:100em;border:1px solid red;overflow-y:scroll;overflow-x:scroll;word-wrap:break-word;">
+                                                <iframe src="view.officeapps.live.com/op/view.aspx?src={$url}"style="margin-left:4em;border:1px solid red;overflow-y:scroll;padding:2em;overflow-x:scroll;word-wrap:break-word;width:63em;height:99em;"></iframe>
                                             </div>
+
                                         </div>
-                                        <div class="form-group col-md-6" style="float:right;width:45em;height:100em;">
+
+                                        <div class="form-group col-md-6" style="float:right;width:45em;">
                                             <label>
                                                 <b style="font-size:1.3em;color:#09F;padding:2em;letter-spacing:0.2em;">审批批注 : </b>
                                             </label><br><br>
-                                            <div style="margin-left:4em;padding:2em;height:90em;border:1px solid red;overflow-y:scroll;overflow-x:scroll;word-wrap:break-word;">
+                                            <div style="margin-left:2em;padding:2em;height:100em;border:1px solid red;overflow-y:scroll;overflow-x:scroll;word-wrap:break-word;">
 
                                             </div>
                                         </div>
