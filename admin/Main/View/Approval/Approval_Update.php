@@ -144,7 +144,7 @@
                                             <label>
                                                 <b style="font-size:1.3em;color:#09F;padding:1em;letter-spacing:0.2em;">审批批注 : </b>
                                             </label><br><br>
-                                            <textarea  style="margin-left:2em;padding:1em;height:83em;border:solid 2px #d2d5d8;overflow-y:scroll;overflow-x:scroll;word-wrap:break-word;">
+                                            <textarea  style="margin-left:2em;padding:1em;height:83em;border:solid 2px #d2d5d8;overflow-y:scroll;overflow-x:scroll;word-wrap:break-word;width:45em;">
 
                                             </textarea >
                                         </div>
