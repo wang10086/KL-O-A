@@ -130,12 +130,15 @@
 
                                     <!-- 文件 和 批注信息-->
                                     <div class="box-header">
-                                        <div class="form-group col-md-6" style="float:left;width:70em;">
+                                        <div class="form-group col-md-6" style="margin: 0em 0em 0em 0em;">
                                             <label>
                                                 <b style="font-size:1.3em;color:#09F;letter-spacing:0.2em;">上传文件 : </b>
                                             </label><br><br>
-                                            <iframe src="https://view.officeapps.live.com/op/view.aspx?src={$url}" style="border:1px solid red;overflow-y:scroll;overflow-x:scroll;word-wrap:break-word;width:67em;height:99em;">
-                                            </iframe>
+                                            <div style="width:65em;height:90em;margin-top:1em;">
+                                                <iframe src="https://view.officeapps.live.com/op/view.aspx?src={$url}" style="overflow-y:scroll;overflow-x:scroll;word-wrap:break-word;width:65em;height:90em;">
+                                                </iframe>
+                                            </div>
+
 
                                         </div>
 
