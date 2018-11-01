@@ -2660,10 +2660,12 @@ function updatekpi($month,$user){
                 if ($v['quota_id']==129){
                     $where = array();
                     $where['s.input_time']	= array('between',array($v['start_date'],$v['end_date']+86399));
+                    $where['r.exe_user_id'] = $user;
                     $lists = M()->table('__TCS_SCORE_USER__ as u')
                         ->field('u.confirm_id,s.*,o.kind')
                         ->join('__TCS_SCORE__ as s on s.uid = u.id','left')
-                        ->join('__OP__ as o on o.op_id = u.op_id')
+                        ->join('__OP__ as o on o.op_id = u.op_id','left')
+                        ->join('__OP_RES__ as r on r.op_id = u.op_id','left')
                         ->where($where)
                         ->select();
 
@@ -2676,15 +2678,48 @@ function updatekpi($month,$user){
                     }
                 }
 
-                /*//工作及时率
+                //工作及时率(研发+设计+资源)
                 if ($v['quota_id']==130){
-                    $where = array();
-                    $where['s.input_time']	= array('between',array($v['start_date'],$v['end_date']+86399));
+                    //5天内完成为不超时
+                    $where                  = array();
+                    $where['create_time']   = array('between',array($v['start_date']-5*86400,$v['end_date']-4*86400));
+                    $where['exe_user_id']   = $user;
+                    $lists1 = M('op_res')->where($where)->select();
+                    $lists2 = M('op_design')->where($where)->select();
+                    $lists3 = M('op_work_plans')->where($where)->select();
+                    $lists  = array();
+                    foreach ($lists1 as $aa=>$bb){
+                        $lists[] = $bb;
+                    }
+                    foreach ($lists2 as $cc=>$dd){
+                        $lists[] = $dd;
+                    }
+                    foreach ($lists3 as $ee=>$ff){
+                        $lists[] = $ff;
+                    }
 
-                }*/
+                    $hege   = array();
+                    foreach ($lists as $key=>$value){
+                        $time   = $value['feedback_time'] - $value['create_time'];
+                        $ftime  = $value['finish_time'] - $value['create_time'];
+                        if ((0<$time && $time< 5*86400) || (0<$ftime && $ftime<5*86400)){
+                            $hege[] = $value;
+                        }
+                    }
+                    $zongxiangmu    = count($lists);
+                    $hegexiangmu    = count($hege);
+                    $hegelv         = round($hegexiangmu/$zongxiangmu,2);
+
+                    if($hegelv>0.9){
+                        $complete	= 100;
+                    }else{
+                        $complete	= round($hegelv/0.9,2)*100;
+                    }
+
+                }
 
 				//已实现自动获取指标值
-				$auto_quta	= array(1,2,3,4,5,6,81,8,9,10,11,15,16,18,20,23,26,21,24,27,32,37,19,22,25,28,33,38,42,45,103,56,113,92,29,34,39,46,102,55,57,58,59,84,87,89,90,111,107,83,66,54,44,12,112,108,100,96,95,65,114,86,85,64,63,62,53,52,41,40,49,80,48,91,79,47,36,35,31,30,82,110,106,99,94,67,124,129);
+				$auto_quta	= array(1,2,3,4,5,6,81,8,9,10,11,15,16,18,20,23,26,21,24,27,32,37,19,22,25,28,33,38,42,45,103,56,113,92,29,34,39,46,102,55,57,58,59,84,87,89,90,111,107,83,66,54,44,12,112,108,100,96,95,65,114,86,85,64,63,62,53,52,41,40,49,80,48,91,79,47,36,35,31,30,82,110,106,99,94,67,124,129,130);
 				
 				//计算完成率并保存数据
 				if(in_array($v['quota_id'],$auto_quta)){

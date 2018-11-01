@@ -829,6 +829,14 @@ class OpController extends BaseController {
 				
 				$op = M('op')->where(array('op_id'=>$opid))->find();
 				if($op['status']=='0' || cookie('roleid')==10 || C('RBAC_SUPER_ADMIN')==cookie('username')) {
+                    if (in_array($op['in_dijie'],array(0,2)) && $info['in_dijie']==1){
+                        $info['project'] = '【发起团】'.$info['project'];
+                    }elseif ($op['in_dijie']==1 && $info['in_dijie'] !=1){
+                        $info['project']    = str_replace('【发起团】','',$info['project']);
+                        $info['dijie_name'] = '';
+                        $info['dijie_opid'] = '';
+                    }
+
                     //保存成团
                     $issave = M('op')->data($info)->where(array('op_id' => $opid))->save();
                     if ($issave) $num++;
