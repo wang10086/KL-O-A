@@ -443,7 +443,7 @@ class SalaryController extends BaseController {
                 $income                                 = M('salary_income')->where($aid)->order('id desc')->find();//其他收入
                 if($income){
                     $wher['income_token']               = $income['income_token'];
-                    $account_r[$key]['Other']        = sql_query(1,'*','oa_salary_income',$wher,1,2);//其他收入
+                    $account_r[$key]['Other']           = sql_query(1,'*','oa_salary_income',$wher,1,2);//其他收入
                 }
                 $withholding                            = M('salary_withholding')->where($aid)->order('id desc')->find();//代扣代缴
                 if($withholding){
@@ -728,17 +728,19 @@ class SalaryController extends BaseController {
 
             $generate_month                         = datetime(date('Y'),date('m'),date('d'),1);//获取当前年月
             $bonus_extract                          = Acquisition_Team_Subsidy($generate_month,(int)$val['guide_id']);//带团补助
-            if(count($user_bonus)==1){//带团补助已有信息
-                $bonus_save['extract']              = $bonus_extract;
-                $bonus                              = M('salary_bonus')->where($att_id)->save($bonus_save);//添加带团补助
-            }elseif(count($user_bonus)==0 || $user_bonus==""){//带团补助未有信息
-                $bonus_save['account_id']           = (int)$val['id'];
-                $bonus_save['createtime']           = time();
-                $bonus_save['extract']              = $bonus_extract;
-                $bonus                              = M('salary_bonus')->add($bonus_save);//添加带团补助
-            }
-            $user_info[$key]['bonus']               = sql_query(1,'*','oa_salary_bonus',$att_id, 1, 1);//提成/奖金/年终奖
+//            if(count($user_bonus)==1){//带团补助已有信息
+//                $bonus_save['extract']              = $bonus_extract;
+//                $bonus                              = M('salary_bonus')->where($att_id)->save($bonus_save);//添加带团补助
+//            }elseif(count($user_bonus)==0 || $user_bonus==""){//带团补助未有信息
+//                $bonus_save['account_id']           = (int)$val['id'];
+//                $bonus_save['createtime']           = time();
+//                $bonus_save['extract']              = $bonus_extract;
+//                $bonus                              = M('salary_bonus')->add($bonus_save);//添加带团补助
+//            }
+//            $user_info[$key]['bonus']               = sql_query(1,'*','oa_salary_bonus',$att_id, 1, 1);//提成/奖金/年终奖
 
+            $user_info[$key]['bonus']               = $user_bonus;
+            $user_info[$key]['bonus'][0]['extract'] = $bonus_extract;
             $user_info[$key]['labour']              = M('salary_labour')->where($id)->order('id desc')->find();//工会会费
             if(count($user_info[$key]['salary'])==0){
                 unset($user_info[$key]);continue;
@@ -882,7 +884,6 @@ class SalaryController extends BaseController {
             //实发工资=岗位工资-考勤扣款+绩效增减+提成(带团补助)+奖金-代扣代缴+年终奖-年终奖计税+住房补贴+外地补贴+电脑补贴-五险一金-个人所得税-工会会费+其他补款
             $user_info[$key]['real_wages']          = round(($user_info[$key]['salary'][0]['standard_salary']-$user_info[$key]['attendance'][0]['withdrawing']+$extract+$user_info[$key]['bonus'][0]['bonus']-$user_info[$key]['summoney']+$user_info[$key]['bonus'][0]['annual_bonus']-$user_info[$key]['yearend']+$user_info[$key]['subsidy'][0]['housing_subsidy']-$user_info[$key]['insurance_Total']-$counting-$user_info[$key]['labour']['Labour_money']+$user_info[$key]['Other']+$user_info[$key]['Achievements']['count_money']+$user_info[$key]['bonus'][0]['foreign_bonus']),2);
         }
-//        print_r($user_info);die;
         return $user_info;
     }
 

@@ -3740,6 +3740,24 @@ function user_table($where){//查询用户
         return $price;
     }
 
+
+    /**
+     * user_contrast_status 信心对比状态
+     * $file_id 文件 id
+     * $user_id 用户id
+     */
+     function user_contrast_status($file_id,$user_id){
+
+            $where['file_id']       = $file_id;
+            $where['account_id']    = $user_id;
+            $status                 = M('annotation_file')->where($where)->find();
+            if($status){
+                return 2;//已批注
+            }else{
+                return 1;//未批注
+            }
+        }
+
 //获取用户信息(用户名+角色)
 function get_userkey(){
     //整理关键字

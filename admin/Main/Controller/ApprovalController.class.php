@@ -60,8 +60,13 @@ class ApprovalController extends BaseController {
         $file[0]                = D('Approval')->approval_update($id);
         $this->id               = $id;
         $approval_file          = D('Approval')->approval_update_sql($file);//循环更改文件数据
-        $this-> url = $_SERVER['SERVER_NAME'].'/'.$approval_file[0]['file']['file_url'];
 
+        if($approval_file['0']['flie_update']['file_url']=""){
+            $this-> url = $_SERVER['SERVER_NAME'].'/'.$approval_file['0']['flie_update']['file_url'];
+        }else{
+            $this-> url = $_SERVER['SERVER_NAME'].'/'.$approval_file['0']['file']['file_url'];
+        }
+//        print_r($approval_file);die;
         $this->assign('approval_file',$approval_file);
         $this->display();
     }

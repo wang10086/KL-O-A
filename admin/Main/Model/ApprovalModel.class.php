@@ -80,9 +80,22 @@
                 $update[$key]['file']               = $val;
                 $update[$key]['flie_update']        = M('approval_flie_update')->where($where)->find();
                 $update[$key]['flie_annotation']    = M('annotation_file')->where($where)->select();
+                $user_id = explode(',',$val['file_account_id']);
+                foreach($user_id as $k =>$v) {
+                    $update[$key]['file']['user'][$k]['status'] = user_contrast_status($val['id'],$v);
+                }
+                if($update[$key]['flie_annotation']['0']['status']==2){
+                    $update[$key]['file']['file_leader_postil'] = 2;
+                }else{
+                    $update[$key]['file']['file_leader_postil'] = 1;
+                }
+                $update[$key]['file']['file_leader_status']     = user_contrast_status($val['file_leader_id'],$val['id']);
             }
             return $update;
         }
+
+
+
         /**
          * 查询 approval_flie表的文件信息
          * $id 文件 id

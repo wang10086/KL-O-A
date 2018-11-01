@@ -873,7 +873,14 @@ class AjaxController extends Controller {
                 $status['status'] = 2;
                 $salary_w                   = M('salary')->where(array('id='.$add['salary_id']))->save($status);
                 $attendance_w               = M('salary_attendance')->where(array('id='.$add['attendance_id']))->save($status);
-                $bonus_w                    = M('salary_bonus')->where(array('id='.$add['bonus_id']))->save($status);
+
+                $generate_month             = datetime(date('Y'),date('m'),date('d'),1);//获取当前年月
+                $guide_id                   = user_table($add['account_id']);
+                $bonus_extract              = Acquisition_Team_Subsidy($generate_month,$guide_id);//带团补助
+                $bonussave['status']        = 2;
+                $bonussave['extract']       = $bonus_extract;
+                $bonus_w                    = M('salary_bonus')->where(array('id='.$add['bonus_id']))->save($bonussave);
+
                 $income_w                   = M('salary_income')->where(array('income_token='.$add['income_token']))->save($status);
                 $insurance_w                = M('salary_insurance')->where(array('id='.$add['insurance_id']))->save($status);
                 $subsidy_w                  = M('salary_subsidy')->where(array('id='.$add['subsidy_id']))->save($status);
@@ -1066,6 +1073,45 @@ class AjaxController extends Controller {
             }
 
         }
+    }
+
+
+    /**
+     *Ajax_approval_textarea 添加批注信息
+     */
+    public function Ajax_approval_textarea(){
+
+//            $sum                    = 1;
+//            $msg                    = "添加失败!";
+//            echo json_encode(array('sum' => $sum, 'msg' => $msg));die;
+
+        $text                           = trim($_POST['text']);
+        $file_id                        = code_number(trim($_POST['file_id']));
+        if(empty($text)){
+            $sum                        = 0;
+            $msg                        = "添加失败!";
+        }
+        $where['account_id']            = (int)$_SESSION['userid'];
+        $where['file_id']               = (int)$file_id;
+        $file                           = M('annotation_file')->where($where)->find();
+        if($file){
+            $add['annotation_content']  = $text;
+            $save =  M('annotation_file')->where('id='.$file['id'])->save($add);
+
+
+        }else{
+            $where['createtime']            = time();
+            $where['account_name']          = $_SESSION['nickname'];
+            $where['annotation_content']    = $text;
+        }
+
+
+
+
+
+
+        var_dump($where);die;
+
     }
 
 
