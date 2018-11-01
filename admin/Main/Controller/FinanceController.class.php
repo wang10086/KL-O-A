@@ -102,6 +102,7 @@ class FinanceController extends BaseController {
         if ($is_zutuan == 1){
             $dijie_shouru     = M('op_budget')->where(array('op_id'=>$op['dijie_opid'],'audit_status'=>1))->getField('shouru');
             $op_types         = array_column($costacc,'type');
+
             if (!in_array(13,$op_types)){
                 $arr                = array();
                 $arr['id']          = 0;
@@ -115,8 +116,9 @@ class FinanceController extends BaseController {
                 $arr['status']      = 0;
                 $arr['del_status']  = 0;
                 $arr['product_id']  = 0;
+
+                $costacc[]        = $arr;
             }
-            $costacc[]        = $arr;
         }
         $this->dijie_shouru   = $dijie_shouru?$dijie_shouru:0;
 
@@ -1015,93 +1017,4 @@ class FinanceController extends BaseController {
         $this->display();
     }
 
-    public function test(){
-
-        $opid = I('opid');
-        $id   = I('id');
-        if($id){
-            $budget = M('op_budget')->find($id);
-            $opid = $budget['op_id'];
-        }
-        if(!$opid) $this->error('项目不存在');
-
-        $where = array();
-        $where['op_id'] = $opid;
-
-        $isCost     = M('op_costacc')->where(array('op_id'=>$opid))->count();
-        $op         = M('op')->where($where)->find();
-        $op['costacc'] = $isCost;
-        $costacc    = M('op_costacc')->where(array('op_id'=>$opid,'status'=>1))->order('id')->select();
-        if(count($costacc)==0){
-            $costacc = 	M('op_costacc')->where(array('op_id'=>$opid,'status'=>0))->order('id')->select();
-            foreach($costacc as $k=>$v){
-                $costacc[$k]['id'] = 0;
-            }
-        }
-
-        $budget     = M('op_budget')->where(array('op_id'=>$opid))->find();
-        $budget['xz'] = explode(',',$budget['xinzhi']);
-
-        $where = array();
-        $where['req_type'] = P::REQ_TYPE_BUDGET;
-        $where['req_id']   = $budget['id'];
-        $audit = M('audit_log')->where($where)->find();
-        if($audit['dst_status']==0){
-            $show = '未审批';
-            $show_user = '未审批';
-            $show_time = '等待审批';
-        }else if($audit['dst_status']==1){
-            $show = '<span class="green">已通过</span>';
-            $show_user = $audit['audit_uname'];
-            $show_time = date('Y-m-d H:i:s',$audit['audit_time']);
-        }else if($audit['dst_status']==2){
-            $show = '<span class="red">未通过</span>';
-            $show_user = $audit['audit_uname'];
-            $show_reason = $audit['audit_reason'];
-            $show_time = date('Y-m-d H:i:s',$audit['audit_time']);
-        }
-        $op['showstatus'] = $show;
-        $op['show_user']  = $show_user;
-        $op['show_time']  = $show_time;
-        $op['show_reason']  = $show_reason;
-
-        $member               = M('op_member')->where(array('op_id'=>$opid))->order('id')->select();
-        $this->member         = $member;
-        $this->kind           = C('COST_TYPE');
-        $this->op             = $op;
-        $this->budget         = $budget;
-        $this->audit          = $audit;
-        $this->business_depts = C('BUSINESS_DEPT');
-        $this->subject_fields = C('SUBJECT_FIELD');
-        $this->ages           = C('AGE_LIST');
-        $this->kinds          =  M('project_kind')->getField('id,name', true);
-        $is_dijie             = M('op')->where(array('dijie_opid'=>$opid))->getField('op_id');
-        $this->is_dijie       = $is_dijie?$is_dijie:0;
-        $is_zutuan            = $op['in_dijie'];
-        $this->is_zutuan      = $is_zutuan;
-        if ($is_zutuan == 1){
-            $dijie_shouru     = M('op_budget')->where(array('op_id'=>$op['dijie_opid'],'audit_status'=>1))->getField('shouru');
-            $op_types         = array_column($costacc,'type');
-            if (!in_array(13,$op_types)){
-                $arr                = array();
-                $arr['id']          = 0;
-                $arr['op_id']       = $opid;
-                $arr['title']       = '地接费用';
-                $arr['unitcost']    = $dijie_shouru;
-                $arr['amount']      = 1;
-                $arr['total']       = $dijie_shouru;
-                $arr['remark']      = '地接费用';
-                $arr['type']        = 13;   //内部地接
-                $arr['status']      = 0;
-                $arr['del_status']  = 0;
-                $arr['product_id']  = 0;
-            }
-            $costacc[]        = $arr;
-        }
-        $this->dijie_shouru   = $dijie_shouru?$dijie_shouru:0;
-
-        $this->costacc        = $costacc;
-        $this->display('op');
-    }
-    
 }

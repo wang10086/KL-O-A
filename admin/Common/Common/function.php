@@ -2685,11 +2685,12 @@ function updatekpi($month,$user){
                 if ($v['quota_id']==130){
                     //5天内完成为不超时
                     $where                  = array();
-                    $where['create_time']   = array('between',array($v['start_date']-5*86400,$v['end_date']-4*86400));
+                    $where['audit_time']    = array('between',array($v['start_date']-5*86400,$v['end_date']-4*86400));
+                    $where['audit_status']  = 1;
                     $where['exe_user_id']   = $user;
-                    $lists1 = M('op_res')->where($where)->select();
-                    $lists2 = M('op_design')->where($where)->select();
-                    $lists3 = M('op_work_plans')->where($where)->select();
+                    $lists1 = M('op_res')->where($where)->select();         //资源需求单
+                    $lists2 = M('op_design')->where($where)->select();      //设计委托单
+                    $lists3 = M('op_work_plans')->where($where)->select();  //工作计划单
                     $lists  = array();
                     foreach ($lists1 as $aa=>$bb){
                         $lists[] = $bb;
@@ -2713,7 +2714,7 @@ function updatekpi($month,$user){
                     $hegexiangmu    = count($hege);
                     $hegelv         = round($hegexiangmu/$zongxiangmu,2);
 
-                    if($hegelv>0.9){
+                    if($hegelv>0.9 || !$zongxiangmu){
                         $complete	= 100;
                     }else{
                         $complete	= round($hegelv/0.9,2)*100;

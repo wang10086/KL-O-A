@@ -22,10 +22,10 @@
                         <td width="16.66%">&yen; {$v.total}</td>
                         <td width="16.66%"><?php echo $kind[$v['type']]; ?></td>
                         <td>{$v.remark}</td>
-                        <td width="80">
-                            <a href="javascript:;" class="btn btn-info btn-sm" onclick="get_jiekuan">借款</a>
+                        <td width="80" id="td_{$v.id}">
+                            <a href="javascript:;" class="btn btn-info btn-sm" onclick="add_jiekuan({$v.id})">借款</a>
                             <input type="hidden" name="id" value="{$v.id}">
-                            <input type="hidden" name="total" value="{$v.total}">
+                            <input type="hidden" name="total" value="{$v.total}" id="total_{$v.id}">
                         </td>
                     </tr>
                     </foreach>
@@ -47,33 +47,63 @@
                 <input type="hidden" name="info[op_id]" value="{$op.op_id}" />
                 <div style="width:100%; float:left;">
                     <div class="form-group col-md-6">
-                        <label>项目名称：</label>
-                        <input type="text" class="form-control" value="<?php  ?>" />
+                        <label>借款单位：</label>
+                        <input type="text" name="info[rolename]" class="form-control" value="<?php echo $list['rolename']?$list['rolename']:session('rolename'); ?>" readonly />
+                    </div>
+
+                    <div class="form-group col-md-6">
+                        <label>团号：</label>
+                        <input type="text" name="info[group_id]" class="form-control" value="<?php echo $list['group_id']?$list['group_id']:$op['group_id']; ?>" readonly />
+                        <input type="hidden" name="info[op_id]" value="<?php echo $list['op_id']?$list['op_id']:$op['op_id']; ?>" />
                     </div>
 
                     <div class="form-group col-md-6">
                         <label>借款金额：</label>
-                        <input type="text" name="info[shouru]" id="shouru" class="form-control" value="<?php if($budget['shouru']){ echo $budget['shouru'];}else{ echo 0;} ?>" />
+                        <input type="text" name="info[sum]" id="jiekuanjine" class="form-control" value="{$list.sum}" />
                     </div>
+
+                    <div class="form-group col-md-6">
+                        <label>人民币(大写)：</label>
+                        <input type="text" name="info[chinese]" id="chinese" class="form-control" value="{$list.chinese}" />
+                    </div>
+
+                    <div class="form-group col-md-12" id="jk_type">
+                        <label>支付方式：</label>
+                        <input type="radio" name="type" value="1" <?php if ($list['type']== 1) echo "checked"; ?> /> &nbsp;支票 &emsp;&emsp;
+                        <input type="radio" name="type" value="2" <?php if ($list['type']== 2) echo "checked"; ?> /> &nbsp;现金 &emsp;&emsp;
+                        <input type="radio" name="type" value="3" <?php if ($list['type']== 3) echo "checked"; ?> /> &nbsp;汇款 &emsp;&emsp;
+                        <input type="radio" name="type" value="4" <?php if ($list['type']== 4) echo "checked"; ?> /> &nbsp;其他 &emsp;&emsp;
+                    </div>
+
+                    <div class="form-group col-md-12">
+                        <label>用途说明：</label>
+                        <textarea class="form-control"  name="info[description]">{$list.description}</textarea>
+                    </div>
+                    <div class="form-group col-md-12 zp_show hk_show">
+                        <label>受款单位：</label>
+                        <input type="text" name="info[payee]" class="form-control zhipiao huikuan" value="{$list.payee}">
+                    </div>
+
+                    <div class="form-group col-md-6 hk_show">
+                        <label>开户行名称：</label>
+                        <input type="text" name="info[bank_name]" class="form-control huikuan" value="{$list.bank_name}">
+                    </div>
+
+                    <div class="form-group col-md-6 hk_show">
+                        <label>账号：</label>
+                        <input type="text" name="info[card_num]" class="form-control huikuan" value="{$list.card_num}">
+                    </div>
+
+                    <div class="form-group col-md-6">
+                        <label>借款人：</label>
+                        <input type="button" onclick="alert(123)" value="签字">
+                    </div>
+
                 </div>
-                <!--<div style="width:100%;float:left; padding-bottom:50px;">
-                    <div class="form-group col-md-4">
-                        <label>毛利：</label>
-                        <input type="text" name="info[maoli]" id="maoli" class="form-control" value="{$budget.maoli}" />
-                    </div>
-
-                    <div class="form-group col-md-4">
-                        <label>毛利率：</label>
-                        <input type="text" name="info[maolilv]" id="maolilv" class="form-control" value="{$budget.maolilv}" />
-                    </div>
-
-                    <div class="form-group col-md-4">
-                        <label>人均毛利：</label>
-                        <input type="text" name="info[renjunmaoli]" id="renjunmaoli" class="form-control" value="{$budget.renjunmaoli}" />
-                    </div>
-                </div>-->
-
-
+            </div>
+            <div style="width:100%; text-align:center;">
+                <!--<a  href="javascript:;" class="btn btn-info btn-lg" onClick="javascript:save('design','<?php /*echo U('Op/public_save'); */?>');">保存</a>-->
+                <input type="submit" class="btn btn-info btn-lg" value="提交">
             </div>
         </form>
 
@@ -82,5 +112,45 @@
     <?php }  ?>
 
     <script>
+        $(function () {
+            $('.hk_show').hide();
+
+            $('#jk_type').find('ins').each(function (index,ele) {
+                $(this).click(function () {
+                    var type = $(this).prev('input').val();
+
+                    if(type ==1){ //支票
+                        $('.huikuan').removeAttr('required');
+                        $('.hk_show').hide();
+                        $('.zp_show').show();
+                        $('.zhipiao').attr('required','true');
+                    }else if(type == 3){ //汇款
+                        $('.hk_show').show();
+                        $('.huikuan').attr('required','true');
+                    }else{
+                        $('.huikuan').removeAttr('required');
+                        $('.hk_show').hide();
+                    }
+                })
+            })
+        })
+
+        function add_jiekuan(id) {
+            var jiekuanjine   = $('#jiekuanjine').val();
+            var total         = $('#total_'+id).val();
+            var sum           = accAdd(jiekuanjine,total);  //数据相加
+            $('#jiekuanjine').val(sum);
+
+            var html        = '';
+            html +='<a href="javascript:;" class="btn btn-sm" onclick="del_jiekuan('+id+')">取消</a>'+
+                '<input type="hidden" name="id" value="'+id+'">'+
+                '<input type="hidden" name="total" value="'+total+'" id="total_'+id+'">';
+            $('#td_'+id+'').html(html);
+        }
+
+        function del_jiekuan(id){
+            alert('加班开发中');
+        }
+
 
     </script>

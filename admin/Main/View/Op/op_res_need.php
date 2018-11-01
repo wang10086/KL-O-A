@@ -117,7 +117,7 @@
                     </div>
 
                     <div class="form-group col-md-12" id="is_custom">
-                        <label>是否制定资源方：</label>
+                        <label>是否指定资源方：</label>
                         <span class="checkboxs_400"><input type="radio" name="info[custom]" <?php if($resource['custom']==1){ echo 'checked';} ?>  value="1">&nbsp; 是<span id="custom">，资源方名称：<input type="text" name="info[res_name]" value="{$resource['res_name']}" style="border: none; border-bottom: solid 1px;"></span></span>&#12288;&#12288;
                         <span class="checkboxs_255"><input type="radio" name="info[custom]" <?php if($resource['custom']==0){ echo 'checked';} ?>  value="0">&nbsp; 否</span>&#12288;&#12288;
                     </div>
@@ -127,7 +127,7 @@
                     </div>
 
                     <div class="form-group col-md-12">
-                        <label>提示：</label><p class="red">成稿后部门负责人最终确认签字(部门负责人审核通过后该需求单才能到达相关执行人员手中)。</p>
+                        <label>提示：</label><p class="red">请填写接收部门负责人(接收部门负责人审核通过后该需求单才能到达相关执行人员手中)。</p>
                         <input type="text" name="info[audit_user_name]" value="{$resource['audit_user_name']}" class="form-control" placeholder="审核人员" id="res_audit_user_name" required />
                         <input type="hidden" name="info[audit_user_id]" value="{$resource['audit_user_id']}" class="form-control" id="res_audit_user_id" />
                     </div>
@@ -202,7 +202,7 @@
                 </div>
 
                 <div class="form-group col-md-12">
-                    <label>提示：</label><p class="red">成稿后部门负责人最终确认签字(部门负责人审核通过后该需求单才能到达相关执行人员手中)。</p>
+                    <label>提示：</label><p class="red">请填写接收部门负责人(接收部门负责人审核通过后该需求单才能到达相关执行人员手中)。</p>
                     <input type="text" name="info[audit_user_name]" value="{$resource['audit_user_name']}" class="form-control" placeholder="审核人员" id="lession_audit_user_name" required />
                     <input type="hidden" name="info[audit_user_id]" value="{$resource['audit_user_id']}" class="form-control" id="lession_audit_user_id" />
                 </div>
@@ -292,7 +292,7 @@
                     </div>
 
                     <div class="form-group col-md-12">
-                        <label>提示：</label><p class="red">成稿后部门负责人最终确认签字(部门负责人审核通过后该需求单才能到达相关执行人员手中)。</p>
+                        <label>提示：</label><p class="red">请填写接收部门负责人(接收部门负责人审核通过后该需求单才能到达相关执行人员手中)。</p>
                         <input type="text" name="info[audit_user_name]" value="{$design['audit_user_name']}" class="form-control" placeholder="审核人员" id="audit_user_name" required />
                         <input type="hidden" name="info[audit_user_id]" value="{$design['audit_user_id']}" class="form-control" id="audit_user_id" />
                     </div>
@@ -375,7 +375,7 @@
                 </div>
 
                 <div class="form-group col-md-12">
-                    <label>提示：</label><p class="red">成稿后部门负责人最终确认签字(部门负责人审核通过后该需求单才能到达相关执行人员手中)。</p>
+                    <label>提示：</label><p class="red">请填写接收部门负责人(接收部门负责人审核通过后该需求单才能到达相关执行人员手中)。</p>
                     <input type="text" name="info[audit_user_name]" value="{$work_plan['audit_user_name']}" class="form-control" placeholder="审核人员" id="plans_audit_user_name" required />
                     <input type="hidden" name="info[audit_user_id]" value="{$work_plan['audit_user_id']}" class="form-control" id="plans_audit_user_id" />
                 </div>

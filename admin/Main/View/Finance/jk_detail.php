@@ -66,7 +66,8 @@
 
 <include file="Index:footer2" />
 
-<script>
+
+<!--<script>
 	$(document).ready(function(e) {
         cost_total();
     });
@@ -169,7 +170,7 @@
 			var renshu   = parseInt($('#renshu').val());        //人数
 			var shouru   = parseInt($('#shouru').val());        //收入
             var maolilv  = toPoint($('#maolilv').val());        //毛利率
-            var is_dijie = "<?php echo $is_dijie; ?>";          //内部地接毛利率不能大于10%
+            var is_dijie = "<?php /*echo $is_dijie; */?>";          //内部地接毛利率不能大于10%
 			if(shouru && renshu){
                 if (is_dijie != 0 && maolilv > 0.1){
                     art.dialog.alert('该团为内部地接团,毛利额不能超过10%');
@@ -194,7 +195,7 @@
         return res;
     }
 
-</script>
+</script>-->
 
      
 
