@@ -107,6 +107,9 @@
                                                     <span style="padding:1em;">
                                                         <b>
                                                             {$n['username']}
+                                                            <b style="<?php if($n['status']==1){echo 'color:red';}elseif($n['status']==2){echo 'color:#00CC33';}?>">
+                                                                [ <?php if($n['status']==1){echo "未批注";}elseif($n['status']==2){echo "已批注";}?> ]
+                                                            </b>
                                                         </b>
                                                     </span>
                                                 </foreach>
@@ -114,16 +117,22 @@
                                         </div>
                                         <div class="form-group col-md-6">
                                             <label>
-                                                <b style="font-size:1.3em;color:#09F;padding:2em;letter-spacing:0.2em;">已审批人员 : </b>
+                                                <b style="font-size:1.3em;color:#09F;padding:2em;letter-spacing:0.2em;">最终审核人员 : </b>
                                             </label><br><br>
                                             <div style="margin-left:5em;">
-                                                <foreach name="f['flie_annotation']" item="an">
-                                                    <span style="padding:1em;">
-                                                        <b>
-                                                            {$an['account_name']}
+
+                                                <span style="padding:1em;">
+                                                    <b>
+                                                        {$f['file']['file_leader_name']}
+                                                        <b style="<?php if($f['file']['file_leader_postil']==1){echo 'color:red';}elseif($f['file']['file_leader_postil']==2){echo 'color:#00CC33';}?>">
+                                                            [ <?php if($f['file']['file_leader_postil']==1){echo "未批准";}elseif($f['file']['file_leader_postil']==2){echo "已批准";}?> ]
                                                         </b>
-                                                    </span>
-                                                </foreach>
+                                                        <b style="<?php if($f['file']['file_leader_status']==1){echo 'color:red';}elseif($f['file']['file_leader_status']==2){echo 'color:#00CC33';}?>">
+                                                            [ <?php if($f['file']['file_leader_status']==1){echo "未批注";}elseif($f['file']['file_leader_status']==2){echo "已批注";}?> ]
+                                                        </b>
+                                                    </b>
+                                                </span>
+
                                             </div>
                                         </div>
                                     </div><br><br>
@@ -142,11 +151,33 @@
 
                                         <div class="form-group col-md-6" style="float:right;width:50em;">
                                             <label>
-                                                <b style="font-size:1.3em;color:#09F;padding:1em;letter-spacing:0.2em;">审批批注 : </b>
+                                                <b style="font-size:1.3em;color:#09F;padding:1em;letter-spacing:0.2em;">批注内容 : </b>
+                                                <b style="margin-left:20em;" id="approval_submit_show">
+                                                    <input type="submit" value="添加审批批注" class="btn btn-info"  style="margin-right:1em;">
+                                                </b>
+                                                <b style="margin-left:20em;display:none;"id="approval_submit_hidden1">
+                                                    <input type="submit" value="提交审批批注" class="btn btn-info"   style="margin-right:1em;">
+                                                </b>
                                             </label><br><br>
-                                            <textarea  style="margin-left:2em;padding:1em;height:83em;border:solid 2px #d2d5d8;overflow-y:scroll;overflow-x:scroll;word-wrap:break-word;width:45em;">
 
-                                            </textarea >
+                                            <div  id="approval_submit_show1" style="margin:-0.6em 0em 0em;padding:1em;height:83em;border:solid 2px #d2d5d8;overflow-y:scroll;overflow-x:scroll;word-wrap:break-word;width:45em;" >
+                                                <foreach name="f['flie_annotation']" item="ann">
+                                                    <p>
+                                                        <b style="color:#339933;">{$ann['account_name']}&nbsp;</b>
+                                                        <span>[ <?php echo date('Y-m-d H:i:s',$ann['createtime']);?> ]</span>
+                                                        <span style="color:#CC3333">[ 批注 ] ：</span>
+                                                        <div style="margin-left:2.5em;">
+                                                            <span style="letter-spacing:0.2em;line-height:2em;">
+                                                                {$ann['annotation_content']}
+                                                            </span>
+                                                        </div>
+                                                    </p>
+                                                </foreach>
+                                            </div>
+
+                                            <textarea style="margin:-0.6em 0em 0em 0em;padding:1em;height:83em;border:solid 2px #d2d5d8;overflow-y:scroll;overflow-x:scroll;word-wrap:break-word;width:45em;display:none;text-indent:2.5em;line-height:2em;letter-spacing:0.2em;"  name="comment">
+                                            </textarea>
+
                                         </div>
                                     </div><br>
 
@@ -162,5 +193,33 @@
 
 
 <include file="Index:footer2" />
+<script>
+
+    $('#approval_submit_show').click(function(){ //点击 ‘添加审批批注’ 效果隐藏显示
+        $(this).hide();
+        $('textarea').show();
+        $('#approval_submit_show1').hide();
+        $('#approval_submit_hidden1').show();
+    });
+
+    $('#approval_submit_hidden1').click(function(){ //添加批注信息
+        var text    = $('textarea').val().replace(/\n|\r\n/g,'<br/>');
+        var file_id = "<?php echo $id;?>";
+        $.ajax({
+            url:"{:U('Ajax/Ajax_approval_textarea')}",
+            type:"POST",
+            data:{'text':text,'file_id':file_id},
+            dataType:"json",
+            success:function(date){
+                if(date.sum==1){
+                    alert(date.msg);
+                }else{
+                    alert(date.msg);
+                }
+            }
+        });
+    });
+
+</script>
 
 

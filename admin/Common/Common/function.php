@@ -1514,12 +1514,9 @@ function up_file_level($fid){
 		}
 		
 	}
-	
-	
-	
-	
-	
 }
+
+
 
 // @@@NODE-3###pdca_auditor###审批人信息###
  function pdca_auditor($id){
@@ -1535,7 +1532,7 @@ function username($userid){
 		$user = M('account')->find($userid);	
 		return $user['nickname'];
 	}else{
-		return '';	
+        return '';
 	}
 }
 
@@ -3524,9 +3521,9 @@ function salary_info($status,$cont){
 
 	$isok = M('op_record')->add($add);
 	if(!$isok){
-
-		$this->error('添加失败!请重新添加！', U('Salary/salary_query'));die;
-
+        $sum                = 0;
+        $msg                = $cont."添加失败!";
+        echo json_encode(array('sum'=>$sum,'msg'=>$msg));die;
 	}
 }
 
@@ -3540,16 +3537,16 @@ function query_department(){//部门
 return M('salary_department')->select();
 
 }
-function code_number($number){//数字验证
+function code_number($number,$style){//数字验证
 
 	if(!is_numeric($number)){
-
+        if($style==1){
+            return 0;
+        }
 		$sum  	= 0;
 		$msg  	= "格式错误!请重新提交!";
 		echo json_encode(array('sum'=>$sum,'msg'=>$msg));die;
-
 	}else{
-
 		return $number;
 	}
 }
@@ -3724,8 +3721,8 @@ function user_table($where){//查询用户
     //带团补助  $month 查询年月 例如:201809
     function Acquisition_Team_Subsidy($month,$guide_id){
 
-        $firstday                           = date('Y-m-27', strtotime("$month -1 month"));//获取第一天
-        $lastday                            = date('Y-m-27', strtotime("$firstday +1 month -1 day"));//获取最后一天
+        $firstday                           = date('Y-m-27', strtotime("$month -2 month"));//获取第一天
+        $lastday                            = date('Y-m-27', strtotime("$firstday +1 month"));//获取最后一天
         $firstday_time                      = strtotime($firstday);//当月第一天时间戳
         $lastday_time                       = strtotime($lastday);//当月最后一天时间戳
 
@@ -3743,6 +3740,24 @@ function user_table($where){//查询用户
         }
         return $price;
     }
+
+
+    /**
+     * user_contrast_status 信心对比状态
+     * $file_id 文件 id
+     * $user_id 用户id
+     */
+     function user_contrast_status($file_id,$user_id){
+
+            $where['file_id']       = $file_id;
+            $where['account_id']    = $user_id;
+            $status                 = M('annotation_file')->where($where)->find();
+            if($status){
+                return 2;//已批注
+            }else{
+                return 1;//未批注
+            }
+        }
 
 //获取用户信息(用户名+角色)
 function get_userkey(){
