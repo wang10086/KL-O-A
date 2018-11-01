@@ -335,7 +335,10 @@ class SalaryController extends BaseController {
             if(!$attend_r){
                 $this->error('您的数据编辑失败!请重新编辑！', U('Salary/salary_attendance'));die;
             }else{
-                salary_info(12,7);//操作记录 编辑
+                $sum = salary_info(12,7);//操作记录 编辑
+                if($sum==0 || $sum=='0'){
+                    $this->error('您的数据编辑失败!请重新编辑！', U('Salary/salary_attendance'));die;
+                }
                 $this->success('编辑数据成功！', U('Salary/salary_attendance'));die;
             }
         }elseif(IS_GET){
@@ -428,8 +431,6 @@ class SalaryController extends BaseController {
 
                 $month                                  = datetime(date('Y'),date('m'),date('d'),1);//获取201810月份
                 $account_r[$key]['extract']             = round(Acquisition_Team_Subsidy($month,$val['guide_id']),2);//带团补助
-
-//              $account_r[$key]['extract']             = $salary_bonus['extract'];
 
                 $account_r[$key]['bonus']               = $salary_bonus['bonus'];
                 $account_r[$key]['annual_bonus']        = $salary_bonus['annual_bonus'];

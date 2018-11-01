@@ -37,8 +37,13 @@ class ApprovalController extends BaseController {
         $user_id                = $_POST['user_id'];
         $style                  = $_POST['style'];
         $approval               = D('Approval');
-        $judge                  = $approval->approval_upload('approval_flie',$user_id,$style);
-
+        if($style==""){
+            $approve_id         = code_number($_POST['approve_id'],1);
+            if($approve_id==0){
+                $this->error('保存文档数据失败!');
+            }
+        }
+        $judge                  = $approval->approval_upload('approval_flie',$user_id,$style,$approve_id);
         if($judge==1){
             $this->success('保存文档数据成功!');//最后一次错误
         }else{
@@ -50,14 +55,11 @@ class ApprovalController extends BaseController {
     //文件详情
     public function Approval_Update(){
 
-        $id = trim(I('id'));//文件id
-        if(!is_numeric($id)){
-            $this->error('您选择文件错误！请重新选择!', U('Approval/Approval_Index'));die;
-        }
+        $id = code_number(trim(I('id')),1);//文件id
+
         $file[0]                = D('Approval')->approval_update($id);
         $this->id               = $id;
         $approval_file          = D('Approval')->approval_update_sql($file);//循环更改文件数据
-
         $this-> url = $_SERVER['SERVER_NAME'].'/'.$approval_file[0]['file']['file_url'];
 
         $this->assign('approval_file',$approval_file);

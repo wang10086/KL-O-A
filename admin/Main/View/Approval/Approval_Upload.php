@@ -44,14 +44,24 @@
                     <h3 class="box-title">上传文件</h3>
                 </div><!-- /.box-header -->
                 <div class="content ">
-                    <div class="col-md-12 mt10" id="Approvel_uploadtid" >
+                    <form method="post" action="{:U('Approval/Approval_file')}" enctype="multipart/form-data">
+                    <div class="col-md-12 mt10">
                         <lebal class="upload-lebal">选择审批人<span></span></lebal>
-                        <form method="post" action="{:U('Approval/Approval_file')}" enctype="multipart/form-data">
                         <foreach name="personnel" item="v">
                             <a style=" width:10em; display: inline-block;" class="{$v.id}">
-                                <input type="checkbox" value="{$v.id}" name="user_id[]" checkbox="">
+                                <input type="checkbox" value="{$v.id}" name="user_id[]" >
                                 &nbsp;{$v.nickname}</a>
                         </foreach>
+                    </div>
+
+                    <div class="col-md-12 mt10">
+                        <lebal class="upload-lebal">选择最终审核人<span></span></lebal>
+                            <foreach name="personnel" item="v">
+                                <a style=" width:10em; display: inline-block;" class="{$v.id}">
+                                    <input type="radio" name="approve_id" value="{$v.id}"  />
+                                    &nbsp;{$v.nickname}
+                                </a>
+                            </foreach>
                     </div>
 
                     <div class="col-md-12 mt10" style=" vertical-align:text-top;">
@@ -85,7 +95,7 @@
                        
                     </div>
                     <div id="formsbtn">
-                        <button type="submit" id="approval_file_upload" style="color:#FFFFFF;width:5em;height:2em;background-color:#008d4c;font-size:1.5em;border-radius:7px;">保 存</button>
+                        <button type="submit" style="color:#FFFFFF;width:5em;height:2em;background-color:#008d4c;font-size:1.5em;border-radius:7px;">保 存</button>
                     </div>
                 </div>
                 </form>

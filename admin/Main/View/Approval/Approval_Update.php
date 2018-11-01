@@ -143,10 +143,11 @@
                                         <div class="form-group col-md-6" style="float:right;width:50em;">
                                             <label>
                                                 <b style="font-size:1.3em;color:#09F;padding:1em;letter-spacing:0.2em;">审批批注 : </b>
+                                                <b style="margin-left:20em;">
+                                                <input value="提交审批批注" class="btn btn-info" style="margin-right:1em;"></b>
                                             </label><br><br>
-                                            <textarea  style="margin-left:2em;padding:1em;height:83em;border:solid 2px #d2d5d8;overflow-y:scroll;overflow-x:scroll;word-wrap:break-word;width:45em;">
-
-                                            </textarea >
+                                                <textarea  style="margin:-0.6em 0em 0em;padding:1em;height:82.5em;border:solid 2px #d2d5d8;overflow-y:scroll;overflow-x:scroll;word-wrap:break-word;width:45em;" name="comment">11111111111111111111111111111111
+                                            </textarea>
                                         </div>
                                     </div><br>
 
@@ -162,5 +163,8 @@
 
 
 <include file="Index:footer2" />
+<script>
+    clicl
+</script>
 
 

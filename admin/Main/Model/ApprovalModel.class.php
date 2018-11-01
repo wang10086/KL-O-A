@@ -10,7 +10,7 @@
          * $table 上传文件表名 $user_id 审批人
          * $style 状态 1 approval_flie_update表添加 默认 approval_flie 表
          */
-        public function approval_upload($table,$user_id,$style){
+        public function approval_upload($table,$user_id,$style,$approve_id){
             if($style==1){
                 $table                                = 'approval_flie_update';
                 $add_approval['update_time']          = time();
@@ -24,6 +24,8 @@
                 }
                 $userid                               = substr($userid,0,-1);
                 $add_approval['file_account_id']      = $userid;
+                $add_approval['file_leader_id']       = $approve_id;
+                $add_approval['file_leader_name']     = username($approve_id);
             }
 
             $upload                                   = new \Think\Upload();// 实例化上传类
