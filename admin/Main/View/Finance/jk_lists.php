@@ -24,7 +24,7 @@
                         <td>{$v.remark}</td>
                         <td width="80" id="td_{$v.id}">
                             <a href="javascript:;" class="btn btn-info btn-sm" onclick="add_jiekuan({$v.id})">借款</a>
-                            <input type="hidden" name="id" value="{$v.id}">
+                            <input type="text" name="id" value="{$v.id}">
                             <input type="hidden" name="total" value="{$v.total}" id="total_{$v.id}">
                         </td>
                     </tr>
@@ -46,6 +46,13 @@
             <div class="content">
                 <input type="hidden" name="info[op_id]" value="{$op.op_id}" />
                 <div style="width:100%; float:left;">
+
+                    <div class="form-group col-md-12">
+                        <label>借款编号ids：</label>
+                        <input type="text" name="info[costacc_ids]" class="form-control" id ="cids" readonly />
+                    </div>
+
+
                     <div class="form-group col-md-6">
                         <label>借款单位：</label>
                         <input type="text" name="info[rolename]" class="form-control" value="<?php echo $list['rolename']?$list['rolename']:session('rolename'); ?>" readonly />
@@ -136,12 +143,15 @@
         })
 
         function add_jiekuan(id) {
-            var jiekuanjine   = $('#jiekuanjine').val();
-            var total         = $('#total_'+id).val();
-            var sum           = accAdd(jiekuanjine,total);  //数据相加
+            var jiekuanjine     = $('#jiekuanjine').val();
+            var total           = $('#total_'+id).val();
+            var sum             = accAdd(jiekuanjine,total);  //数据相加
             $('#jiekuanjine').val(sum);
 
-            var html        = '';
+            var arr_ids         = '';
+
+
+            var html            = '';
             html +='<a href="javascript:;" class="btn btn-sm" onclick="del_jiekuan('+id+')">取消</a>'+
                 '<input type="hidden" name="id" value="'+id+'">'+
                 '<input type="hidden" name="total" value="'+total+'" id="total_'+id+'">';
@@ -149,7 +159,7 @@
         }
 
         function del_jiekuan(id){
-            alert('加班开发中');
+            art.dialog.alert('加班开发中');
         }
 
 

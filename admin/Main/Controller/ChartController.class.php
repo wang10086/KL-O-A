@@ -531,15 +531,16 @@ class ChartController extends BaseController {
 		//查询所有业务人员信息
 		$where = array();
 		$where['status']			= 0;
-		//$where['postid']			= array('in','1,2,4,31,32');
-        $where['position_id']       = array('in','1,5,6,7,8,9,10');
-		
+        //$where['position_id']       = array('in','1,5,6,7,8,9,10');
+        $arr_position_ids           = array(1,5,6,7,8,9,10);
+
 		$field = array();
 		$field[] =  'id as create_user';
 		$field[] =  'nickname as create_user_name';
 		$field[] =  'roleid';
         $field[] =  'departmentid';
-		
+        $field[] =  'position_id';
+
 		$lists = M('account')->field($field)->where($where)->select();
 
 		foreach($lists as $k=>$v){
@@ -561,7 +562,14 @@ class ChartController extends BaseController {
 			
 		}
 
-		$this->lists = $lists;
+		$arr  = array();
+		foreach ($lists as $kk=>$vv){
+            if ($vv['zsr'] != 0.00 || in_array($vv['position_id'],$arr_position_ids)){
+                $arr[] = $vv;
+            }
+        }
+
+        $this->lists = $arr;
 		
 		$this->display('pplist');
 	}
