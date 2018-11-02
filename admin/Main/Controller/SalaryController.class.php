@@ -92,7 +92,7 @@ class SalaryController extends BaseController {
         //kpi 目标任务 完成 提成
         $month                           = (int)substr($datetime,4);
         $year                            = (int)substr($datetime,0,4);
-        $query['user_id']                = 124;
+        $query['user_id']                = $where;
 
         if($year==2018){
             if($month==10 || $month==9){
@@ -697,7 +697,7 @@ class SalaryController extends BaseController {
      */
     private function salary_excel_sql($archives,$name){
             if($name!==""){
-                $where['nickname'] = $name;
+                $where['nickname']                  = $name;
             }
         $where['archives']                          = $archives;
         if($archives==null || $archives==false){

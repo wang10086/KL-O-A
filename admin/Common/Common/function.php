@@ -3753,9 +3753,9 @@ function user_table($where){//查询用户
             $where['account_id']    = $user_id;
             $status                 = M('annotation_file')->where($where)->find();
             if($status){
-                return 2;//已批注
+                return $status['status'];//已批注
             }else{
-                return 1;//未批注
+                return 0;//未批注
             }
         }
 

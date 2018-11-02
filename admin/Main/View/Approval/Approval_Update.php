@@ -180,7 +180,12 @@
 
                                         </div>
                                     </div><br>
+                                    <div style="text-align: center;">
 
+                                        <input type="submit" value="审批通过" class="btn btn-info"   style="margin-right:1em;">
+                                        <input type="submit" value="审批驳回" class="btn btn-info"   style="margin-right:1em;">
+                                        <input type="submit" value="修改提交" class="btn btn-info"   style="margin-right:1em;">
+                                    </div>
                                 </div>
                             </foreach>
                         </div><!-- /.box -->

@@ -1119,6 +1119,7 @@ class AjaxController extends Controller {
             $update['status']               = 2;
             $approvalfile                   = M('approval_flie')->where('id='.$file_id)->save($update);
             $flieupdate                     = M('approval_flie_update')->where('file_id='.$file_id)->save($update);
+
             echo json_encode(array('sum' => 1, 'msg' => "提交数据成功!"));die;
         }else{
             echo json_encode(array('sum' => 0, 'msg' => "编辑失败!请重新编辑提交!"));die;
