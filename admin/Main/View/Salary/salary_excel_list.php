@@ -83,7 +83,7 @@
 
                                         <td>&yen; <?PHP echo sprintf("%.2f",$info['Achievements']['count_money']);?></td>
                                         <td>&yen; <?PHP echo sprintf("%.2f",$info['Extract']['total']);?></td>
-                                        <td>&yen; <?PHP echo sprintf("%.2f",$info['bonus'][0]['bonus']);?></td>
+                                        <td>&yen; <?PHP echo sprintf("%.2f",$info['bonus'][0]['foreign_bonus']);?></td>
                                         <td>&yen; <?PHP echo sprintf("%.2f",$info['subsidy'][0]['housing_subsidy']);?></td>
                                         <td>&yen; <?PHP echo sprintf("%.2f",$info['Other']);?></td>
                                         <td>&yen; <?PHP echo sprintf("%.2f",$info['Should']);?></td>

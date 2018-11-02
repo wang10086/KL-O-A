@@ -166,16 +166,16 @@
                                                         <b style="color:#339933;">{$ann['account_name']}&nbsp;</b>
                                                         <span>[ <?php echo date('Y-m-d H:i:s',$ann['createtime']);?> ]</span>
                                                         <span style="color:#CC3333">[ 批注 ] ：</span>
-                                                        <div style="margin-left:2.5em;">
-                                                            <span style="letter-spacing:0.2em;line-height:2em;">
+
+                                                            <span style="letter-spacing:0.1em;line-height:2em;text-indent:25px">
                                                                 {$ann['annotation_content']}
                                                             </span>
-                                                        </div>
+
                                                     </p>
                                                 </foreach>
                                             </div>
 
-                                            <textarea style="margin:-0.6em 0em 0em 0em;padding:1em;height:83em;border:solid 2px #d2d5d8;overflow-y:scroll;overflow-x:scroll;word-wrap:break-word;width:45em;display:none;text-indent:2.5em;line-height:2em;letter-spacing:0.2em;"  name="comment">
+                                            <textarea style="margin:-0.6em 0em 0em 0em;padding:1em;height:83em;border:solid 2px #d2d5d8;overflow-y:scroll;overflow-x:scroll;word-wrap:break-word;width:45em;display:none;text-indent:2.5em;line-height:2em;letter-spacing:0.1em;"  name="comment">
                                             </textarea>
 
                                         </div>

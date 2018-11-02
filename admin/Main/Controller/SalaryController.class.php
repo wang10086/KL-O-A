@@ -801,10 +801,12 @@ class SalaryController extends BaseController {
             $position                               = sql_query(1,'*','oa_position',$position_id,1,1);//职位
             $strstr                                 = $position[0]['position_name'];
 
-            $user_bonus                             = $user_info[$key]['bonus'][0]['extract'];//提成
+            $user_bonus                             = $user_info[$key]['bonus'][0]['bonus'];//提成
             if(strstr($strstr,'S')!==false){
                 $user_info[$key]['Extract']         = $this->salary_kpi_month($val['id'],$que['p.month'],1); //业务人员 目标任务 完成 提成
             }
+
+
 //            if($user_info[$key]['bonus'][0]['annual_bonus']!==0 && !empty($user_info[$key]['bonus'][0]['annual_bonus'])){
 //                $Year_end = $user_info[$key]['Extract']['total'];
 //                 unset($user_info[$key]['Extract']['total']);
@@ -878,12 +880,19 @@ class SalaryController extends BaseController {
                 }
                 $counting                           = round($countin,2);
             }
+
+            $name[$key]['nickname'] = $user_info[$key]['account']['nickname'];
+            $name[$key]['id'] = $user_info[$key]['account']['id'];
+
+
             $user_info[$key]['datetime']            = $que['p.month'];//现在日期
             $user_info[$key]['personal_tax']        = $counting;//个人所得税
 
             //实发工资=岗位工资-考勤扣款+绩效增减+提成(带团补助)+奖金-代扣代缴+年终奖-年终奖计税+住房补贴+外地补贴+电脑补贴-五险一金-个人所得税-工会会费+其他补款
             $user_info[$key]['real_wages']          = round(($user_info[$key]['salary'][0]['standard_salary']-$user_info[$key]['attendance'][0]['withdrawing']+$extract+$user_info[$key]['bonus'][0]['bonus']-$user_info[$key]['summoney']+$user_info[$key]['bonus'][0]['annual_bonus']-$user_info[$key]['yearend']+$user_info[$key]['subsidy'][0]['housing_subsidy']-$user_info[$key]['insurance_Total']-$counting-$user_info[$key]['labour']['Labour_money']+$user_info[$key]['Other']+$user_info[$key]['Achievements']['count_money']+$user_info[$key]['bonus'][0]['foreign_bonus']),2);
         }
+//        print_r($user_info[79]);die;
+//        print_r($user_info[79]);die;
         return $user_info;
     }
 
@@ -911,7 +920,7 @@ class SalaryController extends BaseController {
                         $sum[$k]['performance_salary']      += round($val['salary'][0]['standard_salary']/10*$val['salary'][0]['performance_salary'],2);//绩效薪资
                         $sum[$k]['count_money']             += round($val['Achievements']['count_money'],2);//绩效增减
                         $sum[$k]['total']                   += round($val['Extract']['total'],2);//业绩提成
-                        $sum[$k]['bonus']                   += round($val['bonus'][0]['bonus'],2);// 奖金
+                        $sum[$k]['bonus']                   += round($val['bonus'][0]['foreign_bonus'],2);// 奖金
                         $sum[$k]['housing_subsidy']         += round($val['subsidy'][0]['housing_subsidy'],2);//住房补贴
                         $sum[$k]['Other']                   += round($val['Other'],2);//其他补款
                         $sum[$k]['Should']                  += round($val['Should'],2);//应发工资

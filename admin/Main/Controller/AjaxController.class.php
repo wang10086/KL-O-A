@@ -1081,39 +1081,29 @@ class AjaxController extends Controller {
      */
     public function Ajax_approval_textarea(){
 
-//            $sum                    = 1;
-//            $msg                    = "添加失败!";
-//            echo json_encode(array('sum' => $sum, 'msg' => $msg));die;
-
-        $text                           = trim($_POST['text']);
-        $file_id                        = code_number(trim($_POST['file_id']));
+        $text                               = trim($_POST['text']);
+        $file_id                            = code_number(trim($_POST['file_id']));
         if(empty($text)){
-            $sum                        = 0;
-            $msg                        = "添加失败!";
+            $sum                            = 0;
+            $msg                            = "添加失败!";
+            echo json_encode(array('sum' => $sum, 'msg' => $msg));die;
         }
-        $where['account_id']            = (int)$_SESSION['userid'];
-        $where['file_id']               = (int)$file_id;
-        $file                           = M('annotation_file')->where($where)->find();
+        $ttt = explode('<br/>',$text);
+        var_dump_r($ttt);die;
+        $where['account_id']                = (int)$_SESSION['userid'];
+        $where['file_id']                   = (int)$file_id;
+        $file                               = M('annotation_file')->where($where)->find();
         if($file){
-            $add['annotation_content']  = $text;
-            $save =  M('annotation_file')->where('id='.$file['id'])->save($add);
-
+            $add['annotation_content']      = $text;
+            $save                           =  M('annotation_file')->where('id='.$file['id'])->save($add);
 
         }else{
             $where['createtime']            = time();
             $where['account_name']          = $_SESSION['nickname'];
             $where['annotation_content']    = $text;
+            $annotation_w                   =  M('annotation_file')->add($where);
         }
 
-
-
-
-
-
-        var_dump($where);die;
-
     }
-
-
 
 }
