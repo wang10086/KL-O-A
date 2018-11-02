@@ -70,7 +70,7 @@
                                         <td style="text-align:center;">{$f['file']['file_format']}</td>
                                         <td style="text-align:center;">{$f['file']['file_size']}</td>
                                         <td style="text-align:center;">
-                                            <?php if($f['file']['status']==1){echo "待批注";}elseif($f['file']['status']==2){echo "待批准";}elseif($f['file']['status']==3){echo "通过";}?>
+                                            <?php if($f['file']['status']==1){echo "待批注";}elseif($f['file']['status']==2){echo "待批准";}elseif($f['file']['status']==3){echo "已批准";}elseif($f['file']['status']==4){echo "审批未通过";}?>
                                         </td>
                                         <td style="text-align:center;">
                                             <a href="{:U('Approval/Approval_Update',array('id'=>$f['file']['id']))}">

@@ -84,7 +84,7 @@
                 foreach($user_id as $k =>$v) {
                     $update[$key]['file']['user'][$k]['status'] = user_contrast_status($val['id'],$v);
                 }
-                if($update[$key]['flie_annotation']['0']['status']==2){
+                if($update[$key]['flie_annotation']['0']['status']>1){
                     $update[$key]['file']['file_leader_postil'] = 2;
                 }else{
                     $update[$key]['file']['file_leader_postil'] = 1;
@@ -110,14 +110,4 @@
             return $file;
         }
 
-
-        /**
-         * 查询选取人员信息
-         * $id 文件 id
-         */
-        public function user_info($file){
-
-            $user_info = explode(',',$file['file_account_id']);
-
-        }
     }

@@ -876,7 +876,7 @@ class AjaxController extends Controller {
 
                 $generate_month             = datetime(date('Y'),date('m'),date('d'),1);//获取当前年月
                 $guide_id                   = user_table($add['account_id']);
-                $bonus_extract              = Acquisition_Team_Subsidy($generate_month,$guide_id);//带团补助
+                $bonus_extract              = Acquisition_Team_Subsidy($generate_month,$guide_id['guide_id']);//带团补助
                 $bonussave['status']        = 2;
                 $bonussave['extract']       = $bonus_extract;
                 $bonus_w                    = M('salary_bonus')->where(array('id='.$add['bonus_id']))->save($bonussave);
@@ -1081,39 +1081,50 @@ class AjaxController extends Controller {
      */
     public function Ajax_approval_textarea(){
 
-//            $sum                    = 1;
-//            $msg                    = "添加失败!";
-//            echo json_encode(array('sum' => $sum, 'msg' => $msg));die;
-
-        $text                           = trim($_POST['text']);
-        $file_id                        = code_number(trim($_POST['file_id']));
-        if(empty($text)){
-            $sum                        = 0;
-            $msg                        = "添加失败!";
+        $text                               = trim($_POST['text']);
+        $file_id                            = code_number(trim($_POST['file_id']));
+        if(empty($text)){//判断是否有值
+            echo json_encode(array('sum' => 0, 'msg' => "编辑失败!请重新编辑提交!"));die;
         }
-        $where['account_id']            = (int)$_SESSION['userid'];
-        $where['file_id']               = (int)$file_id;
-        $file                           = M('annotation_file')->where($where)->find();
-        if($file){
-            $add['annotation_content']  = $text;
-            $save =  M('annotation_file')->where('id='.$file['id'])->save($add);
+        $content                            = array_filter(explode('<br/>',$text));//array_filter
+        $arr = '';
+        foreach($content as $key => $val){//循环传送值 加首行缩进
+            $arr                           .= $val.'<br/>&emsp;&emsp;';
+        }
+        $where['account_id']                = (int)$_SESSION['userid'];
+        $where['file_id']                   = (int)$file_id;
 
-
+        $file                               = M('annotation_file')->where($where)->find();
+        if($file){//判断是添加或者修改
+            $add['annotation_content']      = $arr;
+            $save                           =  M('annotation_file')->where('id='.$file['id'])->save($add);
+            $id                             = $file['id'];
         }else{
             $where['createtime']            = time();
             $where['account_name']          = $_SESSION['nickname'];
-            $where['annotation_content']    = $text;
+            $where['annotation_content']    = $arr;
+            $annotation_w                   =  M('annotation_file')->add($where);
+            $id                             = mysql_insert_id();
+        }
+        if(!empty($id) && $id!==0 && $id !==false){//判断添加或修改是否成功
+            $approval                       = M('approval_flie')->where('id='.$file_id)->find();
+            $userfileid                     = explode(',',$approval['file_account_id']);
+            foreach($userfileid as $key => $val){
+                $file_save                  = user_contrast_status($file_id,$val);
+                if(!$file_save){//判断有人未完成批注
+                    echo json_encode(array('sum' => 1, 'msg' => "提交数据成功!"));die;
+                }
+            }
+            //判断所有人都完成批注
+            $update['status']               = 2;
+            $approvalfile                   = M('approval_flie')->where('id='.$file_id)->save($update);
+            $flieupdate                     = M('approval_flie_update')->where('file_id='.$file_id)->save($update);
+
+            echo json_encode(array('sum' => 1, 'msg' => "提交数据成功!"));die;
+        }else{
+            echo json_encode(array('sum' => 0, 'msg' => "编辑失败!请重新编辑提交!"));die;
         }
 
-
-
-
-
-
-        var_dump($where);die;
-
     }
-
-
 
 }

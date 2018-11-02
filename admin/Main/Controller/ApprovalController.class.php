@@ -12,8 +12,8 @@ class ApprovalController extends BaseController {
         $page                   = new Page($count,10);
         $pages                  = $page->show();
         $approval               = M('approval_flie')->limit("$page->firstRow","$page->listRows")->order('createtime desc')->select();
-        $update                 = D('Approval')->approval_update_sql($approval);//循环更改文件数据
-        $this->file             = $update;
+        $this->file             = D('Approval')->approval_update_sql($approval);//循环更改文件数据
+
         $this->pages            = $pages;
         $this->display();
     }
@@ -66,6 +66,7 @@ class ApprovalController extends BaseController {
         }else{
             $this-> url = $_SERVER['SERVER_NAME'].'/'.$approval_file['0']['file']['file_url'];
         }
+
 //        print_r($approval_file);die;
         $this->assign('approval_file',$approval_file);
         $this->display();

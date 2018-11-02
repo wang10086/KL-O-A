@@ -3753,9 +3753,9 @@ function user_table($where){//查询用户
             $where['account_id']    = $user_id;
             $status                 = M('annotation_file')->where($where)->find();
             if($status){
-                return 2;//已批注
+                return $status['status'];//已批注
             }else{
-                return 1;//未批注
+                return 0;//未批注
             }
         }
 
@@ -3805,7 +3805,7 @@ function get_username(){
     //获取团队相关数据
     $where = array();
     $where['roleid'] = array('in',$postmore[$dept]);
-    $where['status'] = array('eq',0);
+    $where['status'] = array('between','0,1');
     $users = M('account')->where($where)->select();
     $ulist = array();
     foreach($users as $k=>$v){
@@ -3821,10 +3821,11 @@ function get_username(){
     }else if($et){
         $where['l.audit_time'] = array('lt',strtotime($et));
     }
+
     if($xs)   $where['o.create_user_name']	= array('like','%'.$xs.'%');
     if($dept) $where['o.create_user']		= array('in',implode(',',$ulist));
 
-        $datalist = $db->table('__OP_SETTLEMENT__ as b')->group('o.op_id')->field('b.*,o.project,o.group_id,o.number,o.customer,o.create_user_name,o.destination,o.days,o.remark,l.audit_time')->join('__OP__ as o on b.op_id = o.op_id','LEFT')->join('__AUDIT_LOG__ as l on l.req_id = b.id','LEFT')->join('__ACCOUNT__ as a on a.id = o.create_user','LEFT')->where($where)->limit($page->firstRow . ',' . $page->listRows)->order('l.audit_time DESC')->select();
+        $datalist = $db->table('__OP_SETTLEMENT__ as b')->group('o.op_id')->field('b.*,o.project,o.group_id,o.number,o.customer,o.create_user_name,o.destination,o.days,o.remark,l.audit_time')->join('__OP__ as o on b.op_id = o.op_id','LEFT')->join('__AUDIT_LOG__ as l on l.req_id = b.id','LEFT')->join('__ACCOUNT__ as a on a.id = o.create_user','LEFT')->where($where)->order('l.audit_time DESC')->select();
 
         $sum = 0;
     foreach($datalist as $k=>$v){
