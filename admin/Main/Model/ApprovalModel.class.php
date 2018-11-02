@@ -91,7 +91,6 @@
                 }
                 $update[$key]['file']['file_leader_status']     = user_contrast_status($val['file_leader_id'],$val['id']);
             }
-//            print_r($update);die;
             return $update;
         }
 
