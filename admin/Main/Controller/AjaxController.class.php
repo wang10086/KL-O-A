@@ -1088,8 +1088,13 @@ class AjaxController extends Controller {
             $msg                            = "添加失败!";
             echo json_encode(array('sum' => $sum, 'msg' => $msg));die;
         }
-        $ttt = explode('<br/>',$text);
-        var_dump_r($ttt);die;
+        $content = array_filter(explode('<br/>',$text));//array_filter
+        $arr = '';
+//        foreach($content as $key => $val){
+//            $val
+//
+//        }
+//        print_r($ttt);die;
         $where['account_id']                = (int)$_SESSION['userid'];
         $where['file_id']                   = (int)$file_id;
         $file                               = M('annotation_file')->where($where)->find();
