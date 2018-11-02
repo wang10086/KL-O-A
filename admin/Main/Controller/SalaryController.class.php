@@ -92,7 +92,7 @@ class SalaryController extends BaseController {
         //kpi 目标任务 完成 提成
         $month                           = (int)substr($datetime,4);
         $year                            = (int)substr($datetime,0,4);
-        $query['user_id']                = $where;
+        $query['user_id']                = 124;
 
         if($year==2018){
             if($month==10 || $month==9){
@@ -167,9 +167,7 @@ class SalaryController extends BaseController {
             }
             return $content;
         }
-        if($type==2){
 
-        }
         if($month == 3 || $month == 6 || $month == 9 ||$month == 12){
             $count                        = 0;
             $sum                          = 0;
@@ -216,7 +214,6 @@ class SalaryController extends BaseController {
             $content['complete']           = '0.00';//季度完成
             $content['total']              = '0.00';//保留两位小数
         }
-
         return $content;
     }
 
@@ -369,7 +366,7 @@ class SalaryController extends BaseController {
             $where['postid']                        = $postid['id'];
         }
         $where                                      = array_filter($where);
-        $where['status']                            = array('neq',2);
+        $where['A.status']                          = array('between','0,1');
 
         $count                                      = $this->salary_count(1,$where);
         $page                                       = new Page($count,16);
@@ -404,7 +401,7 @@ class SalaryController extends BaseController {
             $postid                                     = M('posts')->where($posts)->find();
             $where['postid']                            = $postid['id'];
         }
-        $where['A.status']                              = array('neq',2);
+        $where['A.status']                              = array('between','0,1');
         $where                                          = array_filter($where);
         if(count($where) !== 0 || $all !== ""){
             if($all == '所有'){
@@ -706,7 +703,7 @@ class SalaryController extends BaseController {
         if($archives==null || $archives==false){
             unset($where['archives']);
         }
-        $where['status'] = array('neq',2);
+        $where['status'] = array('between','0,1');
         $info                                       =  M('account')->where($where)->order('employee_member ASC')->select();//个人数据
         foreach($info as $k => $v){//去除编码空的数据
             if($v['employee_member'] == ""){
@@ -796,27 +793,31 @@ class SalaryController extends BaseController {
             $user_info[$key]['Achievements']['total_score_show']    = $use1;//pdca分数
             $user_info[$key]['Achievements']['show_qa_score']       = $use2;//品质检查分数
             $user_info[$key]['Achievements']['sum_total_score']     = $use3;//KPI分数
-            // 判断是否是业务人员
-            $position_id['id']                      = $val['position_id'];
-            $position                               = sql_query(1,'*','oa_position',$position_id,1,1);//职位
-            $strstr                                 = $position[0]['position_name'];
 
-            $user_bonus                             = $user_info[$key]['bonus'][0]['bonus'];//提成
+
+            // 判断是否是业务人员  提成
+//            $position_id['id']                      = $val['position_id'];
+//            $position                               = sql_query(1,'*','oa_position',$position_id,1,1);//职位
+//            $strstr                                 = $position[0]['position_name'];
 //            if(strstr($strstr,'S')!==false){
 //                $user_info[$key]['Extract']         = $this->salary_kpi_month($val['id'],$que['p.month'],1); //业务人员 目标任务 完成 提成
 //            }
 
-            $user_price                             = $this->salary_kpi_month($val['id'],$que['p.month'],1); //业务人员 目标任务 完成 提成
 
+                //如果做季度提成可以变为奖金放开屏蔽即可
 //            if($user_info[$key]['bonus'][0]['annual_bonus']!==0 && !empty($user_info[$key]['bonus'][0]['annual_bonus'])){
 //                $Year_end = $user_info[$key]['Extract']['total'];
 //                 unset($user_info[$key]['Extract']['total']);
 //                $user_info[$key]['Extract']['total']= $user_bonus;
 //
-//            }else{//如果做季度提成可以变为奖金放开屏蔽即可
+//            }else{
 //                 $user_info[$key]['Extract']['total']    = $user_info[$key]['Extract']['total']+$user_bonus;//提成相加
 //            }
-            $user_info[$key]['Extract']['total']    = $user_price['total']+$user_bonus;//提成相加
+
+
+            $user_price                             = $this->salary_kpi_month($val['id'],$que['p.month'],1); //业务人员 目标任务 完成 提成
+
+            $user_info[$key]['Extract']['total']    = $user_price['total']+$user_info[$key]['bonus'][0]['bonus'];//提成相加
 
             $extract                                = $user_info[$key]['Extract']['total'];
 
@@ -882,18 +883,14 @@ class SalaryController extends BaseController {
                 $counting                           = round($countin,2);
             }
 
-            $name[$key]['nickname'] = $user_info[$key]['account']['nickname'];
-            $name[$key]['id'] = $user_info[$key]['account']['id'];
-
-
             $user_info[$key]['datetime']            = $que['p.month'];//现在日期
             $user_info[$key]['personal_tax']        = $counting;//个人所得税
 
             //实发工资=岗位工资-考勤扣款+绩效增减+提成(带团补助)+奖金-代扣代缴+年终奖-年终奖计税+住房补贴+外地补贴+电脑补贴-五险一金-个人所得税-工会会费+其他补款
             $user_info[$key]['real_wages']          = round(($user_info[$key]['salary'][0]['standard_salary']-$user_info[$key]['attendance'][0]['withdrawing']+$extract+$user_info[$key]['bonus'][0]['bonus']-$user_info[$key]['summoney']+$user_info[$key]['bonus'][0]['annual_bonus']-$user_info[$key]['yearend']+$user_info[$key]['subsidy'][0]['housing_subsidy']-$user_info[$key]['insurance_Total']-$counting-$user_info[$key]['labour']['Labour_money']+$user_info[$key]['Other']+$user_info[$key]['Achievements']['count_money']+$user_info[$key]['bonus'][0]['foreign_bonus']),2);
         }
-//        print_r($user_info[79]);die;
-//        print_r($user_info[79]);die;
+
+//        print_r($user_info[79]);die;//49liuyu
         return $user_info;
     }
 
