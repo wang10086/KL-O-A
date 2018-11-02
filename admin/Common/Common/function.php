@@ -3822,7 +3822,7 @@ function get_username(){
         $where['l.audit_time'] = array('lt',strtotime($et));
     }
 
-    if($xs)   $where['o.create_user_name']	= array('like',$xs);
+    if($xs)   $where['o.create_user_name']	= array('eq',$xs);
     if($dept) $where['o.create_user']		= array('in',implode(',',$ulist));
 
         $datalist = $db->table('__OP_SETTLEMENT__ as b')->group('o.op_id')->field('b.*,o.project,o.group_id,o.number,o.customer,o.create_user_name,o.destination,o.days,o.remark,l.audit_time')->join('__OP__ as o on b.op_id = o.op_id','LEFT')->join('__AUDIT_LOG__ as l on l.req_id = b.id','LEFT')->join('__ACCOUNT__ as a on a.id = o.create_user','LEFT')->where($where)->order('l.audit_time DESC')->select();
