@@ -818,8 +818,16 @@ class AjaxController extends Controller {
 
     //保存提交审核数据
     public function Ajax_salary_details_add(){
-        $user_id = (int)$_SESSION['userid'];
+        /*$user_id = (int)$_SESSION['userid'];
         if($user_id['userid']==77 || $user_id==1){
+
+        }else{
+            $sum                            = 0;
+            $msg                            = "您的权限不足!请联系管理员！";
+            echo json_encode(array('sum' => $sum, 'msg' => $msg));die;
+        }*/
+        $user_id = session('userid');
+        if($user_id==77 || $user_id==1){
 
         }else{
             $sum                            = 0;
