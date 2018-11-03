@@ -22,7 +22,7 @@
                          <!-- right column -->
                         <div class="col-md-12">
                             <!-- general form elements disabled -->
-                            <form method="post" action="{:U('Contract/add')}" name="myform" id="myform">
+                            <form method="post" action="{:U('Contract/add')}" name="myform" id="myform" onsubmit="return beforeSubmit(this)">
                             <div class="box box-warning">
                                 <div class="box-header">
                                     <h3 class="box-title">{$_action_}</h3>
@@ -233,6 +233,17 @@ function orderno(){
 function delbox(obj){
 	$('#'+obj).remove();
 	orderno();
+}
+
+//表单提交
+function beforeSubmit(obj){
+    var contract_amount = parseInt($('#contract_amount').val());
+    if (!contract_amount){
+        art_show_msg('合同金额填写有误',3);
+        return false;
+    }else{
+        obj.submit();
+    }
 }
 	
 </script>

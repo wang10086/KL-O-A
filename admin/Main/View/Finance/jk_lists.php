@@ -98,7 +98,7 @@
 
                     <div class="form-group col-md-6">
                         <label>借款人：</label>
-                        <input type="button" onclick="alert(123)" value="签字">
+                        <input type="button" onclick="art_show_msg('加班开发中',5)" value="签字">
                     </div>
 
                 </div>

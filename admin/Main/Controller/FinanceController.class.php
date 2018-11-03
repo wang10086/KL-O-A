@@ -637,6 +637,19 @@ class FinanceController extends BaseController {
         $this->ages 			= C('AGE_LIST');
         $this->kinds			=  M('project_kind')->getField('id,name', true);
         $this->cost_type        = C('COST_TYPE');
+
+        //先回款,在做结算  //已回款金额
+        $huikuan_lists          = M('op_huikuan')->where(array('op_id'=>$opid,'audit_status'=>1))->select();
+        $yihuikuan              = array_sum(array_column($huikuan_lists,'huikuan'));
+        //合同金额
+        $contract_amount        = M('contract')->where(array('op_id'=>$opid,'status'=>1))->getField('contract_amount');
+        //地接团结算不受汇款限制
+        $dijie_opids            = array_filter(M('op')->getField('dijie_opid',true));
+        if ($yihuikuan > $contract_amount || $yihuikuan == $contract_amount || in_array($opid,$dijie_opids)){
+            $this->yihuikuan    = 1;
+        }
+        //die;
+
         $this->display('settlement');
     }
 	
@@ -655,9 +668,7 @@ class FinanceController extends BaseController {
 		
 		//保存预算
 		if($opid && $costacc){
-			
-			
-		
+
 			$delid = array();
 			foreach($costacc as $k=>$v){
 				$data = array();
