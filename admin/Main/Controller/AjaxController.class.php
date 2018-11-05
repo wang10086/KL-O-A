@@ -1112,7 +1112,7 @@ class AjaxController extends Controller {
         if($file){//判断是添加或者修改
             $add['annotation_content']      = $arr;
             $save                           =  M('annotation_file')->where('id='.$file['id'])->save($add);
-            echo json_encode(array('sum' => 1, 'msg' => "提交数据成功1!"));die;
+            echo json_encode(array('sum' => 1, 'msg' => "提交数据成功!"));die;
         }else{
             $where['createtime']            = time();
             $where['account_name']          = $_SESSION['nickname'];
@@ -1124,12 +1124,12 @@ class AjaxController extends Controller {
                 if(in_array($where['account_id'],$userfileid)){
 
                 }else{//如果不是指定人提交的批注不改状态
-                    echo json_encode(array('sum' => 1, 'msg' => "提交数据成功2!"));die;
+                    echo json_encode(array('sum' => 1, 'msg' => "提交数据成功!"));die;
                 }
                 foreach($userfileid as $key => $val){
                     $file_save                  = user_contrast_status($file_id,$val);
                     if($file_save==0){//判断有人未完成批注
-                        echo json_encode(array('sum' => 1, 'msg' => "提交数据成功3!"));die;
+                        echo json_encode(array('sum' => 1, 'msg' => "提交数据成功!"));die;
                     }
                 }
                 //判断所有人都完成批注
@@ -1138,7 +1138,7 @@ class AjaxController extends Controller {
                 $flieupdate                     = M('approval_flie_update')->where('file_id='.$file_id)->save($update);
                 $flieupdate                     = M('annotation_file')->where('file_id='.$file_id)->save($update);
 
-                echo json_encode(array('sum' => 1, 'msg' => "提交数据成功4!"));die;
+                echo json_encode(array('sum' => 1, 'msg' => "提交数据成功!"));die;
             }else{
                 echo json_encode(array('sum' => 0, 'msg' => "编辑失败!请重新编辑提交!"));die;
             }
