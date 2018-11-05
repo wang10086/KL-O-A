@@ -345,7 +345,7 @@
                         </if>
 
 
-<!---->
+
 <!--                        <if condition="rolemenu(array('Cour/courlist','Cour/courtype','Cour/pptlist'))">-->
 <!--                            <li class="treeview {:ison(CONTROLLER_NAME, 'Cour')}">-->
 <!--                                <a href="javascript:;">-->
@@ -596,31 +596,55 @@
                                     </li>
                                 </if>
 
-
-
                                 <if condition="rolemenu(array('Cour/courlist','Cour/courtype','Cour/pptlist'))">
-                                    <li class="treeview {:ison(CONTROLLER_NAME,'Cour')}">
-
-                                        <a href="javascript:;" onclick="playnone()">
+                                    <li class="treeview {:ison(CONTROLLER_NAME, 'Cour')}">
+                                        <a href="javascript:;">
                                             <i class="fa fa-file-text"></i>
                                             <span>培训管理</span>
+                                            <i class="fa fa-angle-left pull-right"></i>
                                         </a>
-                                        <ul class="treeview-menu playnone">
-
-                                            <if condition="rolemenu(array('Cour/role'))">
-                                                <li ><a href="{:U('Cour/courlist')}"><i class="fa fa-angle-right"></i> 培训课件</a></li>
-                                            </if>
-                                            <if condition="rolemenu(array('Cour/index'))">
-                                                <li><a href="{:U('Cour/courtype')}""><i class="fa fa-angle-right"></i> 课件类型</a></li>
+                                        <ul class="treeview-menu">
+                                            <if condition="rolemenu(array('Cour/courlist'))">
+                                                <li><a href="{:U('Cour/courlist')}"><i class="fa fa-angle-right"></i> 培训课件</a></li>
                                             </if>
 
-                                            <if condition="rolemenu(array('Cour/post'))">
+                                            <if condition="rolemenu(array('Cour/courtype'))">
+                                                <li><a href="{:U('Cour/courtype')}"><i class="fa fa-angle-right"></i> 课件类型</a></li>
+                                            </if>
+
+                                            <if condition="rolemenu(array('Cour/pptlist'))">
                                                 <li><a href="{:U('Cour/pptlist')}"><i class="fa fa-angle-right"></i> 培训记录</a></li>
                                             </if>
 
                                         </ul>
                                     </li>
                                 </if>
+
+
+<!---->
+<!--                                <if condition="rolemenu(array('Cour/courlist','Cour/courtype','Cour/pptlist'))">-->
+<!--                                    <li class="treeview {:ison(CONTROLLER_NAME,'Cour')}">-->
+<!---->
+<!--                                        <a href="javascript:;" onclick="playnone()">-->
+<!--                                            <i class="fa fa-file-text"></i>-->
+<!--                                            <span>培训管理</span>-->
+<!--                                        </a>-->
+<!--                                        <ul class="treeview-menu playnone">-->
+<!---->
+<!--                                            <if condition="rolemenu(array('Cour/role'))">-->
+<!--                                                <li ><a href="{:U('Cour/courlist')}"><i class="fa fa-angle-right"></i> 培训课件</a></li>-->
+<!--                                            </if>-->
+<!--                                            <if condition="rolemenu(array('Cour/index'))">-->
+<!--                                                <li><a href="{:U('Cour/courtype')}""><i class="fa fa-angle-right"></i> 课件类型</a></li>-->
+<!--                                            </if>-->
+<!---->
+<!--                                            <if condition="rolemenu(array('Cour/post'))">-->
+<!--                                                <li><a href="{:U('Cour/pptlist')}"><i class="fa fa-angle-right"></i> 培训记录</a></li>-->
+<!--                                            </if>-->
+<!---->
+<!--                                        </ul>-->
+<!--                                    </li>-->
+<!--                                </if>-->
 
 
                             </ul>
@@ -822,9 +846,10 @@
             <script>
                 function displaynone(){
                     $('.treeview-menu').css('display','none');
-
                 }
                 function playnone(){
-                    $('.playnone').css('display','none');
+//                    $(this).parent('li').children('.treeview-menu').show();
+                    $('#cour_id_show1').show();
+//                    $('.playnone').show();
                 }
             </script>

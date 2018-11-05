@@ -178,10 +178,14 @@
                                         </div>
                                     </div><br>
                                     <div style="text-align: center;">
-
+                                            <?php if($_SESSION['userid'] == $approval_file[0]['file']['file_leader_id'] && $approval_file[0]['file']['file_leader_id']!==3){?>
                                         <input type="submit" value="审批通过" class="btn btn-info"   style="margin-right:1em;">
                                         <input type="submit" value="审批驳回" class="btn btn-info"   style="margin-right:1em;">
+                                            <?php }?>
+                                        <?php if($_SESSION['userid'] == $approval_file[0]['file']['account_id'] && $approval_file[0]['file']['file_leader_id'] && $approval_file[0]['file']['file_leader_id']==4){?>
                                         <input type="submit" value="修改提交" class="btn btn-info"   style="margin-right:1em;">
+                                            <?php }?>
+
                                     </div>
                                 </div>
                             </foreach>
