@@ -107,8 +107,8 @@
                                                     <span style="padding:1em;">
                                                         <b>
                                                             {$n['username']}
-                                                            <b style="<?php if($n['status']==1){echo 'color:red';}elseif($n['status']==2){echo 'color:#00CC33';}?>">
-                                                                [ <?php if($n['status']==1){echo "未批注";}elseif($n['status']==2){echo "已批注";}?> ]
+                                                            <b style="<?php if($n['status']==0){echo 'color:red';}elseif($n['status']>0){echo 'color:#00CC33';}?>">
+                                                                [ <?php if($n['status']==0){echo "未批注";}elseif($n['status']>0){echo "已批注";}?> ]
                                                             </b>
                                                         </b>
                                                     </span>
@@ -124,11 +124,8 @@
                                                 <span style="padding:1em;">
                                                     <b>
                                                         {$f['file']['file_leader_name']}
-                                                        <b style="<?php if($f['file']['file_leader_postil']==1){echo 'color:red';}elseif($f['file']['file_leader_postil']==2){echo 'color:#00CC33';}?>">
-                                                            [ <?php if($f['file']['file_leader_postil']==1){echo "未批准";}elseif($f['file']['file_leader_postil']==2){echo "已批准";}?> ]
-                                                        </b>
-                                                        <b style="<?php if($f['file']['file_leader_status']==1){echo 'color:red';}elseif($f['file']['file_leader_status']==2){echo 'color:#00CC33';}?>">
-                                                            [ <?php if($f['file']['file_leader_status']==1){echo "未批注";}elseif($f['file']['file_leader_status']==2){echo "已批注";}?> ]
+                                                        <b style="<?php if($f['file']['file_leader_status']==0){echo 'color:red';}elseif($f['file']['file_leader_status']==1|| $f['file']['file_leader_status']==2){echo 'color:red';}elseif($f['file']['file_leader_status']==3){echo 'color:#00CC33';}elseif($f['file']['file_leader_status']==4){echo 'color:red';}?>">
+                                                            [ <?php if($f['file']['file_leader_status']==0){echo "未批注";}elseif($f['file']['file_leader_status']==1 || $f['file']['file_leader_status']==2){echo "已批注";}elseif($f['file']['file_leader_status']==3){echo "已批准";}elseif($f['file']['file_leader_status']==4){echo "审批未通过";}?> ]
                                                         </b>
                                                     </b>
                                                 </span>

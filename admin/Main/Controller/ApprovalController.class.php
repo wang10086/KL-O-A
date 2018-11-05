@@ -20,6 +20,7 @@ class ApprovalController extends BaseController {
 
     //选择审批人
     public function Approval_Upload(){
+
         $arr                    = explode(",",$_COOKIE['xuequ_approval']);
         for($i=0;$i<(count($arr)/4);$i++){
             for($k=0;$k<5;$k++){
@@ -56,17 +57,15 @@ class ApprovalController extends BaseController {
     public function Approval_Update(){
 
         $id = code_number(trim(I('id')),1);//文件id
-
         $file[0]                = D('Approval')->approval_update($id);
         $this->id               = $id;
         $approval_file          = D('Approval')->approval_update_sql($file);//循环更改文件数据
 
         if($approval_file['0']['flie_update']['file_url']=""){
-            $this-> url = $_SERVER['SERVER_NAME'].'/'.$approval_file['0']['flie_update']['file_url'];
+            $this-> url         = $_SERVER['SERVER_NAME'].'/'.$approval_file['0']['flie_update']['file_url'];
         }else{
-            $this-> url = $_SERVER['SERVER_NAME'].'/'.$approval_file['0']['file']['file_url'];
+            $this-> url         = $_SERVER['SERVER_NAME'].'/'.$approval_file['0']['file']['file_url'];
         }
-
 //        print_r($approval_file);die;
         $this->assign('approval_file',$approval_file);
         $this->display();
