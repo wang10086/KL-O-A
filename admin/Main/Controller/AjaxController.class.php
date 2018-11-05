@@ -988,6 +988,7 @@ class AjaxController extends Controller {
         echo json_encode(array('sum' => $sum, 'msg' => $msg));die;
     }
 
+
     /**
      * 驳回
      */
@@ -1000,11 +1001,16 @@ class AjaxController extends Controller {
 
         foreach($wages_month_id as $key =>$val ){
             $id ['id']                      = $val;
-            $wages_query =  M('salary_wages_month')->where($id)->find();
+            $wages_query                    =  M('salary_wages_month')->where($id)->find();
             if($wages_query){
-                $att['id'] =  $wages_query['attendance_id'];
-                $stat['status'] =1;
-                $attend = M('salary_attendance')->where($att)->save($stat);
+                $att['id']                  =  $wages_query['attendance_id'];
+                $stat['status']             = 1;
+                $bonus['id']                = $wages_query['bonus_id'];
+                $income['income_token']     = $wages_query['income_token'];
+
+                $attend_W                   = M('salary_attendance')->where($att)->save($stat);
+                $bonus_W                    = M('oa_salary_bonus')->where($bonus)->save($stat);
+                $income_W                   = M('oa_salary_income')->where($att)->save($stat);
             }
             $wages_month_del                = M('salary_wages_month')->where($id)->delete();
         }
@@ -1106,33 +1112,38 @@ class AjaxController extends Controller {
         if($file){//判断是添加或者修改
             $add['annotation_content']      = $arr;
             $save                           =  M('annotation_file')->where('id='.$file['id'])->save($add);
-            $id                             = $file['id'];
+            echo json_encode(array('sum' => 1, 'msg' => "提交数据成功1!"));die;
         }else{
             $where['createtime']            = time();
             $where['account_name']          = $_SESSION['nickname'];
             $where['annotation_content']    = $arr;
             $annotation_w                   =  M('annotation_file')->add($where);
-            $id                             = mysql_insert_id();
-        }
-        if(!empty($id) && $id!==0 && $id !==false){//判断添加或修改是否成功
-            $approval                       = M('approval_flie')->where('id='.$file_id)->find();
-            $userfileid                     = explode(',',$approval['file_account_id']);
-            foreach($userfileid as $key => $val){
-                $file_save                  = user_contrast_status($file_id,$val);
-                if(!$file_save){//判断有人未完成批注
-                    echo json_encode(array('sum' => 1, 'msg' => "提交数据成功!"));die;
+            if($annotation_w){//判断添加是否成功
+                $approval                       = M('approval_flie')->where('id='.$file_id)->find();
+                $userfileid                     = explode(',',$approval['file_account_id']);
+                if(in_array($where['account_id'],$userfileid)){
+
+                }else{//如果不是指定人提交的批注不改状态
+                    echo json_encode(array('sum' => 1, 'msg' => "提交数据成功2!"));die;
                 }
+                foreach($userfileid as $key => $val){
+                    $file_save                  = user_contrast_status($file_id,$val);
+                    if($file_save==0){//判断有人未完成批注
+                        echo json_encode(array('sum' => 1, 'msg' => "提交数据成功3!"));die;
+                    }
+                }
+                //判断所有人都完成批注
+                $update['status']               = 2;
+                $approvalfile                   = M('approval_flie')->where('id='.$file_id)->save($update);
+                $flieupdate                     = M('approval_flie_update')->where('file_id='.$file_id)->save($update);
+                $flieupdate                     = M('annotation_file')->where('file_id='.$file_id)->save($update);
+
+                echo json_encode(array('sum' => 1, 'msg' => "提交数据成功4!"));die;
+            }else{
+                echo json_encode(array('sum' => 0, 'msg' => "编辑失败!请重新编辑提交!"));die;
             }
-            //判断所有人都完成批注
-            $update['status']               = 2;
-            $approvalfile                   = M('approval_flie')->where('id='.$file_id)->save($update);
-            $flieupdate                     = M('approval_flie_update')->where('file_id='.$file_id)->save($update);
 
-            echo json_encode(array('sum' => 1, 'msg' => "提交数据成功!"));die;
-        }else{
-            echo json_encode(array('sum' => 0, 'msg' => "编辑失败!请重新编辑提交!"));die;
         }
-
     }
 
     //人民币小写转换成大写
