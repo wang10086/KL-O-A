@@ -1005,7 +1005,7 @@ class FinanceController extends BaseController {
         $this->display();
     }
 
-    // @@@NODE-3###detail###新增借款###
+    // @@@NODE-3###jk_detail###新增借款###
     public function jk_detail(){
         $opid               = I('opid');
         if (!$opid) $this->error('获取信息失败');
@@ -1027,4 +1027,41 @@ class FinanceController extends BaseController {
         $this->display();
     }
 
+    // @@@NODE-3###sign###个人签字###
+    public function sign(){
+        $this->lists = M('user_sign')->select();
+        $this->display();
+    }
+
+    // @@@NODE-3###sign_add###新增个人签字###
+    public function sign_add(){
+        if (isset($_POST['dosubmint'])){
+            $pic                = I('pic');
+            $info               = I('info');
+            $id                 = I('id');
+            if ($id){
+                $info['password']   = md5(I('password'));
+                $info['file_url']   = $pic['filepath'][0];
+                $info['atta_id']    = $pic['id']['0'];
+                $res = M('user_sign')->where(array('id'=>$id))->save($info);
+            }else{
+                $info['user_id']    = session('userid');
+                $info['role_id']    = session('roleid');
+                $info['password']   = md5(I('password'));
+                $info['department'] = M()->table('__ACCOUNT__ as a')->join('__SALARY_DEPARTMENT__ as d on d.id=a.departmentid')->where(array('a.id'=>$info['user_id']))->getField('d.department');
+                $info['file_url']   = $pic['filepath'][0];
+                $info['atta_id']    = $pic['id']['0'];
+                $res = M('user_sign')->add($info);
+            }
+            if ($res){
+                $this->success('保存成功');
+            }else{
+                $this->error('数据保存失败');
+            }
+        }else{
+
+            $this->list = M('user_sign')->where(array('user_id'=>session('userid')))->find();
+            $this->display();
+        }
+    }
 }

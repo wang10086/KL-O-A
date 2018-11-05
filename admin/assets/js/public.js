@@ -358,6 +358,22 @@ function open_cost (obj) {
 	});
 }
 
+function open_sign (obj) {
+	art.dialog.open(obj, {
+		lock:true,
+		title: '增加签字信息',
+		width:800,
+		height:600,
+		okValue: '提交',
+		ok: function () {
+			this.iframe.contentWindow.gosubmint();
+			return false;
+		},
+		cancelValue:'取消',
+		cancel: function () {
+		}
+	});
+}
 
 /**
  ** 乘法函数，用来得到精确的乘法结果

@@ -1016,6 +1016,10 @@ function open_edit_tcs_need ($cid,$pid,$opid) {
 	return "open_edit_tcs_need('" .U('Op/edit_tcs_need',array('confirm_id'=>$cid,'price_id'=>$pid,'opid'=>$opid)) ."')";
 }
 
+function open_sign ($id) {
+    return "open_sign('" .U('Finance/sign_add',array('id'=>$id)) ."')";
+}
+
 function opid($day=''){
 	if($day){
 		$date = date('Ymd',strtotime($day));
