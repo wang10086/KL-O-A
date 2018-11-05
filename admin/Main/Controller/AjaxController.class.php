@@ -1010,7 +1010,7 @@ class AjaxController extends Controller {
 
                 $attend_W                   = M('salary_attendance')->where($att)->save($stat);
                 $bonus_W                    = M('oa_salary_bonus')->where($bonus)->save($stat);
-                $income_W                   = M('oa_salary_income')->where($att)->save($stat);
+                $income_W                   = M('oa_salary_income')->where($income)->save($stat);
             }
             $wages_month_del                = M('salary_wages_month')->where($id)->delete();
         }
