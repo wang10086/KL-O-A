@@ -90,30 +90,30 @@ class SalaryController extends BaseController {
     private function salary_kpi_month($where,$datetime,$type){
 
         //kpi 目标任务 完成 提成
-        $month                           = (int)substr($datetime,4);
-        $year                            = (int)substr($datetime,0,4);
-        $query['user_id']                = $where;
+        $month                                  = (int)substr($datetime,4);
+        $year                                   = (int)substr($datetime,0,4);
+        $query['user_id']                       = $where;
 
         if($year==2018){
             if($month==10 || $month==9){
-                $month                   = $month-1;
+                $month                          = $month-1;
             }
         }
         if($month<10){
-            $year                        = $year.'0';
+            $year                               = $year.'0';
         }
         if($type==2){
-            $query['month']              = $year.$month;
+            $query['month']                     = $year.$month;
             if($month == 3 || $month == 6 || $month == 9 || $month == 12){
-                $count                   = 0;
-                $sum                     = 0;
-                $i                       = $month-3;
+                $count                          = 0;
+                $sum                            = 0;
+                $i                              = $month-3;
                 for($i;$i<$month;$month--){
-                    $query['month']      = $year.$month;
-                    $kpi                 = M('kpi')->where($query)->find();
+                    $query['month']             = $year.$month;
+                    $kpi                        = M('kpi')->where($query)->find();
 
                     if($kpi){
-                        $lists           = M('kpi_more')->where(array('kpi_id'=>$kpi['id']))->find();
+                        $lists                  = M('kpi_more')->where(array('kpi_id'=>$kpi['id']))->find();
                         if(!$lists || $lists['automatic'] == 0){
                             return 0;
                         }
@@ -121,34 +121,34 @@ class SalaryController extends BaseController {
                         return 0;
                     }
                     //季度完成
-                    $user                 = M('account')->where('id='.$query['user_id'])->find();
-                    $mont1                =  $year.($month-1).'26';//开始月
-                    $mont2                =  $year.$month.'26';//结束月
-                    $sum_user             = monthly_Finance($user['nickname'],$mont1,$mont2);//季度完成
+                    $user                       = M('account')->where('id='.$query['user_id'])->find();
+                    $mont1                      = strtotime($year.($month-1).'26');//开始月
+                    $mont2                      = strtotime($year.$month.'26');//结束月
+                    $sum_user                   = monthly_Finance($query['user_id'],$mont1,$mont2);//季度完成
 
-                    $count               += $lists['target'];//季度目标
-                    $sum                 += $sum_user;//季度完成
+                    $count                      += $lists['target'];//季度目标
+                    $sum                        += $sum_user;//季度完成
                 }
-                $number                        = $sum/$count;//项目季度百分比
+                $number                         = $sum/$count;//项目季度百分比
                 if($number <= 1){
-                    $Total                     = $sum*0.05;//不超过100%
+                    $Total                      = $sum*0.05;//不超过100%
                 }
                 if(1<$number && $number <=1.5){
-                    $Total                     = $count*0.05+($sum-$count)*0.2;//超过100% 不到150%
+                    $Total                      = $count*0.05+($sum-$count)*0.2;//超过100% 不到150%
                 }
                 if(1.5 < $number){
-                    $tot    = $count*0.05;//100%以内
-                    $tt     = ($count*1.5-$count)*0.2;//100%以上 150% 以内
-                    $yy     = ($sum-$count*1.5)*0.25;//150% 以上
-                    $Total  = $tot+$tt+$yy;
+                    $tot                        = $count*0.05;//100%以内
+                    $tt                         = ($count*1.5-$count)*0.2;//100%以上 150% 以内
+                    $yy                         = ($sum-$count*1.5)*0.25;//150% 以上
+                    $Total                      = $tot+$tt+$yy;
                 }
-                $content['target']        = $count;
-                $content['complete']      = $sum;
-                $content['total']         = round($Total,2);//保留两位小数
+                $content['target']              = $count;
+                $content['complete']            = $sum;
+                $content['total']               = round($Total,2);//保留两位小数
             }else{
-                $kpi                      = M('kpi')->where($query)->find();
+                $kpi                            = M('kpi')->where($query)->find();
                 if($kpi){
-                    $lists                = M('kpi_more')->where(array('kpi_id'=>$kpi['id']))->find();
+                    $lists                      = M('kpi_more')->where(array('kpi_id'=>$kpi['id']))->find();
                     if(!$lists || $lists['automatic'] == 0){
                         return 0;
                     }
@@ -156,27 +156,27 @@ class SalaryController extends BaseController {
                     return 0;
                 }
                 //季度完成
-                $user                     = M('account')->where('id='.$query['user_id'])->find();
-                $mont1                    =  $year.($month-1).'26';//开始月
-                $mont2                    =  $year.$month.'26';//结束月
-                $sum_user                 = monthly_Finance($user['nickname'],$mont1,$mont2);//季度完成
+                $user                           = M('account')->where('id='.$query['user_id'])->find();
+                $mont1                          = strtotime($year.($month-1).'26');//开始月
+                $mont2                          = strtotime($year.$month.'26');//结束月
+                $sum_user                       = monthly_Finance($query['user_id'],$mont1,$mont2);//季度完成
 
-                $content['target']        = $lists['target'];//季度目标
-                $content['complete']      = $sum_user;//季度完成
-                $content['total']         = '0.00';//保留两位小数
+                $content['target']              = $lists['target'];//季度目标
+                $content['complete']            = $sum_user;//季度完成
+                $content['total']               = '0.00';//保留两位小数
             }
             return $content;
         }
 
         if($month == 3 || $month == 6 || $month == 9 ||$month == 12){
-            $count                        = 0;
-            $sum                          = 0;
-            $i                            = $month-3;
+            $count                              = 0;
+            $sum                                = 0;
+            $i                                  = $month-3;
             for($i;$i<$month;$month--){
-                $query['month']           = $year.$month;
-                $kpi                      = M('kpi')->where($query)->find();
+                $query['month']                 = $year.$month;
+                $kpi                            = M('kpi')->where($query)->find();
                 if($kpi){
-                    $lists                = M('kpi_more')->where(array('kpi_id'=>$kpi['id']))->find();
+                    $lists                      = M('kpi_more')->where(array('kpi_id'=>$kpi['id']))->find();
 
                     if(!$lists || $lists['automatic'] == 0){
                         return 0;
@@ -185,34 +185,34 @@ class SalaryController extends BaseController {
                     return 0;
                 }
                 //季度完成
-                $user                      = M('account')->where('id='.$query['user_id'])->find();
-                $mont1                     =  $year.($month-1).'26';//开始月
-                $mont2                     =  $year.$month.'26';//结束月
-                $sum                      += monthly_Finance($user['nickname'],$mont1,$mont2);//季度完成
-                $count                    += $lists['target'];//季度目标
+                $user                           = M('account')->where('id='.$query['user_id'])->find();
+                $mont1                          =  strtotime($year.($month-1).'26');//开始月
+                $mont2                          =  strtotime($year.$month.'26');//结束月
+                $sum                            += monthly_Finance($query['user_id'],$mont1,$mont2);//季度完成
+                $count                          += $lists['target'];//季度目标
                // $sum                      += $lists['complete'];//季度完成
             }
-            $number                        = $sum/$count;//项目季度百分比
+            $number                             = $sum/$count;//项目季度百分比
             if($number <= 1){
-                $Total                     = $sum*0.05;//不超过100%
+                $Total                          = $sum*0.05;//不超过100%
             }
             if(1<$number && $number <=1.5){
-                $Total                     = $count*0.05+($sum-$count)*0.2;//超过100% 不到150%
+                $Total                          = $count*0.05+($sum-$count)*0.2;//超过100% 不到150%
             }
             if(1.5 < $number){
-                $tot    = $count*0.05;//100%以内
-                $tt     = ($count*1.5-$count)*0.2;//100%以上 150% 以内
-                $yy     = ($sum-$count*1.5)*0.25;//150% 以上
-                $Total  = round($tot+$tt+$yy,2);
+                $tot                            = $count*0.05;//100%以内
+                $tt                             = ($count*1.5-$count)*0.2;//100%以上 150% 以内
+                $yy                             = ($sum-$count*1.5)*0.25;//150% 以上
+                $Total                          = round($tot+$tt+$yy,2);
             }
-            $content['target']             = $count;
-            $content['complete']           = $sum;
-            $content['total']              = round($Total,2);//保留两位小数
+            $content['target']                  = $count;
+            $content['complete']                = $sum;
+            $content['total']                   = round($Total,2);//保留两位小数
 
         }else{
-            $content['target']             = '0.00';//季度目标
-            $content['complete']           = '0.00';//季度完成
-            $content['total']              = '0.00';//保留两位小数
+            $content['target']                  = '0.00';//季度目标
+            $content['complete']                = '0.00';//季度完成
+            $content['total']                   = '0.00';//保留两位小数
         }
         return $content;
     }

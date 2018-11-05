@@ -1092,32 +1092,33 @@ class AjaxController extends Controller {
 
     /**
      *Ajax_approval_textarea 添加批注信息
+     * text 编辑内容
      */
     public function Ajax_approval_textarea(){
 
-        $text                               = trim($_POST['text']);
-        $file_id                            = code_number(trim($_POST['file_id']));
+        $text                                   = trim($_POST['text']);
+        $file_id                                = code_number(trim($_POST['file_id']));
         if(empty($text)){//判断是否有值
             echo json_encode(array('sum' => 0, 'msg' => "编辑失败!请重新编辑提交!"));die;
         }
-        $content                            = array_filter(explode('<br/>',$text));//array_filter
+        $content                                = array_filter(explode('<br/>',$text));//array_filter
         $arr = '';
         foreach($content as $key => $val){//循环传送值 加首行缩进
-            $arr                           .= $val.'<br/>&emsp;&emsp;';
+            $arr                                .= $val.'<br/>&emsp;&emsp;';
         }
-        $where['account_id']                = (int)$_SESSION['userid'];
-        $where['file_id']                   = (int)$file_id;
+        $where['account_id']                    = (int)$_SESSION['userid'];
+        $where['file_id']                       = (int)$file_id;
 
-        $file                               = M('annotation_file')->where($where)->find();
+        $file                                   = M('annotation_file')->where($where)->find();
         if($file){//判断是添加或者修改
-            $add['annotation_content']      = $arr;
-            $save                           =  M('annotation_file')->where('id='.$file['id'])->save($add);
+            $add['annotation_content']          = $arr;
+            $save                               =  M('annotation_file')->where('id='.$file['id'])->save($add);
             echo json_encode(array('sum' => 1, 'msg' => "提交数据成功!"));die;
         }else{
-            $where['createtime']            = time();
-            $where['account_name']          = $_SESSION['nickname'];
-            $where['annotation_content']    = $arr;
-            $annotation_w                   =  M('annotation_file')->add($where);
+            $where['createtime']                = time();
+            $where['account_name']              = $_SESSION['nickname'];
+            $where['annotation_content']        = $arr;
+            $annotation_w                       =  M('annotation_file')->add($where);
             if($annotation_w){//判断添加是否成功
                 $approval                       = M('approval_flie')->where('id='.$file_id)->find();
                 $userfileid                     = explode(',',$approval['file_account_id']);
@@ -1210,6 +1211,15 @@ class AjaxController extends Controller {
         $nstr=(strpos($nstr,'零角')) ? substr_replace($nstr,"",strpos($nstr,'零角'),6) : $nstr;
         $nstr = (substr($nstr,-3,3)=='元') ? $nstr . $zheng : $nstr;
         $this->ajaxReturn($nstr);
+    }
+
+    /**
+     * Ajax_approval_flie 审核通过 审核驳回  提交审核修改
+     * file_id 文件 id
+     *type  1通过 2驳回 3 修改
+     */
+    public function Ajax_approval_flie(){
+        $fileid = code_number(trim($_POST['file_id']));
     }
 
 }

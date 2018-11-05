@@ -179,11 +179,11 @@
                                     </div><br>
                                     <div style="text-align: center;">
 <!--                                            --><?php //if($_SESSION['userid'] == $approval_file[0]['file']['file_leader_id'] && $approval_file[0]['file']['file_leader_id']!==3){?>
-                                        <input type="submit" value="审批通过" class="btn btn-info"   style="margin-right:1em;">
-                                        <input type="submit" value="审批驳回" class="btn btn-info"   style="margin-right:1em;">
+                                        <input type="submit" value="审批通过" class="btn btn-info "  onclick="approval_update_file(1)" style="margin-right:1em;">
+                                        <input type="submit" value="审批驳回" class="btn btn-info"   onclick="approval_update_file(2)" style="margin-right:1em;">
 <!--                                            --><?php //}?>
 <!--                                        --><?php //if($_SESSION['userid'] == $approval_file[0]['file']['account_id'] && $approval_file[0]['file']['file_leader_id'] && $approval_file[0]['file']['file_leader_id']==4){?>
-                                        <input type="submit" value="修改提交" class="btn btn-info"   style="margin-right:1em;">
+                                        <input type="submit" value="修改提交" class="btn btn-info"   onclick="approval_update_file(3)" style="margin-right:1em;">
 <!--                                            --><?php //}?>
 
                                     </div>
@@ -225,6 +225,28 @@
             }
         });
     });
+
+
+    //审批obj  1通过 2驳回 3 修改
+    function approval_update_file(obj) {
+
+        var file_id = "<?php echo $id;?>";
+
+        $.ajax({
+            url:"{:U('Ajax/Ajax_approval_flie')}",
+            type:"POST",
+            data:{'type':obj,'file_id':file_id},
+            dataType:"json",
+            success:function(date){
+                if(date.sum==1){
+                    alert(date.msg);
+                }else{
+                    alert(date.msg);
+                }
+            }
+        });
+
+    }
 
 </script>
 
