@@ -2452,7 +2452,10 @@ class OpController extends BaseController {
             M('op_guide_price')->where(array('op_id'=>$opid))->delete();
             M('op_team_confirm')->where(array('op_id'=>$opid))->delete();
             M('op_guide_confirm')->where(array('op_id'=>$opid))->delete();
-			
+            M('op_res')->where(array('op_id'=>$opid))->delete();        //资源需求单
+            M('op_design')->where(array('op_id'=>$opid))->delete();     //委托设计工作交接单
+            M('op_work_plans')->where(array('op_id'=>$opid))->delete(); //业务实施计划单
+
 			//删除主项目
 			M('op')->delete($id);
 			$this->success('删除成功！');

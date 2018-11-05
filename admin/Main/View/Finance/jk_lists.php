@@ -66,7 +66,7 @@
 
                     <div class="form-group col-md-6">
                         <label>人民币(大写)：</label>
-                        <input type="text" name="info[chinese]" id="chinese" class="form-control" value="{$list.chinese}" />
+                        <input type="text" name="info[chinese]" id="daxie" class="form-control" value="{$list.chinese}" />
                     </div>
 
                     <div class="form-group col-md-12" id="jk_type">
@@ -143,6 +143,7 @@
             var total           = $('#total_'+id).val();
             var sum             = accAdd(jiekuanjine,total);  //数据相加
             $('#jiekuanjine').val(sum);
+            todaxie(sum);       //转换为大写
 
             var aid             = '['+id+'],';
             arr_ids             += aid;
@@ -161,6 +162,7 @@
             var total           = $('#total_'+id).val();
             var sum             = accSub(jiekuanjine,total);  //数据相减
             $('#jiekuanjine').val(sum);
+            todaxie(sum);       //转换为大写
 
             var aid             = '['+id+'],';
             var aids            = $('#ids').val();
@@ -174,5 +176,18 @@
             $('#td_'+id+'').html(html);
         }
 
+        function todaxie(num) {
+            $.ajax({
+                type: "post",
+                url: "<?php echo U('Ajax/numTrmb'); ?>",
+                dataType:'json',
+                data: {num:num},
+                success:function(data){
+                    if(data){
+                        $('#daxie').val(data);
+                    }
+                }
+            });
+        }
 
     </script>

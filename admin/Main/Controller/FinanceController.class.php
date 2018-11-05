@@ -648,7 +648,6 @@ class FinanceController extends BaseController {
         if ($yihuikuan > $contract_amount || $yihuikuan == $contract_amount || in_array($opid,$dijie_opids)){
             $this->yihuikuan    = 1;
         }
-        //die;
 
         $this->display('settlement');
     }
