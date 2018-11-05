@@ -3796,7 +3796,7 @@ function user_table($where){//查询用户
         if(!empty($guide_id) && ($guide_id)!==0){
             $price                          = 0;
             $guide_array                    = array();
-            $guide_array['guide_id']        = 1703;
+            $guide_array['guide_id']        = $guide_id;
             $guide_array['sure_time']       = array('between',"$firstday_time,$lastday_time");
             $guide_pay                      =  M('guide_pay')->where($guide_array)->select();
             if($guide_pay){
