@@ -43,12 +43,12 @@
 
                                         <div class="form-group col-md-12">
                                             <label>签字密码：</label>
-                                            <input type="text" name="password" class="form-control" />
+                                            <input type="password" name="password" class="form-control" />
                                         </div>
 
                                         <div class="form-group col-md-12">
                                             <label>确认密码：</label>
-                                            <input type="text" name="re_password" class="form-control" />
+                                            <input type="password" name="re_password" class="form-control" />
                                         </div>
 
                                         <div class="form-group col-md-12"></div>

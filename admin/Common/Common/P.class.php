@@ -101,6 +101,8 @@ final class P {
     const UPLOAD_THEORY             = 2;    //附件(原理及实施要求)
     const UPLOAD_VIDEO              = 3;    //视频文件
 
+    const SIGN_USER                 = 4;    //员工签名
+
 }
 
 

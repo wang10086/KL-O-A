@@ -1244,4 +1244,11 @@ class AjaxController extends Controller {
         }
     }
 
+    //检查该团是否已创建合同
+    public function get_contract(){
+        $group_id       = I('gid');
+        $contract       = M()->table('__CONTRACT__ as c')->field('c.*')->join('__OP__ as o on o.op_id = c.op_id')->where(array('o.group_id'=>$group_id))->find();
+        $this->ajaxReturn($contract);
+    }
+
 }

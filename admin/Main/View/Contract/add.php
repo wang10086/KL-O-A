@@ -43,7 +43,8 @@
                                         <label>项目团号</label>
                                         <div class="input-group">
                                             <input type="text"  name="info[group_id]" placeholder="团号" class="form-control" value="{$row.group_id}" id="groupid" required>
-                                            <span class="input-group-addon" style="width:32px;"><a href="javascript:;" onClick="getop();" >获取</a></span>
+                                            <!--<span class="input-group-addon" style="width:32px;"><a href="javascript:;" onClick="getop();" >获取</a></span>-->
+                                            <span class="input-group-addon" style="width:32px;"><a href="javascript:;" onClick="check_contract();" >获取</a></span>
                                         </div>
                                     </div>
                                     <div class="form-group  col-md-4">
@@ -168,6 +169,28 @@
             
 <include file="Index:footer2" />
 <script type="text/javascript">
+    function check_contract(){
+        var gid = $('#groupid').val();
+        if(gid){
+            $.ajax({
+                type: "POST",
+                url: "{:U('Ajax/get_contract')}",
+                dataType:'json',
+                data: {gid:gid},
+                success:function(data){
+                    if (data){
+                        art_show_msg('该项目合同已存在');
+                        return false;
+                    }else{
+                        getop();
+                    }
+                }
+            });
+        }else{
+            art_show_msg('请输入团号');
+        }
+    }
+
 function getop(){
 	var gid = $('#groupid').val();
 	if(gid){

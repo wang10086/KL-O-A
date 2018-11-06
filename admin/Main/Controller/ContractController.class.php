@@ -81,21 +81,22 @@ class ContractController extends BaseController {
 			$where['group_id']	= $info['group_id'];
 			$where['id']		= array('neq',$id);
 			$isok	= $db->where($where)->find();
-			
-			
-            if(!$id){
-				$info['create_user']		= cookie('userid');
-				$info['create_user_name']	= cookie('name');
-				$info['create_time']		= time();
-                $save	= $db->add($info);
-				$cid	= $save;
 
-                //保存操作记录
-                $record                 = array();
-                $record['contract_id']  = $save;
-                $record['type']         = 1;
-                $record['explain']      = '新建合同';
-                contract_record($record);
+            if(!$id){
+                if (!$isok){
+                    $info['create_user']		= cookie('userid');
+                    $info['create_user_name']	= cookie('name');
+                    $info['create_time']		= time();
+                    $save	= $db->add($info);
+                    $cid	= $save;
+
+                    //保存操作记录
+                    $record                 = array();
+                    $record['contract_id']  = $save;
+                    $record['type']         = 1;
+                    $record['explain']      = '新建合同';
+                    contract_record($record);
+                }
             }else{
                 $save	= $db->data($info)->where(array('id'=>$id))->save();
                	$cid	= $id;
@@ -107,7 +108,6 @@ class ContractController extends BaseController {
                 $record['explain']      = '修改合同内容';
                 contract_record($record);
             }
-			
 			//保存电子扫描件
 			save_aontract_art($cid,$attr);
 			

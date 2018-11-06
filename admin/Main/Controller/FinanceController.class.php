@@ -1029,7 +1029,15 @@ class FinanceController extends BaseController {
 
     // @@@NODE-3###sign###个人签字###
     public function sign(){
-        $this->lists = M('user_sign')->select();
+        $db             = M('user_sign');
+        $uids           = array(1,11);
+        if (in_array(session('userid'),$uids)){
+            $lists          = $db->select();
+        }else{
+            $lists          = $db->where(array('user_id'=>session('userid')))->find();
+        }
+        $this->lists    = $lists;
+        $this->mine     = $db->where(array('user_id'=>session('userid')))->find();  //当前用户信息
         $this->display();
     }
 
@@ -1044,6 +1052,7 @@ class FinanceController extends BaseController {
                 $info['file_url']   = $pic['filepath'][0];
                 $info['atta_id']    = $pic['id']['0'];
                 $res = M('user_sign')->where(array('id'=>$id))->save($info);
+                $isadd              = $id;
             }else{
                 $info['user_id']    = session('userid');
                 $info['role_id']    = session('roleid');
@@ -1052,16 +1061,38 @@ class FinanceController extends BaseController {
                 $info['file_url']   = $pic['filepath'][0];
                 $info['atta_id']    = $pic['id']['0'];
                 $res = M('user_sign')->add($info);
+                $isadd              = $res;
             }
+            //保存上传图片
+            save_res(P::SIGN_USER,$isadd,$pic,5);
             if ($res){
                 $this->success('保存成功');
             }else{
                 $this->error('数据保存失败');
             }
         }else{
+            $list       = M('user_sign')->where(array('user_id'=>session('userid')))->find();
+            $this->list = $list;
+            if ($list['atta_id']) {
+                $pic          = get_res(P::SIGN_USER,$list['id']);
+                $this->pic    = array_column($pic,'id');
+            }
 
-            $this->list = M('user_sign')->where(array('user_id'=>session('userid')))->find();
             $this->display();
+        }
+    }
+
+    // @@@NODE-3###del_sign###删除个人签字信息###
+    public function del_sign(){
+        $db         = M('user_sign');
+        $id         = I('id');
+        $atta_id    = $db->where(array('id'=>$id))->getField('atta_id');
+        $res        = $db->where(array('id'=>$id))->delete();
+        M('attachment')->where(array('id'=>$atta_id))->delete();
+        if ($res){
+            $this->success('删除成功');
+        }else{
+            $this->error('删除失败');
         }
     }
 }
