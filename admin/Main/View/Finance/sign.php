@@ -38,7 +38,7 @@
                                         <th class="taskOptions" >签字详情</th>
                                         <th width="60" class="taskOptions">编辑</th>
 
-                                        <if condition="rolemenu(array('Finance/delsign'))">
+                                        <if condition="rolemenu(array('Finance/del_sign'))">
                                         <th width="60" class="taskOptions">删除</th>
                                         </if> 
                                     </tr>
@@ -47,9 +47,11 @@
                                         <td>{$row.user_id}</td>
                                         <td>{$row.name}</td>
                                         <td>{$row.department}</td>
-                                        <td><div style="display: inline-block"><img width="100" src="/{$row.file_url}" alt=""></div></td>
+                                        <td><div style="display: inline-block"><a href="/{$row.file_url}" target="_blank"><img width="100" src="/{$row.file_url}" alt=""></a></div></td>
                                         <td class="taskOptions">
+                                            <?php if ($row['user_id']==cookie('userid')){ ?>
                                             <a href="javascript:;" onClick="javascript:{:open_sign($row['id'])}" title="编辑" class="btn btn-info btn-smsm"><i class="fa fa-pencil"></i></a>
+                                            <?php } ?>
                                         </td>
                                         <if condition="rolemenu(array('Finance/del_sign'))">
                                         <td class="taskOptions">

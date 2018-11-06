@@ -361,6 +361,7 @@ function open_cost (obj) {
 function open_sign (obj) {
 	art.dialog.open(obj, {
 		lock:true,
+		id: 'signAdd',
 		title: '增加签字信息',
 		width:800,
 		height:600,

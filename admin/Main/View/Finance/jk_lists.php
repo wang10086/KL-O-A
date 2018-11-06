@@ -42,8 +42,9 @@
             </table>
         </div>
 
-        <form action="">
+        <form method="post" action="{:U('Finance/public_save')}">
             <div class="content">
+                <input type="hidden" name="savetype" value="2">
                 <input type="hidden" name="info[op_id]" value="{$op.op_id}" />
                 <input type="hidden" name="info[arr_ids]" id="ids">
                 <div style="width:100%; float:left;">

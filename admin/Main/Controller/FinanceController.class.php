@@ -1034,7 +1034,7 @@ class FinanceController extends BaseController {
         if (in_array(session('userid'),$uids)){
             $lists          = $db->select();
         }else{
-            $lists          = $db->where(array('user_id'=>session('userid')))->find();
+            $lists          = $db->where(array('user_id'=>session('userid')))->select();
         }
         $this->lists    = $lists;
         $this->mine     = $db->where(array('user_id'=>session('userid')))->find();  //当前用户信息
@@ -1065,11 +1065,13 @@ class FinanceController extends BaseController {
             }
             //保存上传图片
             save_res(P::SIGN_USER,$isadd,$pic,5);
-            if ($res){
+
+            echo '<script>window.top.location.reload();</script>';
+            /*if ($res){
                 $this->success('保存成功');
             }else{
                 $this->error('数据保存失败');
-            }
+            }*/
         }else{
             $list       = M('user_sign')->where(array('user_id'=>session('userid')))->find();
             $this->list = $list;
@@ -1093,6 +1095,16 @@ class FinanceController extends BaseController {
             $this->success('删除成功');
         }else{
             $this->error('删除失败');
+        }
+    }
+
+    public function public_save(){
+        $savetype           = I('savetype');
+
+        //保存借款申请
+        if ($savetype==2){
+            $a  = I();
+            var_dump($a);die;
         }
     }
 }

@@ -4,6 +4,9 @@
     window.gosubmint= function(){
         var pwd     = $('input[name="password"]').val();
         var re_pwd  = $('input[name="re_password"]').val();
+        //var url     = "http://"+"<?php echo $_SERVER['HTTP_HOST']; ?>"+"<?php echo U('Finance/sign'); ?>";
+        //alert(url);
+
         if (re_pwd == pwd && pwd){
             $('#myform').submit();
         }else{
