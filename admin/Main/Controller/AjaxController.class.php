@@ -1214,12 +1214,34 @@ class AjaxController extends Controller {
     }
 
     /**
-     * Ajax_approval_flie 审核通过 审核驳回  提交审核修改
+     * Ajax_approval_flie 文件审核通过  文件审核驳回  文件提交审核修改
      * file_id 文件 id
      *type  1通过 2驳回 3 修改
      */
     public function Ajax_approval_flie(){
-        $fileid = code_number(trim($_POST['file_id']));
+
+        $fileid                 = (int)code_number(trim($_POST['file_id']));
+        $type                   = (int)code_number(trim($_POST['type']));
+        if($type==1){//文件
+            $status['status']   = 3;
+            $content            = '审核通过';
+        }elseif($type==2){//文件修改
+            $status['status']   = 4;
+            $content            = '审核驳回';
+        }elseif($type==3){//文件批注
+            $status['status']   = 2;
+            $content            = '提交审核修改';
+        }
+        $where1['id']           = $fileid;
+        $where2['file_id']      = $fileid;
+        $file                   = M('approval_flie')->where($where1)->save($status);
+        $update                 = M('approval_flie_update')->where($where2)->save($status);
+        $annotatio              = M('annotation_file')->where($where2)->save($status);
+        if($file && $update && $annotatio){
+            echo json_encode(array('sum' => 1, 'msg' => $content."成功!"));die;
+        }else{
+            echo json_encode(array('sum' => 0, 'msg' => $content."失败!"));die;
+        }
     }
 
 }
