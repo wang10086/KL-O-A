@@ -66,7 +66,6 @@ class ApprovalController extends BaseController {
         }else{
             $this-> url         = $_SERVER['SERVER_NAME'].'/'.$approval_file['0']['file']['file_url'];
         }
-//        print_r($approval_file);die;
         $this->assign('approval_file',$approval_file);
         $this->display();
     }

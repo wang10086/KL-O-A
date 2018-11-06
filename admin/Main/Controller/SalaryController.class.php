@@ -124,6 +124,7 @@ class SalaryController extends BaseController {
                     $user                       = M('account')->where('id='.$query['user_id'])->find();
                     $mont1                      = strtotime($year.($month-1).'26');//开始月
                     $mont2                      = strtotime($year.$month.'26');//结束月
+                    //$sum_user                       = monthly_Finance($user['nickname'],$mont1,$mont2);//季度完成
                     $sum_user                   = monthly_Finance($query['user_id'],$mont1,$mont2);//季度完成
 
                     $count                      += $lists['target'];//季度目标
@@ -159,6 +160,7 @@ class SalaryController extends BaseController {
                 $user                           = M('account')->where('id='.$query['user_id'])->find();
                 $mont1                          = strtotime($year.($month-1).'26');//开始月
                 $mont2                          = strtotime($year.$month.'26');//结束月
+                //$sum_user                       = monthly_Finance($user['nickname'],$mont1,$mont2);//季度完成
                 $sum_user                       = monthly_Finance($query['user_id'],$mont1,$mont2);//季度完成
 
                 $content['target']              = $lists['target'];//季度目标
@@ -188,6 +190,7 @@ class SalaryController extends BaseController {
                 $user                           = M('account')->where('id='.$query['user_id'])->find();
                 $mont1                          =  strtotime($year.($month-1).'26');//开始月
                 $mont2                          =  strtotime($year.$month.'26');//结束月
+                //$sum_user                       += monthly_Finance($user['nickname'],$mont1,$mont2);//季度完成
                 $sum                            += monthly_Finance($query['user_id'],$mont1,$mont2);//季度完成
                 $count                          += $lists['target'];//季度目标
                // $sum                      += $lists['complete'];//季度完成

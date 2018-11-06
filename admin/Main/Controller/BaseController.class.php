@@ -461,48 +461,88 @@ class BaseController extends Controller {
         return $str;
     }
 
+    /**
+     * salary_datetime 工资系统提醒条数
+     */
     public function salary_datetime(){
         if($_SESSION['userid']==11 ||$_SESSION['userid']==55 || $_SESSION['userid']==77){//判断人员
 
             $time_Y                                 = date('Y');
             $time_M                                 = date('m');
             $time_D                                 = date('d');
-            if($time_D < 16){
+            if($time_D < 10){
                 $time_M = $time_M-1;
                 if($time_M < 10) {
-                    $que['datetime']                    = $time_Y.'0'.$time_M;//查询年月
+                    $que['datetime']                = $time_Y.'0'.$time_M;//查询年月
                 }else{
-                    $que['datetime']                    = $time_Y.$time_M;//查询年月
+                    $que['datetime']                = $time_Y.$time_M;//查询年月
                 }
             }
 
             switch ($_SESSION['userid'])
             {
                 case 77:
-                    $money = M('salary_count_money')->where($que)->count();
+                    $money                          = M('salary_count_money')->where($que)->count();
                     if(!$money){
-                        $count = 1;
+                        $count                      = 1;
                     }
-                    $_SESSION['salary_satus'] = $count;
+                    $_SESSION['salary_satus']       = $count;
                     return $count;break;
                 case 55:
-                    $status['status']  = 2;
-                    $money = M('salary_count_money')->where($status)->count();
+                    $status['status']               = 2;
+                    $money                          = M('salary_count_money')->where($status)->count();
                     if($money){
-                        $count = $money;
-                        $_SESSION['salary_satus'] = $count;
+                        $count                      = $money;
+                        $_SESSION['salary_satus']   = $count;
                     }
                     return $count;break;
                 case 11:
-                    $status['status']  = 3;
-                    $money = M('salary_count_money')->where($status)->count();
+                    $status['status']               = 3;
+                    $money                          = M('salary_count_money')->where($status)->count();
                     if($money){
-                        $count = $money;
-                        $_SESSION['salary_satus'] = $count;
+                        $count                      = $money;
+                        $_SESSION['salary_satus']   = $count;
                     }
                     return $count;  break;
             }
         }
+    }
+
+    /**
+     * file_remind_number 文件提醒条数
+     */
+    public function file_remind_number(){
+
+        $userid                     = $_SESSION['userid'];
+
+        // 文件驳回
+        $where['account_id']        = $userid;
+        $where['status']            = 4;
+        $file1                      = M('approval_flie')->where($where)->select();
+        if($file1){
+            $count1                 = count($file1);
+        }
+        //文件待批准
+        $query['file_leader_id']    = $userid;
+        $query['status']            = 2;
+        $file2                      = M('approval_flie')->where($query)->select();
+        if($file2){
+            $count2                 = count($file2);
+        }
+        //文件待批注
+        $r['status']                = 1;
+        $file3                      = M('approval_flie')->where($r)->select();
+        $count3                     = 0;
+        foreach($file3 as $key =>$val){
+            $account                = explode(',',$val['file_account_id']);
+            foreach ($account as $k => $v){
+                if($v==$userid){
+                    $count3         = $count3+1;
+                }
+            }
+        }
+        $_SESSION['approval_flie_type'] = $count1+$count2+$count3;
+        return $_SESSION['approval_flie_type'];
     }
 
 }

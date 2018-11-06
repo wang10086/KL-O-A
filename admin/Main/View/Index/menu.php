@@ -197,7 +197,12 @@
                             <a href="javascript:;">
                                 <i class="fa  fa-folder-open"></i>
                                 <span>文件管理</span>
-                                <i class="fa fa-angle-left pull-right"></i>
+                                <?php if($_SESSION['approval_flie_type']){ ?>
+                                    <small class="badge pull-right bg-red" style="margin-right:6px;"><?php echo $_SESSION['approval_flie_type'];?></small>
+                                <?php }else{ ?>
+                                    <i class="fa fa-angle-left pull-right"></i>
+                                <?php } ?>
+<!--                                <i class="fa fa-angle-left pull-right"></i>-->
                             </a>
                             <ul class="treeview-menu">
                             	<if condition="rolemenu(array('Files/index'))">
@@ -229,10 +234,15 @@
                                             </i> 岗位作业指导书
                                         </a>
                                     </li>
-                                <if condition="rolemenu(array('Approval/Approval_Index'))">
-                                    <li class="{:on('Approval/Approval_Index')}">
+                                <if condition="rolemenu(array('Approval/Approval_Index','Approval/Approval_Upload','Approval/Approval_file','Approval/Approval_Update'))">
+                                    <li class="{:on('Approval/Approval_Index')}{:on('Approval/Approval_Upload')}{:on('Approval/Approval_file')}{:on('Approval/Approval_Update')}">
                                         <a href="{:U('Approval/Approval_Index')}">
                                             <i class="fa fa-angle-right"></i> 文件审批
+                                            <?php if($_SESSION['approval_flie_type']){ ?>
+                                                <small class="badge pull-right bg-red" style="margin-right:6px;"><?php echo $_SESSION['approval_flie_type'];?></small>
+                                            <?php }else{ ?>
+                                                <i class="fa fa-angle-left pull-right"></i>
+                                            <?php } ?>
                                         </a>
                                     </li>
                                 </if>

@@ -74,7 +74,7 @@
                                         </tr>
 
                                         <tr style="text-align:center;">
-                                            <td >{$f['file']['account_id']}</td>
+                                            <td >{$f['file']['id']}</td>
                                             <td>{$f['file']['account_name']}</td>
                                             <td>
                                                 <a href="{$f['file']['file_url']}">
@@ -178,12 +178,12 @@
                                         </div>
                                     </div><br>
                                     <div style="text-align: center;">
-<!--                                            --><?php //if($_SESSION['userid'] == $approval_file[0]['file']['file_leader_id'] && $approval_file[0]['file']['file_leader_id']!==3){?>
+<!--                                            --><?php //if($_SESSION['userid'] == $approval_file[0]['file']['file_leader_id'] && $approval_file[0]['file']['status']==2){?>
                                         <input type="submit" value="审批通过" class="btn btn-info "  onclick="approval_update_file(1)" style="margin-right:1em;">
                                         <input type="submit" value="审批驳回" class="btn btn-info"   onclick="approval_update_file(2)" style="margin-right:1em;">
 <!--                                            --><?php //}?>
-<!--                                        --><?php //if($_SESSION['userid'] == $approval_file[0]['file']['account_id'] && $approval_file[0]['file']['file_leader_id'] && $approval_file[0]['file']['file_leader_id']==4){?>
-                                        <input type="submit" value="修改提交" class="btn btn-info"   onclick="approval_update_file(3)" style="margin-right:1em;">
+<!--                                        --><?php //if($_SESSION['userid'] == $approval_file[0]['file']['account_id'] &&  $approval_file[0]['file']['status']==4){?>
+                                        <input type="submit" value="提交批注修改" class="btn btn-info"   onclick="approval_update_file(3)" style="margin-right:1em;">
 <!--                                            --><?php //}?>
 
                                     </div>

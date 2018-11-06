@@ -19,7 +19,8 @@ class IndexController extends BaseController {
 		$this->sum_product  = M('op')->where("`status`= 1")->count();
 		$this->sum_project  = M('op')->count();
 		$this->sum_audit    = $this->_sum_audit;
-        $this->salary_datetime();//人力资源
+        $this->salary_datetime();//触发人力资源信息条数提醒
+        $this->file_remind_number();//出发文件处理信息条数提醒
 		$this->sum_plans    = M('op')->where("`departure` >= '$startday' and `departure`<= '$endday' and `status`= 1")->count();
 		
 		//获取公告
