@@ -1010,8 +1010,21 @@ class FinanceController extends BaseController {
         $opid               = I('opid');
         if (!$opid) $this->error('获取信息失败');
         $op                 = M('op')->where(array('op_id'=>$opid))->find();
-        $costacc            = M('op_costacc')->where(array('op_id'=>$opid,'status'=>1))->order('id')->select();
         $budget             = M('op_budget')->where(array('op_id'=>$opid))->find();
+        $costacc            = M('op_costacc')->where(array('op_id'=>$opid,'status'=>1))->order('id')->select();
+        $jk_lists           = M('jiekuan')->where(array('op_id'=>$opid))->select();
+        foreach ($jk_lists as $k=>$v){
+            $a  = M('jiekuan_audit')->where(array('jk_id'=>$v['id'],'audit_status'=>'0'))->find();
+            $b  = M('jiekuan_audit')->where(array('jk_id'=>$v['id'],'audit_status'=>'1'))->find();
+            $c  = M('jiekuan_audit')->where(array('jk_id'=>$v['id'],'audit_status'=>'2'))->find();
+            if ($a && !$c){
+                $jk_lists[$k]['auditstatus'] = '<span class="yellow">审核中</span>';
+            }elseif ($c){
+                $jk_lists[$k]['auditstatus'] = '<span class="red">审核未通过</span>';
+            }elseif ($b && !$a && !$c){
+                $jk_lists[$k]['auditstatus'] = '<span class="green">审核通过</span>';
+            }
+        }
 
         //审核通过的预算信息
         $audit_yusuan       = M()->table('__OP_BUDGET__ as b')
@@ -1019,11 +1032,14 @@ class FinanceController extends BaseController {
             ->where(array('b.op_id'=>$opid,'l.req_type'=>P::REQ_TYPE_BUDGET,'l.dst_status'=>1))
             ->find();
         $this->kinds        =  M('project_kind')->getField('id,name', true);
+        $this->jk_lists     = $jk_lists;
         $this->budget       = $budget;
         $this->costacc      = $costacc;
         $this->kind         = C('COST_TYPE');
         $this->audit_yusuan = $audit_yusuan;
         $this->op           = $op;
+        $settlement = M('op_settlement')->where(array('op_id'=>$opid))->find();
+        $this->settlement   = $settlement;
         $this->display();
     }
 
@@ -1103,8 +1119,70 @@ class FinanceController extends BaseController {
 
         //保存借款申请
         if ($savetype==2){
-            $a  = I();
-            var_dump($a);die;
+            $db                 = M('jiekuan');
+            $info               = I('info');
+            $info['type']       = I('type');
+            $info['jk_user']    = cookie('nickname');
+            $info['jk_user_id'] = cookie('userid');
+            $info['jk_time']    = NOW_TIME;
+
+            $res = $db->add($info);
+            if ($res){
+                //审核人信息(借款人,预算审批人,财务主管)
+                //该团的预算审批人
+                $audit_ys    = M()->table('__OP_BUDGET__ as b')
+                    ->field('b.name,l.audit_uid')
+                    ->join('__AUDIT_LOG__ as l on l.req_id = b.id','left')
+                    ->where(array('b.op_id'=>$info['op_id'],'l.dst_status'=>P::AUDIT_STATUS_PASS,'l.req_type'=>P::REQ_TYPE_BUDGET))
+                    ->find();
+
+                //程小平=>55
+                $jk_audits   = array($audit_ys['audit_uid'],'55');
+                $jiekuan_audit          = array();
+                $jiekuan_audit['op_id'] = $info['op_id'];
+                $jiekuan_audit['jk_id'] = $res;
+
+                foreach ($jk_audits as $k=>$v){
+                    $jiekuan_audit['audit_userid']  = $v;
+                    $jiekuan_audit['audit_username']= M('account')->where(array('id'=>$v))->getField('nickname');
+                    M('jiekuan_audit')->add($jiekuan_audit);
+
+                    //发送系统消息
+                    $uid     = cookie('userid');
+                    $title   = '您有来自['.$info['rolename'].'--'.$info['jk_user'].']的借款申请!';
+                    $content = '项目名称：'.$audit_ys['name'].'，团号：'.$info['group_id'].'，借款金额：'.$info['sum'];
+                    $url     = U('Finance/audit_jiekuan',array('id'=>$res));
+                    $user    = '['.$v.']';
+                    send_msg($uid,$title,$content,$url,$user,'');
+                }
+
+                $record = array();
+                $record['op_id']   = $info['op_id'];
+                $record['optype']  = 13;
+                $record['explain'] = '填写借款申请,借款金额'.$info['sum'];
+                op_record($record);
+
+                $this->success('保存成功');
+            }else{
+                $this->error('保存失败');
+            }
         }
     }
+
+
+    // @@@NODE-3###audit_jiekuan###审批借款###
+    public function audit_jiekuan(){
+
+    }
+
+    /* // @@@NODE-3###sign_jk###借款签字/审批签字###
+     public function sign_jk(){
+         if (isset($_POST['dosubmint'])){
+             $a = I();
+             var_dump($a);die;
+         }else{
+             $this->opid         = I('opid');
+             $this->display('sign_jk');
+         }
+     }*/
 }
