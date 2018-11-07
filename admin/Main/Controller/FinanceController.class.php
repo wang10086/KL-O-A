@@ -1032,6 +1032,7 @@ class FinanceController extends BaseController {
             ->where(array('b.op_id'=>$opid,'l.req_type'=>P::REQ_TYPE_BUDGET,'l.dst_status'=>1))
             ->find();
         $this->kinds        =  M('project_kind')->getField('id,name', true);
+        $this->record       = M('op_record')->where(array('op_id'=>$opid,'optype'=>array('in',array(13,14))))->order('id DESC')->select();
         $this->jk_lists     = $jk_lists;
         $this->budget       = $budget;
         $this->costacc      = $costacc;
