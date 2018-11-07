@@ -19,7 +19,7 @@
                             <div class="box">
                                 <div class="box-header">
                                     <div class="tip">
-                                        <a href="javascript:;" onClick="delfile()"  class="btn btn-danger" style="padding:6px 12px;"><i class="fa fa-trash-o"></i> 删除</a>
+                                        <a href="javascript:;"  class="btn btn-danger Approval_file_delete" style="padding:6px 12px;"><i class="fa fa-trash-o"></i> 删除</a>
                                         <a href="{:U('Approval/Approval_Upload')}" class="btn btn-info btn-sm"><i class="fa fa-upload"></i> 上传文件</a>
                                     </div>
                                 </div><!-- /.box-header -->
@@ -45,7 +45,7 @@
                                     <foreach name="file" item="f">
                                     <tr>
                                     	<td align="center">
-                                            <input type="checkbox" class="Approval_check" />
+                                            <input type="checkbox" class="Approval_check" value="{$f['file']['id']}"/>
                                         </td>
                                         <td style="text-align:center;">{$f['file']['id']}</td>
                                         <td style="text-align:center;color:#3399FF;">{$f['file']['account_name']}</td>
@@ -109,7 +109,7 @@
 
 <script type="text/javascript">
 
-
+    // 文件选择
     $(document).ready(function(e) {
         //选择
         $('#Approval_check').on('ifChecked', function() {
@@ -117,6 +117,31 @@
         });
         $('#Approval_check').on('ifUnchecked', function() {
             $('.Approval_check').iCheck('uncheck');
+        });
+    });
+
+
+    // 删除选择文件
+    $('.Approval_file_delete').click(function(){
+        var id = '';
+        $(".Approval_check:checkbox:checked").each(function(){
+            var content = $(this).val();
+                id += content+',';
+            $(this).parents('tr').remove();
+        });
+
+        $.ajax({
+            url:"{:U('Ajax/Ajax_file_delete')}",
+            type:"POST",
+            data:{'fileid':id},
+            dataType:"json",
+            success:function(date){
+                if(date.sum==1){
+                    alert(date.msg);
+                }else{
+                    alert(date.msg);
+                }
+            }
         });
     });
 

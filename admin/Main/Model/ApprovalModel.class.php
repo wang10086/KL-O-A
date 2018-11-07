@@ -49,6 +49,7 @@
                     $files                              = M($table)->where($where)->find();
                     if($files){
                         unset($add_approval['createtime']);
+                        $where['type']                  = 1;
                         $update                         = M($table)->where($where)->save($add_approval);
                         if($update){
                             return 1;die;
@@ -98,7 +99,9 @@
          * $id 文件 id
          */
         public function approval_update($id){
-            $file                                   = M('approval_flie')->where('id='.$id)->find();
+            $where['id']                            = $id;
+            $where['type']                          = 1;
+            $file                                   = M('approval_flie')->where($where)->find();
             $user_id                                = explode(',',$file['file_account_id']);
             foreach($user_id as $key => $val){
                 $userinfo['user'][$key]['username'] = username($val);

@@ -65,12 +65,14 @@
                                             <th class="sorting" style="text-align:center;width:6em;"><b>ID</b></th>
                                             <th class="sorting" style="text-align:center;width:10em;"><b>上传者</b></th>
                                             <th class="sorting" style="text-align:center;width:10em;"><b>文件名称</b></th>
-                                            <th class="sorting" style="text-align:center;width:10em;"><b>修改后文件名称</b></th>
-                                            <th class="sorting" style="text-align:center;width:10em;"><b>修改人姓名</b></th>
-                                            <th class="sorting" style="text-align:center;width:10em;"><b>修改时间</b></th>
                                             <th class="sorting" style="text-align:center;width:10em;"><b>文件大小</b></th>
                                             <th class="sorting" style="text-align:center;width:10em;"><b>文件格式</b></th>
                                             <th class="sorting" style="text-align:center;width:10em;"><b>上传时间</b></th>
+                                            <th class="sorting" style="text-align:center;width:10em;"><b>修改后文件名称</b></th>
+                                            <th class="sorting" style="text-align:center;width:10em;"><b>修改后文件大小</b></th>
+                                            <th class="sorting" style="text-align:center;width:10em;"><b>修改后文件格式</b></th>
+                                            <th class="sorting" style="text-align:center;width:10em;"><b>修改人姓名</b></th>
+                                            <th class="sorting" style="text-align:center;width:10em;"><b>修改时间</b></th>
                                         </tr>
 
                                         <tr style="text-align:center;">
@@ -81,18 +83,20 @@
                                                     <?php if(!empty($f['file']['file_name']) && !empty($f['file']['file_format'])){echo $f['file']['file_name'].'.'.$f['file']['file_format'];}?>
                                                 </a>
                                             </td>
+                                            <td>{$f['file']['file_size']}</td>
+                                            <td>{$f['file']['file_format']}</td>
+                                            <td><?php if(!empty($f['file']['createtime'])){echo date('Y-m-d H:i:s',$f['file']['createtime']);}?></td>
                                             <td style="text-align:center;">
                                                 <a href="{$f['flie_update']['file_url']}">
                                                     <?php if(!empty($f['flie_update']['file_name']) && !empty($f['flie_update']['file_format'])){echo $f['flie_update']['file_name'].'.'.$f['flie_update']['file_format'];}?>
                                                 </a>
                                             </td>
+                                            <td>{$f['flie_update']['file_size']}</td>
+                                            <td>{$f['flie_update']['file_format']}</td>
                                             <td style="text-align:center;">{$f['flie_update']['account_name']}</td>
                                             <td style="text-align:center;">
                                                 <?php if(!empty($f['flie_update']['update_time'])){echo date('Y-m-d H:i:s',$f['flie_update']['update_time']);}?>
                                             </td>
-                                            <td>{$f['file']['file_size']}</td>
-                                            <td>{$f['file']['file_format']}</td>
-                                            <td><?php if(!empty($f['file']['createtime'])){echo date('Y-m-d H:i:s',$f['file']['createtime']);}?></td>
                                         </tr>
                                     </table><br><br>
 
@@ -178,13 +182,13 @@
                                         </div>
                                     </div><br>
                                     <div style="text-align: center;">
-<!--                                            --><?php //if($_SESSION['userid'] == $approval_file[0]['file']['file_leader_id'] && $approval_file[0]['file']['status']==2){?>
+                                            <?php if($_SESSION['userid'] == $approval_file[0]['file']['file_leader_id'] && $approval_file[0]['file']['status']==2){?>
                                         <input type="submit" value="审批通过" class="btn btn-info "  onclick="approval_update_file(1)" style="margin-right:1em;">
                                         <input type="submit" value="审批驳回" class="btn btn-info"   onclick="approval_update_file(2)" style="margin-right:1em;">
-<!--                                            --><?php //}?>
-<!--                                        --><?php //if($_SESSION['userid'] == $approval_file[0]['file']['account_id'] &&  $approval_file[0]['file']['status']==4){?>
+                                            <?php }?>
+                                        <?php if($_SESSION['userid'] == $approval_file[0]['file']['account_id'] &&  $approval_file[0]['file']['status']==4){?>
                                         <input type="submit" value="提交批注修改" class="btn btn-info"   onclick="approval_update_file(3)" style="margin-right:1em;">
-<!--                                            --><?php //}?>
+                                            <?php }?>
 
                                     </div>
                                 </div>

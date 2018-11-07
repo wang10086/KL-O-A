@@ -23,7 +23,7 @@
                         <h3 class="box-title">员工薪资列表</h3>
                         <a  class="btn btn-info" style="width:8em; margin: 0.5em 0em 0em 2em;"> <?php if($status=="" || $status==0 || $status==1){echo "待提交审核";}elseif($status==2){echo "待提交批准";}elseif($status==3){echo "待批准";}elseif($status==4){echo "已批准";}?></a>
                         <a href="javascript:;" class="btn btn-info btn-sm" onclick="javascript:opensearch('searchtext',700,160);" style="margin: 0.7em 0em 0em 3em;" ><i class="fa fa-search"></i> 搜索</a>
-                        <a  href="{:U('Salary/salary_exportExcel',array('datetime'=>$coun['datetime'],'type'=>$type))}" class="btn btn-info btn-sm" style="margin:1em 0em 0em 3em;" />导出 Excel</a>
+                        <a  href="{:U('Salary/salary_exportExcel',array('datetime'=>$count['datetime'],'type'=>$type))}" class="btn btn-info btn-sm" style="margin:1em 0em 0em 3em;" />导出 Excel</a>
 
                     </div><!-- /.box-header --><br>
                     <div class="box-body" style="height:45em;width:110em float:left;overflow:auto;">
@@ -40,14 +40,15 @@
                         <div class="btn-group" style="height:45em;width:200em;">
                             <table class="table table-bordered dataTablev">
                                 <tr role="row" class="orders">
-                                    <th class="sorting" style="width:8em;background-color:#66CCFF;">ID</th>
+                                    <th class="sorting" style="width:5em;background-color:#66CCFF;">序号</th>
+                                    <th class="sorting" style="width:6em;background-color:#66CCFF;">ID</th>
                                     <th class="sorting" style="width:8em;background-color:#66CCFF;">员工姓名</th>
-                                    <th class="sorting" style="width:8em;background-color:#66CCFF;">岗位名称</th>
-                                    <th class="sorting" style="width:8em;background-color:#66CCFF;">所属部门</th>
-                                    <th class="sorting" style="width:12em;background-color:#66CCFF;">岗位薪酬标准</th>
-                                    <th class="sorting" style="width:12em;background-color:#66CCFF;">其中基本工资标准</th>
-                                    <th class="sorting" style="width:8em;background-color:#66CCFF;">考勤扣款</th>
-                                    <th class="sorting" style="width:12em;background-color:#66CCFF;">其中绩效工资标准</th>
+                                    <th class="sorting" style="width:12em;background-color:#66CCFF;">岗位名称</th>
+                                    <th class="sorting" style="width:10em;background-color:#66CCFF;">所属部门</th>
+                                    <th class="sorting" style="width:10em;background-color:#66CCFF;">岗位薪酬标准</th>
+                                    <th class="sorting" style="width:10em;background-color:#66CCFF;">其中基本工资标准</th>
+                                    <th class="sorting" style="width:10em;background-color:#66CCFF;">考勤扣款</th>
+                                    <th class="sorting" style="width:10em;background-color:#66CCFF;">其中绩效工资标准</th>
                                     <th class="sorting" style="width:8em;background-color:#66CCFF;">绩效增减</th>
                                     <th class="sorting" style="width:8em;background-color:#66CCFF;">业绩提成</th>
                                     <th class="sorting" style="width:8em;background-color:#66CCFF;">奖金</th>
@@ -58,29 +59,26 @@
                                     <th class="sorting" style="width:8em;background-color:#66CCFF;">养老保险</th>
                                     <th class="sorting" style="width:8em;background-color:#66CCFF;">失业保险</th>
                                     <th class="sorting" style="width:8em;background-color:#66CCFF;">公积金</th>
-                                    <th class="sorting" style="width:12em;background-color:#66CCFF;">个人保险合计</th>
+                                    <th class="sorting" style="width:10em;background-color:#66CCFF;">个人保险合计</th>
                                     <th class="sorting" style="width:8em;background-color:#66CCFF;">计税工资</th>
-                                    <th class="sorting" style="width:10em;background-color:#66CCFF;">个人所得税</th>
+                                    <th class="sorting" style="width:8em;background-color:#66CCFF;">个人所得税</th>
                                     <th class="sorting" style="width:8em;background-color:#66CCFF;">税后扣款</th>
                                     <th class="sorting" style="width:8em;background-color:#66CCFF;">工会会费</th>
                                     <th class="sorting" style="width:8em;background-color:#66CCFF;">实发工资</th>
 
                                 </tr>
-
+                                        <?php $i=0;?>
                                 <foreach name="info" item="info">
-
-
                                     <tr class="excel_list_money1">
+                                        <td><?php $i<=count($info);$i++; echo $i;?></td>
                                         <td>{$info['account']['id']}</td>
                                         <td style="color:#3399FF;">{$info['account']['nickname']}</td>
                                         <td>{$info['posts'][0]['post_name']}</td>
                                         <td>{$info['department'][0]['department']}</td>
-
                                         <td>&yen; {$info['salary'][0]['standard_salary']}</td>
                                         <td>&yen; <?PHP echo sprintf("%.2f",($info['salary'][0]['standard_salary']/10*$info['salary'][0]['basic_salary']));?></td>
                                         <td>&yen; <?php echo sprintf("%.2f",($info['attendance'][0]['withdrawing']));?></td>
                                         <td>&yen; <?PHP echo sprintf("%.2f",($info['salary'][0]['standard_salary']/10*$info['salary'][0]['performance_salary']));?></td>
-
                                         <td>&yen; <?PHP echo sprintf("%.2f",$info['Achievements']['count_money']);?></td>
                                         <td>&yen; <?PHP echo sprintf("%.2f",$info['Extract']['total']);?></td>
                                         <td>&yen; <?PHP echo sprintf("%.2f",$info['bonus'][0]['foreign_bonus']);?></td>
@@ -116,9 +114,10 @@
                                     </tr>
                                     <th class="list_salary_detail1" style="display: none">{$info['wages_mont_id']}</th>
                                 </foreach>
-
+                                        <?php $n=0;?>
                                 <foreach name="sum" item="sum">
                                     <tr class="excel_list_money2">
+                                        <td><?php $n<=count($sum);$n++; echo $n;?></td>
                                         <td colspan="3" style="text-align: center;">{$sum['name']}</td>
                                         <td>{$sum['department']}</td>
                                         <td>&yen; <?PHP echo sprintf("%.2f",$sum['standard_salary']);?></td>
@@ -145,7 +144,7 @@
                                     <th class="list_salary_detail2" style="display: none">{$sum['id']}</th>
                                 </foreach>
                                 <tr class="excel_list_money3">
-                                    <td colspan="4" style="text-align: center;">{$count['name']}</td>
+                                    <td colspan="5" style="text-align: center;">{$count['name']}</td>
                                     <td>&yen; <?PHP echo sprintf("%.2f",$count['standard_salary']);?></td>
                                     <td>&yen; <?PHP echo sprintf("%.2f",$count['basic']);?></td>
                                     <td>&yen; <?PHP echo sprintf("%.2f",$count['withdrawing']);?></td>
@@ -214,7 +213,7 @@
 
 <include file="Index:footer2" />
 <script>
-    //    提交数据
+    //    提交审核数据
     $('.salary_excel1_submit').click(function(){
         var count           = new Array();
         var content         = new Array();
@@ -261,6 +260,7 @@
         });
     });
 
+    //提交批准
     $('.salary_excel1_submit1').click(function(){
         var wages_month_id ="";
         var departmen_id ="";
@@ -297,7 +297,7 @@
         });
     });
 
-
+    //批准
     $('.salary_excel1_submit3').click(function(){
         var wages_month_id ="";
         var departmen_id ="";
@@ -334,6 +334,7 @@
             }
         });
     });
+    //驳回
     $('.salary_excel1_submit2').click(function(){
         var wages_month_id ="";
         var departmen_id ="";
@@ -370,6 +371,7 @@
             }
         });
     });
+    //表格单双变色
     function excel_list_color(){
         $('.excel_list_money3').css("background","#66CCFF");
         $(".excel_list_money2:odd").css("background","#F8F8F8");
@@ -379,6 +381,7 @@
 
     }
 
+    //横向内容点击变色
     var  cum = 0;
     var  cun = 0;
     $('tr').click(function(){
@@ -399,6 +402,7 @@
         }
     });
 
+    //纵向内容点击变色
     var cont    = 0;
     var num     = 0;
     $('table tr th').click(function(){
@@ -444,43 +448,6 @@
             });
         }
     });
-
-
-//    var content1 ='';
-//    var content2 ='';
-//    var content3 ='';
-//
-//    $('#Excel_id').click(function(){
-//        $('table .excel_list_money1').each(function(){
-//            content1 += $(this).children('td').text();
-//        });
-//        $('.excel_list_money2').each(function(){
-//            content2 += $(this).text();
-//        });
-//        $('.excel_list_money3').each(function(){
-//            content3 += $(this).text();
-//        });
-//        $.ajax({
-//            type: "POST",
-//            url:  "index.php?m=Main&c=Salary&a=salary_exportExcel",
-//            data: {
-//                'Excel1' : content1,
-//                'Excel2' : content2,
-//                'Excel3' : content3,
-//            },
-//            dataType: "json", //数据格式
-//            success: function (data) {
-//                if (data.sum == 1) {
-//                    alert(data.msg);
-//                    return false;
-//                }
-//                if (data.sum == 0) {
-//                    alert(data.msg);
-//                    return false;
-//                }
-//            }
-//        });
-//    });
 
     excel_list_color();
 </script>

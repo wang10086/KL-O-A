@@ -8,10 +8,10 @@ class ApprovalController extends BaseController {
 
     //首页显示
     public function Approval_Index(){
-        $count                  = M('approval_flie')->count();
+        $count                  = M('approval_flie')->where('type=1')->count();
         $page                   = new Page($count,10);
         $pages                  = $page->show();
-        $approval               = M('approval_flie')->limit("$page->firstRow","$page->listRows")->order('createtime desc')->select();
+        $approval               = M('approval_flie')->where('type=1')->limit("$page->firstRow","$page->listRows")->order('createtime desc')->select();
         $this->file             = D('Approval')->approval_update_sql($approval);//循环更改文件数据
 
         $this->pages            = $pages;
@@ -27,7 +27,6 @@ class ApprovalController extends BaseController {
                 $array[$i][$k]  = $arr[$i*4+$k];
             }
         }
-        //   $upload->getError();最后一次错误;
         $this->personnel        = personnel();
         $this->cooki            = $array;
         $this->display();
@@ -55,17 +54,17 @@ class ApprovalController extends BaseController {
 
     //文件详情
     public function Approval_Update(){
-
         $id = code_number(trim(I('id')),1);//文件id
         $file[0]                = D('Approval')->approval_update($id);
         $this->id               = $id;
         $approval_file          = D('Approval')->approval_update_sql($file);//循环更改文件数据
 
-        if($approval_file['0']['flie_update']['file_url']=""){
-            $this-> url         = $_SERVER['SERVER_NAME'].'/'.$approval_file['0']['flie_update']['file_url'];
+        if($approval_file[0]['flie_update']['file_url']!==""){
+            $this-> url         = $_SERVER['SERVER_NAME'].'/'.$approval_file[0]['flie_update']['file_url'];
         }else{
-            $this-> url         = $_SERVER['SERVER_NAME'].'/'.$approval_file['0']['file']['file_url'];
+            $this-> url         = $_SERVER['SERVER_NAME'].'/'.$approval_file[0]['file']['file_url'];
         }
+//        print_r($approval_file);die;
         $this->assign('approval_file',$approval_file);
         $this->display();
     }

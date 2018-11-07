@@ -513,31 +513,33 @@ class BaseController extends Controller {
      */
     public function file_remind_number(){
 
-        $userid                     = $_SESSION['userid'];
-
+        $userid                         = $_SESSION['userid'];
         // 文件驳回
-        $where['account_id']        = $userid;
-        $where['status']            = 4;
-        $file1                      = M('approval_flie')->where($where)->select();
+        $where['account_id']            = $userid;
+        $where['type']                  = 1;
+        $where['status']                = 4;
+        $file1                          = M('approval_flie')->where($where)->select();
         if($file1){
-            $count1                 = count($file1);
+            $count1                     = count($file1);
         }
         //文件待批准
-        $query['file_leader_id']    = $userid;
-        $query['status']            = 2;
-        $file2                      = M('approval_flie')->where($query)->select();
+        $query['file_leader_id']        = $userid;
+        $query['type']                  = 1;
+        $query['status']                = 2;
+        $file2                          = M('approval_flie')->where($query)->select();
         if($file2){
-            $count2                 = count($file2);
+            $count2                     = count($file2);
         }
         //文件待批注
-        $r['status']                = 1;
-        $file3                      = M('approval_flie')->where($r)->select();
-        $count3                     = 0;
+        $r['status']                    = 1;
+        $r['type']                      = 1;
+        $file3                          = M('approval_flie')->where($r)->select();
+        $count3                         = 0;
         foreach($file3 as $key =>$val){
-            $account                = explode(',',$val['file_account_id']);
+            $account                    = explode(',',$val['file_account_id']);
             foreach ($account as $k => $v){
                 if($v==$userid){
-                    $count3         = $count3+1;
+                    $count3             = $count3+1;
                 }
             }
         }

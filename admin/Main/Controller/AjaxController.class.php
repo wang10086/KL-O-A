@@ -1119,8 +1119,11 @@ class AjaxController extends Controller {
             $where['account_name']              = $_SESSION['nickname'];
             $where['annotation_content']        = $arr;
             $annotation_w                       =  M('annotation_file')->add($where);
+
+            $query['id']                        = $file_id;
+            $query['type']                      = 1;
             if($annotation_w){//判断添加是否成功
-                $approval                       = M('approval_flie')->where('id='.$file_id)->find();
+                $approval                       = M('approval_flie')->where($query)->find();
                 $userfileid                     = explode(',',$approval['file_account_id']);
                 if(in_array($where['account_id'],$userfileid)){
 
@@ -1135,7 +1138,7 @@ class AjaxController extends Controller {
                 }
                 //判断所有人都完成批注
                 $update['status']               = 2;
-                $approvalfile                   = M('approval_flie')->where('id='.$file_id)->save($update);
+                $approvalfile                   = M('approval_flie')->where($query)->save($update);
                 $flieupdate                     = M('approval_flie_update')->where('file_id='.$file_id)->save($update);
                 $flieupdate                     = M('annotation_file')->where('file_id='.$file_id)->save($update);
 
@@ -1144,6 +1147,58 @@ class AjaxController extends Controller {
                 echo json_encode(array('sum' => 0, 'msg' => "编辑失败!请重新编辑提交!"));die;
             }
 
+        }
+    }
+
+
+    /**
+     * Ajax_approval_flie 文件审核通过  文件审核驳回  文件提交审核修改
+     * file_id 文件 id
+     *type  1通过 2驳回 3 修改
+     */
+    public function Ajax_approval_flie(){
+
+        $fileid                 = (int)code_number(trim($_POST['file_id']));
+        $type                   = (int)code_number(trim($_POST['type']));
+        if($type==1){//文件
+            $status['status']   = 3;
+            $content            = '审核通过';
+        }elseif($type==2){//文件修改
+            $status['status']   = 4;
+            $content            = '审核驳回';
+        }elseif($type==3){//文件批注
+            $status['status']   = 2;
+            $content            = '提交审核修改';
+        }
+        $where1['id']           = $fileid;
+        $where1['type']         = 1;
+        $where2['file_id']      = $fileid;
+        $file                   = M('approval_flie')->where($where1)->save($status);
+        $update                 = M('approval_flie_update')->where($where2)->save($status);
+        $annotatio              = M('annotation_file')->where($where2)->save($status);
+        if($file && $update && $annotatio){
+            echo json_encode(array('sum' => 1, 'msg' => $content."成功!"));die;
+        }else{
+            echo json_encode(array('sum' => 0, 'msg' => $content."失败!"));die;
+        }
+    }
+
+    /**
+     * Ajax_file_delete 删除选中的文件
+     * $fileid 文件id
+     */
+    function Ajax_file_delete(){
+
+        $fileid             = trim($_POST['fileid']);
+        $file_id            = array_filter(explode(',',$fileid));
+        foreach($file_id as $key => $val){
+            $save['type']   = 2;
+            $approval_flie  = M('approval_flie')->where('id='.$val)->save($save);
+            if($approval_flie){
+                echo json_encode(array('sum' => 1, 'msg' => "删除成功!"));die;
+            }else{
+                echo json_encode(array('sum' => 0, 'msg' => "删除失败!请重新选择!"));die;
+            }
         }
     }
 
@@ -1213,36 +1268,6 @@ class AjaxController extends Controller {
         $this->ajaxReturn($nstr);
     }
 
-    /**
-     * Ajax_approval_flie 文件审核通过  文件审核驳回  文件提交审核修改
-     * file_id 文件 id
-     *type  1通过 2驳回 3 修改
-     */
-    public function Ajax_approval_flie(){
-
-        $fileid                 = (int)code_number(trim($_POST['file_id']));
-        $type                   = (int)code_number(trim($_POST['type']));
-        if($type==1){//文件
-            $status['status']   = 3;
-            $content            = '审核通过';
-        }elseif($type==2){//文件修改
-            $status['status']   = 4;
-            $content            = '审核驳回';
-        }elseif($type==3){//文件批注
-            $status['status']   = 2;
-            $content            = '提交审核修改';
-        }
-        $where1['id']           = $fileid;
-        $where2['file_id']      = $fileid;
-        $file                   = M('approval_flie')->where($where1)->save($status);
-        $update                 = M('approval_flie_update')->where($where2)->save($status);
-        $annotatio              = M('annotation_file')->where($where2)->save($status);
-        if($file && $update && $annotatio){
-            echo json_encode(array('sum' => 1, 'msg' => $content."成功!"));die;
-        }else{
-            echo json_encode(array('sum' => 0, 'msg' => $content."失败!"));die;
-        }
-    }
 
     //检查该团是否已创建合同
     public function get_contract(){

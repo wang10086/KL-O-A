@@ -124,7 +124,9 @@ class SalaryController extends BaseController {
                     $user                       = M('account')->where('id='.$query['user_id'])->find();
                     $mont1                      = strtotime($year.($month-1).'26');//开始月
                     $mont2                      = strtotime($year.$month.'26');//结束月
-                    //$sum_user                       = monthly_Finance($user['nickname'],$mont1,$mont2);//季度完成
+//                    $mont1                      = $year.($month-1).'26';//开始月
+//                    $mont2                      = $year.$month.'26';//结束月
+                    //$sum_user                   = monthly_Finance($user['nickname'],$mont1,$mont2);//季度完成
                     $sum_user                   = monthly_Finance($query['user_id'],$mont1,$mont2);//季度完成
 
                     $count                      += $lists['target'];//季度目标
@@ -160,7 +162,9 @@ class SalaryController extends BaseController {
                 $user                           = M('account')->where('id='.$query['user_id'])->find();
                 $mont1                          = strtotime($year.($month-1).'26');//开始月
                 $mont2                          = strtotime($year.$month.'26');//结束月
-                //$sum_user                       = monthly_Finance($user['nickname'],$mont1,$mont2);//季度完成
+//                $mont1                          = $year.($month-1).'26';//开始月
+//                $mont2                          = $year.$month.'26';//结束月
+//                $sum_user                       = monthly_Finance($user['nickname'],$mont1,$mont2);//季度完成
                 $sum_user                       = monthly_Finance($query['user_id'],$mont1,$mont2);//季度完成
 
                 $content['target']              = $lists['target'];//季度目标
@@ -190,6 +194,8 @@ class SalaryController extends BaseController {
                 $user                           = M('account')->where('id='.$query['user_id'])->find();
                 $mont1                          =  strtotime($year.($month-1).'26');//开始月
                 $mont2                          =  strtotime($year.$month.'26');//结束月
+//                $mont1                          = $year.($month-1).'26';//开始月
+//                $mont2                          = $year.$month.'26';//结束月
                 //$sum_user                       += monthly_Finance($user['nickname'],$mont1,$mont2);//季度完成
                 $sum                            += monthly_Finance($query['user_id'],$mont1,$mont2);//季度完成
                 $count                          += $lists['target'];//季度目标
@@ -523,7 +529,6 @@ class SalaryController extends BaseController {
             }
         }else{
             $db                     = M('salary_department');
-
             //分页
             $pagecount		        = $db->count();
             $page			        = new Page($pagecount, 5);
@@ -625,15 +630,12 @@ class SalaryController extends BaseController {
         }
         $userid                         = (int)$_SESSION['userid'];//用户id
 
-        $this->assign('info',$info);//员工信息
+//        $this->assign('number1',count($info));//员工数量
+//        $this->assign('number2',count($sum));//部门数量
+        $this->assign('info',$info);//员工信息 inf
         $this->assign('type',$archives);//状态
-        $this->assign('sum',$sum);//部门合计
-        $this->assign('count',$summoney);//总合计
-
-        $this->assign('inf',$info);//员工信息
-        $this->assign('su',$sum);//部门合计
-        $this->assign('coun',$summoney);//总合计
-
+        $this->assign('sum',$sum);//部门合计 su
+        $this->assign('count',$summoney);//总合计 coun
         $this->assign('time',$datetime);//表时间
         $this->assign('status',$status);//提交状态
         $this->assign('userid',$userid);//提交状态
