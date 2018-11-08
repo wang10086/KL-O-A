@@ -139,7 +139,7 @@
                                     <th class="list_salary_detail2" style="display: none">{$sum['id']}</th>
                                 </foreach>
                                 <tr class="excel_list_money3">
-                                    <td colspan="5" style="text-align: center;">{$count['name']}</td>
+                                    <td colspan="4" style="text-align: center;">{$count['name']}</td>
                                     <td>&yen; <?PHP echo sprintf("%.2f",$count['standard_salary']);?></td>
                                     <td>&yen; <?PHP echo sprintf("%.2f",$count['basic']);?></td>
                                     <td>&yen; <?PHP echo sprintf("%.2f",$count['withdrawing']);?></td>
