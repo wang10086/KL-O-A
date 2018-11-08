@@ -31,7 +31,7 @@
                                 <td class="td_title td">执行人</td>
                                 <td colspan="2" class="td_con td">{$design.exe_user_name}</td>
                                 <td class="td_title td">计划交稿时间</td>
-                                <td colspan="2" class="td_con td">{$design.finish_time|date='Y-m-d',###}</td>
+                                <td colspan="2" class="td_con td">{$design.need_time|date='Y-m-d',###}</td>
 
                             </tr>
                             <tr>

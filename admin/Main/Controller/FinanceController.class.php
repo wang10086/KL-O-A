@@ -1174,6 +1174,8 @@ class FinanceController extends BaseController {
     // @@@NODE-3###audit_jiekuan###审批借款###
     public function audit_jiekuan(){
 
+
+        $this->display();
     }
 
     /* // @@@NODE-3###sign_jk###借款签字/审批签字###
