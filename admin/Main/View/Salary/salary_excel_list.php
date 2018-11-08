@@ -67,10 +67,9 @@
                                     <th class="sorting" style="width:8em;background-color:#66CCFF;">实发工资</th>
 
                                 </tr>
-                                        <?php $i=0;?>
+
                                 <foreach name="info" item="info">
                                     <tr class="excel_list_money1">
-                                        <td><?php $i<=count($info);$i++; echo $i;?></td>
                                         <td>{$info['account']['id']}</td>
                                         <td style="color:#3399FF;">{$info['account']['nickname']}</td>
                                         <td>{$info['posts'][0]['post_name']}</td>
@@ -114,10 +113,9 @@
                                     </tr>
                                     <th class="list_salary_detail1" style="display: none">{$info['wages_mont_id']}</th>
                                 </foreach>
-                                        <?php $n=0;?>
+
                                 <foreach name="sum" item="sum">
                                     <tr class="excel_list_money2">
-                                        <td><?php $n<=count($sum);$n++; echo $n;?></td>
                                         <td colspan="3" style="text-align: center;">{$sum['name']}</td>
                                         <td>{$sum['department']}</td>
                                         <td>&yen; <?PHP echo sprintf("%.2f",$sum['standard_salary']);?></td>
