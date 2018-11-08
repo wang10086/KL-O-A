@@ -45,12 +45,47 @@
                                 </div><!-- /.box-body -->
                             </div><!-- /.box -->
 
+                            <?php if ($settlement['audit'] != 1){ ?>
                             <div class="box box-warning">
                                 <div class="box-header">
                                     <h3 class="box-title">预算详情</h3>
                                 </div><!-- /.box-header -->
                                 <div class="box-body">
-                                        <include file="jk_lists" />
+                                        <include file="jk_content" />
+                                </div>
+                            </div>
+                            <?php } ?>
+
+                            <div class="box box-warning">
+                                <div class="box-header">
+                                    <h3 class="box-title">借款信息</h3>
+                                </div><!-- /.box-header -->
+                                <div class="box-body">
+                                    <include file="jk_lists" />
+                                </div>
+                            </div>
+
+                            <div class="box box-warning">
+                                <div class="box-header">
+                                    <h3 class="box-title">项目操作记录</h3>
+                                </div>
+                                <div class="box-body">
+                                    <div class="content" style="padding:10px 30px;">
+                                        <table rules="none" border="0">
+                                            <tr>
+                                                <th style="border-bottom:2px solid #06E0F3; font-weight:bold;" width="160">操作时间</th>
+                                                <th style="border-bottom:2px solid #06E0F3; font-weight:bold;" width="100">操作人</th>
+                                                <th style="border-bottom:2px solid #06E0F3; font-weight:bold;" width="500">操作说明</th>
+                                            </tr>
+                                            <foreach name="record" item="v">
+                                                <tr>
+                                                    <td style="padding:20px 0 0 0">{$v.op_time|date='Y-m-d H:i:s',###}</td>
+                                                    <td style="padding:20px 0 0 0">{$v.uname}</td>
+                                                    <td style="padding:20px 0 0 0">{$v.explain}</td>
+                                                </tr>
+                                            </foreach>
+                                        </table>
+                                    </div>
                                 </div>
                             </div>
 
@@ -66,136 +101,6 @@
 
 <include file="Index:footer2" />
 
-
-<!--<script>
-	$(document).ready(function(e) {
-        cost_total();
-    });
-	//新成本核算项
-	function add_costacc(){
-		var i = parseInt($('#costacc_val').text())+1;
-
-		var html = '<div class="userlist cost_expense" id="costacc_'+i+'"><span class="title"></span><input type="text" class="form-control" name="costacc['+i+'][title]"><input type="text"  class="form-control cost" name="costacc['+i+'][unitcost]"  value="0"><input type="text" class="form-control amount" name="costacc['+i+'][amount]" value="1"><input type="text" class="form-control totalval" name="costacc['+i+'][total]"  value="0"><select class="form-control"  name="costacc['+i+'][type]" ><option value="1">物资</option><option value="2">专家辅导员</option><option value="3">合格供方</option><option value="4">其他</option></select><input type="text" class="form-control longinput" name="costacc['+i+'][remark]"><a href="javascript:;" class="btn btn-danger btn-flat" onclick="delbox(\'costacc_'+i+'\')">删除</a></div>';
-		$('#costacc').append(html);	
-		$('#costacc_val').html(i);
-		orderno();
-		cost_total();
-	}
-	
-	//编号
-	function orderno(){
-		$('#mingdan').find('.title').each(function(index, element) {
-            $(this).text(parseInt(index)+1);
-        });
-		$('#pretium').find('.title').each(function(index, element) {
-            $(this).text(parseInt(index)+1);
-        });
-		$('#costacc').find('.title').each(function(index, element) {
-            $(this).text(parseInt(index)+1);
-        });	
-	}
-	
-	//移除
-	function delbox(obj){
-		$('#'+obj).remove();
-		orderno();
-		cost_total();
-	}
-	
-	//更新成本核算
-	function cost_total(){
-        var costaccsum = get_costaccsum();
-
-		$('#costaccsum').html('&yen; '+costaccsum.toFixed(2));	
-		$('#costaccsumval').val(costaccsum.toFixed(2));	
-		lilv();
-	}
-
-	function get_costaccsum() {
-        var costaccsum = 0;
-        $('.cost_expense').each(function(index, element) {
-            $(this).find('.cost').blur(function(){
-                var cost = $(this).val();
-                var amount = $(this).parent().find('.amount').val();
-                var ct = accMul(cost,amount);
-                $(this).parent().find('.totalval').val(ct.toFixed(2));
-                cost_total();
-            });
-            $(this).find('.amount').blur(function(){
-                var amount = $(this).val();
-                var cost = $(this).parent().find('.cost').val();
-                var ct = accMul(cost,amount);
-                $(this).parent().find('.totalval').val(ct.toFixed(2));
-                cost_total()
-            });
-        });
-        $('.totalval').each(function(index, element) {
-            costaccsum += parseFloat($(this).val());
-        });
-        return costaccsum;
-    }
-	
-	
-	
-	//更新利率
-	function lilv(){
-		var chengben = parseFloat($('#costaccsumval').val());   //成本
-		var renshu   = parseInt($('#renshu').val());        //人数
-		var shouru   = parseFloat($('#shouru').val());        //收入
-		
-		//毛利
-		if(shouru && chengben){
-			var maoli    = accSub(shouru,chengben).toFixed(2);
-			$('#maoli').val(maoli);
-		}
-
-		//毛利率
-		if(maoli && shouru){
-			var maolilv    = accDiv(maoli,shouru).toFixed(4);
-			$('#maolilv').val(accMul(maolilv,100)+'%');
-		}
-		
-		//人均成本
-		if(maoli && renshu){
-			var renjunmaoli       = accDiv(maoli,renshu).toFixed(2);
-			$('#renjunmaoli').val(renjunmaoli);
-		}
-		
-	}
-	
-	
-	
-	function appcost(){
-		if (confirm("您确认要提交审批吗？")){
-			var renshu   = parseInt($('#renshu').val());        //人数
-			var shouru   = parseInt($('#shouru').val());        //收入
-            var maolilv  = toPoint($('#maolilv').val());        //毛利率
-            var is_dijie = "<?php /*echo $is_dijie; */?>";          //内部地接毛利率不能大于10%
-			if(shouru && renshu){
-                if (is_dijie != 0 && maolilv > 0.1){
-                    art.dialog.alert('该团为内部地接团,毛利额不能超过10%');
-                    return false;
-                }else{
-                    $('#appsubmint').submit();
-                }
-			}else{
-				alert('请填写人数和预算收入');
-				return false;
-			}
-		}else{
-			return false;
-		}
-	}
-
-	//百分数转化为小数
-    function toPoint(percent){
-        var str=percent.replace("%","");
-            str= str/100;
-        var res = str.toFixed(2);
-        return res;
-    }
-
-</script>-->
 
      
 

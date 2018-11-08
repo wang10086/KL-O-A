@@ -1277,4 +1277,31 @@ class AjaxController extends Controller {
         $this->ajaxReturn($contract);
     }
 
+    //检查用户签字密码
+    public function check_pwd(){
+        $pwd            = I('pwd');
+        $password       = md5($pwd);
+        $res            = M('user_sign')->where(array('user_id'=>cookie('userid'),'password'=>$password))->find();
+        $data            = array();
+        if ($res){
+            if ($res['file_url']){
+                $data['stu']        = 1;
+                $data['message']    = '获取数据成功';
+                $data['file_url']   = $res['file_url'];
+            }else{
+                $data['stu'] = 2;
+                $data['message']    = '签字信息有误';
+                $data['file_url']   = '';
+            }
+        }else{
+            $data['stu']        = -1;
+            $data['message']    = '账号和密码信息不匹配';
+            $data['file_url']   = '';
+        }
+
+        $this->ajaxReturn($data);
+    }
+
+
+
 }
