@@ -26,7 +26,7 @@
                         <a  href="{:U('Salary/salary_exportExcel',array('datetime'=>$count['datetime'],'type'=>$type))}" class="btn btn-info btn-sm" style="margin:1em 0em 0em 3em;" />导出 Excel</a>
 
                     </div><!-- /.box-header --><br>
-                    <div class="box-body" style="height:45em;width:110em float:left;overflow:auto;">
+                    <div class="box-body" style="height:45em;width:118em;float:left;overflow:auto;">
                         <div class="btn-group" id="catfont" >
 <!--                            'month'=> $count['datetime']-->
                             <a href="{:U('Salary/salary_excel_list')}" class="btn <?php if($type=="" || $type==0){ echo 'btn-info';}else{ echo 'btn-default';} ?>">所有</a>
@@ -40,33 +40,31 @@
                         <div class="btn-group" style="height:45em;width:200em;">
                             <table class="table table-bordered dataTablev">
                                 <tr role="row" class="orders">
-                                    <th class="sorting" style="width:6em;background-color:#66CCFF;">ID</th>
-                                    <th class="sorting" style="width:8em;background-color:#66CCFF;">员工姓名</th>
-                                    <th class="sorting" style="width:12em;background-color:#66CCFF;">岗位名称</th>
+                                    <th class="sorting" style="width:8em;background-color:#66CCFF;">ID</th>
+                                    <th class="sorting" style="width:10em;background-color:#66CCFF;">员工姓名</th>
+                                    <th class="sorting" style="width:16em;background-color:#66CCFF;">岗位名称</th>
                                     <th class="sorting" style="width:10em;background-color:#66CCFF;">所属部门</th>
                                     <th class="sorting" style="width:10em;background-color:#66CCFF;">岗位薪酬标准</th>
-                                    <th class="sorting" style="width:10em;background-color:#66CCFF;">其中基本工资标准</th>
+                                    <th class="sorting" style="width:14em;background-color:#66CCFF;">其中基本工资标准</th>
                                     <th class="sorting" style="width:10em;background-color:#66CCFF;">考勤扣款</th>
-                                    <th class="sorting" style="width:10em;background-color:#66CCFF;">其中绩效工资标准</th>
-                                    <th class="sorting" style="width:8em;background-color:#66CCFF;">绩效增减</th>
-                                    <th class="sorting" style="width:8em;background-color:#66CCFF;">业绩提成</th>
-                                    <th class="sorting" style="width:8em;background-color:#66CCFF;">奖金</th>
-                                    <th class="sorting" style="width:8em;background-color:#66CCFF;">住房补贴</th>
-                                    <th class="sorting" style="width:8em;background-color:#66CCFF;">其他补款</th>
-                                    <th class="sorting" style="width:8em;background-color:#66CCFF;">应发工资</th>
-                                    <th class="sorting" style="width:8em;background-color:#66CCFF;">医疗保险</th>
-                                    <th class="sorting" style="width:8em;background-color:#66CCFF;">养老保险</th>
-                                    <th class="sorting" style="width:8em;background-color:#66CCFF;">失业保险</th>
-                                    <th class="sorting" style="width:8em;background-color:#66CCFF;">公积金</th>
-                                    <th class="sorting" style="width:10em;background-color:#66CCFF;">个人保险合计</th>
-                                    <th class="sorting" style="width:8em;background-color:#66CCFF;">计税工资</th>
-                                    <th class="sorting" style="width:8em;background-color:#66CCFF;">个人所得税</th>
-                                    <th class="sorting" style="width:8em;background-color:#66CCFF;">税后扣款</th>
-                                    <th class="sorting" style="width:8em;background-color:#66CCFF;">工会会费</th>
-                                    <th class="sorting" style="width:8em;background-color:#66CCFF;">实发工资</th>
-
+                                    <th class="sorting" style="width:14em;background-color:#66CCFF;">其中绩效工资标准</th>
+                                    <th class="sorting" style="width:10em;background-color:#66CCFF;">绩效增减</th>
+                                    <th class="sorting" style="width:10em;background-color:#66CCFF;">业绩提成</th>
+                                    <th class="sorting" style="width:10em;background-color:#66CCFF;">奖金</th>
+                                    <th class="sorting" style="width:10em;background-color:#66CCFF;">住房补贴</th>
+                                    <th class="sorting" style="width:10em;background-color:#66CCFF;">其他补款</th>
+                                    <th class="sorting" style="width:10em;background-color:#66CCFF;">应发工资</th>
+                                    <th class="sorting" style="width:10em;background-color:#66CCFF;">医疗保险</th>
+                                    <th class="sorting" style="width:10em;background-color:#66CCFF;">养老保险</th>
+                                    <th class="sorting" style="width:10em;background-color:#66CCFF;">失业保险</th>
+                                    <th class="sorting" style="width:10em;background-color:#66CCFF;">公积金</th>
+                                    <th class="sorting" style="width:12em;background-color:#66CCFF;">个人保险合计</th>
+                                    <th class="sorting" style="width:10em;background-color:#66CCFF;">计税工资</th>
+                                    <th class="sorting" style="width:10em;background-color:#66CCFF;">个人所得税</th>
+                                    <th class="sorting" style="width:10em;background-color:#66CCFF;">税后扣款</th>
+                                    <th class="sorting" style="width:10em;background-color:#66CCFF;">工会会费</th>
+                                    <th class="sorting" style="width:10em;background-color:#66CCFF;">实发工资</th>
                                 </tr>
-
                                 <foreach name="info" item="info">
                                     <tr class="excel_list_money1">
                                         <td>{$info['account']['id']}</td>
