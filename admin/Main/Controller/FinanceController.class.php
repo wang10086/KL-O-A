@@ -1120,6 +1120,7 @@ class FinanceController extends BaseController {
 
         //保存借款申请
         if ($savetype==2){
+
             $db                 = M('jiekuan');
             $info               = I('info');
             $info['type']       = I('type');
@@ -1138,12 +1139,13 @@ class FinanceController extends BaseController {
                     ->find();
 
                 //程小平=>55
-                $jk_audits   = array($audit_ys['audit_uid'],'55');
+                $jk_audits   = array(1=>$audit_ys['audit_uid'],2=>'55');
                 $jiekuan_audit          = array();
                 $jiekuan_audit['op_id'] = $info['op_id'];
                 $jiekuan_audit['jk_id'] = $res;
 
                 foreach ($jk_audits as $k=>$v){
+                    $jiekuan_audit['audit_usertype']= $k;
                     $jiekuan_audit['audit_userid']  = $v;
                     $jiekuan_audit['audit_username']= M('account')->where(array('id'=>$v))->getField('nickname');
                     M('jiekuan_audit')->add($jiekuan_audit);
@@ -1152,7 +1154,7 @@ class FinanceController extends BaseController {
                     $uid     = cookie('userid');
                     $title   = '您有来自['.$info['rolename'].'--'.$info['jk_user'].']的借款申请!';
                     $content = '项目名称：'.$audit_ys['name'].'，团号：'.$info['group_id'].'，借款金额：'.$info['sum'];
-                    $url     = U('Finance/audit_jiekuan',array('id'=>$res));
+                    $url     = U('Finance/audit_jiekuan',array('id'=>$res,'op_id'=>$info['op_id'],'audit_usertype'=>$k));
                     $user    = '['.$v.']';
                     send_msg($uid,$title,$content,$url,$user,'');
                 }
@@ -1170,10 +1172,20 @@ class FinanceController extends BaseController {
         }
     }
 
-
     // @@@NODE-3###audit_jiekuan###审批借款###
     public function audit_jiekuan(){
+        $id                 = I('id');
+        $opid               = I('op_id');
+        $audit_usertype     = I('audit_usertype');
+        $op                 = M('op')->where(array('op_id'=>$opid))->find();
+        $jiekuan            = M('jiekuan')->where(array('id'=>$id))->find();
 
+        $audit_userinfo     = M('jiekuan_audit')->where(array('op_id'=>$opid,'jk_id'=>$id,'audit_usertype'=>$audit_usertype))->find();
+
+        $this->jiekuan      = $jiekuan;
+        $this->op           = $op;
+        $this->audit_userinfo= $audit_userinfo;
+        $this->audit_usertype= $audit_usertype;
 
         $this->display();
     }

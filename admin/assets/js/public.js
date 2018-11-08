@@ -559,3 +559,9 @@ function removeThisFile(fid) {
 		$('input[rel=' + fid +']').remove();
 	}
 }
+
+//打印部分页面
+function print_view(id){
+	document.body.innerHTML=document.getElementById(''+id+'').innerHTML;
+	window.print();
+}
