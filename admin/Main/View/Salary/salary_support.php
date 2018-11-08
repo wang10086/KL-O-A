@@ -29,7 +29,8 @@
                                     </div>
                                 </div><!-- /.box-header -->
                                 <div class="box-body">
-                                
+
+
                                     <table class="table table-bordered dataTable fontmini" id="tablelist" style="margin-top:8px;">
                                         <tr role="row" class="orders" >
                                             <th class="sorting" data="op_id">ID</th>
@@ -41,21 +42,46 @@
                                             <th class="sorting" data="group_id">扶植结束时间</th>
 
                                         </tr>
+                                        <!--                                        <foreach name="info" item="info">-->
+                                        <tr>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td><input type="text"></td>
+                                            <td></td>
 
-<!--                                        <foreach name="info" item="info">-->
-
-                                            <tr>
-                                                <td></td>
-                                                <td></td>
-                                                <td></td>
-                                                <td></td>
-                                                <td></td>
-                                                <td></td>
-                                                <td></td>
-
-                                            </tr>
-<!--                                        </foreach>-->
+                                        </tr>
+                                        <!--                                        </foreach>-->
                                     </table>
+<!--                                -->
+<!--                                    <table class="table table-bordered dataTable fontmini" id="tablelist" style="margin-top:8px;">-->
+<!--                                        <tr role="row" class="orders" >-->
+<!--                                            <th class="sorting" data="op_id">ID</th>-->
+<!--                                            <th class="sorting" data="group_id">员工姓名</th>-->
+<!--                                            <th class="sorting" data="group_id">员工编码</th>-->
+<!--                                            <th class="sorting" data="group_id">员工岗位</th>-->
+<!--                                            <th class="sorting" data="group_id">员工部门</th>-->
+<!--                                            <th class="sorting" data="group_id">扶植开始时间</th>-->
+<!--                                            <th class="sorting" data="group_id">扶植结束时间</th>-->
+<!--                                            -->
+<!--                                        </tr>-->
+<!---->
+<!--<!--                                        <foreach name="info" item="info">-->-->
+<!---->
+<!--                                            <tr>-->
+<!--                                                <td></td>-->
+<!--                                                <td></td>-->
+<!--                                                <td></td>-->
+<!--                                                <td></td>-->
+<!--                                                <td></td>-->
+<!--                                                <td></td>-->
+<!--                                                <td></td>-->
+<!---->
+<!--                                            </tr>-->
+<!--<!--                                        </foreach>-->-->
+<!--                                    </table>-->
 
                                 </div><!-- /.box-body -->
                                  <div class="box-footer clearfix">

@@ -1118,6 +1118,8 @@ class SalaryController extends BaseController {
      *salary_support 扶植人员信息表
      */
     public function salary_support(){
+
+
         $this->display();
     }
 

@@ -21,7 +21,7 @@
                 <div class="box" >
                     <div class="box-header" >
                         <h3 class="box-title">员工薪资列表</h3>
-                        <a  class="btn btn-info" style="width:8em; margin: 0.5em 0em 0em 2em;"> <?php if($status=="" || $status==0 || $status==1){echo "待提交审核";}elseif($status==2){echo "待提交批准";}elseif($status==3){echo "待批准";}elseif($status==4){echo "已批准";}?></a>
+                        <a  class="btn btn-info" style="width:10em; margin: 0.5em 0em 0em 2em;"> <?php if($status=="" || $status==0 || $status==1){echo "待提交审核(人事)";}elseif($status==2){echo "待提交批准(财务)";}elseif($status==3){echo "待批准(总经理)";}elseif($status==4){echo "已批准";}?></a>
                         <a href="javascript:;" class="btn btn-info btn-sm" onclick="javascript:opensearch('searchtext',700,160);" style="margin: 0.7em 0em 0em 3em;" ><i class="fa fa-search"></i> 搜索</a>
                         <a  href="{:U('Salary/salary_exportExcel',array('datetime'=>$count['datetime'],'type'=>$type))}" class="btn btn-info btn-sm" style="margin:1em 0em 0em 3em;" />导出 Excel</a>
 
