@@ -40,7 +40,6 @@
                         <div class="btn-group" style="height:45em;width:200em;">
                             <table class="table table-bordered dataTablev">
                                 <tr role="row" class="orders">
-                                    <th class="sorting" style="width:5em;background-color:#66CCFF;">序号</th>
                                     <th class="sorting" style="width:6em;background-color:#66CCFF;">ID</th>
                                     <th class="sorting" style="width:8em;background-color:#66CCFF;">员工姓名</th>
                                     <th class="sorting" style="width:12em;background-color:#66CCFF;">岗位名称</th>
