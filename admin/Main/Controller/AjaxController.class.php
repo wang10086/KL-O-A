@@ -1200,6 +1200,7 @@ class AjaxController extends Controller {
                 echo json_encode(array('sum' => 0, 'msg' => "删除失败!请重新选择!"));die;
             }
         }
+
     }
 
     //人民币小写转换成大写

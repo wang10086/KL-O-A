@@ -3807,8 +3807,7 @@ function user_table($where){//查询用户
         }
         return $price;
     }
-
-
+    
     /**
      * user_contrast_status 信心对比状态
      * $file_id 文件 id
@@ -3857,65 +3856,64 @@ function get_username(){
     return json_encode($user_key);
 }
 
-//    /**
-//     * 财务统计
-//     * $xs 名字 $st 开始时间 $et 结束时间
-//     * $dept=0 全部部门
-//     */
-//    function monthly_Finance($xs,$st,$et,$dept=0){
-//
-//        $db			= M('op_settlement');
-//        $post 		= C('POST_TEAM');
-//        $postmore	= C('POST_TEAM_MORE');
-//
-//        //获取团队相关数据
-//        $where = array();
-//        $where['roleid'] = array('in',$postmore[$dept]);
-//        $where['status'] = array('between','0,1');
-//        $users = M('account')->where($where)->select();
-//        $ulist = array();
-//        foreach($users as $k=>$v){
-//            $ulist[] = $v['id'];
-//        }
-//        $where = array();
-//        $where['b.audit_status'] = 1;
-//        $where['l.req_type']	= 801;
-//        if($st && $et){
-//            $where['l.audit_time'] = array('between',array(strtotime($st),strtotime($et)));
-//        }else if($st){
-//            $where['l.audit_time'] = array('gt',strtotime($st));
-//        }else if($et){
-//            $where['l.audit_time'] = array('lt',strtotime($et));
-//        }
-//
-//        if($xs)   $where['o.create_user_name']	= array('eq',$xs);
-//        if($dept) $where['o.create_user']		= array('in',implode(',',$ulist));
-//
-//        $datalist = $db->table('__OP_SETTLEMENT__ as b')->group('o.op_id')->field('b.*,o.project,o.group_id,o.number,o.customer,o.create_user_name,o.destination,o.days,o.remark,l.audit_time')->join('__OP__ as o on b.op_id = o.op_id','LEFT')->join('__AUDIT_LOG__ as l on l.req_id = b.id','LEFT')->join('__ACCOUNT__ as a on a.id = o.create_user','LEFT')->where($where)->order('l.audit_time DESC')->select();
-//
-//        $sum = 0;
-//        foreach($datalist as $k=>$v){
-//            //获取月份毛利
-//            $sum +=$v['maoli'];
-//        }
-//        return $sum;
-//    }
-
-
     /**
-     * monthly_Finance 财务统计
-     * $userid 用户id
-     * $createtime 开始时间
-     * $endtime 结束时间
+     * 财务统计
+     * $xs 名字 $st 开始时间 $et 结束时间
+     * $dept=0 全部部门
      */
-    function monthly_Finance($userid,$createtime,$endtime){
+    function monthly_Finance($xs,$st,$et,$dept=0){
+        $db			= M('op_settlement');
+        $post 		= C('POST_TEAM');
+        $postmore	= C('POST_TEAM_MORE');
 
-        $where['userid']             = $userid;
-        $where['huikuan_time']       = array('between',"$createtime,$endtime");
-        $huikuan                     = M('op_huikuan')->where($where)->select();
-        $price = '';
-        foreach($huikuan as $key =>$val){
-            $price += $val['huikuan'];
+        //获取团队相关数据
+        $where = array();
+        $where['roleid'] = array('in',$postmore[$dept]);
+        $where['status'] = array('between','0,1');
+        $users = M('account')->where($where)->select();
+        $ulist = array();
+        foreach($users as $k=>$v){
+            $ulist[] = $v['id'];
         }
-    return $price;
-}
+        $where = array();
+        $where['b.audit_status'] = 1;
+        $where['l.req_type']	= 801;
+        if($st && $et){
+            $where['l.audit_time'] = array('between',array(strtotime($st),strtotime($et)));
+        }else if($st){
+            $where['l.audit_time'] = array('gt',strtotime($st));
+        }else if($et){
+            $where['l.audit_time'] = array('lt',strtotime($et));
+        }
+
+        if($xs)   $where['o.create_user_name']	= array('eq',$xs);
+        if($dept) $where['o.create_user']		= array('in',implode(',',$ulist));
+
+        $datalist = $db->table('__OP_SETTLEMENT__ as b')->group('o.op_id')->field('b.*,o.project,o.group_id,o.number,o.customer,o.create_user_name,o.destination,o.days,o.remark,l.audit_time')->join('__OP__ as o on b.op_id = o.op_id','LEFT')->join('__AUDIT_LOG__ as l on l.req_id = b.id','LEFT')->join('__ACCOUNT__ as a on a.id = o.create_user','LEFT')->where($where)->order('l.audit_time DESC')->select();
+
+        $sum = 0;
+        foreach($datalist as $k=>$v){
+            //获取月份毛利
+            $sum +=$v['maoli'];
+        }
+        return $sum;
+    }
+
+
+//    /**
+//     * monthly_Finance 财务统计
+//     * $userid 用户id
+//     * $createtime 开始时间
+//     * $endtime 结束时间
+//     */
+//    function monthly_Finance($userid,$createtime,$endtime){
+//
+//        $where['userid']             = $userid;
+//        $where['huikuan_time']       = array('between',"$createtime,$endtime");
+//        $huikuan                     = M('op_huikuan')->where($where)->select();
+//        $price = '';
+//        foreach($huikuan as $key =>$val){
+//            $price += $val['huikuan'];
+//        }
+//    return $price;
+//}

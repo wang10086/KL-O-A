@@ -122,12 +122,12 @@ class SalaryController extends BaseController {
                     }
                     //季度完成
                     $user                       = M('account')->where('id='.$query['user_id'])->find();
-                    $mont1                      = strtotime($year.($month-1).'26');//开始月
-                    $mont2                      = strtotime($year.$month.'26');//结束月
-//                    $mont1                      = $year.($month-1).'26';//开始月
-//                    $mont2                      = $year.$month.'26';//结束月
-                    //$sum_user                   = monthly_Finance($user['nickname'],$mont1,$mont2);//季度完成
-                    $sum_user                   = monthly_Finance($query['user_id'],$mont1,$mont2);//季度完成
+//                    $mont1                      = strtotime($year.($month-1).'26');//开始月
+//                    $mont2                      = strtotime($year.$month.'26');//结束月
+//                    $sum_user                   = monthly_Finance($query['user_id'],$mont1,$mont2);//季度完成
+                    $mont1                      = $year.($month-1).'26';//开始月
+                    $mont2                      = $year.$month.'26';//结束月
+                    $sum_user                   = monthly_Finance($user['nickname'],$mont1,$mont2);//季度完成
 
                     $count                      += $lists['target'];//季度目标
                     $sum                        += $sum_user;//季度完成
@@ -160,12 +160,12 @@ class SalaryController extends BaseController {
                 }
                 //季度完成
                 $user                           = M('account')->where('id='.$query['user_id'])->find();
-                $mont1                          = strtotime($year.($month-1).'26');//开始月
-                $mont2                          = strtotime($year.$month.'26');//结束月
-//                $mont1                          = $year.($month-1).'26';//开始月
-//                $mont2                          = $year.$month.'26';//结束月
-//                $sum_user                       = monthly_Finance($user['nickname'],$mont1,$mont2);//季度完成
-                $sum_user                       = monthly_Finance($query['user_id'],$mont1,$mont2);//季度完成
+//                $mont1                          = strtotime($year.($month-1).'26');//开始月
+//                $mont2                          = strtotime($year.$month.'26');//结束月
+//                $sum_user                       = monthly_Finance($query['user_id'],$mont1,$mont2);//季度完成
+                $mont1                          = $year.($month-1).'26';//开始月
+                $mont2                          = $year.$month.'26';//结束月
+                $sum_user                       = monthly_Finance($user['nickname'],$mont1,$mont2);//季度完成
 
                 $content['target']              = $lists['target'];//季度目标
                 $content['complete']            = $sum_user;//季度完成
@@ -173,7 +173,6 @@ class SalaryController extends BaseController {
             }
             return $content;
         }
-
         if($month == 3 || $month == 6 || $month == 9 ||$month == 12){
             $count                              = 0;
             $sum                                = 0;
@@ -192,12 +191,12 @@ class SalaryController extends BaseController {
                 }
                 //季度完成
                 $user                           = M('account')->where('id='.$query['user_id'])->find();
-                $mont1                          =  strtotime($year.($month-1).'26');//开始月
-                $mont2                          =  strtotime($year.$month.'26');//结束月
-//                $mont1                          = $year.($month-1).'26';//开始月
-//                $mont2                          = $year.$month.'26';//结束月
-                //$sum_user                       += monthly_Finance($user['nickname'],$mont1,$mont2);//季度完成
-                $sum                            += monthly_Finance($query['user_id'],$mont1,$mont2);//季度完成
+//                $mont1                          =  strtotime($year.($month-1).'26');//开始月
+//                $mont2                          =  strtotime($year.$month.'26');//结束月
+//                $sum                            += monthly_Finance($query['user_id'],$mont1,$mont2);//季度完成
+                $mont1                          = $year.($month-1).'26';//开始月
+                $mont2                          = $year.$month.'26';//结束月
+                $sum                            += monthly_Finance($user['nickname'],$mont1,$mont2);//季度完成
                 $count                          += $lists['target'];//季度目标
                // $sum                      += $lists['complete'];//季度完成
             }
@@ -790,7 +789,6 @@ class SalaryController extends BaseController {
             $user_info[$key]['Achievements']['show_qa_score']       = $use2;//品质检查分数
             $user_info[$key]['Achievements']['sum_total_score']     = $use3;//KPI分数
 
-
             // 判断是否是业务人员  提成
 //            $position_id['id']                      = $val['position_id'];
 //            $position                               = sql_query(1,'*','oa_position',$position_id,1,1);//职位
@@ -798,7 +796,6 @@ class SalaryController extends BaseController {
 //            if(strstr($strstr,'S')!==false){
 //                $user_info[$key]['Extract']         = $this->salary_kpi_month($val['id'],$que['p.month'],1); //业务人员 目标任务 完成 提成
 //            }
-
 
                 //如果做季度提成可以变为奖金放开屏蔽即可
 //            if($user_info[$key]['bonus'][0]['annual_bonus']!==0 && !empty($user_info[$key]['bonus'][0]['annual_bonus'])){
@@ -809,7 +806,6 @@ class SalaryController extends BaseController {
 //            }else{
 //                 $user_info[$key]['Extract']['total']    = $user_info[$key]['Extract']['total']+$user_bonus;//提成相加
 //            }
-
 
             $user_price                             = $this->salary_kpi_month($val['id'],$que['p.month'],1); //业务人员 目标任务 完成 提成
 
@@ -1116,6 +1112,13 @@ class SalaryController extends BaseController {
 
         $Excel_content                  = array_merge($Excel_data,$info_user1,$info_user2,$info_user3,$Approver);
         exportexcel($Excel_content,$setTitle,$setTitle);
+    }
+
+    /**
+     *salary_support 扶植
+     */
+    public function salary_support(){
+
     }
 
 }
