@@ -46,9 +46,10 @@ class ApprovalController extends BaseController {
         $judge                  = $approval->approval_upload('approval_flie',$user_id,$style,$approve_id);
         if($judge==1){
             $this->success('保存文档数据成功!');//最后一次错误
-        }else{
-
+        }elseif($judge==2){
             $this->error('保存文档数据失败!');//最后一次错误
+        }elseif($judge==3){
+            $this->error('您只能更改自己提交的文件!');//最后一次错误
         }
     }
 
@@ -64,7 +65,6 @@ class ApprovalController extends BaseController {
         }else{
             $this-> url         = $_SERVER['SERVER_NAME'].'/'.$approval_file[0]['file']['file_url'];
         }
-//        print_r($approval_file);die;
         $this->assign('approval_file',$approval_file);
         $this->display();
     }

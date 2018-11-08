@@ -19,7 +19,7 @@
                 $approval_r                             = M('approval_flie')->where('id='.$userid)->find();
                 if($approval_r){
                     if($approval_r['account_id'] == $_SESSION['userid']){
-                        return 0;die;
+                        return 3;die;
                     }
                 }
             }else{
@@ -94,8 +94,6 @@
             }
             return $update;
         }
-
-
 
         /**
          * 查询 approval_flie表的文件信息

@@ -3807,7 +3807,7 @@ function user_table($where){//查询用户
         }
         return $price;
     }
-    
+
     /**
      * user_contrast_status 信心对比状态
      * $file_id 文件 id
