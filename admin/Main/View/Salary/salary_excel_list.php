@@ -1,4 +1,4 @@
-<include file="Index:header2" />
+<include file="Index:header" />
 
 <script src="__HTML__/js/public.js?v=1.0.6" type="text/javascript"></script>
 <aside class="right-side">
@@ -26,7 +26,7 @@
                         <a  href="{:U('Salary/salary_exportExcel',array('datetime'=>$count['datetime'],'type'=>$type))}" class="btn btn-info btn-sm" style="margin:1em 0em 0em 3em;" />导出 Excel</a>
 
                     </div><!-- /.box-header --><br>
-                    <div class="box-body" style="height:45em;width:118em;float:left;overflow:auto;">
+                    <div class="box-body" style="height:40em;width:100%;float:left;overflow:auto;">
                         <div class="btn-group" id="catfont" >
 <!--                            'month'=> $count['datetime']-->
                             <a href="{:U('Salary/salary_excel_list')}" class="btn <?php if($type=="" || $type==0){ echo 'btn-info';}else{ echo 'btn-default';} ?>">所有</a>
@@ -37,7 +37,7 @@
                         </div>
 
                         <br><br>
-                        <div class="btn-group" style="height:45em;width:200em;">
+                        <div class="btn-group" style="height:100%;width:200em;">
                             <table class="table table-bordered dataTablev">
                                 <tr role="row" class="orders">
                                     <th class="sorting" style="width:8em;background-color:#66CCFF;">ID</th>
