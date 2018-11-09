@@ -65,7 +65,7 @@
         </div>
 
     <?php if ($audit_userinfo['audit_status'] != 1){ ?>
-    <form method="post" action="{:U('op/public_save')}" id="audit_jk" onsubmit="return submitBefore()">
+    <form method="post" action="{:U('Finance/public_save')}" id="audit_jk" onsubmit="return submitBefore()">
         <input type="hidden" name="dosubmint" value="1">
         <input type="hidden" name="opid" value="{$op.op_id}">
         <input type="hidden" name="jk_id" value="{$jiekuan.id}">

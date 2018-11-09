@@ -10,20 +10,22 @@
                         <th width="">合计</th>
                         <th width="">类型</th>
                         <th width="">备注</th>
+                        <th width="">借款金额</th>
                         <th width="">借款</th>
                     </tr>
                 </thead>
                 <tbody>
                     <foreach name="costacc" key="k" item="v">
                     <tr class="userlist" id="supplier_id_103">
-                        <td width="16.66%">{$v.title}</td>
-                        <td width="16.66%">&yen; {$v.unitcost}</td>
-                        <td width="16.66%">{$v.amount}</td>
-                        <td width="16.66%">&yen; {$v.total}</td>
-                        <td width="16.66%"><?php echo $kind[$v['type']]; ?></td>
+                        <td width="12%">{$v.title}</td>
+                        <td width="12%">&yen; {$v.unitcost}</td>
+                        <td width="12%">{$v.amount}</td>
+                        <td width="12%">&yen; {$v.total}</td>
+                        <td width="12%"><?php echo $kind[$v['type']]; ?></td>
                         <td>{$v.remark}</td>
+                        <td width="16%" id="jk_{$v.id}"></td>
                         <td width="80" id="td_{$v.id}">
-                            <a href="javascript:;" class="btn btn-info btn-sm" onclick="add_jiekuan({$v.id})">借款</a>
+                            <a href="javascript:;" class="btn btn-info btn-sm" onclick="add_jiekuan({$v.id},{$v.total})">借款</a>
                             <input type="hidden" name="id" value="{$v.id}">
                             <input type="hidden" name="total" value="{$v.total}" id="total_{$v.id}">
                         </td>
@@ -37,6 +39,7 @@
                         <td></td>
                         <td></td>
                         <td></td>
+                        <td></td>
                     </tr>
                 </tbody>
             </table>
@@ -44,11 +47,12 @@
 
         <form method="post" action="{:U('Finance/public_save')}" name="jiekuanform" id="jiekuanform" onsubmit="return submitBefore()" >
             <div class="content">
+                <input type="hidden" name="dosubmint" value="1">
                 <input type="hidden" name="savetype" value="2">
                 <input type="hidden" name="info[op_id]" value="{$op.op_id}" />
                 <input type="hidden" name="info[costacc_ids]" id="ids">
                 <input type="hidden" id="qianzi" value="0">
-                <input type="hidden" id="jk_sum">
+                <input type="hidden" name="info[yingjiekuan]" id="jk_sum">
                 <div style="width:100%; float:left;">
                     
                     <div class="form-group col-md-6">
@@ -119,6 +123,7 @@
     <script>
         $(function () {
             $('.hk_show').hide();
+            $('.jkje').hide();
 
             $('#jk_type').find('ins').each(function (index,ele) {
                 $(this).click(function () {
@@ -140,7 +145,39 @@
             })
         })
 
-        function add_jiekuan(id) {
+        function add_jiekuan(id,total) {
+            var jkhtml    = '';
+            var qxhtml    = '';
+                jkhtml += '<input type="text" name="shijiekuan" id="sjk_'+id+'" style="width: 10em;" value="'+total+'">'+
+                    '<input type="hidden" name="yingjiekuan" id="yjk_'+id+'" style="width: 10em;" value="'+total+'">';
+                qxhtml += '<a href="javascript:;" class="btn btn-sm" onclick="del_jiekuan('+id+')">取消</a>'+
+                    '<input type="hidden" name="id" value="'+id+'">'+
+                    '<input type="hidden" name="total" value="'+total+'" id="total_'+id+'">';
+            $('#jk_'+id).html(jkhtml);
+            $('#td_'+id).html(qxhtml);
+
+            var arr_ids         = $('#ids').val();
+            var aid             = '['+id+'],';
+            arr_ids             += aid;
+            $('#ids').val(arr_ids);
+
+            check_total(0,total);
+        }
+
+        function del_jiekuan(id){
+            alert(id);
+        }
+
+        function check_total(yjk,sjk=0){
+            var jiekuanjine     = $('#jiekuanjine').val();
+            var sum1            = accSub(jiekuanjine,yjk);  //数据相减
+            var sum             = accAdd(sum1,sjk);  //数据相加
+            $('#jiekuanjine').val(sum);
+            todaxie(sum);       //转换为大写
+
+        }
+
+        /*function add_jiekuan(id) {
             var arr_ids         = $('#ids').val();
             var jiekuanjine     = $('#jiekuanjine').val();
             var total           = $('#total_'+id).val();
@@ -159,9 +196,9 @@
                 '<input type="hidden" name="id" value="'+id+'">'+
                 '<input type="hidden" name="total" value="'+total+'" id="total_'+id+'">';
             $('#td_'+id+'').html(html);
-        }
+        }*/
 
-        function del_jiekuan(id){
+        /*function del_jiekuan(id){
             var jiekuanjine     = $('#jiekuanjine').val();
             var total           = $('#total_'+id).val();
             var sum             = accSub(jiekuanjine,total);  //数据相减
@@ -179,7 +216,7 @@
                 '<input type="hidden" name="id" value="'+id+'">'+
                 '<input type="hidden" name="total" value="'+total+'" id="total_'+id+'">';
             $('#td_'+id+'').html(html);
-        }
+        }*/
 
         function todaxie(num) {
             $.ajax({
@@ -227,15 +264,8 @@
 
         function submitBefore() {
             var isqianzi = $('#qianzi').val();
-            var ying_jk  = $('#jk_sum').val();
-            var shi_jk   = $('#jiekuanjine').val();
             if (isqianzi == 1){
-                if (shi_jk > ying_jk){
-                    art_show_msg('本次借款超出所选项目实际预算,请重新核实借款信息');
-                    return false;
-                }else{
-                    $('#jiekuanform').submit();
-                }
+                $('#jiekuanform').submit();
             }else{
                 art_show_msg('请完善借款信息');
                 return false;
