@@ -50,6 +50,7 @@
                                     <th class="sorting" style="width:14em;background-color:#66CCFF;">其中绩效工资标准</th>
                                     <th class="sorting" style="width:10em;background-color:#66CCFF;">绩效增减</th>
                                     <th class="sorting" style="width:10em;background-color:#66CCFF;">业绩提成</th>
+
                                     <th class="sorting" style="width:10em;background-color:#66CCFF;">奖金</th>
                                     <th class="sorting" style="width:10em;background-color:#66CCFF;">住房补贴</th>
                                     <th class="sorting" style="width:10em;background-color:#66CCFF;">其他补款</th>
@@ -77,6 +78,8 @@
                                         <td>&yen; <?PHP echo sprintf("%.2f",($info['salary'][0]['standard_salary']/10*$info['salary'][0]['performance_salary']));?></td>
                                         <td>&yen; <?PHP echo sprintf("%.2f",$info['Achievements']['count_money']);?></td>
                                         <td>&yen; <?PHP echo sprintf("%.2f",$info['Extract']['total']);?></td>
+
+
                                         <td>&yen; <?PHP echo sprintf("%.2f",$info['bonus'][0]['foreign_bonus']);?></td>
                                         <td>&yen; <?PHP echo sprintf("%.2f",$info['subsidy'][0]['housing_subsidy']);?></td>
                                         <td>&yen; <?PHP echo sprintf("%.2f",$info['Other']);?></td>

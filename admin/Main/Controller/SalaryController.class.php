@@ -660,7 +660,7 @@ class SalaryController extends BaseController {
             $list[$key]['attendance'][0]['id']                      = $val['attendance_id'];
             $list[$key]['attendance'][0]['withdrawing']             = $val['withdrawing'];
             $list[$key]['bonus'][0]['id']                           = $val['bonus_id'];
-            $list[$key]['bonus'][0]['bonus']                        = $val['bonus'];
+            $list[$key]['bonus'][0]['foreign_bonus']                = $val['bonus'];
             $list[$key]['income'][0]['income_token']                = $val['income_token'];
             $list[$key]['Other']                                    = $val['Other'];
             $list[$key]['insurance'][0]['id']                       = $val['insurance_id'];

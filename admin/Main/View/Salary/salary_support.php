@@ -53,7 +53,7 @@
                                             <td><input type="text" name="endtime"></td>
                                             <input type="hidden" name="userid">
                                             <input type="hidden" name="type" value="1">
-                                            <td><input type="submit" value="添加扶植人员" style="background-color:#00acd6;color:#FFFFFF;padding:0.3em;font-size: 1.2em;" /> </td>
+                                            <td><input type="submit" value="添加扶植人员" style="font-weight:bold;background-color:#00acd6;color:#FFFFFF;padding:0.3em;font-size: 1.2em;" /> </td>
                                         </tr>
                                         </form>
                                     </table>
@@ -112,6 +112,9 @@
                 <div class="form-group col-md-3">
                     <input type="text" class="form-control" name="name" placeholder="员工姓名">
                 </div>
+                <div class="form-group col-md-3" id="support_add_input">
+                    <input type="hidden" class="form-control"  name="status" value="1">
+                </div>
                 </form>
             </div>
 
@@ -122,20 +125,25 @@
 
 
 <script>
+
+    //添加扶植人信息  点击事件
 $('.supportadd').click(function(){
     var html ='';
-//    $('#supportlist1').toggle(
-//        if($(this).style.display==''){
-//            var html = '<div class="form-group col-md-3">';
-//            html += '<input type="hidden" class="form-control" name="stype" value="1">';
-//            html +=</div>';
-//            $('#searchtext').append(html);
-//        }
-//    );
+    $('#support_add_input').remove(); //清除上一次添加弹框
+    $('#supportlist1').toggle(); //显示隐藏
+    $('#supportlist2').toggle();//显示隐藏
+    if($('#supportlist1').css('display')=='none'){ //添加显示
+        var html = '<div class="form-group col-md-3" id="support_add_input">';
+            html += '<input type="hidden" class="form-control support_add_input" name="status" value="1">';
+            html +='</div>';
+        $('#searchform').append(html);
+    }else if($('#supportlist2').css('display')=='none'){ //列表显示
+        var html = '<div class="form-group col-md-3" id="support_add_input">';
+            html += '<input type="hidden" class="form-control support_add_input" name="status" value="2">';
+            html +='</div>';
+        $('#searchform').append(html);//添加弹框div
+    }
 
-
-
-    $('#supportlist2').toggle();
 });
 
 
