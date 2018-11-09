@@ -1146,7 +1146,6 @@ class AjaxController extends Controller {
             }else{
                 echo json_encode(array('sum' => 0, 'msg' => "编辑失败!请重新编辑提交!"));die;
             }
-
         }
     }
 
@@ -1300,6 +1299,13 @@ class AjaxController extends Controller {
 
         $this->ajaxReturn($data);
     }
+
+    /**
+     * salary_support_add 添加扶植信息
+     */
+//    public function salary_support_add(){
+//
+//    }
 
 
 
