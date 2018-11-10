@@ -1011,8 +1011,31 @@ class FinanceController extends BaseController {
         if (!$opid) $this->error('获取信息失败');
         $op                 = M('op')->where(array('op_id'=>$opid))->find();
         $budget             = M('op_budget')->where(array('op_id'=>$opid))->find();
-        $costacc            = M('op_costacc')->where(array('op_id'=>$opid,'status'=>1))->order('id')->select();
         $jk_lists           = M()->table('__JIEKUAN__ as j')->field('j.*,a.*,j.id as jid,a.id as aid')->join('__JIEKUAN_AUDIT__ as a on a.jk_id=j.id','left')->where(array('j.op_id'=>$opid))->order($this->orders('j.id'))->select();
+        $cost               = M('op_costacc')->field('id,op_id,title,unitcost,amount,total as ctotal,remark')->where(array('op_id'=>$opid,'status'=>1))->order('id')->select();
+        $jiekuan_detail     = M('jiekuan_detail')->where(array('op_id'=>$opid))->select();
+        $costacc            = array();
+        foreach ($cost as $k=>$v){
+            $costacc[$k]['id']      = $v['id'];
+            $costacc[$k]['op_id']   = $v['op_id'];
+            $costacc[$k]['title']   = $v['title'];
+            $costacc[$k]['unitcost']= $v['unitcost'];
+            $costacc[$k]['amount']  = $v['amount'];
+            $costacc[$k]['ctotal']  = $v['ctotal'];
+            $costacc[$k]['remark']  = $v['remark'];
+            foreach ($jiekuan_detail as $kk=>$vv){
+                if($vv['costacc_id']==$v['id']){
+                    $costacc[$k]['jk_id'] = $vv['jk_id'];
+                    $costacc[$k]['costacc_id'] = $vv['costacc_id'];
+                    $costacc[$k]['sjk']   = $vv['sjk'];
+                    $costacc[$k]['total'] = $vv['rest'];
+                    $costacc[$k]['audit_status'] = $vv['audit_status'];
+                    break;
+                }else{
+                    $costacc[$k]['total'] = $v['ctotal'];
+                }
+            }
+        }
 
         foreach ($jk_lists as $k=>$v){
             if ($v['audit_status']==0) $jk_lists[$k]['auditstatus'] = '<span class="yellow">审核中</span>';
@@ -1025,7 +1048,6 @@ class FinanceController extends BaseController {
             ->join('__AUDIT_LOG__ as l on l.req_id=b.id')
             ->where(array('b.op_id'=>$opid,'l.req_type'=>P::REQ_TYPE_BUDGET,'l.dst_status'=>1))
             ->find();
-        $this->kinds        =  M('project_kind')->getField('id,name', true);
         $this->record       = M('op_record')->where(array('op_id'=>$opid,'optype'=>array('in',array(13,14))))->order('id DESC')->select();
         $this->jk_lists     = $jk_lists;
         $this->budget       = $budget;
@@ -1115,8 +1137,10 @@ class FinanceController extends BaseController {
 
             //保存借款申请
             if ($savetype==2){
+
                 $db                 = M('jiekuan');
                 $info               = I('info');
+                $data               = I('data');
                 $info['type']       = I('type');
                 $info['jk_user']    = cookie('nickname');
                 $info['jk_user_id'] = cookie('userid');
@@ -1148,6 +1172,18 @@ class FinanceController extends BaseController {
                         $audit_usertype                     = 2;    //财务主管
                     }
                     M('jiekuan_audit')->add($jiekuan_audit);
+
+                    //保存借款详情
+                    foreach ($data as $k=>$v){
+                        $con                = array();
+                        $con['op_id']       = $info['op_id'];
+                        $con['jk_id']       = $res;
+                        $con['costacc_id']  = $v['costacc_id'];
+                        $con['yjk']         = $v['yjk'];
+                        $con['sjk']         = $v['sjk'];
+                        $con['rest']        = $v['yjk'] - $v['sjk'];
+                        M('jiekuan_detail')->add($con);
+                    }
 
                     //发送系统消息
                     $uid     = cookie('userid');

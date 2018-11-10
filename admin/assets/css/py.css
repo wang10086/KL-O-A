@@ -4099,6 +4099,7 @@ th{outline: none;}
 
 .delem-checkbox{  width:18px; height: 18px; background-color: #ffffff; background: rgba(255, 255, 255, 0.7) url(iCheck/minimal/minimal.png) no-repeat;}
 .score-black{font-weight: 600;}
+.info-button {width: 45px;height: 30px; border-radius: 15%;}
 
 #plans { padding:0 15px;}
 #plans .form-control{ width:250px; float:left; margin-right:10px; border-radius:0;}
