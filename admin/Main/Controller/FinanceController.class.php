@@ -1024,7 +1024,7 @@ class FinanceController extends BaseController {
             $costacc[$k]['ctotal']  = $v['ctotal'];
             $costacc[$k]['remark']  = $v['remark'];
             foreach ($jiekuan_detail as $kk=>$vv){
-                if($vv['costacc_id']==$v['id']){
+                if($vv['costacc_id']==$v['id'] && $vv['audit_status'] != 2){
                     $costacc[$k]['jk_id'] = $vv['jk_id'];
                     $costacc[$k]['costacc_id'] = $vv['costacc_id'];
                     $costacc[$k]['sjk']   = $vv['sjk'];
@@ -1142,6 +1142,7 @@ class FinanceController extends BaseController {
                 $info               = I('info');
                 $data               = I('data');
                 $info['type']       = I('type');
+                $info['jkd_id']     = jkdid($info['op_id']);
                 $info['jk_user']    = cookie('nickname');
                 $info['jk_user_id'] = cookie('userid');
                 $info['jk_time']    = NOW_TIME;
@@ -1159,6 +1160,7 @@ class FinanceController extends BaseController {
                     $jiekuan_audit          = array();
                     $jiekuan_audit['op_id'] = $info['op_id'];
                     $jiekuan_audit['jk_id'] = $res;
+                    $jiekuan_audit['jkd_id']= $info['jkd_id'];
 
                     if ($info['sum'] > $info['yingjiekuan']){
                         //与预算审批人审核
@@ -1178,6 +1180,7 @@ class FinanceController extends BaseController {
                         $con                = array();
                         $con['op_id']       = $info['op_id'];
                         $con['jk_id']       = $res;
+                        $con['jkd_id']      = $info['jkd_id'];
                         $con['costacc_id']  = $v['costacc_id'];
                         $con['yjk']         = $v['yjk'];
                         $con['sjk']         = $v['sjk'];
@@ -1205,10 +1208,65 @@ class FinanceController extends BaseController {
                 }
             }
 
-            //保存借款审核信息
+            //保存借款预算审核人审核信息
             if ($savetype==3){
-                $a = I();
-                var_dump($a);die;
+
+                $db                 = M('jiekuan_audit');
+                $jk_id              = I('jk_id');
+                $jkd_id             = I('jkd_id');
+                $opid               = I('op_id');
+                $info               = I('info');
+                $audit_id           = I('audit_id');
+                $info['ys_audit_time'] = NOW_TIME;
+
+                $res = $db->where(array('id'=>$audit_id))->save($info);
+                if ($res){
+                    $audit_status   = C('AUDIT_STATUS');
+                    $jk_info        = M('jiekuan')->where(array('id'=>$jk_id))->find();
+                    $audit_info     = M('jiekuan_audit')->where(array('id'=>$audit_id))->find();
+                    $op             = M('op')->where(array('op_id'=>$opid))->find();
+                    if ($info['ys_audit_status'] ==1){
+                        $audit_usertype                     = 2;    //财务主管
+                        $cw_audit_userid                    = 55;   //程小平
+                        //审核通过,到达财务//发送系统消息
+                        $uid     = cookie('userid');
+                        $title   = '您有来自['.$jk_info['rolename'].'--'.$jk_info['jk_user'].']的借款申请!';
+                        $content = '项目名称：'.$op['project'].'，团号：'.$op['group_id'].'，借款金额：'.$jk_info['sum'];
+                        $url     = U('Finance/audit_jiekuan',array('id'=>$jk_id,'op_id'=>$opid,'audit_usertype'=>$audit_usertype));
+                        $user    = '['.$cw_audit_userid.']';
+                        send_msg($uid,$title,$content,$url,$user,'');
+                    }else{
+                        //审核不通过
+                        $audit                  = array();
+                        $audit['audit_status']  = $info['ys_audit_status'];
+                        M('jiekuan')->where(array('id'=>$jk_id))->save($audit);
+                        M('jiekuan_detail')->where(array('jk_id'=>$jk_id))->save($audit);
+
+                        //发送系统消息
+                        $uid     = cookie('userid');
+                        $title   = '您有来自['.$audit_info['ys_audit_username'].']的借款审批回复!';
+                        $content = '项目名称：'.$op['project'].'，团号：'.$op['group_id'].'，借款金额：'.$jk_info['sum'];
+                        $url     = U('Finance/jk_detail',array('opid'=>$opid));
+                        $user    = '['.$jk_info['jk_user_id'].']';
+                        send_msg($uid,$title,$content,$url,$user,'');
+                    }
+
+                    $record = array();
+                    $record['op_id']   = $info['op_id'];
+                    $record['optype']  = 14;
+                    $record['explain'] = '审核借款申请单，借款单号：'.$jkd_id.'，审核结果：'.$audit_status[$info['ys_audit_status']];
+                    op_record($record);
+
+                    $this->success('数据保存成功!');
+                }else{
+                    $this->error('数据保存失败!');
+                }
+            }
+
+            //保存借款财务审核信息
+            if ($savetype==4){
+                $a          = I();
+                //var_dump($a);die;
             }
         }
     }
@@ -1220,10 +1278,13 @@ class FinanceController extends BaseController {
         $audit_usertype     = I('audit_usertype');
         $op                 = M('op')->where(array('op_id'=>$opid))->find();
         $jiekuan            = M('jiekuan')->where(array('id'=>$id))->find();
+        $jk_lists           = M()->table('__JIEKUAN_DETAIL__ as j')->join('__OP_COSTACC__ as c on c.id=j.costacc_id','left')->where(array('j.jk_id'=>$jiekuan['id']))->select();
 
-        $audit_userinfo     = M('jiekuan_audit')->where(array('op_id'=>$opid,'jk_id'=>$id,'audit_usertype'=>$audit_usertype))->find();
+        $audit_userinfo     = M('jiekuan_audit')->where(array('op_id'=>$opid,'jk_id'=>$id))->find();
+        if (!$audit_userinfo){ $this->error('获取信息失败'); };
 
         $this->jiekuan      = $jiekuan;
+        $this->jk_lists     = $jk_lists;
         $this->op           = $op;
         $this->audit_userinfo= $audit_userinfo;
         $this->audit_usertype= $audit_usertype;
