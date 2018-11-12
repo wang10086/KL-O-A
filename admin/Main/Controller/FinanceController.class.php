@@ -1014,6 +1014,7 @@ class FinanceController extends BaseController {
         $jk_lists           = M()->table('__JIEKUAN__ as j')->field('j.*,a.*,j.id as jid,a.id as aid')->join('__JIEKUAN_AUDIT__ as a on a.jk_id=j.id','left')->where(array('j.op_id'=>$opid))->order($this->orders('j.id'))->select();
         $cost               = M('op_costacc')->field('id,op_id,title,unitcost,amount,total as ctotal,remark')->where(array('op_id'=>$opid,'status'=>1))->order('id')->select();
         $jiekuan_detail     = M('jiekuan_detail')->where(array('op_id'=>$opid))->select();
+
         $costacc            = array();
         foreach ($cost as $k=>$v){
             $costacc[$k]['id']      = $v['id'];
@@ -1023,18 +1024,23 @@ class FinanceController extends BaseController {
             $costacc[$k]['amount']  = $v['amount'];
             $costacc[$k]['ctotal']  = $v['ctotal'];
             $costacc[$k]['remark']  = $v['remark'];
-            foreach ($jiekuan_detail as $kk=>$vv){
-                if($vv['costacc_id']==$v['id'] && $vv['audit_status'] != 2){
-                    $costacc[$k]['jk_id'] = $vv['jk_id'];
-                    $costacc[$k]['costacc_id'] = $vv['costacc_id'];
-                    $costacc[$k]['sjk']   = $vv['sjk'];
-                    $costacc[$k]['total'] = $vv['rest'];
-                    $costacc[$k]['audit_status'] = $vv['audit_status'];
-                    break;
-                }else{
-                    $costacc[$k]['total'] = $v['ctotal'];
+            if ($jiekuan_detail){
+                foreach ($jiekuan_detail as $kk=>$vv){
+                    if($vv['costacc_id']==$v['id'] && $vv['audit_status'] != 2){
+                        $costacc[$k]['jk_id'] = $vv['jk_id'];
+                        $costacc[$k]['costacc_id'] = $vv['costacc_id'];
+                        $costacc[$k]['sjk']   = $vv['sjk'];
+                        $costacc[$k]['total'] = $vv['rest'];
+                        $costacc[$k]['audit_status'] = $vv['audit_status'];
+                        break;
+                    }else{
+                        $costacc[$k]['total'] = $v['ctotal'];
+                    }
                 }
+            }else{
+                $costacc[$k]['total'] = $v['ctotal'];
             }
+
         }
 
         foreach ($jk_lists as $k=>$v){
