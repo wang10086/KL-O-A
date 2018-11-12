@@ -2,7 +2,7 @@
     <?php if ($jk_lists){ ?>
     <table class="table table-bordered dataTable fontmini" id="tablelist" style="margin-top:10px;">
         <tr role="row" class="orders" >
-            <th class="sorting" width="80" data="id">ID</th>
+            <th class="sorting" width="150" data="jkd_id">借款单编号</th>
             <th class="sorting" width="150" data="jk_user">借款人</th>
             <th class="sorting" width="150" data="rolename">借款部门</th>
             <th class="sorting" data="sum">借款金额</th>
@@ -14,7 +14,7 @@
         </tr>
         <foreach name="jk_lists" item="row">
             <tr>
-                <td>{$row.id}</td>
+                <td>{$row.jkd_id}</td>
                 <td>{$row.jk_user}</td>
                 <td>{$row.rolename}</td>
                 <td>{$row.sum}</td>

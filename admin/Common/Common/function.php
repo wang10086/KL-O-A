@@ -3916,3 +3916,17 @@ function get_username(){
 //        }
 //    return $price;
 //}
+
+    //自动生成借款单编号
+    function jkdid($opid){
+        if ($opid){
+            $jkd   = 'TNJK'.$opid;
+        }else{
+            $data  = date('Ymd',time())*10000;
+            $jkd   = 'TNJK'.$data;
+        }
+        $count     = M('jiekuan')->where(array('jkd_id'=>array('like',$jkd.'%')))->count();
+        $jkdid     = $jkd.'-'.($count+1);
+        return $jkdid;
+    }
+
