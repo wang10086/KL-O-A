@@ -43,18 +43,20 @@
                                         </tr>
 
                                         <form action="Handler1.ashx" method="post" >
-                                        <tr>
-                                            <td>1</td>
-                                            <td>2</td>
-                                            <td>3</td>
-                                            <td>4</td>
-                                            <td>5</td>
-                                            <td><input type="text" name="starttime"></td>
-                                            <td><input type="text" name="endtime"></td>
-                                            <input type="hidden" name="userid">
-                                            <input type="hidden" name="type" value="1">
-                                            <td><input type="submit" value="添加扶植人员" style="font-weight:bold;background-color:#00acd6;color:#FFFFFF;padding:0.3em;font-size: 1.2em;" /> </td>
-                                        </tr>
+                                            <foreach name="userinfo" item="user">
+                                                <tr>
+                                                    <td>1</td>
+                                                    <td>2</td>
+                                                    <td>3</td>
+                                                    <td>4</td>
+                                                    <td>5</td>
+                                                    <td><input type="text" name="starttime"></td>
+                                                    <td><input type="text" name="endtime"></td>
+                                                    <input type="hidden" name="userid">
+                                                    <input type="hidden" name="type" value="1">
+                                                    <td><input type="submit" value="添加扶植人员" style="font-weight:bold;background-color:#00acd6;color:#FFFFFF;padding:0.3em;font-size: 1.2em;" /> </td>
+                                                </tr>
+                                            </foreach>
                                         </form>
                                     </table>
 

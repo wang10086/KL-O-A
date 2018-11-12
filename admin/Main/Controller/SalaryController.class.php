@@ -1116,15 +1116,34 @@ class SalaryController extends BaseController {
 
     /**
      *salary_support 扶植人员信息表
+     * $userid 用户id  $employee_member编码
+     * $username 用户名字   $status状态 1 查询扶植人员 2添加扶植人员
      */
-    public function salary_support(){
-//        starttime
-//endtime
-//userid
-//type
+    public function salary_support(){//departmentid
+        if(IS_POST){
+            $userid['id']                   = $_POST['id'];
+            $employee_member['department']  = $_POST['employee_member'];
+            $userid['nickname']             = $_POST['name'];
+            $status                         = $_POST['status'];
+            $departmentid                   = M('salary_department')->where($employee_member)->find();//查询部门
+            $userid['departmentid']         = $departmentid['id'];
+            $userid                         = array_filter($userid); //去除空数组
+            $userinfo ['user']              = M('account')->where($userid)->select();//查询用户信息
 
+//            print_r($userinfo);die;
+//            if($status==2){
+//            }
+        }
+        $this->assign('userinfo',$userinfo);//总合计 coun
         $this->display();
     }
 
-
+    //用户的 部门 岗位  详情信息
+    function userinfo($employee_member){
+        $departmentid                   = M('salary_department')->where($employee_member)->find();//查询部门
+        $userid['departmentid']         = $departmentid['id'];
+        $userid                         = array_filter($userid); //去除空数组
+        $userinfo ['user']              = M('account')->where($userid)->select();//查询用户信息
+        //postid
+    }
 }
