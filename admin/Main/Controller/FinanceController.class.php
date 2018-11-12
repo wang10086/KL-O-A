@@ -1252,7 +1252,7 @@ class FinanceController extends BaseController {
                     }
 
                     $record = array();
-                    $record['op_id']   = $info['op_id'];
+                    $record['op_id']   = $opid;
                     $record['optype']  = 14;
                     $record['explain'] = '审核借款申请单，借款单号：'.$jkd_id.'，审核结果：'.$audit_status[$info['ys_audit_status']];
                     op_record($record);
@@ -1265,8 +1265,52 @@ class FinanceController extends BaseController {
 
             //保存借款财务审核信息
             if ($savetype==4){
-                $a          = I();
-                //var_dump($a);die;
+                $db                 = M('jiekuan_audit');
+                $jk_id              = I('jk_id');
+                $jkd_id             = I('jkd_id');
+                $opid               = I('op_id');
+                $info               = I('info');
+                $audit_id           = I('audit_id');
+                $info['cw_audit_time'] = NOW_TIME;
+
+                $res = $db->where(array('id'=>$audit_id))->save($info);
+                if ($res){
+                    $audit_status   = C('AUDIT_STATUS');
+                    $jk_info        = M('jiekuan')->where(array('id'=>$jk_id))->find();
+                    $audit_info     = M('jiekuan_audit')->where(array('id'=>$audit_id))->find();
+                    $op             = M('op')->where(array('op_id'=>$opid))->find();
+                    if ($info['ys_audit_status'] ==1){
+                        //发送系统消息
+                        $uid     = cookie('userid');
+                        $title   = '您有来自['.$audit_info['cw_audit_username'].']的借款审批回复!';
+                        $content = '项目名称：'.$op['project'].'，团号：'.$op['group_id'].'，借款金额：'.$jk_info['sum'];
+                        $url     = U('Finance/jk_detail',array('opid'=>$opid));
+                        $user    = '['.$jk_info['jk_user_id'].']';
+                        send_msg($uid,$title,$content,$url,$user,'');
+                    }else{
+                        //审核不通过//发送系统消息
+                        $uid     = cookie('userid');
+                        $title   = '您有来自['.$audit_info['cw_audit_username'].']的借款审批回复!';
+                        $content = '项目名称：'.$op['project'].'，团号：'.$op['group_id'].'，借款金额：'.$jk_info['sum'];
+                        $url     = U('Finance/jk_detail',array('opid'=>$opid));
+                        $user    = '['.$jk_info['jk_user_id'].']';
+                        send_msg($uid,$title,$content,$url,$user,'');
+                    }
+                    $audit                  = array();
+                    $audit['audit_status']  = $info['cw_audit_status'];
+                    M('jiekuan')->where(array('id'=>$jk_id))->save($audit);
+                    M('jiekuan_detail')->where(array('jk_id'=>$jk_id))->save($audit);
+
+                    $record = array();
+                    $record['op_id']   = $opid;
+                    $record['optype']  = 14;
+                    $record['explain'] = '审核借款申请单，借款单号：'.$jkd_id.'，审核结果：'.$audit_status[$info['cw_audit_status']];
+                    op_record($record);
+
+                    $this->success('数据保存成功');
+                }else{
+                    $this->error('数据保存失败');
+                }
             }
         }
     }
@@ -1288,6 +1332,7 @@ class FinanceController extends BaseController {
         $this->op           = $op;
         $this->audit_userinfo= $audit_userinfo;
         $this->audit_usertype= $audit_usertype;
+
 
         $this->display();
     }
