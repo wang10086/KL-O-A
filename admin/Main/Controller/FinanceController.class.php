@@ -1167,11 +1167,15 @@ class FinanceController extends BaseController {
                         $jiekuan_audit['ys_audit_userid']   = $audit_ys['audit_uid'];
                         $jiekuan_audit['ys_audit_username'] = M('account')->where(array('id'=>$audit_ys['audit_uid']))->getField('nickname');
                         $audit_usertype                     = 1;    //预算审核人
+
+                        $msg_user                           = $jiekuan_audit['ys_audit_userid'];
                     }else{
                         //直接到达财务审核
                         $jiekuan_audit['cw_audit_userid']   = 55; //程小平
                         $jiekuan_audit['cw_audit_username'] = M('account')->where(array('id'=>55))->getField('nickname');
                         $audit_usertype                     = 2;    //财务主管
+
+                        $msg_user                           = $jiekuan_audit['cw_audit_userid'];
                     }
                     M('jiekuan_audit')->add($jiekuan_audit);
 
@@ -1193,7 +1197,7 @@ class FinanceController extends BaseController {
                     $title   = '您有来自['.$info['rolename'].'--'.$info['jk_user'].']的借款申请!';
                     $content = '项目名称：'.$audit_ys['name'].'，团号：'.$info['group_id'].'，借款金额：'.$info['sum'];
                     $url     = U('Finance/audit_jiekuan',array('id'=>$res,'op_id'=>$info['op_id'],'audit_usertype'=>$audit_usertype));
-                    $user    = '['.$jiekuan_audit['ys_audit_userid'].']';
+                    $user    = '['.$msg_user.']';
                     send_msg($uid,$title,$content,$url,$user,'');
 
                     $record = array();
@@ -1337,14 +1341,39 @@ class FinanceController extends BaseController {
         $this->display();
     }
 
-    /* // @@@NODE-3###sign_jk###借款签字/审批签字###
-     public function sign_jk(){
-         if (isset($_POST['dosubmint'])){
-             $a = I();
-             var_dump($a);die;
-         }else{
-             $this->opid         = I('opid');
-             $this->display('sign_jk');
-         }
-     }*/
+    // @@@NODE-3###jiekuan_lists###借款单列表###
+    public function jiekuan_lists(){
+        $project        = I('title');
+        $group_id       = I('oid');
+        $jkd_id         = I('jkdid');
+        $jk_user        = I('ou');
+
+        $where          = array();
+        if ($project)   $where['o.project'] = array('like','%'.$project.'%');
+        if ($group_id)  $where['j.group_id']= array('like','%'.$group_id.'%');
+        if ($jkd_id)    $where['j.jkd_id']  = array('like','%'.$jkd_id.'%');
+        if ($jk_user)   $where['j.jk_user'] = array('like','%'.$jk_user.'%');
+
+        $lists          = M()->table('__JIEKUAN__ as j')->field('j.*,o.project')->join('__OP__ as o on o.op_id=j.op_id','left')->where($where)->order($this->orders('j.id'))->select();
+
+        foreach ($lists as $k=>$v){
+            if ($v['audit_status'] == 0) $lists[$k]['zhuangtai'] = "<span class='yellow'>审核中</span>";
+            if ($v['audit_status'] == 1) $lists[$k]['zhuangtai'] = "<span class='green'>审核通过</span>";
+            if ($v['audit_status'] == 2) $lists[$k]['zhuangtai'] = "<span class='red'>审核未通过</span>";
+        }
+        $this->lists    = $lists;
+        $this->display();
+    }
+
+    // @@@NODE-3###jiekuandan_info###借款单详情###
+    public function jiekuandan_info(){
+        $id             = I('jkid');
+        $jiekuan        = M()->table('__JIEKUAN__ as j')->join('__JIEKUAN_AUDIT__ as a on a.jk_id=j.id','left')->where(array('j.id'=>$id))->find();
+        $jk_lists       = M()->table('__JIEKUAN_DETAIL__ as j')->join('__OP_COSTACC__ as c on c.id=j.costacc_id','left')->where(array('j.jk_id'=>$id))->select();
+        $this->op       = M('op')->where(array('op_id'=>$jiekuan['op_id']))->find();
+        $this->jiekuan  = $jiekuan;
+        $this->jk_lists = $jk_lists;
+        $this->display();
+    }
+
 }

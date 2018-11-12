@@ -450,13 +450,16 @@
                             </a>
                             <ul class="treeview-menu">
 
-                                <li class="treeview {:on('Finance/jiekuan')} {:on('Finance/sign')}">
+                                <li class="treeview {:on('Finance/jiekuan')} {:on('Finance/jiekuan_lists')} {:on('Finance/jiekuandan_info')} {:on('Finance/sign')}">
                                     <if condition="rolemenu(array('Finance/jiekuan'))">
                                         <a href=""><i class="fa  fa-check-circle"></i> 财务审批</a>
                                     </if>
                                     <ul class="treeview-menu">
                                         <if condition="rolemenu(array('Finance/jiekuan'))">
                                             <li class="{:on('Finance/jiekuan')}"><a href="{:U('Finance/jiekuan')}"><i class="fa fa-angle-right"></i> 团内支出借款</a></li>
+                                        </if>
+                                        <if condition="rolemenu(array('Finance/jiekuan_lists'))">
+                                            <li class="{:on('Finance/jiekuan_lists')}"><a href="{:U('Finance/jiekuan_lists')}"><i class="fa fa-angle-right"></i> 借款单管理</a></li>
                                         </if>
                                         <if condition="rolemenu(array('Finance/sign'))">
                                             <li class="{:on('Finance/sign')}"><a href="{:U('Finance/sign')}"><i class="fa fa-angle-right"></i> 个人签字管理</a></li>
@@ -681,11 +684,9 @@
                                     </if>
                                     <if condition="rolemenu(array('worder/worder_list'))">
                                         <li><a href="{:U('worder/worder_list')}"><i class="fa fa-angle-right"></i> 管理工单</a></li>
-                                        <!--<li><a href="javascript:;" onClick="art_show_msg('加班开发中，稍后呈现...',5)"><i class="fa fa-angle-right"></i> 管理工单</a></li>-->
                                     </if>
                                     <if condition="rolemenu(array('worder/project'))">
                                         <li><a href="{:U('worder/project')}"><i class="fa fa-angle-right"></i> 项目工单</a></li>
-                                        <!--<li><a href="javascript:;" onClick="art_show_msg('加班开发中，稍后呈现...',5)"><i class="fa fa-angle-right"></i> 项目工单</a></li>-->
                                     </if>
                                     <!--
                                     <li><a href="javascript:;" onClick="art_show_msg('加班开发中，稍后呈现...',5)"><i class="fa fa-angle-right"></i> KPI</a></li>
