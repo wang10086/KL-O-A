@@ -832,6 +832,10 @@
                                         <li class="{:on('Rbac/worder_auth')}" ><a href="{:U('Rbac/worder_auth')}"><i class="fa fa-angle-right"></i> 工单系统指定指派人</a></li>
                                     </if>
 
+                                    <if condition="rolemenu(array('Finance/jk_audit_user'))">
+                                        <li class="{:on('Finance/jk_audit_user')}" ><a href="{:U('Finance/jk_audit_user')}"><i class="fa fa-angle-right"></i> 部门借款审核人</a></li>
+                                    </if>
+
                                     <if condition="rolemenu(array('Rbac/kpi_quota'))">
                                          <li class="{:on('Rbac/kpi_quota')}" ><a href="{:U('Rbac/kpi_quota')}"><i class="fa fa-angle-right"></i> KPI考核指标管理</a></li>
                                     </if>

@@ -1382,4 +1382,28 @@ class FinanceController extends BaseController {
         $this->display();
     }
 
+    //@@@NODE-3###jk_audit_user###部门借款审核人###
+    public function jk_audit_user(){
+        $this->departments  = M('salary_department')->select();
+        $this->display();
+    }
+
+    //@@@NODE-3###set_jiekuan_user###配置部门借款审核人###
+    public function set_jiekuan_user(){
+        if(isset($_POST['dosubmint'])){
+            $db             = M('salary_department');
+            $id             = I('id');
+            $info           = I('info');
+            $res            = $db->where(array('id'=>$id))->save($info);
+
+            echo "<script>window.top.location.reload();</script>";
+        }else{
+            $id                 = I('id');
+            $list           = M('salary_department')->where(array('id'=>$id))->find();
+            $this->list     = $list;
+            $this->userkey  = get_userkey();
+            $this->display();
+        }
+    }
+
 }

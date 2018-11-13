@@ -405,7 +405,20 @@
                                         </div>
                                     </div>
                                 </div>
-                                
+
+                               <div class="box box-warning">
+                                   <div class="box-header">
+                                       <h3 class="box-title">前期资源、研发评价</h3>
+                                   </div>
+                                   <div class="box-body">
+                                       <?php if((cookie('roleid')==10 || cookie('userid')==$op['create_user'] || C('RBAC_SUPER_ADMIN')==cookie('username')) && $settlement['audit']!=1 ){ ?>
+                                           <include file="evaluateaaa_edit" />
+                                       <?php }else{ ?>
+                                           <include file="evaluateaaa_read" />
+                                       <?php }?>
+                                   </div>
+                               </div>
+
                                 
                                 <div class="box box-warning">
                                     <div class="box-header">
