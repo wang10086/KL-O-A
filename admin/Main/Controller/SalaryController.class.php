@@ -89,31 +89,24 @@ class SalaryController extends BaseController {
      */
 
     private function salary_kpi_month($where,$datetime,$type){
-
         //kpi 目标任务 完成 提成
         $month                                  = (int)substr($datetime,4);
         $year                                   = (int)substr($datetime,0,4);
+        $count                                  = 0;
+        $sum1                                   = 0;
+        $sum2                                   = 0;
         $query['user_id']                       = $where;
-        if($year==2018){
-            if($month==10 || $month==9){
-                $month                          = $month-1;
-            }
-        }
         if($month<10){
             $year                               = $year.'0';
         }
         if($type==2){
             $query['month']                     = $year.$month;
             if($month == 3 || $month == 6 || $month == 9 || $month == 12){
-                $count                          = 0;
-                $sum1                           = 0;
-                $sum2                           = 0;
                 $i                              = $month-3;
                 for($i;$i<$month;$month--){
                     $query['month']             = $year.$month;
                     $kpi                        = M('kpi')->where($query)->find();
                     $lists                      = M('kpi_more')->where(array('kpi_id'=>$kpi['id']))->find();
-
                     //季度完成
                     $user                       = M('account')->where('id='.$query['user_id'])->find();
                     $mont1                      = $year.($month-1).'26';//开始月日
@@ -170,14 +163,7 @@ class SalaryController extends BaseController {
                 $content['total']               = round($Total,2);//保留两位小数
             }else{
                 $kpi                            = M('kpi')->where($query)->find();
-                if($kpi){
-                    $lists                      = M('kpi_more')->where(array('kpi_id'=>$kpi['id']))->find();
-                    if(!$lists || $lists['automatic'] == 0){
-                        return 0;
-                    }
-                }else{
-                    return 0;
-                }
+                $lists                      = M('kpi_more')->where(array('kpi_id'=>$kpi['id']))->find();
                 //季度完成
                 $user                           = M('account')->where('id='.$query['user_id'])->find();
                 $mont1                          = $year.($month-1).'26';//开始月
@@ -190,9 +176,6 @@ class SalaryController extends BaseController {
             return $content;
         }
         if($month == 3 || $month == 6 || $month == 9 || $month == 12){
-            $count                              = 0;
-            $sum1                               = 0;
-            $sum2                               = 0;
             $i                                  = $month-3;
             for($i;$i<$month;$month--){
                 $query['month']                 = $year.$month;
@@ -200,9 +183,6 @@ class SalaryController extends BaseController {
                 $lists                          = M('kpi_more')->where(array('kpi_id'=>$kpi['id']))->find();
                 //季度完成
                 $user                           = M('account')->where('id='.$query['user_id'])->find();
-//                $mont1                          =  strtotime($year.($month-1).'26');//开始月
-//                $mont2                          =  strtotime($year.$month.'26');//结束月
-//                $sum                            += monthly_Finance($query['user_id'],$mont1,$mont2);//季度完成
                 $mont1                          = $year.($month-1).'26';//开始月
                 $mont2                          = $year.$month.'26';//结束月
                 $support                        = M('salary_support')->where('account_id='.$query['user_id'])->find();//扶植人员
