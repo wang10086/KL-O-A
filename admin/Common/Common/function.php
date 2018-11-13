@@ -3917,6 +3917,17 @@ function get_username(){
 //    return $price;
 //}
 
+    //用户的 部门 岗位  详情信息
+    function userinfo($userid){
+        $info                              = M('account')->where($userid)->select();//查询用户信息
+        foreach($info as $key => $val){
+            $userinfo[$key]['info']        = $val;
+            $userinfo[$key]['posts']       = M('posts')->where('id='.$val['postid'])->find();
+            $userinfo[$key]['department']  = M('salary_department')->where('id='.$val['departmentid'])->find();//查询部门
+        }
+        return $userinfo;
+    }
+
     //自动生成借款单编号
     function jkdid($opid){
         if ($opid){

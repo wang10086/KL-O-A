@@ -87,13 +87,13 @@ class SalaryController extends BaseController {
      * salary_kpi_month 季度
      * kpi 目标任务 完成 提成
      */
+
     private function salary_kpi_month($where,$datetime,$type){
 
         //kpi 目标任务 完成 提成
         $month                                  = (int)substr($datetime,4);
         $year                                   = (int)substr($datetime,0,4);
         $query['user_id']                       = $where;
-
         if($year==2018){
             if($month==10 || $month==9){
                 $month                          = $month-1;
@@ -106,45 +106,65 @@ class SalaryController extends BaseController {
             $query['month']                     = $year.$month;
             if($month == 3 || $month == 6 || $month == 9 || $month == 12){
                 $count                          = 0;
-                $sum                            = 0;
+                $sum1                           = 0;
+                $sum2                           = 0;
                 $i                              = $month-3;
                 for($i;$i<$month;$month--){
                     $query['month']             = $year.$month;
                     $kpi                        = M('kpi')->where($query)->find();
+                    $lists                      = M('kpi_more')->where(array('kpi_id'=>$kpi['id']))->find();
 
-                    if($kpi){
-                        $lists                  = M('kpi_more')->where(array('kpi_id'=>$kpi['id']))->find();
-                        if(!$lists || $lists['automatic'] == 0){
-                            return 0;
-                        }
-                    }else{
-                        return 0;
-                    }
                     //季度完成
                     $user                       = M('account')->where('id='.$query['user_id'])->find();
-//                    $mont1                      = strtotime($year.($month-1).'26');//开始月
-//                    $mont2                      = strtotime($year.$month.'26');//结束月
-//                    $sum_user                   = monthly_Finance($query['user_id'],$mont1,$mont2);//季度完成
-                    $mont1                      = $year.($month-1).'26';//开始月
-                    $mont2                      = $year.$month.'26';//结束月
-                    $sum_user                   = monthly_Finance($user['nickname'],$mont1,$mont2);//季度完成
+                    $mont1                      = $year.($month-1).'26';//开始月日
+                    $mont2                      = $year.$month.'26';//结束月日
 
+                    $support = M('salary_support')->where('account_id='.$query['user_id'])->find();//扶植人员
+                    if($support){//查询是否是扶植人员
+                        //扶植起日期 > 季度起日期   扶植止日期 < 季度止日期
+                        if($support['starttime']>strtotime($mont1) && $support['endtime']<strtotime($mont2)){
+                            $mont3              = date('Ymd',$support['starttime']);
+                            $mont4              = date('Ymd',$support['endtime']);
+                        }elseif($support['starttime']>strtotime($mont1) && $support['endtime']>strtotime($mont2) && $support['starttime']<strtotime($mont2)){
+                            //扶植起日期 > 季度起日期   扶植止日期 > 季度止日期 扶植起日期<季度止日期
+                            $mont3              = date('Ymd',$support['starttime']);
+                            $mont4              = $mont2;
+                        }elseif(($support['starttime']<strtotime($mont1) && $support['endtime']>strtotime($mont2))){
+                            //扶植起日期 < 季度起日期   扶植止日期 > 季度止日期
+                            $mont3              = $mont1;
+                            $mont4              = $mont2;
+                        }elseif(($support['starttime']<strtotime($mont1) && $support['endtime']<strtotime($mont2))){
+                            //扶植起日期 > 季度起日期   扶植止日期 < 季度止日期
+                            $mont3              = $mont1;
+                            $mont4              = $support['endtime'];
+                        }elseif(($support['starttime']<strtotime($mont2) && $support['endtime']<strtotime($mont1)) || ($support['starttime']<strtotime($mont2) && $support['endtime']>strtotime($mont1)) || ($support['starttime']>strtotime($mont2) && $support['endtime']>strtotime($mont1)) || ($support['starttime']>strtotime($mont2) && $support['endtime']<strtotime($mont1))){
+                            //1、扶植起日期<季度止日期  扶植止日期<季度起日期 2、扶植起日期<季度止日期 扶植止日期<季度起日期 3、扶植起日期>季度止日期 扶植止日期>季度起日期 4、扶植起日期>季度止日期 扶植止日期<季度起日期
+                            $mont3              = 0;
+                            $mont4              = 0;
+                        }
+                        $sum_user1              = monthly_Finance($user['nickname'],$mont3,$mont4);//季度完成
+                        $sum1                   += $sum_user1;
+                    }
+                    $sum_user                   = monthly_Finance($user['nickname'],$mont1,$mont2);//季度完成
                     $count                      += $lists['target'];//季度目标
-                    $sum                        += $sum_user;//季度完成
+                    $sum2                       += $sum_user;//季度完成
                 }
+                $price                          = $sum1*0.25;//扶植期提成
+                $sum                            = $sum2-$sum1;//季度完成-扶植人员日期完成
                 $number                         = $sum/$count;//项目季度百分比
                 if($number <= 1){
-                    $Total                      = $sum*0.05;//不超过100%
+                    $Total1                     = $sum*0.05;//不超过100%
                 }
                 if(1<$number && $number <=1.5){
-                    $Total                      = $count*0.05+($sum-$count)*0.2;//超过100% 不到150%
+                    $Total1                     = $count*0.05+($sum-$count)*0.2;//超过100% 不到150%
                 }
                 if(1.5 < $number){
                     $tot                        = $count*0.05;//100%以内
                     $tt                         = ($count*1.5-$count)*0.2;//100%以上 150% 以内
                     $yy                         = ($sum-$count*1.5)*0.25;//150% 以上
-                    $Total                      = $tot+$tt+$yy;
+                    $Total1                     = $tot+$tt+$yy;
                 }
+                $Total = $Total1 + $price;//提成+扶植期提成
                 $content['target']              = $count;
                 $content['complete']            = $sum;
                 $content['total']               = round($Total,2);//保留两位小数
@@ -160,35 +180,24 @@ class SalaryController extends BaseController {
                 }
                 //季度完成
                 $user                           = M('account')->where('id='.$query['user_id'])->find();
-//                $mont1                          = strtotime($year.($month-1).'26');//开始月
-//                $mont2                          = strtotime($year.$month.'26');//结束月
-//                $sum_user                       = monthly_Finance($query['user_id'],$mont1,$mont2);//季度完成
                 $mont1                          = $year.($month-1).'26';//开始月
                 $mont2                          = $year.$month.'26';//结束月
                 $sum_user                       = monthly_Finance($user['nickname'],$mont1,$mont2);//季度完成
-
                 $content['target']              = $lists['target'];//季度目标
                 $content['complete']            = $sum_user;//季度完成
                 $content['total']               = '0.00';//保留两位小数
             }
             return $content;
         }
-        if($month == 3 || $month == 6 || $month == 9 ||$month == 12){
+        if($month == 3 || $month == 6 || $month == 9 || $month == 12){
             $count                              = 0;
-            $sum                                = 0;
+            $sum1                               = 0;
+            $sum2                               = 0;
             $i                                  = $month-3;
             for($i;$i<$month;$month--){
                 $query['month']                 = $year.$month;
                 $kpi                            = M('kpi')->where($query)->find();
-                if($kpi){
-                    $lists                      = M('kpi_more')->where(array('kpi_id'=>$kpi['id']))->find();
-
-                    if(!$lists || $lists['automatic'] == 0){
-                        return 0;
-                    }
-                }else{
-                    return 0;
-                }
+                $lists                          = M('kpi_more')->where(array('kpi_id'=>$kpi['id']))->find();
                 //季度完成
                 $user                           = M('account')->where('id='.$query['user_id'])->find();
 //                $mont1                          =  strtotime($year.($month-1).'26');//开始月
@@ -196,27 +205,57 @@ class SalaryController extends BaseController {
 //                $sum                            += monthly_Finance($query['user_id'],$mont1,$mont2);//季度完成
                 $mont1                          = $year.($month-1).'26';//开始月
                 $mont2                          = $year.$month.'26';//结束月
-                $sum                            += monthly_Finance($user['nickname'],$mont1,$mont2);//季度完成
+                $support                        = M('salary_support')->where('account_id='.$query['user_id'])->find();//扶植人员
+                if($support){//查询是否是扶植人员
+
+                    //扶植起日期 > 季度起日期   扶植止日期 < 季度止日期
+                    if($support['starttime']>strtotime($mont1) && $support['endtime']<strtotime($mont2)){
+                        $mont3                  = date('Ymd',$support['starttime']);
+                        $mont4                  = date('Ymd',$support['endtime']);
+                        $sum1                   += monthly_Finance($user['nickname'],$mont3,$mont4);//季度完成
+                    }elseif($support['starttime']>strtotime($mont1) && $support['endtime']>strtotime($mont2) && $support['starttime']<strtotime($mont2)){
+                        //扶植起日期 > 季度起日期   扶植止日期 > 季度止日期 扶植起日期<季度止日期
+                        $mont3                  = date('Ymd',$support['starttime']);
+                        $mont4                  = $mont2;
+                        $sum1                   += monthly_Finance($user['nickname'],$mont3,$mont4);//季度完成
+                    }elseif(($support['starttime']<strtotime($mont1) && $support['endtime']>strtotime($mont2))){
+                        //扶植起日期 < 季度起日期   扶植止日期 > 季度止日期
+                        $mont3                  = $mont1;
+                        $mont4                  = $mont2;
+                        $sum1                   += monthly_Finance($user['nickname'],$mont3,$mont4);//季度完成
+                    }elseif(($support['starttime']<strtotime($mont1) && $support['endtime']<strtotime($mont2))){
+                        //扶植起日期 > 季度起日期   扶植止日期 < 季度止日期
+                        $mont3                  = $mont1;
+                        $mont4                  = $support['endtime'];
+                        $sum1                   += monthly_Finance($user['nickname'],$mont3,$mont4);//季度完成
+                    }else{
+                        //1、扶植起日期<季度止日期  扶植止日期<季度起日期 2、扶植起日期<季度止日期 扶植止日期<季度起日期 3、扶植起日期>季度止日期 扶植止日期>季度起日期 4、扶植起日期>季度止日期 扶植止日期<季度起日期
+                        $mont3                  = 0;
+                        $mont4                  = 0;
+                    }
+                }
+                $sum2                           += monthly_Finance($user['nickname'],$mont1,$mont2);//季度完成
                 $count                          += $lists['target'];//季度目标
-               // $sum                      += $lists['complete'];//季度完成
             }
+            $price                              = $sum1*0.25;//扶植期提成
+            $sum                                = $sum2-$sum1;//季度完成-扶植人员日期完成
             $number                             = $sum/$count;//项目季度百分比
             if($number <= 1){
-                $Total                          = $sum*0.05;//不超过100%
+                $Total1                          = $sum*0.05;//不超过100%
             }
             if(1<$number && $number <=1.5){
-                $Total                          = $count*0.05+($sum-$count)*0.2;//超过100% 不到150%
+                $Total1                         = $count*0.05+($sum-$count)*0.2;//超过100% 不到150%
             }
             if(1.5 < $number){
                 $tot                            = $count*0.05;//100%以内
                 $tt                             = ($count*1.5-$count)*0.2;//100%以上 150% 以内
                 $yy                             = ($sum-$count*1.5)*0.25;//150% 以上
-                $Total                          = round($tot+$tt+$yy,2);
+                $Total1                         = round($tot+$tt+$yy,2);
             }
+            $Total                              = $Total1+$price;//提成+扶植期提成
             $content['target']                  = $count;
             $content['complete']                = $sum;
             $content['total']                   = round($Total,2);//保留两位小数
-
         }else{
             $content['target']                  = '0.00';//季度目标
             $content['complete']                = '0.00';//季度完成
@@ -708,7 +747,7 @@ class SalaryController extends BaseController {
             unset($where['archives']);
         }
         $where['status'] = array('between','0,1');
-        $info                                       =  M('account')->where($where)->order('employee_member ASC')->select();//个人数据
+        $info                                       =  M('account')->where($where)->order('id ASC')->select();//个人数据
         foreach($info as $k => $v){//去除编码空的数据
             if($v['employee_member'] == ""){
                 unset($info[$k]);
@@ -726,13 +765,10 @@ class SalaryController extends BaseController {
             $att_id['status']                       = 1;
             $user_info[$key]['attendance']          = sql_query(1,'*','oa_salary_attendance',$att_id, 1, 1);//员工考核
             $user_bonus                             = sql_query(1,'*','oa_salary_bonus',$att_id, 1, 1);//提成/奖金/年终奖
-
             $generate_month                         = datetime(date('Y'),date('m'),date('d'),1);//获取当前年月
             $bonus_extract                          = Acquisition_Team_Subsidy($generate_month,$val['guide_id']);//带团补助
-
             $user_info[$key]['bonus']               = $user_bonus;
             $user_info[$key]['bonus'][0]['extract'] = $bonus_extract;
-
             $user_info[$key]['labour']              = M('salary_labour')->where($id)->order('id desc')->find();//工会会费
             if(count($user_info[$key]['salary'])==0){
                 unset($user_info[$key]);continue;
@@ -747,7 +783,6 @@ class SalaryController extends BaseController {
                 }
             }
             $user_info[$key]['insurance']           = sql_query(1,'*','oa_salary_insurance', $id, 1,1);//五险一金表
-
             $user_info[$key]['insurance_Total']     = round(($user_info[$key]['insurance'][0]['pension_ratio']*$user_info[$key]['insurance'][0]['pension_base']+$user_info[$key]['insurance'][0]['medical_care_ratio']*$user_info[$key]['insurance'][0]['medical_care_base']+$user_info[$key]['insurance'][0]['unemployment_ratio']*$user_info[$key]['insurance'][0]['unemployment_base']+round($user_info[$key]['insurance'][0]['accumulation_fund_ratio']*$user_info[$key]['insurance'][0]['accumulation_fund_base'])+$user_info[$key]['insurance'][0]['big_price']),2);//五险一金
 
             $user_info[$key]['accumulation']        = round(($user_info[$key]['insurance'][0]['accumulation_fund_ratio']*$user_info[$key]['insurance'][0]['accumulation_fund_base']),0);
@@ -769,7 +804,6 @@ class SalaryController extends BaseController {
             $que['p.tab_user_id']                   = $val['id'];//用户id
             $que['p.month']                         = datetime(date('Y'),date('m'),date('d'),1);
             $user                                   = $this->query_score($que);//绩效增减
-
             $use1                                   = trim(str_replace(array('<font color="#999999">','</font>','无加扣分','<span class="red">','</span>','<span>','<font color="#ff9900">','未完成评分'),"",$user[0]['total_score_show']));//PDCA
             $use2                                   = trim(str_replace(array('<font color="#999999">','</font>','无加扣分','<span class="red">','</span>','<span>','<font color="#ff9900">','未完成评分'),"",$user[0]['show_qa_score']));//品质检查
             $use3                                   = trim(str_replace(array('<font color="#999999">','</font>','无加扣分','<span class="red">','</span>','<span>','<font color="#ff9900">','未完成评分'),"",$user[0]['total_kpi_score']));//KPI
@@ -789,14 +823,6 @@ class SalaryController extends BaseController {
             $user_info[$key]['Achievements']['show_qa_score']       = $use2;//品质检查分数
             $user_info[$key]['Achievements']['sum_total_score']     = $use3;//KPI分数
 
-            // 判断是否是业务人员  提成
-//            $position_id['id']                      = $val['position_id'];
-//            $position                               = sql_query(1,'*','oa_position',$position_id,1,1);//职位
-//            $strstr                                 = $position[0]['position_name'];
-//            if(strstr($strstr,'S')!==false){
-//                $user_info[$key]['Extract']         = $this->salary_kpi_month($val['id'],$que['p.month'],1); //业务人员 目标任务 完成 提成
-//            }
-
                 //如果做季度提成可以变为奖金放开屏蔽即可
 //            if($user_info[$key]['bonus'][0]['annual_bonus']!==0 && !empty($user_info[$key]['bonus'][0]['annual_bonus'])){
 //                $Year_end = $user_info[$key]['Extract']['total'];
@@ -806,17 +832,11 @@ class SalaryController extends BaseController {
 //            }else{
 //                 $user_info[$key]['Extract']['total']    = $user_info[$key]['Extract']['total']+$user_bonus;//提成相加
 //            }
-
-            $user_price                             = $this->salary_kpi_month($val['id'],$que['p.month'],1); //业务人员 目标任务 完成 提成
-
+            $user_price                             = $this->salary_kpi_month(100,$que['p.month'],1); //业务人员 目标任务 完成 提成
             $user_info[$key]['Extract']['total']    = $user_price['total']+$user_bonus[0]['bonus'];//提成相加
-
-
             $extract                                = $user_info[$key]['Extract']['total'];
-
 //            $Year_end                               = $Year_end;//如果做季度提成可以变为奖金放开屏蔽即可
             $Year_end                               = ($user_info[$key]['bonus'][0]['annual_bonus'])/12;
-
             if($Year_end < 1500){
                 $price1                             = $Year_end*0.03;
             }
@@ -850,13 +870,11 @@ class SalaryController extends BaseController {
             $user_info[$key]['Should'] = round(($user_info[$key]['bonus'][0]['foreign_bonus']+$user_info[$key]['salary'][0]['standard_salary']-$user_info[$key]['attendance'][0]['withdrawing']+$bonus_extract+$extract+$user_info[$key]['bonus'][0]['annual_bonus']-$user_info[$key]['yearend']+$user_info[$key]['subsidy'][0]['housing_subsidy']+$user_info[$key]['Other']+$user_info[$key]['Achievements']['count_money']),2);
 
             $user_info[$key]['tax_counting']        = round(($user_info[$key]['Should']-$user_info[$key]['insurance_Total']+$user_info[$key]['labour']['merge_counting']),2);//计税工资
-
             //个人所得税$user_info[$key]['labour']['merge_counting']
             if($user_info[$key]['tax_counting'] <= 5000){
                 $counting                           = '0';
             }else{
                 $cout                               = $user_info[$key]['tax_counting']-5000;
-
                 if($cout <= 3000){
                     $countin                        = $cout*0.03;
 
@@ -875,7 +893,6 @@ class SalaryController extends BaseController {
                 }
                 $counting                           = round($countin,2);
             }
-
             $user_info[$key]['datetime']            = $que['p.month'];//现在日期
             $user_info[$key]['personal_tax']        = $counting;//个人所得税
 
@@ -1118,32 +1135,75 @@ class SalaryController extends BaseController {
      *salary_support 扶植人员信息表
      * $userid 用户id  $employee_member编码
      * $username 用户名字   $status状态 1 查询扶植人员 2添加扶植人员
+     * $type 1 添加扶植人员
      */
     public function salary_support(){//departmentid
+        $type                                = $_POST['type'];
         if(IS_POST){
-            $userid['id']                   = $_POST['id'];
-            $employee_member['department']  = $_POST['employee_member'];
-            $userid['nickname']             = $_POST['name'];
-            $status                         = $_POST['status'];
-            $departmentid                   = M('salary_department')->where($employee_member)->find();//查询部门
-            $userid['departmentid']         = $departmentid['id'];
-            $userid                         = array_filter($userid); //去除空数组
-            $userinfo ['user']              = M('account')->where($userid)->select();//查询用户信息
-
-//            print_r($userinfo);die;
-//            if($status==2){
-//            }
+            if($type==1){ //添加扶植人员
+                $save['account_id']          = trim($_POST['userid']);
+                $user['entry_account_id']    = $_SESSION['userid'];
+                $user['starttime']           = trim(strtotime($_POST['starttime']));
+                $user['endtime']             = trim(strtotime($_POST['endtime']));
+                if(empty($user['starttime']) || empty($user['endtime'])){
+                    $this->error('添加扶植人员起止时间不能为空!', U('Salary/salary_support'));die;
+                }
+                $support_r                   = M('salary_support')->where($save)->find();
+                if($support_r){ //判断是否已经有扶植人员 已有修改
+                    $save                    = M('salary_support')->where($save)->save($user);
+                    if($save){//判断是否修改
+                        $this->success('添加扶植人员成功!', U('Salary/salary_support'));die;
+                    }else{
+                        $this->error('添加扶植人员失败!请重新添加!', U('Salary/salary_support'));die;
+                    }
+                }else{ //没有就添加
+                    $user['account_id']      = $_POST['userid'];
+                    $user['createtime']      = time();
+                    $add                     = M('salary_support')->add($user);
+                    if($add){ //判断是否添加
+                        $this->success('添加扶植人员成功!', U('Salary/salary_support'));die;
+                    }else{
+                        $this->error('添加扶植人员失败!请重新添加!', U('Salary/salary_support'));die;
+                    }
+                }
+            }
+            //查询扶植人员
+            $userid['id']                    = $_POST['id'];
+            $empl['department']              = $_POST['employee_member'];
+            $userid['nickname']              = $_POST['name'];
+            $status                          = $_POST['status'];
+            if(!empty($empl['department'])){
+                $departmentid                = M('salary_department')->where($empl)->find();//查询部门
+                $userid['departmentid']      = $departmentid['id'];
+            }
+            $userid                          = array_filter($userid); //去除空数组
+           if(!empty($userid)) {
+               $userinfo                     = userinfo($userid);
+               foreach($userinfo as $key => $val){
+                   $account['account_id']    = $val['info']['id'];
+                   $account['status']        = 1;
+                   $userinfo[$key]['support']= M('salary_support')->where($account)->find();
+               }
+           }
+        }else{
+            $count                           = M('salary_support')->where('status=1')->count();
+            $page                            = new Page($count,12);
+            $pages                           = $page->show();
+            $info                            = M('salary_support')->where('status=1')->limit("$page->firstRow","$page->listRows")->order('createtime desc')->select();//分页显示
+            foreach($info as $key => $val){
+                $where['id']                 = $val['account_id'];
+                $user                        = userinfo($where);
+                foreach($user as $k => $v){
+                    $content = $v;
+                }
+                $userinfo[$key]              = $content;
+                $userinfo[$key]['support']   = $val;
+            }
         }
-        $this->assign('userinfo',$userinfo);//总合计 coun
+        $this->assign('userinfo',$userinfo); //查询下详情
+        $this->assign('status',$status);//当前回返状态
+        $this->assign('page',$pages);//分页
         $this->display();
     }
 
-    //用户的 部门 岗位  详情信息
-    function userinfo($employee_member){
-        $departmentid                   = M('salary_department')->where($employee_member)->find();//查询部门
-        $userid['departmentid']         = $departmentid['id'];
-        $userid                         = array_filter($userid); //去除空数组
-        $userinfo ['user']              = M('account')->where($userid)->select();//查询用户信息
-        //postid
-    }
 }
