@@ -1300,6 +1300,28 @@ class AjaxController extends Controller {
         $this->ajaxReturn($data);
     }
 
+    //获取部门名称
+    public function get_department(){
+        $id         = I('department_id');
+        $department = M('salary_department')->where(array('id'=>$id))->getField('department');
+        $this->ajaxReturn($department);
+    }
+
+    //查询该团是否有借款信息
+    public function has_jiekuan(){
+        $op_id          = I('opid');
+        $id             = I('id');
+        $count          = M('jiekuan')->where(array('op_id'=>$op_id))->count();
+        $data           = array();
+        if ($count ==0){
+            $data['msg']= '真的要删除吗？';
+        }else{
+            $data['msg']= "该团有过借款信息<br/>你确定要删除该团吗?";
+        }
+        $data['url']    = U('Op/delpro',array('id'=>$id));
+        $this->ajaxReturn($data);
+    }
+
     /**
      * salary_support_add 添加扶植信息
      */

@@ -55,20 +55,18 @@
             <input type="hidden" name="info[costacc_ids]" id="ids">
             <input type="hidden" id="qianzi" value="0">
             <input type="hidden" name="info[yingjiekuan]" id="jk_sum">
+            <input type="hidden" name="info[department]" id="department">
             <div style="width:100%; float:left;">
 
-                <!--<div class="form-group col-md-12">
-                    <label>aaaids：</label>
-                    <input type="text" name="" id ="aaaids" class="form-control" />
-                </div>
-                <div class="form-group col-md-12">
-                    <label>aaaids：</label>
-                    <input type="text" name="" id ="aaajk_sum" class="form-control" />
-                </div>-->
-
                 <div class="form-group col-md-6">
-                    <label>借款单位：</label>
-                    <input type="text" name="info[rolename]" class="form-control" value="<?php echo $list['rolename']?$list['rolename']:session('rolename'); ?>" readonly />
+                    <label>借款部门：</label>
+                    <select class="form-control" name="info[department_id]" onchange="get_department()" id="department_id" required >
+                        <option value="">--请选择--</option>
+                        <foreach name="departments" item="v">
+                            <option value="{$v.id}">{$v.department}</option>
+                        </foreach>
+                    </select>
+                    <!--<input type="text" name="info[department]" class="form-control" value="<?php /*echo $list['rolename']?$list['rolename']:session('rolename'); */?>" readonly />-->
                 </div>
 
                 <div class="form-group col-md-6">
@@ -79,12 +77,12 @@
 
                 <div class="form-group col-md-6">
                     <label>借款金额：</label>
-                    <input type="text" name="info[sum]" id="jiekuanjine" class="form-control" value="{$list.sum}" onblur="todaxie($(this).val())" />
+                    <input type="text" name="info[sum]" id="jiekuanjine" class="form-control" value="{$list.sum}" onblur="todaxie($(this).val())" readonly />
                 </div>
 
                 <div class="form-group col-md-6">
                     <label>人民币(大写)：</label>
-                    <input type="text" name="info[sum_chinese]" id="daxie" class="form-control" value="{$list.sum_chinese}" />
+                    <input type="text" name="info[sum_chinese]" id="daxie" class="form-control" value="{$list.sum_chinese}" readonly />
                 </div>
 
                 <div class="form-group col-md-12" id="jk_type">
@@ -174,13 +172,11 @@
             var aid             = '['+id+'],';
             arr_ids             += aid;
             $('#ids').val(arr_ids);
-            //$('#aaaids').val(arr_ids);
 
             //应借款
             var yingjiekuan     = $('#jk_sum').val();
             var yjk             = accAdd(yingjiekuan,total);
             $('#jk_sum').val(yjk);
-            //$('#aaajk_sum').val(yjk);
 
             check_total(0,total);
         }
@@ -191,13 +187,11 @@
             var aid             = '['+id+'],';
             var aaa             = arr_ids.replace(aid,'');
             $('#ids').val(aaa);
-            //$('#aaaids').val(aaa);
 
             //应借款
             var yingjiekuan     = $('#jk_sum').val();
             var yjk             = accSub(yingjiekuan,total);
             $('#jk_sum').val(yjk);
-            //$('#aaajk_sum').val(yjk);
 
             //上次修改后的借款金额
             var upd_jk             = $('#yjk_'+id).val();
@@ -276,6 +270,19 @@
                 art_show_msg('请完善借款信息');
                 return false;
             }
+        }
+
+        function get_department(){
+            var departid        = $('#department_id').val();
+            $.ajax({
+                type: "POST",
+                url : "{:U('Ajax/get_department')}",
+                dataType : "JSON",
+                data : {department_id:departid},
+                success : function (msg) {
+                    $('#department').val(msg);
+                }
+            })
         }
 
         /*function qianzi() {

@@ -85,7 +85,9 @@
                                         </if>
                                         <if condition="rolemenu(array('Op/delpro'))">
                                         <td class="taskOptions">
-                                        <button onClick="javascript:ConfirmDel('{:U('Op/delpro',array('id'=>$row['id']))}')" title="删除" class="btn btn-warning btn-smsm"><i class="fa fa-times"></i></button>
+                                        <!--<button onClick="javascript:ConfirmDel('{:U('Op/delpro',array('id'=>$row['id']))}')" title="删除" class="btn btn-warning btn-smsm"><i class="fa fa-times"></i></button>-->
+                                        <!--<button onClick="javascript:ConfirmDel('{:U('Ajax/has_jiekuan',array('opid'=>$row['op_id']))}')" title="删除" class="btn btn-warning btn-smsm"><i class="fa fa-times"></i></button>-->
+                                        <button onClick="javascript:has_jiekuan('{$row.op_id}','{$row.id}')" title="删除" class="btn btn-warning btn-smsm"><i class="fa fa-times"></i></button>
                                         </td>
                                         </if>
                                     </tr>
@@ -171,3 +173,49 @@
             </div>
 
 <include file="Index:footer2" />
+
+<script>
+    function has_jiekuan(opid,id) {
+        $.ajax({
+            type: 'post',
+            url : "{:U('Ajax/has_jiekuan')}",
+            dataType : "JSON",
+            data : {opid:opid,id:id},
+            success: function (data) {
+                ConfirmDel(data.url,data.msg);
+            }
+        })
+    }
+
+    function ConfirmDel(url,msg) {
+        /*
+         if (confirm("真的要删除吗？")){
+         window.location.href=url;
+         }else{
+         return false;
+         }
+         */
+
+        if(!msg){
+            var msg = '真的要删除吗？';
+        }
+
+        art.dialog({
+            title: '提示',
+            width:400,
+            height:100,
+            lock:true,
+            fixed: true,
+            content: '<span style="width:100%; text-align:center; font-size:18px;float:left; clear:both;">'+msg+'</span>',
+            ok: function (msg) {
+                window.location.href=url;
+                //this.title('3秒后自动关闭').time(3);
+                return false;
+            },
+            cancelVal: '取消',
+            cancel: true //为true等价于function(){}
+        });
+
+    }
+
+</script>

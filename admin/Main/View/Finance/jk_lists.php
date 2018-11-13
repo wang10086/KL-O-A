@@ -16,7 +16,7 @@
             <tr>
                 <td>{$row.jkd_id}</td>
                 <td>{$row.jk_user}</td>
-                <td>{$row.rolename}</td>
+                <td>{$row.department}</td>
                 <td>{$row.sum}</td>
                 <td>{$row.auditstatus}</td>
                 <if condition="rolemenu(array('Finance/aaa'))">

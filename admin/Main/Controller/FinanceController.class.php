@@ -1014,6 +1014,8 @@ class FinanceController extends BaseController {
         $jk_lists           = M()->table('__JIEKUAN__ as j')->field('j.*,a.*,j.id as jid,a.id as aid')->join('__JIEKUAN_AUDIT__ as a on a.jk_id=j.id','left')->where(array('j.op_id'=>$opid))->order($this->orders('j.id'))->select();
         $cost               = M('op_costacc')->field('id,op_id,title,unitcost,amount,total as ctotal,remark')->where(array('op_id'=>$opid,'status'=>1))->order('id')->select();
         $jiekuan_detail     = M('jiekuan_detail')->where(array('op_id'=>$opid))->select();
+        $departids          = array(2,6,7,12,13,14,16,17);
+        $departments        = M('salary_department')->where(array('id'=>array('in',$departids)))->select();
 
         $costacc            = array();
         foreach ($cost as $k=>$v){
@@ -1056,6 +1058,7 @@ class FinanceController extends BaseController {
             ->find();
         $this->record       = M('op_record')->where(array('op_id'=>$opid,'optype'=>array('in',array(13,14))))->order('id DESC')->select();
         $this->jk_lists     = $jk_lists;
+        $this->departments  = $departments;
         $this->budget       = $budget;
         $this->costacc      = $costacc;
         $this->kind         = C('COST_TYPE');
@@ -1157,11 +1160,8 @@ class FinanceController extends BaseController {
                 if ($res){
                     //如果借款金额>所选借款金额,有预算审核人审批+财务审批;如果小于,则直接由财务审批
                     //该团的预算审批人
-                    $audit_ys    = M()->table('__OP_BUDGET__ as b')
-                        ->field('b.name,l.audit_uid')
-                        ->join('__AUDIT_LOG__ as l on l.req_id = b.id','left')
-                        ->where(array('b.op_id'=>$info['op_id'],'l.dst_status'=>P::AUDIT_STATUS_PASS,'l.req_type'=>P::REQ_TYPE_BUDGET))
-                        ->find();
+                    //$audit_ys    = M()->table('__OP_BUDGET__ as b')->field('b.name,l.audit_uid')->join('__AUDIT_LOG__ as l on l.req_id = b.id','left')->where(array('b.op_id'=>$info['op_id'],'l.dst_status'=>P::AUDIT_STATUS_PASS,'l.req_type'=>P::REQ_TYPE_BUDGET))->find();
+                    $audit_ys       = M('salary_department')->field('jk_audit_user_id,jk_audit_user_name')->where(array('id'=>$info['department_id']))->find();
 
                     $jiekuan_audit          = array();
                     $jiekuan_audit['op_id'] = $info['op_id'];
@@ -1170,8 +1170,8 @@ class FinanceController extends BaseController {
 
                     if ($info['sum'] > $info['yingjiekuan']){
                         //与预算审批人审核
-                        $jiekuan_audit['ys_audit_userid']   = $audit_ys['audit_uid'];
-                        $jiekuan_audit['ys_audit_username'] = M('account')->where(array('id'=>$audit_ys['audit_uid']))->getField('nickname');
+                        $jiekuan_audit['ys_audit_userid']   = $audit_ys['jk_audit_user_id'];
+                        $jiekuan_audit['ys_audit_username'] = $audit_ys['jk_audit_user_name'];
                         $audit_usertype                     = 1;    //预算审核人
 
                         $msg_user                           = $jiekuan_audit['ys_audit_userid'];
@@ -1199,9 +1199,11 @@ class FinanceController extends BaseController {
                     }
 
                     //发送系统消息
+                    $project = M('op')->where(array('op_id'=>$info['op_id']))->getField('project');
+
                     $uid     = cookie('userid');
-                    $title   = '您有来自['.$info['rolename'].'--'.$info['jk_user'].']的借款申请!';
-                    $content = '项目名称：'.$audit_ys['name'].'，团号：'.$info['group_id'].'，借款金额：'.$info['sum'];
+                    $title   = '您有来自['.$info['department'].'--'.$info['jk_user'].']的借款申请!';
+                    $content = '项目名称：'.$project.'，团号：'.$info['group_id'].'，借款金额：'.$info['sum'];
                     $url     = U('Finance/audit_jiekuan',array('id'=>$res,'op_id'=>$info['op_id'],'audit_usertype'=>$audit_usertype));
                     $user    = '['.$msg_user.']';
                     send_msg($uid,$title,$content,$url,$user,'');

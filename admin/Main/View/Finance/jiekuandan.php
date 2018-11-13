@@ -31,7 +31,7 @@
                             <tr>
                                 <td class="td_title" colspan="6">
                                     <div class="form-group col-md-12">
-                                        <h4>科学国际旅行社 <b>借款单</b></h4>
+                                        <h4><b>借款单</b></h4>
                                     </div>
                                 </td>
                             </tr>
@@ -74,7 +74,7 @@
                             </tr>
 
                             <tr>
-                                <td colspan="4" class="td_con td">借款单位：{$jiekuan.rolename}</td>
+                                <td colspan="4" class="td_con td">借款单位：{$jiekuan.department}</td>
                                 <td colspan="2" class="td_con td">借款人签字：<img src="/{$jiekuan.jk_file}" height="50px" alt=""></td>
                             </tr>
 
