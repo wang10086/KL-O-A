@@ -88,9 +88,9 @@
 
                                     <div class="form-group col-md-4">
                                         <label>客户单位：</label>
-                                        <!--
+<!--
                                         <input type="text" name="info[customer]" id="customer_name" value="" placeholder="您可以输入客户单位名称拼音首字母检索" class="form-control" />
-                                        -->
+-->
                                         <select  name="info[customer]" class="form-control" required>
                                             <option value="" selected disabled>请选择客户单位</option>
                                             <foreach name="geclist"  item="v">
@@ -121,20 +121,24 @@
                                     </div>
 
                                     <!--<div class="form-group col-md-12">
-                                        <label>工单接收部门：</label>
-                                        <input type="checkbox" name="exe[]" value="45">&nbsp;市场部 &#12288;
-                                        <input type="checkbox" name="exe[]" value="31">&nbsp;计调部 &#12288;
-                                        <input type="checkbox" name="exe[]" value="15">&nbsp;研发部 &#12288;
-                                        <input type="checkbox" name="exe[]" value="52">&nbsp;资源管理部&#12288;
-                                        <input type="checkbox" name="exe[]" value="93">&nbsp;资源管理部&#12288;
-                                    </div>-->
-
-                                    <div class="form-group col-md-12">
                                         <label>工单接收人：</label>
                                         <input type="text" name="exe_user_name" class="form-control userkeywords">
                                         <input type="hidden" name="exe_user_id" id="exe_user">
+                                    </div>-->
+
+                                    <div class="form-group col-md-12 ml-12" id="is_or_not_worder">
+                                        <h2 class="tcs_need_h2">是否需要下工单：</h2>
+                                        <input type="radio" name="need_worder_or_not" value="0"  <?php if($rad==0){ echo 'checked';} ?>> &#8194;不需要 &#12288;&#12288;&#12288;
+                                        <input type="radio" name="need_worder_or_not" value="1"  <?php if($rad==1){ echo 'checked';} ?>> &#8194;需要
                                     </div>
 
+                                    <div class="form-group col-md-12 ml-12" id="wonder_department" style="margin-top: -30px;">
+                                        <h2 class="tcs_need_h2">工单接收部门：</h2>
+                                        <input type="checkbox" name="exe_user_id[]" value="31"> &nbsp;研发(京区校内-魏春竹) &#12288;
+                                        <input type="checkbox" name="exe_user_id[]" value="174"> &nbsp;资源(京区校内-李亚楠) &#12288;
+                                        <input type="checkbox" name="exe_user_id[]" value="12"> &nbsp;研发(公司大研发-秦总)&#12288;
+                                        <input type="checkbox" name="exe_user_id[]" value="26"> &nbsp;资源(公司资源-李岩)&#12288;
+                                    </div>
                                 </div>
 
                             </div><!-- /.box-body -->
@@ -163,6 +167,7 @@
 
         $(function () {
             $('#dijie_name').hide();
+            $('#wonder_department').hide();
 
             var keywords = <?php echo $userkey; ?>;
             $(".userkeywords").autocomplete(keywords, {
@@ -177,6 +182,19 @@
             }).result(function(event, item) {
                 $('#exe_user').val(item.id);
             });
+
+
+            $('#is_or_not_worder').find('ins').each(function (index,ele) {
+                $(this).click(function () {
+                    var is_worder   = $(this).prev('input[name="need_worder_or_not"]').val();
+                    if (is_worder == 1){    //需要下工单
+                        $('#wonder_department').show();
+                    }else{
+                        $('#wonder_department').hide();
+                        $('input[name="exe_user_id[]"]').parent('div').removeClass('checked');
+                    }
+                })
+            })
 
         })
 

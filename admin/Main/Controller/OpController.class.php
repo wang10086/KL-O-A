@@ -101,7 +101,6 @@ class OpController extends BaseController {
 			$op_member_db   = M('op_member');
 			$op_supplier_db = M('op_supplier');
 
-			
 			$info       = I('info');
             $guide      = I('guide');
             $member     = I('member');
@@ -115,11 +114,11 @@ class OpController extends BaseController {
                 $info['project'] = '【发起团】'.$info['project'];
             }
 
-            //$exe_role_ids = I('exe');
             $exe_user_id    = I('exe_user_id');
-            $exe_user_name  = I('exe_user_name');
+            //$exe_user_name  = I('exe_user_name');
+            //$exe_role_ids = I('exe');
 
-			if(!$info['customer']){
+            if(!$info['customer']){
 				$this->error('客户单位不能为空' . $db->getError());	
 				die();	
 			}
@@ -194,39 +193,42 @@ class OpController extends BaseController {
                     $worder['plan_complete_time']= strtotime(getAfterWorkDay($u_time));
 
                     if($exe_user_id){
-                        $exe_user_id        = $exe_user_id;
-                        $exe_user_name      = $exe_user_name;
-                        $exe_dept_id        = M('account')->where(array('id'=>$exe_user_id))->getField('roleid');
-                        $exe_dept_name      = M('role')->where(array('id'=>$exe_dept_id))->getField('role_name');
-                        $worder['exe_dept_id']      = $exe_dept_id;
-                        $worder['exe_dept_name']    = $exe_dept_name;
-                        $worder['exe_user_id']      = $exe_user_id;
-                        $worder['exe_user_name']    = $exe_user_name;
-                        $res = M('worder')->add($worder);
-                        if($res){
-                            //保存操作记录
-                            $record = array();
-                            $record['worder_id'] = $res;
-                            $record['type']     = 0;
-                            $record['explain']  = '立项/创建工单';
-                            worder_record($record);
-                            //发送系统消息
-                            $uid     = cookie('userid');
-                            $title   = '您有来自['.$worder['ini_dept_name'].'--'.$worder['ini_user_name'].']的工单待执行!';
-                            $content = $worder['worder_content'];
-                            $url     = U('worder/worder_info',array('id'=>$res));
-                            $user    = '['.$worder['exe_user_id'].']';
-                            send_msg($uid,$title,$content,$url,$user,'');
+                        foreach ($exe_user_id as $k=>$v){
+                            $exe_user_info      = M('account')->field('nickname,roleid')->where(array('id'=>$v))->find();
+                            $exe_user_id        = $v;
+                            $exe_user_name      = $exe_user_info['nickname'];
+                            $exe_dept_id        = $exe_user_info['roleid'];
+                            $exe_dept_name      = M('role')->where(array('id'=>$exe_dept_id))->getField('role_name');
+                            $worder['exe_dept_id']      = $exe_dept_id;
+                            $worder['exe_dept_name']    = $exe_dept_name;
+                            $worder['exe_user_id']      = $exe_user_id;
+                            $worder['exe_user_name']    = $exe_user_name;
+                            $res = M('worder')->add($worder);
+                            if($res){
+                                //保存操作记录
+                                $record = array();
+                                $record['worder_id'] = $res;
+                                $record['type']     = 0;
+                                $record['explain']  = '立项/创建工单';
+                                worder_record($record);
+                                //发送系统消息
+                                $uid     = cookie('userid');
+                                $title   = '您有来自['.$worder['ini_dept_name'].'--'.$worder['ini_user_name'].']的工单待执行!';
+                                $content = '该工单为项目工单，现已立项通过，前期需要研发、资源等相关部门的协助。项目名称：'.$worder['worder_title'].'；备注信息：'.$worder['worder_content'];
+                                $url     = U('worder/worder_info',array('id'=>$res));
+                                $user    = '['.$worder['exe_user_id'].']';
+                                send_msg($uid,$title,$content,$url,$user,'');
+                            }
                         }
                     }
 
 					$this->success('保存成功！',U('Op/plans_follow',array('opid'=>$opid)));
 				}else{
-					$this->error('保存失败' . $db->getError());	
+					$this->error('保存失败' . $db->getError());
 				}
 				
 			}else{
-				$this->error('保存失败' . $db->getError());	
+				$this->error('保存失败' . $db->getError());
 			}
 			
 		}else{
