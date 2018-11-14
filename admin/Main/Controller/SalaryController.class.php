@@ -118,25 +118,25 @@ class SalaryController extends BaseController {
                         if($support['starttime']>strtotime($mont1) && $support['endtime']<strtotime($mont2)){
                             $mont3              = date('Ymd',$support['starttime']);
                             $mont4              = date('Ymd',$support['endtime']);
+                            $sum1               += monthly_Finance($user['nickname'],$mont3,$mont4);//季度完成
                         }elseif($support['starttime']>strtotime($mont1) && $support['endtime']>strtotime($mont2) && $support['starttime']<strtotime($mont2)){
                             //扶植起日期 > 季度起日期   扶植止日期 > 季度止日期 扶植起日期<季度止日期
                             $mont3              = date('Ymd',$support['starttime']);
                             $mont4              = $mont2;
+                            $sum1               += monthly_Finance($user['nickname'],$mont3,$mont4);//季度完成
                         }elseif(($support['starttime']<strtotime($mont1) && $support['endtime']>strtotime($mont2))){
                             //扶植起日期 < 季度起日期   扶植止日期 > 季度止日期
                             $mont3              = $mont1;
                             $mont4              = $mont2;
+                            $sum1               += monthly_Finance($user['nickname'],$mont3,$mont4);//季度完成
                         }elseif(($support['starttime']<strtotime($mont1) && $support['endtime']<strtotime($mont2))){
                             //扶植起日期 > 季度起日期   扶植止日期 < 季度止日期
                             $mont3              = $mont1;
                             $mont4              = $support['endtime'];
-                        }elseif(($support['starttime']<strtotime($mont2) && $support['endtime']<strtotime($mont1)) || ($support['starttime']<strtotime($mont2) && $support['endtime']>strtotime($mont1)) || ($support['starttime']>strtotime($mont2) && $support['endtime']>strtotime($mont1)) || ($support['starttime']>strtotime($mont2) && $support['endtime']<strtotime($mont1))){
-                            //1、扶植起日期<季度止日期  扶植止日期<季度起日期 2、扶植起日期<季度止日期 扶植止日期<季度起日期 3、扶植起日期>季度止日期 扶植止日期>季度起日期 4、扶植起日期>季度止日期 扶植止日期<季度起日期
+                        }else{
                             $mont3              = 0;
                             $mont4              = 0;
                         }
-                        $sum_user1              = monthly_Finance($user['nickname'],$mont3,$mont4);//季度完成
-                        $sum1                   += $sum_user1;
                     }
                     $sum_user                   = monthly_Finance($user['nickname'],$mont1,$mont2);//季度完成
                     $count                      += $lists['target'];//季度目标

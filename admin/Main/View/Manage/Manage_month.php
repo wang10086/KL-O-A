@@ -1,12 +1,12 @@
 <include file="Index:header2" />
 
 <aside class="right-side">
-    <!-- Content Header (Page header) -->
+
     <section class="content-header">
-        <h1>{$title}</h1>
+        <h1><?php echo date('Y',time());?>年月度财务报表</h1>
         <ol class="breadcrumb">
             <li><a href="{:U('Index/index')}"><i class="fa fa-home"></i> 首页</a></li>
-            <li><a href="{:U('Rbac/kpi_users')}"><i class="fa fa-gift"></i> KPI</a></li>
+            <li><a href="{:U('Manage/Manage_month')}"><i class="fa fa-gift"></i> 月度财务报表</a></li>
         </ol>
     </section>
 
@@ -16,103 +16,135 @@
         <div class="row">
             <!-- right column -->
             <div class="col-md-12">
-
-
                 <div class="btn-group" id="catfont" style="padding-bottom:20px;">
-                    <?php if($prveyear>2019){ ?>
-                        <a href="{:U('Kpi/postkpi',array('year'=>$prveyear,'month'=>'01','post'=>$post))}" class="btn btn-default" style="padding:8px 18px;">上一年</a>
-                    <?php } ?>
+
+                    <a href="{:U('Manage/Manage_month',array('year'=>$prveyear,'month'=>'01','post'=>$post))}" class="btn btn-default" style="padding:8px 18px;">上一年</a>
                     <?php
                         for($i=1;$i<13;$i++){
-                            $par = array();
-                            $par['year']  = $year;
-                            $par['month'] = str_pad($i,2,"0",STR_PAD_LEFT);
-                            $par['post']  = $post;
-                            if($month==$i){
-                                echo '<a href="'.U('Kpi/postkpi',$par).'" class="btn btn-info" style="padding:8px 18px;">'.$i.'月</a>';
-                            }else{
-                                echo '<a href="'.U('Kpi/postkpi',$par).'" class="btn btn-default" style="padding:8px 18px;">'.$i.'月</a>';
-                            }
+                         echo '<a href="'.U('Manage/Manage_month',array('month'=>$i)).'" class="btn btn-default" style="padding:8px 18px;">'.$i.'月</a>';
                         }
                     ?>
-                    <?php if($year<date('Y')){ ?>
-                        <a href="{:U('Kpi/postkpi',array('year'=>$nextyear,'month'=>'01','post'=>$post))}" class="btn btn-default" style="padding:8px 18px;">下一年</a>
-                    <?php } ?>
+                    <a href="{:U('Manage/Manage_month',array('year'=>$nextyear,'month'=>'01','post'=>$post))}" class="btn btn-default" style="padding:8px 18px;">下一年</a>
                 </div>
-
 
                 <div class="box box-warning">
                     <div class="box-header">
-                        <h3 class="box-title">考核指标</h3>
-                        <?php if($upost){ ?>
-                            <div class="box-tools pull-right">
-                                <select class="form-control"  onchange="window.location=this.value;">
-
-                                    <foreach name="upost" key="k" item="v">
-                                        <?php
-                                            $par = array();
-                                            $par['year']  = $year;
-                                            $par['month'] = $month;
-                                            $par['post']  = $k;
-                                        ?>
-                                        <option value="{:U('Kpi/postkpi',$par)}" <?php if($post==$k){ echo 'selected';} ?> >{$v}</option>
-                                    </foreach>
-                                </select>
-                            </div>
-                        <?php } ?>
+                        <h3 class="box-title">月度财务报表</h3>
                     </div><!-- /.box-header -->
                     <div class="box-body">
 
                         <table class="table table-bordered dataTable fontmini" id="tablecenter">
-                            <tr role="row" class="orders" >
-                                <th <?php if($check){ echo 'rowspan="2"';} ?> width="40">序号</th>
-                                <th <?php if($check){ echo 'rowspan="2"';} ?> style="text-align:left;">被考评人</th>
-                                <?php
-                                    if($check){
-                                        foreach($postlist as $k=>$v){
-                                            $kp = explode('-',$v);
-                                            echo '<th colspan="2">'.$kp[0].'</th>';
-                                        }
-                                    }else{
-                                        echo '<th>KPI指标</th>';
-                                    }
-                                ?>
-                                <th <?php if($check){ echo 'rowspan="2"';} ?> width="80">总分</th>
+                            <tr role="row" class="orders" style="text-align:center;" >
+                                <th style="width:10em;"><b>项目</b></th>
+                                <th style="width:10em;"><b>公司</b></th>
+                                <th style="width:10em;">
+                                    <p><b>京区业务中心</b></p>
+                                    <p style="border-top:1px solid #ddd;margin:1em -0.7em 0em -0.7em;padding:0em 3em 1em 0em;">
+                                        <a style="border-right:1px solid #ddd;padding:0em 3em 1em 0em;margin-right:3em">数额</a>
+                                        <a style="text-align:center;text-align:center;margin:0em 0em 0em 0em;">占比</a>
+                                    </p>
+                                </th>
+                                <th style="width:10em;"><b>京外业务中心</b></th>
+                                <th style="width:10em;"><b>南京项目部</b></th>
+                                <th style="width:10em;"><b>武汉项目部</b></th>
+                                <th style="width:10em;"><b>沈阳项目部</b></th>
+                                <th style="width:10em;"><b>长春项目部</b></th>
+                                <th style="width:10em;"><b>市场部</b></th>
                             </tr>
-                            <?php if($check){  ?>
-                                <tr role="row" class="orders" >
-                                    <?php
-                                        foreach($postlist as $k=>$v){
-                                            echo '<th >得分</th><th>权重</th>';
-                                        }
-                                    ?>
-                                </tr>
-                            <?php } ?>
-                            <foreach name="kpils" key="key" item="row">
-                                <tr>
-                                    <td align="center"><?php echo $key+1; ?></td>
-                                    <td style="text-align:left;"><a href="{:U('Kpi/kpiinfo',array('year'=>$year,'month'=>$month,'uid'=>$row['id']))}">{$row.nickname}</a></td>
-                                    <?php
-                                        $zf = 0;
 
-                                        if($kpils[$key]['kpi']){
-                                            foreach($kpils[$key]['kpi'] as $k=>$v){
-                                                echo '<th>'.$v['score'].'</th><th>'.$v['weight'].'</th>';
-                                                $zf += $v['score'];
-                                            }
-                                        }else{
-                                            echo '<th colspan="'.(count($postlist)*2).'" style="color:#999999;">暂未获取KPI信息</th>';
-                                        }
-                                    ?>
-                                    <td align="center"><?php echo $zf; ?></td>
-                                </tr>
-                            </foreach>
-                        </table>
+                            <tr role="row" class="orders" style="text-align:center;">
+                                <td>员工人数</td>
+                                <td>1</td>
+                                <td>1</td>
+                                <td>{$f['file']['id']}</td>
+                                <td>1</td>
+                                <td>{$f['file']['id']}</td>
+                                <td>{$f['file']['account_name']}</td>
+                                <td>{$f['file']['id']}</td>
+                                <td>{$f['file']['account_name']}</td>
+                            </tr>
+                            <tr role="row" class="orders" style="text-align:center;">
+                                <td>营业收入</td>
+                                <td>1</td>
+                                <td>1</td>
+                                <td>{$f['file']['id']}</td>
+                                <td>1</td>
+                                <td>{$f['file']['id']}</td>
+                                <td>{$f['file']['account_name']}</td>
+                                <td>{$f['file']['id']}</td>
+                                <td>{$f['file']['account_name']}</td>
+                            </tr>
+                            <tr role="row" class="orders" style="text-align:center;">
+                                <td>营业毛利</td>
+                                <td>1</td>
+                                <td>1</td>
+                                <td>{$f['file']['id']}</td>
+                                <td>1</td>
+                                <td>{$f['file']['id']}</td>
+                                <td>{$f['file']['account_name']}</td>
+                                <td>{$f['file']['id']}</td>
+                                <td>{$f['file']['account_name']}</td>
+                            </tr>
+                            <tr role="row" class="orders" style="text-align:center;">
+                                <td>营业利率(%)</td>
+                                <td>1</td>
+                                <td>1</td>
+                                <td>{$f['file']['id']}</td>
+                                <td>1</td>
+                                <td>{$f['file']['id']}</td>
+                                <td>{$f['file']['account_name']}</td>
+                                <td>{$f['file']['id']}</td>
+                                <td>{$f['file']['account_name']}</td>
+                            </tr>
+                            <tr role="row" class="orders" style="text-align:center;">
+                                <td>人力资源成本</td>
+                                <td>1</td>
+                                <td>1</td>
+                                <td>{$f['file']['id']}</td>
+                                <td>1</td>
+                                <td>{$f['file']['id']}</td>
+                                <td>{$f['file']['account_name']}</td>
+                                <td>{$f['file']['id']}</td>
+                                <td>{$f['file']['account_name']}</td>
+                            </tr>
+                            <tr role="row" class="orders" style="text-align:center;">
+                                <td>其他费用</td>
+                                <td>1</td>
+                                <td>1</td>
+                                <td>{$f['file']['id']}</td>
+                                <td>1</td>
+                                <td>{$f['file']['id']}</td>
+                                <td>{$f['file']['account_name']}</td>
+                                <td>{$f['file']['id']}</td>
+                                <td>{$f['file']['account_name']}</td>
+                            </tr>
+                            <tr role="row" class="orders" style="text-align:center;">
+                                <td>利润总额</td>
+                                <td>1</td>
+                                <td>1</td>
+                                <td>{$f['file']['id']}</td>
+                                <td>1</td>
+                                <td>{$f['file']['id']}</td>
+                                <td>{$f['file']['account_name']}</td>
+                                <td>{$f['file']['id']}</td>
+                                <td>{$f['file']['account_name']}</td>
+                            </tr>
+                            <tr role="row" class="orders" style="text-align:center;">
+                                <td>人事费用率</td>
+                                <td>1</td>
+                                <td>1</td>
+                                <td>{$f['file']['id']}</td>
+                                <td>1</td>
+                                <td>{$f['file']['id']}</td>
+                                <td>{$f['file']['account_name']}</td>
+                                <td>{$f['file']['id']}</td>
+                                <td>{$f['file']['account_name']}</td>
+                            </tr>
 
+                        </table><br><br>
 
                     </div><!-- /.box-body -->
                 </div><!-- /.box -->
-
 
             </div><!--/.col (right) -->
 
