@@ -1316,7 +1316,7 @@ class AjaxController extends Controller {
         if ($count ==0){
             $data['msg']= '真的要删除吗？';
         }else{
-            $data['msg']= "该团有过借款信息<br/>你确定要删除该团吗?";
+            $data['msg']= "<span class='red'>该团有过借款信息</span><br/>你确定要删除该团吗?";
         }
         $data['url']    = U('Op/delpro',array('id'=>$id));
         $this->ajaxReturn($data);
