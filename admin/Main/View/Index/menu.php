@@ -441,7 +441,7 @@
                         </li>
                         </if>
 
-                        <if condition="rolemenu(array('Finance/costacclist','Finance/budget','Finance/settlementlist','Finance/payment','Finance/costlabour'))">
+                        <if condition="rolemenu(array('Finance/costacclist','Finance/budget','Finance/settlementlist','Finance/payment','Finance/costlabour','Finance/sign'))">
                         <li class="treeview {:ison(CONTROLLER_NAME, 'Finance')}">
                             <a href="javascript:;">
                                 <i class="fa  fa-yen"></i>
@@ -450,7 +450,7 @@
                             </a>
                             <ul class="treeview-menu">
 
-                                <li class="treeview {:on('Finance/jiekuan')} {:on('Finance/jiekuan_lists')} {:on('Finance/jiekuandan_info')} {:on('Finance/sign')}">
+                                <li class="treeview {:on('Finance/jiekuan')} {:on('Finance/jk_detail')}">
                                     <if condition="rolemenu(array('Finance/jiekuan'))">
                                         <a href=""><i class="fa  fa-check-circle"></i> 财务审批</a>
                                     </if>
@@ -458,12 +458,16 @@
                                         <if condition="rolemenu(array('Finance/jiekuan'))">
                                             <li class="{:on('Finance/jiekuan')}"><a href="{:U('Finance/jiekuan')}"><i class="fa fa-angle-right"></i> 团内支出借款</a></li>
                                         </if>
+                                    </ul>
+                                </li>
+
+                                <li class="treeview {:on('Finance/jiekuan_lists')} {:on('Finance/jiekuandan_info')}">
+                                    <if condition="rolemenu(array('Finance/jiekuan'))">
+                                        <a href=""><i class="fa calculator"></i> 单据管理</a>
+                                    </if>
+                                    <ul class="treeview-menu">
                                         <if condition="rolemenu(array('Finance/jiekuan_lists'))">
                                             <li class="{:on('Finance/jiekuan_lists')}"><a href="{:U('Finance/jiekuan_lists')}"><i class="fa fa-angle-right"></i> 借款单管理</a></li>
-                                        </if>
-                                        <if condition="rolemenu(array('Finance/sign'))">
-                                            <li class="{:on('Finance/sign')}"><a href="{:U('Finance/sign')}"><i class="fa fa-angle-right"></i> 个人签字管理</a></li>
-                                            <!--<li><a href="javascript:;" onclick="art_show_msg('加班开发中,稍后呈现......',5)"><i class="fa fa-angle-right"></i>团内支出借款</a></li>-->
                                         </if>
                                     </ul>
                                 </li>
@@ -487,6 +491,10 @@
                                 <if condition="rolemenu(array('Finance/costlabour'))">
                                     <li><a href="{:U('Finance/costlabour')}"><i class="fa fa-angle-right"></i> 劳务费用</a></li>
                                     <!--<li><a href="javascript:;" onClick="art_show_msg('加班开发中，稍后呈现...',5)"><i class="fa fa-angle-right"></i> 劳务费用</a></li>-->
+                                </if>
+
+                                <if condition="rolemenu(array('Finance/sign'))">
+                                    <li class="{:on('Finance/sign')}"><a href="{:U('Finance/sign')}"><i class="fa fa-angle-right"></i> 签字管理</a></li>
                                 </if>
 
                             </ul>
