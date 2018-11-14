@@ -459,18 +459,6 @@
                                         </if>
                                     </ul>
                                 </li>
-
-                                <li class="treeview {:on('Finance/jiekuan_lists')} {:on('Finance/jiekuandan_info')}">
-                                    <if condition="rolemenu(array('Finance/jiekuan'))">
-                                        <a href=""><i class="fa fa-file-text-o"></i> 单据管理</a>
-                                    </if>
-                                    <ul class="treeview-menu">
-                                        <if condition="rolemenu(array('Finance/jiekuan_lists'))">
-                                            <li class="{:on('Finance/jiekuan_lists')}"><a href="{:U('Finance/jiekuan_lists')}"><i class="fa fa-angle-right"></i> 借款单管理</a></li>
-                                        </if>
-                                    </ul>
-                                </li>
-
                                 <li class="treeview {:on('Manage/Manage_month')}">
                                     <if condition="rolemenu(array('Manage/Manage_month'))">
                                         <a href=""><i class="fa fa-angle-right"></i> 经营报表</a>
@@ -488,6 +476,18 @@
                                         </if>
                                     </ul>
                                 </li>
+                                <li class="treeview {:on('Finance/jiekuan_lists')} {:on('Finance/jiekuandan_info')}">
+                                    <if condition="rolemenu(array('Finance/jiekuan'))">
+                                        <a href=""><i class="fa fa-file-text-o"></i> 单据管理</a>
+                                    </if>
+                                    <ul class="treeview-menu">
+                                        <if condition="rolemenu(array('Finance/jiekuan_lists'))">
+                                            <li class="{:on('Finance/jiekuan_lists')}"><a href="{:U('Finance/jiekuan_lists')}"><i class="fa fa-angle-right"></i> 借款单管理</a></li>
+                                        </if>
+                                    </ul>
+                                </li>
+
+
 
                                 <li class="treeview {:on('Finance/costacclist')} {:on('Finance/budget')} {:on('Finance/settlementlist')} {:on('Finance/payment')}">
                                     <if condition="rolemenu(array('Finance/jiekuan'))">
