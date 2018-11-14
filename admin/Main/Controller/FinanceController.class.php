@@ -1408,4 +1408,17 @@ class FinanceController extends BaseController {
         }
     }
 
+    //@@@NODE-3###del_jkd###删除借款单###
+    public function del_jkd(){
+        $id                 = I('id');
+        if ($id){
+            M('jiekuan')->where(array('id'=>$id))->delete();
+            M('jiekuan_audit')->where(array('jk_id'=>$id))->delete();
+            M('jiekuan_detail')->where(array('jk_id'=>$id))->delete();
+            $this->success('删除成功');
+        }else{
+            $this->error('删除数据失败');
+        }
+    }
+
 }

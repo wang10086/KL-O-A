@@ -86,7 +86,6 @@
                                         <if condition="rolemenu(array('Op/delpro'))">
                                         <td class="taskOptions">
                                         <!--<button onClick="javascript:ConfirmDel('{:U('Op/delpro',array('id'=>$row['id']))}')" title="删除" class="btn btn-warning btn-smsm"><i class="fa fa-times"></i></button>-->
-                                        <!--<button onClick="javascript:ConfirmDel('{:U('Ajax/has_jiekuan',array('opid'=>$row['op_id']))}')" title="删除" class="btn btn-warning btn-smsm"><i class="fa fa-times"></i></button>-->
                                         <button onClick="javascript:has_jiekuan('{$row.op_id}','{$row.id}')" title="删除" class="btn btn-warning btn-smsm"><i class="fa fa-times"></i></button>
                                         </td>
                                         </if>

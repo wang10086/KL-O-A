@@ -36,6 +36,9 @@
                                         <if condition="rolemenu(array('Finance/jiekuandan_info'))">
                                             <th width="40" class="taskOptions">详情</th>
                                         </if>
+                                        <if condition="rolemenu(array('Finance/del_jkd'))">
+                                            <th width="40" class="taskOptions">删除</th>
+                                        </if>
 
                                     </tr>
                                     <foreach name="lists" item="row"> 
@@ -47,9 +50,14 @@
                                         <td>{$row.sum}</td>
                                         <td>{$row.zhuangtai}</td>
                                         <if condition="rolemenu(array('Finance/jiekuandan_info'))">
-                                        <td class="taskOptions">
-                                        <a href="{:U('Finance/jiekuandan_info',array('jkid'=>$row['id']))}" title="详情" class="btn btn-info btn-smsm"><i class="fa fa-bars"></i></a>
-                                        </td>
+                                            <td class="taskOptions">
+                                                <a href="{:U('Finance/jiekuandan_info',array('jkid'=>$row['id']))}" title="详情" class="btn btn-info btn-smsm"><i class="fa fa-bars"></i></a>
+                                            </td>
+                                        </if>
+                                        <if condition="rolemenu(array('Finance/del_jkd'))">
+                                            <td class="taskOptions">
+                                                <button onClick="javascript:ConfirmDel('{:U('Finance/del_jkd',array('id'=>$row['id']))}')" title="删除" class="btn btn-warning btn-smsm"><i class="fa fa-times"></i></button>
+                                            </td>
                                         </if>
                                     </tr>
                                     </foreach>					
