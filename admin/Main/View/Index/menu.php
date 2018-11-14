@@ -462,7 +462,7 @@
 
                                 <li class="treeview {:on('Finance/jiekuan_lists')} {:on('Finance/jiekuandan_info')}">
                                     <if condition="rolemenu(array('Finance/jiekuan'))">
-                                        <a href=""><i class="fa calculator"></i> 单据管理</a>
+                                        <a href=""><i class="fa fa-file-text-o"></i> 单据管理</a>
                                     </if>
                                     <ul class="treeview-menu">
                                         <if condition="rolemenu(array('Finance/jiekuan_lists'))">
@@ -488,21 +488,29 @@
                                         </if>
                                     </ul>
                                 </li>
-                            	<if condition="rolemenu(array('Finance/costacclist'))">
-                                    <li><a href="{:U('Finance/costacclist')}"><i class="fa fa-angle-right"></i> 成本核算</a></li>
-                                </if>
 
-                                <if condition="rolemenu(array('Finance/budget'))">
-                                    <li><a href="{:U('Finance/budget')}"><i class="fa fa-angle-right"></i> 项目预算</a></li>
-                                </if>
+                                <li class="treeview {:on('Finance/costacclist')} {:on('Finance/budget')} {:on('Finance/settlementlist')} {:on('Finance/payment')}">
+                                    <if condition="rolemenu(array('Finance/jiekuan'))">
+                                        <a href=""><i class="fa fa-bullseye"></i> 项目费用</a>
+                                    </if>
+                                    <ul class="treeview-menu">
+                                        <if condition="rolemenu(array('Finance/costacclist'))">
+                                            <li><a href="{:U('Finance/costacclist')}"><i class="fa fa-angle-right"></i> 成本核算</a></li>
+                                        </if>
 
-                                <if condition="rolemenu(array('Finance/settlementlist'))">
-                                    <li><a href="{:U('Finance/settlementlist')}"><i class="fa fa-angle-right"></i> 项目结算</a></li>
-                                </if>
+                                        <if condition="rolemenu(array('Finance/budget'))">
+                                            <li><a href="{:U('Finance/budget')}"><i class="fa fa-angle-right"></i> 项目预算</a></li>
+                                        </if>
 
-                                <if condition="rolemenu(array('Finance/payment'))">
-                                    <li><a href="{:U('Finance/payment')}"><i class="fa fa-angle-right"></i> 回款管理</a></li>
-                                </if>
+                                        <if condition="rolemenu(array('Finance/settlementlist'))">
+                                            <li><a href="{:U('Finance/settlementlist')}"><i class="fa fa-angle-right"></i> 项目结算</a></li>
+                                        </if>
+
+                                        <if condition="rolemenu(array('Finance/payment'))">
+                                            <li><a href="{:U('Finance/payment')}"><i class="fa fa-angle-right"></i> 回款管理</a></li>
+                                        </if>
+                                    </ul>
+                                </li>
 
                                 <if condition="rolemenu(array('Finance/costlabour'))">
                                     <li><a href="{:U('Finance/costlabour')}"><i class="fa fa-angle-right"></i> 劳务费用</a></li>
