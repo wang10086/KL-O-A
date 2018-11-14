@@ -1169,7 +1169,7 @@ class SalaryController extends BaseController {
             $count                           = M('salary_support')->where('status=1')->count();
             $page                            = new Page($count,12);
             $pages                           = $page->show();
-            $info                            = M('salary_support')->where('status=1')->limit("$page->firstRow","$page->listRows")->order('createtime desc')->select();//分页显示
+            $info                            = M('salary_support')->where('status=1')->limit("$page->firstRow","$page->listRows")->order('account_id ASC')->select();//分页显示
             foreach($info as $key => $val){
                 $where['id']                 = $val['account_id'];
                 $user                        = userinfo($where);
