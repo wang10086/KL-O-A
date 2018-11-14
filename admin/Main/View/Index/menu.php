@@ -468,6 +468,23 @@
                                     </ul>
                                 </li>
 
+                                <li class="treeview {:on('Manage/Manage_month')}">
+                                    <if condition="rolemenu(array('Manage/Manage_month'))">
+                                        <a href=""><i class="fa  fa-check-circle"></i> 经营报表</a>
+                                    </if>
+                                    <ul class="treeview-menu">
+                                        <if condition="rolemenu(array('Manage/Manage_month'))">
+                                            <li class="{:on('Manage/Manage_month')}"><a href="{:U('Manage/Manage_month')}"><i class="fa fa-angle-right"></i> 月度经营报表</a></li>
+                                        </if>
+                                        <if condition="rolemenu(array('Manage/Manage_quarter'))">
+                                            <li class="{:on('Manage/Manage_quarter')}"><a href="{:U('Manage/Manage_quarter')}"><i class="fa fa-angle-right"></i> 借款单管理</a></li>
+                                        </if>
+                                        <if condition="rolemenu(array('Manage/Manage_year'))">
+                                            <li class="{:on('Manage/Manage_year')}"><a href="{:U('Manage/Manage_year')}"><i class="fa fa-angle-right"></i> 个人签字管理</a></li>
+                                            <!--<li><a href="javascript:;" onclick="art_show_msg('加班开发中,稍后呈现......',5)"><i class="fa fa-angle-right"></i>团内支出借款</a></li>-->
+                                        </if>
+                                    </ul>
+                                </li>
                             	<if condition="rolemenu(array('Finance/costacclist'))">
                                     <li><a href="{:U('Finance/costacclist')}"><i class="fa fa-angle-right"></i> 成本核算</a></li>
                                 </if>
