@@ -143,13 +143,18 @@
                                     <input type="hidden" name="referer" value="<?php echo $_SERVER['HTTP_REFERER']; ?>" />
                                     <div class="content" >
                                         <div style="width:100%; float:left;">
-                                            <div class="form-group col-md-12">
+                                            <div class="form-group col-md-6">
                                                 <label>回款计划：</label>
-                                                <select class="form-control" name="info[payid]">
+                                                <select class="form-control" name="info[payid]" required>
                                                     <foreach name="huikuanlist" key="k" item="v">
                                                         <option value="{$v.id}"><?php if($v['contract_id']){ echo $v['contract_id'].'  / '; } ?>第{$v.no}笔 / {$v.amount}元 / {$v.remark}</option>
                                                     </foreach>
                                                 </select>
+                                            </div>
+
+                                            <div class="form-group col-md-6">
+                                                <label>付款方：</label>
+                                                <input type="text" name="info[payer]" class="form-control" value="" required />
                                             </div>
                                             
                                             <div class="form-group col-md-4">
@@ -159,7 +164,7 @@
                                             
                                             <div class="form-group col-md-4">
                                                 <label>收款方式：</label>
-                                                <select class="form-control" name="info[type]">
+                                                <select class="form-control" name="info[type]" required>
                                                     <option value="">选择</option>
                                                     <option value="转账">转账</option>
                                                     <option value="支票">支票</option>
@@ -211,6 +216,7 @@
                                                     <th width="120">回款方式</th>
                                                     <th width="180">申请时间</th>
                                                     <th>回款备注</th>
+                                                    <th width="">付款方</th>
                                                     <th width="120">审批状态</th>
                                                     <th width="120">审批者</th>
                                                     <th width="">审批说明</th>
@@ -223,7 +229,7 @@
                                                         <td>{$v.type}</td>
                                                         <td>{$v.create_time|date='Y-m-d H:i:s',###}</td>
                                                         <td>{$v.remark}</td>
-                                                        
+                                                        <td>{$v.payer}</td>
                                                         <td>{$v.showstatus}</td>
                                                         <td>{$v.show_user}</td>
                                                         <td>{$v.show_reason}</td>

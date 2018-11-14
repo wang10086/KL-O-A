@@ -809,6 +809,7 @@ class FinanceController extends BaseController {
 		//保存回款
 		if(!$info['huikuan'])	$this->error('本次回款金额不能为空');
 		if(!$info['type'])		$this->error('请选择回款类型');
+        if (!$info['payer'])    $this->error('付款方不能为空');
 		$info['userid']			= cookie('userid');
 		$info['create_time']		= time();
 		$info['huikuan_time']	= strtotime($info['huikuan_time']);
