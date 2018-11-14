@@ -461,17 +461,17 @@
                                 </li>
                                 <li class="treeview {:on('Manage/Manage_month')}">
                                     <if condition="rolemenu(array('Manage/Manage_month'))">
-                                        <a href=""><i class="fa fa-angle-right"></i> 经营报表</a>
+                                        <a href=""><i class="fa fa-angle-right"></i> 经营管理</a>
                                     </if>
                                     <ul class="treeview-menu">
                                         <if condition="rolemenu(array('Manage/Manage_month'))">
-                                            <li class="{:on('Manage/Manage_month')}"><a href="{:U('Manage/Manage_month')}"><i class="fa fa-angle-right"></i> 月度经营报表</a></li>
+                                            <li class="{:on('Manage/Manage_month')}"><a href="{:U('Manage/Manage_month')}"><i class="fa fa-angle-right"></i> 月度经营</a></li>
                                         </if>
                                         <if condition="rolemenu(array('Manage/Manage_quarter'))">
-                                            <li class="{:on('Manage/Manage_quarter')}"><a href="{:U('Manage/Manage_quarter')}"><i class="fa fa-angle-right"></i> 季度经营报表</a></li>
+                                            <li class="{:on('Manage/Manage_quarter')}"><a href="{:U('Manage/Manage_quarter')}"><i class="fa fa-angle-right"></i> 季度经营</a></li>
                                         </if>
                                         <if condition="rolemenu(array('Manage/Manage_year'))">
-                                            <li class="{:on('Manage/Manage_year')}"><a href="{:U('Manage/Manage_year')}"><i class="fa fa-angle-right"></i> 年度经营报表</a></li>
+                                            <li class="{:on('Manage/Manage_year')}"><a href="{:U('Manage/Manage_year')}"><i class="fa fa-angle-right"></i> 年度经营</a></li>
                                             <!--<li><a href="javascript:;" onclick="art_show_msg('加班开发中,稍后呈现......',5)"><i class="fa fa-angle-right"></i>团内支出借款</a></li>-->
                                         </if>
                                     </ul>
