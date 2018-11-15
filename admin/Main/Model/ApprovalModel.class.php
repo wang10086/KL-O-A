@@ -10,27 +10,36 @@
          * $table 上传文件表名 $user_id 审批人
          * $style 状态 1 approval_flie_update表添加 默认 approval_flie 表
          */
-        public function approval_upload($table,$user_id,$style,$approve_id){
-            if($style==1){
+        public function approval_upload($table,$user_id,$style,$approve_id,$id){
+            if($style==1){//修改文件信息
                 $table                                  = 'approval_flie_update';
                 $add_approval['update_time']            = time();
                 $userid                                 = $user_id;
                 $add_approval['file_id']                = $user_id;
                 $approval_r                             = M('approval_flie')->where('id='.$userid)->find();
                 if($approval_r){
-                    if($approval_r['account_id'] == $_SESSION['userid']){
+                    if($approval_r['account_id']!==$_SESSION['userid']){
                         return 3;die;
                     }
                 }
             }else{
-                $userid                                 = '';
-                foreach($user_id as $key =>$val){
-                    $userid                             .= $val.',';
+                if($style!==2){//不是普通用户上传
+                    $userid                             = '';
+                    foreach($user_id as $key =>$val){
+                        $userid                         .= $val.',';
+                    }
+                    $userid                             = substr($userid,0,-1);
+                    $add_approval['file_account_id']    = $userid;
+                    $add_approval['file_leader_id']     = $approve_id;
+                    $add_approval['file_leader_name']   = username($approve_id);
+                    if($style==3){//给普通用户添加审批人
+                        $update                         = M($table)->where('id='.$id)->save($add_approval);
+                        if($update){
+                            return 1;die;
+                        }
+                        return 0;die;
+                    }
                 }
-                $userid                                 = substr($userid,0,-1);
-                $add_approval['file_account_id']        = $userid;
-                $add_approval['file_leader_id']         = $approve_id;
-                $add_approval['file_leader_name']       = username($approve_id);
             }
             $upload                                     = new \Think\Upload();// 实例化上传类
             $upload->maxSize                            = 31457280000 ;// 设置附件上传大小

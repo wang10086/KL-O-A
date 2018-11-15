@@ -53,7 +53,7 @@
                                             <input type="hidden" name="style" value="1">
                                         </a>
                                         <button type="submit" style="float:left;width:6em;height:2.4em;background-color:#00acd6;border-radius:6px;font-size:1.2em;color:#ffffff;margin-left:1em;margin-top:-0.1em;line-height:0em;">保 存</button>
-                                        </form>
+                                    </form>
                                 </div>
                             </div><!-- /.box-header -->
                             <foreach name="approval_file" item="f">

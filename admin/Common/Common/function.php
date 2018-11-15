@@ -3825,6 +3825,21 @@ function user_table($where){//查询用户
             }
         }
 
+    /**
+     * session_userid 是否是特殊人员
+     *  用户id
+     */
+    function session_userid(){
+        $userid = (int)$_SESSION['userid'];
+        if($userid==1 || $userid==2 || $userid==11 || $userid==12 ||$userid==13 || $userid==32 || $userid==38){
+            $type = 1; // 特殊人员识别
+        }else{
+            $type = 2; //普通人员只显示上传
+        }
+        return $type;
+    }
+
+
 //获取用户信息(用户名+角色)
 function get_userkey(){
     //整理关键字

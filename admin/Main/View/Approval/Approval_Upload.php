@@ -45,6 +45,12 @@
                 </div><!-- /.box-header -->
                 <div class="content ">
                     <form method="post" action="{:U('Approval/Approval_file')}" enctype="multipart/form-data">
+                    <?php if($type==1 || $type==3){?>
+
+                        <?php if($type==3){?>
+                        <input type="hidden" value="3" name="style" >
+                        <input type="hidden" value="<?php echo $id;?>" name="id" >
+                        <?php } ?>
                     <div class="col-md-12 mt10">
                         <lebal class="upload-lebal">选择审批人<span></span></lebal>
                         <foreach name="personnel" item="v">
@@ -63,7 +69,12 @@
                                 </a>
                             </foreach>
                     </div>
+                    <?php } ?>
 
+                     <?php if($type==2){ ?>
+                        <input type="hidden" value="2" name="style" >
+                       <?php } ?>
+                        <?php if($type!==3){?>
                     <div class="col-md-12 mt10" style=" vertical-align:text-top;">
                         <lebal class="upload-lebal">文件类型</lebal><br>
 <!--                        <a href="javascript:;" id="approval_file" class="btn btn-success btn-sm" style="margin-top:15px; float:left;">-->
@@ -74,6 +85,7 @@
                         </a>
                         <span style="line-height:30px; float:left;margin-left:15px; color:#999999;">请选择小于100M的文件，支持JPG / GIF / PNG / DOC / XLS / PDF / ZIP / RAR文件类型</span>
                     </div>
+                        <?php } ?>
                     <div class="form-group col-md-12">
 
                         <table id="flist" class="table" style="margin-top:15px; float:left; clear:both; border-top:1px solid #dedede;">

@@ -76,6 +76,8 @@
                                             <a href="{:U('Approval/Approval_Update',array('id'=>$f['file']['id']))}">
                                                 查看详情
                                             </a>
+                                            <a href="{:U('Approval/Approval_Upload',array('type'=>3,'id'=>$f['file']['id']))}"
+                                               style="<?php if(($f['file']['file_leader_id']=='' || $f['file']['file_leader_id']==0) && $type==1){echo '';}else{echo 'display:none';} ?>"> | 添加审批人</a>
                                         </td>
                                     </tr>
                                         </foreach>

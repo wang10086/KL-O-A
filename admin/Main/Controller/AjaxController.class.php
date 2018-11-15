@@ -1192,12 +1192,8 @@ class AjaxController extends Controller {
         foreach($file_id as $key => $val){
             $save['type']   = 2;
             $approval_flie  = M('approval_flie')->where('id='.$val)->save($save);
-            if($approval_flie){
-                echo json_encode(array('sum' => 1, 'msg' => "删除成功!"));die;
-            }else{
-                echo json_encode(array('sum' => 0, 'msg' => "删除失败!请重新选择!"));die;
-            }
         }
+
 
     }
 
@@ -1321,14 +1317,6 @@ class AjaxController extends Controller {
         $data['url']    = U('Op/delpro',array('id'=>$id));
         $this->ajaxReturn($data);
     }
-
-    /**
-     * salary_support_add 添加扶植信息
-     */
-//    public function salary_support_add(){
-//
-//    }
-
 
 
 }
