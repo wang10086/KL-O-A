@@ -151,7 +151,17 @@
                                         </div>
 
                                         <div class="form-group col-md-6" style="float:right;width:50em;">
-                                            <label>
+                                            <label style='<?php
+                                                                $number = 1;
+                                                               for($i=0;$i<count($f['file']['user']);$i++){
+                                                                   if($f['file']['user'][$i]['username']==$username['nickname'] || $status==1){
+                                                                       $number = 2;
+                                                                   }
+                                                                }
+                                                                if($number == 1){
+                                                                    echo "display:none;";
+                                                                }
+                                                            ?>'>
                                                 <b style="font-size:1.3em;color:#09F;padding:1em;letter-spacing:0.2em;">批注内容 : </b>
                                                 <b style="margin-left:20em;" id="approval_submit_show">
                                                     <input type="submit" value="添加审批批注" class="btn btn-info"  style="margin-right:1em;">
@@ -161,7 +171,7 @@
                                                 </b>
                                             </label><br><br>
 
-                                            <div  id="approval_submit_show1" style="margin:-0.6em 0em 0em;padding:1em;height:83em;border:solid 2px #d2d5d8;overflow-y:scroll;overflow-x:scroll;word-wrap:break-word;width:45em;" >
+                                            <div  id="approval_submit_show1" style="margin:<?php if($number==1){echo '0.8em';}else{echo '-0.6em';}?> 0em 0em;padding:1em;height:83em;border:solid 2px #d2d5d8;overflow-y:scroll;overflow-x:scroll;word-wrap:break-word;width:45em;" >
                                                 <foreach name="f['flie_annotation']" item="ann">
                                                     <p>
                                                         <b style="color:#339933;">{$ann['account_name']}&nbsp;</b>
