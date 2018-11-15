@@ -477,8 +477,8 @@
                             html +='<a style="width:10em;margin-left:20em;font-size:1.5em;color:#000000;">'+data.msg.content+data.msg.time+'</a>';
                     }
                     $('#salary_add_applovel3').append(html);
-                    return false;
                     print_view(id);
+                    return false;
                 }
                 if (data.sum == 0 || data.sum == "") {
                     alert('打印失败!');
