@@ -16,8 +16,9 @@
 
                 <!-- Main content -->
                 <section class="content">
-                    <form method="post" action="{:U('Worder/new_worder')}" name="myform" id="myform" onsubmit="return beforeSubmit(this)">
+                <form method="post" action="{:U('Worder/new_worder')}" name="myform" id="myform" onsubmit="return beforeSubmit(this)">
                 <input type="hidden" name="dosubmint" value="1">
+                <input type="hidden" name="info[op_id]" id="op_id">
                     <div class="row">
                          <!-- right column -->
                         <div class="col-md-12">
@@ -43,8 +44,7 @@
                                         </div>
 
                                         <div class="form-group col-md-12" id="group_id">
-                                            <label>项目编号：</label><input type="text" name="info[op_id]" value="{$data.op_id}" class="form-control" />
-                                           <!-- <span class="input-group-addon" style="width:32px;"><a href="javascript:;" onClick="getop();" >获取</a></span>-->
+                                            <label>项目团号：</label><input type="text" name="info[group_id]" value="{$data.group_id}" class="form-control" onblur="get_opid()" />
                                         </div>
 
                                         <div class="form-group col-md-12">
@@ -213,15 +213,37 @@
             var urgent = $("input[name=info['urgent']]:checked").val()
             var u_cause= $("#urgent_cause").val();
             var worder_type = $('#worder_type').val();
-            var group_id = $("input[name='info[op_id]']").val();
+            var op_id = $("#op_id").val();
             if (urgent==1 && u_cause == ''){
-                alert("工单紧急原因不能为空!");
+                art_show_msg("工单紧急原因不能为空!",3);
                 return false;
-            }else if(worder_type == 100 && group_id == ''){
-                alert("项目编号信息不能为空!");
+            }else if(worder_type == 100 && op_id == ''){
+                art_show_msg("项目团号信息有误!",3);
                 return false;
             }else{
                 $("#myform").submit;
+            }
+        }
+
+        function get_opid() {
+            var group_id    = $('input[name="info[group_id]"]').val();
+            if (!group_id){
+                art_show_msg('团号信息不能为空',3);
+            }else{
+                $.ajax({
+                    type: 'POST',
+                    dataType: 'JSON',
+                    data: {group_id:group_id},
+                    url : "{:U('Ajax/get_opid')}",
+                    success: function (msg) {
+                        if (!msg){
+                            art_show_msg('团号输入错误');
+                            return false;
+                        }else{
+                            $('#op_id').val(msg);
+                        }
+                    }
+                });
             }
         }
 

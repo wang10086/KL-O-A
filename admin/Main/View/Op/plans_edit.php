@@ -412,13 +412,12 @@
                                    </div>
                                    <div class="box-body">
                                        <?php if((cookie('roleid')==10 || cookie('userid')==$op['create_user'] || C('RBAC_SUPER_ADMIN')==cookie('username')) && $settlement['audit']!=1 ){ ?>
-                                           <include file="evaluateaaa_edit" />
+                                           <include file="score_edit" />
                                        <?php }else{ ?>
-                                           <include file="evaluateaaa_read" />
+                                           <include file="evaluate_before_read" />
                                        <?php }?>
                                    </div>
                                </div>
-
                                 
                                 <div class="box box-warning">
                                     <div class="box-header">

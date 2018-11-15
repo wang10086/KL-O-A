@@ -403,8 +403,6 @@ class OpController extends BaseController {
 		$record     = M('op_record')->where(array('op_id'=>$opid))->order('id DESC')->select();
 		$budget     = M('op_budget')->where(array('op_id'=>$opid))->find();
 		$settlement = M('op_settlement')->where(array('op_id'=>$opid))->find();
-        //$resource   = M('op_res')->where(array('op_id'=>$opid))->find();
-       // $res_money  = M('op_res_money')->where(array('op_res_id'=>$resource['id']))->select();
 
         //根据line_id判断是普通线路还是固定线路
         $line_id    = $op['line_id'];
@@ -423,9 +421,6 @@ class OpController extends BaseController {
 		$where['req_id']   = $op['id'];
 		$audit = M('audit_log')->where($where)->find();
 		if($audit['dst_status']==0){
-			/*$show = '未审批';
-			$show_user = '未审批';
-			$show_time = '等待审批';*/
             $show = '系统默认通过';
             $show_user = '系统默认';
             $show_time = date('Y-m-d H:i:s',$op['create_time']);
@@ -603,15 +598,7 @@ class OpController extends BaseController {
 		$this->geclist     = M('customer_gec')->field('id,pinyin,company_name')->where($where)->group("company_name")->order('pinyin ASC')->select();
 
         //人员名单关键字
-        $user   = M('account')->field("id,nickname")->where(array('status'=>0))->select();
-        $user_key    = array();
-        foreach($user as $k=>$v){
-            $text           = $v['nickname'];
-            $user_key[$k]['id']  = $v['id'];
-            $user_key[$k]['pinyin'] = strtopinyin($text);
-            $user_key[$k]['text']       = $text;
-        }
-        $this->userkey = json_encode($user_key);
+        $this->userkey = get_username();
 
         $this->display('plans_edit');
 		
@@ -3038,10 +3025,10 @@ class OpController extends BaseController {
 			
 			$info	= I('info');
 			
-			if(!$info[1]['evaluate']) 	$this->error('产品评价内容不能为空！');	
-			if(!$info[2]['evaluate']) 	$this->error('计调评价内容不能为空！');	
-			if(!$info[3]['evaluate']) 	$this->error('资源评价内容不能为空！');	
-			if(!$info[4]['evaluate']) 	$this->error('物资评价内容不能为空！');	
+			if(!$info[1]['evaluate']) 	$this->error('产品评价内容不能为空！');
+            if(!$info[2]['evaluate']) 	$this->error('计调评价内容不能为空！');
+            if(!$info[3]['evaluate']) 	$this->error('资源评价内容不能为空！');
+            if(!$info[4]['evaluate']) 	$this->error('物资评价内容不能为空！');
 			
 			//保存
 			foreach($info as $k=>$v){
