@@ -47,8 +47,8 @@
                                     <th class="sorting" style="width:15em;background-color:#66CCFF;">所属部门</th>
                                     <th class="sorting" style="width:10em;background-color:#66CCFF;">岗位薪酬标准</th>
                                     <th class="sorting" style="width:10em;background-color:#66CCFF;">其中基本工资标准</th>
-                                    <th class="sorting" style="width:10em;background-color:#66CCFF;">考勤扣款</th>
-                                    <th class="sorting" style="width:14em;background-color:#66CCFF;">其中绩效工资标准</th>
+                                    <th class="sorting" style="width:9em;background-color:#66CCFF;">考勤扣款</th>
+                                    <th class="sorting" style="width:10em;background-color:#66CCFF;">其中绩效工资标准</th>
                                     <th class="sorting" style="width:10em;background-color:#66CCFF;">绩效增减</th>
                                     <th class="sorting" style="width:10em;background-color:#66CCFF;">业绩提成</th>
 
