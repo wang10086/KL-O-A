@@ -38,7 +38,7 @@
                         </div>
 
                         <br><br>
-                        <div class="btn-group" style="height:100%;width:200em;" id="salary_archives_list">
+                        <div class="btn-group" style="height:100%;width:195em;" id="salary_archives_list">
                             <table class="table table-bordered dataTablev">
                                 <tr role="row" class="orders">
                                     <th class="sorting" style="width:5em;background-color:#66CCFF;">ID</th>
@@ -60,7 +60,7 @@
                                     <th class="sorting" style="width:9em;background-color:#66CCFF;">养老保险</th>
                                     <th class="sorting" style="width:9em;background-color:#66CCFF;">失业保险</th>
                                     <th class="sorting" style="width:9em;background-color:#66CCFF;">公积金</th>
-                                    <th class="sorting" style="width:12em;background-color:#66CCFF;">个人保险合计</th>
+                                    <th class="sorting" style="width:9em;background-color:#66CCFF;">个人保险合计</th>
                                     <th class="sorting" style="width:9em;background-color:#66CCFF;">计税工资</th>
                                     <th class="sorting" style="width:9em;background-color:#66CCFF;">个人所得税</th>
                                     <th class="sorting" style="width:9em;background-color:#66CCFF;">税后扣款</th>
