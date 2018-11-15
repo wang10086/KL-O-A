@@ -41,8 +41,8 @@
                         <div class="btn-group" style="height:100%;width:200em;" id="salary_archives_list">
                             <table class="table table-bordered dataTablev">
                                 <tr role="row" class="orders">
-                                    <th class="sorting" style="width:8em;background-color:#66CCFF;">ID</th>
-                                    <th class="sorting" style="width:12em;background-color:#66CCFF;">员工姓名</th>
+                                    <th class="sorting" style="width:6em;background-color:#66CCFF;">ID</th>
+                                    <th class="sorting" style="width:10em;background-color:#66CCFF;">员工姓名</th>
                                     <th class="sorting" style="width:20em;background-color:#66CCFF;">岗位名称</th>
                                     <th class="sorting" style="width:15em;background-color:#66CCFF;">所属部门</th>
                                     <th class="sorting" style="width:10em;background-color:#66CCFF;">岗位薪酬标准</th>
