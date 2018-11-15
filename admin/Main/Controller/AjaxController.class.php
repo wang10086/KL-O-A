@@ -818,22 +818,15 @@ class AjaxController extends Controller {
 
     //保存提交审核数据
     public function Ajax_salary_details_add(){
-        /*$user_id = (int)$_SESSION['userid'];
-        if($user_id['userid']==77 || $user_id==1){
 
-        }else{
-            $sum                            = 0;
-            $msg                            = "您的权限不足!请联系管理员！";
-            echo json_encode(array('sum' => $sum, 'msg' => $msg));die;
-        }*/
         $user_id = session('userid');
-        if($user_id==77 || $user_id==1){
-
-        }else{
-            $sum                            = 0;
-            $msg                            = "您的权限不足!请联系管理员！";
-            echo json_encode(array('sum' => $sum, 'msg' => $msg));die;
-        }
+//        if($user_id==77 || $user_id==1){
+//
+//        }else{
+//            $sum                            = 0;
+//            $msg                            = "您的权限不足!请联系管理员！";
+//            echo json_encode(array('sum' => $sum, 'msg' => $msg));die;
+//        }
         $datetime                           = trim($_POST['datetime']);//表数据时间
         if($datetime=="" || $datetime ==null || $datetime==false){
             $datetime                       = datetime(date('Y'),date('m'),date('d'),1);;
@@ -1182,6 +1175,41 @@ class AjaxController extends Controller {
     }
 
     /**
+     *printing_content 打印
+     * $time 打印数据的工资表时间
+     * $moneyid 工资表 id
+     */
+    function printing_content(){
+        $time                       = code_number(trim($_POST['time']));
+        $moneyid                    = trim($_POST['moneyid']);
+        $money                      = M('salary_count_money')->where('id='.$moneyid)->find();
+        if($money){
+            $botton['status']       = 2; //没有提交和审核批准人
+            $url1 = M('user_sign')->where('user_id='.$money['examine_user_id'])->find();
+            $url2 = M('user_sign')->where('user_id='.$money['submission_user_id'])->find();
+            $url3 = M('user_sign')->where('user_id='.$money['approval_user_id'])->find();
+
+            $botton['submitter_url']= $url1['file_url'];
+            $botton['examine_url']  = $url2['file_url'];
+            $botton['approval_url'] = $url3['file_url'];
+//            $submitter              = user_table($money['examine_user_id']);//提交审核
+//            $examine                = user_table($money['submission_user_id']);//提交批准
+//            $approval               = user_table($money['approval_user_id']);//批准
+//            $botton['submitter']    = $submitter['nickname'];
+//            $botton['examine']      = $examine['nickname'];
+//            $botton['approval']     = $approval['nickname'];
+            $botton['content']      = '制表日期 : ';
+            $botton['time']         = date('Y-m-d H:i:s',$money['approval_time']);
+        }else{
+            $botton['status']       = 1; //没有提交和审核批准人
+            $botton['submitter']    = $_SESSION['username'];
+            $botton['content']      = '打印日期 : ';
+            $botton['time']         = date('Y-m-d H:i:s',time());
+        }
+        echo json_encode(array('sum'=>1, 'msg'=>$botton));die;
+    }
+
+    /**
      * Ajax_file_delete 删除选中的文件
      * $fileid 文件id
      */
@@ -1193,8 +1221,6 @@ class AjaxController extends Controller {
             $save['type']   = 2;
             $approval_flie  = M('approval_flie')->where('id='.$val)->save($save);
         }
-
-
     }
 
     //人民币小写转换成大写

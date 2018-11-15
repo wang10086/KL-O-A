@@ -24,6 +24,7 @@
                         <a  class="btn btn-info" style="width:10em; margin: 0.5em 0em 0em 2em;"> <?php if($status=="" || $status==0 || $status==1){echo "待提交审核(人事)";}elseif($status==2){echo "待提交批准(财务)";}elseif($status==3){echo "待批准(总经理)";}elseif($status==4){echo "已批准";}?></a>
                         <a href="javascript:;" class="btn btn-info btn-sm" onclick="javascript:opensearch('searchtext',700,160);" style="margin: 0.7em 0em 0em 3em;" ><i class="fa fa-search"></i> 搜索</a>
                         <a  href="{:U('Salary/salary_exportExcel',array('datetime'=>$count['datetime'],'type'=>$type))}" class="btn btn-info btn-sm" style="margin:1em 0em 0em 3em;" />导出 Excel</a>
+                        <a class="btn btn-default" onclick="salary2();" style="margin:0.8em 0em 0em 2em;color:#000000;background-color: lightgrey;"><i class="fa fa-print"></i> 打印</a>
 
                     </div><!-- /.box-header --><br>
                     <div class="box-body" style="height:40em;width:100%;float:left;overflow:auto;">
@@ -37,7 +38,7 @@
                         </div>
 
                         <br><br>
-                        <div class="btn-group" style="height:100%;width:200em;">
+                        <div class="btn-group" style="height:100%;width:200em;" id="salary_archives_list">
                             <table class="table table-bordered dataTablev">
                                 <tr role="row" class="orders">
                                     <th class="sorting" style="width:8em;background-color:#66CCFF;">ID</th>
@@ -167,6 +168,10 @@
                                 <th class="list_salary_datetime" style="display: none">{$count['datetime']}</th>
                                 <th class="list_salary_detail3" style="display: none">{$count['id']}</th>
                             </table>
+                            <br><br>
+                            <div id = "salary_add_applovel3">
+
+                            </div> <br><br>
                         </div>
                     </div><!-- /.box-body -->
 
@@ -446,6 +451,42 @@
             });
         }
     });
+    function salary2(){ //打印
+        var time    = $('.list_salary_datetime').text();//现在表的时间
+        var moneyid = $('.list_salary_detail3').text(); // 表单id
+        var id      = $('#salary_archives_list').attr('id');//当前要打印的id
+        $.ajax({
+            type: "POST",
+            url:  "index.php?m=Main&c=Ajax&a=printing_content",
+            data: {
+                'time' : time,
+                'moneyid' : moneyid,
+            },
+            dataType: "json", //数据格式
+            success: function (data) {
+                if (data.sum == 1) {
+                    $('#salary_add_applovel3').empty();
+                    if(data.msg.status==2){
+                        var html = '<a style="width:10em;margin-left:20em;font-size:1.5em;color:#000000;"><b>提交审核人 : </b><img src="'+data.msg.submitter_url+'" alt="" style="width:6em;"></a>';
+                            html +='<a style="width:10em;margin-left:20em;font-size:1.5em;color:#000000;"><b>审核人 : </b><img src="'+data.msg.examine_url+'" alt="" style="width:6em;"></a>';
+                            html +='<a style="width:10em;margin-left:20em;font-size:1.5em;color:#000000;"><b>批准人 : </b><img src="'+data.msg.approval_url+'" alt="" style="width:6em;"></a>';
+                            html +='<a style="width:10em;margin-left:20em;font-size:1.5em;color:#000000;">'+data.msg.content+data.msg.time+'</a>';
+                    }
+                    if(data.msg.status==1){
+                        var html = '<a style="width:10em;margin-left:20em;font-size:1.5em;color:#000000;"><b>打印人 : '+data.msg.submitter+'</b></a>';
+                            html +='<a style="width:10em;margin-left:20em;font-size:1.5em;color:#000000;">'+data.msg.content+data.msg.time+'</a>';
+                    }
+                    $('#salary_add_applovel3').append(html);
+                    return false;
+                    print_view(id);
+                }
+                if (data.sum == 0 || data.sum == "") {
+                    alert('打印失败!');
+                    return false;
+                }
+            }
+        });
+    }
 
     excel_list_color();
 </script>
