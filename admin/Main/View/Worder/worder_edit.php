@@ -19,6 +19,7 @@
                     <form method="post" action="{:U('Worder/worder_edit')}" name="myform" id="myform" onsubmit="return beforeSubmit(this)">
                     <input type="hidden" name="dosubmint" value="1">
                     <input type="hidden" name="id" value="{$id}">
+                    <input type="hidden" name="info[op_id]" id="op_id" value="{$row.op_id}">
                     <div class="row">
                          <!-- right column -->
                         <div class="col-md-12">
@@ -44,8 +45,7 @@
                                         </div>
 
                                         <div class="form-group col-md-12" id="group_id">
-                                            <label>项目编号：</label><input type="text" name="info[op_id]" value="{$row.op_id}" class="form-control" />
-                                           <!-- <span class="input-group-addon" style="width:32px;"><a href="javascript:;" onClick="getop();" >获取</a></span>-->
+                                            <label>项目团号：</label><input type="text" name="info[group_id]" value="{$row.group_id}" class="form-control" onblur="get_opid()" />
                                         </div>
 
                                         <div class="form-group col-md-12">
@@ -142,16 +142,38 @@
             }
         }
 
+        function get_opid() {
+            var group_id    = $('input[name="info[group_id]"]').val();
+            if (!group_id){
+                art_show_msg('团号信息不能为空',3);
+            }else{
+                $.ajax({
+                    type: 'POST',
+                    dataType: 'JSON',
+                    data: {group_id:group_id},
+                    url : "{:U('Ajax/get_opid')}",
+                    success: function (msg) {
+                        if (!msg){
+                            art_show_msg('团号输入错误');
+                            return false;
+                        }else{
+                            $('#op_id').val(msg);
+                        }
+                    }
+                });
+            }
+        }
+
         //检验表单
         function beforeSubmit(form){
             var urgent = $("input[name=info['urgent']]:checked").val()
             var u_cause= $("#urgent_cause").val();
             var worder_type = $('#worder_type').val();
-            var group_id = $("input[name='info[op_id]']").val();
+            var op_id = $("#op_id").val();
             if (urgent==1 && u_cause == ''){
                 alert("工单紧急原因不能为空!");
                 return false;
-            }else if(worder_type == 100 && group_id == ''){
+            }else if(worder_type == 100 && op_id == ''){
                 alert("项目编号信息不能为空!");
                 return false;
             }else{

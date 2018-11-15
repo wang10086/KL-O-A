@@ -1303,6 +1303,12 @@ class AjaxController extends Controller {
         $this->ajaxReturn($department);
     }
 
+    public function get_opid(){
+        $group_id   = I('group_id');
+        $opid       = M('op')->where(array('group_id'=>$group_id))->getField('op_id');
+        $this->ajaxReturn($opid);
+    }
+
     //查询该团是否有借款信息
     public function has_jiekuan(){
         $op_id          = I('opid');
