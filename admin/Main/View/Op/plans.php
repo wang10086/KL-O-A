@@ -134,13 +134,12 @@
 
                                     <div class="form-group col-md-12 ml-12" id="wonder_department" style="margin-top: -30px;">
                                         <h2 class="tcs_need_h2">工单接收部门：</h2>
-                                        <input type="checkbox" name="exe_user_id[]" value="31"> &nbsp;研发(京区校内-魏春竹) &#12288;
-                                        <input type="checkbox" name="exe_user_id[]" value="174"> &nbsp;资源(京区校内-李亚楠) &#12288;
                                         <input type="checkbox" name="exe_user_id[]" value="12"> &nbsp;研发(公司大研发-秦总)&#12288;
                                         <input type="checkbox" name="exe_user_id[]" value="26"> &nbsp;资源(公司资源-李岩)&#12288;
+                                        <input type="checkbox" name="exe_user_id[]" value="31"> &nbsp;研发(京区校内-魏春竹) &#12288;
+                                        <input type="checkbox" name="exe_user_id[]" value="174"> &nbsp;资源(京区校内-李亚楠) &#12288;
                                     </div>
                                 </div>
-
                             </div><!-- /.box-body -->
                         </div><!-- /.box -->
 

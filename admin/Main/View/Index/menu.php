@@ -353,33 +353,6 @@
                         </li>
                         </if>
 
-
-
-<!--                        <if condition="rolemenu(array('Cour/courlist','Cour/courtype','Cour/pptlist'))">-->
-<!--                            <li class="treeview {:ison(CONTROLLER_NAME, 'Cour')}">-->
-<!--                                <a href="javascript:;">-->
-<!--                                    <i class="fa fa-file-text"></i>-->
-<!--                                    <span>培训管理</span>-->
-<!--                                    <i class="fa fa-angle-left pull-right"></i>-->
-<!--                                </a>-->
-<!--                                <ul class="treeview-menu">-->
-<!--                                    <if condition="rolemenu(array('Cour/courlist'))">-->
-<!--                                        <li><a href="{:U('Cour/courlist')}"><i class="fa fa-angle-right"></i> 培训课件</a></li>-->
-<!--                                    </if>-->
-<!---->
-<!--                                    <if condition="rolemenu(array('Cour/courtype'))">-->
-<!--                                        <li><a href="{:U('Cour/courtype')}"><i class="fa fa-angle-right"></i> 课件类型</a></li>-->
-<!--                                    </if>-->
-<!---->
-<!--                                    <if condition="rolemenu(array('Cour/pptlist'))">-->
-<!--                                        <li><a href="{:U('Cour/pptlist')}"><i class="fa fa-angle-right"></i> 培训记录</a></li>-->
-<!--                                    </if>-->
-<!---->
-<!--                                </ul>-->
-<!--                            </li>-->
-<!--                        </if>-->
-
-
                         <if condition="rolemenu(array('Rights/index','Rights/myreq'))">
                         <li class="treeview {:on('Rights')}">
                             <a href="javascript:;">
@@ -459,23 +432,7 @@
                                         </if>
                                     </ul>
                                 </li>
-                                <li class="treeview {:on('Manage/Manage_month')}">
-                                    <if condition="rolemenu(array('Manage/Manage_month'))">
-                                        <a href=""><i class="fa fa-angle-right"></i> 经营管理</a>
-                                    </if>
-                                    <ul class="treeview-menu">
-                                        <if condition="rolemenu(array('Manage/Manage_month'))">
-                                            <li class="{:on('Manage/Manage_month')}"><a href="{:U('Manage/Manage_month')}"><i class="fa fa-angle-right"></i> 月度经营</a></li>
-                                        </if>
-                                        <if condition="rolemenu(array('Manage/Manage_quarter'))">
-                                            <li class="{:on('Manage/Manage_quarter')}"><a href="{:U('Manage/Manage_quarter')}"><i class="fa fa-angle-right"></i> 季度经营</a></li>
-                                        </if>
-                                        <if condition="rolemenu(array('Manage/Manage_year'))">
-                                            <li class="{:on('Manage/Manage_year')}"><a href="{:U('Manage/Manage_year')}"><i class="fa fa-angle-right"></i> 年度经营</a></li>
-                                            <!--<li><a href="javascript:;" onclick="art_show_msg('加班开发中,稍后呈现......',5)"><i class="fa fa-angle-right"></i>团内支出借款</a></li>-->
-                                        </if>
-                                    </ul>
-                                </li>
+
                                 <li class="treeview {:on('Finance/jiekuan_lists')} {:on('Finance/jiekuandan_info')}">
                                     <if condition="rolemenu(array('Finance/jiekuan'))">
                                         <a href=""><i class="fa fa-file-text-o"></i> 单据管理</a>
@@ -486,8 +443,6 @@
                                         </if>
                                     </ul>
                                 </li>
-
-
 
                                 <li class="treeview {:on('Finance/costacclist')} {:on('Finance/budget')} {:on('Finance/settlementlist')} {:on('Finance/payment')}">
                                     <if condition="rolemenu(array('Finance/jiekuan'))">
@@ -508,6 +463,24 @@
 
                                         <if condition="rolemenu(array('Finance/payment'))">
                                             <li><a href="{:U('Finance/payment')}"><i class="fa fa-angle-right"></i> 回款管理</a></li>
+                                        </if>
+                                    </ul>
+                                </li>
+
+                                <li class="treeview {:on('Manage/Manage_month')}">
+                                    <if condition="rolemenu(array('Manage/Manage_month'))">
+                                        <a href=""><i class="fa fa-angle-right"></i> 经营管理</a>
+                                    </if>
+                                    <ul class="treeview-menu">
+                                        <if condition="rolemenu(array('Manage/Manage_month'))">
+                                            <li class="{:on('Manage/Manage_month')}"><a href="{:U('Manage/Manage_month')}"><i class="fa fa-angle-right"></i> 月度经营</a></li>
+                                        </if>
+                                        <if condition="rolemenu(array('Manage/Manage_quarter'))">
+                                            <li class="{:on('Manage/Manage_quarter')}"><a href="{:U('Manage/Manage_quarter')}"><i class="fa fa-angle-right"></i> 季度经营</a></li>
+                                        </if>
+                                        <if condition="rolemenu(array('Manage/Manage_year'))">
+                                            <li class="{:on('Manage/Manage_year')}"><a href="{:U('Manage/Manage_year')}"><i class="fa fa-angle-right"></i> 年度经营</a></li>
+                                            <!--<li><a href="javascript:;" onclick="art_show_msg('加班开发中,稍后呈现......',5)"><i class="fa fa-angle-right"></i>团内支出借款</a></li>-->
                                         </if>
                                     </ul>
                                 </li>
@@ -550,7 +523,32 @@
 <!--                            </ul>-->
 <!--                        </li>-->
 <!--                        </if>-->
-                        <li class="treeview {:on('Kpi')} {:on('Rbac')} {:on('Cour')} {:on('Salary')}">
+
+                        <if condition="rolemenu(array('Cour/courlist','Cour/courtype','Cour/pptlist'))">
+                            <li class="treeview {:ison(CONTROLLER_NAME, 'Cour')}">
+                                <a href="javascript:;">
+                                    <i class="fa fa-file-text"></i>
+                                    <span>培训管理</span>
+                                    <i class="fa fa-angle-left pull-right"></i>
+                                </a>
+                                <ul class="treeview-menu">
+                                    <if condition="rolemenu(array('Cour/courlist'))">
+                                        <li><a href="{:U('Cour/courlist')}"><i class="fa fa-angle-right"></i> 培训课件</a></li>
+                                    </if>
+
+                                    <if condition="rolemenu(array('Cour/courtype'))">
+                                        <li><a href="{:U('Cour/courtype')}"><i class="fa fa-angle-right"></i> 课件类型</a></li>
+                                    </if>
+
+                                    <if condition="rolemenu(array('Cour/pptlist'))">
+                                        <li><a href="{:U('Cour/pptlist')}"><i class="fa fa-angle-right"></i> 培训记录</a></li>
+                                    </if>
+
+                                </ul>
+                            </li>
+                        </if>
+
+                        <li class="treeview {:on('Kpi')} {:on('Rbac')} {:on('Salary')}">
                             <a href="javascript:;" onclick="displaynone()">
                                 <i class="fa fa-sitemap"></i>
                                 <span>人力资源</span>
@@ -644,7 +642,7 @@
                                     </li>
                                 </if>
 
-                                <if condition="rolemenu(array('Cour/courlist','Cour/courtype','Cour/pptlist'))">
+                                <!--<if condition="rolemenu(array('Cour/courlist','Cour/courtype','Cour/pptlist'))">
                                     <li class="treeview {:ison(CONTROLLER_NAME, 'Cour')}">
                                         <a href="javascript:;">
                                             <i class="fa fa-file-text"></i>
@@ -666,34 +664,7 @@
 
                                         </ul>
                                     </li>
-                                </if>
-
-
-<!---->
-<!--                                <if condition="rolemenu(array('Cour/courlist','Cour/courtype','Cour/pptlist'))">-->
-<!--                                    <li class="treeview {:ison(CONTROLLER_NAME,'Cour')}">-->
-<!---->
-<!--                                        <a href="javascript:;" onclick="playnone()">-->
-<!--                                            <i class="fa fa-file-text"></i>-->
-<!--                                            <span>培训管理</span>-->
-<!--                                        </a>-->
-<!--                                        <ul class="treeview-menu playnone">-->
-<!---->
-<!--                                            <if condition="rolemenu(array('Cour/role'))">-->
-<!--                                                <li ><a href="{:U('Cour/courlist')}"><i class="fa fa-angle-right"></i> 培训课件</a></li>-->
-<!--                                            </if>-->
-<!--                                            <if condition="rolemenu(array('Cour/index'))">-->
-<!--                                                <li><a href="{:U('Cour/courtype')}""><i class="fa fa-angle-right"></i> 课件类型</a></li>-->
-<!--                                            </if>-->
-<!---->
-<!--                                            <if condition="rolemenu(array('Cour/post'))">-->
-<!--                                                <li><a href="{:U('Cour/pptlist')}"><i class="fa fa-angle-right"></i> 培训记录</a></li>-->
-<!--                                            </if>-->
-<!---->
-<!--                                        </ul>-->
-<!--                                    </li>-->
-<!--                                </if>-->
-
+                                </if>-->
 
                             </ul>
                         </li>

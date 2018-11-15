@@ -194,6 +194,15 @@ class OpController extends BaseController {
 
                     if($exe_user_id){
                         foreach ($exe_user_id as $k=>$v){
+                            if ($v==12){
+                                $worder['kpi_type'] = 1;    //公司研发
+                            }elseif ($v==26){
+                                $worder['kpi_type'] = 2;    //公司资源
+                            } elseif ($v==31){
+                                $worder['kpi_type'] = 3;    //京区校内研发
+                            }elseif ($v==174){
+                                $worder['kpi_type'] = 4;    //京区校内资源
+                            }
                             $exe_user_info      = M('account')->field('nickname,roleid')->where(array('id'=>$v))->find();
                             $exe_user_id        = $v;
                             $exe_user_name      = $exe_user_info['nickname'];
@@ -539,17 +548,6 @@ class OpController extends BaseController {
         $this->guide          = $guide?$guide:$guide_old;
         $this->dijie_names    = C('DIJIE_NAME');
         $this->change         = M('op')->where(array('dijie_opid'=>$opid))->find();
-
-        /*$this->service_type   = C('SERVICE_TYPE');
-        $this->act_need       = C('ACT_NEED');
-        $this->les_field      = C('LES_FIELD');
-        $this->act_field      = C('ACT_FIELD');*/
-        /*$this->resource       = $resource;
-        $this->service_types  = $service_type;
-        $this->act_needs      = $act_need;
-        $this->les_fields     = $les_field;
-        $this->act_fields     = $act_field;
-        $this->job_name       = array_column($job_names,'job_money','job_name');*/
 
          $product_need         = M()->table('__OP_COSTACC__ as c')->field('c.*,p.from,p.subject_field,p.type as ptype,p.age,p.reckon_mode')->join('left join __PRODUCT__ as p on c.product_id=p.id')->where(array('c.op_id'=>$opid,'c.type'=>5,'c.status'=>0))->select();
          foreach ($product_need as $k=>$v){
@@ -1327,6 +1325,12 @@ class OpController extends BaseController {
                 }else{
                     $this->error('保存数据失败');
                 }
+            }
+
+            //保存前期对资源评价
+            if ($opid && $savetype==21){
+                $a = I();
+                var_dump($a);die;
             }
 
             echo $num;
@@ -2444,6 +2448,7 @@ class OpController extends BaseController {
             M('op_res')->where(array('op_id'=>$opid))->delete();        //资源需求单
             M('op_design')->where(array('op_id'=>$opid))->delete();     //委托设计工作交接单
             M('op_work_plans')->where(array('op_id'=>$opid))->delete(); //业务实施计划单
+            M('worder')->where(array('op_id'=>$opid))->delete();        //项目工单
 
 			//删除主项目
 			M('op')->delete($id);
