@@ -20,8 +20,9 @@
                                 <div class="box-header">
                                     <div class="tip">
                                         <a href="javascript:;"  class="btn btn-danger Approval_file_delete" style="padding:6px 12px;"><i class="fa fa-trash-o"></i> 删除</a>
-                                        <a href="{:U('Approval/Approval_Upload')}" class="btn btn-info btn-sm"><i class="fa fa-upload"></i> 上传文件</a>
+<!--                                        <a href="{:U('Approval/Approval_Upload')}" class="btn btn-info btn-sm"><i class="fa fa-upload"></i> 上传文件</a>-->
                                     </div>
+                                    <a class="btn btn-info btn-sm" id="salary_create_file" onclick="javascript:salry_opensearch('searchtext',700,300,'创建文件');" style="float:right;margin:1em 2em 0em 0em;background-color:#f4543c"><b>+</b> 创建文件</a>
                                 </div><!-- /.box-header -->
                                 <div class="box-body">
 
@@ -78,6 +79,7 @@
                                             </a>
                                             <a href="{:U('Approval/Approval_Upload',array('type'=>3,'id'=>$f['file']['id']))}"
                                                style="<?php if(($f['file']['file_leader_id']=='' || $f['file']['file_leader_id']==0) && $type==1){echo '';}else{echo 'display:none';} ?>"> | 添加审批人</a>
+
                                         </td>
                                     </tr>
                                         </foreach>
@@ -94,18 +96,28 @@
 
                 </section><!-- /.content -->
             </aside><!-- /.right-side -->
-            
-            
-            <div id="mkdir">
-                <form method="post" action="{:U('Files/mkdirs')}" name="myform" id="gosub">
-            	<input type="hidden" name="dosubmit"  value="1">
-                <input type="hidden" name="pid" value="{$pid}">
-                <input type="hidden" name="level" value="{$level}">
-                <div class="form-group col-md-12">
-                    <input type="text" class="form-control" name="filename" placeholder="文件夹名称">
-                </div>
-                </form>
-            </div>
+
+
+<div id="searchtext">
+    <script src="__HTML__/js/public.js?v=1.0.6" type="text/javascript"></script>
+
+    <form action="{:U('Salary/salaryindex')}" method="post">
+
+        <div class="form-group col-md-5" style="float: left;">
+            创建文件名称： <input type="text" class="form-control" style="margin-top:1em;width:20em;" name="create_file">
+        </div>
+        <div class="form-group" style="width:8em;float: right;">
+            创建人：
+            <input type="text" class="form-control" style="margin-top:1em;" name="file_name" value="<?php echo $_SESSION['username']?>" disabled="disabled">
+        </div><br><br><br><br>
+        <div class="form-group" style="margin:0em 0em 0em 1em;">
+            <a>文件描述：</a><br>
+            <textarea rows="5" cols="65" style="margin-top:1em;"> </textarea>
+        </div>
+
+
+    </form>
+</div>
 
 <include file="Index:footer2" />
 
@@ -147,4 +159,30 @@
         });
     });
 
+
+    function salry_opensearch(obj,w,h,t){ //自制弹窗
+        var url ="{:U('Approval/Approval_Upload')}";
+        art.dialog({
+            content:$('#'+obj).html(),
+            lock:true,
+            title: t,
+            width:w,
+            height:h,
+            okValue: t,
+            button:[
+                {name:'确定',
+                    class:'aui_state_highlight',
+                    callback:function(){
+                        window.location.href=url;
+                        return false;
+                    }
+                },
+            ],
+            cancelValue:'取消',
+            cancel: function () {
+            }
+
+        }).show();
+        $('.aui_buttons').find("button").first().css("background-color","#00acd6");
+    }
 </script>
