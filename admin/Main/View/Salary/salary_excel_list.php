@@ -42,9 +42,9 @@
                             <table class="table table-bordered dataTablev">
                                 <tr role="row" class="orders">
                                     <th class="sorting" style="width:8em;background-color:#66CCFF;">ID</th>
-                                    <th class="sorting" style="width:10em;background-color:#66CCFF;">员工姓名</th>
-                                    <th class="sorting" style="width:16em;background-color:#66CCFF;">岗位名称</th>
-                                    <th class="sorting" style="width:10em;background-color:#66CCFF;">所属部门</th>
+                                    <th class="sorting" style="width:12em;background-color:#66CCFF;">员工姓名</th>
+                                    <th class="sorting" style="width:20em;background-color:#66CCFF;">岗位名称</th>
+                                    <th class="sorting" style="width:15em;background-color:#66CCFF;">所属部门</th>
                                     <th class="sorting" style="width:10em;background-color:#66CCFF;">岗位薪酬标准</th>
                                     <th class="sorting" style="width:14em;background-color:#66CCFF;">其中基本工资标准</th>
                                     <th class="sorting" style="width:10em;background-color:#66CCFF;">考勤扣款</th>
@@ -467,14 +467,14 @@
                 if (data.sum == 1) {
                     $('#salary_add_applovel3').empty();
                     if(data.msg.status==2){
-                        var html = '<a style="width:10em;margin-left:20em;font-size:1.5em;color:#000000;"><b>提交审核人 : </b><img src="'+data.msg.submitter_url+'" alt="" style="width:6em;"></a>';
-                            html +='<a style="width:10em;margin-left:20em;font-size:1.5em;color:#000000;"><b>审核人 : </b><img src="'+data.msg.examine_url+'" alt="" style="width:6em;"></a>';
-                            html +='<a style="width:10em;margin-left:20em;font-size:1.5em;color:#000000;"><b>批准人 : </b><img src="'+data.msg.approval_url+'" alt="" style="width:6em;"></a>';
-                            html +='<a style="width:10em;margin-left:20em;font-size:1.5em;color:#000000;">'+data.msg.content+data.msg.time+'</a>';
+                        var html = '<a style="width:10em;margin-left:10em;font-size:1.5em;color:#000000;"><b>提交审核人 : </b><img src="'+data.msg.submitter_url+'" alt="" style="width:6em;"></a>';
+                            html +='<a style="width:10em;margin-left:10em;font-size:1.5em;color:#000000;"><b>审核人 : </b><img src="'+data.msg.examine_url+'" alt="" style="width:6em;"></a>';
+                            html +='<a style="width:10em;margin-left:10em;font-size:1.5em;color:#000000;"><b>批准人 : </b><img src="'+data.msg.approval_url+'" alt="" style="width:6em;"></a>';
+                            html +='<a style="width:10em;margin-left:10em;font-size:1.5em;color:#000000;">'+data.msg.content+data.msg.time+'</a>';
                     }
                     if(data.msg.status==1){
-                        var html = '<a style="width:10em;margin-left:20em;font-size:1.5em;color:#000000;"><b>打印人 : '+data.msg.submitter+'</b></a>';
-                            html +='<a style="width:10em;margin-left:20em;font-size:1.5em;color:#000000;">'+data.msg.content+data.msg.time+'</a>';
+                        var html = '<a style="width:10em;margin-left:10em;font-size:1.5em;color:#000000;"><b>打印人 : '+data.msg.submitter+'</b></a>';
+                            html +='<a style="width:10em;margin-left:10em;font-size:1.5em;color:#000000;">'+data.msg.content+data.msg.time+'</a>';
                     }
                     $('#salary_add_applovel3').append(html);
                     print_view(id);
