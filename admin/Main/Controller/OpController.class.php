@@ -598,6 +598,14 @@ class OpController extends BaseController {
         //人员名单关键字
         $this->userkey = get_username();
 
+        //研发和资源人员信息(用于前期对研发和资源人员评分)
+        $yanfa          = M('worder')->field('exe_user_id , exe_user_name , assign_id, assign_name')->where(array('op_id'=>$opid,'kpi_type'=>3,'status'=>array('neq',-1)))->find();   //京区校内研发
+        $ziyuan         = M('worder')->field('exe_user_id , exe_user_name , assign_id, assign_name')->where(array('op_id'=>$opid,'kpi_type'=>4,'status'=>array('neq',-1)))->find();   //京区校内资源
+        $this->yanfa    = $yanfa;
+        $this->ziyuan   = $ziyuan;
+        $pingfen        = M('op_score')->where(array('op_id'=>$opid))->find();
+        $this->pingfen  = json_encode($pingfen) ;
+
         $this->display('plans_edit');
 		
 	}
@@ -1329,8 +1337,29 @@ class OpController extends BaseController {
 
             //保存前期对资源评价
             if ($opid && $savetype==21){
-                $a = I();
-                var_dump($a);die;
+                $info['op_id']      = $opid;
+                $info['pf_id']      = cookie('userid');
+                $info['pf_name']    = cookie('nickname');
+                $info['create_time']= NOW_TIME;
+                $pingfen    = M('op_score')->where(array('op_id'=>$opid))->find();
+                if ($pingfen){
+                    $res    = M('op_score')->where(array('id'=>$pingfen['id']))->save($info);
+
+                    $record = array();
+                    $record['op_id']   = $opid;
+                    $record['optype']  = 4;
+                    $record['explain'] = '修改评分信息';
+                    op_record($record);
+                }else{
+                    $res    = M('op_score')->add($info);
+
+                    $record = array();
+                    $record['op_id']   = $opid;
+                    $record['optype']  = 4;
+                    $record['explain'] = '填写评分信息';
+                    op_record($record);
+                }
+                if ($res) $num++;
             }
 
             echo $num;
