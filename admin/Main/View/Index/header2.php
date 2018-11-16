@@ -59,7 +59,9 @@
         <script src="__HTML__/comm/liMarquee/jquery.liMarquee.js" type="text/javascript"></script>
         <script src="__HTML__/comm/laydate/laydate.js"></script>
         <script src="__HTML__/comm/jquery.autocomplete.min.js"></script>
-		<script type="text/javascript">
+        <!--jquery.raty-->
+        <script type="text/javascript" src="__HTML__/score/lib/jquery.raty.min.js"></script>
+        <script type="text/javascript">
         	//laydate.skin('molv');
         </script>
 

@@ -1,18 +1,7 @@
-
-<form method="post" action="<?php echo U('Op/public_save'); ?>" id="save_score">
+<?php if ($pingfen){ ?>
     <label class="lit-title">对前期研发评价<span style="float: right;clear: both;font-weight: normal;">资源负责人：<?php echo $yanfa['assign_name']?$yanfa['assign_name']:$yanfa['exe_user_name']; ?></span></label>
     <div class="content">
-        <input type="hidden" name="dosubmint" value="1">
-        <input type="hidden" name="savetype" value="21">
-        <input type="hidden" name="opid" value="{$op.op_id}">
         <div class="content" id="guidelist" style="display:block;">
-            <input type="hidden" id="match_num" name="info[match]" value="" />
-            <input type="hidden" id="innovate_num" name="info[innovate]" value="" />
-            <input type="hidden" id="cost_num" name="info[cost]" value="" />
-            <input type="hidden" id="safe_num" name="info[safe]" value="" />
-            <input type="hidden" id="ptfa_num" name="info[ptfa]" value="" />
-            <input type="hidden" name="info[yf_uid]" value="<?php echo $yanfa['assign_id']?$yanfa['assign_id']:$yanfa['exe_user_id']; ?>" />
-            <input type="hidden" name="info[yf_uname]" value="<?php echo $yanfa['assign_name']?$yanfa['assign_name']:$yanfa['exe_user_name']; ?>" />
 
             <div style="width:100%;float:left;">
 
@@ -51,8 +40,10 @@
                     </div>
                 </div>
 
-                <textarea name="info[yf_content]" class="form-control" id="yf_content"  rows="2" placeholder="请输入对研发评价内容"></textarea>
-                <div class="form-group col-md-12"></div>
+                <div class="form-group col-md-12">
+                    <label>评价信息：</label>
+                    <textarea name="info[yf_content]" class="form-control" id="yf_content" ></textarea>
+                </div>
 
             </div>
         </div>
@@ -61,11 +52,6 @@
     <label class="lit-title">对前期资源配置评价<span style="float: right;clear: both;font-weight: normal;">资源负责人：<?php echo $ziyuan['assign_name']?$ziyuan['assign_name']:$ziyuan['exe_user_name']; ?></span></label>
     <div class="content">
         <div class="content" id="" style="display:block;">
-            <input type="hidden" id="times_num" name="info[times]" value="">
-            <input type="hidden" id="finish_num" name="info[finish]" value="">
-            <input type="hidden" id="site_num" name="info[site]" value="">
-            <input type="hidden" name="info[zy_uid]" value="<?php echo $ziyuan['assign_id']?$ziyuan['assign_id']:$ziyuan['exe_user_id']; ?>" />
-            <input type="hidden" name="info[zy_uname]" value="<?php echo $ziyuan['assign_name']?$ziyuan['assign_name']:$ziyuan['exe_user_name']; ?>" />
 
             <div style="width:100%;float:left;">
 
@@ -90,18 +76,19 @@
                     </div>
                 </div>
 
-                <textarea name="info[zy_content]" class="form-control" id="zy_content"  rows="2" placeholder="请输入对资源评价内容"></textarea>
-                <div class="form-group col-md-12"></div>
+                <div class="form-group col-md-12">
+                    <label>评价信息：</label>
+                    <textarea name="info[zy_content]" class="form-control" id="zy_content"></textarea>
+                </div>
 
             </div>
 
         </div>
-        <div align="center" class="form-group col-md-12" style="alert:cennter;margin-bottom: 20px;">
-            <a  href="javascript:;" class="btn btn-info" onClick="javascript:save('save_score','<?php echo U('Op/public_save'); ?>');" style="width:60px;">保存</a>
-            <!--<input type="submit" class="btn btn-info" value="提交">-->
-        </div>
     </div>
-</form>
+
+<?php }else{ ?>
+<div class="content"><div class="form-group col-md-12">未评分！</div></div>
+<?php } ?>
 
 
 
@@ -137,7 +124,6 @@
     });
 
     function pingfen(id,score) {
-        $('#'+id+'_num').val(score);
         $('#'+id).raty({
             score: score ,
             click: function(score, evt) {
@@ -147,25 +133,5 @@
         });
     }
 
-    //保存信息
-    function save(id,url){
-        $.ajax({
-            type: "POST",
-            url: url,
-            dataType:'json',
-            data: $('#'+id).serialize(),
-            success:function(data){
-                if(parseInt(data)>0){
-                    art.dialog.alert('保存成功','success');
-                    window.top.location.reload();
-                    top.art.dialog({id:"score"}).close();
-                }else{
-                    art.dialog.alert('保存失败','warning');
-                }
-            }
-        });
-
-        setTimeout("history.go(0)",1000);
-    }
 
 </script>

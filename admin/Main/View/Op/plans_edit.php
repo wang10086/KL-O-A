@@ -414,7 +414,7 @@
                                        <?php if((cookie('roleid')==10 || cookie('userid')==$op['create_user'] || C('RBAC_SUPER_ADMIN')==cookie('username')) && $settlement['audit']!=1 ){ ?>
                                            <include file="score_edit" />
                                        <?php }else{ ?>
-                                           <include file="evaluate_before_read" />
+                                           <include file="score_read" />
                                        <?php }?>
                                    </div>
                                </div>

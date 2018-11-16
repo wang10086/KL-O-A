@@ -604,7 +604,7 @@ class OpController extends BaseController {
         $this->yanfa    = $yanfa;
         $this->ziyuan   = $ziyuan;
         $pingfen        = M('op_score')->where(array('op_id'=>$opid))->find();
-        $this->pingfen  = json_encode($pingfen) ;
+        if ($pingfen) { $this->pingfen  = json_encode($pingfen) ;}
 
         $this->display('plans_edit');
 		
