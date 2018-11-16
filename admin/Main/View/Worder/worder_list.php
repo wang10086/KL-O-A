@@ -30,18 +30,19 @@
                                 
                                 <div class="btn-group" id="catfont">
                                     <a href="{:U('Worder/worder_list',array('pin'=>0))}" class="btn <?php if($pin==0){ echo 'btn-info';}else{ echo 'btn-default';} ?>">所有工单</a>
-                                    <a href="{:U('Worder/my_worder',array('pin'=>1))}" class="btn <?php if($pin==1){ echo 'btn-info';}else{ echo 'btn-default';} ?>">我的已申请工单</a>
-                                    <a href="{:U('Worder/my_worder',array('pin'=>2))}" class="btn <?php if($pin==2){ echo 'btn-info';}else{ echo 'btn-default';} ?>">我的待执行工单</a>
+                                    <a href="{:U('Worder/worder_list',array('pin'=>3))}" class="btn <?php if($pin==3){ echo 'btn-info';}else{ echo 'btn-default';} ?>">我的待指派工单</a>
+                                    <a href="{:U('Worder/worder_list',array('pin'=>1))}" class="btn <?php if($pin==1){ echo 'btn-info';}else{ echo 'btn-default';} ?>">我的已申请工单</a>
+                                    <a href="{:U('Worder/worder_list',array('pin'=>2))}" class="btn <?php if($pin==2){ echo 'btn-info';}else{ echo 'btn-default';} ?>">我的待执行工单</a>
                                 </div>
                                 
                                 <table class="table table-bordered dataTable fontmini" id="tablelist" style="margin-top:10px;">
                                     <tr role="row" class="orders" >
                                         <th class="sorting" width="60" data="id">id</th>
                                         <th class="sorting" width="120" data="worder_title">工单标题</th>
-                                        <!--<th class="sorting"  data="worder_content">工单内容</th>-->
                                         <th class="sorting" width="80" data="worder_type">工单类型</th>
                                         <th class="sorting" width="80" data="init_user_name">发起人姓名</th>
-                                        <th class="sorting" width="80"  data="exe_user_name">执行人姓名</th>
+                                        <th class="sorting" width="80"  data="exe_user_name">接收人姓名</th>
+                                        <th class="sorting" width="80"  data="assign_name">执行人姓名</th>
                                         <th class="sorting" width="80" data="status">工单状态</th>
                                         <th class="sorting" width="125">工单创建时间</th>
                                         <!--<th class="sorting" width="125">工单完成时间</th>-->
@@ -55,10 +56,10 @@
                                     <tr>
                                         <td>{$row.id}<if condition="($row.urgent eq 2) and (in_array($row.status,array(0,1,2)))"><small class="badge pull-right bg-red" style="margin-right:4px;">加急</small></if></td>
                                         <td><a href="{:U('Worder/worder_info',array('id'=>$row['id']))}">{$row.worder_title}</a></td>
-                                        <!--<td>{$row.worder_content}</td>-->
-                                        <td>{$row.type}</td>
+                                        <td>{$worder_type[$row[worder_type]]}</td>
                                         <td>{$row.ini_user_name}</td>
                                         <td>{$row.exe_user_name}</td>
+                                        <td><?php echo $row['assign_name']?$row['assign_name']:"<span class=\"yellow\">未指派</span>"; ?></td>
                                         <td>{$row.sta}</td>
                                         <td>{$row.create_time|date='Y-m-d H:i:s',###}</td>
                                         <!--<if condition="$row.complete_time eq 0">
@@ -106,7 +107,15 @@
                     <input type="text" class="form-control" name="worder_title" placeholder="工单名称">
                 </div>
 
-                <div class="form-group col-md-12">
+                <div class="form-group col-md-6">
+                    <select name="worder_type" class="form-control">
+                        <foreach name="worder_type" key="k" item="v">
+                            <option value="{$k}">{$v}</option>
+                        </foreach>
+                    </select>
+                </div>
+
+                <div class="form-group col-md-6">
                     <input type="text" class="form-control" name="worder_content" placeholder="工单内容">
                 </div>
                 

@@ -672,7 +672,7 @@
 
 
                         <if condition="rolemenu(array('worder/new_worder','worder/worder_list','worder/project'))">
-                            <li class="treeview {:ison(CONTROLLER_NAME, 'worder')}">
+                            <li class="treeview {:ison(CONTROLLER_NAME, 'Worder')}">
                                 <a href="javascript:;">
                                     <i class="fa fa-clipboard"></i>
                                     <span>工单管理</span>
@@ -688,9 +688,9 @@
                                     <if condition="rolemenu(array('worder/worder_list'))">
                                         <li><a href="{:U('worder/worder_list')}"><i class="fa fa-angle-right"></i> 管理工单</a></li>
                                     </if>
-                                    <if condition="rolemenu(array('worder/project'))">
+                                    <!--<if condition="rolemenu(array('worder/project'))">
                                         <li><a href="{:U('worder/project')}"><i class="fa fa-angle-right"></i> 项目工单</a></li>
-                                    </if>
+                                    </if>-->
                                     <!--
                                     <li><a href="javascript:;" onClick="art_show_msg('加班开发中，稍后呈现...',5)"><i class="fa fa-angle-right"></i> KPI</a></li>
                                     -->
