@@ -1,6 +1,6 @@
 
 <form method="post" action="<?php echo U('Op/public_save'); ?>" id="save_score">
-    <label class="lit-title">对前期研发评价<span style="float: right;clear: both;font-weight: normal;">资源负责人：<?php echo $yanfa['assign_name']?$yanfa['assign_name']:$yanfa['exe_user_name']; ?></span></label>
+    <label class="lit-title">对前期研发评价<span style="float: right;clear: both;font-weight: normal;">资源负责人：{$yanfa.user_name}</span></label>
     <div class="content">
         <input type="hidden" name="dosubmint" value="1">
         <input type="hidden" name="savetype" value="21">
@@ -11,8 +11,8 @@
             <input type="hidden" id="cost_num" name="info[cost]" value="" />
             <input type="hidden" id="safe_num" name="info[safe]" value="" />
             <input type="hidden" id="ptfa_num" name="info[ptfa]" value="" />
-            <input type="hidden" name="info[yf_uid]" value="<?php echo $yanfa['assign_id']?$yanfa['assign_id']:$yanfa['exe_user_id']; ?>" />
-            <input type="hidden" name="info[yf_uname]" value="<?php echo $yanfa['assign_name']?$yanfa['assign_name']:$yanfa['exe_user_name']; ?>" />
+            <input type="hidden" name="info[yf_uid]" value="{$yanfa.user_id}" />
+            <input type="hidden" name="info[yf_uname]" value="{$yanfa.user_name}" />
 
             <div style="width:100%;float:left;">
 
@@ -58,14 +58,14 @@
         </div>
     </div>
 
-    <label class="lit-title">对前期资源配置评价<span style="float: right;clear: both;font-weight: normal;">资源负责人：<?php echo $ziyuan['assign_name']?$ziyuan['assign_name']:$ziyuan['exe_user_name']; ?></span></label>
+    <label class="lit-title">对前期资源配置评价<span style="float: right;clear: both;font-weight: normal;">资源负责人：{$ziyuan.user_name}</span></label>
     <div class="content">
         <div class="content" id="" style="display:block;">
             <input type="hidden" id="times_num" name="info[times]" value="">
             <input type="hidden" id="finish_num" name="info[finish]" value="">
             <input type="hidden" id="site_num" name="info[site]" value="">
-            <input type="hidden" name="info[zy_uid]" value="<?php echo $ziyuan['assign_id']?$ziyuan['assign_id']:$ziyuan['exe_user_id']; ?>" />
-            <input type="hidden" name="info[zy_uname]" value="<?php echo $ziyuan['assign_name']?$ziyuan['assign_name']:$ziyuan['exe_user_name']; ?>" />
+            <input type="hidden" name="info[zy_uid]" value="{$ziyuan.user_id}" />
+            <input type="hidden" name="info[zy_uname]" value="{$ziyuan.user_name}" />
 
             <div style="width:100%;float:left;">
 
@@ -147,25 +147,5 @@
         });
     }
 
-    //保存信息
-    function save(id,url){
-        $.ajax({
-            type: "POST",
-            url: url,
-            dataType:'json',
-            data: $('#'+id).serialize(),
-            success:function(data){
-                if(parseInt(data)>0){
-                    art.dialog.alert('保存成功','success');
-                    window.top.location.reload();
-                    top.art.dialog({id:"score"}).close();
-                }else{
-                    art.dialog.alert('保存失败','warning');
-                }
-            }
-        });
-
-        setTimeout("history.go(0)",1000);
-    }
 
 </script>

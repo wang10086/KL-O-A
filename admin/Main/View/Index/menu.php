@@ -561,7 +561,7 @@
                             <ul class="treeview-menu">
 
                                 <if condition="rolemenu(array('Rbac/role','Rbac/index'))">
-                                    <li class="treeview {:on('Rbac/role')} {:on('Rbac/addrole')} {:on('Rbac/priv')} {:on('Rbac/index')} {:on('Rbac/adduser')} {:on('Rbac/password')}">
+                                    <li class="treeview {:on('Rbac/role')} {:on('Rbac/addrole')} {:on('Rbac/priv')} {:on('Rbac/index')} {:on('Rbac/adduser')} {:on('Rbac/password')} {:on('Rbac/post')} {:on('Rbac/addpost')} {:on('Rbac/kpi_users')}">
 
                                         <a href="{:U('Rbac/index')}">
                                             <i class="fa fa-user"></i>
@@ -578,6 +578,10 @@
 
                                             <if condition="rolemenu(array('Rbac/post'))">
                                                 <li class="{:on('Rbac/post')} {:on('Rbac/addpost')}"><a href="{:U('Rbac/post')}"><i class="fa fa-angle-right"></i> 岗位管理</a></li>
+                                            </if>
+
+                                            <if condition="rolemenu(array('Rbac/kpi_users'))">
+                                                <li class="{:on('Rbac/kpi_users')}" ><a href="{:U('Rbac/kpi_users')}"><i class="fa fa-angle-right"></i> 配置KPI数据</a></li>
                                             </if>
 
                                         </ul>
@@ -841,10 +845,6 @@
 
                                     <if condition="rolemenu(array('Rbac/kpi_quota'))">
                                          <li class="{:on('Rbac/kpi_quota')}" ><a href="{:U('Rbac/kpi_quota')}"><i class="fa fa-angle-right"></i> KPI考核指标管理</a></li>
-                                    </if>
-
-                                    <if condition="rolemenu(array('Rbac/kpi_users'))">
-                                         <li class="{:on('Rbac/kpi_users')}" ><a href="{:U('Rbac/kpi_users')}"><i class="fa fa-angle-right"></i> 配置KPI数据</a></li>
                                     </if>
 
                                     <if condition="rolemenu(array('Rbac/kpi_lockdata'))">

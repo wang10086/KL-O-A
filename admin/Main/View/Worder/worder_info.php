@@ -1,18 +1,4 @@
 <include file="Index:header2" />
-<!--评分插件-->
-<!--<link rel="stylesheet" type="text/css" href="__HTML__/pingfen/css/normalize.css" />
-<link rel="stylesheet" type="text/css" href="__HTML__/pingfen/css/default.css">
-<link rel="stylesheet" type="text/css" href="__HTML__/pingfen/css/demo.css" />
-<link href="http://cdn.bootcss.com/font-awesome/4.4.0/css/font-awesome.min.css" rel="stylesheet">
-<script src="__HTML__/pingfen/js/jquery-2.1.1.min.js"></script>
-<script src="__HTML__/pingfen/js/jquery.ratyli.js"></script>
-<script src="__HTML__/pingfen/js/demo.js"></script>-->
-
-<script type="text/javascript">
-    window.onload = function(){
-        $('#dept').hide();
-    }
-</script>
 
     <aside class="right-side">
         <!-- Content Header (Page header) -->
@@ -38,9 +24,6 @@
                             <h3 class="box-title">
                              工单信息
                             </h3>
-                            <?php /*if($row['contract_id']){ */?><!--
-                            <h3 class="box-title pull-right" style="font-weight:normal; color:#333333;"><span class="green">工单编号：{$row.contract_id}</span></h3>
-                            --><?php /*} */?>
                         </div><!-- /.box-header -->
                         <div class="box-body">
                             <div class="content">
@@ -183,7 +166,6 @@
 
                 <div class="col-md-12">
                     <?php if(rolemenu(array('Worder/assign_user')) and rolemenu(array('Worder/exe_worder')) and ($info['exe_user_id'] == cookie('userid') || $info['assign_id'] == cookie('userid')) ){ ?>
-                        <?php /*if(rolemenu(array('Worder/assign_user'))){ */?>
                     <div class="box box-warning">
                         <div class="box-header">
                             <h3 class="box-title">工单确认信息</h3>
@@ -212,9 +194,8 @@
                                 <input type="hidden" name="unfinished" value="">
                                 <input type="hidden" name="referer" value="<?php echo $_SERVER['HTTP_REFERER']; ?>" />
 
-                                <div class="form-group col-md-12" style="margin-top:10px;">
+                                <div class="form-group col-md-12" style="margin-top:10px;" id="check_worder">
                                     <div class="checkboxlist" id="applycheckbox" style="margin-top:10px;">
-                                    <!--<input type="radio" name="info[status]" value="1" <?php /*if($row['status']==1){ echo 'checked';} */?> > 确认通过-->
                                     <input type="radio" name="info[status]" value="1" <?php if($row['status']==1){ echo 'checked';} ?> > 确认通过
                                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                     <input type="radio" name="info[status]" value="-1" <?php if($row['status']==-1){ echo 'checked';} ?> > 拒绝该工单
@@ -222,11 +203,11 @@
                                     </div>
                                 </div>
 
-                                <if condition="in_array(cookie('roleid'),$ids)">
+                                <div class="dept">
                                     <div class="form-group col-md-12">
                                         <div style="border-top:1px solid #dedede; margin-top:15px; padding-top:20px;">
                                             <label>工单类型</label>
-                                            <select class="form-control" name="info[wd_id]" onchange="show_dept()" id="pro_tit">
+                                            <select class="form-control" name="info[wd_id]" onchange="show_dept()" id="pro_tit" required>
                                                 <option value="" disabled selected>选择工单类型</option>
                                                 <foreach name="dept_list" item="v">
                                                     <option value="{$v.id}" <?php if($info['id']==$v['id']){ echo 'selected';} ?> >{$v.pro_title}</option>
@@ -235,16 +216,14 @@
                                         </div>
                                     </div>
 
-                                    <div id="dept">
-                                        <div class="form-group col-md-6">
-                                            <label>工单类型：</label><input type="text" name="d_type" class="form-control" readonly />
-                                        </div>
-
-                                        <div class="form-group col-md-6">
-                                            <label>完成所需时间：</label><input type="text" name="use_time" class="form-control" readonly />
-                                        </div>
+                                    <div class="form-group col-md-6">
+                                        <label>工单类型：</label><input type="text" name="d_type" class="form-control" readonly />
                                     </div>
-                                </if>
+
+                                    <div class="form-group col-md-6">
+                                        <label>完成所需时间：</label><input type="text" name="use_time" class="form-control" readonly />
+                                    </div>
+                                </div>
 
                                 <div class="form-group col-md-12"></div>
                                 <div class="form-group col-md-12">
@@ -432,6 +411,24 @@
 <include file="Index:footer2" />
 
 <script type="text/javascript">
+    $(function () {
+        $('.dept').hide();
+        $('#check_worder').find('ins').each(function (index,ele) {
+            $(this).click(function () {
+                var stu = $(this).prev('input').val();
+                if(stu==1){
+                    $('.dept').show();
+                }else{
+                    $('.dept').hide();
+                    $('#pro_tit').val('');
+                    $("input[name='d_type']").val('');
+                    $("input[name='use_time']").val('');
+                    $('#pro_tit').removeAttr('required')
+                }
+            })
+        })
+    })
+
     //指派责任人
     function assign(url,title){
         art.dialog.open(url,{

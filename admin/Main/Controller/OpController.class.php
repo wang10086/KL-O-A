@@ -596,15 +596,22 @@ class OpController extends BaseController {
 		$this->geclist     = M('customer_gec')->field('id,pinyin,company_name')->where($where)->group("company_name")->order('pinyin ASC')->select();
 
         //人员名单关键字
-        $this->userkey = get_username();
+        $this->userkey      = get_username();
 
         //研发和资源人员信息(用于前期对研发和资源人员评分)
-        $yanfa          = M('worder')->field('exe_user_id , exe_user_name , assign_id, assign_name')->where(array('op_id'=>$opid,'kpi_type'=>3,'status'=>array('neq',-1)))->find();   //京区校内研发
-        $ziyuan         = M('worder')->field('exe_user_id , exe_user_name , assign_id, assign_name')->where(array('op_id'=>$opid,'kpi_type'=>4,'status'=>array('neq',-1)))->find();   //京区校内资源
-        $this->yanfa    = $yanfa;
-        $this->ziyuan   = $ziyuan;
-        $pingfen        = M('op_score')->where(array('op_id'=>$opid))->find();
+        $pingfen            = M('op_score')->where(array('op_id'=>$opid))->find();
         if ($pingfen) { $this->pingfen  = json_encode($pingfen) ;}
+
+        $yanfa_info         = M('worder')->field('exe_user_id , exe_user_name , assign_id, assign_name')->where(array('op_id'=>$opid,'kpi_type'=>3,'status'=>array('neq',-1)))->find();   //京区校内研发
+        $ziyuan_info        = M('worder')->field('exe_user_id , exe_user_name , assign_id, assign_name')->where(array('op_id'=>$opid,'kpi_type'=>4,'status'=>array('neq',-1)))->find();   //京区校内资源
+        $yanfa              = array();
+        $yanfa['user_id']   = $pingfen['yf_uid']?$pingfen['yf_uid']:($yanfa_info['assign_id']?$yanfa_info['assign_id']:$yanfa_info['exe_user_id']);
+        $yanfa['user_name'] = $pingfen['yf_uname']?$pingfen['yf_uname']:($yanfa_info['assign_name']?$yanfa_info['assign_name']:$yanfa_info['exe_user_name']);
+        $ziyuan             = array();
+        $ziyuan['user_id']  = $pingfen['zy_uid']?$pingfen['zy_uid']:($ziyuan_info['assign_id']?$ziyuan_info['assign_id']:$ziyuan_info['exe_user_id']);
+        $ziyuan['user_name']= $pingfen['zy_uname']?$pingfen['zy_uname']:($ziyuan_info['assign_name']?$ziyuan_info['assign_name']:$ziyuan_info['exe_user_name']);
+        $this->yanfa        = $yanfa;
+        $this->ziyuan       = $ziyuan;
 
         $this->display('plans_edit');
 		

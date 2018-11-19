@@ -296,7 +296,7 @@ class WorderController extends BaseController{
             //$this->info     = $db->alias('w')->where(array('w.id'=>$id))->join("left join oa_worder_dept as d on d.id = w.wd_id")->find();
             $info           = $db->where(array('id'=>$id))->find();
             $roleid         = cookie('roleid');
-            $this->dept_list= M('worder_dept')->field("id,pro_title")->where("dept_id = '$roleid'")->select();
+            $this->dept_list= M('worder_dept')->field("id,pro_title")->select();
             $this->record   = M('worder_record')->where(array('worder_id'=>$id))->order('id DESC')->select();
 
             //判断工单类型
@@ -341,6 +341,7 @@ class WorderController extends BaseController{
 
         if(isset($_POST['dosubmit']) && $info){
 
+            //保存指派人信息
             $assign_name        = M('account')->where(array('id'=>$info))->getField('nickname');
             $data               = array();
             $data['assign_id']  = $info;
