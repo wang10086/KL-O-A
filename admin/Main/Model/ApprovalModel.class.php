@@ -2,122 +2,66 @@
     namespace Main\Model;
     use Think\Model;
     use Sys\P;
-    class ApprovalModel extends Model{
+    class ApprovalModel extends Model
+    {
 
-
-        /**
-         * 文件上传审批
-         * $table 上传文件表名 $user_id 审批人
-         * $style 状态 1 approval_flie_update表添加 默认 approval_flie 表
-         */
-        public function approval_upload($table,$user_id,$style,$approve_id,$id){
-            if($style==1){//修改文件信息
-                $table                                  = 'approval_flie_update';
-                $add_approval['update_time']            = time();
-                $userid                                 = $user_id;
-                $add_approval['file_id']                = $user_id;
-                $approval_r                             = M('approval_flie')->where('id='.$userid)->find();
-                if($approval_r){
-                    if($approval_r['account_id']!==$_SESSION['userid']){
-                        return 3;die;
-                    }
-                }
-            }else{
-                if($style!==2){//不是普通用户上传
-                    $userid                             = '';
-                    foreach($user_id as $key =>$val){
-                        $userid                         .= $val.',';
-                    }
-                    $userid                             = substr($userid,0,-1);
-                    $add_approval['file_account_id']    = $userid;
-                    $add_approval['file_leader_id']     = $approve_id;
-                    $add_approval['file_leader_name']   = username($approve_id);
-                    if($style==3){//给普通用户添加审批人
-                        $update                         = M($table)->where('id='.$id)->save($add_approval);
-                        if($update){
-                            return 1;die;
-                        }
-                        return 0;die;
-                    }
-                }
-            }
-            $upload                                     = new \Think\Upload();// 实例化上传类
-            $upload->maxSize                            = 31457280000 ;// 设置附件上传大小
-            $upload->exts                               = array('doc','docx','pdf');// 设置附件上传类型
-            $upload->rootPath                           = './upload/'; // 设置附件上传根目录
-            $upload->subName                            = array('date', 'Ym');//文件upload下的文件名
-            $info                                       =  $upload->upload();//上传文件
-            if($info){
-                //文件信息保存
-                $add_approval['createtime']             = time();
-                $add_approval['account_id']             = $_SESSION['userid'];
-                $add_approval['account_name']           = user_table($_SESSION['userid'])['nickname'];
-                $add_approval['file_size']              = $info['file']['size'];
-                $add_approval['file_format']            = $info['file']['ext'];
-                $add_approval['file_name']              = substr($info['file']['savename'],0,strlen($info['file']['savename'])-4);
-                $add_approval['file_url']               = substr($upload->rootPath,2).$info['file']['savepath'].$info['file']['savename'];
-                if($style==1){//判断是否已经有数据
-                    $where['file_id']                   = $user_id;
-                    $files                              = M($table)->where($where)->find();
-                    if($files){
-                        unset($add_approval['createtime']);
-                        $where['type']                  = 1;
-                        $update                         = M($table)->where($where)->save($add_approval);
-                        if($update){
-                            return 1;die;
-                        }
-                        return 0;die;
-                    }
-                }
-                $upload                                = M($table)->add($add_approval);
-                if($upload){
-                    if(empty($_COOKIE['xuequ_approval'])){
-                        $approval                      = $add_approval['createtime'].','.$add_approval['file_size'].','.$add_approval['file_format'].','.$info['file']['savename'];
-                    }else{
-                        $approval                      =  $_COOKIE['xuequ_approval'].','.$add_approval['createtime'].','.$add_approval['file_size'].','.$add_approval['file_format'].','.$info['file']['savename'];
-                    }
-                    cookie('approval',$approval,18000);
-                    return 1;die;
-                }
-            }
-           return 0;die;
+        //文件详情
+        public function Approval_details($id)
+        {
+            $approval_url = M('approval_flie_url')->where($id)->find();
+            return $approval_url;
         }
-        /**
-         * 查询 approval_flie_update 文件修改表
-         * $approval 文件的信息 二维数组
-         *   echo M($table)->getLastSql();
-         */
-        public function approval_update_sql($approval){
+
+        //编辑文件
+        public function Arrangement($fileid)
+        {
+            if (!is_numeric($fileid)) {
+                $this->error('数据错误!请重新打开！');//最后一次错误
+            }
+            $flie = M('approval_flie')->where('id=' . $fileid)->find();
+            //整理关键字
+            $role = M('role')->GetField('id,role_name', true);
+            $user = M('account')->where(array('status' => 0))->select();
+            $key  = array();
+            foreach ($user as $k => $v) {
+                $text                 = $v['nickname'] . '-' . $role[$v['roleid']];
+                $key[$k]['id']        = $v['id'];
+                $key[$k]['user_name'] = $v['nickname'];
+                $key[$k]['pinyin']    = strtopinyin($text);
+                $key[$k]['text']      = $text;
+                $key[$k]['role']      = $v['roleid'];
+                $key[$k]['role_name'] = $role[$v['roleid']];
+            }
+            $app['flie'] = $flie;
+            $app['key']  = $key;
+            return $app;
+        }
+
+        //文件首次上传
+        public function add_approval($file){
+            if (empty($file['file_url']) || !is_numeric($file['pid_account_id'])) {
+                return 0;
+            }
+            $file = array_filter($file);
+            $add  = M('approval_flie_url')->add($file);
+            if ($add) {
+                return 1;
+            } else {
+                return 0;
+            }
+        }
+        //查询文件和修改文件 $type 1 判断是文件修改表 默认是文件表
+        public function query_table($approval,$type){
             foreach($approval as $key => $val){
-                $where['file_id']                               = $val['id'];
-                $update[$key]['file']                           = $val;
-                $update[$key]['flie_update']                    = M('approval_flie_update')->where($where)->find();
-                $update[$key]['flie_annotation']                = M('annotation_file')->where($where)->select();
-                $user_id                                        = explode(',',$val['file_account_id']);
-                foreach($user_id as $k =>$v) {
-                    $update[$key]['file']['user'][$k]['status'] = user_contrast_status($val['id'],$v);
+                if($type==1){
+                    $app['id']                  = $val['id'];
+                }else{
+                    $app['file_id']             = $val['id'];
                 }
-
-                //如果 0未批注 <=2 是已批注 3是已批准 4 批准未通过
-                $update[$key]['file']['file_leader_status']     = user_contrast_status($val['id'],$val['file_leader_id']);
+                $appro[$key]['Approval_url']    = $this->Approval_details($app);
+                $appro[$key]['Approval']        = $val;
             }
-            return $update;
-        }
-
-        /**
-         * 查询 approval_flie表的文件信息
-         * $id 文件 id
-         */
-        public function approval_update($id){
-            $where['id']                            = $id;
-            $where['type']                          = 1;
-            $file                                   = M('approval_flie')->where($where)->find();
-            $user_id                                = explode(',',$file['file_account_id']);
-            foreach($user_id as $key => $val){
-                $userinfo['user'][$key]['username'] = username($val);
-            }
-            $file                                   = array_merge($file,$userinfo);
-            return $file;
+            return $appro;
         }
 
     }

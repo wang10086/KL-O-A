@@ -1,5 +1,12 @@
 <include file="Index:header" />
 
+<style>
+    #bordorcolor{
+        border:1px solid rgb(0,0,0);
+
+    }
+
+</style>
 <script src="__HTML__/js/public.js?v=1.0.6" type="text/javascript"></script>
 <aside class="right-side">
     <!-- Content Header (Page header) -->
@@ -455,6 +462,7 @@
         var time    = $('.list_salary_datetime').text();//现在表的时间
         var moneyid = $('.list_salary_detail3').text(); // 表单id
         var id      = $('#salary_archives_list').attr('id');//当前要打印的id
+
         $.ajax({
             type: "POST",
             url:  "index.php?m=Main&c=Ajax&a=printing_content",
@@ -476,6 +484,8 @@
                         var html = '<a style="width:10em;margin-left:10em;font-size:1.5em;color:#000000;"><b>打印人 : '+data.msg.submitter+'</b></a>';
                             html +='<a style="width:10em;margin-left:10em;font-size:1.5em;color:#000000;">'+data.msg.content+data.msg.time+'</a>';
                     }
+                    $('th').prop('id','bordorcolor');
+                    $('td').prop('id','bordorcolor');
                     $('#salary_add_applovel3').append(html);
                     print_view(id);
                     return false;

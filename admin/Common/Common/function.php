@@ -3582,7 +3582,7 @@ function kpilock($month,$uid){
 function salary_info($status,$cont){
 
 	$add['op_time'] 	= time();
-	$add['uname'] 		= $_SESSION['nickname'];
+	$add['uname'] 		= $_SESSION['name'];
 	$add['optype'] 		= $status;//添加岗位薪酬变动
 	$add['explain'] 	= $cont;
 
@@ -3825,19 +3825,6 @@ function user_table($where){//查询用户
             }
         }
 
-    /**
-     * session_userid 是否是特殊人员
-     *  用户id
-     */
-    function session_userid(){
-        $userid = (int)$_SESSION['userid'];
-        if($userid==1 || $userid==2 || $userid==11 || $userid==12 ||$userid==13 || $userid==32 || $userid==38){
-            $type = 1; // 特殊人员识别
-        }else{
-            $type = 2; //普通人员只显示上传
-        }
-        return $type;
-    }
 
 
 //获取用户信息(用户名+角色)
@@ -3914,6 +3901,7 @@ function get_username(){
         return $sum;
     }
 
+
 //    /**
 //     * monthly_Finance 财务统计
 //     * $userid 用户id
@@ -3954,5 +3942,17 @@ function get_username(){
         $count     = M('jiekuan')->where(array('jkd_id'=>array('like',$jkd.'%')))->count();
         $jkdid     = $jkd.'-'.($count+1);
         return $jkdid;
+    }
+
+    //领导层选取
+    function office_user($type){
+        if($type==1){
+            $arr = array("乔峰","杨开玖","秦鸣","王凯","杜莹","程小平");//办公室成员
+        }elseif($type==2){
+            $arr = array("王茜","蔡金龙","孟华","王丹","许世伟","石曼","赵鹏","李岩","徐恒","徐娜","赵燕");//扩展人员
+        }elseif($type==3){
+            $arr = array("乔峰","杨开玖","秦鸣","王凯","杜莹","程小平","王茜","蔡金龙","孟华","王丹","许世伟","石曼","赵鹏","李岩","徐恒","徐娜","赵燕");
+        }
+        return $arr;
     }
 
