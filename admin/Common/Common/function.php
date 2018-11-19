@@ -2660,8 +2660,8 @@ function updatekpi($month,$user){
                     }
                 }
 
-                //业务人员满意度（研发质量)
-                if ($v['quota_id']==129){
+                //业务人员满意度（京区业务中心研发)
+                /*if ($v['quota_id']==129){
                     $where = array();
                     $where['s.input_time']	= array('between',array($v['start_date'],$v['end_date']+86399));
                     $where['r.exe_user_id'] = $user;
@@ -2674,7 +2674,22 @@ function updatekpi($month,$user){
                         ->select();
 
                     //合格率>0.9(满分)
-                    $hegelv = get_hegelv($lists);
+                    $hegelv = get_hegelvaa($lists);
+                    if($hegelv>0.9 || !$lists){
+                        $complete	= 100;
+                    }else{
+                        $complete	= (round($hegelv/0.9,2)*100).'%';
+                    }
+                }*/
+                if ($v['quota_id']==129){
+                    $where = array();
+                    $where['create_time']	= array('between',array($v['start_date'],$v['end_date']+86399));
+                    $where['yf_uid']        = $user;
+                    $lists = M('op_score')->field('match,innovate,cost,safe,ptfa')->where($where)->select();
+
+                    //合格率>0.9(满分)
+                    $hegelv = get_hegelv($lists,5);
+
                     if($hegelv>0.9 || !$lists){
                         $complete	= 100;
                     }else{
@@ -2682,8 +2697,8 @@ function updatekpi($month,$user){
                     }
                 }
 
-                //工作及时率(研发+设计+资源)
-                if ($v['quota_id']==130){
+                //工作及时率(京区业务中心研发)
+                /*if ($v['quota_id']==130){
                     //5天内完成为不超时
                     $where                  = array();
                     $where['audit_time']    = array('between',array($v['start_date']-5*86400,$v['end_date']-4*86400));
@@ -2720,11 +2735,67 @@ function updatekpi($month,$user){
                     }else{
                         $complete	= round($hegelv/0.9,2)*100;
                     }
+                }*/
+                if ($v['quota_id']==130){
+                    //及时率
+                    $jishilv_data           = get_jishilv($user,$v['start_date'],$v['end_date']);
+                    $jishilv                = $jishilv_data['jishilv'];
 
+                    if($jishilv>0.9 || !$jishilv_data['zongshu']){
+                        $complete	= 100;
+                    }else{
+                        $complete	= round($jishilv/0.9,2)*100;
+                    }
                 }
 
+                //研发培训(京区业务中心研发)
+                if ($v['quota_id']==131){
+                    //培训完成率
+                    $peixun_data            = get_peixunlv($user,$v['start_date'],$v['end_date']);
+                    $zongshu                = $peixun_data['zongshu'];
+                    $peixunlv               = $peixun_data['peixunlv'];
+
+                    if($peixunlv >= 1 || !$zongshu){
+                        $complete	= 100;
+                    }else{
+                        $complete	= ($peixunlv*100).'%';
+                    }
+                }
+
+                //辅导员/教师管理及时率(京区业务中心教务)
+                /*if ($v['quota_id']==132){
+                    //辅导员管理及时率
+                    $jishilv        = get_fdyjsl($user,$v['start_date'],$v['end_date']);
+
+                    var_dump($jishilv);die;
+
+                    if($peixunlv >= 1 || !$zongshu){
+                        $complete	= 100;
+                    }else{
+                        $complete	= ($peixunlv*100).'%';
+                    }
+                }*/
+
+                //场馆资源调度质量(京区业务中心资源)
+                if ($v['quota_id']==137){
+                    $where = array();
+                    $where['create_time']	= array('between',array($v['start_date'],$v['end_date']+86399));
+                    $where['zy_uid']        = $user;
+                    $lists = M('op_score')->field('times,finish,site')->where($where)->select();
+
+                    //合格率>0.9(满分)
+                    $hegelv = get_hegelv($lists,3);
+
+                    if($hegelv>0.9 || !$lists){
+                        $complete	= 100;
+                    }else{
+                        $complete	= (round($hegelv/0.9,2)*100).'%';
+                    }
+                }
+
+
 				//已实现自动获取指标值
-				$auto_quta	= array(1,2,3,4,5,6,81,8,9,10,11,15,16,18,20,23,26,21,24,27,32,37,19,22,25,28,33,38,42,45,103,56,113,92,29,34,39,46,102,55,57,58,59,84,87,89,90,111,107,83,66,54,44,12,112,108,100,96,95,65,114,86,85,64,63,62,53,52,41,40,49,80,48,91,79,47,36,35,31,30,82,110,106,99,94,67,124,129,130);
+				$auto_quta	= array(1,2,3,4,5,6,81,8,9,10,11,15,16,18,20,23,26,21,24,27,32,37,19,22,25,28,33,38,42,45,103,56,113,92,29,34,39,46,102,55,57,58,59,84,87,89,90,111,107,83,66,54,44,12,112,108,100,96,95,65,114,86,85,64,63,62,53,52,41,40,49,80,48,91,79,47,36,35,31,30,82,110,106,99,94,67,124,129,130,131,137);
 				
 				//计算完成率并保存数据
 				if(in_array($v['quota_id'],$auto_quta)){
@@ -2763,8 +2834,129 @@ function updatekpi($month,$user){
 	}
 }
 
+/*
+ * 辅导员管理及时率
+ * 1.员工id
+ * 2.本周期开始时间
+ * 3.本周期结束时间
+ * */
+function get_fdyjsl($user,$start_date,$end_date){
+    //辅导员调度次数
+}
+
+
+/*
+ * 培训完成率
+ * 1.员工id
+ * 2.本周期开始时间
+ * 3.本周期结束时间
+ * */
+function get_peixunlv($user,$start_date,$end_date){
+    //需要培训数(工单取值)
+    $worder             = get_worder($user,$start_date,$end_date);
+    $zonggongdan        = $worder['zonggongdan'];
+    $zongshu            = count($zonggongdan);
+
+    //已完成培训数量(培训管理取值)
+    $where = array();
+    $where['create_time']	= array('between',array($start_date,$end_date+86399));
+    $where['lecturer_uid']  = $user;
+    $lists = M('cour_ppt')->where($where)->select();
+    $yiwancheng             = count($lists);
+
+    $peixunlv               = round($yiwancheng/$zongshu,2);
+    $data                   = array();
+    $data['zgd']            = $zonggongdan;
+    $data['wcpx']           = $lists;
+    $data['zongshu']        = $zongshu;
+    $data['yiwancheng']     = $yiwancheng;
+    $data['peixunlv']       = $peixunlv;
+    return $data;
+}
+
+
+/*
+ * 获取工作及时率
+ * 1.员工id
+ * 2.本周期开始时间
+ * 3.本周期结束时间
+ * */
+function get_jishilv($user,$start_date,$end_date){
+    $worder             = get_worder($user,$start_date,$end_date);
+    $zonggongdan        = $worder['zonggongdan'];
+    $wanchenggongdan    = $worder['wanchenggongdan'];
+    $zongshu            = count($zonggongdan);
+    $yiwancheng         = count($wanchenggongdan);
+    $jishilv            = round($yiwancheng/$zongshu,2);
+
+    $data               = array();
+    $data['zgd']        = $zonggongdan;
+    $data['wcgd']       = $wanchenggongdan;
+    $data['zongshu']    = $zongshu;
+    $data['yiwancheng'] = $yiwancheng;
+    $data['jishilv']    = $jishilv;
+    return $data;
+}
+
+/*
+ * 获取本月应完成工单
+ * 1.员工id
+ * 2.本周期开始时间
+ * 3.本周期结束时间
+ * */
+function get_worder($user,$start_date,$end_date){
+    $where                  = array();
+    //$where['create_time']	= array('between',array($v['start_date'],$v['end_date']+86399));
+    $where['status']        = array('neq',-1);
+    $where['_string']       = " (assign_id = $user) OR (exe_user_id = $user and assign_id = 0) ";
+    $lists  = M()->table('__WORDER__ as w')->field('w.*,d.use_time')->join('__WORDER_DEPT__ as d on d.id=w.wd_id','left')->where($where)->select();
+
+    $end_date        = $end_date + 24*3600;
+    $zonggongdan     = array();
+    $wanchenggongdan = array();
+    foreach ($lists as $k=>$v){
+        $use_time   = $v['use_time']?$v['use_time']:5;                          //默认5个工作日
+        $end_time   = strtotime(getAfterWorkDay($use_time,$v['create_time']));  //工单应完成时间
+        if ($end_time > $start_date && $end_time < $end_date){
+            $zonggongdan[]      = $v;            //本月应完成总工单数
+        }
+        if ($end_time > $start_date && $end_time < $end_date && $v['status']==2){
+            $wanchenggongdan[]  = $v;           //本月已完成工单(2=>执行部门确认完成)
+        }
+    }
+
+    $data                   = array();
+    $data['zonggongdan']    = $zonggongdan;
+    $data['wanchenggongdan']= $wanchenggongdan;
+    return $data;
+}
+
+/*
+ * 获取合格率
+ * 1.总考核数
+ * 2.考核维度
+ * 3.单个纬度分数(星星数量)
+ * */
+function get_hegelv($lists,$n,$star=5){
+    $hege_list          = array();
+    foreach ($lists as $k=>$v){
+        $defen          = array_sum($v);
+        $zongfen        = $n*$star;
+        $ratio          = round($defen/$zongfen,2);
+        //大于72%即为合格
+        if ($ratio >= 0.72){
+            $hege_list[]= $v;
+        }
+    }
+    $hegetuanshu        = count($hege_list);
+    $zongtuanshu        = count($lists);
+    $hegelv             = round($hegetuanshu/$zongtuanshu,2);
+
+    return $hegelv;
+}
+
 //根据项目类型不同考核内容不同(研发)
-function get_hegelv($lists){
+/*function get_hegelvaa($lists){
     $score_kind1        = array_keys(C('SCORE_KIND1')); //线路类
     $score_kind2        = array_keys(C('SCORE_KIND2')); //课程类
     $score_kind3        = array_keys(C('SCORE_KIND3')); //亲自旅行 , 冬夏令营
@@ -2796,7 +2988,7 @@ function get_hegelv($lists){
     $hegelv             = round($hegetuanshu/$zongtuanshu,2);
 
     return $hegelv;
-}
+}*/
 
 //客户满意度
 function get_manyidu($lists){
@@ -3403,11 +3595,16 @@ function intervalsn($value,$ratio){
 }
 
 
-//获取某个工作日之后的日期
-function getAfterWorkDay($n){
+
+/*
+ * 获取某个工作日之后的日期
+ * 1.n个工作日
+ * 2.开始时间
+ * */
+function getAfterWorkDay($n,$start_time = NOW_TIME){
 	//节假日
 	$holiday=['2018-03-03','2018-03-04','2018-03-10','2018-03-11','2018-03-17','2018-03-18','2018-03-24','2018-03-25','2018-03-31','2018-04-01','2018-04-05','2018-04-06','2018-04-07','2018-04-14','2018-04-15','2018-04-21','2018-04-22','2018-04-29','2018-04-30','2018-05-01','2018-05-05','2018-05-06','2018-05-12','2018-05-13','2018-05-19','2018-05-20','2018-05-26','2018-05-27','2018-06-02','2018-06-03','2018-06-09','2018-06-10','2018-06-16','2018-06-17','2018-06-23','2018-06-24','2018-06-30','2018-07-01','2018-07-07','2018-07-08','2018-07-14','2018-07-15','2018-07-21','2018-07-22','2018-07-28','2018-07-29','2018-08-04','2018-08-05','2018-08-11','2018-08-12','2018-08-18','2018-08-19','2018-08-25','2018-08-26','2018-09-01','2018-09-02','2018-09-08','2018-09-09','2018-09-15','2018-09-16','2018-09-22','2018-09-23','2018-09-24','2018-10-01','2018-10-02','2018-10-03','2018-10-04','2018-10-05','2018-10-06','2018-10-07','2018-10-13','2018-10-14','2018-10-20','2018-10-21','2018-10-27','2018-10-28','2018-11-03','2018-11-04','2018-11-10','2018-11-11','2018-11-17','2018-11-18','2018-11-24','2018-11-25','2018-12-01','2018-12-02','2018-12-08','2018-12-09','2018-12-15','2018-12-16','2018-12-22','2018-12-23','2018-12-29','2018-12-30',];
-	$time=NOW_TIME;
+	$time=$start_time;
 	$start_timestamp=$time;
 
 	//计算两个工作日后的时间
