@@ -1083,94 +1083,143 @@ class AjaxController extends Controller {
     }
 
 
+//    /**
+//     *Ajax_approval_textarea 添加批注信息
+//     * text 编辑内容
+//     */
+//    public function Ajax_approval_textarea(){
+//
+//        $text                                   = trim($_POST['text']);
+//        $file_id                                = code_number(trim($_POST['file_id']));
+//        if(empty($text)){//判断是否有值
+//            echo json_encode(array('sum' => 0, 'msg' => "编辑失败!请重新编辑提交!"));die;
+//        }
+//        $content                                = array_filter(explode('<br/>',$text));//array_filter
+//        $arr = '';
+//        foreach($content as $key => $val){//循环传送值 加首行缩进
+//            $arr                                .= $val.'<br/>&emsp;&emsp;';
+//        }
+//        $where['account_id']                    = (int)$_SESSION['userid'];
+//        $where['file_id']                       = (int)$file_id;
+//
+//        $file                                   = M('annotation_file')->where($where)->find();
+//        if($file){//判断是添加或者修改
+//            $add['annotation_content']          = $arr;
+//            $save                               =  M('annotation_file')->where('id='.$file['id'])->save($add);
+//            echo json_encode(array('sum' => 1, 'msg' => "提交数据成功!"));die;
+//        }else{
+//            $where['createtime']                = time();
+//            $where['account_name']              = $_SESSION['name'];
+//            $where['annotation_content']        = $arr;
+//            $annotation_w                       =  M('annotation_file')->add($where);
+//
+//            $query['id']                        = $file_id;
+//            $query['type']                      = 1;
+//            if($annotation_w){//判断添加是否成功
+//                $approval                       = M('approval_flie')->where($query)->find();
+//                $userfileid                     = explode(',',$approval['file_account_id']);
+//                if(in_array($where['account_id'],$userfileid)){
+//
+//                }else{//如果不是指定人提交的批注不改状态
+//                    echo json_encode(array('sum' => 1, 'msg' => "提交数据成功!"));die;
+//                }
+//                foreach($userfileid as $key => $val){
+//                    $file_save                  = user_contrast_status($file_id,$val);
+//                    if($file_save==0){//判断有人未完成批注
+//                        echo json_encode(array('sum' => 1, 'msg' => "提交数据成功!"));die;
+//                    }
+//                }
+//                //判断所有人都完成批注
+//                $update['status']               = 2;
+//                $approvalfile                   = M('approval_flie')->where($query)->save($update);
+//                $flieupdate                     = M('approval_flie_update')->where('file_id='.$file_id)->save($update);
+//                $flieupdate                     = M('annotation_file')->where('file_id='.$file_id)->save($update);
+//
+//                echo json_encode(array('sum' => 1, 'msg' => "提交数据成功!"));die;
+//            }else{
+//                echo json_encode(array('sum' => 0, 'msg' => "编辑失败!请重新编辑提交!"));die;
+//            }
+//        }
+//    }
+//
+//    /**
+//     * Ajax_approval_flie 文件审核通过  文件审核驳回  文件提交审核修改
+//     * file_id 文件 id
+//     *type  1通过 2驳回 3 修改
+//     */
+//    public function Ajax_approval_flie(){
+//
+//        $fileid                 = (int)code_number(trim($_POST['file_id']));
+//        $type                   = (int)code_number(trim($_POST['type']));
+//        if($type==1){//文件
+//            $status['status']   = 3;
+//            $content            = '审核通过';
+//        }elseif($type==2){//文件修改
+//            $status['status']   = 4;
+//            $content            = '审核驳回';
+//        }elseif($type==3){//文件批注
+//            $status['status']   = 2;
+//            $content            = '提交审核修改';
+//        }
+//        $where1['id']           = $fileid;
+//        $where1['type']         = 1;
+//        $where2['file_id']      = $fileid;
+//        $file                   = M('approval_flie')->where($where1)->save($status);
+//        $update                 = M('approval_flie_update')->where($where2)->save($status);
+//        $annotatio              = M('annotation_file')->where($where2)->save($status);
+//        if($file && $update && $annotatio){
+//            echo json_encode(array('sum' => 1, 'msg' => $content."成功!"));die;
+//        }else{
+//            echo json_encode(array('sum' => 0, 'msg' => $content."失败!"));die;
+//        }
+//    }
     /**
-     *Ajax_approval_textarea 添加批注信息
-     * text 编辑内容
+     * create_file 创建文件
+     * $file_name 文件名称 $file_date 审批天数
+     * $status 1 新建 2 修改
+     * $file_user 用户名称  $textarea 文件描述
      */
-    public function Ajax_approval_textarea(){
-
-        $text                                   = trim($_POST['text']);
-        $file_id                                = code_number(trim($_POST['file_id']));
-        if(empty($text)){//判断是否有值
-            echo json_encode(array('sum' => 0, 'msg' => "编辑失败!请重新编辑提交!"));die;
-        }
-        $content                                = array_filter(explode('<br/>',$text));//array_filter
-        $arr = '';
-        foreach($content as $key => $val){//循环传送值 加首行缩进
-            $arr                                .= $val.'<br/>&emsp;&emsp;';
-        }
-        $where['account_id']                    = (int)$_SESSION['userid'];
-        $where['file_id']                       = (int)$file_id;
-
-        $file                                   = M('annotation_file')->where($where)->find();
-        if($file){//判断是添加或者修改
-            $add['annotation_content']          = $arr;
-            $save                               =  M('annotation_file')->where('id='.$file['id'])->save($add);
-            echo json_encode(array('sum' => 1, 'msg' => "提交数据成功!"));die;
-        }else{
-            $where['createtime']                = time();
-            $where['account_name']              = $_SESSION['nickname'];
-            $where['annotation_content']        = $arr;
-            $annotation_w                       =  M('annotation_file')->add($where);
-
-            $query['id']                        = $file_id;
-            $query['type']                      = 1;
-            if($annotation_w){//判断添加是否成功
-                $approval                       = M('approval_flie')->where($query)->find();
-                $userfileid                     = explode(',',$approval['file_account_id']);
-                if(in_array($where['account_id'],$userfileid)){
-
-                }else{//如果不是指定人提交的批注不改状态
-                    echo json_encode(array('sum' => 1, 'msg' => "提交数据成功!"));die;
-                }
-                foreach($userfileid as $key => $val){
-                    $file_save                  = user_contrast_status($file_id,$val);
-                    if($file_save==0){//判断有人未完成批注
-                        echo json_encode(array('sum' => 1, 'msg' => "提交数据成功!"));die;
-                    }
-                }
-                //判断所有人都完成批注
-                $update['status']               = 2;
-                $approvalfile                   = M('approval_flie')->where($query)->save($update);
-                $flieupdate                     = M('approval_flie_update')->where('file_id='.$file_id)->save($update);
-                $flieupdate                     = M('annotation_file')->where('file_id='.$file_id)->save($update);
-
-                echo json_encode(array('sum' => 1, 'msg' => "提交数据成功!"));die;
-            }else{
-                echo json_encode(array('sum' => 0, 'msg' => "编辑失败!请重新编辑提交!"));die;
-            }
-        }
+     function create_file(){
+         $file['createtime']        = time();
+         $file['account_id']        = $_SESSION['userid'];
+         $file['account_name']      = trim($_POST['file_user']);
+         $file['file_primary']      = trim($_POST['file_name']);
+         $file['file_describe']     = trim($_POST['textarea']);
+         $file['file_date']         = code_number(trim($_POST['file_date']));
+         $file['category']          = code_number(trim($_POST['status']));
+         $user                      = user_table($file['account_id']);
+         $department                = M('salary_department')->where('id='.$user['departmentid'])->find();
+         $file['department']        = $department['department'];
+         $file                      = array_filter($file);
+         if(empty($file['account_name'])){
+             echo json_encode(array('sum' => 0, 'msg' => "创建失败!请完善后提交"));die;
+         }
+         if(!empty($file['file_describe'])){
+             $file['file_describe'] = htmlspecialchars($file['file_describe']);
+         }
+         $add                       = M('approval_flie')->add($file);
+         if($add){
+             echo json_encode(array('sum' => 1, 'msg' =>"创建成功!"));die;
+         }else{
+             echo json_encode(array('sum' => 0, 'msg' => "创建失败!请完善后提交！"));die;
+         }
     }
 
     /**
-     * Ajax_approval_flie 文件审核通过  文件审核驳回  文件提交审核修改
-     * file_id 文件 id
-     *type  1通过 2驳回 3 修改
+     * Ajax_file_delete 删除选中的文件
+     * $fileid 文件id
      */
-    public function Ajax_approval_flie(){
-
-        $fileid                 = (int)code_number(trim($_POST['file_id']));
-        $type                   = (int)code_number(trim($_POST['type']));
-        if($type==1){//文件
-            $status['status']   = 3;
-            $content            = '审核通过';
-        }elseif($type==2){//文件修改
-            $status['status']   = 4;
-            $content            = '审核驳回';
-        }elseif($type==3){//文件批注
-            $status['status']   = 2;
-            $content            = '提交审核修改';
-        }
-        $where1['id']           = $fileid;
-        $where1['type']         = 1;
-        $where2['file_id']      = $fileid;
-        $file                   = M('approval_flie')->where($where1)->save($status);
-        $update                 = M('approval_flie_update')->where($where2)->save($status);
-        $annotatio              = M('annotation_file')->where($where2)->save($status);
-        if($file && $update && $annotatio){
-            echo json_encode(array('sum' => 1, 'msg' => $content."成功!"));die;
-        }else{
-            echo json_encode(array('sum' => 0, 'msg' => $content."失败!"));die;
+    function Ajax_file_delete(){
+        $status                 = trim($_POST['status']);
+        $fileid                 = trim($_POST['fileid']);
+        $file_id                = array_filter(explode(',',$fileid));
+        foreach($file_id as $key => $val){
+            $save['type']       = 2;
+            if($status==1){
+                $approval_flie  = M('approval_flie')->where('id='.$val)->save($save);
+            }elseif($status==2){
+                $approval_flie  = M('approval_flie_url')->where('id='.$val)->save($save);
+            }
         }
     }
 
@@ -1185,42 +1234,21 @@ class AjaxController extends Controller {
         $money                      = M('salary_count_money')->where('id='.$moneyid)->find();
         if($money){
             $botton['status']       = 2; //没有提交和审核批准人
-            $url1 = M('user_sign')->where('user_id='.$money['examine_user_id'])->find();
-            $url2 = M('user_sign')->where('user_id='.$money['submission_user_id'])->find();
-            $url3 = M('user_sign')->where('user_id='.$money['approval_user_id'])->find();
-
+            $url1                   = M('user_sign')->where('user_id='.$money['examine_user_id'])->find();
+            $url2                   = M('user_sign')->where('user_id='.$money['submission_user_id'])->find();
+            $url3                   = M('user_sign')->where('user_id='.$money['approval_user_id'])->find();
             $botton['submitter_url']= $url1['file_url'];
             $botton['examine_url']  = $url2['file_url'];
             $botton['approval_url'] = $url3['file_url'];
-//            $submitter              = user_table($money['examine_user_id']);//提交审核
-//            $examine                = user_table($money['submission_user_id']);//提交批准
-//            $approval               = user_table($money['approval_user_id']);//批准
-//            $botton['submitter']    = $submitter['nickname'];
-//            $botton['examine']      = $examine['nickname'];
-//            $botton['approval']     = $approval['nickname'];
             $botton['content']      = '制表日期 : ';
             $botton['time']         = date('Y-m-d H:i:s',$money['approval_time']);
         }else{
             $botton['status']       = 1; //没有提交和审核批准人
-            $botton['submitter']    = $_SESSION['username'];
+            $botton['submitter']    = $_SESSION['name'];
             $botton['content']      = '打印日期 : ';
             $botton['time']         = date('Y-m-d H:i:s',time());
         }
         echo json_encode(array('sum'=>1, 'msg'=>$botton));die;
-    }
-
-    /**
-     * Ajax_file_delete 删除选中的文件
-     * $fileid 文件id
-     */
-    function Ajax_file_delete(){
-
-        $fileid             = trim($_POST['fileid']);
-        $file_id            = array_filter(explode(',',$fileid));
-        foreach($file_id as $key => $val){
-            $save['type']   = 2;
-            $approval_flie  = M('approval_flie')->where('id='.$val)->save($save);
-        }
     }
 
     //人民币小写转换成大写
