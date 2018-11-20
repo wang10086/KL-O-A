@@ -53,7 +53,8 @@ class RightsController extends BaseController {
 
             //团号+计调人员 + 回款金额
             $fid                = $row['req_id'];
-            $budget             = M('op_huikuan')->find($fid);
+            //$budget             = M('op_huikuan')->find($fid);
+            $budget             = M('op_settlement')->find($fid);
             $opid               = $budget['op_id'];
             $rs[$k]['group_id']    = M('op')->where(array('op_id'=>$opid))->getfield('group_id');
 
