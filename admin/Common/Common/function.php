@@ -3791,10 +3791,12 @@ function salary_info($status,$cont){
 	}
 }
 
-function query_posts(){//查询岗位
-
-	return M('posts')->select();
-
+function query_posts($where){//查询岗位
+    if(count($where)==0){
+        return M('posts')->select();
+    }else{
+        return M('posts')->where($where)->select();
+    }
 }
 function query_department(){//部门
 
@@ -3949,8 +3951,15 @@ function personnel(){//所有人员名称 id
     return M('account')->field('id,nickname')->where('status=0 and id>2')->select();
 
 }
-function user_table($where){//查询用户
-    return M('account')->where('id='.$where)->find();
+function user_table($where,$type){//查询用户 1 查询一个 2 查询符合条件的 默认查询id
+    if($type!==0 && $type!=="" && $type==1){
+        return M('account')->where($where)->find();
+    }elseif($type!==0 && $type!=="" && $type==2) {
+        return M('account')->where($where)->order('id ASC')->select();
+    }else{
+        return M('account')->where('id='.$where)->find();
+    }
+
 }
 
     function datetime($time_Y,$time_M,$time_D,$type){//获取年月日
@@ -4141,15 +4150,4 @@ function get_username(){
         return $jkdid;
     }
 
-    //领导层选取
-    function office_user($type){
-        if($type==1){
-            $arr = array("乔峰","杨开玖","秦鸣","王凯","杜莹","程小平");//办公室成员
-        }elseif($type==2){
-            $arr = array("王茜","蔡金龙","孟华","王丹","许世伟","石曼","赵鹏","李岩","徐恒","徐娜","赵燕");//扩展人员
-        }elseif($type==3){
-            $arr = array("乔峰","杨开玖","秦鸣","王凯","杜莹","程小平","王茜","蔡金龙","孟华","王丹","许世伟","石曼","赵鹏","李岩","徐恒","徐娜","赵燕");
-        }
-        return $arr;
-    }
 

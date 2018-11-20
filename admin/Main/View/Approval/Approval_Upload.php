@@ -148,7 +148,7 @@
                 FileUploaded: function(up, file, res) {
                     var rs = eval('(' + res.response +')');
                     if (rs.rs ==  'ok') {
-                        var html = '<div><input type="text" name="file_md_name" value="'+rs.fileurl+'" style="display:none;" ></div>';
+                        var html = '<div><input type="text" name="file_url" value="'+rs.fileurl+'" style="display:none;" ></div>';
                             html += '<div><input type="text" name="file_name" value="'+file.name+'" style="display:none;" ></div>';
                         $('#postid').append(html);
                         $('div[rel=' + file.id + ']').css('width', '100%');

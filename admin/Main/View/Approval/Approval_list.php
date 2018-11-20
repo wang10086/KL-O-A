@@ -56,10 +56,10 @@
                                             <td style="text-align:center;color:#3399FF;"><a href="{$app['Approval']['file_url']}">{$app['Approval']['file_name']}</a></td>
                                             <td style="text-align:center;"><?php if(is_numeric($app['Approval']['createtime'])){echo date('Y-m-d H:i:s',$app['Approval']['createtime']);}else{echo'';}?></td>
                                             <td style="text-align:center;color:#3399FF;">{$app['Approval']['file_size']}</td>
-                                            <td style="text-align:center;">{$app['Approval_url']['modify_filename']}</td>
-                                            <td style="text-align:center;">{$app['Approval_url']['modify_name']}</td>
-                                            <td style="text-align:center;">{$app['Approval_url']['modify_size']}</td>
-                                            <td style="text-align:center;"><?php if(is_numeric($app['Approval_url']['createtime'])){echo date('Y-m-d H:i:s',$app['Approval_url']['createtime']);}else{echo'';}?></td>
+                                            <td style="text-align:center;">{$app['Approval']['modify_filename']}</td>
+                                            <td style="text-align:center;">{$app['Approval']['modify_name']}</td>
+                                            <td style="text-align:center;">{$app['Approval']['modify_size']}</td>
+                                            <td style="text-align:center;"><?php if(is_numeric($app['Approval']['createtime'])){echo date('Y-m-d H:i:s',$app['Approval']['createtime']);}else{echo'';}?></td>
                                             <td style="text-align:center;">
                                                 <a href="{:U('Approval/Approval_Update',array('id'=>$app['Approval']['id']))}">
                                                     文件详情

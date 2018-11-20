@@ -34,7 +34,6 @@
 
                                     </tr>
 
-                                    <foreach name="approval" item="approval">
                                     <tr style="text-align:center;">
                                         <td>{$approval['Approval']['id']}</td>
                                         <td>{$approval['Approval']['account_name']}</td>
@@ -47,13 +46,15 @@
                                         <td><?php if(is_numeric($approval['Approval_url']['modify_time'])){echo date('Y-m-d H:i:s',$approval['Approval_url']['modify_time']);}else{echo'';}?></td>
 
                                     </tr>
-                                        </foreach>
                                 </table><br><br>
 
                                 <div class="box-header" style="margin:-5em 0em 4em 1em;width:98%;text-align: center;">
                                     <div>
-                                        <form method="post" action="{:U('Approval/Approval_file')}" enctype="multipart/form-data">
+                                        <form method="post" action="{:U('Approval/file_change')}" enctype="multipart/form-data">
+                                            <input type="hidden" name="file_id" value="{$approval['Approval_url']['file_id']}">
+                                            <input type="hidden" name="file_url_id" value="{$approval['Approval_url']['id']}">
 
+                                            <div class="col-md-12 mt10" id="postid"></div>
                                             <div class="form-group col-md-12"></div>
                                             <div class="form-group col-md-12" style="margin-left:-1em;">
                                                 <a href="javascript:;" id="pickupfile" class="btn btn-success btn-sm" style="margin-top:15px; float:left;"><i class="fa fa-upload"></i> 修改上传文件</a>
@@ -74,15 +75,60 @@
                                             <div id="formsbtn" >
                                                 <button type="submit" class="btn btn-success btn-sm" style="width:7em;font-size:1.2em;margin:0em auto;">保 存</button>
                                             </div>
-                                        </form><br>
+                                        </form><br><br><br>
                                     </div>
                                 </div><!-- /.box-header -->
+
+
+
+                                <!-- 选择审批人员  选择审批人员-->
+                                <div style="margin-top:-2.5em;">
+                                    <form method="post" action="{:U('Approval/add_final_judgment')}" enctype="multipart/form-data">
+                                        <input type="hidden" name="file_id" value="{$approval['Approval']['file_id']}">
+                                        <input type="hidden" name="file_url_id" value="{$approval['Approval']['id']}">
+                                        <div class="box-header" >
+                                            <div class="form-group  col-md-6" >
+                                                <label>
+                                                    <b style="font-size:1.3em;color:#09F;letter-spacing:0.2em;">选择审批人员 : </b>
+                                                </label><br>
+                                                <foreach name="approver" item="app">
+                                                    <label style="margin-left:2em;" class="col-md-3">
+                                                        <b><input type="checkbox" name="check[]" value="{$app['id']}">
+                                                            {$app['nickname']}
+                                                        </b>
+                                                    </label>
+                                                </foreach>
+                                            </div>
+
+                                            <div class="form-group col-md-6">
+                                                <label>
+                                                    <b style="font-size:1.3em;color:#09F;letter-spacing:0.2em;">选择终审人员 : </b>
+                                                </label><br>
+                                                <foreach name="office" item="off">
+                                                    <label style="margin-left:2em;" class="col-md-3">
+                                                       <b><input type="checkbox" name="judgment[]" value="{$app['id']}">
+                                                                {$off['nickname']}
+                                                       </b>
+                                                    </label>
+                                                </foreach>
+                                            </div>
+
+                                        </div>
+                                        <center>
+                                            <button type="submit" class="btn btn-success btn-sm" style="width:7em;font-size:1.2em;margin-top:1em;">
+                                                保 存
+                                            </button>
+                                        </center>
+                                    </form><br><br><br>
+                                    <div class="box-header" ></div>
+                                </div><br>
+
 
                                 <!-- 已选审批人员  已审批人员-->
                                 <div class="box-header" style="width:98%;">
                                     <div class="form-group  col-md-6" >
                                         <label>
-                                            <b style="font-size:1.3em;color:#09F;padding:2em;letter-spacing:0.2em;">已选审批人员 : </b>
+                                            <b style="font-size:1.3em;color:#09F;padding:2em;letter-spacing:0.2em;">已选审批状态 : </b>
                                         </label><br><br>
                                         <div style="margin-left:5em;">
                                             <foreach name="f['file']['user']" item="n">
@@ -99,7 +145,7 @@
                                     </div>
                                     <div class="form-group col-md-6">
                                         <label>
-                                            <b style="font-size:1.3em;color:#09F;padding:2em;letter-spacing:0.2em;">最终审核人员 : </b>
+                                            <b style="font-size:1.3em;color:#09F;padding:2em;letter-spacing:0.2em;">最终审核状态 : </b>
                                         </label><br><br>
                                         <div style="margin-left:5em;">
 
@@ -225,7 +271,8 @@
                             + '<input type="hidden" name="pid_' + file.id + '" value="{$pid}" class="pid_val" />'
                             + '<input type="hidden" name="level_' + file.id + '" value="{$level}" class="level_val" />'
                             + '<input type="text" name="nm_' + file.id + '" value="'+ file.name +'" class="form-control file_val" />'
-                            + '</td> <input type="hidden" name="file_size" value="'+plupload.formatSize(file.size)+'"/><td>' + plupload.formatSize(file.size) +''
+                            + '</td> <input type="hidden" name="file_size" value="'+plupload.formatSize(file.size)+'"/>'    
+                            + '<td>' + plupload.formatSize(file.size) +''
                             + '</td> <td>'
                             + '<div class="progress sm"> '
                             + '<div class="progress-bar progress-bar-aqua" rel="'+ file.id +'"  role="progressbar"  aria-valuemin="0" aria-valuemax="100">'
@@ -240,8 +287,9 @@
                 FileUploaded: function(up, file, res) {
                     var rs = eval('(' + res.response +')');
                     if (rs.rs ==  'ok') {
-                        var html = '<div><input type="text" name="file_md_name" value="'+rs.fileurl+'" style="display:none;" ></div>';
-                        html += '<div><input type="text" name="file_name" value="'+file.name+'" style="display:none;" ></div>';
+                        console.log(up);
+                        var html = '<div><input type="text" name="file_url" value="'+rs.fileurl+'" style="display:none;" ></div>';
+                            html += '<div><input type="text" name="file_name" value="'+file.name+'" style="display:none;" ></div>';
                         $('#postid').append(html);
                         $('div[rel=' + file.id + ']').css('width', '100%');
                         $('#container').append('<input type="hidden" rel="'+file.id+'" name="resfiles[]" value="' + rs.aid + '" />');
