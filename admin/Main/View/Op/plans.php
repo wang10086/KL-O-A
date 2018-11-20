@@ -138,6 +138,8 @@
                                         <input type="checkbox" name="exe_user_id[]" value="26"> &nbsp;资源(公司资源-李岩)&#12288;
                                         <input type="checkbox" name="exe_user_id[]" value="31"> &nbsp;研发(京区校内-魏春竹) &#12288;
                                         <input type="checkbox" name="exe_user_id[]" value="174"> &nbsp;资源(京区校内-李亚楠) &#12288;
+                                        <input type="checkbox" name="exe_user_id[]" value="110"> &nbsp;研发(南京-李艳) &#12288;
+                                        <input type="checkbox" name="exe_user_id[]" value="115"> &nbsp;资源(南京-桂小佩) &#12288;
                                     </div>
                                 </div>
                             </div><!-- /.box-body -->
