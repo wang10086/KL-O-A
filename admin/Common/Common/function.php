@@ -2763,18 +2763,38 @@ function updatekpi($month,$user){
                 }
 
                 //辅导员/教师管理及时率(京区业务中心教务)
-                /*if ($v['quota_id']==132){
+                if ($v['quota_id']==132){
                     //辅导员管理及时率
-                    $jishilv        = get_fdyjsl($user,$v['start_date'],$v['end_date']);
+                    $jishilv_data       = get_fdyjsl($user,$v['start_date'],$v['end_date']);
+                    $jishilv            = $jishilv_data['hegelv'];
 
-                    var_dump($jishilv);die;
-
-                    if($peixunlv >= 1 || !$zongshu){
+                    if($jishilv >= 1){
                         $complete	= 100;
                     }else{
-                        $complete	= ($peixunlv*100).'%';
+                        $complete	= ($jishilv*100).'%';
                     }
-                }*/
+                }
+
+                //辅导员管理准确性(京区业务中心教务)
+                if ($v['quota_id']==134){
+                    //辅导员管理准确性
+                    $zhunque_data       = get_fdyzqx($user,$v['start_date'],$v['end_date']);
+                    $buhegeshu          = $zhunque_data['buhegeshu'];
+
+                    if($buhegeshu <= 1){
+                        $complete	= 100;
+                    }else{
+                        $cifang     = $buhegeshu - 2;
+                        $fenshu     = 5*pow(2,$cifang);
+                        if ($fenshu > 100) { $fenshu = 100; };
+                        $complete	= (100 - $fenshu).'%';
+                    }
+                }
+
+                //辅导员/教师资源培训完成率(京区业务中心教务)
+                if ($v['quota_id']==135){
+
+                }
 
                 //场馆资源调度质量(京区业务中心资源)
                 if ($v['quota_id']==137){
@@ -2795,7 +2815,7 @@ function updatekpi($month,$user){
 
 
 				//已实现自动获取指标值
-				$auto_quta	= array(1,2,3,4,5,6,81,8,9,10,11,15,16,18,20,23,26,21,24,27,32,37,19,22,25,28,33,38,42,45,103,56,113,92,29,34,39,46,102,55,57,58,59,84,87,89,90,111,107,83,66,54,44,12,112,108,100,96,95,65,114,86,85,64,63,62,53,52,41,40,49,80,48,91,79,47,36,35,31,30,82,110,106,99,94,67,124,129,130,131,137);
+				$auto_quta	= array(1,2,3,4,5,6,81,8,9,10,11,15,16,18,20,23,26,21,24,27,32,37,19,22,25,28,33,38,42,45,103,56,113,92,29,34,39,46,102,55,57,58,59,84,87,89,90,111,107,83,66,54,44,12,112,108,100,96,95,65,114,86,85,64,63,62,53,52,41,40,49,80,48,91,79,47,36,35,31,30,82,110,106,99,94,67,124,129,130,131,132,134,137);
 				
 				//计算完成率并保存数据
 				if(in_array($v['quota_id'],$auto_quta)){
@@ -2835,13 +2855,89 @@ function updatekpi($month,$user){
 }
 
 /*
+ * 辅导员管理准确性
+ * 1.员工id
+ * 2.本周期开始时间
+ * 3.本周期结束时间
+ * */
+function get_fdyzqx($user,$start_date,$end_date){
+    $end_date        = $end_date + 24*3600;
+    //辅导员本月调度总团数
+    $where                    = array();
+    $where['heshi_oa_uid']    = $user;
+    $where['heshi_time']      = array('between',array($start_date,$end_date));
+    $lists                    = M('op_guide_confirm')->where($where)->select();          //活动结束后核实人员信息
+
+    $buhegexiangmu            = array();
+    foreach ($lists as $k=>$v){
+        if ($v['istrue'] ==1){
+            $buhegexiangmu[]  = $v;
+        }
+    }
+    $zongxiangmu            = $lists;
+    $buhegexiangmu          = $buhegexiangmu;
+    $zongshu                = count($zongxiangmu);
+    $buhegeshu              = count($buhegexiangmu);
+    //$hegeshu                = $zongshu - $buhegeshu;
+    //$hegelv                 = round($hegeshu/$zongshu,2);
+
+    $data                   = array();
+    $data['zongxiangmu']    = $zongxiangmu;
+    $data['buhegexiangmu']  = $buhegexiangmu;
+    $data['zongshu']        = $zongshu;
+    $data['buhegeshu']      = $buhegeshu;
+    //$data['hegelv']         = $hegelv;
+    return $data;
+}
+
+/*
  * 辅导员管理及时率
  * 1.员工id
  * 2.本周期开始时间
  * 3.本周期结束时间
  * */
 function get_fdyjsl($user,$start_date,$end_date){
-    //辅导员调度次数
+    $end_date        = $end_date + 24*3600;
+    //辅导员本月调度总团数
+    $before_where                   = array();
+    $before_where['manager_id']     = $user;
+    $before_where['set_guide_time'] = array('between',array($start_date,$end_date));
+    $before_lists                   = M('op_guide_confirm')->where($before_where)->select();   //出团前安排人员
+    $after_where                    = array();
+    $after_where['heshi_oa_uid']    = $user;
+    $after_where['heshi_time']      = array('between',array($start_date,$end_date));
+    $after_lists                    = M('op_guide_confirm')->where($after_where)->select();          //活动结束后核实人员信息
+
+    $zongxiangmu            = array();
+    $hegexiangmu            = array();
+    foreach ($before_lists as $k=>$v){
+        $timeaa             = $v['in_begin_day']-$v['set_guide_time'];
+        $timebb             = 3*24*3600;     //活动实施前3天完成辅导员安排
+        if ($timeaa >= $timebb){
+            $hegexiangmu[]  = $v;            //合格团数
+        }
+        $zongxiangmu[]      = $v;
+    }
+
+    foreach ($after_lists as $kk=>$vv){
+        $timeaa             = $vv['heshi_time']-$vv['daiheshi_time'];
+        $timebb             = 5*24*3600;     //活动实施后5天内完成核实
+        if ($timeaa <= $timebb){
+            $hegexiangmu[]  = $vv;
+        }
+        $zongxiangmu[]      = $vv;
+    }
+    $zongshu                = count($zongxiangmu);
+    $hegeshu                = count($hegexiangmu);
+    $hegelv                 = round($hegeshu/$zongshu,2);
+
+    $data                   = array();
+    $data['zongxiangmu']    = $zongxiangmu;
+    $data['hegexiangmu']    = $hegexiangmu;
+    $data['zongshu']        = $zongshu;
+    $data['hegeshu']        = $hegeshu;
+    $data['hegelv']         = $hegelv;
+    return $data;
 }
 
 
