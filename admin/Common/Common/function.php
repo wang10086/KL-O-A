@@ -2775,6 +2775,17 @@ function updatekpi($month,$user){
                     }
                 }
 
+                //辅导员/教师管理满意度(京区业务中心教务)
+                if ($v['quota_id']==133){
+                    $manyidu_data       = get_jw_myd($user,$v['start_date'],$v['end_date']);
+                    $hegelv             = $manyidu_data['hegelv'];
+                    if($hegelv >= 0.9){
+                        $complete	= 100;
+                    }else{
+                        $complete   = (round($hegelv/0.9,2)*100).'%';
+                    }
+                }
+
                 //辅导员管理准确性(京区业务中心教务)
                 if ($v['quota_id']==134){
                     //辅导员管理准确性
@@ -2810,6 +2821,11 @@ function updatekpi($month,$user){
                     }
                 }
 
+                //资源培训率(京区业务中心资源)
+                if ($v['quota_id']==135){
+
+                }
+
                 //场馆资源调度质量(京区业务中心资源)
                 if ($v['quota_id']==137){
                     $where = array();
@@ -2829,7 +2845,7 @@ function updatekpi($month,$user){
 
 
 				//已实现自动获取指标值
-				$auto_quta	= array(1,2,3,4,5,6,81,8,9,10,11,15,16,18,20,23,26,21,24,27,32,37,19,22,25,28,33,38,42,45,103,56,113,92,29,34,39,46,102,55,57,58,59,84,87,89,90,111,107,83,66,54,44,12,112,108,100,96,95,65,114,86,85,64,63,62,53,52,41,40,49,80,48,91,79,47,36,35,31,30,82,110,106,99,94,67,124,129,130,131,132,134,135,136,137);
+				$auto_quta	= array(1,2,3,4,5,6,81,8,9,10,11,15,16,18,20,23,26,21,24,27,32,37,19,22,25,28,33,38,42,45,103,56,113,92,29,34,39,46,102,55,57,58,59,84,87,89,90,111,107,83,66,54,44,12,112,108,100,96,95,65,114,86,85,64,63,62,53,52,41,40,49,80,48,91,79,47,36,35,31,30,82,110,106,99,94,67,124,129,130,131,132,133,134,135,136,137);
 				
 				//计算完成率并保存数据
 				if(in_array($v['quota_id'],$auto_quta)){
@@ -2866,6 +2882,41 @@ function updatekpi($month,$user){
 		}
 
 	}
+}
+
+/*
+ * 教务满意度
+ * 1.员工id
+ * 2.本周期开始时间
+ * 3.本周期结束时间
+ * */
+function get_jw_myd($user,$start_date,$end_date){
+    $end_date        = $end_date + 24*3600;
+    //本月以评分的总项目
+    $where                  = array();
+    $where['c.manager_id']  = $user;
+    $where['s.input_time']  = array('between',array($start_date,$end_date));
+    $where['s.late']        = array('neq',0);
+    $field                  = "s.id,s.guide,s.late,s.manage,s.morality,u.id as uid,u.confirm_id";
+    $lists                  = M()->table('__TCS_SCORE__ as s')->field($field)->join('__TCS_SCORE_USER__ as u on u.id=s.uid','left')->join('__OP_GUIDE_CONFIRM__ as c on c.id=u.confirm_id','left')->where($where)->select();
+
+    $hegexiangmu            = array();
+    $zongfen                = 4*5;   //考核4项, 每项5分, 满分总分
+    foreach ($lists as $k=>$v){
+        $defen              = $v['guide']+$v['late']+$v['manage']+$v['morality'];
+        $score              = round($defen/$zongfen,2);
+        if ($score > 0.72){
+            $hegexiangmu[]  = $v;
+        }
+    }
+
+    $data                   = array();
+    $data['zongxiangmu']    = $lists;
+    $data['hegexiangmu']    = $hegexiangmu;
+    $data['zongshu']        = count($lists);
+    $data['hegeshu']        = count($hegexiangmu);
+    $data['hegelv']         = round($data['hegeshu']/$data['zongshu'],2);
+    return $data;
 }
 
 /*
@@ -3105,16 +3156,17 @@ function get_manyidu($lists){
     $opids      = array_unique(array_column($lists,'op_id'));
     $score_kind1= array_keys(C('SCORE_KIND1'));
     $score_kind2= array_keys(C('SCORE_KIND2'));
+    $score_kind3= array_keys(C('SCORE_KIND3'));
 
     $zongfen    = 0;
     $defen      = 0;
     foreach ($opids as $k=>$v){
         $kind               = M('op')->where(array('op_id'=>$v))->getField('kind');
-
         foreach ($lists as $kk=>$vv){
-            if (in_array($kind,$score_kind1)) $zongfen += 8*5; //考核8项, 每项5分, 满分总分
-            if (in_array($kind,$score_kind2)) $zongfen += 6*5; //考核6项, 每项5分, 满分总分
-            $defen += $vv['stay']+$vv['travel']+$vv['content']+$vv['food']+$vv['bus']+$vv['driver']+$vv['guide']+$vv['teacher']+$vv['depth']+$vv['major']+$vv['interest']+$vv['material'];
+            if (in_array($kind,$score_kind1)) $zongfen += 9*5; //考核9项, 每项5分, 满分总分
+            if (in_array($kind,$score_kind2)) $zongfen += 10*5; //考核10项, 每项5分, 满分总分
+            if (in_array($kind,$score_kind3)) $zongfen += 10*5; //考核10项, 每项5分, 满分总分
+            $defen += $vv['stay']+$vv['travel']+$vv['content']+$vv['food']+$vv['bus']+$vv['driver']+$vv['guide']+$vv['teacher']+$vv['depth']+$vv['major']+$vv['interest']+$vv['material']+$vv['late']+$vv['manage']+$vv['morality'];
         }
     }
     $score      = round($defen/$zongfen,2);

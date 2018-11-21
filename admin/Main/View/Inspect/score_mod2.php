@@ -13,13 +13,13 @@
                     <span>5分=>非常满意</span>
                 </div>
                 <div class="col-md-2">
-                    <span>4分=>满意</span>
+                    <span>4分=>较满意</span>
                 </div>
                 <div class="col-md-2">
-                    <span>3分=>一般</span>
+                    <span>3分=>满意</span>
                 </div>
                 <div class="col-md-2">
-                    <span>2分=>不满意</span>
+                    <span>2分=>较不满意</span>
                 </div>
                 <div class="col-md-2">
                     <span>1分=>非常不满意</span>
