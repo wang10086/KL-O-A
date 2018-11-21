@@ -20,7 +20,7 @@ class SalaryController extends BaseController {
         $userid                                = array_filter($userid);
         $user_id                               = (int)$_SESSION['userid'];
 
-        if($user_id==11 ||$user_id==55 || $user_id==77 || $user_id==32 || $user_id==38 || $user_id==12  || $user_id==1){
+        if($user_id==11 ||$user_id==55 || $user_id==77 || $user_id==32 || $user_id==38 || $user_id==12  || $user_id==1 || $user_id==185){
         }else{
             $userid['account_id']              = $user_id;
         }
@@ -55,7 +55,7 @@ class SalaryController extends BaseController {
         $uid                                    = (int)$user_info1['account_id'];
         $userid = (int)$_SESSION['userid'];
 
-        if($userid==1 || $userid===55|| $userid===77 || $userid===11 || $userid==38 || $userid==12 || $userid==32){
+        if($userid==1 || $userid===55|| $userid===77 || $userid===11 || $userid==38 || $userid==12 || $userid==32 || $userid==185){
 
         }else{
             if($uid!==$userid){
@@ -301,7 +301,7 @@ class SalaryController extends BaseController {
     public function salary_attendance(){
         $userid = (int)$_SESSION['userid'];
 
-        if($userid==11 ||$userid==55 || $userid==77 || $userid==32 || $userid==38 || $userid==12  || $userid==1){
+        if($userid==11 ||$userid==55 || $userid==77 || $userid==32 || $userid==38 || $userid==12  || $userid==1 || $user_id==185){
 
             $where['account_id']           = (int)(trim($_POST['id']));//编码
         }else{

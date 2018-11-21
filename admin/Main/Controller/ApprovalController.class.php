@@ -12,7 +12,7 @@ class ApprovalController extends BaseController {
     public function Approval_Index(){
 
         $approval_table                 = 'approval_flie';
-        $approval                       = $this->approval_table($approval_table);
+        $approval                       = $this->approval_table($approval_table,'',1);
         $this->approval                 = $approval['approval'];
         $this->pages                    = $approval['pages'];
         $this->display();
@@ -23,30 +23,35 @@ class ApprovalController extends BaseController {
      * $file_id 文档 id
      */
     public function Approval_list(){
-        $app                            = D('Approval');
-        $where                          = $app->Jurisdiction();
+        $app                                = D('Approval');
+        $where                              = $app->Jurisdiction();
         if($where==1){
             unset($where);
+        }elseif($where==2){
+            $where['account_id']            = $_SESSION['userid'];
+        }elseif($where==3){
+            $approval                       = $this->approval_table('','',2);
         }
-        if(IS_POST){
-            $file_name                  = trim($_POST['file_name']);
-            $account_name               = trim($_POST['username']);
-            $where['file_name']         = array('like',"%$file_name%");
-            $where['account_name']      = array('like',"%$account_name%");
-            $where                      = array_filter($where);
-        }else{
-            $id                         = trim($_GET['file_id']);
-            if(is_numeric($id)){ //判断是否有传值
-                $where['file_id']       = $id;
+        if($where!==3){
+            if(IS_POST){
+                $file_name                  = trim($_POST['file_name']);
+                $account_name               = trim($_POST['username']);
+                $where['file_name']         = array('like',"%$file_name%");
+                $where['account_name']      = array('like',"%$account_name%");
+                $where                      = array_filter($where);
             }else{
-                $this->error('数据错误!请重新打开！');
+                $id                         = trim($_GET['file_id']);
+                if(is_numeric($id)){ //判断是否有传值
+                    $where['file_id']       = $id;
+                }else{
+                    $this->error('数据错误!请重新打开！');
+                }
             }
+            $approval                       = $this->approval_table('approval_flie_url',$where,1);
         }
-        $approval_table                 = 'approval_flie_url';
-        $approval                       = $this->approval_table($approval_table,$where);
-        $this->file_id                  = $id;
-        $this->approval                 = $approval['approval']; //文件信息 -- 文件夹信息
-        $this->pages                    = $approval['pages'];//分页
+        $this->file_id                      = $id;
+        $this->approval                     = $approval['approval']; //文件信息 -- 文件夹信息
+        $this->pages                        = $approval['pages'];//分页
         $this->display();
     }
 
@@ -55,14 +60,25 @@ class ApprovalController extends BaseController {
      * $approval_table 表名
      * $where 查询条件
      */
-    public function approval_table($approval_table,$where){
-        $where['type']              = 1;
-        $count                      = M($approval_table)->where($where)->count();
-        $page                       = new Page($count,10);
-        $pages                      = $page->show();
-        $approval                   = M($approval_table)->where($where)->limit("$page->firstRow","$page->listRows")->order('createtime desc')->select();
-        $approval_w['approval']     = D('Approval')->query_table($approval);
-        $approval_w['pages']        = $pages;
+    public function approval_table($approval_table,$where,$type){
+        if($type==1){
+            $where['type']                                = 1;
+            $count                                        = M($approval_table)->where($where)->count();
+            $page                                         = new Page($count,10);
+            $pages                                        = $page->show();
+            $approval                                     = M($approval_table)->where($where)->limit("$page->firstRow","$page->listRows")->order('createtime desc')->select();
+        }elseif($type==2){
+            $userid                                       = $_SESSION['userid'];
+            $map['approval_judgment.judgment_account_id'] = array('like',"%$userid%");
+            $map['approval_flie_url.type']                = 1;
+            $count                                        = M('approval_judgment')->join('left join approval_flie_url on approval_judgment.file_url_id = approval_flie_url.id')->where($map)->count();
+            $page                                         = new Page($count,10);
+            $pages                                        = $page->show();
+            $$approval['approval']                        = M('approval_judgment')->join('left join approval_flie_url on approval_judgment.file_url_id = approval_flie_url.id')->where($map)->limit("$page->firstRow","$page->listRows")->select();
+        }
+       
+        $approval_w['approval']                           = D('Approval')->query_table($approval);
+        $approval_w['pages']                              = $pages;
         return $approval_w;
     }
 
@@ -116,6 +132,12 @@ class ApprovalController extends BaseController {
         }else{
             $this->error('数据错误！请重新打开页面！');
         }
+        $whe['file_url_id']         = $approval_r[1]['id'];
+        $whe['file_id']             = $approval_r[1]['file_id'];
+
+        $this->judgmen              = $query->Approval_userinfo($whe);//审批人员
+        $this->annotation           = M('approval_annotation')->where($whe)->select();//批注
+
         $this->approval             = $approval[1];//文档信息
         $where['post_name']         = array('like',"%经理%");
         $this->approver             = $query->Approver($where); //审批人员
@@ -166,12 +188,39 @@ class ApprovalController extends BaseController {
         $type                   = $query->add_judgment($file,$judgment,$check);
         if($type==1){
             $this->success('添加审批人成功！');
+        }elseif($type==2){
+            $this->error('请不要重复提交！');
         }else{
             $this->error('添加审批人失败！请重新提交！');
         }
     }
-
- }
+    /**
+     * add_annotation 提交批注
+     */
+    public function add_annotation(){
+        $status                             = trim($_POST['status']);
+        $comment                            = trim($_POST['comment']);
+        $file['file_url_id']                = trim($_POST['file_url_id']);
+        $file['file_id']                    = trim($_POST['file_id']);
+        $query                              = D('Approval');
+        $state                              = $query->add_file_annotation($file,$comment,$status);
+        if($state==1){
+            $this->success('添加数据成功！');
+        }elseif($state==2){
+            $this->error('添加数据失败！请重新添加！');
+        }elseif($state==3){
+            $this->error('添加数据不能为空!');
+        }elseif($state==4){
+            $this->success('驳回成功！');
+        }elseif($state==5){
+            $this->error('驳回失败!您的数据不完整！');
+        }elseif($state==6){
+            $this->error('驳回失败!您没有权限！');
+        }elseif($state==7){
+            $this->error('数据已经驳回！请不要再次提交！');
+        }
+    }
+}
 
 
 

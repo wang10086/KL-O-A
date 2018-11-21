@@ -20,7 +20,7 @@
                             <div class="box-body" >
 
                                 <!-- 文件信息-->
-                                <table class="table table-bordered" style="text-align:center;margin:2em auto;width:98%;">
+                                <table class="table table-bordered" style="text-align:center;margin:2em auto;width:96%;">
                                     <tr class="orders">
                                         <th class="sorting" style="text-align:center;width:6em;"><b>ID</b></th>
                                         <th class="sorting" style="text-align:center;width:9em;"><b>拟稿人</b></th>
@@ -31,7 +31,7 @@
                                         <th class="sorting" style="text-align:center;width:9em;"><b>修改后拟稿名称</b></th>
                                         <th class="sorting" style="text-align:center;width:9em;"><b>修改后文件大小</b></th>
                                         <th class="sorting" style="text-align:center;width:9em;"><b>修改后上传时间</b></th>
-
+                                        <th class="sorting" style="text-align:center;width:9em;"><b>状态</b></th>
                                     </tr>
 
                                     <tr style="text-align:center;">
@@ -44,11 +44,14 @@
                                         <td>{$approval['Approval_url']['modify_filename']}</td>
                                         <td>{$approval['Approval_url']['modify_size']}</td>
                                         <td><?php if(is_numeric($approval['Approval_url']['modify_time'])){echo date('Y-m-d H:i:s',$approval['Approval_url']['modify_time']);}else{echo'';}?></td>
+                                        <td style="text-align:center;">
+                                                <?php if($approval['Approval']['status']==1){echo"待上级审核";}elseif($approval['Approval']['status']==2){echo"待综合审核";}elseif($approval['Approval']['status']==3){echo"待各级领导审核";}elseif($approval['Approval']['status']==4){echo"待最终审核";}elseif($approval['Approval']['status']==5){echo"审核通过";}elseif($approval['Approval']['status']==6){echo"审核驳回";}?>
+                                        </td>
 
                                     </tr>
                                 </table><br><br>
 
-                                <div class="box-header" style="margin:-5em 0em 4em 1em;width:98%;text-align: center;">
+                                <div style="margin:-5em 0em 4em 3em;width:96%;text-align: center;">
                                     <div>
                                         <form method="post" action="{:U('Approval/file_change')}" enctype="multipart/form-data">
                                             <input type="hidden" name="file_id" value="{$approval['Approval_url']['file_id']}">
@@ -72,17 +75,20 @@
                                                 </table>
                                                 <div id="container" style="display:none;"></div>
                                             </div>
-                                            <div id="formsbtn" >
+                                            <div id="formsbtn" ><br>
                                                 <button type="submit" class="btn btn-success btn-sm" style="width:7em;font-size:1.2em;margin:0em auto;">保 存</button>
-                                            </div>
-                                        </form><br><br><br>
+                                            </div><br><br><br>
+                                            <table style="width:98%;"  class="table">
+                                                    <th width=""></th>
+                                            </table>
+                                        </form>
                                     </div>
                                 </div><!-- /.box-header -->
 
 
 
                                 <!-- 选择审批人员  选择审批人员-->
-                                <div style="margin-top:-2.5em;">
+                                <div style="margin:-4em 0em 0em 2em;width:96%;">
                                     <form method="post" action="{:U('Approval/add_final_judgment')}" enctype="multipart/form-data">
                                         <input type="hidden" name="file_id" value="{$approval['Approval']['file_id']}">
                                         <input type="hidden" name="file_url_id" value="{$approval['Approval']['id']}">
@@ -106,7 +112,7 @@
                                                 </label><br>
                                                 <foreach name="office" item="off">
                                                     <label style="margin-left:2em;" class="col-md-3">
-                                                       <b><input type="checkbox" name="judgment[]" value="{$app['id']}">
+                                                       <b><input type="checkbox" name="judgment[]" value="{$off['id']}">
                                                                 {$off['nickname']}
                                                        </b>
                                                     </label>
@@ -114,8 +120,8 @@
                                             </div>
 
                                         </div>
-                                        <center>
-                                            <button type="submit" class="btn btn-success btn-sm" style="width:7em;font-size:1.2em;margin-top:1em;">
+                                        <center><br>
+                                            <button type="submit" class="btn btn-success btn-sm" style="width:7em;font-size:1.2em;margin-left:1.7em;">
                                                 保 存
                                             </button>
                                         </center>
@@ -125,18 +131,18 @@
 
 
                                 <!-- 已选审批人员  已审批人员-->
-                                <div class="box-header" style="width:98%;">
+                                <div  style="width:96%;">
                                     <div class="form-group  col-md-6" >
                                         <label>
                                             <b style="font-size:1.3em;color:#09F;padding:2em;letter-spacing:0.2em;">已选审批状态 : </b>
                                         </label><br><br>
                                         <div style="margin-left:5em;">
-                                            <foreach name="f['file']['user']" item="n">
+                                            <foreach name="judgmen['annotation1']" item="j">
                                                 <span style="padding:1em;">
                                                     <b>
-                                                        {$n['username']}
-                                                        <b style="<?php if($n['status']==0){echo 'color:red';}elseif($n['status']>0){echo 'color:#00CC33';}?>">
-                                                            [ <?php if($n['status']==0){echo "未批注";}elseif($n['status']>0){echo "已批注";}?> ]
+                                                        {$j['username']}
+                                                        <b style="<?php if($j['steta']==0 || $j['steta']=="" || $j['steta']==1){echo 'color:red';}elseif($j['steta']>0){echo 'color:#00CC33';}?>">
+                                                            [ <?php if($j['steta']==0 || $j['steta']=="" || $j['steta']==1){echo "未批注";}elseif($j['steta']==2){echo "已批注";}?> ]
                                                         </b>
                                                     </b>
                                                 </span>
@@ -148,82 +154,66 @@
                                             <b style="font-size:1.3em;color:#09F;padding:2em;letter-spacing:0.2em;">最终审核状态 : </b>
                                         </label><br><br>
                                         <div style="margin-left:5em;">
-
+                                            <foreach name="judgmen['annotation2']" item="an">
                                             <span style="padding:1em;">
                                                 <b>
-                                                    {$f['file']['file_leader_name']}
-                                                    <b style="<?php if($f['file']['file_leader_status']==0){echo 'color:red';}elseif($f['file']['file_leader_status']==1|| $f['file']['file_leader_status']==2){echo 'color:red';}elseif($f['file']['file_leader_status']==3){echo 'color:#00CC33';}elseif($f['file']['file_leader_status']==4){echo 'color:red';}?>">
-                                                        [ <?php if($f['file']['file_leader_status']==0){echo "未批注";}elseif($f['file']['file_leader_status']==1 || $f['file']['file_leader_status']==2){echo "已批注";}elseif($f['file']['file_leader_status']==3){echo "已批准";}elseif($f['file']['file_leader_status']==4){echo "审批未通过";}?> ]
+                                                    {$an['username']}
+                                                    <b style="<?php if($j['steta']==0 || $j['steta']=="" || $j['steta']==1){echo 'color:red';}elseif($j['steta']>0){echo 'color:#00CC33';}?>">
+                                                            [ <?php if($j['steta']==0 || $j['steta']=="" || $j['steta']==1){echo "未批注";}elseif($j['steta']==2){echo "已批注";}?> ]
                                                     </b>
                                                 </b>
                                             </span>
-
+                                            </foreach>
                                         </div>
                                     </div>
-                                </div><br><br>
+                                </div><br><br><br><br><br><br><br>
+                                <table style="margin-left:2em;width:96%;"  class="table">
+                                    <th width=""></th>
+                                </table>
 
                                 <!-- 文件 和 批注信息-->
-                                <div class="box-header" style="width: 117em;">
+                                <div style="width:96%;margin-left:1em;">
                                     <div class="form-group col-md-6">
                                         <label>
                                             <b style="font-size:1.3em;color:#09F;letter-spacing:0.2em;">上传文件 : </b>
                                         </label><br><br>
                                         <div style="width:65em;height:83em;overflow: hidden;border:solid 2px #d2d5d8;">
-<!--                                            <iframe src="https://view.officeapps.live.com/op/view.aspx?src={$url}" style="overflow-y:scroll;overflow-x:scroll;word-wrap:break-word;margin-top:-6em;width:65em;height:92em;">-->
-<!--                                            </iframe>-->
+                                          <!--   <iframe src="https://view.officeapps.live.com/op/view.aspx?src={$url}" style="overflow-y:scroll;overflow-x:scroll;word-wrap:break-word;margin-top:-6em;width:65em;height:92em;">
+                                           </iframe>--> -->
                                         </div>
                                     </div>
 
-                                    <div class="form-group col-md-6" style="float:right;width:50em;">
-                                        <label style='<?php
-                                                            $number = 1;
-                                                           for($i=0;$i<count($f['file']['user']);$i++){
-                                                               if($f['file']['user'][$i]['username']==$username['nickname'] || $status==1){
-                                                                   $number = 2;
-                                                               }
-                                                            }
-                                                            if($number == 1){
-                                                                echo "display:none;";
-                                                            }
-                                                        ?>'>
+                                    <div class="form-group col-md-6" style="float:right;width:45em;">
+                                        <label>
                                             <b style="font-size:1.3em;color:#09F;padding:1em;letter-spacing:0.2em;">批注内容 : </b>
-                                            <b style="margin-left:20em;" id="approval_submit_show">
-                                                <input type="submit" value="添加审批批注" class="btn btn-info"  style="margin-right:1em;">
-                                            </b>
-                                            <b style="margin-left:20em;display:none;"id="approval_submit_hidden1">
-                                                <input type="submit" value="提交审批批注" class="btn btn-info"   style="margin-right:1em;">
-                                            </b>
+                                        
                                         </label><br><br>
 
-                                        <div  id="approval_submit_show1" style="margin:<?php if($number==1){echo '0.8em';}else{echo '-0.6em';}?> 0em 0em;padding:1em;height:83em;border:solid 2px #d2d5d8;overflow-y:scroll;overflow-x:scroll;word-wrap:break-word;width:45em;" >
-                                            <foreach name="f['flie_annotation']" item="ann">
+                                        <div  id="approval_submit_show1" style="padding:1em;height:83em;border:solid 2px #d2d5d8;overflow-y:scroll;overflow-x:scroll;word-wrap:break-word;width:45em;" >
+                                            <foreach name="annotation" item="ann">
                                                 <p>
                                                     <b style="color:#339933;">{$ann['account_name']}&nbsp;</b>
                                                     <span>[ <?php echo date('Y-m-d H:i:s',$ann['createtime']);?> ]</span>
                                                     <span style="color:#CC3333">[ 批注 ] ：</span>
 
-                                                        <span style="letter-spacing:0.1em;line-height:2em;text-indent:25px">
-                                                            {$ann['annotation_content']}
-                                                        </span>
+                                                    <span style="letter-spacing:0.1em;line-height:2em;text-indent:25px">
+                                                        {$ann['annotation_content']}
+                                                    </span>
 
                                                 </p>
                                             </foreach>
                                         </div>
-
-                                        <textarea style="margin:-0.6em 0em 0em 0em;padding:1em;height:83em;border:solid 2px #d2d5d8;overflow-y:scroll;overflow-x:scroll;word-wrap:break-word;width:45em;display:none;text-indent:2.5em;line-height:2em;letter-spacing:0.1em;"  name="comment">
-                                        </textarea>
-
                                     </div>
                                 </div><br>
-                                <div style="text-align: center;">
-                                        <?php if($_SESSION['userid'] == $approval_file[0]['file']['file_leader_id'] && $approval_file[0]['file']['status']==2){?>
-                                    <input type="submit" value="审批通过" class="btn btn-info "  onclick="approval_update_file(1)" style="margin-right:1em;">
-                                    <input type="submit" value="审批驳回" class="btn btn-info"   onclick="approval_update_file(2)" style="margin-right:1em;">
-                                        <?php }?>
-                                    <?php if($_SESSION['userid'] == $approval_file[0]['file']['account_id'] &&  $approval_file[0]['file']['status']==4){?>
-                                    <input type="submit" value="提交批注修改" class="btn btn-info"   onclick="approval_update_file(3)" style="margin-right:1em;">
-                                        <?php }?>
-
+                                <div style="text-align:center;width:96%;">
+                                    <form method="post" action="{:U('Approval/add_annotation')}" enctype="multipart/form-data">
+                                        <input type="hidden" name="file_id" value="{$approval['Approval']['file_id']}">
+                                        <input type="hidden" name="file_url_id" value="{$approval['Approval']['id']}">
+                                         <textarea style="margin:2em -4em 2em 0em;padding:1em;height: 15em;border:solid 2px #d2d5d8;overflow-y:scroll;overflow-x:scroll;word-wrap:break-word;width:100%;text-indent:2.5em;line-height:2em;letter-spacing:0.1em;"  name="comment">
+                                            </textarea>
+                                        <input type="submit" value="提交批注" name="status" class="btn btn-info"  style="margin-right:1em;">
+                                        <input type="submit" value="审批驳回" name="status" class="btn btn-info"  style="margin-right:1em;">
+                                    </form>
                                 </div>
                             </div>
                         </div><!-- /.box -->
@@ -313,53 +303,6 @@
         });
         uploader.init();
     });
-
-    $('#approval_submit_show').click(function(){ //点击 ‘添加审批批注’ 效果隐藏显示
-        $(this).hide();
-        $('textarea').show();
-        $('#approval_submit_show1').hide();
-        $('#approval_submit_hidden1').show();
-    });
-
-    $('#approval_submit_hidden1').click(function(){ //添加批注信息
-        var text    = $('textarea').val().replace(/\n|\r\n/g,'<br/>');
-        var file_id = "<?php echo $id;?>";
-        $.ajax({
-            url:"{:U('Ajax/Ajax_approval_textarea')}",
-            type:"POST",
-            data:{'text':text,'file_id':file_id},
-            dataType:"json",
-            success:function(date){
-                if(date.sum==1){
-                    alert(date.msg);
-                }else{
-                    alert(date.msg);
-                }
-            }
-        });
-    });
-
-
-    //审批obj  1通过 2驳回 3 修改
-    function approval_update_file(obj) {
-
-        var file_id = "<?php echo $id;?>";
-
-        $.ajax({
-            url:"{:U('Ajax/Ajax_approval_flie')}",
-            type:"POST",
-            data:{'type':obj,'file_id':file_id},
-            dataType:"json",
-            success:function(date){
-                if(date.sum==1){
-                    alert(date.msg);
-                }else{
-                    alert(date.msg);
-                }
-            }
-        });
-
-    }
 
 </script>
 
