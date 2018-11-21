@@ -2697,7 +2697,7 @@ function updatekpi($month,$user){
                     }
                 }
 
-                //工作及时率(京区业务中心研发)
+                //工作及时率(京区业务中心)(工单)
                 /*if ($v['quota_id']==130){
                     //5天内完成为不超时
                     $where                  = array();
@@ -2736,7 +2736,7 @@ function updatekpi($month,$user){
                         $complete	= round($hegelv/0.9,2)*100;
                     }
                 }*/
-                if ($v['quota_id']==130){
+                if (in_array($v['quota_id'],array(130,136))){
                     //及时率
                     $jishilv_data           = get_jishilv($user,$v['start_date'],$v['end_date']);
                     $jishilv                = $jishilv_data['jishilv'];
@@ -2793,7 +2793,21 @@ function updatekpi($month,$user){
 
                 //辅导员/教师资源培训完成率(京区业务中心教务)
                 if ($v['quota_id']==135){
+                    $where                  = array();
+                    $where['manager_id']    = $user;
+                    $where['set_guide_time']= array('between',array($v['start_date'],$v['end_date']+ 24*3600));
+                    $field                  = 'op_id,id as confirm_id,manager_id,set_guide_time';
+                    $lists                  = M('op_guide_confirm')->field($field)->where($where)->group('op_id')->select();
+                    $count                  = count($lists);
 
+                    $peixun_data            = get_peixunlv($user,$v['start_date'],$v['end_date'],$count,$lists);
+                    $peixunlv               = $peixun_data['peixunlv'];
+
+                    if($peixunlv >= 1){
+                        $complete	= 100;
+                    }else{
+                        $complete	= ($peixunlv*100).'%';
+                    }
                 }
 
                 //场馆资源调度质量(京区业务中心资源)
@@ -2815,7 +2829,7 @@ function updatekpi($month,$user){
 
 
 				//已实现自动获取指标值
-				$auto_quta	= array(1,2,3,4,5,6,81,8,9,10,11,15,16,18,20,23,26,21,24,27,32,37,19,22,25,28,33,38,42,45,103,56,113,92,29,34,39,46,102,55,57,58,59,84,87,89,90,111,107,83,66,54,44,12,112,108,100,96,95,65,114,86,85,64,63,62,53,52,41,40,49,80,48,91,79,47,36,35,31,30,82,110,106,99,94,67,124,129,130,131,132,134,137);
+				$auto_quta	= array(1,2,3,4,5,6,81,8,9,10,11,15,16,18,20,23,26,21,24,27,32,37,19,22,25,28,33,38,42,45,103,56,113,92,29,34,39,46,102,55,57,58,59,84,87,89,90,111,107,83,66,54,44,12,112,108,100,96,95,65,114,86,85,64,63,62,53,52,41,40,49,80,48,91,79,47,36,35,31,30,82,110,106,99,94,67,124,129,130,131,132,134,135,136,137);
 				
 				//计算完成率并保存数据
 				if(in_array($v['quota_id'],$auto_quta)){
@@ -2947,11 +2961,11 @@ function get_fdyjsl($user,$start_date,$end_date){
  * 2.本周期开始时间
  * 3.本周期结束时间
  * */
-function get_peixunlv($user,$start_date,$end_date){
+function get_peixunlv($user,$start_date,$end_date,$sum=0,$sumlists=''){
     //需要培训数(工单取值)
     $worder             = get_worder($user,$start_date,$end_date);
-    $zonggongdan        = $worder['zonggongdan'];
-    $zongshu            = count($zonggongdan);
+    $zonggongdan        = $sumlists?$sumlists:$worder['zonggongdan'];
+    $zongshu            = $sum?$sum:count($zonggongdan);
 
     //已完成培训数量(培训管理取值)
     $where = array();
