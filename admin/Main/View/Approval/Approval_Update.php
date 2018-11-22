@@ -172,31 +172,32 @@
                                 </table>
 
                                 <!-- 文件 和 批注信息-->
-                                <div style="width:96%;margin-left:1em;">
-                                    <div class="form-group col-md-6">
+                                <div style="width:96%;margin-left:4em;">
+                                    <div style="float:left;width:58%;overflow-y:scroll;overflow-y:visible;">
                                         <label>
                                             <b style="font-size:1.3em;color:#09F;letter-spacing:0.2em;">上传文件 : </b>
                                         </label><br><br>
-                                        <div style="width:65em;height:83em;overflow: hidden;border:solid 2px #d2d5d8;">
-                                          <!--   <iframe src="https://view.officeapps.live.com/op/view.aspx?src={$url}" style="overflow-y:scroll;overflow-x:scroll;word-wrap:break-word;margin-top:-6em;width:65em;height:92em;">
-                                           </iframe>--> -->
+                                        <div style="height:83em;overflow: hidden;border:solid 2px #d2d5d8;">
+                                             <iframe src="https://view.officeapps.live.com/op/view.aspx?src={$approval['Approval']['file_url']}" style="overflow-y:scroll;overflow-x:scroll;word-wrap:break-word;margin-top:-6em;width:100%;height:92em;overflow-x:hidden">
+<!-- {$approval['Approval']['file_url']} -->
+                                           </iframe> 
                                         </div>
                                     </div>
 
-                                    <div class="form-group col-md-6" style="float:right;width:45em;">
+                                    <div style="float:right;width:35%;" >
                                         <label>
                                             <b style="font-size:1.3em;color:#09F;padding:1em;letter-spacing:0.2em;">批注内容 : </b>
                                         
                                         </label><br><br>
 
-                                        <div  id="approval_submit_show1" style="padding:1em;height:83em;border:solid 2px #d2d5d8;overflow-y:scroll;overflow-x:scroll;word-wrap:break-word;width:45em;" >
+                                        <div  id="approval_submit_show1" style="padding:1em;height:83em;border:solid 2px #d2d5d8;overflow-y:scroll;overflow-x:scroll;word-wrap:break-word;" >
                                             <foreach name="annotation" item="ann">
                                                 <p>
                                                     <b style="color:#339933;">{$ann['account_name']}&nbsp;</b>
                                                     <span>[ <?php echo date('Y-m-d H:i:s',$ann['createtime']);?> ]</span>
                                                     <span style="color:#CC3333">[ 批注 ] ：</span>
 
-                                                    <span style="letter-spacing:0.1em;line-height:2em;text-indent:25px">
+                                                    <span style="letter-spacing:0.1em;line-height:2em;text-indent:50px;">
                                                         {$ann['annotation_content']}
                                                     </span>
 

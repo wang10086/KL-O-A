@@ -98,18 +98,34 @@
 
         //修改文件及路径 $table表名 $where条件 $save 修改内容
         public function save_approval($table,$where,$save){
-
-            $sql                = M($table)->where($where)->find();
+            $sql                                        = M($table)->where($where)->find();
             if($sql){
                 if($sql['account_id'] !== $_SESSION['userid']){
                     return 2;
+                }else{
+                    if($sql['status']==6){ //判断是否驳回后提交
+                        $userid                  = $_SESSION['userid'];
+                        $up['file_id']           = $where['file_id'];
+                        $up['file_url_id']       = $where['id'];
+                        $judgment                = M('approval_judgment')->where($up)->find();
+                        $arr                     = explode(",",$judgment['judgment_account_id']);
+                        $arr2                    = explode(",",$judgment['final_account_id']);
+                        if(($sql['pid_account_id'] ==$sql['last_account_id'] && $sql['last_state']==2) || ($judgment['account_id']==$sql['last_account_id'] && $sql['last_state']==3) || (in_array($sql['last_account_id'],$arr) && $sql['last_state']==4 ) || (in_array($sql['last_account_id'],$arr2) && $sql['last_state']==5)){
+                                $save['status']  = (int)($sql['last_state'])-1;
+                                $sql_w           = M($table)->where($where)->save($save);
+                                $judgment1       = M('approval_judgment')->where($up)->save($save);
+                        }elseif(($sql['pid_account_id'] ==$sql['last_account_id'] && $sql['last_state']==1) || ($judgment['account_id']==$sql['last_account_id'] && $sql['last_state']==2) || (in_array($sql['last_account_id'],$arr) && $sql['last_state']==3) || (in_array($sql['last_account_id'],$arr2) && $sql['last_state']==4)){
+                                $save['status']  = (int)($sql['last_state']);
+                                $sql_w           = M($table)->where($where)->save($save);
+                                $judgment1       = M('approval_judgment')->where($up)->save($save);
+                        }
+                        if($sql_w){ return 1;}else{return 0;}
+                    }
+                    //不是驳回提交
+                    $sql_w                       = M($table)->where($where)->save($save);
+                    if($sql_w){ return 1;}else{return 0;}
                 }
-            }
-            $sql_w              = M($table)->where($where)->save($save);
-            if($sql_w){
-                return 1;
-            }else{
-                return 0;
+                return 0; 
             }
         }
 
@@ -177,19 +193,22 @@
             $where['file_id']                   = $file['file_id'];
             $where['id']                        = $file['file_url_id'];
             $query                              = M('approval_flie_url')->where($where)->find();
-            if($query['status']==3){
-                    return 2;die;
-            }
+            if($query['status']==3){ return 2;die;}
             if($query){
                 $update['status']               = 3;
                 $update['type']                 = 1;
                 $where['type']                  = 1;
                 $save                           = M('approval_flie_url')->where($where)->save($update);
                 if($save){
+                    $sta['status']              = 3;
+                    $judgment_save              = M('approval_judgment')->where($file)->save($sta);
+                    if($judgment_save){
+                        return 1;die;
+                    }
                     $file['final_account_id']   = substr($arr,0,strlen($arr)-1);
                     $file['judgment_account_id']= substr($array,0,strlen($array)-1);
-                    $file['createtime']         = time();
                     $file['account_id']         = $_SESSION['userid'];
+                    $file['createtime']         = time();
                     $file['account_name']       = $_SESSION['name'];
                     $file['status']             = 3;
                     $add                        = M('approval_judgment')->add($file);
@@ -206,68 +225,81 @@
             $userid                                         = (int)$_SESSION['userid'];
             $query['file_id']                               = $file['file_id'];
             $query['file_url_id']                           = $file['file_url_id'];
-
+            $judgment                                       = M('approval_judgment')->where($query)->find();
+            $arr                                            = explode(",",$judgment['judgment_account_id']);
+            $arr2                                           = explode(",",$judgment['final_account_id']);
+            $roval_flie                                     = M('approval_flie_url')->where('id='.$file['file_url_id'])->find();
+            if(in_array($userid,$arr) || in_array($userid,$arr2) || $userid==$judgment['account_id'] || $userid==1 || $userid==2 || $roval_flie['pid_account_id'] == $userid){
+            }else{return 6;die;}
             if($status=="审批驳回"){ //审批驳回
                 $where['id']                                = $file['file_url_id'];
                 $app                                        = M('approval_flie_url')->where($where)->find();
-                $judgment                                   = M('approval_judgment')->where($query)->find();
-                $arr                                        = explode(",",$judgment['judgment_account_id']);
-                $arr2                                       = explode(",",$judgment['final_account_id']);
-                if(in_array($userid,$arr) || in_array($userid,$arr2) || $userid==13 || $userid==1 || $userid==2){
-                    if($judgment){
-                        $update['status']                   = 6;
-                        if($app['status']==6){
-                            return 7;die;
-                        }
-                        $update['last_state']               = $app['status'];
-                        $update['last_account_id']          = $userid;
-                        $url_save = M('approval_flie_url')->where($where)->save($update);
-                        if($url_save){
-                            $save['status']                 = 6;
-                            $url_judgment                   = M('approval_judgment')->where($query)->save($save);
-                            if($url_judgment){
-                                return 4;die;
-                            }
-                        }
-                    }
-                   return 6;die;
+                $update['status']                           = 6;
+                if($app['status']==6){ return 7;die;}
+                $update['last_state']                       = $app['status'];
+                $update['last_account_id']                  = $userid;
+                $url_save                                   = M('approval_flie_url')->where($where)->save($update);
+                if($url_save){
+                    $save['status']                         = 6;
+                    $url_judgment                           = M('approval_judgment')->where($query)->save($save);
+                    if($url_judgment){return 4;die; }
                 }
                 return 5;die;
             }
-            if(empty($comment)){
-                return 3; die;//空
-            }
+            if(empty($comment)){ return 3; die; }//空
             //批注提交
-            $judgment                                       = M('approval_judgment')->where($query)->find();
-            if($judgment){
-                $arr                                        = array_values(explode(",",$judgment['judgment_account_id']));
-                $arr2                                       = array_values(explode(",",$judgment['final_account_id']));
-                if(in_array($userid,$arr) || in_array($userid,$arr2) || $userid==13 || $userid==1 || $userid==2) {
-
-                }else{
-                    return 5;die;//您没有审批权限
-                }
-            }
             $file['account_id']                             = $_SESSION['userid'];
             $file['account_name']                           = $_SESSION['name'];
-            $file_state                                     = M('approval_annotation')->where($file)->find();
+            $file_state                                     = M('approval_annotation')->where($file)->find(); 
             if($file_state){
                 $update['annotation_content']               = $comment;
                 $save                                       = M('approval_annotation')->where($file)->save($update);
-                if($save){
-                    return 1;die;//成功
-                }else{
-                    return 2;die;//失败
-                }
+                if($save){ return 1;die;}else{ return 2;die;}//1 成功 2//失败
             }else{
                 $file['createtime']                         = time();
                 $file['annotation_content']                 = trim($_POST['comment']);
                 $file_add                                   = M('approval_annotation')->add($file);
                 if($file_add){
-                    return 1;die;//成功
-                }else{
-                    return 2;die;//失败
+                    $url['file_id']                         = $file['file_id'];
+                    $url['id']                              = $file['file_url_id'];
+                    $url['pid_account_id']                  = $userid;
+                    $find_r                                 = M('approval_flie_url')->where($url)->find();
+                    if($find_r){
+                        if($find_r['status'] ==1){
+                            $up['status']                   = 2;
+                            $url_save                       = M('approval_flie_url')->where($url)->save($up);
+                            if($url_save){ return 1;die;}else{ return 2;die; }
+                        }
+                        if($find_r['status'] ==3){
+                             foreach($arr as $key =>$val){
+                                $query['account_id']        = $val;
+                                $file_nnot                  = M('approval_annotation')->where($query)->find();
+                                if(!$file_nnot){
+                                    return 1;die;//失败
+                                }
+                             }
+                             unset($query['account_id']);
+                             $up['status']                  = 4;
+                             $url_save1                     = M('approval_flie_url')->where($url)->save($up);
+                             $url_judgment1                 = M('approval_judgment')->where($query)->save($up);
+                        }
+                        if($find_r['status'] ==4){
+                            foreach($arr2 as $k =>$v){
+                                $query['account_id']        = $v;
+                                $file_nnot                  = M('approval_annotation')->where($query)->find();
+                                if(!$file_nnot){
+                                    return 1;die;//失败
+                                }
+                             }
+                             unset($query['account_id']);
+                             $up['status']                  = 5;
+                             $url_save1                     = M('approval_flie_url')->where($url)->save($up);
+                             $url_judgment1                 = M('approval_judgment')->where($query)->save($up);
+                        }
+                    }
+                    return 1;die;//失败
                 }
+                return 2;die;
             }
         }
         

@@ -197,8 +197,8 @@
                             <a href="javascript:;">
                                 <i class="fa  fa-folder-open"></i>
                                 <span>文件管理</span>
-                                <?php if($_SESSION['approval_flie_type']){ ?>
-                                    <small class="badge pull-right bg-red" style="margin-right:6px;"><?php echo $_SESSION['approval_flie_type'];?></small>
+                                <?php if($_SESSION['file_sum']){ ?>
+                                    <small class="badge pull-right bg-red" style="margin-right:6px;"><?php echo $_SESSION['file_sum'];?></small>
                                 <?php }else{ ?>
                                     <i class="fa fa-angle-left pull-right"></i>
                                 <?php } ?>
@@ -209,7 +209,7 @@
                                 	<li class="{:on('Files/index')}">
                                         <a href="{:U('Files/index')}">
                                             <i class="fa fa-angle-right">
-                                            </i> 文件管理
+                                            </i> 文件管理  
                                         </a>
                                     </li>
                                 </if>
@@ -234,12 +234,14 @@
                                             </i> 岗位作业指导书
                                         </a>
                                     </li>
-                                <if condition="rolemenu(array('Approval/Approval_Index','Approval/Approval_Upload','Approval/Approval_file','Approval/Approval_Update'))">
-                                    <li class="{:on('Approval/Approval_Index')}{:on('Approval/Approval_Upload')}{:on('Approval/Approval_file')}{:on('Approval/Approval_Update')}">
+                                <if condition="rolemenu(array('Approval/Approval_Index','Approval/Approval_list','Approval/approval_table','Approval/Approval_Upload','Approval/file_upload','Approval/Approval_Update','Approval/file_change','Approval/add_final_judgment','Approval/add_annotation'))">
+
+                                    <li class="{:on('Approval/Approval_Index')}{:on('Approval/Approval_list')}{:on('Approval/approval_table')}{:on('Approval/Approval_Upload')}{:on('Approval/file_upload')}{:on('Approval/Approval_Update')}{:on('Approval/file_change')}{:on('Approval/add_final_judgment')}{:on('Approval/add_annotation')}">
+
                                         <a href="{:U('Approval/Approval_Index')}">
                                             <i class="fa fa-angle-right"></i> 文件审批
-                                            <?php if($_SESSION['approval_flie_type']){ ?>
-                                                <small class="badge pull-right bg-red" style="margin-right:6px;"><?php echo $_SESSION['approval_flie_type'];?></small>
+                                            <?php if($_SESSION['file_sum']){ ?>
+                                                <small class="badge pull-right bg-red" style="margin-right:6px;"><?php echo $_SESSION['file_sum'];?></small>
                                             <?php }?>
 
                                         </a>

@@ -124,6 +124,7 @@ class ApprovalController extends BaseController {
      * $id 文档id
      */
     public function Approval_Update(){
+
         $id['id']                   = (int)trim($_GET['id']);
         $query                      = D('Approval');
         if(is_numeric($id['id'])){
@@ -179,7 +180,7 @@ class ApprovalController extends BaseController {
      * file_id 文件id   file_url_id 文档id
      */
     public function add_final_judgment(){
-        //oa_approval_judgment
+    
         $file['file_id']        = trim($_POST['file_id']);
         $file['file_url_id']    = trim($_POST['file_url_id']);
         $judgment               = $_POST['judgment'];
