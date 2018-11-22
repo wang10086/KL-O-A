@@ -37,10 +37,10 @@
                                     <tr style="text-align:center;">
                                         <td>{$approval['Approval']['id']}</td>
                                         <td>{$approval['Approval']['account_name']}</td>
-                                        <td><a href="{$approval['file_url']}"></a>{$approval['Approval']['file_name']}</td>
+                                        <td><a href="{$approval['Approval']['file_url']}">{$approval['Approval']['file_name']}</a></td>
                                         <td>{$approval['Approval']['file_size']}</td>
                                         <td><?php if(is_numeric($approval['Approval']['createtime'])){echo date('Y-m-d H:i:s',$approval['Approval']['createtime']);}else{echo'';}?></td>
-                                        <td>{$approval['Approval_url']['modify_name']}</td>
+                                        <td ><a href="{$approval['Approval_url']['modify_url']}">{$approval['Approval_url']['modify_name']}</a></td>
                                         <td>{$approval['Approval_url']['modify_filename']}</td>
                                         <td>{$approval['Approval_url']['modify_size']}</td>
                                         <td><?php if(is_numeric($approval['Approval_url']['modify_time'])){echo date('Y-m-d H:i:s',$approval['Approval_url']['modify_time']);}else{echo'';}?></td>
