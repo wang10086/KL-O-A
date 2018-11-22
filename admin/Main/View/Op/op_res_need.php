@@ -75,7 +75,8 @@
                     </div>
 
                     <div class="form-group col-md-12">
-                        <label>资源需求：</label><input type="text" name="info[res_need]" value="{$resource['res_need']}" class="form-control" />
+                        <label>资源需求：</label><input type="text" name="info[res_need]" value="{$resource['res_need']}" id="cas_res" class="form-control" />
+                        <input type="hidden" name="info[cas_res_id]" id="cas_res_id" value="{$resource['cas_res_id']}">
                     </div>
 
                     <div class="form-group col-md-12">
@@ -393,19 +394,20 @@
 
 <script type="text/javascript">
     var keywords = <?php echo $userkey; ?>;
+    var res_keywords = <?php echo $scienceRes; ?>;
     $(document).ready(function(e){
         /*autocom('exe_u_name','exe_u_id');
         * autocom('exe_user_name','exe_user_id');
          */
-        autocom('do_user_name','do_user_id');
+        autocom('do_user_name','do_user_id',keywords);
+        autocom('res_audit_user_name','res_audit_user_id',keywords);
+        autocom('lession_audit_user_name','lession_audit_user_id',keywords);
+        autocom('audit_user_name','audit_user_id',keywords);
+        autocom('plans_audit_user_name','plans_audit_user_id',keywords);
+        autocom('cas_res','cas_res_id',res_keywords);
+    })
 
-        autocom('res_audit_user_name','res_audit_user_id');
-        autocom('lession_audit_user_name','lession_audit_user_id');
-        autocom('audit_user_name','audit_user_id');
-        autocom('plans_audit_user_name','plans_audit_user_id');
-    });
-
-    function autocom(username,userid){
+    function autocom(username,userid,keywords){
         $("#"+username+"").autocomplete(keywords, {
             matchContains: true,
             highlightItem: false,

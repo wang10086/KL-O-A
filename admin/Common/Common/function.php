@@ -1858,16 +1858,16 @@ function updatekpi($month,$user){
 
 	if($quto){
 		foreach($quto as $k=>$v){
+            $v['end_date']   = $v['end_date']+86399;
 			
 			if($v['automatic']==0){
-			
 				//获取月度累计毛利额
 				if($v['quota_id']==1){
 					$where = array();
 					$where['b.audit_status']		= 1;
 					$where['o.create_user']			= $user;
 					$where['l.req_type']			= 801;
-					$where['l.audit_time']			= array('between',array($v['start_date'],$v['end_date']+86399));
+					$where['l.audit_time']			= array('between',array($v['start_date'],$v['end_date']));
 					$complete = M()->table('__OP_SETTLEMENT__ as b')->field('b.maoli')->join('__OP__ as o on b.op_id = o.op_id','LEFT')->join('__AUDIT_LOG__ as l on l.req_id = b.id','LEFT')->where($where)->sum('b.maoli');
 
 					$complete = $complete ? $complete : 0;
@@ -1879,7 +1879,7 @@ function updatekpi($month,$user){
 					$where['b.audit_status']		= 1;
 					$where['o.create_user']			= $user;
 					$where['l.req_type']			= 801;
-					$where['l.audit_time']			= array('between',array($v['start_date'],$v['end_date']+86399));
+					$where['l.audit_time']			= array('between',array($v['start_date'],$v['end_date']));
 					$maoli = M()->table('__OP_SETTLEMENT__ as b')->field('b.maoli')->join('__OP__ as o on b.op_id = o.op_id','LEFT')->join('__AUDIT_LOG__ as l on l.req_id = b.id','LEFT')->where($where)->sum('b.maoli');
 					$shouru = M()->table('__OP_SETTLEMENT__ as b')->field('b.shouru')->join('__OP__ as o on b.op_id = o.op_id','LEFT')->join('__AUDIT_LOG__ as l on l.req_id = b.id','LEFT')->where($where)->sum('b.shouru');
 					$complete = round(($maoli / $shouru)*100,2).'%';
@@ -1888,7 +1888,7 @@ function updatekpi($month,$user){
 				//获取回款及时率
 				if($v['quota_id']==3){
 					$where = array();
-					$where['return_time']			= array('lt',$v['end_date']+86399);
+					$where['return_time']			= array('lt',$v['end_date']);
 					$where['payee']					= $user;
 					$shouru		= M('contract_pay')->where($where)->sum('amount');
 					$huikuan	= M('contract_pay')->where($where)->sum('pay_amount');
@@ -1933,7 +1933,7 @@ function updatekpi($month,$user){
 				if($v['quota_id']==5){
 					$where 							= array();
 					$where['o.create_user']			= $user;
-					$where['c.dep_time']			= array('between',array($v['start_date'],$v['end_date']+86399));
+					$where['c.dep_time']			= array('between',array($v['start_date'],$v['end_date']));
 					$xiangmu_list	= M()->table('__OP__ as o')->field('o.op_id,c.dep_time')->join('left join __OP_TEAM_CONFIRM__ as c on o.op_id=c.op_id')->where($where)->select();
 					$xiangmu 		= count($xiangmu_list);
 					$hetong 		= 0;
@@ -1950,7 +1950,7 @@ function updatekpi($month,$user){
 				//地接、房、车性价比比选-计调专员，以项目创建时间为准
 				if(in_array($v['quota_id'],array(6,81))){
 					$where = array();
-					$where['o.create_time']			= array('between',array($v['start_date'],$v['end_date']+86399));
+					$where['o.create_time']			= array('between',array($v['start_date'],$v['end_date']));
 					$bj_type 						= array(9,7,8);		//'9'=>'地接社','7'=>'旅游车队','8'=>'酒店'
 					$where['c.type'] 				= array('in',$bj_type);
 					$where['u.line']				= $user;
@@ -1972,19 +1972,19 @@ function updatekpi($month,$user){
 					if($fzr[$user]){
 						//获取具体团队数据
 						if($v['quota_id']==8){	
-							$ywdata 	= tplist($fzr[$user],array($v['start_date'],$v['end_date']+86399));
+							$ywdata 	= tplist($fzr[$user],array($v['start_date'],$v['end_date']));
 							$complete	= $ywdata['zml'] ? $ywdata['zml'] : '0';
 						}
 						if($v['quota_id']==9){
-							$ywdata 	= tplist($fzr[$user],array($v['start_date'],$v['end_date']+86399));
+							$ywdata 	= tplist($fzr[$user],array($v['start_date'],$v['end_date']));
 							$complete	= $ywdata['mll'] ? $ywdata['mll'].'%' : '0.00%';	
 						}
 						if($v['quota_id']==10){
-							$xkh		= team_new_customers($fzr[$user],array($v['start_date'],$v['end_date']+86399));
+							$xkh		= team_new_customers($fzr[$user],array($v['start_date'],$v['end_date']));
 							$complete	= $xkh['ratio'] ? $xkh['ratio'].'%' : '0.00%';	
 						}
 						if($v['quota_id']==11){
-							$xkh		= team_new_customers($fzr[$user],array($v['start_date'],$v['end_date']+86399));
+							$xkh		= team_new_customers($fzr[$user],array($v['start_date'],$v['end_date']));
 							$complete	= $xkh['reratio'] ? $xkh['reratio'].'%' : '0.00%';	
 						}
 					}
@@ -1996,7 +1996,7 @@ function updatekpi($month,$user){
 					$where['s.audit_status']		= 1;
 					$where['u.line']				= $user;
 					//$where['l.req_type']			= 801;
-					$where['l.audit_time']			= array('between',array($v['start_date'],$v['end_date']+86399));
+					$where['l.audit_time']			= array('between',array($v['start_date'],$v['end_date']));
 					
 					//获取总的结算毛利
 					$js = M()->table('__OP_SETTLEMENT__ as s')
@@ -2153,7 +2153,7 @@ function updatekpi($month,$user){
 					//获取招聘人数
 					$where = array();
 					$where['status']			= 0;
-					$where['input_time']		= array('between',array($v['start_date'],$v['end_date']+86399));
+					$where['input_time']		= array('between',array($v['start_date'],$v['end_date']));
 					$sum = M('account')->where($where)->count();
 					
 					$complete = $v['plan'] ? round(($sum / $v['plan'])*100,2).'%' : '100%';
@@ -2209,7 +2209,7 @@ function updatekpi($month,$user){
 				if($v['quota_id']==84){
 					
 					$where = array();
-					$where['input_time']  		= array('between',array($v['start_date'],$v['end_date']+86399));
+					$where['input_time']  		= array('between',array($v['start_date'],$v['end_date']));
 					$where['input_uid']  		= $user;
 					$where['audit_status']  		= 1;
 					
@@ -2221,7 +2221,7 @@ function updatekpi($month,$user){
 				if(in_array($v['quota_id'],array(112,108,65))){
 					
 					$where = array();
-					$where['input_time']  		= array('between',array($v['start_date'],$v['end_date']+86399));
+					$where['input_time']  		= array('between',array($v['start_date'],$v['end_date']));
 					$where['input_uid']  		= $user;
 					$where['audit_status']  		= 1;
 					
@@ -2236,7 +2236,7 @@ function updatekpi($month,$user){
 				if(in_array($v['quota_id'],array(100,96))){
 					
 					$where = array();
-					$where['input_time']  		= array('between',array($v['start_date'],$v['end_date']+86399));
+					$where['input_time']  		= array('between',array($v['start_date'],$v['end_date']));
 					$where['input_user']  		= $user;
 					$where['audit_status']  		= 1;
 					
@@ -2362,7 +2362,7 @@ function updatekpi($month,$user){
 					
 					//获取培训次数
 					$where = array();
-					$where['lecture_date']  		= array('between',array($v['start_date'],$v['end_date']+86399));
+					$where['lecture_date']  		= array('between',array($v['start_date'],$v['end_date']));
 					$where['lecturer_uid']  		= $user;
 					$where['del']  				= 0;
 					$sum = M('cour_ppt')->where($where)->count();
@@ -2451,7 +2451,7 @@ function updatekpi($month,$user){
 					
 					//获取当月出团项目数
 					$where = array();
-					$where['o.dep_time']		= array('between',array($v['start_date'],$v['end_date']+86399));
+					$where['o.dep_time']		= array('between',array($v['start_date'],$v['end_date']));
 					
 					//当月出团项目数
 					$ops = M()->table('__OP_TEAM_CONFIRM__ as o')->where($where)->count();
@@ -2478,15 +2478,15 @@ function updatekpi($month,$user){
 					
 					$zongfen	= 0;
 					//京区校内
-					$jqxn 		= business_dept_data(35,array($v['start_date'],$v['end_date']+86399));
+					$jqxn 		= business_dept_data(35,array($v['start_date'],$v['end_date']));
 					$zongfen 	+= absdata($jqxn['mll'],19.5);
 					
 					//京区校外
-					$jqxw		= business_dept_data(80,array($v['start_date'],$v['end_date']+86399));
+					$jqxw		= business_dept_data(80,array($v['start_date'],$v['end_date']));
 					$zongfen 	+= absdata($jqxw['mll'],28);
 					
 					//京外业务
-					$jwyw		= business_dept_data(18,array($v['start_date'],$v['end_date']+86399));
+					$jwyw		= business_dept_data(18,array($v['start_date'],$v['end_date']));
 					$zongfen 	+= absdata($jwyw['mll'],24.5);
 					
 					$complete 	= $zongfen ? round(($zongfen / 300)*100,2) : '100';
@@ -2564,7 +2564,7 @@ function updatekpi($month,$user){
 					
 					//获取当月出团项目数
 					$where = array();
-					$where['o.ret_time']		= array('between',array($v['start_date'],$v['end_date']+86399));
+					$where['o.ret_time']		= array('between',array($v['start_date'],$v['end_date']));
 					$where['e.liable_uid']	= $user;
 					$where['e.eval_type']	= 2;
 					
@@ -2589,7 +2589,7 @@ function updatekpi($month,$user){
 					
 					//获取当月出团项目数
 					$where = array();
-					$where['o.dep_time']		= array('between',array($v['start_date'],$v['end_date']+86399));
+					$where['o.dep_time']		= array('between',array($v['start_date'],$v['end_date']));
 					$where['e.liable_uid']	= $user;
 					$where['e.eval_type']	= 3;
 					
@@ -2614,7 +2614,7 @@ function updatekpi($month,$user){
 					
 					//获取当月出团项目数
 					$where = array();
-					$where['o.dep_time']		= array('between',array($v['start_date'],$v['end_date']+86399));
+					$where['o.dep_time']		= array('between',array($v['start_date'],$v['end_date']));
 					$where['e.liable_uid']	= $user;
 					$where['e.eval_type']	= 1;
 					
@@ -2638,32 +2638,20 @@ function updatekpi($month,$user){
 
                     //获取当月已评分的团
                     $where = array();
-                    $where['s.input_time']	= array('between',array($v['start_date'],$v['end_date']+86399));
+                    $where['s.input_time']	= array('between',array($v['start_date'],$v['end_date']));
                     $where['o.create_user'] = $user;
-                    $lists = M()->table('__TCS_SCORE__ as s')->field('u.op_id,o.kind,s.stay,s.travel,s.content,s.food,s.bus,s.driver,s.guide,s.teacher,s.teacher,s.depth,s.major,s.interest,s.material')->join('left join __TCS_SCORE_USER__ as u on u.id = s.uid')->join('__OP__ as o on o.op_id = u.op_id','left')->where($where)->select();
-
-                    //无项目的，得0分；有项目，但无调查项目的，得100分。
-                    //$wheres = array();
-                    //$wheres['c.ret_time']   = array('between',array($v['start_date'],$v['end_date']+86399));
-                    //$wheres['o.create_user'] = $user;
-                    //$oplist = M()->table('__OP__ as o')->join('__OP_TEAM_CONFIRM__ as c on c.op_id = o.op_id','left')->where($wheres)->select();
+                    $lists = M()->table('__TCS_SCORE__ as s')->field('u.op_id,o.kind,s.stay,s.travel,s.content,s.food,s.bus,s.driver,s.guide,s.teacher,s.depth,s.major,s.interest,s.material,s.late,s.manage,s.morality')->join('join __TCS_SCORE_USER__ as u on u.id = s.uid','left')->join('__OP__ as o on o.op_id = u.op_id','left')->where($where)->select();
 
                     $average = get_manyidu($lists);
-
-                    //平均得分(如果得分>72%,得分100, 如果小于72%,以72%作为满分求百分比)
-                    $score = round(($average*100/72)*100);
-
-                    if($average>0.72 || !$lists){
-                        $complete	= 100;
-                    }else{
-                        $complete	= $score;
-                    }
+                    //平均得分(如果得分>90%,得分100, 如果小于90%,以90%作为满分求百分比)
+                    $score = (round($average*100/90,2))*100;
+                    $complete = $average > 0.9 ? 100 : $score;
                 }
 
                 //业务人员满意度（京区业务中心研发)
                 /*if ($v['quota_id']==129){
                     $where = array();
-                    $where['s.input_time']	= array('between',array($v['start_date'],$v['end_date']+86399));
+                    $where['s.input_time']	= array('between',array($v['start_date'],$v['end_date']));
                     $where['r.exe_user_id'] = $user;
                     $lists = M()->table('__TCS_SCORE_USER__ as u')
                         ->field('u.confirm_id,s.*,o.kind')
@@ -2683,7 +2671,7 @@ function updatekpi($month,$user){
                 }*/
                 if ($v['quota_id']==129){
                     $where = array();
-                    $where['create_time']	= array('between',array($v['start_date'],$v['end_date']+86399));
+                    $where['create_time']	= array('between',array($v['start_date'],$v['end_date']));
                     $where['yf_uid']        = $user;
                     $lists = M('op_score')->field('match,innovate,cost,safe,ptfa')->where($where)->select();
 
@@ -2806,7 +2794,7 @@ function updatekpi($month,$user){
                 if ($v['quota_id']==135){
                     $where                  = array();
                     $where['manager_id']    = $user;
-                    $where['set_guide_time']= array('between',array($v['start_date'],$v['end_date']+ 24*3600));
+                    $where['set_guide_time']= array('between',array($v['start_date'],$v['end_date']));
                     $field                  = 'op_id,id as confirm_id,manager_id,set_guide_time';
                     $lists                  = M('op_guide_confirm')->field($field)->where($where)->group('op_id')->select();
                     $count                  = count($lists);
@@ -2821,15 +2809,10 @@ function updatekpi($month,$user){
                     }
                 }
 
-                //资源培训率(京区业务中心资源)
-                if ($v['quota_id']==135){
-
-                }
-
                 //场馆资源调度质量(京区业务中心资源)
                 if ($v['quota_id']==137){
                     $where = array();
-                    $where['create_time']	= array('between',array($v['start_date'],$v['end_date']+86399));
+                    $where['create_time']	= array('between',array($v['start_date'],$v['end_date']));
                     $where['zy_uid']        = $user;
                     $lists = M('op_score')->field('times,finish,site')->where($where)->select();
 
@@ -2843,9 +2826,41 @@ function updatekpi($month,$user){
                     }
                 }
 
+                //新增资源转化率(京区业务中心资源)
+                if ($v['quota_id']==138){
+                    $zhuanhualv_data = get_zhuanhualv($user,$v['start_date'],$v['end_date']);
+                    $xinzengshu      = $zhuanhualv_data['xinzengshu'];
+                    $zhuanhualv      = $zhuanhualv_data['zhuanhualv'];
+
+                    if($zhuanhualv >= 1 || !$xinzengshu){
+                        $complete	= 100;
+                    }else{
+                        $complete	= $zhuanhualv*100;
+                    }
+                }
+
+                //资源培训率(京区业务中心资源)
+                if ($v['quota_id']==139){
+                    //需要培训的资源数
+                    $where                  = array();
+                    $where['input_time']	= array('between',array($v['start_date'],$v['end_date']));
+                    $where['audit_status']  = 1;    //审核通过
+                    $where['input_user']    = $user;
+                    $lists                  = M('cas_res')->where($where)->getField('id',true);
+                    $count                  = count($lists);
+                    $peixun_data            = get_peixunlv($user,$v['start_date'],$v['end_date'],$count,$lists);
+                    $zongshu                = $peixun_data['zongshu'];
+                    $peixunlv               = $peixun_data['peixunlv'];
+
+                    if($peixunlv >= 1){
+                        $complete	= 100;
+                    }else{
+                        $complete	= $peixunlv*100;
+                    }
+                }
 
 				//已实现自动获取指标值
-				$auto_quta	= array(1,2,3,4,5,6,81,8,9,10,11,15,16,18,20,23,26,21,24,27,32,37,19,22,25,28,33,38,42,45,103,56,113,92,29,34,39,46,102,55,57,58,59,84,87,89,90,111,107,83,66,54,44,12,112,108,100,96,95,65,114,86,85,64,63,62,53,52,41,40,49,80,48,91,79,47,36,35,31,30,82,110,106,99,94,67,124,129,130,131,132,133,134,135,136,137);
+				$auto_quta	= array(1,2,3,4,5,6,81,8,9,10,11,15,16,18,20,23,26,21,24,27,32,37,19,22,25,28,33,38,42,45,103,56,113,92,29,34,39,46,102,55,57,58,59,84,87,89,90,111,107,83,66,54,44,12,112,108,100,96,95,65,114,86,85,64,63,62,53,52,41,40,49,80,48,91,79,47,36,35,31,30,82,110,106,99,94,67,124,129,130,131,132,133,134,135,136,137,138,139);
 				
 				//计算完成率并保存数据
 				if(in_array($v['quota_id'],$auto_quta)){
@@ -2877,11 +2892,38 @@ function updatekpi($month,$user){
 			//合计总分
 			$total	= M('kpi_more')->field('score,weight,score_status')->where(array('kpi_id'=>$v['kpi_id']))->sum('score');
 			$issave	= M('kpi')->data(array('score'=>$total))->where(array('id'=>$v['kpi_id']))->save();
-				
-			
+
 		}
 
 	}
+}
+
+/*
+ * 新增资源转化率(京区业务中心资源)
+ * 1.员工id
+ * 2.本周期开始时间
+ * 3.本周期结束时间
+ * */
+function get_zhuanhualv($user,$start_date,$end_date){
+    //考核三个月前新增资源数量
+    $where                  = array();
+    $where['input_time']	= array('between',array($start_date-(120*24*3600),$end_date-(120*24*3600)));
+    $where['audit_status']  = 1;    //审核通过
+    $where['input_user']    = $user;
+    $xinzengziyuan          = M('cas_res')->where($where)->getField('id',true);
+
+    //已转化资源数量
+    $where                  = array();
+    $where['cas_res_id']    = array('in',$xinzengziyuan);
+    $zhuanhuaziyuan         = M('op_res')->field('id')->where($where)->group('cas_res_id')->select();
+
+    $data                   = array();
+    $data['xinzengziyuan']  = $xinzengziyuan;
+    $data['zhuanhuaziyuan'] = $zhuanhuaziyuan;
+    $data['xinzengshu']     = count($xinzengziyuan);
+    $data['zhuanhuashu']    = count($zhuanhuaziyuan);
+    $data['zhuanhualv']     = round($data['zhuanhuashu']/$data['xinzengshu'],2);
+    return $data;
 }
 
 /*
@@ -2891,7 +2933,6 @@ function updatekpi($month,$user){
  * 3.本周期结束时间
  * */
 function get_jw_myd($user,$start_date,$end_date){
-    $end_date        = $end_date + 24*3600;
     //本月以评分的总项目
     $where                  = array();
     $where['c.manager_id']  = $user;
@@ -2926,7 +2967,6 @@ function get_jw_myd($user,$start_date,$end_date){
  * 3.本周期结束时间
  * */
 function get_fdyzqx($user,$start_date,$end_date){
-    $end_date        = $end_date + 24*3600;
     //辅导员本月调度总团数
     $where                    = array();
     $where['heshi_oa_uid']    = $user;
@@ -2962,7 +3002,6 @@ function get_fdyzqx($user,$start_date,$end_date){
  * 3.本周期结束时间
  * */
 function get_fdyjsl($user,$start_date,$end_date){
-    $end_date        = $end_date + 24*3600;
     //辅导员本月调度总团数
     $before_where                   = array();
     $before_where['manager_id']     = $user;
@@ -3020,7 +3059,7 @@ function get_peixunlv($user,$start_date,$end_date,$sum=0,$sumlists=''){
 
     //已完成培训数量(培训管理取值)
     $where = array();
-    $where['create_time']	= array('between',array($start_date,$end_date+86399));
+    $where['create_time']	= array('between',array($start_date,$end_date));
     $where['lecturer_uid']  = $user;
     $lists = M('cour_ppt')->where($where)->select();
     $yiwancheng             = count($lists);
@@ -3067,12 +3106,11 @@ function get_jishilv($user,$start_date,$end_date){
  * */
 function get_worder($user,$start_date,$end_date){
     $where                  = array();
-    //$where['create_time']	= array('between',array($v['start_date'],$v['end_date']+86399));
+    //$where['create_time']	= array('between',array($v['start_date'],$v['end_date']));
     $where['status']        = array('neq',-1);
     $where['_string']       = " (assign_id = $user) OR (exe_user_id = $user and assign_id = 0) ";
     $lists  = M()->table('__WORDER__ as w')->field('w.*,d.use_time')->join('__WORDER_DEPT__ as d on d.id=w.wd_id','left')->where($where)->select();
 
-    $end_date        = $end_date + 24*3600;
     $zonggongdan     = array();
     $wanchenggongdan = array();
     foreach ($lists as $k=>$v){
@@ -3153,21 +3191,18 @@ function get_hegelv($lists,$n,$star=5){
 
 //客户满意度
 function get_manyidu($lists){
-    $opids      = array_unique(array_column($lists,'op_id'));
     $score_kind1= array_keys(C('SCORE_KIND1'));
     $score_kind2= array_keys(C('SCORE_KIND2'));
     $score_kind3= array_keys(C('SCORE_KIND3'));
 
     $zongfen    = 0;
     $defen      = 0;
-    foreach ($opids as $k=>$v){
-        $kind               = M('op')->where(array('op_id'=>$v))->getField('kind');
-        foreach ($lists as $kk=>$vv){
-            if (in_array($kind,$score_kind1)) $zongfen += 9*5; //考核9项, 每项5分, 满分总分
-            if (in_array($kind,$score_kind2)) $zongfen += 10*5; //考核10项, 每项5分, 满分总分
-            if (in_array($kind,$score_kind3)) $zongfen += 10*5; //考核10项, 每项5分, 满分总分
-            $defen += $vv['stay']+$vv['travel']+$vv['content']+$vv['food']+$vv['bus']+$vv['driver']+$vv['guide']+$vv['teacher']+$vv['depth']+$vv['major']+$vv['interest']+$vv['material']+$vv['late']+$vv['manage']+$vv['morality'];
-        }
+    foreach ($lists as $k=>$v){
+        $kind   = $v['kind'];
+        if (in_array($kind,$score_kind1)) $zongfen += 9*5;  //考核9项, 每项5分, 满分总分
+        if (in_array($kind,$score_kind2)) $zongfen += 10*5; //考核10项, 每项5分, 满分总分
+        if (in_array($kind,$score_kind3)) $zongfen += 10*5; //考核10项, 每项5分, 满分总分
+        $defen += $v['stay']+$v['travel']+$v['content']+$v['food']+$v['bus']+$v['driver']+$v['guide']+$v['teacher']+$v['depth']+$v['major']+$v['interest']+$v['material']+$v['late']+$v['manage']+$v['morality'];
     }
     $score      = round($defen/$zongfen,2);
     return $score;
@@ -4224,6 +4259,19 @@ function get_username(){
         $user_key[$k]['text']   = $text;
     }
     return json_encode($user_key);
+}
+
+//科普资源信息
+function getScienceRes(){
+    $lists          = M('cas_res')->field("id,title")->where(array('audit_status'=>1))->select();
+    $scienceRes     = array();
+    foreach($lists as $k=>$v){
+        $text                     = $v['title'];
+        $scienceRes[$k]['id']     = $v['id'];
+        $scienceRes[$k]['pinyin'] = strtopinyin($text);
+        $scienceRes[$k]['text']   = $text;
+    }
+    return json_encode($scienceRes);
 }
 
     /**

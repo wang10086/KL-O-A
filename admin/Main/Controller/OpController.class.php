@@ -2747,8 +2747,6 @@ class OpController extends BaseController {
                     }
                 }
 
-                //职能类型
-
                 //所属领域
                 foreach ($this->fields as $key=>$value){
                     if ($v['field'] == $key){
@@ -2763,6 +2761,8 @@ class OpController extends BaseController {
 
             //人员名单关键字
             $this->userkey      = get_username();
+            //科普资源关键字
+            $this->scienceRes   = getScienceRes();
 
             //人员列表
             $stu_list       = M('op_member')->where(array('op_id'=>$opid))->select();
@@ -2809,6 +2809,8 @@ class OpController extends BaseController {
 			$this->display('confirm');
 		}
 	}
+
+
 
     // @@@NODE-3###change_op###项目交接###
     public function change_op(){
