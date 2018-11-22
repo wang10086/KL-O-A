@@ -172,18 +172,18 @@
                                 </table>
 
                                 <!-- 文件 和 批注信息-->
-                                <div style="width:96%;margin-left:4em;">
-                                    <div style="float:left;width:58%;overflow-y:scroll;overflow-y:visible;">
+                                <div style="width:96%;margin-left:2em;">
+                                    <div style="float:left;width:68%;overflow-y:scroll;overflow-y:visible;">
                                         <label>
                                             <b style="font-size:1.3em;color:#09F;letter-spacing:0.2em;">上传文件 : </b>
                                         </label><br><br>
-                                        <div style="height:83em;overflow: hidden;border:solid 2px #d2d5d8;">
-                                             <iframe src="https://view.officeapps.live.com/op/view.aspx?src={$sercer}{$approval['Approval']['file_url']}" style="overflow-y:scroll;overflow-x:scroll;word-wrap:break-word;margin-top:-6em;width:100%;height:100%;overflow-x:hidden">
-                                           </iframe> 
+                                        <div style="height:90em;overflow: hidden;border:solid 2px #d2d5d8;">
+                                             <iframe src="https://view.officeapps.live.com/op/view.aspx?src={$sercer}{$approval['Approval']['file_url']}" style="overflow-y:scroll;overflow-x:scroll;word-wrap:break-word;width:100%;height:100%;overflow-x:hidden">
+                                           </iframe> margin:0em 0em 0em 0em;
                                         </div>
                                     </div>
 
-                                    <div style="float:right;width:35%;" >
+                                    <div style="float:right;width:30%;" >
                                         <label>
                                             <b style="font-size:1.3em;color:#09F;padding:1em;letter-spacing:0.2em;">批注内容 : </b>
                                         
