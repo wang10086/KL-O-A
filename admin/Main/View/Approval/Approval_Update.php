@@ -178,8 +178,8 @@
                                             <b style="font-size:1.3em;color:#09F;letter-spacing:0.2em;">上传文件 : </b>
                                         </label><br><br>
                                         <div style="height:90em;overflow: hidden;border:solid 2px #d2d5d8;">
-                                             <iframe src="https://view.officeapps.live.com/op/view.aspx?src={$sercer}{$approval['Approval']['file_url']}" style="overflow-y:scroll;overflow-x:scroll;word-wrap:break-word;width:100%;height:100%;overflow-x:hidden">
-                                           </iframe> margin:0em 0em 0em 0em;
+                                             <iframe src="https://view.officeapps.live.com/op/view.aspx?src={$sercer}{$approval['Approval']['file_url']}" style="overflow-y:scroll;overflow-x:scroll;word-wrap:break-word;width:100%;height:100%;overflow-x:hidden;margin-top:-6em;">
+                                           </iframe>
                                         </div>
                                     </div>
 
