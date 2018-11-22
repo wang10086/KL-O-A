@@ -40,8 +40,8 @@
                                         <td><a href="{$approval['Approval']['file_url']}">{$approval['Approval']['file_name']}</a></td>
                                         <td>{$approval['Approval']['file_size']}</td>
                                         <td><?php if(is_numeric($approval['Approval']['createtime'])){echo date('Y-m-d H:i:s',$approval['Approval']['createtime']);}else{echo'';}?></td>
-                                        <td ><a href="{$approval['Approval_url']['modify_url']}">{$approval['Approval_url']['modify_name']}</a></td>
-                                        <td>{$approval['Approval_url']['modify_filename']}</td>
+                                        <td >{$approval['Approval_url']['modify_name']}</td>
+                                        <td><a href="{$approval['Approval_url']['modify_url']}">{$approval['Approval_url']['modify_filename']}</a></td>
                                         <td>{$approval['Approval_url']['modify_size']}</td>
                                         <td><?php if(is_numeric($approval['Approval_url']['modify_time'])){echo date('Y-m-d H:i:s',$approval['Approval_url']['modify_time']);}else{echo'';}?></td>
                                         <td style="text-align:center;">
@@ -177,19 +177,19 @@
                                         <label>
                                             <b style="font-size:1.3em;color:#09F;letter-spacing:0.2em;">上传文件 : </b>
                                         </label><br><br>
-                                        <div style="height:90em;overflow: hidden;border:solid 2px #d2d5d8;">
-                                             <iframe src="https://view.officeapps.live.com/op/view.aspx?src={$sercer}{$approval['Approval']['file_url']}" style="overflow-y:scroll;overflow-x:scroll;word-wrap:break-word;width:100%;height:100%;overflow-x:hidden;margin-top:-6em;">
-                                           </iframe>
+                                        <div style="height:90em;overflow: hidden;border-top:solid 2px #d2d5d8;">
+                                             <iframe src="https://view.officeapps.live.com/op/view.aspx?src={$sercer}<?php if($approval['Approval_url']['modify_url']!==""){echo $approval['Approval_url']['modify_url'];}else{echo $approval['Approval']['file_url'];}?>" style="overflow-y:scroll;overflow-x:scroll;word-wrap:break-word;width:100%;height:100%;overflow-x:hidden;margin-top:-6em;">
+                                            </iframe>
                                         </div>
                                     </div>
 
                                     <div style="float:right;width:30%;" >
                                         <label>
                                             <b style="font-size:1.3em;color:#09F;padding:1em;letter-spacing:0.2em;">批注内容 : </b>
-                                        
+                                            <a class="btn btn-default" onclick="salary2();" style="margin-top: -1em;color:#000000;background-color: lightgrey;"><i class="fa fa-print"></i> 打印</a>
                                         </label><br><br>
 
-                                        <div  id="approval_submit_show1" style="padding:1em;height:83em;border:solid 2px #d2d5d8;overflow-y:scroll;overflow-x:scroll;word-wrap:break-word;" >
+                                        <div  id="approval_submit_show1" style="padding:1em;height:84em;border:solid 2px #d2d5d8;overflow-y:scroll;overflow-x:scroll;word-wrap:break-word;" >
                                             <foreach name="annotation" item="ann">
                                                 <p>
                                                     <b style="color:#339933;">{$ann['account_name']}&nbsp;</b>
@@ -303,6 +303,15 @@
         });
         uploader.init();
     });
+    function salary2(){
+        var id = $('#approval_submit_show1').prop("id");
+        var html = '<div style="text-align:center;font-weight:bold;font-size:2em;">';
+            html += "<?php if($approval['Approval_url']['modify_filename']!==''){echo $approval['Approval_url']['modify_filename'];}else{echo $approval['Approval']['file_name'];}?> &nbsp;审批批注</div>";
+
+        $('#approval_submit_show1').prepend(html);
+        print_view(id);
+
+    }
 
 </script>
 
