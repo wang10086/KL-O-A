@@ -144,6 +144,7 @@ class ApprovalController extends BaseController {
         $this->approver             = $query->Approver($where); //审批人员
         $sql['employee_member']     = array('like',"A%");
         $this->office               = $query->finaljudgment($sql,2); //审批人员
+        $this->sercer               = $_SERVER['SERVER_NAME'].'/';
 
         $this->display();
     }

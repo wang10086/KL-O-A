@@ -178,7 +178,7 @@
                                             <b style="font-size:1.3em;color:#09F;letter-spacing:0.2em;">上传文件 : </b>
                                         </label><br><br>
                                         <div style="height:83em;overflow: hidden;border:solid 2px #d2d5d8;">
-                                             <iframe src="https://view.officeapps.live.com/op/view.aspx?src={$approval['Approval']['file_url']}" style="overflow-y:scroll;overflow-x:scroll;word-wrap:break-word;margin-top:-6em;width:100%;height:92em;overflow-x:hidden">
+                                             <iframe src="https://view.officeapps.live.com/op/view.aspx?src={$sercer}{$approval['Approval']['file_url']}" style="overflow-y:scroll;overflow-x:scroll;word-wrap:break-word;margin-top:-6em;width:100%;height:92em;overflow-x:hidden">
 <!-- {$approval['Approval']['file_url']} -->
                                            </iframe> 
                                         </div>
