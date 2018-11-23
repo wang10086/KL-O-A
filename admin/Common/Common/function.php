@@ -1936,13 +1936,14 @@ function updatekpi($month,$user){
 					$where['c.dep_time']			= array('between',array($v['start_date'],$v['end_date']));
 					$xiangmu_list	= M()->table('__OP__ as o')->field('o.op_id,c.dep_time')->join('left join __OP_TEAM_CONFIRM__ as c on o.op_id=c.op_id')->where($where)->select();
 					$xiangmu 		= count($xiangmu_list);
-					$hetong 		= 0;
+                    $hetong_list    = array();
 					foreach ($xiangmu_list as $key=>$value){
 						//出团后5天内完成上传
 						$time 		= $value['dep_time'] + 5*24*3600;
-						$hetong_list = M('contract')->where(array('op_id'=>$value['op_id'],'status'=>1,'confirm_time'=>array('lt',$time)))->find();
-						if ($hetong_list) $hetong++;
+						$list       = M('contract')->where(array('op_id'=>$value['op_id'],'status'=>1,'confirm_time'=>array('lt',$time)))->find();
+						if ($list){ $hetong_list[] = $list; }
 					}
+					$hetong         = count($hetong_list);
 					$complete = $xiangmu ? round(($hetong / $xiangmu)*100,2).'%' : 0 .'%';
 				}
 				
@@ -2640,7 +2641,7 @@ function updatekpi($month,$user){
                     $where = array();
                     $where['s.input_time']	= array('between',array($v['start_date'],$v['end_date']));
                     $where['o.create_user'] = $user;
-                    $lists = M()->table('__TCS_SCORE__ as s')->field('u.op_id,o.kind,s.stay,s.travel,s.content,s.food,s.bus,s.driver,s.guide,s.teacher,s.depth,s.major,s.interest,s.material,s.late,s.manage,s.morality')->join('join __TCS_SCORE_USER__ as u on u.id = s.uid','left')->join('__OP__ as o on o.op_id = u.op_id','left')->where($where)->select();
+                    $lists = M()->table('__TCS_SCORE__ as s')->field('u.op_id,o.kind,s.id as sid,s.stay,s.travel,s.content,s.food,s.bus,s.driver,s.guide,s.teacher,s.depth,s.major,s.interest,s.material,s.late,s.manage,s.morality')->join('join __TCS_SCORE_USER__ as u on u.id = s.uid','left')->join('__OP__ as o on o.op_id = u.op_id','left')->where($where)->select();
 
                     $average = get_manyidu($lists);
                     //平均得分(如果得分>90%,得分100, 如果小于90%,以90%作为满分求百分比)
