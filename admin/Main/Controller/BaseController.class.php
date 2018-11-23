@@ -574,7 +574,6 @@ class BaseController extends Controller {
         $number2                    = M('approval_flie_url')->where($stat)->count();//要处理文档
         $sum5                       = $number2;
    
-
         // 提示文件处理条数
         $sum                            = $sum1+$sum2+$sum3+$sum4+$sum5;
         $_SESSION['file_sum']           = $sum;//保存缓存

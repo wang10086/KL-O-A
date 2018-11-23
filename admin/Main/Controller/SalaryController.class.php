@@ -301,7 +301,7 @@ class SalaryController extends BaseController {
     public function salary_attendance(){
         $userid = (int)$_SESSION['userid'];
 
-        if($userid==11 ||$userid==55 || $userid==77 || $userid==32 || $userid==38 || $userid==12  || $userid==1 || $user_id==185){
+        if($userid==11 ||$userid==55 || $userid==77 || $userid==32 || $userid==38 || $userid==12  || $userid==1 || $userid==185){
 
             $where['account_id']           = (int)(trim($_POST['id']));//编码
         }else{
@@ -646,6 +646,15 @@ class SalaryController extends BaseController {
                 }
             }
         }
+        if($summoney['examine_user_id']!==""){ $sta1 = 1; }else{$sta1 = 2; }
+        if($summoney['submission_user_id']!==""){ $sta2 = 1; }else{$sta2 = 2; }
+        if($summoney['approval_user_id']!==""){ $sta3 = 1;}else{ $sta3 = 2;}
+        if($summoney['datetime']!==""){$date=date('Y年m月',strtotime($summoney['datetime']));}else{$date=datetime(date('Y'),date('m'),date('d'),2);}
+        $this->sta1 = $sta1;
+        $this->sta2 = $sta2;
+        $this->sta3 = $sta3;
+        $this->date = $date;
+
         $userid                         = (int)$_SESSION['userid'];//用户id
 
 //        $this->assign('number1',count($info));//员工数量

@@ -88,11 +88,11 @@
 
 
                                 <!-- 选择审批人员  选择审批人员-->
-                                <div style="margin:-4em 0em 0em 2em;width:96%;">
+                                <div style="margin:-4em 0em 0em 2em;width:96%;<?php if($status==1){ echo 'display:none;';}?>" >
                                     <form method="post" action="{:U('Approval/add_final_judgment')}" enctype="multipart/form-data">
                                         <input type="hidden" name="file_id" value="{$approval['Approval']['file_id']}">
                                         <input type="hidden" name="file_url_id" value="{$approval['Approval']['id']}">
-                                        <div class="box-header" >
+                                        <div class="box-header">
                                             <div class="form-group  col-md-6" >
                                                 <label>
                                                     <b style="font-size:1.3em;color:#09F;letter-spacing:0.2em;">选择审批人员 : </b>
@@ -158,8 +158,8 @@
                                             <span style="padding:1em;">
                                                 <b>
                                                     {$an['username']}
-                                                    <b style="<?php if($j['steta']==0 || $j['steta']=="" || $j['steta']==1){echo 'color:red';}elseif($j['steta']>0){echo 'color:#00CC33';}?>">
-                                                            [ <?php if($j['steta']==0 || $j['steta']=="" || $j['steta']==1){echo "未批注";}elseif($j['steta']==2){echo "已批注";}?> ]
+                                                    <b style="<?php if($an['steta']==0 || $an['steta']=="" || $an['steta']==1){echo 'color:red';}elseif($an['steta']>0){echo 'color:#00CC33';}?>">
+                                                            [ <?php if($an['steta']==0 || $an['steta']=="" || $an['steta']==1){echo "未批注";}elseif($an['steta']==2){echo "已批注";}?> ]
                                                     </b>
                                                 </b>
                                             </span>

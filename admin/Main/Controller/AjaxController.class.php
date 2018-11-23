@@ -829,7 +829,7 @@ class AjaxController extends Controller {
 //        }
         $datetime                           = trim($_POST['datetime']);//表数据时间
         if($datetime=="" || $datetime ==null || $datetime==false){
-            $datetime                       = datetime(date('Y'),date('m'),date('d'),1);;
+            $datetime                       = datetime(date('Y'),date('m'),date('d'),1);
         }
         $content                        = trim($_POST['content']);//去除左右空字符 提交申请表数据
         $coutdepartment                 = trim($_POST['coutdepartment']);//去除左右空字符 提交申请表部门数据
@@ -1119,6 +1119,12 @@ class AjaxController extends Controller {
      * $fileid 文件id
      */
     function Ajax_file_delete(){
+
+        $arr                    = array("11", "55", "77", "32","38","1","12","13");
+        if(in_array($_SESSION['userid'],$arr)){
+        }else{
+            echo json_encode(array('sum' => 0, 'msg' => "删除失败！您没有权限删除！"));die;
+        }
         $status                 = trim($_POST['status']);
         $fileid                 = trim($_POST['fileid']);
         $file_id                = array_filter(explode(',',$fileid));

@@ -13,6 +13,8 @@ class ApprovalController extends BaseController {
 
         $approval_table                 = 'approval_flie';
         $approval                       = $this->approval_table($approval_table,'',1);
+        $app                            = D('Approval');
+        $save                           = $app->datetime_approval();//改变到预定时间的文件
         $this->approval                 = $approval['approval'];
         $this->pages                    = $approval['pages'];
         $this->display();
@@ -133,10 +135,16 @@ class ApprovalController extends BaseController {
         }else{
             $this->error('数据错误！请重新打开页面！');
         }
+
+        if(($_SESSION['userid']==13 || $_SESSION['userid']==1) && $approval_r[1]['type']==1 && $approval_r[1]['status']==2){
+            $this ->status = 2;
+        }else{
+            $this ->status = 1;
+        }
         $whe['file_url_id']         = $approval_r[1]['id'];
         $whe['file_id']             = $approval_r[1]['file_id'];
 
-        $this->judgmen              = $query->Approval_userinfo($whe);//审批人员
+        $this->judgmen              = $query->Approval_userinfo($whe);//审批人员显示
         $this->annotation           = M('approval_annotation')->where($whe)->select();//批注
 
         $this->approval             = $approval[1];//文档信息
