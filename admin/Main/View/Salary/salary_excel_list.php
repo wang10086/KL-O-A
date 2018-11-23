@@ -182,25 +182,42 @@
                                 <th class="list_salary_detail3" style="display: none">{$count['id']}</th>
                                 </TBODY>
                                 <!--  签字   -->
-
-                                <TFOOT style="display:table-footer-group;font-weight:bold;display:none;">
-                                    <tr>
-                                        <td colspan="6" style="text-align: center;">
-                                            <b>提交人 : </b><?php if($sta1==1){echo "<img src='upload/201811/13/5bea3dc9c4ef2.png' alt='' style='max-height: 50px'>";}elseif($sta1==2){echo "暂未提交";}?>
-                                        </td>
-                                        <td colspan="6" style="text-align: center;">
-                                            <b>审核人 : </b><?php if ($sta2==1){echo "<img src='upload/201811/13/5bea3dc9c4ef3.png' alt='' style='max-height: 50px'>";}elseif($sta2==2){echo "暂未审核";} ?>
-                                        </td>
-                                        <td colspan="6" style="text-align: center;">
-                                            <b>批准人 : </b><?php if ($sta3==1){echo "<img src='upload/201811/13/5bea3dc9c4ef4.png' alt='' style='max-height: 50px'>";}elseif($sta3==2){echo "暂未批准";} ?>
-                                        </td>
-                                        <td colspan="6" style="text-align: center;">
-                                            <b>打印时间: </b><?php echo date("Y-m-d H:i:s",time()); ?>
-                                        </td>
-                                    </tr>
+                                <TFOOT style="display:table-footer-group;font-weight:bold" >
+                                <tr>
+                                    <td colspan="6" style="text-align: center;">
+                                        提交人 : <img src="__HTML__/img/test.png" alt="" style="max-height: 50px">
+                                    </td>
+                                    <td colspan="6" style="text-align: center;">
+                                        审核人 : <?php if (1>2){echo "<img src='__HTML__/img/test.png' alt='' style='max-height: 50px'>";}else{echo "暂未审核";} ?>
+                                    </td>
+                                    <td colspan="6" style="text-align: center;">
+                                        批准人 : <?php if (1>2){echo "<img src='__HTML__/img/test.png' alt='' style='max-height: 50px'>";}else{echo "暂未批准";} ?>
+                                    </td>
+                                    <td class="ddd" colspan="6" style="text-align: center;">
+                                        打印时间: <?php echo date("Y-m-d H:i:s",time()); ?>
+                                    </td>
+                                </tr>
                                 </TFOOT>
+
+
+
+                                <!--                                <TFOOT style="display:table-footer-group;font-weight:bold;display:none;">-->
+<!--                                    <tr>-->
+<!--                                        <td colspan="6" style="text-align: center;">-->
+<!--                                            <b>提交人 : </b>--><?php //if($sta1==1){echo "<img src='upload/201811/13/5bea3dc9c4ef2.png' alt='' style='max-height: 50px'>";}elseif($sta1==2){echo "暂未提交";}?>
+<!--                                        </td>-->
+<!--                                        <td colspan="6" style="text-align: center;">-->
+<!--                                            <b>审核人 : </b>--><?php //if ($sta2==1){echo "<img src='upload/201811/13/5bea3dc9c4ef3.png' alt='' style='max-height: 50px'>";}elseif($sta2==2){echo "暂未审核";} ?>
+<!--                                        </td>-->
+<!--                                        <td colspan="6" style="text-align: center;">-->
+<!--                                            <b>批准人 : </b>--><?php //if ($sta3==1){echo "<img src='upload/201811/13/5bea3dc9c4ef4.png' alt='' style='max-height: 50px'>";}elseif($sta3==2){echo "暂未批准";} ?>
+<!--                                        </td>-->
+<!--                                        <td colspan="6" style="text-align: center;">-->
+<!--                                            <b>打印时间: </b>--><?php //echo date("Y-m-d H:i:s",time()); ?>
+<!--                                        </td>-->
+<!--                                    </tr>-->
+<!--                                </TFOOT>-->
                             </table>
-                            <br><br>
                         </div>
                     </div><!-- /.box-body -->
 
