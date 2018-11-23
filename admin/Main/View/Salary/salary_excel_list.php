@@ -8,7 +8,6 @@
         INPUT {display:none}
     }
 
-
 </style>
 <script src="__HTML__/js/public.js?v=1.0.6" type="text/javascript"></script>
 <aside class="right-side">
@@ -184,18 +183,18 @@
 
                                 <TFOOT style="display:table-footer-group;font-weight:bold;">
                                     <tr>
-                                        <td colspan="6" style="text-align: center;">
-                                            <b>提交人 : </b><?php if ($sta1==1){echo "<img src='__HTML__/img/test.png' alt='' style='max-height: 50px'>";}else{echo "暂未提交";} ?>
-                                        </td>
-                                        <td colspan="6" style="text-align: center;">
-                                            <b>审核人 : </b><?php if ($sta2==1){echo "<img src='__HTML__/img/test.png' alt='' style='max-height: 50px'>";}else{echo "暂未审核";} ?>
-                                        </td>
-                                        <td colspan="6" style="text-align: center;">
-                                            <b>批准人 : </b><?php if ($sta3==1){echo "<img src='__HTML__/img/test.png' alt='' style='max-height: 50px'>";}else{echo "暂未批准";} ?>
-                                        </td>
-                                        <td colspan="6" style="text-align: center;">
+                                        <th colspan="6" style="text-align: center;">
+                                            <b>提交人 : </b><?php if ($sta1==1){echo "<img src='{$url1}' alt='' style='max-height: 50px'>";}else{echo "暂未提交";} ?>
+                                        </th>
+                                        <th colspan="6" style="text-align: center;">
+                                            <b>审核人 : </b><?php if ($sta2==1){echo "<img src='{$url2}' alt='' style='max-height: 50px'>";}else{echo "暂未审核";} ?>
+                                        </th>
+                                        <th colspan="6" style="text-align: center;">
+                                            <b>批准人 : </b><?php if ($sta3==1){echo "<img src='{$url3}' alt='' style='max-height: 50px'>";}else{echo "暂未批准";} ?>
+                                        </th>
+                                        <th colspan="6" style="text-align: center;">
                                             <b>打印时间: </b><?php echo date("Y-m-d H:i:s",time()); ?>
-                                        </td>
+                                        </th>
                                     </tr>
                                 </TFOOT>
                             </table>

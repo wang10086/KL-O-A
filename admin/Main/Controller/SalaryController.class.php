@@ -647,13 +647,16 @@ class SalaryController extends BaseController {
             }
         }
         if(is_numeric($summoney['id'])){
-            if($summoney['examine_user_id']!==""){ $sta1 = 1; }
-            if($summoney['submission_user_id']!==""){ $sta2 = 1; }
-            if($summoney['approval_user_id']!==""){ $sta3 = 1;}
+            if($summoney['examine_user_id']!==""){ $sta1 = 1; $useid1 = M('user_sign')->where('user_id='.$summoney['examine_user_id'])->find(); $url1 = $useid1['file_url']; }
+            if($summoney['submission_user_id']!==""){ $sta2 = 1;$useid2 = M('user_sign')->where('user_id='.$summoney['examine_user_id'])->find(); $url2 = $useid2['file_url']; }
+            if($summoney['approval_user_id']!==""){ $sta3 = 1; $useid3 = M('user_sign')->where('user_id='.$summoney['examine_user_id'])->find(); $url3 = $useid3['file_url'];}
             if($summoney['datetime']!==""){$date=date('Y年m月',strtotime($summoney['datetime']));}
             $this->sta1 = $sta1;
             $this->sta2 = $sta2;
             $this->sta3 = $sta3;
+            $this->url1 = $url1;
+            $this->url2 = $url2;
+            $this->url3 = $url3;
         }else{
             $date=datetime(date('Y'),date('m'),date('d'),2);
         }
