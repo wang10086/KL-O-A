@@ -72,7 +72,6 @@
 
 
 <div id="searchtext">
-    <script src="__HTML__/js/public.js?v=1.0.6" type="text/javascript"></script>
 
     <form action="{:U('Approval/create_file')}" method="post">
 

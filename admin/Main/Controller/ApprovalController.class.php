@@ -76,7 +76,7 @@ class ApprovalController extends BaseController {
             $count                                        = M('approval_judgment')->join('left join approval_flie_url on approval_judgment.file_url_id = approval_flie_url.id')->where($map)->count();
             $page                                         = new Page($count,10);
             $pages                                        = $page->show();
-            $$approval['approval']                        = M('approval_judgment')->join('left join approval_flie_url on approval_judgment.file_url_id = approval_flie_url.id')->where($map)->limit("$page->firstRow","$page->listRows")->select();
+            $approval['approval']                        = M('approval_judgment')->join('left join approval_flie_url on approval_judgment.file_url_id = approval_flie_url.id')->where($map)->limit("$page->firstRow","$page->listRows")->select();
         }
        
         $approval_w['approval']                           = D('Approval')->query_table($approval);
@@ -119,6 +119,37 @@ class ApprovalController extends BaseController {
             $this->error('保存失败！请重新提交！');
         }
     }
+    /**
+     * create_file 创建文件
+     * $file_name 文件名称 $file_date 审批天数
+     * $status 1 新建 2 修改
+     * $file_user 用户名称  $textarea 文件描述
+     */
+    function create_file(){
+        print_R(I());die;
+        $file['createtime']        = time();
+        $file['account_id']        = $_SESSION['userid'];
+        $file['account_name']      = trim($_POST['file_user']);
+        $file['file_primary']      = trim($_POST['file_name']);
+        $file['file_describe']     = trim($_POST['textarea']);
+        $file['file_date']         = trim($_POST['file_date']);
+        $file['category']          = trim($_POST['status']);
+        $user                      = user_table($file['account_id']);
+        $file                      = array_filter($file);
+        if(empty($file['account_name'])){
+            $this->error('数据错误！请重新提交！');die;
+        }
+        if(!empty($file['file_describe'])){
+            $file['file_describe'] = htmlspecialchars($file['file_describe']);
+        }
+        $add                       = M('approval_flie')->add($file);
+        if($add){
+         $this->success('创建成功！');die;
+        }else{
+            $this->error('数据错误！请重新提交！');die;
+        }
+    }
+
 
 
     /**
@@ -133,7 +164,7 @@ class ApprovalController extends BaseController {
             $approval_r[1]          = $query->Approval_details($id);//确定有一个[加一个随意数]
             $approval               = $query->query_table($approval_r,1);
         }else{
-            $this->error('数据错误！请重新打开页面！');
+            $this->error('数据错误！请重新打开页面！');die;
         }
 
         if(($_SESSION['userid']==13 || $_SESSION['userid']==1) && $approval_r[1]['type']==1 && $approval_r[1]['status']==2){

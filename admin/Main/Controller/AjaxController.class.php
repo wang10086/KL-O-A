@@ -1094,11 +1094,9 @@ class AjaxController extends Controller {
          $file['account_name']      = trim($_POST['file_user']);
          $file['file_primary']      = trim($_POST['file_name']);
          $file['file_describe']     = trim($_POST['textarea']);
-         $file['file_date']         = code_number(trim($_POST['file_date']));
-         $file['category']          = code_number(trim($_POST['status']));
+         $file['file_date']         = trim($_POST['file_date']);
+         $file['category']          = trim($_POST['status']);
          $user                      = user_table($file['account_id']);
-         $department                = M('salary_department')->where('id='.$user['departmentid'])->find();
-         $file['department']        = $department['department'];
          $file                      = array_filter($file);
          if(empty($file['account_name'])){
              echo json_encode(array('sum' => 0, 'msg' => "创建失败!请完善后提交"));die;

@@ -3,8 +3,11 @@
 <style>
     #bordorcolor{
         border:1px solid rgb(0,0,0);
-
     }
+    @media print{
+        INPUT {display:none}
+    }
+
 
 </style>
 <script src="__HTML__/js/public.js?v=1.0.6" type="text/javascript"></script>
@@ -47,33 +50,36 @@
                         <br><br>
                         <div class="btn-group" style="height:100%;width:195em;" id="salary_archives_list">
                             <table class="table table-bordered dataTablev">
+                                <!--       表头    -->
+                                <THEAD style="display:table-header-group;font-weight:bold">
                                 <tr role="row" class="orders">
                                     <th class="sorting" style="width:5em;background-color:#66CCFF;">ID</th>
-                                    <th class="sorting" style="width:8em;background-color:#66CCFF;">员工姓名</th>
+                                    <th class="sorting" style="width:12em;background-color:#66CCFF;">员工姓名</th>
                                     <th class="sorting" style="width:20em;background-color:#66CCFF;">岗位名称</th>
-                                    <th class="sorting" style="width:14em;background-color:#66CCFF;">所属部门</th>
+                                    <th class="sorting" style="width:20em;background-color:#66CCFF;">所属部门</th>
                                     <th class="sorting" style="width:10em;background-color:#66CCFF;">岗位薪酬标准</th>
-                                    <th class="sorting" style="width:10em;background-color:#66CCFF;">其中基本工资标准</th>
-                                    <th class="sorting" style="width:9em;background-color:#66CCFF;">考勤扣款</th>
-                                    <th class="sorting" style="width:10em;background-color:#66CCFF;">其中绩效工资标准</th>
-                                    <th class="sorting" style="width:9em;background-color:#66CCFF;">绩效增减</th>
-                                    <th class="sorting" style="width:9em;background-color:#66CCFF;">业绩提成</th>
-
-                                    <th class="sorting" style="width:9em;background-color:#66CCFF;">奖金</th>
-                                    <th class="sorting" style="width:9em;background-color:#66CCFF;">住房补贴</th>
-                                    <th class="sorting" style="width:8em;background-color:#66CCFF;">其他补款</th>
-                                    <th class="sorting" style="width:8em;background-color:#66CCFF;">应发工资</th>
-                                    <th class="sorting" style="width:9em;background-color:#66CCFF;">医疗保险</th>
-                                    <th class="sorting" style="width:9em;background-color:#66CCFF;">养老保险</th>
-                                    <th class="sorting" style="width:9em;background-color:#66CCFF;">失业保险</th>
-                                    <th class="sorting" style="width:9em;background-color:#66CCFF;">公积金</th>
-                                    <th class="sorting" style="width:9em;background-color:#66CCFF;">个人保险合计</th>
-                                    <th class="sorting" style="width:9em;background-color:#66CCFF;">计税工资</th>
-                                    <th class="sorting" style="width:9em;background-color:#66CCFF;">个人所得税</th>
-                                    <th class="sorting" style="width:9em;background-color:#66CCFF;">税后扣款</th>
-                                    <th class="sorting" style="width:9em;background-color:#66CCFF;">工会会费</th>
-                                    <th class="sorting" style="width:9em;background-color:#66CCFF;">实发工资</th>
+                                    <th class="sorting" style="width:12em;background-color:#66CCFF;">其中基本工资标准</th>
+                                    <th class="sorting" style="width:10em;background-color:#66CCFF;">考勤扣款</th>
+                                    <th class="sorting" style="width:12em;background-color:#66CCFF;">其中绩效工资标准</th>
+                                    <th class="sorting" style="width:10em;background-color:#66CCFF;">绩效增减</th>
+                                    <th class="sorting" style="width:10em;background-color:#66CCFF;">业绩提成</th>
+                                    <th class="sorting" style="width:10em;background-color:#66CCFF;">奖金</th>
+                                    <th class="sorting" style="width:10em;background-color:#66CCFF;">住房补贴</th>
+                                    <th class="sorting" style="width:10em;background-color:#66CCFF;">其他补款</th>
+                                    <th class="sorting" style="width:10em;background-color:#66CCFF;">应发工资</th>
+                                    <th class="sorting" style="width:10em;background-color:#66CCFF;">医疗保险</th>
+                                    <th class="sorting" style="width:10em;background-color:#66CCFF;">养老保险</th>
+                                    <th class="sorting" style="width:10em;background-color:#66CCFF;">失业保险</th>
+                                    <th class="sorting" style="width:10em;background-color:#66CCFF;">公积金</th>
+                                    <th class="sorting" style="width:10em;background-color:#66CCFF;">个人保险合计</th>
+                                    <th class="sorting" style="width:10em;background-color:#66CCFF;">计税工资</th>
+                                    <th class="sorting" style="width:10em;background-color:#66CCFF;">个人所得税</th>
+                                    <th class="sorting" style="width:10em;background-color:#66CCFF;">税后扣款</th>
+                                    <th class="sorting" style="width:10em;background-color:#66CCFF;">工会会费</th>
+                                    <th class="sorting" style="width:10em;background-color:#66CCFF;">实发工资</th>
                                 </tr>
+                                </THEAD>
+                                <TBODY style="text-align:center">
                                 <foreach name="info" item="info">
                                     <tr class="excel_list_money1">
                                         <td>{$info['account']['id']}</td>
@@ -174,11 +180,27 @@
                                 </tr>
                                 <th class="list_salary_datetime" style="display: none">{$count['datetime']}</th>
                                 <th class="list_salary_detail3" style="display: none">{$count['id']}</th>
+                                </TBODY>
+                                <!--  签字   -->
+
+                                <TFOOT style="display:table-footer-group;font-weight:bold;display:none;">
+                                    <tr>
+                                        <td colspan="6" style="text-align: center;">
+                                            <b>提交人 : </b><?php if($sta1==1){echo "<img src='upload/201811/13/5bea3dc9c4ef2.png' alt='' style='max-height: 50px'>";}elseif($sta1==2){echo "暂未提交";}?>
+                                        </td>
+                                        <td colspan="6" style="text-align: center;">
+                                            <b>审核人 : </b><?php if ($sta2==1){echo "<img src='upload/201811/13/5bea3dc9c4ef3.png' alt='' style='max-height: 50px'>";}elseif($sta2==2){echo "暂未审核";} ?>
+                                        </td>
+                                        <td colspan="6" style="text-align: center;">
+                                            <b>批准人 : </b><?php if ($sta3==1){echo "<img src='upload/201811/13/5bea3dc9c4ef4.png' alt='' style='max-height: 50px'>";}elseif($sta3==2){echo "暂未批准";} ?>
+                                        </td>
+                                        <td colspan="6" style="text-align: center;">
+                                            <b>打印时间: </b><?php echo date("Y-m-d H:i:s",time()); ?>
+                                        </td>
+                                    </tr>
+                                </TFOOT>
                             </table>
                             <br><br>
-                            <div id = "salary_add_applovel3">
-
-                            </div> <br><br>
                         </div>
                     </div><!-- /.box-body -->
 
@@ -205,7 +227,6 @@
 
 
 <div id="searchtext">
-    <!--                <script src="__HTML__/js/public.js?v=1.0.6" type="text/javascript"></script>-->
 
     <form action="{:U('Salary/salary_excel_list')}" method="post" id="searchform">
 
@@ -458,45 +479,60 @@
             });
         }
     });
-    function salary2(){ //打印
-        var time    = $('.list_salary_datetime').text();//现在表的时间
-        var moneyid = $('.list_salary_detail3').text(); // 表单id
-        var id      = $('#salary_archives_list').attr('id');//当前要打印的id
 
-        $.ajax({
-            type: "POST",
-            url:  "index.php?m=Main&c=Ajax&a=printing_content",
-            data: {
-                'time' : time,
-                'moneyid' : moneyid,
-            },
-            dataType: "json", //数据格式
-            success: function (data) {
-                if (data.sum == 1) {
-                    $('#salary_add_applovel3').empty();
-                    if(data.msg.status==2){
-                        var html = '<a style="width:10em;margin-left:10em;font-size:1.5em;color:#000000;"><b>提交审核人 : </b><img src="'+data.msg.submitter_url+'" alt="" style="width:6em;"></a>';
-                            html +='<a style="width:10em;margin-left:10em;font-size:1.5em;color:#000000;"><b>审核人 : </b><img src="'+data.msg.examine_url+'" alt="" style="width:6em;"></a>';
-                            html +='<a style="width:10em;margin-left:10em;font-size:1.5em;color:#000000;"><b>批准人 : </b><img src="'+data.msg.approval_url+'" alt="" style="width:6em;"></a>';
-                            html +='<a style="width:10em;margin-left:10em;font-size:1.5em;color:#000000;">'+data.msg.content+data.msg.time+'</a>';
-                    }
-                    if(data.msg.status==1){
-                        var html = '<a style="width:10em;margin-left:10em;font-size:1.5em;color:#000000;"><b>打印人 : '+data.msg.submitter+'</b></a>';
-                            html +='<a style="width:10em;margin-left:10em;font-size:1.5em;color:#000000;">'+data.msg.content+data.msg.time+'</a>';
-                    }
-                    $('th').prop('id','bordorcolor');
-                    $('td').prop('id','bordorcolor');
-                    $('#salary_add_applovel3').append(html);
-                    print_view(id);
-                    return false;
-                }
-                if (data.sum == 0 || data.sum == "") {
-                    alert('打印失败!');
-                    return false;
-                }
-            }
-        });
+    function salary2() { //打印
+        var add = "工资表";
+        var dat = "<?php echo $date;?>";
+            $("title").html(dat+add);
+        var id  = $('#salary_archives_list').attr('id');//当前要打印的id
+        $('TFOOT').show();
+        print_view(id);
     }
+    // function salary2(){ //打印
+    //     var time    = $('.list_salary_datetime').text();//现在表的时间
+    //     var moneyid = $('.list_salary_detail3').text(); // 表单id
+    //     var id      = $('#salary_archives_list').attr('id');//当前要打印的id
+    //
+    //     $.ajax({
+    //         type: "POST",
+    //         url:  "index.php?m=Main&c=Ajax&a=printing_content",
+    //         data: {
+    //             'time' : time,
+    //             'moneyid' : moneyid,
+    //         },
+    //         dataType: "json", //数据格式
+    //         success: function (data) {
+    //             if (data.sum == 1) {
+    //                 $('#salary_add_applovel3').empty();
+    //                 if(data.msg.status==2){
+    //
+    //                     var html = '<a style="width:8em;margin-left:8em;font-size:1.5em;color:#000000;"><b>提交审核人 : </b><img src="'+data.msg.submitter_url+'" alt="" style="width:6em;"></a>';
+    //                         html +='<a style="width:8em;margin-left:8em;font-size:1.5em;color:#000000;"><b>审核人 : </b><img src="'+data.msg.examine_url+'" alt="" style="width:6em;"></a>';
+    //                         html +='<a style="width:8em;margin-left:8em;font-size:1.5em;color:#000000;"><b>批准人 : </b><img src="'+data.msg.approval_url+'" alt="" style="width:6em;"></a>';
+    //                         html +='<a style="width:8em;margin-left:8em;font-size:1.5em;color:#000000;">'+data.msg.content+data.msg.time+'</a>';
+    //                 }
+    //                 if(data.msg.status==1){
+    //                     var html = '<a style="width:10em;margin-left:10em;font-size:1.5em;color:#000000;"><b>打印人 : '+data.msg.submitter+'</b></a>';
+    //                         html +='<a style="width:10em;margin-left:10em;font-size:1.5em;color:#000000;">'+data.msg.content+data.msg.time+'</a>';
+    //
+    //                 }
+    //                 var add = "工资表";
+    //                 var ohaveHis = $.myTime.DateToUnix(data.msg.time+add);
+    //                 var oHaveHisBack = $.myTime.UnixToDate(ohaveHis);
+    //                 $("title").html(oHaveHisBack);
+    //                 $('th').prop('id','bordorcolor');
+    //                 $('td').prop('id','bordorcolor');
+    //                 $('#salary_add_applovel3').append(html);
+    //                 print_view(id);
+    //                 return false;
+    //             }
+    //             if (data.sum == 0 || data.sum == "") {
+    //                 alert('打印失败!');
+    //                 return false;
+    //             }
+    //         }
+    //     });
+    // }
 
     excel_list_color();
 </script>
