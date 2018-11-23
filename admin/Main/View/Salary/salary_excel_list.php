@@ -181,6 +181,7 @@
                                 <th class="list_salary_datetime" style="display: none">{$count['datetime']}</th>
                                 <th class="list_salary_detail3" style="display: none">{$count['id']}</th>
                                 </TBODY>
+
                                 <TFOOT style="display:table-footer-group;font-weight:bold;">
                                     <tr>
                                         <td colspan="6" style="text-align: center;">
@@ -197,6 +198,7 @@
                                         </td>
                                     </tr>
                                 </TFOOT>
+
                             </table>
 
                         </div>
