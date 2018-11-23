@@ -182,7 +182,7 @@
                                 <th class="list_salary_detail3" style="display: none">{$count['id']}</th>
                                 </TBODY>
 
-                                <TFOOT style="display:table-footer-group;font-weight:bold;display:none;">
+                                <TFOOT style="display:table-footer-group;font-weight:bold;">
                                     <tr>
                                         <td colspan="6" style="text-align: center;">
                                             <b>提交人 : </b><?php if ($sta1==1){echo "<img src='upload/201811/13/5bea3dc9c4ef2.png' alt='' style='max-height: 50px'>";}else{echo "暂未提交";} ?>
@@ -483,7 +483,6 @@
         var dat = "<?php echo $date;?>";
             $("title").html(dat+add);
         var id  = $('#salary_archives_list').attr('id');//当前要打印的id
-        $('TFOOT').show();
         print_view(id);
     }
     // function salary2(){ //打印
