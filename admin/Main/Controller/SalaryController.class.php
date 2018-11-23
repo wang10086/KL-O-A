@@ -646,17 +646,17 @@ class SalaryController extends BaseController {
                 }
             }
         }
-        if($summoney['examine_user_id']!==""){ $sta1 = 1; }
-        if($summoney['submission_user_id']!==""){ $sta2 = 1; }
-        if($summoney['approval_user_id']!==""){ $sta3 = 1;}
-        if($summoney['datetime']!==""){$date=date('Y年m月',strtotime($summoney['datetime']));}else{$date=datetime(date('Y'),date('m'),date('d'),2);}
-        $this->sta1 = $sta1;
-        $this->sta2 = $sta2;
-        $this->sta3 = $sta3;
-        $this->date = $date;
-
+        if(is_numeric($summoney['id'])){
+            if($summoney['examine_user_id']!==""){ $sta1 = 1; }
+            if($summoney['submission_user_id']!==""){ $sta2 = 1; }
+            if($summoney['approval_user_id']!==""){ $sta3 = 1;}
+            if($summoney['datetime']!==""){$date=date('Y年m月',strtotime($summoney['datetime']));}else{$date=datetime(date('Y'),date('m'),date('d'),2);}
+            $this->sta1 = $sta1;
+            $this->sta2 = $sta2;
+            $this->sta3 = $sta3;
+            $this->date = $date;
+        }
         $userid                         = (int)$_SESSION['userid'];//用户id
-
 //        $this->assign('number1',count($info));//员工数量
 //        $this->assign('number2',count($sum));//部门数量
         $this->assign('info',$info);//员工信息 inf
