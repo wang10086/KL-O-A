@@ -185,13 +185,13 @@
                                 <TFOOT style="display:table-footer-group;font-weight:bold;display:none;">
                                     <tr>
                                         <td colspan="6" style="text-align: center;">
-                                            <b>提交人 : </b><?php if ($sta1==1){echo "<img src='upload/201811/13/5bea3dc9c4ef2.png' alt='' style='max-height: 50px'>";}elseif($sta1==2){echo "暂未提交";} ?>
+                                            <b>提交人 : </b><?php if ($sta1==1){echo "<img src='upload/201811/13/5bea3dc9c4ef2.png' alt='' style='max-height: 50px'>";}else{echo "暂未提交";} ?>
                                         </td>
                                         <td colspan="6" style="text-align: center;">
-                                            <b>审核人 : </b><?php if ($sta2==1){echo "<img src='upload/201811/13/5bea3dc9c4ef3.png' alt='' style='max-height: 50px'>";}elseif($sta2==2){echo "暂未审核";} ?>
+                                            <b>审核人 : </b><?php if ($sta2==1){echo "<img src='upload/201811/13/5bea3dc9c4ef3.png' alt='' style='max-height: 50px'>";}else{echo "暂未审核";} ?>
                                         </td>
                                         <td colspan="6" style="text-align: center;">
-                                            <b>批准人 : </b><?php if ($sta3==1){echo "<img src='upload/201811/13/5bea3dc9c4ef4.png' alt='' style='max-height: 50px'>";}elseif($sta3==2){echo "暂未批准";} ?>
+                                            <b>批准人 : </b><?php if ($sta3==1){echo "<img src='upload/201811/13/5bea3dc9c4ef4.png' alt='' style='max-height: 50px'>";}else{echo "暂未批准";} ?>
                                         </td>
                                         <td colspan="6" style="text-align: center;">
                                             <b>打印时间: </b><?php echo date("Y-m-d H:i:s",time()); ?>

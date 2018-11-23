@@ -646,9 +646,9 @@ class SalaryController extends BaseController {
                 }
             }
         }
-        if($summoney['examine_user_id']!==""){ $sta1 = 1; }else{$sta1 = 2; }
-        if($summoney['submission_user_id']!==""){ $sta2 = 1; }else{$sta2 = 2; }
-        if($summoney['approval_user_id']!==""){ $sta3 = 1;}else{ $sta3 = 2;}
+        if($summoney['examine_user_id']!==""){ $sta1 = 1; }
+        if($summoney['submission_user_id']!==""){ $sta2 = 1; }
+        if($summoney['approval_user_id']!==""){ $sta3 = 1;}
         if($summoney['datetime']!==""){$date=date('Y年m月',strtotime($summoney['datetime']));}else{$date=datetime(date('Y'),date('m'),date('d'),2);}
         $this->sta1 = $sta1;
         $this->sta2 = $sta2;
