@@ -40,8 +40,9 @@
                                 <th style="width:10em;">
                                     <p><b>京区业务中心</b></p>
                                     <p style="border-top:1px solid #ddd;margin:1em -0.7em 0em -0.7em;padding:0em 3em 1em 0em;">
-                                        <a style="border-right:1px solid #ddd;padding:0em 3em 1em 0em;margin-right:3em">数额</a>
-                                        <a style="text-align:center;text-align:center;margin:0em 0em 0em 0em;">占比</a>
+                                        <a style="padding:0em 0em 0em 0em;margin:0em 0em 0em 0em;">数额</a>
+                                        <a href="margin:0em 0em 0em 0em;">|</a>
+                                        <a style="text-align:center;margin:0em 0em 0em 0em;">占比</a>
                                     </p>
                                 </th>
                                 <th style="width:10em;"><b>京外业务中心</b></th>
