@@ -3,10 +3,10 @@
 <aside class="right-side">
 
     <section class="content-header">
-        <h1><?php echo date('Y',time());?>年月度财务报表</h1>
+        <h1><?php echo date('Y',time());?>月度经营报表</h1>
         <ol class="breadcrumb">
             <li><a href="{:U('Index/index')}"><i class="fa fa-home"></i> 首页</a></li>
-            <li><a href="{:U('Manage/Manage_month')}"><i class="fa fa-gift"></i> 月度财务报表</a></li>
+            <li><a href="{:U('Manage/Manage_month')}"><i class="fa fa-gift"></i> 月度经营报表</a></li>
         </ol>
     </section>
 
@@ -29,7 +29,7 @@
 
                 <div class="box box-warning">
                     <div class="box-header">
-                        <h3 class="box-title">月度财务报表</h3>
+                        <h3 class="box-title">月度经营报表</h3>
                     </div><!-- /.box-header -->
                     <div class="box-body">
 
@@ -40,18 +40,66 @@
                                 <th style="width:15em;">
                                     <p><b>京区业务中心</b></p>
                                     <p style="border-top:1px solid #ddd;margin:0em -0.7em 1em -0.7em;">
-                                        <center style="margin-bottom: -0.9em;">
-                                            <a style="padding: 1em;margin-right: -0.3em;border-right:1px solid #ddd;">数额</a>
-                                            <a style="text-align:center;padding: 1em;">占比</a>
-                                        </center>
+                                    <center style="margin-bottom: -0.9em;">
+                                        <a style="padding: 1em;margin-right: -0.3em;border-right:1px solid #ddd;">数额</a>
+                                        <a style="text-align:center;padding: 1em;">占比</a>
+                                    </center>
                                     </p>
                                 </th>
-                                <th style="width:15em;"><b>京外业务中心</b></th>
-                                <th style="width:15em;"><b>南京项目部</b></th>
-                                <th style="width:15em;"><b>武汉项目部</b></th>
-                                <th style="width:15em;"><b>沈阳项目部</b></th>
-                                <th style="width:15em;"><b>长春项目部</b></th>
-                                <th style="width:15em;"><b>市场部</b></th>
+                                <th style="width:15em;">
+                                    <p><b>京外业务中心</b></p>
+                                    <p style="border-top:1px solid #ddd;margin:0em -0.7em 1em -0.7em;">
+                                    <center style="margin-bottom: -0.9em;">
+                                        <a style="padding: 1em;margin-right: -0.3em;border-right:1px solid #ddd;">数额</a>
+                                        <a style="text-align:center;padding: 1em;">占比</a>
+                                    </center>
+                                    </p>
+                                </th>
+                                <th style="width:15em;">
+                                    <p><b>南京项目部</b></p>
+                                    <p style="border-top:1px solid #ddd;margin:0em -0.7em 1em -0.7em;">
+                                    <center style="margin-bottom: -0.9em;">
+                                        <a style="padding: 1em;margin-right: -0.3em;border-right:1px solid #ddd;">数额</a>
+                                        <a style="text-align:center;padding: 1em;">占比</a>
+                                    </center>
+                                    </p>
+                                </th>
+                                <th style="width:15em;">
+                                    <p><b>武汉项目部</b></p>
+                                    <p style="border-top:1px solid #ddd;margin:0em -0.7em 1em -0.7em;">
+                                    <center style="margin-bottom: -0.9em;">
+                                        <a style="padding: 1em;margin-right: -0.3em;border-right:1px solid #ddd;">数额</a>
+                                        <a style="text-align:center;padding: 1em;">占比</a>
+                                    </center>
+                                    </p>
+                                </th>
+                                <th style="width:15em;">
+                                    <p><b>沈阳项目部</b></p>
+                                    <p style="border-top:1px solid #ddd;margin:0em -0.7em 1em -0.7em;">
+                                    <center style="margin-bottom: -0.9em;">
+                                        <a style="padding: 1em;margin-right: -0.3em;border-right:1px solid #ddd;">数额</a>
+                                        <a style="text-align:center;padding: 1em;">占比</a>
+                                    </center>
+                                    </p>
+                                </th>
+                                <th style="width:15em;">
+                                    <p><b>长春项目部</b></p>
+                                    <p style="border-top:1px solid #ddd;margin:0em -0.7em 1em -0.7em;">
+                                    <center style="margin-bottom: -0.9em;">
+                                        <a style="padding: 1em;margin-right: -0.3em;border-right:1px solid #ddd;">数额</a>
+                                        <a style="text-align:center;padding: 1em;">占比</a>
+                                    </center>
+                                    </p>
+                                </th>
+                                <th style="width:15em;">
+                                    <p><b>市场部</b></p>
+                                    <p style="border-top:1px solid #ddd;margin:0em -0.7em 1em -0.7em;">
+                                    <center style="margin-bottom: -0.9em;">
+                                        <a style="padding: 1em;margin-right: -0.3em;border-right:1px solid #ddd;">数额</a>
+                                        <a style="text-align:center;padding: 1em;">占比</a>
+                                    </center>
+                                    </p>
+                                </th>
                             </tr>
 
                             <tr role="row" class="orders" style="text-align:center;">
