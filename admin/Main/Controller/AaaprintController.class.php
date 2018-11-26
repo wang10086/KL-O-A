@@ -534,7 +534,7 @@ class AaaprintController extends BaseController {
         return $content;
     }
 
-    private function countmoney($archives,$list,$status){
+    private function countmoney($archives,$list='',$status=0){
         $where['archives']                                  = $archives;
         $where = array_filter($where);
         $info1                                              =  M('account')->where($where)->group('departmentid')->order('employee_member ASC')->select();//个人数据

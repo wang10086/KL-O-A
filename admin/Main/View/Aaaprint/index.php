@@ -1,6 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
 <head>
+    <script src="__HTML__/js/jquery-1.7.2.min.js"></script>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <title>2018年11月工资发放表</title>
     <style>
@@ -17,7 +18,7 @@
     <tr role="row" class="orders" style="font-weight:bold;border:3px double red">
         <td class="sorting" style="width:5em;background-color:#66CCFF;">ID</td>
         <td class="sorting" style="width:8em;background-color:#66CCFF;">员工姓名</td>
-        <td class="sorting" style="width:20em;background-color:#66CCFF;">岗位名称</td>
+        <td class="sorting aaa" style="width:20em;background-color:#66CCFF;">岗位名称</td>
         <td class="sorting" style="width:14em;background-color:#66CCFF;">所属部门</td>
         <td class="sorting" style="width:10em;background-color:#66CCFF;">岗位薪酬标准</td>
         <td class="sorting" style="width:10em;background-color:#66CCFF;">其中基本工资标准</td>
@@ -47,7 +48,7 @@
     <tr style="page-break-after:always;">
         <td>{$info['account']['id']}</td>
         <td style="color:#3399FF;">{$info['account']['nickname']}</td>
-        <td>{$info['posts'][0]['post_name']}</td>
+        <td class="aaa">{$info['posts'][0]['post_name']}</td>
         <td>{$info['department'][0]['department']}</td>
         <td>&yen; {$info['salary'][0]['standard_salary']}</td>
         <td>&yen; <?PHP echo sprintf("%.2f",($info['salary'][0]['standard_salary']/10*$info['salary'][0]['basic_salary']));?></td>
@@ -92,7 +93,7 @@
 
     <foreach name="sum" item="sum">
         <tr class="excel_list_money2">
-            <td colspan="3" style="text-align: center;">{$sum['name']}</td>
+            <td class="bbb" colspan="3" style="text-align: center;">{$sum['name']}</td>
             <td>{$sum['department']}</td>
             <td>&yen; <?PHP echo sprintf("%.2f",$sum['standard_salary']);?></td>
             <td>&yen; <?PHP echo sprintf("%.2f",$sum['basic']);?></td>
@@ -118,7 +119,7 @@
         <th class="list_salary_detail2" style="display: none">{$sum['id']}</th>
     </foreach>
     <tr class="excel_list_money3">
-        <td colspan="4" style="text-align: center;">{$count['name']}</td>
+        <td class='ccc' colspan="4" style="text-align: center;">{$count['name']}</td>
         <td>&yen; <?PHP echo sprintf("%.2f",$count['standard_salary']);?></td>
         <td>&yen; <?PHP echo sprintf("%.2f",$count['basic']);?></td>
         <td>&yen; <?PHP echo sprintf("%.2f",$count['withdrawing']);?></td>
@@ -143,12 +144,34 @@
     <th class="list_salary_datetime" style="display: none">{$count['datetime']}</th>
     <th class="list_salary_detail3" style="display: none">{$count['id']}</th>
     </TBODY>
-    <TFOOT style="display:table-footer-group;font-weight:bold">
+    <TFOOT style="display:table-footer-group;font-weight:bold" >
     <tr>
-        <td colspan="24" align="right" style="font-weight:bold;border:3px double blue;height: 60px;">签字信息自己填写</td>
+        <td colspan="6" style="text-align: center;">
+           提交人 : <img src="__HTML__/img/test.png" alt="" style="max-height: 50px">
+        </td>
+        <td colspan="6" style="text-align: center;">
+            审核人 : <?php if (1>2){echo "<img src='__HTML__/img/test.png' alt='' style='max-height: 50px'>";}else{echo "暂未审核";} ?>
+        </td>
+        <td colspan="6" style="text-align: center;">
+            批准人 : <?php if (1>2){echo "<img src='__HTML__/img/test.png' alt='' style='max-height: 50px'>";}else{echo "暂未批准";} ?>
+        </td>
+        <td class="ddd" colspan="6" style="text-align: center;">
+            打印时间: <?php echo date("Y-m-d H:i:s",time()); ?>
+        </td>
     </tr>
     </TFOOT>
 </TABLE>
-<input type=button value=" 打 印 " onclick=javascript:window.print()>
+<!--<input type=button value=" 打 印 " onclick=javascript:window.print()>-->
+<input type=button value=" 打 印 " onclick="print_aa()">
 </body>
 </html>
+
+<script>
+    function print_aa() {
+       $('.aaa').hide();
+        $(".bbb").attr("colspan",2);
+        $(".ccc").attr("colspan",3);
+        $(".ddd").attr("colspan",5);
+        window.print();
+    }
+</script>
