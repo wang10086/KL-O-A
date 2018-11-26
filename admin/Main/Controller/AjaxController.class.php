@@ -1082,6 +1082,35 @@ class AjaxController extends Controller {
         }
     }
 
+    /**
+     * create_file 创建文件
+     * $file_name 文件名称 $file_date 审批天数
+     * $status 1 新建 2 修改
+     * $file_user 用户名称  $textarea 文件描述
+     */
+     function create_file(){
+         $file['createtime']        = time();
+         $file['account_id']        = $_SESSION['userid'];
+         $file['account_name']      = trim($_POST['file_user']);
+         $file['file_primary']      = trim($_POST['file_name']);
+         $file['file_describe']     = trim($_POST['textarea']);
+         $file['file_date']         = trim($_POST['file_date']);
+         $file['category']          = trim($_POST['status']);
+         $user                      = user_table($file['account_id']);
+         $file                      = array_filter($file);
+         if(empty($file['account_name'])){
+             echo json_encode(array('sum' => 0, 'msg' => "创建失败!请完善后提交"));die;
+         }
+         if(!empty($file['file_describe'])){
+             $file['file_describe'] = htmlspecialchars($file['file_describe']);
+         }
+         $add                       = M('approval_flie')->add($file);
+         if($add){
+             echo json_encode(array('sum' => 1, 'msg' =>"创建成功!"));die;
+         }else{
+             echo json_encode(array('sum' => 0, 'msg' => "创建失败!请完善后提交！"));die;
+         }
+    }
 
     /**
      * Ajax_file_delete 删除选中的文件
