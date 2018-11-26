@@ -22,7 +22,7 @@
                                         <a href="javascript:;"  class="btn btn-danger Approval_file_delete" style="padding:6px 12px;"><i class="fa fa-trash-o"></i> 删除</a>
 <!--                                        <a href="{:U('Approval/Approval_Upload')}" class="btn btn-info btn-sm"><i class="fa fa-upload"></i> 上传文件</a>-->
                                     </div>
-                                    <a class="btn btn-info btn-sm" id="salary_create_file" onclick="javascript:salry_opensearch('searchtext',650,380,'创建文件');" style="float:right;margin:1em 2em 0em 0em;background-color:#f4543c"><b>+</b> 创建文件</a>
+                                    <a class="btn btn-info btn-sm" id="salary_create_file" onclick="javascript:salry_opensearch('searchtext',650,380,'创建文件');" style="float:right;margin:1em 2em 0em 0em;background-color:#f4543c"><b>+</b> 创建文件夹</a>
                                 </div><!-- /.box-header -->
                                 <div class="box-body">
 

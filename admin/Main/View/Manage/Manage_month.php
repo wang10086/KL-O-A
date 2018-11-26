@@ -37,20 +37,21 @@
                             <tr role="row" class="orders" style="text-align:center;" >
                                 <th style="width:10em;"><b>项目</b></th>
                                 <th style="width:10em;"><b>公司</b></th>
-                                <th style="width:10em;">
+                                <th style="width:15em;">
                                     <p><b>京区业务中心</b></p>
-                                    <p style="border-top:1px solid #ddd;margin:1em -0.7em 0em -0.7em;padding:0em 3em 1em 0em;">
-                                        <a style="padding:0em 0em 0em 0em;margin:0em 0em 0em 0em;">数额</a>
-                                        <a href="margin:0em 0em 0em 0em;">|</a>
-                                        <a style="text-align:center;margin:0em 0em 0em 0em;">占比</a>
+                                    <p style="border-top:1px solid #ddd;margin:0em -0.7em 1em -0.7em;">
+                                        <center style="margin-bottom: -0.9em;">
+                                            <a style="padding: 1em;margin-right: -0.3em;border-right:1px solid #ddd;">数额</a>
+                                            <a style="text-align:center;padding: 1em;">占比</a>
+                                        </center>
                                     </p>
                                 </th>
-                                <th style="width:10em;"><b>京外业务中心</b></th>
-                                <th style="width:10em;"><b>南京项目部</b></th>
-                                <th style="width:10em;"><b>武汉项目部</b></th>
-                                <th style="width:10em;"><b>沈阳项目部</b></th>
-                                <th style="width:10em;"><b>长春项目部</b></th>
-                                <th style="width:10em;"><b>市场部</b></th>
+                                <th style="width:15em;"><b>京外业务中心</b></th>
+                                <th style="width:15em;"><b>南京项目部</b></th>
+                                <th style="width:15em;"><b>武汉项目部</b></th>
+                                <th style="width:15em;"><b>沈阳项目部</b></th>
+                                <th style="width:15em;"><b>长春项目部</b></th>
+                                <th style="width:15em;"><b>市场部</b></th>
                             </tr>
 
                             <tr role="row" class="orders" style="text-align:center;">
