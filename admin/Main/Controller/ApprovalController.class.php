@@ -25,12 +25,13 @@ class ApprovalController extends BaseController {
      * $file_id 文档 id
      */
     public function Approval_list(){
+
         $app                                = D('Approval');
         $where                              = $app->Jurisdiction();
         if($where==1){
             unset($where);
         }elseif($where==2){
-            $where['account_id']            = $_SESSION['userid'];
+            $query['account_id']            = $_SESSION['userid'];
         }elseif($where==3){
             $approval                       = $this->approval_table('','',2);
         }
@@ -38,23 +39,48 @@ class ApprovalController extends BaseController {
             if(IS_POST){
                 $file_name                  = trim($_POST['file_name']);
                 $account_name               = trim($_POST['username']);
-                $where['file_name']         = array('like',"%$file_name%");
-                $where['account_name']      = array('like',"%$account_name%");
-                $where                      = array_filter($where);
+                $query['file_name']         = array('like',"%$file_name%");
+                $query['account_name']      = array('like',"%$account_name%");
+                $query                      = array_filter($query);
             }else{
-                $id                         = trim($_GET['file_id']);
+                $id                         = trim(I('file_id'));
                 if(is_numeric($id)){ //判断是否有传值
-                    $where['file_id']       = $id;
+                    $query['file_id']       = $id;
                 }else{
                     $this->error('数据错误!请重新打开！');
                 }
             }
-            $approval                       = $this->approval_table('approval_flie_url',$where,1);
+            $approval                       = $this->approval_table('approval_flie_url',$query,1);
         }
         $this->file_id                      = $id;
         $this->approval                     = $approval['approval']; //文件信息 -- 文件夹信息
         $this->pages                        = $approval['pages'];//分页
         $this->display();
+    }
+
+    /**
+     * Ajax_file_delete 删除选中的文件
+     * $fileid 文件id
+     */
+    function file_delete(){
+        print_r(I());die;
+
+        $arr                    = array("11", "55", "77", "32","38","1","12","13");
+        if(in_array($_SESSION['userid'],$arr)){
+        }else{
+            echo json_encode(array('sum' => 0, 'msg' => "删除失败！您没有权限删除！"));die;
+        }
+        $status                 = trim($_POST['status']);
+        $fileid                 = trim($_POST['fileid']);
+        $file_id                = array_filter(explode(',',$fileid));
+        foreach($file_id as $key => $val){
+            $save['type']       = 2;
+            if($status==1){
+                $approval_flie  = M('approval_flie')->where('id='.$val)->save($save);
+            }elseif($status==2){
+                $approval_flie  = M('approval_flie_url')->where('id='.$val)->save($save);
+            }
+        }
     }
 
     /**

@@ -42,7 +42,7 @@
                                     <foreach name="approval" item="app">
                                         <tr>
                                             <td align="center">
-                                                <input type="checkbox" class="Approval_check" value="{$app['id']}"/>
+                                                <input type="checkbox" class="Approval_check" value="{$app['Approval']['id']}"/>
                                             </td>
                                             <td style="text-align:center;">{$app['Approval']['id']}</td>
                                             <td style="text-align:center;color:#3399FF;">{$app['Approval']['account_name']}</td>
