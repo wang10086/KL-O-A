@@ -99,128 +99,127 @@ class SalaryController extends BaseController {
         if($month<10){
             $year                               = $year.'0';
         }
-        if($type==2){
-            $query['month']                     = $year.$month;
-            if($month == 3 || $month == 6 || $month == 9 || $month == 12){
-                $i                              = $month-3;
-                for($i;$i<$month;$month--){
-                    $query['month']             = $year.$month;
-                    $kpi                        = M('kpi')->where($query)->find();
-                    $lists                      = M('kpi_more')->where(array('kpi_id'=>$kpi['id']))->find();
+        if($type==2) {
+            $query['month'] = $year . $month;
+            if ($month == 3 || $month == 6 || $month == 9 || $month == 12) {
+                $i = $month - 3;
+                for ($i; $i < $month; $month--) {
+                    $query['month'] = $year . $month;
+                    $kpi = M('kpi')->where($query)->find();
+                    $lists = M('kpi_more')->where(array('kpi_id' => $kpi['id']))->find();
                     //季度完成
-                    $user                       = M('account')->where('id='.$query['user_id'])->find();
-                    $mont1                      = $year.($month-1).'26';//开始月日
-                    $mont2                      = $year.$month.'26';//结束月日
+                    $user = M('account')->where('id=' . $query['user_id'])->find();
+                    $mont1 = $year . ($month - 1) . '26';//开始月日
+                    $mont2 = $year . $month . '26';//结束月日
 
-                    $support = M('salary_support')->where('account_id='.$query['user_id'])->find();//扶植人员
-                    if($support){//查询是否是扶植人员
+                    $support = M('salary_support')->where('account_id=' . $query['user_id'])->find();//扶植人员
+                    if ($support) {//查询是否是扶植人员
                         //扶植起日期 > 季度起日期   扶植止日期 < 季度止日期
-                        if($support['starttime']>strtotime($mont1) && $support['endtime']<strtotime($mont2)){
-                            $mont3              = date('Ymd',$support['starttime']);
-                            $mont4              = date('Ymd',$support['endtime']);
-                            $sum1               += monthly_Finance($user['nickname'],$mont3,$mont4);//季度完成
-                        }elseif($support['starttime']>strtotime($mont1) && $support['endtime']>strtotime($mont2) && $support['starttime']<strtotime($mont2)){
+                        if ($support['starttime'] > strtotime($mont1) && $support['endtime'] < strtotime($mont2)) {
+                            $mont3 = date('Ymd', $support['starttime']);
+                            $mont4 = date('Ymd', $support['endtime']);
+                            $sum1 += monthly_Finance($user['nickname'], $mont3, $mont4);//季度完成
+                        } elseif ($support['starttime'] > strtotime($mont1) && $support['endtime'] > strtotime($mont2) && $support['starttime'] < strtotime($mont2)) {
                             //扶植起日期 > 季度起日期   扶植止日期 > 季度止日期 扶植起日期<季度止日期
-                            $mont3              = date('Ymd',$support['starttime']);
-                            $mont4              = $mont2;
-                            $sum1               += monthly_Finance($user['nickname'],$mont3,$mont4);//季度完成
-                        }elseif(($support['starttime']<strtotime($mont1) && $support['endtime']>strtotime($mont2))){
+                            $mont3 = date('Ymd', $support['starttime']);
+                            $mont4 = $mont2;
+                            $sum1 += monthly_Finance($user['nickname'], $mont3, $mont4);//季度完成
+                        } elseif (($support['starttime'] < strtotime($mont1) && $support['endtime'] > strtotime($mont2))) {
                             //扶植起日期 < 季度起日期   扶植止日期 > 季度止日期
-                            $mont3              = $mont1;
-                            $mont4              = $mont2;
-                            $sum1               += monthly_Finance($user['nickname'],$mont3,$mont4);//季度完成
-                        }elseif(($support['starttime']<strtotime($mont1) && $support['endtime']<strtotime($mont2))){
+                            $mont3 = $mont1;
+                            $mont4 = $mont2;
+                            $sum1 += monthly_Finance($user['nickname'], $mont3, $mont4);//季度完成
+                        } elseif (($support['starttime'] < strtotime($mont1) && $support['endtime'] < strtotime($mont2))) {
                             //扶植起日期 > 季度起日期   扶植止日期 < 季度止日期
-                            $mont3              = $mont1;
-                            $mont4              = $support['endtime'];
-                        }else{
-                            $mont3              = 0;
-                            $mont4              = 0;
+                            $mont3 = $mont1;
+                            $mont4 = $support['endtime'];
+                        } else {
+                            $mont3 = 0;
+                            $mont4 = 0;
                         }
                     }
-                    $sum_user                   = monthly_Finance($user['nickname'],$mont1,$mont2);//季度完成
-                    $count                      += $lists['target'];//季度目标
-                    $sum2                       += $sum_user;//季度完成
+                    $sum_user = monthly_Finance($user['nickname'], $mont1, $mont2);//季度完成
+                    $count += $lists['target'];//季度目标
+                    $sum2 += $sum_user;//季度完成
                 }
-                $price                          = $sum1*0.25;//扶植期提成
-                $sum                            = $sum2-$sum1;//季度完成-扶植人员日期完成
-                $number                         = $sum/$count;//项目季度百分比
-                if($number <= 1){
-                    $Total1                     = $sum*0.05;//不超过100%
+                $price = $sum1 * 0.25;//扶植期提成
+                $sum = $sum2 - $sum1;//季度完成-扶植人员日期完成
+                $number = $sum / $count;//项目季度百分比
+                if ($number <= 1) {
+                    $Total1 = $sum * 0.05;//不超过100%
                 }
-                if(1<$number && $number <=1.5){
-                    $Total1                     = $count*0.05+($sum-$count)*0.2;//超过100% 不到150%
+                if (1 < $number && $number <= 1.5) {
+                    $Total1 = $count * 0.05 + ($sum - $count) * 0.2;//超过100% 不到150%
                 }
-                if(1.5 < $number){
-                    $tot                        = $count*0.05;//100%以内
-                    $tt                         = ($count*1.5-$count)*0.2;//100%以上 150% 以内
-                    $yy                         = ($sum-$count*1.5)*0.25;//150% 以上
-                    $Total1                     = $tot+$tt+$yy;
+                if (1.5 < $number) {
+                    $tot = $count * 0.05;//100%以内
+                    $tt = ($count * 1.5 - $count) * 0.2;//100%以上 150% 以内
+                    $yy = ($sum - $count * 1.5) * 0.25;//150% 以上
+                    $Total1 = $tot + $tt + $yy;
                 }
                 $Total = $Total1 + $price;//提成+扶植期提成
-                $content['target']              = $count;
-                $content['complete']            = $sum;
-                $content['total']               = round($Total,2);//保留两位小数
-            }else{// 每月完成
+                $content['target'] = $count;
+                $content['complete'] = $sum;
+                $content['total'] = round($Total, 2);//保留两位小数
+            } else {//月度提成
 
-                    $query['month']             = $year.$month;
-                    $kpi                        = M('kpi')->where($query)->find();
-                    $lists                      = M('kpi_more')->where(array('kpi_id'=>$kpi['id']))->find();
-                    //季度完成
-                    $user                       = M('account')->where('id='.$query['user_id'])->find();
-                    $mont1                      = $year.($month-1).'26';//开始月日
-                    $mont2                      = $year.$month.'26';//结束月日
+                $query['month'] = $year . $month;
+                $kpi = M('kpi')->where($query)->find();
+                $lists = M('kpi_more')->where(array('kpi_id' => $kpi['id']))->find();
+                //季度完成
+                $user = M('account')->where('id=' . $query['user_id'])->find();
+                $mont1 = $year . ($month - 1) . '26';//开始月日
+                $mont2 = $year . $month . '26';//结束月日
 
-                    $support = M('salary_support')->where('account_id='.$query['user_id'])->find();//扶植人员
-                    if($support){//查询是否是扶植人员
+                $support = M('salary_support')->where('account_id=' . $query['user_id'])->find();//扶植人员
+                if ($support) {//查询是否是扶植人员
+                    //扶植起日期 > 季度起日期   扶植止日期 < 季度止日期
+                    if ($support['starttime'] > strtotime($mont1) && $support['endtime'] < strtotime($mont2)) {
+                        $mont3 = date('Ymd', $support['starttime']);
+                        $mont4 = date('Ymd', $support['endtime']);
+                        $sum1 = monthly_Finance($user['nickname'], $mont3, $mont4);//季度完成
+                    } elseif ($support['starttime'] > strtotime($mont1) && $support['endtime'] > strtotime($mont2) && $support['starttime'] < strtotime($mont2)) {
+                        //扶植起日期 > 季度起日期   扶植止日期 > 季度止日期 扶植起日期<季度止日期
+                        $mont3 = date('Ymd', $support['starttime']);
+                        $mont4 = $mont2;
+                        $sum1 = monthly_Finance($user['nickname'], $mont3, $mont4);//季度完成
+                    } elseif (($support['starttime'] < strtotime($mont1) && $support['endtime'] > strtotime($mont2))) {
+                        //扶植起日期 < 季度起日期   扶植止日期 > 季度止日期
+                        $mont3 = $mont1;
+                        $mont4 = $mont2;
+                        $sum1 = monthly_Finance($user['nickname'], $mont3, $mont4);//季度完成
+                    } elseif (($support['starttime'] < strtotime($mont1) && $support['endtime'] < strtotime($mont2))) {
                         //扶植起日期 > 季度起日期   扶植止日期 < 季度止日期
-                        if($support['starttime']>strtotime($mont1) && $support['endtime']<strtotime($mont2)){
-                            $mont3              = date('Ymd',$support['starttime']);
-                            $mont4              = date('Ymd',$support['endtime']);
-                            $sum1               = monthly_Finance($user['nickname'],$mont3,$mont4);//季度完成
-                        }elseif($support['starttime']>strtotime($mont1) && $support['endtime']>strtotime($mont2) && $support['starttime']<strtotime($mont2)){
-                            //扶植起日期 > 季度起日期   扶植止日期 > 季度止日期 扶植起日期<季度止日期
-                            $mont3              = date('Ymd',$support['starttime']);
-                            $mont4              = $mont2;
-                            $sum1               = monthly_Finance($user['nickname'],$mont3,$mont4);//季度完成
-                        }elseif(($support['starttime']<strtotime($mont1) && $support['endtime']>strtotime($mont2))){
-                            //扶植起日期 < 季度起日期   扶植止日期 > 季度止日期
-                            $mont3              = $mont1;
-                            $mont4              = $mont2;
-                            $sum1               = monthly_Finance($user['nickname'],$mont3,$mont4);//季度完成
-                        }elseif(($support['starttime']<strtotime($mont1) && $support['endtime']<strtotime($mont2))){
-                            //扶植起日期 > 季度起日期   扶植止日期 < 季度止日期
-                            $mont3              = $mont1;
-                            $mont4              = $support['endtime'];
-                        }else{
-                            $mont3              = 0;
-                            $mont4              = 0;
-                        }
-                $sum_user                       = monthly_Finance($user['nickname'],$mont1,$mont2);//季度完成
-                $count                          = $lists['target'];//季度目标
-                $sum2                           = $sum_user;//季度完成
-                $price                          = $sum1*0.25;//扶植期提成
-                $sum                            = $sum2-$sum1;//季度完成-扶植人员日期完成
-                $number                         = $sum/$count;//项目季度百分比
-                if($number <= 1){
-                    $Total1                     = $sum*0.05;//不超过100%
-                }
-                if(1<$number && $number <=1.5){
-                    $Total1                     = $count*0.05+($sum-$count)*0.2;//超过100% 不到150%
-                }
-                if(1.5 < $number){
-                    $tot                        = $count*0.05;//100%以内
-                    $tt                         = ($count*1.5-$count)*0.2;//100%以上 150% 以内
-                    $yy                         = ($sum-$count*1.5)*0.25;//150% 以上
-                    $Total1                     = $tot+$tt+$yy;
-                }
-                $Total = $Total1 + $price;//提成+扶植期提成
-                $content['target']              = $count;
-                $content['complete']            = $sum;
-                $content['total']               = round($Total,2);//保留两位小数
-
+                        $mont3 = $mont1;
+                        $mont4 = $support['endtime'];
+                    } else {
+                        $mont3 = 0;
+                        $mont4 = 0;
+                    }
+                    $sum_user = monthly_Finance($user['nickname'], $mont1, $mont2);//季度完成
+                    $count = $lists['target'];//季度目标
+                    $sum2 = $sum_user;//季度完成
+                    $price = $sum1 * 0.25;//扶植期提成
+                    $sum = $sum2 - $sum1;//季度完成-扶植人员日期完成
+                    $number = $sum / $count;//项目季度百分比
+                    if ($number <= 1) {
+                        $Total1 = $sum * 0.05;//不超过100%
+                    }
+                    if (1 < $number && $number <= 1.5) {
+                        $Total1 = $count * 0.05 + ($sum - $count) * 0.2;//超过100% 不到150%
+                    }
+                    if (1.5 < $number) {
+                        $tot = $count * 0.05;//100%以内
+                        $tt = ($count * 1.5 - $count) * 0.2;//100%以上 150% 以内
+                        $yy = ($sum - $count * 1.5) * 0.25;//150% 以上
+                        $Total1 = $tot + $tt + $yy;
+                    }
+                    $Total = $Total1 + $price;//提成+扶植期提成
+                    $content['target'] = $count;
+                    $content['complete'] = $sum;
+                    $content['total'] = round($Total, 2);//保留两位小数
 //                $kpi                            = M('kpi')->where($query)->find();
-//                $lists                          = M('kpi_more')->where(array('kpi_id'=>$kpi['id']))->find();
+//                $lists                      = M('kpi_more')->where(array('kpi_id'=>$kpi['id']))->find();
 //                //季度完成
 //                $user                           = M('account')->where('id='.$query['user_id'])->find();
 //                $mont1                          = $year.($month-1).'26';//开始月
@@ -229,6 +228,7 @@ class SalaryController extends BaseController {
 //                $content['target']              = $lists['target'];//季度目标
 //                $content['complete']            = $sum_user;//季度完成
 //                $content['total']               = '0.00';//保留两位小数
+                }
             }
             return $content;
         }
