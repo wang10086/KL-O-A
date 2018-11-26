@@ -23,7 +23,9 @@
                                     <h3 class="box-title">项目计划列表</h3>
                                     <div class="box-tools pull-right">
                                     	 <a href="javascript:;" class="btn btn-info btn-sm" onclick="javascript:opensearch('searchtext',800,160);"><i class="fa fa-search"></i> 搜索</a>
-                                         <a href="{:U('Op/plans')}" class="btn btn-sm btn-danger"><i class="fa fa-plus"></i> 新建项目计划</a>
+                                        <if condition="rolemenu(array('Op/plans'))">
+                                        <a href="{:U('Op/plans')}" class="btn btn-sm btn-danger"><i class="fa fa-plus"></i> 新建项目计划</a>
+                                        </if>
                                     </div>
                                 </div><!-- /.box-header -->
                                 <div class="box-body">
