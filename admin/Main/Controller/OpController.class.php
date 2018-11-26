@@ -371,8 +371,8 @@ class OpController extends BaseController {
 		$this->ages           = C('AGE_LIST');
 		$this->display('plans_info');
 	}
-	
-	
+
+
 	
 	// @@@NODE-3###plans_follow###项目跟进###
     public function plans_follow(){
@@ -599,9 +599,21 @@ class OpController extends BaseController {
         $this->userkey      = get_username();
 
         //研发和资源人员信息(用于前期对研发和资源人员评分)
-        $pingfen            = M('op_score')->where(array('op_id'=>$opid))->find();
-        if ($pingfen) { $this->pingfen  = json_encode($pingfen) ;}
+        $score_data         = $this->get_score_user($opid);
 
+        $pingfen            = $score_data['pingfen'];
+        $yanfa              = $score_data['yanfa'];
+        $ziyuan             = $score_data['ziyuan'];
+        if ($pingfen) { $this->pingfen  = json_encode($pingfen) ;}
+        $this->yanfa        = $yanfa;
+        $this->ziyuan       = $ziyuan;
+
+        $this->display('plans_edit');
+		
+	}
+
+    private function get_score_user($opid){
+        $pingfen            = M('op_score')->where(array('op_id'=>$opid))->find();
         $yanfa_info         = M('worder')->field('exe_user_id , exe_user_name , assign_id, assign_name')->where(array('op_id'=>$opid,'kpi_type'=>3,'status'=>array('neq',-1)))->find();   //京区校内研发
         $ziyuan_info        = M('worder')->field('exe_user_id , exe_user_name , assign_id, assign_name')->where(array('op_id'=>$opid,'kpi_type'=>4,'status'=>array('neq',-1)))->find();   //京区校内资源
         $yanfa              = array();
@@ -610,12 +622,13 @@ class OpController extends BaseController {
         $ziyuan             = array();
         $ziyuan['user_id']  = $pingfen['zy_uid']?$pingfen['zy_uid']:($ziyuan_info['assign_id']?$ziyuan_info['assign_id']:$ziyuan_info['exe_user_id']);
         $ziyuan['user_name']= $pingfen['zy_uname']?$pingfen['zy_uname']:($ziyuan_info['assign_name']?$ziyuan_info['assign_name']:$ziyuan_info['exe_user_name']);
-        $this->yanfa        = $yanfa;
-        $this->ziyuan       = $ziyuan;
 
-        $this->display('plans_edit');
-		
-	}
+        $data               = array();
+        $data['pingfen']    = $pingfen;
+        $data['yanfa']      = $yanfa;
+        $data['ziyuan']     = $ziyuan;
+        return $data;
+    }
 	
 	
 	// @@@NODE-3###public_save###保存项目###
@@ -1367,6 +1380,12 @@ class OpController extends BaseController {
                     op_record($record);
                 }
                 if ($res) $num++;
+            }
+
+            //活动结束后对计调的评价
+            if ($opid && $savetype==22){
+                $a = I();
+                //var_dump($a);die;
             }
 
             echo $num;
@@ -3054,7 +3073,7 @@ class OpController extends BaseController {
 	
 	
 	// @@@NODE-3###evaluate###项目评价###
-    public function evaluate(){
+    /*public function evaluate(){
 		
 		$opid = I('opid');
 		if(!$opid) $this->error('项目不存在');	
@@ -3143,6 +3162,14 @@ class OpController extends BaseController {
 			$this->display('evaluate');
 		}
 		
+    }*/
+    public function evaluate(){
+        $opid           = I('opid');
+
+        //研发和资源人员信息(用于前期对研发和资源人员评分)
+        $score_data         = $this->get_score_user($opid);
+
+        $this->display();
     }
 
     //修改辅导员需求信息

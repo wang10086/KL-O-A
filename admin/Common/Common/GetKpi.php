@@ -1,7 +1,7 @@
 <?php
 
  function aaa(){
-     return "aaaaaabbbbvcccc";
+     return "a";
  }
 
 /*

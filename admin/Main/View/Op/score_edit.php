@@ -1,6 +1,10 @@
 
 <form method="post" action="<?php echo U('Op/public_save'); ?>" id="save_score">
-    <label class="lit-title">对前期研发评价<span style="float: right;clear: both;font-weight: normal;">资源负责人：{$yanfa.user_name}</span></label>
+    <label class="lit-title" style="width: 98%;margin: 0 1%">对前期研发评价
+        <if condition="$yanfa['user_name']">
+            <span style="float: right;clear: both;font-weight: normal;">研发负责人：{$yanfa.user_name}</span>
+        </if>
+    </label>
     <div class="content">
         <input type="hidden" name="dosubmint" value="1">
         <input type="hidden" name="savetype" value="21">
@@ -58,7 +62,11 @@
         </div>
     </div>
 
-    <label class="lit-title">对前期资源配置评价<span style="float: right;clear: both;font-weight: normal;">资源负责人：{$ziyuan.user_name}</span></label>
+    <label class="lit-title" style="width: 98%;margin: 0 1%">对前期资源配置评价
+        <if condition="$ziyuan['user_name']">
+        <span style="float: right;clear: both;font-weight: normal;">资源负责人：{$ziyuan.user_name}</span>
+        </if>
+    </label>
     <div class="content">
         <div class="content" id="" style="display:block;">
             <input type="hidden" id="times_num" name="info[times]" value="">

@@ -47,7 +47,8 @@
                                 <div class="box-body">
                                 
 									<?php if(cookie('roleid')==10 || cookie('userid')==$op['create_user'] || C('RBAC_SUPER_ADMIN')==cookie('username') ){ ?>
-                                    <include file="evaluate_edit" />
+                                    <!--<include file="evaluate_edit" />-->
+                                    <include file="score_after_op_edit" />
                                     <?php }else{ ?>
                                     <include file="evaluate_read" />	
                                     <?php }?>

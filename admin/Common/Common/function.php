@@ -4,6 +4,7 @@ import ('P', COMMON_PATH . 'Common/');
 use App\P;
 ulib('Pinyin');
 use Sys\Pinyin;
+require_once 'GetKpi.php';
 
 /**
  * @brief  载入第三方类库
@@ -14,7 +15,6 @@ function ulib ($class) {
     import($class, THINK_PATH . '../ulib/');
 }
 
-require_once 'GetKpi.php';
 
 /*redis*/
 function redis($key,$val=null){
@@ -2881,8 +2881,7 @@ function updatekpi($month,$user){
 
                 //业务人员满意度调查(计调)
                 if ($v['quota_id']==140){
-                    $aa     = aaa();
-                    
+
                 }
 
 				//已实现自动获取指标值

@@ -1,5 +1,5 @@
 <?php if ($pingfen){ ?>
-    <label class="lit-title">对前期研发评价<span style="float: right;clear: both;font-weight: normal;">资源负责人：<?php echo $yanfa['assign_name']?$yanfa['assign_name']:$yanfa['exe_user_name']; ?></span></label>
+    <label class="lit-title" style="width: 98%;margin: 0 1%">对前期研发评价<span style="float: right;clear: both;font-weight: normal;">资源负责人：<?php echo $yanfa['assign_name']?$yanfa['assign_name']:$yanfa['exe_user_name']; ?></span></label>
     <div class="content">
         <div class="content" id="guidelist" style="display:block;">
 
@@ -49,7 +49,7 @@
         </div>
     </div>
 
-    <label class="lit-title">对前期资源配置评价<span style="float: right;clear: both;font-weight: normal;">资源负责人：<?php echo $ziyuan['assign_name']?$ziyuan['assign_name']:$ziyuan['exe_user_name']; ?></span></label>
+    <label class="lit-title" style="width: 98%;margin: 0 1%">对前期资源配置评价<span style="float: right;clear: both;font-weight: normal;">资源负责人：<?php echo $ziyuan['assign_name']?$ziyuan['assign_name']:$ziyuan['exe_user_name']; ?></span></label>
     <div class="content">
         <div class="content" id="" style="display:block;">
 
