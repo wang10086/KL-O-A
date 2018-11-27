@@ -188,7 +188,7 @@
                                         </div><br/><br/><br/>
                                         <h5 style="color:#000000;">&nbsp;&nbsp;&nbsp;&nbsp;其他人员提成（计调、研发、资源）：<?PHP echo sprintf("%.2f",$info['bonus']['extract']);?>（元）</h5><br/>
                                         <div class="form-group col-md-4 viwe">
-                                            <p>带团补助（课时费）：<?PHP echo sprintf("%.2f",$info['bonus']['bonus']);?></p>
+                                            <p>带团补助（课时费）：<?PHP echo sprintf("%.2f",$info['wages_month']['Subsidy']);?></p>
                                         </div>
                                         <div class="form-group col-md-4 viwe">
                                             <p>住房补助：<?PHP echo sprintf("%.2f",$info['wages_month']['housing_subsidy']);?> </p>

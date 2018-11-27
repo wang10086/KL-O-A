@@ -884,7 +884,7 @@ class SalaryController extends BaseController {
 //                 $user_info[$key]['Extract']['total']    = $user_info[$key]['Extract']['total']+$user_bonus;//提成相加
 //            }
             $user_price                             = $this->salary_kpi_month(100,$que['p.month'],1); //业务人员 目标任务 完成 提成
-            $user_info[$key]['Extract']['total']    = $user_price['total']+$user_bonus[0]['bonus'];//提成相加
+            $user_info[$key]['Extract']['total']    = $user_price['total']+$user_bonus[0]['bonus']+$bonus_extract;//提成相加
             $extract                                = $user_info[$key]['Extract']['total'];
 //            $Year_end                               = $Year_end;//如果做季度提成可以变为奖金放开屏蔽即可
             $Year_end                               = ($user_info[$key]['bonus'][0]['annual_bonus'])/12;
