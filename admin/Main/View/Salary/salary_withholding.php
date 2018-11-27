@@ -189,8 +189,8 @@
                         <th class="sorting" data="group_id" style="width:8em;">员工编号</th>
                         <th class="sorting" data="group_id" style="width:10em;">部门</th>
                         <th class="sorting" data="project" style="width:12em;">岗位</th>
-                        <th class="sorting" data="number" style="width:12em;">原工合并计税</th>
-                        <th class="sorting" data="shouru" style="width:12em;">现工合并计税</th>
+                        <th class="sorting" data="number" style="width:12em;">原合并计税</th>
+                        <th class="sorting" data="shouru" style="width:12em;">现合并计税</th>
                         <th class="sorting" data="shouru" style="width:8em;">操作</th>
                         </if>
 
