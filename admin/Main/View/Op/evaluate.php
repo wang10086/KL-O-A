@@ -68,6 +68,49 @@
 
 <include file="Index:footer2" />
 
+<script>
+    artDialog.alert = function (content, status) {
+        return artDialog({
+            id: 'Alert',
+            icon: status,
+            width:300,
+            height:120,
+            fixed: true,
+            lock: true,
+            time: 1,
+            content: content,
+            ok: true
+        });
+    };
+
+
+    //保存信息
+    function save(id,url,opid){
+        $.ajax({
+            type: "POST",
+            url: url,
+            dataType:'json',
+            data: $('#'+id).serialize(),
+            success:function(data){
+                if(parseInt(data)>0){
+                    art.dialog.alert('保存成功','success');
+                }else{
+                    art.dialog.alert('保存失败','warning');
+                }
+            }
+        });
+
+        setTimeout("history.go(0)",1000);
+        /*
+         if(id=='save_line_days'){
+         $.get("<?php /*echo U('Op/public_ajax_material'); */?>",{id:opid}, function(result){
+         $('#opmaterial').find('tbody').html(result);
+         });
+         }
+         */
+    }
+</script>
+
 
      
 

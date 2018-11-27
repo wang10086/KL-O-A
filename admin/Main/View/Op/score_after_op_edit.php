@@ -1,5 +1,5 @@
 
-<form method="post" action="<?php echo U('Op/public_save'); ?>" id="save_score">
+<form method="post" action="<?php echo U('Op/public_save'); ?>" id="save_afterOpScore">
     <div class="content" >
         <label class="lit-title" style="width: 98%;margin: 0 1%">请对计调人员作出评价
             <if condition="$jidiao['user_name']">
@@ -63,8 +63,7 @@
                 </div>
             </div>
             <div align="center" class="form-group col-md-12" style="alert:cennter;margin-top: 20px;">
-                <a  href="javascript:;" class="btn btn-info" onClick="javascript:save('save_score','<?php echo U('Op/public_save'); ?>');" style="width:60px;">保存</a>
-                <!--<input type="submit" class="btn btn-info" value="提交">-->
+                <a  href="javascript:;" class="btn btn-info" onClick="javascript:save('save_afterOpScore','<?php echo U('Op/public_save'); ?>');" style="width:60px;">保存</a>
             </div>
         </div>
     </div>

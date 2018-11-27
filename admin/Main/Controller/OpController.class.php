@@ -616,17 +616,22 @@ class OpController extends BaseController {
         $pingfen            = M('op_score')->where(array('op_id'=>$opid))->find();
         $yanfa_info         = M('worder')->field('exe_user_id , exe_user_name , assign_id, assign_name')->where(array('op_id'=>$opid,'kpi_type'=>3,'status'=>array('neq',-1)))->find();   //京区校内研发
         $ziyuan_info        = M('worder')->field('exe_user_id , exe_user_name , assign_id, assign_name')->where(array('op_id'=>$opid,'kpi_type'=>4,'status'=>array('neq',-1)))->find();   //京区校内资源
+        $jidiao_info        = M()->table('__OP_AUTH__ as o')->field('a.id,a.nickname')->join('__ACCOUNT__ as a on a.id=o.yusuan','left')->where(array('o.op_id'=>$opid))->find();
         $yanfa              = array();
         $yanfa['user_id']   = $pingfen['yf_uid']?$pingfen['yf_uid']:($yanfa_info['assign_id']?$yanfa_info['assign_id']:$yanfa_info['exe_user_id']);
         $yanfa['user_name'] = $pingfen['yf_uname']?$pingfen['yf_uname']:($yanfa_info['assign_name']?$yanfa_info['assign_name']:$yanfa_info['exe_user_name']);
         $ziyuan             = array();
         $ziyuan['user_id']  = $pingfen['zy_uid']?$pingfen['zy_uid']:($ziyuan_info['assign_id']?$ziyuan_info['assign_id']:$ziyuan_info['exe_user_id']);
         $ziyuan['user_name']= $pingfen['zy_uname']?$pingfen['zy_uname']:($ziyuan_info['assign_name']?$ziyuan_info['assign_name']:$ziyuan_info['exe_user_name']);
+        $jidiao             = array();
+        $jidiao['user_id']  = $pingfen['ji_uid']?$pingfen['ji_uid']:($jidiao_info['id']?$jidiao_info['id']:0);
+        $jidiao['user_name']= $pingfen['ji_uname']?$pingfen['ji_uname']:($jidiao_info['nickname']?$jidiao_info['nickname']:'');
 
         $data               = array();
         $data['pingfen']    = $pingfen;
         $data['yanfa']      = $yanfa;
         $data['ziyuan']     = $ziyuan;
+        $data['jidiao']     = $jidiao;
         return $data;
     }
 	
@@ -1368,7 +1373,7 @@ class OpController extends BaseController {
                     $record = array();
                     $record['op_id']   = $opid;
                     $record['optype']  = 4;
-                    $record['explain'] = '修改评分信息';
+                    $record['explain'] = '修改前期评分信息';
                     op_record($record);
                 }else{
                     $res    = M('op_score')->add($info);
@@ -1376,7 +1381,7 @@ class OpController extends BaseController {
                     $record = array();
                     $record['op_id']   = $opid;
                     $record['optype']  = 4;
-                    $record['explain'] = '填写评分信息';
+                    $record['explain'] = '填写前期评分信息';
                     op_record($record);
                 }
                 if ($res) $num++;
@@ -1384,8 +1389,31 @@ class OpController extends BaseController {
 
             //活动结束后对计调的评价
             if ($opid && $savetype==22){
-                $a = I();
-                //var_dump($a);die;
+                $info               = I('info');
+                $pingfen            = M('op_score')->where(array('op_id'=>$opid))->find();
+                if ($pingfen){
+                    $res            = M('op_score')->where(array('id'=>$pingfen['id']))->save($info);
+
+                    $record = array();
+                    $record['op_id']   = $opid;
+                    $record['optype']  = 4;
+                    $record['explain'] = '修改计调评分信息';
+                    op_record($record);
+                }else{
+                    $info['op_id']  = $opid;
+                    $info['pf_id']  = cookie('userid');
+                    $info['pf_name']= cookie('nickname');
+                    $info['create_time'] = NOW_TIME;
+                    $res            = M('op_score')->add($info);
+
+                    $record = array();
+                    $record['op_id']   = $opid;
+                    $record['optype']  = 4;
+                    $record['explain'] = '填写计调评分信息';
+                    op_record($record);
+                }
+
+                if ($res) $num++;
             }
 
             echo $num;
@@ -3164,10 +3192,14 @@ class OpController extends BaseController {
 		
     }*/
     public function evaluate(){
-        $opid           = I('opid');
+        $opid               = I('opid');
 
-        //研发和资源人员信息(用于前期对研发和资源人员评分)
+        //计调人员人员信息(对计调人员人员评分)
         $score_data         = $this->get_score_user($opid);
+        $this->op           = M('op')->where(array('op_id'=>$opid))->find();
+        $this->jidiao       = $score_data['jidiao'];
+        $pingfen            = $score_data['pingfen'];
+        if ($pingfen['ysjsx']){ $this->pingfen = json_encode($pingfen); };
 
         $this->display();
     }
