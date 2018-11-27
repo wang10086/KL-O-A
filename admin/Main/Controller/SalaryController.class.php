@@ -798,7 +798,7 @@ class SalaryController extends BaseController {
             unset($where['archives']);
         }
         $where['status'] = array('between','0,1');
-        $info                                       =  M('account')->where($where)->order('id ASC')->select();//个人数据
+        $info                                       =  M('account')->where($where)->order('employee_member ASC')->select();//个人数据
         foreach($info as $k => $v){//去除编码空的数据
             if($v['employee_member'] == ""){
                 unset($info[$k]);
