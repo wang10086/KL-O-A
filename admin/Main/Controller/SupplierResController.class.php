@@ -37,10 +37,6 @@ class SupplierResController extends BaseController {
         
         $this->reskind = M('supplierkind')->getField('id,name', true);
         $this->lists = M('supplier')->where($where)->limit($page->firstRow . ',' . $page->listRows)->order($this->orders('input_time'))->select();
-        //品控部经理添加读取列表权限
-        if (cookie('roleid')==47){
-            $this->lists = M('supplier')->where(1)->limit($page->firstRow . ',' . $page->listRows)->order($this->orders('input_time'))->select();
-        }
 
 		//P(M('supplier')->getLastSql());
         $this->status = array(

@@ -2881,11 +2881,85 @@ function updatekpi($month,$user){
 
                 //业务人员满意度调查(计调)
                 if ($v['quota_id']==140){
+                    $where = array();
+                    $where['jd_score_time']	= array('between',array($v['start_date'],$v['end_date']));
+                    $where['jd_uid']        = $user;
+                    $lists = M('op_score')->field('ysjsx,zhunbei,peixun,genjin,yingji')->where($where)->select();
 
+                    //合格率>0.9(满分)
+                    $hegelv = get_hegelv($lists,5);
+
+                    if($hegelv>0.9 || !$lists){
+                        $complete	= 100;
+                    }else{
+                        $complete	= (round($hegelv/0.9,2)*100).'%';
+                    }
+                }
+
+                //地接社、酒店、旅游车转化率(计调)
+                if ($v['quota_id']==141){
+                    $zhuanhualv_data      = jd_zhuanhualv($user,$v['start_date'],$v['end_date']);
+                    $xinzengshu           = $zhuanhualv_data['xinzengshu'];
+                    $zhuanhualv           = $zhuanhualv_data['zhuanhualv'];
+
+                    /*if ($zhuanhualv >= 1 || !$xinzengshu){*/
+                    if ($zhuanhualv >= 1){
+                        $complete   = 100;
+                    }else{
+                        $complete   = ($zhuanhualv*100).'%';
+                    }
+                }
+
+                //培训完成率
+                if ($v['quota_id']==143){
+                   //需要培训数量
+                    $where                  = array();
+                    $where['c.dep_time']    = array('between',array($v['start_date'],$v['end_date']));
+                    $where['a.yusuan']      = $user;
+                    $lists                  = M()->table('__OP__ as o')->field('o.op_id,o.kind,k.name')->join('__OP_AUTH__ as a on a.op_id=o.op_id','left')->join('__OP_TEAM_CONFIRM__ as c on c.op_id=o.op_id','left')->join('__PROJECT_KIND__ as k on k.id=o.kind','left')->group('o.kind')->where($where)->select();
+                    $count                  = count($lists);
+                    $peixun_data            = get_peixunlv($user,$v['start_date'],$v['end_date'],$count,$lists);
+                    $zongshu                = $peixun_data['zongshu'];
+                    $peixunlv               = $peixun_data['peixunlv'];
+
+                    $complete   = $peixunlv?$peixunlv*100:100;
+                }
+
+                //客户满意度(客服)(58=>亲子旅行,59=>冬夏令营,63=>学趣课程)
+                if ($v['quota_id']==143){
+                    //获取当月已评分的相关团
+                    /*$kinds                  = array(58,59,63);
+                    $where                  = array();
+                    $where['s.input_time']	= array('between',array($v['start_date'],$v['end_date']));
+                    $lists = M()->table('__TCS_SCORE__ as s')->field('u.op_id,o.kind,s.id as sid,s.stay,s.travel,s.content,s.food,s.bus,s.driver,s.guide,s.teacher,s.depth,s.major,s.interest,s.material,s.late,s.manage,s.morality')->join('join __TCS_SCORE_USER__ as u on u.id = s.uid','left')->join('__OP__ as o on o.op_id = u.op_id','left')->where($where)->select();
+
+                    var_dump($lists);die;
+                    $average = get_manyidu($lists);
+
+                    //无项目的，得0分；有项目，但无调查项目的，得100分。
+                    //本月实际实施团
+                    $where                  = array();
+                    $where['dep_time']      = array('between',array($v['start_date'],$v['end_date']));
+                    $where['user_id']       = $user;
+                    $shishi = M('op_team_confirm')->where($where)->getField('op_id',true);
+                    //需要辅导员的团
+                    $where                  = array();
+                    $where['in_begin_day']  = array('between',array($v['start_date'],$v['end_date']));
+                    $where['manager_id']    = $user;
+                    $need_guide             = M('op_guide_confirm')->where($where)->count();
+
+                    if ($shishi && !$need_guide){
+                        //有项目，但无调查项目的，得100分。
+                        $complete = 100;
+                    }else{
+                        //平均得分(如果得分>90%,得分100, 如果小于90%,以90%作为满分求百分比)
+                        $score = (round($average*100/90,2))*100;
+                        $complete = $average > 0.9 ? 100 : $score;
+                    }*/
                 }
 
 				//已实现自动获取指标值
-				$auto_quta	= array(1,2,3,4,5,6,81,8,9,10,11,15,16,18,20,23,26,21,24,27,32,37,19,22,25,28,33,38,42,45,103,56,113,92,29,34,39,46,102,55,57,58,59,84,87,89,90,111,107,83,66,54,44,12,112,108,100,96,95,65,114,86,85,64,63,62,53,52,41,40,49,80,48,91,79,47,36,35,31,30,82,110,106,99,94,67,124,129,130,131,132,133,134,135,136,137,138,139);
+				$auto_quta	= array(1,2,3,4,5,6,81,8,9,10,11,15,16,18,20,23,26,21,24,27,32,37,19,22,25,28,33,38,42,45,103,56,113,92,29,34,39,46,102,55,57,58,59,84,87,89,90,111,107,83,66,54,44,12,112,108,100,96,95,65,114,86,85,64,63,62,53,52,41,40,49,80,48,91,79,47,36,35,31,30,82,110,106,99,94,67,124,129,130,131,132,133,134,135,136,137,138,139,140,141,143);
 				
 				//计算完成率并保存数据
 				if(in_array($v['quota_id'],$auto_quta)){

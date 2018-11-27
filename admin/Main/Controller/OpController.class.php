@@ -1389,27 +1389,28 @@ class OpController extends BaseController {
 
             //活动结束后对计调的评价
             if ($opid && $savetype==22){
-                $info               = I('info');
-                $pingfen            = M('op_score')->where(array('op_id'=>$opid))->find();
+                $info                   = I('info');
+                $info['jd_score_time']  = NOW_TIME;
+                $pingfen                = M('op_score')->where(array('op_id'=>$opid))->find();
                 if ($pingfen){
-                    $res            = M('op_score')->where(array('id'=>$pingfen['id']))->save($info);
+                    $res                = M('op_score')->where(array('id'=>$pingfen['id']))->save($info);
 
-                    $record = array();
-                    $record['op_id']   = $opid;
-                    $record['optype']  = 4;
-                    $record['explain'] = '修改计调评分信息';
+                    $record             = array();
+                    $record['op_id']    = $opid;
+                    $record['optype']   = 4;
+                    $record['explain']  = '修改计调评分信息';
                     op_record($record);
                 }else{
-                    $info['op_id']  = $opid;
-                    $info['pf_id']  = cookie('userid');
-                    $info['pf_name']= cookie('nickname');
-                    $info['create_time'] = NOW_TIME;
-                    $res            = M('op_score')->add($info);
+                    $info['op_id']      = $opid;
+                    $info['pf_id']      = cookie('userid');
+                    $info['pf_name']    = cookie('nickname');
+                    $info['create_time']= NOW_TIME;
+                    $res                = M('op_score')->add($info);
 
-                    $record = array();
-                    $record['op_id']   = $opid;
-                    $record['optype']  = 4;
-                    $record['explain'] = '填写计调评分信息';
+                    $record             = array();
+                    $record['op_id']    = $opid;
+                    $record['optype']   = 4;
+                    $record['explain']  = '填写计调评分信息';
                     op_record($record);
                 }
 
