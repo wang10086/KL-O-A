@@ -3907,7 +3907,7 @@ function user_table($where,$type){//查询用户 1 查询一个 2 查询符合�
     //带团补助  $month 查询年月 例如:201809
     function Acquisition_Team_Subsidy($month,$guide_id){
 
-        $firstday                           = date('Y-m-27', strtotime("$month -2 month"));//获取第一天
+        $firstday                           = date('Y-m-27', strtotime("$month -1 month"));//获取第一天
         $lastday                            = date('Y-m-27', strtotime("$firstday +1 month"));//获取最后一天
         $firstday_time                      = strtotime($firstday);//当月第一天时间戳
         $lastday_time                       = strtotime($lastday);//当月最后一天时间戳

@@ -13,7 +13,7 @@ class ManageController extends BaseController {
      */
     public function Manage_month(){
         $mod            = D('Manage');
-        // 
+        // 月度统计人员 数额 占比
         $number         = $mod->month();
 //        print_r($number);die;
         $this->number   = $number;

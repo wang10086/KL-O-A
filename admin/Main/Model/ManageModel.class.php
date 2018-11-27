@@ -35,6 +35,7 @@ class ManageModel extends Model{
         $num = M('account')->where($where)->count();
         return $num;
     }
+
     //月度统计 营业收入
     public function operation_revenue(){
 
