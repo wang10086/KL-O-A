@@ -3916,6 +3916,7 @@ function user_table($where,$type){//查询用户 1 查询一个 2 查询符合�
             $price                          = 0;
             $guide_array                    = array();
             $guide_array['guide_id']        = $guide_id;
+            $guide_array['status']          = 2;
             $guide_array['sure_time']       = array('between',"$firstday_time,$lastday_time");
             $guide_pay                      =  M('guide_pay')->where($guide_array)->select();
             if($guide_pay){
