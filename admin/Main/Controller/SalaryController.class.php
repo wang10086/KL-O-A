@@ -72,6 +72,7 @@ class SalaryController extends BaseController {
         $position                               = sql_query(1,'*','oa_position',$position_id,1,1);//职位
         $strstr                                 = $position[0]['position_name'];
         $user_info['kpi']                       = $this->salary_kpi_month($uid,$que['p.month'],2); //业务人员 目标任务 完成 提成
+
         $user_info['income']                    = M('salary_income')->where(array('income_token='.$user_info1['income_token']))->select();//其他收入
         $user_info['insurance']                 = M('salary_insurance')->where(array('id='.$user_info1['insurance_id']))->find();//五险一金表
         $user_info['subsidy']                   = M('salary_subsidy')->where(array('id='.$user_info1['subsidy_id']))->find();//补贴
@@ -166,12 +167,15 @@ class SalaryController extends BaseController {
                 $query['month'] = $year . $month;
                 $kpi = M('kpi')->where($query)->find();
                 $lists = M('kpi_more')->where(array('kpi_id' => $kpi['id']))->find();
+
                 //季度完成
                 $user = M('account')->where('id=' . $query['user_id'])->find();
+
                 $mont1 = $year . ($month - 1) . '26';//开始月日
                 $mont2 = $year . $month . '26';//结束月日
 
                 $support = M('salary_support')->where('account_id=' . $query['user_id'])->find();//扶植人员
+
                 if ($support) {//查询是否是扶植人员
                     //扶植起日期 > 季度起日期   扶植止日期 < 季度止日期
                     if ($support['starttime'] > strtotime($mont1) && $support['endtime'] < strtotime($mont2)) {
@@ -192,11 +196,13 @@ class SalaryController extends BaseController {
                         //扶植起日期 > 季度起日期   扶植止日期 < 季度止日期
                         $mont3 = $mont1;
                         $mont4 = $support['endtime'];
-                    } else {
+                    } else{
                         $mont3 = 0;
                         $mont4 = 0;
                     }
-                    $sum_user = monthly_Finance($user['nickname'], $mont1, $mont2);//季度完成
+                }
+                    $sum_user = monthly_Finance($user['nickname'],$mont1,$mont2);//季度完成
+
                     $count = $lists['target'];//季度目标
                     $sum2 = $sum_user;//季度完成
                     $price = $sum1 * 0.25;//扶植期提成
@@ -217,18 +223,7 @@ class SalaryController extends BaseController {
                     $Total = $Total1 + $price;//提成+扶植期提成
                     $content['target'] = $count;
                     $content['complete'] = $sum;
-                    $content['total'] = round($Total, 2);//保留两位小数
-//                $kpi                            = M('kpi')->where($query)->find();
-//                $lists                      = M('kpi_more')->where(array('kpi_id'=>$kpi['id']))->find();
-//                //季度完成
-//                $user                           = M('account')->where('id='.$query['user_id'])->find();
-//                $mont1                          = $year.($month-1).'26';//开始月
-//                $mont2                          = $year.$month.'26';//结束月
-//                $sum_user                       = monthly_Finance($user['nickname'],$mont1,$mont2);//季度完成
-//                $content['target']              = $lists['target'];//季度目标
-//                $content['complete']            = $sum_user;//季度完成
-//                $content['total']               = '0.00';//保留两位小数
-                }
+                    $content['total'] = $Total;//保留两位小数
             }
             return $content;
         }
