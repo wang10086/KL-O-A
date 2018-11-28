@@ -1027,12 +1027,12 @@ class AjaxController extends Controller {
 
     public function salary_list_Labour(){//添加工会会费
 
-        $where['account_id']                = (int)(code_number(trim(I('uid'))));
+        $where['account_id']                = code_number(trim(I('uid')));
         $Labour_money                       = trim(I('money'));
-        $status                             = (int)(trim(I('status')));
+        $status                             = trim(I('status'));
         if($status==1){
             $cot = "合并计税";
-        }else{
+        }elseif($status==2){
             $cot = "工会会费";
         }
         if(empty($Labour_money)){
@@ -1040,13 +1040,13 @@ class AjaxController extends Controller {
             $msg                            = "添加".$cot."失败!";
             echo json_encode(array('sum' => $sum, 'msg' => $msg));die;
         }else{
-            $where['status'] = 1;
-            $Labour                         = M('salary_labour')->where($where)->order('id desc')->find();
+            $where['status']                = 1;
+            $Labour                         = M('salary_labour')->where($where)->find();
             if($Labour){
                 $id['id']                   = $Labour['id'];
                 if($status==1){
                     $save['merge_counting'] = $Labour_money;
-                }else{
+                }elseif($status==2){
                     $save['Labour_money']   = $Labour_money;
                 }
                $Labour_w                    =  M('salary_labour')->where($id)->save($save);
@@ -1059,9 +1059,9 @@ class AjaxController extends Controller {
                 }
             }else{
                 if($status==1){
-                    $save['merge_counting'] = $Labour_money;
-                }else{
-                    $save['Labour_money']   = $Labour_money;
+                    $where['merge_counting'] = $Labour_money;
+                }elseif($status==2){
+                    $where['Labour_money']   = $Labour_money;
                 }
                 $where['createtime']        = time();
 
@@ -1078,7 +1078,6 @@ class AjaxController extends Controller {
                     echo json_encode(array('sum' => $sum, 'msg' => $msg));die;
                 }
             }
-
         }
     }
 

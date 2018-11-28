@@ -166,6 +166,7 @@
                                 <input type="text" class="form-control salary_basic2" value="" />
                             </td>
                             <td class="salary_entry">
+                                <input type="hidden" class="salary_basic3" value="2">
                                 <input type="button" class="form-control salary_button22" value="添加" style="background-color:#00acd6;font-size:1em;" />
                             </td>
                         </tr>
@@ -204,7 +205,7 @@
                             <td>{$inf.post_name}</td>
                             <td>{$inf['Labour']['merge_counting']}</td>
                             <td class="salary_basic">
-                                <input type="text" class="form-control salary_basic2" value="" />
+                                <input type="text" class="form-control salary_basic2" />
                             </td>
                             <input type="hidden" class="salary_basic3" value="1" />
                             <td class="salary_entry">

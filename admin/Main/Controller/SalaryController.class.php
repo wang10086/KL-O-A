@@ -788,6 +788,7 @@ class SalaryController extends BaseController {
 
     /**
      * @salary_excel_sql
+     * 获取详情数据表
      */
     private function salary_excel_sql($archives,$name){
             if($name!==""){
