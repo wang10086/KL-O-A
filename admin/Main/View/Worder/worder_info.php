@@ -249,7 +249,6 @@
 
                 <div class="col-md-12">
                     <?php if(rolemenu(array('Worder/assign_user')) and rolemenu(array('Worder/exe_worder'))  and ($info['exe_user_id'] == cookie('userid') || $info['assign_id'] == cookie('userid'))){ ?>
-                    <?php /*if(rolemenu(array('Worder/assign_user'))){ */?>
                     <div class="box box-warning">
                         <div class="box-header">
                             <h3 class="box-title">工单执行信息</h3>
@@ -301,7 +300,6 @@
                 </div><!--/.col (right) -->
 
                 <div class="col-md-12">
-                <?php /*if(rolemenu(array('Worder/new_worder'))){ */?>
                 <?php if(rolemenu(array('Worder/new_worder')) and ($info['ini_user_id'] == cookie('userid'))){ ?>
                     <div class="box box-warning">
                         <div class="box-header">
@@ -333,33 +331,24 @@
                                 </form>
                             <?php } ?>
                             <?php if ($info['status']==2 ){ ?>
-                                <form method="post" action="{:U('Worder/audit_resure')}" name="myform" >
+                                <form method="post" action="{:U('Worder/audit_resure')}" name="myform" onsubmit="submitBefore()" >
                                     <input type="hidden" name="dosubmint" value="1">
                                     <input type="hidden" name="id" value="{$info.id}">
 
                                     <div class="form-group col-md-12" style="margin-top:10px;">
                                         <div class="checkboxlist" id="applycheckbox" style="margin-top:10px;">
-                                            <input type="radio" name="info[status]" value="3" > 该工单已执行完毕
+                                            <input type="radio" name="info[status]" checked value="3" > 该工单已执行完毕
                                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                             <input type="radio" name="info[status]" value="-3" > 该工单未执行完毕
                                         </div>
 
                                         <div class="form-group">&nbsp;</div>
-
-                                        <!--**********************pingfen start*********************-->
-                                        <!--<div class="form-group col-md-12">
-                                            <h2 style="font-size:16px; color:#ff3300; border-bottom:2px solid #dedede; padding-bottom:10px;">对该工单进行评分</h2>
-                                        </div>-->
-
-                                        <!--<div class="col-md-12 "  id="demo7">
-                                            <label>请您对本次的工单服务进行评价 :</label>
-                                            <span class="ratyli"></span>
-                                        </div>-->
-                                        <!--**********************pingfen end*********************-->
+                                        <!--评分信息-->
+                                        <include file="score_edit" />
 
                                     </div>
 
-                                    <div class="form-group col-md-12"  style="margin-top:50px; padding-bottom:20px; text-align:center;">
+                                    <div class="form-group col-md-12"  style="padding-bottom:20px; text-align:center;">
                                         <button class="btn btn-success btn-lg">确认提交</button>
                                     </div>
                                 </form>
@@ -373,27 +362,24 @@
                     </div>
                 <?php } ?>
 
+                <?php if ($info['status']==3 && $pingfen){ ?>
+                    <div class="box box-warning">
+                        <div class="box-header">
+                            <h3 class="box-title">工单评分信息</h3>
+                            <h3 class="box-title pull-right" style="font-weight:normal; color:#333333;">被评分人：<span id="bpfr"></span></h3>
+                        </div>
+                        <div class="box-body">
+                            <include file="score_read" />
+                        </div>
+                    </div>
+                <?php } ?>
+
                     <div class="box box-warning">
                         <div class="box-header">
                             <h3 class="box-title">工单操作记录</h3>
                         </div>
                         <div class="box-body">
-                            <div class="content" style="padding:10px 30px;">
-                                <table rules="none" border="0">
-                                    <tr>
-                                        <th style="border-bottom:2px solid #06E0F3; font-weight:bold;" width="160">操作时间</th>
-                                        <th style="border-bottom:2px solid #06E0F3; font-weight:bold;" width="100">操作人</th>
-                                        <th style="border-bottom:2px solid #06E0F3; font-weight:bold;" width="500">操作说明</th>
-                                    </tr>
-                                    <foreach name="record" item="v">
-                                        <tr>
-                                            <td style="padding:20px 0 0 0">{$v.time|date='Y-m-d H:i:s',###}</td>
-                                            <td style="padding:20px 0 0 0">{$v.uname}</td>
-                                            <td style="padding:20px 0 0 0">{$v.explain}</td>
-                                        </tr>
-                                    </foreach>
-                                </table>
-                            </div>
+                            <include file="worder_recore" />
                         </div>
                     </div>
 
