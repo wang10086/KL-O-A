@@ -14,6 +14,7 @@ class ApprovalController extends BaseController {
         $approval_table                 = 'approval_flie';
         $approval                       = $this->approval_table($approval_table,'',1);
         $app                            = D('Approval');
+        $this->file_remind_number();//出发文件处理信息条数提醒
         $save                           = $app->datetime_approval();//改变到预定时间的文件
         $this->approval                 = $approval['approval'];
         $this->pages                    = $approval['pages'];
@@ -31,10 +32,11 @@ class ApprovalController extends BaseController {
             unset($where);
         }elseif($where==2){
             $query['account_id']            = $_SESSION['userid'];
-
         }elseif($where==3){
             $approval                       = $this->approval_table('','',2);
         }
+        $userid                             = $_SESSION['userid'];
+        $id                                 = trim(I('file_id'));
         if($where!==3 && !empty($where)){
             if(IS_POST){
                 $file_name                  = trim($_POST['file_name']);
@@ -43,10 +45,10 @@ class ApprovalController extends BaseController {
                 $query['account_name']      = array('like',"%$account_name%");
                 $query                      = array_filter($query);
             }else{
-                $id                         = trim(I('file_id'));
+
                 if(is_numeric($id)){ //判断是否有传值
                     $wher['file_id']        = $id;
-                    $wher['_query'] = 'file_id='.$query['account_id'].'&pid_account_id='.$query['account_id'].'&_logic=or';
+                    $wher['_query']         = 'account_id='.$userid.'&pid_account_id='.$userid.'&_logic=or';
                 }else{
                     $this->error('数据错误!请重新打开！');
                 }
@@ -57,7 +59,7 @@ class ApprovalController extends BaseController {
         }
         $approval                           = $this->approval_table('approval_flie_url',$wher,1);
         $this->file_id                      = $id;
-
+//        print_R($approval);die;
         foreach($approval['approval'] as $key => $val){
             $approval['approval'][$key]['Approval']['pid_account_name'] = user_table($val['Approval']['pid_account_id'])['nickname'];
         }
@@ -122,6 +124,7 @@ class ApprovalController extends BaseController {
      * $fileid 文件id
      */
     public function Approval_Upload(){
+
         $fileid                     = trim(I('id'));
         $key                        = D('Approval')->Arrangement($fileid);
         $this->userkey 		        = json_encode($key['key']);
@@ -252,7 +255,7 @@ class ApprovalController extends BaseController {
      * file_id 文件id   file_url_id 文档id
      */
     public function add_final_judgment(){
-    
+   
         $file['file_id']        = trim($_POST['file_id']);
         $file['file_url_id']    = trim($_POST['file_url_id']);
         $judgment               = $_POST['judgment'];
@@ -288,7 +291,7 @@ class ApprovalController extends BaseController {
         }elseif($state==5){
             $this->error('驳回失败!您的数据不完整！');
         }elseif($state==6){
-            $this->error('驳回失败!您没有权限！');
+            $this->error('提交失败!您没有权限！');
         }elseif($state==7){
             $this->error('数据已经驳回！请不要再次提交！');
         }

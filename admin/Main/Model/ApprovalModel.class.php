@@ -101,6 +101,7 @@
             foreach($arr2 as $k =>$v){
                 $info['annotation2'][$k]['username']    = user_table($v,3)['nickname'];
                 $where['account_id']                    = $v;
+                $where['status']                        = 2;
                 $annotation2                            = M('approval_annotation')->where($where)->find();
                 if($annotation2){
                     $info['annotation2'][$k]['steta']   = 2;//有批注
@@ -158,19 +159,21 @@
 
         // 选择审批人员
         public function Approver($where){
-            $posts                                  = query_posts($where);//查找岗位
-            $account['status']                      = 0;
-            $sum = 0;
-            foreach($posts as $key => $val){
-                $account['postid']                  = $val['id'];
-                $info                               = M('account')->where($account)->order('id ASC')->select();
-                foreach($info as $k => $v){
-                    $user[$sum]['id']               = $v['id'];
-                    $user[$sum]['employee_member']  = $v['employee_member'];
-                    $user[$sum]['departmentid']     = $v['departmentid'];
-                    $user[$sum]['nickname']         = $v['nickname'];
-                    $user[$sum]['postid']           = $v['postid'];
-                    $sum++;
+            $account['status']                          = 0;
+            $info                                       = M('account')->where($account)->order('id ASC')->select();
+            foreach($info as $key => $val){
+                if($val['id']==196 || $val['id']==42 || $val['id'] ==41 || $val['id']==43) {
+                }else{
+                    $where['id']                        = $val['postid'];
+//                    $where['post_name']                 = array('like',"%经理%");
+                    $posts                              = M('posts')->where($where)->find();//查找岗位
+                    if($posts){
+                        $user[$key]['id']               = $val['id'];
+                        $user[$key]['employee_member']  = $val['employee_member'];
+                        $user[$key]['departmentid']     = $val['departmentid'];
+                        $user[$key]['nickname']         = $val['nickname'];
+                        $user[$key]['postid']           = $val['postid'];
+                    }
                 }
             }
             return $user;
@@ -251,7 +254,7 @@
 
         //添加批注信息 驳回
         public function add_file_annotation($file,$comment,$status){
-            $userid                                         = (int)$_SESSION['userid'];
+            $userid                                         = $_SESSION['userid'];
             $query['file_id']                               = $file['file_id'];
             $query['file_url_id']                           = $file['file_url_id'];
             $judgment                                       = M('approval_judgment')->where($query)->find();
@@ -260,10 +263,12 @@
             $url['file_id']                                 = $file['file_id'];
             $url['id']                                      = $file['file_url_id'];
             $roval_flie                                     = M('approval_flie_url')->where($url)->find();
-//            if(in_array($userid,$arr) || in_array($userid,$arr2) || $userid==$judgment['account_id'] || $userid==1 || $userid==2 || in_array($userid,$roval_flie['pid_account_id'])){
-//
-//            }
-            if($status=="审批驳回"){ //审批驳回
+            if(in_array($userid,$arr) || in_array($userid,$arr2) || $userid==$judgment['account_id'] || $userid==1 || $userid==2 || $userid==$roval_flie['pid_account_id']){
+
+            }else{
+                return 6;
+            }
+            if($status=="不同意"){ //审批驳回
                 $update['status']                           = 6;
                 if($roval_flie['status']==6){ return 7;die;}
                 $update['last_state']                       = $roval_flie['status'];
@@ -277,15 +282,22 @@
                 return 5;die;
             }
             if(empty($comment)){ return 3; die; }//空
+
             //批注提交
             $file['account_id']                             = $_SESSION['userid'];
             $file['account_name']                           = $_SESSION['name'];
+            if($judgment['status']==4){
+                $file['status']                             = 2;//终审状态
+            }
             $file_state                                     = M('approval_annotation')->where($file)->find(); 
             if($file_state){
                 $update['annotation_content']               = $comment;
                 $save                                       = M('approval_annotation')->where($file)->save($update);
                 if($save){ return 1;die;}else{ return 2;die;}//1 成功 2//失败
             }else{
+                if($judgment['status']==4){
+                    $file['status']                         = 2;//终审状态
+                }
                 $file['createtime']                         = time();
                 $file['annotation_content']                 = trim($_POST['comment']);
                 $file_add                                   = M('approval_annotation')->add($file);

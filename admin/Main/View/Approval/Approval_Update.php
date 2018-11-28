@@ -134,7 +134,7 @@
                                 <div  style="width:96%;">
                                     <div class="form-group  col-md-6" >
                                         <label>
-                                            <b style="font-size:1.3em;color:#09F;padding:2em;letter-spacing:0.2em;">已选审批状态 : </b>
+                                            <b style="font-size:1.3em;color:#09F;padding:2em;letter-spacing:0.2em;">已选审议状态 : </b>
                                         </label><br><br>
                                         <div style="margin-left:5em;">
                                             <foreach name="judgmen['annotation1']" item="j">
@@ -211,8 +211,8 @@
                                         <input type="hidden" name="file_url_id" value="{$approval['Approval']['id']}">
                                          <textarea style="margin:2em -4em 2em 0em;padding:1em;height: 15em;border:solid 2px #d2d5d8;overflow-y:scroll;overflow-x:scroll;word-wrap:break-word;width:100%;text-indent:2.5em;line-height:2em;letter-spacing:0.1em;"  name="comment">
                                             </textarea>
-                                        <input type="submit" value="提交批注" name="status" class="btn btn-info"  style="margin-right:1em;">
-                                        <input type="submit" value="审批驳回" name="status" class="btn btn-info"  style="margin-right:1em;">
+                                        <input type="submit" value="同意" name="status" class="btn btn-info"  style="margin-right:1em;">
+                                        <input type="submit" value="不同意" name="status" class="btn btn-info"  style="margin-right:1em;">
                                     </form>
                                 </div>
                             </div>

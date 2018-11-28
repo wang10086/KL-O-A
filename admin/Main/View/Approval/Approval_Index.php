@@ -31,12 +31,12 @@
                                     	<th style="text-align:center;width:6em;"/>
                                             <input type="checkbox" id="Approval_check"/>
                                         </th>
-                                        <th style="text-align:center;width:6em;"><b>文件ID </b></th>
+                                        <th style="text-align:center;width:6em;"><b>文件夹ID </b></th>
                                         <th style="text-align:center;width:10em;"><b>创建人姓名</b></th>
-                                        <th style="text-align:center;width:10em;"><b>文件名称</b></th>
+                                        <th style="text-align:center;width:10em;"><b>文件夹名称</b></th>
                                         <th style="text-align:center;width:10em;"><b>创建时间</b></th>
                                         <th style="text-align:center;width:5em;"><b>审批天数</b></th>
-                                        <th style="text-align:center;width:5em;"><b>文件类别 </b></th>
+                                        <th style="text-align:center;width:5em;"><b>文件夹类别 </b></th>
                                         <th style="text-align:center;width:10em;"><b>操作</b></th>
                                     </tr>
                                     <foreach name="approval" item="app">
@@ -46,7 +46,7 @@
                                             </td>
                                             <td style="text-align:center;">{$app['Approval']['id']}</td>
                                             <td style="text-align:center;color:#3399FF;">{$app['Approval']['account_name']}</td>
-                                            <td style="text-align:center;"><a href="{:U('Approval/Approval_list',array('file_id'=>$app['Approval']['id']))}">{$app['Approval']['file_primary']}</a></td>
+                                            <td style="text-align:center;"><a href="{:U('Approval/Approval_list',array('file_id'=>$app['Approval']['id']))}"><i class="fa fa-folder-open" style="color: #3399ff;"></i> {$app['Approval']['file_primary']}</a></td>
                                             <td style="text-align:center;"><?php if(is_numeric($app['Approval']['createtime'])){echo date('Y-m-d H:i:s',$app['Approval']['createtime']);}else{echo'';}?></td>
                                             <td style="text-align:center;">{$app['Approval']['file_date']} ( 天 )</td>
                                             <td style="text-align:center;"><?php if($app['Approval']['category']==1){echo "新建";}else{echo "修改";}?></td>
