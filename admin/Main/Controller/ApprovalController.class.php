@@ -151,7 +151,6 @@ class ApprovalController extends BaseController {
      * $file_user 用户名称  $textarea 文件描述
      */
     function create_file(){
-        print_R(I());die;
         $file['createtime']        = time();
         $file['account_id']        = $_SESSION['userid'];
         $file['account_name']      = trim($_POST['file_user']);
