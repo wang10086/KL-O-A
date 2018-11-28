@@ -25,7 +25,6 @@ class ApprovalController extends BaseController {
      * $file_id 文档 id
      */
     public function Approval_list(){
-
         $app                                = D('Approval');
         $where                              = $app->Jurisdiction();
         if($where==1){
@@ -36,8 +35,7 @@ class ApprovalController extends BaseController {
         }elseif($where==3){
             $approval                       = $this->approval_table('','',2);
         }
-
-        if($where!==3){
+        if($where!==3 && !empty($where)){
             if(IS_POST){
                 $file_name                  = trim($_POST['file_name']);
                 $account_name               = trim($_POST['username']);
@@ -53,8 +51,11 @@ class ApprovalController extends BaseController {
                     $this->error('数据错误!请重新打开！');
                 }
             }
-            $approval                       = $this->approval_table('approval_flie_url',$wher,1);
+        }else{
+            $wher['file_id']                = trim(I('file_id'));
+            $wher['type']                   = 1;
         }
+        $approval                           = $this->approval_table('approval_flie_url',$wher,1);
         $this->file_id                      = $id;
 
         foreach($approval['approval'] as $key => $val){
