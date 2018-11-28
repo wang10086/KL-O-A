@@ -32,9 +32,11 @@ class ApprovalController extends BaseController {
             unset($where);
         }elseif($where==2){
             $query['account_id']            = $_SESSION['userid'];
+
         }elseif($where==3){
             $approval                       = $this->approval_table('','',2);
         }
+
         if($where!==3){
             if(IS_POST){
                 $file_name                  = trim($_POST['file_name']);
@@ -45,14 +47,19 @@ class ApprovalController extends BaseController {
             }else{
                 $id                         = trim(I('file_id'));
                 if(is_numeric($id)){ //判断是否有传值
-                    $query['file_id']       = $id;
+                    $wher['file_id']        = $id;
+                    $wher['_query'] = 'file_id='.$query['account_id'].'&pid_account_id='.$query['account_id'].'&_logic=or';
                 }else{
                     $this->error('数据错误!请重新打开！');
                 }
             }
-            $approval                       = $this->approval_table('approval_flie_url',$query,1);
+            $approval                       = $this->approval_table('approval_flie_url',$wher,1);
         }
         $this->file_id                      = $id;
+
+        foreach($approval['approval'] as $key => $val){
+            $approval['approval'][$key]['Approval']['pid_account_name'] = user_table($val['Approval']['pid_account_id'])['nickname'];
+        }
         $this->approval                     = $approval['approval']; //文件信息 -- 文件夹信息
         $this->pages                        = $approval['pages'];//分页
         $this->display();

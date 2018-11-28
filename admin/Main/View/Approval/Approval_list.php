@@ -44,6 +44,7 @@
                                         <th style="text-align:center;width:9em;"><b>修改拟稿人姓名</b></th>
                                         <th style="text-align:center;width:9em;"><b>修改后文件大小</b></th>
                                         <th style="text-align:center;width:9em;"><b>修改后上传时间</b></th>
+                                        <th style="text-align:center;width:9em;"><b>上级审批人</b></th>
                                         <th style="text-align:center;width:9em;"><b>状态</b></th>
                                         <th style="text-align:center;width:10em;"><b>操作</b></th>
                                     </tr>
@@ -61,6 +62,7 @@
                                             <td style="text-align:center;">{$app['Approval']['modify_name']}</td>
                                             <td style="text-align:center;">{$app['Approval']['modify_size']}</td>
                                             <td style="text-align:center;"><?php if(is_numeric($app['Approval']['createtime'])){echo date('Y-m-d H:i:s',$app['Approval']['createtime']);}else{echo'';}?></td>
+                                            <td style="text-align:center;"><a href="">{$app['Approval']['pid_account_name']}</a></td>
                                             <td style="text-align:center;">
                                                 <?php if($app['Approval']['status']==1){echo"待上级审核";}elseif($app['Approval']['status']==2){echo"待综合审核";}elseif($app['Approval']['status']==3){echo"待各级领导审核";}elseif($app['Approval']['status']==4){echo"待最终审核";}elseif($app['Approval']['status']==5){echo"审核通过";}elseif($app['Approval']['status']==6){echo"审核驳回";}?>
                                             </td>

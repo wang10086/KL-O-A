@@ -196,9 +196,11 @@
                 $where                      = 1;
             }else{
                 $userid                     = $_SESSION['userid'];
-                $map['judgment_account_id'] = array('like',"%userid%");
-                $info                       =  M('approval_judgment')->where($map)->count();
-                if(!$info){
+                $map['judgment_account_id'] = array('like','%'.$userid.'%');
+                $info1                       =  M('approval_judgment')->where($map)->count();
+                $wher['pid_account_id'] = array('like','%'.$userid.'%');
+                $info2                       =  M('oa_approval_flie_url')->where($wher)->count();
+                if($info1 !==0 || $info2 !==0){
                     $where                  = 2;
                 }else{
                      $where                 = 3;
