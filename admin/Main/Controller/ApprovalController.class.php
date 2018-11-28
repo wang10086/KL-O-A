@@ -63,7 +63,6 @@ class ApprovalController extends BaseController {
      * $fileid 文件id
      */
     function file_delete(){
-        print_r(I());die;
 
         $arr                    = array("11", "55", "77", "32","38","1","12","13");
         if(in_array($_SESSION['userid'],$arr)){

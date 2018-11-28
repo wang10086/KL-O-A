@@ -258,8 +258,9 @@
             $url['file_id']                                 = $file['file_id'];
             $url['id']                                      = $file['file_url_id'];
             $roval_flie                                     = M('approval_flie_url')->where($url)->find();
-            if(in_array($userid,$arr) || in_array($userid,$arr2) || $userid==$judgment['account_id'] || $userid==1 || $userid==2 || in_array($userid,$roval_flie['pid_account_id'])){
-            }else{return 6;die;}
+//            if(in_array($userid,$arr) || in_array($userid,$arr2) || $userid==$judgment['account_id'] || $userid==1 || $userid==2 || in_array($userid,$roval_flie['pid_account_id'])){
+//
+//            }
             if($status=="审批驳回"){ //审批驳回
                 $update['status']                           = 6;
                 if($roval_flie['status']==6){ return 7;die;}
