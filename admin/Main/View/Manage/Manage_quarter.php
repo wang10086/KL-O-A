@@ -17,13 +17,11 @@
             <!-- right column -->
             <div class="col-md-12">
                 <div class="btn-group" id="catfont" style="padding-bottom:20px;">
-
                     <a href="{:U('Manage/Manage_month',array('year'=>$prveyear,'month'=>'01','post'=>$post))}" class="btn btn-default" style="padding:8px 18px;">上一年</a>
-                    <?php
-                    for($i=1;$i<13;$i++){
-                        echo '<a href="'.U('Manage/Manage_month',array('month'=>$i)).'" class="btn btn-default" style="padding:8px 18px;">'.$i.'月</a>';
-                    }
-                    ?>
+                    <a href="'.U('Manage/Manage_month',array('month'=>1)).'" class="btn btn-default" style="padding:8px 18px;">第一季度</a>
+                    <a href="'.U('Manage/Manage_month',array('month'=>2)).'" class="btn btn-default" style="padding:8px 18px;">第二季度</a>
+                    <a href="'.U('Manage/Manage_month',array('month'=>3)).'" class="btn btn-default" style="padding:8px 18px;">第三季度</a>
+                    <a href="'.U('Manage/Manage_month',array('month'=>4)).'" class="btn btn-default" style="padding:8px 18px;">第四季度</a>
                     <a href="{:U('Manage/Manage_month',array('year'=>$nextyear,'month'=>'01','post'=>$post))}" class="btn btn-default" style="padding:8px 18px;">下一年</a>
                 </div>
 
@@ -35,162 +33,167 @@
 
                         <table class="table table-bordered dataTable fontmini" id="tablecenter">
                             <tr role="row" class="orders" style="text-align:center;" >
-                                <th style="width:10em;"><b>项目</b></th>
-                                <th style="width:10em;"><b>公司</b></th>
-                                <th style="width:15em;">
-                                    <p><b>京区业务中心</b></p>
-                                    <p style="border-top:1px solid #ddd;margin:0em -0.7em 1em -0.7em;">
-                                    <center style="margin-bottom: -0.9em;">
-                                        <a style="padding: 1em;margin-right: -0.3em;border-right:1px solid #ddd;">数额</a>
-                                        <a style="text-align:center;padding: 1em;">占比</a>
-                                    </center>
-                                    </p>
-                                </th>
-                                <th style="width:15em;">
-                                    <p><b>京外业务中心</b></p>
-                                    <p style="border-top:1px solid #ddd;margin:0em -0.7em 1em -0.7em;">
-                                    <center style="margin-bottom: -0.9em;">
-                                        <a style="padding: 1em;margin-right: -0.3em;border-right:1px solid #ddd;">数额</a>
-                                        <a style="text-align:center;padding: 1em;">占比</a>
-                                    </center>
-                                    </p>
-                                </th>
-                                <th style="width:15em;">
-                                    <p><b>南京项目部</b></p>
-                                    <p style="border-top:1px solid #ddd;margin:0em -0.7em 1em -0.7em;">
-                                    <center style="margin-bottom: -0.9em;">
-                                        <a style="padding: 1em;margin-right: -0.3em;border-right:1px solid #ddd;">数额</a>
-                                        <a style="text-align:center;padding: 1em;">占比</a>
-                                    </center>
-                                    </p>
-                                </th>
-                                <th style="width:15em;">
-                                    <p><b>武汉项目部</b></p>
-                                    <p style="border-top:1px solid #ddd;margin:0em -0.7em 1em -0.7em;">
-                                    <center style="margin-bottom: -0.9em;">
-                                        <a style="padding: 1em;margin-right: -0.3em;border-right:1px solid #ddd;">数额</a>
-                                        <a style="text-align:center;padding: 1em;">占比</a>
-                                    </center>
-                                    </p>
-                                </th>
-                                <th style="width:15em;">
-                                    <p><b>沈阳项目部</b></p>
-                                    <p style="border-top:1px solid #ddd;margin:0em -0.7em 1em -0.7em;">
-                                    <center style="margin-bottom: -0.9em;">
-                                        <a style="padding: 1em;margin-right: -0.3em;border-right:1px solid #ddd;">数额</a>
-                                        <a style="text-align:center;padding: 1em;">占比</a>
-                                    </center>
-                                    </p>
-                                </th>
-                                <th style="width:15em;">
-                                    <p><b>长春项目部</b></p>
-                                    <p style="border-top:1px solid #ddd;margin:0em -0.7em 1em -0.7em;">
-                                    <center style="margin-bottom: -0.9em;">
-                                        <a style="padding: 1em;margin-right: -0.3em;border-right:1px solid #ddd;">数额</a>
-                                        <a style="text-align:center;padding: 1em;">占比</a>
-                                    </center>
-                                    </p>
-                                </th>
-                                <th style="width:15em;">
-                                    <p><b>市场部</b></p>
-                                    <p style="border-top:1px solid #ddd;margin:0em -0.7em 1em -0.7em;">
-                                    <center style="margin-bottom: -0.9em;">
-                                        <a style="padding: 1em;margin-right: -0.3em;border-right:1px solid #ddd;">数额</a>
-                                        <a style="text-align:center;padding: 1em;">占比</a>
-                                    </center>
-                                    </p>
-                                </th>
+                                <th style="width:10em;" rowspan="2"><b>项目</b></th>
+                                <th style="width:10em;" rowspan="2"><b>公司</b></th>
+                                <th style="width:10em;" colspan="2"><b>京区业务中心</b></th>
+                                <th style="width:10em;" colspan="2"><b>京外业务中心</b></th>
+                                <th style="width:10em;" colspan="2"><b>南京项目部</b></th>
+                                <th style="width:10em;" colspan="2"><b>武汉项目部</b></th>
+                                <th style="width:10em;" colspan="2"><b>沈阳项目部</b></th>
+                                <th style="width:10em;" colspan="2"><b>长春项目部</b></th>
+                                <th style="width:10em;" colspan="2"><b>市场部</b></th>
+                            </tr>
+                            <tr role="row" class="orders" style="text-align:center;">
+                                <?php for($i=0;$i<7;$i++){?>
+                                    <td>数额</td>
+                                    <td>占比</td>
+                                <?php } ?>
                             </tr>
 
                             <tr role="row" class="orders" style="text-align:center;">
                                 <td>员工人数</td>
-                                <td>1</td>
-                                <td>1</td>
-                                <td>{$f['file']['id']}</td>
-                                <td>1</td>
-                                <td>{$f['file']['id']}</td>
-                                <td>{$f['file']['account_name']}</td>
-                                <td>{$f['file']['id']}</td>
-                                <td>{$f['file']['account_name']}</td>
+                                <td>{$number[0]['employees_sum']}</td>
+                                <td>{$number[1]['employees_sum']}</td>
+                                <td>{$number[1]['proportion']}</td>
+                                <td>{$number[2]['employees_sum']}</td>
+                                <td>{$number[2]['proportion']}</td>
+                                <td>{$number[3]['employees_sum']}</td>
+                                <td>{$number[3]['proportion']}</td>
+                                <td>{$number[4]['employees_sum']}</td>
+                                <td>{$number[4]['proportion']}</td>
+                                <td>{$number[5]['employees_sum']}</td>
+                                <td>{$number[5]['proportion']}</td>
+                                <td>{$number[6]['employees_sum']}</td>
+                                <td>{$number[6]['proportion']}</td>
+                                <td>{$number[7]['employees_sum']}</td>
+                                <td>{$number[7]['proportion']}</td>
                             </tr>
                             <tr role="row" class="orders" style="text-align:center;">
                                 <td>营业收入</td>
+                                <td></td>
                                 <td>1</td>
+                                <td></td>
                                 <td>1</td>
-                                <td>{$f['file']['id']}</td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
                                 <td>1</td>
-                                <td>{$f['file']['id']}</td>
-                                <td>{$f['file']['account_name']}</td>
-                                <td>{$f['file']['id']}</td>
-                                <td>{$f['file']['account_name']}</td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
                             </tr>
                             <tr role="row" class="orders" style="text-align:center;">
                                 <td>营业毛利</td>
+                                <td><?php echo $n['employees_sum'];?></td>
                                 <td>1</td>
+                                <td></td>
                                 <td>1</td>
-                                <td>{$f['file']['id']}</td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
                                 <td>1</td>
-                                <td>{$f['file']['id']}</td>
-                                <td>{$f['file']['account_name']}</td>
-                                <td>{$f['file']['id']}</td>
-                                <td>{$f['file']['account_name']}</td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
                             </tr>
                             <tr role="row" class="orders" style="text-align:center;">
-                                <td>营业利率(%)</td>
+                                <td>营业利率</td>
+                                <td><?php echo $n['employees_sum'];?></td>
                                 <td>1</td>
+                                <td></td>
                                 <td>1</td>
-                                <td>{$f['file']['id']}</td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
                                 <td>1</td>
-                                <td>{$f['file']['id']}</td>
-                                <td>{$f['file']['account_name']}</td>
-                                <td>{$f['file']['id']}</td>
-                                <td>{$f['file']['account_name']}</td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
                             </tr>
                             <tr role="row" class="orders" style="text-align:center;">
                                 <td>人力资源成本</td>
+                                <td><?php echo $n['employees_sum'];?></td>
                                 <td>1</td>
+                                <td></td>
                                 <td>1</td>
-                                <td>{$f['file']['id']}</td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
                                 <td>1</td>
-                                <td>{$f['file']['id']}</td>
-                                <td>{$f['file']['account_name']}</td>
-                                <td>{$f['file']['id']}</td>
-                                <td>{$f['file']['account_name']}</td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
                             </tr>
                             <tr role="row" class="orders" style="text-align:center;">
                                 <td>其他费用</td>
+                                <td><?php echo $n['employees_sum'];?></td>
                                 <td>1</td>
+                                <td></td>
                                 <td>1</td>
-                                <td>{$f['file']['id']}</td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
                                 <td>1</td>
-                                <td>{$f['file']['id']}</td>
-                                <td>{$f['file']['account_name']}</td>
-                                <td>{$f['file']['id']}</td>
-                                <td>{$f['file']['account_name']}</td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
                             </tr>
                             <tr role="row" class="orders" style="text-align:center;">
                                 <td>利润总额</td>
+                                <td><?php echo $n['employees_sum'];?></td>
                                 <td>1</td>
+                                <td></td>
                                 <td>1</td>
-                                <td>{$f['file']['id']}</td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
                                 <td>1</td>
-                                <td>{$f['file']['id']}</td>
-                                <td>{$f['file']['account_name']}</td>
-                                <td>{$f['file']['id']}</td>
-                                <td>{$f['file']['account_name']}</td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
                             </tr>
                             <tr role="row" class="orders" style="text-align:center;">
                                 <td>人事费用率</td>
+                                <td><?php echo $n['employees_sum'];?></td>
                                 <td>1</td>
+                                <td></td>
                                 <td>1</td>
-                                <td>{$f['file']['id']}</td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
                                 <td>1</td>
-                                <td>{$f['file']['id']}</td>
-                                <td>{$f['file']['account_name']}</td>
-                                <td>{$f['file']['id']}</td>
-                                <td>{$f['file']['account_name']}</td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
                             </tr>
-
                         </table><br><br>
 
                     </div><!-- /.box-body -->
@@ -204,8 +207,6 @@
 
 </aside><!-- /.right-side -->
 
-</div>
-</div>
 
 <include file="Index:footer2" />
 

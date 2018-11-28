@@ -15,18 +15,23 @@ class ManageController extends BaseController {
         $mod            = D('Manage');
         // 月度统计人员 数额 占比
         $number         = $mod->month();
-//        print_r($number);die;
         $this->number   = $number;
         $this->display();
     }
     //季度经营报表
     public function Manage_quarter(){
-
+        $mod            = D('Manage');
+        // 月度统计人员 数额 占比
+        $number         = $mod->month();
+        $this->number   = $number;
         $this->display();
     }
     //年度经营报表
     public function Manage_year(){
-
+        $mod            = D('Manage');
+        // 月度统计人员 数额 占比
+        $number         = $mod->month();
+        $this->number   = $number;
         $this->display();
     }
 

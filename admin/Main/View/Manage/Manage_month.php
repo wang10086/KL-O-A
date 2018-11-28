@@ -209,8 +209,6 @@
 
 </aside><!-- /.right-side -->
 
-</div>
-</div>
 
 <include file="Index:footer2" />
 
