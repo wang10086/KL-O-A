@@ -64,11 +64,14 @@
             })
         }else{
             $('#zhuize').hide();
+            $('input[name="is_blame_or_not"][value="0"]').parent('div').addClass('checked');
+            $('input[name="is_blame_or_not"][value="1"]').parent('div').removeClass('checked');
         }
 
         $('#is_blame').find('ins').each(function (index,ele) {
             $(this).click(function () {
-                if (index == 0){
+                var is_blame = $(this).prev('input[name="is_blame_or_not"]').val();
+                if (is_blame == 0){
                     $('#zhuize').hide();
                 }else{
                     $('#zhuize').show();

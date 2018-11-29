@@ -40,6 +40,7 @@
                 <input type="hidden" name="dosubmint" value="1">
                 <input type="hidden" name="opid" value="{$op.op_id}">
 
+                <if condition="rolemenu(array('Inspect/return_visit'))">
                 <div class="tcscon">
                     <div id="tcs">
                         <div class="userlist form-title">
@@ -57,6 +58,7 @@
                     </div>
                     <div class="form-group">&nbsp;</div>
                 </div><!--/.col (right) -->
+                </if>
             </form>
         </div>
 
@@ -81,13 +83,13 @@
             width:600,
             height:400,
             fixed: true,
-            okValue:'提交',
+            okVal:'提交',
             ok: function () {
                 this.iframe.contentWindow.myform.submit();
                 location.reload();
                 return false;
             },
-            cancelValue:'取消',
+            cancelVal:'取消',
             cancel: function () {
             }
 
