@@ -105,7 +105,7 @@
                                 <td></td>
                             </tr>
                             <tr role="row" class="orders" style="text-align:center;">
-                                <td>营业利率</td>
+                                <td>营业毛利率(%)</td>
                                 <td><?php echo $n['employees_sum'];?></td>
                                 <td>1</td>
                                 <td></td>

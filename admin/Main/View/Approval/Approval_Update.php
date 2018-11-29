@@ -51,7 +51,7 @@
                                     </tr>
                                 </table><br><br>
 
-                                <div style="margin:-5em 0em 4em 3em;width:96%;text-align: center;">
+                                <div style="margin:-5em 0em 4em 3em;width:96%;text-align: center;<?php if($type==2){ echo 'display:none;';}?>" >
                                     <div>
                                         <form method="post" action="{:U('Approval/file_change')}" enctype="multipart/form-data">
                                             <input type="hidden" name="file_id" value="{$approval['Approval_url']['file_id']}">
@@ -80,15 +80,16 @@
                                             </div><br><br><br>
                                             <table style="width:98%;"  class="table">
                                                     <th width=""></th>
+                                            </table><br>
+                                            <table style="width:98%;"  class="table">
+                                                <th width=""></th>
                                             </table>
                                         </form>
                                     </div>
                                 </div><!-- /.box-header -->
 
-
-
-                                <!-- 选择审批人员  选择审批人员-->
-                                <div style="margin:-4em 0em 0em 2em;width:96%;<?php if($status==1){ echo 'display:none;';}?>" >
+                                <!-- 选择审批人员  选择审批人员  -->
+                                <div style="<?php if($type==2){ echo 'margin:-2em 0em 6em 1em;';}else{echo 'margin:-4em 0em 0em 2em;';}?>width:96%;<?php if($status==1){ echo 'display:none;';}?>" id="add_final_judgment">
                                     <form method="post" action="{:U('Approval/add_final_judgment')}" enctype="multipart/form-data">
                                         <input type="hidden" name="file_id" value="{$approval['Approval']['file_id']}">
                                         <input type="hidden" name="file_url_id" value="{$approval['Approval']['id']}">
@@ -125,13 +126,13 @@
                                                 保 存
                                             </button>
                                         </center>
-                                    </form><br><br><br>
+                                    </form><br><br>
                                     <div class="box-header" ></div>
                                 </div><br>
 
 
                                 <!-- 已选审批人员  已审批人员-->
-                                <div  style="width:96%;">
+                                <div  style="width:96%;<?php if($status==1){ echo 'margin:-4em 0em 0em -1.5em;';}?>">
                                     <div class="form-group  col-md-6" >
                                         <label>
                                             <b style="font-size:1.3em;color:#09F;padding:2em;letter-spacing:0.2em;">已选审议状态 : </b>
@@ -147,6 +148,9 @@
                                                     </b>
                                                 </span>
                                             </foreach>
+                                            <span>
+                                                <b class="btn btn-success btn-sm add_final_judgment1" style="width:8em;font-size:1em;margin-left:1.7em;"> 修改审议人员</b>
+                                            </span>
                                         </div>
                                     </div>
                                     <div class="form-group col-md-6">
@@ -155,17 +159,21 @@
                                         </label><br><br>
                                         <div style="margin-left:5em;">
                                             <foreach name="judgmen['annotation2']" item="an">
-                                            <span style="padding:1em;">
-                                                <b>
-                                                    {$an['username']}
-                                                    <b style="<?php if($an['steta']==0 || $an['steta']=="" || $an['steta']==1){echo 'color:red';}elseif($an['steta']>0){echo 'color:#00CC33';}?>">
-                                                            [ <?php if($an['steta']==0 || $an['steta']=="" || $an['steta']==1){echo "未批注";}elseif($an['steta']==2){echo "已批注";}?> ]
+                                                <span style="padding:1em;">
+                                                    <b>
+                                                        {$an['username']}
+                                                        <b style="<?php if($an['steta']==0 || $an['steta']=="" || $an['steta']==1){echo 'color:red';}elseif($an['steta']>0){echo 'color:#00CC33';}?>">
+                                                                [ <?php if($an['steta']==0 || $an['steta']=="" || $an['steta']==1){echo "未批注";}elseif($an['steta']==2){echo "已批注";}?> ]
+                                                        </b>
                                                     </b>
-                                                </b>
-                                            </span>
+                                                </span>
                                             </foreach>
+                                            <span>
+                                                <b class="btn btn-success btn-sm add_final_judgment1" style="width:8em;font-size:1em;margin-left:1.7em;"> 修改审核人员</b>
+                                            </span>
                                         </div>
                                     </div>
+
                                 </div><br><br><br><br><br><br><br>
                                 <table style="margin-left:2em;width:96%;"  class="table">
                                     <th width=""></th>
@@ -312,6 +320,9 @@
         print_view(id);
 
     }
+    $('.add_final_judgment1').click(function(){
+        $('#add_final_judgment').show();
+    });
 
 </script>
 
