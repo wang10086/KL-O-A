@@ -11,58 +11,15 @@ class ApprovalController extends BaseController {
      */
     public function Approval_Index(){
 
-        $approval_table                 = 'approval_flie';
-        $approval                       = $this->approval_table($approval_table,'',1);
+        $approval                       = $this->approval_table('approval_flie','',1);
         $app                            = D('Approval');
         $save                           = $app->datetime_approval();//改变到预定时间的文件
+        $this->file_remind_number();
         $this->approval                 = $approval['approval'];
         $this->pages                    = $approval['pages'];
         $this->display();
     }
 
-    /**
-     * Approval_list 文档列表 搜索文档
-     * $file_id 文档 id
-     */
-//    public function Approval_list(){
-//
-//        $app                                = D('Approval');
-//        $where                              = $app->Jurisdiction();
-//        if($where==1){
-//            unset($where);
-//        }elseif($where==2){
-//            $query['account_id']            = $_SESSION['userid'];
-//
-//        }elseif($where==3){
-//            $approval                       = $this->approval_table('','',2);
-//        }
-//        if($where!==3 && !empty($where)){
-//            if(IS_POST){
-//                $file_name                  = trim($_POST['file_name']);
-//                $account_name               = trim($_POST['username']);
-//                $query['file_name']         = array('like',"%$file_name%");
-//                $query['account_name']      = array('like',"%$account_name%");
-//                $query                      = array_filter($query);
-//            }else{
-//                $id                         = trim(I('file_id'));
-//                if(is_numeric($id)){ //判断是否有传值
-//                    $wher['file_id']        = $id;
-//                    $wher['_query'] = 'file_id='.$query['account_id'].'&pid_account_id='.$query['account_id'].'&_logic=or';
-//                }else{
-//                    $this->error('数据错误!请重新打开！');
-//                }
-//            }
-//        }
-//        $approval                          = $this->approval_table('approval_flie_url',$wher,1);
-//        $this->file_id                      = $id;
-//
-//        foreach($approval['approval'] as $key => $val){
-//            $approval['approval'][$key]['Approval']['pid_account_name'] = user_table($val['Approval']['pid_account_id'])['nickname'];
-//        }
-//        $this->approval                     = $approval['approval']; //文件信息 -- 文件夹信息
-//        $this->pages                        = $approval['pages'];//分页
-//        $this->display();
-//    }
 
     /**
      * Approval_list 文档列表 搜索文档
@@ -75,34 +32,42 @@ class ApprovalController extends BaseController {
             unset($where);
         }elseif($where==2){
             $query['account_id']            = $_SESSION['userid'];
-        }elseif($where==3){
-            $approval                       = $this->approval_table('','',2);
         }
         $userid                             = $_SESSION['userid'];
         $id                                 = trim(I('file_id'));
-        if($where!==3 && !empty($where)){
-            if(IS_POST){
+        if($where==2 && !empty($where)){//不是管理员
+            if(IS_POST){//搜索
                 $file_name                  = trim($_POST['file_name']);
                 $account_name               = trim($_POST['username']);
                 $query['file_name']         = array('like',"%$file_name%");
                 $query['account_name']      = array('like',"%$account_name%");
                 $query                      = array_filter($query);
-            }else{
-
+                $stat                       = 2;
+            }else{//普通人员
                 if(is_numeric($id)){ //判断是否有传值
-                    $wher['file_id']        = $id;
-                    $wher['_query']         = 'account_id='.$userid.'&pid_account_id='.$userid.'&_logic=or';
+                    $wher['account_id']     = $userid;
+                    $wher['pid_account_id'] = $userid;
+                    $wher['file_id']        = trim(I('file_id'));
+                    $stat                   = 2;
                 }else{
                     $this->error('数据错误!请重新打开！');
                 }
             }
         }else{
-            $wher['file_id']                = trim(I('file_id'));
-            $wher['type']                   = 1;
+            if(empty($where) && $userid==13){//管理员
+                $wher['account_id']             = $userid;
+                $wher['pid_account_id']         = $userid;
+                $wher['file_id']                = trim(I('file_id'));
+                $stat                           = 3;
+            }else{
+                $wher['account_id']             = $userid;
+                $wher['pid_account_id']         = $userid;
+                $wher['file_id']                = trim(I('file_id'));
+                $stat                           = 2;
+            }
         }
-        $approval                           = $this->approval_table('approval_flie_url',$wher,1);
+        $approval                           = $this->approval_table('approval_flie_url',$wher,$stat);
         $this->file_id                      = $id;
-//        print_R($approval);die;
         foreach($approval['approval'] as $key => $val){
             $approval['approval'][$key]['Approval']['pid_account_name'] = user_table($val['Approval']['pid_account_id'])['nickname'];
         }
@@ -116,7 +81,6 @@ class ApprovalController extends BaseController {
      * $fileid 文件id
      */
     function file_delete(){
-
         $status                 = trim($_POST['status']);
         $fileid                 = trim($_POST['fileid']);
         $file_id                = array_filter(explode(',',$fileid));
@@ -143,15 +107,20 @@ class ApprovalController extends BaseController {
             $pages                                        = $page->show();
             $approval                                     = M($approval_table)->where($where)->limit("$page->firstRow","$page->listRows")->order('createtime desc')->select();
         }elseif($type==2){
-            $userid                                       = $_SESSION['userid'];
-            $map['approval_judgment.judgment_account_id'] = array('like',"%$userid%");
-            $map['approval_flie_url.type']                = 1;
-            $count                                        = M('approval_judgment')->join('left join approval_flie_url on approval_judgment.file_url_id = approval_flie_url.id')->where($map)->count();
+            $where['type']                                = 1;
+            $count                                        = M($approval_table)->where($where)->count();
             $page                                         = new Page($count,10);
             $pages                                        = $page->show();
-            $approval['approval']                        = M('approval_judgment')->join('left join approval_flie_url on approval_judgment.file_url_id = approval_flie_url.id')->where($map)->limit("$page->firstRow","$page->listRows")->select();
+            $sql    = "SELECT * FROM `oa_approval_flie_url` WHERE `file_id` = ".$where['file_id']." AND ( `account_id` = ".$where['account_id']." OR `pid_account_id` = ".$where['account_id']." OR `status` > 2  ) AND `type` = 1 ORDER BY createtime desc LIMIT ".$page->firstRow.",".$page->listRows;
+            $approval = M()->query($sql);
+        }elseif($type==3){
+            $where['type']                                = 1;
+            $count                                        = M($approval_table)->where($where)->count();
+            $page                                         = new Page($count,10);
+            $pages                                        = $page->show();
+            $sql    = "SELECT * FROM `oa_approval_flie_url` WHERE `file_id` = ".$where['file_id']." AND ( `account_id` = ".$where['account_id']." OR `pid_account_id` = ".$where['account_id']." OR `status` >= 2  ) AND `type` = 1 ORDER BY createtime desc LIMIT ".$page->firstRow.",".$page->listRows;
+            $approval = M()->query($sql);
         }
-       
         $approval_w['approval']                           = D('Approval')->query_table($approval);
         $approval_w['pages']                              = $pages;
         return $approval_w;
@@ -162,7 +131,6 @@ class ApprovalController extends BaseController {
      * $fileid 文件id
      */
     public function Approval_Upload(){
-
         $fileid                     = trim(I('id'));
         $key                        = D('Approval')->Arrangement($fileid);
         $this->userkey 		        = json_encode($key['key']);
@@ -231,7 +199,7 @@ class ApprovalController extends BaseController {
      */
     public function Approval_Update(){
 
-        $id['id']                   = (int)trim($_GET['id']);
+        $id['id']                   = trim($_GET['id']);
         $query                      = D('Approval');
         if(is_numeric($id['id'])){
             $approval_r[1]          = $query->Approval_details($id);//确定有一个[加一个随意数]
@@ -244,13 +212,15 @@ class ApprovalController extends BaseController {
         }else{
             $this ->status = 1;
         }
-        $whe['file_url_id']         = $approval_r[1]['id'];
+        $whe['id']                  = $approval_r[1]['id'];
         $whe['file_id']             = $approval_r[1]['file_id'];
         if($approval_r[1]['account_id']!==$_SESSION['userid']){
             $this->type             = 2;//判断不是上传文件本人
         }
         $this->judgmen              = $query->Approval_userinfo($whe);//审批人员显示
-        $this->annotation           = M('approval_annotation')->where($whe)->select();//批注
+        $quer['file_url_id']        = $id['id'];
+        $quer['file_id']            = $approval_r[1]['file_id'];
+        $this->annotation           = M('approval_annotation')->where($quer)->select();//批注
         $this->approval             = $approval[1];//文档信息
         $where['post_name']         = array('like',"%经理%");
         $this->approver             = $query->Approver($where); //审批人员
@@ -295,7 +265,7 @@ class ApprovalController extends BaseController {
     public function add_final_judgment(){
 
         $file['file_id']        = trim($_POST['file_id']);
-        $file['file_url_id']    = trim($_POST['file_url_id']);
+        $file['id']             = trim($_POST['file_url_id']);
         $judgment               = $_POST['judgment'];
         $check                  = $_POST['check'];
         $query                  = D('Approval');

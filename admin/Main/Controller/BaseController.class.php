@@ -525,15 +525,16 @@ class BaseController extends Controller {
            $number1                    = M('approval_flie_url')->where($status)->count();//要处理文档
            $sum4                       = $number1;
        }
+
         // $sum2 状态3的数量
         $where['status']                = 3;
         $where['judgment_account_id']   = array('like',"%$useid%");
         $sum2                           = 0;
-        $judgment                       = M('approval_judgment')->where($where)->select();
+        $judgment                       = M('approval_flie_url')->where($where)->select();
         foreach($judgment as $key =>$val){
             if(in_array($useid,explode(',',$val['judgment_account_id']))){
                 $query['file_id']       = $val['file_id'];
-                $query['file_url_id']   = $val['file_url_id'];
+                $query['file_url_id']   = $val['id'];
                 $query['account_id']    = $useid;
                 $annotation             = M('approval_annotation')->where($query)->find();//已经处理过的数据
                 if(!$annotation){
@@ -545,11 +546,11 @@ class BaseController extends Controller {
         $gment['status']                = 4;
         $gment['final_account_id']      = array('like',"%$useid%");
         $sum3                           = 0;
-        $gmen                           = M('approval_judgment')->where($gment)->select();
+        $gmen                           = M('approval_flie_url')->where($gment)->select();
         foreach($gmen as $k => $v){
             if(in_array($useid,explode(",",$v['final_account_id']))){
                 $gmen_r['file_id']      = $v['file_id'];
-                $gmen_r['file_url_id']  = $v['file_url_id'];
+                $gmen_r['file_url_id']  = $v['id'];
                 $gmen_r['account_id']   = $useid;
                 $annotation             = M('approval_annotation')->where($gmen_r)->find();//已经处理过的数据
                 if(!$annotation){

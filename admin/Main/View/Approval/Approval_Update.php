@@ -96,7 +96,7 @@
                                         <div class="box-header">
                                             <div class="form-group  col-md-6" >
                                                 <label>
-                                                    <b style="font-size:1.3em;color:#09F;letter-spacing:0.2em;">选择审批人员 : </b>
+                                                    <b style="font-size:1.3em;color:#09F;letter-spacing:0.2em;">选择审议人员 : </b>
                                                 </label><br>
                                                 <foreach name="approver" item="app">
                                                     <label style="margin-left:2em;" class="col-md-3">
@@ -147,8 +147,8 @@
                                                         </b>
                                                     </b>
                                                 </span>
-                                            </foreach>
-                                            <span>
+                                            </foreach><br><br>
+                                            <span style="<?php if($_SESSION['userid']==13 || $_SESSION['userid']==1){}else{echo 'display:none;';}?>">
                                                 <b class="btn btn-success btn-sm add_final_judgment1" style="width:8em;font-size:1em;margin-left:1.7em;"> 修改审议人员</b>
                                             </span>
                                         </div>
@@ -167,11 +167,11 @@
                                                         </b>
                                                     </b>
                                                 </span>
-                                            </foreach>
-                                            <span>
+                                            </foreach><br><br>
+                                            <span style="<?php if($_SESSION['userid']==13 || $_SESSION['userid']==1){}else{echo 'display:none;';}?>">
                                                 <b class="btn btn-success btn-sm add_final_judgment1" style="width:8em;font-size:1em;margin-left:1.7em;"> 修改审核人员</b>
                                             </span>
-                                        </div>
+                                        </div><br><br>
                                     </div>
 
                                 </div><br><br><br><br><br><br><br>
@@ -202,7 +202,7 @@
                                                 <p>
                                                     <b style="color:#339933;">{$ann['account_name']}&nbsp;</b>
                                                     <span>[ <?php echo date('Y-m-d H:i:s',$ann['createtime']);?> ]</span>
-                                                    <span style="color:#CC3333">[ 批注 ] ：</span>
+                                                    <span style="color:#CC3333">[ <?php if($ann['status']==1){echo "上级领导";}elseif($ann['status']==2){echo "审议";}elseif($ann['status']==3){echo "终审";}?>批注 ] ：</span>
 
                                                     <span style="letter-spacing:0.1em;line-height:2em;text-indent:50px;">
                                                         {$ann['annotation_content']}
@@ -321,7 +321,7 @@
 
     }
     $('.add_final_judgment1').click(function(){
-        $('#add_final_judgment').show();
+        $('#add_final_judgment').toggle();
     });
 
 </script>
