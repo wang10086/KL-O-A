@@ -3939,9 +3939,12 @@ function personnel(){//所有人员名称 id
 
 }
 function user_table($where,$type){//查询用户 1 查询一个 2 查询符合条件的 默认查询id
-    if($type!==0 && $type!=="" && $type==1){
+
+    if($type==1){
+        $where['status'] = 0;
         return M('account')->where($where)->find();
-    }elseif($type!==0 && $type!=="" && $type==2) {
+    }elseif($type==2) {
+        $where['status'] = 0;
         return M('account')->where($where)->order('id ASC')->select();
     }else{
         return M('account')->where('id='.$where)->find();
