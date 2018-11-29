@@ -384,6 +384,9 @@ class InspectController extends BaseController{
         $this->average          = $average;
         $this->lists            = $lists;
         $this->op_id            = $op_id;
+        $visit_lists            = M('op_visit')->where(array('op_id'=>$op_id))->select();
+        if ($visit_lists){ $this->return_visit = 1; }
+        $this->visit_lists      = $visit_lists;
         //$this->score_stu        = C('SCORE_STU');
 
 
@@ -417,5 +420,35 @@ class InspectController extends BaseController{
 
         $this->display();
     }
-    
+
+
+    // @@@NODE-3###return_visit###满意度回访###
+    public function return_visit(){
+        if (isset($_POST['dosubmint'])){
+            $db                     = M('op_visit');
+            $opid                   = I('opid');
+            $id                     = I('id');
+            $num                    = 0;
+            $data                   = array();
+            $data['tel']            = trim(I('tel'));
+            $data['content']        = trim(I('content'));
+            $data['op_id']          = $opid;
+            $data['input_time']     = NOW_TIME;
+            $data['input_user_id']  = cookie('userid');
+            $data['input_user_name']= cookie('username');
+            if ($id){
+                $res                = $db->where(array('id'=>$id))->save($data);
+            }else{
+                $res                = $db->add($data);
+            }
+            if ($res) $num++;
+            echo $num;
+        }else{
+            $id     = I('id');
+            if (!$id) $this->error('获取数据失败');
+            $this->row = M('op_visit')->where(array('id'=>$id))->find();
+
+            $this->display('upd_visit');
+        }
+    }
 }

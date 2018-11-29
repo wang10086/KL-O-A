@@ -28,6 +28,10 @@
                         <?php }else{ ?>
                             <include file="score_mod_blame_read" />
                         <?php } ?>
+
+                        <!--回访记录-->
+
+                        <include file="return_visit_edit" />
                     </div>   <!-- /.row -->
                     <?php }else{ ?>
                         <include file="score_mod_noscore" />
