@@ -287,48 +287,50 @@ class WorderController extends BaseController{
 
     //查看工单详情
     public function worder_info(){
+        $id             = I('id');
+        $db             = M('worder');
+        //$this->info     = $db->alias('w')->where(array('w.id'=>$id))->join("left join oa_worder_dept as d on d.id = w.wd_id")->find();
+        $info           = $db->where(array('id'=>$id))->find();
+        $roleid         = cookie('roleid');
+        $this->dept_list= M('worder_dept')->field("id,pro_title")->select();
+        $this->record   = M('worder_record')->where(array('worder_id'=>$id))->order('id DESC')->select();
 
-        if (isset($_POST['dosubmint'])){
+        //判断工单类型
+        if($info['worder_type']==0) $info['type'] = '维修工单';
+        if($info['worder_type']==1) $info['type'] = '管理工单';
+        if($info['worder_type']==2) $info['type'] = '质量工单';
+        if($info['worder_type']==3) $info['type'] = '其他工单';
+        if($info['worder_type']==100)$info['type']= '项目工单';
 
-        }else{
-            $id             = I('id');
-            $db             = M('worder');
-            //$this->info     = $db->alias('w')->where(array('w.id'=>$id))->join("left join oa_worder_dept as d on d.id = w.wd_id")->find();
-            $info           = $db->where(array('id'=>$id))->find();
-            $roleid         = cookie('roleid');
-            $this->dept_list= M('worder_dept')->field("id,pro_title")->select();
-            $this->record   = M('worder_record')->where(array('worder_id'=>$id))->order('id DESC')->select();
+        //判断工单状态
+        if($info['status']==0)      $info['sta'] = '<span class="red">未响应</span>';
+        if($info['status']==1)      $info['sta'] = '<span class="yellow">执行部门已响应</span>';
+        if($info['status']==2)      $info['sta'] = '<span class="yellow">执行部门已确认完成</span>';
+        if($info['status']==3)      $info['sta'] = '<span class="green">发起人已确认完成</span>';
+        if($info['status']==-1)     $info['sta'] = '拒绝或无效工单';
+        if($info['status']==-2)     $info['sta'] = '已撤销';
+        if($info['status']==-3)     $info['sta'] = '<span class="red">需要做二次修改</span>';
 
-            //判断工单类型
-            if($info['worder_type']==0) $info['type'] = '维修工单';
-            if($info['worder_type']==1) $info['type'] = '管理工单';
-            if($info['worder_type']==2) $info['type'] = '质量工单';
-            if($info['worder_type']==3) $info['type'] = '其他工单';
-            if($info['worder_type']==100)$info['type']= '项目工单';
-
-            //判断工单状态
-            if($info['status']==0)      $info['sta'] = '<span class="red">未响应</span>';
-            if($info['status']==1)      $info['sta'] = '<span class="yellow">执行部门已响应</span>';
-            if($info['status']==2)      $info['sta'] = '<span class="yellow">执行部门已确认完成</span>';
-            if($info['status']==3)      $info['sta'] = '<span class="green">发起人已确认完成</span>';
-            if($info['status']==-1)     $info['sta'] = '拒绝或无效工单';
-            if($info['status']==-2)     $info['sta'] = '已撤销';
-            if($info['status']==-3)     $info['sta'] = '<span class="red">需要做二次修改</span>';
-
-            $this->ids      = array_unique(M('worder_dept')->getfield("dept_id",true));
-            $this->info     = $info;
-            $this->atts     = get_res(P::WORDER_INI,$id);
-            $this->exe_atts = get_res(P::WORDER_EXE,$id);
-            $wd_id          = $info['wd_id'];
-            if ($wd_id != 0){
-                $dept           = M('worder_dept')->where(array('id'=>$wd_id))->find();
-                if ($dept['type']==0) $dept['n_type'] = '成熟产品';
-                if ($dept['type']==1) $dept['n_type'] = '新产品';
-                if ($dept['type']==2) $dept['n_type'] = '定制产品';
-                $this->dept     = $dept;
-            }
-            $this->display();
+        $this->ids      = array_unique(M('worder_dept')->getfield("dept_id",true));
+        $this->info     = $info;
+        $this->atts     = get_res(P::WORDER_INI,$id);
+        $this->exe_atts = get_res(P::WORDER_EXE,$id);
+        $wd_id          = $info['wd_id'];
+        if ($wd_id != 0){
+            $dept           = M('worder_dept')->where(array('id'=>$wd_id))->find();
+            if ($dept['type']==0) $dept['n_type'] = '成熟产品';
+            if ($dept['type']==1) $dept['n_type'] = '新产品';
+            if ($dept['type']==2) $dept['n_type'] = '定制产品';
+            $this->dept     = $dept;
         }
+        //执行人岗位
+        $exe_user_id    = $info['assign_id']?$info['assign_id']:$info['exe_user_id'];
+        $post_id        = M()->table('__ACCOUNT__ as a')->join('__POSTS__ as p on p.id = a.postid','left')->where(array('a.id'=>$exe_user_id))->getField('p.id');
+        $this->post_id  = $post_id;
+        $pingfen        = M('worder_score')->where(array('worder_id'=>$id))->find();
+        $this->pingfen  = json_encode($pingfen);
+        $this->display();
+
     }
 
     //执行人响应工单并指派工单
@@ -549,8 +551,24 @@ class WorderController extends BaseController{
         if (isset($_POST['dosubmint'])) {
             $id     = I('id');
             $info   = I('info');
+            $sco    = I('sco');
             $info['ini_confirm_time']  = NOW_TIME;
             $exe_user_id    = M('worder')->where(array('id'=>$id))->getfield('exe_user_id');
+            $score_info     = M('worder_score')->where(array('worder_id'=>$id))->find();
+
+            //保存评分信息
+            if ($sco){
+                $sco['worder_id']   = $id;
+                $sco['pfr_id']      = cookie('userid');
+                $sco['pfr_name']    = cookie('nickname');
+                $sco['input_time']  = NOW_TIME;
+                if ($score_info){
+                    M('worder_score')->where(array('worder_id'=>$id))->save($sco);
+                }else{
+                    M('worder_score')->add($sco);
+                }
+            }
+
             if ($info['status'] == 3){
                 $res    = M('worder')->where("id = '$id'")->save($info);
                 if ($res){

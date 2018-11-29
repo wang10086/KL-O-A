@@ -1,5 +1,66 @@
 <?php
 
+/*
+* 工单满意度(京区设计,新媒体)
+* 1.员工id
+* 2.本周期开始时间
+* 3.本周期结束时间
+ * 4.考核纬度
+* */
+function get_worder_score($user,$start_date,$end_date,$num){
+    $where                  = array();
+    $where['bpfr_id']       = $user;
+    $where['input_time']    = array('between',array($start_date,$end_date));
+    $lists                  = M('worder_score')->field('text,pic,article,habit,hot,light')->where($where)->select();
+    $hege_list              = array();
+    foreach ($lists as $k=>$v){
+        $zongfen            = 5*$num;
+        $defen              = $v['text']+$v['pic']+$v['article']+$v['habit']+$v['hot']+$v['light'];
+        $manyidu            = round($defen/$zongfen,2);
+        if ($manyidu >0.72) $hege_list[] = $v;
+    }
+    $data                   = array();
+    $data['lists']          = $lists;
+    $data['hege_list']      = $hege_list;
+    $data['pingfencishu']   = count($lists);
+    $data['hegecishu']      = count($hege_list);
+    $data['hegelv']         = round($data['hegecishu']/$data['pingfencishu'],2);
+    return $data;
+}
+
+/*
+ * 客户满意度
+ * 1.开始时间
+ * 2.结束时间
+ * 3.活动类型
+ * 4.字段
+ * 5.字段数量
+ * */
+function get_kfmyd($start_date,$end_date,$kinds='',$field='',$num=1){
+    $where                  = array();
+    if ($kinds){ $where['o.kind']        = array('in',$kinds); };
+    if ($field == 'new_media'){$where['s.new_media'] = array('neq',0); }
+    $where['s.input_time']	= array('between',array($start_date,$end_date));
+    $lists = M()->table('__TCS_SCORE__ as s')->field('u.op_id,s.id as sid,s.before_sell,s.new_media')->join('join __TCS_SCORE_USER__ as u on u.id = s.uid','left')->join('__OP__ as o on o.op_id = u.op_id','left')->where($where)->select();
+    $hege_list              = array();
+    foreach ($lists as $k=>$v){
+        $zongfen            = $num*5;
+        $defen              = $v[''.$field.''];
+        if (round($defen/$zongfen,2) >= 0.8){
+            $hege_list[]    = $v;
+        }
+    }
+    $hegecishu              = count($hege_list);
+    $pingfencishu           = count($lists);
+    $data                   = array();
+    $data['lists']          = $lists;
+    $data['hege_list']      = $hege_list;
+    $data['pingfencishu']   = $pingfencishu;
+    $data['hegecishu']      = $hegecishu;
+    $data['hegelv']         = round($hegecishu/$pingfencishu,2);
+    return $data;
+}
+
 //合格供方转化率(计调)
  function jd_zhuanhualv($user,$start_date,$end_date){
      //考核三个月前新增资源数量
@@ -209,9 +270,10 @@ function get_peixunlv($user,$start_date,$end_date,$sum=0,$sumlists=''){
  * 1.员工id
  * 2.本周期开始时间
  * 3.本周期结束时间
+ * 4.工单发起人
  * */
-function get_jishilv($user,$start_date,$end_date){
-    $worder             = get_worder($user,$start_date,$end_date);
+function get_jishilv($user,$start_date,$end_date,$ini_user_ids=''){
+    $worder             = get_worder($user,$start_date,$end_date,$ini_user_ids);
     $zonggongdan        = $worder['zonggongdan'];
     $wanchenggongdan    = $worder['wanchenggongdan'];
     $zongshu            = count($zonggongdan);
@@ -233,10 +295,11 @@ function get_jishilv($user,$start_date,$end_date){
  * 2.本周期开始时间
  * 3.本周期结束时间
  * */
-function get_worder($user,$start_date,$end_date){
+function get_worder($user,$start_date,$end_date,$ini_user_ids=''){
     $where                  = array();
     //$where['create_time']	= array('between',array($v['start_date'],$v['end_date']));
     $where['status']        = array('neq',-1);
+    if ($ini_user_ids){ $where['ini_user_id'] =array('in',$ini_user_ids) ; };
     $where['_string']       = " (assign_id = $user) OR (exe_user_id = $user and assign_id = 0) ";
     $lists  = M()->table('__WORDER__ as w')->field('w.*,d.use_time')->join('__WORDER_DEPT__ as d on d.id=w.wd_id','left')->where($where)->select();
 
