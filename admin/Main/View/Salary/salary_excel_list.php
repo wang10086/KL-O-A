@@ -92,7 +92,6 @@
                                         <td>&yen; <?PHP echo sprintf("%.2f",$info['Achievements']['count_money']);?></td>
                                         <td>&yen; <?PHP echo sprintf("%.2f",$info['Extract']['total']);?></td>
 
-
                                         <td>&yen; <?PHP echo sprintf("%.2f",$info['bonus'][0]['foreign_bonus']);?></td>
                                         <td>&yen; <?PHP echo sprintf("%.2f",$info['subsidy'][0]['housing_subsidy']);?></td>
                                         <td>&yen; <?PHP echo sprintf("%.2f",$info['Other']);?></td>
@@ -141,7 +140,7 @@
                                         <td>&yen; <?PHP echo sprintf("%.2f",$sum['housing_subsidy']);?></td>
                                         <td>&yen; <?PHP echo sprintf("%.2f",$sum['Other']);?></td>
                                         <td>&yen; <?PHP echo sprintf("%.2f",$sum['Should']);?></td>
-                                        <td>&yen; <?PHP echo sprintf("%.3f",$sum['care']);?></td>
+                                        <td>&yen; <?PHP echo sprintf("%.3f",$sum['care']+$sum['big_price']);?></td>
                                         <td>&yen; <?PHP echo sprintf("%.3f",$sum['pension']);?></td>
                                         <td>&yen; <?PHP echo sprintf("%.3f",$sum['unemployment']);?></td>
                                         <td>&yen; <?PHP echo sprintf("%.2f",$sum['accumulation']);?></td>
@@ -166,7 +165,7 @@
                                     <td>&yen; <?PHP echo sprintf("%.2f",$count['housing_subsidy']);?></td>
                                     <td>&yen; <?PHP echo sprintf("%.2f",$count['Other']);?></td>
                                     <td>&yen; <?PHP echo sprintf("%.2f",$count['Should']);?></td>
-                                    <td>&yen; <?PHP echo sprintf("%.3f",$count['care']);?></td>
+                                    <td>&yen; <?PHP echo sprintf("%.3f",($count['care']+$count['big_price']));?></td>
                                     <td>&yen; <?PHP echo sprintf("%.3f",$count['pension']);?></td>
                                     <td>&yen; <?PHP echo sprintf("%.3f",$count['unemployment']);?></td>
                                     <td>&yen; <?PHP echo sprintf("%.2f",$count['accumulation']);?></td>
@@ -201,7 +200,7 @@
                         </div>
                     </div><!-- /.box-body -->
 
-                    <div><br><br>
+                    <div style="margin-top:2em;"><br><br><br><br>
                         <?php if($status==1 && $userid== 77){?>
                             <a  class="btn btn-info salary_excel1_submit" style="width:10em;margin-left:45em;">提交审核</a>
                         <?php }?>
@@ -364,25 +363,12 @@
     });
     //驳回
     $('.salary_excel1_submit2').click(function(){
-        var wages_month_id ="";
-        var departmen_id ="";
-        $('.list_salary_detail1').each(function(){
-            var text = $(this).text();
-            wages_month_id +=text+',';
-        });
-        $('.list_salary_detail2').each(function(){
-            var txt = $(this).text();
-            departmen_id +=txt+',';
-        });
-        var count_money_id = $('.list_salary_detail3').text();
-
+       var datetime = <?php echo $count['datetime'];?>;
         $.ajax({
             type: "POST",
             url:  "index.php?m=Main&c=Ajax&a=post_error",
             data: {
-                'wages_month_id' : wages_month_id,
-                'departmen_id' : departmen_id,
-                'count_money_id' : count_money_id,
+                'datetime' : datetime,
                 'status':1,
 
             },

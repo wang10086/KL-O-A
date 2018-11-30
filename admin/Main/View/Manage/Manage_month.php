@@ -51,25 +51,11 @@
                                 <td>占比</td>
                                 <?php } ?>
                             </tr>
+                            <foreach name="number" item="n">
+                                <td>{$n.employees_sum}</td>
+                                <td>{$n.proportion}</td>
+                            </foreach>
 
-                            <tr role="row" class="orders" style="text-align:center;">
-                                <td>员工人数</td>
-                                <td>{$number[0]['employees_sum']}</td>
-                                <td>{$number[1]['employees_sum']}</td>
-                                <td>{$number[1]['proportion']}</td>
-                                <td>{$number[2]['employees_sum']}</td>
-                                <td>{$number[2]['proportion']}</td>
-                                <td>{$number[3]['employees_sum']}</td>
-                                <td>{$number[3]['proportion']}</td>
-                                <td>{$number[4]['employees_sum']}</td>
-                                <td>{$number[4]['proportion']}</td>
-                                <td>{$number[5]['employees_sum']}</td>
-                                <td>{$number[5]['proportion']}</td>
-                                <td>{$number[6]['employees_sum']}</td>
-                                <td>{$number[6]['proportion']}</td>
-                                <td>{$number[7]['employees_sum']}</td>
-                                <td>{$number[7]['proportion']}</td>
-                            </tr>
                             <tr role="row" class="orders" style="text-align:center;">
                                 <td>营业收入</td>
                                 <td></td>

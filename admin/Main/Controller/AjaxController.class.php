@@ -986,43 +986,41 @@ class AjaxController extends Controller {
      * 驳回
      */
     public function post_error(){
-        $wages_month_id                     = explode(',',trim($_POST['wages_month_id']));
-        $departmen_id                       = explode(',',trim($_POST['departmen_id']));
-        $count_money_id                     = trim($_POST['count_money_id']);
-        $status ['status']                  = trim($_POST['status']);
-        array_pop($wages_month_id);array_pop($departmen_id);
-
-        foreach($wages_month_id as $key =>$val ){
-            $id ['id']                      = $val;
-            $wages_query                    =  M('salary_wages_month')->where($id)->find();
-            if($wages_query){
-                $att['id']                  =  $wages_query['attendance_id'];
-                $stat['status']             = 1;
-                $bonus['id']                = $wages_query['bonus_id'];
-                $income['income_token']     = $wages_query['income_token'];
-
-                $attend_W                   = M('salary_attendance')->where($att)->save($stat);
-                $bonus_W                    = M('oa_salary_bonus')->where($bonus)->save($stat);
-                $income_W                   = M('oa_salary_income')->where($income)->save($stat);
+        $datetime['datetime']           = trim($_POST['datetime']);
+        $status ['status']              = $_POST['status'];
+        $wages_query                    =  M('salary_wages_month')->where($datetime)->select();
+        foreach($wages_query as $key => $val){
+            if($val['status'] == 4){
+                $sum                    = 0;
+                $msg                    = "驳回失败!数据锁定！请联系管理员！";
+                echo json_encode(array('sum' => $sum, 'msg' => $msg));die;
             }
-            $wages_month_del                = M('salary_wages_month')->where($id)->delete();
+            $att['id']                  =  $val['attendance_id'];
+            $stat['status']             = 1;
+            $bonus['id']                = $val['bonus_id'];
+            $income['income_token']     = $val['income_token'];
+            $labou['id']                = $val['labour_id'];
+            $subsid['id']               = $val['subsidy_id'];
+            $withh['withholding_token'] = $val['withholding_token'];
+            $attend_W                   = M('salary_attendance')->where($att)->save($stat);
+            $bonus_W                    = M('oa_salary_bonus')->where($bonus)->save($stat);
+            $income_W                   = M('oa_salary_income')->where($income)->save($stat);
+            $labour_W                   = M('oa_salary_labour')->where($labou)->save($stat);
+            $subsidy_W                  = M('oa_salary_subsidy')->where($subsid)->save($stat);
+            $withh_W                    = M('oa_salary_withholding')->where($withh)->save($stat);
         }
-
-        foreach($departmen_id as $k => $v ){
-            $where ['id']                   = $v;
-            $departmen_count                = M('salary_departmen_count')->where($where)->delete();
-        }
-        $count_money                        = M('salary_count_money')->where('id='.$count_money_id)->delete();
-        if($count_money){
-            $sum                            = 1;
-            $msg                            = "驳回成功!";
+        $wages_month_del                = M('salary_wages_month')->where($datetime)->delete();
+        $departmen_count                = M('salary_departmen_count')->where($datetime)->delete();
+        $count_money                    = M('salary_count_money')->where($datetime)->delete();
+        if($count_money && $departmen_count && $wages_month_del){
+            $sum                        = 1;
+            $msg                        = "驳回成功!";
             echo json_encode(array('sum' => $sum, 'msg' => $msg));die;
         }else{
-            $sum                            = 0;
-            $msg                            = "驳回失败!".$count_money_id;
+            $sum                        = 0;
+            $msg                        = "驳回失败!";
             echo json_encode(array('sum' => $sum, 'msg' => $msg));die;
         }
-
     }
 
     public function salary_list_Labour(){//添加工会会费
