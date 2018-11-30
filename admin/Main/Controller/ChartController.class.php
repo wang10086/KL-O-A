@@ -656,6 +656,13 @@ class ChartController extends BaseController {
 		
 		$this->display('tpmore');
 	}
+
+    //数据按部门统计
+    public function  department(){
+
+
+        $this->display();
+    }
 	
 }
 	
