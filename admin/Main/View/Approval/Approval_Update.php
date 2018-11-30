@@ -197,7 +197,7 @@
                                             <a class="btn btn-default" onclick="salary2();" style="margin-top: -1em;color:#000000;background-color: lightgrey;"><i class="fa fa-print"></i> 打印</a>
                                         </label><br><br>
 
-                                        <div  id="approval_submit_show1" style="padding:1em;height:84em;border:solid 2px #d2d5d8;overflow-y:scroll;overflow-x:scroll;word-wrap:break-word;" >
+                                        <div style="padding:1em;height:84em;border:solid 2px #d2d5d8;overflow-y:scroll;overflow-x:scroll;word-wrap:break-word;" >
                                             <foreach name="annotation" item="ann">
                                                 <p>
                                                     <b style="color:#339933;">{$ann['account_name']}&nbsp;</b>
@@ -227,7 +227,7 @@
                         </div><!-- /.box -->
 
                             <!--             打印页面           -->
-                        <table class="table table-bordered" style="margin:2em auto;width:96%;">
+                        <table class="table table-bordered" style="margin:2em auto;width:96%;"  id="approval_submit_show1">
                             <tr style="text-align:center;">
                                 <td style="width:10em;letter-spacing:0.1em;"><b>文件名称</b></td>
                                 <td colspan="5" style="width:10em;letter-spacing:0.2em;">{$file['file_primary']}</td>
@@ -273,7 +273,7 @@
                                             <p style="float: right;letter-spacing:0.2em;">
                                                 <span style="padding-right:2em;"><?php echo $a['account_name'];?></span><br>
 
-                                                <span style=";padding-right: 4em;"><?php echo date('Y年m月d日',$a['createtime']);?></span>
+                                                <span style=";padding-right: 2em;"><?php echo date('Y年m月d日',$a['createtime']);?></span>
                                             </p>
                                         <?php }?>
                                     </foreach>
@@ -369,9 +369,10 @@
         uploader.init();
     });
     function salary2(){
+        $('#approval_submit_show1').show();
         var id = $('#approval_submit_show1').prop("id");
         var html = '<div style="text-align:center;font-weight:bold;font-size:2em;">';
-            html += "<?php if($approval['Approval_url']['modify_filename']!==''){echo $approval['Approval_url']['modify_filename'];}else{echo $approval['Approval']['file_name'];}?> &nbsp;审批批注</div>";
+            html += "<?php echo $file['file_primary'];?> &nbsp;审批文件</div>";
 
         $('#approval_submit_show1').prepend(html);
         print_view(id);
