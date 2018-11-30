@@ -731,6 +731,27 @@
                             </a>
                             <ul class="treeview-menu">
 
+                                <li class="treeview {:ison(CONTROLLER_NAME, 'Chart')}">
+                                    <a href="javascript:;">
+                                        <i class="fa fa-calendar"></i>
+                                        <span>项目月度统计</span>
+                                        <i class="fa fa-angle-left pull-right"></i>
+                                    </a>
+                                    <ul class="treeview-menu">
+                                        <if condition="rolemenu(array('Chart/settlement'))">
+                                            <li><a href="{:U('Chart/settlement')}"><i class="fa fa-angle-right"></i> 项目月度统计</a></li>
+                                        </if>
+                                        <if condition="rolemenu(array('Chart/department'))">
+                                            <li><a href="{:U('Chart/department')}"><i class="fa fa-angle-right"></i> 项目分部门汇总</a></li>
+
+                                        </if>
+                                        <if condition="rolemenu(array('Chart/kind'))">
+                                            <!--<li><a href="{:U('Chart/kind')}"><i class="fa fa-angle-right"></i> 项目分部门分类型汇总</a></li>-->
+                                            <li><a href="javascript:;" onClick="art_show_msg('加班开发中，稍后呈现...',5)"><i class="fa fa-angle-right"></i> 项目分部门分类型汇总</a></li>
+                                        </if>
+                                    </ul>
+                                </li>
+
                             	<if condition="rolemenu(array('Chart/op'))">
                                     <li><a href="{:U('Chart/op')}"><i class="fa fa-angle-right"></i> 综合数据分析</a></li>
                                 </if>
@@ -741,9 +762,6 @@
                                     <li><a href="{:U('Chart/op_tc')}"><i class="fa fa-angle-right"></i> 项目提成分析</a></li>
                                 </if>
 
-                                <if condition="rolemenu(array('Chart/settlement'))">
-                                    <li><a href="{:U('Chart/settlement')}"><i class="fa fa-angle-right"></i> 项目月度统计</a></li>
-                                </if>
                                 <if condition="rolemenu(array('Chart/finance'))">
                                     <li><a href="{:U('Chart/finance')}"><i class="fa fa-angle-right"></i> 项目结算统计</a></li>
                                 </if>
