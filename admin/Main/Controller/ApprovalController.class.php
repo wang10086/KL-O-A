@@ -208,10 +208,14 @@ class ApprovalController extends BaseController {
             $this->error('数据错误！请重新打开页面！');die;
         }
         if(($_SESSION['userid']==13 || $_SESSION['userid']==1) && $approval_r[1]['type']==1 && $approval_r[1]['status']==2){
-            $this ->status = 2;
+            $this ->status          = 2;
         }else{
-            $this ->status = 1;
+            $this ->status          = 1;
         }
+        $file_id['id']              = $approval_r[1]['file_id'];
+        $file                       = M('approval_flie')->where($file_id)->find();//文件名称
+        $this->file                 = $file;
+        $this->department           = userinfo(user_table($file['account_id'])['departmentid'],2);
         $whe['id']                  = $approval_r[1]['id'];
         $whe['file_id']             = $approval_r[1]['file_id'];
         if($approval_r[1]['account_id']!==$_SESSION['userid']){

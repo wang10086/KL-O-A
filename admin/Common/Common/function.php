@@ -4176,7 +4176,11 @@ function getScienceRes(){
 //}
 
     //用户的 部门 岗位  详情信息
-    function userinfo($userid){
+    function userinfo($userid,$type){
+        if($type==2){
+            $userinfo  = M('salary_department')->where('id='.$userid)->find();//查询部门
+            return $userinfo;die;
+        }
         $info                              = M('account')->where($userid)->select();//查询用户信息
         foreach($info as $key => $val){
             $userinfo[$key]['info']        = $val;

@@ -226,6 +226,49 @@
                             </div>
                         </div><!-- /.box -->
 
+                            <!--             打印页面           -->
+                        <table class="table table-bordered" style="text-align:center;margin:2em auto;width:96%;">
+                            <tr style="text-align:center;">
+                                <td style="width:10em;"><b>文件名称</b></td>
+                                <td colspan="5">{$file['file_primary']}</td>
+                            </tr>
+                            <tr style="text-align:center;">
+                                <td style="width:10em;"><b>起草部门</b></td>
+                                <td style="width:10em;">{$department['department']}</td>
+                                <td style="width:10em;"><b>拟稿人</b></td>
+                                <td style="width:10em;">{$file['account_name']}</td>
+                                <td style="width:10em;"><b>新编/修改</b></td>
+                                <td style="width:10em;"><?php if($file['category']==1){echo '新建';}else{echo '修改';} ?></td>
+
+                            </tr>
+                            <tr style="text-align:center;">
+                                <td style="width:10em;"><b>发放范围</b></td>
+                                <td colspan="5">公司各部门、经理办公室成员</td>
+                            </tr>
+                            <tr style="text-align:center;">
+                                <td><b>相关人员修改意见</b></td>
+                                <td colspan="5">
+                                    <p>请经理办公室会扩大会成员及各业务中心（项目部）负责人阅，提出建设性意见。</p>
+                                    <foreach name="annotation" item="an">
+                                        <p>
+                                            <b style="color:#339933;">{$an['account_name']}&nbsp;</b>
+                                            <span>[ <?php echo date('Y-m-d H:i:s',$an['createtime']);?> ]</span>
+                                            <span style="letter-spacing:0.1em;line-height:2em;text-indent:50px;">
+                                                 {$an['annotation_content']}
+                                             </span>
+
+                                        </p>
+                                    </foreach>
+                                </td>
+                            </tr>
+                            <tr style="text-align:center;">
+                                <td><b>文件批准</b></td>
+                                <td colspan="5"></td>
+                            </tr>
+
+                        </table><br><br>
+
+
                     </div><!-- /.col -->
                  </div>
 
