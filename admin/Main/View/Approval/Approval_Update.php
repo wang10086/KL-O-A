@@ -227,61 +227,62 @@
                         </div><!-- /.box -->
 
                             <!--             打印页面           -->
-                        <table class="table table-bordered" style="margin:2em auto;width:96%;"  id="approval_submit_show1">
-                            <tr style="text-align:center;">
-                                <td style="width:10em;letter-spacing:0.1em;"><b>文件名称</b></td>
-                                <td colspan="5" style="width:10em;letter-spacing:0.2em;">{$file['file_primary']}</td>
-                            </tr>
-                            <tr style="text-align:center;">
-                                <td style="width:10em;letter-spacing:0.1em;"><b>起草部门</b></td>
-                                <td style="width:10em;letter-spacing:0.2em;">{$department['department']}</td>
-                                <td style="width:10em;"><b>拟稿人</b></td>
-                                <td style="width:10em;letter-spacing:0.2em;">{$file['account_name']}</td>
-                                <td style="width:10em;letter-spacing:0.1em;"><b>新编/修改</b></td>
-                                <td style="width:10em;letter-spacing:0.2em;"><?php if($file['category']==1){echo '新建';}else{echo '修改';} ?></td>
+                        <div  id="approval_submit_show1">
+                            <table class="table table-bordered" style="margin:2em auto;width:96%;" >
+                                <tr style="text-align:center;">
+                                    <td style="width:10em;letter-spacing:0.1em;"><b>文件名称</b></td>
+                                    <td colspan="5" style="width:10em;letter-spacing:0.2em;">{$file['file_primary']}</td>
+                                </tr>
+                                <tr style="text-align:center;">
+                                    <td style="width:10em;letter-spacing:0.1em;"><b>起草部门</b></td>
+                                    <td style="width:10em;letter-spacing:0.2em;">{$department['department']}</td>
+                                    <td style="width:10em;"><b>拟稿人</b></td>
+                                    <td style="width:10em;letter-spacing:0.2em;">{$file['account_name']}</td>
+                                    <td style="width:10em;letter-spacing:0.1em;"><b>新编/修改</b></td>
+                                    <td style="width:10em;letter-spacing:0.2em;"><?php if($file['category']==1){echo '新建';}else{echo '修改';} ?></td>
 
-                            </tr>
-                            <tr style="text-align:center;letter-spacing:0.1em;">
-                                <td style="width:10em;text-align:center;letter-spacing:0.1em"><b>发放范围</b></td>
-                                <td colspan="5" style="text-align:center;letter-spacing:0.2em;">公司各部门、经理办公室成员</td>
-                            </tr>
-                            <tr>
-                                <td style="text-align:center;letter-spacing:0.1em;"><b>相关人员修改意见</b></td>
-                                <td colspan="5" style="letter-spacing:0.1em;">
-                                    <p>请经理办公室会扩大会成员及各业务中心（项目部）负责人阅，提出建设性意见。</p>
-                                    <foreach name="annotation" item="an">
-                                        <?php if($an['status']<3){?>
-                                        <p>
-                                            <b style="color:#339933;"><?php echo $an['account_name'];?>&nbsp;</b>
-                                            <span>[ <?php echo date('Y-m-d H:i:s',$an['createtime']);?> ]</span>
-                                            <span style="letter-spacing:0.1em;line-height:2em;text-indent:50px;">
-                                                 <?php echo $an['annotation_content'];?>
-                                             </span>
-                                        </p>
-                                        <?php }?>
-                                    </foreach>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td style="text-align:center;letter-spacing:0.1em;"><b>文件批准</b></td>
-                                <td colspan="5" style="letter-spacing:0.1em;">
-                                    <foreach name="annotation" item="a">
-                                        <?php if($a['status']==3){?>
+                                </tr>
+                                <tr style="text-align:center;letter-spacing:0.1em;">
+                                    <td style="width:10em;text-align:center;letter-spacing:0.1em"><b>发放范围</b></td>
+                                    <td colspan="5" style="text-align:center;letter-spacing:0.2em;">公司各部门、经理办公室成员</td>
+                                </tr>
+                                <tr>
+                                    <td style="text-align:center;letter-spacing:0.1em;"><b>相关人员修改意见</b></td>
+                                    <td colspan="5" style="letter-spacing:0.1em;">
+                                        <p>请经理办公室会扩大会成员及各业务中心（项目部）负责人阅，提出建设性意见。</p>
+                                        <foreach name="annotation" item="an">
+                                            <?php if($an['status']<3){?>
                                             <p>
-                                                <?php echo $a['annotation_content'];?>
+                                                <b style="color:#339933;"><?php echo $an['account_name'];?>&nbsp;</b>
+                                                <span>[ <?php echo date('Y-m-d H:i:s',$an['createtime']);?> ]</span>
+                                                <span style="letter-spacing:0.1em;line-height:2em;text-indent:50px;">
+                                                     <?php echo $an['annotation_content'];?>
+                                                 </span>
                                             </p>
-                                            <p style="float: right;letter-spacing:0.2em;">
-                                                <span style="padding-right:2em;"><?php echo $a['account_name'];?></span><br>
+                                            <?php }?>
+                                        </foreach>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="text-align:center;letter-spacing:0.1em;"><b>文件批准</b></td>
+                                    <td colspan="5" style="letter-spacing:0.1em;">
+                                        <foreach name="annotation" item="a">
+                                            <?php if($a['status']==3){?>
+                                                <p>
+                                                    <?php echo $a['annotation_content'];?>
+                                                </p>
+                                                <p style="float: right;letter-spacing:0.2em;">
+                                                    <span style="padding-right:2em;"><?php echo $a['account_name'];?></span><br>
 
-                                                <span style=";padding-right: 2em;"><?php echo date('Y年m月d日',$a['createtime']);?></span>
-                                            </p>
-                                        <?php }?>
-                                    </foreach>
-                                </td>
-                            </tr>
+                                                    <span style=";padding-right: 2em;"><?php echo date('Y年m月d日',$a['createtime']);?></span>
+                                                </p>
+                                            <?php }?>
+                                        </foreach>
+                                    </td>
+                                </tr>
 
-                        </table><br><br>
-
+                            </table><br><br>
+                        </div>
 
                     </div><!-- /.col -->
                  </div>
@@ -372,7 +373,7 @@
         $('#approval_submit_show1').show();
         var id = $('#approval_submit_show1').prop("id");
         var html = '<div style="text-align:center;font-weight:bold;font-size:2em;">';
-            html += "<?php echo $file['file_primary'];?> &nbsp;审批文件</div>";
+            html += "<?php echo $file['file_primary'];?> &nbsp;文件审批单</div><br><br>";
 
         $('#approval_submit_show1').prepend(html);
         print_view(id);
