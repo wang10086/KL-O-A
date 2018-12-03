@@ -12,20 +12,21 @@ class ManageController extends BaseController {
      * M 武汉项目部 N 沈阳项目部 P 长春项目部 B 市场部
      */
     public function Manage_month(){
-        $year = trim(I('year'));
-        $post = trim(I('post'));
-        $month = trim(I('month'));
-        $mod                  = D('Manage');
-        //月度统计人员 数额 占比
-        $this->number        = $mod->month();
+        $year                   = trim(I('year'));
+        $post                   = trim(I('post'));
+        $month                  = trim(I('month'));
+        $mod                    = D('Manage');
         //年月变化
-        $year = $mod->yearmonth($year,$post);
+        $year                   = $mod->yearmonth($year,$post);
         if($post==''){
-            $post=0;
+            $post               = 0;
         }
-        $this->year=$year;
-        $this->post=$post;
-        $this->month=$month;
+//        月度统计人员 数额 占比
+        $this->number           = $mod->month($year,$month);
+
+        $this->year             =$year;
+        $this->post             =$post;
+        $this->month            =$month;
         $this->display();
     }
     //季度经营报表

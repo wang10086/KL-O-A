@@ -6,7 +6,30 @@ use Sys\P;
 class ManageModel extends Model{
 
     //月度经营统计
-    public function month(){
+    public function month($year,$month){
+
+        if($month<10 || $month==0 || $month==''){ //判断时间是否空 和 小于10
+            if($month==0 || $month==''){ //为空默认
+                $month          = date('m');
+            }
+            if($month<10){ //小于10 添加为符合条件的字段
+                $datetime       = $year.'0'.$month;
+            }else{ //不小于10 直接获取年月
+                $datetime       = $year.$month;
+            }
+        }
+        $salary_month           = M('salary_wages_month')->field('id')->where('datetime='.$datetime)->select();//获取发工资的人
+         if(!$salary_month){
+            return 0;
+         }
+        $sum_count              = count($salary_month);//获取发工资的人数
+        foreach($salary_month as $key =>$val){
+            $id['id'] = $val['account_id'];
+            $account = M('account')->where($id)->find();
+
+        }
+//        print_r($salary_month);die;
+
         $month1 = $this->amount();//数额
         return $month1;
     }
@@ -16,7 +39,7 @@ class ManageModel extends Model{
         $arr1   = array('F','G','L','M','N','P','B');
         foreach($arr1 as $key =>$val){
             $where['employee_member']             = array('like','%'.$val.'%');
-            $salary_month   = M('salary_wages_month')->select();
+
             if($key>=0){
                 if($key<1){
                     //公司月度统计 数额
