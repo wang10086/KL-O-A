@@ -52,10 +52,11 @@ class ManageController extends BaseController {
         $year = trim(I('year'));
         $post = trim(I('post'));
         $mod            = D('Manage');
-        // 月度统计人员 数额 占比
+        // 月度统计人员 数额 占
+        $number         = $mod->month();
+        $year = $mod->yearmonth($year,$post);
         $this->post=$post;
         $this->year=$year;
-        $number         = $mod->month();
         $this->number   = $number;
         $this->display();
     }
