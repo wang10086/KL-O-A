@@ -3,7 +3,7 @@
 <aside class="right-side">
 
     <section class="content-header">
-        <h1><?php echo date('Y',time());?>月度经营报表</h1>
+        <h1><a >{$year}</a>月度经营报表</h1>
         <ol class="breadcrumb">
             <li><a href="{:U('Index/index')}"><i class="fa fa-home"></i> 首页</a></li>
             <li><a href="{:U('Manage/Manage_month')}"><i class="fa fa-gift"></i> 月度经营报表</a></li>
@@ -18,13 +18,13 @@
             <div class="col-md-12">
                 <div class="btn-group" id="catfont" style="padding-bottom:20px;">
 
-                    <a href="{:U('Manage/Manage_month',array('year'=>$prveyear,'month'=>'01','post'=>$post))}" class="btn btn-default" style="padding:8px 18px;">上一年</a>
+                    <a href="{:U('Manage/Manage_month',array('year'=>$year,'month'=>'1','post'=>1))}" class="btn btn-default" id="btn-default_1" style="padding:8px 18px;">上一年</a>
                     <?php
                         for($i=1;$i<13;$i++){
-                         echo '<a href="'.U('Manage/Manage_month',array('month'=>$i)).'" class="btn btn-default" style="padding:8px 18px;">'.$i.'月</a>';
+                         echo '<a href="'.U('Manage/Manage_month',array('year'=>$year,'month'=>$i)).'" class="btn btn-default" id="default'.$i.'" style="padding:8px 18px;">'.$i.'月</a>';
                         }
                     ?>
-                    <a href="{:U('Manage/Manage_month',array('year'=>$nextyear,'month'=>'01','post'=>$post))}" class="btn btn-default" style="padding:8px 18px;">下一年</a>
+                    <a href="{:U('Manage/Manage_month',array('year'=>$year,'month'=>'1','post'=>2))}" class="btn btn-default" id="btn-default_2" style="padding:8px 18px;">下一年</a>
                 </div>
 
                 <div class="box box-warning">
@@ -197,4 +197,17 @@
 
 
 <include file="Index:footer2" />
-
+<script>
+    $(function(){
+        var num = <?php echo $post;?>;
+        if(num==1){
+            $('#btn-default_1').css('backgroundColor','#00acd6');
+        }
+        if(num==2){
+            $('#btn-default_2').css('backgroundColor','#00acd6');
+        }
+        if(num==""){
+            $("#default<?php echo $month;?>").css('backgroundColor','#00acd6');
+        }
+    });
+</script>
