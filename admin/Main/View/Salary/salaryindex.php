@@ -138,9 +138,12 @@
     function p(s){ //时间格式
         return s < 10 ? '0' + s : s;
     }
-    function Atime(m,d){
+    function Atime(y,m,d){
 
         if(d < 10){
+            if(m==1){
+                m=13;
+            }
             m = m-1;
                 return  m;//查询年月
         }
@@ -151,7 +154,10 @@
        var year         = myDate.getFullYear();//获取当前年
        var month        = myDate.getMonth()+1;//获取当前月
        var date         = myDate.getDate();//当前日
-       var Appointime   = Atime(month,date);//工资月分
+       var Appointime   = Atime(year,month,date);//工资月分
+       if(Appointime==12){
+           year = year-1;
+       }
        var currenttime  = year+''+p(Appointime);//当前时间
 
        var msg = '将生成'+' '+currenttime+' '+'月份工资表，操作前请确认所有数据录入事项均已完成！';

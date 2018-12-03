@@ -158,6 +158,7 @@ class SalaryController extends BaseController {
                     $tt = ($count * 1.5 - $count) * 0.2;//100%以上 150% 以内
                     $yy = ($sum - $count * 1.5) * 0.25;//150% 以上
                     $Total1 = $tot + $tt + $yy;
+
                 }
                 $Total = $Total1 + $price;//提成+扶植期提成
                 $content['target'] = $count;
