@@ -16,6 +16,7 @@ class ManageModel extends Model{
         $arr1   = array('F','G','L','M','N','P','B');
         foreach($arr1 as $key =>$val){
             $where['employee_member']             = array('like','%'.$val.'%');
+            $salary_month   = M('salary_wages_month')->select();
             if($key>=0){
                 if($key<1){
                     //公司月度统计 数额

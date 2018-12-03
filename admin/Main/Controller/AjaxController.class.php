@@ -990,11 +990,11 @@ class AjaxController extends Controller {
         $status ['status']              = $_POST['status'];
         $wages_query                    =  M('salary_wages_month')->where($datetime)->select();
         foreach($wages_query as $key => $val){
-            if($val['status'] == 4){
-                $sum                    = 0;
-                $msg                    = "驳回失败!数据锁定！请联系管理员！";
-                echo json_encode(array('sum' => $sum, 'msg' => $msg));die;
-            }
+//            if($val['status'] == 4){
+//                $sum                    = 0;
+//                $msg                    = "驳回失败!数据锁定！请联系管理员！";
+//                echo json_encode(array('sum' => $sum, 'msg' => $msg));die;
+//            }
             $att['id']                  =  $val['attendance_id'];
             $stat['status']             = 1;
             $bonus['id']                = $val['bonus_id'];
@@ -1002,12 +1002,25 @@ class AjaxController extends Controller {
             $labou['id']                = $val['labour_id'];
             $subsid['id']               = $val['subsidy_id'];
             $withh['withholding_token'] = $val['withholding_token'];
-            $attend_W                   = M('salary_attendance')->where($att)->save($stat);
-            $bonus_W                    = M('oa_salary_bonus')->where($bonus)->save($stat);
-            $income_W                   = M('oa_salary_income')->where($income)->save($stat);
-            $labour_W                   = M('oa_salary_labour')->where($labou)->save($stat);
-            $subsidy_W                  = M('oa_salary_subsidy')->where($subsid)->save($stat);
-            $withh_W                    = M('oa_salary_withholding')->where($withh)->save($stat);
+
+            if($att['id']!==0){
+                $attend_W               = M('salary_attendance')->where($att)->save($stat);
+            }
+            if($bonus['id']!==0){
+                $bonus_W                = M('oa_salary_bonus')->where($bonus)->save($stat);
+            }
+            if($income['income_token']!==0){
+                $income_W               = M('oa_salary_income')->where($income)->save($stat);
+            }
+            if($labou['id']!==0){
+                $labour_W               = M('oa_salary_labour')->where($labou)->save($stat);
+            }
+            if($subsid['id']!==0){
+                $subsidy_W              = M('oa_salary_subsidy')->where($subsid)->save($stat);
+            }
+            if($withh['withholding_token']!==0){
+                $withh_W                = M('oa_salary_withholding')->where($withh)->save($stat);
+            }
         }
         $wages_month_del                = M('salary_wages_month')->where($datetime)->delete();
         $departmen_count                = M('salary_departmen_count')->where($datetime)->delete();

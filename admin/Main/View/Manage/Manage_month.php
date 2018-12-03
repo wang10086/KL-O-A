@@ -39,26 +39,31 @@
 
                         <table class="table table-bordered dataTable fontmini" id="tablecenter">
                             <tr role="row" class="orders" style="text-align:center;" >
-                                <th style="width:10em;" rowspan="2"><b>项目</b></th>
-                                <th style="width:10em;" rowspan="2"><b>公司</b></th>
-                                <th style="width:10em;" colspan="2"><b>京区业务中心</b></th>
-                                <th style="width:10em;" colspan="2"><b>京外业务中心</b></th>
-                                <th style="width:10em;" colspan="2"><b>南京项目部</b></th>
-                                <th style="width:10em;" colspan="2"><b>武汉项目部</b></th>
-                                <th style="width:10em;" colspan="2"><b>沈阳项目部</b></th>
-                                <th style="width:10em;" colspan="2"><b>长春项目部</b></th>
-                                <th style="width:10em;" colspan="2"><b>市场部</b></th>
+                                <th style="width:10em;" ><b>项目</b></th>
+                                <th style="width:10em;" ><b>公司</b></th>
+                                <th style="width:10em;" ><b>京区业务中心</b></th>
+                                <th style="width:10em;" ><b>京外业务中心</b></th>
+                                <th style="width:10em;" ><b>南京项目部</b></th>
+                                <th style="width:10em;" ><b>武汉项目部</b></th>
+                                <th style="width:10em;" ><b>沈阳项目部</b></th>
+                                <th style="width:10em;" ><b>长春项目部</b></th>
+                                <th style="width:10em;" ><b>市场部</b></th>
+                                <th style="width:10em;" ><b>常规旅游中心</b></th>
+                                <th style="width:10em;" ><b>机关部门</b></th>
                             </tr>
                             <tr role="row" class="orders" style="text-align:center;">
-                                <?php for($i=0;$i<7;$i++){?>
-                                <td>数额</td>
-                                <td>占比</td>
-                                <?php } ?>
+                                <td>员工人数</td>
+                                <td></td>
+                                <td>1</td>
+                                <td></td>
+                                <td>1</td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td>1</td>
                             </tr>
-                            <foreach name="number" item="n">
-                                <td>{$n.employees_sum}</td>
-                                <td>{$n.proportion}</td>
-                            </foreach>
 
                             <tr role="row" class="orders" style="text-align:center;">
                                 <td>营业收入</td>
@@ -72,11 +77,6 @@
                                 <td></td>
                                 <td></td>
                                 <td>1</td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
                             </tr>
                             <tr role="row" class="orders" style="text-align:center;">
                                 <td>营业毛利</td>
@@ -90,11 +90,6 @@
                                 <td></td>
                                 <td></td>
                                 <td>1</td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
                             </tr>
                             <tr role="row" class="orders" style="text-align:center;">
                                 <td>营业毛利率(%)</td>
@@ -108,11 +103,6 @@
                                 <td></td>
                                 <td></td>
                                 <td>1</td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
                             </tr>
                             <tr role="row" class="orders" style="text-align:center;">
                                 <td>人力资源成本</td>
@@ -126,11 +116,7 @@
                                 <td></td>
                                 <td></td>
                                 <td>1</td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
+
                             </tr>
                             <tr role="row" class="orders" style="text-align:center;">
                                 <td>其他费用</td>
@@ -144,11 +130,6 @@
                                 <td></td>
                                 <td></td>
                                 <td>1</td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
                             </tr>
                             <tr role="row" class="orders" style="text-align:center;">
                                 <td>利润总额</td>
@@ -162,11 +143,6 @@
                                 <td></td>
                                 <td></td>
                                 <td>1</td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
                             </tr>
                             <tr role="row" class="orders" style="text-align:center;">
                                 <td>人事费用率</td>
@@ -180,11 +156,6 @@
                                 <td></td>
                                 <td></td>
                                 <td>1</td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
                             </tr>
                         </table><br><br>
 
