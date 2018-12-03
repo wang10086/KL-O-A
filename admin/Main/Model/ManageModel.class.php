@@ -11,7 +11,6 @@ class ManageModel extends Model{
         return $month1;
     }
 
-
     //月度统计 数额
     public function amount(){
         $arr1   = array('F','G','L','M','N','P','B');
@@ -31,6 +30,22 @@ class ManageModel extends Model{
             }
         }
         return $month;
+    }
+
+    /**
+     * yearmonth 年月变化
+     */
+    public function yearmonth($year,$post){
+        if(is_numeric($year)){//判断有无传送年
+            if(is_numeric($post) && $post==1){
+                $year = $year-1;
+            }elseif(is_numeric($post) && $post==2){
+                $year = $year+1;
+            }
+        }else{ //没有就默认
+            $year = date('Y');
+        }
+        return $year;
     }
     /**
      * 项目排列名称

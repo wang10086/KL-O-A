@@ -471,6 +471,10 @@ class BaseController extends Controller {
             $time_M                                 = date('m');
             $time_D                                 = date('d');
             if($time_D < 10){
+                if($time_M==1){
+                    $time_Y = $time_Y-1;
+                    $time_M = 13;
+                }
                 $time_M = $time_M-1;
                 if($time_M < 10) {
                     $que['datetime']                = $time_Y.'0'.$time_M;//查询年月

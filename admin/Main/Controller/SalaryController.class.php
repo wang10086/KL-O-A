@@ -110,8 +110,9 @@ class SalaryController extends BaseController {
                     $lists = M('kpi_more')->where(array('kpi_id' => $kpi['id']))->find();
                     //季度完成
                     $user = M('account')->where('id=' . $query['user_id'])->find();
-                    $mont1 = $year . ($month - 1) . '26';//开始月日
-                    $mont2 = $year . $month . '26';//结束月日
+                    $yearmonth    = GetGuideMonth($query['month']);
+                    $mont1 = $yearmonth['firstday'];//开始月日
+                    $mont2 = $yearmonth['lastday'];//结束月日
 
                     $support = M('salary_support')->where('account_id=' . $query['user_id'])->find();//扶植人员
                     if ($support) {//查询是否是扶植人员
@@ -171,8 +172,9 @@ class SalaryController extends BaseController {
                 //季度完成
                 $user = M('account')->where('id=' . $query['user_id'])->find();
 
-                $mont1 = $year . ($month - 1) . '26';//开始月日
-                $mont2 = $year . $month . '26';//结束月日
+                $yresmonth = GetGuideMonth($query['month']);
+                $mont1 = $yresmonth['firstday'];//开始月日
+                $mont2 = $yresmonth['lastday'];//结束月日日
 
                 $support = M('salary_support')->where('account_id=' . $query['user_id'])->find();//扶植人员
 
@@ -235,8 +237,9 @@ class SalaryController extends BaseController {
                 $lists                          = M('kpi_more')->where(array('kpi_id'=>$kpi['id']))->find();
                 //季度完成
                 $user                           = M('account')->where('id='.$query['user_id'])->find();
-                $mont1                          = $year.($month-1).'26';//开始月
-                $mont2                          = $year.$month.'26';//结束月
+                $yearmonth    = GetGuideMonth($query['month']);
+                $mont1 = $yearmonth['firstday'];//开始月日
+                $mont2 = $yearmonth['lastday'];//结束月日
                 $support                        = M('salary_support')->where('account_id='.$query['user_id'])->find();//扶植人员
                 if($support){//查询是否是扶植人员
 

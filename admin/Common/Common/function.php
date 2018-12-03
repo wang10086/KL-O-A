@@ -4001,6 +4001,10 @@ function user_table($where,$type){//查询用户 1 查询一个 2 查询符合�
 
         if($type==1){
             if($time_D < 10){
+                if($time_M==1){
+                    $time_Y = $time_Y-1;
+                    $time_M = 13;
+                }
                 $time_M = $time_M-1;
                 if($time_M < 10) {
                     $que                 = $time_Y.'0'.$time_M;//查询年月
@@ -4013,6 +4017,10 @@ function user_table($where,$type){//查询用户 1 查询一个 2 查询符合�
             }
         }elseif($type==2){
             if($time_D < 10){
+                if($time_M==1){
+                    $time_Y = $time_Y-1;
+                    $time_M = 13;
+                }
                 $time_M                     = $time_M-1;
                 if($time_M < 10) {
                     $que               = $time_Y.'年0'.$time_M.'月';//查询年月
