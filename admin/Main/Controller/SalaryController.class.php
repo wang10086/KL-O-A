@@ -642,7 +642,7 @@ class SalaryController extends BaseController {
             $dateti['datetime']         = $monthly;
                 $sql                    = 'SELECT *,month.status as mstatus FROM oa_salary_wages_month as month, oa_account as account where month.account_id=account.id AND account.archives='.$archives.' AND month.datetime='.$monthly;
             if($name!==""){
-                $sql .= ' AND month.user_name='.$name;
+                $sql .= " AND month.user_name=$name";
             }
             $user_info = M()->query($sql);
             $info                       = $this->arraysplit($user_info);
@@ -664,6 +664,7 @@ class SalaryController extends BaseController {
                 }
                 $wages_month            = M('salary_wages_month')->where($dateti)->select();//已经提交数据
                 $info                   = $this->arraysplit($wages_month);
+                unset( $dateti['user_name']);
                 $sum                    = M('salary_departmen_count')->where($dateti)->select();
                 $summoney               = M('salary_count_money')->where($dateti)->find();
                 $status                 = $wages_month[0]['status'];

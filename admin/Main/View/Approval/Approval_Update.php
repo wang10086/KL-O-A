@@ -227,28 +227,28 @@
                         </div><!-- /.box -->
 
                             <!--             打印页面           -->
-                        <div  id="approval_submit_show1">
-                            <table class="table table-bordered" style="margin:2em auto;width:96%;" >
-                                <tr style="text-align:center;">
-                                    <td style="width:10em;letter-spacing:0.1em;"><b>文件名称</b></td>
-                                    <td colspan="5" style="width:10em;letter-spacing:0.2em;">{$file['file_primary']}</td>
+                        <div  id="approval_submit_show1" style="display:none;">
+                            <table class="table table-bordered" style="margin:2em auto;width:96%;border:1px solid #000000;" >
+                                <tr style="text-align:center;" >
+                                    <td style="width:10em;letter-spacing:0.1em;border:1px solid #000000;font-size:0.8em;"><b>文件名称</b></td>
+                                    <td colspan="5" style="width:10em;letter-spacing:0.2em;border:1px solid #000000;font-size:0.8em;">{$file['file_primary']}</td>
                                 </tr>
-                                <tr style="text-align:center;">
-                                    <td style="width:10em;letter-spacing:0.1em;"><b>起草部门</b></td>
-                                    <td style="width:10em;letter-spacing:0.2em;">{$department['department']}</td>
-                                    <td style="width:10em;"><b>拟稿人</b></td>
-                                    <td style="width:10em;letter-spacing:0.2em;">{$file['account_name']}</td>
-                                    <td style="width:10em;letter-spacing:0.1em;"><b>新编/修改</b></td>
-                                    <td style="width:10em;letter-spacing:0.2em;"><?php if($file['category']==1){echo '新建';}else{echo '修改';} ?></td>
+                                <tr style="text-align:center;border:1px solid #000000;font-size:0.8em;">
+                                    <td style="width:10em;letter-spacing:0.1em;border:1px solid #000000;font-size:0.8em;"><b>起草部门</b></td>
+                                    <td style="width:10em;letter-spacing:0.2em;border:1px solid #000000;font-size:0.8em;">{$department['department']}</td>
+                                    <td style="width:10em;border:1px solid #000000;font-size:0.8em;"><b>拟稿人</b></td>
+                                    <td style="width:10em;letter-spacing:0.2em;border:1px solid #000000;font-size:0.8em;">{$file['account_name']}</td>
+                                    <td style="width:10em;letter-spacing:0.1em;border:1px solid #000000;font-size:0.8em;"><b>新编/修改</b></td>
+                                    <td style="width:10em;letter-spacing:0.2em;border:1px solid #000000;font-size:0.8em;"><?php if($file['category']==1){echo '新建';}else{echo '修改';} ?></td>
 
                                 </tr>
-                                <tr style="text-align:center;letter-spacing:0.1em;">
-                                    <td style="width:10em;text-align:center;letter-spacing:0.1em"><b>发放范围</b></td>
-                                    <td colspan="5" style="text-align:center;letter-spacing:0.2em;">公司各部门、经理办公室成员</td>
+                                <tr style="text-align:center;letter-spacing:0.1em;border:1px solid #000000;font-size:0.8em;">
+                                    <td style="width:10em;text-align:center;letter-spacing:0.1em;border:1px solid #000000;font-size:0.8em;"><b>发放范围</b></td>
+                                    <td colspan="5" style="text-align:center;letter-spacing:0.2em;border:1px solid #000000;font-size:0.8em;">公司各部门、经理办公室成员</td>
                                 </tr>
                                 <tr>
-                                    <td style="text-align:center;letter-spacing:0.1em;"><b>相关人员修改意见</b></td>
-                                    <td colspan="5" style="letter-spacing:0.1em;">
+                                    <td style="text-align:center;letter-spacing:0.1em;border:1px solid #000000;font-size:0.8em;"><b>相关人员修改意见</b></td>
+                                    <td colspan="5" style="letter-spacing:0.1em;border:1px solid #000000;height:100em;font-size:0.8em;">
                                         <p>请经理办公室会扩大会成员及各业务中心（项目部）负责人阅，提出建设性意见。</p>
                                         <foreach name="annotation" item="an">
                                             <?php if($an['status']<3){?>
@@ -264,8 +264,8 @@
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td style="text-align:center;letter-spacing:0.1em;"><b>文件批准</b></td>
-                                    <td colspan="5" style="letter-spacing:0.1em;">
+                                    <td style="text-align:center;letter-spacing:0.1em;border:1px solid #000000;font-size:0.8em;"><b>文件批准</b></td>
+                                    <td colspan="5" style="letter-spacing:0.1em;border:1px solid #000000;font-size:0.8em;">
                                         <foreach name="annotation" item="a">
                                             <?php if($a['status']==3){?>
                                                 <p>
@@ -281,7 +281,7 @@
                                     </td>
                                 </tr>
 
-                            </table><br><br>
+                            </table>
                         </div>
 
                     </div><!-- /.col -->
