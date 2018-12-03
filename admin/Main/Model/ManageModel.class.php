@@ -48,6 +48,21 @@ class ManageModel extends Model{
         return $year;
     }
     /**
+     * yearmonth 年月变化
+     */
+    public function yearquarter($year,$post){
+        if(is_numeric($year)){//判断有无传送年
+            if(is_numeric($post) && $post==1){
+                $year = $year-1;
+            }elseif(is_numeric($post) && $post==2){
+                $year = $year+1;
+            }
+        }else{ //没有就默认
+            $year = date('Y');
+        }
+        return $year;
+    }
+    /**
      * 项目排列名称
      */
     public  function project_name($project){

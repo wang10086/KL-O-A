@@ -1,5 +1,9 @@
 <include file="Index:header2" />
-
+<style>
+    #btn-default_1{
+        background-color:#00acd6;
+    }
+</style>
 <aside class="right-side">
 
     <section class="content-header">
@@ -18,13 +22,13 @@
             <div class="col-md-12">
                 <div class="btn-group" id="catfont" style="padding-bottom:20px;">
 
-                    <a href="{:U('Manage/Manage_month',array('year'=>$year,'month'=>'1','post'=>1))}" class="btn btn-default" id="btn-default_1" style="padding:8px 18px;">上一年</a>
+                    <a href="{:U('Manage/Manage_month',array('year'=>$year,'month'=>'1','post'=>1))}" class="btn btn-default" id="btn-default_id1" style="padding:8px 18px;">上一年</a>
                     <?php
                         for($i=1;$i<13;$i++){
-                         echo '<a href="'.U('Manage/Manage_month',array('year'=>$year,'month'=>$i)).'" class="btn btn-default" id="default'.$i.'" style="padding:8px 18px;">'.$i.'月</a>';
+                         echo '<a href="'.U('Manage/Manage_month',array('year'=>$year,'month'=>$i)).'" class="btn btn-default" id="btn-default'.$i.'" style="padding:8px 18px;">'.$i.'月</a>';
                         }
                     ?>
-                    <a href="{:U('Manage/Manage_month',array('year'=>$year,'month'=>'1','post'=>2))}" class="btn btn-default" id="btn-default_2" style="padding:8px 18px;">下一年</a>
+                    <a href="{:U('Manage/Manage_month',array('year'=>$year,'month'=>'1','post'=>2))}" class="btn btn-default" id="btn-default_id3" style="padding:8px 18px;">下一年</a>
                 </div>
 
                 <div class="box box-warning">
@@ -199,15 +203,16 @@
 <include file="Index:footer2" />
 <script>
     $(function(){
-        var num = <?php echo $post;?>;
-        if(num==1){
-            $('#btn-default_1').css('backgroundColor','#00acd6');
+        var sum = <?php echo $post;?>;
+        var num = <?php echo $month;?>;
+        if(sum==1){
+           $('#btn-default_id1').attr('id','btn-default_1');return false;
         }
-        if(num==2){
-            $('#btn-default_2').css('backgroundColor','#00acd6');
+        if(sum==2){
+            $('#btn-default_id3').attr('id','btn-default_1');return false;
         }
-        if(num==""){
-            $("#default<?php echo $month;?>").css('backgroundColor','#00acd6');
+        if(sum==0){
+            $('#btn-default<?php echo $month;?>').attr('id','btn-default_1');return false;
         }
     });
 </script>

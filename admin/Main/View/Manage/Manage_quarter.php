@@ -1,9 +1,13 @@
 <include file="Index:header2" />
-
+<style>
+    #btn-default_1{
+        background-color:#00acd6;
+    }
+</style>
 <aside class="right-side">
 
     <section class="content-header">
-        <h1><?php echo date('Y',time());?>季度经营报表</h1>
+        <h1><?php echo $year;?>季度经营报表</h1>
         <ol class="breadcrumb">
             <li><a href="{:U('Index/index')}"><i class="fa fa-home"></i> 首页</a></li>
             <li><a href="{:U('Manage/Manage_quarter')}"><i class="fa fa-gift"></i> 季度经营报表</a></li>
@@ -17,12 +21,12 @@
             <!-- right column -->
             <div class="col-md-12">
                 <div class="btn-group" id="catfont" style="padding-bottom:20px;">
-                    <a href="{:U('Manage/Manage_month',array('year'=>$prveyear,'month'=>'01','post'=>$post))}" class="btn btn-default" style="padding:8px 18px;">上一年</a>
-                    <a href="'.U('Manage/Manage_month',array('month'=>1)).'" class="btn btn-default" style="padding:8px 18px;">第一季度</a>
-                    <a href="'.U('Manage/Manage_month',array('month'=>2)).'" class="btn btn-default" style="padding:8px 18px;">第二季度</a>
-                    <a href="'.U('Manage/Manage_month',array('month'=>3)).'" class="btn btn-default" style="padding:8px 18px;">第三季度</a>
-                    <a href="'.U('Manage/Manage_month',array('month'=>4)).'" class="btn btn-default" style="padding:8px 18px;">第四季度</a>
-                    <a href="{:U('Manage/Manage_month',array('year'=>$nextyear,'month'=>'01','post'=>$post))}" class="btn btn-default" style="padding:8px 18px;">下一年</a>
+                    <a href="{:U('Manage/Manage_quarter',array('year'=>$year,'quarter'=>'3','post'=>1))}" class="btn btn-default" id ="<?php if($post==1 && $quarter==3){echo 'btn-default_1';}?>" style="padding:8px 18px;">上一年</a>
+                    <a href="{:U('Manage/Manage_quarter',array('year'=>$year,'quarter'=>3))}" class="btn btn-default" style="padding:8px 18px;" id="<?php if($quarter==3 && $post==0){echo 'btn-default_1';}?>">第一季度</a>
+                    <a href="{:U('Manage/Manage_quarter',array('year'=>$year,'quarter'=>6))}" class="btn btn-default" style="padding:8px 18px;" id="<?php if($quarter==6  && $post==0){echo 'btn-default_1';}?>">第二季度</a>
+                    <a href="{:U('Manage/Manage_quarter',array('year'=>$year,'quarter'=>9))}" class="btn btn-default" style="padding:8px 18px;" id="<?php if($quarter==9  && $post==0){echo 'btn-default_1';}?>">第三季度</a>
+                    <a href="{:U('Manage/Manage_quarter',array('year'=>$year,'quarter'=>12))}" class="btn btn-default" style="padding:8px 18px;" id="<?php if($quarter==12  && $post==0){echo 'btn-default_1';}?>">第四季度</a>
+                    <a href="{:U('Manage/Manage_quarter',array('year'=>$year,'quarter'=>'3','post'=>2))}" class="btn btn-default" id ="<?php if($post==2 && $quarter==3){echo 'btn-default_1';}?>" style="padding:8px 18px;">下一年</a>
                 </div>
 
                 <div class="box box-warning">

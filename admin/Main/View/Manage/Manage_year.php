@@ -1,9 +1,13 @@
 <include file="Index:header2" />
-
+<style>
+    #btn-default_1{
+        background-color:#00acd6;
+    }
+</style>
 <aside class="right-side">
 
     <section class="content-header">
-        <h1><?php echo date('Y',time());?>年度经营报表</h1>
+        <h1><?php echo $year;?>年度经营报表</h1>
         <ol class="breadcrumb">
             <li><a href="{:U('Index/index')}"><i class="fa fa-home"></i> 首页</a></li>
             <li><a href="{:U('Manage/Manage_year')}"><i class="fa fa-gift"></i> 年度经营报表</a></li>
@@ -17,8 +21,8 @@
             <!-- right column -->
             <div class="col-md-12">
                 <div class="btn-group" id="catfont" style="padding-bottom:20px;">
-                    <a href="{:U('Manage/Manage_month',array('year'=>$prveyear,'month'=>'01','post'=>$post))}" class="btn btn-default" style="padding:8px 18px;">上一年</a>
-                    <a href="{:U('Manage/Manage_month',array('year'=>$nextyear,'month'=>'01','post'=>$post))}" class="btn btn-default" style="padding:8px 18px;">下一年</a>
+                    <a href="{:U('Manage/Manage_year',array('year'=>$year,'post'=>1))}" class="btn btn-default" id="<?php if($post==1){echo 'btn-default_1';}?>" style="padding:8px 18px;">上一年</a>
+                    <a href="{:U('Manage/Manage_year',array('year'=>$year,'post'=>2))}" class="btn btn-default" id="<?php if($post==2){echo 'btn-default_1';}?>" style="padding:8px 18px;">下一年</a>
                 </div>
 
                 <div class="box box-warning">
