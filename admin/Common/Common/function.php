@@ -4058,14 +4058,15 @@ function user_table($where,$type){//查询用户 1 查询一个 2 查询符合�
         if ($yearmonth){
             $year       = substr($yearmonth,0,4);
             $month      = substr($yearmonth,4,2);
+            $day        = 27;
             $data       = array();
             if ($month ==01){
                 $mon                = 12;
-                $data['firstday']   = ($year-1)."$mon".'27';
-                $data['lastday']    = $yearmonth.'27';
+                $data['firstday']   = ($year-1).$mon.$day;
+                $data['lastday']    = $yearmonth.$day;
             }else{
-                $data['firstday']   = ($yearmonth-1).'27';
-                $data['lastday']    = $yearmonth.'27';
+                $data['firstday']   = ($yearmonth-1).$day;
+                $data['lastday']    = $yearmonth.$day;
             }
         }
         return $data;
