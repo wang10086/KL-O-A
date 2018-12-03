@@ -659,9 +659,195 @@ class ChartController extends BaseController {
 
     //数据按部门统计
     public function  department(){
+        $pin        = I('pin');
+        $year		= I('year',date('Y'));
+        $month		= I('month',date('m'));
+        if (strlen($month)<2) $month = str_pad($month,2,'0',STR_PAD_LEFT);
+        $times      = $year.$month;
 
+        $yw_departs     = C('YW_DEPARTS');  //业务部门id
+        $where          = array();
+        $where['id']    = array('in',$yw_departs);
+        $departments    = M('salary_department')->field('id,department')->where($where)->select();
+        //预算及结算分部门汇总
+        $lists          = $this->count_lists($departments,$year,$month,$pin);
+        $this->lists    = $lists;
+        //var_dump($lists);
+        //die;
 
+        $this->year 	= $year;
+        $this->month 	= $month;
+        $this->prveyear	= $year-1;
+        $this->nextyear	= $year+1;
+        $this->pin      = $pin?$pin:0;
         $this->display();
+    }
+
+    //统计部门数据
+    public function count_lists($departments,$year,$month,$pin=0){
+        $yearBegin      			= $year.'0101';
+        $yearEnd        			= ($year+1).'0101';
+        $yeartimes					= array();
+        $yeartimes['yearBeginTime'] = strtotime($yearBegin);
+        $yeartimes['yearEndTime']   = strtotime($yearEnd);
+        $month                      = $year.$month;
+        $userlists      			= array();
+        foreach ($departments as $k=>$v){
+            $userlists[$v['id']]['users']   = M('account')->where(array('departmentid'=>$v['id']))->getField('id',true);
+            $userlists[$v['id']]['id']      = $v['id'];
+            $userlists[$v['id']]['depname'] = $v['department'];
+        }
+
+        //预算及结算分部门汇总
+        if ($pin == 0){
+            $lists      = $this->ysjs_deplist($userlists,$month,$yeartimes,$pin);
+        }else{
+            $lists      = $this->js_deplist($userlists,$month,$yeartimes,$pin);
+        }
+
+        return $lists;
+    }
+
+    public function ysjs_deplist($userlists,$month,$yeartimes,$pin=0){
+        //年累计
+        $where                  = array();
+        $where['create_time']   = array('between',"$yeartimes");
+        $where['audit_status']  = P::AUDIT_STATUS_PASS;
+        $ys_opids               = M('op_budget')->where($where)->getField('op_id',true);
+        $js_opids               = M('op_settlement')->where($where)->getField('op_id',true);
+        $opids                  = array_unique(array_merge_recursive($ys_opids,$js_opids));
+        return count($js_opids);
+
+        foreach ($userlists as $k=>$v){
+
+        }
+
+        return count($js_opids);
+
+        $db			= M('op');
+        $roles		= M('role')->GetField('id,role_name',true);
+
+        $post 		= C('POST_TEAM');
+        $postmore	= C('POST_TEAM_MORE');
+        $postfzr  	= C('POST_TEAM_FZR');
+
+            //获取部门人数
+        $where = array();
+        $where['roleid'] = array('in',$postmore[$roleid]);
+        $where['status'] = array('eq',0);
+        $users = M('account')->where($where)->select();
+        $num   = count($users);
+        $ulist = array();
+        foreach($users as $k=>$v){
+        $ulist[] = $v['id'];
+        }
+
+        //查询结算数据
+        $where = array();
+        $where['b.audit_status']		= 1;
+        $where['l.req_type']			= 801;
+        if($times){
+            $where['l.audit_time']		= array('between',$times);
+        }else{
+            $where['l.audit_time']		= array('gt',strtotime('2018-01-01'));
+        }
+        $where['a.id']					= array('in',implode(',',$ulist));
+
+        $field = array();
+        $field[] =  'sum(b.shouru) as zsr';
+        $field[] =  'sum(b.maoli) as zml';
+        $field[] =  '(sum(b.maoli)/sum(b.shouru)) as mll';
+
+        $lists = $db->table('__OP_SETTLEMENT__ as b')->field($field)->join('__OP__ as o on b.op_id = o.op_id','LEFT')->join('__ACCOUNT__ as a on a.id = o.create_user','LEFT')->join('__AUDIT_LOG__ as l on l.req_id = b.id','LEFT')->where($where)->order('zsr DESC')->find();
+
+        $lists['mll']			= $lists['zml']>0 ?  sprintf("%.2f",$lists['mll']*100) : '0.00';
+
+        $lists['zsr'] 			= $lists['zsr'] ? $lists['zsr'] : '0.00';
+        $lists['zml'] 			= $lists['zml'] ? $lists['zml'] : '0.00';
+        $lists['rjzsr']			= sprintf("%.2f",$lists['zsr']/$num);
+        $lists['rjzml']			= sprintf("%.2f",$lists['zml']/$num);
+        $lists['rjmll']			= $lists['zml'] ? sprintf("%.2f",($lists['rjzml']/$lists['rjzsr'])*100) : '0.00';
+
+
+        //查询月度
+        $month = twentyfive();
+        $where = array();
+        $where['b.audit_status']	= 1;
+        $where['a.id']				= array('in',implode(',',$ulist));
+        $where['l.req_type']		= 801;
+        $where['l.audit_time']		= array('between',array($month[0],$month[1]));
+
+        $field = array();
+        $field[] =  'sum(b.shouru) as ysr';
+        $field[] =  'sum(b.maoli) as yml';
+        $field[] =  '(sum(b.maoli)/sum(b.shouru)) as yll';
+        $users = $db->table('__OP_SETTLEMENT__ as b')->field($field)->join('__OP__ as o on b.op_id = o.op_id','LEFT')->join('__AUDIT_LOG__ as l on l.req_id = b.id','LEFT')->join('__ACCOUNT__ as a on a.id = o.create_user','LEFT')->where($where)->find();
+
+        $users['ysr'] 		= $users['ysr'] ? $users['ysr'] : '0.00';
+        $users['yml'] 		= $users['yml'] ? $users['yml'] : '0.00';
+        $users['yll'] 		= $users['yml']>0 ? sprintf("%.4f",$users['yll'])*100 : '0.00';
+        $users['rjysr']		= sprintf("%.2f",$users['ysr']/$num);
+        $users['rjyml']		= sprintf("%.2f",$users['yml']/$num);
+        $users['rjyll']		= sprintf("%.2f",($users['rjyml']/$users['rjysr'])*100);
+        $users['num']		= $num;
+        $users['rid']		= $roleid;
+        $users['fzr']		= $postfzr[$roleid];
+
+        return array_merge($lists, $users);
+    }
+
+    public function js_deplist($userlists,$month,$yeartimes,$pin=0){
+
+        $lists      = array();
+    	foreach ($userlists as $k => $v) {
+            //年度累计
+            $where = array();
+            $where['b.audit_status']		= 1;
+            $where['l.req_type']			= 801;
+            $where['l.audit_time']		    = array('between',"$yeartimes[yearBeginTime],$yeartimes[yearEndTime]");
+            $where['a.id']					= array('in',$v['users']);
+
+            $field = array();
+            $field[] =  'count(o.id) as xms';
+            $field[] =  'sum(c.num_adult) as renshu';
+            $field[] =  'sum(b.shouru) as zsr';
+            $field[] =  'sum(b.maoli) as zml';
+            $field[] =  '(sum(b.maoli)/sum(b.shouru)) as mll';
+
+            $yearlist = M()->table('__OP_SETTLEMENT__ as b')->field($field)->join('__OP__ as o on b.op_id = o.op_id','LEFT')->join('__ACCOUNT__ as a on a.id = o.create_user','LEFT')->join('__AUDIT_LOG__ as l on l.req_id = b.id','LEFT')->join('__OP_TEAM_CONFIRM__ as c on c.op_id=o.op_id','left')->where($where)->order('zsr DESC')->find();
+            $lists[$v['id']]['yearxms']       = $yearlist['xms']?$yearlist['xms']:0;
+            $lists[$v['id']]['yearrenshu']    = $yearlist['renshu']?$yearlist['renshu']:0;
+            $lists[$v['id']]['yearzsr']       = $yearlist['zsr']?$yearlist['zsr']:"0.00";
+            $lists[$v['id']]['yearzml']       = $yearlist['zml']?$yearlist['zml']:"0.00";
+            $lists[$v['id']]['yearmll']       = $yearlist['mll']?sprintf("%.2f",$yearlist['mll']*100):"0.00";
+
+            //查询月度
+            $monthtime = intval($month);
+            $month  = get_cycle($monthtime,25);
+            $where = array();
+            $where['b.audit_status']		= 1;
+            $where['l.req_type']			= 801;
+            $where['l.audit_time']		    = array('between',"$month[begintime],$month[endtime]");
+            $where['a.id']					= array('in',$v['users']);
+
+            $field = array();
+            $field[] =  'count(o.id) as xms';
+            $field[] =  'sum(c.num_adult) as renshu';
+            $field[] =  'sum(b.shouru) as zsr';
+            $field[] =  'sum(b.maoli) as zml';
+            $field[] =  '(sum(b.maoli)/sum(b.shouru)) as mll';
+
+            $monthlist = M()->table('__OP_SETTLEMENT__ as b')->field($field)->join('__OP__ as o on b.op_id = o.op_id','LEFT')->join('__ACCOUNT__ as a on a.id = o.create_user','LEFT')->join('__AUDIT_LOG__ as l on l.req_id = b.id','LEFT')->join('__OP_TEAM_CONFIRM__ as c on c.op_id=o.op_id','left')->where($where)->order('zsr DESC')->find();
+            $lists[$v['id']]['monthxms']    = $monthlist['xms']?$monthlist['xms']:0;
+            $lists[$v['id']]['monthrenshu'] = $monthlist['renshu']?$monthlist['renshu']:0;
+            $lists[$v['id']]['monthzsr']    = $monthlist['zsr']?$monthlist['zsr']:"0.00";
+            $lists[$v['id']]['monthzml']    = $monthlist['zml']?$monthlist['zml']:"0.00";
+            $lists[$v['id']]['monthmll']    = $monthlist['mll']?sprintf("%.2f",$monthlist['mll']*100):"0.00";
+            $lists[$v['id']]['users']       = $v['users'];
+            $lists[$v['id']]['id']          = $v['id'];
+            $lists[$v['id']]['depname']     = $v['depname'];
+    	}
+        return $lists;
     }
 	
 }

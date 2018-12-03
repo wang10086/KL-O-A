@@ -3115,8 +3115,6 @@ function update_userlist_role(){
 
 //获取上月25至本月25时间戳
 function twentyfive(){
-	
-	
 	$today = date('d',time());
 	if($today<25){
 		$firstday		= date("Y-m-25",strtotime('-1 month')); 
@@ -3133,9 +3131,30 @@ function twentyfive(){
 	$return = array();
 	$return[0] = $firsttime;
 	$return[1] = $lasttime;
-	
-	
+
 	return $return;
+}
+
+//获取当前月份的周期
+function get_cycle($yearmonth,$day=26){
+    if ($yearmonth){
+        $year       = substr($yearmonth,0,4);
+        $month      = substr($yearmonth,4,2);
+        $data       = array();
+        if ($month ==01){
+            $mon                = 12;
+            $data['beginday']   = ($year-1).$mon.$day;
+            $data['endday']     = $yearmonth.$day;
+            $data['begintime']  = strtotime($data['beginday']);
+            $data['endtime']    = strtotime($data['endday']);
+        }else{
+            $data['beginday']   = ($yearmonth-1).$day;
+            $data['endday']     = $yearmonth.$day;
+            $data['begintime']  = strtotime($data['beginday']);
+            $data['endtime']    = strtotime($data['endday']);
+        }
+    }
+    return $data;
 }
 
 //统计部门数据

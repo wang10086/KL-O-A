@@ -20,9 +20,12 @@
                         <div class="col-xs-12">
                             <div class="box box-warning">
                                 <div class="box-header">
-                                    <div class="box-tools btn-group" style="">
-                                        <a href="{:U('Chart/department',array('pin'=>0))}" class="btn btn-sm <?php if($pin==0){ echo 'btn-primary';}else{ echo 'btn-info';} ?>">预算及结算分部门汇总</a>
-                                        <a href="{:U('Chart/department',array('pin'=>1))}" class="btn btn-sm <?php if($pin==1){ echo 'btn-primary';}else{ echo 'btn-info';} ?>">已结算分部门汇总</a>
+                                    <style>
+                                        #chart_btn_group .btn-a{ background-color: #ddd;color: #666;}
+                                    </style>
+                                    <div class="box-tools btn-group" id = "chart_btn_group">
+                                        <a href="{:U('Chart/department',array('pin'=>0))}" class="btn btn-sm <?php if($pin==0){ echo 'btn-info';}else{ echo 'btn-a';} ?>">预算及结算分部门汇总</a>
+                                        <a href="{:U('Chart/department',array('pin'=>1))}" class="btn btn-sm <?php if($pin==1){ echo 'btn-info';}else{ echo 'btn-a';} ?>">已结算分部门汇总</a>
                                     </div>
                                     <!--<div class="box-tools pull-right">
                                     	 <a href="javascript:;" class="btn btn-info btn-sm" onclick="javascript:opensearch('searchtext',800,160);"><i class="fa fa-search"></i> 搜索</a>
@@ -34,73 +37,62 @@
                                 <div class="box-body">
 
                                     <div class="btn-group" id="catfont" style="padding-bottom:5px;">
-                                        <?php /*if($prveyear>2016){ */?>
-                                            <a href="{:U('Chart/department')}" class="btn btn-default" style="padding:8px 18px;">上一年</a>
-                                        <?php /*} */?>
+                                        <?php if($prveyear>2016){ ?>
+                                            <a href="{:U('Chart/department',array('year'=>$prveyear,'pin'=>$pin))}" class="btn btn-default" style="padding:8px 18px;">上一年</a>
+                                        <?php } ?>
                                         <?php
                                         for($i=1;$i<13;$i++){
-                                            $par = array();
+                                            /*$par = array();
                                             $par['year']  	= $year;
-                                            $par['month'] 	= $year.str_pad($i,2,"0",STR_PAD_LEFT);
-                                            if($month==$year.str_pad($i,2,"0",STR_PAD_LEFT)){
-                                                echo '<a href="'.U('Chart/department').'" class="btn btn-info" style="padding:8px 18px;">'.$i.'月</a>';
+                                            $par['month'] 	= $year.str_pad($i,2,"0",STR_PAD_LEFT);*/
+                                            if($year.$month==$year.str_pad($i,2,"0",STR_PAD_LEFT)){
+                                                echo '<a href="'.U('Chart/department',array('year'=>$year,'month'=>$i,'pin'=>$pin)).'" class="btn btn-info" style="padding:8px 18px;">'.$i.'月</a>';
                                             }else{
-                                                echo '<a href="'.U('Chart/department').'" class="btn btn-default" style="padding:8px 18px;">'.$i.'月</a>';
+                                                echo '<a href="'.U('Chart/department',array('year'=>$year,'month'=>$i,'pin'=>$pin)).'" class="btn btn-default" style="padding:8px 18px;">'.$i.'月</a>';
                                             }
                                         }
                                         ?>
                                         <?php if($year<date('Y')){ ?>
-                                            <a href="{:U('Chart/department',array('year'=>$nextyear,'month'=>'01'))}" class="btn btn-default" style="padding:8px 18px;">下一年</a>
+                                            <a href="{:U('Chart/department',array('year'=>$nextyear,'month'=>'01','pin'=>$pin))}" class="btn btn-default" style="padding:8px 18px;">下一年</a>
                                         <?php } ?>
                                     </div>
                                 
                                 <table class="table table-bordered dataTable fontmini" id="tablelist" style="margin-top:10px;">
                                     <tr>
                                         <th class="sorting" style="text-align: center;" rowspan="2">部门</th>
-                                        <th colspan="5" style="text-align: center;">累计</th>
-                                        <th colspan="5" style="text-align: center;">当月</th>
+                                        <th colspan="5" style="text-align: center;">{$year}年累计</th>
+                                        <th colspan="5" style="text-align: center;">{$month}月累计</th>
                                     </tr>
                                     <tr>
                                         <td class="taskOptions" data="">项目数</td>
                                         <td class="taskOptions" data="">人数</td>
                                         <td class="taskOptions" data="">收入合计</td>
                                         <td class="taskOptions" data="">毛利合计</td>
-                                        <td class="taskOptions" data="">毛利率</td>
+                                        <td class="taskOptions" data="">毛利率(%)</td>
                                         <td class="taskOptions" data="">项目数</td>
                                         <td class="taskOptions" data="" width="">人数</td>
                                         <td class="taskOptions" data="">收入合计</td>
                                         <td class="taskOptions" data="">毛利合计</td>
-                                        <td class="taskOptions" data="">毛利率</td>
+                                        <td class="taskOptions" data="">毛利率(%)</td>
                                     </tr>
                                     <foreach name="lists" item="row"> 
                                     <tr>
-                                        <td>{$row.op_id}</td>
-                                        <td><?php if($row['status']==1){ echo "<span class='green'>".$row['group_id']."</span>";}elseif($row['status']==2){ echo "<span class='red' title='".$row['nogroup']."'>不成团</span>";}else{ echo '未成团';} ?></td>
-                                        <td><div class="tdbox_long"><a href="{:U('Op/plans_follow',array('opid'=>$row['op_id']))}" title="{$row.project}">{$row.project}</a></div></td>
-                                        <td>{$row.number}人</td>
-                                        <!--
-                                        <td><?php if($row['sale_cost']){ ?>&yen;{$row.sale_cost}<?php } ?></td>
-                                        <td><?php if($row['peer_cost']){ ?>&yen;{$row.peer_cost}<?php } ?></td>
-                                        -->
-                                        <td>{$row.departure}</td>
-                                        <td>{$row.days}天</td>
-                                        <td><div class="tdbox_long" style="width:80px" title="{$row.destination}">{$row.destination}</div></td>
-                                        <td><div class="tdbox_long" style="width:80px" title="<?php echo $kinds[$row['kind']]; ?>"><?php echo $kinds[$row['kind']]; ?></div></td>
-                                        <td>{$row.jidiao}</td>
-                                        <!-- <td>{$row.sale_user}</td> -->
-                                        <td>{$row.create_user_name}</td>
-                                        <td>{$row.zhuangtai}</td>
-                                        <if condition="rolemenu(array('Op/plans_follow'))">
+                                        <td class="taskOptions">{$row.depname}</td>
+                                        <td class="taskOptions">{$row.yearxms}</td>
+                                        <td class="taskOptions">{$row.yearrenshu}</td>
+                                        <td class="taskOptions">{$row.yearzsr}</td>
+                                        <td class="taskOptions">{$row.yearzml}</td>
+                                        <td class="taskOptions">{$row.yearmll}</td>
+                                        <td class="taskOptions">{$row.monthxms}</td>
+                                        <td class="taskOptions">{$row.monthrenshu}</td>
+                                        <td class="taskOptions">{$row.monthzsr}</td>
+                                        <td class="taskOptions">{$row.monthzml}</td>
+                                        <td class="taskOptions">{$row.monthmll}</td>
+                                        <!--<if condition="rolemenu(array('Op/delpro'))">
                                         <td class="taskOptions">
-                                        <a href="{:U('Op/plans_follow',array('opid'=>$row['op_id']))}" title="详情" class="btn btn-info btn-smsm"><i class="fa fa-pencil"></i></a>
-                                        </td>
-                                        </if>
-                                        <if condition="rolemenu(array('Op/delpro'))">
-                                        <td class="taskOptions">
-                                        <!--<button onClick="javascript:ConfirmDel('{:U('Op/delpro',array('id'=>$row['id']))}')" title="删除" class="btn btn-warning btn-smsm"><i class="fa fa-times"></i></button>-->
                                         <button onClick="javascript:has_jiekuan('{$row.op_id}','{$row.id}')" title="删除" class="btn btn-warning btn-smsm"><i class="fa fa-times"></i></button>
                                         </td>
-                                        </if>
+                                        </if>-->
                                     </tr>
                                     </foreach>					
                                 </table>
