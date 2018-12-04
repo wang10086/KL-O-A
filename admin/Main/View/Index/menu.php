@@ -617,8 +617,8 @@
 
                                                 </li>
                                             </if>
-                                            <if condition="rolemenu(array('Salary/salaryindex'))">
-                                                <li class="{:on('Salary/salaryindex')}"><a href="{:U('Salary/salary_attendance')}"><i class="fa fa-angle-right"></i>员工考勤</a></li>
+                                            <if condition="rolemenu(array('Salary/salary_attendance'))">
+                                                <li class="{:on('Salary/salary_attendance')}"><a href="{:U('Salary/salary_attendance')}"><i class="fa fa-angle-right"></i>员工考勤</a></li>
                                             </if>
 
                                         </ul>

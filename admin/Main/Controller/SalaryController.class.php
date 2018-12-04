@@ -703,24 +703,35 @@ class SalaryController extends BaseController {
                 }
             }
         }
-        if(is_numeric($summoney['id'])){
-            if($summoney['examine_user_id']!==""){ $sta1 = 1; $useid1 = M('user_sign')->where('user_id='.$summoney['examine_user_id'])->find(); $url1 = $useid1['file_url']; }
-            if($summoney['submission_user_id']!==""){ $sta2 = 1;$useid2 = M('user_sign')->where('user_id='.$summoney['examine_user_id'])->find(); $url2 = $useid2['file_url']; }
-            if($summoney['approval_user_id']!==""){ $sta3 = 1; $useid3 = M('user_sign')->where('user_id='.$summoney['examine_user_id'])->find(); $url3 = $useid3['file_url'];}
+        if(is_numeric($summoney['id'])){//判断当前总和年月
             if($summoney['datetime']!==""){$date=date('Y年m月',strtotime($summoney['datetime']));}
-            $this->sta1 = $sta1;
-            $this->sta2 = $sta2;
-            $this->sta3 = $sta3;
-            $this->url1 = $url1;
-            $this->url2 = $url2;
-            $this->url3 = $url3;
         }else{
             $date=datetime(date('Y'),date('m'),date('d'),2);
         }
+        $sign = M('salary_sign')->where('datetime='.$summoney['datetime'])->find();
+        if($sign['submission_status']==2){//判断提交人id 是否存在
+            $sign1 = M('user_sign')->where('user_id='.$sign['submission_user_id'])->find();
+            if($sign1){
+                $url1 = $sign1['file_url'];
+                $this->assign('url1',$url1);
+            }
+        }
+        if($sign['examine_status']==2){//判断审批人id 是否存在
+            $sign2 = M('user_sign')->where('user_id='.$sign['examine_user_id'])->find();
+            if($sign2){
+                $url2 = $sign2['file_url'];
+                $this->assign('url2',$url2);
+            }
+        }
+        if($sign['approval_status']==2){//判断批准人id 是否存在
+            $sign3 = M('user_sign')->where('user_id='.$sign['approval_user_id'])->find();
+            if($sign3){
+                $url3 = $sign3['file_url'];
+                $this->assign('url3',$url3);
+            }
+        }
         $this->date = $date;
         $userid                         = (int)$_SESSION['userid'];//用户id
-//        $this->assign('number1',count($info));//员工数量
-//        $this->assign('number2',count($sum));//部门数量
         $this->assign('info',$info);//员工信息 inf
         $this->assign('type',$archives);//状态
         $this->assign('sum',$sum);//部门合计 su

@@ -186,7 +186,7 @@
                                     <th style="width:10em;" ><b>武汉项目部</b></th>
                                     <th style="width:10em;" ><b>沈阳项目部</b></th>
                                     <th style="width:10em;" ><b>长春项目部</b></th>
-                                    <th style="width:10em;" ><b>市场部</b></th>
+                                    <th style="width:10em;" ><b>市场部(业务)</b></th>
                                     <th style="width:10em;" ><b>常规旅游中心</b></th>
                                     <th style="width:10em;" ><b>机关部门</b></th>
                                 </tr>

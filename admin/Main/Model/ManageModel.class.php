@@ -7,29 +7,47 @@ class ManageModel extends Model{
 
     //月度经营统计
     public function month($year,$month){
-
+        $year = 2018;$month=9;
+        $datetime                               = 0;
         if($month<10 || $month==0 || $month==''){ //判断时间是否空 和 小于10
             if($month==0 || $month==''){ //为空默认
-                $month          = date('m');
+                $month                          = date('m');
             }
             if($month<10){ //小于10 添加为符合条件的字段
-                $datetime       = $year.'0'.$month;
+                $datetime                       = $year.'0'.$month;
             }else{ //不小于10 直接获取年月
-                $datetime       = $year.$month;
+                $datetime                       = $year.$month;
             }
         }
-        $salary_month           = M('salary_wages_month')->field('id')->where('datetime='.$datetime)->select();//获取发工资的人
+        $salary_month                           = M('salary_wages_month')->where('datetime='.$datetime)->select();//获取发工资的人
          if(!$salary_month){
             return 0;
          }
-        $sum_count              = count($salary_month);//获取发工资的人数
-        foreach($salary_month as $key =>$val){
-            $id['id'] = $val['account_id'];
-            $account = M('account')->where($id)->find();
-
+        $sum_count                              = count($salary_month);//获取发工资的人数
+        $arr1                                   = array('F','G','L','M','N','P','B');
+        foreach($arr1 as $key =>$val){//循环发工资的部门人数
+            $where['employee_member']           = array('like',$val.'%');
+            foreach($salary_month as $k =>$v){ //人员信息
+                $where['id']                    = $v['account_id'];
+                if($val=='B'){
+                    $arr['position_name']       = array('like','%S%');
+                    $position                   =  M('oa_position')->where($arr)->find();
+                    foreach($position as $ke => $va){ // 市场部业务人员信息
+                        $where['position_id']   = $va['id'];
+                        $account[$key][$k]      = M('account')->field('id,employee_member,nickname,roleid,postid,position_id')->where($where)->find();
+                        if($account[$key][$k]==''){
+                            unset($account[$key][$k]);
+                        }
+                    }
+                }else{
+                    $account[$key][$k]          = M('account')->field('id,employee_member,nickname,roleid,postid,position_id')->where($where)->find();
+                    if($account[$key][$k]==''){
+                        unset($account[$key][$k]);
+                    }
+                }
+            }
         }
-//        print_r($salary_month);die;
-
+//        print_r($account);die;
         $month1 = $this->amount();//数额
         return $month1;
     }

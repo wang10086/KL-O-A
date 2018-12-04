@@ -183,13 +183,13 @@
                                 <TFOOT style="display:table-footer-group;font-weight:bold;">
                                     <tr>
                                         <th colspan="6" style="text-align: center;">
-                                            <b>提交人 : </b><?php if ($sta1==1){echo "<img src='{$url1}' alt='' style='max-height: 50px'>";}else{echo "暂未提交";} ?>
+                                            <b>提交人 : </b><?php if ($url1!==''){echo "<img src='{$url1}' alt='' style='max-height: 50px'>";}else{echo "暂未提交";} ?>
                                         </th>
                                         <th colspan="6" style="text-align: center;">
-                                            <b>审核人 : </b><?php if ($sta2==1){echo "<img src='{$url2}' alt='' style='max-height: 50px'>";}else{echo "暂未审核";} ?>
+                                            <b>审核人 : </b><?php if ($url2!==''){echo "<img src='{$url2}' alt='' style='max-height: 50px'>";}else{echo "暂未审核";} ?>
                                         </th>
                                         <th colspan="6" style="text-align: center;">
-                                            <b>批准人 : </b><?php if ($sta3==1){echo "<img src='{$url3}' alt='' style='max-height: 50px'>";}else{echo "暂未批准";} ?>
+                                            <b>批准人 : </b><?php if ($url3!==''){echo "<img src='{$url3}' alt='' style='max-height: 50px'>";}else{echo "暂未批准";} ?>
                                         </th>
                                         <th colspan="6" style="text-align: center;">
                                             <b>打印时间: </b><?php echo date("Y-m-d H:i:s",time()); ?>
@@ -200,17 +200,17 @@
                         </div>
                     </div><!-- /.box-body -->
 
-                    <div style="margin-top:2em;"><br><br><br><br>
+                    <div style="margin-top:2em;text-align:center;" id="shr_qianzi"><br><br><br><br>
                         <?php if($status==1 && $userid== 77){?>
-                            <a  class="btn btn-info salary_excel1_submit" style="width:10em;margin-left:45em;">提交审核</a>
+                            <a  class="btn btn-info salary_excel1_submit" style="width:10em;" onclick="show_qianzi(0)">提交审核</a>
                         <?php }?>
                         <?php if($status==2 && $userid == 55){?>
-                            <a  class="btn btn-info salary_excel1_submit1" style="width:10em;margin-left:45em;">提交批准</a>
-                            <a  class="btn btn-info salary_excel1_submit2" style="width:10em;">驳回</a>
+                            <a  class="btn btn-info salary_excel1_submit1" style="width:10em;" onclick="show_qianzi(1)">提交批准</a>
+                            <a  class="btn btn-info salary_excel1_submit2" style="width:10em;" onclick="show_qianzi(2)">驳回</a>
                         <?php }?>
                         <?php if($status==3 && $userid == 11){?>
-                            <a  class="btn btn-info salary_excel1_submit3" style="width:10em;margin-left:45em;">批准</a>
-                            <a  class="btn btn-info salary_excel1_submit2" style="width:10em;">驳回</a>
+                            <a  class="btn btn-info salary_excel1_submit3" style="width:10em;" onclick="show_qianzi(3)">批准</a>
+                            <a  class="btn btn-info salary_excel1_submit2" style="width:10em;" onclick="show_qianzi(2)">驳回</a>
                         <?php }?>
                     </div><br><br>
                 </div><!-- /.box -->
@@ -240,8 +240,51 @@
 
 <include file="Index:footer2" />
 <script>
+
+    function show_qianzi(obj) {
+        var html = '';
+            html += '<label>签字：</label>'+
+            '<input type="text" name="password" class="" placeholder="请输入签字密码"  />&emsp;'+
+            '<input type="button" value="确定" onclick="check_pwd('+obj+')">';
+        $('#shr_qianzi').html(html);
+    }
+    function check_pwd(obj) {
+        var curl        = "index.php?m=Main&c=Ajax&a=Ajax_salary_sign";
+        var pwd         = $('input[name="password"]').val();
+        var status      = obj;
+        var datetime    = <?php echo $count['datetime'];?>;
+        $.ajax({
+            type: "POST",
+            url: curl,
+            data: {
+                'pwd'       :pwd,
+                'status'    :status,
+                'datetime'  :datetime,
+            },
+            dataType: "json", //数据格式
+            success: function (data) {
+                if (data.sum == 1) {
+                    if(obj == 0){
+                        salary_excel1_submit();
+                    }else if(obj == 1){
+                        salary_excel1_submit1();
+                    }else if(obj == 2){
+                        salary_excel1_submit2();
+                    }else if(obj == 3){
+                        salary_excel1_submit3();
+                    }
+                }
+                if (data.sum == 0) {
+                    alert("签字密码或用户错误！请重新提交输入！");
+                    return false;
+                }
+            }
+        });
+    }
+
+
     //    提交审核数据
-    $('.salary_excel1_submit').click(function(){
+    function salary_excel1_submit(){
         var count           = new Array();
         var content         = new Array();
         var totals_num      = new Array();
@@ -277,6 +320,7 @@
             success: function (data) {
                 if (data.sum == 1) {
                     alert(data.msg);
+                    window.location.reload();
                     return false;
                 }
                 if (data.sum == 0) {
@@ -285,10 +329,10 @@
                 }
             }
         });
-    });
+    }
 
     //提交批准
-    $('.salary_excel1_submit1').click(function(){
+    function salary_excel1_submit1(){
         var wages_month_id ="";
         var departmen_id ="";
         $('.list_salary_detail1').each(function(){
@@ -308,12 +352,12 @@
                 'departmen_id' : departmen_id,
                 'count_money_id' : count_money_id,
                 'status':3,
-
             },
             dataType: "json", //数据格式
             success: function (data) {
                 if (data.sum == 1) {
                     alert(data.msg);
+                    window.location.reload();
                     return false;
                 }
                 if (data.sum == 0) {
@@ -322,10 +366,10 @@
                 }
             }
         });
-    });
+    }
 
     //批准
-    $('.salary_excel1_submit3').click(function(){
+    function salary_excel1_submit3(){
         var wages_month_id ="";
         var departmen_id ="";
         $('.list_salary_detail1').each(function(){
@@ -337,7 +381,6 @@
             departmen_id +=txt+',';
         });
         var count_money_id = $('.list_salary_detail3').text();
-
         $.ajax({
             type: "POST",
             url:  "index.php?m=Main&c=Ajax&a=Ajax_salary_details_upgrade",
@@ -346,12 +389,12 @@
                 'departmen_id' : departmen_id,
                 'count_money_id' : count_money_id,
                 'status':4,
-
             },
             dataType: "json", //数据格式
             success: function (data) {
                 if (data.sum == 1) {
                     alert(data.msg);
+                    window.location.reload();
                     return false;
                 }
                 if (data.sum == 0) {
@@ -360,9 +403,9 @@
                 }
             }
         });
-    });
+    }
     //驳回
-    $('.salary_excel1_submit2').click(function(){
+    function salary_excel1_submit2(){
        var datetime = <?php echo $count['datetime'];?>;
         $.ajax({
             type: "POST",
@@ -370,12 +413,12 @@
             data: {
                 'datetime' : datetime,
                 'status':1,
-
             },
             dataType: "json", //数据格式
             success: function (data) {
                 if (data.sum == 1) {
                     alert(data.msg);
+                    window.location.reload();
                     return false;
                 }
                 if (data.sum == 0) {
@@ -384,7 +427,7 @@
                 }
             }
         });
-    });
+    }
     //表格单双变色
     function excel_list_color(){
         $('.excel_list_money3').css("background","#66CCFF");
@@ -470,51 +513,7 @@
         var id  = $('#salary_archives_list').attr('id');//当前要打印的id
         print_view(id);
     }
-    // function salary2(){ //打印
-    //     var time    = $('.list_salary_datetime').text();//现在表的时间
-    //     var moneyid = $('.list_salary_detail3').text(); // 表单id
-    //     var id      = $('#salary_archives_list').attr('id');//当前要打印的id
-    //
-    //     $.ajax({
-    //         type: "POST",
-    //         url:  "index.php?m=Main&c=Ajax&a=printing_content",
-    //         data: {
-    //             'time' : time,
-    //             'moneyid' : moneyid,
-    //         },
-    //         dataType: "json", //数据格式
-    //         success: function (data) {
-    //             if (data.sum == 1) {
-    //                 $('#salary_add_applovel3').empty();
-    //                 if(data.msg.status==2){
-    //
-    //                     var html = '<a style="width:8em;margin-left:8em;font-size:1.5em;color:#000000;"><b>提交审核人 : </b><img src="'+data.msg.submitter_url+'" alt="" style="width:6em;"></a>';
-    //                         html +='<a style="width:8em;margin-left:8em;font-size:1.5em;color:#000000;"><b>审核人 : </b><img src="'+data.msg.examine_url+'" alt="" style="width:6em;"></a>';
-    //                         html +='<a style="width:8em;margin-left:8em;font-size:1.5em;color:#000000;"><b>批准人 : </b><img src="'+data.msg.approval_url+'" alt="" style="width:6em;"></a>';
-    //                         html +='<a style="width:8em;margin-left:8em;font-size:1.5em;color:#000000;">'+data.msg.content+data.msg.time+'</a>';
-    //                 }
-    //                 if(data.msg.status==1){
-    //                     var html = '<a style="width:10em;margin-left:10em;font-size:1.5em;color:#000000;"><b>打印人 : '+data.msg.submitter+'</b></a>';
-    //                         html +='<a style="width:10em;margin-left:10em;font-size:1.5em;color:#000000;">'+data.msg.content+data.msg.time+'</a>';
-    //
-    //                 }
-    //                 var add = "工资表";
-    //                 var ohaveHis = $.myTime.DateToUnix(data.msg.time+add);
-    //                 var oHaveHisBack = $.myTime.UnixToDate(ohaveHis);
-    //                 $("title").html(oHaveHisBack);
-    //                 $('th').prop('id','bordorcolor');
-    //                 $('td').prop('id','bordorcolor');
-    //                 $('#salary_add_applovel3').append(html);
-    //                 print_view(id);
-    //                 return false;
-    //             }
-    //             if (data.sum == 0 || data.sum == "") {
-    //                 alert('打印失败!');
-    //                 return false;
-    //             }
-    //         }
-    //     });
-    // }
+
 
     excel_list_color();
 </script>

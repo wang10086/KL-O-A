@@ -819,14 +819,13 @@ class AjaxController extends Controller {
     //保存提交审核数据
     public function Ajax_salary_details_add(){
 
-        $user_id = session('userid');
-//        if($user_id==77 || $user_id==1){
-//
-//        }else{
-//            $sum                            = 0;
-//            $msg                            = "您的权限不足!请联系管理员！";
-//            echo json_encode(array('sum' => $sum, 'msg' => $msg));die;
-//        }
+        $user_id = $_SESSION['userid'];
+        if($user_id==77 || $user_id==1){
+        }else{
+            $sum                            = 0;
+            $msg                            = "您的权限不足!请联系管理员！";
+            echo json_encode(array('sum' => $sum, 'msg' => $msg));die;
+        }
         $datetime                           = trim($_POST['datetime']);//表数据时间
         if($datetime=="" || $datetime ==null || $datetime==false){
             $datetime                       = datetime(date('Y'),date('m'),date('d'),1);
@@ -926,6 +925,51 @@ class AjaxController extends Controller {
         $sum                        = 0;
         $msg                        = "数据提交失败!请重新提交!";
         echo json_encode(array('sum' => $sum, 'msg' => $msg));die;
+    }
+
+    /**
+     * Ajax_salary_sign 签字验证
+     */
+    public function Ajax_salary_sign(){
+        $userid['password']                 = md5(trim($_POST['pwd']));
+        $status                             = trim($_POST['status']);
+        $userid['user_id']                  = $_SESSION['userid'];
+        $datetime                           = trim($_POST['datetime']);
+        $sign                               = M('user_sign')->where($userid)->find();
+        if($sign){
+            if($status==0){
+                $add['createtime']          = time();
+                $add['submission_user_id']  = $userid['user_id'];
+                $add['datetime']            = $datetime;
+                $add['submission_status']   = 2;
+            }elseif($status==1){
+                $add['examine_user_id']     = $userid['user_id'];
+                $add['examine_status']      = 2;
+            }elseif($status==2){
+                $time                       = M('salary_sign')->where('datetime='.$datetime)->delete();
+                if($time){
+                    echo json_encode(array('sum' => 1));die;
+                }else{
+                    echo json_encode(array('sum' => 0));die;
+                }
+            }elseif($status==3){
+                $add['approval_user_id']    = $userid['user_id'];
+                $add['approval_status']     = 2;
+            }
+            $time                           = M('salary_sign')->where('datetime='.$datetime)->find();
+            if($time){
+                $sign1                      = M('salary_sign')->where('datetime='.$datetime)->save($add);
+            }else{
+                $sign1                      = M('salary_sign')->add($add);
+            }
+            if($sign1){
+                echo json_encode(array('sum' => 1));die;
+            }else{
+                echo json_encode(array('sum' => 0));die;
+            }
+        }else{
+            echo json_encode(array('sum' => 0));die;
+        }
     }
 
     /**

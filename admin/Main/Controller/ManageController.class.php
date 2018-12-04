@@ -22,7 +22,8 @@ class ManageController extends BaseController {
             $post               = 0;
         }
 //        月度统计人员 数额 占比
-        $this->number           = $mod->month($year,$month);
+        $number           = $mod->month($year,$month);
+//        print_r($number);die;
 
         $this->year             =$year;
         $this->post             =$post;
