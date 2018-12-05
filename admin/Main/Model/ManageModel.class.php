@@ -71,7 +71,7 @@ class ManageModel extends Model{
                 $datime['account_id']   = $v['id'];
                 $salary_list            = M('salary_wages_month')->where($datime)->find();
                 $sum += $salary_list['Should_distributed'];
-                print_r($v);die;
+
             }
             $info[$key]['money'] = $sum;
         }

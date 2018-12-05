@@ -97,7 +97,6 @@
                                         <td>&yen; <?php echo sprintf("%.2f",($info['attendance'][0]['withdrawing']));?></td>
                                         <td>&yen; <?PHP echo sprintf("%.2f",($info['salary'][0]['standard_salary']/10*$info['salary'][0]['performance_salary']));?></td>
                                         <td>&yen; <?PHP echo sprintf("%.2f",$info['Achievements']['count_money']);?></td>
-
                                         <td>&yen; <?PHP echo sprintf("%.2f",$info['Extract']['total']);?></td>
 
                                         <td>&yen; <?PHP echo sprintf("%.2f",$info['bonus'][0]['foreign_bonus']);?></td>
@@ -127,9 +126,8 @@
                                         <td style="display:none">{$info['Extract']['target']}</td>
                                         <td style="display:none">{$info['Extract']['complete']}</td>
                                         <td style="display:none">{$info['yearend']}</td>
-                                        <td style="display:none">{$info['bonus'][0]['extract']}</td>
+                                        <td style="display:none">{$info['bonus'][0]['royalty']}</td>
                                         <td style="display:none">{$info['welfare']}</td>
-                                        <td style="display:none">{$info['labour']['id']}</td>
                                     </tr>
                                     <th class="list_salary_detail1" style="display: none">{$info['wages_mont_id']}</th>
                                 </foreach>
