@@ -707,7 +707,7 @@ class SalaryController extends BaseController {
             $year1 = substr($summoney['datetime'],0,4);
             $month1 = substr($summoney['datetime'],4);
             $date = $year1.'年'.$month1.'月';
-            if($summoney['datetime']!==""){$date=date('Y年m月',strtotime($summoney['datetime']));}
+          
         }else{
             $date=datetime(date('Y'),date('m'),date('d'),2);
         }
