@@ -704,10 +704,9 @@ class SalaryController extends BaseController {
             }
         }
         if(!empty($summoney['datetime'])){//判断当前总和年月
-            $year1 = substr($summoney['datetime'],0,4);
-            $month1 = substr($summoney['datetime'],4);
-            $date = $year1.'年'.$month1.'月';
-          
+            $year1                      = substr($summoney['datetime'],0,4);
+            $month1                     = substr($summoney['datetime'],4);
+            $date                       = $year1.'年'.$month1.'月';
         }else{
             $date=datetime(date('Y'),date('m'),date('d'),2);
         }
