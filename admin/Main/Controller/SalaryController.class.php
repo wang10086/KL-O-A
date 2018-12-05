@@ -703,11 +703,15 @@ class SalaryController extends BaseController {
                 }
             }
         }
-        if(is_numeric($summoney['id'])){//判断当前总和年月
+        if(!empty($summoney['datetime'])){//判断当前总和年月
+            $year1 = substr($summoney['datetime'],0,4);
+            $month1 = substr($summoney['datetime'],4);
+            $date = $year1.'年'.$month1.'月';
             if($summoney['datetime']!==""){$date=date('Y年m月',strtotime($summoney['datetime']));}
         }else{
             $date=datetime(date('Y'),date('m'),date('d'),2);
         }
+
         $sign = M('salary_sign')->where('datetime='.$summoney['datetime'])->find();
         if($sign['submission_status']==2){//判断提交人id 是否存在
             $sign1 = M('user_sign')->where('user_id='.$sign['submission_user_id'])->find();

@@ -47,7 +47,7 @@ class ManageModel extends Model{
                 }
             }
         }
-//        print_r($account);die;
+        print_r($account);die;
         $month1 = $this->amount();//数额
         return $month1;
     }
