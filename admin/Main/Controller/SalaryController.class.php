@@ -782,7 +782,7 @@ class SalaryController extends BaseController {
             $list[$key]['withholding'][0]['token']                  = $val['withholding_token'];
             $list[$key]['Extract']['target']                        = $val['target'];
             $list[$key]['Extract']['complete']                      = $val['complete'];
-            $list[$key]['Extract']['total']                         = $val['total'];
+            $list[$key]['Extract']['total']                         = $val['total']+$val['Subsidy'];
             $list[$key]['tax_counting']                             = $val['tax_counting'];
             $list[$key]['personal_tax']                             = $val['personal_tax'];
             $list[$key]['Labour']                                   = $val['Labour'];

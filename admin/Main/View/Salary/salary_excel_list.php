@@ -97,6 +97,7 @@
                                         <td>&yen; <?php echo sprintf("%.2f",($info['attendance'][0]['withdrawing']));?></td>
                                         <td>&yen; <?PHP echo sprintf("%.2f",($info['salary'][0]['standard_salary']/10*$info['salary'][0]['performance_salary']));?></td>
                                         <td>&yen; <?PHP echo sprintf("%.2f",$info['Achievements']['count_money']);?></td>
+
                                         <td>&yen; <?PHP echo sprintf("%.2f",$info['Extract']['total']);?></td>
 
                                         <td>&yen; <?PHP echo sprintf("%.2f",$info['bonus'][0]['foreign_bonus']);?></td>
@@ -514,8 +515,8 @@
     });
 
     function salary2() { //打印
-        // $('td').css('border','1px solid #000000');
-        // $('th').css('border','1px solid #000000');
+        $('td').css('border','1px solid #000000');
+        $('th').css('border','1px solid #000000');
         var add = "工资表";
             add += "<?php if($type==1){echo ' (中心)'; }elseif($type==2){echo ' (科旅)';}elseif($type==3){echo ' (科行)';}elseif($type==4){echo ' (行管局)';} ?>";
         var dat = "<?php echo $date;?>";
