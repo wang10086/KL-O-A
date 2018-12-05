@@ -42,9 +42,6 @@
                                         <?php } ?>
                                         <?php
                                         for($i=1;$i<13;$i++){
-                                            /*$par = array();
-                                            $par['year']  	= $year;
-                                            $par['month'] 	= $year.str_pad($i,2,"0",STR_PAD_LEFT);*/
                                             if($year.$month==$year.str_pad($i,2,"0",STR_PAD_LEFT)){
                                                 echo '<a href="'.U('Chart/department',array('year'=>$year,'month'=>$i,'pin'=>$pin)).'" class="btn btn-info" style="padding:8px 18px;">'.$i.'月</a>';
                                             }else{
@@ -94,7 +91,20 @@
                                         </td>
                                         </if>-->
                                     </tr>
-                                    </foreach>					
+                                    </foreach>
+                                    <tr>
+                                        <td class="taskOptions black" data="">合计</td>
+                                        <td class="taskOptions black" data="">{$heji.yearxms}</td>
+                                        <td class="taskOptions black" data="">{$heji.yearrenshu}</td>
+                                        <td class="taskOptions black" data="">{$heji.yearzsr}</td>
+                                        <td class="taskOptions black" data="">{$heji.yearzml}</td>
+                                        <td class="taskOptions black" data="">{$heji.yearmll}</td>
+                                        <td class="taskOptions black" data="">{$heji.monthxms}</td>
+                                        <td class="taskOptions black" data="" width="">{$heji.monthrenshu}</td>
+                                        <td class="taskOptions black" data="">{$heji.monthzsr}</td>
+                                        <td class="taskOptions black" data="">{$heji.monthzml}</td>
+                                        <td class="taskOptions black" data="">{$heji.monthmll}</td>
+                                    </tr>
                                 </table>
                                 </div><!-- /.box-body -->
                                  <div class="box-footer clearfix">
