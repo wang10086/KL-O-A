@@ -21,12 +21,13 @@ class ManageController extends BaseController {
         if($post==''){
             $post               = 0;
         }
-//        月度统计人员 数额 占比
-        $number           = $mod->month($year,$month);
-//        print_r($number);die;
-        $this->year             =$year;
-        $this->post             =$post;
-        $this->month            =$month;
+        //月度统计人员 数额 占比
+        $number                 = $mod->month($year,$month);//model日期假数据
+        $infomoney              = $mod->sum_money($number['userinfo'],$year,$month);//model日期假数据
+        $this->number           = $number['account'];
+        $this->year             = $year;
+        $this->post             = $post;
+        $this->month            = $month;
         $this->display();
     }
     //季度经营报表

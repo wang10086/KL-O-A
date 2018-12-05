@@ -51,23 +51,17 @@
                                 <th style="width:10em;" ><b>常规旅游中心</b></th>
                                 <th style="width:10em;" ><b>机关部门</b></th>
                             </tr>
+
                             <tr role="row" class="orders" style="text-align:center;">
                                 <td>员工人数</td>
-                                <td></td>
-                                <td>1</td>
-                                <td></td>
-                                <td>1</td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td>1</td>
+                                <foreach name="number" item="n">
+                                    <td>{$n['sum']}</td>
+                                </foreach>
                             </tr>
 
                             <tr role="row" class="orders" style="text-align:center;">
                                 <td>营业收入</td>
-                                <td></td>
+                                <td>8</td>
                                 <td>1</td>
                                 <td></td>
                                 <td>1</td>

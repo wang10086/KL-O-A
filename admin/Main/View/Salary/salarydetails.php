@@ -247,7 +247,7 @@
                                                     <td><?php echo $info['insurance']['medical_care_base']*$info['insurance']['medical_care_ratio'];?></td>
                                                     <td>{$info['insurance'].big_price}</td>
                                                     <td><?php echo $info['insurance']['unemployment_base']*$info['insurance']['unemployment_ratio'];?></td>
-                                                    <td><?php echo $info['insurance']['accumulation_fund_base']*$info['insurance']['accumulation_fund_ratio'];?></td>
+                                                    <td><?php echo round($info['insurance']['accumulation_fund_base']*$info['insurance']['accumulation_fund_ratio']);?></td>
                                                 </tr>
                                             </table>
                                         </div>
@@ -296,7 +296,7 @@
                                                     <td><?php echo $info['insurance']['company_medical_care_base']*$info['insurance']['company_medical_care_ratio'];?></td>
                                                     <td>{$info['insurance'].company_big_price}</td>
                                                     <td><?php echo $info['insurance']['company_unemployment_base']*$info['insurance']['company_unemployment_ratio'];?></td>
-                                                    <td><?php echo $info['insurance']['company_accumulation_fund_base']*$info['insurance']['company_accumulation_fund_ratio'];?></td>
+                                                    <td>{$info['wages_month']['accumulation_fund']}</td>
                                                 </tr>
                                             </table>
                                         </div>
@@ -383,6 +383,7 @@
                                                 <td class="salary_subsidy1">{$info['wages_month']['withdrawing']} (元)</td>
 
                                                 <td class="five_risks">{$info['wages_month']['insurance_Total']} (元)</td>
+<!--                                                {$info['wages_month']['summoney']+$info['wages_month']['personal_tax']+$info['wages_month']['Labour']}-->
                                                 <td class="salary_individual_totala1"><?PHP echo sprintf("%.2f",($info['wages_month']['summoney']+$info['wages_month']['personal_tax']+$info['bonus']['annual_bonus']+$info['wages_month']['Labour']));?> (元)</td>
                                             </tr>
                                         </table>

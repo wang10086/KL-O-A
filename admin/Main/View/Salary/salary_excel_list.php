@@ -7,6 +7,13 @@
     @media print{
         INPUT {display:none}
     }
+    th{
+       border=1px solid #000000;
+    }
+    td{
+         border=1px solid #000000;
+     }
+
 
 </style>
 <script src="__HTML__/js/public.js?v=1.0.6" type="text/javascript"></script>
@@ -50,7 +57,7 @@
                         <div class="btn-group" style="height:100%;width:195em;" id="salary_archives_list">
                             <table class="table table-bordered dataTablev">
                                 <!--       表头    -->
-                                <THEAD style="display:table-header-group;font-weight:bold">
+                                <THEAD style="display:table-header-group;font-weight:bold;>
                                 <tr role="row" class="orders">
                                     <th class="sorting" style="width:5em;background-color:#66CCFF;">ID</th>
                                     <th class="sorting" style="width:10em;background-color:#66CCFF;">员工姓名</th>
@@ -507,10 +514,16 @@
     });
 
     function salary2() { //打印
+        // $('td').css('border','1px solid #000000');
+        // $('th').css('border','1px solid #000000');
         var add = "工资表";
+            add += "<?php if($type==1){echo ' (中心)'; }elseif($type==2){echo ' (科旅)';}elseif($type==3){echo ' (科行)';}elseif($type==4){echo ' (行管局)';} ?>";
         var dat = "<?php echo $date;?>";
             $("title").html(dat+add);
         var id  = $('#salary_archives_list').attr('id');//当前要打印的id
+        ('tr')
+        // $('tr').css('border','1px solid #000000');
+
         print_view(id);
     }
 

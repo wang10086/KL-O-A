@@ -8,6 +8,81 @@ class ManageModel extends Model{
     //月度经营统计
     public function month($year,$month){
         $year = 2018;$month=9;
+        $datetime                               = $this->datetime($year,$month);
+        $datime['datetime']                     = $datetime;
+        $datime['status']                       = 4;
+        $salary_month                           = M('salary_wages_month')->where('datetime='.$datetime)->select();//获取发工资的人
+         if(!$salary_month){
+            return 0;
+         }
+        $account[0]['sum']                      = count($salary_month);//获取发工资的人数
+        $arr1                                   = array('F','G','L','M','N','P','B');
+        $sum                                    = 0;
+        $count                                  = $account[0]['sum'];
+        foreach($arr1 as $key =>$val){//循环发工资的部门人数
+            $key                                = $key+1;
+            $where['employee_member']           = array('like',$val.'%');
+            foreach($salary_month as $k =>$v){ //人员信息
+                $where['id']                    = $v['account_id'];
+                if($val=="B"){
+                    $arr['position_name']       = array('like','%S%');
+                    $position                   =  M('position')->where($arr)->select();
+                    foreach($position as $ke => $va){ // 市场部业务人员信息
+                        $where['position_id']   = $va['id'];
+                        $userinfo[$key][$k]     = $this->userinfo($where);
+                        if($userinfo[$key][$k]==''){
+                            unset($userinfo[$key][$k]);
+                        }
+                    }
+                    $count                      = $count-$account[$key]['sum'];//机关部门
+                }else{
+                    $userinfo[$key][$k]         = $this->userinfo($where);
+                    if($userinfo[$key][$k]==''){
+                        unset($userinfo[$key][$k]);
+                    }
+                }
+            }
+            $account[$key]['sum']               = count($userinfo[$key]);
+            $count                              = $count-$account[$key]['sum'];//机关部门
+            $sum                                = $key+1;
+        }
+        $wher['roleid']                         = 19; //常规旅游中心
+        $userinfo[$sum]                         = $this->userinfo($wher,1);
+        $account[$sum]['sum']                   = count($userinfo[$sum]);
+        $num                                    = $sum+1;
+        $account[$num]['sum']                   = $count-$account[$sum]['sum'];//机关部门人数
+        $list['account']                        = $account;
+        $list['userinfo']                       = $userinfo;
+        return $list;
+    }
+
+    /**
+     * sum 工资表 人力资源成本
+     */
+    public function sum_money($infomoney,$year,$month){
+        $year = 2018;$month=9;
+        $datetime                       = $this->datetime($year,$month);
+        $datime['datetime']             = $datetime;
+        $datime['status']               = 4;
+        $count_money[0]['money']        = M('salary_count_money')->field('id,datetime,Should')->where($datime)->find();
+        foreach($infomoney as $key => $val){
+            $sum = 0;
+            foreach($val as $k => $v){
+                $datime['account_id']   = $v['id'];
+                $salary_list            = M('salary_wages_month')->where($datime)->find();
+                $sum += $salary_list['Should_distributed'];
+                print_r($v);die;
+            }
+            $info[$key]['money'] = $sum;
+        }
+
+
+    }
+
+    /**
+     * datetime 年月 日期变换
+     */
+    public function datetime($year,$month){
         $datetime                               = 0;
         if($month<10 || $month==0 || $month==''){ //判断时间是否空 和 小于10
             if($month==0 || $month==''){ //为空默认
@@ -19,37 +94,18 @@ class ManageModel extends Model{
                 $datetime                       = $year.$month;
             }
         }
-        $salary_month                           = M('salary_wages_month')->where('datetime='.$datetime)->select();//获取发工资的人
-         if(!$salary_month){
-            return 0;
-         }
-        $sum_count                              = count($salary_month);//获取发工资的人数
-        $arr1                                   = array('F','G','L','M','N','P','B');
-        foreach($arr1 as $key =>$val){//循环发工资的部门人数
-            $where['employee_member']           = array('like',$val.'%');
-            foreach($salary_month as $k =>$v){ //人员信息
-                $where['id']                    = $v['account_id'];
-                if($val=='B'){
-                    $arr['position_name']       = array('like','%S%');
-                    $position                   =  M('oa_position')->where($arr)->find();
-                    foreach($position as $ke => $va){ // 市场部业务人员信息
-                        $where['position_id']   = $va['id'];
-                        $account[$key][$k]      = M('account')->field('id,employee_member,nickname,roleid,postid,position_id')->where($where)->find();
-                        if($account[$key][$k]==''){
-                            unset($account[$key][$k]);
-                        }
-                    }
-                }else{
-                    $account[$key][$k]          = M('account')->field('id,employee_member,nickname,roleid,postid,position_id')->where($where)->find();
-                    if($account[$key][$k]==''){
-                        unset($account[$key][$k]);
-                    }
-                }
-            }
+        return $datetime;
+    }
+
+    /**
+     * userinfo 获取用户信息
+     */
+    public function userinfo($where,$type){
+        if($type==1){
+            return M('account')->field('id,employee_member,nickname,roleid,postid,position_id')->where($where)->select();die;
+        }else{
+            return M('account')->field('id,employee_member,nickname,roleid,postid,position_id')->where($where)->find();die;
         }
-        print_r($account);die;
-        $month1 = $this->amount();//数额
-        return $month1;
     }
 
     //月度统计 数额
