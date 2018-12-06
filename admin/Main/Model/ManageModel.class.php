@@ -10,73 +10,51 @@ class ManageModel extends Model{
         $year = 2018;$month=9;
         $datetime                               = $this->datetime($year,$month);
         $datime['datetime']                     = $datetime;
-        $datime['status']                       = 4;
-        $salary_month                           = M('salary_wages_month')->where('datetime='.$datetime)->select();//获取发工资的人
-         if(!$salary_month){
-            return 0;
-         }
-        $account[0]['sum']                      = count($salary_month);//获取发工资的人数
-        $arr1                                   = array('F','G','L','M','N','P','B');
+        $datime['status']                       = 4;//数据锁定
+        $account[0]['sum']                      = $this->userinfo($datime,5);//获取发工资的人员数量
+        $account[0]['money']                    = (float)$this->userinfo($datime,2)['Should'];//获取人力资源成本（应发工资）
+        //  array('6','7','12','13','14','16','2','15');//部门  'F','G','L','M','N','P','B','O'
+        $arr1                                   = array('京区业务中心','京外业务中心','南京项目部','武汉项目部','沈阳项目部','长春项目部','市场部','常规业务中心');//部门
+        $number                                 = $account[0]['sum'];
+        $num                                    = $account[0]['money'];
         $sum                                    = 0;
-        $count                                  = $account[0]['sum'];
-        foreach($arr1 as $key =>$val){//循环发工资的部门人数
+        foreach($arr1 as $key =>$val){//循环发工资的部门人数 $key=0 公司
             $key                                = $key+1;
-            $where['employee_member']           = array('like',$val.'%');
-            foreach($salary_month as $k =>$v){ //人员信息
-                $where['id']                    = $v['account_id'];
-                if($val=="B"){
-                    $arr['position_name']       = array('like','%S%');
-                    $position                   =  M('position')->where($arr)->select();
-                    foreach($position as $ke => $va){ // 市场部业务人员信息
-                        $where['position_id']   = $va['id'];
-                        $userinfo[$key][$k]     = $this->userinfo($where);
-                        if($userinfo[$key][$k]==''){
-                            unset($userinfo[$key][$k]);
+            $datime['department']               = $val;
+            if($val=='市场部'){ //业务人员
+                $where['code']                  = array('like','S%');
+                $position                       = M('position')->where($where)->select();//查询业务人员
+                $wher['departmentid']           = 2;
+                $wher['status']                 = 0;
+                foreach($position as $k => $v){
+                    $wher['position_id']        = $v['id'];
+                    $info                       = $this->userinfo($wher,1);//查询业务人员信息
+                    $account[$key]['sum']       = count($info);//业务人员人数
+                    foreach($info as $ke => $va){
+                        $datime['account_id']   = $va['id'];
+                        $money                  = $this->userinfo($datime,4)['Should_distributed'];//查询业务人员人力资源成本
+                        if($money){
+                            $number             = $number-1;
                         }
-                    }
-                    $count                      = $count-$account[$key]['sum'];//机关部门
-                }else{
-                    $userinfo[$key][$k]         = $this->userinfo($where);
-                    if($userinfo[$key][$k]==''){
-                        unset($userinfo[$key][$k]);
+                        $account[$key]['money'] = $account[$key]['money']+$money;//查询业务人员人力资源成本
+                        unset($datime['account_id']);
                     }
                 }
+                $num                            = $num-$account[$key]['money'];
+            }else{ //非市场业务人员
+                $salary_month1                  = $this->userinfo($datime,3);//获取发工资的应发工资(所有)
+                $account[$key]['sum']           = count($salary_month1);//人数
+                foreach($salary_month1 as $k=>$v){
+                    $account[$key]['money']     = $account[$key]['money']+$v['Should_distributed'];//人力资源成本
+                    $number                     = $number-1;
+                }
+                $num                            = $num-$account[$key]['money'];
             }
-            $account[$key]['sum']               = count($userinfo[$key]);
-            $count                              = $count-$account[$key]['sum'];//机关部门
             $sum                                = $key+1;
         }
-        $wher['roleid']                         = 19; //常规旅游中心
-        $userinfo[$sum]                         = $this->userinfo($wher,1);
-        $account[$sum]['sum']                   = count($userinfo[$sum]);
-        $num                                    = $sum+1;
-        $account[$num]['sum']                   = $count-$account[$sum]['sum'];//机关部门人数
-        $list['account']                        = $account;
-        $list['userinfo']                       = $userinfo;
-        return $list;
-    }
-
-    /**
-     * sum 工资表 人力资源成本
-     */
-    public function sum_money($infomoney,$year,$month){
-        $year = 2018;$month=9;
-        $datetime                       = $this->datetime($year,$month);
-        $datime['datetime']             = $datetime;
-        $datime['status']               = 4;
-        $count_money[0]['money']        = M('salary_count_money')->field('id,datetime,Should')->where($datime)->find();
-        foreach($infomoney as $key => $val){
-            $sum = 0;
-            foreach($val as $k => $v){
-                $datime['account_id']   = $v['id'];
-                $salary_list            = M('salary_wages_month')->where($datime)->find();
-                $sum += $salary_list['Should_distributed'];
-
-            }
-            $info[$key]['money'] = $sum;
-        }
-
-
+        $account[$sum]['sum']                   = $number;
+        $account[$sum]['money']                 = $num;
+        return $account;
     }
 
     /**
@@ -98,12 +76,21 @@ class ManageModel extends Model{
     }
 
     /**
-     * userinfo 获取用户信息
+     * userinfo 获取用户信息 价格
+     * $type 1 用户所有条件信息 2 总价格列表信息 3价格列表信息
      */
     public function userinfo($where,$type){
         if($type==1){
             return M('account')->field('id,employee_member,nickname,roleid,postid,position_id')->where($where)->select();die;
-        }else{
+        }elseif($type==2){
+            return  M('salary_count_money')->field('id,datetime,Should')->where($where)->find();die;
+        }elseif($type==3){
+            return  M('salary_wages_month')->field('id,account_id,datetime,Should_distributed')->where($where)->select();die;
+        }elseif($type==4){
+            return  M('salary_wages_month')->field('id,account_id,datetime,Should_distributed')->where($where)->find();die;
+        }elseif($type==5){
+            return  M('salary_wages_month')->field('id,account_id,datetime,Should_distributed')->where($where)->count();die;
+        }{
             return M('account')->field('id,employee_member,nickname,roleid,postid,position_id')->where($where)->find();die;
         }
     }
@@ -131,9 +118,10 @@ class ManageModel extends Model{
     }
 
     /**
-     * yearmonth 年月变化
+     * manageyear 年变化
+     *$year 年  $post 1 加年  2 减年
      */
-    public function yearmonth($year,$post){
+    public function manageyear($year,$post){
         if(is_numeric($year)){//判断有无传送年
             if(is_numeric($post) && $post==1){
                 $year = $year-1;
@@ -146,20 +134,17 @@ class ManageModel extends Model{
         return $year;
     }
     /**
-     * yearmonth 年月变化
+     * managemonth 月变化
+     *$month 月
      */
-    public function yearquarter($year,$post){
-        if(is_numeric($year)){//判断有无传送年
-            if(is_numeric($post) && $post==1){
-                $year = $year-1;
-            }elseif(is_numeric($post) && $post==2){
-                $year = $year+1;
-            }
-        }else{ //没有就默认
-            $year = date('Y');
+    public function managemonth($month){
+        if(is_numeric($month)){
+            return $month;
+        }else{
+           return date('m');
         }
-        return $year;
     }
+
     /**
      * 项目排列名称
      */

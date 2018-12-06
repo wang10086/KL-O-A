@@ -22,13 +22,13 @@
             <div class="col-md-12">
                 <div class="btn-group" id="catfont" style="padding-bottom:20px;">
 
-                    <a href="{:U('Manage/Manage_month',array('year'=>$year,'month'=>'1','post'=>1))}" class="btn btn-default" id="btn-default_id1" style="padding:8px 18px;">上一年</a>
+                    <a href="{:U('Manage/Manage_month',array('year'=>$year,'post'=>1))}" class="btn btn-default" id="btn-default_id1" style="padding:8px 18px;">上一年</a>
                     <?php
                         for($i=1;$i<13;$i++){
                          echo '<a href="'.U('Manage/Manage_month',array('year'=>$year,'month'=>$i)).'" class="btn btn-default" id="btn-default'.$i.'" style="padding:8px 18px;">'.$i.'月</a>';
                         }
                     ?>
-                    <a href="{:U('Manage/Manage_month',array('year'=>$year,'month'=>'1','post'=>2))}" class="btn btn-default" id="btn-default_id3" style="padding:8px 18px;">下一年</a>
+                    <a href="{:U('Manage/Manage_month',array('year'=>$year,'post'=>2))}" class="btn btn-default" id="btn-default_id3" style="padding:8px 18px;">下一年</a>
                 </div>
 
                 <div class="box box-warning">
@@ -48,14 +48,14 @@
                                 <th style="width:10em;" ><b>沈阳项目部</b></th>
                                 <th style="width:10em;" ><b>长春项目部</b></th>
                                 <th style="width:10em;" ><b>市场部(业务)</b></th>
-                                <th style="width:10em;" ><b>常规旅游中心</b></th>
+                                <th style="width:10em;" ><b>常规业务中心</b></th>
                                 <th style="width:10em;" ><b>机关部门</b></th>
                             </tr>
 
                             <tr role="row" class="orders" style="text-align:center;">
-                                <td>员工人数</td>
+                                <th>员工人数</th>
                                 <foreach name="number" item="n">
-                                    <td>{$n['sum']}</td>
+                                    <th>{$n['sum']}</th>
                                 </foreach>
                             </tr>
 
@@ -100,17 +100,9 @@
                             </tr>
                             <tr role="row" class="orders" style="text-align:center;">
                                 <td>人力资源成本</td>
-                                <td><?php echo $n['employees_sum'];?></td>
-                                <td>1</td>
-                                <td></td>
-                                <td>1</td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td>1</td>
-
+                                <foreach name="number" item="num">
+                                    <td>{$num['money']}</td>
+                                </foreach>
                             </tr>
                             <tr role="row" class="orders" style="text-align:center;">
                                 <td>其他费用</td>
