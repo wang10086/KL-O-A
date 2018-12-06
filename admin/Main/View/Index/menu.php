@@ -432,6 +432,26 @@
                                         <if condition="rolemenu(array('Finance/jiekuan'))">
                                             <li class="{:on('Finance/jiekuan')}"><a href="{:U('Finance/jiekuan')}"><i class="fa fa-angle-right"></i> 团内支出借款</a></li>
                                         </if>
+                                        <li class="treeview {:on('Finance/')} {:on('Finance/')}">
+                                            <if condition="rolemenu(array('Finance/'))">
+                                                <a href=""><i class="fa fa-angle-right"></i> 团内支出报销</a>
+                                            </if>
+                                            <ul class="treeview-menu">
+                                                <if condition="rolemenu(array('Finance/'))">
+                                                    <li><a href="{:U('Finance/')}"><i class="fa fa-angle-right"></i> 借款报销</a></li>
+                                                </if>
+
+                                                <if condition="rolemenu(array('Finance/'))">
+                                                    <li><a href="{:U('Finance/')}"><i class="fa fa-angle-right"></i> 直接报销</a></li>
+                                                </if>
+                                            </ul>
+                                        </li>
+                                        <if condition="rolemenu(array('Finance/jiekuan'))">
+                                            <li class="{:on('Finance/jiekuan')}"><a href="javascript:;"><i class="fa fa-angle-right"></i> 非团支出借款</a></li>
+                                        </if>
+                                        <if condition="rolemenu(array('Finance/jiekuan'))">
+                                            <li class="{:on('Finance/jiekuan')}"><a href="javascript:;"><i class="fa fa-angle-right"></i> 非团支出报销</a></li>
+                                        </if>
                                     </ul>
                                 </li>
 
