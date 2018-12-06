@@ -1349,10 +1349,17 @@ class FinanceController extends BaseController {
         $jk_user        = I('ou');
 
         $where          = array();
+        $all_jkd        = array('Finance/all_jkd'); //查看所有借款单权限
         if ($project)   $where['o.project'] = array('like','%'.$project.'%');
         if ($group_id)  $where['j.group_id']= array('like','%'.$group_id.'%');
         if ($jkd_id)    $where['j.jkd_id']  = array('like','%'.$jkd_id.'%');
         if ($jk_user)   $where['j.jk_user'] = array('like','%'.$jk_user.'%');
+        $auth           = explode(',',Rolerelation(cookie('roleid')));
+        if (rolemenu($all_jkd)){
+
+        }else{
+            $where['jk_user_id']    = array('in',$auth);
+        }
 
         $lists          = M()->table('__JIEKUAN__ as j')->field('j.*,o.project')->join('__OP__ as o on o.op_id=j.op_id','left')->where($where)->order($this->orders('j.id'))->select();
 
