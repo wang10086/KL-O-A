@@ -59,7 +59,7 @@
                             <div class="box box-warning">
                                 <div class="box-header">
                                     <h3 class="box-title">借款信息</h3>
-                                </div><!-- /.box-header -->
+                                </div>
                                 <div class="box-body">
                                     <include file="jk_lists" />
                                 </div>

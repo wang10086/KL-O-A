@@ -17,7 +17,7 @@
                     <td>{$row.amount}</td>
                     <td>{$row.total}</td>
                     <td>{$row.yjk}</td>
-                    <td>{$row.sjk}</td>
+                    <td <?php if ($row['sjk']>$row['yjk']){ echo "class='red'"; } ?>>{$row.sjk}</td>
                 </tr>
             </foreach>
         </table>
@@ -82,13 +82,17 @@
                                 <td colspan="4" class="td_con td">预算审批人签字：<span id="ysspr"> <?php if($audit_userinfo['ys_audit_status']==2){echo "<span class='red'>不通过</span>"; }elseif ($audit_userinfo['ys_audit_status']==1){ echo "<img src='/$audit_userinfo[ys_audit_file]' height='50px'>";}; ?></span></td>
                                 <td colspan="2" class="td_con td">财务主管签字：<span id="cwzg"><?php if($audit_userinfo['cw_audit_status']==2){echo "<span class='red'>不通过</span>"; }elseif ($audit_userinfo['cw_audit_status']==1){ echo "<img src='/$audit_userinfo[cw_audit_file]' height='50px'>";}; ?></span></td>
                             </tr>
+                            <tr id="print_time">
+                                <td class="td_con" colspan="6" style="text-align: right; ">打印时间：<?php echo date('Y-m-d H:i:s',time()); ?></td>
+                            </tr>
 
                         </table>
                     </div>
-
-                    <div class="content no-print">
-                        <button class="btn btn-default" onclick="print_view('jiekuandan');"><i class="fa fa-print"></i> 打印</button>
-                    </div>
+                    <if condition="rolemenu(array('Finance/print_jkd'))">
+                        <div class="content no-print">
+                            <button class="btn btn-default" onclick="show_print_time(),print_view('jiekuandan');"><i class="fa fa-print"></i> 打印</button>
+                        </div>
+                    </if>
                 </div>
             </div><!--/.col (right) -->
         </div>
@@ -168,6 +172,14 @@
 <?php } ?>
 
 <script>
+    $(function () {
+        $('#print_time').hide();
+    })
+
+    function show_print_time() {
+        $('#print_time').show();
+    }
+
     function show_qianzi() {
         var html = '';
         html += '<label>签字：</label>'+
