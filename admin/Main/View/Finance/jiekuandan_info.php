@@ -90,10 +90,9 @@
                                                     <td class="td_con" colspan="2" style="text-align: left; min-width:230px; ">借款单编号：{$jiekuan['jkd_id']}</td>
                                                     <td class="td_con" colspan="4" style="text-align: right;">
                                                         支付方式：
-                                                        <input type="radio" name="type" value="1" <?php if ($jiekuan['type']== 1) echo "checked"; ?> /> <?php if ($jiekuan['type']== 1) echo '√'; ?>支票 &nbsp;
-                                                        <input type="radio" name="type" value="2" <?php if ($jiekuan['type']== 2) echo "checked"; ?> /> <?php if ($jiekuan['type']== 2) echo '√'; ?>现金 &nbsp;
-                                                        <input type="radio" name="type" value="3" <?php if ($jiekuan['type']== 3) echo "checked"; ?> /> <?php if ($jiekuan['type']== 3) echo '√'; ?>汇款 &nbsp;
-                                                        <input type="radio" name="type" value="4" <?php if ($jiekuan['type']== 4) echo "checked"; ?> /> <?php if ($jiekuan['type']== 4) echo '√'; ?>其他 &nbsp;
+                                                        <foreach name="jk_type" key="k" item="v">
+                                                            <input type="radio" name="type" value="{$k}" <?php if ($jiekuan['type']== $k) echo "checked"; ?> /> <?php if ($jiekuan['type']== $k) echo '√'; ?>{$v} &nbsp;
+                                                        </foreach>
                                                     </td>
                                                 </tr>
 

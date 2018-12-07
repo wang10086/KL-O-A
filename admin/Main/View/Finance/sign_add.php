@@ -58,7 +58,7 @@
                                         <div class="form-group col-md-12">
                                             <label class="upload_label">上传签字图片</label>
                                             {:upload_m('file','files',$pic,'上传图片','pic_box','pic','图片名称')}
-                                            <span style="line-height:30px; margin-left:15px; margin-top:15px; color:#999999;">请选择1张图片文件,尺寸80*60</span>
+                                            <span style="line-height:30px; margin-left:15px; margin-top:15px; color:#999999;">请选择1张图片文件,尺寸比例950*550</span>
                                             <div id="pic_box"></div>
                                         </div>
 
