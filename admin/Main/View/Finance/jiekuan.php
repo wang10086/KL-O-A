@@ -28,12 +28,12 @@
                                 <table class="table table-bordered dataTable fontmini" id="tablelist" style="margin-top:10px;">
                                     <tr role="row" class="orders" >
                                         <th class="sorting" width="80" data="o.op_id">编号</th>
-                                        <th class="sorting" width="150" data="o.status">团号</th>
+                                        <th class="sorting" width="120" data="o.status">团号</th>
                                         <th class="sorting" data="o.project">项目名称</th>
-                                        <th class="sorting" data="o.kind">类型</th>
+                                        <th class="sorting" width="150" data="o.kind">类型</th>
                                         <th class="sorting" width="80" data="a.jidiao">计调</th>
                                         <th class="sorting" width="80" data="o.create_user_name">创建者</th>
-                                        <th class="sorting" data="o.audit_status">状态</th>
+                                        <th class="sorting" width="80" data="o.audit_status">状态</th>
                                         <if condition="rolemenu(array('Finance/jk_detail'))">
                                         <th width="40" class="taskOptions">借款</th>
                                         </if>

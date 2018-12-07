@@ -1,100 +1,47 @@
 
-    <?php if($audit_yusuan && $costacc){ ?>
+    <?php /*if($audit_yusuan && $costacc){ */?>
     <form method="post" action="{:U('Finance/public_save')}" name="jiekuanform" id="jiekuanform" onsubmit="return submitBefore()" >
-        <div class="content" style="padding-top:0px;">
-            <table class="table table-striped" id="font-14-p">
-                <thead>
-                    <tr>
-                        <th width="">费用项</th>
-                        <th width="">单价</th>
-                        <th width="">数量</th>
-                        <th width="">合计</th>
-                        <th width="">已借金额</th>
-                        <th width="">可借金额</th>
-                        <th width="">备注</th>
-                        <th width="">借款金额</th>
-                        <th width="">借款</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <foreach name="costacc" key="k" item="v">
-                    <tr class="userlist" id="supplier_id_103">
-                        <td width="12%">{$v.title}</td>
-                        <td width="10%">&yen; {$v.unitcost}</td>
-                        <td width="10%">{$v.amount}</td>
-                        <td width="10%">{$v.ctotal}</td>
-                        <td width="10%">{$v.sjk}</td>
-                        <td width="10%">&yen; {$v.total}</td>
-                        <td>{$v.remark}</td>
-                        <td width="16%" id="jk_{$v.id}"></td>
-                        <td width="80" id="td_{$v.id}">
-                            <a href="javascript:;" class="btn btn-info btn-sm" onclick="add_jiekuan({$v.id},{$v.total})">借款</a>
-                            <input type="hidden" name="id" value="{$v.id}">
-                            <input type="hidden" name="total" value="{$v.total}" id="total_{$v.id}">
-                        </td>
-                    </tr>
-                    </foreach>
-                    <tr>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td style="font-size:16px; color:#ff3300;">&yen; {$budget.budget}</td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
 
         <div class="content">
             <input type="hidden" name="dosubmint" value="1">
-            <input type="hidden" name="savetype" value="2">
+            <input type="hidden" name="savetype" value="">
             <input type="hidden" name="info[op_id]" value="{$op.op_id}" />
             <input type="hidden" name="info[costacc_ids]" id="ids">
             <input type="hidden" id="qianzi" value="0">
             <input type="hidden" name="info[yingjiekuan]" id="jk_sum">
             <input type="hidden" name="info[department]" id="department">
             <div style="width:100%; float:left;">
-
                 <div class="form-group col-md-6">
-                    <label>借款部门：</label>
-                    <select class="form-control" name="info[department_id]" onchange="get_department()" id="department_id" required >
-                        <option value="">--请选择--</option>
-                        <foreach name="departments" item="v">
-                            <option value="{$v.id}">{$v.department}</option>
-                        </foreach>
-                    </select>
-                    <!--<input type="text" name="info[department]" class="form-control" value="<?php /*echo $list['rolename']?$list['rolename']:session('rolename'); */?>" readonly />-->
+                    <label>借款单号：</label>
+                    <input type="text" name="info[jkd_id]" class="form-control" value="{$list.jkd_id}" readonly />
                 </div>
 
                 <div class="form-group col-md-6">
-                    <label>团号：</label>
-                    <input type="text" name="info[group_id]" class="form-control" value="<?php echo $list['group_id']?$list['group_id']:$op['group_id']; ?>" readonly />
-                    <input type="hidden" name="info[op_id]" value="<?php echo $list['op_id']?$list['op_id']:$op['op_id']; ?>" />
+                    <label>报销单位：</label>
+                    <input type="text" name="" class="form-control">
                 </div>
 
                 <div class="form-group col-md-6">
-                    <label>借款金额：</label>
-                    <input type="text" name="info[sum]" id="jiekuanjine" class="form-control" value="{$list.sum}" onblur="todaxie($(this).val())" readonly />
+                    <label>还款金额：</label>
+                    <input type="text" name="info[sum]" id="jiekuanjine" class="form-control" value="{$list.sum}" onblur="todaxie($(this).val())" />
                 </div>
 
                 <div class="form-group col-md-6">
                     <label>人民币(大写)：</label>
-                    <input type="text" name="info[sum_chinese]" id="daxie" class="form-control" value="{$list.sum_chinese}" readonly />
+                    <input type="text" name="info[sum_chinese]" id="daxie" class="form-control" value="{$list.sum_chinese}" />
                 </div>
 
                 <div class="form-group col-md-12" id="jk_type">
                     <label>支付方式：</label>
                     <foreach name="jk_type" key="k" item="v">
-                        <input type="radio" name="type" value="{$k}" <?php if ($list['type']== $k) echo "checked"; ?> /> &nbsp;{$v} &emsp;&emsp;
+                        <!--<input type="radio" name="type" value="{$k}" <?php /*if ($list['type']== $k) echo "checked"; */?> /> &nbsp;{$v} &emsp;&emsp;-->
+                        <input type="radio" name="type" value="{$k}" /> &nbsp;{$v} &emsp;&emsp;
                     </foreach>
                 </div>
 
                 <div class="form-group col-md-12">
                     <label>用途说明：</label>
-                    <textarea class="form-control"  name="info[description]">{$list.description}</textarea>
+                    <textarea class="form-control"  name="info[description]"></textarea>
                 </div>
                 <div class="form-group col-md-12 zp_show hk_show">
                     <label>受款单位：</label>
@@ -112,7 +59,7 @@
                 </div>
 
                 <div class="form-group col-md-6" id="jkr_qianzi">
-                    <label>借款人：</label>
+                    <label>还款人：</label>
                     <input type="button" onclick="show_qianzi()" class="info-button" value="签字">
                 </div>
 
@@ -124,9 +71,9 @@
         </div>
     </form>
 
-    <?php }else{ ?>
+    <?php /*}else{ */?><!--
             <div class="content" style="margin-left:15px;">该项目尚未做预算！</div>
-    <?php }  ?>
+    --><?php /*}  */?>
 
     <script>
         $(function () {

@@ -1063,6 +1063,7 @@ class FinanceController extends BaseController {
         $this->budget       = $budget;
         $this->costacc      = $costacc;
         $this->kind         = C('COST_TYPE');
+        $this->jk_type      = C('JIEKUAN_TYPE');
         $this->audit_yusuan = $audit_yusuan;
         $this->op           = $op;
         $settlement = M('op_settlement')->where(array('op_id'=>$opid))->find();
@@ -1369,6 +1370,7 @@ class FinanceController extends BaseController {
             if ($v['audit_status'] == 2) $lists[$k]['zhuangtai'] = "<span class='red'>审核未通过</span>";
         }
         $this->lists    = $lists;
+        $this->jk_type  = C('JIEKUAN_TYPE');
         $this->display();
     }
 
@@ -1380,6 +1382,7 @@ class FinanceController extends BaseController {
         $this->op       = M('op')->where(array('op_id'=>$jiekuan['op_id']))->find();
         $this->jiekuan  = $jiekuan;
         $this->jk_lists = $jk_lists;
+        $this->jk_type  = C('JIEKUAN_TYPE');
         $this->display();
     }
 
@@ -1420,4 +1423,46 @@ class FinanceController extends BaseController {
         }
     }
 
+    //@@@NODE-3###loan_jklist###借款报销(列表)###
+    public function loan_jklist(){
+        $project        = I('title');
+        $group_id       = I('oid');
+        $jkd_id         = I('jid');
+        $jk_user        = I('ou');
+
+        $where          = array();
+        $all_jkd        = array('Finance/all_jkd'); //查看所有借款单权限
+        if ($project)   $where['o.project'] = array('like','%'.$project.'%');
+        if ($group_id)  $where['j.group_id']= array('like','%'.$group_id.'%');
+        if ($jkd_id)    $where['j.jkd_id']  = array('like','%'.$jkd_id.'%');
+        if ($jk_user)   $where['j.jk_user'] = array('like','%'.$jk_user.'%');
+        $auth           = explode(',',Rolerelation(cookie('roleid')));
+        if (rolemenu($all_jkd)){
+
+        }else{
+            $where['jk_user_id']    = array('in',$auth);
+        }
+
+        $lists          = M()->table('__JIEKUAN__ as j')->field('j.*,o.project')->join('__OP__ as o on o.op_id=j.op_id','left')->where($where)->order($this->orders('j.id'))->select();
+
+        foreach ($lists as $k=>$v){
+            if ($v['audit_status'] == 0) $lists[$k]['zhuangtai'] = "<span class='yellow'>审核中</span>";
+            if ($v['audit_status'] == 1) $lists[$k]['zhuangtai'] = "<span class='green'>审核通过</span>";
+            if ($v['audit_status'] == 2) $lists[$k]['zhuangtai'] = "<span class='red'>审核未通过</span>";
+        }
+        $this->lists    = $lists;
+        $this->jk_type  = C('JIEKUAN_TYPE');
+
+        $this->display();
+    }
+
+    //@@@NODE-3###loan_jk###填写借款报销页###
+    public function loan_jk(){
+        $db                 = M('jiekuan');
+        $jkid               = I('jkid');
+        $list               = $db->where(array('id'=>$jkid))->find();
+        $this->list         = $list;
+        $this->jk_type      = C('JIEKUAN_TYPE');
+        $this->display();
+    }
 }
