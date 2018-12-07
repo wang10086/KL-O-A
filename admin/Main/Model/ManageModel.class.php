@@ -199,7 +199,7 @@ class ManageModel extends Model{
 
         $affairs = $this->company_profit($profit,$departmen); //营业收入合并成需求数组
 
-        print_R($affairs);die;
+//        print_R($affairs);die;
 
     }
 
