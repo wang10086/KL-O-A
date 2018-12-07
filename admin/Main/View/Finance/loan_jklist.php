@@ -34,7 +34,6 @@
                                             <th class="sorting" width="80" data="j.sum">借款金额</th>
                                             <th class="sorting" width="60" data="j.type">借款方式</th>
                                             <th class="sorting" width="80" data="j.zhuangtai">审批状态</th>
-                                            <th class="sorting" width="80" data="j.">报销状态</th>
                                             <if condition="rolemenu(array('Finance/jiekuandan_info'))">
                                                 <th width="40" class="taskOptions">详情</th>
                                             </if>
@@ -62,7 +61,6 @@
                                                 <td>{$row.sum}</td>
                                                 <td>{$jk_type[$row[type]]}</td>
                                                 <td>{$row.zhuangtai}</td>
-                                                <td>{$row.}</td>
                                                 <if condition="rolemenu(array('Finance/jiekuandan_info'))">
                                                     <td class="taskOptions">
                                                         <a href="{:U('Finance/jiekuandan_info',array('jkid'=>$row['id']))}" title="详情" class="btn btn-info btn-smsm"><i class="fa fa-bars"></i></a>

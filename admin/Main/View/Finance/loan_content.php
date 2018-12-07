@@ -4,19 +4,15 @@
 
         <div class="content">
             <input type="hidden" name="dosubmint" value="1">
-            <input type="hidden" name="savetype" value="5">
+            <input type="hidden" name="savetype" value="6">
             <input type="hidden" name="info[op_id]" value="{$op.op_id}" />
             <input type="hidden" name="info[costacc_ids]" id="ids">
             <input type="hidden" id="qianzi" value="0">
             <input type="hidden" name="info[yingjiekuan]" id="jk_sum">
             <input type="hidden" name="info[department]" id="department">
             <div style="width:100%; float:left;">
-                <div class="form-group col-md-6">
-                    <label>借款单号：</label>
-                    <input type="text" name="info[jkd_id]" class="form-control" value="{$list.jkd_id}" readonly />
-                </div>
 
-                <div class="form-group col-md-6">
+                <div class="form-group col-md-12">
                     <label>报销单位：</label>
                     <input type="text" name="" class="form-control">
                 </div>

@@ -1317,6 +1317,16 @@ class FinanceController extends BaseController {
                     $this->error('数据保存失败');
                 }
             }
+
+            //保存团内报销(借款报销)
+            if ($savetype==5){
+
+            }
+
+            //保存团内报销(直接报销)
+            if ($savetype==6){
+
+            }
         }
     }
 
@@ -1462,6 +1472,13 @@ class FinanceController extends BaseController {
         $jkid               = I('jkid');
         $list               = $db->where(array('id'=>$jkid))->find();
         $this->list         = $list;
+        $this->jk_type      = C('JIEKUAN_TYPE');
+        $this->display();
+    }
+
+    //@@@NODE-3###loan###填写直接报销页###
+    public function loan(){
+
         $this->jk_type      = C('JIEKUAN_TYPE');
         $this->display();
     }
