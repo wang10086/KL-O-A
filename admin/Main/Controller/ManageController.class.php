@@ -13,21 +13,26 @@ class ManageController extends ChartController {
      * M 武汉项目部 N 沈阳项目部 P 长春项目部 B 市场部
      */
     public function Manage_month(){
-        $year                   = trim(I('year'));
+        $year                   = trim(I('year',date('Y')));
         $post                   = trim(I('post'));
-        $month                  = trim(I('month'));
+        $month                  = trim(I('month',date('m')));
         $mod                    = D('Manage');
         //年月变化
         $year1                  = $mod->manageyear($year,$post);//判断加减年
-        $month1                 = $mod->managemonth($month);
         //月度统计人员 数额 占比
         $number                 = $mod->month($year1,$month);// 部门数量 部门人力资源成本
-        $money                  = $this->business($year1,$month);
-//        print_r($money);die;
-        $this->number           = $number;
-        $this->year             = $year1;
-        $this->post             = $post;
-        $this->month            = $month;
+        $money                  = $this->business($year1,$month);//monthzsr 收入合计   monthzml 毛利合计  monthmll 毛利率
+        $profit                 = $mod->profit($money);//收入 毛利 毛利率
+        $human                  = $mod->human_affairs($number,$profit['profit'],$profit['departmen']);//人事费用率
+        $total_profit           = $mod->total_profit($number,$profit['profit'],$profit['departmen']);//利润总额
+//        print_R($profit);die;
+        $this->human_affairs    = $human;//人事费用率
+        $this->profit           = $profit['departmen'];//部门 收入 毛利 毛利率
+        $this->company          = $profit['profit'];//总数 收入 毛利 毛利率
+        $this->number           = $number;// 部门数量 部门人力资源成本
+        $this->year             = $year1;//年
+        $this->post             = $post;//加减年
+        $this->month            = $month;//月
         $this->display();
     }
 
@@ -45,7 +50,6 @@ class ManageController extends ChartController {
         $departments    = M('salary_department')->field('id,department')->where($where)->select();
         //预算及结算分部门汇总
         $listdatas      = $this->count_lists($departments,$year,$month,1);//1 结算 0预算
-        unset($listdatas['heji']);  //注意顺序
         return $listdatas;die;
 
     }
