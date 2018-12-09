@@ -3,7 +3,7 @@
 
 <?php } ?>
 
-<form method="post" action="{:U('Op/public_save')}" id="tcs_need_form">
+<form method="post" action="{:U('Op/public_save')}" id="tcs_need_form" onsubmit="return submitBefore()">
     <input type="hidden" name="dosubmint" value="1">
     <input type="hidden" name="opid" value="{$op.op_id}">
     <input type="hidden" name="savetype" value="13">
@@ -17,7 +17,7 @@
     <div class="form-group col-md-12" id="longline">
         <input type="hidden" value="1" id="number">
         <div class="form-group col-md-6">
-            <label>实施日期(实例:2018-08-08 - 2018-08-08)：</label>
+            <label>实施日期(例如:2018-08-08 - 2018-08-08)：</label>
             <input type="text" name="in_day" class="form-control between_day" id="in_day" value="" required />
         </div>
 
@@ -115,7 +115,7 @@
 
                                 <div class="form-group col-md-12" id="useraddbtns">
                                     <a href="javascript:;" class="btn btn-success btn-sm" onClick="add_tcs()"><i class="fa fa-fw fa-plus"></i> 人员信息</a>
-                                    <!--<a  href="javascript:;" class="btn btn-info btn-sm" onClick="javascript:save('tcs_need_form','<?php /*echo U('Op/public_save'); */?>',{$op.op_id});">保存</a>-->
+                                    <!--<a  href="javascript:;" class="btn btn-info btn-sm" onClick="submitBefore('tcs_need_form','<?php /*echo U('Op/public_save'); */?>',{$op.op_id})">保存</a>-->
                                     <input type="submit" class="btn btn-info btn-sm" value="保存">
 
                                 </div>
@@ -133,7 +133,17 @@
 </form>
 
 <script>
-
+function submitBefore(id,url,opid) {
+    var inday   = $('#in_day').val();
+    var address = $('#address').val();
+    if (!inday || !address){
+        art_show_msg('请填写完整信息');
+        return false;
+    }else{
+        /*save(id,url,opid);*/
+        $('#tcs_need_form').submit();
+    }
+}
 </script>
 
 
