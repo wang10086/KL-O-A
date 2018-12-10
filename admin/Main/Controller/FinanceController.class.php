@@ -1161,8 +1161,8 @@ class FinanceController extends BaseController {
                 $res = $db->add($info);
                 if ($res){
                     //该团的预算审批人
-                    $jkr_departmentid   = cookie('department');
-                    $audit_ys           = M('salary_department')->field('department,jk_audit_user_id,jk_audit_user_name')->where(array('id'=>$jkr_departmentid))->find();
+                    $jk_departmentid    = $info['department_id'];
+                    $audit_ys           = M('salary_department')->field('department,jk_audit_user_id,jk_audit_user_name')->where(array('id'=>$jk_departmentid))->find();
 
                     $jiekuan_audit          = array();
                     $jiekuan_audit['op_id'] = $info['op_id'];
@@ -1194,7 +1194,7 @@ class FinanceController extends BaseController {
                     $project = M('op')->where(array('op_id'=>$info['op_id']))->getField('project');
 
                     $uid     = cookie('userid');
-                    $title   = '您有来自['.$audit_ys['department'].'--'.$info['jk_user'].']的借款申请!';
+                    $title   = '您有来自['.$info['jk_user'].']的借款申请!';
                     $content = '项目名称：'.$project.'，团号：'.$info['group_id'].'，借款金额：'.$info['sum'];
                     $url     = U('Finance/audit_jiekuan',array('id'=>$res,'op_id'=>$info['op_id'],'audit_usertype'=>$audit_usertype));
                     $user    = '['.$msg_user.']';
@@ -1318,7 +1318,7 @@ class FinanceController extends BaseController {
                 }
             }
 
-            //保存团内报销(借款报销)
+            //保存团内借款报销
             if ($savetype==5){
 
             }
@@ -1433,6 +1433,39 @@ class FinanceController extends BaseController {
         }
     }
 
+    //@@@NODE-3###loan_op###团内支出报销###
+    public function loan_op(){
+
+        $this->display();
+    }
+
+    // @@@NODE-3###select_ys###选择预算信息###
+    public function select_ys(){
+        $title  = I('tit');
+        $type   = I('ty');
+        $opid   = I('opid');
+
+        $where          = array();
+        if ($title) $where['title'] = array('like','%'.$title.'%');
+        if ($type)  $where['type']  = $type;
+        $where['op_id'] = $opid;
+        $where['status']= 1;
+        $field          = array('id,op_id,title,unitcost,amount,total as ctotal,type,remark');
+
+        //分页
+        $pagecount = M('op_costacc')->field($field)->where($where)->count();
+        $page = new Page($pagecount,25);
+        $this->pages = $pagecount>25 ? $page->show():'';
+
+        $lists          = M('op_costacc')->field($field)->where($where)->limit($page->firstRow . ',' . $page->listRows)->select();
+        $this->opid     = $opid;
+        $this->lists    = $lists;
+        $this->ctype    = C('COST_TYPE');
+        $this->display('select_ys');
+    }
+
+
+    /*****************************start****************************************/
     //@@@NODE-3###loan_jklist###借款报销(列表)###
     public function loan_jklist(){
         $project        = I('title');
@@ -1482,4 +1515,5 @@ class FinanceController extends BaseController {
         $this->jk_type      = C('JIEKUAN_TYPE');
         $this->display();
     }
+    /****************************end*****************************************/
 }

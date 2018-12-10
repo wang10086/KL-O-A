@@ -1345,5 +1345,28 @@ class AjaxController extends Controller {
         $this->ajaxReturn($data);
     }
 
+    //查询预算列表
+    public function get_yslist(){
+        $group_id       = trim(I('group_id'));
+        $op             = M('op')->where(array('group_id'=>$group_id))->find();
+        $opid           = $op['op_id'];
+        $data           = array();
+        if ($op){
+            $list               = M('op_costacc')->field('id,op_id,title,unitcost,amount,total as ctotal,remark')->where(array('op_id'=>$opid,'status'=>1))->order('id')->select();
+            if ($list){
+                $data['status'] = 1;
+                $data['msg']    = $opid;
+            }else{
+                $data['status'] = -2;
+                $data['msg']    = '暂无预算信息';
+            }
+        }else{
+            $data['status']     = -1;
+            $data['msg']        = '团号输入有误';
+        }
+
+        $this->ajaxReturn($data);
+    }
+
 
 }
