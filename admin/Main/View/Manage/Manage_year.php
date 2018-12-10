@@ -154,8 +154,9 @@
                         </table><br><br>
 
                     </div><!-- /.box-body -->
+                </div>
 
-                    <div class="box box-warning" style="border-top-color:#ddd;">
+                    <div class="box box-warning">
                         <div class="box-header">
                             <h3 class="box-title">年度经营报表</h3>
                         </div><!-- /.box-header -->
