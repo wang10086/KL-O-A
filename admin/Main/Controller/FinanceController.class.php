@@ -1321,6 +1321,9 @@ class FinanceController extends BaseController {
             //保存团内借款报销
             if ($savetype==5){
 
+                $a = I();
+
+                var_dump($a);die;
             }
 
             //保存团内报销(直接报销)
@@ -1446,18 +1449,27 @@ class FinanceController extends BaseController {
         $opid   = I('opid');
 
         $where          = array();
-        if ($title) $where['title'] = array('like','%'.$title.'%');
-        if ($type)  $where['type']  = $type;
-        $where['op_id'] = $opid;
-        $where['status']= 1;
-        $field          = array('id,op_id,title,unitcost,amount,total as ctotal,type,remark');
+        if ($title) $where['c.title'] = array('like','%'.$title.'%');
+        if ($type)  $where['c.type']  = $type;
+        $where['c.op_id'] = $opid;
+        $where['c.status']= 1;
+        $field          = array('o.group_id,c.id,c.op_id,c.title,c.unitcost,c.amount,c.total as ctotal,c.type');
 
         //分页
         $pagecount = M('op_costacc')->field($field)->where($where)->count();
         $page = new Page($pagecount,25);
         $this->pages = $pagecount>25 ? $page->show():'';
 
-        $lists          = M('op_costacc')->field($field)->where($where)->limit($page->firstRow . ',' . $page->listRows)->select();
+        $lists          = M()->table('__OP_COSTACC__ as c')->join('__OP__ as o on o.op_id=c.op_id')->field($field)->where($where)->limit($page->firstRow . ',' . $page->listRows)->select();
+        foreach ($lists as $k=>$v){
+            //已借款信息
+            $field      = array();
+            $field[]    = 'sum(sjk) as jiekuan';
+            $jiekuan_list= M('jiekuan_detail')->where(array('costacc_id'=>$v['id']))->field($field)->find();
+            $jiekuan    = $jiekuan_list['jiekuan']?$jiekuan_list['jiekuan']:0;
+            $lists[$k]['jiekuan'] = $jiekuan;
+        }
+
         $this->opid     = $opid;
         $this->lists    = $lists;
         $this->ctype    = C('COST_TYPE');

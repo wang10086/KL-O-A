@@ -1,56 +1,57 @@
 <div class="box-body">
-    <form method="post" action="<?php echo U('Finance/public_save'); ?>" id="save_guide">
+    <form method="post" action="<?php echo U('Finance/public_save'); ?>" id="save_loan">
     <input type="hidden" name="dosubmint" value="1">
     <input type="hidden" name="opid" value="{$op.op_id}">
-    <input type="hidden" name="savetype" value="">
-    <div class="content" id="guidelist" style="display:block;">
-    <!--<h3 style="float:left; width:100px;">专家辅导员</h3>-->
+    <input type="hidden" name="savetype" value="5">
+    <div class="content" id="loanlist" style="display:block;">
     <table class="table table-striped">
         <thead>
             <tr>
+                <th></th>
+                <th width="120">团号</th>
                 <th width="">费用项</th>
                 <th width="80">单价</th>
                 <th width="20">&nbsp;</th>
                 <th width="80">数量</th>
                 <th width="100">合计</th>
                 <th width="80">类型</th>
-                <th width="160">备注</th>
+                <th width="160">已借款金额</th>
                 <th width="80">删除</th>
             </tr>
         </thead>
         <tbody>
-            <foreach name="guide" item="v">
-            <tr class="expense" id="guide_id_{$v.id}">
+            <foreach name="loan" item="v">
+            <tr class="expense" id="loan_id_{$v.id}">
                 <td>
-                <input type="hidden" name="cost[20000{$v.id}][item]" value="{$v.kind}">
-                <input type="hidden" name="cost[20000{$v.id}][cost_type]" value="2">
-                <input type="hidden" name="cost[20000{$v.id}][remark]" value="{$v.name}">
-                <input type="hidden" name="cost[20000{$v.id}][relevant_id]" value="{$v.guide_id}">
-                <input type="hidden" name="resid[20000{$v.id}][id]" value="{$v.id}">
-                <input type="hidden" name="guide[20000{$v.id}][guide_id]" value="{$v.guide_id}">
-                <input type="hidden" name="guide[20000{$v.id}][name]" value="{$v.name}">
-                <input type="hidden" name="guide[20000{$v.id}][kind]" value="{$v.kind}">
-                <input type="hidden" name="guide[20000{$v.id}][sex]" value="{$v.sex}">
-                <a href="javascript:;" onClick="open_guide({$v.guide_id},'{$v.name}')">{$v.name}</a> 
-                <i class="fa  fa-calendar" style="color:#3CF; margin-left:8px; cursor:pointer;" onClick="course({$v.guide_id},{$op.op_id})"></i>
+                    <input type="hidden" name="loan[20000{$v.id}][costacc_id]" value="{$v.id}">
+                    <input type="hidden" name="loan[20000{$v.id}][op_id]" value="{$v.op_id}">
+                    <input type="hidden" name="loan[20000{$v.id}][group_id]" value="{$v.group_id}">
+                    <input type="hidden" name="loan[20000{$v.id}][title]" value="{$v.title}">
+                    <input type="hidden" name="loan[20000{$v.id}][unitcost]" value="{$v.unitcost}">
+                    <input type="hidden" name="loan[20000{$v.id}][amount]" value="{$v.amount}">
+                    <input type="hidden" name="loan[20000{$v.id}][ctotal]" value="{$v.ctotal}">
+                    <input type="hidden" name="loan[20000{$v.id}][amount]" value="{$v.amount}">
+                    <input type="hidden" name="loan[20000{$v.id}][type]" value="{$v.type}">
+                    <input type="hidden" name="loan[20000{$v.id}][jiekuan]" value="{$v.jiekuan}">
                 </td>
-                <td>{$v.kind}</td>
-                <td>{$v.sex}</td>
-                <td><input type="text" name="cost[20000{$v.id}][cost]" placeholder="价格" value="{$v.cost}" class="form-control min_input cost"></td>
+                <td>{$v.group_id}</td>
+                <td>{$v.title}</td>
+                <td>{$v.unitcost}</td>
                 <td><span>X</span></td>
-                <td><input type="text" name="cost[20000{$v.id}][amount]" placeholder="数量" value="{$v.amount}" class="form-control min_input amount" ></td>
-                <td class="total">&yen;<?php echo $v['cost']*$v['amount']; ?></td>
-                <td><input type="text" name="guide[20000{$v.id}][remark]" value="{$v.remark}" class="form-control"></td>
-                <td><a href="javascript:;" class="btn btn-danger btn-flat" onclick="delbox('guide_id_{$v.id}')">删除</a></td></tr>
+                <td>&yen;{$v.amount}</td>
+                <td class="total">&yen;{$v.ctotal}</td>
+                <td>{$v.type}</td>
+                <td>{$v.jiekuan}</td>
+                <td><a href="javascript:;" class="btn btn-danger btn-flat" onclick="delbox('loan_id_{$v.id}')">删除</a></td></tr>;
             </foreach>
         </tbody>
         <tfoot>
             <tr>
-                <td align="left" colspan="9">
-                <input type="text" name="group_id" id="group_id" onblur="get_yusuan()" placeholder="请输入团号信息" style="width:200px;height: 33px; margin-right: 10px;">
+                <td align="left" colspan="10">
+                <input type="text" name="group_id" id="groupId" onblur="get_yusuan()" placeholder="请输入团号信息" style="width:200px;height: 33px; margin-right: 10px;">
                 <a href="javascript:;" class="btn btn-success btn-sm" style="margin-left:-8px;"  onClick="show_group()"><i class="fa fa-fw  fa-plus"></i> 增加团号信息</a>
-                <a  href="javascript:;" class="btn btn-info btn-sm" onClick="javascript:save('save_guide','<?php echo U('Op/public_save'); ?>',{$op.op_id});">保存</a>
-               
+                <!--<a  href="javascript:;" class="btn btn-info btn-sm" onClick="javascript:save('save_loan','<?php /*echo U('Finance/public_save'); */?>');">保存</a>-->
+                <input type="submit" class="btn btn-info btn-sm" value="保存">
                 </td>
             </tr>
         </tfoot>
@@ -61,15 +62,15 @@
 
 <script>
     $(function () {
-        $('#group_id').hide();
+        $('#groupId').hide();
     })
 
     function show_group() {
-        $('#group_id').show();
+        $('#groupId').show();
     }
 
     function get_yusuan() {
-        var group_id    = $('#group_id').val();
+        var group_id    = $('#groupId').val();
         if (group_id){
             $.ajax({
                 type: "post",
@@ -84,41 +85,44 @@
                             lock:true,
                             title: '选择预算信息',
                             width:1000,
+                            id:'showys',
                             height:500,
                             okVal: '提交',
                             fixed: true,
                             ok: function () {
                                 var origin = artDialog.open.origin;
-                                var guide = this.iframe.contentWindow.gosubmint();
-                                var guide_html = '';
-                                for (var j = 0; j < guide.length; j++) {
-                                    if (guide[j].id) {
+                                var loan = this.iframe.contentWindow.gosubmint();
+                                var loan_html = '';
+                                for (var j = 0; j < loan.length; j++) {
+                                    if (loan[j].id) {
                                         var i = parseInt(Math.random()*100000)+j;
-                                        /*var cost = '<input type="hidden" name="cost['+i+'][item]" value="'+guide[j].kind+'">' +
-                                            '<input type="hidden" name="cost['+i+'][cost_type]" value="2">' +
-                                            '<input type="hidden" name="cost['+i+'][remark]" value="'+guide[j].name+'">' +
-                                            '<input type="hidden" name="cost['+i+'][relevant_id]" value="'+guide[j].id+'">';*/
-                                        guide_html += '<tr class="expense" id="guide_'+i+'">' +
-                                            '<td><input type="hidden" name="guide['+i+'][costacc_id]" value="'+guide[j].id+'">' +
-                                            '<input type="hidden" name="guide['+i+'][op_id]" value="'+guide[j].op_id+'">' +
-                                            '<input type="hidden" name="guide['+i+'][title]" value="'+guide[j].title+'">' +
-                                            '<input type="hidden" name="guide['+i+'][unitcost]" value="'+guide[j].unitcost+'">' +
-                                            '<input type="hidden" name="guide['+i+'][amount]" value="'+guide[j].amount+'">' +
-                                            '<input type="hidden" name="guide['+i+'][amount]" value="'+guide[j].amount+'">' +
-                                            '<input type="hidden" name="guide['+i+'][amount]" value="'+guide[j].amount+'">' +
+                                        loan_html += '<tr class="expense" id="loan_'+i+'">' +
+                                            '<td><input type="hidden" name="loan['+i+'][costacc_id]" value="'+loan[j].id+'">' +
+                                            '<input type="hidden" name="loan['+i+'][op_id]" value="'+loan[j].op_id+'">' +
+                                            '<input type="hidden" name="loan['+i+'][group_id]" value="'+loan[j].group_id+'">' +
+                                            '<input type="hidden" name="loan['+i+'][title]" value="'+loan[j].title+'">' +
+                                            '<input type="hidden" name="loan['+i+'][unitcost]" value="'+loan[j].unitcost+'">' +
+                                            '<input type="hidden" name="loan['+i+'][amount]" value="'+loan[j].amount+'">' +
+                                            '<input type="hidden" name="loan['+i+'][ctotal]" value="'+loan[j].ctotal+'">' +
+                                            '<input type="hidden" name="loan['+i+'][amount]" value="'+loan[j].amount+'">' +
+                                            '<input type="hidden" name="loan['+i+'][type]" value="'+loan[j].type+'">' +
+                                            '<input type="hidden" name="loan['+i+'][jiekuan]" value="'+loan[j].jiekuan+'">' +
                                             '</td>'+
-                                            '<td>'+guide[j].kind+'</td><td>'+guide[j].sex+'</td>' +
-                                            '<td><input type="text" name="cost['+i+'][cost]" placeholder="价格" value="'+guide[j].fee+'" class="form-control min_input cost" /></td>' +
-                                            '<td><span>X</span></td><td><input type="text" name="cost['+i+'][amount]" placeholder="数量" value="1" class="form-control min_input amount" /></td>' +
-                                            '<td class="total">&yen;'+guide[j].fee*1+'</td>' +
-                                            '<td><input type="text" name="guide['+i+'][remark]" value="" class="form-control" /></td>' +
-                                            '<td><a href="javascript:;" class="btn btn-danger btn-flat" onclick="delbox(\'guide_'+i+'\')">删除</a></td></tr>';
+                                            '<td>'+loan[j].group_id+'</td>' +
+                                            '<td>'+loan[j].title+'</td>' +
+                                            '<td>'+loan[j].unitcost+'</td>' +
+                                            '<td><span>X</span></td>'+
+                                            '<td>&yen;'+loan[j].amount+'</td>' +
+                                            '<td class="total">&yen;'+loan[j].ctotal+'</td>' +
+                                            '<td>'+loan[j].type+'</td>' +
+                                            '<td>'+loan[j].jiekuan+'</td>' +
+                                            '<td><a href="javascript:;" class="btn btn-danger btn-flat" onclick="delbox(\'loan_'+i+'\')">删除</a></td></tr>';
                                     };
                                 }
-                                $('#guidelist').show();
-                                $('#nonetext').hide();
-                                $('#guidelist').find('tbody').append(guide_html);
-                                total();
+                                $('#loanlist').show();
+                                $('#groupId').hide();
+                                $('#loanlist').find('tbody').append(loan_html);
+                                top.art.dialog({id:"showys"}).close();
                             },
                             cancelValue:'取消',
                             cancel: function () {
@@ -135,4 +139,44 @@
             return  false;
         }
     }
+
+    //移除
+    function delbox(obj){
+        $('#'+obj).remove();
+    }
+
+    artDialog.alert = function (content, status) {
+        return artDialog({
+            id: 'Alert',
+            icon: status,
+            width:300,
+            height:120,
+            fixed: true,
+            lock: true,
+            time: 1,
+            content: content,
+            ok: true
+        });
+    };
+
+
+    //保存信息
+    function save(id,url){
+        $.ajax({
+            type: "POST",
+            url: url,
+            dataType:'json',
+            data: $('#'+id).serialize(),
+            success:function(data){
+                if(parseInt(data)>0){
+                    art.dialog.alert('保存成功','success');
+                }else{
+                    art.dialog.alert('保存失败','warning');
+                }
+            }
+        });
+
+        setTimeout("history.go(0)",1000);
+    }
+
 </script>
