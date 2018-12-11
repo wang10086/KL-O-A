@@ -216,7 +216,7 @@
                                 $('#ys_total_td').html(new_ys_total);
                                 $('#jk_total_td').html(new_jk_total);
                                 $('#bx_total_td').html(new_bx_total);
-                                $('#baoxiaojine').val(new_bx_total);
+                                $('#baoxiaojine').val(new_bx_total);    //报销单
                                 todaxie(new_bx_total);
                                 $('#loanlist').show();
                                 $('#groupId').hide();
@@ -258,6 +258,8 @@
         $('#ys_total_td').html(new_ys_total);
         $('#jk_total_td').html(new_jk_total);
         $('#bx_total_td').html(new_bx_total);
+        $('#baoxiaojine').val(new_bx_total);    //报销单
+        todaxie(new_bx_total);
     }
 
     function upd_bxje(id) {
@@ -269,6 +271,8 @@
         $('#bx_total').val(new_bx_total);
         $('#bx_total_td').html(new_bx_total);
         $('#old_bx_'+id).val(this_new_bxje);    //重新赋值
+        $('#baoxiaojine').val(new_bx_total);    //报销单
+        todaxie(new_bx_total);
     }
 
     function todaxie(num) {
