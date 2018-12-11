@@ -140,12 +140,12 @@ class ChartModel extends Model{
             //年累计
             //年度预算的团
             $req_type			= 800;
-            $ysopids            = D('Chart')->get_ys_opids($v['users'],$yearbegintime,$yearendtime,$req_type);
+            $ysopids            =$this->get_ys_opids($v['users'],$yearbegintime,$yearendtime,$req_type);
             $ysopids            = array_column($ysopids,'op_id');
 
             //年度结算的团
             $req_type			= 801;
-            $jsopids            = D('Chart')->get_js_opids($v['users'],$yearbegintime,$yearendtime,$req_type);
+            $jsopids            = $this->get_js_opids($v['users'],$yearbegintime,$yearendtime,$req_type);
             $jsopids            = array_column($jsopids,'op_id');
 
             //年度数据
@@ -165,12 +165,12 @@ class ChartModel extends Model{
             //月累计
             //月度预算的团
             $req_type			= 800;
-            $monthysopids       = D('Chart')->get_ys_opids($v['users'],$month['begintime'],$month['endtime'],$req_type);
+            $monthysopids       = $this->get_ys_opids($v['users'],$month['begintime'],$month['endtime'],$req_type);
             $monthysopids       = array_column($monthysopids,'op_id');
 
             //月度结算的团
             $req_type		    = 801;
-            $monthjsopids       = D('Chart')->get_js_opids($v['users'],$month['begintime'],$month['endtime'],$req_type);
+            $monthjsopids       = $this->get_js_opids($v['users'],$month['begintime'],$month['endtime'],$req_type);
             $monthjsopids       = array_column($monthjsopids,'op_id');
 
             //月度数据

@@ -89,7 +89,7 @@
                                 </div><!-- /.box-header -->
 
                                 <!-- 选择审批人员  选择审批人员  -->
-                                <div style="<?php if($type==2){ echo 'margin:-2em 0em 6em 1em;';}else{echo 'margin:-4em 0em 0em 2em;';}?>width:96%;<?php if($status==1){ echo 'display:none;';}?>" id="add_final_judgment">
+                                <div style="<?php if($type==2){ echo 'margin:-2em 0em 6em 1em;';}else{echo 'margin:-4em 0em 0em 2em;';}?>width:96%;<?php if($status==1){ echo 'display:;';}?>" id="add_final_judgment">
                                     <form method="post" action="{:U('Approval/add_final_judgment')}" enctype="multipart/form-data">
                                         <input type="hidden" name="file_id" value="{$approval['Approval']['file_id']}">
                                         <input type="hidden" name="file_url_id" value="{$approval['Approval']['id']}">
@@ -228,32 +228,33 @@
 
                             <!--             打印页面           -->
                         <div  id="approval_submit_show1" style="display:none;">
-                            <table class="table table-bordered" style="margin:2em auto;width:96%;border:1px solid #000000;" >
-                                <tr style="text-align:center;" >
-                                    <td style="width:10em;letter-spacing:0.1em;border:1px solid #000000;font-size:0.8em;"><b>文件名称</b></td>
-                                    <td colspan="5" style="width:10em;letter-spacing:0.2em;border:1px solid #000000;font-size:0.8em;">{$file['file_primary']}</td>
+                            <table class="table table-bordered" style="margin:2em auto;width:96%;border:1px solid #000000;font-size:2em;" >
+                                <tr>
+                                    <th style="width:10em;letter-spacing:0.1em;border:1px solid #000000;font-size:0.8em;text-align:center;"><b>文件名称</b></th>
+                                    <th colspan="5" style="width:10em;letter-spacing:0.2em;border:1px solid #000000;font-size:0.8em;text-align:center;">{$file['file_primary']}</th>
                                 </tr>
-                                <tr style="text-align:center;border:1px solid #000000;font-size:0.8em;">
-                                    <td style="width:10em;letter-spacing:0.1em;border:1px solid #000000;font-size:0.8em;"><b>起草部门</b></td>
-                                    <td style="width:10em;letter-spacing:0.2em;border:1px solid #000000;font-size:0.8em;">{$department['department']}</td>
-                                    <td style="width:10em;border:1px solid #000000;font-size:0.8em;"><b>拟稿人</b></td>
-                                    <td style="width:10em;letter-spacing:0.2em;border:1px solid #000000;font-size:0.8em;">{$file['account_name']}</td>
-                                    <td style="width:10em;letter-spacing:0.1em;border:1px solid #000000;font-size:0.8em;"><b>新编/修改</b></td>
-                                    <td style="width:10em;letter-spacing:0.2em;border:1px solid #000000;font-size:0.8em;"><?php if($file['category']==1){echo '新建';}else{echo '修改';} ?></td>
+                                <tr style=";border:1px solid #000000;font-size:0.8em;">
+                                    <th style="width:10em;letter-spacing:0.1em;border:1px solid #000000;font-size:0.8em;text-align:center;"><b>起草部门</b></th>
+                                    <th style="width:10em;letter-spacing:0.2em;border:1px solid #000000;font-size:0.8em;text-align:center;">{$department['department']}</th>
+                                    <th style="width:10em;border:1px solid #000000;font-size:0.8em;text-align:center;"><b>拟稿人</b></th>
+                                    <th style="width:10em;letter-spacing:0.2em;border:1px solid #000000;font-size:0.8em;text-align:center;">{$file['account_name']}</th>
+                                    <th style="width:10em;letter-spacing:0.1em;border:1px solid #000000;font-size:0.8em;text-align:center;"><b>新编/修改</b></th>
+                                    <th style="width:10em;letter-spacing:0.2em;border:1px solid #000000;font-size:0.8em;text-align:center;"><?php if($file['category']==1){echo '新建';}else{echo '修改';} ?></th>
+                                </tr>
+                                <tr style="letter-spacing:0.1em;border:1px solid #000000;font-size:0.8em;">
+                                    <th style="width:10em;text-align:center;letter-spacing:0.1em;border:1px solid #000000;font-size:0.8em;"><b>发放范围</b></th>
+                                    <th colspan="5" style="text-align:center;letter-spacing:0.2em;border:1px solid #000000;font-size:0.8em;">公司各部门、经理办公室成员</th>
 
                                 </tr>
-                                <tr style="text-align:center;letter-spacing:0.1em;border:1px solid #000000;font-size:0.8em;">
-                                    <td style="width:10em;text-align:center;letter-spacing:0.1em;border:1px solid #000000;font-size:0.8em;"><b>发放范围</b></td>
-                                    <td colspan="5" style="text-align:center;letter-spacing:0.2em;border:1px solid #000000;font-size:0.8em;">公司各部门、经理办公室成员</td>
-                                </tr>
                                 <tr>
-                                    <td style="text-align:center;letter-spacing:0.1em;border:1px solid #000000;font-size:0.8em;"><b>相关人员修改意见</b></td>
-                                    <td colspan="5" style="letter-spacing:0.1em;border:1px solid #000000;height:100em;font-size:0.8em;">
-                                        <p>请经理办公室会扩大会成员及各业务中心（项目部）负责人阅，提出建设性意见。</p>
+                                    <th style="letter-spacing:0.1em;border:1px solid #000000;font-size:0.8em;text-align:center;"><b>相关人员修改意见</b></th>
+                                    <th colspan="5" style="letter-spacing:0.1em;border:1px solid #000000;font-size:0.8em;">
+                                        <p style="text-align:center;margin-bottom:2em;"><b>请经理办公室会扩大会成员及各业务中心（项目部）负责人阅，提出建设性意见。</b></p>
+                                        <div style="height:60em;">
                                         <foreach name="annotation" item="an">
                                             <?php if($an['status']<3){?>
                                             <p>
-                                                <b style="color:#339933;"><?php echo $an['account_name'];?>&nbsp;</b>
+                                                <b style="color:#339933;;"><?php echo $an['account_name'];?>&nbsp;</b>
                                                 <span>[ <?php echo date('Y-m-d H:i:s',$an['createtime']);?> ]</span>
                                                 <span style="letter-spacing:0.1em;line-height:2em;text-indent:50px;">
                                                      <?php echo $an['annotation_content'];?>
@@ -261,11 +262,12 @@
                                             </p>
                                             <?php }?>
                                         </foreach>
-                                    </td>
+                                        </div>
+                                    </th>
                                 </tr>
                                 <tr>
-                                    <td style="text-align:center;letter-spacing:0.1em;border:1px solid #000000;font-size:0.8em;"><b>文件批准</b></td>
-                                    <td colspan="5" style="letter-spacing:0.1em;border:1px solid #000000;font-size:0.8em;">
+                                    <th style="text-align:center;letter-spacing:0.1em;border:1px solid #000000;font-size:0.8em;"><b>文件批准</b></th>
+                                    <th colspan="5" style="letter-spacing:0.1em;border:1px solid #000000;font-size:0.8em;">
                                         <foreach name="annotation" item="a">
                                             <?php if($a['status']==3){?>
                                                 <p>
@@ -278,7 +280,7 @@
                                                 </p>
                                             <?php }?>
                                         </foreach>
-                                    </td>
+                                    </th>
                                 </tr>
 
                             </table>
@@ -372,7 +374,7 @@
     function salary2(){
         $('#approval_submit_show1').show();
         var id = $('#approval_submit_show1').prop("id");
-        var html = '<div style="text-align:center;font-weight:bold;font-size:2em;">';
+        var html = '<div style="text-align:center;font-weight:bold;font-size:4em;">';
             html += "<?php echo $file['file_primary'];?> &nbsp;文件审批单</div><br><br>";
 
         $('#approval_submit_show1').prepend(html);

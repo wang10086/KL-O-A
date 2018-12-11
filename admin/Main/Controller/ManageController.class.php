@@ -24,7 +24,7 @@ class ManageController extends ChartController {
         $profit                 = $mod->profit($money);//收入 毛利 毛利率
         $human                  = $mod->human_affairs($number,$profit['profit'],$profit['departmen']);//人事费用率
         $total_profit           = $mod->total_profit($number,$profit['profit'],$profit['departmen']);//利润总额
-//print_R(number);die;
+
         $this->total_profit     = $total_profit;//利润总额(未减去其他费用)
         $this->human_affairs    = $human;//人事费用率
         $this->profit           = $profit['departmen'];//部门 收入 毛利 毛利率
@@ -54,18 +54,25 @@ class ManageController extends ChartController {
         return $listdatas;die;
     }
 
-    //季度经营报表
-    public function Manage_quarter(){
+    /**
+     * manage_quarter 季度经营报表
+     * $year 年 $quart月
+     * $post 2 加  1 减年
+     */
+    public function manage_quarter(){
         $year                   = trim(I('year',date('Y')));//年
         $post                   = trim(I('post'));//加减年
         $quart                  = trim(I('quart',date('m')));//季度
         $mod                    = D('Manage');
         $year1                  = $mod->manageyear($year,$post);//判断加减年
         $quarter                = $mod->quarter($year1,$quart);// 季度人数 和人力资源成本
-        $money                  = $this->business($year1,$quart);//monthzsr 收入合计   monthzml 毛利合计  monthmll 毛利率
-        $profit                 = $mod->profit($money);//收入 毛利 毛利率
-//        print_r($profit);die;
+        $profits                = $this->profit_r($year1,$quart);//月份循环季度数据 利润
+        $manage_quarter         = $mod->manage_quarter($quarter,$profits);//季度利润总额
+        $personnel_costs        = $mod->personnel_costs($quarter,$profits);//人事费用率
 
+        $this->personnel_costs  = $personnel_costs;//人事费用率
+        $this->manage_quarter   = $manage_quarter;// 季度利润总额
+        $this->profit           = $profits;// 收入 毛利 毛利率
         $this->quarter          = $quarter;// 季度人数 和人力资源成本
         $this->year             = $year1;//年
         $this->post             = $post;
@@ -74,17 +81,81 @@ class ManageController extends ChartController {
     }
 
     /**
-     *
+     * profit_r 月份循环季度数据
+     * $quarter  人数 人力资源成本
+     * $profits 季度数据 总收入 总毛利 总利率
      */
-    public function profit_r(){
-
+    public function profit_r($year1,$quart){
+        $mod                                        = D('Manage');
+        $arr1                                       = array('3','6','9','12');
+        $i                                          = 0; //现在季度月 减一
+        $company                                    = array(); //季度内数据总和
+        $month_r                                    = array();
+        $month_r[9]['monthzsr']                     = 0.00;//机关部门营业总收入为默认0
+        $month_r[9]['monthzml']                     = 0.00;//机关部门营业总毛利为默认0
+        $month_r[9]['monthmll']                     = 0.00;//机关部门营业总利率为默认0
+        if(in_array($quart,$arr1)){ //判断是否是第一、二、三、四季度
+            for($n = 2; $n >= $i;$i++){ //
+                $month                              = $quart-$i; //季度上一个月
+                $count                              = $this->business($year1,$month); //季度 人数和 人力资源成本
+                $profit                             = $mod->profit($count);//收入 毛利 毛利率
+                foreach($profit['departmen'] as $key => $val){
+                    $month_r[$key]['monthzsr']      += $val['department']['monthzsr'];
+                    $month_r[$key]['monthzml']      += $val['department']['monthzml'];
+                    $month_r[$key]['monthmll']      += $val['department']['monthmll'];
+                }
+                $month_r[0]['monthzsr']             += $profit['profit']['monthzsr'];
+                $month_r[0]['monthzml']             += $profit['profit']['monthzml'];
+                $month_r[0]['monthmll']             += $profit['profit']['monthmll'];
+            }
+            foreach($month_r as $key =>$val){
+                unset($month_r[$key]['monthmll']);
+                $maoli                              = $val['monthzml']/$val['monthzsr'];
+                $month_r[$key]['monthmll']          = round(($maoli*100),2);
+            }
+            ksort($month_r);
+            return $month_r;
+        }else{
+            for($n = 2;$n > $i;$i++){
+                $month                              = $quart-$i;
+               if($month==3 || $month==6 || $month==9 || $month==12) {
+                   foreach($month_r as $key =>$val){
+                       unset($month_r[$key]['monthmll']);
+                       $maoli                       = $val['monthzml']/$val['monthzsr'];
+                       $month_r[$key]['monthmll']   = round($maoli*100,2);
+                   }
+                   ksort($month_r);
+                   return $month_r;
+               }else{
+                    $count                           = $this->business($year1,$month); //季度 人数和 人力资源成本
+                    $profit                          = $mod->profit($count);//收入 毛利 毛利率
+                    $month_r = array();
+                    foreach($profit['departmen'] as $key => $val){
+                        $month_r[$key]['monthzsr']  += $val['department']['monthzsr'];
+                        $month_r[$key]['monthzml']  += $val['department']['monthzml'];
+                        $month_r[$key]['monthmll']  += $val['department']['monthmll'];
+                        $sum                         = $key;
+                    }
+                    $month_r[0]['monthzsr']         += $profit['profit']['monthzsr'];
+                    $month_r[0]['monthzml']         += $profit['profit']['monthzml'];
+                    $month_r[0]['monthmll']         += $profit['profit']['monthmll'];
+                }
+            }
+        }
     }
-    //年度经营报表
+
+    /**
+     * Manage_year 年度经营报表
+     * $year 年 $quart月
+     * $post 2 加  1 减年
+     */
     public function Manage_year(){
-        $year       = trim(I('year'));
+        $year       = trim(I('year',date('Y')));
         $post       = trim(I('post'));
         $mod        = D('Manage');
+        $yea_report =$mod->yea_report($year,$post);
 
+        $this->post = $post;
         $this->display();
     }
 
