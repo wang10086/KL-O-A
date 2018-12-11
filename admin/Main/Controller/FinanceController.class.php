@@ -1320,10 +1320,12 @@ class FinanceController extends BaseController {
 
             //保存团内借款报销
             if ($savetype==5){
+                $loan_lists     = I('loan');
+                $info           = I('info');
+                $type           = I('type');
+                $total          = I('total');
 
-                $a = I();
-
-                var_dump($a);die;
+                var_dump(I());die;
             }
 
             //保存团内报销(直接报销)

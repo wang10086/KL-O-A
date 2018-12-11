@@ -1,7 +1,6 @@
 <div class="box-body">
-    <form method="post" action="<?php echo U('Finance/public_save'); ?>" id="save_loan">
+    <form method="post" action="<?php echo U('Finance/public_save'); ?>" id="save_loan" onsubmit="return submitBefore()">
         <input type="hidden" name="dosubmint" value="1">
-        <input type="hidden" name="opid" value="{$op.op_id}">
         <input type="hidden" name="savetype" value="5">
         <div class="content" id="loanlist" style="display:block;">
             <table class="table table-striped">
@@ -24,9 +23,10 @@
                             <input type="hidden" name="loan[20000{$v.id}][costacc_id]" value="{$v.id}">
                             <input type="hidden" name="loan[20000{$v.id}][op_id]" value="{$v.op_id}">
                             <input type="hidden" name="loan[20000{$v.id}][group_id]" value="{$v.group_id}">
-                            <input type="hidden" name="loan[20000{$v.id}][title]" value="{$v.title}">
+                            <!--<input type="hidden" name="loan[20000{$v.id}][title]" value="{$v.title}">
                             <input type="hidden" name="loan[20000{$v.id}][ctotal]" value="{$v.ctotal}" id="ys_20000{$v.id}">
-                            <input type="hidden" name="loan[20000{$v.id}][amount]" value="{$v.amount}">
+                            <input type="hidden" name="loan[20000{$v.id}][amount]" value="{$v.amount}">-->
+                            <input type="hidden" value="{$v.ctotal}" id="ys_20000{$v.id}">
                             <input type="hidden" name="loan[20000{$v.id}][type]" value="{$v.type}">
                             <input type="hidden" name="loan[20000{$v.id}][jiekuan]" value="{$v.jiekuan}" id="jk_20000{$v.id}">
                         </td>
@@ -43,16 +43,16 @@
                     </foreach>
                     <tr id="t-body">
                         <td>
-                            <input type="hidden" name="ys_total" id="ys_total" value="{$total.ys_total}">
-                            <input type="hidden" name="jk_total" id="jk_total" value="{$total.jk_total}">
-                            <input type="hidden" name="bx_total" id="bx_total" value="{$total.bx_total}">
+                            <input type="hidden" name="total[ys_total]" id="ys_total" value="{$total.ys_total}">
+                            <input type="hidden" name="total[jk_total]" id="jk_total" value="{$total.jk_total}">
+                            <input type="hidden" name="total[bx_total]" id="bx_total" value="{$total.bx_total}">
                         </td>
                         <td></td>
                         <td></td>
-                        <td style="font-size:16px; color:#ff3300;" id="ys_total_td">&yen; {$total.ys_total}</td>
+                        <td style="font-size:16px; color:#ff3300;" id="ys_total_td">&yen; <?php echo $total['ys_total']?$total['ys_total']:'0.00'; ?></td>
                         <td></td>
-                        <td style="font-size:16px; color:#ff3300;" id="jk_total_td">&yen; {$total.jk_total}</td>
-                        <td style="font-size:16px; color:#ff3300;" id="bx_total_td">&yen; {$total.bx_total}</td>
+                        <td style="font-size:16px; color:#ff3300;" id="jk_total_td">&yen; <?php echo $total['jk_total']?$total['jk_total']:'0.00'; ?></td>
+                        <td style="font-size:16px; color:#ff3300;" id="bx_total_td">&yen; <?php echo $total['bx_total']?$total['bx_total']:'0.00'; ?></td>
                         <td></td>
                     </tr>
                 </tbody>
@@ -61,8 +61,6 @@
                         <td align="left" colspan="10">
                         <input type="text" id="groupId" onblur="get_yusuan()" placeholder="请输入团号信息" style="width:200px;height: 33px; margin-right: 10px;">
                         <a href="javascript:;" class="btn btn-success btn-sm" style="margin-left:-8px;"  onClick="show_group()"><i class="fa fa-fw  fa-plus"></i> 增加团号信息</a>
-                        <!--<a  href="javascript:;" class="btn btn-info btn-sm" onClick="javascript:save('save_loan','<?php /*echo U('Finance/public_save'); */?>');">保存</a>-->
-                        <input type="submit" class="btn btn-info btn-sm" value="保存">
                         </td>
                     </tr>
                 </tfoot>
@@ -71,7 +69,6 @@
 
         <div class="content">
             <input type="hidden" id="qianzi" value="0">
-            <input type="hidden" name="yingjiekuan" id="jk_sum">
             <div style="width:100%; float:left;">
 
                 <div class="form-group col-md-12">
@@ -83,12 +80,6 @@
                         </foreach>
                     </select>
                 </div>
-
-                <!--<div class="form-group col-md-6">
-                    <label>团号：</label>
-                    <input type="text" name="info[group_id]" class="form-control" value="<?php /*echo $list['group_id']?$list['group_id']:$op['group_id']; */?>" readonly />
-                    <input type="hidden" name="info[op_id]" value="<?php /*echo $list['op_id']?$list['op_id']:$op['op_id']; */?>" />
-                </div>-->
 
                 <div class="form-group col-md-6">
                     <label>报销金额：</label>
@@ -133,12 +124,35 @@
 
             </div>
         </div>
+        <div style="width:100%; text-align:center;">
+            <input type="submit" class="btn btn-info btn-lg" value="提交">
+        </div>
     </form> 
 </div>
 
 <script>
     $(function () {
         $('#groupId').hide();
+        $('.hk_show').hide();
+
+        $('#jk_type').find('ins').each(function (index,ele) {
+            $(this).click(function () {
+                var type = $(this).prev('input').val();
+
+                if(type ==1){ //支票
+                    $('.huikuan').removeAttr('required');
+                    $('.hk_show').hide();
+                    $('.zp_show').show();
+                    $('.zhipiao').attr('required','true');
+                }else if(type == 3){ //汇款
+                    $('.hk_show').show();
+                    $('.huikuan').attr('required','true');
+                }else{
+                    $('.huikuan').removeAttr('required');
+                    $('.hk_show').hide();
+                }
+            })
+        })
     })
 
     function show_group() {
@@ -185,10 +199,10 @@
                                             '<td><input type="hidden" name="loan['+i+'][costacc_id]" value="'+loan[j].id+'">' +
                                             '<input type="hidden" name="loan['+i+'][op_id]" value="'+loan[j].op_id+'">' +
                                             '<input type="hidden" name="loan['+i+'][group_id]" value="'+loan[j].group_id+'">' +
-                                            '<input type="hidden" name="loan['+i+'][title]" value="'+loan[j].title+'">' +
+                                            /*'<input type="hidden" name="loan['+i+'][title]" value="'+loan[j].title+'">' +
                                             '<input type="hidden" name="loan['+i+'][ctotal]" value="'+loan[j].ctotal+'" id="ys_'+i+'">' +
-                                            '<input type="hidden" name="loan['+i+'][amount]" value="'+loan[j].amount+'">' +
-                                            '<input type="hidden" name="loan['+i+'][type]" value="'+loan[j].type+'">' +
+                                            '<input type="hidden" name="loan['+i+'][type]" value="'+loan[j].type+'">' +*/
+                                            '<input type="hidden" value="'+loan[j].ctotal+'" id="ys_'+i+'">' +
                                             '<input type="hidden" name="loan['+i+'][jiekuan]" value="'+loan[j].jiekuan+'" id="jk_'+i+'">' +
                                             '</td>'+
                                             '<td>'+loan[j].group_id+'</td>' +
@@ -287,6 +301,46 @@
                 }
             }
         });
+    }
+
+    function show_qianzi() {
+        var html = '';
+        html += '<label>报销人：</label>'+
+            '<input type="text" name="password" style="width:160px;height: 30px;" placeholder="请输入签字密码"  />&emsp;'+
+            '<input type="button" class="info-button" value="确定" onclick="check_pwd()">';
+        $('#jkr_qianzi').html(html);
+    }
+
+    function check_pwd() {
+        var pwd = $('input[name="password"]').val();
+        $.ajax({
+            type: 'POST',
+            url : "{:U('Ajax/check_pwd')}",
+            data: {pwd:pwd},
+            success:function (msg) {
+                if (msg.stu ==1){
+                    var html = '';
+                    html += '<label>报销人：</label>'+
+                        '<input type="hidden" name="info[jk_file]" value="'+msg.file_url+'">'+
+                        '<img width="100" src="/'+msg.file_url+'" alt="">';
+                    $('#jkr_qianzi').html(html);
+                    $('#qianzi').val('1');
+                }else{
+                    art_show_msg(msg.message);
+                    return false;
+                }
+            }
+        })
+    }
+
+    function submitBefore() {
+        var isqianzi = $('#qianzi').val();
+        if (isqianzi == 1){
+            $('#jiekuanform').submit();
+        }else{
+            art_show_msg('请完善报销信息');
+            return false;
+        }
     }
 
     //移除
