@@ -1439,6 +1439,10 @@ class FinanceController extends BaseController {
     //@@@NODE-3###loan_op###团内支出报销###
     public function loan_op(){
 
+        $departids          = array(2,6,7,12,13,14,16,17);
+        $departments        = M('salary_department')->where(array('id'=>array('in',$departids)))->select();
+        $this->departments  = $departments;
+        $this->jk_type      = C('JIEKUAN_TYPE');
         $this->display();
     }
 

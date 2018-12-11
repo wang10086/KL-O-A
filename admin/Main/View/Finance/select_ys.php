@@ -10,8 +10,6 @@
 					obj.op_id      = $(element).find("input[name=op_id]").val();
 					obj.group_id   = $(element).find("input[name=group_id]").val();
 					obj.title      = $(element).find("input[name=title]").val();
-					obj.unitcost   = $(element).find("input[name=unitcost]").val();
-					obj.amount     = $(element).find("input[name=amount]").val();
 					obj.ctotal     = $(element).find("input[name=ctotal]").val();
 					obj.type       = $(element).find("input[name=type]").val();
 					obj.jiekuan    = $(element).find("input[name=jiekuan]").val();
