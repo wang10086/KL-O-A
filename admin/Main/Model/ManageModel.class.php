@@ -78,11 +78,14 @@ class ManageModel extends Model{
         return $account;
     }
      /**
+      * 公司五险一金 insurance
+      *  $where 条件
       */
      public function insurance($where){
          $insurance              = M('salary_insurance')->where($where)->find();
          // 公司 生育 工伤 养老 医疗 失业
          $medical_insurance      = $insurance['company_birth_ratio']*$insurance['company_birth_base']+$insurance['company_injury_ratio']*$insurance['company_injury_base']+$insurance['company_pension_ratio']*$insurance['company_pension_base']+$insurance['company_medical_care_ratio']*$insurance['company_medical_care_base']+$insurance['company_unemployment_ratio']*$insurance['company_unemployment_base']+$insurance['company_accumulation_fund_ratio']*$insurance['company_accumulation_fund_base']+$insurance['company_big_price'];
+
          return $medical_insurance;
      }
 
@@ -262,38 +265,6 @@ class ManageModel extends Model{
         return $affairs;
     }
 
-
-    /**
-     * 项目排列公司名称
-     */
-    public  function project_company_name($project){
-        switch ($project) {
-            case 'F':
-                return '京区业务中心';
-                break;
-            case 'G':
-                return '京外业务中心';
-                break;
-            case 'L':
-                return '南京项目部';
-                break;
-            case 'M':
-                return '武汉项目部';
-                break;
-            case 'N':
-                return '沈阳项目部';
-                break;
-            case 'P':
-                return '长春项目部';
-                break;
-            case 'B':
-                return '市场部';
-                break;
-            default:
-                break;
-        }
-    }
-
     /**
      * quarter 季度 年月 数据值修正返回
      *  $year 加减年 $quarter季度
@@ -355,6 +326,7 @@ class ManageModel extends Model{
 
             //人事费用率 = 季度总毛利-人力资源成本
             $personnel_costs[$key]['personnel_costs'] = round(($val['money']/$profits[$key]['monthzsr'])*100,2);
+
         }
         return $personnel_costs;
     }
@@ -365,47 +337,108 @@ class ManageModel extends Model{
      * $post 2 加  1 减年
      */
     public  function yea_report($year,$post){
-
-        $where['datetime']                      = array('like',$year.'%');
-        $where['status']                        = 4;
-        $query                                  = array();
-        $user_count[0]['sum']                   = $this->userinfo($where,5); //公司今年人员数量
-        $count_money                            = M('salary_count_money')->where($where)->select();//今年应发总计数据
+        $arr                                            = array('京区业务中心','京外业务中心','南京项目部','武汉项目部','沈阳项目部','长春项目部','市场部','常规业务中心');//部门
+        $where['datetime']                              = array('like',$year.'%');
+        $where['status']                                = 4;
+        $query                                          = array();
+        $user_count[0]['sum']                           = $this->userinfo($where,5); //公司今年人员数量
+        $count_money                                    = M('salary_count_money')->where($where)->select();//今年应发总计数据
+        $sum                                            = 0;//市场部 业务人员 数量
         foreach($count_money as $key => $val){
-            $user_count[0]['money']             += $val['Should'];//今年应发总计金额
+            $query_r['id']                              = $val['insurance_id'];
+            $moner2                                     = $this->insurance($query_r);//公司总共缴五险一金
+            $user_count[0]['money']                    += $val['Should']+$moner2;//今年应发总计金额
         }
-        $arr                                    = array('京区业务中心','京外业务中心','南京项目部','武汉项目部','沈阳项目部','长春项目部','市场部','常规业务中心');//部门
+        $money                                          = $user_count[0]['money'];//今年应发总计金额
+        $count                                          = $user_count[0]['sum'];// 公司今年人员数量
+        $number                                         = 0;
         foreach($arr as $key => $val){
-            $key                                = $key+1;
-            $where['department']                = $val;
+            $key                                        = $key+1;
+            $where['department']                        = $val;
             if($val=='市场部'){
-                $query[$key]['code']            = array('like','S'.'%');
-                $position                       = M('position')->where($query)->select();//业务 带S的职位
+                $query[$key]['code']                    = array('like','S'.'%');
+                $position                               = M('position')->where($query)->select();//业务 带S的职位
                 foreach($position as $k => $v){
-                    $quer['position_id']        = $v['id'];
-                    $quer['departmentid']       = 2;
-                    $userid                     = M('account')->where($quer)->select();//市场部 业务人员id
+                    $quer['position_id']                = $v['id'];
+                    $quer['departmentid']               = 2;
+                    $userid                             = M('account')->where($quer)->select();//市场部 业务人员id
                     foreach($userid as $kk => $vv){
-                        $user_r['account_id']   = $vv['id'];
-                        $user_r['datetime']     = array('like',$year.'%');
-                        $user_r['status']       = 4;
-                        $salary_count           = $this->userinfo($user_r,3); //公司今年人员工资信息
+                        $user_r['account_id']           = $vv['id'];
+                        $user_r['datetime']             = array('like',$year.'%');
+                        $user_r['status']               = 4;
+                        $salary_count                   = $this->userinfo($user_r,3); //公司今年人员工资信息
+                        if($salary_count){$sum = $sum+1;}
                         foreach($salary_count as $ke => $va){
-                            $user_count[$key]['money'] += $va['Should_distributed'];//市场部 业务人员应发工资
+                            $que['id']                  = $va['insurance_id'];
+                            $mon                        = $this->insurance($que);//公司总共缴五险一金
+                            $user_count[$key]['money'] += $va['Should_distributed']+$mon;//市场部 业务人员应发工资
+                            $money                      = $money-$va['Should_distributed']-$mon;
                         }
                     }
                 }
+                $user_count[$key]['sum']                = $sum;//市场部 业务人员数量
+                $count                                  = $count-$sum;
             }else{ //各部门应发总额
-                $salary_count                   = $this->userinfo($where,3); //公司今年人员工资信息
-                $user_count[$key]['sum']        = count($salary_count); //公司今年人员数量
+                $salary_count                           = $this->userinfo($where,3); //公司今年人员工资信息
+                $user_count[$key]['sum']                = count($salary_count); //公司今年人员数量
+                $count                                  = $count-count($salary_count);
                 foreach($salary_count as $k => $v){
-                    $user_count[$key]['money']  += $v['Should_distributed'];
+                    $qu['id']                           = $v['insurance_id'];
+                    $money1                             = $this->insurance($qu);//公司总共缴五险一金
+                    $user_count[$key]['money']         += $v['Should_distributed']+$money1;//部门人员应发工资
+                    $money                              = $money-$v['Should_distributed']-$money1;
                 }
             }
+            $number                                     = $key+2;
         }
-//        print_r($user_count);die;
+        $user_count[$number]['sum']                     = $count;
+        $user_count[$number]['money']                   = $money;
+        return $user_count;
+    }
 
 
+    /**
+     * profit_w 整理年 收入 毛利 利率
+     * $money 年 收入 毛利 利率
+     */
+    public function profit_w($money){
+        $arr                                             = array('京区业务中心','京外业务中心','南京项目部','武汉项目部','沈阳项目部','长春项目部','市场部','常规业务中心');//部门
+        $departmen                                       = array();
+        $sum                                             = 0;
+
+        foreach($arr as $key =>$val){ //部门循环
+            $key                                         = $key + 1;
+            $departmen[$key]['department']['depname']    = $val;
+
+            foreach($money as $k => $v){ //部门年收入 毛利 利率
+
+                if($v['depname']==$val){ $departmen[$key]= $v;}//每个部门年收入 毛利 利率
+                if($k=='heji'){$departmen[0] = $v;}       //总收入 毛利 利率
+            }
+            $sum                                         = $key+1;
+        }
+        $departmen[$sum]['yearzsr']                      = 0.00;//机关部门收入 默认0
+        $departmen[$sum]['yearzml']                      = 0.00;//机关部门毛利 默认
+        $departmen[$sum]['yearmll']                      = 0.00;//机关部门利率 默认
+        ksort($departmen);
+        return $departmen;
+    }
+
+    /**
+     * count_profit 年利润总额
+     * $yea_report 年人员人力资源成本
+     * $profit 年 收入 毛利 毛利率
+     */
+    public function count_profit($yea_report,$profit){
+
+        foreach($yea_report as $key =>$val){
+
+            $profit_sum[$key]['yearprofit'] = $profit[$key]['yearzml']-$val['money'];//利润总额 = 营业毛利-人力资源成本
+
+            $profit_sum[$key]['personnel']  = round(($val['money']/$profit[$key]['yearzml'])*100,2);//人事费用率 = 人力资源成本/营业毛利
+
+        }
+        return $profit_sum;
     }
 }
 

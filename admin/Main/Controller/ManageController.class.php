@@ -8,6 +8,7 @@ class ManageController extends ChartController {
     /**
      * Manage_month 月度经营报表
      * $post 1 上一年 2 下一年
+     * $year 年 $month 月
      * F 京区业务中心 G 京外业务中心 L 南京项目部
      * M 武汉项目部 N 沈阳项目部 P 长春项目部 B 市场部
      */
@@ -16,9 +17,7 @@ class ManageController extends ChartController {
         $post                   = trim(I('post'));
         $month                  = trim(I('month',date('m')));
         $mod                    = D('Manage');
-        //年月变化
         $year1                  = $mod->manageyear($year,$post);//判断加减年
-        //月度统计人员 数额 占比
         $number                 = $mod->month($year1,$month);// 部门数量 部门人力资源成本
         $money                  = $this->business($year1,$month);//monthzsr 收入合计   monthzml 毛利合计  monthmll 毛利率
         $profit                 = $mod->profit($money);//收入 毛利 毛利率
@@ -59,7 +58,7 @@ class ManageController extends ChartController {
      * $year 年 $quart月
      * $post 2 加  1 减年
      */
-    public function manage_quarter(){
+    public function Manage_quarter(){
         $year                   = trim(I('year',date('Y')));//年
         $post                   = trim(I('post'));//加减年
         $quart                  = trim(I('quart',date('m')));//季度
@@ -143,6 +142,7 @@ class ManageController extends ChartController {
             }
         }
     }
+    
 
     /**
      * Manage_year 年度经营报表
@@ -150,12 +150,21 @@ class ManageController extends ChartController {
      * $post 2 加  1 减年
      */
     public function Manage_year(){
-        $year       = trim(I('year',date('Y')));
-        $post       = trim(I('post'));
-        $mod        = D('Manage');
-        $yea_report =$mod->yea_report($year,$post);
+        $year               = trim(I('year',date('Y')));
+        $post               = trim(I('post'));
+        $mod                = D('Manage');
+        $month              = date('m');
+        $year1              = $mod->manageyear($year,$post);//判断加减年
+        $yea_report         = $mod->yea_report($year1,$post);//年人员数量  年人员人力资源成本
+        $money              = $this->business($year1,$month);//年 monthzsr 收入合计   monthzml 毛利合计  monthmll 毛利率
+        $profit             = $mod->profit_w($money);//年 收入 毛利 毛利率
+        $count_profit       = $mod->count_profit($yea_report,$profit);//年利润总额 年人事费用
 
-        $this->post = $post;
+        $this->count_profit = $count_profit;//年人员人力资源成本 收入 毛利 毛利率
+        $this->profit       = $profit;//收入 毛利 毛利率
+        $this->year         = $year1;//加减后年
+        $this->yea_report   = $yea_report;//年人员数量  年人员人力资源成本
+        $this->post         = $post;
         $this->display();
     }
 

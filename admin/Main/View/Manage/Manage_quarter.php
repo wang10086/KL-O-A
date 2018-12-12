@@ -45,7 +45,7 @@
                                     <th style="width:10em;" ><b>沈阳项目部</b></th>
                                     <th style="width:10em;" ><b>长春项目部</b></th>
                                     <th style="width:10em;" ><b>市场部</b></th>
-                                    <th style="width:10em;" ><b>常规旅游中心</b></th>
+                                    <th style="width:10em;" ><b>常规业务中心</b></th>
                                     <th style="width:10em;" ><b>机关部门</b></th>
                                 </tr>
                                 <tr role="row" class="orders" style="text-align:center;">
@@ -58,53 +58,53 @@
                                 <tr role="row" class="orders" style="text-align:center;">
                                     <td>营业收入</td>
                                     <td></td>
-                                    <td>1</td>
-                                    <td></td>
-                                    <td>1</td>
                                     <td></td>
                                     <td></td>
                                     <td></td>
                                     <td></td>
                                     <td></td>
-                                    <td>1</td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
                                 </tr>
                                 <tr role="row" class="orders" style="text-align:center;">
                                     <td>营业毛利</td>
                                     <td><?php echo $n['employees_sum'];?></td>
-                                    <td>1</td>
-                                    <td></td>
-                                    <td>1</td>
                                     <td></td>
                                     <td></td>
                                     <td></td>
                                     <td></td>
                                     <td></td>
-                                    <td>1</td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
                                 </tr>
                                 <tr role="row" class="orders" style="text-align:center;">
                                     <td>营业毛利率(%)</td>
                                     <td><?php echo $n['employees_sum'];?></td>
-                                    <td>1</td>
-                                    <td></td>
-                                    <td>1</td>
                                     <td></td>
                                     <td></td>
                                     <td></td>
                                     <td></td>
                                     <td></td>
-                                    <td>1</td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
                                 </tr>
                                 <tr role="row" class="orders" style="text-align:center;">
                                     <td>人力资源成本</td>
-                                    <td>1</td>
-                                    <td></td>
-                                    <td>1</td>
                                     <td></td>
                                     <td></td>
                                     <td></td>
                                     <td></td>
                                     <td></td>
-                                    <td>1</td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
                                     <td></td>
 
 
@@ -112,41 +112,41 @@
                                 <tr role="row" class="orders" style="text-align:center;">
                                     <td>其他费用</td>
                                     <td><?php echo $n['employees_sum'];?></td>
-                                    <td>1</td>
-                                    <td></td>
-                                    <td>1</td>
                                     <td></td>
                                     <td></td>
                                     <td></td>
                                     <td></td>
                                     <td></td>
-                                    <td>1</td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
                                 </tr>
                                 <tr role="row" class="orders" style="text-align:center;">
                                     <td>利润总额</td>
                                     <td><?php echo $n['employees_sum'];?></td>
-                                    <td>1</td>
-                                    <td></td>
-                                    <td>1</td>
                                     <td></td>
                                     <td></td>
                                     <td></td>
                                     <td></td>
                                     <td></td>
-                                    <td>1</td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
                                 </tr>
                                 <tr role="row" class="orders" style="text-align:center;">
                                     <td>人事费用率</td>
                                     <td><?php echo $n['employees_sum'];?></td>
-                                    <td>1</td>
-                                    <td></td>
-                                    <td>1</td>
                                     <td></td>
                                     <td></td>
                                     <td></td>
                                     <td></td>
                                     <td></td>
-                                    <td>1</td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
                                 </tr>
                             </table><br><br>
                         </div><!-- /.box-body -->
@@ -169,7 +169,7 @@
                                     <th style="width:10em;" ><b>沈阳项目部</b></th>
                                     <th style="width:10em;" ><b>长春项目部</b></th>
                                     <th style="width:10em;" ><b>市场部</b></th>
-                                    <th style="width:10em;" ><b>常规旅游中心</b></th>
+                                    <th style="width:10em;" ><b>常规业务中心</b></th>
                                     <th style="width:10em;" ><b>机关部门</b></th>
                                 </tr>
                                 <tr role="row" class="orders" style="text-align:center;">

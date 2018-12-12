@@ -42,114 +42,107 @@
                                 <th style="width:10em;" ><b>沈阳项目部</b></th>
                                 <th style="width:10em;" ><b>长春项目部</b></th>
                                 <th style="width:10em;" ><b>市场部</b></th>
-                                <th style="width:10em;" ><b>常规旅游中心</b></th>
+                                <th style="width:10em;" ><b>常规业务中心</b></th>
                                 <th style="width:10em;" ><b>机关部门</b></th>
                             </tr>
                             <tr role="row" class="orders" style="text-align:center;">
-                                <td>员工人数</td>
-                                <td></td>
-                                <td>1</td>
-                                <td></td>
-                                <td>1</td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td>1</td>
+                                <th>员工人数</th>
+                                <foreach name="yea_report" item="yea">
+                                    <th><?php if($yea['sum']=="" || $yea['sum']==0 || $yea_report[0]['sum']==0){echo '0';}else{echo $yea['sum']; }?>（人)</th>
+                                </foreach>
                             </tr>
 
                             <tr role="row" class="orders" style="text-align:center;">
                                 <td>营业收入</td>
                                 <td></td>
-                                <td>1</td>
-                                <td></td>
-                                <td>1</td>
                                 <td></td>
                                 <td></td>
                                 <td></td>
                                 <td></td>
                                 <td></td>
-                                <td>1</td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
                             </tr>
                             <tr role="row" class="orders" style="text-align:center;">
                                 <td>营业毛利</td>
                                 <td><?php echo $n['employees_sum'];?></td>
-                                <td>1</td>
-                                <td></td>
-                                <td>1</td>
                                 <td></td>
                                 <td></td>
                                 <td></td>
                                 <td></td>
                                 <td></td>
-                                <td>1</td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
                             </tr>
                             <tr role="row" class="orders" style="text-align:center;">
                                 <td>营业毛利率(%)</td>
                                 <td><?php echo $n['employees_sum'];?></td>
-                                <td>1</td>
-                                <td></td>
-                                <td>1</td>
                                 <td></td>
                                 <td></td>
                                 <td></td>
                                 <td></td>
                                 <td></td>
-                                <td>1</td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
                             </tr>
                             <tr role="row" class="orders" style="text-align:center;">
                                 <td>人力资源成本</td>
                                 <td><?php echo $n['employees_sum'];?></td>
-                                <td>1</td>
-                                <td></td>
-                                <td>1</td>
                                 <td></td>
                                 <td></td>
                                 <td></td>
                                 <td></td>
                                 <td></td>
-                                <td>1</td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
 
                             </tr>
                             <tr role="row" class="orders" style="text-align:center;">
                                 <td>其他费用</td>
                                 <td><?php echo $n['employees_sum'];?></td>
-                                <td>1</td>
-                                <td></td>
-                                <td>1</td>
                                 <td></td>
                                 <td></td>
                                 <td></td>
                                 <td></td>
                                 <td></td>
-                                <td>1</td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
                             </tr>
                             <tr role="row" class="orders" style="text-align:center;">
                                 <td>利润总额</td>
                                 <td><?php echo $n['employees_sum'];?></td>
-                                <td>1</td>
-                                <td></td>
-                                <td>1</td>
                                 <td></td>
                                 <td></td>
                                 <td></td>
                                 <td></td>
                                 <td></td>
-                                <td>1</td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
                             </tr>
                             <tr role="row" class="orders" style="text-align:center;">
                                 <td>人事费用率</td>
                                 <td><?php echo $n['employees_sum'];?></td>
-                                <td>1</td>
-                                <td></td>
-                                <td>1</td>
                                 <td></td>
                                 <td></td>
                                 <td></td>
                                 <td></td>
                                 <td></td>
-                                <td>1</td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
                             </tr>
                         </table><br><br>
 
@@ -173,114 +166,65 @@
                                     <th style="width:10em;" ><b>沈阳项目部</b></th>
                                     <th style="width:10em;" ><b>长春项目部</b></th>
                                     <th style="width:10em;" ><b>市场部(业务)</b></th>
-                                    <th style="width:10em;" ><b>常规旅游中心</b></th>
+                                    <th style="width:10em;" ><b>常规业务中心</b></th>
                                     <th style="width:10em;" ><b>机关部门</b></th>
                                 </tr>
                                 <tr role="row" class="orders" style="text-align:center;">
-                                    <td>员工人数</td>
-                                    <td></td>
-                                    <td>1</td>
-                                    <td></td>
-                                    <td>1</td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td>1</td>
+                                    <th>员工人数</th>
+                                    <foreach name="yea_report" item="yea">
+                                        <th><?php if($yea['sum']=="" || $yea['sum']==0 || $yea_report[0]['sum']==0){echo '0';}else{echo $yea['sum']; }?>（人)</th>
+                                    </foreach>
                                 </tr>
 
                                 <tr role="row" class="orders" style="text-align:center;">
                                     <td>营业收入</td>
-                                    <td></td>
-                                    <td>1</td>
-                                    <td></td>
-                                    <td>1</td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td>1</td>
+                                    <foreach name="profit" item="pro">
+                                        <th>¥ <?php if($pro['yearzsr']=="" || $pro['yearzsr']==0 || $yea_report[0]['sum']==0){echo '0.00';}else{echo $pro['yearzsr']; }?></th>
+                                    </foreach>
                                 </tr>
                                 <tr role="row" class="orders" style="text-align:center;">
                                     <td>营业毛利</td>
-                                    <td><?php echo $n['employees_sum'];?></td>
-                                    <td>1</td>
-                                    <td></td>
-                                    <td>1</td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td>1</td>
+                                    <foreach name="profit" item="pr">
+                                        <th>¥ <?php if($pr['yearzml']=="" || $pr['yearzml']==0 || $yea_report[0]['sum']==0){echo '0.00';}else{echo $pr['yearzml']; }?></th>
+                                    </foreach>
                                 </tr>
                                 <tr role="row" class="orders" style="text-align:center;">
                                     <td>营业毛利率(%)</td>
-                                    <td><?php echo $n['employees_sum'];?></td>
-                                    <td>1</td>
-                                    <td></td>
-                                    <td>1</td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td>1</td>
+                                    <foreach name="profit" item="p">
+                                        <th><?php if($p['yearmll']=="" || $p['yearmll']==0 || $yea_report[0]['sum']==0){echo '0.00';}else{echo $p['yearmll']; }?> %</th>
+                                    </foreach>
                                 </tr>
                                 <tr role="row" class="orders" style="text-align:center;">
                                     <td>人力资源成本</td>
-                                    <td><?php echo $n['employees_sum'];?></td>
-                                    <td>1</td>
-                                    <td></td>
-                                    <td>1</td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td>1</td>
+                                    <foreach name="yea_report" item="ye">
+                                        <th>¥ <?php if($ye['money']=="" || $ye['money']==0 || $yea_report[0]['sum']==0){echo '0.00';}else{echo $ye['money'];}?></th>
+                                    </foreach>
 
                                 </tr>
                                 <tr role="row" class="orders" style="text-align:center;">
                                     <td>其他费用</td>
                                     <td><?php echo $n['employees_sum'];?></td>
-                                    <td>1</td>
-                                    <td></td>
-                                    <td>1</td>
                                     <td></td>
                                     <td></td>
                                     <td></td>
                                     <td></td>
                                     <td></td>
-                                    <td>1</td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
                                 </tr>
                                 <tr role="row" class="orders" style="text-align:center;">
                                     <td>利润总额</td>
-                                    <td><?php echo $n['employees_sum'];?></td>
-                                    <td>1</td>
-                                    <td></td>
-                                    <td>1</td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td>1</td>
+                                    <foreach name="count_profit" item="count">
+                                        <th>¥ <?php if($count['yearprofit']=="" || $count['yearprofit']==0 || $yea_report[0]['sum']==0){echo '0.00';}else{echo $count['yearprofit'];}?></th>
+                                    </foreach>
                                 </tr>
                                 <tr role="row" class="orders" style="text-align:center;">
                                     <td>人事费用率</td>
-                                    <td><?php echo $n['employees_sum'];?></td>
-                                    <td>1</td>
-                                    <td></td>
-                                    <td>1</td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td>1</td>
+                                    <foreach name="count_profit" item="c">
+                                        <th><?php if($c['personnel']=="" || $c['personnel']==0 || $yea_report[0]['sum']==0){echo '0.00';}else{echo $c['personnel'];}?> %</th>
+                                    </foreach>
                                 </tr>
                             </table><br><br>
 
