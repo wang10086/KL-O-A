@@ -1153,7 +1153,7 @@ class FinanceController extends BaseController {
                 $info               = I('info');
                 $data               = I('data');
                 $info['type']       = I('type');
-                $info['jkd_id']     = jkdid($info['op_id']);
+                $info['jkd_id']     = make_num('TNJK',$info['op_id']);
                 $info['jk_user']    = cookie('nickname');
                 $info['jk_user_id'] = cookie('userid');
                 $info['jk_time']    = NOW_TIME;
@@ -1172,6 +1172,8 @@ class FinanceController extends BaseController {
                     //与预算审批人审核
                     $jiekuan_audit['ys_audit_userid']   = $audit_ys['jk_audit_user_id'];
                     $jiekuan_audit['ys_audit_username'] = $audit_ys['jk_audit_user_name'];
+                    $jiekuan_audit['cw_audit_userid']   = 55;
+                    $jiekuan_audit['cw_audit_username'] = '程小平';
                     $audit_usertype                     = 1;    //预算审核人
                     $msg_user                           = $jiekuan_audit['ys_audit_userid'];
 
@@ -1201,10 +1203,10 @@ class FinanceController extends BaseController {
                     send_msg($uid,$title,$content,$url,$user,'');
 
                     $record = array();
-                    $record['op_id']   = $info['op_id'];
-                    $record['optype']  = 13;
-                    $record['explain'] = '填写借款申请,借款金额'.$info['sum'];
-                    op_record($record);
+                    $record['bill_id']      = $info['jkd_id'];
+                    $record['type']         = 1;
+                    $record['explain']      = '填写借款申请,借款金额'.$info['sum'];
+                    jkbx_record($record);
 
                     $this->success('保存成功');
                 }else{
@@ -1256,10 +1258,10 @@ class FinanceController extends BaseController {
                     }
 
                     $record = array();
-                    $record['op_id']   = $opid;
-                    $record['optype']  = 14;
-                    $record['explain'] = '审核借款申请单，借款单号：'.$jkd_id.'，审核结果：'.$audit_status[$info['ys_audit_status']];
-                    op_record($record);
+                    $record['bill_id']  = $jkd_id;
+                    $record['type']     = 1;
+                    $record['explain']  = '审核借款申请单，借款单号：'.$jkd_id.'，审核结果：'.$audit_status[$info['ys_audit_status']];
+                    jkbx_record($record);
 
                     $this->success('数据保存成功!');
                 }else{
@@ -1307,10 +1309,10 @@ class FinanceController extends BaseController {
                     M('jiekuan_detail')->where(array('jk_id'=>$jk_id))->save($audit);
 
                     $record = array();
-                    $record['op_id']   = $opid;
-                    $record['optype']  = 14;
-                    $record['explain'] = '审核借款申请单，借款单号：'.$jkd_id.'，审核结果：'.$audit_status[$info['cw_audit_status']];
-                    op_record($record);
+                    $record['bill_id']  = $jkd_id;
+                    $record['type']     = 1;
+                    $record['explain']  = '审核借款申请单，借款单号：'.$jkd_id.'，审核结果：'.$audit_status[$info['cw_audit_status']];
+                    jkbx_record($record);
 
                     $this->success('数据保存成功');
                 }else{
@@ -1325,7 +1327,71 @@ class FinanceController extends BaseController {
                 $type           = I('type');
                 $total          = I('total');
 
-                var_dump(I());die;
+                $info['bxd_id']         = make_num('TNBX');
+                $info['opids']          = implode(',',array_unique(array_column($loan_lists,'op_id')));
+                $info['group_ids']      = implode(',',array_unique(array_column($loan_lists,'group_id')));
+                $info['costacc_ids']    = implode(',',array_unique(array_column($loan_lists,'costacc_id')));
+                $info['yingbaoxiao']    = $total['jk_total'];
+                $info['type']           = $type;
+                $info['bx_user_id']     = cookie('userid');
+                $info['bx_user']        = cookie('username');
+                $info['department']     = M('salary_department')->where(array('id'=>$info['department_id']))->getField('department');
+                $info['bx_time']        = NOW_TIME;
+
+                //获取证明验收人信息(所选单项预算金额最多的业务)
+                $new_lists              = multi_array_sort($loan_lists,'ctotal',SORT_DESC,SORT_NUMERIC);
+                $opid                   = $this->get_zmysr_id($new_lists);
+                $where                  = array();
+                $where['o.op_id']       = $opid;
+                $fields                 = "a.id,a.nickname,o.project,o.group_id";
+                $zmysr_info             = M()->table('__OP__ as o')->join('__ACCOUNT__ as a on a.id=o.create_user','left')->where($where)->field($fields)->find();
+                if ($zmysr_info['id']){
+                    $res    = M('baoxiao')->add($info);   //保存报销单基本信息
+                    if ($res){
+                        $audit                      = array();
+                        $audit['bx_id']             = $res;
+                        $audit['bxd_id']            = $info['bxd_id'];
+                        $audit['zm_audit_userid']   = $zmysr_info['id'];
+                        $audit['zm_audit_username'] = $zmysr_info['nickname'];
+                        M('baoxiao_audit')->add($audit);    //保存报销审核信息
+
+                        //保存报销详情
+                        foreach ($loan_lists as $k=>$v){
+                            $con                = array();
+                            $con['op_id']       = $v['op_id'];
+                            $con['group_id']    = $v['group_id'];
+                            $con['bx_id']       = $res;
+                            $con['bxd_id']      = $info['bxd_id'];
+                            $con['costacc_id']  = $v['costacc_id'];
+                            $con['ys']          = $v['ctotal'];
+                            $con['ybx']         = $v['ybx'];
+                            $con['sbx']         = $v['sbx'];
+                            M('baoxiao_detail')->add($con);
+                        }
+
+                        //发送系统通知
+                        $audit_usertype         = 1;    //证明验收人
+                        $uid     = cookie('userid');
+                        $title   = '您有来自['.$info['bx_user'].']团内报销单待证明验收!';
+                        $content = '项目名称：'.$zmysr_info['project'].'，团号：'.$zmysr_info['group_id'].'，报销金额：'.$info['sum'];
+                        $url     = U('Finance/audit_baoxiao',array('id'=>$res,'audit_usertype'=>$audit_usertype));
+                        $user    = '['.$audit['zm_audit_userid'].']';
+                        send_msg($uid,$title,$content,$url,$user,'');
+
+                        $record             = array();
+                        $record['bill_id']  = $info['bxd_id'];
+                        $record['type']     = 2;
+                        $record['explain']  = '填写报销单,报销金额'.$info['sum'];
+                        jkbx_record($record);
+
+                        $this->success('保存成功');
+                    }else{
+                        $this->error('数据保存失败');
+                    }
+                }else{
+                    $this->error('获取证明验收人信息失败');
+                }
+
             }
 
             //保存团内报销(直接报销)
@@ -1333,6 +1399,16 @@ class FinanceController extends BaseController {
 
             }
         }
+    }
+
+    public function get_zmysr_id($lists){
+        foreach ($lists as $k=>$v){
+            $opid           = $v['op_id'];
+            if ($opid){
+                break;
+            }
+        }
+        return $opid;
     }
 
     // @@@NODE-3###audit_jiekuan###审批借款###
@@ -1353,7 +1429,6 @@ class FinanceController extends BaseController {
         $this->audit_userinfo= $audit_userinfo;
         $this->audit_usertype= $audit_usertype;
 
-
         $this->display();
     }
 
@@ -1366,18 +1441,24 @@ class FinanceController extends BaseController {
 
         $where          = array();
         $all_jkd        = array('Finance/all_jkd'); //查看所有借款单权限
-        if ($project)   $where['o.project'] = array('like','%'.$project.'%');
-        if ($group_id)  $where['j.group_id']= array('like','%'.$group_id.'%');
-        if ($jkd_id)    $where['j.jkd_id']  = array('like','%'.$jkd_id.'%');
-        if ($jk_user)   $where['j.jk_user'] = array('like','%'.$jk_user.'%');
         $auth           = explode(',',Rolerelation(cookie('roleid')));
+
         if (rolemenu($all_jkd)){
-
+            if ($project)   $where['o.project'] = array('like','%'.$project.'%');
+            if ($group_id)  $where['j.group_id']= array('like','%'.$group_id.'%');
+            if ($jkd_id)    $where['j.jkd_id']  = array('like','%'.$jkd_id.'%');
+            if ($jk_user)   $where['j.jk_user'] = array('like','%'.$jk_user.'%');
         }else{
-            $where['jk_user_id']    = array('in',$auth);
+            $where['j.jk_user_id']              = array('in',$auth);
+            $where['a.ys_audit_userid']         = array('eq',cookie('userid'));
+            $where['_logic'] = 'or';
+            $map['_complex'] = $where;
+            if ($project)   $map['o.project']   = array('like','%'.$project.'%');
+            if ($group_id)  $map['j.group_id']  = array('like','%'.$group_id.'%');
+            if ($jkd_id)    $map['j.jkd_id']    = array('like','%'.$jkd_id.'%');
+            if ($jk_user)   $map['j.jk_user']   = array('like','%'.$jk_user.'%');
         }
-
-        $lists          = M()->table('__JIEKUAN__ as j')->field('j.*,o.project')->join('__OP__ as o on o.op_id=j.op_id','left')->where($where)->order($this->orders('j.id'))->select();
+        $lists          = M()->table('__JIEKUAN__ as j')->field('j.*,o.project')->join('__JIEKUAN_AUDIT__ as a on a.jk_id=j.id','left')->join('__OP__ as o on o.op_id=j.op_id','left')->where($where)->order($this->orders('j.id'))->select();
 
         foreach ($lists as $k=>$v){
             if ($v['audit_status'] == 0) $lists[$k]['zhuangtai'] = "<span class='yellow'>审核中</span>";
@@ -1394,10 +1475,19 @@ class FinanceController extends BaseController {
         $id             = I('jkid');
         $jiekuan        = M()->table('__JIEKUAN__ as j')->join('__JIEKUAN_AUDIT__ as a on a.jk_id=j.id','left')->where(array('j.id'=>$id))->find();
         $jk_lists       = M()->table('__JIEKUAN_DETAIL__ as j')->join('__OP_COSTACC__ as c on c.id=j.costacc_id','left')->where(array('j.jk_id'=>$id))->select();
-        $this->op       = M('op')->where(array('op_id'=>$jiekuan['op_id']))->find();
+        $op             = M('op')->where(array('op_id'=>$jiekuan['op_id']))->find();
+        $this->op       = $op;
         $this->jiekuan  = $jiekuan;
         $this->jk_lists = $jk_lists;
         $this->jk_type  = C('JIEKUAN_TYPE');
+        $audit_userinfo = M('jiekuan_audit')->where(array('op_id'=>$op['op_id'],'jk_id'=>$id))->find();
+        $this->audit_userinfo= $audit_userinfo;
+        //审核人信息
+        if ($jiekuan['ys_audit_userid']==cookie('userid')){
+            $this->audit_usertype = 1;  //预算审批人
+        }elseif ($jiekuan['cw_audit_userid']==cookie('userid')){
+            $this->audit_usertype = 2;
+        }
         $this->display();
     }
 

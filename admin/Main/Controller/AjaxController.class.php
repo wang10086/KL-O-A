@@ -1352,7 +1352,8 @@ class AjaxController extends Controller {
         $opid           = $op['op_id'];
         $data           = array();
         if ($op){
-            $list               = M('op_costacc')->field('id,op_id,title,unitcost,amount,total as ctotal,remark')->where(array('op_id'=>$opid,'status'=>1))->order('id')->select();
+            //$list               = M('op_costacc')->field('id,op_id,title,unitcost,amount,total as ctotal,remark')->where(array('op_id'=>$opid,'status'=>1))->order('id')->select();
+            $list               = M('op_budget')->where(array('op_id'=>$opid,'audit_status'=>1))->find();
             if ($list){
                 $data['status'] = 1;
                 $data['msg']    = $opid;

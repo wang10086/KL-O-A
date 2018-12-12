@@ -23,10 +23,9 @@
                             <input type="hidden" name="loan[20000{$v.id}][costacc_id]" value="{$v.id}">
                             <input type="hidden" name="loan[20000{$v.id}][op_id]" value="{$v.op_id}">
                             <input type="hidden" name="loan[20000{$v.id}][group_id]" value="{$v.group_id}">
-                            <!--<input type="hidden" name="loan[20000{$v.id}][title]" value="{$v.title}">
-                            <input type="hidden" name="loan[20000{$v.id}][ctotal]" value="{$v.ctotal}" id="ys_20000{$v.id}">
+                            <!--<input type="hidden" name="loan[20000{$v.id}][unitcost]" value="{$v.unitcost}">
                             <input type="hidden" name="loan[20000{$v.id}][amount]" value="{$v.amount}">-->
-                            <input type="hidden" value="{$v.ctotal}" id="ys_20000{$v.id}">
+                            <input type="hidden" name="loan[20000{$v.id}][ctotal]" value="{$v.ctotal}" id="ys_20000{$v.id}">
                             <input type="hidden" name="loan[20000{$v.id}][type]" value="{$v.type}">
                             <input type="hidden" name="loan[20000{$v.id}][jiekuan]" value="{$v.jiekuan}" id="jk_20000{$v.id}">
                         </td>
@@ -73,13 +72,18 @@
 
                 <div class="form-group col-md-12">
                     <label>报销部门：</label>
-                    <select class="form-control" name="info[department_id]" onchange="get_department()" id="department_id" required >
+                    <select class="form-control" name="info[department_id]" id="department_id" required >
                         <option value="">--请选择--</option>
                         <foreach name="departments" item="v">
                             <option value="{$v.id}">{$v.department}</option>
                         </foreach>
                     </select>
                 </div>
+
+                <!--<div class="form-group col-md-6">
+                    <label>证明验收人：</label>
+                    <input type="text" name="info[zmysr]" id="zmysr" class="form-control" value="{$list.zmysr}" readonly />
+                </div>-->
 
                 <div class="form-group col-md-6">
                     <label>报销金额：</label>
@@ -159,6 +163,10 @@
         $('#groupId').show();
     }
 
+    function get_zmysr() {
+
+    }
+
     function get_yusuan() {
         var group_id        = $('#groupId').val();
         var old_ys_total    = $('#ys_total').val();
@@ -202,7 +210,7 @@
                                             /*'<input type="hidden" name="loan['+i+'][title]" value="'+loan[j].title+'">' +
                                             '<input type="hidden" name="loan['+i+'][ctotal]" value="'+loan[j].ctotal+'" id="ys_'+i+'">' +
                                             '<input type="hidden" name="loan['+i+'][type]" value="'+loan[j].type+'">' +*/
-                                            '<input type="hidden" value="'+loan[j].ctotal+'" id="ys_'+i+'">' +
+                                            '<input type="hidden" name="loan['+i+'][ctotal]" value="'+loan[j].ctotal+'" id="ys_'+i+'">' +
                                             '<input type="hidden" name="loan['+i+'][jiekuan]" value="'+loan[j].jiekuan+'" id="jk_'+i+'">' +
                                             '</td>'+
                                             '<td>'+loan[j].group_id+'</td>' +
@@ -321,7 +329,7 @@
                 if (msg.stu ==1){
                     var html = '';
                     html += '<label>报销人：</label>'+
-                        '<input type="hidden" name="info[jk_file]" value="'+msg.file_url+'">'+
+                        '<input type="hidden" name="info[bx_file]" value="'+msg.file_url+'">'+
                         '<img width="100" src="/'+msg.file_url+'" alt="">';
                     $('#jkr_qianzi').html(html);
                     $('#qianzi').val('1');

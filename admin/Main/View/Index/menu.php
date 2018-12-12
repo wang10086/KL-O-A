@@ -458,7 +458,7 @@
                                 </li>
 
                                 <li class="treeview {:on('Finance/jiekuan_lists')} {:on('Finance/jiekuandan_info')}">
-                                    <if condition="rolemenu(array('Finance/jiekuan'))">
+                                    <if condition="rolemenu(array('Finance/jiekuan_lists'))">
                                         <a href=""><i class="fa fa-file-text-o"></i> 单据管理</a>
                                     </if>
                                     <ul class="treeview-menu">

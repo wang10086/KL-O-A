@@ -147,6 +147,8 @@
                                 </div><!--/.col (right) -->
                             </div>
 
+                            <include file="audit_jk_form" />
+
                         <?php }else{ ?>
                             <div class="content" style="padding-top:40px;">  获取借款信息失败!</div>
                         <?php } ?>
@@ -172,6 +174,53 @@
     
     function show_print_time() {
         $('#print_time').show();
+    }
+
+    function show_qianzi() {
+        var html = '';
+        html += '<label>签字：</label>'+
+            '<input type="password" name="password" class="" placeholder="请输入签字密码"  />&emsp;'+
+            '<input type="button" value="确定" onclick="check_pwd()">';
+        $('#shr_qianzi').html(html);
+    }
+
+    function check_pwd() {
+        var pwd = $('input[name="password"]').val();
+        var audit_usertype = '<?php echo "$audit_usertype"; ?>';
+        $.ajax({
+            type: 'POST',
+            url : "{:U('Ajax/check_pwd')}",
+            data: {pwd:pwd},
+            success:function (msg) {
+                if (msg.stu ==1){
+                    var html = '';
+                    if (audit_usertype ==1 ){
+                        html += '<label>预算审核人签字：</label>'+
+                            '<input type="hidden" name="info[ys_audit_file]" value="'+msg.file_url+'">'+
+                            '<img width="100" src="/'+msg.file_url+'" alt="">';
+                    }else if(audit_usertype ==2){
+                        html += '<label>财务主管签字：</label>'+
+                            '<input type="hidden" name="info[cw_audit_file]" value="'+msg.file_url+'">'+
+                            '<img width="100" src="/'+msg.file_url+'" alt="">';
+                    }
+                    $('#shr_qianzi').html(html);
+                    $('#qianzi').val('1');
+                }else{
+                    art_show_msg(msg.message);
+                    return false;
+                }
+            }
+        })
+    }
+
+    function submitBefore() {
+        var isqianzi = $('#qianzi').val();
+        if (isqianzi == 1){
+            $('#jiekuanform').submit();
+        }else{
+            art_show_msg('请完善审核信息');
+            return false;
+        }
     }
 </script>
 

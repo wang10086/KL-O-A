@@ -1051,6 +1051,20 @@ function op_record($info){
 	}
 }
 
+//借款报销操作记录
+function jkbx_record($info){
+    $data = array();
+    $data = $info;
+    $data['uname'] = cookie('name');
+    $data['time'] = time();
+    $isok = M('jkbx_record')->add($data);
+    if($isok){
+        return true;
+    }else{
+        return false;
+    }
+}
+
 //工单操作记录
 function worder_record($info){
 	$data = array();
@@ -4239,17 +4253,38 @@ function getScienceRes(){
         return $userinfo;
     }
 
-    //自动生成借款单编号
-    function jkdid($opid){
+    /**
+     * 自动生成单据编号
+     * @param $str
+     * @param $opid
+     * @return string
+     */
+    function make_num($str,$opid=''){
         if ($opid){
-            $jkd   = 'TNJK'.$opid;
+            $jkd   = $str.$opid;
         }else{
             $data  = date('Ymd',time())*10000;
-            $jkd   = 'TNJK'.$data;
+            $jkd   = $str.$data;
         }
         $count     = M('jiekuan')->where(array('jkd_id'=>array('like',$jkd.'%')))->count();
         $jkdid     = $jkd.'-'.($count+1);
         return $jkdid;
+    }
+
+    /**
+     * 对二维数组排序
+     * @param $arr
+     * @param $shortKey
+     * @param int $short
+     * @param int $shortType
+     * @return mixed
+     */
+    function multi_array_sort($arr,$shortKey,$short=SORT_DESC,$shortType=SORT_REGULAR){
+        foreach ($arr as $key => $data){
+            $name[$key] = $data[$shortKey];
+        }
+        array_multisort($name,$shortType,$short,$arr);
+        return $arr;
     }
 
 
