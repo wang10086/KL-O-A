@@ -1464,6 +1464,7 @@ class FinanceController extends BaseController {
             if ($v['audit_status'] == 0) $lists[$k]['zhuangtai'] = "<span class='yellow'>审核中</span>";
             if ($v['audit_status'] == 1) $lists[$k]['zhuangtai'] = "<span class='green'>审核通过</span>";
             if ($v['audit_status'] == 2) $lists[$k]['zhuangtai'] = "<span class='red'>审核未通过</span>";
+            if ($v['audit_status'] == -1) $lists[$k]['zhuangtai'] = "<span class=''>借款已销账</span>";
         }
         $this->lists    = $lists;
         $this->jk_type  = C('JIEKUAN_TYPE');
@@ -1528,7 +1529,7 @@ class FinanceController extends BaseController {
         }
     }
 
-    //@@@NODE-3###loan_op###团内支出报销###
+    //@@@NODE-3###loan_op###填写团内支出报销单###
     public function loan_op(){
 
         $departids          = array(2,6,7,12,13,14,16,17);
@@ -1572,6 +1573,60 @@ class FinanceController extends BaseController {
         $this->display('select_ys');
     }
 
+    // @@@NODE-3###baoxiao_lists###报销单列表###
+    public function baoxiao_lists(){
+        $group_id       = I('oid');
+        $bxd_id         = I('bxdid');
+        $bx_user        = I('ou');
+
+        $where          = array();
+        $all_jkd        = array('Finance/all_jkd'); //查看所有借款单权限
+        $auth           = explode(',',Rolerelation(cookie('roleid')));
+
+        if (rolemenu($all_jkd)){
+            if ($group_id)  $where['b.group_ids']   = array('like','%'.$group_id.'%');
+            if ($bxd_id)    $where['b.bxd_id']      = array('like','%'.$bxd_id.'%');
+            if ($bx_user)   $where['b.bx_user']     = array('like','%'.$bx_user.'%');
+        }else{
+            $where['b.bx_user_id']                  = array('in',$auth);
+            $where['a.ys_audit_userid']             = array('eq',cookie('userid'));
+            $where['_logic'] = 'or';
+            $map['_complex'] = $where;
+            if ($group_id)  $map['b.group_ids']     = array('like','%'.$group_id.'%');
+            if ($bxd_id)    $map['b.bxd_id']        = array('like','%'.$bxd_id.'%');
+            if ($bx_user)   $map['b.bx_user']       = array('like','%'.$bx_user.'%');
+        }
+        //$lists          = M()->table('__JIEKUAN__ as j')->field('j.*,o.project')->join('__JIEKUAN_AUDIT__ as a on a.jk_id=j.id','left')->join('__OP__ as o on o.op_id=j.op_id','left')->where($where)->order($this->orders('j.id'))->select();
+        $lists          = M()->table('__BAOXIAO__ as b')->field('b.*')->join('__BAOXIAO_AUDIT__ as a on a.bx_id=b.id','left')->where($where)->order($this->orders('b.id'))->select();
+        //var_dump($lists);die;
+
+        foreach ($lists as $k=>$v){
+            if ($v['audit_status'] == 0) $lists[$k]['zhuangtai'] = "<span class='yellow'>审核中</span>";
+            if ($v['audit_status'] == 1) $lists[$k]['zhuangtai'] = "<span class='green'>审核通过</span>";
+            if ($v['audit_status'] == 2) $lists[$k]['zhuangtai'] = "<span class='red'>审核未通过</span>";
+        }
+        $this->lists    = $lists;
+        $this->jk_type  = C('JIEKUAN_TYPE');
+        $this->display();
+    }
+
+    // @@@NODE-3###audit_baoxiao###审批报销单(包括证明验收人审核)###
+    public function audit_baoxiao(){
+        $id                 = I('id');
+        $audit_usertype     = I('audit_usertype');
+        $baoxiao            = M('baoxiao')->where(array('id'=>$id))->find();
+        $bx_lists           = M()->table('__BAOXIAO_DETAIL__ as b')->join('__OP_COSTACC__ as c on c.id=b.costacc_id','left')->where(array('b.bx_id'=>$id))->select();
+
+        $audit_userinfo     = M('baoxiao_audit')->where(array('bx_id'=>$id))->find();
+        if (!$audit_userinfo){ $this->error('获取信息失败'); };
+
+        $this->baoxiao      = $baoxiao;
+        $this->bx_lists     = $bx_lists;
+        $this->audit_userinfo= $audit_userinfo;
+        $this->audit_usertype= $audit_usertype;
+
+        $this->display();
+    }
 
     /*****************************start****************************************/
     //@@@NODE-3###loan_jklist###借款报销(列表)###

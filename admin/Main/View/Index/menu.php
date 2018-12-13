@@ -457,13 +457,16 @@
                                     </ul>
                                 </li>
 
-                                <li class="treeview {:on('Finance/jiekuan_lists')} {:on('Finance/jiekuandan_info')}">
-                                    <if condition="rolemenu(array('Finance/jiekuan_lists'))">
+                                <li class="treeview {:on('Finance/jiekuan_lists')} {:on('Finance/jiekuandan_info')} {:on('Finance/baoxiao_lists')}">
+                                    <if condition="rolemenu(array('Finance/jiekuan_lists','Finance/baoxiao_lists'))">
                                         <a href=""><i class="fa fa-file-text-o"></i> 单据管理</a>
                                     </if>
                                     <ul class="treeview-menu">
                                         <if condition="rolemenu(array('Finance/jiekuan_lists'))">
                                             <li class="{:on('Finance/jiekuan_lists')}"><a href="{:U('Finance/jiekuan_lists')}"><i class="fa fa-angle-right"></i> 借款单管理</a></li>
+                                        </if>
+                                        <if condition="rolemenu(array('Finance/baoxiao_lists'))">
+                                            <li class="{:on('Finance/baoxiao_lists')}"><a href="{:U('Finance/baoxiao_lists')}"><i class="fa fa-angle-right"></i> 报销单管理</a></li>
                                         </if>
                                     </ul>
                                 </li>
