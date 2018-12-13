@@ -402,24 +402,24 @@ class ManageModel extends Model{
      * $money 年 收入 毛利 利率
      */
     public function profit_w($money){
-        $arr                                             = array('京区业务中心','京外业务中心','南京项目部','武汉项目部','沈阳项目部','长春项目部','市场部','常规业务中心');//部门
-        $departmen                                       = array();
-        $sum                                             = 0;
+        $arr                                         = array('京区业务中心','京外业务中心','南京项目部','武汉项目部','沈阳项目部','长春项目部','市场部','常规业务中心');//部门
+        $departmen                                   = array();
+        $sum                                         = 0;
 
         foreach($arr as $key =>$val){ //部门循环
-            $key                                         = $key + 1;
-            $departmen[$key]['department']['depname']    = $val;
+            $key                                     = $key + 1;
+            $departmen[$key]['department']['depname']= $val;
 
             foreach($money as $k => $v){ //部门年收入 毛利 利率
 
                 if($v['depname']==$val){ $departmen[$key]= $v;}//每个部门年收入 毛利 利率
                 if($k=='heji'){$departmen[0] = $v;}       //总收入 毛利 利率
             }
-            $sum                                         = $key+1;
+            $sum                                     = $key+1;
         }
-        $departmen[$sum]['yearzsr']                      = 0.00;//机关部门收入 默认0
-        $departmen[$sum]['yearzml']                      = 0.00;//机关部门毛利 默认
-        $departmen[$sum]['yearmll']                      = 0.00;//机关部门利率 默认
+        $departmen[$sum]['yearzsr']                  = 0.00;//机关部门收入 默认0
+        $departmen[$sum]['yearzml']                  = 0.00;//机关部门毛利 默认
+        $departmen[$sum]['yearmll']                  = 0.00;//机关部门利率 默认
         ksort($departmen);
         return $departmen;
     }
@@ -435,7 +435,7 @@ class ManageModel extends Model{
 
             $profit_sum[$key]['yearprofit'] = $profit[$key]['yearzml']-$val['money'];//利润总额 = 营业毛利-人力资源成本
 
-            $profit_sum[$key]['personnel']  = round(($val['money']/$profit[$key]['yearzml'])*100,2);//人事费用率 = 人力资源成本/营业毛利
+            $profit_sum[$key]['personnel']  = round(($val['money']/$profit[$key]['yearzml'])*100,2);//人事费用率=人力资源成本/营业毛利
 
         }
         return $profit_sum;

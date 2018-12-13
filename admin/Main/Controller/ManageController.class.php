@@ -17,9 +17,10 @@ class ManageController extends ChartController {
         $post                   = trim(I('post'));
         $month                  = trim(I('month',date('m')));
         $mod                    = D('Manage');
+
         $year1                  = $mod->manageyear($year,$post);//判断加减年
         $number                 = $mod->month($year1,$month);// 部门数量 部门人力资源成本
-        $money                  = $this->business($year1,$month);//monthzsr 收入合计   monthzml 毛利合计  monthmll 毛利率
+        $money                  = $this->business($year1,$month,1);//monthzsr 收入合计   monthzml 毛利合计  monthmll 毛利率
         $profit                 = $mod->profit($money);//收入 毛利 毛利率
         $human                  = $mod->human_affairs($number,$profit['profit'],$profit['departmen']);//人事费用率
         $total_profit           = $mod->total_profit($number,$profit['profit'],$profit['departmen']);//利润总额
@@ -40,7 +41,7 @@ class ManageController extends ChartController {
      * $year 年 $month月
      * $pin 1 结算 0预算
      */
-    public function  business($year,$month){
+    public function  business($year,$month,$type){
 
         if (strlen($month)<2) $month = str_pad($month,2,'0',STR_PAD_LEFT);
         $times                       = $year.$month;
@@ -49,7 +50,7 @@ class ManageController extends ChartController {
         $where['id']                 = array('in',$yw_departs);
         $departments                 = M('salary_department')->field('id,department')->where($where)->select();
         //预算及结算分部门汇总
-        $listdatas                   = $this->count_lists($departments,$year,$month,1);//1 结算 0预算
+        $listdatas                   = $this->count_lists($departments,$year,$month,$type);//1 结算 0预算
         return $listdatas;die;
     }
 
@@ -63,12 +64,21 @@ class ManageController extends ChartController {
         $post                   = trim(I('post'));//加减年
         $quart                  = trim(I('quart',date('m')));//季度
         $mod                    = D('Manage');
+        // 季度经营报表
         $year1                  = $mod->manageyear($year,$post);//判断加减年
         $quarter                = $mod->quarter($year1,$quart);// 季度人数 和人力资源成本
-        $profits                = $this->profit_r($year1,$quart);//月份循环季度数据 利润
+        $profits                = $this->profit_r($year1,$quart,1);//月份循环季度数据 利润
         $manage_quarter         = $mod->manage_quarter($quarter,$profits);//季度利润总额
         $personnel_costs        = $mod->personnel_costs($quarter,$profits);//人事费用率
-
+        // 季度预算报表
+        $budget_profits         = $this->profit_r($year1,$quart,0);//月份循环季度数据 利润
+        $budget_manage          = $mod->manage_quarter($quarter,$budget_profits);//季度利润总额
+        $budget_personnel       = $mod->personnel_costs($quarter,$budget_profits);//人事费用率
+        // 季度预算报表
+        $this->budget_profits   = $budget_profits;//月份循环季度数据 利润
+        $this->budget_manage    = $budget_manage;//季度利润总额
+        $this->budget_personnel = $budget_personnel;//人事费用率
+        // 季度经营报表
         $this->personnel_costs  = $personnel_costs;//人事费用率
         $this->manage_quarter   = $manage_quarter;// 季度利润总额
         $this->profit           = $profits;// 收入 毛利 毛利率
@@ -83,8 +93,9 @@ class ManageController extends ChartController {
      * profit_r 月份循环季度数据
      * $quarter  人数 人力资源成本
      * $profits 季度数据 总收入 总毛利 总利率
+     * $type 1 结算 0 预算
      */
-    public function profit_r($year1,$quart){
+    public function profit_r($year1,$quart,$type){
         $mod                                        = D('Manage');
         $arr1                                       = array('3','6','9','12');
         $i                                          = 0; //现在季度月 减一
@@ -96,7 +107,7 @@ class ManageController extends ChartController {
         if(in_array($quart,$arr1)){ //判断是否是第一、二、三、四季度
             for($n = 2; $n >= $i;$i++){ //
                 $month                              = $quart-$i; //季度上一个月
-                $count                              = $this->business($year1,$month); //季度 人数和 人力资源成本
+                $count                              = $this->business($year1,$month,$type); //季度 人数和 人力资源成本
                 $profit                             = $mod->profit($count);//收入 毛利 毛利率
                 foreach($profit['departmen'] as $key => $val){
                     $month_r[$key]['monthzsr']      += $val['department']['monthzsr'];
@@ -126,7 +137,7 @@ class ManageController extends ChartController {
                    ksort($month_r);
                    return $month_r;
                }else{
-                    $count                           = $this->business($year1,$month); //季度 人数和 人力资源成本
+                    $count                           = $this->business($year1,$month,1); //季度 人数和 人力资源成本
                     $profit                          = $mod->profit($count);//收入 毛利 毛利率
                     $month_r = array();
                     foreach($profit['departmen'] as $key => $val){
@@ -142,7 +153,7 @@ class ManageController extends ChartController {
             }
         }
     }
-    
+
 
     /**
      * Manage_year 年度经营报表
@@ -154,12 +165,20 @@ class ManageController extends ChartController {
         $post               = trim(I('post'));
         $mod                = D('Manage');
         $month              = date('m');
+        //年度经营报表
         $year1              = $mod->manageyear($year,$post);//判断加减年
         $yea_report         = $mod->yea_report($year1,$post);//年人员数量  年人员人力资源成本
-        $money              = $this->business($year1,$month);//年 monthzsr 收入合计   monthzml 毛利合计  monthmll 毛利率
+        $money              = $this->business($year1,$month,1);//年 monthzsr 收入合计   monthzml 毛利合计  monthmll 毛利率
         $profit             = $mod->profit_w($money);//年 收入 毛利 毛利率
         $count_profit       = $mod->count_profit($yea_report,$profit);//年利润总额 年人事费用
-
+        //年度预算报表
+        $budget_money       = $this->business($year1,$month,0);//年 monthzsr 收入合计   monthzml 毛利合计  monthmll 毛利率
+        $budget_profit      = $mod->profit_w($budget_money);//年 收入 毛利 毛利率
+        $budget_count       = $mod->count_profit($yea_report,$budget_profit);//年利润总额 年人事费用
+        //年度预算报表
+        $this->budget_count = $budget_count;//年人员人力资源成本 收入 毛利 毛利率
+        $this->budget_profit= $budget_profit;//收入 毛利 毛利率
+        //年度经营报表
         $this->count_profit = $count_profit;//年人员人力资源成本 收入 毛利 毛利率
         $this->profit       = $profit;//收入 毛利 毛利率
         $this->year         = $year1;//加减后年
@@ -167,5 +186,7 @@ class ManageController extends ChartController {
         $this->post         = $post;
         $this->display();
     }
+
+
 
  }
