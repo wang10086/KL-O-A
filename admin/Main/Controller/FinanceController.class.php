@@ -1617,7 +1617,7 @@ class FinanceController extends BaseController {
         $baoxiao            = M('baoxiao')->where(array('id'=>$id))->find();
         $field              = '';
         $bx_lists           = M()->table('__BAOXIAO_DETAIL__ as b')->join('__OP_COSTACC__ as c on c.id=b.costacc_id','left')->where(array('b.bx_id'=>$id))->select();
-        var_dump($bx_lists);die;
+        //var_dump($bx_lists);die;
 
         $audit_userinfo     = M('baoxiao_audit')->where(array('bx_id'=>$id))->find();
         if (!$audit_userinfo){ $this->error('获取信息失败'); };
