@@ -4,8 +4,6 @@
         <table class="table table-bordered dataTable fontmini" id="tablelist" style="margin-top:10px;">
             <tr role="row" class="orders" >
                 <th class="sorting" width="150" data="title">费用项</th>
-                <!--<th class="sorting" width="150" data="unitcost">单价</th>
-                <th class="sorting" width="150" data="amount">数量</th>-->
                 <th class="sorting" width="150" data="total">合计</th>
                 <th class="sorting" width="150" data="yjk">借款金额</th>
                 <th class="sorting" width="150" data="sjk">本次报销金额</th>
@@ -13,8 +11,6 @@
             <foreach name="bx_lists" item="row">
                 <tr>
                     <td>{$row.title}</td>
-                    <!--<td>{$row.unitcost}</td>
-                    <td>{$row.amount}</td>-->
                     <td>{$row.total}</td>
                     <td>{$row.yjk}</td>
                     <td <?php if ($row['sjk']>$row['yjk']){ echo "class='red'"; } ?>>{$row.sjk}</td>

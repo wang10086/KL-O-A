@@ -1364,8 +1364,8 @@ class FinanceController extends BaseController {
                             $con['bxd_id']      = $info['bxd_id'];
                             $con['costacc_id']  = $v['costacc_id'];
                             $con['ys']          = $v['ctotal'];
-                            $con['ybx']         = $v['ybx'];
-                            $con['sbx']         = $v['sbx'];
+                            $con['ybx']         = $v['jiekuan'];
+                            $con['sbx']         = $v['baoxiao'];
                             M('baoxiao_detail')->add($con);
                         }
 
@@ -1484,8 +1484,8 @@ class FinanceController extends BaseController {
         $audit_userinfo = M('jiekuan_audit')->where(array('op_id'=>$op['op_id'],'jk_id'=>$id))->find();
         $this->audit_userinfo= $audit_userinfo;
         //审核人信息
-        if ($jiekuan['ys_audit_userid']==cookie('userid')){
-            $this->audit_usertype = 1;  //预算审批人
+        if ($jiekuan['ys_audit_userid']==cookie('userid') || cookie('userid')==11){
+            $this->audit_usertype = 1;  //预算审批人(或乔总)
         }elseif ($jiekuan['cw_audit_userid']==cookie('userid')){
             $this->audit_usertype = 2;
         }
@@ -1615,7 +1615,9 @@ class FinanceController extends BaseController {
         $id                 = I('id');
         $audit_usertype     = I('audit_usertype');
         $baoxiao            = M('baoxiao')->where(array('id'=>$id))->find();
+        $field              = '';
         $bx_lists           = M()->table('__BAOXIAO_DETAIL__ as b')->join('__OP_COSTACC__ as c on c.id=b.costacc_id','left')->where(array('b.bx_id'=>$id))->select();
+        var_dump($bx_lists);die;
 
         $audit_userinfo     = M('baoxiao_audit')->where(array('bx_id'=>$id))->find();
         if (!$audit_userinfo){ $this->error('获取信息失败'); };
