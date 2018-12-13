@@ -1057,7 +1057,6 @@ class FinanceController extends BaseController {
             ->join('__AUDIT_LOG__ as l on l.req_id=b.id')
             ->where(array('b.op_id'=>$opid,'l.req_type'=>P::REQ_TYPE_BUDGET,'l.dst_status'=>1))
             ->find();
-        $this->record       = M('op_record')->where(array('op_id'=>$opid,'optype'=>array('in',array(13,14))))->order('id DESC')->select();
         $this->jk_lists     = $jk_lists;
         $this->departments  = $departments;
         $this->budget       = $budget;
@@ -1153,7 +1152,7 @@ class FinanceController extends BaseController {
                 $info               = I('info');
                 $data               = I('data');
                 $info['type']       = I('type');
-                $info['jkd_id']     = make_num('TNJK',$info['op_id']);
+                $info['jkd_id']     = make_num('TNJK','jiekuan','jkd_id');
                 $info['jk_user']    = cookie('nickname');
                 $info['jk_user_id'] = cookie('userid');
                 $info['jk_time']    = NOW_TIME;
@@ -1327,15 +1326,17 @@ class FinanceController extends BaseController {
                 $type           = I('type');
                 $total          = I('total');
 
-                $info['bxd_id']         = make_num('TNBX');
+                $info['bxd_id']         = make_num('TNBX','baoxiao','bxd_id');
                 $info['opids']          = implode(',',array_unique(array_column($loan_lists,'op_id')));
                 $info['group_ids']      = implode(',',array_unique(array_column($loan_lists,'group_id')));
                 $info['costacc_ids']    = implode(',',array_unique(array_column($loan_lists,'costacc_id')));
+                $info['jkd_ids']        = D('Finance')->get_jkd($loan_lists);
                 $info['yingbaoxiao']    = $total['jk_total'];
                 $info['type']           = $type;
                 $info['bx_user_id']     = cookie('userid');
                 $info['bx_user']        = cookie('username');
-                $info['department']     = M('salary_department')->where(array('id'=>$info['department_id']))->getField('department');
+                $department             = M('salary_department')->where(array('id'=>$info['department_id']))->find();
+                $info['department']     = $department['department'];
                 $info['bx_time']        = NOW_TIME;
 
                 //获取证明验收人信息(所选单项预算金额最多的业务)
@@ -1353,6 +1354,10 @@ class FinanceController extends BaseController {
                         $audit['bxd_id']            = $info['bxd_id'];
                         $audit['zm_audit_userid']   = $zmysr_info['id'];
                         $audit['zm_audit_username'] = $zmysr_info['nickname'];
+                        $audit['ys_audit_userid']   = $department['jk_audit_user_id'];
+                        $audit['ys_audit_username'] = $department['jk_audit_user_name'];
+                        $audit['cw_audit_userid']   = 55;
+                        $audit['cw_audit_username'] = '程小平';
                         M('baoxiao_audit')->add($audit);    //保存报销审核信息
 
                         //保存报销详情
@@ -1397,6 +1402,7 @@ class FinanceController extends BaseController {
             //保存团内报销(直接报销)
             if ($savetype==6){
 
+                //var_dump(I());die;
             }
         }
     }
@@ -1428,6 +1434,7 @@ class FinanceController extends BaseController {
         $this->op           = $op;
         $this->audit_userinfo= $audit_userinfo;
         $this->audit_usertype= $audit_usertype;
+        $this->jk_type      = C('JIEKUAN_TYPE');
 
         $this->display();
     }
@@ -1483,6 +1490,8 @@ class FinanceController extends BaseController {
         $this->jk_type  = C('JIEKUAN_TYPE');
         $audit_userinfo = M('jiekuan_audit')->where(array('op_id'=>$op['op_id'],'jk_id'=>$id))->find();
         $this->audit_userinfo= $audit_userinfo;
+        $this->record   = D('Finance')->get_record($jiekuan['jkd_id']);
+
         //审核人信息
         if ($jiekuan['ys_audit_userid']==cookie('userid') || cookie('userid')==11){
             $this->audit_usertype = 1;  //预算审批人(或乔总)
@@ -1596,9 +1605,7 @@ class FinanceController extends BaseController {
             if ($bxd_id)    $map['b.bxd_id']        = array('like','%'.$bxd_id.'%');
             if ($bx_user)   $map['b.bx_user']       = array('like','%'.$bx_user.'%');
         }
-        //$lists          = M()->table('__JIEKUAN__ as j')->field('j.*,o.project')->join('__JIEKUAN_AUDIT__ as a on a.jk_id=j.id','left')->join('__OP__ as o on o.op_id=j.op_id','left')->where($where)->order($this->orders('j.id'))->select();
         $lists          = M()->table('__BAOXIAO__ as b')->field('b.*')->join('__BAOXIAO_AUDIT__ as a on a.bx_id=b.id','left')->where($where)->order($this->orders('b.id'))->select();
-        //var_dump($lists);die;
 
         foreach ($lists as $k=>$v){
             if ($v['audit_status'] == 0) $lists[$k]['zhuangtai'] = "<span class='yellow'>审核中</span>";
@@ -1615,9 +1622,8 @@ class FinanceController extends BaseController {
         $id                 = I('id');
         $audit_usertype     = I('audit_usertype');
         $baoxiao            = M('baoxiao')->where(array('id'=>$id))->find();
-        $field              = '';
-        $bx_lists           = M()->table('__BAOXIAO_DETAIL__ as b')->join('__OP_COSTACC__ as c on c.id=b.costacc_id','left')->where(array('b.bx_id'=>$id))->select();
-        //var_dump($bx_lists);die;
+        $field              = 'b.*,c.title';
+        $bx_lists           = M()->table('__BAOXIAO_DETAIL__ as b')->join('__OP_COSTACC__ as c on c.id=b.costacc_id','left')->where(array('b.bx_id'=>$id))->field($field)->select();
 
         $audit_userinfo     = M('baoxiao_audit')->where(array('bx_id'=>$id))->find();
         if (!$audit_userinfo){ $this->error('获取信息失败'); };

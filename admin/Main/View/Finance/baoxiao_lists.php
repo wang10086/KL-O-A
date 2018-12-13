@@ -29,7 +29,7 @@
                                     <tr role="row" class="orders" >
                                         <th class="sorting" width="180" data="b.bxd_id">报销单号</th>
                                         <th class="sorting" width="" data="b.group_ids">团号</th>
-                                        <!--<th class="sorting" data="o.project">项目名称</th>-->
+                                        <th class="sorting" data="b.jkd_ids">借款单号</th>
                                         <th class="sorting" width="100" data="b.bx_user">报销人</th>
                                         <th class="sorting" width="80" data="b.sum">报销金额</th>
                                         <th class="sorting" width="60" data="b.type">报销方式</th>
@@ -45,6 +45,7 @@
                                     <tr>
                                         <td>{$row.bxd_id}</td>
                                         <td>{$row.group_ids}</td>
+                                        <td>{$row.jkd_ids}</td>
                                         <!--<td>
                                             <div class="">
                                                 <if condition="rolemenu(array('Finance/jiekuandan_info'))">

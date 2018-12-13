@@ -87,12 +87,16 @@
                                                     </td>
                                                 </tr>
                                                 <tr>
-                                                    <td class="td_con" colspan="2" style="text-align: left; min-width:230px; ">借款单编号：{$jiekuan['jkd_id']}</td>
-                                                    <td class="td_con" colspan="4" style="text-align: right;">
-                                                        支付方式：
-                                                        <foreach name="jk_type" key="k" item="v">
-                                                            <input type="radio" name="type" value="{$k}" <?php if ($jiekuan['type']== $k) echo "checked"; ?> /> <?php if ($jiekuan['type']== $k) echo '√'; ?>{$v} &nbsp;
-                                                        </foreach>
+                                                    <td class="td_con" colspan="6">
+                                                        <div style="display: inline-block; float: left; min-width:230px; clear: left;">
+                                                            借款单编号：{$jiekuan['jkd_id']}
+                                                        </div>
+                                                        <div style="display: inline-block; float: right; clear: right;">
+                                                            支付方式：
+                                                            <foreach name="jk_type" key="k" item="v">
+                                                                <input type="radio" name="type" value="{$k}" <?php if ($jiekuan['type']== $k) echo "checked"; ?> /> <?php if ($jiekuan['type']== $k) echo '√'; ?>{$v} &nbsp;
+                                                            </foreach>
+                                                        </div>
                                                     </td>
                                                 </tr>
 
@@ -106,7 +110,7 @@
                                                     <td colspan="2" class="td_con td">用途说明</td>
                                                     <td colspan="4" class="td_con td">
                                                         <div class="form-group col-md-12">
-                                                            <textarea class="form-control no-border-textarea" readonly>{$jiekuan.description}</textarea>
+                                                            <textarea class="form-control no-border-textarea">{$jiekuan.description}</textarea>
                                                         </div>
                                                     </td>
                                                 </tr>
@@ -119,18 +123,18 @@
                                                     <td colspan="6" class="td_con td">受款单位：{$jiekuan.payee}</td>
                                                 </tr>
                                                 <tr>
-                                                    <td colspan="4" class="td_con td">开户行名称：{$jiekuan.bank_name}</td>
-                                                    <td colspan="2" class="td_con td">账号：{$jiekuan.card_num}</td>
+                                                    <td colspan="3" class="td_con td">开户行名称：{$jiekuan.bank_name}</td>
+                                                    <td colspan="3" class="td_con td">账号：{$jiekuan.card_num}</td>
                                                 </tr>
 
                                                 <tr>
-                                                    <td colspan="4" class="td_con td">借款单位：{$jiekuan.department}</td>
-                                                    <td colspan="2" class="td_con td">借款人签字：<img src="/{$jiekuan.jk_file}" height="50px" alt=""></td>
+                                                    <td colspan="3" class="td_con td">借款单位：{$jiekuan.department}</td>
+                                                    <td colspan="3" class="td_con td">借款人签字：<img src="/{$jiekuan.jk_file}" height="50px" alt=""></td>
                                                 </tr>
 
                                                 <tr>
-                                                    <td colspan="4" class="td_con td">预算审批人签字：<span id="ysspr"> <?php if($jiekuan['ys_audit_status']==2){echo "<span class='red'>不通过</span>"; }elseif ($jiekuan['ys_audit_status']==1){ echo "<img src='/$jiekuan[ys_audit_file]' height='50px'>";}; ?></span></td>
-                                                    <td colspan="2" class="td_con td">财务主管签字：<span id="cwzg"><?php if($jiekuan['cw_audit_status']==2){echo "<span class='red'>不通过</span>"; }elseif ($jiekuan['cw_audit_status']==1){ echo "<img src='/$jiekuan[cw_audit_file]' height='50px'>";}; ?></span></td>
+                                                    <td colspan="3" class="td_con td">预算审批人签字：<span id="ysspr"> <?php if($jiekuan['ys_audit_status']==2){echo "<span class='red'>不通过</span>"; }elseif ($jiekuan['ys_audit_status']==1){ echo "<img src='/$jiekuan[ys_audit_file]' height='50px'>";}; ?></span></td>
+                                                    <td colspan="3" class="td_con td">财务主管签字：<span id="cwzg"><?php if($jiekuan['cw_audit_status']==2){echo "<span class='red'>不通过</span>"; }elseif ($jiekuan['cw_audit_status']==1){ echo "<img src='/$jiekuan[cw_audit_file]' height='50px'>";}; ?></span></td>
                                                 </tr>
                                                 <tr id="print_time">
                                                     <td class="td_con" colspan="6" style="text-align: right; ">打印时间：<?php echo date('Y-m-d H:i:s',time()); ?></td>
@@ -152,6 +156,30 @@
                         <?php }else{ ?>
                             <div class="content" style="padding-top:40px;">  获取借款信息失败!</div>
                         <?php } ?>
+                    </div>
+                </div>
+
+                <div class="box box-warning">
+                    <div class="box-header">
+                        <h3 class="box-title">项目操作记录</h3>
+                    </div>
+                    <div class="box-body">
+                        <div class="content" style="padding:10px 30px;">
+                            <table rules="none" border="0">
+                                <tr>
+                                    <th style="border-bottom:2px solid #06E0F3; font-weight:bold;" width="160">操作时间</th>
+                                    <th style="border-bottom:2px solid #06E0F3; font-weight:bold;" width="100">操作人</th>
+                                    <th style="border-bottom:2px solid #06E0F3; font-weight:bold;" width="500">操作说明</th>
+                                </tr>
+                                <foreach name="record" item="v">
+                                    <tr>
+                                        <td style="padding:20px 0 0 0">{$v.time|date='Y-m-d H:i:s',###}</td>
+                                        <td style="padding:20px 0 0 0">{$v.uname}</td>
+                                        <td style="padding:20px 0 0 0">{$v.explain}</td>
+                                    </tr>
+                                </foreach>
+                            </table>
+                        </div>
                     </div>
                 </div>
 

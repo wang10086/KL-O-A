@@ -314,7 +314,7 @@
     function show_qianzi() {
         var html = '';
         html += '<label>报销人：</label>'+
-            '<input type="text" name="password" style="width:160px;height: 30px;" placeholder="请输入签字密码"  />&emsp;'+
+            '<input type="password" name="password" style="width:160px;height: 30px;" placeholder="请输入签字密码"  />&emsp;'+
             '<input type="button" class="info-button" value="确定" onclick="check_pwd()">';
         $('#jkr_qianzi').html(html);
     }

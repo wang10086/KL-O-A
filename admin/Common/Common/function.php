@@ -4256,19 +4256,21 @@ function getScienceRes(){
     /**
      * 自动生成单据编号
      * @param $str
-     * @param $opid
+     * @param $table
+     * @param $ele
      * @return string
      */
-    function make_num($str,$opid=''){
-        if ($opid){
-            $jkd   = $str.$opid;
+    function make_num($str,$table,$ele){
+        $date   = date('Ymd',time());
+        $length = strlen($str);
+        $lastid = M("$table")->where(array("$ele"=>array('like','%'.$date.'%')))->order('id DESC')->find();
+        if ($lastid){
+            $numb   = substr($lastid["$ele"],$length);
+            $num    = $str.($numb+1);
         }else{
-            $data  = date('Ymd',time())*10000;
-            $jkd   = $str.$data;
+            $num    = $str.(($date*10000)+1);
         }
-        $count     = M('jiekuan')->where(array('jkd_id'=>array('like',$jkd.'%')))->count();
-        $jkdid     = $jkd.'-'.($count+1);
-        return $jkdid;
+        return $num;
     }
 
     /**
