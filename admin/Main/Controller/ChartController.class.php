@@ -700,10 +700,11 @@ class ChartController extends BaseController {
             $userlists[$v['id']]['depname'] = $v['department'];
         }
 
-        //预算及结算分部门汇总
         if ($pin == 0){
+            //预算及结算分部门汇总
             $lists      = D('Chart')->ysjs_deplist($userlists,$month,$yeartimes,$pin);
         }else{
+            //结算分部门汇总
             $lists      = D('Chart')->js_deplist($userlists,$month,$yeartimes,$pin);
         }
         return $lists;
