@@ -34,10 +34,10 @@
                                         <th class="sorting" width="80" data="b.sum">报销金额</th>
                                         <th class="sorting" width="60" data="b.type">报销方式</th>
                                         <th class="sorting" width="80" data="b.zhuangtai">审批状态</th>
-                                        <if condition="rolemenu(array('Finance/jiekuandan_info'))">
+                                        <if condition="rolemenu(array('Finance/baoxiaodan_info'))">
                                             <th width="40" class="taskOptions">详情</th>
                                         </if>
-                                        <if condition="rolemenu(array('Finance/del_jkd'))">
+                                        <if condition="rolemenu(array('Finance/del_bxd'))">
                                             <th width="40" class="taskOptions">删除</th>
                                         </if>
                                     </tr>
@@ -46,25 +46,16 @@
                                         <td>{$row.bxd_id}</td>
                                         <td>{$row.group_ids}</td>
                                         <td>{$row.jkd_ids}</td>
-                                        <!--<td>
-                                            <div class="">
-                                                <if condition="rolemenu(array('Finance/jiekuandan_info'))">
-                                                    <a href="{:U('Finance/jiekuandan_info',array('bxid'=>$row['id']))}" title="{$row.project}">{$row.project}</a>
-                                                    <else />
-                                                    <a href="javascript:;" title="{$row.project}">{$row.project}</a>
-                                                </if>
-                                            </div>
-                                        </td>-->
                                         <td>{$row.bx_user}</td>
                                         <td>{$row.sum}</td>
                                         <td>{$jk_type[$row[type]]}</td>
                                         <td>{$row.zhuangtai}</td>
-                                        <if condition="rolemenu(array('Finance/jiekuandan_info'))">
+                                        <if condition="rolemenu(array('Finance/baoxiaodan_info'))">
                                             <td class="taskOptions">
-                                                <a href="javascript:;" title="详情" class="btn btn-info btn-smsm"><i class="fa fa-bars"></i></a>
+                                                <a href="{:U('Finance/baoxiaodan_info',array('id'=>$row['id']))}" title="详情" class="btn btn-info btn-smsm"><i class="fa fa-bars"></i></a>
                                             </td>
                                         </if>
-                                        <if condition="rolemenu(array('Finance/del_jkd'))">
+                                        <if condition="rolemenu(array('Finance/del_bxd'))">
                                             <td class="taskOptions">
                                                 <button onClick="javascript:ConfirmDel()" title="删除" class="btn btn-warning btn-smsm"><i class="fa fa-times"></i></button>
                                             </td>

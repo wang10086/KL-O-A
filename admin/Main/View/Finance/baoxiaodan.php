@@ -19,7 +19,7 @@
         </table>
     </div><!-- /.box-body -->
 
-        <div class="box-body" id="jiekuandan" >
+        <div class="box-body" id="baoxiaodan" >
             <div class="row"><!-- right column -->
                 <div class="form-group col-md-12">
                     <div class="form-group col-md-12" style="align: center;">
@@ -73,7 +73,7 @@
                             </tr>
 
                             <tr>
-                                <td colspan="3" class="td_con td">报销人签字：<img src="/{$baoxiao.jk_file}" height="50px" alt=""></td>
+                                <td colspan="3" class="td_con td">报销人签字：<img src="/{$baoxiao.bx_file}" height="50px" alt=""></td>
                                 <td colspan="3" class="td_con td">证明验收人签字：<span id="zmysr"> <?php if($audit_userinfo['zm_audit_status']==2){echo "<span class='red'>不通过</span>"; }elseif ($audit_userinfo['zm_audit_status']==1){ echo "<img src='/$audit_userinfo[zm_audit_file]' height='50px'>";}; ?></span></td>
                             </tr>
 
@@ -87,11 +87,11 @@
 
                         </table>
                     </div>
-                    <if condition="rolemenu(array('Finance/print_jkd'))">
+                    <?php if (in_array(cookie('userid'),array(1,11,$baoxiao['bx_user_id']))){ ?>
                         <div class="content no-print">
-                            <button class="btn btn-default" onclick="show_print_time(),print_view('jiekuandan');"><i class="fa fa-print"></i> 打印</button>
+                            <button class="btn btn-default" onclick="show_print_time(),print_view('baoxiaodan');"><i class="fa fa-print"></i> 打印</button>
                         </div>
-                    </if>
+                    <?php } ?>
                 </div>
             </div><!--/.col (right) -->
         </div>
@@ -130,10 +130,14 @@
                 if (msg.stu ==1){
                     var html = '';
                     if (audit_usertype ==1 ){
+                        html += '<label>证明验收人签字：</label>'+
+                            '<input type="hidden" name="info[zm_audit_file]" value="'+msg.file_url+'">'+
+                            '<img width="100" src="/'+msg.file_url+'" alt="">';
+                    }else if(audit_usertype ==2){
                         html += '<label>预算审核人签字：</label>'+
                             '<input type="hidden" name="info[ys_audit_file]" value="'+msg.file_url+'">'+
                             '<img width="100" src="/'+msg.file_url+'" alt="">';
-                    }else if(audit_usertype ==2){
+                    }else if(audit_usertype ==3){
                         html += '<label>财务主管签字：</label>'+
                             '<input type="hidden" name="info[cw_audit_file]" value="'+msg.file_url+'">'+
                             '<img width="100" src="/'+msg.file_url+'" alt="">';

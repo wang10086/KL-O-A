@@ -32,4 +32,43 @@ class FinanceModel extends Model{
         return $lists;
     }
 
+    /**
+     * 保存借款单审核结果
+     * @param $jk_id
+     * @param $result
+     */
+    public function save_jkd_audit($jk_id,$result){
+        $audit                  = array();
+        $audit['audit_status']  = $result;
+        M('jiekuan')->where(array('id'=>$jk_id))->save($audit);
+        M('jiekuan_detail')->where(array('jk_id'=>$jk_id))->save($audit);
+    }
+
+    /**
+     * 保存报销单审核结果
+     * @param $bx_id
+     * @param $result
+     */
+    public function save_bxd_audit($bx_id,$result){
+        $audit                  = array();
+        $audit['audit_status']  = $result;
+        M('baoxiao')->where(array('id'=>$bx_id))->save($audit);
+        M('baoxiao_detail')->where(array('bx_id'=>$bx_id))->save($audit);
+    }
+
+    /**
+     * 获取证明验收人相关信息
+     * @param $lists
+     * @return mixed
+     */
+    public function get_zmysr_id($lists){
+        foreach ($lists as $k=>$v){
+            $opid           = $v['op_id'];
+            if ($opid){
+                break;
+            }
+        }
+        return $opid;
+    }
+
 }

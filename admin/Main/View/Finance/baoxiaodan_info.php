@@ -3,10 +3,10 @@
             <aside class="right-side">
                 <!-- Content Header (Page header) -->
                 <section class="content-header">
-                    <h1>审核报销信息</h1>
+                    <h1>报销单信息</h1>
                     <ol class="breadcrumb">
                         <li><a href="{:U('Index/index')}"><i class="fa fa-home"></i> 首页</a></li>
-                        <li><a href="{:U('Finance/audit_baoxiao')}"><i class="fa fa-gift"></i> 审核报销单</a></li>
+                        <li><a href="{:U('Finance/baoxiaodan_info')}"><i class="fa fa-gift"></i> 报销单信息</a></li>
                     </ol>
                 </section>
 
@@ -19,7 +19,7 @@
 
                             <div class="box box-warning">
                                 <div class="box-header">
-                                    <h3 class="box-title">报销信息</h3>
+                                    <h3 class="box-title">报销单信息</h3>
                                 </div><!-- /.box-header -->
                                 <div class="box-body">
                                     <include file="baoxiaodan" />
