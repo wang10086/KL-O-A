@@ -32,6 +32,9 @@
                 <div class="box box-warning">
                     <div class="box-header">
                         <h3 class="box-title">季度预算报表</h3>
+                        <div class="box-header">
+                            <a class="btn btn-info btn-sm" href="{:U('Manage/Manage_quarter_w')}" style="float:right;margin:1em 2em 0em 0em;background-color:#398439;"><b>+</b>预算录入</a>
+                        </div>
                     </div><!-- /.box-header -->
                     <div class="box-body">
                             <table class="table table-bordered dataTable fontmini" id="tablecenter">
@@ -50,59 +53,108 @@
                                 </tr>
                                 <tr role="row" class="orders" style="text-align:center;">
                                     <th>员工人数</th>
-                                    <foreach name="quarter" item="qua">
-                                        <th><?php if(is_numeric($qua['sum'])){echo round($qua['sum']);}else{echo '111111111111';}?>(人)</th>
-                                    </foreach>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
                                 </tr>
 
                                 <tr role="row" class="orders" style="text-align:center;">
                                     <td>营业收入</td>
-                                    <foreach name="budget_profits" item="t">
-                                        <th>¥ <?php if($t['monthzsr']=="" || $t['monthzsr']==0 || count($quarter)==0){echo '0.00';}else{echo round($t['monthzsr'],2);}?></th>
-                                    </foreach>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
                                 </tr>
                                 <tr role="row" class="orders" style="text-align:center;">
                                     <td>营业毛利</td>
-                                    <foreach name="budget_profits" item="ge">
-                                        <th>¥ <?php if($ge['monthzml']=="" || $ge['monthzml']==0 || count($quarter)==0){echo '0.00';}else{echo round($ge['monthzml'],2);}?></th>
-                                    </foreach>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
                                 </tr>
-                                <tr role="row" class="budget_profits" style="text-align:center;">
+                                <tr role="row" class="orders" style="text-align:center;">
                                     <td>营业毛利率(%)</td>
-                                    <foreach name="budget_profits" item="g">
-                                        <th><?php if($g['monthmll']=="" || $g['monthmll']==0 || count($quarter)==0){echo '0.00';}else{echo round($g['monthmll'],2);}?> %</th>
-                                    </foreach>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
                                 </tr>
                                 <tr role="row" class="orders" style="text-align:center;">
                                     <td>人力资源成本</td>
-                                    <foreach name="quarter" item="qu">
-                                        <th>¥ <?php if($qu['money']=="" || $qu['money']==0 || count($quarter)==0){echo '0.00';}else{echo round($qu['money'],2);}?></th>
-                                    </foreach>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
                                 </tr>
                                 <tr role="row" class="orders" style="text-align:center;">
-                                    <td>其他费用</td>
-                                    <td><?php echo $n['employees_sum'];?></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
+                                    <th>其他费用</th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
                                 </tr>
                                 <tr role="row" class="orders" style="text-align:center;">
                                     <td>利润总额</td>
-                                    <foreach name="budget_manage" item="bu">
-                                        <th>¥ <?php if($bu['monthzml']=="" || $bu['monthzml']==0 || count($quarter)==0){echo '0.00';}else{echo round($bu['monthzml'],2);}?></th>
-                                    </foreach>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
                                 </tr>
                                 <tr role="row" class="orders" style="text-align:center;">
                                     <td>人事费用率</td>
-                                    <foreach name="budget_personnel" item="b">
-                                        <th><?php if($b['personnel_costs']=="" || $b['personnel_costs']==0){echo '0.00';}else{echo round($b['personnel_costs'],2);}?> %</th>
-                                    </foreach>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
                                 </tr>
                             </table><br><br>
                         </div><!-- /.box-body -->
@@ -142,7 +194,7 @@
                                     </foreach>
                                 </tr>
                                 <tr role="row" class="orders" style="text-align:center;">
-                                    <td>营业毛利</td>
+                                    <th>营业毛利</th>
                                     <foreach name="profit" item="pr">
                                         <th>¥ <?php if($pr['monthzml']=="" || $pr['monthzml']==0 || count($quarter)==0){echo '0.00';}else{echo round($pr['monthzml'],2);}?></th>
                                     </foreach>

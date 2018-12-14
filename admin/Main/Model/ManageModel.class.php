@@ -273,28 +273,51 @@ class ManageModel extends Model{
         $arr1                                    = array('3','6','9','12');
         $i                                       = 0; //现在季度月 减一
         $company                                 = array(); //季度内数据总和
+        $count_sum                               = 3;
+        $content                                 = array();
+        $count                                   = array();
         if(in_array($quarter,$arr1)){ //判断是否是第一、二、三、四季度
-            for($n = 2; $n >= $i;$i++){ //
+            for($n = 3; $n > $i;$i++){ //
                 $month                           =  $quarter-$i; //季度上一个月
-                $count                           = $this->month($year,$month); //季度 人数和 人力资源成本
-                foreach($count as $k => $v){
+                $count[$i]                       = $this->month($year,$month); //季度 人数和 人力资源成本
+                foreach($count[$i] as $k => $v){
                     $company[$k]['sum']         += $v['sum'];//人数相加
                     $company[$k]['money']       += $v['money'];//人力资源成本相加
                 }
+                foreach($count[$i] as $key =>$val){ //删除数组等于空 和 0 的数据、
+                    if(($val['sum']=='' || $val['sum']==0) && ($val['money']=='' || $val['money']==0)){
+                        unset($count[$i][$key]);
+                    }else{
+                        if($val['sum']=='' || $val['sum']==0){unset($count[$i][$key]['sum']);}
+                        if($val['money']=='' || $val['money']==0){unset($count[$i][$key]['money']);}
+                    }
+                }
+                if(count($count[$i]) ==0 || $count[$i]==''){$count_sum = $count_sum -1;unset($count[$i]);}
             }
+            foreach($company as $ke => $va){$company[$ke]['sum'] = round($va['sum']/$count_sum,2);}
             return $company;
         }else{
-            for($n = 2;$n > $i;$i++){
+            for($n = 3;$n > $i;$i++){
                 $month                           = $quarter-$i;
-                if(in_array($month,$arr1)){
+                if($month==3 || $month==6 || $month==9 || $month==12){
+                    $count_sum = count($company);
+                    foreach($company as $ke => $va){$company[$ke]['sum'] = round($va['sum']/$count_sum,2);}
                     return $company;
                 }else{
-                    $count                       = $this->month($year,$month); //季度 人数和 人力资源成本
-                    foreach($count as $k => $v){
+                    $count[$i]                   = $this->month($year,$month); //季度 人数和 人力资源成本
+                    foreach($count[$i] as $k => $v){
                         $company[$k]['sum']     += $v['sum'];//人数相加
                         $company[$k]['money']   += $v['money'];//人力资源成本相加
                     }
-                    return $company;
+                    foreach($count[$i] as $key =>$val){ //删除数组等于空 和 0 的数据、
+                        if(($val['sum']=='' || $val['sum']==0) && ($val['money']=='' || $val['money']==0)){
+                            unset($count[$i][$key]);
+                        }else{
+                            if($val['sum']=='' || $val['sum']==0){unset($count[$i][$key]['sum']);}
+                            if($val['money']=='' || $val['money']==0){unset($count[$i][$key]['money']);}
+                        }
+                    }
+                    $count[$i]                  = array_filter($count[$i]);//去空和0
                 }
             }
         }
@@ -392,6 +415,7 @@ class ManageModel extends Model{
             $number                                     = $key+2;
         }
         $user_count[$number]['sum']                     = $count;
+        foreach($user_count as $key => $val){$user_count[$key]['sum'] = round($val['sum']/count($count_money),2);}
         $user_count[$number]['money']                   = $money;
         return $user_count;
     }

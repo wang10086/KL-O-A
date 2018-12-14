@@ -27,6 +27,13 @@ function relaydate(){
 			elem: elm
 		});
 	});
+    //年份
+    $('.yearly').each (function(idx, elm) {
+        laydate.render({
+            elem: elm,type: 'year',format: 'yyyy'
+        });
+    });
+
 
 	//月份
 	$('.monthly').each (function(idx, elm) {

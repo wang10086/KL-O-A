@@ -28,6 +28,9 @@
                 <div class="box box-warning">
                     <div class="box-header">
                         <h3 class="box-title">年度预算报表</h3>
+                        <div class="box-header">
+                            <a class="btn btn-info btn-sm" href="{:U('Manage/Manage_input')}" style="float:right;margin:1em 2em 0em 0em;background-color:#398439;"><b>+</b>预算录入</a>
+                        </div>
                     </div><!-- /.box-header -->
                     <div class="box-body">
 
@@ -47,34 +50,69 @@
                             </tr>
                             <tr role="row" class="orders" style="text-align:center;">
                                 <th>员工人数</th>
-                                <foreach name="yea_report" item="yea">
-                                    <th><?php if($yea['sum']=="" || $yea['sum']==0 || $yea_report[0]['sum']==0){echo '0';}else{echo $yea['sum']; }?>（人)</th>
-                                </foreach>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
                             </tr>
 
                             <tr role="row" class="orders" style="text-align:center;">
                                 <td>营业收入</td>
-                                <foreach name="budget_profit" item="bp">
-                                    <th>¥ <?php if($bp['yearzsr']=="" || $bp['yearzsr']==0 || $yea_report[0]['sum']==0){echo '0.00';}else{echo $bp['yearzsr']; }?></th>
-                                </foreach>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
                             </tr>
                             <tr role="row" class="orders" style="text-align:center;">
                                 <td>营业毛利</td>
-                                <foreach name="budget_profit" item="fit">
-                                    <th>¥ <?php if($fit['yearzml']=="" || $fit['yearzml']==0 || $yea_report[0]['sum']==0){echo '0.00';}else{echo $fit['yearzml']; }?></th>
-                                </foreach>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
                             </tr>
                             <tr role="row" class="orders" style="text-align:center;">
                                 <td>营业毛利率(%)</td>
-                                <foreach name="budget_profit" item="it">
-                                    <th><?php if($it['yearmll']=="" || $it['yearmll']==0 || $yea_report[0]['sum']==0){echo '0.00';}else{echo $it['yearmll']; }?> %</th>
-                                </foreach>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
                             </tr>
                             <tr role="row" class="orders" style="text-align:center;">
                                 <td>人力资源成本</td>
-                                <foreach name="yea_report" item="ye">
-                                    <th>¥ <?php if($ye['money']=="" || $ye['money']==0 || $yea_report[0]['sum']==0){echo '0.00';}else{echo $ye['money'];}?></th>
-                                </foreach>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
 
                             </tr>
                             <tr role="row" class="orders" style="text-align:center;">
@@ -92,15 +130,29 @@
                             </tr>
                             <tr role="row" class="orders" style="text-align:center;">
                                 <td>利润总额</td>
-                                <foreach name="budget_count" item="b">
-                                    <th>¥ <?php if($b['yearprofit']=="" || $b['yearprofit']==0 || $yea_report[0]['sum']==0){echo '0.00';}else{echo $b['yearprofit'];}?></th>
-                                </foreach>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
                             </tr>
                             <tr role="row" class="orders" style="text-align:center;">
                                 <td>人事费用率</td>
-                                <foreach name="budget_count" item="co">
-                                    <th><?php if($co['personnel']=="" || $co['personnel']==0 || $yea_report[0]['sum']==0){echo '0.00';}else{echo $co['personnel'];}?> %</th>
-                                </foreach>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
                             </tr>
                         </table><br><br>
 

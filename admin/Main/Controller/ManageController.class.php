@@ -70,14 +70,16 @@ class ManageController extends ChartController {
         $profits                = $this->profit_r($year1,$quart,1);//月份循环季度数据 利润
         $manage_quarter         = $mod->manage_quarter($quarter,$profits);//季度利润总额
         $personnel_costs        = $mod->personnel_costs($quarter,$profits);//人事费用率
+
         // 季度预算报表
-        $budget_profits         = $this->profit_r($year1,$quart,0);//月份循环季度数据 利润
-        $budget_manage          = $mod->manage_quarter($quarter,$budget_profits);//季度利润总额
-        $budget_personnel       = $mod->personnel_costs($quarter,$budget_profits);//人事费用率
-        // 季度预算报表
-        $this->budget_profits   = $budget_profits;//月份循环季度数据 利润
-        $this->budget_manage    = $budget_manage;//季度利润总额
-        $this->budget_personnel = $budget_personnel;//人事费用率
+//        $budget_profits         = $this->profit_r($year1,$quart,0);//月份循环季度数据 利润
+//        $budget_manage          = $mod->manage_quarter($quarter,$budget_profits);//季度利润总额
+//        $budget_personnel       = $mod->personnel_costs($quarter,$budget_profits);//人事费用率
+//        // 季度预算报表
+//        $this->budget_profits   = $budget_profits;//月份循环季度数据 利润
+//        $this->budget_manage    = $budget_manage;//季度利润总额
+//        $this->budget_personnel = $budget_personnel;//人事费用率
+
         // 季度经营报表
         $this->personnel_costs  = $personnel_costs;//人事费用率
         $this->manage_quarter   = $manage_quarter;// 季度利润总额
@@ -171,13 +173,15 @@ class ManageController extends ChartController {
         $money              = $this->business($year1,$month,1);//年 monthzsr 收入合计   monthzml 毛利合计  monthmll 毛利率
         $profit             = $mod->profit_w($money);//年 收入 毛利 毛利率
         $count_profit       = $mod->count_profit($yea_report,$profit);//年利润总额 年人事费用
-        //年度预算报表
-        $budget_money       = $this->business($year1,$month,0);//年 monthzsr 收入合计   monthzml 毛利合计  monthmll 毛利率
-        $budget_profit      = $mod->profit_w($budget_money);//年 收入 毛利 毛利率
-        $budget_count       = $mod->count_profit($yea_report,$budget_profit);//年利润总额 年人事费用
-        //年度预算报表
-        $this->budget_count = $budget_count;//年人员人力资源成本 收入 毛利 毛利率
-        $this->budget_profit= $budget_profit;//收入 毛利 毛利率
+
+//        //年度预算报表
+//        $budget_money       = $this->business($year1,$month,0);//年 monthzsr 收入合计   monthzml 毛利合计  monthmll 毛利率
+//        $budget_profit      = $mod->profit_w($budget_money);//年 收入 毛利 毛利率
+//        $budget_count       = $mod->count_profit($yea_report,$budget_profit);//年利润总额 年人事费用
+//        //年度预算报表
+//        $this->budget_count = $budget_count;//年人员人力资源成本 收入 毛利 毛利率
+//        $this->budget_profit= $budget_profit;//收入 毛利 毛利率
+
         //年度经营报表
         $this->count_profit = $count_profit;//年人员人力资源成本 收入 毛利 毛利率
         $this->profit       = $profit;//收入 毛利 毛利率
@@ -187,6 +191,23 @@ class ManageController extends ChartController {
         $this->display();
     }
 
+    /**
+     * Manage_input 年数据录入
+     */
+    public function Manage_input(){
+//        print_r(I());die;
 
+        $this->display();
+
+    }
+
+    /**
+     * Manage_input 季度数据录入
+     */
+    public function Manage_quarter_w(){
+
+        $this->display();
+
+    }
 
  }
