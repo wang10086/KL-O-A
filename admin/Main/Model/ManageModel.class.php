@@ -18,7 +18,7 @@ class ManageModel extends Model{
         }
         $account[0]['sum']                                  = count($account_sum);
         $account[0]['money']                                = (float)$this->userinfo($datime,2)['Should']+$moner2;//获取人力资源成本（应发工资）
-        $arr                                                = array('京区业务中心','京外业务中心','南京项目部','武汉项目部','沈阳项目部','长春项目部','市场部','常规业务中心');//部门
+        $arr                                                = C('department');//部门
         $number                                             = $account[0]['sum'];
         $num                                                = $account[0]['money'];
         $sum                                                = 0;
@@ -154,7 +154,7 @@ class ManageModel extends Model{
      */
     public function profit($money){
 
-        $arr                                          = array('京区业务中心','京外业务中心','南京项目部','武汉项目部','沈阳项目部','长春项目部','市场部','常规业务中心');//部门
+        $arr                                          =  C('department');//部门
 
         $departmen                                    = array();
 
@@ -360,7 +360,7 @@ class ManageModel extends Model{
      * $post 2 加  1 减年
      */
     public  function yea_report($year,$post){
-        $arr                                            = array('京区业务中心','京外业务中心','南京项目部','武汉项目部','沈阳项目部','长春项目部','市场部','常规业务中心');//部门
+        $arr                                            = C('department');//部门
         $where['datetime']                              = array('like',$year.'%');
         $where['status']                                = 4;
         $query                                          = array();
@@ -426,7 +426,7 @@ class ManageModel extends Model{
      * $money 年 收入 毛利 利率
      */
     public function profit_w($money){
-        $arr                                         = array('京区业务中心','京外业务中心','南京项目部','武汉项目部','沈阳项目部','长春项目部','市场部','常规业务中心');//部门
+        $arr                                         =  C('department');//部门
         $departmen                                   = array();
         $sum                                         = 0;
 
@@ -463,6 +463,227 @@ class ManageModel extends Model{
 
         }
         return $profit_sum;
+    }
+
+    /**
+     * quarter_month 自动计算当前季度
+     * $date_Y['year'] 年
+     * $time_M 月
+     */
+    public function quarter_month($date_Y){
+
+        $time_M = date('m');
+        switch ($time_M)
+        {
+            case 1:
+                $date_Y['type']    = 1;
+                return $date_Y;die;
+            case 2:
+                $date_Y['type']    = 2;
+                return $date_Y;break;
+            case 3:
+                $date_Y['type']    = 2;
+                return $date_Y;break;
+            case 4:
+                $date_Y['type']    = 2;
+                return $date_Y;break;
+            case 5:
+                $date_Y['type']    = 3;
+                return $date_Y;break;
+            case 6:
+                $date_Y['type']    = 3;
+                return $date_Y;break;
+            case 7:
+                $date_Y['type']    = 3;
+                return $date_Y;break;
+            case 8:
+                $date_Y['type']    = 4;
+                return $date_Y;break;
+            case 9:
+                $date_Y['type']    = 4;
+                return $date_Y;break;
+            case 10:
+                $date_Y['type']    = 4;
+                return $date_Y;break;
+            case 11:
+                $date_Y['year']     = $date_Y['year']+1;
+                $date_Y['type']    = 1;
+                return $date_Y;break;
+            case 12:
+                $date_Y['year']     = $date_Y['year']+1;
+                $date_Y['type']    = 1;
+                return $date_Y;break;
+        }
+    }
+
+
+    /**
+     * quarter_month 自动计算当前季度
+     * $date_Y['statu'] 季度
+     * $time_M 月
+     */
+    public function quarter_month1($time_M){
+        switch ($time_M)
+        {
+            case 1:
+                $statu    = 1;
+                return $statu;die;
+            case 2:
+                $statu    = 1;
+                return $statu;break;
+            case 3:
+                $statu    = 1;
+                return $statu;break;
+            case 4:
+                $statu    = 2;
+                return $statu;break;
+            case 5:
+                $statu    = 2;
+                return $statu;break;
+            case 6:
+                $statu    = 2;
+                return $statu;break;
+            case 7:
+                $statu    = 3;
+                return $statu;break;
+            case 8:
+                $statu    = 3;
+                return $statu;break;
+            case 9:
+                $statu    = 3;
+                return $statu;break;
+            case 10:
+                $statu    = 4;
+                return $statu;break;
+            case 11:
+                $statu    = 4;
+                return $statu;break;
+            case 12:
+                $statu    = 4;
+                return $statu;break;
+        }
+    }
+    /**
+     * quarter_month 自动计算当前年
+     * $date_Y['year'] 年
+     * $time_M 月
+     */
+    public function quarter_year($date_Y){
+        $time_M                  = date('m');
+        switch ($time_M)
+        {
+            case 1:
+                return $date_Y;break;
+            case 2:
+                return $date_Y;break;
+            case 3:
+                return $date_Y;break;
+            case 4:
+                return $date_Y;break;
+            case 10:
+                $date_Y['year']  = $date_Y['year']+1;
+                return $date_Y;break;
+            case 11:
+                $date_Y['year']  = $date_Y['year']+1;
+                return $date_Y;break;
+            case 12:
+                $date_Y['year']  = $date_Y['year']+1;
+                return $date_Y;break;
+        }
+    }
+
+    /**
+     * manage_input_statu 判断是否有数据
+     * 返回数据
+     */
+    public  function manage_input_statu($table,$datetime){
+        $add['account_id']              = $_SESSION['userid'];//用户uid
+        $add['datetime']                = $datetime['year'];//年
+        $add['statu']                   = 1;
+        $add['type']                    = $datetime['type'];
+        $add['logged_department']       = trim(I('department'));//部门
+        $count                          = M($table)->where($add)->find();
+        if(!$count){
+            if($count['statu']>1){return 3;die;}
+            $add['createtime']          = time(); //时间
+            $add['username']            = $_SESSION['name'];//用户名
+            $add['employees_number']    = trim(I('number'));//员工人数
+            $add['logged_income']       = trim(I('income'));//营业收入
+            $add['logged_profit']       = trim(I('profit'));//营业毛利
+            $add['logged_rate']         = trim(I('rate'));//营业利率比
+            $add['manpower_cost']       = trim(I('cost'));//人力资源成本
+            $add['other_expenses']      = trim(I('other'));//其他费用
+            $add['total_profit']        = trim(I('total'));//利润总额
+            $add['personnel_cost_rate'] = trim(I('personnel'));//人事费用率
+            $add_input                  = M($table)->add($add);
+            if($add_input){return 1;die;}else{return 2;die;}
+        }else{
+            $save['createtime']         = time(); //时间
+            $save['username']           = $_SESSION['name'];//用户名
+            $save['employees_number']   = trim(I('number'));//员工人数
+            $save['logged_income']      = trim(I('income'));//营业收入
+            $save['logged_profit']      = trim(I('profit'));//营业毛利
+            $save['logged_rate']        = trim(I('rate'));//营业利率比
+            $save['manpower_cost']      = trim(I('cost'));//人力资源成本
+            $save['other_expenses']     = trim(I('other'));//其他费用
+            $save['total_profit']       = trim(I('total'));//利润总额
+            $save['personnel_cost_rate']= trim(I('personnel'));//人事费用率
+            $save_input = M($table)->where($add)->save($save);
+            if($save_input){return 1;die;}else{return 2;die;}
+        }
+    }
+
+    /**
+     * Manage_display 显示季度数据输入页面信息排序
+     * $datetime 当前季度时间
+     */
+    public function Manage_display($datetime,$statu){
+
+        $where['datetime']                      = $datetime['year'];//年
+
+        $where['type']                          = $datetime['type'];
+
+        $department                             = C('department1');
+
+        $sta                                    = M('manage_input')->where($where)->find();//批准通过的数据
+
+        if(!$sta){
+
+            $where['statu']                     = $statu-1;
+
+            $sta2                               = M('manage_input')->where($where)->find();//批准通过的数据
+
+            if(!$sta2){
+
+                $where['statu']                 = $statu-2;
+
+                $sta2                           = M('manage_input')->where($where)->find();//批准通过的数据
+            }
+        }
+        foreach($department as $key => $val){
+
+            $where['logged_department']         = $val;
+
+            $manage[$key]                       = M('manage_input')->where($where)->find();//批准通过的数据
+
+            $manage[$key]['logged_department']  = $val;
+        }
+        return $manage;
+    }
+
+    /**
+     * sql_r 查询数据
+     */
+    public function sql_r($table,$where,$type){
+
+        if($type==1){
+
+            return M($table)->where($where)->find();
+
+        }elseif($type==2){
+
+            return M($table)->where($where)->select();
+        }
     }
 }
 

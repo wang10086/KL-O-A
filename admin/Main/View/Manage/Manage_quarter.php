@@ -51,110 +51,59 @@
                                     <th style="width:10em;" ><b>常规业务中心</b></th>
                                     <th style="width:10em;" ><b>机关部门</b></th>
                                 </tr>
-                                <tr role="row" class="orders" style="text-align:center;">
+                                <tr role="row" class="orders">
                                     <th>员工人数</th>
-                                    <th></th>
-                                    <th></th>
-                                    <th></th>
-                                    <th></th>
-                                    <th></th>
-                                    <th></th>
-                                    <th></th>
-                                    <th></th>
-                                    <th></th>
-                                    <th></th>
+                                    <foreach name="manage" item="m">
+                                        <th><?php if($m['employees_number']=="" || $m['employees_number']==0){echo '';}else{echo $m['employees_number'].'（人）'; }?></th>
+                                    </foreach>
                                 </tr>
-
-                                <tr role="row" class="orders" style="text-align:center;">
-                                    <td>营业收入</td>
-                                    <th></th>
-                                    <th></th>
-                                    <th></th>
-                                    <th></th>
-                                    <th></th>
-                                    <th></th>
-                                    <th></th>
-                                    <th></th>
-                                    <th></th>
-                                    <th></th>
+                                <tr role="row" class="orders">
+                                    <th>营业收入</th>
+                                    <foreach name="manage" item="m">
+                                        <th><?php if($m['logged_income']=="" || $m['logged_income']==0){echo '';}else{echo '¥ '.$m['logged_income']; }?></th>
+                                    </foreach>
                                 </tr>
-                                <tr role="row" class="orders" style="text-align:center;">
-                                    <td>营业毛利</td>
-                                    <th></th>
-                                    <th></th>
-                                    <th></th>
-                                    <th></th>
-                                    <th></th>
-                                    <th></th>
-                                    <th></th>
-                                    <th></th>
-                                    <th></th>
-                                    <th></th>
+                                <tr role="row" class="orders">
+                                    <th>营业毛利</th>
+                                    <foreach name="manage" item="m">
+                                        <th><?php if($m['logged_profit']=="" || $m['logged_profit']==0){echo '';}else{echo '¥ '.$m['logged_profit']; }?></th>
+                                    </foreach>
                                 </tr>
-                                <tr role="row" class="orders" style="text-align:center;">
-                                    <td>营业毛利率(%)</td>
-                                    <th></th>
-                                    <th></th>
-                                    <th></th>
-                                    <th></th>
-                                    <th></th>
-                                    <th></th>
-                                    <th></th>
-                                    <th></th>
-                                    <th></th>
-                                    <th></th>
+                                <tr role="row" class="orders">
+                                    <th>营业毛利率(%)</th>
+                                    <foreach name="manage" item="m">
+                                        <th><?php if($m['logged_rate']=="" || $m['logged_rate']==0){echo '';}else{echo $m['logged_rate'].' %'; }?></th>
+                                    </foreach>
                                 </tr>
-                                <tr role="row" class="orders" style="text-align:center;">
-                                    <td>人力资源成本</td>
-                                    <th></th>
-                                    <th></th>
-                                    <th></th>
-                                    <th></th>
-                                    <th></th>
-                                    <th></th>
-                                    <th></th>
-                                    <th></th>
-                                    <th></th>
-                                    <th></th>
+                                <tr role="row" class="orders">
+                                    <th>人力资源成本</th>
+                                    <foreach name="manage" item="m">
+                                        <th><?php if($m['manpower_cost']=="" || $m['manpower_cost']==0){echo '';}else{echo '¥ '.$m['manpower_cost']; }?></th>
+                                    </foreach>
                                 </tr>
-                                <tr role="row" class="orders" style="text-align:center;">
+                                <tr role="row" class="orders">
                                     <th>其他费用</th>
-                                    <th></th>
-                                    <th></th>
-                                    <th></th>
-                                    <th></th>
-                                    <th></th>
-                                    <th></th>
-                                    <th></th>
-                                    <th></th>
-                                    <th></th>
-                                    <th></th>
+                                    <foreach name="manage" item="m">
+                                        <th><?php if($m['other_expenses']=="" || $m['other_expenses']==0){echo '';}else{echo '¥ '.$m['other_expenses']; }?></th>
+                                    </foreach>
                                 </tr>
-                                <tr role="row" class="orders" style="text-align:center;">
-                                    <td>利润总额</td>
-                                    <th></th>
-                                    <th></th>
-                                    <th></th>
-                                    <th></th>
-                                    <th></th>
-                                    <th></th>
-                                    <th></th>
-                                    <th></th>
-                                    <th></th>
-                                    <th></th>
+                                <tr role="row" class="orders">
+                                    <th>利润总额</th>
+                                    <foreach name="manage" item="m">
+                                        <th><?php if($m['total_profit']=="" || $m['total_profit']==0){echo '';}else{echo '¥ '.$m['total_profit']; }?></th>
+                                    </foreach>
                                 </tr>
-                                <tr role="row" class="orders" style="text-align:center;">
-                                    <td>人事费用率</td>
-                                    <th></th>
-                                    <th></th>
-                                    <th></th>
-                                    <th></th>
-                                    <th></th>
-                                    <th></th>
-                                    <th></th>
-                                    <th></th>
-                                    <th></th>
-                                    <th></th>
+                                <tr role="row" class="orders">
+                                    <th>人事费用率(%)</th>
+                                    <foreach name="manage" item="m">
+                                        <th><?php if($m['personnel_cost_rate']=="" || $m['personnel_cost_rate']==0){echo '';}else{echo $m['personnel_cost_rate'].' %'; }?></th>
+                                    </foreach>
+                                </tr>
+                                <tr role="row" class="orders">
+                                    <th>状态</th>
+                                    <foreach name="manage" item="m">
+                                        <th><?php if($m['statu']=="" || $m['statu']==0){echo '';}else{echo $m['statu']; }?></th>
+                                    </foreach>
                                 </tr>
                             </table><br><br>
                         </div><!-- /.box-body -->
@@ -232,7 +181,7 @@
                                     </foreach>
                                 </tr>
                                 <tr role="row" class="orders" style="text-align:center;">
-                                    <td>人事费用率</td>
+                                    <td>人事费用率(%)</td>
                                     <foreach name="personnel_costs" item="pe">
                                         <th><?php if($pe['personnel_costs']=="" || $pe['personnel_costs']==0 || count($quarter)==0){echo '0.00';}else{echo round($pe['personnel_costs'],2);}?> %</th>
                                     </foreach>

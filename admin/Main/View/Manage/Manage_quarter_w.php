@@ -47,127 +47,66 @@
                                 <th style="width:10em;" ><b>市场部</b></th>
                                 <th style="width:10em;" ><b>常规业务中心</b></th>
                                 <th style="width:10em;" ><b>机关部门</b></th>
-                                <th style="width:10em;" ><b>状态</b></th>
-                            </tr>
-                            <tr role="row" class="orders">
-                                <th>员工人数</th>
-                                <th></th>
-                                <th></th>
-                                <th></th>
-                                <th></th>
-                                <th></th>
-                                <th></th>
-                                <th></th>
-                                <th></th>
-                                <th></th>
-                                <th></th>
-                                <th></th>
                             </tr>
 
                             <tr role="row" class="orders">
+                                <th>员工人数</th>
+                                <foreach name="manage" item="m">
+                                    <th><?php if($m['employees_number']=="" || $m['employees_number']==0){echo '';}else{echo $m['employees_number'].'（人）'; }?></th>
+                                </foreach>
+                            </tr>
+                            <tr role="row" class="orders">
                                 <td>营业收入</td>
-                                <th></th>
-                                <th></th>
-                                <th></th>
-                                <th></th>
-                                <th></th>
-                                <th></th>
-                                <th></th>
-                                <th></th>
-                                <th></th>
-                                <th></th>
-                                <th></th>
+                                <foreach name="manage" item="m">
+                                    <th><?php if($m['logged_income']=="" || $m['logged_income']==0){echo '';}else{echo '¥ '.$m['logged_income']; }?></th>
+                                </foreach>
                             </tr>
                             <tr role="row" class="orders">
                                 <td>营业毛利</td>
-                                <th></th>
-                                <th></th>
-                                <th></th>
-                                <th></th>
-                                <th></th>
-                                <th></th>
-                                <th></th>
-                                <th></th>
-                                <th></th>
-                                <th></th>
-                                <th></th>
+                                <foreach name="manage" item="m">
+                                    <th><?php if($m['logged_profit']=="" || $m['logged_profit']==0){echo '';}else{echo '¥ '.$m['logged_profit']; }?></th>
+                                </foreach>
                             </tr>
                             <tr role="row" class="orders">
                                 <td>营业毛利率(%)</td>
-                                <th></th>
-                                <th></th>
-                                <th></th>
-                                <th></th>
-                                <th></th>
-                                <th></th>
-                                <th></th>
-                                <th></th>
-                                <th></th>
-                                <th></th>
-                                <th></th>
+                                <foreach name="manage" item="m">
+                                    <th><?php if($m['logged_rate']=="" || $m['logged_rate']==0){echo '';}else{echo $m['logged_rate'].' %'; }?></th>
+                                </foreach>
                             </tr>
                             <tr role="row" class="orders">
                                 <td>人力资源成本</td>
-                                <th></th>
-                                <th></th>
-                                <th></th>
-                                <th></th>
-                                <th></th>
-                                <th></th>
-                                <th></th>
-                                <th></th>
-                                <th></th>
-                                <th></th>
-                                <th></th>
-                            </tr>
+                                <foreach name="manage" item="m">
+                                    <th><?php if($m['manpower_cost']=="" || $m['manpower_cost']==0){echo '';}else{echo '¥ '.$m['manpower_cost']; }?></th>
+                                </foreach>
                             <tr role="row" class="orders">
                                 <td>其他费用</td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <th></th>
+                                <foreach name="manage" item="m">
+                                    <th><?php if($m['other_expenses']=="" || $m['other_expenses']==0){echo '';}else{echo '¥ '.$m['other_expenses']; }?></th>
+                                </foreach>
                             </tr>
                             <tr role="row" class="orders">
                                 <td>利润总额</td>
-                                <th></th>
-                                <th></th>
-                                <th></th>
-                                <th></th>
-                                <th></th>
-                                <th></th>
-                                <th></th>
-                                <th></th>
-                                <th></th>
-                                <th></th>
-                                <th></th>
+                                <foreach name="manage" item="m">
+                                    <th><?php if($m['total_profit']=="" || $m['total_profit']==0){echo '';}else{echo '¥ '.$m['total_profit']; }?></th>
+                                </foreach>
                             </tr>
                             <tr role="row" class="orders">
-                                <td>人事费用率</td>
-                                <th></th>
-                                <th></th>
-                                <th></th>
-                                <th></th>
-                                <th></th>
-                                <th></th>
-                                <th></th>
-                                <th></th>
-                                <th></th>
-                                <th></th>
-                                <th></th>
+                                <td>人事费用率(%)</td>
+                                <foreach name="manage" item="m">
+                                    <th><?php if($m['personnel_cost_rate']=="" || $m['personnel_cost_rate']==0){echo '';}else{echo $m['personnel_cost_rate'].' %'; }?></th>
+                                </foreach>
+                            </tr>
+                            <tr role="row" class="orders">
+                                <td>状态</td>
+                                <foreach name="manage" item="m">
+                                    <th><?php if($m['statu']=="" || $m['statu']==0){echo '';}else{echo $m['statu']; }?></th>
+                                </foreach>
                             </tr>
                         </table><br><br>
 
 
                         <table class="table table-bordered dataTable fontmini" id="tablecenter1">
                             <tr role="row" class="orders" >
-                                <th>预算季度</th>
                                 <th>部门</th>
                                 <th>员工人数</th>
                                 <th>营业收入</th>
@@ -176,20 +115,11 @@
                                 <th>人力资源成本</th>
                                 <th>其他费用</th>
                                 <th>利润总额</th>
-                                <th>人事费用率</th>
+                                <th>人事费用率(%)</th>
                                 <th>状态</th>
                             </tr>
                             <tr role="row" class="orders">
-                                <td><input type="text" class="form-control yearly" name="datetime"></td>
-                                <form action="{:U('Manage/Manage_quarter_w')}" method="post" id="searchform">
-                                    <td>
-                                        <select name="type" class="form-control">
-                                            <option value ="1">第一季度</option>
-                                            <option value ="2">第二季度</option>
-                                            <option value="3">第三季度</option>
-                                            <option value="4">第四季度</option>
-                                        </select>
-                                    </td>
+                                <form action="{:U('Manage/Manage_save')}" method="post">
                                     <td>
                                         <select name="department" class="form-control">
                                             <option value ="公司">公司</option>
@@ -199,20 +129,20 @@
                                             <option value ="武汉项目部">武汉项目部</option>
                                             <option value ="沈阳项目部">沈阳项目部</option>
                                             <option value="长春项目部">长春项目部</option>
-                                            <option value="市场部(业务)">市场部(业务)</option>
+                                            <option value="市场部">市场部(业务)</option>
                                             <option value ="常规业务中心">常规业务中心</option>
                                             <option value ="机关部门">机关部门</option>
                                         </select>
                                     </td>
-                                    <td><input type="text" name="number" class="form-control"></td>
-                                    <td><input type="text" name="income" class="form-control"></td>
-                                    <td><input type="text" name="profit" class="form-control"></td>
-                                    <td><input type="text" name="rate" class="form-control"></td>
-                                    <td><input type="text" name="cost" class="form-control"></td>
-                                    <td><input type="text" name="other" class="form-control"></td>
-                                    <td><input type="text" name="total" class="form-control"></td>
-                                    <td><input type="text" name="personnel" class="form-control"></td>
-                                    <td><input type="button" value="保存" style="background-color:#00acd6;font-size:1.5em;" class="salary_add_button"></td>
+                                    <td><input type="text" name="number" class="form-control" placeholder="例如：50 或 50.29"></td>
+                                    <td><input type="text" name="income" class="form-control" placeholder="例如：500.23 或 500"></td>
+                                    <td><input type="text" name="profit" class="form-control" placeholder="例如：500.23 或 500"></td>
+                                    <td><input type="text" name="rate" class="form-control" placeholder="例如：25.23 或 25"></td>
+                                    <td><input type="text" name="cost" class="form-control"  placeholder="例如：500.23 或 500"></td>
+                                    <td><input type="text" name="other" class="form-control" placeholder="例如：500.23 或 500"></td>
+                                    <td><input type="text" name="total" class="form-control" placeholder="例如：500.23 或 500"></td>
+                                    <td><input type="text" name="personnel" class="form-control" placeholder="例如：50.23 或 50"></td>
+                                    <td><input type="submit" value="保存" style="background-color:#00acd6;font-size:1.5em;"></td>
                                 </form>
                             </tr>
 

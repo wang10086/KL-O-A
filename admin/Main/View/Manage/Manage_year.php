@@ -3,6 +3,13 @@
     #btn-default_1{
         background-color:#00acd6;
     }
+
+    th{
+        text-align:center;
+    }
+    td input{
+        text-align:center;
+    }
 </style>
 <aside class="right-side">
 
@@ -34,8 +41,8 @@
                     </div><!-- /.box-header -->
                     <div class="box-body">
 
-                        <table class="table table-bordered dataTable fontmini" id="tablecenter">
-                            <tr role="row" class="orders" style="text-align:center;" >
+                        <table class="table table-bordered dataTable fontmini">
+                            <tr role="row" class="orders" >
                                 <th style="width:10em;" ><b>项目</b></th>
                                 <th style="width:10em;" ><b>公司</b></th>
                                 <th style="width:10em;" ><b>京区业务中心</b></th>
@@ -48,111 +55,59 @@
                                 <th style="width:10em;" ><b>常规业务中心</b></th>
                                 <th style="width:10em;" ><b>机关部门</b></th>
                             </tr>
-                            <tr role="row" class="orders" style="text-align:center;">
+                            <tr role="row" class="orders">
                                 <th>员工人数</th>
-                                <th></th>
-                                <th></th>
-                                <th></th>
-                                <th></th>
-                                <th></th>
-                                <th></th>
-                                <th></th>
-                                <th></th>
-                                <th></th>
-                                <th></th>
+                                <foreach name="manage" item="m">
+                                    <th><?php if($m['employees_number']=="" || $m['employees_number']==0){echo '';}else{echo $m['employees_number'].'（人）'; }?></th>
+                                </foreach>
                             </tr>
-
-                            <tr role="row" class="orders" style="text-align:center;">
-                                <td>营业收入</td>
-                                <th></th>
-                                <th></th>
-                                <th></th>
-                                <th></th>
-                                <th></th>
-                                <th></th>
-                                <th></th>
-                                <th></th>
-                                <th></th>
-                                <th></th>
+                            <tr role="row" class="orders">
+                                <th>营业收入</th>
+                                <foreach name="manage" item="m">
+                                    <th><?php if($m['logged_income']=="" || $m['logged_income']==0){echo '';}else{echo '¥ '.$m['logged_income']; }?></th>
+                                </foreach>
                             </tr>
-                            <tr role="row" class="orders" style="text-align:center;">
-                                <td>营业毛利</td>
-                                <th></th>
-                                <th></th>
-                                <th></th>
-                                <th></th>
-                                <th></th>
-                                <th></th>
-                                <th></th>
-                                <th></th>
-                                <th></th>
-                                <th></th>
+                            <tr role="row" class="orders">
+                                <th>营业毛利</th>
+                                <foreach name="manage" item="m">
+                                    <th><?php if($m['logged_profit']=="" || $m['logged_profit']==0){echo '';}else{echo '¥ '.$m['logged_profit']; }?></th>
+                                </foreach>
                             </tr>
-                            <tr role="row" class="orders" style="text-align:center;">
-                                <td>营业毛利率(%)</td>
-                                <th></th>
-                                <th></th>
-                                <th></th>
-                                <th></th>
-                                <th></th>
-                                <th></th>
-                                <th></th>
-                                <th></th>
-                                <th></th>
-                                <th></th>
+                            <tr role="row" class="orders">
+                                <th>营业毛利率(%)</th>
+                                <foreach name="manage" item="m">
+                                    <th><?php if($m['logged_rate']=="" || $m['logged_rate']==0){echo '';}else{echo $m['logged_rate'].' %'; }?></th>
+                                </foreach>
                             </tr>
-                            <tr role="row" class="orders" style="text-align:center;">
-                                <td>人力资源成本</td>
-                                <th></th>
-                                <th></th>
-                                <th></th>
-                                <th></th>
-                                <th></th>
-                                <th></th>
-                                <th></th>
-                                <th></th>
-                                <th></th>
-                                <th></th>
-
+                            <tr role="row" class="orders">
+                                <th>人力资源成本</th>
+                                <foreach name="manage" item="m">
+                                    <th><?php if($m['manpower_cost']=="" || $m['manpower_cost']==0){echo '';}else{echo '¥ '.$m['manpower_cost']; }?></th>
+                                </foreach>
                             </tr>
-                            <tr role="row" class="orders" style="text-align:center;">
-                                <td>其他费用</td>
-                                <td><?php echo $n['employees_sum'];?></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
+                            <tr role="row" class="orders">
+                                <th>其他费用</th>
+                                <foreach name="manage" item="m">
+                                    <th><?php if($m['other_expenses']=="" || $m['other_expenses']==0){echo '';}else{echo '¥ '.$m['other_expenses']; }?></th>
+                                </foreach>
                             </tr>
-                            <tr role="row" class="orders" style="text-align:center;">
-                                <td>利润总额</td>
-                                <th></th>
-                                <th></th>
-                                <th></th>
-                                <th></th>
-                                <th></th>
-                                <th></th>
-                                <th></th>
-                                <th></th>
-                                <th></th>
-                                <th></th>
+                            <tr role="row" class="orders">
+                                <th>利润总额</th>
+                                <foreach name="manage" item="m">
+                                    <th><?php if($m['total_profit']=="" || $m['total_profit']==0){echo '';}else{echo '¥ '.$m['total_profit']; }?></th>
+                                </foreach>
                             </tr>
-                            <tr role="row" class="orders" style="text-align:center;">
-                                <td>人事费用率</td>
-                                <th></th>
-                                <th></th>
-                                <th></th>
-                                <th></th>
-                                <th></th>
-                                <th></th>
-                                <th></th>
-                                <th></th>
-                                <th></th>
-                                <th></th>
+                            <tr role="row" class="orders">
+                                <th>人事费用率(%)</th>
+                                <foreach name="manage" item="m">
+                                    <th><?php if($m['personnel_cost_rate']=="" || $m['personnel_cost_rate']==0){echo '';}else{echo $m['personnel_cost_rate'].' %'; }?></th>
+                                </foreach>
+                            </tr>
+                            <tr role="row" class="orders">
+                                <th>状态</th>
+                                <foreach name="manage" item="m">
+                                    <th><?php if($m['statu']=="" || $m['statu']==0){echo '';}else{echo $m['statu']; }?></th>
+                                </foreach>
                             </tr>
                         </table><br><br>
 
@@ -182,32 +137,32 @@
                                 <tr role="row" class="orders" style="text-align:center;">
                                     <th>员工人数</th>
                                     <foreach name="yea_report" item="yea">
-                                        <th><?php if($yea['sum']=="" || $yea['sum']==0 || $yea_report[0]['sum']==0){echo '0';}else{echo $yea['sum']; }?>（人)</th>
+                                        <th><?php if($yea['sum']=="" || $yea['sum']==0){echo '0';}else{echo $yea['sum']; }?>（人)</th>
                                     </foreach>
                                 </tr>
 
                                 <tr role="row" class="orders" style="text-align:center;">
                                     <td>营业收入</td>
                                     <foreach name="profit" item="pro">
-                                        <th>¥ <?php if($pro['yearzsr']=="" || $pro['yearzsr']==0 || $yea_report[0]['sum']==0){echo '0.00';}else{echo $pro['yearzsr']; }?></th>
+                                        <th>¥ <?php if($pro['yearzsr']=="" || $pro['yearzsr']==0){echo '0.00';}else{echo $pro['yearzsr']; }?></th>
                                     </foreach>
                                 </tr>
                                 <tr role="row" class="orders" style="text-align:center;">
                                     <td>营业毛利</td>
                                     <foreach name="profit" item="pr">
-                                        <th>¥ <?php if($pr['yearzml']=="" || $pr['yearzml']==0 || $yea_report[0]['sum']==0){echo '0.00';}else{echo $pr['yearzml']; }?></th>
+                                        <th>¥ <?php if($pr['yearzml']=="" || $pr['yearzml']==0){echo '0.00';}else{echo $pr['yearzml']; }?></th>
                                     </foreach>
                                 </tr>
                                 <tr role="row" class="orders" style="text-align:center;">
                                     <td>营业毛利率(%)</td>
                                     <foreach name="profit" item="p">
-                                        <th><?php if($p['yearmll']=="" || $p['yearmll']==0 || $yea_report[0]['sum']==0){echo '0.00';}else{echo $p['yearmll']; }?> %</th>
+                                        <th><?php if($p['yearmll']=="" || $p['yearmll']==0){echo '0.00';}else{echo $p['yearmll']; }?> %</th>
                                     </foreach>
                                 </tr>
                                 <tr role="row" class="orders" style="text-align:center;">
                                     <td>人力资源成本</td>
                                     <foreach name="yea_report" item="ye">
-                                        <th>¥ <?php if($ye['money']=="" || $ye['money']==0 || $yea_report[0]['sum']==0){echo '0.00';}else{echo $ye['money'];}?></th>
+                                        <th>¥ <?php if($ye['money']=="" || $ye['money']==0){echo '0.00';}else{echo $ye['money'];}?></th>
                                     </foreach>
 
                                 </tr>
@@ -227,13 +182,13 @@
                                 <tr role="row" class="orders" style="text-align:center;">
                                     <td>利润总额</td>
                                     <foreach name="count_profit" item="count">
-                                        <th>¥ <?php if($count['yearprofit']=="" || $count['yearprofit']==0 || $yea_report[0]['sum']==0){echo '0.00';}else{echo $count['yearprofit'];}?></th>
+                                        <th>¥ <?php if($count['yearprofit']=="" || $count['yearprofit']==0){echo '0.00';}else{echo $count['yearprofit'];}?></th>
                                     </foreach>
                                 </tr>
                                 <tr role="row" class="orders" style="text-align:center;">
-                                    <td>人事费用率</td>
+                                    <td>人事费用率(%)</td>
                                     <foreach name="count_profit" item="c">
-                                        <th><?php if($c['personnel']=="" || $c['personnel']==0 || $yea_report[0]['sum']==0){echo '0.00';}else{echo $c['personnel'];}?> %</th>
+                                        <th><?php if($c['personnel']=="" || $c['personnel']==0){echo '0.00';}else{echo $c['personnel'];}?> %</th>
                                     </foreach>
                                 </tr>
                             </table><br><br>

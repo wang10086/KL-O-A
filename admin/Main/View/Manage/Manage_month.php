@@ -109,7 +109,7 @@
 
                             </tr>
                             <tr role="row" class="orders" style="text-align:center;">
-                                <th>人事费用率</th>
+                                <th>人事费用率(%)</th>
                                 <foreach name="human_affairs" item="aff">
                                     <th><?php if($aff['human_affairs']=="" || $aff['human_affairs']==0 || $number[0]['sum']==0){echo '0.00';}else{echo $aff['human_affairs'];}?> %</th>
                                 </foreach>

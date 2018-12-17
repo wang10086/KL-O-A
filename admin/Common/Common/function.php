@@ -3886,7 +3886,7 @@ function code_number($number,$style){//数字验证
  * sql_query 查询数据
  * $status 1 查询 2添加 3删除  4 修改
  * $field 查询字段（修改时作修改的字段）  $table 查询表 $where 查询条件
- * $order 1倒叙 2正常  $type (1 查询一条  默认查询所有)
+ * $order 1倒叙 2正常  $type (1 查询一条  2查询所有)
  */
 
 function sql_query($status,$field,$table,$where,$order,$type){

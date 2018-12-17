@@ -72,13 +72,10 @@ class ManageController extends ChartController {
         $personnel_costs        = $mod->personnel_costs($quarter,$profits);//人事费用率
 
         // 季度预算报表
-//        $budget_profits         = $this->profit_r($year1,$quart,0);//月份循环季度数据 利润
-//        $budget_manage          = $mod->manage_quarter($quarter,$budget_profits);//季度利润总额
-//        $budget_personnel       = $mod->personnel_costs($quarter,$budget_profits);//人事费用率
-//        // 季度预算报表
-//        $this->budget_profits   = $budget_profits;//月份循环季度数据 利润
-//        $this->budget_manage    = $budget_manage;//季度利润总额
-//        $this->budget_personnel = $budget_personnel;//人事费用率
+        $datetime['year']       = $year1;
+        $datetime['type']       = $mod->quarter_month1($quart);//获取季度预算
+        $manage                 = $mod->Manage_display($datetime,4);
+        $this->manage           = $manage;//季度预算
 
         // 季度经营报表
         $this->personnel_costs  = $personnel_costs;//人事费用率
@@ -163,7 +160,7 @@ class ManageController extends ChartController {
      * $post 2 加  1 减年
      */
     public function Manage_year(){
-        $year               = trim(I('year',date('Y')));
+        $year               = trim(I('year'));
         $post               = trim(I('post'));
         $mod                = D('Manage');
         $month              = date('m');
@@ -174,13 +171,11 @@ class ManageController extends ChartController {
         $profit             = $mod->profit_w($money);//年 收入 毛利 毛利率
         $count_profit       = $mod->count_profit($yea_report,$profit);//年利润总额 年人事费用
 
-//        //年度预算报表
-//        $budget_money       = $this->business($year1,$month,0);//年 monthzsr 收入合计   monthzml 毛利合计  monthmll 毛利率
-//        $budget_profit      = $mod->profit_w($budget_money);//年 收入 毛利 毛利率
-//        $budget_count       = $mod->count_profit($yea_report,$budget_profit);//年利润总额 年人事费用
-//        //年度预算报表
-//        $this->budget_count = $budget_count;//年人员人力资源成本 收入 毛利 毛利率
-//        $this->budget_profit= $budget_profit;//收入 毛利 毛利率
+        //年度预算报表
+        $where['year']      = $year1;
+        $where['type']      = 5;
+        $manage             = $mod->Manage_display($where,4);
+        $this->manage       = $manage;//年度预算
 
         //年度经营报表
         $this->count_profit = $count_profit;//年人员人力资源成本 收入 毛利 毛利率
@@ -192,22 +187,66 @@ class ManageController extends ChartController {
     }
 
     /**
-     * Manage_input 年数据录入
+     * Manage_input 年数据显示
      */
     public function Manage_input(){
-//        print_r(I());die;
-
+        $mod                = D('Manage');
+        $date_Y['year']     = date('Y');
+        $date_Y['type']     = 5;
+        $datetime           = $mod->quarter_year($date_Y);//获取年度预算
+        $manage             = $mod->Manage_display($datetime,3);
+        $this->manage       = $manage;
         $this->display();
-
     }
 
     /**
-     * Manage_input 季度数据录入
+     * Manage_input 年数据录入与修改
+     * $mod->quarter_month 自动获取年
+     */
+    public function Manage_year_w(){
+        $mod                            = D('Manage');
+        $date_Y['year']                 = date('Y');
+        $datetime                       = $mod->quarter_year($date_Y);//获取年度预算
+        $datetime['type']               = 5;
+        $statu                          = $mod->manage_input_statu('manage_input',$datetime);
+        if($statu==1){
+            $this->success('数据更新成功!',U('Manage/Manage_input'));die;
+        }elseif($statu==2){
+            $this->error('数据更新失败!',U('Manage/Manage_input'));die;
+        }elseif($statu==3){
+            $this->error('请驳回后更改数据!',U('Manage/Manage_input'));die;
+        }
+    }
+
+    /**
+     * Manage_input 季度数据显示
+     * $mod->quarter_month 自动获取季度
      */
     public function Manage_quarter_w(){
-
+        $mod                = D('Manage');
+        $date_Y['year']     = date('Y');
+        $datetime           = $mod->quarter_month($date_Y);//获取季度预算
+        $manage             = $mod->Manage_display($datetime,3);
+        $this->manage       = $manage;
         $this->display();
+    }
 
+    /**
+     * Manage_input 季度数据录入与修改
+     * $mod->quarter_month 自动获取季度
+     */
+    public function Manage_save(){
+        $mod                            = D('Manage');
+        $date_Y['year']                 = date('Y');
+        $datetime                       = $mod->quarter_month($date_Y);//获取季度预算
+        $statu                          = $mod->manage_input_statu('manage_input',$datetime);
+        if($statu==1){
+            $this->success('数据更新成功!',U('Manage/Manage_quarter_w'));die;
+        }elseif($statu==2){
+            $this->error('数据更新失败!',U('Manage/Manage_quarter_w'));die;
+        }elseif($statu==3){
+            $this->error('请驳回后更改数据!',U('Manage/Manage_quarter_w'));die;
+        }
     }
 
  }
