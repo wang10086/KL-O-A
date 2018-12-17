@@ -645,7 +645,7 @@ class FinanceController extends BaseController {
         $contract_amount        = M('contract')->where(array('op_id'=>$opid,'status'=>1))->getField('contract_amount');
         //地接团结算不受汇款限制
         $dijie_opids            = array_filter(M('op')->getField('dijie_opid',true));
-        if ($yihuikuan > $contract_amount || $yihuikuan == $contract_amount || in_array($opid,$dijie_opids)){
+        if ($yihuikuan >= $contract_amount || in_array($opid,$dijie_opids)){
             $this->yihuikuan    = 1;
         }
 
@@ -1470,18 +1470,23 @@ class FinanceController extends BaseController {
                         $url     = U('Finance/audit_baoxiao',array('id'=>$bx_id,'audit_usertype'=>$audit_usertype));
                         $user    = '['.$cw_audit_userid.']';
                         send_msg($uid,$title,$content,$url,$user,'');
-                    }else{
-                        //发送系统消息 审核不通过(报销人)
-                        $uid     = cookie('userid');
-                        $title   = '您有来自['.$audit_info['ys_audit_username'].']的报销单审核反馈!';
-                        $content = '报销单号：'.$bxd_id.'，报销金额：'.$bx_info['sum']."，<hr />预算审核人审核意见：<span class='red'>".$zhuangtai.'；'.$info['ys_remark']."</span>";
-                        $url     = U('Finance/baoxiaodan_info',array('id'=>$bx_id));
-                        $user    = '['.$bx_info['bx_user_id'].']';
-                        send_msg($uid,$title,$content,$url,$user,'');
 
+                        $bxr_content = '报销单号：'.$bxd_id.'，报销金额：'.$bx_info['sum']."，<hr />预算审核人审核意见：<span class='red'>".$zhuangtai.'；'.$info['ys_remark']."</span>请及时打印报销单,并附上相关票据交至财务部审核!";
+                    }else{
+
+                        $bxr_content = '报销单号：'.$bxd_id.'，报销金额：'.$bx_info['sum']."，<hr />预算审核人审核意见：<span class='red'>".$zhuangtai.'；'.$info['ys_remark']."</span>";
                         //保存审核结果
                         D('Finance')->save_bxd_audit($bx_id,$info['ys_audit_status']);
                     }
+
+                    //发送系统消息过(报销人)
+                    $uid     = cookie('userid');
+                    $title   = '您有来自['.$audit_info['ys_audit_username'].']的报销单审核反馈!';
+                    $content = $bxr_content;
+                    $url     = U('Finance/baoxiaodan_info',array('id'=>$bx_id));
+                    $user    = '['.$bx_info['bx_user_id'].']';
+                    send_msg($uid,$title,$content,$url,$user,'');
+
                     $record = array();
                     $record['bill_id']  = $bxd_id;
                     $record['type']     = 2;
