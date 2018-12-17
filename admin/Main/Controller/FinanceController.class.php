@@ -1471,7 +1471,7 @@ class FinanceController extends BaseController {
                         $user    = '['.$cw_audit_userid.']';
                         send_msg($uid,$title,$content,$url,$user,'');
 
-                        $bxr_content = '报销单号：'.$bxd_id.'，报销金额：'.$bx_info['sum']."，<hr />预算审核人审核意见：<span class='red'>".$zhuangtai.'；'.$info['ys_remark']."</span>请及时打印报销单,并附上相关票据交至财务部审核!";
+                        $bxr_content = '报销单号：'.$bxd_id.'，报销金额：'.$bx_info['sum']."，<hr />预算审核人审核意见：<span class='red'>".$zhuangtai.'；'.$info['ys_remark']."</span>；请及时打印报销单,并附上相关票据交至财务部审核!";
                     }else{
 
                         $bxr_content = '报销单号：'.$bxd_id.'，报销金额：'.$bx_info['sum']."，<hr />预算审核人审核意见：<span class='red'>".$zhuangtai.'；'.$info['ys_remark']."</span>";
@@ -1756,6 +1756,12 @@ class FinanceController extends BaseController {
         $baoxiao            = M('baoxiao')->where(array('id'=>$id))->find();
         $field              = 'b.*,c.title';
         $bx_lists           = M()->table('__BAOXIAO_DETAIL__ as b')->join('__OP_COSTACC__ as c on c.id=b.costacc_id','left')->where(array('b.bx_id'=>$id))->field($field)->select();
+        foreach ($bx_lists as $k=>$v){
+            $where                  = array();
+            $where['costacc_id']    = $v['costacc_id'];
+            $jkd_ids                = M('jiekuan_detail')->where($where)->getField('jkd_id',true);
+            $bx_lists[$k]['jkd_id'] = implode(',',array_unique($jkd_ids));
+        }
 
         $audit_userinfo     = M('baoxiao_audit')->where(array('bx_id'=>$id))->find();
         if (!$audit_userinfo){ $this->error('获取信息失败'); };
