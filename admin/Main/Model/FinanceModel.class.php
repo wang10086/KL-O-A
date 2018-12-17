@@ -18,9 +18,18 @@ class FinanceModel extends Model{
             $jkd_ids    = M('jiekuan_detail')->where(array('costacc_id'=>$v))->getField('jkd_id',true);
             $arr[]      = $jkd_ids;
         }
-        $ids            = implode(',',array_unique(array_reduce($arr, 'array_merge', array())));
+
+        $result         = array();
+        foreach ($arr as $v){
+            foreach ($v as $vv){
+                $result[] = $vv;
+            }
+        }
+
+        $ids            = implode(',',array_unique($result));
         return $ids;
     }
+
 
     /**
      * 获取操作记录

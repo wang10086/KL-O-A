@@ -4,13 +4,17 @@
         <table class="table table-bordered dataTable fontmini" id="tablelist" style="margin-top:10px;">
             <tr role="row" class="orders" >
                 <th class="sorting" width="150" data="title">费用项</th>
+                <th class="sorting" width="150" data="group_id">团号</th>
+                <th class="sorting" width="150" data="jkd_id">借款单号</th>
                 <th class="sorting" width="150" data="total">合计</th>
-                <th class="sorting" width="150" data="yjk">报销金额</th>
+                <th class="sorting" width="150" data="yjk">应报销金额</th>
                 <th class="sorting" width="150" data="sjk">本次报销金额</th>
             </tr>
             <foreach name="bx_lists" item="row">
                 <tr>
                     <td>{$row.title}</td>
+                    <td>{$row.group_id}</td>
+                    <td>{$row.jkd_id}</td>
                     <td>{$row.ys}</td>
                     <td>{$row.ybx}</td>
                     <td <?php if ($row['ybx']>$row['sbx']){ echo "class='red'"; } ?>>{$row.sbx}</td>

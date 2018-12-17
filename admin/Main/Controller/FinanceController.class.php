@@ -1773,6 +1773,12 @@ class FinanceController extends BaseController {
         $id             = I('id');
         $baoxiao        = M()->table('__BAOXIAO__ as b')->join('__BAOXIAO_AUDIT__ as a on a.bx_id=b.id','left')->where(array('b.id'=>$id))->find();
         $bx_lists       = M()->table('__BAOXIAO_DETAIL__ as b')->join('__OP_COSTACC__ as c on c.id=b.costacc_id','left')->where(array('b.bx_id'=>$id))->select();
+        foreach ($bx_lists as $k=>$v){
+            $where                  = array();
+            $where['costacc_id']    = $v['costacc_id'];
+            $jkd_ids                = M('jiekuan_detail')->where($where)->getField('jkd_id',true);
+            $bx_lists[$k]['jkd_id'] = implode(',',array_unique($jkd_ids));
+        }
 
         $this->baoxiao  = $baoxiao;
         $this->bx_lists = $bx_lists;
