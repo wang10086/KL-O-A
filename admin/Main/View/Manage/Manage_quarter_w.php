@@ -99,7 +99,7 @@
                             <tr role="row" class="orders">
                                 <td>状态</td>
                                 <foreach name="manage" item="m">
-                                    <th><?php if($m['statu']=="" || $m['statu']==0){echo '';}else{echo $m['statu']; }?></th>
+                                    <th><a><b><?php if($m['statu']=="" || $m['statu']==0){echo '';}elseif($m['statu']==1){echo "待提交审核"; }elseif($m['statu']==2){echo "待提交批准"; }elseif($m['statu']==3){echo "待批准"; }?></b></a></th>
                                 </foreach>
                             </tr>
                         </table><br><br>
@@ -146,9 +146,25 @@
                                 </form>
                             </tr>
 
-                        </table><br><br>
+                        </table>
 
+                        <div style="margin-top:2em;text-align:center;" id="shr_qianzi">
 
+                            <form action="{:U('Manage/quarter_submit')}" method="post" style="<?php if($type==1){echo "";}else{echo "display:none;";}?>">
+                                <p style="color:red;">(请确认自己部门数据预算后点击 <b>"提交审核"</b>)</p>
+                                <input type="hidden" name="status" value="1">
+                                <input type="submit" value="提交审核" class="btn btn-info" style="width:10em;">
+                            </form>
+                            <div style="<?php if($type==2){echo "";}else{echo "display:none;";}?>">
+                                <a href="{:U('Manage/quarter_paprova',array('status'=>2))}" class="btn btn-info" style="width:10em;">提交批准</a>
+                                <a href="{:U('Manage/quarter_paprova',array('type'=>1))}"  class="btn btn-info" style="width:10em;">驳回</a>
+                            </div>
+                            <div style="<?php if($type==3){echo "";}else{echo "display:none;";}?>">
+                                <a href="{:U('Manage/quarter_approve',array('status'=>3))}" class="btn btn-info" style="width:10em;">批准</a>
+                                <a href="{:U('Manage/quarter_approve',array('type'=>1))}"  class="btn btn-info" style="width:10em;">驳回</a>
+                            </div>
+
+                        </div><br><br>
 
                     </div><!-- /.box-body -->
 

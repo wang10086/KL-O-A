@@ -60,9 +60,9 @@ class ManageController extends ChartController {
      * $post 2 加  1 减年
      */
     public function Manage_quarter(){
-        $year                   = trim(I('year',date('Y')));//年
-        $post                   = trim(I('post'));//加减年
-        $quart                  = trim(I('quart',date('m')));//季度
+        $year                   = (int)trim(I('year',date('Y')));//年
+        $post                   = (int)trim(I('post'));//加减年
+        $quart                  = (int)trim(I('quart',date('m')));//季度
         $mod                    = D('Manage');
         // 季度经营报表
         $year1                  = $mod->manageyear($year,$post);//判断加减年
@@ -122,8 +122,7 @@ class ManageController extends ChartController {
                 $maoli                              = $val['monthzml']/$val['monthzsr'];
                 $month_r[$key]['monthmll']          = round(($maoli*100),2);
             }
-            ksort($month_r);
-            return $month_r;
+            ksort($month_r);return $month_r;
         }else{
             for($n = 2;$n > $i;$i++){
                 $month                              = $quart-$i;
@@ -133,8 +132,7 @@ class ManageController extends ChartController {
                        $maoli                       = $val['monthzml']/$val['monthzsr'];
                        $month_r[$key]['monthmll']   = round($maoli*100,2);
                    }
-                   ksort($month_r);
-                   return $month_r;
+                   ksort($month_r);return $month_r;
                }else{
                     $count                           = $this->business($year1,$month,1); //季度 人数和 人力资源成本
                     $profit                          = $mod->profit($count);//收入 毛利 毛利率
@@ -167,7 +165,7 @@ class ManageController extends ChartController {
         //年度经营报表
         $year1              = $mod->manageyear($year,$post);//判断加减年
         $yea_report         = $mod->yea_report($year1,$post);//年人员数量  年人员人力资源成本
-        $money              = $this->business($year1,$month,1);//年 monthzsr 收入合计   monthzml 毛利合计  monthmll 毛利率
+        $money              = $this->business($year1,$month,1);//年 monthzsr 收入合计 monthzml 毛利合计 monthmll 毛利率
         $profit             = $mod->profit_w($money);//年 收入 毛利 毛利率
         $count_profit       = $mod->count_profit($yea_report,$profit);//年利润总额 年人事费用
 
@@ -191,10 +189,12 @@ class ManageController extends ChartController {
      */
     public function Manage_input(){
         $mod                = D('Manage');
-        $date_Y['year']     = date('Y');
+        $date_Y['year']     = (int)date('Y');
         $date_Y['type']     = 5;
         $datetime           = $mod->quarter_year($date_Y);//获取年度预算
-        $manage             = $mod->Manage_display($datetime,3);
+        $manage             = $mod->Manage_display($datetime,4);
+        $type               = $mod->Manage_type(1,5);//年度提交状态
+        $this->type         = $type;//年度提交状态
         $this->manage       = $manage;
         $this->display();
     }
@@ -205,7 +205,7 @@ class ManageController extends ChartController {
      */
     public function Manage_year_w(){
         $mod                            = D('Manage');
-        $date_Y['year']                 = date('Y');
+        $date_Y['year']                 = (int)date('Y');
         $datetime                       = $mod->quarter_year($date_Y);//获取年度预算
         $datetime['type']               = 5;
         $statu                          = $mod->manage_input_statu('manage_input',$datetime);
@@ -226,8 +226,10 @@ class ManageController extends ChartController {
         $mod                = D('Manage');
         $date_Y['year']     = date('Y');
         $datetime           = $mod->quarter_month($date_Y);//获取季度预算
-        $manage             = $mod->Manage_display($datetime,3);
+        $manage             = $mod->Manage_display($datetime,4);//季度数据
+        $type               = $mod->Manage_type(2,5);//季度提交状态
         $this->manage       = $manage;
+        $this->type         = $type;//季度提交状态
         $this->display();
     }
 
@@ -245,8 +247,103 @@ class ManageController extends ChartController {
         }elseif($statu==2){
             $this->error('数据更新失败!',U('Manage/Manage_quarter_w'));die;
         }elseif($statu==3){
-            $this->error('请驳回后更改数据!',U('Manage/Manage_quarter_w'));die;
+            $this->error('当前数据您无权限修改!',U('Manage/Manage_quarter_w'));die;
         }
+    }
+
+    /**
+     * quarter_submit 季度提交审批
+     * status 1 提交审批
+     */
+    public function quarter_submit(){
+        if(trim($_POST['status']) == 1){
+            $mod    = D('Manage');
+            $manage = $mod->quarter_submit1();//季度提交审核
+        }else{
+            $manage = 3;
+        }
+        if($manage==1){
+            $this->success('数据提交成功!');
+        }elseif($manage==2){
+            $this->success('数据提交成功!');
+        }elseif($manage==3){
+            $this->error('数据提交失败!');
+        }
+    }
+    /**
+     * quarter_paprova 季度提交批准
+     * $m 路径比对
+     * $status 2 提交批准 $type 1 驳回
+     */
+    public function quarter_paprova(){
+        $m              = trim($_GET['m']);
+        $status         = trim($_GET['status']);
+        $type           = trim($_GET['type']);
+        $mod            = D('Manage');
+        if($m=='Main' && is_numeric($status) && $status==2){
+        }elseif($m=='Main' && is_numeric($type) && $type==1){
+        }else{$this->error('数据提交失败!');die;}
+        $manage         = $mod->quarter_paprova1($status,$type,2,3);//季度提交审
+        $this->error($manage);
+    }
+    /**
+     * quarter_approve 季度批准
+     * $status 3 批准 $type 1 驳回
+     */
+    public function quarter_approve(){
+        $m              = trim($_GET['m']);
+        $status         = trim($_GET['status']);
+        $type           = trim($_GET['type']);
+        $mod            = D('Manage');
+        if($m=='Main' && is_numeric($status) && $status==3){
+        }elseif($m=='Main' && is_numeric($type) && $type==1){
+        }else{$this->error('数据提交失败!');die;}
+        $manage         = $mod->quarter_paprova1($status,$type,3,4);//季度提交审
+        $this->error($manage);
+    }
+    /**
+     * year_submit 年度提交审批
+     * status 1 提交审批
+     */
+    public function year_submit(){
+        if(trim($_POST['status']) == 1){
+            $mod    = D('Manage');
+            $manage = $mod->year_submit1();//年度提交审核
+        }else{
+            $manage = 3;
+        }
+        if($manage==1){
+            $this->success('数据提交成功!');
+        }elseif($manage==2){
+            $this->success('数据提交成功!');
+        }elseif($manage==3){
+            $this->error('数据提交失败!');
+        }
+    }
+    /**
+     * year_paprova 年度提交批准
+     * $status 2 提交批准 $type 1 驳回
+     */
+    public function year_paprova(){
+        $m              = trim($_GET['m']);
+        $status         = trim($_GET['status']);
+        $type           = trim($_GET['type']);
+        $mod            = D('Manage');
+        if($m=='Main' && is_numeric($status) && $status==2){
+        }elseif($m=='Main' && is_numeric($type) && $type==1){
+        }else{$this->error('数据提交失败!');die;}
+        $manage         = $mod->year_paprova1($status,$type,2,3);//年度提交审
+        $this->error($manage);
+
+        print_r(I());die;
+    }
+    /**
+     * year_approve 年度批准
+     * $status 3 批准 $type 1 驳回
+     *
+     */
+    public function year_approve(){
+        print_r(I());die;
     }
 
  }

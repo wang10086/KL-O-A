@@ -189,16 +189,16 @@ class ManageModel extends Model{
 
             if(is_numeric($post) && $post==1){
 
-                $year       = $year-1;
+                $year       = (int)$year-1;
 
             }elseif(is_numeric($post) && $post==2){
 
-                $year       = $year+1;
+                $year       = (int)$year+1;
             }
 
         }else{ //没有就默认
 
-            $year           = date('Y');
+            $year           = (int)date('Y');
         }
         return $year;
     }
@@ -300,7 +300,7 @@ class ManageModel extends Model{
             for($n = 3;$n > $i;$i++){
                 $month                           = $quarter-$i;
                 if($month==3 || $month==6 || $month==9 || $month==12){
-                    $count_sum = count($company);
+                    $count_sum                   = count($company);
                     foreach($company as $ke => $va){$company[$ke]['sum'] = round($va['sum']/$count_sum,2);}
                     return $company;
                 }else{
@@ -349,7 +349,6 @@ class ManageModel extends Model{
 
             //人事费用率 = 季度总毛利-人力资源成本
             $personnel_costs[$key]['personnel_costs'] = round(($val['money']/$profits[$key]['monthzsr'])*100,2);
-
         }
         return $personnel_costs;
     }
@@ -429,13 +428,10 @@ class ManageModel extends Model{
         $arr                                         =  C('department');//部门
         $departmen                                   = array();
         $sum                                         = 0;
-
         foreach($arr as $key =>$val){ //部门循环
             $key                                     = $key + 1;
             $departmen[$key]['department']['depname']= $val;
-
             foreach($money as $k => $v){ //部门年收入 毛利 利率
-
                 if($v['depname']==$val){ $departmen[$key]= $v;}//每个部门年收入 毛利 利率
                 if($k=='heji'){$departmen[0] = $v;}       //总收入 毛利 利率
             }
@@ -506,11 +502,11 @@ class ManageModel extends Model{
                 $date_Y['type']    = 4;
                 return $date_Y;break;
             case 11:
-                $date_Y['year']     = $date_Y['year']+1;
+                $date_Y['year']    = $date_Y['year']+1;
                 $date_Y['type']    = 1;
                 return $date_Y;break;
             case 12:
-                $date_Y['year']     = $date_Y['year']+1;
+                $date_Y['year']    = $date_Y['year']+1;
                 $date_Y['type']    = 1;
                 return $date_Y;break;
         }
@@ -569,7 +565,7 @@ class ManageModel extends Model{
      * $time_M 月
      */
     public function quarter_year($date_Y){
-        $time_M                  = date('m');
+        $time_M                  = (int)date('m');
         switch ($time_M)
         {
             case 1:
@@ -599,12 +595,10 @@ class ManageModel extends Model{
     public  function manage_input_statu($table,$datetime){
         $add['account_id']              = $_SESSION['userid'];//用户uid
         $add['datetime']                = $datetime['year'];//年
-        $add['statu']                   = 1;
         $add['type']                    = $datetime['type'];
         $add['logged_department']       = trim(I('department'));//部门
         $count                          = M($table)->where($add)->find();
         if(!$count){
-            if($count['statu']>1){return 3;die;}
             $add['createtime']          = time(); //时间
             $add['username']            = $_SESSION['name'];//用户名
             $add['employees_number']    = trim(I('number'));//员工人数
@@ -618,6 +612,7 @@ class ManageModel extends Model{
             $add_input                  = M($table)->add($add);
             if($add_input){return 1;die;}else{return 2;die;}
         }else{
+            if($count['statu']>1){return 3;die;}
             $save['createtime']         = time(); //时间
             $save['username']           = $_SESSION['name'];//用户名
             $save['employees_number']   = trim(I('number'));//员工人数
@@ -639,27 +634,14 @@ class ManageModel extends Model{
      */
     public function Manage_display($datetime,$statu){
 
-        $where['datetime']                      = $datetime['year'];//年
+        $where['datetime']                      = array('eq',$datetime['year']);//年
 
-        $where['type']                          = $datetime['type'];
+        $where['type']                          = array('eq',$datetime['type']);
 
         $department                             = C('department1');
 
-        $sta                                    = M('manage_input')->where($where)->find();//批准通过的数据
+        $where['statu']                         = array('lt',$statu);
 
-        if(!$sta){
-
-            $where['statu']                     = $statu-1;
-
-            $sta2                               = M('manage_input')->where($where)->find();//批准通过的数据
-
-            if(!$sta2){
-
-                $where['statu']                 = $statu-2;
-
-                $sta2                           = M('manage_input')->where($where)->find();//批准通过的数据
-            }
-        }
         foreach($department as $key => $val){
 
             $where['logged_department']         = $val;
@@ -683,8 +665,192 @@ class ManageModel extends Model{
         }elseif($type==2){
 
             return M($table)->where($where)->select();
+
+        }elseif($type==3){
+
+            return M($table)->where($where)->count();
         }
     }
+
+    /**
+     * Manage_type 提交状态
+     * 1 待提交审核 2 待提交批准 3 待批准
+     * $sum 1年度 2 季度 $type 5
+     */
+
+    public function Manage_type($sum,$type){
+
+        $where['account_id']           = array('eq',$_SESSION['userid']);
+
+        $where['statu']                = array('eq',1);
+
+        if($sum==1){$where['type']     = array('eq',$type);}else{$where['type']= array('lt',$type);}
+
+        $content                       = $this->sql_r('manage_input',$where,1); //查询当前状态是否为待提交审核
+
+        if($content){
+
+            return 1;die;
+
+        }else{
+
+            $query['statu']            = array('eq',2);
+
+            if($sum==1){$query['type'] = array('eq',$type);}elseif($sum==2){$query['type']= array('lt',$type);}
+
+            $count                     = $this->sql_r('manage_input',$query,3);//查询当前状态是否为待提交批准
+
+            if($count==10){
+
+                return 2;die;
+
+            }else{
+                $query['statu']        = array('eq',3);
+
+                if($sum==1){$input_r['type'] = array('eq',$type);}elseif($sum==2){$input_r['type']= array('lt',$type);}
+
+                $input                 = $this->sql_r('manage_input',$input_r,1);//查询当前状态是否为待批准
+
+                if($input){return 3;die;}else{return 0;die;}
+            }
+        }
+    }
+
+    /**
+     * quarter_submit1 季度提交审核
+     */
+    public function quarter_submit1(){
+
+        $where['type']        = $this->quarter_month(date('Y'));
+
+        $where['account_id']  = $_SESSION['userid'];
+
+        $where['statu']       = 1;
+
+        $manage               = $this->sql_r('manage_input',$where,2);
+
+        if(!$manage){return 3;die;}
+
+        foreach($manage as $key => $val){
+
+            $query['id']      = $val['id'];
+
+            $save['statu']    = 2;
+
+            $input            = M('manage_input')->where($query)->save($save);
+
+            if(!$input){return 3;die;}
+        }
+
+        $wher['statu']        = 2;
+
+        $wher['type']         = $this->quarter_month(date('Y'));
+
+        $count                = $this->sql_r('manage_input',$wher,3);
+
+        if($count==10){return 2;die;}else{return 1;die;}
+    }
+
+    /**
+     * quarter_paprova1 季度提交审批
+     * $status 2 提交批准 $type 1 驳回
+     * $num 当前状态  $sum 成功修改状态
+     */
+    public function quarter_paprova1($status,$type,$num,$sum){
+
+        $wher['statu']                  = $num;
+
+        $wher['type']                   = $this->quarter_month(date('Y'));
+
+        $count                          = $this->sql_r('manage_input',$wher,2);
+
+        if(count($count)==10){
+
+            foreach($count as $key => $val){
+
+                $query['id']            = $val['id'];
+
+                if($type=='' || $type==0){$save['statu']=$sum;$content='驳回';}else{$save['statu']=1;$content='批准';}
+
+                $input                  = M('manage_input')->where($query)->save($save);
+
+                if(!$input){return $content.'失败！';}else{return $content.'成功！';}
+            }
+        }else{
+            return '请确认所有人员预算数据已提交！';die;
+        }
+    }
+
+    /**
+     * year_submit1 年度提交审核
+     */
+    public function year_submit1(){
+
+        $sum['year']          = (int)date('Y');
+
+        $where['datetime']    = $this->quarter_year($sum)['year'];
+
+        $where['account_id']  = $_SESSION['userid'];
+
+        $where['statu']       = 1;
+
+        $where['type']        = 5;
+
+        $manage               = $this->sql_r('manage_input',$where,2);
+
+        if(!$manage){return 3;die;}
+
+        foreach($manage as $key => $val){
+
+            $query['id']      = $val['id'];
+
+            $save['statu']    = 2;
+
+            $input            = M('manage_input')->where($query)->save($save);
+
+            if(!$input){return 3;die;}
+        }
+
+        $wher['statu']        = 2;
+
+        $wher['type']         = $this->quarter_month(date('Y'));
+
+        $count                = $this->sql_r('manage_input',$wher,3);
+
+        if($count==10){return 2;die;}else{return 1;die;}
+    }
+
+
+    /**
+     * quarter_paprova1 年度提交审批
+     * $status 2 提交批准 $type 1 驳回
+     * $num 当前状态  $sum 成功修改状态
+     */
+    public function year_paprova1($status,$type,$num,$sum){
+
+        $wher['statu']                  = $num;
+
+        $wher['type']                   = $this->quarter_month(date('Y'));
+
+        $count                          = $this->sql_r('manage_input',$wher,2);
+
+        if(count($count)==10){
+
+            foreach($count as $key => $val){
+
+                $query['id']            = $val['id'];
+
+                if($type=='' || $type==0){$save['statu']=$sum;$content='驳回';}else{$save['statu']=1;$content='批准';}
+
+                $input                  = M('manage_input')->where($query)->save($save);
+
+                if(!$input){return $content.'失败！';}else{return $content.'成功！';}
+            }
+        }else{
+            return '请确认所有人员预算数据已提交！';die;
+        }
+    }
+
 }
 
 ?>
