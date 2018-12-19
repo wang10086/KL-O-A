@@ -74,7 +74,7 @@ class ManageController extends ChartController {
         // 季度预算报表
         $datetime['year']       = $year1;
         $datetime['type']       = $mod->quarter_month1($quart);//获取季度预算
-        $manage                 = $mod->Manage_display($datetime,4);
+        $manage                 = $mod->Manage_display($datetime);
         $this->manage           = $manage;//季度预算
 
         // 季度经营报表
@@ -151,7 +151,6 @@ class ManageController extends ChartController {
         }
     }
 
-
     /**
      * Manage_year 年度经营报表
      * $year 年 $quart月
@@ -172,9 +171,8 @@ class ManageController extends ChartController {
         //年度预算报表
         $where['year']      = $year1;
         $where['type']      = 5;
-        $manage             = $mod->Manage_display($where,4);
+        $manage             = $mod->Manage_display($where,1);
         $this->manage       = $manage;//年度预算
-
         //年度经营报表
         $this->count_profit = $count_profit;//年人员人力资源成本 收入 毛利 毛利率
         $this->profit       = $profit;//收入 毛利 毛利率
@@ -192,8 +190,8 @@ class ManageController extends ChartController {
         $date_Y['year']     = (int)date('Y');
         $date_Y['type']     = 5;
         $datetime           = $mod->quarter_year($date_Y);//获取年度预算
-        $manage             = $mod->Manage_display($datetime,4);
-        $type               = $mod->Manage_type(1,5);//年度提交状态
+        $manage             = $mod->Manage_display($datetime);
+        $type               = $mod->Manage_type(2,5);//年度提交状态
         $this->type         = $type;//年度提交状态
         $this->manage       = $manage;
         $this->display();
@@ -214,7 +212,7 @@ class ManageController extends ChartController {
         }elseif($statu==2){
             $this->error('数据更新失败!',U('Manage/Manage_input'));die;
         }elseif($statu==3){
-            $this->error('请驳回后更改数据!',U('Manage/Manage_input'));die;
+            $this->error('数据已存在！当前不支持更改！',U('Manage/Manage_input'));die;
         }
     }
 
@@ -226,8 +224,8 @@ class ManageController extends ChartController {
         $mod                = D('Manage');
         $date_Y['year']     = date('Y');
         $datetime           = $mod->quarter_month($date_Y);//获取季度预算
-        $manage             = $mod->Manage_display($datetime,4);//季度数据
-        $type               = $mod->Manage_type(2,5);//季度提交状态
+        $manage             = $mod->Manage_display($datetime);//季度数据
+        $type               = $mod->Manage_type(1);//季度提交状态
         $this->manage       = $manage;
         $this->type         = $type;//季度提交状态
         $this->display();
@@ -247,7 +245,7 @@ class ManageController extends ChartController {
         }elseif($statu==2){
             $this->error('数据更新失败!',U('Manage/Manage_quarter_w'));die;
         }elseif($statu==3){
-            $this->error('当前数据您无权限修改!',U('Manage/Manage_quarter_w'));die;
+            $this->error('数据已存在！当前不支持更改！',U('Manage/Manage_quarter_w'));die;
         }
     }
 
@@ -284,7 +282,7 @@ class ManageController extends ChartController {
         }elseif($m=='Main' && is_numeric($type) && $type==1){
         }else{$this->error('数据提交失败!');die;}
         $manage         = $mod->quarter_paprova1($status,$type,2,3);//季度提交审
-        $this->error($manage);
+        if(strpos($manage,'成功') !==false){$this->success($manage);}else{$this->error($manage);}
     }
     /**
      * quarter_approve 季度批准
@@ -299,7 +297,7 @@ class ManageController extends ChartController {
         }elseif($m=='Main' && is_numeric($type) && $type==1){
         }else{$this->error('数据提交失败!');die;}
         $manage         = $mod->quarter_paprova1($status,$type,3,4);//季度提交审
-        $this->error($manage);
+        if(strpos($manage,'成功') !==false){$this->success($manage);}else{$this->error($manage);}
     }
     /**
      * year_submit 年度提交审批
@@ -332,10 +330,9 @@ class ManageController extends ChartController {
         if($m=='Main' && is_numeric($status) && $status==2){
         }elseif($m=='Main' && is_numeric($type) && $type==1){
         }else{$this->error('数据提交失败!');die;}
-        $manage         = $mod->year_paprova1($status,$type,2,3);//年度提交审
-        $this->error($manage);
+        $manage         = $mod->year_paprova1($status,$type,2,3);//年度提批准
+        if(strpos($manage,'成功') !==false){$this->success($manage);}else{$this->error($manage);}
 
-        print_r(I());die;
     }
     /**
      * year_approve 年度批准
@@ -343,7 +340,15 @@ class ManageController extends ChartController {
      *
      */
     public function year_approve(){
-        print_r(I());die;
+        $m              = trim($_GET['m']);
+        $status         = trim($_GET['status']);
+        $type           = trim($_GET['type']);
+        $mod            = D('Manage');
+        if($m=='Main' && is_numeric($status) && $status==3){
+        }elseif($m=='Main' && is_numeric($type) && $type==1){
+        }else{$this->error('数据提交失败!');die;}
+        $manage         = $mod->year_paprova1($status,$type,3,4);//季度提交审
+        if(strpos($manage,'成功') !==false){$this->success($manage);}else{$this->error($manage);}
     }
 
  }

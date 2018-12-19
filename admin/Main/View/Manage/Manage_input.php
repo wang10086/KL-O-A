@@ -146,23 +146,28 @@
                                 </form>
                             </tr>
 
-                        </table>
+                        </table><br><br>
 
-                        <div style="margin-top:2em;text-align:center;" id="shr_qianzi">
-
-                            <form action="{:U('Manage/year_submit')}" method="post" style="<?php if($type==1){echo "display:none;";}else{echo "display:none;";}?>">
-                                <p style="color:red;">(请确认自己部门数据预算后点击 <b>"提交审核"</b>)</p>
-                                <input type="hidden" name="status" value="1">
-                                <input type="submit" value="提交审核" class="btn btn-info" style="width:10em;">
-                            </form>
-                            <div style="<?php if($type==2){echo "";}else{echo "";}?>">
-                                <a href="{:U('Manage/year_paprova',array('status'=>2))}" class="btn btn-info" style="width:10em;">提交批准</a>
-                                <a href="{:U('Manage/year_paprova',array('type'=>1))}"  class="btn btn-info" style="width:10em;">驳回</a>
-                            </div>
-                            <div style="<?php if($type==3){echo "display:none;";}else{echo "display:none;";}?>">
-                                <a href="{:U('Manage/year_approve',array('status'=>3))}" class="btn btn-info" style="width:10em;">批准</a>
-                                <a href="{:U('Manage/year_approve',array('type'=>1))}"  class="btn btn-info" style="width:10em;">驳回</a>
-                            </div>
+                        <div style="text-align:center;" id="shr_qianzi">
+                            <if condition="rolemenu(array('Manage/year_submit'))" class="{:on('Manage/year_submit')}">
+                                <form action="{:U('Manage/year_submit')}" method="post" style="<?php if($type==1){echo "";}else{echo "display:none;";}?>">
+                                    <p style="color:red;">(请确认自己部门数据预算后点击 <b>"提交审核"</b>,提交后不可更改!)</p>
+                                    <input type="hidden" name="status" value="1">
+                                    <input type="submit" value="提交审核" class="btn btn-info" style="width:10em;">
+                                </form>
+                            </if>
+                            <if condition="rolemenu(array('Manage/year_paprova'))" class="{:on('Manage/year_paprova')}">
+                                <div style="<?php if($type==2){echo "";}else{echo "display:none;";}?>">
+                                    <a href="{:U('Manage/year_paprova',array('status'=>2))}" class="btn btn-info" style="width:10em;">提交批准</a>
+                                    <a href="{:U('Manage/year_paprova',array('type'=>1))}"  class="btn btn-info" style="width:10em;">驳回</a>
+                                </div>
+                            </if>
+                            <if condition="rolemenu(array('Manage/year_approve'))" class="{:on('Manage/year_approve')}">
+                                <div style="<?php if($type==3){echo "";}else{echo "display:none;";}?>">
+                                    <a href="{:U('Manage/year_approve',array('status'=>3))}" class="btn btn-info" style="width:10em;">批准</a>
+                                    <a href="{:U('Manage/year_approve',array('type'=>1))}"  class="btn btn-info" style="width:10em;">驳回</a>
+                                </div>
+                            </if>
 
                         </div><br><br>
 

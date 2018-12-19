@@ -494,8 +494,8 @@
                                     </ul>
                                 </li>
 
-                                <li class="treeview {:on('Manage/Manage_month')}">
-                                    <if condition="rolemenu(array('Manage/Manage_month'))">
+                                <li class="treeview {:on('Manage/Manage_month')}{:on('Manage/Manage_quarter')}{:on('Manage/Manage_year')}">
+                                    <if condition="rolemenu(array('Manage/Manage_month','Manage/Manage_quarter','Manage/Manage_year'))">
                                         <a href=""><i class="fa fa-angle-right"></i> 经营管理</a>
                                     </if>
                                     <ul class="treeview-menu">
