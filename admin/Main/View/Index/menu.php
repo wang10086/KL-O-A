@@ -424,8 +424,8 @@
                             </a>
                             <ul class="treeview-menu">
 
-                                <li class="treeview {:on('Finance/jiekuan')} {:on('Finance/jk_detail')} {:on('Finance/loan_op')}">
-                                    <if condition="rolemenu(array('Finance/jiekuan'))">
+                                <li class="treeview {:on('Finance/jiekuan')} {:on('Finance/jk_detail')} {:on('Finance/loan_op')} {:on('Finance/nopjk')}">
+                                    <if condition="rolemenu(array('Finance/jiekuan','Finance/loan_op','Finance/nopjk'))">
                                         <a href=""><i class="fa  fa-check-circle"></i> 财务审批</a>
                                     </if>
                                     <ul class="treeview-menu">
@@ -435,24 +435,13 @@
                                         <if condition="rolemenu(array('Finance/loan_op'))">
                                             <li class="{:on('Finance/loan_op')}"><a href="{:U('Finance/loan_op')}"><i class="fa fa-angle-right"></i> 团内支出报销</a></li>
                                         </if>
-                                        <!--<li class="treeview {:on('Finance/loan_jklist')} {:on('Finance/loan_jk')} {:on('Finance/loan')}">
-                                            <if condition="rolemenu(array('Finance/loan_jklist'))">
-                                                <a href=""><i class="fa fa-angle-right"></i> 团内支出报销</a>
-                                            </if>
-                                            <ul class="treeview-menu">
-                                                <if condition="rolemenu(array('Finance/loan_jklist'))">
-                                                    <li><a href="{:U('Finance/loan_jklist')}"><i class="fa fa-angle-right"></i> 借款报销</a></li>
-                                                </if>
-                                                <if condition="rolemenu(array('Finance/loan'))">
-                                                    <li><a href="{:U('Finance/loan')}"><i class="fa fa-angle-right"></i> 直接报销</a></li>
-                                                </if>
-                                            </ul>
-                                        </li>-->
-                                        <if condition="rolemenu(array('Finance/jiekuan'))">
-                                            <li class="{:on('Finance/jiekuan')}"><a href="javascript:;"><i class="fa fa-angle-right"></i> 非团支出借款</a></li>
+                                        <if condition="rolemenu(array('Finance/nopjk'))">
+                                            <li class="{:on('Finance/nopjk')}"><a href="{:U('Finance/nopjk')}"><i class="fa fa-angle-right"></i> 非团支出借款</a></li>
                                         </if>
                                         <if condition="rolemenu(array('Finance/jiekuan'))">
-                                            <li class="{:on('Finance/jiekuan')}"><a href="javascript:;"><i class="fa fa-angle-right"></i> 非团支出报销</a></li>
+                                            <li class="{:on('Finance/jiekuan')}"><a href="javascript;"><i class="fa fa-angle-right"></i> 非团支出报销</a></li>
+                                            <!--<li class="{:on('Finance/jiekuan')}"><a href="{:U('Finance/loan')}"><i class="fa fa-angle-right"></i> 非团支出借款</a></li>-->
+                                            <!--<li class="{:on('Finance/jiekuan')}"><a href="{:U('Finance/loan_jklist')}"><i class="fa fa-angle-right"></i> 非团支出报销</a></li>-->
                                         </if>
                                     </ul>
                                 </li>
