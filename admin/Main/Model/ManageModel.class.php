@@ -577,13 +577,13 @@ class ManageModel extends Model{
             case 4:
                 return $date_Y;break;
             case 10:
-                $date_Y['year']  = $date_Y['year']+1;
+                $date_Y['year']  = (int)$date_Y['year']+1;
                 return $date_Y;break;
             case 11:
-                $date_Y['year']  = $date_Y['year']+1;
+                $date_Y['year']  = (int)$date_Y['year']+1;
                 return $date_Y;break;
             case 12:
-                $date_Y['year']  = $date_Y['year']+1;
+                $date_Y['year']  = (int)$date_Y['year']+1;
                 return $date_Y;break;
         }
     }
@@ -593,6 +593,7 @@ class ManageModel extends Model{
      * 返回数据
      */
     public  function manage_input_statu($table,$datetime){
+
         $add['account_id']              = $_SESSION['userid'];//用户uid
         $add['datetime']                = $datetime['year'];//年
         $add['type']                    = $datetime['type'];
@@ -636,11 +637,11 @@ class ManageModel extends Model{
 
         $where['datetime']                      = array('eq',$datetime['year']);//年
 
-        $where['type']                          = array('eq',$datetime['type']);
+        if($statu==1){$where['type'] = array('eq',5);}else{$where['type'] = array('eq',$datetime['type']);}
 
         $department                             = C('department1');
 
-        $where['statu']                         = array('lt',$statu);
+        $where['statu']                         = array('eq',4);
 
         foreach($department as $key => $val){
 
@@ -673,55 +674,56 @@ class ManageModel extends Model{
     }
 
     /**
-     * Manage_type 提交状态
+     * Manage_type 年和季度显示提交状态
      * 1 待提交审核 2 待提交批准 3 待批准
      * $sum 1年度 2 季度 $type 5
      */
 
     public function Manage_type($sum,$type){
 
-        $where['account_id']           = array('eq',$_SESSION['userid']);
-
-        $where['statu']                = array('eq',1);
-
-        if($sum==1){$where['type']     = array('eq',$type);}else{$where['type']= array('lt',$type);}
-
-        $content                       = $this->sql_r('manage_input',$where,1); //查询当前状态是否为待提交审核
-
+        if($sum==1){
+            $year['year']                   = (int)date('Y');
+            $datetime                       = $this->quarter_month($year);
+            $where['datetime']              = array('eq',$datetime['year']);
+            $where['type']                  = array('eq',$datetime['type']);
+        }elseif($sum==2){
+            $year['year']                   = (int)date('Y');
+            $datetime                       = $this->quarter_year($year);
+            $where['datetime']              = array('eq',$datetime['year']);
+            $where['type']                  = array('eq',$type);
+        }
+        $where['account_id']                = array('eq',$_SESSION['userid']);
+        $where['statu']                     = array('eq',1);
+        $content                            = $this->sql_r('manage_input',$where,1); //查询当前状态是否为待提交审
         if($content){
-
             return 1;die;
-
         }else{
-
-            $query['statu']            = array('eq',2);
-
-            if($sum==1){$query['type'] = array('eq',$type);}elseif($sum==2){$query['type']= array('lt',$type);}
-
-            $count                     = $this->sql_r('manage_input',$query,3);//查询当前状态是否为待提交批准
-
+            unset($where['statu']);
+            $where['statu']                 = array('eq',2);
+            $count                          = $this->sql_r('manage_input',$where,3);//查询当前状态是否为待提交批准
             if($count==10){
-
                 return 2;die;
-
             }else{
-                $query['statu']        = array('eq',3);
-
-                if($sum==1){$input_r['type'] = array('eq',$type);}elseif($sum==2){$input_r['type']= array('lt',$type);}
-
-                $input                 = $this->sql_r('manage_input',$input_r,1);//查询当前状态是否为待批准
-
+                unset($where['statu']);
+                $where['statu']             = array('eq',3);
+                $input                      = $this->sql_r('manage_input',$where,1);//查询当前状态是否为待批准
                 if($input){return 3;die;}else{return 0;die;}
             }
         }
     }
 
     /**
-     * quarter_submit1 季度提交审核
+     * quarter_submit1 季度提交审批
      */
     public function quarter_submit1(){
 
-        $where['type']        = $this->quarter_month(date('Y'));
+        $sum['year']          = (int)date('Y');
+
+        $datetime             = $this->quarter_month($sum);
+
+        $where['datetime']    = $datetime['year'];
+
+        $where['type']        = $datetime['type'];
 
         $where['account_id']  = $_SESSION['userid'];
 
@@ -752,17 +754,23 @@ class ManageModel extends Model{
     }
 
     /**
-     * quarter_paprova1 季度提交审批
+     * quarter_paprova1 季度批准
      * $status 2 提交批准 $type 1 驳回
      * $num 当前状态  $sum 成功修改状态
      */
     public function quarter_paprova1($status,$type,$num,$sum){
 
-        $wher['statu']                  = $num;
+        $where['statu']                 = $num;
 
-        $wher['type']                   = $this->quarter_month(date('Y'));
+        $number['year']                 = (int)date('Y');
 
-        $count                          = $this->sql_r('manage_input',$wher,2);
+        $datetime                       = $this->quarter_month($number);
+
+        $where['datetime']              = $datetime['year'];
+
+        $where['type']                  = $datetime['type'];
+
+        $count                          = $this->sql_r('manage_input',$where,2);
 
         if(count($count)==10){
 
@@ -770,13 +778,15 @@ class ManageModel extends Model{
 
                 $query['id']            = $val['id'];
 
-                if($type=='' || $type==0){$save['statu']=$sum;$content='驳回';}else{$save['statu']=1;$content='批准';}
+                if($type=='' || $type==0){$save['statu']=$sum;$content='批准';}else{$save['statu']=1;$content='驳回';}
 
                 $input                  = M('manage_input')->where($query)->save($save);
-
-                if(!$input){return $content.'失败！';}else{return $content.'成功！';}
             }
+
+            if(!$input){return $content.'失败！';}else{return $content.'成功！';}
+
         }else{
+
             return '请确认所有人员预算数据已提交！';die;
         }
     }
@@ -822,7 +832,7 @@ class ManageModel extends Model{
 
 
     /**
-     * quarter_paprova1 年度提交审批
+     * quarter_paprova1 年度提交批准
      * $status 2 提交批准 $type 1 驳回
      * $num 当前状态  $sum 成功修改状态
      */
@@ -830,9 +840,14 @@ class ManageModel extends Model{
 
         $wher['statu']                  = $num;
 
-        $wher['type']                   = $this->quarter_month(date('Y'));
+        $date['year']                   = (int)date('Y');
+
+        $wher['datetime']               = $this->quarter_year($date)['year'];//获取年度
+
+        $wher['type']                   = 5;
 
         $count                          = $this->sql_r('manage_input',$wher,2);
+//        print_r($type);die;
 
         if(count($count)==10){
 
@@ -840,13 +855,15 @@ class ManageModel extends Model{
 
                 $query['id']            = $val['id'];
 
-                if($type=='' || $type==0){$save['statu']=$sum;$content='驳回';}else{$save['statu']=1;$content='批准';}
+                if($type=='' || $type==0){$save['statu']=$sum;$content='批准';}else{$save['statu']=1;$content='驳回';}
 
                 $input                  = M('manage_input')->where($query)->save($save);
 
-                if(!$input){return $content.'失败！';}else{return $content.'成功！';}
             }
+            if(!$input){return $content.'失败！';}else{return $content.'成功！';}
+
         }else{
+
             return '请确认所有人员预算数据已提交！';die;
         }
     }

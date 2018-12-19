@@ -35,9 +35,11 @@
                 <div class="box box-warning">
                     <div class="box-header">
                         <h3 class="box-title">年度预算报表</h3>
-                        <div class="box-header">
-                            <a class="btn btn-info btn-sm" href="{:U('Manage/Manage_input')}" style="float:right;margin:1em 2em 0em 0em;background-color:#398439;"><b>+</b>预算录入</a>
-                        </div>
+                        <if condition="rolemenu(array('Manage/Manage_input'))" class="{:on('Manage/Manage_input')}">
+                            <div class="box-header">
+                                <a class="btn btn-info btn-sm" href="{:U('Manage/Manage_input')}" style="float:right;margin:1em 2em 0em 0em;background-color:#398439;"><b>+</b>预算录入</a>
+                            </div>
+                        </if>
                     </div><!-- /.box-header -->
                     <div class="box-body">
 
@@ -106,7 +108,7 @@
                             <tr role="row" class="orders">
                                 <th>状态</th>
                                 <foreach name="manage" item="m">
-                                    <th><?php if($m['statu']=="" || $m['statu']==0){echo '';}else{echo $m['statu']; }?></th>
+                                    <th><a><?php if($m['statu']=="" || $m['statu']==0){echo '';}elseif($m['statu']==1){echo '待提交审核';}elseif($m['statu']==2){echo '待提交批准';}elseif($m['statu']==3){echo '待批准';}elseif($m['statu']==4){echo '已批准'; }?></a></th>
                                 </foreach>
                             </tr>
                         </table><br><br>
