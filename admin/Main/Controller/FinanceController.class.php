@@ -1623,6 +1623,7 @@ class FinanceController extends BaseController {
         $audit_userinfo = M('jiekuan_audit')->where(array('op_id'=>$op['op_id'],'jk_id'=>$id))->find();
         $this->audit_userinfo= $audit_userinfo;
         $this->record   = D('Finance')->get_record($jiekuan['jkd_id']);
+        $this->jidiao   = M()->table('__OP_BUDGET__ as b')->join('__AUDIT_LOG__ as l on l.req_id=b.id','left')->where(array('l.req_type'=>P::REQ_TYPE_BUDGET,'b.op_id'=>$jiekuan['op_id']))->getField('l.req_uname');
 
         //审核人信息
         if ($jiekuan['ys_audit_userid']==cookie('userid') || cookie('userid')==11){
@@ -1650,6 +1651,42 @@ class FinanceController extends BaseController {
             echo "<script>window.top.location.reload();</script>";
         }else{
             $id                 = I('id');
+            $list           = M('salary_department')->where(array('id'=>$id))->find();
+            $this->list     = $list;
+            $this->userkey  = get_userkey();
+            $this->display();
+        }
+    }
+
+    //@@@NODE-3###set_manager###配置部门经理###
+    public function set_manager(){
+        if(isset($_POST['dosubmint'])){
+            $db             = M('salary_department');
+            $id             = I('id');
+            $info           = I('info');
+            $res            = $db->where(array('id'=>$id))->save($info);
+
+            echo "<script>window.top.location.reload();</script>";
+        }else{
+            $id             = I('id');
+            $list           = M('salary_department')->where(array('id'=>$id))->find();
+            $this->list     = $list;
+            $this->userkey  = get_userkey();
+            $this->display();
+        }
+    }
+
+    //@@@NODE-3###set_manager###配置部门分管领导###
+    public function set_depart_boss(){
+        if(isset($_POST['dosubmint'])){
+            $db             = M('salary_department');
+            $id             = I('id');
+            $info           = I('info');
+            $res            = $db->where(array('id'=>$id))->save($info);
+
+            echo "<script>window.top.location.reload();</script>";
+        }else{
+            $id             = I('id');
             $list           = M('salary_department')->where(array('id'=>$id))->find();
             $this->list     = $list;
             $this->userkey  = get_userkey();
@@ -1801,6 +1838,16 @@ class FinanceController extends BaseController {
         }elseif ($baoxiao['cw_audit_userid']==cookie('userid')){
             $this->audit_usertype = 3;
         }
+        $this->display();
+    }
+
+    //@@@NODE-3###nopjk###填写非团支出报销单###
+    public function nopjk(){
+
+        $departids          = array(2,6,7,12,13,14,16,17);
+        $departments        = M('salary_department')->where(array('id'=>array('in',$departids)))->select();
+        $this->departments  = $departments;
+        $this->jk_type      = C('JIEKUAN_TYPE');
         $this->display();
     }
 

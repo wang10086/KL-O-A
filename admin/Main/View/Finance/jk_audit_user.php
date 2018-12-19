@@ -30,10 +30,9 @@
                                         <th width="60">ID</th>
                                         <th width="100">标识</th>
                                         <th>部门名称</th>
-                                        <th width="120">借款审核人</th>
-                                        <if condition="rolemenu(array('Finance/set_jiekuan_user'))">
-                                        <th width="50" class="taskOptions">设置</th>
-                                        </if>
+                                        <th width="100">部门经理(主管)</th>
+                                        <th width="100">借款审核人</th>
+                                        <th width="100">部门分管领导</th>
                                     </tr>
    
                                     <foreach name="departments" item="row">
@@ -41,12 +40,21 @@
                                             <td>{$row.id}</td>
                                             <td>{$row.letter}</td>
                                             <td>{:tree_pad($row['level'])} {$row.department}  </td>
-                                            <td>{$row.jk_audit_user_name}</td>
-                                            <if condition="rolemenu(array('Rbac/set_jiekuan_user'))">
-                                            <td class="taskOptions">
-                                            <a href="javascript:;" onClick="set_jiekuan_user({$row.id})" title="设置" class="btn btn-info btn-smsm"><i class="fa fa-pencil"></i></a>
+                                            <td>{$row.manager_name}
+                                                <if condition="rolemenu(array('Finance/set_manager'))">
+                                                    <span style="float: right; clear: both;"><a href="javascript:;" onClick="set_manager({$row.id})" title="设置部门主管" class="btn btn-info btn-smsm"><i class="fa fa-pencil"></i></a></span>
+                                                </if>
                                             </td>
-                                            </if>
+                                            <td>{$row.jk_audit_user_name}
+                                                <if condition="rolemenu(array('Finance/set_jiekuan_user'))">
+                                                <span style="float: right; clear: both;"><a href="javascript:;" onClick="set_jiekuan_user({$row.id})" title="设置借款审核人" class="btn btn-info btn-smsm"><i class="fa fa-pencil"></i></a></span>
+                                                </if>
+                                            </td>
+                                            <td>{$row.boss_name}
+                                                <if condition="rolemenu(array('Finance/set_depart_boss'))">
+                                                    <span style="float: right; clear: both;"><a href="javascript:;" onClick="set_boss({$row.id})" title="设置部门分管领导" class="btn btn-info btn-smsm"><i class="fa fa-pencil"></i></a></span>
+                                                </if>
+                                            </td>
                                         </tr>
                                     </foreach>										
                                 </table>
@@ -84,4 +92,40 @@
 			}
 		});	
 	}
+
+    function set_manager(id) {
+        art.dialog.open('index.php?m=Main&c=Finance&a=set_manager&id='+id,{
+            lock:true,
+            title: '指定部门主管',
+            width:800,
+            height:400,
+            okValue: '提交',
+            fixed: true,
+            ok: function () {
+                this.iframe.contentWindow.gosubmint();
+                return false;
+            },
+            cancelValue:'取消',
+            cancel: function () {
+            }
+        });
+    }
+
+    function set_boss(id) {
+        art.dialog.open('index.php?m=Main&c=Finance&a=set_depart_boss&id='+id,{
+            lock:true,
+            title: '指定部门分管领导',
+            width:800,
+            height:400,
+            okValue: '提交',
+            fixed: true,
+            ok: function () {
+                this.iframe.contentWindow.gosubmint();
+                return false;
+            },
+            cancelValue:'取消',
+            cancel: function () {
+            }
+        });
+    }
 	</script>

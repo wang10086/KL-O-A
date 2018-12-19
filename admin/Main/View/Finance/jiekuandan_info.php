@@ -92,6 +92,7 @@
                                                             借款单编号：{$jiekuan['jkd_id']}
                                                         </div>
                                                         <div style="display: inline-block; float: right; clear: right;">
+                                                            借款时间：{$jiekuan['jk_time']|date='Y 年 m 月 d 日',###} &emsp;&emsp;
                                                             支付方式：
                                                             <foreach name="jk_type" key="k" item="v">
                                                                 <input type="radio" name="type" value="{$k}" <?php if ($jiekuan['type']== $k) echo "checked"; ?> /> <?php if ($jiekuan['type']== $k) echo '√'; ?>{$v} &nbsp;
@@ -103,7 +104,7 @@
                                                 <tr>
                                                     <td class="td_con td" colspan="2">团号：{$op['group_id']}</td>
                                                     <td class="td_con td" colspan="3">项目名称：{$op['project']}</td>
-                                                    <td class="td_con td">借款时间：{$jiekuan['jk_time']|date='Y 年 m 月 d 日',###}</td>
+                                                    <td class="td_con td">计调：{$jidiao}</td>
                                                 </tr>
 
                                                 <tr>
