@@ -1214,7 +1214,7 @@ class FinanceController extends BaseController {
                 }
             }
 
-            //保存借款预算审核人审核信息
+            //保存团内借款预算审核人审核信息
             if ($savetype==3){
 
                 $db                 = M('jiekuan_audit');
@@ -1237,7 +1237,7 @@ class FinanceController extends BaseController {
                         $cw_audit_userid                    = 55;   //程小平
                         //审核通过,到达财务//发送系统消息
                         $uid     = cookie('userid');
-                        $title   = '您有来自['.$jk_info['rolename'].$jk_info['jk_user'].']的借款申请!';
+                        $title   = '您有来自['.$jk_info['jk_user'].']的借款申请!';
                         $content = '项目名称：'.$op['project'].'，借款单号：'.$jkd_id.'，借款金额：'.$jk_info['sum']."，<hr />部门主管审核意见：<span class='red'>".$zhuangtai."；".$info['ys_remark']."</span>";
                         $url     = U('Finance/audit_jiekuan',array('id'=>$jk_id,'op_id'=>$opid,'audit_usertype'=>$audit_usertype));
                         $user    = '['.$cw_audit_userid.']';
@@ -1267,7 +1267,7 @@ class FinanceController extends BaseController {
                 }
             }
 
-            //保存借款财务审核信息
+            //保存团内借款财务审核信息
             if ($savetype==4){
                 $db                 = M('jiekuan_audit');
                 $jk_id              = I('jk_id');
@@ -1398,7 +1398,7 @@ class FinanceController extends BaseController {
             }
 
             //审核团内报销单(证明验收人审核)
-            if (isset($_POST['dosubmint']) && $savetype==6){
+            if ($savetype==6){
                 $db                     = M('baoxiao_audit');
                 $bx_id                  = I('bx_id');
                 $bxd_id                 = I('bxd_id');
@@ -1447,7 +1447,7 @@ class FinanceController extends BaseController {
             }
 
             //审核团内报销单(预算审核人审核)
-            if (isset($_POST['dosubmint']) && $savetype==7){
+            if ($savetype==7){
                 $db                     = M('baoxiao_audit');
                 $bx_id                  = I('bx_id');
                 $bxd_id                 = I('bxd_id');
@@ -1501,7 +1501,7 @@ class FinanceController extends BaseController {
             }
 
             //审核团内报销单(财务主管审核)
-            if (isset($_POST['dosubmint']) && $savetype==8){
+            if ($savetype==8){
                 $db                     = M('baoxiao_audit');
                 $bx_id                  = I('bx_id');
                 $bxd_id                 = I('bxd_id');
@@ -1549,14 +1549,215 @@ class FinanceController extends BaseController {
             }
 
             //保存非团支出借款
-            if (isset($_POST['dosubmint']) && $savetype==9){
+            if ($savetype==9){
 
-                
+                $db                 = M('jiekuan');
+                $info               = I('info');
+                $info['type']       = I('type');
+                $info['jkd_id']     = make_num('JKD','jiekuan','jkd_id');
+                $info['jk_user']    = cookie('nickname');
+                $info['jk_user_id'] = cookie('userid');
+                $info['jk_time']    = NOW_TIME;
+                $info['jkd_type']   = 2;    //非团支出借款
+
+                $res = $db->add($info);
+                if ($res){
+                    //该团的部门负责人及分管领导信息
+                    $jk_departmentid    = $info['department_id'];
+                    $fields             = "department,manager_id,manager_name,boss_id,boss_name";
+                    $audit_users        = M('salary_department')->field($fields)->where(array('id'=>$jk_departmentid))->find();
+
+                    $jiekuan_audit          = array();
+                    $jiekuan_audit['jk_id'] = $res;
+                    $jiekuan_audit['jkd_id']= $info['jkd_id'];
+
+                    //相关审核人员信息
+                    $jiekuan_audit['manager_userid']    = $audit_users['manager_id'];   //部门负责人
+                    $jiekuan_audit['manager_username']  = $audit_users['manager_name'];
+                    $jiekuan_audit['ys_audit_userid']   = $audit_users['boss_id'];      //部门分管领导
+                    $jiekuan_audit['ys_audit_username'] = $audit_users['boss_name'];
+                    $jiekuan_audit['cw_audit_userid']   = 55;
+                    $jiekuan_audit['cw_audit_username'] = '程小平';
+                    $audit_usertype                     = 1;                            //部门负责人(主管/经理)
+                    $msg_user                           = $jiekuan_audit['manager_userid'];
+
+                    $a = M('jiekuan_audit')->add($jiekuan_audit);
+
+                    //发送系统消息
+                    $uid     = cookie('userid');
+                    $title   = '您有来自['.$info['jk_user'].']的借款申请!';
+                    $content = '借款单号'.$info['jkd_id'].'，借款金额：'.$info['sum'];
+                    $url     = U('Finance/audit_nopjk',array('id'=>$res,'audit_usertype'=>$audit_usertype));
+                    $user    = '['.$msg_user.']';
+                    send_msg($uid,$title,$content,$url,$user,'');
+
+                    $record = array();
+                    $record['bill_id']      = $info['jkd_id'];
+                    $record['type']         = 1;
+                    $record['explain']      = '填写借款申请,借款金额'.$info['sum'];
+                    jkbx_record($record);
+
+                    $this->success('保存成功');
+                }else{
+                    $this->error('保存失败');
+                }
+            }
+
+            //保存非团借款部门负责人签字
+            if ($savetype==10){
+
+                $db                 = M('jiekuan_audit');
+                $jk_id              = I('jk_id');
+                $jkd_id             = I('jkd_id');
+                $info               = I('info');
+                $audit_id           = I('audit_id');
+                $info['manager_audit_time'] = NOW_TIME;
+
+                $res = $db->where(array('id'=>$audit_id))->save($info);
+                if ($res){
+                    $jk_info        = M('jiekuan')->where(array('id'=>$jk_id))->find();
+                    $audit_info     = M('jiekuan_audit')->where(array('id'=>$audit_id))->find();
+                    $audit_zhuangtai= C('AUDIT_STATUS');
+                    $zhuangtai      = $audit_zhuangtai[$info['manager_audit_status']];
+
+                    if ($info['manager_audit_status'] ==1){
+                        $audit_usertype     = 2;                                //部门分管领导
+                        $ys_audit_userid    = $audit_info['ys_audit_userid'];   //部门分管领导
+                        //发送系统消息  审核通过,到达部门分管领导
+                        $uid     = cookie('userid');
+                        $title   = '您有来自['.$jk_info['jk_user'].']的借款申请!';
+                        $content = '借款单号：'.$jkd_id.'，借款金额：'.$jk_info['sum']."，<hr />部门负责人审核意见：<span class='red'>".$zhuangtai."；".$info['manager_remark']."</span>";
+                        $url     = U('Finance/audit_nopjk',array('id'=>$jk_id,'audit_usertype'=>$audit_usertype));
+                        $user    = '['.$ys_audit_userid.']';
+                        send_msg($uid,$title,$content,$url,$user,'');
+                    }else{
+                        //审核不通过
+                        D('Finance')->save_jkd_audit($jk_id,$info['manager_audit_status']);
+
+                        //发送系统消息
+                        $uid     = cookie('userid');
+                        $title   = '您有来自['.$audit_info['manager_username'].']的借款审批回复!';
+                        $content = '借款单号：'.$jkd_id.'，借款金额：'.$jk_info['sum']."，<hr />部门负责人审核意见：<span class='red'>".$zhuangtai."；".$info['manager_remark']."</span>";
+                        $url     = U('Finance/nopjk_info',array('jkid'=>$jk_id));
+                        $user    = '['.$jk_info['jk_user_id'].']';
+                        send_msg($uid,$title,$content,$url,$user,'');
+                    }
+
+                    $record = array();
+                    $record['bill_id']  = $jkd_id;
+                    $record['type']     = 1;
+                    $record['explain']  = '审核借款申请单，借款单号：'.$jkd_id.'，审核结果：'.$zhuangtai;
+                    jkbx_record($record);
+
+                    $this->success('数据保存成功!');
+                }else{
+                    $this->error('数据保存失败!');
+                }
+            }
+
+            //保存非团借款部门分管领导签字
+            if ($savetype==11){
+                $db                 = M('jiekuan_audit');
+                $jk_id              = I('jk_id');
+                $jkd_id             = I('jkd_id');
+                $info               = I('info');
+                $audit_id           = I('audit_id');
+                $info['ys_audit_time'] = NOW_TIME;
+
+                $res = $db->where(array('id'=>$audit_id))->save($info);
+                if ($res){
+                    $jk_info        = M('jiekuan')->where(array('id'=>$jk_id))->find();
+                    $audit_info     = M('jiekuan_audit')->where(array('id'=>$audit_id))->find();
+                    $audit_zhuangtai= C('AUDIT_STATUS');
+                    $zhuangtai      = $audit_zhuangtai[$info['ys_audit_status']];
+                    if ($info['ys_audit_status'] ==1){
+                        $audit_usertype                     = 3;    //财务主管
+                        $cw_audit_userid                    = 55;   //程小平
+                        //审核通过,到达财务//发送系统消息
+                        $uid     = cookie('userid');
+                        $title   = '您有来自['.$jk_info['jk_user'].']的借款申请!';
+                        $content = '借款单号：'.$jkd_id.'，借款金额：'.$jk_info['sum']."，<hr />部门分管领导审核意见：<span class='red'>".$zhuangtai."；".$info['ys_remark']."</span>";
+                        $url     = U('Finance/audit_nopjk',array('id'=>$jk_id,'audit_usertype'=>$audit_usertype));
+                        $user    = '['.$cw_audit_userid.']';
+                        send_msg($uid,$title,$content,$url,$user,'');
+                    }else{
+                        //审核不通过
+                        D('Finance')->save_jkd_audit($jk_id,$info['ys_audit_status']);
+
+                        //发送系统消息
+                        $uid     = cookie('userid');
+                        $title   = '您有来自['.$audit_info['ys_audit_username'].']的借款审批回复!';
+                        $content = '借款单号：'.$jkd_id.'，借款金额：'.$jk_info['sum']."，<hr />部门分管领导审核意见：<span class='red'>".$zhuangtai."；".$info['ys_remark']."</span>";
+                        $url     = U('Finance/nopjk_info',array('jkid'=>$jk_id));
+                        $user    = '['.$jk_info['jk_user_id'].']';
+                        send_msg($uid,$title,$content,$url,$user,'');
+                    }
+
+                    $record = array();
+                    $record['bill_id']  = $jkd_id;
+                    $record['type']     = 1;
+                    $record['explain']  = '审核借款申请单，借款单号：'.$jkd_id.'，审核结果：'.$zhuangtai;
+                    jkbx_record($record);
+
+                    $this->success('数据保存成功!');
+                }else{
+                    $this->error('数据保存失败!');
+                }
+            }
+
+            //保存非团借款财务审核信息
+            if ($savetype==12){
+
+                die;
+
+                $db                 = M('jiekuan_audit');
+                $jk_id              = I('jk_id');
+                $jkd_id             = I('jkd_id');
+                $info               = I('info');
+                $audit_id           = I('audit_id');
+                $info['cw_audit_time'] = NOW_TIME;
+
+                $res = $db->where(array('id'=>$audit_id))->save($info);
+                if ($res){
+                    $jk_info        = M('jiekuan')->where(array('id'=>$jk_id))->find();
+                    $audit_info     = M('jiekuan_audit')->where(array('id'=>$audit_id))->find();
+                    $audit_zhuangtai= C('AUDIT_STATUS');
+                    $zhuangtai      = $audit_zhuangtai[$info['ys_audit_status']];
+                    if ($info['cw_audit_status'] ==1){
+                        $cn_userid  = 27;   //出纳(殷红)
+                        //审核通过发送系统消息(出纳)
+                        $uid     = cookie('userid');
+                        $title   = '您有来自['.$jk_info['jk_user'].']的借款单,请及时跟进!';
+                        $content = '借款单号：'.$jkd_id.'，借款金额：'.$jk_info['sum']."，<hr />财务主管审核意见：<span class='red'>".$zhuangtai."；".$info['cw_remark']."</span>";
+                        $url     = U('Finance/nopjk_info',array('jkid'=>$jk_id));
+                        $user    = '['.$cn_userid.']';
+                        send_msg($uid,$title,$content,$url,$user,'');
+                    }
+                    //发送系统消息(借款人)
+                    $uid     = cookie('userid');
+                    $title   = '您有来自['.$audit_info['cw_audit_username'].']的借款审批回复!';
+                    $content = '借款单号：'.$jkd_id.'，借款金额：'.$jk_info['sum']."，<hr />财务主管审核意见：<span class='red'>".$zhuangtai."；".$info['cw_remark']."</span>";
+                    $url     = U('Finance/nopjk_info',array('jkid'=>$jk_id));
+                    $user    = '['.$jk_info['jk_user_id'].']';
+                    send_msg($uid,$title,$content,$url,$user,'');
+
+                    D('Finance')->save_jkd_audit($jk_id,$info['cw_audit_status']);
+
+                    $record = array();
+                    $record['bill_id']  = $jkd_id;
+                    $record['type']     = 1;
+                    $record['explain']  = '审核借款申请单，借款单号：'.$jkd_id.'，审核结果：'.$zhuangtai;
+                    jkbx_record($record);
+
+                    $this->success('数据保存成功');
+                }else{
+                    $this->error('数据保存失败');
+                }
             }
         }
     }
 
-    // @@@NODE-3###audit_jiekuan###审批借款###
+    // @@@NODE-3###audit_jiekuan###审批团内借款###
     public function audit_jiekuan(){
         $id                 = I('id');
         $opid               = I('op_id');
@@ -1564,6 +1765,7 @@ class FinanceController extends BaseController {
         $op                 = M('op')->where(array('op_id'=>$opid))->find();
         $jiekuan            = M('jiekuan')->where(array('id'=>$id))->find();
         $jk_lists           = M()->table('__JIEKUAN_DETAIL__ as j')->join('__OP_COSTACC__ as c on c.id=j.costacc_id','left')->where(array('j.jk_id'=>$jiekuan['id']))->select();
+        $this->jidiao       = M()->table('__OP_BUDGET__ as b')->join('__AUDIT_LOG__ as l on l.req_id=b.id','left')->where(array('l.req_type'=>P::REQ_TYPE_BUDGET,'b.op_id'=>$jiekuan['op_id']))->getField('l.req_uname');
 
         $audit_userinfo     = M('jiekuan_audit')->where(array('op_id'=>$opid,'jk_id'=>$id))->find();
         if (!$audit_userinfo){ $this->error('获取信息失败'); };
@@ -1580,6 +1782,7 @@ class FinanceController extends BaseController {
 
     // @@@NODE-3###jiekuan_lists###借款单列表###
     public function jiekuan_lists(){
+        $pin            = I('pin')?I('pin'):0;
         $project        = I('title');
         $group_id       = I('oid');
         $jkd_id         = I('jkdid');
@@ -1594,6 +1797,8 @@ class FinanceController extends BaseController {
             if ($group_id)  $where['j.group_id']= array('like','%'.$group_id.'%');
             if ($jkd_id)    $where['j.jkd_id']  = array('like','%'.$jkd_id.'%');
             if ($jk_user)   $where['j.jk_user'] = array('like','%'.$jk_user.'%');
+            if ($pin==1)    $where['jkd_type']  = 1;    //团内借款
+            if ($pin==2)    $where['jkd_type']  = 2;    //非团借款
         }else{
             $where['j.jk_user_id']              = array('in',$auth);
             $where['a.ys_audit_userid']         = array('eq',cookie('userid'));
@@ -1614,10 +1819,11 @@ class FinanceController extends BaseController {
         }
         $this->lists    = $lists;
         $this->jk_type  = C('JIEKUAN_TYPE');
+        $this->pin      = $pin;
         $this->display();
     }
 
-    // @@@NODE-3###jiekuandan_info###借款单详情###
+    // @@@NODE-3###jiekuandan_info###团内借款单详情###
     public function jiekuandan_info(){
         $id             = I('jkid');
         $jiekuan        = M()->table('__JIEKUAN__ as j')->join('__JIEKUAN_AUDIT__ as a on a.jk_id=j.id','left')->where(array('j.id'=>$id))->find();
@@ -1653,7 +1859,9 @@ class FinanceController extends BaseController {
             $db             = M('salary_department');
             $id             = I('id');
             $info           = I('info');
-            $res            = $db->where(array('id'=>$id))->save($info);
+            if ($info['jk_audit_user_id']){
+                $res            = $db->where(array('id'=>$id))->save($info);
+            }
 
             echo "<script>window.top.location.reload();</script>";
         }else{
@@ -1671,7 +1879,9 @@ class FinanceController extends BaseController {
             $db             = M('salary_department');
             $id             = I('id');
             $info           = I('info');
-            $res            = $db->where(array('id'=>$id))->save($info);
+            if ($info['manager_id']){
+                $res            = $db->where(array('id'=>$id))->save($info);
+            }
 
             echo "<script>window.top.location.reload();</script>";
         }else{
@@ -1689,7 +1899,9 @@ class FinanceController extends BaseController {
             $db             = M('salary_department');
             $id             = I('id');
             $info           = I('info');
-            $res            = $db->where(array('id'=>$id))->save($info);
+            if ($info['boss_id']){
+                $res            = $db->where(array('id'=>$id))->save($info);
+            }
 
             echo "<script>window.top.location.reload();</script>";
         }else{
@@ -1848,12 +2060,49 @@ class FinanceController extends BaseController {
         $this->display();
     }
 
-    //@@@NODE-3###nopjk###填写非团支出报销单###
+    //@@@NODE-3###nopjk###填写非团支出借款单###
     public function nopjk(){
 
         $departments        = M('salary_department')->select();
         $this->departments  = $departments;
         $this->jk_type      = C('JIEKUAN_TYPE');
+        $this->display();
+    }
+
+    // @@@NODE-3###audit_jiekuan###审批非团借款###
+    public function audit_nopjk(){
+        $id                 = I('id');
+        $audit_usertype     = I('audit_usertype');
+        $jiekuan            = M('jiekuan')->where(array('id'=>$id))->find();
+        $audit_userinfo     = M('jiekuan_audit')->where(array('jk_id'=>$id))->find();
+        if (!$audit_userinfo){ $this->error('获取信息失败'); };
+
+        $this->jiekuan      = $jiekuan;
+        $this->audit_userinfo= $audit_userinfo;
+        $this->audit_usertype= $audit_usertype;
+        $this->jk_type      = C('JIEKUAN_TYPE');
+
+        $this->display();
+    }
+
+    // @@@NODE-3###nopjk_info###非团借款单详情###
+    public function nopjk_info(){
+        $id             = I('jkid');
+        $jiekuan        = M()->table('__JIEKUAN__ as j')->join('__JIEKUAN_AUDIT__ as a on a.jk_id=j.id','left')->where(array('j.id'=>$id))->find();
+        $this->jiekuan  = $jiekuan;
+        $this->jk_type  = C('JIEKUAN_TYPE');
+        $audit_userinfo = M('jiekuan_audit')->where(array('jk_id'=>$id))->find();
+        $this->audit_userinfo= $audit_userinfo;
+        $this->record   = D('Finance')->get_record($jiekuan['jkd_id']);
+
+        //审核人信息
+        if ($jiekuan['manager_userid']==cookie('userid') || cookie('userid')==11){
+            $this->audit_usertype = 1;  //部门负责人(或乔总)
+        }elseif($jiekuan['ys_audit_userid']==cookie('userid') || cookie('userid')==11){
+            $this->audit_usertype = 2;  //部门分管领导(或乔总)
+        }elseif ($jiekuan['cw_audit_userid']==cookie('userid')){
+            $this->audit_usertype = 3;
+        }
         $this->display();
     }
 

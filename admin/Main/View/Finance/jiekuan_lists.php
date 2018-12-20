@@ -24,61 +24,75 @@
                                     </div>
                                 </div><!-- /.box-header -->
                                 <div class="box-body">
+                                    <div class="btn-group" id="catfont">
+                                        <a href="{:U('Finance/jiekuan_lists',array('pin'=>0))}" class="btn <?php if($pin==0){ echo 'btn-info';}else{ echo 'btn-default';} ?>">全部借款单</a>
+                                        <a href="{:U('Finance/jiekuan_lists',array('pin'=>1))}" class="btn <?php if($pin==1){ echo 'btn-info';}else{ echo 'btn-default';} ?>">团内借款单</a>
+                                        <a href="{:U('Finance/jiekuan_lists',array('pin'=>2))}" class="btn <?php if($pin==2){ echo 'btn-info';}else{ echo 'btn-default';} ?>">非团借款单</a>
+                                    </div>
                                 
-                                <table class="table table-bordered dataTable fontmini" id="tablelist" style="margin-top:10px;">
-                                    <tr role="row" class="orders" >
-                                        <th class="sorting" width="180" data="j.jkd_id">借款单号</th>
-                                        <th class="sorting" width="150" data="j.group_id">团号</th>
-                                        <th class="sorting" data="o.project">项目名称</th>
-                                        <th class="sorting" width="100" data="j.jk_user">借款人</th>
-                                        <th class="sorting" width="80" data="j.sum">借款金额</th>
-                                        <th class="sorting" width="60" data="j.type">借款方式</th>
-                                        <th class="sorting" width="80" data="j.zhuangtai">审批状态</th>
-                                        <if condition="rolemenu(array('Finance/jiekuandan_info'))">
-                                            <th width="40" class="taskOptions">详情</th>
-                                        </if>
-                                        <if condition="rolemenu(array('Finance/aaa'))">
-                                            <th width="40" class="taskOptions">报销</th>
-                                        </if>
-                                        <if condition="rolemenu(array('Finance/del_jkd'))">
-                                            <th width="40" class="taskOptions">删除</th>
-                                        </if>
-                                    </tr>
-                                    <foreach name="lists" item="row"> 
-                                    <tr>
-                                        <td>{$row.jkd_id}</td>
-                                        <td>{$row.group_id}</td>
-                                        <td>
-                                            <div class="">
-                                                <if condition="rolemenu(array('Finance/jiekuandan_info'))">
-                                                    <a href="{:U('Finance/jiekuandan_info',array('jkid'=>$row['id']))}" title="{$row.project}">{$row.project}</a>
-                                                    <else />
-                                                    <a href="javascript:;" title="{$row.project}">{$row.project}</a>
-                                                </if>
-                                            </div>
-                                        </td>
-                                        <td>{$row.jk_user}</td>
-                                        <td>{$row.sum}</td>
-                                        <td>{$jk_type[$row[type]]}</td>
-                                        <td>{$row.zhuangtai}</td>
-                                        <if condition="rolemenu(array('Finance/jiekuandan_info'))">
-                                            <td class="taskOptions">
-                                                <a href="{:U('Finance/jiekuandan_info',array('jkid'=>$row['id']))}" title="详情" class="btn btn-info btn-smsm"><i class="fa fa-bars"></i></a>
-                                            </td>
-                                        </if>
-                                        <if condition="rolemenu(array('Finance/aaa'))">
-                                            <td class="taskOptions">
-                                                <a href="{:U('Finance/aaa',array('jkid'=>$row['id']))}" title="报销" class="btn btn-info btn-smsm"><i class="fa fa-pencil"></i></a>
-                                            </td>
-                                        </if>
-                                        <if condition="rolemenu(array('Finance/del_jkd'))">
-                                            <td class="taskOptions">
-                                                <button onClick="javascript:ConfirmDel('{:U('Finance/del_jkd',array('id'=>$row['id']))}')" title="删除" class="btn btn-warning btn-smsm"><i class="fa fa-times"></i></button>
-                                            </td>
-                                        </if>
-                                    </tr>
-                                    </foreach>					
-                                </table>
+                                    <table class="table table-bordered dataTable fontmini" id="tablelist" style="margin-top:10px;">
+                                        <tr role="row" class="orders" >
+                                            <th class="sorting" width="180" data="j.jkd_id">借款单号</th>
+                                            <if condition="$pin neq 2">
+                                                <th class="sorting" width="150" data="j.group_id">团号</th>
+                                                <th class="sorting" data="o.project">项目名称</th>
+                                            </if>
+                                            <th class="sorting" width="100" data="j.jk_user">借款人</th>
+                                            <th class="sorting" width="80" data="j.sum">借款金额</th>
+                                            <th class="sorting" width="60" data="j.type">借款方式</th>
+                                            <th class="sorting" width="80" data="j.zhuangtai">审批状态</th>
+                                            <if condition="rolemenu(array('Finance/jiekuandan_info'))">
+                                                <th width="40" class="taskOptions">详情</th>
+                                            </if>
+                                            <if condition="rolemenu(array('Finance/aaa'))">
+                                                <th width="40" class="taskOptions">报销</th>
+                                            </if>
+                                            <if condition="rolemenu(array('Finance/del_jkd'))">
+                                                <th width="40" class="taskOptions">删除</th>
+                                            </if>
+                                        </tr>
+                                        <foreach name="lists" item="row">
+                                        <tr>
+                                            <td>{$row.jkd_id}</td>
+                                            <if condition="$pin neq 2">
+                                                <td>{$row.group_id}</td>
+                                                <td>
+                                                    <div class="">
+                                                        <if condition="rolemenu(array('Finance/jiekuandan_info'))">
+                                                            <a href="{:U('Finance/jiekuandan_info',array('jkid'=>$row['id']))}" title="{$row.project}">{$row.project}</a>
+                                                            <else />
+                                                            <a href="javascript:;" title="{$row.project}">{$row.project}</a>
+                                                        </if>
+                                                    </div>
+                                                </td>
+                                            </if>
+                                            <td>{$row.jk_user}</td>
+                                            <td>{$row.sum}</td>
+                                            <td>{$jk_type[$row[type]]}</td>
+                                            <td>{$row.zhuangtai}</td>
+                                            <if condition="rolemenu(array('Finance/jiekuandan_info'))">
+                                                <td class="taskOptions">
+                                                    <if condition="$row.jkd_type neq 2">
+                                                        <a href="{:U('Finance/jiekuandan_info',array('jkid'=>$row['id']))}" title="详情" class="btn btn-info btn-smsm"><i class="fa fa-bars"></i></a>
+                                                        <else />
+                                                        <a href="{:U('Finance/nopjk_info',array('jkid'=>$row['id']))}" title="详情" class="btn btn-info btn-smsm"><i class="fa fa-bars"></i></a>
+                                                    </if>
+                                                </td>
+                                            </if>
+                                            <if condition="rolemenu(array('Finance/aaa'))">
+                                                <td class="taskOptions">
+                                                    <!--<a href="{:U('Finance/aaa',array('jkid'=>$row['id']))}" title="报销" class="btn btn-info btn-smsm"><i class="fa fa-pencil"></i></a>-->
+                                                    <a href="javascript:;" title="报销" class="btn btn-info btn-smsm"><i class="fa fa-pencil"></i></a>
+                                                </td>
+                                            </if>
+                                            <if condition="rolemenu(array('Finance/del_jkd'))">
+                                                <td class="taskOptions">
+                                                    <button onClick="javascript:ConfirmDel('{:U('Finance/del_jkd',array('id'=>$row['id']))}')" title="删除" class="btn btn-warning btn-smsm"><i class="fa fa-times"></i></button>
+                                                </td>
+                                            </if>
+                                        </tr>
+                                        </foreach>
+                                    </table>
                                 </div><!-- /.box-body -->
                                  <div class="box-footer clearfix">
                                 	<div class="pagestyle">{$pages}</div>

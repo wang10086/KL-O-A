@@ -2,6 +2,7 @@
     <form method="post" action="<?php echo U('Finance/public_save'); ?>" id="save_loan" onsubmit="return submitBefore()">
         <input type="hidden" name="dosubmint" value="1">
         <input type="hidden" name="savetype" value="9">
+        <input type="hidden" name="info[department]" value="{$list.department}" id="department">
 
         <div class="content">
             <input type="hidden" id="qianzi" value="0">
@@ -9,7 +10,7 @@
 
                 <div class="form-group col-md-12">
                     <label>借款部门：</label>
-                    <select class="form-control" name="info[department_id]" id="department_id" required >
+                    <select class="form-control" name="info[department_id]" onchange="get_department()" id="department_id" required >
                         <option value="">--请选择--</option>
                         <foreach name="departments" item="v">
                             <option value="{$v.id}">{$v.department}</option>
@@ -95,6 +96,19 @@
         })
     })
 
+    function get_department(){
+        var departid        = $('#department_id').val();
+        $.ajax({
+            type: "POST",
+            url : "{:U('Ajax/get_department')}",
+            dataType : "JSON",
+            data : {department_id:departid},
+            success : function (msg) {
+                $('#department').val(msg);
+            }
+        })
+    }
+
     function todaxie(num) {
         $.ajax({
             type: "post",
@@ -127,7 +141,7 @@
                 if (msg.stu ==1){
                     var html = '';
                     html += '<label>借款人：</label>'+
-                        '<input type="hidden" name="info[bx_file]" value="'+msg.file_url+'">'+
+                        '<input type="hidden" name="info[jk_file]" value="'+msg.file_url+'">'+
                         '<img width="100" src="/'+msg.file_url+'" alt="">';
                     $('#jkr_qianzi').html(html);
                     $('#qianzi').val('1');

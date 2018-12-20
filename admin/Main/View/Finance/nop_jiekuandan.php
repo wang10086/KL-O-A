@@ -1,28 +1,5 @@
 
 <?php if($jiekuan){ ?>
-    <div class="box-body">
-        <table class="table table-bordered dataTable fontmini" id="tablelist" style="margin-top:10px;">
-            <tr role="row" class="orders" >
-                <th class="sorting" width="150" data="title">费用项</th>
-                <th class="sorting" width="150" data="unitcost">单价</th>
-                <th class="sorting" width="150" data="amount">数量</th>
-                <th class="sorting" width="150" data="total">合计</th>
-                <th class="sorting" width="150" data="yjk">可借金额</th>
-                <th class="sorting" width="150" data="sjk">本次借款金额</th>
-            </tr>
-            <foreach name="jk_lists" item="row">
-                <tr>
-                    <td>{$row.title}</td>
-                    <td>{$row.unitcost}</td>
-                    <td>{$row.amount}</td>
-                    <td>{$row.total}</td>
-                    <td>{$row.yjk}</td>
-                    <td <?php if ($row['sjk']>$row['yjk']){ echo "class='red'"; } ?>>{$row.sjk}</td>
-                </tr>
-            </foreach>
-        </table>
-    </div><!-- /.box-body -->
-
         <div class="box-body" id="jiekuandan" >
             <div class="row"><!-- right column -->
                 <div class="form-group col-md-12">
@@ -37,11 +14,10 @@
                             </tr>
                             <tr>
                                 <td class="td_con" colspan="6">
-                                    <div style="display: inline-block; float: left; min-width:230px; clear: left;">
+                                    <div style="display: inline-block; float: left; clear: left;">
                                         借款单编号：{$jiekuan['jkd_id']}
                                     </div>
                                     <div style="display: inline-block; float: right; clear: right;">
-                                        借款时间：{$jiekuan['jk_time']|date='Y 年 m 月 d 日',###} &emsp;&emsp;
                                         支付方式：
                                         <foreach name="jk_type" key="k" item="v">
                                             <input type="radio" name="type" value="{$k}" <?php if ($jiekuan['type']== $k) echo "checked"; ?> /> <?php if ($jiekuan['type']== $k) echo '√'; ?>{$v} &nbsp;
@@ -51,9 +27,8 @@
                             </tr>
 
                             <tr>
-                                <td class="td_con td" colspan="2">团号：{$op['group_id']}</td>
-                                <td class="td_con td" colspan="3">项目名称：{$op['project']}</td>
-                                <td class="td_con td">计调：{$jidiao}</td>
+                                <td class="td_con td" colspan="3">借款单位：{$jiekuan.department}</td>
+                                <td class="td_con td" colspan="3">借款时间：{$jiekuan['jk_time']|date='Y 年 m 月 d 日',###}</td>
                             </tr>
 
                             <tr>
@@ -66,8 +41,8 @@
                             </tr>
                             <tr>
                                 <td colspan="2" class="td_con td">借款金额</td>
-                                <td colspan="3" class="td_con td">{$jiekuan.sum_chinese}</td>
-                                <td class="td_con td">&yen;&emsp;<input type="text" style="border:none;border-bottom: solid 1px #808080; " value="{$jiekuan.sum}">元</td>
+                                <td colspan="2" class="td_con td">{$jiekuan.sum_chinese}</td>
+                                <td colspan="2" class="td_con td">&yen;&emsp;<input type="text" style="border:none;border-bottom: solid 1px #808080; " value="{$jiekuan.sum}">元</td>
                             </tr>
                             <tr>
                                 <td colspan="6" class="td_con td">受款单位：{$jiekuan.payee}</td>
@@ -78,12 +53,12 @@
                             </tr>
 
                             <tr>
-                                <td colspan="3" class="td_con td">借款单位：{$jiekuan.department}</td>
                                 <td colspan="3" class="td_con td">借款人签字：<img src="/{$jiekuan.jk_file}" height="50px" alt=""></td>
+                                <td colspan="3" class="td_con td">部门负责人签字：<span id="bmzg"> <?php if($audit_userinfo['manager_audit_status']==2){echo "<span class='red'>不通过</span>"; }elseif ($audit_userinfo['manager_audit_status']==1){ echo "<img src='/$audit_userinfo[manager_audit_file]' height='50px'>";}; ?></span></td>
                             </tr>
 
                             <tr>
-                                <td colspan="3" class="td_con td">预算审批人签字：<span id="ysspr"> <?php if($audit_userinfo['ys_audit_status']==2){echo "<span class='red'>不通过</span>"; }elseif ($audit_userinfo['ys_audit_status']==1){ echo "<img src='/$audit_userinfo[ys_audit_file]' height='50px'>";}; ?></span></td>
+                                <td colspan="3" class="td_con td">分管领导签字：<span id="ysspr"> <?php if($audit_userinfo['ys_audit_status']==2){echo "<span class='red'>不通过</span>"; }elseif ($audit_userinfo['ys_audit_status']==1){ echo "<img src='/$audit_userinfo[ys_audit_file]' height='50px'>";}; ?></span></td>
                                 <td colspan="3" class="td_con td">财务主管签字：<span id="cwzg"><?php if($audit_userinfo['cw_audit_status']==2){echo "<span class='red'>不通过</span>"; }elseif ($audit_userinfo['cw_audit_status']==1){ echo "<img src='/$audit_userinfo[cw_audit_file]' height='50px'>";}; ?></span></td>
                             </tr>
                             <tr id="print_time">
@@ -101,7 +76,7 @@
             </div><!--/.col (right) -->
         </div>
 
-    <include file="audit_jk_form" />
+    <include file="audit_nopjk_form" />
 
 <?php }else{ ?>
     <div class="content" style="padding-top:40px;">  获取借款信息失败!</div>
@@ -126,7 +101,7 @@
 
     function check_pwd() {
         var pwd = $('input[name="password"]').val();
-        var audit_usertype = '<?php echo "$audit_usertype"; ?>';
+        var audit_usertype = '<?php echo $audit_usertype; ?>';
         $.ajax({
             type: 'POST',
             url : "{:U('Ajax/check_pwd')}",
@@ -135,10 +110,14 @@
                 if (msg.stu ==1){
                     var html = '';
                     if (audit_usertype ==1 ){
-                        html += '<label>预算审核人签字：</label>'+
-                            '<input type="hidden" name="info[ys_audit_file]" value="'+msg.file_url+'">'+
+                        html += '<label>部门负责人审核：</label>'+
+                            '<input type="hidden" name="info[manager_audit_file]" value="'+msg.file_url+'">'+
                             '<img width="100" src="/'+msg.file_url+'" alt="">';
                     }else if(audit_usertype ==2){
+                        html += '<label>分管领导签字：</label>'+
+                            '<input type="hidden" name="info[ys_audit_file]" value="'+msg.file_url+'">'+
+                            '<img width="100" src="/'+msg.file_url+'" alt="">';
+                    }else if(audit_usertype ==3){
                         html += '<label>财务主管签字：</label>'+
                             '<input type="hidden" name="info[cw_audit_file]" value="'+msg.file_url+'">'+
                             '<img width="100" src="/'+msg.file_url+'" alt="">';
