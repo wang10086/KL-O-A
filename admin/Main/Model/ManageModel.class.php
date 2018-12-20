@@ -85,7 +85,6 @@ class ManageModel extends Model{
          $insurance              = M('salary_insurance')->where($where)->find();
          // 公司 生育 工伤 养老 医疗 失业
          $medical_insurance      = $insurance['company_birth_ratio']*$insurance['company_birth_base']+$insurance['company_injury_ratio']*$insurance['company_injury_base']+$insurance['company_pension_ratio']*$insurance['company_pension_base']+$insurance['company_medical_care_ratio']*$insurance['company_medical_care_base']+$insurance['company_unemployment_ratio']*$insurance['company_unemployment_base']+$insurance['company_accumulation_fund_ratio']*$insurance['company_accumulation_fund_base']+$insurance['company_big_price'];
-
          return $medical_insurance;
      }
 
@@ -189,16 +188,16 @@ class ManageModel extends Model{
 
             if(is_numeric($post) && $post==1){
 
-                $year       = (int)$year-1;
+                $year           = (int)$year-1;
 
             }elseif(is_numeric($post) && $post==2){
 
-                $year       = (int)$year+1;
+                $year           = (int)$year+1;
             }
 
         }else{ //没有就默认
 
-            $year           = (int)date('Y');
+            $year               = (int)date('Y');
         }
         return $year;
     }

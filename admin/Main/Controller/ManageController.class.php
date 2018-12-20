@@ -42,7 +42,6 @@ class ManageController extends ChartController {
      * $pin 1 结算 0预算
      */
     public function  business($year,$month,$type){
-
         if (strlen($month)<2) $month = str_pad($month,2,'0',STR_PAD_LEFT);
         $times                       = $year.$month;
         $yw_departs                  = C('YW_DEPARTS');  //业务部门id
@@ -70,13 +69,11 @@ class ManageController extends ChartController {
         $profits                = $this->profit_r($year1,$quart,1);//月份循环季度数据 利润
         $manage_quarter         = $mod->manage_quarter($quarter,$profits);//季度利润总额
         $personnel_costs        = $mod->personnel_costs($quarter,$profits);//人事费用率
-
         // 季度预算报表
         $datetime['year']       = $year1;
         $datetime['type']       = $mod->quarter_month1($quart);//获取季度预算
         $manage                 = $mod->Manage_display($datetime,2);//季度预算
         $this->manage           = $manage;//季度预算
-
         // 季度经营报表
         $this->personnel_costs  = $personnel_costs;//人事费用率
         $this->manage_quarter   = $manage_quarter;// 季度利润总额
@@ -167,7 +164,6 @@ class ManageController extends ChartController {
         $money              = $this->business($year1,$month,1);//年 monthzsr 收入合计 monthzml 毛利合计 monthmll 毛利率
         $profit             = $mod->profit_w($money);//年 收入 毛利 毛利率
         $count_profit       = $mod->count_profit($yea_report,$profit);//年利润总额 年人事费用
-
         //年度预算报表
         $where['year']      = $year1;
         $where['type']      = 5;
@@ -332,7 +328,6 @@ class ManageController extends ChartController {
         }else{$this->error('数据提交失败!');die;}
         $manage         = $mod->year_paprova1($status,$type,2,3);//年度提批准
         if(strpos($manage,'成功') !==false){$this->success($manage);}else{$this->error($manage);}
-
     }
     /**
      * year_approve 年度批准
@@ -350,5 +345,4 @@ class ManageController extends ChartController {
         $manage         = $mod->year_paprova1($status,$type,3,4);//季度提交审
         if(strpos($manage,'成功') !==false){$this->success($manage);}else{$this->error($manage);}
     }
-
  }
