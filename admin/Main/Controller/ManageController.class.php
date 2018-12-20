@@ -74,7 +74,7 @@ class ManageController extends ChartController {
         // 季度预算报表
         $datetime['year']       = $year1;
         $datetime['type']       = $mod->quarter_month1($quart);//获取季度预算
-        $manage                 = $mod->Manage_display($datetime);
+        $manage                 = $mod->Manage_display($datetime,2);//季度预算
         $this->manage           = $manage;//季度预算
 
         // 季度经营报表

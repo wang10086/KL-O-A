@@ -594,12 +594,15 @@ class ManageModel extends Model{
      */
     public  function manage_input_statu($table,$datetime){
 
-        $add['account_id']              = $_SESSION['userid'];//用户uid
+
         $add['datetime']                = $datetime['year'];//年
         $add['type']                    = $datetime['type'];
         $add['logged_department']       = trim(I('department'));//部门
-        $count                          = M($table)->where($add)->find();
+        $tab                            = $this->sql_r($table,$add,2);
+        $add['account_id']              = $_SESSION['userid'];//用户uid
+        $count                          = $this->sql_r($table,$add,1);
         if(!$count){
+            if(count($tab)==10){return 3;die;}
             $add['createtime']          = time(); //时间
             $add['username']            = $_SESSION['name'];//用户名
             $add['employees_number']    = trim(I('number'));//员工人数
@@ -624,7 +627,7 @@ class ManageModel extends Model{
             $save['other_expenses']     = trim(I('other'));//其他费用
             $save['total_profit']       = trim(I('total'));//利润总额
             $save['personnel_cost_rate']= trim(I('personnel'));//人事费用率
-            $save_input = M($table)->where($add)->save($save);
+            $save_input                 = M($table)->where($add)->save($save);
             if($save_input){return 1;die;}else{return 2;die;}
         }
     }
@@ -635,21 +638,21 @@ class ManageModel extends Model{
      */
     public function Manage_display($datetime,$statu){
 
-        $where['datetime']                      = array('eq',$datetime['year']);//年
+        $where['datetime']                          = array('eq',$datetime['year']);//年
 
         if($statu==1){$where['type'] = array('eq',5);}else{$where['type'] = array('eq',$datetime['type']);}
 
-        $department                             = C('department1');
+        $department                                 = C('department1');
 
-        $where['statu']                         = array('eq',4);
+        if($statu==1 || $statu==2){$where['statu']  = array('eq',4);}else{$where['statu'] = array('lt',4);}
 
         foreach($department as $key => $val){
 
-            $where['logged_department']         = $val;
+            $where['logged_department']             = $val;
 
-            $manage[$key]                       = M('manage_input')->where($where)->find();//批准通过的数据
+            $manage[$key]                           = $this->sql_r('manage_input',$where,1);//批准通过的数据
 
-            $manage[$key]['logged_department']  = $val;
+            $manage[$key]['logged_department']      = $val;
         }
         return $manage;
     }
@@ -698,13 +701,13 @@ class ManageModel extends Model{
         if($content){
             return 1;die;
         }else{
-            unset($where['statu']);
+            unset($where['statu']);unset($where['account_id']);
             $where['statu']                 = array('eq',2);
             $count                          = $this->sql_r('manage_input',$where,3);//查询当前状态是否为待提交批准
             if($count==10){
                 return 2;die;
             }else{
-                unset($where['statu']);
+                unset($where['statu']);unset($where['account_id']);
                 $where['statu']             = array('eq',3);
                 $input                      = $this->sql_r('manage_input',$where,1);//查询当前状态是否为待批准
                 if($input){return 3;die;}else{return 0;die;}
