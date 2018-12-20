@@ -1283,7 +1283,7 @@ class FinanceController extends BaseController {
                     $audit_info     = M('jiekuan_audit')->where(array('id'=>$audit_id))->find();
                     $op             = M('op')->where(array('op_id'=>$opid))->find();
                     $audit_zhuangtai= C('AUDIT_STATUS');
-                    $zhuangtai      = $audit_zhuangtai[$info['ys_audit_status']];
+                    $zhuangtai      = $audit_zhuangtai[$info['cw_audit_status']];
                     if ($info['cw_audit_status'] ==1){
                         $cn_userid  = 27;   //出纳(殷红)
                         //审核通过发送系统消息(出纳)
@@ -1708,8 +1708,6 @@ class FinanceController extends BaseController {
             //保存非团借款财务审核信息
             if ($savetype==12){
 
-                die;
-
                 $db                 = M('jiekuan_audit');
                 $jk_id              = I('jk_id');
                 $jkd_id             = I('jkd_id');
@@ -1722,7 +1720,7 @@ class FinanceController extends BaseController {
                     $jk_info        = M('jiekuan')->where(array('id'=>$jk_id))->find();
                     $audit_info     = M('jiekuan_audit')->where(array('id'=>$audit_id))->find();
                     $audit_zhuangtai= C('AUDIT_STATUS');
-                    $zhuangtai      = $audit_zhuangtai[$info['ys_audit_status']];
+                    $zhuangtai      = $audit_zhuangtai[$info['cw_audit_status']];
                     if ($info['cw_audit_status'] ==1){
                         $cn_userid  = 27;   //出纳(殷红)
                         //审核通过发送系统消息(出纳)

@@ -4263,7 +4263,7 @@ function getScienceRes(){
     function make_num($str,$table,$ele){
         $date   = date('Ymd',time());
         $length = strlen($str);
-        $lastid = M("$table")->where(array("$ele"=>array('like','%'.$date.'%')))->order('id DESC')->find();
+        $lastid = M("$table")->where(array("$ele"=>array('like',$str.$date.'%')))->order('id DESC')->find();
         if ($lastid){
             $numb   = substr($lastid["$ele"],$length);
             $num    = $str.($numb+1);
