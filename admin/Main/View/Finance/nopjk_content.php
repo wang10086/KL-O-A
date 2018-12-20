@@ -1,7 +1,7 @@
 <div class="box-body">
     <form method="post" action="<?php echo U('Finance/public_save'); ?>" id="save_loan" onsubmit="return submitBefore()">
         <input type="hidden" name="dosubmint" value="1">
-        <input type="hidden" name="savetype" value="">
+        <input type="hidden" name="savetype" value="9">
 
         <div class="content">
             <input type="hidden" id="qianzi" value="0">

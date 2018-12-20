@@ -1145,7 +1145,7 @@ class FinanceController extends BaseController {
         if (isset($_POST['dosubmint']) && $_POST['dosubmint']){
             $savetype           = I('savetype');
 
-            //保存借款申请
+            //保存团内支出借款申请
             if ($savetype==2){
 
                 $db                 = M('jiekuan');
@@ -1156,6 +1156,7 @@ class FinanceController extends BaseController {
                 $info['jk_user']    = cookie('nickname');
                 $info['jk_user_id'] = cookie('userid');
                 $info['jk_time']    = NOW_TIME;
+                $info['jkd_type']   = 1;    //团内支出借款
 
                 $res = $db->add($info);
                 if ($res){
@@ -1546,6 +1547,12 @@ class FinanceController extends BaseController {
                     $this->error('保存失败');
                 }
             }
+
+            //保存非团支出借款
+            if (isset($_POST['dosubmint']) && $savetype==9){
+
+                
+            }
         }
     }
 
@@ -1844,8 +1851,7 @@ class FinanceController extends BaseController {
     //@@@NODE-3###nopjk###填写非团支出报销单###
     public function nopjk(){
 
-        $departids          = array(2,6,7,12,13,14,16,17);
-        $departments        = M('salary_department')->where(array('id'=>array('in',$departids)))->select();
+        $departments        = M('salary_department')->select();
         $this->departments  = $departments;
         $this->jk_type      = C('JIEKUAN_TYPE');
         $this->display();
