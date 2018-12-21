@@ -135,13 +135,13 @@
                                         </select>
                                     </td>
                                     <td><input type="text" name="number" class="form-control" placeholder="例如：50 或 50.29"></td>
-                                    <td><input type="text" name="income" class="form-control" placeholder="例如：500.23 或 500"></td>
-                                    <td><input type="text" name="profit" class="form-control" placeholder="例如：500.23 或 500"></td>
-                                    <td><input type="text" name="rate" class="form-control" placeholder="例如：25.23 或 25"></td>
-                                    <td><input type="text" name="cost" class="form-control"  placeholder="例如：500.23 或 500"></td>
-                                    <td><input type="text" name="other" class="form-control" placeholder="例如：500.23 或 500"></td>
-                                    <td><input type="text" name="total" class="form-control" placeholder="例如：500.23 或 500"></td>
-                                    <td><input type="text" name="personnel" class="form-control" placeholder="例如：50.23 或 50"></td>
+                                    <td><input type="text" name="income" class="form-control manage_num1" placeholder="例如：500.23 或 500"></td>
+                                    <td><input type="text" name="profit" class="form-control manage_num2" placeholder="例如：500.23 或 500"></td>
+                                    <td><input type="text" name="rate" class="form-control manage_num3" placeholder="例如：25.23 或 25"></td>
+                                    <td><input type="text" name="cost" class="form-control manage_num4"  placeholder="例如：500.23 或 500"></td>
+                                    <td><input type="text" name="other" class="form-control manage_num5" placeholder="例如：500.23 或 500"></td>
+                                    <td><input type="text" name="total" class="form-control manage_num6" placeholder="例如：500.23 或 500"></td>
+                                    <td><input type="text" name="personnel" class="form-control manage_num7" placeholder="例如：50.23 或 50"></td>
                                     <td><input type="submit" value="保存" style="background-color:#00acd6;font-size:1.5em;"></td>
                                 </form>
                             </tr>
@@ -156,12 +156,12 @@
                                     <input type="submit" value="提交审核" class="btn btn-info" style="width:10em;">
                                 </form>
                             </if>
-                            <if condition="rolemenu(array('Manage/quarter_paprova'))" class="{:on('Manage/quarter_paprova')}">
-                                <div style="<?php if($type==2){echo "";}else{echo "display:none;";}?>">
-                                    <a href="{:U('Manage/quarter_paprova',array('status'=>2))}" class="btn btn-info" style="width:10em;">提交批准</a>
-                                    <a href="{:U('Manage/quarter_paprova',array('type'=>1))}"  class="btn btn-info" style="width:10em;">驳回</a>
-                                </div>
-                            </if>
+<!--                            <if condition="rolemenu(array('Manage/quarter_paprova'))" class="{:on('Manage/quarter_paprova')}">-->
+<!--                                <div style="--><?php //if($type==2){echo "";}else{echo "display:none;";}?><!--">-->
+<!--                                    <a href="{:U('Manage/quarter_paprova',array('status'=>2))}" class="btn btn-info" style="width:10em;">提交批准</a>-->
+<!--                                    <a href="{:U('Manage/quarter_paprova',array('type'=>1))}"  class="btn btn-info" style="width:10em;">驳回</a>-->
+<!--                                </div>-->
+<!--                            </if>-->
                             <if condition="rolemenu(array('Manage/quarter_approve'))" class="{:on('Manage/quarter_approve')}">
                                 <div style="<?php if($type==3){echo "";}else{echo "display:none;";}?>" >
                                     <a href="{:U('Manage/quarter_approve',array('status'=>3))}" class="btn btn-info" style="width:10em;">批准</a>
@@ -188,4 +188,17 @@
 
 <script>
 
+    $(document).bind("click", function (e){
+        var num1    = $(".manage_num1").val();//营业收入
+        var num2    = $(".manage_num2").val();//营业毛利
+        var num4    = $(".manage_num4").val();//人力资源成本
+        var num5    = $(".manage_num5").val();//其他费用
+        var num3    = (num2*100/num1).toFixed(2);//营业毛利率
+        var number  = $(".manage_num3").val(num3);
+        var contetn = num2-num4-num5;//利润总额
+        var num6    = $(".manage_num6").val(contetn);
+        var port    = (num4*100/num1).toFixed(2);//人事费用率
+        var num7    = $(".manage_num7").val(port);
+
+    });
 </script>

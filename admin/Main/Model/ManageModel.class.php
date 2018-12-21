@@ -727,8 +727,6 @@ class ManageModel extends Model{
 
         $where['type']        = $datetime['type'];
 
-        $where['account_id']  = $_SESSION['userid'];
-
         $where['statu']       = 1;
 
         $manage               = $this->sql_r('manage_input',$where,2);
@@ -739,20 +737,22 @@ class ManageModel extends Model{
 
             $query['id']      = $val['id'];
 
-            $save['statu']    = 2;
+            $save['statu']    = 3;
 
             $input            = M('manage_input')->where($query)->save($save);
 
             if(!$input){return 3;die;}
         }
 
-        $wher['statu']        = 2;
+        $wher['statu']        = 3;
 
-        $wher['type']         = $this->quarter_month(date('Y'));
+        $wher['datetime']     = $where['datetime'];
+
+        $wher['type']         = $where['type'];
 
         $count                = $this->sql_r('manage_input',$wher,3);
 
-        if($count==10){return 2;die;}else{return 1;die;}
+        if($count==10){return 2;die;}else{return 3;die;}
     }
 
     /**
@@ -802,8 +802,6 @@ class ManageModel extends Model{
 
         $where['datetime']    = $this->quarter_year($sum)['year'];
 
-        $where['account_id']  = $_SESSION['userid'];
-
         $where['statu']       = 1;
 
         $where['type']        = 5;
@@ -811,25 +809,30 @@ class ManageModel extends Model{
         $manage               = $this->sql_r('manage_input',$where,2);
 
         if(!$manage){return 3;die;}
+        if(count($manage)==10){}else{return 4;die;}
 
         foreach($manage as $key => $val){
 
             $query['id']      = $val['id'];
 
-            $save['statu']    = 2;
+//            $save['statu']    = 2;
+
+            $save['statu']    = 3;
 
             $input            = M('manage_input')->where($query)->save($save);
 
             if(!$input){return 3;die;}
         }
 
-        $wher['statu']        = 2;
+        $wher['statu']        = 3;
 
-        $wher['type']         = $this->quarter_month(date('Y'));
+        $wher['datetime']     = $where['datetime'];
+
+        $wher['type']         = 5;
 
         $count                = $this->sql_r('manage_input',$wher,3);
 
-        if($count==10){return 2;die;}else{return 1;die;}
+        if($count==10){return 2;die;}else{return 3;die;}
     }
 
 

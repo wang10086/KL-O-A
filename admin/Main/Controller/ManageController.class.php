@@ -269,17 +269,17 @@ class ManageController extends ChartController {
      * $m 路径比对
      * $status 2 提交批准 $type 1 驳回
      */
-    public function quarter_paprova(){
-        $m              = trim($_GET['m']);
-        $status         = trim($_GET['status']);
-        $type           = trim($_GET['type']);
-        $mod            = D('Manage');
-        if($m=='Main' && is_numeric($status) && $status==2){
-        }elseif($m=='Main' && is_numeric($type) && $type==1){
-        }else{$this->error('数据提交失败!');die;}
-        $manage         = $mod->quarter_paprova1($status,$type,2,3);//季度提交审
-        if(strpos($manage,'成功') !==false){$this->success($manage);}else{$this->error($manage);}
-    }
+//    public function quarter_paprova(){
+//        $m              = trim($_GET['m']);
+//        $status         = trim($_GET['status']);
+//        $type           = trim($_GET['type']);
+//        $mod            = D('Manage');
+//        if($m=='Main' && is_numeric($status) && $status==2){
+//        }elseif($m=='Main' && is_numeric($type) && $type==1){
+//        }else{$this->error('数据提交失败!');die;}
+//        $manage         = $mod->quarter_paprova1($status,$type,2,3);//季度提交审
+//        if(strpos($manage,'成功') !==false){$this->success($manage);}else{$this->error($manage);}
+//    }
     /**
      * quarter_approve 季度批准
      * $status 3 批准 $type 1 驳回
@@ -312,27 +312,29 @@ class ManageController extends ChartController {
             $this->success('数据提交成功!');
         }elseif($manage==3){
             $this->error('数据提交失败!');
+        }elseif($manage==4){
+            $this->error('部门数据不完整！!');
         }
     }
     /**
      * year_paprova 年度提交批准
      * $status 2 提交批准 $type 1 驳回
+     * 当出现部门->财务->总经办 可用
      */
-    public function year_paprova(){
-        $m              = trim($_GET['m']);
-        $status         = trim($_GET['status']);
-        $type           = trim($_GET['type']);
-        $mod            = D('Manage');
-        if($m=='Main' && is_numeric($status) && $status==2){
-        }elseif($m=='Main' && is_numeric($type) && $type==1){
-        }else{$this->error('数据提交失败!');die;}
-        $manage         = $mod->year_paprova1($status,$type,2,3);//年度提批准
-        if(strpos($manage,'成功') !==false){$this->success($manage);}else{$this->error($manage);}
-    }
+//    public function year_paprova(){
+//        $m              = trim($_GET['m']);
+//        $status         = trim($_GET['status']);
+//        $type           = trim($_GET['type']);
+//        $mod            = D('Manage');
+//        if($m=='Main' && is_numeric($status) && $status==2){
+//        }elseif($m=='Main' && is_numeric($type) && $type==1){
+//        }else{$this->error('数据提交失败!');die;}
+//        $manage         = $mod->year_paprova1($status,$type,2,3);//年度提批准
+//        if(strpos($manage,'成功') !==false){$this->success($manage);}else{$this->error($manage);}
+//    }
     /**
      * year_approve 年度批准
      * $status 3 批准 $type 1 驳回
-     *
      */
     public function year_approve(){
         $m              = trim($_GET['m']);
