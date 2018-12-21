@@ -3,10 +3,10 @@
             <aside class="right-side">
                 <!-- Content Header (Page header) -->
                 <section class="content-header">
-                    <h1>团内支出报销</h1>
+                    <h1>非团支出借款</h1>
                     <ol class="breadcrumb">
                         <li><a href="{:U('Index/index')}"><i class="fa fa-home"></i> 首页</a></li>
-                        <li><a href="javascript:;"><i class="fa fa-gift"></i> 直接报销</a></li>
+                        <li><a href="javascript:;"><i class="fa fa-gift"></i> 非团支出借款</a></li>
                     </ol>
                 </section>
 
@@ -19,7 +19,7 @@
 
                             <div class="box box-warning">
                                 <div class="box-header">
-                                    <h3 class="box-title">直接报销</h3>
+                                    <h3 class="box-title">非团支出借款</h3>
                                 </div><!-- /.box-header -->
                                 <div class="box-body">
                                         <include file="nopjk_content" />

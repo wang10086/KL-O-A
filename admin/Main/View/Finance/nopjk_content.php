@@ -18,11 +18,6 @@
                     </select>
                 </div>
 
-                <!--<div class="form-group col-md-6">
-                    <label>证明验收人：</label>
-                    <input type="text" name="info[zmysr]" id="zmysr" class="form-control" value="{$list.zmysr}" readonly />
-                </div>-->
-
                 <div class="form-group col-md-6">
                     <label>借款金额：</label>
                     <input type="text" name="info[sum]" id="baoxiaojine" class="form-control" value="{$list.sum}" onblur="todaxie($(this).val())" />

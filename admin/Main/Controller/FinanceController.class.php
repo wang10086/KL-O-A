@@ -1336,6 +1336,7 @@ class FinanceController extends BaseController {
                 $department             = M('salary_department')->where(array('id'=>$info['department_id']))->find();
                 $info['department']     = $department['department'];
                 $info['bx_time']        = NOW_TIME;
+                $info['bxd_type']       = 1;    //团内借款报销
 
                 //获取证明验收人信息(所选单项预算金额最多的业务)
                 $new_lists              = multi_array_sort($loan_lists,'ctotal',SORT_DESC,SORT_NUMERIC);
@@ -1752,6 +1753,16 @@ class FinanceController extends BaseController {
                     $this->error('数据保存失败');
                 }
             }
+
+            //保存非团支出报销(修改时注意:关联两个表单提交loan_content and loan_jk_content)
+            if ($savetype==13){
+                $info           = I('info');
+                $info['type']   = I('type');
+                $zmysr_id       = I('zmysr_id');
+                $zmysr_name     = I('zmysr_name');
+
+                //var_dump(I());die;
+            }
         }
     }
 
@@ -2105,8 +2116,8 @@ class FinanceController extends BaseController {
     }
 
     /*****************************start****************************************/
-    //@@@NODE-3###loan_jklist###借款报销(列表)###
-    public function loan_jklist(){
+    //@@@NODE-3###loan_nopjk###非团借款报销(列表)###
+    public function loan_nopjk(){
         $project        = I('title');
         $group_id       = I('oid');
         $jkd_id         = I('jid');
@@ -2114,10 +2125,9 @@ class FinanceController extends BaseController {
 
         $where          = array();
         $all_jkd        = array('Finance/all_jkd'); //查看所有借款单权限
-        if ($project)   $where['o.project'] = array('like','%'.$project.'%');
-        if ($group_id)  $where['j.group_id']= array('like','%'.$group_id.'%');
-        if ($jkd_id)    $where['j.jkd_id']  = array('like','%'.$jkd_id.'%');
-        if ($jk_user)   $where['j.jk_user'] = array('like','%'.$jk_user.'%');
+        $where['jkd_type']  = 2;
+        if ($jkd_id)    $where['j.jkd_id']  = array('like',$jkd_id);
+        if ($jk_user)   $where['j.jk_user'] = array('like',$jk_user);
         $auth           = explode(',',Rolerelation(cookie('roleid')));
         if (rolemenu($all_jkd)){
 
@@ -2138,12 +2148,15 @@ class FinanceController extends BaseController {
         $this->display();
     }
 
-    //@@@NODE-3###loan_jk###填写借款报销页###
+    //@@@NODE-3###loan_jk###填写非团支出报销单###
     public function loan_jk(){
         $db                 = M('jiekuan');
         $jkid               = I('jkid');
         $list               = $db->where(array('id'=>$jkid))->find();
+        $departments        = M('salary_department')->field('id,department')->select();
+        $this->departments  = $departments;
         $this->list         = $list;
+        $this->userkey      = get_userkey();
         $this->jk_type      = C('JIEKUAN_TYPE');
         $this->display();
     }
@@ -2151,7 +2164,10 @@ class FinanceController extends BaseController {
     //@@@NODE-3###loan###填写直接报销页###
     public function loan(){
 
+        $departments        = M('salary_department')->field('id,department')->select();
+        $this->departments  = $departments;
         $this->jk_type      = C('JIEKUAN_TYPE');
+        $this->userkey      = get_userkey();
         $this->display();
     }
     /****************************end*****************************************/

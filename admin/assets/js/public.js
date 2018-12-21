@@ -74,6 +74,26 @@ function relaydate(){
 	});
 }
 
+/**
+ * 自动模糊匹配
+ * @param className
+ * @param idName
+ * @param keyWords
+ */
+function getUserKeyWords(className,idName,keyWords){
+	$("."+className+"").autocomplete(keyWords, {
+		matchContains: true,
+		highlightItem: false,
+		formatItem: function(row, i, max, term) {
+			return '<span style=" display:none">'+row.pinyin+'</span>'+row.text;
+		},
+		formatResult: function(row) {
+			return row.user_name;
+		}
+	}).result(function(event, item) {
+		$('#'+idName+'').val(item.id);
+	});
+}
 
 
 function ConfirmDel(url,msg) {
