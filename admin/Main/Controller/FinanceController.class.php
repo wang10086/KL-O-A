@@ -1581,7 +1581,7 @@ class FinanceController extends BaseController {
                     $audit_usertype                     = 1;                            //部门负责人(主管/经理)
                     $msg_user                           = $jiekuan_audit['manager_userid'];
 
-                    $a = M('jiekuan_audit')->add($jiekuan_audit);
+                    M('jiekuan_audit')->add($jiekuan_audit);
 
                     //发送系统消息
                     $uid     = cookie('userid');

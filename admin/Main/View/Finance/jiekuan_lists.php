@@ -38,6 +38,7 @@
                                                 <th class="sorting" data="o.project">项目名称</th>
                                             </if>
                                             <th class="sorting" width="100" data="j.jk_user">借款人</th>
+                                            <th class="sorting" width="100" data="j.department_id">借款部门</th>
                                             <th class="sorting" width="80" data="j.sum">借款金额</th>
                                             <th class="sorting" width="60" data="j.type">借款方式</th>
                                             <th class="sorting" width="80" data="j.zhuangtai">审批状态</th>
@@ -67,6 +68,7 @@
                                                 </td>
                                             </if>
                                             <td>{$row.jk_user}</td>
+                                            <td>{$row.department}</td>
                                             <td>{$row.sum}</td>
                                             <td>{$jk_type[$row[type]]}</td>
                                             <td>{$row.zhuangtai}</td>
