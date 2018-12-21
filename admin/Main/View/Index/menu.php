@@ -439,7 +439,7 @@
                                             <li class="{:on('Finance/nopjk')}"><a href="{:U('Finance/nopjk')}"><i class="fa fa-angle-right"></i> 非团支出借款</a></li>
                                         </if>
                                         <if condition="rolemenu(array('Finance/jiekuan'))">
-                                            <li class="{:on('Finance/jiekuan')}"><a href="javascript;"><i class="fa fa-angle-right"></i> 非团支出报销</a></li>
+                                            <li class="{:on('Finance/jiekuan')}"><a href="javascript:;"><i class="fa fa-angle-right"></i> 非团支出报销</a></li>
                                             <!--<li class="{:on('Finance/jiekuan')}"><a href="{:U('Finance/loan')}"><i class="fa fa-angle-right"></i> 非团支出借款</a></li>-->
                                             <!--<li class="{:on('Finance/jiekuan')}"><a href="{:U('Finance/loan_jklist')}"><i class="fa fa-angle-right"></i> 非团支出报销</a></li>-->
                                         </if>

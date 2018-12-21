@@ -1559,8 +1559,8 @@ class FinanceController extends BaseController {
                 $info['jk_user_id'] = cookie('userid');
                 $info['jk_time']    = NOW_TIME;
                 $info['jkd_type']   = 2;    //非团支出借款
-
                 $res = $db->add($info);
+
                 if ($res){
                     //该团的部门负责人及分管领导信息
                     $jk_departmentid    = $info['department_id'];
