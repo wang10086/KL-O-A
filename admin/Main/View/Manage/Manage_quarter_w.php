@@ -183,7 +183,6 @@
 
 </aside><!-- /.right-side -->
 
-
 <include file="Index:footer2" />
 
 <script>
