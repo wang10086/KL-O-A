@@ -1790,7 +1790,7 @@ class FinanceController extends BaseController {
                         $uid     = cookie('userid');
                         $title   = '您有来自['.$info['bx_user'].']团内报销单待证明验收!';
                         $content = '报销单号：'.$info['bxd_id'].'，报销金额：'.$info['sum'];
-                        $url     = U('Finance/audit_nopbxd',array('id'=>$res,'audit_usertype'=>$audit_usertype));
+                        $url     = U('Finance/nopbxd_info',array('id'=>$res,'audit_usertype'=>$audit_usertype));
                         $user    = '['.$audit['zm_audit_userid'].']';
                         send_msg($uid,$title,$content,$url,$user,'');
 
@@ -1806,6 +1806,208 @@ class FinanceController extends BaseController {
                     }
                 }else{
                     $this->error('获取证明验收人信息失败');
+                }
+            }
+
+            //审核非团借款报销单(证明验收人审核)
+            if ($savetype==14){
+
+                $db                     = M('baoxiao_audit');
+                $bx_id                  = I('bx_id');
+                $bxd_id                 = I('bxd_id');
+                $audit_id               = I('audit_id');
+                $info                   = I('info');
+                $info['zm_audit_time']  = NOW_TIME;
+                $res                    = $db->where(array('id'=>$audit_id))->save($info);
+                $bx_info                = M('baoxiao')->where(array('id'=>$bx_id))->find();
+                $audit_info             = M('baoxiao_audit')->where(array('id'=>$audit_id))->find();
+                $audit_zhuangtai        = C('AUDIT_STATUS');
+                $zhuangtai              = $audit_zhuangtai[$info['zm_audit_status']];
+                if ($res){
+                    if ($info['zm_audit_status']==1){
+                        //审核通过(部门主管)
+                        $audit_usertype     = 2;    //部门主管
+                        $manager_userid     = $audit_info['manager_userid'];
+                        //发送系统消息
+                        $uid     = cookie('userid');
+                        $title   = '您有来自['.$bx_info['bx_user'].']的报销申请!';
+                        $content = '报销单号：'.$bxd_id.'，报销金额：'.$bx_info['sum']."，<hr />证明验收人审核意见：<span class='red'>".$zhuangtai.'；'.$info['zm_remark']."</span>";
+                        $url     = U('Finance/nopbxd_info',array('id'=>$bx_id,'audit_usertype'=>$audit_usertype));
+                        $user    = '['.$manager_userid.']';
+                        send_msg($uid,$title,$content,$url,$user,'');
+                    }else{
+                        //发送系统消息 审核不通过(报销人)
+                        $uid     = cookie('userid');
+                        $title   = '您有来自['.$audit_info['zm_audit_username'].']的报销单审核反馈!';
+                        $content = '报销单号：'.$bxd_id.'，报销金额：'.$bx_info['sum']."，<hr />证明验收人审核意见：<span class='red'>".$zhuangtai.'；'.$info['zm_remark']."</span>";
+                        $url     = U('Finance/nopbxd_info',array('id'=>$bx_id));
+                        $user    = '['.$bx_info['bx_user_id'].']';
+                        send_msg($uid,$title,$content,$url,$user,'');
+
+                        //保存审核结果
+                        D('Finance')->save_bxd_audit($bx_id,$info['zm_audit_status']);
+                    }
+                    $record = array();
+                    $record['bill_id']  = $bxd_id;
+                    $record['type']     = 2;
+                    $record['explain']  = '证明验收人审核报销申请单，报销单号：'.$bxd_id.'，审核结果：'.$zhuangtai;
+                    jkbx_record($record);
+
+                    $this->success('保存成功');
+                }else{
+                    $this->error('保存失败');
+                }
+            }
+
+            //审核团内报销单(部门主管审核)
+            if ($savetype==15){
+                $db                     = M('baoxiao_audit');
+                $bx_id                  = I('bx_id');
+                $bxd_id                 = I('bxd_id');
+                $audit_id               = I('audit_id');
+                $info                   = I('info');
+                $info['manager_audit_time']  = NOW_TIME;
+                $res                    = $db->where(array('id'=>$audit_id))->save($info);
+                $bx_info                = M('baoxiao')->where(array('id'=>$bx_id))->find();
+                $audit_info             = M('baoxiao_audit')->where(array('id'=>$audit_id))->find();
+                $audit_zhuangtai        = C('AUDIT_STATUS');
+                $zhuangtai              = $audit_zhuangtai[$info['manager_audit_status']];
+                if ($res){
+                    if ($info['manager_audit_status']==1){
+                        //审核通过(部门分管领导)
+                        $audit_usertype                     = 3;    //部门分管领导
+                        $ys_audit_userid                    = $audit_info['ys_audit_userid'];
+                        //发送系统消息
+                        $uid     = cookie('userid');
+                        $title   = '您有来自['.$bx_info['bx_user'].']的报销申请!';
+                        $content = '报销单号：'.$bxd_id.'，报销金额：'.$bx_info['sum']."，<hr />部门分管领导审核意见：<span class='red'>".$zhuangtai.'；'.$info['manager_remark']."</span>";
+                        $url     = U('Finance/nopbxd_info',array('id'=>$bx_id,'audit_usertype'=>$audit_usertype));
+                        $user    = '['.$ys_audit_userid.']';
+                        send_msg($uid,$title,$content,$url,$user,'');
+                    }else{
+                        //发送系统消息 审核不通过(报销人)
+                        $uid     = cookie('userid');
+                        $title   = '您有来自['.$audit_info['zm_audit_username'].']的报销单审核反馈!';
+                        $content = '报销单号：'.$bxd_id.'，报销金额：'.$bx_info['sum']."，<hr />部门分管领导审核意见：<span class='red'>".$zhuangtai.'；'.$info['manager_remark']."</span>";
+                        $url     = U('Finance/nopbxd_info',array('id'=>$bx_id));
+                        $user    = '['.$bx_info['bx_user_id'].']';
+                        send_msg($uid,$title,$content,$url,$user,'');
+
+                        //保存审核结果
+                        D('Finance')->save_bxd_audit($bx_id,$info['manager_audit_status']);
+                    }
+                    $record = array();
+                    $record['bill_id']  = $bxd_id;
+                    $record['type']     = 2;
+                    $record['explain']  = '部门分管领导审核报销申请单，报销单号：'.$bxd_id.'，审核结果：'.$zhuangtai;
+                    jkbx_record($record);
+
+                    $this->success('保存成功');
+                }else{
+                    $this->error('保存失败');
+                }
+            }
+
+            //审核团内报销单(部门分管领导审核)
+            if ($savetype==16){
+                $db                     = M('baoxiao_audit');
+                $bx_id                  = I('bx_id');
+                $bxd_id                 = I('bxd_id');
+                $audit_id               = I('audit_id');
+                $info                   = I('info');
+                $info['ys_audit_time']  = NOW_TIME;
+                $res                    = $db->where(array('id'=>$audit_id))->save($info);
+                $bx_info                = M('baoxiao')->where(array('id'=>$bx_id))->find();
+                $audit_info             = M('baoxiao_audit')->where(array('id'=>$audit_id))->find();
+                $audit_zhuangtai        = C('AUDIT_STATUS');
+                $zhuangtai              = $audit_zhuangtai[$info['ys_audit_status']];
+
+                if ($res){
+                    if ($info['ys_audit_status']==1){
+                        //审核通过(财务)
+                        $audit_usertype                     = 4;    //财务
+                        $cw_audit_userid                    = $audit_info['cw_audit_userid'];
+                        //发送系统消息
+                        $uid     = cookie('userid');
+                        $title   = '您有来自['.$bx_info['bx_user'].']的报销申请!';
+                        $content = '报销单号：'.$bxd_id.'，报销金额：'.$bx_info['sum']."，<hr />部门分管领导审核意见：<span class='red'>".$zhuangtai.'；'.$info['ys_remark']."</span>";
+                        $url     = U('Finance/nopbxd_info',array('id'=>$bx_id,'audit_usertype'=>$audit_usertype));
+                        $user    = '['.$cw_audit_userid.']';
+                        send_msg($uid,$title,$content,$url,$user,'');
+
+                        $bxr_content = '报销单号：'.$bxd_id.'，报销金额：'.$bx_info['sum']."，<hr />部门分管领导审核意见：<span class='red'>".$zhuangtai.'；'.$info['ys_remark']."</span>；请及时打印报销单,并附上相关票据交至财务部审核!";
+                    }else{
+
+                        $bxr_content = '报销单号：'.$bxd_id.'，报销金额：'.$bx_info['sum']."，<hr />部门分管领导审核意见：<span class='red'>".$zhuangtai.'；'.$info['ys_remark']."</span>";
+                        //保存审核结果
+                        D('Finance')->save_bxd_audit($bx_id,$info['ys_audit_status']);
+                    }
+
+                    //发送系统消息(报销人)
+                    $uid     = cookie('userid');
+                    $title   = '您有来自['.$audit_info['ys_audit_username'].']的报销单审核反馈!';
+                    $content = $bxr_content;
+                    $url     = U('Finance/nopbxd_info',array('id'=>$bx_id));
+                    $user    = '['.$bx_info['bx_user_id'].']';
+                    send_msg($uid,$title,$content,$url,$user,'');
+
+                    $record = array();
+                    $record['bill_id']  = $bxd_id;
+                    $record['type']     = 2;
+                    $record['explain']  = '部门分管领导审核报销申请单，报销单号：'.$bxd_id.'，审核结果：'.$zhuangtai;
+                    jkbx_record($record);
+
+                    $this->success('保存成功');
+                }else{
+                    $this->error('保存失败');
+                }
+            }
+
+            //审核团内报销单(财务审核)
+            if ($savetype==17){
+                $db                     = M('baoxiao_audit');
+                $bx_id                  = I('bx_id');
+                $bxd_id                 = I('bxd_id');
+                $audit_id               = I('audit_id');
+                $info                   = I('info');
+                $info['cw_audit_time']  = NOW_TIME;
+                $res                    = $db->where(array('id'=>$audit_id))->save($info);
+                $bx_info                = M('baoxiao')->where(array('id'=>$bx_id))->find();
+                $audit_info             = M('baoxiao_audit')->where(array('id'=>$audit_id))->find();
+                $audit_zhuangtai        = C('AUDIT_STATUS');
+                $zhuangtai              = $audit_zhuangtai[$info['cw_audit_status']];
+                if ($res){
+                    if ($info['cw_audit_status']==1){
+                        //审核通过(通知出纳)
+                        $cn_userid  = 27;   //出纳(殷红)
+                        //发送系统消息
+                        $uid     = cookie('userid');
+                        $title   = '您有来自['.$bx_info['bx_user'].']的报销单,请及时跟进!';
+                        $content = '报销单号：'.$bxd_id.'，报销金额：'.$bx_info['sum']."，<hr />财务主管审核意见：<span class='red'>".$zhuangtai.'；'.$info['cw_remark']."</span>";
+                        $url     = U('Finance/nopbxd_info',array('id'=>$bx_id));
+                        $user    = '['.$cn_userid.']';
+                        send_msg($uid,$title,$content,$url,$user,'');
+                    }
+                    //发送系统消息(报销人)
+                    $uid     = cookie('userid');
+                    $title   = '您有来自['.$audit_info['cw_audit_username'].']的报销单审核反馈!';
+                    $content = '报销单号：'.$bxd_id.'，报销金额：'.$bx_info['sum']."，<hr />财务主管审核意见：<span class='red'>".$zhuangtai.'；'.$info['cw_remark']."</span>";
+                    $url     = U('Finance/nopbxd_info',array('id'=>$bx_id));
+                    $user    = '['.$bx_info['bx_user_id'].']';
+                    send_msg($uid,$title,$content,$url,$user,'');
+
+                    //保存审核结果
+                    D('Finance')->save_bxd_audit($bx_id,$info['cw_audit_status']);
+
+                    $record = array();
+                    $record['bill_id']  = $bxd_id;
+                    $record['type']     = 2;
+                    $record['explain']  = '财务主管审核报销申请单，报销单号：'.$bxd_id.'，审核结果：'.$zhuangtai;
+                    jkbx_record($record);
+
+                    $this->success('保存成功');
+                }else{
+                    $this->error('保存失败');
                 }
             }
         }
@@ -1880,7 +2082,8 @@ class FinanceController extends BaseController {
     // @@@NODE-3###jiekuandan_info###团内借款单详情###
     public function jiekuandan_info(){
         $id             = I('jkid');
-        $jiekuan        = M()->table('__JIEKUAN__ as j')->join('__JIEKUAN_AUDIT__ as a on a.jk_id=j.id','left')->where(array('j.id'=>$id))->find();
+        $field          = 'j.*,a.jk_id,a.manager_userid,a.manager_username,a.manager_audit_file,a.manager_audit_status,a.manager_audit_time,a.manager_remark,a.ys_audit_userid,a.ys_audit_username,a.ys_audit_file,a.ys_audit_status,a.ys_audit_time,a.ys_remark,a.cw_audit_userid,a.cw_audit_username,a.cw_audit_file,a.cw_audit_status,a.cw_audit_time,a.cw_remark';
+        $jiekuan        = M()->table('__JIEKUAN__ as j')->field($field)->join('__JIEKUAN_AUDIT__ as a on a.jk_id=j.id','left')->where(array('j.id'=>$id))->find();
         $jk_lists       = M()->table('__JIEKUAN_DETAIL__ as j')->join('__OP_COSTACC__ as c on c.id=j.costacc_id','left')->where(array('j.jk_id'=>$id))->select();
         $op             = M('op')->where(array('op_id'=>$jiekuan['op_id']))->find();
         $this->op       = $op;
@@ -2094,7 +2297,8 @@ class FinanceController extends BaseController {
     // @@@NODE-3###baoxiaodan_info###报销单详情###
     public function baoxiaodan_info(){
         $id             = I('id');
-        $baoxiao        = M()->table('__BAOXIAO__ as b')->join('__BAOXIAO_AUDIT__ as a on a.bx_id=b.id','left')->where(array('b.id'=>$id))->find();
+        $field          = "b.*,a.bx_id,a.zm_audit_userid,a.zm_audit_username,a.zm_audit_file,a.zm_audit_status,a.zm_audit_time,a.zm_remark,a.manager_userid,a.manager_username,a.manager_audit_file,a.manager_audit_status,a.manager_audit_time,a.manager_remark,a.ys_audit_userid,a.ys_audit_username,a.ys_audit_file,a.ys_audit_status,a.ys_audit_time,a.ys_remark,a.cw_audit_userid,a.cw_audit_username,a.cw_audit_file,a.cw_audit_status,a.cw_audit_time,a.cw_remark";
+        $baoxiao        = M()->table('__BAOXIAO__ as b')->field($field)->join('__BAOXIAO_AUDIT__ as a on a.bx_id=b.id','left')->where(array('b.id'=>$id))->find();
         $bx_lists       = M()->table('__BAOXIAO_DETAIL__ as b')->join('__OP_COSTACC__ as c on c.id=b.costacc_id','left')->where(array('b.bx_id'=>$id))->select();
         foreach ($bx_lists as $k=>$v){
             $where                  = array();
@@ -2111,9 +2315,9 @@ class FinanceController extends BaseController {
         $this->record   = D('Finance')->get_record($baoxiao['bxd_id']);
 
         //审核人信息
-        if ($baoxiao['zm_audit_userid']==cookie('userid') || cookie('userid')==11){
-            $this->audit_usertype = 1;  //证明验收人(或乔总)
-        }elseif ($baoxiao['ys_audit_userid']==cookie('userid') || cookie('userid')==11){
+        if ($baoxiao['zm_audit_userid']==cookie('userid')){
+            $this->audit_usertype = 1;  //证明验收人
+        }elseif ($baoxiao['ys_audit_userid']==cookie('userid')){
             $this->audit_usertype = 2;  //预算审批人(或乔总)
         }elseif ($baoxiao['cw_audit_userid']==cookie('userid')){
             $this->audit_usertype = 3;
@@ -2149,7 +2353,8 @@ class FinanceController extends BaseController {
     // @@@NODE-3###nopjk_info###非团借款单详情###
     public function nopjk_info(){
         $id             = I('jkid');
-        $jiekuan        = M()->table('__JIEKUAN__ as j')->join('__JIEKUAN_AUDIT__ as a on a.jk_id=j.id','left')->where(array('j.id'=>$id))->find();
+        $field          = 'j.*,a.jk_id,a.manager_userid,a.manager_username,a.manager_audit_file,a.manager_audit_status,a.manager_audit_time,a.manager_remark,a.ys_audit_userid,a.ys_audit_username,a.ys_audit_file,a.ys_audit_status,a.ys_audit_time,a.ys_remark,a.cw_audit_userid,a.cw_audit_username,a.cw_audit_file,a.cw_audit_status,a.cw_audit_time,a.cw_remark';
+        $jiekuan        = M()->table('__JIEKUAN__ as j')->field($field)->join('__JIEKUAN_AUDIT__ as a on a.jk_id=j.id','left')->where(array('j.id'=>$id))->find();
         $this->jiekuan  = $jiekuan;
         $this->jk_type  = C('JIEKUAN_TYPE');
         $audit_userinfo = M('jiekuan_audit')->where(array('jk_id'=>$id))->find();
@@ -2157,10 +2362,10 @@ class FinanceController extends BaseController {
         $this->record   = D('Finance')->get_record($jiekuan['jkd_id']);
 
         //审核人信息
-        if ($jiekuan['manager_userid']==cookie('userid') || cookie('userid')==11){
-            $this->audit_usertype = 1;  //部门负责人(或乔总)
-        }elseif($jiekuan['ys_audit_userid']==cookie('userid') || cookie('userid')==11){
-            $this->audit_usertype = 2;  //部门分管领导(或乔总)
+        if ($jiekuan['manager_userid']==cookie('userid')){
+            $this->audit_usertype = 1;  //部门负责人
+        }elseif($jiekuan['ys_audit_userid']==cookie('userid')){
+            $this->audit_usertype = 2;  //部门分管领导
         }elseif ($jiekuan['cw_audit_userid']==cookie('userid')){
             $this->audit_usertype = 3;
         }
@@ -2223,12 +2428,12 @@ class FinanceController extends BaseController {
         $this->display();
     }
 
-    //@@@NODE-3###audit_nopbxd###报销单详情(审核非团支出报销单)###
+    //@@@NODE-3###nopbxd_info###报销单详情(审核非团支出报销单)###
     public function nopbxd_info(){
 
         $id                 = I('id');
         $audit_usertype     = I('audit_usertype');
-        $baoxiao            = M()->table('__BAOXIAO__ as b')->join('__BAOXIAO_AUDIT__ as a on a.bx_id=b.id','left')->where(array('b.id'=>$id))->find();
+        $baoxiao            = M('baoxiao')->where(array('id'=>$id))->find();
 
         $this->baoxiao  = $baoxiao;
         $this->bx_type  = C('JIEKUAN_TYPE');
@@ -2237,15 +2442,16 @@ class FinanceController extends BaseController {
         $this->record   = D('Finance')->get_record($baoxiao['bxd_id']);
 
         //审核人信息
-        if ($baoxiao['zm_audit_userid']==cookie('userid') || cookie('userid')==11 || C('RBAC_SUPER_ADMIN')==cookie('username')){
-            $this->audit_usertype = 1;  //证明验收人(或乔总)
-        }elseif ($baoxiao['manager_userid']==cookie('userid') || cookie('userid')==11 || C('RBAC_SUPER_ADMIN')==cookie('username')){
-            $this->audit_usertype = 2;  //部门主管(或乔总)
-        }elseif ($baoxiao['ys_audit_userid']==cookie('userid') || cookie('userid')==11 || C('RBAC_SUPER_ADMIN')==cookie('username')){
-            $this->audit_usertype = 3;  //预算审批人(或乔总)
+        if ($baoxiao['zm_audit_userid']==cookie('userid')){
+            $this->audit_usertype = 1;  //证明验收人
+        }elseif ($baoxiao['manager_userid']==cookie('userid')){
+            $this->audit_usertype = 2;  //部门主管
+        }elseif ($baoxiao['ys_audit_userid']==cookie('userid')){
+            $this->audit_usertype = 3;  //预算审批人
         }elseif ($baoxiao['cw_audit_userid']==cookie('userid')){
             $this->audit_usertype = 4;
         }
+        $this->audit_usertype   = $audit_usertype;
         $this->display();
     }
     /****************************end*****************************************/

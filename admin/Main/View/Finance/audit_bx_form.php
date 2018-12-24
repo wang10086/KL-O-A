@@ -1,5 +1,5 @@
 <!--证明验收人-->
-<?php if ($audit_userinfo['zm_audit_status'] == 0 && $audit_usertype ==1){ ?>
+<?php if ($audit_userinfo['zm_audit_status'] == 0 && ($audit_usertype ==1 || cookie('userid')==11)){ ?>
     <form method="post" action="{:U('Finance/public_save')}" id="audit_jk" onsubmit="return submitBefore()">
         <input type="hidden" name="dosubmint" value="1">
         <input type="hidden" name="bx_id" value="{$baoxiao.id}">
@@ -32,7 +32,7 @@
 <?php } ?>
 
 <!--预算审核人签字-->
-<?php if ($audit_userinfo['zm_audit_status'] == 1 && $audit_userinfo['ys_audit_status'] == 0 && $baoxiao['audit_status'] == 0 && $audit_usertype ==2){ ?>
+<?php if ($audit_userinfo['zm_audit_status'] == 1 && $audit_userinfo['ys_audit_status'] == 0 && $baoxiao['audit_status'] == 0 && ($audit_usertype ==2 || cookie('userid')==11)){ ?>
     <form method="post" action="{:U('Finance/public_save')}" id="audit_jk" onsubmit="return submitBefore()">
         <input type="hidden" name="dosubmint" value="1">
         <input type="hidden" name="bx_id" value="{$baoxiao.id}">

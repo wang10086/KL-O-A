@@ -96,8 +96,8 @@
                                         <div id="formsbtn" style="padding-bottom:20px; margin-top:10px; color:#ff3300;">请确认各项结算费用是否正确，请务必确认，不可反复提交申请</div>
                                         
                                         <button type="button" onClick="$('#save_settlement').submit()" class="btn btn-info btn-lg" style=" padding-left:40px; padding-right:40px; margin-right:10px;">保存结算</button>
-                                        <!--<button type="button" onClick="$('#appsubmint').submit()" class="btn btn-success btn-lg" style=" padding-left:40px; padding-right:40px; margin-left:10px;">申请审批</button>-->
-                                        <button type="button" onClick="check_huikuan()" class="btn btn-success btn-lg" style=" padding-left:40px; padding-right:40px; margin-left:10px;">申请审批</button>
+                                        <button type="button" onClick="$('#appsubmint').submit()" class="btn btn-success btn-lg" style=" padding-left:40px; padding-right:40px; margin-left:10px;">申请审批</button>
+                                        <!--<button type="button" onClick="check_huikuan()" class="btn btn-success btn-lg" style=" padding-left:40px; padding-right:40px; margin-left:10px;">申请审批</button>-->
 
                                         
                                         

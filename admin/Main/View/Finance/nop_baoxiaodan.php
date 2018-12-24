@@ -54,8 +54,13 @@
                             </tr>
 
                             <tr>
-                                <td colspan="3" class="td_con td">报销人签字：<img src="/{$baoxiao.bx_file}" height="50px" alt=""></td>
-                                <td colspan="3" class="td_con td">证明验收人签字：<span id="zmysr"> <?php if($audit_userinfo['zm_audit_status']==2){echo "<span class='red'>不通过</span>"; }elseif ($audit_userinfo['zm_audit_status']==1){ echo "<img src='/$audit_userinfo[zm_audit_file]' height='50px'>";}; ?></span></td>
+                                <td class="td_con td" colspan="6">
+                                    <div style="display: inline-block; width: 33%;">报销人签字：<img src="/{$baoxiao.bx_file}" height="50px" alt=""></div>
+                                    <div style="display: inline-block; width: 33%;">证明验收人签字：<span id="zmysr"> <?php if($audit_userinfo['zm_audit_status']==2){echo "<span class='red'>不通过</span>"; }elseif ($audit_userinfo['zm_audit_status']==1){ echo "<img src='/$audit_userinfo[zm_audit_file]' height='50px'>";}; ?></span></div>
+                                    <div style="display: inline-block; width: 33%;">部门主管签字：<span id="zmysr"> <?php if($audit_userinfo['zm_audit_status']==2){echo "<span class='red'>不通过</span>"; }elseif ($audit_userinfo['zm_audit_status']==1){ echo "<img src='/$audit_userinfo[zm_audit_file]' height='50px'>";}; ?></span></div>
+                                </td>
+                                <!--<td colspan="3" class="td_con td">报销人签字：<img src="/{$baoxiao.bx_file}" height="50px" alt=""></td>
+                                <td colspan="3" class="td_con td">证明验收人签字：<span id="zmysr"> <?php /*if($audit_userinfo['zm_audit_status']==2){echo "<span class='red'>不通过</span>"; }elseif ($audit_userinfo['zm_audit_status']==1){ echo "<img src='/$audit_userinfo[zm_audit_file]' height='50px'>";}; */?></span></td>-->
                             </tr>
 
                             <tr>
@@ -110,15 +115,19 @@
             success:function (msg) {
                 if (msg.stu ==1){
                     var html = '';
-                    if (audit_usertype ==1 ){
+                    if (audit_usertype ==1){
                         html += '<label>证明验收人签字：</label>'+
                             '<input type="hidden" name="info[zm_audit_file]" value="'+msg.file_url+'">'+
                             '<img width="100" src="/'+msg.file_url+'" alt="">';
                     }else if(audit_usertype ==2){
-                        html += '<label>预算审核人签字：</label>'+
-                            '<input type="hidden" name="info[ys_audit_file]" value="'+msg.file_url+'">'+
+                        html += '<label>部门主管签字：</label>'+
+                            '<input type="hidden" name="info[manager_audit_file]" value="'+msg.file_url+'">'+
                             '<img width="100" src="/'+msg.file_url+'" alt="">';
                     }else if(audit_usertype ==3){
+                        html += '<label>部门分管领导签字：</label>'+
+                            '<input type="hidden" name="info[ys_audit_file]" value="'+msg.file_url+'">'+
+                            '<img width="100" src="/'+msg.file_url+'" alt="">';
+                    }else if(audit_usertype ==4){
                         html += '<label>财务主管签字：</label>'+
                             '<input type="hidden" name="info[cw_audit_file]" value="'+msg.file_url+'">'+
                             '<img width="100" src="/'+msg.file_url+'" alt="">';
