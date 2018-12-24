@@ -24,45 +24,59 @@
                                     </div>
                                 </div><!-- /.box-header -->
                                 <div class="box-body">
+                                    <!---->
+                                    <div class="btn-group" id="catfont">
+                                        <a href="{:U('Finance/baoxiao_lists',array('pin'=>0))}" class="btn <?php if($pin==0){ echo 'btn-info';}else{ echo 'btn-default';} ?>">全部报销单</a>
+                                        <a href="{:U('Finance/baoxiao_lists',array('pin'=>1))}" class="btn <?php if($pin==1){ echo 'btn-info';}else{ echo 'btn-default';} ?>">团内支出报销单</a>
+                                        <a href="{:U('Finance/baoxiao_lists',array('pin'=>2))}" class="btn <?php if($pin==2){ echo 'btn-info';}else{ echo 'btn-default';} ?>">非团支出报销单</a>
+                                    </div>
                                 
-                                <table class="table table-bordered dataTable fontmini" id="tablelist" style="margin-top:10px;">
-                                    <tr role="row" class="orders" >
-                                        <th class="sorting" width="180" data="b.bxd_id">报销单号</th>
-                                        <th class="sorting" width="" data="b.group_ids">团号</th>
-                                        <th class="sorting" data="b.jkd_ids">借款单号</th>
-                                        <th class="sorting" width="100" data="b.bx_user">报销人</th>
-                                        <th class="sorting" width="80" data="b.sum">报销金额</th>
-                                        <th class="sorting" width="60" data="b.type">报销方式</th>
-                                        <th class="sorting" width="80" data="b.zhuangtai">审批状态</th>
-                                        <if condition="rolemenu(array('Finance/baoxiaodan_info'))">
-                                            <th width="40" class="taskOptions">详情</th>
-                                        </if>
-                                        <if condition="rolemenu(array('Finance/del_bxd'))">
-                                            <th width="40" class="taskOptions">删除</th>
-                                        </if>
-                                    </tr>
-                                    <foreach name="lists" item="row"> 
-                                    <tr>
-                                        <td>{$row.bxd_id}</td>
-                                        <td>{$row.group_ids}</td>
-                                        <td>{$row.jkd_ids}</td>
-                                        <td>{$row.bx_user}</td>
-                                        <td>{$row.sum}</td>
-                                        <td>{$jk_type[$row[type]]}</td>
-                                        <td>{$row.zhuangtai}</td>
-                                        <if condition="rolemenu(array('Finance/baoxiaodan_info'))">
-                                            <td class="taskOptions">
-                                                <a href="{:U('Finance/baoxiaodan_info',array('id'=>$row['id']))}" title="详情" class="btn btn-info btn-smsm"><i class="fa fa-bars"></i></a>
-                                            </td>
-                                        </if>
-                                        <if condition="rolemenu(array('Finance/del_bxd'))">
-                                            <td class="taskOptions">
-                                                <button onClick="javascript:ConfirmDel()" title="删除" class="btn btn-warning btn-smsm"><i class="fa fa-times"></i></button>
-                                            </td>
-                                        </if>
-                                    </tr>
-                                    </foreach>					
-                                </table>
+                                    <table class="table table-bordered dataTable fontmini" id="tablelist" style="margin-top:10px;">
+                                        <tr role="row" class="orders" >
+                                            <th class="sorting" width="180" data="b.bxd_id">报销单号</th>
+                                            <if condition="$pin neq 2">
+                                                <th class="sorting" width="" data="b.group_ids">团号</th>
+                                            </if>
+                                            <th class="sorting" data="b.jkd_ids">借款单号</th>
+                                            <th class="sorting" width="100" data="b.bx_user">报销人</th>
+                                            <th class="sorting" width="80" data="b.sum">报销金额</th>
+                                            <th class="sorting" width="60" data="b.type">报销方式</th>
+                                            <th class="sorting" width="80" data="b.zhuangtai">审批状态</th>
+                                            <if condition="rolemenu(array('Finance/baoxiaodan_info'))">
+                                                <th width="40" class="taskOptions">详情</th>
+                                            </if>
+                                            <if condition="rolemenu(array('Finance/del_bxd'))">
+                                                <th width="40" class="taskOptions">删除</th>
+                                            </if>
+                                        </tr>
+                                        <foreach name="lists" item="row">
+                                        <tr>
+                                            <td>{$row.bxd_id}</td>
+                                            <if condition="$pin neq 2">
+                                                <td>{$row.group_ids}</td>
+                                            </if>
+                                            <td>{$row.jkd_ids}</td>
+                                            <td>{$row.bx_user}</td>
+                                            <td>{$row.sum}</td>
+                                            <td>{$jk_type[$row[type]]}</td>
+                                            <td>{$row.zhuangtai}</td>
+                                            <if condition="rolemenu(array('Finance/baoxiaodan_info','Finance/nopbxd_info'))">
+                                                <td class="taskOptions">
+                                                    <if condition="$row.bxd_type eq 1"><!--团内借款报销-->
+                                                        <a href="{:U('Finance/baoxiaodan_info',array('id'=>$row['id']))}" title="详情" class="btn btn-info btn-smsm"><i class="fa fa-bars"></i></a>
+                                                    <else /><!--非团借款报销-->
+                                                        <a href="{:U('Finance/nopbxd_info',array('id'=>$row['id']))}" title="详情" class="btn btn-info btn-smsm"><i class="fa fa-bars"></i></a>
+                                                    </if>
+                                                </td>
+                                            </if>
+                                            <if condition="rolemenu(array('Finance/del_bxd'))">
+                                                <td class="taskOptions">
+                                                    <button onClick="javascript:ConfirmDel()" title="删除" class="btn btn-warning btn-smsm"><i class="fa fa-times"></i></button>
+                                                </td>
+                                            </if>
+                                        </tr>
+                                        </foreach>
+                                    </table>
                                 </div><!-- /.box-body -->
                                  <div class="box-footer clearfix">
                                 	<div class="pagestyle">{$pages}</div>

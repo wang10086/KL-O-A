@@ -3,13 +3,15 @@
         <div class="content">
             <input type="hidden" name="dosubmint" value="1">
             <input type="hidden" name="savetype" value="13">
+            <input type="hidden" name="bxd_type" value="2"><!--非团借款报销-->
+            <input type="hidden" name="yingbaoxiao" value="{$list.sum}">
             <input type="hidden" id="qianzi" value="0">
             <input type="hidden" name="info[department]" id="department" value="{$list.department}">
             <input type="hidden" name="zmysr_id" id="zmysr_id">
             <div style="width:100%; float:left;">
                 <div class="form-group col-md-6">
                     <label>借款单号：</label>
-                    <input type="text" name="info[jkd_id]" class="form-control" value="{$list.jkd_id}" readonly />
+                    <input type="text" name="jkd_id" class="form-control" value="{$list.jkd_id}" readonly />
                 </div>
 
                 <div class="form-group col-md-6">
@@ -148,7 +150,7 @@
                     if (msg.stu ==1){
                         var html = '';
                         html += '<label>借款人：</label>'+
-                            '<input type="hidden" name="info[jk_file]" value="'+msg.file_url+'">'+
+                            '<input type="hidden" name="info[bx_file]" value="'+msg.file_url+'">'+
                             '<img width="100" src="/'+msg.file_url+'" alt="">';
                         $('#jkr_qianzi').html(html);
                         $('#qianzi').val('1');

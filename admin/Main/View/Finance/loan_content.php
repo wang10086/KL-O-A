@@ -4,6 +4,7 @@
         <div class="content">
             <input type="hidden" name="dosubmint" value="1">
             <input type="hidden" name="savetype" value="13">
+            <input type="hidden" name="bxd_type" value="3"><!--直接报销-->
             <input type="hidden" id="qianzi" value="0">
             <input type="hidden" name="info[department]" id="department">
             <input type="hidden" name="zmysr_id" id="zmysr_id">
@@ -145,7 +146,7 @@
                     if (msg.stu ==1){
                         var html = '';
                         html += '<label>报销人：</label>'+
-                            '<input type="hidden" name="info[jk_file]" value="'+msg.file_url+'">'+
+                            '<input type="hidden" name="info[bx_file]" value="'+msg.file_url+'">'+
                             '<img width="100" src="/'+msg.file_url+'" alt="">';
                         $('#jkr_qianzi').html(html);
                         $('#qianzi').val('1');
