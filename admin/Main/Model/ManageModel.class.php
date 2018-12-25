@@ -218,6 +218,7 @@ class ManageModel extends Model{
 
             $human[$key]['human_affairs'] = round(($val['money']/$affairs[$key]['affairs'])*100,2);//人事费用率
         }
+
         return $human;
     }
 
@@ -226,8 +227,9 @@ class ManageModel extends Model{
      * $number人力资源成本
      * $profit  总 营业收入
      * $departmen 部门 营业收入
+     * $department 部门 其他费用
      */
-    public function total_profit($number,$profit,$departmen){
+    public function total_profit($number,$profit,$departmen,$department){
 
         $departmen[0]['department']['monthzml'] = $profit['monthzml'];//总毛利 添加到部门营业毛利中
 
@@ -237,7 +239,7 @@ class ManageModel extends Model{
 
         foreach($departmen as $key => $val){
 
-           $total_profit[$key]['total_profit']  =  round($val['department']['monthzml']-$number[$key]['money'],2); //营业毛利-人力资源成本
+           $total_profit[$key]['total_profit']  =  round($val['department']['monthzml']-$number[$key]['money']-$department[$key]['money'],2); //营业毛利-人力资源成本
         }
         return $total_profit;
     }
@@ -454,7 +456,7 @@ class ManageModel extends Model{
 
             $profit_sum[$key]['yearprofit'] = $profit[$key]['yearzml']-$val['money'];//利润总额 = 营业毛利-人力资源成本
 
-            $profit_sum[$key]['personnel']  = round(($val['money']/$profit[$key]['yearzml'])*100,2);//人事费用率=人力资源成本/营业毛利
+            $profit_sum[$key]['personnel']  = round(($val['money']/$profit[$key]['yearzsr'])*100,2);//人事费用率=人力资源成本/营业毛利
 
         }
         return $profit_sum;
@@ -598,10 +600,10 @@ class ManageModel extends Model{
         $add['type']                    = $datetime['type'];
         $add['logged_department']       = trim(I('department'));//部门
         $tab                            = $this->sql_r($table,$add,2);
-        $add['account_id']              = $_SESSION['userid'];//用户uid
         $count                          = $this->sql_r($table,$add,1);
         if(!$count){
             if(count($tab)==10){return 3;die;}
+            $add['account_id']          = $_SESSION['userid'];//用户uid
             $add['createtime']          = time(); //时间
             $add['username']            = $_SESSION['name'];//用户名
             $add['employees_number']    = trim(I('number'));//员工人数
@@ -612,6 +614,7 @@ class ManageModel extends Model{
             $add['other_expenses']      = trim(I('other'));//其他费用
             $add['total_profit']        = trim(I('total'));//利润总额
             $add['personnel_cost_rate'] = trim(I('personnel'));//人事费用率
+            $add                        = array_filter($add);
             $add_input                  = M($table)->add($add);
             if($add_input){return 1;die;}else{return 2;die;}
         }else{
@@ -626,6 +629,7 @@ class ManageModel extends Model{
             $save['other_expenses']     = trim(I('other'));//其他费用
             $save['total_profit']       = trim(I('total'));//利润总额
             $save['personnel_cost_rate']= trim(I('personnel'));//人事费用率
+            $save                       = array_filter($save);
             $save_input                 = M($table)->where($add)->save($save);
             if($save_input){return 1;die;}else{return 2;die;}
         }
@@ -694,19 +698,19 @@ class ManageModel extends Model{
             $where['datetime']              = array('eq',$datetime['year']);
             $where['type']                  = array('eq',$type);
         }
-        $where['account_id']                = array('eq',$_SESSION['userid']);
+//        $where['account_id']                = array('eq',$_SESSION['userid']);
         $where['statu']                     = array('eq',1);
         $content                            = $this->sql_r('manage_input',$where,1); //查询当前状态是否为待提交审
         if($content){
             return 1;die;
         }else{
-            unset($where['statu']);unset($where['account_id']);
+            unset($where['statu']);
             $where['statu']                 = array('eq',2);
             $count                          = $this->sql_r('manage_input',$where,3);//查询当前状态是否为待提交批准
             if($count==10){
                 return 2;die;
             }else{
-                unset($where['statu']);unset($where['account_id']);
+                unset($where['statu']);
                 $where['statu']             = array('eq',3);
                 $input                      = $this->sql_r('manage_input',$where,1);//查询当前状态是否为待批准
                 if($input){return 3;die;}else{return 0;die;}
@@ -873,6 +877,57 @@ class ManageModel extends Model{
         }
     }
 
+    /**
+     * year_month_day 当前查询日期
+     * $year1   $month
+     */
+    public function year_month_day($year1,$month){
+        $day                    = 26;//当月结束天数
+        if($month==1){//判断时间
+            $yea                = $year1-1;
+            $mon                = 12;
+            $ymd1               = $yea.$mon.$day;//开始时间
+            $ymd2               = $year1.$month.$day;//结束时间
+        }else{
+            $ymd1               = $year1.($month-1).$day;//开始时间
+            $ymd2               = $year1.$month.$day;//结束时间
+        }
+        $ymd[0] = $ymd1;
+        $ymd[1] = $ymd2;
+        return $ymd;
+    }
+
+    /**
+     * department_data 部门数据
+     * $data 部门、公司所有数据
+     */
+    public function department_data($data){
+        $money                        = array();//部门其他费用
+        $count                        = 0;//公司总其他费用
+        foreach($data as $key => $val){
+            $count                   += $val['sum'];//公司总其他费用
+        }
+        $money[0]['money']            = $count;
+
+        $department                   = C('department');//部门顺序
+        $count_departmen              = 0;//总部门其他费用
+        foreach($department as $key => $val){//循环部门
+            $key                      = $key+1;
+            $departmen                = 0;//部门他费用
+            foreach($data as $k => $v){//循环部门其他费用
+                if($val ==$v['department']){
+                    $count_departmen +=$v['sum'];
+                    $departmen        = $departmen+$v['sum'];//部门总计
+                }else{
+                    $departmen        = $departmen+0;
+                }
+            }
+            $money[$key]['money']     = $departmen;
+        }
+        $money[9]['money']            = $money[0]['money']-$count_departmen;//机关部门
+        ksort($money);
+        return $money;
+    }
 }
 
 ?>
