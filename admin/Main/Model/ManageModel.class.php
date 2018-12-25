@@ -806,15 +806,16 @@ class ManageModel extends Model{
 
         $sum['year']          = (int)date('Y');
 
-        $where['datetime']    = $this->quarter_year($sum)['year'];
+        $where['datetime']    = $this->quarter_year($sum)['year']; //查询当前年度
 
         $where['statu']       = 1;
 
         $where['type']        = 5;
 
-        $manage               = $this->sql_r('manage_input',$where,2);
+        $manage               = $this->sql_r('manage_input',$where,2);//查询预算是年度 并且
 
         if(!$manage){return 3;die;}
+
         if(count($manage)==10){}else{return 4;die;}
 
         foreach($manage as $key => $val){
@@ -859,7 +860,7 @@ class ManageModel extends Model{
 
         $count                          = $this->sql_r('manage_input',$wher,2);
 
-        if(count($count)==10){
+        if(count($count)==10){//判断数据是不是已经都填写，
 
             foreach($count as $key => $val){
 
@@ -867,7 +868,7 @@ class ManageModel extends Model{
 
                 if($type=='' || $type==0){$save['statu']=$sum;$content='批准';}else{$save['statu']=1;$content='驳回';}
 
-                $input                  = M('manage_input')->where($query)->save($save);
+                $input                  = M('manage_input')->where($query)->save($save); //已有数据修改状态
 
             }
             if(!$input){return $content.'失败！';}else{return $content.'成功！';}
@@ -918,7 +919,6 @@ class ManageModel extends Model{
             $count                   += $val['sum'];//公司总其他费用
         }
         $money[0]['money']            = $count;
-
         $department                   = C('department');//部门顺序
         $count_departmen              = 0;//总部门其他费用
         foreach($department as $key => $val){//循环部门
