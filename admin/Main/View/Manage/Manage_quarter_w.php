@@ -187,7 +187,7 @@
 
 <script>
 
-    $(document).bind("click", function (e){
+    $("input").mouseleave(function (){
         var num1    = $(".manage_num1").val();//营业收入
         var num2    = $(".manage_num2").val();//营业毛利
         var num4    = $(".manage_num4").val();//人力资源成本

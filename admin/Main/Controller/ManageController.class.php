@@ -19,9 +19,11 @@ class ManageController extends ChartController {
         $mod                    = D('Manage');
 
         $year1                  = $mod->manageyear($year,$post);//判断加减年
+
         $ymd                    = $mod->year_month_day($year1,$month);//月度其他费用判断取出数据日期
         $mon                    = $this->not_team($ymd[0],$ymd[1]);//月度其他费用取出数据
         $department             = $mod->department_data($mon);//月度其他费用部门数据
+
         $number                 = $mod->month($year1,$month);// 月度 部门数量 部门人力资源成本
         $money                  = $this->business($year1,$month,1);// 月度 monthzsr 收入合计   monthzml 毛利合计  monthmll 毛利率
         $profit                 = $mod->profit($money);//月度 收入 毛利 毛利率
@@ -106,7 +108,15 @@ class ManageController extends ChartController {
         $month_r[9]['monthmll']                     = 0.00;//机关部门营业总利率为默认0
         if(in_array($quart,$arr1)){ //判断是否是第一、二、三、四季度
             for($n = 2; $n >= $i;$i++){ //
+
                 $month                              = $quart-$i; //季度上一个月
+
+                $ymd                                = $mod->year_month_day($year1,$month);//月度其他费用判断取出数据日期
+                $mon                                = $this->not_team($ymd[0],$ymd[1]);//月度其他费用取出数据
+                $department                         = $mod->department_data($mon);//月度其他费用部门数据
+                foreach($department as $key =>$val){
+                    $month_r[$key]['money']        += $val['money'];//季度其他费用
+                }
                 $count                              = $this->business($year1,$month,$type); //季度 人数和 人力资源成本
                 $profit                             = $mod->profit($count);//收入 毛利 毛利率
                 foreach($profit['departmen'] as $key => $val){
@@ -147,6 +157,12 @@ class ManageController extends ChartController {
                     $month_r[0]['monthzsr']         += $profit['profit']['monthzsr'];
                     $month_r[0]['monthzml']         += $profit['profit']['monthzml'];
                     $month_r[0]['monthmll']         += $profit['profit']['monthmll'];
+                   $ymd                              = $mod->year_month_day($year1,$month);//月度其他费用判断取出数据日期
+                   $mon                              = $this->not_team($ymd[0],$ymd[1]);//月度其他费用取出数据
+                   $department                       = $mod->department_data($mon);//月度其他费用部门数据
+                   foreach($department as $key =>$val){
+                       $month_r[$key]['money']      += $val['money'];//季度其他费用
+                   }
                 }
             }
         }

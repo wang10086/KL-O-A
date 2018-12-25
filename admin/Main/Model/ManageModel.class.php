@@ -334,7 +334,8 @@ class ManageModel extends Model{
         foreach($quarter as $key =>$val){ //循环数据
 
             //季度利润总额 = 季度总毛利-人力资源成本
-           $countprofit[$key]['monthzml'] =  $profits[$key]['monthzml']-$val['money'];
+           $countprofit[$key]['monthzml'] =  $profits[$key]['monthzml']-$val['money']-$profits[$key]['money'];
+
         }
         return $countprofit;
     }
