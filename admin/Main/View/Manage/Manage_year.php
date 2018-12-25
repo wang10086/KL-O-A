@@ -170,16 +170,10 @@
                                 </tr>
                                 <tr role="row" class="orders" style="text-align:center;">
                                     <td>其他费用</td>
-                                    <td><?php echo $n['employees_sum'];?></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
+                                    <foreach name="department" item="dep">
+                                        <th>¥ <?php if($dep['money']=="" || $dep['money']==0){echo '0.00';}else{echo $dep['money'];}?></th>
+                                    </foreach>
+
                                 </tr>
                                 <tr role="row" class="orders" style="text-align:center;">
                                     <td>利润总额</td>

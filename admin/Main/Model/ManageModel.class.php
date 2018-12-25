@@ -239,7 +239,7 @@ class ManageModel extends Model{
 
         foreach($departmen as $key => $val){
 
-           $total_profit[$key]['total_profit']  =  round($val['department']['monthzml']-$number[$key]['money']-$department[$key]['money'],2); //营业毛利-人力资源成本
+           $total_profit[$key]['total_profit']  =  round($val['department']['monthzml']-$number[$key]['money']-$department[$key]['money'],2); //营业毛利-人力资源成本-其他费用
         }
         return $total_profit;
     }
@@ -333,7 +333,7 @@ class ManageModel extends Model{
 
         foreach($quarter as $key =>$val){ //循环数据
 
-            //季度利润总额 = 季度总毛利-人力资源成本
+            //季度利润总额 = 季度总毛利-人力资源成本-其他费用
            $countprofit[$key]['monthzml'] =  $profits[$key]['monthzml']-$val['money']-$profits[$key]['money'];
 
         }
@@ -450,12 +450,13 @@ class ManageModel extends Model{
      * count_profit 年利润总额
      * $yea_report 年人员人力资源成本
      * $profit 年 收入 毛利 毛利率
+     * $department 部门其他费用
      */
-    public function count_profit($yea_report,$profit){
+    public function count_profit($yea_report,$profit,$department){
 
         foreach($yea_report as $key =>$val){
 
-            $profit_sum[$key]['yearprofit'] = $profit[$key]['yearzml']-$val['money'];//利润总额 = 营业毛利-人力资源成本
+            $profit_sum[$key]['yearprofit'] = $profit[$key]['yearzml']-$val['money']-$department[$key]['money'];//利润总额 = 营业毛利-人力资源成本-其他费用
 
             $profit_sum[$key]['personnel']  = round(($val['money']/$profit[$key]['yearzsr'])*100,2);//人事费用率=人力资源成本/营业毛利
 
@@ -887,10 +888,16 @@ class ManageModel extends Model{
             $yea                = $year1-1;
             $mon                = 12;
             $ymd1               = $yea.$mon.$day;//开始时间
-            $ymd2               = $year1.$month.$day;//结束时间
+            $ymd2               = "$year1.'0'".$month.$day;//结束时间
         }else{
-            $ymd1               = $year1.($month-1).$day;//开始时间
-            $ymd2               = $year1.$month.$day;//结束时间
+            if($month<10){
+                $ymd1               = "$year1.'0'".($month-1).$day;//开始时间
+                $ymd2               = "$year1.'0'".$month.$day;//结束时间
+            }else{
+                $ymd1               = $year1.($month-1).$day;//开始时间
+                $ymd2               = $year1.$month.$day;//结束时间
+            }
+
         }
         $ymd[0] = $ymd1;
         $ymd[1] = $ymd2;
@@ -929,11 +936,13 @@ class ManageModel extends Model{
         return $money;
     }
     /**
-     * yearmonthday 年度部门数据
+     * yearmonthday 年度其他费用部门数据
      * $year 年
      */
     public function yearmonthday($year){
-
+        $ymd[0]       = ($year-1).'1226';
+        $ymd[1]       = $year.'1226';
+        return $ymd;
     }
 }
 

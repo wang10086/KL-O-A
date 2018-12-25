@@ -722,7 +722,7 @@ class ChartController extends BaseController {
         $map['bxd_type'] = array(array('gt',1),array('lt',4));//2 非团借款报销 3直接报销
         $map['audit_status'] = array('eq',1);//审核通过
         $money = M('baoxiao')->where($map)->select();//日期内所有数据
-        return  $money;
+        return  $ymd1;
     }
 
 }
