@@ -1970,9 +1970,11 @@ class FinanceController extends BaseController {
                 $bxd_id                 = I('bxd_id');
                 $audit_id               = I('audit_id');
                 $info                   = I('info');
-                $bxd_kind               = I('bxd_kind');
                 $info['cw_audit_time']  = NOW_TIME;
                 $res                    = $db->where(array('id'=>$audit_id))->save($info);
+                $bxd                    = array();
+                $bxd['bxd_kind']        = I('bxd_kind');
+                M('baoxiao')->where(array('id'=>$bx_id))->save($bxd);
                 $bx_info                = M('baoxiao')->where(array('id'=>$bx_id))->find();
                 $audit_info             = M('baoxiao_audit')->where(array('id'=>$audit_id))->find();
                 $audit_zhuangtai        = C('AUDIT_STATUS');
@@ -2470,7 +2472,7 @@ class FinanceController extends BaseController {
         }
     }
 
-    public function aa(){
+    public function test(){
         $guide_ids = M('account')->where(array('guide_id'=>array('neq',0)))->getField('guide_id',true);
         $arr        = array();
         $begin_time = 1543248000; //11.27
@@ -2481,10 +2483,19 @@ class FinanceController extends BaseController {
             $where['p.status']      = 2;
             $where['p.sure_time']   = array('between',"$begin_time,$end_time");
             $field      = array();
-            $field[]    = sum();
+            $field[]    = 'sum(p.really_cost) as ccost';
+            $field[]    = 'g.name';
             $list       = M()->table('__GUIDE__ as g')->field($field)->join('__GUIDE_PAY__ as p on p.guide_id=g.id','left')->where($where)->find();
+            if ($list['ccost']){
+                $arr[]  = $list;
+            }
         }
-        var_dump($guide_ids);die;
+
+        $sum = 0;
+        foreach ($arr as $v){
+            $sum += $v['ccost'];
+        }
+        var_dump($sum);die;
     }
 
     /****************************end*****************************************/
