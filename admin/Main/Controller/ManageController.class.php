@@ -19,12 +19,16 @@ class ManageController extends ChartController {
         $mod                    = D('Manage');
 
         $year1                  = $mod->manageyear($year,$post);//判断加减年
-        $number                 = $mod->month($year1,$month);// 部门数量 部门人力资源成本
-        $money                  = $this->business($year1,$month,1);//monthzsr 收入合计   monthzml 毛利合计  monthmll 毛利率
-        $profit                 = $mod->profit($money);//收入 毛利 毛利率
-        $human                  = $mod->human_affairs($number,$profit['profit'],$profit['departmen']);//人事费用率
-        $total_profit           = $mod->total_profit($number,$profit['profit'],$profit['departmen']);//利润总额
+        $ymd                    = $mod->year_month_day($year1,$month);//月度其他费用判断取出数据日期
+        $mon                    = $this->not_team($ymd[0],$ymd[1]);//月度其他费用取出数据
+        $department             = $mod->department_data($mon);//月度其他费用部门数据
+        $number                 = $mod->month($year1,$month);// 月度 部门数量 部门人力资源成本
+        $money                  = $this->business($year1,$month,1);// 月度 monthzsr 收入合计   monthzml 毛利合计  monthmll 毛利率
+        $profit                 = $mod->profit($money);//月度 收入 毛利 毛利率
+        $human                  = $mod->human_affairs($number,$profit['profit'],$profit['departmen']);//月度 人事费用率
+        $total_profit           = $mod->total_profit($number,$profit['profit'],$profit['departmen'],$department);//月度 利润总额
 
+        $this->department       = $department;//其他费用部门数据
         $this->total_profit     = $total_profit;//利润总额(未减去其他费用)
         $this->human_affairs    = $human;//人事费用率
         $this->profit           = $profit['departmen'];//部门 收入 毛利 毛利率
@@ -163,6 +167,7 @@ class ManageController extends ChartController {
         $yea_report         = $mod->yea_report($year1,$post);//年人员数量  年人员人力资源成本
         $money              = $this->business($year1,$month,1);//年 monthzsr 收入合计 monthzml 毛利合计 monthmll 毛利率
         $profit             = $mod->profit_w($money);//年 收入 毛利 毛利率
+
         $count_profit       = $mod->count_profit($yea_report,$profit);//年利润总额 年人事费用
         //年度预算报表
         $where['year']      = $year1;
@@ -200,7 +205,7 @@ class ManageController extends ChartController {
     public function Manage_year_w(){
         $mod                            = D('Manage');
         $date_Y['year']                 = (int)date('Y');
-        $datetime                       = $mod->quarter_year($date_Y);//获取年度预算
+        $datetime                       = $mod->quarter_year($date_Y);//获取年度预算时间
         $datetime['type']               = 5;
         $statu                          = $mod->manage_input_statu('manage_input',$datetime);
         if($statu==1){
@@ -347,4 +352,5 @@ class ManageController extends ChartController {
         $manage         = $mod->year_paprova1($status,$type,3,4);//季度提交审
         if(strpos($manage,'成功') !==false){$this->success($manage);}else{$this->error($manage);}
     }
+
  }

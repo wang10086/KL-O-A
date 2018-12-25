@@ -90,16 +90,9 @@
                             </tr>
                             <tr role="row" class="orders" style="text-align:center;">
                                 <td>其他费用</td>
-                                <td>¥ 0.00</td>
-                                <td>¥ 0.00</td>
-                                <td>¥ 0.00</td>
-                                <td>¥ 0.00</td>
-                                <td>¥ 0.00</td>
-                                <td>¥ 0.00</td>
-                                <td>¥ 0.00</td>
-                                <td>¥ 0.00</td>
-                                <td>¥ 0.00</td>
-                                <td>¥ 0.00</td>
+                                <foreach name="department" item="d">
+                                    <th>¥ <?php if($d['money']=="" || $d['money']==0){echo '0.00';}else{echo $d['money'];}?></th>
+                                </foreach>
                             </tr>
                             <tr role="row" class="orders" style="text-align:center;">
                                 <td>利润总额</td>
