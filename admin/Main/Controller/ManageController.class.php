@@ -19,7 +19,6 @@ class ManageController extends ChartController {
         $mod                    = D('Manage');
 
         $year1                  = $mod->manageyear($year,$post);//判断加减年
-
         $ymd                    = $mod->year_month_day($year1,$month);//月度其他费用判断取出数据日期
         $mon                    = $this->not_team($ymd[0],$ymd[1]);//月度其他费用取出数据
         $department             = $mod->department_data($mon);//月度其他费用部门数据
@@ -29,7 +28,7 @@ class ManageController extends ChartController {
         $profit                 = $mod->profit($money);//月度 收入 毛利 毛利率
         $human                  = $mod->human_affairs($number,$profit['profit'],$profit['departmen']);//月度 人事费用率
         $total_profit           = $mod->total_profit($number,$profit['profit'],$profit['departmen'],$department);//月度 利润总额
-
+//        print_r($money);die;
         $this->department       = $department;//其他费用部门数据
         $this->total_profit     = $total_profit;//利润总额(未减去其他费用)
         $this->human_affairs    = $human;//人事费用率
@@ -108,9 +107,7 @@ class ManageController extends ChartController {
         $month_r[9]['monthmll']                     = 0.00;//机关部门营业总利率为默认0
         if(in_array($quart,$arr1)){ //判断是否是第一、二、三、四季度
             for($n = 2; $n >= $i;$i++){ //
-
                 $month                              = $quart-$i; //季度上一个月
-
                 $ymd                                = $mod->year_month_day($year1,$month);//月度其他费用判断取出数据日期
                 $mon                                = $this->not_team($ymd[0],$ymd[1]);//月度其他费用取出数据
                 $department                         = $mod->department_data($mon);//月度其他费用部门数据
@@ -183,6 +180,10 @@ class ManageController extends ChartController {
         $yea_report         = $mod->yea_report($year1,$post);//年人员数量  年人员人力资源成本
         $money              = $this->business($year1,$month,1);//年 monthzsr 收入合计 monthzml 毛利合计 monthmll 毛利率
         $profit             = $mod->profit_w($money);//年 收入 毛利 毛利率
+        // 其他费用
+        $ymd                = $mod->yearmonthday($year1);//月度其他费用判断取出数据日期
+        $mon                = $this->not_team($ymd[0],$ymd[1]);//月度其他费用取出数据
+        $department         = $mod->department_data($mon);//月度其他费用部门数据
 
         $count_profit       = $mod->count_profit($yea_report,$profit);//年利润总额 年人事费用
         //年度预算报表

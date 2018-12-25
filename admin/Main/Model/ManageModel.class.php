@@ -878,8 +878,8 @@ class ManageModel extends Model{
     }
 
     /**
-     * year_month_day 当前查询日期
-     * $year1   $month
+     * year_month_day 月度当前查询日期
+     * $year1 年  $month月
      */
     public function year_month_day($year1,$month){
         $day                    = 26;//当月结束天数
@@ -927,6 +927,13 @@ class ManageModel extends Model{
         $money[9]['money']            = $money[0]['money']-$count_departmen;//机关部门
         ksort($money);
         return $money;
+    }
+    /**
+     * yearmonthday 年度部门数据
+     * $year 年
+     */
+    public function yearmonthday($year){
+
     }
 }
 
