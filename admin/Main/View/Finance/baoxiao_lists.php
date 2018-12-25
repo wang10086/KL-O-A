@@ -71,7 +71,7 @@
                                             </if>
                                             <if condition="rolemenu(array('Finance/del_bxd'))">
                                                 <td class="taskOptions">
-                                                    <button onClick="javascript:ConfirmDel()" title="删除" class="btn btn-warning btn-smsm"><i class="fa fa-times"></i></button>
+                                                    <button onClick="javascript:ConfirmDel('{:U('Finance/del_bxd',array('id'=>$row['id']))}')" title="删除" class="btn btn-warning btn-smsm"><i class="fa fa-times"></i></button>
                                                 </td>
                                             </if>
                                         </tr>

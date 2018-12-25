@@ -1970,6 +1970,7 @@ class FinanceController extends BaseController {
                 $bxd_id                 = I('bxd_id');
                 $audit_id               = I('audit_id');
                 $info                   = I('info');
+                $bxd_kind               = I('bxd_kind');
                 $info['cw_audit_time']  = NOW_TIME;
                 $res                    = $db->where(array('id'=>$audit_id))->save($info);
                 $bx_info                = M('baoxiao')->where(array('id'=>$bx_id))->find();
@@ -2452,7 +2453,39 @@ class FinanceController extends BaseController {
             $auditUserType = 4;
         }
         $this->audit_usertype   = $audit_usertype?$audit_usertype:$auditUserType;
+        $this->bxd_kind         = C('BXD_KIND');
         $this->display();
     }
+
+    //@@@NODE-3###del_bxd###删除报销单###
+    public function del_bxd(){
+        $id         = I('id');
+        if ($id){
+            M('baoxiao')->where(array('id'=>$id))->delete();
+            M('baoxiao_audit')->where(array('bx_id'=>$id))->delete();
+            M('baoxiao_detail')->where(array('bx_id'=>$id))->delete();
+            $this->success('删除数据成功');
+        }else{
+            $this->error('删除数据失败');
+        }
+    }
+
+    public function aa(){
+        $guide_ids = M('account')->where(array('guide_id'=>array('neq',0)))->getField('guide_id',true);
+        $arr        = array();
+        $begin_time = 1543248000; //11.27
+        $end_time   = 1545753600; //12.26
+        foreach ($guide_ids as $v){
+            $where                  = array();
+            $where['g.id']          = $v;
+            $where['p.status']      = 2;
+            $where['p.sure_time']   = array('between',"$begin_time,$end_time");
+            $field      = array();
+            $field[]    = sum();
+            $list       = M()->table('__GUIDE__ as g')->field($field)->join('__GUIDE_PAY__ as p on p.guide_id=g.id','left')->where($where)->find();
+        }
+        var_dump($guide_ids);die;
+    }
+
     /****************************end*****************************************/
 }

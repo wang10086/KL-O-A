@@ -115,11 +115,11 @@
 
             <div class="form-group col-md-6">
                 <label>报销单分类：</label>
-                <select class="form-control" name="" id="" required>
+                <select class="form-control" name="bxd_kind" required>
                     <option value="">==请选择==</option>
-                    <option value="1">住宿</option>
-                    <option value="2">用车</option>
-                    <option value="3">采买</option>
+                    <foreach name="bxd_kind" key="k" item="v">
+                        <option value="{$k}">{$v}</option>
+                    </foreach>
                 </select>
             </div>
 
