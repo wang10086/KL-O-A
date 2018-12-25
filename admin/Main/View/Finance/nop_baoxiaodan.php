@@ -57,10 +57,8 @@
                                 <td class="td_con td" colspan="6">
                                     <div style="display: inline-block; width: 33%;">报销人签字：<img src="/{$baoxiao.bx_file}" height="50px" alt=""></div>
                                     <div style="display: inline-block; width: 33%;">证明验收人签字：<span id="zmysr"> <?php if($audit_userinfo['zm_audit_status']==2){echo "<span class='red'>不通过</span>"; }elseif ($audit_userinfo['zm_audit_status']==1){ echo "<img src='/$audit_userinfo[zm_audit_file]' height='50px'>";}; ?></span></div>
-                                    <div style="display: inline-block; width: 33%;">部门主管签字：<span id="zmysr"> <?php if($audit_userinfo['zm_audit_status']==2){echo "<span class='red'>不通过</span>"; }elseif ($audit_userinfo['zm_audit_status']==1){ echo "<img src='/$audit_userinfo[zm_audit_file]' height='50px'>";}; ?></span></div>
+                                    <div style="display: inline-block; width: 33%;">部门主管签字：<span id="zmysr"> <?php if($audit_userinfo['manager_audit_status']==2){echo "<span class='red'>不通过</span>"; }elseif ($audit_userinfo['manager_audit_status']==1){ echo "<img src='/$audit_userinfo[manager_audit_file]' height='50px'>";}; ?></span></div>
                                 </td>
-                                <!--<td colspan="3" class="td_con td">报销人签字：<img src="/{$baoxiao.bx_file}" height="50px" alt=""></td>
-                                <td colspan="3" class="td_con td">证明验收人签字：<span id="zmysr"> <?php /*if($audit_userinfo['zm_audit_status']==2){echo "<span class='red'>不通过</span>"; }elseif ($audit_userinfo['zm_audit_status']==1){ echo "<img src='/$audit_userinfo[zm_audit_file]' height='50px'>";}; */?></span></td>-->
                             </tr>
 
                             <tr>

@@ -1,5 +1,5 @@
 <!--证明验收人-->
-<?php if ($audit_userinfo['zm_audit_status'] == 0 && ($audit_usertype ==1 || cookie('userid')==11 || C('RBAC_SUPER_ADMIN')==cookie('username'))){ ?>
+<?php if ($audit_usertype ==2 && (in_array(cookie('userid'),array($info['zm_audit_userid'],1,11)))){ ?>
     <form method="post" action="{:U('Finance/public_save')}" id="audit_jk" onsubmit="return submitBefore()">
         <input type="hidden" name="dosubmint" value="1">
         <input type="hidden" name="bx_id" value="{$baoxiao.id}">
@@ -32,7 +32,7 @@
 <?php } ?>
 
 <!--部门主管-->
-<?php if ($audit_userinfo['zm_audit_status'] == 1 && $audit_userinfo['manager_audit_status'] == 0 && $baoxiao['audit_status'] == 0 && ($audit_usertype ==2 || cookie('userid')==11 || C('RBAC_SUPER_ADMIN')==cookie('username'))){ ?>
+<?php if ($audit_usertype ==2 && (in_array(cookie('userid'),array($info['manager_userid'],1,11)))){ ?>
     <form method="post" action="{:U('Finance/public_save')}" id="audit_jk" onsubmit="return submitBefore()">
         <input type="hidden" name="dosubmint" value="1">
         <input type="hidden" name="bx_id" value="{$baoxiao.id}">
@@ -65,7 +65,7 @@
 <?php } ?>
 
 <!--部门分管领导-->
-<?php if ($audit_userinfo['zm_audit_status'] == 1 && $audit_userinfo['manager_audit_status'] == 1 && $audit_userinfo['ys_audit_status'] == 0 && $baoxiao['audit_status'] == 0 && ($audit_usertype ==3 || cookie('userid')==11 || C('RBAC_SUPER_ADMIN')==cookie('username'))){ ?>
+<?php if ($audit_usertype ==3 && (in_array(cookie('userid'),array($info['ys_audit_userid'],1,11)))){ ?>
     <form method="post" action="{:U('Finance/public_save')}" id="audit_jk" onsubmit="return submitBefore()">
         <input type="hidden" name="dosubmint" value="1">
         <input type="hidden" name="bx_id" value="{$baoxiao.id}">
@@ -98,7 +98,7 @@
 <?php } ?>
 
 <!--财务主管签字-->
-<?php if ($audit_userinfo['zm_audit_status'] == 1 && $audit_userinfo['manager_audit_status'] == 1 && $audit_userinfo['ys_audit_status'] == 1 && $baoxiao['audit_status'] == 0 && ($audit_usertype ==4 || C('RBAC_SUPER_ADMIN')==cookie('username'))){ ?>
+<?php if ($audit_usertype ==4 && in_array(cookie('userid'),array($info['cw_audit_userid'],1))){ ?>
     <form method="post" action="{:U('Finance/public_save')}" id="audit_jk" onsubmit="return submitBefore()">
         <input type="hidden" name="dosubmint" value="1">
         <input type="hidden" name="bx_id" value="{$baoxiao.id}">

@@ -2442,16 +2442,16 @@ class FinanceController extends BaseController {
         $this->record   = D('Finance')->get_record($baoxiao['bxd_id']);
 
         //审核人信息
-        if ($baoxiao['zm_audit_userid']==cookie('userid')){
-            $this->audit_usertype = 1;  //证明验收人
-        }elseif ($baoxiao['manager_userid']==cookie('userid')){
-            $this->audit_usertype = 2;  //部门主管
-        }elseif ($baoxiao['ys_audit_userid']==cookie('userid')){
-            $this->audit_usertype = 3;  //预算审批人
-        }elseif ($baoxiao['cw_audit_userid']==cookie('userid')){
-            $this->audit_usertype = 4;
+        if ($audit_userinfo['zm_audit_status'] == 0 && $baoxiao['audit_status'] == 0){
+            $auditUserType = 1;  //证明验收人
+        }elseif ($audit_userinfo['zm_audit_status'] == 1 && $audit_userinfo['manager_audit_status'] == 0 && $baoxiao['audit_status'] == 0){
+            $auditUserType = 2;  //部门主管
+        }elseif ($audit_userinfo['zm_audit_status'] == 1 && $audit_userinfo['manager_audit_status'] == 1 && $audit_userinfo['ys_audit_status'] == 0 && $baoxiao['audit_status'] == 0){
+            $auditUserType = 3;  //预算审批人
+        }elseif ($audit_userinfo['zm_audit_status'] == 1 && $audit_userinfo['manager_audit_status'] == 1 && $audit_userinfo['ys_audit_status'] == 1 && $baoxiao['audit_status'] == 0){
+            $auditUserType = 4;
         }
-        $this->audit_usertype   = $audit_usertype;
+        $this->audit_usertype   = $audit_usertype?$audit_usertype:$auditUserType;
         $this->display();
     }
     /****************************end*****************************************/
