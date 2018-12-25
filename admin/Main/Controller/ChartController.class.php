@@ -716,13 +716,14 @@ class ChartController extends BaseController {
      * $ymd2 结束时间 20180726
      */
     public function not_team($ymd1,$ymd2){
+
         $ymd1 =  strtotime($ymd1);
         $ymd2 =  strtotime($ymd2);
         $map['bx_time'] = array(array('gt',$ymd1),array('lt',$ymd2));//开始结束时间
         $map['bxd_type'] = array(array('gt',1),array('lt',4));//2 非团借款报销 3直接报销
         $map['audit_status'] = array('eq',1);//审核通过
         $money = M('baoxiao')->where($map)->select();//日期内所有数据
-        return  $ymd1;
+        return  $money;
     }
 
 }

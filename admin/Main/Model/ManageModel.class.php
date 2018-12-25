@@ -884,23 +884,26 @@ class ManageModel extends Model{
      */
     public function year_month_day($year1,$month){
         $day                    = 26;//当月结束天数
-        if($month==1){//判断时间
+        if($month==1){//判断时间 如果是一月份
             $yea                = $year1-1;
             $mon                = 12;
             $ymd1               = $yea.$mon.$day;//开始时间
-            $ymd2               = "$year1.'0'".$month.$day;//结束时间
+            $ymd2               = $year1.'01'.$day;//结束时间
         }else{
-            if($month<10){
-                $ymd1               = "$year1.'0'".($month-1).$day;//开始时间
-                $ymd2               = "$year1.'0'".$month.$day;//结束时间
+            if($month<10){ //小于10月的
+                $ymd1           = $year1.'0'.($month-1).$day;//开始时间
+                $ymd2           = $year1.'0'.$month.$day;//结束时间
             }else{
-                $ymd1               = $year1.($month-1).$day;//开始时间
-                $ymd2               = $year1.$month.$day;//结束时间
+                if($month-1 < 10){//减一月小于10月的
+                    $ymd1       = $year1.'0'.($month-1).$day;//开始时间
+                }else{
+                    $ymd1       = $year1.($month-1).$day;//开始时间
+                }
+                $ymd2           = $year1.$month.$day;//结束时间
             }
-
         }
-        $ymd[0] = $ymd1;
-        $ymd[1] = $ymd2;
+        $ymd[0]                 = $ymd1;
+        $ymd[1]                 = $ymd2;
         return $ymd;
     }
 

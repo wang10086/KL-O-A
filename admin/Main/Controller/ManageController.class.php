@@ -73,7 +73,6 @@ class ManageController extends ChartController {
         $quarter                = $mod->quarter($year1,$quart);// 季度人数 和人力资源成本
         $profits                = $this->profit_r($year1,$quart,1);//月份循环季度数据 利润
 
-//        print_r($profits);die;
         $manage_quarter         = $mod->manage_quarter($quarter,$profits);//季度利润总额
         $personnel_costs        = $mod->personnel_costs($quarter,$profits);//人事费用率
         // 季度预算报表
@@ -110,14 +109,12 @@ class ManageController extends ChartController {
         if(in_array($quart,$arr1)){ //判断是否是第一、二、三、四季度
             for($n = 2; $n >= $i;$i++){ //
                 $month                              = $quart-$i; //季度上一个月
-                if($month<10){$month = '0'.$month;}
                 $ymd                                = $mod->year_month_day($year1,$month);//月度其他费用判断取出数据日期
                 $mon                                = $this->not_team($ymd[0],$ymd[1]);//月度其他费用取出数据
                 $department                         = $mod->department_data($mon);//月度其他费用部门数据
                 foreach($department as $key =>$val){
                     $month_r[$key]['money']        += $val['money'];//季度其他费用
                 }
-//                print_r($ymd);
                 $count                              = $this->business($year1,$month,$type); //季度 人数和 人力资源成本
                 $profit                             = $mod->profit($count);//收入 毛利 毛利率
                 foreach($profit['departmen'] as $key => $val){
