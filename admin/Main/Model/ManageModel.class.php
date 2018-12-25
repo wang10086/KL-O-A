@@ -856,7 +856,6 @@ class ManageModel extends Model{
         $wher['type']                   = 5;
 
         $count                          = $this->sql_r('manage_input',$wher,2);
-//        print_r($type);die;
 
         if(count($count)==10){
 
