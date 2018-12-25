@@ -73,7 +73,7 @@ class ManageController extends ChartController {
         $quarter                = $mod->quarter($year1,$quart);// 季度人数 和人力资源成本
         $profits                = $this->profit_r($year1,$quart,1);//月份循环季度数据 利润
 
-        print_r($profits);die;
+//        print_r($profits);die;
         $manage_quarter         = $mod->manage_quarter($quarter,$profits);//季度利润总额
         $personnel_costs        = $mod->personnel_costs($quarter,$profits);//人事费用率
         // 季度预算报表
@@ -189,7 +189,7 @@ class ManageController extends ChartController {
         $mon                = $this->not_team($ymd[0],$ymd[1]);//年度其他费用取出数据
         $department         = $mod->department_data($mon);//年度其他费用部门数据
         $count_profit       = $mod->count_profit($yea_report,$profit,$department);//年利润总额 年人事费用
-//        print_R($department);die;
+
         //年度预算报表
         $where['year']      = $year1;
         $where['type']      = 5;

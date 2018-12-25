@@ -230,7 +230,8 @@ class SalaryController extends BaseController {
             }
             return $content;
         }
-        if($month == 3 || $month == 6 || $month == 9 || $month == 12){
+        if($month == 3 || $month == 6 || $month == 9 || $month == 1){
+            if($month==1){$year=$year-1;$month=12;$query['month'] = $year.$month;}//如果季度提取正常就删除此行
             $i                                  = $month-3;
             for($i;$i<$month;$month--){
                 $query['month']                 = $year.$month;
