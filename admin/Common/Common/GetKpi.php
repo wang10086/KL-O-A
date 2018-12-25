@@ -240,6 +240,8 @@ function get_fdyjsl($user,$start_date,$end_date){
  * 1.员工id
  * 2.本周期开始时间
  * 3.本周期结束时间
+ * 4.应培训总数
+ * 5.工单数
  * */
 function get_peixunlv($user,$start_date,$end_date,$sum=0,$sumlists=''){
     //需要培训数(工单取值)
@@ -311,7 +313,7 @@ function get_worder($user,$start_date,$end_date,$ini_user_ids=''){
         if ($end_time > $start_date && $end_time < $end_date){
             $zonggongdan[]      = $v;            //本月应完成总工单数
         }
-        if ($end_time > $start_date && $end_time < $end_date && $v['status']==2){
+        if ($end_time > $start_date && $end_time < $end_date && in_array($v['status'],array(2,3))){
             $wanchenggongdan[]  = $v;           //本月已完成工单(2=>执行部门确认完成)
         }
     }

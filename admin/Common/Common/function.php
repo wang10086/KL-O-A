@@ -2769,12 +2769,13 @@ function updatekpi($month,$user){
                     }else{
                         $complete	= round($jishilv/0.9,2)*100;
                     }
+
                 }
 
-                //研发培训(京区业务中心研发)
+                //研发培训(京区业务中心研发)(每月至少培训一次)
                 if ($v['quota_id']==131){
                     //培训完成率
-                    $peixun_data            = get_peixunlv($user,$v['start_date'],$v['end_date']);
+                    $peixun_data            = get_peixunlv($user,$v['start_date'],$v['end_date'],1);
                     $zongshu                = $peixun_data['zongshu'];
                     $peixunlv               = $peixun_data['peixunlv'];
 
