@@ -134,58 +134,51 @@
                                 <tr role="row" class="orders" style="text-align:center;">
                                     <td>员工人数</td>
                                     <foreach name="quarter" item="q">
-                                        <th><?php if($q['sum']=="" || $q['sum']==0 || count($quarter)==0){echo '0';}else{echo round($q['sum']);}?> (人)</th>
+                                        <th><?php if($q['sum']=="" || $q['sum']==0){echo '0';}else{echo round($q['sum']);}?> (人)</th>
                                     </foreach>
                                 </tr>
 
                                 <tr role="row" class="orders" style="text-align:center;">
                                     <td>营业收入</td>
                                     <foreach name="profit" item="pro">
-                                        <th>¥ <?php if($pro['monthzsr']=="" || $pro['monthzsr']==0 || count($quarter)==0){echo '0.00';}else{echo round($pro['monthzsr'],2);}?></th>
+                                        <th>¥ <?php if($pro['monthzsr']=="" || $pro['monthzsr']==0){echo '0.00';}else{echo round($pro['monthzsr'],2);}?></th>
                                     </foreach>
                                 </tr>
                                 <tr role="row" class="orders" style="text-align:center;">
                                     <th>营业毛利</th>
                                     <foreach name="profit" item="pr">
-                                        <th>¥ <?php if($pr['monthzml']=="" || $pr['monthzml']==0 || count($quarter)==0){echo '0.00';}else{echo round($pr['monthzml'],2);}?></th>
+                                        <th>¥ <?php if($pr['monthzml']=="" || $pr['monthzml']==0 ){echo '0.00';}else{echo round($pr['monthzml'],2);}?></th>
                                     </foreach>
                                 </tr>
                                 <tr role="row" class="orders" style="text-align:center;">
                                     <td>营业毛利率(%)</td>
                                     <foreach name="profit" item="p">
-                                        <th><?php if($p['monthmll']=="" || $p['monthmll']==0 || count($quarter)==0){echo '0.00';}else{echo round($p['monthmll'],2);}?> %</th>
+                                        <th><?php if($p['monthmll']=="" || $p['monthmll']==0 ){echo '0.00';}else{echo round($p['monthmll'],2);}?> %</th>
                                     </foreach>
                                 </tr>
                                 <tr role="row" class="orders" style="text-align:center;">
                                     <th>人力资源成本</th>
                                     <foreach name="quarter" item="qu">
-                                        <th>¥ <?php if($qu['money']=="" || $qu['money']==0 || count($quarter)==0){echo '0.00';}else{echo round($qu['money'],2);}?></th>
+                                        <th>¥ <?php if($qu['money']=="" || $qu['money']==0){echo '0.00';}else{echo round($qu['money'],2);}?></th>
                                     </foreach>
 
                                 </tr>
                                 <tr role="row" class="orders" style="text-align:center;">
                                     <td>其他费用</td>
-                                    <td><?php echo $n['employees_sum'];?></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
+                                    <foreach name="profit" item="p">
+                                        <th>¥ <?php if($p['money']=="" || $p['money']==0){echo '0.00';}else{echo round($p['money'],2);}?></th>
+                                    </foreach>
                                 </tr>
                                 <tr role="row" class="orders" style="text-align:center;">
                                     <td>利润总额</td>
                                     <foreach name="manage_quarter" item="ma">
-                                        <th>¥ <?php if($ma['monthzml']=="" || $ma['monthzml']==0 || count($quarter)==0){echo '0.00';}else{echo round($ma['monthzml'],2);}?></th>
+                                        <th>¥ <?php if($ma['monthzml']=="" || $ma['monthzml']==0){echo '0.00';}else{echo round($ma['monthzml'],2);}?></th>
                                     </foreach>
                                 </tr>
                                 <tr role="row" class="orders" style="text-align:center;">
                                     <td>人事费用率(%)</td>
                                     <foreach name="personnel_costs" item="pe">
-                                        <th><?php if($pe['personnel_costs']=="" || $pe['personnel_costs']==0 || count($quarter)==0){echo '0.00';}else{echo round($pe['personnel_costs'],2);}?> %</th>
+                                        <th><?php if($pe['personnel_costs']=="" || $pe['personnel_costs']==0){echo '0.00';}else{echo round($pe['personnel_costs'],2);}?> %</th>
                                     </foreach>
                                 </tr>
                             </table><br><br>

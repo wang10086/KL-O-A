@@ -55,37 +55,37 @@
                             <tr role="row" class="orders" style="text-align:center;">
                                 <th>员工人数</th>
                                 <foreach name="number" item="n">
-                                    <th><?php if($n['sum']=="" || $n['sum']==0 || $number[0]['sum']==0){echo '0';}else{echo $n['sum']; }?>（人)</th>
+                                    <th><?php if($n['sum']=="" || $n['sum']==0){echo '0';}else{echo $n['sum']; }?>（人)</th>
                                 </foreach>
                             </tr>
                             <tr role="row" class="orders" style="text-align:center;">
                                 <th>营业收入</th>
-                                <td>¥ <?php if($company['monthzsr']=="" || $company['monthzsr']==0 || $number[0]['sum']==0){echo '0.00';}else{echo $company['monthzsr']; }?></td>
-                                <foreach name="profit" item="p">
-                                    <th>¥ <?php if($p['department']['monthzsr']=="" || $p['department']['monthzsr']==0 || $number[0]['sum']==0){echo '0.00';}else{echo $p['department']['monthzsr']; }?></th>
+                                <td>¥ <?php if($company['monthzsr']=="" || $company['monthzsr']==0 ){echo '0.00';}else{echo $company['monthzsr']; }?></td>
+                                <foreach name="profit" item="pf">
+                                    <th>¥ <?php if($pf['department']['monthzsr']=="" || $pf['department']['monthzsr']==0 ){echo '0.00';}else{echo $pf['department']['monthzsr']; }?></th>
                                 </foreach>
                                 <th>¥ 0.00</th>
                             </tr>
                             <tr role="row" class="orders" style="text-align:center;">
                                 <td>营业毛利</td>
-                                <td>¥ <?php if($company['monthzml']=="" || $company['monthzml']==0 || $number[0]['sum']==0){echo '0.00';}else{echo $company['monthzml']; }?></td>
+                                <td>¥ <?php if($company['monthzml']=="" || $company['monthzml']==0 ){echo '0.00';}else{echo $company['monthzml']; }?></td>
                                 <foreach name="profit" item="pr">
-                                    <th>¥ <?php if($pr['department']['monthzml']=="" || $pr['department']['monthzml']==0 || $number[0]['sum']==0){echo '0.00';}else{echo $pr['department']['monthzml']; }?></th>
+                                    <th>¥ <?php if($pr['department']['monthzml']=="" || $pr['department']['monthzml']==0 ){echo '0.00';}else{echo $pr['department']['monthzml']; }?></th>
                                 </foreach>
                                 <td>¥ 0.00</td>
                             </tr>
                             <tr role="row" class="orders" style="text-align:center;">
                                 <td>营业毛利率(%)</td>
-                                <td><?php if($company['monthmll']=="" || $company['monthmll']==0 || $number[0]['sum']==0){echo '0.00';}else{echo $company['monthmll']; }?> %</td>
+                                <td><?php if($company['monthmll']=="" || $company['monthmll']==0 ){echo '0.00';}else{echo $company['monthmll']; }?> %</td>
                                 <foreach name="profit" item="pro">
-                                    <th><?php if($pro['department']['monthmll']=="" || $pr['department']['monthzml']==0 || $number[0]['sum']==0){echo '0.00';}else{echo $pro['department']['monthmll']; }?> %</th>
+                                    <th><?php if($pro['department']['monthmll']=="" || $pr['department']['monthzml']==0 ){echo '0.00';}else{echo $pro['department']['monthmll']; }?> %</th>
                                 </foreach>
                                 <td>0.00 %</td>
                             </tr>
                             <tr role="row" class="orders" style="text-align:center;">
                                 <td>人力资源成本</td>
                                 <foreach name="number" item="num">
-                                    <th>¥ <?php if($num['money']=="" || $num['money']==0 || $number[0]['sum']==0){echo '0.00';}else{echo $num['money'];}?></th>
+                                    <th>¥ <?php if($num['money']=="" || $num['money']==0 ){echo '0.00';}else{echo $num['money'];}?></th>
                                 </foreach>
                             </tr>
                             <tr role="row" class="orders" style="text-align:center;">
@@ -97,14 +97,14 @@
                             <tr role="row" class="orders" style="text-align:center;">
                                 <td>利润总额</td>
                                 <foreach name="total_profit" item="t">
-                                    <th>¥ <?php if($t['total_profit']=="" || $t['total_profit']==0 || $number[0]['sum']==0){echo '0.00';}else{echo $t['total_profit'];}?></th>
+                                    <th>¥ <?php if($t['total_profit']=="" || $t['total_profit']==0 ){echo '0.00';}else{echo $t['total_profit'];}?></th>
                                 </foreach>
 
                             </tr>
                             <tr role="row" class="orders" style="text-align:center;">
                                 <th>人事费用率(%)</th>
                                 <foreach name="human_affairs" item="aff">
-                                    <th><?php if($aff['human_affairs']=="" || $aff['human_affairs']==0 || $number[0]['sum']==0){echo '0.00';}else{echo $aff['human_affairs'];}?> %</th>
+                                    <th><?php if($aff['human_affairs']=="" || $aff['human_affairs']==0 ){echo '0.00';}else{echo $aff['human_affairs'];}?> %</th>
                                 </foreach>
                             </tr>
                         </table><br><br>
