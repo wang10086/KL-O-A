@@ -1756,6 +1756,8 @@ class FinanceController extends BaseController {
 
             //保存非团支出报销(修改时注意:关联两个表单提交loan_content and loan_jk_content)
             if ($savetype==13){
+
+                $share              = I('share');
                 $zmysr_id           = I('zmysr_id');
                 $zmysr_name         = I('zmysr_name');
                 $info               = I('info');
@@ -1784,6 +1786,16 @@ class FinanceController extends BaseController {
                         $audit['cw_audit_userid']   = 55;
                         $audit['cw_audit_username'] = '程小平';
                         M('baoxiao_audit')->add($audit);    //保存报销审核信息
+
+                        if ($share && $info['share']==1){
+                            //保存分摊信息
+                            foreach ($share as $v){
+                                $v['bx_id']         = $res;
+                                $v['bxd_id']        = $info['bxd_id'];
+                                $v['input_time']    = NOW_TIME;
+                                M('baoxiao_share')->add($v);
+                            }
+                        }
 
                         //发送系统通知
                         $audit_usertype         = 1;    //证明验收人

@@ -101,7 +101,7 @@
                 </div>
 
                 <div class="form-group col-md-6" id="share">
-                    <label>是否分摊至各部门：</label>
+                    <p><label>是否分摊至各部门(如房租、电话费、网费等)：</label></p>
                     <input type="radio" name="info[share]" value="1"> &emsp;分摊 &emsp;&emsp;&emsp;
                     <input type="radio" name="info[share]" value="0" checked> &emsp;不分摊
                 </div>
@@ -150,6 +150,8 @@
                     let share = $(this).prev('input').val();
                     if (share ==1){ //分享
                         selectDepartment();
+                    }else{
+                        $('#departmentlist').hide();
                     }
                 })
             })
@@ -170,7 +172,7 @@
                 lock:true,
                 title: '选择分摊部门',
                 width:800,
-                height:500,
+                height:400,
                 okValue: '提交',
                 fixed: true,
                 ok: function () {
@@ -261,6 +263,15 @@
         function submitBefore() {
             let isqianzi = $('#qianzi').val();
             let zmysr    = $('#zmysr_id').val();
+            let sbxje    = $('#jiekuanjine').val();
+            let sftje    = $('#shareSum').html();
+            let bxje     = parseFloat(sbxje);
+            let ftje     = parseFloat(sftje);
+            let isShare  = $('#share').find('div[class="iradio_minimal checked"]').find('input[name="info[share]"]').val()
+            if (isShare==1 && bxje != ftje){
+                art_show_msg('报销金额和分摊金额不相等');
+                return false;
+            }
             if (!zmysr){
                 art_show_msg('请填写证明验收人');
                 return false;
