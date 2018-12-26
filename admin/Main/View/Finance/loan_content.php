@@ -1,7 +1,45 @@
 
     <form method="post" action="{:U('Finance/public_save')}" name="jiekuanform" id="jiekuanform" onsubmit="return submitBefore()" >
 
-        <div class="content">
+        <div class="content" id="departmentlist" style="display:block; display: none">
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th width="20%">部门名称</th>
+                    <th width="10%">分摊金额</th>
+                    <th width="25%">备注</th>
+                    <th width="80">删除</th>
+                </tr>
+                </thead>
+                <tbody>
+                <foreach name="supplier" item="v">
+                    <tr class="expense" id="share_{$v.sid}">
+                        <td style="vertical-align:middle">
+                            <input type="hidden" name="share[30000{$v.sid}][item]" value="{$v.kind}">
+                            <input type="hidden" name="share[30000{$v.sid}][remark]" value="{$v.share_name}">
+                            <input type="hidden" name="share[30000{$v.sid}][cost_type]" value="3">
+                            <div class="tdbox"><a href="javascript:;" onClick="javascript:;">{$v.department}</a></div>
+                        </td>
+                        <td>{$v.depart_sum}</td>
+                        <td>{$v.remark}</td>
+                        <td><a href="javascript:;" class="btn btn-danger btn-flat" onclick="delbox('share_id_{$v.sid}',{$v.sid})">删除</a></td>
+                    </tr>
+                </foreach>
+                <tr id="shareTotal">
+                    <td></td>
+                    <td style="font-size:16px; color:#ff3300;">合计: <span id="shareSum">0.00</span></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+
+                </tbody>
+                <tfoot>
+
+                </tfoot>
+            </table>
+        </div>
+
+        <div class="content mt20">
             <input type="hidden" name="dosubmint" value="1">
             <input type="hidden" name="savetype" value="13">
             <input type="hidden" name="bxd_type" value="3"><!--直接报销-->
@@ -10,6 +48,7 @@
             <input type="hidden" name="zmysr_id" id="zmysr_id">
             <div style="width:100%; float:left;">
 
+                <div class="form-group col-md-12"></div>
                 <div class="form-group col-md-6">
                     <label>报销单位：</label>
                     <select class="form-control" name="info[department_id]" onchange="get_department()" id="department_id" required>
@@ -61,6 +100,12 @@
                     <input type="text" name="info[card_num]" class="form-control huikuan" value="{$list.card_num}">
                 </div>
 
+                <div class="form-group col-md-6" id="share">
+                    <label>是否分摊至各部门：</label>
+                    <input type="radio" name="info[share]" value="1"> &emsp;分摊 &emsp;&emsp;&emsp;
+                    <input type="radio" name="info[share]" value="0" checked> &emsp;不分摊
+                </div>
+
                 <div class="form-group col-md-6" id="jkr_qianzi">
                     <label>报销人：</label>
                     <input type="button" onclick="show_qianzi()" class="info-button" value="签字">
@@ -99,7 +144,62 @@
                     }
                 })
             })
+
+            $('#share').find('ins').each(function (index,ele) {
+                $(this).click(function () {
+                    let share = $(this).prev('input').val();
+                    if (share ==1){ //分享
+                        selectDepartment();
+                    }
+                })
+            })
         })
+
+        function check_total(a,oldje=0,newje=0){
+            var ftje     = $('#shareSum').html();
+            var sum1     = accSub(ftje,oldje);        //数据相减
+            var sum      = accAdd(sum1,newje);        //数据相加
+            $('#shareSum').html(sum);
+            $('#ftje_'+a).val(newje);
+        }
+
+        //选择部门
+        function selectDepartment() {
+            $('#departmentlist').show();
+            art.dialog.open('<?php echo U('Finance/select_department'); ?>',{
+                lock:true,
+                title: '选择分摊部门',
+                width:800,
+                height:500,
+                okValue: '提交',
+                fixed: true,
+                ok: function () {
+                    var origin = artDialog.open.origin;
+                    var departments = this.iframe.contentWindow.gosubmint();
+                    var share_html = '';
+                    for (var j = 0; j < departments.length; j++) {
+                        if (departments[j].department) {
+                            var i = parseInt(Math.random()*100000)+j;
+                            var aaa = '<input type="hidden" name="share['+i+'][department]" value="'+departments[j].department+'">';
+                            share_html += '<tr class="expense" id="share_'+i+'"><td style="vertical-align:middle">'+aaa+departments[j].department+'</td><td><input type="hidden" id="ftje_'+i+'"><input type="text" name="share['+i+'][depart_sum]" onblur="check_total('+i+',$(`#ftje_'+i+'`).val(),$(this).val())" placeholder="分摊金额" value="0.00" class="form-control" /></td><td><input type="text" name="share['+i+'][remark]" value="" class="form-control" /></td><td><a href="javascript:;" class="btn btn-danger btn-flat" onclick="delbox(\'share_'+i+'\','+i+',$(`#ftje_'+i+'`).val())">删除</a></td></tr>';
+                        };
+                    }
+                    $('#departmentlist').show();
+                    $('#nonetext').hide();
+                    $('#departmentlist').find('#shareTotal').before(share_html);
+                },
+                cancelValue:'取消',
+                cancel: function () {
+                }
+            });
+        }
+
+        //移除
+        function delbox(obj,i,oldje=0,newje=0){
+            $('#'+obj).remove();
+            check_total(1,oldje,newje)
+        }
+
 
         function get_department(){
             var departid        = $('#department_id').val();

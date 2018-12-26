@@ -227,28 +227,16 @@ class InspectController extends BaseController{
         $page			= new Page($pagecount, P::PAGE_SIZE);
         $this->pages	= $pagecount>P::PAGE_SIZE ? $page->show():'';
 
-        //$score_kind1    = array_keys(C('SCORE_KIND1')); //旅行类至少十分之一人投票
-        //$score_kind2    = array_keys(C('SCORE_KIND2')); //课程类至少一人投票
         $lists = M()->table('__OP__ as o')->field('o.*,c.ret_time')->join('left join __OP_TEAM_CONFIRM__ as c on c.op_id=o.op_id')->limit($page->firstRow . ',' . $page->listRows)->where($where)->order($this->orders('o.create_time'))->select();
         foreach ($lists as $k=>$v){
             $op_id          = $v['op_id'];
-            //$number         = $v['number'];
-            //$project_kind   = M('op')->where(array('op_id'=>$op_id))->getField('kind');
             $guide_manager  = M()->table('__OP_GUIDE_CONFIRM__ as c')->field('g.name')->join('left join __GUIDE__ as g on g.id = c.charity_id')->where(array('c.op_id'=>$op_id,'c.charity_id'=>array('neq',0)))->select();
             $lists[$k]['guide_manager'] = $guide_manager?implode(',',array_unique(array_column($guide_manager,'name'))):'<span class="blue">待定</span>';
 
             $charity        = $this->public_get_confirm_id($op_id);
             $count_score    = M()->table('__TCS_SCORE__ as s')->join('__TCS_SCORE_USER__ as u on u.id=s.uid','left')->where(array('u.op_id'=>$v['op_id']))->count();
 
-            /*if (in_array($project_kind,$score_kind1)) {
-                $yg_num         = intval($number/10);    //应完成人数,只要1/10的人投票即完成
-                $sj_num         = $count_score;   //实际投票人数
-            }else{
-                $yg_num         = 1;                     //只要有一人投票
-                $sj_num         = $count_score;   //实际投票人数
-            }*/
-
-            if (!$charity){
+            if (!$charity && !$count_score){
                 $charity_status = "<span class='red'>未安排</span>";
             }elseif ($charity && $count_score <1){
                 $charity_status = "<span class='yellow'>已安排调查</span>";

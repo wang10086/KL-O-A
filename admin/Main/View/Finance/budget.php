@@ -48,7 +48,7 @@
                                     <tr>
                                         <td>{$row.op_id}</td>
                                         <td>{$row.group_id}</td>
-                                        <td><div class="tdbox_long"><a href="{:U('Finance/op',array('opid'=>$row['op_id']))}" title="{$row.project}">{$row.project}</a></div></td>
+                                        <td><div class="tdbox_long"><a href="{:U('Finance/budget_loan',array('opid'=>$row['op_id']))}" title="{$row.project}">{$row.project}</a></div></td>
                                         <td>{$row.number}人</td>
                                         <td>&yen; {$row.shouru}</td>
                                         <td>&yen; {$row.maoli}</td>
@@ -60,7 +60,8 @@
                                         <td>{$row.budget_audit_status}</td>
                                         <if condition="rolemenu(array('Finance/op'))">
                                         <td class="taskOptions">
-                                        <a href="{:U('Finance/op',array('opid'=>$row['op_id']))}" title="详情" class="btn btn-info btn-smsm"><i class="fa fa-pencil"></i></a>
+                                        <!--<a href="{:U('Finance/op',array('opid'=>$row['op_id']))}" title="详情" class="btn btn-info btn-smsm"><i class="fa fa-pencil"></i></a>-->
+                                        <a href="{:U('Finance/budget_loan',array('opid'=>$row['op_id']))}" title="详情" class="btn btn-info btn-smsm"><i class="fa fa-pencil"></i></a>
                                         </td>
                                         </if>
                                        

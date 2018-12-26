@@ -66,10 +66,11 @@ class ContractController extends BaseController {
 			$attr		= I('attr');
             $referer	= I('referer');
 			$payment	= I('payment');
+            $group_id   = trim($info['group_id']);
 			
 			
 			//根据团号获取项目信息
-			$op			= M('op')->where(array('group_id'=>$info['group_id']))->find();
+			$op			= M('op')->where(array('group_id'=>$group_id))->find();
 			if(!$op){
 				$this->error('未找到该团的项目信息');	
 			}

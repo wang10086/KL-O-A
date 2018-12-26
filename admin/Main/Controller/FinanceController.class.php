@@ -312,7 +312,6 @@ class FinanceController extends BaseController {
 		
 		$db = M('op');
 		
-		
 		$title = I('title');         //项目名称
 		$opid = I('opid');         //项目编号
 		$oid = I('oid');         //项目团号
@@ -322,6 +321,7 @@ class FinanceController extends BaseController {
 		
 		$where = array();
 		$where['o.audit_status'] = 1;
+		$where['b.audit_status'] = 1;
 		$where['b.id'] = array('gt',0);
 		if($title)   $where['o.project'] = array('like','%'.$title.'%');
 		if($oid)   $where['o.group_id'] = array('like','%'.$oid.'%');
@@ -335,7 +335,7 @@ class FinanceController extends BaseController {
 		$this->pages = $pagecount>P::PAGE_SIZE ? $page->show():'';
 
         $lists = $db->table('__OP_BUDGET__ as b')->field('b.*,o.project,o.group_id,o.number,o.customer,o.create_user_name')->join('__OP__ as o on b.op_id = o.op_id','LEFT')->where($where)->limit($page->firstRow . ',' . $page->listRows)->order($this->orders('b.create_time'))->select();
-		
+
 		
 		foreach($lists as $k=>$v){
 			
@@ -2375,7 +2375,6 @@ class FinanceController extends BaseController {
         $this->display();
     }
 
-    /*****************************start****************************************/
     //@@@NODE-3###loan_nopjk###非团借款报销(列表)###
     public function loan_nopjk(){
         $project        = I('title');
@@ -2471,6 +2470,84 @@ class FinanceController extends BaseController {
             $this->error('删除数据失败');
         }
     }
+
+
+    /****************************start*****************************************/
+    //财务费用预算
+    public function budget_loan(){
+        $opid = I('opid');
+        if(!$opid) $this->error('项目不存在');
+
+        $where      = array();
+        $where['o.op_id'] = $opid;
+        $field      = array();
+        $field      = "o.*,c.num_adult,c.num_children";
+
+        $op         = M()->table('__OP__ as o')->field($field)->join('__OP_TEAM_CONFIRM__ as c on c.op_id=o.op_id','left')->where($where)->find();
+        $costacc    = M('op_costacc')->where(array('op_id'=>$opid,'status'=>1))->order('id')->select();
+        foreach ($costacc as $k=>$v){
+            $field  = array();
+            $field[]= 'sjk,jkd_id';
+            $list   = M('jiekuan_detail')->field($field)->where(array('costacc_id'=>$v['id'],'audit_status'=>1))->select();
+            $jiekuan= array_sum(array_column($list,'sjk'));                     //借款金额
+            $arr_jkdid= array_unique(array_column($list,'jkd_id'));             //借款单号
+            $jkd_ids= implode(',',$arr_jkdid);
+            $costacc[$k]['jiekuan'] = $jiekuan?$jiekuan:'0.00';
+            $costacc[$k]['jkd_ids'] = $jkd_ids?$jkd_ids:'';
+            $costacc[$k]['arr_jkdid'] = $arr_jkdid?$arr_jkdid:'';
+
+            $where  = array();
+            $where['j.jkd_id']  = $arr_jkdid[0];
+            $field  = 'j.type,j.payee,a.cw_audit_time';
+            $loan   = M()->table('__JIEKUAN__ as j')->field($field)->join('__JIEKUAN_AUDIT__ as a on a.jk_id=j.id','left')->where($where)->find();
+            $costacc[$k]['jktype']          = $loan['type'];
+            $costacc[$k]['payee']           = $loan['payee'];
+            $costacc[$k]['cw_audit_time']   = $loan['cw_audit_time'];
+        }
+
+        $budget         = M('op_budget')->where(array('op_id'=>$opid))->find();
+        $budget['xz']   = explode(',',$budget['xinzhi']);
+
+        $where = array();
+        $where['req_type'] = P::REQ_TYPE_BUDGET;
+        $where['req_id']   = $budget['id'];
+        $audit = M('audit_log')->where($where)->find();
+        if($audit['dst_status']==0){
+            $show = '未审批';
+            $show_user = '未审批';
+            $show_time = '等待审批';
+        }else if($audit['dst_status']==1){
+            $show = '<span class="green">已通过</span>';
+            $show_user = $audit['audit_uname'];
+            $show_time = date('Y-m-d H:i:s',$audit['audit_time']);
+        }else if($audit['dst_status']==2){
+            $show = '<span class="red">未通过</span>';
+            $show_user = $audit['audit_uname'];
+            $show_reason = $audit['audit_reason'];
+            $show_time = date('Y-m-d H:i:s',$audit['audit_time']);
+        }
+        $op['showstatus'] = $show;
+        $op['show_user']  = $show_user;
+        $op['show_time']  = $show_time;
+        $op['show_reason']  = $show_reason;
+
+        $this->kind           = C('COST_TYPE');
+        $this->op             = $op;
+        $this->budget         = $budget;
+        $this->kinds          =  M('project_kind')->getField('id,name', true);
+        $this->jiekuan_type   = C('JIEKUAN_TYPE');
+        $this->costacc        = $costacc;
+        $this->display('budget_loan');
+    }
+
+    //选择部门
+    public function select_department(){
+        $departments           = C('department1');
+        unset($departments[0]); //删除第一项(公司)
+        $this->departments      = $departments;
+        $this->display();
+    }
+
 
     public function test(){
         $guide_ids = M('account')->where(array('guide_id'=>array('neq',0)))->getField('guide_id',true);
