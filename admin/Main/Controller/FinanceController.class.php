@@ -1871,7 +1871,7 @@ class FinanceController extends BaseController {
                 }
             }
 
-            //审核团内报销单(部门主管审核)
+            //审核非团借款报销单(部门主管审核)
             if ($savetype==15){
                 $db                     = M('baoxiao_audit');
                 $bx_id                  = I('bx_id');
@@ -1920,7 +1920,7 @@ class FinanceController extends BaseController {
                 }
             }
 
-            //审核团内报销单(部门分管领导审核)
+            //审核非团借款报销单(部门分管领导审核)
             if ($savetype==16){
                 $db                     = M('baoxiao_audit');
                 $bx_id                  = I('bx_id');
@@ -1975,7 +1975,7 @@ class FinanceController extends BaseController {
                 }
             }
 
-            //审核团内报销单(财务审核)
+            //审核非团借款报销单(财务审核)
             if ($savetype==17){
                 $db                     = M('baoxiao_audit');
                 $bx_id                  = I('bx_id');
@@ -2024,6 +2024,17 @@ class FinanceController extends BaseController {
                 }else{
                     $this->error('保存失败');
                 }
+            }
+
+            //保存项目预算详情财务备注等信息
+            if ($savetype==18){
+                $num                = 0;
+                $costacc_id         = I('costacc_id');
+                $info               = array();
+                $info['cwremark']   = I('cwremark');
+                $res                = M('op_costacc')->where(array('id'=>$costacc_id))->save($info);
+                if ($res) $num++;
+                echo $num;
             }
         }
     }
@@ -2484,6 +2495,14 @@ class FinanceController extends BaseController {
         }
     }
 
+    //选择报销金额分摊部门
+    public function select_department(){
+        $departments           = C('department1');
+        unset($departments[0]); //删除第一项(公司)
+        $this->departments      = $departments;
+        $this->display();
+    }
+
 
     /****************************start*****************************************/
     //财务费用预算
@@ -2493,9 +2512,7 @@ class FinanceController extends BaseController {
 
         $where      = array();
         $where['o.op_id'] = $opid;
-        $field      = array();
         $field      = "o.*,c.num_adult,c.num_children";
-
         $op         = M()->table('__OP__ as o')->field($field)->join('__OP_TEAM_CONFIRM__ as c on c.op_id=o.op_id','left')->where($where)->find();
         $costacc    = M('op_costacc')->where(array('op_id'=>$opid,'status'=>1))->order('id')->select();
         foreach ($costacc as $k=>$v){
@@ -2552,15 +2569,6 @@ class FinanceController extends BaseController {
         $this->costacc        = $costacc;
         $this->display('budget_loan');
     }
-
-    //选择部门
-    public function select_department(){
-        $departments           = C('department1');
-        unset($departments[0]); //删除第一项(公司)
-        $this->departments      = $departments;
-        $this->display();
-    }
-
 
     public function test(){
         $guide_ids = M('account')->where(array('guide_id'=>array('neq',0)))->getField('guide_id',true);
