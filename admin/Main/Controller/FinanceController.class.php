@@ -2454,6 +2454,7 @@ class FinanceController extends BaseController {
         $audit_userinfo = M('baoxiao_audit')->where(array('bx_id'=>$id))->find();
         $this->audit_userinfo= $audit_userinfo;
         $this->record   = D('Finance')->get_record($baoxiao['bxd_id']);
+        $this->share_lists = M('baoxiao_share')->where(array('bx_id'=>$id))->select();
 
         //审核人信息
         if ($audit_userinfo['zm_audit_status'] == 0 && $baoxiao['audit_status'] == 0){

@@ -12,17 +12,22 @@
                 </thead>
                 <tbody>
                 <foreach name="supplier" item="v">
-                    <tr class="expense" id="share_{$v.sid}">
+                    <!--<tr class="expense" id="share_{$v.sid}">
                         <td style="vertical-align:middle">
-                            <input type="hidden" name="share[30000{$v.sid}][item]" value="{$v.kind}">
-                            <input type="hidden" name="share[30000{$v.sid}][remark]" value="{$v.share_name}">
-                            <input type="hidden" name="share[30000{$v.sid}][cost_type]" value="3">
-                            <div class="tdbox"><a href="javascript:;" onClick="javascript:;">{$v.department}</a></div>
+                            <input type="hidden" name="share[30000{$v.id}][department]" value="'+departments[j].department+'">;
+                            {$v.department}
                         </td>
-                        <td>{$v.depart_sum}</td>
-                        <td>{$v.remark}</td>
-                        <td><a href="javascript:;" class="btn btn-danger btn-flat" onclick="delbox('share_id_{$v.sid}',{$v.sid})">删除</a></td>
-                    </tr>
+                        <td>
+                            <input type="hidden" id="ftje_30000{$v.id}">
+                            <input type="text" name="share[30000{$v.id}][depart_sum]" onblur="check_total(30000{$v.id},$(`#ftje_'+30000{$v.id}+'`).val(),$(this).val())" placeholder="分摊金额" value="0.00" class="form-control" />
+                        </td>
+                        <td>
+                            <input type="text" name="share[30000{$v.id}][remark]" value="" class="form-control" />
+                        </td>
+                        <td>
+                            <a href="javascript:;" class="btn btn-danger btn-flat" onclick="delbox(\'share_'+30000{$v.id}+'\','+30000{$v.id}+',$(`#ftje_'+30000{$v.id}+'`).val())">删除</a>
+                        </td>
+                    </tr>;-->
                 </foreach>
                 <tr id="shareTotal">
                     <td></td>
@@ -48,12 +53,12 @@
             <input type="hidden" name="zmysr_id" id="zmysr_id">
             <div style="width:100%; float:left;">
                 <div class="form-group col-md-12"></div>
-                <div class="form-group col-md-6">
+                <div class="form-group col-md-4">
                     <label>借款单号：</label>
                     <input type="text" name="jkd_id" class="form-control" value="{$list.jkd_id}" readonly />
                 </div>
 
-                <div class="form-group col-md-6">
+                <div class="form-group col-md-4">
                     <label>报销单位：</label>
                     <select class="form-control" name="info[department_id]" onchange="get_department()" id="department_id" required>
                         <foreach name="departments" item="v">
@@ -63,18 +68,18 @@
                 </div>
 
                 <div class="form-group col-md-4">
+                    <label>证明验收人：<font color="#999999">（可通过姓名拼音快速检索）</font></label>
+                    <input type="text" name="zmysr_name" class="form-control zmysr_name" value="{$list.zmysr}" required />
+                </div>
+
+                <div class="form-group col-md-6">
                     <label>报销金额：</label>
                     <input type="text" name="info[sum]" id="jiekuanjine" class="form-control" value="{$list.sum}" onblur="todaxie($(this).val())" />
                 </div>
 
-                <div class="form-group col-md-4">
+                <div class="form-group col-md-6">
                     <label>人民币(大写)：</label>
                     <input type="text" name="info[sum_chinese]" id="daxie" class="form-control" value="{$list.sum_chinese}" />
-                </div>
-
-                <div class="form-group col-md-4">
-                    <label>证明验收人：<font color="#999999">（可通过姓名拼音快速检索）</font></label>
-                    <input type="text" name="zmysr_name" class="form-control zmysr_name" value="{$list.zmysr}" required />
                 </div>
 
                 <div class="form-group col-md-6" id="jk_type">
