@@ -43,7 +43,7 @@
             </table>
         </div>
 
-        <div class="content mt20">
+        <div class="content">
             <input type="hidden" name="dosubmint" value="1">
             <input type="hidden" name="savetype" value="13">
             <input type="hidden" name="bxd_type" value="2"><!--非团借款报销-->

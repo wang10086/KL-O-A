@@ -20,6 +20,9 @@
                             <div class="box box-warning">
                                 <div class="box-header">
                                     <h3 class="box-title">非团支出报销单信息</h3>
+                                    <h3 class="box-title pull-right" style="font-weight:normal; color:#333333;">
+                                        <span class="green">报销单编号：{$baoxiao['bxd_id']}</span>
+                                    </h3>
                                 </div><!-- /.box-header -->
                                 <div class="box-body">
                                     <include file="nop_baoxiaodan" />
