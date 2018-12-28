@@ -768,9 +768,9 @@
                                             <li><a href="{:U('Chart/department')}"><i class="fa fa-angle-right"></i> 项目分部门汇总</a></li>
 
                                         </if>
-                                        <if condition="rolemenu(array('Chart/kind'))">
+                                        <if condition="rolemenu(array('Chart/summary_types'))">
                                             <!--<li><a href="{:U('Chart/kind')}"><i class="fa fa-angle-right"></i> 项目分部门分类型汇总</a></li>-->
-                                            <li><a href="javascript:;" onClick="art_show_msg('加班开发中，稍后呈现...',5)"><i class="fa fa-angle-right"></i> 项目分部门分类型汇总</a></li>
+                                            <li><a href="{:U('Chart/summary_types')}"><i class="fa fa-angle-right"></i> 项目分部门分类型汇总</a></li>
                                         </if>
                                     </ul>
                                 </li>
