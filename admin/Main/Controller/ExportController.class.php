@@ -112,6 +112,105 @@ class ExportController extends BaseController {
 
 	}
 
+    /*导出预算详细数据(借款信息,财务备注)*/
+    public function budget_loan(){
+
+        $opid = I('opid');
+        if(!$opid) $this->error('项目不存在');
+
+        $where = array();
+        $where['op_id'] = $opid;
+
+        $budget       = M('op_budget')->where(array('op_id'=>$opid))->find();
+        $budget['xz'] = explode(',',$budget['xinzhi']);
+
+        if(!$budget || $budget['audit_status']!=1 ) $this->error('预算未审批通过');
+
+        $where      = array();
+        $where['o.op_id'] = $opid;
+        $field      = "o.*,c.num_adult,c.num_children";
+        $op         = M()->table('__OP__ as o')->field($field)->join('__OP_TEAM_CONFIRM__ as c on c.op_id=o.op_id','left')->where($where)->find();
+        $costcc    = M('op_costacc')->where(array('op_id'=>$opid,'status'=>1))->field('id,title,unitcost,amount,total,cwremark')->order('id')->select();
+        foreach ($costcc as $k=>$v){
+            $field  = array();
+            $field[]= 'sjk,jkd_id';
+            $list   = M('jiekuan_detail')->field($field)->where(array('costacc_id'=>$v['id'],'audit_status'=>1))->select();
+            $jiekuan= array_sum(array_column($list,'sjk'));                     //借款金额
+            $arr_jkdid= array_unique(array_column($list,'jkd_id'));             //借款单号
+            $jkd_ids= implode(',',$arr_jkdid);
+            $costcc[$k]['jiekuan'] = intval($jiekuan)?$jiekuan:'';
+            $costcc[$k]['jkd_ids'] = $jkd_ids?$jkd_ids:'';
+            $costcc[$k]['arr_jkdid'] = $arr_jkdid?$arr_jkdid:'';
+
+            $where  = array();
+            $where['j.jkd_id']  = $arr_jkdid[0];
+            $field  = 'j.type,j.payee,a.cw_audit_time';
+            $loan   = M()->table('__JIEKUAN__ as j')->field($field)->join('__JIEKUAN_AUDIT__ as a on a.jk_id=j.id','left')->where($where)->find();
+            $costcc[$k]['jktype']          = $loan['type'];
+            $costcc[$k]['payee']           = $loan['payee'];
+            $costcc[$k]['cw_audit_time']   = $loan['cw_audit_time'];
+        }
+        $filename       = $op['group_id'].'预算借款信息表';
+        $jiekuan_type   = C('JIEKUAN_TYPE');
+
+        $data = array();
+        $data['B2']   = $op['group_id'];  //团号
+        $data['E2']   = $op['customer'];  //客户单位
+        $data['J2']   = $op['sale_user'];  //销售人员
+        $data['L2']   = '';  //研发人员
+        $data['B3']   = $op['days'];  //天数
+        $data['D3']   = $op['num_adult'];  //成人人数
+        $data['F3']   = $op['num_children'];  //儿童人数
+        //$data['H3']   = $budget['renshu'];  //合计人数
+        $data['H3']   = $op['num_adult']+$op['num_children'];  //合计人数
+        $data['J3']   = '';  //免费人数
+        $data['L3']   = $budget['maolilv'];  //毛利率
+
+
+        $i = 6;
+        $j = 1;
+        foreach($costcc as $k=>$v){
+            $data['A'.$i]  = $j;  //编号
+            $data['B'.$i]  = $v['title'];  //费用项
+            $data['C'.$i]  = $v['amount'];  //数量
+            $data['D'.$i]  = $v['unitcost'];  //单价
+            $data['E'.$i]  = $v['total'];  //合计
+            $data['F'.$i]  = $v['jkd_ids'];  //借款单号
+            $data['G'.$i]  = $jiekuan_type[$v['jktype']];  //支付方式
+            $data['H'.$i]  = $v['cw_audit_time']?date('Y-m-d',$v['cw_audit_time']):'';  //支付时间
+            $data['I'.$i]  = $v['jiekuan'];  //借款金额
+            $data['J'.$i]  = $v['payee'];  //收款单位
+            $data['L'.$i]  = $v['cwremark'];  //财务备注
+            $i++;
+            $j++;
+        }
+
+        if($j<=30){
+            $data['B37'] = $budget['budget'];  //合计成本价格
+            $data['F37'] = $budget['shouru'];  //合计报价
+            $data['J37'] = $budget['maoli'];  //合计毛利润
+            $model = 'admin/assets/xls/budgetLoan_30.xls';
+        }else if($j>30 && $j<=60){
+            $data['B67'] = $budget['budget'];  //合计成本价格
+            $data['F67'] = $budget['shouru'];  //合计报价
+            $data['J67'] = $budget['maoli'];  //合计毛利润
+            $model = 'admin/assets/xls/budgetLoan_60.xls';
+        }else if($j>60 && $j<=100){
+            $data['B107'] = $budget['budget'];  //合计成本价格
+            $data['F107'] = $budget['shouru'];  //合计报价
+            $data['J107'] = $budget['maoli'];  //合计毛利润
+            $model = 'admin/assets/xls/budgetLoan_100.xls';
+        }else if($j>100){
+            $data['B157'] = $budget['budget'];  //合计成本价格
+            $data['F157'] = $budget['shouru'];  //合计报价
+            $data['J157'] = $budget['maoli'];  //合计毛利润
+            $model = 'admin/assets/xls/budgetLoan_150.xls';
+        }
+
+        model_exportexcel($data,$filename,$model);
+
+    }
+
 
 
 

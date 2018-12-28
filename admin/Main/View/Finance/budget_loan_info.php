@@ -106,10 +106,12 @@
             </table>
         </div>
 
+        <if condition="rolemenu(array('Finance/save_cwremark'))">
         <div class="content no-print">
             <button class="btn btn-default" onclick="window.print();"><i class="fa fa-print"></i> 打印</button>
-            <a href="{:U('Export/budget',array('opid'=>$op['op_id']))}" class="btn btn-default"><i class="fa fa-arrow-circle-down"></i> 导出</a>
+            <a href="{:U('Export/budget_loan',array('opid'=>$op['op_id']))}" class="btn btn-default"><i class="fa fa-arrow-circle-down"></i> 导出</a>
         </div>
+        </if>
 
         <script>
             artDialog.alert = function (content, status) {
