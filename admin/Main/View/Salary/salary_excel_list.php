@@ -207,16 +207,16 @@
                     </div><!-- /.box-body -->
 
                     <div style="margin-top:2em;text-align:center;" id="shr_qianzi"><br><br><br><br>
-                        <?php if($status==1 && $userid== 77){?>
-                            <a  class="btn btn-info salary_excel1_submit" style="width:10em;" onclick="show_qianzi(0)">提交审核</a>
-                        <?php }?>
+<!--                        --><?php //if($status==1 && $userid== 77){?>
+                            <a  class="btn btn-info salary_excel1_submit" style="width:10em;margin-top:2em;" onclick="show_qianzi(0)">提交审核</a>
+<!--                        --><?php //}?>
                         <?php if($status==2 && $userid == 55){?>
-                            <a  class="btn btn-info salary_excel1_submit1" style="width:10em;" onclick="show_qianzi(1)">提交批准</a>
-                            <a  class="btn btn-info salary_excel1_submit2" style="width:10em;" onclick="show_qianzi(2)">驳回</a>
+                            <a  class="btn btn-info salary_excel1_submit1" style="width:10em;margin-top:2em;" onclick="show_qianzi(1)">提交批准</a>
+                            <a  class="btn btn-info salary_excel1_submit2" style="width:10em;margin-top:2em;" onclick="show_qianzi(2)">驳回</a>
                         <?php }?>
                         <?php if($status==3 && $userid == 11){?>
-                            <a  class="btn btn-info salary_excel1_submit3" style="width:10em;" onclick="show_qianzi(3)">批准</a>
-                            <a  class="btn btn-info salary_excel1_submit2" style="width:10em;" onclick="show_qianzi(2)">驳回</a>
+                            <a  class="btn btn-info salary_excel1_submit3" style="width:10em;margin-top:2em;" onclick="show_qianzi(3)">批准</a>
+                            <a  class="btn btn-info salary_excel1_submit2" style="width:10em;margin-top:2em;" onclick="show_qianzi(2)">驳回</a>
                         <?php }?>
                     </div><br><br>
                 </div><!-- /.box -->
@@ -249,9 +249,9 @@
 
     function show_qianzi(obj) {
         var html = '';
-            html += '<label>签字：</label>'+
-            '<input type="text" name="password" class="" placeholder="请输入签字密码"  />&emsp;'+
-            '<input type="button" value="确定" onclick="check_pwd('+obj+')">';
+            html += '<label style="margin-top:2em;font-size:1.2em;">签字：</label>'+
+            '<input type="text" name="password" class="" style="margin-top:2em;height:2.3em;" placeholder="请输入签字密码" />&emsp;'+
+            '<input type="button" value="确定" onclick="check_pwd('+obj+')" style="margin-top:2em;font-size:1.2em;background-color:#00acd6;">';
         $('#shr_qianzi').html(html);
     }
     function check_pwd(obj) {
@@ -325,12 +325,12 @@
             dataType: "json", //数据格式
             success: function (data) {
                 if (data.sum == 1) {
-                    alert(data.msg);
+                    alert('提交审核成功！');
                     window.location.reload();
                     return false;
                 }
                 if (data.sum == 0) {
-                    alert(data.msg);
+                    alert('提交审核失败！');
                     return false;
                 }
             }
@@ -362,12 +362,12 @@
             dataType: "json", //数据格式
             success: function (data) {
                 if (data.sum == 1) {
-                    alert(data.msg);
+                    alert('提交批准成功!');
                     window.location.reload();
                     return false;
                 }
                 if (data.sum == 0) {
-                    alert(data.msg);
+                    alert('提交批准失败!');
                     return false;
                 }
             }
@@ -399,12 +399,12 @@
             dataType: "json", //数据格式
             success: function (data) {
                 if (data.sum == 1) {
-                    alert(data.msg);
+                    alert('批准成功!');
                     window.location.reload();
                     return false;
                 }
                 if (data.sum == 0) {
-                    alert(data.msg);
+                    alert('批准失败!');
                     return false;
                 }
             }
@@ -423,12 +423,12 @@
             dataType: "json", //数据格式
             success: function (data) {
                 if (data.sum == 1) {
-                    alert(data.msg);
+                    alert('驳回成功!');
                     window.location.reload();
                     return false;
                 }
                 if (data.sum == 0) {
-                    alert(data.msg);
+                    alert('驳回失败!');
                     return false;
                 }
             }
