@@ -813,7 +813,7 @@ class SalaryController extends BaseController {
         if($archives==null || $archives==false){
             unset($where['archives']);
         }
-        $where['status'] = array('between','0,1');
+        $where['status']                            = 0;
         $info                                       =  M('account')->where($where)->order('employee_member ASC')->select();//个人数据
         foreach($info as $k => $v){//去除编码空的数据
             if($v['employee_member'] == ""){
@@ -979,7 +979,8 @@ class SalaryController extends BaseController {
     private function countmoney($archives,$list,$status){
         $where['archives']                                  = $archives;
         $where = array_filter($where);
-        $info1                                              =  M('account')->where($where)->group('departmentid')->order('employee_member ASC')->select();//个人数据
+        $info1                                              =  M('account')->where(
+        )->group('departmentid')->order('employee_member ASC')->select();//个人数据
         foreach($info1 as $k => $v){//去除编码空的数据
             if($v['employee_member'] == ""){//去空
                 unset($info1[$k]);
