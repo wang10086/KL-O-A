@@ -716,7 +716,7 @@ class ChartController extends BaseController {
         $this->prveyear	= $year-1;
         $this->nextyear	= $year+1;
 
-        $this->display('Chart/pplist');
+        $this->display('pplist');
     }
 
 
@@ -747,7 +747,7 @@ class ChartController extends BaseController {
         $this->year 	= $year;
         $this->prveyear	= $year-1;
         $this->nextyear	= $year+1;
-        $this->display('Chart/tplist');
+        $this->display('tplist');
     }
 
 
@@ -776,7 +776,7 @@ class ChartController extends BaseController {
         $this->year 	= $year;
         $this->prveyear	= $year-1;
         $this->nextyear	= $year+1;
-        $this->display('chart/tpavglist');
+        $this->display('tpavglist');
     }
 
 
