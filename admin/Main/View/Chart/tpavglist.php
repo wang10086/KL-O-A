@@ -48,7 +48,9 @@
                                             <tr role="row" class="orders" >
                                                 <th width="40" data="">序号</th>
                                                 <th>团队</th>
+                                                <?php if ($year == date("Y")){ ?>
                                                 <th>当月人数(个)</th>
+                                                <?php } ?>
                                                 <th>累计计算人数(个)</th>
                                                 <th class="orderth">累计人均收入(元)</th>
                                                 <th class="orderth">累计人均毛利(元)</th>
@@ -65,9 +67,11 @@
                                         <foreach name="lists" item="row" key="k">                      
                                             <tr>
                                                 <td class="orderNo"></td>
-                                                <td><a href="{:U('Chart/tpmore',array('dept'=>$row['rid']))}">{$row.rolename}</a></td>
-                                                <td>{$row.num}</td>
-                                                <td>{$row.num}</td>
+                                                <td><a href="{:U('Chart/tpmore',array('dept'=>$row['rid'],'year'=>$year))}">{$row.rolename}</a></td>
+                                                <?php if ($year == date("Y")){ ?>
+                                                <td>{$row.sumMonth}</td>
+                                                <?php } ?>
+                                                <td>{$row.sumYear}</td>
                                                 <td>{$row.rjzsr}</td>
                                                 <td>{$row.rjzml}</td>
                                                 <td>{$row.rjmll}</td>

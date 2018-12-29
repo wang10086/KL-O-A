@@ -18,7 +18,7 @@
                         <div class="col-xs-12">
                             <div class="box box-warning">
                                 <div class="box-body">
-                                     <p>提示：以下累计数据从2018年1月1日起已完成结算项目中采集</p>
+                                    <p>提示：以下累计数据从{$year-1}年12月26日起已完成结算项目中采集</p>
                                 	 <table id="example2" class="table table-striped table-bordered table-hover" >
                                         <thead>
                                             <tr role="row" class="orders" >
@@ -28,23 +28,27 @@
                                                 <th class="orderth">累计收入(元)</th>
                                                 <th class="orderth">累计毛利(元)</th>
                                                 <th class="orderth">累计毛利率(%)</th>
+                                                <?php if ($year == date("Y")){ ?>
                                                 <th class="orderth">当月收入(元)</th>
                                                 <th class="orderth">当月毛利(元)</th>
                                                 <th class="orderth">当月毛利率(%)</th>
+                                                <?php } ?>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             <foreach name="lists" item="row" key="k">                      
                                             <tr>
                                             	<td class="orderNo"></td>
-                                                <td><a href="{:U('Chart/finance',array('xs'=>$row['create_user_name'],'st'=>'2018-01-01'))}">{$row.create_user_name}</a></td>
+                                                <td><a href="{:U('Chart/finance',array('xs'=>$row['create_user_name'],'st'=>($year-1).'-12-26'))}">{$row.create_user_name}</a></td>
                                                 <td>{$row.rolename}</td>
                                                 <td>{$row.zsr}</td>
                                                 <td>{$row.zml}</td>
                                                 <td>{$row.mll}</td>
+                                                <?php if ($year == date("Y")){ ?>
                                                 <td>{$row.ysr}</td>
                                                 <td>{$row.yml}</td>
                                                 <td>{$row.yll}</td>
+                                                <?php } ?>
                                             </tr>
                                             </foreach>	
                                         </tbody>	

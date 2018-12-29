@@ -107,6 +107,31 @@ class ChartModel extends Model
         return $lists;
     }
 
+    /**从工资表获取部门每个月及全年人员信息
+     * @param $depart
+     * @param $year
+     * @return array
+     */
+    function getMonthUser($depart,$yearMonth){
+        //上个月人员信息
+        $lastMonthUser              = M('salary_wages_month')->where(array('datetime'=>$yearMonth,'department'=>$depart['department']))->getField('account_id,user_name',true);    //从工资表获取累计人数
+        $monthUserIds               = array_keys($lastMonthUser);
+        $sumMonth                   = count($lastMonthUser);
+        //全年人员信息
+        $year                       = substr($yearMonth,0,4);
+        $yearUser                   = M('salary_wages_month')->where(array('datetime'=>array('like',$year.'%'),'department'=>$depart['department']))->getField('account_id,user_name',true);    //从工资表获取累计人数
+        $yearUserIds                = array_keys($yearUser);
+        $sumYear                    = count($yearUser);
+        $data                       = array();
+        $data[$yearMonth]['users']  = $lastMonthUser;
+        $data[$yearMonth]['sumMonth'] = $sumMonth;
+        $data[$yearMonth]['userIds']= $monthUserIds;
+        $data['yearUser']           = $yearUser;
+        $data['sumYear']            = $sumYear;
+        $data['yearUserIds']        = $yearUserIds;
+        return $data;
+    }
+
     /**
      * 获取某个时间段结算项目
      * @param 用户 (array)
@@ -462,6 +487,8 @@ class ChartModel extends Model
         $table[1] = $count_list;
         return $table;
     }
+
+
 
 
 }

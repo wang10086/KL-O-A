@@ -3193,26 +3193,87 @@ function get_cycle($yearmonth,$day=26){
 }
 
 //统计部门数据
-function tplist($roleid,$times){
+/*function tplist($roleid,$times){
+
+    $db			= M('op');
+    $roles		= M('role')->GetField('id,role_name',true);
+
+    $post 		= C('POST_TEAM');
+    $postmore	= C('POST_TEAM_MORE');
+    $postfzr  	= C('POST_TEAM_FZR');
+
+//获取部门人数
+    $where = array();
+    $where['roleid'] = array('in',$postmore[$roleid]);
+    $where['status'] = array('eq',0);
+    $users = M('account')->where($where)->select();
+    $num   = count($users);
+    $ulist = array();
+    foreach($users as $k=>$v){
+        $ulist[] = $v['id'];
+    }
+
+//查询结算数据
+    $where = array();
+    $where['b.audit_status']		= 1;
+    $where['l.req_type']			= 801;
+    if($times){
+        $where['l.audit_time']		= array('between',$times);
+    }else{
+        $where['l.audit_time']		= array('gt',strtotime('2018-01-01'));
+    }
+    $where['a.id']					= array('in',implode(',',$ulist));
+
+    $field = array();
+    $field[] =  'sum(b.shouru) as zsr';
+    $field[] =  'sum(b.maoli) as zml';
+    $field[] =  '(sum(b.maoli)/sum(b.shouru)) as mll';
+
+    $lists = $db->table('__OP_SETTLEMENT__ as b')->field($field)->join('__OP__ as o on b.op_id = o.op_id','LEFT')->join('__ACCOUNT__ as a on a.id = o.create_user','LEFT')->join('__AUDIT_LOG__ as l on l.req_id = b.id','LEFT')->where($where)->order('zsr DESC')->find();
+
+    $lists['mll']			= $lists['zml']>0 ?  sprintf("%.2f",$lists['mll']*100) : '0.00';
+
+    $lists['zsr'] 			= $lists['zsr'] ? $lists['zsr'] : '0.00';
+    $lists['zml'] 			= $lists['zml'] ? $lists['zml'] : '0.00';
+    $lists['rjzsr']			= sprintf("%.2f",$lists['zsr']/$num);
+    $lists['rjzml']			= sprintf("%.2f",$lists['zml']/$num);
+    $lists['rjmll']			= $lists['zml'] ? sprintf("%.2f",($lists['rjzml']/$lists['rjzsr'])*100) : '0.00';
+
+
+//查询月度
+    $month = twentyfive();
+    $where = array();
+    $where['b.audit_status']	= 1;
+    $where['a.id']				= array('in',implode(',',$ulist));
+    $where['l.req_type']		= 801;
+    $where['l.audit_time']		= array('between',array($month[0],$month[1]));
+
+    $field = array();
+    $field[] =  'sum(b.shouru) as ysr';
+    $field[] =  'sum(b.maoli) as yml';
+    $field[] =  '(sum(b.maoli)/sum(b.shouru)) as yll';
+    $users = $db->table('__OP_SETTLEMENT__ as b')->field($field)->join('__OP__ as o on b.op_id = o.op_id','LEFT')->join('__AUDIT_LOG__ as l on l.req_id = b.id','LEFT')->join('__ACCOUNT__ as a on a.id = o.create_user','LEFT')->where($where)->find();
+
+    $users['ysr'] 		= $users['ysr'] ? $users['ysr'] : '0.00';
+    $users['yml'] 		= $users['yml'] ? $users['yml'] : '0.00';
+    $users['yll'] 		= $users['yml']>0 ? sprintf("%.4f",$users['yll'])*100 : '0.00';
+    $users['rjysr']		= sprintf("%.2f",$users['ysr']/$num);
+    $users['rjyml']		= sprintf("%.2f",$users['yml']/$num);
+    $users['rjyll']		= sprintf("%.2f",($users['rjyml']/$users['rjysr'])*100);
+    $users['num']		= $num;
+    $users['rid']		= $roleid;
+    $users['fzr']		= $postfzr[$roleid];
+
+    return array_merge($lists, $users);
+}*/
+
+//统计部门数据
+function tplist($department,$times){
 	
-	$db			= M('op');
-	$roles		= M('role')->GetField('id,role_name',true);
-	
-	$post 		= C('POST_TEAM');
-	$postmore	= C('POST_TEAM_MORE');
-	$postfzr  	= C('POST_TEAM_FZR');
-	
-	//获取部门人数
-	$where = array();
-	$where['roleid'] = array('in',$postmore[$roleid]);
-	$where['status'] = array('eq',0);
-	$users = M('account')->where($where)->select();
-	$num   = count($users);
-	$ulist = array();
-	foreach($users as $k=>$v){
-		$ulist[] = $v['id'];
-	}
-	
+	$db	        = M('op');
+    $users      = M('account')->where(array('departmentid'=>$department['id']))->getField('id',true);
+    $num        = count($users);    //获取部门人数
+
 	//查询结算数据
 	$where = array();
 	$where['b.audit_status']		= 1;
@@ -3222,7 +3283,7 @@ function tplist($roleid,$times){
 	}else{
 		$where['l.audit_time']		= array('gt',strtotime('2018-01-01'));
 	}
-	$where['a.id']					= array('in',implode(',',$ulist));
+	$where['a.id']					= array('in',implode(',',$users));
 	
 	$field = array();
 	$field[] =  'sum(b.shouru) as zsr';
@@ -3244,7 +3305,7 @@ function tplist($roleid,$times){
 	$month = twentyfive();
 	$where = array();
 	$where['b.audit_status']	= 1;
-	$where['a.id']				= array('in',implode(',',$ulist));
+	$where['a.id']				= array('in',implode(',',$users));
 	$where['l.req_type']		= 801;
 	$where['l.audit_time']		= array('between',array($month[0],$month[1]));
 	
@@ -3260,13 +3321,11 @@ function tplist($roleid,$times){
 	$users['rjysr']		= sprintf("%.2f",$users['ysr']/$num);	
 	$users['rjyml']		= sprintf("%.2f",$users['yml']/$num);	
 	$users['rjyll']		= sprintf("%.2f",($users['rjyml']/$users['rjysr'])*100);	
-	$users['num']		= $num;
-	$users['rid']		= $roleid;
-	$users['fzr']		= $postfzr[$roleid];
-	
+	//$users['num']		= $num;
+	$users['rid']		= $department['id'];
+
 	return array_merge($lists, $users);
 }
-
 
 
 //获取某时间段个人业绩

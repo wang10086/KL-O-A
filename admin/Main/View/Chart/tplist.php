@@ -63,7 +63,7 @@
                                         <foreach name="lists" item="row" key="k">                      
                                             <tr>
                                                 <td class="orderNo"></td>
-                                                <td><a href="{:U('Chart/tpmore',array('dept'=>$row['rid']))}">{$row.rolename}</a></td>
+                                                <td><a href="{:U('Chart/tpmore',array('dept'=>$row['rid'],'year'=>$year))}">{$row.rolename}</a></td>
                                                 <td>{$row.fzr}</td>
                                                 <td>{$row.zsr}</td>
                                                 <td>{$row.zml}</td>

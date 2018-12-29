@@ -515,7 +515,7 @@ class ChartController extends BaseController {
 
 
 
-    /*//个人业绩排行榜
+    /*//个人业绩排行榜  20181229
     public function pplist(){
         $db		= M('op');
         $roles	= M('role')->GetField('id,role_name',true);
@@ -737,11 +737,10 @@ class ChartController extends BaseController {
         $post           = M('salary_department')->where(array('id'=>array('in',$departids)))->getField('id,department,manager_name',true);
 
         foreach($post as $k=>$v){
-            $lists[$k]				= tplist($v['id'],$times);
+            $lists[$k]				= tplist($v,$times);
             $lists[$k]['rolename']	= $v['department'];
             $lists[$k]['fzr']       = $v['manager_name'];
         }
-
 
         $this->lists    = $lists;
         $this->year 	= $year;
@@ -753,8 +752,9 @@ class ChartController extends BaseController {
 
     //团队人均排行榜
     public function tpavglist(){
-
+        $mod        = D('Chart');
         $year       = I('year',date('Y'));
+        $yearMonth  = $year.date('m',strtotime("-1 month"));    //上个月
         $times      = array();
         if ($year <2018){
             $yearBegin  = strtotime('2017-12-26');
@@ -765,15 +765,16 @@ class ChartController extends BaseController {
         }
         $times[]        = $yearBegin;
         $times[]        = $yearEnd;
-        //$post           = C('POST_TEAM');
         $departids      = C('YW_DEPARTS');  //业务部门id
         $post           = M('salary_department')->where(array('id'=>array('in',$departids)))->getField('id,department,manager_name',true);
         foreach($post as $k=>$v){
-            $lists[$k]				= tplists($k,$times);
+            $userInfo               = $mod->getMonthUser($v,$yearMonth);
+            $lists[$k]				= tplist($v,$times);
             $lists[$k]['rolename']	= $v['department'];
             $lists[$k]['fzr']       = $v['manager_name'];
+            $lists[$k]['sumMonth']  = $userInfo[$yearMonth]['sumMonth'];
+            $lists[$k]['sumYear']   = $userInfo['sumYear'];
         }
-
 
         $this->lists    = $lists;
         $this->year 	= $year;
@@ -797,31 +798,17 @@ class ChartController extends BaseController {
         $yearTime[]     = $yearBegin;
         $yearTime[]     = $yearEnd;
 
-        $dept		= I('dept');
+        $dept		    = I('dept');
+        $field          = array();
+        $field[]        =  'id as create_user';
+        $field[]        =  'nickname as create_user_name';
+        $field[]        =  'departmentid';
+        $lists	        = M('account')->field($field)->where(array('departmentid'=>$dept,'status'=>0))->select();
+        $department     = M('salary_department')->where(array('id'=>$dept))->find();
 
-        $post 		= C('POST_TEAM');
-        $postmore	= C('POST_TEAM_MORE');
-        $db			= M('op');
-        $roles		= M('role')->GetField('id,role_name',true);
-
-
-        //查询所有业务人员信息
-        $where = array();
-        $where['roleid']			= array('in',$postmore[$dept]);
-        $where['status']			= 0;
-        //$where['postid']			= array('in','1,2,4,31,32');
-
-
-
-        $field = array();
-        $field[] =  'id as create_user';
-        $field[] =  'nickname as create_user_name';
-        $field[] =  'roleid';
-
-        $lists = M('account')->field($field)->where($where)->select();
         foreach($lists as $k=>$v){
 
-            $lists[$k]['rolename'] 	=  $roles[$v['roleid']];
+            $lists[$k]['rolename'] 	=  $department['department'];
 
             //查询2018年度总收入
             $all = personal_income($v['create_user'],0,$yearTime);
@@ -834,11 +821,10 @@ class ChartController extends BaseController {
             $lists[$k]['ysr'] = $mon['zsr'];
             $lists[$k]['yml'] = $mon['zml'];
             $lists[$k]['yll'] = $mon['mll'];
-
         }
 
-        $this->deptname = $post[$dept];
-        $this->lists = $lists;
+        $this->deptname = $department['department'];
+        $this->lists    = $lists;
         $this->year 	= $year;
         $this->prveyear	= $year-1;
         $this->nextyear	= $year+1;
