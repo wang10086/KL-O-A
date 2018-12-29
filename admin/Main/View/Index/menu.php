@@ -474,9 +474,9 @@
                                         <a href=""><i class="fa fa-bullseye"></i> 项目费用</a>
                                     </if>
                                     <ul class="treeview-menu">
-                                        <if condition="rolemenu(array('Finance/costacclist'))">
+                                        <!--<if condition="rolemenu(array('Finance/costacclist'))">
                                             <li><a href="{:U('Finance/costacclist')}"><i class="fa fa-angle-right"></i> 成本核算</a></li>
-                                        </if>
+                                        </if>--><!--20181228----delete-->
 
                                         <if condition="rolemenu(array('Finance/budget'))">
                                             <li><a href="{:U('Finance/budget')}"><i class="fa fa-angle-right"></i> 项目预算</a></li>

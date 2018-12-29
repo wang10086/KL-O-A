@@ -260,8 +260,8 @@ class FinanceController extends BaseController {
 	}
 
 
-	// @@@NODE-3###costacclist###成本核算记录###
-    public function costacclist(){
+	// @@@NODE-3###costacclist###成本核算记录###(删除20181228_bak)
+    /*public function costacclist_bak(){
 		$this->title('成本核算记录');
 		
 		$db = M('op');
@@ -285,7 +285,7 @@ class FinanceController extends BaseController {
         $this->lists = $db->where($where)->limit($page->firstRow . ',' . $page->listRows)->order($this->orders('create_time'))->select();
 		
 		$this->display('costacclist');
-	}
+	}*/
 
 
 	// @@@NODE-3###costapply###费用申请记录###

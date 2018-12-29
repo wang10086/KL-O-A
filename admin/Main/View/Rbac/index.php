@@ -101,7 +101,7 @@
                 <input type="hidden" name="m" value="Main">
                 <input type="hidden" name="c" value="Rbac">
                 <input type="hidden" name="a" value="index">
-                <div class="form-group col-md-6">
+                <div class="form-group col-md-12">
                     <input type="text" class="form-control" name="key" placeholder="关键字">
                 </div>
 
@@ -113,15 +113,6 @@
                         </foreach>
                     </select>
                 </div>
-                
-                <!--<div class="form-group col-md-6">
-                    <select class="form-control" name="role">
-                        <option value="0">所属角色</option>
-                        <foreach name="roles" key="k" item="v">
-                        <option value="{$k}">{$v}</option>
-                        </foreach>
-                    </select>
-                </div>-->
 
                 <div class="form-group col-md-6">
                     <select class="form-control" name="position_id">
@@ -140,7 +131,15 @@
                         </foreach>
                     </select>
                 </div>
-                
+
+                <div class="form-group col-md-6">
+                    <select class="form-control" name="role">
+                        <option value="0">所属角色</option>
+                        <foreach name="roles" key="k" item="v">
+                            <option value="{$k}">{$v}</option>
+                        </foreach>
+                    </select>
+                </div>
                 
                 </form>
             </div>

@@ -23,7 +23,8 @@
                                 <div class="box-header">
                                     <h3 class="box-title">{$_action_}</h3>
                                     <div class="box-tools pull-right">
-                                         <a href="{:U('Rbac/addrole')}" class="btn btn-sm btn-danger"><i class="fa fa-plus"></i> 新增</a>
+                                         <!--<a href="{:U('Rbac/addrole')}" class="btn btn-sm btn-danger"><i class="fa fa-plus"></i> 新增</a>-->
+                                         <a href="javascript:;" onclick="art_show_msg('请先修改没有人的角色')" class="btn btn-sm btn-danger"><i class="fa fa-plus"></i> 新增</a>
                                     </div>
                                 </div><!-- /.box-header -->
                                 <div class="box-body">
@@ -42,7 +43,8 @@
                                         <tr>
                                             <td>{$row.id}</td>
                                             <!--<td>{$row.name}</td>-->
-                                            <td>{:tree_pad($row['level'])} {$row.role_name} <a class="pull-right" href="{:U('Rbac/addrole',array('pid'=>$row['id']))}"><i class="fa fa-plus"></i> 子部门</a>&nbsp; </td>
+                                            <!--<td>{:tree_pad($row['level'])} {$row.role_name} <a class="pull-right" href="{:U('Rbac/addrole',array('pid'=>$row['id']))}"><i class="fa fa-plus"></i> 子部门</a>&nbsp; </td>-->
+                                            <td>{:tree_pad($row['level'])} {$row.role_name} <a class="pull-right" href="javascript:;" onclick="art_show_msg('请先修改没有人的角色')"><i class="fa fa-plus"></i> 子部门</a>&nbsp; </td>
                                             <td>{$row.level}</td>
                                             <td><if condition="$row['isend']==1">是<else/>否</if></td>
                                             <td><if condition="$row['status']==1">启用<else/>停用</if></td>

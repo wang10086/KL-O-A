@@ -4111,3 +4111,5 @@ th{outline: none;}
 #plans_val{ display:none}
 
 .black{font-size: 14px; font-weight: 600;}
+#chart_btn_group .btn-group-header{ background-color: #ddd;color: #666;}
+/*#catfont .btn-group-header{ background-color: #ddd;color: #666;}*/

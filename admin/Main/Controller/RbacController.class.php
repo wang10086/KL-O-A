@@ -27,7 +27,7 @@ class RbacController extends BaseController {
 		if(rolemenu(array('Rbac/adduser'))){
 			$key            = I('key','');
             $departmentid   = I('departmentid',0);
-			//$role           = I('role',0);
+			$role           = I('role',0);
 			$post           = I('post',0);
             $position_id    = I('position_id',0);
             $arr            = $this->public_get_positions($position_id);
@@ -38,7 +38,7 @@ class RbacController extends BaseController {
 			$where['id'] = array('gt',3);
 			if($key)            $where['nickname']      = array('like','%'.$key.'%');
             if($departmentid)   $where['departmentid']  = $departmentid;
-			//if($role)           $where['roleid']        = $role;
+			if($role)           $where['roleid']        = $role;
 			if($post)           $where['postid']        = $post;
             if ($position_id)   $where['position_id']   = array('in',$position_id);
 		}else{

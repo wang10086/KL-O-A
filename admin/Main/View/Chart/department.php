@@ -20,12 +20,10 @@
                         <div class="col-xs-12">
                             <div class="box box-warning">
                                 <div class="box-header">
-                                    <style>
-                                        #chart_btn_group .btn-a{ background-color: #ddd;color: #666;}
-                                    </style>
+                                   
                                     <div class="box-tools btn-group" id = "chart_btn_group">
-                                        <a href="{:U('Chart/department',array('pin'=>0))}" class="btn btn-sm <?php if($pin==0){ echo 'btn-info';}else{ echo 'btn-a';} ?>">预算及结算分部门汇总</a>
-                                        <a href="{:U('Chart/department',array('pin'=>1))}" class="btn btn-sm <?php if($pin==1){ echo 'btn-info';}else{ echo 'btn-a';} ?>">已结算分部门汇总</a>
+                                        <a href="{:U('Chart/department',array('pin'=>0))}" class="btn btn-sm <?php if($pin==0){ echo 'btn-info';}else{ echo 'btn-group-header';} ?>">预算及结算分部门汇总</a>
+                                        <a href="{:U('Chart/department',array('pin'=>1))}" class="btn btn-sm <?php if($pin==1){ echo 'btn-info';}else{ echo 'btn-group-header';} ?>">已结算分部门汇总</a>
                                     </div>
                                     <!--<div class="box-tools pull-right">
                                     	 <a href="javascript:;" class="btn btn-info btn-sm" onclick="javascript:opensearch('searchtext',800,160);"><i class="fa fa-search"></i> 搜索</a>

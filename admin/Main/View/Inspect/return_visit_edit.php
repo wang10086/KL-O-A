@@ -35,6 +35,7 @@
                     <a href="javascript:;" onclick="show_visit_from()">立即回访</a></if></div></div>
         <?php } ?>
 
+        <if condition="rolemenu(array('Inspect/return_visit'))">
         <div class="content" style="margin-top: 20px;">
             <form method="post" action="{:U('Inspect/return_visit')}" id="visit_form">
                 <input type="hidden" name="dosubmint" value="1">
@@ -61,6 +62,7 @@
                 </if>
             </form>
         </div>
+        </if>
 
     </div>
 </div><!--/.col (right) -->
