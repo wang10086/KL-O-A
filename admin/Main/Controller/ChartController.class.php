@@ -710,6 +710,8 @@ class ChartController extends BaseController {
         return $lists;
     }
 
+
+
     /**
      * not_team 非团支出报销（其他费用）
      * $ymd1 开始时间 20180626
@@ -717,14 +719,39 @@ class ChartController extends BaseController {
      */
     public function not_team($ymd1,$ymd2){
 
-        $ymd1 =  strtotime($ymd1);
-        $ymd2 =  strtotime($ymd2);
-        $map['bx_time'] = array(array('gt',$ymd1),array('lt',$ymd2));//开始结束时间
-        $map['bxd_type'] = array(array('gt',1),array('lt',4));//2 非团借款报销 3直接报销
-        $map['audit_status'] = array('eq',1);//审核通过
-        $money = M('baoxiao')->where($map)->select();//日期内所有数据
+        $ymd1                   =  strtotime($ymd1);
+        $ymd2                   =  strtotime($ymd2);
+        $map['bx_time']         = array(array('gt',$ymd1),array('lt',$ymd2));//开始结束时间
+        $map['bxd_type']        = array(array('gt',1),array('lt',4));//2 非团借款报销 3直接报销
+        $map['audit_status']    = array('eq',1);//审核通过
+        $money                  = M('baoxiao')->where($map)->select();//日期内所有数据
         return  $money;
     }
+
+    /**
+     * summary_types 分部门分类型汇总
+     * $year 年 $month 月
+     * $type 类型(800=>预算 , 801=>结算)
+     */
+    public function summary_types(){
+
+        $year           = (int)trim(I('year',date('Y')));//默认或传输年份
+        $month          = (int)trim(I('month',date('m')));//默认或传输月份
+        $type           = (int)trim(I('type',800));//默认或传输 预算及结算 已结算 类型
+        $statu          = (int)(I('statu'));//1加年 2 减年
+        if($statu==1){ $year = $year+1;}elseif($statu==2){$year = $year-1;}//1加年 2 减年
+        $time1 = strtotime((int)($year.($month-1).'26'));//月开始时间
+        $time2 = strtotime((int)($year.$month.'26'));//月结束时间
+
+        $chart          = D('Chart');
+        $department     =  $chart->department($year,$time1,$time2,$type);//
+
+        $this->month    = $month;
+        $this->year     = $year;
+        $this->display();
+    }
+
+
 
 }
 	
