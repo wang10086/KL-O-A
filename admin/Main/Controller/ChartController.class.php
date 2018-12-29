@@ -928,10 +928,10 @@ class ChartController extends BaseController {
         if($statu==1){ $year= $year+1;}elseif($statu==2){$year = $year-1;}//1加年 2 减年
         $time1              = strtotime((int)($year.($month-1).'26'));//月开始时间
         $time2              = strtotime((int)($year.$month.'26'));//月结束时间
-
         $chart              = D('Chart');
-        $department         =  $chart->department($year,$time1,$time2,$type);//分部门分类型汇总数据
-        $this->department   = $department;
+        $department         = $chart->department($year,$time1,$time2,$type);//分部门分类型汇总数据
+        $this->department   = $department[0];//分部门分类型汇总数据
+        $this->count_sum    = $department[1]['name'];//总计
         $this->month        = $month;
         $this->year         = $year;
         $this->display();
