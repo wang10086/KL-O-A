@@ -113,19 +113,35 @@
                                         <td class="taskOptions">20.00</td>
                                     </tr>
 
-
                                     <tr>
-                                        <td class="taskOptions black" data="">合计</td>
-                                        <td class="taskOptions black" data="">{$heji.yearxms}</td>
-                                        <td class="taskOptions black" data="">{$heji.yearrenshu}</td>
-                                        <td class="taskOptions black" data="">{$heji.yearzsr}</td>
-                                        <td class="taskOptions black" data="">{$heji.yearzml}</td>
-                                        <td class="taskOptions black" data="">{$heji.yearmll}</td>
-                                        <td class="taskOptions black" data="">{$heji.monthxms}</td>
-                                        <td class="taskOptions black" data="" width="">{$heji.monthrenshu}</td>
-                                        <td class="taskOptions black" data="">{$heji.monthzsr}</td>
-                                        <td class="taskOptions black" data="">{$heji.monthzml}</td>
-                                        <td class="taskOptions black" data="">{$heji.monthmll}</td>
+                                        <th class="taskOptions" rowspan='<?php echo count($count_sum); ?>'>合计</th>
+                                    </tr>
+<!--                                    <foreach name="count_sum"  item="c">-->
+<!--                                        <tr>-->
+<!--                                            <td class="taskOptions">--><?php //if($c['year_sum']==0 || $c['year_sum']==''){echo '0';}else{echo $c['year_sum'];?><!--</td>-->
+<!--                                            <td class="taskOptions">--><?php //if($c['year_people_num']==0 || $c['year_people_num']==''){echo '0';}else{echo $c['year_people_num'];?><!--</td>-->
+<!--                                            <td class="taskOptions">--><?php //if($c['year_income']==0 || $c['year_income']==''){echo '0';}else{echo $c['year_income'];?><!--</td>-->
+<!--                                            <td class="taskOptions">--><?php //if($c['year_profit']==0 || $c['year_profit']==''){echo '0';}else{echo $c['year_profit'];?><!--</td>-->
+<!--                                            <td class="taskOptions">--><?php //if($c['year_ratio']==0 || $c['year_ratio']==''){echo '0';}else{echo $c['year_ratio'];?><!--</td>-->
+<!--                                            <td class="taskOptions">--><?php //if($c['month_sum']==0 || $c['month_sum']==''){echo '0';}else{echo $c['month_sum'];?><!--</td>-->
+<!--                                            <td class="taskOptions">--><?php //if($c['month_people_num']==0 || $c['month_people_num']==''){echo '0';}else{echo $c['month_people_num'];?><!--</td>-->
+<!--                                            <td class="taskOptions">--><?php //if($c['month_income']==0 || $c['month_income']==''){echo '0';}else{echo $c['month_income'];?><!--</td>-->
+<!--                                            <td class="taskOptions">--><?php //if($c['month_profit']==0 || $c['month_profit']==''){echo '0';}else{echo $c['month_profit'];?><!--</td>-->
+<!--                                            <td class="taskOptions">--><?php //if($c['month_ratio']==0 || $c['month_ratio']==''){echo '0';}else{echo $c['month_ratio'];?><!--</td>-->
+<!--                                        </tr>-->
+<!--                                    </foreach>-->
+                                    <tr>
+                                        <td class="taskOptions black" data="" rowspan="">合计</td>
+                                        <td class="taskOptions black" data="">{$count_sum.yearxms}</td>
+                                        <td class="taskOptions black" data="">{$count_sum.yearrenshu}</td>
+                                        <td class="taskOptions black" data="">{$count_sum.yearzsr}</td>
+                                        <td class="taskOptions black" data="">{$count_sum.yearzml}</td>
+                                        <td class="taskOptions black" data="">{$count_sum.yearmll}</td>
+                                        <td class="taskOptions black" data="">{$count_sum.monthxms}</td>
+                                        <td class="taskOptions black" data="">{$count_sum.monthrenshu}</td>
+                                        <td class="taskOptions black" data="">{$count_sum.monthzsr}</td>
+                                        <td class="taskOptions black" data="">{$count_sum.monthzml}</td>
+                                        <td class="taskOptions black" data="">{$count_sum.monthmll}</td>
                                     </tr>
                                 </table>
                                 </div><!-- /.box-body -->
@@ -140,8 +156,3 @@
 
 
 <include file="Index:footer2" />
-
-<script>
-
-
-</script>
