@@ -519,7 +519,7 @@ class ChartController extends BaseController {
 	
 	
 	
-	//个人业绩排行榜
+	/*//个人业绩排行榜
 	public function pplist(){
 		$db		= M('op');
 		$roles	= M('role')->GetField('id,role_name',true);
@@ -655,7 +655,197 @@ class ChartController extends BaseController {
 		$this->lists = $lists;
 		
 		$this->display('tpmore');
-	}
+	}*/
+
+    //个人业绩排行榜
+    public function pplist(){
+        $year           = I('year',date('Y'));
+        $yearTime       = array();
+        if ($year <2018){
+            $yearBegin  = strtotime('2017-12-26');
+            $yearEnd    = strtotime('2018-12-26');
+        }else{
+            $yearBegin  = strtotime(($year-1).'-12-26');
+            $yearEnd    = strtotime($year.'-12-26');
+        }
+        $yearTime[]     = $yearBegin;
+        $yearTime[]     = $yearEnd;
+
+        $db		= M('op');
+        $roles	= M('role')->GetField('id,role_name',true);
+        $dep    = M('salary_department')->getField('id,department',true);
+
+        //查询所有业务人员信息
+        $where = array();
+        $where['status']			= 0;
+        $arr_position_ids           = array(1,5,6,7,8,9,10);
+
+        $field = array();
+        $field[] =  'id as create_user';
+        $field[] =  'nickname as create_user_name';
+        $field[] =  'roleid';
+        $field[] =  'departmentid';
+        $field[] =  'position_id';
+
+        $lists = M('account')->field($field)->where($where)->select();
+
+        foreach($lists as $k=>$v){
+
+            $lists[$k]['rolename'] 	=  $roles[$v['roleid']];
+            $lists[$k]['department']=  $dep[$v['departmentid']];
+
+            //查询2018年度总收入
+            $all = personal_income($v['create_user'],0,$yearTime);
+            $lists[$k]['zsr'] = $all['zsr'];
+            $lists[$k]['zml'] = $all['zml'];
+            $lists[$k]['mll'] = $all['mll'];
+
+            //查询当月总收入'
+            $mon = personal_income($v['create_user'],1,$yearTime);
+            $lists[$k]['ysr'] = $mon['zsr'];
+            $lists[$k]['yml'] = $mon['zml'];
+            $lists[$k]['yll'] = $mon['mll'];
+
+        }
+
+        $arr  = array();
+        foreach ($lists as $kk=>$vv){
+            if ($vv['zsr'] != 0.00 || in_array($vv['position_id'],$arr_position_ids)){
+                $arr[] = $vv;
+            }
+        }
+
+        $this->lists    = $arr;
+        $this->year 	= $year;
+        $this->prveyear	= $year-1;
+        $this->nextyear	= $year+1;
+
+        $this->display('pplist');
+    }
+
+
+
+    //团队业绩排行榜
+    public function tplist(){
+
+        $year       = I('year',date('Y'));
+        $times      = array();
+        if ($year <2018){
+            $yearBegin  = strtotime('2017-12-26');
+            $yearEnd    = strtotime('2018-12-26');
+        }else{
+            $yearBegin  = strtotime(($year-1).'-12-26');
+            $yearEnd    = strtotime($year.'-12-26');
+        }
+        $times[]     = $yearBegin;
+        $times[]     = $yearEnd;
+
+        $post = C('POST_TEAM');
+        foreach($post as $k=>$v){
+            $lists[$k]				= tplist($k,$times);
+            $lists[$k]['rolename']	= $v;
+        }
+
+
+        $this->lists    = $lists;
+        $this->year 	= $year;
+        $this->prveyear	= $year-1;
+        $this->nextyear	= $year+1;
+        $this->display('tplist');
+    }
+
+
+    //团队人均排行榜
+    public function tpavglist(){
+
+        $year       = I('year',date('Y'));
+        $times      = array();
+        if ($year <2018){
+            $yearBegin  = strtotime('2017-12-26');
+            $yearEnd    = strtotime('2018-12-26');
+        }else{
+            $yearBegin  = strtotime(($year-1).'-12-26');
+            $yearEnd    = strtotime($year.'-12-26');
+        }
+        $times[]        = $yearBegin;
+        $times[]        = $yearEnd;
+        $post           = C('POST_TEAM');
+        foreach($post as $k=>$v){
+            $lists[$k]				= tplist($k,$times);
+            $lists[$k]['rolename']	= $v;
+        }
+
+
+        $this->lists    = $lists;
+        $this->year 	= $year;
+        $this->prveyear	= $year-1;
+        $this->nextyear	= $year+1;
+        $this->display('tpavglist');
+    }
+
+
+    //团队业绩详情
+    public function tpmore(){
+        $year           = I('year',date('Y'));
+        $yearTime       = array();
+        if ($year <2018){
+            $yearBegin  = strtotime('2017-12-26');
+            $yearEnd    = strtotime('2018-12-26');
+        }else{
+            $yearBegin  = strtotime(($year-1).'-12-26');
+            $yearEnd    = strtotime($year.'-12-26');
+        }
+        $yearTime[]     = $yearBegin;
+        $yearTime[]     = $yearEnd;
+
+        $dept		= I('dept');
+
+        $post 		= C('POST_TEAM');
+        $postmore	= C('POST_TEAM_MORE');
+        $db			= M('op');
+        $roles		= M('role')->GetField('id,role_name',true);
+
+
+        //查询所有业务人员信息
+        $where = array();
+        $where['roleid']			= array('in',$postmore[$dept]);
+        $where['status']			= 0;
+        //$where['postid']			= array('in','1,2,4,31,32');
+
+
+
+        $field = array();
+        $field[] =  'id as create_user';
+        $field[] =  'nickname as create_user_name';
+        $field[] =  'roleid';
+
+        $lists = M('account')->field($field)->where($where)->select();
+        foreach($lists as $k=>$v){
+
+            $lists[$k]['rolename'] 	=  $roles[$v['roleid']];
+
+            //查询2018年度总收入
+            $all = personal_income($v['create_user'],0,$yearTime);
+            $lists[$k]['zsr'] = $all['zsr'];
+            $lists[$k]['zml'] = $all['zml'];
+            $lists[$k]['mll'] = $all['mll'];
+
+            //查询当月总收入
+            $mon = personal_income($v['create_user'],1,$yearTime);
+            $lists[$k]['ysr'] = $mon['zsr'];
+            $lists[$k]['yml'] = $mon['zml'];
+            $lists[$k]['yll'] = $mon['mll'];
+
+        }
+
+        $this->deptname = $post[$dept];
+        $this->lists = $lists;
+        $this->year 	= $year;
+        $this->prveyear	= $year-1;
+        $this->nextyear	= $year+1;
+
+        $this->display('tpmore');
+    }
 
     //数据按部门统计
     public function  department(){

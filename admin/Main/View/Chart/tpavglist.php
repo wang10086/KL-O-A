@@ -12,19 +12,37 @@
 
                 <!-- Main content -->
                 <section class="content">
-					
-                    <div class="btn-group" id="catfont">
-                        <a href="{:U('Chart/pplist')}" class="btn btn-default">个人业绩排行榜</a>
-                        <a href="{:U('Chart/tplist')}" class="btn btn-default">团队总体业绩排行榜</a>
-                        <a href="{:U('Chart/tpavglist')}" class="btn btn-info">团队人均排行榜</a>
-                    </div>
-                    
                     <div class="row" style="margin-top:20px;">
                         <div class="col-xs-12">
                             <div class="box box-warning">
+
+                                <div class="box-header">
+                                    <div class="box-tools btn-group" id="chart_btn_group">
+                                        <a href="{:U('Chart/pplist')}" class="btn btn-sm btn-group-header">个人业绩排行榜</a>
+                                        <a href="{:U('Chart/tplist')}" class="btn btn-sm btn-group-header">团队总体业绩排行榜</a>
+                                        <a href="{:U('Chart/tpavglist')}" class="btn btn-sm btn-info">团队人均排行榜</a>
+                                    </div>
+                                </div><!-- /.box-header -->
                                
                                 <div class="box-body">
-                                	<p>提示：以下累计数据从2018年1月1日起已完成结算项目中采集</p>
+                                    <div class="btn-group" id="catfont" style="padding-bottom:5px;">
+                                        <?php if($prveyear>2017){ ?>
+                                            <a href="{:U('Chart/tpavglist',array('year'=>$prveyear))}" class="btn btn-default" style="padding:8px 18px;">上一年</a>
+                                        <?php } ?>
+                                        <?php
+                                        for($i=2018;$i<date('Y');$i++){
+                                            if($year==$i){
+                                                echo '<a href="'.U('Chart/tpavglist',array('year'=>$i)).'" class="btn btn-info" style="padding:8px 18px;">'.$i.'年</a>';
+                                            }else{
+                                                echo '<a href="'.U('Chart/tpavglist',array('year'=>$i)).'" class="btn btn-default" style="padding:8px 18px;">'.$i.'年</a>';
+                                            }
+                                        }
+                                        ?>
+                                        <?php if($year<date('Y')){ ?>
+                                            <a href="{:U('Chart/tpavglist',array('year'=>$nextyear))}" class="btn btn-default" style="padding:8px 18px;">下一年</a>
+                                        <?php } ?>
+                                    </div>
+                                    <p>提示：以下累计数据从{$year-1}年12月26日起已完成结算项目中采集</p>
                                     <table id="example2" class="table table-striped table-bordered table-hover">
                                         <thead>
                                             <tr role="row" class="orders" >
@@ -35,9 +53,11 @@
                                                 <th class="orderth">累计人均收入(元)</th>
                                                 <th class="orderth">累计人均毛利(元)</th>
                                                 <th class="orderth">累计人均毛利率(%)</th>
+                                                <?php if ($year == date("Y")){ ?>
                                                 <th class="orderth">当月人均收入(元)</th>
                                                 <th class="orderth">当月人均毛利(元)</th>
                                                 <th class="orderth">当月人均毛利率(%)</th>
+                                                <?php } ?>
                                             </tr>
                                         </thead>
                                         
@@ -51,9 +71,11 @@
                                                 <td>{$row.rjzsr}</td>
                                                 <td>{$row.rjzml}</td>
                                                 <td>{$row.rjmll}</td>
+                                                <?php if ($year == date("Y")){ ?>
                                                 <td>{$row.rjysr}</td>
                                                 <td>{$row.rjyml}</td>
                                                 <td>{$row.rjyll}</td>
+                                                <?php } ?>
                                             </tr>
                                         </foreach>	
                                         </tbody>

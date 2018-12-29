@@ -3129,7 +3129,7 @@ function update_userlist_role(){
 }
 
 //获取上月25至本月25时间戳
-function twentyfive(){
+/*function twentyfive(){
 	$today = date('d',time());
 	if($today<25){
 		$firstday		= date("Y-m-25",strtotime('-1 month')); 
@@ -3148,6 +3148,26 @@ function twentyfive(){
 	$return[1] = $lasttime;
 
 	return $return;
+}*/
+function twentyfive(){
+    $today = date('d',time());
+    if($today<26){
+        $firstday		= date("Y-m-26",strtotime('-1 month'));
+        $lastday		= date("Y-m-25",time());
+    }else{
+        $firstday		= date("Y-m-26",time());
+        $lastday		= date("Y-m-25",strtotime('+1 month'));
+    }
+
+    if($firstday<'2018-01-01') $firstday = '2017-12-26';
+    $firsttime		= strtotime($firstday);
+    $lasttime		= strtotime($lastday)+86399;
+
+    $return = array();
+    $return[0] = $firsttime;
+    $return[1] = $lasttime;
+
+    return $return;
 }
 
 //获取当前月份的周期
@@ -3250,10 +3270,10 @@ function tplist($roleid,$times){
 
 
 //获取某时间段个人业绩
-function personal_income($userid,$time){
+function personal_income($userid,$time,$yearTime){
 	
 	$month = twentyfive();
-	
+
 	//查询月度
 	$where = array();
 	$where['b.audit_status']	= 1;
@@ -3261,7 +3281,7 @@ function personal_income($userid,$time){
 	$where['a.req_type']		= 801;
 	
 	if($time == 0){
-		$where['a.audit_time']		= array('gt',strtotime('2018-01-01 00:00:00')); 
+		$where['a.audit_time']		= array('between',$yearTime);
 	}else{
 		$where['a.audit_time']		= array('between',$month); 
 	}
