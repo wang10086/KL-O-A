@@ -16,7 +16,7 @@
         <h1><?php echo $year;?>{$datetime['year']}年季度预算录入</h1>
         <ol class="breadcrumb">
             <li><a href="{:U('Index/index')}"><i class="fa fa-home"></i> 首页</a></li>
-            <li><a href="{:U('Manage/Manage_year')}"><i class="fa fa-gift"></i> 季度预算报表</a></li>
+            <li><a href="{:U('Manage/Manage_year')}"><i class="fa fa-gift"></i> {$datetime['year']}年季度预算报表</a></li>
         </ol>
     </section>
 

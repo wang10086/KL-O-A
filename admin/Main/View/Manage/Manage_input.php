@@ -13,10 +13,10 @@
 <aside class="right-side">
 
     <section class="content-header">
-        <h1><?php echo $year;?>年度预算录入</h1>
+        <h1><?php echo $year;?>{$datetime['year']}年度预算录入</h1>
         <ol class="breadcrumb">
             <li><a href="{:U('Index/index')}"><i class="fa fa-home"></i> 首页</a></li>
-            <li><a href="{:U('Manage/Manage_year')}"><i class="fa fa-gift"></i> 年度经营报表</a></li>
+            <li><a href="{:U('Manage/Manage_year')}"><i class="fa fa-gift"></i>{$datetime['year']}年度经营报表</a></li>
         </ol>
     </section>
 
@@ -29,7 +29,7 @@
 
                 <div class="box box-warning">
                     <div class="box-header">
-                        <h3 class="box-title">年度预算录入</h3>
+                        <h3 class="box-title">{$datetime['year']}年度预算录入</h3>
 
                     </div><!-- /.box-header -->
                     <div class="box-body">
