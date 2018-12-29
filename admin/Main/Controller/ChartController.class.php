@@ -232,8 +232,6 @@ class ChartController extends BaseController {
         $xs    		= I('xs');
         $dept  		= I('dept',0);
 
-
-
         //获取团队相关数据
         $where = array();
         $where['roleid'] = array('in',$postmore[$dept]);
@@ -302,8 +300,6 @@ class ChartController extends BaseController {
 
 
     }
-
-
 
 
     //项目统计
@@ -651,7 +647,8 @@ class ChartController extends BaseController {
         $this->lists = $lists;
 
         $this->display('tpmore');
-    }*/
+    }
+    */
 
     //个人业绩排行榜
     public function pplist(){
@@ -733,13 +730,16 @@ class ChartController extends BaseController {
             $yearBegin  = strtotime(($year-1).'-12-26');
             $yearEnd    = strtotime($year.'-12-26');
         }
-        $times[]     = $yearBegin;
-        $times[]     = $yearEnd;
+        $times[]        = $yearBegin;
+        $times[]        = $yearEnd;
 
-        $post = C('POST_TEAM');
+        $departids      = C('YW_DEPARTS');  //业务部门id
+        $post           = M('salary_department')->where(array('id'=>array('in',$departids)))->getField('id,department,manager_name',true);
+
         foreach($post as $k=>$v){
-            $lists[$k]				= tplist($k,$times);
-            $lists[$k]['rolename']	= $v;
+            $lists[$k]				= tplist($v['id'],$times);
+            $lists[$k]['rolename']	= $v['department'];
+            $lists[$k]['fzr']       = $v['manager_name'];
         }
 
 
@@ -765,10 +765,13 @@ class ChartController extends BaseController {
         }
         $times[]        = $yearBegin;
         $times[]        = $yearEnd;
-        $post           = C('POST_TEAM');
+        //$post           = C('POST_TEAM');
+        $departids      = C('YW_DEPARTS');  //业务部门id
+        $post           = M('salary_department')->where(array('id'=>array('in',$departids)))->getField('id,department,manager_name',true);
         foreach($post as $k=>$v){
-            $lists[$k]				= tplist($k,$times);
-            $lists[$k]['rolename']	= $v;
+            $lists[$k]				= tplists($k,$times);
+            $lists[$k]['rolename']	= $v['department'];
+            $lists[$k]['fzr']       = $v['manager_name'];
         }
 
 
@@ -873,8 +876,8 @@ class ChartController extends BaseController {
 
     //统计部门数据
     public function count_lists($departments,$year,$month,$pin=0){
-        $yearBegin      			= $year.'0101';
-        $yearEnd        			= ($year+1).'0101';
+        $yearBegin      			= ($year-1).'1226';
+        $yearEnd        			= ($year+1).'1226';
         $yeartimes					= array();
         $yeartimes['yearBeginTime'] = strtotime($yearBegin);
         $yeartimes['yearEndTime']   = strtotime($yearEnd);
