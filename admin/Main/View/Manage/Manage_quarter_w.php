@@ -13,7 +13,7 @@
 <aside class="right-side">
 
     <section class="content-header">
-        <h1><?php echo $year;?>季度预算录入</h1>
+        <h1><?php echo $year;?>{$datetime['year']}年季度预算录入</h1>
         <ol class="breadcrumb">
             <li><a href="{:U('Index/index')}"><i class="fa fa-home"></i> 首页</a></li>
             <li><a href="{:U('Manage/Manage_year')}"><i class="fa fa-gift"></i> 季度预算报表</a></li>
@@ -29,7 +29,7 @@
 
                 <div class="box box-warning">
                     <div class="box-header">
-                        <h3 class="box-title">季度预算录入</h3>
+                        <h3 class="box-title"><?php if($datetime['type']==1){echo "第一";}elseif($datetime['type']==2){echo "第一";}elseif($datetime['type']==3){echo "第三";}elseif($datetime['type']==4){echo "第四";}?>季度预算录入</h3>
 
                     </div><!-- /.box-header -->
                     <div class="box-body">

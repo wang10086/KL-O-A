@@ -248,6 +248,7 @@ class ManageController extends ChartController {
         $manage             = $mod->Manage_display($datetime);//季度数据
         $type               = $mod->Manage_type(1);//季度提交状态
         $this->manage       = $manage;
+        $this->datetime     = $datetime;//当前年和季度
         $this->type         = $type;//季度提交状态
         $this->display();
     }
