@@ -32,8 +32,7 @@
                                         <th class="sorting" data="o.status">团号</th>
                                         <th class="sorting" data="o.project" width="160">项目名称</th>
                                         <th class="sorting" data="o.number">人数</th>
-
-                                        <th class="sorting" data="o.ret_time">完成时间</th>
+                                        <th class="sorting" data="c.ret_time">活动完成时间</th>
                                          <th class="sorting" data="o.sale_user">业务人员</th>
                                         <th class="sorting" data="o.guide_manager">调查人员</th>
                                         <th class="taskOptions" width="80" data="o.charity_status">满意度状态</th>
@@ -49,9 +48,12 @@
                                         <td><?php if($row['status']==1){ echo "<span class='green'>".$row['group_id']."</span>";}elseif($row['status']==2){ echo "<span class='red' title='".$row['nogroup']."'>不成团</span>";}else{ echo '未成团';} ?></td>
                                         <td><div class="tdbox_long"><a href="{:U('Op/plans_follow',array('opid'=>$row['op_id']))}" title="{$row.project}">{$row.project}</a></div></td>
                                         <td>{$row.number}人</td>
-
-                                        <td>{$row.ret_time|date='Y-m-d',###}</td>
-                                         <td>{$row.sale_user}</td>
+                                        <td>
+                                            <if condition="$row.ret_time neq 0">
+                                                {$row.ret_time|date='Y-m-d',###}
+                                            </if>
+                                        </td>
+                                        <td>{$row.sale_user}</td>
                                         <td>{$row.guide_manager}</td>
                                         <td><div class="tdbox_long" style="width:80px">{$row.charity_status}</div></td>
                                         <!--<td>

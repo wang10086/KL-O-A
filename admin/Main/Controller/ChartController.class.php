@@ -863,7 +863,7 @@ class ChartController extends BaseController {
     //统计部门数据
     public function count_lists($departments,$year,$month,$pin=0){
         $yearBegin      			= ($year-1).'1226';
-        $yearEnd        			= ($year+1).'1226';
+        $yearEnd        			= $year.'1226';
         $yeartimes					= array();
         $yeartimes['yearBeginTime'] = strtotime($yearBegin);
         $yeartimes['yearEndTime']   = strtotime($yearEnd);
