@@ -1095,7 +1095,7 @@ class OpController extends BaseController {
 
             //审核资源配置信息(审核15)
             if ($opid && $savetype==20){
-                if ($info['audit_status'] && $info['exe_user_id']){
+                if ($info['audit_status']){
                     $res_id                 = I('res_id');
                     $info['audit_time']     = NOW_TIME;
                     $where                  = array();
@@ -1192,6 +1192,7 @@ class OpController extends BaseController {
 
             //保存"审核"委托设计工作交接单 + 业务实施计划单
             if ($opid && $savetype==17){
+
                 $type           = I('type');
                 if (!$info){
                     $this->error('审核信息有误!');
@@ -1244,7 +1245,7 @@ class OpController extends BaseController {
                         //审核不通过
                         $uid     = cookie('userid');
                         $title   = '您有来自['.session('rolename').'--'.session('nickname').']的'.$name.'审核结果通知!';
-                        $content = '项目名称：'.$op['project'].'；团号：'.$op['group_id'].'；审核结果：'.$status[$info["audit_status"]];
+                        $content = '项目名称：'.$op['project'].'；团号：'.$op['group_id'].'；审核结果：'.$status[$info["audit_status"]].'；<span class="red">'.$info['audit_remark'].'</span>';
                         $url     = U('Op/confirm',array('opid'=>$opid));
                         $user    = '['.$ini_user_id.']';
                         send_msg($uid,$title,$content,$url,$user,'');

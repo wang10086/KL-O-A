@@ -47,11 +47,17 @@
                                             <input type="hidden" name="design_id" value="{$design.id}">
                                             <input type="hidden" name="type" value="{$type}">
                                             <input type="hidden" name="savetype" value="17">
+                                            <input type="hidden" id="isAssign">
                                             <div class="content">
-                                                <div class="form-group col-md-12">
+                                                <div class="form-group col-md-12" id="checkUid">
                                                     <label>审核需求信息：</label>
                                                     <input type="radio" name="info[audit_status]" value="1" <?php if ($design['audit_status'] == 1){echo 'checked';} ?>> &emsp;通过&emsp;&emsp;&emsp;
                                                     <input type="radio" name="info[audit_status]" value="2" <?php if ($design['audit_status'] == 2){echo 'checked';} ?>> &emsp;不通过
+                                                </div>
+
+                                                <div class="form-group col-md-12">
+                                                    <label>备注：</label>
+                                                    <textarea class="form-control"  name="info[audit_remark]">{$design['audit_remark']}</textarea>
                                                 </div>
 
                                                 <div class="form-group col-md-12">
@@ -178,6 +184,17 @@
     var keywords = <?php echo $userkey; ?>;
     $(document).ready(function(e){
         autocom('design_exe_user_name','design_exe_user_id');
+
+        $('#checkUid').find('ins').each(function (index,ele) {
+            $(this).click(function () {
+                var isneed = $(this).prev('input[name="info[audit_status]"]').val();
+                if (isneed == 1){
+                    $('#isAssign').val(1);
+                }else{
+                    $('#isAssign').val('');
+                }
+            })
+        })
     });
 
     function autocom(username,userid){
@@ -196,13 +213,19 @@
     }
 
     function saveResForm() {
-        let uid = $('#design_exe_user_id').val();
-        if (uid && uid !=0){
-            $("#audit_design").submit();
+        let uid         = $('#design_exe_user_id').val();
+        let isAssign    = $('#isAssign').val();
+        if (isAssign ==1){
+            if ( uid && uid !=0){
+                $("#audit_design").submit();
+            }else{
+                art_show_msg('请正确填写实施人员信息');
+                return false;
+            }
         }else{
-            art_show_msg('请正确填写实施人员信息');
-            return false;
+            $("#audit_design").submit();
         }
+
     }
 
     function print_design(){
