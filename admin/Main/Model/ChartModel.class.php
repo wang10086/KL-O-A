@@ -476,6 +476,7 @@ class ChartModel extends Model
                     $table_list[$key]['name'][$ke]['type_name']     = $va['name'];
                 }
                 if($count_list['name'][$ke]['month_sum']==0 && $count_list['name'][$ke]['month_people_num']==0 && $count_list['name'][$ke]['month_income']==0 &&  $count_list['name'][$ke]['month_profit']==0 &&  $count_list['name'][$ke]['year_sum']==0 && $count_list['name'][$ke]['year_people_num']==0 && $count_list['name'][$ke]['year_income']==0 && $count_list['name'][$ke]['year_profit']==0 && $count_list['name'][$ke]['month_ratio']==0 && $count_list['name'][$ke]['year_ratio']==0){
+                    unset($count_list['name'][$ke]);
                 }else{
                     $count_list['name'][$ke]['type_name']             = $va['name'];
                     $count_list['name'][$ke]['month_ratio']           = round(($count_list['name'][$ke]['month_profit']/$count_list['name'][$ke]['month_income'])*100,2);//总计 月度 毛利率
@@ -483,8 +484,9 @@ class ChartModel extends Model
                 }
             }
         }
-        $table[0] = $table_list;
-        $table[1] = $count_list;
+        $table[0] = $table_list;//部门
+        $table[1] = $count_list;//合计
+        $table[1]['nickname'] = '合计';
         return $table;
     }
 
