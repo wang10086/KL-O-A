@@ -13,8 +13,27 @@
                 <!-- Main content -->
                 <section class="content">
                     
-                    <div class="row" style="margin-top:20px;">
-                        <div class="col-xs-12">
+                    <div class="row" >
+                        <div class="col-md-12">
+
+                            <div class="btn-group" id="catfont" style="padding-bottom:20px;">
+                                <?php /*if($prveyear>2017){ */?><!--
+                                            <a href="{:U('Chart/pplist',array('year'=>$prveyear))}" class="btn btn-default" style="padding:8px 18px;">上一年</a>
+                                        --><?php /*} */?>
+                                <?php
+                                for($i=2018;$i<=date('Y');$i++){
+                                    if($year==$i){
+                                        echo '<a href="'.U('Chart/pplist',array('year'=>$i)).'" class="btn btn-info" style="padding:8px 18px;">'.$i.'年</a>';
+                                    }else{
+                                        echo '<a href="'.U('Chart/pplist',array('year'=>$i)).'" class="btn btn-default" style="padding:8px 18px;">'.$i.'年</a>';
+                                    }
+                                }
+                                ?>
+                                <?php /*if($year<date('Y')){ */?><!--
+                                            <a href="{:U('Chart/pplist',array('year'=>$nextyear))}" class="btn btn-default" style="padding:8px 18px;">下一年</a>
+                                        --><?php /*} */?>
+                            </div>
+
                             <div class="box box-warning">
                                 <div class="box-header">
                                     <div class="box-tools btn-group" id="chart_btn_group">
@@ -23,24 +42,8 @@
                                         <a href="{:U('Chart/tpavglist')}" class="btn btn-sm btn-group-header">团队人均排行榜</a>
                                     </div>
                                 </div><!-- /.box-header -->
+
                                 <div class="box-body">
-                                    <div class="btn-group" id="catfont" style="padding-bottom:5px;">
-                                        <?php if($prveyear>2017){ ?>
-                                            <a href="{:U('Chart/pplist',array('year'=>$prveyear))}" class="btn btn-default" style="padding:8px 18px;">上一年</a>
-                                        <?php } ?>
-                                        <?php
-                                        for($i=2018;$i<date('Y');$i++){
-                                            if($year==$i){
-                                                echo '<a href="'.U('Chart/pplist',array('year'=>$i)).'" class="btn btn-info" style="padding:8px 18px;">'.$i.'年</a>';
-                                            }else{
-                                                echo '<a href="'.U('Chart/pplist',array('year'=>$i)).'" class="btn btn-default" style="padding:8px 18px;">'.$i.'年</a>';
-                                            }
-                                        }
-                                        ?>
-                                        <?php if($year<date('Y')){ ?>
-                                            <a href="{:U('Chart/pplist',array('year'=>$nextyear))}" class="btn btn-default" style="padding:8px 18px;">下一年</a>
-                                        <?php } ?>
-                                    </div>
                                      <p>提示：以下累计数据从{$year-1}年12月26日起已完成结算项目中采集</p>
                                 	 <table id="example2" class="table table-striped table-bordered table-hover" >
                                         <thead>

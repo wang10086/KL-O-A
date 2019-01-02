@@ -754,7 +754,11 @@ class ChartController extends BaseController {
     public function tpavglist(){
         $mod        = D('Chart');
         $year       = I('year',date('Y'));
-        $yearMonth  = $year.date('m',strtotime("-1 month"));    //上个月
+        if (date('m')=='01'){   //月份人数从上个月获取
+            $yearMonth = ($year-1).date('m',strtotime("-1 month"));    //上个月
+        }else{
+            $yearMonth  = $year.date('m',strtotime("-1 month"));    //上个月
+        }
         $times      = array();
         if ($year <2018){
             $yearBegin  = strtotime('2017-12-26');

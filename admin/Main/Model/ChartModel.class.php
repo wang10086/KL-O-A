@@ -115,21 +115,50 @@ class ChartModel extends Model
     function getMonthUser($depart,$yearMonth){
         //上个月人员信息
         $lastMonthUser              = M('salary_wages_month')->where(array('datetime'=>$yearMonth,'department'=>$depart['department']))->getField('account_id,user_name',true);    //从工资表获取累计人数
-        $monthUserIds               = array_keys($lastMonthUser);
         $sumMonth                   = count($lastMonthUser);
         //全年人员信息
+        $months                     = $this->getYearMonth($yearMonth);
         $year                       = substr($yearMonth,0,4);
-        $yearUser                   = M('salary_wages_month')->where(array('datetime'=>array('like',$year.'%'),'department'=>$depart['department']))->getField('account_id,user_name',true);    //从工资表获取累计人数
-        $yearUserIds                = array_keys($yearUser);
-        $sumYear                    = count($yearUser);
+        $yearUser                   = M('salary_wages_month')->field('account_id,user_name,datetime')->where(array('datetime'=>array('in',$months),'department'=>$depart['department']))->select();    //从工资表获取累计人数
+        $countMonth                 = count(array_unique(array_column($yearUser,'datetime')));
+        $sumYearUser                = count($yearUser);         //年总人数
+        $sumYear                    = $sumYearUser/$countMonth; //年平均人数
         $data                       = array();
         $data[$yearMonth]['users']  = $lastMonthUser;
         $data[$yearMonth]['sumMonth'] = $sumMonth;
-        $data[$yearMonth]['userIds']= $monthUserIds;
         $data['yearUser']           = $yearUser;
         $data['sumYear']            = $sumYear;
-        $data['yearUserIds']        = $yearUserIds;
         return $data;
+    }
+
+    /**
+     * 获取本周期年内的月份(上一年12月至本年11月)
+     * @param $yearMonth
+     * @return array
+     */
+    function getYearMonth($yearMonth){
+        $year                       = substr($yearMonth,0,4);
+        $month                      = substr($yearMonth,4,2);
+        $month_arr                  = array();
+        if ($month == 12){
+            $month_arr[]            = $yearMonth;
+            $y                      = $year+1;
+            for ($n=1;$n<12;$n++){
+                $m                  = str_pad($n,2,"0",STR_PAD_LEFT);
+                $ym                 = $y.$m;
+                $month_arr[]        = $ym;
+            }
+        }else{
+            $y                      = $year;
+            for ($n=1;$n<12;$n++){
+                $m                  = str_pad($n,2,"0",STR_PAD_LEFT);
+                $ym                 = $y.$m;
+                $month_arr[]        = $ym;
+            }
+            $lym                    = ($year-1).'12';   //上一年的12月份
+            $month_arr[]            = $lym;
+        }
+        return $month_arr;
     }
 
     /**
