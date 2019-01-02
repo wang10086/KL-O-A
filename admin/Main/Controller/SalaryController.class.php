@@ -637,6 +637,7 @@ class SalaryController extends BaseController {
 
     /**
      * @salary_excel_list 生成工资表
+     *
      */
     public function salary_excel_list(){//判断权限
         $monthly                        = trim(I('month'));

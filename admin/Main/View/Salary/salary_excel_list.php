@@ -99,6 +99,7 @@
                                         <td>&yen; <?PHP echo sprintf("%.2f",$info['Achievements']['count_money']);?></td>
                                         <td>&yen; <?PHP echo sprintf("%.2f",$info['Extract']['total']);?></td>
 
+
                                         <td>&yen; <?PHP echo sprintf("%.2f",$info['bonus'][0]['foreign_bonus']);?></td>
                                         <td>&yen; <?PHP echo sprintf("%.2f",$info['subsidy'][0]['housing_subsidy']);?></td>
                                         <td>&yen; <?PHP echo sprintf("%.2f",$info['Other']);?></td>
@@ -128,6 +129,8 @@
                                         <td style="display:none">{$info['yearend']}</td>
                                         <td style="display:none">{$info['bonus'][0]['royalty']}</td>
                                         <td style="display:none">{$info['welfare']}</td>
+                                        <td style="display:none">{$info['labour']['id']}</td>
+
                                     </tr>
                                     <th class="list_salary_detail1" style="display: none">{$info['wages_mont_id']}</th>
                                 </foreach>
@@ -207,9 +210,9 @@
                     </div><!-- /.box-body -->
 
                     <div style="margin-top:2em;text-align:center;" id="shr_qianzi"><br><br><br><br>
-                        <?php if($status==1 && $userid== 77){?>
+<!--                        --><?php //if($status==1 && $userid== 77){?>
                             <a  class="btn btn-info salary_excel1_submit" style="width:10em;margin-top:2em;" onclick="show_qianzi(0)">提交审核</a>
-                        <?php }?>
+<!--                        --><?php //}?>
                         <?php if($status==2 && $userid == 55){?>
                             <a  class="btn btn-info salary_excel1_submit1" style="width:10em;margin-top:2em;" onclick="show_qianzi(1)">提交批准</a>
                             <a  class="btn btn-info salary_excel1_submit2" style="width:10em;margin-top:2em;" onclick="show_qianzi(2)">驳回</a>
