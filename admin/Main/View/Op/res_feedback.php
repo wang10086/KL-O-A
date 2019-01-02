@@ -43,11 +43,17 @@
                                         <input type="hidden" name="opid" value="{$op.op_id}">
                                         <input type="hidden" name="res_id" value="{$resource.id}">
                                         <input type="hidden" name="savetype" value="20">
+                                        <input type="hidden" id="isAssign">
                                         <div class="content">
-                                            <div class="form-group col-md-12">
+                                            <div class="form-group col-md-12" id="checkUid">
                                                 <label>审核需求信息：</label>
                                                 <input type="radio" name="info[audit_status]" value="1" <?php if ($resource['audit_status'] == 1){echo 'checked';} ?>> &emsp;通过&emsp;&emsp;&emsp;
                                                 <input type="radio" name="info[audit_status]" value="2" <?php if ($resource['audit_status'] == 2){echo 'checked';} ?>> &emsp;不通过
+                                            </div>
+
+                                            <div class="form-group col-md-12">
+                                                <label>备注：</label>
+                                                <textarea class="form-control"  name="info[audit_remark]">{$resource['audit_remark']}</textarea>
                                             </div>
 
                                             <div class="form-group col-md-12">
@@ -58,7 +64,8 @@
                                         </div>
 
                                         <div style="width:100%; text-align:center;">
-                                            <a  href="javascript:;" class="btn btn-info btn-lg" onClick="javascript:save('feed_back','<?php echo U('Op/public_save'); ?>');">保存</a>
+                                            <!--<a  href="javascript:;" class="btn btn-info btn-lg" onClick="javascript:save('feed_back','<?php /*echo U('Op/public_save'); */?>');">保存</a>-->
+                                            <a  href="javascript:;" class="btn btn-info btn-lg" onClick="javascript:saveResForm()">保存</a>
                                         </div>
                                     </form>
                                 <?php } ?>
@@ -113,6 +120,17 @@
     var keywords = <?php echo $userkey; ?>;
     $(document).ready(function(e){
         autocom('res_exe_user_name','res_exe_user_id');
+
+        $('#checkUid').find('ins').each(function (index,ele) {
+            $(this).click(function () {
+                var isneed = $(this).prev('input[name="info[audit_status]"]').val();
+                if (isneed == 1){
+                    $('#isAssign').val(1);
+                }else{
+                    $('#isAssign').val('');
+                }
+            })
+        })
     });
 
     function autocom(username,userid){
@@ -128,6 +146,21 @@
         }).result(function (event, item) {
             $("#"+userid+"").val(item.id);
         });
+    }
+
+    function saveResForm() {
+        let uid         = $('#res_exe_user_id').val();
+        let isAssign    = $('#isAssign').val();
+        if (isAssign == 1){
+            if (uid && uid !=0){
+                save('feed_back','<?php echo U('Op/public_save'); ?>');
+            }else{
+                art_show_msg('请正确填写实施人员信息');
+                return false;
+            }
+        }else{
+            save('feed_back','<?php echo U('Op/public_save'); ?>');
+        }
     }
 
     //保存信息

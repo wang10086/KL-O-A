@@ -15,7 +15,7 @@
 </script>
 
 <!--业务实施需求单 (一)-->
-    <form method="post" action="<?php echo U('Op/public_save'); ?>" id="res_need_table" class="hideAll">
+    <form method="post" action="<?php echo U('Op/public_save'); ?>" id="res_need_table" class="hideAll" onsubmit="return resSubmitBefore(1)">
     <?php if ($resource['audit_status'] != 1){ ?>
     <input type="hidden" name="dosubmint" value="1">
     <input type="hidden" name="opid" value="{$op.op_id}">
@@ -135,8 +135,8 @@
                 </div>
 
                 <div style="width:100%; text-align:center;">
-                    <!--<button type="submit" class="btn btn-info btn-lg" id="lrpd">提交aa</button>-->
-                    <a  href="javascript:;" class="btn btn-info btn-lg" onClick="javascript:save('res_need_table','<?php echo U('Op/public_save'); ?>');">保存</a>
+                    <a  href="javascript:;" class="btn btn-info btn-lg" onClick="javascript:saveResForm(1)">保存</a>
+                    <!--<a  href="javascript:;" class="btn btn-info btn-lg" onClick="javascript:save('res_need_table','<?php /*echo U('Op/public_save'); */?>');">保存</a>-->
                 </div>
             </div><!--/.col (right) -->
         </div>
@@ -211,8 +211,8 @@
             </div>
 
             <div style="width:100%; text-align:center;">
-                <input type="submit" value="aa提交">
-                <a  href="javascript:;" class="btn btn-info btn-lg" onClick="javascript:save('after_lession','<?php echo U('Op/public_save'); ?>');">保存</a>
+                <!--<a  href="javascript:;" class="btn btn-info btn-lg" onClick="javascript:save('after_lession','<?php /*echo U('Op/public_save'); */?>');">保存</a>-->
+                <a  href="javascript:;" class="btn btn-info btn-lg" onClick="javascript:saveResForm(2)">保存</a>
             </div>
         </div>
     </div>
@@ -302,7 +302,7 @@
 
                 <div style="width:100%; text-align:center;">
                     <!--<a  href="javascript:;" class="btn btn-info btn-lg" onClick="javascript:save('design','<?php /*echo U('Op/public_save'); */?>');">保存</a>-->
-                    <input type="submit" class="btn btn-info btn-lg" value="提交">
+                    <a  href="javascript:;" class="btn btn-info btn-lg" onClick="javascript:saveResForm(3)">保存</a>
                 </div>
             </div>
         </div>
@@ -312,7 +312,7 @@
 </form>
 
 <!--业务实施计划单 计调部-->
-<form method="post" action="<?php echo U('Op/public_save'); ?>" id="work_plan" class="hideAll">
+<form method="post" action="<?php echo U('Op/public_save'); ?>" id="work_plan" class="hideAll" onsubmit="" >
     <?php if ($work_plan['audit_status'] != 1){ ?>
     <input type="hidden" name="dosubmint" value="1">
     <input type="hidden" name="opid" value="{$op.op_id}">
@@ -383,7 +383,7 @@
             </div>
 
             <div style="width:100%; text-align:center;">
-                <input type="submit" class="btn btn-info btn-lg" value="提交">
+                <a  href="javascript:;" class="btn btn-info btn-lg" onClick="javascript:saveResForm(4)">保存</a>
             </div>
         </div>
     </div>
@@ -406,6 +406,47 @@
         autocom('plans_audit_user_name','plans_audit_user_id',keywords);
         autocom('cas_res','cas_res_id',res_keywords);
     })
+
+    function saveResForm(pin) {
+        if (pin ==1){
+            let uid = $('#res_audit_user_id').val();
+            if (uid){
+                save('res_need_table','<?php echo U('Op/public_save'); ?>');
+            }else{
+                art_show_msg('请正确填写审核人员信息');
+                return false;
+            }
+        }else if(pin ==2){
+            let uid = $('#lession_audit_user_id').val();
+            if (uid){
+                save('after_lession','<?php echo U('Op/public_save'); ?>');
+            }else{
+                art_show_msg('请正确填写审核人员信息');
+                return false;
+            }
+        }else if(pin ==3){
+            let uid = $('#audit_user_id').val();
+            if (uid){
+                save('design','<?php echo U('Op/public_save'); ?>');
+            }else{
+                art_show_msg('请正确填写审核人员信息');
+                return false;
+            }
+        }else if(pin ==4){
+            let uid     = $('#plans_audit_user_id').val();
+            let douid   = $('#do_user_id').val();
+            if (uid && douid){
+                save('work_plan','<?php echo U('Op/public_save'); ?>');
+            }else{
+                if (!uid){
+                    art_show_msg('请正确填写审核人员信息');
+                }else{
+                    art_show_msg('请正确填写接收人员信息');
+                }
+                return false;
+            }
+        }
+    }
 
     function autocom(username,userid,keywords){
         $("#"+username+"").autocomplete(keywords, {
