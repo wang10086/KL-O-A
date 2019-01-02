@@ -840,11 +840,11 @@ class AjaxController extends Controller {
         $cont                           = count($count);//计算数量
         $partment_num                   = count($partment);//计算数量
         $pan = M('salary_wages_month')->where('datetime='.$datetime)->find();
-//        if($pan){
-//            $sum                        = 0;
-//            $msg                        = "请不要重复提交数据!";
-//            echo json_encode(array('sum' => $sum, 'msg' => $msg));die;
-//        }
+        if($pan){
+            $sum                        = 0;
+            $msg                        = "请不要重复提交数据!";
+            echo json_encode(array('sum' => $sum, 'msg' => $msg));die;
+        }
         for($i=0;$i<$cont/40;$i++){//计算没多少条一个数组
             for($num=$i*40;$num<40*$i+40;$num++){//计算分组字段的长度
                 $array[$i][$num%40] = $count[$num];//[数组数量][多少条的数据]
