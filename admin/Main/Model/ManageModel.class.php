@@ -525,40 +525,40 @@ class ManageModel extends Model{
         switch ($time_M)
         {
             case 1:
-                $statu    = 1;
+                $statu    = 3;
                 return $statu;die;
             case 2:
-                $statu    = 1;
+                $statu    = 3;
                 return $statu;break;
             case 3:
-                $statu    = 1;
+                $statu    = 3;
                 return $statu;break;
             case 4:
-                $statu    = 2;
+                $statu    = 6;
                 return $statu;break;
             case 5:
-                $statu    = 2;
+                $statu    = 6;
                 return $statu;break;
             case 6:
-                $statu    = 2;
+                $statu    = 6;
                 return $statu;break;
             case 7:
-                $statu    = 3;
+                $statu    = 9;
                 return $statu;break;
             case 8:
-                $statu    = 3;
+                $statu    = 9;
                 return $statu;break;
             case 9:
-                $statu    = 3;
+                $statu    = 9;
                 return $statu;break;
             case 10:
-                $statu    = 4;
+                $statu    = 12;
                 return $statu;break;
             case 11:
-                $statu    = 4;
+                $statu    = 12;
                 return $statu;break;
             case 12:
-                $statu    = 4;
+                $statu    = 12;
                 return $statu;break;
         }
     }

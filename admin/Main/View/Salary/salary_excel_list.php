@@ -207,9 +207,9 @@
                     </div><!-- /.box-body -->
 
                     <div style="margin-top:2em;text-align:center;" id="shr_qianzi"><br><br><br><br>
-<!--                        --><?php //if($status==1 && $userid== 77){?>
+                        <?php if($status==1 && $userid== 77){?>
                             <a  class="btn btn-info salary_excel1_submit" style="width:10em;margin-top:2em;" onclick="show_qianzi(0)">提交审核</a>
-<!--                        --><?php //}?>
+                        <?php }?>
                         <?php if($status==2 && $userid == 55){?>
                             <a  class="btn btn-info salary_excel1_submit1" style="width:10em;margin-top:2em;" onclick="show_qianzi(1)">提交批准</a>
                             <a  class="btn btn-info salary_excel1_submit2" style="width:10em;margin-top:2em;" onclick="show_qianzi(2)">驳回</a>
@@ -250,7 +250,7 @@
     function show_qianzi(obj) {
         var html = '';
             html += '<label style="margin-top:2em;font-size:1.2em;">签字：</label>'+
-            '<input type="text" name="password" class="" style="margin-top:2em;height:2.3em;" placeholder="请输入签字密码" />&emsp;'+
+            '<input type="password" name="password" class="" style="margin-top:2em;height:2.3em;" placeholder="请输入签字密码" />&emsp;'+
             '<input type="button" value="确定" onclick="check_pwd('+obj+')" style="margin-top:2em;font-size:1.2em;background-color:#00acd6;">';
         $('#shr_qianzi').html(html);
     }

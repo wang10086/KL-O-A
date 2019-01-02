@@ -15,11 +15,12 @@ class ManageController extends ChartController {
     public function Manage_month(){
         $year                   = trim(I('year',date('Y')));
         $post                   = trim(I('post'));
-        $month                  = trim(I('month',date('m')));
+        $month                  = intval(I('month',date('m')));
         $mod                    = D('Manage');
 
         $year1                  = $mod->manageyear($year,$post);//判断加减年
         $ymd                    = $mod->year_month_day($year1,$month);//月度其他费用判断取出数据日期
+
         $mon                    = $this->not_team($ymd[0],$ymd[1]);//月度其他费用取出数据
         $department             = $mod->department_data($mon);//月度其他费用部门数据
 
@@ -66,18 +67,20 @@ class ManageController extends ChartController {
     public function Manage_quarter(){
         $year                   = (int)trim(I('year',date('Y')));//年
         $post                   = (int)trim(I('post'));//加减年
-        $quart                  = (int)trim(I('quart',date('m')));//季度
+        $quart                  = intval(trim(I('quart',date('m'))));//季度
         $mod                    = D('Manage');
         // 季度经营报表
         $year1                  = $mod->manageyear($year,$post);//判断加减年
+        $quart                  = $mod->quarter_month1($quart);//获取季度月份
         $quarter                = $mod->quarter($year1,$quart);// 季度人数 和人力资源成本
         $profits                = $this->profit_r($year1,$quart,1);//月份循环季度数据 利润 其他费用(money)
         $manage_quarter         = $mod->manage_quarter($quarter,$profits);//季度利润总额
         $personnel_costs        = $mod->personnel_costs($quarter,$profits);//人事费用率
         // 季度预算报表
         $datetime['year']       = $year1;
-        $datetime['type']       = $mod->quarter_month1($quart);//获取季度预算
+        $datetime['type']       = $quart;//获取季度预算
         $manage                 = $mod->Manage_display($datetime,2);//季度预算
+
         $this->manage           = $manage;//季度预算
         // 季度经营报表
         $this->personnel_costs  = $personnel_costs;//人事费用率
