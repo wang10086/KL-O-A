@@ -1186,9 +1186,7 @@ class OpController extends BaseController {
                     $record['explain'] = '填写/修改委托设计工作交接单(设计)';
                     op_record($record);
 
-                    $this->success('保存成功!');
-                }else{
-                    $this->error('保存数据失败');
+                    $num++;
                 }
             }
 
@@ -1303,12 +1301,6 @@ class OpController extends BaseController {
                 $info['additive']   = implode(',',$additive);
                 $info['create_time']= NOW_TIME;
 
-                if (!$info['exe_user_id']){
-                    $this->error('请填写接收人员信息');
-                }
-                if (!$info['audit_user_id']){
-                    $this->error('请填写审核人员信息');
-                }
                 $planed = M('op_work_plans')->where(array('op_id'=>$opid))->find();
                 if ($planed) {
                     $plan_id    = $planed['id'];
@@ -1355,9 +1347,7 @@ class OpController extends BaseController {
                     $record['explain'] = '填写/修改业务实施计划单(计调)';
                     op_record($record);
 
-                    $this->success('保存成功!');
-                }else{
-                    $this->error('保存数据失败');
+                    $num++;
                 }
             }
 

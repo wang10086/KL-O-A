@@ -63,7 +63,8 @@
                                             </div>
 
                                             <div style="width:100%; text-align:center;">
-                                                <input type="submit" class="btn btn-info btn-lg" value = '提交'>
+                                                <!--<input type="submit" class="btn btn-info btn-lg" value = '提交'>-->
+                                                <a  href="javascript:;" class="btn btn-info btn-lg" onClick="javascript:saveResForm()">保存</a>
                                             </div>
                                         </form>
                                     <?php } ?>
@@ -194,6 +195,15 @@
         });
     }
 
+    function saveResForm() {
+        let uid = $('#design_exe_user_id').val();
+        if (uid && uid !=0){
+            $("#audit_design").submit();
+        }else{
+            art_show_msg('请正确填写实施人员信息');
+            return false;
+        }
+    }
 
     function print_design(){
         document.body.innerHTML=document.getElementById('design').innerHTML;

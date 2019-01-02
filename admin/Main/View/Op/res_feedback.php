@@ -58,7 +58,8 @@
                                         </div>
 
                                         <div style="width:100%; text-align:center;">
-                                            <a  href="javascript:;" class="btn btn-info btn-lg" onClick="javascript:save('feed_back','<?php echo U('Op/public_save'); ?>');">保存</a>
+                                            <!--<a  href="javascript:;" class="btn btn-info btn-lg" onClick="javascript:save('feed_back','<?php /*echo U('Op/public_save'); */?>');">保存</a>-->
+                                            <a  href="javascript:;" class="btn btn-info btn-lg" onClick="javascript:saveResForm()">保存</a>
                                         </div>
                                     </form>
                                 <?php } ?>
@@ -128,6 +129,16 @@
         }).result(function (event, item) {
             $("#"+userid+"").val(item.id);
         });
+    }
+
+    function saveResForm() {
+        let uid = $('#res_exe_user_id').val();
+        if (uid && uid !=0){
+            save('feed_back','<?php echo U('Op/public_save'); ?>');
+        }else{
+            art_show_msg('请正确填写实施人员信息');
+            return false;
+        }
     }
 
     //保存信息
