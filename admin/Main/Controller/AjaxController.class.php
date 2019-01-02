@@ -864,7 +864,6 @@ class AjaxController extends Controller {
             $add['datetime']                = $datetime;$add['createtime']  = time();   $add['status']      = 2;        $add['yearend']        = $val[36];
             $add['Subsidy']                 = $val[37]; $add['welfare']     = $val[38]; $add['labour_id']     = $val[39];
             $add                            = array_filter($add);
-            print_r($val);die;
             $month = M('salary_wages_month')->add($add);
             if(!$month){
                 $sum                        = 0;
