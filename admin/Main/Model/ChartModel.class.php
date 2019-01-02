@@ -249,6 +249,16 @@ class ChartModel extends Model
             $lists[$v['id']]['id'] = $v['id'];
             $lists[$v['id']]['depname'] = $v['depname'];
         }
+
+        //地接团信息
+        $dj_opids       = array_filter(M('op')->group('dijie_opid')->getField('dijie_opid',true));
+        //年累计
+        $req_type       = 801;
+        $dj_js_opids    = $this->get_dj_js_opids($yearbegintime, $yearendtime, $req_type);
+        $req_type       = 800;
+        $dj_ys_opids    = $this->get_dj_ys_opids($yearbegintime, $yearendtime, $req_type);
+        //return $dj_ys_opids;
+
         $heji = array();
         $heji['yearxms'] = array_sum(array_column($lists, 'yearxms'));
         $heji['yearrenshu'] = array_sum(array_column($lists, 'yearrenshu'));
@@ -261,6 +271,36 @@ class ChartModel extends Model
         $heji['monthzml'] = array_sum(array_column($lists, 'monthzml'));
         $heji['monthmll'] = sprintf("%.2f", ($heji['monthzml'] / $heji['monthzsr']) * 100);
         $lists['heji'] = $heji;
+        return $lists;
+    }
+
+    /**获取地接结算团信息
+     * @param $begintime
+     * @param $endtime
+     * @param $req_type
+     */
+    function get_dj_js_opids($begintime, $endtime, $req_type){
+        $where = array();
+        $where['b.audit_status'] = 1;
+        $where['l.req_type'] = $req_type;
+        $where['l.audit_time'] = array('between', "$begintime,$endtime");
+        $lists = M()->table('__OP_SETTLEMENT__ as b')->field('o.op_id')->join('__OP__ as o on b.op_id = o.op_id', 'LEFT')->join('__ACCOUNT__ as a on a.id = o.create_user', 'LEFT')->join('__AUDIT_LOG__ as l on l.req_id = b.id', 'LEFT')->where($where)->select();
+
+        return $lists;
+    }
+
+    /**获取地接预算团信息
+     * @param $begintime
+     * @param $endtime
+     * @param $req_type
+     */
+    function get_dj_ys_opids($begintime, $endtime, $req_type){
+        $where = array();
+        $where['b.audit_status'] = 1;
+        $where['l.req_type'] = $req_type;
+        $where['l.audit_time'] = array('between', "$begintime,$endtime");
+        $lists = M()->table('__OP_BUDGET__ as b')->field('o.op_id')->join('__OP__ as o on b.op_id = o.op_id', 'LEFT')->join('__ACCOUNT__ as a on a.id = o.create_user', 'LEFT')->join('__AUDIT_LOG__ as l on l.req_id = b.id', 'LEFT')->where($where)->select();
+
         return $lists;
     }
 

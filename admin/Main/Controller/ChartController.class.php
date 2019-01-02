@@ -850,6 +850,8 @@ class ChartController extends BaseController {
         $departments    = M('salary_department')->field('id,department')->where($where)->select();
         //预算及结算分部门汇总
         $listdatas      = $this->count_lists($departments,$year,$month,$pin);
+        //var_dump($listdatas);
+        //die;
 
         $heji           = $listdatas['heji'];
         unset($listdatas['heji']);  //注意顺序
