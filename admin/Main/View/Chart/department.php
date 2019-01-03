@@ -51,7 +51,11 @@
                                             <a href="{:U('Chart/department',array('year'=>$nextyear,'month'=>'01','pin'=>$pin))}" class="btn btn-default" style="padding:8px 18px;">下一年</a>
                                         <?php } ?>
                                     </div>
-                                    <p>提示：以下累计数据从{$year-1}年12月26日起已完成结算项目中采集</p>
+                                    <?php if ($pin==1){ ?>
+                                        <p>提示：以下累计数据从{$year-1}年12月26日起已完成结算项目中采集</p>
+                                    <?php }else{ ?>
+                                        <p>提示：以下累计数据从{$year-1}年12月26日起已审批预算和已完成结算项目中采集</p>
+                                    <?php } ?>
                                 <table class="table table-bordered dataTable fontmini" id="tablelist" style="margin-top:10px;">
                                     <tr>
                                         <th class="sorting" style="text-align: center;" rowspan="2">部门</th>

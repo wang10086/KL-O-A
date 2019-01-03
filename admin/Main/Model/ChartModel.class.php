@@ -72,19 +72,72 @@ class ChartModel extends Model
             $lists[$v['id']]['id'] = $v['id'];
             $lists[$v['id']]['depname'] = $v['depname'];
         }
-        $heji = array();
-        $heji['yearxms'] = array_sum(array_column($lists, 'yearxms'));
-        $heji['yearrenshu'] = array_sum(array_column($lists, 'yearrenshu'));
-        $heji['yearzsr'] = array_sum(array_column($lists, 'yearzsr'));
-        $heji['yearzml'] = array_sum(array_column($lists, 'yearzml'));
-        $heji['yearmll'] = sprintf("%.2f", ($heji['yearzml'] / $heji['yearzsr']) * 100);
-        $heji['monthxms'] = array_sum(array_column($lists, 'monthxms'));
-        $heji['monthrenshu'] = array_sum(array_column($lists, 'monthrenshu'));
-        $heji['monthzsr'] = array_sum(array_column($lists, 'monthzsr'));
-        $heji['monthzml'] = array_sum(array_column($lists, 'monthzml'));
-        $heji['monthmll'] = sprintf("%.2f", ($heji['monthzml'] / $heji['monthzsr']) * 100);
-        $lists['heji'] = $heji;
+
+        //地接团信息
+        $dj_opids       = array_filter(M('op')->group('dijie_opid')->getField('dijie_opid',true));
+        //地接年累计
+        $req_type       = 801;  //结算
+        $dj_js_opids    = $this->get_dj_js_opids($yeartimes['yearBeginTime'], $yeartimes['yearEndTime'], $req_type,$dj_opids);
+        $dj_js_opids    = array_column($dj_js_opids,'op_id');
+        $dj_yeardata    = $this->get_dj_js_info($yeartimes['yearBeginTime'],$yeartimes['yearEndTime'],$dj_js_opids);
+
+        //地接月累计
+        $req_type       = 801;  //结算
+        $dj_m_js_opids  = $this->get_dj_js_opids($month['begintime'], $month['endtime'], $req_type,$dj_opids);
+        $dj_m_js_opids  = array_column($dj_m_js_opids,'op_id');
+        $dj_monthdata   = $this->get_dj_js_info($month['begintime'],$month['endtime'],$dj_m_js_opids);
+
+        $dj_heji                = array();
+        $dj_heji['yearxms']     = $dj_yeardata['xms'];
+        $dj_heji['yearrenshu']  = $dj_yeardata['renshu'];
+        $dj_heji['yearzsr']     = $dj_yeardata['zsr'];
+        $dj_heji['yearzml']     = $dj_yeardata['zml'];
+        $dj_heji['yearmll']     = sprintf("%.2f", ($dj_heji['yearzml'] / $dj_heji['yearzsr']) * 100);
+        $dj_heji['monthxms']    = $dj_monthdata['xms'];
+        $dj_heji['monthrenshu'] = $dj_monthdata['renshu'];
+        $dj_heji['monthzsr']    = $dj_monthdata['zsr'];
+        $dj_heji['monthzml']    = $dj_monthdata['zml'];
+        $dj_heji['monthmll']    = sprintf("%.2f", ($dj_heji['monthzml'] / $dj_heji['monthzsr']) * 100);
+
+        $heji                   = array();
+        $heji['yearxms']        = array_sum(array_column($lists, 'yearxms'));
+        $heji['yearrenshu']     = array_sum(array_column($lists, 'yearrenshu'));
+        $heji['yearzsr']        = array_sum(array_column($lists, 'yearzsr'));
+        $heji['yearzml']        = array_sum(array_column($lists, 'yearzml'));
+        $heji['yearmll']        = sprintf("%.2f", ($heji['yearzml'] / $heji['yearzsr']) * 100);
+        $heji['monthxms']       = array_sum(array_column($lists, 'monthxms'));
+        $heji['monthrenshu']    = array_sum(array_column($lists, 'monthrenshu'));
+        $heji['monthzsr']       = array_sum(array_column($lists, 'monthzsr'));
+        $heji['monthzml']       = array_sum(array_column($lists, 'monthzml'));
+        $heji['monthmll']       = sprintf("%.2f", ($heji['monthzml'] / $heji['monthzsr']) * 100);
+        $lists['heji']          = $heji;
+        $lists['dj_heji']       = $dj_heji;
         return $lists;
+    }
+
+
+    function get_dj_js_info($beginTime,$endTime,$dj_opids){
+        //年度累计
+        $where                  = array();
+        $where['b.audit_status']= 1;
+        $where['l.req_type']    = 801;
+        $where['l.audit_time']  = array('between', "$beginTime,$endTime");
+        $where['b.op_id']       = array('in',$dj_opids);
+
+        $field   = array();
+        $field[] = 'count(o.id) as xms';
+        $field[] = 'sum(c.num_adult) as renshu';
+        $field[] = 'sum(b.shouru) as zsr';
+        $field[] = 'sum(b.maoli) as zml';
+        $field[] = '(sum(b.maoli)/sum(b.shouru)) as mll';
+
+        $yearlist = M()->table('__OP_SETTLEMENT__ as b')->field($field)->join('__OP__ as o on b.op_id = o.op_id', 'LEFT')->join('__ACCOUNT__ as a on a.id = o.create_user', 'LEFT')->join('__AUDIT_LOG__ as l on l.req_id = b.id', 'LEFT')->join('__OP_TEAM_CONFIRM__ as c on c.op_id=o.op_id', 'left')->where($where)->order('zsr DESC')->find();
+        $list['xms'] = $yearlist['xms'] ? $yearlist['xms'] : 0;
+        $list['renshu'] = $yearlist['renshu'] ? $yearlist['renshu'] : 0;
+        $list['zsr'] = $yearlist['zsr'] ? $yearlist['zsr'] : "0.00";
+        $list['zml'] = $yearlist['zml'] ? $yearlist['zml'] : "0.00";
+        $list['mll'] = $yearlist['mll'] ? sprintf("%.2f", $yearlist['mll'] * 100) : "0.00";
+        return $list;
     }
 
     /**
