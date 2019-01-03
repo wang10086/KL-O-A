@@ -101,13 +101,13 @@ class ChartModel extends Model
 
         $heji                   = array();
         $heji['yearxms']        = array_sum(array_column($lists, 'yearxms'));
-        $heji['yearrenshu']     = array_sum(array_column($lists, 'yearrenshu'));
-        $heji['yearzsr']        = array_sum(array_column($lists, 'yearzsr'));
+        $heji['yearrenshu']     = array_sum(array_column($lists, 'yearrenshu')) - $dj_yeardata['renshu'];
+        $heji['yearzsr']        = array_sum(array_column($lists, 'yearzsr')) - $dj_yeardata['zsr'];
         $heji['yearzml']        = array_sum(array_column($lists, 'yearzml'));
         $heji['yearmll']        = sprintf("%.2f", ($heji['yearzml'] / $heji['yearzsr']) * 100);
         $heji['monthxms']       = array_sum(array_column($lists, 'monthxms'));
-        $heji['monthrenshu']    = array_sum(array_column($lists, 'monthrenshu'));
-        $heji['monthzsr']       = array_sum(array_column($lists, 'monthzsr'));
+        $heji['monthrenshu']    = array_sum(array_column($lists, 'monthrenshu')) - $dj_monthdata['renshu'];
+        $heji['monthzsr']       = array_sum(array_column($lists, 'monthzsr')) - $dj_monthdata['zsr'];
         $heji['monthzml']       = array_sum(array_column($lists, 'monthzml'));
         $heji['monthmll']       = sprintf("%.2f", ($heji['monthzml'] / $heji['monthzsr']) * 100);
         $lists['heji']          = $heji;
@@ -350,13 +350,13 @@ class ChartModel extends Model
 
         $heji                   = array();
         $heji['yearxms']        = array_sum(array_column($lists, 'yearxms'));
-        $heji['yearrenshu']     = array_sum(array_column($lists, 'yearrenshu'));
-        $heji['yearzsr']        = array_sum(array_column($lists, 'yearzsr'));
+        $heji['yearrenshu']     = array_sum(array_column($lists, 'yearrenshu')) - $dj_heji['yearrenshu'];
+        $heji['yearzsr']        = array_sum(array_column($lists, 'yearzsr')) - $dj_heji['yearzsr'];
         $heji['yearzml']        = array_sum(array_column($lists, 'yearzml'));
         $heji['yearmll']        = sprintf("%.2f", ($heji['yearzml'] / $heji['yearzsr']) * 100);
         $heji['monthxms']       = array_sum(array_column($lists, 'monthxms'));
-        $heji['monthrenshu']    = array_sum(array_column($lists, 'monthrenshu'));
-        $heji['monthzsr']       = array_sum(array_column($lists, 'monthzsr'));
+        $heji['monthrenshu']    = array_sum(array_column($lists, 'monthrenshu')) - $dj_heji['monthrenshu'];
+        $heji['monthzsr']       = array_sum(array_column($lists, 'monthzsr')) - $dj_heji['monthzsr'];
         $heji['monthzml']       = array_sum(array_column($lists, 'monthzml'));
         $heji['monthmll']       = sprintf("%.2f", ($heji['monthzml'] / $heji['monthzsr']) * 100);
         $lists['heji']          = $heji;
