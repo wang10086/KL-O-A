@@ -854,9 +854,12 @@ class ChartController extends BaseController {
         //die;
 
         $heji           = $listdatas['heji'];
+        $dj_heji        = $listdatas['dj_heji'];
+        unset($listdatas['dj_heji']);  //注意顺序
         unset($listdatas['heji']);  //注意顺序
         $this->lists    = $listdatas;
         $this->heji     = $heji;
+        $this->dj_heji  = $dj_heji;
 
         $this->year 	= $year;
         $this->month 	= $month;

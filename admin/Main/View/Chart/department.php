@@ -91,6 +91,19 @@
                                     </tr>
                                     </foreach>
                                     <tr>
+                                        <td class="taskOptions black" data="">地接合计</td>
+                                        <td class="taskOptions black" data="">{$dj_heji.yearxms}</td>
+                                        <td class="taskOptions black" data="">{$dj_heji.yearrenshu}</td>
+                                        <td class="taskOptions black" data="">{$dj_heji.yearzsr}</td>
+                                        <td class="taskOptions black" data="">{$dj_heji.yearzml}</td>
+                                        <td class="taskOptions black" data="">{$dj_heji.yearmll}</td>
+                                        <td class="taskOptions black" data="">{$dj_heji.monthxms}</td>
+                                        <td class="taskOptions black" data="" width="">{$dj_heji.monthrenshu}</td>
+                                        <td class="taskOptions black" data="">{$dj_heji.monthzsr}</td>
+                                        <td class="taskOptions black" data="">{$dj_heji.monthzml}</td>
+                                        <td class="taskOptions black" data="">{$dj_heji.monthmll}</td>
+                                    </tr>
+                                    <tr>
                                         <td class="taskOptions black" data="">合计</td>
                                         <td class="taskOptions black" data="">{$heji.yearxms}</td>
                                         <td class="taskOptions black" data="">{$heji.yearrenshu}</td>

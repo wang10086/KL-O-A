@@ -169,13 +169,14 @@ class ChartModel extends Model
      * @param 类型(800=>预算 , 801=>结算)
      * @return mixed
      */
-    function get_ys_opids($users, $begintime, $endtime, $req_type = 800)
+    function get_ys_opids($users, $begintime, $endtime, $req_type = 800,$opids='')
     {
         $where = array();
         $where['b.audit_status'] = 1;
         $where['l.req_type'] = $req_type;
         $where['l.audit_time'] = array('between', "$begintime,$endtime");
         $where['a.id'] = array('in', $users);
+        if ($opids){ $where['o.op_id']  = array('not in',$opids); }
         $lists = M()->table('__OP_BUDGET__ as b')->field('o.op_id')->join('__OP__ as o on b.op_id = o.op_id', 'LEFT')->join('__ACCOUNT__ as a on a.id = o.create_user', 'LEFT')->join('__AUDIT_LOG__ as l on l.req_id = b.id', 'LEFT')->where($where)->select();
 
         return $lists;
@@ -197,15 +198,15 @@ class ChartModel extends Model
         $month = get_cycle($monthtime, 26);
         foreach ($userlists as $k => $v) {
             //年累计
-            //年度预算的团
-            $req_type = 800;
-            $ysopids = $this->get_ys_opids($v['users'], $yearbegintime, $yearendtime, $req_type);
-            $ysopids = array_column($ysopids, 'op_id');
-
             //年度结算的团
             $req_type = 801;
             $jsopids = $this->get_js_opids($v['users'], $yearbegintime, $yearendtime, $req_type);
             $jsopids = array_column($jsopids, 'op_id');
+
+            //年度预算的团
+            $req_type = 800;
+            $ysopids = $this->get_ys_opids($v['users'], $yearbegintime, $yearendtime, $req_type,$jsopids);
+            $ysopids = array_column($ysopids, 'op_id');
 
             //年度数据
             $yeardata = $this->get_ysjshz($ysopids, $jsopids);
@@ -222,15 +223,15 @@ class ChartModel extends Model
             $lists[$v['id']]['yearmll'] = $yearmll ? sprintf("%.2f", $yearmll * 100) : "0.00";
 
             //月累计
-            //月度预算的团
-            $req_type = 800;
-            $monthysopids = $this->get_ys_opids($v['users'], $month['begintime'], $month['endtime'], $req_type);
-            $monthysopids = array_column($monthysopids, 'op_id');
-
             //月度结算的团
             $req_type = 801;
             $monthjsopids = $this->get_js_opids($v['users'], $month['begintime'], $month['endtime'], $req_type);
             $monthjsopids = array_column($monthjsopids, 'op_id');
+
+            //月度预算的团
+            $req_type = 800;
+            $monthysopids = $this->get_ys_opids($v['users'], $month['begintime'], $month['endtime'], $req_type,$monthjsopids);
+            $monthysopids = array_column($monthysopids, 'op_id');
 
             //月度数据
             $monthdata = $this->get_ysjshz($monthysopids, $monthjsopids);
@@ -252,25 +253,62 @@ class ChartModel extends Model
 
         //地接团信息
         $dj_opids       = array_filter(M('op')->group('dijie_opid')->getField('dijie_opid',true));
-        //年累计
-        $req_type       = 801;
-        $dj_js_opids    = $this->get_dj_js_opids($yearbegintime, $yearendtime, $req_type);
-        $req_type       = 800;
-        $dj_ys_opids    = $this->get_dj_ys_opids($yearbegintime, $yearendtime, $req_type);
-        //return $dj_ys_opids;
+        //地接年累计
+        $req_type       = 801;  //结算
+        $dj_js_opids    = $this->get_dj_js_opids($yearbegintime, $yearendtime, $req_type,$dj_opids);
+        $dj_js_opids    = array_column($dj_js_opids,'op_id');
+        $in_year_opids  = array();
+        foreach ($dj_opids as $v){
+            if (!in_array($dj_js_opids,$v)){
+                $in_year_opids[] = $v;
+            }
+        }
+        $req_type       = 800;  //预算
+        $dj_ys_opids    = $this->get_dj_ys_opids($yearbegintime, $yearendtime, $req_type,$in_year_opids);
+        $dj_ys_opids    = array_column($dj_ys_opids,'op_id');
+        $dj_yeardata    = $this->get_ysjshz($dj_ys_opids,$dj_js_opids);
 
-        $heji = array();
-        $heji['yearxms'] = array_sum(array_column($lists, 'yearxms'));
-        $heji['yearrenshu'] = array_sum(array_column($lists, 'yearrenshu'));
-        $heji['yearzsr'] = array_sum(array_column($lists, 'yearzsr'));
-        $heji['yearzml'] = array_sum(array_column($lists, 'yearzml'));
-        $heji['yearmll'] = sprintf("%.2f", ($heji['yearzml'] / $heji['yearzsr']) * 100);
-        $heji['monthxms'] = array_sum(array_column($lists, 'monthxms'));
-        $heji['monthrenshu'] = array_sum(array_column($lists, 'monthrenshu'));
-        $heji['monthzsr'] = array_sum(array_column($lists, 'monthzsr'));
-        $heji['monthzml'] = array_sum(array_column($lists, 'monthzml'));
-        $heji['monthmll'] = sprintf("%.2f", ($heji['monthzml'] / $heji['monthzsr']) * 100);
-        $lists['heji'] = $heji;
+        //地接月累计
+        $req_type       = 801;  //结算
+        $dj_m_js_opids  = $this->get_dj_js_opids($month['begintime'], $month['endtime'], $req_type,$dj_opids);
+        $dj_m_js_opids  = array_column($dj_m_js_opids,'op_id');
+        $in_month_opids = array();
+        foreach ($dj_opids as $v){
+            if (!in_array($dj_js_opids,$v)){
+                $in_month_opids[] = $v;
+            }
+        }
+        $req_type       = 800;  //预算
+        $dj_m_ys_opids  = $this->get_dj_ys_opids($month['begintime'], $month['endtime'], $req_type,$in_month_opids);
+        $dj_m_ys_opids  = array_column($dj_m_ys_opids,'op_id');
+        $dj_monthdata   = $this->get_ysjshz($dj_m_ys_opids,$dj_m_js_opids);
+
+        $dj_heji                = array();
+        $dj_heji['yearxms']     = $dj_yeardata['xms'];
+        $dj_heji['yearrenshu']  = $dj_yeardata['renshu'];
+        $dj_heji['yearzsr']     = $dj_yeardata['zsr'];
+        $dj_heji['yearzml']     = $dj_yeardata['zml'];
+        $dj_heji['yearmll']     = sprintf("%.2f", ($dj_heji['yearzml'] / $dj_heji['yearzsr']) * 100);
+        $dj_heji['monthxms']    = $dj_monthdata['xms'];
+        $dj_heji['monthrenshu'] = $dj_monthdata['renshu'];
+        $dj_heji['monthzsr']    = $dj_monthdata['zsr'];
+        $dj_heji['monthzml']    = $dj_monthdata['zml'];
+        $dj_heji['monthmll']    = sprintf("%.2f", ($dj_heji['monthzml'] / $dj_heji['monthzsr']) * 100);
+
+        $heji                   = array();
+        $heji['yearxms']        = array_sum(array_column($lists, 'yearxms'));
+        $heji['yearrenshu']     = array_sum(array_column($lists, 'yearrenshu'));
+        $heji['yearzsr']        = array_sum(array_column($lists, 'yearzsr'));
+        $heji['yearzml']        = array_sum(array_column($lists, 'yearzml'));
+        $heji['yearmll']        = sprintf("%.2f", ($heji['yearzml'] / $heji['yearzsr']) * 100);
+        $heji['monthxms']       = array_sum(array_column($lists, 'monthxms'));
+        $heji['monthrenshu']    = array_sum(array_column($lists, 'monthrenshu'));
+        $heji['monthzsr']       = array_sum(array_column($lists, 'monthzsr'));
+        $heji['monthzml']       = array_sum(array_column($lists, 'monthzml'));
+        $heji['monthmll']       = sprintf("%.2f", ($heji['monthzml'] / $heji['monthzsr']) * 100);
+        $lists['heji']          = $heji;
+        $lists['dj_heji']       = $dj_heji;
+
         return $lists;
     }
 
@@ -279,11 +317,12 @@ class ChartModel extends Model
      * @param $endtime
      * @param $req_type
      */
-    function get_dj_js_opids($begintime, $endtime, $req_type){
+    function get_dj_js_opids($begintime, $endtime, $req_type,$dj_opids=''){
         $where = array();
         $where['b.audit_status'] = 1;
         $where['l.req_type'] = $req_type;
         $where['l.audit_time'] = array('between', "$begintime,$endtime");
+        if ($dj_opids){ $where['o.op_id']   = array('in',$dj_opids); }
         $lists = M()->table('__OP_SETTLEMENT__ as b')->field('o.op_id')->join('__OP__ as o on b.op_id = o.op_id', 'LEFT')->join('__ACCOUNT__ as a on a.id = o.create_user', 'LEFT')->join('__AUDIT_LOG__ as l on l.req_id = b.id', 'LEFT')->where($where)->select();
 
         return $lists;
@@ -294,11 +333,12 @@ class ChartModel extends Model
      * @param $endtime
      * @param $req_type
      */
-    function get_dj_ys_opids($begintime, $endtime, $req_type){
+    function get_dj_ys_opids($begintime, $endtime, $req_type,$in_opids=''){
         $where = array();
-        $where['b.audit_status'] = 1;
-        $where['l.req_type'] = $req_type;
-        $where['l.audit_time'] = array('between', "$begintime,$endtime");
+        $where['b.audit_status']= 1;
+        $where['l.req_type']    = $req_type;
+        $where['l.audit_time']  = array('between', "$begintime,$endtime");
+        if ($in_opids){ $where['o.op_id']       = array('in',$in_opids); }
         $lists = M()->table('__OP_BUDGET__ as b')->field('o.op_id')->join('__OP__ as o on b.op_id = o.op_id', 'LEFT')->join('__ACCOUNT__ as a on a.id = o.create_user', 'LEFT')->join('__AUDIT_LOG__ as l on l.req_id = b.id', 'LEFT')->where($where)->select();
 
         return $lists;
@@ -312,19 +352,19 @@ class ChartModel extends Model
     public function get_ysjshz($ysopids, $jsopids)
     {
         //从预算取值的团
-        $fromys = array();
+        /*$fromys = array();
         foreach ($ysopids as $value) {
             if (in_array($value, $jsopids)) {
             } else {
                 $fromys[] = $value;
             }
-        }
+        }*/
 
         //结算相关费用
         $jswhere = array();
         $jswhere['b.op_id'] = array('in', $jsopids);
         $yswhere = array();
-        $yswhere['b.op_id'] = array('in', $fromys);
+        $yswhere['b.op_id'] = array('in', $ysopids);
 
         $field = array();
         $field[] = 'count(o.id) as xms';
