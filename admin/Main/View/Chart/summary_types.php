@@ -74,7 +74,7 @@
                                         <tr>
                                             <td class="taskOptions"><?php if($d['type_name']==''){echo '';}else{echo $d['type_name'];}?></td>
                                             <td class="taskOptions"><?php if($d['year_sum']==''){echo '0';}else{echo $d['year_sum'];}?></td>
-                                            <td class="taskOptions"><?php if($d['year_people_num']==''){echo '0.00';}else{echo $d['year_people_num'];}?></td>
+                                            <td class="taskOptions"><?php if($d['year_people_num']==''){echo '0';}else{echo $d['year_people_num'];}?></td>
                                             <td class="taskOptions">&yen; <?php if($d['year_income']==''){echo '0.00';}else{echo $d['year_income'];}?></td>
                                             <td class="taskOptions">&yen; <?php if($d['year_profit']==''){echo '0.00';}else{echo $d['year_profit'];}?></td>
                                             <td class="taskOptions"><?PHP echo sprintf("%.2f",($d['year_profit']/$d['year_income'])*100);?> %</td>
@@ -97,7 +97,7 @@
                                         <tr>
                                             <td class="taskOptions"><?php if($c['type_name']==''){echo '';}else{echo $c['type_name'];}?></td>
                                             <td class="taskOptions"><?php if($c['year_sum']==''){echo '0';}else{echo $c['year_sum'];}?></td>
-                                            <td class="taskOptions"><?php if($c['year_people_num']==''){echo '0.00';}else{echo $c['year_people_num'];}?></td>
+                                            <td class="taskOptions"><?php if($c['year_people_num']==''){echo '0';}else{echo $c['year_people_num'];}?></td>
                                             <td class="taskOptions">&yen; <?php if($c['year_income']==''){echo '0.00';}else{echo $c['year_income'];}?></td>
                                             <td class="taskOptions">&yen; <?php if($c['year_profit']==''){echo '0.00';}else{echo $c['year_profit'];}?></td>
                                             <td class="taskOptions"><?PHP echo sprintf("%.2f",($c['year_profit']/$c['year_income'])*100);?> %</td>
