@@ -2657,7 +2657,8 @@ class OpController extends BaseController {
                     $project            = '【地接团】'.$op['project'];
                     $new_op['project']  = str_replace('【发起团】','',$project);
                     $new_op['op_id']    = opid();
-                    $groupid            = $op['dijie_name'].date('Ymd',time());
+                    $gtime              = $info['dep_time']?$info['dep_time']:time();
+                    $groupid            = $op['dijie_name'].date('Ymd',$gtime);
                     //团号信息
                     $count_groupids     = M('op')->where(array('group_id'=>array('like','%'.$groupid.'%')))->count();
                     $new_op['group_id'] = $count_groupids?$groupid.'-'.$count_groupids:$groupid;
