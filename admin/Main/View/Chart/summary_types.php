@@ -24,13 +24,13 @@
                                         #chart_btn_group .btn-a{ background-color: #ddd;color: #666;}
                                     </style>
                                     <div class="box-tools btn-group" id = "chart_btn_group">
-                                        <a href="{:U('Chart/summary_types',array('type'=>800))}" class="btn btn-sm <?php if($type==800){ echo 'btn-info';}else{ echo 'btn-a';} ?>">预算及结算分部门汇总</a>
-                                        <a href="{:U('Chart/summary_types',array('type'=>801))}" class="btn btn-sm <?php if($type==801){ echo 'btn-info';}else{ echo 'btn-a';} ?>">已结算分部门汇总</a>
+                                        <a href="{:U('Chart/summary_types',array('type'=>$type))}" class="btn btn-sm <?php if($type==800){ echo 'btn-info';}else{ echo 'btn-a';} ?>">预算及结算分部门汇总</a>
+                                        <a href="{:U('Chart/summary_types',array('type'=>$type))}" class="btn btn-sm <?php if($type==801){ echo 'btn-info';}else{ echo 'btn-a';} ?>">已结算分部门汇总</a>
                                     </div>
                                 </div><!-- /.box-header -->
                                 <div class="box-body">
                                     <div class="btn-group" id="catfont" style="padding-bottom:5px;">
-                                            <a href="{:U('Chart/summary_types',array('year'=>$year,'month'=>$month,'statu'=>2))}" class="btn btn-default" style="padding:8px 18px;">上一年</a>
+                                            <a href="{:U('Chart/summary_types',array('year'=>$year,'month'=>$month,'statu'=>2,'type'=>$type))}" class="btn btn-default" style="padding:8px 18px;">上一年</a>
 
                                         <?php
                                         for($i=1;$i<13;$i++){
@@ -42,7 +42,7 @@
                                             }
                                         }
                                         ?>
-                                            <a href="{:U('Chart/summary_types',array('year'=>$year,'month'=>$month,'statu'=>1))}" class="btn btn-default" style="padding:8px 18px;">下一年</a>
+                                            <a href="{:U('Chart/summary_types',array('year'=>$year,'month'=>$month,'statu'=>1,'type'=>$type))}" class="btn btn-default" style="padding:8px 18px;">下一年</a>
                                     </div>
 
                                 <table class="table table-bordered dataTable fontmini" id="tablelist" style="margin-top:10px;">

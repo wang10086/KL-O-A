@@ -368,9 +368,10 @@ class ChartModel extends Model
      * $year 年 2018
      */
     public function time_department($year,$department,$begintime,$endtime,$type){
-        $lists                                                      = array();
+
         $table_list                                                 = array();
         $count_list                                                 = array();
+        $lists = array();$lists1 = array();$lists2 = array();$list1 = array();$lists = array();$list = array();
         foreach($department as $key =>$val){
             $account                                                = M('account')->where(array('departmentid='.$key,'status=0'))->select();//用户id
             $kind                                                   = M('project_kind')->field('id,name')->select();//部门分类
@@ -390,9 +391,15 @@ class ChartModel extends Model
                     //月度数据
                     if ($type == 800) { //800=>预算 数据
                         $lists = M()->table('__OP_BUDGET__ as b')->join('__OP__ as o on b.op_id = o.op_id', 'LEFT')->join('__AUDIT_LOG__ as l on l.req_id = b.id', 'LEFT')->where($where)->select();
-                    } elseif ($type == 801) { // 801=>结算 数据
+//                        unset($where['l.req_type']);
+//                        $where['l.req_type']                        = array('eq',801);
+//                        $lists1 = M()->table('__OP_SETTLEMENT__ as b')->join('__OP__ as o on b.op_id = o.op_id', 'LEFT')->join('__AUDIT_LOG__ as l on l.req_id = b.id', 'LEFT')->where($where)->select();
+//                        $lists = array_merge($lists2,$lists1);
+
+                    }elseif ($type == 801) { // 801=>结算 数据
                         $lists = M()->table('__OP_SETTLEMENT__ as b')->join('__OP__ as o on b.op_id = o.op_id', 'LEFT')->join('__AUDIT_LOG__ as l on l.req_id = b.id', 'LEFT')->where($where)->select();
                     }
+//                    print_r($lists);die;
                     if($lists){
                         $month_sum                                  = $month_sum+count($lists);//月项目数
                         foreach($lists as $kk =>$vv){
@@ -406,6 +413,11 @@ class ChartModel extends Model
                     $where['l.audit_time']                          = array('between', "$time1,$time2");
                     if ($type == 800) { //800=>预算 数据
                         $list = M()->table('__OP_BUDGET__ as b')->join('__OP__ as o on b.op_id = o.op_id', 'LEFT')->join('__AUDIT_LOG__ as l on l.req_id = b.id', 'LEFT')->where($where)->select();
+//                        unset($where['l.req_type']);
+//                        $where['l.req_type']                        = array('eq',801);
+//                        $list2 = M()->table('__OP_SETTLEMENT__ as b')->join('__OP__ as o on b.op_id = o.op_id', 'LEFT')->join('__AUDIT_LOG__ as l on l.req_id = b.id', 'LEFT')->where($where)->select();
+//                        $list = array_merge($list2,$list1);
+
                     } elseif ($type == 801) { // 801=>结算 数据
                         $list = M()->table('__OP_SETTLEMENT__ as b')->join('__OP__ as o on b.op_id = o.op_id', 'LEFT')->join('__AUDIT_LOG__ as l on l.req_id = b.id', 'LEFT')->where($where)->select();
                     }
