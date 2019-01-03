@@ -645,7 +645,23 @@ class ManageModel extends Model{
 
         $where['datetime']                          = array('eq',$datetime['year']);//年
 
-        if($statu==1){$where['type'] = array('eq',5);}else{$where['type'] = array('eq',$datetime['type']);}
+        if($statu==1){
+            $where['type'] = array('eq',5);
+        }else{
+
+            switch ($datetime['type'])
+            {
+                case 3:
+                    $type    = 1; break;
+                case 6:
+                    $type    = 2; break;
+                case 9:
+                    $type    = 3; break;
+                case 12:
+                    $type    = 4; break;
+            }
+            $where['type'] = array('eq',$type);
+        }
 
         $department                                 = C('department1');
 
