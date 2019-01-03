@@ -4,12 +4,12 @@
                 <!-- Content Header (Page header) -->
                 <section class="content-header">
                     <h1>
-                        项目分部门汇总
+                        项目分部门分类型汇总
                     </h1>
                     <ol class="breadcrumb">
                         <li><a href="{:U('Index/index')}"><i class="fa fa-home"></i> 首页</a></li>
                         <li><a href="javascript:;"><i class="fa fa-gift"></i> 数据统计</a></li>
-                        <li class="active">项目分部门汇总</li>
+                        <li class="active">项目分部门分类型汇总</li>
                     </ol>
                 </section>
 
@@ -24,8 +24,8 @@
                                         #chart_btn_group .btn-a{ background-color: #ddd;color: #666;}
                                     </style>
                                     <div class="box-tools btn-group" id = "chart_btn_group">
-                                        <a href="{:U('Chart/summary_types',array('type'=>$type))}" class="btn btn-sm <?php if($type==800){ echo 'btn-info';}else{ echo 'btn-a';} ?>">预算及结算分部门汇总</a>
-                                        <a href="{:U('Chart/summary_types',array('type'=>$type))}" class="btn btn-sm <?php if($type==801){ echo 'btn-info';}else{ echo 'btn-a';} ?>">已结算分部门汇总</a>
+                                        <a href="{:U('Chart/summary_types',array('type'=>800,'year'=>$year,'month'=>$month))}" class="btn btn-sm <?php if($type==800){ echo 'btn-info';}else{ echo 'btn-a';} ?>">预算及结算分部门汇总</a>
+                                        <a href="{:U('Chart/summary_types',array('type'=>801,'year'=>$year,'month'=>$month))}" class="btn btn-sm <?php if($type==801){ echo 'btn-info';}else{ echo 'btn-a';} ?>">已结算分部门汇总</a>
                                     </div>
                                 </div><!-- /.box-header -->
                                 <div class="box-body">
@@ -91,7 +91,7 @@
                                     </foreach>
 
                                         <tr>
-                                            <th class="taskOptions" rowspan='<?php echo count($count_sum['name'])+1; ?>'>{$count_sum['nickname']}</th>
+                                            <th class="taskOptions" rowspan='<?php echo count($count_sum['name'])+1; ?>'>合计</th>
                                         </tr>
                                         <foreach name="count_sum['name']"  item="c">
                                         <tr>

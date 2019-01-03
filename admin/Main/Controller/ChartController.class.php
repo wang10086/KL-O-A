@@ -931,12 +931,12 @@ class ChartController extends BaseController {
         $time1              = strtotime($date[0]);//月开始时间
         $time2              = strtotime($date[1]);//月结束时间
         $chart              = D('Chart');
-        $department         = $chart->department($year,$time1,$time2,$type);//分部门分类型汇总数据
+        $department         = $chart->department($year,$time1,$time2,$type);//分部门分类型汇总数据 结算
 
         $this->department   = $department[0];//分部门分类型汇总数据
         $this->count_sum    = $department[1];//总计
         $this->month        = $month;
-//        print_R($year);die;
+//        print_R($department);die;
         $this->type         = $type;
         $this->year         = $year;
         $this->display();
