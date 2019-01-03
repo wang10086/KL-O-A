@@ -175,7 +175,7 @@ class ChartModel extends Model
         $yearUser                   = M('salary_wages_month')->field('account_id,user_name,datetime')->where(array('datetime'=>array('in',$months),'department'=>$depart['department']))->select();    //从工资表获取累计人数
         $countMonth                 = count(array_unique(array_column($yearUser,'datetime')));
         $sumYearUser                = count($yearUser);         //年总人数
-        $sumYear                    = $sumYearUser/$countMonth; //年平均人数
+        $sumYear                    = round($sumYearUser/$countMonth,2); //年平均人数
         $data                       = array();
         $data[$yearMonth]['users']  = $lastMonthUser;
         $data[$yearMonth]['sumMonth'] = $sumMonth;
