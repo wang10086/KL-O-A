@@ -51,7 +51,11 @@
                                             <a href="{:U('Chart/department',array('year'=>$nextyear,'month'=>'01','pin'=>$pin))}" class="btn btn-default" style="padding:8px 18px;">下一年</a>
                                         <?php } ?>
                                     </div>
-                                    <p>提示：以下累计数据从{$year-1}年12月26日起已完成结算项目中采集</p>
+                                    <?php if ($pin==1){ ?>
+                                        <p>提示：以下累计数据从{$year-1}年12月26日起已完成结算项目中采集</p>
+                                    <?php }else{ ?>
+                                        <p>提示：以下累计数据从{$year-1}年12月26日起已审批预算和已完成结算项目中采集</p>
+                                    <?php } ?>
                                 <table class="table table-bordered dataTable fontmini" id="tablelist" style="margin-top:10px;">
                                     <tr>
                                         <th class="sorting" style="text-align: center;" rowspan="2">部门</th>
@@ -90,6 +94,19 @@
                                         </if>-->
                                     </tr>
                                     </foreach>
+                                    <tr>
+                                        <td class="taskOptions black" data="">地接合计</td>
+                                        <td class="taskOptions black" data="">{$dj_heji.yearxms}</td>
+                                        <td class="taskOptions black" data="">{$dj_heji.yearrenshu}</td>
+                                        <td class="taskOptions black" data="">{$dj_heji.yearzsr}</td>
+                                        <td class="taskOptions black" data="">{$dj_heji.yearzml}</td>
+                                        <td class="taskOptions black" data="">{$dj_heji.yearmll}</td>
+                                        <td class="taskOptions black" data="">{$dj_heji.monthxms}</td>
+                                        <td class="taskOptions black" data="" width="">{$dj_heji.monthrenshu}</td>
+                                        <td class="taskOptions black" data="">{$dj_heji.monthzsr}</td>
+                                        <td class="taskOptions black" data="">{$dj_heji.monthzml}</td>
+                                        <td class="taskOptions black" data="">{$dj_heji.monthmll}</td>
+                                    </tr>
                                     <tr>
                                         <td class="taskOptions black" data="">合计</td>
                                         <td class="taskOptions black" data="">{$heji.yearxms}</td>
