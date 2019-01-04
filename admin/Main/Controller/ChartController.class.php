@@ -930,6 +930,8 @@ class ChartController extends BaseController {
         $time2              = strtotime($date[1]);//月结束时间
         $chart              = D('Chart');
         $department         = $chart->department($year,$time1,$time2,$type);//分部门分类型汇总数据 结算
+        echo "<pre>";
+        print_r($department);die;
 
         $this->department   = $department[0];//分部门分类型汇总数据
         $this->count_sum    = $department[1];//总计

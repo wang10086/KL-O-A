@@ -1047,22 +1047,22 @@ class AjaxController extends Controller {
             $subsid['id']               = $val['subsidy_id'];
             $withh['withholding_token'] = $val['withholding_token'];
 
-            if($att['id']!==0){
+            if($att['id']>0 && $att['id'] !==""){
                 $attend_W               = M('salary_attendance')->where($att)->save($stat);
             }
-            if($bonus['id']!==0){
+            if($bonus['id']!==0 && $bonus['id'] !==""){
                 $bonus_W                = M('oa_salary_bonus')->where($bonus)->save($stat);
             }
-            if($income['income_token']!==0){
+            if($income['income_token']!==0  && $income['income_token'] !==''){
                 $income_W               = M('oa_salary_income')->where($income)->save($stat);
             }
-            if($labou['id']!==0){
+            if($labou['id']!==0 && $labou['id']!==""){
                 $labour_W               = M('oa_salary_labour')->where($labou)->save($stat);
             }
-            if($subsid['id']!==0){
+            if($subsid['id']!==0  && $subsid['id']!==""){
                 $subsidy_W              = M('oa_salary_subsidy')->where($subsid)->save($stat);
             }
-            if($withh['withholding_token']!==0){
+            if($withh['withholding_token']!==0   && $withh['withholding_token']!==""){
                 $withh_W                = M('oa_salary_withholding')->where($withh)->save($stat);
             }
         }

@@ -4167,7 +4167,7 @@ function user_table($where,$type){//查询用户 1 查询一个 2 查询符合�
         $firstday                           = $yearmonth['firstday'];
         $lastday                            = $yearmonth['lastday'];
         /*$firstday                           = date('Y-m-27', strtotime("$month -2 month"));//获取第一天
-        $lastday                            = date('Y-m-27', strtotime("$firstday +1 month"));//获取最后一天*/
+//        $lastday                            = date('Y-m-27', strtotime("$firstday +1 month"));//获取最后一天*/
         $firstday_time                      = strtotime($firstday);//当月第一天时间戳
         $lastday_time                       = strtotime($lastday);//当月最后一天时间戳
 
