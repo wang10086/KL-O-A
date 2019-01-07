@@ -401,3 +401,247 @@ function get_manyidu($lists){
     $score      = round($defen/$zongfen,2);
     return $score;
 }
+
+/**
+ * 部门季度预算信息
+ * @param $userid
+ * @param $month
+ * @return mixed
+ */
+function get_department_budget($department,$year,$month){
+    $quarter                    = get_quarter($month);  //获取季度信息
+    $year                       = $year?$year:date("Y");
+    $where                      = array();
+    $where['datetime']          = $year;
+    $where['logged_department'] = $department;
+    $where['type']              = $quarter;
+    $budget                     = M('manage_input')->where($where)->find();
+    return $budget;
+}
+
+/**
+ * 获取部门实际经营信息(从季度经营报表中取值)
+ * @param $userid
+ * @param $month
+ */
+ function get_department_operate($department,$year,$month){
+     $mod           = D('Manage');
+     $quart         = $mod->quarter_month1($month);  //季度信息
+     $quarter       = $mod->quarter($year,$quart);// 季度人数 和人力资源成本
+     $profits       = profit_r($year,$quart,1);//月份循环季度数据 利润 其他费用(money)
+     $manage_quarter= $mod->manage_quarter($quarter,$profits);//季度利润总额
+     $personnel_costs        = $mod->personnel_costs($quarter,$profits);//人事费用率
+    switch ($department){
+        case '京区业务中心':
+            $kk     = 1;
+            break;
+        case '京外业务中心':
+            $kk     = 2;
+            break;
+        case '南京项目部':
+            $kk     = 3;
+            break;
+        case '武汉项目部':
+            $kk     = 4;
+            break;
+        case '沈阳项目部':
+            $kk     = 5;
+            break;
+        case '长春项目部':
+            $kk     = 6;
+            break;
+        case '市场部':
+            $kk     = 7;
+            break;
+        case '常规业务中心':
+            $kk     = 8;
+            break;
+    }
+    $info               = array();
+     $info['ygrs']      = $quarter[$kk]['sum'];         //部门员工人数
+     $info['yysr']      = $profits[$kk]['monthzsr'];    //营业收入
+     $info['yyml']      = $profits[$kk]['monthzml'];    //营业毛利
+     $info['yymll']     = $profits[$kk]['monthmll'];    //营业毛利率
+     $info['rlzycb']    = $quarter[$kk]['money'];       //人力资源成本
+     $info['qtfy']      = $profits[$kk]['money'];       //其他费用
+     $info['lrze']      = $manage_quarter[$kk]['monthzml'];    //利润总额
+     $info['rsfyl']     = $personnel_costs[$kk]['personnel_costs'];//人事费用率
+
+     return $info;
+}
+
+/**
+ * ManageController
+ * profit_r 月份循环季度数据
+ * $quarter  人数 人力资源成本
+ * $profits 季度数据 总收入 总毛利 总利率
+ * $type 1 结算 0 预算
+ */
+function profit_r($year1,$quart,$type){
+    $mod                                        = D('Manage');
+    $arr1                                       = array('3','6','9','12');
+    $i                                          = 0; //现在季度月 减一
+    $company                                    = array(); //季度内数据总和
+    $month_r                                    = array();
+    //机关部门营业总收入、毛利、总利率 为默认0.00
+    $month_r[9]['monthzsr']                     = 0.00;//机关部门营业总收入为默认0
+    $month_r[9]['monthzml']                     = 0.00;//机关部门营业总毛利为默认0
+    $month_r[9]['monthmll']                     = 0.00;//机关部门营业总利率为默认0
+    if(in_array($quart,$arr1)){ //判断是否是第一、二、三、四季度
+        for($n = 2; $n >= $i;$i++){ //
+            $month                              = $quart-$i; //季度上一个月
+            $ymd                                = $mod->year_month_day($year1,$month);//月度其他费用判断取出数据日期
+            $mon                                = not_team($ymd[0],$ymd[1]);//月度其他费用取出数据
+            $department                         = $mod->department_data($mon);//月度其他费用部门数据
+            foreach($department as $key =>$val){
+                $month_r[$key]['money']        += $val['money'];//季度其他费用
+            }
+            $count                              = business_kpi($year1,$month,$type); //季度 人数和 人力资源成本
+            $profit                             = $mod->profit($count);//收入 毛利 毛利率
+            foreach($profit['departmen'] as $key => $val){ //获取 chart 控制器的 收入 毛利 毛利率
+                $month_r[$key]['monthzsr']     += $val['department']['monthzsr'];
+                $month_r[$key]['monthzml']     += $val['department']['monthzml'];
+                $month_r[$key]['monthmll']     += $val['department']['monthmll'];
+            }
+            $month_r[0]['monthzsr']            += $profit['profit']['monthzsr'];//所有的数据相加 公司收入
+            $month_r[0]['monthzml']            += $profit['profit']['monthzml'];//所有的数据相加 公司毛利
+            $month_r[0]['monthmll']            += $profit['profit']['monthmll'];//所有的数据相加 公司毛利率
+        }
+        foreach($month_r as $key =>$val){
+            unset($month_r[$key]['monthmll']);
+            $maoli                              = $val['monthzml']/$val['monthzsr'];
+            $month_r[$key]['monthmll']          = round(($maoli*100),2);
+        }
+        ksort($month_r);return $month_r;
+    }else{ //如果季度 不是整季度 例如：7月 8月
+        for($n = 2;$n > $i;$i++){//循环两次
+            $month                              = $quart-$i;//月份循环减一
+            if($month==3 || $month==6 || $month==9 || $month==12) {//循环到某一季度 执行
+                foreach($month_r as $key =>$val){
+                    unset($month_r[$key]['monthmll']);
+                    $maoli                       = $val['monthzml']/$val['monthzsr'];
+                    $month_r[$key]['monthmll']   = round($maoli*100,2);
+                }
+                ksort($month_r);return $month_r;
+            }else{
+                $count                           = business_kpi($year1,$month,1); //季度 人数和 人力资源成本
+                $profit                          = $mod->profit($count);//收入 毛利 毛利率
+                $month_r                         = array();
+                foreach($profit['departmen'] as $key => $val){ //获取 chart 控制器的 收入 毛利 毛利率
+                    $month_r[$key]['monthzsr']  += $val['department']['monthzsr'];
+                    $month_r[$key]['monthzml']  += $val['department']['monthzml'];
+                    $month_r[$key]['monthmll']  += $val['department']['monthmll'];
+                    $sum                         = $key;
+                }
+                //所有的数据相加 公司收入、毛利、毛利率
+                $month_r[0]['monthzsr']         += $profit['profit']['monthzsr'];
+                $month_r[0]['monthzml']         += $profit['profit']['monthzml'];
+                $month_r[0]['monthmll']         += $profit['profit']['monthmll'];
+                $ymd                              = $mod->year_month_day($year1,$month);//月度其他费用判断取出数据日期
+                $mon                              = not_team($ymd[0],$ymd[1]);//月度其他费用取出数据
+                $department                       = $mod->department_data($mon);//月度其他费用部门数据
+                foreach($department as $key =>$val){
+                    $month_r[$key]['money']      += $val['money'];//季度其他费用
+                }
+            }
+        }
+    }
+}
+
+//ManageController
+function  business_kpi($year,$month,$type){
+    if (strlen($month)<2) $month = str_pad($month,2,'0',STR_PAD_LEFT);
+    $times                       = $year.$month;
+    $yw_departs                  = C('YW_DEPARTS');  //业务部门id
+    $where                       = array();
+    $where['id']                 = array('in',$yw_departs);
+    $departments                 = M('salary_department')->field('id,department')->where($where)->select();
+    //预算及结算分部门汇总
+    $listdatas                   = count_lists($departments,$year,$month,$type);//1 结算 0预算
+    return $listdatas;
+}
+
+//chartController
+function count_lists($departments,$year,$month,$pin=0){
+    $yearBegin      			= ($year-1).'1226';
+    $yearEnd        			= $year.'1226';
+    $yeartimes					= array();
+    $yeartimes['yearBeginTime'] = strtotime($yearBegin);
+    $yeartimes['yearEndTime']   = strtotime($yearEnd);
+    $month                      = $year.$month;
+    $userlists      			= array();
+    foreach ($departments as $k=>$v){
+        $userlists[$v['id']]['users']   = M('account')->where(array('departmentid'=>$v['id']))->getField('id',true);
+        $userlists[$v['id']]['id']      = $v['id'];
+        $userlists[$v['id']]['depname'] = $v['department'];
+    }
+
+    if ($pin == 0){
+        //预算及结算分部门汇总
+        $lists      = D('Chart')->ysjs_deplist($userlists,$month,$yeartimes,$pin);
+    }else{
+        //结算分部门汇总
+        $lists      = D('Chart')->js_deplist($userlists,$month,$yeartimes,$pin);
+    }
+    return $lists;
+}
+
+//ChartController
+function not_team($ymd1,$ymd2){
+
+    $ymd1                   =  strtotime($ymd1);
+    $ymd2                   =  strtotime($ymd2);
+    $map['bx_time']         = array(array('gt',$ymd1),array('lt',$ymd2));//开始结束时间
+    $map['bxd_type']        = array(array('gt',1),array('lt',4));//2 非团借款报销 3直接报销
+    $map['audit_status']    = array('eq',1);//审核通过
+    $money                  = M('baoxiao')->where($map)->select();//日期内所有数据
+    return  $money;
+}
+
+/**
+ * 获取季度顾客满意度
+ * @param $users  array
+ * @param $year
+ * @param $month
+ */
+function get_QCS($userids,$year,$month){
+    $quart_time     = getQuarterlyCicle($year,$month);  //季度周期
+    //获取周期所有评分信息
+    $where                  = array();
+    $where['s.input_time']	= array('between',array($quart_time['begin_time'],$quart_time['end_time']));
+    $where['o.create_user'] = array('in',$userids);
+    $lists = M()->table('__TCS_SCORE__ as s')->field('u.op_id,o.kind,s.id as sid,s.stay,s.travel,s.content,s.food,s.bus,s.driver,s.guide,s.teacher,s.depth,s.major,s.interest,s.material,s.late,s.manage,s.morality')->join('join __TCS_SCORE_USER__ as u on u.id = s.uid','left')->join('__OP__ as o on o.op_id = u.op_id','left')->where($where)->select();
+
+    $average = get_manyidu($lists);
+    return $average;
+}
+
+/**
+ * 获取季度周期
+ * @param $year
+ * @param $month
+ * @return 返回时间段
+ */
+function getQuarterlyCicle($year,$month){
+    $quarter    = get_quarter($month); //获取季度信息
+    $data       = array();
+    switch ($quarter){
+        case 1:
+            $data['begin_time']     = strtotime(($year-1).'1226') ;
+            $data['end_time']       = strtotime($year.'0326');
+            break;
+        case 2:
+            $data['begin_time']     = strtotime($year.'0326') ;
+            $data['end_time']       = strtotime($year.'0626');
+            break;
+        case 3:
+            $data['begin_time']     = strtotime($year.'0626') ;
+            $data['end_time']       = strtotime($year.'0926');
+            break;
+        case 4:
+            $data['begin_time']     = strtotime($year.'0926') ;
+            $data['end_time']       = strtotime($year.'1226');
+            break;
+    }
+    return $data;
+}

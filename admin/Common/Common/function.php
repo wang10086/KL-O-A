@@ -3018,8 +3018,81 @@ function updatekpi($month,$user){
                     }
                 }
 
+                //季度利润总额目标完成率
+                if ($v['quota_id']==125){
+                    $department     = M()->table('__ACCOUNT__ as a')->join('__SALARY_DEPARTMENT__ as d on d.id=a.departmentid','left')->where(array('a.id'=>$v['user_id']))->getField("d.department");    //获取部门信息
+                    $year           = $v['year']?$v['year']:date('Y');
+                    $month          = $v['month']?substr($v['month'],4,2):date('m');
+                    $budget_info    = get_department_budget($department,$year,$month);      //部门季度预算信息
+                    $ys_lrze        = $budget_info['total_profit'];                         //预算利润总额
+                    $operate_info   = get_department_operate($department,$year,$month);     //实际经营信息
+                    $jy_lrze        = $operate_info['lrze'];                                //经营利润总额
+                    $wcl            = round($jy_lrze/$ys_lrze,2);                           //季度利润总额目标完成率
+
+                    if ($wcl >= 1){
+                        $complete   = 100;
+                    }else{
+                        $complete   = $wcl*100;
+                    }
+                }
+
+                //季度顾客满意度
+                if ($v['quota_id']==126){
+                    $department_id  = M('account')->where(array('id'=>$v['user_id']))->getField('departmentid');    //获取部门信息
+                    $users          = M('account')->where(array('departmentid'=>$department_id))->getField('id,nickname',true);
+                    $userids        = array_keys($users);
+                    $year           = $v['year']?$v['year']:date('Y');
+                    $month          = $v['month']?substr($v['month'],4,2):date('m');
+                    $average        = get_QCS($userids,$year,$month);         //季度顾客满意度
+
+                    //无项目的，得0分；有项目，但无调查项目的，得100分。
+                    //本月实际实施团
+                    $where                  = array();
+                    $where['dep_time']      = array('between',array($v['start_date'],$v['end_date']));
+                    $where['user_id']       = array('in',$userids);
+                    $shishi = M('op_team_confirm')->where($where)->getField('op_id',true);
+                    //需要辅导员的团(需要调查)
+                    $where                  = array();
+                    $where['in_begin_day']  = array('between',array($v['start_date'],$v['end_date']));
+                    $where['manager_id']    = array('in',$userids);
+                    $need_guide             = M('op_guide_confirm')->where($where)->count();
+
+                    if ($shishi && !$need_guide){
+                        //有项目，但无调查项目的，得100分。
+                        $complete = 100;
+                    }else{
+                        //平均得分(如果得分>90%,得分100, 如果小于90%,以90%作为满分求百分比)
+                        $score = (round($average*100/90,2))*100;
+                        $complete = $average > 0.9 ? 100 : $score;
+                    }
+                }
+
+                //季度人事费用率
+                if ($v['quota_id']==127){
+                    $department     = M()->table('__ACCOUNT__ as a')->join('__SALARY_DEPARTMENT__ as d on d.id=a.departmentid','left')->where(array('a.id'=>$v['user_id']))->getField("d.department");    //获取部门信息
+                    $year           = $v['year']?$v['year']:date('Y');
+                    $month          = $v['month']?substr($v['month'],4,2):date('m');
+                    $budget_info    = get_department_budget($department,$year,$month);      //部门季度预算信息
+                    $ys_rsfyl       = $budget_info['personnel_cost_rate'];                  //预算人事费用率
+                    $operate_info   = get_department_operate($department,$year,$month);     //实际经营信息
+                    $jy_rsfyl       = $operate_info['rsfyl'];                               //经营人事费用率
+                    $wcl            = round($jy_rsfyl/$ys_rsfyl,2);                         //季度人事费用率
+
+                    if ($wcl >= 1 || !$jy_rsfyl || !$ys_rsfyl){
+                        $complete   = 100;
+                    }else{
+                        $complete   = $wcl*100;
+                    }
+                }
+
+                //不发生安全责任事故
+                if ($v['quota_id']==128){
+                    //默认满分,如果发生安全事故则由人事手动清零
+                    $complete   = 100;
+                }
+
 				//已实现自动获取指标值
-				$auto_quta	= array(1,2,3,4,5,6,81,8,9,10,11,15,16,18,20,23,26,21,24,27,32,37,19,22,25,28,33,38,42,45,103,56,113,92,29,34,39,46,102,55,57,58,59,84,87,89,90,111,107,83,66,54,44,12,112,108,100,96,95,65,114,86,85,64,63,62,53,52,41,40,49,80,48,91,79,47,36,35,31,30,82,110,106,99,94,67,124,129,130,131,132,133,134,135,136,137,138,139,140,141,143,144,145,146,147,148,149,150,151);
+				$auto_quta	= array(1,2,3,4,5,6,81,8,9,10,11,15,16,18,20,23,26,21,24,27,32,37,19,22,25,28,33,38,42,45,103,56,113,92,29,34,39,46,102,55,57,58,59,84,87,89,90,111,107,83,66,54,44,12,112,108,100,96,95,65,114,86,85,64,63,62,53,52,41,40,49,80,48,91,79,47,36,35,31,30,82,110,106,99,94,67,124,125,126,127,128,129,130,131,132,133,134,135,136,137,138,139,140,141,143,144,145,146,147,148,149,150,151);
 				
 				//计算完成率并保存数据
 				if(in_array($v['quota_id'],$auto_quta)){
@@ -3056,8 +3129,6 @@ function updatekpi($month,$user){
 
 	}
 }
-
-
 
 function get_role_link($roleid,$rtype = 0){
 	
@@ -3191,81 +3262,6 @@ function get_cycle($yearmonth,$day=26){
     }
     return $data;
 }
-
-//统计部门数据
-/*function tplist($roleid,$times){
-
-    $db			= M('op');
-    $roles		= M('role')->GetField('id,role_name',true);
-
-    $post 		= C('POST_TEAM');
-    $postmore	= C('POST_TEAM_MORE');
-    $postfzr  	= C('POST_TEAM_FZR');
-
-//获取部门人数
-    $where = array();
-    $where['roleid'] = array('in',$postmore[$roleid]);
-    $where['status'] = array('eq',0);
-    $users = M('account')->where($where)->select();
-    $num   = count($users);
-    $ulist = array();
-    foreach($users as $k=>$v){
-        $ulist[] = $v['id'];
-    }
-
-//查询结算数据
-    $where = array();
-    $where['b.audit_status']		= 1;
-    $where['l.req_type']			= 801;
-    if($times){
-        $where['l.audit_time']		= array('between',$times);
-    }else{
-        $where['l.audit_time']		= array('gt',strtotime('2018-01-01'));
-    }
-    $where['a.id']					= array('in',implode(',',$ulist));
-
-    $field = array();
-    $field[] =  'sum(b.shouru) as zsr';
-    $field[] =  'sum(b.maoli) as zml';
-    $field[] =  '(sum(b.maoli)/sum(b.shouru)) as mll';
-
-    $lists = $db->table('__OP_SETTLEMENT__ as b')->field($field)->join('__OP__ as o on b.op_id = o.op_id','LEFT')->join('__ACCOUNT__ as a on a.id = o.create_user','LEFT')->join('__AUDIT_LOG__ as l on l.req_id = b.id','LEFT')->where($where)->order('zsr DESC')->find();
-
-    $lists['mll']			= $lists['zml']>0 ?  sprintf("%.2f",$lists['mll']*100) : '0.00';
-
-    $lists['zsr'] 			= $lists['zsr'] ? $lists['zsr'] : '0.00';
-    $lists['zml'] 			= $lists['zml'] ? $lists['zml'] : '0.00';
-    $lists['rjzsr']			= sprintf("%.2f",$lists['zsr']/$num);
-    $lists['rjzml']			= sprintf("%.2f",$lists['zml']/$num);
-    $lists['rjmll']			= $lists['zml'] ? sprintf("%.2f",($lists['rjzml']/$lists['rjzsr'])*100) : '0.00';
-
-
-//查询月度
-    $month = twentyfive();
-    $where = array();
-    $where['b.audit_status']	= 1;
-    $where['a.id']				= array('in',implode(',',$ulist));
-    $where['l.req_type']		= 801;
-    $where['l.audit_time']		= array('between',array($month[0],$month[1]));
-
-    $field = array();
-    $field[] =  'sum(b.shouru) as ysr';
-    $field[] =  'sum(b.maoli) as yml';
-    $field[] =  '(sum(b.maoli)/sum(b.shouru)) as yll';
-    $users = $db->table('__OP_SETTLEMENT__ as b')->field($field)->join('__OP__ as o on b.op_id = o.op_id','LEFT')->join('__AUDIT_LOG__ as l on l.req_id = b.id','LEFT')->join('__ACCOUNT__ as a on a.id = o.create_user','LEFT')->where($where)->find();
-
-    $users['ysr'] 		= $users['ysr'] ? $users['ysr'] : '0.00';
-    $users['yml'] 		= $users['yml'] ? $users['yml'] : '0.00';
-    $users['yll'] 		= $users['yml']>0 ? sprintf("%.4f",$users['yll'])*100 : '0.00';
-    $users['rjysr']		= sprintf("%.2f",$users['ysr']/$num);
-    $users['rjyml']		= sprintf("%.2f",$users['yml']/$num);
-    $users['rjyll']		= sprintf("%.2f",($users['rjyml']/$users['rjysr'])*100);
-    $users['num']		= $num;
-    $users['rid']		= $roleid;
-    $users['fzr']		= $postfzr[$roleid];
-
-    return array_merge($lists, $users);
-}*/
 
 //统计部门数据
 function tplist($department,$times){
@@ -4382,4 +4378,27 @@ function getScienceRes(){
         return $arr;
     }
 
+/**
+ * 根据月份获取季度
+ * @param $month
+ * @return int
+ */
+function get_quarter($month){
+    $month              = $month?$month:date("m");
+    switch ($month){
+        case in_array($month,array('01','02','03')):
+            $quarter    = 1;
+            break;
+        case in_array($month,array('04','05','06')):
+            $quarter    = 2;
+            break;
+        case in_array($month,array('07','08','09')):
+            $quarter    = 3;
+            break;
+        case in_array($month,array('10','11','12')):
+            $quarter    = 4;
+            break;
+    }
+    return $quarter;
+}
 
