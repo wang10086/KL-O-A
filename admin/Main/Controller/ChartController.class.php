@@ -916,15 +916,16 @@ class ChartController extends BaseController {
      * $type 类型(800=>预算 , 801=>结算)
      */
     public function summary_types(){
+        $chart              = D('Chart');
         $year               = (int)trim(I('year',date('Y')));//默认或传输年份
-        $month              = intval(trim(I('month',date('m'))));//默认或传输月份
+        $month              = (int)trim(I('month',date('m')));//默认或传输月份
         $type               = (int)trim(I('type',800));//默认或传输 预算及结算 已结算 类型
         $statu              = (int)(I('statu'));//1加年 2 减年
         if($statu==1){ $year= $year+1;}elseif($statu==2){$year = $year-1;}//1加年 2 减年
-        $date               = D('Manage')->year_month_day($year,$month);
+
+        $date               = $chart->year_month_day($year,$month);
         $time1              = strtotime($date[0]);//月开始时间
         $time2              = strtotime($date[1]);//月结束时间
-        $chart              = D('Chart');
         $department         = $chart->department($year,$time1,$time2,$type);//分部门分类型汇总数据 结算
         $this->department   = $department[0];//分部门分类型汇总数据
         $this->count_sum    = $department[1];//总计
