@@ -67,8 +67,25 @@
                                     </tr>
 
                                     <foreach name="department"  item="dep">
+
+                                        <?php if(count($dep['name'])==0){?>
                                         <tr>
-                                            <th class="taskOptions" rowspan="<?php echo count($dep['name'])+1;?>">{$dep['department']}</th>
+                                            <td class="taskOptions"><?php echo $dep['department'];?></td>
+                                            <td class="taskOptions"></td>
+                                            <td class="taskOptions">0</td>
+                                            <td class="taskOptions">0</td>
+                                            <td class="taskOptions">&yen; 0.00</td>
+                                            <td class="taskOptions">&yen; 0.00</td>
+                                            <td class="taskOptions">0.00 %</td>
+                                            <td class="taskOptions">0</td>
+                                            <td class="taskOptions">0</td>
+                                            <td class="taskOptions">&yen; 0.00</td>
+                                            <td class="taskOptions">&yen; 0.00</td>
+                                            <td class="taskOptions">0.00 %</td>
+                                        </tr>
+                                        <?php }else{?>
+                                        <tr>
+                                            <th class="taskOptions" rowspan="<?php echo count($dep['name'])+1;?>"><?php echo $dep['department'];?></th>
                                         </tr>
                                         <foreach name="dep['name']"  item="d">
                                         <tr>
@@ -78,22 +95,20 @@
                                             <td class="taskOptions">&yen; <?php if($d['year_income']==''){echo '0.00';}else{echo $d['year_income'];}?></td>
                                             <td class="taskOptions">&yen; <?php if($d['year_profit']==''){echo '0.00';}else{echo $d['year_profit'];}?></td>
                                             <td class="taskOptions"><?PHP echo sprintf("%.2f",($d['year_profit']/$d['year_income'])*100);?> %</td>
-
                                             <td class="taskOptions"><?php if($d['month_sum']==''){echo '0';}else{echo $d['month_sum'];}?></td>
                                             <td class="taskOptions"><?php if($d['month_people_num']==''){echo '0';}else{echo $d['month_people_num'];}?></td>
                                             <td class="taskOptions">&yen; <?php if($d['month_income']==''){echo '0.00';}else{echo $d['month_income'];}?></td>
                                             <td class="taskOptions">&yen; <?php if($d['month_profit']==''){echo '0.00';}else{echo $d['month_profit'];}?></td>
                                             <td class="taskOptions"><?PHP echo sprintf("%.2f",($d['month_profit']/$d['month_income'])*100);?> %</td>
-
                                         </tr>
                                         </foreach>
-
+                                        <?php }?>
                                     </foreach>
 
                                         <tr>
-                                            <th class="taskOptions" rowspan='<?php echo count($count_sum['name'])+1; ?>'>合计</th>
+                                            <th class="taskOptions" rowspan='<?php echo count($count_sum)+1; ?>'>合计</th>
                                         </tr>
-                                        <foreach name="count_sum['name']"  item="c">
+                                        <foreach name="count_sum"  item="c">
                                         <tr>
                                             <td class="taskOptions"><?php if($c['type_name']==''){echo '';}else{echo $c['type_name'];}?></td>
                                             <td class="taskOptions"><?php if($c['year_sum']==''){echo '0';}else{echo $c['year_sum'];}?></td>

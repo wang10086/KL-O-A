@@ -916,10 +916,6 @@ class ChartController extends BaseController {
      * $type 类型(800=>预算 , 801=>结算)
      */
     public function summary_types(){
-
-//        $date = date('Ymd');
-//        $url = file_get_contents("http://api.goseek.cn/Tools/holiday?date=$date");
-
         $year               = (int)trim(I('year',date('Y')));//默认或传输年份
         $month              = intval(trim(I('month',date('m'))));//默认或传输月份
         $type               = (int)trim(I('type',800));//默认或传输 预算及结算 已结算 类型
@@ -930,13 +926,9 @@ class ChartController extends BaseController {
         $time2              = strtotime($date[1]);//月结束时间
         $chart              = D('Chart');
         $department         = $chart->department($year,$time1,$time2,$type);//分部门分类型汇总数据 结算
-        echo "<pre>";
-        print_r($department);die;
-
         $this->department   = $department[0];//分部门分类型汇总数据
         $this->count_sum    = $department[1];//总计
         $this->month        = $month;
-//        print_R($department);die;
         $this->type         = $type;
         $this->year         = $year;
         $this->display();

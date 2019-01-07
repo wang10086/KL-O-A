@@ -446,8 +446,7 @@ class ChartModel extends Model
      */
     public function department($year,$begintime,$endtime,$type){
 
-//        $department = array('2' => '市场部', '6' => '京区业务中心', '7' => '京外业务中心', '12' => '南京项目部', '13' => '武汉项目部', '14' => '沈阳项目部', '15' => '常规业务中心', '16' => '长春项目部', '17' => '济南项目部');
-        $department = array( '6' => '京区业务中心');
+        $department = array('2' => '市场部', '6' => '京区业务中心', '7' => '京外业务中心', '12' => '南京项目部', '13' => '武汉项目部', '14' => '沈阳项目部', '15' => '常规业务中心', '16' => '长春项目部', '17' => '济南项目部');
         $data      = $this->time_department($year,$department,$begintime,$endtime,$type);//年 月度数据
 
         return $data;
@@ -459,6 +458,95 @@ class ChartModel extends Model
      * $begintime 月开始时间（时间戳） $endtime 月结束时间（时间戳）
      * $year 年 2018
      */
+    public function time_department($year,$department,$begintime,$endtime,$type)
+    {
+        $table_list                      = array();
+        $count_list                      = array();
+        $table_info                      = array();
+        $kind                            = M('project_kind')->getfield('id,name',true);//部门分类
+        $where['b.audit_status']         = array('eq', 1);
+        $where['l.audit_time']           = array('between', "$begintime,$endtime");
+        $time1                           = strtotime((int)(($year-1).'1226'));//默认年开始时间
+        $time2                           = strtotime((int)($year.'1226'));//默认年结束时间
+
+        //月度
+        if($type==800){
+            $where['l.req_type']         = array('eq', 801);
+            $list1                       = M()->table('__OP_SETTLEMENT__ as b')->join('__OP__ as o on b.op_id = o.op_id', 'LEFT')->join('__AUDIT_LOG__ as l on l.req_id = b.id', 'LEFT')->where($where)->select();
+            $js_opids                    = array_column($list1,'op_id');
+            $where['l.req_type']         = array('eq', 800);
+            $where['b.op_id']            = array('not in',$js_opids);
+            $list2                       = M()->table('__OP_BUDGET__ as b')->join('__OP__ as o on b.op_id = o.op_id', 'LEFT')->join('__AUDIT_LOG__ as l on l.req_id = b.id', 'LEFT')->where($where)->select();
+            $list                        = array_merge($list1,$list2);
+        }elseif($type==801){
+            $where['l.req_type']         = array('eq', 801);
+            $list                        = M()->table('__OP_SETTLEMENT__ as b')->join('__OP__ as o on b.op_id = o.op_id', 'LEFT')->join('__AUDIT_LOG__ as l on l.req_id = b.id', 'LEFT')->where($where)->select();
+        }
+        //年度
+        if($type==800){
+            $where['l.audit_time']       = array('between', "$time1,$time2");
+            $where['l.req_type']         = array('eq', 801);
+            $lists1                      = M()->table('__OP_SETTLEMENT__ as b')->join('__OP__ as o on b.op_id = o.op_id', 'LEFT')->join('__AUDIT_LOG__ as l on l.req_id = b.id', 'LEFT')->where($where)->select();
+            $year_js_opids               = array_column($lists1,'op_id');
+            $where['l.req_type']         = array('eq', 800);
+            $where['b.op_id']            = array('not in',$year_js_opids);
+            $lists2                      = M()->table('__OP_BUDGET__ as b')->join('__OP__ as o on b.op_id = o.op_id', 'LEFT')->join('__AUDIT_LOG__ as l on l.req_id = b.id', 'LEFT')->where($where)->select();
+            $lists                       = array_merge($lists1,$lists2);
+        }elseif($type==801){
+            $where['l.audit_time']       = array('between', "$time1,$time2");
+            $where['l.req_type']         = array('eq', 801);
+            $lists                       = M()->table('__OP_SETTLEMENT__ as b')->join('__OP__ as o on b.op_id = o.op_id', 'LEFT')->join('__AUDIT_LOG__ as l on l.req_id = b.id', 'LEFT')->where($where)->select();
+        }
+        $account                                                            = M('account')->getfield('id,departmentid',true);//用户id
+        foreach($department as $key =>$val){ //查询数组中是否部门用户id
+            $userIds                                                        = array();
+            $table_info[$key]['department']                                 = $val;
+            foreach ($account as $kk=>$vv){if ($vv==$key){$userIds[] = $kk;}}//部门id
+            foreach($kind as $ke =>$va){ //类型
+                $table_info[$key]['name'][$ke]['type_name']                 = $va;
+                $count_list[$ke]['type_name']                               = $va;
+                foreach($list as $k => $v){//月度数据
+
+                    if($v['kind']==$ke && in_array($v['create_user'],$userIds)){
+                        $table_info[$key]['name'][$ke]['month_sum']         += 1; //项目数
+                        $table_info[$key]['name'][$ke]['month_people_num']  += $v['renshu'];//人数
+                        $table_info[$key]['name'][$ke]['month_income']      += $v['shouru'];//收入
+                        $table_info[$key]['name'][$ke]['month_profit']      += $v['maoli'];//毛利
+                        //合计
+                        $count_list[$ke]['month_sum']                       += 1;//项目数
+                        $count_list[$ke]['month_people_num']                += $v['renshu'];//人数
+                        $count_list[$ke]['month_income']                    += $v['shouru'];//收入
+                        $count_list[$ke]['month_profit']                    += $v['maoli'];//毛利
+                    }
+                }
+                foreach($lists as $kkk => $vvv){//年度数据
+                    if($vvv['kind']==$ke && in_array($vvv['create_user'],$userIds)){
+                        $table_info[$key]['name'][$ke]['year_sum']          += 1;//项目数
+                        $table_info[$key]['name'][$ke]['year_people_num']   += $vvv['renshu'];//人数
+                        $table_info[$key]['name'][$ke]['year_income']       += $vvv['shouru'];//收入
+                        $table_info[$key]['name'][$ke]['year_profit']       += $vvv['maoli'];//毛利
+                        //合计
+                        $count_list[$ke]['year_sum']                        += 1;//项目数
+                        $count_list[$ke]['year_people_num']                 += $vvv['renshu'];//人数
+                        $count_list[$ke]['year_income']                     += $vvv['shouru'];//收入
+                        $count_list[$ke]['year_profit']                     += $vvv['maoli'];//毛利
+                    }
+                }
+                if(empty($table_info[$key]['name'][$ke]['month_sum']) && empty($table_info[$key]['name'][$ke]['month_people_num']) && empty($table_info[$key]['name'][$ke]['month_income']) && empty($table_info[$key]['name'][$ke]['month_profit']) && empty($table_info[$key]['name'][$ke]['year_sum']) && empty($table_info[$key]['name'][$ke]['year_people_num']) && empty($table_info[$key]['name'][$ke]['year_income']) && empty($table_info[$key]['name'][$ke]['year_profit'])){
+                    unset($table_info[$key]['name'][$ke]); //去除空类型
+                }
+                if(empty($count_list[$ke]['month_sum']) && empty($count_list[$ke]['month_people_num']) && empty($count_list[$ke]['month_income']) && empty($count_list[$ke]['month_profit']) && empty($count_list[$ke]['year_sum']) && empty($count_list[$ke]['year_people_num']) && empty($count_list[$ke]['year_income']) && empty($count_list[$ke]['year_profit'])){
+                    unset($count_list[$ke]); //去除空类型
+                }
+            }
+        }
+        $table_list[0] = $table_info;
+        $table_list[1] = $count_list;
+        return $table_list;
+    }
+
+
+
 //    public function time_department($year,$department,$begintime,$endtime,$type){
 //        $table_list                                                 = array();
 //        $count_list                                                 = array();
@@ -579,201 +667,96 @@ class ChartModel extends Model
 //    }
 
 
-
-    public function time_department($year,$department,$begintime,$endtime,$type){
-        $table_list                                                 = array();
-        $count_list                                                 = array();
-        foreach($department as $key =>$val){
-            $account                                                = M('account')->where(array('departmentid='.$key,'status=0'))->select();//用户id
-            $kind                                                   = M('project_kind')->field('id,name')->select();//部门分类
-            $table_list[$key]['department']                         = $val;//部门名称
-            foreach($kind as $ke => $va){//分类
-                $where['o.kind']                                    = $va['id'];
-                $month_sum  = 0;$month_people_num = 0;$month_income = 0;$month_profit = 0;
-                $year_sum   = 0;$year_people_num  = 0;$year_income  = 0;$year_profit  = 0;
-                $Contrast1 = array();//筛选op_id
-                $Contrast2 = array();//筛选op_id
-                foreach($account as $k => $v){//分类下的部门数据
-                    $time1                                          = strtotime((int)(($year-1).'1226'));//默认年开始时间
-                    $time2                                          = strtotime((int)($year.'1226'));//默认年结束时间
-                    $where['o.status']                              = array('eq', 1);
-                    $where['o.create_user']                         = array('eq', $v['id']);
-                    $where['b.audit_status']                        = array('eq', 1);
-                    $where['l.req_type']                            = array('eq', $type);
-                    $where['l.audit_time']                          = array('between', "$begintime,$endtime");
-                    $tnub1 = 0;$tnub2 = 0;
-                    //月度数据
-                    if ($type == 800) { //800=>预算 数据
-                        $where['l.req_type'] = array('eq', 801);
-                        $lists2 = M()->table('__OP_SETTLEMENT__ as b')->join('__OP__ as o on b.op_id = o.op_id', 'LEFT')->join('__AUDIT_LOG__ as l on l.req_id = b.id', 'LEFT')->where($where)->select();
-                        if($lists2){
-                            $month_sum                             += count($lists2);//月项目数
-                            foreach($lists2 as $kk =>$vv){
-                                $month_people_num                  += $vv['renshu'];//人数
-                                $month_income                      += $vv['shouru'];//收入
-                                $month_profit                      += $vv['maoli'];//毛利
-                                $Contrast1[$kk]                     = $vv['op_id'];
-                            }
-                        }
-                        $where['l.req_type']                        = array('eq', 800);
-                        //预算
-                        $lists1 = M()->table('__OP_BUDGET__ as b')->join('__OP__ as o on b.op_id = o.op_id', 'LEFT')->join('__AUDIT_LOG__ as l on l.req_id = b.id', 'LEFT')->where($where)->select();
-                        if($lists1){
-                            foreach($lists1 as $kk =>$vv){
-                                if(in_array($vv['op_id'],$Contrast1)){
-                                    $tnub1 = $tnub1+1;
-                                }else{
-                                    $month_people_num              += $vv['renshu'];//人数
-                                    $month_income                  += $vv['shouru'];//收入
-                                    $month_profit                  += $vv['maoli'];//毛利
-                                }
-                            }
-                            $month_sum                             += count($lists1)-$tnub1;//月项目数
-                        }
-                    }elseif ($type == 801) { // 801=>结算 数据
-                        $lists = M()->table('__OP_SETTLEMENT__ as b')->join('__OP__ as o on b.op_id = o.op_id', 'LEFT')->join('__AUDIT_LOG__ as l on l.req_id = b.id', 'LEFT')->where($where)->select();
-                        if($lists){
-                            $month_sum                              = $month_sum+count($lists);//月项目数
-                            foreach($lists as $kk =>$vv){
-                                $month_people_num                  += $vv['renshu'];//人数
-                                $month_income                      += $vv['shouru'];//收入
-                                $month_profit                      += $vv['maoli'];//毛利
-                            }
-                        }
-                    }
-                    //年度数据
-                    unset($where['l.audit_time']);
-                    $where['l.audit_time']                          = array('between', "$time1,$time2");
-                    if ($type == 800) { //800=>预算 数据
-                        $where['l.req_type'] = array('eq', 801);
-                        $list2= M()->table('__OP_SETTLEMENT__ as b')->join('__OP__ as o on b.op_id = o.op_id', 'LEFT')->join('__AUDIT_LOG__ as l on l.req_id = b.id', 'LEFT')->where($where)->select();
-                        if($list2){
-                            $year_sum                               = $year_sum+count($list2);//月项目数
-                            foreach($list2 as $kkk =>$vvv){
-                                $year_people_num                   += $vvv['renshu'];//人数
-                                $year_income                       += $vvv['shouru'];//收入
-                                $year_profit                       += $vvv['maoli'];//毛利
-                                $Contrast2[$kkk]                    = $vvv['op_id'];
-                            }
-                        }
-                        $where['l.req_type'] = array('eq', 800);
-                        $list1 = M()->table('__OP_BUDGET__ as b')->join('__OP__ as o on b.op_id = o.op_id', 'LEFT')->join('__AUDIT_LOG__ as l on l.req_id = b.id', 'LEFT')->where($where)->select();
-                        if($list1){
-                            foreach($list1 as $kkk =>$vvv){
-
-                                if(in_array($vvv['op_id'],$Contrast2)){
-                                    $tnub2 = $tnub2+1;
-                                }else{
-                                    $year_people_num                += $vvv['renshu'];//人数
-                                    $year_income                    += $vvv['shouru'];//收入
-                                    $year_profit                    += $vvv['maoli'];//毛利
-                                }
-                            }
-                            $year_sum                                = $year_sum+count($list1)-$tnub2;//月项目数
-                        }
-                    }elseif ($type == 801) { // 801=>结算 数据
-                        $list = M()->table('__OP_SETTLEMENT__ as b')->join('__OP__ as o on b.op_id = o.op_id', 'LEFT')->join('__AUDIT_LOG__ as l on l.req_id = b.id', 'LEFT')->where($where)->select();
-                        if($list){
-                            $year_sum                                = $year_sum+count($list);//月项目数
-                            foreach($list as $kkk =>$vvv){
-                                $year_people_num                    += $vvv['renshu'];//人数
-                                $year_income                        += $vvv['shouru'];//收入
-                                $year_profit                        += $vvv['maoli'];//毛利
-                            }
-                        }
-                    }
-                }
-                $table_list = $this->table_add($table_list,$key,$ke,$month_sum,$month_people_num,$month_income,$month_profit,$year_sum,$year_people_num,$year_income,$year_profit);
-                $count_list = $this->count_add($ke,$count_list,$month_sum,$month_people_num,$month_income,$month_profit,$year_sum,$year_people_num,$year_income,$year_profit);
-                if($month_sum==0&&$month_people_num==0&&$month_income==0&&$month_profit==0&&$year_sum==0&&$year_people_num==0&&$year_income==0&&$year_profit==0){
-                    unset($table_list[$key]['name'][$ke]);
-                }else{
-                    $table_list[$key]['name'][$ke]['type_name']     = $va['name'];
-                }
-                $count_list                                         = $this->table_if($count_list,$ke,$va);//判断数据
-            }
-        }
-        $table_list                                                 = $this->array_table($table_list,$key,$ke);
-        $table[0]                                                   = $table_list;//部门
-        $table[1]                                                   = $count_list;//合计
-        return $table;
-    }
-
-    /**
-     * array_table 显示空数据数组
-     * $table_list 部门数据
-     */
-    public function array_table($table_list,$key,$ke){
-        foreach($table_list as $key => $val){//空的显示空
-            if(count($table_list[$key]['name'])==0){
-                //月度数据
-                $table_list[$key]['name'][$ke]['month_sum']         = '';//人数
-                $table_list[$key]['name'][$ke]['month_people_num']  = '';//人数
-                $table_list[$key]['name'][$ke]['month_income']      = '';//收入
-                $table_list[$key]['name'][$ke]['month_profit']      = '';//毛利
-                //$table_list[$key]['name'][$ke]['month_ratio']       = '';//毛利率
-                //年度数据
-                $table_list[$key]['name'][$ke]['year_sum']          = '';//人数
-                $table_list[$key]['name'][$ke]['year_people_num']   = '';//人数
-                $table_list[$key]['name'][$ke]['year_income']       = '';//收入
-                $table_list[$key]['name'][$ke]['year_profit']       = '';//毛利
-                ////$table_list[$key]['name'][$ke]['year_ratio']        = '';//毛利率
-            }
-        }
-        return $table_list;
-    }
-
-    /**
-     *  table_if 数据
-     * $count_list 部门数据
-     *  $ke 循环第几个
-     *  $va 当前 数据
-     */
-    public function table_if($count_list,$ke,$va){
-        if($count_list['name'][$ke]['month_sum']==0 && $count_list['name'][$ke]['month_people_num']==0 && $count_list['name'][$ke]['month_income']==0 &&  $count_list['name'][$ke]['month_profit']==0 &&  $count_list['name'][$ke]['year_sum']==0 && $count_list['name'][$ke]['year_people_num']==0 && $count_list['name'][$ke]['year_income']==0 && $count_list['name'][$ke]['year_profit']==0 && $count_list['name'][$ke]['month_ratio']==0 && $count_list['name'][$ke]['year_ratio']==0){
-            unset($count_list['name'][$ke]);
-        }else{
-            $count_list['name'][$ke]['type_name']             = $va['name'];
-            $count_list['name'][$ke]['month_ratio']           = round(($count_list['name'][$ke]['month_profit']/$count_list['name'][$ke]['month_income'])*100,2);//总计 月度 毛利率
-            $count_list['name'][$ke]['year_ratio']            = round(($count_list['name'][$ke]['year_profit']/$count_list['name'][$ke]['year_income'])*100,2);//总计 年度毛利率
-        }
-        return $count_list;
-    }
-
-    /**
-     * add_table 填充数据
-     */
-    public function table_add($table_list,$key,$ke,$month_sum,$month_people_num,$month_income,$month_profit,$year_sum,$year_people_num,$year_income,$year_profit){
-        //月度数据
-        $table_list[$key]['name'][$ke]['month_sum']         = $month_sum;//人数
-        $table_list[$key]['name'][$ke]['month_people_num']  = $month_people_num;//人数
-        $table_list[$key]['name'][$ke]['month_income']      = $month_income;//收入
-        $table_list[$key]['name'][$ke]['month_profit']      = $month_profit;//毛利
-        //   $table_list[$key]['name'][$ke]['month_ratio']       = round(($month_profit/$month_income)*100,2);//毛利率
-        //年度数据
-        $table_list[$key]['name'][$ke]['year_sum']          = $year_sum;//人数
-        $table_list[$key]['name'][$ke]['year_people_num']   = $year_people_num;//人数
-        $table_list[$key]['name'][$ke]['year_income']       = $year_income;//收入
-        $table_list[$key]['name'][$ke]['year_profit']       = $year_profit;//毛利
-        // $table_list[$key]['name'][$ke]['year_ratio']        = round(($year_profit/$year_people_num)*100,2);//毛利率
-        return $table_list;
-    }
-    /**
-     * count_add 填充数据
-     */
-    public function count_add($ke,$count_list,$month_sum,$month_people_num,$month_income,$month_profit,$year_sum,$year_people_num,$year_income,$year_profit){
-        //总计 月度数据
-        $count_list['name'][$ke]['month_sum']         += $month_sum;//人数
-        $count_list['name'][$ke]['month_people_num']  += $month_people_num;//人数
-        $count_list['name'][$ke]['month_income']      += $month_income;//收入
-        $count_list['name'][$ke]['month_profit']      += $month_profit;//毛利
-        //总计 年度数据
-        $count_list['name'][$ke]['year_sum']          += $year_sum;//人数
-        $count_list['name'][$ke]['year_people_num']   += $year_people_num;//人数
-        $count_list['name'][$ke]['year_income']       += $year_income;//收入
-        $count_list['name'][$ke]['year_profit']       += $year_profit;//毛利
-        return $count_list;
-    }
+//    /**
+//     * table_sql 查询
+//     * $where 条件 $type 1 预算 2 结算
+//     */
+//
+//    public function table_sql($where,$type){
+//        if($type==1){ //预算
+//            $list1 = M()->table('__OP_BUDGET__ as b')->join('__OP__ as o on b.op_id = o.op_id', 'LEFT')->join('__AUDIT_LOG__ as l on l.req_id = b.id', 'LEFT')->where($where)->select();
+//            }elseif($type==2){ //结算
+//            $lists2 = M()->table('__OP_SETTLEMENT__ as b')->join('__OP__ as o on b.op_id = o.op_id', 'LEFT')->join('__AUDIT_LOG__ as l on l.req_id = b.id', 'LEFT')->where($where)->select();
+//        }
+//        return $list1;
+//
+//    }
+//
+//    /**
+//     * array_table 显示空数据数组
+//     * $table_list 部门数据
+//     */
+//    public function array_table($table_list,$key,$ke){
+//        foreach($table_list as $key => $val){//空的显示空
+//            if(count($table_list[$key]['name'])==0){
+//                //月度数据
+//                $table_list[$key]['name'][$ke]['month_sum']         = '';//人数
+//                $table_list[$key]['name'][$ke]['month_people_num']  = '';//人数
+//                $table_list[$key]['name'][$ke]['month_income']      = '';//收入
+//                $table_list[$key]['name'][$ke]['month_profit']      = '';//毛利
+//                //$table_list[$key]['name'][$ke]['month_ratio']       = '';//毛利率
+//                //年度数据
+//                $table_list[$key]['name'][$ke]['year_sum']          = '';//人数
+//                $table_list[$key]['name'][$ke]['year_people_num']   = '';//人数
+//                $table_list[$key]['name'][$ke]['year_income']       = '';//收入
+//                $table_list[$key]['name'][$ke]['year_profit']       = '';//毛利
+//                ////$table_list[$key]['name'][$ke]['year_ratio']        = '';//毛利率
+//            }
+//        }
+//        return $table_list;
+//    }
+//
+//    /**
+//     *  table_if 数据
+//     * $count_list 部门数据
+//     *  $ke 循环第几个
+//     *  $va 当前 数据
+//     */
+//    public function table_if($count_list,$ke,$va){
+//        if($count_list['name'][$ke]['month_sum']==0 && $count_list['name'][$ke]['month_people_num']==0 && $count_list['name'][$ke]['month_income']==0 &&  $count_list['name'][$ke]['month_profit']==0 &&  $count_list['name'][$ke]['year_sum']==0 && $count_list['name'][$ke]['year_people_num']==0 && $count_list['name'][$ke]['year_income']==0 && $count_list['name'][$ke]['year_profit']==0 && $count_list['name'][$ke]['month_ratio']==0 && $count_list['name'][$ke]['year_ratio']==0){
+//            unset($count_list['name'][$ke]);
+//        }else{
+//            $count_list['name'][$ke]['type_name']             = $va['name'];
+//            $count_list['name'][$ke]['month_ratio']           = round(($count_list['name'][$ke]['month_profit']/$count_list['name'][$ke]['month_income'])*100,2);//总计 月度 毛利率
+//            $count_list['name'][$ke]['year_ratio']            = round(($count_list['name'][$ke]['year_profit']/$count_list['name'][$ke]['year_income'])*100,2);//总计 年度毛利率
+//        }
+//        return $count_list;
+//    }
+//
+//    /**
+//     * add_table 填充数据
+//     */
+//    public function table_add($table_list,$key,$ke,$month_sum,$month_people_num,$month_income,$month_profit,$year_sum,$year_people_num,$year_income,$year_profit){
+//        //月度数据
+//        $table_list[$key]['name'][$ke]['month_sum']         = $month_sum;//人数
+//        $table_list[$key]['name'][$ke]['month_people_num']  = $month_people_num;//人数
+//        $table_list[$key]['name'][$ke]['month_income']      = $month_income;//收入
+//        $table_list[$key]['name'][$ke]['month_profit']      = $month_profit;//毛利
+//        //   $table_list[$key]['name'][$ke]['month_ratio']       = round(($month_profit/$month_income)*100,2);//毛利率
+//        //年度数据
+//        $table_list[$key]['name'][$ke]['year_sum']          = $year_sum;//人数
+//        $table_list[$key]['name'][$ke]['year_people_num']   = $year_people_num;//人数
+//        $table_list[$key]['name'][$ke]['year_income']       = $year_income;//收入
+//        $table_list[$key]['name'][$ke]['year_profit']       = $year_profit;//毛利
+//        // $table_list[$key]['name'][$ke]['year_ratio']        = round(($year_profit/$year_people_num)*100,2);//毛利率
+//        return $table_list;
+//    }
+//    /**
+//     * count_add 填充数据
+//     */
+//    public function count_add($ke,$count_list,$month_sum,$month_people_num,$month_income,$month_profit,$year_sum,$year_people_num,$year_income,$year_profit){
+//        //总计 月度数据
+//        $count_list['name'][$ke]['month_sum']         += $month_sum;//人数
+//        $count_list['name'][$ke]['month_people_num']  += $month_people_num;//人数
+//        $count_list['name'][$ke]['month_income']      += $month_income;//收入
+//        $count_list['name'][$ke]['month_profit']      += $month_profit;//毛利
+//        //总计 年度数据
+//        $count_list['name'][$ke]['year_sum']          += $year_sum;//人数
+//        $count_list['name'][$ke]['year_people_num']   += $year_people_num;//人数
+//        $count_list['name'][$ke]['year_income']       += $year_income;//收入
+//        $count_list['name'][$ke]['year_profit']       += $year_profit;//毛利
+//        return $count_list;
+//    }
 
 
 
