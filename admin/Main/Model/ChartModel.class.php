@@ -506,7 +506,6 @@ class ChartModel extends Model
                 $table_info[$key]['name'][$ke]['type_name']                 = $va;
                 $count_list[$ke]['type_name']                               = $va;
                 foreach($list as $k => $v){//月度数据
-
                     if($v['kind']==$ke && in_array($v['create_user'],$userIds)){
                         $table_info[$key]['name'][$ke]['month_sum']         += 1; //项目数
                         $table_info[$key]['name'][$ke]['month_people_num']  += $v['renshu'];//人数
@@ -540,6 +539,7 @@ class ChartModel extends Model
                 }
             }
         }
+//        print_r($count_list);die;
         $table_list[0] = $table_info;
         $table_list[1] = $count_list;
         return $table_list;
