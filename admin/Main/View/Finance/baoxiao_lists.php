@@ -55,7 +55,7 @@
                                             <if condition="$pin neq 2">
                                                 <td>{$row.group_ids}</td>
                                             </if>
-                                            <td>{$row.jkd_ids}</td>
+                                            <td><?php echo $row['jkd_ids']?$row['jkd_ids']:'暂无借款单信息'; ?></td>
                                             <td>{$row.bx_user}</td>
                                             <td>{$row.sum}</td>
                                             <td>{$jk_type[$row[type]]}</td>

@@ -35,8 +35,8 @@
                                             <th class="sorting" width="180" data="j.jkd_id">借款单号</th>
                                             <if condition="$pin neq 2">
                                                 <th class="sorting" width="150" data="j.group_id">团号</th>
-                                                <th class="sorting" data="o.project">项目名称</th>
                                             </if>
+                                            <th class="sorting" width="" data="o.project">项目名称</th>
                                             <th class="sorting" width="100" data="j.jk_user">借款人</th>
                                             <th class="sorting" width="100" data="j.department_id">借款部门</th>
                                             <th class="sorting" width="80" data="j.sum">借款金额</th>
@@ -52,21 +52,26 @@
                                                 <th width="40" class="taskOptions">删除</th>
                                             </if>
                                         </tr>
+
                                         <foreach name="lists" item="row">
                                         <tr>
                                             <td>{$row.jkd_id}</td>
                                             <if condition="$pin neq 2">
-                                                <td>{$row.group_id}</td>
-                                                <td>
-                                                    <div class="">
-                                                        <if condition="rolemenu(array('Finance/jiekuandan_info'))">
-                                                            <a href="{:U('Finance/jiekuandan_info',array('jkid'=>$row['id']))}" title="{$row.project}">{$row.project}</a>
-                                                            <else />
-                                                            <a href="javascript:;" title="{$row.project}">{$row.project}</a>
-                                                        </if>
-                                                    </div>
-                                                </td>
+                                                <td><?php echo $row['group_id']?$row['group_id']:'非团借款'; ?></td>
                                             </if>
+                                            <td>
+                                                <div class="text-overflow">
+                                                    <if condition="rolemenu(array('Finance/jiekuandan_info'))">
+                                                        <if condition="$row.jkd_type neq 2">
+                                                        <a href="{:U('Finance/jiekuandan_info',array('jkid'=>$row['id']))}" title="<?php echo $row['project']?$row['project']:$row['description']; ?>"><?php echo $row['project']?$row['project']:$row['description']; ?></a>
+                                                        <else />
+                                                        <a href="{:U('Finance/nopjk_info',array('jkid'=>$row['id']))}" title="<?php echo $row['project']?$row['project']:$row['description']; ?>"><?php echo $row['project']?$row['project']:$row['description']; ?></a>
+                                                        </if>
+                                                    <else />
+                                                        <a href="javascript:;" title="{$row.project}">{$row.project}</a>
+                                                    </if>
+                                                </div>
+                                            </td>
                                             <td>{$row.jk_user}</td>
                                             <td>{$row.department}</td>
                                             <td>{$row.sum}</td>

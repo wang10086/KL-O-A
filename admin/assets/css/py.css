@@ -4113,3 +4113,4 @@ th{outline: none;}
 .black{font-size: 14px; font-weight: 600;}
 #chart_btn_group .btn-group-header{ background-color: #ddd;color: #666;}
 /*#catfont .btn-group-header{ background-color: #ddd;color: #666;}*/
+.text-overflow{max-width: 90%; overflow: hidden;  text-overflow:ellipsis;  white-space: nowrap;}
