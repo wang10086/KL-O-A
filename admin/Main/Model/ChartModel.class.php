@@ -447,6 +447,7 @@ class ChartModel extends Model
     public function department($year,$begintime,$endtime,$type){
 
         $department = array('2' => '市场部', '6' => '京区业务中心', '7' => '京外业务中心', '12' => '南京项目部', '13' => '武汉项目部', '14' => '沈阳项目部', '15' => '常规业务中心', '16' => '长春项目部', '17' => '济南项目部');
+
         $data      = $this->time_department($year,$department,$begintime,$endtime,$type);//年 月度数据
 
         return $data;
@@ -479,6 +480,9 @@ class ChartModel extends Model
     }
 
 
+
+
+
     /**
      * department 部门数据
      * $type 类型(800=>预算 , 801=>结算)
@@ -498,69 +502,47 @@ class ChartModel extends Model
 
         //月度
         if($type==800){
-            $where['l.req_type']         = array('eq', 800);
-            $list1                       = M()->table('__OP_BUDGET__ as b')->join('__OP__ as o on b.op_id = o.op_id', 'LEFT')->join('__AUDIT_LOG__ as l on l.req_id = b.id', 'LEFT')->where($where)->select();
-            $js_opids1                    = array_column($list1,'op_id');
-
+            unset($where['l.req_type']);
             $where['l.req_type']         = array('eq', 801);
-            $list2                       = M()->table('__OP_SETTLEMENT__ as b')->join('__OP__ as o on b.op_id = o.op_id', 'LEFT')->join('__AUDIT_LOG__ as l on l.req_id = b.id', 'LEFT')->where($where)->select();
-            $js_opids2                    = array_column($list2,'op_id');
-
-            $list_table1 = array_intersect($js_opids1,$js_opids2);
-            foreach($list1 as $key =>$val){if(in_array($val['op_id'],$list_table1)){unset($list1[$key]);}}
+            $list1                       = M()->table('__OP_SETTLEMENT__ as b')->join('__OP__ as o on b.op_id = o.op_id', 'LEFT')->join('__AUDIT_LOG__ as l on l.req_id = b.id', 'LEFT')->where($where)->select();
+            $js_opids                    = array_column($list1,'op_id');
+            $where['l.req_type']         = array('eq', 800);
+            $where['o.op_id']            = array('not in',$js_opids);
+            $list2                       = M()->table('__OP_BUDGET__ as b')->join('__OP__ as o on b.op_id = o.op_id', 'LEFT')->join('__AUDIT_LOG__ as l on l.req_id = b.id', 'LEFT')->where($where)->select();
             $list                       = array_merge($list1,$list2);
-
-//            $where['l.req_type']         = array('eq', 801);
-//            $list1                       = M()->table('__OP_SETTLEMENT__ as b')->join('__OP__ as o on b.op_id = o.op_id', 'LEFT')->join('__AUDIT_LOG__ as l on l.req_id = b.id', 'LEFT')->where($where)->select();
-//            $js_opids                    = array_column($list1,'op_id');
-//            $where['l.req_type']         = array('eq', 800);
-//            $where['b.op_id']            = array('not in',$js_opids);
-//            $list2                       = M()->table('__OP_BUDGET__ as b')->join('__OP__ as o on b.op_id = o.op_id', 'LEFT')->join('__AUDIT_LOG__ as l on l.req_id = b.id', 'LEFT')->where($where)->select();
-//            $list                       = array_merge($list1,$list2);
         }elseif($type==801){
             $where['l.req_type']         = array('eq', 801);
             $list                        = M()->table('__OP_SETTLEMENT__ as b')->join('__OP__ as o on b.op_id = o.op_id', 'LEFT')->join('__AUDIT_LOG__ as l on l.req_id = b.id', 'LEFT')->where($where)->select();
         }
         //年度
         if($type==800){
+            unset($where['l.audit_time']);unset($where['l.req_type']);unset($where['o.op_id']);
             $where['l.audit_time']       = array('between', "$time1,$time2");
-            $where['l.req_type']         = array('eq', 800);
-            $lists1                       = M()->table('__OP_BUDGET__ as b')->join('__OP__ as o on b.op_id = o.op_id', 'LEFT')->join('__AUDIT_LOG__ as l on l.req_id = b.id', 'LEFT')->where($where)->select();
-            $js_opids3                    = array_column($lists1,'op_id');
-
             $where['l.req_type']         = array('eq', 801);
-            $lists2                       = M()->table('__OP_SETTLEMENT__ as b')->join('__OP__ as o on b.op_id = o.op_id', 'LEFT')->join('__AUDIT_LOG__ as l on l.req_id = b.id', 'LEFT')->where($where)->select();
-            $js_opids4                   = array_column($lists2,'op_id');
-
-            $list_table2 = array_intersect($js_opids3,$js_opids4);
-            foreach($lists1 as $key =>$val){if(in_array($val['op_id'],$list_table2)){unset($lists1[$key]);}}
+            $lists1                      = M()->table('__OP_SETTLEMENT__ as b')->join('__OP__ as o on b.op_id = o.op_id', 'LEFT')->join('__AUDIT_LOG__ as l on l.req_id = b.id', 'LEFT')->where($where)->select();
+            $year_js_opids               = array_column($lists1,'op_id');
+            unset($where['o.op_id']);
+            $where['l.req_type']         = array('eq', 800);
+            $where['o.op_id']            = array('not in',$year_js_opids);
+            $lists2                      = M()->table('__OP_BUDGET__ as b')->join('__OP__ as o on b.op_id = o.op_id', 'LEFT')->join('__AUDIT_LOG__ as l on l.req_id = b.id', 'LEFT')->where($where)->select();
             $lists                       = array_merge($lists1,$lists2);
-
-//            $where['l.audit_time']       = array('between', "$time1,$time2");
-//            $where['l.req_type']         = array('eq', 801);
-//            $lists1                      = M()->table('__OP_SETTLEMENT__ as b')->join('__OP__ as o on b.op_id = o.op_id', 'LEFT')->join('__AUDIT_LOG__ as l on l.req_id = b.id', 'LEFT')->where($where)->select();
-//            $year_js_opids               = array_column($lists1,'op_id');
-//
-//            $where['l.req_type']         = array('eq', 800);
-//            $where['b.op_id']            = array('not in',$year_js_opids);
-//            $lists2                      = M()->table('__OP_BUDGET__ as b')->join('__OP__ as o on b.op_id = o.op_id', 'LEFT')->join('__AUDIT_LOG__ as l on l.req_id = b.id', 'LEFT')->where($where)->select();
-//            $lists                       = array_merge($lists1,$lists2);
         }elseif($type==801){
             $where['l.audit_time']       = array('between', "$time1,$time2");
             $where['l.req_type']         = array('eq', 801);
             $lists                       = M()->table('__OP_SETTLEMENT__ as b')->join('__OP__ as o on b.op_id = o.op_id', 'LEFT')->join('__AUDIT_LOG__ as l on l.req_id = b.id', 'LEFT')->where($where)->select();
         }
-
-        $account                                                            = M('account')->getfield('id,departmentid',true);//用户id
         foreach($department as $key =>$val){ //查询数组中是否部门用户id
             $userIds                                                        = array();
             $table_info[$key]['department']                                 = $val;
-            foreach ($account as $kk=>$vv){if ($vv==$key){$userIds[] = $kk;}}//部门id
+            $account                    = M('account')->where('departmentid='.$key)->field('id,departmentid')->select();//用户id
+            $id                         = array_column($account,'id');
+            $departmentid               = array_column($account,'departmentid');
             foreach($kind as $ke =>$va){ //类型
                 $table_info[$key]['name'][$ke]['type_name']                 = $va;
                 $count_list[$ke]['type_name']                               = $va;
                 foreach($list as $k => $v){//月度数据
-                    if($v['kind']==$ke && in_array($v['create_user'],$userIds)){
+//            print_r($key);die;
+                    if($v['kind']==$ke && in_array($v['create_user'],$id) && in_array($key,$departmentid)){
                         $table_info[$key]['name'][$ke]['month_sum']         += 1; //项目数
                         $table_info[$key]['name'][$ke]['month_people_num']  += $v['renshu'];//人数
                         $table_info[$key]['name'][$ke]['month_income']      += $v['shouru'];//收入
@@ -573,7 +555,7 @@ class ChartModel extends Model
                     }
                 }
                 foreach($lists as $k => $v){//年度数据
-                    if($v['kind']==$ke && in_array($v['create_user'],$userIds)){
+                    if($v['kind']==$ke && in_array($v['create_user'],$id) && in_array($key,$departmentid)){
                         $table_info[$key]['name'][$ke]['year_sum']          += 1;//项目数
                         $table_info[$key]['name'][$ke]['year_people_num']   += $v['renshu'];//人数
                         $table_info[$key]['name'][$ke]['year_income']       += $v['shouru'];//收入
@@ -593,8 +575,10 @@ class ChartModel extends Model
                 }
             }
         }
+//        print_R($table_info);die;
         $table_list[0] = $table_info;
         $table_list[1] = $count_list;
+
         return $table_list;
     }
 

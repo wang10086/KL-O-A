@@ -843,14 +843,12 @@ class ChartController extends BaseController {
         $month		= I('month',date('m'));
         if (strlen($month)<2) $month = str_pad($month,2,'0',STR_PAD_LEFT);
         $times      = $year.$month;
-
         $yw_departs     = C('YW_DEPARTS');  //业务部门id
         $where          = array();
         $where['id']    = array('in',$yw_departs);
         $departments    = M('salary_department')->field('id,department')->where($where)->select();
         //预算及结算分部门汇总
         $listdatas      = $this->count_lists($departments,$year,$month,$pin);
-
         $heji           = $listdatas['heji'];
         $dj_heji        = $listdatas['dj_heji'];
         unset($listdatas['dj_heji']);  //注意顺序
