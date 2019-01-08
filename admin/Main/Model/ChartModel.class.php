@@ -478,7 +478,7 @@ class ChartModel extends Model
         return $time;
 
     }
-    
+
 
     /**
      * department 部门数据
