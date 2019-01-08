@@ -2036,6 +2036,27 @@ class FinanceController extends BaseController {
                 if ($res) $num++;
                 echo $num;
             }
+
+            //保存修改借款单
+            if ($savetype==19){
+                $id             = I('jkid');
+                $jkd_id         = I('jkd_id');
+                if (!$id){ $this->error('保存信息失败'); }
+                $info           = I('info');
+                $info['type']   = I('type');
+                $res            = M('jiekuan')->where(array('id'=>$id))->save($info);
+                if ($res){
+                    $record = array();
+                    $record['bill_id']      = $jkd_id;
+                    $record['type']         = 1;
+                    $record['explain']      = '更改借款单信息';
+                    jkbx_record($record);
+
+                    $this->success('修改成功',U('Finance/jiekuan_lists'));
+                }else{
+                    $this->error('修改失败');
+                }
+            }
         }
     }
 
@@ -2504,7 +2525,6 @@ class FinanceController extends BaseController {
     }
 
 
-    /****************************start*****************************************/
     //财务费用预算
     public function budget_loan(){
         $opid = I('opid');
@@ -2570,6 +2590,24 @@ class FinanceController extends BaseController {
         $this->display('budget_loan');
     }
 
+
+    public function edit_jiekuandan(){
+        $jkid                   = I('jkid');
+        if (!$jkid) { $this->error("获取信息失败"); }
+        $departments            = M('salary_department')->select();
+        $jiekuan_info           = M('jiekuan')->where(array('id'=>$jkid))->find();
+
+
+
+        $this->jiekuandan       = $jiekuan_info;
+        $this->departments      = $departments;
+        $this->jk_type          = C('JIEKUAN_TYPE');
+        $this->jkid             = $jkid;
+
+        $this->display();
+    }
+
+    /****************************start*****************************************/
     public function test(){
         $guide_ids = M('account')->where(array('guide_id'=>array('neq',0)))->getField('guide_id',true);
         $arr        = array();
