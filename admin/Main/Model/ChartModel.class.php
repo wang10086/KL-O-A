@@ -541,7 +541,7 @@ class ChartModel extends Model
                 $table_info[$key]['name'][$ke]['type_name']                 = $va;
                 $count_list[$ke]['type_name']                               = $va;
                 foreach($list as $k => $v){//月度数据
-//            print_r($key);die;
+
                     if($v['kind']==$ke && in_array($v['create_user'],$id) && in_array($key,$departmentid)){
                         $table_info[$key]['name'][$ke]['month_sum']         += 1; //项目数
                         $table_info[$key]['name'][$ke]['month_people_num']  += $v['renshu'];//人数
