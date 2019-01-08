@@ -2112,7 +2112,12 @@ class FinanceController extends BaseController {
             if ($jkd_id)    $map['j.jkd_id']    = array('like','%'.$jkd_id.'%');
             if ($jk_user)   $map['j.jk_user']   = array('like','%'.$jk_user.'%');
         }
-        $lists          = M()->table('__JIEKUAN__ as j')->field('j.*,o.project')->join('__JIEKUAN_AUDIT__ as a on a.jk_id=j.id','left')->join('__OP__ as o on o.op_id=j.op_id','left')->where($where)->order($this->orders('j.id'))->select();
+        //分页
+        $pagecount		= M()->table('__JIEKUAN__ as j')->field('j.*,o.project')->join('__JIEKUAN_AUDIT__ as a on a.jk_id=j.id','left')->join('__OP__ as o on o.op_id=j.op_id','left')->where($where)->order($this->orders('j.id'))->count();
+        $page			= new Page($pagecount, P::PAGE_SIZE);
+        $this->pages	= $pagecount>P::PAGE_SIZE ? $page->show():'';
+
+        $lists          = M()->table('__JIEKUAN__ as j')->field('j.*,o.project')->join('__JIEKUAN_AUDIT__ as a on a.jk_id=j.id','left')->join('__OP__ as o on o.op_id=j.op_id','left')->where($where)->order($this->orders('j.id'))->limit($page->firstRow . ',' . $page->listRows)->select();
 
         foreach ($lists as $k=>$v){
             if ($v['audit_status'] == 0) $lists[$k]['zhuangtai'] = "<span class='yellow'>审核中</span>";
@@ -2303,7 +2308,12 @@ class FinanceController extends BaseController {
             if ($pin==1)    $map['b.bxd_type']      = 1;
             if ($pin==2)    $map['b.bxd_type']      = array('in',array(2,3));
         }
-        $lists          = M()->table('__BAOXIAO__ as b')->field('b.*')->join('__BAOXIAO_AUDIT__ as a on a.bx_id=b.id','left')->where($where)->order($this->orders('b.id'))->select();
+        //分页
+        $pagecount		= M()->table('__BAOXIAO__ as b')->field('b.*')->join('__BAOXIAO_AUDIT__ as a on a.bx_id=b.id','left')->where($where)->order($this->orders('b.id'))->count();
+        $page			= new Page($pagecount, P::PAGE_SIZE);
+        $this->pages	= $pagecount>P::PAGE_SIZE ? $page->show():'';
+
+        $lists          = M()->table('__BAOXIAO__ as b')->field('b.*')->join('__BAOXIAO_AUDIT__ as a on a.bx_id=b.id','left')->where($where)->order($this->orders('b.id'))->limit($page->firstRow . ',' . $page->listRows)->select();
 
         foreach ($lists as $k=>$v){
             if ($v['audit_status'] == 0) $lists[$k]['zhuangtai'] = "<span class='yellow'>审核中</span>";
@@ -2590,7 +2600,7 @@ class FinanceController extends BaseController {
         $this->display('budget_loan');
     }
 
-
+    //修改借款单
     public function edit_jiekuandan(){
         $jkid                   = I('jkid');
         if (!$jkid) { $this->error("获取信息失败"); }
