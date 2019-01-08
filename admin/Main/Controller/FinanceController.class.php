@@ -2597,8 +2597,6 @@ class FinanceController extends BaseController {
         $departments            = M('salary_department')->select();
         $jiekuan_info           = M('jiekuan')->where(array('id'=>$jkid))->find();
 
-
-
         $this->jiekuandan       = $jiekuan_info;
         $this->departments      = $departments;
         $this->jk_type          = C('JIEKUAN_TYPE');

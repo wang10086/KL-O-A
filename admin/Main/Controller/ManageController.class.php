@@ -43,6 +43,32 @@ class ManageController extends ChartController {
     }
 
     /**
+     * 其他费用
+     * $tm: m=>月度, q=>季度, y=>年度
+     */
+    public function otherExpenses(){
+        $year		            = I('year',date('Y'));
+        $month		            = I('month',date('m'));
+        if (strlen($month)<2) $month = str_pad($month,2,'0',STR_PAD_LEFT);
+        $tm                     = I('tm')?I('tm'):'m';
+        $kinds                  = C('BXD_KIND');
+        $departments            = C('department1');
+        $mod                    = D('Manage');
+        $times                  = $mod->get_times($year,$month,$tm);
+        //var_dump($times);die;
+        $lists                  = $mod->get_otherExpenses();
+        //var_dump($lists);die;
+
+        $this->kinds            = $kinds;
+        $this->tm               = $tm;
+        $this->year 	        = $year;
+        $this->month 	        = $month;
+        $this->prveyear	        = $year-1;
+        $this->nextyear	        = $year+1;
+        $this->display();
+    }
+
+    /**
      * business 营业收入 营业毛利 营业毛利率
      * $year 年 $month月
      * $pin 1 结算 0预算
