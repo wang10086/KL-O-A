@@ -45,8 +45,8 @@
                                             <if condition="rolemenu(array('Finance/jiekuandan_info'))">
                                                 <th width="40" class="taskOptions">详情</th>
                                             </if>
-                                            <if condition="rolemenu(array('Finance/aaa'))">
-                                                <th width="40" class="taskOptions">报销</th>
+                                            <if condition="rolemenu(array('Finance/edit_jiekuandan'))">
+                                                <th width="40" class="taskOptions">修改</th>
                                             </if>
                                             <if condition="rolemenu(array('Finance/del_jkd'))">
                                                 <th width="40" class="taskOptions">删除</th>
@@ -86,10 +86,9 @@
                                                     </if>
                                                 </td>
                                             </if>
-                                            <if condition="rolemenu(array('Finance/aaa'))">
+                                            <if condition="rolemenu(array('Finance/edit_jiekuandan'))">
                                                 <td class="taskOptions">
-                                                    <!--<a href="{:U('Finance/aaa',array('jkid'=>$row['id']))}" title="报销" class="btn btn-info btn-smsm"><i class="fa fa-pencil"></i></a>-->
-                                                    <a href="javascript:;" title="报销" class="btn btn-info btn-smsm"><i class="fa fa-pencil"></i></a>
+                                                    <a href="{:U('Finance/edit_jiekuandan',array('jkid'=>$row['id']))}" title="修改" class="btn btn-info btn-smsm"><i class="fa fa-pencil"></i></a>
                                                 </td>
                                             </if>
                                             <if condition="rolemenu(array('Finance/del_jkd'))">

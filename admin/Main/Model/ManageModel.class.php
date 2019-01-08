@@ -963,6 +963,16 @@ class ManageModel extends Model{
         $ymd[1]       = $year.'1226';
         return $ymd;
     }
+
+    public function get_times($year,$month,$tm){
+
+        return $month;
+    }
+
+    public function get_otherExpenses(){
+
+        return "aaaaaaaaaaa";
+    }
 }
 
 ?>
