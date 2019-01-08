@@ -1332,7 +1332,7 @@ class FinanceController extends BaseController {
                 $info['yingbaoxiao']    = $total['jk_total'];
                 $info['type']           = $type;
                 $info['bx_user_id']     = cookie('userid');
-                $info['bx_user']        = cookie('username');
+                $info['bx_user']        = cookie('nickname');
                 $department             = M('salary_department')->where(array('id'=>$info['department_id']))->find();
                 $info['department']     = $department['department'];
                 $info['bx_time']        = NOW_TIME;
@@ -1767,7 +1767,7 @@ class FinanceController extends BaseController {
                 $info['jkd_ids']    = I('jkd_id')?I('jkd_id'):'';
                 $info['yingbaoxiao']= I('yingbaoxiao')?I('yingbaoxiao'):'0.00';
                 $info['bx_user_id'] = cookie('userid');
-                $info['bx_user']    = cookie('username');
+                $info['bx_user']    = cookie('nickname');
                 $info['bx_time']    = NOW_TIME;
 
                 if ($zmysr_id){

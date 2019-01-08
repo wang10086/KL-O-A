@@ -4402,3 +4402,33 @@ function get_quarter($month){
     return $quarter;
 }
 
+/**
+ * 获取季度考核周期
+ * @param $year
+ * @param $month
+ * @return 返回时间段
+ */
+function getQuarterlyCicle($year,$month){
+    $quarter    = get_quarter($month); //获取季度信息
+    $data       = array();
+    switch ($quarter){
+        case 1:
+            $data['begin_time']     = strtotime(($year-1).'1226') ;
+            $data['end_time']       = strtotime($year.'0326');
+            break;
+        case 2:
+            $data['begin_time']     = strtotime($year.'0326') ;
+            $data['end_time']       = strtotime($year.'0626');
+            break;
+        case 3:
+            $data['begin_time']     = strtotime($year.'0626') ;
+            $data['end_time']       = strtotime($year.'0926');
+            break;
+        case 4:
+            $data['begin_time']     = strtotime($year.'0926') ;
+            $data['end_time']       = strtotime($year.'1226');
+            break;
+    }
+    return $data;
+}
+
