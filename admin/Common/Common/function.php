@@ -3027,13 +3027,8 @@ function updatekpi($month,$user){
                     $ys_lrze        = $budget_info['total_profit'];                         //预算利润总额
                     $operate_info   = get_department_operate($department,$year,$month);     //实际经营信息
                     $jy_lrze        = $operate_info['lrze'];                                //经营利润总额
-                    $wcl            = round($jy_lrze/$ys_lrze,2);                           //季度利润总额目标完成率
 
-                    if ($wcl >= 1){
-                        $complete   = 100;
-                    }else{
-                        $complete   = $wcl*100;
-                    }
+                    $complete       = $jy_lrze;
                 }
 
                 //季度顾客满意度
@@ -3076,13 +3071,9 @@ function updatekpi($month,$user){
                     $ys_rsfyl       = $budget_info['personnel_cost_rate'];                  //预算人事费用率
                     $operate_info   = get_department_operate($department,$year,$month);     //实际经营信息
                     $jy_rsfyl       = $operate_info['rsfyl'];                               //经营人事费用率
-                    $wcl            = round($jy_rsfyl/$ys_rsfyl,2);                         //季度人事费用率
+                    //$wcl            = round($jy_rsfyl/$ys_rsfyl,2);                         //季度人事费用率
+                    $complete       = $jy_rsfyl;
 
-                    if ($wcl >= 1 || !$jy_rsfyl || !$ys_rsfyl){
-                        $complete   = 100;
-                    }else{
-                        $complete   = $wcl*100;
-                    }
                 }
 
                 //不发生安全责任事故
@@ -3093,22 +3084,34 @@ function updatekpi($month,$user){
 
 				//已实现自动获取指标值
 				$auto_quta	= array(1,2,3,4,5,6,81,8,9,10,11,15,16,18,20,23,26,21,24,27,32,37,19,22,25,28,33,38,42,45,103,56,113,92,29,34,39,46,102,55,57,58,59,84,87,89,90,111,107,83,66,54,44,12,112,108,100,96,95,65,114,86,85,64,63,62,53,52,41,40,49,80,48,91,79,47,36,35,31,30,82,110,106,99,94,67,124,125,126,127,128,129,130,131,132,133,134,135,136,137,138,139,140,141,143,144,145,146,147,148,149,150,151);
-				
+				//不超过既得满分的指标 不能按照 实际/计划计算得分
+                $otherQuota = array(127);
 				//计算完成率并保存数据
 				if(in_array($v['quota_id'],$auto_quta)){
-					
-					$rate = $v['target'] ? round(($complete / $v['target'])*100,2) : 100;
-					$rate = $rate>100 ? 100 : $rate; 
+                    if (in_array($v['quota_id'],$otherQuota)){
+                        $target     = (float)$v['target'];
+                        $comp       = (float)$complete;
+                        if ($comp <= $target){
+                            //实际值不超过计划值得满分
+                            $rate   = 100;
+                        }else{
+                            //大于指标值得0分
+                            $rate   = 0;
+                        }
+                    }else{
+                        $rate = $v['target'] ? round(($complete / $v['target'])*100,2) : 100;
+                        $rate = $rate>100 ? 100 : $rate;
+                    }
 					
 					$data = array();
 					$data['complete']		= $complete;
 					$data['complete_rate']	= $rate."%";
-					$data['score']			= round(($rate * $v['weight']) / 100,1);
+                    $data['score']			= round(($rate * $v['weight']) / 100,1);
 					$data['score_status']	= 1;
 
 					
 				}else{
-					
+
 					$rate = 100;
 					$data = array();
 					//$data['complete']		= $complete;
@@ -3116,8 +3119,7 @@ function updatekpi($month,$user){
 					$data['score']			= round(($rate * $v['weight']) / 100,1);
 					$data['score_status']	= 1;
 				}
-				
-				M('kpi_more')->data($data)->where(array('id'=>$v['id']))->save();	
+				M('kpi_more')->data($data)->where(array('id'=>$v['id']))->save();
 				
 			}
 			
