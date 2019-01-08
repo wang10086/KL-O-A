@@ -267,8 +267,7 @@
                                             </table>
                                         </div>
                                     </div>
-
-
+                                </div>
                                     <!--调薪-->
 
                                     <div id="salary_change" style="display:none">

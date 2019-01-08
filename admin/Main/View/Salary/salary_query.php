@@ -22,7 +22,7 @@
 
 
                             <!--岗位薪酬变动 -->
-                            <div class="btn-group salary_search_extract" id="salary_add_backcolor"><br>
+                            <div class="salary_search_extract" id="salary_add_backcolor"><br>
 
                                 <include file="post_salary_change" />
 
@@ -60,7 +60,7 @@
 
                 </section><!-- /.content -->
                 <!--   操作历史 -->
-                <div id="salary_history_page1">
+                <div id="salary_history_page1" style="margin-left:1em;">
 
                 </div>
 

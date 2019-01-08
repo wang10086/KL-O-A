@@ -478,10 +478,7 @@ class ChartModel extends Model
         return $time;
 
     }
-
-
-
-
+    
 
     /**
      * department 部门数据
@@ -499,7 +496,6 @@ class ChartModel extends Model
         $where['l.audit_time']           = array('between', "$begintime,$endtime");
         $time1                           = strtotime((int)(($year-1).'1226'));//默认年开始时间
         $time2                           = strtotime((int)($year.'1226'));//默认年结束时间
-
         //月度
         if($type==800){
             unset($where['l.req_type']);
@@ -507,23 +503,23 @@ class ChartModel extends Model
             $list1                       = M()->table('__OP_SETTLEMENT__ as b')->join('__OP__ as o on b.op_id = o.op_id', 'LEFT')->join('__AUDIT_LOG__ as l on l.req_id = b.id', 'LEFT')->where($where)->select();
             $js_opids                    = array_column($list1,'op_id');
             $where['l.req_type']         = array('eq', 800);
-            $where['o.op_id']            = array('not in',$js_opids);
+            $where['b.op_id']            = array('not in',$js_opids);
             $list2                       = M()->table('__OP_BUDGET__ as b')->join('__OP__ as o on b.op_id = o.op_id', 'LEFT')->join('__AUDIT_LOG__ as l on l.req_id = b.id', 'LEFT')->where($where)->select();
-            $list                       = array_merge($list1,$list2);
+            $list                        = array_merge($list1,$list2);
         }elseif($type==801){
             $where['l.req_type']         = array('eq', 801);
             $list                        = M()->table('__OP_SETTLEMENT__ as b')->join('__OP__ as o on b.op_id = o.op_id', 'LEFT')->join('__AUDIT_LOG__ as l on l.req_id = b.id', 'LEFT')->where($where)->select();
         }
         //年度
         if($type==800){
-            unset($where['l.audit_time']);unset($where['l.req_type']);unset($where['o.op_id']);
+            unset($where['l.audit_time']);unset($where['l.req_type']);unset($where['b.op_id']);
             $where['l.audit_time']       = array('between', "$time1,$time2");
             $where['l.req_type']         = array('eq', 801);
             $lists1                      = M()->table('__OP_SETTLEMENT__ as b')->join('__OP__ as o on b.op_id = o.op_id', 'LEFT')->join('__AUDIT_LOG__ as l on l.req_id = b.id', 'LEFT')->where($where)->select();
             $year_js_opids               = array_column($lists1,'op_id');
             unset($where['o.op_id']);
             $where['l.req_type']         = array('eq', 800);
-            $where['o.op_id']            = array('not in',$year_js_opids);
+            $where['b.op_id']            = array('not in',$year_js_opids);
             $lists2                      = M()->table('__OP_BUDGET__ as b')->join('__OP__ as o on b.op_id = o.op_id', 'LEFT')->join('__AUDIT_LOG__ as l on l.req_id = b.id', 'LEFT')->where($where)->select();
             $lists                       = array_merge($lists1,$lists2);
         }elseif($type==801){
@@ -532,17 +528,15 @@ class ChartModel extends Model
             $lists                       = M()->table('__OP_SETTLEMENT__ as b')->join('__OP__ as o on b.op_id = o.op_id', 'LEFT')->join('__AUDIT_LOG__ as l on l.req_id = b.id', 'LEFT')->where($where)->select();
         }
         foreach($department as $key =>$val){ //查询数组中是否部门用户id
-            $userIds                                                        = array();
             $table_info[$key]['department']                                 = $val;
-            $account                    = M('account')->where('departmentid='.$key)->field('id,departmentid')->select();//用户id
-            $id                         = array_column($account,'id');
-            $departmentid               = array_column($account,'departmentid');
+            $account                                                        = M('account')->where('departmentid='.$key)->field('id,departmentid')->select();//用户id
+            $id                                                             = array_column($account,'id');
+//            $departmentid                                                   = array_column($account,'departmentid');
             foreach($kind as $ke =>$va){ //类型
                 $table_info[$key]['name'][$ke]['type_name']                 = $va;
                 $count_list[$ke]['type_name']                               = $va;
                 foreach($list as $k => $v){//月度数据
-
-                    if($v['kind']==$ke && in_array($v['create_user'],$id) && in_array($key,$departmentid)){
+                    if($v['kind']==$ke && in_array($v['create_user'],$id)){// && in_array($key,$departmentid)
                         $table_info[$key]['name'][$ke]['month_sum']         += 1; //项目数
                         $table_info[$key]['name'][$ke]['month_people_num']  += $v['renshu'];//人数
                         $table_info[$key]['name'][$ke]['month_income']      += $v['shouru'];//收入
@@ -555,7 +549,7 @@ class ChartModel extends Model
                     }
                 }
                 foreach($lists as $k => $v){//年度数据
-                    if($v['kind']==$ke && in_array($v['create_user'],$id) && in_array($key,$departmentid)){
+                    if($v['kind']==$ke && in_array($v['create_user'],$id)){// && in_array($key,$departmentid)
                         $table_info[$key]['name'][$ke]['year_sum']          += 1;//项目数
                         $table_info[$key]['name'][$ke]['year_people_num']   += $v['renshu'];//人数
                         $table_info[$key]['name'][$ke]['year_income']       += $v['shouru'];//收入
@@ -575,12 +569,106 @@ class ChartModel extends Model
                 }
             }
         }
-//        print_R($table_info);die;
         $table_list[0] = $table_info;
         $table_list[1] = $count_list;
-
         return $table_list;
     }
 
 
+//    public function time_department($year,$department,$begintime,$endtime,$type)
+//    {
+//        $table_list                      = array();
+//        $count_list                      = array();
+//        $table_info                      = array();
+//        $kind                            = M('project_kind')->getfield('id,name',true);//部门分类
+//        $where['b.audit_status']         = array('eq', 1);
+//        $where['l.audit_time']           = array('between', "$begintime,$endtime");
+//        $time1                           = strtotime((int)(($year-1).'1226'));//默认年开始时间
+//        $time2                           = strtotime((int)($year.'1226'));//默认年结束时间
+//
+//        //月度
+//        if($type==800){
+//            $where['l.req_type']         = array('eq', 801);
+//            $list1 = M()->table('__OP_SETTLEMENT__ as b')->join('__OP__ as o on b.op_id = o.op_id', 'LEFT')->join('__AUDIT_LOG__ as l on l.req_id = b.id', 'LEFT')->where($where)->select();
+//            $js_opids                    = array_column($list1,'op_id');
+//            $where['l.req_type']         = array('eq', 800);
+//            $where['b.op_id']            = array('not in',$js_opids);
+//            $list2 = M()->table('__OP_BUDGET__ as b')->join('__OP__ as o on b.op_id = o.op_id', 'LEFT')->join('__AUDIT_LOG__ as l on l.req_id = b.id', 'LEFT')->where($where)->select();
+//            $list  = array_merge($list1,$list2);
+//
+//        }elseif($type==801){
+//            $where['l.req_type']         = array('eq', 801);
+//            $list = M()->table('__OP_SETTLEMENT__ as b')->join('__OP__ as o on b.op_id = o.op_id', 'LEFT')->join('__AUDIT_LOG__ as l on l.req_id = b.id', 'LEFT')->where($where)->select();
+//        }
+//
+//        //年度
+//        if($type==800){
+//            unset($where['b.op_id']);
+//            $where['l.audit_time']       = array('between', "$time1,$time2");
+//            $where['l.req_type']         = array('eq', 801);
+//            $lists1= M()->table('__OP_SETTLEMENT__ as b')->join('__OP__ as o on b.op_id = o.op_id', 'LEFT')->join('__AUDIT_LOG__ as l on l.req_id = b.id', 'LEFT')->where($where)->select();
+//
+//            $year_js_opids               = array_column($lists1,'op_id');
+//            $where['l.req_type']         = array('eq', 800);
+//            $where['b.op_id']            = array('not in',$year_js_opids);
+//            $lists2 = M()->table('__OP_BUDGET__ as b')->join('__OP__ as o on b.op_id = o.op_id', 'LEFT')->join('__AUDIT_LOG__ as l on l.req_id = b.id', 'LEFT')->where($where)->select();
+//            $lists  = array_merge($lists1,$lists2);
+//        }elseif($type==801){
+//            $where['l.audit_time']       = array('between', "$time1,$time2");
+//            $where['l.req_type']         = array('eq', 801);
+//            $lists= M()->table('__OP_SETTLEMENT__ as b')->join('__OP__ as o on b.op_id = o.op_id', 'LEFT')->join('__AUDIT_LOG__ as l on l.req_id = b.id', 'LEFT')->where($where)->select();
+//        }
+//        $account                             = M('account')->getfield('id,departmentid',true);//用户id
+//
+//        foreach($department as $key =>$val){ //查询数组中是否部门用户id
+//            $userIds                          = array();
+//            $table_info[$key]['department'] = $val;
+//            foreach ($account as $kk=>$vv){
+//                if ($vv==$key){
+//                    $userIds[]           = $kk;
+//                }
+//            }
+//            foreach($kind as $ke =>$va){ //类型
+//                $table_info[$key]['name'][$ke]['type_name'] = $va;
+//                $count_list[$key]['type_name'] = $va;
+//                foreach($list as $k => $v){//月度数据
+//                    if($v['kind']==$ke && in_array($v['create_user'],$userIds)){
+//                        $table_info[$key]['name'][$ke]['month_sum']         += 1;
+//                        $table_info[$key]['name'][$ke]['month_people_num']  += $v['renshu'];
+//                        $table_info[$key]['name'][$ke]['month_income']      += $v['shouru'];
+//                        $table_info[$key]['name'][$ke]['month_profit']      += $v['maoli'];
+//                        //合计
+//                        $count_list[$key]['month_sum']                      += 1;
+//                        $count_list[$key]['month_people_num']               += $v['renshu'];
+//                        $count_list[$key]['month_income']                   += $v['shouru'];
+//                        $count_list[$key]['month_profit']                   += $v['maoli'];
+//                    }
+//                }
+//                foreach($lists as $k => $v){//年度数据
+//                    if($v['kind']==$ke && in_array($v['create_user'],$userIds)){
+//                        $table_info[$key]['name'][$ke]['year_sum']          += 1;
+//                        $table_info[$key]['name'][$ke]['year_people_num']   += $v['renshu'];
+//                        $table_info[$key]['name'][$ke]['year_income']       += $v['shouru'];
+//                        $table_info[$key]['name'][$ke]['year_profit']       += $v['maoli'];
+//                        //合计
+//                        $count_list[$key]['year_sum']                       += 1;
+//                        $count_list[$key]['year_people_num']                += $v['renshu'];
+//                        $count_list[$key]['year_income']                    += $v['shouru'];
+//                        $count_list[$key]['year_profit']                    += $v['maoli'];
+//                    }
+//                }
+//                if(empty($table_info[$key]['name'][$ke]['month_sum']) && empty($table_info[$key]['name'][$ke]['month_people_num']) && empty($table_info[$key]['name'][$ke]['month_income']) && empty($table_info[$key]['name'][$ke]['month_profit']) && empty($table_info[$key]['name'][$ke]['year_sum']) && empty($table_info[$key]['name'][$ke]['year_people_num']) && empty($table_info[$key]['name'][$ke]['year_income']) && empty($table_info[$key]['name'][$ke]['year_profit'])){
+//                    unset($table_info[$key]['name'][$ke]); //去除空类型
+//                }
+//                if(empty($count_list[$ke]['month_sum']) && empty($count_list[$ke]['month_people_num']) && empty($count_list[$ke]['month_income']) && empty($count_list[$ke]['month_profit']) && empty($count_list[$ke]['year_sum']) && empty($count_list[$ke]['year_people_num']) && empty($count_list[$ke]['year_income']) && empty($count_list[$ke]['year_profit'])){
+//                    unset($count_list[$ke]); //去除空类型
+//                }
+//
+//            }
+//        }
+//        $table_list[0] = $table_info;
+//        $table_list[1] = $count_list;
+//        return $table_list;
+//
+//    }
 }
