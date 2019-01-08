@@ -63,7 +63,7 @@
                         <table class="table table-bordered dataTable fontmini" id="tablecenter">
                             <tr role="row" class="orders" style="text-align:center;" >
                                 <th style="width:10em;" ><b>科目</b></th>
-                                <th style="width:10em;" ><b>公司</b></th>
+                                <!--<th style="width:10em;" ><b>公司</b></th>
                                 <th style="width:10em;" ><b>京区业务中心</b></th>
                                 <th style="width:10em;" ><b>京外业务中心</b></th>
                                 <th style="width:10em;" ><b>南京项目部</b></th>
@@ -72,7 +72,10 @@
                                 <th style="width:10em;" ><b>长春项目部</b></th>
                                 <th style="width:10em;" ><b>市场部(业务)</b></th>
                                 <th style="width:10em;" ><b>常规业务中心</b></th>
-                                <th style="width:10em;" ><b>机关部门</b></th>
+                                <th style="width:10em;" ><b>机关部门</b></th>-->
+                                <foreach name="departments" item="v">
+                                    <th style="width:10em;" ><b>{$v}</b></th>
+                                </foreach>
                             </tr>
 
                             <foreach name="kinds" item="v">

@@ -964,15 +964,54 @@ class ManageModel extends Model{
         return $ymd;
     }
 
-    public function get_times($year,$month,$tm){
-
-        return $month;
+    public function get_otherExpenses($departments,$kinds,$times){
+        $lists                          = M('baoxiao')->where(array('bx_time'=>array('between',"$times[beginTime],$times[endTime]"),'audit_status'=>1))->select();
+        $infos                          = array();
+        foreach ($kinds as $k=>$v){ //办公耗材,网络及通讯费,差旅费,交通费,印刷宣传费...
+            foreach ($departments as $kk=>$vv){    //公司,京区业务中心,京外业务中心,南京项目部,武汉项目部...
+                $data                   = array();
+                $data['jqyw']           = 1;
+                $data['jwyw']           = 2;
+                $data['nanjing']        = 3;
+                $data['wuhan']          = 4;
+                $data['shenyang']       = 5;
+                $data['changchun']      = 5;
+                $data['shichang']       = 5;
+                $data['changgui']       = 5;
+                $data['jiguan']         = 5;
+                $data['gongsi']         = '';
+            }
+            $infos[] = $data;
+        }
+        return $infos;
     }
 
-    public function get_otherExpenses(){
-
-        return "aaaaaaaaaaa";
+    /**
+     * 获取考核时间
+     * @param $year     年 2019
+     * @param $month    月 01
+     * @param $tm       类别 : m=>月度; q=>季度; y=>年度
+     * @return array    (beginTime,endTime) 时间戳
+     */
+    function get_times($year,$month,$tm){
+        if (strlen($month)<2) $month    = str_pad($month,2,'0',STR_PAD_LEFT);
+        $betweenTime                    = array();
+        if ($tm=='m'){  //月度
+            $yearmonth                  = $year.$month;
+            $times                      = get_cycle($yearmonth,$day=26);
+            $betweenTime['beginTime']   = $times['begintime'];
+            $betweenTime['endTime']     = $times['endtime'];
+        }elseif ($tm=='q'){ //季度
+            $times                      = getQuarterlyCicle($year,$month);
+            $betweenTime['beginTime']   = $times['begin_time'];
+            $betweenTime['endTime']     = $times['end_time'];
+        }elseif ($tm=='y'){ //年度
+            $betweenTime['beginTime']   = strtotime(($year-1).'1226');
+            $betweenTime['endTime']     = strtotime($year.'1226');
+        }
+        return $betweenTime;
     }
+
 }
 
 ?>

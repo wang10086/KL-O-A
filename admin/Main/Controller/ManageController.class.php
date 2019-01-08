@@ -55,10 +55,10 @@ class ManageController extends ChartController {
         $departments            = C('department1');
         $mod                    = D('Manage');
         $times                  = $mod->get_times($year,$month,$tm);
-        //var_dump($times);die;
-        $lists                  = $mod->get_otherExpenses();
+        $lists                  = $mod->get_otherExpenses($departments,$kinds,$times);
         //var_dump($lists);die;
 
+        $this->departments      = $departments;
         $this->kinds            = $kinds;
         $this->tm               = $tm;
         $this->year 	        = $year;
