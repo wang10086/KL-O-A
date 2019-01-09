@@ -94,7 +94,7 @@
                                 </tr>
                             </foreach>
                             <tr role="row" class="orders" style="text-align:center;">
-                                <td>合计</td>
+                                <td><b>合计</b></td>
                                 <td>{$heji.gongsi}</td>
                                 <td>{$heji.jqyw}</td>
                                 <td>{$heji.jwyw}</td>

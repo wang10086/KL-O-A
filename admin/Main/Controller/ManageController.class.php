@@ -118,35 +118,6 @@ class ManageController extends ChartController {
     }
 
     /**
-     * 其他费用
-     * $tm: m=>月度, q=>季度, y=>年度
-     */
-    public function otherExpenses(){
-        $year		            = I('year',date('Y'));
-        $month		            = I('month',date('m'));
-        if (strlen($month)<2) $month = str_pad($month,2,'0',STR_PAD_LEFT);
-        $tm                     = I('tm')?I('tm'):'m';
-        $kinds                  = C('BXD_KIND');
-        $departments            = C('department1');
-        $mod                    = D('Manage');
-        $times                  = $mod->get_times($year,$month,$tm);
-        $lists                  = $mod->get_otherExpenses($departments,$kinds,$times);
-        $heji                   = $lists['heji'];
-        unset($lists['heji']);
-
-        $this->lists            = $lists;
-        $this->heji             = $heji;
-        $this->departments      = $departments;
-        $this->kinds            = $kinds;
-        $this->tm               = $tm;
-        $this->year 	        = $year;
-        $this->month 	        = $month;
-        $this->prveyear	        = $year-1;
-        $this->nextyear	        = $year+1;
-        $this->display();
-    }
-
-    /**
      * business 营业收入 营业毛利 营业毛利率
      * $year 年 $month月
      * $pin 1 结算 0预算
@@ -483,6 +454,61 @@ class ManageController extends ChartController {
         }else{$this->error('数据提交失败!');die;}
         $manage         = $mod->year_paprova1($status,$type,3,4);//季度提交审
         if(strpos($manage,'成功') !==false){$this->success($manage);}else{$this->error($manage);}
+    }
+
+
+    /**
+     * 其他费用
+     * $tm: m=>月度, q=>季度, y=>年度
+     */
+    public function otherExpenses(){
+        $year		            = I('year',date('Y'));
+        $month		            = I('month',date('m'));
+        if (strlen($month)<2) $month = str_pad($month,2,'0',STR_PAD_LEFT);
+        $tm                     = I('tm')?I('tm'):'m';
+        $kinds                  = C('BXD_KIND');
+        $departments            = C('department1');
+        $mod                    = D('Manage');
+        $times                  = $mod->get_times($year,$month,$tm);
+        $lists                  = $mod->get_otherExpenses($departments,$kinds,$times);
+        $heji                   = $lists['heji'];
+        unset($lists['heji']);
+
+        $this->lists            = $lists;
+        $this->heji             = $heji;
+        $this->departments      = $departments;
+        $this->kinds            = $kinds;
+        $this->tm               = $tm;
+        $this->year 	        = $year;
+        $this->month 	        = $month;
+        $this->prveyear	        = $year-1;
+        $this->nextyear	        = $year+1;
+        $this->display();
+    }
+
+    /**
+     * 人力资源成本详情
+     * $tm: m=>月度, q=>季度, y=>年度
+     */
+    public function HR_cost(){
+        $year		            = I('year',date('Y'));
+        $month		            = I('month',date('m'));
+        if (strlen($month)<2) $month = str_pad($month,2,'0',STR_PAD_LEFT);
+        $tm                     = I('tm')?I('tm'):'m';
+        $hr_cost                = C('HR_COST');
+        $departments            = C('department1');
+        $mod                    = D('Manage');
+        $times                  = $mod->get_times($year,$month,$tm);
+        $lists                  = $mod->get_hr_cost($departments,$hr_cost,$times);
+
+        $this->hr_cost          = $hr_cost;
+        $this->departments      = $departments;
+        $this->tm               = $tm;
+        $this->year 	        = $year;
+        $this->month 	        = $month;
+        $this->prveyear	        = $year-1;
+        $this->nextyear	        = $year+1;
+        $this->display();
     }
 
  }

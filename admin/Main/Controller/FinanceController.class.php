@@ -2626,10 +2626,17 @@ class FinanceController extends BaseController {
             $this->ajaxReturn($msg);
             die;
         }
+        $jkd_id                 = $db->where(array('id'=>$id))->getField('jkd_id');
         $data                   = array();
         $data['is_print']       = 1;
         $res                    = $db->where(array('id'=>$id))->save($data);
         if ($res){
+            $record = array();
+            $record['bill_id']      = $jkd_id;
+            $record['type']         = 1;
+            $record['explain']      = '确认已打印借款单';
+            jkbx_record($record);
+
             $msg['msg']         = '保存成功';
             $msg['time']        = 1;
             $this->ajaxReturn($msg);

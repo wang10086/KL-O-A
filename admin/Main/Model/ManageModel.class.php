@@ -1080,7 +1080,7 @@ class ManageModel extends Model{
      * @param $lists        报销列表
      * @param $share_lists  分摊列表
      */
-    public function get_jiguan_sum($kindid,$arr,$lists,$share_lists){
+    public function get_jiguan_sum($kindid,$arr,$lists='',$share_lists=''){
         $sum                    = 0;
         if ($lists){
             foreach ($lists as $k=>$v){
@@ -1107,7 +1107,7 @@ class ManageModel extends Model{
      * @param $tm       类别 : m=>月度; q=>季度; y=>年度
      * @return array    (beginTime,endTime) 时间戳
      */
-    function get_times($year,$month,$tm){
+    public function get_times($year,$month,$tm){
         if (strlen($month)<2) $month    = str_pad($month,2,'0',STR_PAD_LEFT);
         $betweenTime                    = array();
         if ($tm=='m'){  //月度
@@ -1124,6 +1124,11 @@ class ManageModel extends Model{
             $betweenTime['endTime']     = strtotime($year.'1226');
         }
         return $betweenTime;
+    }
+
+
+    public function get_hr_cost($departments,$hr_cost,$times){
+        var_dump($hr_cost);die;
     }
 
 }

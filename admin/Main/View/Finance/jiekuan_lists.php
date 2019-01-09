@@ -101,7 +101,7 @@
                                                     <if condition="$row.is_print eq 1">
                                                         <span class="green">已打印</span>
                                                     <else />
-                                                        <a href="javascript:;" onclick="ConfirmPrint(`{$row['id']}`,'确认已打印改借款单吗?')" title="打印" class="btn btn-warning btn-smsm"><i class="fa fa-print"></i></a>
+                                                        <a href="javascript:;" onclick="ConfirmPrint(`{$row['id']}`,'确认已打印该借款单吗?')" title="打印" class="btn btn-warning btn-smsm"><i class="fa fa-print"></i></a>
                                                     </if>
                                                 </td>
                                             </if>
