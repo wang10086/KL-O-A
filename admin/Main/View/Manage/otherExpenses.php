@@ -78,21 +78,34 @@
                                 </foreach>
                             </tr>
 
-                            <foreach name="kinds" item="v">
+                            <foreach name="lists" key="k" item="v">
                                 <tr role="row" class="orders" style="text-align:center;">
-                                    <td>{$v}</td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
+                                    <td>{$kinds[$k]}</td>
+                                    <td>{$v.gongsi}</td>
+                                    <td>{$v.jqyw}</td>
+                                    <td>{$v.jwyw}</td>
+                                    <td>{$v.nanjing}</td>
+                                    <td>{$v.wuhan}</td>
+                                    <td>{$v.shenyang}</td>
+                                    <td>{$v.changchun}</td>
+                                    <td>{$v.shichang}</td>
+                                    <td>{$v.changgui}</td>
+                                    <td>{$v.jiguan}</td>
                                 </tr>
                             </foreach>
+                            <tr role="row" class="orders" style="text-align:center;">
+                                <td>合计</td>
+                                <td>{$heji.gongsi}</td>
+                                <td>{$heji.jqyw}</td>
+                                <td>{$heji.jwyw}</td>
+                                <td>{$heji.nanjing}</td>
+                                <td>{$heji.wuhan}</td>
+                                <td>{$heji.shenyang}</td>
+                                <td>{$heji.changchun}</td>
+                                <td>{$heji.shichang}</td>
+                                <td>{$heji.changgui}</td>
+                                <td>{$heji.jiguan}</td>
+                            </tr>
 
 
                             <!--<tr role="row" class="orders" style="text-align:center;">
