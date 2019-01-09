@@ -2615,6 +2615,31 @@ class FinanceController extends BaseController {
         $this->display();
     }
 
+    //确认打印信息
+    public function sure_print(){
+        $id                     = I('jkid');
+        $db                     = M('jiekuan');
+        $msg                    = array();
+        if (!$id){
+            $msg['msg']         = '获取信息失败';
+            $msg['time']        = 3;
+            $this->ajaxReturn($msg);
+            die;
+        }
+        $data                   = array();
+        $data['is_print']       = 1;
+        $res                    = $db->where(array('id'=>$id))->save($data);
+        if ($res){
+            $msg['msg']         = '保存成功';
+            $msg['time']        = 1;
+            $this->ajaxReturn($msg);
+        }else{
+            $msg['msg']         = '保存信息失败';
+            $msg['time']        = 3;
+            $this->ajaxReturn($msg);
+        }
+    }
+
     /****************************start*****************************************/
     public function test(){
         $guide_ids = M('account')->where(array('guide_id'=>array('neq',0)))->getField('guide_id',true);
