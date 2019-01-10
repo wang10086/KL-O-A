@@ -1,9 +1,5 @@
 <include file="Index:header2" />
-<!--<style>
-    #btn-default_1{
-        background-color:#00acd6;
-    }
-</style>-->
+
 <aside class="right-side">
 
     <section class="content-header">
@@ -68,33 +64,51 @@
                                 </foreach>
                             </tr>
 
-                            <foreach name="hr_cost" key="k" item="v">
-                                <tr role="row" class="orders" style="text-align:center;">
-                                    <td>{$v}</td>
-                                    <td>{$v.gongsi}</td>
-                                    <td>{$v.jqyw}</td>
-                                    <td>{$v.jwyw}</td>
-                                    <td>{$v.nanjing}</td>
-                                    <td>{$v.wuhan}</td>
-                                    <td>{$v.shenyang}</td>
-                                    <td>{$v.changchun}</td>
-                                    <td>{$v.shichang}</td>
-                                    <td>{$v.changgui}</td>
-                                    <td>{$v.jiguan}</td>
-                                </tr>
+                            <foreach name="hr_cost" item="v">
+                                <foreach name="data" key="kk" item="vv">
+                                    <if condition="$kk eq $v">
+                                        <tr role="row" class="orders" style="text-align:center;">
+                                            <td>{$v}</td>
+                                            <td>{$vv.公司}</td>
+                                            <td>{$vv.京区业务中心}</td>
+                                            <td>{$vv.京外业务中心}</td>
+                                            <td>{$vv.南京项目部}</td>
+                                            <td>{$vv.武汉项目部}</td>
+                                            <td>{$vv.沈阳项目部}</td>
+                                            <td>{$vv.长春项目部}</td>
+                                            <td>{$vv.市场部}</td>
+                                            <td>{$vv.常规业务中心}</td>
+                                            <td>{$vv.机关部门}</td>
+                                        </tr>
+                                    <else />
+                                        <tr role="row" class="orders" style="text-align:center;">
+                                            <td>{$v}</td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                        </tr>
+                                    </if>
+                                </foreach>
                             </foreach>
                             <tr role="row" class="orders" style="text-align:center;">
                                 <td><b>合计</b></td>
-                                <td>{$heji.gongsi}</td>
-                                <td>{$heji.jqyw}</td>
-                                <td>{$heji.jwyw}</td>
-                                <td>{$heji.nanjing}</td>
-                                <td>{$heji.wuhan}</td>
-                                <td>{$heji.shenyang}</td>
-                                <td>{$heji.changchun}</td>
-                                <td>{$heji.shichang}</td>
-                                <td>{$heji.changgui}</td>
-                                <td>{$heji.jiguan}</td>
+                                <td>{$sum.公司}</td>
+                                <td>{$sum.京区业务中心}</td>
+                                <td>{$sum.京外业务中心}</td>
+                                <td>{$sum.南京项目部}</td>
+                                <td>{$sum.武汉项目部}</td>
+                                <td>{$sum.沈阳项目部}</td>
+                                <td>{$sum.长春项目部}</td>
+                                <td>{$sum.市场部}</td>
+                                <td>{$sum.常规业务中心}</td>
+                                <td>{$sum.机关部门}</td>
                             </tr>
 
                         </table><br><br>

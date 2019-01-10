@@ -498,10 +498,15 @@ class ManageController extends ChartController {
         $hr_cost                = C('HR_COST');
         $departments            = C('department1');
         $mod                    = D('Manage');
-        $times                  = $mod->get_times($year,$month,$tm);
-        $lists                  = $mod->get_hr_cost($departments,$hr_cost,$times);
+        $times                  = $mod->get_times($year,$month,$tm);    //获取考核周期开始及结束时间戳
+        $ym_arr                 = $mod->get_yms($year,$month,$tm);      //获取某个时间段内的月份信息Ym
+        $data                   = array();
+        $data[$hr_cost[0]]      = $mod->get_hr_cost($ym_arr);           //工资总额
 
+        $this->data             = $data;
+        $sum                    = $mod->get_sum_HRcost($data);          //合计
         $this->hr_cost          = $hr_cost;
+        $this->sum              = $sum;
         $this->departments      = $departments;
         $this->tm               = $tm;
         $this->year 	        = $year;

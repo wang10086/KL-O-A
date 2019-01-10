@@ -1126,9 +1126,89 @@ class ManageModel extends Model{
         return $betweenTime;
     }
 
+    /**
+     * 获取考核周期内的月份信息
+     * @param $year     年 2019
+     * @param $month    月 01
+     * @param $tm       类别 : m=>月度; q=>季度; y=>年度
+     * @return array    (beginTime,endTime) 时间戳
+     */
+    public function get_yms($year,$month,$tm){
+        if (strlen($month)<2) $month    = str_pad($month,2,'0',STR_PAD_LEFT);
+        $yearMonth                      = array();
+        if ($tm == 'm'){        //月度
+            $yearMonth[]                = $year.$month;
+        }elseif ($tm == 'q'){   //季度
+            $quarter                    = get_quarter($month);
+            switch ($quarter){
+                case 1:
+                    $yearMonth[]        = $year.'01';
+                    $yearMonth[]        = $year.'02';
+                    $yearMonth[]        = $year.'03';
+                    break;
+                case 2:
+                    $yearMonth[]        = $year.'04';
+                    $yearMonth[]        = $year.'05';
+                    $yearMonth[]        = $year.'06';
+                    break;
+                case 3:
+                    $yearMonth[]        = $year.'07';
+                    $yearMonth[]        = $year.'08';
+                    $yearMonth[]        = $year.'09';
+                    break;
+                case 4:
+                    $yearMonth[]        = $year.'10';
+                    $yearMonth[]        = $year.'11';
+                    $yearMonth[]        = $year.'12';
+                    break;
+            }
+        }elseif ($tm == 'y'){   //年度
+            for ($m=1;$m<13;$m++){
+                if (strlen($m)<2) $m    = str_pad($m,2,'0',STR_PAD_LEFT);
+                $yearMonth[]            = $year.$m;
+            }
+        }
+        return $yearMonth;
+    }
 
-    public function get_hr_cost($departments,$hr_cost,$times){
-        var_dump($hr_cost);die;
+    /**
+     * 获取部门相关月份合计费用信息
+     * @param $ym_arr
+     */
+    public function get_hr_cost($ym_arr){
+        $hr_cost                    = C('HR_COST');
+        $departments                = C('department1');     //公司所有部门信息
+        $business_departments       = C('department');      //公司业务部门信息
+        $lists                      = M('salary_departmen_count')->where(array('datetime'=>array('in',$ym_arr),'status'=>4))->select();
+
+        $info                       = array();
+        foreach ($business_departments as $value){
+            $info[$value]           = 0;
+            foreach ($lists as $vv){
+                if ($vv['department']==$value){
+                    $info[$value]   += $vv['Should'];
+                }
+            }
+        }
+        $info['机关部门']           = 0;
+        $info['公司']               = 0;
+        foreach ($lists as $v){
+            if (!in_array($v['department'],$business_departments)){
+                $info['机关部门']   += $v['Should'];
+            }
+            $info['公司']           += $v['Should'];
+        }
+        return $info;
+    }
+
+
+    public function get_sum_HRcost($info){
+        $departments                = C('department1');     //公司所有部门信息
+        $data                       = array();
+        foreach ($departments as $v){
+            $data[$v]     = array_sum(array_column($info,"$v"));
+        }
+        return $data;
     }
 
 }
