@@ -110,7 +110,12 @@
                                         <td>&yen; <?PHP echo sprintf("%.2f",$info['accumulation']);?></td>
                                         <td>&yen; <?PHP echo sprintf("%.3f",$info['insurance_Total']);?></td>
                                         <td>&yen; <?PHP echo sprintf("%.2f",$info['tax_counting']);?></td>
-                                        <td>&yen; <?PHP echo sprintf("%.2f",$info['personal_tax']);?></td>
+                                        <?php if($status==1 && ($userid== 77 || $userid== 11 || $userid== 1)){?>
+                                            <td class="individual_tax" id="<?php echo$info['account']['id'];?> ">&yen; <?PHP echo sprintf("%.2f",$info['personal_tax']);?></td>
+                                        <?php }else{?>
+                                            <td>&yen; <?PHP echo sprintf("%.2f",$info['personal_tax']);?></td>
+                                        <?php } ?>
+
                                         <td>&yen; <?PHP echo sprintf("%.2f",$info['summoney']);?></td>
                                         <td>&yen; <?PHP echo sprintf("%.2f",$info['labour']['Labour_money']);?></td>
                                         <td>&yen; <?PHP echo sprintf("%.2f",$info['real_wages']);?></td>
@@ -230,7 +235,6 @@
     </section><!-- /.content -->
 </aside><!-- /.right-side -->
 
-
 <div id="searchtext">
 
     <form action="{:U('Salary/salary_excel_list')}" method="post" id="searchform">
@@ -244,8 +248,6 @@
 
     </form>
 </div>
-
-
 
 <include file="Index:footer2" />
 <script>
@@ -290,6 +292,36 @@
             }
         });
     }
+
+    //个税点击变输入框
+    $('.individual_tax').click(function(){
+        var id = $(this).attr('id');//用户id
+        if($('.individual_tax_update'+id).length <= 0) {
+            var money = $(this).text();
+            $(this).empty();
+            var h  = '<input type="text" class="form-control individual_tax_update'+id+'" value="'+money+'" />';
+            $(this).append(h);
+            $('.individual_tax_update'+id).focus();
+
+            //个税鼠标移动事件
+            $('.individual_tax_update'+id).mouseleave(function(){
+                var content = $(this).val();//个人计税金额
+                content = content.replace('¥ ','');//将¥ 字符替换为空字符
+                var curl = "index.php?m=Main&c=Ajax&a=get_salary_content";
+                var datetime = <?php echo $count['datetime'];?>;
+                $.ajax({
+                    type: "POST",
+                    url: curl,
+                    data: {'individual_tax':content, 'uid':id,'datetime':datetime},
+                    dataType: "json", //数据格式
+                    success: function (data) {
+                        if (data.sum == 1) {alert("恭喜您保存成功！");return false;}
+                        if (data.sum == 0) {alert("保存失败！请您重新保存！");return false;}
+                    }
+                });
+            });
+        }
+    });
 
 
     //    提交审核数据
@@ -474,9 +506,7 @@
     $('table tr th').click(function(){
         cont++;
         var index = $("table tr th").index(this);
-
         if(cont%2==1 || num!==index){
-
             $("tr").each(function(){
                 var clas =  $(this).prop('class');
                 if(clas == 'excel_list_money2'){

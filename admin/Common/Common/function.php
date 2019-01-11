@@ -4124,7 +4124,7 @@ function user_table($where,$type){//查询用户 1 查询一个 2 查询符合�
     function datetime($time_Y,$time_M,$time_D,$type){//获取年月日
 
         if($type==1){
-            if($time_D < 10){
+            if($time_D < 20){
                 if($time_M==1){
                     $time_Y = $time_Y-1;
                     $time_M = 13;
@@ -4140,7 +4140,7 @@ function user_table($where,$type){//查询用户 1 查询一个 2 查询符合�
                 $que                     = $time_Y.$time_M;//查询年月
             }
         }elseif($type==2){
-            if($time_D < 10){
+            if($time_D < 20){
                 if($time_M==1){
                     $time_Y = $time_Y-1;
                     $time_M = 13;

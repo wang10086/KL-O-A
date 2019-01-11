@@ -186,10 +186,10 @@
             dataType: "json", //数据格式
             success: function (data) {
                 if(data.sum==1){
-                    alert(data.msg);die;
+                    alert(data.msg);return false;
                 }
                 if(data.sum==0){
-                    alert(data.msg);die;
+                    alert(data.msg);return false;
                 }
             }
         });

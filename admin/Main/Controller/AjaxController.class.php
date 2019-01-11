@@ -842,7 +842,7 @@ class AjaxController extends Controller {
         $pan = M('salary_wages_month')->where('datetime='.$datetime)->find();
         if($pan){
             $sum                        = 0;
-            $msg                        = "请不要重复提交数据!";
+            $msg                        = "$datetime!";
             echo json_encode(array('sum' => $sum, 'msg' => $msg));die;
         }
         for($i=0;$i<$cont/40;$i++){//计算没多少条一个数组
@@ -957,8 +957,9 @@ class AjaxController extends Controller {
                 $add['approval_status']     = 2;
             }
             $time                           = M('salary_sign')->where('datetime='.$datetime)->find();
+
             if($time){
-                $sign1                      = M('salary_sign')->where('datetime='.$datetime)->save($add);
+                $sign1                      = M('salary_sign')->where('id='.$time['id'])->save($add);
             }else{
                 $sign1                      = M('salary_sign')->add($add);
             }
@@ -992,6 +993,15 @@ class AjaxController extends Controller {
         foreach($wages_month_id as $key =>$val ){
             $id ['id']                      = $val;
             $oa_salary_wages_month          = M('salary_wages_month')->where($id)->save($status);
+            //修改个税
+            $wages_mont1                    = M('salary_wages_month')->where($id)->find();
+            if($wages_mont1 && $user_id==11){
+               $user_table                  = M('salary_individual_tax')->where('account_id='.$wages_mont1['account_id'])->order('id DESC')->find();
+                if($user_table && $user_table['statu']==1){
+                    $save1['statu']         = 2;
+                    M('salary_individual_tax')->where('id='.$user_table['id'])->save($save1);
+                }
+            }
         }
         foreach($departmen_id as $k => $v ){
             $where ['id']                   = $v;
@@ -1000,11 +1010,10 @@ class AjaxController extends Controller {
         if($user_id==11){
             $status['approval_time']        = time();
             $status['approval_user_id']     = $user_id;
-        }elseif($user_id=='55'){
+        }elseif($user_id==55){
             $status['submission_time']      = time();
             $status['submission_user_id']   = $user_id;
         }
-
         $count_money                        = M('salary_count_money')->where('id='.$count_money_id)->save($status);
         if($count_money){
             $sum                            = 1;
@@ -1047,24 +1056,12 @@ class AjaxController extends Controller {
             $subsid['id']               = $val['subsidy_id'];
             $withh['withholding_token'] = $val['withholding_token'];
 
-            if($att['id']>0 && $att['id'] !==""){
-                $attend_W               = M('salary_attendance')->where($att)->save($stat);
-            }
-            if($bonus['id']!==0 && $bonus['id'] !==""){
-                $bonus_W                = M('oa_salary_bonus')->where($bonus)->save($stat);
-            }
-            if($income['income_token']!==0  && $income['income_token'] !==''){
-                $income_W               = M('oa_salary_income')->where($income)->save($stat);
-            }
-            if($labou['id']!==0 && $labou['id']!==""){
-                $labour_W               = M('oa_salary_labour')->where($labou)->save($stat);
-            }
-            if($subsid['id']!==0  && $subsid['id']!==""){
-                $subsidy_W              = M('oa_salary_subsidy')->where($subsid)->save($stat);
-            }
-            if($withh['withholding_token']!==0   && $withh['withholding_token']!==""){
-                $withh_W                = M('oa_salary_withholding')->where($withh)->save($stat);
-            }
+            if($att['id']!==0 && $att['id']!==''){M('salary_attendance')->where($att)->save($stat);}
+            if($bonus['id']>0 && $bonus['id']!==''){M('oa_salary_bonus')->where($bonus)->save($stat);}
+            if($income['income_token']!==0  && $income['income_token'] !==''){M('oa_salary_income')->where($income)->save($stat);}
+            if($labou['id']!==0  && $labou['id']!==''){M('oa_salary_labour')->where($labou)->save($stat);}
+            if($subsid['id']!==0 && $subsid['id']!==''){M('oa_salary_subsidy')->where($subsid)->save($stat);}
+            if($withh['withholding_token']!==0   && $withh['withholding_token']!==""){M('oa_salary_withholding')->where($withh)->save($stat);}
         }
         $wages_month_del                = M('salary_wages_month')->where($datetime)->delete();
         $departmen_count                = M('salary_departmen_count')->where($datetime)->delete();
@@ -1369,5 +1366,39 @@ class AjaxController extends Controller {
         $this->ajaxReturn($data);
     }
 
-
+    /**
+     * get_salary_content 工资生成 个人计税
+     *  $individual_tax 个人计税金额 $uid 用户id
+     */
+    public function get_salary_content(){
+        $individual_tax             = trim(I('individual_tax'));//个人计税金额
+        $datetime['account_id']     = trim(I('uid'));//用户
+        $datetime['datetime']       = trim(I('datetime'));//保存年月
+        $add['individual_tax']      = $individual_tax;//个人计税金额
+        $add['account_id']          = $datetime['account_id'];//用户
+        $add['createtime']          = time();//创建时间
+        $add['datetime']            = $datetime['datetime'];//保存年月
+        $datetime['statu']          = array('eq',1);
+        $sql                        = M('salary_individual_tax')->where($datetime)->order('id DESC')->find();
+        if($sql){
+            $update                 = M('salary_individual_tax')->where('id='.$sql['id'])->save($add);
+            if($update){
+                $data['sum']        = 1;
+                $data['msg']        = '保存数据成功！';
+            }else{
+                $data['sum']        = 0;
+                $data['msg']        = '保存数据失败！请重新保存数据！';
+            }
+        }else{
+            $add_tax                = M('salary_individual_tax')->add($add);
+            if($add_tax){
+                $data['sum']        = 1;
+                $data['msg']        = '保存数据成功！';
+            }else{
+                $data['sum']        = 0;
+                $data['msg']        = '保存数据失败！请重新保存数据！';
+            }
+        }
+        $this->ajaxReturn($data);
+    }
 }

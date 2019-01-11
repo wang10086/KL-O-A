@@ -140,7 +140,7 @@
     }
     function Atime(y,m,d){
 
-        if(d < 10){
+        if(d < 20){
             if(m==1){
                 m=13;
             }
