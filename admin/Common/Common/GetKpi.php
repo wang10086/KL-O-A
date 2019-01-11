@@ -396,7 +396,7 @@ function get_manyidu($lists){
         if (in_array($kind,$score_kind1)) $zongfen += 9*5;  //考核9项, 每项5分, 满分总分
         if (in_array($kind,$score_kind2)) $zongfen += 10*5; //考核10项, 每项5分, 满分总分
         if (in_array($kind,$score_kind3)) $zongfen += 10*5; //考核10项, 每项5分, 满分总分
-        $defen += $v['stay']+$v['travel']+$v['content']+$v['food']+$v['bus']+$v['driver']+$v['guide']+$v['teacher']+$v['depth']+$v['major']+$v['interest']+$v['material']+$v['late']+$v['manage']+$v['morality'];
+        $defen += $v['before_sell']+$v['new_media']+$v['stay']+$v['travel']+$v['content']+$v['food']+$v['bus']+$v['driver']+$v['guide']+$v['teacher']+$v['depth']+$v['major']+$v['interest']+$v['material']+$v['late']+$v['manage']+$v['morality'];
     }
     $score      = round($defen/$zongfen,2);
     return $score;
@@ -610,7 +610,7 @@ function get_QCS($userids,$year,$month){
     $where                  = array();
     $where['s.input_time']	= array('between',array($quart_time['begin_time'],$quart_time['end_time']));
     $where['o.create_user'] = array('in',$userids);
-    $lists = M()->table('__TCS_SCORE__ as s')->field('u.op_id,o.kind,s.id as sid,s.stay,s.travel,s.content,s.food,s.bus,s.driver,s.guide,s.teacher,s.depth,s.major,s.interest,s.material,s.late,s.manage,s.morality')->join('join __TCS_SCORE_USER__ as u on u.id = s.uid','left')->join('__OP__ as o on o.op_id = u.op_id','left')->where($where)->select();
+    $lists = M()->table('__TCS_SCORE__ as s')->field('u.op_id,o.kind,s.id as sid,s.before_sell,s.new_media,s.stay,s.travel,s.content,s.food,s.bus,s.driver,s.guide,s.teacher,s.depth,s.major,s.interest,s.material,s.late,s.manage,s.morality')->join('join __TCS_SCORE_USER__ as u on u.id = s.uid','left')->join('__OP__ as o on o.op_id = u.op_id','left')->where($where)->select();
 
     $average = get_manyidu($lists);
     return $average;

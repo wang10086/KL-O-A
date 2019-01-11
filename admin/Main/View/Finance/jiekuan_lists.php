@@ -37,8 +37,9 @@
                                                 <th class="sorting" width="150" data="j.group_id">团号</th>
                                             </if>
                                             <th class="sorting" width="" data="o.project">项目名称</th>
-                                            <th class="sorting" width="100" data="j.jk_user">借款人</th>
-                                            <th class="sorting" width="100" data="j.department_id">借款部门</th>
+                                            <th class="sorting" width="" data="j.description">用途说明</th>
+                                            <th class="sorting" width="" data="j.jk_user">借款人</th>
+                                            <th class="sorting" width="" data="j.department_id">借款部门</th>
                                             <th class="sorting" width="80" data="j.sum">借款金额</th>
                                             <th class="sorting" width="60" data="j.type">借款方式</th>
                                             <th class="sorting" width="80" data="j.zhuangtai">审批状态</th>
@@ -47,6 +48,9 @@
                                             </if>
                                             <if condition="rolemenu(array('Finance/edit_jiekuandan'))">
                                                 <th width="40" class="taskOptions">修改</th>
+                                            </if>
+                                            <if condition="rolemenu(array('Finance/sure_print'))">
+                                                <th width="40" class="taskOptions">打印</th>
                                             </if>
                                             <if condition="rolemenu(array('Finance/del_jkd'))">
                                                 <th width="40" class="taskOptions">删除</th>
@@ -72,6 +76,7 @@
                                                     </if>
                                                 </div>
                                             </td>
+                                            <td><div class="text-overflow-lines"><a href="javascript:;" title="{$row.description}">{$row.description}</a></div></td>
                                             <td>{$row.jk_user}</td>
                                             <td>{$row.department}</td>
                                             <td>{$row.sum}</td>
@@ -91,9 +96,18 @@
                                                     <a href="{:U('Finance/edit_jiekuandan',array('jkid'=>$row['id']))}" title="修改" class="btn btn-info btn-smsm"><i class="fa fa-pencil"></i></a>
                                                 </td>
                                             </if>
+                                            <if condition="rolemenu(array('Finance/sure_print'))">
+                                                <td class="taskOptions">
+                                                    <if condition="$row.is_print eq 1">
+                                                        <span class="green">已打印</span>
+                                                    <else />
+                                                        <a href="javascript:;" onclick="ConfirmPrint(`{$row['id']}`,'确认已打印该借款单吗?')" title="打印" class="btn btn-warning btn-smsm"><i class="fa fa-print"></i></a>
+                                                    </if>
+                                                </td>
+                                            </if>
                                             <if condition="rolemenu(array('Finance/del_jkd'))">
                                                 <td class="taskOptions">
-                                                    <button onClick="javascript:ConfirmDel('{:U('Finance/del_jkd',array('id'=>$row['id']))}')" title="删除" class="btn btn-warning btn-smsm"><i class="fa fa-times"></i></button>
+                                                    <button onClick="javascript:ConfirmDel('{:U('Finance/del_jkd',array('id'=>$row['id']))}')" title="删除" class="btn btn-danger btn-smsm"><i class="fa fa-times"></i></button>
                                                 </td>
                                             </if>
                                         </tr>
@@ -138,3 +152,38 @@
             </div>
 
 <include file="Index:footer2" />
+
+<script>
+    function ConfirmPrint(id,msg) {
+
+        art.dialog({
+            title: '提示',
+            width:400,
+            height:100,
+            fixed: true,
+            id : 'is_print',
+            lock:true,
+            content: '<span style="width:100%; text-align:center; font-size:18px;float:left; clear:both;">'+msg+'</span>',
+            ok: function () {
+                //window.location.href=url;
+                //this.title('3秒后自动关闭').time(3);
+                top.art.dialog({id:"is_print"}).close();
+                $.ajax({
+                    type:'POST',
+                    url: "{:U('Finance/sure_print')}",
+                    data:{jkid:id},
+                    success:function (info) {
+                        art_show_msg(info.msg,info.time);
+                        setTimeout(function(){
+                            location.reload()
+                        },2000);
+                        return false;
+                    }
+                });
+            },
+            cancelVal: '取消',
+            cancel: true //为true等价于function(){}
+        });
+
+    }
+</script>

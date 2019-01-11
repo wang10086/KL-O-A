@@ -12,7 +12,7 @@ class ManageController extends ChartController {
      * F 京区业务中心 G 京外业务中心 L 南京项目部
      * M 武汉项目部 N 沈阳项目部 P 长春项目部 B 市场部
      */
-    public function Manage_month(){
+    /*public function Manage_month(){
         $year                   = trim(I('year',date('Y')));
         $post                   = trim(I('post'));
         $month                  = intval(I('month',date('m')));
@@ -40,32 +40,81 @@ class ManageController extends ChartController {
         $this->post             = $post;//加减年
         $this->month            = $month;//月
         $this->display();
+    }*/
+    public function Manage_month(){
+        $year                   = trim(I('year',date('Y')));
+        $post                   = trim(I('post'));
+        $month                  = intval(I('month',date('m')));
+        $mod                    = D('Manage');
+
+        $year1                  = $mod->manageyear($year,$post);//判断加减年
+        $ymd                    = $mod->year_month_day($year1,$month);//月度其他费用判断取出数据日期
+
+        $mon                    = $this->not_team($ymd[0],$ymd[1]);//月度其他费用取出数据(不分摊)
+        $mon_share              = $this->not_team_share($ymd[0],$ymd[1]);//月度其他费用取出数据(分摊)
+        $department             = $mod->department_data($mon,$mon_share);//月度其他费用部门数据
+
+        $number                 = $mod->month($year1,$month);// 月度 部门数量 部门人力资源成本
+        $money                  = $this->business($year1,$month,1);// 月度 monthzsr 收入合计   monthzml 毛利合计  monthmll 毛利率
+        $profit                 = $mod->profit($money);//月度 收入 毛利 毛利率
+        $human                  = $mod->human_affairs($number,$profit['profit'],$profit['departmen']);//月度 人事费用率
+        $total_profit           = $mod->total_profit($number,$profit['profit'],$profit['departmen'],$department);//月度 利润总额
+
+        $this->department       = $department;//其他费用部门数据
+        $this->total_profit     = $total_profit;//利润总额(未减去其他费用)
+        $this->human_affairs    = $human;//人事费用率
+        $this->profit           = $profit['departmen'];//部门 收入 毛利 毛利率
+        $this->company          = $profit['profit'];//总数 收入 毛利 毛利率
+        $this->number           = $number;// 部门数量 部门人力资源成本
+        $this->year             = $year1;//年
+        $this->post             = $post;//加减年
+        $this->month            = $month;//月
+        $this->display();
     }
 
     /**
-     * 其他费用
-     * $tm: m=>月度, q=>季度, y=>年度
+     * not_team 非团支出报销（其他费用）(不分摊)
+     * $ymd1 开始时间 20180626
+     * $ymd2 结束时间 20180726
      */
-    public function otherExpenses(){
-        $year		            = I('year',date('Y'));
-        $month		            = I('month',date('m'));
-        if (strlen($month)<2) $month = str_pad($month,2,'0',STR_PAD_LEFT);
-        $tm                     = I('tm')?I('tm'):'m';
-        $kinds                  = C('BXD_KIND');
-        $departments            = C('department1');
-        $mod                    = D('Manage');
-        $times                  = $mod->get_times($year,$month,$tm);
-        //var_dump($times);die;
-        $lists                  = $mod->get_otherExpenses();
-        //var_dump($lists);die;
+    /*public function not_team($ymd1,$ymd2){
 
-        $this->kinds            = $kinds;
-        $this->tm               = $tm;
-        $this->year 	        = $year;
-        $this->month 	        = $month;
-        $this->prveyear	        = $year-1;
-        $this->nextyear	        = $year+1;
-        $this->display();
+        $ymd1                   =  strtotime($ymd1);
+        $ymd2                   =  strtotime($ymd2);
+        $map['bx_time']         = array(array('gt',$ymd1),array('lt',$ymd2));//开始结束时间
+        $map['bxd_type']        = array(array('gt',1),array('lt',4));//2 非团借款报销 3直接报销
+        $map['audit_status']    = array('eq',1);//审核通过
+        $money                  = M('baoxiao')->where($map)->select();//日期内所有数据
+        return  $money;
+    }*/
+    public function not_team($ymd1,$ymd2){
+
+        $ymd1                   =  strtotime($ymd1);
+        $ymd2                   =  strtotime($ymd2);
+        $map['bx_time']         = array(array('gt',$ymd1),array('lt',$ymd2));//开始结束时间
+        $map['bxd_type']        = array(array('gt',1),array('lt',4));//2 非团借款报销 3直接报销
+        $map['audit_status']    = array('eq',1);    //审核通过
+        $map['share']           = array('neq',1);   //不分摊
+        $money                  = M('baoxiao')->where($map)->select();//日期内所有数据
+        return  $money;
+    }
+
+    /**
+     * 非团支出报销(其他费用)(分摊)
+     * @param $ymd1
+     * @param $ymd2
+     * @return mixed
+     */
+    public function not_team_share($ymd1,$ymd2){
+
+        $ymd1                       =  strtotime($ymd1);
+        $ymd2                       =  strtotime($ymd2);
+        $where                      = array();
+        $where['b.bx_time']         = array('between',"$ymd1,$ymd2");//开始结束时间
+        $where['b.bxd_type']        = array('in',array(2,3));//2 非团借款报销 3直接报销
+        $where['b.audit_status']    = array('eq',1);    //审核通过
+        $money                      = M()->table('__BAOXIAO_SHARE__ as s')->field('b.bxd_kind,s.*')->join('__BAOXIAO__ as b on b.id=s.bx_id','left')->where($where)->select();
+        return  $money;
     }
 
     /**
@@ -140,7 +189,8 @@ class ManageController extends ChartController {
                 $month                              = $quart-$i; //季度上一个月
                 $ymd                                = $mod->year_month_day($year1,$month);//月度其他费用判断取出数据日期
                 $mon                                = $this->not_team($ymd[0],$ymd[1]);//月度其他费用取出数据
-                $department                         = $mod->department_data($mon);//月度其他费用部门数据
+                $mon_share                          = $this->not_team_share($ymd[0],$ymd[1]);//月度其他费用取出数据(分摊w)
+                $department                         = $mod->department_data($mon,$mon_share);//月度其他费用部门数据
                 foreach($department as $key =>$val){
                     $month_r[$key]['money']        += $val['money'];//季度其他费用
                 }
@@ -187,7 +237,8 @@ class ManageController extends ChartController {
                     $month_r[0]['monthmll']         += $profit['profit']['monthmll'];
                    $ymd                              = $mod->year_month_day($year1,$month);//月度其他费用判断取出数据日期
                    $mon                              = $this->not_team($ymd[0],$ymd[1]);//月度其他费用取出数据
-                   $department                       = $mod->department_data($mon);//月度其他费用部门数据
+                   $mon_share                        = $this->not_team_share($ymd[0],$ymd[1]);//月度其他费用取出数据(分摊w)
+                   $department                       = $mod->department_data($mon,$mon_share);//月度其他费用部门数据
                    foreach($department as $key =>$val){
                        $month_r[$key]['money']      += $val['money'];//季度其他费用
                    }
@@ -214,7 +265,8 @@ class ManageController extends ChartController {
         // 其他费用
         $ymd                    = $mod->yearmonthday($year1);//年度其他费用判断取出数据日期
         $mon                    = $this->not_team($ymd[0],$ymd[1]);//年度其他费用取出数据
-        $department             = $mod->department_data($mon);//年度其他费用部门数据
+        $mon_share              = $this->not_team_share($ymd[0],$ymd[1]);//月度其他费用取出数据(分摊w)
+        $department             = $mod->department_data($mon,$mon_share);//年度其他费用部门数据
         $count_profit           = $mod->count_profit($yea_report,$profit,$department);//年利润总额 年人事费用
 
         //年度预算报表
@@ -402,6 +454,72 @@ class ManageController extends ChartController {
         }else{$this->error('数据提交失败!');die;}
         $manage         = $mod->year_paprova1($status,$type,3,4);//季度提交审
         if(strpos($manage,'成功') !==false){$this->success($manage);}else{$this->error($manage);}
+    }
+
+
+    /**
+     * 其他费用
+     * $tm: m=>月度, q=>季度, y=>年度
+     */
+    public function otherExpenses(){
+        $year		            = I('year',date('Y'));
+        $month		            = I('month',date('m'));
+        if (strlen($month)<2) $month = str_pad($month,2,'0',STR_PAD_LEFT);
+        $tm                     = I('tm')?I('tm'):'m';
+        $kinds                  = C('BXD_KIND');
+        $departments            = C('department1');
+        $mod                    = D('Manage');
+        $times                  = $mod->get_times($year,$month,$tm);
+        $lists                  = $mod->get_otherExpenses($departments,$kinds,$times);
+        $heji                   = $lists['heji'];
+        unset($lists['heji']);
+
+        $this->lists            = $lists;
+        $this->heji             = $heji;
+        $this->departments      = $departments;
+        $this->kinds            = $kinds;
+        $this->tm               = $tm;
+        $this->year 	        = $year;
+        $this->month 	        = $month;
+        $this->prveyear	        = $year-1;
+        $this->nextyear	        = $year+1;
+        $this->display();
+    }
+
+    /**
+     * 人力资源成本详情
+     * $tm: m=>月度, q=>季度, y=>年度
+     */
+    public function HR_cost(){
+        $year		            = I('year',date('Y'));
+        $month		            = I('month',date('m'));
+        if (strlen($month)<2) $month = str_pad($month,2,'0',STR_PAD_LEFT);
+        $tm                     = I('tm')?I('tm'):'m';
+        $hr_cost                = C('HR_COST');
+        $departments            = C('department1');
+        $mod                    = D('Manage');
+        $times                  = $mod->get_times($year,$month,$tm);    //获取考核周期开始及结束时间戳
+        $ym_arr                 = $mod->get_yms($year,$month,$tm);      //获取某个时间段内的月份信息Ym
+        $data                   = array();
+        $data[$hr_cost[0]]      = $mod->get_wages($ym_arr);             //工资总额
+        $data[$hr_cost[1]]      = $mod->get_insurance($ym_arr);         //公司五险一金
+
+        $this->data             = $data;
+        $sum                    = $mod->get_sum_cost($data);          //合计
+        $this->hr_cost          = $hr_cost;
+        $this->sum              = $sum;
+        $this->departments      = $departments;
+        $this->tm               = $tm;
+        $this->year 	        = $year;
+        $this->month 	        = $month;
+        $this->prveyear	        = $year-1;
+        $this->nextyear	        = $year+1;
+
+        //未完成
+        $unfinished             = array('职工福利费','职工教育经费','劳动保护费用','工会经费及其他','职工住房费用');
+        $this->unfinished       = $unfinished;
+
+        $this->display();
     }
 
  }

@@ -928,7 +928,7 @@ class ManageModel extends Model{
      * department_data 部门数据
      * $data 部门、公司所有数据
      */
-    public function department_data($data){
+    /*public function department_data($data){
         $money                        = array();//部门其他费用
         $count                        = 0;//公司总其他费用
         foreach($data as $key => $val){
@@ -953,7 +953,54 @@ class ManageModel extends Model{
         $money[9]['money']            = $money[0]['money']-$count_departmen;//机关部门
         ksort($money);
         return $money;
+    }*/
+
+    /**
+     * @param $data         不分摊金额
+     * @param $data_share   分摊金额
+     * @return array
+     */
+    public function department_data($data,$data_share=''){
+        $money                        = array();//部门其他费用
+        $count                        = 0;//公司总其他费用
+        foreach($data as $key => $val){
+            $count                   += $val['sum'];//公司总其他费用
+        }
+        if ($data_share){
+            foreach ($data_share as $k => $v){
+                $count               += $v['depart_sum'];
+            }
+        }
+        $money[0]['money']            = $count;
+        $department                   = C('department');//部门顺序
+        $count_departmen              = 0;//总部门其他费用
+        foreach($department as $key => $val){//循环部门
+            $key                      = $key+1;
+            $departmen                = 0;//部门他费用
+            foreach($data as $k => $v){//循环部门其他费用
+                if($val ==$v['department']){
+                    $count_departmen +=$v['sum'];
+                    $departmen       +=$v['sum'];//部门总计
+                }else{
+                    $departmen        = $departmen+0;
+                }
+            }
+            if ($data_share){
+                foreach ($data_share as $k => $v){
+                  if ($v['department'] == $val){
+                      $count_departmen +=$v['depart_sum'];
+                      $departmen       +=$v['depart_sum'];//部门总计
+                  }
+                }
+            }
+
+            $money[$key]['money']     = $departmen;
+        }
+        $money[9]['money']            = $money[0]['money']-$count_departmen;//机关部门
+        ksort($money);
+        return $money;
     }
+
     /**
      * yearmonthday 年度其他费用部门数据
      * $year 年
@@ -964,15 +1011,249 @@ class ManageModel extends Model{
         return $ymd;
     }
 
+    public function get_otherExpenses($departments,$kinds,$times){
+        $lists                          = M('baoxiao')->where(array('bx_time'=>array('between',"$times[beginTime],$times[endTime]"),'audit_status'=>1,'bxd_type'=>array('in',array(2,3)),'share'=>array('neq',1)))->select();   //bxd_type 2=> 非团借款报销,3=>直接报销
+        $share_lists                    = M()->table('__BAOXIAO_SHARE__ as s')->field('b.bxd_kind,s.*')->join('__BAOXIAO__ as b on b.id=s.bx_id','left')->where(array('b.bx_time'=>array('between',"$times[beginTime],$times[endTime]"),'b.audit_status'=>1,'b.bxd_type'=>array('in',array(2,3))))->select();
+        $infos                          = array();
+        $depart_business                = C('department');  //业务部门
+
+        $heji                           = array();
+        foreach ($kinds as $k=>$v){ //办公耗材,网络及通讯费,差旅费,交通费,印刷宣传费...
+            $data                   = array();
+            $data['jqyw']           = $this->get_sum($k,'京区业务中心',$lists,$share_lists);
+            $data['jwyw']           = $this->get_sum($k,'京外业务中心',$lists,$share_lists);
+            $data['nanjing']        = $this->get_sum($k,'南京项目部',$lists,$share_lists);
+            $data['wuhan']          = $this->get_sum($k,'武汉项目部',$lists,$share_lists);
+            $data['shenyang']       = $this->get_sum($k,'沈阳项目部',$lists,$share_lists);
+            $data['changchun']      = $this->get_sum($k,'长春项目部',$lists,$share_lists);
+            $data['shichang']       = $this->get_sum($k,'市场部',$lists,$share_lists);
+            $data['changgui']       = $this->get_sum($k,'常规业务中心',$lists,$share_lists);
+            $data['jiguan']         = $this->get_jiguan_sum($k,$depart_business,$lists,$share_lists);
+            $data['gongsi']         = $data['jqyw']+$data['jwyw']+$data['nanjing']+$data['wuhan']+$data['shenyang']+$data['changchun']+$data['shichang']+$data['changgui']+$data['jiguan'];
+            $infos[$k]              = $data;
+            $heji['jqyw']           += $data['jqyw'];
+            $heji['jwyw']           += $data['jwyw'];
+            $heji['nanjing']        += $data['nanjing'];
+            $heji['wuhan']          += $data['wuhan'];
+            $heji['shenyang']       += $data['shenyang'];
+            $heji['changchun']      += $data['changchun'];
+            $heji['shichang']       += $data['shichang'];
+            $heji['changgui']       += $data['changgui'];
+            $heji['jiguan']         += $data['jiguan'];
+            $heji['gongsi']         += $data['gongsi'];
+        }
+        $infos['heji']          = $heji;
+        return $infos;
+    }
+
+    /**
+     * 获取某部门某一类型的费用
+     * @param $kindid               办公耗材,网络及通讯费,差旅费,交通费,印刷宣传费...id
+     * @param $department           部门名称
+     * @param string $lists         报销列表
+     * @param string $share_lists   分摊列表
+     */
+    public function get_sum($kindid,$department,$lists='',$share_lists=''){
+        $sum                    = 0;
+        if ($lists){
+            foreach ($lists as $k=>$v){
+                if ($v['bxd_kind'] == $kindid && $v['department']== $department){
+                    $sum += $v['sum'];
+                }
+            }
+        }
+
+        if ($share_lists){
+            foreach ($share_lists as $k=>$v){
+                if ($v['bxd_kind'] == $kindid && $v['department']== $department){
+                    $sum += $v['depart_sum'];
+                }
+            }
+        }
+        return $sum;
+    }
+
+    /**
+     * 获取机关部门费用
+     * @param $kindid       办公耗材,网络及通讯费,差旅费,交通费,印刷宣传费...id
+     * @param $arr          非机关部门名称
+     * @param $lists        报销列表
+     * @param $share_lists  分摊列表
+     */
+    public function get_jiguan_sum($kindid,$arr,$lists='',$share_lists=''){
+        $sum                    = 0;
+        if ($lists){
+            foreach ($lists as $k=>$v){
+                if ($v['bxd_kind'] == $kindid && !in_array($v['department'],$arr)){
+                    $sum += $v['sum'];
+                }
+            }
+        }
+
+        if ($share_lists){
+            foreach ($share_lists as $k=>$v){
+                if ($v['bxd_kind'] == $kindid && !in_array($v['department'],$arr)){
+                    $sum += $v['depart_sum'];
+                }
+            }
+        }
+        return $sum;
+    }
+
+    /**
+     * 获取考核时间
+     * @param $year     年 2019
+     * @param $month    月 01
+     * @param $tm       类别 : m=>月度; q=>季度; y=>年度
+     * @return array    (beginTime,endTime) 时间戳
+     */
     public function get_times($year,$month,$tm){
-
-        return $month;
+        if (strlen($month)<2) $month    = str_pad($month,2,'0',STR_PAD_LEFT);
+        $betweenTime                    = array();
+        if ($tm=='m'){  //月度
+            $yearmonth                  = $year.$month;
+            $times                      = get_cycle($yearmonth,$day=26);
+            $betweenTime['beginTime']   = $times['begintime'];
+            $betweenTime['endTime']     = $times['endtime'];
+        }elseif ($tm=='q'){ //季度
+            $times                      = getQuarterlyCicle($year,$month);
+            $betweenTime['beginTime']   = $times['begin_time'];
+            $betweenTime['endTime']     = $times['end_time'];
+        }elseif ($tm=='y'){ //年度
+            $betweenTime['beginTime']   = strtotime(($year-1).'1226');
+            $betweenTime['endTime']     = strtotime($year.'1226');
+        }
+        return $betweenTime;
     }
 
-    public function get_otherExpenses(){
-
-        return "aaaaaaaaaaa";
+    /**
+     * 获取考核周期内的月份信息
+     * @param $year     年 2019
+     * @param $month    月 01
+     * @param $tm       类别 : m=>月度; q=>季度; y=>年度
+     * @return array    (beginTime,endTime) 时间戳
+     */
+    public function get_yms($year,$month,$tm){
+        if (strlen($month)<2) $month    = str_pad($month,2,'0',STR_PAD_LEFT);
+        $yearMonth                      = array();
+        if ($tm == 'm'){        //月度
+            $yearMonth[]                = $year.$month;
+        }elseif ($tm == 'q'){   //季度
+            $quarter                    = get_quarter($month);
+            switch ($quarter){
+                case 1:
+                    $yearMonth[]        = $year.'01';
+                    $yearMonth[]        = $year.'02';
+                    $yearMonth[]        = $year.'03';
+                    break;
+                case 2:
+                    $yearMonth[]        = $year.'04';
+                    $yearMonth[]        = $year.'05';
+                    $yearMonth[]        = $year.'06';
+                    break;
+                case 3:
+                    $yearMonth[]        = $year.'07';
+                    $yearMonth[]        = $year.'08';
+                    $yearMonth[]        = $year.'09';
+                    break;
+                case 4:
+                    $yearMonth[]        = $year.'10';
+                    $yearMonth[]        = $year.'11';
+                    $yearMonth[]        = $year.'12';
+                    break;
+            }
+        }elseif ($tm == 'y'){   //年度
+            for ($m=1;$m<13;$m++){
+                if (strlen($m)<2) $m    = str_pad($m,2,'0',STR_PAD_LEFT);
+                $yearMonth[]            = $year.$m;
+            }
+        }
+        return $yearMonth;
     }
+
+    /**
+     * 获取部门相关月份合计费用信息
+     * @param $ym_arr   相关月份信息
+     */
+    public function get_wages($ym_arr){
+        //$hr_cost                    = C('HR_COST');
+        //$departments                = C('department1');     //公司所有部门信息
+        $business_departments       = C('department');      //公司业务部门信息
+        $lists                      = M('salary_departmen_count')->where(array('datetime'=>array('in',$ym_arr),'status'=>4))->select();
+
+        $info                       = array();
+        foreach ($business_departments as $value){
+            $info[$value]           = 0;
+            foreach ($lists as $vv){
+                if ($vv['department']==$value){
+                    $info[$value]   += $vv['Should'];
+                }
+            }
+        }
+        $info['机关部门']           = 0;
+        $info['公司']               = 0;
+        foreach ($lists as $v){
+            if (!in_array($v['department'],$business_departments)){
+                $info['机关部门']   += $v['Should'];
+            }
+            $info['公司']           += $v['Should'];
+        }
+        return $info;
+    }
+
+    public function get_insurance($ym_arr){
+        //$departments                = C('department1');     //公司所有部门信息
+        $business_departments       = C('department');      //公司业务部门信息
+        $where                      = array();
+        $where['s.datetime']        = array('in',$ym_arr);
+        $field                      = "s.datetime,a.nickname as aname,d.department,i.*";
+        $lists                      = M()->table('__SALARY_WAGES_MONTH__ as s')->join('__SALARY_INSURANCE__ as i on i.id=s.insurance_id','left')->join('__ACCOUNT__ as a on a.id=s.account_id','left')->join('__SALARY_DEPARTMENT__ as d on d.id=a.departmentid','left')->field($field)->where($where)->select();
+        $sumLists                   = $this->sum_insurance($lists);
+
+        $data                       = array();
+        foreach ($business_departments as $v){
+            foreach ($sumLists as $vv){
+                if ($vv['department']==$v){
+                    $data[$vv['department']] += $vv['company_pay_sum'];
+                }
+            }
+        }
+
+        foreach ($sumLists as $v){
+            if (!in_array($v['department'],$business_departments)){
+                $data['机关部门']   += $v['company_pay_sum'];
+            }
+        }
+        $data['公司']               = array_sum($data);
+        return $data;
+    }
+
+    /**
+     * 求公司为个人员所缴纳五险一金(公司部分)之和
+     * @param $lists
+     */
+    public function sum_insurance($lists){
+        foreach ($lists as $k=>$v){
+            $company_pay_sum        = ($v['company_birth_ratio']*$v['company_birth_base']) + ($v['company_injury_ratio']*$v['company_injury_ratio']) + ($v['company_pension_ratio']*$v['company_pension_base']) + ($v['company_medical_care_ratio']*$v['company_medical_care_base']) + ($v['company_unemployment_ratio']*$v['company_unemployment_base']) + ($v['company_accumulation_fund_ratio']*$v['company_accumulation_fund_base']);
+            $lists[$k]['company_pay_sum']   = round($company_pay_sum,2);
+        }
+        return $lists;
+    }
+
+    /**
+     * 获取人力资源成本合计费用
+     * @param $info
+     * @return array
+     */
+    public function get_sum_cost($info){
+        $departments                = C('department1');     //公司所有部门信息
+        $data                       = array();
+        foreach ($departments as $v){
+            $data[$v]     = array_sum(array_column($info,"$v"));
+        }
+        return $data;
+    }
+
 }
 
 ?>

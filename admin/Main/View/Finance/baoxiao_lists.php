@@ -38,6 +38,7 @@
                                                 <th class="sorting" width="" data="b.group_ids">团号</th>
                                             </if>
                                             <th class="sorting" data="b.jkd_ids">借款单号</th>
+                                            <th class="sorting" width="" data="b.description">用途说明</th>
                                             <th class="sorting" width="100" data="b.bx_user">报销人</th>
                                             <th class="sorting" width="80" data="b.sum">报销金额</th>
                                             <th class="sorting" width="60" data="b.type">报销方式</th>
@@ -56,6 +57,13 @@
                                                 <td>{$row.group_ids}</td>
                                             </if>
                                             <td><?php echo $row['jkd_ids']?$row['jkd_ids']:'暂无借款单信息'; ?></td>
+                                            <td>
+                                                <if condition="$row.bxd_type eq 1"><!--团内借款报销-->
+                                                    <div class="text-overflow-lines"><a href="{:U('Finance/baoxiaodan_info',array('id'=>$row['id']))}" title="{$row.description}">{$row.description}</a></div>
+                                                <else /><!--非团借款报销-->
+                                                    <div class="text-overflow-lines"><a href="{:U('Finance/nopbxd_info',array('id'=>$row['id']))}" title="{$row.description}">{$row.description}</a></div>
+                                                </if>
+                                            </td>
                                             <td>{$row.bx_user}</td>
                                             <td>{$row.sum}</td>
                                             <td>{$jk_type[$row[type]]}</td>

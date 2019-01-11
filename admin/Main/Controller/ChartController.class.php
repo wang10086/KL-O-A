@@ -891,23 +891,6 @@ class ChartController extends BaseController {
     }
 
 
-
-    /**
-     * not_team 非团支出报销（其他费用）
-     * $ymd1 开始时间 20180626
-     * $ymd2 结束时间 20180726
-     */
-    public function not_team($ymd1,$ymd2){
-
-        $ymd1                   =  strtotime($ymd1);
-        $ymd2                   =  strtotime($ymd2);
-        $map['bx_time']         = array(array('gt',$ymd1),array('lt',$ymd2));//开始结束时间
-        $map['bxd_type']        = array(array('gt',1),array('lt',4));//2 非团借款报销 3直接报销
-        $map['audit_status']    = array('eq',1);//审核通过
-        $money                  = M('baoxiao')->where($map)->select();//日期内所有数据
-        return  $money;
-    }
-
     /**
      * summary_types 分部门分类型汇总
      * $year 年 $month 月

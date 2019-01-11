@@ -83,7 +83,7 @@
                                 <td>0.00 %</td>
                             </tr>
                             <tr role="row" class="orders" style="text-align:center;">
-                                <td>人力资源成本</td>
+                                <td><a href="{:U('Manage/HR_cost',array('tm'=>'m'))}">人力资源成本</a></td>
                                 <foreach name="number" item="num">
                                     <th>¥ <?php if($num['money']=="" || $num['money']==0 ){echo '0.00';}else{echo $num['money'];}?></th>
                                 </foreach>

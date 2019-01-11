@@ -63,7 +63,7 @@
                         <table class="table table-bordered dataTable fontmini" id="tablecenter">
                             <tr role="row" class="orders" style="text-align:center;" >
                                 <th style="width:10em;" ><b>科目</b></th>
-                                <th style="width:10em;" ><b>公司</b></th>
+                                <!--<th style="width:10em;" ><b>公司</b></th>
                                 <th style="width:10em;" ><b>京区业务中心</b></th>
                                 <th style="width:10em;" ><b>京外业务中心</b></th>
                                 <th style="width:10em;" ><b>南京项目部</b></th>
@@ -72,24 +72,40 @@
                                 <th style="width:10em;" ><b>长春项目部</b></th>
                                 <th style="width:10em;" ><b>市场部(业务)</b></th>
                                 <th style="width:10em;" ><b>常规业务中心</b></th>
-                                <th style="width:10em;" ><b>机关部门</b></th>
+                                <th style="width:10em;" ><b>机关部门</b></th>-->
+                                <foreach name="departments" item="v">
+                                    <th style="width:10em;" ><b>{$v}</b></th>
+                                </foreach>
                             </tr>
 
-                            <foreach name="kinds" item="v">
+                            <foreach name="lists" key="k" item="v">
                                 <tr role="row" class="orders" style="text-align:center;">
-                                    <td>{$v}</td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
+                                    <td>{$kinds[$k]}</td>
+                                    <td>{$v.gongsi}</td>
+                                    <td>{$v.jqyw}</td>
+                                    <td>{$v.jwyw}</td>
+                                    <td>{$v.nanjing}</td>
+                                    <td>{$v.wuhan}</td>
+                                    <td>{$v.shenyang}</td>
+                                    <td>{$v.changchun}</td>
+                                    <td>{$v.shichang}</td>
+                                    <td>{$v.changgui}</td>
+                                    <td>{$v.jiguan}</td>
                                 </tr>
                             </foreach>
+                            <tr role="row" class="orders" style="text-align:center;">
+                                <td><b>合计</b></td>
+                                <td>{$heji.gongsi}</td>
+                                <td>{$heji.jqyw}</td>
+                                <td>{$heji.jwyw}</td>
+                                <td>{$heji.nanjing}</td>
+                                <td>{$heji.wuhan}</td>
+                                <td>{$heji.shenyang}</td>
+                                <td>{$heji.changchun}</td>
+                                <td>{$heji.shichang}</td>
+                                <td>{$heji.changgui}</td>
+                                <td>{$heji.jiguan}</td>
+                            </tr>
 
 
                             <!--<tr role="row" class="orders" style="text-align:center;">
