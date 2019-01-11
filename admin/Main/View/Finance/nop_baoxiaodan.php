@@ -21,7 +21,7 @@
     </div><!-- /.box-body -->
     <?php } ?>
 
-    <div class="box-body mt20" id="baoxiaodan" >
+    <div class="box-body mt20" >
         <div class="row"><!-- right column -->
             <div class="form-group col-md-12">
                 <div class="form-group col-md-12" style="align: center;">
@@ -94,7 +94,7 @@
                 </div>
                 <?php if (in_array(cookie('userid'),array(1,11,$baoxiao['bx_user_id']))){ ?>
                     <div class="content no-print">
-                        <button class="btn btn-default" onclick="show_print_time(),print_view('baoxiaodan');"><i class="fa fa-print"></i> 打印</button>
+                        <button class="btn btn-default" onclick="show_print_time(),print_A4_view('baoxiaodan');"><i class="fa fa-print"></i> 打印</button>
                     </div>
                 <?php } ?>
             </div>
@@ -169,5 +169,12 @@
             art_show_msg('请完善审核信息');
             return false;
         }
+    }
+
+    //打印部分页面
+    function print_A4_view(id){
+        $('#'+id+'').css({height:295,width:1050});
+        document.body.innerHTML=document.getElementById(''+id+'').innerHTML;
+        window.print();
     }
 </script>
