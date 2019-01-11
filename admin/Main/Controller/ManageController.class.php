@@ -501,10 +501,11 @@ class ManageController extends ChartController {
         $times                  = $mod->get_times($year,$month,$tm);    //获取考核周期开始及结束时间戳
         $ym_arr                 = $mod->get_yms($year,$month,$tm);      //获取某个时间段内的月份信息Ym
         $data                   = array();
-        $data[$hr_cost[0]]      = $mod->get_hr_cost($ym_arr);           //工资总额
+        $data[$hr_cost[0]]      = $mod->get_wages($ym_arr);             //工资总额
+        $data[$hr_cost[1]]      = $mod->get_insurance($ym_arr);         //公司五险一金
 
         $this->data             = $data;
-        $sum                    = $mod->get_sum_HRcost($data);          //合计
+        $sum                    = $mod->get_sum_cost($data);          //合计
         $this->hr_cost          = $hr_cost;
         $this->sum              = $sum;
         $this->departments      = $departments;
@@ -513,6 +514,11 @@ class ManageController extends ChartController {
         $this->month 	        = $month;
         $this->prveyear	        = $year-1;
         $this->nextyear	        = $year+1;
+
+        //未完成
+        $unfinished             = array('职工福利费','职工教育经费','劳动保护费用','工会经费及其他','职工住房费用');
+        $this->unfinished       = $unfinished;
+
         $this->display();
     }
 

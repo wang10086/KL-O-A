@@ -80,23 +80,28 @@
                                             <td>{$vv.常规业务中心}</td>
                                             <td>{$vv.机关部门}</td>
                                         </tr>
-                                    <else />
-                                        <tr role="row" class="orders" style="text-align:center;">
-                                            <td>{$v}</td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                        </tr>
                                     </if>
                                 </foreach>
                             </foreach>
+
+                            <!--完成后删除  begin-->
+                            <foreach name="unfinished" item="v">
+                                    <tr role="row" class="orders" style="text-align:center;">
+                                        <td>{$v}</td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                    </tr>
+                            </foreach>
+                            <!--完成后删除  end-->
+
                             <tr role="row" class="orders" style="text-align:center;">
                                 <td><b>合计</b></td>
                                 <td>{$sum.公司}</td>

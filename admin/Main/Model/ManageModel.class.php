@@ -1173,11 +1173,11 @@ class ManageModel extends Model{
 
     /**
      * 获取部门相关月份合计费用信息
-     * @param $ym_arr
+     * @param $ym_arr   相关月份信息
      */
-    public function get_hr_cost($ym_arr){
-        $hr_cost                    = C('HR_COST');
-        $departments                = C('department1');     //公司所有部门信息
+    public function get_wages($ym_arr){
+        //$hr_cost                    = C('HR_COST');
+        //$departments                = C('department1');     //公司所有部门信息
         $business_departments       = C('department');      //公司业务部门信息
         $lists                      = M('salary_departmen_count')->where(array('datetime'=>array('in',$ym_arr),'status'=>4))->select();
 
@@ -1201,8 +1201,51 @@ class ManageModel extends Model{
         return $info;
     }
 
+    public function get_insurance($ym_arr){
+        //$departments                = C('department1');     //公司所有部门信息
+        $business_departments       = C('department');      //公司业务部门信息
+        $where                      = array();
+        $where['s.datetime']        = array('in',$ym_arr);
+        $field                      = "s.datetime,a.nickname as aname,d.department,i.*";
+        $lists                      = M()->table('__SALARY_WAGES_MONTH__ as s')->join('__SALARY_INSURANCE__ as i on i.id=s.insurance_id','left')->join('__ACCOUNT__ as a on a.id=s.account_id','left')->join('__SALARY_DEPARTMENT__ as d on d.id=a.departmentid','left')->field($field)->where($where)->select();
+        $sumLists                   = $this->sum_insurance($lists);
 
-    public function get_sum_HRcost($info){
+        $data                       = array();
+        foreach ($business_departments as $v){
+            foreach ($sumLists as $vv){
+                if ($vv['department']==$v){
+                    $data[$vv['department']] += $vv['company_pay_sum'];
+                }
+            }
+        }
+
+        foreach ($sumLists as $v){
+            if (!in_array($v['department'],$business_departments)){
+                $data['机关部门']   += $v['company_pay_sum'];
+            }
+        }
+        $data['公司']               = array_sum($data);
+        return $data;
+    }
+
+    /**
+     * 求公司为个人员所缴纳五险一金(公司部分)之和
+     * @param $lists
+     */
+    public function sum_insurance($lists){
+        foreach ($lists as $k=>$v){
+            $company_pay_sum        = ($v['company_birth_ratio']*$v['company_birth_base']) + ($v['company_injury_ratio']*$v['company_injury_ratio']) + ($v['company_pension_ratio']*$v['company_pension_base']) + ($v['company_medical_care_ratio']*$v['company_medical_care_base']) + ($v['company_unemployment_ratio']*$v['company_unemployment_base']) + ($v['company_accumulation_fund_ratio']*$v['company_accumulation_fund_base']);
+            $lists[$k]['company_pay_sum']   = round($company_pay_sum,2);
+        }
+        return $lists;
+    }
+
+    /**
+     * 获取人力资源成本合计费用
+     * @param $info
+     * @return array
+     */
+    public function get_sum_cost($info){
         $departments                = C('department1');     //公司所有部门信息
         $data                       = array();
         foreach ($departments as $v){
