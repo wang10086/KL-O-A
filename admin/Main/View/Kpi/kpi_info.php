@@ -24,6 +24,7 @@
 								<?php } ?>
 								<?php 
                                 for($i=1;$i<13;$i++){
+                                    if (strlen($i)<2){ $i = str_pad($i,2,'0',STR_PAD_LEFT);}
                                     $par = array();
                                     $par['year']  = $year;
                                     $par['month'] = $i;

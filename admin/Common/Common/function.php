@@ -3020,12 +3020,12 @@ function updatekpi($month,$user){
 
                 //季度利润总额目标完成率
                 if ($v['quota_id']==125){
-                    $department     = M()->table('__ACCOUNT__ as a')->join('__SALARY_DEPARTMENT__ as d on d.id=a.departmentid','left')->where(array('a.id'=>$v['user_id']))->getField("d.department");    //获取部门信息
                     $year           = $v['year']?$v['year']:date('Y');
                     $month          = $v['month']?substr($v['month'],4,2):date('m');
+                    $department     = get_department($v['user_id']);                        //获取别考评人所管辖的部门信息
                     $budget_info    = get_department_budget($department,$year,$month);      //部门季度预算信息
-                    $ys_lrze        = $budget_info['total_profit'];                         //预算利润总额
-                    $operate_info   = get_department_operate($department,$year,$month);     //实际经营信息
+                    $ys_lrze        = $budget_info['sum_total_profit'];                     //预算利润总额
+                    $operate_info   = get_sum_department_operate($department,$year,$month);     //实际经营信息
                     $jy_lrze        = $operate_info['lrze'];                                //经营利润总额
 
                     $complete       = $jy_lrze;
@@ -3033,8 +3033,7 @@ function updatekpi($month,$user){
 
                 //季度顾客满意度
                 if ($v['quota_id']==126){
-                    $department_id  = M('account')->where(array('id'=>$v['user_id']))->getField('departmentid');    //获取部门信息
-                    $users          = M('account')->where(array('departmentid'=>$department_id))->getField('id,nickname',true);
+                    $users          = get_department_users($v['user_id']);
                     $userids        = array_keys($users);
                     $year           = $v['year']?$v['year']:date('Y');
                     $month          = $v['month']?substr($v['month'],4,2):date('m');
@@ -3057,19 +3056,22 @@ function updatekpi($month,$user){
                         $complete = 100;
                     }else{
                         //平均得分(如果得分>90%,得分100, 如果小于90%,以90%作为满分求百分比)
-                        $score = (round($average*100/90,2))*100;
-                        $complete = $average > 0.9 ? 100 : $score;
+                        /*$score = (round($average*100/90,2))*100;
+                        $complete = $average > 0.9 ? 100 : $score;*/
+                        $complete       = $average*100;
+
                     }
                 }
 
                 //季度人事费用率
                 if ($v['quota_id']==127){
-                    $department     = M()->table('__ACCOUNT__ as a')->join('__SALARY_DEPARTMENT__ as d on d.id=a.departmentid','left')->where(array('a.id'=>$v['user_id']))->getField("d.department");    //获取部门信息
+                    //$department     = M()->table('__ACCOUNT__ as a')->join('__SALARY_DEPARTMENT__ as d on d.id=a.departmentid','left')->where(array('a.id'=>$v['user_id']))->getField("d.department");    //获取部门信息
                     $year           = $v['year']?$v['year']:date('Y');
                     $month          = $v['month']?substr($v['month'],4,2):date('m');
+                    $department     = get_department($v['user_id']);
                     $budget_info    = get_department_budget($department,$year,$month);      //部门季度预算信息
                     $ys_rsfyl       = $budget_info['personnel_cost_rate'];                  //预算人事费用率
-                    $operate_info   = get_department_operate($department,$year,$month);     //实际经营信息
+                    $operate_info   = get_sum_department_operate($department,$year,$month);     //实际经营信息
                     $jy_rsfyl       = $operate_info['rsfyl'];                               //经营人事费用率
                     //$wcl            = round($jy_rsfyl/$ys_rsfyl,2);                         //季度人事费用率
                     $complete       = $jy_rsfyl;
@@ -3082,8 +3084,14 @@ function updatekpi($month,$user){
                     $complete   = 100;
                 }
 
+                //上级领导组织对本季度关键事项绩效评价(总经办)
+                if ($v['quota_id']==153){
+                    //默认满分
+                    $complete   = 100;
+                }
+
 				//已实现自动获取指标值
-				$auto_quta	= array(1,2,3,4,5,6,81,8,9,10,11,15,16,18,20,23,26,21,24,27,32,37,19,22,25,28,33,38,42,45,103,56,113,92,29,34,39,46,102,55,57,58,59,84,87,89,90,111,107,83,66,54,44,12,112,108,100,96,95,65,114,86,85,64,63,62,53,52,41,40,49,80,48,91,79,47,36,35,31,30,82,110,106,99,94,67,124,125,126,127,128,129,130,131,132,133,134,135,136,137,138,139,140,141,143,144,145,146,147,148,149,150,151);
+				$auto_quta	= array(1,2,3,4,5,6,81,8,9,10,11,15,16,18,20,23,26,21,24,27,32,37,19,22,25,28,33,38,42,45,103,56,113,92,29,34,39,46,102,55,57,58,59,84,87,89,90,111,107,83,66,54,44,12,112,108,100,96,95,65,114,86,85,64,63,62,53,52,41,40,49,80,48,91,79,47,36,35,31,30,82,110,106,99,94,67,124,125,126,127,128,129,130,131,132,133,134,135,136,137,138,139,140,141,143,144,145,146,147,148,149,150,151,153);
 				//不超过既得满分的指标 不能按照 实际/计划计算得分
                 $otherQuota = array(127);
 				//计算完成率并保存数据
