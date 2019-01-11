@@ -1800,7 +1800,7 @@ class FinanceController extends BaseController {
                         //发送系统通知
                         $audit_usertype         = 1;    //证明验收人
                         $uid     = cookie('userid');
-                        $title   = '您有来自['.$info['bx_user'].']团内报销单待证明验收!';
+                        $title   = '您有来自['.$info['bx_user'].']非团支出报销单待证明验收!';
                         $content = '报销单号：'.$info['bxd_id'].'，报销金额：'.$info['sum'];
                         $url     = U('Finance/nopbxd_info',array('id'=>$res,'audit_usertype'=>$audit_usertype));
                         $user    = '['.$audit['zm_audit_userid'].']';

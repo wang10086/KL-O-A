@@ -403,6 +403,27 @@ function get_manyidu($lists){
 }
 
 /**
+ * 获取别考评人所管辖的部门信息
+ * @param $uid
+ * @return array|mixed
+ */
+function get_department($uid){
+    $department     = M()->table('__ACCOUNT__ as a')->join('__SALARY_DEPARTMENT__ as d on d.id=a.departmentid','left')->where(array('a.id'=>$uid))->getField("d.department");    //获取部门信息
+    switch ($uid){
+        case 32:
+            $department = C('MANAGER_WANG');
+            break;
+        case 38:
+            $department = C('MANAGER_YANG');
+            break;
+        default:
+            $department = array($department);
+            break;
+    }
+    return $department;
+}
+
+/**
  * 部门季度预算信息
  * @param $userid
  * @param $month
@@ -413,10 +434,34 @@ function get_department_budget($department,$year,$month){
     $year                       = $year?$year:date("Y");
     $where                      = array();
     $where['datetime']          = $year;
-    $where['logged_department'] = $department;
+    $where['logged_department'] = array('in',$department);
     $where['type']              = $quarter;
-    $budget                     = M('manage_input')->where($where)->find();
+    $field                      = array();
+    $field[]                    = 'sum(employees_number) as sum_employees_number,sum(logged_income) as sum_logged_income,sum(logged_profit) as sum_logged_profit, sum(manpower_cost) as sum_manpower_cost, sum(other_expenses) as sum_other_expenses, sum(total_profit) as sum_total_profit';
+    $budget                     = M('manage_input')->field($field)->where($where)->find();
     return $budget;
+}
+
+/**
+ * 获取所管辖所有部门经营总额
+ * @param $department   array
+ * @param $year
+ * @param $month
+ */
+function get_sum_department_operate($department,$year,$month){
+    foreach ($department as $v){
+        $info[]                 = get_department_operate($v,$year,$month);
+    }
+    $data                       = array();
+    $data['ygrs']               = array_sum(array_column($info,'ygrs'));        //员工人数
+    $data['yysr']               = array_sum(array_column($info,'yysr'));        //营业收入
+    $data['yyml']               = array_sum(array_column($info,'yyml'));        //营业毛利
+    $data['yymll']              = round($data['yyml']/$data['yysr'],4)*100;     //营业毛利率(%)
+    $data['rlzycb']             = array_sum(array_column($info,'rlzycb'));      //人力资源成本
+    $data['qtfy']               = array_sum(array_column($info,'qtfy'));        //其他费用
+    $data['lrze']               = array_sum(array_column($info,'lrze'));        //利润总额
+    $data['rsfyl']              = round($data['rlzycb']/$data['yysr'],4)*100;   //人事费用率(%)
+    return $data;
 }
 
 /**
@@ -614,5 +659,13 @@ function get_QCS($userids,$year,$month){
 
     $average = get_manyidu($lists);
     return $average;
+}
+
+
+function get_department_users($userid){
+    $departments            = get_department($userid);
+    $department_ids         = M('salary_department')->where(array('department'=>array('in',$departments)))->getField('id',true);
+    $users                  = M('account')->where(array('departmentid'=>array('in',$department_ids)))->getField('id,nickname',true);
+    return $users;
 }
 
