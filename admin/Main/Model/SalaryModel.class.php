@@ -13,7 +13,7 @@ class SalaryModel extends Model
         $where['account_id']   = array('eq',$userid);
         $where['statu']        = array('neq',3);
         $tax                   = M('salary_individual_tax')->where('account_id='.$userid)->order('id DESC')->find();
-        if($tax){
+        if($tax && $tax['statu'] !==3){
             $counting          = $tax['individual_tax'];
         }else{
             if($cout_money <= 5000){
