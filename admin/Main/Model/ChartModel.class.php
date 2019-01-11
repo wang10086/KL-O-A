@@ -514,12 +514,13 @@ class ChartModel extends Model
             $where['l.req_type']         = array('eq', 801);
             $lists1                      = M()->table('__OP_SETTLEMENT__ as b')->join('__OP__ as o on b.op_id = o.op_id', 'LEFT')->join('__AUDIT_LOG__ as l on l.req_id = b.id', 'LEFT')->where($where)->select();
             $year_js_opids               = array_column($lists1,'op_id');
-            unset($where['o.op_id']);
+
             $where['l.req_type']         = array('eq', 800);
             $where['b.op_id']            = array('not in',$year_js_opids);
             $lists2                      = M()->table('__OP_BUDGET__ as b')->join('__OP__ as o on b.op_id = o.op_id', 'LEFT')->join('__AUDIT_LOG__ as l on l.req_id = b.id', 'LEFT')->where($where)->select();
             $lists                       = array_merge($lists1,$lists2);
         }elseif($type==801){
+            unset($where['l.audit_time']);
             $where['l.audit_time']       = array('between', "$time1,$time2");
             $where['l.req_type']         = array('eq', 801);
             $lists                       = M()->table('__OP_SETTLEMENT__ as b')->join('__OP__ as o on b.op_id = o.op_id', 'LEFT')->join('__AUDIT_LOG__ as l on l.req_id = b.id', 'LEFT')->where($where)->select();
