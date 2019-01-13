@@ -23,9 +23,7 @@
                     </div><!-- /.box-header -->
                     <div class="box-body">
                         <?php if($jiekuan){ ?>
-                            <div class="box-body" id="jiekuandan" >
                                 <include file="nop_jiekuandan" />
-                            </div>
                         <?php }else{ ?>
                             <div class="content" style="padding-top:40px;">  获取借款信息失败!</div>
                         <?php } ?>
