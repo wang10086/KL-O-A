@@ -224,7 +224,7 @@
     </div>
 </div>
 <script>
-    var stat = <?php echo $stau;?>;
+    var stat = <?php if($stau==""){echo 0;}else{echo $stau;}?>;
     if(stat==5){
         $('#salary_withholding3').show();
         $('#salary_withholding1').hide();
