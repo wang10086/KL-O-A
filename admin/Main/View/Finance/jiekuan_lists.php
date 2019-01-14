@@ -32,10 +32,12 @@
                                 
                                     <table class="table table-bordered dataTable fontmini" id="tablelist" style="margin-top:10px;">
                                         <tr role="row" class="orders" >
-                                            <th width="40" style="text-align:center;">
-                                                <a href="javascript:;" type="button" onclick="check_url()" class="btn btn-info btn-sm" title="打印" ><i class="fa fa-print"></i></a>
-                                                <!--<input type="checkbox" id="accessdata">-->
-                                            </th>
+                                            <if condition="rolemenu(array('Finance/print_jkd'))">
+                                                <th width="40" style="text-align:center;">
+                                                    <a href="javascript:;" type="button" onclick="check_url()" class="btn btn-info btn-sm" title="打印" ><i class="fa fa-print"></i></a>
+                                                    <!--<input type="checkbox" id="accessdata">-->
+                                                </th>
+                                            </if>
                                             <th class="sorting" width="180" data="j.jkd_id">借款单号</th>
                                             <if condition="$pin neq 2">
                                                 <th class="sorting" width="150" data="j.group_id">团号</th>
@@ -62,7 +64,9 @@
 
                                         <foreach name="lists" item="row">
                                         <tr>
-                                            <td style="text-align:center;"><input type="checkbox" value="{$row.id}" class="accessdata"/></td>
+                                            <if condition="rolemenu(array('Finance/print_jkd'))">
+                                                <td style="text-align:center;"><input type="checkbox" value="{$row.id}" class="accessdata"/></td>
+                                            </if>
                                             <td>{$row.jkd_id}</td>
                                             <if condition="$pin neq 2">
                                                 <td><?php echo $row['group_id']?$row['group_id']:'非团借款'; ?></td>

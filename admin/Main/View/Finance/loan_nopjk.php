@@ -35,7 +35,7 @@
                                             <if condition="rolemenu(array('Finance/jiekuandan_info'))">
                                                 <th width="40" class="taskOptions">详情</th>
                                             </if>
-                                            <if condition="rolemenu(array('Finance/aaa'))">
+                                            <if condition="rolemenu(array('Finance/loan_jk'))">
                                                 <th width="40" class="taskOptions">报销</th>
                                             </if>
                                             <!--<if condition="rolemenu(array('Finance/del_jkd'))">
@@ -55,7 +55,7 @@
                                                         <a href="{:U('Finance/nopjk_info',array('jkid'=>$row['id']))}" title="详情" class="btn btn-info btn-smsm"><i class="fa fa-bars"></i></a>
                                                     </td>
                                                 </if>
-                                                <if condition="rolemenu(array('Finance/aaa'))">
+                                                <if condition="rolemenu(array('Finance/loan_jk'))">
                                                     <td class="taskOptions">
                                                         <a href="{:U('Finance/loan_jk',array('jkid'=>$row['id']))}" title="报销" class="btn btn-info btn-smsm"><i class="fa fa-pencil"></i></a>
                                                     </td>
