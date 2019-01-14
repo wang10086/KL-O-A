@@ -42,12 +42,6 @@
     .a4-page-tables table tr td{ font-size: 12px;  padding-top: 3px;  padding-bottom: 3px;  position: relative;}
     .one-third-a4{ height: 350px; margin: 16px 0; border: dashed 1px #ffffff;}
 
-    /*@media print {
-        body {
-            display: inherit; !*设置为none，则打印空白，即不能打印*!
-        }
-    }*/
-
     @page{
         margin:0
     }
@@ -244,7 +238,6 @@
 
 <script>
     $(function () {
-       // alert('打印前请先调整页边距为最小或0');
         print_A4_view('jiekuandan');
     })
 
@@ -254,79 +247,6 @@
         $('.jkd-table').css({'width': '90%','margin': '30px 5%'});
         document.body.innerHTML=document.getElementById(''+id+'').innerHTML;
         window.print();
-    }
-
-    //获得IE浏览器版本
-    function checkIEV() {
-        var X, V, N;
-        V = navigator.appVersion;
-        N = navigator.appName;
-        if (N == "Microsoft Internet Explorer")
-            X = parseFloat(V.substring(V.indexOf("MSIE") + 5, V.lastIndexOf("Windows")));
-        else
-            X = parseFloat(V);
-        alert(X);
-        return X;
-    }
-    //设置为不打印
-    function noPrint() {
-        var stylef = document.styleSheets[0];
-        var rul = stylef.rules[0]; /*上面@media 那一段*/
-        rul.style.display = "none";
-    }
-
-    //设置网页打印的页眉页脚和页边距
-    function PageSetup_Null() {
-        var HKEY_Root, HKEY_Path, HKEY_Key;
-        HKEY_Root = "HKEY_CURRENT_USER";
-        HKEY_Path = "\\Software\\Microsoft\\InternetExplorer\\PageSetup\\";
-        try {
-            var Wsh = new ActiveXObject("WScript.Shell");
-            HKEY_Key = "header";
-            //设置页眉（为空）
-            //Wsh.RegRead(HKEY_Root+HKEY_Path+HKEY_Key)可获得原页面设置
-            Wsh.RegWrite(HKEY_Root + HKEY_Path + HKEY_Key, "");
-            HKEY_Key = "footer";
-            //设置页脚（为空）
-            Wsh.RegWrite(HKEY_Root + HKEY_Path + HKEY_Key, "");
-            //Wsh.RegRead(HKEY_Root+HKEY_Path+HKEY_Key)可获得原页面设置
-            Wsh.RegWrite(HKEY_Root + HKEY_Path + HKEY_Key, "");
-            HKEY_Key = "footer";
-            //设置页脚（为空）
-            Wsh.RegWrite(HKEY_Root + HKEY_Path + HKEY_Key, "");
-            if (checkIEV() < 8.0) {
-                HKEY_Key = "margin_left";
-                //设置左页边距
-                Wsh.RegWrite(HKEY_Root + HKEY_Path + HKEY_Key, "0");
-                HKEY_Key = "margin_right";
-                //设置右页边距
-                Wsh.RegWrite(HKEY_Root + HKEY_Path + HKEY_Key, "0");
-                HKEY_Key = "margin_top";
-                //设置上页边距
-                Wsh.RegWrite(HKEY_Root + HKEY_Path + HKEY_Key, "0");
-                HKEY_Key = "margin_bottom";
-                //设置下页边距
-                Wsh.RegWrite(HKEY_Root + HKEY_Path + HKEY_Key, "0");
-            }
-            else {
-                HKEY_Key = "margin_left";
-                //设置左页边距
-                Wsh.RegWrite(HKEY_Root + HKEY_Path + HKEY_Key, "0");
-                HKEY_Key = "margin_right";
-                //设置右页边距
-                Wsh.RegWrite(HKEY_Root + HKEY_Path + HKEY_Key, "0");
-                HKEY_Key = "margin_top";
-                //设置上页边距
-                Wsh.RegWrite(HKEY_Root + HKEY_Path + HKEY_Key, "0");
-                HKEY_Key = "margin_bottom";
-                //设置下页边距
-                Wsh.RegWrite(HKEY_Root + HKEY_Path + HKEY_Key, "0");
-            }
-        }
-        catch (e) {
-            noPrint();
-            alert("ActiveX控件被禁用,请按下面步骤操作：\n1、请打开浏览器‘工具’菜单/‘选项’/‘安全’下的‘自定义级别’，\n把‘对没有标记为安全的activex控件进行初始化和脚本运行’设置为‘启用’。\n2、刷新本页 ");
-        }
     }
 
     /**
