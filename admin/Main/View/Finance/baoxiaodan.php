@@ -23,10 +23,10 @@
         </table>
     </div><!-- /.box-body -->
 
-        <div class="box-body" id="baoxiaodan" >
+        <div class="box-body" id="" >
             <div class="row"><!-- right column -->
                 <div class="form-group col-md-12">
-                    <div class="form-group col-md-12" style="align: center;">
+                    <!--<div class="form-group col-md-12" style="align: center;">
                         <table style="width: 100%; margin-top: 20px;">
                             <tr>
                                 <td class="td_title" colspan="6">
@@ -42,10 +42,10 @@
                                     </div>
                                     <div style="display: inline-block; float: right; clear: right;">
                                         支付方式：
-                                        <input type="radio" name="type" value="1" <?php if ($baoxiao['type']== 1) echo "checked"; ?> /> <?php if ($baoxiao['type']== 1) echo '√'; ?>支票 &nbsp;
-                                        <input type="radio" name="type" value="2" <?php if ($baoxiao['type']== 2) echo "checked"; ?> /> <?php if ($baoxiao['type']== 2) echo '√'; ?>现金 &nbsp;
-                                        <input type="radio" name="type" value="3" <?php if ($baoxiao['type']== 3) echo "checked"; ?> /> <?php if ($baoxiao['type']== 3) echo '√'; ?>汇款 &nbsp;
-                                        <input type="radio" name="type" value="4" <?php if ($baoxiao['type']== 4) echo "checked"; ?> /> <?php if ($baoxiao['type']== 4) echo '√'; ?>其他 &nbsp;
+                                        <input type="radio" name="type" value="1" <?php /*if ($baoxiao['type']== 1) echo "checked"; */?> /> <?php /*if ($baoxiao['type']== 1) echo '√'; */?>支票 &nbsp;
+                                        <input type="radio" name="type" value="2" <?php /*if ($baoxiao['type']== 2) echo "checked"; */?> /> <?php /*if ($baoxiao['type']== 2) echo '√'; */?>现金 &nbsp;
+                                        <input type="radio" name="type" value="3" <?php /*if ($baoxiao['type']== 3) echo "checked"; */?> /> <?php /*if ($baoxiao['type']== 3) echo '√'; */?>汇款 &nbsp;
+                                        <input type="radio" name="type" value="4" <?php /*if ($baoxiao['type']== 4) echo "checked"; */?> /> <?php /*if ($baoxiao['type']== 4) echo '√'; */?>其他 &nbsp;
                                     </div>
                                 </td>
                             </tr>
@@ -78,22 +78,88 @@
 
                             <tr>
                                 <td colspan="3" class="td_con td">报销人签字：<img src="/{$baoxiao.bx_file}" height="50px" alt=""></td>
-                                <td colspan="3" class="td_con td">证明验收人签字：<span id="zmysr"> <?php if($audit_userinfo['zm_audit_status']==2){echo "<span class='red'>不通过</span>"; }elseif ($audit_userinfo['zm_audit_status']==1){ echo "<img src='/$audit_userinfo[zm_audit_file]' height='50px'>";}; ?></span></td>
+                                <td colspan="3" class="td_con td">证明验收人签字：<span id="zmysr"> <?php /*if($audit_userinfo['zm_audit_status']==2){echo "<span class='red'>不通过</span>"; }elseif ($audit_userinfo['zm_audit_status']==1){ echo "<img src='/$audit_userinfo[zm_audit_file]' height='50px'>";}; */?></span></td>
                             </tr>
 
                             <tr>
-                                <td colspan="3" class="td_con td">预算审批人签字：<span id="ysspr"> <?php if($audit_userinfo['ys_audit_status']==2){echo "<span class='red'>不通过</span>"; }elseif ($audit_userinfo['ys_audit_status']==1){ echo "<img src='/$audit_userinfo[ys_audit_file]' height='50px'>";}; ?></span></td>
-                                <td colspan="3" class="td_con td">财务主管签字：<span id="cwzg"><?php if($audit_userinfo['cw_audit_status']==2){echo "<span class='red'>不通过</span>"; }elseif ($audit_userinfo['cw_audit_status']==1){ echo "<img src='/$audit_userinfo[cw_audit_file]' height='50px'>";}; ?></span></td>
+                                <td colspan="3" class="td_con td">预算审批人签字：<span id="ysspr"> <?php /*if($audit_userinfo['ys_audit_status']==2){echo "<span class='red'>不通过</span>"; }elseif ($audit_userinfo['ys_audit_status']==1){ echo "<img src='/$audit_userinfo[ys_audit_file]' height='50px'>";}; */?></span></td>
+                                <td colspan="3" class="td_con td">财务主管签字：<span id="cwzg"><?php /*if($audit_userinfo['cw_audit_status']==2){echo "<span class='red'>不通过</span>"; }elseif ($audit_userinfo['cw_audit_status']==1){ echo "<img src='/$audit_userinfo[cw_audit_file]' height='50px'>";}; */?></span></td>
                             </tr>
                             <tr id="print_time">
-                                <td class="td_con" colspan="6" style="text-align: right; ">打印时间：<?php echo date('Y-m-d H:i:s',time()); ?></td>
+                                <td class="td_con" colspan="6" style="text-align: right; ">打印时间：<?php /*echo date('Y-m-d H:i:s',time()); */?></td>
+                            </tr>
+
+                        </table>
+                    </div>-->
+
+                    <!--startprint-->
+                    <div class="container a4-endwise" id="baoxiaodan">
+                        <table id="bxd-table" style="width: 100%;">
+                            <tr>
+                                <td class="" colspan="6" style="text-align: center;">
+                                    <b style="font-weight: 600;font-size: large;">报销单</b>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="" colspan="6">
+                                    <div style="display: inline-block; float: left; min-width:230px; clear: left;">
+                                        报销单编号：{$baoxiao['bxd_id']}
+                                    </div>
+                                    <div style="display: inline-block; float: right; clear: right;">
+                                        支付方式：
+                                        <input type="radio" name="type" value="1" <?php if ($baoxiao['type']== 1) echo "checked"; ?> /> <?php if ($baoxiao['type']== 1) echo '√'; ?>支票 &nbsp;
+                                        <input type="radio" name="type" value="2" <?php if ($baoxiao['type']== 2) echo "checked"; ?> /> <?php if ($baoxiao['type']== 2) echo '√'; ?>现金 &nbsp;
+                                        <input type="radio" name="type" value="3" <?php if ($baoxiao['type']== 3) echo "checked"; ?> /> <?php if ($baoxiao['type']== 3) echo '√'; ?>汇款 &nbsp;
+                                        <input type="radio" name="type" value="4" <?php if ($baoxiao['type']== 4) echo "checked"; ?> /> <?php if ($baoxiao['type']== 4) echo '√'; ?>其他 &nbsp;
+                                    </div>
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td class=" td" colspan="5">&emsp;报销单位：{$baoxiao.department}</td>
+                                <td class=" td">&emsp;报销时间：{$baoxiao['bx_time']|date='Y 年 m 月 d 日',###}</td>
+                            </tr>
+
+                            <tr>
+                                <td colspan="6" class=" td">
+                                    &emsp;用途说明：  {$baoxiao.description}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="3" class=" td">&emsp;报销金额：{$baoxiao.sum_chinese}</td>
+                                <td colspan="3" class=" td">&emsp;&yen;&emsp;<input type="text" style="border:none;border-bottom: solid 1px #808080; " value="{$baoxiao.sum}">元</td>
+                            </tr>
+                            <tr>
+                                <td colspan="6" class=" td">&emsp;受款单位：{$baoxiao.payee}</td>
+                            </tr>
+                            <tr>
+                                <td colspan="3" class=" td">&emsp;开户行名称：{$baoxiao.bank_name}</td>
+                                <td colspan="3" class=" td">&emsp;账号：{$baoxiao.card_num}</td>
+                            </tr>
+
+                            <tr>
+                                <td class=" td" colspan="6">
+                                    <div style="display: inline-block; width: 30%;">&emsp;报销人签字：<img src="/{$baoxiao.bx_file}" height="35px" alt=""></div>
+                                    <div style="display: inline-block; width: 30%;">&emsp;证明验收人签字：<span id="zmysr"> <?php if($audit_userinfo['zm_audit_status']==2){echo "<span class='red'>不通过</span>"; }elseif ($audit_userinfo['zm_audit_status']==1){ echo "<img src='/$audit_userinfo[zm_audit_file]' height='35px'>";}; ?></span></div>
+                                    <div style="display: inline-block; width: 30%;">&emsp;部门主管签字：<span id="zmysr"> <?php if($audit_userinfo['manager_audit_status']==2){echo "<span class='red'>不通过</span>"; }elseif ($audit_userinfo['manager_audit_status']==1){ echo "<img src='/$audit_userinfo[manager_audit_file]' height='35px'>";}; ?></span></div>
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td colspan="3" class=" td" style="width: 50%;">&emsp;预算审批人签字：<span id="ysspr"> <?php if($audit_userinfo['ys_audit_status']==2){echo "<span class='red'>不通过</span>"; }elseif ($audit_userinfo['ys_audit_status']==1){ echo "<img src='/$audit_userinfo[ys_audit_file]' height='35px'>";}; ?></span></td>
+                                <td colspan="3" class=" td" style="width: 50%;">&emsp;财务主管签字：<span id="cwzg"><?php if($audit_userinfo['cw_audit_status']==2){echo "<span class='red'>不通过</span>"; }elseif ($audit_userinfo['cw_audit_status']==1){ echo "<img src='/$audit_userinfo[cw_audit_file]' height='35px'>";}; ?></span></td>
+                            </tr>
+                            <tr id="print_time">
+                                <td class="" colspan="6" style="text-align: right; ">打印时间：<?php echo date('Y-m-d H:i:s',time()); ?></td>
                             </tr>
 
                         </table>
                     </div>
+                    <!--endprint-->
+
                     <?php if (in_array(cookie('userid'),array(1,11,$baoxiao['bx_user_id']))){ ?>
                         <div class="content no-print">
-                            <button class="btn btn-default" onclick="show_print_time(),print_view('baoxiaodan');"><i class="fa fa-print"></i> 打印</button>
+                            <button class="btn btn-default" onclick="show_print_time(),print_A4_view('baoxiaodan');"><i class="fa fa-print"></i> 打印</button>
                         </div>
                     <?php } ?>
                 </div>
@@ -164,5 +230,13 @@
             art_show_msg('请完善审核信息');
             return false;
         }
+    }
+
+    //打印部分页面 A4纸
+    function print_A4_view(id){
+        $('.a4-endwise').css({'height': '560px', 'border-bottom': '1px #AAAAAA dashed'});
+        $('#bxd-table').css({'width': '90%','margin': '10px 5%'});
+        document.body.innerHTML=document.getElementById(''+id+'').innerHTML;
+        window.print();
     }
 </script>

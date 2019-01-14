@@ -2674,5 +2674,10 @@ class FinanceController extends BaseController {
         var_dump($sum);die;
     }
 
+    public function aaa(){
+
+        $this->display();
+    }
+
     /****************************end*****************************************/
 }

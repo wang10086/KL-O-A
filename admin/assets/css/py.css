@@ -4114,4 +4114,9 @@ th{outline: none;}
 #chart_btn_group .btn-group-header{ background-color: #ddd;color: #666;}
 /*#catfont .btn-group-header{ background-color: #ddd;color: #666;}*/
 .text-overflow{max-width: 90%; overflow: hidden;  text-overflow:ellipsis;  white-space: nowrap;}
-.text-overflow-lines{max-width: 90%; display: -webkit-box;  -webkit-box-orient: vertical;  -webkit-line-clamp: 3;  overflow: hidden;}
+.text-overflow-lines{max-width: 90%; display: -webkit-box;  -webkit-box-orient: vertical;  -webkit-line-clamp: 2;  overflow: hidden;}
+
+.a4-endwise{  width: 100%;  overflow: hidden;  padding: 0;  word-break:break-all;  }
+
+
+

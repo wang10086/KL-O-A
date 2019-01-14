@@ -32,14 +32,19 @@
                                 
                                     <table class="table table-bordered dataTable fontmini" id="tablelist" style="margin-top:10px;">
                                         <tr role="row" class="orders" >
+                                            <if condition="rolemenu(array('Finance/print_jkd'))">
+                                                <th width="40" style="text-align:center;">
+                                                    <a href="javascript:;" type="button" onclick="check_url()" class="btn btn-info btn-sm" title="打印" ><i class="fa fa-print"></i></a>
+                                                    <!--<input type="checkbox" id="accessdata">-->
+                                                </th>
+                                            </if>
                                             <th class="sorting" width="180" data="j.jkd_id">借款单号</th>
                                             <if condition="$pin neq 2">
                                                 <th class="sorting" width="150" data="j.group_id">团号</th>
                                             </if>
-                                            <th class="sorting" width="" data="o.project">项目名称</th>
                                             <th class="sorting" width="" data="j.description">用途说明</th>
-                                            <th class="sorting" width="" data="j.jk_user">借款人</th>
-                                            <th class="sorting" width="" data="j.department_id">借款部门</th>
+                                            <th class="sorting" width="60" data="j.jk_user">借款人</th>
+                                            <th class="sorting" width="100" data="j.department_id">借款部门</th>
                                             <th class="sorting" width="80" data="j.sum">借款金额</th>
                                             <th class="sorting" width="60" data="j.type">借款方式</th>
                                             <th class="sorting" width="80" data="j.zhuangtai">审批状态</th>
@@ -59,24 +64,26 @@
 
                                         <foreach name="lists" item="row">
                                         <tr>
+                                            <if condition="rolemenu(array('Finance/print_jkd'))">
+                                                <td style="text-align:center;"><input type="checkbox" value="{$row.id}" class="accessdata"/></td>
+                                            </if>
                                             <td>{$row.jkd_id}</td>
                                             <if condition="$pin neq 2">
                                                 <td><?php echo $row['group_id']?$row['group_id']:'非团借款'; ?></td>
                                             </if>
                                             <td>
-                                                <div class="text-overflow">
+                                                <div class="text-overflow-lines">
                                                     <if condition="rolemenu(array('Finance/jiekuandan_info'))">
                                                         <if condition="$row.jkd_type neq 2">
-                                                        <a href="{:U('Finance/jiekuandan_info',array('jkid'=>$row['id']))}" title="<?php echo $row['project']?$row['project']:$row['description']; ?>"><?php echo $row['project']?$row['project']:$row['description']; ?></a>
+                                                        <a href="{:U('Finance/jiekuandan_info',array('jkid'=>$row['id']))}" title="{$row.description}">{$row.description}</a>
                                                         <else />
-                                                        <a href="{:U('Finance/nopjk_info',array('jkid'=>$row['id']))}" title="<?php echo $row['project']?$row['project']:$row['description']; ?>"><?php echo $row['project']?$row['project']:$row['description']; ?></a>
+                                                        <a href="{:U('Finance/nopjk_info',array('jkid'=>$row['id']))}" title="{$row.description}">{$row.description}</a>
                                                         </if>
                                                     <else />
                                                         <a href="javascript:;" title="{$row.project}">{$row.project}</a>
                                                     </if>
                                                 </div>
                                             </td>
-                                            <td><div class="text-overflow-lines"><a href="javascript:;" title="{$row.description}">{$row.description}</a></div></td>
                                             <td>{$row.jk_user}</td>
                                             <td>{$row.department}</td>
                                             <td>{$row.sum}</td>
@@ -184,6 +191,32 @@
             cancelVal: '取消',
             cancel: true //为true等价于function(){}
         });
-
     }
+
+    function check_url() {
+        var jkids        = '';
+        $('.accessdata').each(function (index,element) {
+            var checked     = $(this).parent().attr('aria-checked');
+            if (checked=='true'){
+                jkids += $(this).val()+',';
+            }
+        });
+        if (!jkids){
+            art_show_msg('请选择要打印的借款单');
+            return false;
+        }else{
+            var url =  '/index.php?m=Main&c=Print&a=printLoanBill&jkids='+jkids;
+            window.location.href=url;
+        }
+    }
+
+    $(document).ready(function(e) {
+        //选择
+        $('#accessdata').on('ifChecked', function() {
+            $('.accessdata').iCheck('check');
+        });
+        $('#accessdata').on('ifUnchecked', function() {
+            $('.accessdata').iCheck('uncheck');
+        });
+    });
 </script>
