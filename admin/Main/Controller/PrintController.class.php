@@ -24,7 +24,7 @@ class PrintController extends Controller{
             ->where(array('j.id'=>array('in',$ids),'l.req_type'=>P::REQ_TYPE_BUDGET))
             ->select();
 
-       $lists           = array_chunk($data,2,false);
+       $lists           = array_chunk($data,3,false);
 
         $this->jk_type  = C('JIEKUAN_TYPE');
         $this->lists    = $lists;
