@@ -1869,7 +1869,7 @@ function updatekpi($month,$user){
 	$where = array();
 	$where['month']   = $month;
 	$where['user_id'] = $user;
-	
+
 	$quto   = M('kpi_more')->where($where)->select();
 
 	if($quto){
@@ -3021,11 +3021,11 @@ function updatekpi($month,$user){
                 //季度利润总额目标完成率
                 if ($v['quota_id']==125){
                     $year           = $v['year']?$v['year']:date('Y');
-                    $month          = $v['month']?substr($v['month'],4,2):date('m');
+                    $monon          = $v['month']?substr($v['month'],4,2):date('m');
                     $department     = get_department($v['user_id']);                        //获取别考评人所管辖的部门信息
-                    $budget_info    = get_department_budget($department,$year,$month);      //部门季度预算信息
+                    $budget_info    = get_department_budget($department,$year,$monon);      //部门季度预算信息
                     $ys_lrze        = $budget_info['sum_total_profit'];                     //预算利润总额
-                    $operate_info   = get_sum_department_operate($department,$year,$month);     //实际经营信息
+                    $operate_info   = get_sum_department_operate($department,$year,$monon);     //实际经营信息
                     $jy_lrze        = $operate_info['lrze'];                                //经营利润总额
 
                     $complete       = $jy_lrze;
@@ -3036,8 +3036,8 @@ function updatekpi($month,$user){
                     $users          = get_department_users($v['user_id']);
                     $userids        = array_keys($users);
                     $year           = $v['year']?$v['year']:date('Y');
-                    $month          = $v['month']?substr($v['month'],4,2):date('m');
-                    $average        = get_QCS($userids,$year,$month);         //季度顾客满意度
+                    $monon          = $v['month']?substr($v['month'],4,2):date('m');
+                    $average        = get_QCS($userids,$year,$monon);         //季度顾客满意度
 
                     //无项目的，得0分；有项目，但无调查项目的，得100分。
                     //本月实际实施团
@@ -3063,15 +3063,15 @@ function updatekpi($month,$user){
                     }
                 }
 
+
                 //季度人事费用率
                 if ($v['quota_id']==127){
-                    //$department     = M()->table('__ACCOUNT__ as a')->join('__SALARY_DEPARTMENT__ as d on d.id=a.departmentid','left')->where(array('a.id'=>$v['user_id']))->getField("d.department");    //获取部门信息
                     $year           = $v['year']?$v['year']:date('Y');
-                    $month          = $v['month']?substr($v['month'],4,2):date('m');
+                    $monon          = $v['month']?substr($v['month'],4,2):date('m');
                     $department     = get_department($v['user_id']);
-                    $budget_info    = get_department_budget($department,$year,$month);      //部门季度预算信息
+                    $budget_info    = get_department_budget($department,$year,$monon);      //部门季度预算信息
                     $ys_rsfyl       = $budget_info['personnel_cost_rate'];                  //预算人事费用率
-                    $operate_info   = get_sum_department_operate($department,$year,$month);     //实际经营信息
+                    $operate_info   = get_sum_department_operate($department,$year,$monon);     //实际经营信息
                     $jy_rsfyl       = $operate_info['rsfyl'];                               //经营人事费用率
                     //$wcl            = round($jy_rsfyl/$ys_rsfyl,2);                         //季度人事费用率
                     $complete       = $jy_rsfyl;
@@ -3110,23 +3110,26 @@ function updatekpi($month,$user){
                         $rate = $v['target'] ? round(($complete / $v['target'])*100,2) : 100;
                         $rate = $rate>100 ? 100 : $rate;
                     }
-					
+
 					$data = array();
 					$data['complete']		= $complete;
 					$data['complete_rate']	= $rate."%";
-                    $data['score']			= round(($rate * $v['weight']) / 100,1);
+                    //$data['score']			= round(($rate * $v['weight']) / 100,1);
+                    $data['score']          = get_kpi_score($rate,$v['weight'],$v['end_date'],$month);
 					$data['score_status']	= 1;
 
-					
+
 				}else{
 
 					$rate = 100;
 					$data = array();
 					//$data['complete']		= $complete;
 					//$data['complete_rate']	= $rate."%";
-					$data['score']			= round(($rate * $v['weight']) / 100,1);
+					//$data['score']			= round(($rate * $v['weight']) / 100,1);
+					$data['score']			= get_kpi_score($rate,$v['weight'],$v['end_date'],$month);
 					$data['score_status']	= 1;
 				}
+
 				M('kpi_more')->data($data)->where(array('id'=>$v['id']))->save();
 				
 			}
@@ -3136,8 +3139,22 @@ function updatekpi($month,$user){
 			$issave	= M('kpi')->data(array('score'=>$total))->where(array('id'=>$v['kpi_id']))->save();
 
 		}
-
 	}
+}
+
+/**
+ * @param float $rate       完成率
+ * @param $weight           权重
+ * @param $endTime          考核结束时间
+ */
+function get_kpi_score($rate=100,$weight,$endTime,$month){
+    $monthBeginTime     = get_cycle(date('Ym',$endTime))['begintime'];  //考核结束月份的开始时间
+    if (NOW_TIME < $monthBeginTime){
+        $score          = $weight;
+    }else{
+        $score          = round(($rate * $weight) / 100,1);
+    }
+    return $score;
 }
 
 function get_role_link($roleid,$rtype = 0){
@@ -3910,7 +3927,7 @@ function kpilock($month,$uid){
 	$where = array();
 	$where['month']	 	= $month;
 	$where['user_id']	= $uid;
-	
+
 	$save = M('kpi_more')->where($where)->data(array('automatic'=>1))->save();
 	
 	if($save){
