@@ -36,12 +36,12 @@ class FinanceController extends BaseController {
 
 	// @@@NODE-3###op###项目预算###
     public function op(){
-			
-		$opid = I('opid');
-		$id   = I('id');
+        $mod                = D('Finance');
+		$opid               = I('opid');
+		$id                 = I('id');
 		if($id){
-			$budget = M('op_budget')->find($id);
-			$opid = $budget['op_id'];
+			$budget         = M('op_budget')->find($id);
+			$opid           = $budget['op_id'];
 		}
 		if(!$opid) $this->error('项目不存在');	
 		
@@ -100,7 +100,7 @@ class FinanceController extends BaseController {
         $is_zutuan            = $op['in_dijie'];
         $this->is_zutuan      = $is_zutuan;
         if ($is_zutuan == 1){
-            $dijie_shouru     = M('op_budget')->where(array('op_id'=>$op['dijie_opid'],'audit_status'=>1))->getField('shouru');
+            $dijie_shouru     = $mod->get_landAcquisitionAgency_money($op,P::REQ_TYPE_BUDGET);
             $op_types         = array_column($costacc,'type');
 
             if (!in_array(13,$op_types)){
@@ -528,43 +528,23 @@ class FinanceController extends BaseController {
 
     // @@@NODE-3###settlement###项目结算###now
     public function settlement(){
-
-        $opid = I('opid');
-        $id   = I('id');
+        $mod                    = D('Finance');
+        $opid                   = I('opid');
+        $id                     = I('id');
         if($id){
-            $budget = M('op_settlement')->find($id);
-            $opid = $budget['op_id'];
+            $budget             = M('op_settlement')->find($id);
+            $opid               = $budget['op_id'];
         }
         if(!$opid) $this->error('项目不存在');
 
-        $where = array();
-        $where['op_id'] = $opid;
+        $where                  = array();
+        $where['op_id']         = $opid;
+        $op                     = M('op')->where($where)->find();
+        $is_zutuan              = $op['in_dijie'];
 
-        $op         = M('op')->where($where)->find();
-
-        $jiesuan    = M('op_costacc')->where(array('op_id'=>$opid,'status'=>2))->order('id')->select();
+        $jiesuan                = M('op_costacc')->where(array('op_id'=>$opid,'status'=>2))->order('id')->select();
         if(count($jiesuan)==0){
-            $guide        = M()->table('__GUIDE_PAY__ as p')->field('g.name,p.op_id,p.num,p.price,p.total,p.really_cost,p.remark')->join('left join __GUIDE__ as g on p.guide_id = g.id')->where(array('p.op_id'=>$opid))->select();
-            $costa        = M('op_costacc')->where(array('op_id'=>$opid,'status'=>1,'type'=>array('neq',2)))->order('type')->select();
-            $op_supplier  = M()->table('__OP_SUPPLIER__ as s')->field('s.op_id,s.supplier_name as title,c.cost as unitcost,c.amount,c.total,c.cost_type as type,s.remark')->join('left join __OP_COST__ as c on c.link_id=s.id')->where(array('s.op_id'=>$opid,'c.op_id' => $opid))->select();
-
-            $costacc      = array();
-            foreach ($guide as $k=>$v){
-                $data['op_id']     = $v['op_id'];
-                $data['title']     = $v['name'];
-                $data['unitcost']  = $v['price'];
-                $data['amount']    = $v['num'];
-                $data['total']     = $v['really_cost'];
-                $data['type']      = 2;
-                $data['remark']    = $v['remark'];
-                $costacc[]         = $data;
-            }
-            foreach ($costa as $v){
-                $costacc[]          = $v;
-            }
-            foreach ($op_supplier as $v){
-                $costacc[]          = $v;
-            }
+            $costacc            = $mod->get_budget_costacc($op,$is_zutuan);
 
             /*$costacc    = M('op_cost')->where(array('op_id'=>$opid))->order('cost_type')->select();
             foreach($costacc as $k=>$v){
@@ -594,33 +574,33 @@ class FinanceController extends BaseController {
             }
             //$qita   = M('op_costacc')->where(array('op_id'=>$opid,'status'=>1,'type'=>4))->order('id')->select();*/
         }
-        $budget     = M('op_budget')->where(array('op_id'=>$opid))->find();
-        $settlement = M('op_settlement')->where(array('op_id'=>$opid))->find();
+        $budget                 = M('op_budget')->where(array('op_id'=>$opid))->find();
+        $settlement             = M('op_settlement')->where(array('op_id'=>$opid))->find();
 
-
-        $where = array();
-        $where['req_type'] = P::REQ_TYPE_SETTLEMENT;
-        $where['req_id']   = $settlement['id'];
-        $audit = M('audit_log')->where($where)->find();
+        $where                  = array();
+        $where['req_type']      = P::REQ_TYPE_SETTLEMENT;
+        $where['req_id']        = $settlement['id'];
+        $audit                  = M('audit_log')->where($where)->find();
         if($audit['dst_status']==0){
-            $show = '未审批';
-            $show_user = '未审批';
-            $show_time = '等待审批';
+            $show               = '未审批';
+            $show_user          = '未审批';
+            $show_time          = '等待审批';
         }else if($audit['dst_status']==1){
-            $show = '<span class="green">已通过</span>';
-            $show_user = $audit['audit_uname'];
-            $show_time = date('Y-m-d H:i:s',$audit['audit_time']);
+            $show               = '<span class="green">已通过</span>';
+            $show_user          = $audit['audit_uname'];
+            $show_time          = date('Y-m-d H:i:s',$audit['audit_time']);
         }else if($audit['dst_status']==2){
-            $show = '<span class="red">未通过</span>';
-            $show_user = $audit['audit_uname'];
-            $show_reason = $audit['audit_reason'];
-            $show_time = date('Y-m-d H:i:s',$audit['audit_time']);
+            $show               = '<span class="red">未通过</span>';
+            $show_user          = $audit['audit_uname'];
+            $show_reason        = $audit['audit_reason'];
+            $show_time          = date('Y-m-d H:i:s',$audit['audit_time']);
         }
-        $op['showstatus'] = $show;
-        $op['show_user']  = $show_user;
-        $op['show_time']  = $show_time;
-        $op['show_reason']  = $show_reason;
+        $op['showstatus']       = $show;
+        $op['show_user']        = $show_user;
+        $op['show_time']        = $show_time;
+        $op['show_reason']          = $show_reason;
 
+        $dijie_shouru           = $mod->get_landAcquisitionAgency_money($op,P::REQ_TYPE_SETTLEMENT);   //801 获取地接结算收入
         $member                 = M('op_member')->where(array('op_id'=>$opid))->order('id')->select();
         $this->member           = $member;
         $this->kind				= C('COST_TYPE');
@@ -637,17 +617,12 @@ class FinanceController extends BaseController {
         $this->ages 			= C('AGE_LIST');
         $this->kinds			=  M('project_kind')->getField('id,name', true);
         $this->cost_type        = C('COST_TYPE');
+        $this->is_zutuan        = $is_zutuan;
+        $this->dijie_shouru     = $dijie_shouru?$dijie_shouru:0;
 
-        //先回款,在做结算  //已回款金额
-        $huikuan_lists          = M('op_huikuan')->where(array('op_id'=>$opid,'audit_status'=>1))->select();
-        $yihuikuan              = array_sum(array_column($huikuan_lists,'huikuan'));
-        //合同金额
-        $contract_amount        = M('contract')->where(array('op_id'=>$opid,'status'=>1))->getField('contract_amount');
-        //地接团结算不受汇款限制
-        $dijie_opids            = array_filter(M('op')->getField('dijie_opid',true));
-        if ($yihuikuan >= $contract_amount || in_array($opid,$dijie_opids)){
-            $this->yihuikuan    = 1;
-        }
+        //检查先回款,在做结算  //已回款金额
+        //$money_back             = $mod->check_money_back($opid);
+        //$this->yihuikuan        = $money_back;
 
         $this->display('settlement');
     }

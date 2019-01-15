@@ -76,11 +76,18 @@
                                     <h3 class="box-title">项目结算</h3>
                                 </div><!-- /.box-header -->
                                 <div class="box-body">
-                                    <php> if($audit['dst_status']!=1 || cookie('userid')==11){ </php>
-                                    <include file="settlement_edit" />
-                                    <php> }else{ </php>
-                                    <include file="settlement_read" />
-                                    <php> } </php>
+                                    <?php if($is_zutuan == 1){ ?>
+                                        <?php if ($dijie_shouru && $audit['dst_status']!=1){ ?>
+                                            <include file="settlement_edit" />
+                                        <?php }else{ ?>
+                                            <include file="settlement_read" />
+                                        <?php } ?>
+                                    <?php }else{ ?>
+                                        <?php if($audit['dst_status']!=1 || cookie('userid')==11){ ?>
+                                            <include file="settlement_edit" />
+                                        <?php }else{ ?>
+                                            <include file="settlement_read" />
+                                        <?php } } ?>
                                 </div>
                             </div>
                             
@@ -229,7 +236,7 @@
 	}
 
 	//检查是否全部回款
-    function check_huikuan(){
+    /*function check_huikuan(){
         var yihuikuan  = <?php echo $yihuikuan?$yihuikuan:0; ?>;
         if (yihuikuan){
             $('#appsubmint').submit();
@@ -237,7 +244,7 @@
             art_show_msg('该团未全部回款',5);
             return false;
         }
-    }
+    }*/
 </script>
 
      
