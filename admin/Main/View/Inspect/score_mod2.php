@@ -13,10 +13,10 @@
                     <span>5分=>非常满意</span>
                 </div>
                 <div class="col-md-2">
-                    <span>4分=>较满意</span>
+                    <span>4分=>满意</span>
                 </div>
                 <div class="col-md-2">
-                    <span>3分=>满意</span>
+                    <span>3分=>较满意</span>
                 </div>
                 <div class="col-md-2">
                     <span>2分=>较不满意</span>
@@ -38,6 +38,9 @@
                         <th class="sorting" data="s.material">材料及设备</th>
                         <th class="sorting" data="s.teacher">专家/讲师</th>
                         <th class="sorting" data="s.guide">辅导员</th>
+                        <!--<th class="sorting" data="s.late">迟到早退(教务人员)</th>
+                        <th class="sorting" data="s.manage">管理组织能力(教务人员)</th>
+                        <th class="sorting" data="s.morality">师德仪表(教务人员)</th>-->
                     <?php }elseif(in_array($kind,$score_kind3)){ ?>
                         <th class="sorting" data="s.before_sell">前期沟通</th>
                         <th class="sorting" data="s.new_media">新媒体推广</th>
@@ -77,6 +80,9 @@
                             <td>{$row.material}</td>
                             <td>{$row.teacher}</td>
                             <td>{$row.guide}</td>
+                            <!--<td>{$row.late}</td>
+                            <td>{$row.manage}</td>
+                            <td>{$row.morality}</td>-->
                         <?php }elseif(in_array($kind,$score_kind3)){ ?>
                             <td>{$row.before_sell}</td>
                             <td>{$row.new_media}</td>
