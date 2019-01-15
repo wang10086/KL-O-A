@@ -83,7 +83,6 @@
                             <tr id="print_time">
                                 <td class="" colspan="6" style="text-align: right; ">打印时间：<?php echo date('Y-m-d H:i:s',time()); ?></td>
                             </tr>
-
                         </table>
                     </div>
 

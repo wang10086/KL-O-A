@@ -65,7 +65,7 @@
                     </div>
                     <if condition="rolemenu(array('Finance/print_jkd'))">
                         <div class="content no-print">
-                            <button class="btn btn-default" onclick="show_print_time(),print_A4_view('jiekuandan');"><i class="fa fa-print"></i> 打印</button>
+                            <a href="{:U('Print/printLoanBill',array('jkids'=>$jiekuan['id']))}" class="btn btn-default"><i class="fa fa-print"></i> 打印</a>
                         </div>
                     </if>
                 </div>
