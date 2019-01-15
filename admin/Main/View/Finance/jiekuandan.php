@@ -89,7 +89,7 @@
 
                     <if condition="rolemenu(array('Finance/print_jkd'))">
                         <div class="content no-print">
-                            <button class="btn btn-default" onclick="show_print_time(),print_A4_view('jiekuandan');"><i class="fa fa-print"></i> 打印</button>
+                            <a href="{:U('Print/printLoanBill',array('jkids'=>$jiekuan['id']))}" class="btn btn-default"><i class="fa fa-print"></i> 打印</a>
                         </div>
                     </if>
                 </div>
@@ -107,9 +107,9 @@
         $('#print_time').hide();
     })
 
-    function show_print_time() {
+    /*function show_print_time() {
         $('#print_time').show();
-    }
+    }*/
 
     function show_qianzi() {
         var html = '';
@@ -159,10 +159,10 @@
     }
 
     //打印部分页面 A4纸
-    function print_A4_view(id){
+    /*function print_A4_view(id){
         $('.a4-endwise').css({'height': '560px', 'border-bottom': '1px #AAAAAA dashed'});
         $('#jkd-table').css({'width': '90%','margin': '10px 5%'});
         document.body.innerHTML=document.getElementById(''+id+'').innerHTML;
         window.print();
-    }
+    }*/
 </script>
