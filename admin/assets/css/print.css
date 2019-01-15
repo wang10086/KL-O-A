@@ -1,0 +1,19 @@
+.a4-endwise{
+    width: 100%;
+    /*height: 1485px;*/
+    overflow: hidden;
+    padding: 0;
+    word-break:break-all;
+}
+
+.a4-page-tables{
+    page-break-before: auto;
+    page-break-after: always;
+}
+
+.a4-page-tables table tr td{ font-size: 12px;  padding-top: 3px;  padding-bottom: 3px;  position: relative;}
+.one-third-a4{ height: 350px; margin: 16px 0; border: dashed 1px #ffffff;}
+
+@page{
+    margin:0
+}

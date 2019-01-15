@@ -1,52 +1,5 @@
-<?php use Sys\P; ?>
-<!DOCTYPE html>
-<html lang="zh-CN">
-<head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+<include file="print_header" />
 
-    <title><?php echo P::SYSTEM_NAME; ?></title>
-    <!-- bootstrap 3.0.2 -->
-    <link href="__HTML__/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
-
-    <!-- Theme style -->
-    <link href="__HTML__/css/py.css" rel="stylesheet" type="text/css" />
-    <!--[if lt IE 9]>
-    <script src="__HTML__/js/html5shiv.min.js"></script>
-    <script src="__HTML__/js/respond.min.js"></script>
-    <![endif]-->
-    <?php /*echo PHP_EOL . $__additional_css__ */?>
-
-    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-    <script src="https://cdn.bootcss.com/jquery/1.12.4/jquery.min.js"></script>
-    <!-- Include all compiled plugins (below), or include individual files as needed -->
-    <script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-
-</head>
-<style>
-    .a4-endwise{
-        width: 100%;
-        /*height: 1485px;*/
-        overflow: hidden;
-        padding: 0;
-        word-break:break-all;
-    }
-
-    .a4-page-tables{
-        page-break-before: auto;
-        page-break-after: always;
-    }
-
-    .a4-page-tables table tr td{ font-size: 12px;  padding-top: 3px;  padding-bottom: 3px;  position: relative;}
-    .one-third-a4{ height: 350px; margin: 16px 0; border: dashed 1px #ffffff;}
-
-    @page{
-        margin:0
-    }
-
-</style>
 <body>
 <!--startprint-->
     <div class="a4-endwise" id="jiekuandan"  style="align: center;">
@@ -74,11 +27,19 @@
                                 </div>
                             </td>
                         </tr>
-                        <tr>
-                            <td class="td" colspan="2">&emsp;团号：{$v[0]['group_id']}</td>
-                            <td class="td" colspan="3">&emsp;项目名称：{$v[0]['project']}</td>
-                            <td class="td">&emsp;计调：{$v[0]['req_uname']}</td>
-                        </tr>
+                        <?php if ($v[0]['jkd_type']==2){ ?>
+                            <!--非团支出借款-->
+                            <tr>
+                                <td class="td" colspan="6">&emsp;借款信息：非团支出借款</td>
+                            </tr>
+                        <?php }else{ ?>
+                            <!--团内支出借款-->
+                            <tr>
+                                <td class="td" colspan="2">&emsp;团号：{$v[0]['group_id']}</td>
+                                <td class="td" colspan="3">&emsp;项目名称：{$v[0]['project']}</td>
+                                <td class="td">&emsp;计调：{$v[0]['req_uname']}</td>
+                            </tr>
+                        <?php } ?>
                         <tr>
                             <td colspan="6" class="td">
                                 &emsp;用途说明：  {$v[0].description}
@@ -99,10 +60,20 @@
                             <td colspan="3" class="td">&emsp;借款单位：{$v[0].department}</td>
                             <td colspan="3" class="td">&emsp;借款人签字：<img src="/{$v[0].jk_file}" height='35px' alt=""></td>
                         </tr>
-                        <tr>
-                            <td colspan="3" class="td">&emsp;预算审批人签字：<span id="ysspr"> <?php if($v[0]['ys_audit_status']==2){echo "<span class='red'>不通过</span>"; }elseif ($v[0]['ys_audit_status']==1){ echo "<img src='/".$v[0]['ys_audit_file']."' height='35px'>";}; ?></span></td>
-                            <td colspan="3" class="td">&emsp;财务主管签字：<span id="cwzg"><?php if($v[0]['cw_audit_status']==2){echo "<span class='red'>不通过</span>"; }elseif ($v[0]['cw_audit_status']==1){ echo "<img src='/".$v[0]['cw_audit_file']."' height='35px'>";}; ?></span></td>
-                        </tr>
+                        <?php if ($v[0]['jkd_type']==2){ ?>
+                            <!--非团支出借款-->
+                            <tr>
+                                <td colspan="2" class="td">&emsp;部门主管签字：<span id=""> <?php if($v[0]['manager_audit_status']==2){echo "<span class='red'>不通过</span>"; }elseif ($v[0]['manager_audit_status']==1){ echo "<img src='/".$v[0]['manager_audit_file']."' height='35px'>";}; ?></span></td>
+                                <td colspan="2" class="td">&emsp;部门分管领导签字：<span id="ysspr"> <?php if($v[0]['ys_audit_status']==2){echo "<span class='red'>不通过</span>"; }elseif ($v[0]['ys_audit_status']==1){ echo "<img src='/".$v[0]['ys_audit_file']."' height='35px'>";}; ?></span></td>
+                                <td colspan="2" class="td">&emsp;财务主管签字：<span id="cwzg"><?php if($v[0]['cw_audit_status']==2){echo "<span class='red'>不通过</span>"; }elseif ($v[0]['cw_audit_status']==1){ echo "<img src='/".$v[0]['cw_audit_file']."' height='35px'>";}; ?></span></td>
+                            </tr>
+                        <?php }else{ ?>
+                            <!--团内支出借款-->
+                            <tr>
+                                <td colspan="3" class="td">&emsp;预算审批人签字：<span id="ysspr"> <?php if($v[0]['ys_audit_status']==2){echo "<span class='red'>不通过</span>"; }elseif ($v[0]['ys_audit_status']==1){ echo "<img src='/".$v[0]['ys_audit_file']."' height='35px'>";}; ?></span></td>
+                                <td colspan="3" class="td">&emsp;财务主管签字：<span id="cwzg"><?php if($v[0]['cw_audit_status']==2){echo "<span class='red'>不通过</span>"; }elseif ($v[0]['cw_audit_status']==1){ echo "<img src='/".$v[0]['cw_audit_file']."' height='35px'>";}; ?></span></td>
+                            </tr>
+                        <?php } ?>
                         <tr id="print_time">
                             <td  colspan="6" style="text-align: right; ">打印时间：<?php echo date('Y-m-d H:i:s',time()); ?></td>
                         </tr>
@@ -131,11 +102,21 @@
                                     </div>
                                 </td>
                             </tr>
-                            <tr>
-                                <td class="td" colspan="2">&emsp;团号：{$v[1]['group_id']}</td>
-                                <td class="td" colspan="3">&emsp;项目名称：{$v[1]['project']}</td>
-                                <td class="td">&emsp;计调：{$v[1]['req_uname']}</td>
-                            </tr>
+
+                            <?php if ($v[1]['jkd_type']==2){ ?>
+                                <!--非团支出借款-->
+                                <tr>
+                                    <td class="td" colspan="6">&emsp;借款信息：非团支出借款</td>
+                                </tr>
+                            <?php }else{ ?>
+                                <!--团内支出借款-->
+                                <tr>
+                                    <td class="td" colspan="2">&emsp;团号：{$v[1]['group_id']}</td>
+                                    <td class="td" colspan="3">&emsp;项目名称：{$v[1]['project']}</td>
+                                    <td class="td">&emsp;计调：{$v[1]['req_uname']}</td>
+                                </tr>
+                            <?php } ?>
+
                             <tr>
                                 <td colspan="6" class="td">
                                     &emsp;用途说明：  {$v[1].description}
@@ -156,10 +137,22 @@
                                 <td colspan="3" class="td">&emsp;借款单位：{$v[1].department}</td>
                                 <td colspan="3" class="td">&emsp;借款人签字：<img src="/{$v[1].jk_file}" height='35px' alt=""></td>
                             </tr>
-                            <tr>
-                                <td colspan="3" class="td">&emsp;预算审批人签字：<span id="ysspr"> <?php if($v[1]['ys_audit_status']==2){echo "<span class='red'>不通过</span>"; }elseif ($v[1]['ys_audit_status']==1){ echo "<img src='/".$v[1]['ys_audit_file']."' height='35px'>";}; ?></span></td>
-                                <td colspan="3" class="td">&emsp;财务主管签字：<span id="cwzg"><?php if($v[1]['cw_audit_status']==2){echo "<span class='red'>不通过</span>"; }elseif ($v[1]['cw_audit_status']==1){ echo "<img src='/".$v[1]['cw_audit_file']."' height='35px'>";}; ?></span></td>
-                            </tr>
+
+                            <?php if ($v[1]['jkd_type']==2){ ?>
+                                <!--非团支出借款-->
+                                <tr>
+                                    <td colspan="2" class="td">&emsp;部门主管签字：<span id=""> <?php if($v[1]['manager_audit_status']==2){echo "<span class='red'>不通过</span>"; }elseif ($v[1]['manager_audit_status']==1){ echo "<img src='/".$v[1]['manager_audit_file']."' height='35px'>";}; ?></span></td>
+                                    <td colspan="2" class="td">&emsp;部门分管领导签字：<span id="ysspr"> <?php if($v[1]['ys_audit_status']==2){echo "<span class='red'>不通过</span>"; }elseif ($v[1]['ys_audit_status']==1){ echo "<img src='/".$v[1]['ys_audit_file']."' height='35px'>";}; ?></span></td>
+                                    <td colspan="2" class="td">&emsp;财务主管签字：<span id="cwzg"><?php if($v[1]['cw_audit_status']==2){echo "<span class='red'>不通过</span>"; }elseif ($v[1]['cw_audit_status']==1){ echo "<img src='/".$v[1]['cw_audit_file']."' height='35px'>";}; ?></span></td>
+                                </tr>
+                            <?php }else{ ?>
+                                <!--团内支出借款-->
+                                <tr>
+                                    <td colspan="3" class="td">&emsp;预算审批人签字：<span id="ysspr"> <?php if($v[1]['ys_audit_status']==2){echo "<span class='red'>不通过</span>"; }elseif ($v[1]['ys_audit_status']==1){ echo "<img src='/".$v[1]['ys_audit_file']."' height='35px'>";}; ?></span></td>
+                                    <td colspan="3" class="td">&emsp;财务主管签字：<span id="cwzg"><?php if($v[1]['cw_audit_status']==2){echo "<span class='red'>不通过</span>"; }elseif ($v[1]['cw_audit_status']==1){ echo "<img src='/".$v[1]['cw_audit_file']."' height='35px'>";}; ?></span></td>
+                                </tr>
+                            <?php } ?>
+
                             <tr id="print_time">
                                 <td  colspan="6" style="text-align: right; ">打印时间：<?php echo date('Y-m-d H:i:s',time()); ?></td>
                             </tr>
@@ -189,11 +182,21 @@
                                     </div>
                                 </td>
                             </tr>
-                            <tr>
-                                <td class="td" colspan="2">&emsp;团号：{$v[2]['group_id']}</td>
-                                <td class="td" colspan="3">&emsp;项目名称：{$v[2]['project']}</td>
-                                <td class="td">&emsp;计调：{$v[2]['req_uname']}</td>
-                            </tr>
+
+                            <?php if ($v[2]['jkd_type']==2){ ?>
+                                <!--非团支出借款-->
+                                <tr>
+                                    <td class="td" colspan="6">&emsp;借款信息：非团支出借款</td>
+                                </tr>
+                            <?php }else{ ?>
+                                <!--团内支出借款-->
+                                <tr>
+                                    <td class="td" colspan="2">&emsp;团号：{$v[2]['group_id']}</td>
+                                    <td class="td" colspan="3">&emsp;项目名称：{$v[2]['project']}</td>
+                                    <td class="td">&emsp;计调：{$v[2]['req_uname']}</td>
+                                </tr>
+                            <?php } ?>
+
                             <tr>
                                 <td colspan="6" class="td">
                                     &emsp;用途说明：  {$v[2].description}
@@ -214,10 +217,22 @@
                                 <td colspan="3" class="td">&emsp;借款单位：{$v[2].department}</td>
                                 <td colspan="3" class="td">&emsp;借款人签字：<img src="/{$v[2].jk_file}" height='35px' alt=""></td>
                             </tr>
-                            <tr>
-                                <td colspan="3" class="td">&emsp;预算审批人签字：<span id="ysspr"> <?php if($v[2]['ys_audit_status']==2){echo "<span class='red'>不通过</span>"; }elseif ($v[2]['ys_audit_status']==1){ echo "<img src='/".$v[2]['ys_audit_file']."' height='35px'>";}; ?></span></td>
-                                <td colspan="3" class="td">&emsp;财务主管签字：<span id="cwzg"><?php if($v[2]['cw_audit_status']==2){echo "<span class='red'>不通过</span>"; }elseif ($v[2]['cw_audit_status']==1){ echo "<img src='/".$v[2]['cw_audit_file']."' height='35px'>";}; ?></span></td>
-                            </tr>
+
+                            <?php if ($v[2]['jkd_type']==2){ ?>
+                                <!--非团支出借款-->
+                                <tr>
+                                    <td colspan="2" class="td">&emsp;部门主管签字：<span id=""> <?php if($v[2]['manager_audit_status']==2){echo "<span class='red'>不通过</span>"; }elseif ($v[2]['manager_audit_status']==1){ echo "<img src='/".$v[2]['manager_audit_file']."' height='35px'>";}; ?></span></td>
+                                    <td colspan="2" class="td">&emsp;部门分管领导签字：<span id="ysspr"> <?php if($v[2]['ys_audit_status']==2){echo "<span class='red'>不通过</span>"; }elseif ($v[2]['ys_audit_status']==1){ echo "<img src='/".$v[2]['ys_audit_file']."' height='35px'>";}; ?></span></td>
+                                    <td colspan="2" class="td">&emsp;财务主管签字：<span id="cwzg"><?php if($v[2]['cw_audit_status']==2){echo "<span class='red'>不通过</span>"; }elseif ($v[2]['cw_audit_status']==1){ echo "<img src='/".$v[2]['cw_audit_file']."' height='35px'>";}; ?></span></td>
+                                </tr>
+                            <?php }else{ ?>
+                                <!--团内支出借款-->
+                                <tr>
+                                    <td colspan="3" class="td">&emsp;预算审批人签字：<span id="ysspr"> <?php if($v[2]['ys_audit_status']==2){echo "<span class='red'>不通过</span>"; }elseif ($v[2]['ys_audit_status']==1){ echo "<img src='/".$v[2]['ys_audit_file']."' height='35px'>";}; ?></span></td>
+                                    <td colspan="3" class="td">&emsp;财务主管签字：<span id="cwzg"><?php if($v[2]['cw_audit_status']==2){echo "<span class='red'>不通过</span>"; }elseif ($v[2]['cw_audit_status']==1){ echo "<img src='/".$v[2]['cw_audit_file']."' height='35px'>";}; ?></span></td>
+                                </tr>
+                            <?php } ?>
+
                             <tr id="print_time">
                                 <td  colspan="6" style="text-align: right; ">打印时间：<?php echo date('Y-m-d H:i:s',time()); ?></td>
                             </tr>
