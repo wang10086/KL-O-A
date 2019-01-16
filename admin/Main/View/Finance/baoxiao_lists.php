@@ -54,13 +54,18 @@
                                         <tr>
                                             <td>{$row.bxd_id}</td>
                                             <if condition="$pin neq 2">
-                                                <td>{$row.group_ids}</td>
+                                                <td>
+                                                    <if condition="$row.bxd_type eq 1">
+                                                    {$row.group_ids}
+                                                    <else />
+                                                    非团报销单
+                                                </td>
                                             </if>
                                             <td><?php echo $row['jkd_ids']?$row['jkd_ids']:'暂无借款单信息'; ?></td>
                                             <td>
-                                                <if condition="$row.bxd_type eq 1"><!--团内借款报销-->
+                                                <if condition="$row.bxd_type eq 1"> <!--团内借款报销-->
                                                     <div class="text-overflow-lines"><a href="{:U('Finance/baoxiaodan_info',array('id'=>$row['id']))}" title="{$row.description}">{$row.description}</a></div>
-                                                <else /><!--非团借款报销-->
+                                                <else /> <!--非团借款报销-->
                                                     <div class="text-overflow-lines"><a href="{:U('Finance/nopbxd_info',array('id'=>$row['id']))}" title="{$row.description}">{$row.description}</a></div>
                                                 </if>
                                             </td>
