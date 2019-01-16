@@ -22,7 +22,8 @@
                                     <h3 class="box-title">岗位管理</h3>
                                     <if condition="rolemenu(array('Rbac/addpost'))">
                                     <div class="box-tools pull-right">
-                                         <a href="{:U('Rbac/addpost')}" class="btn btn-sm btn-danger"><i class="fa fa-plus"></i> 新建岗位</a>
+                                         <!--<a href="{:U('Rbac/addpost')}" class="btn btn-sm btn-danger"><i class="fa fa-plus"></i> 新建岗位</a>-->
+                                         <a href="javascript:;" onclick="art_show_msg('请优先编辑使用没有人员的岗位')" class="btn btn-sm btn-danger"><i class="fa fa-plus"></i> 新建岗位</a>
                                     </div>
                                     </if>
                                 </div><!-- /.box-header -->

@@ -11,7 +11,7 @@ use Think\Controller;
 
 class PrintController extends Controller{
 
-    //打印报销单
+    //打印借款单
     public function printLoanBill(){
         $id                             = I('jkids');
         $ids                            = explode(',',$id);

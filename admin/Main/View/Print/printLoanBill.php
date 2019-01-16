@@ -74,8 +74,13 @@
                                 <td colspan="3" class="td">&emsp;财务主管签字：<span id="cwzg"><?php if($v[0]['cw_audit_status']==2){echo "<span class='red'>不通过</span>"; }elseif ($v[0]['cw_audit_status']==1){ echo "<img src='/".$v[0]['cw_audit_file']."' height='35px'>";}; ?></span></td>
                             </tr>
                         <?php } ?>
-                        <tr id="print_time">
-                            <td  colspan="6" style="text-align: right; ">打印时间：<?php echo date('Y-m-d H:i:s',time()); ?></td>
+                        <tr>
+                            <?php if ($v[0]['cw_remark']){ ?>
+                                <td  colspan="3" class="td" >&emsp;财务备注：{$v[0].cw_remark}</td>
+                                <td  colspan="3" class="td" >&emsp;打印时间：<?php echo date('Y-m-d H:i:s',time()); ?></td>
+                            <?php }else{ ?>
+                                <td  colspan="6" style="text-align: right; ">打印时间：<?php echo date('Y-m-d H:i:s',time()); ?></td>
+                            <?php } ?>
                         </tr>
                     </table>
                 </div>
@@ -153,8 +158,13 @@
                                 </tr>
                             <?php } ?>
 
-                            <tr id="print_time">
-                                <td  colspan="6" style="text-align: right; ">打印时间：<?php echo date('Y-m-d H:i:s',time()); ?></td>
+                            <tr>
+                                <?php if ($v[1]['cw_remark']){ ?>
+                                    <td  colspan="3" class="td" >&emsp;财务备注：{$v[1].cw_remark}</td>
+                                    <td  colspan="3" class="td" >&emsp;打印时间：<?php echo date('Y-m-d H:i:s',time()); ?></td>
+                                <?php }else{ ?>
+                                    <td  colspan="6" style="text-align: right; ">打印时间：<?php echo date('Y-m-d H:i:s',time()); ?></td>
+                                <?php } ?>
                             </tr>
                         </table>
                     </div>
@@ -233,8 +243,13 @@
                                 </tr>
                             <?php } ?>
 
-                            <tr id="print_time">
-                                <td  colspan="6" style="text-align: right; ">打印时间：<?php echo date('Y-m-d H:i:s',time()); ?></td>
+                            <tr>
+                                <?php if ($v[2]['cw_remark']){ ?>
+                                    <td  colspan="3" class="td" >&emsp;财务备注：{$v[2].cw_remark}</td>
+                                    <td  colspan="3" class="td" >&emsp;打印时间：<?php echo date('Y-m-d H:i:s',time()); ?></td>
+                                <?php }else{ ?>
+                                    <td  colspan="6" style="text-align: right; ">打印时间：<?php echo date('Y-m-d H:i:s',time()); ?></td>
+                                <?php } ?>
                             </tr>
                         </table>
                     </div>
