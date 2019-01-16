@@ -23,8 +23,6 @@
                             <input type="hidden" name="loan[20000{$v.id}][costacc_id]" value="{$v.id}">
                             <input type="hidden" name="loan[20000{$v.id}][op_id]" value="{$v.op_id}">
                             <input type="hidden" name="loan[20000{$v.id}][group_id]" value="{$v.group_id}">
-                            <!--<input type="hidden" name="loan[20000{$v.id}][unitcost]" value="{$v.unitcost}">
-                            <input type="hidden" name="loan[20000{$v.id}][amount]" value="{$v.amount}">-->
                             <input type="hidden" name="loan[20000{$v.id}][ctotal]" value="{$v.ctotal}" id="ys_20000{$v.id}">
                             <input type="hidden" name="loan[20000{$v.id}][type]" value="{$v.type}">
                             <input type="hidden" name="loan[20000{$v.id}][jiekuan]" value="{$v.jiekuan}" id="jk_20000{$v.id}">
@@ -104,7 +102,7 @@
 
                 <div class="form-group col-md-12">
                     <label>用途说明：</label>
-                    <textarea class="form-control"  name="info[description]">{$list.description}</textarea>
+                    <textarea class="form-control" name="info[description]">{$list.description}</textarea>
                 </div>
                 <div class="form-group col-md-12 zp_show hk_show">
                     <label>受款单位：</label>
@@ -163,10 +161,6 @@
         $('#groupId').show();
     }
 
-    function get_zmysr() {
-
-    }
-
     function get_yusuan() {
         var group_id        = $('#groupId').val();
         var old_ys_total    = $('#ys_total').val();
@@ -179,9 +173,16 @@
                 dataType: "json",
                 data: {group_id:group_id},
                 success:function (data) {
-                    var status  = data.status;
-                    var msg     = data.msg;
+                    var status              = data.status;
+                    var msg                 = data.msg;
                     if (status==1){
+                        var description     = $('textarea[name="info[description]"]').val();
+                        var inthe           = description.indexOf(group_id);
+                        if (inthe ==-1){    //将团号信息带入用途说明
+                            var new_descipt = group_id+';'+description;
+                            $('textarea[name="info[description]"]').val(new_descipt);
+                        }
+
                         art.dialog.open("/index.php?m=Main&c=Finance&a=select_ys&opid="+msg,{
                             lock:true,
                             title: '选择预算信息',
@@ -207,9 +208,6 @@
                                             '<td><input type="hidden" name="loan['+i+'][costacc_id]" value="'+loan[j].id+'">' +
                                             '<input type="hidden" name="loan['+i+'][op_id]" value="'+loan[j].op_id+'">' +
                                             '<input type="hidden" name="loan['+i+'][group_id]" value="'+loan[j].group_id+'">' +
-                                            /*'<input type="hidden" name="loan['+i+'][title]" value="'+loan[j].title+'">' +
-                                            '<input type="hidden" name="loan['+i+'][ctotal]" value="'+loan[j].ctotal+'" id="ys_'+i+'">' +
-                                            '<input type="hidden" name="loan['+i+'][type]" value="'+loan[j].type+'">' +*/
                                             '<input type="hidden" name="loan['+i+'][ctotal]" value="'+loan[j].ctotal+'" id="ys_'+i+'">' +
                                             '<input type="hidden" name="loan['+i+'][jiekuan]" value="'+loan[j].jiekuan+'" id="jk_'+i+'">' +
                                             '</td>'+

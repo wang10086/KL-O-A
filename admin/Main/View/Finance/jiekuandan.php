@@ -80,9 +80,6 @@
                                 <td colspan="3" class=" td">&emsp;预算审批人签字：<span id="ysspr"> <?php if($audit_userinfo['ys_audit_status']==2){echo "<span class='red'>不通过</span>"; }elseif ($audit_userinfo['ys_audit_status']==1){ echo "<img src='/$audit_userinfo[ys_audit_file]' height='35px'>";}; ?></span></td>
                                 <td colspan="3" class=" td">&emsp;财务主管签字：<span id="cwzg"><?php if($audit_userinfo['cw_audit_status']==2){echo "<span class='red'>不通过</span>"; }elseif ($audit_userinfo['cw_audit_status']==1){ echo "<img src='/$audit_userinfo[cw_audit_file]' height='35px'>";}; ?></span></td>
                             </tr>
-                            <tr id="print_time">
-                                <td class="" colspan="6" style="text-align: right; ">打印时间：<?php echo date('Y-m-d H:i:s',time()); ?></td>
-                            </tr>
                         </table>
                     </div>
 
@@ -102,13 +99,6 @@
 <?php } ?>
 
 <script>
-    $(function () {
-        $('#print_time').hide();
-    })
-
-    /*function show_print_time() {
-        $('#print_time').show();
-    }*/
 
     function show_qianzi() {
         var html = '';
@@ -157,11 +147,4 @@
         }
     }
 
-    //打印部分页面 A4纸
-    /*function print_A4_view(id){
-        $('.a4-endwise').css({'height': '560px', 'border-bottom': '1px #AAAAAA dashed'});
-        $('#jkd-table').css({'width': '90%','margin': '10px 5%'});
-        document.body.innerHTML=document.getElementById(''+id+'').innerHTML;
-        window.print();
-    }*/
 </script>

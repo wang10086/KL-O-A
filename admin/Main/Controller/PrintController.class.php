@@ -12,7 +12,7 @@ use Think\Controller;
 class PrintController extends Controller{
 
     //打印报销单
-    function printLoanBill(){
+    public function printLoanBill(){
         $id                             = I('jkids');
         $ids                            = explode(',',$id);
         $data                           = M()->table('__JIEKUAN__ as j')->join('__JIEKUAN_AUDIT__ as a on a.jk_id=j.id','left')->where(array('j.id'=>array('in',$ids)))->select();
@@ -28,9 +28,29 @@ class PrintController extends Controller{
             }
         }
 
-       $lists                           = array_chunk($data,3,false);
+        $lists                          = array_chunk($data,3,false);
         $this->jk_type                  = C('JIEKUAN_TYPE');
         $this->lists                    = $lists;
+        $this->display();
+    }
+
+    //打印 报销单
+    public function printReimbursement(){
+        $id                             = I('bxid');
+        $data                           = M()->table('__BAOXIAO__ as b')->join('__BAOXIAO_AUDIT__ as a on a.bx_id=b.id','left')->where(array('b.id'=>$id))->find();
+        if ($data['bxd_type']==1){      //团内借款报销
+            $opids                      = explode(',',$data['opids']);
+            $field                      = 'o.group_id,o.project,l.req_uname';
+            $where                      = array();
+            $where['o.op_id']           = array('in',$opids);
+            $where['l.req_type']        = P::REQ_TYPE_BUDGET;
+            $info                       = M()->table('__OP__ as o')->field($field)->join('__OP_BUDGET__ as b on b.op_id = o.op_id','left')->join('__AUDIT_LOG__ as l on l.req_id=b.id','left')->where($where)->select();
+            $data['project']            = implode(',',array_column($info,'project'));
+            $data['req_uname']          = implode(',',array_unique(array_column($info,'req_uname')));
+        }
+
+        $this->bx_type                  = C('JIEKUAN_TYPE');
+        $this->list                     = $data;
         $this->display();
     }
 }

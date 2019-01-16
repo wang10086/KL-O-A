@@ -24,13 +24,11 @@
                                     </div>
                                 </td>
                             </tr>
-
                             <tr>
                                 <td class=" td" colspan="2">&emsp;团号：{$op['group_id']}</td>
                                 <td class=" td" colspan="3">&emsp;项目名称：{$op['project']}</td>
                                 <td class=" td">&emsp;计调：{$jidiao}</td>
                             </tr>
-
                             <tr>
                                 <td colspan="6" class=" td">
                                     &emsp;用途说明：  {$jiekuan.description}
@@ -47,20 +45,14 @@
                                 <td colspan="3" class=" td">&emsp;开户行名称：{$jiekuan.bank_name}</td>
                                 <td colspan="3" class=" td">&emsp;账号：{$jiekuan.card_num}</td>
                             </tr>
-
                             <tr>
                                 <td colspan="3" class=" td">&emsp;借款单位：{$jiekuan.department}</td>
                                 <td colspan="3" class=" td">&emsp;借款人签字：<img src="/{$jiekuan.jk_file}" height='35px' alt=""></td>
                             </tr>
-
                             <tr>
                                 <td colspan="3" class=" td">&emsp;预算审批人签字：<span id="ysspr"> <?php if($audit_userinfo['ys_audit_status']==2){echo "<span class='red'>不通过</span>"; }elseif ($audit_userinfo['ys_audit_status']==1){ echo "<img src='/$audit_userinfo[ys_audit_file]' height='35px'>";}; ?></span></td>
                                 <td colspan="3" class=" td">&emsp;财务主管签字：<span id="cwzg"><?php if($audit_userinfo['cw_audit_status']==2){echo "<span class='red'>不通过</span>"; }elseif ($audit_userinfo['cw_audit_status']==1){ echo "<img src='/$audit_userinfo[cw_audit_file]' height='35px'>";}; ?></span></td>
                             </tr>
-                            <tr id="print_time">
-                                <td class="" colspan="6" style="text-align: right; ">打印时间：<?php echo date('Y-m-d H:i:s',time()); ?></td>
-                            </tr>
-
                         </table>
                     </div>
                     <if condition="rolemenu(array('Finance/print_jkd'))">
@@ -79,13 +71,6 @@
 <?php } ?>
 
 <script>
-    $(function () {
-        $('#print_time').hide();
-    })
-
-    function show_print_time() {
-        $('#print_time').show();
-    }
 
     function show_qianzi() {
         var html = '';
@@ -138,11 +123,4 @@
         }
     }
 
-    //打印部分页面 A4纸
-    function print_A4_view(id){
-        $('.a4-endwise').css({'height': '560px', 'border-bottom': '1px #AAAAAA dashed'});
-        $('#jkd-table').css({'width': '90%','margin': '10px 5%'});
-        document.body.innerHTML=document.getElementById(''+id+'').innerHTML;
-        window.print();
-    }
 </script>
