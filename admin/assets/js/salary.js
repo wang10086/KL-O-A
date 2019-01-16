@@ -338,7 +338,7 @@ $('.withholding_click').click(function(){//添加新项目
 $('.withholding_delete').click(function(){//删除无用的项目 前期自动添加项目
     $(this).parents('.add_withholding_list').remove();
 });
-function withholding_delete() {
+function withholding_delete(obj) {
     $('.withholding_delete').click(function(){//删除无用的项目 后期手动添加项目
         $(this).parents('.add_withholding_list').remove();
     });
@@ -352,6 +352,10 @@ $('.salary_withholding_butt').click(function(){
         var name = $(this).find('.withholding_project_name').val();//项目名称
         var money = $(this).find('.withholding_money').val();//金额
         var id = $(this).find('.withholding_id').val();//用户id
+        if(id==''){
+            id =  $('.withholding_countid1').val();//用户id
+        }
+
         arr += name+",";
         arr += money+",";
         arr += id+","+"|";
