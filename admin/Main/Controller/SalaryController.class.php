@@ -884,9 +884,7 @@ class SalaryController extends BaseController {
             $user_info[$key]['Extract']['total']    = $user_price['total']+$user_bonus[0]['bonus']+$bonus_extract;//提成相加
             $extract                                = $user_info[$key]['Extract']['total'];
             $Year_end                               = ($user_info[$key]['bonus'][0]['annual_bonus'])/12;
-//            $user_info[$key]['yearend']             = D('Salary')->year_end($Year_end);//年终奖计税
-            $user_info[$key]['yearend']             = 0; //年终奖计税
-
+            $user_info[$key]['yearend']             = D('Salary')->year_end_tax($Year_end,$user_info[$key]['bonus'][0]['year_end_tax']);//年终奖计税
             //其他补款 = 其他补贴变动 + 外地补贴 + 电脑补贴
             $user_info[$key]['Other']               = round(($countmoney+$user_info[$key]['subsidy'][0]['foreign_subsidies']+$user_info[$key]['subsidy'][0]['computer_subsidy']),2);
             // 提成 + 奖金+带团补助+年终奖+住房补贴+外地补贴+电脑补贴+提成

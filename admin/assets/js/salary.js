@@ -232,6 +232,7 @@ $('.salary_button22').click(function(){//工会会费
         var foreign_subsidies = $(this).parents('tr').find('.salary_bonus_bonus').val();//外地补贴 | 其他提成
         var foreign_bonus = $(this).parents('tr').find('.salary_bonus1_bonus').val();//奖金
         var computer_subsidy = $(this).parents('tr').find('.salary_bonus_yearend').val();//电脑补贴 | 年终
+        var yearend = $(this).parents('tr').find('.salary_bonus_yearendtax').val();//电脑补贴 | 年终
         $.ajax({
             type: "post",
             url: url, //url
@@ -242,6 +243,7 @@ $('.salary_button22').click(function(){//工会会费
                 'computer_subsidy': computer_subsidy,
                 'foreign_bonus':foreign_bonus,
                 'statu':statu,
+                'yearend':yearend,
             },
             dataType: "json", //数据格式
             success: function (data) {

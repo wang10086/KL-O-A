@@ -481,6 +481,7 @@ class AjaxController extends Controller {
             $where['bonus']                 = code_number(trim($_POST['foreign_subsidies']));//其他人员提成
             $where['annual_bonus']          = code_number(trim($_POST['computer_subsidy']));//年终奖
             $where['foreign_bonus']         = code_number(trim($_POST['foreign_bonus']));//奖金
+            $where['year_end_tax']          = code_number(trim($_POST['yearend']));//年终奖计税
         }
         if($type == 2){//补贴
             $where['housing_subsidy']       = code_number(trim($_POST['housing_subsidy']));//住房补贴

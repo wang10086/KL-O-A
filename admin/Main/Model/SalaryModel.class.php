@@ -41,6 +41,24 @@ class SalaryModel extends Model
         return $counting;
     }
 
+
+    /**
+     * year_end_tax 年终奖税
+     * $Year_end 年终金额
+     * $year_end_tax
+     */
+    public function year_end_tax($Year_end,$year_end_tax){
+        if(is_numeric($Year_end) || is_numeric($year_end_tax)){
+            return $year_end_tax;die;
+        }elseif(is_numeric($year_end_tax=="") || empty($year_end_tax)){
+            return $this->year_end($Year_end);die;
+
+        }else{
+            return 0;die;
+        }
+    }
+
+
     /***
      * year_end 年终奖
      * $Year_end 年终金额

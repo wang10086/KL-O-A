@@ -31,6 +31,7 @@
                             <th class="sorting" data="number" style="width:12em;">其他人员提成</th>
                             <th class="sorting" data="number" style="width:12em;">奖金</th>
                             <th class="sorting" data="shouru" style="width:12em;">年终奖</th>
+                            <th class="sorting" data="shouru" style="width:12em;">年终奖计税</th>
                             <th class="sorting" data="shouru" style="width:10em;">操作</th>
                         </tr>
 
@@ -46,6 +47,7 @@
                                 <td><input type="text" style="float:left;" class="form-control salary_bonus_bonus" placeholder="其他人员提成" /></td>
                                 <td><input type="text" style="float:left;" class="form-control salary_bonus1_bonus" placeholder="奖金" /></td>
                                 <td><input type="text" style="float:left;" class="form-control salary_bonus_yearend" value="{$lst.annual_bonus}" /></td>
+                                <td><input type="text" style="float:left;" class="form-control salary_bonus_yearendtax" value="{$lst.year_end_tax}" /></td>
                                 <input type="hidden" class="status" value="1">
 
                                 <td> <input type="button" class="form-control salary_subsidy_butt" value="添加" style="background-color:#00acd6;font-size:1em;" /></td>
