@@ -488,6 +488,8 @@ class ChartModel extends Model
      */
     public function time_department($year,$department,$begintime,$endtime,$type)
     {
+        $count_list                      = array();
+        $table_info                      = array();
         $kind                            = M('project_kind')->select();//部门分类
         $where['b.audit_status']         = array('eq', 1);
         $where['l.audit_time']           = array('between', "$begintime,$endtime");
@@ -525,8 +527,7 @@ class ChartModel extends Model
             $where['l.req_type']         = array('eq', 801);
             $lists                       = M()->table('__OP_SETTLEMENT__ as b')->join('__OP__ as o on b.op_id = o.op_id', 'LEFT')->join('__AUDIT_LOG__ as l on l.req_id = b.id', 'LEFT')->where($where)->select();
         }
-        $count_list                      = array();
-        $table_info                      = array();
+
         foreach($department as $key =>$val){ //查询数组中是否部门用户id
             $table_info[$key]['department']                                 = $val;
             $account                                                        = M('account')->where('departmentid='.$key)->field('id,departmentid')->select();//用户id

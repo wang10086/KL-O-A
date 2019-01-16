@@ -1031,7 +1031,7 @@ class AjaxController extends Controller {
             }
             $sum                            = 0;
         }
-        echo json_encode(array('sum' => $sum, 'msg' => $msg));die;
+        echo json_encode(array('sum' =>1, 'msg' => $msg));die;
     }
 
 
