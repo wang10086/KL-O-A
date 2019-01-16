@@ -1,94 +1,17 @@
 
-    <label class="lit-title" style="width: 98%;margin: 0 1%">请对工单完成质量评价
-        <span style="float: right;clear: both;font-weight: normal;">工单执行人：<?php echo $info['assign_name']?$info['assign_name']:$info['exe_user_name']; ?></span>
-    </label>
-    <div class="content">
-        <div class="content" id="guidelist" style="display:block;">
-            <input type="hidden" name="sco[bpfr_id]" value="<?php echo $info['assign_id']?$info['assign_id']:$info['exe_user_id']; ?>" />
-            <input type="hidden" name="sco[bpfr_name]" value="<?php echo $info['assign_name']?$info['assign_name']:$info['exe_user_name']; ?>" />
+            <?php if ($post_id == 83){ ?>
+                <!--京区业务中心平面设计专员-->
+                <include file="score_form_1" />
 
-            <div style="width:100%;float:left;">
+            <?php }elseif($post_id ==102 ){ ?>
+                <!--京区业务中心微信运营专员-->
+                <include file="score_form_2" />
+            <?php }elseif($post_id ==63 ){ ?>
+                <!--研发部实施专家-->
+                <include file="score_form_3" />
+            <?php } ?>
 
-                <?php if ($post_id == 83){ ?>
-                    <input type="hidden" id="text_num" name="sco[text]" value="" />
-                    <input type="hidden" id="pic_num" name="sco[pic]" value="" />
-                    <input type="hidden" id="article_num" name="sco[article]" value="" />
-                    <input type="hidden" id="habit_num" name="sco[habit]" value="" />
-                    <input type="hidden" id="hot_num" name="sco[hot]" value="" />
-                    <!--京区业务中心平面设计专员-->
-                    <div class="form-group col-md-4">
-                        <label>文字准确度：</label>
-                        <div class="demo score">
-                            <div id="text"></div>
-                        </div>
-                    </div>
 
-                    <div class="form-group col-md-4">
-                        <label>图片准确性：</label>
-                        <div class="demo score">
-                            <div id="pic"></div>
-                        </div>
-                    </div>
-
-                    <div class="form-group col-md-4">
-                        <label>文章要素完整性：</label>
-                        <div class="demo score">
-                            <div id="article"></div>
-                        </div>
-                    </div>
-
-                    <div class="form-group col-md-6">
-                        <label>设计考虑用户使用习惯、各类推广牵引效果、情感及体验感受：</label>
-                        <div class="demo score">
-                            <div id="habit"></div>
-                        </div>
-                    </div>
-
-                    <div class="form-group col-md-6">
-                        <label>即时掌握相关热点，匹配专题策划、 活动，提高客户成交率：</label>
-                        <div class="demo score">
-                            <div id="hot"></div>
-                        </div>
-                    </div>
-                <?php }elseif($post_id ==102 ){ ?>
-                    <input type="hidden" id="text_num" name="sco[text]" value="" />
-                    <input type="hidden" id="pic_num" name="sco[pic]" value="" />
-                    <input type="hidden" id="article_num" name="sco[article]" value="" />
-                    <input type="hidden" id="light_num" name="sco[light]" value="" />
-                    <!--京区业务中心微信运营专员-->
-                    <div class="form-group col-md-6">
-                        <label>文字准确度：</label>
-                        <div class="demo score">
-                            <div id="text"></div>
-                        </div>
-                    </div>
-
-                    <div class="form-group col-md-6">
-                        <label>图片准确性：</label>
-                        <div class="demo score">
-                            <div id="pic"></div>
-                        </div>
-                    </div>
-
-                    <div class="form-group col-md-6">
-                        <label>文章要素完整性：</label>
-                        <div class="demo score">
-                            <div id="article"></div>
-                        </div>
-                    </div>
-
-                    <div class="form-group col-md-6">
-                        <label>文章选题有创意、策划有亮点、符合客户需求：</label>
-                        <div class="demo score">
-                            <div id="light"></div>
-                        </div>
-                    </div>
-                <?php } ?>
-
-                <textarea name="sco[content]" class="form-control" id="content"  rows="2" placeholder="请输入对该工单评价内容"></textarea>
-            </div>
-        </div>
-    </div>
 
 
 

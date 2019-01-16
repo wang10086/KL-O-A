@@ -223,73 +223,10 @@ class WorderController extends BaseController{
         }
     }
 
-    //我的工单
-    /*public function my_worder(){
-        if (isset($_POST['dosubmint'])){
-
-        }else{
-            $db                     = M('worder');
-            $pin                    = I('pin',1);
-            if ($pin == 0){$pin = 1;};
-            $userid                 = cookie('userid');
-            $where                  = array();
-
-            if ($pin == 1){
-                $where['worder_type']   = array('neq',P::WORDER_PROJECT);   //排除项目工单
-                $where['ini_user_id']   = $userid;                          //我申请的工单
-            }elseif ($pin == 2){
-                $where['worder_type']   = array('neq',P::WORDER_PROJECT);
-                $where['assign_id']   = $userid or $where['exe_user_id']   = $userid;    //我的待执行工单
-                //$where['exe_user_id']   = $userid;
-                $st                     = array(0,1,2,-3);
-                $where['status']        = array('in',$st);
-            }elseif ($pin == 101){
-                $where['worder_type']   = array('eq',P::WORDER_PROJECT);   //项目工单
-                $where['ini_user_id']   = $userid;                         //我指派的项目工单
-            }elseif ($pin == 102){
-                $where['worder_type']   = array('eq',P::WORDER_PROJECT);
-                $where['exe_user_id']   = $userid or $where['assign_id']   = $userid;   //我的待执行项目工单
-                $st                     = array(0,1,2,-3);
-                $where['status']        = array('in',$st);
-            }
-            //分页
-            $pagecount		= $db->where($where)->count();
-            $page			= new Page($pagecount, P::PAGE_SIZE);
-            $this->pages	= $pagecount>P::PAGE_SIZE ? $page->show():'';
-
-            $lists                  = $db->where($where)->limit($page->firstRow . ',' . $page->listRows)->order($this->orders('create_time'))->select();
-            foreach($lists as $k=>$v){
-                //判断工单类型
-                if($v['worder_type']==0) $lists[$k]['type'] = '维修工单';
-                if($v['worder_type']==1) $lists[$k]['type'] = '管理工单';
-                if($v['worder_type']==2) $lists[$k]['type'] = '质量工单';
-                if($v['worder_type']==3) $lists[$k]['type'] = '其他工单';
-                if($v['worder_type']==100)$lists[$k]['type']= '项目工单';
-
-                //判断工单状态
-                if($v['status']==0)     $lists[$k]['sta'] = '<span class="red">未响应</span>';
-                if($v['status']==1)     $lists[$k]['sta'] = '<span class="yellow">执行部门已响应</span>';
-                if($v['status']==2)     $lists[$k]['sta'] = '<span class="yellow">执行部门已确认完成</span>';
-                if($v['status']==3)     $lists[$k]['sta'] = '<span class="green">发起人已确认完成</span>';
-                if($v['status']==-1)    $lists[$k]['sta'] = '拒绝或无效工单';
-                if($v['status']==-2)    $lists[$k]['sta'] = '已撤销';
-                if($v['status']==-3)    $lists[$k]['sta'] = '<span class="red">需要做二次修改</span>';
-            }
-            $this->lists            = $lists;
-            $this->pin              = $pin;
-            if ($pin == 1 or $pin == 2){
-                $this->display('my_worder');
-            }elseif ($pin ==101 or $pin == 102){
-                $this->display('my_pro_worder');
-            }
-        }
-    }*/
-
     //查看工单详情
     public function worder_info(){
         $id             = I('id');
         $db             = M('worder');
-        //$this->info     = $db->alias('w')->where(array('w.id'=>$id))->join("left join oa_worder_dept as d on d.id = w.wd_id")->find();
         $info           = $db->where(array('id'=>$id))->find();
         $roleid         = cookie('roleid');
         $this->dept_list= M('worder_dept')->field("id,pro_title")->select();

@@ -2650,7 +2650,7 @@ function updatekpi($month,$user){
 					
 				}
 
-                //月度顾客满意度
+                //月度顾客满意度(业务)
                 if($v['quota_id']==124){
 
                     //获取当月已评分的团
@@ -2721,44 +2721,6 @@ function updatekpi($month,$user){
                 }
 
                 //工作及时率(京区业务中心)(工单)
-                /*if ($v['quota_id']==130){
-                    //5天内完成为不超时
-                    $where                  = array();
-                    $where['audit_time']    = array('between',array($v['start_date']-5*86400,$v['end_date']-4*86400));
-                    $where['audit_status']  = 1;
-                    $where['exe_user_id']   = $user;
-                    $lists1 = M('op_res')->where($where)->select();         //资源需求单
-                    $lists2 = M('op_design')->where($where)->select();      //设计委托单
-                    $lists3 = M('op_work_plans')->where($where)->select();  //工作计划单
-                    $lists  = array();
-                    foreach ($lists1 as $aa=>$bb){
-                        $lists[] = $bb;
-                    }
-                    foreach ($lists2 as $cc=>$dd){
-                        $lists[] = $dd;
-                    }
-                    foreach ($lists3 as $ee=>$ff){
-                        $lists[] = $ff;
-                    }
-
-                    $hege   = array();
-                    foreach ($lists as $key=>$value){
-                        $time   = $value['feedback_time'] - $value['create_time'];
-                        $ftime  = $value['finish_time'] - $value['create_time'];
-                        if ((0<$time && $time< 5*86400) || (0<$ftime && $ftime<5*86400)){
-                            $hege[] = $value;
-                        }
-                    }
-                    $zongxiangmu    = count($lists);
-                    $hegexiangmu    = count($hege);
-                    $hegelv         = round($hegexiangmu/$zongxiangmu,2);
-
-                    if($hegelv>0.9 || !$zongxiangmu){
-                        $complete	= 100;
-                    }else{
-                        $complete	= round($hegelv/0.9,2)*100;
-                    }
-                }*/
                 if (in_array($v['quota_id'],array(130,136,148,150))){
                     //及时率
                     $jishilv_data           = get_jishilv($user,$v['start_date'],$v['end_date']);
@@ -3063,7 +3025,6 @@ function updatekpi($month,$user){
                     }
                 }
 
-
                 //季度人事费用率
                 if ($v['quota_id']==127){
                     $year           = $v['year']?$v['year']:date('Y');
@@ -3090,8 +3051,29 @@ function updatekpi($month,$user){
                     $complete   = 100;
                 }
 
+                //专家实施客户满意度(研发专家)
+                if($v['quota_id']==161){
+                    $data                   = get_op_guide($user,$v['start_date'],$v['end_date']);  //获取该用户本周期所带团评分信息
+                    $num                    = $data['num'];                //负责项目数
+                    $average                = get_manyidu($data['lists']); //满意度平均值
+
+                    if (!$num){
+                        //本月度无负责实施项目的，本项0分
+                        $complete = 0;
+                    }else{
+                        //平均得分(如果得分>90%,得分100, 如果小于90%,以90%作为满分求百分比)
+                        $score = (round($average*100/90,2))*100;
+                        $complete = $average > 0.9 ? 100 : $score;
+                    }
+                }
+
+                //研发专员对产品研发专业支持满意度
+                if ($v['quota_id']==162){
+
+                }
+
 				//已实现自动获取指标值
-				$auto_quta	= array(1,2,3,4,5,6,81,8,9,10,11,15,16,18,20,23,26,21,24,27,32,37,19,22,25,28,33,38,42,45,103,56,113,92,29,34,39,46,102,55,57,58,59,84,87,89,90,111,107,83,66,54,44,12,112,108,100,96,95,65,114,86,85,64,63,62,53,52,41,40,49,80,48,91,79,47,36,35,31,30,82,110,106,99,94,67,124,125,126,127,128,129,130,131,132,133,134,135,136,137,138,139,140,141,143,144,145,146,147,148,149,150,151,153);
+				$auto_quta	= array(1,2,3,4,5,6,81,8,9,10,11,15,16,18,20,23,26,21,24,27,32,37,19,22,25,28,33,38,42,45,103,56,113,92,29,34,39,46,102,55,57,58,59,84,87,89,90,111,107,83,66,54,44,12,112,108,100,96,95,65,114,86,85,64,63,62,53,52,41,40,49,80,48,91,79,47,36,35,31,30,82,110,106,99,94,67,124,125,126,127,128,129,130,131,132,133,134,135,136,137,138,139,140,141,143,144,145,146,147,148,149,150,151,153,161);
 				//不超过既得满分的指标 不能按照 实际/计划计算得分
                 $otherQuota = array(127);
 				//计算完成率并保存数据
@@ -3114,8 +3096,8 @@ function updatekpi($month,$user){
 					$data = array();
 					$data['complete']		= $complete;
 					$data['complete_rate']	= $rate."%";
-                    //$data['score']			= round(($rate * $v['weight']) / 100,1);
-                    $data['score']          = get_kpi_score($rate,$v['weight'],$v['end_date'],$month);
+                    $data['score']			= round(($rate * $v['weight']) / 100,1);
+                    //$data['score']          = get_kpi_score($rate,$v['weight'],$v['end_date'],$month);
 					$data['score_status']	= 1;
 
 
@@ -3125,8 +3107,8 @@ function updatekpi($month,$user){
 					$data = array();
 					//$data['complete']		= $complete;
 					//$data['complete_rate']	= $rate."%";
-					//$data['score']			= round(($rate * $v['weight']) / 100,1);
-					$data['score']			= get_kpi_score($rate,$v['weight'],$v['end_date'],$month);
+					$data['score']			= round(($rate * $v['weight']) / 100,1);
+					//$data['score']			= get_kpi_score($rate,$v['weight'],$v['end_date'],$month);
 					$data['score_status']	= 1;
 				}
 
@@ -3147,7 +3129,7 @@ function updatekpi($month,$user){
  * @param $weight           权重
  * @param $endTime          考核结束时间
  */
-function get_kpi_score($rate=100,$weight,$endTime,$month){
+/*function get_kpi_score($rate=100,$weight,$endTime,$month){
     $monthBeginTime     = get_cycle(date('Ym',$endTime))['begintime'];  //考核结束月份的开始时间
     if (NOW_TIME < $monthBeginTime){
         $score          = $weight;
@@ -3155,7 +3137,7 @@ function get_kpi_score($rate=100,$weight,$endTime,$month){
         $score          = round(($rate * $weight) / 100,1);
     }
     return $score;
-}
+}*/
 
 function get_role_link($roleid,$rtype = 0){
 	

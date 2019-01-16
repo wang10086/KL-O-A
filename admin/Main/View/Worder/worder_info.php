@@ -13,23 +13,14 @@
         <!-- Main content -->
         <section class="content">
         
-            <div class="row">
-                 <!-- right column -->
+            <div class="row"><!-- right column -->
                 <div class="col-md-12">
-                     
-                     
-                     
                      <div class="box box-warning" style="margin-top:15px;">
                         <div class="box-header">
-                            <h3 class="box-title">
-                             工单信息
-                            </h3>
+                            <h3 class="box-title">工单信息</h3>
                         </div><!-- /.box-header -->
                         <div class="box-body">
                             <div class="content">
-                            	<div class="form-group col-md-12">
-                                    <h2 style="font-size:16px; border-bottom:2px solid #dedede; padding-bottom:10px;">工单信息</h2>
-                                </div>
                                 <div class="form-group col-md-12">
                                 <table width="100%" id="font-14" rules="none" border="0" cellpadding="0" cellspacing="0" style="margin-top:-15px;">
                                     <tr>
@@ -293,10 +284,7 @@
 
                         </div>
                     </div><!-- /.box -->
-                    <?php }
-                    /*else{ */?><!--
-                                <div class="content" ><span style="padding:20px 0; float:left; clear:both; text-align:center; text-align:center; width:100%;">尚无相关信息</span></div>
-							--><?php /*} */?>
+                    <?php } ?>
                 </div><!--/.col (right) -->
 
                 <div class="col-md-12">
@@ -319,7 +307,6 @@
                                     <div class="form-group col-md-12" style="margin-top:10px;">
                                         <div class="checkboxlist" id="applycheckbox" style="margin-top:10px;">
                                             <input type="checkbox" name="info[status]" value="-2" > &#12288;撤销该工单
-
                                         </div>
                                     </div>
 
@@ -341,11 +328,9 @@
                                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                             <input type="radio" name="info[status]" value="-3" > 该工单未执行完毕
                                         </div>
-
                                         <div class="form-group">&nbsp;</div>
                                         <!--评分信息-->
                                         <include file="score_edit" />
-
                                     </div>
 
                                     <div class="form-group col-md-12"  style="padding-bottom:20px; text-align:center;">

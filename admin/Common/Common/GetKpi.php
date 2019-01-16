@@ -661,11 +661,43 @@ function get_QCS($userids,$year,$month){
     return $average;
 }
 
-
+/**
+ * 获取当前用户所管理部门的人员信息
+ * @param $userid       userid
+ * @return array        id=>name
+ */
 function get_department_users($userid){
     $departments            = get_department($userid);
     $department_ids         = M('salary_department')->where(array('department'=>array('in',$departments)))->getField('id',true);
     $users                  = M('account')->where(array('departmentid'=>array('in',$department_ids)))->getField('id,nickname',true);
     return $users;
 }
+
+/**获取该用户本周期所带团评分信息
+ * @param $userid
+ * @param $beginTime
+ * @param $endTime
+ */
+function get_op_guide($userid,$beginTime,$endTime){
+    $tcsBeginTime           = $beginTime + 24*3600;     //辅导员确认时间比OA系统晚一天
+    $tcsEndTime             = $endTime + 24*3600;
+    $guide                  = M()->table('__TCS_ADMIN__ as t')->field('g.id,g.name')->join('__GUIDE__ as g on g.uid=t.id','left')->where(array('t.oa_id'=>$userid))->find();
+    $guide_id               = $guide['id'];
+    $where                  = array();
+    $where['guide_id']      = $guide_id;
+    $where['status']        = 2;
+    $where['sure_time']     = array('between',array($tcsBeginTime,$tcsEndTime));
+    $op_ids                 = M('guide_pay')->where($where)->getField('op_id',true);
+    $num                    = count($op_ids);
+    $op_ids                 = array_unique($op_ids);
+    $where                  = array();
+    $where['s.input_time']	= array('between',array($tcsBeginTime,$tcsEndTime));
+    $where['o.op_id']       = array('in',$op_ids);
+    $score_lists            = M()->table('__TCS_SCORE__ as s')->field('u.op_id,o.kind,s.id as sid,s.before_sell,s.new_media,s.stay,s.travel,s.content,s.food,s.bus,s.driver,s.guide,s.teacher,s.depth,s.major,s.interest,s.material,s.late,s.manage,s.morality')->join('join __TCS_SCORE_USER__ as u on u.id = s.uid','left')->join('__OP__ as o on o.op_id = u.op_id','left')->where($where)->select();
+    $data                   = array();
+    $data['num']            = $num;
+    $data['lists']          = $score_lists;
+    return $data;
+}
+
 
