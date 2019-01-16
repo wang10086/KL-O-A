@@ -105,6 +105,7 @@
                                 <div class="form-group col-md-6 viwe">
                                     <p>入职时间 ：<?php echo date('Y-m-d',$wit['entry_time'])?> </p>
                                 </div>
+                                <input type="hidden"  class="form-control withholding_countid1" value="{$wit.aid}" />
 
                             </div>
 

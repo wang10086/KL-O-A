@@ -50,9 +50,6 @@ class SalaryModel extends Model
     public function year_end_tax($Year_end,$year_end_tax){
         if(is_numeric($Year_end) || is_numeric($year_end_tax)){
             return $year_end_tax;die;
-        }elseif(is_numeric($year_end_tax=="") || empty($year_end_tax)){
-            return $this->year_end($Year_end);die;
-
         }else{
             return 0;die;
         }

@@ -477,16 +477,16 @@ class AjaxController extends Controller {
         $uid['account_id']                  = (int)(code_number(trim($_POST['account_id'])));
         if($type == 1){//提成/奖金
 
-            $where['extract']               = code_number(trim($_POST['housing_subsidy']));//带团补助
-            $where['bonus']                 = code_number(trim($_POST['foreign_subsidies']));//其他人员提成
-            $where['annual_bonus']          = code_number(trim($_POST['computer_subsidy']));//年终奖
-            $where['foreign_bonus']         = code_number(trim($_POST['foreign_bonus']));//奖金
-            $where['year_end_tax']          = code_number(trim($_POST['yearend']));//年终奖计税
+            $where['extract']               = trim($_POST['housing_subsidy']);//带团补助
+            $where['bonus']                 = trim($_POST['foreign_subsidies']);//其他人员提成
+            $where['annual_bonus']          = trim($_POST['computer_subsidy']);//年终奖
+            $where['foreign_bonus']         = trim($_POST['foreign_bonus']);//奖金
+            $where['year_end_tax']          = trim($_POST['yearend']);//年终奖计税
         }
         if($type == 2){//补贴
-            $where['housing_subsidy']       = code_number(trim($_POST['housing_subsidy']));//住房补贴
-            $where['foreign_subsidies']     = code_number(trim($_POST['foreign_subsidies']));//外地补贴
-            $where['computer_subsidy']      = code_number(trim($_POST['computer_subsidy']));//电脑补贴
+            $where['housing_subsidy']       = trim($_POST['housing_subsidy']);//住房补贴
+            $where['foreign_subsidies']     = trim($_POST['foreign_subsidies']);//外地补贴
+            $where['computer_subsidy']      = trim($_POST['computer_subsidy']);//电脑补贴
         }
 
         if($type == 1){$subsidy_r           = M('salary_bonus')->where($uid)->order('id desc')->find();}
@@ -672,7 +672,7 @@ class AjaxController extends Controller {
             $str                    = explode(",", $v);//分隔字符串
             $str                    = array_filter($str);//去除空数组空字段
             if($str[0]!=="" && $str[1]!=="" && $str[2]!=="" && $str[0]!=="undefined" && $str[1]!=="undefined" && $str[2]!=="undefined") {
-                $add_w              = $table->add($v);
+                $add_w              = M($table)->add($v);
                 if ($add_w) {
                     if ($status == 1) {
                         $content    = $conten . ":" . $type . "项目名称:" . $v['project_name'] . ";金额:" . $v['money'] . ";（元）";
@@ -704,17 +704,17 @@ class AjaxController extends Controller {
             $where['account_id']                = $str[2];
             if($str[0]!=="" && $str[1]!=="" && $str[2]!=="" && $str[0]!=="undefined" && $str[1]!=="undefined" && $str[2]!=="undefined"){
                 if($status == 1){//代扣代缴
-                    $add[$key]['project_name']  = $str[0];
-                    $add[$key]['money']         = $str[1];
-                    $add[$key]['account_id']    = $str[2];
-                    $add[$key]['token']         = $time.$str[2];
+                    $add[$key]['project_name']  = $str[0]?trim($str[0]):$str[0];
+                    $add[$key]['money']         = $str[1]?trim($str[1]):$str[1];
+                    $add[$key]['account_id']    = $str[2]?trim($str[2]):$str[2];
+                    $add[$key]['token']         = $time.$str[2]?trim($time.$str[2]):$time.$str[2];
                     $add[$key]['createtime']    = time();
                 }
                 if($status == 2){//其他收入
-                    $add[$key]['income_name']   = $str[0];
-                    $add[$key]['income_money']  = $str[1];
-                    $add[$key]['account_id']    = $str[2];
-                    $add[$key]['income_token']  = $time.$str[2];
+                    $add[$key]['income_name']   = $str[0]?trim($str[0]):$str[0];
+                    $add[$key]['income_money']  = $str[1]?trim($str[1]):$str[1];
+                    $add[$key]['account_id']    = $str[2]?trim($str[2]):$str[2];
+                    $add[$key]['income_token']  = $time.$str[2]?trim($time.$str[2]):$time.$str[2];
                     $add[$key]['createtime']    = time();
                 }
             }
@@ -731,62 +731,52 @@ class AjaxController extends Controller {
      */
     public function Ajax_withholding_income(){
         if(IS_POST){
+            $userid = I('userid');
             $arr                            = trim($_POST['arr']);//数据数组
             $status                         = (int)(code_number(trim($_POST['status'])));//状态
-
             $content                        = array_filter(explode("|", $arr));//去除空数组+分隔字符串
             $time                           = time();
             if($status == 1){//代扣代缴状态
                 $conten                     = "代扣代缴";
-                $table                      =  M('salary_withholding');//代扣代缴状态
+                $table                      =  'salary_withholding';//代扣代缴状态
             }
             if($status == 2) {//其他收入
                 $conten                     = "其他收入";
-                $table                      = M('salary_income');//其他收入
+                $table                      = 'salary_income';//其他收入
             }
             $reg                            = $this->withholding_income_addstr($status,$content,$time);
             $add                            = $reg[0];
             $where                          = $reg[1];
-            $with                           = $table->where($where)->order('id desc')->find();//查询 代扣代缴状态/其他收入
+            $with                           = M($table)->where($where)->order('id desc')->find();//查询 代扣代缴状态/其他收入
+
             if($with){
                 if ($status == 1) {
-
-                    $save['token']          = $with['token'];
-
+                    $save['token']          = trim($with['token']);
                 }
                 if ($status == 2) {
-
-                    $save['income_token']   = $with['income_token'];
+                    $save['income_token']   = trim($with['income_token']);
                 }
 
                 if($with['status'] == 1){
-
-                    $with_add               = $table->where($save)->delete();//添加新的数据
+                    $with_add               = M($table)->where($save)->delete();//添加新的数据
                     $cot                    = "修改";
                     if ($with_add) {
-
                         $this->withholding_income_add($table,$add,$conten,$cot,$status);
-
                     }else{
-
                         $sum                = 0;
                         $msg                = "编辑数据失败!请重新编辑!";
                         echo json_encode(array('sum' => $sum, 'msg' => $msg));die;
                     }
                 }
                 if ($with['status'] == 2) {
-
                     $cot                    = "添加";
                     $this->withholding_income_add($table,$add,$conten,$cot,$status);
                 }
             }else{
                 if($status == 1 || $status == 2){
-
                     foreach($add as $k =>$v) {//循环数据
-
                         $str                = explode(",", $v);//分隔字符串
                         $str                = array_filter($str);//去除空数组空字段
-
                         if ($str[0]!=="" && $str[1]!=="" && $str[2]!=="" && $str[0]!=="undefined" && $str[1]!=="undefined" && $str[2]!=="undefined") {
                             $cot            = "添加";
                             $this->withholding_income_add($table, $add, $conten, $cot, $status);

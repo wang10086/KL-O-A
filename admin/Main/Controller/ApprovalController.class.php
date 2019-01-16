@@ -1,24 +1,195 @@
 <?php
 namespace Main\Controller;
 use Think\Controller;
+use Think\Upload;
 use Sys\P;
 ulib('Page');
 use Sys\Page;
 class ApprovalController extends BaseController {
 
     /**
-     * Approval_Index 首页显示
+     * Approval_upload_file 默认上传文件
      */
-    public function Approval_Index(){
+    public function Approval_upload_file()
+    {
+        $db                 = M('attachment');
+        $upload             = new Upload(C('UPLOAD_FILE_CFG'));
+        $info               = $upload->upload();
+        $att                = array();
+        $rs                 = array();
 
-        $approval                       = $this->approval_table('approval_flie','',1);
-        $app                            = D('Approval');
-        $save                           = $app->datetime_approval();//改变到预定时间的文件
-        $this->file_remind_number();
-        $this->approval                 = $approval['approval'];
-        $this->pages                    = $approval['pages'];
+        if ($info) {
+            foreach ($info as $row) {
+            $rs['rs']       = 'ok';
+            $rs['fileurl']  = $upload->rootPath . $row['savepath'] . $row['savename'];
+            $rs['msg']      = '上传成功';
+                break;
+            }
+            echo json_encode($rs);
+        } else {
+            $rs['rs']       = 'err';
+            $rs['msg']      = '上传失败';
+            echo json_encode($rs);
+        }
+    }
+    /**
+     * Approval_file 保存文件
+     */
+    public function Approval_file()
+    {
+        $app            = D('Approval');
+        $id             = I('file_id');
+        $where['id']    = $id;
+        $where['type']  = 1;
+        $file           = M('approval_flie')->where($where)->find();
+        if(!$file){unset($id);}
+        if(empty($id)){
+            $submit     = $app->submit_file();
+        }else{
+            $submit     = $app->update_file($id,$file);
+        }
+        if($submit==1){
+            $this->success('保存成功！');
+        }else{
+            $this->error('数据错误!请重新打开！');
+        }
+    }
+
+    /**
+     * Approval_Upload 编辑文件 修改文件
+     */
+    public function Approval_Upload()
+    {
+        $where['id']        = I('id');
+        if(is_numeric($where['id'])){ //判断是否有传值id
+            $where['type']  = 1;
+            $approval       = $this->approval_table('approval_flie',$where,1);//文件信息
+            if(empty($approval['approval'][0]['id'])){$this->error('文件不存在！');}
+            if($approval['approval'][0]['userid']!==$_SESSION['userid']){
+                $this->error('您不是上传文件用户！不能编辑！');
+            }
+            $save           =  D('Approval')->Approval_Upload_save($where);//查询修改文件数据信息
+            $this->save     = $save;
+        }
+        $key                = D('Approval')->Angements();//查询上级领导
+        if($key==3){$this->error('数据错误!请重新打开！');}
+        $this->userkey 	    = json_encode($key['key']);
+        $this->userid       = $key['userid'];
+        $this->approval     = $approval['approval'][0];
+//        print_r($approval['approval'][0]);die;
         $this->display();
     }
+
+    /**
+     * Approval_Index 首页显示
+     */
+    public function Approval_Index()
+    {
+        $where['type']     = 1;
+        $approval          = $this->approval_table('approval_flie',$where,1);//获取首页信息
+        $this->approval    = $approval['approval'];
+        $this->pages       = $approval['pages'];
+        $this->display();
+    }
+    /**
+     * approval_table 优化查询
+     * $approval_table 表名 $where 条件
+     * $type 1 首页
+     */
+    public function approval_table($approval_table,$where,$type)
+    {
+        if ($type == 1) {
+            $where['type']      = 1;
+            $count              = M($approval_table)->where($where)->count();
+            $page               = new Page($count, 10);
+            $pages              = $page->show();
+            $approval           = M($approval_table)->where($where)->limit("$page->firstRow", "$page->listRows")->order('createtime desc')->select();
+        }
+        $approval_w['approval'] = D('Approval')->select_sql($approval);
+        $approval_w['pages']    = $pages;
+        return $approval_w;
+    }
+
+    /**
+     * file_delete 删除选中的文件
+     * $fileid 文件id
+     */
+    public function file_delete()
+    {
+        $id             = I('id');
+        if(is_numeric($id)){
+            $delete     = D('Approval')->filedelete($id);
+        }else{
+            $delete     = 0;
+        }
+        if($delete==1){
+            $this->success('删除成功！');die;
+        }else{
+            $this->error('删除失败！');die;
+        }
+    }
+    /**
+     * Approval_detele_file 删除 主件 附件
+     * $id 文件id
+     */
+    public function Approval_detele_file(){
+        $where['id'] =  I('id');
+        $del         =  D('Approval')->Approval_detele_file($where);
+
+        if($del==1){
+            echo json_encode(array('msg' => '删除成功！'));die;
+        }elseif($del==2){
+            echo json_encode(array('msg' => '删除失败！'));die;
+        }elseif($del==3){
+            echo json_encode(array('msg' => '只能上传者本人删除！'));die;
+        }
+    }
+
+    /**
+     * Approval_Update 详情列表
+     */
+    public function Approval_Update(){
+        $id                     = I('id');
+        $list                   = D('Approval')->file_details($id);//列表展示
+        $this->approver         = D('Approval')->Approver(); // 选择审议人员
+
+        //print_r($list);die;
+
+        $sql['employee_member'] = array('like',"A%");
+        $this->office           = D('Approval')->finaljudgment($sql,2); //选择终审人员
+        $this->list             = $list;//列表展示
+        $this->display();
+    }
+
+    /**
+     * add_final_judgment 添加终审和审批人员
+     * check 审批人员id  judgment终审人员 id
+     * file_id 文件id   file_url_id 文档id
+     */
+    public function add_final_judgment(){
+
+        $file['id']             = trim($_POST['file_id']);
+        $judgment               = $_POST['judgment'];
+        $consider               = $_POST['consider'];
+        if(!empty($consider) && !empty($judgment)){
+            $type               = D('Approval')->add_judgment($file,$judgment,$consider);
+        }
+        if($type==1){
+            $this->success('添加审批人成功！');
+        }elseif($type==2){
+            $this->error('请不要重复提交！');
+        }else{
+            $this->error('添加审批人失败！请重新提交！');
+        }
+    }
+
+
+
+
+
+
+
+
 
 
     /**
@@ -77,66 +248,48 @@ class ApprovalController extends BaseController {
     }
 
     /**
-     * Ajax_file_delete 删除选中的文件
-     * $fileid 文件id
-     */
-    function file_delete(){
-        $status                 = trim($_POST['status']);
-        $fileid                 = trim($_POST['fileid']);
-        $file_id                = array_filter(explode(',',$fileid));
-        foreach($file_id as $key => $val){
-            $save['type']       = 2;
-            if($status==1){
-                $approval_flie  = M('approval_flie')->where('id='.$val)->save($save);
-            }elseif($status==2){
-                $approval_flie  = M('approval_flie_url')->where('id='.$val)->save($save);
-            }
-        }
-    }
-
-    /**
      * approval_table 查询列表详情
      * $approval_table 表名
      * $where 查询条件
      */
-    public function approval_table($approval_table,$where,$type){
-        if($type==1){
-            $where['type']                                = 1;
-            $count                                        = M($approval_table)->where($where)->count();
-            $page                                         = new Page($count,10);
-            $pages                                        = $page->show();
-            $approval                                     = M($approval_table)->where($where)->limit("$page->firstRow","$page->listRows")->order('createtime desc')->select();
-        }elseif($type==2){
-            $where['type']                                = 1;
-            $count                                        = M($approval_table)->where($where)->count();
-            $page                                         = new Page($count,10);
-            $pages                                        = $page->show();
-            $sql    = "SELECT * FROM `oa_approval_flie_url` WHERE `file_id` = ".$where['file_id']." AND ( `account_id` = ".$where['account_id']." OR `pid_account_id` = ".$where['account_id']." OR `status` > 2  ) AND `type` = 1 ORDER BY createtime desc LIMIT ".$page->firstRow.",".$page->listRows;
-            $approval = M()->query($sql);
-        }elseif($type==3){
-            $where['type']                                = 1;
-            $count                                        = M($approval_table)->where($where)->count();
-            $page                                         = new Page($count,10);
-            $pages                                        = $page->show();
-            $sql    = "SELECT * FROM `oa_approval_flie_url` WHERE `file_id` = ".$where['file_id']." AND ( `account_id` = ".$where['account_id']." OR `pid_account_id` = ".$where['account_id']." OR `status` >= 2  ) AND `type` = 1 ORDER BY createtime desc LIMIT ".$page->firstRow.",".$page->listRows;
-            $approval = M()->query($sql);
-        }
-        $approval_w['approval']                           = D('Approval')->query_table($approval);
-        $approval_w['pages']                              = $pages;
-        return $approval_w;
-    }
+//    public function approval_table($approval_table,$where,$type){
+//        if($type==1){
+//            $where['type']                                = 1;
+//            $count                                        = M($approval_table)->where($where)->count();
+//            $page                                         = new Page($count,10);
+//            $pages                                        = $page->show();
+//            $approval                                     = M($approval_table)->where($where)->limit("$page->firstRow","$page->listRows")->order('createtime desc')->select();
+//        }elseif($type==2){
+//            $where['type']                                = 1;
+//            $count                                        = M($approval_table)->where($where)->count();
+//            $page                                         = new Page($count,10);
+//            $pages                                        = $page->show();
+//            $sql    = "SELECT * FROM `oa_approval_flie_url` WHERE `file_id` = ".$where['file_id']." AND ( `account_id` = ".$where['account_id']." OR `pid_account_id` = ".$where['account_id']." OR `status` > 2  ) AND `type` = 1 ORDER BY createtime desc LIMIT ".$page->firstRow.",".$page->listRows;
+//            $approval = M()->query($sql);
+//        }elseif($type==3){
+//            $where['type']                                = 1;
+//            $count                                        = M($approval_table)->where($where)->count();
+//            $page                                         = new Page($count,10);
+//            $pages                                        = $page->show();
+//            $sql    = "SELECT * FROM `oa_approval_flie_url` WHERE `file_id` = ".$where['file_id']." AND ( `account_id` = ".$where['account_id']." OR `pid_account_id` = ".$where['account_id']." OR `status` >= 2  ) AND `type` = 1 ORDER BY createtime desc LIMIT ".$page->firstRow.",".$page->listRows;
+//            $approval = M()->query($sql);
+//        }
+//        $approval_w['approval']                           = D('Approval')->query_table($approval);
+//        $approval_w['pages']                              = $pages;
+//        return $approval_w;
+//    }
 
     /**
      * Approval_Upload 编辑文件
      * $fileid 文件id
      */
-    public function Approval_Upload(){
-        $fileid                     = trim(I('id'));
-        $key                        = D('Approval')->Arrangement($fileid);
-        $this->userkey 		        = json_encode($key['key']);
-        $this->file                 = $key['flie'];
-        $this->display();
-    }
+//    public function Approval_Upload(){
+//        $fileid                     = trim(I('id'));
+//        $key                        = D('Approval')->Arrangement($fileid);
+//        $this->userkey 		        = json_encode($key['key']);
+//        $this->file                 = $key['flie'];
+//        $this->display();
+//    }
 
     /**
      * file_upload 文件首次上传
@@ -144,52 +297,52 @@ class ApprovalController extends BaseController {
      * file_name 文档名字 file_size 文档大小
      * type 文档类型 user_id 上级领导ID
      */
-    public function file_upload(){
-        $file['createtime']         = time();
-        $file['file_id']            = trim($_POST['file_id']);
-        $file['file_url']           = trim($_POST['file_url']);
-        $file['file_name']          = trim($_POST['file_name']);
-        $file['account_id']         = trim($_SESSION['userid']);
-        $file['account_name']       = trim($_SESSION['name']);
-        $file['file_size']          = trim($_POST['file_size']);
-        $file['style']              = trim($_POST['type']);
-        $file['pid_account_id']     = trim($_POST['user_id']);
-        $add                        = D('Approval')->add_approval($file);
-        if($add==1){
-             $this->success('保存成功！');
-        }else{
-            $this->error('保存失败！请重新提交！');
-        }
-    }
+//    public function file_upload(){
+//        $file['createtime']         = time();
+//        $file['file_id']            = trim($_POST['file_id']);
+//        $file['file_url']           = trim($_POST['file_url']);
+//        $file['file_name']          = trim($_POST['file_name']);
+//        $file['account_id']         = trim($_SESSION['userid']);
+//        $file['account_name']       = trim($_SESSION['name']);
+//        $file['file_size']          = trim($_POST['file_size']);
+//        $file['style']              = trim($_POST['type']);
+//        $file['pid_account_id']     = trim($_POST['user_id']);
+//        $add                        = D('Approval')->add_approval($file);
+//        if($add==1){
+//             $this->success('保存成功！');
+//        }else{
+//            $this->error('保存失败！请重新提交！');
+//        }
+//    }
     /**
      * create_file 创建文件
      * $file_name 文件名称 $file_date 审批天数
      * $status 1 新建 2 修改
      * $file_user 用户名称  $textarea 文件描述
      */
-    function create_file(){
-        $file['createtime']        = time();
-        $file['account_id']        = $_SESSION['userid'];
-        $file['account_name']      = trim($_POST['file_user']);
-        $file['file_primary']      = trim($_POST['file_name']);
-        $file['file_describe']     = trim($_POST['textarea']);
-        $file['file_date']         = trim($_POST['file_date']);
-        $file['category']          = trim($_POST['status']);
-        $user                      = user_table($file['account_id']);
-        $file                      = array_filter($file);
-        if(empty($file['account_name'])){
-            $this->error('数据错误！请重新提交！');die;
-        }
-        if(!empty($file['file_describe'])){
-            $file['file_describe'] = htmlspecialchars($file['file_describe']);
-        }
-        $add                       = M('approval_flie')->add($file);
-        if($add){
-         $this->success('创建成功！');die;
-        }else{
-            $this->error('数据错误！请重新提交！');die;
-        }
-    }
+//    function create_file(){
+//        $file['createtime']        = time();
+//        $file['account_id']        = $_SESSION['userid'];
+//        $file['account_name']      = trim($_POST['file_user']);
+//        $file['file_primary']      = trim($_POST['file_name']);
+//        $file['file_describe']     = trim($_POST['textarea']);
+//        $file['file_date']         = trim($_POST['file_date']);
+//        $file['category']          = trim($_POST['status']);
+//        $user                      = user_table($file['account_id']);
+//        $file                      = array_filter($file);
+//        if(empty($file['account_name'])){
+//            $this->error('数据错误！请重新提交！');die;
+//        }
+//        if(!empty($file['file_describe'])){
+//            $file['file_describe'] = htmlspecialchars($file['file_describe']);
+//        }
+//        $add                       = M('approval_flie')->add($file);
+//        if($add){
+//         $this->success('创建成功！');die;
+//        }else{
+//            $this->error('数据错误！请重新提交！');die;
+//        }
+//    }
 
 
 
@@ -197,43 +350,43 @@ class ApprovalController extends BaseController {
      * Approval_Update 文档详情
      * $id 文档id
      */
-    public function Approval_Update(){
-
-        $id['id']                   = trim($_GET['id']);
-        $query                      = D('Approval');
-        if(is_numeric($id['id'])){
-            $approval_r[1]          = $query->Approval_details($id);//确定有一个[加一个随意数]
-            $approval               = $query->query_table($approval_r,1);
-        }else{
-            $this->error('数据错误！请重新打开页面！');die;
-        }
-        if(($_SESSION['userid']==13 || $_SESSION['userid']==1) && $approval_r[1]['type']==1 && $approval_r[1]['status']==2){
-            $this ->status          = 2;
-        }else{
-            $this ->status          = 1;
-        }
-        $file_id['id']              = $approval_r[1]['file_id'];
-        $file                       = M('approval_flie')->where($file_id)->find();//文件名称
-        $this->file                 = $file;
-        $this->department           = userinfo(user_table($file['account_id'])['departmentid'],2);
-        $whe['id']                  = $approval_r[1]['id'];
-        $whe['file_id']             = $approval_r[1]['file_id'];
-        if($approval_r[1]['account_id']!==$_SESSION['userid']){
-            $this->type             = 2;//判断不是上传文件本人
-        }
-        $this->judgmen              = $query->Approval_userinfo($whe);//审批人员显示
-        $quer['file_url_id']        = $id['id'];
-        $quer['file_id']            = $approval_r[1]['file_id'];
-        $this->annotation           = M('approval_annotation')->where($quer)->select();//批注
-        $this->approval             = $approval[1];//文档信息
-        $where['post_name']         = array('like',"%经理%");
-        $this->approver             = $query->Approver($where); //审批人员
-        $sql['employee_member']     = array('like',"A%");
-        $this->office               = $query->finaljudgment($sql,2); //审批人员
-        $this->sercer               = $_SERVER['SERVER_NAME'].'/';
-
-        $this->display();
-    }
+//    public function Approval_Update(){
+//
+//        $id['id']                   = trim($_GET['id']);
+//        $query                      = D('Approval');
+//        if(is_numeric($id['id'])){
+//            $approval_r[1]          = $query->Approval_details($id);//确定有一个[加一个随意数]
+//            $approval               = $query->query_table($approval_r,1);
+//        }else{
+//            $this->error('数据错误！请重新打开页面！');die;
+//        }
+//        if(($_SESSION['userid']==13 || $_SESSION['userid']==1) && $approval_r[1]['type']==1 && $approval_r[1]['status']==2){
+//            $this ->status          = 2;
+//        }else{
+//            $this ->status          = 1;
+//        }
+//        $file_id['id']              = $approval_r[1]['file_id'];
+//        $file                       = M('approval_flie')->where($file_id)->find();//文件名称
+//        $this->file                 = $file;
+//        $this->department           = userinfo(user_table($file['account_id'])['departmentid'],2);
+//        $whe['id']                  = $approval_r[1]['id'];
+//        $whe['file_id']             = $approval_r[1]['file_id'];
+//        if($approval_r[1]['account_id']!==$_SESSION['userid']){
+//            $this->type             = 2;//判断不是上传文件本人
+//        }
+//        $this->judgmen              = $query->Approval_userinfo($whe);//审批人员显示
+//        $quer['file_url_id']        = $id['id'];
+//        $quer['file_id']            = $approval_r[1]['file_id'];
+//        $this->annotation           = M('approval_annotation')->where($quer)->select();//批注
+//        $this->approval             = $approval[1];//文档信息
+//        $where['post_name']         = array('like',"%经理%");
+//        $this->approver             = $query->Approver($where); //审批人员
+//        $sql['employee_member']     = array('like',"A%");
+//        $this->office               = $query->finaljudgment($sql,2); //审批人员
+//        $this->sercer               = $_SERVER['SERVER_NAME'].'/';
+//
+//        $this->display();
+//    }
 
     /**
      * file_change 更改文件
@@ -241,47 +394,27 @@ class ApprovalController extends BaseController {
      * file_url 上传文档的url  file_name 上传的文件名称
      * file_size 上传文档的大小
      */
-    public function file_change(){
+//    public function file_change(){
+//
+//        $where['file_id']           = trim($_POST['file_id']);
+//        $where['id']                = trim($_POST['file_url_id']);
+//        $file['modify_time']        = time();
+//        $file['modify_url']         = trim($_POST['file_url']);
+//        $file['modify_account_id']  = trim($_SESSION['userid']);
+//        $file['modify_name']        = trim($_SESSION['name']);
+//        $file['modify_filename']    = trim($_POST['file_name']);
+//        $file['modify_size']        = trim($_POST['file_size']);
+//        $save                       = D('Approval')->save_approval('approval_flie_url',$where,$file);
+//        if($save==1){
+//            $this->success('修改成功！');
+//        }elseif($save==2){
+//            $this->error('请修改自己的文档！');
+//        }else{
+//            $this->error('修改失败！请重新提交！');
+//        }
+//    }
 
-        $where['file_id']           = trim($_POST['file_id']);
-        $where['id']                = trim($_POST['file_url_id']);
-        $file['modify_time']        = time();
-        $file['modify_url']         = trim($_POST['file_url']);
-        $file['modify_account_id']  = trim($_SESSION['userid']);
-        $file['modify_name']        = trim($_SESSION['name']);
-        $file['modify_filename']    = trim($_POST['file_name']);
-        $file['modify_size']        = trim($_POST['file_size']);
-        $save                       = D('Approval')->save_approval('approval_flie_url',$where,$file);
-        if($save==1){
-            $this->success('修改成功！');
-        }elseif($save==2){
-            $this->error('请修改自己的文档！');
-        }else{
-            $this->error('修改失败！请重新提交！');
-        }
-    }
 
-    /**
-     * add_final_judgment 添加终审和审批人员
-     * check 审批人员id  judgment终审人员 id
-     * file_id 文件id   file_url_id 文档id
-     */
-    public function add_final_judgment(){
-
-        $file['file_id']        = trim($_POST['file_id']);
-        $file['id']             = trim($_POST['file_url_id']);
-        $judgment               = $_POST['judgment'];
-        $check                  = $_POST['check'];
-        $query                  = D('Approval');
-        $type                   = $query->add_judgment($file,$judgment,$check);
-        if($type==1){
-            $this->success('添加审批人成功！');
-        }elseif($type==2){
-            $this->error('请不要重复提交！');
-        }else{
-            $this->error('添加审批人失败！请重新提交！');
-        }
-    }
     /**
      * add_annotation 提交批注
      */
