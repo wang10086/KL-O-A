@@ -26,7 +26,7 @@
                     </tr>
                 </foreach>
                 <tr id="shareTotal">
-                    <td></td>
+                    <td><a href="javascript:;" onclick="selectDepartment()" class="btn btn-success btn-sm"><i class="fa fa-fw fa-plus"></i>添加分摊部门</a></td>
                     <td style="font-size:16px; color:#ff3300;">合计: <span id="shareSum">0.00</span></td>
                     <td></td>
                     <td></td>
