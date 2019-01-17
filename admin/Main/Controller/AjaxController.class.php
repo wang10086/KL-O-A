@@ -731,7 +731,7 @@ class AjaxController extends Controller {
      */
     public function Ajax_withholding_income(){
         if(IS_POST){
-            $userid = I('userid');
+            $userid                         = I('userid');
             $arr                            = trim($_POST['arr']);//数据数组
             $status                         = (int)(code_number(trim($_POST['status'])));//状态
             $content                        = array_filter(explode("|", $arr));//去除空数组+分隔字符串
@@ -748,8 +748,8 @@ class AjaxController extends Controller {
             $add                            = $reg[0];
             $where                          = $reg[1];
             $where['status']                = 1;
+            $where['account_id']            = $userid;
             $with                           = M($table)->where($where)->order('id desc')->find();//查询 代扣代缴状态/其他收入
-
             if($with){
                 if ($status == 1) {
                     $save['token']          = trim($with['token']);
@@ -757,7 +757,6 @@ class AjaxController extends Controller {
                 if ($status == 2) {
                     $save['income_token']   = trim($with['income_token']);
                 }
-
                 if($with['status'] == 1){
                     $with_add               = M($table)->where($save)->delete();//添加新的数据
                     $cot                    = "修改";

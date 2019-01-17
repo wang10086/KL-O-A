@@ -355,11 +355,13 @@ $('.salary_withholding_butt').click(function(){
         if(id==''){
             id =  $('.withholding_countid1').val();//用户id
         }
-
         arr += name+",";
         arr += money+",";
         arr += id+","+"|";
     });
+    if(arr==''){
+        var id =  $('.withholding_countid1').val();//用户id
+    }
     var status = $(this).parents('.salary_add_table').find('.withholding_status').val();//状态
     $.ajax({
         type: "POST",
@@ -367,6 +369,7 @@ $('.salary_withholding_butt').click(function(){
         data: {
             'status': status,
             'arr': arr,
+            'userid':id,
         },
         dataType: "json", //数据格式
         success: function (data) {
