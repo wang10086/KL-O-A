@@ -747,6 +747,7 @@ class AjaxController extends Controller {
             $reg                            = $this->withholding_income_addstr($status,$content,$time);
             $add                            = $reg[0];
             $where                          = $reg[1];
+            $where['status']                = 1;
             $with                           = M($table)->where($where)->order('id desc')->find();//查询 代扣代缴状态/其他收入
 
             if($with){
