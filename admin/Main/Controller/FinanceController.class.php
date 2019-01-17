@@ -2217,6 +2217,7 @@ class FinanceController extends BaseController {
         $departments        = M('salary_department')->where(array('id'=>array('in',$departids)))->select();
         $this->departments  = $departments;
         $this->jk_type      = C('JIEKUAN_TYPE');
+        $this->company      = C('COMPANY');
         $this->display();
     }
 
@@ -2446,6 +2447,7 @@ class FinanceController extends BaseController {
         $this->list         = $list;
         $this->userkey      = get_userkey();
         $this->jk_type      = C('JIEKUAN_TYPE');
+        $this->company      = C('COMPANY');
         $this->display();
     }
 
@@ -2456,6 +2458,7 @@ class FinanceController extends BaseController {
         $this->departments  = $departments;
         $this->jk_type      = C('JIEKUAN_TYPE');
         $this->userkey      = get_userkey();
+        $this->company      = C('COMPANY');
         $this->display();
     }
 

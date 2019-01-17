@@ -9,7 +9,7 @@
                         </div>
                         <div class="pull-left info">
                             <p><?php  echo cookie('name'); ?></p>
-                            <a href="#"><?php echo cookie('rolename');  ?></a>
+                            <a href="#"><?php echo cookie('postname')?cookie('postname'):cookie('rolename');  ?></a>
                         </div>
                     </div>
                     

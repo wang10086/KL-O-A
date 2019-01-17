@@ -93,11 +93,23 @@
                     <input type="text" name="info[sum_chinese]" id="daxie" class="form-control" value="{$list.sum_chinese}" readonly />
                 </div>
 
-                <div class="form-group col-md-12" id="jk_type">
+                <div class="form-group col-md-6" id="jk_type">
                     <label>支付方式：</label>
-                    <foreach name="jk_type" key="k" item="v">
-                        <input type="radio" name="type" value="{$k}" <?php if ($list['type']== $k) echo "checked"; ?> /> &nbsp;{$v} &emsp;&emsp;
-                    </foreach>
+                    <div class="form-control" style="border: none;">
+                        <foreach name="jk_type" key="k" item="v">
+                            <input type="radio" name="type" value="{$k}" <?php if ($list['type']== $k) echo "checked"; ?> /> &nbsp;{$v} &emsp;&emsp;
+                        </foreach>
+                    </div>
+                </div>
+
+                <div class="form-group col-md-6">
+                    <label>账单分类：</label>
+                    <select class="form-control" name="info[company]" id="company" required>
+                        <option value="">==请选择==</option>
+                        <foreach name="company" key="k" item="v">
+                            <option value="{$k}" <?php if ($list['company']==$k) echo 'selected'; ?>>{$v}</option>
+                        </foreach>
+                    </select>
                 </div>
 
                 <div class="form-group col-md-12">

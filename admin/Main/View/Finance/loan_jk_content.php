@@ -72,14 +72,24 @@
                     <input type="text" name="zmysr_name" class="form-control zmysr_name" value="{$list.zmysr}" required />
                 </div>
 
-                <div class="form-group col-md-6">
+                <div class="form-group col-md-4">
                     <label>报销金额：</label>
                     <input type="text" name="info[sum]" id="jiekuanjine" class="form-control" value="{$list.sum}" onblur="todaxie($(this).val())" />
                 </div>
 
-                <div class="form-group col-md-6">
+                <div class="form-group col-md-4">
                     <label>人民币(大写)：</label>
                     <input type="text" name="info[sum_chinese]" id="daxie" class="form-control" value="{$list.sum_chinese}" />
+                </div>
+
+                <div class="form-group col-md-4">
+                    <label>账单分类：</label>
+                    <select class="form-control" name="info[company]" id="company" required>
+                        <option value="">==请选择==</option>
+                        <foreach name="company" key="k" item="v">
+                            <option value="{$k}" <?php if ($list['company']==$k) echo 'selected'; ?>>{$v}</option>
+                        </foreach>
+                    </select>
                 </div>
 
                 <div class="form-group col-md-6" id="jk_type">
@@ -276,12 +286,17 @@
             let bxje     = parseFloat(sbxje);
             let ftje     = parseFloat(sftje);
             let isShare  = $('#share').find('div[class="iradio_minimal checked"]').find('input[name="info[share]"]').val()
+            let company  = $('#company').val();
             if (isShare==1 && bxje != ftje){
                 art_show_msg('报销金额和分摊金额不相等');
                 return false;
             }
             if (!zmysr){
                 art_show_msg('请填写证明验收人');
+                return false;
+            }
+            if (!company){
+                art_show_msg('请选择账单分类');
                 return false;
             }
             if (isqianzi == 1 && zmysr){

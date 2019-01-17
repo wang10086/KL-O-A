@@ -51,6 +51,7 @@ class PrintController extends Controller{
 
         $this->bx_type                  = C('JIEKUAN_TYPE');
         $this->list                     = $data;
+        $this->company                  = C('COMPANY');
         $this->display();
     }
 }

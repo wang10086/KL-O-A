@@ -7,7 +7,7 @@
                 <table class="jkd-table" style="width: 99%;">
                     <tr>
                         <td  colspan="6" style="text-align: center;">
-                            <b style="font-weight: 600;font-size: large;">报销单</b>
+                            <b style="font-weight: 600;font-size: large;">{$company[$list['company']]}【报销单】</b>
                         </td>
                     </tr>
                     <tr>

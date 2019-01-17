@@ -160,8 +160,9 @@ class IndexController extends BaseController {
 					
 
 					//获取角色名称
-					$role = M('role')->find($isdate['roleid']);
-					
+					$role           = M('role')->find($isdate['roleid']);
+                    $post           = M('posts')->find($isdate['postid']);
+
 					session(C('USER_AUTH_KEY'),$isdate['id']);
 					
 					if ($username == C('RBAC_SUPER_ADMIN')) session(C('ADMIN_AUTH_KEY'), true);
@@ -175,6 +176,7 @@ class IndexController extends BaseController {
 					session('nickname',$isdate['nickname']);
 					session('department',$isdate['departmentid']);
 					session('posts',$isdate['postid']);
+					session('postname',$post['post_name']);
 
 					cookie('userid',$isdate['id'],36000);
 					cookie('username',$username,36000);	
@@ -185,6 +187,7 @@ class IndexController extends BaseController {
 					cookie('nickname',$isdate['nickname'],36000);
 					cookie('department',$isdate['departmentid'],36000);
 					cookie('posts',$isdate['postid'],36000);
+					cookie('postname',$post['post_name'],36000);
 
 					$info['update_time'] = time();
 					$info['ip'] = get_client_ip();
