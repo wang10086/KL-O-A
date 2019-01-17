@@ -25,13 +25,13 @@
                                     <div class="box-tools pull-left">
                                        <h3 style="color:blue"><b>岗位薪酬变动</h3>
                                         <h4 style="margin:-1.8em 0em 0em 10em">变动事项</h4>
-                                       <select name="some" class="btn btn-info btn-sm" style="margin:-3.5em 0em 0em 22em;">
+                                        <select name="some" class="btn btn-info btn-sm" style="margin:-3.5em 0em 0em 22em;" onchange="salary_entry($(this).val())">
                                             <option value="0">选择操作</option>
-                                            <option value="1" onclick="salary_entry(1)">入职</option>
-                                            <option value="2" onclick="salary_entry(2)">转正</option>
-                                            <option value="3" onclick="salary_entry(3)">调岗</option>
-                                            <option value="4" onclick="salary_entry(4)">离职</option>
-                                            <option value="5" onclick="salary_entry(5)">调薪</option>
+                                            <option value="1">入职</option>
+                                            <option value="2">转正</option>
+                                            <option value="3">调岗</option>
+                                            <option value="4">离职</option>
+                                            <option value="5">调薪</option>
                                         </select>
                     
                                     </div>

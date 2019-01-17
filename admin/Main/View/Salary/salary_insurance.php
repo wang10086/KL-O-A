@@ -5,14 +5,16 @@
         <div class="box-tools pull-left">
             <h3 style="color:blue"><b>&nbsp;&nbsp;&nbsp;五险一金</h3>
             <h4 style="margin:-1.8em 0em 0em 8em">操作事项</h4>
-            <select name="some" class="btn btn-info" style="margin:-3em 0em 0em 17em;width:10em;" id="salary_insurance">
+
+            <select name="some" class="btn btn-info btn-sm" style="margin:-3.5em 0em 0em 20em;width:10em;" id="salary_insurance" onchange="salary_insurance($(this).val())">
                 <option value="0" <?php if($type=="" || $type==0 ){echo 'selected';}?>>选择操作</option>
-                <option value="1" onclick="salary_insurance(1)" <?php if($type==8){echo 'selected';}?>>调整社保/医保基数</option>
-                <option value="2" onclick="salary_insurance(2)" <?php if($type==9){echo 'selected';}?>>调整员工社保/公积金比例</option>
-                <option value="3" onclick="salary_insurance(3)" <?php if($type==10){echo 'selected';}?>>调整员工医保比例</option>
-                <option value="4" onclick="salary_insurance(4)" <?php if($type==11){echo 'selected';}?>>调整公司社保/公积金比例</option>
-                <option value="5" onclick="salary_insurance(5)" <?php if($type==12){echo 'selected';}?>>调整公司医保比例</option>
+                <option value="1" <?php if($type==8){echo 'selected';}?>>调整社保/医保基数</option>
+                <option value="2" <?php if($type==9){echo 'selected';}?>>调整员工社保/公积金比例</option>
+                <option value="3" <?php if($type==10){echo 'selected';}?>>调整员工医保比例</option>
+                <option value="4" <?php if($type==11){echo 'selected';}?>>调整公司社保/公积金比例</option>
+                <option value="5" <?php if($type==12){echo 'selected';}?>>调整公司医保比例</option>
             </select>
+
         </div>
     </div>
     <div class="box-body">
