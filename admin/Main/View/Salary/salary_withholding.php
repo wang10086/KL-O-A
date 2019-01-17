@@ -5,12 +5,13 @@
         <div class="box-tools pull-left">
             <h3 style="color:blue"><b>&nbsp;&nbsp;&nbsp;代扣代缴</h3>
             <h4 style="margin:-1.8em 0em 0em 8em">变动事项</h4>
-            <select name="some" class="btn btn-info btn-sm" style="margin:-3.5em 0em 0em 20em;width:11em;" id="salary_withholding_selected">
+
+            <select name="some" class="btn btn-info btn-sm" style="margin:-3.5em 0em 0em 20em;width:11em;" id="salary_withholding_selected" onchange="salary_withholding($(this).val())">
                 <option value="0" <?php if($type==0|| $type=="" ){echo 'selected';}?>>选择操作</option>
-                <option value="1" onclick="salary_withholding(1)" <?php if($type==13){echo 'selected';}?>>代扣代缴变动</option>
-                <option value="3" onclick="salary_withholding(3)" <?php if($type==15){echo 'selected';}?>>工会会费</option>
-                <option value="2" onclick="salary_withholding(2)" <?php if($type==14){echo 'selected';}?>>其他收入变动</option>
-                <option value="4" onclick="salary_withholding(4)" <?php if($type==16){echo 'selected';}?>>合并计税</option>
+                <option value="1" <?php if($type==13){echo 'selected';}?>>代扣代缴变动</option>
+                <option value="3" <?php if($type==15){echo 'selected';}?>>工会会费</option>
+                <option value="2" <?php if($type==14){echo 'selected';}?>>其他收入变动</option>
+                <option value="4" <?php if($type==16){echo 'selected';}?>>合并计税</option>
             </select>
         </div>
     </div><!-- /.box-header -->

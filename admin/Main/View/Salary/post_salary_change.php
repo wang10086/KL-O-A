@@ -5,14 +5,15 @@
         <div class="box-tools pull-left">
             <h3 style="color:blue"><b>岗位薪酬变动</h3>
             <h4 style="margin:-1.8em 0em 0em 10em">变动事项</h4>
-            <select name="some" class="btn btn-info btn-sm" style="margin:-3.5em 0em 0em 22em;width:11em;" id="salary_id_hidden">
-                <option value="0">选择操作</option>
-                <option value="1" onclick="salary_entry(1)" <?php if($type==1 || $type==0 || $type==""){echo 'selected';}?>>入职</option>
-                <option value="2" onclick="salary_entry(2)" <?php if($type==2){echo 'selected';}?>>转正</option>
-                <option value="3" onclick="salary_entry(3)" <?php if($type==3){echo 'selected';}?>>调岗</option>
-                <option value="4" onclick="salary_entry(4)" <?php if($type==4){echo 'selected';}?>>离职</option>
-                <option value="5" onclick="salary_entry(5)" <?php if($type==5){echo 'selected';}?>>调薪</option>
+            <select name="some" class="btn btn-info btn-sm" style="margin:-3.5em 0em 0em 22em;width:11em;" id="salary_id_hidden" onchange="salary_entry($(this).val())">
+                <option value="0" >选择操作</option>
+                <option value="1" <?php if($type==1 || $type==0 || $type==""){echo 'selected';}?>>入职</option>
+                <option value="2" <?php if($type==2){echo 'selected';}?>>转正</option>
+                <option value="3" <?php if($type==3){echo 'selected';}?>>调岗</option>
+                <option value="4" <?php if($type==4){echo 'selected';}?>>离职</option>
+                <option value="5"  <?php if($type==5){echo 'selected';}?>>调薪</option>
             </select>
+
         </div>
     </div><!-- /.box-header -->
     <div class="box-body">

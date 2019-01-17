@@ -306,6 +306,7 @@ $('.salary_button22').click(function(){//工会会费
         });
     })
 function salary_withholding(obj) {//显示隐藏代扣代缴
+        alert(obj);return ;
     $('#salary_withholding1').hide();
     $('#salary_withholding1').siblings().hide();
     $('#salary_withholding'+obj).show();
