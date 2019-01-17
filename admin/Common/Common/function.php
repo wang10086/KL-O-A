@@ -3069,6 +3069,19 @@ function updatekpi($month,$user){
 
                 //研发专员对产品研发专业支持满意度
                 if ($v['quota_id']==162){
+                    $score_date             = get_worder_score($user,$v['start_date'],$v['end_date'],3,1);
+                    $pingfencishu           = $score_date['pingfencishu'];
+                    $hegelv                 = $score_date['hegelv'];
+
+                    if ($hegelv >= 1 || !$pingfencishu){
+                        $complete           = (100).'%';
+                    }else{
+                        $complete           = (round(($hegelv*100)/90,2)*100).'%';
+                    }
+                }
+
+                //业绩贡献度
+                if ($v['qota_id']==163){
 
                 }
 

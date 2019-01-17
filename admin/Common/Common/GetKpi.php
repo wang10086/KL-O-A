@@ -5,19 +5,24 @@
 * 1.员工id
 * 2.本周期开始时间
 * 3.本周期结束时间
- * 4.考核纬度
+* 4.考核纬度
+* 5.合格数 默认0.72 ; 1=>0.9
 * */
-function get_worder_score($user,$start_date,$end_date,$num){
+function get_worder_score($user,$start_date,$end_date,$num,$quali=''){
     $where                  = array();
     $where['bpfr_id']       = $user;
     $where['input_time']    = array('between',array($start_date,$end_date));
-    $lists                  = M('worder_score')->field('text,pic,article,habit,hot,light')->where($where)->select();
+    $lists                  = M('worder_score')->field('pfr_name,worder_id,text,pic,article,habit,hot,light,bpfr_name')->where($where)->select();
     $hege_list              = array();
     foreach ($lists as $k=>$v){
         $zongfen            = 5*$num;
         $defen              = $v['text']+$v['pic']+$v['article']+$v['habit']+$v['hot']+$v['light'];
         $manyidu            = round($defen/$zongfen,2);
-        if ($manyidu >0.72) $hege_list[] = $v;
+        if ($quali ==1){
+            if ($manyidu >0.9)  $hege_list[] = $v;
+        }else{
+            if ($manyidu >0.72) $hege_list[] = $v;
+        }
     }
     $data                   = array();
     $data['lists']          = $lists;
