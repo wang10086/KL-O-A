@@ -45,8 +45,8 @@
                                 <td>{$lst.post_name}</td>
                                 <td><input type="text" style="float:left;" class="form-control salary_bonus_extract" placeholder="带团补助" value="<?php if($lst['extract']==0 || $lst['extract']==""){echo 0;}else{echo $lst['extract'];}?>" readonly /></td>
 
-                                <td><input type="text" style="float:left;" class="form-control salary_bonus_bonus" placeholder="其他人员提成" /></td>
-                                <td><input type="text" style="float:left;" class="form-control salary_bonus1_bonus" placeholder="奖金" /></td>
+                                <td><input type="text" style="float:left;" class="form-control salary_bonus_bonus" value="{$lst.bonus}" placeholder="其他人员提成" /></td>
+                                <td><input type="text" style="float:left;" class="form-control salary_bonus1_bonus" value="{$lst.foreign_bonus}"  placeholder="奖金" /></td>
                                 <td><input type="text" style="float:left;" class="form-control salary_bonus_yearend" value="{$lst.annual_bonus}" /></td>
                                 <td><input type="text" style="float:left;" class="form-control salary_bonus_yearendtax" value="{$lst.year_end_tax}" /></td>
                                 <input type="hidden" class="status" value="1">

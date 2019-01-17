@@ -509,13 +509,17 @@ class SalaryController extends BaseController {
                 $account_r[$key]['performance_salary']  = $salary['performance_salary'];
                 $salary_bonus                           = M('salary_bonus')->where($aid)->order('id desc')->find();//提成/奖金
                 $account_r[$key]['bonus_id']            = $salary_bonus['id'];
-
                 $month                                  = datetime(date('Y'),date('m'),date('d'),1);//获取201810月份
                 $account_r[$key]['extract']             = round(Acquisition_Team_Subsidy($month,$val['guide_id']),2);//带团补助
 
                 $account_r[$key]['bonus']               = $salary_bonus['bonus'];
                 $account_r[$key]['annual_bonus']        = $salary_bonus['annual_bonus'];
+                $account_r[$key]['foreign_bonus']       = $salary_bonus['foreign_bonus'];
+                $account_r[$key]['year_end_tax']        = $salary_bonus['year_end_tax'];
+
                 $subsidy_r                              = M('salary_subsidy')->where($aid)->order('id desc')->find();//补贴
+
+                $account_r[$key]['bonus']               = $subsidy_r['bonus'];
                 $account_r[$key]['subsidy']             = $subsidy_r['id'];
                 $account_r[$key]['housing_subsidy']     = $subsidy_r['housing_subsidy'];
                 $account_r[$key]['foreign_subsidies']   = $subsidy_r['foreign_subsidies'];
@@ -545,6 +549,7 @@ class SalaryController extends BaseController {
         if($status == 2){
             $this->assign('page2',$pages);//数据分页
             $this->assign('rows',$account_r);//数据
+
         }
         if($status == 3){
             $this->assign('page3',$pages);//数据分页
