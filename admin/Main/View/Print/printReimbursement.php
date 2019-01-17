@@ -56,7 +56,7 @@
                     <tr>
                         <td colspan="2" class="td">&emsp;报销单位：{$list.department}</td>
                         <td colspan="2" class="td">&emsp;报销人签字：<img src="/{$list.bx_file}" height='35px' alt=""></td>
-                        <td colspan="2" class="td">证明验收人签字：<span id="zmysr"> <?php if($audit_userinfo['zm_audit_status']==2){echo "<span class='red'>不通过</span>"; }elseif ($audit_userinfo['zm_audit_status']==1){ echo "<img src='/$audit_userinfo[zm_audit_file]' height='50px'>";}; ?></span></td>
+                        <td colspan="2" class="td">证明验收人签字：<span id="zmysr"> <?php if($list['zm_audit_status']==2){echo "<span class='red'>不通过</span>"; }elseif ($list['zm_audit_status']==1){ echo "<img src='/".$list['zm_audit_file']."' height='50px'>";}; ?></span></td>
                     </tr>
                     <?php if (in_array($list['bxd_type'],array(2,3))){ ?>
                         <!--非团支出报销+直接报销-->
