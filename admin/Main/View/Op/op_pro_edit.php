@@ -42,7 +42,14 @@
     </div>
 
     <div class="form-group col-md-4">
-        <label>立项时间：</label><input type="text" name="info[op_create_date]" value="{$op.op_create_date}"class="form-control inputdate_a" />
+        <!--<label>立项时间：</label><input type="text" name="info[op_create_date]" value="{$op.op_create_date}"class="form-control inputdate_a" />-->
+        <label>协助销售实施专家：</label>
+        <select class="form-control" name="info[expert]">
+            <option value="">==请选择==</option>
+            <foreach name="expert" key="k" item="v">
+                <option value="{$k}" <?php if($op['expert']==$k){ echo 'selected'; } ?>>{$v}</option>
+            </foreach>
+        </select>
     </div>
 
 

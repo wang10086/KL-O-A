@@ -279,6 +279,7 @@ class OpController extends BaseController {
 			$this->rolelist    =  M('role')->where('`id`>10')->getField('id,role_name', true);
             $this->apply_to    = C('APPLY_TO');
             $this->dijie_names = C('DIJIE_NAME');
+            $this->expert      = C('EXPERT');
 			$this->title('出团计划');
 			$this->display('plans');
 		}
@@ -548,6 +549,7 @@ class OpController extends BaseController {
         $this->guide          = $guide?$guide:$guide_old;
         $this->dijie_names    = C('DIJIE_NAME');
         $this->change         = M('op')->where(array('dijie_opid'=>$opid))->find();
+        $this->expert         = C('expert');
 
          $product_need         = M()->table('__OP_COSTACC__ as c')->field('c.*,p.from,p.subject_field,p.type as ptype,p.age,p.reckon_mode')->join('left join __PRODUCT__ as p on c.product_id=p.id')->where(array('c.op_id'=>$opid,'c.type'=>5,'c.status'=>0))->select();
          foreach ($product_need as $k=>$v){

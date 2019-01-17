@@ -26,7 +26,7 @@
                             <div class="box-body">
                                 <div class="content">
 
-                                    <div class="form-group col-md-8">
+                                    <div class="form-group col-md-4">
                                         <label>项目名称(学校名称 + 地点 + 项目类型)：</label><input type="text" name="info[project]" class="form-control" required />
                                     </div>
 
@@ -100,6 +100,16 @@
                                     </div>
 
                                     <div class="form-group col-md-4">
+                                        <label>协助销售实施专家：</label>
+                                        <select class="form-control" name="info[expert]">
+                                            <option value="">==请选择==</option>
+                                            <foreach name="expert" key="k" item="v">
+                                                <option value="{$k}">{$v}</option>
+                                            </foreach>
+                                        </select>
+                                    </div>
+
+                                    <div class="form-group col-md-4">
                                         <label>是否本公司其他项目部地接</label>
                                         <select  name="info[in_dijie]" class="form-control" id="dijie" onchange="is_or_not_dijie()" required>
                                             <option value="" selected disabled>--请选择--</option>
@@ -119,12 +129,6 @@
                                         <label>备注：</label><textarea class="form-control"  name="info[context]" id="context"></textarea>
                                         <span id="contextTip"></span>
                                     </div>
-
-                                    <!--<div class="form-group col-md-12">
-                                        <label>工单接收人：</label>
-                                        <input type="text" name="exe_user_name" class="form-control userkeywords">
-                                        <input type="hidden" name="exe_user_id" id="exe_user">
-                                    </div>-->
 
                                     <div class="form-group col-md-12 ml-12" id="is_or_not_worder">
                                         <h2 class="tcs_need_h2">是否需要下工单：</h2>
