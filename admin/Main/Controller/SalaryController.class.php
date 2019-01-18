@@ -518,7 +518,8 @@ class SalaryController extends BaseController {
                 $account_r[$key]['year_end_tax']        = $salary_bonus['year_end_tax'];
 
                 $subsidy_r                              = M('salary_subsidy')->where($aid)->order('id desc')->find();//补贴
-                
+
+                $account_r[$key]['bonus1']              = $subsidy_r['bonus'];
                 $account_r[$key]['subsidy']             = $subsidy_r['id'];
                 $account_r[$key]['housing_subsidy']     = $subsidy_r['housing_subsidy'];
                 $account_r[$key]['foreign_subsidies']   = $subsidy_r['foreign_subsidies'];
