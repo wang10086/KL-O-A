@@ -6,9 +6,8 @@
 * 2.本周期开始时间
 * 3.本周期结束时间
 * 4.考核纬度
-* 5.合格数 默认0.72 ; 1=>0.9
 * */
-function get_worder_score($user,$start_date,$end_date,$num,$quali=''){
+function get_worder_score($user,$start_date,$end_date,$num){
     $where                  = array();
     $where['bpfr_id']       = $user;
     $where['input_time']    = array('between',array($start_date,$end_date));
@@ -18,11 +17,7 @@ function get_worder_score($user,$start_date,$end_date,$num,$quali=''){
         $zongfen            = 5*$num;
         $defen              = $v['text']+$v['pic']+$v['article']+$v['habit']+$v['hot']+$v['light'];
         $manyidu            = round($defen/$zongfen,2);
-        if ($quali ==1){
-            if ($manyidu >0.9)  $hege_list[] = $v;
-        }else{
-            if ($manyidu >0.72) $hege_list[] = $v;
-        }
+        if ($manyidu >0.72) $hege_list[] = $v;
     }
     $data                   = array();
     $data['lists']          = $lists;
@@ -30,6 +25,33 @@ function get_worder_score($user,$start_date,$end_date,$num,$quali=''){
     $data['pingfencishu']   = count($lists);
     $data['hegecishu']      = count($hege_list);
     $data['hegelv']         = round($data['hegecishu']/$data['pingfencishu'],2);
+    return $data;
+}
+
+/*
+* 工单满意度(京区设计,新媒体)
+* 1.员工id
+* 2.本周期开始时间
+* 3.本周期结束时间
+* 4.考核纬度
+* 5.合格数 默认0.72 ; 1=>0.9
+* */
+function get_worder_sum_score($user,$start_date,$end_date,$num){
+    $where                  = array();
+    $where['bpfr_id']       = $user;
+    $where['input_time']    = array('between',array($start_date,$end_date));
+    $lists                  = M('worder_score')->field('pfr_name,worder_id,text,pic,article,habit,hot,light,bpfr_name')->where($where)->select();
+    $defen                  = 0;
+    foreach ($lists as $k=>$v){
+        $defen              += $v['text']+$v['pic']+$v['article']+$v['habit']+$v['hot']+$v['light'];
+    }
+
+    $data                   = array();
+    $data['lists']          = $lists;
+    $data['pingfencishu']   = count($lists);
+    $data['zongfen']        = $data['pingfencishu']*$num*5;
+    $data['zongdefen']      = $defen;
+    $data['defenlv']        = round($data['zongdefen']/$data['zongfen'],2);
     return $data;
 }
 
@@ -702,6 +724,57 @@ function get_op_guide($userid,$beginTime,$endTime){
     $data                   = array();
     $data['num']            = $num;
     $data['lists']          = $score_lists;
+    return $data;
+}
+
+/**
+ * 获取该用户的薪资信息
+ * @param $userid
+ */
+function get_wages_info($userid){
+    $where                  = array();
+    $where['account_id']    = $userid;
+    $info                   = M('salary')->where($where)->order('id DESC')->find();
+    $info['otherWages']     = $info['standard_salary']*1.5;
+    return $info;
+}
+
+function get_gross_profit($userid,$beginTime,$endTime){
+    //个人立项毛利部分(结算)
+    $where                  = array();
+    $where['o.create_user'] = $userid;
+    $where['l.req_type']    = 801;
+    $where['l.audit_time']  = array('between',array($beginTime,$endTime));
+    $where['s.audit_status']= 1;
+    $field                  = array();
+    $field[]                = 'sum(s.maoli) as selfSumGrossProfit';
+    $settlement_self        = M()->table('__OP__ as o')
+        ->join('__OP_SETTLEMENT__ as s on s.op_id=o.op_id','left')
+        ->join('__AUDIT_LOG__ as l on l.req_id=s.id','left')
+        ->where($where)
+        ->field($field)
+        ->find();
+
+    //协助销售毛利*0.4
+    $where                  = array();
+    $where['o.create_user'] = array('neq',$userid);
+    $where['o.expert']      = $userid;
+    $where['l.req_type']    = 801;
+    $where['l.audit_time']  = array('between',array($beginTime,$endTime));
+    $where['s.audit_status']= 1;
+    $field                  = array();
+    $field[]                = 'sum(s.maoli) as otherSumGrossProfit';
+    $settlement_other       = M()->table('__OP__ as o')
+        ->join('__OP_SETTLEMENT__ as s on s.op_id=o.op_id','left')
+        ->join('__AUDIT_LOG__ as l on l.req_id=s.id','left')
+        ->where($where)
+        ->field($field)
+        ->find();
+    $data                       = array();
+    $data['self']               = $settlement_self['selfSumGrossProfit'];
+    $data['otherSum']           = $settlement_other['otherSumGrossProfit'];
+    $data['other']              = $data['otherSum']*0.4;
+    $data['sum']                = $data['self'] + $data['other'];
     return $data;
 }
 

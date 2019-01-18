@@ -3081,39 +3081,21 @@ function updatekpi($month,$user){
                 }
 
                 //业绩贡献度
-                if ($v['qota_id']==163){
-
+                if ($v['quota_id']==163){
+                    $maoli_data             = get_gross_profit($user,$v['start_date'],$v['end_date']);
+                    $maoli                  = $maoli_data['sum'];
+                    $wages_info             = get_wages_info($user);                                    //获取该员工岗位薪资信息
+                    $one_point_five_wages   = $wages_info['otherWages'];                                //1.5倍薪资
+                    $wanchenglv             = round($maoli/$one_point_five_wages,2);
+                    $complete               = ($wanchenglv*100).'%';
                 }
 
 				//已实现自动获取指标值
-				$auto_quta	= array(1,2,3,4,5,6,81,8,9,10,11,15,16,18,20,23,26,21,24,27,32,37,19,22,25,28,33,38,42,45,103,56,113,92,29,34,39,46,102,55,57,58,59,84,87,89,90,111,107,83,66,54,44,12,112,108,100,96,95,65,114,86,85,64,63,62,53,52,41,40,49,80,48,91,79,47,36,35,31,30,82,110,106,99,94,67,124,125,126,127,128,129,130,131,132,133,134,135,136,137,138,139,140,141,143,144,145,146,147,148,149,150,151,153,161);
-				//不超过既得满分的指标 不能按照 实际/计划计算得分
-                $otherQuota = array(127);
+				$auto_quta	= array(1,2,3,4,5,6,81,8,9,10,11,15,16,18,20,23,26,21,24,27,32,37,19,22,25,28,33,38,42,45,103,56,113,92,29,34,39,46,102,55,57,58,59,84,87,89,90,111,107,83,66,54,44,12,112,108,100,96,95,65,114,86,85,64,63,62,53,52,41,40,49,80,48,91,79,47,36,35,31,30,82,110,106,99,94,67,124,125,126,127,128,129,130,131,132,133,134,135,136,137,138,139,140,141,143,144,145,146,147,148,149,150,151,153,161,162,163);
+
 				//计算完成率并保存数据
 				if(in_array($v['quota_id'],$auto_quta)){
-                    if (in_array($v['quota_id'],$otherQuota)){
-                        $target     = (float)$v['target'];
-                        $comp       = (float)$complete;
-                        if ($comp <= $target){
-                            //实际值不超过计划值得满分
-                            $rate   = 100;
-                        }else{
-                            //大于指标值得0分
-                            $rate   = 0;
-                        }
-                    }else{
-                        $rate = $v['target'] ? round(($complete / $v['target'])*100,2) : 100;
-                        $rate = $rate>100 ? 100 : $rate;
-                    }
-
-					$data = array();
-					$data['complete']		= $complete;
-					$data['complete_rate']	= $rate."%";
-                    $data['score']			= round(($rate * $v['weight']) / 100,1);
-                    //$data['score']          = get_kpi_score($rate,$v['weight'],$v['end_date'],$month);
-					$data['score_status']	= 1;
-
-
+                    $data                   = get_kpi_data($v,$complete);
 				}else{
 
 					$rate = 100;
@@ -3135,6 +3117,37 @@ function updatekpi($month,$user){
 
 		}
 	}
+}
+
+function get_kpi_data($v,$complete){
+    $otherQuota     = array(127);
+    $gt100          = array(163);
+    if (in_array($v['quota_id'],$otherQuota)){
+        //不超过既得满分的指标 不能按照 实际/计划计算得分
+        $target     = (float)$v['target'];
+        $comp       = (float)$complete;
+        if ($comp <= $target){
+            //实际值不超过计划值得满分
+            $rate   = 100;
+        }else{
+            //大于指标值得0分
+            $rate   = 0;
+        }
+    }elseif(in_array($v['quota_id'],$gt100)){
+        //实际kpi总得分可大于100分
+        $rate       = (float)$complete;
+    }else{
+        $rate = $v['target'] ? round(($complete / $v['target'])*100,2) : 100;
+        $rate = $rate>100 ? 100 : $rate;
+    }
+
+    $data = array();
+    $data['complete']		= $complete;
+    $data['complete_rate']	= $rate."%";
+    $data['score']			= round(($rate * $v['weight']) / 100,1);
+    //$data['score']          = get_kpi_score($rate,$v['weight'],$v['end_date'],$month);
+    $data['score_status']	= 1;
+    return $data;
 }
 
 /**
