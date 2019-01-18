@@ -3137,8 +3137,8 @@ function get_kpi_data($v,$complete){
         //实际kpi总得分可大于100分
         $rate       = (float)$complete;
     }else{
-        $rate = $v['target'] ? round(($complete / $v['target'])*100,2) : 100;
-        $rate = $rate>100 ? 100 : $rate;
+        $rate       = $v['target'] ? round(($complete / $v['target'])*100,2) : 100;
+        $rate       = $rate>100 ? 100 : $rate;
     }
 
     $data = array();

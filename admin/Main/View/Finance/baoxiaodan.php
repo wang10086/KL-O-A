@@ -91,7 +91,7 @@
 
                     <?php if (in_array(cookie('userid'),array(1,11,$baoxiao['bx_user_id']))){ ?>
                         <div class="content no-print">
-                            <a href="{:U('Print/printReimbursement',array('bxid'=>$baoxiao['id']))}" class="btn btn-default"><i class="fa fa-print"></i> 打印</a>
+                            <a href="{:U('Print/printReimbursements',array('bxids'=>$baoxiao['id']))}" class="btn btn-default"><i class="fa fa-print"></i> 打印</a>
                         </div>
                     <?php } ?>
                 </div>

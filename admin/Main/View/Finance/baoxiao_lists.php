@@ -33,6 +33,10 @@
                                 
                                     <table class="table table-bordered dataTable fontmini" id="tablelist" style="margin-top:10px;">
                                         <tr role="row" class="orders" >
+                                            <th width="40" style="text-align:center;">
+                                                <a href="javascript:;" type="button" onclick="check_url()" class="btn btn-info btn-sm" title="打印" ><i class="fa fa-print"></i></a>
+                                                <!--<input type="checkbox" id="accessdata">-->
+                                            </th>
                                             <th class="sorting" width="180" data="b.bxd_id">报销单号</th>
                                             <if condition="$pin neq 2">
                                                 <th class="sorting" width="" data="b.group_ids">团号</th>
@@ -52,6 +56,7 @@
                                         </tr>
                                         <foreach name="lists" item="row">
                                         <tr>
+                                            <td style="text-align:center;"><input type="checkbox" value="{$row.id}" class="accessdata"/></td>
                                             <td>{$row.bxd_id}</td>
                                             <if condition="$pin neq 2">
                                                 <td>
@@ -75,9 +80,9 @@
                                             <td>{$row.zhuangtai}</td>
                                             <if condition="rolemenu(array('Finance/baoxiaodan_info','Finance/nopbxd_info'))">
                                                 <td class="taskOptions">
-                                                    <if condition="$row.bxd_type eq 1"><!--团内借款报销-->
+                                                    <if condition="$row.bxd_type eq 1"> <!--团内借款报销-->
                                                         <a href="{:U('Finance/baoxiaodan_info',array('id'=>$row['id']))}" title="详情" class="btn btn-info btn-smsm"><i class="fa fa-bars"></i></a>
-                                                    <else /><!--非团借款报销-->
+                                                        <else /> <!--非团借款报销-->
                                                         <a href="{:U('Finance/nopbxd_info',array('id'=>$row['id']))}" title="详情" class="btn btn-info btn-smsm"><i class="fa fa-bars"></i></a>
                                                     </if>
                                                 </td>
@@ -129,3 +134,22 @@
             </div>
 
 <include file="Index:footer2" />
+
+<script>
+    function check_url() {
+        var bxids        = '';
+        $('.accessdata').each(function (index,element) {
+            var checked     = $(this).parent().attr('aria-checked');
+            if (checked=='true'){
+                bxids += $(this).val()+',';
+            }
+        });
+        if (!bxids){
+            art_show_msg('请选择要打印的报销单');
+            return false;
+        }else{
+            var url =  '/index.php?m=Main&c=Print&a=printReimbursements&bxids='+bxids;
+            window.location.href=url;
+        }
+    }
+</script>

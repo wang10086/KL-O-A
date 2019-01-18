@@ -2034,19 +2034,6 @@ class OpController extends BaseController {
 
 	// @@@NODE-3###public_ajax_material###获取模块物资信息###
 	public function public_ajax_material(){
-		/*
-		$db = M('product_material');
-		$line_id = I('id');
-		$pdata = M('product_line_tpl')->where(array('line_id'=>$line_id,'type'=>1))->getField('pro_id',true);
-		$where = array();
-		$where['product_id'] = array('in',implode(',',$pdata));
-		$list = $db->where($where)->select();
-		if($list){
-			foreach($list as $k=>$row){
-			 	echo '<tr class="expense mokuaiwuzi" id="wuzi_mokuai_'.$k.'"><td><input type="hidden" name="cost['.(2000+$k).'][item]" value="物资费"><input type="hidden" name="cost['.(2000+$k).'][cost_type]" value="4"><input type="hidden" name="cost['.(2000+$k).'][relevant_id]" value=""><input type="hidden" name="cost['.(2000+$k).'][remark]" value="'.$row['material'].'"><input type="hidden" name="wuzi['.(2000+$k).'][material]" value="'.$row['material'].'"><input type="hidden" name="wuzi['.(2000+$k).'][material_id]" value="">'.$row['material'].'</td><td><input type="text" name="cost['.(2000+$k).'][cost]" value="'.$row['unitprice'].'" placeholder="单价" class="form-control min_input cost"></td><td><span>X</span></td><td><input type="text" name="cost['.(2000+$k).'][amount]" value="" placeholder="'.$row['amount'].'" class="form-control min_input amount"></td><td class="total">¥'.$row['unitprice']*$row['amount'].'</td><td><input type="text" name="wuzi['.(2000+$k).'][remarks]" value="'.$row['remarks'].'" class="form-control"></td><td><a href="javascript:;" class="btn btn-danger btn-flat" onclick="delbox(\'wuzi_mokuai_'.$k.'\')">删除</a></td></tr>';	
-			}
-		}
-		*/
 		$opid = I('id');
 		$list = M()->table('__OP_MATERIAL__ as m')->field('c.*,m.*')->join('__OP_COST__ as c on m.material=c.remark')->where(array('m.op_id'=>$opid,'c.op_id'=>$opid,'c.cost_type'=>4))->order('m.id')->select();
 		
@@ -2104,7 +2091,8 @@ class OpController extends BaseController {
         if ($from)  $where['from']  = array('eq',$type);
         if ($subject_field)  $where['subject_field']  = array('eq',$subject_field);
 
-        $page = new Page($db->where($where)->count(),25);
+        $pagecount   = $db->where($where)->count();
+        $page        = new Page($pagecount,25);
         $this->pages = $pagecount>25 ? $page->show():'';
         $lists       = $db->where($where)->limit($page->firstRow . ',' . $page->listRows)->order($this->orders('input_time'))->select();
 

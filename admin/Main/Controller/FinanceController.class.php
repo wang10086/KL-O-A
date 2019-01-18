@@ -1040,6 +1040,7 @@ class FinanceController extends BaseController {
         $this->jk_type      = C('JIEKUAN_TYPE');
         $this->audit_yusuan = $audit_yusuan;
         $this->op           = $op;
+        $this->company      = C('COMPANY');
         $settlement = M('op_settlement')->where(array('op_id'=>$opid))->find();
         $this->settlement   = $settlement;
         $this->display();
@@ -2364,6 +2365,7 @@ class FinanceController extends BaseController {
         $departments        = M('salary_department')->select();
         $this->departments  = $departments;
         $this->jk_type      = C('JIEKUAN_TYPE');
+        $this->company      = C('COMPANY');
         $this->display();
     }
 

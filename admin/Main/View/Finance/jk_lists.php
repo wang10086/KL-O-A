@@ -7,7 +7,7 @@
             <th class="sorting" width="150" data="rolename">借款部门</th>
             <th class="sorting" data="sum">借款金额</th>
             <th class="sorting" data="">审核信息</th>
-            <if condition="rolemenu(array('Finance/aaa'))">
+            <if condition="rolemenu(array('Finance/jiekuandan_info'))">
                 <th class="taskOptions" width="80" data="">详情</th>
             </if>
 
@@ -19,9 +19,9 @@
                 <td>{$row.department}</td>
                 <td>{$row.sum}</td>
                 <td>{$row.auditstatus}</td>
-                <if condition="rolemenu(array('Finance/aaa'))">
+                <if condition="rolemenu(array('Finance/jiekuandan_info'))">
                     <td class="taskOptions">
-                        <a href="{:U('Finance/aaa',array('opid'=>$row['op_id']))}" title="借款" class="btn btn-info btn-smsm"><i class="fa fa-pencil"></i></a>
+                        <a href="{:U('Finance/jiekuandan_info',array('jkid'=>$row['id']))}" title="借款" class="btn btn-info btn-smsm"><i class="fa fa-pencil"></i></a>
                     </td>
                 </if>
             </tr>
