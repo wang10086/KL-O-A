@@ -71,7 +71,7 @@
                                 <td colspan="2" class="td">&emsp;证明验收人签字：<span id="zmysr"> <?php if($v[0]['zm_audit_status']==2){echo "<span class='red'>不通过</span>"; }elseif ($v[0]['zm_audit_status']==1){ echo "<img src='/".$v[0]['zm_audit_file']."' height='35px'>";}; ?></span></td>
                             </tr>
                             <tr>
-                                <td colspan="2" class="td">&emsp;部门主管签字：<span id=""> <?php if($v[0]['manager_audit_status']==2){echo "<span class='red'>不通过</span>"; }elseif ($v[0]['manager_audit_status']==1){ echo "<img src='/".$v[0]['manager_audit_file']."' height='35px'>";}; ?></span></td>
+                                <td colspan="2" class="td">&emsp;部门主管签字：<span id="bmzg"> <?php if($v[0]['manager_audit_status']==2){echo "<span class='red'>不通过</span>"; }elseif ($v[0]['manager_audit_status']==1){ echo "<img src='/".$v[0]['manager_audit_file']."' height='35px'>";}; ?></span></td>
                                 <td colspan="2" class="td">&emsp;部门分管领导签字：<span id="ysspr"> <?php if($v[0]['ys_audit_status']==2){echo "<span class='red'>不通过</span>"; }elseif ($v[0]['ys_audit_status']==1){ echo "<img src='/".$v[0]['ys_audit_file']."' height='35px'>";}; ?></span></td>
                                 <td colspan="2" class="td">&emsp;财务主管签字：<span id="cwzg"><?php if($v[0]['cw_audit_status']==2){echo "<span class='red'>不通过</span>"; }elseif ($v[0]['cw_audit_status']==1){ echo "<img src='/".$v[0]['cw_audit_file']."' height='35px'>";}; ?></span></td>
                             </tr>
@@ -160,7 +160,7 @@
                                     <td colspan="2" class="td">&emsp;证明验收人签字：<span id="zmysr"> <?php if($v[1]['zm_audit_status']==2){echo "<span class='red'>不通过</span>"; }elseif ($v[1]['zm_audit_status']==1){ echo "<img src='/".$v[1]['zm_audit_file']."' height='35px'>";}; ?></span></td>
                                 </tr>
                                 <tr>
-                                    <td colspan="2" class="td">&emsp;部门主管签字：<span id=""> <?php if($v[1]['manager_audit_status']==2){echo "<span class='red'>不通过</span>"; }elseif ($v[1]['manager_audit_status']==1){ echo "<img src='/".$v[1]['manager_audit_file']."' height='35px'>";}; ?></span></td>
+                                    <td colspan="2" class="td">&emsp;部门主管签字：<span id="bmzg"> <?php if($v[1]['manager_audit_status']==2){echo "<span class='red'>不通过</span>"; }elseif ($v[1]['manager_audit_status']==1){ echo "<img src='/".$v[1]['manager_audit_file']."' height='35px'>";}; ?></span></td>
                                     <td colspan="2" class="td">&emsp;部门分管领导签字：<span id="ysspr"> <?php if($v[1]['ys_audit_status']==2){echo "<span class='red'>不通过</span>"; }elseif ($v[1]['ys_audit_status']==1){ echo "<img src='/".$v[1]['ys_audit_file']."' height='35px'>";}; ?></span></td>
                                     <td colspan="2" class="td">&emsp;财务主管签字：<span id="cwzg"><?php if($v[1]['cw_audit_status']==2){echo "<span class='red'>不通过</span>"; }elseif ($v[1]['cw_audit_status']==1){ echo "<img src='/".$v[1]['cw_audit_file']."' height='35px'>";}; ?></span></td>
                                 </tr>
@@ -252,7 +252,7 @@
                                     <td colspan="2" class="td">&emsp;证明验收人签字：<span id="zmysr"> <?php if($v[2]['zm_audit_status']==2){echo "<span class='red'>不通过</span>"; }elseif ($v[2]['zm_audit_status']==1){ echo "<img src='/".$v[2]['zm_audit_file']."' height='35px'>";}; ?></span></td>
                                 </tr>
                                 <tr>
-                                    <td colspan="2" class="td">&emsp;部门主管签字：<span id=""> <?php if($v[2]['manager_audit_status']==2){echo "<span class='red'>不通过</span>"; }elseif ($v[2]['manager_audit_status']==1){ echo "<img src='/".$v[2]['manager_audit_file']."' height='35px'>";}; ?></span></td>
+                                    <td colspan="2" class="td">&emsp;部门主管签字：<span id="bmzg"> <?php if($v[2]['manager_audit_status']==2){echo "<span class='red'>不通过</span>"; }elseif ($v[2]['manager_audit_status']==1){ echo "<img src='/".$v[2]['manager_audit_file']."' height='35px'>";}; ?></span></td>
                                     <td colspan="2" class="td">&emsp;部门分管领导签字：<span id="ysspr"> <?php if($v[2]['ys_audit_status']==2){echo "<span class='red'>不通过</span>"; }elseif ($v[2]['ys_audit_status']==1){ echo "<img src='/".$v[2]['ys_audit_file']."' height='35px'>";}; ?></span></td>
                                     <td colspan="2" class="td">&emsp;财务主管签字：<span id="cwzg"><?php if($v[2]['cw_audit_status']==2){echo "<span class='red'>不通过</span>"; }elseif ($v[2]['cw_audit_status']==1){ echo "<img src='/".$v[2]['cw_audit_file']."' height='35px'>";}; ?></span></td>
                                 </tr>

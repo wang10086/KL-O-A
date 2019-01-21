@@ -1,6 +1,6 @@
 
 <!--岗位薪酬变动 -->
-<div class="box">
+<div class="box box-warning">
     <div class="box-header">
         <div class="box-tools pull-left">
             <h3 style="color:blue"><b>岗位薪酬变动</h3>

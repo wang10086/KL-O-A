@@ -18,37 +18,59 @@
                 <!-- Main content -->
                 <section class="content">
                     <div class="row">
-                        <div class="col-xs-12">
+                        <div class="col-md-12">
 
+                            <div class="btn-group" id="catfont">
+                                <a href="{:U('Salary/salary_query',array('pin'=>0))}" class="btn <?php if($pin==0){ echo 'btn-info';}else{ echo 'btn-default';} ?>">岗位薪酬变动</a>
+                                <a href="{:U('Salary/salary_query',array('pin'=>1))}" class="btn <?php if($pin==1){ echo 'btn-info';}else{ echo 'btn-default';} ?>">提成/补助/奖金</a>
+                                <a href="{:U('Salary/salary_query',array('pin'=>2))}" class="btn <?php if($pin==2){ echo 'btn-info';}else{ echo 'btn-default';} ?>">五险一金</a>
+                                <a href="{:U('Salary/salary_query',array('pin'=>3))}" class="btn <?php if($pin==3){ echo 'btn-info';}else{ echo 'btn-default';} ?>">代扣代缴</a>
+                                <a href="{:U('Salary/salary_query',array('pin'=>4))}" class="btn <?php if($pin==4){ echo 'btn-info';}else{ echo 'btn-default';} ?>">专项附加扣除</a>
+                            </div>
 
                             <!--岗位薪酬变动 -->
-                            <div class="salary_search_extract" id="salary_add_backcolor"><br>
-
-                                <include file="post_salary_change" />
-
-                            </div>
+                            <?php if($pin == 0){ ?>
+                                <div class="salary_search_extract" id="salary_add_backcolor"><br>
+                                    <include file="post_salary_change" />
+                                </div>
+                            <?php } ?>
 
 
                             <!--提成/奖金/补助-->
-                            <div class="salary_search_extract">
+                            <?php if($pin == 1){ ?>
+                                <div class="salary_search_extract mt20">
+                                    <include file="Salary:salary_extract_bonus" />
+                                </div>
+                            <?php } ?>
 
-                                <include file="Salary:salary_extract_bonus" />
-
-                            </div>
 
                             <!--五险一金-->
-                            <div class="salary_search_extract" >
+                            <?php if($pin == 2){ ?>
+                                <div class="salary_search_extract mt20" >
+                                    <include file="Salary:salary_insurance" />
+                                </div>
+                            <?php } ?>
 
-                                <include file="Salary:salary_insurance" />
-
-                            </div>
 
                             <!--代扣代缴-->
-                            <div class="salary_search_extract" >
+                            <?php if($pin == 3){ ?>
+                                <div class="salary_search_extract mt20" >
+                                    <include file="Salary:salary_withholding" />
+                                </div>
+                            <?php } ?>
 
-                                <include file="Salary:salary_withholding" />
+                            <!--专项附加扣除-->
+                            <?php if($pin == 4){ ?>
+                                <div class="salary_search_extract mt20" >
+                                    <include file="Salary:salary_specialDeduction" />
+                                </div>
+                            <?php } ?>
+
+                            <!--   操作历史 -->
+                            <div id="salary_history_page1">
 
                             </div>
+
 
                         </div><!-- /.col -->
                      </div>
@@ -59,17 +81,9 @@
                     </div>
 
                 </section><!-- /.content -->
-                <!--   操作历史 -->
-                <div id="salary_history_page1" style="margin-left:1em;">
-
-                </div>
 
             </aside><!-- /.right-side -->
 
 
 <include file="Index:footer2" />
 <script src="__HTML__/js/salary.js" type="text/javascript"></script>
-<script>
-
-
-</script>

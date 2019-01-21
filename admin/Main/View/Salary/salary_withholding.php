@@ -1,6 +1,6 @@
 
 <!--代扣代缴 -->
-<div class="box">
+<div class="box box-warning">
     <div class="box-header">
         <div class="box-tools pull-left">
             <h3 style="color:blue"><b>&nbsp;&nbsp;&nbsp;代扣代缴</h3>

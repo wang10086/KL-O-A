@@ -1,6 +1,6 @@
 
 <!--提成/奖金/补助-->
-<div class="box">
+<div class="box box-warning">
     <div class="box-header">
         <div class="box-tools pull-left">
             <h3 style="color:blue"><b>提成/补助/奖金</h3>
