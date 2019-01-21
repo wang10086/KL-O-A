@@ -173,7 +173,7 @@
                                         </div>
                                     </div>
                                 </div><br>
-                                <div style="text-align:center;width:96%;">
+                                <div style="text-align:center;width:96%;<?php if($statu!==1){echo 'display:none;';}?>">
                                     <form method="post" action="{:U('Approval/add_annotation')}" enctype="multipart/form-data">
                                         <input type="hidden" name="file_id" value="{$list[0]['id']}">
                                          <textarea style="margin:2em -4em 2em 0em;padding:1em;height: 15em;border:solid 2px #d2d5d8;overflow-y:scroll;overflow-x:scroll;word-wrap:break-word;width:100%;text-indent:2.5em;line-height:2em;letter-spacing:0.1em;"  name="comment">

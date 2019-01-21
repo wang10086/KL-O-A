@@ -43,11 +43,10 @@
                                             <td style="text-align:center;<?php if($app['statu']<5 || $app['statu']==6){echo 'color:red;';}else{echo 'color:#00CC33;';}?>"> <?php if($app['statu']==1){echo '待上级领导审核';}elseif($app['statu']==2){echo '待综合审核';}elseif($app['statu']==3){echo '待审议人员审核';}elseif($app['statu']==4){echo '待终审批准';}elseif($app['statu']==5){echo '已批准';}elseif($app['statu']==6){echo '驳回';}?></td>
 
                                             <td style="text-align:center;font-size: 1em;">
-                                                <a href="{:U('Approval/Approval_Upload',array('id'=>$app['id']))}" title="编辑" class="btn btn-info btn-smsm">
+                                                <a href="{:U('Approval/Approval_Upload',array('id'=>$app['id']))}" title="编辑" class="btn btn-info btn-smsm" style="<?php if($app['userid']!==$_SESSION['userid']){echo 'display:none;';} ?>">
                                                     <i class="fa fa-pencil"></i>
-                                                </a>
-
-                                                | <a href="{:U('Approval/Approval_Update',array('id'=>$app['id']))}" title="详情" class="btn btn-info btn-smsm">
+                                                </a> <?php if($app['userid']==$_SESSION['userid']){echo ' | ';} ?>
+                                                 <a href="{:U('Approval/Approval_Update',array('id'=>$app['id']))}" title="详情" class="btn btn-info btn-smsm">
                                                     <i class="fa fa-bars"></i>
                                                 </a>
                                                 <if condition="rolemenu(array('Approval/file_delete'))">

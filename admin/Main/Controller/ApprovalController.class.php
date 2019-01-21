@@ -155,6 +155,7 @@ class ApprovalController extends BaseController {
 
     /**
      * Approval_Update 详情列表
+     * $id 文件id
      */
     public function Approval_Update()
     {
@@ -173,6 +174,7 @@ class ApprovalController extends BaseController {
         $query['file_id']       = $id;
         $annotation             = D('Approval')->table_sql('approval_annotation',$query,2);//批注信息
         $Printing               = D('Approval')->printing_info($list);//打印单 数据详细信息
+        $this->statu            = D('Approval')->status($annotation,$judge,$consider,$judgment);//1显示0不显示批注框
 
         $this->printing         = $Printing;;//打印单 数据详细信息
         $this->annotation       = $annotation;//批注信息
