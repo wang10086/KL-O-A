@@ -545,19 +545,15 @@ class ApprovalModel extends Model
     public function status($annotation,$judge,$consider,$judgment){
         $statu = 0;
         if(!$annotation){
-            if($judge['pid']==$_SESSION['userid']){
-                $statu = 1; //上级
-            }
+            if($judge['pid']==$_SESSION['userid']){$statu = 1; }//上级
+
         }else{
-            if($annotation[0]['statu']==2 && $_SESSION['userid']==13){
-                $statu = 1; //综合
-            }
-            if($annotation[0]['statu']==3 && in_array($_SESSION['userid'],$consider)){
-                $statu = 1; //综合
-            }
-            if($annotation[0]['statu']==4  && in_array($_SESSION['userid'],$judgment)){
-                $statu = 1; //综合
-            }
+            if($annotation[0]['statu']==2 && $_SESSION['userid']==13){$statu = 1;} //综合
+
+            if($annotation[0]['statu']==3 && in_array($_SESSION['userid'],$consider)){$statu = 1; } //审议
+
+            if($annotation[0]['statu']==4  && in_array($_SESSION['userid'],$judgment)){$statu = 1; }//终审
+
         }
         return $statu;
 
