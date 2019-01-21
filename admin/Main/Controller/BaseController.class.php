@@ -515,61 +515,80 @@ class BaseController extends Controller {
     /**
      * file_remind_number 文件提醒条数
      */
-   public function file_remind_number(){
+//   public function file_remind_number()
+//   {
+//       $useid                           = $_SESSION['userid'];//用户id
+//       $sun                             = 0;//信息条数
+//       $file                            = M('approval_flie')->where()->select();
+//       foreach($file as $key =>$val){
+//           $where = array();
+//            $where['file_id']             = $val['id'];
+//            $annotatio                    = M('approval_annotation')->where($where)->find();
+//            if($annotatio){//判断有无文件批注
+//                if($useid==13 && $annotatio['statu']==2){$where['statu']=2;$where['file_id']=$val['id'];}//判断综合
+//
+//                $conside                  = explode(',', $val['file_consider']);//显示审议人员id
+//                if(in_array($useid,$conside) && $annotatio['statu']==3){$where['statu']=3;$where['file_id']=$val['id'];}//判断审议
+//
+//                $judgment                 = explode(',', $val['file_judgment']);//显示终审人员id
+//                if(in_array($useid,$judgment) && $annotatio['statu']==4){$where['statu']=4;$where['file_id']=$val['id'];}//判断终审
+//
+//                $where['account_id']      = $useid;
+//                $annotation               = M('approval_annotation')->where($where)->find();//判断状态文件是否存在
+//                if(!$annotation){$sun     = $sun+1;}//没有查到文件
+//            }else{
+//                $where['account_id']      =  $val['pid'];
+//                if($useid==$val['pid']){//判断上级
+//                    $where['type']        = 1;
+//                    $annotation           = M('approval_annotation')->where($where)->find();
+//                    if(!$annotation){$sun = $sun+1;}// 有文件没有批注
+//                }
+//            }
+//       }
+//       $_SESSION['file_sum']              = $sun;//保存缓存
+//        return $sun;
+//   }
 
-        // $sum1 状态1 的数量
-        $useid                          = $_SESSION['userid'];
-        $userid['pid_account_id']       = $useid;
-        $userid['status']               = 1;
-        $sum1                           = M('approval_flie_url')->where($userid)->count();//要处理文档
-        //$sum4 状态2的数量
-       $sum4                           = 0;
-       if($useid==13){
-           $status['status']           = 2;
-           $number1                    = M('approval_flie_url')->where($status)->count();//要处理文档
-           $sum4                       = $number1;
-       }
 
-        // $sum2 状态3的数量
-        $where['status']                = 3;
-        $where['judgment_account_id']   = array('like',"%$useid%");
-        $sum2                           = 0;
-        $judgment                       = M('approval_flie_url')->where($where)->select();
-        foreach($judgment as $key =>$val){
-            if(in_array($useid,explode(',',$val['judgment_account_id']))){
-                $query['file_id']       = $val['file_id'];
-                $query['file_url_id']   = $val['id'];
-                $query['account_id']    = $useid;
-                $annotation             = M('approval_annotation')->where($query)->find();//已经处理过的数据
-                if(!$annotation){
-                    $sum2++;
+    /**
+     * file_remind_number 文件提醒条数
+     */
+    public function file_remind_number()
+    {
+        $useid                              = $_SESSION['userid'];//用户id
+        $sun                                = 0;//信息条数
+        $file                               = M('approval_flie')->select();
+        foreach($file as $key =>$val){
+            $where                          = array();
+            $where['file_id']               = $val['id'];
+            $annotatio                      = M('approval_annotation')->where($where)->find();
+            if($annotatio){//判断有无文件批注
+                if($useid==$val['pid'] && $annotatio['statu']==1){$sun  = $sun+1; }//判断综合
+                if($useid==13 && $annotatio['statu']==2){ $sun  = $sun+1;}//判断综合
+                if($val['account_id']==$useid && $annotatio['statu']==6){$sun  = $sun+1;} //驳回
+
+                $conside                    = explode(',', $val['file_consider']);//显示审议人员id
+                if(in_array($useid,$conside) && $annotatio['statu']==3){//判断审议
+                    $where['type']          = 3;
+                    $where['account_id']    = $useid;
+                    $annotation2            = M('approval_annotation')->where($where)->find();//判断状态文件是否存在
+                    if(!$annotation2){$sun  = $sun+1;}//没有查到文件
+                }
+                $judgment                   = explode(',', $val['file_judgment']);//显示终审人员id
+                if(in_array($useid,$judgment) && $annotatio['statu']==4){//判断终审
+                    $where['type']          = 4;
+                    $where['account_id']    = $useid;
+                    $annotation3            = M('approval_annotation')->where($where)->find();//判断状态文件是否存在
+                    if(!$annotation3){$sun  = $sun+1;}//没有查到文件
+                }
+            }else{
+                if($useid==$val['pid']){//判断上级有文件没有批注
+                 $sun                       = $sun+1;
                 }
             }
         }
-        //$sum3 状态4的数量
-        $gment['status']                = 4;
-        $gment['final_account_id']      = array('like',"%$useid%");
-        $sum3                           = 0;
-        $gmen                           = M('approval_flie_url')->where($gment)->select();
-        foreach($gmen as $k => $v){
-            if(in_array($useid,explode(",",$v['final_account_id']))){
-                $gmen_r['file_id']      = $v['file_id'];
-                $gmen_r['file_url_id']  = $v['id'];
-                $gmen_r['account_id']   = $useid;
-                $annotation             = M('approval_annotation')->where($gmen_r)->find();//已经处理过的数据
-                if(!$annotation){
-                    $sum3++;
-                }
-            }
-        }
-        //$sum5 状态6的数量
-        $stat['status']             = 6;
-        $stat['account_id']         = $useid;
-        $sum5                        = M('approval_flie_url')->where($stat)->count();//要处理文档
-        // 提示文件处理条数
-        $sum                            = $sum1+$sum2+$sum3+$sum4+$sum5;
-        $_SESSION['file_sum']           = $sum;//保存缓存
-        return $sum;
+        $_SESSION['file_sum']               = $sun;//保存缓存
+        return $sun;
     }
 }
 

@@ -26,23 +26,35 @@
                                 <table class="table table-bordered dataTable"  style="margin-top:10px;">
                                     <tr role="row" class="orders" >
                                         <th style="text-align:center;width:6em;"><b>文件夹ID </b></th>
-                                        <th style="text-align:center;width:10em;"><b>创建人姓名</b></th>
-                                        <th style="text-align:center;width:10em;"><b>文件夹名称</b></th>
-                                        <th style="text-align:center;width:10em;"><b>创建时间</b></th>
-                                        <th style="text-align:center;width:5em;"><b>审批天数</b></th>
-                                        <th style="text-align:center;width:10em;"><b>操作</b></th>
+                                        <th style="text-align:center;width:8em;"><b>创建人姓名</b></th>
+                                        <th style="text-align:center;width:15em;"><b>文件夹名称</b></th>
+                                        <th style="text-align:center;width:8em;"><b>创建时间</b></th>
+                                        <th style="text-align:center;width:6em;"><b>审批天数</b></th>
+                                        <th style="text-align:center;width:6em;"><b>状态</b></th>
+                                        <th style="text-align:center;width:10em;"><b>编辑 | 详情 <if condition="rolemenu(array('Approval/file_delete'))">| 删除</if></b></th>
                                     </tr>
                                     <foreach name="approval" item="app">
                                         <tr>
-                                            <td style="text-align:center;">{$app['Approval']['id']}</td>
-                                            <td style="text-align:center;color:#3399FF;">{$app['Approval']['account_name']}</td>
-                                            <td style="text-align:center;"><a href="{:U('Approval/Approval_list',array('file_id'=>$app['Approval']['id']))}"><i class="fa fa-folder-open" style="color: #3399ff;"></i> {$app['Approval']['file_primary']}</a></td>
-                                            <td style="text-align:center;"><?php if(is_numeric($app['Approval']['createtime'])){echo date('Y-m-d H:i:s',$app['Approval']['createtime']);}else{echo'';}?></td>
-                                            <td style="text-align:center;">{$app['Approval']['file_date']} ( 天 )</td>
+                                            <td style="text-align:center;">{$app['id']}</td>
+                                            <td style="text-align:center;color:#3399FF;">{$app['username']}</td>
+                                            <td style="text-align:center;"><a href="{$app['file_url']}">{$app['file_name']}</a></td>
+                                            <td style="text-align:center;"><?php if(is_numeric($app['createtime'])){echo date('Y-m-d H:i:s',$app['createtime']);}else{echo'';}?></td>
+                                            <td style="text-align:center;">{$app['file_date']} ( 天 )</td>
+                                            <td style="text-align:center;<?php if($app['statu']<5 || $app['statu']==6){echo 'color:red;';}else{echo 'color:#00CC33;';}?>"> <?php if($app['statu']==1){echo '待上级领导审核';}elseif($app['statu']==2){echo '待综合审核';}elseif($app['statu']==3){echo '待审议人员审核';}elseif($app['statu']==4){echo '待终审批准';}elseif($app['statu']==5){echo '已批准';}elseif($app['statu']==6){echo '驳回';}?></td>
+
                                             <td style="text-align:center;font-size: 1em;">
-                                                <a href="{:U('Approval/Approval_Upload',array('id'=>$app['Approval']['id']))}" style="color:#008d4c;;">
-                                                    编辑
-                                                </a> | <a href="" style="color:red;">删除</a> | <a href="{:U('Approval/Approval_Update')}" style="color:#3399FF;">详情</a>
+                                                <a href="{:U('Approval/Approval_Upload',array('id'=>$app['id']))}" title="编辑" class="btn btn-info btn-smsm">
+                                                    <i class="fa fa-pencil"></i>
+                                                </a>
+
+                                                | <a href="{:U('Approval/Approval_Update',array('id'=>$app['id']))}" title="详情" class="btn btn-info btn-smsm">
+                                                    <i class="fa fa-bars"></i>
+                                                </a>
+                                                <if condition="rolemenu(array('Approval/file_delete'))">
+                                                    |  <a href="{:U('Approval/file_delete',array('id'=>$app['id']))}" title="删除" class="btn btn-warning btn-smsm">
+                                                        <i class="fa fa-times"></i>
+                                                    </a>
+                                                </if>
                                             </td>
                                         </tr>
                                      </foreach>
@@ -60,116 +72,8 @@
             </aside><!-- /.right-side -->
 
 
-<!--<div id="searchtext">-->
-<!---->
-<!--    <form action="{:U('Approval/create_file')}" method="post">-->
-<!---->
-<!--        <div class="form-group col-md-6">-->
-<!--            创建文件名称： <input type="text" style="margin-top:1em;" class="form-control"  name="file_name">-->
-<!--        </div>-->
-<!--        <div class="form-group col-md-6">-->
-<!--            审批完结天数：-->
-<!--            <input type="text" class="form-control" style="margin-top:1em;" name="file_date" placeholder="例：5" />-->
-<!--        </div>-->
-<!--        <div class="form-group col-md-6" >-->
-<!--            文件状态：-->
-<!--            <select name="status" style="margin-top:1em;" class="form-control">-->
-<!--                <option value="1" selected>新建</option>-->
-<!--                <option value="2">修改</option>-->
-<!--            </select>-->
-<!--        </div>-->
-<!--        <div class="form-group col-md-6" >-->
-<!--            创建人：-->
-<!--            <input type="text" class="form-control" style="margin-top:1em;" name="file_user" value="--><?php //echo $_SESSION['name']?><!--" disabled="disabled" />-->
-<!--        </div>-->
-<!--        <div class="form-group col-md-12">-->
-<!--            <a>审核描述：</a>-->
-<!--            <textarea rows="4" cols="70" style="margin-top:1em;"> </textarea>-->
-<!--        </div>-->
-<!---->
-<!--    </form>-->
-<!--</div>-->
-
 <include file="Index:footer2" />
 
 <script type="text/javascript">
 
-    // 文件选择
-    // $(document).ready(function(e) {
-    //     //选择
-    //     $('#Approval_check').on('ifChecked', function() {
-    //         $('.Approval_check').iCheck('check');
-    //     });
-    //     $('#Approval_check').on('ifUnchecked', function() {
-    //         $('.Approval_check').iCheck('uncheck');
-    //     });
-    // });
-
-
-    // 删除选择文件
-    // $('.Approval_file_delete').click(function(){
-    //     var id = '';
-    //     $(".Approval_check:checkbox:checked").each(function(){
-    //         var content = $(this).val();
-    //             id += content+',';
-    //         $(this).parents('tr').remove();
-    //     });
-    //     var status = 1;
-    //     $.ajax({
-    //         url:"{:U('Ajax/Ajax_file_delete')}",
-    //         type:"POST",
-    //         data:{'fileid':id,'status':status,},
-    //         dataType:"json",
-    //         success:function(date){
-    //             if(date.sum==1){
-    //                 alert(date.msg);
-    //             }else{
-    //                 alert(date.msg);
-    //             }
-    //         }
-    //     });
-    // });
-
-    // function salry_opensearch(obj,w,h,t){ //自制弹窗
-    //     art.dialog({
-    //         content:$('#'+obj).html(),
-    //         lock:true,
-    //         title: t,
-    //         width:w,
-    //         height:h,
-    //         okValue: t,
-    //         ok: function () {
-    //             var file_name = $("input[name='file_name']").val();
-    //             var file_date = $("input[name='file_date']").val();
-    //             var status    = $(".aui_content option:selected").val();;
-    //             var file_user = $("input[name='file_user']").val();
-    //             var textarea  = $("textarea").val();
-    //             $.ajax({
-    //                 url:"{:U('Ajax/create_file')}",
-    //                 type:"POST",
-    //                 data:{
-    //                     'file_name':file_name,
-    //                     'file_date':file_date,
-    //                     'status':status,
-    //                     'file_user':file_user,
-    //                     'textarea':textarea,
-    //                 },
-    //                 dataType:"json",
-    //                 success:function(date){
-    //                     if(date.sum==1){
-    //                         alert(date.msg);
-    //                     }else{
-    //                         alert(date.msg);
-    //                     }
-    //                     window.location.reload();
-    //                 }
-    //             });
-    //             $('.aui_content').remove()
-    //         },
-    //         cancelValue:'取消',
-    //         cancel: function () {
-    //         }
-    //     }).show();
-    //     $('.aui_buttons').find("aui_state_highlight").first().css("background-color","#00acd6");
-    // }
 </script>
