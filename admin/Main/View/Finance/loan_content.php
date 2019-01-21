@@ -60,7 +60,7 @@
                 </div>
 
                 <div class="form-group col-md-6">
-                    <label>证明验收人：<font color="#999999">（可通过姓名拼音快速检索）</font></label>
+                    <label>证明验收人：<font color="#999999">（不能与经手人相同）</font></label>
                     <input type="text" name="zmysr_name" class="form-control zmysr_name" value="{$list.zmysr}" required />
                 </div>
 
@@ -282,12 +282,18 @@
             let ftje     = parseFloat(sftje);
             let isShare  = $('#share').find('div[class="iradio_minimal checked"]').find('input[name="info[share]"]').val()
             let company  = $('#company').val();
+            let userid   = <?php echo cookie('userid'); ?>;
+
             if (isShare==1 && bxje != ftje){
                 art_show_msg('报销金额和分摊金额不相等');
                 return false;
             }
             if (!zmysr){
                 art_show_msg('请填写证明验收人');
+                return false;
+            }
+            if (zmysr == userid){
+                art_show_msg('证明验收人与经手人不能为同一人');
                 return false;
             }
             if (!company){
