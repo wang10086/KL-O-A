@@ -239,6 +239,7 @@ class ApprovalModel extends Model
             $query['id']        = $val;
             $query['statu']     = array('neq',3);
             $date[$key]         = $this->table_sql('approval_addfile',$query,1);//查询文件信息
+            if(count($date[$key])<1){unset( $date[$key]);}//去空
         }
         $list[0] = $sql;
         $list[1] = $date;
@@ -534,6 +535,32 @@ class ApprovalModel extends Model
                M('approval_annotation')->where($sav)->save($up);
            }
         }
+    }
+
+    /**
+     * status 查询状态
+     * $annotation 批注信息  $judge 文件信息
+     * $consider 审议 $judgment 终审
+     */
+    public function status($annotation,$judge,$consider,$judgment){
+        $statu = 0;
+        if(!$annotation){
+            if($judge['pid']==$_SESSION['userid']){
+                $statu = 1; //上级
+            }
+        }else{
+            if($annotation[0]['statu']==2 && $_SESSION['userid']==13){
+                $statu = 1; //综合
+            }
+            if($annotation[0]['statu']==3 && in_array($_SESSION['userid'],$consider)){
+                $statu = 1; //综合
+            }
+            if($annotation[0]['statu']==4  && in_array($_SESSION['userid'],$judgment)){
+                $statu = 1; //综合
+            }
+        }
+        return $statu;
+
     }
 
 }
