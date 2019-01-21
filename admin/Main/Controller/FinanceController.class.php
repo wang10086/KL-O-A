@@ -2591,6 +2591,7 @@ class FinanceController extends BaseController {
         $this->departments      = $departments;
         $this->jk_type          = C('JIEKUAN_TYPE');
         $this->jkid             = $jkid;
+        $this->company          = C('COMPANY');
 
         $this->display();
     }
