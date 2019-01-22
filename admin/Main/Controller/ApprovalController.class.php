@@ -18,6 +18,7 @@ class ApprovalController extends BaseController {
 
     /**
      * Approval_upload_file 默认上传文件
+     * upload 上传文件方法
      */
     public function Approval_upload_file()
     {
@@ -42,6 +43,7 @@ class ApprovalController extends BaseController {
     }
     /**
      * Approval_file 保存文件
+     * file_id 文件id
      */
     public function Approval_file()
     {
@@ -65,6 +67,7 @@ class ApprovalController extends BaseController {
 
     /**
      * Approval_Upload 编辑文件 修改文件
+     * id 文件id
      */
     public function Approval_Upload()
     {
@@ -93,6 +96,8 @@ class ApprovalController extends BaseController {
 
     /**
      * Approval_Index 首页显示
+     * approval 列表信息
+     * pages 分页
      */
     public function Approval_Index()
     {
@@ -226,7 +231,6 @@ class ApprovalController extends BaseController {
             $this->error($state);
         }
     }
-
 }
 
 
