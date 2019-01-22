@@ -21,31 +21,31 @@ class ApprovalModel extends Model
             if($submit){$id['mianid']       = $submit;}else{return 0 ;die;}
         }
         //副文件保存
-        $add1['createtime']             = time();//创建时间
-        $add1['account_id']             = $_SESSION['userid'];//提交人员id
-        $file_name                      = $_POST['file_name1'];//文件名称
+        $add1['createtime']                 = time();//创建时间
+        $add1['account_id']                 = $_SESSION['userid'];//提交人员id
+        $file_name                          = $_POST['file_name1'];//文件名称
         if(!empty($file_name)){
-            $file_size                  = $_POST['file_size1'];//文件大小
-            $file_url                   = $_POST['file_url1'];//文件路径
-            $add1['statu']              = 2;//创建状态
+            $file_size                      = $_POST['file_size1'];//文件大小
+            $file_url                       = $_POST['file_url1'];//文件路径
+            $add1['statu']                  = 2;//创建状态
             foreach($file_name as $key =>$val){
-                $add1['file_name']      = $val;
-                $add1['file_size']      = $file_size[$key];
-                $add1['file_url']       = $file_url[$key];
-                $submit1                = M('approval_addfile')->add($add1);//保存文件信息
-                if($submit1){$id['vice'] .= $submit1.',';}else{return 0 ;die;}
+                $add1['file_name']          = $val;
+                $add1['file_size']          = $file_size[$key];
+                $add1['file_url']           = $file_url[$key];
+                $submit1                    = M('approval_addfile')->add($add1);//保存文件信息
+                if($submit1){$id['vice']    .= $submit1.',';}else{return 0 ;die;}
             }
-            $id['vice']                 = substr($id['vice'],0,-1);
+            $id['vice']                     = substr($id['vice'],0,-1);
             //文件主表储存
-            $increase['createtime']     = time();
-            $increase['account_id']     = $_SESSION['userid'];//提交人员id
-            $increase['account_name']   = username($_SESSION['userid']);
-            $increase['pid']            = $_POST['user_id'];
-            $increase['file_describe']  = trim($_POST['describe']);
-            $increase['main_addfile_id']= $id['mianid'];
-            $increase['vice_addfile_id']= $id['vice'];
-            $increase['file_date']      = $_POST['days'];
-            $increase_add               = M('approval_flie')->add($increase);
+            $increase['createtime']         = time();
+            $increase['account_id']         = $_SESSION['userid'];//提交人员id
+            $increase['account_name']       = username($_SESSION['userid']);
+            $increase['pid']                = $_POST['user_id'];
+            $increase['file_describe']      = trim($_POST['describe']);
+            $increase['main_addfile_id']    = $id['mianid'];
+            $increase['vice_addfile_id']    = $id['vice'];
+            $increase['file_date']          = $_POST['days'];
+            $increase_add                   = M('approval_flie')->add($increase);
             if($increase_add){return 1;die;}else{return 0;die;}
         }else{
             return 1;die;
@@ -81,7 +81,6 @@ class ApprovalModel extends Model
                 }
             }
         }
-
         $file_name                              = $_POST['file_name1'];//文件名称
         if(!empty($file_name)){//是否有副文件保存
             //副文件保存

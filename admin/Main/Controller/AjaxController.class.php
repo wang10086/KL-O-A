@@ -975,7 +975,6 @@ class AjaxController extends Controller {
             $msg                            = "您的权限不足!请联系管理员！";
             echo json_encode(array('sum' => $sum, 'msg' => $msg));die;
         }
-
         $wages_month_id                     = explode(',',trim($_POST['wages_month_id']));
         $departmen_id                       = explode(',',trim($_POST['departmen_id']));
         $count_money_id                     = trim($_POST['count_money_id']);
@@ -1009,17 +1008,9 @@ class AjaxController extends Controller {
         if($count_money){
             $sum                            = 1;
             $_SESSION['salary_satus']       = '';
-            if($user_id==11){
-                $msg                        = "批准成功!";
-            }elseif($user_id==55){
-                $msg                       = "提交批准成功!";
-            }
+            if($user_id==11){$msg = "批准成功!";}elseif($user_id==55){$msg = "提交批准成功!";}
         }else{
-            if($user_id==11){
-                $msg                        = "批准失败!";
-            }elseif($user_id==55){
-                $msg                        = "提交批准失败!";
-            }
+            if($user_id==11){$msg = "批准失败!";}elseif($user_id==55){$msg = "提交批准失败!";}
             $sum                            = 0;
         }
         echo json_encode(array('sum' =>1, 'msg' => $msg));die;
@@ -1034,11 +1025,6 @@ class AjaxController extends Controller {
         $status ['status']              = $_POST['status'];
         $wages_query                    =  M('salary_wages_month')->where($datetime)->select();
         foreach($wages_query as $key => $val){
-//            if($val['status'] == 4){
-//                $sum                    = 0;
-//                $msg                    = "驳回失败!数据锁定！请联系管理员！";
-//                echo json_encode(array('sum' => $sum, 'msg' => $msg));die;
-//            }
             $att['id']                  =  $val['attendance_id'];
             $stat['status']             = 1;
             $bonus['id']                = $val['bonus_id'];
@@ -1047,12 +1033,30 @@ class AjaxController extends Controller {
             $subsid['id']               = $val['subsidy_id'];
             $withh['withholding_token'] = $val['withholding_token'];
 
-            if($att['id']!==0 && $att['id']!==''){M('salary_attendance')->where($att)->save($stat);}
-            if($bonus['id']>0 && $bonus['id']!==''){M('oa_salary_bonus')->where($bonus)->save($stat);}
-            if($income['income_token']!==0  && $income['income_token'] !==''){M('oa_salary_income')->where($income)->save($stat);}
-            if($labou['id']!==0  && $labou['id']!==''){M('oa_salary_labour')->where($labou)->save($stat);}
-            if($subsid['id']!==0 && $subsid['id']!==''){M('oa_salary_subsidy')->where($subsid)->save($stat);}
-            if($withh['withholding_token']!==0   && $withh['withholding_token']!==""){M('oa_salary_withholding')->where($withh)->save($stat);}
+            if(!empty($att['id'])){
+                $table1 = M('salary_attendance')->where($att)->save($stat);
+                if(!$table1){}else{}
+            }
+            if(!empty($bonus['id'])){
+                $table2 = M('oa_salary_bonus')->where($bonus)->save($stat);
+                if(!$table2){}else{}
+            }
+            if(!empty($income['income_token'])){
+                $table3 = M('oa_salary_income')->where($income)->save($stat);
+                if(!$table3){}else{}
+            }
+            if(!empty($labou['id'])){
+                $table4 = M('oa_salary_labour')->where($labou)->save($stat);
+                if(!$table4){}else{}
+            }
+            if(!empty($subsid['id'])){
+                $table5 = M('oa_salary_subsidy')->where($subsid)->save($stat);
+                if(!$table5){}else{}
+            }
+            if(!empty($withh['withholding_token'])){
+                $table6 = M('oa_salary_withholding')->where($withh)->save($stat);
+                if(!$table6){}else{}
+            }
         }
         $wages_month_del                = M('salary_wages_month')->where($datetime)->delete();
         $departmen_count                = M('salary_departmen_count')->where($datetime)->delete();
@@ -1073,11 +1077,7 @@ class AjaxController extends Controller {
         $where['account_id']                = code_number(trim(I('uid')));
         $Labour_money                       = trim(I('money'));
         $status                             = trim(I('status'));
-        if($status==1){
-            $cot = "合并计税";
-        }elseif($status==2){
-            $cot = "工会会费";
-        }
+        if($status==1){$cot = "合并计税";}elseif($status==2){$cot = "工会会费";}
         if(empty($Labour_money)){
             $sum                            = 0;
             $msg                            = "添加".$cot."失败!";
