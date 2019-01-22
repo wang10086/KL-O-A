@@ -3,7 +3,7 @@
     <script src="__HTML__/js/public.js?v=1.0.6" type="text/javascript"></script>
 
     <form action="{:U('Salary/salary_query')}" method="post" id="searchform">
-
+        <input type="hidden" name="pin" value="{$pin}">
         <div class="form-group col-md-6">
             <input type="text" class="form-control" name="id" placeholder="ID编号">
         </div>
@@ -34,7 +34,7 @@
     <script src="__HTML__/js/public.js?v=1.0.6" type="text/javascript"></script>
 
     <form action="{:U('Salary/salary_query')}" method="post" id="searchform1">
-
+        <input type="hidden" name="pin" value="{$pin}">
         <div class="form-group col-md-6">
             <input type="text" class="form-control" name="id" placeholder="ID编号">
         </div>
@@ -64,7 +64,7 @@
     <script src="__HTML__/js/public.js?v=1.0.6" type="text/javascript"></script>
 
     <form action="{:U('Salary/salary_query')}" method="post" id="searchform2">
-
+        <input type="hidden" name="pin" value="{$pin}">
         <div class="form-group col-md-6">
             <input type="text" class="form-control" name="id" placeholder="ID编号">
         </div>
@@ -94,7 +94,7 @@
     <script src="__HTML__/js/public.js?v=1.0.6" type="text/javascript"></script>
 
     <form action="{:U('Salary/salary_query')}" method="post" id="salary_withholding_num">
-
+        <input type="hidden" name="pin" value="{$pin}">
         <div class="form-group col-md-12">
             <input type="text" class="form-control" name="id" placeholder="ID编号">
         </div>
@@ -115,7 +115,7 @@
     <script src="__HTML__/js/public.js?v=1.0.6" type="text/javascript"></script>
 
     <form action="{:U('Salary/salary_query')}" method="post" id="salary_withholding_num">
-
+        <input type="hidden" name="pin" value="{$pin}">
         <div class="form-group col-md-12">
             <input type="text" class="form-control" name="id" placeholder="ID编号">
         </div>
@@ -130,3 +130,49 @@
 
     </form>
 </div>
+
+<!--专项附加扣除-->
+<div id="searchBox">
+    <form action="{:U('Salary/salary_query')}" method="post" id="searchBoxForm">
+        <input type="hidden" name="pin" value="{$pin}">
+        <div class="form-group col-md-6">
+            <input type="text" class="form-control" id="nickname" name="nickname" placeholder="员工姓名">
+        </div>
+        <div class="form-group col-md-6">
+            <input type="text" class="form-control" name="id" placeholder="ID编号">
+        </div>
+        <div class="form-group col-md-6">
+            <input type="text" class="form-control" name="employee_member" placeholder="员工编号">
+        </div>
+        <div class="form-group col-md-6">
+            <input type="text" class="form-control" name="departmen" placeholder="部门">
+        </div>
+        <div class="form-group col-md-6">
+            <input type="text" class="form-control" name="posts" placeholder="岗位">
+        </div>
+        <input type="hidden" name="status" value="1">
+        <div class="form-group col-md-6">
+            <input type="text" class="form-control" name="all" placeholder="输入'所有' 查询所有">
+        </div>
+    </form>
+</div>
+
+<script>
+    function autocomp(username){
+        var keywords = <?php echo $userkey; ?>;
+        $("#"+username+"").autocomplete(keywords, {
+         matchContains: true,
+         highlightItem: false,
+         formatItem: function(row, i, max, term) {
+         return '<span style=" display:none">'+row.pinyin+'</span>'+row.text;
+         },
+         formatResult: function(row) {
+         return row.text;
+         }
+         });
+        /*.result(function (event, item) {
+         $("#"+userid+"").val(item.id);
+         });*/
+    }
+
+</script>

@@ -474,6 +474,7 @@ class SalaryController extends BaseController {
      * department_name 部门
      */
     public function salary_query(){
+        $pin                                            = I('pin');
         $type                                           = trim(I('typeval'));
         $where['A.id']                                  = trim(I('id'));
         $where['A.employee_member']                     = trim(I('employee_member'));
@@ -497,6 +498,8 @@ class SalaryController extends BaseController {
             $page                                       = new Page($count,4);
             $pages                                      = $page->show();
             $account_r                                  = M()->table('oa_account as A')->join('oa_posts as P on A.postid=P.id')->join('oa_salary_department as D on D.id=A.departmentid')->field('A.id as aid,A.employee_member,A.guide_id,A.departmentid,A.employee_member,A.nickname,A.entry_time,A.archives,D.department,P.post_name')->where($where)->limit("$page->firstRow","$page->listRows")->select();
+            //var_dump($account_r);
+            //die;
             foreach($account_r as $key => $val){
                 $aid['account_id']                      = $account_r[$key]['aid'];
                 $whe['account_id']                      = $aid['account_id'];
@@ -538,7 +541,7 @@ class SalaryController extends BaseController {
                     $account_r[$key]['withholding']     = sql_query(1,'*','oa_salary_withholding',$query,1,2);//代扣代缴
                 }
             }
-            if(!$account_r || $account_r==""){$this->error('请添加员工编码或者员工部门！', U('Salary/salary_query'));die;}
+            if(!$account_r || $account_r==""){$this->error('请添加员工编码或者员工部门！', U('Salary/salary_query',array('pin'=>$pin)));die;}
         }
 
         $status                                         = trim(I('status'));
@@ -562,9 +565,12 @@ class SalaryController extends BaseController {
             $this->assign('withhold',$account_r);//数据
             $this->assign('stau',$status);//数据
         }
+        //人员名单关键字
+        $this->userkey      = get_username();
         $this->assign('type',$type);//数据
         $this->assign('department',query_department());//部门
         $this->assign('posts',query_posts());//岗位
+        $this->assign('pin',$pin);
         $this->display();
     }
 
