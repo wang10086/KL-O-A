@@ -64,6 +64,7 @@
                                                     {$row.group_ids}
                                                     <else />
                                                     非团报销单
+                                                    </if>
                                                 </td>
                                             </if>
                                             <td><?php echo $row['jkd_ids']?$row['jkd_ids']:'暂无借款单信息'; ?></td>
