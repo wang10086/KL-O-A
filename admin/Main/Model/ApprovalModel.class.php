@@ -119,11 +119,11 @@ class ApprovalModel extends Model
             if($increase_add){}else{return 0;die;}
         }
         //判断有没有标注
-        $file_id['file_id']                 = $id;
-        $annotation                         = M('approval_annotation')->where($file_id)->find();
+        $file_id['file_id']                     = $id;
+        $annotation                             = M('approval_annotation')->where($file_id)->find();
         if ($annotation) {
-            $uup['statu']                   = 1;
-            $sav                            = M('approval_annotation')->where($file_id)->save($uup);
+            $uup['statu']                       = 1;
+            $sav                                = M('approval_annotation')->where($file_id)->save($uup);
         }
 
             return 1;die;
@@ -507,9 +507,9 @@ class ApprovalModel extends Model
             $approval                          = $this->table_sql('approval_annotation',$whe,2);
 
             if(!empty($approval)){
-                $consider_name[$k]['status'] = 1;
+                $consider_name[$k]['status']   = 1;
             }else{
-                $consider_name[$k]['status'] = 2;
+                $consider_name[$k]['status']   = 2;
             }
         }
         $table[0]                              = $judgment_name;//终审人员

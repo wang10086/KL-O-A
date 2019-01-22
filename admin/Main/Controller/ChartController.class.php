@@ -838,11 +838,11 @@ class ChartController extends BaseController {
 
     //数据按部门统计
     public function  department(){
-        $pin        = I('pin');
-        $year		= I('year',date('Y'));
-        $month		= I('month',date('m'));
+        $pin            = I('pin');
+        $year		    = I('year',date('Y'));
+        $month		    = I('month',date('m'));
         if (strlen($month)<2) $month = str_pad($month,2,'0',STR_PAD_LEFT);
-        $times      = $year.$month;
+        $times          = $year.$month;
         $yw_departs     = C('YW_DEPARTS');  //业务部门id
         $where          = array();
         $where['id']    = array('in',$yw_departs);
@@ -867,13 +867,13 @@ class ChartController extends BaseController {
 
     //统计部门数据
     public function count_lists($departments,$year,$month,$pin=0){
-        $yearBegin      			= ($year-1).'1226';
-        $yearEnd        			= $year.'1226';
-        $yeartimes					= array();
-        $yeartimes['yearBeginTime'] = strtotime($yearBegin);
-        $yeartimes['yearEndTime']   = strtotime($yearEnd);
-        $month                      = $year.$month;
-        $userlists      			= array();
+        $yearBegin      			        = ($year-1).'1226';
+        $yearEnd        			        = $year.'1226';
+        $yeartimes					        = array();
+        $yeartimes['yearBeginTime']         = strtotime($yearBegin);
+        $yeartimes['yearEndTime']           = strtotime($yearEnd);
+        $month                              = $year.$month;
+        $userlists      			        = array();
         foreach ($departments as $k=>$v){
             $userlists[$v['id']]['users']   = M('account')->where(array('departmentid'=>$v['id']))->getField('id',true);
             $userlists[$v['id']]['id']      = $v['id'];
@@ -882,10 +882,10 @@ class ChartController extends BaseController {
 
         if ($pin == 0){
             //预算及结算分部门汇总
-            $lists      = D('Chart')->ysjs_deplist($userlists,$month,$yeartimes,$pin);
+            $lists                          = D('Chart')->ysjs_deplist($userlists,$month,$yeartimes,$pin);
         }else{
             //结算分部门汇总
-            $lists      = D('Chart')->js_deplist($userlists,$month,$yeartimes,$pin);
+            $lists                          = D('Chart')->js_deplist($userlists,$month,$yeartimes,$pin);
         }
         return $lists;
     }

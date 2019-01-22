@@ -45,17 +45,16 @@ class ApprovalController extends BaseController {
      */
     public function Approval_file()
     {
-        $app                = D('Approval');
-        $id                 = I('file_id');
-
-        $where['id']        = $id;
-        $where['type']      = 1;
-        $file               = M('approval_flie')->where($where)->find();
+        $app            = D('Approval');
+        $id             = I('file_id');
+        $where['id']    = $id;
+        $where['type']  = 1;
+        $file           = M('approval_flie')->where($where)->find();
         if(!$file){unset($id);}
         if(empty($id)){
-            $submit         = $app->submit_file();
+            $submit     = $app->submit_file();
         }else{
-            $submit         = $app->update_file($id,$file);
+            $submit     = $app->update_file($id,$file);
         }
         if($submit==1){
             $this->success('保存成功！');
@@ -71,9 +70,13 @@ class ApprovalController extends BaseController {
     {
         $where['id']        = I('id');
         if(is_numeric($where['id'])){ //判断是否有传值id
+
             $where['type']  = 1;
             $approval       = $this->approval_table('approval_flie',$where,1);//文件信息
-            if(empty($approval['approval'][0]['id'])){$this->error('文件不存在！');}
+
+            if(empty($approval['approval'][0]['id'])){
+                $this->error('文件不存在！');
+            }
             if($approval['approval'][0]['userid']!==$_SESSION['userid']){
                 $this->error('您不是上传文件用户！不能编辑！');
             }
@@ -193,12 +196,11 @@ class ApprovalController extends BaseController {
      */
     public function add_final_judgment()
     {
-
-        $file['id']             = trim($_POST['file_id']);
-        $judgment               = $_POST['judgment'];
-        $consider               = $_POST['consider'];
+        $file['id']   = trim($_POST['file_id']);
+        $judgment     = $_POST['judgment'];
+        $consider     = $_POST['consider'];
         if(!empty($consider) && !empty($judgment)){
-            $type               = D('Approval')->add_judgment($file,$judgment,$consider);
+            $type     = D('Approval')->add_judgment($file,$judgment,$consider);
         }
         if($type==1){
             $this->success('添加审批人成功！');
@@ -214,16 +216,15 @@ class ApprovalController extends BaseController {
      */
     public function add_annotation()
     {
-        $status                             = trim($_POST['status']);
-        $comment                            = trim($_POST['comment']);
-        $file['file_id']                    = trim($_POST['file_id']);
-        $state                              = D('Approval')->add_file_annotation($file,$comment,$status);
+        $status          = trim($_POST['status']);
+        $comment         = trim($_POST['comment']);
+        $file['file_id'] = trim($_POST['file_id']);
+        $state           = D('Approval')->add_file_annotation($file,$comment,$status);
         if(strpos($state,'成功')){
             $this->success($state);
         }else{
             $this->error($state);
         }
-
     }
 
 }
