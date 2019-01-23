@@ -212,13 +212,17 @@ class ApprovalModel extends Model
      */
     public function Approval_detele_file($where)
     {
-        $userid         = $_SESSION['userid'];
-        $info           = M('approval_addfile')->where($where)->find();
+        $userid      = $_SESSION['userid'];
+        $info        = M('approval_addfile')->where($where)->find();
+
         if($userid==$info['account_id']){
-            $addfile    = M('approval_addfile')->where($where)->delete();
+
+            $addfile = M('approval_addfile')->where($where)->delete();
+
             if($addfile){$num = 1;}else{$num = 2;}
+
         }else{
-            $num        = 3;
+            $num     = 3;
         }
         return $num;
     }
