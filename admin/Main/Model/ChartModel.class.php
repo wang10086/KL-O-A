@@ -457,7 +457,7 @@ class ChartModel extends Model
             '14'    => '沈阳项目部',
             '15'    => '常规业务中心',
             '16'    => '长春项目部',
-            '17'    => '济南项目部'
+            /*'17'    => '济南项目部'*/
         );
         $data       = $this->time_department($year,$department,$begintime,$endtime,$type);//年 月度数据
 
