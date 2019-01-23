@@ -23,11 +23,10 @@
                 <!-- 代扣代缴变动 -->
                 <div id="salary_withholding1" class="salary_add_table">
                     <div style="float: left;margin-left: 2em;">
+                        <label>选择人员：</label>
+                        <a href="javascript:;" class="btn btn-info btn-sm" onclick="javascript:opensearch('searchtext_withholding',500,180);autocomp('nickname');"><i class="fa fa-search"></i> 搜索</a> (提示: 选择不到人员或基本信息不完整、错误时，请在“员工管理”->"人员管理"页面添加或编辑信息)<br><br>
 
-                            <label>选择人员：</label>
-                            <a href="javascript:;" class="btn btn-info btn-sm" onclick="javascript:opensearch('searchtext_3',500,180);"><i class="fa fa-search"></i> 搜索</a> (提示: 选择不到人员或基本信息不完整、错误时，请在“员工管理”->"人员管理"页面添加或编辑信息)<br><br>
-
-                        <foreach name="withholding" item="wit">
+                        <foreach name="withholding_lists" item="wit">
                             <div style="font-size:13px;">
                                 <div class="form-group col-md-6 viwe">
                                     <p class="fom_id">ID ：{$wit.aid} </p>
@@ -84,9 +83,9 @@
                     <div style="float: left;margin-left: 2em;">
 
                         <label>选择人员：</label>
-                        <a href="javascript:;" class="btn btn-info btn-sm" onclick="javascript:opensearch('searchtext_3',500,180);"><i class="fa fa-search"></i> 搜索</a> (提示: 选择不到人员或基本信息不完整、错误时，请在“员工管理”->"人员管理"页面添加或编辑信息)<br><br>
+                        <a href="javascript:;" class="btn btn-info btn-sm" onclick="javascript:opensearch('searchtext_withholding',500,180);autocomp('nickname');"><i class="fa fa-search"></i> 搜索</a> (提示: 选择不到人员或基本信息不完整、错误时，请在“员工管理”->"人员管理"页面添加或编辑信息)<br><br>
 
-                        <foreach name="withholding" item="wit">
+                        <foreach name="withholding_lists" item="wit">
                             <div style="font-size:13px;">
                                 <div class="form-group col-md-6 viwe">
                                     <p class="fom_id">ID ：{$wit.aid} </p>
@@ -141,7 +140,7 @@
             <div id="salary_withholding3" style="display:none">
                 <div style="float: left;margin-left: 2em;">
                     <label>选择人员：</label>
-                    <a href="javascript:;" class="btn btn-info btn-sm" onclick="javascript:opensearch('searchtext_4',500,180);"><i class="fa fa-search"></i> 搜索</a> (提示: 选择不到人员或基本信息不完整、错误时，请在“员工管理”->"人员管理"页面添加或编辑信息)<br><br>
+                    <a href="javascript:;" class="btn btn-info btn-sm" onclick="javascript:opensearch('searchtext',700,180);autocomp('nickname');"><i class="fa fa-search"></i> 搜索</a> (提示: 选择不到人员或基本信息不完整、错误时，请在“员工管理”->"人员管理"页面添加或编辑信息)<br><br>
 
                     <table class="table table-bordered dataTable fontmini" id="tablelist" style="margin-top:10px;">
                         <tr role="row" class="orders" >
@@ -153,10 +152,9 @@
                             <th class="sorting" data="number" style="width:12em;">原工会会费</th>
                             <th class="sorting" data="shouru" style="width:12em;">现工会会费</th>
                             <th class="sorting" data="shouru" style="width:8em;">操作</th>
-                            </if>
 
                         </tr>
-                        <foreach name="withhold" item="inf">
+                        <foreach name="lists" item="inf">
                         <tr>
                             <td class="salary_aid" >{$inf.aid}</td>
                             <td>{$inf.nickname}</td>
@@ -177,13 +175,16 @@
                     </table>
 
                 </div>
+                <div class="box-footer clearfix">
+                    <div class="pagestyle">{$pages}</div>
+                </div>
             </div>
 
-
+            <!--合并计税-->
             <div id="salary_withholding4" style="display:none">
             <div style="float: left;margin-left: 2em;">
                 <label>选择人员：</label>
-                <a href="javascript:;" class="btn btn-info btn-sm" onclick="javascript:opensearch('searchtext_4',500,180);"><i class="fa fa-search"></i> 搜索</a> (提示: 选择不到人员或基本信息不完整、错误时，请在“员工管理”->"人员管理"页面添加或编辑信息)<br><br>
+                <a href="javascript:;" class="btn btn-info btn-sm" onclick="javascript:opensearch('searchtext',500,180);autocomp('nickname');"><i class="fa fa-search"></i> 搜索</a> (提示: 选择不到人员或基本信息不完整、错误时，请在“员工管理”->"人员管理"页面添加或编辑信息)<br><br>
 
                 <table class="table table-bordered dataTable fontmini" id="tablelist" style="margin-top:10px;">
                     <tr role="row" class="orders" >
@@ -195,10 +196,8 @@
                         <th class="sorting" data="number" style="width:12em;">原合并计税</th>
                         <th class="sorting" data="shouru" style="width:12em;">现合并计税</th>
                         <th class="sorting" data="shouru" style="width:8em;">操作</th>
-                        </if>
-
                     </tr>
-                    <foreach name="withhold" item="inf">
+                    <foreach name="lists" item="inf">
                         <tr>
                             <td class="salary_aid" >{$inf.aid}</td>
                             <td>{$inf.nickname}</td>
@@ -215,10 +214,11 @@
                             </td>
                         </tr>
                     </foreach>
-
                 </table>
-
             </div>
+                <div class="box-footer clearfix">
+                    <div class="pagestyle">{$pages}</div>
+                </div>
         </div>
 
 

@@ -25,7 +25,7 @@
             <div id="salary_entry" >
                 <div style="float: left;margin-left: 2em;">
                     <label>选择人员：</label>
-                    <a href="javascript:;" class="btn btn-info btn-sm" onclick="javascript:opensearch('searchtext',700,180);"><i class="fa fa-search"></i> 搜索</a> (提示: 选择不到人员或基本信息不完整、错误时，请在“员工管理”->"人员管理"页面添加或编辑信息)<br><br>
+                    <a href="javascript:;" class="btn btn-info btn-sm" onclick="javascript:opensearch('searchtext',700,180);autocomp('nickname');"><i class="fa fa-search"></i> 搜索</a> (提示: 选择不到人员或基本信息不完整、错误时，请在“员工管理”->"人员管理"页面添加或编辑信息)<br><br>
 
                     <table class="table table-bordered dataTable fontmini" id="tablelist" style="margin-top:10px;">
                         <tr role="row" class="orders">
@@ -39,10 +39,9 @@
                             <th class="sorting" data="shouru" style="width:16em;">试用期基效比</th>
                             <th class="sorting" data="shouru" style="width:8em;">操作</th>
                             </if>
-
                         </tr>
 
-                        <foreach name="list" item="row">
+                        <foreach name="lists" item="row">
                             <tr>
                                 <td class="salary_aid">{$row.aid}</td>
                                 <td>{$row.nickname}</td>
@@ -64,7 +63,7 @@
                         </foreach>
                     </table>
                     <div class="box-footer clearfix">
-                        <div class="pagestyle">{$page}</div>
+                        <div class="pagestyle">{$pages}</div>
                     </div>
                 </div>
             </div>
@@ -76,7 +75,7 @@
             <div id="salary_formal" style="display:none">
                 <div style="float: left;margin-left: 2em;">
                     <label>选择人员：</label>
-                    <a href="javascript:;" class="btn btn-info btn-sm" onclick="javascript:opensearch('searchtext',700,180);"><i class="fa fa-search"></i> 搜索</a> (提示: 选择不到人员或基本信息不完整、错误时，请在“员工管理”->"人员管理"页面添加或编辑信息)<br><br>
+                    <a href="javascript:;" class="btn btn-info btn-sm" onclick="javascript:opensearch('searchtext',700,180);autocomp('nickname');"><i class="fa fa-search"></i> 搜索</a> (提示: 选择不到人员或基本信息不完整、错误时，请在“员工管理”->"人员管理"页面添加或编辑信息)<br><br>
 
                     <table class="table table-bordered dataTable fontmini" id="tablelist" style="margin-top:10px;">
                         <tr role="row" class="orders" >
@@ -95,7 +94,7 @@
 
                         </tr>
 
-                        <foreach name="list" item="row">
+                        <foreach name="lists" item="row">
                             <tr>
                                 <td class="salary_aid">{$row.aid}</td>
                                 <td>{$row.nickname}</td>
@@ -120,7 +119,7 @@
 
                     </table>
                     <div class="box-footer clearfix">
-                        <div class="pagestyle">{$page}</div>
+                        <div class="pagestyle">{$pages}</div>
                     </div>
                 </div>
             </div>
@@ -130,7 +129,7 @@
             <div id="salary_adjustment" style="display:none">
                 <div style="float: left;margin-left: 2em;">
                     <label>选择人员：</label>
-                    <a href="javascript:;" class="btn btn-info btn-sm" onclick="javascript:opensearch('searchtext',700,180);"><i class="fa fa-search"></i> 搜索</a> (提示: 选择不到人员或基本信息不完整、错误时，请在“员工管理”->"人员管理"页面添加或编辑信息)<br><br>
+                    <a href="javascript:;" class="btn btn-info btn-sm" onclick="javascript:opensearch('searchtext',700,180);autocomp('nickname');"><i class="fa fa-search"></i> 搜索</a> (提示: 选择不到人员或基本信息不完整、错误时，请在“员工管理”->"人员管理"页面添加或编辑信息)<br><br>
 
                     <table class="table table-bordered dataTable fontmini" id="tablelist" style="margin-top:10px;">
                         <tr role="row" class="orders" >
@@ -149,7 +148,7 @@
                             </if>
 
                         </tr>
-                        <foreach name="list" item="row">
+                        <foreach name="lists" item="row">
                             <tr>
                                 <td id ="salary_adjustment_<?php echo $row['aid'];?>">{$row.aid}</td>
                                 <td>{$row.nickname}</td>
@@ -187,7 +186,7 @@
                         </foreach>
                     </table>
                     <div class="box-footer clearfix">
-                        <div class="pagestyle">{$page}</div>
+                        <div class="pagestyle">{$pages}</div>
                     </div>
                 </div>
             </div>
@@ -198,7 +197,7 @@
             <div id="salary_quit" style="display:none">
                 <div style="float: left;margin-left: 2em;">
                     <label>选择人员：</label>
-                    <a href="javascript:;" class="btn btn-info btn-sm" onclick="javascript:opensearch('searchtext',700,180);"><i class="fa fa-search"></i> 搜索</a> (提示: 选择不到人员或基本信息不完整、错误时，请在“员工管理”->"人员管理"页面添加或编辑信息)<br><br>
+                    <a href="javascript:;" class="btn btn-info btn-sm" onclick="javascript:opensearch('searchtext',700,180);autocomp('nickname');"><i class="fa fa-search"></i> 搜索</a> (提示: 选择不到人员或基本信息不完整、错误时，请在“员工管理”->"人员管理"页面添加或编辑信息)<br><br>
 
                     <table class="table table-bordered dataTable fontmini" id="tablelist" style="margin-top:10px;">
                         <tr role="row" class="orders" >
@@ -214,7 +213,7 @@
 
                         </tr>
 
-                        <foreach name="list" item="row">
+                        <foreach name="lists" item="row">
                             <tr>
                                 <td>{$row.aid}</td>
                                 <td>{$row.nickname}</td>
@@ -232,7 +231,7 @@
 
                     </table>
                     <div class="box-footer clearfix">
-                        <div class="pagestyle">{$page}</div>
+                        <div class="pagestyle">{$pages}</div>
                     </div>
                 </div>
             </div>
@@ -243,7 +242,7 @@
             <div id="salary_change" style="display:none">
                 <div style="float: left;margin-left: 2em;">
                     <label>选择人员：</label>
-                    <a href="javascript:;" class="btn btn-info btn-sm" onclick="javascript:opensearch('searchtext',700,180);"><i class="fa fa-search"></i> 搜索</a> (提示: 选择不到人员或基本信息不完整、错误时，请在“员工管理”->"人员管理"页面添加或编辑信息)<br><br>
+                    <a href="javascript:;" class="btn btn-info btn-sm" onclick="javascript:opensearch('searchtext',700,180);autocomp('nickname');"><i class="fa fa-search"></i> 搜索</a> (提示: 选择不到人员或基本信息不完整、错误时，请在“员工管理”->"人员管理"页面添加或编辑信息)<br><br>
 
                     <table class="table table-bordered dataTable fontmini" id="tablelist" style="margin-top:10px;">
                         <tr role="row" class="orders" >
@@ -261,7 +260,7 @@
 
                         </tr>
 
-                        <foreach name="list" item="row">
+                        <foreach name="lists" item="row">
                             <tr>
                                 <td class="salary_aid" >{$row.aid}</td>
                                 <td>{$row.nickname}</td>
@@ -285,7 +284,7 @@
 
                     </table>
                     <div class="box-footer clearfix">
-                        <div class="pagestyle">{$page}</div>
+                        <div class="pagestyle">{$pages}</div>
                     </div>
                 </div>
             </div>

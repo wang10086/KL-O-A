@@ -473,7 +473,7 @@ class SalaryController extends BaseController {
      * oa_post 岗位
      * department_name 部门
      */
-    public function salary_query(){
+    /*public function salary_query(){
         $pin                                            = I('pin');
         $type                                           = trim(I('typeval'));
         $where['A.id']                                  = trim(I('id'));
@@ -486,7 +486,7 @@ class SalaryController extends BaseController {
             $postid                                     = M('posts')->where($posts)->find();
             $where['postid']                            = $postid['id'];
         }
-        $where['A.status']                              = array('between','0,1');
+        $where['A.status']                              = array('in',array(0,1));
         $where                                          = array_filter($where);
         if(count($where) !== 0 || $all !== ""){
             if($all == '所有'){
@@ -498,6 +498,7 @@ class SalaryController extends BaseController {
             $page                                       = new Page($count,4);
             $pages                                      = $page->show();
             $account_r                                  = M()->table('oa_account as A')->join('oa_posts as P on A.postid=P.id')->join('oa_salary_department as D on D.id=A.departmentid')->field('A.id as aid,A.employee_member,A.guide_id,A.departmentid,A.employee_member,A.nickname,A.entry_time,A.archives,D.department,P.post_name')->where($where)->limit("$page->firstRow","$page->listRows")->select();
+            //echo M()->getlastsql();
             //var_dump($account_r);
             //die;
             foreach($account_r as $key => $val){
@@ -567,9 +568,103 @@ class SalaryController extends BaseController {
         }
         //人员名单关键字
         $this->userkey      = get_username();
-        $this->assign('type',$type);//数据
+        $this->departments  = M('salary_department')->getField('id,department',true);
+        $this->assign('type',$type);            //数据
         $this->assign('department',query_department());//部门
-        $this->assign('posts',query_posts());//岗位
+        $this->assign('posts',query_posts());   //岗位
+        $this->assign('pin',$pin);
+        $this->display();
+    }*/
+    public function salary_query(){
+
+        $pin                                            = I('pin');
+        $withholding_type                               = I('withholding_type');        //代扣代缴
+        $type                                           = trim(I('typeval'));           //?
+        $id                                             = trim(I('id'));
+        $nickname                                       = trim(I('nickname'));
+        $post_id                                        = trim(I('post_id'));           //岗位id
+        $department_id                                  = trim(I('department_id'));     //部门id
+        $where                                          = array();
+        if ($id) $where['A.id']                         = $id;
+        if ($nickname) $where['A.nickname']             = $nickname;
+        if ($post_id) $where['A.postid']                = $post_id;
+        if ($department_id) $where['A.departmentid']    = $department_id;
+        $where['A.status']                              = array('in',array(0,1));
+
+        //分页
+        $pagecount		                            = M()->table('oa_account as A')->join('oa_posts as P on A.postid=P.id')->join('oa_salary_department as D on D.id=A.departmentid')->field('A.id as aid,A.employee_member,A.guide_id,A.departmentid,A.employee_member,A.nickname,A.entry_time,A.archives,D.department,P.post_name')->where($where)->order($this->orders('A.input_time'))->count();
+        $page			                            = new Page($pagecount, 10);
+        $this->pages	                            = $pagecount>10 ? $page->show():'';
+
+        $account_r                                  = M()->table('oa_account as A')->join('oa_posts as P on A.postid=P.id')->join('oa_salary_department as D on D.id=A.departmentid')->field('A.id as aid,A.employee_member,A.guide_id,A.departmentid,A.employee_member,A.nickname,A.entry_time,A.archives,D.department,P.post_name')->where($where)->limit($page->firstRow . ',' . $page->listRows)->order($this->orders('A.input_time'))->select();
+        $specialDeduction_lists                     = M('salary_specialdeduction')->select();
+        foreach($account_r as $key => $val){
+            $aid['account_id']                      = $account_r[$key]['aid'];
+            $whe['account_id']                      = $aid['account_id'];
+            $whe['status']                          = (int)1;
+            $account_r[$key]['Labour']              = M('salary_labour')->where($whe)->find();
+            $salary                                 = M('salary')->where($aid)->order('id desc')->find();//岗位薪资
+            $account_r[$key]['account_id']          = $salary['account_id'];
+            $account_r[$key]['standard_salary']     = $salary['standard_salary'];
+            $account_r[$key]['basic_salary']        = $salary['basic_salary'];
+            $account_r[$key]['performance_salary']  = $salary['performance_salary'];
+            $salary_bonus                           = M('salary_bonus')->where($aid)->order('id desc')->find();//提成/奖金
+            $account_r[$key]['bonus_id']            = $salary_bonus['id'];
+            $month                                  = datetime(date('Y'),date('m'),date('d'),1);//获取201810月份
+            $account_r[$key]['extract']             = round(Acquisition_Team_Subsidy($month,$val['guide_id']),2);//带团补助
+
+            $account_r[$key]['bonus']               = $salary_bonus['bonus'];
+            $account_r[$key]['annual_bonus']        = $salary_bonus['annual_bonus'];
+            $account_r[$key]['foreign_bonus']       = $salary_bonus['foreign_bonus'];
+            $account_r[$key]['year_end_tax']        = $salary_bonus['year_end_tax'];
+
+            $subsidy_r                              = M('salary_subsidy')->where($aid)->order('id desc')->find();//补贴
+
+            $account_r[$key]['bonus1']              = $subsidy_r['bonus'];
+            $account_r[$key]['subsidy']             = $subsidy_r['id'];
+            $account_r[$key]['housing_subsidy']     = $subsidy_r['housing_subsidy'];
+            $account_r[$key]['foreign_subsidies']   = $subsidy_r['foreign_subsidies'];
+            $account_r[$key]['computer_subsidy']    = $subsidy_r['computer_subsidy'];
+            $account_r[$key]['insurance']           = M('salary_insurance')->where($aid)->order('id desc')->find();//五险一金
+            $income                                 = M('salary_income')->where($aid)->order('id desc')->find();//其他收入
+            if($income){
+                $wher['income_token']               = $income['income_token'];
+                $wher['status']                     = 1;
+                $account_r[$key]['Other']           = sql_query(1,'*','oa_salary_income',$wher,1,2);//其他收入
+            }
+            $withholding                            = M('salary_withholding')->where($aid)->order('id desc')->find();//代扣代缴
+            if($withholding){
+                $query['token']                     = $withholding['token'];
+                $query['status']                    = 1;
+                $account_r[$key]['withholding']     = sql_query(1,'*','oa_salary_withholding',$query,1,2);//代扣代缴
+            }
+
+            //代扣代缴
+            foreach ($specialDeduction_lists as $k=>$v){
+                if ($v['account_id']==$val['aid']){
+                    $account_r[$key]['account_name']        = $v['account_name'];
+                    $account_r[$key]['children_education']  = $v['children_education']?$v['children_education']:'0.01'; //子女教育
+                    $account_r[$key]['continue_education']  = $v['continue_education']?$v['continue_education']:'0.00'; //继续教育
+                    $account_r[$key]['health']              = $v['health']?$v['health']:'0.00';                         //大病医疗
+                    $account_r[$key]['buy_house']           = $v['buy_house']?$v['buy_house']:'0.00';                   //住房贷款
+                    $account_r[$key]['rent_house']          = $v['rent_house']?$v['rent_house']:'0.00';                 //租房租金
+                    $account_r[$key]['support_older']       = $v['support_older']?$v['support_older']:'0.00';           //赡养老人
+                }
+            }
+        }
+        //var_dump($account_r);die;
+
+        if ($withholding_type){
+            //代扣代缴
+            $this->withholding_lists                = $account_r;
+        }
+        //人员名单关键字
+        $this->userkey                              = get_username();
+        $this->departments                          = M('salary_department')->getField('id,department',true);
+        $this->lists                                = $account_r;
+        $this->assign('type',$type);            //数据
+        $this->assign('department',query_department());//部门
+        $this->assign('posts',query_posts());   //岗位
         $this->assign('pin',$pin);
         $this->display();
     }

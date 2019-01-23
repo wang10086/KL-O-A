@@ -24,7 +24,7 @@
             <div id="table_salary_insurance1" >
                 <div style="float: left;margin-left: 2em;">
                     <label>选择人员：</label>
-                    <a href="javascript:;" class="btn btn-info btn-sm" onclick="javascript:opensearch('searchtext_2',700,180);"><i class="fa fa-search"></i> 搜索</a> (提示: 选择不到人员或基本信息不完整、错误时，请在“员工管理”->"人员管理"页面添加或编辑信息)<br><br>
+                    <a href="javascript:;" class="btn btn-info btn-sm" onclick="javascript:opensearch('searchtext',700,180);autocomp('nickname');"><i class="fa fa-search"></i> 搜索</a> (提示: 选择不到人员或基本信息不完整、错误时，请在“员工管理”->"人员管理"页面添加或编辑信息)<br><br>
                     <table class="table table-bordered"  style="margin-top:10px;">
                         <tr role="row" class="orders">
                             <th class="sorting" data="op_id"  style="width:6em;">ID</th>
@@ -40,7 +40,7 @@
                             <th class="sorting" data="shouru" style="width:10em;">操作</th>
                         </tr>
 
-                        <foreach name="insurance" item="lst">
+                        <foreach name="lists" item="lst">
                             <tr>
                                 <td class="salary_table_insurance">{$lst.aid}</td>
                                 <td>{$lst.nickname}</td>
@@ -58,7 +58,7 @@
                         </foreach>
                     </table>
                     <div class="box-footer clearfix">
-                        <div class="pagestyle">{$page3}</div>
+                        <div class="pagestyle">{$pages}</div>
                     </div>
 
                 </div>
@@ -69,7 +69,7 @@
             <div id="table_salary_insurance2" style="display: none;">
                 <div style="float: left;margin-left: 2em;">
                     <label>选择人员：</label>
-                    <a href="javascript:;" class="btn btn-info btn-sm" onclick="javascript:opensearch('searchtext_2',700,180);"><i class="fa fa-search"></i> 搜索</a> (提示: 选择不到人员或基本信息不完整、错误时，请在“员工管理”->"人员管理"页面添加或编辑信息)<br><br>
+                    <a href="javascript:;" class="btn btn-info btn-sm" onclick="javascript:opensearch('searchtext',700,180);autocomp('nickname');"><i class="fa fa-search"></i> 搜索</a> (提示: 选择不到人员或基本信息不完整、错误时，请在“员工管理”->"人员管理"页面添加或编辑信息)<br><br>
                     <table class="table table-bordered"  style="margin-top:10px;">
                         <tr role="row" class="orders">
                             <th class="sorting" data="op_id"  style="width:6em;">ID</th>
@@ -85,7 +85,7 @@
                             <th class="sorting" data="shouru" style="width:10em;">操作</th>
                         </tr>
 
-                        <foreach name="insurance" item="lst">
+                        <foreach name="lists" item="lst">
                             <tr>
                                 <td class="salary_table_insurance">{$lst.aid}</td>
                                 <td>{$lst.nickname}</td>
@@ -104,7 +104,7 @@
                     </table>
                     <div><h6 style="color:red;width:40em;"><b>医疗比例以百分比为标准; 例如: 0.03</b></h6></div>
                     <div class="box-footer clearfix">
-                        <div class="pagestyle">{$page3}</div>
+                        <div class="pagestyle">{$pages}</div>
                     </div>
 
                 </div>
@@ -114,7 +114,7 @@
             <div id="table_salary_insurance3" style="display: none;">
                 <div style="float: left;margin-left: 2em;">
                     <label>选择人员：</label>
-                    <a href="javascript:;" class="btn btn-info btn-sm" onclick="javascript:opensearch('searchtext_2',700,180);"><i class="fa fa-search"></i> 搜索</a> (提示: 选择不到人员或基本信息不完整、错误时，请在“员工管理”->"人员管理"页面添加或编辑信息)<br><br>
+                    <a href="javascript:;" class="btn btn-info btn-sm" onclick="javascript:opensearch('searchtext',700,180);autocomp('nickname');"><i class="fa fa-search"></i> 搜索</a> (提示: 选择不到人员或基本信息不完整、错误时，请在“员工管理”->"人员管理"页面添加或编辑信息)<br><br>
                     <table class="table table-bordered"  style="margin-top:10px;">
                         <tr role="row" class="orders">
                             <th class="sorting" data="op_id"  style="width:6em;">ID</th>
@@ -128,7 +128,7 @@
                             <th class="sorting" data="shouru" style="width:10em;">操作</th>
                         </tr>
 
-                        <foreach name="insurance" item="lst">
+                        <foreach name="lists" item="lst">
                             <tr>
                                 <td class="salary_table_insurance">{$lst.aid}</td>
                                 <td>{$lst.nickname}</td>
@@ -145,7 +145,7 @@
                     </table>
                     <div><h6 style="color:red;width:40em;"><b>医疗比例以百分比为标准; 例如: 0.03</b></h6></div>
                     <div class="box-footer clearfix">
-                        <div class="pagestyle">{$page3}</div>
+                        <div class="pagestyle">{$pages}</div>
                     </div>
 
                 </div>
@@ -155,7 +155,7 @@
             <div id="table_salary_insurance4" style="display: none;">
                 <div style="float: left;margin-left: 2em;">
                     <label>选择人员：</label>
-                    <a href="javascript:;" class="btn btn-info btn-sm" onclick="javascript:opensearch('searchtext_2',700,180);"><i class="fa fa-search"></i> 搜索</a> (提示: 选择不到人员或基本信息不完整、错误时，请在“员工管理”->"人员管理"页面添加或编辑信息)<br><br>
+                    <a href="javascript:;" class="btn btn-info btn-sm" onclick="javascript:opensearch('searchtext',700,180);autocomp('nickname');"><i class="fa fa-search"></i> 搜索</a> (提示: 选择不到人员或基本信息不完整、错误时，请在“员工管理”->"人员管理"页面添加或编辑信息)<br><br>
                     <table class="table table-bordered"  style="margin-top:10px;">
                         <tr role="row" class="orders">
                             <th class="sorting" data="op_id"  style="width:6em;">ID</th>
@@ -171,7 +171,7 @@
                             <th class="sorting" data="shouru" style="width:10em;">操作</th>
                         </tr>
 
-                        <foreach name="insurance" item="lst">
+                        <foreach name="lists" item="lst">
                             <tr>
                                 <td class="salary_table_insurance">{$lst.aid}</td>
                                 <td>{$lst.nickname}</td>
@@ -190,7 +190,7 @@
                     </table>
                     <div><h6 style="color:red;width:40em;"><b>医疗比例以百分比为标准; 例如: 0.03</b></h6></div>
                     <div class="box-footer clearfix">
-                        <div class="pagestyle">{$page3}</div>
+                        <div class="pagestyle">{$pages}</div>
                     </div>
 
                 </div>
@@ -201,7 +201,7 @@
             <div id="table_salary_insurance5" style="display: none;">
                 <div style="float: left;margin-left: 2em;">
                     <label>选择人员：</label>
-                    <a href="javascript:;" class="btn btn-info btn-sm" onclick="javascript:opensearch('searchtext_2',700,180);"><i class="fa fa-search"></i> 搜索</a> (提示: 选择不到人员或基本信息不完整、错误时，请在“员工管理”->"人员管理"页面添加或编辑信息)<br><br>
+                    <a href="javascript:;" class="btn btn-info btn-sm" onclick="javascript:opensearch('searchtext',700,180);autocomp('nickname');"><i class="fa fa-search"></i> 搜索</a> (提示: 选择不到人员或基本信息不完整、错误时，请在“员工管理”->"人员管理"页面添加或编辑信息)<br><br>
                     <table class="table table-bordered"  style="margin-top:10px;">
                         <tr role="row" class="orders">
                             <th class="sorting" data="op_id"  style="width:6em;">ID</th>
@@ -219,7 +219,7 @@
                             <th class="sorting" data="shouru" style="width:12em;">操作</th>
                         </tr>
 
-                        <foreach name="insurance" item="lst">
+                        <foreach name="lists" item="lst">
                             <tr>
                                 <td class="salary_table_insurance">{$lst.aid}</td>
                                 <td>{$lst.nickname}</td>
@@ -240,7 +240,7 @@
                     </table>
                     <div><h6 style="color:red;width:40em;"><b>医疗比例以百分比为标准; 例如: 0.03</b></h6></div>
                     <div class="box-footer clearfix">
-                        <div class="pagestyle">{$page3}</div>
+                        <div class="pagestyle">{$pages}</div>
                     </div>
 
                 </div>
