@@ -1,5 +1,6 @@
 <?php
 namespace Main\Controller;
+use Symfony\Component\Translation\Tests\IdentityTranslatorTest;
 use Think\Controller;
 use Sys\P;
 ulib('Page');
@@ -1320,4 +1321,33 @@ class SalaryController extends BaseController {
         $this->display();
     }
 
+    //保存专项附加扣除
+    public function save_spacialDeduction(){
+        $num                                = 0;
+        $userid                             = I('uid');
+        $nickname                           = trim(I('nickname'));
+        $info                               = I('info');
+        $db                                 = M('salary_specialdeduction');
+        if ($userid){
+            $where                          = array();
+            $where['account_id']            = $userid;
+            $list                           = $db->where($where)->find();
+            if ($list){
+                $res                        = $db->where($where)->save($info);
+                $content                    = '修改'.$nickname.'专项扣除';
+            }else{
+                $info['account_id']         = $userid;
+                $info['account_name']       = $nickname;
+                $res                        = $db->add($info);
+                $content                    = '增加'.$nickname.'专项扣除';
+            }
+            if ($res){
+                $num++;
+
+                //保存操作记录
+                salary_info(11,$content);
+            }
+        }
+        echo $num;
+    }
 }
