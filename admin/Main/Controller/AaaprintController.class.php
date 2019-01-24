@@ -604,4 +604,19 @@ class AaaprintController extends BaseController {
     }
 
 
+    public function test(){
+        $where                  = array();
+        $where['p.guide_id']    = 1272;
+        $where['p.status']      = 2;
+        $field                  = array();
+        $field                  = 'o.project,o.group_id,p.really_cost,p.sure_time';
+        $data = M()->table('__GUIDE_PAY__ as p')->join('__OP__ as o on o.op_id=p.op_id','left')->where($where)->field($field)->order('p.sure_time desc')->select();
+        foreach ($data as $k=>$v){
+            $data[$k]['sure_time'] = date('Y-m-d',$v['sure_time']);
+        }
+
+        $title = array('团号','名称','金额','时间');
+
+        exportexcel($data,$title,'赵洋');
+    }
 }

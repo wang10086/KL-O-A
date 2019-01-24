@@ -1392,4 +1392,47 @@ class AjaxController extends Controller {
         }
         $this->ajaxReturn($data);
     }
+
+    //批量确认报销单
+    public function batch_sure(){
+        $bxids                      = I('bxids');
+        if (!$bxids) $msg           = '请选择报销单信息';
+        $bxids                      = explode(',',$bxids);
+        $db                         = M('baoxiao');
+        $audit_db                   = M('baoxiao_audit');
+        $bx_data                    = array();
+        $bx_data['audit_status']    = 1;
+        $res                        = $db->where(array('id'=>array('in',$bxids)))->save($bx_data);
+        if ($res){
+            $data                   = array();
+            $data['cw_audit_userid']= cookie('userid');
+            $data['cw_audit_username']= cookie('nickname');
+            $data['cw_audit_file']  = M('user_sign')->where(array('user_id'=>cookie('userid')))->getField('file_url');
+            $data['cw_audit_status']= 1;
+            $data['cw_audit_time']  = NOW_TIME;
+            $save                   = $audit_db->where(array('bx_id'=>array('in',$bxids)))->save($data);
+            if ($save){
+                $msg                = '操作成功';
+
+                foreach ($bxids as $v){
+                    $bxd_id          = $db->where(array('id'=>$v))->getField('bxd_id');
+                    $record = array();
+                    $record['bill_id']  = $bxd_id;
+                    $record['type']     = 2;
+                    $record['explain']  = '财务主管审核报销申请单，报销单号：'.$bxd_id.'，审核结果：审核通过';
+                    jkbx_record($record);
+                }
+
+            }else{
+                $db->rollback();
+                $audit_db->rollback();
+                $msg                = '操作失败';
+            }
+
+        }else{
+            $msg                = '操作失败';
+        }
+
+        $this->ajaxReturn($msg);
+    }
 }

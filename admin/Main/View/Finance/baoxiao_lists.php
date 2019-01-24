@@ -33,6 +33,11 @@
                                 
                                     <table class="table table-bordered dataTable fontmini" id="tablelist" style="margin-top:10px;">
                                         <tr role="row" class="orders" >
+                                            <?php if (in_array(cookie('userid'),array(1,11,55))){ ?>   <!--程小平-->
+                                                <th width="40" style="text-align:center;">
+                                                    <a href="javascript:;" type="button" onclick="batch_sure()" class="btn btn-info btn-sm" title="确认" ><i class="fa fa-check-circle"></i></a>
+                                                </th>
+                                            <?php } ?>
                                             <th width="40" style="text-align:center;">
                                                 <a href="javascript:;" type="button" onclick="check_url()" class="btn btn-info btn-sm" title="打印" ><i class="fa fa-print"></i></a>
                                                 <!--<input type="checkbox" id="accessdata">-->
@@ -56,6 +61,9 @@
                                         </tr>
                                         <foreach name="lists" item="row">
                                         <tr>
+                                            <?php if (in_array(cookie('userid'),array(1,11,55))){ ?>
+                                                <td style="text-align:center;"><input type="checkbox" value="{$row.id}" class="batch_confirm"/></td>
+                                            <?php } ?>
                                             <td style="text-align:center;"><input type="checkbox" value="{$row.id}" class="accessdata"/></td>
                                             <td>{$row.bxd_id}</td>
                                             <if condition="$pin neq 2">
@@ -152,5 +160,55 @@
             var url =  '/index.php?m=Main&c=Print&a=printReimbursements&bxids='+bxids;
             window.location.href=url;
         }
+    }
+
+    function batch_sure() {
+        var bxids        = '';
+        $('.batch_confirm').each(function (index,element) {
+            var checked     = $(this).parent().attr('aria-checked');
+            if (checked=='true'){
+                bxids += $(this).val()+',';
+            }
+        });
+        if (!bxids){
+            art_show_msg('请选择要确认的报销单');
+            return false;
+        }else{
+
+            var url     =  '/index.php?m=Main&c=Ajax&a=batch_sure';
+            var data    = bxids;
+            var msg     = '确定审批通过吗？';
+            batch_confirm(url,data,msg);
+        }
+    }
+
+    function batch_confirm(url,data,msg) {
+        if(!msg){
+            var msg = '确定要执行吗？';
+        }
+
+        art.dialog({
+            title: '提示',
+            width:400,
+            height:100,
+            lock:true,
+            fixed: true,
+            content: '<span style="width:100%; text-align:center; font-size:18px;float:left; clear:both;">'+msg+'</span>',
+            ok: function (msg) {
+                $.ajax({
+                    type: 'POST',
+                    url : url,
+                    data: {bxids:data},
+                    success: function(message){
+                        art_show_msg(message);
+                        location.reload();
+                        return false;
+                    }
+                })
+            },
+            cancelVal: '取消',
+            cancel: true //为true等价于function(){}
+        });
+
     }
 </script>
