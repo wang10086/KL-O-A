@@ -1025,6 +1025,8 @@ class SalaryController extends BaseController {
                 }
             }
             $user_info[$key]['insurance']           = sql_query(1,'*','oa_salary_insurance', $id, 1,1);//五险一金表
+            $specialdeduction                       = sql_query(1,'*','oa_salary_specialdeduction',$id,1,1); //专项附加扣除
+            $user_info[$key]['specialdeduction']    = round($specialdeduction[0]['children_education'] + $specialdeduction[0]['continue_education'] + $specialdeduction[0]['health'] + $specialdeduction[0]['buy_house'] + $specialdeduction[0]['rent_house'] + $specialdeduction[0]['support_older'],2); //专项附加扣除合计
             $user_info[$key]['insurance_Total']     = round(($user_info[$key]['insurance'][0]['pension_ratio']*$user_info[$key]['insurance'][0]['pension_base']+$user_info[$key]['insurance'][0]['medical_care_ratio']*$user_info[$key]['insurance'][0]['medical_care_base']+$user_info[$key]['insurance'][0]['unemployment_ratio']*$user_info[$key]['insurance'][0]['unemployment_base']+round($user_info[$key]['insurance'][0]['accumulation_fund_ratio']*$user_info[$key]['insurance'][0]['accumulation_fund_base'])+$user_info[$key]['insurance'][0]['big_price']),2);//五险一金
 
             $user_info[$key]['accumulation']        = round(($user_info[$key]['insurance'][0]['accumulation_fund_ratio']*$user_info[$key]['insurance'][0]['accumulation_fund_base']),0);
@@ -1074,7 +1076,8 @@ class SalaryController extends BaseController {
             //应发工资 = 岗位工资-考勤扣款+绩效增减+季度提成+奖金+年终奖-年终奖计税+住房补贴+其他补款
             $user_info[$key]['Should']              = round(($user_info[$key]['bonus'][0]['foreign_bonus']+$user_info[$key]['salary'][0]['standard_salary']-$user_info[$key]['attendance'][0]['withdrawing']+$extract+$user_info[$key]['bonus'][0]['annual_bonus']-$user_info[$key]['yearend']+$user_info[$key]['subsidy'][0]['housing_subsidy']+$user_info[$key]['Other']+$user_info[$key]['Achievements']['count_money']),2);
 
-            $user_info[$key]['tax_counting']        = round(($user_info[$key]['Should']-$user_info[$key]['insurance_Total']+$user_info[$key]['labour']['merge_counting']),2);//计税工资
+            //计税工资 = 应该工资-五险一金 + 合并计税 - 专项附加扣除
+            $user_info[$key]['tax_counting']        = round(($user_info[$key]['Should']-$user_info[$key]['insurance_Total']+$user_info[$key]['labour']['merge_counting'] /*- $user_info[$key]['specialdeduction']*/),2);//计税工资
 
             $counting                               = D('Salary')->individual_tax($user_info[$key]['tax_counting'],$val['id']);//个人所得税
             $user_info[$key]['datetime']            = $que['p.month'];//现在日期
@@ -1118,6 +1121,7 @@ class SalaryController extends BaseController {
                         $sum[$k]['pension']                 += round($val['insurance'][0]['pension_base']*$val['insurance'][0]['pension_ratio'],3);//养老保险
                         $sum[$k]['unemployment']            += round($val['insurance'][0]['unemployment_base']*$val['insurance'][0]['unemployment_ratio'],2);// 失业保险
                         $sum[$k]['accumulation']            += round($val['insurance'][0]['accumulation_fund_base']*$val['insurance'][0]['accumulation_fund_ratio']);//公积金
+                        $sum[$k]['specialdeduction']        += round($val['specialdeduction']);//专项附加扣除
                         $sum[$k]['insurance_Total']         += round($val['insurance_Total'],3);//个人保险合计
                         $sum[$k]['big_price']               += round($val['insurance'][0]['big_price'],3);//个人大额医疗
                         $sum[$k]['tax_counting']            += round($val['tax_counting'],2);//计税工资
@@ -1155,6 +1159,7 @@ class SalaryController extends BaseController {
             $cout['unemployment']                    += round($val['unemployment'],2);//失业保险
             $cout['accumulation']                    += round($val['accumulation'],2);//公积金
             $cout['insurance_Total']                 += round($val['insurance_Total'],3);//个人保险合计
+            $cout['specialdeduction']                += round($val['specialdeduction'],2);//专项附加扣除
             $cout['tax_counting']                    += round($val['tax_counting'],2);//计税工资
             $cout['personal_tax']                    += round($val['personal_tax'],2);//个人所得税
             $cout['summoney']                        += round($val['summoney'],2);//税后扣款

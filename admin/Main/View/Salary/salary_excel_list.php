@@ -110,7 +110,7 @@
                                         <td>&yen; <?PHP echo sprintf("%.3f",($info['insurance'][0]['unemployment_base']*$info['insurance'][0]['unemployment_ratio']));?></td>
                                         <td>&yen; <?PHP echo sprintf("%.2f",$info['accumulation']);?></td>
                                         <td>&yen; <?PHP echo sprintf("%.3f",$info['insurance_Total']);?></td>
-                                        <td>AAA</td>
+                                        <td>&yen; <?php echo sprintf('%.2f',$info['specialdeduction']); ?></td>
                                         <td>&yen; <?PHP echo sprintf("%.2f",$info['tax_counting']);?></td>
                                         <?php if($status==1 && ($userid== 77 || $userid== 11 || $userid== 1)){?>
                                             <td class="individual_tax" id="<?php echo$info['account']['id'];?> ">&yen; <?PHP echo sprintf("%.2f",$info['personal_tax']);?></td>
@@ -161,7 +161,7 @@
                                         <td>&yen; <?PHP echo sprintf("%.3f",$sum['unemployment']);?></td>
                                         <td>&yen; <?PHP echo sprintf("%.2f",$sum['accumulation']);?></td>
                                         <td>&yen; <?PHP echo sprintf("%.3f",$sum['insurance_Total']);?></td>
-                                        <td>&yen; </td>
+                                        <td>&yen; <?php echo sprintf("%.2f",$sum['specialdeduction']); ?></td>
                                         <td>&yen; <?PHP echo sprintf("%.2f",$sum['tax_counting']);?></td>
                                         <td>&yen; <?PHP echo sprintf("%.2f",$sum['personal_tax']);?></td>
                                         <td>&yen; <?PHP echo sprintf("%.2f",$sum['summoney']);?></td>
@@ -187,7 +187,7 @@
                                     <td>&yen; <?PHP echo sprintf("%.3f",$count['unemployment']);?></td>
                                     <td>&yen; <?PHP echo sprintf("%.2f",$count['accumulation']);?></td>
                                     <td>&yen; <?PHP echo sprintf("%.3f",$count['insurance_Total']);?></td>
-                                    <td>&yen;</td>
+                                    <td>&yen; <?php echo sprintf("%.2f",$count['specialdeduction']);?></td>
                                     <td>&yen; <?PHP echo sprintf("%.2f",$count['tax_counting']);?></td>
                                     <td>&yen; <?PHP echo sprintf("%.2f",$count['personal_tax']);?></td>
                                     <td>&yen; <?PHP echo sprintf("%.2f",$count['summoney']);?></td>
