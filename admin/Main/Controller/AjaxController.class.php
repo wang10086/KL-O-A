@@ -1458,6 +1458,7 @@ class AjaxController extends Controller {
                 salary_info(11,$content);
             }
         }
+        echo M()->getlastsql();
         $this->ajaxReturn($num);
     }
 }
