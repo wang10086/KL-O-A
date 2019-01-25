@@ -1950,6 +1950,8 @@ function updatekpi($month,$user){
 					$where 							= array();
 					$where['o.create_user']			= $user;
 					$where['c.dep_time']			= array('between',array($v['start_date'],$v['end_date']));
+                    $dj_op_ids                      = array_filter(M('op')->getField('dijie_opid',true));
+                    $where['o.op_id']               = array('not in',$dj_op_ids);   //排除地接团
 					$xiangmu_list	= M()->table('__OP__ as o')->field('o.op_id,c.dep_time')->join('left join __OP_TEAM_CONFIRM__ as c on o.op_id=c.op_id')->where($where)->select();
 					$xiangmu 		= count($xiangmu_list);
                     $hetong_list    = array();
@@ -1960,7 +1962,7 @@ function updatekpi($month,$user){
 						if ($list){ $hetong_list[] = $list; }
 					}
 					$hetong         = count($hetong_list);
-					$complete = $xiangmu ? round(($hetong / $xiangmu)*100,2).'%' : 0 .'%';
+					$complete       = $xiangmu ? round(($hetong / $xiangmu)*100,2).'%' : 0 .'%';
 				}
 				
 				
