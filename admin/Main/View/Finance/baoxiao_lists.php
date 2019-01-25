@@ -62,7 +62,11 @@
                                         <foreach name="lists" item="row">
                                         <tr>
                                             <?php if (in_array(cookie('userid'),array(1,11,55))){ ?>
-                                                <td style="text-align:center;"><input type="checkbox" value="{$row.id}" class="batch_confirm"/></td>
+                                                <td style="text-align:center;">
+                                                    <if condition="$row.bxd_type eq 1"> <!--团内借款报销-->
+                                                        <input type="checkbox" value="{$row.id}" class="batch_confirm"/>
+                                                    </if>
+                                                </td>
                                             <?php } ?>
                                             <td style="text-align:center;"><input type="checkbox" value="{$row.id}" class="accessdata"/></td>
                                             <td>{$row.bxd_id}</td>
