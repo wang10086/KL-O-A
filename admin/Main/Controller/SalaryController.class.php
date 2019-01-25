@@ -1336,16 +1336,11 @@ class SalaryController extends BaseController {
         if ($userid){
             $where                          = array();
             $where['account_id']            = $userid;
-            $list                           = $db->where($where)->find();
-            if ($list){
-                $res                        = $db->where($where)->save($info);
-                $content                    = '修改'.$nickname.'专项扣除';
-            }else{
-                $info['account_id']         = $userid;
-                $info['account_name']       = $nickname;
-                $res                        = $db->add($info);
-                $content                    = '增加'.$nickname.'专项扣除';
-            }
+            $info['account_id']             = $userid;
+            $info['account_name']           = $nickname;
+            $res                            = $db->add($info);
+            $content                        = '编辑'.$nickname.'专项扣除';
+
             if ($res){
                 $num++;
 
