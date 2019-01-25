@@ -50,17 +50,17 @@
                             <td>{$v.nickname}</td>
                             <!--<td>{$v.post_name}</td>-->
                             <td width="6%"  class="taskOptions">{$v.children_education}</td>
-                            <td width="8%"><input type="text" name="info[children_education]" class="form-control salary-special-deduction-input" placeholder="请输入抵扣金额"></td>
+                            <td width="8%"><input type="text" name="info[children_education]" class="form-control salary-special-deduction-input" value="{$v.children_education}" placeholder="请输入抵扣金额"></td>
                             <td width="6%"  class="taskOptions">{$v.continue_education}</td>
-                            <td width="8%"><input type="text" name="info[continue_education]" class="form-control salary-special-deduction-input" placeholder="请输入抵扣金额"></td>
+                            <td width="8%"><input type="text" name="info[continue_education]" class="form-control salary-special-deduction-input" value="{$v.continue_education}" placeholder="请输入抵扣金额"></td>
                             <td width="6%"  class="taskOptions">{$v.health}</td>
-                            <td width="8%"><input type="text" name="info[health]" class="form-control salary-special-deduction-input" placeholder="请输入抵扣金额"></td>
+                            <td width="8%"><input type="text" name="info[health]" class="form-control salary-special-deduction-input" value="{$v.health}" placeholder="请输入抵扣金额"></td>
                             <td width="6%"  class="taskOptions">{$v.buy_house}</td>
-                            <td width="8%"><input type="text" name="info[buy_house]" class="form-control salary-special-deduction-input" placeholder="请输入抵扣金额"></td>
+                            <td width="8%"><input type="text" name="info[buy_house]" class="form-control salary-special-deduction-input" value="{$v.buy_house}" placeholder="请输入抵扣金额"></td>
                             <td width="6%"  class="taskOptions">{$v.rent_house}</td>
-                            <td width="8%"><input type="text" name="info[rent_house]" class="form-control salary-special-deduction-input" placeholder="请输入抵扣金额"></td>
+                            <td width="8%"><input type="text" name="info[rent_house]" class="form-control salary-special-deduction-input" value="{$v.rent_house}" placeholder="请输入抵扣金额"></td>
                             <td width="6%"  class="taskOptions">{$v.support_older}</td>
-                            <td width="8%"><input type="text" name="info[support_older]" class="form-control salary-special-deduction-input" placeholder="请输入抵扣金额"></td>
+                            <td width="8%"><input type="text" name="info[support_older]" class="form-control salary-special-deduction-input" value="{$v.support_older}" placeholder="请输入抵扣金额"></td>
                             <td width="30" class="taskOptions">
                                 <a href="javascript:;" onclick="save('sd_{$v.aid}','<?php echo U('Ajax/save_spacialDeduction'); ?>')" title="保存" class="btn btn-info btn-smsm"><i class="fa fa-check"></i></a>
                             </td>

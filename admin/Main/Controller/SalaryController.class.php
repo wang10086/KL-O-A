@@ -1326,28 +1326,4 @@ class SalaryController extends BaseController {
         $this->display();
     }
 
-    //保存专项附加扣除
-    public function save_spacialDeduction(){
-        $num                                = 0;
-        $userid                             = I('uid');
-        $nickname                           = trim(I('nickname'));
-        $info                               = I('info');
-        $db                                 = M('salary_specialdeduction');
-        if ($userid){
-            $where                          = array();
-            $where['account_id']            = $userid;
-            $info['account_id']             = $userid;
-            $info['account_name']           = $nickname;
-            $res                            = $db->add($info);
-            $content                        = '编辑'.$nickname.'专项扣除';
-
-            if ($res){
-                $num++;
-
-                //保存操作记录
-                salary_info(11,$content);
-            }
-        }
-        echo $num;
-    }
 }
