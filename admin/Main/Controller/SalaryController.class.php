@@ -78,7 +78,7 @@ class SalaryController extends BaseController {
         $user_info['insurance']                 = M('salary_insurance')->where(array('id='.$user_info1['insurance_id']))->find();//五险一金表
         $user_info['subsidy']                   = M('salary_subsidy')->where(array('id='.$user_info1['subsidy_id']))->find();//补贴
         $user_info['withholding']               = M('salary_withholding')->where(array('token='.$user_info1['withholding_token']))->select();//代扣代缴
-
+        $user_info['specialdeduction']          = M('salary_specialdeduction')->where(array('id'=>$user_info1['specialdeduction_id']))->find();//专项附加扣除
         $this->assign('info',$user_info);
         $this->display();
     }

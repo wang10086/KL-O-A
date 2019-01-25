@@ -302,10 +302,37 @@
                                         </div>
                                     </div>
 
+                                    <div class="content">
+                                        <div class="box-header" style="margin-left: -20px">
+                                            <h3 class="box-title">五 、专项附加扣除</h3>
+                                        </div><!-- /.box-header --><br />
+                                        <div class="box-body">
+                                            <table class="table table-bordered dataTable fontmini" style="margin-top:10px; text-align: center;">
+                                                <tr role="row" class="orders" >
+                                                    <th class="taskOptions">子女教育</th>
+                                                    <th class="taskOptions">继续教育</th>
+                                                    <th class="taskOptions">大病医疗</th>
+                                                    <th class="taskOptions">住房贷款</th>
+                                                    <th class="taskOptions">租房租金</th>
+                                                    <th class="taskOptions">赡养老人</th>
+                                                </tr>
+                                                <tr>
+                                                    <td>&yen;<?php echo $info['specialdeduction']['children_education']?$info['specialdeduction']['children_education']:'0.00'; ?></td>
+                                                    <td>&yen;<?php echo $info['specialdeduction']['continue_education']?$info['specialdeduction']['continue_education']:'0.00'; ?></td>
+                                                    <td>&yen;<?php echo $info['specialdeduction']['health']?$info['specialdeduction']['health']:'0.00'; ?></td>
+                                                    <td>&yen;<?php echo $info['specialdeduction']['buy_house']?$info['specialdeduction']['buy_house']:'0.00'; ?></td>
+                                                    <td>&yen;<?php echo $info['specialdeduction']['rent_house']?$info['specialdeduction']['rent_house']:'0.00'; ?></td>
+                                                    <td>&yen;<?php echo $info['specialdeduction']['support_older']?$info['specialdeduction']['support_older']:'0.00'; ?></td>
+                                                </tr>
+
+                                            </table><br/>
+                                        </div>
+                                    </div>
+
 
                                     <div class="content">
                                         <div class="box-header" style="margin-left: -20px">
-                                            <h3 class="box-title">五 、个税及工会会费、代扣代缴  共计 <u class="salary_individual_totala"><?PHP echo sprintf("%.2f",($info['wages_month']['summoney']+$info['wages_month']['personal_tax']+$info['bonus']['annual_bonus']+$info['wages_month']['Labour']));?></u>  元</h3>
+                                            <h3 class="box-title">六 、个税及工会会费、代扣代缴  共计 <u class="salary_individual_totala"><?PHP echo sprintf("%.2f",($info['wages_month']['summoney']+$info['wages_month']['personal_tax']+$info['bonus']['annual_bonus']+$info['wages_month']['Labour']));?></u>  元</h3>
                                         </div><!-- /.box-header --><br><br>
 
                                         <div class="form-group col-md-4 viwe">
@@ -362,7 +389,7 @@
                                     </div>
                                     <div class="content">
                                         <div class="box-header" style="margin-left: -20px">
-                                            <h3 class="box-title">六 、实发工资  共计 <u class="salary_Payroll">{$info['wages_month']['real_wages']}</u> 元</h3><p style="margin-top: 15px;">(实发工资=岗位薪酬+提成/补助/奖金+绩效增减-考勤扣款-员工五险一金-个税及工会会费、代扣代缴)</p>
+                                            <h3 class="box-title">七 、实发工资  共计 <u class="salary_Payroll">{$info['wages_month']['real_wages']}</u> 元</h3><p style="margin-top: 15px;">(实发工资=岗位薪酬+提成/补助/奖金+绩效增减-考勤扣款-员工五险一金-个税及工会会费、代扣代缴)</p>
                                         </div><!-- /.box-header --><br />
                                         <!--   1+2-3-5    -->
                                         <table class="table table-bordered dataTable fontmini"  style="margin-left:-15px;">
