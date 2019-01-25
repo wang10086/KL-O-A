@@ -954,6 +954,7 @@ class SalaryController extends BaseController {
             }
             $user_info[$key]['insurance']           = sql_query(1,'*','oa_salary_insurance', $id, 1,1);//五险一金表
             $specialdeduction                       = sql_query(1,'*','oa_salary_specialdeduction',$id,1,1); //专项附加扣除
+            $user_info[$key]['specialdeduction_id'] = $specialdeduction[0]['id'];
             $user_info[$key]['specialdeduction']    = round($specialdeduction[0]['children_education'] + $specialdeduction[0]['continue_education'] + $specialdeduction[0]['health'] + $specialdeduction[0]['buy_house'] + $specialdeduction[0]['rent_house'] + $specialdeduction[0]['support_older'],2); //专项附加扣除合计
             $user_info[$key]['insurance_Total']     = round(($user_info[$key]['insurance'][0]['pension_ratio']*$user_info[$key]['insurance'][0]['pension_base']+$user_info[$key]['insurance'][0]['medical_care_ratio']*$user_info[$key]['insurance'][0]['medical_care_base']+$user_info[$key]['insurance'][0]['unemployment_ratio']*$user_info[$key]['insurance'][0]['unemployment_base']+round($user_info[$key]['insurance'][0]['accumulation_fund_ratio']*$user_info[$key]['insurance'][0]['accumulation_fund_base'])+$user_info[$key]['insurance'][0]['big_price']),2);//五险一金
 

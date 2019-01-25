@@ -100,7 +100,6 @@
                                         <td>&yen; <?PHP echo sprintf("%.2f",$info['Achievements']['count_money']);?></td>
                                         <td>&yen; <?PHP echo sprintf("%.2f",$info['Extract']['total']);?></td>
 
-
                                         <td>&yen; <?PHP echo sprintf("%.2f",$info['bonus'][0]['foreign_bonus']);?></td>
                                         <td>&yen; <?PHP echo sprintf("%.2f",$info['subsidy'][0]['housing_subsidy']);?></td>
                                         <td>&yen; <?PHP echo sprintf("%.2f",$info['Other']);?></td>
@@ -137,6 +136,7 @@
                                         <td style="display:none">{$info['bonus'][0]['royalty']}</td>
                                         <td style="display:none">{$info['welfare']}</td>
                                         <td style="display:none">{$info['labour']['id']}</td>
+                                        <td style="display:none">{$info['specialdeduction_id']}</td>
 
                                     </tr>
                                     <th class="list_salary_detail1" style="display: none">{$info['wages_mont_id']}</th>
@@ -352,6 +352,7 @@
                 totals_num += num + ',';
             });
         });
+
         $.ajax({
             type: "POST",
             url: url, //url
