@@ -1449,6 +1449,9 @@ class AjaxController extends Controller {
             $info['account_id']             = $userid;
             $info['account_name']           = $nickname;
             $res                            = $db->add($info);
+            var_dump($res);
+            echo M()->getlastsql();
+
             $content                        = '编辑'.$nickname.'专项扣除';
 
             if ($res){
@@ -1458,7 +1461,7 @@ class AjaxController extends Controller {
                 salary_info(11,$content);
             }
         }
-        echo M()->getlastsql();
+
         $this->ajaxReturn($num);
     }
 }
