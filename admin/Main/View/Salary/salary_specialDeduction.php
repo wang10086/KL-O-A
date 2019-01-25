@@ -43,7 +43,7 @@
 
                 <foreach name="lists" item="v">
                     <tr>
-                        <form method="post" action="{:U('salary/save_spacialDeduction')}" id="sd_{$v.aid}">
+                        <form method="post" action="{:U('ajax/save_spacialDeduction')}" id="sd_{$v.aid}">
                             <input type="hidden" name="uid" value="{$v.aid}">
                             <input type="hidden" name="nickname" value="{$v.nickname}">
                             <td>{$v.employee_member}</td>
@@ -62,7 +62,7 @@
                             <td width="6%"  class="taskOptions">{$v.support_older}</td>
                             <td width="8%"><input type="text" name="info[support_older]" class="form-control salary-special-deduction-input" placeholder="请输入抵扣金额"></td>
                             <td width="30" class="taskOptions">
-                                <a href="javascript:;" onclick="save('sd_{$v.aid}','<?php echo U('Salary/save_spacialDeduction'); ?>')" title="保存" class="btn btn-info btn-smsm"><i class="fa fa-check"></i></a>
+                                <a href="javascript:;" onclick="save('sd_{$v.aid}','<?php echo U('Ajax/save_spacialDeduction'); ?>')" title="保存" class="btn btn-info btn-smsm"><i class="fa fa-check"></i></a>
                             </td>
                         </form>
                     </tr>
