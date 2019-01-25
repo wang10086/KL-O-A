@@ -635,17 +635,17 @@ class AjaxController extends Controller {
         }
         $insurance                                  = M('salary_insurance')->where($where)->order('id desc')->find();
         if($insurance){
-            if((int)$insurance['status'] ==  1){//判断能否修改
+            /*if((int)$insurance['status'] ==  1){ //判断能否修改*/
                 $cont                               = "修改";
                 $id['id']                           = $insurance['id'];
                 $oinsurance_w                       = M('salary_insurance')->where($id)->save($add);
-            }
-            if((int)$insurance['status'] ==  2){//添加
+            /*}
+            if((int)$insurance['status'] ==  2){ //添加
                 $cont                               = "添加";
                 $add['account_id']                  = $where['account_id'];
                 $add['createtime']                  = time();
                 $oinsurance_w                       = M('salary_insurance')->add($add);
-            }
+            }*/
         }else{
             if($statu<6 && 0<$statu){
                 $cont                               = "添加";
