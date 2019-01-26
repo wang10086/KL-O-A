@@ -1035,6 +1035,7 @@ class AjaxController extends Controller {
             $labou['id']                = $val['labour_id'];
             $subsid['id']               = $val['subsidy_id'];
             $withh['withholding_token'] = $val['withholding_token'];
+            $specialdeduction_id        = $val['specialdeduction_id'];
 
             if(!empty($att['id'])){
                 $table1 = M('salary_attendance')->where($att)->save($stat);
@@ -1059,6 +1060,9 @@ class AjaxController extends Controller {
             if(!empty($withh['withholding_token'])){
                 $table6 = M('oa_salary_withholding')->where($withh)->save($stat);
                 if(!$table6){}else{}
+            }
+            if ($specialdeduction_id){
+                M('salary_specialdeduction')->where(array('id'=>$specialdeduction_id))->save($stat);
             }
         }
         $wages_month_del                = M('salary_wages_month')->where($datetime)->delete();

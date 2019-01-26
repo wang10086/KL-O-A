@@ -794,7 +794,7 @@ class SalaryController extends BaseController {
                     if($name!==""){
                         $wher['user_name']  = $name;
                     }
-                    $wages_month        = M('salary_wages_month')->where($wher)->select();//已经提交数据
+                    $wages_month        = M('salary_wages_month')->where($wher)->order('id ASC')->select();//已经提交数据
                     if(!$wages_month) {
                         $info           = $this->salary_excel_sql($archives,$name);//员工信息
                         $sum            = $this->countmoney('',$info);//部门合计
@@ -802,7 +802,7 @@ class SalaryController extends BaseController {
                         $status         = 1;
                     }else{
                         $info           = $this->arraysplit($wages_month);
-                        $sum            = M('salary_departmen_count')->where('datetime='.$wages_month[0]['datetime'])->select();
+                        $sum            = M('salary_departmen_count')->where('datetime='.$wages_month[0]['datetime'])->order('id ASC')->select();
                         $summoney       = M('salary_count_money')->where('datetime='.$wages_month[0]['datetime'])->find();
                         $status         = 2;
                     }
