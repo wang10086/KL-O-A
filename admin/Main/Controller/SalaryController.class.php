@@ -653,7 +653,6 @@ class SalaryController extends BaseController {
                 }
             }
         }
-        //var_dump($account_r);die;
 
         if ($withholding_type){
             //代扣代缴

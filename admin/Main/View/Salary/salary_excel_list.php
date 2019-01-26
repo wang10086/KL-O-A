@@ -209,7 +209,7 @@
                                         <th colspan="6" style="text-align: center;">
                                             <b>批准人 : </b><?php if ($url3!==''){echo "<img src='{$url3}' alt='' style='max-height: 50px'>";}else{echo "暂未批准";} ?>
                                         </th>
-                                        <th colspan="6" style="text-align: center;">
+                                        <th colspan="7" style="text-align: center;">
                                             <b>打印时间: </b><?php echo date("Y-m-d H:i:s",time()); ?>
                                         </th>
                                     </tr>

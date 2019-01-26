@@ -26,7 +26,7 @@
                     <th class="taskOptions" colspan="2" width="14%">赡养老人</th>
                     <th class="taskOptions" rowspan="2">操作</th>
                 </tr>
-                <tr>
+                <tr role="row" class="orders">
                     <th class="taskOptions">原金额</th>
                     <th class="taskOptions">现金额</th>
                     <th class="taskOptions">原金额</th>

@@ -159,14 +159,14 @@
                                 <td>
                                     <select class="form-control salary_current_department">
                                         <foreach name="department" item="dep">
-                                            <option value ="{$dep.id}">{$dep.department}</option>
+                                            <option value ="{$dep.id}" <?php if ($dep['department']==$row['department']) echo 'selected'; ?>>{$dep.department}</option>
                                         </foreach>
                                     </select>
                                 </td>
                                 <td>
                                     <select class="form-control salary_present_post">
                                         <foreach name="posts" item="p">
-                                            <option value ="{$p.id}">{$p.post_name}</option>
+                                            <option value ="{$p.id}" <?php if ($p['post_name']==$row['post_name']) echo 'selected'; ?>>{$p.post_name}</option>
                                         </foreach>
                                     </select>
                                 </td>
