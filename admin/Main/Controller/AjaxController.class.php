@@ -1122,10 +1122,13 @@ class AjaxController extends Controller {
                 $id['id']                   = $Labour['id'];
                 if($status==1){
                     $save['merge_counting'] = $Labour_money;
+                    $save['Labour_money']   = $Labour['Labour_money'];
                 }elseif($status==2){
+                    $save['merge_counting'] = $Labour['merge_counting'];
                     $save['Labour_money']   = $Labour_money;
                 }
-               $Labour_w                    =  M('salary_labour')->where($id)->save($save);
+                $Labour_w                   =  M('salary_labour')->where($id)->save($save);
+
                 if($Labour_w){
                     $sum                    = 1;
                     $msg                    = "修改".$cot."成功!";
