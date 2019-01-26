@@ -977,15 +977,24 @@ class SalaryController extends BaseController {
             $use2                                   = trim(str_replace(array('<font color="#999999">','</font>','无加扣分','<span class="red">','</span>','<span>','<font color="#ff9900">','未完成评分'),"",$user[0]['show_qa_score']));//品质检查
             $use3                                   = trim(str_replace(array('<font color="#999999">','</font>','无加扣分','<span class="red">','</span>','<span>','<font color="#ff9900">','未完成评分'),"",$user[0]['total_kpi_score']));//KPI
             $money                                  = $user_info[$key]['salary'][0]['standard_salary']/10*$user_info[$key]['salary'][0]['performance_salary'];//绩效金额
+            $base_money                             = $user_info[$key]['salary'][0]['standard_salary']/10*$user_info[$key]['salary'][0]['basic_salary'];    //基本工资
             $branch                                 = 100;//给总共100分
 
             if($val['formal']==0 || $val['formal']==4) {$use3 = 0;}
-            $f = $use1+$use2+$use3;//获得总分
-            if(substr($f,0,1)=='-'){
-                $user_info[$key]['Achievements']['count_money']     = (substr($f,0,1)).(round(($money/$branch*(substr($f,1))),2));
+            $f      = $use2+$use3;//获得总分    品质检查+kpi从绩效工资取值
+            $fpdca  = $use1;
+
+            if(substr($f,0,1)=='-'){    //绩效工资余额
+                $balance1                           = (substr($f,0,1)).(round(($money/$branch*(substr($f,1))),2));
             }else{
-                $user_info[$key]['Achievements']['count_money']     = (substr($f,0,1)).(round(($money/$branch*(substr($f,1))),2));
+                $balance1                           = (substr($f,0,1)).(round(($money/$branch*(substr($f,1))),2));
             }
+            if(substr($fpdca,0,1)=='-'){    //基本工资余额
+                $balance2                           = (substr($fpdca,0,1)).(round(($base_money/$branch*(substr($fpdca,1))),2));
+            }else{
+                $balance2                           = (substr($fpdca,0,1)).(round(($base_money/$branch*(substr($fpdca,1))),2));
+            }
+            $user_info[$key]['Achievements']['count_money']         = $balance1 + $balance2;
             $user_info[$key]['Achievements']['total_score_show']    = $use1;//pdca分数
             $user_info[$key]['Achievements']['show_qa_score']       = $use2;//品质检查分数
             $user_info[$key]['Achievements']['sum_total_score']     = $use3;//KPI分数
