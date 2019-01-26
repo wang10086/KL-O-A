@@ -476,21 +476,19 @@ class AjaxController extends Controller {
         $type                               = (int)(code_number(trim($_POST['statu'])));
         $uid['account_id']                  = (int)(code_number(trim($_POST['account_id'])));
         if($type == 1){//提成/奖金
-
             $where['extract']               = trim($_POST['housing_subsidy']);//带团补助
             $where['bonus']                 = trim($_POST['foreign_subsidies']);//其他人员提成
             $where['annual_bonus']          = trim($_POST['computer_subsidy']);//年终奖
             $where['foreign_bonus']         = trim($_POST['foreign_bonus']);//奖金
             $where['year_end_tax']          = trim($_POST['yearend']);//年终奖计税
+            $subsidy_r                      = M('salary_bonus')->where($uid)->order('id desc')->find();
         }
         if($type == 2){//补贴
             $where['housing_subsidy']       = trim($_POST['housing_subsidy']);//住房补贴
             $where['foreign_subsidies']     = trim($_POST['foreign_subsidies']);//外地补贴
             $where['computer_subsidy']      = trim($_POST['computer_subsidy']);//电脑补贴
+            $subsidy_r                      = M('salary_subsidy')->where($uid)->order('id desc')->find();
         }
-
-        if($type == 1){$subsidy_r           = M('salary_bonus')->where($uid)->order('id desc')->find();}
-        if($type == 2){$subsidy_r           = M('salary_subsidy')->where($uid)->order('id desc')->find();}
 
         if($subsidy_r){
 
@@ -634,18 +632,46 @@ class AjaxController extends Controller {
             $add['company_big_price']               = $big_price;//大额 比例(公司)
         }
         $insurance                                  = M('salary_insurance')->where($where)->order('id desc')->find();
+
         if($insurance){
-            /*if((int)$insurance['status'] ==  1){ //判断能否修改*/
+            $data                                   = array();
+            $data['birth_base']                     = $add['birth_base']?$add['birth_base']:$insurance['birth_base'];
+            $data['company_birth_base']             = $add['company_birth_base']?$add['company_birth_base']:$insurance['company_birth_base'];
+            $data['injury_base']                    = $add['injury_base']?$add['injury_base']:$insurance['injury_base'];
+            $data['company_injury_base']            = $add['company_injury_base']?$add['company_injury_base']:$insurance['company_injury_base'];
+            $data['medical_care_base']              = $add['medical_care_base']?$add['medical_care_base']:$insurance['medical_care_base'];
+            $data['company_medical_care_base']      = $add['company_medical_care_base']?$add['company_medical_care_base']:$insurance['company_medical_care_base'];
+            $data['pension_base']                   = $add['pension_base']?$add['pension_base']:$insurance['pension_base'];
+            $data['company_pension_base']           = $add['company_pension_base']?$add['company_pension_base']:$insurance['company_pension_base'];
+            $data['unemployment_base']              = $add['unemployment_base']?$add['unemployment_base']:$insurance['unemployment_base'];
+            $data['company_unemployment_base']      = $add['company_unemployment_base']?$add['company_unemployment_base']:$insurance['company_unemployment_base'];
+            $data['accumulation_fund_base']         = $add['accumulation_fund_base']?$add['accumulation_fund_base']:$insurance['accumulation_fund_base'];
+            $data['company_accumulation_fund_base'] = $add['company_accumulation_fund_base']?$add['company_accumulation_fund_base']:$insurance['company_accumulation_fund_base'];
+            $data['pension_ratio']                  = $add['pension_ratio']?$add['pension_ratio']:$insurance['pension_ratio'];
+            $data['unemployment_ratio']             = $add['unemployment_ratio']?$add['unemployment_ratio']:$insurance['unemployment_ratio'];
+            $data['accumulation_fund_ratio']        = $add['accumulation_fund_ratio']?$add['accumulation_fund_ratio']:$insurance['accumulation_fund_ratio'];
+            $data['medical_care_ratio']             = $add['medical_care_ratio']?$add['medical_care_ratio']:$insurance['medical_care_ratio'];
+            $data['big_price']                      = $add['big_price']?$add['big_price']:$insurance['big_price'];
+            $data['company_pension_ratio']          = $add['company_pension_ratio']?$add['company_pension_ratio']:$insurance['company_pension_ratio'];
+            $data['company_unemployment_ratio']     = $add['company_unemployment_ratio']?$add['company_unemployment_ratio']:$insurance['company_unemployment_ratio'];
+            $data['company_accumulation_fund_ratio']= $add['company_accumulation_fund_ratio']?$add['company_accumulation_fund_ratio']:$insurance['company_accumulation_fund_ratio'];
+            $data['company_medical_care_ratio']     = $add['company_medical_care_ratio']?$add['company_medical_care_ratio']:$insurance['company_medical_care_ratio'];
+            $data['company_birth_ratio']            = $add['company_birth_ratio']?$add['company_birth_ratio']:$insurance['company_birth_ratio'];
+            $data['company_injury_ratio']           = $add['company_injury_ratio']?$add['company_injury_ratio']:$insurance['company_injury_ratio'];
+            $data['company_big_price']              = $add['company_big_price']?$add['company_big_price']:$insurance['company_big_price'];
+            $data['birth_ratio']                    = $add['birth_ratio']?$add['birth_ratio']:$insurance['birth_ratio'];
+            $data['injury_ratio']                   = $add['injury_ratio']?$add['injury_ratio']:$insurance['injury_ratio'];
+            if((int)$insurance['status'] ==  1){ //判断能否修改
                 $cont                               = "修改";
                 $id['id']                           = $insurance['id'];
-                $oinsurance_w                       = M('salary_insurance')->where($id)->save($add);
-            /*}
+                $oinsurance_w                       = M('salary_insurance')->where($id)->save($data);
+            }
             if((int)$insurance['status'] ==  2){ //添加
                 $cont                               = "添加";
-                $add['account_id']                  = $where['account_id'];
-                $add['createtime']                  = time();
-                $oinsurance_w                       = M('salary_insurance')->add($add);
-            }*/
+                $data['account_id']                 = $where['account_id'];
+                $data['createtime']                 = time();
+                $oinsurance_w                       = M('salary_insurance')->add($data);
+            }
         }else{
             if($statu<6 && 0<$statu){
                 $cont                               = "添加";
