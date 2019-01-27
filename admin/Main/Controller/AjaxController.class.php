@@ -1431,6 +1431,7 @@ class AjaxController extends Controller {
 
     //批量确认报销单
     public function batch_sure(){
+        M()->startTrans();          //开启事务
         $bxids                      = I('bxids');
         if (!$bxids) $msg           = '请选择报销单信息';
         $bxids                      = explode(',',$bxids);
@@ -1448,6 +1449,7 @@ class AjaxController extends Controller {
             $data['cw_audit_time']  = NOW_TIME;
             $save                   = $audit_db->where(array('bx_id'=>array('in',$bxids)))->save($data);
             if ($save){
+                M()->commit();      //提交
                 $msg                = '操作成功';
 
                 foreach ($bxids as $v){
@@ -1460,8 +1462,7 @@ class AjaxController extends Controller {
                 }
 
             }else{
-                $db->rollback();
-                $audit_db->rollback();
+                M()->rollback();    //回滚
                 $msg                = '操作失败';
             }
 
