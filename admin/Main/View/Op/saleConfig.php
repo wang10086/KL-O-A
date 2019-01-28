@@ -51,7 +51,9 @@
                                         <th colspan="3" class="taskOptions">第二季度</th>
                                         <th colspan="3" class="taskOptions">第三季度</th>
                                         <th colspan="3" class="taskOptions">第四季度</th>
+                                        <if condition="rolemenu(array('Op/sale_config_edit'))">
                                         <th rowspan="2" class="taskOptions" width="80">设置</th>
+                                        </if>
                                     </tr>
                                     <tr role="row" class="orders">
                                         <td class="taskOptions">一月</td>
@@ -84,9 +86,11 @@
                                             <td class="taskOptions">{$row.October}</td>
                                             <td class="taskOptions">{$row.November}</td>
                                             <td class="taskOptions">{$row.December}</td>
+                                            <if condition="rolemenu(array('Op/sale_config_edit'))">
                                             <td class="taskOptions">
                                                 <a href="javascript:;" onClick="set_saleConfig({$row.id},{$year})" title="设置部门分管领导" class="btn btn-info btn-smsm"><i class="fa fa-pencil"></i></a>
                                             </td>
+                                            </if>
                                         </tr>
                                     </foreach>										
                                 </table>

@@ -3211,7 +3211,6 @@ class OpController extends BaseController {
         $department_ids     = C('YW_DEPARTS');
         $departments        = M('salary_department')->field('id,department')->where(array('id'=>array('in',$department_ids)))->select();
         $sale_configs       = M('sale_config')->where(array('year'=>$year))->select();
-        //var_dump($sale_config);die;
         foreach ($departments as $k=>$v){
             foreach ($sale_configs as $key=>$value){
                 if ($value['department_id']==$v['id']){
@@ -3238,7 +3237,7 @@ class OpController extends BaseController {
         $this->display();
     }
 
-    //
+    //配置销售人员系数
     public function sale_config_edit(){
         $db                 = M('sale_config');
         if (isset($_POST['dosubmint'])){
