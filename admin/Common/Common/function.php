@@ -2661,34 +2661,40 @@ function updatekpi($month,$user){
 
                 //月度顾客满意度(业务)
                 if($v['quota_id']==124){
+                    //获取当月月度累计毛利额目标值(如果毛利额系数目标为0,则不考核)
+                    $gross_margin                   = get_gross_margin($v['month'],$v['user_id'],1);
+                    if ($gross_margin && $gross_margin['target']==0){
+                        //当月目标为0
+                        $complete                   = '100%';
+                    }else {
+                        //获取当月已评分的团
+                        $where                  = array();
+                        $where['s.input_time']	= array('between',array($v['start_date'],$v['end_date']));
+                        $where['o.create_user'] = $user;
+                        $lists = M()->table('__TCS_SCORE__ as s')->field('u.op_id,o.kind,s.id as sid,s.before_sell,s.new_media,s.stay,s.travel,s.content,s.food,s.bus,s.driver,s.guide,s.teacher,s.depth,s.major,s.interest,s.material,s.late,s.manage,s.morality')->join('join __TCS_SCORE_USER__ as u on u.id = s.uid','left')->join('__OP__ as o on o.op_id = u.op_id','left')->where($where)->select();
 
-                    //获取当月已评分的团
-                    $where                  = array();
-                    $where['s.input_time']	= array('between',array($v['start_date'],$v['end_date']));
-                    $where['o.create_user'] = $user;
-                    $lists = M()->table('__TCS_SCORE__ as s')->field('u.op_id,o.kind,s.id as sid,s.before_sell,s.new_media,s.stay,s.travel,s.content,s.food,s.bus,s.driver,s.guide,s.teacher,s.depth,s.major,s.interest,s.material,s.late,s.manage,s.morality')->join('join __TCS_SCORE_USER__ as u on u.id = s.uid','left')->join('__OP__ as o on o.op_id = u.op_id','left')->where($where)->select();
+                        $average = get_manyidu($lists);
 
-                    $average = get_manyidu($lists);
+                        //无项目的，得0分；有项目，但无调查项目的，得100分。
+                        //本月实际实施团
+                        $where                  = array();
+                        $where['dep_time']      = array('between',array($v['start_date'],$v['end_date']));
+                        $where['user_id']       = $user;
+                        $shishi = M('op_team_confirm')->where($where)->getField('op_id',true);
+                        //需要辅导员的团
+                        $where                  = array();
+                        $where['in_begin_day']  = array('between',array($v['start_date'],$v['end_date']));
+                        $where['manager_id']    = $user;
+                        $need_guide             = M('op_guide_confirm')->where($where)->count();
 
-                    //无项目的，得0分；有项目，但无调查项目的，得100分。
-                    //本月实际实施团
-                    $where                  = array();
-                    $where['dep_time']      = array('between',array($v['start_date'],$v['end_date']));
-                    $where['user_id']       = $user;
-                    $shishi = M('op_team_confirm')->where($where)->getField('op_id',true);
-                    //需要辅导员的团
-                    $where                  = array();
-                    $where['in_begin_day']  = array('between',array($v['start_date'],$v['end_date']));
-                    $where['manager_id']    = $user;
-                    $need_guide             = M('op_guide_confirm')->where($where)->count();
-
-                    if ($shishi && !$need_guide){
-                        //有项目，但无调查项目的，得100分。
-                        $complete = 100;
-                    }else{
-                        //平均得分(如果得分>90%,得分100, 如果小于90%,以90%作为满分求百分比)
-                        $score = (round($average*100/90,2))*100;
-                        $complete = $average > 0.9 ? 100 : $score;
+                        if ($shishi && !$need_guide){
+                            //有项目，但无调查项目的，得100分。
+                            $complete = 100;
+                        }else{
+                            //平均得分(如果得分>90%,得分100, 如果小于90%,以90%作为满分求百分比)
+                            $score = (round($average*100/90,2))*100;
+                            $complete = $average > 0.9 ? 100 : $score;
+                        }
                     }
                 }
 
