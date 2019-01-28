@@ -2291,7 +2291,7 @@ class FinanceController extends BaseController {
         $page			= new Page($pagecount, P::PAGE_SIZE);
         $this->pages	= $pagecount>P::PAGE_SIZE ? $page->show():'';
 
-        $lists          = M()->table('__BAOXIAO__ as b')->field('b.*')->join('__BAOXIAO_AUDIT__ as a on a.bx_id=b.id','left')->where($where)->order($this->orders('b.id'))->limit($page->firstRow . ',' . $page->listRows)->select();
+        $lists          = M()->table('__BAOXIAO__ as b')->field('b.*,a.ys_audit_status')->join('__BAOXIAO_AUDIT__ as a on a.bx_id=b.id','left')->where($where)->order($this->orders('b.id'))->limit($page->firstRow . ',' . $page->listRows)->select();
 
         foreach ($lists as $k=>$v){
             if ($v['audit_status'] == 0) $lists[$k]['zhuangtai'] = "<span class='yellow'>审核中</span>";

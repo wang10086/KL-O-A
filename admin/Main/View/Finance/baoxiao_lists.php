@@ -63,9 +63,9 @@
                                         <tr>
                                             <?php if (in_array(cookie('userid'),array(1,11,55))){ ?>
                                                 <td style="text-align:center;">
-                                                    <if condition="$row.bxd_type eq 1"> <!--团内借款报销-->
+                                                    <?php if($row['bxd_type']==1 && $row['ys_audit_status']==1 && $row['audit_status']==0){ ?> <!--团内借款报销-->
                                                         <input type="checkbox" value="{$row.id}" class="batch_confirm"/>
-                                                    </if>
+                                                    <?php } ?>
                                                 </td>
                                             <?php } ?>
                                             <td style="text-align:center;"><input type="checkbox" value="{$row.id}" class="accessdata"/></td>
