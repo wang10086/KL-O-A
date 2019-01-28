@@ -768,7 +768,7 @@ class SalaryController extends BaseController {
             }
         }else{
             if(!empty($archives)){
-                $info                   = $this->salary_excel_sql($archives,$name);//员工信息
+                $info                   = $this->salary_excel_sql($archives,$name,$datetime);//员工信息
                 $sum                    = $this->countmoney($archives,$info);//部门合计
                 $summoney               = $this->summoney($sum); //总合计
             }elseif(is_numeric($monthly)){
@@ -795,7 +795,7 @@ class SalaryController extends BaseController {
                     }
                     $wages_month        = M('salary_wages_month')->where($wher)->order('id ASC')->select();//已经提交数据
                     if(!$wages_month) {
-                        $info           = $this->salary_excel_sql($archives,$name);//员工信息
+                        $info           = $this->salary_excel_sql($archives,$name,$datetime);//员工信息
                         $sum            = $this->countmoney('',$info);//部门合计
                         $summoney       = $this->summoney($sum); //总合计
                         $status         = 1;
@@ -916,10 +916,40 @@ class SalaryController extends BaseController {
      * @salary_excel_sql
      * 获取详情数据表
      */
-    private function salary_excel_sql($archives,$name){
-        if($name!==""){$where['nickname']           = $name;}
-        $where['archives']                          = $archives;
-        if($archives==null || $archives==false){unset($where['archives']);}
+    private function salary_excel_sql($archives='',$name='',$datetime=""){
+        $pay_year                                   = (int)substr($datetime,0,4);
+        $pay_month                                  = (int)substr($datetime,4);
+        if (in_array($pay_month,array('01','04','07','10'))){   //季度后一个月发放该季度提成
+            if ($pay_month==1) {
+                $p_year                             = $pay_year - 1;
+                $p_month                            = 12;
+            }else{
+                $p_year                             = $pay_year;
+                $p_month                            = $pay_month - 1;
+            }
+            $quarter_time                           = getQuarterlyCicle($p_year,$p_month);  //获取该季度周期,方便业务提成(结算)取值
+
+            $where = array();
+            $where['b.audit_status'] = 1;
+            $where['l.req_type'] = 801;
+            $where['l.audit_time'] = array('between', "$quarter_time[begin_time],$quarter_time[end_time]");
+
+            /*$field = array();
+            $field[] = 'count(o.id) as xms';
+            $field[] = 'sum(c.num_adult) as renshu';
+            $field[] = 'sum(b.shouru) as zsr';
+            $field[] = 'sum(b.maoli) as zml';
+            $field[] = '(sum(b.maoli)/sum(b.shouru)) as mll';*/
+            $field      = array();
+            $field      = 'o.op_id,o.project';
+
+            $op_settlement_list = M()->table('__OP_SETTLEMENT__ as b')->field($field)->join('__OP__ as o on b.op_id = o.op_id', 'LEFT')->join('__ACCOUNT__ as a on a.id = o.create_user', 'LEFT')->join('__AUDIT_LOG__ as l on l.req_id = b.id', 'LEFT')->join('__OP_TEAM_CONFIRM__ as c on c.op_id=o.op_id', 'left')->where($where)->select();
+            //var_dump($op_settlement_list);die;
+
+        }
+        $where                                      = array();
+        if($name)       $where['nickname']          = $name;
+        if($archives)   $where['archives']          = $archives;
         $where['status']                            = 0;
         $info                                       =  M('account')->where($where)->order('employee_member ASC')->select();//个人数据
         foreach($info as $k => $v){//去除编码空的数据

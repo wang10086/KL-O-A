@@ -4440,6 +4440,7 @@ function getScienceRes(){
  */
 function get_quarter($month){
     $month              = $month?$month:date("m");
+    if (strlen($month)<2) $month = str_pad($month,2,'0',STR_PAD_LEFT);
     switch ($month){
         case in_array($month,array('01','02','03')):
             $quarter    = 1;
