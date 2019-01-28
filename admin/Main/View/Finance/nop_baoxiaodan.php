@@ -29,7 +29,7 @@
                         <tr>
                             <td class="td_title" colspan="6">
                                 <div class="form-group col-md-12">
-                                    <h4><b>报销单</b></h4>
+                                    <h4><b>{$company[$baoxiao['company']]}报销单</b></h4>
                                 </div>
                             </td>
                         </tr>

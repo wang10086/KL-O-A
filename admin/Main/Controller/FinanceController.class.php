@@ -2122,6 +2122,7 @@ class FinanceController extends BaseController {
         $this->audit_userinfo= $audit_userinfo;
         $this->record   = D('Finance')->get_record($jiekuan['jkd_id']);
         $this->jidiao   = M()->table('__OP_BUDGET__ as b')->join('__AUDIT_LOG__ as l on l.req_id=b.id','left')->where(array('l.req_type'=>P::REQ_TYPE_BUDGET,'b.op_id'=>$jiekuan['op_id']))->getField('l.req_uname');
+        $this->company  = C('COMPANY');
 
         //审核人信息
         if ($jiekuan['ys_audit_userid']==cookie('userid') || cookie('userid')==11){
@@ -2347,6 +2348,7 @@ class FinanceController extends BaseController {
         $audit_userinfo = M('baoxiao_audit')->where(array('bx_id'=>$id))->find();
         $this->audit_userinfo= $audit_userinfo;
         $this->record   = D('Finance')->get_record($baoxiao['bxd_id']);
+        $this->company  = C('COMPANY');
 
         //审核人信息
         if ($baoxiao['zm_audit_userid']==cookie('userid')){
@@ -2381,6 +2383,7 @@ class FinanceController extends BaseController {
         $this->audit_userinfo= $audit_userinfo;
         $this->audit_usertype= $audit_usertype;
         $this->jk_type      = C('JIEKUAN_TYPE');
+        $this->company      = C('COMPANY');
 
         $this->display();
     }
@@ -2404,6 +2407,7 @@ class FinanceController extends BaseController {
         }elseif ($jiekuan['cw_audit_userid']==cookie('userid')){
             $this->audit_usertype = 3;
         }
+        $this->company  = C('COMPANY');
         $this->display();
     }
 
@@ -2490,6 +2494,7 @@ class FinanceController extends BaseController {
         }
         $this->audit_usertype   = $audit_usertype?$audit_usertype:$auditUserType;
         $this->bxd_kind         = C('BXD_KIND');
+        $this->company          = C('COMPANY');
         $this->display();
     }
 

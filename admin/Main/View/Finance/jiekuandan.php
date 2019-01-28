@@ -30,7 +30,7 @@
                         <table id="jkd-table" style="width: 99%; margin-top: 20px;">
                             <tr>
                                 <td class="" colspan="6" style="text-align: center;">
-                                    <b style="font-weight: 600;font-size: large;">借款单</b>
+                                    <b style="font-weight: 600;font-size: large;">{$company[$jiekuan['company']]}借款单</b>
                                 </td>
                             </tr>
                             <tr>
