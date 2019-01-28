@@ -778,4 +778,20 @@ function get_gross_profit($userid,$beginTime,$endTime){
     return $data;
 }
 
+    /**
+     * 获取当月考核KPI的某一项值
+     * @param $yearmonth
+     * @param $user_id
+     * @param int $quota_id = 1(默认月度累计毛利额)
+     */
+function get_gross_margin($yearmonth,$user_id,$quota_id=1){
+    $db                         = M('kpi_more');
+    $where                      = array();
+    $where['user_id']           = $user_id;
+    $where['month']             = $yearmonth;
+    $where['quota_id']          = $quota_id;
+    $list                       = $db->where($where)->find();
+    return $list;
+}
+
 

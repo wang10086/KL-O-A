@@ -1947,22 +1947,29 @@ function updatekpi($month,$user){
 
 				//获取合同签订率（含家长协议书）
 				if($v['quota_id']==5){
-					$where 							= array();
-					$where['o.create_user']			= $user;
-					$where['c.dep_time']			= array('between',array($v['start_date'],$v['end_date']));
-                    $dj_op_ids                      = array_filter(M('op')->getField('dijie_opid',true));
-                    $where['o.op_id']               = array('not in',$dj_op_ids);   //排除地接团
-					$xiangmu_list	= M()->table('__OP__ as o')->field('o.op_id,c.dep_time')->join('left join __OP_TEAM_CONFIRM__ as c on o.op_id=c.op_id')->where($where)->select();
-					$xiangmu 		= count($xiangmu_list);
-                    $hetong_list    = array();
-					foreach ($xiangmu_list as $key=>$value){
-						//出团后5天内完成上传
-						$time 		= $value['dep_time'] + 5*24*3600;
-						$list       = M('contract')->where(array('op_id'=>$value['op_id'],'status'=>1,'confirm_time'=>array('lt',$time)))->find();
-						if ($list){ $hetong_list[] = $list; }
-					}
-					$hetong         = count($hetong_list);
-					$complete       = $xiangmu ? round(($hetong / $xiangmu)*100,2).'%' : 0 .'%';
+                    //获取当月月度累计毛利额目标值(如果毛利额目标为0,则不考核)
+                    $gross_margin                   = get_gross_margin($v['month'],$v['user_id'],1);
+                    if ($gross_margin && $gross_margin['target']==0){
+                        //当月目标为0
+                        $complete                   = '100%';
+                    }else{
+                        $where 							= array();
+                        $where['o.create_user']			= $user;
+                        $where['c.dep_time']			= array('between',array($v['start_date'],$v['end_date']));
+                        $dj_op_ids                      = array_filter(M('op')->getField('dijie_opid',true));
+                        $where['o.op_id']               = array('not in',$dj_op_ids);   //排除地接团
+                        $xiangmu_list	= M()->table('__OP__ as o')->field('o.op_id,c.dep_time')->join('left join __OP_TEAM_CONFIRM__ as c on o.op_id=c.op_id')->where($where)->select();
+                        $xiangmu 		= count($xiangmu_list);
+                        $hetong_list    = array();
+                        foreach ($xiangmu_list as $key=>$value){
+                            //出团后5天内完成上传
+                            $time 		= $value['dep_time'] + 5*24*3600;
+                            $list       = M('contract')->where(array('op_id'=>$value['op_id'],'status'=>1,'confirm_time'=>array('lt',$time)))->find();
+                            if ($list){ $hetong_list[] = $list; }
+                        }
+                        $hetong         = count($hetong_list);
+                        $complete       = $xiangmu ? round(($hetong / $xiangmu)*100,2).'%' : 0 .'%';
+                    }
 				}
 				
 				
