@@ -895,6 +895,7 @@ class SalaryController extends BaseController {
             $list[$key]['Extract']['complete']                      = $val['complete'];
             $list[$key]['Extract']['total']                         = $val['total']+$val['Subsidy'];
             $list[$key]['tax_counting']                             = $val['tax_counting'];
+            $list[$key]['specialdeduction']                         = $val['specialdeduction'];
             $list[$key]['personal_tax']                             = $val['personal_tax'];
             $list[$key]['Labour']                                   = $val['Labour'];
             $list[$key]['summoney']                                 = $val['summoney'];
@@ -1179,11 +1180,12 @@ class SalaryController extends BaseController {
             $info_user1[$key][18]       = sprintf("%.2f",$val['insurance'][0]['unemployment_base']*$val['insurance'][0]['unemployment_ratio']) ;
             $info_user1[$key][19]       = sprintf("%.2f",$val['accumulation']);
             $info_user1[$key][20]       = sprintf("%.2f",$val['insurance_Total']);
-            $info_user1[$key][21]       = sprintf("%.2f",$val['tax_counting']);
-            $info_user1[$key][22]       = sprintf("%.2f",$val['personal_tax']);
-            $info_user1[$key][23]       = sprintf("%.2f",$val['summoney']);
-            $info_user1[$key][24]       = sprintf("%.2f",$val['labour']['Labour_money']);
-            $info_user1[$key][25]       = sprintf("%.2f",$val['real_wages']);
+            $info_user1[$key][21]       = sprintf("%.2f",$val['specialdeduction']);
+            $info_user1[$key][22]       = sprintf("%.2f",$val['tax_counting']);
+            $info_user1[$key][23]       = sprintf("%.2f",$val['personal_tax']);
+            $info_user1[$key][24]       = sprintf("%.2f",$val['summoney']);
+            $info_user1[$key][25]       = sprintf("%.2f",$val['labour']['Labour_money']);
+            $info_user1[$key][26]       = sprintf("%.2f",$val['real_wages']);
         }
         foreach($sum as $key => $val){
             $info_user2[$key][0]        = $val['name'];
@@ -1207,11 +1209,12 @@ class SalaryController extends BaseController {
             $info_user2[$key][18]       = sprintf("%.2f",$val['unemployment']);
             $info_user2[$key][19]       = sprintf("%.2f",$val['accumulation']);
             $info_user2[$key][20]       = sprintf("%.2f",$val['insurance_Total']);
-            $info_user2[$key][21]       = sprintf("%.2f",$val['tax_counting']);
-            $info_user2[$key][22]       = sprintf("%.2f",$val['personal_tax']);
-            $info_user2[$key][23]       = sprintf("%.2f",$val['summoney']);
-            $info_user2[$key][24]       = sprintf("%.2f",$val['Labour']);
-            $info_user2[$key][25]       = sprintf("%.2f",$val['real_wages']);
+            $info_user2[$key][21]       = sprintf("%.2f",$val['specialdeduction']);
+            $info_user2[$key][22]       = sprintf("%.2f",$val['tax_counting']);
+            $info_user2[$key][23]       = sprintf("%.2f",$val['personal_tax']);
+            $info_user2[$key][24]       = sprintf("%.2f",$val['summoney']);
+            $info_user2[$key][25]       = sprintf("%.2f",$val['Labour']);
+            $info_user2[$key][26]       = sprintf("%.2f",$val['real_wages']);
         }
 
         $info_user3[$key][0]            = $summoney['name'];
@@ -1235,12 +1238,12 @@ class SalaryController extends BaseController {
         $info_user3[$key][18]           = sprintf("%.2f",$summoney['unemployment']);
         $info_user3[$key][19]           = sprintf("%.2f",$summoney['accumulation']);
         $info_user3[$key][20]           = sprintf("%.2f",$summoney['insurance_Total']);
-        $info_user3[$key][21]           = sprintf("%.2f",$summoney['tax_counting']);
-        $info_user3[$key][22]           = sprintf("%.2f",$summoney['personal_tax']);
-        $info_user3[$key][23]           = sprintf("%.2f",$summoney['summoney']);
-        $info_user3[$key][24]           = sprintf("%.2f",$summoney['Labour']);
-        $info_user3[$key][25]           = sprintf("%.2f",$summoney['real_wages']);
-        $info_user3[$key][25]           = sprintf("%.2f",$summoney['real_wages']);
+        $info_user3[$key][21]           = sprintf("%.2f",$summoney['specialdeduction']);
+        $info_user3[$key][22]           = sprintf("%.2f",$summoney['tax_counting']);
+        $info_user3[$key][23]           = sprintf("%.2f",$summoney['personal_tax']);
+        $info_user3[$key][24]           = sprintf("%.2f",$summoney['summoney']);
+        $info_user3[$key][25]           = sprintf("%.2f",$summoney['Labour']);
+        $info_user3[$key][26]           = sprintf("%.2f",$summoney['real_wages']);
         if($datetim){
             $datetime = $datetim;
         }else{
@@ -1254,7 +1257,7 @@ class SalaryController extends BaseController {
 
         $setTitle                       = $datetime.'工资发放表';
         $Excel_data[0]                  = array('0'=>'1',''=>'','2'=>'','3'=>'','4'=>$setTitle);
-        $Excel_data[1]                  = array('1'=>'ID','2'=>'员工姓名','3'=>'岗位名称','4'=>'所属部门','5'=>'身份证号','6'=>'工资卡号','7'=>'岗位薪酬标准','8'=>'其中基本工资标准','9'=>'考勤扣款','10'=>'其中绩效工资标准','11'=>'绩效增减','12'=>'业绩提成','13'=>'奖金','14'=>'住房补贴','15'=>'其他补款','16'=>'应发工资','17'=>'医疗保险','18'=>'养老保险','19'=>'失业保险','20'=>'公积金','21'=>'个人保险合计','22'=>'计税工资','23'=>'个人所得税','24'=>'税后扣款','25'=>'工会会费','26'=>'实发工资');
+        $Excel_data[1]                  = array('1'=>'ID','2'=>'员工姓名','3'=>'岗位名称','4'=>'所属部门','5'=>'身份证号','6'=>'工资卡号','7'=>'岗位薪酬标准','8'=>'其中基本工资标准','9'=>'考勤扣款','10'=>'其中绩效工资标准','11'=>'绩效增减','12'=>'业绩提成','13'=>'奖金','14'=>'住房补贴','15'=>'其他补款','16'=>'应发工资','17'=>'医疗保险','18'=>'养老保险','19'=>'失业保险','20'=>'公积金','21'=>'个人保险合计','22'=>'专项扣除','23'=>'计税工资','24'=>'个人所得税','25'=>'税后扣款','26'=>'工会会费','27'=>'实发工资');
 
         $Excel_content                  = array_merge($Excel_data,$info_user1,$info_user2,$info_user3,$Approver);
         exportexcel($Excel_content,$setTitle,$setTitle);
