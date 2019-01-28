@@ -3203,4 +3203,72 @@ class OpController extends BaseController {
         $this->display();
     }
 
+    //销售人员系数配置
+    public function saleConfig(){
+        $year               = I('year',date('Y'));
+        $yearTime           = array();
+
+        $department_ids     = C('YW_DEPARTS');
+        $departments        = M('salary_department')->field('id,department')->where(array('id'=>array('in',$department_ids)))->select();
+        $sale_configs       = M('sale_config')->where(array('year'=>$year))->select();
+        //var_dump($sale_config);die;
+        foreach ($departments as $k=>$v){
+            foreach ($sale_configs as $key=>$value){
+                if ($value['department_id']==$v['id']){
+                    $departments[$k]['January']         = $value['January'];
+                    $departments[$k]['February']        = $value['February'];
+                    $departments[$k]['March']           = $value['March'];
+                    $departments[$k]['April']           = $value['April'];
+                    $departments[$k]['May']             = $value['May'];
+                    $departments[$k]['June']            = $value['June'];
+                    $departments[$k]['July']            = $value['July'];
+                    $departments[$k]['August']          = $value['August'];
+                    $departments[$k]['September']       = $value['September'];
+                    $departments[$k]['October']         = $value['October'];
+                    $departments[$k]['November']        = $value['November'];
+                    $departments[$k]['December']        = $value['December'];
+                }
+            }
+        }
+
+        $this->year 	    = $year;
+        $this->prveyear	    = $year-1;
+        $this->nextyear	    = $year+1;
+        $this->departments  = $departments;
+        $this->display();
+    }
+
+    //
+    public function sale_config_edit(){
+        $db                 = M('sale_config');
+        if (isset($_POST['dosubmint'])){
+            $info                       = I('info');
+            $info['year']               = trim(I('year'));
+            $info['department_id']      = trim(I('department_id'));
+            $data                       = $db->where(array('department_id'=>$department_id,'year'=>$year))->find();
+            if ($data){
+                $res                    = $db->where(array('id'=>$data['id']))->save($info);
+            }else{
+                $res                    = $db->add($info);
+            }
+            echo "<script>window.top.location.reload();</script>";
+        }else{
+            $id                         = trim(I('id'));
+            $year                       = trim(I('year'));
+            if ($id && $year){
+                $where                  = array();
+                $where['year']          = $year;
+                $where['department_id'] = $id;
+                $department             = M('salary_department')->field('id,department')->where(array('id'=>$id))->find();
+                $list                   = $db->where($where)->find();
+                $this->year             = $year;
+                $this->list             = $list;
+                $this->department       = $department;
+                $this->display();
+            }else{
+                $this->error('获取信息失败');
+            }
+        }
+    }
+
 }

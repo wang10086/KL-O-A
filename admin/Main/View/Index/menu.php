@@ -886,6 +886,10 @@
                                         <li class="{:on('Finance/jk_audit_user')}" ><a href="{:U('Finance/jk_audit_user')}"><i class="fa fa-angle-right"></i> 部门借款审核人</a></li>
                                     </if>
 
+                                    <if condition="rolemenu(array('Op/saleConfig'))">
+                                        <li class="{:on('Op/saleConfig')}" ><a href="{:U('Op/saleConfig')}"><i class="fa fa-angle-right"></i> 销售任务系数配置</a></li>
+                                    </if>
+
                                     <if condition="rolemenu(array('Rbac/kpi_quota'))">
                                          <li class="{:on('Rbac/kpi_quota')}" ><a href="{:U('Rbac/kpi_quota')}"><i class="fa fa-angle-right"></i> KPI考核指标管理</a></li>
                                     </if>
