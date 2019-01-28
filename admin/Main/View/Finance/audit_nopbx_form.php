@@ -98,7 +98,7 @@
 <?php } ?>
 
 <!--财务主管签字-->
-<?php if ($audit_usertype ==4 && in_array(cookie('userid'),array($audit_userinfo['cw_audit_userid'],1)) && $audit_userinfo['zm_audit_status'] == 1 && $audit_userinfo['manager_audit_status'] == 1 && $audit_userinfo['ys_audit_status'] == 1 && $baoxiao['audit_status'] == 0){ ?>
+<?php if ($audit_usertype ==4 && in_array(cookie('userid'),array($audit_userinfo['cw_audit_userid'],1,11)) && $audit_userinfo['zm_audit_status'] == 1 && $audit_userinfo['manager_audit_status'] == 1 && $audit_userinfo['ys_audit_status'] == 1 && $baoxiao['audit_status'] == 0){ ?>
     <form method="post" action="{:U('Finance/public_save')}" id="audit_jk" onsubmit="return submitBefore()">
         <input type="hidden" name="dosubmint" value="1">
         <input type="hidden" name="bx_id" value="{$baoxiao.id}">
