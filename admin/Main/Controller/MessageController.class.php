@@ -33,15 +33,15 @@ class MessageController extends BasepubController {
 		
 		
 		//分页
-		$pagecount = $db->where($where)->count();
+		$pagecount = M()->table('__MESSAGE__ as m')->field('m.*,r.user_id,r.read_time,r.del')->where($where)->join('__MESSAGE_READ__ as r on r.msg_id = m.id','LEFT')->limit($page->firstRow . ',' . $page->listRows)->order($this->orders('m.send_time'))->count();
 		$page = new Page($pagecount, P::PAGE_SIZE);
 		$this->pages = $pagecount>P::PAGE_SIZE ? $page->show():'';
-		
+
 		
 		//查询
 		$status = C('STATUS_STR');
 		
-		$datalist = M()->table('__MESSAGE__ as m')->field('m.*,r.user_id,r.read_time,r.del')->where($where)->join('__MESSAGE_READ__ as r on r.msg_id = m.id','LEFT')->limit($page->firstRow . ',' . $page->listRows)->order($this->orders('m.send_time'))->select();	
+		$datalist = M()->table('__MESSAGE__ as m')->field('m.*,r.user_id,r.read_time,r.del')->where($where)->join('__MESSAGE_READ__ as r on r.msg_id = m.id','LEFT')->limit($page->firstRow . ',' . $page->listRows)->order($this->orders('m.send_time'))->select();
 		foreach($datalist as $k=>$v){
 			//read_msg($v['id']);
 			$datalist[$k]['send_user'] = $v['send_user'] ? username($v['send_user']) : '系统';
