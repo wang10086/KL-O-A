@@ -913,6 +913,90 @@ class SalaryController extends BaseController {
     }
 
     /**
+     * 获取销售季度任务系数oa_sale_config表
+     * @param $quarter
+     */
+    private function getQuarterMonth($quarter,$year){
+        $quarter                        = (int)$quarter;
+        $field                          = array();
+        switch ($quarter){
+            case 1:
+                $field                  = 'January,February,March';
+                break;
+            case 2:
+                $field                  = 'April,May,June';
+                break;
+            case 3:
+                $field                  = 'July,August,September';
+                break;
+            case 4:
+                $field                  = 'October,November,December';
+                break;
+        }
+        $lists                          = M('sale_config')->field($field)->where(array('year'=>$year))->select();
+        foreach ($lists as $k=>$v){
+            $January                    = $v['January']?$v['January']:0;
+            $February                   = $v['February']?$v['February']:0;
+            $March                      = $v['March']?$v['March']:0;
+            $April                      = $v['April']?$v['April']:0;
+            $May                        = $v['May']?$v['May']:0;
+            $June                       = $v['June']?$v['June']:0;
+            $July                       = $v['July']?$v['July']:0;
+            $August                     = $v['August']?$v['August']:0;
+            $September                  = $v['September']?$v['September']:0;
+            $October                    = $v['October']?$v['October']:0;
+            $November                   = $v['November']?$v['November']:0;
+            $December                   = $v['December']?$v['December']:0;
+            $lists[$k]['coefficient']       = $January + $February + $March + $April + $May + $June + $July + $August + $September + $October + $November + $December;
+        }
+        return $lists;
+    }
+
+    //获取该季度所有结算的团
+    private function get_quarter_settlement_list($quarter_time){
+        $where                                  = array();
+        $where['b.audit_status']                = 1;
+        $where['l.req_type']                    = 801;
+        $where['l.audit_time']                  = array('between', "$quarter_time[begin_time],$quarter_time[end_time]");
+        $field                                  = array();
+        $field                                  = 'o.op_id,o.project,o.group_id,o.create_user,o.create_user_name,b.maoli'; //获取所有该季度结算的团
+        $op_settlement_list                     = M()->table('__OP_SETTLEMENT__ as b')->field($field)->join('__OP__ as o on b.op_id = o.op_id', 'LEFT')->join('__ACCOUNT__ as a on a.id = o.create_user', 'LEFT')->join('__AUDIT_LOG__ as l on l.req_id = b.id', 'LEFT')->where($where)->select();
+        return $op_settlement_list;
+    }
+
+    //获取本人季度业绩提成
+    private function get_quarter_royalty($user,$sale_configs,$op_settlement_list,$salary){
+        $salary                                 = $salary[0]['standard_salary'];    //工资岗位薪酬
+        foreach ($sale_configs as $k=>$v){
+            if ($user['departmentid']==$v['department_id']){
+                $coefficient                    = $v['coefficient'];    //季度目标系数
+            }
+        }
+        $lists                                  = array();
+        foreach ($op_settlement_list as $key=>$value){
+            if ($value['create_user']== $user['id']){
+                $lists[]                        = $value;   //当季度结算的团
+            }
+        }
+        $sum_profit                             = array_sum(array_column($lists,'maoli'));  //当季度结算毛利总额
+
+        //提成金额 = 季度目标系数 * 工资岗位薪酬 (100%内提取5%; 100%-150%=>20%; 大于150%=>25%)
+        $count                                  = $salary*$coefficient;     //目标值 = 季度目标系数 * 工资岗位薪酬
+        $royalty                                = 0;
+        if ($sum_profit < $count){
+            $royalty                            += $sum_profit*0.05;
+        }elseif ($sum_profit > $count && $sum_profit < $count*1.5){
+            $royalty                            += $count*0.05;
+            $royalty                            += ($sum_profit - $count)*0.2;
+        }elseif ($sum_profit > $count*1.5){
+            $royalty                            += $count*0.05;
+            $royalty                            += ($count*1.5 - $count)*0.2;
+            $royalty                            += ($sum_profit - $count*1.5)*0.25;
+        }
+        return $royalty;
+    }
+
+    /**
      * @salary_excel_sql
      * 获取详情数据表
      */
@@ -927,31 +1011,19 @@ class SalaryController extends BaseController {
                 $p_year                             = $pay_year;
                 $p_month                            = $pay_month - 1;
             }
-            $quarter_time                           = getQuarterlyCicle($p_year,$p_month);  //获取该季度周期,方便业务提成(结算)取值
-
-            $where = array();
-            $where['b.audit_status'] = 1;
-            $where['l.req_type'] = 801;
-            $where['l.audit_time'] = array('between', "$quarter_time[begin_time],$quarter_time[end_time]");
-
-            /*$field = array();
-            $field[] = 'count(o.id) as xms';
-            $field[] = 'sum(c.num_adult) as renshu';
-            $field[] = 'sum(b.shouru) as zsr';
-            $field[] = 'sum(b.maoli) as zml';
-            $field[] = '(sum(b.maoli)/sum(b.shouru)) as mll';*/
-            $field      = array();
-            $field      = 'o.op_id,o.project';
-
-            $op_settlement_list = M()->table('__OP_SETTLEMENT__ as b')->field($field)->join('__OP__ as o on b.op_id = o.op_id', 'LEFT')->join('__ACCOUNT__ as a on a.id = o.create_user', 'LEFT')->join('__AUDIT_LOG__ as l on l.req_id = b.id', 'LEFT')->join('__OP_TEAM_CONFIRM__ as c on c.op_id=o.op_id', 'left')->where($where)->select();
-            //var_dump($op_settlement_list);die;
-
+            $quarter                                = get_quarter($p_month);
+            $sale_configs                           = $this->getQuarterMonth($quarter,$p_year);     //获取所有销售季度任务基数 coefficient
+            $quarter_time                           = getQuarterlyCicle($p_year,$p_month);          //获取该季度周期,方便业务提成(结算)取值
+            $op_settlement_list                     = $this->get_quarter_settlement_list($quarter_time);   //获取该季度所有的结算团
         }
+
         $where                                      = array();
         if($name)       $where['nickname']          = $name;
         if($archives)   $where['archives']          = $archives;
         $where['status']                            = 0;
+        //$where['nickname']                          = '李宝库';
         $info                                       =  M('account')->where($where)->order('employee_member ASC')->select();//个人数据
+
         foreach($info as $k => $v){//去除编码空的数据
             if($v['employee_member'] == ""){unset($info[$k]);}
         }
@@ -1030,9 +1102,11 @@ class SalaryController extends BaseController {
             $user_info[$key]['Achievements']['show_qa_score']       = $use2;//品质检查分数
             $user_info[$key]['Achievements']['sum_total_score']     = $use3;//KPI分数
 
-            $user_price                             = $this->salary_kpi_month($id['account_id'],$que['p.month'],1); //业务人员 目标任务 完成 提成
+            $quarter_royalty                        = $this->get_quarter_royalty($val,$sale_configs,$op_settlement_list,$user_info[$key]['salary']);    //销售季度提成
+
+            $user_price                             = $this->salary_kpi_month($id['account_id'],$que['p.month'],1); //业务人员 目标任务 完成 提成 (刘 ) ??
             $user_info[$key]['bonus'][0]['royalty'] = $user_price['total'];
-            $user_info[$key]['Extract']['total']    = $user_price['total']+$user_bonus[0]['bonus']+$bonus_extract;//提成相加
+            $user_info[$key]['Extract']['total']    = $user_price['total']+$user_bonus[0]['bonus']+$bonus_extract + $quarter_royalty;//提成相加
             $extract                                = $user_info[$key]['Extract']['total'];
             $Year_end                               = ($user_info[$key]['bonus'][0]['annual_bonus'])/12;
             $user_info[$key]['yearend']             = D('Salary')->year_end_tax($Year_end,$user_info[$key]['bonus'][0]['year_end_tax']);//年终奖计税
