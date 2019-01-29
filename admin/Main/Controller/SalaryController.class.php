@@ -1108,12 +1108,15 @@ class SalaryController extends BaseController {
             $user_info[$key]['Achievements']['show_qa_score']       = $use2;//品质检查分数
             $user_info[$key]['Achievements']['sum_total_score']     = $use3;//KPI分数
 
-            $quarter_royalty_data                   = $this->get_quarter_royalty($val,$sale_configs,$op_settlement_list,$user_info[$key]['salary']);    //销售季度提成
-            $quarter_royalty                        = $quarter_royalty_data['quarter_royalty'];
+            $quarter_royalty_data                   = $this->get_quarter_royalty($val,$sale_configs,$op_settlement_list,$user_info[$key]['salary']);    //销售季度目标 完成 提成
+            //$quarter_royalty                        = $quarter_royalty_data['quarter_royalty'];
 
             $user_price                             = $this->salary_kpi_month($id['account_id'],$que['p.month'],1); //业务人员 目标任务 完成 提成 (刘 ) ??
+            $user_price['target']                   = $quarter_royalty_data['target']?$quarter_royalty_data['target']:$user_price['target'];
+            $user_price['complete']                 = $quarter_royalty_data['quarter_profit']?$quarter_royalty_data['quarter_profit']:$user_price['complete'];
+            $user_price['total']                    = $quarter_royalty_data['quarter_royalty']?$quarter_royalty_data['quarter_royalty']:$user_price['total'];
             $user_info[$key]['bonus'][0]['royalty'] = $user_price['total'];
-            $user_info[$key]['Extract']['total']    = $user_price['total']+$user_bonus[0]['bonus']+$bonus_extract + $quarter_royalty;//提成相加
+            $user_info[$key]['Extract']['total']    = $user_price['total']+$user_bonus[0]['bonus']+$bonus_extract ;//提成相加
             $extract                                = $user_info[$key]['Extract']['total'];
             $Year_end                               = ($user_info[$key]['bonus'][0]['annual_bonus'])/12;
             $user_info[$key]['yearend']             = D('Salary')->year_end_tax($Year_end,$user_info[$key]['bonus'][0]['year_end_tax']);//年终奖计税
