@@ -921,16 +921,16 @@ class SalaryController extends BaseController {
         $field                          = array();
         switch ($quarter){
             case 1:
-                $field                  = 'January,February,March';
+                $field                  = 'id,department_id,department,year,January,February,March';
                 break;
             case 2:
-                $field                  = 'April,May,June';
+                $field                  = 'id,department_id,department,year,April,May,June';
                 break;
             case 3:
-                $field                  = 'July,August,September';
+                $field                  = 'id,department_id,department,year,July,August,September';
                 break;
             case 4:
-                $field                  = 'October,November,December';
+                $field                  = 'id,department_id,department,year,October,November,December';
                 break;
         }
         $lists                          = M('sale_config')->field($field)->where(array('year'=>$year))->select();
@@ -981,19 +981,25 @@ class SalaryController extends BaseController {
         $sum_profit                             = array_sum(array_column($lists,'maoli'));  //当季度结算毛利总额
 
         //提成金额 = 季度目标系数 * 工资岗位薪酬 (100%内提取5%; 100%-150%=>20%; 大于150%=>25%)
-        $count                                  = $salary*$coefficient;     //目标值 = 季度目标系数 * 工资岗位薪酬
+        $target                                 = $salary*$coefficient;     //目标值 = 季度目标系数 * 工资岗位薪酬
         $royalty                                = 0;
-        if ($sum_profit < $count){
+        if ($sum_profit < $target){
             $royalty                            += $sum_profit*0.05;
-        }elseif ($sum_profit > $count && $sum_profit < $count*1.5){
-            $royalty                            += $count*0.05;
-            $royalty                            += ($sum_profit - $count)*0.2;
-        }elseif ($sum_profit > $count*1.5){
-            $royalty                            += $count*0.05;
-            $royalty                            += ($count*1.5 - $count)*0.2;
-            $royalty                            += ($sum_profit - $count*1.5)*0.25;
+        }elseif ($sum_profit > $target && $sum_profit < $target*1.5){
+            $royalty                            += $target*0.05;
+            $royalty                            += ($sum_profit - $target)*0.2;
+        }elseif ($sum_profit > $target*1.5){
+            $royalty                            += $target*0.05;
+            $royalty                            += ($target*1.5 - $target)*0.2;
+            $royalty                            += ($sum_profit - $target*1.5)*0.25;
         }
-        return $royalty;
+        $data                                   = array();
+        $data['account_id']                     = $user['id'];
+        $data['salary']                         = $salary;
+        $data['quarter_profit']                 = $sum_profit;  //季度毛利
+        $data['target']                         = $target;      //目标值
+        $data['quarter_royalty']                = $royalty;     //季度提成
+        return $data;
     }
 
     /**
@@ -1102,7 +1108,8 @@ class SalaryController extends BaseController {
             $user_info[$key]['Achievements']['show_qa_score']       = $use2;//品质检查分数
             $user_info[$key]['Achievements']['sum_total_score']     = $use3;//KPI分数
 
-            $quarter_royalty                        = $this->get_quarter_royalty($val,$sale_configs,$op_settlement_list,$user_info[$key]['salary']);    //销售季度提成
+            $quarter_royalty_data                   = $this->get_quarter_royalty($val,$sale_configs,$op_settlement_list,$user_info[$key]['salary']);    //销售季度提成
+            $quarter_royalty                        = $quarter_royalty_data['quarter_royalty'];
 
             $user_price                             = $this->salary_kpi_month($id['account_id'],$que['p.month'],1); //业务人员 目标任务 完成 提成 (刘 ) ??
             $user_info[$key]['bonus'][0]['royalty'] = $user_price['total'];
