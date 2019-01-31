@@ -4115,6 +4115,8 @@ th{outline: none;}
 /*#catfont .btn-group-header{ background-color: #ddd;color: #666;}*/
 .text-overflow{max-width: 90%; overflow: hidden;  text-overflow:ellipsis;  white-space: nowrap;}
 .text-overflow-lines{max-width: 90%; display: -webkit-box;  -webkit-box-orient: vertical;  -webkit-line-clamp: 2;  overflow: hidden;}
+.text-overflow-lines-300{max-width: 300px; display: -webkit-box;  -webkit-box-orient: vertical;  -webkit-line-clamp: 2;  overflow: hidden;}
+
 
 .a4-endwise{  width: 100%;  overflow: hidden;  padding: 0;  word-break:break-all;  }
 

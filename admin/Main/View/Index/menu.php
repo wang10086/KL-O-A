@@ -49,6 +49,9 @@
                                 <if condition="rolemenu(array('Op/relpricelist'))">
                                         <li class="{:on('Op/relpricelist')} {:on('Op/relprice')}"><a href="{:U('Op/relpricelist')}"><i class="fa fa-angle-right"></i> 项目比价</a></li>
                                 </if>
+                                <if condition="rolemenu(array('Op/satisfaction'))">
+                                    <li class="{:on('Op/satisfaction')} {:on('Op/')}"><a href="{:U('Op/satisfaction')}"><i class="fa fa-angle-right"></i> 研发满意度</a></li>
+                                </if>
 
                             </ul>
                         </li>
