@@ -3311,7 +3311,7 @@ class OpController extends BaseController {
             $where['monthly']           = $info['monthly'];
             $list                       = $db->where($where)->find();
             if ($list){
-                $this->error('您已将完成当月的评分');
+                $this->error('您已将完成当月的评分',U('Op/satisfaction'));
             }else{
                 $res                    = $db->add($info);
                 if ($res){

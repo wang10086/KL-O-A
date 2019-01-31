@@ -6,7 +6,7 @@
             <?php }elseif($post_id ==102 ){ ?>
                 <!--京区业务中心微信运营专员-->
                 <include file="score_form_2" />
-            <?php }elseif($post_id ==63 ){ ?>
+            <?php }elseif(in_array($post_id,array(63,64))){ ?>
                 <!--研发部实施专家-->
                 <include file="score_form_3" />
             <?php } ?>

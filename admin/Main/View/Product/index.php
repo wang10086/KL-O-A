@@ -53,6 +53,7 @@
                                         <!--<th class="sorting">参考单价</th>
                                         <th class="sorting">数量</th>-->
                                         <th class="sorting" data="p.sales_price">参考成本价</th>
+                                        <th class="sorting" data="p.input_uname">研发人员</th>
                                         <th>审批状态</th>
                                         
                                         <if condition="rolemenu(array('Product/add'))">
@@ -81,7 +82,8 @@
                                             <!--<td></td>
                                             <td></td>-->
                                             <td>{$row.sales_price}</td>
-                                            <?php 
+                                            <td>{$row.input_uname}</td>
+                                            <?php
                                             if($row['audit_status']== P::AUDIT_STATUS_NOT_AUDIT){
                                                 $show  = '<td>等待审批</td>';	
                                             }else if($row['audit_status'] == P::AUDIT_STATUS_PASS){

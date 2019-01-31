@@ -65,7 +65,7 @@ function get_worder_sum_score($user,$start_date,$end_date,$num){
  * */
 function get_kfmyd($start_date,$end_date,$kinds='',$field='',$num=1){
     $where                  = array();
-    if ($kinds){ $where['o.kind']        = array('in',$kinds); };
+    if ($kinds){ $where['o.kind']  = array('in',$kinds); };
     if ($field == 'new_media'){$where['s.new_media'] = array('neq',0); }
     $where['s.input_time']	= array('between',array($start_date,$end_date));
     $lists = M()->table('__TCS_SCORE__ as s')->field('u.op_id,s.id as sid,s.before_sell,s.new_media')->join('join __TCS_SCORE_USER__ as u on u.id = s.uid','left')->join('__OP__ as o on o.op_id = u.op_id','left')->where($where)->select();
@@ -739,6 +739,7 @@ function get_wages_info($userid){
     return $info;
 }
 
+//研发专家业绩贡献度
 function get_gross_profit($userid,$beginTime,$endTime){
     //个人立项毛利部分(结算)
     $where                  = array();
@@ -778,6 +779,23 @@ function get_gross_profit($userid,$beginTime,$endTime){
     return $data;
 }
 
+//研发专家毛利总额 和 基本工资总和
+function get_sum_gross_profit($userids,$beginTime,$endTime){
+    $lists                      = array();
+    $base_wages                 = array();
+    foreach ($userids as $v){
+        $lists[$v]              = get_gross_profit($v,$beginTime,$endTime);
+        $base_wages[$v]         = get_wages_info($v);
+    }
+
+    $data                       = array();
+    $sum_profit                 = array_sum(array_column($lists,'self')) + array_sum(array_column($lists,'other')); //毛利总额
+    $sum_base_wages             = array_sum(array_column($base_wages,'otherWages'));    //1.5倍基本工资总和
+    $data['sum_profit']         = $sum_profit;
+    $data['sum_base_wages']     = $sum_base_wages;
+    return $data;
+}
+
     /**
      * 获取当月考核KPI的某一项值
      * @param $yearmonth
@@ -793,5 +811,83 @@ function get_gross_margin($yearmonth,$user_id,$quota_id=1){
     $list                       = $db->where($where)->find();
     return $list;
 }
+
+function get_satisfaction($yearmonth){
+    $db                         = M('satisfaction');
+    $lists                      = $db->where(array('monthly'=>$yearmonth))->select();
+    $num                        = count($lists);
+    $sum_average                = 0;
+    foreach ($lists as $k=>$v){
+        $score                  = $v['timely'] + $v['accord'] + $v['cost'] + $v['train'] + $v['service'];
+        $count_score            = 5*5;  //总分 = 5各维度, 每个维度5颗星
+        $sum_average            += round($score/$count_score,2);
+    }
+    $average                    = round($sum_average/$num,2);
+    $data                       = array();
+    $data['num']                = $num;
+    $data['average']            = $average;
+    return $data;
+}
+
+        /*
+         * 研发主管客户满意度平均值
+         * 1.开始时间
+         * 2.结束时间
+         * */
+    function get_satisfaction_average($start_date,$end_date){
+        $where                  = array();
+        $where['s.input_time']	= array('between',array($start_date,$end_date));
+        $lists = M()->table('__TCS_SCORE__ as s')->field('u.op_id,o.kind,s.id as sid,s.content,s.teacher,s.depth,s.major,s.interest,s.material')->join('join __TCS_SCORE_USER__ as u on u.id = s.uid','left')->join('__OP__ as o on o.op_id = u.op_id','left')->where($where)->select();
+
+        $score_kind1            = array_keys(C('SCORE_KIND1'));
+        $score_kind2            = array_keys(C('SCORE_KIND2'));
+        $score_kind3            = array_keys(C('SCORE_KIND3'));
+        $snum1                  = 0;
+        $snum2                  = 0;
+        $snum3                  = 0;
+        $average1               = 0;
+        $average2               = 0;
+        $average3               = 0;
+        foreach ($lists as $key=>$value){
+            if (in_array($value['kind'],$score_kind1)){
+                $score          = $value['content'] + $value['teacher'];
+                $sum_score      = 5*2;
+                $average1       += round($score/$sum_score,2);
+                $snum1++;
+            }
+            if (in_array($value['kind'],$score_kind2)){
+                $score          = $value['depth'] + $value['major'] + $value['interest'] + $value['teacher'] + $value['material'];
+                $sum_score      = 5*5;
+                $average2       += round($score/$sum_score,2);
+                $snum2++;
+            }
+            if (in_array($value['kind'],$score_kind3)){
+                $score          = $value['major'] + $value['material'];
+                $sum_score      = 5*2;
+                $average3       += round($score/$sum_score,2);
+                $snum3++;
+            }
+        }
+        $score1                 = round($average1/$snum1,2);
+        $score2                 = round($average2/$snum2,2);
+        $score3                 = round($average3/$snum3,2);
+        $average                = round(($score1 + $score2 + $score3)/3,2);
+        $data                   = array();
+        $data['num']            = count($lists);    //评分次数
+        $data['average']        = $average;
+        return $data;
+    }
+
+    /**
+     * 获取研发人员模块使用率
+     * @param $userid
+     * @param $beginTime
+     * @param $endTime
+     */
+    function get_use_times($userid,$beginTime,$endTime){
+        $op_ids                 = M('op_team_confirm')->where(array('confirm_time'=>array('between',"$beginTime,$endTime")))->getField('op_id',true);
+        $count                  = M()->table('__OP_PRODUCT__ as o')->join('__PRODUCT__ as p on p.id=o.product_id','left')->where(array('o.op_id'=>array('in',$op_ids),'p.input_user'=> $userid))->count();
+        return $count;
+    }
 
 

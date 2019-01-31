@@ -2719,7 +2719,7 @@ function updatekpi($month,$user){
                         $complete	= (round($hegelv/0.9,2)*100).'%';
                     }
                 }*/
-                if ($v['quota_id']==129){
+                if (in_array($v['quota_id'],array(129,158))){
                     $where = array();
                     $where['create_time']	= array('between',array($v['start_date'],$v['end_date']));
                     $where['yf_uid']        = $user;
@@ -3107,9 +3107,54 @@ function updatekpi($month,$user){
 
                 //客户对公司产品满意度
                 if($v['quota_id']==154){
+                    $average_data           = get_satisfaction_average($v['start_date'],$v['end_date']);
+                    $average                = $average_data['average'];
+                    $num                    = $average_data['num'];
+                    if ($average > 0.9 || !$num){
+                        $complete           = 100;
+                    }else{
+                        $complete           = round(($v['plan']/0.9)*$average,2).'%';
+                    }
 
                 }
 
+                //业务部门对产品研发满意度
+                if ($v['quota_id']==155){
+                    $score_info             = get_satisfaction($v['month']);
+                    $num                    = $score_info['num'];
+                    $average                = $score_info['average'];
+                    if ($average > 0.9 || !$num){
+                        $complete           = 100;
+                    }else{
+                        $complete           = round(($v['plan']/0.9)*$average,2).'%';
+                    }
+                }
+
+                //实施专家业绩贡献度
+                if ($v['quota_id']==156){
+                    $experts                = array_keys(C('EXPERT'));
+                    $data                   = get_sum_gross_profit($experts,$v['start_date'],$v['end_date']);
+                    $sum_profit             = $data['sum_profit'];      //毛利总和
+                    $sum_base_wages         = $data['sum_base_wages'];  //1.5倍薪资岗位薪资总和
+
+                    $wanchenglv             = round($sum_profit/$sum_base_wages,2);
+                    $complete               = ($wanchenglv*100).'%';
+                }
+
+                //所负责表转化产品的客户满意度
+                if ($v['quota_id']==159){
+
+                }
+
+                //标准化模块使用量
+                if ($v['quota_id']==160){
+                    //本月立项成团的项目
+                    $useTimes               = get_use_times($v['user_id'],$v['start_date'],$v['end_date']);
+                    $complete               = $useTimes.'次';
+                }
+
+
+                //节后添加 154,155,156,158,160
 				//已实现自动获取指标值
 				$auto_quta	= array(1,2,3,4,5,6,81,8,9,10,11,15,16,18,20,23,26,21,24,27,32,37,19,22,25,28,33,38,42,45,103,56,113,92,29,34,39,46,102,55,57,58,59,84,87,89,90,111,107,83,66,54,44,12,112,108,100,96,95,65,114,86,85,64,63,62,53,52,41,40,49,80,48,91,79,47,36,35,31,30,82,110,106,99,94,67,124,125,126,127,128,129,130,131,132,133,134,135,136,137,138,139,140,141,143,144,145,146,147,148,149,150,151,153,161,162,163);
 
@@ -3141,7 +3186,7 @@ function updatekpi($month,$user){
 
 function get_kpi_data($v,$complete){
     $otherQuota     = array(127);
-    $gt100          = array(163);
+    $gt100          = array(163,156);
     if (in_array($v['quota_id'],$otherQuota)){
         //不超过既得满分的指标 不能按照 实际/计划计算得分
         $target     = (float)$v['target'];
