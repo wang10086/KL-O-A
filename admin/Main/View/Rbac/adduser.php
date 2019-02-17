@@ -172,8 +172,8 @@
 
                                 <div class="form-group col-md-3">
                                     <label>所属队列</label>
-                                    <select class="form-control" name="info[rank]">
-                                        <option <?php if($row['rank']==''){ echo 'selected';}?> value="">请选择</option>
+                                    <select class="form-control" name="info[rank]" required>
+                                        <option value="">请选择</option>
                                         <option <?php if($row['rank']=='00'){ echo 'selected';}?> value="00">0队列</option>
                                         <option <?php if($row['rank']=='01'){ echo 'selected';}?> value="01">1队列</option>
                                         <option <?php if($row['rank']=='02'){ echo 'selected';}?> value="02">2队列</option>

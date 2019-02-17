@@ -1694,6 +1694,7 @@ class KpiController extends BaseController {
 
 	//kpi排行
 	public function chart(){
+        $pin            = I('pin');
         $year           = I('year',date('Y'));
         $yearTime       = array();
         if ($year <2018){
@@ -1707,7 +1708,7 @@ class KpiController extends BaseController {
         $yearTime[]     = $yearEnd;
 
 
-
+        $this->pin      = $pin;
         $this->year 	= $year;
         $this->prveyear	= $year-1;
         $this->nextyear	= $year+1;
