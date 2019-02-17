@@ -35,6 +35,7 @@
                                     
                                     </div>
                                     <div class="box-tools pull-right">
+                                        <a href="javascript:;" class="btn btn-success btn-sm" onclick="javascript:opensearch('searchtext',400,120);"><i class="fa fa-search"></i> 搜索</a>
                                     	 <if condition="rolemenu(array('Files/mkdirs'))">
                                     	 <a href="javascript:;" class="btn btn-danger btn-sm" onclick="javascript:opensearch('mkdir',400,120,'创建文件夹');"><i class="fa fa-folder-open"></i> 创建文件夹</a>
                                          </if>
@@ -107,8 +108,19 @@
                 </div>
                 </form>
             </div>
-            
-            
+
+            <div id="searchtext">
+                <form action="" method="get" id="searchform">
+                    <input type="hidden" name="m" value="Main">
+                    <input type="hidden" name="c" value="Files">
+                    <input type="hidden" name="a" value="index">
+                    <input type="hidden" name="pid" value="{$pid}">
+
+                    <div class="form-group col-md-12">
+                        <input type="text" class="form-control" name="filename" placeholder="请输入文件名称关键字">
+                    </div>
+                </form>
+            </div>
            
             
             <script type="text/javascript">

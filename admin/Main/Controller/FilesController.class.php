@@ -17,17 +17,19 @@ class FilesController extends BaseController {
     public function index(){
         $this->title('文件管理');
 		
-		$db = M('files');
+		$db                     = M('files');
+        $filename               = I('filename');
 		
 		//定义配置
-		$this->type            = array('0'=>'文件夹','1'=>'文档');
+		$this->type             = array('0'=>'文件夹','1'=>'文档');
 		
 		//取参
-		$this->pid             = I('pid',0);
+		$this->pid              = I('pid',0);
 		
 		//查询条件
 		$where = array();
-		$where['pid']          = $this->pid;
+		$where['pid']           = $this->pid;
+        if ($filename) $where['file_name'] = array('like','%'.$filename.'%');
 		
 		//权限识别
 		/*
