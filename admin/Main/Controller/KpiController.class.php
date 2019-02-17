@@ -1691,6 +1691,28 @@ class KpiController extends BaseController {
 		
 		
 	}
+
+	//kpi排行
+	public function chart(){
+        $year           = I('year',date('Y'));
+        $yearTime       = array();
+        if ($year <2018){
+            $yearBegin  = strtotime('2017-12-26');
+            $yearEnd    = strtotime('2018-12-26');
+        }else{
+            $yearBegin  = strtotime(($year-1).'-12-26');
+            $yearEnd    = strtotime($year.'-12-26');
+        }
+        $yearTime[]     = $yearBegin;
+        $yearTime[]     = $yearEnd;
+
+
+
+        $this->year 	= $year;
+        $this->prveyear	= $year-1;
+        $this->nextyear	= $year+1;
+        $this->display();
+    }
 	
 	
 	

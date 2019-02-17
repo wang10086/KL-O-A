@@ -25,12 +25,29 @@
                         </if>
 
 
-                        <li class="{:on('Chart')}">
+                        <!--<li class="{:on('Chart')}">
                             <a href="{:U('Chart/pplist')}">
                                 <i class="fa fa-signal"></i> <span>业绩排行</span>
                             </a>
+                        </li>-->
 
-                        </li>
+                        <if condition="rolemenu(array('Chart/pplist'))">
+                            <li class="treeview {:ison(CONTROLLER_NAME,'Chart')} {:on('Kpi/chart')}">
+                                <a href="javascript:;">
+                                    <i class="fa fa-signal"></i>
+                                    <span>绩效排行</span>
+                                    <i class="fa fa-angle-left pull-right"></i>
+                                </a>
+                                <ul class="treeview-menu">
+                                    <if condition="rolemenu(array('Chart/pplist'))">
+                                        <li><a href="{:U('Chart/pplist')}"><i class="fa fa-angle-right"></i> 业绩排行</a></li>
+                                    </if>
+                                    <if condition="rolemenu(array('Kpi/chart'))">
+                                        <li><a href="{:U('Kpi/chart')}"><i class="fa fa-angle-right"></i> KPI排行</a></li>
+                                    </if>
+                                </ul>
+                            </li>
+                        </if>
 
                         <if condition="rolemenu(array('Op/index','Op/plans','Project/kind','Op/relpricelist'))">
                         <li class="treeview {:ison(CONTROLLER_NAME,'Op')} {:on('Project/addkind')}">
