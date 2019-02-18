@@ -50,9 +50,9 @@
                                 	 <table id="example2" class="table table-striped table-bordered table-hover" >
                                         <thead>
                                             <tr role="row" class="orders" >
-                                            	<th width="40">列队</th>
-                                            	<th width="40">序号</th>
-                                                <th>姓名</th>
+                                                <th width="60" class="taskOptions">队列</th>
+                                                <th width="40" class="taskOptions">编号</th>
+                                                <th width="80">姓名</th>
                                                 <th>周期</th>
                                                 <th>年平均</th>
                                                 <th>1月</th>
@@ -72,25 +72,31 @@
                                         <tbody>
                                             <foreach name="lists" item="row" key="k">                      
                                             <tr>
-                                            	<td class="orderNo"></td>
-                                                <td><a href="{:U('Kpi/finance',array('xs'=>$row['create_user_name'],'st'=>($year-1).'-12-26'))}">{$row.create_user_name}</a></td>
-                                                <!--<td>{$row.rolename}</td>-->
-                                                <td>{$row.department}</td>
-                                                <td>{$row.zsr}</td>
-                                                <td>{$row.zml}</td>
-                                                <td>{$row.mll}</td>
-                                                <?php if ($year == date("Y")){ ?>
-                                                <td>{$row.ysr}</td>
-                                                <td>{$row.yml}</td>
-                                                <td>{$row.yll}</td>
-                                                <?php } ?>
+                                                <td class="taskOptions">{$row.ranks}</td>
+                                                <td class="taskOptions">{$row.employee_member}</td>
+                                                <td>{$row.nickname}</td>
+                                                <td>{$row.cycle}</td>
+                                                <td>{$row.average}</td>
+                                                <td><a href="{:U('Kpi/kpiinfo',array('year'=>$year,'month'=>'01','uid'=>$row['id']))}" target="_blank">{$row["kpi"]['01']}</a></td>
+                                                <td><a href="{:U('Kpi/kpiinfo',array('year'=>$year,'month'=>'02','uid'=>$row['id']))}" target="_blank">{$row["kpi"]['02']}</a></td>
+                                                <td><a href="{:U('Kpi/kpiinfo',array('year'=>$year,'month'=>'03','uid'=>$row['id']))}" target="_blank">{$row["kpi"]['03']}</a></td>
+                                                <td><a href="{:U('Kpi/kpiinfo',array('year'=>$year,'month'=>'04','uid'=>$row['id']))}" target="_blank">{$row["kpi"]['04']}</a></td>
+                                                <td><a href="{:U('Kpi/kpiinfo',array('year'=>$year,'month'=>'05','uid'=>$row['id']))}" target="_blank">{$row["kpi"]['05']}</a></td>
+                                                <td><a href="{:U('Kpi/kpiinfo',array('year'=>$year,'month'=>'06','uid'=>$row['id']))}" target="_blank">{$row["kpi"]['06']}</a></td>
+                                                <td><a href="{:U('Kpi/kpiinfo',array('year'=>$year,'month'=>'07','uid'=>$row['id']))}" target="_blank">{$row["kpi"]['07']}</a></td>
+                                                <td><a href="{:U('Kpi/kpiinfo',array('year'=>$year,'month'=>'08','uid'=>$row['id']))}" target="_blank">{$row["kpi"]['08']}</a></td>
+                                                <td><a href="{:U('Kpi/kpiinfo',array('year'=>$year,'month'=>'09','uid'=>$row['id']))}" target="_blank">{$row["kpi"]['09']}</a></td>
+                                                <td><a href="{:U('Kpi/kpiinfo',array('year'=>$year,'month'=>'10','uid'=>$row['id']))}" target="_blank">{$row["kpi"]['10']}</a></td>
+                                                <td><a href="{:U('Kpi/kpiinfo',array('year'=>$year,'month'=>'11','uid'=>$row['id']))}" target="_blank">{$row["kpi"]['11']}</a></td>
+                                                <td><a href="{:U('Kpi/kpiinfo',array('year'=>$year,'month'=>'12','uid'=>$row['id']))}" target="_blank">{$row["kpi"]['12']}</a></td>
                                             </tr>
                                             </foreach>	
-                                        </tbody>	
-                                        
+                                        </tbody>
                                     </table>
-                                
                                 </div><!-- /.box-body -->
+                                <div class="box-footer clearfix">
+                                    <div class="pagestyle">{$pages}</div>
+                                </div>
                             </div><!-- /.box -->
 
                         </div><!-- /.col -->
@@ -100,28 +106,4 @@
             </aside><!-- /.right-side -->
 
         <include file="Index:footer2" />
-        <script type="text/javascript">
-		$('#example2').dataTable({
-			"bPaginate": false,
-			"bLengthChange": false,
-			"bFilter": false,
-			"bSort": true,
-			"bInfo": false,
-			"aaSorting" : [[4, "desc"]],
-			"bAutoWidth": true,
-			"aoColumnDefs": [{ "bSortable": false, "aTargets": [ 0,1,2] }]
-		});
-		
-		$(document).ready(function(e) {
-			$('.orderNo').each(function(index, element) {
-				$(this).text(index+1);
-			});	
-				
-			$('.orderth').click(function(){
-				$('.orderNo').each(function(index, element) {
-					$(this).text(index+1);
-				});	
-			})
-		});
-        </script>
         

@@ -83,13 +83,13 @@
                                 <td>0.00 %</td>
                             </tr>
                             <tr role="row" class="orders" style="text-align:center;">
-                                <td><a href="{:U('Manage/HR_cost',array('tm'=>'m'))}">人力资源成本</a></td>
+                                <td><a href="{:U('Manage/HR_cost',array('year'=>$year,'month'=>$month,'tm'=>'m'))}">人力资源成本</a></td>
                                 <foreach name="number" item="num">
                                     <th>¥ <?php if($num['money']=="" || $num['money']==0 ){echo '0.00';}else{echo $num['money'];}?></th>
                                 </foreach>
                             </tr>
                             <tr role="row" class="orders" style="text-align:center;">
-                                <td><a href="{:U('Manage/otherExpenses',array('tm'=>'m'))}">其他费用</a></td>
+                                <td><a href="{:U('Manage/otherExpenses',array('year'=>$year,'month'=>$month,'tm'=>'m'))}">其他费用</a></td>
                                 <foreach name="department" item="d">
                                     <th>¥ <?php if($d['money']=="" || $d['money']==0){echo '0.00';}else{echo $d['money'];}?></th>
                                 </foreach>

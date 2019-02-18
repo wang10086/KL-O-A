@@ -430,7 +430,7 @@
                         </if>
 
                         <if condition="rolemenu(array('Finance/costacclist','Finance/budget','Finance/settlementlist','Finance/payment','Finance/costlabour','Finance/sign','Finance/jiekuan','Finance/jk_detail','Finance/loan_nopjk','Finance/loan'))">
-                        <li class="treeview {:ison(CONTROLLER_NAME, 'Finance')}">
+                        <li class="treeview {:ison(CONTROLLER_NAME, 'Finance')} {:ison(CONTROLLER_NAME, 'Manage')}">
                             <a href="javascript:;">
                                 <i class="fa  fa-yen"></i>
                                 <span>财务管理</span>

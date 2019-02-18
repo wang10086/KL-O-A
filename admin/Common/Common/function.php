@@ -4302,6 +4302,21 @@ function user_table($where,$type){//查询用户 1 查询一个 2 查询符合�
         return $data;
     }
 
+    //获取年份周期(上一年1226至本年1226)
+    function getYearTime($year){
+        $yearTime       = array();
+        if ($year <2018){
+            $yearBegin  = strtotime('2017-12-26');
+            $yearEnd    = strtotime('2018-12-26');
+        }else{
+            $yearBegin  = strtotime(($year-1).'-12-26');
+            $yearEnd    = strtotime($year.'-12-26');
+        }
+        $yearTime[]     = $yearBegin;
+        $yearTime[]     = $yearEnd;
+        return $yearTime;
+    }
+
     /**
      * user_contrast_status 信心对比状态
      * $file_id 文件 id

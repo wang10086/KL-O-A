@@ -1696,23 +1696,112 @@ class KpiController extends BaseController {
 	public function kpiChart(){
         $pin            = I('pin');
         $year           = I('year',date('Y'));
-        $yearTime       = array();
-        if ($year <2018){
-            $yearBegin  = strtotime('2017-12-26');
-            $yearEnd    = strtotime('2018-12-26');
-        }else{
-            $yearBegin  = strtotime(($year-1).'-12-26');
-            $yearEnd    = strtotime($year.'-12-26');
-        }
-        $yearTime[]     = $yearBegin;
-        $yearTime[]     = $yearEnd;
+        $where          = array();
+        $where['status']= array('neq',2);
+        $where['id']    = array('gt',10);
+        $where['employee_member'] = array('neq','');
+        if ($pin) $where['rank'] = $pin;
 
+        //分页
+        $pagecount		= M('account')->field('id,nickname')->where($where)->count();
+        $page			= new Page($pagecount, P::PAGE_SIZE);
+        //$this->pages 	= $pagecount>P::PAGE_SIZE ? $page->show():'';
+        //$accountlists   = M('account')->field('id,nickname,rank')->where($where)->limit($page->firstRow . ',' . $page->listRows)->select();
+        $accountlists   = M('account')->field('id,nickname,rank,employee_member')->where($where)->order('employee_member ASC')->select();
+        $lists          = $this->getKpiResult($accountlists,$year);
 
+        $this->lists    = $lists;
         $this->pin      = $pin;
         $this->year 	= $year;
         $this->prveyear	= $year-1;
         $this->nextyear	= $year+1;
         $this->display();
+    }
+
+    private function getKpiResult($accountlists,$year){
+        $kpilists                                       = M('kpi')->where(array('year'=>$year))->select();
+        foreach ($accountlists as $k=>$v){
+            $lists[$k]                                  = $v;
+            if ($v['rank']=='00') $lists[$k]['ranks']   = '0队列';
+            if ($v['rank']=='01') $lists[$k]['ranks']   = '1队列';
+            if ($v['rank']=='02') $lists[$k]['ranks']   = '2队列';
+            if ($v['rank']=='03') $lists[$k]['ranks']   = '3队列';
+            $sum_score                                  = 0; //总分
+            $num                                        = 0; //得分次数
+            $cycle                                      = M('kpi_more')->field('start_date,end_date')->where(array('user_id'=>$v['id'],'year'=>$year))->find();
+            if (($cycle['end_date']-$cycle['start_date'])-(31*24*3600)>=0){
+                $lists[$k]['cycle']                     = '季度';
+            }else{
+                $lists[$k]['cycle']                     = '月度';
+            }
+            foreach ($kpilists as $key=>$value){
+                $lists[$k]['year']      = $year;
+                if ($value['user_id']==$v['id']){
+                    if ($value['month'] == $year.'01' && $value['score'] != 0){
+                        $lists[$k]['kpi']['01'] = $value['score'];
+                        $sum_score      += $value['score'];
+                        $num            += 1;
+                    }
+                    if ($value['month'] == $year.'02' && $value['score'] != 0){
+                        $lists[$k]['kpi']['02'] = $value['score'];
+                        $sum_score      += $value['score'];
+                        $num            += 1;
+                    }
+                    if ($value['month'] == $year.'03' && $value['score'] != 0){
+                        $lists[$k]['kpi']['03'] = $value['score'];
+                        $sum_score      += $value['score'];
+                        $num            += 1;
+                    }
+                    if ($value['month'] == $year.'04' && $value['score'] != 0){
+                        $lists[$k]['kpi']['04'] = $value['score'];
+                        $sum_score      += $value['score'];
+                        $num            += 1;
+                    }
+                    if ($value['month'] == $year.'05' && $value['score'] != 0){
+                        $lists[$k]['kpi']['05'] = $value['score'];
+                        $sum_score      += $value['score'];
+                        $num            += 1;
+                    }
+                    if ($value['month'] == $year.'06' && $value['score'] != 0){
+                        $lists[$k]['kpi']['06'] = $value['score'];
+                        $sum_score      += $value['score'];
+                        $num            += 1;
+                    }
+                    if ($value['month'] == $year.'07' && $value['score'] != 0){
+                        $lists[$k]['kpi']['07'] = $value['score'];
+                        $sum_score      += $value['score'];
+                        $num            += 1;
+                    }
+                    if ($value['month'] == $year.'08' && $value['score'] != 0){
+                        $lists[$k]['kpi']['08'] = $value['score'];
+                        $sum_score      += $value['score'];
+                        $num            += 1;
+                    }
+                    if ($value['month'] == $year.'09' && $value['score'] != 0){
+                        $lists[$k]['kpi']['09'] = $value['score'];
+                        $sum_score      += $value['score'];
+                        $num            += 1;
+                    }
+                    if ($value['month'] == $year.'10' && $value['score'] != 0){
+                        $lists[$k]['kpi']['10'] = $value['score'];
+                        $sum_score      += $value['score'];
+                        $num            += 1;
+                    }
+                    if ($value['month'] == $year.'11' && $value['score'] != 0){
+                        $lists[$k]['kpi']['11'] = $value['score'];
+                        $sum_score      += $value['score'];
+                        $num            += 1;
+                    }
+                    if ($value['month'] == $year.'12' && $value['score'] != 0){
+                        $lists[$k]['kpi']['12'] = $value['score'];
+                        $sum_score      += $value['score'];
+                        $num            += 1;
+                    }
+                }
+            }
+            $lists[$k]['average']   = round($sum_score/$num,2);
+        }
+        return $lists;
     }
 	
 	

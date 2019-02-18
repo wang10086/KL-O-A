@@ -653,16 +653,7 @@ class ChartController extends BaseController {
     //个人业绩排行榜
     public function pplist(){
         $year           = I('year',date('Y'));
-        $yearTime       = array();
-        if ($year <2018){
-            $yearBegin  = strtotime('2017-12-26');
-            $yearEnd    = strtotime('2018-12-26');
-        }else{
-            $yearBegin  = strtotime(($year-1).'-12-26');
-            $yearEnd    = strtotime($year.'-12-26');
-        }
-        $yearTime[]     = $yearBegin;
-        $yearTime[]     = $yearEnd;
+        $yearTime       = getYearTime($year);
 
         $db		= M('op');
         $roles	= M('role')->GetField('id,role_name',true);
@@ -721,17 +712,8 @@ class ChartController extends BaseController {
     //团队业绩排行榜
     public function tplist(){
 
-        $year       = I('year',date('Y'));
-        $times      = array();
-        if ($year <2018){
-            $yearBegin  = strtotime('2017-12-26');
-            $yearEnd    = strtotime('2018-12-26');
-        }else{
-            $yearBegin  = strtotime(($year-1).'-12-26');
-            $yearEnd    = strtotime($year.'-12-26');
-        }
-        $times[]        = $yearBegin;
-        $times[]        = $yearEnd;
+        $year           = I('year',date('Y'));
+        $times          = getYearTime($year);
 
         $departids      = C('YW_DEPARTS');  //业务部门id
         $post           = M('salary_department')->where(array('id'=>array('in',$departids)))->getField('id,department,manager_name',true);
@@ -759,16 +741,8 @@ class ChartController extends BaseController {
         }else{
             $yearMonth  = $year.date('m',strtotime("-1 month"));    //上个月
         }
-        $times      = array();
-        if ($year <2018){
-            $yearBegin  = strtotime('2017-12-26');
-            $yearEnd    = strtotime('2018-12-26');
-        }else{
-            $yearBegin  = strtotime(($year-1).'-12-26');
-            $yearEnd    = strtotime($year.'-12-26');
-        }
-        $times[]        = $yearBegin;
-        $times[]        = $yearEnd;
+        $times          = getYearTime($year);
+
         $departids      = C('YW_DEPARTS');  //业务部门id
         $post           = M('salary_department')->where(array('id'=>array('in',$departids)))->getField('id,department,manager_name',true);
         foreach($post as $k=>$v){

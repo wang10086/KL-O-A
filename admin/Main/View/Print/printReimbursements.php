@@ -28,11 +28,12 @@
                                 </div>
                             </td>
                         </tr>
+
                         <?php if ($v[0]['bxd_type']==1){ ?>
                             <!--团内支出报销-->
                             <tr>
-                                <td class="td" colspan="2">&emsp;团号：<span class="black">{$v[0]['group_ids']}</span></td>
-                                <td class="td" colspan="3">&emsp;项目名称：<span class="black">{$v[0]['project']}</span></td>
+                                <td class="td" colspan="2">&emsp;团号：<span class="black text-overflow-lines-1-w-20rem">{$v[0]['group_ids']}</span></td>
+                                <td class="td" colspan="3">&emsp;项目名称：<span class="black text-overflow-lines-1-w-20rem">{$v[0]['project']}</span></td>
                                 <td class="td">&emsp;计调：{$v[0]['req_uname']}</td>
                             </tr>
                         <?php } ?>
@@ -119,8 +120,8 @@
                             <?php if ($v[1]['bxd_type']==1){ ?>
                                 <!--团内支出报销-->
                                 <tr>
-                                    <td class="td" colspan="2">&emsp;团号：<span class="black">{$v[1]['group_ids']}</span></td>
-                                    <td class="td" colspan="3">&emsp;项目名称：<span class="black">{$v[1]['project']}</span></td>
+                                    <td class="td" colspan="2">&emsp;团号：<span class="black text-overflow-lines-1-w-20rem">{$v[1]['group_ids']}</span></td>
+                                    <td class="td" colspan="3">&emsp;项目名称：<span class="black text-overflow-lines-1-w-20rem">{$v[1]['project']}</span></td>
                                     <td class="td">&emsp;计调：{$v[1]['req_uname']}</td>
                                 </tr>
                             <?php } ?>
@@ -210,8 +211,8 @@
                             <?php if ($v[2]['bxd_type']==1){ ?>
                                 <!--团内支出报销-->
                                 <tr>
-                                    <td class="td" colspan="2">&emsp;团号：<span class="black">{$v[2]['group_ids']}</span></td>
-                                    <td class="td" colspan="3">&emsp;项目名称：<span class="black">{$v[2]['project']}</span></td>
+                                    <td class="td" colspan="2">&emsp;团号：<span class="black text-overflow-lines-1-w-20rem">{$v[2]['group_ids']}</span></td>
+                                    <td class="td" colspan="3">&emsp;项目名称：<span class="black text-overflow-lines-1-w-20rem">{$v[2]['project']}</span></td>
                                     <td class="td">&emsp;计调：{$v[2]['req_uname']}</td>
                                 </tr>
                             <?php }?>
