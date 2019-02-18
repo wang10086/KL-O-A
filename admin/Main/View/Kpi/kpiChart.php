@@ -18,30 +18,30 @@
 
                             <div class="btn-group" id="catfont" style="padding-bottom:20px;">
                                 <?php /*if($prveyear>2017){ */?><!--
-                                            <a href="{:U('Kpi/chart',array('year'=>$prveyear))}" class="btn btn-default" style="padding:8px 18px;">上一年</a>
+                                            <a href="{:U('Kpi/kpiChart',array('year'=>$prveyear))}" class="btn btn-default" style="padding:8px 18px;">上一年</a>
                                         --><?php /*} */?>
                                 <?php
                                 for($i=2018;$i<=date('Y');$i++){
                                     if($year==$i){
-                                        echo '<a href="'.U('Kpi/chart',array('year'=>$i)).'" class="btn btn-info" style="padding:8px 18px;">'.$i.'年</a>';
+                                        echo '<a href="'.U('Kpi/kpiChart',array('year'=>$i)).'" class="btn btn-info" style="padding:8px 18px;">'.$i.'年</a>';
                                     }else{
-                                        echo '<a href="'.U('Kpi/chart',array('year'=>$i)).'" class="btn btn-default" style="padding:8px 18px;">'.$i.'年</a>';
+                                        echo '<a href="'.U('Kpi/kpiChart',array('year'=>$i)).'" class="btn btn-default" style="padding:8px 18px;">'.$i.'年</a>';
                                     }
                                 }
                                 ?>
                                 <?php /*if($year<date('Y')){ */?><!--
-                                            <a href="{:U('Kpi/chart',array('year'=>$nextyear))}" class="btn btn-default" style="padding:8px 18px;">下一年</a>
+                                            <a href="{:U('Kpi/kpiChart',array('year'=>$nextyear))}" class="btn btn-default" style="padding:8px 18px;">下一年</a>
                                         --><?php /*} */?>
                             </div>
 
                             <div class="box box-warning">
                                 <div class="box-header">
                                     <div class="box-tools btn-group" id="chart_btn_group">
-                                        <a href="{:U('Kpi/chart')}" class="btn btn-sm <?php if(!$pin){ echo 'btn-info';}else{ echo 'btn-group-header';} ?>">全部人员</a>
-                                        <a href="{:U('Kpi/chart',array('pin'=>'00'))}" class="btn btn-sm <?php if($pin=='00'){ echo 'btn-info';}else{ echo 'btn-group-header';} ?>">0列队</a>
-                                        <a href="{:U('Kpi/chart',array('pin'=>'01'))}" class="btn btn-sm <?php if($pin=='01'){ echo 'btn-info';}else{ echo 'btn-group-header';} ?>">1列队</a>
-                                        <a href="{:U('Kpi/chart',array('pin'=>'02'))}" class="btn btn-sm <?php if($pin=='02'){ echo 'btn-info';}else{ echo 'btn-group-header';} ?>">2列队</a>
-                                        <a href="{:U('Kpi/chart',array('pin'=>'03'))}" class="btn btn-sm <?php if($pin=='03'){ echo 'btn-info';}else{ echo 'btn-group-header';} ?>">3列队</a>
+                                        <a href="{:U('Kpi/kpiChart')}" class="btn btn-sm <?php if(!$pin){ echo 'btn-info';}else{ echo 'btn-group-header';} ?>">全部人员</a>
+                                        <a href="{:U('Kpi/kpiChart',array('pin'=>'00'))}" class="btn btn-sm <?php if($pin=='00'){ echo 'btn-info';}else{ echo 'btn-group-header';} ?>">0列队</a>
+                                        <a href="{:U('Kpi/kpiChart',array('pin'=>'01'))}" class="btn btn-sm <?php if($pin=='01'){ echo 'btn-info';}else{ echo 'btn-group-header';} ?>">1列队</a>
+                                        <a href="{:U('Kpi/kpiChart',array('pin'=>'02'))}" class="btn btn-sm <?php if($pin=='02'){ echo 'btn-info';}else{ echo 'btn-group-header';} ?>">2列队</a>
+                                        <a href="{:U('Kpi/kpiChart',array('pin'=>'03'))}" class="btn btn-sm <?php if($pin=='03'){ echo 'btn-info';}else{ echo 'btn-group-header';} ?>">3列队</a>
                                     </div>
                                 </div><!-- /.box-header -->
 

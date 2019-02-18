@@ -31,23 +31,17 @@
                             </a>
                         </li>-->
 
-                        <if condition="rolemenu(array('Chart/pplist'))">
-                            <li class="treeview {:ison(CONTROLLER_NAME,'Chart')} {:on('Kpi/chart')}">
-                                <a href="javascript:;">
-                                    <i class="fa fa-signal"></i>
-                                    <span>绩效排行</span>
-                                    <i class="fa fa-angle-left pull-right"></i>
-                                </a>
-                                <ul class="treeview-menu">
-                                    <if condition="rolemenu(array('Chart/pplist'))">
-                                        <li><a href="{:U('Chart/pplist')}"><i class="fa fa-angle-right"></i> 业绩排行</a></li>
-                                    </if>
-                                    <if condition="rolemenu(array('Kpi/chart'))">
-                                        <li><a href="{:U('Kpi/chart')}"><i class="fa fa-angle-right"></i> KPI排行</a></li>
-                                    </if>
-                                </ul>
-                            </li>
-                        </if>
+                        <li class="treeview {:ison(CONTROLLER_NAME,'Chart')} {:on('Kpi/kpiChart')}">
+                            <a href="javascript:;">
+                                <i class="fa fa-signal"></i>
+                                <span>绩效排行</span>
+                                <i class="fa fa-angle-left pull-right"></i>
+                            </a>
+                            <ul class="treeview-menu">
+                                <li><a href="{:U('Chart/pplist')}"><i class="fa fa-angle-right"></i> 业绩排行</a></li>
+                                <li><a href="{:U('Kpi/kpiChart')}"><i class="fa fa-angle-right"></i> KPI排行</a></li>
+                            </ul>
+                        </li>
 
                         <if condition="rolemenu(array('Op/index','Op/plans','Project/kind','Op/relpricelist'))">
                         <li class="treeview {:ison(CONTROLLER_NAME,'Op')} {:on('Project/addkind')}">
@@ -525,14 +519,12 @@
                                         </if>
                                         <if condition="rolemenu(array('Manage/Manage_year'))">
                                             <li class="{:on('Manage/Manage_year')}"><a href="{:U('Manage/Manage_year')}"><i class="fa fa-angle-right"></i> 年度经营</a></li>
-                                            <!--<li><a href="javascript:;" onclick="art_show_msg('加班开发中,稍后呈现......',5)"><i class="fa fa-angle-right"></i>团内支出借款</a></li>-->
                                         </if>
                                     </ul>
                                 </li>
 
                                 <if condition="rolemenu(array('Finance/costlabour'))">
                                     <li><a href="{:U('Finance/costlabour')}"><i class="fa fa-angle-right"></i> 劳务费用</a></li>
-                                    <!--<li><a href="javascript:;" onClick="art_show_msg('加班开发中，稍后呈现...',5)"><i class="fa fa-angle-right"></i> 劳务费用</a></li>-->
                                 </if>
 
                                 <if condition="rolemenu(array('Finance/sign'))">

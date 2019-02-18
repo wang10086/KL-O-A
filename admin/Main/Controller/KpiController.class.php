@@ -1693,7 +1693,7 @@ class KpiController extends BaseController {
 	}
 
 	//kpi排行
-	public function chart(){
+	public function kpiChart(){
         $pin            = I('pin');
         $year           = I('year',date('Y'));
         $yearTime       = array();
