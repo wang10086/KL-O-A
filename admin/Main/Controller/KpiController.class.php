@@ -11,10 +11,27 @@ class KpiController extends BaseController {
     
     protected $_pagetitle_ = '绩效管理';
     protected $_pagedesc_  = '';
-    
+
+    //初始化(更新所有人员KPI信息)
+    public function get_initialize(){
+        $where                  = array();
+        $where['status']		= 0;
+        $where['id']            = array('gt',10);
+        $userlist               = M('account')->field('id,nickname,roleid,postid')->where($where)->select();
+
+        foreach($userlist as $k=>$v){
+            //获取该用户KPI
+            $yearMonth		    = date('Ym');
+            $user_id	        = $v['id'];
+
+            //更新数据
+            updatekpi($yearMonth,$user_id);
+        }
+    }
 	
 	// @@@NODE-3###pdcaresult###考评结果###
     public function pdcaresult(){
+        $this->get_initialize();    //初始化KPI数据
         $this->title('绩效考评结果');
 		
 		$year		= I('year',date('Y'));
@@ -1694,6 +1711,7 @@ class KpiController extends BaseController {
 
 	//kpi排行
 	public function kpiChart(){
+        $this->get_initialize();    //初始化KPI数据
         $pin            = I('pin')?I('pin'):'00';
         $year           = I('year',date('Y'));
         $where          = array();
