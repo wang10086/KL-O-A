@@ -1694,13 +1694,13 @@ class KpiController extends BaseController {
 
 	//kpi排行
 	public function kpiChart(){
-        $pin            = I('pin');
+        $pin            = I('pin')?I('pin'):'00';
         $year           = I('year',date('Y'));
         $where          = array();
         $where['status']= array('neq',2);
         $where['id']    = array('gt',10);
         $where['employee_member'] = array('neq','');
-        if ($pin) $where['rank'] = $pin;
+        if ($pin && $pin !=100) $where['rank'] = $pin;
 
         //分页
         $pagecount		= M('account')->field('id,nickname')->where($where)->count();
@@ -1737,62 +1737,62 @@ class KpiController extends BaseController {
             foreach ($kpilists as $key=>$value){
                 $lists[$k]['year']      = $year;
                 if ($value['user_id']==$v['id']){
-                    if ($value['month'] == $year.'01' && $value['score'] != 0){
+                    if ($value['month'] == $year.'01' && $value['score'] != 0 && date('Ym')>= $year.'01'){
                         $lists[$k]['kpi']['01'] = $value['score'];
                         $sum_score      += $value['score'];
                         $num            += 1;
                     }
-                    if ($value['month'] == $year.'02' && $value['score'] != 0){
+                    if ($value['month'] == $year.'02' && $value['score'] != 0 && date('Ym')>= $year.'02'){
                         $lists[$k]['kpi']['02'] = $value['score'];
                         $sum_score      += $value['score'];
                         $num            += 1;
                     }
-                    if ($value['month'] == $year.'03' && $value['score'] != 0){
+                    if ($value['month'] == $year.'03' && $value['score'] != 0 && date('Ym')>= $year.'03'){
                         $lists[$k]['kpi']['03'] = $value['score'];
                         $sum_score      += $value['score'];
                         $num            += 1;
                     }
-                    if ($value['month'] == $year.'04' && $value['score'] != 0){
+                    if ($value['month'] == $year.'04' && $value['score'] != 0 && date('Ym')>= $year.'04'){
                         $lists[$k]['kpi']['04'] = $value['score'];
                         $sum_score      += $value['score'];
                         $num            += 1;
                     }
-                    if ($value['month'] == $year.'05' && $value['score'] != 0){
+                    if ($value['month'] == $year.'05' && $value['score'] != 0 && date('Ym')>= $year.'05'){
                         $lists[$k]['kpi']['05'] = $value['score'];
                         $sum_score      += $value['score'];
                         $num            += 1;
                     }
-                    if ($value['month'] == $year.'06' && $value['score'] != 0){
+                    if ($value['month'] == $year.'06' && $value['score'] != 0 && date('Ym')>= $year.'06'){
                         $lists[$k]['kpi']['06'] = $value['score'];
                         $sum_score      += $value['score'];
                         $num            += 1;
                     }
-                    if ($value['month'] == $year.'07' && $value['score'] != 0){
+                    if ($value['month'] == $year.'07' && $value['score'] != 0 && date('Ym')>= $year.'07'){
                         $lists[$k]['kpi']['07'] = $value['score'];
                         $sum_score      += $value['score'];
                         $num            += 1;
                     }
-                    if ($value['month'] == $year.'08' && $value['score'] != 0){
+                    if ($value['month'] == $year.'08' && $value['score'] != 0 && date('Ym')>= $year.'08'){
                         $lists[$k]['kpi']['08'] = $value['score'];
                         $sum_score      += $value['score'];
                         $num            += 1;
                     }
-                    if ($value['month'] == $year.'09' && $value['score'] != 0){
+                    if ($value['month'] == $year.'09' && $value['score'] != 0 && date('Ym')>= $year.'09'){
                         $lists[$k]['kpi']['09'] = $value['score'];
                         $sum_score      += $value['score'];
                         $num            += 1;
                     }
-                    if ($value['month'] == $year.'10' && $value['score'] != 0){
+                    if ($value['month'] == $year.'10' && $value['score'] != 0 && date('Ym')>= $year.'10'){
                         $lists[$k]['kpi']['10'] = $value['score'];
                         $sum_score      += $value['score'];
                         $num            += 1;
                     }
-                    if ($value['month'] == $year.'11' && $value['score'] != 0){
+                    if ($value['month'] == $year.'11' && $value['score'] != 0 && date('Ym')>= $year.'11'){
                         $lists[$k]['kpi']['11'] = $value['score'];
                         $sum_score      += $value['score'];
                         $num            += 1;
                     }
-                    if ($value['month'] == $year.'12' && $value['score'] != 0){
+                    if ($value['month'] == $year.'12' && $value['score'] != 0 && date('Ym')>= $year.'12'){
                         $lists[$k]['kpi']['12'] = $value['score'];
                         $sum_score      += $value['score'];
                         $num            += 1;

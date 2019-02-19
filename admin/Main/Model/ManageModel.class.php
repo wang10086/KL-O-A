@@ -1012,8 +1012,9 @@ class ManageModel extends Model{
     }
 
     public function get_otherExpenses($departments,$kinds,$times){
-        $lists                          = M('baoxiao')->where(array('bx_time'=>array('between',"$times[beginTime],$times[endTime]"),'audit_status'=>1,'bxd_type'=>array('in',array(2,3)),'share'=>array('neq',1)))->select();   //bxd_type 2=> 非团借款报销,3=>直接报销
-        $share_lists                    = M()->table('__BAOXIAO_SHARE__ as s')->field('b.bxd_kind,s.*')->join('__BAOXIAO__ as b on b.id=s.bx_id','left')->where(array('b.bx_time'=>array('between',"$times[beginTime],$times[endTime]"),'b.audit_status'=>1,'b.bxd_type'=>array('in',array(2,3))))->select();
+        $not_in_arr                     = C('NOT_USE_OTHER_EXPENSES');
+        $lists                          = M('baoxiao')->where(array('bx_time'=>array('between',"$times[beginTime],$times[endTime]"),'audit_status'=>1,'bxd_type'=>array('in',array(2,3)),'share'=>array('neq',1),'bxd_kind'=>array('not in',$not_in_arr)))->select();   //bxd_type 2=> 非团借款报销,3=>直接报销
+        $share_lists                    = M()->table('__BAOXIAO_SHARE__ as s')->field('b.bxd_kind,s.*')->join('__BAOXIAO__ as b on b.id=s.bx_id','left')->where(array('b.bx_time'=>array('between',"$times[beginTime],$times[endTime]"),'b.audit_status'=>1,'b.bxd_type'=>array('in',array(2,3)),'b.bxd_kind'=>array('not in',$not_in_arr)))->select();
         $infos                          = array();
         $depart_business                = C('department');  //业务部门
 

@@ -291,6 +291,8 @@ $config = array(
         '18' => '其他'
     ),
 
+    'NOT_USE_OTHER_EXPENSES'=>array(10,13,14,15,16,17,19), //其他费用中未使用到的 BXD_KIND, 排除工资,社保,公积金等
+
 	//记录详情
 	'REC_TYPE_INFO' => array(
 		'1'=>array(
