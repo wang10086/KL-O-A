@@ -38,10 +38,10 @@
                                 <div class="box-header">
                                     <div class="box-tools btn-group" id="chart_btn_group">
                                         <a href="{:U('Kpi/kpiChart')}" class="btn btn-sm <?php if(!$pin){ echo 'btn-info';}else{ echo 'btn-group-header';} ?>">全部人员</a>
-                                        <a href="{:U('Kpi/kpiChart',array('pin'=>'00'))}" class="btn btn-sm <?php if($pin=='00'){ echo 'btn-info';}else{ echo 'btn-group-header';} ?>">0列队</a>
-                                        <a href="{:U('Kpi/kpiChart',array('pin'=>'01'))}" class="btn btn-sm <?php if($pin=='01'){ echo 'btn-info';}else{ echo 'btn-group-header';} ?>">1列队</a>
-                                        <a href="{:U('Kpi/kpiChart',array('pin'=>'02'))}" class="btn btn-sm <?php if($pin=='02'){ echo 'btn-info';}else{ echo 'btn-group-header';} ?>">2列队</a>
-                                        <a href="{:U('Kpi/kpiChart',array('pin'=>'03'))}" class="btn btn-sm <?php if($pin=='03'){ echo 'btn-info';}else{ echo 'btn-group-header';} ?>">3列队</a>
+                                        <a href="{:U('Kpi/kpiChart',array('pin'=>'00'))}" class="btn btn-sm <?php if($pin=='00'){ echo 'btn-info';}else{ echo 'btn-group-header';} ?>">0队列</a>
+                                        <a href="{:U('Kpi/kpiChart',array('pin'=>'01'))}" class="btn btn-sm <?php if($pin=='01'){ echo 'btn-info';}else{ echo 'btn-group-header';} ?>">1队列</a>
+                                        <a href="{:U('Kpi/kpiChart',array('pin'=>'02'))}" class="btn btn-sm <?php if($pin=='02'){ echo 'btn-info';}else{ echo 'btn-group-header';} ?>">2队列</a>
+                                        <a href="{:U('Kpi/kpiChart',array('pin'=>'03'))}" class="btn btn-sm <?php if($pin=='03'){ echo 'btn-info';}else{ echo 'btn-group-header';} ?>">3队列</a>
                                     </div>
                                 </div><!-- /.box-header -->
 
