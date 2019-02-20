@@ -95,8 +95,8 @@ class ManageController extends ChartController {
         $map['bxd_type']        = array(array('gt',1),array('lt',4));//2 非团借款报销 3直接报销
         $map['audit_status']    = array('eq',1);    //审核通过
         $map['share']           = array('neq',1);   //不分摊
-        $not_in_arr             = C('NOT_USE_OTHER_EXPENSES');
-        $map['bxd_kind']        = array('not in',$not_in_arr);
+        $otherExpensesKinds     = M('bxd_kind')->where(array('pid'=>2))->getField('id',true);
+        $map['bxd_kind']        = array('in',$otherExpensesKinds);
         $money                  = M('baoxiao')->where($map)->select();//日期内所有数据
         return  $money;
     }
@@ -115,8 +115,8 @@ class ManageController extends ChartController {
         $where['b.bx_time']         = array('between',"$ymd1,$ymd2");//开始结束时间
         $where['b.bxd_type']        = array('in',array(2,3));//2 非团借款报销 3直接报销
         $where['b.audit_status']    = array('eq',1);    //审核通过
-        $not_in_arr                 = C('NOT_USE_OTHER_EXPENSES');
-        $where['b.bxd_kind']        = array('not in',$not_in_arr);
+        $otherExpensesKinds         = M('bxd_kind')->where(array('pid'=>2))->getField('id',true);
+        $where['b.bxd_kind']        = array('in',$otherExpensesKinds);
         $money                      = M()->table('__BAOXIAO_SHARE__ as s')->field('b.bxd_kind,s.*')->join('__BAOXIAO__ as b on b.id=s.bx_id','left')->where($where)->select();
         return  $money;
     }
@@ -472,9 +472,9 @@ class ManageController extends ChartController {
         $tm                     = I('tm')?I('tm'):'m';
         $bxd_kind               = M('bxd_kind')->where(array('pid'=>array('neq',0)))->getField('id,name',true);;
         $kinds                  = array();
-        $not_in_arr             = C('NOT_USE_OTHER_EXPENSES');
+        $otherExpensesKinds     = M('bxd_kind')->where(array('pid'=>2))->getField('id',true);
         foreach ($bxd_kind as $k=>$v){  //排除工资,社保...
-            if (!in_array($k,$not_in_arr)){
+            if (in_array($k,$otherExpensesKinds)){
                 $kinds[$k]      = $v;
             }
         }
