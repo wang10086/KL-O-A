@@ -1721,12 +1721,13 @@ class KpiController extends BaseController {
         if ($pin && $pin !=100) $where['rank'] = $pin;
 
         //分页
-        $pagecount		= M('account')->field('id,nickname')->where($where)->count();
-        $page			= new Page($pagecount, P::PAGE_SIZE);
+        //$pagecount		= M('account')->field('id,nickname')->where($where)->count();
+        //$page			= new Page($pagecount, P::PAGE_SIZE);
         //$this->pages 	= $pagecount>P::PAGE_SIZE ? $page->show():'';
         //$accountlists   = M('account')->field('id,nickname,rank')->where($where)->limit($page->firstRow . ',' . $page->listRows)->select();
         $accountlists   = M('account')->field('id,nickname,rank,employee_member')->where($where)->order('employee_member ASC')->select();
-        $lists          = $this->getKpiResult($accountlists,$year);
+        $kpiLists       = $this->getKpiResult($accountlists,$year); //获取KPI数据
+        $lists          = $this->getKpiCycle($kpiLists);            //获取最终考核结果显示的月份
 
         $this->lists    = $lists;
         $this->pin      = $pin;
@@ -1736,6 +1737,7 @@ class KpiController extends BaseController {
         $this->display();
     }
 
+    //获取KPI数据
     private function getKpiResult($accountlists,$year){
         $kpilists                                       = M('kpi')->where(array('year'=>$year))->select();
         foreach ($accountlists as $k=>$v){
@@ -1818,6 +1820,18 @@ class KpiController extends BaseController {
                 }
             }
             $lists[$k]['average']   = round($sum_score/$num,2);
+        }
+        return $lists;
+    }
+
+    //获取最终考核结果显示的月份
+    private function getKpiCycle($lists){
+        foreach ($lists as $k=>$v){
+            if ($v['cycle']=='季度'){
+                $lists[$k]['finalMonth']    = array('03','06','09','12');
+            }else{
+                $lists[$k]['finalMonth']    = array('01','02','03','04','05','06','07','08','09','10','11','12');
+            }
         }
         return $lists;
     }
