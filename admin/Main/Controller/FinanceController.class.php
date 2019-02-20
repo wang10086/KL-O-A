@@ -2488,7 +2488,7 @@ class FinanceController extends BaseController {
             $auditUserType = 4;
         }
         $this->audit_usertype   = $audit_usertype?$audit_usertype:$auditUserType;
-        $this->bxd_kind         = C('BXD_KIND');
+        $this->bxdkind          = M('bxd_kind')->where(array('pid'=>0))->getField('id,name',true);
         $this->company          = C('COMPANY');
         $this->display();
     }

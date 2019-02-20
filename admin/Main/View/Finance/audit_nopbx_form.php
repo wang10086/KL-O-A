@@ -107,19 +107,26 @@
         <input type="hidden" id="qianzi" value="0">
         <input type="hidden" name="savetype" value="17">
         <div class="content">
-            <div class="form-group col-md-6">
+            <div class="form-group col-md-4">
                 <p><label>财务主管审核：</label></p>
                 <input type="radio" name="info[cw_audit_status]" value="1" <?php if ($audit_userinfo['cw_audit_status'] == 1){echo 'checked';} ?>> &emsp;通过&emsp;&emsp;&emsp;
                 <input type="radio" name="info[cw_audit_status]" value="2" <?php if ($audit_userinfo['cw_audit_status'] == 2){echo 'checked';} ?>> &emsp;不通过
             </div>
 
-            <div class="form-group col-md-6">
-                <label>报销单分类：</label>
-                <select class="form-control" name="bxd_kind" required>
+            <div class="form-group col-md-4">
+                <label>报销单类型：</label>
+                <select class="form-control" name="bxdKind" onchange="get_bxd_kind()" required>
                     <option value="">==请选择==</option>
-                    <foreach name="bxd_kind" key="k" item="v">
+                    <foreach name="bxdkind" key="k" item="v">
                         <option value="{$k}">{$v}</option>
                     </foreach>
+                </select>
+            </div>
+
+            <div class="form-group col-md-4">
+                <label>报销单分类：</label>
+                <select class="form-control" name="bxd_kind" id="bxd_kind" required>
+                    <option value="">==请先选择报销单类型==</option>
                 </select>
             </div>
 
@@ -140,3 +147,33 @@
         </div>
     </form>
 <?php } ?>
+
+<script type="text/javascript">
+    function get_bxd_kind() {
+        var bxdKind = $("select[name='bxdKind']").val();
+        if (!bxdKind){
+            art_show_msg('请选择报销单类型');
+            return false;
+        }else{
+            $.ajax({
+                type: 'POST',
+                url:  "{:U('Ajax/get_bxd_kind')}",
+                data: {bxdkind:bxdKind},
+                success:function (msg) {
+                    var html = '';
+                    var i = 0;
+                    var count = msg.length;
+                    if (msg){
+                        html += '<option value="">==请选择==</option>';
+                        for(i=0;i<count;i++){
+                            html += '<option value="'+ msg[i].id +'">'+ msg[i].name +'</option>';
+                        }
+                    }else{
+                        html += '<option value="">暂无数据</option>';
+                    }
+                    $('#bxd_kind').html(html);
+                }
+            })
+        }
+    }
+</script>

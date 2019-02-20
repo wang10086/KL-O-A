@@ -1502,4 +1502,12 @@ class AjaxController extends Controller {
         }
         $this->ajaxReturn($num);
     }
+
+    //获取报销单类型
+    public function get_bxd_kind(){
+        $pid                                = I('bxdkind');
+        $db                                 = M('bxd_kind');
+        $data                               = $db->field('id,name')->where(array('pid'=>$pid))->select();
+        $this->ajaxReturn($data);
+    }
 }
