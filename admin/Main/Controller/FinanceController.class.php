@@ -2236,12 +2236,7 @@ class FinanceController extends BaseController {
         $where['c.status']= 1;
         $field          = array('o.group_id,c.id,c.op_id,c.title,c.unitcost,c.amount,c.total as ctotal,c.type');
 
-        //分页
-        $pagecount = M('op_costacc')->field($field)->where($where)->count();
-        $page = new Page($pagecount,25);
-        $this->pages = $pagecount>25 ? $page->show():'';
-
-        $lists          = M()->table('__OP_COSTACC__ as c')->join('__OP__ as o on o.op_id=c.op_id')->field($field)->where($where)->limit($page->firstRow . ',' . $page->listRows)->select();
+        $lists          = M()->table('__OP_COSTACC__ as c')->join('__OP__ as o on o.op_id=c.op_id')->field($field)->where($where)->select();
         foreach ($lists as $k=>$v){
             //已借款信息
             $field      = array();
