@@ -470,14 +470,7 @@ class ManageController extends ChartController {
         $month		            = I('month',date('m'));
         if (strlen($month)<2) $month = str_pad($month,2,'0',STR_PAD_LEFT);
         $tm                     = I('tm')?I('tm'):'m';
-        $bxd_kind               = M('bxd_kind')->where(array('pid'=>array('neq',0)))->getField('id,name',true);;
-        $kinds                  = array();
-        $otherExpensesKinds     = M('bxd_kind')->where(array('pid'=>2))->getField('id',true);
-        foreach ($bxd_kind as $k=>$v){  //排除工资,社保...
-            if (in_array($k,$otherExpensesKinds)){
-                $kinds[$k]      = $v;
-            }
-        }
+        $kinds                  = M('bxd_kind')->where(array('pid'=>2))->getField('id',true);
         $departments            = C('department1');
         $mod                    = D('Manage');
         $times                  = $mod->get_times($year,$month,$tm);
