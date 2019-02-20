@@ -79,7 +79,7 @@
                                         </div>
                                         <?php  } ?>
                                         
-                                        <?php  if((cookie('userid') == $op['create_user']  && $op['audit_status']==0 && $settlement['audit']!=1) || C('RBAC_SUPER_ADMIN')==cookie('username') || cookie('roleid')==10){ ?>
+                                        <?php  if((cookie('userid') == $op['create_user']  && $settlement['audit']!=1) || C('RBAC_SUPER_ADMIN')==cookie('username') || cookie('roleid')==10){ ?>
                                         <include file="op_pro_edit" />
                                         <?php  }else{ ?>
                                         <include file="op_pro" />
