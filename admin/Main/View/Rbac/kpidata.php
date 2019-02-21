@@ -62,7 +62,7 @@
                                         <table class="table table-bordered dataTable fontmini" id="tablelist" style="margin-top:10px;">
                                             <tr role="row" class="orders" >
                                                 <th width="50">序号</th>
-                                                <th>指标名称</th>
+                                                <th style="min-width: 10rem;">指标名称</th>
                                                 <th width="140">考核开始</th>
                                                 <th width="140">考核结束</th>
                                                 <th width="100">计划</th>
