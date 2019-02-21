@@ -54,9 +54,16 @@
 
                             <tr role="row" class="orders" style="text-align:center;">
                                 <th>员工人数</th>
-                                <foreach name="number" item="n">
-                                    <th><?php if($n['sum']=="" || $n['sum']==0){echo '0';}else{echo $n['sum']; }?>（人)</th>
-                                </foreach>
+                                <th>{$number['公司']}（人)</th>
+                                <th>{$number['京区业务中心']}（人)</th>
+                                <th>{$number['京外业务中心']}（人)</th>
+                                <th>{$number['南京项目部']}（人)</th>
+                                <th>{$number['武汉项目部']}（人)</th>
+                                <th>{$number['沈阳项目部']}（人)</th>
+                                <th>{$number['长春项目部']}（人)</th>
+                                <th>{$number['市场部']}（人)</th>
+                                <th>{$number['常规业务中心']}（人)</th>
+                                <th>{$number['机关部门']}（人)</th>
                             </tr>
                             <tr role="row" class="orders" style="text-align:center;">
                                 <th>营业收入</th>
@@ -84,9 +91,16 @@
                             </tr>
                             <tr role="row" class="orders" style="text-align:center;">
                                 <td><a href="{:U('Manage/HR_cost',array('year'=>$year,'month'=>$month,'tm'=>'m'))}">人力资源成本</a></td>
-                                <foreach name="number" item="num">
-                                    <th>¥ <?php if($num['money']=="" || $num['money']==0 ){echo '0.00';}else{echo $num['money'];}?></th>
-                                </foreach>
+                                <th>&yen;&nbsp;{$hr_cost['公司']}</th>
+                                <th>&yen;&nbsp;{$hr_cost['京区业务中心']}</th>
+                                <th>&yen;&nbsp;{$hr_cost['京外业务中心']}</th>
+                                <th>&yen;&nbsp;{$hr_cost['南京项目部']}</th>
+                                <th>&yen;&nbsp;{$hr_cost['武汉项目部']}</th>
+                                <th>&yen;&nbsp;{$hr_cost['沈阳项目部']}</th>
+                                <th>&yen;&nbsp;{$hr_cost['长春项目部']}</th>
+                                <th>&yen;&nbsp;{$hr_cost['市场部']}</th>
+                                <th>&yen;&nbsp;{$hr_cost['常规业务中心']}</th>
+                                <th>&yen;&nbsp;{$hr_cost['机关部门']}</th>
                             </tr>
                             <tr role="row" class="orders" style="text-align:center;">
                                 <td><a href="{:U('Manage/otherExpenses',array('year'=>$year,'month'=>$month,'tm'=>'m'))}">其他费用</a></td>

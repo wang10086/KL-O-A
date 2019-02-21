@@ -5,8 +5,22 @@ use Sys\P;
 
 class ManageModel extends Model{
 
+    //月度部门人数(从工资表取值)
+    public function get_number($year,$month){
+        $datetime                   = $this->datetime($year,$month);
+        $datime['datetime']         = $datetime;
+        $datime['status']           = 4;//数据锁定
+        $wages_lists                = M()->table('__SALARY_WAGES_MONTH__ as s')->join('__ACCOUNT__ as a on a.id=s.account_id','left')->field('s.id,s.account_id,s.user_name,s.department,s.insurance_id,s.datetime,s.Should_distributed,a.position_id')->where(array('s.datetime'=>$datetime,'s.status'=>4))->select(); //应付工资
+        $depart_account             = $this->get_account($wages_lists);
+        $info                       = array();
+        foreach ($depart_account as $k=>$v){
+            $info[$k]               = count($v);
+        }
+        return $info;
+    }
+
     //月度经营统计
-    public function month($year,$month){
+    /*public function month($year,$month){
         $datetime                                           = $this->datetime($year,$month);
         $datime['datetime']                                 = $datetime;
         $datime['status']                                   = 4;//数据锁定
@@ -76,7 +90,34 @@ class ManageModel extends Model{
         $account[$sum]['sum']                               = $number;
         $account[$sum]['money']                             = $num;
         return $account;
+    }*/
+
+    public function month($year,$month){
+        $datetime                   = $this->datetime($year,$month);
+        $datime['datetime']         = $datetime;
+        $datime['status']           = 4;//数据锁定
+        $wages_lists                = M()->table('__SALARY_WAGES_MONTH__ as s')->join('__ACCOUNT__ as a on a.id=s.account_id','left')->field('s.id,s.account_id,s.user_name,s.department,s.insurance_id,s.datetime,s.Should_distributed,a.position_id')->where(array('s.datetime'=>$datetime,'s.status'=>4))->select(); //应付工资
+        $field                      = "s.account_id,s.user_name,s.datetime,s.department,i.*";
+        $insurance_lists            = M()->table('__SALARY_WAGES_MONTH__ as s')->join('__SALARY_INSURANCE__ as i on i.id=s.insurance_id','left')->field($field)->where(array('s.datetime'=>$datetime,'s.status'=>4))->select();
+        $sumLists                   = $this->sum_insurance($insurance_lists);   //五险一金
+        $depart_account             = $this->get_account($wages_lists);
+        foreach ($depart_account as $k=>$v){
+            $info[$k]               = 0;
+            foreach ($wages_lists as $key=>$value){
+                if (in_array($value['account_id'],$v)){
+                    $info[$k]       += $value['Should_distributed'];    //应付工资
+                }
+            }
+
+            foreach ($sumLists as $key=>$value){
+                if (in_array($value['account_id'],$v)){
+                    $info[$k]       += $value['company_pay_sum'];       //公司缴纳五险一金
+                }
+            }
+        }
+        return $info;
     }
+
      /**
       * 公司五险一金 insurance
       *  $where 条件
@@ -91,7 +132,7 @@ class ManageModel extends Model{
     /**
      * datetime 年月 日期变换
      */
-    public function datetime($year,$month){
+    /*public function datetime($year,$month){
 
         if($month<10 || $month==0 || $month==''){ //判断时间是否空 和 小于10
 
@@ -111,6 +152,13 @@ class ManageModel extends Model{
         }else{
             $datetime                 = $year.$month;
         }
+        return $datetime;
+    }*/
+    public function datetime($year,$month){
+        $year                           = $year?$year:date('Y');
+        $month                          = $month?$month:date('m');
+        if (strlen($month)<2) $month    = str_pad($month,2,'0',STR_PAD_LEFT);
+        $datetime                       = $year.$month;
         return $datetime;
     }
 
@@ -1173,10 +1221,10 @@ class ManageModel extends Model{
     }
 
     /**
-     * 获取部门相关月份合计费用信息
+     * 工资总额(应付)
      * @param $ym_arr   相关月份信息
      */
-    public function get_wages($ym_arr){
+    /*public function get_wages($ym_arr){
         //$hr_cost                    = C('HR_COST');
         //$departments                = C('department1');     //公司所有部门信息
         $business_departments       = C('department');      //公司业务部门信息
@@ -1200,33 +1248,70 @@ class ManageModel extends Model{
             $info['公司']           += $v['Should'];
         }
         return $info;
-    }
+    }*/
+    public function get_wages($ym_arr){
+        $lists                      = M()->table('__SALARY_WAGES_MONTH__ as s')->join('__ACCOUNT__ as a on a.id=s.account_id','left')->field('s.account_id,s.user_name,s.department,s.datetime,s.Should_distributed,a.position_id')->where(array('s.datetime'=>array('in',$ym_arr),'s.status'=>4))->select();
 
-    public function get_insurance($ym_arr){
-        //$departments                = C('department1');     //公司所有部门信息
-        $business_departments       = C('department');      //公司业务部门信息
-        $where                      = array();
-        $where['s.datetime']        = array('in',$ym_arr);
-        $field                      = "s.datetime,a.nickname as aname,d.department,i.*";
-        $lists                      = M()->table('__SALARY_WAGES_MONTH__ as s')->join('__SALARY_INSURANCE__ as i on i.id=s.insurance_id','left')->join('__ACCOUNT__ as a on a.id=s.account_id','left')->join('__SALARY_DEPARTMENT__ as d on d.id=a.departmentid','left')->field($field)->where($where)->select();
-        $sumLists                   = $this->sum_insurance($lists);
-
-        $data                       = array();
-        foreach ($business_departments as $v){
-            foreach ($sumLists as $vv){
-                if ($vv['department']==$v){
-                    $data[$vv['department']] += $vv['company_pay_sum'];
+        $depart_account             = $this->get_account($lists);
+        foreach ($depart_account as $k=>$v){
+            $info[$k]               = 0;
+            foreach ($lists as $key=>$value){
+                if (in_array($value['account_id'],$v)){
+                    $info[$k]       += $value['Should_distributed'];    //应付工资
                 }
             }
         }
+        return $info;
+    }
 
-        foreach ($sumLists as $v){
-            if (!in_array($v['department'],$business_departments)){
-                $data['机关部门']   += $v['company_pay_sum'];
+    //获取每个部门的人员id
+    public function get_account($lists){
+        $business_departments               = C('department');      //公司业务部门信息
+        $noOffice                           = array();
+        foreach ($lists as $k=>$v){
+            foreach ($business_departments as $value){
+                if ($value == '市场部'){   //市场部只提取市场业务人员
+                    $where['code']          = array('like','S%');
+                    $position               = M('position')->where($where)->getField('id',true);//查询业务人员
+                    if (in_array($v['position_id'],$position) && $v['department']==$value){
+                        $account[$value][]  = $v['account_id'];
+                        $noOffice[]         = $v['account_id'];
+                    }
+                }else{
+                    if ($v['department']==$value){
+                        $account[$value][]  = $v['account_id'];
+                        $noOffice[]         = $v['account_id'];
+                    }
+                }
+            }
+            $account['公司'][]              = $v['account_id'];
+        }
+        foreach ($lists as $k=>$v){
+            if (!in_array($v['account_id'],$noOffice)){
+                $account['机关部门'][]      = $v['account_id'];
             }
         }
-        $data['公司']               = array_sum($data);
-        return $data;
+        return $account;
+    }
+
+    //公司五险一金
+    public function get_insurance($ym_arr){
+        $where                      = array();
+        $where['s.datetime']        = array('in',$ym_arr);
+        $field                      = "s.account_id,s.datetime,a.nickname as aname,a.position_id,d.department,i.*";
+        $lists                      = M()->table('__SALARY_WAGES_MONTH__ as s')->join('__SALARY_INSURANCE__ as i on i.id=s.insurance_id','left')->join('__ACCOUNT__ as a on a.id=s.account_id','left')->join('__SALARY_DEPARTMENT__ as d on d.id=a.departmentid','left')->field($field)->where($where)->select();
+        $sumLists                   = $this->sum_insurance($lists);
+        $depart_account             = $this->get_account($sumLists);
+
+        foreach ($depart_account as $k=>$v){
+            $info[$k]               = 0;
+            foreach ($sumLists as $key=>$value){
+                if (in_array($value['account_id'],$v)){
+                    $info[$k]       += $value['company_pay_sum'];    //公司缴纳五险一金
+                }
+            }
+        }
+        return $info;
     }
 
     /**

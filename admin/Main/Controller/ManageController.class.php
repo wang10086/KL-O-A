@@ -12,35 +12,6 @@ class ManageController extends ChartController {
      * F 京区业务中心 G 京外业务中心 L 南京项目部
      * M 武汉项目部 N 沈阳项目部 P 长春项目部 B 市场部
      */
-    /*public function Manage_month(){
-        $year                   = trim(I('year',date('Y')));
-        $post                   = trim(I('post'));
-        $month                  = intval(I('month',date('m')));
-        $mod                    = D('Manage');
-
-        $year1                  = $mod->manageyear($year,$post);//判断加减年
-        $ymd                    = $mod->year_month_day($year1,$month);//月度其他费用判断取出数据日期
-
-        $mon                    = $this->not_team($ymd[0],$ymd[1]);//月度其他费用取出数据
-        $department             = $mod->department_data($mon);//月度其他费用部门数据
-
-        $number                 = $mod->month($year1,$month);// 月度 部门数量 部门人力资源成本
-        $money                  = $this->business($year1,$month,1);// 月度 monthzsr 收入合计   monthzml 毛利合计  monthmll 毛利率
-        $profit                 = $mod->profit($money);//月度 收入 毛利 毛利率
-        $human                  = $mod->human_affairs($number,$profit['profit'],$profit['departmen']);//月度 人事费用率
-        $total_profit           = $mod->total_profit($number,$profit['profit'],$profit['departmen'],$department);//月度 利润总额
-
-        $this->department       = $department;//其他费用部门数据
-        $this->total_profit     = $total_profit;//利润总额(未减去其他费用)
-        $this->human_affairs    = $human;//人事费用率
-        $this->profit           = $profit['departmen'];//部门 收入 毛利 毛利率
-        $this->company          = $profit['profit'];//总数 收入 毛利 毛利率
-        $this->number           = $number;// 部门数量 部门人力资源成本
-        $this->year             = $year1;//年
-        $this->post             = $post;//加减年
-        $this->month            = $month;//月
-        $this->display();
-    }*/
     public function Manage_month(){
         $year                   = trim(I('year',date('Y')));
         $post                   = trim(I('post'));
@@ -54,18 +25,20 @@ class ManageController extends ChartController {
         $mon_share              = $this->not_team_share($ymd[0],$ymd[1]);//月度其他费用取出数据(分摊)
         $department             = $mod->department_data($mon,$mon_share);//月度其他费用部门数据
 
-        $number                 = $mod->month($year1,$month);// 月度 部门数量 部门人力资源成本
+        $number                 = $mod->get_number($year1,$month);   //月度 部门人数
+        $hr_cost                = $mod->month($year1,$month);// 月度 部门数量 部门人力资源成本
         $money                  = $this->business($year1,$month,1);// 月度 monthzsr 收入合计   monthzml 毛利合计  monthmll 毛利率
         $profit                 = $mod->profit($money);//月度 收入 毛利 毛利率
-        $human                  = $mod->human_affairs($number,$profit['profit'],$profit['departmen']);//月度 人事费用率
-        $total_profit           = $mod->total_profit($number,$profit['profit'],$profit['departmen'],$department);//月度 利润总额
+        $human                  = $mod->human_affairs($hr_cost,$profit['profit'],$profit['departmen']);//月度 人事费用率
+        $total_profit           = $mod->total_profit($hr_cost,$profit['profit'],$profit['departmen'],$department);//月度 利润总额
 
         $this->department       = $department;//其他费用部门数据
         $this->total_profit     = $total_profit;//利润总额(未减去其他费用)
         $this->human_affairs    = $human;//人事费用率
         $this->profit           = $profit['departmen'];//部门 收入 毛利 毛利率
         $this->company          = $profit['profit'];//总数 收入 毛利 毛利率
-        $this->number           = $number;// 部门数量 部门人力资源成本
+        $this->number           = $number;  // 部门数量
+        $this->hr_cost          = $hr_cost; // 部门人力资源成本
         $this->year             = $year1;//年
         $this->post             = $post;//加减年
         $this->month            = $month;//月
