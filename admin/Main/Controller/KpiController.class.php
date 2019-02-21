@@ -1712,7 +1712,7 @@ class KpiController extends BaseController {
 	//kpi排行
 	public function kpiChart(){
         $pin            = I('pin')?I('pin'):'00';
-        if ($pin=='00'){ $this->get_initialize(); }    //初始化KPI数据
+        //if ($pin=='00'){ $this->get_initialize(); }    //初始化KPI数据
         $year           = I('year',date('Y'));
         $where          = array();
         $where['status']= array('neq',2);
