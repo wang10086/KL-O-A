@@ -54,16 +54,16 @@
 
                             <tr role="row" class="orders" style="text-align:center;">
                                 <th>员工人数</th>
-                                <th>{$number['公司']}（人)</th>
-                                <th>{$number['京区业务中心']}（人)</th>
-                                <th>{$number['京外业务中心']}（人)</th>
-                                <th>{$number['南京项目部']}（人)</th>
-                                <th>{$number['武汉项目部']}（人)</th>
-                                <th>{$number['沈阳项目部']}（人)</th>
-                                <th>{$number['长春项目部']}（人)</th>
-                                <th>{$number['市场部']}（人)</th>
-                                <th>{$number['常规业务中心']}（人)</th>
-                                <th>{$number['机关部门']}（人)</th>
+                                <th><?php echo $number['公司']?$number['公司']:0; ?>（人)</th>
+                                <th><?php echo $number['京区业务中心']?$number['京区业务中心']:0; ?>（人)</th>
+                                <th><?php echo $number['京外业务中心']?$number['京外业务中心']:0; ?>（人)</th>
+                                <th><?php echo $number['南京项目部']?$number['南京项目部']:0; ?>（人)</th>
+                                <th><?php echo $number['武汉项目部']?$number['武汉项目部']:0; ?>（人)</th>
+                                <th><?php echo $number['沈阳项目部']?$number['沈阳项目部']:0; ?>（人)</th>
+                                <th><?php echo $number['长春项目部']?$number['长春项目部']:0; ?>（人)</th>
+                                <th><?php echo $number['市场部']?$number['市场部']:0; ?>（人)</th>
+                                <th><?php echo $number['常规业务中心']?$number['常规业务中心']:0; ?>（人)</th>
+                                <th><?php echo $number['机关部门']?$number['机关部门']:0; ?>（人)</th>
                             </tr>
                             <tr role="row" class="orders" style="text-align:center;">
                                 <th>营业收入</th>
@@ -91,16 +91,16 @@
                             </tr>
                             <tr role="row" class="orders" style="text-align:center;">
                                 <td><a href="{:U('Manage/HR_cost',array('year'=>$year,'month'=>$month,'tm'=>'m'))}">人力资源成本</a></td>
-                                <th>&yen;&nbsp;{$hr_cost['公司']}</th>
-                                <th>&yen;&nbsp;{$hr_cost['京区业务中心']}</th>
-                                <th>&yen;&nbsp;{$hr_cost['京外业务中心']}</th>
-                                <th>&yen;&nbsp;{$hr_cost['南京项目部']}</th>
-                                <th>&yen;&nbsp;{$hr_cost['武汉项目部']}</th>
-                                <th>&yen;&nbsp;{$hr_cost['沈阳项目部']}</th>
-                                <th>&yen;&nbsp;{$hr_cost['长春项目部']}</th>
-                                <th>&yen;&nbsp;{$hr_cost['市场部']}</th>
-                                <th>&yen;&nbsp;{$hr_cost['常规业务中心']}</th>
-                                <th>&yen;&nbsp;{$hr_cost['机关部门']}</th>
+                                <th>&yen; <?php echo $hr_cost['公司']?$hr_cost['公司']:'0.00'; ?></th>
+                                <th>&yen; <?php echo $hr_cost['京区业务中心']?$hr_cost['京区业务中心']:'0.00'; ?></th>
+                                <th>&yen; <?php echo $hr_cost['京外业务中心']?$hr_cost['京外业务中心']:'0.00'; ?></th>
+                                <th>&yen; <?php echo $hr_cost['南京项目部']?$hr_cost['南京项目部']:'0.00'; ?></th>
+                                <th>&yen; <?php echo $hr_cost['武汉项目部']?$hr_cost['武汉项目部']:'0.00'; ?></th>
+                                <th>&yen; <?php echo $hr_cost['沈阳项目部']?$hr_cost['沈阳项目部']:'0.00'; ?></th>
+                                <th>&yen; <?php echo $hr_cost['长春项目部']?$hr_cost['长春项目部']:'0.00'; ?></th>
+                                <th>&yen; <?php echo $hr_cost['市场部']?$hr_cost['市场部']:'0.00'; ?></th>
+                                <th>&yen; <?php echo $hr_cost['常规业务中心']?$hr_cost['常规业务中心']:'0.00'; ?></th>
+                                <th>&yen; <?php echo $hr_cost['机关部门']?$hr_cost['机关部门']:'0.00'; ?></th>
                             </tr>
                             <tr role="row" class="orders" style="text-align:center;">
                                 <td><a href="{:U('Manage/otherExpenses',array('year'=>$year,'month'=>$month,'tm'=>'m'))}">其他费用</a></td>
