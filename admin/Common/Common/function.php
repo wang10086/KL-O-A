@@ -1908,7 +1908,11 @@ function updatekpi($month,$user){
 					$where['payee']					= $user;
 					$shouru		= M('contract_pay')->where($where)->sum('amount');
 					$huikuan	= M('contract_pay')->where($where)->sum('pay_amount');
-					$complete = round(($huikuan / $shouru)*100,2).'%';
+                    if (!$shouru){
+                        $complete = '100%';
+                    }else{
+                        $complete = round(($huikuan / $shouru)*100,2).'%';
+                    }
 				}
 				
 				//获取成团率
