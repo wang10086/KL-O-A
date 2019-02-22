@@ -92,7 +92,7 @@ class ManageModel extends Model{
         return $account;
     }*/
 
-    public function month($year,$month){
+    public function month($year,$month,$times){
         $datetime                   = $this->datetime($year,$month);
         $datime['datetime']         = $datetime;
         $datime['status']           = 4;//数据锁定
@@ -101,6 +101,10 @@ class ManageModel extends Model{
         $insurance_lists            = M()->table('__SALARY_WAGES_MONTH__ as s')->join('__SALARY_INSURANCE__ as i on i.id=s.insurance_id','left')->field($field)->where(array('s.datetime'=>$datetime,'s.status'=>4))->select();
         $sumLists                   = $this->sum_insurance($insurance_lists);   //五险一金
         $depart_account             = $this->get_account($wages_lists);
+        //职工福利,教育经费,工会费......
+        $kinds                      = array(12,19,21);
+        $money                      = $this->get_welfare($times,$kinds);
+
         foreach ($depart_account as $k=>$v){
             $info[$k]               = 0;
             foreach ($wages_lists as $key=>$value){
@@ -114,7 +118,9 @@ class ManageModel extends Model{
                     $info[$k]       += $value['company_pay_sum'];       //公司缴纳五险一金
                 }
             }
+            $info[$k]               += $money[$k];
         }
+
         return $info;
     }
 
@@ -1156,7 +1162,7 @@ class ManageModel extends Model{
      * @param $tm       类别 : m=>月度; q=>季度; y=>年度
      * @return array    (beginTime,endTime) 时间戳
      */
-    public function get_times($year,$month,$tm){
+    public function get_times($year,$month,$tm='m'){
         if (strlen($month)<2) $month    = str_pad($month,2,'0',STR_PAD_LEFT);
         $betweenTime                    = array();
         if ($tm=='m'){  //月度
@@ -1344,23 +1350,71 @@ class ManageModel extends Model{
      * @param $times
      * @param $kind 报销单种类
      */
-    public function get_welfare($times,$kind){
-        $where                  = array();
-        //$where['bx_time']       = array('between',$times[0],$times[1]);
-        $where['bxd_kind']      = $kind;
-        $where['audit_status']  = 1;    //审核通过
-        $lists                  = M('baoxiao')->where($where)->select();
-        //var_dump($lists);
+    public function get_welfare($times,$kinds){
+        $departments            = C('department1');
+        $lists                  = $this->get_lists($times,$kinds);
+        $info                   = array();
+        $sum_other_depart       = 0;
+        foreach ($departments as $v){
+            $info['公司']       = 0;
+            foreach ($lists as $key=>$value){
+                $info['公司']   += $value['sum'];
+                if($value['department']==$v){
+                    $info[$v]   += $value['sum'];
+                    $sum_other_depart += $value['sum'];
+                }
+            }
+        }
+        $info['机关部门']       += $info['公司'] - $sum_other_depart;
+        return $info;
     }
 
-    private function get_lists($times,$kind){
-        $where                  = array();
-        //$where['bx_time']       = array('between',$times[0],$times[1]);
-        $where['bxd_kind']      = $kind;
-        $where['audit_status']  = 1;    //审核通过
-        $lists                  = M('baoxiao')->where($where)->select();
-        //var_dump($lists);
+    private function get_lists($times,$kinds){
+        $not_share_lists        = $this->not_share_list($times,$kinds);
+        $share_lists            = $this->share_list($times,$kinds);
+        $lists                  = array_merge($not_share_lists,$share_lists);
+        return $lists;
     }
+
+    /**
+     * not_team 非团支出报销（其他费用）(不分摊)
+     * $ymd1 开始时间 20180626
+     * $ymd2 结束时间 20180726
+     */
+
+    public function not_share_list($times,$kinds=''){
+        $map['bx_time']         = array('between',"$times[beginTime],$times[endTime]");//开始结束时间
+        $map['bxd_type']        = array('in',array(2,3));//2 非团借款报销 3直接报销
+        $map['audit_status']    = array('eq',1);    //审核通过
+        $map['share']           = array('neq',1);   //不分摊
+        $map['bxd_kind']        = array('in',$kinds);
+        $money                  = M('baoxiao')->where($map)->select();//日期内所有数据
+        return  $money;
+    }
+
+    /**
+     * 非团支出报销(其他费用)(分摊)
+     * @param $ymd1
+     * @param $ymd2
+     * @return mixed
+     */
+    public function share_list($times,$kinds=''){
+
+        $where                      = array();
+        $where['b.bx_time']         = array('between',"$times[beginTime],$times[endTime]");//开始结束时间
+        $where['b.bxd_type']        = array('in',array(2,3));//2 非团借款报销 3直接报销
+        $where['b.audit_status']    = array('eq',1);    //审核通过
+        $where['b.bxd_kind']        = array('in',$kinds);
+        $money                      = M()->table('__BAOXIAO_SHARE__ as s')->field('b.bxd_kind,s.*,s.depart_sum as sum')->join('__BAOXIAO__ as b on b.id=s.bx_id','left')->where($where)->select();
+        return  $money;
+    }
+
+
+
+
+
+
+
 
 }
 

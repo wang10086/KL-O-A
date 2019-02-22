@@ -69,38 +69,20 @@
                                     <if condition="$kk eq $v">
                                         <tr role="row" class="orders" style="text-align:center;">
                                             <td>{$v}</td>
-                                            <td>{$vv.公司}</td>
-                                            <td>{$vv.京区业务中心}</td>
-                                            <td>{$vv.京外业务中心}</td>
-                                            <td>{$vv.南京项目部}</td>
-                                            <td>{$vv.武汉项目部}</td>
-                                            <td>{$vv.沈阳项目部}</td>
-                                            <td>{$vv.长春项目部}</td>
-                                            <td>{$vv.市场部}</td>
-                                            <td>{$vv.常规业务中心}</td>
-                                            <td>{$vv.机关部门}</td>
+                                            <td>&yen; <?PHP echo $vv['公司']?$vv['公司']:'0.00'; ?></td>
+                                            <td>&yen; <?PHP echo $vv['京区业务中心']?$vv['京区业务中心']:'0.00'; ?></td>
+                                            <td>&yen; <?PHP echo $vv['京外业务中心']?$vv['京外业务中心']:'0.00'; ?></td>
+                                            <td>&yen; <?PHP echo $vv['南京项目部']?$vv['南京项目部']:'0.00'; ?></td>
+                                            <td>&yen; <?PHP echo $vv['武汉项目部']?$vv['武汉项目部']:'0.00'; ?></td>
+                                            <td>&yen; <?PHP echo $vv['沈阳项目部']?$vv['沈阳项目部']:'0.00'; ?></td>
+                                            <td>&yen; <?PHP echo $vv['长春项目部']?$vv['长春项目部']:'0.00'; ?></td>
+                                            <td>&yen; <?PHP echo $vv['市场部']?$vv['市场部']:'0.00'; ?></td>
+                                            <td>&yen; <?PHP echo $vv['常规业务中心']?$vv['常规业务中心']:'0.00'; ?></td>
+                                            <td>&yen; <?PHP echo $vv['机关部门']?$vv['机关部门']:'0.00'; ?></td>
                                         </tr>
                                     </if>
                                 </foreach>
                             </foreach>
-
-                            <!--完成后删除  begin-->
-                            <foreach name="unfinished" item="v">
-                                    <tr role="row" class="orders" style="text-align:center;">
-                                        <td>{$v}</td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                    </tr>
-                            </foreach>
-                            <!--完成后删除  end-->
 
                             <tr role="row" class="orders" style="text-align:center;">
                                 <td><b>合计</b></td>

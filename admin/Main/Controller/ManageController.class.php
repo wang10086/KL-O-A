@@ -16,6 +16,7 @@ class ManageController extends ChartController {
         $year                   = trim(I('year',date('Y')));
         $month                  = intval(I('month',date('m')));
         $mod                    = D('Manage');
+        $times                  = $mod->get_times($year,$month);    //获取考核周期开始及结束时间戳
 
         $ymd                    = $mod->year_month_day($year,$month);//月度其他费用判断取出数据日期
         $mon                    = $this->not_team($ymd[0],$ymd[1]);//月度其他费用取出数据(不分摊)
@@ -23,7 +24,7 @@ class ManageController extends ChartController {
         $department             = $mod->department_data($mon,$mon_share);//月度其他费用部门数据
 
         $number                 = $mod->get_number($year,$month);   //月度 部门人数
-        $hr_cost                = $mod->month($year,$month);// 月度 部门数量 部门人力资源成本
+        $hr_cost                = $mod->month($year,$month,$times);// 月度 部门数量 部门人力资源成本
         $money                  = $this->business($year,$month,1);// 月度 monthzsr 收入合计   monthzml 毛利合计  monthmll 毛利率
         $profit                 = $mod->profit($money);//月度 收入 毛利 毛利率
 
@@ -476,8 +477,11 @@ class ManageController extends ChartController {
         $data                   = array();
         $data[$hr_cost[0]]      = $mod->get_wages($ym_arr);             //工资总额
         $data[$hr_cost[1]]      = $mod->get_insurance($ym_arr);         //公司五险一金
-        $data[$hr_cost[2]]      = $mod->get_welfare($times,21);         //职工福利
-        //var_dump($times);die;
+        $data[$hr_cost[2]]      = $mod->get_welfare($times,array(21));         //职工福利
+        $data[$hr_cost[3]]      = $mod->get_welfare($times,array(12));         //职工教育经费
+        $data[$hr_cost[4]]      = '';         //劳动保护费用
+        $data[$hr_cost[5]]      = $mod->get_welfare($times,array(19));         //工会会费
+        $data[$hr_cost[6]]      = '';         //职工住房费用
 
         $this->data             = $data;
         $sum                    = $mod->get_sum_cost($data);          //合计
@@ -489,10 +493,6 @@ class ManageController extends ChartController {
         $this->month 	        = $month;
         $this->prveyear	        = $year-1;
         $this->nextyear	        = $year+1;
-
-        //未完成
-        $unfinished             = array('职工福利费','职工教育经费','劳动保护费用','工会经费及其他','职工住房费用');
-        $this->unfinished       = $unfinished;
 
         $this->display();
     }
