@@ -14,33 +14,29 @@ class ManageController extends ChartController {
      */
     public function Manage_month(){
         $year                   = trim(I('year',date('Y')));
-        $post                   = trim(I('post'));
         $month                  = intval(I('month',date('m')));
         $mod                    = D('Manage');
 
-        $year1                  = $mod->manageyear($year,$post);//判断加减年
-        $ymd                    = $mod->year_month_day($year1,$month);//月度其他费用判断取出数据日期
-
+        $ymd                    = $mod->year_month_day($year,$month);//月度其他费用判断取出数据日期
         $mon                    = $this->not_team($ymd[0],$ymd[1]);//月度其他费用取出数据(不分摊)
         $mon_share              = $this->not_team_share($ymd[0],$ymd[1]);//月度其他费用取出数据(分摊)
         $department             = $mod->department_data($mon,$mon_share);//月度其他费用部门数据
 
-        $number                 = $mod->get_number($year1,$month);   //月度 部门人数
-        $hr_cost                = $mod->month($year1,$month);// 月度 部门数量 部门人力资源成本
-        $money                  = $this->business($year1,$month,1);// 月度 monthzsr 收入合计   monthzml 毛利合计  monthmll 毛利率
+        $number                 = $mod->get_number($year,$month);   //月度 部门人数
+        $hr_cost                = $mod->month($year,$month);// 月度 部门数量 部门人力资源成本
+        $money                  = $this->business($year,$month,1);// 月度 monthzsr 收入合计   monthzml 毛利合计  monthmll 毛利率
         $profit                 = $mod->profit($money);//月度 收入 毛利 毛利率
-        $human                  = $mod->human_affairs($hr_cost,$profit['profit'],$profit['departmen']);//月度 人事费用率
-        $total_profit           = $mod->total_profit($hr_cost,$profit['profit'],$profit['departmen'],$department);//月度 利润总额
+
+        $human_affairs          = $mod->human_affairs($hr_cost,$profit);//月度 人事费用率
+        $total_profit           = $mod->total_profit($profit,$hr_cost,$department);//月度 利润总额
 
         $this->department       = $department;//其他费用部门数据
         $this->total_profit     = $total_profit;//利润总额(未减去其他费用)
-        $this->human_affairs    = $human;//人事费用率
-        $this->profit           = $profit['departmen'];//部门 收入 毛利 毛利率
-        $this->company          = $profit['profit'];//总数 收入 毛利 毛利率
+        $this->human_affairs    = $human_affairs;//人事费用率
+        $this->profit           = $profit;//部门 收入 毛利 毛利率
         $this->number           = $number;  // 部门数量
         $this->hr_cost          = $hr_cost; // 部门人力资源成本
-        $this->year             = $year1;//年
-        $this->post             = $post;//加减年
+        $this->year             = $year;//年
         $this->month            = $month;//月
         $this->display();
     }
@@ -480,6 +476,8 @@ class ManageController extends ChartController {
         $data                   = array();
         $data[$hr_cost[0]]      = $mod->get_wages($ym_arr);             //工资总额
         $data[$hr_cost[1]]      = $mod->get_insurance($ym_arr);         //公司五险一金
+        $data[$hr_cost[2]]      = $mod->get_welfare($times,21);         //职工福利
+        //var_dump($times);die;
 
         $this->data             = $data;
         $sum                    = $mod->get_sum_cost($data);          //合计

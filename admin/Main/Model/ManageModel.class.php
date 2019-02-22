@@ -199,7 +199,7 @@ class ManageModel extends Model{
      * $money 价格 匹配已有条件
      *
      */
-    public function profit($money){
+    /*public function profit($money){
 
         $arr                                          =  C('department');//部门
 
@@ -224,6 +224,17 @@ class ManageModel extends Model{
         $list['profit']                               = $money['heji'];
 
         return $list;
+    }*/
+    public function profit($money){
+        $info                                         = array();
+        foreach ($money as $k=>$v){
+            if ($k=='heji'){
+                $v['depname']                         = '公司';
+            }
+            $info[$v['depname']]                      = $v;
+        }
+
+        return $info;
     }
 
     /**
@@ -252,22 +263,19 @@ class ManageModel extends Model{
 
 
     /**
-     * human_affairs人事费用率
-     * $number 人力资源成本
-     * $profit 总 收入 毛利 毛利率
-     * $departmen 部门 收入 毛利 毛利率
+     * human_affairs    人事费用率 = 人力资源成本/收入
+     * @param $hr_cost  人力资源成本
+     * @param $profit   部门收人 毛利  毛利率
+     * @return mixed
      */
 
-    public function human_affairs($number,$profit,$departmen){
+    public function human_affairs($hr_cost,$profit){
+        $human_affairs                  = array();
+        foreach($hr_cost as $key => $val){
 
-        $affairs                          = $this->company_profit($profit,$departmen);//营业收入合并成需求数组
-
-        foreach($number as $key => $val){
-
-            $human[$key]['human_affairs'] = round(($val['money']/$affairs[$key]['affairs'])*100,2);//人事费用率
+            $human_affairs[$key] = round(($val/$profit[$key]['monthzsr'])*100,2);//人事费用率
         }
-
-        return $human;
+        return $human_affairs;
     }
 
     /**
@@ -277,7 +285,7 @@ class ManageModel extends Model{
      * $departmen 部门 营业收入
      * $department 部门 其他费用
      */
-    public function total_profit($number,$profit,$departmen,$department){
+    /*public function total_profit($number,$profit,$departmen,$department){
 
         $departmen[0]['department']['monthzml'] = $profit['monthzml'];//总毛利 添加到部门营业毛利中
 
@@ -290,28 +298,20 @@ class ManageModel extends Model{
            $total_profit[$key]['total_profit']  =  round($val['department']['monthzml']-$number[$key]['money']-$department[$key]['money'],2); //营业毛利-人力资源成本-其他费用
         }
         return $total_profit;
-    }
+    }*/
 
     /**
-     * company_profit 月度 人力资源成本 营业收入
-     *$profit 总 营业收入 毛利 毛利率
-     * $departmen 部门 营业收入 毛利 毛利率
+     * 利润总额 = 营业毛利-人力资源成本-其他费用
+     * @param $profit   营业毛利
+     * @param $hr_cost  人力资源成本
+     * @param $department 其他费用
      */
-    public function company_profit($profit,$departmen){
-
-        $affairs[0]['affairs']        = $profit['monthzsr'];//公司营业收入
-
-        $sum                          = 0;
-
-        foreach($departmen as $key =>$val){
-
-            $affairs[$key]['affairs'] = $val['department']['monthzsr'];//部门营业收入
-
-            $sum                      = $key + 1;
+    public function total_profit($profit,$hr_cost,$department){
+        $info                   = array();
+        foreach ($hr_cost as $k=>$v){
+            $info[$k]           = $profit[$k]['monthzml'] - $v - $department[$k]['money'];
         }
-        $affairs[$sum]['affairs']     = 0.00;//机关部门营业收入
-
-        return $affairs;
+        return $info;
     }
 
     /**
@@ -1019,11 +1019,11 @@ class ManageModel extends Model{
                 $count               += $v['depart_sum'];
             }
         }
-        $money[0]['money']            = $count;
+        $money['公司']['money']       = $count;
         $department                   = C('department');//部门顺序
         $count_departmen              = 0;//总部门其他费用
         foreach($department as $key => $val){//循环部门
-            $key                      = $key+1;
+            //$key                      = $key+1;
             $departmen                = 0;//部门他费用
             foreach($data as $k => $v){//循环部门其他费用
                 if($val ==$v['department']){
@@ -1042,10 +1042,10 @@ class ManageModel extends Model{
                 }
             }
 
-            $money[$key]['money']     = $departmen;
+            $money[$val]['money']       = $departmen;
         }
-        $money[9]['money']            = $money[0]['money']-$count_departmen;//机关部门
-        ksort($money);
+        $money['机关部门']['money']     = $money['公司']['money']-$count_departmen;//机关部门
+        //ksort($money);
         return $money;
     }
 
@@ -1338,6 +1338,28 @@ class ManageModel extends Model{
             $data[$v]     = array_sum(array_column($info,"$v"));
         }
         return $data;
+    }
+
+    /**职工福利费
+     * @param $times
+     * @param $kind 报销单种类
+     */
+    public function get_welfare($times,$kind){
+        $where                  = array();
+        //$where['bx_time']       = array('between',$times[0],$times[1]);
+        $where['bxd_kind']      = $kind;
+        $where['audit_status']  = 1;    //审核通过
+        $lists                  = M('baoxiao')->where($where)->select();
+        //var_dump($lists);
+    }
+
+    private function get_lists($times,$kind){
+        $where                  = array();
+        //$where['bx_time']       = array('between',$times[0],$times[1]);
+        $where['bxd_kind']      = $kind;
+        $where['audit_status']  = 1;    //审核通过
+        $lists                  = M('baoxiao')->where($where)->select();
+        //var_dump($lists);
     }
 
 }

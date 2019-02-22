@@ -165,9 +165,19 @@
                                 </tr>
                                 <tr role="row" class="orders" style="text-align:center;">
                                     <td>其他费用</td>
-                                    <foreach name="profit" item="p">
-                                        <th>¥ <?php if($p['money']=="" || $p['money']==0){echo '0.00';}else{echo round($p['money'],2);}?></th>
-                                    </foreach>
+                                    <!--<foreach name="profit" item="p">
+                                        <th>¥ <?php /*if($p['money']=="" || $p['money']==0){echo '0.00';}else{echo round($p['money'],2);}*/?></th>
+                                    </foreach>-->
+                                    <th>&yen; <?php echo $department['公司']['money']?$department['公司']['money']:'0.00'; ?></th>
+                                    <th>&yen; <?php echo $department['京区业务中心']['money']?$department['京区业务中心']['money']:'0.00'; ?></th>
+                                    <th>&yen; <?php echo $department['京外业务中心']['money']?$department['京外业务中心']['money']:'0.00'; ?></th>
+                                    <th>&yen; <?php echo $department['南京项目部']['money']?$department['南京项目部']['money']:'0.00'; ?></th>
+                                    <th>&yen; <?php echo $department['武汉项目部']['money']?$department['武汉项目部']['money']:'0.00'; ?></th>
+                                    <th>&yen; <?php echo $department['沈阳项目部']['money']?$department['沈阳项目部']['money']:'0.00'; ?></th>
+                                    <th>&yen; <?php echo $department['长春项目部']['money']?$department['长春项目部']['money']:'0.00'; ?></th>
+                                    <th>&yen; <?php echo $department['市场部']['money']?$department['市场部']['money']:'0.00'; ?></th>
+                                    <th>&yen; <?php echo $department['常规业务中心']['money']?$department['常规业务中心']['money']:'0.00'; ?></th>
+                                    <th>&yen; <?php echo $department['机关部门']['money']?$department['机关部门']['money']:'0.00'; ?></th>
                                 </tr>
                                 <tr role="row" class="orders" style="text-align:center;">
                                     <td>利润总额</td>

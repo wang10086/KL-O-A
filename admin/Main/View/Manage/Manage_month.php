@@ -21,14 +21,15 @@
             <!-- right column -->
             <div class="col-md-12">
                 <div class="btn-group" id="catfont" style="padding-bottom:20px;">
-
-                    <a href="{:U('Manage/Manage_month',array('year'=>$year,'post'=>1))}" class="btn btn-default" id="btn-default_id1" style="padding:8px 18px;">上一年</a>
+                    <?php if (($year-1)>2017){ ?>
+                    <a href="{:U('Manage/Manage_month',array('year'=>$year-1))}" class="btn btn-default" id="btn-default_id1" style="padding:8px 18px;">上一年</a>
+                    <?php } ?>
                     <?php
                         for($i=1;$i<13;$i++){
                          echo '<a href="'.U('Manage/Manage_month',array('year'=>$year,'month'=>$i)).'" class="btn btn-default" id="btn-default'.$i.'" style="padding:8px 18px;">'.$i.'月</a>';
                         }
                     ?>
-                    <a href="{:U('Manage/Manage_month',array('year'=>$year,'post'=>2))}" class="btn btn-default" id="btn-default_id3" style="padding:8px 18px;">下一年</a>
+                    <a href="{:U('Manage/Manage_month',array('year'=>$year+1))}" class="btn btn-default" id="btn-default_id3" style="padding:8px 18px;">下一年</a>
                 </div>
 
                 <div class="box box-warning">
@@ -67,27 +68,42 @@
                             </tr>
                             <tr role="row" class="orders" style="text-align:center;">
                                 <th>营业收入</th>
-                                <td>¥ <?php if($company['monthzsr']=="" || $company['monthzsr']==0 ){echo '0.00';}else{echo $company['monthzsr']; }?></td>
-                                <foreach name="profit" item="pf">
-                                    <th>¥ <?php if($pf['department']['monthzsr']=="" || $pf['department']['monthzsr']==0 ){echo '0.00';}else{echo $pf['department']['monthzsr']; }?></th>
-                                </foreach>
-                                <th>¥ 0.00</th>
+                                <th>&yen; <?php echo $profit['公司']['monthzsr']?$profit['公司']['monthzsr']:'0.00'; ?></th>
+                                <th>&yen; <?php echo $profit['京区业务中心']['monthzsr']?$profit['京区业务中心']['monthzsr']:'0.00'; ?></th>
+                                <th>&yen; <?php echo $profit['京外业务中心']['monthzsr']?$profit['京外业务中心']['monthzsr']:'0.00'; ?></th>
+                                <th>&yen; <?php echo $profit['南京项目部']['monthzsr']?$profit['南京项目部']['monthzsr']:'0.00'; ?></th>
+                                <th>&yen; <?php echo $profit['武汉项目部']['monthzsr']?$profit['武汉项目部']['monthzsr']:'0.00'; ?></th>
+                                <th>&yen; <?php echo $profit['沈阳项目部']['monthzsr']?$profit['沈阳项目部']['monthzsr']:'0.00'; ?></th>
+                                <th>&yen; <?php echo $profit['长春项目部']['monthzsr']?$profit['长春项目部']['monthzsr']:'0.00'; ?></th>
+                                <th>&yen; <?php echo $profit['市场部']['monthzsr']?$profit['市场部']['monthzsr']:'0.00'; ?></th>
+                                <th>&yen; <?php echo $profit['常规业务中心']['monthzsr']?$profit['常规业务中心']['monthzsr']:'0.00'; ?></th>
+                                <th>&yen; <?php echo $profit['机关部门']['monthzsr']?$profit['机关部门']['monthzsr']:'0.00'; ?></th>
                             </tr>
                             <tr role="row" class="orders" style="text-align:center;">
                                 <td>营业毛利</td>
-                                <td>¥ <?php if($company['monthzml']=="" || $company['monthzml']==0 ){echo '0.00';}else{echo $company['monthzml']; }?></td>
-                                <foreach name="profit" item="pr">
-                                    <th>¥ <?php if($pr['department']['monthzml']=="" || $pr['department']['monthzml']==0 ){echo '0.00';}else{echo $pr['department']['monthzml']; }?></th>
-                                </foreach>
-                                <td>¥ 0.00</td>
+                                <th>&yen; <?php echo $profit['公司']['monthzml']?$profit['公司']['monthzml']:'0.00'; ?></th>
+                                <th>&yen; <?php echo $profit['京区业务中心']['monthzml']?$profit['京区业务中心']['monthzml']:'0.00'; ?></th>
+                                <th>&yen; <?php echo $profit['京外业务中心']['monthzml']?$profit['京外业务中心']['monthzml']:'0.00'; ?></th>
+                                <th>&yen; <?php echo $profit['南京项目部']['monthzml']?$profit['南京项目部']['monthzml']:'0.00'; ?></th>
+                                <th>&yen; <?php echo $profit['武汉项目部']['monthzml']?$profit['武汉项目部']['monthzml']:'0.00'; ?></th>
+                                <th>&yen; <?php echo $profit['沈阳项目部']['monthzml']?$profit['沈阳项目部']['monthzml']:'0.00'; ?></th>
+                                <th>&yen; <?php echo $profit['长春项目部']['monthzml']?$profit['长春项目部']['monthzml']:'0.00'; ?></th>
+                                <th>&yen; <?php echo $profit['市场部']['monthzml']?$profit['市场部']['monthzml']:'0.00'; ?></th>
+                                <th>&yen; <?php echo $profit['常规业务中心']['monthzml']?$profit['常规业务中心']['monthzml']:'0.00'; ?></th>
+                                <th>&yen; <?php echo $profit['机关部门']['monthzml']?$profit['机关部门']['monthzml']:'0.00'; ?></th>
                             </tr>
                             <tr role="row" class="orders" style="text-align:center;">
                                 <td>营业毛利率(%)</td>
-                                <td><?php if($company['monthmll']=="" || $company['monthmll']==0 ){echo '0.00';}else{echo $company['monthmll']; }?> %</td>
-                                <foreach name="profit" item="pro">
-                                    <th><?php if($pro['department']['monthmll']=="" || $pr['department']['monthzml']==0 ){echo '0.00';}else{echo $pro['department']['monthmll']; }?> %</th>
-                                </foreach>
-                                <td>0.00 %</td>
+                                <th><?php echo $profit['公司']['monthmll']?$profit['公司']['monthmll']:'0.00'; ?> %</th>
+                                <th><?php echo $profit['京区业务中心']['monthmll']?$profit['京区业务中心']['monthmll']:'0.00'; ?> %</th>
+                                <th><?php echo $profit['京外业务中心']['monthmll']?$profit['京外业务中心']['monthmll']:'0.00'; ?> %</th>
+                                <th><?php echo $profit['南京项目部']['monthmll']?$profit['南京项目部']['monthmll']:'0.00'; ?> %</th>
+                                <th><?php echo $profit['武汉项目部']['monthmll']?$profit['武汉项目部']['monthmll']:'0.00'; ?> %</th>
+                                <th><?php echo $profit['沈阳项目部']['monthmll']?$profit['沈阳项目部']['monthmll']:'0.00'; ?> %</th>
+                                <th><?php echo $profit['长春项目部']['monthmll']?$profit['长春项目部']['monthmll']:'0.00'; ?> %</th>
+                                <th><?php echo $profit['市场部']['monthmll']?$profit['市场部']['monthmll']:'0.00'; ?> %</th>
+                                <th><?php echo $profit['常规业务中心']['monthmll']?$profit['常规业务中心']['monthmll']:'0.00'; ?> %</th>
+                                <th><?php echo $profit['机关部门']['monthmll']?$profit['机关部门']['monthmll']:'0.00'; ?> %</th>
                             </tr>
                             <tr role="row" class="orders" style="text-align:center;">
                                 <td><a href="{:U('Manage/HR_cost',array('year'=>$year,'month'=>$month,'tm'=>'m'))}">人力资源成本</a></td>
@@ -104,21 +120,42 @@
                             </tr>
                             <tr role="row" class="orders" style="text-align:center;">
                                 <td><a href="{:U('Manage/otherExpenses',array('year'=>$year,'month'=>$month,'tm'=>'m'))}">其他费用</a></td>
-                                <foreach name="department" item="d">
-                                    <th>¥ <?php if($d['money']=="" || $d['money']==0){echo '0.00';}else{echo $d['money'];}?></th>
-                                </foreach>
+                                <th>&yen; <?php echo $department['公司']['money']?$department['公司']['money']:'0.00'; ?></th>
+                                <th>&yen; <?php echo $department['京区业务中心']['money']?$department['京区业务中心']['money']:'0.00'; ?></th>
+                                <th>&yen; <?php echo $department['京外业务中心']['money']?$department['京外业务中心']['money']:'0.00'; ?></th>
+                                <th>&yen; <?php echo $department['南京项目部']['money']?$department['南京项目部']['money']:'0.00'; ?></th>
+                                <th>&yen; <?php echo $department['武汉项目部']['money']?$department['武汉项目部']['money']:'0.00'; ?></th>
+                                <th>&yen; <?php echo $department['沈阳项目部']['money']?$department['沈阳项目部']['money']:'0.00'; ?></th>
+                                <th>&yen; <?php echo $department['长春项目部']['money']?$department['长春项目部']['money']:'0.00'; ?></th>
+                                <th>&yen; <?php echo $department['市场部']['money']?$department['市场部']['money']:'0.00'; ?></th>
+                                <th>&yen; <?php echo $department['常规业务中心']['money']?$department['常规业务中心']['money']:'0.00'; ?></th>
+                                <th>&yen; <?php echo $department['机关部门']['money']?$department['机关部门']['money']:'0.00'; ?></th>
                             </tr>
                             <tr role="row" class="orders" style="text-align:center;">
                                 <td>利润总额</td>
-                                <foreach name="total_profit" item="t">
-                                    <th>¥ <?php if($t['total_profit']=="" || $t['total_profit']==0 ){echo '0.00';}else{echo $t['total_profit'];}?></th>
-                                </foreach>
+                                <th>&yen; <?php echo $total_profit['公司']?$total_profit['公司']:'0.00'; ?></th>
+                                <th>&yen; <?php echo $total_profit['京区业务中心']?$total_profit['京区业务中心']:'0.00'; ?></th>
+                                <th>&yen; <?php echo $total_profit['京外业务中心']?$total_profit['京外业务中心']:'0.00'; ?></th>
+                                <th>&yen; <?php echo $total_profit['南京项目部']?$total_profit['南京项目部']:'0.00'; ?></th>
+                                <th>&yen; <?php echo $total_profit['武汉项目部']?$total_profit['武汉项目部']:'0.00'; ?></th>
+                                <th>&yen; <?php echo $total_profit['沈阳项目部']?$total_profit['沈阳项目部']:'0.00'; ?></th>
+                                <th>&yen; <?php echo $total_profit['长春项目部']?$total_profit['长春项目部']:'0.00'; ?></th>
+                                <th>&yen; <?php echo $total_profit['市场部']?$total_profit['市场部']:'0.00'; ?></th>
+                                <th>&yen; <?php echo $total_profit['常规业务中心']?$total_profit['常规业务中心']:'0.00'; ?></th>
+                                <th>&yen; <?php echo $total_profit['机关部门']?$total_profit['机关部门']:'0.00'; ?></th>
                             </tr>
                             <tr role="row" class="orders" style="text-align:center;">
                                 <th>人事费用率(%)</th>
-                                <foreach name="human_affairs" item="aff">
-                                    <th><?php if($aff['human_affairs']=="" || $aff['human_affairs']==0 ){echo '0.00';}else{echo $aff['human_affairs'];}?> %</th>
-                                </foreach>
+                                <th><?php echo $human_affairs['公司']?$human_affairs['公司']:'0.00'; ?> %</th>
+                                <th><?php echo $human_affairs['京区业务中心']?$human_affairs['京区业务中心']:'0.00'; ?> %</th>
+                                <th><?php echo $human_affairs['京外业务中心']?$human_affairs['京外业务中心']:'0.00'; ?> %</th>
+                                <th><?php echo $human_affairs['南京项目部']?$human_affairs['南京项目部']:'0.00'; ?> %</th>
+                                <th><?php echo $human_affairs['武汉项目部']?$human_affairs['武汉项目部']:'0.00'; ?> %</th>
+                                <th><?php echo $human_affairs['沈阳项目部']?$human_affairs['沈阳项目部']:'0.00'; ?> %</th>
+                                <th><?php echo $human_affairs['长春项目部']?$human_affairs['长春项目部']:'0.00'; ?> %</th>
+                                <th><?php echo $human_affairs['市场部']?$human_affairs['市场部']:'0.00'; ?> %</th>
+                                <th><?php echo $human_affairs['常规业务中心']?$human_affairs['常规业务中心']:'0.00'; ?> %</th>
+                                <th><?php echo $human_affairs['机关部门']?$human_affairs['机关部门']:'0.00'; ?> %</th>
                             </tr>
                         </table><br><br>
 
