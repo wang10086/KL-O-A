@@ -247,7 +247,7 @@ class ManageModel extends Model{
      * manageyear 年变化
      *$year 年  $post 1 加年  2 减年
      */
-    public function manageyear($year,$post){
+    /*public function manageyear($year,$post){
 
         if(is_numeric($year)){//判断有无传送年
 
@@ -265,7 +265,7 @@ class ManageModel extends Model{
             $year               = (int)date('Y');
         }
         return $year;
-    }
+    }*/
 
 
     /**
@@ -324,7 +324,7 @@ class ManageModel extends Model{
      * quarter 季度 年月 数据值修正返回
      *  $year 加减年 $quarter季度
      */
-    public function quarter($year,$quarter){
+    /*public function quarter($year,$quarter){
         $arr1                                    = array('3','6','9','12');
         $i                                       = 0; //现在季度月 减一
         $company                                 = array(); //季度内数据总和
@@ -334,10 +334,12 @@ class ManageModel extends Model{
         if(in_array($quarter,$arr1)){ //判断是否是第一、二、三、四季度
             for($n = 3; $n > $i;$i++){ //
                 $month                           =  $quarter-$i; //季度上一个月
-                $count[$i]                       = $this->month($year,$month); //季度 人数和 人力资源成本
+                $count[$i]                       = $this->month($year,$month); //季度 人力资源成本
+                $number[$i]                      = $this->get_number($year,$month); //人数和
+                //var_dump($number);
                 foreach($count[$i] as $k => $v){
                     $company[$k]['sum']         += $v['sum'];//人数相加
-                    $company[$k]['money']       += $v['money'];//人力资源成本相加
+                    $company[$k]['money']       += $v;//人力资源成本相加
                 }
                 foreach($count[$i] as $key =>$val){ //删除数组等于空 和 0 的数据、
                     if(($val['sum']=='' || $val['sum']==0) && ($val['money']=='' || $val['money']==0)){
@@ -376,6 +378,58 @@ class ManageModel extends Model{
                 }
             }
         }
+    }*/
+
+
+    /** 获取季度人数平均值
+     * @param $year
+     * @param $yms
+     */
+    public function get_numbers($year,$yms){
+        $info                   = array();
+        foreach ($yms as $k=>$v){
+            $month              = substr($v,4,2);
+            $info[]             = $this->get_number($year,$month);
+        }
+
+        $sum                    = array();  //总人数
+        $num                    = 0;
+        foreach ($info as $key=>$value){
+            if ($value){
+                $num++;
+                foreach ($value as $k=>$v){
+                    $sum[$k]    += $v;
+                }
+            }
+        }
+
+        $average                = array();
+        foreach ($sum as $k=>$v){
+            $average[$k]        = round($v/$num,2);
+        }
+        return $average;
+    }
+
+    /**
+     * 季度部门人力资源成本
+     * @param $year
+     * @param $yms
+     * @param $times
+     */
+    public function get_quarter_hr_cost($year,$yms,$times){
+        $info                   = array();
+        foreach ($yms as $v){
+            $month              = substr($v,4,2);
+            $info[]             = $this->month($year,$month,$times);
+        }
+
+        $sum                    = array();
+        foreach ($info as $value){
+            foreach ($value as $k=>$v){
+                $sum[$k]        += $v;
+            }
+        }
+        return $sum;
     }
 
     /**
@@ -1059,9 +1113,15 @@ class ManageModel extends Model{
      * yearmonthday 年度其他费用部门数据
      * $year 年
      */
-    public function yearmonthday($year){
-        $ymd[0]       = ($year-1).'1226';
-        $ymd[1]       = $year.'1226';
+    public function yearmonthday($year,$month){
+        $day              = date('d');
+        if ($month.$day > 1225){
+            $ymd[0]       = $year.'1226';
+            $ymd[1]       = ($year+1).'1226';
+        }else{
+            $ymd[0]       = ($year-1).'1226';
+            $ymd[1]       = $year.'1226';
+        }
         return $ymd;
     }
 

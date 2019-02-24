@@ -16,7 +16,7 @@ class ManageController extends ChartController {
         $year                   = trim(I('year',date('Y')));
         $month                  = intval(I('month',date('m')));
         $mod                    = D('Manage');
-        $times                  = $mod->get_times($year,$month);    //获取考核周期开始及结束时间戳
+        $times                  = $mod->get_times($year,$month,'m');    //获取考核周期开始及结束时间戳
 
         $ymd                    = $mod->year_month_day($year,$month);//月度其他费用判断取出数据日期
         $mon                    = $this->not_team($ymd[0],$ymd[1]);//月度其他费用取出数据(不分摊)
@@ -24,7 +24,7 @@ class ManageController extends ChartController {
         $department             = $mod->department_data($mon,$mon_share);//月度其他费用部门数据
 
         $number                 = $mod->get_number($year,$month);   //月度 部门人数
-        $hr_cost                = $mod->month($year,$month,$times);// 月度 部门数量 部门人力资源成本
+        $hr_cost                = $mod->month($year,$month,$times);// 月度 部门人力资源成本
         $money                  = $this->business($year,$month,1);// 月度 monthzsr 收入合计   monthzml 毛利合计  monthmll 毛利率
         $profit                 = $mod->profit($money);//月度 收入 毛利 毛利率
 
@@ -61,8 +61,8 @@ class ManageController extends ChartController {
 
         $ymd1                   =  strtotime($ymd1);
         $ymd2                   =  strtotime($ymd2);
-        $map['bx_time']         = array(array('gt',$ymd1),array('lt',$ymd2));//开始结束时间
-        $map['bxd_type']        = array(array('gt',1),array('lt',4));//2 非团借款报销 3直接报销
+        $map['bx_time']         = array('between',"$ymd1,$ymd2");//开始结束时间
+        $map['bxd_type']        = array('in',array(2,3));//2 非团借款报销 3直接报销
         $map['audit_status']    = array('eq',1);    //审核通过
         $map['share']           = array('neq',1);   //不分摊
         $otherExpensesKinds     = M('bxd_kind')->where(array('pid'=>2))->getField('id',true);
@@ -108,6 +108,29 @@ class ManageController extends ChartController {
         return $listdatas;die;
     }
 
+    /**  monthzsr 收入合计   monthzml 毛利合计  monthmll 毛利率
+     * @param $year
+     * @param $yms
+     */
+    public function get_business($year,$yms){
+        $info                   = array();
+        foreach ($yms as $v){
+            $month              = substr($v,4,2);
+            $info[]             = $this->business($year,$month,1);
+        }
+
+        $sum                    = array();
+        foreach ($info as $key=>$value){
+            foreach ($value as $k=>$v){
+                if ($k == 'heji') $v['depname'] = '公司';
+                $sum[$v['depname']]['monthzsr'] += $v['monthzsr'];
+                $sum[$v['depname']]['monthzml'] += $v['monthzml'];
+                $sum[$v['depname']]['monthmll'] = round($sum[$v['depname']]['monthzml']/$sum[$v['depname']]['monthzsr'],4)*100;
+            }
+        }
+        return $sum;
+    }
+
     /**
      * manage_quarter 季度经营报表
      * $year 年 $quart月
@@ -115,29 +138,40 @@ class ManageController extends ChartController {
      */
     public function Manage_quarter(){
         $year                   = (int)trim(I('year',date('Y')));//年
-        $post                   = (int)trim(I('post'));//加减年
-        $quart                  = intval(trim(I('quart',date('m'))));//季度
+        $quart                  = trim(I('quart',date('m')));//季度
         $mod                    = D('Manage');
         // 季度经营报表
-        $year1                  = $mod->manageyear($year,$post);//判断加减年
         $quart                  = $mod->quarter_month1($quart);//获取季度月份
-        $quarter                = $mod->quarter($year1,$quart);// 季度人数 和人力资源成本
-        $profits                = $this->profit_r($year1,$quart,1);//月份循环季度数据 利润 其他费用(money)
-        $manage_quarter         = $mod->manage_quarter($quarter,$profits);//季度利润总额
-        $personnel_costs        = $mod->personnel_costs($quarter,$profits);//人事费用率
+
         // 季度预算报表
-        $datetime['year']       = $year1;
+        $datetime['year']       = $year;
         $datetime['type']       = $quart;//获取季度预算
         $manage                 = $mod->Manage_display($datetime,2);//季度预算
 
+        $times                  = getQuarterlyCicle($year,$quart);  //获取季度周期
+        $ymd[0]                 = date("Ymd",$times['begin_time']);
+        $ymd[1]                 = date("Ymd",$times['end_time']);
+        $mon                    = $this->not_team($ymd[0],$ymd[1]);//季度其他费用取出数据(不分摊)
+        $mon_share              = $this->not_team_share($ymd[0],$ymd[1]);//季度其他费用取出数据(分摊)
+        $department             = $mod->department_data($mon,$mon_share);//季度其他费用部门数据
+
+        $yms                    = $mod->get_yms($year,$quart,'q');  //获取费季度包含的全部月份
+        $times                  = $mod->get_times($year,$quart,'q');    //获取考核周期开始及结束时间戳
+        $number                 = $mod->get_numbers($year,$yms);    //季度平均人数
+        $hr_cost                = $mod->get_quarter_hr_cost($year,$yms,$times);// 季度部门人力资源成本
+        $profit                 = $this->get_business($year,$yms);// 季度 monthzsr 收入合计   monthzml 毛利合计  monthmll 毛利率
+        $human_affairs          = $mod->human_affairs($hr_cost,$profit);//季度 人事费用率
+        $total_profit           = $mod->total_profit($profit,$hr_cost,$department);//季度 利润总额
+
         $this->manage           = $manage;//季度预算
         // 季度经营报表
-        $this->personnel_costs  = $personnel_costs;//人事费用率
-        $this->manage_quarter   = $manage_quarter;// 季度利润总额
-        $this->profit           = $profits;// 收入 毛利 毛利率
-        $this->quarter          = $quarter;// 季度人数 和人力资源成本
-        $this->year             = $year1;//年
-        $this->post             = $post;
+        $this->number           = $number;  // 部门数量
+        $this->hr_cost          = $hr_cost; // 部门人力资源成本
+        $this->profit           = $profit;  // 收入 毛利 毛利率
+        $this->department       = $department;  //季度其他费用
+        $this->human_affairs    = $human_affairs;   //季度人事费用率
+        $this->total_profit     = $total_profit;    //季度利润总额
+        $this->year             = $year;//年
         $this->quart            = $quart;
         $this->display();
     }
@@ -227,33 +261,39 @@ class ManageController extends ChartController {
      * $post 2 加  1 减年
      */
     public function Manage_year(){
-        $year                   = trim(I('year'));
+        $year                   = I('year')?trim(I('year')):date('Y');
         $post                   = trim(I('post'));
         $mod                    = D('Manage');
         $month                  = date('m');
-        //年度经营报表
-        $year1                  = $mod->manageyear($year,$post);//判断加减年
-        $yea_report             = $mod->yea_report($year1,$post);//年人员数量  年人员人力资源成本
-        $money                  = $this->business($year1,$month,1);//年 monthzsr 收入合计 monthzml 毛利合计 monthmll 毛利率
-        $profit                 = $mod->profit_w($money);//年 收入 毛利 毛利率
+
+        //年度预算报表
+        $where['year']          = $year;
+        $where['type']          = 5;
+        $manage                 = $mod->Manage_display($where,1);
+
         // 其他费用
-        $ymd                    = $mod->yearmonthday($year1);//年度其他费用判断取出数据日期
+        $ymd                    = $mod->yearmonthday($year,$month);//年度其他费用判断取出数据日期
         $mon                    = $this->not_team($ymd[0],$ymd[1]);//年度其他费用取出数据
         $mon_share              = $this->not_team_share($ymd[0],$ymd[1]);//月度其他费用取出数据(分摊w)
         $department             = $mod->department_data($mon,$mon_share);//年度其他费用部门数据
-        $count_profit           = $mod->count_profit($yea_report,$profit,$department);//年利润总额 年人事费用
 
-        //年度预算报表
-        $where['year']          = $year1;
-        $where['type']          = 5;
-        $manage                 = $mod->Manage_display($where,1);
-        $this->manage           = $manage;//年度预算
         //年度经营报表
-        $this->department       = $department;//年度其他费用部门数据
-        $this->count_profit     = $count_profit;//年人员人力资源成本 收入 毛利 毛利率
-        $this->profit           = $profit;//收入 毛利 毛利率
-        $this->year             = $year1;//加减后年
-        $this->yea_report       = $yea_report;//年人员数量  年人员人力资源成本
+        $yms                    = $mod->get_yms($year,$month,'y');  //获取年度包含的所有月份信息
+        $times                  = $mod->get_times($year,$month,'y');    //获取考核周期开始及结束时间戳
+        $number                 = $mod->get_numbers($year,$yms);    //季度平均人数
+        $hr_cost                = $mod->get_quarter_hr_cost($year,$yms,$times);// 季度部门人力资源成本
+        $profit                 = $this->get_business($year,$yms);// 季度 monthzsr 收入合计   monthzml 毛利合计  monthmll 毛利率
+        $human_affairs          = $mod->human_affairs($hr_cost,$profit);//年度 人事费用率
+        $total_profit           = $mod->total_profit($profit,$hr_cost,$department);//年度 利润总额
+
+        $this->manage           = $manage;//年度预算
+        $this->number           = $number;  // 部门数量
+        $this->hr_cost          = $hr_cost; // 部门人力资源成本
+        $this->profit           = $profit;  // 收入 毛利 毛利率
+        $this->department       = $department;  //季度其他费用
+        $this->human_affairs    = $human_affairs;   //季度人事费用率
+        $this->total_profit     = $total_profit;    //季度利润总额
+        $this->year             = $year;//年
         $this->post             = $post;
         $this->display();
     }
