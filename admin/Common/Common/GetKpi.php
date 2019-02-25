@@ -1,5 +1,41 @@
 <?php
 
+    /**将上个季度的考核结果扶植到当季度
+     * @param $user_id
+     * @param $year
+     * @param $month
+     * @param $quata_id
+     */
+function get_prev_kpi_result($user_id,$year,$month,$quota_id){
+    $monthly                = get_kpi_monthly($year,$month);
+    $where                  = array();
+    $where['user_id']       = $user_id;
+    $where['year']          = $year;
+    $where['month']         = $year.$month;
+    $where['quota_id']      = $quota_id;
+    $list                   = M('kpi_more')->where($where)->find();
+    $complete               = $list['complete'];
+    return $complete;
+}
+
+function get_kpi_monthly($year,$month){
+    switch ($month){
+        case in_array($month,array('01','02','03')):
+            $kpi_monthly    = ($year-1).'12';
+            break;
+        case in_array($month,array('04','05','06')):
+            $kpi_monthly    = $year.'03';
+            break;
+        case in_array($month,array('07','08','09')):
+            $kpi_monthly    = $year.'06';
+            break;
+        case in_array($month,array('10','11','12')):
+            $kpi_monthly    = $year.'09';
+            break;
+    }
+    return $kpi_monthly;
+}
+
 /*
 * 工单满意度(京区设计,新媒体)
 * 1.员工id

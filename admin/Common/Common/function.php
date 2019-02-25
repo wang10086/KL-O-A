@@ -1877,818 +1877,1164 @@ function updatekpi($month,$user){
             $v['end_date']   = $v['end_date']+86399;
 			
 			if($v['automatic']==0){
-				//获取月度累计毛利额
-				if($v['quota_id']==1){
-					$where = array();
-					$where['b.audit_status']		= 1;
-					$where['o.create_user']			= $user;
-					$where['l.req_type']			= 801;
-					$where['l.audit_time']			= array('between',array($v['start_date'],$v['end_date']));
-					$complete = M()->table('__OP_SETTLEMENT__ as b')->field('b.maoli')->join('__OP__ as o on b.op_id = o.op_id','LEFT')->join('__AUDIT_LOG__ as l on l.req_id = b.id','LEFT')->where($where)->sum('b.maoli');
-
-					$complete = $complete ? $complete : 0;
-				}
-
-				//获取累计毛利率
-				if($v['quota_id']==2){
-					$where = array();
-					$where['b.audit_status']		= 1;
-					$where['o.create_user']			= $user;
-					$where['l.req_type']			= 801;
-					$where['l.audit_time']			= array('between',array($v['start_date'],$v['end_date']));
-					$maoli = M()->table('__OP_SETTLEMENT__ as b')->field('b.maoli')->join('__OP__ as o on b.op_id = o.op_id','LEFT')->join('__AUDIT_LOG__ as l on l.req_id = b.id','LEFT')->where($where)->sum('b.maoli');
-					$shouru = M()->table('__OP_SETTLEMENT__ as b')->field('b.shouru')->join('__OP__ as o on b.op_id = o.op_id','LEFT')->join('__AUDIT_LOG__ as l on l.req_id = b.id','LEFT')->where($where)->sum('b.shouru');
-					$complete = round(($maoli / $shouru)*100,2).'%';
-				}
-				
-				//获取回款及时率
-				if($v['quota_id']==3){
-					$where = array();
-					$where['return_time']			= array('lt',$v['end_date']);
-					$where['payee']					= $user;
-					$shouru		= M('contract_pay')->where($where)->sum('amount');
-					$huikuan	= M('contract_pay')->where($where)->sum('pay_amount');
-                    if (!$shouru){
-                        $complete = '100%';
-                    }else{
-                        $complete = round(($huikuan / $shouru)*100,2).'%';
-                    }
-				}
-				
-				//获取成团率
-				if($v['quota_id']==4){
-
-					//计划出团日期在当前考核周期三个月之前一个月的总团数
-					$zxm 					= array();
-					$where 					= array();
-					$where['create_user'] 	= $user;
-					$lists 					= M('op')->where($where)->select();
-					foreach ($lists as & $val){
-						$val['departure'] 	= strtotime($val['departure']);
-						if($v['start_date']-90*24*3600<$val['departure'] && $val['departure']<$v['end_date']-90*24*3600 && $val['create_user']==$user){
-							$zxm[] = $val;
-						}
-					}
-					$zongxiangmu = count($zxm);
-
-					//求这些团中未成团的个数
-					$ct 			= array();
-					foreach ($zxm as $value){
-						if ($value['group_id']){
-							$ct[] 		= $value;
-						}
-					}
-					$chengtuan 		= count($ct);
-
-					//当月未有团时默认满分
-					if($zongxiangmu ==0){
-						$complete = "100%";
-					}else{
-						$complete = round(($chengtuan / $zongxiangmu)*100,2).'%';
-					}
-
-				}
-
-				//获取合同签订率（含家长协议书）
-				if($v['quota_id']==5){
-                    //获取当月月度累计毛利额目标值(如果毛利额目标为0,则不考核)
-                    $gross_margin                   = get_gross_margin($v['month'],$v['user_id'],1);
-                    if ($gross_margin && $gross_margin['target']==0){
-                        //当月目标为0
-                        $complete                   = '100%';
-                    }else{
-                        $where 							= array();
+                if (in_array($v['user_id'],C('KPI_QUARTER')) && $v['month']>201903){
+                    //上个季度的结果引用到下个季度
+                    $monthd                             = substr($v['month'],4,2);
+                    $complete                           = get_prev_kpi_result($v['user_id'],$v['year'],$monthd,$v['quota_id']);
+                }else{
+                    //获取月度累计毛利额
+                    if($v['quota_id']==1){
+                        $where = array();
+                        $where['b.audit_status']		= 1;
                         $where['o.create_user']			= $user;
-                        $where['c.dep_time']			= array('between',array($v['start_date'],$v['end_date']));
-                        $dj_op_ids                      = array_filter(M('op')->getField('dijie_opid',true));
-                        $where['o.op_id']               = array('not in',$dj_op_ids);   //排除地接团
-                        $xiangmu_list	= M()->table('__OP__ as o')->field('o.op_id,c.dep_time')->join('left join __OP_TEAM_CONFIRM__ as c on o.op_id=c.op_id')->where($where)->select();
-                        $xiangmu 		= count($xiangmu_list);
-                        $hetong_list    = array();
-                        foreach ($xiangmu_list as $key=>$value){
-                            //出团后5天内完成上传
-                            $time 		= $value['dep_time'] + 5*24*3600;
-                            $list       = M('contract')->where(array('op_id'=>$value['op_id'],'status'=>1,'confirm_time'=>array('lt',$time)))->find();
-                            if ($list){ $hetong_list[] = $list; }
-                        }
-                        $hetong         = count($hetong_list);
-                        $complete       = $xiangmu ? round(($hetong / $xiangmu)*100,2).'%' : 0 .'%';
+                        $where['l.req_type']			= 801;
+                        $where['l.audit_time']			= array('between',array($v['start_date'],$v['end_date']));
+                        $complete = M()->table('__OP_SETTLEMENT__ as b')->field('b.maoli')->join('__OP__ as o on b.op_id = o.op_id','LEFT')->join('__AUDIT_LOG__ as l on l.req_id = b.id','LEFT')->where($where)->sum('b.maoli');
+
+                        $complete = $complete ? $complete : 0;
                     }
-				}
-				
-				
-				//地接、房、车性价比比选-计调专员，以项目创建时间为准
-				if(in_array($v['quota_id'],array(6,81))){
-					$where = array();
-					$where['o.create_time']			= array('between',array($v['start_date'],$v['end_date']));
-					$bj_type 						= array(9,7,8);		//'9'=>'地接社','7'=>'旅游车队','8'=>'酒店'
-					$where['c.type'] 				= array('in',$bj_type);
-					$where['u.line']				= $user;
-					//获取周期内创建的项目数(op_costacc)
-					//$sj = M()->table('__OP_AUTH__ as u')->join('__OP__ as o on o.op_id = u.op_id','LEFT')->where($where)->count();
-					//获取需要比价的项(类型为地接 , 旅游车队 , 酒店的项)
-					$sj_op = M()->table('__OP_AUTH__ as u')->field('o.op_id')->join('__OP__ as o on o.op_id = u.op_id','LEFT')->join('__OP_COSTACC__ as c on c.op_id = o.op_id','LEFT')->where($where)->select();
-					$sj = count(array_unique(array_column($sj_op,'op_id')));
-					//获取已比价的项目数
-					$bj_op = M()->table('__REL_PRICE__ as p')->field('o.op_id')->join('__OP__ as o on o.op_id = p.op_id','LEFT')->join('__OP_AUTH__ as u on u.op_id = p.op_id','LEFT')->join('__OP_COSTACC__ as c on c.op_id = o.op_id','LEFT')->where($where)->select();
-					$bj = count(array_unique(array_column($bj_op,'op_id')));
-					$complete = $sj ? round(($bj / $sj)*100,2).'%' : '100%';
-				}
-				
-				
-				//业务经理 月度累计毛利额-业务经理  6个月平均毛利率-业务经理
-				if(in_array($v['quota_id'],array(8,9,10,11))){
-					$fzr = C('POST_TEAM_UID');
-					if($fzr[$user]){
-						//获取具体团队数据
-						if($v['quota_id']==8){	
-							$ywdata 	= tplist($fzr[$user],array($v['start_date'],$v['end_date']));
-							$complete	= $ywdata['zml'] ? $ywdata['zml'] : '0';
-						}
-						if($v['quota_id']==9){
-							$ywdata 	= tplist($fzr[$user],array($v['start_date'],$v['end_date']));
-							$complete	= $ywdata['mll'] ? $ywdata['mll'].'%' : '0.00%';	
-						}
-						if($v['quota_id']==10){
-							$xkh		= team_new_customers($fzr[$user],array($v['start_date'],$v['end_date']));
-							$complete	= $xkh['ratio'] ? $xkh['ratio'].'%' : '0.00%';	
-						}
-						if($v['quota_id']==11){
-							$xkh		= team_new_customers($fzr[$user],array($v['start_date'],$v['end_date']));
-							$complete	= $xkh['reratio'] ? $xkh['reratio'].'%' : '0.00%';	
-						}
-					}
-				}
-				
-				//月度累计预算准确度
-				if($v['quota_id']==15){
-					$where = array();
-					$where['s.audit_status']		= 1;
-					$where['u.line']				= $user;
-					//$where['l.req_type']			= 801;
-					$where['l.audit_time']			= array('between',array($v['start_date'],$v['end_date']));
-					
-					//获取总的结算毛利
-					$js = M()->table('__OP_SETTLEMENT__ as s')
-							 ->join('__AUDIT_LOG__ as l on l.req_id = s.id','LEFT')
-							 ->join('__OP_AUTH__ as u 	on u.op_id  = s.op_id','LEFT')
-							 ->where($where)->sum('s.maoli');
-					
-					//获取总的预算毛利		 
-					$ys = M()->table('__OP_SETTLEMENT__ as s')
-							 ->join('__AUDIT_LOG__ as l on l.req_id = s.id','LEFT')
-							 ->join('__OP_AUTH__ as u 	on u.op_id  = s.op_id','LEFT')
-							 ->join('__OP_BUDGET__ as b on b.op_id  = s.op_id','LEFT')
-							 ->where($where)->sum('b.maoli');
 
-					//定义比较区间
-					$v1 = intervalsn($ys,0.10);
-					$v2 = intervalsn($ys,0.15);
-					/*if($js > $v1[0] && $js<$v1[1]){
-						$complete = '100%';
-					}else if(($js < $v1[0] && $js > $v2[0]) || ($js > $v1[1] && $js < $v2[1]) ){
-						$complete = '80%';
-					}else{
-						$complete = '0%';	
-					}*/
-					$complete = '100%';
+                    //获取累计毛利率
+                    if($v['quota_id']==2){
+                        $where = array();
+                        $where['b.audit_status']		= 1;
+                        $where['o.create_user']			= $user;
+                        $where['l.req_type']			= 801;
+                        $where['l.audit_time']			= array('between',array($v['start_date'],$v['end_date']));
+                        $maoli = M()->table('__OP_SETTLEMENT__ as b')->field('b.maoli')->join('__OP__ as o on b.op_id = o.op_id','LEFT')->join('__AUDIT_LOG__ as l on l.req_id = b.id','LEFT')->where($where)->sum('b.maoli');
+                        $shouru = M()->table('__OP_SETTLEMENT__ as b')->field('b.shouru')->join('__OP__ as o on b.op_id = o.op_id','LEFT')->join('__AUDIT_LOG__ as l on l.req_id = b.id','LEFT')->where($where)->sum('b.shouru');
+                        $complete = round(($maoli / $shouru)*100,2).'%';
+                    }
 
-				}
-				
-				
-				//活动前要素准备不及时
-				if($v['quota_id']==16){
-					$rsum = user_work_record($user,$month,105);
-					if($rsum){
-						$rcom	= $rsum>=10 ? 0 : 100-($rsum*10);		
-					}else{
-						$rcom	= 100;
-					}
-					$complete	= $rcom.'%';
-				}
-				
-				
-				//帐、表、税准确性-财务经理
-				if($v['quota_id']==18){
-					$rsum = user_work_record($user,$month,205);
-					$complete	= $rsum ? '0%' : '100%';
-				}
-				
-				//开具发票、支票、汇票等准确-财务经理
-				if(in_array($v['quota_id'],array(20,23,26))){
-					$rsum = user_work_record($user,$month,206);
-					$complete	= $rsum ? '0%' : '100%';
-				}
-				
-				//帐帐相符、帐实相符-出纳员
-				if(in_array($v['quota_id'],array(21,24))){
-					$rsum = user_work_record($user,$month,207);
-					$complete	= $rsum ? '0%' : '100%';
-				}
-				
-				//办公环境及设施保障指标（OA）-综合部经理
-				if(in_array($v['quota_id'],array(27,32,37))){
-					$sum = user_work_record($user,$month,208);
-					if($sum>4){
-						$complete	= 0;	
-					}else{
-						$zongfen 	= 100-($sum*10);
-						$complete	= $zongfen>0 ? $zongfen : 0;
-					}
-					$complete = $complete.'%';
-				}
-				
-				//日常工作及时性
-				if(in_array($v['quota_id'],array(19,22,25,28,33,38,45,103))){
-					$sum = user_work_record($user,$month,100);
-					if($sum>4){
-						$complete	= 0;	
-					}else{
-						$zongfen 	= 100-($sum*10);
-						$complete	= $zongfen>0 ? $zongfen : 0;
-					}
-					$complete = $complete.'%';
-				}
-				
-				//活动前要素准备不及时
-				if(in_array($v['quota_id'],array(56,113))){
-					$rsum = user_work_record($user,$month,106);
-					if($rsum){
-						$rcom	= $rsum>=20 ? 0 : 100-($rsum*5);		
-					}else{
-						$rcom	= 100;
-					}
-					$complete	= $rcom.'%';
-				}
-				
-				//票据及时性--采购经理
-				if($v['quota_id']==92){
-					$rsum = user_work_record($user,$month,108);
-					if($rsum){
-						$rcom	= $rsum>=10 ? 0 : 100-($rsum*10);		
-					}else{
-						$rcom	= 100;
-					}
-					$complete	= $rcom.'%';
-				}
-				
-				//日常工作质量不合格
-				if(in_array($v['quota_id'],array(29,34,39,46,102))){
-					$sum = user_work_record($user,$month,200);
-					if($v['quota_id']!=102){
-						if($sum>4){
-							$complete	= 0;	
-						}else{
-							$zongfen 	= 100-($sum*10);
-							$complete	= $zongfen>0 ? $zongfen : 0;
-						}
-					}else{
-						if($sum>1){
-							$complete	= 0;	
-						}else{
-							$zongfen 	= 100-($sum*50);
-							$complete	= $zongfen>0 ? $zongfen : 0;
-						}
-					}
-					$complete = $complete.'%';
-				}
-				
-				//中科教微信运营——市场文案
-				if($v['quota_id']==55){
-					
-					$koufen = 0;
-					
-					//发图出错
-					$sum = user_work_record($user,$month,209);
-					if($sum>1) 	$koufen += $sum*2;
-					
-					//一般文字出错
-					$sum = user_work_record($user,$month,211);
-					if($sum) 	$koufen += $sum*2;
-					
-					//发文不及时
-					$sum = user_work_record($user,$month,array('111','210'));
-					if($sum) 	$koufen += $sum*5;
-					
-					//汇总扣分数
-					$zongfen 	= 100-$koufen;
-					
-					$complete	= $zongfen>0 ? $zongfen : 0;
-				}
-				
-				
-				//招聘到岗率
-				if($v['quota_id']==42){
-					
-					//获取招聘人数
-					$where = array();
-					$where['status']			= 0;
-					$where['input_time']		= array('between',array($v['start_date'],$v['end_date']));
-					$sum = M('account')->where($where)->count();
-					
-					$complete = $v['plan'] ? round(($sum / $v['plan'])*100,2).'%' : '100%';
-				}
-				
-				//网站维护--市场文案
-				if($v['quota_id']==57){
-					
-					//汇总记录次数
-					$sum = user_work_record($user,$month,array('212','213','112'));
-					
-					//汇总扣分数
-					$zongfen 	= 100-($sum*5);
-					
-					$complete	= $zongfen>0 ? $zongfen : 0;
-				}
-				
-				
-				//学趣微信--市场新媒体
-				if($v['quota_id']==58){
-					
-					$koufen = 0;
-					
-					//发图出错
-					$sum = user_work_record($user,$month,214);
-					if($sum>1) 	$koufen += $sum*3;
-					
-					//发文不及时或者文字错误
-					$sum = user_work_record($user,$month,array('113','215'));
-					if($sum) 	$koufen += $sum*5;
-					
-					//汇总扣分数
-					$zongfen 	= 100-$koufen;
-					
-					$complete	= $zongfen>0 ? $zongfen : 0;
-				}
-				
-				
-				//信息收集--市场新媒体
-				if($v['quota_id']==59){
-					
-					//汇总记录次数
-					$sum = user_work_record($user,$month,array('401','402'));
-					
-					//汇总扣分数
-					$zongfen 	= 100-($sum*2);
-					
-					$complete	= $zongfen>0 ? $zongfen : 0;
-				}
-				
-				
-				//每月新增10家物资采购方--采购经理
-				if($v['quota_id']==84){
-					
-					$where = array();
-					$where['input_time']  		= array('between',array($v['start_date'],$v['end_date']));
-					$where['input_uid']  		= $user;
-					$where['audit_status']  		= 1;
-					
-					$rsum = M('supplier')->where($where)->count();
-					$complete	= $rsum>10 ? '100%' : ($rsum*10).'%';
-				}
-				
-				//新资源拓展--资源管理部（教务专员）
-				if(in_array($v['quota_id'],array(112,108,65))){
-					
-					$where = array();
-					$where['input_time']  		= array('between',array($v['start_date'],$v['end_date']));
-					$where['input_uid']  		= $user;
-					$where['audit_status']  		= 1;
-					
-					$rsum = M('supplier')->where($where)->count();
-					
-					$complete = $v['plan'] ? round(($rsum / $v['plan'])*100,2).'%' : '100%';
-					
-				}
-				
-				
-				//新产品模块开发数量
-				if(in_array($v['quota_id'],array(100,96))){
-					
-					$where = array();
-					$where['input_time']  		= array('between',array($v['start_date'],$v['end_date']));
-					$where['input_user']  		= $user;
-					$where['audit_status']  		= 1;
-					
-					$rsum = M('product')->where($where)->count();
-					
-					$complete = $v['plan'] ? round(($rsum / $v['plan'])*100,2).'%' : '100%';
-					
-				}
-				
-				
-				//活动前期准备--业务助理活动
-				if($v['quota_id']==87){
-					
-					//汇总记录次数
-					$sum = user_work_record($user,$month,403);
-					
-					//汇总扣分数
-					$zongfen 	= 100-($sum*2);
-					
-					$complete	= $zongfen>0 ? $zongfen : 0;
-				}
-				
-				
-				//文件归集整理工作--业务助理
-				if($v['quota_id']==89){
-					
-					//汇总记录次数
-					$sum = user_work_record($user,$month,array('114','216'));
-					
-					if($sum>3){
-						$complete	= 0;	
-					}else{
-						//汇总扣分数
-						$zongfen 	= 100-($sum*10);
-						$complete	= $zongfen>0 ? $zongfen : 0;
-					}
-				}
-				
-				
-				//完成领导交办的其他任务--业务助理
-				if($v['quota_id']==90){
-					
-					//汇总记录次数
-					$sum = user_work_record($user,$month,115);
-					
-					if($sum>3){
-						$complete	= 0;	
-					}else{
-						//汇总扣分数
-						$zongfen 	= 100-($sum*10);
-						$complete	= $zongfen>0 ? $zongfen : 0;
-					}
-				}
-				
-				
-				//网站微信运营--市场经理
-				if($v['quota_id']==53){
-					
-					//汇总记录次数
-					$sum = user_work_record($user,$month,404);
-					
-					if($sum>3){
-						$complete	= 0;	
-					}else{
-						//汇总扣分数
-						$zongfen 	= 100-($sum*10);
-						$complete	= $zongfen>0 ? $zongfen : 0;
-					}
-				}
-				
-				//市场活动前期准备--市场经理
-				if($v['quota_id']==52){
-					
-					//汇总记录次数
-					$sum = user_work_record($user,$month,405);
-					$zongfen 	= 100-($sum*2);
-					$complete	= $zongfen>0 ? $zongfen : 0;
-				}
-				
-				
-				//员工满意度--物资专员
-				if($v['quota_id']==41){
-					
-					//汇总记录次数
-					$sum = user_work_record($user,$month,300);
-					if($sum>3){
-						$complete	= 0;	
-					}else{
-						//汇总扣分数
-						$zongfen 	= 100-($sum*10);
-						$complete	= $zongfen>0 ? $zongfen : 0;
-					}
-				}
-				
-				//物资物料盘点抽查账实相符--物资专员
-				if($v['quota_id']==40){
-					
-					//汇总记录次数
-					$sum = user_work_record($user,$month,217);
-					if($sum){
-						$complete	= 0;	
-					}else{
-						$complete	= 100;
-					}
-				}
-				
-				
-				//重大责任事故控制--安全副经理员
-				if($v['quota_id']==48){
-					
-					//汇总记录次数
-					$sum = user_work_record($user,$month,218);
-					if($sum){
-						$complete	= 0;	
-					}else{
-						$complete	= 100;
-					}
-				}
-				
-				
-				//培训相关
-				if(in_array($v['quota_id'],array(111,107,83,66,54,44,12,95))){
-					
-					//获取培训次数
-					$where = array();
-					$where['lecture_date']  		= array('between',array($v['start_date'],$v['end_date']));
-					$where['lecturer_uid']  		= $user;
-					$where['del']  				= 0;
-					$sum = M('cour_ppt')->where($where)->count();
-					
-					$complete = $v['plan'] ? round(($sum / $v['plan'])*100,2).'%' : '100%';
-					
-				}
-				
-				
-				//满意度考核-采购经理
-				if($v['quota_id']==114){
-					$sum = user_work_record($user,$month,217);
-					if($sum>3){
-						$complete	= 0;	
-					}else{
-						//汇总扣分数
-						$zongfen 	= 100-($sum*10);
-						$complete	= $zongfen>0 ? $zongfen : 0;
-					}
-				}
-				
-				
-				//物资采购合格率--采购经理
-				if($v['quota_id']==86){
-					$sum = user_work_record($user,$month,217);
-					if($sum>4){
-						$complete	= 0;	
-					}else{
-						//汇总扣分数
-						$zongfen 	= 100-($sum*10);
-						$complete	= $zongfen>0 ? $zongfen : 0;
-					}
-				}
-				
-				
-				//日常所有工作及时性--采购经理
-				if($v['quota_id']==85){
-					$sum = user_work_record($user,$month,100);
-					if($sum>3){
-						$complete	= 0;	
-					}else{
-						//汇总扣分数
-						$zongfen 	= 100-($sum*10);
-						$complete	= $zongfen>0 ? $zongfen : 0;
-					}
-				}
-				
-				//数据前端后端对接--市场PHP
-				if($v['quota_id']==64){
-					$sum = user_work_record($user,$month,116);
-					if($sum>3){
-						$complete	= 0;	
-					}else{
-						//汇总扣分数
-						$zongfen 	= 100-($sum*10);
-						$complete	= $zongfen>0 ? $zongfen : 0;
-					}
-				}
-				
-				
-				//前端网页实现--市场PHP
-				if($v['quota_id']==63){
-					$sum = user_work_record($user,$month,117);
-					if($sum>3){
-						$complete	= 0;	
-					}else{
-						$zongfen 	= 100-($sum*10);
-						$complete	= $zongfen>0 ? $zongfen : 0;
-					}
-				}
-				
-				//前端网页实现--市场PHP
-				if($v['quota_id']==62){
-					$sum = user_work_record($user,$month,118);
-					if($sum>3){
-						$complete	= 0;	
-					}else{
-						$zongfen 	= 100-($sum*10);
-						$complete	= $zongfen>0 ? $zongfen : 0;
-					}
-				}
-				
-				
-				//满意度调查--安全副经理
-				if($v['quota_id']==49){
-					
-					//获取当月出团项目数
-					$where = array();
-					$where['o.dep_time']		= array('between',array($v['start_date'],$v['end_date']));
-					
-					//当月出团项目数
-					$ops = M()->table('__OP_TEAM_CONFIRM__ as o')->where($where)->count();
-					
-					//已巡查的项目数
-					$ins = M()->table('__INSPECT__ as i')->join('__OP_TEAM_CONFIRM__ as o on i.group_id = o.group_id','LEFT')->where($where)->count();
-					
-					$sum = $ops - $ins;
-					
-					if($sum>3){
-						$complete	= 0;	
-					}else{
-						//汇总扣分数
-						$zongfen 	= 100-($sum*10);
-						$complete	= $zongfen>0 ? $zongfen : 0;
-					}
-					
-					
-				}
-				
-				//各业务平均毛利率--计调经理
-				if($v['quota_id']==80){
-					
-					
-					$zongfen	= 0;
-					//京区校内
-					$jqxn 		= business_dept_data(35,array($v['start_date'],$v['end_date']));
-					$zongfen 	+= absdata($jqxn['mll'],19.5);
-					
-					//京区校外
-					$jqxw		= business_dept_data(80,array($v['start_date'],$v['end_date']));
-					$zongfen 	+= absdata($jqxw['mll'],28);
-					
-					//京外业务
-					$jwyw		= business_dept_data(18,array($v['start_date'],$v['end_date']));
-					$zongfen 	+= absdata($jwyw['mll'],24.5);
-					
-					$complete 	= $zongfen ? round(($zongfen / 300)*100,2) : '100';
-										
-					
-				}
-				
-				
-				//物资采购验收率--采购经理
-				if($v['quota_id']==91){
-					//汇总记录次数
-					$sum = user_work_record($user,$month,204);
-					if($sum>3){
-						$complete	= 0;	
-					}else{
-						//汇总扣分数
-						$zongfen 	= 100-($sum*10);
-						$complete	= $zongfen>0 ? $zongfen : 0;
-					}
-				}
-				
-				
-				//日常所有工作及时性--计调经理
-				if($v['quota_id']==79){
-					//汇总记录次数
-					$sum = user_work($user,$month,1);
-					if($sum>2){
-						$complete	= 0;	
-					}else{
-						//汇总扣分数
-						$zongfen 	= 100-($sum*10);
-						$complete	= $zongfen>0 ? $zongfen : 0;
-					}
-				}
-				
-				
-				//安全隐患控制--安全副经理
-				if($v['quota_id']==47){
-					//汇总记录次数
-					$sum = user_work_record($user,$month,219);
-					$complete		= $sum ? 0 : 100;	
-				}
-				
-				
-				//员工满意度--综合部专员
-				if(in_array($v['quota_id'],array(36,31))){
-					//汇总记录次数
-					$sum = user_work($user,$month,3);
-					if($sum>3){
-						$complete	= 0;	
-					}else{
-						$nsum 		= $sum ? $sum-1 : 0;
-						//汇总扣分数
-						$zongfen 	= 100-($nsum*10);
-						$complete	= $zongfen>0 ? $zongfen : 0;
-					}
-				}
-				
-				//公司制度、文件管理执行率--综合部专员
-				if(in_array($v['quota_id'],array(35,30))){
-					//汇总记录次数
-					$sum = user_work_record($user,$month,220);
-					if($sum>2){
-						$complete	= 0;	
-					}else{
-						//汇总扣分数
-						$zongfen 	= 100-($sum*10);
-						$complete	= $zongfen>0 ? $zongfen : 0;
-					}
-				}
-				
-				
-				//业务人员满意度--计调经理
-				if($v['quota_id']==82){
-					
-					//获取当月出团项目数
-					$where = array();
-					$where['o.ret_time']		= array('between',array($v['start_date'],$v['end_date']));
-					$where['e.liable_uid']	= $user;
-					$where['e.eval_type']	= 2;
-					
-					//当月结束的团项目数
-					$cou = M()->table('__OP_EVAL__ as e')->join('__OP_TEAM_CONFIRM__ as o on o.op_id = e.op_id','LEFT')->where($where)->count();
-					
-					$sum = M()->table('__OP_EVAL__ as e')->join('__OP_TEAM_CONFIRM__ as o on o.op_id = e.op_id','LEFT')->where($where)->sum('score');
-					
-					//平均得分
-					$score = round($sum/($cou*100)*100);
-					if($score>=85 || !$cou){
-						$complete	= 100;	
-					}else{
-						$complete	= $score;	
-					}
-					
-				}
-				
-				
-				//资源配置质量--资源管理部（教务专员）
-				if(in_array($v['quota_id'],array(110,106,67))){
-					
-					//获取当月出团项目数
-					$where = array();
-					$where['o.dep_time']		= array('between',array($v['start_date'],$v['end_date']));
-					$where['e.liable_uid']	= $user;
-					$where['e.eval_type']	= 3;
-					
-					//当月结束的团项目数
-					$cou = M()->table('__OP_EVAL__ as e')->join('__OP_TEAM_CONFIRM__ as o on o.op_id = e.op_id','LEFT')->where($where)->count();
-					
-					$sum = M()->table('__OP_EVAL__ as e')->join('__OP_TEAM_CONFIRM__ as o on o.op_id = e.op_id','LEFT')->where($where)->sum('score');
-					
-					//平均得分
-					$score = round($sum/($cou*90)*100);
-					if($score>100 || !$cou){
-						$complete	= 100;	
-					}else{
-						$complete	= $score;	
-					}
-					
-				}
-				
-				
-				//产品方案完成质量---研发
-				if(in_array($v['quota_id'],array(99,94))){
-					
-					//获取当月出团项目数
-					$where = array();
-					$where['o.dep_time']		= array('between',array($v['start_date'],$v['end_date']));
-					$where['e.liable_uid']	= $user;
-					$where['e.eval_type']	= 1;
-					
-					//当月结束的团项目数
-					$cou = M()->table('__OP_EVAL__ as e')->join('__OP_TEAM_CONFIRM__ as o on o.op_id = e.op_id','LEFT')->where($where)->count();
-					
-					$sum = M()->table('__OP_EVAL__ as e')->join('__OP_TEAM_CONFIRM__ as o on o.op_id = e.op_id','LEFT')->where($where)->sum('score');
-					
-					//平均得分
-					$score = round($sum/($cou*90)*100);
-					if($score>100 || !$cou){
-						$complete	= 100;	
-					}else{
-						$complete	= $score;	
-					}
-					
-				}
+                    //获取回款及时率
+                    if($v['quota_id']==3){
+                        $where = array();
+                        $where['return_time']			= array('lt',$v['end_date']);
+                        $where['payee']					= $user;
+                        $shouru		= M('contract_pay')->where($where)->sum('amount');
+                        $huikuan	= M('contract_pay')->where($where)->sum('pay_amount');
+                        if (!$shouru){
+                            $complete = '100%';
+                        }else{
+                            $complete = round(($huikuan / $shouru)*100,2).'%';
+                        }
+                    }
 
-                //月度顾客满意度(业务)
-                if($v['quota_id']==124){
-                    //获取当月月度累计毛利额目标值(如果毛利额系数目标为0,则不考核)
-                    $gross_margin                   = get_gross_margin($v['month'],$v['user_id'],1);
-                    if ($gross_margin && $gross_margin['target']==0){
-                        //当月目标为0
-                        $complete                   = '100%';
-                    }else {
-                        //获取当月已评分的团
-                        $where                  = array();
+                    //获取成团率
+                    if($v['quota_id']==4){
+
+                        //计划出团日期在当前考核周期三个月之前一个月的总团数
+                        $zxm 					= array();
+                        $where 					= array();
+                        $where['create_user'] 	= $user;
+                        $lists 					= M('op')->where($where)->select();
+                        foreach ($lists as & $val){
+                            $val['departure'] 	= strtotime($val['departure']);
+                            if($v['start_date']-90*24*3600<$val['departure'] && $val['departure']<$v['end_date']-90*24*3600 && $val['create_user']==$user){
+                                $zxm[] = $val;
+                            }
+                        }
+                        $zongxiangmu = count($zxm);
+
+                        //求这些团中未成团的个数
+                        $ct 			= array();
+                        foreach ($zxm as $value){
+                            if ($value['group_id']){
+                                $ct[] 		= $value;
+                            }
+                        }
+                        $chengtuan 		= count($ct);
+
+                        //当月未有团时默认满分
+                        if($zongxiangmu ==0){
+                            $complete = "100%";
+                        }else{
+                            $complete = round(($chengtuan / $zongxiangmu)*100,2).'%';
+                        }
+
+                    }
+
+                    //获取合同签订率（含家长协议书）
+                    if($v['quota_id']==5){
+                        //获取当月月度累计毛利额目标值(如果毛利额目标为0,则不考核)
+                        $gross_margin                   = get_gross_margin($v['month'],$v['user_id'],1);
+                        if ($gross_margin && $gross_margin['target']==0){
+                            //当月目标为0
+                            $complete                   = '100%';
+                        }else{
+                            $where 							= array();
+                            $where['o.create_user']			= $user;
+                            $where['c.dep_time']			= array('between',array($v['start_date'],$v['end_date']));
+                            $dj_op_ids                      = array_filter(M('op')->getField('dijie_opid',true));
+                            $where['o.op_id']               = array('not in',$dj_op_ids);   //排除地接团
+                            $xiangmu_list	= M()->table('__OP__ as o')->field('o.op_id,c.dep_time')->join('left join __OP_TEAM_CONFIRM__ as c on o.op_id=c.op_id')->where($where)->select();
+                            $xiangmu 		= count($xiangmu_list);
+                            $hetong_list    = array();
+                            foreach ($xiangmu_list as $key=>$value){
+                                //出团后5天内完成上传
+                                $time 		= $value['dep_time'] + 5*24*3600;
+                                $list       = M('contract')->where(array('op_id'=>$value['op_id'],'status'=>1,'confirm_time'=>array('lt',$time)))->find();
+                                if ($list){ $hetong_list[] = $list; }
+                            }
+                            $hetong         = count($hetong_list);
+                            $complete       = $xiangmu ? round(($hetong / $xiangmu)*100,2).'%' : 0 .'%';
+                        }
+                    }
+
+
+                    //地接、房、车性价比比选-计调专员，以项目创建时间为准
+                    if(in_array($v['quota_id'],array(6,81))){
+                        $where = array();
+                        $where['o.create_time']			= array('between',array($v['start_date'],$v['end_date']));
+                        $bj_type 						= array(9,7,8);		//'9'=>'地接社','7'=>'旅游车队','8'=>'酒店'
+                        $where['c.type'] 				= array('in',$bj_type);
+                        $where['u.line']				= $user;
+                        //获取周期内创建的项目数(op_costacc)
+                        //$sj = M()->table('__OP_AUTH__ as u')->join('__OP__ as o on o.op_id = u.op_id','LEFT')->where($where)->count();
+                        //获取需要比价的项(类型为地接 , 旅游车队 , 酒店的项)
+                        $sj_op = M()->table('__OP_AUTH__ as u')->field('o.op_id')->join('__OP__ as o on o.op_id = u.op_id','LEFT')->join('__OP_COSTACC__ as c on c.op_id = o.op_id','LEFT')->where($where)->select();
+                        $sj = count(array_unique(array_column($sj_op,'op_id')));
+                        //获取已比价的项目数
+                        $bj_op = M()->table('__REL_PRICE__ as p')->field('o.op_id')->join('__OP__ as o on o.op_id = p.op_id','LEFT')->join('__OP_AUTH__ as u on u.op_id = p.op_id','LEFT')->join('__OP_COSTACC__ as c on c.op_id = o.op_id','LEFT')->where($where)->select();
+                        $bj = count(array_unique(array_column($bj_op,'op_id')));
+                        $complete = $sj ? round(($bj / $sj)*100,2).'%' : '100%';
+                    }
+
+
+                    //业务经理 月度累计毛利额-业务经理  6个月平均毛利率-业务经理
+                    if(in_array($v['quota_id'],array(8,9,10,11))){
+                        $fzr = C('POST_TEAM_UID');
+                        if($fzr[$user]){
+                            //获取具体团队数据
+                            if($v['quota_id']==8){
+                                $ywdata 	= tplist($fzr[$user],array($v['start_date'],$v['end_date']));
+                                $complete	= $ywdata['zml'] ? $ywdata['zml'] : '0';
+                            }
+                            if($v['quota_id']==9){
+                                $ywdata 	= tplist($fzr[$user],array($v['start_date'],$v['end_date']));
+                                $complete	= $ywdata['mll'] ? $ywdata['mll'].'%' : '0.00%';
+                            }
+                            if($v['quota_id']==10){
+                                $xkh		= team_new_customers($fzr[$user],array($v['start_date'],$v['end_date']));
+                                $complete	= $xkh['ratio'] ? $xkh['ratio'].'%' : '0.00%';
+                            }
+                            if($v['quota_id']==11){
+                                $xkh		= team_new_customers($fzr[$user],array($v['start_date'],$v['end_date']));
+                                $complete	= $xkh['reratio'] ? $xkh['reratio'].'%' : '0.00%';
+                            }
+                        }
+                    }
+
+                    //月度累计预算准确度
+                    if($v['quota_id']==15){
+                        $where = array();
+                        $where['s.audit_status']		= 1;
+                        $where['u.line']				= $user;
+                        //$where['l.req_type']			= 801;
+                        $where['l.audit_time']			= array('between',array($v['start_date'],$v['end_date']));
+
+                        //获取总的结算毛利
+                        $js = M()->table('__OP_SETTLEMENT__ as s')
+                            ->join('__AUDIT_LOG__ as l on l.req_id = s.id','LEFT')
+                            ->join('__OP_AUTH__ as u 	on u.op_id  = s.op_id','LEFT')
+                            ->where($where)->sum('s.maoli');
+
+                        //获取总的预算毛利
+                        $ys = M()->table('__OP_SETTLEMENT__ as s')
+                            ->join('__AUDIT_LOG__ as l on l.req_id = s.id','LEFT')
+                            ->join('__OP_AUTH__ as u 	on u.op_id  = s.op_id','LEFT')
+                            ->join('__OP_BUDGET__ as b on b.op_id  = s.op_id','LEFT')
+                            ->where($where)->sum('b.maoli');
+
+                        //定义比较区间
+                        $v1 = intervalsn($ys,0.10);
+                        $v2 = intervalsn($ys,0.15);
+                        /*if($js > $v1[0] && $js<$v1[1]){
+                            $complete = '100%';
+                        }else if(($js < $v1[0] && $js > $v2[0]) || ($js > $v1[1] && $js < $v2[1]) ){
+                            $complete = '80%';
+                        }else{
+                            $complete = '0%';
+                        }*/
+                        $complete = '100%';
+
+                    }
+
+
+                    //活动前要素准备不及时
+                    if($v['quota_id']==16){
+                        $rsum = user_work_record($user,$month,105);
+                        if($rsum){
+                            $rcom	= $rsum>=10 ? 0 : 100-($rsum*10);
+                        }else{
+                            $rcom	= 100;
+                        }
+                        $complete	= $rcom.'%';
+                    }
+
+
+                    //帐、表、税准确性-财务经理
+                    if($v['quota_id']==18){
+                        $rsum = user_work_record($user,$month,205);
+                        $complete	= $rsum ? '0%' : '100%';
+                    }
+
+                    //开具发票、支票、汇票等准确-财务经理
+                    if(in_array($v['quota_id'],array(20,23,26))){
+                        $rsum = user_work_record($user,$month,206);
+                        $complete	= $rsum ? '0%' : '100%';
+                    }
+
+                    //帐帐相符、帐实相符-出纳员
+                    if(in_array($v['quota_id'],array(21,24))){
+                        $rsum = user_work_record($user,$month,207);
+                        $complete	= $rsum ? '0%' : '100%';
+                    }
+
+                    //办公环境及设施保障指标（OA）-综合部经理
+                    if(in_array($v['quota_id'],array(27,32,37))){
+                        $sum = user_work_record($user,$month,208);
+                        if($sum>4){
+                            $complete	= 0;
+                        }else{
+                            $zongfen 	= 100-($sum*10);
+                            $complete	= $zongfen>0 ? $zongfen : 0;
+                        }
+                        $complete = $complete.'%';
+                    }
+
+                    //日常工作及时性
+                    if(in_array($v['quota_id'],array(19,22,25,28,33,38,45,103))){
+                        $sum = user_work_record($user,$month,100);
+                        if($sum>4){
+                            $complete	= 0;
+                        }else{
+                            $zongfen 	= 100-($sum*10);
+                            $complete	= $zongfen>0 ? $zongfen : 0;
+                        }
+                        $complete = $complete.'%';
+                    }
+
+                    //活动前要素准备不及时
+                    if(in_array($v['quota_id'],array(56,113))){
+                        $rsum = user_work_record($user,$month,106);
+                        if($rsum){
+                            $rcom	= $rsum>=20 ? 0 : 100-($rsum*5);
+                        }else{
+                            $rcom	= 100;
+                        }
+                        $complete	= $rcom.'%';
+                    }
+
+                    //票据及时性--采购经理
+                    if($v['quota_id']==92){
+                        $rsum = user_work_record($user,$month,108);
+                        if($rsum){
+                            $rcom	= $rsum>=10 ? 0 : 100-($rsum*10);
+                        }else{
+                            $rcom	= 100;
+                        }
+                        $complete	= $rcom.'%';
+                    }
+
+                    //日常工作质量不合格
+                    if(in_array($v['quota_id'],array(29,34,39,46,102))){
+                        $sum = user_work_record($user,$month,200);
+                        if($v['quota_id']!=102){
+                            if($sum>4){
+                                $complete	= 0;
+                            }else{
+                                $zongfen 	= 100-($sum*10);
+                                $complete	= $zongfen>0 ? $zongfen : 0;
+                            }
+                        }else{
+                            if($sum>1){
+                                $complete	= 0;
+                            }else{
+                                $zongfen 	= 100-($sum*50);
+                                $complete	= $zongfen>0 ? $zongfen : 0;
+                            }
+                        }
+                        $complete = $complete.'%';
+                    }
+
+                    //中科教微信运营——市场文案
+                    if($v['quota_id']==55){
+
+                        $koufen = 0;
+
+                        //发图出错
+                        $sum = user_work_record($user,$month,209);
+                        if($sum>1) 	$koufen += $sum*2;
+
+                        //一般文字出错
+                        $sum = user_work_record($user,$month,211);
+                        if($sum) 	$koufen += $sum*2;
+
+                        //发文不及时
+                        $sum = user_work_record($user,$month,array('111','210'));
+                        if($sum) 	$koufen += $sum*5;
+
+                        //汇总扣分数
+                        $zongfen 	= 100-$koufen;
+
+                        $complete	= $zongfen>0 ? $zongfen : 0;
+                    }
+
+
+                    //招聘到岗率
+                    if($v['quota_id']==42){
+
+                        //获取招聘人数
+                        $where = array();
+                        $where['status']			= 0;
+                        $where['input_time']		= array('between',array($v['start_date'],$v['end_date']));
+                        $sum = M('account')->where($where)->count();
+
+                        $complete = $v['plan'] ? round(($sum / $v['plan'])*100,2).'%' : '100%';
+                    }
+
+                    //网站维护--市场文案
+                    if($v['quota_id']==57){
+
+                        //汇总记录次数
+                        $sum = user_work_record($user,$month,array('212','213','112'));
+
+                        //汇总扣分数
+                        $zongfen 	= 100-($sum*5);
+
+                        $complete	= $zongfen>0 ? $zongfen : 0;
+                    }
+
+
+                    //学趣微信--市场新媒体
+                    if($v['quota_id']==58){
+
+                        $koufen = 0;
+
+                        //发图出错
+                        $sum = user_work_record($user,$month,214);
+                        if($sum>1) 	$koufen += $sum*3;
+
+                        //发文不及时或者文字错误
+                        $sum = user_work_record($user,$month,array('113','215'));
+                        if($sum) 	$koufen += $sum*5;
+
+                        //汇总扣分数
+                        $zongfen 	= 100-$koufen;
+
+                        $complete	= $zongfen>0 ? $zongfen : 0;
+                    }
+
+
+                    //信息收集--市场新媒体
+                    if($v['quota_id']==59){
+
+                        //汇总记录次数
+                        $sum = user_work_record($user,$month,array('401','402'));
+
+                        //汇总扣分数
+                        $zongfen 	= 100-($sum*2);
+
+                        $complete	= $zongfen>0 ? $zongfen : 0;
+                    }
+
+
+                    //每月新增10家物资采购方--采购经理
+                    if($v['quota_id']==84){
+
+                        $where = array();
+                        $where['input_time']  		= array('between',array($v['start_date'],$v['end_date']));
+                        $where['input_uid']  		= $user;
+                        $where['audit_status']  		= 1;
+
+                        $rsum = M('supplier')->where($where)->count();
+                        $complete	= $rsum>10 ? '100%' : ($rsum*10).'%';
+                    }
+
+                    //新资源拓展--资源管理部（教务专员）
+                    if(in_array($v['quota_id'],array(112,108,65))){
+
+                        $where = array();
+                        $where['input_time']  		= array('between',array($v['start_date'],$v['end_date']));
+                        $where['input_uid']  		= $user;
+                        $where['audit_status']  		= 1;
+
+                        $rsum = M('supplier')->where($where)->count();
+
+                        $complete = $v['plan'] ? round(($rsum / $v['plan'])*100,2).'%' : '100%';
+
+                    }
+
+
+                    //新产品模块开发数量
+                    if(in_array($v['quota_id'],array(100,96))){
+
+                        $where = array();
+                        $where['input_time']  		= array('between',array($v['start_date'],$v['end_date']));
+                        $where['input_user']  		= $user;
+                        $where['audit_status']  		= 1;
+
+                        $rsum = M('product')->where($where)->count();
+
+                        $complete = $v['plan'] ? round(($rsum / $v['plan'])*100,2).'%' : '100%';
+
+                    }
+
+
+                    //活动前期准备--业务助理活动
+                    if($v['quota_id']==87){
+
+                        //汇总记录次数
+                        $sum = user_work_record($user,$month,403);
+
+                        //汇总扣分数
+                        $zongfen 	= 100-($sum*2);
+
+                        $complete	= $zongfen>0 ? $zongfen : 0;
+                    }
+
+
+                    //文件归集整理工作--业务助理
+                    if($v['quota_id']==89){
+
+                        //汇总记录次数
+                        $sum = user_work_record($user,$month,array('114','216'));
+
+                        if($sum>3){
+                            $complete	= 0;
+                        }else{
+                            //汇总扣分数
+                            $zongfen 	= 100-($sum*10);
+                            $complete	= $zongfen>0 ? $zongfen : 0;
+                        }
+                    }
+
+
+                    //完成领导交办的其他任务--业务助理
+                    if($v['quota_id']==90){
+
+                        //汇总记录次数
+                        $sum = user_work_record($user,$month,115);
+
+                        if($sum>3){
+                            $complete	= 0;
+                        }else{
+                            //汇总扣分数
+                            $zongfen 	= 100-($sum*10);
+                            $complete	= $zongfen>0 ? $zongfen : 0;
+                        }
+                    }
+
+
+                    //网站微信运营--市场经理
+                    if($v['quota_id']==53){
+
+                        //汇总记录次数
+                        $sum = user_work_record($user,$month,404);
+
+                        if($sum>3){
+                            $complete	= 0;
+                        }else{
+                            //汇总扣分数
+                            $zongfen 	= 100-($sum*10);
+                            $complete	= $zongfen>0 ? $zongfen : 0;
+                        }
+                    }
+
+                    //市场活动前期准备--市场经理
+                    if($v['quota_id']==52){
+
+                        //汇总记录次数
+                        $sum = user_work_record($user,$month,405);
+                        $zongfen 	= 100-($sum*2);
+                        $complete	= $zongfen>0 ? $zongfen : 0;
+                    }
+
+
+                    //员工满意度--物资专员
+                    if($v['quota_id']==41){
+
+                        //汇总记录次数
+                        $sum = user_work_record($user,$month,300);
+                        if($sum>3){
+                            $complete	= 0;
+                        }else{
+                            //汇总扣分数
+                            $zongfen 	= 100-($sum*10);
+                            $complete	= $zongfen>0 ? $zongfen : 0;
+                        }
+                    }
+
+                    //物资物料盘点抽查账实相符--物资专员
+                    if($v['quota_id']==40){
+
+                        //汇总记录次数
+                        $sum = user_work_record($user,$month,217);
+                        if($sum){
+                            $complete	= 0;
+                        }else{
+                            $complete	= 100;
+                        }
+                    }
+
+
+                    //重大责任事故控制--安全副经理员
+                    if($v['quota_id']==48){
+
+                        //汇总记录次数
+                        $sum = user_work_record($user,$month,218);
+                        if($sum){
+                            $complete	= 0;
+                        }else{
+                            $complete	= 100;
+                        }
+                    }
+
+
+                    //培训相关
+                    if(in_array($v['quota_id'],array(111,107,83,66,54,44,12,95))){
+
+                        //获取培训次数
+                        $where = array();
+                        $where['lecture_date']  		= array('between',array($v['start_date'],$v['end_date']));
+                        $where['lecturer_uid']  		= $user;
+                        $where['del']  				= 0;
+                        $sum = M('cour_ppt')->where($where)->count();
+
+                        $complete = $v['plan'] ? round(($sum / $v['plan'])*100,2).'%' : '100%';
+
+                    }
+
+
+                    //满意度考核-采购经理
+                    if($v['quota_id']==114){
+                        $sum = user_work_record($user,$month,217);
+                        if($sum>3){
+                            $complete	= 0;
+                        }else{
+                            //汇总扣分数
+                            $zongfen 	= 100-($sum*10);
+                            $complete	= $zongfen>0 ? $zongfen : 0;
+                        }
+                    }
+
+
+                    //物资采购合格率--采购经理
+                    if($v['quota_id']==86){
+                        $sum = user_work_record($user,$month,217);
+                        if($sum>4){
+                            $complete	= 0;
+                        }else{
+                            //汇总扣分数
+                            $zongfen 	= 100-($sum*10);
+                            $complete	= $zongfen>0 ? $zongfen : 0;
+                        }
+                    }
+
+
+                    //日常所有工作及时性--采购经理
+                    if($v['quota_id']==85){
+                        $sum = user_work_record($user,$month,100);
+                        if($sum>3){
+                            $complete	= 0;
+                        }else{
+                            //汇总扣分数
+                            $zongfen 	= 100-($sum*10);
+                            $complete	= $zongfen>0 ? $zongfen : 0;
+                        }
+                    }
+
+                    //数据前端后端对接--市场PHP
+                    if($v['quota_id']==64){
+                        $sum = user_work_record($user,$month,116);
+                        if($sum>3){
+                            $complete	= 0;
+                        }else{
+                            //汇总扣分数
+                            $zongfen 	= 100-($sum*10);
+                            $complete	= $zongfen>0 ? $zongfen : 0;
+                        }
+                    }
+
+
+                    //前端网页实现--市场PHP
+                    if($v['quota_id']==63){
+                        $sum = user_work_record($user,$month,117);
+                        if($sum>3){
+                            $complete	= 0;
+                        }else{
+                            $zongfen 	= 100-($sum*10);
+                            $complete	= $zongfen>0 ? $zongfen : 0;
+                        }
+                    }
+
+                    //前端网页实现--市场PHP
+                    if($v['quota_id']==62){
+                        $sum = user_work_record($user,$month,118);
+                        if($sum>3){
+                            $complete	= 0;
+                        }else{
+                            $zongfen 	= 100-($sum*10);
+                            $complete	= $zongfen>0 ? $zongfen : 0;
+                        }
+                    }
+
+
+                    //满意度调查--安全副经理
+                    if($v['quota_id']==49){
+
+                        //获取当月出团项目数
+                        $where = array();
+                        $where['o.dep_time']		= array('between',array($v['start_date'],$v['end_date']));
+
+                        //当月出团项目数
+                        $ops = M()->table('__OP_TEAM_CONFIRM__ as o')->where($where)->count();
+
+                        //已巡查的项目数
+                        $ins = M()->table('__INSPECT__ as i')->join('__OP_TEAM_CONFIRM__ as o on i.group_id = o.group_id','LEFT')->where($where)->count();
+
+                        $sum = $ops - $ins;
+
+                        if($sum>3){
+                            $complete	= 0;
+                        }else{
+                            //汇总扣分数
+                            $zongfen 	= 100-($sum*10);
+                            $complete	= $zongfen>0 ? $zongfen : 0;
+                        }
+
+
+                    }
+
+                    //各业务平均毛利率--计调经理
+                    if($v['quota_id']==80){
+
+
+                        $zongfen	= 0;
+                        //京区校内
+                        $jqxn 		= business_dept_data(35,array($v['start_date'],$v['end_date']));
+                        $zongfen 	+= absdata($jqxn['mll'],19.5);
+
+                        //京区校外
+                        $jqxw		= business_dept_data(80,array($v['start_date'],$v['end_date']));
+                        $zongfen 	+= absdata($jqxw['mll'],28);
+
+                        //京外业务
+                        $jwyw		= business_dept_data(18,array($v['start_date'],$v['end_date']));
+                        $zongfen 	+= absdata($jwyw['mll'],24.5);
+
+                        $complete 	= $zongfen ? round(($zongfen / 300)*100,2) : '100';
+
+
+                    }
+
+
+                    //物资采购验收率--采购经理
+                    if($v['quota_id']==91){
+                        //汇总记录次数
+                        $sum = user_work_record($user,$month,204);
+                        if($sum>3){
+                            $complete	= 0;
+                        }else{
+                            //汇总扣分数
+                            $zongfen 	= 100-($sum*10);
+                            $complete	= $zongfen>0 ? $zongfen : 0;
+                        }
+                    }
+
+
+                    //日常所有工作及时性--计调经理
+                    if($v['quota_id']==79){
+                        //汇总记录次数
+                        $sum = user_work($user,$month,1);
+                        if($sum>2){
+                            $complete	= 0;
+                        }else{
+                            //汇总扣分数
+                            $zongfen 	= 100-($sum*10);
+                            $complete	= $zongfen>0 ? $zongfen : 0;
+                        }
+                    }
+
+
+                    //安全隐患控制--安全副经理
+                    if($v['quota_id']==47){
+                        //汇总记录次数
+                        $sum = user_work_record($user,$month,219);
+                        $complete		= $sum ? 0 : 100;
+                    }
+
+
+                    //员工满意度--综合部专员
+                    if(in_array($v['quota_id'],array(36,31))){
+                        //汇总记录次数
+                        $sum = user_work($user,$month,3);
+                        if($sum>3){
+                            $complete	= 0;
+                        }else{
+                            $nsum 		= $sum ? $sum-1 : 0;
+                            //汇总扣分数
+                            $zongfen 	= 100-($nsum*10);
+                            $complete	= $zongfen>0 ? $zongfen : 0;
+                        }
+                    }
+
+                    //公司制度、文件管理执行率--综合部专员
+                    if(in_array($v['quota_id'],array(35,30))){
+                        //汇总记录次数
+                        $sum = user_work_record($user,$month,220);
+                        if($sum>2){
+                            $complete	= 0;
+                        }else{
+                            //汇总扣分数
+                            $zongfen 	= 100-($sum*10);
+                            $complete	= $zongfen>0 ? $zongfen : 0;
+                        }
+                    }
+
+
+                    //业务人员满意度--计调经理
+                    if($v['quota_id']==82){
+
+                        //获取当月出团项目数
+                        $where = array();
+                        $where['o.ret_time']		= array('between',array($v['start_date'],$v['end_date']));
+                        $where['e.liable_uid']	= $user;
+                        $where['e.eval_type']	= 2;
+
+                        //当月结束的团项目数
+                        $cou = M()->table('__OP_EVAL__ as e')->join('__OP_TEAM_CONFIRM__ as o on o.op_id = e.op_id','LEFT')->where($where)->count();
+
+                        $sum = M()->table('__OP_EVAL__ as e')->join('__OP_TEAM_CONFIRM__ as o on o.op_id = e.op_id','LEFT')->where($where)->sum('score');
+
+                        //平均得分
+                        $score = round($sum/($cou*100)*100);
+                        if($score>=85 || !$cou){
+                            $complete	= 100;
+                        }else{
+                            $complete	= $score;
+                        }
+
+                    }
+
+
+                    //资源配置质量--资源管理部（教务专员）
+                    if(in_array($v['quota_id'],array(110,106,67))){
+
+                        //获取当月出团项目数
+                        $where = array();
+                        $where['o.dep_time']		= array('between',array($v['start_date'],$v['end_date']));
+                        $where['e.liable_uid']	= $user;
+                        $where['e.eval_type']	= 3;
+
+                        //当月结束的团项目数
+                        $cou = M()->table('__OP_EVAL__ as e')->join('__OP_TEAM_CONFIRM__ as o on o.op_id = e.op_id','LEFT')->where($where)->count();
+
+                        $sum = M()->table('__OP_EVAL__ as e')->join('__OP_TEAM_CONFIRM__ as o on o.op_id = e.op_id','LEFT')->where($where)->sum('score');
+
+                        //平均得分
+                        $score = round($sum/($cou*90)*100);
+                        if($score>100 || !$cou){
+                            $complete	= 100;
+                        }else{
+                            $complete	= $score;
+                        }
+
+                    }
+
+
+                    //产品方案完成质量---研发
+                    if(in_array($v['quota_id'],array(99,94))){
+
+                        //获取当月出团项目数
+                        $where = array();
+                        $where['o.dep_time']		= array('between',array($v['start_date'],$v['end_date']));
+                        $where['e.liable_uid']	= $user;
+                        $where['e.eval_type']	= 1;
+
+                        //当月结束的团项目数
+                        $cou = M()->table('__OP_EVAL__ as e')->join('__OP_TEAM_CONFIRM__ as o on o.op_id = e.op_id','LEFT')->where($where)->count();
+
+                        $sum = M()->table('__OP_EVAL__ as e')->join('__OP_TEAM_CONFIRM__ as o on o.op_id = e.op_id','LEFT')->where($where)->sum('score');
+
+                        //平均得分
+                        $score = round($sum/($cou*90)*100);
+                        if($score>100 || !$cou){
+                            $complete	= 100;
+                        }else{
+                            $complete	= $score;
+                        }
+
+                    }
+
+                    //月度顾客满意度(业务)
+                    if($v['quota_id']==124){
+                        //获取当月月度累计毛利额目标值(如果毛利额系数目标为0,则不考核)
+                        $gross_margin                   = get_gross_margin($v['month'],$v['user_id'],1);
+                        if ($gross_margin && $gross_margin['target']==0){
+                            //当月目标为0
+                            $complete                   = '100%';
+                        }else {
+                            //获取当月已评分的团
+                            $where                  = array();
+                            $where['s.input_time']	= array('between',array($v['start_date'],$v['end_date']));
+                            $where['o.create_user'] = $user;
+                            $lists = M()->table('__TCS_SCORE__ as s')->field('u.op_id,o.kind,s.id as sid,s.before_sell,s.new_media,s.stay,s.travel,s.content,s.food,s.bus,s.driver,s.guide,s.teacher,s.depth,s.major,s.interest,s.material,s.late,s.manage,s.morality')->join('join __TCS_SCORE_USER__ as u on u.id = s.uid','left')->join('__OP__ as o on o.op_id = u.op_id','left')->where($where)->select();
+
+                            $average = get_manyidu($lists);
+
+                            //无项目的，得0分；有项目，但无调查项目的，得100分。
+                            //本月实际实施团
+                            $where                  = array();
+                            $where['dep_time']      = array('between',array($v['start_date'],$v['end_date']));
+                            $where['user_id']       = $user;
+                            $shishi = M('op_team_confirm')->where($where)->getField('op_id',true);
+                            //需要辅导员的团
+                            $where                  = array();
+                            $where['in_begin_day']  = array('between',array($v['start_date'],$v['end_date']));
+                            $where['manager_id']    = $user;
+                            $need_guide             = M('op_guide_confirm')->where($where)->count();
+
+                            if ($shishi && !$need_guide){
+                                //有项目，但无调查项目的，得100分。
+                                $complete = 100;
+                            }else{
+                                //平均得分(如果得分>90%,得分100, 如果小于90%,以90%作为满分求百分比)
+                                $score = (round($average*100/90,2))*100;
+                                $complete = $average > 0.9 ? 100 : $score;
+                            }
+                        }
+                    }
+
+                    //业务人员满意度（京区业务中心研发)
+                    /*if ($v['quota_id']==129){
+                        $where = array();
                         $where['s.input_time']	= array('between',array($v['start_date'],$v['end_date']));
-                        $where['o.create_user'] = $user;
-                        $lists = M()->table('__TCS_SCORE__ as s')->field('u.op_id,o.kind,s.id as sid,s.before_sell,s.new_media,s.stay,s.travel,s.content,s.food,s.bus,s.driver,s.guide,s.teacher,s.depth,s.major,s.interest,s.material,s.late,s.manage,s.morality')->join('join __TCS_SCORE_USER__ as u on u.id = s.uid','left')->join('__OP__ as o on o.op_id = u.op_id','left')->where($where)->select();
+                        $where['r.exe_user_id'] = $user;
+                        $lists = M()->table('__TCS_SCORE_USER__ as u')
+                            ->field('u.confirm_id,s.*,o.kind')
+                            ->join('__TCS_SCORE__ as s on s.uid = u.id','left')
+                            ->join('__OP__ as o on o.op_id = u.op_id','left')
+                            ->join('__OP_RES__ as r on r.op_id = u.op_id','left')
+                            ->where($where)
+                            ->select();
 
-                        $average = get_manyidu($lists);
+                        //合格率>0.9(满分)
+                        $hegelv = get_hegelvaa($lists);
+                        if($hegelv>0.9 || !$lists){
+                            $complete	= 100;
+                        }else{
+                            $complete	= (round($hegelv/0.9,2)*100).'%';
+                        }
+                    }*/
+                    if (in_array($v['quota_id'],array(129,158))){
+                        $where = array();
+                        $where['create_time']	= array('between',array($v['start_date'],$v['end_date']));
+                        $where['yf_uid']        = $user;
+                        $lists = M('op_score')->field('match,innovate,cost,safe,ptfa')->where($where)->select();
+
+                        //合格率>0.9(满分)
+                        $hegelv = get_hegelv($lists,5);
+
+                        if($hegelv>0.9 || !$lists){
+                            $complete	= 100;
+                        }else{
+                            $complete	= (round($hegelv/0.9,2)*100).'%';
+                        }
+                    }
+
+                    //工作及时率(京区业务中心)(工单)
+                    if (in_array($v['quota_id'],array(130,136,148,150))){
+                        //及时率
+                        $jishilv_data           = get_jishilv($user,$v['start_date'],$v['end_date']);
+                        $jishilv                = $jishilv_data['jishilv'];
+
+                        if($jishilv>0.9 || !$jishilv_data['zongshu']){
+                            $complete	= 100;
+                        }else{
+                            $complete	= round($jishilv/0.9,2)*100;
+                        }
+
+                    }
+
+                    //研发培训(京区业务中心研发)(每月至少培训一次)
+                    if ($v['quota_id']==131){
+                        //培训完成率
+                        $peixun_data            = get_peixunlv($user,$v['start_date'],$v['end_date'],1);
+                        $zongshu                = $peixun_data['zongshu'];
+                        $peixunlv               = $peixun_data['peixunlv'];
+
+                        if($peixunlv >= 1 || !$zongshu){
+                            $complete	= 100;
+                        }else{
+                            $complete	= ($peixunlv*100).'%';
+                        }
+                    }
+
+                    //辅导员/教师管理及时率(京区业务中心教务)
+                    if ($v['quota_id']==132){
+                        //辅导员管理及时率
+                        $jishilv_data       = get_fdyjsl($user,$v['start_date'],$v['end_date']);
+                        $jishilv            = $jishilv_data['hegelv'];
+
+                        if($jishilv >= 1){
+                            $complete	= 100;
+                        }else{
+                            $complete	= ($jishilv*100).'%';
+                        }
+                    }
+
+                    //辅导员/教师管理满意度(京区业务中心教务)
+                    if ($v['quota_id']==133){
+                        $manyidu_data       = get_jw_myd($user,$v['start_date'],$v['end_date']);
+                        $hegelv             = $manyidu_data['hegelv'];
+                        if($hegelv >= 0.9){
+                            $complete	= 100;
+                        }else{
+                            $complete   = (round($hegelv/0.9,2)*100).'%';
+                        }
+                    }
+
+                    //辅导员管理准确性(京区业务中心教务)
+                    if ($v['quota_id']==134){
+                        //辅导员管理准确性
+                        $zhunque_data       = get_fdyzqx($user,$v['start_date'],$v['end_date']);
+                        $buhegeshu          = $zhunque_data['buhegeshu'];
+
+                        if($buhegeshu <= 1){
+                            $complete	= 100;
+                        }else{
+                            $cifang     = $buhegeshu - 2;
+                            $fenshu     = 5*pow(2,$cifang);
+                            if ($fenshu > 100) { $fenshu = 100; };
+                            $complete	= (100 - $fenshu).'%';
+                        }
+                    }
+
+                    //辅导员/教师资源培训完成率(京区业务中心教务)
+                    if ($v['quota_id']==135){
+                        $where                  = array();
+                        $where['manager_id']    = $user;
+                        $where['set_guide_time']= array('between',array($v['start_date'],$v['end_date']));
+                        $field                  = 'op_id,id as confirm_id,manager_id,set_guide_time';
+                        $lists                  = M('op_guide_confirm')->field($field)->where($where)->group('op_id')->select();
+                        $count                  = count($lists);
+
+                        $peixun_data            = get_peixunlv($user,$v['start_date'],$v['end_date'],$count,$lists);
+                        $peixunlv               = $peixun_data['peixunlv'];
+
+                        if($peixunlv >= 1){
+                            $complete	= 100;
+                        }else{
+                            $complete	= ($peixunlv*100).'%';
+                        }
+                    }
+
+                    //场馆资源调度质量(京区业务中心资源)
+                    if ($v['quota_id']==137){
+                        $where = array();
+                        $where['create_time']	= array('between',array($v['start_date'],$v['end_date']));
+                        $where['zy_uid']        = $user;
+                        $lists = M('op_score')->field('times,finish,site')->where($where)->select();
+
+                        //合格率>0.9(满分)
+                        $hegelv = get_hegelv($lists,3);
+
+                        if($hegelv>0.9 || !$lists){
+                            $complete	= 100;
+                        }else{
+                            $complete	= (round($hegelv/0.9,2)*100).'%';
+                        }
+                    }
+
+                    //新增资源转化率(京区业务中心资源)
+                    if ($v['quota_id']==138){
+                        $zhuanhualv_data = get_zhuanhualv($user,$v['start_date'],$v['end_date']);
+                        $xinzengshu      = $zhuanhualv_data['xinzengshu'];
+                        $zhuanhualv      = $zhuanhualv_data['zhuanhualv'];
+
+                        if($zhuanhualv >= 1 || !$xinzengshu){
+                            $complete	= 100;
+                        }else{
+                            $complete	= $zhuanhualv*100;
+                        }
+                    }
+
+                    //资源培训率(京区业务中心资源)
+                    if ($v['quota_id']==139){
+                        //需要培训的资源数
+                        $where                  = array();
+                        $where['input_time']	= array('between',array($v['start_date'],$v['end_date']));
+                        $where['audit_status']  = 1;    //审核通过
+                        $where['input_user']    = $user;
+                        $lists                  = M('cas_res')->where($where)->getField('id',true);
+                        $count                  = count($lists);
+                        $peixun_data            = get_peixunlv($user,$v['start_date'],$v['end_date'],$count,$lists);
+                        $peixunlv               = $peixun_data['peixunlv'];
+
+                        if($peixunlv >= 1){
+                            $complete	= 100;
+                        }else{
+                            $complete	= $peixunlv*100;
+                        }
+                    }
+
+                    //业务人员满意度调查(计调)
+                    if ($v['quota_id']==140){
+                        $where = array();
+                        $where['jd_score_time']	= array('between',array($v['start_date'],$v['end_date']));
+                        $where['jd_uid']        = $user;
+                        $lists = M('op_score')->field('ysjsx,zhunbei,peixun,genjin,yingji')->where($where)->select();
+
+                        //合格率>0.9(满分)
+                        $hegelv = get_hegelv($lists,5);
+
+                        if($hegelv>0.9 || !$lists){
+                            $complete	= 100;
+                        }else{
+                            $complete	= (round($hegelv/0.9,2)*100).'%';
+                        }
+                    }
+
+                    //地接社、酒店、旅游车转化率(计调)
+                    if ($v['quota_id']==141){
+                        $zhuanhualv_data      = jd_zhuanhualv($user,$v['start_date'],$v['end_date']);
+                        $xinzengshu           = $zhuanhualv_data['xinzengshu'];
+                        $zhuanhualv           = $zhuanhualv_data['zhuanhualv'];
+
+                        /*if ($zhuanhualv >= 1 || !$xinzengshu){*/
+                        if ($zhuanhualv >= 1){
+                            $complete   = 100;
+                        }else{
+                            $complete   = ($zhuanhualv*100).'%';
+                        }
+                    }
+
+                    //培训完成率
+                    if ($v['quota_id']==143){
+                        //需要培训数量
+                        $where                  = array();
+                        $where['c.dep_time']    = array('between',array($v['start_date'],$v['end_date']));
+                        $where['a.yusuan']      = $user;
+                        $lists                  = M()->table('__OP__ as o')->field('o.op_id,o.kind,k.name')->join('__OP_AUTH__ as a on a.op_id=o.op_id','left')->join('__OP_TEAM_CONFIRM__ as c on c.op_id=o.op_id','left')->join('__PROJECT_KIND__ as k on k.id=o.kind','left')->group('o.kind')->where($where)->select();
+                        $count                  = count($lists);
+                        $peixun_data            = get_peixunlv($user,$v['start_date'],$v['end_date'],$count,$lists);
+                        $zongshu                = $peixun_data['zongshu'];
+                        $peixunlv               = $peixun_data['peixunlv'];
+
+                        $complete   = $peixunlv?$peixunlv*100:100;
+                    }
+
+                    //客户满意度(客服)(58=>亲子旅行,59=>冬夏令营,63=>学趣课程)
+                    if ($v['quota_id']==144){
+                        //获取当月已评分的相关团
+                        $kinds                  = array(58,59,63);
+                        $field                  = 'before_sell';
+                        $manyidu_data           = get_kfmyd($v['start_date'],$v['end_date'],$kinds,$field,1);
+                        $pingfencishu           = $manyidu_data['pingfencishu'];
+                        $hegelv                 = $manyidu_data['hegelv'];
+
+                        if ($hegelv >= 0.9 && !$pingfencishu){
+                            $complete = 100;
+                        }else{
+                            $score = (round($hegelv*100/90,2))*100;
+                            $complete = $score;
+                        }
+                    }
+
+                    //工作及时性(客服)(工单)
+                    if ($v['quota_id']==145){
+                        $ini_user_ids           = array(59);    //学趣主管
+                        $jishilv_data           = get_jishilv($user,$v['start_date'],$v['end_date'],$ini_user_ids);
+                        $zongshu                = $jishilv_data['zongshu'];
+                        $jishilv                = $jishilv_data['jishilv'];
+                        $complete               = ($jishilv >=1 || !$zongshu)? 100 : $jishilv*100;
+                    }
+
+                    //工作准确性(客服)(工单)
+                    if ($v['quota_id']==146){
+                        $ini_user_ids           = array(33,86,39);  //计调
+                        $jishilv_data           = get_jishilv($user,$v['start_date'],$v['end_date'],$ini_user_ids);
+                        $zongshu                = $jishilv_data['zongshu'];
+                        $jishilv                = $jishilv_data['jishilv'];
+                        $complete               = ($jishilv >=1 || !$zongshu)? 100 : $jishilv*100;
+                    }
+
+                    //客户满意度('新媒体推广')
+                    if ($v['quota_id']==147){
+                        $field                  = 'new_media';
+                        $manyidu_data           = get_kfmyd($v['start_date'],$v['end_date'],'',$field,1);
+                        $pingfencishu           = $manyidu_data['pingfencishu'];
+                        $hegelv                 = $manyidu_data['hegelv'];
+
+                        if ($hegelv >= 0.9 && !$pingfencishu){
+                            $complete = 100;
+                        }else{
+                            $score = (round($hegelv*100/90,2))*100;
+                            $complete = $score;
+                        }
+                    }
+
+                    //工作及时性('新媒体推广')148=>同上
+                    //工作及时性(' 平面设计')150=>同上
+                    //工作质量('新媒体推广')149
+                    if ($v['quota_id']==149){
+                        $score_date             = get_worder_score($user,$v['start_date'],$v['end_date'],4);
+                        $pingfencishu           = $score_date['pingfencishu'];
+                        $hegelv                 = $score_date['hegelv'];
+
+                        if ($hegelv >= 1 || !$pingfencishu){
+                            $complete           = 100;
+                        }else{
+                            $complete           = round(($hegelv*100)/72,2)*100;
+                        }
+                    }
+
+                    //工作质量('平面设计')151
+                    if ($v['quota_id']==151){
+                        $score_date             = get_worder_score($user,$v['start_date'],$v['end_date'],5);
+                        $pingfencishu           = $score_date['pingfencishu'];
+                        $hegelv                 = $score_date['hegelv'];
+
+                        if ($hegelv >= 1 || !$pingfencishu){
+                            $complete           = 100;
+                        }else{
+                            $complete           = round(($hegelv*100)/72,2)*100;
+                        }
+                    }
+
+                    //季度利润总额目标完成率
+                    if ($v['quota_id']==125){
+                        $year           = $v['year']?$v['year']:date('Y');
+                        $monon          = $v['month']?substr($v['month'],4,2):date('m');
+                        $department     = get_department($v['user_id']);                        //获取别考评人所管辖的部门信息
+                        $budget_info    = get_department_budget($department,$year,$monon);      //部门季度预算信息
+                        $ys_lrze        = $budget_info['sum_total_profit'];                     //预算利润总额
+                        $operate_info   = get_sum_department_operate($department,$year,$monon);     //实际经营信息
+                        $jy_lrze        = $operate_info['lrze'];                                //经营利润总额
+
+                        $complete       = $jy_lrze;
+                    }
+
+                    //季度顾客满意度
+                    if ($v['quota_id']==126){
+                        $users          = get_department_users($v['user_id']);
+                        $userids        = array_keys($users);
+                        $year           = $v['year']?$v['year']:date('Y');
+                        $monon          = $v['month']?substr($v['month'],4,2):date('m');
+                        $average        = get_QCS($userids,$year,$monon);         //季度顾客满意度
 
                         //无项目的，得0分；有项目，但无调查项目的，得100分。
                         //本月实际实施团
                         $where                  = array();
                         $where['dep_time']      = array('between',array($v['start_date'],$v['end_date']));
-                        $where['user_id']       = $user;
+                        $where['user_id']       = array('in',$userids);
                         $shishi = M('op_team_confirm')->where($where)->getField('op_id',true);
-                        //需要辅导员的团
+                        //需要辅导员的团(需要调查)
                         $where                  = array();
                         $where['in_begin_day']  = array('between',array($v['start_date'],$v['end_date']));
-                        $where['manager_id']    = $user;
+                        $where['manager_id']    = array('in',$userids);
                         $need_guide             = M('op_guide_confirm')->where($where)->count();
 
                         if ($shishi && !$need_guide){
@@ -2696,467 +3042,125 @@ function updatekpi($month,$user){
                             $complete = 100;
                         }else{
                             //平均得分(如果得分>90%,得分100, 如果小于90%,以90%作为满分求百分比)
+                            /*$score = (round($average*100/90,2))*100;
+                            $complete = $average > 0.9 ? 100 : $score;*/
+                            $complete       = $average*100;
+
+                        }
+                    }
+
+                    //季度人事费用率
+                    if ($v['quota_id']==127){
+                        $year           = $v['year']?$v['year']:date('Y');
+                        $monon          = $v['month']?substr($v['month'],4,2):date('m');
+                        $department     = get_department($v['user_id']);
+                        $budget_info    = get_department_budget($department,$year,$monon);      //部门季度预算信息
+                        $ys_rsfyl       = $budget_info['personnel_cost_rate'];                  //预算人事费用率
+                        $operate_info   = get_sum_department_operate($department,$year,$monon);     //实际经营信息
+                        $jy_rsfyl       = $operate_info['rsfyl'].'%';                               //经营人事费用率
+                        $complete       = $jy_rsfyl;
+
+                    }
+
+                    //不发生安全责任事故
+                    if ($v['quota_id']==128){
+                        //默认满分,如果发生安全事故则由人事手动清零
+                        $complete   = 100;
+                    }
+
+                    //上级领导组织对本季度关键事项绩效评价(总经办)
+                    if ($v['quota_id']==153){
+                        //默认满分
+                        $complete   = 100;
+                    }
+
+                    //专家实施客户满意度(研发专家)
+                    if($v['quota_id']==161){
+                        $data                   = get_op_guide($user,$v['start_date'],$v['end_date']);  //获取该用户本周期所带团评分信息
+                        $num                    = $data['num'];                //负责项目数
+                        $average                = get_manyidu($data['lists']); //满意度平均值
+
+                        if (!$num){
+                            //本月度无负责实施项目的，本项0分
+                            $complete = 0;
+                        }else{
+                            //平均得分(如果得分>90%,得分100, 如果小于90%,以90%作为满分求百分比)
                             $score = (round($average*100/90,2))*100;
                             $complete = $average > 0.9 ? 100 : $score;
                         }
                     }
-                }
 
-                //业务人员满意度（京区业务中心研发)
-                /*if ($v['quota_id']==129){
-                    $where = array();
-                    $where['s.input_time']	= array('between',array($v['start_date'],$v['end_date']));
-                    $where['r.exe_user_id'] = $user;
-                    $lists = M()->table('__TCS_SCORE_USER__ as u')
-                        ->field('u.confirm_id,s.*,o.kind')
-                        ->join('__TCS_SCORE__ as s on s.uid = u.id','left')
-                        ->join('__OP__ as o on o.op_id = u.op_id','left')
-                        ->join('__OP_RES__ as r on r.op_id = u.op_id','left')
-                        ->where($where)
-                        ->select();
+                    //研发专员对产品研发专业支持满意度
+                    if ($v['quota_id']==162){
+                        $score_date             = get_worder_score($user,$v['start_date'],$v['end_date'],3,1);
+                        $pingfencishu           = $score_date['pingfencishu'];
+                        $hegelv                 = $score_date['hegelv'];
 
-                    //合格率>0.9(满分)
-                    $hegelv = get_hegelvaa($lists);
-                    if($hegelv>0.9 || !$lists){
-                        $complete	= 100;
-                    }else{
-                        $complete	= (round($hegelv/0.9,2)*100).'%';
-                    }
-                }*/
-                if (in_array($v['quota_id'],array(129,158))){
-                    $where = array();
-                    $where['create_time']	= array('between',array($v['start_date'],$v['end_date']));
-                    $where['yf_uid']        = $user;
-                    $lists = M('op_score')->field('match,innovate,cost,safe,ptfa')->where($where)->select();
-
-                    //合格率>0.9(满分)
-                    $hegelv = get_hegelv($lists,5);
-
-                    if($hegelv>0.9 || !$lists){
-                        $complete	= 100;
-                    }else{
-                        $complete	= (round($hegelv/0.9,2)*100).'%';
-                    }
-                }
-
-                //工作及时率(京区业务中心)(工单)
-                if (in_array($v['quota_id'],array(130,136,148,150))){
-                    //及时率
-                    $jishilv_data           = get_jishilv($user,$v['start_date'],$v['end_date']);
-                    $jishilv                = $jishilv_data['jishilv'];
-
-                    if($jishilv>0.9 || !$jishilv_data['zongshu']){
-                        $complete	= 100;
-                    }else{
-                        $complete	= round($jishilv/0.9,2)*100;
+                        if ($hegelv >= 1 || !$pingfencishu){
+                            $complete           = (100).'%';
+                        }else{
+                            $complete           = (round(($hegelv*100)/90,2)*100).'%';
+                        }
                     }
 
-                }
-
-                //研发培训(京区业务中心研发)(每月至少培训一次)
-                if ($v['quota_id']==131){
-                    //培训完成率
-                    $peixun_data            = get_peixunlv($user,$v['start_date'],$v['end_date'],1);
-                    $zongshu                = $peixun_data['zongshu'];
-                    $peixunlv               = $peixun_data['peixunlv'];
-
-                    if($peixunlv >= 1 || !$zongshu){
-                        $complete	= 100;
-                    }else{
-                        $complete	= ($peixunlv*100).'%';
-                    }
-                }
-
-                //辅导员/教师管理及时率(京区业务中心教务)
-                if ($v['quota_id']==132){
-                    //辅导员管理及时率
-                    $jishilv_data       = get_fdyjsl($user,$v['start_date'],$v['end_date']);
-                    $jishilv            = $jishilv_data['hegelv'];
-
-                    if($jishilv >= 1){
-                        $complete	= 100;
-                    }else{
-                        $complete	= ($jishilv*100).'%';
-                    }
-                }
-
-                //辅导员/教师管理满意度(京区业务中心教务)
-                if ($v['quota_id']==133){
-                    $manyidu_data       = get_jw_myd($user,$v['start_date'],$v['end_date']);
-                    $hegelv             = $manyidu_data['hegelv'];
-                    if($hegelv >= 0.9){
-                        $complete	= 100;
-                    }else{
-                        $complete   = (round($hegelv/0.9,2)*100).'%';
-                    }
-                }
-
-                //辅导员管理准确性(京区业务中心教务)
-                if ($v['quota_id']==134){
-                    //辅导员管理准确性
-                    $zhunque_data       = get_fdyzqx($user,$v['start_date'],$v['end_date']);
-                    $buhegeshu          = $zhunque_data['buhegeshu'];
-
-                    if($buhegeshu <= 1){
-                        $complete	= 100;
-                    }else{
-                        $cifang     = $buhegeshu - 2;
-                        $fenshu     = 5*pow(2,$cifang);
-                        if ($fenshu > 100) { $fenshu = 100; };
-                        $complete	= (100 - $fenshu).'%';
-                    }
-                }
-
-                //辅导员/教师资源培训完成率(京区业务中心教务)
-                if ($v['quota_id']==135){
-                    $where                  = array();
-                    $where['manager_id']    = $user;
-                    $where['set_guide_time']= array('between',array($v['start_date'],$v['end_date']));
-                    $field                  = 'op_id,id as confirm_id,manager_id,set_guide_time';
-                    $lists                  = M('op_guide_confirm')->field($field)->where($where)->group('op_id')->select();
-                    $count                  = count($lists);
-
-                    $peixun_data            = get_peixunlv($user,$v['start_date'],$v['end_date'],$count,$lists);
-                    $peixunlv               = $peixun_data['peixunlv'];
-
-                    if($peixunlv >= 1){
-                        $complete	= 100;
-                    }else{
-                        $complete	= ($peixunlv*100).'%';
-                    }
-                }
-
-                //场馆资源调度质量(京区业务中心资源)
-                if ($v['quota_id']==137){
-                    $where = array();
-                    $where['create_time']	= array('between',array($v['start_date'],$v['end_date']));
-                    $where['zy_uid']        = $user;
-                    $lists = M('op_score')->field('times,finish,site')->where($where)->select();
-
-                    //合格率>0.9(满分)
-                    $hegelv = get_hegelv($lists,3);
-
-                    if($hegelv>0.9 || !$lists){
-                        $complete	= 100;
-                    }else{
-                        $complete	= (round($hegelv/0.9,2)*100).'%';
-                    }
-                }
-
-                //新增资源转化率(京区业务中心资源)
-                if ($v['quota_id']==138){
-                    $zhuanhualv_data = get_zhuanhualv($user,$v['start_date'],$v['end_date']);
-                    $xinzengshu      = $zhuanhualv_data['xinzengshu'];
-                    $zhuanhualv      = $zhuanhualv_data['zhuanhualv'];
-
-                    if($zhuanhualv >= 1 || !$xinzengshu){
-                        $complete	= 100;
-                    }else{
-                        $complete	= $zhuanhualv*100;
-                    }
-                }
-
-                //资源培训率(京区业务中心资源)
-                if ($v['quota_id']==139){
-                    //需要培训的资源数
-                    $where                  = array();
-                    $where['input_time']	= array('between',array($v['start_date'],$v['end_date']));
-                    $where['audit_status']  = 1;    //审核通过
-                    $where['input_user']    = $user;
-                    $lists                  = M('cas_res')->where($where)->getField('id',true);
-                    $count                  = count($lists);
-                    $peixun_data            = get_peixunlv($user,$v['start_date'],$v['end_date'],$count,$lists);
-                    $peixunlv               = $peixun_data['peixunlv'];
-
-                    if($peixunlv >= 1){
-                        $complete	= 100;
-                    }else{
-                        $complete	= $peixunlv*100;
-                    }
-                }
-
-                //业务人员满意度调查(计调)
-                if ($v['quota_id']==140){
-                    $where = array();
-                    $where['jd_score_time']	= array('between',array($v['start_date'],$v['end_date']));
-                    $where['jd_uid']        = $user;
-                    $lists = M('op_score')->field('ysjsx,zhunbei,peixun,genjin,yingji')->where($where)->select();
-
-                    //合格率>0.9(满分)
-                    $hegelv = get_hegelv($lists,5);
-
-                    if($hegelv>0.9 || !$lists){
-                        $complete	= 100;
-                    }else{
-                        $complete	= (round($hegelv/0.9,2)*100).'%';
-                    }
-                }
-
-                //地接社、酒店、旅游车转化率(计调)
-                if ($v['quota_id']==141){
-                    $zhuanhualv_data      = jd_zhuanhualv($user,$v['start_date'],$v['end_date']);
-                    $xinzengshu           = $zhuanhualv_data['xinzengshu'];
-                    $zhuanhualv           = $zhuanhualv_data['zhuanhualv'];
-
-                    /*if ($zhuanhualv >= 1 || !$xinzengshu){*/
-                    if ($zhuanhualv >= 1){
-                        $complete   = 100;
-                    }else{
-                        $complete   = ($zhuanhualv*100).'%';
-                    }
-                }
-
-                //培训完成率
-                if ($v['quota_id']==143){
-                   //需要培训数量
-                    $where                  = array();
-                    $where['c.dep_time']    = array('between',array($v['start_date'],$v['end_date']));
-                    $where['a.yusuan']      = $user;
-                    $lists                  = M()->table('__OP__ as o')->field('o.op_id,o.kind,k.name')->join('__OP_AUTH__ as a on a.op_id=o.op_id','left')->join('__OP_TEAM_CONFIRM__ as c on c.op_id=o.op_id','left')->join('__PROJECT_KIND__ as k on k.id=o.kind','left')->group('o.kind')->where($where)->select();
-                    $count                  = count($lists);
-                    $peixun_data            = get_peixunlv($user,$v['start_date'],$v['end_date'],$count,$lists);
-                    $zongshu                = $peixun_data['zongshu'];
-                    $peixunlv               = $peixun_data['peixunlv'];
-
-                    $complete   = $peixunlv?$peixunlv*100:100;
-                }
-
-                //客户满意度(客服)(58=>亲子旅行,59=>冬夏令营,63=>学趣课程)
-                if ($v['quota_id']==144){
-                    //获取当月已评分的相关团
-                    $kinds                  = array(58,59,63);
-                    $field                  = 'before_sell';
-                    $manyidu_data           = get_kfmyd($v['start_date'],$v['end_date'],$kinds,$field,1);
-                    $pingfencishu           = $manyidu_data['pingfencishu'];
-                    $hegelv                 = $manyidu_data['hegelv'];
-
-                    if ($hegelv >= 0.9 && !$pingfencishu){
-                        $complete = 100;
-                    }else{
-                        $score = (round($hegelv*100/90,2))*100;
-                        $complete = $score;
-                    }
-                }
-
-                //工作及时性(客服)(工单)
-                if ($v['quota_id']==145){
-                    $ini_user_ids           = array(59);    //学趣主管
-                    $jishilv_data           = get_jishilv($user,$v['start_date'],$v['end_date'],$ini_user_ids);
-                    $zongshu                = $jishilv_data['zongshu'];
-                    $jishilv                = $jishilv_data['jishilv'];
-                    $complete               = ($jishilv >=1 || !$zongshu)? 100 : $jishilv*100;
-                }
-
-                //工作准确性(客服)(工单)
-                if ($v['quota_id']==146){
-                    $ini_user_ids           = array(33,86,39);  //计调
-                    $jishilv_data           = get_jishilv($user,$v['start_date'],$v['end_date'],$ini_user_ids);
-                    $zongshu                = $jishilv_data['zongshu'];
-                    $jishilv                = $jishilv_data['jishilv'];
-                    $complete               = ($jishilv >=1 || !$zongshu)? 100 : $jishilv*100;
-                }
-
-                //客户满意度('新媒体推广')
-                if ($v['quota_id']==147){
-                    $field                  = 'new_media';
-                    $manyidu_data           = get_kfmyd($v['start_date'],$v['end_date'],'',$field,1);
-                    $pingfencishu           = $manyidu_data['pingfencishu'];
-                    $hegelv                 = $manyidu_data['hegelv'];
-
-                    if ($hegelv >= 0.9 && !$pingfencishu){
-                        $complete = 100;
-                    }else{
-                        $score = (round($hegelv*100/90,2))*100;
-                        $complete = $score;
-                    }
-                }
-
-                //工作及时性('新媒体推广')148=>同上
-                //工作及时性(' 平面设计')150=>同上
-                //工作质量('新媒体推广')149
-                if ($v['quota_id']==149){
-                    $score_date             = get_worder_score($user,$v['start_date'],$v['end_date'],4);
-                    $pingfencishu           = $score_date['pingfencishu'];
-                    $hegelv                 = $score_date['hegelv'];
-
-                    if ($hegelv >= 1 || !$pingfencishu){
-                        $complete           = 100;
-                    }else{
-                        $complete           = round(($hegelv*100)/72,2)*100;
-                    }
-                }
-
-                //工作质量('平面设计')151
-                if ($v['quota_id']==151){
-                    $score_date             = get_worder_score($user,$v['start_date'],$v['end_date'],5);
-                    $pingfencishu           = $score_date['pingfencishu'];
-                    $hegelv                 = $score_date['hegelv'];
-
-                    if ($hegelv >= 1 || !$pingfencishu){
-                        $complete           = 100;
-                    }else{
-                        $complete           = round(($hegelv*100)/72,2)*100;
-                    }
-                }
-
-                //季度利润总额目标完成率
-                if ($v['quota_id']==125){
-                    $year           = $v['year']?$v['year']:date('Y');
-                    $monon          = $v['month']?substr($v['month'],4,2):date('m');
-                    $department     = get_department($v['user_id']);                        //获取别考评人所管辖的部门信息
-                    $budget_info    = get_department_budget($department,$year,$monon);      //部门季度预算信息
-                    $ys_lrze        = $budget_info['sum_total_profit'];                     //预算利润总额
-                    $operate_info   = get_sum_department_operate($department,$year,$monon);     //实际经营信息
-                    $jy_lrze        = $operate_info['lrze'];                                //经营利润总额
-
-                    $complete       = $jy_lrze;
-                }
-
-                //季度顾客满意度
-                if ($v['quota_id']==126){
-                    $users          = get_department_users($v['user_id']);
-                    $userids        = array_keys($users);
-                    $year           = $v['year']?$v['year']:date('Y');
-                    $monon          = $v['month']?substr($v['month'],4,2):date('m');
-                    $average        = get_QCS($userids,$year,$monon);         //季度顾客满意度
-
-                    //无项目的，得0分；有项目，但无调查项目的，得100分。
-                    //本月实际实施团
-                    $where                  = array();
-                    $where['dep_time']      = array('between',array($v['start_date'],$v['end_date']));
-                    $where['user_id']       = array('in',$userids);
-                    $shishi = M('op_team_confirm')->where($where)->getField('op_id',true);
-                    //需要辅导员的团(需要调查)
-                    $where                  = array();
-                    $where['in_begin_day']  = array('between',array($v['start_date'],$v['end_date']));
-                    $where['manager_id']    = array('in',$userids);
-                    $need_guide             = M('op_guide_confirm')->where($where)->count();
-
-                    if ($shishi && !$need_guide){
-                        //有项目，但无调查项目的，得100分。
-                        $complete = 100;
-                    }else{
-                        //平均得分(如果得分>90%,得分100, 如果小于90%,以90%作为满分求百分比)
-                        /*$score = (round($average*100/90,2))*100;
-                        $complete = $average > 0.9 ? 100 : $score;*/
-                        $complete       = $average*100;
-
-                    }
-                }
-
-                //季度人事费用率
-                if ($v['quota_id']==127){
-                    $year           = $v['year']?$v['year']:date('Y');
-                    $monon          = $v['month']?substr($v['month'],4,2):date('m');
-                    $department     = get_department($v['user_id']);
-                    $budget_info    = get_department_budget($department,$year,$monon);      //部门季度预算信息
-                    $ys_rsfyl       = $budget_info['personnel_cost_rate'];                  //预算人事费用率
-                    $operate_info   = get_sum_department_operate($department,$year,$monon);     //实际经营信息
-                    $jy_rsfyl       = $operate_info['rsfyl'];                               //经营人事费用率
-                    //$wcl            = round($jy_rsfyl/$ys_rsfyl,2);                         //季度人事费用率
-                    $complete       = $jy_rsfyl;
-
-                }
-
-                //不发生安全责任事故
-                if ($v['quota_id']==128){
-                    //默认满分,如果发生安全事故则由人事手动清零
-                    $complete   = 100;
-                }
-
-                //上级领导组织对本季度关键事项绩效评价(总经办)
-                if ($v['quota_id']==153){
-                    //默认满分
-                    $complete   = 100;
-                }
-
-                //专家实施客户满意度(研发专家)
-                if($v['quota_id']==161){
-                    $data                   = get_op_guide($user,$v['start_date'],$v['end_date']);  //获取该用户本周期所带团评分信息
-                    $num                    = $data['num'];                //负责项目数
-                    $average                = get_manyidu($data['lists']); //满意度平均值
-
-                    if (!$num){
-                        //本月度无负责实施项目的，本项0分
-                        $complete = 0;
-                    }else{
-                        //平均得分(如果得分>90%,得分100, 如果小于90%,以90%作为满分求百分比)
-                        $score = (round($average*100/90,2))*100;
-                        $complete = $average > 0.9 ? 100 : $score;
-                    }
-                }
-
-                //研发专员对产品研发专业支持满意度
-                if ($v['quota_id']==162){
-                    $score_date             = get_worder_score($user,$v['start_date'],$v['end_date'],3,1);
-                    $pingfencishu           = $score_date['pingfencishu'];
-                    $hegelv                 = $score_date['hegelv'];
-
-                    if ($hegelv >= 1 || !$pingfencishu){
-                        $complete           = (100).'%';
-                    }else{
-                        $complete           = (round(($hegelv*100)/90,2)*100).'%';
-                    }
-                }
-
-                //业绩贡献度
-                if ($v['quota_id']==163){
-                    $maoli_data             = get_gross_profit($user,$v['start_date'],$v['end_date']);
-                    $maoli                  = $maoli_data['sum'];
-                    $wages_info             = get_wages_info($user);                                    //获取该员工岗位薪资信息
-                    $one_point_five_wages   = $wages_info['otherWages'];                                //1.5倍薪资
-                    $wanchenglv             = round($maoli/$one_point_five_wages,2);
-                    $complete               = ($wanchenglv*100).'%';
-                }
-
-                //客户对公司产品满意度
-                if($v['quota_id']==154){
-                    $average_data           = get_satisfaction_average($v['start_date'],$v['end_date']);
-                    $average                = $average_data['average'];
-                    $num                    = $average_data['num'];
-                    if ($average > 0.9 || !$num){
-                        $complete           = 100;
-                    }else{
-                        $complete           = round(($v['plan']/0.9)*$average,2).'%';
+                    //业绩贡献度
+                    if ($v['quota_id']==163){
+                        $maoli_data             = get_gross_profit($user,$v['start_date'],$v['end_date']);
+                        $maoli                  = $maoli_data['sum'];
+                        $wages_info             = get_wages_info($user);                                    //获取该员工岗位薪资信息
+                        $one_point_five_wages   = $wages_info['otherWages'];                                //1.5倍薪资
+                        $wanchenglv             = round($maoli/$one_point_five_wages,2);
+                        $complete               = ($wanchenglv*100).'%';
                     }
 
-                }
+                    //客户对公司产品满意度
+                    if($v['quota_id']==154){
+                        $average_data           = get_satisfaction_average($v['start_date'],$v['end_date']);
+                        $average                = $average_data['average'];
+                        $num                    = $average_data['num'];
+                        if ($average > 0.9 || !$num){
+                            $complete           = 100;
+                        }else{
+                            $complete           = round(($v['plan']/0.9)*$average,2).'%';
+                        }
 
-                //业务部门对产品研发满意度
-                if ($v['quota_id']==155){
-                    $score_info             = get_satisfaction($v['month']);
-                    $num                    = $score_info['num'];
-                    $average                = $score_info['average'];
-                    if ($average > 0.9 || !$num){
-                        $complete           = 100;
-                    }else{
-                        $complete           = round(($v['plan']/0.9)*$average,2).'%';
+                    }
+
+                    //业务部门对产品研发满意度
+                    if ($v['quota_id']==155){
+                        $score_info             = get_satisfaction($v['month']);
+                        $num                    = $score_info['num'];
+                        $average                = $score_info['average'];
+                        if ($average > 0.9 || !$num){
+                            $complete           = 100;
+                        }else{
+                            $complete           = round(($v['plan']/0.9)*$average,2).'%';
+                        }
+                    }
+
+                    //实施专家业绩贡献度
+                    if ($v['quota_id']==156){
+                        $experts                = array_keys(C('EXPERT'));
+                        $data                   = get_sum_gross_profit($experts,$v['start_date'],$v['end_date']);
+                        $sum_profit             = $data['sum_profit'];      //毛利总和
+                        $sum_base_wages         = $data['sum_base_wages'];  //1.5倍薪资岗位薪资总和
+
+                        $wanchenglv             = round($sum_profit/$sum_base_wages,2);
+                        $complete               = ($wanchenglv*100).'%';
+                    }
+
+                    //所负责表转化产品的客户满意度
+                    if ($v['quota_id']==159){
+
+                    }
+
+                    //标准化模块使用量
+                    if ($v['quota_id']==160){
+                        //本月立项成团的项目
+                        $useTimes               = get_use_times($v['user_id'],$v['start_date'],$v['end_date']);
+                        $complete               = $useTimes.'次';
                     }
                 }
-
-                //实施专家业绩贡献度
-                if ($v['quota_id']==156){
-                    $experts                = array_keys(C('EXPERT'));
-                    $data                   = get_sum_gross_profit($experts,$v['start_date'],$v['end_date']);
-                    $sum_profit             = $data['sum_profit'];      //毛利总和
-                    $sum_base_wages         = $data['sum_base_wages'];  //1.5倍薪资岗位薪资总和
-
-                    $wanchenglv             = round($sum_profit/$sum_base_wages,2);
-                    $complete               = ($wanchenglv*100).'%';
-                }
-
-                //所负责表转化产品的客户满意度
-                if ($v['quota_id']==159){
-
-                }
-
-                //标准化模块使用量
-                if ($v['quota_id']==160){
-                    //本月立项成团的项目
-                    $useTimes               = get_use_times($v['user_id'],$v['start_date'],$v['end_date']);
-                    $complete               = $useTimes.'次';
-                }
-
 
                 //节后添加 154,155,156,158,160
 				//已实现自动获取指标值
