@@ -499,47 +499,111 @@ function get_sum_department_operate($department,$year,$month){
  function get_department_operate($department,$year,$month){
      $mod           = D('Manage');
      $quart         = $mod->quarter_month1($month);  //季度信息
-     $quarter       = $mod->quarter($year,$quart);// 季度人数 和人力资源成本
-     $profits       = profit_r($year,$quart,1);//月份循环季度数据 利润 其他费用(money)
-     $manage_quarter= $mod->manage_quarter($quarter,$profits);//季度利润总额
-     $personnel_costs        = $mod->personnel_costs($quarter,$profits);//人事费用率
-    switch ($department){
-        case '京区业务中心':
-            $kk     = 1;
-            break;
-        case '京外业务中心':
-            $kk     = 2;
-            break;
-        case '南京项目部':
-            $kk     = 3;
-            break;
-        case '武汉项目部':
-            $kk     = 4;
-            break;
-        case '沈阳项目部':
-            $kk     = 5;
-            break;
-        case '长春项目部':
-            $kk     = 6;
-            break;
-        case '市场部':
-            $kk     = 7;
-            break;
-        case '常规业务中心':
-            $kk     = 8;
-            break;
-    }
-    $info               = array();
-     $info['ygrs']      = $quarter[$kk]['sum'];         //部门员工人数
-     $info['yysr']      = $profits[$kk]['monthzsr'];    //营业收入
-     $info['yyml']      = $profits[$kk]['monthzml'];    //营业毛利
-     $info['yymll']     = $profits[$kk]['monthmll'];    //营业毛利率
-     $info['rlzycb']    = $quarter[$kk]['money'];       //人力资源成本
-     $info['qtfy']      = $profits[$kk]['money'];       //其他费用
-     $info['lrze']      = $manage_quarter[$kk]['monthzml'];    //利润总额
-     $info['rsfyl']     = $personnel_costs[$kk]['personnel_costs'];//人事费用率
+
+     $yms                    = $mod->get_yms($year,$quart,'q');  //获取费季度包含的全部月份
+     $times                  = $mod->get_times($year,$quart,'q');    //获取考核周期开始及结束时间戳
+
+     $ymd[0]                 = date("Ymd",$times['beginTime']);
+     $ymd[1]                 = date("Ymd",$times['endTime']);
+     $mon                    = not_team_not_share($ymd[0],$ymd[1]);//季度其他费用取出数据(不分摊)
+     $mon_share              = not_team_share($ymd[0],$ymd[1]);//季度其他费用取出数据(分摊)
+     $otherExpenses          = $mod->department_data($mon,$mon_share);//季度其他费用部门数据
+
+     $number                 = $mod->get_numbers($year,$yms);    //季度平均人数
+     $hr_cost                = $mod->get_quarter_hr_cost($year,$yms,$times);// 季度部门人力资源成本
+     $profit                 = get_business_sum($year,$yms);// 季度 monthzsr 收入合计   monthzml 毛利合计  monthmll 毛利率
+     $human_affairs          = $mod->human_affairs($hr_cost,$profit);//季度 人事费用率
+     $total_profit           = $mod->total_profit($profit,$hr_cost,$department);//季度 利润总额
+
+     $info              = array();
+     $info['ygrs']      = $number[$department];             //部门员工人数
+     $info['yysr']      = $profit[$department]['monthzsr']; //营业收入
+     $info['yyml']      = $profit[$department]['monthzml']; //营业毛利
+     $info['yymll']     = $profit[$department]['monthmll']; //营业毛利率
+     $info['rlzycb']    = $hr_cost[$department];            //人力资源成本
+     $info['qtfy']      = $otherExpenses[$department];      //其他费用
+     $info['lrze']      = $total_profit[$department];       //利润总额
+     $info['rsfyl']     = $human_affairs[$department];      //人事费用率
 
      return $info;
+}
+
+    /**
+     * not_team 非团支出报销（其他费用）(不分摊)
+     * $ymd1 开始时间 20180626
+     * $ymd2 结束时间 20180726
+     */
+    function not_team_not_share($ymd1,$ymd2){
+    $ymd1                   =  strtotime($ymd1);
+    $ymd2                   =  strtotime($ymd2);
+    $map['bx_time']         = array('between',"$ymd1,$ymd2");//开始结束时间
+    $map['bxd_type']        = array('in',array(2,3));//2 非团借款报销 3直接报销
+    $map['audit_status']    = array('eq',1);    //审核通过
+    $map['share']           = array('neq',1);   //不分摊
+    $otherExpensesKinds     = M('bxd_kind')->where(array('pid'=>2))->getField('id',true);
+    $map['bxd_kind']        = array('in',$otherExpensesKinds);
+    $money                  = M('baoxiao')->where($map)->select();//日期内所有数据
+    return  $money;
+}
+
+    /**
+     * 非团支出报销(其他费用)(分摊)
+     * @param $ymd1
+     * @param $ymd2
+     * @return mixed
+     */
+    function not_team_share($ymd1,$ymd2){
+
+    $ymd1                       =  strtotime($ymd1);
+    $ymd2                       =  strtotime($ymd2);
+    $where                      = array();
+    $where['b.bx_time']         = array('between',"$ymd1,$ymd2");//开始结束时间
+    $where['b.bxd_type']        = array('in',array(2,3));//2 非团借款报销 3直接报销
+    $where['b.audit_status']    = array('eq',1);    //审核通过
+    $otherExpensesKinds         = M('bxd_kind')->where(array('pid'=>2))->getField('id',true);
+    $where['b.bxd_kind']        = array('in',$otherExpensesKinds);
+    $money                      = M()->table('__BAOXIAO_SHARE__ as s')->field('b.bxd_kind,s.*')->join('__BAOXIAO__ as b on b.id=s.bx_id','left')->where($where)->select();
+    return  $money;
+}
+
+    /**
+     * business 营业收入 营业毛利 营业毛利率
+     * $year 年 $month月
+     * $pin 1 结算 0预算
+     */
+    function  business_sum($year,$month,$type){
+    if (strlen($month)<2) $month = str_pad($month,2,'0',STR_PAD_LEFT);
+    $times                       = $year.$month;
+    $yw_departs                  = C('YW_DEPARTS');  //业务部门id
+    $where                       = array();
+    $where['id']                 = array('in',$yw_departs);
+    $departments                 = M('salary_department')->field('id,department')->where($where)->select();
+    //预算及结算分部门汇总
+    $listdatas                   = count_lists($departments,$year,$month,$type);//1 结算 0预算
+    return $listdatas;
+}
+
+    /**  monthzsr 收入合计   monthzml 毛利合计  monthmll 毛利率
+     * @param $year
+     * @param $yms
+     */
+    function get_business_sum($year,$yms){
+    $info                   = array();
+    foreach ($yms as $v){
+        $month              = substr($v,4,2);
+        $info[]             = business_sum($year,$month,1);
+    }
+
+    $sum                    = array();
+    foreach ($info as $key=>$value){
+        foreach ($value as $k=>$v){
+            if ($k == 'heji') $v['depname'] = '公司';
+            $sum[$v['depname']]['monthzsr'] += $v['monthzsr'];
+            $sum[$v['depname']]['monthzml'] += $v['monthzml'];
+            $sum[$v['depname']]['monthmll'] = round($sum[$v['depname']]['monthzml']/$sum[$v['depname']]['monthzsr'],4)*100;
+        }
+    }
+    return $sum;
 }
 
 /**
