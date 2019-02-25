@@ -28,23 +28,34 @@
         <div class="row">
             <!-- right column -->
             <div class="col-md-12">
-                <div class="btn-group" id="catfont" style="padding-bottom:20px;">
-                    <?php if($prveyear>2017){ ?>
-                        <a href="{:U('Manage/otherExpenses',array('year'=>$prveyear,'tm'=>$tm))}" class="btn btn-default" style="padding:8px 18px;">上一年</a>
-                    <?php } ?>
-                    <?php
-                    for($i=1;$i<13;$i++){
-                        if($year.$month==$year.str_pad($i,2,"0",STR_PAD_LEFT)){
-                            echo '<a href="'.U('Manage/otherExpenses',array('year'=>$year,'month'=>$i,'tm'=>$tm)).'" class="btn btn-info" style="padding:8px 18px;">'.$i.'月</a>';
-                        }else{
-                            echo '<a href="'.U('Manage/otherExpenses',array('year'=>$year,'month'=>$i,'tm'=>$tm)).'" class="btn btn-default" style="padding:8px 18px;">'.$i.'月</a>';
+                <?php if ($tm == 'm'){ ?>
+                    <div class="btn-group" id="catfont" style="padding-bottom:20px;">
+                        <?php if($prveyear>2017){ ?>
+                            <a href="{:U('Manage/otherExpenses',array('year'=>$prveyear,'tm'=>$tm))}" class="btn btn-default" style="padding:8px 18px;">上一年</a>
+                        <?php } ?>
+                        <?php
+                        for($i=1;$i<13;$i++){
+                            if($year.$month==$year.str_pad($i,2,"0",STR_PAD_LEFT)){
+                                echo '<a href="'.U('Manage/otherExpenses',array('year'=>$year,'month'=>$i,'tm'=>$tm)).'" class="btn btn-info" style="padding:8px 18px;">'.$i.'月</a>';
+                            }else{
+                                echo '<a href="'.U('Manage/otherExpenses',array('year'=>$year,'month'=>$i,'tm'=>$tm)).'" class="btn btn-default" style="padding:8px 18px;">'.$i.'月</a>';
+                            }
                         }
-                    }
-                    ?>
-                    <?php if($year<date('Y')){ ?>
-                        <a href="{:U('Manage/otherExpenses',array('year'=>$nextyear,'month'=>'01','tm'=>$tm))}" class="btn btn-default" style="padding:8px 18px;">下一年</a>
-                    <?php } ?>
-                </div>
+                        ?>
+                        <?php if($year<date('Y')){ ?>
+                            <a href="{:U('Manage/otherExpenses',array('year'=>$nextyear,'month'=>'01','tm'=>$tm))}" class="btn btn-default" style="padding:8px 18px;">下一年</a>
+                        <?php } ?>
+                    </div>
+                <?php }elseif ($tm =='q'){ ?>
+                    <div class="btn-group" id="catfont" style="padding-bottom:20px;">
+                        <!--<a href="{:U('Manage/otherExpenses',array('year'=>$year-1))}" class="btn btn-default" style="padding:8px 18px;">上一年</a>-->
+                        <a href="{:U('Manage/otherExpenses',array('year'=>$year,'quarter'=>1,'month'=>3,'tm'=>$tm))}" class="btn btn-default <?php if($quarter==1){echo 'btn-info';}?>">第一季度</a>
+                        <a href="{:U('Manage/otherExpenses',array('year'=>$year,'quarter'=>2,'month'=>6,'tm'=>$tm))}" class="btn btn-default <?php if($quarter==2){echo 'btn-info';}?>">第二季度</a>
+                        <a href="{:U('Manage/otherExpenses',array('year'=>$year,'quarter'=>3,'month'=>9,'tm'=>$tm))}" class="btn btn-default <?php if($quarter==3){echo 'btn-info';}?>">第三季度</a>
+                        <a href="{:U('Manage/otherExpenses',array('year'=>$year,'quarter'=>4,'month'=>12,'tm'=>$tm))}" class="btn btn-default <?php if($quarter==4){echo 'btn-info';}?>">第四季度</a>
+                        <!--<a href="{:U('Manage/otherExpenses',array('year'=>$year+1))}" class="btn btn-default">下一年</a>-->
+                    </div>
+                <?php }?>
 
                 <div class="box box-warning">
                     <div class="box-header">

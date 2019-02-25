@@ -192,8 +192,7 @@
                                     <th><?php echo $profit['机关部门']['monthmll']?$profit['机关部门']['monthmll']:'0.00'; ?> %</th>
                                 </tr>
                                 <tr role="row" class="orders" style="text-align:center;">
-                                    <!--<td><a href="{:U('Manage/HR_cost',array('year'=>$year,'month'=>$month,'tm'=>'q'))}">人力资源成本</a></td>-->
-                                    <td>人力资源成本</td>
+                                    <td><a href="{:U('Manage/HR_cost',array('year'=>$year,'month'=>$month,'tm'=>'q'))}">人力资源成本</a></td>
                                     <th>&yen; <?php echo $hr_cost['公司']?$hr_cost['公司']:'0.00'; ?></th>
                                     <th>&yen; <?php echo $hr_cost['京区业务中心']?$hr_cost['京区业务中心']:'0.00'; ?></th>
                                     <th>&yen; <?php echo $hr_cost['京外业务中心']?$hr_cost['京外业务中心']:'0.00'; ?></th>
@@ -206,8 +205,8 @@
                                     <th>&yen; <?php echo $hr_cost['机关部门']?$hr_cost['机关部门']:'0.00'; ?></th>
                                 </tr>
                                 <tr role="row" class="orders" style="text-align:center;">
-                                    <!--<td><a href="{:U('Manage/otherExpenses',array('year'=>$year,'month'=>$month,'tm'=>'q'))}">其他费用</a></td>-->
-                                    <td>其他费用</td>
+                                    <td><a href="{:U('Manage/otherExpenses',array('year'=>$year,'month'=>$month,'tm'=>'q'))}">其他费用</a></td>
+                                    <!--<td>其他费用</td>-->
                                     <th>&yen; <?php echo $department['公司']['money']?$department['公司']['money']:'0.00'; ?></th>
                                     <th>&yen; <?php echo $department['京区业务中心']['money']?$department['京区业务中心']['money']:'0.00'; ?></th>
                                     <th>&yen; <?php echo $department['京外业务中心']['money']?$department['京外业务中心']['money']:'0.00'; ?></th>

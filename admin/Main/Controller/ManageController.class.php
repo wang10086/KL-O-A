@@ -479,6 +479,7 @@ class ManageController extends ChartController {
         $year		            = I('year',date('Y'));
         $month		            = I('month',date('m'));
         if (strlen($month)<2) $month = str_pad($month,2,'0',STR_PAD_LEFT);
+        $quarter                = I('quarter')?I('quarter'):get_quarter($month);
         $tm                     = I('tm')?I('tm'):'m';
         $kinds                  = M('bxd_kind')->where(array('pid'=>2))->getField('id',true);
         $departments            = C('department1');
@@ -497,6 +498,7 @@ class ManageController extends ChartController {
         $this->month 	        = $month;
         $this->prveyear	        = $year-1;
         $this->nextyear	        = $year+1;
+        $this->quarter          = $quarter;
         $this->display();
     }
 
@@ -508,6 +510,7 @@ class ManageController extends ChartController {
         $year		            = I('year',date('Y'));
         $month		            = I('month',date('m'));
         if (strlen($month)<2) $month = str_pad($month,2,'0',STR_PAD_LEFT);
+        $quarter                = I('quarter')?I('quarter'):get_quarter($month);
         $tm                     = I('tm')?I('tm'):'m';
         $hr_cost                = C('HR_COST');
         $departments            = C('department1');
@@ -533,6 +536,7 @@ class ManageController extends ChartController {
         $this->month 	        = $month;
         $this->prveyear	        = $year-1;
         $this->nextyear	        = $year+1;
+        $this->quarter          = $quarter;
 
         $this->display();
     }
