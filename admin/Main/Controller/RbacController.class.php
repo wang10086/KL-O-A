@@ -53,7 +53,7 @@ class RbacController extends BaseController {
 		
         $this->users        = $db->relation(true)->where($where)->order($this->orders('id'))->limit($page->firstRow . ',' . $page->listRows)->select();
 		
-		$this->roles        = M('role')->GetField('id,role_name',true);
+		$this->roles        = M('role')->where(array('id'=>array('gt',3),'status'=>1))->GetField('id,role_name',true);
 		$this->posts        = M('posts')->GetField('id,post_name',true);
         $this->department   = M('salary_department')->getField('id,department',true);
         $this->positions    = M('position')->getField('id,position_name',true);
@@ -159,7 +159,7 @@ class RbacController extends BaseController {
         }else{
             $id = I('id', 0);
             	
-            $this->roles    = M('role')->where('id>3')->select();
+            $this->roles    = M('role')->where(array('id'=>array('gt',3),'status'=>1))->select();
 			$this->posts    = M('posts')->GetField('id,post_name',true);
             $this->position = M('position')->getField('id,position_name',true);
             $department     = M('salary_department')->select();//新添加部门
