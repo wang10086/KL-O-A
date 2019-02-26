@@ -3081,8 +3081,8 @@ function updatekpi($month,$user){
                         $average                = get_manyidu($data['lists']); //满意度平均值
 
                         if (!$num){
-                            //本月度无负责实施项目的，本项0分
-                            $complete = 0;
+                            //本月度无负责实施项目的，本项100分
+                            $complete = '100%';
                         }else{
                             //平均得分(如果得分>90%,得分100, 如果小于90%,以90%作为满分求百分比)
                             $score = (round($average*100/90,2))*100;
