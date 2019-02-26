@@ -1,19 +1,18 @@
 <?php
 
     /**将上个季度的考核结果扶植到当季度
-     * @param $user_id
-     * @param $year
-     * @param $month
-     * @param $quata_id
+     * @param $arr
      */
-function get_prev_kpi_result($user_id,$year,$month,$quota_id){
-    $monthly                = get_kpi_monthly($year,$month);
+function get_prev_quarter_kpi_result($arr){
+    $year                   = $arr['year'];
+    $monthd                 = substr($arr['month'],4,2);
+    $monthly                = get_kpi_monthly($year,$monthd);
     $where                  = array();
-    $where['user_id']       = $user_id;
+    $where['user_id']       = $arr['user_id'];
     $where['year']          = $year;
-    $where['month']         = $year.$month;
-    $where['quota_id']      = $quota_id;
-    $list                   = M('kpi_more')->where($where)->find();
+    $where['month']         = $monthly;
+    $where['quota_id']      = $arr['quota_id'];
+    $list                   = M('kpi_more')->where(array($where))->find();
     $complete               = $list['complete'];
     return $complete;
 }
