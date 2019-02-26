@@ -3121,9 +3121,8 @@ function updatekpi($month,$user){
                         if ($average > 0.9 || !$num){
                             $complete           = 100;
                         }else{
-                            $complete           = round(($v['plan']/0.9)*$average,2).'%';
+                            $complete           = round(($v['target']/0.9)*$average,2).'%';
                         }
-
                     }
 
                     //业务部门对产品研发满意度
@@ -3134,7 +3133,7 @@ function updatekpi($month,$user){
                         if ($average > 0.9 || !$num){
                             $complete           = 100;
                         }else{
-                            $complete           = round(($v['plan']/0.9)*$average,2).'%';
+                            $complete           = round(($v['target']/0.9)*$average,2).'%';
                         }
                     }
 
