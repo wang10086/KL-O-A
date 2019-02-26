@@ -1093,6 +1093,11 @@ class SalaryController extends BaseController {
             $f      = $use2+$use3;//获得总分    品质检查+kpi从绩效工资取值
             $fpdca  = $use1;
 
+            //kpi季度考核的人员,从2019年开始实施下个季度从上个季度取值,第一季度均默认不扣KPI
+            if (in_array($datetime,array('201901','201902','201903')) && in_array($val['id'],C('KPI_QUARTER'))){
+                $f  = 0;
+            }
+
             if(substr($f,0,1)=='-'){    //绩效工资余额
                 $balance1                           = (substr($f,0,1)).(round(($money/$branch*(substr($f,1))),2));
             }else{
