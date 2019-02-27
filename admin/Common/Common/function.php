@@ -2826,7 +2826,7 @@ function updatekpi($month,$user){
                         $peixun_data            = get_peixunlv($user,$v['start_date'],$v['end_date'],$count,$lists);
                         $peixunlv               = $peixun_data['peixunlv'];
 
-                        if($peixunlv >= 1){
+                        if($peixunlv >= 0){
                             $complete	= 100;
                         }else{
                             $complete	= ($peixunlv*100).'%';
