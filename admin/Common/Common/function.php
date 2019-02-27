@@ -1870,7 +1870,8 @@ function updatekpi($month,$user){
 	$where['month']   = $month;
 	$where['user_id'] = $user;
 
-    if (($month==date('Ym') && date('d')<26) || ($month==(date('Ym')+1) && date('d')>25)){   //只刷新当前月份,避免老数据刷新
+    //if (($month==date('Ym') && date('d')<26) || ($month==(date('Ym')+1) && date('d')>25)){   //只刷新当前月份,避免老数据刷新
+    if ($month==date('Ym')){   //只刷新当前月份,避免老数据刷新
         $quto   = M('kpi_more')->where($where)->select();
         if($quto){
             foreach($quto as $k=>$v){
