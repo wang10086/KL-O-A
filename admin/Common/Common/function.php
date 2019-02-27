@@ -3078,9 +3078,10 @@ function updatekpi($month,$user){
                     if($v['quota_id']==161){
                         $data                   = get_op_guide($user,$v['start_date'],$v['end_date']);  //获取该用户本周期所带团评分信息
                         $num                    = $data['num'];                //负责项目数
+                        $list                   = $data['lists'];               //评分列表
                         $average                = get_manyidu($data['lists']); //满意度平均值
 
-                        if (!$num){
+                        if (!$num || !$list){
                             //本月度无负责实施项目的，本项100分
                             $complete = '100%';
                         }else{
