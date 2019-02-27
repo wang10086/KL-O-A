@@ -24,15 +24,40 @@ class IndexController extends BaseController {
 		$this->sum_plans    = M('op')->where("`departure` >= '$startday' and `departure`<= '$endday' and `status`= 1")->count();
 		
 		//获取公告
-		$this->notice = M('notice')->limit(10)->order('id desc')->select();
-        //$time               = NOW_TIME-24*3600*80;
-		//$this->notice = M('notice')->where(array('send_time'=>array('gt',$time)))->order('id desc')->select();
-
+		$lists              = $this->get_notice_list();
+		$this->notice       = $lists;
 		
 		$this->css('date');
 		//$this->js('date');
 
 		$this->display();
+    }
+
+    //获取首页滚动条公告(处罚1-3分的挂两周，3分以上的挂一个月，奖励的挂两个月)
+    public function get_notice_list(){
+        $lists              = M('notice')->limit(30)->order('id desc')->select();
+        $time1              = 14*24*3600;
+        $time2              = 30*24*3600;
+        $time3              = 60*24*3600;
+        $notice             = array();
+        foreach ($lists as $k=>$v){
+            $qaqc           = M('qaqc')->find($v['source_id']);
+            $info           = M('qaqc_user')->group('qaqc_id')->where(array('qaqc_id'=>$qaqc['id']))->find();
+            if ($info['type']==0){  //惩罚
+                if($info['score']>3){
+                    $v['show_time']     = $info['update_time'] + $time2;
+                }else{
+                    $v['show_time']     = $info['update_time'] + $time1;
+                }
+            }else{  //奖励
+                $v['show_time']         = $info['update_time'] + $time3;
+            }
+
+            if ($v['show_time'] > time()){
+                $notice[]                       = $v;
+            }
+        }
+        return $notice;
     }
 	
 	
