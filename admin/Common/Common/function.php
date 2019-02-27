@@ -2788,9 +2788,11 @@ function updatekpi($month,$user){
                     //辅导员/教师管理满意度(京区业务中心教务)
                     if ($v['quota_id']==133){
                         $manyidu_data       = get_jw_myd($user,$v['start_date'],$v['end_date']);
+                        $zongshu            = $manyidu_data['zongshu'];
                         $hegelv             = $manyidu_data['hegelv'];
-                        if($hegelv >= 0.9){
-                            $complete	= 100;
+
+                        if($hegelv >= 0.9 || !$zongshu){
+                            $complete	= '100%';
                         }else{
                             $complete   = (round($hegelv/0.9,2)*100).'%';
                         }
