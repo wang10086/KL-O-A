@@ -1027,7 +1027,7 @@ class SalaryController extends BaseController {
         if($name)       $where['nickname']          = $name;
         if($archives)   $where['archives']          = $archives;
         $where['status']                            = 0;
-        //$where['nickname']                          = '常悦';
+        //$where['nickname']                          = '李智婷';
         $info                                       =  M('account')->where($where)->order('employee_member ASC')->select();//个人数据
 
         foreach($info as $k => $v){//去除编码空的数据
@@ -1100,8 +1100,10 @@ class SalaryController extends BaseController {
                 $f  = 0;
             }
 
-            if(substr($f,0,1)=='-'){    //绩效工资余额
+            /*if(substr($f,0,1)=='-'){    //绩效工资余额
                 $balance1                           = (substr($f,0,1)).(round(($money/$branch*$f),2));
+                var_dump($f);
+                var_dump($balance1);
             }else{
                 $balance1                           = round(($money/$branch*$f),2);
             }
@@ -1109,7 +1111,10 @@ class SalaryController extends BaseController {
                 $balance2                           = (substr($fpdca,0,1)).(round(($base_money/$branch*(substr($fpdca,1))),2));
             }else{
                 $balance2                           = round(($base_money/$branch*$fpdca),2);
-            }
+            }*/
+            $balance1                           = round(($money/$branch*$f),2); //绩效工资余额
+            $balance2                           = round(($base_money/$branch*$fpdca),2);    //基本工资余额
+
             $user_info[$key]['Achievements']['count_money']         = $balance1 + $balance2;
             $user_info[$key]['Achievements']['total_score_show']    = $use1;//pdca分数
             $user_info[$key]['Achievements']['show_qa_score']       = $use2;//品质检查分数
