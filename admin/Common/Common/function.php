@@ -2778,9 +2778,10 @@ function updatekpi($month,$user){
                         if ($v['quota_id']==132){
                             //辅导员管理及时率
                             $jishilv_data       = get_fdyjsl($user,$v['start_date'],$v['end_date']);
+                            $zongshu            = $jishilv_data['zongshu'];
                             $jishilv            = $jishilv_data['hegelv'];
 
-                            if($jishilv >= 1){
+                            if($jishilv >= 1 || !$zongshu){
                                 $complete	= 100;
                             }else{
                                 $complete	= ($jishilv*100).'%';
@@ -3059,7 +3060,7 @@ function updatekpi($month,$user){
                             $year           = $v['year']?$v['year']:date('Y');
                             $monon          = $v['month']?substr($v['month'],4,2):date('m');
                             $department     = get_department($v['user_id']);
-                            $budget_info    = get_department_budget($department,$year,$monon);      //部门季度预算信息
+                            $budget_info    = get_department_budget($department,$year,$monon);      //部门季度预算信息 总人数+总收入+总毛利+人力资源+其他费用+利润总额
                             $ys_rsfyl       = $budget_info['personnel_cost_rate'];                  //预算人事费用率
                             $operate_info   = get_sum_department_operate($department,$year,$monon);     //实际经营信息
                             $jy_rsfyl       = $operate_info['rsfyl'].'%';                               //经营人事费用率
