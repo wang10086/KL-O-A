@@ -750,7 +750,7 @@ class SalaryController extends BaseController {
     public function salary_excel_list(){//判断权限
         $monthly                        = trim(I('month'));
         $archives                       = trim(I('archives'));
-        $datetime                       = trim(I('datetime'));
+        $datetime                       = I('datetime')?trim(I('datetime')):date('Ym');
         $name                           = trim(I('name'));//名字
         if(is_numeric($monthly) && is_numeric($archives)){
             $dateti['datetime']         = $monthly;
@@ -1027,7 +1027,7 @@ class SalaryController extends BaseController {
         if($name)       $where['nickname']          = $name;
         if($archives)   $where['archives']          = $archives;
         $where['status']                            = 0;
-        //$where['nickname']                          = '李智婷';
+        //$where['nickname']                          = '杨开玖';
         $info                                       =  M('account')->where($where)->order('employee_member ASC')->select();//个人数据
 
         foreach($info as $k => $v){//去除编码空的数据
