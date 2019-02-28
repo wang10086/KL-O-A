@@ -522,7 +522,7 @@ function get_sum_department_operate($department,$year,$month){
     $data['rlzycb']             = array_sum(array_column($info,'rlzycb'));      //人力资源成本
     $data['qtfy']               = array_sum(array_column($info,'qtfy'));        //其他费用
     $data['lrze']               = array_sum(array_column($info,'lrze'));        //利润总额
-    $data['rsfyl']              = round($data['rlzycb']/$data['yysr'],4)*100;   //人事费用率(%)
+    $data['rsfyl']              = round($data['rlzycb']/$data['yysr'],4)*100;   //人事费用率(%)  人力资源成本/营业收入
     return $data;
 }
 
