@@ -266,18 +266,18 @@ function get_fdyjsl($user,$start_date,$end_date){
 
     $zongxiangmu            = array();
     $hegexiangmu            = array();
-    foreach ($before_lists as $k=>$v){
+    /*foreach ($before_lists as $k=>$v){
         $timeaa             = $v['in_begin_day']-$v['set_guide_time'];
-        $timebb             = 3*24*3600;     //活动实施前3天完成辅导员安排
+        $timebb             = 7*24*3600;     //活动实施前7天完成辅导员安排
         if ($timeaa >= $timebb){
             $hegexiangmu[]  = $v;            //合格团数
         }
         $zongxiangmu[]      = $v;
-    }
+    }*/
 
     foreach ($after_lists as $kk=>$vv){
         $timeaa             = $vv['heshi_time']-$vv['daiheshi_time'];
-        $timebb             = 5*24*3600;     //活动实施后5天内完成核实
+        $timebb             = strtopinyin(date('Ym').'26');     //活动实施后每月26号前完成内完成核实
         if ($timeaa <= $timebb){
             $hegexiangmu[]  = $vv;
         }
