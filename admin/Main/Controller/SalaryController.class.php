@@ -1027,7 +1027,7 @@ class SalaryController extends BaseController {
         if($name)       $where['nickname']          = $name;
         if($archives)   $where['archives']          = $archives;
         $where['status']                            = 0;
-        //$where['nickname']                          = '姚云鹏';
+        //$where['nickname']                          = '常悦';
         $info                                       =  M('account')->where($where)->order('employee_member ASC')->select();//个人数据
 
         foreach($info as $k => $v){//去除编码空的数据
@@ -1092,6 +1092,8 @@ class SalaryController extends BaseController {
             if($val['formal']==0 || $val['formal']==4) {$use3 = 0;}
             $f      = $use2+$use3;//获得总分    品质检查+kpi从绩效工资取值
             $fpdca  = $use1;
+            $f      = str_replace('+','',$f);
+            $fpdca  = str_replace('+','',$fpdca);
 
             //kpi季度考核的人员,从2019年开始实施下个季度从上个季度取值,第一季度均默认不扣KPI
             if (in_array($datetime,array('201901','201902','201903')) && in_array($val['id'],C('KPI_QUARTER'))){
@@ -1099,14 +1101,14 @@ class SalaryController extends BaseController {
             }
 
             if(substr($f,0,1)=='-'){    //绩效工资余额
-                $balance1                           = (substr($f,0,1)).(round(($money/$branch*(substr($f,1))),2));
+                $balance1                           = (substr($f,0,1)).(round(($money/$branch*$f),2));
             }else{
-                $balance1                           = (substr($f,0,1)).(round(($money/$branch*(substr($f,1))),2));
+                $balance1                           = round(($money/$branch*$f),2);
             }
             if(substr($fpdca,0,1)=='-'){    //基本工资余额
                 $balance2                           = (substr($fpdca,0,1)).(round(($base_money/$branch*(substr($fpdca,1))),2));
             }else{
-                $balance2                           = (substr($fpdca,0,1)).(round(($base_money/$branch*(substr($fpdca,1))),2));
+                $balance2                           = round(($base_money/$branch*$fpdca),2);
             }
             $user_info[$key]['Achievements']['count_money']         = $balance1 + $balance2;
             $user_info[$key]['Achievements']['total_score_show']    = $use1;//pdca分数
