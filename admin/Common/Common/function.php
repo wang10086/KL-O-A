@@ -2908,7 +2908,7 @@ function updatekpi($month,$user){
                             $zhuanhualv           = $zhuanhualv_data['zhuanhualv'];
 
                             /*if ($zhuanhualv >= 1 || !$xinzengshu){*/
-                            if ($zhuanhualv >= 1){
+                            if ($zhuanhualv >= 1 || date('Ym')<201906){ //延后6个月考核 从2019年开始
                                 $complete   = 100;
                             }else{
                                 $complete   = ($zhuanhualv*100).'%';

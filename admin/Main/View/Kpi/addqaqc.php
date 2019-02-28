@@ -71,7 +71,7 @@
                                         
                                         
                                         <div class="form-group box-float-12">
-                                            <label>不合格事实陈述及违反规定条款</label> 
+                                            <label>相关事实陈述及适用规定条款</label>
                                             <textarea class="form-control" style="height:90px;" name="info[chen]">{$row.chen}</textarea>
                                         </div>
                                         

@@ -125,9 +125,9 @@ function get_kfmyd($start_date,$end_date,$kinds='',$field='',$num=1){
 
 //合格供方转化率(计调)
  function jd_zhuanhualv($user,$start_date,$end_date){
-     //考核三个月前新增资源数量
+     //考核六个月前新增资源数量
      $where                 = array();
-     $where['input_time']	= array('between',array($start_date-(120*24*3600),$end_date-(120*24*3600)));
+     $where['input_time']	= array('between',array($start_date-(210*24*3600),$end_date-(210*24*3600)));
      $where['audit_status'] = 1;    //审核通过
      $where['input_uid']    = $user;
      $xinzengziyuan         = M('supplier')->field('id,name')->where($where)->select();
