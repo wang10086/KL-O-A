@@ -28,7 +28,7 @@
         </div>
         
         <div class="fromlist nobor" style="margin-top:10px;">
-            <div class="fromtitle">不合格事实陈述及违反规定条款：</div> 
+            <div class="fromtitle">相关事实陈述及适用规定条款：</div>
             <div class="formtexts">{$row.chen}</div>
         </div>
         
