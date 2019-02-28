@@ -1082,9 +1082,9 @@ class SalaryController extends BaseController {
             $que['p.tab_user_id']                   = $val['id'];//用户id
             $que['p.month']                         = datetime(date('Y'),date('m'),date('d'),1);
             $user                                   = $this->query_score($que);//绩效增减
-            $use1                                   = trim(str_replace(array('<font color="#999999">','</font>','无加扣分','<span class="red">','</span>','<span>','<font color="#ff9900">','未完成评分','<span class="green">'),"",$user[0]['total_score_show']));//PDCA
-            $use2                                   = trim(str_replace(array('<font color="#999999">','</font>','无加扣分','<span class="red">','</span>','<span>','<font color="#ff9900">','未完成评分','<span class="green">'),"",$user[0]['show_qa_score']));//品质检查
-            $use3                                   = trim(str_replace(array('<font color="#999999">','</font>','无加扣分','<span class="red">','</span>','<span>','<font color="#ff9900">','未完成评分'),"",$user[0]['total_kpi_score']));//KPI
+            $use1                                   = trim(str_replace(array('<font color="#999999">','</font>','无加扣分','<span class="red">','</span>','<span>','<font color="#ff9900">','未完成评分','<span class="green">','+'),"",$user[0]['total_score_show']));//PDCA
+            $use2                                   = trim(str_replace(array('<font color="#999999">','</font>','无加扣分','<span class="red">','</span>','<span>','<font color="#ff9900">','未完成评分','<span class="green">','+'),"",$user[0]['show_qa_score']));//品质检查
+            $use3                                   = trim(str_replace(array('<font color="#999999">','</font>','无加扣分','<span class="red">','</span>','<span>','<font color="#ff9900">','未完成评分','+'),"",$user[0]['total_kpi_score']));//KPI
             $money                                  = $user_info[$key]['salary'][0]['standard_salary']/10*$user_info[$key]['salary'][0]['performance_salary'];//绩效金额
             $base_money                             = $user_info[$key]['salary'][0]['standard_salary']/10*$user_info[$key]['salary'][0]['basic_salary'];    //基本工资
             $branch                                 = 100;//给总共100分
@@ -1092,8 +1092,6 @@ class SalaryController extends BaseController {
             if($val['formal']==0 || $val['formal']==4) {$use3 = 0;}
             $f      = $use2+$use3;//获得总分    品质检查+kpi从绩效工资取值
             $fpdca  = $use1;
-            $f      = str_replace('+','',$f);
-            $fpdca  = str_replace('+','',$fpdca);
 
             //kpi季度考核的人员,从2019年开始实施下个季度从上个季度取值,第一季度均默认不扣KPI
             if (in_array($datetime,array('201901','201902','201903')) && in_array($val['id'],C('KPI_QUARTER'))){
