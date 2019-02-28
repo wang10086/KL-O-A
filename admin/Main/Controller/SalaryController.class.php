@@ -1027,7 +1027,7 @@ class SalaryController extends BaseController {
         if($name)       $where['nickname']          = $name;
         if($archives)   $where['archives']          = $archives;
         $where['status']                            = 0;
-        //$where['nickname']                          = '李宝库';
+        //$where['nickname']                          = '姚云鹏';
         $info                                       =  M('account')->where($where)->order('employee_member ASC')->select();//个人数据
 
         foreach($info as $k => $v){//去除编码空的数据
@@ -1082,8 +1082,8 @@ class SalaryController extends BaseController {
             $que['p.tab_user_id']                   = $val['id'];//用户id
             $que['p.month']                         = datetime(date('Y'),date('m'),date('d'),1);
             $user                                   = $this->query_score($que);//绩效增减
-            $use1                                   = trim(str_replace(array('<font color="#999999">','</font>','无加扣分','<span class="red">','</span>','<span>','<font color="#ff9900">','未完成评分'),"",$user[0]['total_score_show']));//PDCA
-            $use2                                   = trim(str_replace(array('<font color="#999999">','</font>','无加扣分','<span class="red">','</span>','<span>','<font color="#ff9900">','未完成评分'),"",$user[0]['show_qa_score']));//品质检查
+            $use1                                   = trim(str_replace(array('<font color="#999999">','</font>','无加扣分','<span class="red">','</span>','<span>','<font color="#ff9900">','未完成评分','<span class="green">'),"",$user[0]['total_score_show']));//PDCA
+            $use2                                   = trim(str_replace(array('<font color="#999999">','</font>','无加扣分','<span class="red">','</span>','<span>','<font color="#ff9900">','未完成评分','<span class="green">'),"",$user[0]['show_qa_score']));//品质检查
             $use3                                   = trim(str_replace(array('<font color="#999999">','</font>','无加扣分','<span class="red">','</span>','<span>','<font color="#ff9900">','未完成评分'),"",$user[0]['total_kpi_score']));//KPI
             $money                                  = $user_info[$key]['salary'][0]['standard_salary']/10*$user_info[$key]['salary'][0]['performance_salary'];//绩效金额
             $base_money                             = $user_info[$key]['salary'][0]['standard_salary']/10*$user_info[$key]['salary'][0]['basic_salary'];    //基本工资
