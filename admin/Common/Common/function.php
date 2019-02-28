@@ -3020,7 +3020,7 @@ function updatekpi($month,$user){
                             $operate_info   = get_sum_department_operate($department,$year,$monon);     //实际经营信息
                             $jy_lrze        = $operate_info['lrze'];                                //经营利润总额
 
-                            $complete       = $jy_lrze;
+                            $complete       = $jy_lrze>0?$jy_lrze:0;
                         }
 
                         //季度顾客满意度
@@ -3061,7 +3061,7 @@ function updatekpi($month,$user){
                             $monon          = $v['month']?substr($v['month'],4,2):date('m');
                             $department     = get_department($v['user_id']);
                             $budget_info    = get_department_budget($department,$year,$monon);      //部门季度预算信息 总人数+总收入+总毛利+人力资源+其他费用+利润总额
-                            $ys_rsfyl       = $budget_info['personnel_cost_rate'];                  //预算人事费用率
+                            $ys_rsfyl       = (round($budget_info['sum_manpower_cost']/$budget_info['sum_logged_income'],4)*100).'%';  //预算人事费用率 (人力资源成本/营业收入)
                             $operate_info   = get_sum_department_operate($department,$year,$monon);     //实际经营信息
                             $jy_rsfyl       = $operate_info['rsfyl'].'%';                               //经营人事费用率
                             $complete       = $jy_rsfyl;
