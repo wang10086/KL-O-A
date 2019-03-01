@@ -269,7 +269,8 @@ function get_fdyjsl($user,$start_date,$end_date){
     /*foreach ($before_lists as $k=>$v){
         $timeaa             = $v['in_begin_day']-$v['set_guide_time'];
         $timebb             = 7*24*3600;     //活动实施前7天完成辅导员安排
-        if ($timeaa >= $timebb){
+        //if ($timeaa >= $timebb){
+        if ($timeaa >= 0){                   //活动开始前安排
             $hegexiangmu[]  = $v;            //合格团数
         }
         $zongxiangmu[]      = $v;
