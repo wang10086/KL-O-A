@@ -299,7 +299,8 @@ class AjaxController extends Controller {
         $data['staff_id']   = $id;
         $data['youke']      = cookie('staff_youke');
         $data['zan_time']   = NOW_TIME;
-        $zan_db->add($data);
+        $res                = $zan_db->add($data);
+        if ($res) $this->ajaxReturn($res);
     }
 
 
@@ -1509,5 +1510,43 @@ class AjaxController extends Controller {
         $db                                 = M('bxd_kind');
         $data                               = $db->field('id,name')->where(array('pid'=>$pid))->select();
         $this->ajaxReturn($data);
+    }
+
+    //获取KPI季度月份
+    public function get_kpi_info(){
+        $cycle                              = I('cycle');
+        $year                               = I('year');
+        $month                              = I('month');
+        $kpi_month                          = $this->kpi_info($year,$month,$cycle);
+        $this->ajaxReturn($kpi_month);
+    }
+
+    /** 求考核周期开始及结束时间
+     * @param $year     年
+     * @param $month    月份
+     * @param $cycle    考核周期
+     */
+    public function kpi_info($year,$month,$cycle){
+        $data                   = array();
+        if ($cycle==1){ //月度
+            $yearmonth          = $year.$month;
+            $times              = get_cycle($yearmonth);
+            $data['beginTime']  = date('Y-m-d',$times['begintime']);
+            $data['endTime']    = date('Y-m-d',$times['endtime']);
+            $data['yearMonths'] = $yearmonth;
+        }elseif ($cycle==2){    //季度
+            $times              = getQuarterlyCicle($year,$month);
+            $data['beginTime']  = date('Y-m-d',$times['begin_time']);
+            $data['endTime']    = date('Y-m-d',$times['end_time']);
+        }elseif ($cycle==3){    //半年度
+            $times              = get_half_year_cycle($year,$month);
+            $data['beginTime']  = date('Y-m-d',$times['beginTime']);
+            $data['endTime']    = date('Y-m-d',$times['endTime']);
+        }elseif ($cycle==4){    //年度
+            $times              = get_year_cycle($year);
+            $data['beginTime']  = date('Y-m-d',$times['beginTime']);
+            $data['endTime']    = date('Y-m-d',$times['endTime']);
+        }
+        return $data;
     }
 }
