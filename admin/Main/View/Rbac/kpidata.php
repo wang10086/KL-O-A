@@ -16,11 +16,12 @@
                     <div class="row">
                          <!-- right column -->
                         <div class="col-md-12">
-                            
-                                  
-                            <div class="btn-group" id="catfont" style="padding-bottom:20px;">
+                            <!--月度考核-->
+                            <div class="btn-group cycle_nav month" id="catfont" style="padding-bottom:20px;">
+                                <?php if ($prveyear > 2017){ ?>
                             	<a href="{:U('Rbac/kpi_data',array('year'=>$prveyear,'uid'=>$uid))}" class="btn btn-default" style="padding:8px 18px;">上一年</a>
-								<?php 
+                                <?php } ?>
+								<?php
                                 for($i=1;$i<13;$i++){
                                     $par = array();
                                     $par['year']  = $year;
@@ -33,12 +34,73 @@
                                     }
                                 }
                                 ?>
+                                <?php if ($prveyear < date('Y')-1){ ?>
                                 <a href="{:U('Rbac/kpi_data',array('year'=>$nextyear,'uid'=>$uid))}" class="btn btn-default" style="padding:8px 18px;">下一年</a>
+                                <?php } ?>
+                            </div>
+
+                            <!--季度考核-->
+                            <div class="btn-group cycle_nav quarter" id="catfont" style="padding-bottom:20px;">
+                                <?php if ($prveyear > 2017){ ?>
+                                <a href="{:U('Rbac/kpi_data',array('year'=>$prveyear,'uid'=>$uid))}" class="btn btn-default" style="padding:8px 18px;">上一年</a>
+                                <?php } ?>
+                                <?php
+                                    for($i=1;$i<5;$i++){
+                                        $par = array();
+                                        $par['year']  = $year;
+                                        $par['quarter'] = $i;
+                                        $par['uid']   = $uid;
+                                        if($quarter==$i){
+                                            echo '<a href="'.U('Rbac/kpi_data',$par).'" class="btn btn-info" style="padding:8px 18px;">'.$i.'季度</a>';
+                                        }else{
+                                            echo '<a href="'.U('Rbac/kpi_data',$par).'" class="btn btn-default" style="padding:8px 18px;">'.$i.'季度</a>';
+                                        }
+                                    }
+                                ?>
+                                <?php if ($prveyear < date('Y')-1){ ?>
+                                    <a href="{:U('Rbac/kpi_data',array('year'=>$nextyear,'uid'=>$uid))}" class="btn btn-default" style="padding:8px 18px;">下一年</a>
+                                <?php } ?>
+                            </div>
+
+                            <!--半年度考核-->
+                            <div class="btn-group cycle_nav half-year" id="catfont" style="padding-bottom:20px;">
+                                <?php if ($prveyear > 2017){ ?>
+                                    <a href="{:U('Rbac/kpi_data',array('year'=>$prveyear,'uid'=>$uid))}" class="btn btn-default" style="padding:8px 18px;">上一年</a>
+                                <?php } ?>
+                                <?php
+                                    if($half_year==1){
+                                        echo '<a href="'.U('Rbac/kpi_data',array('year'=>$year,'half_year'=>1,'uid'=>$uid)).'" class="btn btn-info" style="padding:8px 18px;">上半年</a>'.'<a href="'.U('Rbac/kpi_data',array('year'=>$year,'half_year'=>2,'uid'=>$uid)).'" class="btn btn-default" style="padding:8px 18px;">下半年</a>';
+                                    }else{
+                                        echo '<a href="'.U('Rbac/kpi_data',array('year'=>$year,'half_year'=>1,'uid'=>$uid)).'" class="btn btn-default" style="padding:8px 18px;">上半年</a>'.'<a href="'.U('Rbac/kpi_data',array('year'=>$year,'half_year'=>2,'uid'=>$uid)).'" class="btn btn-info" style="padding:8px 18px;">下半年</a>';
+                                    }
+                                ?>
+                                <?php if ($prveyear < date('Y')-1){ ?>
+                                    <a href="{:U('Rbac/kpi_data',array('year'=>$nextyear,'uid'=>$uid))}" class="btn btn-default" style="padding:8px 18px;">下一年</a>
+                                <?php } ?>
+                            </div>
+
+                            <!--年度考核-->
+                            <div class="btn-group cycle_nav year" id="catfont" style="padding-bottom:20px;">
+                                <?php
+                                    for($i=2018;$i<=date('Y');$i++){
+                                        $par = array();
+                                        $par['year']  = $year;
+                                        $par['month'] = $i;
+                                        $par['uid']   = $uid;
+                                        if($year==$i){
+                                            echo '<a href="'.U('Rbac/kpi_data',$par).'" class="btn btn-info" style="padding:8px 18px;">'.$i.'年</a>';
+                                        }else{
+                                            echo '<a href="'.U('Rbac/kpi_data',$par).'" class="btn btn-default" style="padding:8px 18px;">'.$i.'年</a>';
+                                        }
+                                    }
+                                ?>
                             </div>
                                     
                             
-                            <form method="post" action="{:U('Rbac/save_kpi_data')}" name="myform" id="myform">
+                            <form method="post" action="{:U('Rbac/save_kpi_data')}" name="myform" id="myform" onsubmit="return submitBefore()">
                             <input type="hidden" name="dosubmint" value="1">
+                            <input type="hidden" name="kpi_id" value="{$kpi.id}">
+                            <input type="hidden" name="account_id" value="{$user.id}">
                             <div class="box box-warning">
                                 <div class="box-header">
                                     <h3 class="box-title">考核指标</h3>
@@ -54,10 +116,27 @@
                                         所属岗位：{$user.postname}
                                         </span> 
                                         
-                                        <a href="{:u('Kpi/addkpi',array('year'=>$year,'uid'=>$uid))}" class="btn btn-danger btn-sm" style="float:right;"><i class="fa fa-fw  fa-refresh"></i> 获取全年指标</a> 
-                                        
-                                        <a href="{:u('Kpi/addkpi',array('year'=>$year,'month'=>$month,'uid'=>$uid))}" class="btn btn-success btn-sm" style="float:right; margin-right:10px;"><i class="fa fa-fw  fa-refresh"></i> 获取本月指标</a> 
-                                        
+                                        <!--<a href="{:u('Kpi/addkpi',array('year'=>$year,'uid'=>$uid))}" class="btn btn-danger btn-sm" style="float:right;"><i class="fa fa-fw  fa-refresh"></i> 获取全年指标</a>-->
+                                        <a href="javascript:;" onclick="getFullYearKpi()" class="btn btn-danger btn-sm" style="float:right;"><i class="fa fa-fw  fa-refresh"></i> 获取全年指标</a>
+
+                                       <!-- <a href="{:u('Kpi/addkpi',array('year'=>$year,'month'=>$month,'uid'=>$uid))}" class="btn btn-success btn-sm" style="float:right; margin-right:10px;"><i class="fa fa-fw  fa-refresh"></i> 获取本月指标</a>-->
+                                        <style>
+                                            .set-kpi-select{display: inline-block; width: 13rem; float: right}
+                                            .btn-group{margin-top: 0px;}
+                                        </style>
+                                        <?php if ($year == date('Y')){ ?>
+                                            <div class="form-group set-kpi-select">
+                                                <div class=" col-md-12">
+                                                    <select class="form-control" name="cycle" id="cycle" onchange="change_view($(this).val())">
+                                                        <option value="">==考核周期==</option>
+                                                        <foreach name="kpi_cycle" key="k" item="v">
+                                                            <option value="{$k}" <?php if ($cycle == $k){echo 'selected'; } ?>>{$v}</option>
+                                                        </foreach>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        <?php } ?>
+
                                         <div class="box-body table-responsive no-padding">
                                         <table class="table table-bordered dataTable fontmini" id="tablelist" style="margin-top:10px;">
                                             <tr role="row" class="orders" >
@@ -74,8 +153,8 @@
                                             <tr>
                                                 <td style="line-height:34px;" align="center"><?php echo $key+1; ?></td>
                                                 <td style="line-height:34px;"><a href="javascript:;" onClick="kpi({$row.quota_id})">{$row.quota_title}</a></td>
-                                                <td><input type="text" class="form-control" name="info[{$row.id}][start_date]" value="{$row.start_date|date='Y-m-d',###}"></td>
-                                                <td><input type="text" class="form-control" name="info[{$row.id}][end_date]" value="{$row.end_date|date='Y-m-d',###}"></td>
+                                                <td><input type="text" class="form-control start_date" name="info[{$row.id}][start_date]" value="{$row.start_date|date='Y-m-d',###}"></td>
+                                                <td><input type="text" class="form-control end_date" name="info[{$row.id}][end_date]" value="{$row.end_date|date='Y-m-d',###}"></td>
                                                 <td><input type="text" class="form-control" name="info[{$row.id}][plan]" value="{$row.plan}"></td>
                                                 <td><input type="text" class="form-control" name="info[{$row.id}][target]" value="{$row.target}"></td>
                                                 <td><input type="text" class="form-control" name="info[{$row.id}][weight]" value="{$row.weight}"></td>
@@ -84,20 +163,15 @@
                                                 </td>
                                                 
                                             </tr>
-                                            </foreach>					
-                                        </table> 
-                                        
+                                            </foreach>
+                                        </table>
                                         </div>
-                                        
                                         <div class="form-group">&nbsp;</div>
-                                       
                                     </div>
-                                    
                                 </div><!-- /.box-body -->
                             </div><!-- /.box -->
                         </div><!--/.col (right) -->
-                        
-                        
+
                         <div class="col-md-12">
                             <div class="box box-warning">
                                 <div class="box-body">
@@ -135,34 +209,25 @@
                                 </div>
                             </div>
                         </div>
-                        
-                       
-                        
-                        
                         </form>
-                        
-                                    
-                        
-                        
-                        
-                       
-                        
-                    
                     </div>   <!-- /.row -->
-                    
-                    
-                    
-                    
                 </section><!-- /.content -->
-                
             </aside><!-- /.right-side -->
-			
   		</div>
 	</div>
 
 	<include file="Index:footer2" />
     
     <script>
+        $(function () {
+            var cycle = <?php echo $kpi['cycle']?$kpi['cycle']:1; ?>;
+            $('.cycle_nav').hide();
+            if (cycle ==1){ $('.month').show(); }
+            if (cycle ==2){ $('.quarter').show(); }
+            if (cycle ==3){ $('.half-year').show(); }
+            if (cycle ==4){ $('.year').show(); }
+        })
+
     //编辑KPI指标
 	function edit_kpi(id) {
 		var kpiid = '{$kpi.id}';
@@ -230,4 +295,59 @@
 		});
 	});
 	*/
+
+	//选择KPI考核周期
+	function change_view(cycle) {
+        var month   = "<?php echo $month?$month:date('m'); ?>";
+        var year    = "<?php echo $year?$year:date('Y'); ?>";
+        var cycle   = cycle?cycle:{$cycle};
+        if (cycle==1){  //月度
+            $('.cycle_nav').hide();
+            $('.month').show();
+        }else if(cycle==2){ //季度
+            $('.cycle_nav').hide();
+            $('.quarter').show();
+        }else if(cycle==3){ //半年度
+            $('.cycle_nav').hide();
+            $('.half-year').show();
+        }else if(cycle==4){ //年度
+            $('.cycle_nav').hide();
+            $('.year').show();
+        }
+
+        $.ajax({
+            type : 'POST',
+            url : "{:U('Ajax/get_kpi_info')}",
+            dataType:'json',
+            data:{cycle:cycle,year:year,month:month},
+            success:function (data) {
+                $('.start_date').val(data.beginTime);
+                $('.end_date').val(data.endTime);
+            }
+        })
+    }
+
+    function submitBefore() {
+        var cycle = $('#cycle').val();
+        if (!cycle){
+            art_show_msg('请选择考核周期');
+            return false;
+        }else {
+            $('#myform').submit();
+        }
+    }
+
+    function getFullYearKpi() {
+        var cycle   = $('#cycle').val();
+        var year    = {$year};
+        var uid     = {$uid};
+        var month   = {$month};
+        if (!cycle){
+            art_show_msg('请选择考核周期');
+            return false;
+        }else{
+            var url = '/index.php?m=Main&c=Kpi&a=addkpi&year='+year+'&month='+month+'&uid='+uid+'&cycle='+cycle;
+            window.location.href = url;
+        }
+    }
 	</script>

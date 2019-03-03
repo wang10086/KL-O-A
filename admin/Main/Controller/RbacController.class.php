@@ -1394,29 +1394,31 @@ class RbacController extends BaseController {
 	// @@@NODE-3###kpi_data###配置KPI数据###
 	public function kpi_data(){
 		$this->title('配置KPI目标数据');
-         
-       $id    = I('id');
-		
-		$year  = I('year',date('Y'));
-		$month = I('month',date('m'));
-		$user  = I('uid',cookie('userid'));
-		
-		
-		$sta   = C('KPI_STATUS');
-		
-		if($id){
-			$kpi   = M('kpi')->where($where)->find($id);
-			$year  = $kpi['year'];
-			$month = ltrim(substr($kpi['month'],4,2),0);
-			$user  = $kpi['user_id'];
+
+        $id                     = I('id');
+		$year                   = I('year',date('Y'));
+		$month                  = I('month',date('m'));
+		//$user                   = I('uid',cookie('userid'));
+		$user                   = I('uid');
+		$quarter                = I('quarter')?trim(I('quarter')):get_quarter($month);  //获取季度信息
+        $half_year              = I('half_year')?trim(I('half_year')):get_half_year($month);//获取上半年还是下半年
+        $cycle                  = M('account')->where(array('id'=>$user))->getField('kpi_cycle');
+        $sta                    = C('KPI_STATUS');
+        $yearmonth              = $this->get_kpi_month($cycle,$year,$month,$quarter,$half_year);
+
+        if($id){
+			$kpi                = M('kpi')->where($where)->find($id);
+			$year               = $kpi['year'];
+			$month              = ltrim(substr($kpi['month'],4,2),0);
+			$user               = $kpi['user_id'];
 		}else{
-			$where = array();
-			$where['month']   = $year.sprintf('%02s', $month);
-			$where['user_id'] = $user;
+			$where              = array();
+			$where['month']     = array('like','%'.$yearmonth.'%');
+			$where['user_id']   = $user;
+            //$where['cycle']     = $cycle;
 			$kpi = M('kpi')->where($where)->find();
 		}
-		
-		
+
 		
 		$kpi['kaoping']      = $kpi['mk_user_id'] ? username($kpi['mk_user_id']) : '未评分'; 	
 		$kpi['score']        = $kpi['score'] ? $kpi['score'].'分' : '未评分'; 	
@@ -1446,16 +1448,69 @@ class RbacController extends BaseController {
 		$this->prveyear   = $year-1;
 		$this->nextyear   = $year+1;
 		$this->allmonth   = $year.sprintf('%02s', $month);
-        
-		$this->display('kpidata');
+        $this->kpi_cycle  = C('KPI_CYCLE');
+        $this->quarter    = $quarter;   //季度
+        $this->half_year  = $half_year; //上半年/下半年
+        $this->cycle      = $cycle;
+
+        $this->display('kpidata');
 	}
+
+	//获取KPI月份
+    public function get_kpi_month($cycle=1,$year,$month='',$quarter='',$half_year=''){
+        switch ($cycle){
+            case 1: //月度
+                $yearMonth              = $year.$month;
+                break;
+            case 2: //季度
+                switch ($quarter){
+                    case 1:
+                        $yearMonth      = $year.'03';
+                        break;
+                    case 2:
+                        $yearMonth      = $year.'06';
+                        break;
+                    case 3:
+                        $yearMonth      = $year.'09';
+                        break;
+                    case 4:
+                        $yearMonth      = $year.'12';
+                        break;
+                }
+                break;
+            case 3: //半年度
+                switch ($half_year){
+                    case 1:
+                        $yearMonth      = $year.'06';
+                        break;
+                    case 2:
+                        $yearMonth      = $year.'12';
+                        break;
+                }
+                break;
+            case 4: //年度
+                $yearMonth              = $year.datetime('m');
+                break;
+        }
+        return $yearMonth;
+    }
 	
 	// @@@NODE-3###save_kpi_data###保存KPI指标数据###
 	public function save_kpi_data(){
 		$id = I('id','');
-		
+        var_dump(I());die;
+
 		if(isset($_POST['dosubmint'])){
-			$info = I('info');
+            $account_id         = trim(I('account_id'));
+			$info               = I('info');
+            $kpi_id             = I('kpi_id');
+            $cycle              = I('cycle');
+            $kpiData            = array();
+            $kpiData['cycle']   = $cycle;
+            M('kpi')->where(array('id'=>$kpi_id))->save($kpiData);
+            $acc                = array();
+            $acc['kpi_cycle']   = $cycle;
+            M('account')->where(array('id'=>$account_id))->save($acc);
 			foreach($info as $k=>$v){
 				
 				//获取原记录
@@ -1464,6 +1519,7 @@ class RbacController extends BaseController {
 				//保存新数据
 				$v['start_date'] = strtotime($v['start_date']);
 				$v['end_date']   = strtotime($v['end_date']);
+                $v['cycle']      = $cycle;
 				M('kpi_more')->data($v)->where(array('id'=>$k))->save();
 				
 				//保存更新记录

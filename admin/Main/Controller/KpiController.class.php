@@ -1243,27 +1243,45 @@ class KpiController extends BaseController {
 	
 	// @@@NODE-3###addkpi###新建KPI###
 	public function addkpi(){
-		
-		$year  = I('year','');
-		$month = I('month','');
-		$user  = I('uid',cookie('userid'));
-		
-		if($month){
-			addkpiinfo($year,$month,$user);
+		$mod            = D('Kpi');
+		$year           = I('year',date('Y'));
+		$month          = I('month',date('m'));
+		$user           = I('uid',cookie('userid'));
+        $cycle          = I('cycle',1);
+
+        $acc                = array();
+        $acc['kpi_cycle']   = $cycle;
+        M('account')->where(array('id'=>$user))->save($acc);
+
+		/*if($month){
+			addkpiinfo($year,$month,$user,$cycle);
 		}else{
 			for($i=1;$i<13;$i++){
-				addkpiinfo($year,$i,$user);
+				addkpiinfo($year,$i,$user,$cycle);
 			}
-		}
+		}*/
+		if ($cycle == 1){   //月度
+            for($i=1;$i<13;$i++){
+                $mod->addKpiInfo($year,$user,$cycle,$i);
+            }
+        }elseif ($cycle==2){ //季度
+            for ($i=1;$i<5;$i++){
+                $mod->addKpiInfo($year,$user,$cycle,'',$i);
+            }
+        }elseif ($cycle==3){    //半年度
+            for ($i=1;$i<3;$i++){
+                $mod->addKpiInfo($year,$user,$cycle,'','',$i);
+            }
+        }elseif ($cycle==4){    //年度
+            $yearCycle  = 1;
+            $mod->addKpiInfo($year,$user,$cycle,'','','',$yearCycle);
+        }
+
 		$this->success('获取成功!');
 				
 			
 	}
-	
-	
-	
-	
-	
+
 	
 	// @@@NODE-3###kpiinfo###KPI指标管理###
 	public function kpiinfo(){

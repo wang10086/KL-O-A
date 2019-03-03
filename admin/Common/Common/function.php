@@ -1758,7 +1758,7 @@ function getthemonth($date,$type=0){
    
 } 
 
-
+//获取月度周期
 function set_month($date,$type=0){
 	$year   = substr($date,0,4);
 	$month  = substr($date,4,2);
@@ -1785,22 +1785,45 @@ function set_month($date,$type=0){
 	return $return;
 }
 
+//获取季度周期
+function set_quarter($year,$quarter){
+    switch ($quarter){
+        case 1:
+            $data['begin_time']     = strtotime(($year-1).'1226') ;
+            $data['end_time']       = strtotime($year.'0326');
+            break;
+        case 2:
+            $data['begin_time']     = strtotime($year.'0326') ;
+            $data['end_time']       = strtotime($year.'0626');
+            break;
+        case 3:
+            $data['begin_time']     = strtotime($year.'0626') ;
+            $data['end_time']       = strtotime($year.'0926');
+            break;
+        case 4:
+            $data['begin_time']     = strtotime($year.'0926') ;
+            $data['end_time']       = strtotime($year.'1226');
+            break;
+    }
+    return $data;
+}
 
-function addkpiinfo($year,$month,$user){
+//20190302注释
+/*function addkpiinfo($year,$month,$user){
 	$yearm = $year.sprintf('%02s', $month);
-	
-	
+
+
 	//获取用户信息
 	$acc = M('account')->find($user);
-	
+
 	//判断月份是否存在
 	$where = array();
 	$where['month']   = $yearm;
 	$where['user_id'] = $user;
-	
+
 	//查询这个月的KPI信息
 	$kpi = M('kpi')->where($where)->find();
-	
+
 	//如果不存在新增
 	if(!$kpi){
 		//获取评分人信息
@@ -1816,22 +1839,22 @@ function addkpiinfo($year,$month,$user){
 		$info['create_time']    = time();
 		$kpiid = M('kpi')->add($info);
 	}else{
-		$kpiid = $kpi['id'];	
+		$kpiid = $kpi['id'];
 	}
-	
-	
-			
+
+
+
 	//获取考核指标信息
 	$postid = $acc['postid'];
 	$quto   = M()->table('__KPI_POST_QUOTA__ as r')->field('c.*')->join('__KPI_CONFIG__ as c on c.id = r.quotaid')->where(array('r.postid'=>$postid))->select();
-	
+
 	if($quto){
 		foreach($quto as $k=>$v){
-			
-			
+
+
 			//整理数据
 			$data = array();
-			$data['user_id']       = $user;	
+			$data['user_id']       = $user;
 			$data['kpi_id']        = $kpiid;
 			$data['year']          = $year;
 			$data['month']         = $yearm;
@@ -1841,8 +1864,8 @@ function addkpiinfo($year,$month,$user){
 			$data['weight']        = $v['weight'];
 			$data['status']        = 0;
 			$data['create_time']   = time();
-			
-				
+
+
 			$where = array();
 			$where['month']     = $yearm;
 			$where['quota_id']  = $v['id'];
@@ -1854,13 +1877,14 @@ function addkpiinfo($year,$month,$user){
 				$data['end_date']        = $zhouqi[1];
 				M('kpi_more')->add($data);
 			}else{
-				M('kpi_more')->data($data)->where(array('id'=>$more['id']))->save();	
+				M('kpi_more')->data($data)->where(array('id'=>$more['id']))->save();
 			}
-			
-		}	
+
+		}
 	}
-		
-}
+
+}*/
+
 
 
 
@@ -4566,4 +4590,86 @@ function getQuarterlyCicle($year,$month){
     }
     return $data;
 }
+
+//获取每个季度的月份
+    function getQuarterMonths($quarter,$year){
+    switch ($quarter){
+        case 1:
+            $yearMonths     = $year.'01,'.$year.'02,'.$year.'03';
+            break;
+        case 2:
+            $yearMonths     = $year.'04,'.$year.'05,'.$year.'06';
+            break;
+        case 3:
+            $yearMonths     = $year.'07,'.$year.'08,'.$year.'09';
+            break;
+        case 4:
+            $yearMonths     = $year.'10,'.$year.'11,'.$year.'12';
+            break;
+    }
+    return $yearMonths;
+}
+
+//获取半年度的月份
+    function getHalfYearMonths($half_year,$year){
+        switch ($half_year){
+            case 1:
+                $yearMonths     = $year.'01,'.$year.'02,'.$year.'03,'.$year.'04,'.$year.'05,'.$year.'06';
+                break;
+            case 2:
+                $yearMonths     = $year.'07,'.$year.'08,'.$year.'09,'.$year.'10,'.$year.'11,'.$year.'12';
+                break;
+        }
+        return $yearMonths;
+    }
+
+    //获取年度的月份
+    function getFullYearMonths($year){
+        $yearMonths             = '';
+        for ($i=1;$i<13;$i++){
+            if (strlen($i)<2) $i = str_pad($i,2,'0',STR_PAD_LEFT);
+            $yearMonths         .= $year.$i.',';
+        }
+        $yearMonths             = substr($yearMonths,0,-1);
+        return $yearMonths;
+    }
+
+    /**获取上半年还是下半年
+     * @param $month
+     */
+function get_half_year($month){
+    $month                          = $month?$month:date('m');
+    if (strlen($month)<2) $month    = str_pad($month,2,'0',STR_PAD_LEFT);
+    switch ($month){
+        case in_array($month,array('01','02','03','04','05','06')):
+            $half_year              = 1;
+            break;
+        case in_array($month,array('07','08','09','10','11','12')):
+            $half_year              = 2;
+            break;
+    }
+    return $half_year;
+}
+
+//半年度考核周期
+function get_half_year_cycle($year,$month){
+    $month                          = $month?$month:date('m');
+    if (strlen($month)<2) $month    = str_pad($month,2,'0',STR_PAD_LEFT);
+    $data                           = array();
+    if (in_array($month,array('01','02','03','04','05','06'))){
+        $data['beginTime']          = strtotime(($year-1).'1226');
+        $data['endTime']            = strtotime($year.'0626');
+    }else{
+        $data['beginTime']          = strtotime($year.'0626');
+        $data['endTime']            = strtotime($year.'1226');
+    }
+    return $data;
+}
+    //年度考核周期
+    function get_year_cycle($year){
+        $data                       = array();
+        $data['beginTime']          = strtotime(($year-1).'1226');
+        $data['endTime']            = strtotime($year.'1226');
+        return $data;
+    }
 
