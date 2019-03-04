@@ -1498,19 +1498,18 @@ class RbacController extends BaseController {
 	// @@@NODE-3###save_kpi_data###保存KPI指标数据###
 	public function save_kpi_data(){
 		$id = I('id','');
-        var_dump(I());die;
 
 		if(isset($_POST['dosubmint'])){
             $account_id         = trim(I('account_id'));
 			$info               = I('info');
             $kpi_id             = I('kpi_id');
             $cycle              = I('cycle');
-            $kpiData            = array();
+            /*$kpiData            = array();
             $kpiData['cycle']   = $cycle;
             M('kpi')->where(array('id'=>$kpi_id))->save($kpiData);
             $acc                = array();
             $acc['kpi_cycle']   = $cycle;
-            M('account')->where(array('id'=>$account_id))->save($acc);
+            M('account')->where(array('id'=>$account_id))->save($acc);*/
 			foreach($info as $k=>$v){
 				
 				//获取原记录
@@ -1519,7 +1518,7 @@ class RbacController extends BaseController {
 				//保存新数据
 				$v['start_date'] = strtotime($v['start_date']);
 				$v['end_date']   = strtotime($v['end_date']);
-                $v['cycle']      = $cycle;
+                //$v['cycle']      = $cycle;
 				M('kpi_more')->data($v)->where(array('id'=>$k))->save();
 				
 				//保存更新记录

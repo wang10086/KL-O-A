@@ -20,16 +20,26 @@ class KpiModel extends Model
         $where['month']         = $yearm;
         $where['user_id']       = $user;
 
-        //删除以前的旧数据
+        /*//删除以前的旧数据
         $delKpi                 = array();
         $delKpi['user_id']      = $acc['id'];
         $delKpi['year']         = $year;
         $delKpi['cycle']        = array('neq',$cycle);
-        $delKpiIds              = M('kpi')->where($delKpi)->getField('id',true);
-        M('kpi')->where($delKpi)->delete();
+        $delKpiIds              = '';
+        for($a=$month;$a<13;$a++){
+            if (strlen($a)<2) $a = str_pad($a,2,'0',STR_PAD_LEFT);
+            $ym                 = $year.$a;
+            $delKpi['month']    = array('like','%'.$ym.'%');
+            $delKpiId           = M('kpi')->where($delKpi)->getField('id');
+            $delKpiIds          = $delKpiIds.','.$delKpiId;
+        }
+        $arr_delKpiIds          = array_unique(array_filter(explode(',',$delKpiIds)));
+        $arr                    = array();
+        if ($arr_delKpiIds) $arr['id']  = array('in',$arr_delKpiIds);
+        M('kpi')->where($arr)->delete();
         $delKpiMore             = array();
-        $delKpiMore['kpi_id']   = array('in',$delKpiIds);
-        M('kpi_more')->where($delKpiMore)->delete();
+        $delKpiMore['kpi_id']   = array('in',$arr_delKpiIds);
+        M('kpi_more')->where($delKpiMore)->delete();*/
 
         //查询这个月的KPI信息
         $kpi = M('kpi')->where($where)->find();

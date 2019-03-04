@@ -1248,33 +1248,60 @@ class KpiController extends BaseController {
 		$month          = I('month',date('m'));
 		$user           = I('uid',cookie('userid'));
         $cycle          = I('cycle',1);
+        if (!$cycle) $this->error('请选择考核周期');
 
         $acc                = array();
         $acc['kpi_cycle']   = $cycle;
         M('account')->where(array('id'=>$user))->save($acc);
 
-		/*if($month){
-			addkpiinfo($year,$month,$user,$cycle);
-		}else{
-			for($i=1;$i<13;$i++){
-				addkpiinfo($year,$i,$user,$cycle);
-			}
-		}*/
+        /*//获取全年数据,保留已过考核周期月份的数据
+        $delKpi                 = array();
+        $delKpi['user_id']      = $user;
+        $delKpi['year']         = $year;
+        $delKpi['cycle']        = array('neq',$cycle);
+        $delKpiIds              = '';
+        for($a=$month;$a<13;$a++){
+            if (strlen($a)<2) $a = str_pad($a,2,'0',STR_PAD_LEFT);
+            $ym                 = $year.$a;
+            $delKpi['month']    = array('like','%'.$ym.'%');
+            $delKpiId           = M('kpi')->where($delKpi)->getField('id');
+            $delKpiIds          = $delKpiIds.','.$delKpiId;
+        }
+        $arr_delKpiIds          = array_unique(array_filter(explode(',',$delKpiIds)));
+        $arr                    = array();
+        if ($arr_delKpiIds) $arr['id']  = array('in',$arr_delKpiIds);
+        M('kpi')->where($arr)->delete();
+        $delKpiMore             = array();
+        $delKpiMore['kpi_id']   = array('in',$arr_delKpiIds);
+        M('kpi_more')->where($delKpiMore)->delete();*/
+
+        //获取全年数据,保留已过考核周期月份的数据
+        $delKpi                 = array();
+        $delKpi['user_id']      = $user;
+        $delKpi['year']         = $year;
+        $delKpi['cycle']        = array('neq',$cycle);
+        $delKpiIds              = M('kpi')->where($delKpi)->getField('id',true);
+        $delKpi['id']           = array('in',$delKpiIds);
+        M('kpi')->where($delKpi)->delete();
+        $delKpiMore             = array();
+        $delKpiMore['kpi_id']   = array('in',$delKpiIds);
+        M('kpi_more')->where($delKpiMore)->delete();
+
 		if ($cycle == 1){   //月度
             for($i=1;$i<13;$i++){
                 $mod->addKpiInfo($year,$user,$cycle,$i);
             }
         }elseif ($cycle==2){ //季度
             for ($i=1;$i<5;$i++){
-                $mod->addKpiInfo($year,$user,$cycle,'',$i);
+                $mod->addKpiInfo($year,$user,$cycle,$month,$i);
             }
         }elseif ($cycle==3){    //半年度
             for ($i=1;$i<3;$i++){
-                $mod->addKpiInfo($year,$user,$cycle,'','',$i);
+                $mod->addKpiInfo($year,$user,$cycle,$month,'',$i);
             }
         }elseif ($cycle==4){    //年度
             $yearCycle  = 1;
-            $mod->addKpiInfo($year,$user,$cycle,'','','',$yearCycle);
+            $mod->addKpiInfo($year,$user,$cycle,$month,'','',$yearCycle);
         }
 
 		$this->success('获取成功!');
@@ -1305,7 +1332,7 @@ class KpiController extends BaseController {
 			$user  = $kpi['user_id'];
 		}else{
 			$where = array();
-			$where['month']   = $year.sprintf('%02s', $month);
+			$where['month']   = array('like','%'.$year.sprintf('%02s', $month).'%');
 			$where['user_id'] = $user;
 			$kpi = M('kpi')->where($where)->find();
 		}
@@ -1692,20 +1719,21 @@ class KpiController extends BaseController {
 		
 		$where['postid']		= $this->post;
 		$where['status']		= 0;
-		$userlist = M('account')->field('id,nickname,roleid,postid')->where($where)->select();
-		
+		$userlist = M('account')->field('id,nickname,roleid,postid,kpi_cycle')->where($where)->select();
+
 	
 		foreach($userlist as $k=>$v){
+            $cycle              = $v['cycle'];
 			//获取该用户KPI
 			$where = array();
-			$where['month']		= $this->year.$this->month;
+			$where['month']		= array('like','%'.$this->year.$this->month.'%');
 			$where['user_id']	= $v['id'];
-			
+
 			//更新数据
 			updatekpi($where['month'],$where['user_id']);
 			
 			$kpi = M('kpi_more')->field('quota_id,quota_title,target,complete,weight,score')->where($where)->order('quota_id ASC')->select();
-			$userlist[$k]['kpi'] = $kpi;	
+			$userlist[$k]['kpi'] = $kpi;
 			
 		}
 		
@@ -1743,9 +1771,10 @@ class KpiController extends BaseController {
         //$page			= new Page($pagecount, P::PAGE_SIZE);
         //$this->pages 	= $pagecount>P::PAGE_SIZE ? $page->show():'';
         //$accountlists   = M('account')->field('id,nickname,rank')->where($where)->limit($page->firstRow . ',' . $page->listRows)->select();
-        $accountlists   = M('account')->field('id,nickname,rank,employee_member')->where($where)->order('employee_member ASC')->select();
+        $accountlists   = M('account')->field('id,nickname,rank,employee_member,kpi_cycle')->where($where)->order('employee_member ASC')->select();
         $kpiLists       = $this->getKpiResult($accountlists,$year); //获取KPI数据
         $lists          = $this->getKpiCycle($kpiLists);            //获取最终考核结果显示的月份
+        //var_dump($kpiLists);die;
 
         $this->lists    = $lists;
         $this->pin      = $pin;
@@ -1757,21 +1786,21 @@ class KpiController extends BaseController {
 
     //获取KPI数据
     private function getKpiResult($accountlists,$year){
-        $kpilists                                       = M('kpi')->where(array('year'=>$year))->select();
+        $kpilists                                           = M('kpi')->where(array('year'=>$year))->select();
         foreach ($accountlists as $k=>$v){
-            $lists[$k]                                  = $v;
-            if ($v['rank']=='00') $lists[$k]['ranks']   = '0队列';
-            if ($v['rank']=='01') $lists[$k]['ranks']   = '1队列';
-            if ($v['rank']=='02') $lists[$k]['ranks']   = '2队列';
-            if ($v['rank']=='03') $lists[$k]['ranks']   = '3队列';
-            $sum_score                                  = 0; //总分
-            $num                                        = 0; //得分次数
-            $cycle                                      = M('kpi_more')->field('start_date,end_date')->where(array('user_id'=>$v['id'],'year'=>$year))->find();
-            if (($cycle['end_date']-$cycle['start_date'])-(31*24*3600)>=0){
-                $lists[$k]['cycle']                     = '季度';
-            }else{
-                $lists[$k]['cycle']                     = '月度';
-            }
+            $lists[$k]                                      = $v;
+            if ($v['rank']=='00')   $lists[$k]['ranks']     = '0队列';
+            if ($v['rank']=='01')   $lists[$k]['ranks']     = '1队列';
+            if ($v['rank']=='02')   $lists[$k]['ranks']     = '2队列';
+            if ($v['rank']=='03')   $lists[$k]['ranks']     = '3队列';
+            if ($v['kpi_cycle']==1) $lists[$k]['cycle']     = '月度';
+            if ($v['kpi_cycle']==2) $lists[$k]['cycle']     = '季度';
+            if ($v['kpi_cycle']==3) $lists[$k]['cycle']     = '半年度';
+            if ($v['kpi_cycle']==4) $lists[$k]['cycle']     = '年度';
+            $lists[$k]['kpi_cycle']                         = $v['kpi_cycle'];
+
+            $sum_score                                      = 0; //总分
+            $num                                            = 0; //得分次数
             foreach ($kpilists as $key=>$value){
                 $lists[$k]['year']      = $year;
                 if ($value['user_id']==$v['id']){
@@ -1840,6 +1869,10 @@ class KpiController extends BaseController {
             $lists[$k]['average']   = round($sum_score/$num,2);
         }
         return $lists;
+    }
+
+    public function chart_kpi_score(){
+
     }
 
     //获取最终考核结果显示的月份
