@@ -1891,7 +1891,7 @@ function set_quarter($year,$quarter){
 function updatekpi($month,$user){
 
 	$where = array();
-	$where['month']   = $month;
+	$where['month']   = array('like','%'.$month.'%');
 	$where['user_id'] = $user;
 
     //if (($month==date('Ym') && date('d')<26) || ($month==(date('Ym')+1) && date('d')>25)){   //只刷新当前月份,避免老数据刷新
@@ -4671,16 +4671,4 @@ function get_half_year_cycle($year,$month){
         $data['beginTime']          = strtotime(($year-1).'1226');
         $data['endTime']            = strtotime($year.'1226');
         return $data;
-    }
-
-    //二维数组排序
-    function arraySequence($array, $field, $sort = 'SORT_DESC'){
-        $arrSort = array();
-        foreach ($array as $uniqid => $row) {
-            foreach ($row as $key => $value) {
-                $arrSort[$key][$uniqid] = $value;
-            }
-        }
-        array_multisort($arrSort[$field], constant($sort), $array);
-        return $array;
     }

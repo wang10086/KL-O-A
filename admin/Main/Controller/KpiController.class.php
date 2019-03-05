@@ -17,7 +17,7 @@ class KpiController extends BaseController {
         $where                  = array();
         $where['status']		= 0;
         $where['id']            = array('gt',10);
-        $userlist               = M('account')->field('id,nickname,roleid,postid')->where($where)->select();
+        $userlist               = M('account')->field('id,nickname,roleid,postid,kpi_cycle')->where($where)->select();
 
         foreach($userlist as $k=>$v){
             //获取该用户KPI
@@ -1943,7 +1943,7 @@ class KpiController extends BaseController {
             }
         }
 
-        $lists                              = arraySequence($lists,'average');  //排序(平均值由高到低)
+        $lists                              = multi_array_sort($lists,'average');  //排序(平均值由高到低)
         return $lists;
     }
 
