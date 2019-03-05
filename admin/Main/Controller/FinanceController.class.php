@@ -990,7 +990,7 @@ class FinanceController extends BaseController {
         $jk_lists           = M()->table('__JIEKUAN__ as j')->field('j.*,a.*,j.id as jid,a.id as aid')->join('__JIEKUAN_AUDIT__ as a on a.jk_id=j.id','left')->where(array('j.op_id'=>$opid))->order($this->orders('j.id'))->select();
         $cost               = M('op_costacc')->field('id,op_id,title,unitcost,amount,total as ctotal,remark')->where(array('op_id'=>$opid,'status'=>1))->order('id')->select();
         $jiekuan_detail     = M('jiekuan_detail')->where(array('op_id'=>$opid))->select();
-        $departids          = array(2,6,7,12,13,14,16,17);
+        $departids          = array(2,6,7,12,13,14,15,16,17);
         $departments        = M('salary_department')->where(array('id'=>array('in',$departids)))->select();
 
         $costacc            = array();
