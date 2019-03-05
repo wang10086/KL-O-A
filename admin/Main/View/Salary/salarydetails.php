@@ -162,7 +162,7 @@
                                                 </tr>
                                                 <tr>
                                                     <td>增减</td>
-                                                    <td class="salary_detali_score_td1">{$info['wages_month']['performance_salary']/100*$info['wages_month']['total_score_show']} (元)</td>
+                                                    <td class="salary_detali_score_td1">{$info['wages_month']['basic_salary']/100*$info['wages_month']['total_score_show']} (元)</td>
                                                     <td class="salary_detali_score_td3">{$info['wages_month']['performance_salary']/100*$info['wages_month']['show_qa_score']}(元)</td>
                                                     <td class="salary_detali_score_td2">{$info['wages_month']['performance_salary']/100*$info['wages_month']['sum_total_score']} (元)</td>
 
