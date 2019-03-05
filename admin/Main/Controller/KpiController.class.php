@@ -1774,7 +1774,6 @@ class KpiController extends BaseController {
         $accountlists   = M('account')->field('id,nickname,rank,employee_member,kpi_cycle')->where($where)->order('employee_member ASC')->select();
         $kpiLists       = $this->getKpiResult($accountlists,$year); //获取KPI数据
         $lists          = $this->getKpiCycle($kpiLists);            //获取最终考核结果显示的月份
-        //var_dump($kpiLists);die;
 
         $this->lists    = $lists;
         $this->pin      = $pin;
@@ -1804,7 +1803,7 @@ class KpiController extends BaseController {
             foreach ($kpilists as $key=>$value){
                 $lists[$k]['year']      = $year;
                 if ($value['user_id']==$v['id']){
-                    if ($value['month'] == $year.'01' && $value['score'] != 0 && date('Ym')>= $year.'01'){
+                    /*if ($value['month'] == $year.'01' && $value['score'] != 0 && date('Ym')>= $year.'01'){
                         $lists[$k]['kpi']['01'] = $value['score'];
                         $sum_score      += $value['score'];
                         $num            += 1;
@@ -1863,6 +1862,48 @@ class KpiController extends BaseController {
                         $lists[$k]['kpi']['12'] = $value['score'];
                         $sum_score      += $value['score'];
                         $num            += 1;
+                    }*/
+
+                    /*if ($v['kpi_cycle']==1){ //月度
+                        $arr_months         = $this->get_kpi_cycle_months($v['kpi_cycle'],$year);
+                        if (in_array($value['month'],$arr_months) && $value['score'] != 0 && date('Ym')>= $year.date('m')){
+                            $dm             = substr($value['month'],4,2);
+                            $lists[$k]['kpi'][$dm] = $value['score'];
+                            $sum_score      += $value['score'];
+                            $num            += 1;
+                        }
+                    }elseif($v['kpi_cycle']==2){ //季度
+                        $arr_months         = $this->get_kpi_cycle_months($v['kpi_cycle'],$year);
+                        if (in_array($value['month'],$arr_months) && $value['score'] != 0 && date('Ym')>= $year.date('m')){
+                            $dm             = substr($value['month'],4,2);
+                            $lists[$k]['kpi'][$dm] = $value['score'];
+                            $sum_score      += $value['score'];
+                            $num            += 1;
+                        }
+                    }elseif ($v['kpi_cycle']==3){  //半年度
+                        $arr_months         = $this->get_kpi_cycle_months($v['kpi_cycle'],$year);
+                        if (in_array($value['month'],$arr_months) && $value['score'] != 0 && date('Ym')>= $year.date('m')){
+                            $dm             = substr($value['month'],4,2);
+                            $lists[$k]['kpi'][$dm] = $value['score'];
+                            $sum_score      += $value['score'];
+                            $num            += 1;
+                        }
+                    }elseif ($v['kpi_cycle']==4){ //年度
+                        $arr_months         = $this->get_kpi_cycle_months($v['kpi_cycle'],$year);
+                        if (in_array($value['month'],$arr_months) && $value['score'] != 0 && date('Ym')>= $year.date('m')){
+                            $dm             = substr($value['month'],4,2);
+                            $lists[$k]['kpi'][$dm] = $value['score'];
+                            $sum_score      += $value['score'];
+                            $num            += 1;
+                        }
+                    }*/
+
+                    $arr_months         = $this->get_kpi_cycle_months($v['kpi_cycle'],$year);
+                    if (in_array($value['month'],$arr_months) && $value['score'] != 0 && date('Ym')>= $year.date('m')){
+                        $dm             = substr($value['month'],4,2);
+                        $lists[$k]['kpi'][$dm] = $value['score'];
+                        $sum_score      += $value['score'];
+                        $num            += 1;
                     }
                 }
             }
@@ -1871,23 +1912,41 @@ class KpiController extends BaseController {
         return $lists;
     }
 
-    public function chart_kpi_score(){
-
+    public function get_kpi_cycle_months($cycle,$year){
+        switch ($cycle){
+            case 1: //月度
+                $months                 = array($year.'01',$year.'02',$year.'03',$year.'04',$year.'05',$year.'06',$year.'07',$year.'08',$year.'09',$year.'10',$year.'11',$year.'12');
+                break;
+            case 2: //季度
+                $months                 = array($year.'01,'.$year.'02,'.$year.'03',$year.'04,'.$year.'05,'.$year.'06',$year.'07,'.$year.'08,'.$year.'09',$year.'10,'.$year.'11,'.$year.'12');
+                break;
+            case 3: //半年度
+                $months                 = array($year.'01,'.$year.'02,'.$year.'03,'.$year.'04,'.$year.'05,'.$year.'06',$year.'07,'.$year.'08,'.$year.'09,'.$year.'10,'.$year.'11,'.$year.'12');
+                break;
+            case 4: //年度
+                $months                 = array($year.'01,'.$year.'02,'.$year.'03,'.$year.'04,'.$year.'05,'.$year.'06,'.$year.'07,'.$year.'08,'.$year.'09,'.$year.'10,'.$year.'11,'.$year.'12');
+        }
+        return $months;
     }
 
     //获取最终考核结果显示的月份
     private function getKpiCycle($lists){
         foreach ($lists as $k=>$v){
-            if ($v['cycle']=='季度'){
+            if ($v['kpi_cycle']=='2'){ //季度
                 $lists[$k]['finalMonth']    = array('03','06','09','12');
-            }else{
+            }elseif($v['kpi_cycle']=='3'){ //半年度
+                $lists[$k]['finalMonth']    = array('06','12');
+            }elseif($v['kpi_cycle']=='4'){ //年度
+                $lists[$k]['finalMonth']    = array('12');
+            }else{ //月度
                 $lists[$k]['finalMonth']    = array('01','02','03','04','05','06','07','08','09','10','11','12');
             }
         }
+
+        $lists                              = arraySequence($lists,'average');  //排序(平均值由高到低)
         return $lists;
     }
-	
-	
+
 	
 	public function test(){
 		P(team_new_customers(35,array(strtotime('2018-01-01'),strtotime('2018-01-25'))));

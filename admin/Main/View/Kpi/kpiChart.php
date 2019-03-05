@@ -56,19 +56,19 @@
                                                 <th width="40" class="taskOptions">序号</th>
                                                 <th width="80">姓名</th>
                                                 <th>周期</th>
-                                                <th class="orderth">年平均</th>
-                                                <th>1月</th>
-                                                <th>2月</th>
-                                                <th>3月</th>
-                                                <th>4月</th>
-                                                <th>5月</th>
-                                                <th>6月</th>
-                                                <th>7月</th>
-                                                <th>8月</th>
-                                                <th>9月</th>
-                                                <th>10月</th>
-                                                <th>11月</th>
-                                                <th>12月</th>
+                                                <th class="taskOptions orderth">年平均</th>
+                                                <th class="taskOptions">1月</th>
+                                                <th class="taskOptions">2月</th>
+                                                <th class="taskOptions">3月</th>
+                                                <th class="taskOptions">4月</th>
+                                                <th class="taskOptions">5月</th>
+                                                <th class="taskOptions">6月</th>
+                                                <th class="taskOptions">7月</th>
+                                                <th class="taskOptions">8月</th>
+                                                <th class="taskOptions">9月</th>
+                                                <th class="taskOptions">10月</th>
+                                                <th class="taskOptions">11月</th>
+                                                <th class="taskOptions">12月</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -79,30 +79,30 @@
                                                 <td class="taskOptions orderNo"></td>
                                                 <td>{$row.nickname}</td>
                                                 <td>{$row.cycle}</td>
-                                                <td>{$row.average}</td>
+                                                <td class="taskOptions">{$row.average}</td>
                                                 <?php if ($row['kpi_cycle']==1){ ?>     <!--月度-->
-                                                    <td  class="taskOptions"><a href="{:U('Kpi/kpiinfo',array('year'=>$year,'month'=>'01','uid'=>$row['id']))}" target="_blank" <?php if (time()>strtotime($year.'0126') && in_array('01',$row['finalMonth'])){echo "class=red"; }; ?>><?php echo $row["kpi"]['01']?$row["kpi"]['01']:'<font color="#999999">未考核</font>'; ?></a></td>
-                                                    <td  class="taskOptions"><a href="{:U('Kpi/kpiinfo',array('year'=>$year,'month'=>'02','uid'=>$row['id']))}" target="_blank" <?php if (time()>strtotime($year.'0226') && in_array('01',$row['finalMonth'])){echo "class=red"; }; ?>><?php echo $row["kpi"]['02']?$row["kpi"]['02']:'<font color="#999999">未考核</font>'; ?></a></td>
-                                                    <td  class="taskOptions"><a href="{:U('Kpi/kpiinfo',array('year'=>$year,'month'=>'03','uid'=>$row['id']))}" target="_blank" <?php if (time()>strtotime($year.'0326') && in_array('01',$row['finalMonth'])){echo "class=red"; }; ?>><?php echo $row["kpi"]['03']?$row["kpi"]['03']:'<font color="#999999">未考核</font>'; ?></a></td>
-                                                    <td  class="taskOptions"><a href="{:U('Kpi/kpiinfo',array('year'=>$year,'month'=>'04','uid'=>$row['id']))}" target="_blank" <?php if (time()>strtotime($year.'0426') && in_array('01',$row['finalMonth'])){echo "class=red"; }; ?>><?php echo $row["kpi"]['04']?$row["kpi"]['04']:'<font color="#999999">未考核</font>'; ?></a></td>
-                                                    <td  class="taskOptions"><a href="{:U('Kpi/kpiinfo',array('year'=>$year,'month'=>'05','uid'=>$row['id']))}" target="_blank" <?php if (time()>strtotime($year.'0526') && in_array('01',$row['finalMonth'])){echo "class=red"; }; ?>><?php echo $row["kpi"]['05']?$row["kpi"]['05']:'<font color="#999999">未考核</font>'; ?></a></td>
-                                                    <td  class="taskOptions"><a href="{:U('Kpi/kpiinfo',array('year'=>$year,'month'=>'06','uid'=>$row['id']))}" target="_blank" <?php if (time()>strtotime($year.'0626') && in_array('01',$row['finalMonth'])){echo "class=red"; }; ?>><?php echo $row["kpi"]['06']?$row["kpi"]['06']:'<font color="#999999">未考核</font>'; ?></a></td>
-                                                    <td  class="taskOptions"><a href="{:U('Kpi/kpiinfo',array('year'=>$year,'month'=>'07','uid'=>$row['id']))}" target="_blank" <?php if (time()>strtotime($year.'0726') && in_array('01',$row['finalMonth'])){echo "class=red"; }; ?>><?php echo $row["kpi"]['07']?$row["kpi"]['07']:'<font color="#999999">未考核</font>'; ?></a></td>
-                                                    <td  class="taskOptions"><a href="{:U('Kpi/kpiinfo',array('year'=>$year,'month'=>'08','uid'=>$row['id']))}" target="_blank" <?php if (time()>strtotime($year.'0826') && in_array('01',$row['finalMonth'])){echo "class=red"; }; ?>><?php echo $row["kpi"]['08']?$row["kpi"]['08']:'<font color="#999999">未考核</font>'; ?></a></td>
-                                                    <td  class="taskOptions"><a href="{:U('Kpi/kpiinfo',array('year'=>$year,'month'=>'09','uid'=>$row['id']))}" target="_blank" <?php if (time()>strtotime($year.'0926') && in_array('01',$row['finalMonth'])){echo "class=red"; }; ?>><?php echo $row["kpi"]['09']?$row["kpi"]['09']:'<font color="#999999">未考核</font>'; ?></a></td>
-                                                    <td  class="taskOptions"><a href="{:U('Kpi/kpiinfo',array('year'=>$year,'month'=>'10','uid'=>$row['id']))}" target="_blank" <?php if (time()>strtotime($year.'1026') && in_array('01',$row['finalMonth'])){echo "class=red"; }; ?>><?php echo $row["kpi"]['10']?$row["kpi"]['10']:'<font color="#999999">未考核</font>'; ?></a></td>
-                                                    <td  class="taskOptions"><a href="{:U('Kpi/kpiinfo',array('year'=>$year,'month'=>'11','uid'=>$row['id']))}" target="_blank" <?php if (time()>strtotime($year.'1126') && in_array('01',$row['finalMonth'])){echo "class=red"; }; ?>><?php echo $row["kpi"]['11']?$row["kpi"]['11']:'<font color="#999999">未考核</font>'; ?></a></td>
-                                                    <td  class="taskOptions"><a href="{:U('Kpi/kpiinfo',array('year'=>$year,'month'=>'12','uid'=>$row['id']))}" target="_blank" <?php if (time()>strtotime($year.'1226') && in_array('01',$row['finalMonth'])){echo "class=red"; }; ?>><?php echo $row["kpi"]['12']?$row["kpi"]['12']:'<font color="#999999">未考核</font>'; ?></a></td>
+                                                    <td class="taskOptions"><a href="{:U('Kpi/kpiinfo',array('year'=>$year,'month'=>'01','uid'=>$row['id']))}" target="_blank" <?php if (time()>strtotime($year.'0126') && in_array('01',$row['finalMonth'])){echo "class=red"; }; ?>><?php echo $row["kpi"]['01']?$row["kpi"]['01']:'<font color="#999999">未考核</font>'; ?></a></td>
+                                                    <td class="taskOptions"><a href="{:U('Kpi/kpiinfo',array('year'=>$year,'month'=>'02','uid'=>$row['id']))}" target="_blank" <?php if (time()>strtotime($year.'0226') && in_array('02',$row['finalMonth'])){echo "class=red"; }; ?>><?php echo $row["kpi"]['02']?$row["kpi"]['02']:'<font color="#999999">未考核</font>'; ?></a></td>
+                                                    <td class="taskOptions"><a href="{:U('Kpi/kpiinfo',array('year'=>$year,'month'=>'03','uid'=>$row['id']))}" target="_blank" <?php if (time()>strtotime($year.'0326') && in_array('03',$row['finalMonth'])){echo "class=red"; }; ?>><?php echo $row["kpi"]['03']?$row["kpi"]['03']:'<font color="#999999">未考核</font>'; ?></a></td>
+                                                    <td class="taskOptions"><a href="{:U('Kpi/kpiinfo',array('year'=>$year,'month'=>'04','uid'=>$row['id']))}" target="_blank" <?php if (time()>strtotime($year.'0426') && in_array('04',$row['finalMonth'])){echo "class=red"; }; ?>><?php echo $row["kpi"]['04']?$row["kpi"]['04']:'<font color="#999999">未考核</font>'; ?></a></td>
+                                                    <td class="taskOptions"><a href="{:U('Kpi/kpiinfo',array('year'=>$year,'month'=>'05','uid'=>$row['id']))}" target="_blank" <?php if (time()>strtotime($year.'0526') && in_array('05',$row['finalMonth'])){echo "class=red"; }; ?>><?php echo $row["kpi"]['05']?$row["kpi"]['05']:'<font color="#999999">未考核</font>'; ?></a></td>
+                                                    <td class="taskOptions"><a href="{:U('Kpi/kpiinfo',array('year'=>$year,'month'=>'06','uid'=>$row['id']))}" target="_blank" <?php if (time()>strtotime($year.'0626') && in_array('06',$row['finalMonth'])){echo "class=red"; }; ?>><?php echo $row["kpi"]['06']?$row["kpi"]['06']:'<font color="#999999">未考核</font>'; ?></a></td>
+                                                    <td class="taskOptions"><a href="{:U('Kpi/kpiinfo',array('year'=>$year,'month'=>'07','uid'=>$row['id']))}" target="_blank" <?php if (time()>strtotime($year.'0726') && in_array('07',$row['finalMonth'])){echo "class=red"; }; ?>><?php echo $row["kpi"]['07']?$row["kpi"]['07']:'<font color="#999999">未考核</font>'; ?></a></td>
+                                                    <td class="taskOptions"><a href="{:U('Kpi/kpiinfo',array('year'=>$year,'month'=>'08','uid'=>$row['id']))}" target="_blank" <?php if (time()>strtotime($year.'0826') && in_array('08',$row['finalMonth'])){echo "class=red"; }; ?>><?php echo $row["kpi"]['08']?$row["kpi"]['08']:'<font color="#999999">未考核</font>'; ?></a></td>
+                                                    <td class="taskOptions"><a href="{:U('Kpi/kpiinfo',array('year'=>$year,'month'=>'09','uid'=>$row['id']))}" target="_blank" <?php if (time()>strtotime($year.'0926') && in_array('09',$row['finalMonth'])){echo "class=red"; }; ?>><?php echo $row["kpi"]['09']?$row["kpi"]['09']:'<font color="#999999">未考核</font>'; ?></a></td>
+                                                    <td class="taskOptions"><a href="{:U('Kpi/kpiinfo',array('year'=>$year,'month'=>'10','uid'=>$row['id']))}" target="_blank" <?php if (time()>strtotime($year.'1026') && in_array('10',$row['finalMonth'])){echo "class=red"; }; ?>><?php echo $row["kpi"]['10']?$row["kpi"]['10']:'<font color="#999999">未考核</font>'; ?></a></td>
+                                                    <td class="taskOptions"><a href="{:U('Kpi/kpiinfo',array('year'=>$year,'month'=>'11','uid'=>$row['id']))}" target="_blank" <?php if (time()>strtotime($year.'1126') && in_array('11',$row['finalMonth'])){echo "class=red"; }; ?>><?php echo $row["kpi"]['11']?$row["kpi"]['11']:'<font color="#999999">未考核</font>'; ?></a></td>
+                                                    <td class="taskOptions"><a href="{:U('Kpi/kpiinfo',array('year'=>$year,'month'=>'12','uid'=>$row['id']))}" target="_blank" <?php if (time()>strtotime($year.'1226') && in_array('12',$row['finalMonth'])){echo "class=red"; }; ?>><?php echo $row["kpi"]['12']?$row["kpi"]['12']:'<font color="#999999">未考核</font>'; ?></a></td>
                                                 <?php }elseif($row['kpi_cycle']==2){ ?>     <!--季度-->
-                                                    <td  class="taskOptions" colspan="3"><a href="{:U('Kpi/kpiinfo',array('year'=>$year,'month'=>'01','uid'=>$row['id']))}" target="_blank" <?php if (time()>strtotime($year.'0126') && in_array('01',$row['finalMonth'])){echo "class=red"; }; ?>><?php echo $row["kpi"]['01']?$row["kpi"]['01']:'<font color="#999999">未考核</font>'; ?></a></td>
-                                                    <td  class="taskOptions" colspan="3"><a href="{:U('Kpi/kpiinfo',array('year'=>$year,'month'=>'02','uid'=>$row['id']))}" target="_blank" <?php if (time()>strtotime($year.'0226') && in_array('01',$row['finalMonth'])){echo "class=red"; }; ?>><?php echo $row["kpi"]['02']?$row["kpi"]['02']:'<font color="#999999">未考核</font>'; ?></a></td>
-                                                    <td  class="taskOptions" colspan="3"><a href="{:U('Kpi/kpiinfo',array('year'=>$year,'month'=>'03','uid'=>$row['id']))}" target="_blank" <?php if (time()>strtotime($year.'0326') && in_array('01',$row['finalMonth'])){echo "class=red"; }; ?>><?php echo $row["kpi"]['03']?$row["kpi"]['03']:'<font color="#999999">未考核</font>'; ?></a></td>
-                                                    <td  class="taskOptions" colspan="3"><a href="{:U('Kpi/kpiinfo',array('year'=>$year,'month'=>'04','uid'=>$row['id']))}" target="_blank" <?php if (time()>strtotime($year.'0426') && in_array('01',$row['finalMonth'])){echo "class=red"; }; ?>><?php echo $row["kpi"]['04']?$row["kpi"]['04']:'<font color="#999999">未考核</font>'; ?></a></td>
+                                                    <td class="taskOptions" colspan="3"><a href="{:U('Kpi/kpiinfo',array('year'=>$year,'month'=>'03','uid'=>$row['id']))}" target="_blank" <?php if (time()>strtotime($year.'0326') && in_array('03',$row['finalMonth'])){echo "class=red"; }; ?>><?php echo $row["kpi"]['01']?$row["kpi"]['01']:'<font color="#999999">未考核</font>'; ?></a></td>
+                                                    <td class="taskOptions" colspan="3"><a href="{:U('Kpi/kpiinfo',array('year'=>$year,'month'=>'06','uid'=>$row['id']))}" target="_blank" <?php if (time()>strtotime($year.'0626') && in_array('06',$row['finalMonth'])){echo "class=red"; }; ?>><?php echo $row["kpi"]['02']?$row["kpi"]['02']:'<font color="#999999">未考核</font>'; ?></a></td>
+                                                    <td class="taskOptions" colspan="3"><a href="{:U('Kpi/kpiinfo',array('year'=>$year,'month'=>'09','uid'=>$row['id']))}" target="_blank" <?php if (time()>strtotime($year.'0926') && in_array('09',$row['finalMonth'])){echo "class=red"; }; ?>><?php echo $row["kpi"]['03']?$row["kpi"]['03']:'<font color="#999999">未考核</font>'; ?></a></td>
+                                                    <td class="taskOptions" colspan="3"><a href="{:U('Kpi/kpiinfo',array('year'=>$year,'month'=>'12','uid'=>$row['id']))}" target="_blank" <?php if (time()>strtotime($year.'1226') && in_array('12',$row['finalMonth'])){echo "class=red"; }; ?>><?php echo $row["kpi"]['04']?$row["kpi"]['04']:'<font color="#999999">未考核</font>'; ?></a></td>
                                                 <?php }elseif($row['kpi_cycle']==3){ ?>     <!--半年度-->
-                                                    <td  class="taskOptions" colspan="6"><a href="{:U('Kpi/kpiinfo',array('year'=>$year,'month'=>'01','uid'=>$row['id']))}" target="_blank" <?php if (time()>strtotime($year.'0126') && in_array('01',$row['finalMonth'])){echo "class=red"; }; ?>><?php echo $row["kpi"]['01']?$row["kpi"]['01']:'<font color="#999999">未考核</font>'; ?></a></td>
-                                                    <td  class="taskOptions" COLSPAN="6"><a href="{:U('Kpi/kpiinfo',array('year'=>$year,'month'=>'02','uid'=>$row['id']))}" target="_blank" <?php if (time()>strtotime($year.'0226') && in_array('01',$row['finalMonth'])){echo "class=red"; }; ?>><?php echo $row["kpi"]['02']?$row["kpi"]['02']:'<font color="#999999">未考核</font>'; ?></a></td>
+                                                    <td class="taskOptions" colspan="6"><a href="{:U('Kpi/kpiinfo',array('year'=>$year,'month'=>'06','uid'=>$row['id']))}" target="_blank" <?php if (time()>strtotime($year.'0626') && in_array('06',$row['finalMonth'])){echo "class=red"; }; ?>><?php echo $row["kpi"]['01']?$row["kpi"]['01']:'<font color="#999999">未考核</font>'; ?></a></td>
+                                                    <td class="taskOptions" COLSPAN="6"><a href="{:U('Kpi/kpiinfo',array('year'=>$year,'month'=>'12','uid'=>$row['id']))}" target="_blank" <?php if (time()>strtotime($year.'1226') && in_array('12',$row['finalMonth'])){echo "class=red"; }; ?>><?php echo $row["kpi"]['02']?$row["kpi"]['02']:'<font color="#999999">未考核</font>'; ?></a></td>
                                                 <?php }elseif($row['kpi_cycle']==4){ ?>     <!--年度-->
-                                                    <td  class="taskOptions" colspan="12"><a href="{:U('Kpi/kpiinfo',array('year'=>$year,'month'=>'01','uid'=>$row['id']))}" target="_blank" <?php if (time()>strtotime($year.'0126') && in_array('01',$row['finalMonth'])){echo "class=red"; }; ?>><?php echo $row["kpi"]['01']?$row["kpi"]['01']:'<font color="#999999">未考核</font>'; ?></a></td>
+                                                    <td class="taskOptions" colspan="12"><a href="{:U('Kpi/kpiinfo',array('year'=>$year,'month'=>'12','uid'=>$row['id']))}" target="_blank" <?php if (time()>strtotime($year.'1226') && in_array('12',$row['finalMonth'])){echo "class=red"; }; ?>><?php echo $row["kpi"]['01']?$row["kpi"]['01']:'<font color="#999999">未考核</font>'; ?></a></td>
                                                 <?php } ?>
                                             </tr>
                                             </foreach>	
@@ -123,30 +123,7 @@
         <include file="Index:footer2" />
 
 <script type="text/javascript">
-
-    /*$('#example3').each(function () {
-        var $this = $(this),
-            columns = [];
-
-        // Traversing all th in thead, if th has 'orderable' class, it's column can be orderd.
-        if (!$this.find('.no-items')) {
-            $this.find('thead th').each(function () {
-                columns.push({ 'orderable': $(this).hasClass('orderable') });
-            });
-
-            $this.dataTable({
-                columns: columns,
-                dom: "f<t>",
-                info: false,
-                pageLength: Number.MAX_VALUE,
-                paging: false,
-                order: [],
-                searching: $this.data('searching')
-            });
-        }
-    });*/
-
-    $('#example3').dataTable({
+    /*$('#example3').dataTable({
         "bPaginate": false,
         "bLengthChange": false,
         "bFilter": false,
@@ -154,14 +131,14 @@
         "bInfo": false,
         "aaSorting" : [[4, "desc"]],
         "bAutoWidth": true,
-        /*"aoColumnDefs": [{ "bSortable": false, "aTargets": [ 0,1,2,5,6,7,8,9,10,11,12,13,14,15,16] }] //设置不排序的列*/
+        /!*"aoColumnDefs": [{ "bSortable": false, "aTargets": [ 0,1,2,5,6,7,8,9,10,11,12,13,14,15,16] }] //设置不排序的列*!/
         "aoColumnDefs": [
             {
                 "bSortable": false,
                 "aTargets": [ 0,1,2,5,6,7,8,9,10,11,12,13,14,15,16]
             }
         ]
-    });
+    });*/
 
     $(document).ready(function(e) {
         $('.orderNo').each(function(index, element) {

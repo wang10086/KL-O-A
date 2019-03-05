@@ -4673,3 +4673,14 @@ function get_half_year_cycle($year,$month){
         return $data;
     }
 
+    //二维数组排序
+    function arraySequence($array, $field, $sort = 'SORT_DESC'){
+        $arrSort = array();
+        foreach ($array as $uniqid => $row) {
+            foreach ($row as $key => $value) {
+                $arrSort[$key][$uniqid] = $value;
+            }
+        }
+        array_multisort($arrSort[$field], constant($sort), $array);
+        return $array;
+    }
