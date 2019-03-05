@@ -557,7 +557,7 @@ function get_sum_department_operate($department,$year,$month){
      $info['yyml']      = $profit[$department]['monthzml']; //营业毛利
      $info['yymll']     = $profit[$department]['monthmll']; //营业毛利率
      $info['rlzycb']    = $hr_cost[$department];            //人力资源成本
-     $info['qtfy']      = $otherExpenses[$department];      //其他费用
+     $info['qtfy']      = $otherExpenses[$department]['money'];      //其他费用
      $info['lrze']      = $total_profit[$department];       //利润总额
      $info['rsfyl']     = $human_affairs[$department];      //人事费用率
 

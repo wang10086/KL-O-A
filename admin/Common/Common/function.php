@@ -3042,7 +3042,7 @@ function updatekpi($month,$user){
                             $budget_info    = get_department_budget($department,$year,$monon);      //部门季度预算信息
                             $ys_lrze        = $budget_info['sum_total_profit'];                     //预算利润总额
                             $operate_info   = get_sum_department_operate($department,$year,$monon);     //实际经营信息
-                            $jy_lrze        = $operate_info['lrze'];                                //经营利润总额
+                            $jy_lrze        = $operate_info['lrze']-$operate_info['qtfy'];              //经营利润总额
 
                             $complete       = $jy_lrze>0?$jy_lrze:0;
                         }
