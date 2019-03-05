@@ -3042,9 +3042,9 @@ function updatekpi($month,$user){
                             $budget_info    = get_department_budget($department,$year,$monon);      //部门季度预算信息
                             $ys_lrze        = $budget_info['sum_total_profit'];                     //预算利润总额
                             $operate_info   = get_sum_department_operate($department,$year,$monon);     //实际经营信息
-                            $jy_lrze        = $operate_info['lrze']-$operate_info['qtfy'];              //经营利润总额
+                            $jy_lrze        = round($operate_info['lrze']-$operate_info['qtfy'],2);              //经营利润总额
 
-                            $complete       = $jy_lrze>0?$jy_lrze:0;
+                            $complete       = $jy_lrze;
                         }
 
                         //季度顾客满意度
@@ -3209,13 +3209,11 @@ function updatekpi($month,$user){
                         $data = array();
                         //$data['complete']		= $complete;
                         //$data['complete_rate']	= $rate."%";
-                        $data['score']			= round(($rate * $v['weight']) / 100,1);
+                        $data['score']			= round(($rate * $v['weight']) / 100,1)>0?round(($rate * $v['weight']) / 100,1):0;
                         //$data['score']			= get_kpi_score($rate,$v['weight'],$v['end_date'],$month);
                         $data['score_status']	= 1;
                     }
-
                     M('kpi_more')->data($data)->where(array('id'=>$v['id']))->save();
-
                 }
 
                 //合计总分
@@ -3252,7 +3250,7 @@ function get_kpi_data($v,$complete){
     $data = array();
     $data['complete']		= $complete;
     $data['complete_rate']	= $rate."%";
-    $data['score']			= round(($rate * $v['weight']) / 100,1);
+    $data['score']			= round(($rate * $v['weight']) / 100,1)>0?round(($rate * $v['weight']) / 100,1):0;
     //$data['score']          = get_kpi_score($rate,$v['weight'],$v['end_date'],$month);
     $data['score_status']	= 1;
     return $data;
