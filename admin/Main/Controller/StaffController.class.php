@@ -46,13 +46,18 @@ class StaffController extends Controller{
             $token          = I('token');
             $arr_ip         = C('ARR_IP');
             $ip             = get_client_ip();
+            $filename       = I('newname','');
+            $fileid         = I('fileid','');
+
             if (in_array($ip,$arr_ip)){
                 if ($token == $_SESSION['token']){
                     $info           = array();
-                    $info['content']= stripslashes(I('content'));
+                    $info['title']  = stripslashes(trim(I('title')));
+                    $info['content']= stripslashes(trim(I('content')));
                     $info['send_time']= NOW_TIME;
                     $info['userid'] = cookie('staff_userid')?cookie('staff_userid'):0;
                     $info['youke']  = cookie('staff_youke');
+                    $info['fileids'] = $fileid?implode(',',$fileid):'';
                     $res = M('staff')->add($info);
                     if ($res){
                         $this->success('发布成功',U('Staff/index'));
@@ -87,26 +92,31 @@ class StaffController extends Controller{
     }
 
     public function info(){
-        $id             = I('id');
-        $list           = M()->field('s.*,u.nickname')->table('__STAFF__ as s')->join('left join __STAFF_USER__ as u on s.userid=u.id')->where(array('s.id'=>$id))->find();
-        $list['content']= htmlspecialchars_decode($list['content']);
-        $list['username']= $list['nickname']?$list['nickname']:'匿名游客';
-        $zan            = M('staff_zan')->where(array('staff_id'=>$id,'youke'=>array('eq',cookie('staff_youke'))))->order('id desc')->find();
-        $time           = NOW_TIME - $zan['zan_time'];
+        $id                 = I('id');
+        $list               = M()->field('s.*,u.nickname')->table('__STAFF__ as s')->join('left join __STAFF_USER__ as u on s.userid=u.id')->where(array('s.id'=>$id))->find();
+        $list['content']    = htmlspecialchars_decode($list['content']);
+        $list['username']   = $list['nickname']?$list['nickname']:'匿名游客';
+        $zan                = M('staff_zan')->where(array('staff_id'=>$id,'youke'=>array('eq',cookie('staff_youke'))))->order('id desc')->find();
+        $time               = NOW_TIME - $zan['zan_time'];
         if (!$zan || $time>3600*24){
             //没有点赞或点赞时间大于24小时
-            $list['zan']= 1;
+            $list['zan']    = 1;
         }
-        $this->list     = $list;
+        $this->list         = $list;
+
+        $fileids_str        = trim($list['fileids']);
+        if ($fileids_str) $fileids = explode(',',$fileids_str);
+        $files              = M('attachment')->where(array('id'=>array('in',$fileids)))->select();
+        $this->files        = $files;
 
         $token              = md5(uniqid(rand(), true));
         $_SESSION['token']  = $token;
         $this->token        = $token;
 
-        $hot_tiezi      = $this->get_hot_tiezi(6);
-        $this->hot_tiezi= $hot_tiezi;
+        $hot_tiezi          = $this->get_hot_tiezi(6);
+        $this->hot_tiezi    = $hot_tiezi;
 
-        $huifu          = M()->field('s.*,u.nickname')->table('__STAFF__ as s')->join('left join __STAFF_USER__ as u on s.userid=u.id')->where(array('s.pid'=>$id))->order('s.send_time desc, s.good_num desc')->select();
+        $huifu              = M()->field('s.*,u.nickname')->table('__STAFF__ as s')->join('left join __STAFF_USER__ as u on s.userid=u.id')->where(array('s.pid'=>$id))->order('s.send_time desc, s.good_num desc')->select();
         foreach ($huifu as $k=>$v){
             $huifu[$k]['content'] = htmlspecialchars_decode($v['content']);
             $huifu[$k]['username']= $v['nickname']?$v['nickname']:'匿名游客';

@@ -41,6 +41,22 @@
                                         {$list.content}
                                     </div>
 
+                                    <if condition="$files">
+                                        <div class="form-group col-md-12">
+                                            <h2 style="font-size:16px; border-bottom:2px solid #dedede; padding-bottom:10px;">相关文件</h2>
+                                        </div>
+                                        <div class="form-group col-md-12">
+                                            <div id="showimglist">
+                                                <foreach name="files" key="k" item="v">
+                                                    <div class="att-file">
+                                                        <a href="{$v.filepath}" target="_blank" style="margin-right:10px;"><div class="fileext"><?php echo isimg($v['filepath']); ?></div></a>
+                                                        <span class="att-file-name"  >{$v.filename}</span>
+                                                    </div>
+                                                </foreach>
+                                            </div>
+                                        </div>
+                                    </if>
+
                                     <div class="note-info">
                                         <span class="note-xq ml20">作者：{$list.username}</span>
                                         |<span class="note-xq ml10">发布时间：{$list.send_time|date='Y-m-d H:i:s',###}</span>
