@@ -90,13 +90,19 @@
                                                 
                                                 <?php }?>
                                             </tr>
-                                            <foreach name="lists" key="key" item="row"> 
+                                            <foreach name="lists" key="key" item="row">
                                             <tr>
                                                 <td align="center"><?php echo $key+1; ?></td>
                                                 <td><a href="javascript:;" onClick="kpi({$row.quota_id})">{$row.quota_title}</a> </td>
                                                 <td>{$row.start_date|date='Y-m-d',###} 至 {$row.end_date|date='Y-m-d',###}</td>
                                                 <td>{$row.target}</td>
-                                                <td>{$row.complete}</td>
+                                                <td>
+                                                    <?php if ($row['url']){ ?>
+                                                        <a href="{$row['url']}" target="_blank">{$row.complete}</a>
+                                                    <?php }else{ ?>
+                                                        {$row.complete}
+                                                    <?php } ?>
+                                                </td>
                                                 <td>{$row.complete_rate}</td>
                                                 <td>{$row.weight}</td>
                                                 <td>{$row.score}</td>

@@ -1429,7 +1429,7 @@ class RbacController extends BaseController {
 		foreach($lists as $K=>$v){
 			$lists[$K]['score']  = $v['score_status'] ?  $v['score']  : '<font color="#999">未评分</font>';
 		}
-		
+
 		//审核记录
 		$applist          = M('kpi_op_record')->where(array('kpi_id'=>$kpi['id']))->order('op_time DESC')->select();
 		
@@ -1458,6 +1458,7 @@ class RbacController extends BaseController {
 
 	//获取KPI月份
     public function get_kpi_month($cycle=1,$year,$month='',$quarter='',$half_year=''){
+        if (strlen($month)<2) $month = str_pad($month,2,'0',STR_PAD_LEFT);
         switch ($cycle){
             case 1: //月度
                 $yearMonth              = $year.$month;

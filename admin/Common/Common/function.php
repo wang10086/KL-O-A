@@ -3042,7 +3042,8 @@ function updatekpi($month,$user){
                             $budget_info    = get_department_budget($department,$year,$monon);      //部门季度预算信息
                             $ys_lrze        = $budget_info['sum_total_profit'];                     //预算利润总额
                             $operate_info   = get_sum_department_operate($department,$year,$monon);     //实际经营信息
-                            $jy_lrze        = round($operate_info['lrze']-$operate_info['qtfy'],2);              //经营利润总额
+                            $jy_lrze        = round($operate_info['lrze']-$operate_info['qtfy'],2);   //经营利润总额
+                            $url            = U('manage/Manage_quarter');
 
                             $complete       = $jy_lrze;
                         }
@@ -3066,6 +3067,7 @@ function updatekpi($month,$user){
                             $where['in_begin_day']  = array('between',array($v['start_date'],$v['end_date']));
                             $where['manager_id']    = array('in',$userids);
                             $need_guide             = M('op_guide_confirm')->where($where)->count();
+                            $url                    = '';
 
                             if ($shishi && !$need_guide){
                                 //有项目，但无调查项目的，得100分。
@@ -3089,18 +3091,21 @@ function updatekpi($month,$user){
                             $operate_info   = get_sum_department_operate($department,$year,$monon);     //实际经营信息
                             $jy_rsfyl       = $operate_info['rsfyl'].'%';                               //经营人事费用率
                             $complete       = $jy_rsfyl;
+                            $url            = '';
 
                         }
 
                         //不发生安全责任事故
                         if ($v['quota_id']==128){
                             //默认满分,如果发生安全事故则由人事手动清零
+                            $url        = '';
                             $complete   = 100;
                         }
 
                         //上级领导组织对本季度关键事项绩效评价(总经办)
                         if ($v['quota_id']==153){
                             //默认满分
+                            $url        = '';
                             $complete   = 100;
                         }
 
@@ -3207,7 +3212,7 @@ function updatekpi($month,$user){
 
                     //计算完成率并保存数据
                     if(in_array($v['quota_id'],$auto_quta)){
-                        $data                   = get_kpi_data($v,$complete);
+                        $data                   = get_kpi_data($v,$complete,$url);
                     }else{
 
                         $rate = 100;
@@ -3217,6 +3222,7 @@ function updatekpi($month,$user){
                         $data['score']			= round(($rate * $v['weight']) / 100,1)>0?round(($rate * $v['weight']) / 100,1):0;
                         //$data['score']			= get_kpi_score($rate,$v['weight'],$v['end_date'],$month);
                         $data['score_status']	= 1;
+                        $data['url']            = '';
                     }
                     M('kpi_more')->data($data)->where(array('id'=>$v['id']))->save();
                 }
@@ -3230,7 +3236,7 @@ function updatekpi($month,$user){
     }
 }
 
-function get_kpi_data($v,$complete){
+function get_kpi_data($v,$complete,$url=''){
     $otherQuota     = array(127);
     $gt100          = array(163,156);
     if (in_array($v['quota_id'],$otherQuota)){
@@ -3258,6 +3264,7 @@ function get_kpi_data($v,$complete){
     $data['score']			= round(($rate * $v['weight']) / 100,1)>0?round(($rate * $v['weight']) / 100,1):0;
     //$data['score']          = get_kpi_score($rate,$v['weight'],$v['end_date'],$month);
     $data['score_status']	= 1;
+    $data['url']            = $url?$url:'';
     return $data;
 }
 
