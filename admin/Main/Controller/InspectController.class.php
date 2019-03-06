@@ -210,13 +210,15 @@ class InspectController extends BaseController{
 
 	// @@@NODE-3###score###顾客满意度###
     public function score(){
-        $title	= I('title');		//项目名称
-        $opid	= I('id');			//项目编号
-        $oid	= I('oid');			//项目团号
-        $ou		= I('ou');			//立项人
+        $title	        = I('title');		//项目名称
+        $opid	        = I('id');			//项目编号
+        $oid	        = I('oid');			//项目团号
+        $ou		        = I('ou');			//立项人
+        $kpi_opids      = I('kpi_opids')?explode(',',I('kpi_opids')):0;
 
         $where = array();
 
+        if ($kpi_opids)     $where['o.op_id']           = array('in',$kpi_opids);
         if($title)			$where['o.project']			= array('like','%'.$title.'%');
         if($oid)			$where['o.group_id']		= array('like','%'.$oid.'%');
         if($opid)			$where['o.op_id']			= $opid;

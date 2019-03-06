@@ -3067,7 +3067,8 @@ function updatekpi($month,$user){
                             $where['in_begin_day']  = array('between',array($v['start_date'],$v['end_date']));
                             $where['manager_id']    = array('in',$userids);
                             $need_guide             = M('op_guide_confirm')->where($where)->count();
-                            $url                    = '';
+                            $kpi_opids              = $shishi?implode(',',$shishi):'0';
+                            $url                    = U('Inspect/score',array('kpi_opids'=>$kpi_opids));
 
                             if ($shishi && !$need_guide){
                                 //有项目，但无调查项目的，得100分。
@@ -3091,7 +3092,7 @@ function updatekpi($month,$user){
                             $operate_info   = get_sum_department_operate($department,$year,$monon);     //实际经营信息
                             $jy_rsfyl       = $operate_info['rsfyl'].'%';                               //经营人事费用率
                             $complete       = $jy_rsfyl;
-                            $url            = '';
+                            $url            = U('manage/Manage_quarter');
 
                         }
 
