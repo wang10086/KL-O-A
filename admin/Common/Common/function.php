@@ -3179,7 +3179,7 @@ function updatekpi($month,$user){
                             $complete               = ($wanchenglv*100).'%';
                         }
 
-                        //所负责表转化产品的客户满意度
+                        //所负责标准化产品的客户满意度 1大类 线路=> 王新月 , 2大类 课程=>彭白鸽 3大类 其他=>秦鸣
                         if ($v['quota_id']==159){
 
                         }
@@ -3189,6 +3189,11 @@ function updatekpi($month,$user){
                             //本月立项成团的项目
                             $useTimes               = get_use_times($v['user_id'],$v['start_date'],$v['end_date']);
                             $complete               = $useTimes.'次';
+                        }
+
+                        //OA及网站、办公环境及设施、物资保障指标（OA）-综合部经理
+                        if ($v['quota_id']==164){
+
                         }
 
                         //产品设计-市场部经理

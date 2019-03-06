@@ -246,6 +246,9 @@ class IndexController extends BaseController {
 			
 			//检查登录
 		} else {
+            $time           = time()-5*24*3600;
+            $new_staff      = M('staff')->where(array('send_time'=>array('gt',$time)))->count();
+            if ($new_staff) $this->new_staff = $new_staff;
 	        $this->display('login');
 		}
     }

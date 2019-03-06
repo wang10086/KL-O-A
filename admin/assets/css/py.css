@@ -4119,6 +4119,6 @@ th{outline: none;}
 .text-overflow-lines-1-w-20rem{max-width: 20rem; display: -webkit-box;  -webkit-box-orient: vertical;  -webkit-line-clamp: 1;  overflow: hidden;}
 
 .a4-endwise{  width: 100%;  overflow: hidden;  padding: 0;  word-break:break-all;  }
-
+.newStaff{position: absolute; right: 5px;}
 
 

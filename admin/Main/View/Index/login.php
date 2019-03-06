@@ -24,7 +24,7 @@
 
         <div class="form-box" id="login-box">
             <div class="header"><?php echo P::SYSTEM_NAME; ?>登录</div>
-            <form id="loginform" method="post" class="form-vertical" action="{:U('Index/login')}" />
+            <form id="loginform" method="post" class="form-vertical" action="{:U('Index/login')}" >
             <input type="hidden" name="dosubmit" value="1" />
                 <div class="body bg-gray">
                     <div class="form-group">
@@ -38,10 +38,15 @@
                     <button type="submit" class="btn bg-olive btn-block">进入系统</button>  
                 </div>
             </form>
-  
         </div>
 
-        <a href="{:U('Staff/login')}"><div class="employee-aspirations"><i class="fa fa-hand-o-right"></i>&emsp14;员工心声</div></a>
+        <a href="{:U('Staff/login')}">
+            <div class="employee-aspirations"><i class="fa fa-hand-o-right"></i>&emsp14;员工心声
+                <if condition="$new_staff">
+                    <img src="__HTML__/img/new.png" width="30rem" alt="" class="newStaff">
+                </if>
+            </div>
+        </a>
 
         <div class="unbox copy">
             版权所有 &copy; 中科教科学教育平台 <a href="http://www.miitbeian.gov.cn" target="_blank">京ICP备12018327号</a>  &nbsp; <!--京公网安备110402500027号-->

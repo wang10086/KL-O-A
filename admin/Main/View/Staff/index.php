@@ -16,6 +16,9 @@
 
             <foreach name="list" item="v">
                 <div class="lbox">
+                    <?php if (time()-$v['send_time']<5*24*3600){ ?>
+                        <img src="__HTML__/img/new.png" width="30rem"  alt="">
+                    <?php } ?>
                     <span class="staff-name">『 {$v.username} 』</span>:
                     <a href="{:U('staff/info',array('id'=>$v['id']))}"><span class="note-con"><?php echo $v['content']; ?></span></a>
                     <div class="note-info">
