@@ -38,7 +38,7 @@
                 <div class=" content ">
                     <div class="col-md-12" id="departmentid">
                         <lebal class="upload-lebal">所属部门<span></span></lebal>
-                        <!--<span class="lebal-span" style="margin-right: 6px"><input type="checkbox" id="departmentcheckbox"> &nbsp;全选</span>-->
+                        <span class="lebal-span" style="margin-right: 6px"><input type="checkbox" id="departmentcheckbox" value="all"> &nbsp;全选</span>
                         <foreach name="department" key="k" item="v">
                             <span class="lebal-span"><input type="checkbox" value="{$k}" name="department[]" class="departmentcheckbox"> &nbsp;{$v}</span>
                         </foreach>
@@ -163,20 +163,37 @@
 			});
 	
 			uploader.init();
-
             reload();
 
             $('#postid').html('');
             var departmentids = '';
+
             $('#departmentid').find('ins').each(function(index, element) {
                 $(this).click(function(){
                     var departmentid = '['+$(this).prev().val()+']';
                     if (departmentids.indexOf(departmentid) !='-1') {
-                        departmentids = departmentids.replace(departmentid+',','')
+                        if(departmentid == '[all]'){ //全部反选
+                            $('.departmentcheckbox').parent('div').attr('aria-checked','false').removeClass('checked');
+                            departmentids   = '';
+                        }else{ //单选
+                            departmentids = departmentids.replace(departmentid+',','')
+                        }
                     }else{
-                        departmentids += '['+$(this).prev().val()+'],';
+                        if(departmentid == '[all]'){  //全选
+                            if($(this).parent('div').attr('aria-checked','true')){
+                                $('.departmentcheckbox').parent('div').attr('aria-checked','true').addClass('checked');
+                                $('#departmentid').find('ins').each(function (index,element) {
+                                    if($(this).parent('div').hasClass('checked')){
+                                        departmentids += '['+$(this).prev().val()+'],';
+                                    }
+                                })
+                            }
+                        }else{ //单选
+                            departmentids   += '['+$(this).prev().val()+'],';
+                        }
                     }
-                   $.ajax({
+
+                    $.ajax({
                        type: 'POST',
                        url: "{:U('Ajax/get_posts')}",
                        dataType: 'JSON',
@@ -205,14 +222,6 @@
         });
 
         function reload(){
-            //所属部门
-            /*$('#departmentcheckbox').on('ifChecked', function() {
-             $('.departmentcheckbox').iCheck('check');
-             });
-             $('#departmentcheckbox').on('ifUnchecked', function() {
-             $('.departmentcheckbox').iCheck('uncheck');
-             });*/
-
             //所属岗位
             $('#postscheckbox').on('ifChecked', function() {
                 $('.postscheckbox').iCheck('check');
