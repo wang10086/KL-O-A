@@ -37,7 +37,7 @@
                                 </div><!-- /.box-header -->
                                 <div class="box-body">
                                     <div class="form-group col-md-12 mb0">
-                                        <label class="straff-tit">帖子详情</label>
+                                        <label class="straff-tit">帖子详情<?php echo $list['title']?"：".$list['title']:''; ?></label>
                                         {$list.content}
                                     </div>
 
