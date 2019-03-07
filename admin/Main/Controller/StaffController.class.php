@@ -51,7 +51,6 @@ class StaffController extends Controller{
 
             if (in_array($ip,$arr_ip)){
                 if ($token == $_SESSION['token']){
-                    P(I());die;
                     $info           = array();
                     $info['title']  = stripslashes(trim(I('title')));
                     $info['content']= stripslashes(trim(I('content')));
@@ -59,8 +58,7 @@ class StaffController extends Controller{
                     $info['userid'] = cookie('staff_userid')?cookie('staff_userid'):0;
                     $info['youke']  = cookie('staff_youke');
                     $info['fileids'] = $fileid?implode(',',$fileid):'';
-                    var_dump($info);die;
-                    //$res = M('staff')->add($info);
+                    $res = M('staff')->add($info);
                     if ($res){
                         $this->success('发布成功',U('Staff/index'));
                     }else{

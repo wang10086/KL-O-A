@@ -68,8 +68,7 @@ class FileController extends Controller {
                 
                 $aid = $db->add($att);
                 $rs['aid'] = $aid;
-                $rs['aaa'] = M()->getlastsql();
-                
+
                 break;
             }
             
