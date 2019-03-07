@@ -20,7 +20,7 @@
                         <img src="__HTML__/img/new.png" width="30rem"  alt="">
                     <?php } ?>
                     <span class="staff-name">『 {$v.username} 』</span>:
-                    <a href="{:U('staff/info',array('id'=>$v['id']))}"><span class="note-con"><?php echo $v['content']; ?></span></a>
+                    <a href="{:U('staff/info',array('id'=>$v['id']))}"><span class="note-con"><?php $v['title']?$v['title']:$v['content']; ?></span></a>
                     <div class="note-info">
                         <span class="note-xq">作者：{$v.username}</span>|<span class="note-xq ml10">发布时间：{$v.send_time|date='Y-m-d H:i:s',###}</span>| <span class="note-xq ml10">点赞数量：{$v.good_num}</span>
                     </div>
