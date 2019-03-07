@@ -60,7 +60,7 @@ class FileController extends Controller {
                 $att['filename']    = $row['name'];
                 $att['filepath']    = $rs['fileurl'];
                 $att['catid']       = I('catid');
-                $att['userid']      = session('userid');
+                $att['userid']      = session('userid')?session('userid'):0;
                 $att['uploadtime']  = time();
                 $att['uploadip']    = get_client_ip();
                 $att['rel_id']      = 0;
