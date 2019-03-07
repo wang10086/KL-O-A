@@ -51,7 +51,7 @@ class StaffController extends Controller{
 
             if (in_array($ip,$arr_ip)){
                 if ($token == $_SESSION['token']){
-                    var_dump(I());die;
+                    P(I());die;
                     $info           = array();
                     $info['title']  = stripslashes(trim(I('title')));
                     $info['content']= stripslashes(trim(I('content')));
