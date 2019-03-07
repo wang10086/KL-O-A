@@ -58,7 +58,8 @@ class StaffController extends Controller{
                     $info['userid'] = cookie('staff_userid')?cookie('staff_userid'):0;
                     $info['youke']  = cookie('staff_youke');
                     $info['fileids'] = $fileid?implode(',',$fileid):'';
-                    $res = M('staff')->add($info);
+                    var_dump($info);die;
+                    //$res = M('staff')->add($info);
                     if ($res){
                         $this->success('发布成功',U('Staff/index'));
                     }else{
