@@ -155,6 +155,7 @@
                         console.log(up);
                         console.log(file);
                         console.log(res);
+                        console.log(rs);
                         alert('abbbc');
                         $('div[rel=' + file.id + ']').css('width', '100%');
                         $('#container').append('<input type="hidden" rel="'+file.id+'" name="resfiles[]" value="' + rs.aid + '" />');
