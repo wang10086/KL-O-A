@@ -152,7 +152,10 @@
                     var rs = eval('(' + res.response +')');
                     alert('aaa');
                     if (rs.rs ==  'ok') {
-                        alert('abbb');
+                        console.log(up);
+                        console.log(file);
+                        console.log(res);
+                        alert('abbbc');
                         $('div[rel=' + file.id + ']').css('width', '100%');
                         $('#container').append('<input type="hidden" rel="'+file.id+'" name="resfiles[]" value="' + rs.aid + '" />');
                         $('input[name=nm_' + file.id +']').prop('name', 'newname['+rs.aid+']');
