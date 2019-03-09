@@ -652,6 +652,21 @@
 
                                                 </li>
                                             </if>
+
+                                            <if condition="rolemenu(array('Wages/index'))">
+                                                <li class="{:on('Wages/index')}">
+                                                    <a href="{:U('Wages/index')}">
+                                                        <i class="fa fa-angle-right">
+                                                        </i>员工薪资(新)
+                                                        <?php if($_SESSION['salary_satus']){ ?>
+                                                            <small class="badge pull-right bg-red" style="margin-right:6px;"><?php echo $_SESSION['salary_satus'];?></small>
+                                                        <?php }else{ ?>
+                                                            <i class="fa fa-angle-right pull-right"></i>
+                                                        <?php } ?>
+                                                    </a>
+
+                                                </li>
+                                            </if>
                                             <if condition="rolemenu(array('Salary/salary_attendance'))">
                                                 <li class="{:on('Salary/salary_attendance')}"><a href="{:U('Salary/salary_attendance')}"><i class="fa fa-angle-right"></i>员工考勤</a></li>
                                             </if>
