@@ -3,6 +3,7 @@
     <div class="content">
         <input type="hidden" name="dosubmint" value="1">
         <div class="content">
+            <input type="hidden" name="info[dimension]" value="5"> <!--考核维度-->
             <input type="hidden" id="timely_num" name="info[timely]" value="" />
             <input type="hidden" id="accord_num" name="info[accord]" value="" />
             <input type="hidden" id="cost_num" name="info[cost]" value="" />

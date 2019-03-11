@@ -3303,11 +3303,12 @@ class OpController extends BaseController {
             $info['has_rd']             = I('has_rd');
             $info['content']            = trim(I('content'));
             $info['monthly']            = trim(I('monthly'));
-            $info['account_id']         = cookie('userid');
-            $info['account_name']       = cookie('nickname');
+            $info['input_userid']       = cookie('userid');
+            $info['input_username']     = cookie('nickname');
             $info['create_time']        = NOW_TIME;
+            $info['type']               = 1; //对研发评分
             $where                      = array();
-            $where['account_id']        = $info['account_id'];
+            $where['account_id']        = $info['input_userid'];
             $where['monthly']           = $info['monthly'];
             $list                       = $db->where($where)->find();
             if ($list){

@@ -348,7 +348,7 @@
 
 
                         <if condition="rolemenu(array('Inspect/record','Inspect/edit_ins','Inspect/score'))">
-                        <li class="treeview {:ison(CONTROLLER_NAME, 'Inspect')}">
+                        <li class="treeview {:ison(CONTROLLER_NAME, 'Inspect')} {:on('Index/public_satisfaction')}">
                             <a href="javascript:;">
                                 <i class="fa fa-medkit"></i>
                                 <span>品控巡检</span>
@@ -364,6 +364,7 @@
                                 <if condition="rolemenu(array('Inspect/score'))">
                                     <li><a href="{:U('Inspect/score')}"><i class="fa fa-angle-right"></i> 顾客满意度</a></li>
                                 </if>
+                                <li><a href="{:U('Index/public_satisfaction')}"><i class="fa fa-angle-right"></i> 内部人员满意度</a></li>
 
                             </ul>
                         </li>

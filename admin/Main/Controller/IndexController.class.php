@@ -281,6 +281,13 @@ class IndexController extends BaseController {
 			echo 0;	
 		}
 	}
+
+
+	//内部人员满意度
+	public function public_satisfaction(){
+
+        $this->display('satisfaction');
+    }
 	
 	
 	
