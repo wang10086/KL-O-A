@@ -450,7 +450,7 @@ class InspectController extends BaseController{
             $data['op_id']          = $opid;
             $data['input_time']     = NOW_TIME;
             $data['input_user_id']  = cookie('userid');
-            $data['input_user_name']= cookie('username');
+            $data['input_user_name']= cookie('nickname');
             if ($id){
                 $res                = $db->where(array('id'=>$id))->save($data);
             }else{
