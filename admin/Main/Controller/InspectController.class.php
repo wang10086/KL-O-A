@@ -210,33 +210,32 @@ class InspectController extends BaseController{
 
 	// @@@NODE-3###score###顾客满意度###
     public function score(){
-        $title	        = I('title');		//项目名称
-        $opid	        = I('id');			//项目编号
-        $oid	        = I('oid');			//项目团号
-        $ou		        = I('ou');			//立项人
-        $kpi_opids      = I('kpi_opids')?explode(',',I('kpi_opids')):0;
+        $title	                = I('title');		//项目名称
+        $opid	                = I('id');			//项目编号
+        $oid	                = I('oid');			//项目团号
+        $ou		                = I('ou');			//立项人
+        $kpi_opids              = I('kpi_opids')?explode(',',I('kpi_opids')):0;
 
-        $where = array();
-
-        if ($kpi_opids)     $where['o.op_id']           = array('in',$kpi_opids);
-        if($title)			$where['o.project']			= array('like','%'.$title.'%');
-        if($oid)			$where['o.group_id']		= array('like','%'.$oid.'%');
-        if($opid)			$where['o.op_id']			= $opid;
-        if($ou)				$where['o.create_user_name']= $ou;
+        $where                  = array();
+        if ($kpi_opids) $where['o.op_id']           = array('in',$kpi_opids);
+        if($title)		$where['o.project']			= array('like','%'.$title.'%');
+        if($oid)	    $where['o.group_id']		= array('like','%'.$oid.'%');
+        if($opid)		$where['o.op_id']			= $opid;
+        if($ou)			$where['o.create_user_name']= $ou;
 
         //分页
-        $pagecount		= M()->table('__OP__ as o')->field('o.*,c.ret_time')->join('left join __OP_TEAM_CONFIRM__ as c on c.op_id=o.op_id')->where($where)->order($this->orders('o.create_time'))->count();
-        $page			= new Page($pagecount, P::PAGE_SIZE);
-        $this->pages	= $pagecount>P::PAGE_SIZE ? $page->show():'';
+        $pagecount		        = M()->table('__OP__ as o')->field('o.*,c.ret_time')->join('left join __OP_TEAM_CONFIRM__ as c on c.op_id=o.op_id')->where($where)->order($this->orders('o.create_time'))->count();
+        $page			        = new Page($pagecount, P::PAGE_SIZE);
+        $this->pages	        = $pagecount>P::PAGE_SIZE ? $page->show():'';
 
-        $lists = M()->table('__OP__ as o')->field('o.*,c.ret_time')->join('left join __OP_TEAM_CONFIRM__ as c on c.op_id=o.op_id')->limit($page->firstRow . ',' . $page->listRows)->where($where)->order($this->orders('o.create_time'))->select();
+        $lists                  = M()->table('__OP__ as o')->field('o.*,c.ret_time')->join('left join __OP_TEAM_CONFIRM__ as c on c.op_id=o.op_id')->limit($page->firstRow . ',' . $page->listRows)->where($where)->order($this->orders('o.create_time'))->select();
         foreach ($lists as $k=>$v){
-            $op_id          = $v['op_id'];
-            $guide_manager  = M()->table('__OP_GUIDE_CONFIRM__ as c')->field('g.name')->join('left join __GUIDE__ as g on g.id = c.charity_id')->where(array('c.op_id'=>$op_id,'c.charity_id'=>array('neq',0)))->select();
+            $op_id              = $v['op_id'];
+            $guide_manager      = M()->table('__OP_GUIDE_CONFIRM__ as c')->field('g.name,c.score_num,c.op_id')->join('left join __GUIDE__ as g on g.id = c.charity_id')->where(array('c.op_id'=>$op_id,'c.charity_id'=>array('neq',0)))->select();
             $lists[$k]['guide_manager'] = $guide_manager?implode(',',array_unique(array_column($guide_manager,'name'))):'<span class="blue">待定</span>';
 
-            $charity        = $this->public_get_confirm_id($op_id);
-            $count_score    = M()->table('__TCS_SCORE__ as s')->join('__TCS_SCORE_USER__ as u on u.id=s.uid','left')->where(array('u.op_id'=>$v['op_id']))->count();
+            $charity            = $this->public_get_confirm_id($op_id);
+            $count_score        = M()->table('__TCS_SCORE__ as s')->join('__TCS_SCORE_USER__ as u on u.id=s.uid','left')->where(array('u.op_id'=>$v['op_id']))->count();
 
             if (!$charity && !$count_score){
                 $charity_status = "<span class='red'>未安排</span>";
@@ -247,10 +246,36 @@ class InspectController extends BaseController{
             }
             $lists[$k]["charity_status"] = $charity_status;
 
-        }
+            //求得分率
+            $average            = $this->get_guide_score($v);
+            $lists[$k]['average'] = $average;
 
-        $this->lists    = $lists;
+        }
+        $this->lists            = $lists;
         $this->display();
+    }
+
+    private function get_guide_score($v){
+        $kind               = $v['kind'];
+        $op_id              = $v['op_id'];
+        $score_kind1        = array_keys(C('SCORE_KIND1'));
+        $score_kind2        = array_keys(C('SCORE_KIND2'));
+        $score_kind3        = array_keys(C('SCORE_KIND3'));
+        $lists              = M()->table('__TCS_SCORE__ as s')
+            ->field('s.*,u.mobile,u.confirm_id,c.in_begin_day,c.in_day,c.address,c.score_num')
+            ->join('left join __TCS_SCORE_USER__ as u on u.id = s.uid')
+            ->join('left join __OP_GUIDE_CONFIRM__ as c on c.id = u.confirm_id')
+            ->where(array('u.op_id'=>$op_id))
+            ->select();
+        $score_num          = count($lists);
+        foreach ($lists as $k=>$v){
+            $lists[$k]['sum_score'] = $v['before_sell']+$v['new_media']+$v['stay']+$v['travel']+$v['content']+$v['food']+$v['bus']+$v['driver']+$v['guide']+$v['teacher']+$v['depth']+$v['major']+$v['interest']+$v['material'];
+        }
+        if (in_array($kind,$score_kind1)) $sum = 9*5*$score_num; //考核9项, 每项5分, 满分总分
+        if (in_array($kind,$score_kind2)) $sum = 7*5*$score_num; //考核7项, 每项5分, 满分总分
+        if (in_array($kind,$score_kind3)) $sum = 10*5*$score_num; //考核10项, 每项5分, 满分总分
+        $average            = (round(array_sum(array_column($lists,'sum_score'))/$sum,2)*100).'%';
+        return $average;
     }
 
     public function public_get_confirm_id($op_id){
