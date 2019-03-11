@@ -12,26 +12,30 @@ class SalaryController extends BaseController {
      *
      */
     public function salaryindex(){
+        $name                                   = I('name')?trim(I('name')):'';
+        $id                                     = I('id')?trim(I('id')):'';
+        $department                             = I('department')?trim(I('department')):'';
+        $month                                  = I('month')?trim(I('month')):'';
+        $userid                                 = session('userid');
 
-        $userid['status'] = 4;
-        $userid['account_id']                  = trim($_POST['id']);
-        $userid['department']                  = trim($_POST['employee_member']);
-        $userid['user_name']                   = trim($_POST['name']);
-        $userid['datetime']                    = trim($_POST['month']);
-        $userid                                = array_filter($userid);
-        $user_id                               = (int)$_SESSION['userid'];
+        $where                                  = array();
+        $where['status']                        = 4;
+        if ($name) $where['user_name']          = $name;
+        if ($id) $where['account_id']           = $id;
+        if ($department) $where['department']   = $department;
+        if ($month) $where['datetime']          = $month;
 
-        if($user_id==11 ||$user_id==55 || $user_id==77 || $user_id==32 || $user_id==38 || $user_id==12  || $user_id==1 || $user_id==185){
+        if (in_array($userid,array(1,11,12,32,38,55,77,185))){
+
         }else{
-            $userid['account_id']              = $user_id;
+            $where['account_id']                = $userid;
         }
-        $count                                 = M('salary_wages_month')->where($userid)->count();
-        $page                                  = new Page($count,15);
-        $pages                                 = $page->show();
-        $info                                  = M('salary_wages_month')->where($userid)->limit("$page->firstRow","$page->listRows")->order('datetime desc')->select();//工资生成数据
 
-        $this->assign('info',$info);
-        $this->assign('page',$pages);
+        $count                                  = M('salary_wages_month')->where($where)->count();
+        $page                                   = new Page($count,P::PAGE_SIZE);
+        $this->page                             = $count>P::PAGE_SIZE?$page->show():'';
+        $lists                                  = M('salary_wages_month')->where($where)->limit("$page->firstRow","$page->listRows")->order('datetime desc')->select();//工资生成数据
+        $this->info                             = $lists;
         $this->display();
     }
 
@@ -1459,6 +1463,7 @@ class SalaryController extends BaseController {
         $this->assign('userinfo',$userinfo); //查询下详情
         $this->assign('status',$status);//当前回返状态
         $this->assign('page',$pages);//分页
+        $this->pin      = I('pin');
         $this->display();
     }
 

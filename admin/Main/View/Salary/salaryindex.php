@@ -20,7 +20,7 @@
                             <div class="box">
                                 <div class="box-header">
                                     <h3 class="box-title">人员薪资列表</h3>
-                                    <div class="box-tools pull-right">
+                                    <!--<div class="box-tools pull-right">
                                         <if condition="rolemenu(array('Salary/salary_query'))">
                                             <a href="{:U('Salary/salary_support')}" class="btn btn-sm btn-danger" style="background:#3c8dbc;border:1px solid #3c8dbc;"><i class="fa fa-plus"></i> 扶植人员信息</a>
                                         </if>
@@ -32,8 +32,15 @@
                                         <if condition="rolemenu(array('Salary/salary_excel_list'))">
                                             <a class="btn btn-sm salary_moduser1" style="background-color:#398439;border: #398439"><i class="fa fa-plus"></i> 生成工资表</a>
                                         </if>
-
-                                         
+                                    </div>-->
+                                    <div class="box-tools pull-right">
+                                        <a href="javascript:;" class="btn btn-info btn-sm" onclick="javascript:opensearch('searchtext',700,160);"><i class="fa fa-search"></i> 搜索</a>
+                                        <if condition="rolemenu(array('Salary/salary_query'))">
+                                            <a href="{:U('Salary/salary_query')}" class="btn btn-sm btn-danger"><i class="fa fa-plus"></i> 数据录入</a>
+                                        </if>
+                                        <if condition="rolemenu(array('Salary/salary_excel_list'))">
+                                            <a class="btn btn-sm salary_moduser1" style="background-color:#398439;border: #398439"><i class="fa fa-plus"></i> 生成工资表</a>
+                                        </if>
                                     </div>
                                 </div><!-- /.box-header -->
                                 <div class="box-body">
@@ -93,26 +100,19 @@
 
 
             <div id="searchtext">
-                <script src="__HTML__/js/public.js?v=1.0.6" type="text/javascript"></script>
-
                 <form action="{:U('Salary/salaryindex')}" method="post" id="searchform">
-
-                <div class="form-group col-md-3">
-                    <input type="text" class="form-control" name="id" placeholder="ID编号">
-                </div>
-                    <div class="form-group col-md-3">
-                        <input type="text" class="form-control" name="employee_member" placeholder="部门">
+                    <div class="form-group col-md-6">
+                        <input type="text" class="form-control" name="name" placeholder="姓名">
                     </div>
-
-                <div class="form-group col-md-3">
-                    <input type="text" class="form-control" name="name" placeholder="员工姓名">
-                </div>
-
-                <div class="form-group col-md-3">
-                    <input type="text" name="month" class="form-control monthly" placeholder="年月/201806" />
-<!--                    <input type="date" class="form-control" name="salary_time" placeholder="年月" id="nowTime">-->
-                </div>
-
+                    <div class="form-group col-md-6">
+                        <input type="text" class="form-control" name="id" placeholder="员工ID">
+                    </div>
+                    <div class="form-group col-md-6">
+                        <input type="text" class="form-control" name="department" placeholder="部门">
+                    </div>
+                    <div class="form-group col-md-6">
+                        <input type="text" class="form-control monthly" name="month" placeholder="年月/201806" />
+                    </div>
                 </form>
             </div>
 <form class="form-horizontal" id="salary_pop1" action="{:U('user/updates')}" method="post" style="display: none">

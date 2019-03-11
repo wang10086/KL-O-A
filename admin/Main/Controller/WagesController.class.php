@@ -1153,7 +1153,7 @@
                 $data[$k]['performance_salary'] = ($salary['standard_salary']/10)*$salary['performance_salary']; //岗位绩效工资
                 $kpi_pdca_score                 = $this->get_kpi_salary($v,$salary,$datetime); //绩效得分
                 $data[$k]['achievements']       = $kpi_pdca_score['count_money']; //绩效增减
-                // 住房补贴 其他补款 应发工资 医疗保险 养老保险 失业保险 公积金 个人保险合计 专项扣除 计税工资 个人所得税 税后扣款 工会会费  实发工资
+                //应发工资 医疗保险 养老保险 失业保险 公积金 个人保险合计 专项扣除 计税工资 个人所得税 税后扣款 工会会费  实发工资
                 $op_guide_info                  = $mod->get_op_guide($v,$datetime); //带团补助信息
                 $data[$k]['guide_salary']       = $op_guide_info['guide_salary']?$op_guide_info['guide_salary']:0; //带团补助金额
                 $quarter_royalty_data           = $mod->get_royalty($v,$datetime,$salary['standard_salary']); //季度毛利,季度目标,季度提成
@@ -1162,7 +1162,13 @@
                 $royalty                        = $quarter_royalty_data['quarter_royalty'] + $salary_bonus_list['bonus']; //提成 : 业务人员季度提成  其他人员提成(手动录入)
                 $data[$k]['royalty']            = $royalty?$royalty:'0.00'; //提成
                 $data[$k]['bonus']              = $salary_bonus_list['foreign_bonus']?$salary_bonus_list['foreign_bonus']:'0.00'; //奖金
-                $salary_subsidy                 = M('salary_subsidy')->where(array('account_id'=>$v['id']))->order('id desc')->find(); //补贴(住房补贴,外地补贴,电脑补贴)
+                $salary_subsidy_list            = M('salary_subsidy')->where(array('account_id'=>$v['id']))->order('id desc')->find(); //补贴(住房补贴,外地补贴,电脑补贴)
+                $data[$k]['housing_subsidy']    = $salary_subsidy_list['housing_subsidy'];  //住房补贴
+                $data[$k]['other_subsidy']      = $salary_subsidy_list['foreign_subsidies']+$salary_subsidy_list['computer_subsidy']; //其他补款(外地补贴+电脑补贴)
+                //$data[$k][]                     = ''; //应发工资
+                $salary_insurance_list          = M('salary_insurance')->where(array('account_id'=>$v['id']))->order('id desc')->find();
+
+                var_dump($salary_insurance_list);
 
             }
             var_dump($data);die;

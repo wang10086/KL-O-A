@@ -17,7 +17,17 @@
 
                     <div class="row">
                         <div class="col-xs-12">
-                            <div class="box">
+
+                            <div class="btn-group" id="catfont">
+                                <a href="{:U('Salary/salary_query',array('pin'=>0))}" class="btn <?php if($pin==0){ echo 'btn-info';}else{ echo 'btn-default';} ?>">岗位薪酬变动</a>
+                                <a href="{:U('Salary/salary_query',array('pin'=>1))}" class="btn <?php if($pin==1){ echo 'btn-info';}else{ echo 'btn-default';} ?>">提成/补助/奖金</a>
+                                <a href="{:U('Salary/salary_query',array('pin'=>2))}" class="btn <?php if($pin==2){ echo 'btn-info';}else{ echo 'btn-default';} ?>">五险一金</a>
+                                <a href="{:U('Salary/salary_query',array('pin'=>3))}" class="btn <?php if($pin==3){ echo 'btn-info';}else{ echo 'btn-default';} ?>">代扣代缴</a>
+                                <a href="{:U('Salary/salary_query',array('pin'=>4))}" class="btn <?php if($pin==4){ echo 'btn-info';}else{ echo 'btn-default';} ?>">专项附加扣除</a>
+                                <a href="{:U('Salary/salary_support',array('pin'=>5))}" class="btn <?php if($pin==5){ echo 'btn-info';}else{ echo 'btn-default';} ?>">扶植人员信息</a>
+                            </div>
+
+                            <div class="box box-warning mt20">
                                 <div class="box-header">
                                     <h3 class="box-title">扶植人员列表</h3>
                                     <div class="box-tools pull-right">
