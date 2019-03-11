@@ -286,7 +286,18 @@ class IndexController extends BaseController {
 	//内部人员满意度
 	public function public_satisfaction(){
 
+        $lists              = M('satisfaction')->order($this->orders('id'))->select();
+        $this->lists        = $lists;
         $this->display('satisfaction');
+    }
+
+    //增加内部评分信息
+    public function public_satisfaction_add(){
+        if (isset($_POST['dosubmint']) && $_POST['dosubmint']){
+            var_dump(I());die;
+        }else{
+            $this->display('satisfaction_add');
+        }
     }
 	
 	

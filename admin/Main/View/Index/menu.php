@@ -348,7 +348,7 @@
 
 
                         <if condition="rolemenu(array('Inspect/record','Inspect/edit_ins','Inspect/score'))">
-                        <li class="treeview {:ison(CONTROLLER_NAME, 'Inspect')} {:on('Index/public_satisfaction')}">
+                        <li class="treeview {:ison(CONTROLLER_NAME, 'Inspect')} {:on('Index/public_satisfaction')} {:on('Index/public_satisfaction_add')}">
                             <a href="javascript:;">
                                 <i class="fa fa-medkit"></i>
                                 <span>品控巡检</span>

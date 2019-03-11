@@ -20,7 +20,7 @@
                                     <h3 class="box-title">评分记录</h3>
                                     <div class="box-tools pull-right">
                                         <a href="javascript:;" class="btn btn-info btn-sm" onclick="javascript:opensearch('searchtext',400,160);"><i class="fa fa-search"></i> 搜索</a>
-                                        <a href="{:U('Op/satisfaction_add')}" class="btn btn-sm btn-success"><i class="fa fa-plus"></i> 评分</a>
+                                        <a href="{:U('Index/public_satisfaction_add')}" class="btn btn-sm btn-success"><i class="fa fa-plus"></i> 评分</a>
                                     </div>
                                 </div><!-- /.box-header -->
 
@@ -28,19 +28,8 @@
                                 <table class="table table-bordered dataTable fontmini" id="tablelist" style="margin-top:10px;">
                                     <tr role="row" class="orders" >
                                         <th class="taskOptions" width="80" data="o.status">评分月份</th>
-                                        <?php if ($has_rd == 1){ ?>     <!--有研发-->
-                                        <th class="sorting" data="timely">培训</th>
-                                        <th class="sorting" data="accord">标准化</th>
-                                        <th class="sorting" data="cost">支持、指导</th>
-                                        <th class="sorting" data="train">及时性</th>
-                                        <th class="sorting" data="service">工作态度</th>
-                                        <?php }else{ ?>     <!--无研发-->
-                                        <th class="sorting" data="timely">及时性</th>
-                                        <th class="sorting" data="accord">符合性</th>
-                                        <th class="sorting" data="cost">成本控制</th>
-                                        <th class="sorting" data="train">培训</th>
-                                        <th class="sorting" data="service">服务态度</th>
-                                        <?php } ?>
+                                        <th class="sorting" data="">被评分人</th>
+                                        <th class="sorting" data="">综合得分</th>
                                         <th class="sorting" data="account_name" width="300">评价内容</th>
                                         <th class="sorting" data="content">评分人员</th>
                                         <th class="sorting" data="create_time">评分时间</th>
@@ -51,13 +40,10 @@
                                     <foreach name="lists" item="row"> 
                                     <tr>
                                         <td class="taskOptions">{$row.monthly}</td>
-                                        <td class="taskOptions">{$row.timely}</td>
-                                        <td class="taskOptions">{$row.accord}</td>
-                                        <td class="taskOptions">{$row.cost}</td>
-                                        <td class="taskOptions">{$row.train}</td>
-                                        <td class="taskOptions">{$row.service}</td>
-                                        <td class="taskOptions"><div class="text-overflow-lines-300"><a href="javascript:;" onclick="show_detail({$row.id});">{$row.content}</a></div></td>
                                         <td class="taskOptions">{$row.account_name}</td>
+                                        <td class="taskOptions">{$row.cost}</td>
+                                        <td class="taskOptions"><div class="text-overflow-lines-300"><a href="javascript:;" onclick="show_detail({$row.id});">{$row.content}</a></div></td>
+                                        <td class="taskOptions">{$row.input_username}</td>
                                         <td class="taskOptions">{$row.create_time|date="Y-m-d H:i:s",###}</td>
 
                                         <if condition="rolemenu(array('Op/del_satisfaction'))">
@@ -84,12 +70,16 @@
             <div id="searchtext">
                 <form action="" method="get" id="searchform">
                 <input type="hidden" name="m" value="Main">
-                <input type="hidden" name="c" value="Op">
-                <input type="hidden" name="a" value="satisfaction">
+                <input type="hidden" name="c" value="Index">
+                <input type="hidden" name="a" value="public_satisfaction">
                 
                 <div class="form-group col-md-12"></div>
                 <div class="form-group col-md-12">
-                    <input type="text" class="form-control" name="uname" placeholder="评分人">
+                    <input type="text" class="form-control" name="uname" placeholder="被评分人">
+                </div>
+
+                <div class="form-group col-md-12">
+                    <input type="text" class="form-control" name="input_name" placeholder="评分人">
                 </div>
                 
                 <div class="form-group col-md-12">
@@ -103,7 +93,7 @@
 
 <script>
     function show_detail(id) {
-        art.dialog.open('index.php?m=Main&c=Op&a=satisfaction_detail&id='+id,{
+        art.dialog.open('index.php?m=Main&c=Index&a=public_satisfaction_detail&id='+id,{
             lock:true,
             title: '客户满意度详情',
             width:800,
