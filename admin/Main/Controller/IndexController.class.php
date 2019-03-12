@@ -287,6 +287,7 @@ class IndexController extends BaseController {
 
 	//内部人员满意度
 	public function public_satisfaction(){
+        $kpiTime            = I('kpiTime')?explode(',',I('kpiTime')):null; //kpi链接
         $uname              = trim(I('uname'));
         $input_name         = trim(I('input_name'));
         $monthly            = trim(I('month'));
@@ -295,6 +296,7 @@ class IndexController extends BaseController {
         if ($uname)         $where['account_name']  = array('like','%'.$uname.'%');
         if ($input_name)    $where['input_username']= array('like','%'.$input_name.'%');
         if ($monthly)       $where['monthly']       = $monthly;
+        if ($kpiTime)       $where['create_time']   = array('between',"$kpiTime[0],$kpiTime[1]");
 
         //分页
         $pagecount          = M('satisfaction')->where($where)->count();

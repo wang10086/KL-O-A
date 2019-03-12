@@ -914,7 +914,7 @@ function get_gross_margin($yearmonth,$user_id,$quota_id=1){
 
 function get_satisfaction($yearmonth){
     $db                         = M('satisfaction');
-    $lists                      = $db->where(array('monthly'=>$yearmonth))->select();
+    $lists                      = $db->where(array('monthly'=>$yearmonth,'type'=>1))->select();
     $num                        = count($lists);
     $sum_average                = 0;
     foreach ($lists as $k=>$v){
@@ -990,4 +990,77 @@ function get_satisfaction($yearmonth){
         return $count;
     }
 
+    /**
+     * 获取月度公司顾客满意度,本周期评分情况
+     */
+    function get_month_satisfaction($v){
+        //获取周期所有评分信息
+        $where                  = array();
+        $where['s.input_time']	= array('between',array($v['start_date'],$v['end_date']));
+        $lists = M()->table('__TCS_SCORE__ as s')->field('u.op_id,o.kind,s.id as sid,s.before_sell,s.new_media,s.stay,s.travel,s.content,s.food,s.bus,s.driver,s.guide,s.teacher,s.depth,s.major,s.interest,s.material,s.late,s.manage,s.morality')->join('join __TCS_SCORE_USER__ as u on u.id = s.uid','left')->join('__OP__ as o on o.op_id = u.op_id','left')->where($where)->select();
+
+        return $lists;
+    }
+
+    //获取顾客满意度不合格数
+    function get_score_unqualified_lists($lists){
+        $score_kind1= array_keys(C('SCORE_KIND1'));
+        $score_kind2= array_keys(C('SCORE_KIND2'));
+        $score_kind3= array_keys(C('SCORE_KIND3'));
+
+        $num        = 0;
+        $unok_arr   = array(1,2);
+        $unok_list  = array();
+        foreach ($lists as $k=>$v){
+            $kind   = $v['kind'];
+            if (in_array($kind,$score_kind1)) $zongfen = 9*5;  //考核9项, 每项5分, 满分总分
+            if (in_array($kind,$score_kind2)) $zongfen = 10*5; //考核10项, 每项5分, 满分总分
+            if (in_array($kind,$score_kind3)) $zongfen = 10*5; //考核10项, 每项5分, 满分总分
+            $defen = $v['before_sell']+$v['new_media']+$v['stay']+$v['travel']+$v['content']+$v['food']+$v['bus']+$v['driver']+$v['guide']+$v['teacher']+$v['depth']+$v['major']+$v['interest']+$v['material']+$v['late']+$v['manage']+$v['morality'];
+            $score = round($defen/$zongfen,2);
+            //单项3颗星或顾客满意度低于90%
+            if ($score < 0.9 || (in_array($v['before_sell'],$unok_arr) || in_array($v['new_media'],$unok_arr) || in_array($v['stay'],$unok_arr) || in_array($v['travel'],$unok_arr) || in_array($v['content'],$unok_arr) || in_array($v['food'],$unok_arr) || in_array($v['bus'],$unok_arr) || in_array($v['driver'],$unok_arr) || in_array($v['guide'],$unok_arr) || in_array($v['teacher'],$unok_arr) || in_array($v['depth'],$unok_arr) || in_array($v['major'],$unok_arr) || in_array($v['interest'],$unok_arr) || in_array($v['material'],$unok_arr) || in_array($v['late'],$unok_arr) || in_array($v['manage'],$unok_arr) || in_array($v['morality'],$unok_arr))){
+                //$num++;
+                $v['score']     = $score;
+                $unok_list[]    = $v;
+            }
+        }
+        return $unok_list;
+    }
+
+    function get_visit($start_date,$end_date){
+        $end_date               = $end_date?$end_date:time();
+        $where                  = array();
+        $where['input_time']    = array('between',"$start_date,$end_date");
+        $lists                  = M('op_visit')->where($where)->group('op_id')->select();
+        return $lists;
+    }
+
+
+    //获取内部人员满意度
+    function get_company_satisfaction($v){
+        $db                         = M('satisfaction');
+        $where                      = array();
+        $where['type']              = array('neq',1); //1=>研发
+        $where['account_id']        = $v['user_id'];
+        $where['monthly']           = $v['month'];
+        $where['create_time']       = array('between',"$v[start_date],$v[end_date]");
+        $lists                      = $db->where($where)->select();
+        $num                        = count($lists);
+        $sum_average                = 0;
+        $dimension                  = $lists[0]['dimension']; //评分维度
+        if ($lists){
+            foreach ($lists as $k=>$v){
+                $score                  = $v['AA'] + $v['BB'] + $v['CC'] + $v['DD'];
+                $count_score            = 5*$dimension;  //总分 = 5各维度, 每个维度5颗星
+                $sum_average            += round($score/$count_score,2);
+            }
+        }
+
+        $average                    = round($sum_average/$num,2);
+        $data                       = array();
+        $data['num']                = $num;
+        $data['average']            = $average;
+        return $data;
+    }
 

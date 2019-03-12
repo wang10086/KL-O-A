@@ -3197,19 +3197,58 @@ function updatekpi($month,$user){
                             $complete               = $useTimes.'次';
                         }
 
-                        //OA及网站、办公环境及设施、物资保障指标（OA）-综合部经理
-                        if ($v['quota_id']==164){
-
-                        }
-
                         //产品设计-市场部经理
                         if ($v['quota_id']==188){
                             $complete               = '80%';
                         }
+
+                        //公司顾客满意度-安全品控部经理
+                        if ($v['quota_id']==213){
+                            $score_lists            = get_month_satisfaction($v); //评分列表
+                            $opids                  = implode(',',array_column($score_lists,'op_id'));
+                            $satisfaction           = get_manyidu($score_lists); //满意度
+                            $complete               = ($satisfaction*100).'%';
+                            $url                    = U('Inspect/score',array('kpi_opids'=>$opids));
+                        }
+
+                        //员工满意度-安全品控部经理(内部员工满意度)
+                        if ($v['quota_id']==214){
+                            $data                   = get_company_satisfaction($v);
+                            $num                    = $data['num'];
+                            $average                = $data['average'];
+                            if ($average >= 0.85 || !$num){
+                                $complete           = 100;
+                            }else{
+                                $complete           = (round(($average/0.85),2)*100).'%';
+                            }
+                            $uname                  = M('account')->where(array('id'=>$v['user_id']))->getField('nickname');
+                            $url                    = U('Index/public_satisfaction',array('uname'=>$uname,'kpiTime'=>$v['start_date'].','.$v['end_date']));
+                        }
+
+                        //不合格处理率-安全品控部经理
+                        if ($v['quota_id']==215){
+                            $score_lists            = get_month_satisfaction($v); //总评分列表
+                            $unok_lists             = get_score_unqualified_lists($score_lists); //不合格评分列表
+                            $unok_num               = count($unok_lists);
+                            $visit_list             = get_visit($v['start_date'],$v['end_date']); //回访记录
+                            $visit_num              = count($visit_list);
+                            $average                = round($visit_num/$unok_num,2);
+                            $complete               = ($average*100).'%';
+                            $opids                  = implode(',',array_column($score_lists,'op_id'));
+                            $url                    = U('Inspect/score',array('kpi_opids'=>$opids));
+                        }
+
+                        //上级领导组织对本月度关键事项绩效评价
+                        if ($v['quota_id']==216){
+                            //默认满分(有人力资源手动录入)
+                            $complete               = '100%';
+                            $url                    = '';
+                        }
+
                     }
 
                     //已实现自动获取指标值
-                    $auto_quta	= array(1,2,3,4,5,6,81,8,9,10,11,15,16,18,20,23,26,21,24,27,32,37,19,22,25,28,33,38,42,45,103,56,113,92,29,34,39,46,102,55,57,58,59,84,87,89,90,111,107,83,66,54,44,12,112,108,100,96,95,65,114,86,85,64,63,62,53,52,41,40,49,80,48,91,79,47,36,35,31,30,82,110,106,99,94,67,124,125,126,127,128,129,130,131,132,133,134,135,136,137,138,139,140,141,143,144,145,146,147,148,149,150,151,153,154,155,156,158,160,161,162,163,188);
+                    $auto_quta	= array(1,2,3,4,5,6,81,8,9,10,11,15,16,18,20,23,26,21,24,27,32,37,19,22,25,28,33,38,42,45,103,56,113,92,29,34,39,46,102,55,57,58,59,84,87,89,90,111,107,83,66,54,44,12,112,108,100,96,95,65,114,86,85,64,63,62,53,52,41,40,49,80,48,91,79,47,36,35,31,30,82,110,106,99,94,67,124,125,126,127,128,129,130,131,132,133,134,135,136,137,138,139,140,141,143,144,145,146,147,148,149,150,151,153,154,155,156,158,160,161,162,163,188,213,214,215,216);
 
                     //计算完成率并保存数据
                     if(in_array($v['quota_id'],$auto_quta)){
