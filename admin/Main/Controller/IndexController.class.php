@@ -4,6 +4,8 @@ use Think\Controller;
 use Org\Util\Rbac;
 ulib('phpqrcode.phpqrcode');
 use Sys\P;
+ulib('Page');
+use Sys\Page;
 
 // @@@NODE-2###Index###系统登录###
 class IndexController extends BaseController {
@@ -285,8 +287,20 @@ class IndexController extends BaseController {
 
 	//内部人员满意度
 	public function public_satisfaction(){
+        $uname              = trim(I('uname'));
+        $input_name         = trim(I('input_name'));
+        $monthly            = trim(I('month'));
+        $where              = array();
+        if ($uname)         $where['account_name']  = array('like','%'.$uname.'%');
+        if ($input_name)    $where['input_username']= array('like','%'.$input_name.'%');
+        if ($monthly)       $where['monthly']       = $monthly;
 
-        $lists              = M('satisfaction')->order($this->orders('id'))->select();
+        //分页
+        $pagecount          = M('satisfaction')->where($where)->count();
+        $page               = new Page($pagecount,P::PAGE_SIZE);
+        $this->pages        = $pagecount>P::PAGE_SIZE ? $page->show():'';
+
+        $lists              = M('satisfaction')->where($where)->limit($page->firstRow.','.$page->listRows)->order($this->orders('id'))->select();
         $this->lists        = $lists;
         $this->display('satisfaction');
     }
