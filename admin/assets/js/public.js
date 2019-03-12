@@ -20,6 +20,22 @@ $(document).ready(function(e) {
 	
 });
 
+//autocomplete
+function autocomplete_id(username,userid,keywords){
+	$("#"+username+"").autocomplete(keywords, {
+		matchContains: true,
+		highlightItem: false,
+		formatItem: function(row, i, max, term) {
+			return '<span style=" display:none">'+row.pinyin+'</span>'+row.text;
+		},
+		formatResult: function(row) {
+			return row.text;
+		}
+	}).result(function (event, item) {
+		$("#"+userid+"").val(item.id);
+	});
+}
+
 //全局日期时间插件
 function relaydate(){
 	$('.inputdate').each (function(idx, elm) {

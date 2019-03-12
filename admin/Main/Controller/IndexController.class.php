@@ -293,9 +293,32 @@ class IndexController extends BaseController {
 
     //增加内部评分信息
     public function public_satisfaction_add(){
+        $db                             = M('satisfaction');
         if (isset($_POST['dosubmint']) && $_POST['dosubmint']){
-            var_dump(I());die;
+            $info                       = I('info');
+            $info['content']            = trim(I('content'));
+            $info['input_userid']       = cookie('userid');
+            $info['input_username']     = cookie('nickname');
+            $info['create_time']        = NOW_TIME;
+            $info['monthly']            = I('monthly')?trim(I('monthly')):date('Ym');
+            $where                      = array();
+            $where['monthly']           = $info['monthly'];
+            $where['input_userid']      = $info['input_userid'];
+            $where['account_id']        = $info['account_id'];
+            $list                       = $db->where($where)->find();
+            if ($list){
+                $this->error('您本月已经完成对'.$info['account_name'].'的评价',U('Index/public_satisfaction'));
+            }else{
+                if (!$info['AA']) $this->error('获取评分数据失败');
+                $res                    = $db->add($info);
+                if ($res){
+                    $this->success('数据保存成功',U('Index/public_satisfaction'));
+                }else{
+                    $this->error('数据保存失败');
+                }
+            }
         }else{
+            $this->userkey  = get_username();
             $this->display('satisfaction_add');
         }
     }

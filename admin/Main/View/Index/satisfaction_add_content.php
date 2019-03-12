@@ -1,57 +1,55 @@
 
-<form method="post" action="<?php echo U('Index/public_satisfaction_add'); ?>" id="save_satisfaction">
+<form method="post" action="<?php echo U('Index/public_satisfaction_add'); ?>" id="myForm" onsubmit="return submitBefore()">
     <div class="content">
         <input type="hidden" name="dosubmint" value="1">
         <div class="content">
-            <input type="hidden" name="info[dimension]" value="5"> <!--考核维度-->
-            <input type="hidden" id="timely_num" name="info[timely]" value="" />
-            <input type="hidden" id="accord_num" name="info[accord]" value="" />
-            <input type="hidden" id="cost_num" name="info[cost]" value="" />
-            <input type="hidden" id="train_num" name="info[train]" value="" />
-            <input type="hidden" id="service_num" name="info[service]" value="" />
+            <input type="hidden" id="AA_num" name="info[AA]" value="" />
+            <input type="hidden" id="BB_num" name="info[BB]" value="" />
+            <input type="hidden" id="CC_num" name="info[CC]" value="" />
+            <input type="hidden" id="DD_num" name="info[DD]" value="" />
 
-            <div style="width:100%;float:left;">
-                <div class="form-group col-md-6">
-                    <label>对相关法规、政策、制度、标准化产品培训情况：</label>
-                    <div class="demo score">
-                        <div id="timely"></div>
-                    </div>
-                </div>
-
-                <div class="form-group col-md-6">
-                    <label>公司产品标准及标准化产品情况：</label>
-                    <div class="demo score">
-                        <div id="accord"></div>
-                    </div>
-                </div>
-
-                <div class="form-group col-md-6">
-                    <label>专业支持、指导情况：</label>
-                    <div class="demo score">
-                        <div id="cost"></div>
-                    </div>
-                </div>
-
-                <div class="form-group col-md-6">
-                    <label>研发部人员服务支持及时性：</label>
-                    <div class="demo score">
-                        <div id="train"></div>
-                    </div>
-                </div>
-
-                <div class="form-group col-md-6">
-                    <label>研发部人员工作态度情况：</label>
-                    <div class="demo score">
-                        <div id="service"></div>
-                    </div>
-                </div>
-
-                <div class="form-group col-md-6">
-                    <label id="ctrq">评分月份：</label><input type="text" name="monthly"  class="form-control monthly"  style="width: 50%;" required />
-                </div>
+            <div class="form-group col-md-6">
+                <label>被评价人员姓名：</label>
+                <input type="text" name="info[account_name]"  class="form-control" id="account_name"  style="width: 50%;" required  />
+                <input type="hidden" name="info[account_id]" id="account_id">
             </div>
-            <textarea name="content" class="form-control" id="content"  rows="2" placeholder="请输入对研发评价内容"></textarea>
-            <div class="form-group col-md-12"></div>
+
+            <div class="form-group col-md-6">
+                <label id="ctrq">评分月份：</label><input type="text" name="monthly"  class="form-control monthly"  style="width: 50%;" required />
+            </div>
+
+            <div id="satisfaction_content">
+                <div class="form-group col-md-12">
+                    <div class="form-group mt20">请先选择被考评人员！</div>
+                </div>
+                <!--<div class="form-group col-md-6">
+                    <label>支撑服务态度：</label>
+                    <div class="demo score">
+                        <div id="AA"></div>
+                    </div>
+                </div>
+
+                <div class="form-group col-md-6">
+                    <label>支撑服务效果：</label>
+                    <div class="demo score">
+                        <div id="BB"></div>
+                    </div>
+                </div>
+
+                <div class="form-group col-md-6">
+                    <label>支撑服务及时性：</label>
+                    <div class="demo score">
+                        <div id="CC"></div>
+                    </div>
+                </div>
+
+                <div class="form-group col-md-6">
+                    <label>公正及合理性：</label>
+                    <div class="demo score">
+                        <div id="DD"></div>
+                    </div>
+                </div>-->
+            </div>
         </div>
 
         <div align="center" class="form-group col-md-12" style="alert:cennter;margin-bottom: 20px;">
@@ -62,28 +60,24 @@
 </form>
 
 <script type="text/javascript">
+    var user_keywords   = <?php echo $userkey; ?>;
 
     $(function() {
-        $.fn.raty.defaults.path = "__HTML__/score/lib/img";
-        var res = <?php echo $pingfen?$pingfen:0; ?>;
-
-        if (res){
-            $('#content').html(res.content);
-
-            pingfen('timely',res.timely);       //及时性
-            pingfen('accord',res.accord);    //产品及文件对需求的符合性
-            pingfen('cost',res.cost);        //研发成本控制
-            pingfen('train',res.train);        //培训支持及可操作性
-            pingfen('service',res.service);        //研发部人员的服务态度
-        }else{
-            pingfen('timely',5);       //及时性
-            pingfen('accord',5);    //产品及文件对需求的符合性
-            pingfen('cost',5);        //研发成本控制
-            pingfen('train',5);        //培训支持及可操作性
-            pingfen('service',5);        //研发部人员的服务态度
-        }
-
+        $("#account_name").autocomplete(user_keywords, {
+            matchContains: true,
+            highlightItem: false,
+            formatItem: function(row, i, max, term) {
+                return '<span style=" display:none">'+row.pinyin+'</span>'+row.text;
+            },
+            formatResult: function(row) {
+                return row.text;
+            }
+        }).result(function (event, item) {
+            $("#account_id").val(item.id);
+            $('#account_id').change();
+        });
     });
+
 
     function pingfen(id,score) {
         $('#'+id+'_num').val(score);
@@ -94,6 +88,63 @@
                 $('#'+id+'_num').val(score);
             }
         });
+    }
+
+    $('#account_id').change(function(){
+        var account_id  = $('#account_id').val();
+        var noBodyHtml  = '<div class="form-group col-md-12"> <div class="form-group mt20">暂无该员工的考核内容！</div> </div>';
+        if (account_id){
+            var html        = '';
+            var arr1        = ['26']; //安全品控部 26=>李岩
+            var textarea    = '<textarea name="content" class="form-control" id="content"  rows="2" placeholder="请输入评价内容"></textarea> <div class="form-group col-md-12"></div>';
+            if (arr1.indexOf(account_id) == '-1'){
+                $('#satisfaction_content').html(noBodyHtml);
+                return false;
+            }else{
+                var content = '<input type="hidden" name="info[dimension]" value="4"> <!--考核维度-->'+
+                    '<div class="form-group col-md-6"> <label>支撑服务态度：</label> <div class="demo score"> <div id="AA"></div> </div> </div>'+
+                    '<div class="form-group col-md-6"> <label>支撑服务效果：</label> <div class="demo score"> <div id="BB"></div> </div> </div>'+
+                    '<div class="form-group col-md-6"> <label>支撑服务及时性：</label> <div class="demo score"> <div id="CC"></div> </div> </div>'+
+                    '<div class="form-group col-md-6"> <label>公正及合理性：</label> <div class="demo score"> <div id="DD"></div> </div> </div>';
+            }
+            var html = content + textarea;
+            $('#satisfaction_content').html(html);
+            init_score();
+        }else{
+            var unRightHtml = '<div class="form-group col-md-12"> <div class="form-group mt20">请输入正确的员工信息！</div> </div>';
+            $('#satisfaction_content').html(unRightHtml);
+            return false;
+        }
+    });
+
+    //初始化评分显示
+    function init_score() {
+        $.fn.raty.defaults.path = "__HTML__/score/lib/img";
+        var res = <?php echo $pingfen?$pingfen:0; ?>;
+
+        if (res){
+            $('#content').html(res.content);
+
+            pingfen('AA',res.AA);
+            pingfen('BB',res.BB);
+            pingfen('CC',res.CC);
+            pingfen('DD',res.DD);
+        }else{
+            pingfen('AA',5);
+            pingfen('BB',5);
+            pingfen('CC',5);
+            pingfen('DD',5);
+        }
+    }
+
+    function submitBefore() {
+        var account_id      = $('#account_id').val();
+        if (!account_id){
+            art_show_msg('人员信息错误');
+            return false;
+        }else{
+            $('#myForm').submit();
+        }
     }
 
 </script>

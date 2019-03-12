@@ -364,9 +364,7 @@
                                 <if condition="rolemenu(array('Inspect/score'))">
                                     <li><a href="{:U('Inspect/score')}"><i class="fa fa-angle-right"></i> 顾客满意度</a></li>
                                 </if>
-                                <?php if (cookie('userid')==1){ ?>
                                 <li><a href="{:U('Index/public_satisfaction')}"><i class="fa fa-angle-right"></i> 内部人员满意度</a></li>
-                                <?php } ?>
                             </ul>
                         </li>
                         </if>
