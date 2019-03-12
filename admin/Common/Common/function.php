@@ -3217,7 +3217,7 @@ function updatekpi($month,$user){
                             $num                    = $data['num'];
                             $average                = $data['average'];
                             if ($average >= 0.85 || !$num){
-                                $complete           = 100;
+                                $complete           = '100%';
                             }else{
                                 $complete           = (round(($average/0.85),2)*100).'%';
                             }
