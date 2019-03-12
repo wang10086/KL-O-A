@@ -291,6 +291,7 @@ class IndexController extends BaseController {
         $input_name         = trim(I('input_name'));
         $monthly            = trim(I('month'));
         $where              = array();
+        $where['type']      = array('neq',1); //研发
         if ($uname)         $where['account_name']  = array('like','%'.$uname.'%');
         if ($input_name)    $where['input_username']= array('like','%'.$input_name.'%');
         if ($monthly)       $where['monthly']       = $monthly;
@@ -336,7 +337,17 @@ class IndexController extends BaseController {
             $this->display('satisfaction_add');
         }
     }
-	
+
+	//评分详情
+    public function public_satisfaction_detail(){
+        $id                 = I('id');
+        $db                 = M('satisfaction');
+        if (!$id) $this->error('获取数据失败');
+        $field              = "s.*,d.AA as aa,d.BB as bb,d.CC as cc,d.DD as dd";
+        $list               = M()->table('__SATISFACTION__ as s')->join('__SCORE_DIMENSION__ as d on d.account_id=s.account_id','left')->where(array('s.id'=>$id))->field($field)->find();
+        $this->list         = $list;
+        $this->display('satisfaction_detail');
+    }
 	
 	
 	public function test_kpi(){
