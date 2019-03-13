@@ -1916,7 +1916,8 @@ function updatekpi($month,$user){
                             $where['l.audit_time']			= array('between',array($v['start_date'],$v['end_date']));
                             $complete = M()->table('__OP_SETTLEMENT__ as b')->field('b.maoli')->join('__OP__ as o on b.op_id = o.op_id','LEFT')->join('__AUDIT_LOG__ as l on l.req_id = b.id','LEFT')->where($where)->sum('b.maoli');
                             $complete = $complete ? $complete : 0;
-                            $url      = U('Chart/pplist');
+                            $username = M('account')->where(array('id'=>$v['user_id']))->getField('nickname');
+                            $url      = U('Chart/finance',array('xs'=>$username,'st'=>date('Ymd',$v['start_date']),'et'=>date('Ymd',$v['end_date'])));
                         }
 
                         //获取累计毛利率
