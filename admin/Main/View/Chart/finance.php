@@ -66,7 +66,22 @@
                                         <td>{$row.create_user_name}</td>
                                         <td>{$row.audit_time|date='Y-m-d',###}</td>
                                     </tr>
-                                    </foreach>					
+                                    </foreach>
+                                    <if condition="$kpi_total">
+                                        <tr>
+                                            <td><b>合计</b></td>
+                                            <td></td>
+                                            <td>{$kpi_sum.renshu}人</td>
+                                            <td></td>
+                                            <td></td>
+                                            <!-- <td></td>-->
+                                            <td>{$kpi_sum.shouru}</td>
+                                            <td>{$kpi_sum.maoli}</td>
+                                            <!-- <td></td> -->
+                                            <td></td>
+                                            <td></td>
+                                        </tr>
+                                    </if>
                                 </table>
                                 </div><!-- /.box-body -->
                                 <div class="box-footer clearfix">

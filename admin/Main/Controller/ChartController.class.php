@@ -272,9 +272,16 @@ class ChartController extends BaseController {
         $page = new Page($count, P::PAGE_SIZE);
         $this->pages = $page->show();
 
-        $datalist = $db->table('__OP_SETTLEMENT__ as b')->group('o.op_id')->field('b.*,o.project,o.group_id,o.number,o.customer,o.create_user_name,o.destination,o.days,o.remark,l.audit_time')->join('__OP__ as o on b.op_id = o.op_id','LEFT')->join('__AUDIT_LOG__ as l on l.req_id = b.id','LEFT')->join('__ACCOUNT__ as a on a.id = o.create_user','LEFT')->where($where)->limit($page->firstRow . ',' . $page->listRows)->order('l.audit_time DESC')->select();
+        $datalist               = $db->table('__OP_SETTLEMENT__ as b')->group('o.op_id')->field('b.*,o.project,o.group_id,o.number,o.customer,o.create_user_name,o.destination,o.days,o.remark,l.audit_time')->join('__OP__ as o on b.op_id = o.op_id','LEFT')->join('__AUDIT_LOG__ as l on l.req_id = b.id','LEFT')->join('__ACCOUNT__ as a on a.id = o.create_user','LEFT')->where($where)->limit($page->firstRow . ',' . $page->listRows)->order('l.audit_time DESC')->select();
+        $kpi_sum                = array();
+        $kpi_sum['renshu']      = 0;
+        $kpi_sum['shouru']      = 0;
+        $kpi_sum['maoli']       = 0;
         foreach($datalist as $k=>$v){
             $datalist[$k]['shuihou'] = $v['maoli'] -  sprintf("%.2f", ($v['maoli']*0.06));
+            $kpi_sum['renshu']  += $v['renshu'];
+            $kpi_sum['shouru']  += $v['shouru'];
+            $kpi_sum['maoli']   += $v['maoli'];
         }
 
         //获取月份的开始结束时间戳
@@ -284,6 +291,9 @@ class ChartController extends BaseController {
         $this->month	= I('month');
         $this->moon		= $yue ? $moon : month_phase(date('Ymd'));
         $this->datalist	= $datalist;
+        $this->kpi_total= I('kpi_total');
+        $this->kpi_sum  = $kpi_sum;
+
 
         $url = array();
         if($st)     $url['st']    = $st;
