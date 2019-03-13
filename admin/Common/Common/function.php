@@ -3229,12 +3229,14 @@ function updatekpi($month,$user){
                         if ($v['quota_id']==215){
                             $score_lists            = get_month_satisfaction($v); //总评分列表
                             $unok_lists             = get_score_unqualified_lists($score_lists); //不合格评分列表
+                            $unok_opids             = array_column($unok_lists,'op_id');
                             $unok_num               = count($unok_lists);
-                            $visit_list             = get_visit($v['start_date'],$v['end_date']); //回访记录
+
+                            $visit_list             = get_visit($unok_opids); //回访记录
                             $visit_num              = count($visit_list);
                             $average                = round($visit_num/$unok_num,2);
                             $complete               = ($average*100).'%';
-                            $opids                  = implode(',',array_column($score_lists,'op_id'));
+                            $opids                  = implode(',',array_unique(array_column($score_lists,'op_id')));
                             $url                    = U('Inspect/score',array('kpi_opids'=>$opids));
                         }
 

@@ -1028,10 +1028,9 @@ function get_satisfaction($yearmonth){
         return $unok_list;
     }
 
-    function get_visit($start_date,$end_date){
-        $end_date               = $end_date?$end_date:time();
+    function get_visit($opids){
         $where                  = array();
-        $where['input_time']    = array('between',"$start_date,$end_date");
+        $where['op_id']         = array('in',$opids);
         $lists                  = M('op_visit')->where($where)->group('op_id')->select();
         return $lists;
     }
