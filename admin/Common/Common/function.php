@@ -1915,8 +1915,8 @@ function updatekpi($month,$user){
                             $where['l.req_type']			= 801;
                             $where['l.audit_time']			= array('between',array($v['start_date'],$v['end_date']));
                             $complete = M()->table('__OP_SETTLEMENT__ as b')->field('b.maoli')->join('__OP__ as o on b.op_id = o.op_id','LEFT')->join('__AUDIT_LOG__ as l on l.req_id = b.id','LEFT')->where($where)->sum('b.maoli');
-
                             $complete = $complete ? $complete : 0;
+                            $url      = U('Chart/pplist');
                         }
 
                         //获取累计毛利率
@@ -1926,9 +1926,10 @@ function updatekpi($month,$user){
                             $where['o.create_user']			= $user;
                             $where['l.req_type']			= 801;
                             $where['l.audit_time']			= array('between',array($v['start_date'],$v['end_date']));
-                            $maoli = M()->table('__OP_SETTLEMENT__ as b')->field('b.maoli')->join('__OP__ as o on b.op_id = o.op_id','LEFT')->join('__AUDIT_LOG__ as l on l.req_id = b.id','LEFT')->where($where)->sum('b.maoli');
-                            $shouru = M()->table('__OP_SETTLEMENT__ as b')->field('b.shouru')->join('__OP__ as o on b.op_id = o.op_id','LEFT')->join('__AUDIT_LOG__ as l on l.req_id = b.id','LEFT')->where($where)->sum('b.shouru');
-                            $complete = round(($maoli / $shouru)*100,2).'%';
+                            $maoli      = M()->table('__OP_SETTLEMENT__ as b')->field('b.maoli')->join('__OP__ as o on b.op_id = o.op_id','LEFT')->join('__AUDIT_LOG__ as l on l.req_id = b.id','LEFT')->where($where)->sum('b.maoli');
+                            $shouru     = M()->table('__OP_SETTLEMENT__ as b')->field('b.shouru')->join('__OP__ as o on b.op_id = o.op_id','LEFT')->join('__AUDIT_LOG__ as l on l.req_id = b.id','LEFT')->where($where)->sum('b.shouru');
+                            $complete   = round(($maoli / $shouru)*100,2).'%';
+                            $url        = '';
                         }
 
                         //获取回款及时率
@@ -1943,6 +1944,7 @@ function updatekpi($month,$user){
                             }else{
                                 $complete = round(($huikuan / $shouru)*100,2).'%';
                             }
+                            $url        = '';
                         }
 
                         //获取成团率
@@ -1972,11 +1974,11 @@ function updatekpi($month,$user){
 
                             //当月未有团时默认满分
                             if($zongxiangmu ==0){
-                                $complete = "100%";
+                                $complete   = "100%";
                             }else{
-                                $complete = round(($chengtuan / $zongxiangmu)*100,2).'%';
+                                $complete   = round(($chengtuan / $zongxiangmu)*100,2).'%';
                             }
-
+                            $url            = '';
                         }
 
                         //获取合同签订率（含家长协议书）
@@ -2004,6 +2006,7 @@ function updatekpi($month,$user){
                                 $hetong         = count($hetong_list);
                                 $complete       = $xiangmu ? round(($hetong / $xiangmu)*100,2).'%' : 0 .'%';
                             }
+                            $url                = '';
                         }
 
 
@@ -2023,6 +2026,7 @@ function updatekpi($month,$user){
                             $bj_op = M()->table('__REL_PRICE__ as p')->field('o.op_id')->join('__OP__ as o on o.op_id = p.op_id','LEFT')->join('__OP_AUTH__ as u on u.op_id = p.op_id','LEFT')->join('__OP_COSTACC__ as c on c.op_id = o.op_id','LEFT')->where($where)->select();
                             $bj = count(array_unique(array_column($bj_op,'op_id')));
                             $complete = $sj ? round(($bj / $sj)*100,2).'%' : '100%';
+                            $url      = '';
                         }
 
 
@@ -2048,6 +2052,7 @@ function updatekpi($month,$user){
                                     $complete	= $xkh['reratio'] ? $xkh['reratio'].'%' : '0.00%';
                                 }
                             }
+                            $url        = '';
                         }
 
                         //月度累计预算准确度
@@ -2081,7 +2086,8 @@ function updatekpi($month,$user){
                             }else{
                                 $complete = '0%';
                             }*/
-                            $complete = '100%';
+                            $complete   = '100%';
+                            $url        = '';
 
                         }
 
@@ -2095,6 +2101,7 @@ function updatekpi($month,$user){
                                 $rcom	= 100;
                             }
                             $complete	= $rcom.'%';
+                            $url        = '';
                         }
 
 
@@ -2102,18 +2109,21 @@ function updatekpi($month,$user){
                         if($v['quota_id']==18){
                             $rsum = user_work_record($user,$month,205);
                             $complete	= $rsum ? '0%' : '100%';
+                            $url        = '';
                         }
 
                         //开具发票、支票、汇票等准确-财务经理
                         if(in_array($v['quota_id'],array(20,23,26))){
                             $rsum = user_work_record($user,$month,206);
                             $complete	= $rsum ? '0%' : '100%';
+                            $url        = '';
                         }
 
                         //帐帐相符、帐实相符-出纳员
                         if(in_array($v['quota_id'],array(21,24))){
                             $rsum = user_work_record($user,$month,207);
                             $complete	= $rsum ? '0%' : '100%';
+                            $url        = '';
                         }
 
                         //办公环境及设施保障指标（OA）-综合部经理
@@ -2125,7 +2135,8 @@ function updatekpi($month,$user){
                                 $zongfen 	= 100-($sum*10);
                                 $complete	= $zongfen>0 ? $zongfen : 0;
                             }
-                            $complete = $complete.'%';
+                            $complete       = $complete.'%';
+                            $url            = '';
                         }
 
                         //日常工作及时性
@@ -2137,7 +2148,8 @@ function updatekpi($month,$user){
                                 $zongfen 	= 100-($sum*10);
                                 $complete	= $zongfen>0 ? $zongfen : 0;
                             }
-                            $complete = $complete.'%';
+                            $complete       = $complete.'%';
+                            $url            = '';
                         }
 
                         //活动前要素准备不及时
@@ -2149,6 +2161,7 @@ function updatekpi($month,$user){
                                 $rcom	= 100;
                             }
                             $complete	= $rcom.'%';
+                            $url        = '';
                         }
 
                         //票据及时性--采购经理
@@ -2160,6 +2173,7 @@ function updatekpi($month,$user){
                                 $rcom	= 100;
                             }
                             $complete	= $rcom.'%';
+                            $url        = '';
                         }
 
                         //日常工作质量不合格
@@ -2180,7 +2194,8 @@ function updatekpi($month,$user){
                                     $complete	= $zongfen>0 ? $zongfen : 0;
                                 }
                             }
-                            $complete = $complete.'%';
+                            $complete           = $complete.'%';
+                            $url                = '';
                         }
 
                         //中科教微信运营——市场文案
@@ -2204,6 +2219,7 @@ function updatekpi($month,$user){
                             $zongfen 	= 100-$koufen;
 
                             $complete	= $zongfen>0 ? $zongfen : 0;
+                            $url        = '';
                         }
 
 
@@ -2217,6 +2233,7 @@ function updatekpi($month,$user){
                             $sum = M('account')->where($where)->count();
 
                             $complete = $v['plan'] ? round(($sum / $v['plan'])*100,2).'%' : '100%';
+                            $url      = '';
                         }
 
                         //网站维护--市场文案
@@ -2229,6 +2246,7 @@ function updatekpi($month,$user){
                             $zongfen 	= 100-($sum*5);
 
                             $complete	= $zongfen>0 ? $zongfen : 0;
+                            $url        = '';
                         }
 
 
@@ -2249,6 +2267,7 @@ function updatekpi($month,$user){
                             $zongfen 	= 100-$koufen;
 
                             $complete	= $zongfen>0 ? $zongfen : 0;
+                            $url        = '';
                         }
 
 
@@ -2262,6 +2281,7 @@ function updatekpi($month,$user){
                             $zongfen 	= 100-($sum*2);
 
                             $complete	= $zongfen>0 ? $zongfen : 0;
+                            $url        = '';
                         }
 
 
@@ -2275,6 +2295,7 @@ function updatekpi($month,$user){
 
                             $rsum = M('supplier')->where($where)->count();
                             $complete	= $rsum>10 ? '100%' : ($rsum*10).'%';
+                            $url        = '';
                         }
 
                         //新资源拓展--资源管理部（教务专员）
@@ -2288,7 +2309,7 @@ function updatekpi($month,$user){
                             $rsum = M('supplier')->where($where)->count();
 
                             $complete = $v['plan'] ? round(($rsum / $v['plan'])*100,2).'%' : '100%';
-
+                            $url      = '';
                         }
 
 
@@ -2303,7 +2324,7 @@ function updatekpi($month,$user){
                             $rsum = M('product')->where($where)->count();
 
                             $complete = $v['plan'] ? round(($rsum / $v['plan'])*100,2).'%' : '100%';
-
+                            $url      = '';
                         }
 
 
@@ -2317,6 +2338,7 @@ function updatekpi($month,$user){
                             $zongfen 	= 100-($sum*2);
 
                             $complete	= $zongfen>0 ? $zongfen : 0;
+                            $url        = '';
                         }
 
 
@@ -2333,6 +2355,7 @@ function updatekpi($month,$user){
                                 $zongfen 	= 100-($sum*10);
                                 $complete	= $zongfen>0 ? $zongfen : 0;
                             }
+                            $url            = '';
                         }
 
 
@@ -2349,6 +2372,7 @@ function updatekpi($month,$user){
                                 $zongfen 	= 100-($sum*10);
                                 $complete	= $zongfen>0 ? $zongfen : 0;
                             }
+                            $url            = '';
                         }
 
 
@@ -2365,6 +2389,7 @@ function updatekpi($month,$user){
                                 $zongfen 	= 100-($sum*10);
                                 $complete	= $zongfen>0 ? $zongfen : 0;
                             }
+                            $url            = '';
                         }
 
                         //市场活动前期准备--市场经理
@@ -2374,6 +2399,7 @@ function updatekpi($month,$user){
                             $sum = user_work_record($user,$month,405);
                             $zongfen 	= 100-($sum*2);
                             $complete	= $zongfen>0 ? $zongfen : 0;
+                            $url        = '';
                         }
 
 
@@ -2389,6 +2415,7 @@ function updatekpi($month,$user){
                                 $zongfen 	= 100-($sum*10);
                                 $complete	= $zongfen>0 ? $zongfen : 0;
                             }
+                            $url            = '';
                         }
 
                         //物资物料盘点抽查账实相符--物资专员
@@ -2401,6 +2428,7 @@ function updatekpi($month,$user){
                             }else{
                                 $complete	= 100;
                             }
+                            $url            = '';
                         }
 
 
@@ -2414,6 +2442,7 @@ function updatekpi($month,$user){
                             }else{
                                 $complete	= 100;
                             }
+                            $url            = '';
                         }
 
 
@@ -2428,7 +2457,7 @@ function updatekpi($month,$user){
                             $sum = M('cour_ppt')->where($where)->count();
 
                             $complete = $v['plan'] ? round(($sum / $v['plan'])*100,2).'%' : '100%';
-
+                            $url      = '';
                         }
 
 
@@ -2442,6 +2471,7 @@ function updatekpi($month,$user){
                                 $zongfen 	= 100-($sum*10);
                                 $complete	= $zongfen>0 ? $zongfen : 0;
                             }
+                            $url            = '';
                         }
 
 
@@ -2455,6 +2485,7 @@ function updatekpi($month,$user){
                                 $zongfen 	= 100-($sum*10);
                                 $complete	= $zongfen>0 ? $zongfen : 0;
                             }
+                            $url            = '';
                         }
 
 
@@ -2468,6 +2499,7 @@ function updatekpi($month,$user){
                                 $zongfen 	= 100-($sum*10);
                                 $complete	= $zongfen>0 ? $zongfen : 0;
                             }
+                            $url            = '';
                         }
 
                         //数据前端后端对接--市场PHP
@@ -2480,6 +2512,7 @@ function updatekpi($month,$user){
                                 $zongfen 	= 100-($sum*10);
                                 $complete	= $zongfen>0 ? $zongfen : 0;
                             }
+                            $url            = '';
                         }
 
 
@@ -2492,6 +2525,7 @@ function updatekpi($month,$user){
                                 $zongfen 	= 100-($sum*10);
                                 $complete	= $zongfen>0 ? $zongfen : 0;
                             }
+                            $url            = '';
                         }
 
                         //前端网页实现--市场PHP
@@ -2503,6 +2537,7 @@ function updatekpi($month,$user){
                                 $zongfen 	= 100-($sum*10);
                                 $complete	= $zongfen>0 ? $zongfen : 0;
                             }
+                            $url            = '';
                         }
 
 
@@ -2528,8 +2563,7 @@ function updatekpi($month,$user){
                                 $zongfen 	= 100-($sum*10);
                                 $complete	= $zongfen>0 ? $zongfen : 0;
                             }
-
-
+                            $url            = '';
                         }
 
                         //各业务平均毛利率--计调经理
@@ -2550,8 +2584,7 @@ function updatekpi($month,$user){
                             $zongfen 	+= absdata($jwyw['mll'],24.5);
 
                             $complete 	= $zongfen ? round(($zongfen / 300)*100,2) : '100';
-
-
+                            $url        = '';
                         }
 
 
@@ -2566,6 +2599,7 @@ function updatekpi($month,$user){
                                 $zongfen 	= 100-($sum*10);
                                 $complete	= $zongfen>0 ? $zongfen : 0;
                             }
+                            $url            = '';
                         }
 
 
@@ -2580,6 +2614,7 @@ function updatekpi($month,$user){
                                 $zongfen 	= 100-($sum*10);
                                 $complete	= $zongfen>0 ? $zongfen : 0;
                             }
+                            $url            = '';
                         }
 
 
@@ -2588,6 +2623,7 @@ function updatekpi($month,$user){
                             //汇总记录次数
                             $sum = user_work_record($user,$month,219);
                             $complete		= $sum ? 0 : 100;
+                            $url            = '';
                         }
 
 
@@ -2603,6 +2639,7 @@ function updatekpi($month,$user){
                                 $zongfen 	= 100-($nsum*10);
                                 $complete	= $zongfen>0 ? $zongfen : 0;
                             }
+                            $url            = '';
                         }
 
                         //公司制度、文件管理执行率--综合部专员
@@ -2616,6 +2653,7 @@ function updatekpi($month,$user){
                                 $zongfen 	= 100-($sum*10);
                                 $complete	= $zongfen>0 ? $zongfen : 0;
                             }
+                            $url            = '';
                         }
 
 
@@ -2640,7 +2678,7 @@ function updatekpi($month,$user){
                             }else{
                                 $complete	= $score;
                             }
-
+                            $url            = '';
                         }
 
 
@@ -2665,7 +2703,7 @@ function updatekpi($month,$user){
                             }else{
                                 $complete	= $score;
                             }
-
+                            $url            = '';
                         }
 
 
@@ -2690,7 +2728,7 @@ function updatekpi($month,$user){
                             }else{
                                 $complete	= $score;
                             }
-
+                            $url            = '';
                         }
 
                         //月度顾客满意度(业务)
@@ -2730,6 +2768,7 @@ function updatekpi($month,$user){
                                     $complete = $average > 0.9 ? 100 : $score;
                                 }
                             }
+                            $url            = '';
                         }
 
                         //业务人员满意度（京区业务中心研发)
@@ -2767,6 +2806,7 @@ function updatekpi($month,$user){
                             }else{
                                 $complete	= (round($hegelv/0.9,2)*100).'%';
                             }
+                            $url            = '';
                         }
 
                         //工作及时率(京区业务中心)(工单)
@@ -2780,7 +2820,7 @@ function updatekpi($month,$user){
                             }else{
                                 $complete	= round($jishilv/0.9,2)*100;
                             }
-
+                            $url            = '';
                         }
 
                         //研发培训(京区业务中心研发)(每月至少培训一次)
@@ -2796,6 +2836,7 @@ function updatekpi($month,$user){
                             }else{
                                 $complete	= ($peixunlv*100).'%';
                             }
+                            $url            = '';
                         }
 
                         //辅导员/教师管理及时率(京区业务中心教务)
@@ -2810,6 +2851,7 @@ function updatekpi($month,$user){
                             }else{
                                 $complete	= ($jishilv*100).'%';
                             }
+                            $url            = '';
                         }
 
                         //辅导员/教师管理满意度(京区业务中心教务)
@@ -2823,6 +2865,7 @@ function updatekpi($month,$user){
                             }else{
                                 $complete   = (round($hegelv/0.9,2)*100).'%';
                             }
+                            $url            = '';
                         }
 
                         //辅导员管理准确性(京区业务中心教务)
@@ -2839,6 +2882,7 @@ function updatekpi($month,$user){
                                 if ($fenshu > 100) { $fenshu = 100; };
                                 $complete	= (100 - $fenshu).'%';
                             }
+                            $url            = '';
                         }
 
                         //辅导员/教师资源培训完成率(京区业务中心教务)
@@ -2859,6 +2903,7 @@ function updatekpi($month,$user){
                             }else{
                                 $complete	= ($peixunlv*100).'%';
                             }
+                            $url            = '';
                         }
 
                         //场馆资源调度质量(京区业务中心资源)
@@ -2876,6 +2921,7 @@ function updatekpi($month,$user){
                             }else{
                                 $complete	= (round($hegelv/0.9,2)*100).'%';
                             }
+                            $url            = '';
                         }
 
                         //新增资源转化率(京区业务中心资源)
@@ -2889,6 +2935,7 @@ function updatekpi($month,$user){
                             }else{
                                 $complete	= $zhuanhualv*100;
                             }
+                            $url            = '';
                         }
 
                         //资源培训率(京区业务中心资源)
@@ -2908,6 +2955,7 @@ function updatekpi($month,$user){
                             }else{
                                 $complete	= $peixunlv*100;
                             }
+                            $url            = '';
                         }
 
                         //业务人员满意度调查(计调)
@@ -2925,6 +2973,7 @@ function updatekpi($month,$user){
                             }else{
                                 $complete	= (round($hegelv/0.9,2)*100).'%';
                             }
+                            $url            = '';
                         }
 
                         //地接社、酒店、旅游车转化率(计调)
@@ -2939,6 +2988,7 @@ function updatekpi($month,$user){
                             }else{
                                 $complete   = ($zhuanhualv*100).'%';
                             }
+                            $url            = '';
                         }
 
                         //培训完成率
@@ -2954,6 +3004,7 @@ function updatekpi($month,$user){
                             $peixunlv               = $peixun_data['peixunlv'];
 
                             $complete   = $peixunlv?$peixunlv*100:100;
+                            $url        = '';
                         }
 
                         //客户满意度(客服)(58=>亲子旅行,59=>冬夏令营,63=>学趣课程)
@@ -2968,9 +3019,10 @@ function updatekpi($month,$user){
                             if ($hegelv >= 0.9 && !$pingfencishu){
                                 $complete = 100;
                             }else{
-                                $score = (round($hegelv*100/90,2))*100;
+                                $score    = (round($hegelv*100/90,2))*100;
                                 $complete = $score;
                             }
+                            $url          = '';
                         }
 
                         //工作及时性(客服)(工单)
@@ -2980,6 +3032,7 @@ function updatekpi($month,$user){
                             $zongshu                = $jishilv_data['zongshu'];
                             $jishilv                = $jishilv_data['jishilv'];
                             $complete               = ($jishilv >=1 || !$zongshu)? 100 : $jishilv*100;
+                            $url                    = '';
                         }
 
                         //工作准确性(客服)(工单)
@@ -2989,6 +3042,7 @@ function updatekpi($month,$user){
                             $zongshu                = $jishilv_data['zongshu'];
                             $jishilv                = $jishilv_data['jishilv'];
                             $complete               = ($jishilv >=1 || !$zongshu)? 100 : $jishilv*100;
+                            $url                    = '';
                         }
 
                         //客户满意度('新媒体推广')
@@ -2999,11 +3053,12 @@ function updatekpi($month,$user){
                             $hegelv                 = $manyidu_data['hegelv'];
 
                             if ($hegelv >= 0.9 && !$pingfencishu){
-                                $complete = 100;
+                                $complete   = 100;
                             }else{
-                                $score = (round($hegelv*100/90,2))*100;
-                                $complete = $score;
+                                $score      = (round($hegelv*100/90,2))*100;
+                                $complete   = $score;
                             }
+                            $url            = '';
                         }
 
                         //工作及时性('新媒体推广')148=>同上
@@ -3019,6 +3074,7 @@ function updatekpi($month,$user){
                             }else{
                                 $complete           = round(($hegelv*100)/72,2)*100;
                             }
+                            $url                    = '';
                         }
 
                         //工作质量('平面设计')151
@@ -3032,6 +3088,7 @@ function updatekpi($month,$user){
                             }else{
                                 $complete           = round(($hegelv*100)/72,2)*100;
                             }
+                            $url                    = '';
                         }
 
                         //季度利润总额目标完成率
@@ -3119,12 +3176,13 @@ function updatekpi($month,$user){
 
                             if (!$num || !$list){
                                 //本月度无负责实施项目的，本项100分
-                                $complete = '100%';
+                                $complete   = '100%';
                             }else{
                                 //平均得分(如果得分>90%,得分100, 如果小于90%,以90%作为满分求百分比)
-                                $score = (round($average*100/90,2))*100;
-                                $complete = $average > 0.9 ? 100 : $score;
+                                $score      = (round($average*100/90,2))*100;
+                                $complete   = $average > 0.9 ? 100 : $score;
                             }
+                            $url            = '';
                         }
 
                         //研发专员对产品研发专业支持满意度
@@ -3138,6 +3196,7 @@ function updatekpi($month,$user){
                             }else{
                                 $complete           = (round(($hegelv*100)/90,2)*100).'%';
                             }
+                            $url                    = '';
                         }
 
                         //业绩贡献度
@@ -3148,6 +3207,7 @@ function updatekpi($month,$user){
                             $one_point_five_wages   = $wages_info['otherWages'];                                //1.5倍薪资
                             $wanchenglv             = round($maoli/$one_point_five_wages,2);
                             $complete               = ($wanchenglv*100).'%';
+                            $url                    = '';
                         }
 
                         //客户对公司产品满意度
@@ -3160,6 +3220,7 @@ function updatekpi($month,$user){
                             }else{
                                 $complete           = round(($v['target']/0.9)*$average,2).'%';
                             }
+                            $url                    = '';
                         }
 
                         //业务部门对产品研发满意度
@@ -3172,6 +3233,7 @@ function updatekpi($month,$user){
                             }else{
                                 $complete           = round(($v['target']/0.9)*$average,2).'%';
                             }
+                            $url                    = '';
                         }
 
                         //实施专家业绩贡献度
@@ -3183,6 +3245,7 @@ function updatekpi($month,$user){
 
                             $wanchenglv             = round($sum_profit/$sum_base_wages,2);
                             $complete               = ($wanchenglv*100).'%';
+                            $url                    = '';
                         }
 
                         //所负责标准化产品的客户满意度 1大类 线路=> 王新月 , 2大类 课程=>彭白鸽 3大类 其他=>秦鸣
@@ -3195,11 +3258,13 @@ function updatekpi($month,$user){
                             //本月立项成团的项目
                             $useTimes               = get_use_times($v['user_id'],$v['start_date'],$v['end_date']);
                             $complete               = $useTimes.'次';
+                            $url                    = '';
                         }
 
                         //产品设计-市场部经理
                         if ($v['quota_id']==188){
                             $complete               = '80%';
+                            $url                    = '';
                         }
 
                         //公司顾客满意度-安全品控部经理
