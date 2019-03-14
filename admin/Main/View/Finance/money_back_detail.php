@@ -39,7 +39,7 @@
                                         <foreach name="lists" item="row">
                                         <tr>
                                             <td>{$row.group_id}</td>
-                                            <td>{$row.project}</td>
+                                            <td><a href="{:U('Contract/detail',array('id'=>$row[cid]))}">{$row.project}</a></td>
                                             <td>{$row.amount}</td>
                                             <td>{$row.pay_amount}</td>
                                             <td><?php echo $row['return_time']?date('Y-m-d',$row['return_time']):''; ?></td>
