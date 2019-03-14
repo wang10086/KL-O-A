@@ -1945,7 +1945,7 @@ function updatekpi($month,$user){
                             }else{
                                 $complete = round(($huikuan / $shouru)*100,2).'%';
                             }
-                            $url        = '';
+                            $url        = U('Finance/public_money_back_detail',array('uid'=>$user,'rtime'=>$v['end_date']));
                         }
 
                         //获取成团率
