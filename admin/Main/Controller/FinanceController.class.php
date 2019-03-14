@@ -2630,42 +2630,62 @@ class FinanceController extends BaseController {
 
     //回款详情
     public function public_money_back_detail(){
+        $pin                                = I('pin');
         $uid                                = I('uid');
-        $time                               = I('rtime');
+        $start_time                         = I('start_time');
+        $end_time                           = I('end_time');
         $title                              = trim(I('title'));
         $group_id                           = trim(I('oid'));
         $opid                               = trim(I('opid'));
         if (!$uid) $this->error('获取数据错误');
         $where                              = array();
         $where['c.payee']                   = $uid;
-        $where['return_time']	            = array('lt',$time);
+        $where['c.return_time']	            = array('lt',$end_time);
+        $where['c.cid']                     = array('neq',0);
         if ($title) $where['o.project']     = array('like','%'.$title.'%');
         if ($group_id) $where['o.group_id'] = $group_id;
         if ($opid)  $where['c.op_id']       = $opid;
-        $lists                              = M()->table('__CONTRACT_PAY__ as c')->join('__OP__ as o on o.op_id = c.op_id','left')->field('c.*,o.group_id,o.project')->where($where)->order($this->orders('c.id'))->select();
+        $lists                              = M()->table('__CONTRACT_PAY__ as c')->join('__OP__ as o on o.op_id = c.op_id','left')->join('__OP_TEAM_CONFIRM__ as t on t.op_id=c.op_id','left')->field('c.*,o.group_id,o.project,t.dep_time,t.ret_time')->where($where)->order($this->orders('c.id'))->select();
         $data                               = array();
-        $data['plan_back']                  = 0;
-        $data['money_back']                 = 0;
+        $data['this_month_list']            = ''; //计划当月回款
+        $data['history_list']               = ''; //历史欠款
+        $data['this_month']                 = 0;
+        $data['history']                    = 0;
         foreach ($lists as $k=>$v){
             if ($v['status']==2){
-                $lists[$k]['stu']           = "<span class='green'>已回款</span>";
+                $v['stu']           = "<span class='green'>已回款</span>";
             }elseif ($v['status']==1){
-                $lists[$k]['stu']           = "<span class='yellow'>回款中</span>";
+                $v['stu']           = "<span class='yellow'>回款中</span>";
             }else{
-                if ($v['return_time']<time()){
-                    $lists[$k]['stu']       = "<span class='red'>未回款</span>";
+                if ($v['return_time']<$end_time){
+                    $v['stu']       = "<span class='red'>未回款</span>";
+                    $data['history_list'][] = $v;
+                    $data['history']        += $v['amount'];
+                    $data['history_return'] += $v['pay_amount'];
                 }else{
-                    $lists[$k]['stu']       = "<font color='#999999'>未考核</font>";
+                    $v['stu']       = "<font color='#999999'>未考核</font>";
                 }
             }
-            $data['plan_back']              += $v['amount'];
-            $data['money_back']             += $v['pay_amount'];
+
+            if (($v['return_time'] > $start_time && $v['return_time'] < $end_time) || ($v['pay_time'] > $start_time && $v['pay_time'] < $end_time)){
+                $data['this_month_list'][]  = $v;
+                $data['this_month']         += $v['amount'];
+                $data['this_month_return']  += $v['pay_amount'];
+            }
+
         }
-        $data['money_back_average']         = (round($data['money_back']/$data['plan_back'],4)*100).'%';
+        $data['money_back_average']         = (round($data['this_month_return']/($data['history']+$data['this_month']),4)*100).'%';
+        if ($pin==0){
+            $lists                          = $data['this_month_list'];
+        }elseif ($pin==1){
+            $lists                          = $data['history_list'];
+        }
         $this->uid                          = $uid;
-        $this->rtime                        = $time;
+        $this->start_time                   = $start_time;
+        $this->end_time                     = $end_time;
         $this->data                         = $data;
         $this->lists                        = $lists;
+        $this->pin                          = $pin?$pin:0;
         $this->display('money_back_detail');
     }
 

@@ -24,15 +24,23 @@
                                     </div>
                                 </div><!-- /.box-header -->
                                 <div class="box-body">
+
+                                    <div class="btn-group no-print" id="catfont">
+                                        <a href="{:U('Finance/public_money_back_detail',array('uid'=>$uid,'start_time'=>$start_time,'end_time'=>$end_time,'pin'=>0))}" class="btn <?php if ($pin ==0){echo 'btn-info';}else{echo 'btn-default';}; ?>">当月回款</a>
+                                        <a href="{:U('Finance/public_money_back_detail',array('uid'=>$uid,'start_time'=>$start_time,'end_time'=>$end_time,'pin'=>1))}" class="btn <?php if ($pin ==1){echo 'btn-info';}else{echo 'btn-default';}; ?>">历史欠款</a>
+                                    </div>
                                 
                                     <table class="table table-bordered dataTable fontmini" id="tablelist" style="margin-top:10px;">
                                         <tr role="row" class="orders" >
                                             <th class="sorting" width="150" data="o.group_id">团号</th>
                                             <th class="sorting" width="" data="o.project">项目名称</th>
-                                            <th class="sorting" width="100" data="c.amount">计划回款金额</th>
-                                            <th class="sorting" width="100" data="c.pay_amount">实际回款金额</th>
-                                            <th class="sorting" width="100" data="c.return_time">计划回款时间</th>
-                                            <th class="sorting" width="100" data="c.pay_time">实际回款时间</th>
+                                            <th class="sorting" width="" data="t.dep_time">实施日期</th>
+                                            <th class="sorting" width="" data="t.ret_time">返回日期</th>
+                                            <th class="sorting" width="" data="">笔次/笔数</th>
+                                            <th class="sorting" width="120" data="c.amount">计划回款金额</th>
+                                            <th class="sorting" width="120" data="c.pay_amount">实际回款金额</th>
+                                            <th class="sorting" width="120" data="c.return_time">计划回款时间</th>
+                                            <th class="sorting" width="120" data="c.pay_time">实际回款时间</th>
                                             <th class="taskOptions" width="80" >回款状态</th>
                                         </tr>
 
@@ -40,21 +48,48 @@
                                         <tr>
                                             <td>{$row.group_id}</td>
                                             <td><a href="{:U('Contract/detail',array('id'=>$row[cid]))}" title="查看合同信息">{$row.project}</a></td>
+                                            <td><?php echo $row['dep_time']?date('Y-m-d',$row['dep_time']):''; ?></td>
+                                            <td><?php echo $row['ret_time']?date('Y-m-d',$row['ret_time']):''; ?></td>
+                                            <td></td>
                                             <td>{$row.amount}</td>
                                             <td>{$row.pay_amount}</td>
                                             <td><?php echo $row['return_time']?date('Y-m-d',$row['return_time']):''; ?></td>
-                                            <!--<td>{$row.pay_time|date='Y-m-d',###}</td>-->
                                             <td><?php echo $row['pay_time']?date('Y-m-d',$row['pay_time']):''; ?></td>
                                             <td class="taskOptions">{$row.stu}</td>
                                         </tr>
                                         </foreach>
-                                        <tr>
-                                            <td><b>合计</b></td>
-                                            <td></td>
-                                            <td>{$data.plan_back}</td>
-                                            <td>{$data.money_back}</td>
-                                            <td colspan="3" class="taskOptions">回款率：{$data.money_back_average}</td>
-                                        </tr>
+                                        <?php if($pin==0){ ?>
+                                            <tr>
+                                                <td><b>小计</b></td>
+                                                <td colspan="4"></td>
+                                                <td>{$data.this_month}</td>
+                                                <td>{$data.this_month_return}</td>
+                                                <td colspan="3"></td>
+                                            </tr>
+                                            <tr>
+                                                <td><b>历史欠款</b></td>
+                                                <td colspan="4"></td>
+                                                <td>{$data.history}</td>
+                                                <td>{$data.history_return}</td>
+                                                <td colspan="3"></td>
+                                            </tr>
+                                            <tr>
+                                                <td><b>合计</b></td>
+                                                <td colspan="4"></td>
+                                                <td><?php echo $data['this_month']+$data['history']; ?></td>
+                                                <td>{$data.this_month_return}</td>
+                                                <td colspan="3" class="taskOptions">回款率：{$data.money_back_average}</td>
+                                            </tr>
+                                        <?php }else if($pin==1){ ?>
+                                            <tr>
+                                                <td><b>合计</b></td>
+                                                <td colspan="4"></td>
+                                                <td>{$data.history}</td>
+                                                <td>{$data.history_return}</td>
+                                                <td colspan="3"></td>
+                                            </tr>
+                                        <?php } ?>
+                                        
                                     </table>
                                 </div><!-- /.box-body -->
                                  <div class="box-footer clearfix">
@@ -75,7 +110,8 @@
                 <input type="hidden" name="c" value="Finance">
                 <input type="hidden" name="a" value="public_money_back_detail">
                 <input type="hidden" name="uid" value="{$uid}">
-                <input type="hidden" name="rtime" value="{$rtime}">
+                <input type="hidden" name="start_time" value="{$start_time}">
+                <input type="hidden" name="end_time" value="{$end_time}">
 
                 <div class="form-group col-md-12">
                     <input type="text" class="form-control" name="title" placeholder="项目名称">
