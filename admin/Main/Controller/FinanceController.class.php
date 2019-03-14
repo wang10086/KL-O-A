@@ -2215,7 +2215,7 @@ class FinanceController extends BaseController {
     //@@@NODE-3###loan_op###填写团内支出报销单###
     public function loan_op(){
 
-        $departids          = array(2,6,7,12,13,14,16,17);
+        $departids          = array(2,6,7,12,13,14,15,16,17);
         $departments        = M('salary_department')->where(array('id'=>array('in',$departids)))->select();
         $this->departments  = $departments;
         $this->jk_type      = C('JIEKUAN_TYPE');
@@ -2626,6 +2626,47 @@ class FinanceController extends BaseController {
             $msg['time']        = 3;
             $this->ajaxReturn($msg);
         }
+    }
+
+    //回款详情
+    public function public_money_back_detail(){
+        $uid                                = I('uid');
+        $time                               = I('rtime');
+        $title                              = trim(I('title'));
+        $group_id                           = trim(I('oid'));
+        $opid                               = trim(I('opid'));
+        if (!$uid) $this->error('获取数据错误');
+        $where                              = array();
+        $where['c.payee']                   = $uid;
+        $where['return_time']	            = array('lt',$time);
+        if ($title) $where['o.project']     = array('like','%'.$title.'%');
+        if ($group_id) $where['o.group_id'] = $group_id;
+        if ($opid)  $where['c.op_id']       = $opid;
+        $lists                              = M()->table('__CONTRACT_PAY__ as c')->join('__OP__ as o on o.op_id = c.op_id','left')->field('c.*,o.group_id,o.project')->where($where)->order('c.id desc')->select();
+        $data                               = array();
+        $data['plan_back']                  = 0;
+        $data['money_back']                 = 0;
+        foreach ($lists as $k=>$v){
+            if ($v['status']==2){
+                $lists[$k]['stu']           = "<span class='green'>已回款</span>";
+            }elseif ($v['status']==1){
+                $lists[$k]['stu']           = "<span class='yellow'>回款中</span>";
+            }else{
+                if ($v['return_time']<time()){
+                    $lists[$k]['stu']       = "<span class='red'>未回款</span>";
+                }else{
+                    $lists[$k]['stu']       = "<font color='#999999'>未考核</font>";
+                }
+            }
+            $data['plan_back']              += $v['amount'];
+            $data['money_back']             += $v['pay_amount'];
+        }
+        $data['money_back_average']         = (round($data['money_back']/$data['plan_back'],4)*100).'%';
+        $this->uid                          = $uid;
+        $this->rtime                        = $time;
+        $this->data                         = $data;
+        $this->lists                        = $lists;
+        $this->display('money_back_detail');
     }
 
     /****************************start*****************************************/
