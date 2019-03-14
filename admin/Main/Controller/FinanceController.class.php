@@ -2642,7 +2642,7 @@ class FinanceController extends BaseController {
         if ($title) $where['o.project']     = array('like','%'.$title.'%');
         if ($group_id) $where['o.group_id'] = $group_id;
         if ($opid)  $where['c.op_id']       = $opid;
-        $lists                              = M()->table('__CONTRACT_PAY__ as c')->join('__OP__ as o on o.op_id = c.op_id','left')->field('c.*,o.group_id,o.project')->where($where)->order('c.id desc')->select();
+        $lists                              = M()->table('__CONTRACT_PAY__ as c')->join('__OP__ as o on o.op_id = c.op_id','left')->field('c.*,o.group_id,o.project')->where($where)->order($this->orders('c.id'))->select();
         $data                               = array();
         $data['plan_back']                  = 0;
         $data['money_back']                 = 0;
