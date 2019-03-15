@@ -481,24 +481,26 @@ class ManageController extends ChartController {
         if (strlen($month)<2) $month = str_pad($month,2,'0',STR_PAD_LEFT);
         $quarter                = I('quarter')?I('quarter'):get_quarter($month);
         $tm                     = I('tm')?I('tm'):'m';
-        $kinds                  = M('bxd_kind')->where(array('pid'=>2))->getField('id',true);
+        $bxd_kinds              = M('bxd_kind')->where(array('pid'=>2))->getField('id,name',true);
+        $kind_ids               = array_keys($bxd_kinds);
         $departments            = C('department1');
         $mod                    = D('Manage');
         $times                  = $mod->get_times($year,$month,$tm);
-        $lists                  = $mod->get_otherExpenses($departments,$kinds,$times);
+        $lists                  = $mod->get_otherExpenses($departments,$kind_ids,$times);
         $heji                   = $lists['heji'];
         unset($lists['heji']);
 
         $this->lists            = $lists;
         $this->heji             = $heji;
         $this->departments      = $departments;
-        $this->kinds            = $kinds;
+        $this->kinds            = $bxd_kinds;
         $this->tm               = $tm;
         $this->year 	        = $year;
         $this->month 	        = $month;
         $this->prveyear	        = $year-1;
         $this->nextyear	        = $year+1;
         $this->quarter          = $quarter;
+        $this->kind_ids         = $kind_ids;
         $this->display();
     }
 

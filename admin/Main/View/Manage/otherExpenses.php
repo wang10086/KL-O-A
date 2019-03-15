@@ -91,7 +91,7 @@
 
                             <foreach name="lists" key="k" item="v">
                                 <tr role="row" class="orders" style="text-align:center;">
-                                    <td>{$kinds[$k]}</td>
+                                    <td>{$kinds[$kind_ids[$k]]}</td>
                                     <td>{$v.gongsi}</td>
                                     <td>{$v.jqyw}</td>
                                     <td>{$v.jwyw}</td>
