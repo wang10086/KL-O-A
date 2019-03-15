@@ -2659,9 +2659,11 @@ class FinanceController extends BaseController {
             }else{
                 if ($v['return_time']<$end_time){
                     $v['stu']       = "<span class='red'>未回款</span>";
-                    $data['history_list'][] = $v;
-                    $data['history']        += $v['amount'];
-                    $data['history_return'] += $v['pay_amount'];
+                    if ($v['return_time'] < $start_time){ //排除当月未回款的团
+                        $data['history_list'][] = $v;
+                        $data['history']        += $v['amount'];
+                        $data['history_return'] += $v['pay_amount'];
+                    }
                 }else{
                     $v['stu']       = "<font color='#999999'>未考核</font>";
                 }
