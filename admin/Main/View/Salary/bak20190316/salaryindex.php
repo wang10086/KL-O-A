@@ -20,12 +20,25 @@
                             <div class="box">
                                 <div class="box-header">
                                     <h3 class="box-title">人员薪资列表</h3>
+                                    <!--<div class="box-tools pull-right">
+                                        <if condition="rolemenu(array('Salary/salary_query'))">
+                                            <a href="{:U('Salary/salary_support')}" class="btn btn-sm btn-danger" style="background:#3c8dbc;border:1px solid #3c8dbc;"><i class="fa fa-plus"></i> 扶植人员信息</a>
+                                        </if>
+                                        <if condition="rolemenu(array('Salary/salary_query'))">
+                                            <a href="{:U('Salary/salary_query')}" class="btn btn-sm btn-danger"><i class="fa fa-plus"></i> 数据录入</a>
+                                        </if>
+
+                                    	 <a href="javascript:;" class="btn btn-info btn-sm" onclick="javascript:opensearch('searchtext',700,160);"><i class="fa fa-search"></i> 搜索</a>
+                                        <if condition="rolemenu(array('Salary/salary_excel_list'))">
+                                            <a class="btn btn-sm salary_moduser1" style="background-color:#398439;border: #398439"><i class="fa fa-plus"></i> 生成工资表</a>
+                                        </if>
+                                    </div>-->
                                     <div class="box-tools pull-right">
                                         <a href="javascript:;" class="btn btn-info btn-sm" onclick="javascript:opensearch('searchtext',700,160);"><i class="fa fa-search"></i> 搜索</a>
-                                        <if condition="rolemenu(array('Wages/salary_query'))">
-                                            <a href="{:U('Wages/salary_query')}" class="btn btn-sm btn-danger"><i class="fa fa-plus"></i> 数据录入</a>
+                                        <if condition="rolemenu(array('Salary/salary_query'))">
+                                            <a href="{:U('Salary/salary_query')}" class="btn btn-sm btn-danger"><i class="fa fa-plus"></i> 数据录入</a>
                                         </if>
-                                        <if condition="rolemenu(array('Wages/salary_excel_list'))">
+                                        <if condition="rolemenu(array('Salary/salary_excel_list'))">
                                             <a class="btn btn-sm salary_moduser1" style="background-color:#398439;border: #398439"><i class="fa fa-plus"></i> 生成工资表</a>
                                         </if>
                                     </div>
@@ -52,7 +65,7 @@
 
                                         </tr>
 
-                                        <foreach name="lists" item="info">
+                                        <foreach name="info" item="info">
 
                                             <tr>
                                                 <td>{$info.account_id}</td>
@@ -75,7 +88,7 @@
 
                                 </div><!-- /.box-body -->
                                  <div class="box-footer clearfix">
-                                	<div class="pagestyle">{$pages}</div>
+                                	<div class="pagestyle">{$page}</div>
                                 </div>
                             </div><!-- /.box -->
 
@@ -85,37 +98,37 @@
                 </section><!-- /.content -->
             </aside><!-- /.right-side -->
 
-        <!--<form class="form-horizontal" id="salary_pop1" action="{:U('user/updates')}" method="post" style="display: none">
-            <input type="hidden" name="id" value="{$id}" />
-            <div class="form-group">
-                <label class="col-sm-2 control-label">用户名</label>
-                <div class="col-sm-4">
-                    <input type="text" class="form-control" name="user_login" value="{$user_login}" placeholder="请输入用户名" />
-                </div>
-            </div>
-            <div class="form-group">
-                <div class="col-sm-offset-2 col-sm-10">
-                    <a class="btn btn-primary" id="ajaxform">提 交</a>
-                </div>
-            </div>
-        </form>-->
 
-<div id="searchtext">
-    <form action="{:U('Wages/index')}" method="post" id="searchform">
-        <div class="form-group col-md-6">
-            <input type="text" class="form-control" name="name" placeholder="姓名">
+            <div id="searchtext">
+                <form action="{:U('Salary/salaryindex')}" method="post" id="searchform">
+                    <div class="form-group col-md-6">
+                        <input type="text" class="form-control" name="name" placeholder="姓名">
+                    </div>
+                    <div class="form-group col-md-6">
+                        <input type="text" class="form-control" name="id" placeholder="员工ID">
+                    </div>
+                    <div class="form-group col-md-6">
+                        <input type="text" class="form-control" name="department" placeholder="部门">
+                    </div>
+                    <div class="form-group col-md-6">
+                        <input type="text" class="form-control monthly" name="month" placeholder="年月/201806" />
+                    </div>
+                </form>
+            </div>
+<form class="form-horizontal" id="salary_pop1" action="{:U('user/updates')}" method="post" style="display: none">
+    <input type="hidden" name="id" value="{$id}" />
+    <div class="form-group">
+        <label class="col-sm-2 control-label">用户名</label>
+        <div class="col-sm-4">
+            <input type="text" class="form-control" name="user_login" value="{$user_login}" placeholder="请输入用户名" />
         </div>
-        <div class="form-group col-md-6">
-            <input type="text" class="form-control" name="id" placeholder="员工ID">
+    </div>
+    <div class="form-group">
+        <div class="col-sm-offset-2 col-sm-10">
+            <a class="btn btn-primary" id="ajaxform">提 交</a>
         </div>
-        <div class="form-group col-md-6">
-            <input type="text" class="form-control" name="department" placeholder="部门">
-        </div>
-        <div class="form-group col-md-6">
-            <input type="text" class="form-control monthly" name="month" placeholder="年月/201806" />
-        </div>
-    </form>
-</div>
+    </div>
+</form>
 
 
 <include file="Index:footer2" />
@@ -145,11 +158,11 @@
        if(Appointime==12){
            year = year-1;
        }
-       var currenttime  = year+p(Appointime);//当前时间
+       var currenttime  = year+''+p(Appointime);//当前时间
 
        var msg = '将生成'+' '+currenttime+' '+'月份工资表，操作前请确认所有数据录入事项均已完成！';
-       var url ='/index.php?m=Main&c=Wages&a=salary_excel_list&datetime='+currenttime;
-       //var url1 ="{:U('Wages/salary_query')}";
+       var url ='/index.php?m=Main&c=Salary&a=salary_excel_list&datetime='+currenttime;
+       var url1 ="{:U('Salary/salary_query')}";
        art.dialog({
                content:msg,
            lock:true,
@@ -163,14 +176,14 @@
                        window.location.href=url;
                        return false;
                    }
-               }/*,
+               },
                {name:'录入数据',
                    class:'aui_state_highlight',
                    callback:function(){
                        window.location.href=url1;
                        return false;
                    }
-               },*/
+               }
                ],
 
            cancelValue:'取消',

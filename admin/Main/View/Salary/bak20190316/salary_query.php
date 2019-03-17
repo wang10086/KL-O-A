@@ -32,7 +32,7 @@
                             <!--岗位薪酬变动 -->
                             <?php if($pin == 0){ ?>
                                 <div class="salary_search_extract" id="salary_add_backcolor"><br>
-                                    <include file="Salary:post_salary_change" />
+                                    <include file="post_salary_change" />
                                 </div>
                             <?php } ?>
 

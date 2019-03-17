@@ -180,7 +180,7 @@ class ManageModel extends Model{
 
         }elseif($type==2){
 
-            return M('salary_count_money')->field('id,datetime,Should')->where($where)->find();die;
+            return M('salary_count_money')->field('id,datetime,Should_distributed')->where($where)->find();die;
 
         }elseif($type==3){
 

@@ -834,8 +834,82 @@ class AjaxController extends Controller {
         $this->ajaxReturn($lists);
     }
 
-    //保存提交审核数据
+    //保存人事提交数据
     public function Ajax_salary_details_add(){
+
+        $personLists                = json_decode(htmlspecialchars_decode(I('personLists')),true);
+        $departmentLists            = json_decode(htmlspecialchars_decode(I('departmentLists')),true);
+        $companyLists               = json_decode(htmlspecialchars_decode(I('companyLists')),true);
+        $datetime                   = trim(I('datetime'));
+
+        $remsg                      = array();
+        if (!in_array(session('userid'),array(1,11,77))){
+            $remsg['num']           = 0;
+            $remsg['msg']           = '您的权限不足!请联系管理员！';
+            $this->ajaxReturn($remsg);
+        }
+        if (!$datetime){
+            $remsg['num']           = 0;
+            $remsg['msg']           = '数据错误!';
+            $this->ajaxReturn($remsg);
+        }
+
+        //保存员工基本工资信息
+        $p_num                      = 0;
+        $d_num                      = 0;
+        $c_num                      = 0;
+
+
+        foreach ($personLists as $v){
+            $v['createtime']        = NOW_TIME;
+            $v['status']            = 2;
+            $dres                   = M('salary_wages_month')->add($v);
+
+            if ($dres){
+                $stu_data           = array();
+                $stu_data['status'] = 2;
+                M('salary')->where(array('id'=>$v['salary_id']))->save($stu_data); //基本工资 status
+                M('salary_attendance')->where(array('id'=>$v['attendance_id']))->save($stu_data); //考勤 status
+                M('salary_bonus')->where(array('id'=>$v['bonus_id']))->save($stu_data); //提成/奖金/年终奖 status
+                M('individual_tax')->where(array('id'=>$v['individual_id']))->save($stu_data); //个税 status
+                M('salary_insurance')->where(array('id'=>$v['insurance_id']))->save($stu_data); //五险一金 status
+                M('salary_labour')->where(array('id'=>$v['labour_id']))->save($stu_data); //工会会费 status
+                M('salary_specialdeduction')->where(array('id'=>$v['specialdeduction_id']))->save($stu_data); //专项附加扣除 status
+                M('salary_subsidy')->where(array('id'=>$v['subsidy_id']))->save($stu_data); //补贴 status
+                M('salary_income')->where(array('income_token'=>$v['income_token']))->save($stu_data); //其他收入 status
+                M('salary_withholding')->where(array('token'=>$v['withholding_token']))->save($stu_data); //代扣代缴 status
+                $p_num++;
+            }
+        }
+
+        //保存部门合计信息
+        foreach ($departmentLists as $v){
+            $v['datetime']      = $datetime;
+            $v['createtime']    = NOW_TIME;
+            $v['status']        = 2;
+            $res                = M('salary_departmen_count')->add($v);
+            if ($res) $d_num++;
+        }
+
+        //保存公司合计信息
+        $companyLists['datetime']           = $datetime;
+        $companyLists['createtime']         = NOW_TIME;
+        $companyLists['examine_user_id']    = session('userid');
+        $companyLists['status']             = 2;
+        $cres                   = M('salary_count_money')->add($companyLists);
+        if ($cres) $c_num++;
+        if ($p_num && $d_num && $c_num){
+            $remsg['num']       = 1;
+            $remsg['msg']       = '保存成功!';
+        }else{
+            $remsg['num']       = 0;
+            $remsg['msg']       = '保存失败!';
+        }
+        $this->ajaxReturn($remsg);
+    }
+
+    //保存提交审核数据(刘金垒)
+    /*public function Ajax_salary_details_add(){
 
         $user_id = $_SESSION['userid'];
         if($user_id==77 || $user_id==1){
@@ -946,12 +1020,12 @@ class AjaxController extends Controller {
         $sum                        = 0;
         $msg                        = "数据提交失败!请重新提交!";
         echo json_encode(array('sum' => $sum, 'msg' => $msg));die;
-    }
+    }*/
 
     /**
-     * Ajax_salary_sign 签字验证
+     * Ajax_salary_sign 签字验证(刘金垒)
      */
-    public function Ajax_salary_sign(){
+    /*public function Ajax_salary_sign(){
         $userid['password']                 = md5(trim($_POST['pwd']));
         $status                             = trim($_POST['status']);
         $userid['user_id']                  = $_SESSION['userid'];
@@ -992,12 +1066,10 @@ class AjaxController extends Controller {
         }else{
             echo json_encode(array('sum' => 0));die;
         }
-    }
+    }*/
 
-    /**
-     * 提交数据 / 批准
-     */
-    public function Ajax_salary_details_upgrade(){
+    //财务审核通过签字（刘金垒）
+    /*public function Ajax_salary_details_upgrade(){
         $user_id = (int)$_SESSION['userid'];
         if($user_id==11 ||$user_id==55 || $user_id==1){
         }else{
@@ -1016,7 +1088,7 @@ class AjaxController extends Controller {
             //修改个税
             $wages_mont1                    = M('salary_wages_month')->where($id)->find();
             if($wages_mont1 && $user_id==11){
-               $user_table                  = M('salary_individual_tax')->where('account_id='.$wages_mont1['account_id'])->order('id DESC')->find();
+                $user_table                  = M('salary_individual_tax')->where('account_id='.$wages_mont1['account_id'])->order('id DESC')->find();
                 if($user_table && $user_table['statu']==1){
                     $save1['statu']         = 2;
                     M('salary_individual_tax')->where('id='.$user_table['id'])->save($save1);
@@ -1044,13 +1116,11 @@ class AjaxController extends Controller {
             $sum                            = 0;
         }
         echo json_encode(array('sum' =>1, 'msg' => $msg));die;
-    }
+    }*/
 
-
-    /**
-     * 驳回
-     */
-    public function post_error(){
+    //驳回(刘金垒)
+    /*
+     public function post_error(){
         $datetime['datetime']           = trim($_POST['datetime']);
         $status ['status']              = $_POST['status'];
         $wages_query                    =  M('salary_wages_month')->where($datetime)->select();
@@ -1104,6 +1174,152 @@ class AjaxController extends Controller {
             $msg                        = "驳回失败!";
             echo json_encode(array('sum' => $sum, 'msg' => $msg));die;
         }
+    }
+     */
+
+    /**
+     * 工资签字审核
+     */
+    public function Ajax_salary_sign(){
+        $db                                     = M('salary_sign');
+        $userid['password']                     = md5(trim($_POST['pwd']));
+        $status                                 = trim($_POST['status']);
+        $userid['user_id']                      = $_SESSION['userid'];
+        $datetime                               = trim($_POST['datetime']);
+        $sign                                   = M('user_sign')->where($userid)->find();
+        if($sign){
+            if ($status==2){ //驳回
+                $res                            = $db->where(array('datetime'=>$datetime))->delete();
+            }else{ //批准
+                $data                           = array();
+                if ($status==0){ //人事提交
+                    $data['examine_user_id']    = $userid['user_id'];
+                    $data['examine_status']     = 2;
+                }elseif ($status==1){ //财务审核通过
+                    $data['submission_user_id'] = $userid['user_id'];
+                }elseif ($status==3){
+                    $data['approval_user_id']   = $userid['user_id'];
+                }
+
+                $list                           = $db->where(array('datetime'=>$datetime))->find();
+                if ($list){
+                    $res                        = $db->where(array('datetime'=>$datetime))->save($data);
+                }else{
+                    $data['createtime']         = NOW_TIME;
+                    $data['datetime']           = $datetime;
+                    $res                        = $db->add($data);
+                }
+            }
+            if ($res){
+                $sum                            = 1;
+            }else{
+                $sum                            = 0;
+            }
+        }else{
+            $sum                                = 0;
+        }
+        $this->ajaxReturn($sum);
+    }
+
+    //财务审核通过签字
+    public function Ajax_salary_details_upgrade(){
+        $user_id                        = session('userid');
+        $datetime                       = trim(I('datetime'));
+        $status                         = trim(I('status'));
+        $data                           = array();
+        if (!$datetime){
+            $data['num']                = 0;
+            $data['msg']                = "数据错误";
+        }
+        if(!in_array($user_id,array(1,11,55))){
+            $data['num']                = 0;
+            $data['msg']                = "您的权限不足!请联系管理员！";
+        }
+        $where                          = array();
+        $where['datetime']              = $datetime;
+        $save                           = array();
+        $save['status']                 = $status; //3=>财务审核;4=>总经理审核
+
+        $res1                           = M('salary_wages_month')->where($where)->save($save); //个人
+        $res2                           = M('salary_departmen_count')->where($where)->save($save); //部门合计
+        if ($status==3){ //财务审核
+            $save['submission_user_id'] = session('userid');
+            $save['submission_time']    = NOW_TIME;
+        }elseif ($status==4){ //总经理审核
+            $save['approval_user_id']   = session('userid');
+            $save['approval_time']      = NOW_TIME;
+        }
+        $res3                           = M('salary_count_money')->where($where)->save($save); //公司合计
+        $sign                           = array();
+        if ($status==3) { //财务审核
+            $sign['submission_user_id'] = session('userid');
+            $sign['submission_status']  = 2;
+        }elseif ($status==4) { //总经理审核
+            $sign['approval_user_id']   = session('userid');
+            $sign['approval_status']    = 2;
+        }
+        $res4                           = M('salary_sign')->where(array('datetime'=>$datetime))->save($sign); //签字
+        if ($res1 && $res2 && $res3 && $res4){
+            $_SESSION['salary_satus']   = '';
+            $data['num']                = 1;
+            $data['msg']                = "审核成功!";
+        }
+        $this->ajaxReturn($data);
+    }
+
+
+    /**
+     * 驳回
+     */
+    public function post_error(){
+        $datetime['datetime']           = trim($_POST['datetime']);
+        $status ['status']              = $_POST['status'];
+        $lists                          =  M('salary_wages_month')->where($datetime)->select();
+        $arr_attendance_ids             = array_column($lists,'attendance_id'); //考勤
+        $arr_bonus_ids                  = array_column($lists,'bonus_id'); //提成/奖金/年终奖
+        $arr_individual_ids             = array_column($lists,'individual_id'); //个税
+        //$arr_insurance_ids              = array_column($lists,'insurance_id'); //五险一金
+        //$arr_labour_ids                 = array_column($lists,'labour_id'); //工会会费
+        //$arr_specialdeduction_ids       = array_column($lists,'specialdeduction_id'); //专项附加扣除
+        //$arr_subsidy_ids                = array_column($lists,'subsidy_id'); //补贴(住房/电脑/外地补贴)
+        $arr_income_tokens              = array_column($lists,'income_token'); //其他收入
+        $arr_withholding_tokens         = array_column($lists,'withholding_token'); //代扣代缴
+
+        $stu_data                       = array();
+        $stu_data['status']             = 1;
+        M('salary_attendance')->where(array('id'=>array('in',$arr_attendance_ids)))->save($stu_data); //考勤
+        M('salary_bonus')->where(array('id'=>array('in',$arr_bonus_ids)))->save($stu_data); //提成/奖金/年终奖
+        M('individual_tax')->where(array('id'=>array('in',$arr_individual_ids)))->save($stu_data); //个税
+        //M('salary_insurance')->where(array('id'=>array('in',$arr_insurance_ids)))->save($stu_data); //五险一金
+        //M('salary_labour')->where(array('id'=>array('in',$arr_labour_ids)))->save($stu_data); //工会会费
+        //M('salary_specialdeduction')->where(array('id'=>array('in',$arr_specialdeduction_ids)))->save($stu_data); //专项附加扣除
+        //M('salary_subsidy')->where(array('id'=>array('in',$arr_subsidy_ids)))->save($stu_data); //补贴
+        M('salary_income')->where(array('income_token'=>array('in',$arr_income_tokens)))->save($stu_data); //其他收入
+        M('salary_withholding')->where(array('token'=>array('in',$arr_withholding_tokens)))->save($stu_data); //代扣代缴
+
+        $wages_month_del                = M('salary_wages_month')->where($datetime)->delete();
+        $departmen_count                = M('salary_departmen_count')->where($datetime)->delete();
+        $count_money                    = M('salary_count_money')->where($datetime)->delete();
+        $sign_res                       = M('salary_sign')->where($datetime)->delete();
+        $data                           = array();
+        if($count_money && $departmen_count && $wages_month_del & $sign_res){
+            $data['num']                        = 1;
+            $data['msg']                        = "驳回成功!";
+        }else{
+            $data['num']                        = 0;
+            $data['msg']                        = "驳回失败!";
+        }
+
+        //系统消息
+        $uid     = cookie('userid');
+        $title   = '您的'.$datetime['datetime'].'月的系统工资被'.cookie('nickname').'驳回，请及时处理!';
+        $content = '您的'.$datetime['datetime'].'月的系统工资被'.cookie('nickname').'驳回，请及时处理!';
+        $url     = U('Salary/salary_excel_list',array('datetime'=>$datetime['datetime']));
+        $user    = 77; //王茜
+        $roleid  = '';
+        send_msg($uid,$title,$content,$url,$user,$roleid);
+
+        $this->ajaxReturn($data);
     }
 
     public function salary_list_Labour(){//添加工会会费

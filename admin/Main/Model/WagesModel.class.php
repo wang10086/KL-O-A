@@ -93,12 +93,6 @@ class WagesModel extends Model
     /***************************************************************************************************************/
     /***************************************************************************************************************/
 
-    //
-    public function history_wages($accounts,$datetime){
-        $account_ids                        = array_column($accounts,'id');
-        //p($accounts);die;
-    }
-
 
     /**
      * 获取带团补助
@@ -131,20 +125,19 @@ class WagesModel extends Model
     public function get_royalty($userinfo,$datetime,$salary){
         $pay_year                                   = (int)substr($datetime,0,4);
         $pay_month                                  = (int)substr($datetime,4);
-        if (in_array($pay_month,array('01','04','07','10'))){   //季度后一个月发放该季度提成
-            if ($pay_month==1) {
-                $p_year                             = $pay_year - 1;
-                $p_month                            = 12;
-            }else{
-                $p_year                             = $pay_year;
-                $p_month                            = $pay_month - 1;
-            }
-            $quarter                                = get_quarter($p_month);
-            $sale_configs                           = $this->getQuarterMonth($quarter,$p_year);     //获取所有销售季度任务基数 coefficient
-            $quarter_time                           = getQuarterlyCicle($p_year,$p_month);          //获取该季度周期,方便业务提成(结算)取值
-            $op_settlement_list                     = $this->get_quarter_settlement_list($quarter_time);   //获取该季度所有的结算团
+        if ($pay_month==1) {
+            $p_year                             = $pay_year - 1;
+            $p_month                            = 12;
+        }else{
+            $p_year                             = $pay_year;
+            $p_month                            = $pay_month - 1;
         }
-        $quarter_royalty_data                   = $this->get_quarter_royalty($userinfo,$sale_configs,$op_settlement_list,$salary);    //销售季度目标 完成 提成
+        $quarter                                = get_quarter($p_month);
+        $sale_configs                           = $this->getQuarterMonth($quarter,$p_year);     //获取所有销售季度任务基数 coefficient
+        $quarter_time                           = getQuarterlyCicle($p_year,$p_month);          //获取该季度周期,方便业务提成(结算)取值
+        $op_settlement_list                     = $this->get_quarter_settlement_list($quarter_time);   //获取该季度所有的结算团
+
+        $quarter_royalty_data                   = $this->get_quarter_royalty($userinfo,$sale_configs,$op_settlement_list,$salary,$pay_month);    //销售季度目标 完成 提成
         return $quarter_royalty_data;
     }
 
@@ -202,7 +195,7 @@ class WagesModel extends Model
     }
 
     //获取本人季度业绩提成
-    private function get_quarter_royalty($user,$sale_configs,$op_settlement_list,$salary){
+    private function get_quarter_royalty($user,$sale_configs,$op_settlement_list,$salary,$pay_month){
         $salary                                 = $salary;    //工资岗位薪酬
         foreach ($sale_configs as $k=>$v){
             if ($user['departmentid']==$v['department_id']){
@@ -235,7 +228,11 @@ class WagesModel extends Model
         $data['salary']                         = $salary;
         $data['quarter_profit']                 = $sum_profit;  //季度毛利
         $data['target']                         = $target;      //目标值
-        $data['quarter_royalty']                = $royalty;     //季度提成
+        if (in_array($pay_month,array('01','04','07','10'))) {   //季度后一个月发放该季度提成
+            $data['quarter_royalty'] = $royalty;     //季度提成
+        }else{
+            $data['quarter_royalty'] = '0.00';
+        }
         return $data;
     }
 
