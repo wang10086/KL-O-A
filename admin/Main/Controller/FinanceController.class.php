@@ -2691,37 +2691,15 @@ class FinanceController extends BaseController {
         $this->display('money_back_detail');
     }
 
-    /****************************start*****************************************/
-    public function test(){
-        $guide_ids = M('account')->where(array('guide_id'=>array('neq',0)))->getField('guide_id',true);
-        $arr        = array();
-        $begin_time = 1543248000; //11.27
-        $end_time   = 1545753600; //12.26
-        foreach ($guide_ids as $v){
-            $where                  = array();
-            $where['g.id']          = $v;
-            $where['p.status']      = 2;
-            $where['p.sure_time']   = array('between',"$begin_time,$end_time");
-            $field      = array();
-            $field[]    = 'sum(p.really_cost) as ccost';
-            $field[]    = 'g.name';
-            $list       = M()->table('__GUIDE__ as g')->field($field)->join('__GUIDE_PAY__ as p on p.guide_id=g.id','left')->where($where)->find();
-            if ($list['ccost']){
-                $arr[]  = $list;
-            }
-        }
+    public function public_payment_chart(){
+        $year		    = I('year',date('Y'));
+        $month	        = I('month',date('m'));
+        $pin            = I('pin',0);
 
-        $sum = 0;
-        foreach ($arr as $v){
-            $sum += $v['ccost'];
-        }
-        var_dump($sum);die;
+
+        $this->year		= I('year',date('Y'));
+        $this->month	= I('month',date('m'));
+        $this->pin      = $pin;
+        $this->display('payment_chart');
     }
-
-    public function aaa(){
-
-        $this->display();
-    }
-
-    /****************************end*****************************************/
 }
