@@ -109,9 +109,7 @@
                         <!--<td>{$row.status}</td>-->
 
                         <td class="taskOptions">
-                            <!--<if condition="rolemenu(array('Inspect/score_detail'))">-->
-                                <button class="btn btn-info btn-smsm" onclick="show_score({$row.id})"><i class="fa fa-bars"></i></button>
-                            <!--</if>-->
+                            <button class="btn btn-info btn-smsm" onclick="show_score({$row.id})"><i class="fa fa-bars"></i></button>
                         </td>
 
                     </tr>
