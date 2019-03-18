@@ -18,7 +18,7 @@
 
                             <div class="btn-group" id="catfont" style="padding-bottom:20px;">
                                 <?php if($prveyear>2017){ ?>
-                                    <a href="{:U('Finance/public_payment_chart',array('year'=>$prveyear,'month'=>'01','pin'=>$pin))}" class="btn btn-default" style="padding:8px 18px;">上一年</a>
+                                    <a href="{:U('Finance/public_payment_chart_detail',array('year'=>$prveyear,'month'=>'01','pin'=>$pin,'department'=>$department))}" class="btn btn-default" style="padding:8px 18px;">上一年</a>
                                 <?php } ?>
                                 <?php
                                     for($i=1;$i<13;$i++){
@@ -26,15 +26,16 @@
                                         $par['year']  = $year;
                                         $par['month'] = str_pad($i,2,"0",STR_PAD_LEFT);
                                         $par['pin']   = $pin;
+                                        $par['department']=$department;
                                         if($month==$i){
-                                            echo '<a href="'.U('Finance/public_payment_chart',$par).'" class="btn btn-info" style="padding:8px 18px;">'.$i.'月</a>';
+                                            echo '<a href="'.U('Finance/public_payment_chart_detail',$par).'" class="btn btn-info" style="padding:8px 18px;">'.$i.'月</a>';
                                         }else{
-                                            echo '<a href="'.U('Finance/public_payment_chart',$par).'" class="btn btn-default" style="padding:8px 18px;">'.$i.'月</a>';
+                                            echo '<a href="'.U('Finance/public_payment_chart_detail',$par).'" class="btn btn-default" style="padding:8px 18px;">'.$i.'月</a>';
                                         }
                                     }
                                 ?>
                                 <?php if($year<date('Y')){ ?>
-                                    <a href="{:U('Finance/public_payment_chart',array('year'=>$nextyear,'month'=>'01','pin'=>$pin))}" class="btn btn-default" style="padding:8px 18px;">下一年</a>
+                                    <a href="{:U('Finance/public_payment_chart_detail',array('year'=>$nextyear,'month'=>'01','pin'=>$pin,'department'=>$department))}" class="btn btn-default" style="padding:8px 18px;">下一年</a>
                                 <?php } ?>
                             </div>
 
@@ -46,9 +47,9 @@
                                     </div>-->
                                     <div class="box-header">
                                         <div class="box-tools btn-group" id="chart_btn_group">
-                                            <a href="{:U('Finance/public_payment_chart',array('pin'=>0,'year'=>$year,'month'=>$month))}" class="btn btn-sm <?php if ($pin==0){ echo 'btn-info';}else{echo "btn-group-header";} ?>">回款统计</a>
-                                            <a href="{:U('Finance/public_payment_chart',array('pin'=>1,'year'=>$year,'month'=>$month))}" class="btn btn-sm <?php if ($pin==1){ echo 'btn-info';}else{echo "btn-group-header";} ?>">当月回款详情</a>
-                                            <a href="{:U('Finance/public_payment_chart',array('pin'=>2,'year'=>$year,'month'=>$month))}" class="btn btn-sm <?php if ($pin==2){ echo 'btn-info';}else{echo "btn-group-header";} ?>">历史欠款详情</a>
+                                            <a href="{:U('Finance/public_payment_chart_detail',array('pin'=>0,'year'=>$year,'month'=>$month,'department'=>$department))}" class="btn btn-sm <?php if ($pin==0){ echo 'btn-info';}else{echo "btn-group-header";} ?>">回款统计</a>
+                                            <a href="{:U('Finance/public_payment_chart_detail',array('pin'=>1,'year'=>$year,'month'=>$month,'department'=>$department))}" class="btn btn-sm <?php if ($pin==1){ echo 'btn-info';}else{echo "btn-group-header";} ?>">当月回款详情</a>
+                                            <a href="{:U('Finance/public_payment_chart_detail',array('pin'=>2,'year'=>$year,'month'=>$month,'department'=>$department))}" class="btn btn-sm <?php if ($pin==2){ echo 'btn-info';}else{echo "btn-group-header";} ?>">历史欠款详情</a>
                                         </div>
                                     </div><!-- /.box-header -->
                                 </div><!-- /.box-header -->
@@ -56,8 +57,8 @@
                                 
                                 <table class="table table-bordered dataTable fontmini" id="tablelist" style="margin-top:10px;">
                                     <tr role="row" class="orders" >
-                                    	<th class="taskOptions">业务部门</th>
-                                        <th class="taskOptions" data="">计划回款</th>
+                                    	<th class="taskOptions">姓名</th>
+                                        <th class="taskOptions" data="">当月计划回款金额</th>
                                         <th class="taskOptions" data="">历史欠款金额</th>
                                         <th class="taskOptions" data="">实际回款金额</th>
                                         <th class="taskOptions" data="">回款及时率</th>
@@ -66,15 +67,15 @@
                                     </tr>
                                     <foreach name="lists" item="row">
                                     <tr>
-                                    	<td class="taskOptions"><a href="{:U('Finance/public_payment_chart_detail',array('department'=>$row['id'],'year'=>$year,'month'=>$month,'pin'=>$pin))}" target="_blank">{$row.department}</a></td>
-                                        <td class="taskOptions"><?php echo $row['this_month']?$row['this_month']:'0.00'; ?></td>
-                                        <td class="taskOptions"><?php echo $row['history']?$row['history']:'0.00'; ?></td>
-                                        <td class="taskOptions"><?php echo $row['this_month_return']?$row['this_month_return']:'0.00'; ?></td>
+                                    	<td class="taskOptions"><a href="{:U('Finance/public_money_back_detail',array('uid'=>$row['id'],'start_time'=>$cycle_time['begintime'],'end_time'=>$cycle_time['endtime']))}" target="_blank">{$row.nickname}</a></td>
+                                        <td class="taskOptions">{$row.this_month}</td>
+                                        <td class="taskOptions">{$row.history}</td>
+                                        <td class="taskOptions">{$row.this_month_return}</td>
                                         <td class="taskOptions">{$row.money_back_average}</td>
                                     </tr>
                                     </foreach>
                                     <tr>
-                                        <td class="taskOptions black"><b>合计</b></td>
+                                        <td class="taskOptions black">合计</td>
                                         <td class="taskOptions black">{$sum.this_month}</td>
                                         <td class="taskOptions black">{$sum.history}</td>
                                         <td class="taskOptions black">{$sum.this_month_return}</td>

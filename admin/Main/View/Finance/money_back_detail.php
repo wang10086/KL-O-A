@@ -63,21 +63,21 @@
                                                 <td><b>小计</b></td>
                                                 <td colspan="4"></td>
                                                 <td>{$data.this_month}</td>
-                                                <td>{$data.this_month_return}</td>
+                                                <td><?php echo $data['this_month_return']?$data['this_month_return']:'0.00'; ?></td>
                                                 <td colspan="3"></td>
                                             </tr>
                                             <tr>
                                                 <td><b>历史欠款</b></td>
                                                 <td colspan="4"></td>
                                                 <td>{$data.history}</td>
-                                                <td>{$data.history_return}</td>
+                                                <td><?php echo $data['history_return']?$data['history_return']:'0.00'; ?></td>
                                                 <td colspan="3"></td>
                                             </tr>
                                             <tr>
                                                 <td><b>合计</b></td>
                                                 <td colspan="4"></td>
                                                 <td><?php echo $data['this_month']+$data['history']; ?></td>
-                                                <td>{$data.this_month_return}</td>
+                                                <td><?php echo $data['this_month_return']?$data['this_month_return']:'0.00'; ?></td>
                                                 <td colspan="3" class="taskOptions">回款率：{$data.money_back_average}</td>
                                             </tr>
                                         <?php }else if($pin==1){ ?>

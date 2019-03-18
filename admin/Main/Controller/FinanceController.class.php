@@ -2672,7 +2672,9 @@ class FinanceController extends BaseController {
             if (($v['return_time'] > $start_time && $v['return_time'] < $end_time) || ($v['pay_time'] > $start_time && $v['pay_time'] < $end_time)){
                 $data['this_month_list'][]  = $v;
                 $data['this_month']         += $v['amount'];
-                $data['this_month_return']  += $v['pay_amount'];
+                if ($v['pay_time'] > $start_time && $v['pay_time'] < $end_time){
+                    $data['this_month_return']  += $v['pay_amount'];
+                }
             }
 
         }
@@ -2692,14 +2694,145 @@ class FinanceController extends BaseController {
     }
 
     public function public_payment_chart(){
-        $year		    = I('year',date('Y'));
-        $month	        = I('month',date('m'));
-        $pin            = I('pin',0);
+        $year		                        = I('year',date('Y'));
+        $month	                            = I('month',date('m'));
+        $pin                                = I('pin',0);
+        if (strlen($month)<2) $month        = str_pad($month,2,'0',STR_PAD_LEFT);
+        $times                              = $year.$month;
+        $yw_departs                         = C('YW_DEPARTS');  //业务部门id
+        $where                              = array();
+        $where['id']                        = array('in',$yw_departs);
+        $departments                        = M('salary_department')->field('id,department')->where($where)->select();
+        $cycle_times                        = get_cycle($times);
+        $lists                              = $this->get_department_money_back_list($departments,$cycle_times['begintime'],$cycle_times['endtime']);
+        $sum                                = $this->get_sum($lists);
 
-
-        $this->year		= I('year',date('Y'));
-        $this->month	= I('month',date('m'));
-        $this->pin      = $pin;
+        $this->sum                          = $sum;
+        $this->lists                        = $lists;
+        $this->departments                  = $departments;
+        $this->year		                    = I('year',date('Y'));
+        $this->month	                    = I('month',date('m'));
+        $this->prveyear	                    = $year-1;
+        $this->nextyear	                    = $year+1;
+        $this->pin                          = $pin;
         $this->display('payment_chart');
     }
+
+    public function get_department_money_back_list($departments,$begintime,$endtime){
+        $data                               = array();
+        foreach ($departments as $k=>$v){
+            $data[$k]['id']                 = $v['id'];
+            $data[$k]['department']         = $v['department'];
+            $where                          = array();
+            $where['p.code']                = array('like','S%');
+            $where['a.departmentid']        = $v['id'];
+            $count_lists                    = M()->table('__ACCOUNT__ as a')->join('__POSITION__ as p on p.id=a.position_id','left')->field('a.*')->where($where)->select();
+            foreach ($count_lists as $key=>$value){
+                $info                       = $this->get_money_back_info($value,$begintime,$endtime);
+                $data[$k]['this_month']         += $info['this_month'];
+                $data[$k]['history']            += $info['history'];
+                $data[$k]['this_month_return']  += $info['this_month_return'];
+            }
+            $data[$k]['money_back_average']     = (round($data[$k]['this_month_return']/($data[$k]['this_month']+$data[$k]['history']),4)*100).'%';
+        }
+        return $data;
+    }
+
+    public function public_payment_chart_detail(){
+        $year		                        = I('year',date('Y'));
+        $month	                            = I('month',date('m'));
+        $pin                                = I('pin',0);
+        if (strlen($month)<2) $month        = str_pad($month,2,'0',STR_PAD_LEFT);
+        $times                              = $year.$month;
+        $departmnet_id                      = I('department');
+        $where                              = array();
+        $where['a.departmentid']            = $departmnet_id;
+        $where['a.status']                  = array('neq',2); //未删除
+        $where['p.code']                    = array('like','S%');
+
+        $cycle_time                         = get_cycle($year.$month);
+        $lists                              = M()->table('__ACCOUNT__ as a')->join('__POSITION__ as p on p.id=a.position_id','left')->field('a.*')->where($where)->select();
+        foreach ($lists as $k=>$v){
+            //当月回款/欠款信息
+            $data                           = $this->get_money_back_info($v,$cycle_time['begintime'],$cycle_time['endtime']);
+            $lists[$k]['this_month']        = $data['this_month']?$data['this_month']:'0.00'; //计划回款时间或实际回款时间在当月的团
+            $lists[$k]['history']           = $data['history']?$data['history']:'0.00'; //历史欠付
+            $lists[$k]['this_month_return'] = $data['this_month_return']?$data['this_month_return']:'0.00'; //当月回款金额
+            $lists[$k]['money_back_average']= $data['money_back_average']; //回款及时率
+        }
+        $sum                                = $this->get_sum($lists);
+
+        $this->sum                          = $sum;
+        $this->cycle_time                   = $cycle_time;
+        $this->year		                    = I('year',date('Y'));
+        $this->month	                    = I('month',date('m'));
+        $this->prveyear	                    = $year-1;
+        $this->nextyear	                    = $year+1;
+        $this->pin                          = $pin;
+        $this->lists                        = $lists;
+        $this->department                   = $departmnet_id;
+        $this->displaY('payment_chart_detail');
+    }
+
+    private function get_sum($lists){
+        $sum                                = array();
+        $sum['this_month']                  = array_sum(array_column($lists,'this_month'));
+        $sum['history']                     = array_sum(array_column($lists,'history'));
+        $sum['this_month_return']           = array_sum(array_column($lists,'this_month_return'));
+        $sum['sum_average']                 = (round($sum['this_month_return']/($sum['this_month']+$sum['history']),4)*100).'%';
+        return $sum;
+    }
+
+    /**
+     * 获取当月计划回款金额
+     * @param $userinfo
+     * @param $begintime
+     * @param $endtime
+     * @return array
+     */
+    public function get_money_back_info($userinfo,$starttime,$endtime){
+        $where                                  = array();
+        $where['payee']                         = $userinfo['id'];
+        $where['return_time']                   = array('lt',$endtime);
+        $where['cid']                           = array('neq',0);
+        $lists                                  = M('contract_pay')->where($where)->select();
+        foreach ($lists as $k=>$v){
+            $data                               = array();
+            $data['this_month_list']            = ''; //计划当月回款
+            $data['history_list']               = ''; //历史欠款
+            $data['this_month']                 = 0;
+            $data['history']                    = 0;
+            foreach ($lists as $k=>$v){
+                if ($v['status']==2){
+                    $v['stu']                   = "<span class='green'>已回款</span>";
+                }elseif ($v['status']==1){
+                    $v['stu']                   = "<span class='yellow'>回款中</span>";
+                }else{
+                    if ($v['return_time']<$endtime){
+                        $v['stu']               = "<span class='red'>未回款</span>";
+                        if ($v['return_time'] < $starttime){ //排除当月未回款的团
+                            $data['history_list'][] = $v;
+                            $data['history']        += $v['amount']; //计划回款金额
+                            $data['history_return'] += $v['pay_amount']; //回款金额
+                        }
+                    }else{
+                        $v['stu']               = "<font color='#999999'>未考核</font>";
+                    }
+                }
+
+                if (($v['return_time'] > $starttime && $v['return_time'] < $endtime) || ($v['pay_time'] > $starttime && $v['pay_time'] < $endtime)){
+                    $data['this_month_list'][]  = $v;
+                    $data['this_month']         += $v['amount']; //计划回款时间或实际回款时间在当月的团
+                    if ($v['pay_time'] > $starttime && $v['pay_time'] < $endtime){
+                        $data['this_month_return']  += $v['pay_amount']; //当月实际回款金额
+                    }
+                }
+
+            }
+        }
+        $data['money_back_average']         = (round($data['this_month_return']/($data['history']+$data['this_month']),4)*100).'%';
+        return $data;
+    }
+
+
 }
