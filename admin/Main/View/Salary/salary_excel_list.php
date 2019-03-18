@@ -316,6 +316,8 @@
         var id = $(this).attr('id');//用户id
         if($('.individual_tax_update'+id).length <= 0) {
             var money = $(this).text();
+            console.log(money);
+            alert(money);
             $(this).empty();
             var h  = '<input type="text" class="form-control individual_tax_update'+id+'" value="'+money+'" />';
             $(this).append(h);
