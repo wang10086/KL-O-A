@@ -409,7 +409,7 @@ class InspectController extends BaseController{
     }
 
     // @@@NODE-3###score_detail###每条评分详情###
-    public function score_detail(){
+    public function public_score_detail(){
         $id                 = I('id');
         $info               = M()->table('__TCS_SCORE__ as s')
             ->field('s.*,u.mobile,o.project,o.kind')
@@ -433,7 +433,7 @@ class InspectController extends BaseController{
         $this->row          = $info;
         $this->score_stu    = C('SCORE_STU');
 
-        $this->display();
+        $this->display('score_detail');
     }
 
 

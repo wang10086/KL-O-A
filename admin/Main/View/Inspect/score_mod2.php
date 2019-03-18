@@ -109,9 +109,9 @@
                         <!--<td>{$row.status}</td>-->
 
                         <td class="taskOptions">
-                            <if condition="rolemenu(array('Inspect/score_detail'))">
+                            <!--<if condition="rolemenu(array('Inspect/score_detail'))">-->
                                 <button class="btn btn-info btn-smsm" onclick="show_score({$row.id})"><i class="fa fa-bars"></i></button>
-                            </if>
+                            <!--</if>-->
                         </td>
 
                     </tr>
@@ -130,7 +130,7 @@
 <script type="text/javascript">
 
     function show_score(id) {
-        art.dialog.open('index.php?m=Main&c=Inspect&a=score_detail&id='+id,{
+        art.dialog.open('index.php?m=Main&c=Inspect&a=public_score_detail&id='+id,{
             lock:true,
             title: '客户满意度详情',
             width:800,
