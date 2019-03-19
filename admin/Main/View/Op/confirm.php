@@ -113,6 +113,7 @@
                                 </div><!-- /.box-body -->
                             </div>
 
+                            <?php if ($guide_need){ ?>
                             <div class="box box-warning">
                                 <div class="box-header">
                                     <h3 class="box-title">辅导员/教师、专家需求</h3>
@@ -125,6 +126,7 @@
                                     <?php }?>
                                 </div>
                             </div>
+                            <?php } ?>
 
 
                         </div><!--/.col (right) -->
