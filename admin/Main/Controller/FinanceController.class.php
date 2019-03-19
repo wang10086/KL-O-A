@@ -2641,7 +2641,6 @@ class FinanceController extends BaseController {
         $where                              = array();
         $where['c.payee']                   = $uid;
         $where['c.return_time']	            = array('lt',$end_time);
-        $where['c.cid']                     = array('neq',0);
         if ($title) $where['o.project']     = array('like','%'.$title.'%');
         if ($group_id) $where['o.group_id'] = $group_id;
         if ($opid)  $where['c.op_id']       = $opid;
@@ -2794,7 +2793,6 @@ class FinanceController extends BaseController {
         $where                                  = array();
         $where['payee']                         = $userinfo['id'];
         $where['return_time']                   = array('lt',$endtime);
-        $where['cid']                           = array('neq',0);
         $lists                                  = M('contract_pay')->where($where)->select();
         foreach ($lists as $k=>$v){
             $data                               = array();
