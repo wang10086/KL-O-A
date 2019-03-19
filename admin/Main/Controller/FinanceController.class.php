@@ -2668,7 +2668,7 @@ class FinanceController extends BaseController {
                 }
             }
 
-            if (($v['return_time'] > $start_time && $v['return_time'] < $end_time) || ($v['pay_time'] > $start_time && $v['pay_time'] < $end_time)){
+            if (($v['return_time'] > $start_time && $v['return_time'] < $end_time && $v['status'] != 2) || ($v['pay_time'] > $start_time && $v['pay_time'] < $end_time)){
                 $data['this_month_list'][]  = $v;
                 $data['this_month']         += $v['amount'];
                 if ($v['pay_time'] > $start_time && $v['pay_time'] < $end_time){
@@ -2818,7 +2818,7 @@ class FinanceController extends BaseController {
                     }
                 }
 
-                if (($v['return_time'] > $starttime && $v['return_time'] < $endtime) || ($v['pay_time'] > $starttime && $v['pay_time'] < $endtime)){
+                if (($v['return_time'] > $starttime && $v['return_time'] < $endtime && $v['status'] != 2) || ($v['pay_time'] > $starttime && $v['pay_time'] < $endtime)){
                     $data['this_month_list'][]  = $v;
                     $data['this_month']         += $v['amount']; //计划回款时间或实际回款时间在当月的团
                     if ($v['pay_time'] > $starttime && $v['pay_time'] < $endtime){
