@@ -191,7 +191,6 @@
         <div id="payment_val">1</div>
         <div class="form-group col-md-12" id="useraddbtns">
             <a href="javascript:;" class="btn btn-success btn-sm" onClick="add_payment()"><i class="fa fa-fw fa-plus"></i> 增加回款信息</a>
-            <!--<a  href="javascript:;" class="btn btn-info btn-sm" onClick="javascript:save('save_guide','<?php /*echo U('Finance/public_save',array('savetype'=>20)); */?>',{$op.op_id});">保存</a>-->
             <input type="submit" class="btn btn-info btn-sm" value="保存">
         </div>
         <div class="form-group">&nbsp;</div>

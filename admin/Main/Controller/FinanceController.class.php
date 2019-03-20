@@ -2083,7 +2083,14 @@ class FinanceController extends BaseController {
                         if ($delres) $num++;
                     }
                 }
-                if ($num) $this->success('数据保存成功');
+                if ($num){
+                    $record                 = array();
+                    $record['op_id']        = $opid;
+                    $record['optype']       = 4;
+                    $record['explain']      = '编辑回款计划信息';
+                    op_record($record);
+                    $this->success('数据保存成功');
+                }
             }
         }
     }
