@@ -86,6 +86,8 @@ class FinanceController extends BaseController {
 		$op['show_reason']  = $show_reason;
 
         $member               = M('op_member')->where(array('op_id'=>$opid))->order('id')->select();
+        $pays                 = M('contract_pay')->where(array('op_id'=>$opid))->select(); //回款计划
+        $this->pays           = $pays;
         $this->member         = $member;
 		$this->kind           = C('COST_TYPE');
 		$this->op             = $op;
@@ -117,12 +119,13 @@ class FinanceController extends BaseController {
                 $arr['del_status']  = 0;
                 $arr['product_id']  = 0;
 
-                $costacc[]        = $arr;
+                $costacc[]          = $arr;
             }
         }
-        $this->dijie_shouru   = $dijie_shouru?$dijie_shouru:0;
-
-        $this->costacc        = $costacc;
+        $this->dijie_shouru         = $dijie_shouru?$dijie_shouru:0;
+        $this->costacc              = $costacc;
+        $this->type                 = C('JIEKUAN_TYPE'); //回款方式
+        $this->company              = C('COMPANY'); //回款单位
         $this->display('op');
 	}
 
@@ -2032,6 +2035,55 @@ class FinanceController extends BaseController {
                 }else{
                     $this->error('修改失败');
                 }
+            }
+
+            //保存回款计划
+            if ($savetype==20){
+                $opid           = I('opid');
+                $payment        = I('payment');
+                $project        = trim(I('project'));
+                if (!$opid) $this->error('获取数据失败');
+                $db             = M('contract_pay');
+                $cid            = M('contract')->where(array('op_id'=>$opid))->getField('id');
+                $op             = M('op')->where(array('op_id'=>$opid))->find();
+                $num            = 0;
+                $ids            = array();
+                if (is_array($payment)){
+                    foreach ($payment as $v){
+                        //保存数据
+                        $info = array();
+                        $info['cid']			= $cid?$cid:0;
+                        $info['no']			    = $v['no'];
+                        $info['pro_name']	    = $op['project'];
+                        $info['op_id']  		= $opid;
+                        $info['amount']		    = $v['amount'];
+                        $info['ratio']		    = $v['ratio'];
+                        $info['return_time']	= strtotime($v['return_time']);
+                        $info['remark']		    = $v['remarks'];
+                        $info['type']           = $v['type'];
+                        $info['company']        = $v['company'];
+                        $info['userid'] 		= cookie('userid');
+                        $info['payee']		    = $op['create_user'];
+                        $info['create_time']    = NOW_TIME;
+                        if ($v['pid']){
+                            $res                = $db->where(array('id'=>$v['pid']))->save($info);
+                            $ids[]              = $v['pid'];
+                        }else{
+                            $res                = $db->add($info);
+                            $ids[]              = $res;
+                        }
+                        if ($res) $num++;
+                    }
+
+                    if ($ids){ //删除相关数据
+                        $where                  = array();
+                        $where['op_id']         = $opid;
+                        $where['id']            = array('not in',$ids);
+                        $delres                 = $db->where($where)->delete();
+                        if ($delres) $num++;
+                    }
+                }
+                if ($num) $this->success('数据保存成功');
             }
         }
     }

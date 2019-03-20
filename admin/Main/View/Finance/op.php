@@ -153,7 +153,13 @@
         });
 		$('#costacc').find('.title').each(function(index, element) {
             $(this).text(parseInt(index)+1);
-        });	
+        });
+        $('#payment').find('.title').each(function(index, element) {
+            $(this).text(parseInt(index)+1);
+        });
+        $('#payment').find('.payno').each(function(index, element) {
+            $(this).val(parseInt(index)+1);
+        });
 	}
 	
 	//移除
@@ -162,7 +168,28 @@
 		orderno();
 		cost_total();
 	}
-	
+
+    //新增回款计划
+    function add_payment(){
+        var i = parseInt($('#payment_val').text())+1;
+
+        var html = '<div class="userlist" id="pretium_'+i+'">';
+        html += '<span class="title"></span>';
+        html += '<input type="hidden" name="payment['+i+'][no]" class="payno" value="">';
+        html += '<div class="f_15"><input type="text" class="form-control" name="payment['+i+'][amount]" onblur="check_ratio('+i+',$(this).val())" value=""></div>';
+        html += '<div class="f_15"><input type="text" class="form-control" name="payment['+i+'][ratio]" value=""></div>';
+        html += '<div class="f_15"><input type="text" class="form-control inputdate"  name="payment['+i+'][return_time]" value=""></div>';
+        html += '<div class="f_15"><select class="form-control" name="payment['+i+'][company]"><foreach name="company" key="k" item="v"><option value="{$k}">{$v}</option></foreach></select></div>';
+        html += '<div class="f_15"><select class="form-control" name="payment['+i+'][type]"><foreach name="type" key="k" item="v"><option value="{$k}">{$v}</option></foreach></select></div>';
+        html += '<div class="f_25"><input type="text" class="form-control" name="payment['+i+'][remarks]" value=""></div>';
+        html += '<a href="javascript:;" class="btn btn-danger btn-flat" onclick="delbox(\'pretium_'+i+'\')">删除</a>';
+        html += '</div>';
+        $('#payment').append(html);
+        $('#payment_val').html(i);
+        orderno();
+        relaydate();
+    }
+
 	//更新成本核算
 	function cost_total(){
         var costaccsum = get_costaccsum();
@@ -203,7 +230,8 @@
 		var chengben = parseFloat($('#costaccsumval').val());   //成本
 		var renshu   = parseInt($('#renshu').val());        //人数
 		var shouru   = parseFloat($('#shouru').val());        //收入
-		
+		$('#sum_money_return').html(shouru);
+
 		//毛利
 		if(shouru && chengben){
 			var maoli    = accSub(shouru,chengben).toFixed(2);
@@ -254,6 +282,22 @@
             str= str/100;
         var res = str.toFixed(2);
         return res;
+    }
+
+    //自动计算回款比例
+    function check_ratio(num,obj) {
+        var sum         = $('#sum_money_return').html(); //预算收入
+        if (sum == 0){
+            art_show_msg('预算收入有误,请重新输入');
+            return false;
+        }else{
+            var money_back  = obj;
+            var ratio       = accDiv(money_back,sum); //相除
+            var ratio       = ratio.toFixed(4); //保留4位小数
+            var average     = accMul(ratio,'100')+'%'; //相加
+            $('input[name="payment['+num+'][ratio]"]').val(average);
+        }
+
     }
 
 </script>

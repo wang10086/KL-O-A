@@ -113,7 +113,7 @@ class ContractController extends BaseController {
 			save_aontract_art($cid,$attr);
 			
 			//保存分期信息
-			save_payment($cid,$payment);
+			//save_payment($cid,$payment);
 			
 			if($save) {
 				$this->success('保存成功！',$referer);
@@ -198,10 +198,11 @@ class ContractController extends BaseController {
 			$this->kinds			= M('project_kind')->getField('id,name', true);
 			$this->huikuan			= $huikuan; 
 			$this->atts				= M('contract_pic')->where(array('cid'=>$id))->order('id asc')->select();
-			$this->pays				= M('contract_pay')->where(array('cid'=>$id))->order('id asc')->select();
-			$this->huikuanlist		= M('contract_pay')->where(array('cid'=>$id,'status'=>array('neq','2')))->order('id asc')->select();
-			
-			
+			//$this->pays				= M('contract_pay')->where(array('cid'=>$id))->order('id asc')->select();
+			//$this->huikuanlist		= M('contract_pay')->where(array('cid'=>$id,'status'=>array('neq','2')))->order('id asc')->select();
+            $this->pays				= M('contract_pay')->where(array('op_id'=>$opid))->order('id asc')->select();
+            $this->huikuanlist		= M('contract_pay')->where(array('op_id'=>$opid,'status'=>array('neq','2')))->order('id asc')->select();
+
 			$row['strseal']			= $row['seal'] ? '<span class="green">我司已盖章</span>' : '<span class="red">我司尚未盖章</span>';
 			$row['gbstatus']		= $row['gbs'] ? $gbsta[$row['gbs']] : '未返回';
 			$row['strstatus']		= $row['status'] ? '<span class="green">已确认</span>' : '<span class="red">未确认</span>';

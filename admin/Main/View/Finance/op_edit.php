@@ -94,11 +94,112 @@
             <input type="text" name="info[renjunmaoli]" id="renjunmaoli" class="form-control" value="{$budget.renjunmaoli}" />  
         </div>
     </div>
+</div>
+</form>
+
+<form method="post" action="{:U('Finance/public_save')}" id="save_moneyBackPlan">
+    <input type="hidden" name="opid" value="{$op.op_id}">
+    <input type="hidden" name="dosubmint" value="1">
+    <input type="hidden" name="savetype" value="20">
+    <div class="content" style="padding-top:0px;">
+        <h2 style="font-size:16px; border-bottom:2px solid #dedede; padding-bottom:10px;"> <span class="red">回款计划</span> (回款总金额:<span id="sum_money_return"></span>元)</h2>
+        <div class="callout callout-danger">
+            <h4>提示！</h4>
+            <p>1、在业务实施前回款不小于70%；</p>
+            <p>2、在业务实施结束后10个工作日收回全部尾款；</p>
+        </div>
+        <div class="form-group col-md-12" id="payment">
+            <div class="userlist">
+                <div class="unitbox_15">回款金额(元)</div>
+                <div class="unitbox_15">回款比例(%)</div>
+                <div class="unitbox_15">计划回款时间</div>
+                <div class="unitbox_15">收款方</div>
+                <div class="unitbox_15">回款方式</div>
+                <div class="unitbox_25">备注</div>
+            </div>
+            <?php if($pays){ ?>
+                <foreach name="pays" key="kk" item="pp">
+                    <div class="userlist" id="pretium_8888{$pp.id}">
+                        <span class="title"><?php echo $kk+1; ?></span>
+                        <input type="hidden" name="payment[8888{$pp.id}][no]" class="payno"  value="{$pp.no}">
+                        <input type="hidden" class="form-control" name="payment[8888{$pp.id}][pid]" value="{$pp.id}">
+                        <div class="f_15">
+                            <input type="text" class="form-control" name="payment[8888{$pp.id}][amount]" onblur="check_ratio($(this).parent('div').prev().val(),$(this).val())" value="{$pp.amount}">
+                        </div>
+                        <div class="f_15">
+                            <input type="text" class="form-control" name="payment[8888{$pp.id}][ratio]" value="{$pp.ratio}">
+                        </div>
+                        <div class="f_15">
+                            <input type="text" class="form-control inputdate"  name="payment[8888{$pp.id}][return_time]" value="<if condition="$pp['return_time']">{$pp.return_time|date='Y-m-d',###}</if>">
+                        </div>
+                        <div class="f_15">
+                            <select class="form-control" name="payment[8888{$pp.id}][company]" >
+                                <foreach name="company" key="k" item="v">
+                                    <option value="{$k}" <?php if ($pp['company']==$k) echo 'selected'; ?>>{$v}</option>
+                                </foreach>
+                            </select>
+                        </div>
+                        <div class="f_15">
+                            <select class="form-control" name="payment[8888{$pp.id}][type]" >
+                                <foreach name="type" key="k" item="v">
+                                    <option value="{$k}" <?php if ($pp['type']==$k) echo "selected"; ?>>{$v}</option>
+                                </foreach>
+                            </select>
+                        </div>
+                        <div class="f_25">
+                            <input type="text" class="form-control" name="payment[8888{$pp.id}][remarks]" value="{$pp.remark}">
+                        </div>
+
+                        <a href="javascript:;" class="btn btn-danger btn-flat" onclick="delbox('pretium_8888{$pp.id}')">删除</a>
+                    </div>
+                </foreach>
+            <?php }else{ ?>
+                <div class="userlist" id="pretium_id">
+                    <span class="title">1</span>
+                    <input type="hidden" name="payment[1][no]" class="payno" value="1">
+                    <div class="f_15">
+                        <input type="text" class="form-control" name="payment[1][amount]" onblur="check_ratio($(this).parent('div').prev().val(),$(this).val())" value="">
+                    </div>
+                    <div class="f_15">
+                        <input type="text" class="form-control" name="payment[1][ratio]" value="">
+                    </div>
+                    <div class="f_15">
+                        <input type="text" class="form-control inputdate"  name="payment[1][return_time]" value="">
+                    </div>
+                    <div class="f_15">
+                        <select class="form-control" name="payment[1][company]">
+                            <foreach name="company" key="k" item="v">
+                                <option value="{$k}">{$v}</option>
+                            </foreach>
+                        </select>
+                    </div>
+                    <div class="f_15">
+                        <select class="form-control" name="payment[1][type]">
+                            <foreach name="type" key="k" item="v">
+                                <option value="{$k}">{$v}</option>
+                            </foreach>
+                        </select>
+                    </div>
+                    <div class="f_25">
+                        <input type="text" class="form-control" name="payment[1][remarks]" value="">
+                    </div>
+
+                    <a href="javascript:;" class="btn btn-danger btn-flat" onclick="delbox('pretium_id')">删除</a>
+                </div>
+            <?php } ?>
+        </div>
+        <div id="payment_val">1</div>
+        <div class="form-group col-md-12" id="useraddbtns">
+            <a href="javascript:;" class="btn btn-success btn-sm" onClick="add_payment()"><i class="fa fa-fw fa-plus"></i> 增加回款信息</a>
+            <!--<a  href="javascript:;" class="btn btn-info btn-sm" onClick="javascript:save('save_guide','<?php /*echo U('Finance/public_save',array('savetype'=>20)); */?>',{$op.op_id});">保存</a>-->
+            <input type="submit" class="btn btn-info btn-sm" value="保存">
+        </div>
+        <div class="form-group">&nbsp;</div>
+    </div>
+</form>
     
      <div class="content"  style="border-top:2px solid #f39c12; padding-bottom:20px;">
-        
         <table width="100%" id="font-14" rules="none" border="0" cellpadding="0" cellspacing="0">
-                
             <tr>
                 <td width="33.33%">审批状态：{$op.showstatus}</td>
                 <td width="33.33%">审批人：{$op.show_user}</td>
@@ -110,10 +211,6 @@
             </tr>
             <?php } ?>
         </table>
-        
-       
     </div>
 
-</div>
-</form>          
-                            
+

@@ -86,7 +86,7 @@
                                     
                                     
                                     
-                                    <div class="content" style="padding-top:0px;">
+                                    <!--<div class="content" style="padding-top:0px;">
                                     	<h2 style="font-size:16px; color:#ff3300; border-bottom:2px solid #dedede; padding-bottom:10px;">回款计划</h2>
                                         <div id="payment">
                                             <div class="userlist">
@@ -95,10 +95,10 @@
                                                 <div class="unitbox_20">计划回款时间</div>
                                                 <div class="unitbox_40">备注</div>
                                             </div>
-                                            <?php if($pays){ ?>
+                                            <?php /*if($pays){ */?>
                                             <foreach name="pays" key="kk" item="pp"> 
                                             <div class="userlist" id="pretium_8888{$pp.id}">
-                                                <span class="title"><?php echo $kk+1; ?></span>
+                                                <span class="title"><?php /*echo $kk+1; */?></span>
                                                 <input type="hidden" name="payment[8888{$pp.id}][no]" class="payno"  value="{$pp.no}">
                                                 <input type="hidden" class="form-control" name="payment[8888{$pp.id}][pid]" value="{$pp.id}">
                                                 <div class="f_20">
@@ -117,7 +117,7 @@
                                                 <a href="javascript:;" class="btn btn-danger btn-flat" onclick="delbox('pretium_8888{$pp.id}')">删除</a>
                                             </div>
                                             </foreach>
-                                            <?php }else{ ?>
+                                            <?php /*}else{ */?>
                                             <div class="userlist" id="pretium_id">
                                                 <span class="title">1</span>
                                                 <input type="hidden" name="payment[1][no]" class="payno" value="1">
@@ -136,7 +136,7 @@
                                                
                                                 <a href="javascript:;" class="btn btn-danger btn-flat" onclick="delbox('pretium_id')">删除</a>
                                             </div>
-                                            <?php } ?>
+                                            <?php /*} */?>
                                         </div>
                                         <div id="payment_val">1</div>
                                         <div class="form-group col-md-12" id="useraddbtns">
@@ -144,9 +144,9 @@
                                              
                                         </div>
                                         <div class="form-group">&nbsp;</div>
-                                    </div>
-                                        
-                                    
+                                    </div>-->
+
+                                    <div class="form-group">&nbsp;</div>
                                 </div>
                                     
                                     
