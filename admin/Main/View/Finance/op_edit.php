@@ -102,7 +102,7 @@
     <input type="hidden" name="dosubmint" value="1">
     <input type="hidden" name="savetype" value="20">
     <div class="content" style="padding-top:0px;">
-        <h2 style="font-size:16px; border-bottom:2px solid #dedede; padding-bottom:10px;"> <span class="red">回款计划</span> (回款总金额:<span id="sum_money_return"></span>元)</h2>
+        <h2 style="font-size:16px; border-bottom:2px solid #dedede; padding-bottom:10px;"> <span class="black">回款计划</span> (回款总金额:<span id="sum_money_return"></span>元)</h2>
         <div class="callout callout-danger">
             <h4>提示！</h4>
             <p>1、在业务实施前回款不小于70%；</p>
@@ -124,7 +124,7 @@
                         <input type="hidden" name="payment[8888{$pp.id}][no]" class="payno"  value="{$pp.no}">
                         <input type="hidden" class="form-control" name="payment[8888{$pp.id}][pid]" value="{$pp.id}">
                         <div class="f_15">
-                            <input type="text" class="form-control" name="payment[8888{$pp.id}][amount]" onblur="check_ratio($(this).parent('div').prev().val(),$(this).val())" value="{$pp.amount}">
+                            <input type="text" class="form-control" name="payment[8888{$pp.id}][amount]" onblur="check_ratio('8888'+{$pp.id},$(this).val())" value="{$pp.amount}">
                         </div>
                         <div class="f_15">
                             <input type="text" class="form-control" name="payment[8888{$pp.id}][ratio]" value="{$pp.ratio}">
