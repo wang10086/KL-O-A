@@ -37,8 +37,40 @@
             </table>
         </div>
 
-
-
+        <div class="content mt20" style="padding-top:0px;  border-top:2px solid #f39c12;">
+            <h2 style="font-size:16px; padding-bottom:10px;"> <span class="black">回款计划</span> (应回款总金额:<span id="sum_money_return"></span>元)</h2>
+            <div class="callout callout-danger">
+                <h4>提示！</h4>
+                <p>1、在业务实施前回款不小于70%；</p>
+                <p>2、在业务实施结束后10个工作日收回全部尾款；</p>
+            </div>
+            <table class="table table-striped" id="font-14-p">
+                <thead>
+                <tr>
+                    <th width="">回款金额(元)</th>
+                    <th width="">回款比例(%)</th>
+                    <th width="">计划回款时间</th>
+                    <th width="">收款方</th>
+                    <th width="">回款方式</th>
+                    <th width="">备注</th>
+                    <th width="">回款状态</th>
+                </tr>
+                </thead>
+                <tbody>
+                <foreach name="pays" key="k" item="v">
+                    <tr class="userlist" id="supplier_id_103">
+                        <td width="16.66%">&yen; {$v.amount}</td>
+                        <td width="16.66%">{$v.ratio}</td>
+                        <td width="16.66%">{$v.return_time|date='Y-m-d',###}</td>
+                        <td width="16.66%">{$company[$v['company']]}</td>
+                        <td width="16.66%">{$type[$v['type']]}</td>
+                        <td>{$v.remark}</td>
+                        <td>{$v.huikuan_stu}</td>
+                    </tr>
+                </foreach>
+                </tbody>
+            </table>
+        </div>
 
         <div class="content"  style="border-top:2px solid #f39c12; margin-top:20px; padding-bottom:20px;">
 

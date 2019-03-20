@@ -171,4 +171,77 @@ class FinanceModel extends Model{
         $money                  = $db->where($where)->getField('shouru');
         return $money;
     }
+
+    /**
+     * 保存回款计划
+     * @param $payment
+     * @param $opid
+     * @param $shouru
+     * @return int
+     */
+    public function save_money_back_plans($payment,$opid,$shouru){
+        $db             = M('contract_pay');
+        $cid            = M('contract')->where(array('op_id'=>$opid))->getField('id');
+        $op             = M('op')->where(array('op_id'=>$opid))->find();
+        $num            = 0;
+        $ids            = array();
+        if (is_array($payment)){
+            foreach ($payment as $v){
+                //保存数据
+                $info = array();
+                $info['cid']			= $cid?$cid:0;
+                $info['no']			    = $v['no'];
+                $info['pro_name']	    = $op['project'];
+                $info['op_id']  		= $opid;
+                $info['amount']		    = $v['amount'];
+                $info['ratio']		    = $v['ratio'];
+                $info['return_time']	= strtotime($v['return_time']);
+                $info['remark']		    = $v['remarks'];
+                $info['type']           = $v['type'];
+                $info['company']        = $v['company'];
+                $info['userid'] 		= cookie('userid');
+                $info['payee']		    = $op['create_user'];
+                $info['create_time']    = NOW_TIME;
+                if ($v['pid']){
+                    $res                = $db->where(array('id'=>$v['pid']))->save($info);
+                    $ids[]              = $v['pid'];
+                }else{
+                    $res                = $db->add($info);
+                    $ids[]              = $res;
+                }
+                if ($res) $num++;
+            }
+
+            if ($ids){ //删除相关数据
+                $where                  = array();
+                $where['op_id']         = $opid;
+                $where['id']            = array('not in',$ids);
+                $delres                 = $db->where($where)->delete();
+                if ($delres) $num++;
+            }
+        }
+        if ($num){
+            $record                     = array();
+            $record['op_id']            = $opid;
+            $record['optype']           = 4;
+            $record['explain']          = '编辑回款计划信息';
+            //op_record($record);
+        }
+        return $num;
+    }
+
+
+    public function get_money_back_lists($opid){
+        $lists                          = M('contract_pay')->where(array('op_id'=>$opid))->select();
+        foreach ($lists as $k=>$v){
+            if ($v['status'] ==2){
+                $lists[$k]['huikuan_stu']= "<span class='green'>已回款</span>";
+            }elseif ($v['status'] ==2){
+                $lists[$k]['huikuan_stu']= "<span class='blue'>回款中</span>";
+            }else{
+                $lists[$k]['huikuan_stu']= "<span class='red'>未回款</span>";
+            }
+        }
+        return $lists;
+    }
 }

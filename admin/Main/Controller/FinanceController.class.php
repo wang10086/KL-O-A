@@ -86,7 +86,7 @@ class FinanceController extends BaseController {
 		$op['show_reason']  = $show_reason;
 
         $member               = M('op_member')->where(array('op_id'=>$opid))->order('id')->select();
-        $pays                 = M('contract_pay')->where(array('op_id'=>$opid))->select(); //回款计划
+        $pays                 = $mod->get_money_back_lists($opid); //回款计划
         $this->pays           = $pays;
         $this->member         = $member;
 		$this->kind           = C('COST_TYPE');
@@ -433,19 +433,22 @@ class FinanceController extends BaseController {
 
 	//@@@NODE-3###save_appcost###保存预算###
     public function save_appcost(){
+        $mod                = D('Finance');
+		$db                 = M('op_costacc');
+		$opid               = I('opid');
+		$costacc            = I('costacc');
+		$info               = I('info');
+		$resid              = I('resid');
+		$referer            = I('referer');
+		$budget             = I('budget',0);
+		$xinzhi             = I('xinzhi');
+		$num                = 0;
+        $payment            = I('payment');
+		
+		$info['xinzhi']     = implode(',',$xinzhi);
+		$sum_back_money     = array_sum(array_column($payment,'amount'));
+        if (!$info['shouru'] || $sum_back_money != $info['shouru']) $this->error('请确保回款总金额和收入一致');
 
-		$db              = M('op_costacc');
-		$opid            = I('opid');
-		$costacc         = I('costacc');
-		$info            = I('info');
-		$resid           = I('resid');
-		$referer         = I('referer');
-		$budget          = I('budget',0);
-		$xinzhi          = I('xinzhi');
-		$num             = 0;
-		
-		$info['xinzhi']  = implode(',',$xinzhi);
-		
 		//保存预算
 		if($opid && $costacc){
 			
@@ -465,8 +468,10 @@ class FinanceController extends BaseController {
 					if($savein) $num++;
 				}
 			}	
-			
-			
+
+			//保存回款计划
+            $mod->save_money_back_plans($payment,$opid,$info['shouru']);
+
 			if($budget){
 				M('op_budget')->data($info)->where(array('id'=>$budget))->save();	
 			}else{
@@ -2038,7 +2043,7 @@ class FinanceController extends BaseController {
             }
 
             //保存回款计划
-            if ($savetype==20){
+            /*if ($savetype==20){
                 $opid           = I('opid');
                 $payment        = I('payment');
                 $project        = trim(I('project'));
@@ -2091,7 +2096,7 @@ class FinanceController extends BaseController {
                     op_record($record);
                     $this->success('数据保存成功');
                 }
-            }
+            }*/
         }
     }
 
