@@ -2759,7 +2759,7 @@ class FinanceController extends BaseController {
     public function public_payment_chart(){
         $year		                        = I('year',date('Y'));
         $month	                            = I('month',date('m'));
-        $pin                                = I('pin',0);
+        $pin                                = I('pin',1);
         if (strlen($month)<2) $month        = str_pad($month,2,'0',STR_PAD_LEFT);
         $times                              = $year.$month;
         $yw_departs                         = C('YW_DEPARTS');  //业务部门id
@@ -2938,6 +2938,21 @@ class FinanceController extends BaseController {
         }else{
             $this->error('数据保存失败');
         }
+    }
+
+    /**
+     * 历史欠款
+     */
+    public function history_arrears(){
+        $year		                        = I('year',date('Y'));
+        $month	                            = I('month',date('m'));
+        if (strlen($month)<2) $month        = str_pad($month,2,'0',STR_PAD_LEFT);
+
+        $this->year		                    = I('year',date('Y'));
+        $this->month	                    = I('month',date('m'));
+        $this->prveyear	                    = $year-1;
+        $this->nextyear	                    = $year+1;
+        $this->display();
     }
 
 }
