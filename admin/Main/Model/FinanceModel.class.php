@@ -236,7 +236,11 @@ class FinanceModel extends Model{
         return $num;
     }
 
-
+    /**
+     * 获取回款计划列表
+     * @param $opid
+     * @return mixed
+     */
     public function get_money_back_lists($opid){
         $lists                          = M('contract_pay')->where(array('op_id'=>$opid))->select();
         foreach ($lists as $k=>$v){
@@ -249,5 +253,33 @@ class FinanceModel extends Model{
             }
         }
         return $lists;
+    }
+
+    /**
+     * 判断所填写回款计划是否需要审核(审核页面使用)
+     * @param $opid
+     */
+    public function get_backMoneyPlans($opid){
+        //1、在业务实施前回款不小于70%；2、在业务实施结束后10个工作日收回全部尾款；
+        $confirm_info                   = M('op_team_confirm')->where(array('op_id'=>$opid))->find();
+        $pay_lists                      = M('contract_pay')->where(array('op_id'=>$opid))->select();
+        if ($pay_lists){
+            $count                          = count($pay_lists);
+            $start_time                     = $confirm_info['dep_time']; //实施时间
+            $end_time                       = $confirm_info['ret_time']; //结束时间
+            $first_time                     = $pay_lists[0]['return_time']; //首次计划回款时间
+            $return_time                    = $pay_lists[$count-1]['return_time']; //最后一次计划回款时间
+            $after_ten_days                 = getAfterWorkDay(10,$end_time); //获取业务实施结束后十个工作日
+            $after_ten_time                 = strtotime($after_ten_days);
+            if ($first_time>$start_time || $return_time>$after_ten_time){
+                $res                        = '-1'; //超时
+            }else{
+                $res                        = 0; //正常
+            }
+        }else{
+            $res                            = '-1'; //无回款计划
+        }
+
+        return $res;
     }
 }

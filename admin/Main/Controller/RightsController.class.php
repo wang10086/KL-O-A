@@ -41,7 +41,7 @@ class RightsController extends BaseController {
             $res = $resdb->table('__' . strtoupper($cfg['table']) . '__')->field($cfg['field'])->find($row['req_id']);
             $rs[$k]['cfgdata'] = $cfg;
             $rs[$k]['resdata'] = $res;
-            
+
             $field = explode(',', $cfg['field']);
             $title = explode(',', $cfg['title']);
             $other = '';
@@ -53,7 +53,8 @@ class RightsController extends BaseController {
 
             //团号+计调人员 + 回款金额
             $fid                = $row['req_id'];
-            $budget             = M('op_huikuan')->find($fid);
+            //$budget             = M('op_huikuan')->find($fid);
+            $budget             = M("$row[req_table]")->find($fid);
             $opid               = $budget['op_id'];
             $rs[$k]['group_id']    = M('op')->where(array('op_id'=>$opid))->getfield('group_id');
 
@@ -66,8 +67,7 @@ class RightsController extends BaseController {
         }
 
         $this->lists = $rs;
-        //var_dump($this->lists);die;
-		
+
 		
          $this->audit_status = array (
                 P::AUDIT_STATUS_NOT_AUDIT  => '未审核',
@@ -170,8 +170,15 @@ class RightsController extends BaseController {
             $this->display('audit_ok');
         } else {
             
-            $this->id = I('id');
-            $this->req_type = M('audit_log')->where("id=".$this->id)->getField('req_type');
+            $this->id   = I('id');
+            $list       = M('audit_log')->where("id=".$this->id)->find();
+            $this->req_type = $list['req_type'];
+            if ($list['req_type']==P::REQ_TYPE_BUDGET){ //(审核预算)判断回款信息
+                $return_list            = M("$list[req_table]")->where(array('id'=>$list['req_id']))->find();
+                $mod                    = D('Finance');
+                $res                    = $mod->get_backMoneyPlans($return_list['op_id']); //判断是否超时
+                $this->return_money_stu = $res;
+            }
             $this->display('audit_apply');
         }
     }

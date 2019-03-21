@@ -13,7 +13,9 @@
     				<input type="hidden" name="id"    value="{$id}" />
     				<input type="hidden" name="req_type" value="{$req_type}" />
                     <div class="form-group box-float-12">
-                        
+                        <?php if ($return_money_stu && $return_money_stu == '-1'){ ?> <!--预算-->
+                            <p class="red">回款计划不合规定,请您关注；请您根据实际情况,按尽早收回全款原则予以审批！</p>
+                        <?php } ?>
                         <input type="radio" name="info[dst_status]" value="<?php echo P::AUDIT_STATUS_PASS ;?>"> 审批通过 &nbsp;&nbsp;&nbsp;&nbsp;
                         <input type="radio" name="info[dst_status]" value="<?php echo P::AUDIT_STATUS_NOT_PASS ;?>"> 审批不通过
                         
