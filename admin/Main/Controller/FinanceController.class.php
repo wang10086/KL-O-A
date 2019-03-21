@@ -43,8 +43,9 @@ class FinanceController extends BaseController {
 			$budget         = M('op_budget')->find($id);
 			$opid           = $budget['op_id'];
 		}
-		if(!$opid) $this->error('项目不存在');	
-		
+		if(!$opid) $this->error('项目不存在');
+        $op                 = M('op')->where(array('op_id'=>$opid))->find();
+
 		$where = array();
 		$where['op_id'] = $opid;
 
@@ -85,10 +86,8 @@ class FinanceController extends BaseController {
 		$op['show_time']  = $show_time;
 		$op['show_reason']  = $show_reason;
 
-        $member               = M('op_member')->where(array('op_id'=>$opid))->order('id')->select();
         $pays                 = $mod->get_money_back_lists($opid); //回款计划
         $this->pays           = $pays;
-        $this->member         = $member;
 		$this->kind           = C('COST_TYPE');
 		$this->op             = $op;
 		$this->budget         = $budget;
@@ -188,8 +187,6 @@ class FinanceController extends BaseController {
         }
 
         $this->guide_price      = $guide_price;
-        $member                 = M('op_member')->where(array('op_id'=>$opid))->order('id')->select();
-        $this->member           = $member;
 		$this->kind				= C('COST_TYPE');
 		$this->op				= $op;
 		$this->budget			= $budget;
@@ -609,8 +606,6 @@ class FinanceController extends BaseController {
         $op['show_reason']          = $show_reason;
 
         $dijie_shouru           = $mod->get_landAcquisitionAgency_money($op,P::REQ_TYPE_SETTLEMENT);   //801 获取地接结算收入
-        $member                 = M('op_member')->where(array('op_id'=>$opid))->order('id')->select();
-        $this->member           = $member;
         $this->kind				= C('COST_TYPE');
         $this->costtype			= array('1'=>'其他','2'=>'专家辅导员','3'=>'合格供方','4'=>'物资');
         $this->op				= $op;

@@ -2285,8 +2285,6 @@ class OpController extends BaseController {
 		$op['show_time']  = $show_time;
 		$op['show_reason']  = $show_reason;
 
-        $member               = M('op_member')->where(array('op_id'=>$opid))->order('id')->select();
-        $this->member         = $member;
 		$this->op             = $op;
 		$this->matelist       = $matelist;
 		$this->budget         = $budget;
@@ -2797,8 +2795,6 @@ class OpController extends BaseController {
 
             //人员列表
             $stu_list       = M('op_member')->where(array('op_id'=>$opid))->select();
-            $member         = M('op_member')->where(array('op_id'=>$opid))->order('id')->select();
-            $this->member   = $member;
             $this->stu_list = $stu_list;
 			$this->confirm 	= $confirm;
             $this->upd_num  = $confirm['upd_num'];
@@ -3133,9 +3129,7 @@ class OpController extends BaseController {
 			
 			$this->kinds	= M('project_kind')->getField('id,name', true);
 			$this->op		= $op;
-            $member         = M('op_member')->where(array('op_id'=>$opid))->order('id')->select();
-            $this->member   = $member;
-			
+
 			$auth = M('op_auth')->where(array('op_id'=>$opid))->find();
 			//获取产品负责人信息
 			
