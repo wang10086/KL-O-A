@@ -611,6 +611,7 @@ class FinanceController extends BaseController {
         $dijie_shouru           = $mod->get_landAcquisitionAgency_money($op,P::REQ_TYPE_SETTLEMENT);   //801 获取地接结算收入
         $this->kind				= C('COST_TYPE');
         $this->costtype			= array('1'=>'其他','2'=>'专家辅导员','3'=>'合格供方','4'=>'物资');
+        $this->should_back_money= M('op_budget')->where(array('op_id'=>$opid))->getField('should_back_money'); //回款金额(带入结算收入)
         $this->op				= $op;
         $this->costacc			= $costacc;
         $this->jiesuan			= $jiesuan;
