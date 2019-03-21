@@ -441,12 +441,14 @@ class FinanceController extends BaseController {
 		$xinzhi             = I('xinzhi');
 		$num                = 0;
         $payment            = I('payment');
-		
+        $info['should_back_money']  = $info['shouru'];
+
 		$info['xinzhi']     = implode(',',$xinzhi);
 		$sum_back_money     = array_sum(array_column($payment,'amount'));
         if (!$info['shouru'] || $sum_back_money != $info['shouru']) $this->error('请确保回款总金额和收入一致');
 
-		//保存预算
+
+        //保存预算
 		if($opid && $costacc){
 			
 			$delid = array();
@@ -464,7 +466,7 @@ class FinanceController extends BaseController {
 					$delid[] = $savein;
 					if($savein) $num++;
 				}
-			}	
+			}
 
 			//保存回款计划
             $mod->save_money_back_plans($payment,$opid,$info['shouru']);
@@ -759,8 +761,9 @@ class FinanceController extends BaseController {
 			$huikuan[$k]['show_reason']  = $show_reason;
 		}
 
-        $member             = M('op_member')->where(array('op_id'=>$opid))->order('id')->select();
-        $this->member       = $member;
+        //$member             = M('op_member')->where(array('op_id'=>$opid))->order('id')->select();
+        //$this->member       = $member;
+        $this->jd           = M('op_auth')->where(array('op_id'=>$opid))->getField('yusuan'); //计调
 		$this->op    		= $op;
 		$this->settlement	= $settlement;
 		$this->kinds		= M('project_kind')->getField('id,name', true);
@@ -770,34 +773,35 @@ class FinanceController extends BaseController {
 		
 		
 		$this->pays 			= M()->table('__CONTRACT_PAY__ as p')->field('p.*,c.contract_id')->join('__CONTRACT__ as c on c.id = p.cid','LEFT')->where(array('p.op_id'=>$opid))->order('p.id asc')->select();
-		
-		
+        $this->should_back_money= M('op_budget')->where(array('op_id'=>$opid))->getField('should_back_money');
+
 		$this->display('huikuan');
 	}
 	
 
 	//@@@NODE-3###save_huikuan###保存回款###
     public function save_huikuan(){
-		
+
 		$info			= I('info');
 		$referer		= I('referer');
 		$settlement		= I('settlement',0);
 		$num			= 0;
 
-		//保存回款
-		if(!$info['huikuan'])	$this->error('本次回款金额不能为空');
-		if(!$info['type'])		$this->error('请选择回款类型');
+        //保存回款
+        if(!$info['huikuan'])	$this->error('本次回款金额不能为空');
+        if(!$info['type'])		$this->error('请选择回款类型');
         if (!$info['payer'])    $this->error('付款方不能为空');
-		$info['userid']			= cookie('userid');
-		$info['create_time']		= time();
-		$info['huikuan_time']	= strtotime($info['huikuan_time']);
-		
-		if(!$info['cid']){
-			$cc = M('contract_pay')->find($info['payid']);	
-			$info['cid'] = $cc['cid'];
-		}
-		
-		$save = M('op_huikuan')->add($info);
+        $info['userid']			= cookie('userid');
+        $info['create_time']    = time();
+        $info['huikuan_time']	= strtotime($info['huikuan_time']);
+
+        if(!$info['cid']){
+            $cc = M('contract_pay')->find($info['payid']);
+            $info['cid'] = $cc['cid'];
+        }
+        //var_dump($info);die;
+
+        $save = M('op_huikuan')->add($info);
 
 		//提交审核
 		$audit = M('audit_log')->where(array('req_type'=>P::REQ_TYPE_HUIKUAN,'req_id'=>$save))->find();
@@ -2891,5 +2895,48 @@ class FinanceController extends BaseController {
         return $data;
     }
 
+    //保存修改回款总金额(预算审核通过后)
+    public function save_upd_money_back(){
+        $mod                                = D('Finance');
+        $contract_pay_db                    = M('contract_pay');
+        $op_budget_db                       = M('op_budget');
+        $opid                               = I('opid');
+        $should_back_money                  = I('should_back_money');
+        if (!$opid || intval($should_back_money)==0) $this->error('数据错误');
+        $pays                               = $mod->get_money_back_lists($opid); //回款计划
+        $money_back_num                     = count($pays); //回款次数
+        $num                                = 0;
+        $sum                                = 0;
+        if (is_array($pays)){
+            foreach ($pays as $k=>$v){
+                $info                       = array();
+                if ($k<($money_back_num-1)){ //前几次回款重置百分比
+                    $info['ratio']          = (round($v['amount']/$should_back_money,4)*100).'%';
+                    $sum                    += $v['amount'];
+                }else{ //最后一次回款
+                    $info['amount']         = $should_back_money - $sum;
+                    $info['ratio']          = (round($info['amount']/$should_back_money,4)*100).'%';
+                    $info['status']         = 0; //未回款
+                }
+                $res                        = $contract_pay_db->where(array('id'=>$v['id']))->save($info);
+                if ($res) $num++;
+            }
+        }else{
+
+        }
+        if ($num != 0){
+            $data                           = array();
+            $data['should_back_money']      = $should_back_money;
+            $op_budget_db->where(array('op_id'=>$opid))->save($data);
+            $record = array();
+            $record['op_id']   = $opid;
+            $record['optype']  = 1;
+            $record['explain'] = '修改回款计划总金额';
+            op_record($record);
+            $this->success('数据保存成功');
+        }else{
+            $this->error('数据保存失败');
+        }
+    }
 
 }

@@ -220,7 +220,8 @@
 		var chengben = parseFloat($('#costaccsumval').val());   //成本
 		var renshu   = parseInt($('#renshu').val());        //人数
 		var shouru   = parseFloat($('#shouru').val());        //收入
-		$('#sum_money_return').html(shouru);
+        var should_back_money = "{$budget.should_back_money}"?"{$budget.should_back_money}":shouru;
+		$('#sum_money_return').html(should_back_money);
 
 		//毛利
 		if(shouru && chengben){

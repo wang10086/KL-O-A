@@ -80,7 +80,16 @@
                                         <?php if($pays){ ?>
                                         
                                         <div class="form-group">
-                                            <h2 style="font-size:16px; color:#ff3300; border-bottom:2px solid #dedede; padding-bottom:10px;">回款计划</h2>
+                                            <h2 style="font-size:16px; border-bottom:2px solid #dedede; padding-bottom:10px;"> <span class="black">回款计划</span> (应回款总金额：{$should_back_money}元)&emsp;
+                                                <?php if (in_array(cookie('userid'),array($jd,1,11))){ ?>
+                                                <div style="display: inline-block" id="upd_money_back_div"><button class="btn btn-success btn-sm edit_money_back_btn">修改总回款金额</button></div>
+                                                <?php } ?>
+                                            </h2>
+                                            <div class="callout callout-danger">
+                                                <h4>提示！</h4>
+                                                <p>1、在业务实施前回款不小于70%；</p>
+                                                <p>2、在业务实施结束后10个工作日收回全部尾款；</p>
+                                            </div>
                                         </div>
                                         
                                         
@@ -257,7 +266,21 @@
 <include file="Index:footer2" />
 
 <script>
-	
+	$(function () {
+        $('.edit_money_back_btn').click(function () {
+            var should_back_money   = <?php echo $should_back_money?$should_back_money:'0.00'; ?>;
+            var action              = "{:U('Finance/save_upd_money_back')}";
+            var opid                = {$op.op_id};
+            var form_html           = '<form action="'+action+'" method="post"> ' +
+                '<input type="hidden" name="opid" value="{$op.op_id}">'+
+                '<div style="width:150px; float:left; border-radius:0;">' +
+                '<input type="text" class="form-control" name="should_back_money" value="{$should_back_money}">' +
+                '</div> ' +
+                '<input type="submit" class="btn btn-info btn-sm ml10" value="提交">' +
+                ' </form>';
+            $('#upd_money_back_div').html(form_html);
+        })
+    })
 </script>
 
      
