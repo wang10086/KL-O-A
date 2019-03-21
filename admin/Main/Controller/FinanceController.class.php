@@ -88,6 +88,7 @@ class FinanceController extends BaseController {
 
         $pays                 = $mod->get_money_back_lists($opid); //回款计划
         $this->pays           = $pays;
+        $this->jd             = $mod->get_jidiao($opid);
 		$this->kind           = C('COST_TYPE');
 		$this->op             = $op;
 		$this->budget         = $budget;
@@ -718,12 +719,12 @@ class FinanceController extends BaseController {
 
 	// @@@NODE-3###huikuan###项目回款###
     public function huikuan(){
-			
-		$opid = I('opid');
-		$id   = I('id');
+        $mod            = D('Finance');
+		$opid           = I('opid');
+		$id             = I('id');
 		if($id){
-			$budget = M('op_huikuan')->find($id);
-			$opid = $budget['op_id'];
+			$budget     = M('op_huikuan')->find($id);
+			$opid       = $budget['op_id'];
 		}
 		if(!$opid) $this->error('项目不存在');	
 		
@@ -763,7 +764,7 @@ class FinanceController extends BaseController {
 
         //$member             = M('op_member')->where(array('op_id'=>$opid))->order('id')->select();
         //$this->member       = $member;
-        $this->jd           = M('op_auth')->where(array('op_id'=>$opid))->getField('yusuan'); //计调
+        $this->jd           = $mod->get_jidiao($opid); //计调
 		$this->op    		= $op;
 		$this->settlement	= $settlement;
 		$this->kinds		= M('project_kind')->getField('id,name', true);
@@ -799,7 +800,6 @@ class FinanceController extends BaseController {
             $cc = M('contract_pay')->find($info['payid']);
             $info['cid'] = $cc['cid'];
         }
-        //var_dump($info);die;
 
         $save = M('op_huikuan')->add($info);
 

@@ -71,13 +71,13 @@
                                 </div><!-- /.box-header -->
                                 <div class="box-body">
                                     <?php if($is_zutuan == 1){ ?>
-                                        <?php if ($dijie_shouru && $audit['dst_status']!=1){ ?>
+                                        <?php if ($dijie_shouru && $audit['dst_status']!=1  && (!$jd || in_array(cookie('userid'),array($jd,1,11)))){ ?>
                                             <include file="op_edit" />
                                         <?php }else{ ?>
                                             <include file="op_read" />
                                         <?php } ?>
                                     <?php }else{ ?>
-                                        <?php if($audit['dst_status']!=1){ ?>
+                                        <?php if($audit['dst_status']!=1 && (!$jd || in_array(cookie('userid'),array($jd,1,11)))){ ?>
                                         <include file="op_edit" />
                                         <?php }else{ ?>
                                         <include file="op_read" />

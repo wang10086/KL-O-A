@@ -12,6 +12,12 @@ use Sys\P;
 
 class FinanceModel extends Model{
 
+    //获取团计调信息
+    public function get_jidiao($opid){
+       $jd =  M('op_auth')->where(array('op_id'=>$opid))->getField('yusuan');
+        return $jd;
+    }
+
     public function get_jkd($lists){
         $costacc_ids    = array_column($lists,'costacc_id');
         $arr            = array();
