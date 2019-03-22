@@ -45,7 +45,7 @@
                                     	 <a href="javascript:;" class="btn btn-info btn-sm" onclick="javascript:opensearch('searchtext',700,160);"><i class="fa fa-search"></i> 搜索</a>
                                     </div>-->
                                     <div class="box-tools btn-group" id="chart_btn_group">
-                                        <a href="{:U('Finance/public_payment_chart',array('year'=>$year,'month'=>$month))}" class="btn btn-sm btn-group-header">回款统计</a>
+                                        <a href="{:U('Finance/payment',array('year'=>$year,'month'=>$month))}" class="btn btn-sm btn-group-header">回款统计</a>
                                         <a href="{:U('Finance/arrears_detail',array('year'=>$year,'month'=>$month,'pin'=>1))}" class="btn btn-sm <?php if ($pin==1){ echo 'btn-info';}else{ echo 'btn-group-header'; }; ?>">当月回款详情</a>
                                         <a href="{:U('Finance/arrears_detail',array('year'=>$year,'month'=>$month,'pin'=>2))}" class="btn btn-sm <?php if ($pin==2){ echo 'btn-info';}else{ echo 'btn-group-header'; }; ?>">历史欠款详情</a>
                                     </div>

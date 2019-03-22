@@ -835,7 +835,7 @@ class FinanceController extends BaseController {
 	
 
 	//@@@NODE-3###payment###回款管理###
-    public function payment(){
+    /*public function payment(){
 		$this->title('回款管理');
 		
 		$db		= M('op');
@@ -880,7 +880,7 @@ class FinanceController extends BaseController {
 
 		$this->lists = $lists;
 		$this->display('payment');
-	}
+	}*/
 
     // @@@NODE-3###costapply###劳务费用###
     public function costlabour(){
@@ -2757,7 +2757,8 @@ class FinanceController extends BaseController {
         $this->display('money_back_detail');
     }
 
-    public function public_payment_chart(){
+    //@@@NODE-3###payment###回款管理###
+    public function payment(){
         $year		                        = I('year',date('Y'));
         $month	                            = I('month',date('m'));
         if (strlen($month)<2) $month        = str_pad($month,2,'0',STR_PAD_LEFT);
@@ -2777,7 +2778,7 @@ class FinanceController extends BaseController {
         $this->month	                    = I('month',date('m'));
         $this->prveyear	                    = $year-1;
         $this->nextyear	                    = $year+1;
-        $this->display('payment_chart');
+        $this->display();
     }
 
     public function get_department_money_back_list($departments,$begintime,$endtime){
@@ -2800,7 +2801,7 @@ class FinanceController extends BaseController {
         return $data;
     }
 
-    public function public_payment_chart_detail(){
+    public function public_payment_detail(){
         $year		                        = I('year',date('Y'));
         $month	                            = I('month',date('m'));
         $pin                                = I('pin',0);
@@ -2835,7 +2836,7 @@ class FinanceController extends BaseController {
         $this->pin                          = $pin;
         $this->lists                        = $lists;
         $this->department                   = $departmnet_id;
-        $this->displaY('payment_chart_detail');
+        $this->displaY('payment_detail');
     }
 
     private function get_sum($lists){

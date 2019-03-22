@@ -15,56 +15,71 @@
 
                     <div class="row">
                         <div class="col-xs-12">
-                            <div class="box">
+
+                            <div class="btn-group" id="catfont" style="padding-bottom:20px;">
+                                <?php if($prveyear>2017){ ?>
+                                    <a href="{:U('Finance/payment',array('year'=>$prveyear,'month'=>'01'))}" class="btn btn-default" style="padding:8px 18px;">上一年</a>
+                                <?php } ?>
+                                <?php
+                                    for($i=1;$i<13;$i++){
+                                        $par = array();
+                                        $par['year']  = $year;
+                                        $par['month'] = str_pad($i,2,"0",STR_PAD_LEFT);
+                                        $par['pin']   = $pin;
+                                        if($month==$i){
+                                            echo '<a href="'.U('Finance/payment',$par).'" class="btn btn-info" style="padding:8px 18px;">'.$i.'月</a>';
+                                        }else{
+                                            echo '<a href="'.U('Finance/payment',$par).'" class="btn btn-default" style="padding:8px 18px;">'.$i.'月</a>';
+                                        }
+                                    }
+                                ?>
+                                <?php if($year<date('Y')){ ?>
+                                    <a href="{:U('Finance/payment',array('year'=>$nextyear,'month'=>'01'))}" class="btn btn-default" style="padding:8px 18px;">下一年</a>
+                                <?php } ?>
+                            </div>
+
+                            <div class="box box-warning">
                                 <div class="box-header">
-                                    <h3 class="box-title">回款管理</h3>
+                                    <!--<h3 class="box-title">回款管理</h3>
                                     <div class="box-tools pull-right">
                                     	 <a href="javascript:;" class="btn btn-info btn-sm" onclick="javascript:opensearch('searchtext',700,160);"><i class="fa fa-search"></i> 搜索</a>
-                                         
-                                    </div>
+                                    </div>-->
+                                    <div class="box-header">
+                                        <div class="box-tools btn-group" id="chart_btn_group">
+                                            <a href="{:U('Finance/payment',array('year'=>$year,'month'=>$month))}" class="btn btn-sm btn-info">回款统计</a>
+                                            <a href="{:U('Finance/arrears_detail',array('year'=>$year,'month'=>$month,'pin'=>1))}" class="btn btn-sm btn-group-header">当月回款详情</a>
+                                            <a href="{:U('Finance/arrears_detail',array('year'=>$year,'month'=>$month,'pin'=>2))}" class="btn btn-sm btn-group-header">历史欠款详情</a>
+                                        </div>
+                                    </div><!-- /.box-header -->
                                 </div><!-- /.box-header -->
                                 <div class="box-body">
                                 
                                 <table class="table table-bordered dataTable fontmini" id="tablelist" style="margin-top:10px;">
                                     <tr role="row" class="orders" >
-                                    	<th class="sorting" data="p.op_id">项目编号</th>
-                                        <th class="sorting" data="c.group_id">团号</th>
-                                        <!-- <th class="sorting" data="c.contract_id">合同编号</th> -->
-                                        <th class="sorting" data="o.project">项目名称</th>
-                                        <th class="sorting" data="p.no">序号</th>
-                                        <th class="sorting" data="p.amount">回款金额(元)</th>
-                                        <th class="sorting" data="p.return_time">计划回款日期</th>
-                                        <th class="sorting" data="p.pay_amount">已回款金额(元)</th>
-                                        <th class="sorting" data="p.pay_time">最近回款日期</th>
-                                        <th class="sorting" data="status">状态</th>
-                                        <th class="sorting" data="o.create_user_name">销售</th>
-                                        <if condition="rolemenu(array('Contract/detail'))">
-                                        <th width="50" class="taskOptions">回款</th>
-                                        </if>
+                                    	<th class="taskOptions">业务部门</th>
+                                        <th class="taskOptions" data="">计划回款</th>
+                                        <th class="taskOptions" data="">历史欠款金额</th>
+                                        <th class="taskOptions" data="">实际回款金额</th>
+                                        <th class="taskOptions" data="">回款及时率</th>
+
                                         
                                     </tr>
-                                    <foreach name="lists" item="row"> 
+                                    <foreach name="lists" item="row">
                                     <tr>
-                                    	<td>{$row.op_id}</td>
-                                        <td>{$row.group_id}</td>
-                                        <!-- <td>{$row.contract_id}</td> -->
-                                        <td><div class="tdbox_long" style="width:150px;"><a href="{:U('Finance/huikuan',array('opid'=>$row['op_id']))}" title="{$row.project}">{$row.project}</a></div></td>
-                                        <td>第{$row.no}笔</td>
-                                        <td>{$row.amount}</td>
-                                        <td><if condition="$row['return_time']">{$row.return_time|date='Y-m-d',###}</if></td>
-                                        <td>{$row.pay_amount}</td>
-                                        <td><if condition="$row['pay_time']">{$row.pay_time|date='Y-m-d',###}</if></td>
-                                        
-                                        <td>{$row.strstatus}</td>
-                                        <td>{$row.create_user_name}</td>
-                                        <if condition="rolemenu(array('Contract/detail'))">
-                                        <td class="taskOptions">
-                                        <a href="{:U('Contract/detail',array('id'=>$row['cid']))}" title="详情" class="btn btn-info btn-smsm"><i class="fa fa-pencil"></i></a>
-                                        </td>
-                                        </if>
-                                       
+                                    	<td class="taskOptions"><a href="{:U('Finance/public_payment_detail',array('department'=>$row['id'],'year'=>$year,'month'=>$month))}" target="_blank">{$row.department}</a></td>
+                                        <td class="taskOptions"><?php echo $row['this_month']?$row['this_month']:'0.00'; ?></td>
+                                        <td class="taskOptions"><?php echo $row['history']?$row['history']:'0.00'; ?></td>
+                                        <td class="taskOptions"><?php echo $row['this_month_return']?$row['this_month_return']:'0.00'; ?></td>
+                                        <td class="taskOptions">{$row.money_back_average}</td>
                                     </tr>
-                                    </foreach>					
+                                    </foreach>
+                                    <tr>
+                                        <td class="taskOptions black"><b>合计</b></td>
+                                        <td class="taskOptions black">{$sum.this_month}</td>
+                                        <td class="taskOptions black">{$sum.history}</td>
+                                        <td class="taskOptions black">{$sum.this_month_return}</td>
+                                        <td class="taskOptions black">{$sum.sum_average}</td>
+                                    </tr>
                                 </table>
                                 </div><!-- /.box-body -->
                                  <div class="box-footer clearfix">

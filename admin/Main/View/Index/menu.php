@@ -502,9 +502,9 @@
 
                                         <if condition="rolemenu(array('Finance/payment'))">
                                             <li><a href="{:U('Finance/payment')}"><i class="fa fa-angle-right"></i> 回款管理</a></li>
+                                            <!--<li><a href="{:U('Finance/public_payment_chart')}"><i class="fa fa-angle-right"></i> 回款统计</a></li>-->
                                         </if>
 
-                                            <li><a href="{:U('Finance/public_payment_chart')}"><i class="fa fa-angle-right"></i> 回款统计</a></li>
                                     </ul>
                                 </li>
 
