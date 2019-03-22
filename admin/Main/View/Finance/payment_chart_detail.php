@@ -41,17 +41,10 @@
 
                             <div class="box box-warning">
                                 <div class="box-header">
-                                    <!--<h3 class="box-title">回款管理</h3>
+                                    <h3 class="box-title">回款详情</h3>
                                     <div class="box-tools pull-right">
-                                    	 <a href="javascript:;" class="btn btn-info btn-sm" onclick="javascript:opensearch('searchtext',700,160);"><i class="fa fa-search"></i> 搜索</a>
-                                    </div>-->
-                                    <div class="box-header">
-                                        <div class="box-tools btn-group" id="chart_btn_group">
-                                            <a href="{:U('Finance/public_payment_chart_detail',array('pin'=>0,'year'=>$year,'month'=>$month,'department'=>$department))}" class="btn btn-sm <?php if ($pin==0){ echo 'btn-info';}else{echo "btn-group-header";} ?>">回款统计</a>
-                                            <a href="{:U('Finance/public_payment_chart_detail',array('pin'=>1,'year'=>$year,'month'=>$month,'department'=>$department))}" class="btn btn-sm <?php if ($pin==1){ echo 'btn-info';}else{echo "btn-group-header";} ?>">当月回款详情</a>
-                                            <a href="{:U('Finance/public_payment_chart_detail',array('pin'=>2,'year'=>$year,'month'=>$month,'department'=>$department))}" class="btn btn-sm <?php if ($pin==2){ echo 'btn-info';}else{echo "btn-group-header";} ?>">历史欠款详情</a>
-                                        </div>
-                                    </div><!-- /.box-header -->
+                                    	 <a href="javascript:;" class="btn btn-info btn-sm" onclick="javascript:opensearch('searchtext',400,100);"><i class="fa fa-search"></i> 搜索</a>
+                                    </div>
                                 </div><!-- /.box-header -->
                                 <div class="box-body">
                                 
@@ -99,40 +92,16 @@
                 <form action="" method="get" id="searchform">
                 <input type="hidden" name="m" value="Main">
                 <input type="hidden" name="c" value="Finance">
-                <input type="hidden" name="a" value="payment">
-                
-                <div class="form-group col-md-4">
-                    <input type="text" class="form-control" name="title" placeholder="项目名称">
+                <input type="hidden" name="a" value="public_payment_chart_detail">
+                <input type="hidden" name="year" value="{$year}">
+                <input type="hidden" name="month" value="{$month}">
+                <input type="hidden" name="pin" value="{$pin}">
+                <input type="hidden" name="department" value="{$department}">
+
+                <div class="form-group col-md-12">
+                    <input type="text" class="form-control" name="name" placeholder="请输入姓名">
                 </div>
-                
-                <div class="form-group col-md-4">
-                    <input type="text" class="form-control" name="ou" placeholder="销售">
-                </div>
-                
-                <div class="form-group col-md-4">
-                    <select  class="form-control"  name="as">
-                        <option value="-1">回款状态</option>
-                        <option value="0">未回款</option>
-                        <option value="1">回款中</option>
-                        <option value="2">已回款</option>
-                    </select>                   
-                </div>
-                
-                <div class="form-group col-md-4">
-                    <input type="text" class="form-control" name="opid" placeholder="项目编号">
-                </div>
-                
-                <div class="form-group col-md-4">
-                    <input type="text" class="form-control" name="cid" placeholder="合同编号">
-                </div>
-                
-                <div class="form-group col-md-4">
-                    <input type="text" class="form-control" name="gid" placeholder="项目团号">
-                </div>
-                
-                
-               
-                
+
                 </form>
             </div>
 

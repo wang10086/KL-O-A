@@ -2709,7 +2709,7 @@ class FinanceController extends BaseController {
         if ($group_id) $where['o.group_id'] = $group_id;
         if ($opid)  $where['c.op_id']       = $opid;
         $lists                              = M()->table('__CONTRACT_PAY__ as c')->join('__OP__ as o on o.op_id = c.op_id','left')->join('__OP_TEAM_CONFIRM__ as t on t.op_id=c.op_id','left')->field('c.*,o.group_id,o.project,t.dep_time,t.ret_time')->where($where)->order($this->orders('c.id'))->select();
-        $data                               = array();
+        /*$data                               = array();
         $data['this_month_list']            = ''; //计划当月回款
         $data['history_list']               = ''; //历史欠款
         $data['this_month']                 = 0;
@@ -2741,7 +2741,8 @@ class FinanceController extends BaseController {
             }
 
         }
-        $data['money_back_average']         = (round($data['this_month_return']/($data['history']+$data['this_month']),4)*100).'%';
+        $data['money_back_average']         = (round($data['this_month_return']/($data['history']+$data['this_month']),4)*100).'%';*/
+        $data                               = $this->check_list($lists,$start_time,$end_time);
         if ($pin==0){
             $lists                          = $data['this_month_list'];
         }elseif ($pin==1){
@@ -2759,7 +2760,6 @@ class FinanceController extends BaseController {
     public function public_payment_chart(){
         $year		                        = I('year',date('Y'));
         $month	                            = I('month',date('m'));
-        $pin                                = I('pin',1);
         if (strlen($month)<2) $month        = str_pad($month,2,'0',STR_PAD_LEFT);
         $times                              = $year.$month;
         $yw_departs                         = C('YW_DEPARTS');  //业务部门id
@@ -2777,7 +2777,6 @@ class FinanceController extends BaseController {
         $this->month	                    = I('month',date('m'));
         $this->prveyear	                    = $year-1;
         $this->nextyear	                    = $year+1;
-        $this->pin                          = $pin;
         $this->display('payment_chart');
     }
 
@@ -2805,6 +2804,7 @@ class FinanceController extends BaseController {
         $year		                        = I('year',date('Y'));
         $month	                            = I('month',date('m'));
         $pin                                = I('pin',0);
+        $name                               = trim(I('name'));
         if (strlen($month)<2) $month        = str_pad($month,2,'0',STR_PAD_LEFT);
         $times                              = $year.$month;
         $departmnet_id                      = I('department');
@@ -2812,6 +2812,7 @@ class FinanceController extends BaseController {
         $where['a.departmentid']            = $departmnet_id;
         $where['a.status']                  = array('neq',2); //未删除
         $where['p.code']                    = array('like','S%');
+        if ($name) $where['a.nickname']     = array('like','%'.$name.'%');
 
         $cycle_time                         = get_cycle($year.$month);
         $lists                              = M()->table('__ACCOUNT__ as a')->join('__POSITION__ as p on p.id=a.position_id','left')->field('a.*')->where($where)->select();
@@ -2853,44 +2854,47 @@ class FinanceController extends BaseController {
      * @param $endtime
      * @return array
      */
-    public function get_money_back_info($userinfo,$starttime,$endtime){
+    public function get_money_back_info($userinfo='',$starttime,$endtime){
         $where                                  = array();
-        $where['payee']                         = $userinfo['id'];
+        if ($userinfo) $where['payee']          = $userinfo['id'];
         $where['return_time']                   = array('lt',$endtime);
         $lists                                  = M('contract_pay')->where($where)->select();
+        $data                                   = $this->check_list($lists,$starttime,$endtime);
+        return $data;
+    }
+
+    private function check_list($lists,$start_time,$end_time){
+        $data                               = array();
+        $data['this_month_list']            = ''; //计划当月回款
+        $data['history_list']               = ''; //历史欠款
+        $data['this_month']                 = 0;
+        $data['history']                    = 0;
         foreach ($lists as $k=>$v){
-            $data                               = array();
-            $data['this_month_list']            = ''; //计划当月回款
-            $data['history_list']               = ''; //历史欠款
-            $data['this_month']                 = 0;
-            $data['history']                    = 0;
-            foreach ($lists as $k=>$v){
-                if ($v['status']==2){
-                    $v['stu']                   = "<span class='green'>已回款</span>";
-                }elseif ($v['status']==1){
-                    $v['stu']                   = "<span class='yellow'>回款中</span>";
+            if ($v['status']==2){
+                $v['stu']           = "<span class='green'>已回款</span>";
+            }elseif ($v['status']==1){
+                $v['stu']           = "<span class='yellow'>回款中</span>";
+            }else{
+                if ($v['return_time']<$end_time){
+                    $v['stu']       = "<span class='red'>未回款</span>";
+                    if ($v['return_time'] < $start_time){ //排除当月未回款的团
+                        $data['history_list'][] = $v;
+                        $data['history']        += $v['amount'];
+                        $data['history_return'] += $v['pay_amount'];
+                    }
                 }else{
-                    if ($v['return_time']<$endtime){
-                        $v['stu']               = "<span class='red'>未回款</span>";
-                        if ($v['return_time'] < $starttime){ //排除当月未回款的团
-                            $data['history_list'][] = $v;
-                            $data['history']        += $v['amount']; //计划回款金额
-                            $data['history_return'] += $v['pay_amount']; //回款金额
-                        }
-                    }else{
-                        $v['stu']               = "<font color='#999999'>未考核</font>";
-                    }
+                    $v['stu']       = "<font color='#999999'>未考核</font>";
                 }
-
-                if (($v['return_time'] > $starttime && $v['return_time'] < $endtime && $v['status'] != 2) || ($v['pay_time'] > $starttime && $v['pay_time'] < $endtime)){
-                    $data['this_month_list'][]  = $v;
-                    $data['this_month']         += $v['amount']; //计划回款时间或实际回款时间在当月的团
-                    if ($v['pay_time'] > $starttime && $v['pay_time'] < $endtime){
-                        $data['this_month_return']  += $v['pay_amount']; //当月实际回款金额
-                    }
-                }
-
             }
+
+            if (($v['return_time'] > $start_time && $v['return_time'] < $end_time && $v['status'] != 2) || ($v['pay_time'] > $start_time && $v['pay_time'] < $end_time)){
+                $data['this_month_list'][]  = $v;
+                $data['this_month']         += $v['amount'];
+                if ($v['pay_time'] > $start_time && $v['pay_time'] < $end_time){
+                    $data['this_month_return']  += $v['pay_amount'];
+                }
+            }
+
         }
         $data['money_back_average']         = (round($data['this_month_return']/($data['history']+$data['this_month']),4)*100).'%';
         return $data;
@@ -2943,16 +2947,51 @@ class FinanceController extends BaseController {
     /**
      * 历史欠款
      */
-    public function history_arrears(){
+    public function arrears_detail(){
         $year		                        = I('year',date('Y'));
         $month	                            = I('month',date('m'));
+        $pin                                = I('pin');  //1=>当月回款详情 2=>历史欠款详情
+        $title                              = trim(I('title'));
+        $group_id                           = trim(I('gid'));
+        $opid                               = trim(I('opid'));
+        $create_user                        = trim(I('ou')); //销售
         if (strlen($month)<2) $month        = str_pad($month,2,'0',STR_PAD_LEFT);
+        $yearmonth                          = $year.$month;
+        $times                              = get_cycle($yearmonth);
+        $start_time                         = $times['begintime'];
+        $end_time                           = $times['endtime'];
 
-        $this->year		                    = I('year',date('Y'));
-        $this->month	                    = I('month',date('m'));
+        $where                              = array();
+        $where['c.return_time']	            = array('lt',$end_time);
+        if ($title) $where['o.project']     = array('like','%'.$title.'%');
+        if ($group_id) $where['o.group_id'] = $group_id;
+        if ($opid)  $where['c.op_id']       = $opid;
+        if ($create_user) $where['create_user_name'] = $create_user;
+        $lists                              = M()->table('__CONTRACT_PAY__ as c')->join('__OP__ as o on o.op_id = c.op_id','left')->join('__OP_TEAM_CONFIRM__ as t on t.op_id=c.op_id','left')->field('c.*,o.group_id,o.project,o.create_user_name,t.dep_time,t.ret_time')->where($where)->order($this->orders('c.id'))->select();
+        $data                               = $this->check_list($lists,$start_time,$end_time);
+
+        if ($pin==1){ $this->lists          = $data['this_month_list'];
+        }elseif ($pin==2){ $this->lists     = $data['history_list']; };
+
+        $this->data                         = $data;
+        $this->pin                          = $pin;
+        $this->year		                    = $year;
+        $this->month	                    = $month;
         $this->prveyear	                    = $year-1;
         $this->nextyear	                    = $year+1;
         $this->display();
+    }
+
+    //删除
+    public function del_payment(){
+        $id                                 = I('id');
+        $db                                 = M('contract_pay');
+        $res                                = $db->where(array('id'=>$id))->delete();
+        if ($res){
+            $this->success('删除成功');
+        }else{
+            $this->error('删除失败');
+        }
     }
 
 }

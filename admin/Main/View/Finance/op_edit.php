@@ -100,7 +100,7 @@
     <div class="content" style="padding-top:0px;">
         <h2 style="font-size:16px; border-bottom:2px solid #dedede; padding-bottom:10px;"> <span class="black">回款计划</span> (应回款总金额:<span id="sum_money_return"></span>元)</h2>
         <div class="callout callout-danger">
-            <h4>提示！</h4>
+            <h4>提示！一般情况应做到：</h4>
             <p>1、在业务实施前回款不小于70%；</p>
             <p>2、在业务实施结束后10个工作日收回全部尾款；</p>
         </div>

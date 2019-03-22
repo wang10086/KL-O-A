@@ -112,6 +112,7 @@
                 <input type="hidden" name="uid" value="{$uid}">
                 <input type="hidden" name="start_time" value="{$start_time}">
                 <input type="hidden" name="end_time" value="{$end_time}">
+                <input type="hidden" name="pin" value="{$pin}">
 
                 <div class="form-group col-md-12">
                     <input type="text" class="form-control" name="title" placeholder="项目名称">
