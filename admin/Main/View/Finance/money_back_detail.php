@@ -50,9 +50,9 @@
                                             <td><a href="{:U('Contract/detail',array('id'=>$row[cid]))}" title="查看合同信息">{$row.project}</a></td>
                                             <td><?php echo $row['dep_time']?date('Y-m-d',$row['dep_time']):''; ?></td>
                                             <td><?php echo $row['ret_time']?date('Y-m-d',$row['ret_time']):''; ?></td>
-                                            <td></td>
-                                            <td>{$row.amount}</td>
-                                            <td>{$row.pay_amount}</td>
+                                            <td class="taskOptions">{$row.no_sum}</td>
+                                            <td class="taskOptions">{$row.amount}</td>
+                                            <td class="taskOptions">{$row.pay_amount}</td>
                                             <td><?php echo $row['return_time']?date('Y-m-d',$row['return_time']):''; ?></td>
                                             <td><?php echo $row['pay_time']?date('Y-m-d',$row['pay_time']):''; ?></td>
                                             <td class="taskOptions">{$row.stu}</td>
@@ -62,30 +62,30 @@
                                             <tr>
                                                 <td><b>小计</b></td>
                                                 <td colspan="4"></td>
-                                                <td>{$data.this_month}</td>
-                                                <td><?php echo $data['this_month_return']?$data['this_month_return']:'0.00'; ?></td>
+                                                <td class="taskOptions">{$data.this_month}</td>
+                                                <td class="taskOptions"><?php echo $data['this_month_return']?$data['this_month_return']:'0.00'; ?></td>
                                                 <td colspan="3"></td>
                                             </tr>
                                             <tr>
                                                 <td><b>历史欠款</b></td>
                                                 <td colspan="4"></td>
-                                                <td>{$data.history}</td>
-                                                <td><?php echo $data['history_return']?$data['history_return']:'0.00'; ?></td>
+                                                <td class="taskOptions">{$data.history}</td>
+                                                <td class="taskOptions"><?php echo $data['history_return']?$data['history_return']:'0.00'; ?></td>
                                                 <td colspan="3"></td>
                                             </tr>
                                             <tr>
                                                 <td><b>合计</b></td>
                                                 <td colspan="4"></td>
-                                                <td><?php echo $data['this_month']+$data['history']; ?></td>
-                                                <td><?php echo $data['this_month_return']?$data['this_month_return']:'0.00'; ?></td>
+                                                <td class="taskOptions"><?php echo $data['this_month']+$data['history']; ?></td>
+                                                <td class="taskOptions"><?php echo $data['this_month_return']?$data['this_month_return']:'0.00'; ?></td>
                                                 <td colspan="3" class="taskOptions">回款率：{$data.money_back_average}</td>
                                             </tr>
                                         <?php }else if($pin==1){ ?>
                                             <tr>
                                                 <td><b>合计</b></td>
                                                 <td colspan="4"></td>
-                                                <td>{$data.history}</td>
-                                                <td>{$data.history_return}</td>
+                                                <td class="taskOptions">{$data.history}</td>
+                                                <td class="taskOptions">{$data.history_return}</td>
                                                 <td colspan="3"></td>
                                             </tr>
                                         <?php } ?>

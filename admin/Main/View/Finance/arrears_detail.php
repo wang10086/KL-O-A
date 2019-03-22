@@ -80,9 +80,9 @@
                                                 <td><a href="{:U('Contract/detail',array('id'=>$row[cid]))}" title="查看合同信息">{$row.pro_name}</a></td>
                                                 <td><?php echo $row['dep_time']?date('Y-m-d',$row['dep_time']):''; ?></td>
                                                 <td><?php echo $row['ret_time']?date('Y-m-d',$row['ret_time']):''; ?></td>
-                                                <td></td>
-                                                <td>{$row.amount}</td>
-                                                <td>{$row.pay_amount}</td>
+                                                <td class="taskOptions">{$row.no_sum}</td>
+                                                <td class="taskOptions">{$row.amount}</td>
+                                                <td class="taskOptions">{$row.pay_amount}</td>
                                                 <td><?php echo $row['return_time']?date('Y-m-d',$row['return_time']):''; ?></td>
                                                 <td>{$row.create_user_name}</td>
                                                 <?php if ($pin==1){ ?>

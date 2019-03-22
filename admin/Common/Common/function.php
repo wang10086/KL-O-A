@@ -4110,6 +4110,17 @@ function numTrmb($num){
     return $nstr = (substr($nstr,-3,3)=='元') ? $nstr . $zheng : $nstr;
 }
 
+    //计算$string在$array(需为数组)中重复出现的次数
+    function get_array_repeats($array,$string) {
+
+        $count = array_count_values($array);
+        if (key_exists($string,$count)){
+            return $count[$string];
+        }else {
+            return 0;
+        }
+    }
+
 
 function absdata($val,$goal){
 	$score = abs(($val-$goal)/$goal)*100;

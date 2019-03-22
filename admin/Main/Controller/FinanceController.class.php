@@ -2870,7 +2870,11 @@ class FinanceController extends BaseController {
         $data['history_list']               = ''; //历史欠款
         $data['this_month']                 = 0;
         $data['history']                    = 0;
+        $arr_opids                          = array_column($lists,'op_id');
         foreach ($lists as $k=>$v){
+            $show_times                     = get_array_repeats($arr_opids,$v['op_id']);
+            $no_sum                         = $v['no'].'/'.$show_times;
+            $v['no_sum']                    = $no_sum;
             if ($v['status']==2){
                 $v['stu']           = "<span class='green'>已回款</span>";
             }elseif ($v['status']==1){
@@ -2897,11 +2901,12 @@ class FinanceController extends BaseController {
             }
 
         }
-        $data['money_back_average']         = (round($data['this_month_return']/($data['history']+$data['this_month']),4)*100).'%';
+        $data['money_back_average']         = ($data['history']+$data['this_month'])?(round($data['this_month_return']/($data['history']+$data['this_month']),4)*100).'%':'100%';
         return $data;
     }
 
-    //保存修改回款总金额(预算审核通过后)
+
+//保存修改回款总金额(预算审核通过后)
     public function save_upd_money_back(){
         $mod                                = D('Finance');
         $contract_pay_db                    = M('contract_pay');
