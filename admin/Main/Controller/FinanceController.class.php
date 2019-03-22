@@ -2992,8 +2992,14 @@ class FinanceController extends BaseController {
     public function del_payment(){
         $id                                 = I('id');
         $db                                 = M('contract_pay');
+        $list                               = M()->table('__CONTRACT_PAY__ as p')->join('__OP__ as o on o.op_id=p.op_id','left')->field('p.*,o.group_id')->where(array('p.id'=>$id))->find();
         $res                                = $db->where(array('id'=>$id))->delete();
         if ($res){
+            $record = array();
+            $record['op_id']   = $list['op_id'];
+            $record['optype']  = 1;
+            $record['explain'] = '删除项目回款信息；计划回款金额'.$list['amount'].'；回款金额'.$list['pay_amount'];
+            op_record($record);
             $this->success('删除成功');
         }else{
             $this->error('删除失败');
