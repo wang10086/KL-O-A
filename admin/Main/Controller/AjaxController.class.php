@@ -1616,32 +1616,30 @@ class AjaxController extends Controller {
      */
     public function get_salary_content(){
         $individual_tax             = trim(I('individual_tax'));//个人计税金额
-        $datetime['account_id']     = trim(I('uid'));//用户
-        $datetime['datetime']       = trim(I('datetime'));//保存年月
-        $add['individual_tax']      = $individual_tax;//个人计税金额
-        $add['account_id']          = $datetime['account_id'];//用户
-        $add['createtime']          = time();//创建时间
-        $add['datetime']            = $datetime['datetime'];//保存年月
-        $datetime['statu']          = array('eq',1);
-        $sql                        = M('salary_individual_tax')->where($datetime)->order('id DESC')->find();
-        if($sql){
-            $update                 = M('salary_individual_tax')->where('id='.$sql['id'])->save($add);
-            if($update){
-                $data['sum']        = 1;
-                $data['msg']        = '保存数据成功！';
-            }else{
-                $data['sum']        = 0;
-                $data['msg']        = '保存数据失败！请重新保存数据！';
-            }
+        $account_id                 = trim(I('uid'));//用户
+        $datetime                   = trim(I('datetime'));//保存年月
+        $info                       = array();
+        $info['individual_tax']     = $individual_tax;//个人计税金额
+        $info['account_id']         = $account_id;//用户
+        $info['createtime']         = time();//创建时间
+        $info['datetime']           = $datetime;//保存年月
+        $where                      = array();
+        $where['account_id']        = $account_id;//用户
+        $where['datetime']          = $datetime;//保存年月
+        $where['status']            = array('eq',1);
+        $list                       = M('salary_individual_tax')->where($where)->order('id DESC')->find();
+        if($list){
+            $res                    = M('salary_individual_tax')->where('id='.$list['id'])->save($info);
         }else{
-            $add_tax                = M('salary_individual_tax')->add($add);
-            if($add_tax){
-                $data['sum']        = 1;
-                $data['msg']        = '保存数据成功！';
-            }else{
-                $data['sum']        = 0;
-                $data['msg']        = '保存数据失败！请重新保存数据！';
-            }
+            $res                    = M('salary_individual_tax')->add($info);
+        }
+        $data                       = array();
+        if($res){
+            $data['num']            = 1;
+            $data['msg']            = '保存数据成功！';
+        }else{
+            $data['num']            = 0;
+            $data['msg']            = '保存数据失败！请重新保存数据！';
         }
         $this->ajaxReturn($data);
     }

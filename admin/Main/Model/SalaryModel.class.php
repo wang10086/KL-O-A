@@ -423,8 +423,8 @@ class SalaryModel extends Model
             $data[$k]['withholding_token']  = $withholding['token']; //代扣代缴token
             $data[$k]['summoney']           = $withholding['money']?$withholding['money']:'0.00'; //代扣代缴(税后扣款)
 
-            //实发工资 = 应发工资 - 个人保险合计 - 年终奖个税 - 税后扣款 - 工会会费 - 代扣代缴;
-            $data[$k]['real_wages']         = $data[$k]['Should_distributed'] - $data[$k]['insurance_Total'] - $data[$k]['yearend'] - $data[$k]['after_text_money'] - $data[$k]['labour'] - $data[$k]['summoney'];
+            //实发工资 = 应发工资 - 个人保险合计 - 个人所得税 - 年终奖个税 - 税后扣款 - 工会会费 - 代扣代缴;
+            $data[$k]['real_wages']         = $data[$k]['Should_distributed'] - $data[$k]['insurance_Total']- $data[$k]['personal_tax'] - $data[$k]['yearend'] - $data[$k]['after_text_money'] - $data[$k]['labour'] - $data[$k]['summoney'];
             $data[$k]['total_score_show']   = $kpi_pdca_score['sum_kpi_score']; //KPI分数
             $data[$k]['sum_total_score']    = $kpi_pdca_score['total_pdca_score']; //pdca分数
             $data[$k]['show_qa_score']      = $kpi_pdca_score['show_qa_score']; //品质检查分数

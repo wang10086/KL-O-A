@@ -316,15 +316,13 @@
         var id = $(this).attr('id');//用户id
         if($('.individual_tax_update'+id).length <= 0) {
             var money = $(this).text();
-            console.log(money);
-            alert(money);
             $(this).empty();
             var h  = '<input type="text" class="form-control individual_tax_update'+id+'" value="'+money+'" />';
             $(this).append(h);
             $('.individual_tax_update'+id).focus();
 
-            //个税鼠标移动事件
-            $('.individual_tax_update'+id).mouseleave(function(){
+            //鼠标丢失事件
+            $('.individual_tax_update'+id).blur(function(){
                 var content = $(this).val();//个人计税金额
                 content = content.replace('¥ ','');//将¥ 字符替换为空字符
                 var curl = "index.php?m=Main&c=Ajax&a=get_salary_content";
@@ -334,8 +332,13 @@
                     data: {'individual_tax':content, 'uid':id,'datetime':datetime},
                     dataType: "json", //数据格式
                     success: function (data) {
-                        if (data.sum == 1) {alert("恭喜您保存成功！");return false;}
-                        if (data.sum == 0) {alert("保存失败！请您重新保存！");return false;}
+                        /*if (data.num == 1) {*/
+                            alert(data.msg);
+                            return false;
+                        /*}else {
+                            alert(data.msg);
+                            return false;
+                        }*/
                     }
                 });
             });
