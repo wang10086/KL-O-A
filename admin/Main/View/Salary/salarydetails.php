@@ -30,42 +30,42 @@
                                     <div class="content">
 
                                         <div class="form-group col-md-4 viwe">
-                                            <p>员工ID：{$info['account'].id}</p>
+                                            <p>员工ID：{$account_list.id}</p>
                                         </div>
 
                                         <div class="form-group col-md-4 viwe">
-                                            <p>员工姓名：{$info['account'].nickname}</p>
+                                            <p>员工姓名：{$account_list.nickname}</p>
                                         </div>
 
                                         <div class="form-group col-md-4 viwe">
-                                            <p>员工编号：{$info['account'].employee_member} </p>
+                                            <p>员工编号：{$account_list.employee_member} </p>
                                         </div>
 
                                         <div class="form-group col-md-4 viwe">
-                                            <p>员工部门：{$info['wages_month']['department']}</p>
+                                            <p>员工部门：{$wages_list['department']}</p>
                                         </div>
 
                                         <div class="form-group col-md-4 viwe">
-                                            <p>员工岗位：{$info['wages_month']['post_name']}</p>
+                                            <p>员工岗位：{$wages_list['post_name']}</p>
                                         </div>
 
                                         <div class="form-group col-md-4 viwe">
-                                            <p>员工类别：<?php if($info['account']['formal']==0){ echo '试用';}elseif($info['account']['formal']==1){ echo'正式';}elseif($info['account']['formal']==3){ echo'劳务';}elseif($info['account']['formal']==4){ echo'实习';}?></p>
+                                            <p>员工类别：<?php if($account_list['formal']==0){ echo '试用';}elseif($account_list['formal']==1){ echo'正式';}elseif($account_list['formal']==3){ echo'劳务';}elseif($account_list['formal']==4){ echo'实习';}?></p>
                                         </div>
                                         <div class="form-group col-md-4 viwe">
-                                            <p>员工状态：<?php if($info['account']['status']==0){ echo "在职";}elseif($inf['account']['status']==1){echo "离职";} ?></p>
+                                            <p>员工状态：<?php if($account_list['status']==0){ echo "在职";}elseif($account_list['status']==1){echo "离职";} ?></p>
                                         </div>
 
                                         <div class="form-group col-md-4 viwe">
-                                            <p>入职时间：<?php echo date('Y-m-d',$info['account']['entry_time']) ?></p>
+                                            <p>入职时间：<?php echo date('Y-m-d',$account_list['entry_time']) ?></p>
                                         </div>
 
                                         <div class="form-group col-md-4 viwe searchtex_color_salary2">
-                                            <p>工资发放月份：{$info['wages_month'].datetime}</p>
+                                            <p>工资发放月份：{$wages_list['datetime']}</p>
                                         </div>
 
                                         <div class="form-group col-md-4 viwe">
-                                            <p>档案所属：<?php if($info['account']['archives']==1){ echo '中心';}elseif($info['account']['archives']==2){ echo'科旅';}elseif($info['account']['archives']==3){ echo'科行';}?></p>
+                                            <p>档案所属：<?php if($account_list['archives']==1){ echo '中心';}elseif($account_list['archives']==2){ echo'科旅';}elseif($account_list['archives']==3){ echo'科行';}?></p>
                                         </div>
 
                                     </div>
@@ -75,22 +75,22 @@
                                         </div><!-- /.box-header --><br>
                                         <div class="content">
                                             <div class="form-group col-md-4 viwe">
-                                                <p>岗位薪酬标准：{$info['wages_month'].standard}（元）</p>
+                                                <p>岗位薪酬标准：{$wages_list.standard}（元）</p>
                                             </div>
 
                                             <div class="form-group col-md-4 viwe">
-                                                <p>其中基本工资标准：{$info['wages_month']['basic_salary']}（元）</p>
+                                                <p>其中基本工资标准：{$wages_list['basic_salary']}（元）</p>
                                             </div>
 
                                             <div class="form-group col-md-4 viwe">
-                                                <p>其中绩效工资标准：{$info['wages_month']['performance_salary']}（元）</p>
+                                                <p>其中绩效工资标准：{$wages_list['performance_salary']}（元）</p>
                                             </div>
 
                                             <div class="form-group col-md-4 viwe">
-                                                <p>考勤扣款：{$info['wages_month'].withdrawing}（元） </p>
+                                                <p>考勤扣款：{$wages_list.withdrawing}（元） </p>
                                             </div>
                                             <div class="form-group col-md-4 viwe">
-                                                <p>应发基本工资：<?PHP echo sprintf("%.2f",$info['wages_month']['basic_salary']-$info['wages_month']['withdrawing']);?>（元）</p>
+                                                <p>应发基本工资：<?PHP echo sprintf("%.2f",$wages_list['basic_salary']-$wages_list['withdrawing']);?>（元）</p>
                                             </div>
                                             <table class="table table-bordered dataTable fontmini">
                                                 <tr role="row" class="orders" >
@@ -106,31 +106,31 @@
 
                                                     <tr>
                                                         <td>次数</td>
-                                                        <td><?php echo  round($info['attendance']['late1'],2);?></td>
-                                                        <td><?php echo  round($info['attendance']['late2'],2);?></td>
-                                                        <td><?php echo  round($info['attendance']['leave_absence'],2);?></td>
-                                                        <td><?php echo  round($info['attendance']['sick_leave'],2);?></td>
-                                                        <td><?php echo  round($info['attendance']['absenteeism'],2);?></td>
-                                                        <td><?php echo  round($info['attendance']['entry_data'],2);?></td>
+                                                        <td><?php echo  round($attendance_list['late1'],2);?></td>
+                                                        <td><?php echo  round($attendance_list['late2'],2);?></td>
+                                                        <td><?php echo  round($attendance_list['leave_absence'],2);?></td>
+                                                        <td><?php echo  round($attendance_list['sick_leave'],2);?></td>
+                                                        <td><?php echo  round($attendance_list['absenteeism'],2);?></td>
+                                                        <td><?php echo  round($attendance_list['entry_data'],2);?></td>
                                                     </tr>
 
                                                 <tr>
                                                     <td>扣款</td>
-                                                    <td>{$info['attendance']['late1']*10}</td>
-                                                    <td>{$info['attendance']['late2']*30}</td>
-                                                    <td><?php echo  round($info['wages_month']['basic_salary']/21.75*$info['attendance']['leave_absence'],2);?></td>
-                                                    <td><?php echo  round(($info['wages_month']['basic_salary']-($info['attendance']['lowest_wage']*0.8))/21.75*$info['attendance']['sick_leave'],2);?></td>
-                                                    <td><?php echo  round($info['wages_month']['basic_salary']/21.75*$info['attendance']['absenteeism']*2,2);?></td>
-                                                    <td><?php echo round($info['wages_month']['standard']/21.75*$info['attendance']['entry_data'],2);?></td>
+                                                    <td>{$attendance_list['late1']*10}</td>
+                                                    <td>{$attendance_list['late2']*30}</td>
+                                                    <td><?php echo  round($wages_list['basic_salary']/21.75*$attendance_list['leave_absence'],2);?></td>
+                                                    <td><?php echo  round(($wages_list['basic_salary']-($attendance_list['lowest_wage']*0.8))/21.75*$attendance_list['sick_leave'],2);?></td>
+                                                    <td><?php echo  round($wages_list['basic_salary']/21.75*$attendance_list['absenteeism']*2,2);?></td>
+                                                    <td><?php echo round($wages_list['standard']/21.75*$attendance_list['entry_data'],2);?></td>
                                                 </tr>
 
                                             </table><br />
                                             <div class="form-group col-md-4 viwe">
-                                                <p>绩效增减：{$info['wages_month']['Achievements_withdrawing']} (元)</p>
+                                                <p>绩效增减：{$wages_list['Achievements_withdrawing']} (元)</p>
                                             </div>
 
                                             <div class="form-group col-md-4 viwe">
-                                                <p >应发绩效工资：{$info['wages_month']['performance_salary']+$info['wages_month']['Achievements_withdrawing']} (元)</p>
+                                                <p >应发绩效工资：{$wages_list['performance_salary']+$wages_list['Achievements_withdrawing']} (元)</p>
                                             </div>
                                             <table class="table table-bordered dataTable fontmini" style="margin-top:10px;">
                                                 <tr role="row" class="orders" >
@@ -162,9 +162,9 @@
                                                 </tr>
                                                 <tr>
                                                     <td>增减</td>
-                                                    <td class="salary_detali_score_td1">{$info['wages_month']['basic_salary']/100*$info['wages_month']['total_score_show']} (元)</td>
-                                                    <td class="salary_detali_score_td3">{$info['wages_month']['performance_salary']/100*$info['wages_month']['show_qa_score']}(元)</td>
-                                                    <td class="salary_detali_score_td2">{$info['wages_month']['performance_salary']/100*$info['wages_month']['sum_total_score']} (元)</td>
+                                                    <td class="salary_detali_score_td1">{$wages_list['basic_salary']/100*$wages_list['total_score_show']} (元)</td>
+                                                    <td class="salary_detali_score_td3">{$wages_list['performance_salary']/100*$wages_list['show_qa_score']}(元)</td>
+                                                    <td class="salary_detali_score_td2">{$wages_list['performance_salary']/100*$wages_list['sum_total_score']} (元)</td>
 
                                                 </tr>
                                             </table>
@@ -178,7 +178,7 @@
                                         </div><!-- /.box-header --><br>
                                         <h5 style="color:#FF3333">业务人员提成</h5><br/>
                                         <div class="form-group col-md-4 viwe">
-                                            <p>目标任务(季度)：<?PHP echo $info['kpi']['target'];?> (元)</p>
+                                            <p>目标任务(季度)：<?PHP echo $wages_list['target'];?> (元)</p>
                                         </div>
                                         <div class="form-group col-md-4 viwe">
                                             <p>完成(季度)：<?PHP echo sprintf("%.2f",$info['kpi']['complete']);?> (元)</p>
@@ -186,21 +186,21 @@
                                         <div class="form-group col-md-4 viwe">
                                             <p>业绩提成(季度)：<?PHP echo sprintf("%.2f",$info['kpi']['total']);?> (元)</p>
                                         </div><br/><br/><br/>
-                                        <h5 style="color:#000000;">&nbsp;&nbsp;&nbsp;&nbsp;其他人员提成（计调、研发、资源）：<?PHP echo sprintf("%.2f",$info['bonus']['bonus']);?>（元）</h5><br/>
+                                        <h5 style="color:#000000;">&nbsp;&nbsp;&nbsp;&nbsp;其他人员提成（计调、研发、资源）：<?PHP echo sprintf("%.2f",$bonus_list['bonus']);?>（元）</h5><br/>
                                         <div class="form-group col-md-4 viwe">
-                                            <p>带团补助（课时费）：<?PHP echo sprintf("%.2f",$info['wages_month']['Subsidy']);?></p>
+                                            <p>带团补助（课时费）：<?PHP echo sprintf("%.2f",$wages_list['Subsidy']);?></p>
                                         </div>
                                         <div class="form-group col-md-4 viwe">
-                                            <p>住房补助：<?PHP echo sprintf("%.2f",$info['wages_month']['housing_subsidy']);?> </p>
+                                            <p>住房补助：<?PHP echo sprintf("%.2f",$wages_list['housing_subsidy']);?> </p>
                                         </div>
                                         <div class="form-group col-md-4 viwe">
-                                            <p>外地补贴：<?PHP echo sprintf("%.2f",$info['subsidy']['foreign_subsidies']);?></p>
+                                            <p>外地补贴：<?PHP echo sprintf("%.2f",$subsidy_list['foreign_subsidies']);?></p>
                                         </div>
                                         <div class="form-group col-md-4 viwe">
-                                            <p>电脑补贴：<?PHP echo sprintf("%.2f",$info['subsidy']['computer_subsidy']);?></p>
+                                            <p>电脑补贴：<?PHP echo sprintf("%.2f",$subsidy_list['computer_subsidy']);?></p>
                                         </div>
                                         <div class="form-group col-md-4 viwe">
-                                            <p>年终奖：<?PHP echo sprintf("%.2f",$info['bonus']['annual_bonus']);?> </p>
+                                            <p>年终奖：<?PHP echo sprintf("%.2f",$bonus_list['annual_bonus']);?> </p>
                                         </div>
                                     </div>
                                     <div class="content" style="margin-left: -25px">
@@ -221,33 +221,33 @@
                                                 </tr>
                                                 <tr>
                                                     <td>基数</td>
-                                                    <td>{$info['insurance']['birth_base']}</td>
-                                                    <td>{$info['insurance']['injury_base']}</td>
-                                                    <td>{$info['insurance'].pension_base}</td>
-                                                    <td>{$info['insurance'].medical_care_base}</td>
+                                                    <td>{$insurance_list['birth_base']}</td>
+                                                    <td>{$insurance_list['injury_base']}</td>
+                                                    <td>{$insurance_list.pension_base}</td>
+                                                    <td>{$insurance_list.medical_care_base}</td>
                                                     <td style="text-align: center">---</td>
-                                                    <td>{$info['insurance'].unemployment_base}</td>
-                                                    <td>{$info['insurance'].accumulation_fund_base}</td>
+                                                    <td>{$insurance_list.unemployment_base}</td>
+                                                    <td>{$insurance_list.accumulation_fund_base}</td>
                                                 </tr>
                                                 <tr>
                                                     <td>比例</td>
-                                                    <td>{$info['insurance']['birth_ratio']}</td>
-                                                    <td>{$info['insurance']['injury_ratio']}</td>
-                                                    <td>{$info['insurance'].pension_ratio}</td>
-                                                    <td>{$info['insurance'].medical_care_ratio}</td>
+                                                    <td>{$insurance_list['birth_ratio']}</td>
+                                                    <td>{$insurance_list['injury_ratio']}</td>
+                                                    <td>{$insurance_list.pension_ratio}</td>
+                                                    <td>{$insurance_list.medical_care_ratio}</td>
                                                     <td style="text-align: center">---</td>
-                                                    <td>{$info['insurance'].unemployment_ratio}</td>
-                                                    <td>{$info['insurance'].accumulation_fund_ratio}</td>
+                                                    <td>{$insurance_list.unemployment_ratio}</td>
+                                                    <td>{$insurance_list.accumulation_fund_ratio}</td>
                                                 </tr>
                                                 <tr class="salary_details_personal_money">
                                                     <td>金额</td>
-                                                    <td><?php echo $info['insurance']['birth_base']*$info['insurance']['birth_ratio'];?></td>
-                                                    <td><?php echo $info['insurance']['injury_base']*$info['insurance']['injury_ratio'];?></td>
-                                                    <td><?php echo $info['insurance']['pension_base']*$info['insurance']['pension_ratio'];?></td>
-                                                    <td><?php echo $info['insurance']['medical_care_base']*$info['insurance']['medical_care_ratio'];?></td>
-                                                    <td>{$info['insurance'].big_price}</td>
-                                                    <td><?php echo $info['insurance']['unemployment_base']*$info['insurance']['unemployment_ratio'];?></td>
-                                                    <td><?php echo round($info['insurance']['accumulation_fund_base']*$info['insurance']['accumulation_fund_ratio']);?></td>
+                                                    <td><?php echo $insurance_list['birth_base']*$insurance_list['birth_ratio'];?></td>
+                                                    <td><?php echo $insurance_list['injury_base']*$insurance_list['injury_ratio'];?></td>
+                                                    <td><?php echo $insurance_list['pension_base']*$insurance_list['pension_ratio'];?></td>
+                                                    <td><?php echo $insurance_list['medical_care_base']*$insurance_list['medical_care_ratio'];?></td>
+                                                    <td>{$insurance_list.big_price}</td>
+                                                    <td><?php echo $insurance_list['unemployment_base']*$insurance_list['unemployment_ratio'];?></td>
+                                                    <td><?php echo round($insurance_list['accumulation_fund_base']*$insurance_list['accumulation_fund_ratio']);?></td>
                                                 </tr>
                                             </table>
                                         </div>
@@ -270,33 +270,33 @@
                                                 </tr>
                                                 <tr>
                                                     <td>基数</td>
-                                                    <td>{$info['insurance'].company_birth_base}</td>
-                                                    <td>{$info['insurance'].company_injury_base}</td>
-                                                    <td>{$info['insurance'].company_pension_base}</td>
-                                                    <td>{$info['insurance'].company_medical_care_base}</td>
+                                                    <td>{$insurance_list.company_birth_base}</td>
+                                                    <td>{$insurance_list.company_injury_base}</td>
+                                                    <td>{$insurance_list.company_pension_base}</td>
+                                                    <td>{$insurance_list.company_medical_care_base}</td>
                                                     <td>---</td>
-                                                    <td>{$info['insurance'].company_unemployment_base}</td>
-                                                    <td>{$info['insurance'].company_accumulation_fund_base}</td>
+                                                    <td>{$insurance_list.company_unemployment_base}</td>
+                                                    <td>{$insurance_list.company_accumulation_fund_base}</td>
                                                 </tr>
                                                 <tr>
                                                     <td>比例</td>
-                                                    <td>{$info['insurance'].company_birth_ratio}</td>
-                                                    <td>{$info['insurance'].company_injury_ratio}</td>
-                                                    <td>{$info['insurance'].company_pension_ratio}</td>
-                                                    <td>{$info['insurance'].company_medical_care_ratio}</td>
+                                                    <td>{$insurance_list.company_birth_ratio}</td>
+                                                    <td>{$insurance_list.company_injury_ratio}</td>
+                                                    <td>{$insurance_list.company_pension_ratio}</td>
+                                                    <td>{$insurance_list.company_medical_care_ratio}</td>
                                                     <td>---</td>
-                                                    <td>{$info['insurance'].company_unemployment_ratio}</td>
-                                                    <td>{$info['insurance'].company_accumulation_fund_ratio}</td>
+                                                    <td>{$insurance_list.company_unemployment_ratio}</td>
+                                                    <td>{$insurance_list.company_accumulation_fund_ratio}</td>
                                                 </tr>
                                                 <tr>
                                                     <td>金额</td>
-                                                    <td><?php echo $info['insurance']['company_birth_base']*$info['insurance']['company_birth_ratio'];?></td>
-                                                    <td><?php echo $info['insurance']['company_injury_base']*$info['insurance']['company_injury_ratio'];?></td>
-                                                    <td><?php echo $info['insurance']['company_pension_base']*$info['insurance']['company_pension_ratio'];?></td>
-                                                    <td><?php echo $info['insurance']['company_medical_care_base']*$info['insurance']['company_medical_care_ratio'];?></td>
-                                                    <td>{$info['insurance'].company_big_price}</td>
-                                                    <td><?php echo $info['insurance']['company_unemployment_base']*$info['insurance']['company_unemployment_ratio'];?></td>
-                                                    <td>{$info['wages_month']['accumulation_fund']}</td>
+                                                    <td><?php echo $insurance_list['company_birth_base']*$insurance_list['company_birth_ratio'];?></td>
+                                                    <td><?php echo $insurance_list['company_injury_base']*$insurance_list['company_injury_ratio'];?></td>
+                                                    <td><?php echo $insurance_list['company_pension_base']*$insurance_list['company_pension_ratio'];?></td>
+                                                    <td><?php echo $insurance_list['company_medical_care_base']*$insurance_list['company_medical_care_ratio'];?></td>
+                                                    <td>{$insurance_list.company_big_price}</td>
+                                                    <td><?php echo $insurance_list['company_unemployment_base']*$insurance_list['company_unemployment_ratio'];?></td>
+                                                    <td>{$wages_list['accumulation_fund']}</td>
                                                 </tr>
                                             </table>
                                         </div>
@@ -317,12 +317,12 @@
                                                     <th class="taskOptions">赡养老人</th>
                                                 </tr>
                                                 <tr>
-                                                    <td>&yen;<?php echo $info['specialdeduction']['children_education']?$info['specialdeduction']['children_education']:'0.00'; ?></td>
-                                                    <td>&yen;<?php echo $info['specialdeduction']['continue_education']?$info['specialdeduction']['continue_education']:'0.00'; ?></td>
-                                                    <td>&yen;<?php echo $info['specialdeduction']['health']?$info['specialdeduction']['health']:'0.00'; ?></td>
-                                                    <td>&yen;<?php echo $info['specialdeduction']['buy_house']?$info['specialdeduction']['buy_house']:'0.00'; ?></td>
-                                                    <td>&yen;<?php echo $info['specialdeduction']['rent_house']?$info['specialdeduction']['rent_house']:'0.00'; ?></td>
-                                                    <td>&yen;<?php echo $info['specialdeduction']['support_older']?$info['specialdeduction']['support_older']:'0.00'; ?></td>
+                                                    <td>&yen;<?php echo $specialdeduction_list['children_education']?$specialdeduction_list['children_education']:'0.00'; ?></td>
+                                                    <td>&yen;<?php echo $specialdeduction_list['continue_education']?$specialdeduction_list['continue_education']:'0.00'; ?></td>
+                                                    <td>&yen;<?php echo $specialdeduction_list['health']?$specialdeduction_list['health']:'0.00'; ?></td>
+                                                    <td>&yen;<?php echo $specialdeduction_list['buy_house']?$specialdeduction_list['buy_house']:'0.00'; ?></td>
+                                                    <td>&yen;<?php echo $specialdeduction_list['rent_house']?$specialdeduction_list['rent_house']:'0.00'; ?></td>
+                                                    <td>&yen;<?php echo $specialdeduction_list['support_older']?$specialdeduction_list['support_older']:'0.00'; ?></td>
                                                 </tr>
 
                                             </table><br/>
@@ -332,28 +332,28 @@
 
                                     <div class="content">
                                         <div class="box-header" style="margin-left: -20px">
-                                            <h3 class="box-title">六 、个税及工会会费、代扣代缴  共计 <u class="salary_individual_totala"><?PHP echo sprintf("%.2f",($info['wages_month']['summoney']+$info['wages_month']['personal_tax']+$info['bonus']['annual_bonus']+$info['wages_month']['Labour']));?></u>  元</h3>
+                                            <h3 class="box-title">六 、个税及工会会费、代扣代缴  共计 <u class="salary_individual_totala"><?PHP echo sprintf("%.2f",($wages_list['summoney']+$wages_list['personal_tax']+$bonus_list['annual_bonus']+$wages_list['Labour']));?></u>  元</h3>
                                         </div><!-- /.box-header --><br><br>
 
                                         <div class="form-group col-md-4 viwe">
                                             <!--   岗位薪酬 +  提成/补助/奖金     -->
-                                            <p class="salary_aggregate_should">应发工资合计：<?PHP echo sprintf("%.2f",$info['wages_month']['Should_distributed']);?>(元)</p>
+                                            <p class="salary_aggregate_should">应发工资合计：<?PHP echo sprintf("%.2f",$wages_list['Should_distributed']);?>(元)</p>
                                         </div>
                                         <!--   应发工资合计  - 员工五险一金 + 其他收入     -->
                                         <div class="form-group col-md-4 viwe">
-                                            <p class="salary_individual_tax_assessment">个税计税工资：<?PHP echo sprintf("%.2f",$info['wages_month']['tax_counting']);?> (元)</p>
+                                            <p class="salary_individual_tax_assessment">个税计税工资：<?PHP echo sprintf("%.2f",$wages_list['tax_counting']);?> (元)</p>
                                         </div>
 
                                         <div class="form-group col-md-4 viwe">
-                                            <p class="salary_individual_tax_assessment1">个人所得税：<?PHP echo sprintf("%.2f",$info['wages_month']['personal_tax']);?>(元)</p>
+                                            <p class="salary_individual_tax_assessment1">个人所得税：<?PHP echo sprintf("%.2f",$wages_list['personal_tax']);?>(元)</p>
                                         </div>
 
                                         <div class="form-group col-md-4 viwe">
-                                            <p class="salary_individual_tax_assessment2">年终计税：<?PHP echo sprintf("%.2f",$info['wages_month']['yearend']);?>(元)</p>
+                                            <p class="salary_individual_tax_assessment2">年终计税：<?PHP echo sprintf("%.2f",$wages_list['yearend']);?>(元)</p>
                                         </div>
 
                                         <div class="form-group col-md-4 viwe">
-                                            <p>工会会费：<?PHP echo sprintf("%.2f",$info['wages_month']['Labour']);?>(元)</p>
+                                            <p>工会会费：<?PHP echo sprintf("%.2f",$wages_list['Labour']);?>(元)</p>
                                         </div>
 
                                     </div>
@@ -364,7 +364,7 @@
                                                 <td>项目</td>
                                                 <td>金额</td>
                                             </tr>
-                                            <foreach name="info['withholding']" item="with">
+                                            <foreach name="withholding_list" item="with">
                                                 <tr>
                                                     <td>{$with.project_name}</td>
                                                     <td class="money">{$with.money}</td>
@@ -378,7 +378,7 @@
                                                 <td>项目</td>
                                                 <td>金额</td>
                                             </tr>
-                                            <foreach name="info['income']" item="inc">
+                                            <foreach name="income_list" item="inc">
                                                 <tr>
                                                     <td>{$inc.income_name}</td>
                                                     <td class="money">{$inc.income_money}</td>
@@ -389,7 +389,7 @@
                                     </div>
                                     <div class="content">
                                         <div class="box-header" style="margin-left: -20px">
-                                            <h3 class="box-title">七 、实发工资  共计 <u class="salary_Payroll">{$info['wages_month']['real_wages']}</u> 元</h3><p style="margin-top: 15px;">(实发工资=岗位薪酬+提成/补助/奖金+绩效增减-考勤扣款-员工五险一金-个税及工会会费、代扣代缴)</p>
+                                            <h3 class="box-title">七 、实发工资  共计 <u class="salary_Payroll">{$wages_list['real_wages']}</u> 元</h3><p style="margin-top: 15px;">(实发工资=岗位薪酬+提成/补助/奖金+绩效增减-考勤扣款-员工五险一金-个税及工会会费、代扣代缴)</p>
                                         </div><!-- /.box-header --><br />
                                         <!--   1+2-3-5    -->
                                         <table class="table table-bordered dataTable fontmini"  style="margin-left:-15px;">
@@ -403,15 +403,15 @@
                                                 <th class="sorting" data="group_id">个税及工会会费、代扣代缴</th>
                                             </tr>
                                             <tr>
-                                                <td class="salary_Payroll1">{$info['wages_month']['real_wages']}</td>
-                                                <td>{$info['wages_month']['standard']} (元)</td>
-                                                <td class="salary_subsidy1">{$info['wages_month']['welfare']} (元)</td>
-                                                <td class="salary_subsidy1">{$info['wages_month']['Achievements_withdrawing']} (元)</td>
-                                                <td class="salary_subsidy1">{$info['wages_month']['withdrawing']} (元)</td>
+                                                <td class="salary_Payroll1">{$wages_list['real_wages']}</td>
+                                                <td>{$wages_list['standard']} (元)</td>
+                                                <td class="salary_subsidy1">{$wages_list['welfare']} (元)</td>
+                                                <td class="salary_subsidy1">{$wages_list['Achievements_withdrawing']} (元)</td>
+                                                <td class="salary_subsidy1">{$wages_list['withdrawing']} (元)</td>
 
-                                                <td class="five_risks">{$info['wages_month']['insurance_Total']} (元)</td>
-<!--                                                {$info['wages_month']['summoney']+$info['wages_month']['personal_tax']+$info['wages_month']['Labour']}-->
-                                                <td class="salary_individual_totala1"><?PHP echo sprintf("%.2f",($info['wages_month']['summoney']+$info['wages_month']['personal_tax']+$info['bonus']['annual_bonus']+$info['wages_month']['Labour']));?> (元)</td>
+                                                <td class="five_risks">{$wages_list['insurance_Total']} (元)</td>
+<!--                                                {$wages_list['summoney']+$wages_list['personal_tax']+$wages_list['Labour']}-->
+                                                <td class="salary_individual_totala1"><?PHP echo sprintf("%.2f",($wages_list['summoney']+$wages_list['personal_tax']+$bonus_list['annual_bonus']+$wages_list['Labour']));?> (元)</td>
                                             </tr>
                                         </table>
                                         <br>

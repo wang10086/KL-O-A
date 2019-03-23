@@ -46,7 +46,7 @@ class SalaryController extends BaseController {
      * sql_query 调用自封装函数
      * sql_query参数（1查2增3删4修,查询字段,表名,条件,1倒叙2正常顺序,1查一条0所有）
      */
-    public function salarydetails(){
+    /*public function salarydetails(){
         $mod                                    = D('Salary');
         if(!is_numeric(trim($_GET['id'])) && !is_numeric(trim($_GET['datetime']))){
             $this->error('您查找的数据有误!请重新选择！');die;
@@ -86,7 +86,7 @@ class SalaryController extends BaseController {
         $user_info['specialdeduction']          = M('salary_specialdeduction')->where(array('id'=>$user_info1['specialdeduction_id']))->find();//专项附加扣除
         $this->assign('info',$user_info);
         $this->display();
-    }
+    }*/
 
 
 
@@ -1883,4 +1883,45 @@ class SalaryController extends BaseController {
         exportexcel($excelLists,$title,$datetime.'月工资发放表');
     }
 
+    //员工薪资详情
+    public function salarydetails(){
+        $id                                     = I('id');
+        $mod                                    = D('Salary');
+        $where                                  = array();
+        $where['id']                            = $id;
+        $userid                                 = session('userid');
+
+        if (!in_array($userid,array(1,11,12,32,38,55,77,185))){
+            $where['account_id']                = $userid;
+        }
+        $wages_list                             = M('salary_wages_month')->where($where)->find();
+        if (!$wages_list) $this->error('获取数据失败');
+
+        $account_list                           = M('account')->where(array('id'=>$wages_list['account_id']))->find();
+        $salary_list                            = M('salary')->where(array('id'=>$wages_list['salary_id']))->find();
+        $attendance_list                        = M('salary_attendance')->where(array('id'=>array('in',$wages_list['attendance_id'])))->find(); //考勤
+        $bonus_list                             = M('salary_bonus')->where(array('id'=>array('in',$wages_list['bonus_id'])))->find(); //提成/奖金/年终奖
+        $individual_tax_list                    = M('individual_tax')->where(array('id'=>array('in',$wages_list['individual_id'])))->find(); //个税
+        $insurance_list                         = M('salary_insurance')->where(array('id'=>array('in',$wages_list['insurance_id'])))->find(); //五险一金
+        $labour_list                            = M('salary_labour')->where(array('id'=>array('in',$wages_list['labour_id'])))->find(); //工会会费
+        $specialdeduction_list                  = M('salary_specialdeduction')->where(array('id'=>array('in',$wages_list['specialdeduction_id'])))->find(); //专项附加扣除
+        $subsidy_list                           = M('salary_subsidy')->where(array('id'=>array('in',$wages_list['subsidy_id'])))->find(); //补贴
+        $income_list                            = M('salary_income')->where(array('income_token'=>array('in',$wages_list['income_token'])))->select(); //其他收入
+        $withholding_list                       = M('salary_withholding')->where(array('token'=>array('in',$wages_list['withholding_token'])))->select(); //代扣代缴
+
+        $this->department                       = M('salary_department')->getField('id,department',true);
+        $this->wages_list                       = $wages_list; //当月工资信息
+        $this->account_list                     = $account_list; //个人基本信息
+        $this->salary_list                      = $salary_list; //基本工资信息
+        $this->attendance_list                  = $attendance_list; //考勤
+        $this->bonus_list                       = $bonus_list; //提成/奖金/年终奖
+        $this->individual_tax_list              = $individual_tax_list; //个税
+        $this->insurance_list                   = $insurance_list; //五险一金
+        $this->labour_list                      = $labour_list; //工会会费
+        $this->specialdeduction_list            = $specialdeduction_list; //专项附加扣除
+        $this->subsidy_list                     = $subsidy_list; //补贴
+        $this->income_list                      = $income_list;  //其他收入
+        $this->withholding_list                 = $withholding_list; //代扣代缴
+        $this->display();
+    }
 }

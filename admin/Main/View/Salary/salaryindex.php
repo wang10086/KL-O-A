@@ -48,7 +48,6 @@
                                             <th class="sorting" data="number">实发工资</th>
                                             <th width="50" class="taskOptions">薪资月份</th>
                                             <th width="50" class="taskOptions">详情</th>
-                                            </if>
 
                                         </tr>
 
@@ -67,7 +66,7 @@
                                                 <td>&yen; {$info.summoney}</td>
                                                 <td>&yen; {$info.real_wages}</td>
                                                 <td> {$info.datetime}</td>
-                                                <td><a href="{:U('Salary/salarydetails',array('id'=>$info['id'],'datetime'=>$info['datetime']))}" class="btn btn-info btn-smsm"><i class="fa fa-pencil"></i>查看详情</a></td>
+                                                <td><a href="{:U('Salary/salarydetails',array('id'=>$info['id']))}" class="btn btn-info btn-smsm"><i class="fa fa-pencil"></i>查看详情</a></td>
                                             </tr>
                                         </foreach>
                                     </table>
