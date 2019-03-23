@@ -2796,7 +2796,7 @@ class FinanceController extends BaseController {
                 $data[$k]['history']            += $info['history'];
                 $data[$k]['this_month_return']  += $info['this_month_return'];
             }
-            $data[$k]['money_back_average']     = (round($data[$k]['this_month_return']/($data[$k]['this_month']+$data[$k]['history']),4)*100).'%';
+            $data[$k]['money_back_average']     = ($data[$k]['this_month']+$data[$k]['history'])?(round($data[$k]['this_month_return']/($data[$k]['this_month']+$data[$k]['history']),4)*100).'%':'100%';
         }
         return $data;
     }
