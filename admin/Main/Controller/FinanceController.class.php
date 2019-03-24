@@ -763,8 +763,6 @@ class FinanceController extends BaseController {
 			$huikuan[$k]['show_reason']  = $show_reason;
 		}
 
-        //$member             = M('op_member')->where(array('op_id'=>$opid))->order('id')->select();
-        //$this->member       = $member;
         $this->jd           = $mod->get_jidiao($opid); //计调
 		$this->op    		= $op;
 		$this->settlement	= $settlement;
@@ -772,8 +770,9 @@ class FinanceController extends BaseController {
 		$this->payment		= M('contract_pay')->where(array('op_id'=>$opid))->sum('pay_amount'); 
 		$this->huikuan  		= $huikuan;
 		$this->huikuanlist	= M()->table('__CONTRACT_PAY__ as p')->field('p.*,c.contract_id')->join('__CONTRACT__ as c on c.id = p.cid','LEFT')->where(array('p.op_id'=>$opid,'p.status'=>array('neq','2')))->order('p.id asc')->select();
-		
-		
+
+        $this->type             = C('JIEKUAN_TYPE'); //回款方式
+        $this->company          = C('COMPANY'); //回款单位
 		$this->pays 			= M()->table('__CONTRACT_PAY__ as p')->field('p.*,c.contract_id')->join('__CONTRACT__ as c on c.id = p.cid','LEFT')->where(array('p.op_id'=>$opid))->order('p.id asc')->select();
         $this->should_back_money= M('op_budget')->where(array('op_id'=>$opid))->getField('should_back_money');
 
