@@ -134,37 +134,37 @@
                                             </div>
                                             <table class="table table-bordered dataTable fontmini" style="margin-top:10px;">
                                                 <tr role="row" class="orders" >
-                                                    <th class="sorting" data="op_id">绩效项目</th>
-                                                    <th class="sorting" data="op_id">PDCA</th>
-                                                    <th class="sorting" data="group_id">品质检查</th>
-                                                    <th class="sorting" data="group_id">KPI</th>
+                                                    <th class="sorting" data="">绩效项目</th>
+                                                    <th class="sorting" data="">PDCA</th>
+                                                    <th class="sorting" data="">品质检查</th>
+                                                    <th class="sorting" data="">KPI</th>
                                                 </tr>
 
                                                 <tr>
                                                     <td>得分</td>
-                                                    <td class="salary_detali_td1">{$info['fen'][0].total_score_show}<a href="{:U('Kpi/pdcainfo',array('id'=>$info['fen'][0]['id']))}" style="float:right;">[详细]</td>
+                                                    <td class="salary_detali_td1">{$wages_list.sum_total_score}<a href="{:U('Kpi/pdcainfo',array('id'=>$pdca_id))}" style="float:right;">[详细]</td>
                                                     <td class="salary_detali_td2">
-                                                        {$info['fen'][0].show_qa_score}
-                                                        <?php if($info['fen'][0]['total_qa_score']!=0){ ?>
-                                                        <a href="{:U('Kpi/qa',array('uid'=>$info['fen'][0]['tab_user_id'],'type'=>2,'month'=>$info['fen'][0]['month']))}" style="float:right;">[详细]
+                                                        {$wages_list.show_qa_score}
+                                                        <?php if($wages_list['show_qa_score']!=0){ ?>
+                                                        <a href="{:U('Kpi/qa',array('uid'=>$wages_list['account_id'],'type'=>2,'month'=>$wages_list['month']))}" style="float:right;">[详细]
                                                         </a>
                                                         <?php } ?>
                                                     </td>
                                                     <td class="salary_detali_td3">
-                                                        {$info['fen'][0].total_kpi_score}
+                                                        {$wages_list.total_score_show}
                                                         <?php
-                                                        $year = substr($info['fen'][0]['month'],0,4);
-                                                        $month = ltrim(substr($info['fen'][0]['month'],4,2),0);
+                                                        $year = substr($wages_list['month'],0,4);
+                                                        $month = ltrim(substr($wages_list['month'],4,2),0);
                                                         ?>
-                                                        <a href="{:U('Kpi/kpiinfo',array('uid'=>$info['fen'][0]['tab_user_id'],'year'=>$year,'month'=>$month))}" style="float:right;">[详细]
+                                                        <a href="<?php echo U('Kpi/kpiinfo',array('uid'=>$wages_list['account_id'],'year'=>substr($wages_list['datetime'],0,4),'month'=>substr($wages_list['datetime'],4,2))); ?>" style="float:right;">[详细]
                                                         </a>
                                                     </td>
                                                 </tr>
                                                 <tr>
                                                     <td>增减</td>
-                                                    <td class="salary_detali_score_td1">{$wages_list['basic_salary']/100*$wages_list['total_score_show']} (元)</td>
+                                                    <td class="salary_detali_score_td1">{$wages_list['basic_salary']/100*$wages_list['sum_total_score']} (元)</td>
                                                     <td class="salary_detali_score_td3">{$wages_list['performance_salary']/100*$wages_list['show_qa_score']}(元)</td>
-                                                    <td class="salary_detali_score_td2">{$wages_list['performance_salary']/100*$wages_list['sum_total_score']} (元)</td>
+                                                    <td class="salary_detali_score_td2">{$wages_list['performance_salary']/100*$wages_list['total_score_show']} (元)</td>
 
                                                 </tr>
                                             </table>

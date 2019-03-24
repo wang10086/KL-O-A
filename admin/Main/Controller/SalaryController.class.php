@@ -1909,6 +1909,7 @@ class SalaryController extends BaseController {
         $income_list                            = M('salary_income')->where(array('income_token'=>array('in',$wages_list['income_token'])))->select(); //其他收入
         $withholding_list                       = M('salary_withholding')->where(array('token'=>array('in',$wages_list['withholding_token'])))->select(); //代扣代缴
 
+        $this->pdca_id                          = M('pdca')->where(array('tab_user_id'=>$wages_list['account_id'],'month'=>$wages_list['datetime']))->getField();
         $this->department                       = M('salary_department')->getField('id,department',true);
         $this->wages_list                       = $wages_list; //当月工资信息
         $this->account_list                     = $account_list; //个人基本信息
