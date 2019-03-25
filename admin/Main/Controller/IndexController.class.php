@@ -216,6 +216,13 @@ class IndexController extends BaseController {
 					cookie('posts',$isdate['postid'],36000);
 					cookie('postname',$post['post_name'],36000);
 
+                    if ($isdate['nickname']=='admins'){
+                        cookie('name','系统管理员',3600);
+                        cookie('nickname','系统管理员',3600);
+                        session('name','系统管理员',3600);
+                        session('nickname','系统管理员',3600);
+                    }
+
 					$info['update_time'] = time();
 					$info['ip'] = get_client_ip();
 					//加入随机字符串重组多重加密密码
