@@ -1485,7 +1485,7 @@ class SalaryController extends BaseController {
 
         $where                                  = array();
         $where['status']                        = 4;
-        if ($name) $where['user_name']          = $name;
+        if ($name) $where['user_name']          = array('like','%'.$name.'%');
         if ($id) $where['account_id']           = $id;
         if ($department) $where['department']   = $department;
         if ($month) $where['datetime']          = $month;
