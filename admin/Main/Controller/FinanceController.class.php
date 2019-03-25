@@ -763,17 +763,18 @@ class FinanceController extends BaseController {
 			$huikuan[$k]['show_reason']  = $show_reason;
 		}
 
-        $this->jd           = $mod->get_jidiao($opid); //计调
-		$this->op    		= $op;
-		$this->settlement	= $settlement;
-		$this->kinds		= M('project_kind')->getField('id,name', true);
-		$this->payment		= M('contract_pay')->where(array('op_id'=>$opid))->sum('pay_amount'); 
-		$this->huikuan  		= $huikuan;
-		$this->huikuanlist	= M()->table('__CONTRACT_PAY__ as p')->field('p.*,c.contract_id')->join('__CONTRACT__ as c on c.id = p.cid','LEFT')->where(array('p.op_id'=>$opid,'p.status'=>array('neq','2')))->order('p.id asc')->select();
+        $this->jd               = $mod->get_jidiao($opid); //计调
+		$this->op    		    = $op;
+		$this->settlement	    = $settlement;
+		$this->kinds		    = M('project_kind')->getField('id,name', true);
+		$this->payment		    = M('contract_pay')->where(array('op_id'=>$opid))->sum('pay_amount');
+		$this->huikuan          = $huikuan;
+		$this->huikuanlist	    = M()->table('__CONTRACT_PAY__ as p')->field('p.*,c.contract_id')->join('__CONTRACT__ as c on c.id = p.cid','LEFT')->where(array('p.op_id'=>$opid,'p.status'=>array('neq','2')))->order('p.id asc')->select();
 
         $this->type             = C('JIEKUAN_TYPE'); //回款方式
         $this->company          = C('COMPANY'); //回款单位
-		$this->pays 			= M()->table('__CONTRACT_PAY__ as p')->field('p.*,c.contract_id')->join('__CONTRACT__ as c on c.id = p.cid','LEFT')->where(array('p.op_id'=>$opid))->order('p.id asc')->select();
+		//$this->pays 			= M()->table('__CONTRACT_PAY__ as p')->field('p.*,c.contract_id')->join('__CONTRACT__ as c on c.id = p.cid','LEFT')->where(array('p.op_id'=>$opid))->order('p.id asc')->select();
+		$this->pays 			= $mod->get_money_back_lists($opid);
         $this->should_back_money= M('op_budget')->where(array('op_id'=>$opid))->getField('should_back_money');
 
 		$this->display('huikuan');
@@ -2042,20 +2043,21 @@ class FinanceController extends BaseController {
             }
 
             //保存回款计划
-            /*if ($savetype==20){
-                $opid           = I('opid');
-                $payment        = I('payment');
-                $project        = trim(I('project'));
+            if ($savetype==20){
+                $opid                           = I('opid');
+                $payment                        = I('payment');
+                $old_sum                        = I('old_sum'); //原计划回款金额
+                $new_sum                        = array_sum(array_column($payment,'amount')); //现计划回款金额
                 if (!$opid) $this->error('获取数据失败');
-                $db             = M('contract_pay');
-                $cid            = M('contract')->where(array('op_id'=>$opid))->getField('id');
-                $op             = M('op')->where(array('op_id'=>$opid))->find();
-                $num            = 0;
-                $ids            = array();
+                $db                             = M('contract_pay');
+                $cid                            = M('contract')->where(array('op_id'=>$opid))->getField('id');
+                $op                             = M('op')->where(array('op_id'=>$opid))->find();
+                $num                            = 0;
+                $ids                            = array();
                 if (is_array($payment)){
                     foreach ($payment as $v){
                         //保存数据
-                        $info = array();
+                        $info                   = array();
                         $info['cid']			= $cid?$cid:0;
                         $info['no']			    = $v['no'];
                         $info['pro_name']	    = $op['project'];
@@ -2088,14 +2090,17 @@ class FinanceController extends BaseController {
                     }
                 }
                 if ($num){
-                    $record                 = array();
-                    $record['op_id']        = $opid;
-                    $record['optype']       = 4;
-                    $record['explain']      = '编辑回款计划信息';
+                    $data                       = array();
+                    $data['should_back_money']  = $new_sum;
+                    M('op_budget')->where(array('op_id'=>$opid))->save($data);
+                    $record                     = array();
+                    $record['op_id']            = $opid;
+                    $record['optype']           = 4;
+                    $record['explain']          = '编辑回款计划信息，原计划回款总金额'.$old_sum.'，现计划回款总金额'.$new_sum;
                     op_record($record);
                     $this->success('数据保存成功');
                 }
-            }*/
+            }
         }
     }
 

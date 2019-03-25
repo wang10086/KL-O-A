@@ -77,9 +77,13 @@
                                         </table>
                                         </div>
                                         <?php if (in_array(cookie('userid'),array(1,11,55))){ ?> <!--乔总+财务-->
-                                            <form action="" method="post">
+                                            <form action="{:U('Finance/public_save')}" method="post">
+                                                <input type="hidden" name="savetype" value="20">
+                                                <input type="hidden" name="dosubmint" value="1">
+                                                <input type="hidden" name="opid" value="{$op.op_id}">
+                                                <input type="hidden" name="old_sum" value="{$should_back_money}">
                                                 <div class="content" style="padding-top:0px;">
-                                                    <h2 style="font-size:16px; border-bottom:2px solid #dedede; padding-bottom:10px;"> <span class="black">回款计划</span> (应回款总金额:<span id="sum_money_return"></span>元)</h2>
+                                                    <h2 style="font-size:16px; border-bottom:2px solid #dedede; padding-bottom:10px;"> <span class="black">回款计划</span> (应回款总金额:<span id="sum_money_return">{$should_back_money}</span>元)</h2>
                                                     <div class="callout callout-danger">
                                                         <h4>提示！一般情况应做到：</h4>
                                                         <p>1、在业务实施前回款不小于70%；</p>
@@ -168,7 +172,7 @@
                                                     <div id="payment_val">1</div>
                                                     <div class="form-group col-md-12" id="useraddbtns">
                                                         <a href="javascript:;" class="btn btn-success btn-sm" onClick="add_payment()"><i class="fa fa-fw fa-plus"></i> 增加回款信息</a>
-                                                        <!--<input type="submit" class="btn btn-info btn-sm" value="保存">-->
+                                                        <input type="submit" class="btn btn-info btn-sm" value="保存">
                                                     </div>
                                                     <div class="form-group">&nbsp;</div>
                                                 </div>
@@ -177,7 +181,7 @@
                                             <?php if($pays){ ?>
                                             <div class="form-group">
                                                 <h2 style="font-size:16px; border-bottom:2px solid #dedede; padding-bottom:10px;"> <span class="black">回款计划</span> (应回款总金额：{$should_back_money}元)&emsp;
-                                                    <?php if (in_array(cookie('userid'),array($jd,1,11))){ ?>
+                                                    <?php if (in_array(cookie('userid'),array($jd))){ ?>
                                                     <div style="display: inline-block" id="upd_money_back_div"><button class="btn btn-success btn-sm edit_money_back_btn">修改总回款金额</button></div>
                                                     <?php } ?>
                                                 </h2>
