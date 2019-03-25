@@ -775,8 +775,8 @@ class FinanceController extends BaseController {
         $this->company          = C('COMPANY'); //回款单位
 		//$this->pays 			= M()->table('__CONTRACT_PAY__ as p')->field('p.*,c.contract_id')->join('__CONTRACT__ as c on c.id = p.cid','LEFT')->where(array('p.op_id'=>$opid))->order('p.id asc')->select();
 		$this->pays 			= $mod->get_money_back_lists($opid);
-        $this->should_back_money= M('op_budget')->where(array('op_id'=>$opid))->getField('should_back_money');
-
+        $budget_list            = M('op_budget')->where(array('op_id'=>$opid))->find();
+        $this->should_back_money= $budget_list['should_back_money']?$budget_list['should_back_money']:$budget_list['shouru'];
 		$this->display('huikuan');
 	}
 	
