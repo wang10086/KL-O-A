@@ -446,7 +446,8 @@ class FinanceController extends BaseController {
 
 		$info['xinzhi']     = implode(',',$xinzhi);
 		$sum_back_money     = array_sum(array_column($payment,'amount'));
-        if (!$info['shouru'] || $sum_back_money != $info['shouru']) $this->error('请确保回款总金额和收入一致');
+        $is_dijie           = M('op')->where(array('dijie_opid'=>$opid))->getField('op_id'); //判断是不是地接团(排除内部地接)
+        if ((!$info['shouru'] || $sum_back_money != $info['shouru']) && !$is_dijie) $this->error('请确保回款总金额和收入一致');
 
 
         //保存预算
@@ -611,7 +612,8 @@ class FinanceController extends BaseController {
         $dijie_shouru           = $mod->get_landAcquisitionAgency_money($op,P::REQ_TYPE_SETTLEMENT);   //801 获取地接结算收入
         $this->kind				= C('COST_TYPE');
         $this->costtype			= array('1'=>'其他','2'=>'专家辅导员','3'=>'合格供方','4'=>'物资');
-        $this->should_back_money= M('op_budget')->where(array('op_id'=>$opid))->getField('should_back_money'); //回款金额(带入结算收入)
+        $budget_list            = M('op_budget')->where(array('op_id'=>$opid))->find();
+        $this->should_back_money= $budget_list['should_back_money']?$budget_list['should_back_money']:$budget['shouru']; //回款金额(带入结算收入)
         $this->op				= $op;
         $this->costacc			= $costacc;
         $this->jiesuan			= $jiesuan;

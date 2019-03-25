@@ -192,7 +192,7 @@
         
         <div class="form-group col-md-4">
             <label>实际收入：</label>
-            <input type="text" name="info[shouru]" id="shouru" class="form-control" value="<?php echo $settlement['shouru']?$settlement['shouru']:$should_back_money; ?>" onBlur="lilv()"  />
+            <input type="text" name="info[shouru]" id="shouru" class="form-control" value="<?php echo $settlement['shouru']?$settlement['shouru']:$should_back_money; ?>" onBlur="lilv()" readonly />
         </div>
         <div class="form-group col-md-4">
         	<!--
