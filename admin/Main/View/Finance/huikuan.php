@@ -76,55 +76,148 @@
                                             </if>
                                         </table>
                                         </div>
-                                        
-                                        <?php if($pays){ ?>
-                                        
-                                        <div class="form-group">
-                                            <h2 style="font-size:16px; border-bottom:2px solid #dedede; padding-bottom:10px;"> <span class="black">回款计划</span> (应回款总金额：{$should_back_money}元)&emsp;
-                                                <?php if (in_array(cookie('userid'),array($jd,1,11))){ ?>
-                                                <div style="display: inline-block" id="upd_money_back_div"><button class="btn btn-success btn-sm edit_money_back_btn">修改总回款金额</button></div>
-                                                <?php } ?>
-                                            </h2>
-                                            <div class="callout callout-danger">
-                                                <h4>提示！一般情况应做到：</h4>
-                                                <p>1、在业务实施前回款不小于70%；</p>
-                                                <p>2、在业务实施结束后10个工作日收回全部尾款；</p>
+                                        <?php if (in_array(cookie('userid'),array(1,11,55))){ ?> <!--乔总+财务-->
+                                            <form action="" method="post">
+                                                <div class="content" style="padding-top:0px;">
+                                                    <h2 style="font-size:16px; border-bottom:2px solid #dedede; padding-bottom:10px;"> <span class="black">回款计划</span> (应回款总金额:<span id="sum_money_return"></span>元)</h2>
+                                                    <div class="callout callout-danger">
+                                                        <h4>提示！一般情况应做到：</h4>
+                                                        <p>1、在业务实施前回款不小于70%；</p>
+                                                        <p>2、在业务实施结束后10个工作日收回全部尾款；</p>
+                                                    </div>
+                                                    <div class="form-group col-md-12" id="payment">
+                                                        <div class="userlist">
+                                                            <div class="unitbox_15">回款金额(元)</div>
+                                                            <div class="unitbox_15">回款比例(%)</div>
+                                                            <div class="unitbox_15">计划回款时间</div>
+                                                            <div class="unitbox_15">收款方</div>
+                                                            <div class="unitbox_15">回款方式</div>
+                                                            <div class="unitbox_25">备注</div>
+                                                        </div>
+                                                        <?php if($pays){ ?>
+                                                            <foreach name="pays" key="kk" item="pp">
+                                                                <div class="userlist" id="pretium_8888{$pp.id}">
+                                                                    <span class="title"><?php echo $kk+1; ?></span>
+                                                                    <input type="hidden" name="payment[8888{$pp.id}][no]" class="payno"  value="{$pp.no}">
+                                                                    <input type="hidden" class="form-control" name="payment[8888{$pp.id}][pid]" value="{$pp.id}">
+                                                                    <div class="f_15">
+                                                                        <input type="text" class="form-control" name="payment[8888{$pp.id}][amount]" onblur="check_ratio('8888'+{$pp.id},$(this).val())" value="{$pp.amount}">
+                                                                    </div>
+                                                                    <div class="f_15">
+                                                                        <input type="text" class="form-control" name="payment[8888{$pp.id}][ratio]" value="{$pp.ratio}">
+                                                                    </div>
+                                                                    <div class="f_15">
+                                                                        <input type="text" class="form-control inputdate"  name="payment[8888{$pp.id}][return_time]" value="<if condition="$pp['return_time']">{$pp.return_time|date='Y-m-d',###}</if>">
+                                                                    </div>
+                                                                    <div class="f_15">
+                                                                        <select class="form-control" name="payment[8888{$pp.id}][company]" >
+                                                                            <foreach name="company" key="k" item="v">
+                                                                                <option value="{$k}" <?php if ($pp['company']==$k) echo 'selected'; ?>>{$v}</option>
+                                                                            </foreach>
+                                                                        </select>
+                                                                    </div>
+                                                                    <div class="f_15">
+                                                                        <select class="form-control" name="payment[8888{$pp.id}][type]" >
+                                                                            <foreach name="type" key="k" item="v">
+                                                                                <option value="{$k}" <?php if ($pp['type']==$k) echo "selected"; ?>>{$v}</option>
+                                                                            </foreach>
+                                                                        </select>
+                                                                    </div>
+                                                                    <div class="f_25">
+                                                                        <input type="text" class="form-control" name="payment[8888{$pp.id}][remarks]" value="{$pp.remark}">
+                                                                    </div>
+
+                                                                    <a href="javascript:;" class="btn btn-danger btn-flat" onclick="delbox('pretium_8888{$pp.id}')">删除</a>
+                                                                </div>
+                                                            </foreach>
+                                                        <?php }else{ ?>
+                                                            <div class="userlist" id="pretium_id">
+                                                                <span class="title">1</span>
+                                                                <input type="hidden" name="payment[1][no]" class="payno" value="1">
+                                                                <div class="f_15">
+                                                                    <input type="text" class="form-control" name="payment[1][amount]" onblur="check_ratio($(this).parent('div').prev().val(),$(this).val())" value="">
+                                                                </div>
+                                                                <div class="f_15">
+                                                                    <input type="text" class="form-control" name="payment[1][ratio]" value="">
+                                                                </div>
+                                                                <div class="f_15">
+                                                                    <input type="text" class="form-control inputdate"  name="payment[1][return_time]" value="">
+                                                                </div>
+                                                                <div class="f_15">
+                                                                    <select class="form-control" name="payment[1][company]">
+                                                                        <foreach name="company" key="k" item="v">
+                                                                            <option value="{$k}">{$v}</option>
+                                                                        </foreach>
+                                                                    </select>
+                                                                </div>
+                                                                <div class="f_15">
+                                                                    <select class="form-control" name="payment[1][type]">
+                                                                        <foreach name="type" key="k" item="v">
+                                                                            <option value="{$k}">{$v}</option>
+                                                                        </foreach>
+                                                                    </select>
+                                                                </div>
+                                                                <div class="f_25">
+                                                                    <input type="text" class="form-control" name="payment[1][remarks]" value="">
+                                                                </div>
+
+                                                                <a href="javascript:;" class="btn btn-danger btn-flat" onclick="delbox('pretium_id')">删除</a>
+                                                            </div>
+                                                        <?php } ?>
+                                                    </div>
+                                                    <div id="payment_val">1</div>
+                                                    <div class="form-group col-md-12" id="useraddbtns">
+                                                        <a href="javascript:;" class="btn btn-success btn-sm" onClick="add_payment()"><i class="fa fa-fw fa-plus"></i> 增加回款信息</a>
+                                                        <!--<input type="submit" class="btn btn-info btn-sm" value="保存">-->
+                                                    </div>
+                                                    <div class="form-group">&nbsp;</div>
+                                                </div>
+                                            </form>
+                                        <?php }else{ ?>
+                                            <?php if($pays){ ?>
+                                            <div class="form-group">
+                                                <h2 style="font-size:16px; border-bottom:2px solid #dedede; padding-bottom:10px;"> <span class="black">回款计划</span> (应回款总金额：{$should_back_money}元)&emsp;
+                                                    <?php if (in_array(cookie('userid'),array($jd,1,11))){ ?>
+                                                    <div style="display: inline-block" id="upd_money_back_div"><button class="btn btn-success btn-sm edit_money_back_btn">修改总回款金额</button></div>
+                                                    <?php } ?>
+                                                </h2>
+                                                <div class="callout callout-danger">
+                                                    <h4>提示！一般情况应做到：</h4>
+                                                    <p>1、在业务实施前回款不小于70%；</p>
+                                                    <p>2、在业务实施结束后10个工作日收回全部尾款；</p>
+                                                </div>
                                             </div>
-                                        </div>
-                                        
-                                        
-                                        <div class="form-group">
-                                            <table class="table table-bordered dataTable "  style="margin-top:-20px;" id="tablelist">
-                                                <thead>
-                                                    <tr>
-                                                    	<th width="150">合同编号</th>
-                                                        <th width="40" style="text-align:center;">序号</th>
-                                                        <th width="100">回款金额(元)</th>
-                                                        <th width="100">回款比例(%)</th>
-                                                        <th width="100">计划回款时间</th>
-                                                        <th>备注</th>
-                                                        <th width="100">已回款金额(元)</th>
-                                                        <th width="100">状态</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    <foreach name="pays" key="k" item="v">
-                                                        <tr class="userlist">
-                                                        	<td><a href="{:U('Contract/detail',array('id'=>$v['cid']))}"><?php if($v['contract_id']){ echo $v['contract_id']; }else{ echo '未编号';} ?></a></td>
-                                                            <td style="text-align:center;">{$v.no}</td>
-                                                            <td>&yen; {$v.amount}</td>
-                                                            <td>{$v.ratio}</td>
-                                                            <td><if condition="$v['return_time']">{$v.return_time|date='Y-m-d',###}</if></td>
-                                                            <td>{$v.remark}</td>
-                                                            <td>&yen; {$v.pay_amount}</td>
-                                                            <td><?php if($v['status']==2){ echo '<span class="green">已回款</span>';}else if($v['status']==1){ echo '<span class="blue">待回款</span>';}else if($v['status']==0){ echo '<span class="red">未回款</span>';} ?></td>
-                                                        </tr> 
-                                                    </foreach>
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                        
-                                        <?php } ?>
+                                            <div class="form-group">
+                                                <table class="table table-bordered dataTable "  style="margin-top:-20px;" id="tablelist">
+                                                    <thead>
+                                                        <tr>
+                                                            <th width="150">合同编号</th>
+                                                            <th width="40" style="text-align:center;">序号</th>
+                                                            <th width="100">回款金额(元)</th>
+                                                            <th width="100">回款比例(%)</th>
+                                                            <th width="100">计划回款时间</th>
+                                                            <th>备注</th>
+                                                            <th width="100">已回款金额(元)</th>
+                                                            <th width="100">状态</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <foreach name="pays" key="k" item="v">
+                                                            <tr class="userlist">
+                                                                <td><a href="{:U('Contract/detail',array('id'=>$v['cid']))}"><?php if($v['contract_id']){ echo $v['contract_id']; }else{ echo '未编号';} ?></a></td>
+                                                                <td style="text-align:center;">{$v.no}</td>
+                                                                <td>&yen; {$v.amount}</td>
+                                                                <td>{$v.ratio}</td>
+                                                                <td><if condition="$v['return_time']">{$v.return_time|date='Y-m-d',###}</if></td>
+                                                                <td>{$v.remark}</td>
+                                                                <td>&yen; {$v.pay_amount}</td>
+                                                                <td><?php if($v['status']==2){ echo '<span class="green">已回款</span>';}else if($v['status']==1){ echo '<span class="blue">待回款</span>';}else if($v['status']==0){ echo '<span class="red">未回款</span>';} ?></td>
+                                                            </tr>
+                                                        </foreach>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        <?php }} ?>
                                 
                                     </div>
                                     
@@ -281,6 +374,69 @@
             $('#upd_money_back_div').html(form_html);
         })
     })
+
+    //新增回款计划
+    function add_payment(){
+        var i = parseInt($('#payment_val').text())+1;
+
+        var html = '<div class="userlist" id="pretium_'+i+'">';
+        html += '<span class="title"></span>';
+        html += '<input type="hidden" name="payment['+i+'][no]" class="payno" value="">';
+        html += '<div class="f_15"><input type="text" class="form-control" name="payment['+i+'][amount]" onblur="check_ratio('+i+',$(this).val())" value=""></div>';
+        html += '<div class="f_15"><input type="text" class="form-control" name="payment['+i+'][ratio]" value=""></div>';
+        html += '<div class="f_15"><input type="text" class="form-control inputdate"  name="payment['+i+'][return_time]" value=""></div>';
+        html += '<div class="f_15"><select class="form-control" name="payment['+i+'][company]"><foreach name="company" key="k" item="v"><option value="{$k}">{$v}</option></foreach></select></div>';
+        html += '<div class="f_15"><select class="form-control" name="payment['+i+'][type]"><foreach name="type" key="k" item="v"><option value="{$k}">{$v}</option></foreach></select></div>';
+        html += '<div class="f_25"><input type="text" class="form-control" name="payment['+i+'][remarks]" value=""></div>';
+        html += '<a href="javascript:;" class="btn btn-danger btn-flat" onclick="delbox(\'pretium_'+i+'\')">删除</a>';
+        html += '</div>';
+        $('#payment').append(html);
+        $('#payment_val').html(i);
+        orderno();
+        relaydate();
+    }
+
+    //编号
+    function orderno(){
+        $('#payment').find('.title').each(function(index, element) {
+            $(this).text(parseInt(index)+1);
+        });
+        $('#payment').find('.payno').each(function(index, element) {
+            $(this).val(parseInt(index)+1);
+        });
+    }
+
+    //移除
+    function delbox(obj){
+        $('#'+obj).remove();
+        orderno();
+        //cost_total();
+    }
+
+    //百分数转化为小数
+    function toPoint(percent){
+        var str=percent.replace("%","");
+        str= str/100;
+        var res = str.toFixed(2);
+        return res;
+    }
+
+    //自动计算回款比例
+    function check_ratio(num,obj) {
+        var sum         = $('#sum_money_return').html(); //预算收入
+        if (sum == 0){
+            art_show_msg('预算收入有误,请重新输入');
+            return false;
+        }else{
+            var money_back  = obj;
+            var ratio       = accDiv(money_back,sum); //相除
+            var ratio       = ratio.toFixed(4); //保留4位小数
+            var average     = accMul(ratio,'100')+'%'; //相加
+            $('input[name="payment['+num+'][ratio]"]').val(average);
+        }
+
+    }
+
 </script>
 
      

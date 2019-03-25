@@ -34,18 +34,18 @@
                                 
                                     <table class="table table-bordered dataTable fontmini" id="tablelist" style="margin-top:8px;">
                                         <tr role="row" class="orders" >
-                                            <th class="sorting" data="op_id">ID</th>
-                                            <th class="sorting" data="group_id">员工姓名</th>
-                                            <th class="sorting" data="group_id">员工部门</th>
-                                            <th class="sorting" data="project">岗位薪酬标准</th>
-                                            <th class="sorting" data="shouru">考勤扣款</th>
-                                            <th class="sorting" data="number">绩效增减</th>
-
-                                            <th class="sorting" data="shouru">提成/补助/奖金</th>
-                                            <th class="sorting" data="shouru">应发工资</th>
-                                            <th class="sorting" data="maoli">五险一金</th>
-                                            <th class="sorting" data="number">代扣代缴</th>
-                                            <th class="sorting" data="number">实发工资</th>
+                                            <th class="sorting" data="">ID</th>
+                                            <th class="sorting" data="">员工姓名</th>
+                                            <th class="sorting" data="">员工部门</th>
+                                            <th class="sorting" data="">岗位薪酬标准</th>
+                                            <th class="sorting" data="">考勤扣款</th>
+                                            <th class="sorting" data="">绩效增减</th>
+                                            <th class="sorting" data="">带团补助</th>
+                                            <th class="sorting" data="">提成/补助/奖金</th>
+                                            <th class="sorting" data="">应发工资</th>
+                                            <th class="sorting" data="">五险一金</th>
+                                            <th class="sorting" data="">代扣代缴</th>
+                                            <th class="sorting" data="">实发工资</th>
                                             <th width="50" class="taskOptions">薪资月份</th>
                                             <th width="50" class="taskOptions">详情</th>
 
@@ -60,6 +60,7 @@
                                                 <td>&yen; {$info.standard}</td>
                                                 <td>&yen; {$info.withdrawing}</td>
                                                 <td>&yen; {$info.Achievements_withdrawing}</td>
+                                                <td>&yen;{$info.Subsidy}</td>
                                                 <td>&yen; {$info.welfare}</td>
                                                 <td>&yen; {$info.Should_distributed}</td>
                                                 <td>&yen; {$info.insurance_Total}</td>
