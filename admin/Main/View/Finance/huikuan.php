@@ -428,16 +428,16 @@
     //自动计算回款比例
     function check_ratio(num,obj) {
         var sum         = $('#sum_money_return').html(); //预算收入
-        if (sum == 0){
+        /*if (sum == 0){
             art_show_msg('预算收入有误,请重新输入');
             return false;
-        }else{
+        }else{*/
             var money_back  = obj;
             var ratio       = accDiv(money_back,sum); //相除
             var ratio       = ratio.toFixed(4); //保留4位小数
             var average     = accMul(ratio,'100')+'%'; //相加
             $('input[name="payment['+num+'][ratio]"]').val(average);
-        }
+        /*}*/
 
     }
 
