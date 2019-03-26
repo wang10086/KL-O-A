@@ -178,7 +178,7 @@
                                                 </div>
                                             </form>
                                         <?php }else{ ?>
-                                            <?php if($pays){ ?>
+                                           <!-- --><?php /*if($pays){ */?>
                                             <div class="form-group">
                                                 <h2 style="font-size:16px; border-bottom:2px solid #dedede; padding-bottom:10px;"> <span class="black">回款计划</span> (应回款总金额：{$should_back_money}元)&emsp;
                                                     <?php if (in_array(cookie('userid'),array($jd))){ ?>
@@ -221,8 +221,9 @@
                                                     </tbody>
                                                 </table>
                                             </div>
-                                        <?php }} ?>
-                                
+                                        <?php /*}} */?>
+                                        <?php } ?>
+
                                     </div>
                                     
                                     

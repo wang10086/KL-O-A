@@ -2939,7 +2939,25 @@ class FinanceController extends BaseController {
                 if ($res) $num++;
             }
         }else{
-
+            $field                          = 'o.op_id,o.project,o.group_id,o.create_user,c.id as cid';
+            $op                             = M()->table('__OP__ as o')->join('__CONTRACT__ as c on c.op_id=o.op_id','left')->where(array('o.op_id'=>$opid))->field($field)->find();
+            $return_time                    = getAfterWorkDay(10);
+            $info                           = array();
+            $info['no']                     = 1;
+            $info['pro_name']               = $op['project'];
+            $info['op_id']                  = $opid;
+            $info['cid']                    = $op['cid']?$op['cid']:0;
+            $info['amount']                 = $should_back_money;
+            $info['ratio']                  = '100%';
+            $info['return_time']            = strtotime($return_time);
+            $info['remark']                 = cookie('name').'填写';
+            $info['status']                 = 0; //未回款
+            $info['type']                   = 4; //其他
+            $info['company']                = 2; //中心
+            $info['userid']                 = session('userid');
+            $info['payee']                  = $op['create_user'];
+            $res                            = $contract_pay_db->add($info);
+            if ($res) $num++;
         }
         if ($num != 0){
             $data                           = array();
