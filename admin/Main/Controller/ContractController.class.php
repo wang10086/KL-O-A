@@ -1,5 +1,6 @@
 <?php
 namespace Main\Controller;
+use Monolog\Handler\IFTTTHandler;
 use Sys\P;
 
 ulib('Page');
@@ -255,14 +256,180 @@ class ContractController extends BaseController {
 			}else{
 				$this->error('合同信息不存在');
 			}
-			 
-			
 		}
-		
 	}
 	
-	
-	
- 
-    
+	//合同统计
+    public function statis(){
+        $year		                        = I('year',date('Y'));
+        $month	                            = I('month',date('m'));
+        if (strlen($month)<2) $month        = str_pad($month,2,'0',STR_PAD_LEFT);
+        $times                              = $year.$month;
+        $yw_departs                         = C('YW_DEPARTS');  //业务部门id
+        $where                              = array();
+        $where['id']                        = array('in',$yw_departs);
+        $departments                        = M('salary_department')->field('id,department')->where($where)->select();
+        $cycle_times                        = get_cycle($times);
+        $lists                              = $this->get_department_op_list($departments,$cycle_times['begintime'],$cycle_times['endtime']);
+        $sum                                = $this->get_contract_sum($lists);
+
+        $this->sum                          = $sum;
+        $this->lists                        = $lists;
+        $this->departments                  = $departments;
+        $this->year		                    = I('year',date('Y'));
+        $this->month	                    = I('month',date('m'));
+        $this->prveyear	                    = $year-1;
+        $this->nextyear	                    = $year+1;
+        $this->display();
+    }
+
+    /**
+     * 获取各部门的合同签订率
+     * @param $departments
+     * @param $begintime
+     * @param $endtime
+     * @return array
+     */
+    public function get_department_op_list($departments,$begintime,$endtime){
+        $mod                                = D('Contract');
+        $op_lists                           = $mod->get_budget_list($begintime,$endtime); //在该周期内预算审核通过的项目
+        $data                               = array();
+        foreach ($departments as $k=>$v){
+            $data[$k]                       = $this->get_department_contract($op_lists,$v);
+        }
+        return $data;
+    }
+
+
+    /**
+     * 获取单个部门的合同签订率
+     * @param $op_lists
+     * @param $department
+     * @return array
+     */
+    public function get_department_contract($op_lists,$department){
+        $data                               = array();
+        $data['id']                         = $department['id'];
+        $data['department']                 = $department['department'];
+        $data['op_num']                     = 0; //项目数量
+        $data['contract_num']               = 0; //合同数量
+        $where                              = array();
+        $where['p.code']                    = array('like','S%');
+        $where['a.departmentid']            = $department['id'];
+        $count_lists                        = M()->table('__ACCOUNT__ as a')->join('__POSITION__ as p on p.id=a.position_id','left')->field('a.*')->where($where)->select();
+        foreach ($count_lists as $key=>$value){
+            foreach ($op_lists as $kk=>$vv){
+                if ($vv['create_user']==$value['id']){
+                    $data['lists'][]= $vv;
+                    $data['op_num']++;
+                    $contract_info          = M('contract')->where(array('op_id'=>$vv['op_id'],'status'=>1))->find();
+                    if ($contract_info) $data['contract_num']++;
+                }
+            }
+        }
+        $data['average']                    = $data['op_num']?(round($data['contract_num']/$data['op_num'],4)*100).'%':'100%';
+        return $data;
+    }
+
+    /**获取公司合计合同签订率
+     * @param $lists
+     * @return array
+     */
+    private function get_contract_sum($lists){
+        $data                               = array();
+        $data['name']                       = '合计';
+        $data['op_num']                     = array_sum(array_column($lists,'op_num'));
+        $data['contract_num']               = array_sum(array_column($lists,'contract_num'));
+        $data['average']                    = $data['op_num']?(round($data['contract_num']/$data['op_num'],4)*100).'%':'100%';
+        return $data;
+    }
+
+    public function department_detail(){
+        $year                               = I('year',date("Y"));
+        $month                              = I('month',date('m'));
+        $department_id                      = I('id');
+        $project                            = trim(I('title'));
+        $group_id                           = trim(I('oid'));
+        $op_id                              = trim(I('opid'));
+        $create_user_name                   = trim(I('uname'));
+        $cycle_times                        = get_cycle($year.$month);
+        $department                         = M('salary_department')->where(array('id'=>$department_id))->find();
+        $mod                                = D('Contract');
+        $op_lists                           = $mod->get_budget_list($cycle_times['begintime'],$cycle_times['endtime'],$project,$group_id,$op_id,$create_user_name); //在该周期内预算审核通过的项目
+        $data                               = $this->get_department_contract($op_lists,$department);
+        $lists                              = $data['lists'];
+        foreach ($lists as $k=>$v){
+            $confirm                        = M('op_team_confirm')->where(array('op_id'=>$v['op_id']))->find();
+            $contract                       = M('contract')->where(array('op_id'=>$v['op_id']))->find();
+            $lists[$k]['dep_time']          = $confirm['dep_time'];
+            $lists[$k]['ret_time']          = $confirm['ret_time'];
+            $lists[$k]['confirm_id']        = $contract['id'];
+            if ($contract){
+                $lists[$k]['contract_stu']  = "<span class='green'>已签订</span>";
+            }else{
+                $lists[$k]['contract_stu']  = "<span class='red'>未签订</span>";
+            }
+        }
+        $this->data                         = $data;
+        $this->lists                        = $lists;
+        $this->year                         = $year;
+        $this->month                        = $month;
+        $this->department_id                = $department_id;
+        $this->display();
+    }
+
+    public function month_detail(){
+        $year                               = I('year');
+        $month                              = I('month');
+        $uid                                = I('uid');
+        $cycle_times                        = get_cycle($year.$month);
+        $data                               = $this->get_user_contract_list($uid,$cycle_times['begintime'],$cycle_times['endtime']);
+        $op_list                            = $data['op_list'];
+
+        $this->data                         = $data;
+        $this->lists                        = $op_list;
+        $this->year                         = $year;
+        $this->month                        = $month;
+        $this->uid                          = $uid;
+        $this->display();
+    }
+
+    private function get_user_contract_list($userid,$begintime,$endtime){
+        /*$where                              = array(); //当月预算审核通过的项目
+        $where['l.req_type']                = P::REQ_TYPE_BUDGET; //预算申请
+        $where['b.audit_status']            = 1; //审批通过
+        $where['l.audit_time']              = array('between',"$begintime,$endtime");
+        $where['o.create_user_id']          = $userid;
+        $field                              = 'l.audit_uid,audit_uname,audit_time,o.*,c.dep_time,c.ret_time';
+        $lists                              = M()->table('__OP_BUDGET__ as b')->join('__AUDIT_LOG__ as l on l.req_id=b.id','left')->join('__OP__ as o on o.op_id = b.op_id','left')->join('__OP_TEAM_CONFIRM__ as c on c.op_id = b.op_id','left')->field($field)->where($where)->select();
+        var_dump(I());*/
+
+        $where 							    = array();
+        $where['o.create_user']			    = $userid;
+        $where['c.dep_time']			    = array('between',array($begintime,$endtime));
+        $dj_op_ids                          = array_filter(M('op')->getField('dijie_opid',true));
+        $where['o.op_id']                   = array('not in',$dj_op_ids);   //排除地接团
+        $op_list	                        = M()->table('__OP__ as o')->field('o.*,c.dep_time,c.ret_time')->join('left join __OP_TEAM_CONFIRM__ as c on o.op_id=c.op_id')->where($where)->select();
+        $op_num 		                    = count($op_list);
+        $contract_list                      = array();
+        foreach ($op_list as $key=>$value){
+            //出团后5天内完成上传
+            $time 		                    = $value['dep_time'] + 6*24*3600;
+            $list                           = M('contract')->where(array('op_id'=>$value['op_id'],'status'=>1,'confirm_time'=>array('lt',$time)))->find();
+            if ($list){
+                $contract_list[]    = $list;
+                $op_list[$key]['contract_stu'] = "<span class='green'>有合同</span>";
+            }else{
+                $op_list[$key]['contract_stu'] = "<span class='red'>无合同</span>";
+            }
+        }
+        $contract_num                       = count($contract_list);
+        $data                               = array();
+        $data['op_list']                    = $op_list;
+        $data['contract_list']              = $contract_list;
+        $data['op_num']                     = $op_num;
+        $data['contract_num']               = $contract_num;
+        $data['average']                    = (round($contract_num/$op_num,4)*100).'%';
+        return $data;
+    }
 }
