@@ -18,7 +18,7 @@
 
                             <div class="btn-group" id="catfont" style="padding-bottom:20px;">
                                 <?php if($prveyear>2017){ ?>
-                                    <a href="{:U('Finance/public_payment_chart_detail',array('year'=>$prveyear,'month'=>'01','pin'=>$pin,'department'=>$department))}" class="btn btn-default" style="padding:8px 18px;">上一年</a>
+                                    <a href="{:U('Finance/public_payment_detail',array('year'=>$prveyear,'month'=>'01','pin'=>$pin,'department'=>$department))}" class="btn btn-default" style="padding:8px 18px;">上一年</a>
                                 <?php } ?>
                                 <?php
                                     for($i=1;$i<13;$i++){
@@ -28,14 +28,14 @@
                                         $par['pin']   = $pin;
                                         $par['department']=$department;
                                         if($month==$i){
-                                            echo '<a href="'.U('Finance/public_payment_chart_detail',$par).'" class="btn btn-info" style="padding:8px 18px;">'.$i.'月</a>';
+                                            echo '<a href="'.U('Finance/public_payment_detail',$par).'" class="btn btn-info" style="padding:8px 18px;">'.$i.'月</a>';
                                         }else{
-                                            echo '<a href="'.U('Finance/public_payment_chart_detail',$par).'" class="btn btn-default" style="padding:8px 18px;">'.$i.'月</a>';
+                                            echo '<a href="'.U('Finance/public_payment_detail',$par).'" class="btn btn-default" style="padding:8px 18px;">'.$i.'月</a>';
                                         }
                                     }
                                 ?>
                                 <?php if($year<date('Y')){ ?>
-                                    <a href="{:U('Finance/public_payment_chart_detail',array('year'=>$nextyear,'month'=>'01','pin'=>$pin,'department'=>$department))}" class="btn btn-default" style="padding:8px 18px;">下一年</a>
+                                    <a href="{:U('Finance/public_payment_detail',array('year'=>$nextyear,'month'=>'01','pin'=>$pin,'department'=>$department))}" class="btn btn-default" style="padding:8px 18px;">下一年</a>
                                 <?php } ?>
                             </div>
 
@@ -60,7 +60,7 @@
                                     </tr>
                                     <foreach name="lists" item="row">
                                     <tr>
-                                    	<td class="taskOptions"><a href="{:U('Finance/public_money_back_detail',array('uid'=>$row['id'],'start_time'=>$cycle_time['begintime'],'end_time'=>$cycle_time['endtime']))}" target="_blank">{$row.nickname}</a></td>
+                                    	<td class="taskOptions"><a href="{:U('Finance/public_money_back_detail',array('uid'=>$row['id'],'start_time'=>$cycle_time['begintime'],'end_time'=>$cycle_time['endtime']))}">{$row.nickname}</a></td>
                                         <td class="taskOptions">{$row.this_month}</td>
                                         <td class="taskOptions">{$row.history}</td>
                                         <td class="taskOptions">{$row.this_month_return}</td>
@@ -92,7 +92,7 @@
                 <form action="" method="get" id="searchform">
                 <input type="hidden" name="m" value="Main">
                 <input type="hidden" name="c" value="Finance">
-                <input type="hidden" name="a" value="public_payment_chart_detail">
+                <input type="hidden" name="a" value="public_payment_detail">
                 <input type="hidden" name="year" value="{$year}">
                 <input type="hidden" name="month" value="{$month}">
                 <input type="hidden" name="pin" value="{$pin}">
