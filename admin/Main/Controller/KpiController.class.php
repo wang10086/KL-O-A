@@ -21,14 +21,16 @@ class KpiController extends BaseController {
 
         foreach($userlist as $k=>$v){
             //获取该用户KPI
-            $yearMonth		    = date('Ym');
+            $year               = date('Y');
+            $month              = date('m');
+            $yearMonth          = get_kpi_yearMonth($year,$month);
             $user_id	        = $v['id'];
 
             //更新数据
             updatekpi($yearMonth,$user_id);
         }
     }
-	
+
 	// @@@NODE-3###pdcaresult###考评结果###
     public function pdcaresult(){
         $this->get_initialize();    //初始化KPI数据
@@ -1773,7 +1775,7 @@ class KpiController extends BaseController {
         //$accountlists   = M('account')->field('id,nickname,rank')->where($where)->limit($page->firstRow . ',' . $page->listRows)->select();
         $accountlists   = M('account')->field('id,nickname,rank,employee_member,kpi_cycle')->where($where)->order('employee_member ASC')->select();
         $kpiLists       = $this->getKpiResult($accountlists,$year); //获取KPI数据
-        $lists          = $this->getKpiCycle($kpiLists);            //获取最终考核结果显示的月份
+        $lists          = $this->getKpiCycle($kpiLists); //获取最终考核结果显示的月份
 
         $this->lists    = $lists;
         $this->pin      = $pin;

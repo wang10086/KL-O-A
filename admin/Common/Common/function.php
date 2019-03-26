@@ -1885,6 +1885,31 @@ function set_quarter($year,$quarter){
 
 }*/
 
+    /**
+     * 获取kpi刷新月份
+     * @param $year
+     * @param $month
+     * @return string
+     */
+    function get_kpi_yearMonth($year,$month){
+        $year                   = $year?$year:date('Y');
+        $month                  = $month?$month:date('m');
+        $day                    = date('d');
+        if ($day>1 && $day<26){
+            if (strlen($month)<2) $month= str_pad($month,2,'0',STR_PAD_LEFT);
+            $yearMonth          = $year.$month;
+        }else{
+            if ($month=='12'){
+                if (strlen($month)<2) $month= str_pad($month,2,'0',STR_PAD_LEFT);
+                $yearMonth      = ($year+1).'01';
+            }else{
+                $month          = $month+1;
+                if (strlen($month)<2) $month= str_pad($month,2,'0',STR_PAD_LEFT);
+                $yearMonth      = $year.$month;
+            }
+        }
+        return $yearMonth;
+    }
 
 
 
@@ -1894,8 +1919,8 @@ function updatekpi($month,$user){
 	$where['month']   = array('like','%'.$month.'%');
 	$where['user_id'] = $user;
 
-    //if (($month==date('Ym') && date('d')<26) || ($month==(date('Ym')+1) && date('d')>25)){   //只刷新当前月份,避免老数据刷新
-    if ($month==date('Ym')){   //只刷新当前月份,避免老数据刷新
+    if (($month==date('Ym') && date('d')<26) || ($month==(date('Ym')+1) && date('d')>25)){   //只刷新当前月份,避免老数据刷新
+    //if ($month==date('Ym')){   //只刷新当前月份,避免老数据刷新
         $quto   = M('kpi_more')->where($where)->select();
         if($quto){
             foreach($quto as $k=>$v){
@@ -2007,7 +2032,8 @@ function updatekpi($month,$user){
                                 $hetong         = count($hetong_list);
                                 $complete       = $xiangmu ? round(($hetong / $xiangmu)*100,2).'%' : 0 .'%';
                             }
-                            $url                = '';
+                            $mm                 = substr($v['month'],4,2);
+                            $url                = U('Contract/month_detail',array('year'=>$v['year'],'month'=>$mm,'uid'=>$v['user_id']));
                         }
 
 

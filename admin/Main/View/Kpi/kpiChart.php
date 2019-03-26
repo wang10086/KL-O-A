@@ -57,18 +57,9 @@
                                                 <th width="80">姓名</th>
                                                 <th>周期</th>
                                                 <th class="taskOptions orderth">年平均</th>
-                                                <th class="taskOptions">1月</th>
-                                                <th class="taskOptions">2月</th>
-                                                <th class="taskOptions">3月</th>
-                                                <th class="taskOptions">4月</th>
-                                                <th class="taskOptions">5月</th>
-                                                <th class="taskOptions">6月</th>
-                                                <th class="taskOptions">7月</th>
-                                                <th class="taskOptions">8月</th>
-                                                <th class="taskOptions">9月</th>
-                                                <th class="taskOptions">10月</th>
-                                                <th class="taskOptions">11月</th>
-                                                <th class="taskOptions">12月</th>
+                                                <?php for ($i=1;$i<13;$i++){
+                                                    echo "<th class='taskOptions'>".$i."月</th>";
+                                                } ?>
                                             </tr>
                                         </thead>
                                         <tbody>
