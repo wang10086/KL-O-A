@@ -181,7 +181,7 @@
                                            <!-- --><?php /*if($pays){ */?>
                                             <div class="form-group">
                                                 <h2 style="font-size:16px; border-bottom:2px solid #dedede; padding-bottom:10px;"> <span class="black">回款计划</span> (应回款总金额：{$should_back_money}元)&emsp;
-                                                    <?php if (in_array(cookie('userid'),array($jd))){ ?>
+                                                    <?php if (in_array(cookie('userid'),array($jd)) && !$is_dijie){ ?> <!--地接团不可以修改-->
                                                     <div style="display: inline-block" id="upd_money_back_div"><button class="btn btn-success btn-sm edit_money_back_btn">修改总回款金额</button></div>
                                                     <?php } ?>
                                                 </h2>
