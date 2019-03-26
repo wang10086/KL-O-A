@@ -2752,7 +2752,7 @@ class FinanceController extends BaseController {
 
         }
         $data['money_back_average']         = (round($data['this_month_return']/($data['history']+$data['this_month']),4)*100).'%';*/
-        $data                               = $this->check_list($lists,$start_time,$end_time);
+        $data                               = check_list($lists,$start_time,$end_time);
         if ($pin==0){
             $lists                          = $data['this_month_list'];
         }elseif ($pin==1){
@@ -2870,11 +2870,11 @@ class FinanceController extends BaseController {
         if ($userinfo) $where['payee']          = $userinfo['id'];
         $where['return_time']                   = array('lt',$endtime);
         $lists                                  = M('contract_pay')->where($where)->select();
-        $data                                   = $this->check_list($lists,$starttime,$endtime);
+        $data                                   = check_list($lists,$starttime,$endtime);
         return $data;
     }
 
-    private function check_list($lists,$start_time,$end_time){
+    /*private function check_list($lists,$start_time,$end_time){
         $data                               = array();
         $data['this_month_list']            = ''; //计划当月回款
         $data['history_list']               = ''; //历史欠款
@@ -2913,7 +2913,7 @@ class FinanceController extends BaseController {
         }
         $data['money_back_average']         = ($data['history']+$data['this_month'])?(round($data['this_month_return']/($data['history']+$data['this_month']),4)*100).'%':'100%';
         return $data;
-    }
+    }*/
 
 
 //保存修改回款总金额(预算审核通过后)
@@ -3002,7 +3002,7 @@ class FinanceController extends BaseController {
         if ($opid)  $where['c.op_id']       = $opid;
         if ($create_user) $where['create_user_name'] = $create_user;
         $lists                              = M()->table('__CONTRACT_PAY__ as c')->join('__OP__ as o on o.op_id = c.op_id','left')->join('__OP_TEAM_CONFIRM__ as t on t.op_id=c.op_id','left')->field('c.*,o.group_id,o.project,o.create_user_name,t.dep_time,t.ret_time')->where($where)->order($this->orders('c.id'))->select();
-        $data                               = $this->check_list($lists,$start_time,$end_time);
+        $data                               = check_list($lists,$start_time,$end_time);
 
         if ($pin==1){ $this->lists          = $data['this_month_list'];
         }elseif ($pin==2){ $this->lists     = $data['history_list']; };

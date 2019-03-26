@@ -55,8 +55,6 @@
                                         <th class="taskOptions" data="">历史欠款金额</th>
                                         <th class="taskOptions" data="">实际回款金额</th>
                                         <th class="taskOptions" data="">回款及时率</th>
-
-                                        
                                     </tr>
                                     <foreach name="lists" item="row">
                                     <tr>

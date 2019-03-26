@@ -1960,7 +1960,7 @@ function updatekpi($month,$user){
 
                         //获取回款及时率
                         if($v['quota_id']==3){
-                            $where = array();
+                            /*$where = array();
                             $where['return_time']			= array('lt',$v['end_date']);
                             $where['payee']					= $user;
                             $shouru		= M('contract_pay')->where($where)->sum('amount');
@@ -1969,8 +1969,17 @@ function updatekpi($month,$user){
                                 $complete = '100%';
                             }else{
                                 $complete = round(($huikuan / $shouru)*100,2).'%';
-                            }
-                            $url        = U('Finance/public_money_back_detail',array('uid'=>$user,'start_time'=>$v['start_date'],'end_time'=>$v['end_date']));
+                            }*/
+                            $uid                                = I('uid');
+                            $start_time                         = $v['start_date'];
+                            $end_time                           = $v['end_date'];
+                            $where                              = array();
+                            $where['c.payee']                   = $uid;
+                            $where['c.return_time']	            = array('lt',$end_time);
+                            $lists                              = M()->table('__CONTRACT_PAY__ as c')->join('__OP__ as o on o.op_id = c.op_id','left')->join('__OP_TEAM_CONFIRM__ as t on t.op_id=c.op_id','left')->field('c.*,o.group_id,o.project,t.dep_time,t.ret_time')->where($where)->order('c.id desc')->select();
+                            $data                               = check_list($lists,$start_time,$end_time);
+                            $complete                           = $data['money_back_average'];
+                            $url                                = U('Finance/public_money_back_detail',array('uid'=>$user,'start_time'=>$v['start_date'],'end_time'=>$v['end_date']));
                         }
 
                         //获取成团率
@@ -3443,6 +3452,55 @@ function get_role_link($roleid,$rtype = 0){
 	}
 
 }
+
+    /**
+     * Finance(Controller)
+     * 获取当月回款及历史欠款信息(汇款及时率)
+     * @param $lists
+     * @param $start_time
+     * @param $end_time
+     * @return array
+     */
+    function check_list($lists,$start_time,$end_time){
+        $data                               = array();
+        $data['this_month_list']            = ''; //计划当月回款
+        $data['history_list']               = ''; //历史欠款
+        $data['this_month']                 = 0;
+        $data['history']                    = 0;
+        $arr_opids                          = array_column($lists,'op_id');
+        foreach ($lists as $k=>$v){
+            $show_times                     = get_array_repeats($arr_opids,$v['op_id']);
+            $no_sum                         = $v['no'].'/'.$show_times;
+            $v['no_sum']                    = $no_sum;
+            if ($v['status']==2){
+                $v['stu']           = "<span class='green'>已回款</span>";
+            }elseif ($v['status']==1){
+                $v['stu']           = "<span class='yellow'>回款中</span>";
+            }else{
+                if ($v['return_time']<$end_time){
+                    $v['stu']       = "<span class='red'>未回款</span>";
+                    if ($v['return_time'] < $start_time){ //排除当月未回款的团
+                        $data['history_list'][] = $v;
+                        $data['history']        += $v['amount'];
+                        $data['history_return'] += $v['pay_amount'];
+                    }
+                }else{
+                    $v['stu']       = "<font color='#999999'>未考核</font>";
+                }
+            }
+
+            if (($v['return_time'] > $start_time && $v['return_time'] < $end_time && $v['status'] != 2) || ($v['pay_time'] > $start_time && $v['pay_time'] < $end_time)){
+                $data['this_month_list'][]  = $v;
+                $data['this_month']         += $v['amount'];
+                if ($v['pay_time'] > $start_time && $v['pay_time'] < $end_time){
+                    $data['this_month_return']  += $v['pay_amount'];
+                }
+            }
+
+        }
+        $data['money_back_average']         = ($data['history']+$data['this_month'])?(round($data['this_month_return']/($data['history']+$data['this_month']),4)*100).'%':'100%';
+        return $data;
+    }
 
 
 function update_user_role($id){

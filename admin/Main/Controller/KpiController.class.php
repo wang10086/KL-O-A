@@ -1801,117 +1801,97 @@ class KpiController extends BaseController {
             $lists[$k]['kpi_cycle']                         = $v['kpi_cycle'];
 
             $sum_score                                      = 0; //总分
-            $num                                            = 0; //得分次数
             foreach ($kpilists as $key=>$value){
                 $lists[$k]['year']      = $year;
                 if ($value['user_id']==$v['id']){
-                    /*if ($value['month'] == $year.'01' && $value['score'] != 0 && date('Ym')>= $year.'01'){
-                        $lists[$k]['kpi']['01'] = $value['score'];
-                        $sum_score      += $value['score'];
-                        $num            += 1;
-                    }
-                    if ($value['month'] == $year.'02' && $value['score'] != 0 && date('Ym')>= $year.'02'){
-                        $lists[$k]['kpi']['02'] = $value['score'];
-                        $sum_score      += $value['score'];
-                        $num            += 1;
-                    }
-                    if ($value['month'] == $year.'03' && $value['score'] != 0 && date('Ym')>= $year.'03'){
-                        $lists[$k]['kpi']['03'] = $value['score'];
-                        $sum_score      += $value['score'];
-                        $num            += 1;
-                    }
-                    if ($value['month'] == $year.'04' && $value['score'] != 0 && date('Ym')>= $year.'04'){
-                        $lists[$k]['kpi']['04'] = $value['score'];
-                        $sum_score      += $value['score'];
-                        $num            += 1;
-                    }
-                    if ($value['month'] == $year.'05' && $value['score'] != 0 && date('Ym')>= $year.'05'){
-                        $lists[$k]['kpi']['05'] = $value['score'];
-                        $sum_score      += $value['score'];
-                        $num            += 1;
-                    }
-                    if ($value['month'] == $year.'06' && $value['score'] != 0 && date('Ym')>= $year.'06'){
-                        $lists[$k]['kpi']['06'] = $value['score'];
-                        $sum_score      += $value['score'];
-                        $num            += 1;
-                    }
-                    if ($value['month'] == $year.'07' && $value['score'] != 0 && date('Ym')>= $year.'07'){
-                        $lists[$k]['kpi']['07'] = $value['score'];
-                        $sum_score      += $value['score'];
-                        $num            += 1;
-                    }
-                    if ($value['month'] == $year.'08' && $value['score'] != 0 && date('Ym')>= $year.'08'){
-                        $lists[$k]['kpi']['08'] = $value['score'];
-                        $sum_score      += $value['score'];
-                        $num            += 1;
-                    }
-                    if ($value['month'] == $year.'09' && $value['score'] != 0 && date('Ym')>= $year.'09'){
-                        $lists[$k]['kpi']['09'] = $value['score'];
-                        $sum_score      += $value['score'];
-                        $num            += 1;
-                    }
-                    if ($value['month'] == $year.'10' && $value['score'] != 0 && date('Ym')>= $year.'10'){
-                        $lists[$k]['kpi']['10'] = $value['score'];
-                        $sum_score      += $value['score'];
-                        $num            += 1;
-                    }
-                    if ($value['month'] == $year.'11' && $value['score'] != 0 && date('Ym')>= $year.'11'){
-                        $lists[$k]['kpi']['11'] = $value['score'];
-                        $sum_score      += $value['score'];
-                        $num            += 1;
-                    }
-                    if ($value['month'] == $year.'12' && $value['score'] != 0 && date('Ym')>= $year.'12'){
-                        $lists[$k]['kpi']['12'] = $value['score'];
-                        $sum_score      += $value['score'];
-                        $num            += 1;
-                    }*/
-
-                    /*if ($v['kpi_cycle']==1){ //月度
-                        $arr_months         = $this->get_kpi_cycle_months($v['kpi_cycle'],$year);
-                        if (in_array($value['month'],$arr_months) && $value['score'] != 0 && date('Ym')>= $year.date('m')){
-                            $dm             = substr($value['month'],4,2);
-                            $lists[$k]['kpi'][$dm] = $value['score'];
-                            $sum_score      += $value['score'];
-                            $num            += 1;
-                        }
-                    }elseif($v['kpi_cycle']==2){ //季度
-                        $arr_months         = $this->get_kpi_cycle_months($v['kpi_cycle'],$year);
-                        if (in_array($value['month'],$arr_months) && $value['score'] != 0 && date('Ym')>= $year.date('m')){
-                            $dm             = substr($value['month'],4,2);
-                            $lists[$k]['kpi'][$dm] = $value['score'];
-                            $sum_score      += $value['score'];
-                            $num            += 1;
-                        }
-                    }elseif ($v['kpi_cycle']==3){  //半年度
-                        $arr_months         = $this->get_kpi_cycle_months($v['kpi_cycle'],$year);
-                        if (in_array($value['month'],$arr_months) && $value['score'] != 0 && date('Ym')>= $year.date('m')){
-                            $dm             = substr($value['month'],4,2);
-                            $lists[$k]['kpi'][$dm] = $value['score'];
-                            $sum_score      += $value['score'];
-                            $num            += 1;
-                        }
-                    }elseif ($v['kpi_cycle']==4){ //年度
-                        $arr_months         = $this->get_kpi_cycle_months($v['kpi_cycle'],$year);
-                        if (in_array($value['month'],$arr_months) && $value['score'] != 0 && date('Ym')>= $year.date('m')){
-                            $dm             = substr($value['month'],4,2);
-                            $lists[$k]['kpi'][$dm] = $value['score'];
-                            $sum_score      += $value['score'];
-                            $num            += 1;
-                        }
-                    }*/
-
+                    $num                = $this->get_month_num($value['cycle'],$year,date('m'),date('d'));
                     $arr_months         = $this->get_kpi_cycle_months($v['kpi_cycle'],$year);
-                    if (in_array($value['month'],$arr_months) && $value['score'] != 0 && date('Ym')>= $year.date('m')){
+                    if (in_array($value['month'],$arr_months) &&  date('Ym')>= $year.date('m')){
                         $dm             = substr($value['month'],4,2);
                         $lists[$k]['kpi'][$dm] = $value['score'];
                         $sum_score      += $value['score'];
-                        $num            += 1;
                     }
                 }
             }
             $lists[$k]['average']   = round($sum_score/$num,2);
         }
         return $lists;
+    }
+
+    public function get_month_num($cycle=1,$year,$month,$day){
+        $month                  = $month?$month:date('m');
+        $day                    = $day?$day:date('d');
+        switch ($cycle){
+            case 1: //月度
+                if ($year < date('Y')){
+                    $num                = 12;
+                }else{
+                    if($day > 0 && $day < 26){
+                        $num                = (int)$month;
+                    }else{
+                        if ($month==12){
+                            $num            = 1;
+                        }else{
+                            $num            = $month + 1;
+                        }
+                    }
+                }
+                break;
+            case 2: //季度
+                if ($year < date('Y')){
+                    $num                = 4;
+                }else {
+                    if ($day > 0 && $day < 26) {
+                        if ($month > 1 && $month <= 3) {
+                            $num = 1;
+                        } elseif ($month > 3 && $month <= 6) {
+                            $num = 2;
+                        } elseif ($month > 6 && $month <= 9) {
+                            $num = 3;
+                        } elseif ($month > 9 && $month <= 12) {
+                            $num = 4;
+                        }
+                    } else {
+                        if ($month >= 1 && $month < 3 || $month==12){
+                            $num = 1;
+                        } elseif ($month >= 3 && $month < 6) {
+                            $num = 2;
+                        } elseif ($month >= 6 && $month < 9) {
+                            $num = 3;
+                        } elseif ($month >= 9 && $month < 12) {
+                            $num = 4;
+                        }
+                    }
+                }
+                break;
+            case 3: //半年度
+                if ($year < date('Y')){
+                    $num                = 2;
+                }else {
+                    if ($day > 0 && $day < 26) {
+                        if ($month > 1 && $month <= 6) {
+                            $num = 1;
+                        } elseif ($month > 6 && $month <= 12) {
+                            $num = 2;
+                        }
+                    } else {
+                        if ($month == 12) {
+                            $num = 1;
+                        } else {
+                            if ($month >= 1 && $month < 6 || $month==12){
+                                $num = 1;
+                            } elseif ($month >= 6 && $month < 12) {
+                                $num = 2;
+                            }
+                        }
+                    }
+                }
+                break;
+            case 3: //年度
+                $num = 1;
+                break;
+        }
+        return $num;
     }
 
     public function get_kpi_cycle_months($cycle,$year){

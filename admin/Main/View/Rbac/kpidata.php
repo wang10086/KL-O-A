@@ -155,7 +155,7 @@
                                                 <td style="line-height:34px;"><a href="javascript:;" onClick="kpi({$row.quota_id})">{$row.quota_title}</a></td>
                                                 <td><input type="text" class="form-control start_date" name="info[{$row.id}][start_date]" value="{$row.start_date|date='Y-m-d',###}"></td>
                                                 <td><input type="text" class="form-control end_date" name="info[{$row.id}][end_date]" value="{$row.end_date|date='Y-m-d',###}"></td>
-                                                <td><input type="text" class="form-control" name="info[{$row.id}][plan]" value="{$row.plan}"></td>
+                                                <td><input type="text" class="form-control" name="info[{$row.id}][plan]" value="<?php echo $row['plan']?$row['plan']:100; ?>"></td>
                                                 <td><input type="text" class="form-control" name="info[{$row.id}][target]" value="{$row.target}"></td>
                                                 <td><input type="text" class="form-control" name="info[{$row.id}][weight]" value="{$row.weight}"></td>
                                                 <td   style="line-height:34px;" class="taskOptions">
