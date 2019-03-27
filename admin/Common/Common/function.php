@@ -2042,7 +2042,7 @@ function updatekpi($month,$user){
                                 $complete       = $xiangmu ? round(($hetong / $xiangmu)*100,2).'%' : 0 .'%';
                             }
                             $mm                 = substr($v['month'],4,2);
-                            $url                = U('Contract/month_detail',array('year'=>$v['year'],'month'=>$mm,'uid'=>$v['user_id']));
+                            $url                = U('Contract/public_month_detail',array('year'=>$v['year'],'month'=>$mm,'uid'=>$v['user_id']));
                         }
 
 

@@ -378,7 +378,7 @@ class ContractController extends BaseController {
         $this->display();
     }
 
-    public function month_detail(){
+    public function public_month_detail(){
         $year                               = I('year');
         $month                              = I('month');
         $uid                                = I('uid');
@@ -391,7 +391,7 @@ class ContractController extends BaseController {
         $this->year                         = $year;
         $this->month                        = $month;
         $this->uid                          = $uid;
-        $this->display();
+        $this->display('month_detail');
     }
 
     private function get_user_contract_list($userid,$begintime,$endtime){
