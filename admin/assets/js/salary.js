@@ -345,6 +345,7 @@ function withholding_delete(obj) {
 }
 
 
+/*
 $('.salary_withholding_butt').click(function(){
     var url = "index.php?m=Main&c=Ajax&a=Ajax_withholding_income";
     var arr = new Array();
@@ -362,6 +363,7 @@ $('.salary_withholding_butt').click(function(){
     if(arr==''){
         var id =  $('.withholding_countid1').val();//用户id
     }
+
     var status = $(this).parents('.salary_add_table').find('.withholding_status').val();//状态
     $.ajax({
         type: "POST",
@@ -381,6 +383,42 @@ $('.salary_withholding_butt').click(function(){
                 alert(data.msg);
                 return false;
             }
+        }
+    });
+});*/
+
+$('.salary_withholding_butt').click(function(){
+    var url = "index.php?m=Main&c=Ajax&a=Ajax_withholding_income";
+    var arr = new Array();
+    $(this).parents('.salary_add_table').find('.add_withholding_list').each(function(){
+        var name = $(this).find('.withholding_project_name').val();//项目名称
+        var money = $(this).find('.withholding_money').val();//金额
+        var id = $(this).find('.withholding_id').val();//用户id
+        if(!id){
+            id =  $('.withholding_countid1').val();//用户id
+        }
+        arr += name+",";
+        arr += money+",";
+        arr += id+","+"|";
+    });
+    /*if(arr==''){
+     var id =  $('.withholding_countid1').val();//用户id
+     }*/
+    var id =  $('.withholding_countid1').val();//用户id
+
+    var status = $(this).parents('.salary_add_table').find('.withholding_status').val();//状态
+    $.ajax({
+        type: "POST",
+        url: url, //url
+        data: {
+            'status': status,
+            'arr': arr,
+            'userid':id,
+        },
+        dataType: "json", //数据格式
+        success: function (data) {
+            alert(data.msg);
+            return false;
         }
     });
 });

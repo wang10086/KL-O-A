@@ -756,7 +756,7 @@ class AjaxController extends Controller {
      * Ajax_withholding_income 添加 代扣代缴/其他收入
      * $status 1代扣代缴变动  2其他收入变动
      */
-    public function Ajax_withholding_income(){
+    /*public function Ajax_withholding_income(){
         if(IS_POST){
             $userid                         = I('userid');
             $arr                            = trim($_POST['arr']);//数据数组
@@ -814,6 +814,44 @@ class AjaxController extends Controller {
                     echo json_encode(array('sum' => $sum, 'msg' => $msg));die;
                 }
             }
+        }
+    }*/
+    public function Ajax_withholding_income(){
+        if(IS_POST){
+            $userid                         = I('userid');
+            $arr                            = trim($_POST['arr']);//数据数组
+            $status                         = (int)(code_number(trim($_POST['status'])));//状态
+            $content                        = array_filter(explode("|", $arr));//去除空数组+分隔字符串
+            $time                           = time();
+            if($status == 1){//代扣代缴状态
+                $conten                     = "代扣代缴";
+                $table                      =  'salary_withholding';//代扣代缴状态
+            }
+            if($status == 2) {//其他收入
+                $conten                     = "其他收入";
+                $table                      = 'salary_income';//其他收入
+            }
+            $reg                            = $this->withholding_income_addstr($status,$content,$time);
+            $add                            = $reg[0];
+            $where                          = $reg[1];
+            $where['status']                = 1;
+            $where['account_id']            = $userid;
+            $data                           = array();
+            $data['status']                 = 2;
+            M($table)->where($where)->save($data);
+
+            foreach($add as $k =>$v) {//循环数据
+                $str                = explode(",", $v);//分隔字符串
+                $str                = array_filter($str);//去除空数组空字段
+                if ($str[0]!=="" && $str[1]!=="" && $str[2]!=="" && $str[0]!=="undefined" && $str[1]!=="undefined" && $str[2]!=="undefined") {
+                    $cot            = "添加";
+                    $this->withholding_income_add($table, $add, $conten, $cot, $status);
+                }
+            }
+            $sum                    = 0;
+            $msg                    = "编辑数据失败!请重新编辑!";
+            echo json_encode(array('sum' => $sum, 'msg' => $msg));die;
+
         }
     }
 
