@@ -20,7 +20,7 @@
                         <div class="col-xs-12">
                             <div class="box">
                                 <div class="box-header">
-                                    <h3 class="box-title">{$_action_}</h3>
+                                    <h3 class="box-title">合同详情</h3>
                                     <div class="box-tools pull-right">
                                     	 <a href="javascript:;" class="btn btn-info btn-sm" onclick="javascript:opensearch('searchtext',600,160);"><i class="fa fa-search"></i> 搜索</a>
                                          <a href="{:U('Contract/add')}" class="btn btn-sm btn-danger"><i class="fa fa-plus"></i> 新建合同</a>

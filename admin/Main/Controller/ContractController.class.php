@@ -292,7 +292,7 @@ class ContractController extends BaseController {
      */
     public function get_department_op_list($departments,$begintime,$endtime){
         $mod                                = D('Contract');
-        $op_lists                           = $mod->get_budget_list($begintime,$endtime); //在该周期内预算审核通过的项目
+        $op_lists                           = $mod->get_user_op_list('',$begintime,$endtime); //在该周期内所有预算审核通过的项目
         $data                               = array();
         foreach ($departments as $k=>$v){
             $data[$k]                       = $this->get_department_contract($op_lists,$v);
@@ -395,21 +395,8 @@ class ContractController extends BaseController {
     }
 
     private function get_user_contract_list($userid,$begintime,$endtime){
-        /*$where                              = array(); //当月预算审核通过的项目
-        $where['l.req_type']                = P::REQ_TYPE_BUDGET; //预算申请
-        $where['b.audit_status']            = 1; //审批通过
-        $where['l.audit_time']              = array('between',"$begintime,$endtime");
-        $where['o.create_user_id']          = $userid;
-        $field                              = 'l.audit_uid,audit_uname,audit_time,o.*,c.dep_time,c.ret_time';
-        $lists                              = M()->table('__OP_BUDGET__ as b')->join('__AUDIT_LOG__ as l on l.req_id=b.id','left')->join('__OP__ as o on o.op_id = b.op_id','left')->join('__OP_TEAM_CONFIRM__ as c on c.op_id = b.op_id','left')->field($field)->where($where)->select();
-        var_dump(I());*/
-
-        $where 							    = array();
-        $where['o.create_user']			    = $userid;
-        $where['c.dep_time']			    = array('between',array($begintime,$endtime));
-        $dj_op_ids                          = array_filter(M('op')->getField('dijie_opid',true));
-        $where['o.op_id']                   = array('not in',$dj_op_ids);   //排除地接团
-        $op_list	                        = M()->table('__OP__ as o')->field('o.*,c.dep_time,c.ret_time')->join('left join __OP_TEAM_CONFIRM__ as c on o.op_id=c.op_id')->where($where)->select();
+        $mod                                = D('contract');
+        $op_list                            = $mod->get_user_op_list($userid,$begintime,$endtime);
         $op_num 		                    = count($op_list);
         $contract_list                      = array();
         foreach ($op_list as $key=>$value){
@@ -432,4 +419,6 @@ class ContractController extends BaseController {
         $data['average']                    = (round($contract_num/$op_num,4)*100).'%';
         return $data;
     }
+
+
 }
