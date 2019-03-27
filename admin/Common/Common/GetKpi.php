@@ -1074,6 +1074,8 @@ function get_satisfaction($yearmonth){
     function get_satisfied_kpi_data($userid,$start_time,$end_time,$gross_margin=''){
         //当月实施的团
         $where                          = array();
+        $start_time                     = $start_time - 4*24*3600; //4天前实施的团
+        $end_time                       = $end_time - 4*24*3600;
         $where['c.dep_time']            = array('between',array($start_time,$end_time));
         $where['o.create_user']         = $userid;
         $shishi_lists                   = M()->table('__OP_TEAM_CONFIRM__ as c')->join('__OP__ as o on o.op_id = c.op_id','left')->where($where)->select();
