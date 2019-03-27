@@ -381,9 +381,11 @@ class ContractController extends BaseController {
     public function public_month_detail(){
         $year                               = I('year');
         $month                              = I('month');
+        if (strlen($month)<2) $month        = str_pad($month,2,'0',STR_PAD_LEFT);
         $uid                                = I('uid');
         $cycle_times                        = get_cycle($year.$month);
-        $data                               = $this->get_user_contract_list($uid,$cycle_times['begintime'],$cycle_times['endtime']);
+        $yearMonth                          = $year.$month;
+        $data                               = $this->get_user_contract_list($uid,$yearMonth,$cycle_times['begintime'],$cycle_times['endtime']);
         $op_list                            = $data['op_list'];
 
         $this->data                         = $data;
@@ -394,8 +396,10 @@ class ContractController extends BaseController {
         $this->display('month_detail');
     }
 
-    private function get_user_contract_list($userid,$begintime,$endtime){
+    private function get_user_contract_list($userid,$yearMonth,$begintime,$endtime){
         $mod                                = D('contract');
+        $gross_margin                       = get_gross_margin($yearMonth,$userid,1);  //获取当月月度累计毛利额目标值(如果毛利额目标为0,则不考核)
+        $target                             = $gross_margin['target']; //当月目标值
         $op_list                            = $mod->get_user_op_list($userid,$begintime,$endtime);
         $op_num 		                    = count($op_list);
         $contract_list                      = array();
@@ -416,7 +420,8 @@ class ContractController extends BaseController {
         $data['contract_list']              = $contract_list;
         $data['op_num']                     = $op_num;
         $data['contract_num']               = $contract_num;
-        $data['average']                    = (round($contract_num/$op_num,4)*100).'%';
+        $data['target']                     = $target?$target:'0.00';
+        $data['average']                    = $target?(round($contract_num/$op_num,4)*100).'%':'100%';
         return $data;
     }
 

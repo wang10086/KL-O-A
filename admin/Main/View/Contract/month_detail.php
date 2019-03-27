@@ -68,10 +68,13 @@
                                         </tr>
                                         </foreach>
                                         <tr>
-                                            <td class="black">合计</td>
-                                            <td class="black" colspan="2">应签合同：{$data.op_num}</td>
-                                            <td class="black" colspan="2">实签合同：{$data.contract_num}</td>
-                                            <td class="black" colspan="2">合同签订率：{$data.average}</td>
+                                            <td class="black" colspan="6">
+                                                <span style="display: inline-block; width: 23%">应签合同：{$data.op_num}</span>
+                                                <span style="display: inline-block; width: 23%">实签合同：{$data.contract_num}</span>
+                                                <span style="display: inline-block; width: 23%">目标系数：{$data.target}</span>
+                                                <span style="display: inline-block; width: 23%">合同签订率：{$data.average}</span>
+                                            </td>
+                                            <td class="black">合计：</td>
                                         </tr>
                                     </table>
                                 </div><!-- /.box-body -->
