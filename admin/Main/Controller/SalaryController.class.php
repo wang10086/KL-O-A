@@ -1529,6 +1529,8 @@ class SalaryController extends BaseController {
             if ($name) $where['nickname']   = array('like','%'.$name.'%');
             if ($archives)$where['archives']= $archives;
 
+             //$where['id']                   = 19; //测试
+
             $accounts                       = M('account')->where($where)->select();
             $personWagesLists               = $mod->get_person_wages_lists($accounts,$datetime); //获取员工个人薪资信息
             $departmentWagesLists           = $mod->get_department_wagesList($personWagesLists); //部门合计
