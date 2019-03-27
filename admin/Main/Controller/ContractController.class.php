@@ -270,7 +270,7 @@ class ContractController extends BaseController {
         $where['id']                        = array('in',$yw_departs);
         $departments                        = M('salary_department')->field('id,department')->where($where)->select();
         $cycle_times                        = get_cycle($times);
-        $lists                              = $this->get_department_op_list($departments,$cycle_times['begintime'],$cycle_times['endtime']);
+        $lists                              = $this->get_department_op_list($departments,$cycle_times['begintime'],$cycle_times['endtime'],$times);
         $sum                                = $this->get_contract_sum($lists);
 
         $this->sum                          = $sum;
@@ -290,12 +290,12 @@ class ContractController extends BaseController {
      * @param $endtime
      * @return array
      */
-    public function get_department_op_list($departments,$begintime,$endtime){
+    public function get_department_op_list($departments,$begintime,$endtime,$yearMonth){
         $mod                                = D('Contract');
         $op_lists                           = $mod->get_user_op_list('',$begintime,$endtime); //在该周期内所有预算审核通过的项目
         $data                               = array();
         foreach ($departments as $k=>$v){
-            $data[$k]                       = $this->get_department_contract($op_lists,$v);
+            $data[$k]                       = $this->get_department_contract($op_lists,$v,$begintime,$endtime,$yearMonth);
         }
         return $data;
     }
@@ -307,7 +307,7 @@ class ContractController extends BaseController {
      * @param $department
      * @return array
      */
-    public function get_department_contract($op_lists,$department){
+    /*public function get_department_contract($op_lists,$department){
         $data                               = array();
         $data['id']                         = $department['id'];
         $data['department']                 = $department['department'];
@@ -329,6 +329,33 @@ class ContractController extends BaseController {
         }
         $data['average']                    = $data['op_num']?(round($data['contract_num']/$data['op_num'],4)*100).'%':'100%';
         return $data;
+    }*/
+
+    public function get_department_contract($op_lists,$department,$begintime,$endtime,$yearMonth){
+        $data                               = array();
+        $data['id']                         = $department['id'];
+        $data['department']                 = $department['department'];
+        $where                              = array();
+        $where['p.code']                    = array('like','S%');
+        $where['a.departmentid']            = $department['id'];
+        $count_lists                        = M()->table('__ACCOUNT__ as a')->join('__POSITION__ as p on p.id=a.position_id','left')->field('a.*')->where($where)->select();
+        $department_op_lists                = array();
+        $department_contract_lists          = array();
+        foreach ($count_lists as $key=>$value){
+            foreach ($op_lists as $kk=>$vv){
+                if ($vv['create_user']==$value['id']){
+                    $contract_data          = $this->get_user_contract_list($vv['create_user'],$yearMonth,$begintime,$endtime);
+                }
+            }
+            $department_op_lists            = array_merge($department_op_lists,$contract_data['op_list']);
+            $department_contract_lists      = array_merge($department_contract_lists,$contract_data['contract_list']);
+        }
+        $data['department_op_lists']        = $department_op_lists;
+        $data['department_contract_lists']  = $department_contract_lists;
+        $data['op_num']                     = count($department_op_lists); //项目数量
+        $data['contract_num']               = count($department_contract_lists); //合同数量
+        $data['average']                    = $data['op_num']?(round($data['contract_num']/$data['op_num'],4)*100).'%':'100%';
+        return $data;
     }
 
     /**获取公司合计合同签订率
@@ -344,7 +371,7 @@ class ContractController extends BaseController {
         return $data;
     }
 
-    public function department_detail(){
+    /*public function department_detail(){
         $year                               = I('year',date("Y"));
         $month                              = I('month',date('m'));
         $department_id                      = I('id');
@@ -375,6 +402,29 @@ class ContractController extends BaseController {
         $this->year                         = $year;
         $this->month                        = $month;
         $this->department_id                = $department_id;
+        $this->display();
+    }*/
+    public function department_detail(){
+        $year                               = I('year',date("Y"));
+        $month                              = I('month',date('m'));
+        if (strlen($month)<2) $month        = str_pad($month,2,'0',STR_PAD_LEFT);
+        $yearMonth                          = $year.$month;
+        $cycle_times                        = get_cycle($yearMonth);
+        $department_id                      = I('id');
+
+        $where                              = array();
+        $where['p.code']                    = array('like','S%');
+        $where['a.departmentid']            = $department_id;
+        $count_lists                        = M()->table('__ACCOUNT__ as a')->join('__POSITION__ as p on p.id=a.position_id','left')->field('a.*')->where($where)->select();
+        $data                               = array();
+        foreach ($count_lists as $key=>$value){
+            $data[$value['nickname']]       = $this->get_user_contract_list($value['id'],$yearMonth,$cycle_times['begintime'],$cycle_times['endtime']);
+        }
+
+        $this->lists                        = $data;
+        $this->year                         = $year;
+        $this->month                        = $month;
+        $this->department_info              = M('salary_department')->where(array('id'=>$department_id))->find();
         $this->display();
     }
 
