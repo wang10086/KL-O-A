@@ -414,14 +414,6 @@ class SalaryModel extends Model
             $data[$k]['specialdeduction_id']= $specialdeduction_list['id']?$specialdeduction_list['id']:'0';
             //本月计税工资 = (应发工资 - 个人保险合计 - 专项附加扣除 - 个人免征额) + [其他补助(差额补)]
             $data[$k]['tax_counting']       = round(($data[$k]['Should_distributed'] - $data[$k]['insurance_Total'] - $data[$k]['specialdeduction'] - 5000) + $data[$k]['Other'],2); //本月计税工资 = (应发工资 - 个人保险合计 - 专项附加扣除 - 个人免征额5000) + [其他补助(差额补)]
-            /*var_dump($data[$k]['Should_distributed']);
-            var_dump($data[$k]['insurance_Total']);
-            var_dump($data[$k]['specialdeduction']);
-            var_dump($data[$k]['Other']);
-
-            var_dump($data[$k]['Should_distributed'] - $data[$k]['insurance_Total'] - $data[$k]['specialdeduction'] - 5000);
-            var_dump($data[$k]['tax_counting']);die;*/
-
             $individual_tax_info            = $this->get_personal_income_tax($v['id']); //个人所得税AAAA
             $data[$k]['individual_id']      = $individual_tax_info['id']?$individual_tax_info['id']:'0';
             $data[$k]['personal_tax']       = $individual_tax_info['tax']?$individual_tax_info['tax']:'0.00'; //个人所得税
@@ -431,9 +423,9 @@ class SalaryModel extends Model
             $withholding                    = $this->get_withholding($v['id']); //代扣代缴AAAA
             $data[$k]['withholding_token']  = $withholding['token']; //代扣代缴token
             $data[$k]['summoney']           = $withholding['money']?$withholding['money']:'0.00'; //代扣代缴(税后扣款)
-
             //实发工资 = 应发工资 - 个人保险合计 - 个人所得税 - 年终奖个税 - 税后扣款 - 工会会费 - 代扣代缴;
-            $data[$k]['real_wages']         = $data[$k]['Should_distributed'] - $data[$k]['insurance_Total']- $data[$k]['personal_tax'] - $data[$k]['yearend'] - $data[$k]['after_text_money'] - $data[$k]['labour'] - $data[$k]['summoney'];
+            $data[$k]['real_wages']         = $data[$k]['Should_distributed'] - $data[$k]['insurance_Total']- $data[$k]['personal_tax'] - $data[$k]['yearend'] - $data[$k]['after_text_money'] - $data[$k]['Labour'] - $data[$k]['summoney'];
+
             $data[$k]['total_score_show']   = $kpi_pdca_score['sum_kpi_score']; //KPI分数
             $data[$k]['sum_total_score']    = $kpi_pdca_score['total_pdca_score']; //pdca分数
             $data[$k]['show_qa_score']      = $kpi_pdca_score['show_qa_score']; //品质检查分数
