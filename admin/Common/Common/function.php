@@ -2770,8 +2770,8 @@ function updatekpi($month,$user){
                         //月度顾客满意度(业务)
                         if($v['quota_id']==124){
                             //获取当月月度累计毛利额目标值(如果毛利额系数目标为0,则不考核)
-                            $gross_margin                   = get_gross_margin($v['month'],$v['user_id'],1);
-                            if ($gross_margin && $gross_margin['target']==0){
+                            $gross_margin   = get_gross_margin($v['month'],$v['user_id'],1);
+                            /*if ($gross_margin && $gross_margin['target']==0){
                                 //当月目标为0
                                 $complete                   = '100%';
                             }else {
@@ -2797,37 +2797,20 @@ function updatekpi($month,$user){
 
                                 if ($shishi && !$need_guide){
                                     //有项目，但无调查项目的，得100分。
-                                    $complete = 100;
+                                    $complete = '100%';
                                 }else{
                                     //平均得分(如果得分>90%,得分100, 如果小于90%,以90%作为满分求百分比)
                                     $score = (round($average*100/90,2))*100;
-                                    $complete = $average > 0.9 ? 100 : $score;
+                                    $complete = $average > 0.9 ? '100%' : $score.'%';
                                 }
-                            }
-                            $url            = '';
+                            }*/
+                            $data           = get_satisfied_kpi_data($v['user_id'],$v['start_date'],$v['end_date'],$gross_margin);
+                            $complete       = $data['complete'];
+                            $mm             = substr($v['month'],4,2);
+                            $url            = U('Inspect/public_satisfied',array('year'=>$v['year'],'month'=>$mm,'uid'=>$v['user_id']));
                         }
 
                         //业务人员满意度（京区业务中心研发)
-                        /*if ($v['quota_id']==129){
-                            $where = array();
-                            $where['s.input_time']	= array('between',array($v['start_date'],$v['end_date']));
-                            $where['r.exe_user_id'] = $user;
-                            $lists = M()->table('__TCS_SCORE_USER__ as u')
-                                ->field('u.confirm_id,s.*,o.kind')
-                                ->join('__TCS_SCORE__ as s on s.uid = u.id','left')
-                                ->join('__OP__ as o on o.op_id = u.op_id','left')
-                                ->join('__OP_RES__ as r on r.op_id = u.op_id','left')
-                                ->where($where)
-                                ->select();
-
-                            //合格率>0.9(满分)
-                            $hegelv = get_hegelvaa($lists);
-                            if($hegelv>0.9 || !$lists){
-                                $complete	= 100;
-                            }else{
-                                $complete	= (round($hegelv/0.9,2)*100).'%';
-                            }
-                        }*/
                         if (in_array($v['quota_id'],array(129,158))){
                             $where = array();
                             $where['create_time']	= array('between',array($v['start_date'],$v['end_date']));

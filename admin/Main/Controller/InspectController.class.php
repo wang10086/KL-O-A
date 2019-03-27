@@ -466,4 +466,26 @@ class InspectController extends BaseController{
             $this->display('upd_visit');
         }
     }
+
+    //业务人员顾客满意度详情页
+    public function public_satisfied(){
+        $year                           = I('year');
+        $month                          = (int)I('month');
+        $userid                         = I('uid');
+        if (strlen($month)<2) $month    = str_pad($month,2,'0',STR_PAD_LEFT);
+        $yearMonth                      = $year.$month;
+        $gross_margin                   = get_gross_margin($yearMonth,$userid,1);  //获取当月月度累计毛利额目标值(如果毛利额目标为0,则不考核)
+        $cycle_times                    = get_cycle($yearMonth);
+        $data                           = get_satisfied_kpi_data($userid,$cycle_times['begintime'],$cycle_times['endtime'],$gross_margin);
+        $op_lists                       = $data['shishi_lists'];
+
+        $this->data                     = $data;
+        $this->lists                    = $op_lists;
+        $this->year                     = $year;
+        $this->month                    = $month;
+        $this->uid                      = $userid;
+        $this->display('satisfied');
+    }
+
+
 }

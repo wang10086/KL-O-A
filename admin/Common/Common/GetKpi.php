@@ -1063,5 +1063,69 @@ function get_satisfaction($yearmonth){
         return $data;
     }
 
+    /**
+     * 月度顾客满意度(业务)
+     * @param $userid
+     * @param $start_time
+     * @param $end_time
+     * @param string $gross_margin
+     * @return array
+     */
+    function get_satisfied_kpi_data($userid,$start_time,$end_time,$gross_margin=''){
+        //当月实施的团
+        $where                          = array();
+        $where['c.dep_time']            = array('between',array($start_time,$end_time));
+        $where['o.create_user']         = $userid;
+        $shishi_lists                   = M()->table('__OP_TEAM_CONFIRM__ as c')->join('__OP__ as o on o.op_id = c.op_id','left')->where($where)->select();
+
+        $score_lists                    = array();
+        $score_num                      = 0; //评分的团个数
+        foreach ($shishi_lists as $k=>$v){
+            //获取当月已评分的团
+            $where                      = array();
+            //$where['s.input_time']	    = array('between',array($start_time,$end_time));
+            $where['o.op_id']           = $v['op_id'];
+            $lists                      = M()->table('__TCS_SCORE__ as s')->field('u.op_id,o.kind,s.id as sid,s.before_sell,s.new_media,s.stay,s.travel,s.content,s.food,s.bus,s.driver,s.guide,s.teacher,s.depth,s.major,s.interest,s.material,s.late,s.manage,s.morality')->join('join __TCS_SCORE_USER__ as u on u.id = s.uid','left')->join('__OP__ as o on o.op_id = u.op_id','left')->where($where)->select();
+            if ($lists){ //已评分
+                $score_num++;
+                $op_average_data                = get_manyidu($lists);
+                $shishi_lists[$k]['score_stu']  = '<span class="green">已评分</span>';
+                $shishi_lists[$k]['score_num']  = count($lists);
+                $shishi_lists[$k]['op_average'] = $op_average_data > 0.9?'100%':((round($op_average_data*100/90,2))*100).'%';
+                foreach ($lists as $key=>$value){
+                    $score_lists[]              = $value;
+                }
+            }else{ //未评分
+                $shishi_lists[$k]['score_stu']  = '<span class="red">未评分</span>';
+                $shishi_lists[$k]['op_average'] = '0%';
+            }
+
+            //满意度调查负责人信息
+            $auth                       = M('op_guide_confirm')->where(array('op_id'=>$v['op_id']))->getField('charity_id',true);
+            $str_auth_ids               = explode(',',implode(',',$auth));
+            $auth_names                 = M('guide')->where(array('id'=>array('in',$str_auth_ids)))->getField('name',true);
+            $shishi_lists[$k]['guide_manager']= implode(',',$auth_names);
+        }
+
+        $average = get_manyidu($score_lists);
+
+        if ($gross_margin && $gross_margin['target']==0) { //当月目标为0
+            $complete = '100%';
+        }else{
+            //平均得分(如果得分>90%,得分100, 如果小于90%,以90%作为满分求百分比)
+            $score = (round($average*100/90,2))*100;
+            $complete = $average > 0.9 ? '100%' : $score.'%';
+        }
+
+        $data                           = array();
+        $data['op_num']                 = count($shishi_lists);
+        $data['score_num']              = $score_num;
+        $data['average']                = $average;
+        $data['shishi_lists']           = $shishi_lists;
+        $data['score_lists']            = $score_lists;
+        $data['complete']               = $complete; //已调查顾客满意度
+        return $data;
+    }
+
 
 
