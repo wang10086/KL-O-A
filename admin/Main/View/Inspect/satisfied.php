@@ -63,8 +63,8 @@
                                     <tr class="black">
                                         <td colspan="2">项目总数：{$data.op_num}</td>
                                         <td colspan="3">已调查项目数/项目总数：<?php echo $data['score_num'].'/'.$data['op_num']; ?></td>
-                                        <td colspan="3">已调查顾客满意度：{$data.complete}</td>
-                                        <td colspan="2">总顾客满意度：</td>
+                                        <td colspan="3">已调查顾客满意度：{$data.score_average}</td>
+                                        <td colspan="2">总顾客满意度：{$data.complete}</td>
                                     </tr>
                                 </table>
                                 </div><!-- /.box-body -->
