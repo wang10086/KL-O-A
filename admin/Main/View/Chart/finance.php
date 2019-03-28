@@ -29,12 +29,12 @@
                                     </div>
                                 </div><!-- /.box-header -->
                                 <div class="box-body">
-                                <div class="btn-group" id="catfont">
-                                    <a href="{:U('Chart/finance',array('month'=>$url['month'],'st'=>$url['st'],'et'=>$url['et']))}" <?php if(!$dept){ echo 'class="btn btn-info"';}else{ echo 'class="btn btn-default"';} ?> >所有部门</a>
+                                <!--<div class="btn-group" id="catfont">
+                                    <a href="{:U('Chart/finance',array('month'=>$url['month'],'st'=>$url['st'],'et'=>$url['et']))}" <?php /*if(!$dept){ echo 'class="btn btn-info"';}else{ echo 'class="btn btn-default"';} */?> >所有部门</a>
                                     <foreach name="post" key="k" item="v">
-                                    <a href="{:U('Chart/finance',array('month'=>$url['month'],'st'=>$url['st'],'et'=>$url['et'],'dept'=>$k))}" <?php if($dept==$k){ echo 'class="btn btn-info"';}else{ echo 'class="btn btn-default"';} ?>>{$v}</a>
+                                    <a href="{:U('Chart/finance',array('month'=>$url['month'],'st'=>$url['st'],'et'=>$url['et'],'dept'=>$k))}" <?php /*if($dept==$k){ echo 'class="btn btn-info"';}else{ echo 'class="btn btn-default"';} */?>>{$v}</a>
                                     </foreach>
-                                </div>
+                                </div>-->
                                 <table class="table table-bordered dataTable fontmini" id="tablelist" style="margin-top:10px;">
                                     <tr role="row" class="orders" >
                                         
@@ -52,6 +52,21 @@
                                         <th>销售人员</th>
                                         <th>结算时间</th>
                                     </tr>
+                                    <if condition="$kpi_total">
+                                        <tr class="black">
+                                            <td><b>合计</b></td>
+                                            <td></td>
+                                            <td>{$kpi_sum.renshu}人</td>
+                                            <td></td>
+                                            <td></td>
+                                            <!-- <td></td>-->
+                                            <td>{$kpi_sum.shouru}</td>
+                                            <td>{$kpi_sum.maoli}</td>
+                                            <!-- <td></td> -->
+                                            <td></td>
+                                            <td></td>
+                                        </tr>
+                                    </if>
                                     <foreach name="datalist" item="row"> 
                                     <tr>
                                         <td>{$row.group_id}</td>
@@ -67,21 +82,6 @@
                                         <td>{$row.audit_time|date='Y-m-d',###}</td>
                                     </tr>
                                     </foreach>
-                                    <if condition="$kpi_total">
-                                        <tr>
-                                            <td><b>合计</b></td>
-                                            <td></td>
-                                            <td>{$kpi_sum.renshu}人</td>
-                                            <td></td>
-                                            <td></td>
-                                            <!-- <td></td>-->
-                                            <td>{$kpi_sum.shouru}</td>
-                                            <td>{$kpi_sum.maoli}</td>
-                                            <!-- <td></td> -->
-                                            <td></td>
-                                            <td></td>
-                                        </tr>
-                                    </if>
                                 </table>
                                 </div><!-- /.box-body -->
                                 <div class="box-footer clearfix">

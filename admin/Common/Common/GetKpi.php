@@ -1130,5 +1130,21 @@ function get_satisfaction($yearmonth){
         return $data;
     }
 
+    function get_year_settlement_start_time($year){
+        $month                          = date('m');
+        $day                            = date('d');
+        if ($month ==12){
+            if ($day < 26){
+                $year                   = $year - 1;
+            }else{
+                $year                   = $year;
+            }
+        }else{
+            $year                       = $year - 1;
+        }
+        $beginTime                      = strtotime($year.'1226');
+        return $beginTime;
+    }
+
 
 

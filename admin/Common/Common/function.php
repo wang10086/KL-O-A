@@ -1934,15 +1934,17 @@ function updatekpi($month,$user){
                     }else{
                         //获取月度累计毛利额
                         if($v['quota_id']==1){
+                            $newBeginTime                   =get_year_settlement_start_time($v['year']);
                             $where = array();
                             $where['b.audit_status']		= 1;
                             $where['o.create_user']			= $user;
                             $where['l.req_type']			= 801;
-                            $where['l.audit_time']			= array('between',array($v['start_date'],$v['end_date']));
+                            //$where['l.audit_time']			= array('between',array($v['start_date'],$v['end_date']));
+                            $where['l.audit_time']			= array('between',array($newBeginTime,$v['end_date']));
                             $complete = M()->table('__OP_SETTLEMENT__ as b')->field('b.maoli')->join('__OP__ as o on b.op_id = o.op_id','LEFT')->join('__AUDIT_LOG__ as l on l.req_id = b.id','LEFT')->where($where)->sum('b.maoli');
                             $complete = $complete ? $complete : 0;
                             $username = M('account')->where(array('id'=>$v['user_id']))->getField('nickname');
-                            $url      = U('Chart/finance',array('xs'=>$username,'st'=>date('Ymd',$v['start_date']),'et'=>date('Ymd',$v['end_date']),'kpi_total'=>1));
+                            $url      = U('Chart/finance',array('xs'=>$username,'st'=>date('Ymd',$newBeginTime),'et'=>date('Ymd',$v['end_date']),'kpi_total'=>1));
                         }
 
                         //获取累计毛利率
