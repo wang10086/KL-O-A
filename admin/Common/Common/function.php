@@ -1972,7 +1972,8 @@ function updatekpi($month,$user){
                             }else{
                                 $complete = round(($huikuan / $shouru)*100,2).'%';
                             }*/
-                            $uid                                = I('uid');
+
+                            $uid                                = $v['user_id'];
                             $start_time                         = $v['start_date'];
                             $end_time                           = $v['end_date'];
                             $where                              = array();
