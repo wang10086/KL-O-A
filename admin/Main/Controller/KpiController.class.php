@@ -1774,7 +1774,7 @@ class KpiController extends BaseController {
         //$this->pages 	= $pagecount>P::PAGE_SIZE ? $page->show():'';
         //$accountlists   = M('account')->field('id,nickname,rank')->where($where)->limit($page->firstRow . ',' . $page->listRows)->select();
         $accountlists   = M('account')->field('id,nickname,rank,employee_member,kpi_cycle')->where($where)->order('employee_member ASC')->select();
-        $kpiLists       = $this->getKpiResult($accountlists,$year); //获取KPI数据
+        $kpiLists       = $this->getKpiResult($accountlists,$year,$pin); //获取KPI数据
         $lists          = $this->getKpiCycle($kpiLists); //获取最终考核结果显示的月份
 
         $this->lists    = $lists;
@@ -1786,7 +1786,7 @@ class KpiController extends BaseController {
     }
 
     //获取KPI数据
-    private function getKpiResult($accountlists,$year){
+    private function getKpiResult($accountlists,$year,$pin){
         $kpilists                                           = M('kpi')->where(array('year'=>$year))->select();
         foreach ($accountlists as $k=>$v){
             $lists[$k]                                      = $v;
@@ -1813,7 +1813,24 @@ class KpiController extends BaseController {
                     }
                 }
             }
-            $lists[$k]['average']   = round($sum_score/$num,2);
+            if ($pin =='02'){
+                $time_info              = get_this_month();
+                $year                   = $time_info['year'];
+                $month                  = $time_info['month'];
+                $yearMonth              = $year.$month;
+                $where                  = array();
+                $where['user_id']       = $v['id'];
+                $where['year']          = $year;
+                $where['quota_id']      = array('neq',1); //排除月度累计毛利额
+                $where['month']         = array('elt',$yearMonth);
+                $kpi_more_lists         = M('kpi_more')->where($where)->select();
+                $maoli_score            = M('kpi_more')->where(array('user_id'=>$v['id'],'year'=>$year,'month'=>$yearMonth,'quota_id'=>1))->getField('score'); //当月月度累计毛利额得分
+                $month_num              = count(array_unique(array_column($kpi_more_lists,'month')));
+                $sum_other_score        = array_sum(array_column($kpi_more_lists,'score'));
+                //$lists[$k]['average']   = round($sum_other_score/$month_num,2) + $maoli_score;
+            }else{
+                $lists[$k]['average']   = round($sum_score/$num,2);
+            }
         }
         return $lists;
     }

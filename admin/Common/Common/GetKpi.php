@@ -1207,5 +1207,31 @@ function get_satisfaction($yearmonth){
         return $beginTime;
     }
 
+    //获取当前考核时间所对应的年月日
+    function get_this_month(){
+        $year                           = date('Y');
+        $month                          = date('m');
+        $day                            = date('d');
+        $data                           = array();
+        if ($day < 26){
+            $data['year']               = $year;
+            $data['month']              = $month;
+            $data['day']                = $day;
+        }else{
+            if ($month == 12){
+                $year                   = $year + 1;
+                $month                  = '01';
+            }else{
+                $year                   = $year;
+                $month                  = $month + 1;
+            }
+            if (strlen($month) < 2) $month = str_pad($month,2,'0',STR_PAD_LEFT);
+            $data['year']               = $year;
+            $data['month']              = $month;
+            $data['day']                = $day;
+        }
+        return $data;
+    }
+
 
 
