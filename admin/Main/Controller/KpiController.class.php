@@ -1827,7 +1827,7 @@ class KpiController extends BaseController {
                 $maoli_score            = M('kpi_more')->where(array('user_id'=>$v['id'],'year'=>$year,'month'=>$yearMonth,'quota_id'=>1))->getField('score'); //当月月度累计毛利额得分
                 $month_num              = count(array_unique(array_column($kpi_more_lists,'month')));
                 $sum_other_score        = array_sum(array_column($kpi_more_lists,'score'));
-                //$lists[$k]['average']   = round($sum_other_score/$month_num,2) + $maoli_score;
+                $lists[$k]['average']   = round($sum_other_score/$month_num,2) + $maoli_score;
             }else{
                 $lists[$k]['average']   = round($sum_score/$num,2);
             }
