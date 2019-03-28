@@ -1092,7 +1092,7 @@ function get_satisfaction($yearmonth){
                 $op_average_data                = get_manyidu($lists);
                 $shishi_lists[$k]['score_stu']  = '<span class="green">已评分</span>';
                 $shishi_lists[$k]['score_num']  = count($lists);
-                $shishi_lists[$k]['op_average'] = $op_average_data > 0.9?'100%':((round($op_average_data*100/90,2))*100).'%';
+                $shishi_lists[$k]['op_average'] = $op_average_data >= 0.9?'100%':((round($op_average_data*100/90,2))*100).'%'; //平均得分(如果得分>90%,得分100, 如果小于90%,以90%作为满分求百分比)
                 foreach ($lists as $key=>$value){
                     $score_lists[]              = $value;
                 }
@@ -1116,9 +1116,8 @@ function get_satisfaction($yearmonth){
         if ($gross_margin && $gross_margin['target']==0) { //当月目标为0
             $complete = '100%';
         }else{
-            //平均得分(如果得分>90%,得分100, 如果小于90%,以90%作为满分求百分比)(总平均分,包括未调查的)
-            $score = (round($average*100/90,4))*100;
-            $complete = $average > 0.9 ? '100%' : $score.'%';
+            //总平均分,包括未调查的
+            $complete = ($average*100).'%';
         }
 
         $data                           = array();
