@@ -3238,7 +3238,7 @@ class OpController extends BaseController {
             $info                       = I('info');
             $info['year']               = trim(I('year'));
             $info['department_id']      = trim(I('department_id'));
-            $data                       = $db->where(array('department_id'=>$department_id,'year'=>$year))->find();
+            $data                       = $db->where(array('department_id'=>$info['department_id'],'year'=>$info['year']))->find();
             if ($data){
                 $res                    = $db->where(array('id'=>$data['id']))->save($info);
             }else{
