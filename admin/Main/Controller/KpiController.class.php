@@ -1933,9 +1933,9 @@ class KpiController extends BaseController {
 	public function test(){
 		P(team_new_customers(35,array(strtotime('2018-01-01'),strtotime('2018-01-25'))));
 	}
-	
-	
-	
+
+
+
 	
 	
 	

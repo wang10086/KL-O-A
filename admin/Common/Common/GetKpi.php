@@ -897,20 +897,81 @@ function get_sum_gross_profit($userids,$beginTime,$endTime){
 }
 
     /**
-     * 获取当月考核KPI的某一项值
+     * 获取销售当月任务季度系数
      * @param $yearmonth
      * @param $user_id
-     * @param int $quota_id = 1(默认月度累计毛利额)
+     * @param int $quota_id
+     * @return mixed
      */
-function get_gross_margin($yearmonth,$user_id,$quota_id=1){
-    $db                         = M('kpi_more');
-    $where                      = array();
-    $where['user_id']           = $user_id;
-    $where['month']             = $yearmonth;
-    $where['quota_id']          = $quota_id;
-    $list                       = $db->where($where)->find();
-    return $list;
-}
+    function get_gross_margin($yearmonth,$user_id,$quota_id=1){
+        $db                     = M('kpi_more');
+        $where                  = array();
+        $where['user_id']       = $user_id;
+        $where['month']         = $yearmonth;
+        $where['quota_id']      = $quota_id;
+        $list                   = $db->where($where)->find();
+
+        $year                   = substr($yearmonth,0,4);
+        $month                  = substr($yearmonth,4,2);
+        $departmnet_id          = M('account')->where(array('id'=>$user_id))->getField('departmentid');
+
+        $field                  = get_sale_config_field($month);
+        $monthBaseData          = M('sale_config')->where(array('department_id'=>$departmnet_id,'year'=>$year))->field($field)->find();
+        $monthBase              = $monthBaseData['monthBase']; //当月系数
+
+        //当月任务目标 = 工资*当月任务系数
+        $salary                 = M('salary')->where(array('account_id'=>$user_id))->order('id desc')->getField('standard_salary');
+        $monthTarget            = $salary*$monthBase;
+        $list['monthTarget']    = $monthTarget;
+        return $list;
+    }
+
+    /**
+     * 获取销售季度任务系数字段
+     * @param $month
+     * @return string
+     */
+    function get_sale_config_field($month){
+        switch ($month){
+            case '01':
+                $field          = "department_id,department,year,January as monthBase";
+                break;
+            case '02':
+                $field          = "department_id,department,year,February as monthBase";
+                break;
+            case '03':
+                $field          = "department_id,department,year,March as monthBase";
+                break;
+            case '04':
+                $field          = "department_id,department,year,April as monthBase";
+                break;
+            case '05':
+                $field          = "department_id,department,year,May as monthBase";
+                break;
+            case '06':
+                $field          = "department_id,department,year,June as monthBase";
+                break;
+            case '07':
+                $field          = "department_id,department,year,July as monthBase";
+                break;
+            case '08':
+                $field          = "department_id,department,year,August as monthBase";
+                break;
+            case '09':
+                $field          = "department_id,department,year,September as monthBase";
+                break;
+            case '10':
+                $field          = "department_id,department,year,October as monthBase";
+                break;
+            case '11':
+                $field          = "department_id,department,year,November as monthBase";
+                break;
+            case '12':
+                $field          = "department_id,department,year,December as monthBase";
+                break;
+        }
+        return $field;
+    }
 
 function get_satisfaction($yearmonth){
     $db                         = M('satisfaction');
@@ -1113,7 +1174,7 @@ function get_satisfaction($yearmonth){
         $average                        = round($op_average_sum/$shishi_num,2)/100; //全部平均值
 
 
-        if ($gross_margin && $gross_margin['target']==0) { //当月目标为0
+        if ($gross_margin && $gross_margin['monthTarget']==0) { //当月目标为0
             $complete = '100%';
         }else{
             //总平均分,包括未调查的

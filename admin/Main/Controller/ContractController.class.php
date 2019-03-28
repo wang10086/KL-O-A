@@ -449,7 +449,7 @@ class ContractController extends BaseController {
     private function get_user_contract_list($userid,$yearMonth,$begintime,$endtime){
         $mod                                = D('contract');
         $gross_margin                       = get_gross_margin($yearMonth,$userid,1);  //获取当月月度累计毛利额目标值(如果毛利额目标为0,则不考核)
-        $target                             = $gross_margin['target']; //当月目标值
+        $target                             = $gross_margin['monthTarget']; //当月目标值
         $op_list                            = $mod->get_user_op_list($userid,$begintime,$endtime);
         $op_num 		                    = count($op_list);
         $contract_list                      = array();

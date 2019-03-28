@@ -2022,7 +2022,7 @@ function updatekpi($month,$user){
                         if($v['quota_id']==5){
                             //获取当月月度累计毛利额目标值(如果毛利额目标为0,则不考核)
                             $gross_margin                   = get_gross_margin($v['month'],$v['user_id'],1);
-                            if ($gross_margin && $gross_margin['target']==0){
+                            if ($gross_margin && $gross_margin['monthTarget']==0){
                                 //当月目标为0
                                 $complete                   = '100%';
                             }else{
@@ -2773,7 +2773,7 @@ function updatekpi($month,$user){
                         if($v['quota_id']==124){
                             //获取当月月度累计毛利额目标值(如果毛利额系数目标为0,则不考核)
                             $gross_margin   = get_gross_margin($v['month'],$v['user_id'],1);
-                            /*if ($gross_margin && $gross_margin['target']==0){
+                            /*if ($gross_margin && $gross_margin['monthTarget']==0){
                                 //当月目标为0
                                 $complete                   = '100%';
                             }else {
