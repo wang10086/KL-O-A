@@ -487,5 +487,29 @@ class InspectController extends BaseController{
         $this->display('satisfied');
     }
 
+    //顾客满意度统计
+    public function score_statis(){
+        $year		    = I('year',date('Y'));
+        $month		    = I('month',date('m'));
+        if (strlen($month)<2) $month = str_pad($month,2,'0',STR_PAD_LEFT);
+        $yw_departs     = C('YW_DEPARTS');  //业务部门id
+        $where          = array();
+        $where['id']    = array('in',$yw_departs);
+        $departments    = M('salary_department')->field('id,department')->where($where)->select();
+        $department_data= $this->get_company_score_statis($departments);
+
+        $this->year 	= $year;
+        $this->month 	= $month;
+        $this->display();
+    }
+
+    private function get_company_score_statis($departments){
+        foreach ($departments as $k=>$v){
+            $account_lists  = get_department_businessman($v['id']);
+            var_dump($account_lists);die;
+        }
+        die;
+    }
+
 
 }

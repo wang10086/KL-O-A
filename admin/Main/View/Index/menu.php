@@ -361,9 +361,23 @@
                                 <if condition="rolemenu(array('Inspect/record'))">
                                 	<li><a href="{:U('Inspect/record')}"><i class="fa fa-angle-right"></i> 巡检记录</a></li>
                                 </if>
-                                <if condition="rolemenu(array('Inspect/score'))">
+                                <!--<if condition="rolemenu(array('Inspect/score'))">
                                     <li><a href="{:U('Inspect/score')}"><i class="fa fa-angle-right"></i> 顾客满意度</a></li>
-                                </if>
+                                </if>-->
+                                <li class="treeview {:on('Inspect/score')}">
+                                    <if condition="rolemenu(array('Inspect/score','Inspect/score_statis'))">
+                                        <a href=""><i class="fa fa-smile-o"></i> 顾客满意度</a>
+                                    </if>
+                                    <ul class="treeview-menu">
+                                        <if condition="rolemenu(array('Inspect/score'))">
+                                            <li class="{:on('Inspect/score')}"><a href="{:U('Inspect/score')}"><i class="fa fa-angle-right"></i> 顾客满意度</a></li>
+                                        </if>
+                                        <if condition="rolemenu(array('Inspect/score_statis'))">
+                                            <li class="{:on('Inspect/score_statis')}"><a href="{:U('Inspect/score_statis')}"><i class="fa fa-angle-right"></i> 顾客满意度统计</a></li>
+                                        </if>
+                                    </ul>
+                                </li>
+
                                 <li><a href="{:U('Index/public_satisfaction')}"><i class="fa fa-angle-right"></i> 内部人员满意度</a></li>
                             </ul>
                         </li>
