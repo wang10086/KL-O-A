@@ -978,22 +978,22 @@ function get_sum_gross_profit($userids,$beginTime,$endTime){
         return $monthBase;
     }
 
-function get_satisfaction($yearmonth){
-    $db                         = M('satisfaction');
-    $lists                      = $db->where(array('monthly'=>$yearmonth,'type'=>1))->select();
-    $num                        = count($lists);
-    $sum_average                = 0;
-    foreach ($lists as $k=>$v){
-        $score                  = $v['timely'] + $v['accord'] + $v['cost'] + $v['train'] + $v['service'];
-        $count_score            = 5*5;  //总分 = 5各维度, 每个维度5颗星
-        $sum_average            += round($score/$count_score,2);
+    function get_satisfaction($yearmonth){
+        $db                         = M('satisfaction');
+        $lists                      = $db->where(array('monthly'=>$yearmonth,'type'=>1))->select();
+        $num                        = count($lists);
+        $sum_average                = 0;
+        foreach ($lists as $k=>$v){
+            $score                  = $v['timely'] + $v['accord'] + $v['cost'] + $v['train'] + $v['service'];
+            $count_score            = 5*5;  //总分 = 5各维度, 每个维度5颗星
+            $sum_average            += round($score/$count_score,2);
+        }
+        $average                    = round($sum_average/$num,2);
+        $data                       = array();
+        $data['num']                = $num;
+        $data['average']            = $average;
+        return $data;
     }
-    $average                    = round($sum_average/$num,2);
-    $data                       = array();
-    $data['num']                = $num;
-    $data['average']            = $average;
-    return $data;
-}
 
         /*
          * 研发主管客户满意度平均值
