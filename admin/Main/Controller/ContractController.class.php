@@ -270,8 +270,8 @@ class ContractController extends BaseController {
         $where['id']                        = array('in',$yw_departs);
         $departments                        = M('salary_department')->field('id,department')->where($where)->select();
         $cycle_times                        = get_cycle($times);
-        $lists                              = $this->get_department_op_list($departments,$cycle_times['begintime'],$cycle_times['endtime'],$times);
-        $sum                                = $this->get_contract_sum($lists);
+        $lists                              = get_department_op_list($departments,$cycle_times['begintime'],$cycle_times['endtime'],$times);
+        $sum                                = get_contract_sum($lists);
 
         $this->sum                          = $sum;
         $this->lists                        = $lists;
@@ -290,13 +290,13 @@ class ContractController extends BaseController {
      * @param $endtime
      * @return array
      */
-    public function get_department_op_list($departments,$begintime,$endtime,$yearMonth){
+    /*public function get_department_op_list($departments,$begintime,$endtime,$yearMonth){
         $data                               = array();
         foreach ($departments as $k=>$v){
             $data[$k]                       = $this->get_department_contract($v,$begintime,$endtime,$yearMonth);
         }
         return $data;
-    }
+    }*/
 
 
     /**
@@ -305,31 +305,7 @@ class ContractController extends BaseController {
      * @param $department
      * @return array
      */
-    /*public function get_department_contract($op_lists,$department){
-        $data                               = array();
-        $data['id']                         = $department['id'];
-        $data['department']                 = $department['department'];
-        $data['op_num']                     = 0; //项目数量
-        $data['contract_num']               = 0; //合同数量
-        $where                              = array();
-        $where['p.code']                    = array('like','S%');
-        $where['a.departmentid']            = $department['id'];
-        $count_lists                        = M()->table('__ACCOUNT__ as a')->join('__POSITION__ as p on p.id=a.position_id','left')->field('a.*')->where($where)->select();
-        foreach ($count_lists as $key=>$value){
-            foreach ($op_lists as $kk=>$vv){
-                if ($vv['create_user']==$value['id']){
-                    $data['lists'][]= $vv;
-                    $data['op_num']++;
-                    $contract_info          = M('contract')->where(array('op_id'=>$vv['op_id'],'status'=>1))->find();
-                    if ($contract_info) $data['contract_num']++;
-                }
-            }
-        }
-        $data['average']                    = $data['op_num']?(round($data['contract_num']/$data['op_num'],4)*100).'%':'100%';
-        return $data;
-    }*/
-
-    public function get_department_contract($department,$begintime,$endtime,$yearMonth){
+    /*public function get_department_contract($department,$begintime,$endtime,$yearMonth){
         $data                               = array();
         $data['id']                         = $department['id'];
         $data['department']                 = $department['department'];
@@ -357,20 +333,20 @@ class ContractController extends BaseController {
         $data['contract_num']               = count($department_contract_lists); //合同数量
         $data['average']                    = $data['op_num']?(round($data['contract_num']/$data['op_num'],4)*100).'%':'100%';
         return $data;
-    }
+    }*/
 
     /**获取公司合计合同签订率
      * @param $lists
      * @return array
      */
-    private function get_contract_sum($lists){
+    /*private function get_contract_sum($lists){
         $data                               = array();
         $data['name']                       = '合计';
         $data['op_num']                     = array_sum(array_column($lists,'op_num'));
         $data['contract_num']               = array_sum(array_column($lists,'contract_num'));
         $data['average']                    = $data['op_num']?(round($data['contract_num']/$data['op_num'],4)*100).'%':'100%';
         return $data;
-    }
+    }*/
 
     public function public_department_detail(){
         $year                               = I('year',date("Y"));
@@ -383,9 +359,11 @@ class ContractController extends BaseController {
         $count_lists                        = get_department_businessman($department_id);
         $data                               = array();
         foreach ($count_lists as $key=>$value){
-            $data[$value['nickname']]       = $this->get_user_contract_list($value['id'],$yearMonth,$cycle_times['begintime'],$cycle_times['endtime']);
+            $contract_data                  = get_user_contract_list($value['id'],$yearMonth,$cycle_times['begintime'],$cycle_times['endtime']);
+            $contract_data['user_id']       = $value['id'];
+            $contract_data['user_name']     = $value['nickname'];
+            $data[$key]                     = $contract_data;
         }
-
         $this->lists                        = $data;
         $this->year                         = $year;
         $this->month                        = $month;
@@ -400,7 +378,7 @@ class ContractController extends BaseController {
         $uid                                = I('uid');
         $cycle_times                        = get_cycle($year.$month);
         $yearMonth                          = $year.$month;
-        $data                               = $this->get_user_contract_list($uid,$yearMonth,$cycle_times['begintime'],$cycle_times['endtime']);
+        $data                               = get_user_contract_list($uid,$yearMonth,$cycle_times['begintime'],$cycle_times['endtime']);
         $op_list                            = $data['op_list'];
 
         $this->data                         = $data;
@@ -411,7 +389,7 @@ class ContractController extends BaseController {
         $this->display('month_detail');
     }
 
-    private function get_user_contract_list($userid,$yearMonth,$begintime,$endtime){
+    /*private function get_user_contract_list($userid,$yearMonth,$begintime,$endtime){
         $mod                                = D('contract');
         $gross_margin                       = get_gross_margin($yearMonth,$userid,1);  //获取当月月度累计毛利额目标值(如果毛利额目标为0,则不考核)
         $target                             = $gross_margin['monthTarget']; //当月目标值
@@ -438,7 +416,7 @@ class ContractController extends BaseController {
         $data['target']                     = $target?$target:'0.00';
         $data['average']                    = $target?(round($contract_num/$op_num,4)*100).'%':'100%';
         return $data;
-    }
+    }*/
 
 
 }

@@ -1234,4 +1234,96 @@ function get_satisfaction($yearmonth){
     }
 
 
+    /**
+     * 获取各部门的合同签订率
+     * @param $departments
+     * @param $begintime
+     * @param $endtime
+     * @return array
+     */
+    function get_department_op_list($departments,$begintime,$endtime,$yearMonth){
+        $data                               = array();
+        foreach ($departments as $k=>$v){
+            $data[$k]                       = get_department_contract($v,$begintime,$endtime,$yearMonth);
+        }
+        return $data;
+    }
 
+    /**
+     * 获取单个部门的合同签订率
+     * @param $op_lists
+     * @param $department
+     * @return array
+     */
+    function get_department_contract($department,$begintime,$endtime,$yearMonth){
+        $data                               = array();
+        $data['id']                         = $department['id'];
+        $data['department']                 = $department['department'];
+
+        $count_lists                        = get_department_businessman($department['id']);
+        $department_op_lists                = array();
+        $department_contract_lists          = array();
+        foreach ($count_lists as $key=>$value){
+            $contract_data          = get_user_contract_list($value['id'],$yearMonth,$begintime,$endtime);
+            if ($contract_data['op_list']){ //项目列表
+                foreach ($contract_data['op_list'] as $opk=>$opv){
+                    $department_op_lists[]  = $opv;
+                }
+            }
+            if ($contract_data['contract_list']){ //合同信息
+                foreach ($contract_data['contract_list'] as $conk=>$conv){
+                    $department_contract_lists[] = $conv;
+                }
+            }
+        }
+
+        $data['department_op_lists']        = $department_op_lists;
+        $data['department_contract_lists']  = $department_contract_lists;
+        $data['op_num']                     = count($department_op_lists); //项目数量
+        $data['contract_num']               = count($department_contract_lists); //合同数量
+        $data['average']                    = $data['op_num']?(round($data['contract_num']/$data['op_num'],4)*100).'%':'100%';
+        return $data;
+    }
+
+    //获取公司合计合同签订率
+    function get_user_contract_list($userid,$yearMonth,$begintime,$endtime){
+        $mod                                = D('contract');
+        $gross_margin                       = get_gross_margin($yearMonth,$userid,1);  //获取当月月度累计毛利额目标值(如果毛利额目标为0,则不考核)
+        $target                             = $gross_margin['monthTarget']; //当月目标值
+        $op_list                            = $mod->get_user_op_list($userid,$begintime,$endtime);
+        $op_num 		                    = count($op_list);
+        $contract_list                      = array();
+        foreach ($op_list as $key=>$value){
+            //出团后5天内完成上传
+            $time 		                    = $value['dep_time'] + 6*24*3600;
+            $list                           = M('contract')->where(array('op_id'=>$value['op_id'],'status'=>1,'confirm_time'=>array('lt',$time)))->find();
+            if ($list){
+                $contract_list[]    = $list;
+                $op_list[$key]['contract_stu'] = "<span class='green'>有合同</span>";
+            }else{
+                $op_list[$key]['contract_stu'] = "<span class='red'>无合同</span>";
+            }
+        }
+        $contract_num                       = count($contract_list);
+        $data                               = array();
+        $data['op_list']                    = $op_list;
+        $data['contract_list']              = $contract_list;
+        $data['op_num']                     = $op_num;
+        $data['contract_num']               = $contract_num;
+        $data['target']                     = $target?$target:'0.00';
+        $data['average']                    = $target?(round($contract_num/$op_num,4)*100).'%':'100%';
+        return $data;
+    }
+
+    /**获取公司合计合同签订率
+     * @param $lists
+     * @return array
+     */
+    function get_contract_sum($lists){
+    $data                               = array();
+    $data['name']                       = '合计';
+    $data['op_num']                     = array_sum(array_column($lists,'op_num'));
+    $data['contract_num']               = array_sum(array_column($lists,'contract_num'));
+    $data['average']                    = $data['op_num']?(round($data['contract_num']/$data['op_num'],4)*100).'%':'100%';
+    return $data;
+}
