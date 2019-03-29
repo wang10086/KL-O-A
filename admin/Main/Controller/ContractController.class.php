@@ -291,11 +291,9 @@ class ContractController extends BaseController {
      * @return array
      */
     public function get_department_op_list($departments,$begintime,$endtime,$yearMonth){
-        $mod                                = D('Contract');
-        $op_lists                           = $mod->get_user_op_list('',$begintime,$endtime); //在该周期内所有预算审核通过的项目
         $data                               = array();
         foreach ($departments as $k=>$v){
-            $data[$k]                       = $this->get_department_contract($op_lists,$v,$begintime,$endtime,$yearMonth);
+            $data[$k]                       = $this->get_department_contract($v,$begintime,$endtime,$yearMonth);
         }
         return $data;
     }
@@ -331,25 +329,28 @@ class ContractController extends BaseController {
         return $data;
     }*/
 
-    public function get_department_contract($op_lists,$department,$begintime,$endtime,$yearMonth){
+    public function get_department_contract($department,$begintime,$endtime,$yearMonth){
         $data                               = array();
         $data['id']                         = $department['id'];
         $data['department']                 = $department['department'];
-        $where                              = array();
-        $where['p.code']                    = array('like','S%');
-        $where['a.departmentid']            = $department['id'];
-        $count_lists                        = M()->table('__ACCOUNT__ as a')->join('__POSITION__ as p on p.id=a.position_id','left')->field('a.*')->where($where)->select();
+
+        $count_lists                        = get_department_businessman($department['id']);
         $department_op_lists                = array();
         $department_contract_lists          = array();
         foreach ($count_lists as $key=>$value){
-            foreach ($op_lists as $kk=>$vv){
-                if ($vv['create_user']==$value['id']){
-                    $contract_data          = $this->get_user_contract_list($vv['create_user'],$yearMonth,$begintime,$endtime);
+            $contract_data          = $this->get_user_contract_list($value['id'],$yearMonth,$begintime,$endtime);
+            if ($contract_data['op_list']){ //项目列表
+                foreach ($contract_data['op_list'] as $opk=>$opv){
+                    $department_op_lists[]  = $opv;
                 }
             }
-            $department_op_lists            = array_merge($department_op_lists,$contract_data['op_list']);
-            $department_contract_lists      = array_merge($department_contract_lists,$contract_data['contract_list']);
+            if ($contract_data['contract_list']){ //合同信息
+                foreach ($contract_data['contract_list'] as $conk=>$conv){
+                    $department_contract_lists[] = $conv;
+                }
+            }
         }
+
         $data['department_op_lists']        = $department_op_lists;
         $data['department_contract_lists']  = $department_contract_lists;
         $data['op_num']                     = count($department_op_lists); //项目数量
@@ -371,40 +372,7 @@ class ContractController extends BaseController {
         return $data;
     }
 
-    /*public function department_detail(){
-        $year                               = I('year',date("Y"));
-        $month                              = I('month',date('m'));
-        $department_id                      = I('id');
-        $project                            = trim(I('title'));
-        $group_id                           = trim(I('oid'));
-        $op_id                              = trim(I('opid'));
-        $create_user_name                   = trim(I('uname'));
-        $cycle_times                        = get_cycle($year.$month);
-        $department                         = M('salary_department')->where(array('id'=>$department_id))->find();
-        $mod                                = D('Contract');
-        $op_lists                           = $mod->get_budget_list($cycle_times['begintime'],$cycle_times['endtime'],$project,$group_id,$op_id,$create_user_name); //在该周期内预算审核通过的项目
-        $data                               = $this->get_department_contract($op_lists,$department);
-        $lists                              = $data['lists'];
-        foreach ($lists as $k=>$v){
-            $confirm                        = M('op_team_confirm')->where(array('op_id'=>$v['op_id']))->find();
-            $contract                       = M('contract')->where(array('op_id'=>$v['op_id']))->find();
-            $lists[$k]['dep_time']          = $confirm['dep_time'];
-            $lists[$k]['ret_time']          = $confirm['ret_time'];
-            $lists[$k]['confirm_id']        = $contract['id'];
-            if ($contract){
-                $lists[$k]['contract_stu']  = "<span class='green'>已签订</span>";
-            }else{
-                $lists[$k]['contract_stu']  = "<span class='red'>未签订</span>";
-            }
-        }
-        $this->data                         = $data;
-        $this->lists                        = $lists;
-        $this->year                         = $year;
-        $this->month                        = $month;
-        $this->department_id                = $department_id;
-        $this->display();
-    }*/
-    public function department_detail(){
+    public function public_department_detail(){
         $year                               = I('year',date("Y"));
         $month                              = I('month',date('m'));
         if (strlen($month)<2) $month        = str_pad($month,2,'0',STR_PAD_LEFT);
@@ -412,10 +380,7 @@ class ContractController extends BaseController {
         $cycle_times                        = get_cycle($yearMonth);
         $department_id                      = I('id');
 
-        $where                              = array();
-        $where['p.code']                    = array('like','S%');
-        $where['a.departmentid']            = $department_id;
-        $count_lists                        = M()->table('__ACCOUNT__ as a')->join('__POSITION__ as p on p.id=a.position_id','left')->field('a.*')->where($where)->select();
+        $count_lists                        = get_department_businessman($department_id);
         $data                               = array();
         foreach ($count_lists as $key=>$value){
             $data[$value['nickname']]       = $this->get_user_contract_list($value['id'],$yearMonth,$cycle_times['begintime'],$cycle_times['endtime']);
@@ -425,7 +390,7 @@ class ContractController extends BaseController {
         $this->year                         = $year;
         $this->month                        = $month;
         $this->department_info              = M('salary_department')->where(array('id'=>$department_id))->find();
-        $this->display();
+        $this->display('department_detail');
     }
 
     public function public_month_detail(){

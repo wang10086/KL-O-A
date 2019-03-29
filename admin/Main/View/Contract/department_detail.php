@@ -18,7 +18,7 @@
                         <div class="col-xs-12">
                             <div class="btn-group" id="catfont" style="padding-bottom:20px;">
                                 <?php if($prveyear>2017){ ?>
-                                    <a href="{:U('Contract/department_detail',array('year'=>$prveyear,'month'=>'01','id'=>$department_info['id']))}" class="btn btn-default" style="padding:8px 18px;">上一年</a>
+                                    <a href="{:U('Contract/public_department_detail',array('year'=>$prveyear,'month'=>'01','id'=>$department_info['id']))}" class="btn btn-default" style="padding:8px 18px;">上一年</a>
                                 <?php } ?>
                                 <?php
                                     for($i=1;$i<13;$i++){
@@ -27,14 +27,14 @@
                                         $par['month']   = str_pad($i,2,"0",STR_PAD_LEFT);
                                         $par['id']      = $department_info['id'];
                                         if($month==$i){
-                                            echo '<a href="'.U('Contract/department_detail',$par).'" class="btn btn-info" style="padding:8px 18px;">'.$i.'月</a>';
+                                            echo '<a href="'.U('Contract/public_department_detail',$par).'" class="btn btn-info" style="padding:8px 18px;">'.$i.'月</a>';
                                         }else{
-                                            echo '<a href="'.U('Contract/department_detail',$par).'" class="btn btn-default" style="padding:8px 18px;">'.$i.'月</a>';
+                                            echo '<a href="'.U('Contract/public_department_detail',$par).'" class="btn btn-default" style="padding:8px 18px;">'.$i.'月</a>';
                                         }
                                     }
                                 ?>
                                 <?php if($year<date('Y')){ ?>
-                                    <a href="{:U('Contract/department_detail',array('year'=>$nextyear,'month'=>'01','id'=>$department_info['id']))}" class="btn btn-default" style="padding:8px 18px;">下一年</a>
+                                    <a href="{:U('Contract/public_department_detail',array('year'=>$nextyear,'month'=>'01','id'=>$department_info['id']))}" class="btn btn-default" style="padding:8px 18px;">下一年</a>
                                 <?php } ?>
                             </div>
 
@@ -86,7 +86,7 @@
                 <form action="" method="get" id="searchform">
                 <input type="hidden" name="m" value="Main">
                 <input type="hidden" name="c" value="Contract">
-                <input type="hidden" name="a" value="department_detail">
+                <input type="hidden" name="a" value="public_department_detail">
                 <input type="hidden" name="uid" value="{$uid}">
                 <input type="hidden" name="start_time" value="{$start_time}">
                 <input type="hidden" name="end_time" value="{$end_time}">

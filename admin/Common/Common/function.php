@@ -4871,3 +4871,17 @@ function get_half_year_cycle($year,$month){
         $data['endTime']            = strtotime($year.'1226');
         return $data;
     }
+
+    /**
+     * 获取各部门业务人员信息
+     * @param $department_id
+     * @return mixed
+     */
+    function get_department_businessman($department_id){
+        $where                              = array();
+        $where['p.code']                    = array('like','S%');
+        $where['a.departmentid']            = $department_id;
+        $where['a.status']                  = array('neq',2); //已删除
+        $account_lists                      = M()->table('__ACCOUNT__ as a')->join('__POSITION__ as p on p.id=a.position_id','left')->field('a.*')->where($where)->select();
+        return $account_lists;
+    }
