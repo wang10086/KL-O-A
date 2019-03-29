@@ -53,7 +53,7 @@
                                         </tr>
                                         <foreach name="lists" item="row">
                                         <tr>
-                                            <td class="taskOptions"><a href="{:U('Contract/department_detail',array('year'=>$year,'month'=>$month,'id'=>$row[id]))}" title="查看部门合同信息">{$row.department}</a></td>
+                                            <td class="taskOptions"><a href="{:U('Contract/public_department_detail',array('year'=>$year,'month'=>$month,'id'=>$row[id]))}" title="查看部门合同信息">{$row.department}</a></td>
                                             <td class="taskOptions">{$row.op_num}</td>
                                             <td class="taskOptions">{$row.contract_num}</td>
                                             <td class="taskOptions">{$row.}</td>
