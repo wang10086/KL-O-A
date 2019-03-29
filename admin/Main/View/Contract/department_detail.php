@@ -54,7 +54,7 @@
                                         </tr>
                                         <foreach name="lists" item="row" key="k">
                                         <tr>
-                                            <td class="taskOptions">{$k}</td>
+                                            <td class="taskOptions"><a href="{:U('Contract/public_month_detail',array('year'=>$year,'month'=>$month,'uid'=>$row['user_id']))}">{$row.user_name}</a></td>
                                             <td class="taskOptions">{$row.op_num}</td>
                                             <td class="taskOptions">{$row.contract_num}</td>
                                             <td class="taskOptions">{$row.}</td>
