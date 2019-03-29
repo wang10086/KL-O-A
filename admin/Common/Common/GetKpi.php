@@ -914,10 +914,7 @@ function get_sum_gross_profit($userids,$beginTime,$endTime){
         $year                   = substr($yearmonth,0,4);
         $month                  = substr($yearmonth,4,2);
         $departmnet_id          = M('account')->where(array('id'=>$user_id))->getField('departmentid');
-
-        $field                  = get_sale_config_field($month);
-        $monthBaseData          = M('sale_config')->where(array('department_id'=>$departmnet_id,'year'=>$year))->field($field)->find();
-        $monthBase              = $monthBaseData['monthBase']; //当月系数
+        $monthBase              = get_sale_config_field($year,$month,$user_id,$departmnet_id); //月度任务系数
 
         //当月任务目标 = 工资*当月任务系数
         $salary                 = M('salary')->where(array('account_id'=>$user_id))->order('id desc')->getField('standard_salary');
@@ -931,7 +928,7 @@ function get_sum_gross_profit($userids,$beginTime,$endTime){
      * @param $month
      * @return string
      */
-    function get_sale_config_field($month){
+    function get_sale_config_field($year,$month,$user_id,$departmnet_id){
         switch ($month){
             case '01':
                 $field          = "department_id,department,year,January as monthBase";
@@ -970,7 +967,15 @@ function get_sum_gross_profit($userids,$beginTime,$endTime){
                 $field          = "department_id,department,year,December as monthBase";
                 break;
         }
-        return $field;
+
+        if ($user_id == 59){ //京区业务C端(李保罗)
+            $jqyw_c             = C('JQXY-C');
+            $monthBase          = $jqyw_c[$month];
+        }else{
+            $monthBaseData      = M('sale_config')->where(array('department_id'=>$departmnet_id,'year'=>$year))->field($field)->find();
+            $monthBase          = $monthBaseData['monthBase']; //当月系数
+        }
+        return $monthBase;
     }
 
 function get_satisfaction($yearmonth){
