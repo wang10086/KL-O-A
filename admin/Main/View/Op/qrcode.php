@@ -43,6 +43,7 @@
         <script type="text/javascript">
             function show_code(){
                 var url_info   = $('#url_info').val();
+                alert(url_info);
                 $.ajax({
                     type: "POST",
                     url:  "{:U('Ajax/get_code')}",
