@@ -3365,10 +3365,10 @@ class OpController extends BaseController {
 
     //教务获取满意度二维码
     public function qrcode(){
-        $op_id          = I('opid');
-        $this->title    = M('op')->where(array('op_id'=>$op_id))->getField('project');
+        $opid           = I('opid');
+        $this->title    = M('op')->where(array('op_id'=>$opid))->getField('project');
         $host           = $_SERVER['SERVER_NAME'];
-        $this->url_info = 'http://tcs.kexueyou.com/op.php?m=Main&c=Score&a=index&opid='.$op_id;
+        $this->url_info = 'http://tcs.kexueyou.com/op.php?m=Main&c=Score&a=index&opid='.$opid;
 
         $this->display();
     }

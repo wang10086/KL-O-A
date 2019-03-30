@@ -19,7 +19,6 @@
                                 <div class="box-body" style="padding-top:20px;">
 
                                     <div class="form-group col-md-12">
-                                        <input type="hidden" id="confirm_id" value="{$confirm_id}">
                                         <input type="hidden" id="url_info" value="{$url_info}">
                                         <button class="btn btn-info" onclick="show_code()">获取二维码</button>
                                     </div>
@@ -42,7 +41,7 @@
 
         <script type="text/javascript">
             function show_code(){
-                var url_info   = $('#url_info').val();
+                var url_info   = "<?php echo $url_info; ?>";
                 $.ajax({
                     type: "POST",
                     url:  "{:U('Ajax/get_code')}",
