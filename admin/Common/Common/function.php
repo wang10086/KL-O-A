@@ -1124,8 +1124,6 @@ function unique_arr($array,$field='name'){
      */
     function QR_code($data,$name = 0,$size = 30){
 
-        return "aaatest";
-
         ulib('phpqrcode.phpqrcode');
 
         $QRcode = new \QRcode();
