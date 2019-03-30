@@ -369,11 +369,11 @@ class SalaryModel extends Model
             $salary                         = M('salary')->where(array('account_id'=>$v['id']))->order('id desc')->find();
             $data[$k]['salary_id']          = $salary['id']?$salary['id']:0;
             $data[$k]['standard']           = $salary['standard_salary']?$salary['standard_salary']:'0.00';   //岗位薪酬
-            $data[$k]['basic_salary']       = ($salary['standard_salary']/10)*$salary['basic_salary']; //基本工资
+            $data[$k]['basic_salary']       = round(($salary['standard_salary']/10)*$salary['basic_salary'],2); //基本工资
             $attendance_list                = M('salary_attendance')->where(array('account_id'=>$v['id'],'status'=>1))->order('id desc')->find();//员工考勤信息
             $data[$k]['attendance_id']      = $attendance_list['id']?$attendance_list['id']:'0';
             $data[$k]['withdrawing']        = $attendance_list['withdrawing']?$attendance_list['withdrawing']:'0.00';//考勤扣款
-            $data[$k]['performance_salary'] = ($salary['standard_salary']/10)*$salary['performance_salary']; //岗位绩效工资
+            $data[$k]['performance_salary'] = round(($salary['standard_salary']/10)*$salary['performance_salary'],2); //岗位绩效工资
             $kpi_pdca_score                 = $this->get_kpi_salary($v,$salary,$datetime); //绩效得分AAAA
             $data[$k]['Achievements_withdrawing']= $kpi_pdca_score['count_money']?$kpi_pdca_score['count_money']:'0.00'; //绩效增减
             $op_guide_info                  = $this->get_op_guide($v,$datetime); //带团补助信息
@@ -399,7 +399,7 @@ class SalaryModel extends Model
             $other                          = $salary_subsidy_list['foreign_subsidies']+$salary_subsidy_list['computer_subsidy'] + $other_income['income_money'];
             $data[$k]['Other']              = $other?$other:'0.00'; //其他补款(外地补贴+电脑补贴+其他收入变动(补差额))
             //应发工资 = (基本工资 - 考勤扣款) + (绩效工资 - 绩效增减) + 业绩提成 + 带团补助 + 奖金 + 年终奖 + 住房补贴 + 其他补款;
-            $data[$k]['Should_distributed'] = round(($data[$k]['basic_salary'] - $data[$k]['withdrawing']) + ($data[$k]['performance_salary'] + $data[$k]['Achievements_withdrawing']) + $data[$k]['total'] + $data[$k]['Subsidy'] + $data[$k]['bonus'] + $data[$k]['welfare'] + $data[$k]['housing_subsidy'] + $data[$k]['Other'],2); //应发工资 = (基本工资 - 考勤扣款) + (绩效工资标准-绩效增减)+业绩提成+带团补助+ 奖金+年终奖+住房补贴+其他补款
+            $data[$k]['Should_distributed'] = ($data[$k]['basic_salary'] - $data[$k]['withdrawing']) + ($data[$k]['performance_salary'] + $data[$k]['Achievements_withdrawing']) + $data[$k]['total'] + $data[$k]['Subsidy'] + $data[$k]['bonus'] + $data[$k]['welfare'] + $data[$k]['housing_subsidy'] + $data[$k]['Other']; //应发工资 = (基本工资 - 考勤扣款) + (绩效工资标准-绩效增减)+业绩提成+带团补助+ 奖金+年终奖+住房补贴+其他补款
             $salary_insurance_list          = M('salary_insurance')->where(array('account_id'=>$v['id']))->order('id desc')->find(); //五险一金
             $data[$k]['insurance_id']       = $salary_insurance_list['id']?$salary_insurance_list['id']:'0';
             $data[$k]['medical_care']       = round($salary_insurance_list['medical_care_base']*$salary_insurance_list['medical_care_ratio'],2); //医疗保险个人
