@@ -54,44 +54,6 @@
                             <a href="{:U('Salary/salary_excel_list',array('archives'=>4,'datetime'=>$datetime))}" class="btn <?php if($archives==4){ echo 'btn-info';}else{ echo 'btn-default';} ?>">行管局</a>
                         </div>
 
-                        <script type="text/javascript">
-                            /*$('.individual_tax').click(function(){
-                                var id = $(this).attr('id');//用户id
-                                alert(id);
-                                alert('aaaa');
-                                return false;
-                                if($('.individual_tax_update'+id).length <= 0) {
-                                    var money = $(this).text();
-                                    $(this).empty();
-                                    var h  = '<input type="text" class="form-control individual_tax_update'+id+'" value="'+money+'" />';
-                                    $(this).append(h);
-                                    $('.individual_tax_update'+id).focus();
-
-                                    //个税鼠标移动事件
-                                    $('.individual_tax_update'+id).mouseleave(function(){
-                                        var content = $(this).val();//个人计税金额
-                                        content = content.replace('¥ ','');//将¥ 字符替换为空字符
-                                        var curl = "index.php?m=Main&c=Ajax&a=get_salary_content";
-                                        $.ajax({
-                                            type: "POST",
-                                            url: curl,
-                                            data: {'individual_tax':content, 'uid':id,'datetime':datetime},
-                                            dataType: "json", //数据格式
-                                            success: function (data) {
-                                                if (data.sum == 1) {alert("恭喜您保存成功！");return false;}
-                                                if (data.sum == 0) {alert("保存失败！请您重新保存！");return false;}
-                                            }
-                                        });
-                                    });
-                                }
-                            });*/
-
-                            /*function aaa(account_id) {
-                                alert(account_id);
-                                return false;
-                            }*/
-                        </script>
-
                         <br><br>
                         <div class="btn-group" style="height:100%;width:195em;" id="salary_archives_list">
                             <table class="table table-bordered dataTablev">

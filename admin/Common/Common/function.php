@@ -1116,6 +1116,27 @@ function unique_arr($array,$field='name'){
     return $unitid;
 }
 
+    /**
+     * @brief 生成二维码
+     * @param string $data    要生成二维码的内容
+     * @param string $name    生成的二维码文件名
+     * @param string $size    生成的二维码文件大小
+     */
+    function QR_code($data,$name = 0,$size = 30){
+
+        ulib('phpqrcode.phpqrcode');
+
+        $QRcode = new \QRcode();
+        $level = 'M';                     // 纠错级别：L、M、Q、H
+        $size = $size;                    // 点的大小：1到10,用于手机端4就可以了
+        $name = $name ? $name : time();
+        $path = "upload/code/";           //生成的二维码保存于服务器路径
+        $fileName = $path.$name.'.png';   // 生成的文件名
+        $QRcode->png($data,$fileName,$level,$size);
+
+        return $fileName;
+    }
+
 //获取任意日期的月第一天和最后一天
 function month_phase($date){
 	

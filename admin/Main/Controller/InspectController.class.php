@@ -469,47 +469,129 @@ class InspectController extends BaseController{
 
     //业务人员顾客满意度详情页
     public function public_satisfied(){
-        $year                           = I('year');
-        $month                          = (int)I('month');
-        $userid                         = I('uid');
-        if (strlen($month)<2) $month    = str_pad($month,2,'0',STR_PAD_LEFT);
-        $yearMonth                      = $year.$month;
-        $gross_margin                   = get_gross_margin($yearMonth,$userid,1);  //获取当月月度累计毛利额目标值(如果毛利额目标为0,则不考核)
-        $cycle_times                    = get_cycle($yearMonth);
-        $data                           = get_satisfied_kpi_data($userid,$cycle_times['begintime'],$cycle_times['endtime'],$gross_margin);
-        $op_lists                       = $data['shishi_lists'];
+        $year                       = I('year');
+        $month                      = (int)I('month');
+        $userid                     = I('uid');
+        if (strlen($month)<2) $month= str_pad($month,2,'0',STR_PAD_LEFT);
+        $yearMonth                  = $year.$month;
+        $gross_margin               = get_gross_margin($yearMonth,$userid,1);  //获取当月月度累计毛利额目标值(如果毛利额目标为0,则不考核)
+        $cycle_times                = get_cycle($yearMonth);
+        $data                       = get_satisfied_kpi_data($userid,$cycle_times['begintime'],$cycle_times['endtime'],$gross_margin);
+        $op_lists                   = $data['shishi_lists'];
 
-        $this->data                     = $data;
-        $this->lists                    = $op_lists;
-        $this->year                     = $year;
-        $this->month                    = $month;
-        $this->uid                      = $userid;
+        $this->data                 = $data;
+        $this->lists                = $op_lists;
+        $this->year                 = $year;
+        $this->month                = $month;
+        $this->uid                  = $userid;
         $this->display('satisfied');
     }
 
     //顾客满意度统计
     public function score_statis(){
-        $year		    = I('year',date('Y'));
-        $month		    = I('month',date('m'));
-        if (strlen($month)<2) $month = str_pad($month,2,'0',STR_PAD_LEFT);
-        $yw_departs     = C('YW_DEPARTS');  //业务部门id
-        $where          = array();
-        $where['id']    = array('in',$yw_departs);
-        $departments    = M('salary_department')->field('id,department')->where($where)->select();
-        $department_data= $this->get_company_score_statis($departments);
+        $year		                = I('year',date('Y'));
+        $month		                = I('month',date('m'));
+        if (strlen($month)<2) $month= str_pad($month,2,'0',STR_PAD_LEFT);
+        $yearMonth                  = $year.$month;
+        $yw_departs                 = C('YW_DEPARTS');  //业务部门id
+        $where                      = array();
+        $where['id']                = array('in',$yw_departs);
+        $departments                = M('salary_department')->field('id,department')->where($where)->select();
+        $department_data            = $this->get_company_score_statis($departments,$yearMonth); //部门当月合计
 
-        $this->year 	= $year;
-        $this->month 	= $month;
+        $this->lists                = $department_data;
+        $this->year 	            = $year;
+        $this->month 	            = $month;
+        $this->prveyear             = $year-1;
+        $this->nextyear             = $year+1;
         $this->display();
     }
 
-    private function get_company_score_statis($departments){
+    //部门当月合计
+    private function get_company_score_statis($departments,$yearMonth){
+        $info                               = array();
         foreach ($departments as $k=>$v){
-            $account_lists  = get_department_businessman($v['id']);
-            var_dump($account_lists);die;
+            $account_lists                  = get_department_businessman($v['id']);
+            $year                           = substr($yearMonth,0,4);
+            $year_cycle_times               = get_year_cycle($year);
+            //年度满意度统计
+            $year_op_num                    = 0; //项目数
+            $year_score_num                 = 0; //已评分项目数
+            $year_score_average             = 0; //已评分满意度
+            $year_sum_average               = 0;
+            $year_account_num               = 0;
+            if (is_array($account_lists)){
+                foreach ($account_lists as $key=>$value){
+                    //$value['id']            = 59;
+                    //获取当月月度累计毛利额目标值(如果毛利额系数目标为0,则不考核)
+                    $gross_margin           = get_gross_margin($yearMonth,$value['id'],1);
+                    $year_data              = get_satisfied_kpi_data($value['id'],$year_cycle_times['beginTime'],$year_cycle_times['endTime'],$gross_margin);
+                    $year_op_num            += $year_data['op_num'];
+                    $year_score_num         += $year_data['score_num'];
+                    $ys_average             = str_replace('%','',$year_data['score_average']);
+                    $year_score_average     += $ys_average;
+                    $y_complete             = str_replace('%','',$year_data['complete']);
+                    $year_sum_average       += $y_complete; //总得分
+                    $year_account_num++;
+                }
+            }
+            $info[$k]['id']                 = $v['id'];
+            $info[$k]['department']         = $v['department'];
+            $info[$k]['year_op_num']        = $year_op_num;
+            $info[$k]['year_score_num']     = $year_score_num;
+            $info[$k]['year_score_average'] = round($year_score_average/$year_score_num,2).'%';
+            $info[$k]['year_average']       = round($year_sum_average/$year_account_num,2).'%';
+
+
+            //当月满意度统计
+            $cycle_times                    = get_cycle($yearMonth);
+            $month_op_num                   = 0; //项目数
+            $month_score_num                = 0; //已评分项目数
+            $month_score_average            = 0; //已评分满意度
+            $month_sum_average              = 0; //
+            $month_account_num              = 0;
+            if (is_array($account_lists)){
+                foreach ($account_lists as $key=>$value){
+                    //$value['id']            = 59;
+                    //获取当月月度累计毛利额目标值(如果毛利额系数目标为0,则不考核)
+                    $gross_margin           = get_gross_margin($yearMonth,$value['id'],1);
+                    $month_data             = get_satisfied_kpi_data($value['id'],$cycle_times['begintime'],$cycle_times['endtime'],$gross_margin);
+                    $month_op_num           += $month_data['op_num'];
+                    $month_score_num        += $month_data['score_num'];
+                    $s_average              = str_replace('%','',$month_data['score_average']);
+                    $month_score_average    += $s_average;
+                    $complete               = str_replace('%','',$month_data['complete']);
+                    $month_sum_average      += $complete; //总得分
+                    $month_account_num++;
+                }
+            }
+            $info[$k]['month_op_num']       = $month_op_num;
+            $info[$k]['month_score_num']    = $month_score_num;
+            $info[$k]['month_score_average']= round($month_score_average/$month_score_num,2).'%';
+            $info[$k]['month_average']      = round($month_sum_average/$month_account_num,2).'%';
         }
-        die;
+        return $info;
     }
 
 
+    //顾客满意度统计详情
+    public function public_score_statis_detail(){
+        $year		                = I('year',date('Y'));
+        $month		                = I('month',date('m'));
+        $department_id              = I('did');
+        if (strlen($month)<2) $month= str_pad($month,2,'0',STR_PAD_LEFT);
+        $yearMonth                  = $year.$month;
+        $where                      = array();
+        $where['id']                = $department_id;
+        $department                 = M('salary_department')->field('id,department')->where($where)->find();
+        //$department_data            = $this->get_company_score_statis($departments,$yearMonth); //部门当月合计
+
+        $this->lists                = $department_data;
+        $this->department           = $department;
+        $this->year 	            = $year;
+        $this->month 	            = $month;
+        $this->prveyear             = $year-1;
+        $this->nextyear             = $year+1;
+        $this->display('score_statis_detail');
+    }
 }

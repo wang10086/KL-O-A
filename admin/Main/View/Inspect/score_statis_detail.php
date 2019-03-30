@@ -21,24 +21,25 @@
                             <div class="box box-warning">
                                 <div class="box-header">
                                     <h3 class="box-title">顾客满意度统计</h3>
+                                    <h3 class="box-title pull-right green">部门名称：{$department.department}</h3>
                                 </div><!-- /.box-header -->
                                 <div class="box-body">
 
                                     <div class="btn-group" id="catfont" style="padding-bottom:5px;">
                                         <?php if($prveyear>2018){ ?>
-                                            <a href="{:U('Inspect/score_statis',array('year'=>$prveyear,'month'=>$month))}" class="btn btn-default" style="padding:8px 18px;">上一年</a>
+                                            <a href="{:U('Inspect/public_score_statis_detail',array('year'=>$prveyear,'month'=>$month,'did'=>$department['id']))}" class="btn btn-default" style="padding:8px 18px;">上一年</a>
                                         <?php } ?>
                                         <?php
                                         for($i=1;$i<13;$i++){
                                             if($year.$month==$year.str_pad($i,2,"0",STR_PAD_LEFT)){
-                                                echo '<a href="'.U('Inspect/score_statis',array('year'=>$year,'month'=>$i)).'" class="btn btn-info" style="padding:8px 18px;">'.$i.'月</a>';
+                                                echo '<a href="'.U('Inspect/public_score_statis_detail',array('year'=>$year,'month'=>$i,'did'=>$department['id'])).'" class="btn btn-info" style="padding:8px 18px;">'.$i.'月</a>';
                                             }else{
-                                                echo '<a href="'.U('Inspect/score_statis',array('year'=>$year,'month'=>$i)).'" class="btn btn-default" style="padding:8px 18px;">'.$i.'月</a>';
+                                                echo '<a href="'.U('Inspect/public_score_statis_detail',array('year'=>$year,'month'=>$i,'did'=>$department['id'])).'" class="btn btn-default" style="padding:8px 18px;">'.$i.'月</a>';
                                             }
                                         }
                                         ?>
                                         <?php if($year<date('Y')){ ?>
-                                            <a href="{:U('Inspect/score_statis',array('year'=>$nextyear,'month'=>'01'))}" class="btn btn-default" style="padding:8px 18px;">下一年</a>
+                                            <a href="{:U('Inspect/public_score_statis_detail',array('year'=>$nextyear,'month'=>'01','did'=>$department['id']))}" class="btn btn-default" style="padding:8px 18px;">下一年</a>
                                         <?php } ?>
                                     </div>
 
@@ -60,7 +61,7 @@
                                     </tr>
                                     <foreach name="lists" item="row"> 
                                     <tr>
-                                        <td class="taskOptions"><a href="{:U('Inspect/public_score_statis_detail',array('year'=>$year,'month'=>$month,'did'=>$row['id']))}" title="查看部门详情">{$row.department}</a></td>
+                                        <td class="taskOptions">{$row.department}</td>
                                         <td class="taskOptions">{$row.year_op_num}</td>
                                         <td class="taskOptions">{$row.year_score_num}</td>
                                         <td class="taskOptions">{$row.year_score_average}</td>
@@ -71,17 +72,6 @@
                                         <td class="taskOptions">{$row.month_average}</td>
                                     </tr>
                                     </foreach>
-                                    <tr class="black">
-                                        <td class="taskOptions" data="">公司</td>
-                                        <td class="taskOptions" data="">{$heji.yearxms}</td>
-                                        <td class="taskOptions" data="">{$heji.yearrenshu}</td>
-                                        <td class="taskOptions" data="">{$heji.yearzsr}</td>
-                                        <td class="taskOptions" data="">{$heji.yearzml}</td>
-                                        <td class="taskOptions" data="">{$heji.monthxms}</td>
-                                        <td class="taskOptions" data="">{$heji.monthrenshu}</td>
-                                        <td class="taskOptions" data="">{$heji.monthzsr}</td>
-                                        <td class="taskOptions" data="">{$heji.monthzml}</td>
-                                    </tr>
                                 </table>
                                 </div><!-- /.box-body -->
                                  <div class="box-footer clearfix">

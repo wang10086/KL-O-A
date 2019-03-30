@@ -1801,4 +1801,14 @@ class AjaxController extends Controller {
         }
         return $data;
     }
+
+    //获取满意度二维码
+    public function get_code(){
+        header("Content-type: text/html; charset=utf-8");
+        $url_info       = I('url_info');
+        $change         = array('&amp;'=>'&');
+        $url_info       = strtr($url_info,$change);
+        $QR_Code        = QR_code($url_info);
+        $this->ajaxReturn($QR_Code,'json');
+    }
 }

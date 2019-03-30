@@ -65,7 +65,7 @@
                                     <foreach name="lists" item="row"> 
                                     <tr>
                                         <td>{$row.op_id}</td>
-                                        <td><?php if($row['status']==1){ echo "<span class='green'>".$row['group_id']."</span>";}elseif($row['status']==2){ echo "<span class='red' title='".$row['nogroup']."'>不成团</span>";}else{ echo '未成团';} ?></td>
+                                        <td><?php if($row['status']==1){ echo "<span class='green'>".$row['group_id']."</span> <i class='fa  fa-qrcode' title='获取满意度二维码' style='color:#3CF; margin-left:8px; cursor:pointer;' onClick=\"get_qrcode(`/index.php?m=Main&c=Op&a=qrcode&opid=$row[op_id]`)\"></i>";}elseif($row['status']==2){ echo "<span class='red' title='".$row['nogroup']."'>不成团</span>";}else{ echo '未成团';} ?></td>
                                         <td><div class="tdbox_long"><a href="{:U('Op/plans_follow',array('opid'=>$row['op_id']))}" title="{$row.project}">{$row.project}</a></div></td>
                                         <td>{$row.number}人</td>
                                         <!--
@@ -217,6 +217,18 @@
             cancel: true //为true等价于function(){}
         });
 
+    }
+
+    //获取评分二维码
+    function get_qrcode(url) {
+        art.dialog.open(url,{
+            id:'qrcode',
+            lock:true,
+            title: '二维码',
+            width:600,
+            height:400,
+            fixed: true,
+        });
     }
 
 </script>
