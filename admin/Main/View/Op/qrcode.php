@@ -43,13 +43,13 @@
         <script type="text/javascript">
             function show_code(){
                 var url_info   = $('#url_info').val();
-                alert(url_info);
                 $.ajax({
                     type: "POST",
                     url:  "{:U('Ajax/get_code')}",
                     dataType: 'JSON',
                     data: {url_info:url_info},
                     success:function(msg){
+                        alert(msg);
                         $('#qrcode').attr('src',msg);
                     },
                     error:function(){
