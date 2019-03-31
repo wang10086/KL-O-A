@@ -48,7 +48,6 @@
                     dataType: 'JSON',
                     data: {url_info:url_info},
                     success:function(msg){
-                        alert(msg);
                         $('#qrcode').attr('src',msg);
                     },
                     error:function(){
