@@ -1808,6 +1808,7 @@ class AjaxController extends Controller {
         $url_info       = I('url_info');
         $change         = array('&amp;'=>'&');
         $url_info       = strtr($url_info,$change);
+        $this->ajaxReturn($url_info);
         $QR_Code        = QR_code($url_info);
         $this->ajaxReturn($QR_Code,'json');
     }
