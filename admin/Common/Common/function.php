@@ -3325,11 +3325,23 @@ function updatekpi($month,$user){
 
                         //公司顾客满意度-安全品控部经理
                         if ($v['quota_id']==213){
-                            $score_lists            = get_month_satisfaction($v); //评分列表
+                            /*$score_lists            = get_month_satisfaction($v); //评分列表
                             $opids                  = implode(',',array_column($score_lists,'op_id'));
                             $satisfaction           = get_manyidu($score_lists); //满意度
                             $complete               = ($satisfaction*100).'%';
-                            $url                    = U('Inspect/score',array('kpi_opids'=>$opids));
+                            $url                    = U('Inspect/score',array('kpi_opids'=>$opids));*/
+
+                            $year                       = $v['year'];
+                            $mm                         = substr($v['month'],4,2);
+                            $yearMonth                  = $year.$mm;
+                            $yw_departs                 = C('YW_DEPARTS');  //业务部门id
+                            $where                      = array();
+                            $where['id']                = array('in',$yw_departs);
+                            $departments                = M('salary_department')->field('id,department')->where($where)->select();
+                            $department_data            = get_company_score_statis($departments,$yearMonth); //部门当月合计
+                            $company_data               = get_company_sum_score_statis($department_data); //公司合计
+                            $complete                   = $company_data['month_average'];
+                            $url                        = U('Inspect/score_statis',array('year'=>$year,'month'=>$mm));
                         }
 
                         //员工满意度-安全品控部经理(内部员工满意度)

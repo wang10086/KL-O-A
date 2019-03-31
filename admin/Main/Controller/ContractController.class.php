@@ -12,8 +12,8 @@ class ContractController extends BaseController {
     
     protected $_pagetitle_ = '合同管理';
     protected $_pagedesc_  = '';
-    
-	
+
+
     // @@@NODE-3###index###合同列表###
     public function index(){
         $this->title('合同管理');
@@ -418,5 +418,38 @@ class ContractController extends BaseController {
         return $data;
     }*/
 
+    //项目合同
+    public function op_list(){
+        $opid	                            = I('opid',0);
+        $gid	                            = I('gid',0);
+        $cid	                            = I('cid','');
+        $key	                            = I('key','');
+
+        $where                              = array();
+        if($key)    $where['o.project']		= array('like','%'.$key.'%');
+        if($opid)	$where['o.op_id']	    = $opid;
+        if($gid)    $where['o.group_id']	= $gid;
+        if($cid)    $where['c.contract_id']	= array('like','%'.$cid.'%');
+        $where[trim('o.group_id')]          = array('neq','');
+        $field                              = 'o.project,o.group_id,o.op_id,o.create_user,o.create_user_name,c.id as cid,c.contract_id,c.contract_amount,c.status';
+
+        /*if(!rolemenu(array('Contract/confirm'))){
+            $where['c.create_user']	= cookie('userid');
+        }*/
+
+        //分页
+        $pagecount                          = M()->table('__OP__ as o')->join('__CONTRACT__ as c on c.op_id = o.op_id','left')->field($field)->where($where)->count();
+        $page                               = new Page($pagecount, P::PAGE_SIZE);
+        $this->pages                        = $pagecount>P::PAGE_SIZE ? $page->show():'';
+
+        $lists = M()->table('__OP__ as o')->join('__CONTRACT__ as c on c.op_id = o.op_id','left')->where($where)->field($field)->limit($page->firstRow . ',' . $page->listRows)->order($this->orders('o.create_time'))->select();
+        foreach($lists as $k=>$v){
+            $lists[$k]['has_contract']      = $v['cid']? '<span class="green">有合同</span>' : '<span class="red">无合同</span>';
+            $lists[$k]['strstatus']	        = $v['status'] ? '<span class="green">已确认</span>' : '<span class="red">未确认</span>';
+        }
+
+        $this->lists                        = $lists;
+        $this->display();
+    }
 
 }

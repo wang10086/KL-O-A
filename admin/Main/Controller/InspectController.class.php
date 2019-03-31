@@ -497,80 +497,16 @@ class InspectController extends BaseController{
         $where                      = array();
         $where['id']                = array('in',$yw_departs);
         $departments                = M('salary_department')->field('id,department')->where($where)->select();
-        $department_data            = $this->get_company_score_statis($departments,$yearMonth); //部门当月合计
+        $department_data            = get_company_score_statis($departments,$yearMonth); //部门当月合计
+        $company_data               = get_company_sum_score_statis($department_data); //公司合计
 
+        $this->company              = $company_data;
         $this->lists                = $department_data;
         $this->year 	            = $year;
         $this->month 	            = $month;
         $this->prveyear             = $year-1;
         $this->nextyear             = $year+1;
         $this->display();
-    }
-
-    //部门当月合计
-    private function get_company_score_statis($departments,$yearMonth){
-        $info                               = array();
-        foreach ($departments as $k=>$v){
-            $account_lists                  = get_department_businessman($v['id']);
-            $year                           = substr($yearMonth,0,4);
-            $year_cycle_times               = get_year_cycle($year);
-            //年度满意度统计
-            $year_op_num                    = 0; //项目数
-            $year_score_num                 = 0; //已评分项目数
-            $year_score_average             = 0; //已评分满意度
-            $year_sum_average               = 0;
-            $year_account_num               = 0;
-            if (is_array($account_lists)){
-                foreach ($account_lists as $key=>$value){
-                    //$value['id']            = 59;
-                    //获取当月月度累计毛利额目标值(如果毛利额系数目标为0,则不考核)
-                    $gross_margin           = get_gross_margin($yearMonth,$value['id'],1);
-                    $year_data              = get_satisfied_kpi_data($value['id'],$year_cycle_times['beginTime'],$year_cycle_times['endTime'],$gross_margin);
-                    $year_op_num            += $year_data['op_num'];
-                    $year_score_num         += $year_data['score_num'];
-                    $ys_average             = str_replace('%','',$year_data['score_average']);
-                    $year_score_average     += $ys_average;
-                    $y_complete             = str_replace('%','',$year_data['complete']);
-                    $year_sum_average       += $y_complete; //总得分
-                    $year_account_num++;
-                }
-            }
-            $info[$k]['id']                 = $v['id'];
-            $info[$k]['department']         = $v['department'];
-            $info[$k]['year_op_num']        = $year_op_num;
-            $info[$k]['year_score_num']     = $year_score_num;
-            $info[$k]['year_score_average'] = round($year_score_average/$year_score_num,2).'%';
-            $info[$k]['year_average']       = round($year_sum_average/$year_account_num,2).'%';
-
-
-            //当月满意度统计
-            $cycle_times                    = get_cycle($yearMonth);
-            $month_op_num                   = 0; //项目数
-            $month_score_num                = 0; //已评分项目数
-            $month_score_average            = 0; //已评分满意度
-            $month_sum_average              = 0; //
-            $month_account_num              = 0;
-            if (is_array($account_lists)){
-                foreach ($account_lists as $key=>$value){
-                    //$value['id']            = 59;
-                    //获取当月月度累计毛利额目标值(如果毛利额系数目标为0,则不考核)
-                    $gross_margin           = get_gross_margin($yearMonth,$value['id'],1);
-                    $month_data             = get_satisfied_kpi_data($value['id'],$cycle_times['begintime'],$cycle_times['endtime'],$gross_margin);
-                    $month_op_num           += $month_data['op_num'];
-                    $month_score_num        += $month_data['score_num'];
-                    $s_average              = str_replace('%','',$month_data['score_average']);
-                    $month_score_average    += $s_average;
-                    $complete               = str_replace('%','',$month_data['complete']);
-                    $month_sum_average      += $complete; //总得分
-                    $month_account_num++;
-                }
-            }
-            $info[$k]['month_op_num']       = $month_op_num;
-            $info[$k]['month_score_num']    = $month_score_num;
-            $info[$k]['month_score_average']= round($month_score_average/$month_score_num,2).'%';
-            $info[$k]['month_average']      = round($month_sum_average/$month_account_num,2).'%';
-        }
-        return $info;
     }
 
 
@@ -584,7 +520,7 @@ class InspectController extends BaseController{
         $where                      = array();
         $where['id']                = $department_id;
         $department                 = M('salary_department')->field('id,department')->where($where)->find();
-        //$department_data            = $this->get_company_score_statis($departments,$yearMonth); //部门当月合计
+        //$department_data            = get_company_score_statis($departments,$yearMonth); //部门当月合计
 
         $this->lists                = $department_data;
         $this->department           = $department;

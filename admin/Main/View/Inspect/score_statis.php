@@ -73,14 +73,14 @@
                                     </foreach>
                                     <tr class="black">
                                         <td class="taskOptions" data="">公司</td>
-                                        <td class="taskOptions" data="">{$heji.yearxms}</td>
-                                        <td class="taskOptions" data="">{$heji.yearrenshu}</td>
-                                        <td class="taskOptions" data="">{$heji.yearzsr}</td>
-                                        <td class="taskOptions" data="">{$heji.yearzml}</td>
-                                        <td class="taskOptions" data="">{$heji.monthxms}</td>
-                                        <td class="taskOptions" data="">{$heji.monthrenshu}</td>
-                                        <td class="taskOptions" data="">{$heji.monthzsr}</td>
-                                        <td class="taskOptions" data="">{$heji.monthzml}</td>
+                                        <td class="taskOptions">{$company.year_op_num}</td>
+                                        <td class="taskOptions">{$company.year_score_num}</td>
+                                        <td class="taskOptions">{$company.year_score_average}</td>
+                                        <td class="taskOptions">{$company.year_average}</td>
+                                        <td class="taskOptions">{$company.month_op_num}</td>
+                                        <td class="taskOptions">{$company.month_score_num}</td>
+                                        <td class="taskOptions">{$company.month_score_average}</td>
+                                        <td class="taskOptions">{$company.month_average}</td>
                                     </tr>
                                 </table>
                                 </div><!-- /.box-body -->
