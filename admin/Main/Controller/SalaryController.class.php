@@ -1514,7 +1514,7 @@ class SalaryController extends BaseController {
         $wage['s.datetime']                 = $datetime;
         if ($name) $wage['a.user_name']     = array('eq',$name);
         if ($archives) $wage['a.archives']  = $archives;
-        $wagesLists                         = M()->table('__SALARY_WAGES_MONTH__ as s')->field('s.*')->join('__ACCOUNT__ as a on a.id=s.account_id','left')->where($wage)->order('a.departmentid asc')->select();
+        $wagesLists                         = M()->table('__SALARY_WAGES_MONTH__ as s')->field('s.*')->join('__ACCOUNT__ as a on a.id=s.account_id','left')->where($wage)->order('a.departmentid ASC')->select();
 
          if ($wagesLists){
              $personWagesLists              = $wagesLists; //获取员工个人薪资信息
