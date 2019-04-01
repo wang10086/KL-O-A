@@ -1529,7 +1529,7 @@ class SalaryController extends BaseController {
              $status                        = $sign_status['status'];
          }else{
             $where                          = array();
-            $where['status']                = array('neq',2);   //未删除
+            $where['status']                = array('eq',0);   //未删除 未停用
             $where['id']                    = array('gt',10);
             if ($name) $where['nickname']   = array('like','%'.$name.'%');
             if ($archives)$where['archives']= $archives;
