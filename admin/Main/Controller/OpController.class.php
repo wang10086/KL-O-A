@@ -3363,7 +3363,7 @@ class OpController extends BaseController {
         }
     }
 
-    //教务获取满意度二维码
+    //获取满意度二维码
     public function qrcode(){
         $opid           = I('opid');
         $this->title    = M('op')->where(array('op_id'=>$opid))->getField('project');

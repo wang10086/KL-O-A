@@ -1320,7 +1320,7 @@ class AjaxController extends Controller {
         //$arr_labour_ids                 = array_column($lists,'labour_id'); //工会会费
         //$arr_specialdeduction_ids       = array_column($lists,'specialdeduction_id'); //专项附加扣除
         //$arr_subsidy_ids                = array_column($lists,'subsidy_id'); //补贴(住房/电脑/外地补贴)
-        //$arr_withholding_tokens         = array_column($lists,'withholding_token'); //代扣代缴
+        $arr_withholding_tokens         = array_column($lists,'withholding_token'); //代扣代缴
         $arr_income_tokens              = array_column($lists,'income_token'); //其他收入
 
         $stu_data                       = array();
@@ -1332,7 +1332,7 @@ class AjaxController extends Controller {
         //M('salary_labour')->where(array('id'=>array('in',$arr_labour_ids)))->save($stu_data); //工会会费
         //M('salary_specialdeduction')->where(array('id'=>array('in',$arr_specialdeduction_ids)))->save($stu_data); //专项附加扣除
         //M('salary_subsidy')->where(array('id'=>array('in',$arr_subsidy_ids)))->save($stu_data); //补贴
-        //M('salary_withholding')->where(array('token'=>array('in',$arr_withholding_tokens)))->save($stu_data); //代扣代缴
+        M('salary_withholding')->where(array('token'=>array('in',$arr_withholding_tokens)))->save($stu_data); //代扣代缴
         M('salary_income')->where(array('income_token'=>array('in',$arr_income_tokens)))->save($stu_data); //其他收入
 
         $wages_month_del                = M('salary_wages_month')->where($datetime)->delete();
