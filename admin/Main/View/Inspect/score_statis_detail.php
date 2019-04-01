@@ -61,7 +61,7 @@
                                     </tr>
                                     <foreach name="lists" item="row"> 
                                     <tr>
-                                        <td class="taskOptions">{$row.username}</td>
+                                        <td class="taskOptions"><a href="{:U('Inspect/public_satisfied',array('year'=>$year,'month'=>$month,'uid'=>$row['userid']))}">{$row.username}</a></td>
                                         <td class="taskOptions">{$row.year_op_num}</td>
                                         <td class="taskOptions">{$row.year_score_num}</td>
                                         <td class="taskOptions">{$row.year_score_average}</td>
