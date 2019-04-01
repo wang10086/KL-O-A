@@ -1518,8 +1518,13 @@ class SalaryController extends BaseController {
 
          if ($wagesLists){
              $personWagesLists              = $wagesLists; //获取员工个人薪资信息
-             $departmentWagesLists          = M('salary_departmen_count')->where(array('datetime'=>$datetime))->select(); //部门合计
-             $companyWagesLists             = M('salary_count_money')->where(array('datetime'=>$datetime))->find(); //公司合计
+             if ($archives ==0){ //全部数据
+                 $departmentWagesLists           = M('salary_departmen_count')->where(array('datetime'=>$datetime))->select(); //部门合计
+                 $companyWagesLists              = M('salary_count_money')->where(array('datetime'=>$datetime))->find(); //公司合计
+             }else{
+                 $departmentWagesLists           = $mod->get_department_wagesList($personWagesLists); //部门合计
+                 $companyWagesLists              = $mod->get_company_wages($personWagesLists); //公司合计 //公司合计
+             }
              $sign_status                   = $mod->get_salary_status($datetime); //签字及审核状态
              $status                        = $sign_status['status'];
          }else{
@@ -1732,11 +1737,16 @@ class SalaryController extends BaseController {
         $wage['s.datetime']                 = $datetime;
         if ($archives) $wage['a.archives']  = $archives;
         $wagesLists                         = M()->table('__SALARY_WAGES_MONTH__ as s')->field('s.*,a.id as aid,a.ID_number,a.Salary_card_number')->join('__ACCOUNT__ as a on a.id=s.account_id','left')->where($wage)->select();
-        
+
         if ($wagesLists){
             $personWagesLists               = $wagesLists; //获取员工个人薪资信息
-            $departmentWagesLists           = M('salary_departmen_count')->where(array('datetime'=>$datetime))->select(); //部门合计
-            $companyWagesLists              = M('salary_count_money')->where(array('datetime'=>$datetime))->find(); //公司合计
+            if ($archives ==0){ //全部数据
+                $departmentWagesLists           = M('salary_departmen_count')->where(array('datetime'=>$datetime))->select(); //部门合计
+                $companyWagesLists              = M('salary_count_money')->where(array('datetime'=>$datetime))->find(); //公司合计
+            }else{
+                $departmentWagesLists           = $mod->get_department_wagesList($personWagesLists); //部门合计
+                $companyWagesLists              = $mod->get_company_wages($personWagesLists); //公司合计 //公司合计
+            }
         }else{
             $where                          = array();
             $where['status']                = array('neq',2);   //未删除

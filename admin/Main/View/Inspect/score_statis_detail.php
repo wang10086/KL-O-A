@@ -45,7 +45,7 @@
 
                                 <table class="table table-bordered dataTable fontmini" id="tablelist" style="margin-top:10px;">
                                     <tr>
-                                        <th class="sorting" style="text-align: center;" rowspan="2">部门</th>
+                                        <th class="sorting" style="text-align: center;" rowspan="2">姓名</th>
                                         <th colspan="4" style="text-align: center;">{$year}年累计</th>
                                         <th colspan="4" style="text-align: center;">{$month}月累计</th>
                                     </tr>
