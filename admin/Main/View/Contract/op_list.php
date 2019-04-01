@@ -38,9 +38,6 @@
                                             <if condition="rolemenu(array('Contract/detail'))">
                                             <th width="60" class="taskOptions">详情</th>
                                             </if>
-                                            <if condition="rolemenu(array('Contract/add'))">
-                                            <th width="60" class="taskOptions">编辑</th>
-                                            </if>
                                             <!-- 
                                             <if condition="rolemenu(array('Contract/del'))">
                                             <th width="60" class="taskOptions">删除</th>
@@ -58,12 +55,7 @@
                                             <!--<td>{$row.create_time|date='y-m-d H:i',###}</td>-->
                                             <if condition="rolemenu(array('Contract/detail'))">
                                             <td class="taskOptions">
-                                            <button onClick="javascript:window.location.href='{:U('Contract/detail',array('id'=>$row['id']))}';" title="详情" class="btn btn-success  btn-smsm"><i class="fa  fa-building-o"></i></button>
-                                            </td>
-                                            </if>
-                                            <if condition="rolemenu(array('Contract/add'))">
-                                            <td class="taskOptions">
-                                            <button onClick="javascript:window.location.href='{:U('Contract/add',array('id'=>$row['id']))}';" title="修改" class="btn btn-info btn-smsm"><i class="fa fa-pencil"></i></button>
+                                            <button onClick="javascript:window.location.href='{:U('Contract/detail',array('id'=>$row['cid']))}';" title="详情" class="btn btn-success  btn-smsm"><i class="fa  fa-building-o"></i></button>
                                             </td>
                                             </if>
                                             <!--
