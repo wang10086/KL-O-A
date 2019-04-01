@@ -520,9 +520,9 @@ class InspectController extends BaseController{
         $where                      = array();
         $where['id']                = $department_id;
         $department                 = M('salary_department')->field('id,department')->where($where)->find();
-        //$department_data            = get_company_score_statis($departments,$yearMonth); //部门当月合计
+        $lists                      = get_department_person_score_statis($year,$month,$department_id); //获取某个部门每个人的客户满意度
 
-        $this->lists                = $department_data;
+        $this->lists                = $lists;
         $this->department           = $department;
         $this->year 	            = $year;
         $this->month 	            = $month;
@@ -530,4 +530,6 @@ class InspectController extends BaseController{
         $this->nextyear             = $year+1;
         $this->display('score_statis_detail');
     }
+
+
 }
