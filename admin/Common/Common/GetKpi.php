@@ -1179,7 +1179,7 @@ function get_sum_gross_profit($userids,$beginTime,$endTime){
         $average                        = round($op_average_sum/$shishi_num,2)/100; //全部平均值
 
 
-        if ($gross_margin && $gross_margin['monthTarget']==0) { //当月目标为0
+        if ($shishi_num==0 && $gross_margin && $gross_margin['monthTarget']==0) { //当月目标为0
             $complete = '100%';
         }else{
             //总平均分,包括未调查的
