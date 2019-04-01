@@ -1514,7 +1514,7 @@ class SalaryController extends BaseController {
         $wage['s.datetime']                 = $datetime;
         if ($name) $wage['a.user_name']     = array('eq',$name);
         if ($archives) $wage['a.archives']  = $archives;
-        $wagesLists                         = M()->table('__SALARY_WAGES_MONTH__ as s')->field('s.*')->join('__ACCOUNT__ as a on a.id=s.account_id','left')->where($wage)->order('a.departmentid ASC')->select();
+        $wagesLists                         = M()->table('__SALARY_WAGES_MONTH__ as s')->field('s.*')->join('__ACCOUNT__ as a on a.id=s.account_id','left')->where($wage)->order('a.departmentid asc')->select();
 
          if ($wagesLists){
              $personWagesLists              = $wagesLists; //获取员工个人薪资信息
@@ -1534,7 +1534,7 @@ class SalaryController extends BaseController {
             if ($name) $where['nickname']   = array('like','%'.$name.'%');
             if ($archives)$where['archives']= $archives;
 
-            $accounts                       = M('account')->where($where)->select();
+            $accounts                       = M('account')->where($where)->order('departmentid asc')->select();
             $personWagesLists               = $mod->get_person_wages_lists($accounts,$datetime); //获取员工个人薪资信息
             $departmentWagesLists           = $mod->get_department_wagesList($personWagesLists); //部门合计
             $companyWagesLists              = $mod->get_company_wages($personWagesLists); //公司合计
