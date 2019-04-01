@@ -38,7 +38,7 @@
                     <div class="box-header" >
                         <h3 class="box-title">员工薪资列表</h3>
                         <a href="javascript:;" class="btn btn-info btn-sm" onclick="javascript:opensearch('searchtext',500,160);" style="margin: 0.7em 0em 0em 3em;" ><i class="fa fa-search"></i> 搜索</a>
-                        <a  href="{:U('Salary/salary_exportExcel',array('datetime'=>$datetime,'type'=>$type))}" class="btn btn-info btn-sm" style="margin:1em 0em 0em 3em;" />导出 Excel</a>
+                        <a  href="{:U('Salary/salary_exportExcel',array('datetime'=>$datetime,'archives'=>$archives))}" class="btn btn-info btn-sm" style="margin:1em 0em 0em 3em;" />导出 Excel</a>
                         <a class="btn btn-default" onclick="salary2();" style="margin:0.8em 0em 0em 2em;color:#000000;background-color: lightgrey;"><i class="fa fa-print"></i> 打印</a>
 
                         <h3 class="box-title pull-right" style="font-weight:normal; color:#333333;">

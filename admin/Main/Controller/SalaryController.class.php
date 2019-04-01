@@ -1725,13 +1725,14 @@ class SalaryController extends BaseController {
     public function salary_exportExcel(){
         $mod                                = D('Salary');
         $datetime                           = I('datetime');
+        $archives                           = I('archives')?I('archives'):0;
         if (!$datetime) $this->error('导出数据失败');
 
         $wage                               = array();
         $wage['s.datetime']                 = $datetime;
+        if ($archives) $wage['a.archives']  = $archives;
         $wagesLists                         = M()->table('__SALARY_WAGES_MONTH__ as s')->field('s.*,a.id as aid,a.ID_number,a.Salary_card_number')->join('__ACCOUNT__ as a on a.id=s.account_id','left')->where($wage)->select();
-
-
+        
         if ($wagesLists){
             $personWagesLists               = $wagesLists; //获取员工个人薪资信息
             $departmentWagesLists           = M('salary_departmen_count')->where(array('datetime'=>$datetime))->select(); //部门合计
