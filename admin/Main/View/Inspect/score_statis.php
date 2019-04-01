@@ -60,7 +60,7 @@
                                     </tr>
                                     <foreach name="lists" item="row"> 
                                     <tr>
-                                        <td class="taskOptions"><a href="{:U('Inspect/public_score_statis_detail',array('year'=>$year,'month'=>$month,'did'=>$row['id']))}" title="查看部门详情">{$row.department}</a></td>
+                                        <td class="taskOptions"><a href="{:U('Inspect/public_score_statis_detail',array('year'=>$year,'month'=>$month,'did'=>$row['department_id']))}" title="查看部门详情">{$row.department}</a></td>
                                         <td class="taskOptions">{$row.year_op_num}</td>
                                         <td class="taskOptions">{$row.year_score_num}</td>
                                         <td class="taskOptions">{$row.year_score_average}</td>

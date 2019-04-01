@@ -1333,112 +1333,151 @@ function get_sum_gross_profit($userids,$beginTime,$endTime){
     return $data;
 }
 
-/****************************************start**********************************************/
+
 //获取公司合计满意度
- function get_company_sum_score_statis($department_data){
-    $year_op_num                = 0;
-    $year_score_num             = 0;
-    $year_score_average_sum     = 0;
-    $year_average_sum           = 0;
-    $month_op_num               = 0;
-    $month_score_num            = 0;
-    $month_score_average_sum    = 0;
-    $month_average_sum          = 0;
-    $year_score_average_num     = 0;
-    $year_average_num           = 0;
-    $month_score_average_num    = 0;
-    $month_average_num          = 0;
-    foreach ($department_data as $v){
-        $year_op_num            += $v['year_op_num'];
-        $year_score_num         += $v['year_score_num'];
-        $year_score_average_sum += str_replace('%','',$v['year_score_average']);
-        $year_average_sum       += str_replace('%','',$v['year_average']);
-        $month_op_num           += $v['month_op_num'];
-        $month_score_num        += $v['month_score_num'];
-        $month_score_average_sum+= str_replace('%','',$v['month_score_average']);
-        $month_average_sum      += str_replace('%','',$v['month_average']);
-        if ($v['year_score_average'] != '0%') $year_score_average_num++;
-        if ($v['year_average'] != '0%') $year_average_num++;
-        if ($v['month_score_average'] != '0%') $month_score_average_num++;
-        if ($v['month_average'] != '0%') $month_average_num++;
+    function get_company_sum_score_statis($departments,$yearMonth){
+        $year                               = substr($yearMonth,0,4);
+        $month                              = substr($yearMonth,4,2);
+        $department_ids                     = array_column($departments,'id');
+        $where                              = array();
+        $where['p.code']                    = array('like','S%');
+        $where['a.departmentid']            = array('in',$department_ids); //全部业务人员
+        $where['a.status']                  = array('neq',2); //已删除
+        $account_lists                      = M()->table('__ACCOUNT__ as a')->join('__POSITION__ as p on p.id=a.position_id','left')->field('a.*')->where($where)->select();
+        $account_ids                        = array_column($account_lists,'id');
+
+        $year_cycle_times                   = get_year_cycle($year);
+        $month_cycle_times                  = get_cycle($year.$month);
+
+        //该年度实施的团
+        $year_start_time                    = $year_cycle_times['beginTime'];
+        $year_end_time                      = $year_cycle_times['endTime'];
+        $where                              = array();
+        $year_start_time                    = $year_start_time - 4*24*3600; //4天前实施的团
+        $year_end_time                      = $year_end_time - 4*24*3600;
+        $where['c.ret_time']                = array('between',array($year_start_time,$year_end_time));
+        $where['o.create_user']             = array('in',$account_ids);
+        $year_shishi_lists                  = M()->table('__OP_TEAM_CONFIRM__ as c')->join('__OP__ as o on o.op_id = c.op_id','left')->where($where)->select();
+
+        $year_score_lists                   = array();
+        $year_score_num                     = 0; //评分的团个数
+        $year_op_average_sum                = 0; //平均分
+        foreach ($year_shishi_lists as $k=>$v){
+        //获取当年已评分的团
+            $where                          = array();
+            $where['o.op_id']               = $v['op_id'];
+            $year_lists                     = M()->table('__TCS_SCORE__ as s')->field('u.op_id,o.kind,s.id as sid,s.before_sell,s.new_media,s.stay,s.travel,s.content,s.food,s.bus,s.driver,s.guide,s.teacher,s.depth,s.major,s.interest,s.material,s.late,s.manage,s.morality')->join('join __TCS_SCORE_USER__ as u on u.id = s.uid','left')->join('__OP__ as o on o.op_id = u.op_id','left')->where($where)->select();
+
+
+            if ($year_lists){ //已评分
+                $year_score_num++;
+                $year_op_average_data                = get_op_manyidu($year_lists); //单团满意度得分
+                $year_op_average_sum                 += $year_op_average_data;
+                $year_shishi_lists[$k]['score_stu']  = '<span class="green">已评分</span>';
+                $year_shishi_lists[$k]['score_num']  = count($year_lists);
+                $year_shishi_lists[$k]['op_average'] = ($year_op_average_data*100).'%';
+                foreach ($year_lists as $key=>$value){
+                    $year_score_lists[]              = $value;
+                }
+            }else{ //未评分
+                $year_shishi_lists[$k]['score_stu']  = '<span class="red">未评分</span>';
+                $year_shishi_lists[$k]['op_average'] = '0%';
+            }
+        }
+        $year_score_average                    = (round($year_op_average_sum/$year_score_num,4)*100).'%'; //已调查顾客满意度
+        $year_shishi_num                       = count($year_shishi_lists); //所有实施团的数量(包括未调查的数量)
+        $year_average                          = round($year_op_average_sum/$year_shishi_num,4); //全部平均值
+        $year_average                          = ($year_average*100).'%';  //总平均分,包括未调查的
+
+        $data                                   = array();
+        $data['year_op_num']                   = count($year_shishi_lists);
+        $data['year_score_num']                = $year_score_num;
+        $data['year_score_average']            = $year_score_average; //已调查团的满意度
+        $data['year_average']                  = $year_average; //所有顾客满意度(包括未调查)
+        //$data['year_shishi_lists']           = $year_shishi_lists;
+        //$data['year_score_lists']            = $year_score_lists;
+
+        //该月度实施的团
+        $month_start_time                   = $month_cycle_times['begintime'];
+        $month_end_time                     = $month_cycle_times['endtime'];
+        $where                              = array();
+        $month_start_time                   = $month_start_time - 4*24*3600; //4天前实施的团
+        $month_end_time                     = $month_end_time - 4*24*3600;
+        $where['c.ret_time']                = array('between',array($month_start_time,$month_end_time));
+        $where['o.create_user']             = array('in',$account_ids);
+        $month_shishi_lists                 = M()->table('__OP_TEAM_CONFIRM__ as c')->join('__OP__ as o on o.op_id = c.op_id','left')->where($where)->select();
+
+        $month_score_lists                  = array();
+        $month_score_num                    = 0; //评分的团个数
+        $month_op_average_sum               = 0; //平均分
+        foreach ($month_shishi_lists as $k=>$v){
+            //获取当月已评分的团
+            $where                          = array();
+            $where['o.op_id']               = $v['op_id'];
+            $lists                          = M()->table('__TCS_SCORE__ as s')->field('u.op_id,o.kind,s.id as sid,s.before_sell,s.new_media,s.stay,s.travel,s.content,s.food,s.bus,s.driver,s.guide,s.teacher,s.depth,s.major,s.interest,s.material,s.late,s.manage,s.morality')->join('join __TCS_SCORE_USER__ as u on u.id = s.uid','left')->join('__OP__ as o on o.op_id = u.op_id','left')->where($where)->select();
+
+            if ($lists){ //已评分
+                $month_score_num++;
+                $month_op_average_data                = get_op_manyidu($lists); //单团满意度得分
+                $month_op_average_sum                 += $month_op_average_data;
+                $month_shishi_lists[$k]['score_stu']  = '<span class="green">已评分</span>';
+                $month_shishi_lists[$k]['score_num']  = count($lists);
+                $month_shishi_lists[$k]['op_average'] = ($month_op_average_data*100).'%';
+                foreach ($lists as $key=>$value){
+                    $month_score_lists[]              = $value;
+                }
+            }else{ //未评分
+                $month_shishi_lists[$k]['score_stu']  = '<span class="red">未评分</span>';
+                $month_shishi_lists[$k]['op_average'] = '0%';
+            }
+        }
+        $month_score_average                    = (round($month_op_average_sum/$month_score_num,4)*100).'%'; //已调查顾客满意度
+        $month_shishi_num                       = count($month_shishi_lists); //所有实施团的数量(包括未调查的数量)
+        $month_average                          = round($month_op_average_sum/$month_shishi_num,4); //全部平均值
+        $month_average                          = ($month_average*100).'%';  //总平均分,包括未调查的
+
+        $data['month_op_num']                   = count($month_shishi_lists);
+        $data['month_score_num']                = $month_score_num;
+        $data['month_score_average']            = $month_score_average; //已调查团的满意度
+        $data['month_average']                  = $month_average; //所有顾客满意度(包括未调查)
+        //$data['month_shishi_lists']           = $month_shishi_lists;
+        //$data['month_score_lists']            = $month_score_lists;
+        return $data;
     }
-    $data                       = array();
-    $data['year_op_num']        = $year_op_num;
-    $data['year_score_num']     = $year_score_num;
-    $data['year_score_average'] = round($year_score_average_sum/$year_score_average_num,2).'%';
-    $data['year_average']       = round($year_average_sum/$year_average_num,2).'%';
-    $data['month_op_num']       = $month_op_num;
-    $data['month_score_num']    = $month_score_num;
-    $data['month_score_average']= round($month_score_average_sum/$month_score_average_num,2).'%';
-    $data['month_average']      = round($month_average_sum/$month_average_num,2).'%';
-    return $data;
-}
+
 //获取部门当月合计
- function get_company_score_statis($departments,$yearMonth){
-    $info                               = array();
-    foreach ($departments as $k=>$v){
-        $account_lists                  = get_department_businessman($v['id']);
-        $year                           = substr($yearMonth,0,4);
-        $year_cycle_times               = get_year_cycle($year);
-        //年度满意度统计
-        $year_op_num                    = 0; //项目数
-        $year_score_num                 = 0; //已评分项目数
-        $year_score_average             = 0; //已评分满意度
-        $year_sum_average               = 0;
-        $year_account_num               = 0;
-        if (is_array($account_lists)){
-            foreach ($account_lists as $key=>$value){
-                //$value['id']            = 59;
-                //获取当月月度累计毛利额目标值(如果毛利额系数目标为0,则不考核)
-                $gross_margin           = get_gross_margin($yearMonth,$value['id'],1);
-                $year_data              = get_satisfied_kpi_data($value['id'],$year_cycle_times['beginTime'],$year_cycle_times['endTime'],$gross_margin);
-                $year_op_num            += $year_data['op_num'];
-                $year_score_num         += $year_data['score_num'];
-                $ys_average             = str_replace('%','',$year_data['score_average']);
-                $year_score_average     += $ys_average;
-                $y_complete             = str_replace('%','',$year_data['complete']);
-                $year_sum_average       += $y_complete; //总得分
-                $year_account_num++;
-            }
+    function get_company_score_statis($departments,$yearMonth){
+        $year                               = substr($yearMonth,0,4);
+        $month                              = substr($yearMonth,4,2);
+        foreach ($departments as $k=>$v){
+            $info[$v['department']]         = get_department_person_score_statis($year,$month,$v['id']);
         }
-        $info[$k]['id']                 = $v['id'];
-        $info[$k]['department']         = $v['department'];
-        $info[$k]['year_op_num']        = $year_op_num;
-        $info[$k]['year_score_num']     = $year_score_num;
-        $info[$k]['year_score_average'] = round($year_score_average/$year_score_num,2).'%';
-        $info[$k]['year_average']       = round($year_sum_average/$year_account_num,2).'%';
 
-
-        //当月满意度统计
-        $cycle_times                    = get_cycle($yearMonth);
-        $month_op_num                   = 0; //项目数
-        $month_score_num                = 0; //已评分项目数
-        $month_score_average            = 0; //已评分满意度
-        $month_sum_average              = 0; //
-        $month_account_num              = 0;
-        if (is_array($account_lists)){
-            foreach ($account_lists as $key=>$value){
-                //$value['id']            = 59;
-                //获取当月月度累计毛利额目标值(如果毛利额系数目标为0,则不考核)
-                $gross_margin           = get_gross_margin($yearMonth,$value['id'],1);
-                $month_data             = get_satisfied_kpi_data($value['id'],$cycle_times['begintime'],$cycle_times['endtime'],$gross_margin);
-                $month_op_num           += $month_data['op_num'];
-                $month_score_num        += $month_data['score_num'];
-                $s_average              = str_replace('%','',$month_data['score_average']);
-                $month_score_average    += $s_average;
-                $complete               = str_replace('%','',$month_data['complete']);
-                $month_sum_average      += $complete; //总得分
-                $month_account_num++;
-            }
+        $data                               = array();
+        foreach ($info as $k=>$v){
+            $arr_info                       = array();
+            $year_op_num                    = array_sum(array_column($v,'year_op_num'));
+            $year_score_num                 = array_sum(array_column($v,'year_score_num'));
+            $year_score_average             = array_sum(explode(',',str_replace('%','',implode(',',array_column($v,'year_score_average')))));
+            $year_average                   = array_sum(explode(',',str_replace('%','',implode(',',array_column($v,'year_average')))));
+            $month_op_num                   = array_sum(array_column($v,'month_op_num'));
+            $month_score_num                = array_sum(array_column($v,'month_score_num'));
+            $month_score_average            = array_sum(explode(',',str_replace('%','',implode(',',array_column($v,'month_score_average')))));
+            $month_average                  = array_sum(explode(',',str_replace('%','',implode(',',array_column($v,'month_average')))));
+            $arr_info['department_id']      = M('salary_department')->where(array('department'=>$k))->getField('id');
+            $arr_info['department']         = $k;
+            $arr_info['year_op_num']        = $year_op_num;
+            $arr_info['year_score_num']     = $year_score_num;
+            $arr_info['year_score_average'] = round($year_score_average/$year_score_num,2).'%';
+            $arr_info['year_average']       = round($year_average/$year_op_num,2).'%';
+            $arr_info['month_op_num']       = $month_op_num;
+            $arr_info['month_score_num']    = $month_score_num;
+            $arr_info['month_score_average']= round($month_score_average/$month_score_num,2).'%';
+            $arr_info['month_average']      = round($month_average/$month_op_num,2).'%';
+            $data[$k]                       = $arr_info;
         }
-        $info[$k]['month_op_num']       = $month_op_num;
-        $info[$k]['month_score_num']    = $month_score_num;
-        $info[$k]['month_score_average']= round($month_score_average/$month_score_num,2).'%';
-        $info[$k]['month_average']      = round($month_sum_average/$month_account_num,2).'%';
+        return $data;
     }
-    return $info;
-}
-    /****************************************end**********************************************/
 
     /**获取某个部门每个人的客户满意度
      * @param $year
@@ -1447,17 +1486,6 @@ function get_sum_gross_profit($userids,$beginTime,$endTime){
      */
 function get_department_person_score_statis($year,$month,$department_id){
     $account_lists                      = get_department_businessman($department_id);
-
-    $userid                             = 0; //项目数
-    $year_score_num                     = 0; //已评分项目数
-    $year_score_average                 = 0; //已评分满意度
-    $year_sum_average                   = 0;
-    $year_average                       = 0;
-    $month_op_num                       = 0; //项目数
-    $month_score_num                    = 0; //已评分项目数
-    $month_score_average                = 0; //已评分满意度
-    $month_sum_average                  = 0;
-    $month_average                      = 0;
 
     foreach ($account_lists as $k=>$v){
         $month_data                     = get_satisfied_person($v['id'],$year,$month,'m'); //获取月度信息

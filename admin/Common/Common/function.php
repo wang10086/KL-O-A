@@ -3339,7 +3339,7 @@ function updatekpi($month,$user){
                             $where['id']                = array('in',$yw_departs);
                             $departments                = M('salary_department')->field('id,department')->where($where)->select();
                             $department_data            = get_company_score_statis($departments,$yearMonth); //部门当月合计
-                            $company_data               = get_company_sum_score_statis($department_data); //公司合计
+                            $company_data               = get_company_sum_score_statis($departments,$yearMonth); //公司合计
                             $complete                   = $company_data['month_average'];
                             $url                        = U('Inspect/score_statis',array('year'=>$year,'month'=>$mm));
                         }
