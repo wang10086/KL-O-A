@@ -1829,82 +1829,6 @@ function set_quarter($year,$quarter){
     return $data;
 }
 
-//20190302注释
-/*function addkpiinfo($year,$month,$user){
-	$yearm = $year.sprintf('%02s', $month);
-
-
-	//获取用户信息
-	$acc = M('account')->find($user);
-
-	//判断月份是否存在
-	$where = array();
-	$where['month']   = $yearm;
-	$where['user_id'] = $user;
-
-	//查询这个月的KPI信息
-	$kpi = M('kpi')->where($where)->find();
-
-	//如果不存在新增
-	if(!$kpi){
-		//获取评分人信息
-		$pfr = M('auth')->where(array('role_id'=>$acc['roleid']))->find();
-		$info['ex_user_id']     = $pfr ? $pfr['pdca_auth'] : 0;
-		$info['mk_user_id']     = $pfr ? $pfr['pdca_auth'] : 0;
-		$info['user_id']        = $acc['id'];
-		$info['user_name']      = $acc['nickname'];
-		$info['role_id']        = $acc['roleid'];
-		$info['status']         = 0;
-		$info['year']           = $year;
-		$info['month']          = $yearm;
-		$info['create_time']    = time();
-		$kpiid = M('kpi')->add($info);
-	}else{
-		$kpiid = $kpi['id'];
-	}
-
-
-
-	//获取考核指标信息
-	$postid = $acc['postid'];
-	$quto   = M()->table('__KPI_POST_QUOTA__ as r')->field('c.*')->join('__KPI_CONFIG__ as c on c.id = r.quotaid')->where(array('r.postid'=>$postid))->select();
-
-	if($quto){
-		foreach($quto as $k=>$v){
-
-
-			//整理数据
-			$data = array();
-			$data['user_id']       = $user;
-			$data['kpi_id']        = $kpiid;
-			$data['year']          = $year;
-			$data['month']         = $yearm;
-			$data['quota_id']      = $v['id'];
-			$data['quota_title']   = $v['quota_title'];
-			$data['quota_content'] = $v['quota_content'];
-			$data['weight']        = $v['weight'];
-			$data['status']        = 0;
-			$data['create_time']   = time();
-
-
-			$where = array();
-			$where['month']     = $yearm;
-			$where['quota_id']  = $v['id'];
-			$where['kpi_id']    = $kpiid;
-			$more = M('kpi_more')->where($where)->find();
-			if(!$more){
-				$zhouqi = set_month($yearm);
-				$data['start_date']      = $zhouqi[0];
-				$data['end_date']        = $zhouqi[1];
-				M('kpi_more')->add($data);
-			}else{
-				M('kpi_more')->data($data)->where(array('id'=>$more['id']))->save();
-			}
-
-		}
-	}
-
-}*/
 
     /**
      * 获取kpi刷新月份
@@ -1935,24 +1859,25 @@ function set_quarter($year,$quarter){
 
 
 function updatekpi($month,$user){
+    $kpi_cycle          = M('account')->where(array('id'=>$user))->getField('kpi_cycle');
+    $cycle_arr_month    = get_kpi_refresh_yearMonth($month,$kpi_cycle);
 
 	$where = array();
 	$where['month']   = array('like','%'.$month.'%');
 	$where['user_id'] = $user;
 
-    if (($month==date('Ym') && date('d')<26) || ($month==(date('Ym')+1) && date('d')>25)){   //只刷新当前月份,避免老数据刷新
+    if (($kpi_cycle == 1 && ($month==date('Ym') && date('d')<26) || ($month==(date('Ym')+1) && date('d')>25)) || (in_array($kpi_cycle,array(2,3,4)) && in_array($month,$cycle_arr_month))){   //只刷新当前月份,避免老数据刷新
     //if ($month==date('Ym')){   //只刷新当前月份,避免老数据刷新
         $quto   = M('kpi_more')->where($where)->select();
         if($quto){
             foreach($quto as $k=>$v){
                 $v['end_date']   = $v['end_date']+86399;
-
                 if($v['automatic']==0){
                     /*if (in_array($v['user_id'],C('KPI_QUARTER')) && $v['month']>201903){ */
-                    if (in_array($v['quota_id'],C('QUARTER_QUOTA_ID')) && $v['month']>201903){
+                    /*if (in_array($v['quota_id'],C('QUARTER_QUOTA_ID')) && $v['month']>201903){
                         //上个季度的结果引用到下个季度
                         $complete                           = get_prev_quarter_kpi_result($v);
-                    }else{
+                    }else{*/
                         //获取月度累计毛利额
                         if($v['quota_id']==1){
                             $newBeginTime                   =get_year_settlement_start_time($v['year']);
@@ -3380,7 +3305,7 @@ function updatekpi($month,$user){
                             $url                    = '';
                         }
 
-                    }
+                   /* }*/
 
                     //已实现自动获取指标值
                     $auto_quta	= array(1,2,3,4,5,6,81,8,9,10,11,15,16,18,20,23,26,21,24,27,32,37,19,22,25,28,33,38,42,45,103,56,113,92,29,34,39,46,102,55,57,58,59,84,87,89,90,111,107,83,66,54,44,12,112,108,100,96,95,65,114,86,85,64,63,62,53,52,41,40,49,80,48,91,79,47,36,35,31,30,82,110,106,99,94,67,124,125,126,127,128,129,130,131,132,133,134,135,136,137,138,139,140,141,143,144,145,146,147,148,149,150,151,153,154,155,156,158,160,161,162,163,167,188,213,214,215,216);
@@ -4866,6 +4791,48 @@ function getQuarterlyCicle($year,$month){
                 break;
         }
         return $yearMonths;
+    }
+
+    /**
+     * 自动刷新KPI的月份
+     * @param $yearMonth
+     * @param $cycle
+     * @return array
+     */
+    function get_kpi_refresh_yearMonth($yearMonth,$cycle){
+        $year                   = substr($yearMonth,0,4);
+        $month                  = substr($yearMonth,4,2);
+        switch ($cycle){
+            case 2: //季度
+                switch ($month){
+                    case '03':
+                        $arr_month  = array($year.'01',$year.'02',$year.'03');
+                        break;
+                    case '06':
+                        $arr_month  = array($year.'04',$year.'05',$year.'06');
+                        break;
+                    case '09':
+                        $arr_month  = array($year.'07',$year.'08',$year.'09');
+                        break;
+                    case '12':
+                        $arr_month  = array($year.'10',$year.'11',$year.'12');
+                        break;
+                }
+                break;
+            case 3: //半年度
+                switch ($month){
+                    case '06':
+                        $arr_month = array($year.'01',$year.'02',$year.'03',$year.'04',$year.'05',$year.'06');
+                        break;
+                    case '12':
+                        $arr_month = array($year.'07',$year.'08',$year.'09',$year.'10',$year.'11',$year.'12');
+                        break;
+                }
+                break;
+            case 4: //年度
+                $arr_month          = array($year.'01',$year.'02',$year.'03',$year.'04',$year.'05',$year.'06',$year.'07',$year.'08',$year.'09',$year.'10',$year.'11',$year.'12');
+        }
+        return $arr_month;
     }
 
     //获取年度的月份
