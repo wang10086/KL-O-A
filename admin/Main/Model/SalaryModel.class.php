@@ -402,11 +402,11 @@ class SalaryModel extends Model
             $data[$k]['Should_distributed'] = ($data[$k]['basic_salary'] - $data[$k]['withdrawing']) + ($data[$k]['performance_salary'] + $data[$k]['Achievements_withdrawing']) + $data[$k]['total'] + $data[$k]['Subsidy'] + $data[$k]['bonus'] + $data[$k]['welfare'] + $data[$k]['housing_subsidy'] + $data[$k]['Other']; //应发工资 = (基本工资 - 考勤扣款) + (绩效工资标准-绩效增减)+业绩提成+带团补助+ 奖金+年终奖+住房补贴+其他补款
             $salary_insurance_list          = M('salary_insurance')->where(array('account_id'=>$v['id']))->order('id desc')->find(); //五险一金
             $data[$k]['insurance_id']       = $salary_insurance_list['id']?$salary_insurance_list['id']:'0';
-            $data[$k]['medical_care']       = round($salary_insurance_list['medical_care_base']*$salary_insurance_list['medical_care_ratio'],2); //医疗保险个人
+            $data[$k]['medical_care']       = round(($salary_insurance_list['medical_care_base']*$salary_insurance_list['medical_care_ratio'])+ $salary_insurance_list['big_price'],2); //医疗保险个人
             $data[$k]['pension_ratio']      = round($salary_insurance_list['pension_base']*$salary_insurance_list['pension_ratio'],2);  //养老保险个人
             $data[$k]['unemployment']       = round($salary_insurance_list['unemployment_base']*$salary_insurance_list['unemployment_ratio'],2);  //失业保险个人
             $data[$k]['accumulation_fund']  = round($salary_insurance_list['accumulation_fund_base']*$salary_insurance_list['accumulation_fund_ratio']);  //公积金个人(不保留小数)
-            $data[$k]['insurance_Total']    = $data[$k]['medical_care'] + $data[$k]['pension_ratio'] + $data[$k]['unemployment'] + $data[$k]['accumulation_fund'] + $salary_insurance_list['big_price']; //个人保险合计
+            $data[$k]['insurance_Total']    = $data[$k]['medical_care'] + $data[$k]['pension_ratio'] + $data[$k]['unemployment'] + $data[$k]['accumulation_fund']; //个人保险合计
 
             $specialdeduction_list          = M('salary_specialdeduction')->where(array('account_id'=>$v['id']))->order('id desc')->find(); //专项附加扣除
             $specialdeduction               = round($specialdeduction_list['children_education'] + $specialdeduction_list['continue_education'] + $specialdeduction_list['health'] + $specialdeduction_list['buy_house'] + $specialdeduction_list['rent_house'] + $specialdeduction_list['support_older'],2); //专项附加扣除合计
@@ -420,7 +420,7 @@ class SalaryModel extends Model
             $labour_list                    = M('salary_labour')->where(array('account_id'=>$v['id']))->order('id desc')->find(); //工会会费信息
             $data[$k]['Labour']             = $labour_list['Labour_money']; //工会会费
             $data[$k]['labour_id']          = $labour_list['id']?$labour_list['id']:'0';
-            $withholding                    = $this->get_withholding($v['id']); //代扣代缴AAAA
+            $withholding                    = $this->get_withholding($v['id']); //代扣代缴
             $data[$k]['withholding_token']  = $withholding['token']; //代扣代缴token
             $data[$k]['summoney']           = $withholding['money']?$withholding['money']:'0.00'; //代扣代缴(税后扣款)
             //实发工资 = 应发工资 - 个人保险合计 - 个人所得税 - 年终奖个税 - 税后扣款 - 工会会费 - 代扣代缴;
