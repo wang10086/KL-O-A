@@ -3097,12 +3097,12 @@ function updatekpi($month,$user){
 
                             if ($shishi && !$need_guide){
                                 //有项目，但无调查项目的，得100分。
-                                $complete = 100;
+                                $complete = '100%';
                             }else{
                                 //平均得分(如果得分>90%,得分100, 如果小于90%,以90%作为满分求百分比)
                                 /*$score = (round($average*100/90,2))*100;
                                 $complete = $average > 0.9 ? 100 : $score;*/
-                                $complete       = $average*100;
+                                $complete       = ($average*100).'%';
 
                             }
                         }
