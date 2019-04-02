@@ -3075,7 +3075,12 @@ function updatekpi($month,$user){
 
                         //季度顾客满意度
                         if ($v['quota_id']==126){
-                            $users          = get_department_users($v['user_id']);
+                            $departments    = get_departments($v['user_id']); //获取所管辖部门
+                            $sum            = get_sum_kpi_score($departments,$v['start_date'],$v['end_date']); //总合计
+                            $complete       = $sum['average'];
+                            $url            = U('Inspect/public_kpi_score',array('uid'=>$v['user_id'],'st'=>$v['start_date'],'et'=>$v['end_date'],'y'=>$v['year']));
+
+                            /*$users          = get_department_users($v['user_id']);
                             $userids        = array_keys($users);
                             $year           = $v['year']?$v['year']:date('Y');
                             $monon          = $v['month']?substr($v['month'],4,2):date('m');
@@ -3101,11 +3106,9 @@ function updatekpi($month,$user){
                                 $complete = '100%';
                             }else{
                                 //平均得分(如果得分>90%,得分100, 如果小于90%,以90%作为满分求百分比)
-                                /*$score = (round($average*100/90,2))*100;
-                                $complete = $average > 0.9 ? 100 : $score;*/
                                 $complete       = ($average*100).'%';
 
-                            }
+                            }*/
                         }
 
                         //季度人事费用率
@@ -4898,4 +4901,50 @@ function get_half_year_cycle($year,$month){
         $where['a.status']                  = array('neq',2); //已删除
         $account_lists                      = M()->table('__ACCOUNT__ as a')->join('__POSITION__ as p on p.id=a.position_id','left')->field('a.*')->where($where)->select();
         return $account_lists;
+    }
+
+    /**
+     * 获取所管辖(所属)部门
+     * @param $userid
+     * @return mixed
+     */
+    function get_departments($userid){
+        switch ($userid){
+            case 32: //王总
+                $department_ids     = array(14,16,2); //14=>沈阳,16=>长春,2=>市场部
+                break;
+            case 38: //杨总
+                $department_ids     = array(7,15); //7=>'京外业务中心',15=>'常规业务中心'
+                break;
+            default:
+                $department_ids     = M('account')->where(array('id'=>$userid))->getField('departmentid');
+        }
+        $where                      = array();
+        if (is_array($department_ids)){
+            $where['id']            = array('in',$department_ids);
+        }else{
+            $where['id']            = $department_ids;
+        }
+        $departments                = M('salary_department')->where($where)->getField('id,department',true);
+        return $departments;
+    }
+
+    /**获取所管辖(所属)部门总满意度
+     * @param $departments
+     * @param $startTime
+     * @param $endTime
+     * @return array
+     */
+    function get_sum_kpi_score($departments,$startTime,$endTime){
+        $department_ids                 = array_keys($departments);
+        $where                          = array();
+        $where['p.code']                = array('like','S%');
+        $where['a.departmentid']        = array('in',$department_ids);
+        $where['a.status']              = array('neq',2); //已删除
+        $account_lists                  = M()->table('__ACCOUNT__ as a')->join('__POSITION__ as p on p.id=a.position_id','left')->field('a.*')->where($where)->select();
+        $account_ids                    = array_column($account_lists,'id');
+        $data                           = quarter_statis($account_ids,$startTime,$endTime);
+        $data['userid']                 = '';
+        $data['username']               = '';
+        return $data;
     }

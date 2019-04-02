@@ -537,7 +537,7 @@ class InspectController extends BaseController{
         $endTime                    = I('et');
         $year                       = I('y');
 
-        $departments                = $this->get_departments($uid);
+        $departments                = get_departments($uid); //获取所管辖部门
         $data                       = array();
         foreach ($departments as $k=>$v){
             $data[$v]['departmentid']= $k;
@@ -545,27 +545,12 @@ class InspectController extends BaseController{
             $data[$v]['info']       = get_department_person_score_statis($year,'',$k,'quarter',$startTime,$endTime); //获取季度某个部门每个人的客户满意度
         }
         $data                       = $this->getdepartment_data_sum($data,$startTime,$endTime);
-        $sum                        = $this->get_sum_kpi_score($departments,$startTime,$endTime); //总合计
-        //P($data);
+        $sum                        = get_sum_kpi_score($departments,$startTime,$endTime); //所管辖(所属)部门总合计
 
         $this->sum                  = $sum;
         $this->lists                = $data;
         $this->year                 = $year;
         $this->display('kpi_score');
-    }
-
-    private function get_sum_kpi_score($departments,$startTime,$endTime){
-        $department_ids                 = array_keys($departments);
-        $where                          = array();
-        $where['p.code']                = array('like','S%');
-        $where['a.departmentid']        = array('in',$department_ids);
-        $where['a.status']              = array('neq',2); //已删除
-        $account_lists                  = M()->table('__ACCOUNT__ as a')->join('__POSITION__ as p on p.id=a.position_id','left')->field('a.*')->where($where)->select();
-        $account_ids                    = array_column($account_lists,'id');
-        $data                           = quarter_statis($account_ids,$startTime,$endTime);
-        $data['userid']                 = '';
-        $data['username']               = '';
-        return $data;
     }
 
     private function getdepartment_data_sum($data,$startTime,$endTime){
@@ -581,25 +566,5 @@ class InspectController extends BaseController{
         return $data;
     }
 
-    private function get_departments($userid){
-        switch ($userid){
-            case 32: //王总
-                $department_ids     = array(14,16,2); //14=>沈阳,16=>长春,2=>市场部
-                break;
-            case 38: //杨总
-                $department_ids     = array(7,15); //7=>'京外业务中心',15=>'常规业务中心'
-                break;
-            default:
-                $department_ids     = M('account')->where(array('id'=>$userid))->getField('departmentid');
-        }
-        $where                      = array();
-        if (is_array($department_ids)){
-            $where['id']            = array('in',$department_ids);
-        }else{
-            $where['id']            = $department_ids;
-        }
-        $departments                = M('salary_department')->where($where)->getField('id,department',true);
-        return $departments;
-    }
 
 }
