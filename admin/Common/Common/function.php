@@ -3092,8 +3092,9 @@ function updatekpi($month,$user){
                             $where['in_begin_day']  = array('between',array($v['start_date'],$v['end_date']));
                             $where['manager_id']    = array('in',$userids);
                             $need_guide             = M('op_guide_confirm')->where($where)->count();
-                            $kpi_opids              = $shishi?implode(',',$shishi):'0';
-                            $url                    = U('Inspect/score',array('kpi_opids'=>$kpi_opids));
+                            //$kpi_opids              = $shishi?implode(',',$shishi):'0';
+                            //$url                    = U('Inspect/score',array('kpi_opids'=>$kpi_opids));
+                            $url                    = U('Inspect/public_kpi_score',array('uid'=>$v['user_id'],'st'=>$v['start_date'],'et'=>$v['end_date'],'y'=>$v['year']));
 
                             if ($shishi && !$need_guide){
                                 //有项目，但无调查项目的，得100分。
