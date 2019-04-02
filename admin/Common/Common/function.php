@@ -3077,7 +3077,7 @@ function updatekpi($month,$user){
                         if ($v['quota_id']==126){
                             $departments    = get_departments($v['user_id']); //获取所管辖部门
                             $sum            = get_sum_kpi_score($departments,$v['start_date'],$v['end_date']); //总合计
-                            $complete       = $sum['average'];
+                            $complete       = $sum['score_average'];
                             $url            = U('Inspect/public_kpi_score',array('uid'=>$v['user_id'],'st'=>$v['start_date'],'et'=>$v['end_date'],'y'=>$v['year']));
 
                             /*$users          = get_department_users($v['user_id']);
