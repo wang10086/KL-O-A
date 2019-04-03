@@ -122,10 +122,11 @@ class ManageController extends ChartController {
         $sum                    = array();
         foreach ($info as $key=>$value){
             foreach ($value as $k=>$v){
-                if ($k == 'heji') $v['depname'] = '公司';
-                $sum[$v['depname']]['monthzsr'] += $v['monthzsr'];
-                $sum[$v['depname']]['monthzml'] += $v['monthzml'];
-                $sum[$v['depname']]['monthmll'] = round($sum[$v['depname']]['monthzml']/$sum[$v['depname']]['monthzsr'],4)*100;
+                if ($k == 'heji') $v['depname']     = '公司';
+                if ($k == 'dj_heji') $v['depname']  = '地接合计';
+                $sum[$v['depname']]['monthzsr']     += $v['monthzsr'];
+                $sum[$v['depname']]['monthzml']     += $v['monthzml'];
+                $sum[$v['depname']]['monthmll']     = round($sum[$v['depname']]['monthzml']/$sum[$v['depname']]['monthzsr'],4)*100;
             }
         }
         return $sum;

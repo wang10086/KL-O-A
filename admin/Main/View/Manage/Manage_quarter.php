@@ -244,6 +244,9 @@
                                     <th><?php echo $human_affairs['常规业务中心']?$human_affairs['常规业务中心']:'0.00'; ?> %</th>
                                     <th><?php echo $human_affairs['机关部门']?$human_affairs['机关部门']:'0.00'; ?> %</th>
                                 </tr>
+                                <tr>
+                                    <th colspan="11" style="text-align: left;padding-left: 20px;">说明：其中内部地接营业收入 &yen;{$profit['地接合计']['monthzsr']}；内部地接营业毛利：&yen;{$profit['地接合计']['monthzml']}。公司总收入中不包含地接收入，部门收入中包含地接收入。</th>
+                                </tr>
                             </table><br><br>
 
                         </div><!-- /.box-body -->

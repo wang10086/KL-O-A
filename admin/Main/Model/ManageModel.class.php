@@ -234,9 +234,8 @@ class ManageModel extends Model{
     public function profit($money){
         $info                                         = array();
         foreach ($money as $k=>$v){
-            if ($k=='heji'){
-                $v['depname']                         = '公司';
-            }
+            if ($k=='heji') $v['depname']             = '公司';
+            if ($k == 'dj_heji') $v['depname']        = '地接合计';
             $info[$v['depname']]                      = $v;
         }
 
