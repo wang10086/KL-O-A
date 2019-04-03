@@ -1866,8 +1866,7 @@ function updatekpi($month,$user){
 	$where['month']   = array('like','%'.$month.'%');
 	$where['user_id'] = $user;
 
-    if (($kpi_cycle == 1 && ($month==date('Ym') && date('d')<26) || ($month==(date('Ym')+1) && date('d')>25)) || (in_array($kpi_cycle,array(2,3,4)) && in_array($month,$cycle_arr_month))){   //只刷新当前月份,避免老数据刷新
-    //if ($month==date('Ym')){   //只刷新当前月份,避免老数据刷新
+    if (($kpi_cycle == 1 && ($month==date('Ym') && date('d')<26) || ($month==(date('Ym')+1) && date('d')>25)) || (in_array($kpi_cycle,array(2,3,4)) && in_array($month,$cycle_arr_month))){   //只刷新当前月份,避免老数据刷新  区分考核周期月度,季度半年度...
         $quto   = M('kpi_more')->where($where)->select();
         if($quto){
             foreach($quto as $k=>$v){

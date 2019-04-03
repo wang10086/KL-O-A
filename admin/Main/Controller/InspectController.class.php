@@ -337,8 +337,6 @@ class InspectController extends BaseController{
         }
 
         $this->op       = M('op')->where(array('op_id'=>$op_id))->find();
-        $list           = M('op_guide_confirm')->field('id,score_num')->where(array('op_id'=>$op_id))->select();
-        $score_num      = array_sum(array_column($list,'score_num'));
 
         //分页
         $pagecount		= M()->table('__TCS_SCORE__ as s')->field('s.*,u.mobile,u.confirm_id,c.in_begin_day,c.in_day,c.address')->join('left join __TCS_SCORE_USER__ as u on u.id = s.uid')->join('left join __OP_GUIDE_CONFIRM__ as c on c.id = u.confirm_id')->where(array('u.op_id'=>$op_id))->count();
@@ -352,6 +350,7 @@ class InspectController extends BaseController{
             ->where(array('u.op_id'=>$op_id))
             ->limit($page->firstRow.','.$page->listRows)
             ->select();
+        $score_num      = count($lists);
 
         foreach ($lists as $k=>$v){
             $lists[$k]['sum_score'] = $v['before_sell']+$v['new_media']+$v['stay']+$v['travel']+$v['content']+$v['food']+$v['bus']+$v['driver']+$v['guide']+$v['teacher']+$v['depth']+$v['major']+$v['interest']+$v['material'];
@@ -402,7 +401,6 @@ class InspectController extends BaseController{
         $visit_lists            = M('op_visit')->where(array('op_id'=>$op_id))->select();
         if ($visit_lists){ $this->return_visit = 1; }
         $this->visit_lists      = $visit_lists;
-        //$this->score_stu        = C('SCORE_STU');
 
 
         $this->display();

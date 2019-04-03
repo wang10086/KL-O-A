@@ -69,7 +69,7 @@
                 </tr>
                 <foreach name="lists" item="row">
                     <tr>
-                        <td>{$row.in_begin_day|date="Y-m-d",###} - {$row.in_day|date="Y-m-d",###}</td>
+                        <td><?php if ($row['in_begin_day']) echo date('Y-m-d',$row['in_begin_day']).'-'.date('Y-m-d',$row['in_day']); ?></td>
                         <td>{$row.address}</a></td>
                         <td>{$row.mobile}</td>
                         <?php if (in_array($kind,$score_kind2)){ ?>
