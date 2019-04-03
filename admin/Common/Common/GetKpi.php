@@ -1084,8 +1084,8 @@ function get_sum_gross_profit($userids,$beginTime,$endTime){
             if (in_array($kind,$score_kind3)) $zongfen = 10*5; //考核10项, 每项5分, 满分总分
             $defen = $v['before_sell']+$v['new_media']+$v['stay']+$v['travel']+$v['content']+$v['food']+$v['bus']+$v['driver']+$v['guide']+$v['teacher']+$v['depth']+$v['major']+$v['interest']+$v['material']+$v['late']+$v['manage']+$v['morality'];
             $score = round($defen/$zongfen,2);
-            //单项3颗星或顾客满意度低于90%
-            if ($score < 0.9 || (in_array($v['before_sell'],$unok_arr) || in_array($v['new_media'],$unok_arr) || in_array($v['stay'],$unok_arr) || in_array($v['travel'],$unok_arr) || in_array($v['content'],$unok_arr) || in_array($v['food'],$unok_arr) || in_array($v['bus'],$unok_arr) || in_array($v['driver'],$unok_arr) || in_array($v['guide'],$unok_arr) || in_array($v['teacher'],$unok_arr) || in_array($v['depth'],$unok_arr) || in_array($v['major'],$unok_arr) || in_array($v['interest'],$unok_arr) || in_array($v['material'],$unok_arr) || in_array($v['late'],$unok_arr) || in_array($v['manage'],$unok_arr) || in_array($v['morality'],$unok_arr))){
+            //单项3颗星或顾客满意度低于80%
+            if ($score < 0.8 || (in_array($v['before_sell'],$unok_arr) || in_array($v['new_media'],$unok_arr) || in_array($v['stay'],$unok_arr) || in_array($v['travel'],$unok_arr) || in_array($v['content'],$unok_arr) || in_array($v['food'],$unok_arr) || in_array($v['bus'],$unok_arr) || in_array($v['driver'],$unok_arr) || in_array($v['guide'],$unok_arr) || in_array($v['teacher'],$unok_arr) || in_array($v['depth'],$unok_arr) || in_array($v['major'],$unok_arr) || in_array($v['interest'],$unok_arr) || in_array($v['material'],$unok_arr) || in_array($v['late'],$unok_arr) || in_array($v['manage'],$unok_arr) || in_array($v['morality'],$unok_arr))){
                 //$num++;
                 $v['score']     = $score;
                 $unok_list[]    = $v;
