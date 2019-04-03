@@ -19,58 +19,85 @@ class ChartModel extends Model
      * 3.年份时间戳(array)
      * 4.状态 0=>预算及结算; 1=>结算
      */
-    public function js_deplist($userlists, $month, $yeartimes, $pin = 0)
+    public function js_deplist($userlists, $month='', $yeartimes, $pin = 0,$quartertimes='')
     {
 
-        $monthtime = intval($month);
-        $month = get_cycle($monthtime, 26);
-        $lists = array();
+        $monthtime                  = intval($month);
+        $month                      = get_cycle($monthtime, 26);
+        $quarterbegintime           = $quartertimes['begin_time'];
+        $quarterendtime             = $quartertimes['end_time'];
+        $lists                      = array();
         foreach ($userlists as $k => $v) {
             //年度累计
-            $where = array();
-            $where['b.audit_status'] = 1;
-            $where['l.req_type'] = 801;
-            $where['l.audit_time'] = array('between', "$yeartimes[yearBeginTime],$yeartimes[yearEndTime]");
-            $where['a.id'] = array('in', $v['users']);
+            $where                  = array();
+            $where['b.audit_status']= 1;
+            $where['l.req_type']    = 801;
+            $where['l.audit_time']  = array('between', "$yeartimes[yearBeginTime],$yeartimes[yearEndTime]");
+            $where['a.id']          = array('in', $v['users']);
 
-            $field = array();
-            $field[] = 'count(o.id) as xms';
-            $field[] = 'sum(c.num_adult) as renshu';
-            $field[] = 'sum(b.shouru) as zsr';
-            $field[] = 'sum(b.maoli) as zml';
-            $field[] = '(sum(b.maoli)/sum(b.shouru)) as mll';
+            $field                  = array();
+            $field[]                = 'count(o.id) as xms';
+            $field[]                = 'sum(c.num_adult) as renshu';
+            $field[]                = 'sum(b.shouru) as zsr';
+            $field[]                = 'sum(b.maoli) as zml';
+            $field[]                = '(sum(b.maoli)/sum(b.shouru)) as mll';
 
-            $yearlist = M()->table('__OP_SETTLEMENT__ as b')->field($field)->join('__OP__ as o on b.op_id = o.op_id', 'LEFT')->join('__ACCOUNT__ as a on a.id = o.create_user', 'LEFT')->join('__AUDIT_LOG__ as l on l.req_id = b.id', 'LEFT')->join('__OP_TEAM_CONFIRM__ as c on c.op_id=o.op_id', 'left')->where($where)->order('zsr DESC')->find();
-            $lists[$v['id']]['yearxms'] = $yearlist['xms'] ? $yearlist['xms'] : 0;
-            $lists[$v['id']]['yearrenshu'] = $yearlist['renshu'] ? $yearlist['renshu'] : 0;
-            $lists[$v['id']]['yearzsr'] = $yearlist['zsr'] ? $yearlist['zsr'] : "0.00";
-            $lists[$v['id']]['yearzml'] = $yearlist['zml'] ? $yearlist['zml'] : "0.00";
-            $lists[$v['id']]['yearmll'] = $yearlist['mll'] ? sprintf("%.2f", $yearlist['mll'] * 100) : "0.00";
+            $yearlist               = M()->table('__OP_SETTLEMENT__ as b')->field($field)->join('__OP__ as o on b.op_id = o.op_id', 'LEFT')->join('__ACCOUNT__ as a on a.id = o.create_user', 'LEFT')->join('__AUDIT_LOG__ as l on l.req_id = b.id', 'LEFT')->join('__OP_TEAM_CONFIRM__ as c on c.op_id=o.op_id', 'left')->where($where)->order('zsr DESC')->find();
+            $lists[$v['id']]['yearxms']     = $yearlist['xms'] ? $yearlist['xms'] : 0;
+            $lists[$v['id']]['yearrenshu']  = $yearlist['renshu'] ? $yearlist['renshu'] : 0;
+            $lists[$v['id']]['yearzsr']     = $yearlist['zsr'] ? $yearlist['zsr'] : "0.00";
+            $lists[$v['id']]['yearzml']     = $yearlist['zml'] ? $yearlist['zml'] : "0.00";
+            $lists[$v['id']]['yearmll']     = $yearlist['mll'] ? sprintf("%.2f", $yearlist['mll'] * 100) : "0.00";
 
-            //查询月度
-            $where = array();
-            $where['b.audit_status'] = 1;
-            $where['l.req_type'] = 801;
-            $where['l.audit_time'] = array('between', "$month[begintime],$month[endtime]");
-            $where['a.id'] = array('in', $v['users']);
+            if ($quartertimes){ //季度
+                $where                  = array();
+                $where['b.audit_status']= 1;
+                $where['l.req_type']    = 801;
+                $where['l.audit_time']  = array('between', "$quarterbegintime,$quarterendtime");
+                $where['a.id']          = array('in', $v['users']);
 
-            $field = array();
-            $field[] = 'count(o.id) as xms';
-            $field[] = 'sum(c.num_adult) as renshu';
-            $field[] = 'sum(b.shouru) as zsr';
-            $field[] = 'sum(b.maoli) as zml';
-            $field[] = '(sum(b.maoli)/sum(b.shouru)) as mll';
+                $field                  = array();
+                $field[]                = 'count(o.id) as xms';
+                $field[]                = 'sum(c.num_adult) as renshu';
+                $field[]                = 'sum(b.shouru) as zsr';
+                $field[]                = 'sum(b.maoli) as zml';
+                $field[]                = '(sum(b.maoli)/sum(b.shouru)) as mll';
 
-            $monthlist = M()->table('__OP_SETTLEMENT__ as b')->field($field)->join('__OP__ as o on b.op_id = o.op_id', 'LEFT')->join('__ACCOUNT__ as a on a.id = o.create_user', 'LEFT')->join('__AUDIT_LOG__ as l on l.req_id = b.id', 'LEFT')->join('__OP_TEAM_CONFIRM__ as c on c.op_id=o.op_id', 'left')->where($where)->order('zsr DESC')->find();
+                $quarterlist            = M()->table('__OP_SETTLEMENT__ as b')->field($field)->join('__OP__ as o on b.op_id = o.op_id', 'LEFT')->join('__ACCOUNT__ as a on a.id = o.create_user', 'LEFT')->join('__AUDIT_LOG__ as l on l.req_id = b.id', 'LEFT')->join('__OP_TEAM_CONFIRM__ as c on c.op_id=o.op_id', 'left')->where($where)->order('zsr DESC')->find();
 
-            $lists[$v['id']]['monthxms'] = $monthlist['xms'] ? $monthlist['xms'] : 0;
-            $lists[$v['id']]['monthrenshu'] = $monthlist['renshu'] ? $monthlist['renshu'] : 0;
-            $lists[$v['id']]['monthzsr'] = $monthlist['zsr'] ? $monthlist['zsr'] : "0.00";
-            $lists[$v['id']]['monthzml'] = $monthlist['zml'] ? $monthlist['zml'] : "0.00";
-            $lists[$v['id']]['monthmll'] = $monthlist['mll'] ? sprintf("%.2f", $monthlist['mll'] * 100) : "0.00";
-            $lists[$v['id']]['users'] = $v['users'];
-            $lists[$v['id']]['id'] = $v['id'];
-            $lists[$v['id']]['depname'] = $v['depname'];
+                $lists[$v['id']]['quarterxms']      = $quarterlist['xms'] ? $quarterlist['xms'] : 0;
+                $lists[$v['id']]['quarterrenshu']   = $quarterlist['renshu'] ? $quarterlist['renshu'] : 0;
+                $lists[$v['id']]['quarterzsr']      = $quarterlist['zsr'] ? $quarterlist['zsr'] : "0.00";
+                $lists[$v['id']]['quarterzml']      = $quarterlist['zml'] ? $quarterlist['zml'] : "0.00";
+                $lists[$v['id']]['quartermll']      = $quarterlist['mll'] ? sprintf("%.2f", $quarterlist['mll'] * 100) : "0.00";
+            }
+
+            if ($month){
+                //查询月度
+                $where                  = array();
+                $where['b.audit_status']= 1;
+                $where['l.req_type']    = 801;
+                $where['l.audit_time']  = array('between', "$month[begintime],$month[endtime]");
+                $where['a.id']          = array('in', $v['users']);
+
+                $field                  = array();
+                $field[]                = 'count(o.id) as xms';
+                $field[]                = 'sum(c.num_adult) as renshu';
+                $field[]                = 'sum(b.shouru) as zsr';
+                $field[]                = 'sum(b.maoli) as zml';
+                $field[]                = '(sum(b.maoli)/sum(b.shouru)) as mll';
+
+                $monthlist              = M()->table('__OP_SETTLEMENT__ as b')->field($field)->join('__OP__ as o on b.op_id = o.op_id', 'LEFT')->join('__ACCOUNT__ as a on a.id = o.create_user', 'LEFT')->join('__AUDIT_LOG__ as l on l.req_id = b.id', 'LEFT')->join('__OP_TEAM_CONFIRM__ as c on c.op_id=o.op_id', 'left')->where($where)->order('zsr DESC')->find();
+
+                $lists[$v['id']]['monthxms']    = $monthlist['xms'] ? $monthlist['xms'] : 0;
+                $lists[$v['id']]['monthrenshu'] = $monthlist['renshu'] ? $monthlist['renshu'] : 0;
+                $lists[$v['id']]['monthzsr']    = $monthlist['zsr'] ? $monthlist['zsr'] : "0.00";
+                $lists[$v['id']]['monthzml']    = $monthlist['zml'] ? $monthlist['zml'] : "0.00";
+                $lists[$v['id']]['monthmll']    = $monthlist['mll'] ? sprintf("%.2f", $monthlist['mll'] * 100) : "0.00";
+            }
+            $lists[$v['id']]['users']           = $v['users'];
+            $lists[$v['id']]['id']              = $v['id'];
+            $lists[$v['id']]['depname']         = $v['depname'];
         }
 
         //地接团信息
@@ -81,23 +108,37 @@ class ChartModel extends Model
         $dj_js_opids    = array_column($dj_js_opids,'op_id');
         $dj_yeardata    = $this->get_dj_js_info($yeartimes['yearBeginTime'],$yeartimes['yearEndTime'],$dj_js_opids);
 
-        //地接月累计
-        $req_type       = 801;  //结算
-        $dj_m_js_opids  = $this->get_dj_js_opids($month['begintime'], $month['endtime'], $req_type,$dj_opids);
-        $dj_m_js_opids  = array_column($dj_m_js_opids,'op_id');
-        $dj_monthdata   = $this->get_dj_js_info($month['begintime'],$month['endtime'],$dj_m_js_opids);
+        if ($quartertimes){
+            //地接季度累计
+            $req_type                = 801;  //结算
+            $dj_m_js_opids           = $this->get_dj_js_opids($quarterbegintime, $quarterendtime, $req_type,$dj_opids);
+            $dj_m_js_opids           = array_column($dj_m_js_opids,'op_id');
+            $dj_quarterdata          = $this->get_dj_js_info($quarterbegintime,$quarterendtime,$dj_m_js_opids);
+        }
 
-        $dj_heji                = array();
-        $dj_heji['yearxms']     = $dj_yeardata['xms'];
-        $dj_heji['yearrenshu']  = $dj_yeardata['renshu'];
-        $dj_heji['yearzsr']     = $dj_yeardata['zsr'];
-        $dj_heji['yearzml']     = $dj_yeardata['zml'];
-        $dj_heji['yearmll']     = sprintf("%.2f", ($dj_heji['yearzml'] / $dj_heji['yearzsr']) * 100);
-        $dj_heji['monthxms']    = $dj_monthdata['xms'];
-        $dj_heji['monthrenshu'] = $dj_monthdata['renshu'];
-        $dj_heji['monthzsr']    = $dj_monthdata['zsr'];
-        $dj_heji['monthzml']    = $dj_monthdata['zml'];
-        $dj_heji['monthmll']    = sprintf("%.2f", ($dj_heji['monthzml'] / $dj_heji['monthzsr']) * 100);
+        if ($month){
+            //地接月累计
+            $req_type               = 801;  //结算
+            $dj_m_js_opids          = $this->get_dj_js_opids($month['begintime'], $month['endtime'], $req_type,$dj_opids);
+            $dj_m_js_opids          = array_column($dj_m_js_opids,'op_id');
+            $dj_monthdata           = $this->get_dj_js_info($month['begintime'],$month['endtime'],$dj_m_js_opids);
+        }
+        $dj_heji                    = array();
+        $dj_heji['yearxms']         = $dj_yeardata['xms'];
+        $dj_heji['yearrenshu']      = $dj_yeardata['renshu'];
+        $dj_heji['yearzsr']         = $dj_yeardata['zsr'];
+        $dj_heji['yearzml']         = $dj_yeardata['zml'];
+        $dj_heji['yearmll']         = sprintf("%.2f", ($dj_heji['yearzml'] / $dj_heji['yearzsr']) * 100);
+        $dj_heji['quarterxms']      = $dj_quarterdata['xms'];
+        $dj_heji['quarterrenshu']   = $dj_quarterdata['renshu'];
+        $dj_heji['quarterzsr']      = $dj_quarterdata['zsr'];
+        $dj_heji['quarterzml']      = $dj_quarterdata['zml'];
+        $dj_heji['quartermll']      = sprintf("%.2f", ($dj_heji['quarterzml'] / $dj_heji['quarterzsr']) * 100);
+        $dj_heji['monthxms']        = $dj_monthdata['xms'];
+        $dj_heji['monthrenshu']     = $dj_monthdata['renshu'];
+        $dj_heji['monthzsr']        = $dj_monthdata['zsr'];
+        $dj_heji['monthzml']        = $dj_monthdata['zml'];
+        $dj_heji['monthmll']        = sprintf("%.2f", ($dj_heji['monthzml'] / $dj_heji['monthzsr']) * 100);
 
         $heji                   = array();
         $heji['yearxms']        = array_sum(array_column($lists, 'yearxms'));
@@ -105,6 +146,11 @@ class ChartModel extends Model
         $heji['yearzsr']        = array_sum(array_column($lists, 'yearzsr')) - $dj_yeardata['zsr'];
         $heji['yearzml']        = array_sum(array_column($lists, 'yearzml'));
         $heji['yearmll']        = sprintf("%.2f", ($heji['yearzml'] / $heji['yearzsr']) * 100);
+        $heji['quarterxms']     = array_sum(array_column($lists, 'quarterxms'));
+        $heji['quarterrenshu']  = array_sum(array_column($lists, 'quarterrenshu')) - $dj_quarterdata['renshu'];
+        $heji['quarterzsr']     = array_sum(array_column($lists, 'quarterzsr')) - $dj_quarterdata['zsr'];
+        $heji['quarterzml']     = array_sum(array_column($lists, 'quarterzml'));
+        $heji['quartermll']     = sprintf("%.2f", ($heji['quarterzml'] / $heji['quarterzsr']) * 100);
         $heji['monthxms']       = array_sum(array_column($lists, 'monthxms'));
         $heji['monthrenshu']    = array_sum(array_column($lists, 'monthrenshu')) - $dj_monthdata['renshu'];
         $heji['monthzsr']       = array_sum(array_column($lists, 'monthzsr')) - $dj_monthdata['zsr'];
@@ -240,70 +286,101 @@ class ChartModel extends Model
      * @param array 相关部门及人员信息
      * @param 月份 200808
      * @param array 当年开始及结束时间
+     * @param pin
+     * @param array 季度开始及结束时间
      * @return array
      */
-    public function ysjs_deplist($userlists, $month, $yeartimes)
+    public function ysjs_deplist($userlists, $month='', $yeartimes,$pin='',$quartertimes='')
     {
 
         //年累计
-        $yearbegintime = $yeartimes['yearBeginTime'];
-        $yearendtime = $yeartimes['yearEndTime'];
-        $monthtime = intval($month);
-        $month = get_cycle($monthtime, 26);
+        $yearbegintime          = $yeartimes['yearBeginTime'];
+        $yearendtime            = $yeartimes['yearEndTime'];
+        $quarterbegintime       = $quartertimes['begin_time'];
+        $quarterendtime         = $quartertimes['end_time'];
+        $monthtime              = intval($month);
+        $month                  = get_cycle($monthtime, 26);
 
         foreach ($userlists as $k => $v) {
             //年累计
             //年度结算的团
-            $req_type = 801;
-            $jsopids = $this->get_js_opids($v['users'], $yearbegintime, $yearendtime, $req_type);
-            $jsopids = array_column($jsopids, 'op_id');
+            $req_type           = 801;
+            $jsopids            = $this->get_js_opids($v['users'], $yearbegintime, $yearendtime, $req_type);
+            $jsopids            = array_column($jsopids, 'op_id');
 
             //年度预算的团
-            $req_type = 800;
-            $ysopids = $this->get_ys_opids($v['users'], $yearbegintime, $yearendtime, $req_type,$jsopids);
-            $ysopids = array_column($ysopids, 'op_id');
+            $req_type           = 800;
+            $ysopids            = $this->get_ys_opids($v['users'], $yearbegintime, $yearendtime, $req_type,$jsopids);
+            $ysopids            = array_column($ysopids, 'op_id');
 
             //年度数据
-            $yeardata = $this->get_ysjshz($ysopids, $jsopids);
-            $yearxms = $yeardata['xms'];
-            $yearrenshu = $yeardata['renshu'];
-            $yearzsr = $yeardata['zsr'];
-            $yearzml = $yeardata['zml'];
-            $yearmll = $yeardata['mll'];
+            $yeardata           = $this->get_ysjshz($ysopids, $jsopids);
+            $yearxms            = $yeardata['xms'];
+            $yearrenshu         = $yeardata['renshu'];
+            $yearzsr            = $yeardata['zsr'];
+            $yearzml            = $yeardata['zml'];
+            $yearmll            = $yeardata['mll'];
 
-            $lists[$v['id']]['yearxms'] = $yearxms ? $yearxms : 0;
-            $lists[$v['id']]['yearrenshu'] = $yearrenshu ? $yearrenshu : 0;
-            $lists[$v['id']]['yearzsr'] = $yearzsr ? $yearzsr : "0.00";
-            $lists[$v['id']]['yearzml'] = $yearzml ? $yearzml : "0.00";
-            $lists[$v['id']]['yearmll'] = $yearmll ? sprintf("%.2f", $yearmll * 100) : "0.00";
+            $lists[$v['id']]['yearxms']     = $yearxms ? $yearxms : 0;
+            $lists[$v['id']]['yearrenshu']  = $yearrenshu ? $yearrenshu : 0;
+            $lists[$v['id']]['yearzsr']     = $yearzsr ? $yearzsr : "0.00";
+            $lists[$v['id']]['yearzml']     = $yearzml ? $yearzml : "0.00";
+            $lists[$v['id']]['yearmll']     = $yearmll ? sprintf("%.2f", $yearmll * 100) : "0.00";
 
-            //月累计
-            //月度结算的团
-            $req_type = 801;
-            $monthjsopids = $this->get_js_opids($v['users'], $month['begintime'], $month['endtime'], $req_type);
-            $monthjsopids = array_column($monthjsopids, 'op_id');
+            if ($quartertimes){ //季度累计
+                //季度结算的团
+                $req_type       = 801;
+                $quarterjsopids = $this->get_js_opids($v['users'], $quarterbegintime, $quarterendtime, $req_type);
+                $quarterjsopids = array_column($quarterjsopids, 'op_id');
 
-            //月度预算的团
-            $req_type = 800;
-            $monthysopids = $this->get_ys_opids($v['users'], $month['begintime'], $month['endtime'], $req_type,$monthjsopids);
-            $monthysopids = array_column($monthysopids, 'op_id');
+                //季度预算的团
+                $req_type       = 800;
+                $ysopids        = $this->get_ys_opids($v['users'], $quarterbegintime, $quarterendtime, $req_type,$quarterjsopids);
+                $ysopids        = array_column($ysopids, 'op_id');
 
-            //月度数据
-            $monthdata = $this->get_ysjshz($monthysopids, $monthjsopids);
-            $monthxms = $monthdata['xms'];
-            $monthrenshu = $monthdata['renshu'];
-            $monthzsr = $monthdata['zsr'];
-            $monthzml = $monthdata['zml'];
-            $monthmll = $monthdata['mll'];
+                //季度数据
+                $quarterdata    = $this->get_ysjshz($ysopids, $quarterjsopids);
+                $quarterxms     = $quarterdata['xms'];
+                $quarterrenshu  = $quarterdata['renshu'];
+                $quarterzsr     = $quarterdata['zsr'];
+                $quarterzml     = $quarterdata['zml'];
+                $quartermll     = $quarterdata['mll'];
 
-            $lists[$v['id']]['monthxms'] = $monthxms ? $monthxms : 0;
-            $lists[$v['id']]['monthrenshu'] = $monthrenshu ? $monthrenshu : 0;
-            $lists[$v['id']]['monthzsr'] = $monthzsr ? $monthzsr : "0.00";
-            $lists[$v['id']]['monthzml'] = $monthzml ? $monthzml : "0.00";
-            $lists[$v['id']]['monthmll'] = $monthmll ? sprintf("%.2f", $monthmll * 100) : "0.00";
-            $lists[$v['id']]['users'] = $v['users'];
-            $lists[$v['id']]['id'] = $v['id'];
-            $lists[$v['id']]['depname'] = $v['depname'];
+                $lists[$v['id']]['quarterxms']      = $quarterxms ? $quarterxms : 0;
+                $lists[$v['id']]['quarterrenshu']   = $quarterrenshu ? $quarterrenshu : 0;
+                $lists[$v['id']]['quarterzsr']      = $quarterzsr ? $quarterzsr : "0.00";
+                $lists[$v['id']]['quarterzml']      = $quarterzml ? $quarterzml : "0.00";
+                $lists[$v['id']]['quartermll']      = $quartermll ? sprintf("%.2f", $quartermll * 100) : "0.00";
+            }
+
+            if ($month){ //月度累计
+                //月度结算的团
+                $req_type       = 801;
+                $monthjsopids   = $this->get_js_opids($v['users'], $month['begintime'], $month['endtime'], $req_type);
+                $monthjsopids   = array_column($monthjsopids, 'op_id');
+
+                //月度预算的团
+                $req_type       = 800;
+                $monthysopids   = $this->get_ys_opids($v['users'], $month['begintime'], $month['endtime'], $req_type,$monthjsopids);
+                $monthysopids   = array_column($monthysopids, 'op_id');
+
+                //月度数据
+                $monthdata      = $this->get_ysjshz($monthysopids, $monthjsopids);
+                $monthxms       = $monthdata['xms'];
+                $monthrenshu    = $monthdata['renshu'];
+                $monthzsr       = $monthdata['zsr'];
+                $monthzml       = $monthdata['zml'];
+                $monthmll       = $monthdata['mll'];
+
+                $lists[$v['id']]['monthxms']    = $monthxms ? $monthxms : 0;
+                $lists[$v['id']]['monthrenshu'] = $monthrenshu ? $monthrenshu : 0;
+                $lists[$v['id']]['monthzsr']    = $monthzsr ? $monthzsr : "0.00";
+                $lists[$v['id']]['monthzml']    = $monthzml ? $monthzml : "0.00";
+                $lists[$v['id']]['monthmll']    = $monthmll ? sprintf("%.2f", $monthmll * 100) : "0.00";
+            }
+            $lists[$v['id']]['users']           = $v['users'];
+            $lists[$v['id']]['id']              = $v['id'];
+            $lists[$v['id']]['depname']         = $v['depname'];
         }
 
         //地接团信息
@@ -323,46 +400,75 @@ class ChartModel extends Model
         $dj_ys_opids    = array_column($dj_ys_opids,'op_id');
         $dj_yeardata    = $this->get_ysjshz($dj_ys_opids,$dj_js_opids);
 
-        //地接月累计
-        $req_type       = 801;  //结算
-        $dj_m_js_opids  = $this->get_dj_js_opids($month['begintime'], $month['endtime'], $req_type,$dj_opids);
-        $dj_m_js_opids  = array_column($dj_m_js_opids,'op_id');
-        $in_month_opids = array();
-        foreach ($dj_opids as $v){
-            if (!in_array($dj_js_opids,$v)){
-                $in_month_opids[] = $v;
+        if ($quartertimes){ //季度
+            //地接季度累计
+            $req_type       = 801;  //结算
+            $dj_q_js_opids  = $this->get_dj_js_opids($quarterbegintime, $quarterendtime, $req_type,$dj_opids);
+            $dj_q_js_opids  = array_column($dj_q_js_opids,'op_id');
+            $in_quarter_opids = array();
+            foreach ($dj_opids as $v){
+                if (!in_array($dj_js_opids,$v)){
+                    $in_quarter_opids[] = $v;
+                }
             }
+            $req_type       = 800;  //预算
+            $dj_q_ys_opids  = $this->get_dj_ys_opids($quarterbegintime, $quarterendtime, $req_type,$in_quarter_opids);
+            $dj_q_ys_opids  = array_column($dj_q_ys_opids,'op_id');
+            $dj_quarterdata = $this->get_ysjshz($dj_q_ys_opids,$dj_q_js_opids);
         }
-        $req_type       = 800;  //预算
-        $dj_m_ys_opids  = $this->get_dj_ys_opids($month['begintime'], $month['endtime'], $req_type,$in_month_opids);
-        $dj_m_ys_opids  = array_column($dj_m_ys_opids,'op_id');
-        $dj_monthdata   = $this->get_ysjshz($dj_m_ys_opids,$dj_m_js_opids);
 
-        $dj_heji                = array();
-        $dj_heji['yearxms']     = $dj_yeardata['xms'];
-        $dj_heji['yearrenshu']  = $dj_yeardata['renshu'];
-        $dj_heji['yearzsr']     = $dj_yeardata['zsr'];
-        $dj_heji['yearzml']     = $dj_yeardata['zml'];
-        $dj_heji['yearmll']     = sprintf("%.2f", ($dj_heji['yearzml'] / $dj_heji['yearzsr']) * 100);
-        $dj_heji['monthxms']    = $dj_monthdata['xms'];
-        $dj_heji['monthrenshu'] = $dj_monthdata['renshu'];
-        $dj_heji['monthzsr']    = $dj_monthdata['zsr'];
-        $dj_heji['monthzml']    = $dj_monthdata['zml'];
-        $dj_heji['monthmll']    = sprintf("%.2f", ($dj_heji['monthzml'] / $dj_heji['monthzsr']) * 100);
+        if ($month){ //月度
+            //地接月累计
+            $req_type       = 801;  //结算
+            $dj_m_js_opids  = $this->get_dj_js_opids($month['begintime'], $month['endtime'], $req_type,$dj_opids);
+            $dj_m_js_opids  = array_column($dj_m_js_opids,'op_id');
+            $in_month_opids = array();
+            foreach ($dj_opids as $v){
+                if (!in_array($dj_js_opids,$v)){
+                    $in_month_opids[] = $v;
+                }
+            }
+            $req_type       = 800;  //预算
+            $dj_m_ys_opids  = $this->get_dj_ys_opids($month['begintime'], $month['endtime'], $req_type,$in_month_opids);
+            $dj_m_ys_opids  = array_column($dj_m_ys_opids,'op_id');
+            $dj_monthdata   = $this->get_ysjshz($dj_m_ys_opids,$dj_m_js_opids);
+        }
 
-        $heji                   = array();
-        $heji['yearxms']        = array_sum(array_column($lists, 'yearxms'));
-        $heji['yearrenshu']     = array_sum(array_column($lists, 'yearrenshu')) - $dj_heji['yearrenshu'];
-        $heji['yearzsr']        = array_sum(array_column($lists, 'yearzsr')) - $dj_heji['yearzsr'];
-        $heji['yearzml']        = array_sum(array_column($lists, 'yearzml'));
-        $heji['yearmll']        = sprintf("%.2f", ($heji['yearzml'] / $heji['yearzsr']) * 100);
-        $heji['monthxms']       = array_sum(array_column($lists, 'monthxms'));
-        $heji['monthrenshu']    = array_sum(array_column($lists, 'monthrenshu')) - $dj_heji['monthrenshu'];
-        $heji['monthzsr']       = array_sum(array_column($lists, 'monthzsr')) - $dj_heji['monthzsr'];
-        $heji['monthzml']       = array_sum(array_column($lists, 'monthzml'));
-        $heji['monthmll']       = sprintf("%.2f", ($heji['monthzml'] / $heji['monthzsr']) * 100);
-        $lists['heji']          = $heji;
-        $lists['dj_heji']       = $dj_heji;
+        $dj_heji                    = array();
+        $dj_heji['yearxms']         = $dj_yeardata['xms'];
+        $dj_heji['yearrenshu']      = $dj_yeardata['renshu'];
+        $dj_heji['yearzsr']         = $dj_yeardata['zsr'];
+        $dj_heji['yearzml']         = $dj_yeardata['zml'];
+        $dj_heji['yearmll']         = sprintf("%.2f", ($dj_heji['yearzml'] / $dj_heji['yearzsr']) * 100);
+        $dj_heji['quarterxms']      = $dj_quarterdata['xms'];
+        $dj_heji['quarterrenshu']   = $dj_quarterdata['renshu'];
+        $dj_heji['quarterzsr']      = $dj_quarterdata['zsr'];
+        $dj_heji['quarterzml']      = $dj_quarterdata['zml'];
+        $dj_heji['quartermll']      = sprintf("%.2f", ($dj_heji['quarterzml'] / $dj_heji['quarterzsr']) * 100);
+        $dj_heji['monthxms']        = $dj_monthdata['xms'];
+        $dj_heji['monthrenshu']     = $dj_monthdata['renshu'];
+        $dj_heji['monthzsr']        = $dj_monthdata['zsr'];
+        $dj_heji['monthzml']        = $dj_monthdata['zml'];
+        $dj_heji['monthmll']        = sprintf("%.2f", ($dj_heji['monthzml'] / $dj_heji['monthzsr']) * 100);
+
+        $heji                       = array();
+        $heji['yearxms']            = array_sum(array_column($lists, 'yearxms'));
+        $heji['yearrenshu']         = array_sum(array_column($lists, 'yearrenshu')) - $dj_heji['yearrenshu'];
+        $heji['yearzsr']            = array_sum(array_column($lists, 'yearzsr')) - $dj_heji['yearzsr'];
+        $heji['yearzml']            = array_sum(array_column($lists, 'yearzml'));
+        $heji['yearmll']            = sprintf("%.2f", ($heji['yearzml'] / $heji['yearzsr']) * 100);
+        $heji['quarterxms']         = array_sum(array_column($lists, 'quarterxms'));
+        $heji['quarterrenshu']      = array_sum(array_column($lists, 'quarterrenshu')) - $dj_heji['quarterrenshu'];
+        $heji['quarterzsr']         = array_sum(array_column($lists, 'quarterzsr')) - $dj_heji['quarterzsr'];
+        $heji['quarterzml']         = array_sum(array_column($lists, 'quarterzml'));
+        $heji['quartermll']         = sprintf("%.2f", ($heji['quarterzml'] / $heji['quarterzsr']) * 100);
+        $heji['monthxms']           = array_sum(array_column($lists, 'monthxms'));
+        $heji['monthrenshu']        = array_sum(array_column($lists, 'monthrenshu')) - $dj_heji['monthrenshu'];
+        $heji['monthzsr']           = array_sum(array_column($lists, 'monthzsr')) - $dj_heji['monthzsr'];
+        $heji['monthzml']           = array_sum(array_column($lists, 'monthzml'));
+        $heji['monthmll']           = sprintf("%.2f", ($heji['monthzml'] / $heji['monthzsr']) * 100);
+        $lists['heji']              = $heji;
+        $lists['dj_heji']           = $dj_heji;
 
         return $lists;
     }

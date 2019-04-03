@@ -22,21 +22,18 @@
                                 <div class="box-header">
 
                                     <div class="box-tools btn-group" id = "chart_btn_group">
-                                        <a href="{:U('Chart/department',array('pin'=>0,'year'=>$year))}" class="btn btn-sm <?php if($pin==0){ echo 'btn-info';}else{ echo 'btn-group-header';} ?>">预算及结算分部门汇总</a>
-                                        <a href="{:U('Chart/department',array('pin'=>1,'year'=>$year))}" class="btn btn-sm <?php if($pin==1){ echo 'btn-info';}else{ echo 'btn-group-header';} ?>">已结算分部门汇总</a>
+                                        <a href="{:U('Chart/department',array('pin'=>0,'year'=>$year,'month'=>$month))}" class="btn btn-sm <?php if($pin==0){ echo 'btn-info';}else{ echo 'btn-group-header';} ?>">预算及结算分部门汇总</a>
+                                        <a href="{:U('Chart/department',array('pin'=>1,'year'=>$year,'month'=>$month))}" class="btn btn-sm <?php if($pin==1){ echo 'btn-info';}else{ echo 'btn-group-header';} ?>">已结算分部门汇总</a>
                                     </div>
                                     <!--<div class="box-tools pull-right">
                                     	 <a href="javascript:;" class="btn btn-info btn-sm" onclick="javascript:opensearch('searchtext',800,160);"><i class="fa fa-search"></i> 搜索</a>
-                                        <if condition="rolemenu(array('Op/plans'))">
-                                        <a href="{:U('Op/plans')}" class="btn btn-sm btn-danger"><i class="fa fa-plus"></i> 新建项目计划</a>
-                                        </if>
                                     </div>-->
                                 </div><!-- /.box-header -->
                                 <div class="box-body">
 
                                     <div class="btn-group" id="catfont" style="padding-bottom:5px;">
                                         <?php if($prveyear>2016){ ?>
-                                            <a href="{:U('Chart/department',array('year'=>$prveyear,'pin'=>$pin))}" class="btn btn-default" style="padding:8px 18px;">上一年</a>
+                                            <a href="{:U('Chart/department',array('year'=>$prveyear,'month'=>$month,'pin'=>$pin))}" class="btn btn-default" style="padding:8px 18px;">上一年</a>
                                         <?php } ?>
                                         <?php
                                         for($i=1;$i<13;$i++){
@@ -48,7 +45,7 @@
                                         }
                                         ?>
                                         <?php if($year<date('Y')){ ?>
-                                            <a href="{:U('Chart/department',array('year'=>$nextyear,'month'=>'01','pin'=>$pin))}" class="btn btn-default" style="padding:8px 18px;">下一年</a>
+                                            <a href="{:U('Chart/department',array('year'=>$nextyear,'month'=>$month,'pin'=>$pin))}" class="btn btn-default" style="padding:8px 18px;">下一年</a>
                                         <?php } ?>
                                     </div>
                                     <?php if ($pin==1){ ?>

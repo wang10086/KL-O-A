@@ -789,16 +789,13 @@
                             </a>
                             <ul class="treeview-menu">
 
-                                <li class="treeview {:ison(CONTROLLER_NAME, 'Chart')}">
+                                <li class="treeview {:on('Chart/department')} {:on('Chart/summary_types')}">
                                     <a href="javascript:;">
                                         <i class="fa fa-calendar"></i>
                                         <span>项目月度统计</span>
                                         <i class="fa fa-angle-left pull-right"></i>
                                     </a>
                                     <ul class="treeview-menu">
-                                        <if condition="rolemenu(array('Chart/settlement'))">
-                                            <li><a href="{:U('Chart/settlement')}"><i class="fa fa-angle-right"></i> 项目月度统计</a></li>
-                                        </if>
                                         <if condition="rolemenu(array('Chart/department'))">
                                             <li><a href="{:U('Chart/department')}"><i class="fa fa-angle-right"></i> 项目分部门汇总</a></li>
 
@@ -806,6 +803,24 @@
                                         <if condition="rolemenu(array('Chart/summary_types'))">
                                             <!--<li><a href="{:U('Chart/kind')}"><i class="fa fa-angle-right"></i> 项目分部门分类型汇总</a></li>-->
                                             <li><a href="{:U('Chart/summary_types')}"><i class="fa fa-angle-right"></i> 项目分部门分类型汇总</a></li>
+                                        </if>
+                                    </ul>
+                                </li>
+
+                                <li class="treeview {:on('Chart/quarter_department')} {:on('Chart/aaa')}">
+                                    <a href="javascript:;">
+                                        <i class="fa fa-calendar-o"></i>
+                                        <span>项目季度统计</span>
+                                        <i class="fa fa-angle-left pull-right"></i>
+                                    </a>
+                                    <ul class="treeview-menu">
+                                        <if condition="rolemenu(array('Chart/quarter_department'))">
+                                            <li><a href="{:U('Chart/quarter_department')}"><i class="fa fa-angle-right"></i> 项目分部门汇总</a></li>
+
+                                        </if>
+                                        <if condition="rolemenu(array('Chart/summary_types'))">
+                                            <!--<li><a href="{:U('Chart/kind')}"><i class="fa fa-angle-right"></i> 项目分部门分类型汇总</a></li>-->
+                                            <li><a href="javascript:;" onclick="art_show_msg('加班开发中...',3)"><i class="fa fa-angle-right"></i> 项目分部门分类型汇总</a></li>
                                         </if>
                                     </ul>
                                 </li>

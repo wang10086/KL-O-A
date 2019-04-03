@@ -81,8 +81,8 @@ class ChartController extends BaseController {
 
 
 
-    //项目统计
-    public function settlement(){
+    //项目统计 bak(20190403)
+    /*public function settlement(){
 
         $db = M('op_settlement');
         $kind = M('project_kind')->GetField('id,name',true);
@@ -214,7 +214,7 @@ class ChartController extends BaseController {
 
 
 
-    }
+    }*/
 
 
 
@@ -847,14 +847,15 @@ class ChartController extends BaseController {
         $this->display();
     }
 
-    //统计部门数据
-    public function count_lists($departments,$year,$month,$pin=0){
+    //统计部门数据(月度)
+    public function count_lists($departments,$year,$month='',$pin=0,$quarter=''){
         $yearBegin      			        = ($year-1).'1226';
         $yearEnd        			        = $year.'1226';
         $yeartimes					        = array();
         $yeartimes['yearBeginTime']         = strtotime($yearBegin);
         $yeartimes['yearEndTime']           = strtotime($yearEnd);
-        $month                              = $year.$month;
+        $yearMonth                          = $month?$year.$month:'';
+        $quartertimes                       = set_quarter($year,$quarter);
         $userlists      			        = array();
         foreach ($departments as $k=>$v){
             $userlists[$v['id']]['users']   = M('account')->where(array('departmentid'=>$v['id']))->getField('id',true);
@@ -864,10 +865,10 @@ class ChartController extends BaseController {
 
         if ($pin == 0){
             //预算及结算分部门汇总
-            $lists                          = D('Chart')->ysjs_deplist($userlists,$month,$yeartimes,$pin);
+            $lists                          = D('Chart')->ysjs_deplist($userlists,$yearMonth,$yeartimes,$pin,$quartertimes);
         }else{
             //结算分部门汇总
-            $lists                          = D('Chart')->js_deplist($userlists,$month,$yeartimes,$pin);
+            $lists                          = D('Chart')->js_deplist($userlists,$yearMonth,$yeartimes,$pin,$quartertimes);
         }
         return $lists;
     }
@@ -898,6 +899,33 @@ class ChartController extends BaseController {
         $this->display();
     }
 
+    //项目分季度统计
+    public function quarter_department(){
+        $pin            = I('pin');
+        $year		    = I('year',date('Y'));
+        $month          = I('month',date('m'));
+        $quarter		= I('quarter',get_quarter($month));
+        $yw_departs     = C('YW_DEPARTS');  //业务部门id
+        $where          = array();
+        $where['id']    = array('in',$yw_departs);
+        $departments    = M('salary_department')->field('id,department')->where($where)->select();
+        //预算及结算分部门汇总
+        $listdatas      = $this->count_lists($departments,$year,'',$pin,$quarter);
+        $heji           = $listdatas['heji'];
+        $dj_heji        = $listdatas['dj_heji'];
+        unset($listdatas['dj_heji']);  //注意顺序
+        unset($listdatas['heji']);  //注意顺序
+        $this->lists    = $listdatas;
+        $this->heji     = $heji;
+        $this->dj_heji  = $dj_heji;
+
+        $this->year 	= $year;
+        $this->quarter 	= $quarter;
+        $this->prveyear	= $year-1;
+        $this->nextyear	= $year+1;
+        $this->pin      = $pin?$pin:0;
+        $this->display();
+    }
 
 
 }
