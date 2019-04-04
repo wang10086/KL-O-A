@@ -1191,10 +1191,13 @@ class RbacController extends BaseController {
     public function kpi_quota(){
     	
         $this->title('KPI指标管理');
-    
-        $db 	= M('kpi_config');
-		$auto 	= I('auto');
-		$where 	= array();
+        $db 	                        = M('kpi_config');
+		$auto 	                        = I('auto');
+        $tit                            = trim(I('tit'));
+        $con                            = trim(I('con'));
+		$where 	                        = array();
+        if ($tit) $where['quota_title'] = array('like','%'.$tit.'%');
+        if ($con) $where['quota_content']= array('like','%'.$con.'%');
 		
 		if($auto==1){
 			$where['id'] = array('not in',array(1,2,3,4,5,6,81,8,9,10,11,15,16,18,20,23,26,21,24,27,32,37,19,22,25,28,33,38,42,45,103,56,113,92,29,34,39,46,102,55,57,58,59,84,87,89,90,111,107,83,66,54,44,12,112,108,100,96,95,65,114,86,85,64,63,62,53,52,41,40,49,80,48,91,79,47,36,35,31,30,82,110,106,99,94,67));
@@ -1203,9 +1206,9 @@ class RbacController extends BaseController {
 		}
 		
 		//分页
-		$pagecount = $db->where($where)->count();
-		$page = new Page($pagecount, P::PAGE_SIZE);
-		$this->pages = $pagecount>P::PAGE_SIZE ? $page->show():'';
+		$pagecount      = $db->where($where)->count();
+		$page           = new Page($pagecount, P::PAGE_SIZE);
+		$this->pages    = $pagecount>P::PAGE_SIZE ? $page->show():'';
 		
         $this->datalist = $db->where($where)->order($this->orders('id'))->limit($page->firstRow . ',' . $page->listRows)->select();
         $this->display('kpi_quota');

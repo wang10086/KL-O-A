@@ -284,28 +284,6 @@ class ManageModel extends Model{
     }
 
     /**
-     * total_profit 月度利润总额
-     * $number人力资源成本
-     * $profit  总 营业收入
-     * $departmen 部门 营业收入
-     * $department 部门 其他费用
-     */
-    /*public function total_profit($number,$profit,$departmen,$department){
-
-        $departmen[0]['department']['monthzml'] = $profit['monthzml'];//总毛利 添加到部门营业毛利中
-
-        $departmen[9]['department']['monthzml'] = 0;//机关部门营业毛利默认为0
-
-        ksort($departmen);//按键值进行排序
-
-        foreach($departmen as $key => $val){
-
-           $total_profit[$key]['total_profit']  =  round($val['department']['monthzml']-$number[$key]['money']-$department[$key]['money'],2); //营业毛利-人力资源成本-其他费用
-        }
-        return $total_profit;
-    }*/
-
-    /**
      * 利润总额 = 营业毛利-人力资源成本-其他费用
      * @param $profit   营业毛利
      * @param $hr_cost  人力资源成本
@@ -318,66 +296,6 @@ class ManageModel extends Model{
         }
         return $info;
     }
-
-    /**
-     * quarter 季度 年月 数据值修正返回
-     *  $year 加减年 $quarter季度
-     */
-    /*public function quarter($year,$quarter){
-        $arr1                                    = array('3','6','9','12');
-        $i                                       = 0; //现在季度月 减一
-        $company                                 = array(); //季度内数据总和
-        $count_sum                               = 3;
-        $content                                 = array();
-        $count                                   = array();
-        if(in_array($quarter,$arr1)){ //判断是否是第一、二、三、四季度
-            for($n = 3; $n > $i;$i++){ //
-                $month                           =  $quarter-$i; //季度上一个月
-                $count[$i]                       = $this->month($year,$month); //季度 人力资源成本
-                $number[$i]                      = $this->get_number($year,$month); //人数和
-                //var_dump($number);
-                foreach($count[$i] as $k => $v){
-                    $company[$k]['sum']         += $v['sum'];//人数相加
-                    $company[$k]['money']       += $v;//人力资源成本相加
-                }
-                foreach($count[$i] as $key =>$val){ //删除数组等于空 和 0 的数据、
-                    if(($val['sum']=='' || $val['sum']==0) && ($val['money']=='' || $val['money']==0)){
-                        unset($count[$i][$key]);
-                    }else{
-                        if($val['sum']=='' || $val['sum']==0){unset($count[$i][$key]['sum']);}
-                        if($val['money']=='' || $val['money']==0){unset($count[$i][$key]['money']);}
-                    }
-                }
-                if(count($count[$i]) ==0 || $count[$i]==''){$count_sum = $count_sum -1;unset($count[$i]);}
-            }
-            foreach($company as $ke => $va){$company[$ke]['sum'] = round($va['sum']/$count_sum,2);}
-            return $company;
-        }else{
-            for($n = 3;$n > $i;$i++){
-                $month                           = $quarter-$i;
-                if($month==3 || $month==6 || $month==9 || $month==12){
-                    $count_sum                   = count($company);
-                    foreach($company as $ke => $va){$company[$ke]['sum'] = round($va['sum']/$count_sum,2);}
-                    return $company;
-                }else{
-                    $count[$i]                   = $this->month($year,$month); //季度 人数和 人力资源成本
-                    foreach($count[$i] as $k => $v){
-                        $company[$k]['sum']     += $v['sum'];//人数相加
-                        $company[$k]['money']   += $v['money'];//人力资源成本相加
-                    }
-                    foreach($count[$i] as $key =>$val){ //删除数组等于空 和 0 的数据、
-                        if(($val['sum']=='' || $val['sum']==0) && ($val['money']=='' || $val['money']==0)){
-                            unset($count[$i][$key]);
-                        }else{
-                            if($val['sum']=='' || $val['sum']==0){unset($count[$i][$key]['sum']);}
-                            if($val['money']=='' || $val['money']==0){unset($count[$i][$key]['money']);}
-                        }
-                    }
-                    $count[$i]                  = array_filter($count[$i]);//去空和0
-                }
-            }
-        }
-    }*/
 
 
     /** 获取季度人数平均值

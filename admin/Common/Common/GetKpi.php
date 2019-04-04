@@ -506,7 +506,7 @@ function get_department_budget($department,$year,$month){
 }
 
 /**
- * 获取所管辖所有部门经营总额
+ * 获取所管辖所有部门经营总额(包括地接营收)
  * @param $department   array
  * @param $year
  * @param $month
@@ -533,33 +533,33 @@ function get_sum_department_operate($department,$year,$month){
  * @param $month
  */
  function get_department_operate($department,$year,$month){
-     $mod           = D('Manage');
-     $quart         = quarter_month1($month);  //季度信息
+     $mod                       = D('Manage');
+     $quart                     = quarter_month1($month);  //季度信息
 
-     $yms                    = $mod->get_yms($year,$quart,'q');  //获取费季度包含的全部月份
-     $times                  = $mod->get_times($year,$quart,'q');    //获取考核周期开始及结束时间戳
+     $yms                       = $mod->get_yms($year,$quart,'q');  //获取费季度包含的全部月份
+     $times                     = $mod->get_times($year,$quart,'q');    //获取考核周期开始及结束时间戳
 
-     $ymd[0]                 = date("Ymd",$times['beginTime']);
-     $ymd[1]                 = date("Ymd",$times['endTime']);
-     $mon                    = not_team_not_share($ymd[0],$ymd[1]);//季度其他费用取出数据(不分摊)
-     $mon_share              = not_team_share($ymd[0],$ymd[1]);//季度其他费用取出数据(分摊)
-     $otherExpenses          = $mod->department_data($mon,$mon_share);//季度其他费用部门数据
+     $ymd[0]                    = date("Ymd",$times['beginTime']);
+     $ymd[1]                    = date("Ymd",$times['endTime']);
+     $mon                       = not_team_not_share($ymd[0],$ymd[1]);//季度其他费用取出数据(不分摊)
+     $mon_share                 = not_team_share($ymd[0],$ymd[1]);//季度其他费用取出数据(分摊)
+     $otherExpenses             = $mod->department_data($mon,$mon_share);//季度其他费用部门数据
 
-     $number                 = $mod->get_numbers($year,$yms);    //季度平均人数
-     $hr_cost                = $mod->get_quarter_hr_cost($year,$yms,$times);// 季度部门人力资源成本
-     $profit                 = get_business_sum($year,$yms);// 季度 monthzsr 收入合计   monthzml 毛利合计  monthmll 毛利率
-     $human_affairs          = $mod->human_affairs($hr_cost,$profit);//季度 人事费用率
-     $total_profit           = $mod->total_profit($profit,$hr_cost,$department);//季度 利润总额
+     $number                    = $mod->get_numbers($year,$yms);    //季度平均人数
+     $hr_cost                   = $mod->get_quarter_hr_cost($year,$yms,$times);// 季度部门人力资源成本
+     $profit                    = get_business_sum($year,$yms);// 季度 monthzsr 收入合计   monthzml 毛利合计  monthmll 毛利率
+     $human_affairs             = $mod->human_affairs($hr_cost,$profit);//季度 人事费用率
+     $total_profit              = $mod->total_profit($profit,$hr_cost,$department);//季度 利润总额
 
-     $info              = array();
-     $info['ygrs']      = $number[$department];             //部门员工人数
-     $info['yysr']      = $profit[$department]['monthzsr']; //营业收入
-     $info['yyml']      = $profit[$department]['monthzml']; //营业毛利
-     $info['yymll']     = $profit[$department]['monthmll']; //营业毛利率
-     $info['rlzycb']    = $hr_cost[$department];            //人力资源成本
-     $info['qtfy']      = $otherExpenses[$department]['money'];      //其他费用
-     $info['lrze']      = $total_profit[$department];       //利润总额
-     $info['rsfyl']     = $human_affairs[$department];      //人事费用率
+     $info                      = array();
+     $info['ygrs']              = $number[$department];             //部门员工人数
+     $info['yysr']              = $profit[$department]['monthzsr']; //营业收入
+     $info['yyml']              = $profit[$department]['monthzml']; //营业毛利
+     $info['yymll']             = $profit[$department]['monthmll']; //营业毛利率
+     $info['rlzycb']            = $hr_cost[$department];            //人力资源成本
+     $info['qtfy']              = $otherExpenses[$department]['money'];      //其他费用
+     $info['lrze']              = $total_profit[$department];       //利润总额
+     $info['rsfyl']             = $human_affairs[$department];      //人事费用率
 
      return $info;
 }
@@ -1301,10 +1301,14 @@ function get_sum_gross_profit($userids,$beginTime,$endTime){
         foreach ($op_list as $key=>$value){
             //出团后5天内完成上传
             $time 		                    = $value['dep_time'] + 6*24*3600;
-            $list                           = M('contract')->where(array('op_id'=>$value['op_id'],'status'=>1,'confirm_time'=>array('lt',$time)))->find();
+            $list                           = M('contract')->where(array('op_id'=>$value['op_id'],'status'=>1,'confirm_time'=>array('lt',$time)))->find(); //按规定时间上传合同
+            $list2                          = M('contract')->where(array('op_id'=>$value['op_id'],'status'=>1))->find(); //查看截止当期有无合同
+
             if ($list){
                 $contract_list[]    = $list;
                 $op_list[$key]['contract_stu'] = "<span class='green'>有合同</span>";
+            }elseif (!$list && $list2){
+                $op_list[$key]['contract_stu'] = "<span class='yellow'>合同超时，已返回</span>";
             }else{
                 $op_list[$key]['contract_stu'] = "<span class='red'>无合同</span>";
             }
@@ -1636,3 +1640,65 @@ function get_department_person_score_statis($year='',$month='',$department_id,$c
             return $statu;break;
     }
 }
+
+    /**
+     * 获取公司当季度的预算(营收)营业收入
+     * @param $year
+     * @param $quarter
+     */
+    function get_quarter_plan_income($year,$quarter){
+        $db                         = M('manage_input');
+        $where                      = array();
+        $where['logged_department'] = '公司';
+        $where['datetime']          = $year;
+        $where['type']              = $quarter;
+        $where['statu']             = 4; //已通过审核
+        $income_data                = $db->where($where)->find();
+        return $income_data;
+    }
+
+    /**
+     * 根据平均值求结果分
+     */
+    /*function get_rifht_avg($point){
+        if ($point > -0.1 && $point <= 0.1){
+            $score                  = 100;
+        }elseif (($point > 0.1 && $point <= 0.2) || ($point > -0.2 && $point <= -0.1)){
+            $score                  = 90;
+        }elseif (($point > 0.2 && $point <= 0.3) || ($point > -0.3 && $point <= -0.2)){
+            $score                  = 80;
+        }elseif (($point > 0.3 && $point <= 0.4) || ($point > -0.4 && $point <= -0.3)){
+            $score                  = 70;
+        }elseif (($point > 0.4 && $point <= 0.5) || ($point > -0.5 && $point <= -0.4)){
+            $score                  = 60;
+        }elseif (($point > 0.5 && $point <= 0.6) || ($point > -0.6 && $point <= -0.5)){
+            $score                  = 50;
+        }elseif (($point > 0.6 && $point <= 0.7) || ($point > -0.7 && $point <= -0.6)){
+            $score                  = 40;
+        }elseif (($point > 0.7 && $point <= 0.8) || ($point > -0.8 && $point <= -0.7)){
+            $score                  = 30;
+        }elseif (($point > 0.8 && $point <= 0.9) || ($point > -0.9 && $point <= -0.8)){
+            $score                  = 20;
+        }elseif (($point > 0.9 && $point <= 1) || ($point > -1 && $point <= -0.9)){
+            $score                  = 10;
+        }elseif ($point > 1  || $point <= -1){
+            $score                  = 0;
+        }
+        return $score;
+    }*/
+
+    function get_rifht_avg($point,$snum){
+            if ($point > -0.1 && $point <= 0.1){
+                $score                  = $snum;
+            }else {
+                for ($i = 1; $i < 10; $i++) {
+                    if (($point > '0.'.$i && $point <= '0.'.($i+1)) || ($point > '-0.'.($i+2) && $point <= '-0.'.($i+1))){
+                        $score          = $snum - (10*$i);
+                        if ($score < 0) $score = 0;
+                    }else{
+                        $score          = 0;
+                    }
+                }
+            }
+        return $score;
+    }

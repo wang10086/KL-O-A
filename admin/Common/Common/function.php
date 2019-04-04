@@ -3247,19 +3247,37 @@ function updatekpi($month,$user){
                         }
 
                         //产品设计-市场部经理
-                        if ($v['quota_id']==188){
+                        /*if ($v['quota_id']==188){
                             $complete               = '80%';
                             $url                    = '';
+                        }*/
+
+                        //季度财务预算准确率
+                        if ($v['quota_id']==194){
+                            $weight                 = $v['weight'];
+                            //季度营收准确率指标
+                            $monon                  = substr($v['month'],4,2);
+                            $quarter                = get_quarter($monon);
+                            $quart_month            = quarter_month1($monon);
+                            $quarter_plan_income_data= get_quarter_plan_income($v['year'],$quarter);
+                            $quarter_plan_income    = $quarter_plan_income_data['logged_income']?$quarter_plan_income_data['logged_income']:0; //获取公司当季度的预算营业收入(营收)
+                            $quarter_real_income_data= get_department_operate('公司',$v['year'],$monon); //获取贵公司当季度实际营业收入(营收)(不包括地接营收)
+                            $quarter_real_income    = $quarter_real_income_data['yysr']?$quarter_real_income_data['yysr']:0;
+                            $v1                     = intervalsn($quarter_plan_income,0.10); //定义比较区间
+                            $income_avg             = round(($quarter_real_income - $quarter_plan_income)/$quarter_plan_income,4); //季度营收准确率 (实际-计划)/实际
+                            $income_s               = get_rifht_avg($income_avg,40); //根据平均值求结果分
+
+                            //季度利润准确率指标
+                            $quarter_plan_profit    = $quarter_plan_income_data['total_profit']?$quarter_plan_income_data['total_profit']:0; //获取公司当季度的预算季度利润
+                            $quarter_real_profit    = $quarter_real_income_data['yyml'] - $quarter_real_income_data['rlzycb'] - $quarter_real_income_data['qtfy']; //实际季度利润 = 营业毛利-人力资源成本 - 其他费用
+                            $profit_avg             = round(($quarter_real_profit - $quarter_plan_profit)/$quarter_plan_profit,4); //季度利润准确率
+                            $profit_s               = get_rifht_avg($profit_avg,60); //根据平均值求结果分
+                            $complete               = $income_s + $profit_s; //总分数200(所以除以2)
+                            $url                    = U('Manage/Manage_quarter',array('year'=>$v['year'],'quart'=>$quart_month));
                         }
 
                         //公司顾客满意度-安全品控部经理
                         if ($v['quota_id']==213){
-                            /*$score_lists            = get_month_satisfaction($v); //评分列表
-                            $opids                  = implode(',',array_column($score_lists,'op_id'));
-                            $satisfaction           = get_manyidu($score_lists); //满意度
-                            $complete               = ($satisfaction*100).'%';
-                            $url                    = U('Inspect/score',array('kpi_opids'=>$opids));*/
-
                             $year                       = $v['year'];
                             $mm                         = substr($v['month'],4,2);
                             $yearMonth                  = $year.$mm;
@@ -3312,7 +3330,7 @@ function updatekpi($month,$user){
                    /* }*/
 
                     //已实现自动获取指标值
-                    $auto_quta	= array(1,2,3,4,5,6,81,8,9,10,11,15,16,18,20,23,26,21,24,27,32,37,19,22,25,28,33,38,42,45,103,56,113,92,29,34,39,46,102,55,57,58,59,84,87,89,90,111,107,83,66,54,44,12,112,108,100,96,95,65,114,86,85,64,63,62,53,52,41,40,49,80,48,91,79,47,36,35,31,30,82,110,106,99,94,67,124,125,126,127,128,129,130,131,132,133,134,135,136,137,138,139,140,141,143,144,145,146,147,148,149,150,151,153,154,155,156,158,160,161,162,163,167,188,213,214,215,216);
+                    $auto_quta	= array(1,2,3,4,5,6,81,8,9,10,11,15,16,18,20,23,26,21,24,27,32,37,19,22,25,28,33,38,42,45,103,56,113,92,29,34,39,46,102,55,57,58,59,84,87,89,90,111,107,83,66,54,44,12,112,108,100,96,95,65,114,86,85,64,63,62,53,52,41,40,49,80,48,91,79,47,36,35,31,30,82,110,106,99,94,67,124,125,126,127,128,129,130,131,132,133,134,135,136,137,138,139,140,141,143,144,145,146,147,148,149,150,151,153,154,155,156,158,160,161,162,163,167,194,213,214,215,216);
 
                     //计算完成率并保存数据
                     if(in_array($v['quota_id'],$auto_quta)){
