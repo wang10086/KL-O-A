@@ -623,12 +623,12 @@ class ManageModel extends Model{
     }
 
 
-    /**
+    /** bak_20190404
      * quarter_month 自动计算当前季度
      * $date_Y['statu'] 季度
      * $time_M 月
      */
-    public function quarter_month1($time_M){
+    /*public function quarter_month1($time_M){
         switch ($time_M)
         {
             case 1:
@@ -668,7 +668,7 @@ class ManageModel extends Model{
                 $statu    = 12;
                 return $statu;break;
         }
-    }
+    }*/
     /**
      * quarter_month 自动计算当前年
      * $date_Y['year'] 年

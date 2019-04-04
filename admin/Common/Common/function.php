@@ -3067,7 +3067,8 @@ function updatekpi($month,$user){
                             $ys_lrze        = $budget_info['sum_total_profit'];                     //预算利润总额
                             $operate_info   = get_sum_department_operate($department,$year,$monon);     //实际经营信息
                             $jy_lrze        = round($operate_info['lrze']-$operate_info['qtfy'],2);   //经营利润总额
-                            $url            = U('manage/Manage_quarter');
+                            $quart          = quarter_month1($monon);
+                            $url            = U('manage/Manage_quarter',array('year'=>$v['year'],'quart'=>$quart));
 
                             $complete       = $jy_lrze;
                         }
@@ -4808,14 +4809,38 @@ function getQuarterlyCicle($year,$month){
         switch ($cycle){
             case 2: //季度
                 switch ($month){
+                    case '01':
+                        $arr_month  = array($year.'01',$year.'02',$year.'03');
+                        break;
+                    case '02':
+                        $arr_month  = array($year.'01',$year.'02',$year.'03');
+                        break;
                     case '03':
                         $arr_month  = array($year.'01',$year.'02',$year.'03');
+                        break;
+                    case '04':
+                        $arr_month  = array($year.'04',$year.'05',$year.'06');
+                        break;
+                    case '05':
+                        $arr_month  = array($year.'04',$year.'05',$year.'06');
                         break;
                     case '06':
                         $arr_month  = array($year.'04',$year.'05',$year.'06');
                         break;
+                    case '07':
+                        $arr_month  = array($year.'07',$year.'08',$year.'09');
+                        break;
+                    case '08':
+                        $arr_month  = array($year.'07',$year.'08',$year.'09');
+                        break;
                     case '09':
                         $arr_month  = array($year.'07',$year.'08',$year.'09');
+                        break;
+                    case '10':
+                        $arr_month  = array($year.'10',$year.'11',$year.'12');
+                        break;
+                    case '11':
+                        $arr_month  = array($year.'10',$year.'11',$year.'12');
                         break;
                     case '12':
                         $arr_month  = array($year.'10',$year.'11',$year.'12');

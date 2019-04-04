@@ -142,7 +142,7 @@ class ManageController extends ChartController {
         $quart                  = trim(I('quart',date('m')));//季度
         $mod                    = D('Manage');
         // 季度经营报表
-        $quart                  = $mod->quarter_month1($quart);//获取季度月份
+        $quart                  = quarter_month1($quart);//获取季度月份
 
         // 季度预算报表
         $datetime['year']       = $year;

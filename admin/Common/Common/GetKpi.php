@@ -534,7 +534,7 @@ function get_sum_department_operate($department,$year,$month){
  */
  function get_department_operate($department,$year,$month){
      $mod           = D('Manage');
-     $quart         = $mod->quarter_month1($month);  //季度信息
+     $quart         = quarter_month1($month);  //季度信息
 
      $yms                    = $mod->get_yms($year,$quart,'q');  //获取费季度包含的全部月份
      $times                  = $mod->get_times($year,$quart,'q');    //获取考核周期开始及结束时间戳
@@ -1590,3 +1590,49 @@ function get_department_person_score_statis($year='',$month='',$department_id,$c
         $score      = round($defen/$zongfen,2);
         return $score;
     }
+
+    /**
+     * quarter_month 自动计算当前季度
+     * $month 月
+     */
+    function quarter_month1($month){
+    switch ($month)
+    {
+        case 1:
+            $statu    = 3;
+            return $statu;die;
+        case 2:
+            $statu    = 3;
+            return $statu;break;
+        case 3:
+            $statu    = 3;
+            return $statu;break;
+        case 4:
+            $statu    = 6;
+            return $statu;break;
+        case 5:
+            $statu    = 6;
+            return $statu;break;
+        case 6:
+            $statu    = 6;
+            return $statu;break;
+        case 7:
+            $statu    = 9;
+            return $statu;break;
+        case 8:
+            $statu    = 9;
+            return $statu;break;
+        case 9:
+            $statu    = 9;
+            return $statu;break;
+        case 10:
+            $statu    = 12;
+            return $statu;break;
+        case 11:
+            $statu    = 12;
+            return $statu;break;
+        case 12:
+            $statu    = 12;
+            return $statu;break;
+    }
+}
