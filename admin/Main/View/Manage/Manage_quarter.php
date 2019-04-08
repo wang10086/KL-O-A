@@ -20,14 +20,6 @@
         <div class="row">
             <!-- right column -->
             <div class="col-md-12">
-                <!--<div class="btn-group" id="catfont" style="padding-bottom:20px;">
-                    <a href="{:U('Manage/Manage_quarter',array('year'=>$year-1,'post'=>1))}" class="btn btn-default" id ="<?php /*if($post==1){echo 'btn-default_1';}*/?>" style="padding:8px 18px;">上一年</a>
-                    <a href="{:U('Manage/Manage_quarter',array('year'=>$year,'quart'=>3))}" class="btn btn-default" style="padding:8px 18px;" id="<?php /*if($quart==3 && $post==''){echo 'btn-default_1';}*/?>">第一季度</a>
-                    <a href="{:U('Manage/Manage_quarter',array('year'=>$year,'quart'=>6))}" class="btn btn-default" style="padding:8px 18px;" id="<?php /*if($quart==6  && $post==''){echo 'btn-default_1';}*/?>">第二季度</a>
-                    <a href="{:U('Manage/Manage_quarter',array('year'=>$year,'quart'=>9))}" class="btn btn-default" style="padding:8px 18px;" id="<?php /*if($quart==9  && $post==''){echo 'btn-default_1';}*/?>">第三季度</a>
-                    <a href="{:U('Manage/Manage_quarter',array('year'=>$year,'quart'=>12))}" class="btn btn-default" style="padding:8px 18px;" id="<?php /*if($quart==12  && $post==''){echo 'btn-default_1';}*/?>">第四季度</a>
-                    <a href="{:U('Manage/Manage_quarter',array('year'=>$year+1,'post'=>2))}" class="btn btn-default" id ="<?php /*if($post==2){echo 'btn-default_1';}*/?>" style="padding:8px 18px;">下一年</a>
-                </div>-->
                 <div class="btn-group" id="catfont" style="padding-bottom:20px;">
                     <a href="{:U('Manage/Manage_quarter',array('year'=>$year-1))}" class="btn btn-default" style="padding:8px 18px;">上一年</a>
                     <a href="{:U('Manage/Manage_quarter',array('year'=>$year,'quart'=>3))}" class="btn btn-default <?php if($quart==3){echo 'btn-info';}?>">第一季度</a>
@@ -154,16 +146,16 @@
                                 </tr>
                                 <tr role="row" class="orders" style="text-align:center;">
                                     <th>营业收入</th>
-                                    <th>&yen; <?php echo $profit['公司']['monthzsr']?$profit['公司']['monthzsr']:'0.00'; ?></th>
-                                    <th>&yen; <?php echo $profit['京区业务中心']['monthzsr']?$profit['京区业务中心']['monthzsr']:'0.00'; ?></th>
-                                    <th>&yen; <?php echo $profit['京外业务中心']['monthzsr']?$profit['京外业务中心']['monthzsr']:'0.00'; ?></th>
-                                    <th>&yen; <?php echo $profit['南京项目部']['monthzsr']?$profit['南京项目部']['monthzsr']:'0.00'; ?></th>
-                                    <th>&yen; <?php echo $profit['武汉项目部']['monthzsr']?$profit['武汉项目部']['monthzsr']:'0.00'; ?></th>
-                                    <th>&yen; <?php echo $profit['沈阳项目部']['monthzsr']?$profit['沈阳项目部']['monthzsr']:'0.00'; ?></th>
-                                    <th>&yen; <?php echo $profit['长春项目部']['monthzsr']?$profit['长春项目部']['monthzsr']:'0.00'; ?></th>
-                                    <th>&yen; <?php echo $profit['市场部']['monthzsr']?$profit['市场部']['monthzsr']:'0.00'; ?></th>
-                                    <th>&yen; <?php echo $profit['常规业务中心']['monthzsr']?$profit['常规业务中心']['monthzsr']:'0.00'; ?></th>
-                                    <th>&yen; <?php echo $profit['机关部门']['monthzsr']?$profit['机关部门']['monthzsr']:'0.00'; ?></th>
+                                    <th>&yen; <a href="{:U('Chart/quarter_department',array('year'=>$year,'pin'=>$pin,'quarter'=>$quarter))}"><?php echo $profit['公司']['monthzsr']?$profit['公司']['monthzsr']:'0.00'; ?></a></th>
+                                    <th>&yen; <a href="{:U('Chart/quarter_department',array('year'=>$year,'pin'=>$pin,'quarter'=>$quarter))}"><?php echo $profit['京区业务中心']['monthzsr']?$profit['京区业务中心']['monthzsr']:'0.00'; ?></a></th>
+                                    <th>&yen; <a href="{:U('Chart/quarter_department',array('year'=>$year,'pin'=>$pin,'quarter'=>$quarter))}"><?php echo $profit['京外业务中心']['monthzsr']?$profit['京外业务中心']['monthzsr']:'0.00'; ?></a></th>
+                                    <th>&yen; <a href="{:U('Chart/quarter_department',array('year'=>$year,'pin'=>$pin,'quarter'=>$quarter))}"><?php echo $profit['南京项目部']['monthzsr']?$profit['南京项目部']['monthzsr']:'0.00'; ?></a></th>
+                                    <th>&yen; <a href="{:U('Chart/quarter_department',array('year'=>$year,'pin'=>$pin,'quarter'=>$quarter))}"><?php echo $profit['武汉项目部']['monthzsr']?$profit['武汉项目部']['monthzsr']:'0.00'; ?></a></th>
+                                    <th>&yen; <a href="{:U('Chart/quarter_department',array('year'=>$year,'pin'=>$pin,'quarter'=>$quarter))}"><?php echo $profit['沈阳项目部']['monthzsr']?$profit['沈阳项目部']['monthzsr']:'0.00'; ?></a></th>
+                                    <th>&yen; <a href="{:U('Chart/quarter_department',array('year'=>$year,'pin'=>$pin,'quarter'=>$quarter))}"><?php echo $profit['长春项目部']['monthzsr']?$profit['长春项目部']['monthzsr']:'0.00'; ?></a></th>
+                                    <th>&yen; <a href="{:U('Chart/quarter_department',array('year'=>$year,'pin'=>$pin,'quarter'=>$quarter))}"><?php echo $profit['市场部']['monthzsr']?$profit['市场部']['monthzsr']:'0.00'; ?></a></th>
+                                    <th>&yen; <a href="{:U('Chart/quarter_department',array('year'=>$year,'pin'=>$pin,'quarter'=>$quarter))}"><?php echo $profit['常规业务中心']['monthzsr']?$profit['常规业务中心']['monthzsr']:'0.00'; ?></a></th>
+                                    <th>&yen; <a href="{:U('Chart/quarter_department',array('year'=>$year,'pin'=>$pin,'quarter'=>$quarter))}"><?php echo $profit['机关部门']['monthzsr']?$profit['机关部门']['monthzsr']:'0.00'; ?></a></th>
                                 </tr>
                                 <tr role="row" class="orders" style="text-align:center;">
                                     <td>营业毛利</td>
@@ -192,31 +184,30 @@
                                     <th><?php echo $profit['机关部门']['monthmll']?$profit['机关部门']['monthmll']:'0.00'; ?> %</th>
                                 </tr>
                                 <tr role="row" class="orders" style="text-align:center;">
-                                    <td><a href="{:U('Manage/HR_cost',array('year'=>$year,'month'=>$month,'tm'=>'q'))}">人力资源成本</a></td>
-                                    <th>&yen; <?php echo $hr_cost['公司']?$hr_cost['公司']:'0.00'; ?></th>
-                                    <th>&yen; <?php echo $hr_cost['京区业务中心']?$hr_cost['京区业务中心']:'0.00'; ?></th>
-                                    <th>&yen; <?php echo $hr_cost['京外业务中心']?$hr_cost['京外业务中心']:'0.00'; ?></th>
-                                    <th>&yen; <?php echo $hr_cost['南京项目部']?$hr_cost['南京项目部']:'0.00'; ?></th>
-                                    <th>&yen; <?php echo $hr_cost['武汉项目部']?$hr_cost['武汉项目部']:'0.00'; ?></th>
-                                    <th>&yen; <?php echo $hr_cost['沈阳项目部']?$hr_cost['沈阳项目部']:'0.00'; ?></th>
-                                    <th>&yen; <?php echo $hr_cost['长春项目部']?$hr_cost['长春项目部']:'0.00'; ?></th>
-                                    <th>&yen; <?php echo $hr_cost['市场部']?$hr_cost['市场部']:'0.00'; ?></th>
-                                    <th>&yen; <?php echo $hr_cost['常规业务中心']?$hr_cost['常规业务中心']:'0.00'; ?></th>
-                                    <th>&yen; <?php echo $hr_cost['机关部门']?$hr_cost['机关部门']:'0.00'; ?></th>
+                                    <td>人力资源成本</td>
+                                    <th>&yen; <a href="{:U('Manage/HR_cost',array('year'=>$year,'month'=>$quart,'tm'=>'q','quarter'=>$quarter))}"><?php echo $hr_cost['公司']?$hr_cost['公司']:'0.00'; ?></a></th>
+                                    <th>&yen; <a href="{:U('Manage/HR_cost',array('year'=>$year,'month'=>$quart,'tm'=>'q','quarter'=>$quarter))}"><?php echo $hr_cost['京区业务中心']?$hr_cost['京区业务中心']:'0.00'; ?></a></th>
+                                    <th>&yen; <a href="{:U('Manage/HR_cost',array('year'=>$year,'month'=>$quart,'tm'=>'q','quarter'=>$quarter))}"><?php echo $hr_cost['京外业务中心']?$hr_cost['京外业务中心']:'0.00'; ?></a></th>
+                                    <th>&yen; <a href="{:U('Manage/HR_cost',array('year'=>$year,'month'=>$quart,'tm'=>'q','quarter'=>$quarter))}"><?php echo $hr_cost['南京项目部']?$hr_cost['南京项目部']:'0.00'; ?></a></th>
+                                    <th>&yen; <a href="{:U('Manage/HR_cost',array('year'=>$year,'month'=>$quart,'tm'=>'q','quarter'=>$quarter))}"><?php echo $hr_cost['武汉项目部']?$hr_cost['武汉项目部']:'0.00'; ?></a></th>
+                                    <th>&yen; <a href="{:U('Manage/HR_cost',array('year'=>$year,'month'=>$quart,'tm'=>'q','quarter'=>$quarter))}"><?php echo $hr_cost['沈阳项目部']?$hr_cost['沈阳项目部']:'0.00'; ?></a></th>
+                                    <th>&yen; <a href="{:U('Manage/HR_cost',array('year'=>$year,'month'=>$quart,'tm'=>'q','quarter'=>$quarter))}"><?php echo $hr_cost['长春项目部']?$hr_cost['长春项目部']:'0.00'; ?></a></th>
+                                    <th>&yen; <a href="{:U('Manage/HR_cost',array('year'=>$year,'month'=>$quart,'tm'=>'q','quarter'=>$quarter))}"><?php echo $hr_cost['市场部']?$hr_cost['市场部']:'0.00'; ?></a></th>
+                                    <th>&yen; <a href="{:U('Manage/HR_cost',array('year'=>$year,'month'=>$quart,'tm'=>'q','quarter'=>$quarter))}"><?php echo $hr_cost['常规业务中心']?$hr_cost['常规业务中心']:'0.00'; ?></a></th>
+                                    <th>&yen; <a href="{:U('Manage/HR_cost',array('year'=>$year,'month'=>$quart,'tm'=>'q','quarter'=>$quarter))}"><?php echo $hr_cost['机关部门']?$hr_cost['机关部门']:'0.00'; ?></a></th>
                                 </tr>
                                 <tr role="row" class="orders" style="text-align:center;">
-                                    <td><a href="{:U('Manage/otherExpenses',array('year'=>$year,'month'=>$month,'tm'=>'q'))}">其他费用</a></td>
-                                    <!--<td>其他费用</td>-->
-                                    <th>&yen; <?php echo $department['公司']['money']?$department['公司']['money']:'0.00'; ?></th>
-                                    <th>&yen; <?php echo $department['京区业务中心']['money']?$department['京区业务中心']['money']:'0.00'; ?></th>
-                                    <th>&yen; <?php echo $department['京外业务中心']['money']?$department['京外业务中心']['money']:'0.00'; ?></th>
-                                    <th>&yen; <?php echo $department['南京项目部']['money']?$department['南京项目部']['money']:'0.00'; ?></th>
-                                    <th>&yen; <?php echo $department['武汉项目部']['money']?$department['武汉项目部']['money']:'0.00'; ?></th>
-                                    <th>&yen; <?php echo $department['沈阳项目部']['money']?$department['沈阳项目部']['money']:'0.00'; ?></th>
-                                    <th>&yen; <?php echo $department['长春项目部']['money']?$department['长春项目部']['money']:'0.00'; ?></th>
-                                    <th>&yen; <?php echo $department['市场部']['money']?$department['市场部']['money']:'0.00'; ?></th>
-                                    <th>&yen; <?php echo $department['常规业务中心']['money']?$department['常规业务中心']['money']:'0.00'; ?></th>
-                                    <th>&yen; <?php echo $department['机关部门']['money']?$department['机关部门']['money']:'0.00'; ?></th>
+                                    <td>其他费用</a></td>
+                                    <th>&yen; <a href="{:U('Manage/otherExpenses',array('year'=>$year,'month'=>$quart,'tm'=>'q','quarter'=>$quarter))}"><?php echo $department['公司']['money']?$department['公司']['money']:'0.00'; ?></a></th>
+                                    <th>&yen; <a href="{:U('Manage/otherExpenses',array('year'=>$year,'month'=>$quart,'tm'=>'q','quarter'=>$quarter))}"><?php echo $department['京区业务中心']['money']?$department['京区业务中心']['money']:'0.00'; ?></a></th>
+                                    <th>&yen; <a href="{:U('Manage/otherExpenses',array('year'=>$year,'month'=>$quart,'tm'=>'q','quarter'=>$quarter))}"><?php echo $department['京外业务中心']['money']?$department['京外业务中心']['money']:'0.00'; ?></a></th>
+                                    <th>&yen; <a href="{:U('Manage/otherExpenses',array('year'=>$year,'month'=>$quart,'tm'=>'q','quarter'=>$quarter))}"><?php echo $department['南京项目部']['money']?$department['南京项目部']['money']:'0.00'; ?></a></th>
+                                    <th>&yen; <a href="{:U('Manage/otherExpenses',array('year'=>$year,'month'=>$quart,'tm'=>'q','quarter'=>$quarter))}"><?php echo $department['武汉项目部']['money']?$department['武汉项目部']['money']:'0.00'; ?></a></th>
+                                    <th>&yen; <a href="{:U('Manage/otherExpenses',array('year'=>$year,'month'=>$quart,'tm'=>'q','quarter'=>$quarter))}"><?php echo $department['沈阳项目部']['money']?$department['沈阳项目部']['money']:'0.00'; ?></a></th>
+                                    <th>&yen; <a href="{:U('Manage/otherExpenses',array('year'=>$year,'month'=>$quart,'tm'=>'q','quarter'=>$quarter))}"><?php echo $department['长春项目部']['money']?$department['长春项目部']['money']:'0.00'; ?></a></th>
+                                    <th>&yen; <a href="{:U('Manage/otherExpenses',array('year'=>$year,'month'=>$quart,'tm'=>'q','quarter'=>$quarter))}"><?php echo $department['市场部']['money']?$department['市场部']['money']:'0.00'; ?></a></th>
+                                    <th>&yen; <a href="{:U('Manage/otherExpenses',array('year'=>$year,'month'=>$quart,'tm'=>'q','quarter'=>$quarter))}"><?php echo $department['常规业务中心']['money']?$department['常规业务中心']['money']:'0.00'; ?></a></th>
+                                    <th>&yen; <a href="{:U('Manage/otherExpenses',array('year'=>$year,'month'=>$quart,'tm'=>'q','quarter'=>$quarter))}"><?php echo $department['机关部门']['money']?$department['机关部门']['money']:'0.00'; ?></a></th>
                                 </tr>
                                 <tr role="row" class="orders" style="text-align:center;">
                                     <td>利润总额</td>

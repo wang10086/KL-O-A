@@ -173,7 +173,9 @@ class ManageController extends ChartController {
         $this->human_affairs    = $human_affairs;   //季度人事费用率
         $this->total_profit     = $total_profit;    //季度利润总额
         $this->year             = $year;//年
-        $this->quart            = $quart;
+        $this->quart            = $quart; //季度月份
+        $this->pin              = 1; //已结算统计
+        $this->quarter          = get_quarter($quart);
         $this->display();
     }
 
