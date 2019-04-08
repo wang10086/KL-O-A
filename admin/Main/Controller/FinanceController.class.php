@@ -2767,7 +2767,7 @@ class FinanceController extends BaseController {
         $this->display('money_back_detail');
     }
 
-    //@@@NODE-3###payment###回款管理###
+    //@@@NODE-3###payment###月度回款管理###
     public function payment(){
         $year		                        = I('year',date('Y'));
         $month	                            = I('month',date('m'));
@@ -2790,6 +2790,35 @@ class FinanceController extends BaseController {
         $this->nextyear	                    = $year+1;
         $this->display();
     }
+
+    //@@@NODE-3###payment###季度回款管理###
+    public function payment_quarter(){
+        $year		                        = I('year',date('Y'));
+        $month	                            = I('month',date('m'));
+        if (strlen($month)<2) $month        = str_pad($month,2,'0',STR_PAD_LEFT);
+        $quarter                            = I('quarter')?I('quarter'):get_quarter($month);
+        $cycle_times                        = set_quarter($year,$quarter);
+
+        $yw_departs                         = C('YW_DEPARTS');  //业务部门id
+        $where                              = array();
+        $where['id']                        = array('in',$yw_departs);
+        $departments                        = M('salary_department')->field('id,department')->where($where)->select();
+        $lists                              = $this->get_department_money_back_list($departments,$cycle_times['begin_time'],$cycle_times['end_time']);
+        $sum                                = $this->get_sum($lists);
+
+        $this->sum                          = $sum;
+        $this->lists                        = $lists;
+        $this->departments                  = $departments;
+        $this->year		                    = I('year',date('Y'));
+        $this->month	                    = I('month',date('m'));
+        $this->quarter                      = $quarter;
+        $this->prveyear	                    = $year-1;
+        $this->nextyear	                    = $year+1;
+        $this->display();
+    }
+
+
+
 
     public function get_department_money_back_list($departments,$begintime,$endtime){
         $data                               = array();
@@ -2979,21 +3008,28 @@ class FinanceController extends BaseController {
     }
 
     /**
-     * 历史欠款
+     * 月度历史欠款
      */
     public function arrears_detail(){
         $year		                        = I('year',date('Y'));
-        $month	                            = I('month',date('m'));
+        $month	                            = I('month',date('m')); //月度
+        $quarter                            = I('quarter'); //季度
         $pin                                = I('pin');  //1=>当月回款详情 2=>历史欠款详情
         $title                              = trim(I('title'));
         $group_id                           = trim(I('gid'));
         $opid                               = trim(I('opid'));
         $create_user                        = trim(I('ou')); //销售
         if (strlen($month)<2) $month        = str_pad($month,2,'0',STR_PAD_LEFT);
-        $yearmonth                          = $year.$month;
-        $times                              = get_cycle($yearmonth);
-        $start_time                         = $times['begintime'];
-        $end_time                           = $times['endtime'];
+        if ($quarter){
+            $times                          = set_quarter($year,$quarter);
+            $start_time                     = $times['begin_time'];
+            $end_time                       = $times['endt_ime'];
+        }else{
+            $yearmonth                      = $year.$month;
+            $times                          = get_cycle($yearmonth);
+            $start_time                     = $times['begintime'];
+            $end_time                       = $times['endtime'];
+        }
 
         $where                              = array();
         $where['c.return_time']	            = array('lt',$end_time);
@@ -3013,6 +3049,7 @@ class FinanceController extends BaseController {
         $this->month	                    = $month;
         $this->prveyear	                    = $year-1;
         $this->nextyear	                    = $year+1;
+        $this->quarter                      = $quarter;
         $this->display();
     }
 

@@ -3,10 +3,10 @@
             <aside class="right-side">
                 <!-- Content Header (Page header) -->
                 <section class="content-header">
-                    <h1>回款管理 <small>月度回款</small></h1>
+                    <h1>回款管理 <small>季度回款</small></h1>
                     <ol class="breadcrumb">
                         <li><a href="{:U('Index/index')}"><i class="fa fa-home"></i> 首页</a></li>
-                        <li class="active">月度回款管理</li>
+                        <li class="active">季度回款管理</li>
                     </ol>
                 </section>
 
@@ -16,41 +16,35 @@
                     <div class="row">
                         <div class="col-xs-12">
 
-                            <div class="btn-group" id="catfont" style="padding-bottom:20px;">
-                                <?php if($prveyear>2017){ ?>
-                                    <a href="{:U('Finance/payment',array('year'=>$prveyear,'month'=>'01'))}" class="btn btn-default" style="padding:8px 18px;">上一年</a>
+                            <div class="btn-group" id="catfont" style="padding-bottom:5px;">
+                                <?php if($prveyear>2016){ ?>
+                                    <a href="{:U('Finance/payment_quarter',array('year'=>$prveyear,'quarter'=>$quarter,'pin'=>$pin))}" class="btn btn-default" style="padding:8px 18px;">上一年</a>
                                 <?php } ?>
                                 <?php
-                                    for($i=1;$i<13;$i++){
-                                        $par = array();
-                                        $par['year']  = $year;
-                                        $par['month'] = str_pad($i,2,"0",STR_PAD_LEFT);
-                                        $par['pin']   = $pin;
-                                        if($month==$i){
-                                            echo '<a href="'.U('Finance/payment',$par).'" class="btn btn-info" style="padding:8px 18px;">'.$i.'月</a>';
-                                        }else{
-                                            echo '<a href="'.U('Finance/payment',$par).'" class="btn btn-default" style="padding:8px 18px;">'.$i.'月</a>';
-                                        }
+                                for($i=1;$i<5;$i++){
+                                    if($quarter==$i){
+                                        echo '<a href="'.U('Finance/payment_quarter',array('year'=>$year,'quarter'=>$i,'pin'=>$pin)).'" class="btn btn-info" style="padding:8px 18px;">'.$i.'季度</a>';
+                                    }else{
+                                        echo '<a href="'.U('Finance/payment_quarter',array('year'=>$year,'quarter'=>$i,'pin'=>$pin)).'" class="btn btn-default" style="padding:8px 18px;">'.$i.'季度</a>';
                                     }
+                                }
                                 ?>
                                 <?php if($year<date('Y')){ ?>
-                                    <a href="{:U('Finance/payment',array('year'=>$nextyear,'month'=>'01'))}" class="btn btn-default" style="padding:8px 18px;">下一年</a>
+                                    <a href="{:U('Finance/payment_quarter',array('year'=>$nextyear,'quarter'=>$quarter,'pin'=>$pin))}" class="btn btn-default" style="padding:8px 18px;">下一年</a>
                                 <?php } ?>
                             </div>
 
                             <div class="box box-warning">
                                 <div class="box-header">
-                                    <!--<h3 class="box-title">回款管理</h3>
-                                    <div class="box-tools pull-right">
-                                    	 <a href="javascript:;" class="btn btn-info btn-sm" onclick="javascript:opensearch('searchtext',700,160);"><i class="fa fa-search"></i> 搜索</a>
-                                    </div>-->
+                                   <!-- <h3 class="box-title">季度回款管理</h3>-->
+
                                     <div class="box-header">
                                         <div class="box-tools btn-group" id="chart_btn_group">
-                                            <a href="{:U('Finance/payment',array('year'=>$year,'month'=>$month))}" class="btn btn-sm btn-info">回款统计</a>
-                                            <a href="{:U('Finance/arrears_detail',array('year'=>$year,'month'=>$month,'pin'=>1))}" class="btn btn-sm btn-group-header">当月回款详情</a>
-                                            <a href="{:U('Finance/arrears_detail',array('year'=>$year,'month'=>$month,'pin'=>2))}" class="btn btn-sm btn-group-header">历史欠款详情</a>
+                                            <a href="{:U('Finance/payment_quarter',array('year'=>$year,'quarter'=>$quarter))}" class="btn btn-sm btn-info">季度回款统计</a>
+                                            <a href="{:U('Finance/arrears_detail',array('year'=>$year,'quarter'=>$quarter,'pin'=>1))}" class="btn btn-sm btn-group-header">当季度回款详情</a>
+                                            <a href="{:U('Finance/arrears_detail',array('year'=>$year,'quarter'=>$quarter,'pin'=>2))}" class="btn btn-sm btn-group-header">历史欠款详情</a>
                                         </div>
-                                    </div><!-- /.box-header -->
+                                    </div>
                                 </div><!-- /.box-header -->
                                 <div class="box-body">
                                 
@@ -66,7 +60,7 @@
                                     </tr>
                                     <foreach name="lists" item="row">
                                     <tr>
-                                    	<td class="taskOptions"><a href="{:U('Finance/public_payment_detail',array('department'=>$row['id'],'year'=>$year,'month'=>$month))}" target="_blank">{$row.department}</a></td>
+                                    	<td class="taskOptions"><a href="{:U('Finance/public_payment_detail',array('department'=>$row['id'],'year'=>$year,'quarter'=>$quarter))}" target="_blank">{$row.department}</a></td>
                                         <td class="taskOptions"><?php echo $row['this_month']?$row['this_month']:'0.00'; ?></td>
                                         <td class="taskOptions"><?php echo $row['history']?$row['history']:'0.00'; ?></td>
                                         <td class="taskOptions"><?php echo $row['this_month_return']?$row['this_month_return']:'0.00'; ?></td>
