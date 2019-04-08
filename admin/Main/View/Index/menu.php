@@ -503,7 +503,7 @@
                                     </ul>
                                 </li>
 
-                                <li class="treeview {:on('Finance/costacclist')} {:on('Finance/budget')} {:on('Finance/settlementlist')} {:on('Finance/payment')}">
+                                <li class="treeview {:on('Finance/costacclist')} {:on('Finance/budget')} {:on('Finance/settlementlist')}">
                                     <if condition="rolemenu(array('Finance/jiekuan'))">
                                         <a href=""><i class="fa fa-bullseye"></i> 项目费用</a>
                                     </if>
@@ -520,17 +520,29 @@
                                             <li><a href="{:U('Finance/settlementlist')}"><i class="fa fa-angle-right"></i> 项目结算</a></li>
                                         </if>
 
+                                    </ul>
+                                </li>
+
+                                <li class="treeview {:on('Finance/payment')}">
+                                    <if condition="rolemenu(array('Finance/payment'))">
+                                        <a href=""><i class="fa fa-share"></i> 回款管理</a>
+                                    </if>
+                                    <ul class="treeview-menu">
                                         <if condition="rolemenu(array('Finance/payment'))">
-                                            <li><a href="{:U('Finance/payment')}"><i class="fa fa-angle-right"></i> 回款管理</a></li>
-                                            <!--<li><a href="{:U('Finance/public_payment_chart')}"><i class="fa fa-angle-right"></i> 回款统计</a></li>-->
+                                            <li><a href="{:U('Finance/payment')}"><i class="fa fa-angle-right"></i> 月度回款管理</a></li>
                                         </if>
 
+                                        <li><a href="javascript:;" onclick="art_show_msg('加班开发中...',3)"><i class="fa fa-angle-right"></i> 季度回款管理</a></li>
+
+                                        <if condition="rolemenu(array('Finance/payment_quarter'))">
+                                            <li><a href="{:U('Finance/payment_quarter')}"><i class="fa fa-angle-right"></i> 季度回款管理</a></li>
+                                        </if>
                                     </ul>
                                 </li>
 
                                 <li class="treeview {:on('Manage/Manage_month')}{:on('Manage/Manage_quarter')}{:on('Manage/Manage_year')}">
                                     <if condition="rolemenu(array('Manage/Manage_month','Manage/Manage_quarter','Manage/Manage_year'))">
-                                        <a href=""><i class="fa fa-angle-right"></i> 经营管理</a>
+                                        <a href=""><i class="fa fa-signal"></i> 经营管理</a>
                                     </if>
                                     <ul class="treeview-menu">
                                         <if condition="rolemenu(array('Manage/Manage_month'))">
