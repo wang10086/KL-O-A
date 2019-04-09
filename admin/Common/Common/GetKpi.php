@@ -1702,3 +1702,48 @@ function get_department_person_score_statis($year='',$month='',$department_id,$c
             }
         return $score;
     }
+
+/**
+ * 获取当月计划回款金额
+ * @param $userinfo
+ * @param $begintime
+ * @param $endtime
+ * @return array
+ */
+function get_money_back_info($userinfo='',$starttime,$endtime){
+    $where                                  = array();
+    if ($userinfo) $where['payee']          = $userinfo['id'];
+    $where['return_time']                   = array('lt',$endtime);
+    $lists                                  = M('contract_pay')->where($where)->select();
+    $data                                   = check_list($lists,$starttime,$endtime);
+    return $data;
+}
+
+function get_department_money_back_list($departments,$begintime,$endtime){
+    $data                               = array();
+    foreach ($departments as $k=>$v){
+        $data[$k]['id']                 = $v['id'];
+        $data[$k]['department']         = $v['department'];
+        $where                          = array();
+        $where['p.code']                = array('like','S%');
+        $where['a.departmentid']        = $v['id'];
+        $count_lists                    = M()->table('__ACCOUNT__ as a')->join('__POSITION__ as p on p.id=a.position_id','left')->field('a.*')->where($where)->select();
+        foreach ($count_lists as $key=>$value){
+            $info                       = get_money_back_info($value,$begintime,$endtime);
+            $data[$k]['this_month']         += $info['this_month'];
+            $data[$k]['history']            += $info['history'];
+            $data[$k]['this_month_return']  += $info['this_month_return'];
+        }
+        $data[$k]['money_back_average']     = ($data[$k]['this_month']+$data[$k]['history'])?(round($data[$k]['this_month_return']/($data[$k]['this_month']+$data[$k]['history']),4)*100).'%':'100%';
+    }
+    return $data;
+}
+
+function get_sum($lists){
+    $sum                                = array();
+    $sum['this_month']                  = array_sum(array_column($lists,'this_month'));
+    $sum['history']                     = array_sum(array_column($lists,'history'));
+    $sum['this_month_return']           = array_sum(array_column($lists,'this_month_return'));
+    $sum['sum_average']                 = (round($sum['this_month_return']/($sum['this_month']+$sum['history']),4)*100).'%';
+    return $sum;
+}

@@ -41,8 +41,8 @@
                                     <div class="box-header">
                                         <div class="box-tools btn-group" id="chart_btn_group">
                                             <a href="{:U('Finance/payment_quarter',array('year'=>$year,'quarter'=>$quarter))}" class="btn btn-sm btn-info">季度回款统计</a>
-                                            <a href="{:U('Finance/arrears_detail',array('year'=>$year,'quarter'=>$quarter,'pin'=>1))}" class="btn btn-sm btn-group-header">当季度回款详情</a>
-                                            <a href="{:U('Finance/arrears_detail',array('year'=>$year,'quarter'=>$quarter,'pin'=>2))}" class="btn btn-sm btn-group-header">历史欠款详情</a>
+                                            <a href="{:U('Finance/quarter_arrears_detail',array('year'=>$year,'quarter'=>$quarter,'pin'=>1))}" class="btn btn-sm btn-group-header">当季度回款详情</a>
+                                            <a href="{:U('Finance/quarter_arrears_detail',array('year'=>$year,'quarter'=>$quarter,'pin'=>2))}" class="btn btn-sm btn-group-header">历史欠款详情</a>
                                         </div>
                                     </div>
                                 </div><!-- /.box-header -->

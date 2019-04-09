@@ -2778,8 +2778,8 @@ class FinanceController extends BaseController {
         $where['id']                        = array('in',$yw_departs);
         $departments                        = M('salary_department')->field('id,department')->where($where)->select();
         $cycle_times                        = get_cycle($times);
-        $lists                              = $this->get_department_money_back_list($departments,$cycle_times['begintime'],$cycle_times['endtime']);
-        $sum                                = $this->get_sum($lists);
+        $lists                              = get_department_money_back_list($departments,$cycle_times['begintime'],$cycle_times['endtime']);
+        $sum                                = get_sum($lists);
 
         $this->sum                          = $sum;
         $this->lists                        = $lists;
@@ -2803,8 +2803,8 @@ class FinanceController extends BaseController {
         $where                              = array();
         $where['id']                        = array('in',$yw_departs);
         $departments                        = M('salary_department')->field('id,department')->where($where)->select();
-        $lists                              = $this->get_department_money_back_list($departments,$cycle_times['begin_time'],$cycle_times['end_time']);
-        $sum                                = $this->get_sum($lists);
+        $lists                              = get_department_money_back_list($departments,$cycle_times['begin_time'],$cycle_times['end_time']);
+        $sum                                = get_sum($lists);
 
         $this->sum                          = $sum;
         $this->lists                        = $lists;
@@ -2818,27 +2818,6 @@ class FinanceController extends BaseController {
     }
 
 
-
-
-    public function get_department_money_back_list($departments,$begintime,$endtime){
-        $data                               = array();
-        foreach ($departments as $k=>$v){
-            $data[$k]['id']                 = $v['id'];
-            $data[$k]['department']         = $v['department'];
-            $where                          = array();
-            $where['p.code']                = array('like','S%');
-            $where['a.departmentid']        = $v['id'];
-            $count_lists                    = M()->table('__ACCOUNT__ as a')->join('__POSITION__ as p on p.id=a.position_id','left')->field('a.*')->where($where)->select();
-            foreach ($count_lists as $key=>$value){
-                $info                       = $this->get_money_back_info($value,$begintime,$endtime);
-                $data[$k]['this_month']         += $info['this_month'];
-                $data[$k]['history']            += $info['history'];
-                $data[$k]['this_month_return']  += $info['this_month_return'];
-            }
-            $data[$k]['money_back_average']     = ($data[$k]['this_month']+$data[$k]['history'])?(round($data[$k]['this_month_return']/($data[$k]['this_month']+$data[$k]['history']),4)*100).'%':'100%';
-        }
-        return $data;
-    }
 
     public function public_payment_detail(){
         $year		                        = I('year',date('Y'));
@@ -2858,13 +2837,13 @@ class FinanceController extends BaseController {
         $lists                              = M()->table('__ACCOUNT__ as a')->join('__POSITION__ as p on p.id=a.position_id','left')->field('a.*')->where($where)->select();
         foreach ($lists as $k=>$v){
             //当月回款/欠款信息
-            $data                           = $this->get_money_back_info($v,$cycle_time['begintime'],$cycle_time['endtime']);
+            $data                           = get_money_back_info($v,$cycle_time['begintime'],$cycle_time['endtime']);
             $lists[$k]['this_month']        = $data['this_month']?$data['this_month']:'0.00'; //计划回款时间或实际回款时间在当月的团
             $lists[$k]['history']           = $data['history']?$data['history']:'0.00'; //历史欠付
             $lists[$k]['this_month_return'] = $data['this_month_return']?$data['this_month_return']:'0.00'; //当月回款金额
             $lists[$k]['money_back_average']= $data['money_back_average']; //回款及时率
         }
-        $sum                                = $this->get_sum($lists);
+        $sum                                = get_sum($lists);
 
         $this->sum                          = $sum;
         $this->cycle_time                   = $cycle_time;
@@ -2876,31 +2855,6 @@ class FinanceController extends BaseController {
         $this->lists                        = $lists;
         $this->department                   = $departmnet_id;
         $this->displaY('payment_detail');
-    }
-
-    private function get_sum($lists){
-        $sum                                = array();
-        $sum['this_month']                  = array_sum(array_column($lists,'this_month'));
-        $sum['history']                     = array_sum(array_column($lists,'history'));
-        $sum['this_month_return']           = array_sum(array_column($lists,'this_month_return'));
-        $sum['sum_average']                 = (round($sum['this_month_return']/($sum['this_month']+$sum['history']),4)*100).'%';
-        return $sum;
-    }
-
-    /**
-     * 获取当月计划回款金额
-     * @param $userinfo
-     * @param $begintime
-     * @param $endtime
-     * @return array
-     */
-    public function get_money_back_info($userinfo='',$starttime,$endtime){
-        $where                                  = array();
-        if ($userinfo) $where['payee']          = $userinfo['id'];
-        $where['return_time']                   = array('lt',$endtime);
-        $lists                                  = M('contract_pay')->where($where)->select();
-        $data                                   = check_list($lists,$starttime,$endtime);
-        return $data;
     }
 
     /*private function check_list($lists,$start_time,$end_time){
@@ -3013,23 +2967,23 @@ class FinanceController extends BaseController {
     public function arrears_detail(){
         $year		                        = I('year',date('Y'));
         $month	                            = I('month',date('m')); //月度
-        $quarter                            = I('quarter'); //季度
+        //$quarter                            = I('quarter'); //季度
         $pin                                = I('pin');  //1=>当月回款详情 2=>历史欠款详情
         $title                              = trim(I('title'));
         $group_id                           = trim(I('gid'));
         $opid                               = trim(I('opid'));
         $create_user                        = trim(I('ou')); //销售
         if (strlen($month)<2) $month        = str_pad($month,2,'0',STR_PAD_LEFT);
-        if ($quarter){
+        /*if ($quarter){
             $times                          = set_quarter($year,$quarter);
             $start_time                     = $times['begin_time'];
-            $end_time                       = $times['endt_ime'];
-        }else{
+            $end_time                       = $times['end_time'];
+        }else{*/
             $yearmonth                      = $year.$month;
             $times                          = get_cycle($yearmonth);
             $start_time                     = $times['begintime'];
             $end_time                       = $times['endtime'];
-        }
+        //}
 
         $where                              = array();
         $where['c.return_time']	            = array('lt',$end_time);
@@ -3047,6 +3001,42 @@ class FinanceController extends BaseController {
         $this->pin                          = $pin;
         $this->year		                    = $year;
         $this->month	                    = $month;
+        $this->prveyear	                    = $year-1;
+        $this->nextyear	                    = $year+1;
+        //$this->quarter                      = $quarter;
+        $this->display();
+    }
+
+    /**
+     * 月度历史欠款
+     */
+    public function quarter_arrears_detail(){
+        $year		                        = I('year',date('Y'));
+        $quarter                            = I('quarter',get_quarter(date('m'))); //季度
+        $pin                                = I('pin');  //1=>当月回款详情 2=>历史欠款详情
+        $title                              = trim(I('title'));
+        $group_id                           = trim(I('gid'));
+        $opid                               = trim(I('opid'));
+        $create_user                        = trim(I('ou')); //销售
+        $times                              = set_quarter($year,$quarter);
+        $start_time                         = $times['begin_time'];
+        $end_time                           = $times['end_time'];
+
+        $where                              = array();
+        $where['c.return_time']	            = array('lt',$end_time);
+        if ($title) $where['o.project']     = array('like','%'.$title.'%');
+        if ($group_id) $where['o.group_id'] = $group_id;
+        if ($opid)  $where['c.op_id']       = $opid;
+        if ($create_user) $where['create_user_name'] = $create_user;
+        $lists                              = M()->table('__CONTRACT_PAY__ as c')->join('__OP__ as o on o.op_id = c.op_id','left')->join('__OP_TEAM_CONFIRM__ as t on t.op_id=c.op_id','left')->field('c.*,o.group_id,o.project,o.create_user_name,t.dep_time,t.ret_time')->where($where)->order($this->orders('c.id'))->select();
+        $data                               = check_list($lists,$start_time,$end_time);
+
+        if ($pin==1){ $this->lists          = $data['this_month_list'];
+        }elseif ($pin==2){ $this->lists     = $data['history_list']; };
+
+        $this->data                         = $data;
+        $this->pin                          = $pin;
+        $this->year		                    = $year;
         $this->prveyear	                    = $year-1;
         $this->nextyear	                    = $year+1;
         $this->quarter                      = $quarter;
