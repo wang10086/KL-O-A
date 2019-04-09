@@ -3008,7 +3008,7 @@ class FinanceController extends BaseController {
     }
 
     /**
-     * 月度历史欠款
+     * 季度历史欠款
      */
     public function quarter_arrears_detail(){
         $year		                        = I('year',date('Y'));

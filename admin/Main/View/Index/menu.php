@@ -523,7 +523,7 @@
                                     </ul>
                                 </li>
 
-                                <li class="treeview {:on('Finance/payment')}">
+                                <li class="treeview {:on('Finance/payment')} {:on('Finance/payment_quarter')} {:on('Finance/quarter_arrears_detail')}">
                                     <if condition="rolemenu(array('Finance/payment'))">
                                         <a href=""><i class="fa fa-share"></i> 回款管理</a>
                                     </if>
@@ -531,8 +531,6 @@
                                         <if condition="rolemenu(array('Finance/payment'))">
                                             <li><a href="{:U('Finance/payment')}"><i class="fa fa-angle-right"></i> 月度回款管理</a></li>
                                         </if>
-
-                                        <li><a href="javascript:;" onclick="art_show_msg('加班开发中...',3)"><i class="fa fa-angle-right"></i> 季度回款管理</a></li>
 
                                         <if condition="rolemenu(array('Finance/payment_quarter'))">
                                             <li><a href="{:U('Finance/payment_quarter')}"><i class="fa fa-angle-right"></i> 季度回款管理</a></li>
