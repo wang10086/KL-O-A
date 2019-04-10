@@ -1747,3 +1747,19 @@ function get_sum($lists){
     $sum['sum_average']                 = (round($sum['this_month_return']/($sum['this_month']+$sum['history']),4)*100).'%';
     return $sum;
 }
+
+/**
+ * 获取财务经理汇款及时率
+ * @param $starttime
+ * @param $endtime
+ * @return array
+ */
+function get_hkjsl($starttime,$endtime){
+    $yw_departs                         = C('YW_DEPARTS');  //业务部门id
+    $where                              = array();
+    $where['id']                        = array('in',$yw_departs);
+    $departments                        = M('salary_department')->field('id,department')->where($where)->select();
+    $lists                              = get_department_money_back_list($departments,$starttime,$endtime);
+    $sum                                = get_sum($lists);
+    return $sum;
+}
