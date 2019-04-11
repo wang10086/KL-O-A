@@ -490,6 +490,7 @@ class ManageController extends ChartController {
         $mod                    = D('Manage');
         $times                  = $mod->get_times($year,$month,$tm);
         $lists                  = $mod->get_otherExpenses($departments,$kind_ids,$times);
+        //P($lists);
         $heji                   = $lists['heji'];
         unset($lists['heji']);
 
