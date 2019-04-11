@@ -1373,6 +1373,7 @@ function get_sum_gross_profit($userids,$beginTime,$endTime){
         $year_end_time                      = $year_end_time - 4*24*3600;
         $where['c.ret_time']                = array('between',array($year_start_time,$year_end_time));
         $where['o.create_user']             = array('in',$account_ids);
+        $where['o.in_dijie']                = array('neq',1); //排除发起团
         $year_shishi_lists                  = M()->table('__OP_TEAM_CONFIRM__ as c')->join('__OP__ as o on o.op_id = c.op_id','left')->where($where)->select();
 
         $year_score_lists                   = array();
@@ -1534,6 +1535,7 @@ function get_department_person_score_statis($year='',$month='',$department_id,$c
         $end_time                       = $endTime - 4*24*3600;
         $where['c.ret_time']            = array('between',array($start_time,$end_time));
         $where['o.create_user']         = array('in',$account_ids);
+        $where['o.in_dijie']            = array('neq',1); //排除发起团
         $shishi_lists                   = M()->table('__OP_TEAM_CONFIRM__ as c')->join('__OP__ as o on o.op_id = c.op_id','left')->where($where)->select();
 
         $score_lists                    = array();
