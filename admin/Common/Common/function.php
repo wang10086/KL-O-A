@@ -2641,7 +2641,7 @@ function updatekpi($month,$user){
                         }
 
 
-                        //业务人员满意度--计调经理
+                        //顾客对计调事项满意度--计调部经理
                         if($v['quota_id']==82){
 
                             //获取当月出团项目数
@@ -2663,6 +2663,31 @@ function updatekpi($month,$user){
                                 $complete	= $score;
                             }
                             $url            = '';
+
+                            /*
+                             if ($v['quota_id']==213){
+                            $year                       = $v['year'];
+                            $mm                         = substr($v['month'],4,2);
+                            $yearMonth                  = $year.$mm;
+                            $yw_departs                 = C('YW_DEPARTS');  //业务部门id
+                            $where                      = array();
+                            $where['id']                = array('in',$yw_departs);
+                            $departments                = M('salary_department')->field('id,department')->where($where)->select();
+                            $department_data            = get_company_score_statis($departments,$yearMonth); //部门当月合计
+                            $company_data               = get_company_sum_score_statis($departments,$yearMonth); //公司合计
+                            $complete                   = $company_data['month_average'];
+                            $url                        = U('Inspect/score_statis',array('year'=>$year,'month'=>$mm));
+                        }
+                             */
+                            /*$year                       = $v['year'];
+                            $monon                      = substr($v['month'],4,2);
+                            $yearMonth                  = $year.$monon;
+                            $departments                = get_yw_department();
+                            $fields                     = 'stay,food,bus,material,guide'; //房,餐,车,物资(材料及设备),导游/辅导员
+                            //$department_data            = get_company_score_statisAAA($departments,$yearMonth,$fields); //部门当月合计
+                            $company_data               = get_company_sum_score_statisAAA($departments,$yearMonth,$fields); //公司合计*/
+
+
                         }
 
 
@@ -3293,10 +3318,7 @@ function updatekpi($month,$user){
                             $year                       = $v['year'];
                             $mm                         = substr($v['month'],4,2);
                             $yearMonth                  = $year.$mm;
-                            $yw_departs                 = C('YW_DEPARTS');  //业务部门id
-                            $where                      = array();
-                            $where['id']                = array('in',$yw_departs);
-                            $departments                = M('salary_department')->field('id,department')->where($where)->select();
+                            $departments                = get_yw_department();
                             $department_data            = get_company_score_statis($departments,$yearMonth); //部门当月合计
                             $company_data               = get_company_sum_score_statis($departments,$yearMonth); //公司合计
                             $complete                   = $company_data['month_average'];

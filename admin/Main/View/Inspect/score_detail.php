@@ -26,6 +26,9 @@
                 <div class="form-group box-float-4" style="padding-left:0;">专家/讲师：{$score_stu.$row[teacher]}</div>
                 <div class="form-group box-float-4" style="padding-left:0;">辅导员：{$score_stu.$row[guide]}</div>
                 <div class="form-group box-float-4" style="padding-left:0;">材料及设备：{$score_stu.$row[material]}</div>
+                <div class="form-group box-float-4" style="padding-left:0;">迟到早退(教务人员)：{$score_stu.$row[late]}</div>
+                <div class="form-group box-float-4" style="padding-left:0;">管理组织能力(教务人员)：{$score_stu.$row[manage]}</div>
+                <div class="form-group box-float-4" style="padding-left:0;">师德仪表(教务人员)：{$score_stu.$row[morality]}</div>
             <?php }elseif($kind == 3){ ?>
                 <div class="form-group box-float-4" style="padding-left:0;">前期沟通：{$score_stu.$row[before_sell]}</div>
                 <div class="form-group box-float-4" style="padding-left:0;">新媒体推广：{$score_stu.$row[new_media]}</div>

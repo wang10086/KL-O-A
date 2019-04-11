@@ -353,7 +353,7 @@ class InspectController extends BaseController{
         $score_num      = count($lists);
 
         foreach ($lists as $k=>$v){
-            $lists[$k]['sum_score'] = $v['before_sell']+$v['new_media']+$v['stay']+$v['travel']+$v['content']+$v['food']+$v['bus']+$v['driver']+$v['guide']+$v['teacher']+$v['depth']+$v['major']+$v['interest']+$v['material'];
+            $lists[$k]['sum_score'] = $v['before_sell']+$v['new_media']+$v['stay']+$v['travel']+$v['content']+$v['food']+$v['bus']+$v['driver']+$v['guide']+$v['teacher']+$v['depth']+$v['major']+$v['interest']+$v['material']+$v['late']+$v['manage']+$v['morality'];
         }
 
         $kind                   = M('op')->where(array('op_id'=>$op_id))->getField('kind');
@@ -379,7 +379,7 @@ class InspectController extends BaseController{
         $average['material']    = round(array_sum(array_column($lists,'material'))/$score_num,2);
         $average['score_num']   = $score_num?$score_num:'0';
         if (in_array($kind,$score_kind1)) $sum = 9*5*$score_num; //考核9项, 每项5分, 满分总分
-        if (in_array($kind,$score_kind2)) $sum = 7*5*$score_num; //考核7项, 每项5分, 满分总分
+        if (in_array($kind,$score_kind2)) $sum = 10*5*$score_num; //考核7项, 每项5分, 满分总分
         if (in_array($kind,$score_kind3)) $sum = 10*5*$score_num; //考核10项, 每项5分, 满分总分
         $average['sum_score']   = (round(array_sum(array_column($lists,'sum_score'))/$sum,2)*100).'%';
         $row                    = M('tcs_score_problem')->where(array('op_id'=>$op_id))->find();

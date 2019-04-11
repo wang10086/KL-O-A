@@ -27,9 +27,9 @@
             </div>
             <table class="table table-bordered dataTable fontmini" id="tablelist" >
                 <tr role="row" class="orders" >
-                    <th class="sorting" width="80" data="c.in_begin_day">活动日期</th>
-                    <th class="sorting" data="c.address">活动地点</th>
-                    <th>联系方式</th>
+                    <!--<th class="sorting" width="80" data="c.in_begin_day">活动日期</th>
+                    <th class="sorting" data="c.address">活动地点</th>-->
+                    <th>客户联系方式</th>
                     <?php if (in_array($kind,$score_kind2)){ ?>
                         <th class="sorting" data="s.before_sell">前期沟通</th>
                         <th class="sorting" data="s.depth">课程深度</th>
@@ -38,9 +38,9 @@
                         <th class="sorting" data="s.material">材料及设备</th>
                         <th class="sorting" data="s.teacher">专家/讲师</th>
                         <th class="sorting" data="s.guide">辅导员</th>
-                        <!--<th class="sorting" data="s.late">迟到早退(教务人员)</th>
+                        <th class="sorting" data="s.late">迟到早退(教务人员)</th>
                         <th class="sorting" data="s.manage">管理组织能力(教务人员)</th>
-                        <th class="sorting" data="s.morality">师德仪表(教务人员)</th>-->
+                        <th class="sorting" data="s.morality">师德仪表(教务人员)</th>
                     <?php }elseif(in_array($kind,$score_kind3)){ ?>
                         <th class="sorting" data="s.before_sell">前期沟通</th>
                         <th class="sorting" data="s.new_media">新媒体推广</th>
@@ -69,8 +69,8 @@
                 </tr>
                 <foreach name="lists" item="row">
                     <tr>
-                        <td><?php if ($row['in_begin_day']) echo date('Y-m-d',$row['in_begin_day']).'-'.date('Y-m-d',$row['in_day']); ?></td>
-                        <td>{$row.address}</a></td>
+                        <!--<td><?php /*if ($row['in_begin_day']) echo date('Y-m-d',$row['in_begin_day']).'-'.date('Y-m-d',$row['in_day']); */?></td>
+                        <td>{$row.address}</a></td>-->
                         <td>{$row.mobile}</td>
                         <?php if (in_array($kind,$score_kind2)){ ?>
                             <td>{$row.before_sell}</td>
@@ -80,9 +80,9 @@
                             <td>{$row.material}</td>
                             <td>{$row.teacher}</td>
                             <td>{$row.guide}</td>
-                            <!--<td>{$row.late}</td>
+                            <td>{$row.late}</td>
                             <td>{$row.manage}</td>
-                            <td>{$row.morality}</td>-->
+                            <td>{$row.morality}</td>
                         <?php }elseif(in_array($kind,$score_kind3)){ ?>
                             <td>{$row.before_sell}</td>
                             <td>{$row.new_media}</td>
