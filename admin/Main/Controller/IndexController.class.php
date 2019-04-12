@@ -35,7 +35,7 @@ class IndexController extends BaseController {
 		$this->display();
     }
 
-    //获取首页滚动条公告(处罚1-3分的挂两周，3分以上的挂一个月，奖励的挂两个月)
+    //获取首页滚动条公告(处罚1-3分的挂两周，3分以上的挂一个月，奖励的挂两个月,不加分不减分默认一个月)
     public function get_notice_list(){
         $lists              = M('notice')->limit(30)->order('id desc')->select();
         $time1              = 14*24*3600;
@@ -48,11 +48,17 @@ class IndexController extends BaseController {
             if ($info['type']==0){  //惩罚
                 if($info['score']>3){
                     $v['show_time']     = $info['update_time'] + $time2;
-                }else{
+                }elseif($info['score']>0 && $info['score']<=3){
                     $v['show_time']     = $info['update_time'] + $time1;
+                }else{ //不加分不减分默认
+                    $v['show_time']     = $info['update_time'] + $time2;
                 }
             }else{  //奖励
-                $v['show_time']         = $info['update_time'] + $time3;
+                if($info['score']>0) {
+                    $v['show_time'] = $info['update_time'] + $time3;
+                }else{ //不加分不减分默认
+                    $v['show_time']     = $info['update_time'] + $time2;
+                }
             }
 
             if ($v['show_time'] > time()){
