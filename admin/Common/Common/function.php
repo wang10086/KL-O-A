@@ -3170,7 +3170,7 @@ function updatekpi($month,$user){
                             $url                    = '';
                         }
 
-                        //客户对公司产品满意度
+                        //客户对公司产品满意度(研发经理)
                         if($v['quota_id']==154){
                             /*$average_data           = get_satisfaction_average($v['start_date'],$v['end_date']);
                             $average                = $average_data['average'];
