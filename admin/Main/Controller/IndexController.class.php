@@ -45,20 +45,24 @@ class IndexController extends BaseController {
         foreach ($lists as $k=>$v){
             $qaqc           = M('qaqc')->find($v['source_id']);
             $info           = M('qaqc_user')->group('qaqc_id')->where(array('qaqc_id'=>$qaqc['id']))->find();
-            if ($info['type']==0){  //惩罚
-                if($info['score']>3){
-                    $v['show_time']     = $info['update_time'] + $time2;
-                }elseif($info['score']>0 && $info['score']<=3){
-                    $v['show_time']     = $info['update_time'] + $time1;
-                }else{ //不加分不减分默认
-                    $v['show_time']     = $info['update_time'] + $time2;
+            if ($info){
+                if ($info['type']==0){  //惩罚
+                    if($info['score']>3){
+                        $v['show_time']     = $info['update_time'] + $time2;
+                    }elseif($info['score']>0 && $info['score']<=3){
+                        $v['show_time']     = $info['update_time'] + $time1;
+                    }else{ //不加分不减分默认
+                        $v['show_time']     = $info['update_time'] + $time2;
+                    }
+                }else{  //奖励
+                    if($info['score']>0) {
+                        $v['show_time'] = $info['update_time'] + $time3;
+                    }else{ //不加分不减分默认
+                        $v['show_time']     = $info['update_time'] + $time2;
+                    }
                 }
-            }else{  //奖励
-                if($info['score']>0) {
-                    $v['show_time'] = $info['update_time'] + $time3;
-                }else{ //不加分不减分默认
-                    $v['show_time']     = $info['update_time'] + $time2;
-                }
+            }else{
+               $v['show_time']              = $v['send_time'] + $time2; //无人员信息,默认保存一月
             }
 
             if ($v['show_time'] > time()){

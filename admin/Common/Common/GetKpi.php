@@ -1777,8 +1777,8 @@ function get_yw_department(){
     return $departments;
 }
 
-/*//获取部门当月合计
-    function get_company_score_statisAAA($departments,$yearMonth,$fields=''){
+//获取部门当月合计
+    function get_type_user_company_statis($departments,$yearMonth,$user_type){
         $year                                   = substr($yearMonth,0,4);
         $month                                  = substr($yearMonth,4,2);
         $info                                   = array();
@@ -1789,7 +1789,7 @@ function get_yw_department(){
             $where['a.status']                  = array('neq',2); //已删除
             $account_lists                      = M()->table('__ACCOUNT__ as a')->join('__POSITION__ as p on p.id=a.position_id','left')->field('a.*')->where($where)->select();
             $account_ids                        = array_column($account_lists,'id');
-            $data                               = cycle_statis($year,$month,$account_ids,$fields);
+            $data                               = cycle_statis($year,$month,$account_ids,$user_type);
 
             $info[$k]['department_id']          = $v['id'];
             $info[$k]['department']             = $v['department'];
@@ -1806,7 +1806,7 @@ function get_yw_department(){
     }
 
  //获取公司合计满意度
-    function get_company_sum_score_statisAAA($departments,$yearMonth,$fields){
+    function get_type_user_company_sum_statis($departments,$yearMonth,$user_type){
         $year                               = substr($yearMonth,0,4);
         $month                              = substr($yearMonth,4,2);
         $department_ids                     = array_column($departments,'id');
@@ -1816,17 +1816,20 @@ function get_yw_department(){
         $where['a.status']                  = array('neq',2); //已删除
         $account_lists                      = M()->table('__ACCOUNT__ as a')->join('__POSITION__ as p on p.id=a.position_id','left')->field('a.*')->where($where)->select();
         $account_ids                        = array_column($account_lists,'id');
-        $data                               = cycle_statis($year,$month,$account_ids,$fields);
+        $data                               = cycle_statis($year,$month,$account_ids,$user_type);
         return $data;
     }
 
-     // 求顾客满意度 年度 + 当月数据
-     // @param $year
-     // @param $month
-     // @param $account_ids
-     // @param int $type 0=> 部门 , 2=>个人
-     // @return array
-    function cycle_statis($year,$month,$account_ids,$fields=''){
+    /**
+     * 求计调,研发,资源等岗位的顾客满意度
+     * @param $year
+     * @param $month
+     * @param $account_ids
+     * @param string $user_type 考核人员 jd=>计调,yf=>研发, zy=>资源
+     * @param string $type ''=>部门 , 2=>人员
+     * @return array
+     */
+    function cycle_statis($year,$month,$account_ids,$user_type,$type=''){
         $year_cycle_times                   = get_year_cycle($year);
         $month_cycle_times                  = get_cycle($year.$month);
 
@@ -1848,17 +1851,11 @@ function get_yw_department(){
             //获取当年已评分的团
             $where                          = array();
             $where['o.op_id']               = $v['op_id'];
-            //$year_lists                     = M()->table('__TCS_SCORE__ as s')->field('u.op_id,o.kind,s.id as sid,s.before_sell,s.new_media,s.stay,s.travel,s.content,s.food,s.bus,s.driver,s.guide,s.teacher,s.depth,s.major,s.interest,s.material,s.late,s.manage,s.morality')->join('join __TCS_SCORE_USER__ as u on u.id = s.uid','left')->join('__OP__ as o on o.op_id = u.op_id','left')->where($where)->select();
-            $year_lists                     = M()->table('__TCS_SCORE__ as s')->field($fields)->join('join __TCS_SCORE_USER__ as u on u.id = s.uid','left')->join('__OP__ as o on o.op_id = u.op_id','left')->where($where)->select();
-            var_dump($fields);
-            echo M()->getlastsql();
-            var_dump($year_lists);
-            echo "<hr />";
-
+            $year_lists                     = M()->table('__TCS_SCORE__ as s')->field('u.op_id,o.kind,s.id as sid,s.before_sell,s.new_media,s.stay,s.travel,s.content,s.food,s.bus,s.driver,s.guide,s.teacher,s.depth,s.major,s.interest,s.material,s.late,s.manage,s.morality')->join('join __TCS_SCORE_USER__ as u on u.id = s.uid','left')->join('__OP__ as o on o.op_id = u.op_id','left')->where($where)->select();
 
             if ($year_lists){ //已评分
-                $year_score_num++;
-                $year_op_average_data                = get_op_manyiduAAA($year_lists); //单团满意度得分
+                $year_op_average_data                = get_type_user_manyidu($year_lists,$user_type); //单团满意度得分
+                if ($year_op_average_data)           $year_score_num++;
                 $year_op_average_sum                 += $year_op_average_data;
                 $year_shishi_lists[$k]['score_stu']  = '<span class="green">已评分</span>';
                 $year_shishi_lists[$k]['score_num']  = count($year_lists);
@@ -1876,11 +1873,11 @@ function get_yw_department(){
         $year_average                          = round($year_op_average_sum/$year_shishi_num,4); //全部平均值
         $year_average                          = ($year_average*100).'%';  //总平均分,包括未调查的
 
-        $data                                   = array();
-//        if ($type==2){
-//            $data['userid']                     = $account_ids[0];
-//            $data['username']                   = M('account')->where(array('id'=>$account_ids[0]))->getField('nickname');
-//        }
+        $data                                  = array();
+        if ($type==2){
+            $data['userid']                    = $account_ids[0];
+            $data['username']                  = M('account')->where(array('id'=>$account_ids[0]))->getField('nickname');
+        }
         $data['year_op_num']                   = count($year_shishi_lists);
         $data['year_score_num']                = $year_score_num;
         $data['year_score_average']            = $year_score_average; //已调查团的满意度
@@ -1908,8 +1905,8 @@ function get_yw_department(){
             $lists                          = M()->table('__TCS_SCORE__ as s')->field('u.op_id,o.kind,s.id as sid,s.before_sell,s.new_media,s.stay,s.travel,s.content,s.food,s.bus,s.driver,s.guide,s.teacher,s.depth,s.major,s.interest,s.material,s.late,s.manage,s.morality')->join('join __TCS_SCORE_USER__ as u on u.id = s.uid','left')->join('__OP__ as o on o.op_id = u.op_id','left')->where($where)->select();
 
             if ($lists){ //已评分
-                $month_score_num++;
-                $month_op_average_data                = get_op_manyiduAAA($lists); //单团满意度得分
+                $month_op_average_data                = get_type_user_manyidu($lists,$user_type); //单团满意度得分
+                if ($month_op_average_data)           $month_score_num++; //有此评分信息的才加1
                 $month_op_average_sum                 += $month_op_average_data;
                 $month_shishi_lists[$k]['score_stu']  = '<span class="green">已评分</span>';
                 $month_shishi_lists[$k]['score_num']  = count($lists);
@@ -1936,21 +1933,136 @@ function get_yw_department(){
         return $data;
     }
 
-    //获取单个团的客户满意度
-    function get_op_manyiduAAA($lists){
-        $score_kind1= array_keys(C('SCORE_KIND1'));
-        $score_kind2= array_keys(C('SCORE_KIND2'));
-        $score_kind3= array_keys(C('SCORE_KIND3'));
-
-        $zongfen    = 0;
-        $defen      = 0;
-        foreach ($lists as $k=>$v){
-            $kind   = $v['kind'];
-            if (in_array($kind,$score_kind1)) $zongfen += 9*5;  //考核9项, 每项5分, 满分总分
-            if (in_array($kind,$score_kind2)) $zongfen += 10*5; //考核10项, 每项5分, 满分总分
-            if (in_array($kind,$score_kind3)) $zongfen += 10*5; //考核10项, 每项5分, 满分总分
-            $defen += $v['before_sell']+$v['new_media']+$v['stay']+$v['travel']+$v['content']+$v['food']+$v['bus']+$v['driver']+$v['guide']+$v['teacher']+$v['depth']+$v['major']+$v['interest']+$v['material']+$v['late']+$v['manage']+$v['morality'];
+    //获取计调/研发/资源单个团的客户满意度
+    function get_type_user_manyidu($lists,$user_type){
+        $zongfen                        = 0;
+        $defen                          = 0;
+        switch ($user_type){
+            case 'jd': //计调
+                foreach ($lists as $k=>$v){
+                    if ($v['stay']      != 0) $zongfen +=5; //住宿
+                    if ($v['food']      != 0) $zongfen +=5; //餐
+                    if ($v['travel']    != 0) $zongfen +=5; //行程安排
+                    if ($v['bus']       != 0) $zongfen +=5; //车况
+                    if ($v['driver']    != 0) $zongfen +=5; //司机服务
+                    $defen += $v['stay'] + $v['food'] + $v['travel'] + $v['bus'] + $v['driver'];
+                }
+                $score                  = round($defen/$zongfen,2);
+                break;
+            case 'yf': //研发
+                foreach ($lists as $k=>$v){
+                    if ($v['depth']     != 0) $zongfen +=5; //课程深度
+                    if ($v['major']     != 0) $zongfen +=5; //课程专业性/内容专业性
+                    if ($v['interest']  != 0) $zongfen +=5; //课程趣味性
+                    if ($v['material']  != 0) $zongfen +=5; //材料及设备
+                    $defen += $v['depth'] + $v['major'] + $v['interest'] + $v['material'];
+                }
+                $score                  = round($defen/$zongfen,2);
+                break;
+            case 'zy': //资源
+                foreach ($lists as $k=>$v){
+                    if ($v['travel']    != 0) $zongfen +=5; //场地
+                    if ($v['']  != 0) $zongfen +=5; //
+                    if ($v['']!= 0) $zongfen +=5; //
+                    if ($v['']   != 0) $zongfen +=5; //
+                    $defen += $v[''] + $v[''] + $v[''] + $v[''];
+                }
+                $score                  = round($defen/$zongfen,2);
+                break;
         }
-        $score      = round($defen/$zongfen,2);
         return $score;
-    }*/
+    }
+
+    /**
+     * 获取某个部门每个人的分项客户满意度
+     * @param string $year
+     * @param string $month
+     * @param $department_id
+     * @param string $cycle
+     * @param $startTime
+     * @param $endTime
+     * @return array
+     */
+    function get_user_kpi_department_person_statis($year='',$month='',$department_id,$usertype='',$cycle='',$startTime='',$endTime=''){
+        $account_lists                      = get_department_businessman($department_id);
+        $lists                              = array();
+        foreach ($account_lists as $k=>$v){
+            $arr                            = array($v['id']);
+            /*if ($cycle=='quarter'){
+                $lists[$k]                  = quarter_statis($arr,$startTime,$endTime);
+            }else{
+                $lists[$k]                  =  year_month_statis($year,$month,$arr,2); //年度 + 月度满意度
+            }*/
+            $lists[$k]                      =  cycle_statis($year,$month,$arr,$usertype,2); //年度 + 月度满意度
+        }
+
+        return $lists;
+    }
+
+    /**
+     * 月度顾客满意度(业务kpi)
+     * @param $userid
+     * @param $start_time
+     * @param $end_time
+     * @param string $gross_margin
+     * @return array
+     */
+    function get_user_kpi_data($userid,$start_time,$end_time,$usertype=''){
+        //当月实施的团
+        $where                          = array();
+        $start_time                     = $start_time - 4*24*3600; //4天前实施的团
+        $end_time                       = $end_time - 4*24*3600;
+        $where['c.ret_time']            = array('between',array($start_time,$end_time));
+        $where['o.create_user']         = $userid;
+        $where['o.in_dijie']            = array('neq',1); //排除发起团
+        $shishi_lists                   = M()->table('__OP_TEAM_CONFIRM__ as c')->join('__OP__ as o on o.op_id = c.op_id','left')->where($where)->select();
+
+        $score_lists                    = array();
+        $score_num                      = 0; //评分的团个数
+        foreach ($shishi_lists as $k=>$v){
+            //获取当月已评分的团
+            $where                      = array();
+            $where['o.op_id']           = $v['op_id'];
+            $lists                      = M()->table('__TCS_SCORE__ as s')->field('u.op_id,o.kind,s.id as sid,s.before_sell,s.new_media,s.stay,s.travel,s.content,s.food,s.bus,s.driver,s.guide,s.teacher,s.depth,s.major,s.interest,s.material,s.late,s.manage,s.morality')->join('join __TCS_SCORE_USER__ as u on u.id = s.uid','left')->join('__OP__ as o on o.op_id = u.op_id','left')->where($where)->select();
+            if ($lists){ //已评分
+                $op_average_data                = get_type_user_manyidu($lists,$usertype);
+                if ($op_average_data)           $score_num++;
+                $shishi_lists[$k]['score_stu']  = '<span class="green">已评分</span>';
+                $shishi_lists[$k]['score_num']  = count($lists);
+                $shishi_lists[$k]['op_average'] = ($op_average_data*100).'%';
+                foreach ($lists as $key=>$value){
+                    $score_lists[]              = $value;
+                }
+            }else{ //未评分
+                $shishi_lists[$k]['score_stu']  = '<span class="red">未评分</span>';
+                $shishi_lists[$k]['op_average'] = '0%';
+            }
+
+            //满意度调查负责人信息
+            $auth                       = M('op_guide_confirm')->where(array('op_id'=>$v['op_id']))->getField('charity_id',true);
+            $str_auth_ids               = explode(',',implode(',',$auth));
+            $auth_names                 = M('guide')->where(array('id'=>array('in',$str_auth_ids)))->getField('name',true);
+            $shishi_lists[$k]['guide_manager']= implode(',',$auth_names);
+        }
+        $op_average_sum                 = array_sum(array_filter(explode(',',str_replace('%','',implode(',',array_column($shishi_lists,'op_average'))))));
+        $score_average                  = round($op_average_sum/$score_num,2).'%'; //已调查顾客满意度
+        $shishi_num                     = count($shishi_lists); //所有实施团的数量(包括未调查的数量)
+        $average                        = round($op_average_sum/$shishi_num,2)/100; //全部平均值
+
+
+        if ($shishi_num==0) { //当月目标为0
+            $complete = '100%';
+        }else{
+            //总平均分,包括未调查的
+            $complete = ($average*100).'%';
+        }
+
+        $data                           = array();
+        $data['op_num']                 = count($shishi_lists);
+        $data['score_num']              = $score_num;
+        $data['score_average']          = $score_average; //已调查团的满意度
+        $data['complete']               = $complete; //所有顾客满意度(包括未调查)
+        $data['shishi_lists']           = $shishi_lists;
+        $data['score_lists']            = $score_lists;
+        return $data;
+    }

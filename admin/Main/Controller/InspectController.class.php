@@ -564,5 +564,143 @@ class InspectController extends BaseController{
         return $data;
     }
 
+    //顾客满意度分项统计
+    public function user_kpi_statis(){
+        $year		                = I('year',date('Y'));
+        $month		                = I('month',date('m'));
+        $ut                         = trim(I('ut'))?trim(I('ut')):'jd';
+        if (strlen($month)<2) $month= str_pad($month,2,'0',STR_PAD_LEFT);
+        $yearMonth                  = $year.$month;
+        $yw_departs                 = C('YW_DEPARTS');  //业务部门id
+        $where                      = array();
+        $where['id']                = array('in',$yw_departs);
+        $departments                = M('salary_department')->field('id,department')->where($where)->select();
+        $department_data            = get_type_user_company_statis($departments,$yearMonth,$ut); //部门当月合计
+        $company_data               = get_type_user_company_sum_statis($departments,$yearMonth,$ut); //公司合计
+
+        $this->usertype             = $ut;
+        $this->company              = $company_data;
+        $this->lists                = $department_data;
+        $this->year 	            = $year;
+        $this->month 	            = $month;
+        $this->prveyear             = $year-1;
+        $this->nextyear             = $year+1;
+        $this->display();
+    }
+
+    //顾客满意度分项统计详情
+    public function public_user_kpi_statis_detail(){
+        $year		                = I('year',date('Y'));
+        $month		                = I('month',date('m'));
+        $department_id              = I('did');
+        $ut                         = trim(I('ut'));
+        if (!$ut) $this->error('参数错误');
+        if (strlen($month)<2) $month= str_pad($month,2,'0',STR_PAD_LEFT);
+        $yearMonth                  = $year.$month;
+        $where                      = array();
+        $where['id']                = $department_id;
+        $department                 = M('salary_department')->field('id,department')->where($where)->find();
+        $lists                      = get_user_kpi_department_person_statis($year,$month,$department_id,$ut); //获取某个部门每个人的分项客户满意度
+
+        $this->usertype             = $ut;
+        $this->lists                = $lists;
+        $this->department           = $department;
+        $this->year 	            = $year;
+        $this->month 	            = $month;
+        $this->prveyear             = $year-1;
+        $this->nextyear             = $year+1;
+        $this->display('user_kpi_statis_detail');
+    }
+
+    //顾客满意度分项统计详情页
+    public function public_user_kpi_satisfied(){
+        $year                       = I('year');
+        $month                      = (int)I('month');
+        $userid                     = I('uid');
+        $ut                         = trim(I('ut'));
+        if (strlen($month)<2) $month= str_pad($month,2,'0',STR_PAD_LEFT);
+        $yearMonth                  = $year.$month;
+        //$gross_margin               = get_gross_margin($yearMonth,$userid,1);  //获取当月月度累计毛利额目标值(如果毛利额目标为0,则不考核)
+        $cycle_times                = get_cycle($yearMonth);
+        $data                       = get_user_kpi_data($userid,$cycle_times['begintime'],$cycle_times['endtime'],$ut);
+        $op_lists                   = $data['shishi_lists'];
+
+        $this->usertype             = $ut;
+        $this->data                 = $data;
+        $this->lists                = $op_lists;
+        $this->year                 = $year;
+        $this->month                = $month;
+        $this->uid                  = $userid;
+        $this->display('user_kpi_satisfied');
+    }
+
+    // @@@NODE-3###score_info###顾客满意度分项统计记录详情###
+    public function public_user_kpi_score_info(){
+        $op_id                      = I('opid');
+        $ut                         = trim(I('ut'));
+        if (!$op_id){
+            $this->error("数据获取失败");
+        }
+
+        $this->op                   = M('op')->where(array('op_id'=>$op_id))->find();
+
+        //分页
+        $pagecount		            = M()->table('__TCS_SCORE__ as s')->field('s.*,u.mobile,u.confirm_id,c.in_begin_day,c.in_day,c.address')->join('left join __TCS_SCORE_USER__ as u on u.id = s.uid')->join('left join __OP_GUIDE_CONFIRM__ as c on c.id = u.confirm_id')->where(array('u.op_id'=>$op_id))->count();
+        $page			            = new Page($pagecount, P::PAGE_SIZE);
+        $this->pages	            = $pagecount>P::PAGE_SIZE ? $page->show():'';
+
+        $lists                      = M()->table('__TCS_SCORE__ as s')
+            ->field('s.*,u.mobile,u.confirm_id,c.in_begin_day,c.in_day,c.address')
+            ->join('left join __TCS_SCORE_USER__ as u on u.id = s.uid')
+            ->join('left join __OP_GUIDE_CONFIRM__ as c on c.id = u.confirm_id')
+            ->where(array('u.op_id'=>$op_id))
+            ->limit($page->firstRow.','.$page->listRows)
+            ->select();
+
+        $score_num                  = 0;
+        foreach ($lists as $k=>$v){
+            if ($ut == 'jd') $lists[$k]['sum_score'] = $v['stay']+$v['travel']+$v['food']+$v['bus']+$v['driver']; //计调
+            if ($ut == 'yf') $lists[$k]['sum_score'] = $v['depth']+$v['major']+$v['interest']+$v['material']; //研发
+            if ($ut == 'zy') $lists[$k]['sum_score'] = $v['content']+$v['aa'];
+            if ($lists[$k]['sum_score']) $score_num++;
+        }
+
+        $kind                       = M('op')->where(array('op_id'=>$op_id))->getField('kind');
+        $score_kind1                = array_keys(C('SCORE_KIND1'));
+        $score_kind2                = array_keys(C('SCORE_KIND2'));
+        $score_kind3                = array_keys(C('SCORE_KIND3'));
+
+        $average                    = array();
+        $average['before_sell']     = round(array_sum(array_column($lists,'before_sell'))/$score_num,2);
+        $average['new_media']       = round(array_sum(array_column($lists,'new_media'))/$score_num,2);
+        $average['stay']            = round(array_sum(array_column($lists,'stay'))/$score_num,2);
+        $average['food']            = round(array_sum(array_column($lists,'food'))/$score_num,2);
+        $average['bus']             = round(array_sum(array_column($lists,'bus'))/$score_num,2);
+        $average['travel']          = round(array_sum(array_column($lists,'travel'))/$score_num,2);
+        $average['content']         = round(array_sum(array_column($lists,'content'))/$score_num,2);
+        $average['driver']          = round(array_sum(array_column($lists,'driver'))/$score_num,2);
+        $average['guide']           = round(array_sum(array_column($lists,'guide'))/$score_num,2);
+        $average['teacher']         = round(array_sum(array_column($lists,'teacher'))/$score_num,2);
+
+        $average['depth']           = round(array_sum(array_column($lists,'depth'))/$score_num,2);
+        $average['major']           = round(array_sum(array_column($lists,'major'))/$score_num,2);
+        $average['interest']        = round(array_sum(array_column($lists,'interest'))/$score_num,2);
+        $average['material']        = round(array_sum(array_column($lists,'material'))/$score_num,2);
+        $average['score_num']       = $score_num?$score_num:'0';
+        $average['sum_score']       = (get_type_user_manyidu($lists,$ut)*100).'%'; //合计
+
+        $this->usertype             = $ut;
+        $this->kind                 = $kind;
+        $this->score_kind1          = $score_kind1;
+        $this->score_kind2          = $score_kind2;
+        $this->score_kind3          = $score_kind3;
+        $this->average              = $average;
+        $this->lists                = $lists;
+        $this->op_id                = $op_id;
+
+
+
+        $this->display('user_kpi_score_info');
+    }
 
 }

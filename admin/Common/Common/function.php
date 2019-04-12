@@ -2643,51 +2643,14 @@ function updatekpi($month,$user){
 
                         //顾客对计调事项满意度--计调部经理
                         if($v['quota_id']==82){
-
-                            //获取当月出团项目数
-                            $where = array();
-                            $where['o.ret_time']		= array('between',array($v['start_date'],$v['end_date']));
-                            $where['e.liable_uid']	= $user;
-                            $where['e.eval_type']	= 2;
-
-                            //当月结束的团项目数
-                            $cou = M()->table('__OP_EVAL__ as e')->join('__OP_TEAM_CONFIRM__ as o on o.op_id = e.op_id','LEFT')->where($where)->count();
-
-                            $sum = M()->table('__OP_EVAL__ as e')->join('__OP_TEAM_CONFIRM__ as o on o.op_id = e.op_id','LEFT')->where($where)->sum('score');
-
-                            //平均得分
-                            $score = round($sum/($cou*100)*100);
-                            if($score>=85 || !$cou){
-                                $complete	= 100;
-                            }else{
-                                $complete	= $score;
-                            }
-                            $url            = '';
-
-                            /*
-                             if ($v['quota_id']==213){
                             $year                       = $v['year'];
-                            $mm                         = substr($v['month'],4,2);
-                            $yearMonth                  = $year.$mm;
-                            $yw_departs                 = C('YW_DEPARTS');  //业务部门id
-                            $where                      = array();
-                            $where['id']                = array('in',$yw_departs);
-                            $departments                = M('salary_department')->field('id,department')->where($where)->select();
-                            $department_data            = get_company_score_statis($departments,$yearMonth); //部门当月合计
-                            $company_data               = get_company_sum_score_statis($departments,$yearMonth); //公司合计
-                            $complete                   = $company_data['month_average'];
-                            $url                        = U('Inspect/score_statis',array('year'=>$year,'month'=>$mm));
-                        }
-                             */
-                            /*$year                       = $v['year'];
                             $monon                      = substr($v['month'],4,2);
                             $yearMonth                  = $year.$monon;
                             $departments                = get_yw_department();
-                            $fields                     = 'stay,food,bus,material,guide'; //房,餐,车,物资(材料及设备),导游/辅导员
-                            //$department_data            = get_company_score_statisAAA($departments,$yearMonth,$fields); //部门当月合计
-                            $company_data               = get_company_sum_score_statisAAA($departments,$yearMonth,$fields); //公司合计*/
-
-
+                            //$department_data            = get_type_user_company_statis($departments,$yearMonth,'jd'); //部门当月合计
+                            $company_data               = get_type_user_company_sum_statis($departments,$yearMonth,'jd'); //公司合计
+                            $complete                   = $company_data['month_score_average'];
+                            $url                        = U('Inspect/user_kpi_statis',array('year'=>$year,'month'=>$monon,'ut'=>'jd'));
                         }
 
 
@@ -3209,7 +3172,7 @@ function updatekpi($month,$user){
 
                         //客户对公司产品满意度
                         if($v['quota_id']==154){
-                            $average_data           = get_satisfaction_average($v['start_date'],$v['end_date']);
+                            /*$average_data           = get_satisfaction_average($v['start_date'],$v['end_date']);
                             $average                = $average_data['average'];
                             $num                    = $average_data['num'];
                             if ($average > 0.9 || !$num){
@@ -3217,7 +3180,15 @@ function updatekpi($month,$user){
                             }else{
                                 $complete           = round(($v['target']/0.9)*$average,2).'%';
                             }
-                            $url                    = '';
+                            $url                    = '';*/
+                            $year                       = $v['year'];
+                            $monon                      = substr($v['month'],4,2);
+                            $yearMonth                  = $year.$monon;
+                            $departments                = get_yw_department();
+                            //$department_data            = get_type_user_company_statis($departments,$yearMonth,'jd'); //部门当月合计
+                            $company_data               = get_type_user_company_sum_statis($departments,$yearMonth,'yf'); //公司合计
+                            $complete                   = $company_data['month_score_average'];
+                            $url                        = U('Inspect/user_kpi_statis',array('year'=>$year,'month'=>$monon,'ut'=>'yf'));
                         }
 
                         //业务部门对产品研发满意度
@@ -5023,4 +4994,18 @@ function get_half_year_cycle($year,$month){
         $data['userid']                 = '';
         $data['username']               = '';
         return $data;
+    }
+
+    /**
+     * 获取预算审核状态
+     * @param $opid
+     * @return mixed
+     */
+    function get_budget_status($opid){
+        $budget                         = M('op_budget')->where(array('op_id'=>$opid))->find();
+        $where                          = array();
+        $where['req_type']              = P::REQ_TYPE_BUDGET; //项目预算申请
+        $where['req_id']                = $budget['id'];
+        $audit_stu                      = M('audit_log')->where($where)->getField('dst_status');
+        return $audit_stu;
     }

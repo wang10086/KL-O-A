@@ -347,7 +347,7 @@
 
 
 
-                        <if condition="rolemenu(array('Inspect/record','Inspect/edit_ins','Inspect/score'))">
+                        <if condition="rolemenu(array('Inspect/record','Inspect/edit_ins','Inspect/score','Inspect/score_statis','Inspect/user_kpi_statis'))">
                         <li class="treeview {:ison(CONTROLLER_NAME, 'Inspect')} {:on('Index/public_satisfaction')} {:on('Index/public_satisfaction_add')}">
                             <a href="javascript:;">
                                 <i class="fa fa-medkit"></i>
@@ -364,8 +364,8 @@
                                 <!--<if condition="rolemenu(array('Inspect/score'))">
                                     <li><a href="{:U('Inspect/score')}"><i class="fa fa-angle-right"></i> 顾客满意度</a></li>
                                 </if>-->
-                                <li class="treeview {:on('Inspect/score')}">
-                                    <if condition="rolemenu(array('Inspect/score','Inspect/score_statis'))">
+                                <li class="treeview {:on('Inspect/score')} {:on('Inspect/score_statis')} {:on('Inspect/user_kpi_statis')}">
+                                    <if condition="rolemenu(array('Inspect/score','Inspect/score_statis','Inspect/user_kpi_statis'))">
                                         <a href=""><i class="fa fa-smile-o"></i> 顾客满意度</a>
                                     </if>
                                     <ul class="treeview-menu">
@@ -374,6 +374,9 @@
                                         </if>
                                         <if condition="rolemenu(array('Inspect/score_statis'))">
                                             <li class="{:on('Inspect/score_statis')}"><a href="{:U('Inspect/score_statis')}"><i class="fa fa-angle-right"></i> 顾客满意度统计</a></li>
+                                        </if>
+                                        <if condition="rolemenu(array('Inspect/user_kpi_statis'))">
+                                            <li class="{:on('Inspect/user_kpi_statis')}"><a href="{:U('Inspect/user_kpi_statis')}"><i class="fa fa-angle-right"></i> 顾客满意度分项统计</a></li>
                                         </if>
                                     </ul>
                                 </li>
