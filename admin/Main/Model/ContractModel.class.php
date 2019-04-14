@@ -16,15 +16,12 @@ class ContractModel extends Model{
      * @param $endtime
      * @return mixed
      */
-   /* public function get_budget_list($begintime,$endtime,$project='',$group_id='',$op_id='',$sale_name=''){
+    /*public function get_budget_list($sale_user_id,$begintime,$endtime){
         $where                              = array(); //当月预算审核通过的项目
         $where['l.req_type']                = P::REQ_TYPE_BUDGET; //预算申请
         $where['b.audit_status']            = 1; //审批通过
         $where['l.audit_time']              = array('between',"$begintime,$endtime");
-        if ($project) $where['o.project']   = array('like','%'.$project.'%');
-        if ($group_id) $where['o.group_id'] = array('like','%'.$group_id.'%');
-        if ($op_id) $where['o.op_id']       = $op_id;
-        if ($sale_name) $where['create_user_name'] = array('like','%'.$sale_name.'%');
+        $where['create_user_name']          = $sale_user_id;
         $field                              = 'l.audit_uid,audit_uname,audit_time,o.*';
         $lists                              = M()->table('__OP_BUDGET__ as b')->join('__AUDIT_LOG__ as l on l.req_id=b.id','left')->join('__OP__ as o on o.op_id = b.op_id','left')->field($field)->where($where)->select();
         return $lists;

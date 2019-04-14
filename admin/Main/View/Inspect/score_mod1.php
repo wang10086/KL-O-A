@@ -53,6 +53,18 @@
                 <div class="form-group col-md-4">
                     <p>辅导员：{$average.guide}&emsp;分</p>
                 </div>
+
+                <div class="form-group col-md-4">
+                    <p>中科院相关活动满足时长：{$average.cas_time}&emsp;分</p>
+                </div>
+
+                <div class="form-group col-md-4">
+                    <p>中科院相关活动完整度：{$average.cas_complete}&emsp;分</p>
+                </div>
+
+                <div class="form-group col-md-4">
+                    <p>中科院单位场地服务：{$average.cas_addr}&emsp;分</p>
+                </div>
             <?php }elseif(in_array($kind,$score_kind3)){ ?>
                 <div class="form-group col-md-4">
                     <p>前期沟通：{$average.before_sell}&emsp;分</p>

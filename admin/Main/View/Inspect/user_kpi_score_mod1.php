@@ -68,7 +68,15 @@
                     </div>-->
                 <?php }elseif($usertype == 'zy'){ ?> <!--资源-->
                     <div class="form-group col-md-4">
-                        <p>场地：{$average.travel}&emsp;分</p>
+                        <p>中科院相关活动满足时长：{$average.cas_time}&emsp;分</p>
+                    </div>
+
+                    <div class="form-group col-md-4">
+                        <p>中科院相关活动完整度：{$average.cas_complete}&emsp;分</p>
+                    </div>
+
+                    <div class="form-group col-md-4">
+                        <p>中科院单位场地服务：{$average.cas_addr}&emsp;分</p>
                     </div>
                 <?php } ?>
             <?php }else{ ?>
