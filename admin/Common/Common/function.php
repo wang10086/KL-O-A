@@ -4973,7 +4973,7 @@ function get_half_year_cycle($year,$month){
                 $department_ids     = array(14,16,2); //14=>沈阳,16=>长春,2=>市场部
                 break;
             case 38: //杨总
-                $department_ids     = array(7,15); //7=>'京外业务中心',15=>'常规业务中心'
+                $department_ids     = array(7,13,15); //7=>京外业务中心,13=>武汉项目部,15=>常规业务中心
                 break;
             default:
                 $department_ids     = M('account')->where(array('id'=>$userid))->getField('departmentid');
