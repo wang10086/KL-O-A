@@ -340,7 +340,7 @@ class ManageController extends ChartController {
      * Manage_input 季度数据显示
      * $mod->quarter_month 自动获取季度
      */
-    public function Manage_quarter_w(){
+    /*public function Manage_quarter_w(){
         $mod                = D('Manage');
         $date_Y['year']     = date('Y');
         $datetime           = $mod->quarter_month($date_Y);//获取季度预算
@@ -350,13 +350,42 @@ class ManageController extends ChartController {
         $this->datetime     = $datetime;//当前年和季度
         $this->type         = $type;//季度提交状态
         $this->display();
+    }*/
+
+    public function Manage_quarter_w(){
+        $mod                = D('Manage');
+        $year               = I('year');
+        $type               = I('quarter');
+        $lists              = $this->get_plans_manage($year,$type);
+        $not_upd_list       = $mod->get_not_upd_manage($year,$type); //判断是否可以修改
+
+        $this->not_upd      = $not_upd_list;
+        $this->department   = C('department1');
+        $this->lists        = $lists;
+        $this->year         = $year;
+        $this->type         = $type;
+        $this->display();
+    }
+
+    /**
+     * 获取当前考核周期的预算信息
+     * @param $year
+     * @param $type 1-2-3-4 1-4季度 , 5=>年度
+     */
+    public function get_plans_manage($year,$type){
+        $db                 = M('manage_input');
+        $where              = array();
+        $where['datetime']  = $year;
+        $where['type']      = $type;
+        $lists              = $db->where($where)->select();
+        return $lists;
     }
 
     /**
      * Manage_input 季度数据录入与修改
      * $mod->quarter_month 自动获取季度
      */
-    public function Manage_save(){
+    /*public function Manage_save(){
         $mod               = D('Manage');
         $date_Y['year']    = date('Y');
         $datetime          = $mod->quarter_month($date_Y);//获取季度预算
@@ -368,7 +397,16 @@ class ManageController extends ChartController {
         }elseif($statu==3){
             $this->error('数据已存在！当前不支持更改！',U('Manage/Manage_quarter_w'));die;
         }
+    }*/
+
+    //录入季度数据
+    public function Manage_save(){
+        $mod                = D('Manage');
+        $data               = I();
+        $save_stu           = $mod->save_manage($data);
+        $this->ajaxReturn($save_stu);
     }
+
 
     /**
      * quarter_submit 季度提交审批

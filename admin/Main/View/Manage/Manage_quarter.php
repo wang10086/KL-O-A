@@ -34,7 +34,7 @@
                         <h3 class="box-title">季度预算报表</h3>
                         <if condition="rolemenu(array('Manage/Manage_quarter_w'))" class="{:on('Manage/Manage_quarter_w')}">
                             <div class="box-header">
-                                <a class="btn btn-info btn-sm" href="{:U('Manage/Manage_quarter_w')}" style="float:right;margin:1em 2em 0em 0em;background-color:#398439;"><b>+</b>预算录入</a>
+                                <a class="btn btn-info btn-sm" href="{:U('Manage/Manage_quarter_w',array('year'=>$year,'quarter'=>$quarter))}" style="float:right;margin:1em 2em 0em 0em;background-color:#398439;"><b>+</b>预算录入</a>
                             </div>
                         </if>
                     </div><!-- /.box-header -->
@@ -95,6 +95,21 @@
                                         <th><?php if($m['total_profit']=="" || $m['total_profit']==0){echo '';}else{echo '¥ '.$m['total_profit']; }?></th>
                                     </foreach>
                                 </tr>
+
+                                <tr role="row" class="orders">
+                                    <th>目标利润</th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                </tr>
+
                                 <tr role="row" class="orders">
                                     <th>人事费用率(%)</th>
                                     <foreach name="manage" item="m">

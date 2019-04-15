@@ -663,6 +663,79 @@ class ManageModel extends Model{
     }
 
     /**
+     * 保存季度录入数据
+     * @param $info
+     * @return array
+     */
+    private function save_manage($info){
+        $db                             = M('manage_input');
+        $year                           = $info['year'];
+        $type                           = $info['type'];
+        $num                            = 0;
+        $save_data                      = array();
+        if (!$year || !$type){
+            $save_data['stu']           = $num;
+            $save_data['msg']           = '数据错误';
+            return $save_data;
+        }
+
+        $data                           = array();
+        $data['account_id']             = session('userid');//用户uid
+        $data['username']               = session('name');  //用户名
+        $data['createtime']             = NOW_TIME; //时间
+        $data['datetime']               = trim($info['year']); //年
+        $data['logged_department']      = trim($info['department']); //部门
+        $data['employees_number']       = trim($info['number']);//员工人数
+        $data['logged_income']          = trim($info['income']);//营业收入
+        $data['logged_profit']          = trim($info['profit']);//营业毛利
+        $data['logged_rate']            = trim($info['rate']);//营业利率比
+        $data['manpower_cost']          = trim($info['cost']);//人力资源成本
+        $data['other_expenses']         = trim($info['other']);//其他费用
+        $data['total_profit']           = trim($info['total']);//利润总额
+        $data['target_profit']          = trim($info['target_profit']); //目标利润
+        $data['personnel_cost_rate']    = trim($info['personnel']);//人事费用率
+        $data['type']                   = trim($info['type']); //1-4季度 , 5年度
+        $data['statu']                  = 1; //待提交审核
+
+        $list1                          = $this->get_not_upd_manage($data['datetime'],$data['type']);
+        if ($list1){
+            $msg                        = '数据暂不支持修改';
+        }else{
+            $where2                     = array();
+            $where2['datetime']         = $data['datetime'];
+            $where2['type']             = $data['type'];
+            $where2['logged_department']= $data['logged_department'];
+            $where2['statu']            = 1; //待提交审核
+            $list2                      = $db->where($where2)->find();
+            if (!$list2){
+                $res                    = $db->add($data);
+            }else{
+                $res                    = $db->where($where2)->save($data);
+            }
+            if ($res){
+                $num++;
+                $msg                    = '添加数据成功';
+            }else{
+                $msg                    = '保存数据失败';
+            }
+        }
+        $save_data['stu']               = $num;
+        $save_data['msg']               = $msg;
+        return $save_data;
+    }
+
+    //判断是否可以修改
+    public function get_not_upd_manage($year,$type){
+        $db                             = M('manage_input');
+        $where                          = array();
+        $where['datetime']              = $year;
+        $where['type']                  = $type;
+        $where['statu']                 = array('in',array(2,3,4));
+        $list                           = $db->where($where)->find();
+        return $list;
+    }
+
+    /**
      * Manage_display 显示季度数据输入页面信息排序
      * $datetime 当前季度时间
      */
@@ -948,37 +1021,6 @@ class ManageModel extends Model{
         $ymd[1]                 = $ymd2;
         return $ymd;
     }
-
-    /**
-     * department_data 部门数据
-     * $data 部门、公司所有数据
-     */
-    /*public function department_data($data){
-        $money                        = array();//部门其他费用
-        $count                        = 0;//公司总其他费用
-        foreach($data as $key => $val){
-            $count                   += $val['sum'];//公司总其他费用
-        }
-        $money[0]['money']            = $count;
-        $department                   = C('department');//部门顺序
-        $count_departmen              = 0;//总部门其他费用
-        foreach($department as $key => $val){//循环部门
-            $key                      = $key+1;
-            $departmen                = 0;//部门他费用
-            foreach($data as $k => $v){//循环部门其他费用
-                if($val ==$v['department']){
-                    $count_departmen +=$v['sum'];
-                    $departmen        = $departmen+$v['sum'];//部门总计
-                }else{
-                    $departmen        = $departmen+0;
-                }
-            }
-            $money[$key]['money']     = $departmen;
-        }
-        $money[9]['money']            = $money[0]['money']-$count_departmen;//机关部门
-        ksort($money);
-        return $money;
-    }*/
 
     /**
      * @param $data         不分摊金额

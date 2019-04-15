@@ -29,133 +29,196 @@
 
                 <div class="box box-warning">
                     <div class="box-header">
-                        <h3 class="box-title"><?php if($datetime['type']==1){echo "第一";}elseif($datetime['type']==2){echo "第一";}elseif($datetime['type']==3){echo "第三";}elseif($datetime['type']==4){echo "第四";}?>季度预算录入</h3>
+                        <h3 class="box-title">第<?php if($type==1){echo "一";}elseif($type==2){echo "二";}elseif($type==3){echo "三";}elseif($type==4){echo "四";}?>季度预算录入</h3>
 
                     </div><!-- /.box-header -->
                     <div class="box-body">
 
                         <table class="table table-bordered dataTable fontmini" id="tablecenter">
                             <tr role="row" class="orders" >
-                                <th style="width:10em;" ><b>项目</b></th>
-                                <th style="width:10em;" ><b>公司</b></th>
-                                <th style="width:10em;" ><b>京区业务中心</b></th>
-                                <th style="width:10em;" ><b>京外业务中心</b></th>
-                                <th style="width:10em;" ><b>南京项目部</b></th>
-                                <th style="width:10em;" ><b>武汉项目部</b></th>
-                                <th style="width:10em;" ><b>沈阳项目部</b></th>
-                                <th style="width:10em;" ><b>长春项目部</b></th>
-                                <th style="width:10em;" ><b>市场部</b></th>
-                                <th style="width:10em;" ><b>常规业务中心</b></th>
-                                <th style="width:10em;" ><b>机关部门</b></th>
+                                <th class="black" style="width:10em;" >项目</th>
+                                <foreach name="department" item="v">
+                                    <th class="black" style="width:10em;" >{$v}</th>
+                                </foreach>
                             </tr>
 
                             <tr role="row" class="orders">
                                 <th>员工人数</th>
-                                <foreach name="manage" item="m">
-                                    <th><?php if($m['employees_number']=="" || $m['employees_number']==0){echo '';}else{echo $m['employees_number'].'（人）'; }?></th>
+                                <foreach name="department" item="v">
+                                    <td>
+                                        <?php foreach ($lists as $value){
+                                            if ($value['logged_department'] == $v){
+                                                echo $value['employees_number'].' 人';
+                                            }
+                                        } ?>
+                                    </td>
                                 </foreach>
                             </tr>
                             <tr role="row" class="orders">
                                 <td>营业收入</td>
-                                <foreach name="manage" item="m">
-                                    <th><?php if($m['logged_income']=="" || $m['logged_income']==0){echo '';}else{echo '¥ '.$m['logged_income']; }?></th>
+                                <foreach name="department" item="v">
+                                    <td>
+                                        <?php foreach ($lists as $value){
+                                            if ($value['logged_department'] == $v){
+                                                echo '&yen;'.$value['logged_income'];
+                                            }
+                                        } ?>
+                                    </td>
                                 </foreach>
                             </tr>
                             <tr role="row" class="orders">
                                 <td>营业毛利</td>
-                                <foreach name="manage" item="m">
-                                    <th><?php if($m['logged_profit']=="" || $m['logged_profit']==0){echo '';}else{echo '¥ '.$m['logged_profit']; }?></th>
+                                <foreach name="department" item="v">
+                                    <td>
+                                        <?php foreach ($lists as $value){
+                                            if ($value['logged_department'] == $v){
+                                                echo '&yen;'.$value['logged_profit'];
+                                            }
+                                        } ?>
+                                    </td>
                                 </foreach>
                             </tr>
                             <tr role="row" class="orders">
                                 <td>营业毛利率(%)</td>
-                                <foreach name="manage" item="m">
-                                    <th><?php if($m['logged_rate']=="" || $m['logged_rate']==0){echo '';}else{echo $m['logged_rate'].' %'; }?></th>
+                                <foreach name="department" item="v">
+                                    <td>
+                                        <?php foreach ($lists as $value){
+                                            if ($value['logged_department'] == $v){
+                                                echo $value['logged_rate'].'%';
+                                            }
+                                        } ?>
+                                    </td>
                                 </foreach>
                             </tr>
                             <tr role="row" class="orders">
                                 <td>人力资源成本</td>
-                                <foreach name="manage" item="m">
-                                    <th><?php if($m['manpower_cost']=="" || $m['manpower_cost']==0){echo '';}else{echo '¥ '.$m['manpower_cost']; }?></th>
+                                <foreach name="department" item="v">
+                                    <td>
+                                        <?php foreach ($lists as $value){
+                                            if ($value['logged_department'] == $v){
+                                                echo '&yen;'.$value['manpower_cost'];
+                                            }
+                                        } ?>
+                                    </td>
                                 </foreach>
                             <tr role="row" class="orders">
                                 <td>其他费用</td>
-                                <foreach name="manage" item="m">
-                                    <th><?php if($m['other_expenses']=="" || $m['other_expenses']==0){echo '';}else{echo '¥ '.$m['other_expenses']; }?></th>
+                                <foreach name="department" item="v">
+                                    <td>
+                                        <?php foreach ($lists as $value){
+                                            if ($value['logged_department'] == $v){
+                                                echo '&yen;'.$value['other_expenses'];
+                                            }
+                                        } ?>
+                                    </td>
                                 </foreach>
                             </tr>
                             <tr role="row" class="orders">
                                 <td>利润总额</td>
-                                <foreach name="manage" item="m">
-                                    <th><?php if($m['total_profit']=="" || $m['total_profit']==0){echo '';}else{echo '¥ '.$m['total_profit']; }?></th>
+                                <foreach name="department" item="v">
+                                    <td>
+                                        <?php foreach ($lists as $value){
+                                            if ($value['logged_department'] == $v){
+                                                echo '&yen;'.$value['total_profit'];
+                                            }
+                                        } ?>
+                                    </td>
+                                </foreach>
+                            </tr>
+                            <tr role="row" class="orders">
+                                <th>目标利润</th>
+                                <foreach name="department" item="v">
+                                    <td>
+                                        <?php foreach ($lists as $value){
+                                            if ($value['logged_department'] == $v){
+                                                echo '&yen;'.$value['target_profit'];
+                                            }
+                                        } ?>
+                                    </td>
                                 </foreach>
                             </tr>
                             <tr role="row" class="orders">
                                 <td>人事费用率(%)</td>
-                                <foreach name="manage" item="m">
-                                    <th><?php if($m['personnel_cost_rate']=="" || $m['personnel_cost_rate']==0){echo '';}else{echo $m['personnel_cost_rate'].' %'; }?></th>
+                                <foreach name="department" item="v">
+                                    <td>
+                                        <?php foreach ($lists as $value){
+                                            if ($value['logged_department'] == $v){
+                                                echo $value['personnel_cost_rate'].'%';
+                                            }
+                                        } ?>
+                                    </td>
                                 </foreach>
                             </tr>
                             <tr role="row" class="orders">
                                 <td>状态</td>
-                                <foreach name="manage" item="m">
-                                    <th><a><b><?php if($m['statu']=="" || $m['statu']==0){echo '';}elseif($m['statu']==1){echo "待提交审核"; }elseif($m['statu']==2){echo "待提交批准"; }elseif($m['statu']==3){echo "待批准"; }?></b></a></th>
+                                <foreach name="department" item="v">
+                                    <td>
+                                        <?php foreach ($lists as $value){
+                                            if ($value['logged_department'] == $v){
+                                                if ($value['statu']==1){ echo "待提交审核"; }
+                                                elseif ($value['statu']==2){ echo "待提交批准"; }
+                                                elseif ($value['statu']==3){ echo "待批准"; }
+                                            }
+                                        } ?>
+                                    </td>
                                 </foreach>
                             </tr>
                         </table><br><br>
 
 
-                        <table class="table table-bordered dataTable fontmini" id="tablecenter1">
-                            <tr role="row" class="orders" >
-                                <th>部门</th>
-                                <th>员工人数</th>
-                                <th>营业收入</th>
-                                <th>营业毛利</th>
-                                <th>营业毛利率(%)</th>
-                                <th>人力资源成本</th>
-                                <th>其他费用</th>
-                                <th>利润总额</th>
-                                <th>人事费用率(%)</th>
-                                <th>状态</th>
-                            </tr>
-                            <tr role="row" class="orders">
-                                <form action="{:U('Manage/Manage_save')}" method="post">
-                                    <td>
-                                        <select name="department" class="form-control">
-                                            <option value ="公司">公司</option>
-                                            <option value ="京区业务中心">京区业务中心</option>
-                                            <option value="京外业务中心">京外业务中心</option>
-                                            <option value="南京项目部">南京项目部</option>
-                                            <option value ="武汉项目部">武汉项目部</option>
-                                            <option value ="沈阳项目部">沈阳项目部</option>
-                                            <option value="长春项目部">长春项目部</option>
-                                            <option value="市场部">市场部(业务)</option>
-                                            <option value ="常规业务中心">常规业务中心</option>
-                                            <option value ="机关部门">机关部门</option>
-                                        </select>
-                                    </td>
-                                    <td><input type="text" name="number" class="form-control" placeholder="例如：50 或 50.29"></td>
-                                    <td><input type="text" name="income" class="form-control manage_num1" placeholder="例如：500.23 或 500"></td>
-                                    <td><input type="text" name="profit" class="form-control manage_num2" placeholder="例如：500.23 或 500"></td>
-                                    <td><input type="text" name="rate" class="form-control manage_num3" placeholder="例如：25.23 或 25"></td>
-                                    <td><input type="text" name="cost" class="form-control manage_num4"  placeholder="例如：500.23 或 500"></td>
-                                    <td><input type="text" name="other" class="form-control manage_num5" placeholder="例如：500.23 或 500"></td>
-                                    <td><input type="text" name="total" class="form-control manage_num6" placeholder="例如：500.23 或 500"></td>
-                                    <td><input type="text" name="personnel" class="form-control manage_num7" placeholder="例如：50.23 或 50"></td>
-                                    <td><input type="submit" value="保存" style="background-color:#00acd6;font-size:1.5em;"></td>
-                                </form>
-                            </tr>
+                        <?php if(!$not_upd){ ?>
+                            <table class="table table-bordered dataTable fontmini" id="tablecenter1">
+                                <tr role="row" class="orders" >
+                                    <th>部门</th>
+                                    <th>员工人数</th>
+                                    <th>营业收入</th>
+                                    <th>营业毛利</th>
+                                    <th>营业毛利率(%)</th>
+                                    <th>人力资源成本</th>
+                                    <th>其他费用</th>
+                                    <th>利润总额</th>
+                                    <th>目标利润</th>
+                                    <th>人事费用率(%)</th>
+                                    <th>状态</th>
+                                </tr>
+                                <tr role="row" class="orders">
+                                    <form action="{:U('Manage/Manage_save')}" method="post" id="saveManage">
+                                        <input type="hidden" name="year" value="{$year}">
+                                        <input type="hidden" name="type" value="{$type}">
+                                        <td>
+                                            <select name="department" class="form-control">
+                                                <foreach name="department" item="v">
+                                                    <option value="{$v}">{$v}</option>
+                                                </foreach>
+                                            </select>
+                                        </td>
+                                        <td><input type="text" name="number" class="form-control" placeholder="例如：50 或 50.29"></td>
+                                        <td><input type="text" name="income" class="form-control manage_num1" placeholder="例如：500.23 或 500"></td>
+                                        <td><input type="text" name="profit" class="form-control manage_num2" placeholder="例如：500.23 或 500"></td>
+                                        <td><input type="text" name="rate" class="form-control manage_num3" placeholder="例如：25.23 或 25"></td>
+                                        <td><input type="text" name="cost" class="form-control manage_num4"  placeholder="例如：500.23 或 500"></td>
+                                        <td><input type="text" name="other" class="form-control manage_num5" placeholder="例如：500.23 或 500"></td>
+                                        <td><input type="text" name="total" class="form-control manage_num6" placeholder="例如：500.23 或 500"></td>
+                                        <td><input type="text" name="target_profit" class="form-control manage_num8" placeholder="例如：500.23 或 500"></td>
+                                        <td><input type="text" name="personnel" class="form-control manage_num7" placeholder="例如：50.23 或 50"></td>
+                                        <td>
+                                            <!--<input type="submit" value="保存" style="background-color:#00acd6;font-size:1.5em;">-->
+                                            <a  href="javascript:;" class="btn btn-info btn-sm" onClick="javascript:save('saveManage','<?php echo U('Manage/Manage_save'); ?>');">保存</a>
+                                        </td>
+                                    </form>
+                                </tr>
 
-                        </table><br><br>
+                            </table><br><br>
+                        <?php } ?>
 
                         <div style="text-align:center;" id="shr_qianzi">
-                            <if condition="rolemenu(array('Manage/quarter_submit'))" class="{:on('Manage/quarter_submit')}">
+                            <?php  if(rolemenu(array('Manage/quarter_submit'))){ ?>
                                 <form action="{:U('Manage/quarter_submit')}" method="post" style="<?php if($type==1){echo "";}else{echo "display:none;";}?>">
                                     <p style="color:red;">(请确认自己部门数据预算后点击 <b>"提交审核"</b>,提交后不可更改!)</p>
                                     <input type="hidden" name="status" value="1">
                                     <input type="submit" value="提交审核" class="btn btn-info" style="width:10em;">
                                 </form>
-                            </if>
+                            <?php } ?>
 <!--                            <if condition="rolemenu(array('Manage/quarter_paprova'))" class="{:on('Manage/quarter_paprova')}">-->
 <!--                                <div style="--><?php //if($type==2){echo "";}else{echo "display:none;";}?><!--">-->
 <!--                                    <a href="{:U('Manage/quarter_paprova',array('status'=>2))}" class="btn btn-info" style="width:10em;">提交批准</a>-->
@@ -200,4 +263,40 @@
         var num7    = $(".manage_num7").val(port);
 
     });
+
+    artDialog.alert = function (content, status,time) {
+        return artDialog({
+            id: 'Alert',
+            icon: status,
+            width:300,
+            height:120,
+            fixed: true,
+            lock: true,
+            time: time,
+            content: content,
+            ok: true
+        });
+    };
+
+
+    //保存信息
+    function save(id,url){
+        $.ajax({
+            type: "POST",
+            url: url,
+            dataType:'json',
+            data: $('#'+id).serialize(),
+            success:function(data){
+                var stu     = data.stu;
+                if(parseInt(stu)>0){
+                    art.dialog.alert(data.msg,'success',1);
+                }else{
+                    art.dialog.alert(data.msg,'warning',3);
+                }
+            }
+        });
+
+        setTimeout("history.go(0)",2000);
+    }
+
 </script>
