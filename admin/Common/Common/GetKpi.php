@@ -1388,7 +1388,7 @@ function get_sum_gross_profit($userids,$beginTime,$endTime){
             //获取当年已评分的团
             $where                          = array();
             $where['o.op_id']               = $v['op_id'];
-            $year_lists                     = M()->table('__TCS_SCORE__ as s')->field('u.op_id,o.kind,s.id as sid,s.before_sell,s.new_media,s.stay,s.travel,s.content,s.food,s.bus,s.driver,s.guide,s.teacher,s.depth,s.major,s.interest,s.material,s.late,s.manage,s.morality,s.cas_time,s.cas_complete,s.cas_addr')->join('join __TCS_SCORE_USER__ as u on u.id = s.uid','left')->join('__OP__ as o on o.op_id = u.op_id','left')->where($where)->select();
+            $year_lists                     = M()->table('__TCS_SCORE__ as s')->field('u.op_id,u.time,o.kind,s.id as sid,s.before_sell,s.new_media,s.stay,s.travel,s.content,s.food,s.bus,s.driver,s.guide,s.teacher,s.depth,s.major,s.interest,s.material,s.late,s.manage,s.morality,s.cas_time,s.cas_complete,s.cas_addr')->join('join __TCS_SCORE_USER__ as u on u.id = s.uid','left')->join('__OP__ as o on o.op_id = u.op_id','left')->where($where)->select();
 
 
             if ($year_lists){ //已评分
@@ -1441,7 +1441,7 @@ function get_sum_gross_profit($userids,$beginTime,$endTime){
             //获取当月已评分的团
             $where                          = array();
             $where['o.op_id']               = $v['op_id'];
-            $lists                          = M()->table('__TCS_SCORE__ as s')->field('u.op_id,o.kind,s.id as sid,s.before_sell,s.new_media,s.stay,s.travel,s.content,s.food,s.bus,s.driver,s.guide,s.teacher,s.depth,s.major,s.interest,s.material,s.late,s.manage,s.morality,s.cas_time,s.cas_complete,s.cas_addr')->join('join __TCS_SCORE_USER__ as u on u.id = s.uid','left')->join('__OP__ as o on o.op_id = u.op_id','left')->where($where)->select();
+            $lists                          = M()->table('__TCS_SCORE__ as s')->field('u.op_id,u.time,o.kind,s.id as sid,s.before_sell,s.new_media,s.stay,s.travel,s.content,s.food,s.bus,s.driver,s.guide,s.teacher,s.depth,s.major,s.interest,s.material,s.late,s.manage,s.morality,s.cas_time,s.cas_complete,s.cas_addr')->join('join __TCS_SCORE_USER__ as u on u.id = s.uid','left')->join('__OP__ as o on o.op_id = u.op_id','left')->where($where)->select();
 
             if ($lists){ //已评分
                 $month_score_num++;
@@ -1551,7 +1551,7 @@ function get_department_person_score_statis($year='',$month='',$department_id,$c
             //获取当月已评分的团
             $where                      = array();
             $where['o.op_id']           = $v['op_id'];
-            $lists                      = M()->table('__TCS_SCORE__ as s')->field('u.op_id,o.kind,s.id as sid,s.before_sell,s.new_media,s.stay,s.travel,s.content,s.food,s.bus,s.driver,s.guide,s.teacher,s.depth,s.major,s.interest,s.material,s.late,s.manage,s.morality,s.cas_time,s.cas_complete,s.cas_addr')->join('join __TCS_SCORE_USER__ as u on u.id = s.uid','left')->join('__OP__ as o on o.op_id = u.op_id','left')->where($where)->select();
+            $lists                      = M()->table('__TCS_SCORE__ as s')->field('u.op_id,u.time,o.kind,s.id as sid,s.before_sell,s.new_media,s.stay,s.travel,s.content,s.food,s.bus,s.driver,s.guide,s.teacher,s.depth,s.major,s.interest,s.material,s.late,s.manage,s.morality,s.cas_time,s.cas_complete,s.cas_addr')->join('join __TCS_SCORE_USER__ as u on u.id = s.uid','left')->join('__OP__ as o on o.op_id = u.op_id','left')->where($where)->select();
 
             if ($lists){ //已评分
                 $score_num++;
@@ -1594,7 +1594,11 @@ function get_department_person_score_statis($year='',$month='',$department_id,$c
         $defen      = 0;
         foreach ($lists as $k=>$v){
             $kind   = $v['kind'];
-            if (in_array($kind,$score_kind1)) $zongfen += 12*5; //考核12项, 每项5分, 满分总分
+            if ($v['time'] < strtotime('20190415')){ //20190415之前的按照9项维度考核
+                if (in_array($kind,$score_kind1)) $zongfen += 9*5; //考核9项, 每项5分, 满分总分
+            }else{
+                if (in_array($kind,$score_kind1)) $zongfen += 12*5; //考核12项, 每项5分, 满分总分
+            }
             if (in_array($kind,$score_kind2)) $zongfen += 10*5; //考核10项, 每项5分, 满分总分
             if (in_array($kind,$score_kind3)) $zongfen += 10*5; //考核10项, 每项5分, 满分总分
             $defen += $v['before_sell']+$v['new_media']+$v['stay']+$v['travel']+$v['content']+$v['food']+$v['bus']+$v['driver']+$v['guide']+$v['teacher']+$v['depth']+$v['major']+$v['interest']+$v['material']+$v['late']+$v['manage']+$v['morality']+$v['cas_time']+$v['cas_complete']+$v['cas_addr'];
