@@ -380,6 +380,8 @@ class InspectController extends BaseController{
         $average['score_num']   = $score_num?$score_num:'0';
         $sum                    = get_sum_score($lists); //总分
         $average['sum_score']   = (round(array_sum(array_column($lists,'sum_score'))/$sum,2)*100).'%';
+
+        var_dump($average);die;
         $row                    = M('tcs_score_problem')->where(array('op_id'=>$op_id))->find();
         $this->row              = $row;
         $this->score_pro        = json_encode($row);

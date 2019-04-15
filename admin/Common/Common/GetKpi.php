@@ -2084,6 +2084,9 @@ function get_yw_department(){
             if ($v['major']        !=0) $sum += 5;
             if ($v['interest']     !=0) $sum += 5;
             if ($v['material']     !=0) $sum += 5;
+            if ($v['late']         !=0) $sum += 5;
+            if ($v['manage']       !=0) $sum += 5;
+            if ($v['morality']     !=0) $sum += 5;
             if ($v['cas_time']     !=0) $sum += 5;
             if ($v['cas_complete'] !=0) $sum += 5;
             if ($v['cas_addr']     !=0) $sum += 5;
