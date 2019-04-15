@@ -271,9 +271,7 @@ class InspectController extends BaseController{
         foreach ($lists as $k=>$v){
             $lists[$k]['sum_score'] = $v['before_sell']+$v['new_media']+$v['stay']+$v['travel']+$v['content']+$v['food']+$v['bus']+$v['driver']+$v['guide']+$v['teacher']+$v['depth']+$v['major']+$v['interest']+$v['material']+$v['cas_time']+$v['cas_complete']+$v['cas_addr'];
         }
-        if (in_array($kind,$score_kind1)) $sum = 12*5*$score_num; //考核12项, 每项5分, 满分总分
-        if (in_array($kind,$score_kind2)) $sum = 7*5*$score_num; //考核7项, 每项5分, 满分总分
-        if (in_array($kind,$score_kind3)) $sum = 10*5*$score_num; //考核10项, 每项5分, 满分总分
+        $sum                = get_sum_score($lists);
         $average            = (round(array_sum(array_column($lists,'sum_score'))/$sum,2)*100).'%';
         return $average;
     }
@@ -350,8 +348,7 @@ class InspectController extends BaseController{
             ->where(array('u.op_id'=>$op_id))
             ->limit($page->firstRow.','.$page->listRows)
             ->select();
-        $score_num      = count($lists);
-
+        $score_num              = count($lists);
         foreach ($lists as $k=>$v){
             $lists[$k]['sum_score'] = $v['before_sell']+$v['new_media']+$v['stay']+$v['travel']+$v['content']+$v['food']+$v['bus']+$v['driver']+$v['guide']+$v['teacher']+$v['depth']+$v['major']+$v['interest']+$v['material']+$v['late']+$v['manage']+$v['morality']+$v['cas_time']+$v['cas_complete']+$v['cas_addr'];
         }
@@ -381,9 +378,7 @@ class InspectController extends BaseController{
         $average['cas_complete']= round(array_sum(array_column($lists,'cas_complete'))/$score_num,2);
         $average['cas_addr']    = round(array_sum(array_column($lists,'cas_addr'))/$score_num,2);
         $average['score_num']   = $score_num?$score_num:'0';
-        if (in_array($kind,$score_kind1)) $sum = 12*5*$score_num; //考核12项, 每项5分, 满分总分
-        if (in_array($kind,$score_kind2)) $sum = 10*5*$score_num; //考核7项, 每项5分, 满分总分
-        if (in_array($kind,$score_kind3)) $sum = 10*5*$score_num; //考核10项, 每项5分, 满分总分
+        $sum                    = get_sum_score($lists); //总分
         $average['sum_score']   = (round(array_sum(array_column($lists,'sum_score'))/$sum,2)*100).'%';
         $row                    = M('tcs_score_problem')->where(array('op_id'=>$op_id))->find();
         $this->row              = $row;
