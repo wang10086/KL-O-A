@@ -673,7 +673,7 @@ class ManageModel extends Model{
         $type                           = $info['type'];
         $num                            = 0;
         $save_data                      = array();
-        if (!$year || !$type){
+        if (!$year || !$type || !$info['department']){
             $save_data['stu']           = $num;
             $save_data['msg']           = '数据错误';
             return $save_data;
@@ -697,15 +697,15 @@ class ManageModel extends Model{
         $data['type']                   = trim($info['type']); //1-4季度 , 5年度
         $data['statu']                  = 1; //待提交审核
 
-        $list1                          = $this->get_not_upd_manage($data['datetime'],$data['type']);
-        if ($list1){
-            $msg                        = '数据暂不支持修改';
-        }else{
+        //$list1                          = $this->get_not_upd_manage($data['datetime'],$data['type']);
+        //if ($list1){
+        //  $msg                        = '数据暂不支持修改';
+        //}else{
             $where2                     = array();
             $where2['datetime']         = $data['datetime'];
             $where2['type']             = $data['type'];
             $where2['logged_department']= $data['logged_department'];
-            $where2['statu']            = 1; //待提交审核
+            $where2['statu']            = array('in',array(1,3)); //1=>待提交审核, 3=>审核不通过
             $list2                      = $db->where($where2)->find();
             if (!$list2){
                 $res                    = $db->add($data);
@@ -713,27 +713,36 @@ class ManageModel extends Model{
                 $res                    = $db->where($where2)->save($data);
             }
             if ($res){
+                if (in_array($info['type'],1,2,3,4)){ $cycle=$info['type'].'季度'; }else{ $cycle='年度'; }
+                //发送系统通知
+                $uid     = cookie('userid');
+                $title   = '您有来自'.session('username').'提交的'.$info['year'].'年'.$cycle.'预算报表待审核';
+                $content = '';
+                $url     = U('Manage/Manage_quarter_w',array('year'=>$info['year'],'type'=>$info['type']));
+                $user    = '[11]'; //乔总
+                send_msg($uid,$title,$content,$url,$user,'');
+
                 $num++;
-                $msg                    = '添加数据成功';
+                $msg                    = '保存数据成功';
             }else{
                 $msg                    = '保存数据失败';
             }
-        }
+        //}
         $save_data['stu']               = $num;
         $save_data['msg']               = $msg;
         return $save_data;
     }
 
     //判断是否可以修改
-    public function get_not_upd_manage($year,$type){
+    /*public function get_not_upd_manage($year,$type){
         $db                             = M('manage_input');
         $where                          = array();
         $where['datetime']              = $year;
         $where['type']                  = $type;
-        $where['statu']                 = array('in',array(2,3,4));
+        $where['statu']                 = array('in',array(2,4)); //2=>待审核 , 4=>审核通过
         $list                           = $db->where($where)->find();
         return $list;
-    }
+    }*/
 
     /**
      * Manage_display 显示季度数据输入页面信息排序
@@ -837,7 +846,7 @@ class ManageModel extends Model{
     /**
      * quarter_submit1 季度提交审批
      */
-    public function quarter_submit1(){
+    /*public function quarter_submit1(){
 
         $sum['year']          = (int)date('Y');
 
@@ -873,14 +882,16 @@ class ManageModel extends Model{
         $count                = $this->sql_r('manage_input',$wher,3);
 
         if($count==10){return 2;die;}else{return 3;die;}
-    }
+    }*/
+
+
 
     /**
      * quarter_paprova1 季度批准
      * $status 2 提交批准 $type 1 驳回
      * $num 当前状态  $sum 成功修改状态
      */
-    public function quarter_paprova1($status,$type,$num,$sum){
+    /*public function quarter_paprova1($status,$type,$num,$sum){
 
         $where['statu']                 = $num;
 
@@ -911,7 +922,28 @@ class ManageModel extends Model{
 
             return '请确认所有人员预算数据已提交！';die;
         }
+    }*/
+
+    /**
+     * 审核预算信息
+     * @param $year
+     * @param $type
+     * @param $stu 3=>驳回 4=>通过
+     */
+    public function quarter_paprova1($year,$type,$stu){
+        $db                     = M('manage_input');
+        $where                  = array();
+        $where['datetime']      = $year;
+        $where['type']          = $type;
+        $where['statu']         = 2; //待审核
+        $data                   = array();
+        $data['statu']          = $stu;
+        $num                    = 0;
+        $res                    = $db->where($where)->save($data);
+        if ($res) $num++;
+        return $num;
     }
+
 
     /**
      * year_submit1 年度提交审核
@@ -958,7 +990,7 @@ class ManageModel extends Model{
 
 
     /**
-     * quarter_paprova1 年度提交批准
+     * year_paprova1 年度提交批准
      * $status 2 提交批准 $type 1 驳回
      * $num 当前状态  $sum 成功修改状态
      */
@@ -1429,11 +1461,75 @@ class ManageModel extends Model{
     }
 
 
+    /**
+     * 获取不能修改预算信息的部门(已提交审核)
+     * @param $year
+     * @param $type
+     * @return array
+     */
+    public function get_upd_department($year,$type){
+        $db                         = M('manage_input');
+        $all_departments            = C('department1');
+        $where                      = array();
+        $where['datetime']          = $year;
+        $where['type']              = $type;
+        $where['statu']             = array('in',array(2,4)); //2=>待审核, 4=>审核通过
+        $unupd_departments          = $db->where($where)->getField('logged_department',true); //不可修改的部门
+        $data                       = array();
+        foreach ($all_departments as $v){
+            if (!in_array($v,$unupd_departments)){
+                $data[]             = $v;
+            }
+        }
+        return $data;
+    }
 
+    /**
+     * 获取待审核数据
+     * @param $year
+     * @param $type
+     * @return mixed
+     */
+    public function get_check_data($year,$type){
+        $db                         = M('manage_input');
+        $where                      = array();
+        $where['datetime']          = $year;
+        $where['type']              = $type;
+        $where['statu']             = array('in',array(1,3)); //1=>未审核, 3=>审核不通过
+        $lists                      = $db->where($where)->select(); //待审核的数据
+        return $lists;
+    }
 
+    /**
+     * 有无待审核信息(是否显示待审核按钮)
+     * @param $year
+     * @param $type
+     * @return mixed
+     */
+    public function show_check($year,$type){
+        $db                         = M('manage_input');
+        $where                      = array();
+        $where['datetime']          = $year;
+        $where['type']              = $type;
+        $where['statu']             = 2; //2=>待审核
+        $lists                      = $db->where($where)->select(); //待审核的数据
+        return $lists;
+    }
 
-
-
+    /**
+     * 获取已审核通过的数据信息
+     * @param $year
+     * @param $type
+     */
+    public function get_checked_lists($year,$type){
+        $db                         = M('manage_input');
+        $where                      = array();
+        $where['datetime']          = $year;
+        $where['type']              = $type;
+        $where['statu']             = 4; //审批通过
+        $lists                      = $db->where($where)->select();
+        return $lists;
+    }
 
 }
 

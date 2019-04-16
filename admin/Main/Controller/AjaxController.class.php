@@ -1805,11 +1805,26 @@ class AjaxController extends Controller {
     //获取满意度二维码
     public function get_code(){
         header("Content-type: text/html; charset=utf-8");
-        $url_info       = I('url_info');
-        $change         = array('&amp;'=>'&');
-        $url_info       = strtr($url_info,$change);
-        $QR_Code        = QR_code($url_info);
+        $url_info               = I('url_info');
+        $change                 = array('&amp;'=>'&');
+        $url_info               = strtr($url_info,$change);
+        $QR_Code                = QR_code($url_info);
         $this->ajaxReturn($QR_Code);
         $this->ajaxReturn($QR_Code,'json');
+    }
+
+    //获取预算信息
+    public function get_plans_manage(){
+        $db                     = M('manage_input');
+        $year                   = trim(I('year'));
+        $type                   = trim(I('type'));
+        $department             = trim(I('department'));
+        $where                  = array();
+        $where['datetime']      = $year;
+        $where['type']          = $type;
+        $where['logged_department'] = $department;
+        $where['statu']         = array('in',array(1,3)); //1=>未审核, 3=>审核不通过
+        $list                   = $db->where($where)->find();
+        $this->ajaxReturn($list);
     }
 }

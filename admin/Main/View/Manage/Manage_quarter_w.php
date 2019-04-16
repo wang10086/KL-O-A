@@ -155,9 +155,7 @@
                                     <td>
                                         <?php foreach ($lists as $value){
                                             if ($value['logged_department'] == $v){
-                                                if ($value['statu']==1){ echo "待提交审核"; }
-                                                elseif ($value['statu']==2){ echo "待提交批准"; }
-                                                elseif ($value['statu']==3){ echo "待批准"; }
+                                                echo $value['stu'];
                                             }
                                         } ?>
                                     </td>
@@ -166,7 +164,7 @@
                         </table><br><br>
 
 
-                        <?php if(!$not_upd){ ?>
+                        <?php if(rolemenu(array('Manage/Manage_save'))){ ?>
                             <table class="table table-bordered dataTable fontmini" id="tablecenter1">
                                 <tr role="row" class="orders" >
                                     <th>部门</th>
@@ -186,8 +184,9 @@
                                         <input type="hidden" name="year" value="{$year}">
                                         <input type="hidden" name="type" value="{$type}">
                                         <td>
-                                            <select name="department" class="form-control">
-                                                <foreach name="department" item="v">
+                                            <select name="department" class="form-control" onchange="get_plans_manage($(this).val())">
+                                                <option value="" selected disabled>请选择</option>
+                                                <foreach name="upd_department" item="v">
                                                     <option value="{$v}">{$v}</option>
                                                 </foreach>
                                             </select>
@@ -212,25 +211,21 @@
                         <?php } ?>
 
                         <div style="text-align:center;" id="shr_qianzi">
-                            <?php  if(rolemenu(array('Manage/quarter_submit'))){ ?>
-                                <form action="{:U('Manage/quarter_submit')}" method="post" style="<?php if($type==1){echo "";}else{echo "display:none;";}?>">
-                                    <p style="color:red;">(请确认自己部门数据预算后点击 <b>"提交审核"</b>,提交后不可更改!)</p>
-                                    <input type="hidden" name="status" value="1">
-                                    <input type="submit" value="提交审核" class="btn btn-info" style="width:10em;">
+                            <?php  if(rolemenu(array('Manage/quarter_submit')) && $check_data){ ?>
+                                <form action="{:U('Manage/quarter_submit')}" method="post" >
+                                    <p class="red">(请确认本部门预算数据无误后点击 <b>"提交审核"</b>,提交后不可更改!)</p>
+                                    <input type="hidden" name="year" value="{$year}">
+                                    <input type="hidden" name="type" value="{$type}">
+                                    <a  href="javascript:;" class="btn btn-info" onClick="javascript:save('saveManage','<?php echo U('Manage/quarter_submit'); ?>');">提交审核</a>
                                 </form>
                             <?php } ?>
-<!--                            <if condition="rolemenu(array('Manage/quarter_paprova'))" class="{:on('Manage/quarter_paprova')}">-->
-<!--                                <div style="--><?php //if($type==2){echo "";}else{echo "display:none;";}?><!--">-->
-<!--                                    <a href="{:U('Manage/quarter_paprova',array('status'=>2))}" class="btn btn-info" style="width:10em;">提交批准</a>-->
-<!--                                    <a href="{:U('Manage/quarter_paprova',array('type'=>1))}"  class="btn btn-info" style="width:10em;">驳回</a>-->
-<!--                                </div>-->
-<!--                            </if>-->
-                            <if condition="rolemenu(array('Manage/quarter_approve'))" class="{:on('Manage/quarter_approve')}">
-                                <div style="<?php if($type==3){echo "";}else{echo "display:none;";}?>" >
-                                    <a href="{:U('Manage/quarter_approve',array('status'=>3))}" class="btn btn-info" style="width:10em;">批准</a>
-                                    <a href="{:U('Manage/quarter_approve',array('type'=>1))}"  class="btn btn-info" style="width:10em;">驳回</a>
+
+                            <?php if (rolemenu(array('Manage/quarter_approve')) && in_array(session('userid'),array(1,11)) && $show_check){ ?>
+                                <div class="mt20" >
+                                    <a href="{:U('Manage/quarter_approve',array('year'=>$year,'type'=>$type,'statu'=>4))}" class="btn btn-info" style="width:10em;">批准</a>
+                                    <a href="{:U('Manage/quarter_approve',array('year'=>$year,'type'=>$type,'statu'=>3))}"  class="btn btn-info" style="width:10em;">驳回</a>
                                 </div>
-                            </if>
+                            <?php } ?>
 
                         </div><br><br>
 
@@ -263,6 +258,32 @@
         var num7    = $(".manage_num7").val(port);
 
     });
+
+    function get_plans_manage(department) {
+        var year        = {$year};
+        var type        = {$type};
+        if (!year || !type || !department){ art_show_msg('数据错误'); return false; }
+        $.ajax({
+            type: 'POST',
+            url: "{:U('Ajax/get_plans_manage')}",
+            dataType: 'JSON',
+            data: {year:year,type:type,department:department},
+            success:function (msg) {
+                if (msg){
+                    $("input[name='number']").val(msg.employees_number);
+                    $("input[name='income']").val(msg.logged_income);
+                    $("input[name='profit']").val(msg.logged_profit);
+                    $("input[name='rate']").val(msg.logged_rate);
+                    $("input[name='cost']").val(msg.manpower_cost);
+                    $("input[name='other']").val(msg.other_expenses);
+                    $("input[name='total']").val(msg.total_profit);
+                    $("input[name='target_profit']").val(msg.target_profit);
+                    $("input[name='personnel']").val(msg.personnel_cost_rate);
+                }
+            }
+        })
+
+    }
 
     artDialog.alert = function (content, status,time) {
         return artDialog({

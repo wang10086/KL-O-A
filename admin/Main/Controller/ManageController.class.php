@@ -143,11 +143,13 @@ class ManageController extends ChartController {
         $mod                    = D('Manage');
         // 季度经营报表
         $quart                  = quarter_month1($quart);//获取季度月份
+        $quarter                = get_quarter($quart);
 
         // 季度预算报表
         $datetime['year']       = $year;
         $datetime['type']       = $quart;//获取季度预算
-        $manage                 = $mod->Manage_display($datetime,2);//季度预算
+        //$manage                 = $mod->Manage_display($datetime,2);//季度预算
+        $manage                 = $mod->get_checked_lists($year,$quarter); //季度预算
 
         $times                  = getQuarterlyCicle($year,$quart);  //获取季度周期
         $ymd[0]                 = date("Ymd",$times['begin_time']);
@@ -165,6 +167,7 @@ class ManageController extends ChartController {
         $total_profit           = $mod->total_profit($profit,$hr_cost,$department);//季度 利润总额
 
         $this->manage           = $manage;//季度预算
+        $this->departments      = C('department1'); //部门信息
         // 季度经营报表
         $this->number           = $number;  // 部门数量
         $this->hr_cost          = $hr_cost; // 部门人力资源成本
@@ -175,7 +178,7 @@ class ManageController extends ChartController {
         $this->year             = $year;//年
         $this->quart            = $quart; //季度月份
         $this->pin              = 1; //已结算统计
-        $this->quarter          = get_quarter($quart);
+        $this->quarter          = $quarter;
         $this->display();
     }
 
@@ -355,17 +358,23 @@ class ManageController extends ChartController {
     public function Manage_quarter_w(){
         $mod                = D('Manage');
         $year               = I('year');
-        $type               = I('quarter');
+        $type               = I('type');
         $lists              = $this->get_plans_manage($year,$type);
-        $not_upd_list       = $mod->get_not_upd_manage($year,$type); //判断是否可以修改
+        $upd_departments    = $mod->get_upd_department($year,$type); //获取数据可编辑的部门信息
+        $check_data         = $mod->get_check_data($year,$type); //获取待提交审核数据(页面显示提交审核)
+        $show_check         = $mod->show_check($year,$type); //是否显示审批/驳回
 
-        $this->not_upd      = $not_upd_list;
+        $this->show_check   = $show_check;
+        $this->check_data   = $check_data;
+        $this->upd_department = $upd_departments;
         $this->department   = C('department1');
         $this->lists        = $lists;
         $this->year         = $year;
         $this->type         = $type;
         $this->display();
     }
+
+
 
     /**
      * 获取当前考核周期的预算信息
@@ -378,6 +387,12 @@ class ManageController extends ChartController {
         $where['datetime']  = $year;
         $where['type']      = $type;
         $lists              = $db->where($where)->select();
+        foreach ($lists as $k=>$v){
+            if ($v['statu']==1) $lists[$k]['stu'] = "<span>待提交审核</span>";
+            if ($v['statu']==2) $lists[$k]['stu'] = "<span class='yellow'>待审核</span>";
+            if ($v['statu']==3) $lists[$k]['stu'] = "<span class='red'>审核未通过</span>";
+            if ($v['statu']==4) $lists[$k]['stu'] = "<span class='green'>审核通过</span>";
+        }
         return $lists;
     }
 
@@ -407,12 +422,59 @@ class ManageController extends ChartController {
         $this->ajaxReturn($save_stu);
     }
 
-
     /**
      * quarter_submit 季度提交审批
      * status 1 提交审批
      */
     public function quarter_submit(){
+        $mod                = D('Manage');
+        $year               = I('year');
+        $type               = I('type');
+        $check_data         = $mod->get_check_data($year,$type); //获取待提交审核数据
+        if (!$year || !$type){
+            $data['stu']    = 0;
+            $data['msg']    = '参数错误';
+            $this->ajaxReturn($data);
+        }
+        if (!$check_data){
+            $data['stu']    = 0;
+            $data['msg']    = '暂无需要审核的数据';
+            $this->ajaxReturn($data);
+        }
+        $res                = $this->submit_quarter($check_data);
+        $data               = array();
+        $data['stu']        = $res;
+        if ($res > 0){
+            $msg            = '保存成功';
+        }else{
+            $msg            = '保存失败';
+        }
+        $data['msg']        = $msg;
+        $this->ajaxReturn($data);
+    }
+
+    /**
+     * 保存提交审核信息
+     * @param $data
+     * @return int
+     */
+    public function submit_quarter($data){
+        $db                 = M('manage_input');
+        $ids                = array_column($data,'id');
+        $arr                = array();
+        $arr['statu']       = 2; //已提交未审核
+        $num                = 0;
+        $res                = $db->where(array('id'=>array('in',$ids)))->save($arr);
+        if ($res) $num++;
+        return $num;
+    }
+
+
+    /**
+     * quarter_submit 季度提交审批
+     * status 1 提交审批
+     */
+    /*public function quarter_submit(){
         if(trim($_POST['status']) == 1){
             $mod    = D('Manage');
             $manage = $mod->quarter_submit1();//季度提交审核
@@ -426,28 +488,13 @@ class ManageController extends ChartController {
         }elseif($manage==3){
             $this->error('数据提交失败!');
         }
-    }
-    /**
-     * quarter_paprova 季度提交批准
-     * $m 路径比对
-     * $status 2 提交批准 $type 1 驳回
-     */
-//    public function quarter_paprova(){
-//        $m              = trim($_GET['m']);
-//        $status         = trim($_GET['status']);
-//        $type           = trim($_GET['type']);
-//        $mod            = D('Manage');
-//        if($m=='Main' && is_numeric($status) && $status==2){
-//        }elseif($m=='Main' && is_numeric($type) && $type==1){
-//        }else{$this->error('数据提交失败!');die;}
-//        $manage         = $mod->quarter_paprova1($status,$type,2,3);//季度提交审
-//        if(strpos($manage,'成功') !==false){$this->success($manage);}else{$this->error($manage);}
-//    }
+    }*/
+
     /**
      * quarter_approve 季度批准
      * $status 3 批准 $type 1 驳回
      */
-    public function quarter_approve(){
+    /*public function quarter_approve(){
         $m                  = trim($_GET['m']);
         $status             = trim($_GET['status']);
         $type               = trim($_GET['type']);
@@ -457,7 +504,22 @@ class ManageController extends ChartController {
         }else{$this->error('数据提交失败!');die;}
         $manage             = $mod->quarter_paprova1($status,$type,3,4);//季度提交审
         if(strpos($manage,'成功') !==false){$this->success($manage);}else{$this->error($manage);}
+    }*/
+
+    public function quarter_approve(){
+        $mod                    = D('Manage');
+        $year                   = I('year');
+        $type                   = I('type');
+        $statu                  = I('statu'); //3=>驳回 4=>审核通过
+        if (!$year || !$type || !$statu) $this->error('操作失败');
+        $res                    = $mod->quarter_paprova1($year,$type,$statu);
+        if ($res > 0){
+            $this->success('审核成功');
+        }else{
+            $this->error('数据保存失败');
+        }
     }
+
     /**
      * year_submit 年度提交审批
      * status 1 提交审批
