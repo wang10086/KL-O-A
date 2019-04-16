@@ -667,7 +667,7 @@ class ManageModel extends Model{
      * @param $info
      * @return array
      */
-    private function save_manage($info){
+    public function save_manage($info){
         $db                             = M('manage_input');
         $year                           = $info['year'];
         $type                           = $info['type'];
