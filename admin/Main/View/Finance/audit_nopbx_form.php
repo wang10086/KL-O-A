@@ -107,7 +107,7 @@
         <input type="hidden" id="qianzi" value="0">
         <input type="hidden" name="savetype" value="17">
         <div class="content">
-            <div class="form-group col-md-4">
+            <div class="form-group col-md-4" id="cy_audit">
                 <p><label>财务主管审核：</label></p>
                 <input type="radio" name="info[cw_audit_status]" value="1" <?php if ($audit_userinfo['cw_audit_status'] == 1){echo 'checked';} ?>> &emsp;通过&emsp;&emsp;&emsp;
                 <input type="radio" name="info[cw_audit_status]" value="2" <?php if ($audit_userinfo['cw_audit_status'] == 2){echo 'checked';} ?>> &emsp;不通过
@@ -115,7 +115,7 @@
 
             <div class="form-group col-md-4">
                 <label>报销单类型：</label>
-                <select class="form-control" name="bxdKind" onchange="get_bxd_kind()" required>
+                <select class="form-control requir" name="bxdKind" onchange="get_bxd_kind()" required>
                     <option value="">==请选择==</option>
                     <foreach name="bxdkind" key="k" item="v">
                         <option value="{$k}">{$v}</option>
@@ -125,7 +125,7 @@
 
             <div class="form-group col-md-4">
                 <label>报销单分类：</label>
-                <select class="form-control" name="bxd_kind" id="bxd_kind" required>
+                <select class="form-control requir" name="bxd_kind" id="bxd_kind" required>
                     <option value="">==请先选择报销单类型==</option>
                 </select>
             </div>
@@ -149,6 +149,19 @@
 <?php } ?>
 
 <script type="text/javascript">
+    $(function () {
+        $('#cy_audit').find('ins').each(function (index,element) {
+            $(this).click(function () {
+                stu         = $(this).prev("input[name='info[cw_audit_status]']").val();
+                if(stu ==1){ //审核通过
+                   $('.requir').attr('required',true);
+                }else{
+                    $('.requir').attr('required',false);
+                }
+            })
+        })
+    })
+
     function get_bxd_kind() {
         var bxdKind = $("select[name='bxdKind']").val();
         if (!bxdKind){

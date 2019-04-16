@@ -1282,7 +1282,7 @@ class FinanceController extends BaseController {
                         $content = '项目名称：'.$op['project'].'，借款单号：'.$jkd_id.'，借款金额：'.$jk_info['sum']."，<hr />财务主管审核意见：<span class='red'>".$zhuangtai."；".$info['cw_remark']."</span>";
                         $url     = U('Finance/jiekuandan_info',array('jkid'=>$jk_id));
                         $user    = '['.$cn_userid.']';
-                        send_msg($uid,$title,$content,$url,$user,'');
+                        //send_msg($uid,$title,$content,$url,$user,'');
                     }
                     //发送系统消息(借款人)
                     $uid     = cookie('userid');
@@ -1514,7 +1514,7 @@ class FinanceController extends BaseController {
                         $content = '报销单号：'.$bxd_id.'，报销金额：'.$bx_info['sum']."，<hr />财务主管审核意见：<span class='red'>".$zhuangtai.'；'.$info['cw_remark']."</span>";
                         $url     = U('Finance/baoxiaodan_info',array('id'=>$bx_id));
                         $user    = '['.$cn_userid.']';
-                        send_msg($uid,$title,$content,$url,$user,'');
+                        //send_msg($uid,$title,$content,$url,$user,'');
                     }
                     //发送系统消息(报销人)
                     $uid     = cookie('userid');
@@ -1720,7 +1720,7 @@ class FinanceController extends BaseController {
                         $content = '借款单号：'.$jkd_id.'，借款金额：'.$jk_info['sum']."，<hr />财务主管审核意见：<span class='red'>".$zhuangtai."；".$info['cw_remark']."</span>";
                         $url     = U('Finance/nopjk_info',array('jkid'=>$jk_id));
                         $user    = '['.$cn_userid.']';
-                        send_msg($uid,$title,$content,$url,$user,'');
+                        //send_msg($uid,$title,$content,$url,$user,'');
                     }
                     //发送系统消息(借款人)
                     $uid     = cookie('userid');
@@ -1991,7 +1991,7 @@ class FinanceController extends BaseController {
                         $content = '报销单号：'.$bxd_id.'，报销金额：'.$bx_info['sum']."，<hr />财务主管审核意见：<span class='red'>".$zhuangtai.'；'.$info['cw_remark']."</span>";
                         $url     = U('Finance/nopbxd_info',array('id'=>$bx_id));
                         $user    = '['.$cn_userid.']';
-                        send_msg($uid,$title,$content,$url,$user,'');
+                        //send_msg($uid,$title,$content,$url,$user,'');
                     }
                     //发送系统消息(报销人)
                     $uid     = cookie('userid');
@@ -2394,6 +2394,7 @@ class FinanceController extends BaseController {
         $this->bx_lists     = $bx_lists;
         $this->audit_userinfo= $audit_userinfo;
         $this->audit_usertype= $audit_usertype;
+        $this->company      = C('COMPANY');
 
         $this->display();
     }
