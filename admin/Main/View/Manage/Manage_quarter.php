@@ -178,16 +178,9 @@
                             <table class="table table-bordered dataTable fontmini" id="tablecenter">
                                 <tr role="row" class="orders" style="text-align:center;" >
                                     <th style="width:10em;" ><b>项目</b></th>
-                                    <th style="width:10em;" ><b>公司</b></th>
-                                    <th style="width:10em;" ><b>京区业务中心</b></th>
-                                    <th style="width:10em;" ><b>京外业务中心</b></th>
-                                    <th style="width:10em;" ><b>南京项目部</b></th>
-                                    <th style="width:10em;" ><b>武汉项目部</b></th>
-                                    <th style="width:10em;" ><b>沈阳项目部</b></th>
-                                    <th style="width:10em;" ><b>长春项目部</b></th>
-                                    <th style="width:10em;" ><b>市场部</b></th>
-                                    <th style="width:10em;" ><b>常规业务中心</b></th>
-                                    <th style="width:10em;" ><b>机关部门</b></th>
+                                    <foreach name="departments" item="v">
+                                        <th class="black">{$v}</th>
+                                    </foreach>
                                 </tr>
                                 <tr role="row" class="orders" style="text-align:center;">
                                     <th>员工人数</th>

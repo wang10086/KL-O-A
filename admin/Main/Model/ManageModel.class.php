@@ -291,8 +291,8 @@ class ManageModel extends Model{
      */
     public function total_profit($profit,$hr_cost,$department){
         $info                   = array();
-        foreach ($hr_cost as $k=>$v){
-            $info[$k]           = $profit[$k]['monthzml'] - $v - $department[$k]['money'];
+        foreach ($department as $k=>$v){
+            $info[$k]           = $profit[$k]['monthzml'] - $hr_cost[$k] - $v['money'];
         }
         return $info;
     }
