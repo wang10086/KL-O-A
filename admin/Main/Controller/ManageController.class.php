@@ -273,9 +273,10 @@ class ManageController extends ChartController {
         $month                  = date('m');
 
         //年度预算报表
-        $where['year']          = $year;
+        /*$where['year']          = $year;
         $where['type']          = 5;
-        $manage                 = $mod->Manage_display($where,1);
+        $manage                 = $mod->Manage_display($where,1);*/
+        $manage                 = $mod->get_checked_lists($year,5); //年度预算
 
         // 其他费用
         $ymd                    = $mod->yearmonthday($year,$month);//年度其他费用判断取出数据日期
@@ -292,6 +293,7 @@ class ManageController extends ChartController {
         $human_affairs          = $mod->human_affairs($hr_cost,$profit);//年度 人事费用率
         $total_profit           = $mod->total_profit($profit,$hr_cost,$department);//年度 利润总额
 
+        $this->departments      = C('department1'); //部门信息
         $this->manage           = $manage;//年度预算
         $this->number           = $number;  // 部门数量
         $this->hr_cost          = $hr_cost; // 部门人力资源成本
@@ -305,9 +307,9 @@ class ManageController extends ChartController {
     }
 
     /**
-     * Manage_input 年数据显示
+     * Manage_input 年数据显示 bak_20190416
      */
-    public function Manage_input(){
+    public function Manage_input_bak(){
         $mod                = D('Manage');
         $date_Y['year']     = (int)date('Y');
         $date_Y['type']     = 5;

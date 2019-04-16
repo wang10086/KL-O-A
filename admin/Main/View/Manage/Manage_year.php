@@ -35,80 +35,142 @@
                 <div class="box box-warning">
                     <div class="box-header">
                         <h3 class="box-title">年度预算报表</h3>
-                        <if condition="rolemenu(array('Manage/Manage_input'))" class="{:on('Manage/Manage_input')}">
+                        <!--<if condition="rolemenu(array('Manage/Manage_input'))" class="{:on('Manage/Manage_input')}">
                             <div class="box-header">
                                 <a class="btn btn-info btn-sm" href="{:U('Manage/Manage_input')}" style="float:right;margin:1em 2em 0em 0em;background-color:#398439;"><b>+</b>预算录入</a>
+                            </div>
+                        </if>-->
+                        <if condition="rolemenu(array('Manage/Manage_quarter_w'))">
+                            <div class="box-header">
+                                <a class="btn btn-info btn-sm" href="{:U('Manage/Manage_quarter_w',array('year'=>$year,'type'=>5))}" style="float:right;margin:1em 2em 0em 0em;background-color:#398439;"><b>+</b>预算录入</a>
                             </div>
                         </if>
                     </div><!-- /.box-header -->
                     <div class="box-body">
-
                         <table class="table table-bordered dataTable fontmini">
-                            <tr role="row" class="orders" >
-                                <th style="width:10em;" ><b>项目</b></th>
-                                <th style="width:10em;" ><b>公司</b></th>
-                                <th style="width:10em;" ><b>京区业务中心</b></th>
-                                <th style="width:10em;" ><b>京外业务中心</b></th>
-                                <th style="width:10em;" ><b>南京项目部</b></th>
-                                <th style="width:10em;" ><b>武汉项目部</b></th>
-                                <th style="width:10em;" ><b>沈阳项目部</b></th>
-                                <th style="width:10em;" ><b>长春项目部</b></th>
-                                <th style="width:10em;" ><b>市场部</b></th>
-                                <th style="width:10em;" ><b>常规业务中心</b></th>
-                                <th style="width:10em;" ><b>机关部门</b></th>
+                            <tr>
+                                <th class="black taskOptions">项目</th>
+                                <foreach name="departments" item="v">
+                                    <th class="black taskOptions">{$v}</th>
+                                </foreach>
                             </tr>
-                            <tr role="row" class="orders">
+                            <tr>
                                 <th>员工人数</th>
-                                <foreach name="manage" item="m">
-                                    <th><?php if($m['employees_number']=="" || $m['employees_number']==0){echo '';}else{echo $m['employees_number'].'（人）'; }?></th>
+                                <foreach name="departments" item="v">
+                                    <td class="taskOptions">
+                                        <?php foreach ($manage as $value){
+                                            if ($value['logged_department'] == $v){
+                                                echo $value['employees_number'].' 人';
+                                            }
+                                        } ?>
+                                    </td>
                                 </foreach>
                             </tr>
-                            <tr role="row" class="orders">
-                                <th>营业收入</th>
-                                <foreach name="manage" item="m">
-                                    <th><?php if($m['logged_income']=="" || $m['logged_income']==0){echo '';}else{echo '¥ '.$m['logged_income']; }?></th>
+                            <tr>
+                                <td>营业收入</td>
+                                <foreach name="departments" item="v">
+                                    <td class="taskOptions">
+                                        <?php foreach ($manage as $value){
+                                            if ($value['logged_department'] == $v){
+                                                echo '&yen;'.$value['logged_income'];
+                                            }
+                                        } ?>
+                                    </td>
                                 </foreach>
                             </tr>
-                            <tr role="row" class="orders">
-                                <th>营业毛利</th>
-                                <foreach name="manage" item="m">
-                                    <th><?php if($m['logged_profit']=="" || $m['logged_profit']==0){echo '';}else{echo '¥ '.$m['logged_profit']; }?></th>
+                            <tr>
+                                <td>营业毛利</td>
+                                <foreach name="departments" item="v">
+                                    <td class="taskOptions">
+                                        <?php foreach ($manage as $value){
+                                            if ($value['logged_department'] == $v){
+                                                echo '&yen;'.$value['logged_profit'];
+                                            }
+                                        } ?>
+                                    </td>
                                 </foreach>
                             </tr>
-                            <tr role="row" class="orders">
-                                <th>营业毛利率(%)</th>
-                                <foreach name="manage" item="m">
-                                    <th><?php if($m['logged_rate']=="" || $m['logged_rate']==0){echo '';}else{echo $m['logged_rate'].' %'; }?></th>
+                            <tr>
+                                <td>营业毛利率(%)</td>
+                                <foreach name="departments" item="v">
+                                    <td class="taskOptions">
+                                        <?php foreach ($manage as $value){
+                                            if ($value['logged_department'] == $v){
+                                                echo $value['logged_rate'].'%';
+                                            }
+                                        } ?>
+                                    </td>
                                 </foreach>
                             </tr>
-                            <tr role="row" class="orders">
-                                <th>人力资源成本</th>
-                                <foreach name="manage" item="m">
-                                    <th><?php if($m['manpower_cost']=="" || $m['manpower_cost']==0){echo '';}else{echo '¥ '.$m['manpower_cost']; }?></th>
+                            <tr>
+                                <td>人力资源成本</td>
+                                <foreach name="departments" item="v">
+                                    <td class="taskOptions">
+                                        <?php foreach ($manage as $value){
+                                            if ($value['logged_department'] == $v){
+                                                echo '&yen;'.$value['manpower_cost'];
+                                            }
+                                        } ?>
+                                    </td>
+                                </foreach>
+                            <tr>
+                                <td>其他费用</td>
+                                <foreach name="departments" item="v">
+                                    <td class="taskOptions">
+                                        <?php foreach ($manage as $value){
+                                            if ($value['logged_department'] == $v){
+                                                echo '&yen;'.$value['other_expenses'];
+                                            }
+                                        } ?>
+                                    </td>
                                 </foreach>
                             </tr>
-                            <tr role="row" class="orders">
-                                <th>其他费用</th>
-                                <foreach name="manage" item="m">
-                                    <th><?php if($m['other_expenses']=="" || $m['other_expenses']==0){echo '';}else{echo '¥ '.$m['other_expenses']; }?></th>
+                            <tr>
+                                <td>利润总额</td>
+                                <foreach name="departments" item="v">
+                                    <td class="taskOptions">
+                                        <?php foreach ($manage as $value){
+                                            if ($value['logged_department'] == $v){
+                                                echo '&yen;'.$value['total_profit'];
+                                            }
+                                        } ?>
+                                    </td>
                                 </foreach>
                             </tr>
-                            <tr role="row" class="orders">
-                                <th>利润总额</th>
-                                <foreach name="manage" item="m">
-                                    <th><?php if($m['total_profit']=="" || $m['total_profit']==0){echo '';}else{echo '¥ '.$m['total_profit']; }?></th>
+                            <tr>
+                                <th>目标利润</th>
+                                <foreach name="departments" item="v">
+                                    <td class="taskOptions">
+                                        <?php foreach ($manage as $value){
+                                            if ($value['logged_department'] == $v){
+                                                echo '&yen;'.$value['target_profit'];
+                                            }
+                                        } ?>
+                                    </td>
                                 </foreach>
                             </tr>
-                            <tr role="row" class="orders">
-                                <th>人事费用率(%)</th>
-                                <foreach name="manage" item="m">
-                                    <th><?php if($m['personnel_cost_rate']=="" || $m['personnel_cost_rate']==0){echo '';}else{echo $m['personnel_cost_rate'].' %'; }?></th>
+                            <tr>
+                                <td>人事费用率(%)</td>
+                                <foreach name="departments" item="v">
+                                    <td class="taskOptions">
+                                        <?php foreach ($manage as $value){
+                                            if ($value['logged_department'] == $v){
+                                                echo $value['personnel_cost_rate'].'%';
+                                            }
+                                        } ?>
+                                    </td>
                                 </foreach>
                             </tr>
-                            <tr role="row" class="orders">
-                                <th>状态</th>
-                                <foreach name="manage" item="m">
-                                    <th><a><?php if($m['statu']=="" || $m['statu']==0){echo '';}elseif($m['statu']==1){echo '待提交审核';}elseif($m['statu']==2){echo '待提交批准';}elseif($m['statu']==3){echo '待批准';}elseif($m['statu']==4){echo '已批准'; }?></a></th>
+                            <tr>
+                                <td>状态</td>
+                                <foreach name="departments" item="v">
+                                    <td class="taskOptions">
+                                        <?php foreach ($manage as $value){
+                                            if ($value['logged_department'] == $v){
+                                                if ($value['statu']==4) echo "审批通过";
+                                            }
+                                        } ?>
+                                    </td>
                                 </foreach>
                             </tr>
                         </table><br><br>

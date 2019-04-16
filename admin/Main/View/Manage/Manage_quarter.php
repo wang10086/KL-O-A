@@ -41,9 +41,9 @@
                     <div class="box-body">
                             <table class="table table-bordered dataTable fontmini" id="tablecenter">
                                 <tr role="row" class="orders" style="text-align:center;" >
-                                    <th style="width:10em;" ><b>项目</b></th>
+                                    <th class="black">项目</th>
                                     <foreach name="departments" item="v">
-                                        <th style="10rem" class="black">{$v}</th>
+                                        <th class="black">{$v}</th>
                                     </foreach>
                                 </tr>
                                 <tr role="row" class="orders">

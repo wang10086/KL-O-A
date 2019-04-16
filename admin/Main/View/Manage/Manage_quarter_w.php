@@ -1,22 +1,11 @@
 <include file="Index:header2" />
-<style>
-    #btn-default_1{
-        background-color:#00acd6;
-    }
-    th{
-        text-align:center;
-    }
-    td input{
-        text-align:center;
-    }
-</style>
 <aside class="right-side">
 
     <section class="content-header">
-        <h1><?php echo $year;?>{$datetime['year']}年季度预算录入</h1>
+        <h1><?php if ($type==5){ echo $year."年年度预算录入"; }else{ echo $year.'年季度预算录入'; } ?></h1>
         <ol class="breadcrumb">
             <li><a href="{:U('Index/index')}"><i class="fa fa-home"></i> 首页</a></li>
-            <li><a href="{:U('Manage/Manage_year')}"><i class="fa fa-gift"></i> {$datetime['year']}年季度预算报表</a></li>
+            <li><a href="{:U('Manage/Manage_year')}"><i class="fa fa-gift"></i> 经营管理</a></li>
         </ol>
     </section>
 
@@ -29,8 +18,11 @@
 
                 <div class="box box-warning">
                     <div class="box-header">
+                        <?php if($type==5){ ?>
+                        <h3 class="box-title">{$year}年年度预算录入</h3>
+                        <?php }else{ ?>
                         <h3 class="box-title">第<?php if($type==1){echo "一";}elseif($type==2){echo "二";}elseif($type==3){echo "三";}elseif($type==4){echo "四";}?>季度预算录入</h3>
-
+                        <?php } ?>
                     </div><!-- /.box-header -->
                     <div class="box-body">
 
