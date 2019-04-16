@@ -55,7 +55,7 @@
                                 </foreach>
                             </tr>
                             <tr>
-                                <th>员工人数</th>
+                                <td class="taskOptions">员工人数</td>
                                 <foreach name="departments" item="v">
                                     <td class="taskOptions">
                                         <?php foreach ($manage as $value){
@@ -67,7 +67,7 @@
                                 </foreach>
                             </tr>
                             <tr>
-                                <td>营业收入</td>
+                                <td class="taskOptions">营业收入</td>
                                 <foreach name="departments" item="v">
                                     <td class="taskOptions">
                                         <?php foreach ($manage as $value){
@@ -79,7 +79,7 @@
                                 </foreach>
                             </tr>
                             <tr>
-                                <td>营业毛利</td>
+                                <td class="taskOptions">营业毛利</td>
                                 <foreach name="departments" item="v">
                                     <td class="taskOptions">
                                         <?php foreach ($manage as $value){
@@ -91,7 +91,7 @@
                                 </foreach>
                             </tr>
                             <tr>
-                                <td>营业毛利率(%)</td>
+                                <td class="taskOptions">营业毛利率(%)</td>
                                 <foreach name="departments" item="v">
                                     <td class="taskOptions">
                                         <?php foreach ($manage as $value){
@@ -103,7 +103,7 @@
                                 </foreach>
                             </tr>
                             <tr>
-                                <td>人力资源成本</td>
+                                <td class="taskOptions">人力资源成本</td>
                                 <foreach name="departments" item="v">
                                     <td class="taskOptions">
                                         <?php foreach ($manage as $value){
@@ -114,7 +114,7 @@
                                     </td>
                                 </foreach>
                             <tr>
-                                <td>其他费用</td>
+                                <td class="taskOptions">其他费用</td>
                                 <foreach name="departments" item="v">
                                     <td class="taskOptions">
                                         <?php foreach ($manage as $value){
@@ -126,7 +126,7 @@
                                 </foreach>
                             </tr>
                             <tr>
-                                <td>利润总额</td>
+                                <td class="taskOptions">利润总额</td>
                                 <foreach name="departments" item="v">
                                     <td class="taskOptions">
                                         <?php foreach ($manage as $value){
@@ -138,7 +138,7 @@
                                 </foreach>
                             </tr>
                             <tr>
-                                <th>目标利润</th>
+                                <td class="taskOptions">目标利润</td>
                                 <foreach name="departments" item="v">
                                     <td class="taskOptions">
                                         <?php foreach ($manage as $value){
@@ -150,7 +150,7 @@
                                 </foreach>
                             </tr>
                             <tr>
-                                <td>人事费用率(%)</td>
+                                <td class="taskOptions">人事费用率(%)</td>
                                 <foreach name="departments" item="v">
                                     <td class="taskOptions">
                                         <?php foreach ($manage as $value){
@@ -162,7 +162,7 @@
                                 </foreach>
                             </tr>
                             <tr>
-                                <td>状态</td>
+                                <td class="taskOptions">状态</td>
                                 <foreach name="departments" item="v">
                                     <td class="taskOptions">
                                         <?php foreach ($manage as $value){
@@ -199,111 +199,111 @@
                                     <th style="width:10em;" ><b>机关部门</b></th>
                                 </tr>
                                 <tr role="row" class="orders" style="text-align:center;">
-                                    <th>员工人数</th>
-                                    <th><?php echo $number['公司']?$number['公司']:0; ?>（人)</th>
-                                    <th><?php echo $number['京区业务中心']?$number['京区业务中心']:0; ?>（人)</th>
-                                    <th><?php echo $number['京外业务中心']?$number['京外业务中心']:0; ?>（人)</th>
-                                    <th><?php echo $number['南京项目部']?$number['南京项目部']:0; ?>（人)</th>
-                                    <th><?php echo $number['武汉项目部']?$number['武汉项目部']:0; ?>（人)</th>
-                                    <th><?php echo $number['沈阳项目部']?$number['沈阳项目部']:0; ?>（人)</th>
-                                    <th><?php echo $number['长春项目部']?$number['长春项目部']:0; ?>（人)</th>
-                                    <th><?php echo $number['市场部']?$number['市场部']:0; ?>（人)</th>
-                                    <th><?php echo $number['常规业务中心']?$number['常规业务中心']:0; ?>（人)</th>
-                                    <th><?php echo $number['机关部门']?$number['机关部门']:0; ?>（人)</th>
+                                    <td>员工人数</td>
+                                    <td><?php echo $number['公司']?$number['公司']:0; ?>（人)</td>
+                                    <td><?php echo $number['京区业务中心']?$number['京区业务中心']:0; ?>（人)</td>
+                                    <td><?php echo $number['京外业务中心']?$number['京外业务中心']:0; ?>（人)</td>
+                                    <td><?php echo $number['南京项目部']?$number['南京项目部']:0; ?>（人)</td>
+                                    <td><?php echo $number['武汉项目部']?$number['武汉项目部']:0; ?>（人)</td>
+                                    <td><?php echo $number['沈阳项目部']?$number['沈阳项目部']:0; ?>（人)</td>
+                                    <td><?php echo $number['长春项目部']?$number['长春项目部']:0; ?>（人)</td>
+                                    <td><?php echo $number['市场部']?$number['市场部']:0; ?>（人)</td>
+                                    <td><?php echo $number['常规业务中心']?$number['常规业务中心']:0; ?>（人)</td>
+                                    <td><?php echo $number['机关部门']?$number['机关部门']:0; ?>（人)</td>
                                 </tr>
                                 <tr role="row" class="orders" style="text-align:center;">
-                                    <th>营业收入</th>
-                                    <th>&yen; <?php echo $profit['公司']['monthzsr']?$profit['公司']['monthzsr']:'0.00'; ?></th>
-                                    <th>&yen; <?php echo $profit['京区业务中心']['monthzsr']?$profit['京区业务中心']['monthzsr']:'0.00'; ?></th>
-                                    <th>&yen; <?php echo $profit['京外业务中心']['monthzsr']?$profit['京外业务中心']['monthzsr']:'0.00'; ?></th>
-                                    <th>&yen; <?php echo $profit['南京项目部']['monthzsr']?$profit['南京项目部']['monthzsr']:'0.00'; ?></th>
-                                    <th>&yen; <?php echo $profit['武汉项目部']['monthzsr']?$profit['武汉项目部']['monthzsr']:'0.00'; ?></th>
-                                    <th>&yen; <?php echo $profit['沈阳项目部']['monthzsr']?$profit['沈阳项目部']['monthzsr']:'0.00'; ?></th>
-                                    <th>&yen; <?php echo $profit['长春项目部']['monthzsr']?$profit['长春项目部']['monthzsr']:'0.00'; ?></th>
-                                    <th>&yen; <?php echo $profit['市场部']['monthzsr']?$profit['市场部']['monthzsr']:'0.00'; ?></th>
-                                    <th>&yen; <?php echo $profit['常规业务中心']['monthzsr']?$profit['常规业务中心']['monthzsr']:'0.00'; ?></th>
-                                    <th>&yen; <?php echo $profit['机关部门']['monthzsr']?$profit['机关部门']['monthzsr']:'0.00'; ?></th>
+                                    <td>营业收入</td>
+                                    <td>&yen; <?php echo $profit['公司']['monthzsr']?$profit['公司']['monthzsr']:'0.00'; ?></td>
+                                    <td>&yen; <?php echo $profit['京区业务中心']['monthzsr']?$profit['京区业务中心']['monthzsr']:'0.00'; ?></td>
+                                    <td>&yen; <?php echo $profit['京外业务中心']['monthzsr']?$profit['京外业务中心']['monthzsr']:'0.00'; ?></td>
+                                    <td>&yen; <?php echo $profit['南京项目部']['monthzsr']?$profit['南京项目部']['monthzsr']:'0.00'; ?></td>
+                                    <td>&yen; <?php echo $profit['武汉项目部']['monthzsr']?$profit['武汉项目部']['monthzsr']:'0.00'; ?></td>
+                                    <td>&yen; <?php echo $profit['沈阳项目部']['monthzsr']?$profit['沈阳项目部']['monthzsr']:'0.00'; ?></td>
+                                    <td>&yen; <?php echo $profit['长春项目部']['monthzsr']?$profit['长春项目部']['monthzsr']:'0.00'; ?></td>
+                                    <td>&yen; <?php echo $profit['市场部']['monthzsr']?$profit['市场部']['monthzsr']:'0.00'; ?></td>
+                                    <td>&yen; <?php echo $profit['常规业务中心']['monthzsr']?$profit['常规业务中心']['monthzsr']:'0.00'; ?></td>
+                                    <td>&yen; <?php echo $profit['机关部门']['monthzsr']?$profit['机关部门']['monthzsr']:'0.00'; ?></td>
                                 </tr>
                                 <tr role="row" class="orders" style="text-align:center;">
                                     <td>营业毛利</td>
-                                    <th>&yen; <?php echo $profit['公司']['monthzml']?$profit['公司']['monthzml']:'0.00'; ?></th>
-                                    <th>&yen; <?php echo $profit['京区业务中心']['monthzml']?$profit['京区业务中心']['monthzml']:'0.00'; ?></th>
-                                    <th>&yen; <?php echo $profit['京外业务中心']['monthzml']?$profit['京外业务中心']['monthzml']:'0.00'; ?></th>
-                                    <th>&yen; <?php echo $profit['南京项目部']['monthzml']?$profit['南京项目部']['monthzml']:'0.00'; ?></th>
-                                    <th>&yen; <?php echo $profit['武汉项目部']['monthzml']?$profit['武汉项目部']['monthzml']:'0.00'; ?></th>
-                                    <th>&yen; <?php echo $profit['沈阳项目部']['monthzml']?$profit['沈阳项目部']['monthzml']:'0.00'; ?></th>
-                                    <th>&yen; <?php echo $profit['长春项目部']['monthzml']?$profit['长春项目部']['monthzml']:'0.00'; ?></th>
-                                    <th>&yen; <?php echo $profit['市场部']['monthzml']?$profit['市场部']['monthzml']:'0.00'; ?></th>
-                                    <th>&yen; <?php echo $profit['常规业务中心']['monthzml']?$profit['常规业务中心']['monthzml']:'0.00'; ?></th>
-                                    <th>&yen; <?php echo $profit['机关部门']['monthzml']?$profit['机关部门']['monthzml']:'0.00'; ?></th>
+                                    <td>&yen; <?php echo $profit['公司']['monthzml']?$profit['公司']['monthzml']:'0.00'; ?></td>
+                                    <td>&yen; <?php echo $profit['京区业务中心']['monthzml']?$profit['京区业务中心']['monthzml']:'0.00'; ?></td>
+                                    <td>&yen; <?php echo $profit['京外业务中心']['monthzml']?$profit['京外业务中心']['monthzml']:'0.00'; ?></td>
+                                    <td>&yen; <?php echo $profit['南京项目部']['monthzml']?$profit['南京项目部']['monthzml']:'0.00'; ?></td>
+                                    <td>&yen; <?php echo $profit['武汉项目部']['monthzml']?$profit['武汉项目部']['monthzml']:'0.00'; ?></td>
+                                    <td>&yen; <?php echo $profit['沈阳项目部']['monthzml']?$profit['沈阳项目部']['monthzml']:'0.00'; ?></td>
+                                    <td>&yen; <?php echo $profit['长春项目部']['monthzml']?$profit['长春项目部']['monthzml']:'0.00'; ?></td>
+                                    <td>&yen; <?php echo $profit['市场部']['monthzml']?$profit['市场部']['monthzml']:'0.00'; ?></td>
+                                    <td>&yen; <?php echo $profit['常规业务中心']['monthzml']?$profit['常规业务中心']['monthzml']:'0.00'; ?></td>
+                                    <td>&yen; <?php echo $profit['机关部门']['monthzml']?$profit['机关部门']['monthzml']:'0.00'; ?></td>
                                 </tr>
                                 <tr role="row" class="orders" style="text-align:center;">
                                     <td>营业毛利率(%)</td>
-                                    <th><?php echo $profit['公司']['monthmll']?$profit['公司']['monthmll']:'0.00'; ?> %</th>
-                                    <th><?php echo $profit['京区业务中心']['monthmll']?$profit['京区业务中心']['monthmll']:'0.00'; ?> %</th>
-                                    <th><?php echo $profit['京外业务中心']['monthmll']?$profit['京外业务中心']['monthmll']:'0.00'; ?> %</th>
-                                    <th><?php echo $profit['南京项目部']['monthmll']?$profit['南京项目部']['monthmll']:'0.00'; ?> %</th>
-                                    <th><?php echo $profit['武汉项目部']['monthmll']?$profit['武汉项目部']['monthmll']:'0.00'; ?> %</th>
-                                    <th><?php echo $profit['沈阳项目部']['monthmll']?$profit['沈阳项目部']['monthmll']:'0.00'; ?> %</th>
-                                    <th><?php echo $profit['长春项目部']['monthmll']?$profit['长春项目部']['monthmll']:'0.00'; ?> %</th>
-                                    <th><?php echo $profit['市场部']['monthmll']?$profit['市场部']['monthmll']:'0.00'; ?> %</th>
-                                    <th><?php echo $profit['常规业务中心']['monthmll']?$profit['常规业务中心']['monthmll']:'0.00'; ?> %</th>
-                                    <th><?php echo $profit['机关部门']['monthmll']?$profit['机关部门']['monthmll']:'0.00'; ?> %</th>
+                                    <td><?php echo $profit['公司']['monthmll']?$profit['公司']['monthmll']:'0.00'; ?> %</td>
+                                    <td><?php echo $profit['京区业务中心']['monthmll']?$profit['京区业务中心']['monthmll']:'0.00'; ?> %</td>
+                                    <td><?php echo $profit['京外业务中心']['monthmll']?$profit['京外业务中心']['monthmll']:'0.00'; ?> %</td>
+                                    <td><?php echo $profit['南京项目部']['monthmll']?$profit['南京项目部']['monthmll']:'0.00'; ?> %</td>
+                                    <td><?php echo $profit['武汉项目部']['monthmll']?$profit['武汉项目部']['monthmll']:'0.00'; ?> %</td>
+                                    <td><?php echo $profit['沈阳项目部']['monthmll']?$profit['沈阳项目部']['monthmll']:'0.00'; ?> %</td>
+                                    <td><?php echo $profit['长春项目部']['monthmll']?$profit['长春项目部']['monthmll']:'0.00'; ?> %</td>
+                                    <td><?php echo $profit['市场部']['monthmll']?$profit['市场部']['monthmll']:'0.00'; ?> %</td>
+                                    <td><?php echo $profit['常规业务中心']['monthmll']?$profit['常规业务中心']['monthmll']:'0.00'; ?> %</td>
+                                    <td><?php echo $profit['机关部门']['monthmll']?$profit['机关部门']['monthmll']:'0.00'; ?> %</td>
                                 </tr>
                                 <tr role="row" class="orders" style="text-align:center;">
-                                    <td><a href="{:U('Manage/HR_cost',array('year'=>$year,'month'=>$month,'tm'=>'y'))}">人力资源成本</a></td>
-                                    <th>&yen; <?php echo $hr_cost['公司']?$hr_cost['公司']:'0.00'; ?></th>
-                                    <th>&yen; <?php echo $hr_cost['京区业务中心']?$hr_cost['京区业务中心']:'0.00'; ?></th>
-                                    <th>&yen; <?php echo $hr_cost['京外业务中心']?$hr_cost['京外业务中心']:'0.00'; ?></th>
-                                    <th>&yen; <?php echo $hr_cost['南京项目部']?$hr_cost['南京项目部']:'0.00'; ?></th>
-                                    <th>&yen; <?php echo $hr_cost['武汉项目部']?$hr_cost['武汉项目部']:'0.00'; ?></th>
-                                    <th>&yen; <?php echo $hr_cost['沈阳项目部']?$hr_cost['沈阳项目部']:'0.00'; ?></th>
-                                    <th>&yen; <?php echo $hr_cost['长春项目部']?$hr_cost['长春项目部']:'0.00'; ?></th>
-                                    <th>&yen; <?php echo $hr_cost['市场部']?$hr_cost['市场部']:'0.00'; ?></th>
-                                    <th>&yen; <?php echo $hr_cost['常规业务中心']?$hr_cost['常规业务中心']:'0.00'; ?></th>
-                                    <th>&yen; <?php echo $hr_cost['机关部门']?$hr_cost['机关部门']:'0.00'; ?></th>
+                                    <td>人力资源成本</td>
+                                    <td>&yen; <a href="{:U('Manage/HR_cost',array('year'=>$year,'month'=>$month,'tm'=>'y'))}"> <?php echo $hr_cost['公司']?$hr_cost['公司']:'0.00'; ?> </a></td>
+                                    <td>&yen; <a href="{:U('Manage/HR_cost',array('year'=>$year,'month'=>$month,'tm'=>'y'))}"> <?php echo $hr_cost['京区业务中心']?$hr_cost['京区业务中心']:'0.00'; ?> </a></td>
+                                    <td>&yen; <a href="{:U('Manage/HR_cost',array('year'=>$year,'month'=>$month,'tm'=>'y'))}"> <?php echo $hr_cost['京外业务中心']?$hr_cost['京外业务中心']:'0.00'; ?> </a></td>
+                                    <td>&yen; <a href="{:U('Manage/HR_cost',array('year'=>$year,'month'=>$month,'tm'=>'y'))}"> <?php echo $hr_cost['南京项目部']?$hr_cost['南京项目部']:'0.00'; ?> </a></td>
+                                    <td>&yen; <a href="{:U('Manage/HR_cost',array('year'=>$year,'month'=>$month,'tm'=>'y'))}"> <?php echo $hr_cost['武汉项目部']?$hr_cost['武汉项目部']:'0.00'; ?> </a></td>
+                                    <td>&yen; <a href="{:U('Manage/HR_cost',array('year'=>$year,'month'=>$month,'tm'=>'y'))}"> <?php echo $hr_cost['沈阳项目部']?$hr_cost['沈阳项目部']:'0.00'; ?> </a></td>
+                                    <td>&yen; <a href="{:U('Manage/HR_cost',array('year'=>$year,'month'=>$month,'tm'=>'y'))}"> <?php echo $hr_cost['长春项目部']?$hr_cost['长春项目部']:'0.00'; ?> </a></td>
+                                    <td>&yen; <a href="{:U('Manage/HR_cost',array('year'=>$year,'month'=>$month,'tm'=>'y'))}"> <?php echo $hr_cost['市场部']?$hr_cost['市场部']:'0.00'; ?> </a></td>
+                                    <td>&yen; <a href="{:U('Manage/HR_cost',array('year'=>$year,'month'=>$month,'tm'=>'y'))}"> <?php echo $hr_cost['常规业务中心']?$hr_cost['常规业务中心']:'0.00'; ?> </a></td>
+                                    <td>&yen; <a href="{:U('Manage/HR_cost',array('year'=>$year,'month'=>$month,'tm'=>'y'))}"> <?php echo $hr_cost['机关部门']?$hr_cost['机关部门']:'0.00'; ?> </a></td>
                                 </tr>
                                 <tr role="row" class="orders" style="text-align:center;">
-                                    <td><a href="{:U('Manage/otherExpenses',array('year'=>$year,'month'=>$month,'tm'=>'y'))}">其他费用</a></td>
-                                    <th>&yen; <?php echo $department['公司']['money']?$department['公司']['money']:'0.00'; ?></th>
-                                    <th>&yen; <?php echo $department['京区业务中心']['money']?$department['京区业务中心']['money']:'0.00'; ?></th>
-                                    <th>&yen; <?php echo $department['京外业务中心']['money']?$department['京外业务中心']['money']:'0.00'; ?></th>
-                                    <th>&yen; <?php echo $department['南京项目部']['money']?$department['南京项目部']['money']:'0.00'; ?></th>
-                                    <th>&yen; <?php echo $department['武汉项目部']['money']?$department['武汉项目部']['money']:'0.00'; ?></th>
-                                    <th>&yen; <?php echo $department['沈阳项目部']['money']?$department['沈阳项目部']['money']:'0.00'; ?></th>
-                                    <th>&yen; <?php echo $department['长春项目部']['money']?$department['长春项目部']['money']:'0.00'; ?></th>
-                                    <th>&yen; <?php echo $department['市场部']['money']?$department['市场部']['money']:'0.00'; ?></th>
-                                    <th>&yen; <?php echo $department['常规业务中心']['money']?$department['常规业务中心']['money']:'0.00'; ?></th>
-                                    <th>&yen; <?php echo $department['机关部门']['money']?$department['机关部门']['money']:'0.00'; ?></th>
+                                    <td>其他费用</td>
+                                    <td>&yen; <a href="{:U('Manage/otherExpenses',array('year'=>$year,'month'=>$month,'tm'=>'y'))}"> <?php echo $department['公司']['money']?$department['公司']['money']:'0.00'; ?> </a></td>
+                                    <td>&yen; <a href="{:U('Manage/otherExpenses',array('year'=>$year,'month'=>$month,'tm'=>'y'))}"> <?php echo $department['京区业务中心']['money']?$department['京区业务中心']['money']:'0.00'; ?> </a></td>
+                                    <td>&yen; <a href="{:U('Manage/otherExpenses',array('year'=>$year,'month'=>$month,'tm'=>'y'))}"> <?php echo $department['京外业务中心']['money']?$department['京外业务中心']['money']:'0.00'; ?> </a></td>
+                                    <td>&yen; <a href="{:U('Manage/otherExpenses',array('year'=>$year,'month'=>$month,'tm'=>'y'))}"> <?php echo $department['南京项目部']['money']?$department['南京项目部']['money']:'0.00'; ?> </a></td>
+                                    <td>&yen; <a href="{:U('Manage/otherExpenses',array('year'=>$year,'month'=>$month,'tm'=>'y'))}"> <?php echo $department['武汉项目部']['money']?$department['武汉项目部']['money']:'0.00'; ?> </a></td>
+                                    <td>&yen; <a href="{:U('Manage/otherExpenses',array('year'=>$year,'month'=>$month,'tm'=>'y'))}"> <?php echo $department['沈阳项目部']['money']?$department['沈阳项目部']['money']:'0.00'; ?> </a></td>
+                                    <td>&yen; <a href="{:U('Manage/otherExpenses',array('year'=>$year,'month'=>$month,'tm'=>'y'))}"> <?php echo $department['长春项目部']['money']?$department['长春项目部']['money']:'0.00'; ?> </a></td>
+                                    <td>&yen; <a href="{:U('Manage/otherExpenses',array('year'=>$year,'month'=>$month,'tm'=>'y'))}"> <?php echo $department['市场部']['money']?$department['市场部']['money']:'0.00'; ?> </a></td>
+                                    <td>&yen; <a href="{:U('Manage/otherExpenses',array('year'=>$year,'month'=>$month,'tm'=>'y'))}"> <?php echo $department['常规业务中心']['money']?$department['常规业务中心']['money']:'0.00'; ?> </a></td>
+                                    <td>&yen; <a href="{:U('Manage/otherExpenses',array('year'=>$year,'month'=>$month,'tm'=>'y'))}"> <?php echo $department['机关部门']['money']?$department['机关部门']['money']:'0.00'; ?> </a></td>
                                 </tr>
                                 <tr role="row" class="orders" style="text-align:center;">
                                     <td>利润总额</td>
-                                    <th>&yen; <?php echo $total_profit['公司']?$total_profit['公司']:'0.00'; ?></th>
-                                    <th>&yen; <?php echo $total_profit['京区业务中心']?$total_profit['京区业务中心']:'0.00'; ?></th>
-                                    <th>&yen; <?php echo $total_profit['京外业务中心']?$total_profit['京外业务中心']:'0.00'; ?></th>
-                                    <th>&yen; <?php echo $total_profit['南京项目部']?$total_profit['南京项目部']:'0.00'; ?></th>
-                                    <th>&yen; <?php echo $total_profit['武汉项目部']?$total_profit['武汉项目部']:'0.00'; ?></th>
-                                    <th>&yen; <?php echo $total_profit['沈阳项目部']?$total_profit['沈阳项目部']:'0.00'; ?></th>
-                                    <th>&yen; <?php echo $total_profit['长春项目部']?$total_profit['长春项目部']:'0.00'; ?></th>
-                                    <th>&yen; <?php echo $total_profit['市场部']?$total_profit['市场部']:'0.00'; ?></th>
-                                    <th>&yen; <?php echo $total_profit['常规业务中心']?$total_profit['常规业务中心']:'0.00'; ?></th>
-                                    <th>&yen; <?php echo $total_profit['机关部门']?$total_profit['机关部门']:'0.00'; ?></th>
+                                    <td>&yen; <?php echo $total_profit['公司']?$total_profit['公司']:'0.00'; ?></td>
+                                    <td>&yen; <?php echo $total_profit['京区业务中心']?$total_profit['京区业务中心']:'0.00'; ?></td>
+                                    <td>&yen; <?php echo $total_profit['京外业务中心']?$total_profit['京外业务中心']:'0.00'; ?></td>
+                                    <td>&yen; <?php echo $total_profit['南京项目部']?$total_profit['南京项目部']:'0.00'; ?></td>
+                                    <td>&yen; <?php echo $total_profit['武汉项目部']?$total_profit['武汉项目部']:'0.00'; ?></td>
+                                    <td>&yen; <?php echo $total_profit['沈阳项目部']?$total_profit['沈阳项目部']:'0.00'; ?></td>
+                                    <td>&yen; <?php echo $total_profit['长春项目部']?$total_profit['长春项目部']:'0.00'; ?></td>
+                                    <td>&yen; <?php echo $total_profit['市场部']?$total_profit['市场部']:'0.00'; ?></td>
+                                    <td>&yen; <?php echo $total_profit['常规业务中心']?$total_profit['常规业务中心']:'0.00'; ?></td>
+                                    <td>&yen; <?php echo $total_profit['机关部门']?$total_profit['机关部门']:'0.00'; ?></td>
                                 </tr>
                                 <tr role="row" class="orders" style="text-align:center;">
-                                    <th>人事费用率(%)</th>
-                                    <th><?php echo $human_affairs['公司']?$human_affairs['公司']:'0.00'; ?> %</th>
-                                    <th><?php echo $human_affairs['京区业务中心']?$human_affairs['京区业务中心']:'0.00'; ?> %</th>
-                                    <th><?php echo $human_affairs['京外业务中心']?$human_affairs['京外业务中心']:'0.00'; ?> %</th>
-                                    <th><?php echo $human_affairs['南京项目部']?$human_affairs['南京项目部']:'0.00'; ?> %</th>
-                                    <th><?php echo $human_affairs['武汉项目部']?$human_affairs['武汉项目部']:'0.00'; ?> %</th>
-                                    <th><?php echo $human_affairs['沈阳项目部']?$human_affairs['沈阳项目部']:'0.00'; ?> %</th>
-                                    <th><?php echo $human_affairs['长春项目部']?$human_affairs['长春项目部']:'0.00'; ?> %</th>
-                                    <th><?php echo $human_affairs['市场部']?$human_affairs['市场部']:'0.00'; ?> %</th>
-                                    <th><?php echo $human_affairs['常规业务中心']?$human_affairs['常规业务中心']:'0.00'; ?> %</th>
-                                    <th><?php echo $human_affairs['机关部门']?$human_affairs['机关部门']:'0.00'; ?> %</th>
+                                    <td>人事费用率(%)</td>
+                                    <td><?php echo $human_affairs['公司']?$human_affairs['公司']:'0.00'; ?> %</td>
+                                    <td><?php echo $human_affairs['京区业务中心']?$human_affairs['京区业务中心']:'0.00'; ?> %</td>
+                                    <td><?php echo $human_affairs['京外业务中心']?$human_affairs['京外业务中心']:'0.00'; ?> %</td>
+                                    <td><?php echo $human_affairs['南京项目部']?$human_affairs['南京项目部']:'0.00'; ?> %</td>
+                                    <td><?php echo $human_affairs['武汉项目部']?$human_affairs['武汉项目部']:'0.00'; ?> %</td>
+                                    <td><?php echo $human_affairs['沈阳项目部']?$human_affairs['沈阳项目部']:'0.00'; ?> %</td>
+                                    <td><?php echo $human_affairs['长春项目部']?$human_affairs['长春项目部']:'0.00'; ?> %</td>
+                                    <td><?php echo $human_affairs['市场部']?$human_affairs['市场部']:'0.00'; ?> %</td>
+                                    <td><?php echo $human_affairs['常规业务中心']?$human_affairs['常规业务中心']:'0.00'; ?> %</td>
+                                    <td><?php echo $human_affairs['机关部门']?$human_affairs['机关部门']:'0.00'; ?> %</td>
                                 </tr>
                                 <tr>
-                                    <th colspan="11" style="text-align: left;padding-left: 20px;">说明：其中内部地接营业收入 &yen;{$profit['地接合计']['monthzsr']}；内部地接营业毛利：&yen;{$profit['地接合计']['monthzml']}。公司总收入中不包含地接收入，部门收入中包含地接收入。</th>
+                                    <td colspan="11" style="text-align: left;padding-left: 20px;">说明：其中内部地接营业收入 &yen;{$profit['地接合计']['monthzsr']}；内部地接营业毛利：&yen;{$profit['地接合计']['monthzml']}。公司总收入中不包含地接收入，部门收入中包含地接收入。</td>
                                 </tr>
                             </table><br><br>
 

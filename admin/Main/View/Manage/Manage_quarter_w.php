@@ -271,6 +271,16 @@
                     $("input[name='total']").val(msg.total_profit);
                     $("input[name='target_profit']").val(msg.target_profit);
                     $("input[name='personnel']").val(msg.personnel_cost_rate);
+                }else{
+                    $("input[name='number']").val('');
+                    $("input[name='income']").val('');
+                    $("input[name='profit']").val('');
+                    $("input[name='rate']").val('');
+                    $("input[name='cost']").val('');
+                    $("input[name='other']").val('');
+                    $("input[name='total']").val('');
+                    $("input[name='target_profit']").val('');
+                    $("input[name='personnel']").val('');
                 }
             }
         })
