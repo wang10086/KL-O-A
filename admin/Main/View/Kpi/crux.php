@@ -73,10 +73,11 @@
 
                                     <table class="table table-bordered dataTable fontmini" id="tablelist" style="margin-top:10px;">
                                         <tr role="row" class="orders" >
-                                            <th width="" class="sorting" data="month">季度</th>
-                                            <!-- <th class="sorting" data="title">PDCA描述</th> -->
                                             <th width="" class="sorting" data="tab_user_id">被考核人</th>
-                                            <th width="" class="sorting" data="tab_user_id">考核人</th>
+                                            <th width="" class="sorting" data="month">考核周期</th>
+                                            <th width="" class="sorting" data="month">相关月份</th>
+                                            <!-- <th class="sorting" data="title">PDCA描述</th> -->
+                                            <th width="" class="sorting" data="tab_user_id">评分人</th>
                                             <th width="" class="sorting" data="total_score">考核得分</th>
                                             <th width="" class="sorting" data="status">状态</th>
                                             <if condition="rolemenu(array('Kpi/cruxinfo'))">
