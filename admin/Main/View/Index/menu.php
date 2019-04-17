@@ -714,6 +714,9 @@
                                                 <li><a href="{:U('Kpi/qa')}"><i class="fa fa-angle-right"></i> 品质检查</a></li>
                                             </if>
                                             <li><a href="{:U('Kpi/postkpi')}"><i class="fa fa-angle-right"></i> KPI</a></li>
+                                            <if condition="rolemenu(array('Kpi/crux'))">
+                                                <li><a href="{:U('Kpi/crux')}"><i class="fa fa-angle-right"></i> 关键事项评价</a></li>
+                                            </if>
 
                                         </ul>
                                     </li>

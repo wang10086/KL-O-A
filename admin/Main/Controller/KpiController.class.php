@@ -213,7 +213,7 @@ class KpiController extends BaseController {
 		}
 		
 		$this->month  		= $month;
-		$this->year 			= $year;
+		$this->year 		= $year;
 		$this->prveyear		= $year-1;
 		$this->nextyear		= $year+1;
 		$this->userkey 		= json_encode($key);
@@ -1944,6 +1944,45 @@ class KpiController extends BaseController {
 
         $lists                              = multi_array_sort($lists,'average');  //排序(平均值由高到低)
         return $lists;
+    }
+
+    //关键事项评价
+    public function crux(){
+        $this->title('关键事项评价');
+        $year                               = I('year',date('Y'));
+        $month                              = I('month','');
+
+
+
+        $this->month  		                = $month;
+        $this->year 		                = $year;
+        $this->prveyear		                = $year-1;
+        $this->nextyear		                = $year+1;
+        $this->display();
+    }
+
+    //获取KPI有"关键事项评价"考核的人员信息
+    public function get_kpi_crux_username(){
+        $userids                            = M('kpi_more')->where(array('year'=>date('Y'),'quota_id'=>216))->getField('user_id',true);
+        $where                              = array();
+        $where['status']                    = 0;
+        $where['id']                        = array('in',$userids);
+        $user                               = M('account')->where($where)->field('id,nickname')->select();
+        $user_key                           = array();
+        foreach($user as $k=>$v){
+            $text                           = $v['nickname'];
+            $user_key[$k]['id']             = $v['id'];
+            $user_key[$k]['pinyin']         = strtopinyin($text);
+            $user_key[$k]['text']           = $text;
+        }
+        return json_encode($user_key);
+    }
+
+    //添加关键事项
+    public function add_crux(){
+        $userkey                            = $this->get_kpi_crux_username();
+        $this->userkey                      = $userkey;
+        $this->display();
     }
 
 	
