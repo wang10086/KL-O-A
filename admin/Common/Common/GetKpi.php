@@ -524,7 +524,7 @@ function get_sum_department_operate($department,$year,$month){
  * @param $userid
  * @param $month
  */
- function get_department_operate($department,$year,$month){
+ /*function get_department_operate_bak_20190417($department,$year,$month){
      $mod                       = D('Manage');
      $quart                     = quarter_month1($month);  //季度信息
 
@@ -554,7 +554,46 @@ function get_sum_department_operate($department,$year,$month){
      $info['rsfyl']             = $human_affairs[$department];      //人事费用率
 
      return $info;
-}
+}*/
+
+    /**
+     * 实际经营信息(年度累计)
+     * @param $department
+     * @param $year
+     * @param $month
+     * @return array
+     */
+    function get_department_operate($department,$year,$month){
+        $mod                       = D('Manage');
+        $quart                     = quarter_month1($month);  //季度信息
+
+        $yms                       = $mod->get_yms($year,$quart,'y');  //获取费年度包含的全部月份
+        $times                     = $mod->get_times($year,$quart,'y');    //获取考核周期开始及结束时间戳
+
+        $ymd[0]                    = date("Ymd",$times['beginTime']);
+        $ymd[1]                    = date("Ymd",$times['endTime']);
+        $mon                       = not_team_not_share($ymd[0],$ymd[1]);//年度其他费用取出数据(不分摊)
+        $mon_share                 = not_team_share($ymd[0],$ymd[1]);//年度其他费用取出数据(分摊)
+        $otherExpenses             = $mod->department_data($mon,$mon_share);//年度其他费用部门数据
+
+        $number                    = $mod->get_numbers($year,$yms);    //年度平均人数
+        $hr_cost                   = $mod->get_quarter_hr_cost($year,$yms,$times);// 年度部门人力资源成本
+        $profit                    = get_business_sum($year,$yms);// 年度 monthzsr 收入合计   monthzml 毛利合计  monthmll 毛利率
+        $human_affairs             = $mod->human_affairs($hr_cost,$profit);//年度 人事费用率
+        $total_profit              = $mod->total_profit($profit,$hr_cost,$otherExpenses);//年度 利润总额
+
+        $info                      = array();
+        $info['ygrs']              = $number[$department];             //部门员工人数
+        $info['yysr']              = $profit[$department]['monthzsr']; //营业收入
+        $info['yyml']              = $profit[$department]['monthzml']; //营业毛利
+        $info['yymll']             = $profit[$department]['monthmll']; //营业毛利率
+        $info['rlzycb']            = $hr_cost[$department];            //人力资源成本
+        $info['qtfy']              = $otherExpenses[$department]['money'];      //其他费用
+        $info['lrze']              = $total_profit[$department];       //利润总额
+        $info['rsfyl']             = $human_affairs[$department];      //人事费用率
+
+        return $info;
+    }
 
     /**
      * not_team 非团支出报销（其他费用）(不分摊)
