@@ -1232,7 +1232,7 @@ function get_sum_gross_profit($userids,$beginTime,$endTime){
         $data                           = array();
         $data['op_num']                 = count($shishi_lists);
         $data['score_num']              = $score_num;
-        $data['score_average']          = $score_average; //已调查团的满意度
+        $data['score_average']          = $score_num?$score_average:'100%'; //已调查团的满意度
         $data['complete']               = $complete; //所有顾客满意度(包括未调查)
         $data['shishi_lists']           = $shishi_lists;
         $data['score_lists']            = $score_lists;
@@ -1459,7 +1459,7 @@ function get_sum_gross_profit($userids,$beginTime,$endTime){
         }
         $data['year_op_num']                   = count($year_shishi_lists);
         $data['year_score_num']                = $year_score_num;
-        $data['year_score_average']            = $year_score_average; //已调查团的满意度
+        $data['year_score_average']            = $year_score_num?$year_score_average:'100%'; //已调查团的满意度
         $data['year_average']                  = $year_average; //所有顾客满意度(包括未调查)
         //$data['year_shishi_lists']           = $year_shishi_lists;
         //$data['year_score_lists']            = $year_score_lists;
@@ -1506,10 +1506,11 @@ function get_sum_gross_profit($userids,$beginTime,$endTime){
 
         $data['month_op_num']                   = count($month_shishi_lists);
         $data['month_score_num']                = $month_score_num;
-        $data['month_score_average']            = $month_score_average; //已调查团的满意度
+        $data['month_score_average']            = $month_score_num?$month_score_average:'100%'; //已调查团的满意度
         $data['month_average']                  = $month_average; //所有顾客满意度(包括未调查)
         //$data['month_shishi_lists']           = $month_shishi_lists;
         //$data['month_score_lists']            = $month_score_lists;
+
         return $data;
     }
 
