@@ -567,8 +567,8 @@ function get_sum_department_operate($department,$year,$month){
         $mod                       = D('Manage');
         $quart                     = quarter_month1($month);  //季度信息
 
-        $yms                       = $mod->get_yms($year,$quart,'q');  //获取费年度包含的全部月份
-        $times                     = $mod->get_times($year,$quart,'q');    //获取考核周期开始及结束时间戳
+        $yms                       = $mod->get_yms($year,$quart,'y');  //获取费年度包含的全部月份
+        $times                     = $mod->get_times($year,$quart,'y');    //获取考核周期开始及结束时间戳
 
         $ymd[0]                    = date("Ymd",$times['beginTime']);
         $ymd[1]                    = date("Ymd",$times['endTime']);
