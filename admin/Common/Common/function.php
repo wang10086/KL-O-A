@@ -1866,7 +1866,7 @@ function updatekpi($month,$user){
     $where['month']   = array('like','%'.$month.'%');
     $where['user_id'] = $user;
 
-    if (($kpi_cycle == 1 && ($month==date('Ym') && date('d')<26) || ($month==(date('Ym')+1) && date('d')>25)) || (in_array($kpi_cycle,array(2,3,4)) && in_array(date('Ym'),$cycle_arr_month))){   //只刷新当前月份,避免老数据刷新  区分考核周期月度,季度半年度...
+    if (($kpi_cycle == 1 && ($month==date('Ym') && date('d')<26) || ($month==(date('Ym')+1) && date('d')>25)) || (in_array($kpi_cycle,array(2,3,4)) && in_array($month,$cycle_arr_month))){   //只刷新当前月份,避免老数据刷新  区分考核周期月度,季度半年度...
         $quto   = M('kpi_more')->where($where)->select();
         if($quto){
             foreach($quto as $k=>$v){
@@ -3054,7 +3054,7 @@ function updatekpi($month,$user){
                             $budget_info    = get_department_budget($department,$year,$monon);      //部门季度预算信息
                             $ys_lrze        = $budget_info['sum_total_profit'];                     //预算利润总额
                             $operate_info   = get_sum_department_operate($department,$year,$monon);     //实际经营信息
-                            $jy_lrze        = round($operate_info['lrze']-$operate_info['qtfy'],2);   //经营利润总额
+                            $jy_lrze        = round($operate_info['lrze'],2);   //经营利润总额
                             $quart          = quarter_month1($monon);
                             $url            = U('manage/Manage_quarter',array('year'=>$v['year'],'quart'=>$quart));
 
