@@ -541,7 +541,7 @@ function get_sum_department_operate($department,$year,$month){
      $hr_cost                   = $mod->get_quarter_hr_cost($year,$yms,$times);// 季度部门人力资源成本
      $profit                    = get_business_sum($year,$yms);// 季度 monthzsr 收入合计   monthzml 毛利合计  monthmll 毛利率
      $human_affairs             = $mod->human_affairs($hr_cost,$profit);//季度 人事费用率
-     $total_profit              = $mod->total_profit($profit,$hr_cost,$department);//季度 利润总额
+     $total_profit              = $mod->total_profit($profit,$hr_cost,$otherExpenses);//季度 利润总额
 
      $info                      = array();
      $info['ygrs']              = $number[$department];             //部门员工人数
