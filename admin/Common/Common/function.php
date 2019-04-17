@@ -3053,7 +3053,7 @@ function updatekpi($month,$user){
                             $department     = get_department($v['user_id']);                        //获取别考评人所管辖的部门信息
                             $budget_info    = get_department_budget($department,$year,$monon);      //部门季度预算信息
                             $ys_lrze        = $budget_info['sum_total_profit'];                     //预算利润总额
-                            $operate_info   = get_sum_department_operate($department,$year,$monon);     //实际经营信息
+                            $operate_info   = get_sum_department_operate($department,$year,$monon,'y');     //实际经营信息(年度累计)
                             $jy_lrze        = round($operate_info['lrze'],2);   //经营利润总额
                             $quart          = quarter_month1($monon);
                             $url            = U('manage/Manage_quarter',array('year'=>$v['year'],'quart'=>$quart));
@@ -3106,7 +3106,7 @@ function updatekpi($month,$user){
                             $department     = get_department($v['user_id']);
                             $budget_info    = get_department_budget($department,$year,$monon);      //部门季度预算信息 总人数+总收入+总毛利+人力资源+其他费用+利润总额
                             $ys_rsfyl       = (round($budget_info['sum_manpower_cost']/$budget_info['sum_logged_income'],4)*100).'%';  //预算人事费用率 (人力资源成本/营业收入)
-                            $operate_info   = get_sum_department_operate($department,$year,$monon);     //实际经营信息
+                            $operate_info   = get_sum_department_operate($department,$year,$monon,'q');     //实际经营信息(季度)
                             $jy_rsfyl       = $operate_info['rsfyl'].'%';                               //经营人事费用率
                             $complete       = $jy_rsfyl;
                             $url            = U('manage/Manage_quarter');

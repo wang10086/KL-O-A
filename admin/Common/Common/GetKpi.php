@@ -503,9 +503,9 @@ function get_department_budget($department,$year,$month){
  * @param $year
  * @param $month
  */
-function get_sum_department_operate($department,$year,$month){
+function get_sum_department_operate($department,$year,$month,$type){
     foreach ($department as $v){
-        $info[]                 = get_department_operate($v,$year,$month);
+        $info[]                 = get_department_operate($v,$year,$month,$type);
     }
     $data                       = array();
     $data['ygrs']               = array_sum(array_column($info,'ygrs'));        //员工人数
@@ -561,14 +561,15 @@ function get_sum_department_operate($department,$year,$month){
      * @param $department
      * @param $year
      * @param $month
+     * @param $type 'm'=>月度 'q'=>季度 'y'=>年度
      * @return array
      */
-    function get_department_operate($department,$year,$month){
+    function get_department_operate($department,$year,$month,$type='q'){
         $mod                       = D('Manage');
         $quart                     = quarter_month1($month);  //季度信息
 
-        $yms                       = $mod->get_yms($year,$quart,'y');  //获取费年度包含的全部月份
-        $times                     = $mod->get_times($year,$quart,'y');    //获取考核周期开始及结束时间戳
+        $yms                       = $mod->get_yms($year,$quart,$type);  //获取费年度包含的全部月份
+        $times                     = $mod->get_times($year,$quart,$type);    //获取考核周期开始及结束时间戳
 
         $ymd[0]                    = date("Ymd",$times['beginTime']);
         $ymd[1]                    = date("Ymd",$times['endTime']);
