@@ -1827,4 +1827,12 @@ class AjaxController extends Controller {
         $list                   = $db->where($where)->find();
         $this->ajaxReturn($list);
     }
+
+    //
+    public function get_crux_kpi_cycle(){
+        $db                     = M('kpi');
+        $user_id                = I('user_id');
+        $year                   = I('year');
+        $this->ajaxReturn($user_id);
+    }
 }

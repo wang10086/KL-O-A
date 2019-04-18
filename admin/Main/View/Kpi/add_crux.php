@@ -15,11 +15,18 @@
             <label>被考核人员 </label>
             <input type="text" name="info[user_name]" id="user_name" value="{$row.user_name}"  class="form-control" />
         </div>
+
+        <div class="form-group box-float-6" id="get_cycle_month">
+            <label>考核周期</label>
+            <select class="form-control" name="month">
+                <option value="" disabled>请选择被考核人员</option>
+            </select>
+        </div>
         
-        <div class="form-group box-float-6">
+        <!--<div class="form-group box-float-6">
             <label>考核周期</label>
             <input type="text" name="info[complete_time]" id="complete_time" value="{$row.complete_time}"  class="form-control" />
-        </div>
+        </div>-->
         
         <!--<div class="form-group box-float-4">
             <label>权重 <font color="#FF3300">[必填]</font> <font color="#999">剩余权重分:</font><font color="#f30">{$shengyu}分</font></label>
@@ -46,6 +53,32 @@
     let keywords    = <?php echo $userkey; ?>;
     $(function () {
         autocomplete_id('user_name','user_id',keywords);
+    })
+
+    $('#user_name').blur(function () {
+        let user_id = $('#user_id').val();
+        let year    = {$year};
+        let c_title = '<label>考核周期</label>';
+        if (user_id){
+            $.ajax({
+               type: 'JSON',
+                url: "{:U('Ajax/get_crux_kpi_cycle')}",
+                dataType: 'JSON',
+                data:{user_id:user_id,year:year},
+                success:function (msg) {
+                    alert(msg);
+                },
+            error: function(){
+                alert('error');
+            }
+            });
+            $('#get_cycle_month').html('');
+        }else{
+            let c_content   = '<select class="form-control" name="month"> <option value="" disabled>请选择被考核人员</option> </select>';
+            let html        = c_title + c_content;
+            $('#get_cycle_month').html(html);
+        }
+        return false;
     })
 
 

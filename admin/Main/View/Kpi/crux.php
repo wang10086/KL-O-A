@@ -44,12 +44,12 @@
                                 </div><!-- /.box-header -->
                                 <div class="box-body">
                                 
-                                    <div class="btn-group" id="catfont" style="padding-bottom:5px;">
-										<?php if($prveyear>2019){ ?>
+                                    <!--<div class="btn-group" id="catfont" style="padding-bottom:5px;">
+										<?php /*if($prveyear>2019){ */?>
                                         <a href="{:U('Kpi/crux',array('year'=>$prveyear,'month'=>'01','show'=>$show))}" class="btn btn-default" style="padding:8px 18px;">上一年</a>
-                                        <?php } ?>
+                                        <?php /*} */?>
                                         <?php
-                                        for($i=1;$i<5;$i++){
+/*                                        for($i=1;$i<5;$i++){
                                             $par = array();
 											$par['year']  = $year;
                                             $par['month'] = $year.str_pad($i,2,"0",STR_PAD_LEFT);
@@ -60,41 +60,37 @@
                                                 echo '<a href="'.U('Kpi/crux',$par).'" class="btn btn-default" style="padding:8px 18px;">'.$i.'季度</a>';
                                             }
                                         }
-                                        ?>
-                                        <?php if($year<date('Y')){ ?>
+                                        */?>
+                                        <?php /*if($year<date('Y')){ */?>
                                         <a href="{:U('Kpi/crux',array('year'=>$nextyear,'month'=>'01','show'=>$show))}" class="btn btn-default" style="padding:8px 18px;">下一年</a>
-                                        <?php } ?>
-                                    </div>
-                            
-                                    
-                                    <!--<div class="btn-group" id="catfont" style="float:right;">
-                                        <a href="javascript:;" onClick="showme(this)" data="{$show}" class="btn <?php /*if($show==1){ echo 'btn-info';}else{ echo 'btn-default'; } */?>">我的PDCA</a>
+                                        <?php /*} */?>
                                     </div>-->
 
                                     <table class="table table-bordered dataTable fontmini" id="tablelist" style="margin-top:10px;">
                                         <tr role="row" class="orders" >
-                                            <th width="" class="sorting" data="tab_user_id">被考核人</th>
-                                            <th width="" class="sorting" data="month">考核周期</th>
-                                            <th width="" class="sorting" data="month">相关月份</th>
-                                            <!-- <th class="sorting" data="title">PDCA描述</th> -->
-                                            <th width="" class="sorting" data="tab_user_id">评分人</th>
-                                            <th width="" class="sorting" data="total_score">考核得分</th>
-                                            <th width="" class="sorting" data="status">状态</th>
+                                            <th width="" class="sorting" data="">序号</th>
+                                            <th width="" class="sorting" data="">考核事项</th>
+                                            <th width="" class="sorting" data="">考核时间</th>
+                                            <th width="" class="sorting" data="">考核标准</th>
+                                            <th width="" class="sorting" data="">权重分</th>
+                                            <th width="" class="sorting" data="">考评得分</th>
                                             <if condition="rolemenu(array('Kpi/cruxinfo'))">
-                                            <th width="" class="taskOptions">考核内容</th>
+                                                <th width="" class="taskOptions">考核内容</th>
                                             </if>
-                                            <if condition="rolemenu(array('Kpi/editpdca'))">
-                                            <th width="50" class="taskOptions">编辑</th>
+                                            <if condition="rolemenu(array('Kpi/editcrux'))">
+                                                <th width="50" class="taskOptions">编辑</th>
                                             </if>
-                                            <if condition="rolemenu(array('Kpi/delpdca'))">
-                                            <th width="50" class="taskOptions">删除</th>
+                                            <if condition="rolemenu(array('Kpi/scorecrux'))">
+                                                <th width="50" class="taskOptions">评分</th>
+                                            </if>
+                                            <if condition="rolemenu(array('Kpi/delcrux'))">
+                                                <th width="50" class="taskOptions">删除</th>
                                             </if>
     
                                         </tr>
                                         <foreach name="lists" item="row"> 
                                         <tr>
                                             <td><a href="{:U('Kpi/cruxinfo',array('id'=>$row['id']))}" >{$row.month}</a></td>
-                                            <!-- <td><a href="{:U('Kpi/cruxinfo',array('id'=>$row['id']))}" >{$row.title}</a></td> -->
                                             <td><a href="{:U('Kpi/crux',array('bkpr'=>$row['tab_user_id']))}">{:username($row['tab_user_id'])}</a></td>
                                             <td>{$row.kaoping}</td>
                                             <td>{$row.total_score_show}</td>

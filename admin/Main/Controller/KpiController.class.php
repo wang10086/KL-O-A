@@ -1980,8 +1980,10 @@ class KpiController extends BaseController {
 
     //添加关键事项
     public function add_crux(){
+        $year                               = I('year',date('Y'));
         $userkey                            = $this->get_kpi_crux_username();
         $this->userkey                      = $userkey;
+        $this->year                         = $year;
         $this->display();
     }
 
