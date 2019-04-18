@@ -1828,11 +1828,44 @@ class AjaxController extends Controller {
         $this->ajaxReturn($list);
     }
 
-    //
+    //获取季度考核KPI周期信息
     public function get_crux_kpi_cycle(){
-        $db                     = M('kpi');
         $user_id                = I('user_id');
         $year                   = I('year');
-        $this->ajaxReturn($user_id);
+        $where                  = array();
+        $where['user_id']       = $user_id;
+        $where['year']          = $year;
+        $where['quota_id']      = 216; //上级领导组织对本季度关键事项绩效评价
+        $cycle                  = M('kpi_more')->where($where)->order('id desc')->getField('cycle');
+        $select_html            = $this->get_select_html($year,$cycle);
+        $msg                    = array();
+        $msg['cycle']           = $cycle;
+        $msg['select']          = $select_html;
+        $this->ajaxReturn($msg);
+    }
+
+    //获取select内容
+    public function get_select_html($year,$cycle){
+        if ($cycle == 1){ //月度考核
+            $html               = '<label>考核周期<span class="red">（月度）</span></label><select class="form-control" name="info[month]">';
+            for ($i=1;$i<13;$i++){
+                $mon            = str_pad($i,2,0,STR_PAD_LEFT);
+                $ym             = $year.$mon;
+                $html           .= '<option value="'.$ym.'">'.$i.'月</option>';
+            }
+            $html               .= '</select>';
+        }elseif ($cycle==2){ //季度考核
+            $q1                 = $year.'01,'.$year.'02,'.$year.'03';
+            $q2                 = $year.'04,'.$year.'05,'.$year.'06';
+            $q3                 = $year.'07,'.$year.'08,'.$year.'09';
+            $q4                 = $year.'10,'.$year.'11,'.$year.'12';
+            $html               = '<label>考核周期<span class="red">（季度）</span></label><select class="form-control" name="info[month]">';
+            $html               .= '<option value="'.$q1.'">一季度</option>';
+            $html               .= '<option value="'.$q2.'">二季度</option>';
+            $html               .= '<option value="'.$q3.'">三季度</option>';
+            $html               .= '<option value="'.$q4.'">四季度</option>';
+            $html               .= '</select>';
+        }
+        return $html;
     }
 }

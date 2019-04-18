@@ -1982,9 +1982,36 @@ class KpiController extends BaseController {
     public function add_crux(){
         $year                               = I('year',date('Y'));
         $userkey                            = $this->get_kpi_crux_username();
+
+        $this->remainder_weight             = 1;
         $this->userkey                      = $userkey;
         $this->year                         = $year;
         $this->display();
+    }
+
+    public function public_save(){
+        $savetype                           = trim(I('savetype'));
+        if (isset($_POST['dosubmint']) && $savetype){
+            //保存关键事项
+            if ($savetype == 1){
+                $info                       = I('info');
+                $where                      = array();
+                $where['user_id']           = $info['user_id'];
+                $where['month']             = $info['month'];
+                $where['quota_id']          = 216;
+                $kpi_more_info              = M('kpi_more')->where($where)->find();
+                var_dump($kpi_more_info);die;
+                $info['kpi_id']             = $kpi_more_info['kpi_id'];
+                $info['kpi_more_id']        = $kpi_more_info['id'];
+                $info['standard']           = trim($info['standard']);
+                $info['title']              = trim($info['title']);
+                $info['content']            = trim($info['content']);
+                $info['create_user_id']     = session('userid');.
+                $info['create_user_name']   = session('nickname');
+                $info['create_time']        = NOW_TIME;
+                var_dump(I());
+            }
+        }
     }
 
 	

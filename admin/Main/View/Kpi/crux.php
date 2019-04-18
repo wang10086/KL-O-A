@@ -74,9 +74,6 @@
                                             <th width="" class="sorting" data="">考核标准</th>
                                             <th width="" class="sorting" data="">权重分</th>
                                             <th width="" class="sorting" data="">考评得分</th>
-                                            <if condition="rolemenu(array('Kpi/cruxinfo'))">
-                                                <th width="" class="taskOptions">考核内容</th>
-                                            </if>
                                             <if condition="rolemenu(array('Kpi/editcrux'))">
                                                 <th width="50" class="taskOptions">编辑</th>
                                             </if>
@@ -151,7 +148,7 @@
 	function add_crux(id) {
 		art.dialog.open('index.php?m=Main&c=Kpi&a=add_crux&id='+id,{
 			lock:true,
-			title: '新建PDCA',
+			title: '新建考核事项',
 			width:800,
 			height:400,
 			okValue: '提交',
