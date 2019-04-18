@@ -2134,3 +2134,18 @@ function get_yw_department(){
         }
         return $sum;
     }
+
+    /**
+     * 季度利润总额目标完成率
+     * @param $target
+     * @param $complete
+     */
+    function get_plus_minus_data($target,$complete){
+        if ($target > 0){ //目标为正
+            $rate                   = round($complete/$target,2);
+        }else{
+            $rate                   = 2 - (round($complete/$target,2));
+        }
+        $rate                       = $rate > 0 ? $rate*100 : '0';
+        return $rate;
+    }

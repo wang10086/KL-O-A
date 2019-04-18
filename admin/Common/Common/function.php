@@ -3378,6 +3378,7 @@ function updatekpi($month,$user){
 function get_kpi_data($v,$complete,$url=''){
     $otherQuota     = array(127);
     $gt100          = array(163,156);
+    $plus_minus     = array(125); //分正负情况,季度利润总额目标完成率
     if (in_array($v['quota_id'],$otherQuota)){
         //不超过既得满分的指标 不能按照 实际/计划计算得分
         $target     = (float)$v['target'];
@@ -3392,6 +3393,10 @@ function get_kpi_data($v,$complete,$url=''){
     }elseif(in_array($v['quota_id'],$gt100)){
         //实际kpi总得分可大于100分
         $rate       = (float)$complete;
+    }elseif(in_array($v['quota_id'],$plus_minus)){
+        $target     = $v['target']; //目标
+        $complete   = $v['complete'];
+        $rate       = get_plus_minus_data($target,$complete);
     }else{
         $rate       = $v['target'] ? round(($complete / $v['target'])*100,2) : 100;
         $rate       = $rate>100 ? 100 : $rate;
