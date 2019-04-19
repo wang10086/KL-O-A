@@ -2006,7 +2006,7 @@ class KpiController extends BaseController {
                 $info['standard']           = trim($info['standard']);
                 $info['title']              = trim($info['title']);
                 $info['content']            = trim($info['content']);
-                $info['create_user_id']     = session('userid');.
+                $info['create_user_id']     = session('userid');
                 $info['create_user_name']   = session('nickname');
                 $info['create_time']        = NOW_TIME;
                 var_dump(I());
