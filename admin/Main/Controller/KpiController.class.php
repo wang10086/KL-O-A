@@ -1980,13 +1980,17 @@ class KpiController extends BaseController {
 
     //添加关键事项
     public function add_crux(){
+        $id                                 = I('id');
         $mod                                = D('Kpi');
         $year                               = I('year',date('Y'));
         $userkey                            = $mod->get_kpi_crux_username();
+        $list                               = M('kpi_crux')->find($id);
+        $remainder_weight                   = $mod->get_upd_crux_remainder_weight($list['user_id'],$list['month'],$id); //获取剩余权重
 
-        $this->remainder_weight             = 1;
+        $this->row                          = $list;
+        $this->remainder_weight             = $remainder_weight?$remainder_weight:100;
         $this->userkey                      = $userkey;
-        $this->year                         = $year;
+        $this->year                         = $list['year']?$list['year']:$year;
         $this->display();
     }
 
@@ -1996,6 +2000,7 @@ class KpiController extends BaseController {
             //保存关键事项
             if ($savetype == 1){
                 $db                         = M('kpi_crux');
+                $id                         = I('id');
                 $info                       = I('info');
                 $where                      = array();
                 $where['user_id']           = $info['user_id'];
@@ -2007,10 +2012,17 @@ class KpiController extends BaseController {
                 $info['standard']           = trim($info['standard']);
                 $info['title']              = trim($info['title']);
                 $info['content']            = trim($info['content']);
-                $info['create_user_id']     = session('userid');
-                $info['create_user_name']   = session('nickname');
-                $info['create_time']        = NOW_TIME;
-                $res                        = $db->add($info);
+
+                if ($info['year'] && $info['month'] && $info['kpi_id'] && $info['kpi_more_id']){
+                    if ($id){
+                        $res                = $db->where(array('id'=>$id))->save($info);
+                    }else{
+                        $info['create_user_id']   = session('userid');
+                        $info['create_user_name'] = session('nickname');
+                        $info['create_time']= NOW_TIME;
+                        $res                = $db->add($info);
+                    }
+                }
 
                 if ($res){
                     $this->msg              = '<span class="green">保存成功</span>';
@@ -2027,11 +2039,31 @@ class KpiController extends BaseController {
     //关键事项评分
     public function scorecrux(){
         $id                                 = I('id');
-        var_dump($id);
+        //var_dump($id);
 
-        $this->display();
+        //$this->display();
     }
 
+    //关键事项详情
+    public function public_crux_info(){
+        $mod                                = D('Kpi');
+        $id                                 = I('id');
+        $list                               = $mod->get_crux_info($id);
+        $this->list                         = $list;
+        $this->display('crux_info');
+    }
+
+    //删除关键事项
+    public function delcrux(){
+        $db                                 = M('kpi_crux');
+        $id                                 = I('id');
+        $res                                = $db->delete($id);
+        if ($res){
+            $this->success('删除成功');
+        }else{
+            $this->error('删除失败');
+        }
+    }
 	
 	public function test(){
 		P(team_new_customers(35,array(strtotime('2018-01-01'),strtotime('2018-01-25'))));

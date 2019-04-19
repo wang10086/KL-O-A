@@ -151,5 +151,35 @@ class KpiModel extends Model
         return json_encode($user_key);
     }
 
+    public function get_crux_info($id){
+        $db                                 = M('kpi_crux');
+        $list                               = $db->find($id);
+        if ($list['cycle'] == 1){     $list['cycle_stu'] = '月度';  }
+        elseif ($list['cycle'] == 2){ $list['cycle_stu'] = '季度';  }
+        elseif ($list['cycle'] == 3){ $list['cycle_stu'] = '半年度';}
+        elseif ($list['cycle'] == 4){ $list['cycle_stu'] = '年度';  }
+        if (intval($list['score']) == 0 ){
+            $list['score_stu'] = '<font color="#999">未评分</font>';
+        } else {
+            $list['score_stu'] = $list['score'];
+        }
+        return $list;
+    }
+
+    //获取关键实行剩余权重信息
+    public function get_upd_crux_remainder_weight($user_id,$month,$id=''){
+        $db                                 = M('kpi_crux');
+        $where                              = array();
+        $where['user_id']                   = $user_id;
+        $where['month']                     = $month;
+        $sum_weight                         = $db->where($where)->sum('weight');
+        if ($id){ //编辑
+           $this_weight                     = $db->where(array('id'=>$id))->getField('weight');
+            $sum_weight                     = $sum_weight - $this_weight;
+        }
+        $weight                             = 100 - $sum_weight;
+        return $weight;
+    }
+
 
 }

@@ -24,9 +24,10 @@
         <input type="hidden" name="dosubmint" value="1">
         <input type="hidden" name="savetype" value="1">
         <input type="hidden" name="info[user_id]" id="user_id" value="{$row.user_id}">
-        <input type="hidden" name="info[year]" value="<?php echo $row['year']?$row['year']:$year; ?>">
+        <input type="hidden" name="info[year]" value="{$year}">
         <input type="hidden" name="info[cycle]" value="{$row.cycle}">
         <input type="hidden" id="remainder_weight" value="{$remainder_weight}">
+        <input type="hidden" name="id" value="{$row.id}">
 
         <div class="form-group box-float-6">
             <label>被考核人员 </label>
@@ -36,7 +37,27 @@
         <div class="form-group box-float-6" id="get_cycle_month">
             <label>考核周期</label>
             <select class="form-control" name="info[month]">
-                <option value="" disabled>请选择被考核人员</option>
+                <?php if ($row['cycle'] == 1){ ?>
+                    <option value="<?php echo  $year.'01'; ?>" <?php if ($row['month'] == $year.'01') echo 'selected'; ?>>一月</option>
+                    <option value="<?php echo  $year.'02'; ?>" <?php if ($row['month'] == $year.'02') echo 'selected'; ?>>二月</option>
+                    <option value="<?php echo  $year.'03'; ?>" <?php if ($row['month'] == $year.'03') echo 'selected'; ?>>三月</option>
+                    <option value="<?php echo  $year.'04'; ?>" <?php if ($row['month'] == $year.'04') echo 'selected'; ?>>四月</option>
+                    <option value="<?php echo  $year.'05'; ?>" <?php if ($row['month'] == $year.'05') echo 'selected'; ?>>五月</option>
+                    <option value="<?php echo  $year.'06'; ?>" <?php if ($row['month'] == $year.'06') echo 'selected'; ?>>六月</option>
+                    <option value="<?php echo  $year.'07'; ?>" <?php if ($row['month'] == $year.'07') echo 'selected'; ?>>七月</option>
+                    <option value="<?php echo  $year.'08'; ?>" <?php if ($row['month'] == $year.'08') echo 'selected'; ?>>八月</option>
+                    <option value="<?php echo  $year.'09'; ?>" <?php if ($row['month'] == $year.'09') echo 'selected'; ?>>九月</option>
+                    <option value="<?php echo  $year.'10'; ?>" <?php if ($row['month'] == $year.'10') echo 'selected'; ?>>十月</option>
+                    <option value="<?php echo  $year.'11'; ?>" <?php if ($row['month'] == $year.'11') echo 'selected'; ?>>十一月</option>
+                    <option value="<?php echo  $year.'12'; ?>" <?php if ($row['month'] == $year.'12') echo 'selected'; ?>>十二月</option>
+                <?php }elseif($row['cycle']==2){ ?>
+                    <option value="<?php echo $year.'01,'.$year.'02,'.$year.'03'; ?>" <?php if ($row['month'] == $year.'01,'.$year.'02,'.$year.'03') echo "selected"; ?>>一季度</option>
+                    <option value="<?php echo $year.'04,'.$year.'05,'.$year.'06'; ?>" <?php if ($row['month'] == $year.'04,'.$year.'05,'.$year.'06') echo "selected"; ?>>二季度</option>
+                    <option value="<?php echo $year.'07,'.$year.'08,'.$year.'09'; ?>" <?php if ($row['month'] == $year.'07,'.$year.'08,'.$year.'09') echo "selected"; ?>>三季度</option>
+                    <option value="<?php echo $year.'10,'.$year.'11,'.$year.'12'; ?>" <?php if ($row['month'] == $year.'10,'.$year.'11,'.$year.'12') echo "selected"; ?>>四季度</option>
+                <?php }else{ ?>
+                    <option value="" disabled>请选择被考核人员</option>
+                <?php } ?>
             </select>
         </div>
 
@@ -51,7 +72,7 @@
         </div>
 
         <div class="form-group box-float-6">
-            <label>权重 <font color="#999">剩余权重：<font color="red">{$remainder_weight}%</font></font></label>
+            <label>权重 （<font color="#999">剩余权重：<font color="red"><span id="remainder_weight">{$remainder_weight}</span>%</font></font>）</label>
             <input type="text" name="info[weight]" value="{$row.weight}"  class="form-control" />
         </div>
         
