@@ -1949,11 +1949,28 @@ class KpiController extends BaseController {
     //关键事项评价
     public function crux(){
         $this->title('关键事项评价');
+        $mod                                = D('Kpi');
         $year                               = I('year',date('Y'));
         $month                              = I('month','');
 
+        $pagecount		                    = M('kpi_crux')->count();
+        $page			                    = new Page($pagecount, P::PAGE_SIZE);
+        $this->pages	                    = $pagecount>P::PAGE_SIZE ? $page->show():'';
 
+        $lists                              = M('kpi_crux')->limit($page->firstRow.','.$page->listRows)->order($this->orders('id'))->select();
+        foreach ($lists as $k=>$v){
+            if ($v['cycle']==1){
+                $lists[$k]['cycle_stu']     = '月度';
+            }elseif ($v['cycle']==2){
+                $lists[$k]['cycle_stu']     = '季度';
+            }
+            $lists[$k]['cruxinfo_url']      = U('Kpi/public_crux_info',array('id'=>$v['id'])); //详情url
+            $lists[$k]['scorecrux_url']     = U('Kpi/scorecrux',array('id'=>$v['id'])); //打分url
+            $lists[$k]['addcrux_url']       = U('Kpi/add_crux',array('id'=>$v['id'])); //编辑url
+            $lists[$k]['delcrux_url']       = U('Kpi/delcrux',array('id'=>$v['id'])); //删除url
+        }
 
+        $this->lists                        = $lists;
         $this->month  		                = $month;
         $this->year 		                = $year;
         $this->prveyear		                = $year-1;
@@ -1961,27 +1978,11 @@ class KpiController extends BaseController {
         $this->display();
     }
 
-    //获取KPI有"关键事项评价"考核的人员信息
-    public function get_kpi_crux_username(){
-        $userids                            = M('kpi_more')->where(array('year'=>date('Y'),'quota_id'=>216))->getField('user_id',true);
-        $where                              = array();
-        $where['status']                    = 0;
-        $where['id']                        = array('in',$userids);
-        $user                               = M('account')->where($where)->field('id,nickname')->select();
-        $user_key                           = array();
-        foreach($user as $k=>$v){
-            $text                           = $v['nickname'];
-            $user_key[$k]['id']             = $v['id'];
-            $user_key[$k]['pinyin']         = strtopinyin($text);
-            $user_key[$k]['text']           = $text;
-        }
-        return json_encode($user_key);
-    }
-
     //添加关键事项
     public function add_crux(){
+        $mod                                = D('Kpi');
         $year                               = I('year',date('Y'));
-        $userkey                            = $this->get_kpi_crux_username();
+        $userkey                            = $mod->get_kpi_crux_username();
 
         $this->remainder_weight             = 1;
         $this->userkey                      = $userkey;
@@ -1994,13 +1995,13 @@ class KpiController extends BaseController {
         if (isset($_POST['dosubmint']) && $savetype){
             //保存关键事项
             if ($savetype == 1){
+                $db                         = M('kpi_crux');
                 $info                       = I('info');
                 $where                      = array();
                 $where['user_id']           = $info['user_id'];
                 $where['month']             = $info['month'];
                 $where['quota_id']          = 216;
                 $kpi_more_info              = M('kpi_more')->where($where)->find();
-                var_dump($kpi_more_info);die;
                 $info['kpi_id']             = $kpi_more_info['kpi_id'];
                 $info['kpi_more_id']        = $kpi_more_info['id'];
                 $info['standard']           = trim($info['standard']);
@@ -2009,9 +2010,26 @@ class KpiController extends BaseController {
                 $info['create_user_id']     = session('userid');
                 $info['create_user_name']   = session('nickname');
                 $info['create_time']        = NOW_TIME;
-                var_dump(I());
+                $res                        = $db->add($info);
+
+                if ($res){
+                    $this->msg              = '<span class="green">保存成功</span>';
+                    $this->time             = 1000;
+                }else{
+                    $this->msg              = '<span class="red">保存失败</span>';
+                    $this->time             = 3000;
+                }
+                $this->display('audit_ok');
             }
         }
+    }
+
+    //关键事项评分
+    public function scorecrux(){
+        $id                                 = I('id');
+        var_dump($id);
+
+        $this->display();
     }
 
 	

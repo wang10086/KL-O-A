@@ -40,19 +40,19 @@
             </select>
         </div>
 
+        <div class="form-group box-float-12">
+            <label>关键事项</label>
+            <input type="text" name="info[title]" value="{$row.title}"  class="form-control" />
+        </div>
+
         <div class="form-group box-float-6">
             <label>考核标准 </label>
             <input type="text" name="info[standard]" value="{$row.standard}"  class="form-control" />
         </div>
 
         <div class="form-group box-float-6">
-            <label>权重 <font color="#999">剩余权重分：<font color="red">{$remainder_weight}分</font></font></label>
+            <label>权重 <font color="#999">剩余权重：<font color="red">{$remainder_weight}%</font></font></label>
             <input type="text" name="info[weight]" value="{$row.weight}"  class="form-control" />
-        </div>
-        
-        <div class="form-group box-float-12">
-            <label>关键事项</label>
-            <input type="text" name="info[title]" value="{$row.title}"  class="form-control" />
         </div>
         
         <div class="form-group box-float-12">

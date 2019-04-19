@@ -134,5 +134,22 @@ class KpiModel extends Model
         return $data;
     }
 
+    //获取KPI有"关键事项评价"考核的人员信息
+    public function get_kpi_crux_username(){
+        $userids                            = M('kpi_more')->where(array('year'=>date('Y'),'quota_id'=>216))->getField('user_id',true);
+        $where                              = array();
+        $where['status']                    = 0;
+        $where['id']                        = array('in',$userids);
+        $user                               = M('account')->where($where)->field('id,nickname')->select();
+        $user_key                           = array();
+        foreach($user as $k=>$v){
+            $text                           = $v['nickname'];
+            $user_key[$k]['id']             = $v['id'];
+            $user_key[$k]['pinyin']         = strtopinyin($text);
+            $user_key[$k]['text']           = $text;
+        }
+        return json_encode($user_key);
+    }
+
 
 }

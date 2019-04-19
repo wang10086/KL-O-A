@@ -37,7 +37,8 @@
                                     <div class="box-tools pull-right">
                                     	 
                                          <if condition="rolemenu(array('Kpi/add_crux'))">
-                                         <a href="javascript:;" onclick="add_crux()" class="btn btn-sm btn-success" ><i class="fa fa-plus"></i> 添加关键事项</a>
+                                         <!--<a href="javascript:;" onclick="add_crux()" class="btn btn-sm btn-success" ><i class="fa fa-plus"></i> 添加关键事项</a>-->
+                                         <a href="javascript:;" onclick="public_open('{:U('Kpi/add_crux')}','新建考核事项',800,400)" class="btn btn-sm btn-success" ><i class="fa fa-plus"></i> 添加关键事项</a>
                                          </if>
                                          
                                     </div>
@@ -68,12 +69,14 @@
 
                                     <table class="table table-bordered dataTable fontmini" id="tablelist" style="margin-top:10px;">
                                         <tr role="row" class="orders" >
-                                            <th width="" class="sorting" data="">序号</th>
-                                            <th width="" class="sorting" data="">考核事项</th>
-                                            <th width="" class="sorting" data="">考核时间</th>
+                                            <th width="50" class="sorting" data="id">序号</th>
+                                            <th width="" class="sorting" data="user_id">被考核人员</th>
+                                            <th width="" class="sorting" data="cycle">考核周期</th>
+                                            <th width="" class="sorting" data="title">考核事项</th>
+                                            <th width="150" class="sorting" data="">考核时间</th>
                                             <th width="" class="sorting" data="">考核标准</th>
-                                            <th width="" class="sorting" data="">权重分</th>
-                                            <th width="" class="sorting" data="">考评得分</th>
+                                            <th width="80" class="sorting" data="">权重分</th>
+                                            <th width="80" class="sorting" data="">考评得分</th>
                                             <if condition="rolemenu(array('Kpi/editcrux'))">
                                                 <th width="50" class="taskOptions">编辑</th>
                                             </if>
@@ -87,39 +90,23 @@
                                         </tr>
                                         <foreach name="lists" item="row"> 
                                         <tr>
-                                            <td><a href="{:U('Kpi/cruxinfo',array('id'=>$row['id']))}" >{$row.month}</a></td>
-                                            <td><a href="{:U('Kpi/crux',array('bkpr'=>$row['tab_user_id']))}">{:username($row['tab_user_id'])}</a></td>
-                                            <td>{$row.kaoping}</td>
-                                            <td>{$row.total_score_show}</td>
-                                            <td>{$pdcasta.$row[status]}</td>
-                                            <if condition="rolemenu(array('Kpi/cruxinfo'))">
-                                            <td class="taskOptions">
-                                            <a href="{:U('Kpi/cruxinfo',array('id'=>$row['id']))}" title="项目" class="btn btn-success btn-smsm"><i class="fa fa-ellipsis-h"></i></a>
-                                            </td>
+                                            <td>{$row.id}</td>
+                                            <td>{$row.user_name}</td>
+                                            <td>{$row.cycle_stu}</td>
+                                            <td><a href="javascript:;" onclick="public_open('{$row.cruxinfo_url}','详情',800,400)">{$row.title}</a></td>
+                                            <td>{$row.month}</td>
+                                            <td>{$row.standard}</td>
+                                            <td>{$row.weight}%</td>
+                                            <td>{$row.score}</td>
+                                            <if condition="rolemenu(array('Kpi/add_crux'))">
+                                                <td class="taskOptions"><button onClick="public_open('{$row.addcrux_url}','编辑考核事项',800,400)" title="编辑" class="btn btn-info btn-smsm"><i class="fa fa-pencil"></i></button></td>
                                             </if>
-                                            <if condition="rolemenu(array('Kpi/editpdca'))">
-                                            <td class="taskOptions">
-                                            <?php 
-                                            if(cookie('userid')==$row['tab_user_id'] || cookie('userid')==$pdca['eva_user_id'] || C('RBAC_SUPER_ADMIN')==cookie('username') || cookie('roleid')==10) {
-                                            ?>
-                                            <a href="javascript:;" onClick="add_pdca({$row.id})" title="修改" class="btn btn-info btn-smsm"><i class="fa fa-pencil"></i></a>
-                                            <?php 
-                                            }
-                                            ?>
-                                            </td>
+                                            <if condition="rolemenu(array('Kpi/scorecrux'))">
+                                                <td class="taskOptions"><button onClick="public_open('{$row.scorecrux_url}','关键事项评分',800,600)" title="评分" class="btn btn-info btn-sm"><i class="fa fa-check-circle-o"></i></button></td>
                                             </if>
-                                            <if condition="rolemenu(array('Kpi/delpdca'))">
-                                            <td class="taskOptions">
-                                            <?php 
-                                            if(cookie('userid')==$row['tab_user_id'] || cookie('userid')==$pdca['eva_user_id'] || C('RBAC_SUPER_ADMIN')==cookie('username') || cookie('roleid')==10) {
-                                            ?>
-                                            <button onClick="javascript:ConfirmDel('{:U('Kpi/delpdca',array('id'=>$row['id']))}')" title="删除" class="btn btn-warning btn-smsm"><i class="fa fa-times"></i></button>
-                                            <?php 
-                                            }
-                                            ?>
-                                            </td>
+                                            <if condition="rolemenu(array('Kpi/delcrux'))">
+                                                <td class="taskOptions"><button onClick="javascript:ConfirmDel('{$row.delcrux_url}','确定删除?')" title="删除" class="btn btn-warning btn-smsm"><i class="fa fa-times"></i></button></td>
                                             </if>
-                                           
                                         </tr>
                                         </foreach>					
                                     </table>
@@ -144,7 +131,7 @@
 
 
 	<script>
-    //新建PDCA
+    //新建关键事项
 	function add_crux(id) {
 		art.dialog.open('index.php?m=Main&c=Kpi&a=add_crux&id='+id,{
 			lock:true,
@@ -162,49 +149,48 @@
 			}
 		});	
 	}
-	
-	/*$(document).ready(function(e) {
-		var keywords = <?php echo $userkey; ?>;
-		
-		$(".keywords_bkpr").autocomplete(keywords, {
-			 matchContains: true,
-			 highlightItem: false,
-			 formatItem: function(row, i, max, term) {
-				 return '<span style=" display:none">'+row.pinyin+'</span>'+row.text;
-			 },
-			 formatResult: function(row) {
-				 return row.user_name;
-			 }
-		}).result(function(event, item) {
-		   $('#bkpr').val(item.id);
-		});
-		
-		
-		$(".keywords_kpr").autocomplete(keywords, {
-			 matchContains: true,
-			 highlightItem: false,
-			 formatItem: function(row, i, max, term) {
-				 return '<span style=" display:none">'+row.pinyin+'</span>'+row.text;
-			 },
-			 formatResult: function(row) {
-				 return row.user_name;
-			 }
-		}).result(function(event, item) {
-		   $('#kpr').val(item.id);
-		});
-			
-	})*/
-	
-	
-	
-	function showme(obj){
-		var data = $(obj).attr('data');
-		if(data==0){
-			$(obj).attr('data','1').removeClass('btn-default').addClass('btn-info');
-			window.location.href="{:U('Kpi/crux',array('month'=>$month,'show'=>1))}";
-		}else{
-			$(obj).attr('data','0').removeClass('btn-info').addClass('btn-default');
-			window.location.href="{:U('Kpi/crux',array('month'=>$month,'show'=>0))}";
-		}
-	}
+
+
+    function  public_open(url,title,width,height){
+        art.dialog.open(url,{
+            lock:true,
+            title: title,
+            width: width,
+            height: height,
+            okValue: '提交',
+            fixed: true,
+            ok: function () {
+                this.iframe.contentWindow.gosubmint();
+                return false;
+            },
+            cancelValue:'取消',
+            cancel: function () {
+            }
+        });
+    }
+
+    function ConfirmDel(url,msg) {
+
+        if(!msg){
+            var msg = '真的要删除吗？';
+        }
+
+        art.dialog({
+            title: '提示',
+            width:400,
+            height:100,
+            lock:true,
+            fixed: true,
+            content: '<span style="width:100%; text-align:center; font-size:18px;float:left; clear:both;">'+msg+'</span>',
+            ok: function (msg) {
+                window.location.href=url;
+                //this.title('3秒后自动关闭').time(3);
+                return false;
+            },
+            cancelVal: '取消',
+            cancel: true //为true等价于function(){}
+        });
+
+    }
+
 	</script>
