@@ -18,6 +18,10 @@
             <div class="form-group box-float-6" style="padding-left:0;">权重：{$list.weight}%</div>
             <div class="form-group box-float-6" style="padding-left:0;">考核标准：{$list.standard}</div>
             <div class="form-group box-float-6" style="padding-left:0;">考核得分：{$list.score_stu}</div>
+            <?php if ($list['audit_user_name']){ ?>
+            <div class="form-group box-float-6" style="padding-left:0;">评分人：{$list.audit_user_name}</div>
+            <div class="form-group box-float-6" style="padding-left:0;">评分时间：{$list.audit_time|date="Y-m-d",###}</div>
+            <?php } ?>
         </div>
         
         <div class="fromlist nobor" style="margin-top:10px;">

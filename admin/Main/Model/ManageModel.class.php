@@ -1134,7 +1134,7 @@ class ManageModel extends Model{
             $data['changchun']      = $this->get_sum($v,'长春项目部',$lists,$share_lists);
             $data['shichang']       = $this->get_sum($v,'市场部',$lists,$share_lists);
             $data['changgui']       = $this->get_sum($v,'常规业务中心',$lists,$share_lists);
-            $data['jiguan']         = $this->get_jiguan_sum($k,$depart_business,$lists,$share_lists);
+            $data['jiguan']         = $this->get_jiguan_sum($v,$depart_business,$lists,$share_lists);
             $data['gongsi']         = $data['jqyw']+$data['jwyw']+$data['nanjing']+$data['wuhan']+$data['shenyang']+$data['changchun']+$data['shichang']+$data['changgui']+$data['jiguan'];
             $infos[$k]              = $data;
             $heji['jqyw']           += $data['jqyw'];
