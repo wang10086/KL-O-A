@@ -125,7 +125,6 @@
             dataType: 'JSON',
             data: {user_id:user_id,month:month,id:id},
             success:function (msg) {
-                alert(msg);
                 $('#remainder_weight').val(msg);
                 $('#remainder_weight_html').html(msg);
             }

@@ -181,5 +181,16 @@ class KpiModel extends Model
         return $weight;
     }
 
+    //保存kpi操作记录
+    public function save_kpi_record($kpi_id,$remark){
+        $data                  = array();
+        $data['kpi_id']        = $kpi_id;
+        $data['op_user_id']    = session('userid');
+        $data['op_user_name']  = session('nickname');
+        $data['op_time']       = time();
+        $data['remarks']       = $remark;
+        M('kpi_op_record')->add($data);
+    }
+
 
 }

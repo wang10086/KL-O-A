@@ -2003,6 +2003,7 @@ class KpiController extends BaseController {
         if (isset($_POST['dosubmint']) && $savetype){
             //保存关键事项
             if ($savetype == 1){
+                $mod                        = D('Kpi');
                 $db                         = M('kpi_crux');
                 $id                         = I('id');
                 $info                       = I('info');
@@ -2020,17 +2021,21 @@ class KpiController extends BaseController {
                 if ($info['year'] && $info['month'] && $info['kpi_id'] && $info['kpi_more_id']){
                     if ($id){
                         $res                = $db->where(array('id'=>$id))->save($info);
+                        $operation          = '修改';
                     }else{
                         $info['create_user_id']   = session('userid');
                         $info['create_user_name'] = session('nickname');
                         $info['create_time']= NOW_TIME;
                         $res                = $db->add($info);
+                        $operation          = '添加';
                     }
                 }
 
                 if ($res){
                     $this->msg              = '<span class="green">保存成功</span>';
                     $this->time             = 1000;
+                    $record                 = $operation.'关键事项：'.$info['title'];
+                    $mod->save_kpi_record($info['kpi_id'],$record); //保存操作记录
                 }else{
                     $this->msg              = '<span class="red">保存失败</span>';
                     $this->time             = 3000;
@@ -2040,6 +2045,7 @@ class KpiController extends BaseController {
 
             //保存关键事项评分
             if ($savetype == 2){
+                $mod                        = D('Kpi');
                 $db                         = M('kpi_crux');
                 $id                         = I('id');
                 $info                       = I('info');
@@ -2053,6 +2059,10 @@ class KpiController extends BaseController {
                 if ($res){
                     $this->msg              = '<span class="green">保存成功</span>';
                     $this->time             = 1000;
+
+                    $list                   = $db->find($id);
+                    $record                 = '关键事项评分：'.$list['title'].'--'.$info['score'].'分';
+                    $mod->save_kpi_record($list['kpi_id'],$record); //保存操作记录
                 }else{
                     $this->msg              = '<span class="red">保存失败</span>';
                     $this->time             = 3000;
@@ -2084,10 +2094,15 @@ class KpiController extends BaseController {
 
     //删除关键事项
     public function delcrux(){
+        $mod                                = D('Kpi');
         $db                                 = M('kpi_crux');
         $id                                 = I('id');
+        $list                               = $db->find($id);
         $res                                = $db->delete($id);
         if ($res){
+            $record                         = '删除关键事项评分：'.$list['title'];
+            $mod->save_kpi_record($list['kpi_id'],$record); //保存操作记录
+
             $this->success('删除成功');
         }else{
             $this->error('删除失败');
