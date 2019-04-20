@@ -161,7 +161,7 @@ class KpiModel extends Model
         if (intval($list['score']) == 0 ){
             $list['score_stu'] = '<font color="#999">未评分</font>';
         } else {
-            $list['score_stu'] = $list['score'];
+            $list['score_stu'] = $list['score'].'%';
         }
         return $list;
     }

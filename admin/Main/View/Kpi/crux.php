@@ -73,11 +73,11 @@
                                             <th width="" class="sorting" data="user_id">被考核人员</th>
                                             <th width="" class="sorting" data="cycle">考核周期</th>
                                             <th width="" class="sorting" data="title">考核事项</th>
-                                            <th width="150" class="sorting" data="">相关月份</th>
-                                            <th width="" class="sorting" data="">考核标准</th>
-                                            <th width="80" class="sorting" data="">权重分</th>
-                                            <th width="80" class="sorting" data="">考评得分</th>
-                                            <if condition="rolemenu(array('Kpi/editcrux'))">
+                                            <th width="150" class="sorting" data="month">相关月份</th>
+                                            <th width="" class="sorting" data="standard">考核标准</th>
+                                            <th width="80" class="sorting" data="weight">权重分</th>
+                                            <th width="80" class="sorting" data="score">考评得分</th>
+                                            <if condition="rolemenu(array('Kpi/add_crux'))">
                                                 <th width="50" class="taskOptions">编辑</th>
                                             </if>
                                             <if condition="rolemenu(array('Kpi/scorecrux'))">
@@ -93,7 +93,7 @@
                                             <td>{$row.id}</td>
                                             <td>{$row.user_name}</td>
                                             <td>{$row.cycle_stu}</td>
-                                            <td><a href="javascript:;" onclick="public_open_nbutton('{$row.cruxinfo_url}','详情',800,500)">{$row.title}</a></td>
+                                            <td><a href="javascript:;" onclick="public_open_nbutton('{$row.cruxinfo_url}','详情',800,500)" title="详情">{$row.title}</a></td>
                                             <td>{$row.month}</td>
                                             <td>{$row.standard}</td>
                                             <td>{$row.weight}%</td>
@@ -108,9 +108,9 @@
                                             <if condition="rolemenu(array('Kpi/scorecrux'))">
                                                 <td class="taskOptions">
                                                     <if condition="$row['status'] eq 0">
-                                                        <button onClick="public_open('{$row.scorecrux_url}','关键事项评分',800,600)" title="评分" class="btn btn-info btn-sm"><i class="fa fa-check-circle-o"></i></button>
+                                                        <button onClick="public_open('{$row.scorecrux_url}','关键事项评分',800,600)" title="评分" class="btn btn-info btn-smsm"><i class="fa fa-star"></i></button>
                                                     <else />
-                                                        <button onClick="javascript:;" title="评分" class="btn btn-disable btn-sm"><i class="fa fa-check-circle-o"></i></button>
+                                                        <button onClick="javascript:;" title="评分" class="btn btn-disable btn-smsm"><i class="fa fa-star"></i></button>
                                                     </if>
                                                 </td>
                                             </if>

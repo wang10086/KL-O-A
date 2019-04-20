@@ -1,4 +1,9 @@
 <include file="Index:header_art" />
+<script type="text/javascript">
+    window.gosubmint= function(){
+        $('#gosub').submit();
+    }
+</script>
     
     <div class="box-body art_box-body">
         
@@ -20,35 +25,35 @@
             <div class="form-group box-float-6" style="padding-left:0;">考核得分：{$list.score_stu}</div>
         </div>
         
-        <div class="fromlist nobor" style="margin-top:10px;">
+        <div class="fromlist fromlistbrbr " style="margin-top:10px;">
             <div class="fromtitle">考核内容：</div>
             <div class="formtexts">{$list.content}</div>
         </div>
 
-        <div class="fromlist">
-            <div class="fromtitle">审核人意见：</div>
-            <div class="formtexts">{$list.audit_suggest}</div>
+        <div class="fromlist nobor">
+            <form method="post" action="{:U('Kpi/public_save')}" name="myform" id="gosub">
+                <input type="hidden" name="dosubmint" value="1">
+                <input type="hidden" name="savetype" value="2">
+                <input type="hidden" name="id" value="{$list.id}">
+
+                <div class="form-group box-float-6" style="margin-top:15px;">
+                    <label>权重</label>
+                    <input type="text" value="{$list.weight}"  class="form-control" readonly />
+                </div>
+
+                <div class="form-group box-float-6" style="margin-top:15px;">
+                    <label>评分 <font color="#999999">建议评分不大于权重分</font></label>
+                    <input type="text" name="info[score]" id="title" value="{$list.score}"  class="form-control" />
+                </div>
+
+
+                <div class="form-group box-float-12">
+                    <label>评分人意见</label>
+                    <textarea class="form-control" style="height:90px;" name="info[audit_suggest]">{$list.audit_suggest}</textarea>
+                </div>
+
+            </form>
         </div>
-        
-        <!--<div id="qaqclist" style="margin:15px; ">
-        	<table class="table" style="border-top:2px solid #f39c12; " >
-                <tr>
-                    <th width="15%">人员</th>
-                    <th width="15%">类型</th>
-                    <th width="15%">分数</th>
-                    <th>备注</th>
-                </tr>
-                
-            	<foreach name="userlist" key="k" item="v">
-            	<tr>
-                    <td style="padding:8px; line-height:24px;">{$v.user_name}</td>
-                    <td style="padding:8px; line-height:24px;"><?php /*if($v['type']==0){ echo '惩罚';}else{ echo '奖励';} */?></td>
-                    <td style="padding:8px; line-height:24px;"><?php /*if($v['type']==0){ echo '-';}else{ echo '+';} */?>{$v.score}分</td>
-                    <td style="padding:8px; line-height:24px;">{$v.remark}</td>
-                </tr>
-            	</foreach>
-            </table>
-        </div>-->
                              
     </div>                  
     

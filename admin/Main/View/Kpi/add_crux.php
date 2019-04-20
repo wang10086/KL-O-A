@@ -36,7 +36,7 @@
 
         <div class="form-group box-float-6" id="get_cycle_month">
             <label>考核周期</label>
-            <select class="form-control" name="info[month]">
+            <select class="form-control" name="info[month]" onchange="get_crux_remainder_weight($(this).val())">
                 <?php if ($row['cycle'] == 1){ ?>
                     <option value="<?php echo  $year.'01'; ?>" <?php if ($row['month'] == $year.'01') echo 'selected'; ?>>一月</option>
                     <option value="<?php echo  $year.'02'; ?>" <?php if ($row['month'] == $year.'02') echo 'selected'; ?>>二月</option>
@@ -72,7 +72,7 @@
         </div>
 
         <div class="form-group box-float-6">
-            <label>权重 （<font color="#999">剩余权重：<font color="red"><span id="remainder_weight">{$remainder_weight}</span>%</font></font>）</label>
+            <label>权重 （<font color="#999">剩余权重：<font color="red"><span id="remainder_weight_html">{$remainder_weight}</span>%</font></font>）</label>
             <input type="text" name="info[weight]" value="{$row.weight}"  class="form-control" />
         </div>
         
@@ -116,5 +116,21 @@
         return false;
     })
 
+    function get_crux_remainder_weight(month) {
+        let user_id         = $('#user_id').val();
+        let id              = <?php echo $row['id']?$row['id']:0; ?>;
+        $.ajax({
+            type: 'POST',
+            url : "{:U('Ajax/get_crux_remainder_weight')}",
+            dataType: 'JSON',
+            data: {user_id:user_id,month:month,id:id},
+            success:function (msg) {
+                alert(msg);
+                $('#remainder_weight').val(msg);
+                $('#remainder_weight_html').html(msg);
+            }
+        })
+        return false;
+    }
 
 </script>

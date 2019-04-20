@@ -1847,7 +1847,7 @@ class AjaxController extends Controller {
     //获取select内容
     public function get_select_html($year,$cycle){
         if ($cycle == 1){ //月度考核
-            $html               = '<label>考核周期<span class="red">（月度）</span></label><select class="form-control" name="info[month]">';
+            $html               = '<label>考核周期<span class="red">（月度）</span></label><select class="form-control" name="info[month]" onchange="get_crux_remainder_weight($(this).val())"> <option value="" disabled selected>请选择</option>';
             for ($i=1;$i<13;$i++){
                 $mon            = str_pad($i,2,0,STR_PAD_LEFT);
                 $ym             = $year.$mon;
@@ -1859,7 +1859,8 @@ class AjaxController extends Controller {
             $q2                 = $year.'04,'.$year.'05,'.$year.'06';
             $q3                 = $year.'07,'.$year.'08,'.$year.'09';
             $q4                 = $year.'10,'.$year.'11,'.$year.'12';
-            $html               = '<label>考核周期<span class="red">（季度）</span></label><select class="form-control" name="info[month]">';
+            $html               = '<label>考核周期<span class="red">（季度）</span></label><select class="form-control" name="info[month]" onchange="get_crux_remainder_weight($(this).val())">';
+            $html               .= '<option value="" disabled selected>请选择</option>';
             $html               .= '<option value="'.$q1.'">一季度</option>';
             $html               .= '<option value="'.$q2.'">二季度</option>';
             $html               .= '<option value="'.$q3.'">三季度</option>';
@@ -1867,5 +1868,25 @@ class AjaxController extends Controller {
             $html               .= '</select>';
         }
         return $html;
+    }
+
+    //获取剩余的权重分
+    public function get_crux_remainder_weight(){
+        $db                     = M('kpi_crux');
+        $user_id                = I('user_id');
+        $month                  = I('month');
+        $id                     = I('id');
+        $where                  = array();
+        $where['user_id']       = $user_id;
+        $where['month']         = $month;
+        $weight                 = $db->where($where)->sum('weight'); //当月合计已用权重
+        if ($id){
+            $this_id_weight     = $db->where(array('id'=>$id,'month'=>$month))->getField('weight');
+            $this_id_weight     = $this_id_weight?$this_id_weight:0; //本条记录权重
+            $remainder_weight   = 100 - $weight + $this_id_weight;
+        }else{
+            $remainder_weight   = 100 - $weight;
+        }
+        $this->ajaxReturn($remainder_weight);
     }
 }

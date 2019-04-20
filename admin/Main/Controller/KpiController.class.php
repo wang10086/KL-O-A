@@ -2033,15 +2033,40 @@ class KpiController extends BaseController {
                 }
                 $this->display('audit_ok');
             }
+
+            //保存关键事项评分
+            if ($savetype == 2){
+                $db                         = M('kpi_crux');
+                $id                         = I('id');
+                $info                       = I('info');
+                $info['score']              = trim(str_replace('%','',$info['score']));
+                $info['audit_suggest']      = trim($info['audit_suggest']);
+                $info['audit_user_id']      = session('userid');
+                $info['audit_user_name']    = session('nickname');
+                $info['audit_time']         = NOW_TIME;
+                $info['status']             = 1; //已审批
+                if ($id) $res               = $db->where(array('id'=>$id))->save($info);
+                if ($res){
+                    $this->msg              = '<span class="green">保存成功</span>';
+                    $this->time             = 1000;
+                }else{
+                    $this->msg              = '<span class="red">保存失败</span>';
+                    $this->time             = 3000;
+                }
+                $this->display('audit_ok');
+            }
         }
     }
 
     //关键事项评分
     public function scorecrux(){
+        $mod                                = D('Kpi');
         $id                                 = I('id');
-        //var_dump($id);
+        $list                               = $mod->get_crux_info($id);
 
-        //$this->display();
+
+        $this->list                         = $list;
+        $this->display();
     }
 
     //关键事项详情
