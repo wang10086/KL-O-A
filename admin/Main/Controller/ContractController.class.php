@@ -86,8 +86,8 @@ class ContractController extends BaseController {
 
             if(!$id){
                 if (!$isok){
-                    $info['create_user']		= cookie('userid');
-                    $info['create_user_name']	= cookie('name');
+                    $info['create_user']		= session('userid');
+                    $info['create_user_name']	= session('name');
                     $info['create_time']		= time();
                     $save	= $db->add($info);
                     $cid	= $save;
@@ -98,6 +98,18 @@ class ContractController extends BaseController {
                     $record['type']         = 1;
                     $record['explain']      = '新建合同';
                     contract_record($record);
+
+                    //发送系统消息
+                    $uid     = session('userid');
+                    $title   = '您有来自['.session('name').'--'.$op['project'].']的合同待审核!';
+                    $content = '项目名称：'.$op['project'].'团号：'.$op['group_id'];
+                    $url     = U('Contract/index');
+                    $user    = '[104]'; //段丽华
+                    send_msg($uid,$title,$content,$url,$user,'');
+
+                    //发送短信通知
+                    $mobile  = 17610308338;
+                    sendTemplateSMS($mobile, array(session('name'),$op['project']), "219482"); //手机号码，替换内容数组，模板ID
                 }
             }else{
                 $save	= $db->data($info)->where(array('id'=>$id))->save();

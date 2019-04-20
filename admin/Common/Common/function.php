@@ -4,6 +4,7 @@ import ('P', COMMON_PATH . 'Common/');
 use App\P;
 ulib('Pinyin');
 use Sys\Pinyin;
+use Think\CCPRestSmsSDK;
 require_once 'GetKpi.php';
 
 /**
@@ -5033,4 +5034,77 @@ function get_half_year_cycle($year,$month){
         $where['req_id']                = $budget['id'];
         $audit_stu                      = M('audit_log')->where($where)->getField('dst_status');
         return $audit_stu;
+    }
+
+    /**
+     * 发送模板短信
+     * @param to 手机号码集合,用英文逗号分开
+     * @param datas 内容数据 格式为数组 例如：array('Marry','Alon')，如不需替换请填 null
+     * @param $tempId 模板Id,测试应用和未上线应用使用测试模板请填写1，正式应用上线后填写已申请审核通过的模板ID
+     * @return int|SimpleXMLElement[]|string
+     */
+    function sendTemplateSMS($to,$datas,$tempId)
+    {
+        ulib('Sms');
+
+        //获取配置信息
+        $config = C('SMS_CONFIG');
+        $accountSid     = $config['SID'];
+        $accountToken   = $config['TOKEN'];
+        $appId          = $config['APPID'];
+        $serverIP       = $config['SERVER_IP'];
+        $serverPort     = $config['SERVER_PORT'];
+        $softVersion    = $config['VERSION'];
+
+
+        $rest = new Sms($serverIP,$serverPort,$softVersion);
+        $rest->setAccount($accountSid,$accountToken);
+        $rest->setAppId($appId);
+
+        // 发送模板短信
+        // echo "Sending TemplateSMS to $to <br/>";
+        $result = $rest->sendTemplateSMS($to,$datas,$tempId);
+
+        //保存发送记录
+        $data = array();
+        $data['mobile']				= $to;
+        $data['templet']			= $tempId;
+        $data['content']			= implode(',',$datas);
+        $data['send_time']			= time();
+        $data['status']				= $result->statusCode;
+        $data['send_user']			= cookie('userid');
+        $data['send_user_name']		= cookie('name');
+        $data['send_type']			= 0; //0=>oa系统,1=>辅导员系统
+        M('sms_send_record')->add($data);
+
+        //处理返回
+        if($result == NULL ) {
+
+            return 'error';
+            /*
+            echo "result error!";
+            break;
+            */
+
+        }
+        if($result->statusCode!=0) {
+
+            return $result->statusCode;
+            /*
+            echo "error code :" . $result->statusCode . "<br>";
+            echo "error msg :" . $result->statusMsg . "<br>";
+            //TODO 添加错误处理逻辑
+            */
+        }else{
+
+            return 0;
+            /*
+            echo "Sendind TemplateSMS success!<br/>";
+            // 获取返回信息
+            $smsmessage = $result->TemplateSMS;
+            echo "dateCreated:".$smsmessage->dateCreated."<br/>";
+            echo "smsMessageSid:".$smsmessage->smsMessageSid."<br/>";
+            //TODO 添加成功处理逻辑
+            */
+        }
     }

@@ -94,6 +94,17 @@ $config = array(
         'subName'    =>    array('date','d'),
         'replace'    =>    true,
     ),
+
+    /*短信配置*/
+    'SMS_CONFIG'            => array(
+        'SID'               => '8a216da85fb86db0015fc55b96d6004d',
+        'TOKEN'             => '4a88a06bf2384900921b4f7082b3335e',
+        'APPID'             => '8a216da85fe1c856015fe6752889020d',
+        'SERVER_IP'         => 'app.cloopen.com',
+        'SERVER_PORT'       => '8883',
+        'VERSION'           => '2013-12-26',
+
+    ),
 	
 	'BUSINESS_DEPT'  => array('1'=>'京外业务中心','2'=>'京区校内中心','3'=>'京区校外中心','99'=>'其他'),
 	
