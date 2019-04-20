@@ -1953,12 +1953,14 @@ class KpiController extends BaseController {
         $pin                                = I('pin',0);
         $user_name                          = trim(I('uname'));
         $title                              = trim(I('title'));
+        $month                              = trim(I('month')); //kpi
 
         $where                              = array();
         if ($pin == 1) $where['status']     = 0; //未批准
         if ($pin == 2) $where['status']     = 1; //已批准
         if ($user_name)$where['user_name']  = array('like','%'.$user_name.'%');
         if ($title)    $where['title']      = array('like','%'.$title.'%');
+        if ($month)    $where['month']      = $month;
 
         $pagecount		                    = M('kpi_crux')->where($where)->count();
         $page			                    = new Page($pagecount, P::PAGE_SIZE);

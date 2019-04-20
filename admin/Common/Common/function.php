@@ -3328,8 +3328,14 @@ function updatekpi($month,$user){
                         //上级领导组织对本月度关键事项绩效评价
                         if ($v['quota_id']==216){
                             //默认满分(有人力资源手动录入)
-                            $complete               = '100%';
-                            $url                    = '';
+                            $where                  = array();
+                            $where['user_id']       = $v['user_id'];
+                            $where['month']         = $v['month'];
+                            $where['status']        = 1; //已评分
+                            $score                  = M('kpi_crux')->where($where)->sum('score');
+                            $uname                  = M('account')->where(array('id'=>$v['user_id']))->getField('nickname');
+                            $complete               = $score?$score.'%':'100%';
+                            $url                    = U('Kpi/crux',array('pin'=>2,'uname'=>$uname,'month'=>$v['month']));
                         }
 
                         //顾客资源满意度-资源管理部经理
