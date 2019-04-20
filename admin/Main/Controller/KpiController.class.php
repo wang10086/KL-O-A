@@ -1950,14 +1950,21 @@ class KpiController extends BaseController {
     public function crux(){
         $this->title('关键事项评价');
         $mod                                = D('Kpi');
-        $year                               = I('year',date('Y'));
-        $month                              = I('month','');
+        $pin                                = I('pin',0);
+        $user_name                          = trim(I('uname'));
+        $title                              = trim(I('title'));
 
-        $pagecount		                    = M('kpi_crux')->count();
+        $where                              = array();
+        if ($pin == 1) $where['status']     = 0; //未批准
+        if ($pin == 2) $where['status']     = 1; //已批准
+        if ($user_name)$where['user_name']  = array('like','%'.$user_name.'%');
+        if ($title)    $where['title']      = array('like','%'.$title.'%');
+
+        $pagecount		                    = M('kpi_crux')->where($where)->count();
         $page			                    = new Page($pagecount, P::PAGE_SIZE);
         $this->pages	                    = $pagecount>P::PAGE_SIZE ? $page->show():'';
 
-        $lists                              = M('kpi_crux')->limit($page->firstRow.','.$page->listRows)->order($this->orders('id'))->select();
+        $lists                              = M('kpi_crux')->where($where)->limit($page->firstRow.','.$page->listRows)->order($this->orders('id'))->select();
         foreach ($lists as $k=>$v){
             if ($v['cycle']==1){
                 $lists[$k]['cycle_stu']     = '月度';
@@ -1971,10 +1978,7 @@ class KpiController extends BaseController {
         }
 
         $this->lists                        = $lists;
-        $this->month  		                = $month;
-        $this->year 		                = $year;
-        $this->prveyear		                = $year-1;
-        $this->nextyear		                = $year+1;
+        $this->pin                          = $pin;
         $this->display();
     }
 

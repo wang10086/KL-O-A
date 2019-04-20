@@ -18,54 +18,23 @@
                         <div class="col-xs-12">
                             <div class="box box-warning">
                                 <div class="box-header">
-                                	<!--<div class="kjss">
-                                    	<form action="" method="get" id="searchform">
-                                        <input type="hidden" name="m" value="Main">
-                                        <input type="hidden" name="c" value="Kpi">
-                                        <input type="hidden" name="a" value="pdca">
-                                        <input type="hidden" name="bkpr" id="bkpr" value="">
-                                        <input type="hidden" name="kpr" id="kpr" value="">
-                                    	<input type="text" name="month" class="form-control monthly" placeholder="月份" style="width:100px; margin-right:10px;" />
-                                    	<input type="text" class="form-control keywords_bkpr" placeholder="被考评人"  style="width:180px; margin-right:10px;"/>
-                                        <input type="text" class="form-control keywords_kpr" placeholder="考评人"  style="width:180px;"/>
-                                        <button class="btn btn-info btn-sm" style="float:left;"><i class="fa fa-search"></i></button>
-                                        </form>
-                                    </div>-->
                                     <h3 class="box-title">
                                         {$_action_}
                                     </h3>
                                     <div class="box-tools pull-right">
-                                    	 
+                                        <a href="javascript:;" class="btn btn-info btn-sm" onclick="javascript:opensearch('searchtext',400,160);"><i class="fa fa-search"></i> 搜索</a>
                                          <if condition="rolemenu(array('Kpi/add_crux'))">
-                                         <!--<a href="javascript:;" onclick="add_crux()" class="btn btn-sm btn-success" ><i class="fa fa-plus"></i> 添加关键事项</a>-->
                                          <a href="javascript:;" onclick="public_open('{:U('Kpi/add_crux')}','新建考核事项',800,400)" class="btn btn-sm btn-success" ><i class="fa fa-plus"></i> 添加关键事项</a>
                                          </if>
-                                         
                                     </div>
                                 </div><!-- /.box-header -->
                                 <div class="box-body">
                                 
-                                    <!--<div class="btn-group" id="catfont" style="padding-bottom:5px;">
-										<?php /*if($prveyear>2019){ */?>
-                                        <a href="{:U('Kpi/crux',array('year'=>$prveyear,'month'=>'01','show'=>$show))}" class="btn btn-default" style="padding:8px 18px;">上一年</a>
-                                        <?php /*} */?>
-                                        <?php
-/*                                        for($i=1;$i<5;$i++){
-                                            $par = array();
-											$par['year']  = $year;
-                                            $par['month'] = $year.str_pad($i,2,"0",STR_PAD_LEFT);
-                                            $par['show']  = $show;
-                                            if($month==$year.str_pad($i,2,"0",STR_PAD_LEFT)){
-                                                echo '<a href="'.U('Kpi/crux',$par).'" class="btn btn-info" style="padding:8px 18px;">'.$i.'季度</a>';
-                                            }else{
-                                                echo '<a href="'.U('Kpi/crux',$par).'" class="btn btn-default" style="padding:8px 18px;">'.$i.'季度</a>';
-                                            }
-                                        }
-                                        */?>
-                                        <?php /*if($year<date('Y')){ */?>
-                                        <a href="{:U('Kpi/crux',array('year'=>$nextyear,'month'=>'01','show'=>$show))}" class="btn btn-default" style="padding:8px 18px;">下一年</a>
-                                        <?php /*} */?>
-                                    </div>-->
+                                    <div class="btn-group" id="catfont" style="padding-bottom:5px;">
+                                        <a href="{:U('Kpi/crux',array('pin'=>0))}" class="btn <?php if ($pin==0){ echo "btn-info"; }else{ echo "btn-default"; } ?>" style="padding:8px 18px;">全部</a>
+                                        <a href="{:U('Kpi/crux',array('pin'=>1))}" class="btn <?php if ($pin==1){ echo "btn-info"; }else{ echo "btn-default"; } ?>" style="padding:8px 18px;">未批准</a>
+                                        <a href="{:U('Kpi/crux',array('pin'=>2))}" class="btn <?php if ($pin==2){ echo "btn-info"; }else{ echo "btn-default"; } ?>" style="padding:8px 18px;">已批准</a>
+                                    </div>
 
                                     <table class="table table-bordered dataTable fontmini" id="tablelist" style="margin-top:10px;">
                                         <tr role="row" class="orders" >
@@ -131,11 +100,23 @@
 
                 </section><!-- /.content -->
             </aside><!-- /.right-side -->
-            
-            
-            
-            
-           
+
+        <div id="searchtext">
+            <form action="" method="get" id="searchform">
+                <input type="hidden" name="m" value="Main">
+                <input type="hidden" name="c" value="Kpi">
+                <input type="hidden" name="a" value="crux">
+                <input type="hidden" name="pin" value="{$pin}">
+
+                <div class="form-group col-md-12"></div>
+                <div class="form-group col-md-12">
+                    <input type="text" class="form-control" name="uname" placeholder="被考核人员">
+                </div>
+                <div class="form-group col-md-12">
+                    <input type="text" class="form-control" name="title" placeholder="关键事项">
+                </div>
+            </form>
+        </div>
 
 	<include file="Index:footer2" />
 
