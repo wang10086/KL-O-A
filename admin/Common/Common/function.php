@@ -3231,7 +3231,7 @@ function updatekpi($month,$user){
 
                         //项目合同签订率-综合部经理
                         if ($v['quota_id']==167){
-                            $yw_departs             = C('YW_DEPARTS');  //业务部门id
+                            $yw_departs             = C('YW_DEPARTS_KPI');  //业务部门id
                             $where                  = array();
                             $where['id']            = array('in',$yw_departs);
                             $departments            = M('salary_department')->field('id,department')->where($where)->select();

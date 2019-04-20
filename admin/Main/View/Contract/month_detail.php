@@ -53,6 +53,7 @@
                                             <!--<th class="sorting" width="" data="">实施日期</th>
                                             <th class="sorting" width="" data="">完成日期</th>-->
                                             <th class="sorting" width="" data="">预算审核时间</th>
+                                            <th class="sorting" width="" data="">出团时间</th>
                                             <th class="sorting" width="" data="">合同确认时间</th>
                                             <th class="sorting" width="" data="">业务人员</th>
                                             <th class="sorting" width="" data="">是否签订合同</th>
@@ -65,6 +66,7 @@
                                             <!--<td class="sorting">{$row.dep_time|date='Y-m-d',###}</td>
                                             <td class="sorting">{$row.ret_time|date='Y-m-d',###}</td>-->
                                             <td class="sorting">{$row.audit_time|date='Y-m-d H:i:s',###}</td>
+                                            <td class="sorting">{$row.dep_time|date='Y-m-d',###}</td>
                                             <td class="sorting"><?php if ($row['contract_confirm_time']){ echo date('Y-m-d H:i:s',$row['contract_confirm_time']); } ?></td>
                                             <td class="sorting">{$row.create_user_name}</td>
                                             <td class="sorting">{$row.contract_stu}</td>
