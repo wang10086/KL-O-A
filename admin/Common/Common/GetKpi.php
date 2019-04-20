@@ -1815,6 +1815,14 @@ function get_yw_department(){
     return $departments;
 }
 
+    function get_yw_department_kpi(){
+        $yw_departs                         = C('YW_DEPARTS_KPI');  //业务部门id 排除常规业务中心
+        $where                              = array();
+        $where['id']                        = array('in',$yw_departs);
+        $departments                        = M('salary_department')->field('id,department')->where($where)->select();
+        return $departments;
+    }
+
 //获取部门当月合计
     function get_type_user_company_statis($departments,$yearMonth,$user_type){
         $year                                   = substr($yearMonth,0,4);

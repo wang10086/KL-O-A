@@ -3109,7 +3109,8 @@ function updatekpi($month,$user){
                             $operate_info   = get_sum_department_operate($department,$year,$monon,'q');     //实际经营信息(季度)
                             $jy_rsfyl       = $operate_info['rsfyl'].'%';                               //经营人事费用率
                             $complete       = $jy_rsfyl;
-                            $url            = U('manage/Manage_quarter');
+                            $quart          = quarter_month1($monon);
+                            $url            = U('manage/Manage_quarter',array('year'=>$year,'quart'=>$quart));
 
                         }
 
@@ -3289,7 +3290,7 @@ function updatekpi($month,$user){
                             $year                       = $v['year'];
                             $mm                         = substr($v['month'],4,2);
                             $yearMonth                  = $year.$mm;
-                            $departments                = get_yw_department();
+                            $departments                = get_yw_department_kpi();
                             //$department_data            = get_company_score_statis($departments,$yearMonth); //部门当月合计
                             $company_data               = get_company_sum_score_statis($departments,$yearMonth); //公司合计
                             $complete                   = $company_data['month_average'];

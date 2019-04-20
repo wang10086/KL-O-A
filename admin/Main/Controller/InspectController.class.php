@@ -490,7 +490,7 @@ class InspectController extends BaseController{
         $month		                = I('month',date('m'));
         if (strlen($month)<2) $month= str_pad($month,2,'0',STR_PAD_LEFT);
         $yearMonth                  = $year.$month;
-        $yw_departs                 = C('YW_DEPARTS');  //业务部门id
+        $yw_departs                 = C('YW_DEPARTS_KPI');  //业务部门id
         $where                      = array();
         $where['id']                = array('in',$yw_departs);
         $departments                = M('salary_department')->field('id,department')->where($where)->select();
