@@ -31,8 +31,9 @@
                                         <th class="sorting" data="">被评分人</th>
                                         <th class="sorting" data="">综合得分</th>
                                         <th class="sorting" data="account_name" width="300">评价内容</th>
-                                        <th class="sorting" data="content">评分人员</th>
+                                        <!--<th class="sorting" data="content">评分人员</th>-->
                                         <th class="sorting" data="create_time">评分时间</th>
+                                        <th width="40" class="taskOptions">详情</th>
                                         <if condition="rolemenu(array('Op/del_satisfaction'))">
                                         <th width="40" class="taskOptions">删除</th>
                                         </if> 
@@ -41,11 +42,11 @@
                                     <tr>
                                         <td class="taskOptions">{$row.monthly}</td>
                                         <td class="taskOptions">{$row.account_name}</td>
-                                        <td class="taskOptions">{$row.cost}</td>
+                                        <td class="taskOptions">{$row.average}</td>
                                         <td class="taskOptions"><div class="text-overflow-lines-300"><a href="javascript:;" onclick="show_detail({$row.id});">{$row.content}</a></div></td>
-                                        <td class="taskOptions">{$row.input_username}</td>
+                                        <!--<td class="taskOptions">{$row.input_username}</td>-->
                                         <td class="taskOptions">{$row.create_time|date="Y-m-d H:i:s",###}</td>
-
+                                        <td class="taskOptions"><button onClick="javascript:show_detail({$row.id});" title="详情" class="btn btn-info btn-smsm"><i class="fa fa-search-plus"></i></button></td>
                                         <if condition="rolemenu(array('Op/del_satisfaction'))">
                                         <td class="taskOptions">
                                         <button onClick="javascript:ConfirmDel(`<?php echo U('Op/del_satisfaction',array('id'=>$row['id'])); ?>`)" title="删除" class="btn btn-warning btn-smsm"><i class="fa fa-times"></i></button>

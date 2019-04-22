@@ -321,6 +321,11 @@ class IndexController extends BaseController {
         $this->pages        = $pagecount>P::PAGE_SIZE ? $page->show():'';
 
         $lists              = M('satisfaction')->where($where)->limit($page->firstRow.','.$page->listRows)->order($this->orders('id'))->select();
+        foreach ($lists as $k=>$v){
+            $sum            = $v['AA'] + $v['BB'] + $v['CC'] + $v['DD'] + $v['EE'];
+            $dimension      = $v['dimension'];
+            $lists[$k]['average'] = round($sum/$dimension,2);
+        }
         $this->lists        = $lists;
         $this->display('satisfaction');
     }
@@ -328,11 +333,13 @@ class IndexController extends BaseController {
     //增加内部评分信息
     public function public_satisfaction_add(){
         $db                             = M('satisfaction');
+        $score_dimension_db             = M('score_dimension');
         if (isset($_POST['dosubmint']) && $_POST['dosubmint']){
             $info                       = I('info');
+            $data                       = I('data');
             $info['content']            = trim(I('content'));
             $info['input_userid']       = cookie('userid');
-            $info['input_username']     = cookie('nickname');
+            $info['input_username']     = session('name');
             $info['create_time']        = NOW_TIME;
             $info['monthly']            = I('monthly')?trim(I('monthly')):date('Ym');
             $where                      = array();
@@ -344,8 +351,12 @@ class IndexController extends BaseController {
                 $this->error('您本月已经完成对'.$info['account_name'].'的评价',U('Index/public_satisfaction'));
             }else{
                 if (!$info['AA']) $this->error('获取评分数据失败');
-                $res                    = $db->add($info);
+                $res                        = $db->add($info);
                 if ($res){
+                    $data['satisfaction_id']= $res;
+                    $data['account_id']     = $info['account_id'];
+                    $data['account_name']   = $info['account_name'];
+                    $score_dimension_db->add($data);
                     $this->success('数据保存成功',U('Index/public_satisfaction'));
                 }else{
                     $this->error('数据保存失败');
@@ -360,10 +371,9 @@ class IndexController extends BaseController {
 	//评分详情
     public function public_satisfaction_detail(){
         $id                 = I('id');
-        $db                 = M('satisfaction');
         if (!$id) $this->error('获取数据失败');
         $field              = "s.*,d.AA as aa,d.BB as bb,d.CC as cc,d.DD as dd";
-        $list               = M()->table('__SATISFACTION__ as s')->join('__SCORE_DIMENSION__ as d on d.account_id=s.account_id','left')->where(array('s.id'=>$id))->field($field)->find();
+        $list               = M()->table('__SATISFACTION__ as s')->join('__SCORE_DIMENSION__ as d on d.satisfaction_id=s.id','left')->where(array('s.id'=>$id))->field($field)->find();
         $this->list         = $list;
         $this->display('satisfaction_detail');
     }

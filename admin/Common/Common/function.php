@@ -3298,8 +3298,9 @@ function updatekpi($month,$user){
                             $url                        = U('Inspect/score_statis',array('year'=>$year,'month'=>$mm));
                         }
 
-                        //员工满意度-安全品控部经理(内部员工满意度)
-                        if ($v['quota_id']==214){
+                        //214=>员工满意度-安全品控部经理(内部员工满意度)
+                        //212=>业务部门满意度-计调部经理
+                        if (in_array($v['quota_id'],array(214,212))){
                             $data                   = get_company_satisfaction($v);
                             $num                    = $data['num'];
                             $average                = $data['average'];

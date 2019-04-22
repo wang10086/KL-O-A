@@ -95,21 +95,66 @@
         var noBodyHtml  = '<div class="form-group col-md-12"> <div class="form-group mt20">暂无该员工的考核内容！</div> </div>';
         if (account_id){
             var html        = '';
-            var arr1        = ['26']; //安全品控部 26=>李岩
+            var arr1        = ['26','39']; //安全品控部 26=>李岩, 39=>孟华
             var textarea    = '<textarea name="content" class="form-control" id="content"  rows="2" placeholder="请输入评价内容"></textarea> <div class="form-group col-md-12"></div>';
             if (arr1.indexOf(account_id) == '-1'){
                 $('#satisfaction_content').html(noBodyHtml);
                 return false;
             }else{
-                var content = '<input type="hidden" name="info[dimension]" value="4"> <!--考核维度-->'+
-                    '<div class="form-group col-md-6"> <label>支撑服务态度：</label> <div class="demo score"> <div id="AA"></div> </div> </div>'+
-                    '<div class="form-group col-md-6"> <label>支撑服务效果：</label> <div class="demo score"> <div id="BB"></div> </div> </div>'+
-                    '<div class="form-group col-md-6"> <label>支撑服务及时性：</label> <div class="demo score"> <div id="CC"></div> </div> </div>'+
-                    '<div class="form-group col-md-6"> <label>公正及合理性：</label> <div class="demo score"> <div id="DD"></div> </div> </div>';
+                if (account_id == 26){ //李岩
+                    var content = '<input type="hidden" name="info[dimension]" value="4"> <!--考核维度-->'+
+                        '<input type="hidden" name="data[AA]" value="支撑服务态度">'+
+                        '<input type="hidden" name="data[BB]" value="支撑服务效果">'+
+                        '<input type="hidden" name="data[CC]" value="支撑服务及时性">'+
+                        '<input type="hidden" name="data[DD]" value="公正及合理性">'+
+                        '<div class="form-group col-md-6"> <label>支撑服务态度：</label> <div class="demo score"> <div id="AA"></div> </div> </div>'+
+                        '<div class="form-group col-md-6"> <label>支撑服务效果：</label> <div class="demo score"> <div id="BB"></div> </div> </div>'+
+                        '<div class="form-group col-md-6"> <label>支撑服务及时性：</label> <div class="demo score"> <div id="CC"></div> </div> </div>'+
+                        '<div class="form-group col-md-6"> <label>公正及合理性：</label> <div class="demo score"> <div id="DD"></div> </div> </div>';
+                    var html = content + textarea;
+                    $('#satisfaction_content').html(html);
+                    init_score();
+                    return false;
+                }else if(account_id == 39){ //孟华(查看评分人部门有无计调信息)
+                    $.ajax({
+                        type : 'POST',
+                        dataType : 'JSON',
+                        url : "{:U('Ajax/check_has_jd')}",
+                        success:function (msg) {
+                            if (msg == 1){ //有自己计调
+                                var content = '<input type="hidden" name="info[dimension]" value="4"> <!--考核维度-->'+
+                                '<input type="hidden" name="data[AA]" value="集中采购性价比">'+
+                                '<input type="hidden" name="data[BB]" value="指导、培训等支撑服务及时性">'+
+                                '<input type="hidden" name="data[CC]" value="指导、培训等支撑服务态度">'+
+                                '<input type="hidden" name="data[DD]" value="预结算准确度">'+
+                                '<div class="form-group col-md-6"> <label>集中采购性价比：</label> <div class="demo score"> <div id="AA"></div> </div> </div>'+
+                                '<div class="form-group col-md-6"> <label>指导、培训等支撑服务及时性：</label> <div class="demo score"> <div id="BB"></div> </div> </div>'+
+                                '<div class="form-group col-md-6"> <label>指导、培训等支撑服务态度：</label> <div class="demo score"> <div id="CC"></div> </div> </div>'+
+                                '<div class="form-group col-md-6"> <label>预结算准确度：</label> <div class="demo score"> <div id="DD"></div> </div> </div>';
+                                var html = content + textarea;
+                                $('#satisfaction_content').html(html);
+                                init_score();
+                                return false;
+                            }else{ //无自己部门计调
+                                var content = '<input type="hidden" name="info[dimension]" value="4"> <!--考核维度-->'+
+                                '<input type="hidden" name="data[AA]" value="各采购性价比">'+
+                                '<input type="hidden" name="data[BB]" value="支撑服务及时性">'+
+                                '<input type="hidden" name="data[CC]" value="支撑服务态度">'+
+                                '<input type="hidden" name="data[DD]" value="预结算准确度">'+
+                                '<div class="form-group col-md-6"> <label>各采购性价比：</label> <div class="demo score"> <div id="AA"></div> </div> </div>'+
+                                '<div class="form-group col-md-6"> <label>支撑服务及时性：</label> <div class="demo score"> <div id="BB"></div> </div> </div>'+
+                                '<div class="form-group col-md-6"> <label>支撑服务态度：</label> <div class="demo score"> <div id="CC"></div> </div> </div>'+
+                                '<div class="form-group col-md-6"> <label>预结算准确度：</label> <div class="demo score"> <div id="DD"></div> </div> </div>';
+                                var html = content + textarea;
+                                $('#satisfaction_content').html(html);
+                                init_score();
+                                return false;
+                            }
+                        }
+                    })
+                }
+
             }
-            var html = content + textarea;
-            $('#satisfaction_content').html(html);
-            init_score();
         }else{
             var unRightHtml = '<div class="form-group col-md-12"> <div class="form-group mt20">请输入正确的员工信息！</div> </div>';
             $('#satisfaction_content').html(unRightHtml);
