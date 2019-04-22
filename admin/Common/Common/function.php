@@ -3403,8 +3403,8 @@ function get_kpi_data($v,$complete,$url=''){
         $rate       = (float)$complete;
     }elseif(in_array($v['quota_id'],$plus_minus)){
         $target     = $v['target']; //目标
-        $complete   = $v['complete'];
-        $rate       = get_plus_minus_data($target,$complete);
+        $comp       = $v['complete'];
+        $rate       = get_plus_minus_data($target,$comp);
     }else{
         $rate       = $v['target'] ? round(($complete / $v['target'])*100,2) : 100;
         $rate       = $rate>100 ? 100 : $rate;
