@@ -108,8 +108,8 @@ class ContractController extends BaseController {
                     send_msg($uid,$title,$content,$url,$user,'');
 
                     //发送短信通知
-                    $mobile  = 17610308338;
-                    sendTemplateSMS($mobile, array(session('name'),$op['project']), "219482"); //手机号码，替换内容数组，模板ID
+                    $mobile  = 13611112021;
+                    sendTemplateSMS($mobile, array(session('name'),$op['project']), "425448"); //手机号码，替换内容数组，模板ID
                 }
             }else{
                 $save	= $db->data($info)->where(array('id'=>$id))->save();

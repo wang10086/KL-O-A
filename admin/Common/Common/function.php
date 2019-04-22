@@ -3340,10 +3340,6 @@ function updatekpi($month,$user){
                             $url                    = U('Kpi/crux',array('uname'=>$uname,'month'=>$v['month']));
                         }
 
-                        if ($v['quota_id']=='1111'){
-
-                        }
-
                         //顾客资源满意度-资源管理部经理
                         if ($v['quota_id']==217){
                             $year                       = $v['year'];
