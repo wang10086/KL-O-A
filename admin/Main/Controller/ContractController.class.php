@@ -433,7 +433,7 @@ class ContractController extends BaseController {
     //项目合同
     public function op_list(){
         $opid	                            = I('opid',0);
-        $gid	                            = I('gid',0);
+        $gid	                            = trim(I('gid',''));
         $cid	                            = I('cid','');
         $key	                            = I('key','');
 
@@ -442,7 +442,6 @@ class ContractController extends BaseController {
         if($opid)	$where['o.op_id']	    = $opid;
         if($gid)    $where['o.group_id']	= $gid;
         if($cid)    $where['c.contract_id']	= array('like','%'.$cid.'%');
-        $where[trim('o.group_id')]          = array('neq','');
         $field                              = 'o.project,o.group_id,o.op_id,o.create_user,o.create_user_name,c.id as cid,c.contract_id,c.contract_amount,c.status';
 
         /*if(!rolemenu(array('Contract/confirm'))){

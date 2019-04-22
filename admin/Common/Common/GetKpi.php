@@ -2157,3 +2157,28 @@ function get_yw_department(){
         $rate                       = $rate > 0 ? $rate*100 : '0';
         return $rate;
     }
+
+    /**
+     * 获取人事费用率KPI得分
+     * @param $target 目标值
+     * @param $comp 实际完成值
+     */
+    function get_rsfyl_rate($target,$comp){
+        if ($comp <= $target){
+            //实际值不超过计划值得满分
+            $rate       = 100;
+        }else{ //大于指标值
+            if ($comp > $target && $comp < $target+1){
+                $rate   = 80; //小于一个百分点 80%
+            }elseif ($comp > $target+1 && $comp < $target+2){
+                $rate   = 60; //大于一个百分点点 , 小于2个百分点 60%
+            } elseif ($comp > $target+2 && $comp < $target+3){
+                $rate   = 40; //大于2个百分点点 , 小于3个百分点 40%
+            }elseif ($comp > $target+3 && $comp < $target+4){
+                $rate   = 20; //大于3个百分点点 , 小于4个百分点 20%
+            }else{
+                $rate   = 0;
+            }
+        }
+        return $rate;
+    }

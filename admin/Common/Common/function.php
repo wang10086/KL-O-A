@@ -3384,20 +3384,14 @@ function updatekpi($month,$user){
 }
 
 function get_kpi_data($v,$complete,$url=''){
-    $otherQuota     = array(127);
+    $otherQuota     = array(127); //人事费用率(超过值扣分)
     $gt100          = array(163,156);
     $plus_minus     = array(125); //分正负情况,季度利润总额目标完成率
     if (in_array($v['quota_id'],$otherQuota)){
         //不超过既得满分的指标 不能按照 实际/计划计算得分
         $target     = (float)$v['target'];
         $comp       = (float)$complete;
-        if ($comp <= $target){
-            //实际值不超过计划值得满分
-            $rate   = 100;
-        }else{
-            //大于指标值得0分
-            $rate   = 0;
-        }
+        $rate       = get_rsfyl_rate($target,$comp);
     }elseif(in_array($v['quota_id'],$gt100)){
         //实际kpi总得分可大于100分
         $rate       = (float)$complete;
