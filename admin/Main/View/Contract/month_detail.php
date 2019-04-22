@@ -74,7 +74,7 @@
                                         </tr>
                                         </foreach>
                                         <tr>
-                                            <td class="black" colspan="6">
+                                            <td class="black" colspan="7">
                                                 <span style="display: inline-block; width: 23%">应签合同：{$data.op_num}</span>
                                                 <span style="display: inline-block; width: 23%">实签合同：{$data.contract_num}</span>
                                                 <span style="display: inline-block; width: 23%">目标系数：{$data.target}</span>

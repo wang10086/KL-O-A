@@ -1977,6 +1977,7 @@ class KpiController extends BaseController {
             $lists[$k]['scorecrux_url']     = U('Kpi/scorecrux',array('id'=>$v['id'])); //打分url
             $lists[$k]['addcrux_url']       = U('Kpi/add_crux',array('id'=>$v['id'])); //编辑url
             $lists[$k]['delcrux_url']       = U('Kpi/delcrux',array('id'=>$v['id'])); //删除url
+            $lists[$k]['score']             = floatval($v['score']).'%'; //得分
         }
 
         $this->lists                        = $lists;

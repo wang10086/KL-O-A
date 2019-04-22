@@ -32,8 +32,8 @@
                                 
                                     <div class="btn-group" id="catfont" style="padding-bottom:5px;">
                                         <a href="{:U('Kpi/crux',array('pin'=>0))}" class="btn <?php if ($pin==0){ echo "btn-info"; }else{ echo "btn-default"; } ?>" style="padding:8px 18px;">全部</a>
-                                        <a href="{:U('Kpi/crux',array('pin'=>1))}" class="btn <?php if ($pin==1){ echo "btn-info"; }else{ echo "btn-default"; } ?>" style="padding:8px 18px;">未批准</a>
-                                        <a href="{:U('Kpi/crux',array('pin'=>2))}" class="btn <?php if ($pin==2){ echo "btn-info"; }else{ echo "btn-default"; } ?>" style="padding:8px 18px;">已批准</a>
+                                        <a href="{:U('Kpi/crux',array('pin'=>1))}" class="btn <?php if ($pin==1){ echo "btn-info"; }else{ echo "btn-default"; } ?>" style="padding:8px 18px;">未评分</a>
+                                        <a href="{:U('Kpi/crux',array('pin'=>2))}" class="btn <?php if ($pin==2){ echo "btn-info"; }else{ echo "btn-default"; } ?>" style="padding:8px 18px;">已评分</a>
                                     </div>
 
                                     <table class="table table-bordered dataTable fontmini" id="tablelist" style="margin-top:10px;">

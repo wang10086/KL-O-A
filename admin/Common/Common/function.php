@@ -3123,11 +3123,11 @@ function updatekpi($month,$user){
                         }
 
                         //上级领导组织对本季度关键事项绩效评价(总经办)
-                        if ($v['quota_id']==153){
+                        /*if ($v['quota_id']==153){
                             //默认满分
                             $url        = '';
                             $complete   = 100;
-                        }
+                        }*/
 
                         //专家实施客户满意度(研发专家)
                         if($v['quota_id']==161){
@@ -3333,11 +3333,15 @@ function updatekpi($month,$user){
                             $where                  = array();
                             $where['user_id']       = $v['user_id'];
                             $where['month']         = $v['month'];
-                            $where['status']        = 1; //已评分
+                            //$where['status']        = 1; //已评分
                             $score                  = M('kpi_crux')->where($where)->sum('score');
                             $uname                  = M('account')->where(array('id'=>$v['user_id']))->getField('nickname');
-                            $complete               = $score?$score.'%':'100%';
-                            $url                    = U('Kpi/crux',array('pin'=>2,'uname'=>$uname,'month'=>$v['month']));
+                            $complete               = $score? floatval($score).'%':'100%';
+                            $url                    = U('Kpi/crux',array('uname'=>$uname,'month'=>$v['month']));
+                        }
+
+                        if ($v['quota_id']=='1111'){
+
                         }
 
                         //顾客资源满意度-资源管理部经理
