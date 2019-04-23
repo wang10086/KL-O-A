@@ -12,7 +12,7 @@
             <div class="formtexts">
             	<h4>评分月份：{$list.monthly}</h4>
 				<span class="fr">被评价人：{$list.account_name}</span>
-                <span class="fr">评价人：{$list.input_username}</span>
+                <!--<span class="fr">评价人：{$list.input_username}</span>-->
                 <span class="fr">评价时间：{$list.create_time|date='Y-m-d H:i',###}</span>
                 <!--<span class="fr" style="border:none;">处理结果：{$row.status}</span>-->
             </div>

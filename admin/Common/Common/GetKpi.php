@@ -1146,18 +1146,19 @@ function get_sum_gross_profit($userids,$beginTime,$endTime){
 
     //获取内部人员满意度
     function get_company_satisfaction($v){
+        $months                     = explode(',',$v['month']);
         $db                         = M('satisfaction');
         $where                      = array();
         $where['type']              = array('neq',1); //1=>研发
         $where['account_id']        = $v['user_id'];
-        $where['monthly']           = $v['month'];
+        $where['monthly']           = array('in',$months);
         $where['create_time']       = array('between',"$v[start_date],$v[end_date]");
         $lists                      = $db->where($where)->select();
         $num                        = count($lists);
         $sum_average                = 0;
-        $dimension                  = $lists[0]['dimension']; //评分维度
         if ($lists){
             foreach ($lists as $k=>$v){
+                $dimension              = $v['dimension']; //评分维度
                 $score                  = $v['AA'] + $v['BB'] + $v['CC'] + $v['DD'];
                 $count_score            = 5*$dimension;  //总分 = 5各维度, 每个维度5颗星
                 $sum_average            += round($score/$count_score,2);
@@ -2181,4 +2182,22 @@ function get_yw_department(){
             }
         }
         return $rate;
+    }
+
+    /**
+     * 根据不同的岗位, 满意度指数不同, 获取不同的结果
+     * @param $v
+     * @param $data 满意度评分情况
+     */
+    function get_kpi_satis($v,$data){
+        $num                    = $data['num']; //评分次数
+        $average                = $data['average']; //评分平均分
+        if (in_array($v['quota_id'],array(212,214))){ //212->计调部经理指标,214->安全品控部经理指标
+            if ($average >= 0.85 || !$num){ //85%满分
+                $complete       = '100%';
+            }else{
+                $complete       = (round(($average/0.85),2)*100).'%';
+            }
+        }
+        return $complete;
     }

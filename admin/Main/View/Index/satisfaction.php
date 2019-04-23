@@ -79,9 +79,9 @@
                     <input type="text" class="form-control" name="uname" placeholder="被评分人">
                 </div>
 
-                <div class="form-group col-md-12">
+                <!--<div class="form-group col-md-12">
                     <input type="text" class="form-control" name="input_name" placeholder="评分人">
-                </div>
+                </div>-->
                 
                 <div class="form-group col-md-12">
                     <input type="text" class="form-control" name="month" placeholder="评分月份：201901">

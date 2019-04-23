@@ -341,7 +341,8 @@ class IndexController extends BaseController {
             $info['input_userid']       = cookie('userid');
             $info['input_username']     = session('name');
             $info['create_time']        = NOW_TIME;
-            $info['monthly']            = I('monthly')?trim(I('monthly')):date('Ym');
+            $info['monthly']            = trim(I('monthly'));
+            if (!$info['monthly']) $this->error('考核月份不能为空');
             $where                      = array();
             $where['monthly']           = $info['monthly'];
             $where['input_userid']      = $info['input_userid'];
@@ -372,7 +373,7 @@ class IndexController extends BaseController {
     public function public_satisfaction_detail(){
         $id                 = I('id');
         if (!$id) $this->error('获取数据失败');
-        $field              = "s.*,d.AA as aa,d.BB as bb,d.CC as cc,d.DD as dd";
+        $field              = "s.*,d.AA as aa,d.BB as bb,d.CC as cc,d.DD as dd,d.EE as ee";
         $list               = M()->table('__SATISFACTION__ as s')->join('__SCORE_DIMENSION__ as d on d.satisfaction_id=s.id','left')->where(array('s.id'=>$id))->field($field)->find();
         $this->list         = $list;
         $this->display('satisfaction_detail');
