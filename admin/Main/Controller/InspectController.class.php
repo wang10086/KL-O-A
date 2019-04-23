@@ -267,9 +267,10 @@ class InspectController extends BaseController{
             ->join('left join __OP_GUIDE_CONFIRM__ as c on c.id = u.confirm_id')
             ->where(array('u.op_id'=>$op_id))
             ->select();
+
         $score_num          = count($lists);
         foreach ($lists as $k=>$v){
-            $lists[$k]['sum_score'] = $v['before_sell']+$v['new_media']+$v['stay']+$v['travel']+$v['content']+$v['food']+$v['bus']+$v['driver']+$v['guide']+$v['teacher']+$v['depth']+$v['major']+$v['interest']+$v['material']+$v['cas_time']+$v['cas_complete']+$v['cas_addr'];
+            $lists[$k]['sum_score'] = $v['before_sell']+$v['new_media']+$v['stay']+$v['travel']+$v['content']+$v['food']+$v['bus']+$v['driver']+$v['guide']+$v['teacher']+$v['depth']+$v['major']+$v['interest']+$v['material']+$v['late']+$v['manage']+$v['morality']+$v['cas_time']+$v['cas_complete']+$v['cas_addr'];
         }
         $sum                = get_sum_score($lists);
         $average            = (round(array_sum(array_column($lists,'sum_score'))/$sum,2)*100).'%';
