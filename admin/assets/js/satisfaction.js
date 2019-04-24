@@ -96,10 +96,11 @@ $('#account_id').change(function(){
                 init_radio();
                 return false;
             }else if(account_id == 39){ //孟华(查看评分人部门有无计调信息)
+                var url   = "/index.php?m=Main&c=Ajax&a=check_has_jd";
                 $.ajax({
                     type : 'POST',
                     dataType : 'JSON',
-                    url : "{:U('Ajax/check_has_jd')}",
+                    url : url,
                     success:function (msg) {
                         if (msg == 1){ //有自己计调
                             var content = '<div class="form-group col-md-6">'+
@@ -484,10 +485,11 @@ $('#account_id').change(function(){
                 init_radio();
                 return false;
             }else if(account_id == 12){ //研发经理(秦鸣)
+                var url     = "/index.php?m=Main&c=Ajax&a=check_has_yf";
                 $.ajax({
                     type : 'POST',
                     dataType : 'JSON',
-                    url : "{:U('Ajax/check_has_yf')}",
+                    url : url,
                     success : function (msg) {
                         if (msg ==1){ //有自己研发
                             var content = '<div class="form-group col-md-6">'+
