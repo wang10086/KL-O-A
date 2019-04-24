@@ -60,9 +60,9 @@
                                 <if condition="rolemenu(array('Op/relpricelist'))">
                                         <li class="{:on('Op/relpricelist')} {:on('Op/relprice')}"><a href="{:U('Op/relpricelist')}"><i class="fa fa-angle-right"></i> 项目比价</a></li>
                                 </if>
-                                <if condition="rolemenu(array('Op/satisfaction'))">
+                                <!--<if condition="rolemenu(array('Op/satisfaction'))">
                                     <li class="{:on('Op/satisfaction')} {:on('Op/')}"><a href="{:U('Op/satisfaction')}"><i class="fa fa-angle-right"></i> 研发满意度</a></li>
-                                </if>
+                                </if>-->
 
                             </ul>
                         </li>
@@ -348,7 +348,7 @@
 
 
                         <if condition="rolemenu(array('Inspect/record','Inspect/edit_ins','Inspect/score','Inspect/score_statis','Inspect/user_kpi_statis'))">
-                        <li class="treeview {:ison(CONTROLLER_NAME, 'Inspect')} {:on('Index/public_satisfaction')} {:on('Index/public_satisfaction_add')}">
+                        <li class="treeview {:ison(CONTROLLER_NAME, 'Inspect')} {:on('Inspect/satisfaction')} {:on('Inspect/satisfaction_add')}">
                             <a href="javascript:;">
                                 <i class="fa fa-medkit"></i>
                                 <span>品控巡检</span>
@@ -380,8 +380,9 @@
                                         </if>
                                     </ul>
                                 </li>
-
-                                <li><a href="{:U('Index/public_satisfaction')}"><i class="fa fa-angle-right"></i> 内部人员满意度</a></li>
+                                <if condition="rolemenu(array('Inspect/satisfaction'))">
+                                    <li><a href="{:U('Inspect/satisfaction')}"><i class="fa fa-angle-right"></i> 内部人员满意度</a></li>
+                                </if>
                             </ul>
                         </li>
                         </if>

@@ -1903,5 +1903,19 @@ class AjaxController extends Controller {
         }
         $this->ajaxReturn($res);
     }
+
+    //检查当前人员部门是否有自己的研发
+    public function check_has_yf(){
+        //有自己研发的部门
+        $has_jd_department      = array(6,12); //6=>京区业务中心;12=>南京项目部
+        $user_id                = session('userid');
+        $department_id          = M('account')->where(array('id'=>$user_id))->getField('departmentid');
+        if (in_array($department_id,$has_jd_department)){
+            $res                = 1; //有
+        }else{
+            $res                = 0; //无
+        }
+        $this->ajaxReturn($res);
+    }
 }
 

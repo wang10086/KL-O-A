@@ -20,7 +20,7 @@
                                     <h3 class="box-title">评分记录</h3>
                                     <div class="box-tools pull-right">
                                         <a href="javascript:;" class="btn btn-info btn-sm" onclick="javascript:opensearch('searchtext',400,160);"><i class="fa fa-search"></i> 搜索</a>
-                                        <a href="{:U('Index/public_satisfaction_add')}" class="btn btn-sm btn-success"><i class="fa fa-plus"></i> 评分</a>
+                                        <a href="{:U('Inspect/satisfaction_add')}" class="btn btn-sm btn-success"><i class="fa fa-plus"></i> 评分</a>
                                     </div>
                                 </div><!-- /.box-header -->
 
@@ -34,7 +34,7 @@
                                         <!--<th class="sorting" data="content">评分人员</th>-->
                                         <th class="sorting" data="create_time">评分时间</th>
                                         <th width="40" class="taskOptions">详情</th>
-                                        <if condition="rolemenu(array('Op/del_satisfaction'))">
+                                        <if condition="rolemenu(array('Inspect/del_satisfaction'))">
                                         <th width="40" class="taskOptions">删除</th>
                                         </if> 
                                     </tr>
@@ -47,9 +47,9 @@
                                         <!--<td class="taskOptions">{$row.input_username}</td>-->
                                         <td class="taskOptions">{$row.create_time|date="Y-m-d H:i:s",###}</td>
                                         <td class="taskOptions"><button onClick="javascript:show_detail({$row.id});" title="详情" class="btn btn-info btn-smsm"><i class="fa fa-search-plus"></i></button></td>
-                                        <if condition="rolemenu(array('Op/del_satisfaction'))">
+                                        <if condition="rolemenu(array('Inspect/del_satisfaction'))">
                                         <td class="taskOptions">
-                                        <button onClick="javascript:ConfirmDel(`<?php echo U('Op/del_satisfaction',array('id'=>$row['id'])); ?>`)" title="删除" class="btn btn-warning btn-smsm"><i class="fa fa-times"></i></button>
+                                        <button onClick="javascript:ConfirmDel(`<?php echo U('Inspect/del_satisfaction',array('id'=>$row['id'])); ?>`)" title="删除" class="btn btn-warning btn-smsm"><i class="fa fa-times"></i></button>
                                         </td>
                                         </if>
                                     </tr>
@@ -71,8 +71,8 @@
             <div id="searchtext">
                 <form action="" method="get" id="searchform">
                 <input type="hidden" name="m" value="Main">
-                <input type="hidden" name="c" value="Index">
-                <input type="hidden" name="a" value="public_satisfaction">
+                <input type="hidden" name="c" value="Inspect">
+                <input type="hidden" name="a" value="satisfaction">
                 
                 <div class="form-group col-md-12"></div>
                 <div class="form-group col-md-12">
@@ -94,7 +94,7 @@
 
 <script>
     function show_detail(id) {
-        art.dialog.open('index.php?m=Main&c=Index&a=public_satisfaction_detail&id='+id,{
+        art.dialog.open('index.php?m=Main&c=Inspect&a=satisfaction_detail&id='+id,{
             lock:true,
             title: '客户满意度详情',
             width:800,

@@ -706,4 +706,96 @@ class InspectController extends BaseController{
         $this->display('user_kpi_score_info');
     }
 
+    //内部人员满意度
+    public function satisfaction(){
+        $kpiTime            = I('kpiTime')?explode(',',I('kpiTime')):null; //kpi链接
+        $uname              = trim(I('uname'));
+        $input_name         = trim(I('input_name'));
+        $monthly            = trim(I('month'));
+        $where              = array();
+        $where['type']      = array('neq',1); //研发
+        if ($uname)         $where['account_name']  = array('like','%'.$uname.'%');
+        if ($input_name)    $where['input_username']= array('like','%'.$input_name.'%');
+        if ($monthly)       $where['monthly']       = $monthly;
+        if ($kpiTime)       $where['create_time']   = array('between',"$kpiTime[0],$kpiTime[1]");
+
+        //分页
+        $pagecount          = M('satisfaction')->where($where)->count();
+        $page               = new Page($pagecount,P::PAGE_SIZE);
+        $this->pages        = $pagecount>P::PAGE_SIZE ? $page->show():'';
+
+        $lists              = M('satisfaction')->where($where)->limit($page->firstRow.','.$page->listRows)->order($this->orders('id'))->select();
+        foreach ($lists as $k=>$v){
+            $sum            = $v['AA'] + $v['BB'] + $v['CC'] + $v['DD'] + $v['EE'];
+            $dimension      = $v['dimension'];
+            $lists[$k]['average'] = round($sum/$dimension,2);
+        }
+        $this->lists        = $lists;
+        $this->display('satisfaction');
+    }
+
+    //增加内部评分信息
+    public function satisfaction_add(){
+        $db                             = M('satisfaction');
+        $score_dimension_db             = M('score_dimension');
+        if (isset($_POST['dosubmint']) && $_POST['dosubmint']){
+            $info                       = I('info');
+            $data                       = I('data');
+            $info['content']            = trim(I('content'));
+            $info['input_userid']       = cookie('userid');
+            $info['input_username']     = session('name');
+            $info['create_time']        = NOW_TIME;
+            $info['monthly']            = trim(I('monthly'));
+            if (!$info['monthly']) $this->error('考核月份不能为空');
+            $where                      = array();
+            $where['monthly']           = $info['monthly'];
+            $where['input_userid']      = $info['input_userid'];
+            $where['account_id']        = $info['account_id'];
+            $list                       = $db->where($where)->find();
+            if ($list){
+                $this->error('您本月已经完成对'.$info['account_name'].'的评价',U('Inspect/satisfaction'));
+            }else{
+                if (!$info['AA']) $this->error('获取评分数据失败');
+                $res                        = $db->add($info);
+                if ($res){
+                    $data['satisfaction_id']= $res;
+                    $data['account_id']     = $info['account_id'];
+                    $data['account_name']   = $info['account_name'];
+                    $score_dimension_db->add($data);
+                    $this->success('数据保存成功',U('Inspect/satisfaction'));
+                }else{
+                    $this->error('数据保存失败');
+                }
+            }
+        }else{
+            $this->userkey  = get_username();
+            $this->display('satisfaction_add');
+        }
+    }
+
+    //评分详情
+    public function satisfaction_detail(){
+        $id                 = I('id');
+        if (!$id) $this->error('获取数据失败');
+        $field              = "s.*,d.AA as aa,d.BB as bb,d.CC as cc,d.DD as dd,d.EE as ee";
+        $list               = M()->table('__SATISFACTION__ as s')->join('__SCORE_DIMENSION__ as d on d.satisfaction_id=s.id','left')->where(array('s.id'=>$id))->field($field)->find();
+        $this->list         = $list;
+        $this->display('satisfaction_detail');
+    }
+
+    public function del_satisfaction(){
+        $db                             = M('satisfaction');
+        $id                             = trim(I('id'));
+        if ($id){
+            $res                        = $db->where(array('id'=>$id))->delete();
+            if ($res){
+                $this->success('删除成功');
+            }else{
+                $this->error('删除失败');
+            }
+        }else{
+            $this->error('删除失败');
+        }
+    }
+
 }

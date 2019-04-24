@@ -3265,7 +3265,7 @@ class OpController extends BaseController {
     }
 
     //对研发经理评价(每月评分一次)
-    public function satisfaction(){
+    /*public function satisfaction(){
         $account_name                   = trim(I('uname'));
         $input_username                 = trim(I('input_name'));
         $monthly                        = I('month');
@@ -3334,7 +3334,7 @@ class OpController extends BaseController {
         $this->has_rd                   = $has_rd;
         $this->list                     = $list;
         $this->display();
-    }
+    }*/
 
     private function has_research_and_development(){
         $user_id                        = session('userid');
@@ -3348,20 +3348,7 @@ class OpController extends BaseController {
         return $has_rd;
     }
 
-    public function del_satisfaction(){
-        $db                             = M('satisfaction');
-        $id                             = trim(I('id'));
-        if ($id){
-            $res                        = $db->where(array('id'=>$id))->delete();
-            if ($res){
-                $this->success('删除成功');
-            }else{
-                $this->error('删除失败');
-            }
-        }else{
-            $this->error('删除失败');
-        }
-    }
+
 
     //获取满意度二维码
     public function qrcode(){
