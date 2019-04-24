@@ -707,10 +707,9 @@ class InspectController extends BaseController{
     }
 
     //内部人员满意度
-    public function satisfaction(){
+    /*public function satisfaction(){
         $kpiTime            = I('kpiTime')?explode(',',I('kpiTime')):null; //kpi链接
         $uname              = trim(I('uname'));
-        $input_name         = trim(I('input_name'));
         $monthly            = trim(I('month'));
         $where              = array();
         $where['type']      = array('neq',1); //研发
@@ -732,7 +731,87 @@ class InspectController extends BaseController{
         }
         $this->lists        = $lists;
         $this->display('satisfaction');
+    }*/
+    public function satisfaction(){
+        $year               = I('year',date('Y'));
+        $month              = I('month',date('m'));
+        $yearMonth          = $year.$month;
+        $lists              = $this->get_satisfaction_list($yearMonth);
+
+        $this->lists        = $lists;
+        $this->year         = $year;
+        $this->month        = $month;
+        $this->prveyear     = $year-1;
+        $this->nextyear     = $year+1;
+        $this->display();
     }
+
+    public function get_satisfaction_list($yearMonth){
+        $db                             = M('satisfaction');
+        $satisfaction_lists             = $db->where(array('monthly'=>$yearMonth))->select();
+        $user_lists                     = array_unique(array_column($satisfaction_lists,'account_id'));
+
+        $lists                          = array();
+        foreach ($user_lists as $k=>$v){
+            $info                       = array();
+            foreach ($satisfaction_lists as $key=>$value){
+                if ($value['monthly']==$yearMonth && $value['account_id']==$v){
+                    $info[]             = $value;
+                }
+            }
+            $average_data               = $this->get_average_data($info);
+            $lists[$k]['monthly']       = $yearMonth;
+            $lists[$k]['account_id']    = $v;
+            $lists[$k]['account_name']  = $info[0]['account_name'];
+            $lists[$k]['average_AA']    = $average_data['average_AA'];
+            $lists[$k]['average_BB']    = $average_data['average_BB'];
+            $lists[$k]['average_CC']    = $average_data['average_CC'];
+            $lists[$k]['average_DD']    = $average_data['average_DD'];
+            $lists[$k]['average_EE']    = $average_data['average_EE'];
+            $lists[$k]['sum_average']   = $average_data['sum_average'];
+            $lists[$k]['score_accounts']= $average_data['score_account_name'];
+        }
+        return $lists;
+    }
+
+    //获取每一项指标的平均分
+    private function get_average_data($info){
+        $get_score_AA                   = 0; //得分
+        $get_score_BB                   = 0;
+        $get_score_CC                   = 0;
+        $get_score_DD                   = 0;
+        $get_score_EE                   = 0;
+        $sum_score_AA                   = 0; //总分
+        $sum_score_BB                   = 0;
+        $sum_score_CC                   = 0;
+        $sum_score_DD                   = 0;
+        $sum_score_EE                   = 0;
+        $get_score_total                = 0; //合计得分
+        $sum_score_total                = 0; //合计总分
+        foreach ($info as $k=>$v){
+            $get_score_AA               += $v['AA'];
+            $get_score_BB               += $v['BB'];
+            $get_score_CC               += $v['CC'];
+            $get_score_DD               += $v['DD'];
+            $get_score_EE               += $v['EE'];
+            if($v['AA']){ $sum_score_AA += 5; $sum_score_total+= 5; }
+            if($v['BB']){ $sum_score_BB += 5; $sum_score_total+= 5; }
+            if($v['CC']){ $sum_score_CC += 5; $sum_score_total+= 5; }
+            if($v['DD']){ $sum_score_DD += 5; $sum_score_total+= 5; }
+            if($v['EE']){ $sum_score_EE += 5; $sum_score_total+= 5; }
+            $get_score_total            += $v['AA'] + $v['BB'] + $v['CC'] + $v['DD'] + $v['EE'];
+        }
+        $data                           = array();
+        $data['average_AA']             = $get_score_AA/$sum_score_AA?(round($get_score_AA/$sum_score_AA,2)*100).'%':'';
+        $data['average_BB']             = $get_score_BB/$sum_score_BB?(round($get_score_BB/$sum_score_BB,2)*100).'%':'';
+        $data['average_CC']             = $get_score_CC/$sum_score_CC?(round($get_score_CC/$sum_score_CC,2)*100).'%':'';
+        $data['average_DD']             = $get_score_DD/$sum_score_DD?(round($get_score_DD/$sum_score_DD,2)*100).'%':'';
+        $data['average_EE']             = $get_score_EE/$sum_score_EE?(round($get_score_EE/$sum_score_EE,2)*100).'%':'';
+        $data['sum_average']            = (round($get_score_total/$sum_score_total,2)*100).'%';
+        $data['score_account_name']     = implode(',',array_column($info,'input_username'));
+        return $data;
+    }
+
 
     //增加内部评分信息
     public function satisfaction_add(){
@@ -773,14 +852,71 @@ class InspectController extends BaseController{
         }
     }
 
-    //评分详情
+    //得分详情
     public function satisfaction_detail(){
-        $id                 = I('id');
-        if (!$id) $this->error('获取数据失败');
-        $field              = "s.*,d.AA as aa,d.BB as bb,d.CC as cc,d.DD as dd,d.EE as ee";
-        $list               = M()->table('__SATISFACTION__ as s')->join('__SCORE_DIMENSION__ as d on d.satisfaction_id=s.id','left')->where(array('s.id'=>$id))->field($field)->find();
-        $this->list         = $list;
+        $db                         = M('satisfaction');
+        $uid                        = I('uid');
+        $month                      = I('month');
+        if (!$uid) $this->error('获取数据失败');
+
+        $where                      = array();
+        $where['monthly']           = $month;
+        $where['account_id']        = $uid;
+        $info                       = $db->where($where)->select();
+        $list                       = $this->get_average_data($info);
+        $list['monthly']            = $month;
+        $list['account_name']       = M('account')->where(array('id'=>$uid))->getField('nickname');
+        $dimension                  = $this->get_user_dimension($uid); //获取考核维度
+        $list['AA']                 = $dimension['AA'];
+        $list['BB']                 = $dimension['BB'];
+        $list['CC']                 = $dimension['CC'];
+        $list['DD']                 = $dimension['DD'];
+        $list['EE']                 = $dimension['EE'];
+        $this->list                 = $list;
         $this->display('satisfaction_detail');
+    }
+
+    //评价详情
+    public function satisfaction_info(){
+        $uid                        = trim(I('uid'));
+        $month                      = trim(I('month'));
+        $dimension                  = $this->get_user_dimension($uid); //获取考核维度
+        $db                         = M('satisfaction');
+        $lists                      = $db->where(array('account_id'=>$uid,'monthly'=>$month))->select();
+        foreach ($lists as $k=>$v){
+            $lists[$k]['AA']        = $v['AA']?$v['AA']:'<font color="#999999">未考核</font>';
+            $lists[$k]['BB']        = $v['BB']?$v['BB']:'<font color="#999999">未考核</font>';
+            $lists[$k]['CC']        = $v['CC']?$v['CC']:'<font color="#999999">未考核</font>';
+            $lists[$k]['DD']        = $v['DD']?$v['DD']:'<font color="#999999">未考核</font>';
+            $lists[$k]['EE']        = $v['EE']?$v['EE']:'<font color="#999999">未考核</font>';
+            $lists[$k]['average']   = $this->get_one_sattisfaction_average($v);
+        }
+
+        $this->lists                = $lists;
+        $this->dimension            = $dimension;
+        $this->display();
+    }
+
+    //获取单词评分的内部满意度
+    private function get_one_sattisfaction_average($info){
+        $get_score                  = $info['AA'] + $info['BB'] + $info['CC'] + $info['DD'] + $info['EE']; //得分
+        $sum_score                  = 0; //总分
+        if ($info['AA']) $sum_score += 5;
+        if ($info['BB']) $sum_score += 5;
+        if ($info['CC']) $sum_score += 5;
+        if ($info['DD']) $sum_score += 5;
+        if ($info['EE']) $sum_score += 5;
+        $average                    = (round($get_score/$sum_score,2)*100).'%';
+        return $average;
+    }
+
+    public function get_user_dimension($uid){
+        $db                         = M('score_dimension');
+        $list1                      = $db->where(array('account_id'=>array('eq',$uid),trim('EE')=>array('neq','')))->order($this->orders('id'))->find(); //五项
+        $list2                      = $db->where(array('account_id'=>array('eq',$uid),trim('DD')=>array('neq','')))->order($this->orders('id'))->find(); //四项
+        $list3                      = $db->where(array('account_id'=>array('eq',$uid),trim('CC')=>array('neq','')))->order($this->orders('id'))->find(); //三项
+        $list                       = $list1?$list1:($list2?$list2:$list3);
+        return $list;
     }
 
     public function del_satisfaction(){
@@ -789,6 +925,7 @@ class InspectController extends BaseController{
         if ($id){
             $res                        = $db->where(array('id'=>$id))->delete();
             if ($res){
+                M('score_dimension')->where(array('satisfaction_id'=>$id))->delete();
                 $this->success('删除成功');
             }else{
                 $this->error('删除失败');

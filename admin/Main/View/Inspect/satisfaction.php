@@ -15,11 +15,33 @@
 
                     <div class="row">
                         <div class="col-xs-12">
+                            <div class="btn-group" id="catfont" style="padding-bottom:20px;">
+                                <?php if($prveyear>2018){ ?>
+                                    <a href="{:U('Inspect/satisfaction',array('year'=>$prveyear,'month'=>$month))}" class="btn btn-default" style="padding:8px 18px;">上一年</a>
+                                <?php } ?>
+                                <?php
+                                    for($i=1;$i<13;$i++){
+                                        if (strlen($i)<2){ $i = str_pad($i,2,'0',STR_PAD_LEFT);}
+                                        $par = array();
+                                        $par['year']  = $year;
+                                        $par['month'] = $i;
+                                        if($month==$i){
+                                            echo '<a href="'.U('Inspect/satisfaction',$par).'" class="btn btn-info" style="padding:8px 18px;">'.$i.'月</a>';
+                                        }else{
+                                            echo '<a href="'.U('Inspect/satisfaction',$par).'" class="btn btn-default" style="padding:8px 18px;">'.$i.'月</a>';
+                                        }
+                                    }
+                                ?>
+                                <?php if($year<date('Y')){ ?>
+                                    <a href="{:U('Inspect/satisfaction',array('year'=>$nextyear,'month'=>$month))}" class="btn btn-default" style="padding:8px 18px;">下一年</a>
+                                <?php } ?>
+                            </div>
+
                             <div class="box box-warning">
                                 <div class="box-header">
                                     <h3 class="box-title">评分记录</h3>
                                     <div class="box-tools pull-right">
-                                        <a href="javascript:;" class="btn btn-info btn-sm" onclick="javascript:opensearch('searchtext',400,160);"><i class="fa fa-search"></i> 搜索</a>
+                                        <!--<a href="javascript:;" class="btn btn-info btn-sm" onclick="javascript:opensearch('searchtext',400,160);"><i class="fa fa-search"></i> 搜索</a>-->
                                         <a href="{:U('Inspect/satisfaction_add')}" class="btn btn-sm btn-success"><i class="fa fa-plus"></i> 评分</a>
                                     </div>
                                 </div><!-- /.box-header -->
@@ -27,30 +49,30 @@
                                 <div class="box-body">
                                 <table class="table table-bordered dataTable fontmini" id="tablelist" style="margin-top:10px;">
                                     <tr role="row" class="orders" >
-                                        <th class="taskOptions" width="80" data="o.status">评分月份</th>
-                                        <th class="sorting" data="">被评分人</th>
-                                        <th class="sorting" data="">综合得分</th>
-                                        <th class="sorting" data="account_name" width="300">评价内容</th>
-                                        <!--<th class="sorting" data="content">评分人员</th>-->
-                                        <th class="sorting" data="create_time">评分时间</th>
-                                        <th width="40" class="taskOptions">详情</th>
-                                        <if condition="rolemenu(array('Inspect/del_satisfaction'))">
-                                        <th width="40" class="taskOptions">删除</th>
-                                        </if> 
+                                        <th class="taskOptions" width="80">评分月份</th>
+                                        <th class="taskOptions">被评分人</th>
+                                        <th class="taskOptions">综合得分</th>
+                                        <th class="taskOptions" width="300">已评价人员</th>
+                                        <th class="taskOptions">未评价人员</th>
+                                        <if condition="rolemenu(array('Inspect/satisfaction_detail'))">
+                                            <th width="80" class="taskOptions">得分详情</th>
+                                        </if>
+                                        <if condition="rolemenu(array('Inspect/satisfaction_info'))">
+                                            <th width="80" class="taskOptions">评价详情</th>
+                                        </if>
                                     </tr>
                                     <foreach name="lists" item="row"> 
                                     <tr>
                                         <td class="taskOptions">{$row.monthly}</td>
                                         <td class="taskOptions">{$row.account_name}</td>
-                                        <td class="taskOptions">{$row.average}</td>
-                                        <td class="taskOptions"><div class="text-overflow-lines-300"><a href="javascript:;" onclick="show_detail({$row.id});">{$row.content}</a></div></td>
-                                        <!--<td class="taskOptions">{$row.input_username}</td>-->
-                                        <td class="taskOptions">{$row.create_time|date="Y-m-d H:i:s",###}</td>
-                                        <td class="taskOptions"><button onClick="javascript:show_detail({$row.id});" title="详情" class="btn btn-info btn-smsm"><i class="fa fa-search-plus"></i></button></td>
-                                        <if condition="rolemenu(array('Inspect/del_satisfaction'))">
-                                        <td class="taskOptions">
-                                        <button onClick="javascript:ConfirmDel(`<?php echo U('Inspect/del_satisfaction',array('id'=>$row['id'])); ?>`)" title="删除" class="btn btn-warning btn-smsm"><i class="fa fa-times"></i></button>
-                                        </td>
+                                        <td class="taskOptions">{$row.sum_average}</td>
+                                        <td class="taskOptions">{$row.score_accounts}</td>
+                                        <td class="taskOptions">{$row.}</td>
+                                        <if condition="rolemenu(array('Inspect/satisfaction_detail'))">
+                                            <td class="taskOptions"><button onClick="javascript:show_detail({$row.account_id},{$row.monthly});" title="得分详情" class="btn btn-info btn-smsm"><i class="fa fa-search-plus"></i></button></td>
+                                        </if>
+                                        <if condition="rolemenu(array('Inspect/satisfaction_info'))">
+                                            <td class="taskOptions"><a href="{:U('Inspect/satisfaction_info',array('uid'=>$row['account_id'],'month'=>$row['monthly']))}" title="评价详情" class="btn btn-info btn-smsm"><i class="fa fa-bars"></i></a></td>
                                         </if>
                                     </tr>
                                     </foreach>					
@@ -78,10 +100,6 @@
                 <div class="form-group col-md-12">
                     <input type="text" class="form-control" name="uname" placeholder="被评分人">
                 </div>
-
-                <!--<div class="form-group col-md-12">
-                    <input type="text" class="form-control" name="input_name" placeholder="评分人">
-                </div>-->
                 
                 <div class="form-group col-md-12">
                     <input type="text" class="form-control" name="month" placeholder="评分月份：201901">
@@ -93,39 +111,28 @@
 <include file="Index:footer2" />
 
 <script>
-    function show_detail(id) {
-        art.dialog.open('index.php?m=Main&c=Inspect&a=satisfaction_detail&id='+id,{
+    //得分详情
+    function show_detail(uid,month) {
+        art.dialog.open('index.php?m=Main&c=Inspect&a=satisfaction_detail&uid='+uid+'&month='+month,{
             lock:true,
-            title: '客户满意度详情',
+            title: '得分详情',
+            width:600,
+            height:400,
+            fixed: true,
+
+        });
+    }
+
+    //评价详情
+    function show_info(uid,month) {
+        art.dialog.open('index.php?m=Main&c=Inspect&a=satisfaction_info&uid='+uid+'&month='+month,{
+            lock:true,
+            title: '评价详情',
             width:800,
             height:'60%',
             fixed: true,
 
         });
     }
-
-    /*function ConfirmDel(url,msg) {
-
-        if(!msg){
-            var msg = '真的要删除吗？';
-        }
-
-        art.dialog({
-            title: '提示',
-            width:400,
-            height:100,
-            lock:true,
-            fixed: true,
-            content: '<span style="width:100%; text-align:center; font-size:18px;float:left; clear:both;">'+msg+'</span>',
-            ok: function (msg) {
-                window.location.href=url;
-                //this.title('3秒后自动关闭').time(3);
-                return false;
-            },
-            cancelVal: '取消',
-            cancel: true //为true等价于function(){}
-        });
-
-    }*/
 
 </script>
