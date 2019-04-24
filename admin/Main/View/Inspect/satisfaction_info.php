@@ -23,7 +23,7 @@
                                     <!--<div class="box-tools pull-right">
                                     	 <a href="javascript:;" class="btn btn-info btn-sm" onclick="javascript:opensearch('searchtext',800,160);"><i class="fa fa-search"></i> 搜索</a>
                                     </div>-->
-                                    <h3 class="box-title pull-right" style="font-weight:normal; color:#333333;"> &nbsp;&nbsp;被评价人：{$list.account_name}</h3>
+                                    <h3 class="box-title pull-right" style="font-weight:normal; color:#333333;"> &nbsp;&nbsp;被评价人：{$lists[0]['account_name']}</h3>
                                 </div><!-- /.box-header -->
                                 <div class="box-body">
                                 
