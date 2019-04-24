@@ -1159,7 +1159,7 @@ function get_sum_gross_profit($userids,$beginTime,$endTime){
         if ($lists){
             foreach ($lists as $k=>$v){
                 $dimension              = $v['dimension']; //评分维度
-                $score                  = $v['AA'] + $v['BB'] + $v['CC'] + $v['DD'];
+                $score                  = $v['AA'] + $v['BB'] + $v['CC'] + $v['DD'] + $v['EE'];
                 $count_score            = 5*$dimension;  //总分 = 5各维度, 每个维度5颗星
                 $sum_average            += round($score/$count_score,2);
             }
@@ -2192,7 +2192,19 @@ function get_yw_department(){
     function get_kpi_satis($v,$data){
         $num                    = $data['num']; //评分次数
         $average                = $data['average']; //评分平均分
-        if (in_array($v['quota_id'],array(212,214))){ //212->计调部经理指标,214->安全品控部经理指标
+        if (in_array($v['quota_id'],array(155))){ //155->研发经理
+            if ($average >= 0.9 || !$num){ //90%满分
+                $complete       = '100%';
+            }else{
+                $complete       = (round(($average/0.9),2)*100).'%';
+            }
+        }elseif (in_array($v['quota_id'],array(193))){ //193->财务经理
+            if ($average >= 0.8 || !$num){ //80%满分
+                $complete       = '100%';
+            }else{
+                $complete       = (round(($average/0.8),2)*100).'%';
+            }
+        }else{ ////206=>人事, 212->计调部经理指标,214->安全品控部经理指标,218=>市场 , 219=>资源
             if ($average >= 0.85 || !$num){ //85%满分
                 $complete       = '100%';
             }else{
