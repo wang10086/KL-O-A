@@ -195,7 +195,11 @@
             <?php if ($is_dijie){ ?>
                 <input type="text" name="info[shouru]" id="shouru" class="form-control" value="{$should_back_money}" onBlur="lilv()" />
             <?php }else{ ?>
-                <input type="text" name="info[shouru]" id="shouru" class="form-control" value="{$should_back_money}" onBlur="lilv()" readonly />
+                <?php if ($op['create_time'] < strtotime('20190101')){ ?>
+                    <input type="text" name="info[shouru]" id="shouru" class="form-control" value="{$should_back_money}" onBlur="lilv()" />
+                <?php }else{ ?>
+                    <input type="text" name="info[shouru]" id="shouru" class="form-control" value="{$should_back_money}" onBlur="lilv()" readonly />
+                <?php } ?>
             <?php } ?>
         </div>
         <div class="form-group col-md-4">
