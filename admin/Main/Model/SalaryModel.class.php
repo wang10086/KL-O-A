@@ -155,6 +155,25 @@ class SalaryModel extends Model
         return $lists;
     }
 
+    //获取李保罗的季度目标系数
+    private function get_lbl_coefficient($quarter){
+        switch ($quarter){
+            case 1:
+                $data                   = 11;
+                break;
+            case 2:
+                $data                   = 7;
+                break;
+            case 3:
+                $data                   = 16;
+                break;
+            case 4:
+                $data                   = 6;
+                break;
+        }
+        return $data;
+    }
+
     //获取该季度所有结算的团
     private function get_quarter_settlement_list($quarter_time){
         $where                                  = array();
@@ -168,16 +187,20 @@ class SalaryModel extends Model
     }
 
     //获取本人季度业绩提成
-    private function get_quarter_royalty($user,$sale_configs,$op_settlement_list,$salary,$pay_month){
+    private function get_quarter_royalty($user,$sale_configs,$op_settlement_list,$salary,$pay_month,$quarter){
         //$salary                                 = $salary;    //工资岗位薪酬
 
         /************************************start***************************************/
-        //201904调工资 , 基本工资取上个月数据
+        //201904调工资 , 基本工资取上个月数据(5月份删除此项)
         $salary                       = M('salary_wages_month')->where(array('account_id'=>$user['id'],'status'=>4,'datetime'=>'201903'))->getField('standard');
         /*************************************end****************************************/
         foreach ($sale_configs as $k=>$v){
-            if ($user['departmentid']==$v['department_id']){
-                $coefficient                    = $v['coefficient'];    //季度目标系数
+            if ($user['id'] == 59){ //李保罗
+                $coefficient                    = $this->get_lbl_coefficient($quarter);
+            }else{
+                if ($user['departmentid']==$v['department_id']){
+                    $coefficient                = $v['coefficient'];    //季度目标系数
+                }
             }
         }
         $lists                                  = array();
@@ -460,7 +483,7 @@ class SalaryModel extends Model
         $quarter_time                           = getQuarterlyCicle($p_year,$p_month);          //获取该季度周期,方便业务提成(结算)取值
         $op_settlement_list                     = $this->get_quarter_settlement_list($quarter_time);   //获取该季度所有的结算团
 
-        $quarter_royalty_data                   = $this->get_quarter_royalty($userinfo,$sale_configs,$op_settlement_list,$salary,$pay_month);    //销售季度目标 完成 提成
+        $quarter_royalty_data                   = $this->get_quarter_royalty($userinfo,$sale_configs,$op_settlement_list,$salary,$pay_month,$quarter);    //销售季度目标 完成 提成
         return $quarter_royalty_data;
     }
 
