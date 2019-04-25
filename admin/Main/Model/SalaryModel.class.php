@@ -230,7 +230,11 @@ class SalaryModel extends Model
         $data['quarter_profit']                 = $sum_profit;  //季度毛利
         $data['target']                         = $target;      //目标值
         if (in_array($pay_month,array('01','04','07','10'))) {   //季度后一个月发放该季度提成
-            $data['quarter_royalty'] = $royalty;     //季度提成
+            if ($user['departmentid']==15){ //常规旅游中心
+                $data['quarter_royalty'] = '0.00';
+            }else{
+                $data['quarter_royalty'] = $royalty;     //季度提成
+            }
         }else{
             $data['quarter_royalty'] = '0.00';
         }
@@ -381,8 +385,7 @@ class SalaryModel extends Model
      * @return array
      */
     public function get_person_wages_lists($accounts,$datetime){
-        $month                              = substr($datetime,4,2);
-        $royalty_months                     = array('01','04','07','10'); //业绩提成发放月份
+        //$month                              = substr($datetime,4,2);
         $departments                        = M('salary_department')->getField('id,department',true); //部门
         $posts                              = M('posts')->getField('id,post_name',true);
 
