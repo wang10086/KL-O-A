@@ -385,7 +385,7 @@ class SalaryModel extends Model
             $salary_bonus_list              = M('salary_bonus')->where(array('account_id'=>$v['id'],'status'=>1))->order('id desc')->find(); //其他人员提成 奖金 年终奖
             $data[$k]['bonus_id']           = $salary_bonus_list['id']?$salary_bonus_list['id']:'0';
             $royalty                        = $quarter_royalty_data['quarter_royalty'] + $salary_bonus_list['bonus']; //提成 : 业务人员季度提成(自动取值) + 其他人员提成(手动录入)
-            $data[$k]['total']              = $royalty?$royalty:'0.00'; //总业绩提成
+            $data[$k]['total']              = $royalty?round($royalty,2):'0.00'; //总业绩提成
 
             $data[$k]['welfare']            = $salary_bonus_list['annual_bonus']?$salary_bonus_list['annual_bonus']:'0.00'; //年终奖
             $data[$k]['bonus']              = $salary_bonus_list['foreign_bonus']?$salary_bonus_list['foreign_bonus']:'0.00'; //奖金
