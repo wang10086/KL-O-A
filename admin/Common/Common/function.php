@@ -2749,7 +2749,8 @@ function updatekpi($month,$user){
                         }
 
                         //业务人员满意度（京区业务中心研发)
-                        if (in_array($v['quota_id'],array(129,158))){
+                        //if (in_array($v['quota_id'],array(129,158))){
+                        if (in_array($v['quota_id'],array(158))){
                             $where = array();
                             $where['create_time']	= array('between',array($v['start_date'],$v['end_date']));
                             $where['yf_uid']        = $user;
@@ -3294,7 +3295,8 @@ function updatekpi($month,$user){
                         //218=>内部满意度 -市场部经理
                         //219=>内部满意度 -资源部经理
                         //193=>内部满意度-财务部经理
-                        if (in_array($v['quota_id'],array(155,193,206,214,212,218,219))){
+                        //129=>业务人员满意度(研发质量)(魏春竹)
+                        if (in_array($v['quota_id'],array(129,155,193,206,214,212,218,219))){
                             $data                   = get_company_satisfaction($v);
                             $complete               = get_kpi_satis($v,$data);
                             $uname                  = M('account')->where(array('id'=>$v['user_id']))->getField('nickname');

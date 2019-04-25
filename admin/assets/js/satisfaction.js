@@ -27,7 +27,7 @@ $('#account_id').change(function(){
     var noBodyHtml  = '<div class="form-group col-md-12"> <div class="form-group mt20">暂无该员工的考核内容！</div> </div>';
     if (account_id){
         var html        = '';
-        var arr1        = ['12','13','26','39','55','77','114','204']; //12=>秦鸣,13=>杜莹,26=>李岩, 39=>孟华,55=>程小平,77=>王茜,114=>王丹,204=>李徵红
+        var arr1        = ['12','13','26','31','39','55','77','114','204']; //12=>秦鸣,13=>杜莹,26=>李岩,31=>魏春竹, 39=>孟华,55=>程小平,77=>王茜,114=>王丹,204=>李徵红
         var textarea    = '<textarea name="content" class="form-control" id="content"  rows="2" placeholder="请输入评价内容"></textarea> <div class="form-group col-md-12"></div>';
         if (arr1.indexOf(account_id) == '-1'){
             $('#satisfaction_content').html(noBodyHtml);
@@ -596,6 +596,57 @@ $('#account_id').change(function(){
                         }
                     }
                 })
+            }else if(account_id == 31){ //京区研发主管(魏春竹)
+                var content = '<div class="form-group col-md-6">'+
+                    '<input type="hidden" name="info[dimension]" value="4"> <!--考核维度-->'+
+                    '<input type="hidden" name="data[AA]" value="支撑服务及时性">'+
+                    '<label>支撑服务及时性：</label>'+
+                    '<div class="demo score inline-block"><div id="AA"></div></div>'+
+                    '<div class="form-control no-border star_div">'+
+                    '<span class="sco-star"><input type="radio" name=info[AA] value="5">&nbsp;非常满意</span>&emsp;&emsp;'+
+                    '<span class="sco-star"><input type="radio" name=info[AA] value="4">&nbsp;较满意</span>&emsp;&emsp;'+
+                    '<span class="sco-star"><input type="radio" name=info[AA] value="3">&nbsp;一般</span>&emsp;&emsp;'+
+                    '<span class="sco-star"><input type="radio" name=info[AA] value="2">&nbsp;不满意</span>&emsp;&emsp;'+
+                    '<span class="sco-star"><input type="radio" name=info[AA] value="1">&nbsp;非常不满意</span>'+
+                    '</div></div>'+
+                    '<div class="form-group col-md-6">'+
+                    '<input type="hidden" name="data[BB]" value="支撑服务态度">'+
+                    '<label>支撑服务态度：</label>'+
+                    '<div class="demo score inline-block"><div id="BB"></div></div>'+
+                    '<div class="form-control no-border star_div">'+
+                    '<span class="sco-star"><input type="radio" name=info[BB] value="5">&nbsp;非常满意</span>&emsp;&emsp;'+
+                    '<span class="sco-star"><input type="radio" name=info[BB] value="4">&nbsp;较满意</span>&emsp;&emsp;'+
+                    '<span class="sco-star"><input type="radio" name=info[BB] value="3">&nbsp;一般</span>&emsp;&emsp;'+
+                    '<span class="sco-star"><input type="radio" name=info[BB] value="2">&nbsp;不满意</span>&emsp;&emsp;'+
+                    '<span class="sco-star"><input type="radio" name=info[BB] value="1">&nbsp;非常不满意</span>'+
+                    '</div></div>'+
+                    '<div class="form-group col-md-6">'+
+                    '<input type="hidden" name="data[CC]" value="培训及指导(辅导员及业务人员)">'+
+                    '<label>培训及指导(辅导员及业务人员)：</label>'+
+                    '<div class="demo score inline-block"><div id="CC"></div></div>'+
+                    '<div class="form-control no-border star_div">'+
+                    '<span class="sco-star"><input type="radio" name=info[CC] value="5">&nbsp;非常满意</span>&emsp;&emsp;'+
+                    '<span class="sco-star"><input type="radio" name=info[CC] value="4">&nbsp;满意</span>&emsp;&emsp;'+
+                    '<span class="sco-star"><input type="radio" name=info[CC] value="3">&nbsp;一般</span>&emsp;&emsp;'+
+                    '<span class="sco-star"><input type="radio" name=info[CC] value="2">&nbsp;不满意</span>&emsp;&emsp;'+
+                    '<span class="sco-star"><input type="radio" name=info[CC] value="1">&nbsp;非常不满意</span>'+
+                    '</div></div>'+
+                    '<div class="form-group col-md-6">'+
+                    '<input type="hidden" name="data[DD]" value="产品客户需求符合度">'+
+                    '<label>产品客户需求符合度：</label>'+
+                    '<div class="demo score inline-block"><div id="DD"></div></div>'+
+                    '<div class="form-control no-border star_div">'+
+                    '<span class="sco-star"><input type="radio" name=info[DD] value="5">&nbsp;非常符合</span>&emsp;&emsp;'+
+                    '<span class="sco-star"><input type="radio" name=info[DD] value="4">&nbsp;符合</span>&emsp;&emsp;'+
+                    '<span class="sco-star"><input type="radio" name=info[DD] value="3">&nbsp;一般</span>&emsp;&emsp;'+
+                    '<span class="sco-star"><input type="radio" name=info[DD] value="2">&nbsp;不符合</span>&emsp;&emsp;'+
+                    '<span class="sco-star"><input type="radio" name=info[DD] value="1">&nbsp;很差</span>'+
+                    '</div></div>';
+                var html = content + textarea;
+                $('#satisfaction_content').html(html);
+                init_score_4();
+                init_radio();
+                return false;
             }
         }
     }else{
