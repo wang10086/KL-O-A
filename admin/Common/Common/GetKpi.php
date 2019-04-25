@@ -363,7 +363,7 @@ function get_jishilv($user,$start_date,$end_date,$ini_user_ids=''){
 function get_worder($user,$start_date,$end_date,$ini_user_ids=''){
     $where                  = array();
     //$where['create_time']	= array('between',array($v['start_date'],$v['end_date']));
-    $where['status']        = array('neq',-1);
+    $where['status']        = array('not in',array(-1,-2)); //-1拒绝, -2=>撤销
     if ($ini_user_ids){ $where['ini_user_id'] =array('in',$ini_user_ids) ; };
     $where['_string']       = " (assign_id = $user) OR (exe_user_id = $user and assign_id = 0) ";
     $lists  = M()->table('__WORDER__ as w')->field('w.*,d.use_time')->join('__WORDER_DEPT__ as d on d.id=w.wd_id','left')->where($where)->select();
