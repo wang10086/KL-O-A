@@ -1461,8 +1461,8 @@ class KpiController extends BaseController {
 					
 					$km = M('kpi_more')->find($editid);
 					
-					//总经理修改过后，取消自动同步
-					if(cookie('roleid')==43 || cookie('roleid')==10){
+					//总经理修改过后，取消自动同步 43=>人事经理 44=>人事专员 10=>总经理
+					if(cookie('roleid')==43 || cookie('roleid')==44 || cookie('roleid')==10 || C('RBAC_SUPER_ADMIN')==cookie('username')){
 						$info['automatic']	= 1;
 					}
 					
