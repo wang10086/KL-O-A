@@ -1982,8 +1982,9 @@ function updatekpi($month,$user){
                                 $xiangmu 		= count($xiangmu_list);
                                 $hetong_list    = array();
                                 foreach ($xiangmu_list as $key=>$value){
-                                    //出团后5天内完成上传
-                                    $time 		= $value['dep_time'] + 6*24*3600;
+
+                                    //$time 		= $value['dep_time'] + 6*24*3600;  //出团后5天内完成上传
+                                    $time       = $v['end_date'];
                                     $list       = M('contract')->where(array('op_id'=>$value['op_id'],'status'=>1,'confirm_time'=>array('lt',$time)))->find();
                                     if ($list){ $hetong_list[] = $list; }
                                 }
