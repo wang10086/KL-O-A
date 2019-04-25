@@ -169,7 +169,12 @@ class SalaryModel extends Model
 
     //获取本人季度业绩提成
     private function get_quarter_royalty($user,$sale_configs,$op_settlement_list,$salary,$pay_month){
-        $salary                                 = $salary;    //工资岗位薪酬
+        //$salary                                 = $salary;    //工资岗位薪酬
+
+        /************************************start***************************************/
+        //201904调工资 , 基本工资取上个月数据
+        $salary                       = M('salary_wages_month')->where(array('account_id'=>$user['id'],'status'=>4,'datetime'=>'201903'))->getField('standard');
+        /*************************************end****************************************/
         foreach ($sale_configs as $k=>$v){
             if ($user['departmentid']==$v['department_id']){
                 $coefficient                    = $v['coefficient'];    //季度目标系数
