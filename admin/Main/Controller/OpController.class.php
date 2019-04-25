@@ -848,9 +848,9 @@ class OpController extends BaseController {
 			
 			//修改项目基本信息
 			if($opid && $savetype==10 ){
-				
+
 				$op = M('op')->where(array('op_id'=>$opid))->find();
-				if($op['status']=='0' || cookie('roleid')==10 || C('RBAC_SUPER_ADMIN')==cookie('username')) {
+				if($op['status']=='0' || cookie('userid')==$op['create_user'] || cookie('roleid')==10 || C('RBAC_SUPER_ADMIN')==cookie('username')) {
                     if (in_array($op['in_dijie'],array(0,2)) && $info['in_dijie']==1){
                         $info['project'] = '【发起团】'.$info['project'];
                     }elseif ($op['in_dijie']==1 && $info['in_dijie'] !=1){
