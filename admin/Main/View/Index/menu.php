@@ -706,7 +706,7 @@
                                         </a>
                                         <ul class="treeview-menu">
                                             <if condition="rolemenu(array('Kpi/pdcaresult'))">
-                                                <li><a href="{:U('Kpi/pdcaresult')}"><i class="fa fa-angle-right"></i> 绩效考评结果</a></li>
+                                                <li><a href="{:U('Kpi/pdcaresult',array('autoRefresh'=>1))}"><i class="fa fa-angle-right"></i> 绩效考评结果</a></li>
                                             </if>
                                             <if condition="rolemenu(array('Kpi/pdca'))">
                                                 <li><a href="{:U('Kpi/pdca')}"><i class="fa fa-angle-right"></i> PDCA</a></li>
@@ -718,7 +718,6 @@
                                             <if condition="rolemenu(array('Kpi/crux'))">
                                                 <li><a href="{:U('Kpi/crux')}"><i class="fa fa-angle-right"></i> 关键事项评价</a></li>
                                             </if>
-
                                         </ul>
                                     </li>
                                 </if>

@@ -2790,7 +2790,7 @@ function updatekpi($month,$user){
 
                             /*if($peixunlv >= 1 || !$zongshu){*/
                             if($peixunlv >= 0 || !$zongshu){
-                                $complete	= 100;
+                                $complete	= '100%';
                             }else{
                                 $complete	= ($peixunlv*100).'%';
                             }

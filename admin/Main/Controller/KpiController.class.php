@@ -33,7 +33,10 @@ class KpiController extends BaseController {
 
 	// @@@NODE-3###pdcaresult###考评结果###
     public function pdcaresult(){
-        $this->get_initialize();    //初始化KPI数据
+        $autoRefresh        = trim(I('autoRefresh'));
+        if ($autoRefresh){
+            $this->get_initialize();    //初始化所有用户KPI数据
+        }
         $this->title('绩效考评结果');
 		
 		$year		= I('year',date('Y'));
@@ -124,14 +127,13 @@ class KpiController extends BaseController {
 			$key[$k]['role_name']  = $role[$v['roleid']];
 		}
 		
-		$this->userkey =  json_encode($key);	
-		
-		$this->bkpr 		= $bkpr;
-		$this->bkprnm 	= $bkprnm;
-		$this->year 		= $year;
-		$this->month 	= $month;
-		$this->prveyear	= $year-1;
-		$this->nextyear	= $year+1;
+		$this->userkey          = json_encode($key);
+		$this->bkpr 	        = $bkpr;
+		$this->bkprnm 	        = $bkprnm;
+		$this->year 	        = $year;
+		$this->month 	        = $month;
+		$this->prveyear	        = $year-1;
+		$this->nextyear	        = $year+1;
 		$this->display('pdcaresult');
     }
 	
