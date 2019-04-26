@@ -3301,7 +3301,11 @@ function updatekpi($month,$user){
 
                             $visit_list             = get_visit($unok_opids); //回访记录
                             $visit_num              = count($visit_list);
-                            $average                = round($visit_num/$unok_num,4);
+                            if (!$unok_num){
+                                $average            = 1;
+                            }else{
+                                $average            = round($visit_num/$unok_num,4);
+                            }
                             $complete               = ($average*100).'%';
                             $opids                  = implode(',',array_unique(array_column($score_lists,'op_id')));
                             $url                    = U('Inspect/score',array('kpi_opids'=>$opids));
