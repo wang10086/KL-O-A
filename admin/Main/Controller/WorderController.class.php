@@ -151,27 +151,26 @@ class WorderController extends BaseController{
         $worder_content             = I('worder_content');
         $worder_type                = I('worder_type');
         $pin                        = I('pin')?I('pin'):0;
+        $kpi_worder_ids             = trim(I('kpi_worder_ids'))?explode(',',trim(I('kpi_worder_ids'))):'';
 
         $where                      = array();
-        //$where['worder_type']       = array('neq',P::WORDER_PROJECT);
-
-        if ($worder_title)          $where['worder_title']        = array('like','%'.$worder_title.'%');
-        if ($worder_content)        $where['worder_content']      = array('like','%'.$worder_content.'%');
-        if ($worder_type)           $where['worder_type']         = $worder_type;
-        if ($pin==1)			    $where['ini_user_id']		  = cookie('userid');
-        if ($pin==2) {
-                                    $where['assign_id']		      = cookie('userid');
-        };
-        if ($pin==3)			    $where['exe_user_id']		  = cookie('userid');
+        if ($worder_title)          $where['worder_title']      = array('like','%'.$worder_title.'%');
+        if ($worder_content)        $where['worder_content']    = array('like','%'.$worder_content.'%');
+        if ($worder_type)           $where['worder_type']       = $worder_type;
+        if ($pin==1)			    $where['ini_user_id']       = cookie('userid');
+        if ($pin==2)                $where['assign_id']		    = cookie('userid');
+        if ($pin==3)			    $where['exe_user_id']       = cookie('userid');
+        if ($kpi_worder_ids)        $where['id']                = array('in',$kpi_worder_ids);
 
         $worder_type                = C('WORDER_TYPE');
 
         //分页
-        $pagecount		= $db->where($where)->count();
-        $page			= new Page($pagecount, P::PAGE_SIZE);
-        $this->pages	= $pagecount>P::PAGE_SIZE ? $page->show():'';
+        $pagecount		            = $db->where($where)->count();
+        $page			            = new Page($pagecount, P::PAGE_SIZE);
+        $this->pages	            = $pagecount>P::PAGE_SIZE ? $page->show():'';
 
-        $lists          = $db->where($where)->limit($page->firstRow . ',' . $page->listRows)->order($this->orders('create_time'))->select();
+        $lists                      = $db->where($where)->limit($page->firstRow . ',' . $page->listRows)->order($this->orders('create_time'))->select();
+
         foreach($lists as $k=>$v){
             //判断工单状态
             if($v['status']==0)     $lists[$k]['sta'] = '<span class="red">未响应</span>';

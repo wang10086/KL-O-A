@@ -2778,7 +2778,7 @@ function updatekpi($month,$user){
                             }else{
                                 $complete	= round($jishilv/0.9,2)*100;
                             }
-                            $url            = '';
+                            $url            = U('Worder/worder_list',array('kpi_worder_ids'=>$jishilv_data['kpi_worder_ids']));
                         }
 
                         //研发培训(京区业务中心研发)(每月至少培训一次)

@@ -338,19 +338,20 @@ function get_peixunlv($user,$start_date,$end_date,$sum=0,$sumlists=''){
  * 4.工单发起人
  * */
 function get_jishilv($user,$start_date,$end_date,$ini_user_ids=''){
-    $worder             = get_worder($user,$start_date,$end_date,$ini_user_ids);
-    $zonggongdan        = $worder['zonggongdan'];
-    $wanchenggongdan    = $worder['wanchenggongdan'];
-    $zongshu            = count($zonggongdan);
-    $yiwancheng         = count($wanchenggongdan);
-    $jishilv            = round($yiwancheng/$zongshu,2);
+    $worder                 = get_worder($user,$start_date,$end_date,$ini_user_ids);
+    $zonggongdan            = $worder['zonggongdan'];
+    $wanchenggongdan        = $worder['wanchenggongdan'];
+    $zongshu                = count($zonggongdan);
+    $yiwancheng             = count($wanchenggongdan);
+    $jishilv                = round($yiwancheng/$zongshu,2);
 
-    $data               = array();
-    $data['zgd']        = $zonggongdan;
-    $data['wcgd']       = $wanchenggongdan;
-    $data['zongshu']    = $zongshu;
-    $data['yiwancheng'] = $yiwancheng;
-    $data['jishilv']    = $jishilv;
+    $data                   = array();
+    $data['zgd']            = $zonggongdan;
+    $data['wcgd']           = $wanchenggongdan;
+    $data['zongshu']        = $zongshu;
+    $data['yiwancheng']     = $yiwancheng;
+    $data['jishilv']        = $jishilv;
+    $data['kpi_worder_ids'] = implode(',',array_column($zonggongdan,'id'));
     return $data;
 }
 
