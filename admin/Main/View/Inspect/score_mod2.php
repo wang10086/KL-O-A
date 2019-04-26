@@ -62,6 +62,9 @@
                         <th class="sorting" data="s.driver">司机服务</th>
                         <th class="sorting" data="s.guide">辅导员/领队</th>
                         <th class="sorting" data="s.teacher">教师/专家</th>
+                        <th class="sorting" data="s.teacher">活动时长</th>
+                        <th class="sorting" data="s.teacher">活动完成度</th>
+                        <th class="sorting" data="s.teacher">场地服务</th>
                     <?php } ?>
                     <th>意见建议</th>
                     <!--<th>处理结果</th>-->
@@ -104,6 +107,9 @@
                             <td>{$row.driver}</td>
                             <td>{$row.guide}</td>
                             <td>{$row.teacher}</td>
+                            <td>{$row.cas_time}</td>
+                            <td>{$row.cas_complete}</td>
+                            <td>{$row.cas_addr}</td>
                         <?php } ?>
                         <td>{$row['suggest']}</td>
                         <!--<td>{$row.status}</td>-->

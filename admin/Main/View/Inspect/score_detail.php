@@ -50,6 +50,9 @@
                 <div class="form-group box-float-4" style="padding-left:0;">司机服务：{$score_stu.$row[driver]}</div>
                 <div class="form-group box-float-4" style="padding-left:0;">辅导员/领队：{$score_stu.$row[guide]}</div>
                 <div class="form-group box-float-4" style="padding-left:0;">专家/讲师：{$score_stu.$row[teacher]}</div>
+                <div class="form-group box-float-4" style="padding-left:0;">中科院相关活动满足时长：{$score_stu.$row[cas_time]}</div>
+                <div class="form-group box-float-4" style="padding-left:0;">中科院相关活动完整度：{$score_stu.$row[cas_complete]}</div>
+                <div class="form-group box-float-4" style="padding-left:0;">中科院单位场地服务：{$score_stu.$row[cas_addr]}</div>
             <?php } ?>
             </if>
 

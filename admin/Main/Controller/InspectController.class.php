@@ -334,6 +334,9 @@ class InspectController extends BaseController{
         if (!$op_id){
             $this->error("数据获取失败");
         }
+        $score_kind1    = array_keys(C('SCORE_KIND1'));
+        $score_kind2    = array_keys(C('SCORE_KIND2'));
+        $score_kind3    = array_keys(C('SCORE_KIND3'));
 
         $this->op       = M('op')->where(array('op_id'=>$op_id))->find();
 
@@ -349,39 +352,9 @@ class InspectController extends BaseController{
             ->where(array('u.op_id'=>$op_id))
             ->limit($page->firstRow.','.$page->listRows)
             ->select();
-        $score_num              = count($lists);
-        foreach ($lists as $k=>$v){
-            $lists[$k]['sum_score'] = $v['before_sell']+$v['new_media']+$v['stay']+$v['travel']+$v['content']+$v['food']+$v['bus']+$v['driver']+$v['guide']+$v['teacher']+$v['depth']+$v['major']+$v['interest']+$v['material']+$v['late']+$v['manage']+$v['morality']+$v['cas_time']+$v['cas_complete']+$v['cas_addr'];
-        }
 
+        $average                = $this->get_score_info($lists);
         $kind                   = M('op')->where(array('op_id'=>$op_id))->getField('kind');
-        $score_kind1            = array_keys(C('SCORE_KIND1'));
-        $score_kind2            = array_keys(C('SCORE_KIND2'));
-        $score_kind3            = array_keys(C('SCORE_KIND3'));
-
-        $average                = array();
-        $average['before_sell'] = round(array_sum(array_column($lists,'before_sell'))/$score_num,2);
-        $average['new_media']   = round(array_sum(array_column($lists,'new_media'))/$score_num,2);
-        $average['stay']        = round(array_sum(array_column($lists,'stay'))/$score_num,2);
-        $average['food']        = round(array_sum(array_column($lists,'food'))/$score_num,2);
-        $average['bus']         = round(array_sum(array_column($lists,'bus'))/$score_num,2);
-        $average['travel']      = round(array_sum(array_column($lists,'travel'))/$score_num,2);
-        $average['content']     = round(array_sum(array_column($lists,'content'))/$score_num,2);
-        $average['driver']      = round(array_sum(array_column($lists,'driver'))/$score_num,2);
-        $average['guide']       = round(array_sum(array_column($lists,'guide'))/$score_num,2);
-        $average['teacher']     = round(array_sum(array_column($lists,'teacher'))/$score_num,2);
-
-        $average['depth']       = round(array_sum(array_column($lists,'depth'))/$score_num,2);
-        $average['major']       = round(array_sum(array_column($lists,'major'))/$score_num,2);
-        $average['interest']    = round(array_sum(array_column($lists,'interest'))/$score_num,2);
-        $average['material']    = round(array_sum(array_column($lists,'material'))/$score_num,2);
-        $average['cas_time']    = round(array_sum(array_column($lists,'cas_time'))/$score_num,2);
-        $average['cas_complete']= round(array_sum(array_column($lists,'cas_complete'))/$score_num,2);
-        $average['cas_addr']    = round(array_sum(array_column($lists,'cas_addr'))/$score_num,2);
-        $average['score_num']   = $score_num?$score_num:'0';
-        $sum                    = get_sum_score($lists); //总分
-        $average['sum_score']   = (round(array_sum(array_column($lists,'sum_score'))/$sum,2)*100).'%';
-
         $row                    = M('tcs_score_problem')->where(array('op_id'=>$op_id))->find();
         $this->row              = $row;
         $this->score_pro        = json_encode($row);
@@ -404,6 +377,73 @@ class InspectController extends BaseController{
 
 
         $this->display();
+    }
+
+    private function get_score_info($lists){
+        $score_num                  = count($lists);
+        $before_sell_num            = 0;
+        $new_media_num              = 0;
+        $stay_num                   = 0;
+        $food_num                   = 0;
+        $bus_num                    = 0;
+        $travel_num                 = 0;
+        $content_num                = 0;
+        $driver_num                 = 0;
+        $guide_num                  = 0;
+        $teacher_num                = 0;
+        $depth_num                  = 0;
+        $major_num                  = 0;
+        $interest_num               = 0;
+        $material_num               = 0;
+        $cas_time_num               = 0;
+        $cas_complete_num           = 0;
+        $cas_addr_num               = 0;
+
+
+        foreach ($lists as $k=>$v){
+            $lists[$k]['sum_score'] = $v['before_sell']+$v['new_media']+$v['stay']+$v['travel']+$v['content']+$v['food']+$v['bus']+$v['driver']+$v['guide']+$v['teacher']+$v['depth']+$v['major']+$v['interest']+$v['material']+$v['late']+$v['manage']+$v['morality']+$v['cas_time']+$v['cas_complete']+$v['cas_addr'];
+            if($v['before_sell'])   $before_sell_num++;
+            if($v['new_media'])     $new_media_num++;
+            if($v['stay'])          $stay_num++;
+            if($v['food'])          $food_num++;
+            if($v['bus'])           $bus_num++;
+            if($v['travel'])        $travel_num++;
+            if($v['content'])       $content_num++;
+            if($v['driver'])        $driver_num++;
+            if($v['guide'])         $guide_num++;
+            if($v['teacher'])       $teacher_num++;
+            if($v['depth'])         $depth_num++;
+            if($v['major'])         $major_num++;
+            if($v['interest'])      $interest_num++;
+            if($v['material'])      $material_num++;
+            if($v['cas_time'])      $cas_time_num++;
+            if($v['cas_complete'])  $cas_complete_num++;
+            if($v['cas_addr'])      $cas_addr_num++;
+        }
+
+
+        $average                    = array();
+        $average['before_sell']     = round(array_sum(array_column($lists,'before_sell'))/$before_sell_num,2);
+        $average['new_media']       = round(array_sum(array_column($lists,'new_media'))/$new_media_num,2);
+        $average['stay']            = round(array_sum(array_column($lists,'stay'))/$stay_num,2);
+        $average['food']            = round(array_sum(array_column($lists,'food'))/$food_num,2);
+        $average['bus']             = round(array_sum(array_column($lists,'bus'))/$bus_num,2);
+        $average['travel']          = round(array_sum(array_column($lists,'travel'))/$travel_num,2);
+        $average['content']         = round(array_sum(array_column($lists,'content'))/$content_num,2);
+        $average['driver']          = round(array_sum(array_column($lists,'driver'))/$driver_num,2);
+        $average['guide']           = round(array_sum(array_column($lists,'guide'))/$guide_num,2);
+        $average['teacher']         = round(array_sum(array_column($lists,'teacher'))/$teacher_num,2);
+        $average['depth']           = round(array_sum(array_column($lists,'depth'))/$depth_num,2);
+        $average['major']           = round(array_sum(array_column($lists,'major'))/$major_num,2);
+        $average['interest']        = round(array_sum(array_column($lists,'interest'))/$interest_num,2);
+        $average['material']        = round(array_sum(array_column($lists,'material'))/$material_num,2);
+        $average['cas_time']        = round(array_sum(array_column($lists,'cas_time'))/$cas_time_num,2);
+        $average['cas_complete']    = round(array_sum(array_column($lists,'cas_complete'))/$cas_complete_num,2);
+        $average['cas_addr']        = round(array_sum(array_column($lists,'cas_addr'))/$cas_addr_num,2);
+        $average['score_num']       = $score_num?$score_num:'0';
+        $sum                        = get_sum_score($lists); //总分
+        $average['sum_score']       = (round(array_sum(array_column($lists,'sum_score'))/$sum,2)*100).'%';
+        return $average;
     }
 
     // @@@NODE-3###score_detail###每条评分详情###
