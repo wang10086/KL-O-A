@@ -284,7 +284,8 @@ $config = array(
         '2' => '审核未通过',
     ),
 
-    'KPI_QUARTER'   => array(32,38,100,109),    //kpi季度考核人员的id
+    //'KPI_QUARTER'   => array(32,38,100,109),    //kpi季度考核人员的id
+    'KPI_QUARTER'   => array(100,109),    //kpi季度考核人员的id 100=>石曼, 109=>徐娜
     'KPI_CYCLE'     => array('1'=>'月度','2'=>'季度','3'=>'半年','4'=>'年度'),
 
     'QUARTER_QUOTA_ID'  => array(   //季度考核KPI的指标id

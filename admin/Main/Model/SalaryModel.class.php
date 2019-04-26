@@ -554,13 +554,18 @@ class SalaryModel extends Model
      * @return mixed
      */
     public function get_kpi_salary($userinfo,$salary,$datetime){
+        $last_quarter_kpi_score_users           = C('KPI_QUARTER'); //kpi结果从上个月取值的用户id
         // kpi  pdca 品质检查
         $que['p.tab_user_id']                   = $userinfo['id'];//用户id
         $que['p.month']                         = datetime(date('Y'),date('m'),date('d'),1);
         $user                                   = $this->query_score($que);//绩效增减
         $use1                                   = trim(str_replace(array('<font color="#999999">','</font>','无加扣分','<span class="red">','</span>','<span>','<font color="#ff9900">','未完成评分','<span class="green">','+'),"",$user[0]['total_score_show']));//PDCA
         $use2                                   = trim(str_replace(array('<font color="#999999">','</font>','无加扣分','<span class="red">','</span>','<span>','<font color="#ff9900">','未完成评分','<span class="green">','+'),"",$user[0]['show_qa_score']));//品质检查
-        $use3                                   = trim(str_replace(array('<font color="#999999">','</font>','无加扣分','<span class="red">','</span>','<span>','<font color="#ff9900">','未完成评分','+'),"",$user[0]['total_kpi_score']));//KPI
+        if (in_array($userinfo['id'],$last_quarter_kpi_score_users)){ //kpi从上个季度取值
+            $use3                              = $this->get_last_quarter_kpi_score($userinfo,$datetime);
+        }else{
+            $use3                               = trim(str_replace(array('<font color="#999999">','</font>','无加扣分','<span class="red">','</span>','<span>','<font color="#ff9900">','未完成评分','+'),"",$user[0]['total_kpi_score']));//KPI
+        }
         $money                                  = ($salary['standard_salary']/10)*$salary['performance_salary'];//绩效金额
         $base_money                             = ($salary['standard_salary']/10)*$salary['basic_salary'];    //基本工资
         $branch                                 = 100;//给总共100分
@@ -569,23 +574,6 @@ class SalaryModel extends Model
         $f      = $use2+$use3;//获得总分    品质检查+kpi从绩效工资取值
         $fpdca  = $use1;
 
-        //kpi季度考核的人员,从2019年开始实施下个季度从上个季度取值,第一季度均默认不扣KPI
-        if (in_array($datetime,array('201901','201902','201903')) && in_array($userinfo['id'],C('KPI_QUARTER'))){
-            $f  = 0;
-        }
-
-        /*if(substr($f,0,1)=='-'){    //绩效工资余额
-            $balance1                           = (substr($f,0,1)).(round(($money/$branch*$f),2));
-            var_dump($f);
-            var_dump($balance1);
-        }else{
-            $balance1                           = round(($money/$branch*$f),2);
-        }
-        if(substr($fpdca,0,1)=='-'){    //基本工资余额
-            $balance2                           = (substr($fpdca,0,1)).(round(($base_money/$branch*(substr($fpdca,1))),2));
-        }else{
-            $balance2                           = round(($base_money/$branch*$fpdca),2);
-        }*/
         $balance1                           = round(($money/$branch*$f),2); //绩效工资余额
         $balance2                           = round(($base_money/$branch*$fpdca),2);    //基本工资余额
 
@@ -594,6 +582,68 @@ class SalaryModel extends Model
         $user_info['show_qa_score']       = $use2;//品质检查分数
         $user_info['sum_kpi_score']       = $use3;//KPI分数
         return $user_info;
+    }
+
+    /**
+     * 获取上个季度的kpi值
+     * @param $userinfo
+     * @param $datetime
+     */
+    private function get_last_quarter_kpi_score($userinfo,$datetime){
+        $userid                             = $userinfo['id'];
+        $year                               = substr($datetime,0,4);
+        $month                              = substr($datetime,4,2);
+        $kpi_month                          = $this->get_kpi_score_month($year,$month);
+        $where                              = array();
+        $where['month']                     = $kpi_month;
+        $where['user_id']                   = $userid;
+        $kpi_data                           = M('kpi')->where($where)->find();
+        $kpi_score                          = $kpi_data['score'];
+        $salary_score                       = $kpi_score?$kpi_score-100:0;
+        return $salary_score;
+    }
+
+    //kpi所用到的季度月份信息
+    private function get_kpi_score_month($year,$month){
+        switch ($month){
+            case '01':
+                $cycle_month                = ($year-1).'10,'.($year-1).'11,'.($year-1).'12';
+                break;
+            case '02':
+                $cycle_month                = ($year-1).'10,'.($year-1).'11,'.($year-1).'12';
+                break;
+            case '03':
+                $cycle_month                = ($year-1).'10,'.($year-1).'11,'.($year-1).'12';
+                break;
+            case '04':
+                $cycle_month                = $year.'01,'.$year.'02,'.$year.'03';
+                break;
+            case '05':
+                $cycle_month                = $year.'01,'.$year.'02,'.$year.'03';
+                break;
+            case '06':
+                $cycle_month                = $year.'01,'.$year.'02,'.$year.'03';
+                break;
+            case '07':
+                $cycle_month                = $year.'04,'.$year.'05,'.$year.'06';
+                break;
+            case '08':
+                $cycle_month                = $year.'04,'.$year.'05,'.$year.'06';
+                break;
+            case '09':
+                $cycle_month                = $year.'04,'.$year.'05,'.$year.'06';
+                break;
+            case '10':
+                $cycle_month                = $year.'07,'.$year.'08,'.$year.'09';
+                break;
+            case '11':
+                $cycle_month                = $year.'07,'.$year.'08,'.$year.'09';
+                break;
+            case '12':
+                $cycle_month                = $year.'07,'.$year.'08,'.$year.'09';
+                break;
+        }
+        return $cycle_month;
     }
 
     /**
