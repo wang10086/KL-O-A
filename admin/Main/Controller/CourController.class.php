@@ -239,23 +239,29 @@ class CourController extends BaseController {
 	//培训记录
 	public function pptlist(){
 		
-		$db 			= M('cour_ppt');
-		$type 		= I('type','-1');
-		$keywords 	= I('keywords');
+		$db 			    = M('cour_ppt');
+		$type 		        = I('type','-1');
+		$keywords 	        = I('keywords');
+        $kpiUrl             = trim(I('kpiUrl'));
+        $kpi_cour_ids       = explode(',',trim(I('kpi_cour_ids')));
+		if ($kpiUrl){
+            $where          = array();
+            $where['del']   = 0;
+            $where['id']    = array('in',$kpi_cour_ids);
+        }else{
+            $where 	        = '`del`=0 ';
+		    if($keywords)   $where .= 'and ((`ppt_title` like "%'.$keywords.'%")  OR (`lecturer_uname` like "%'.$keywords.'%")  OR (`lecture_address` like "%'.$keywords.'%")) ';
+        }
+
+
+        //分页
+		$pagecount          = $db->where($where)->count();
+		$page               = new Page($pagecount, P::PAGE_SIZE);
+		$this->pages        = $pagecount>P::PAGE_SIZE ? $page->show():'';
 		
-		$where 		= '`del`=0 ';
-		if($keywords)   $where .= 'and ((`ppt_title` like "%'.$keywords.'%")  OR (`lecturer_uname` like "%'.$keywords.'%")  OR (`lecture_address` like "%'.$keywords.'%")) ';
+		$datalist           = $db->where($where)->limit($page->firstRow . ',' . $page->listRows)->order($this->orders('id'))->select();
 		
-		//分页
-		$pagecount = $db->where($where)->count();
-		$page = new Page($pagecount, P::PAGE_SIZE);
-		$this->pages = $pagecount>P::PAGE_SIZE ? $page->show():'';
-		
-		$datalist = $db->where($where)->limit($page->firstRow . ',' . $page->listRows)->order($this->orders('id'))->select();	
-		
-		
-		$this->datalist 		= $datalist;
-		
+		$this->datalist 	= $datalist;
 		$this->display('pptlist');
 		
 	}

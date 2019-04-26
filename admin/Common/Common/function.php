@@ -2774,14 +2774,14 @@ function updatekpi($month,$user){
                             $jishilv                = $jishilv_data['jishilv'];
 
                             if($jishilv>0.9 || !$jishilv_data['zongshu']){
-                                $complete	= 100;
+                                $complete	= '100%';
                             }else{
-                                $complete	= round($jishilv/0.9,2)*100;
+                                $complete	= (round($jishilv/0.9,2)*100).'%';
                             }
-                            $url            = U('Worder/worder_list',array('kpi_worder_ids'=>$jishilv_data['kpi_worder_ids']));
+                            $url            = U('Worder/worder_list',array('kpi_worder_ids'=>$jishilv_data['kpi_worder_ids'],'kpiUrl'=>1));
                         }
 
-                        //研发培训(京区业务中心研发)(每月至少培训一次)
+                        //项目培训完成率(京区业务中心研发)(每月至少培训一次)
                         if ($v['quota_id']==131){
                             //培训完成率
                             $peixun_data            = get_peixunlv($user,$v['start_date'],$v['end_date'],1);
@@ -2794,7 +2794,7 @@ function updatekpi($month,$user){
                             }else{
                                 $complete	= ($peixunlv*100).'%';
                             }
-                            $url            = '';
+                            $url            = U('Cour/pptlist',array('kpi_cour_ids'=>$peixun_data['kpi_cour_ids'],'kpiUrl'=>1));
                         }
 
                         //辅导员/教师管理及时率(京区业务中心教务)

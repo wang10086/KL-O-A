@@ -326,6 +326,7 @@ function get_peixunlv($user,$start_date,$end_date,$sum=0,$sumlists=''){
     $data['zongshu']        = $zongshu;
     $data['yiwancheng']     = $yiwancheng;
     $data['peixunlv']       = $peixunlv;
+    $data['kpi_cour_ids']   = implode(',',array_column($lists,'id'));
     return $data;
 }
 
