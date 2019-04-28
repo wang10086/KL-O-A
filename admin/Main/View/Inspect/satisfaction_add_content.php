@@ -2,6 +2,13 @@
 <form method="post" action="<?php echo U('Inspect/satisfaction_add'); ?>" id="myForm" onsubmit="return submitBefore()">
     <div class="content">
         <input type="hidden" name="dosubmint" value="1">
+        <div class="form-group col-md-12">
+            <div class="callout callout-info">
+                <h4>提示！</h4>
+                <p>1、请您客观评价，被评分人不会看到您的具体评分内容，只会看到所有人的总评分结果！</p>
+                <p>2、目前可搜索评分人员：程小平、杜莹、孟华、秦鸣、李岩、李徵红、王茜、王丹、魏春竹。</p>
+            </div>
+        </div>
         <div class="content">
             <input type="hidden" id="AA_num" name="info[AA]" value="" />
             <input type="hidden" id="BB_num" name="info[BB]" value="" />
