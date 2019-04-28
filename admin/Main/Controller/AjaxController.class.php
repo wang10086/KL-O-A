@@ -1392,10 +1392,13 @@ class AjaxController extends Controller {
                     echo json_encode(array('sum' => $sum, 'msg' => $msg));die;
                 }
             }else{
+                $list                       = M('salary_labour')->where(array('account_id'=>I('uid'),'status'=>2))->find();
                 if($status==1){
                     $where['merge_counting'] = $Labour_money;
+                    $where['Labour_money']   = $list['Labour_money']?$list['Labour_money']:0;
                 }elseif($status==2){
                     $where['Labour_money']   = $Labour_money;
+                    $where['merge_counting'] = $list['merge_counting']?$list['merge_counting']:0;
                 }
                 $where['createtime']        = time();
 

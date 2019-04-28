@@ -49,7 +49,7 @@
                                 <div class="form-group col-md-12 mt10">
                                     <div class="callout callout-danger mb-0">
                                         <h4>提示！</h4>
-                                        <p>1、当本考核周期有人未给您评分时，您的综合得分将按照默认综合得分50%取值！请及时联系未评价人员对您评价,以免影响您的综合得分!</p>
+                                        <p>1、为避免影响您的综合得分，请关注“未评价人员”一栏，如显示人员名单，请及时联系对方给您评分；逾期未评分，对未评分部分将默认按50%得分取值!</p>
                                     </div>
                                 </div>
 
@@ -74,7 +74,7 @@
                                         <td class="taskOptions">{$row.account_name}</td>
                                         <td class="taskOptions">{$row.sum_average}</td>
                                         <td class="taskOptions">{$row.score_accounts}</td>
-                                        <td class="taskOptions">{$row.}</td>
+                                        <td class="taskOptions">{$row.unscore_users}</td>
                                         <if condition="rolemenu(array('Inspect/satisfaction_detail'))">
                                             <td class="taskOptions"><button onClick="javascript:show_detail({$row.account_id},{$row.monthly});" title="得分详情" class="btn btn-info btn-smsm"><i class="fa fa-search-plus"></i></button></td>
                                         </if>

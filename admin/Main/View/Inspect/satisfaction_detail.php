@@ -13,7 +13,7 @@
             	<h4>被评价人：{$list.account_name}</h4>
 				<span class="fr">评价月份：{$list.monthly}</span>
                 <span class="fr">已评价人：{$list.score_account_name}</span>
-                <!--<span class="fr">评价时间：{$list.create_time|date='Y-m-d H:i',###}</span>-->
+                <!--<span class="fr">未评分人：{$list.unscore_users}</span>-->
             </div>
         </div>
         
@@ -29,7 +29,7 @@
         <div class="fromlist">
             <div class="fromtitle">评价内容(全部人员)：</div>
             <foreach name="contents" key="k" item="v">
-                <div class="formtexts">{$k+1}、{$v}</div>
+                <div class="formtexts">● &nbsp;{$v}</div>
             </foreach>
         </div>
 

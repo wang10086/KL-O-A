@@ -790,16 +790,29 @@ class InspectController extends BaseController{
         $db                             = M('satisfaction');
         $satisfaction_lists             = $db->where(array('monthly'=>$yearMonth))->select();
         $user_lists                     = array_unique(array_column($satisfaction_lists,'account_id'));
+        $score_users                    = C('SATISFACTION_USER');
 
         $lists                          = array();
         foreach ($user_lists as $k=>$v){
+            $should_users               = explode(',',$score_users[$v]); //应评价人员id
+            $input_userids              = array(); //已评价人员
+            $unscore_userids            = array(); //未评价人员
             $info                       = array();
             foreach ($satisfaction_lists as $key=>$value){
                 if ($value['monthly']==$yearMonth && $value['account_id']==$v){
                     $info[]             = $value;
+                    $input_userids[]    = $value['input_userid'];
                 }
             }
-            $average_data               = $this->get_average_data($info);
+
+            foreach ($should_users as $kk=>$vv){
+                if (!in_array($vv,$input_userids)){
+                    $unscore_userids[]  = $vv;
+                }
+            }
+            $unscore_user_lists         = M('account')->where(array('id'=>array('in',$unscore_userids)))->getField('nickname',true);
+
+            $average_data               = $this->get_average_data($info,$unscore_userids);
             $lists[$k]['monthly']       = $yearMonth;
             $lists[$k]['account_id']    = $v;
             $lists[$k]['account_name']  = $info[0]['account_name'];
@@ -810,12 +823,13 @@ class InspectController extends BaseController{
             $lists[$k]['average_EE']    = $average_data['average_EE'];
             $lists[$k]['sum_average']   = $average_data['sum_average'];
             $lists[$k]['score_accounts']= $average_data['score_account_name'];
+            $lists[$k]['unscore_users'] = implode(',',$unscore_user_lists);
         }
         return $lists;
     }
 
-    //获取每一项指标的平均分
-    private function get_average_data($info){
+    //获取每一项指标的平均分 未评分人员全部按照50%
+    private function get_average_data($info,$unscore_userids=''){
         $get_score_AA                   = 0; //得分
         $get_score_BB                   = 0;
         $get_score_CC                   = 0;
@@ -828,7 +842,7 @@ class InspectController extends BaseController{
         $sum_score_EE                   = 0;
         $get_score_total                = 0; //合计得分
         $sum_score_total                = 0; //合计总分
-        foreach ($info as $k=>$v){
+        foreach ($info as $k=>$v){ //已评分部分
             $get_score_AA               += $v['AA'];
             $get_score_BB               += $v['BB'];
             $get_score_CC               += $v['CC'];
@@ -841,6 +855,20 @@ class InspectController extends BaseController{
             if($v['EE']){ $sum_score_EE += 5; $sum_score_total+= 5; }
             $get_score_total            += $v['AA'] + $v['BB'] + $v['CC'] + $v['DD'] + $v['EE'];
         }
+
+        foreach ($unscore_userids as $kk=>$vv){ //未评分部分,每项只得50%分数
+            if ($get_score_AA){ $get_score_AA += 2.5; $get_score_total += 2.5; } //得分
+            if ($get_score_BB){ $get_score_BB += 2.5; $get_score_total += 2.5; }
+            if ($get_score_CC){ $get_score_CC += 2.5; $get_score_total += 2.5; }
+            if ($get_score_DD){ $get_score_DD += 2.5; $get_score_total += 2.5; }
+            if ($get_score_EE){ $get_score_EE += 2.5; $get_score_total += 2.5; }
+            if ($sum_score_AA){ $sum_score_AA += 5;   $sum_score_total += 5; } //总分
+            if ($sum_score_BB){ $sum_score_BB += 5;   $sum_score_total += 5; }
+            if ($sum_score_CC){ $sum_score_CC += 5;   $sum_score_total += 5; }
+            if ($sum_score_DD){ $sum_score_DD += 5;   $sum_score_total += 5; }
+            if ($sum_score_EE){ $sum_score_EE += 5;   $sum_score_total += 5; }
+        }
+
         $data                           = array();
         $data['average_AA']             = $get_score_AA/$sum_score_AA?(round($get_score_AA/$sum_score_AA,2)*100).'%':'';
         $data['average_BB']             = $get_score_BB/$sum_score_BB?(round($get_score_BB/$sum_score_BB,2)*100).'%':'';
@@ -902,22 +930,34 @@ class InspectController extends BaseController{
         $db                         = M('satisfaction');
         $uid                        = I('uid');
         $month                      = I('month');
+        $should_users               = explode(',',C('SATISFACTION_USER')[$uid]); //应评分人员
         if (!$uid) $this->error('获取数据失败');
 
         $where                      = array();
         $where['monthly']           = $month;
         $where['account_id']        = $uid;
         $info                       = $db->where($where)->select();
-        $list                       = $this->get_average_data($info);
+        $input_userids              = array_column($info,'input_userid'); //已评分人员
+
+        $unscore_userids            = array();
+        foreach ($should_users as $kk=>$vv){
+            if (!in_array($vv,$input_userids)){
+                $unscore_userids[]  = $vv;
+            }
+        }
+        $unscore_user_lists         = M('account')->where(array('id'=>array('in',$unscore_userids)))->getField('nickname',true);
+
+        $list                       = $this->get_average_data($info,$unscore_userids);
         $list['monthly']            = $month;
         $list['account_name']       = M('account')->where(array('id'=>$uid))->getField('nickname');
         $dimension                  = $this->get_user_dimension($uid); //获取考核维度
-        $contents                   = array_column($info,'content');
+        $contents                   = array_filter(array_column($info,'content'));
         $list['AA']                 = $dimension['AA'];
         $list['BB']                 = $dimension['BB'];
         $list['CC']                 = $dimension['CC'];
         $list['DD']                 = $dimension['DD'];
         $list['EE']                 = $dimension['EE'];
+        $list['unscore_users']      = implode(',',$unscore_user_lists);
         $this->list                 = $list;
         $this->contents             = $contents;
         $this->display('satisfaction_detail');
