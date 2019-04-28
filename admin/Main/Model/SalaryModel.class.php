@@ -157,18 +157,19 @@ class SalaryModel extends Model
 
     //获取李保罗的季度目标系数
     private function get_lbl_coefficient($quarter){
+        $coe                            = C('JQXY-C');
         switch ($quarter){
             case 1:
-                $data                   = 11;
+                $data                   = $coe['01'] + $coe['02'] + $coe['03'];
                 break;
             case 2:
-                $data                   = 7;
+                $data                   = $coe['04'] + $coe['05'] + $coe['06'];
                 break;
             case 3:
-                $data                   = 16;
+                $data                   = $coe['07'] + $coe['08'] + $coe['09'];
                 break;
             case 4:
-                $data                   = 6;
+                $data                   = $coe['10'] + $coe['11'] + $coe['12'];
                 break;
         }
         return $data;
