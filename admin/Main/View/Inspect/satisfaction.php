@@ -46,6 +46,13 @@
                                     </div>
                                 </div><!-- /.box-header -->
 
+                                <div class="form-group col-md-12 mt10">
+                                    <div class="callout callout-danger mb-0">
+                                        <h4>提示！</h4>
+                                        <p>1、当本考核周期有人未给您评分时，您的综合得分将按照默认综合得分50%取值！请及时联系未评价人员对您评价,以免影响您的综合得分!</p>
+                                    </div>
+                                </div>
+
                                 <div class="box-body">
                                 <table class="table table-bordered dataTable fontmini" id="tablelist" style="margin-top:10px;">
                                     <tr role="row" class="orders" >

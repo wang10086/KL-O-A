@@ -149,4 +149,32 @@
         }
     }
 
+    function submitBefore(){
+        var AA_num      = parseInt($('#AA_num').val());
+        var BB_num      = parseInt($('#BB_num').val());
+        var CC_num      = parseInt($('#CC_num').val());
+        var DD_num      = parseInt($('#DD_num').val());
+        var EE_num      = parseInt($('#EE_num').val());
+        var content     = $('#content').val();
+        var arr         = Array(1,2,3,);
+        var AA_res      = in_array(AA_num,arr);
+        var BB_res      = in_array(BB_num,arr);
+        var CC_res      = in_array(CC_num,arr);
+        var DD_res      = in_array(DD_num,arr);
+        var EE_res      = in_array(EE_num,arr);
+        if ((AA_res || BB_res || CC_res || DD_res || EE_res) && !content){
+            art_show_msg('单项评分低于3分时,必须填写评价内容',3);
+            return false;
+        }
+    }
+
+    function in_array(search,array){
+        for(var i in array){
+            if(array[i]==search){
+                return true;
+            }
+        }
+        return false;
+    }
+
 </script>

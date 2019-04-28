@@ -3739,6 +3739,7 @@ a.iclose{background:url(../img/btn/min_icon.png) no-repeat 0px -30px;width:30px;
 #choose_val{ display:none}
 #choose .lp_remark{ width: 280px;}
 .mb-50{margin-bottom: -50px;}
+.mb-0{margin-bottom: 0;}
 
 #costacc { padding:0 15px;}
 #costacc .form-control{ width:120px; float:left; margin-right:10px; border-radius:0;}
