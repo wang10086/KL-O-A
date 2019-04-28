@@ -907,12 +907,14 @@ class InspectController extends BaseController{
         $list['monthly']            = $month;
         $list['account_name']       = M('account')->where(array('id'=>$uid))->getField('nickname');
         $dimension                  = $this->get_user_dimension($uid); //获取考核维度
+        $contents                   = array_column($info,'content');
         $list['AA']                 = $dimension['AA'];
         $list['BB']                 = $dimension['BB'];
         $list['CC']                 = $dimension['CC'];
         $list['DD']                 = $dimension['DD'];
         $list['EE']                 = $dimension['EE'];
         $this->list                 = $list;
+        $this->contents             = $contents;
         $this->display('satisfaction_detail');
     }
 

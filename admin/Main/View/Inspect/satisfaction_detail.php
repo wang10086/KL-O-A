@@ -25,7 +25,14 @@
             <?php if ($list['average_DD']){ ?> <div class="form-group box-float-6" style="padding-left:0;">{$list.DD}：{$list.average_DD}&nbsp;分</div> <?php } ?>
             <?php if ($list['average_EE']){ ?> <div class="form-group box-float-6" style="padding-left:0;">{$list.EE}：{$list.average_EE}&nbsp;分</div> <?php } ?>
         </div>
-                             
+
+        <div class="fromlist">
+            <div class="fromtitle">评价内容(全部人员)：</div>
+            <foreach name="contents" key="k" item="v">
+                <div class="formtexts">{$k+1}、{$v}</div>
+            </foreach>
+        </div>
+
     </div>                  
     
     <include file="Index:footer" />

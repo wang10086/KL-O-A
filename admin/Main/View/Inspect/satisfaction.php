@@ -72,7 +72,11 @@
                                             <td class="taskOptions"><button onClick="javascript:show_detail({$row.account_id},{$row.monthly});" title="得分详情" class="btn btn-info btn-smsm"><i class="fa fa-search-plus"></i></button></td>
                                         </if>
                                         <if condition="rolemenu(array('Inspect/satisfaction_info'))">
-                                            <td class="taskOptions"><a href="{:U('Inspect/satisfaction_info',array('uid'=>$row['account_id'],'month'=>$row['monthly']))}" title="评价详情" class="btn btn-info btn-smsm"><i class="fa fa-bars"></i></a></td>
+                                            <td class="taskOptions">
+                                                <?php if (in_array(session('userid'),array(1,11))){ ?>
+                                                <a href="{:U('Inspect/satisfaction_info',array('uid'=>$row['account_id'],'month'=>$row['monthly']))}" title="评价详情" class="btn btn-info btn-smsm"><i class="fa fa-bars"></i></a>
+                                                <?php } ?>
+                                            </td>
                                         </if>
                                     </tr>
                                     </foreach>					
