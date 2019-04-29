@@ -17,14 +17,14 @@
                         <div class="col-xs-12">
                             <div class="btn-group" id="catfont" style="padding-bottom:20px;">
                                 <?php if($prveyear>2018){ ?>
-                                    <a href="{:U('Inspect/satisfaction',array('year'=>$prveyear,'month'=>$month))}" class="btn btn-default" style="padding:8px 18px;">上一年</a>
+                                    <a href="{:U('Inspect/satisfaction',array('year'=>$prveyear,'month'=>$yearMonth))}" class="btn btn-default" style="padding:8px 18px;">上一年</a>
                                 <?php } ?>
                                 <?php
                                     for($i=1;$i<13;$i++){
                                         if (strlen($i)<2){ $i = str_pad($i,2,'0',STR_PAD_LEFT);}
                                         $par = array();
                                         $par['year']  = $year;
-                                        $par['month'] = $i;
+                                        $par['month'] = $year.$i;
                                         if($month==$i){
                                             echo '<a href="'.U('Inspect/satisfaction',$par).'" class="btn btn-info" style="padding:8px 18px;">'.$i.'月</a>';
                                         }else{
@@ -33,7 +33,7 @@
                                     }
                                 ?>
                                 <?php if($year<date('Y')){ ?>
-                                    <a href="{:U('Inspect/satisfaction',array('year'=>$nextyear,'month'=>$month))}" class="btn btn-default" style="padding:8px 18px;">下一年</a>
+                                    <a href="{:U('Inspect/satisfaction',array('year'=>$nextyear,'month'=>$yearMonth))}" class="btn btn-default" style="padding:8px 18px;">下一年</a>
                                 <?php } ?>
                             </div>
 

@@ -718,6 +718,9 @@
                                             <if condition="rolemenu(array('Kpi/crux'))">
                                                 <li><a href="{:U('Kpi/crux')}"><i class="fa fa-angle-right"></i> 关键事项评价</a></li>
                                             </if>
+                                            <if condition="rolemenu(array('Inspect/satisfaction_config'))">
+                                                <li><a href="{:U('Inspect/satisfaction_config')}"><i class="fa fa-angle-right"></i> 内部满意度配置</a></li>
+                                            </if>
                                         </ul>
                                     </li>
                                 </if>

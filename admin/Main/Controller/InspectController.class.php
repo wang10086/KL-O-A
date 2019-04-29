@@ -779,6 +779,7 @@ class InspectController extends BaseController{
         $lists              = $this->get_satisfaction_list($yearMonth);
 
         $this->lists        = $lists;
+        $this->yearMonth    = $yearMonth;
         $this->year         = $year;
         $this->month        = $month;
         $this->prveyear     = $year-1;
@@ -1019,6 +1020,89 @@ class InspectController extends BaseController{
             }
         }else{
             $this->error('删除失败');
+        }
+    }
+
+    //内部满意度评分人配置
+    public function satisfaction_config(){
+        $year                       = I('year',date('Y'));
+        $month                      = I('month',date('m'));
+        $yearMonth                  = I('yearMonth')?I('yearMonth'):$year.$month;
+        $users                      = C('SATISFACTION_USERS');
+        $db                         = M('satisfaction_config');
+        $lists                      = array();
+        foreach ($users as $k=>$v){
+            $list                   = $db->where(array('year'=>$year,'month'=>$yearMonth,'user_id'=>$k))->select();
+            $lists[$k]['user_id']   = $k;
+            $lists[$k]['user_name'] = $v;
+            $lists[$k]['score_users']=implode(',',array_column($list,'score_user_name'));
+        }
+
+        $this->lists                = $lists;
+        $this->yearMonth            = $yearMonth;
+        $this->year 	            = $year;
+        $this->month                = $month;
+        $this->prveyear	            = $year-1;
+        $this->nextyear	            = $year+1;
+        $this->display();
+    }
+
+    //编辑内部人员满意度评分人配置
+    public function satisfaction_config_edit(){
+        $year                       = I('year',date('Y'));
+        $month                      = I('month')?I('month'):date('Ym');
+        $userid                     = I('userid');
+        $username                   = trim(I('username'));
+        $db                         = M('satisfaction_config');
+        $lists                      = $db->where(array('year'=>$year,'month'=>$month,'user_id'=>$userid))->select();
+
+        $this->userkey              = get_username();
+        $this->lists                = $lists;
+        $this->userid               = $userid;
+        $this->username             = $username;
+        $this->year                 = $year;
+        $this->month                = $month;
+        $this->display();
+    }
+
+    public function public_save_satisfaction_config(){
+        if (isset($_POST['dosubmint'])){
+            $db                             = M('satisfaction_config');
+            $info                           = I('info');
+            $data                           = I('data');
+            if (!$info['userid']) $this->error('数据错误');
+            $num                            = 0;
+            if ($data){
+                $del_ids                    = array();
+                foreach ($data as $k=>$v){
+                    $conf                   = array();
+                    $conf['user_id']        = $info['userid'];
+                    $conf['user_name']      = trim($info['user_name']);
+                    $conf['year']           = $info['year'];
+                    $conf['month']          = $info['month'];
+                    $conf['score_user_id']  = $v['score_user_id'];
+                    $conf['score_user_name']= $v['score_user_name'];
+                    if ($v['resid']){
+                        $del_ids[]          = $v['resid'];
+                        $res                = $db->where(array('id'=>$v['resid']))->save($conf);
+                        if ($res) $num++;
+                    }else{
+                        $conf['input_time'] = NOW_TIME;
+                        $res                = $db->add($conf);
+                        $del_ids[]          = $res;
+                        if ($res) $num++;
+                    }
+                }
+                $where                      = array();
+                $where['year']              = $info['year'];
+                $where['month']             = $info['month'];
+                $where['user_id']           = $info['userid'];
+                $where['id']                = array('not in',$del_ids);
+                $db->where($where)->delete();
+                echo '<script>window.top.location.reload();</script>';
+            }else{
+                $this->error('数据不能为空');
+            }
         }
     }
 
