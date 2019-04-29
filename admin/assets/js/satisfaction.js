@@ -38,7 +38,7 @@ function change_score_content() {
         $.ajax({
             type : 'POST',
             dataType : 'JSON',
-            url : "<?php echo U('Ajax/check_userinfo') ?>",
+            url : "/index.php?m=Main&c=Ajax&a=check_userinfo",
             data : {account_id:account_id,account_name:account_name},
             success: function (msg) {
                 if (msg == 1){ //名字和id匹配
