@@ -1920,5 +1920,26 @@ class AjaxController extends Controller {
         }
         $this->ajaxReturn($res);
     }
+
+    /**
+     * 检查人员信息
+     * (防止模糊匹配后有误再次更改名字而不点击下拉框)
+     */
+    public function check_userinfo(){
+        $account_id             = I('account_id');
+        $account_name           = trim(I('account_name'));
+        $db                     = M('account');
+        if ($account_id){
+            $list               = $db->where(array('id'=>$account_id))->find();
+            if ($account_name == $list['nickname']){
+                $msg            = 1;
+            }else{
+                $msg            = 0;
+            }
+        }else{
+            $msg                = 0;
+        }
+        $this->ajaxReturn($msg);
+    }
 }
 

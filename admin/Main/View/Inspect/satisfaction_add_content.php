@@ -80,7 +80,7 @@
             </div>
         </div>
 
-        <div align="center" class="form-group col-md-12" style="alert:cennter;margin-bottom: 20px;">
+        <div align="center" class="form-group col-md-12" style="alert:cennter;margin-bottom: 20px;" id="submit-btn">
             <input type="submit" class="btn btn-info" value="提交">
         </div>
 
@@ -89,6 +89,7 @@
 
 <script type="text/javascript" src="__HTML__/js/satisfaction.js?v=1.1"></script>
 <script type="text/javascript">
+    $('#submit-btn').hide();
     var user_keywords   = <?php echo $userkey; ?>;
 
     $(function() {
@@ -176,5 +177,6 @@
         }
         return false;
     }
+
 
 </script>
