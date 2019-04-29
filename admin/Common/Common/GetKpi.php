@@ -958,7 +958,7 @@ function get_sum_gross_profit($userids,$beginTime,$endTime){
     }
 
     /**
-     * 获取销售季度任务系数字段
+     * 获取销售当月任务系数字段
      * @param $month
      * @return string
      */
