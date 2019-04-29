@@ -364,7 +364,7 @@ class SalaryController extends BaseController {
     public function salary_attendance(){
         $userid = (int)$_SESSION['userid'];
 
-        if($userid==11 ||$userid==55 || $userid==77 || $userid==32 || $userid==38 || $userid==12  || $userid==1 || $userid==185){
+        if (in_array($userid,array(1,11,12,32,38,55,77,185,13))){
 
             $where['account_id']           = (int)(trim($_POST['id']));//编码
         }else{
