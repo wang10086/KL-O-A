@@ -84,7 +84,7 @@
 			lock:true,
 			title: '配置'+username+'内部满意度评分人',
 			width:1000,
-			height:800,
+			height:600,
 			okValue: '提交',
 			fixed: true,
 			ok: function () {

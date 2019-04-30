@@ -747,35 +747,10 @@ class InspectController extends BaseController{
     }
 
     //内部人员满意度
-    /*public function satisfaction(){
-        $kpiTime            = I('kpiTime')?explode(',',I('kpiTime')):null; //kpi链接
-        $uname              = trim(I('uname'));
-        $monthly            = trim(I('month'));
-        $where              = array();
-        $where['type']      = array('neq',1); //研发
-        if ($uname)         $where['account_name']  = array('like','%'.$uname.'%');
-        if ($input_name)    $where['input_username']= array('like','%'.$input_name.'%');
-        if ($monthly)       $where['monthly']       = $monthly;
-        if ($kpiTime)       $where['create_time']   = array('between',"$kpiTime[0],$kpiTime[1]");
-
-        //分页
-        $pagecount          = M('satisfaction')->where($where)->count();
-        $page               = new Page($pagecount,P::PAGE_SIZE);
-        $this->pages        = $pagecount>P::PAGE_SIZE ? $page->show():'';
-
-        $lists              = M('satisfaction')->where($where)->limit($page->firstRow.','.$page->listRows)->order($this->orders('id'))->select();
-        foreach ($lists as $k=>$v){
-            $sum            = $v['AA'] + $v['BB'] + $v['CC'] + $v['DD'] + $v['EE'];
-            $dimension      = $v['dimension'];
-            $lists[$k]['average'] = round($sum/$dimension,2);
-        }
-        $this->lists        = $lists;
-        $this->display('satisfaction');
-    }*/
     public function satisfaction(){
         $year               = I('year',date('Y'));
         $month              = I('month',date('m'));
-        $yearMonth          = $year.$month;
+        $yearMonth          = I('yearMonth')?I('yearMonth'):$year.$month;
         $lists              = $this->get_satisfaction_list($yearMonth);
 
         $this->lists        = $lists;
@@ -789,16 +764,24 @@ class InspectController extends BaseController{
 
     public function get_satisfaction_list($yearMonth){
         $db                             = M('satisfaction');
-        $satisfaction_lists             = $db->where(array('monthly'=>$yearMonth))->select();
-        $user_lists                     = array_unique(array_column($satisfaction_lists,'account_id'));
-        $score_users                    = C('SATISFACTION_USER');
+        $satisfaction_config_db         = M('satisfaction_config');
+        $satisfaction_lists             = $db->where(array('monthly'=>$yearMonth))->select(); //所有的已评分列表
+        $should_users_lists             = $satisfaction_config_db->where(array('month'=>$yearMonth))->select(); //所有当月应评分信息
+        $user_lists                     = array_keys(C('SATISFACTION_USERS'));
 
         $lists                          = array();
         foreach ($user_lists as $k=>$v){
-            $should_users               = explode(',',$score_users[$v]); //应评价人员id
+            $should_users               = array(); //应评分人员
             $input_userids              = array(); //已评价人员
             $unscore_userids            = array(); //未评价人员
             $info                       = array();
+
+            foreach ($should_users_lists as $sk=>$sv){
+                if ($sv['user_id']==$v){
+                    $should_users[]     = $sv['score_user_id'];
+                }
+            }
+
             foreach ($satisfaction_lists as $key=>$value){
                 if ($value['monthly']==$yearMonth && $value['account_id']==$v){
                     $info[]             = $value;
@@ -876,7 +859,7 @@ class InspectController extends BaseController{
         $data['average_CC']             = $get_score_CC/$sum_score_CC?(round($get_score_CC/$sum_score_CC,2)*100).'%':'';
         $data['average_DD']             = $get_score_DD/$sum_score_DD?(round($get_score_DD/$sum_score_DD,2)*100).'%':'';
         $data['average_EE']             = $get_score_EE/$sum_score_EE?(round($get_score_EE/$sum_score_EE,2)*100).'%':'';
-        $data['sum_average']            = (round($get_score_total/$sum_score_total,2)*100).'%';
+        $data['sum_average']            = round($get_score_total/$sum_score_total,2)?(round($get_score_total/$sum_score_total,2)*100).'%':'50%';
         $data['score_account_name']     = implode(',',array_column($info,'input_username'));
         return $data;
     }
@@ -929,9 +912,10 @@ class InspectController extends BaseController{
     //得分详情
     public function satisfaction_detail(){
         $db                         = M('satisfaction');
+        $satisfaction_config_db     = M('satisfaction_config');
         $uid                        = I('uid');
         $month                      = I('month');
-        $should_users               = explode(',',C('SATISFACTION_USER')[$uid]); //应评分人员
+        $should_users               = $satisfaction_config_db->where(array('user_id'=>$uid,'month'=>$month))->getField('score_user_id',true); //应评分人员
         if (!$uid) $this->error('获取数据失败');
 
         $where                      = array();
