@@ -526,13 +526,21 @@
     }
 
     //打印
-    function print_part(){
+    /*function print_part(){
         var op_kind = <?php echo $op_kind; ?>;
+        var viewid  = $('#print_part_id').val();
+        alert(viewid);
         if (op_kind == 60){
             document.body.innerHTML=document.getElementById('after_lession').innerHTML;
         }else{
             document.body.innerHTML=document.getElementById('res_need_table').innerHTML;
         }
+        window.print();
+    }*/
+
+    function print_part(){
+        var viewid  = $('#print_part_id').val();
+        document.body.innerHTML=document.getElementById(viewid).innerHTML;
         window.print();
     }
 

@@ -1189,7 +1189,8 @@ function get_sum_gross_profit($userids,$beginTime,$endTime){
         $end_time                       = $end_time - 4*24*3600;
         $where['c.ret_time']            = array('between',array($start_time,$end_time));
         $where['o.create_user']         = $userid;
-        $where['o.in_dijie']            = array('neq',1); //排除发起团
+        $shishi_true_num                = M()->table('__OP_TEAM_CONFIRM__ as c')->join('__OP__ as o on o.op_id = c.op_id','left')->where($where)->count();
+        $where['o.in_dijie']            = array('neq',1); //排除发起团(发起团不做满意度调查)
         $shishi_lists                   = M()->table('__OP_TEAM_CONFIRM__ as c')->join('__OP__ as o on o.op_id = c.op_id','left')->where($where)->select();
 
         $score_lists                    = array();
@@ -1225,8 +1226,7 @@ function get_sum_gross_profit($userids,$beginTime,$endTime){
         $shishi_num                     = count($shishi_lists); //所有实施团的数量(包括未调查的数量)
         $average                        = round($op_average_sum/$shishi_num,2)/100; //全部平均值
 
-
-        if ($shishi_num==0 && $gross_margin && $gross_margin['monthTarget']==0) { //当月目标为0
+        if (($shishi_num==0 && $gross_margin && $gross_margin['monthTarget']==0) || ($shishi_true_num != 0 && $shishi_num==0)) { //当月目标为0 有发起团, 无满意度调查(发起团不做满意度调查,地接团做满意度调查)
             $complete = '100%';
         }else{
             //总平均分,包括未调查的

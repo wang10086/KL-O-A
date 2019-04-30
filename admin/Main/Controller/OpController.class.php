@@ -2758,7 +2758,7 @@ class OpController extends BaseController {
             $jiesuan            = M('op_settlement')->where(array('op_id'=>$opid,'audit_status'=>1))->find(); //结算审批通过
             $this->jiesuan      = $jiesuan;
             $resource           = M('op_res')->where(array('op_id'=>$opid))->find();
-            $this->resource     = $resource;
+            $this->resource     = $resource; //资源需求单
             if ($resource) {
                 $this->rad          = 1;
                 $this->task_fields  = explode(',',$resource['task_field']);
@@ -2803,7 +2803,7 @@ class OpController extends BaseController {
             $this->task_field = C('LES_FIELD');
             $this->apply_to = C('APPLY_TO');
             $this->design   = M('op_design')->where(array('op_id'=>$opid))->find();    //委托设计工作交接单
-            $work_plan          = M('op_work_plans')->where(array('op_id'=>$opid))->find();//业务实施计划单
+            $work_plan      = M('op_work_plans')->where(array('op_id'=>$opid))->find();//业务实施计划单
             $this->work_plan= $work_plan;
             $this->additive = explode(',',$work_plan['additive']);
             $this->plan_between_time = $work_plan['begin_time']?date('Y-m-d',$work_plan['begin_time']).' - '.date('Y-m-d',$work_plan['end_time']):'';
