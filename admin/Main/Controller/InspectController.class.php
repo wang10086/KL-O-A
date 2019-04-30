@@ -884,7 +884,7 @@ class InspectController extends BaseController{
             $unok_arr                   = array(1,2,3);
             if ((in_array($info['AA'],$unok_arr) || in_array($info['BB'],$unok_arr) || in_array($info['CC'],$unok_arr) || in_array($info['DD'],$unok_arr) || in_array($info['EE'],$unok_arr)) && !$info['content']) $this->error('单项评分低于3分时,必须填写评价内容');
             $score_users                = $satisfaction_config_db->where(array('month'=>$info['monthly'],'user_id'=>$info['account_id']))->getField('score_user_id',true);
-            if (!in_array(session('userid'),$score_users)) $this->error('您不在'.$info['account_name'].'的评分人列表!');
+            if (!in_array(session('userid'),$score_users)) $this->error('您不在'.$info['account_name'].'的评分人列表!',U('Inspect/satisfaction'));
 
             $where                      = array();
             $where['monthly']           = $info['monthly'];
