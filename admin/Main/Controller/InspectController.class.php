@@ -799,7 +799,7 @@ class InspectController extends BaseController{
             $average_data               = $this->get_average_data($info,$unscore_userids);
             $lists[$k]['monthly']       = $yearMonth;
             $lists[$k]['account_id']    = $v;
-            $lists[$k]['account_name']  = $info[0]['account_name'];
+            $lists[$k]['account_name']  = M('account')->where(array('id'=>$v))->getField('nickname');
             $lists[$k]['average_AA']    = $average_data['average_AA'];
             $lists[$k]['average_BB']    = $average_data['average_BB'];
             $lists[$k]['average_CC']    = $average_data['average_CC'];
