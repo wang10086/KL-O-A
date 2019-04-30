@@ -1148,29 +1148,28 @@ function get_sum_gross_profit($userids,$beginTime,$endTime){
 
     //获取内部人员满意度
     function get_company_satisfaction($v){
-        $months                     = explode(',',$v['month']);
+        $mod                        = D('Inspect');
         $db                         = M('satisfaction');
+        $satisfaction_config_db     = M('satisfaction_config');
+        $uid                        = $v['user_id'];
+        //$month                      = explode(',',$v['month']);
+        $month                      = substr($v['month'],-6,6);
+        $should_users               = $satisfaction_config_db->where(array('user_id'=>$uid,'month'=>$month))->getField('score_user_id',true); //应评分人员
+
         $where                      = array();
-        $where['type']              = array('neq',1); //1=>研发
-        $where['account_id']        = $v['user_id'];
-        $where['monthly']           = array('in',$months);
-        $where['create_time']       = array('between',"$v[start_date],$v[end_date]");
-        $lists                      = $db->where($where)->select();
-        $num                        = count($lists);
-        $sum_average                = 0;
-        if ($lists){
-            foreach ($lists as $k=>$v){
-                $dimension              = $v['dimension']; //评分维度
-                $score                  = $v['AA'] + $v['BB'] + $v['CC'] + $v['DD'] + $v['EE'];
-                $count_score            = 5*$dimension;  //总分 = 5各维度, 每个维度5颗星
-                $sum_average            += round($score/$count_score,2);
+        $where['monthly']           = $month;
+        $where['account_id']        = $uid;
+        $info                       = $db->where($where)->select();
+        $input_userids              = array_column($info,'input_userid'); //已评分人员
+
+        $unscore_userids            = array();
+        foreach ($should_users as $kk=>$vv){
+            if (!in_array($vv,$input_userids)){
+                $unscore_userids[]  = $vv;
             }
         }
 
-        $average                    = round($sum_average/$num,2);
-        $data                       = array();
-        $data['num']                = $num;
-        $data['average']            = $average;
+        $data                       = $mod->get_average_data($info,$unscore_userids);
         return $data;
     }
 

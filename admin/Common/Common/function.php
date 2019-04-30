@@ -3290,7 +3290,7 @@ function updatekpi($month,$user){
 
                         //214=>员工满意度-安全品控部经理(内部员工满意度)
                         //212=>业务部门满意度-计调部经理
-                        //206=>各部门满意度 - 人事经理
+                        //206=>内部满意度 -人力经理
                         //155=>内部业务人员满意度-研发部经理
                         //218=>内部满意度 -市场部经理
                         //219=>内部满意度 -资源部经理
@@ -3299,7 +3299,8 @@ function updatekpi($month,$user){
                         //129=>业务人员满意度(研发质量)(魏春竹)
                         if (in_array($v['quota_id'],array(129,155,168,193,206,214,212,218,219))){
                             $data                   = get_company_satisfaction($v);
-                            $complete               = get_kpi_satis($v,$data);
+                            //$complete               = get_kpi_satis($v,$data);
+                            $complete               = $data['sum_average'];
                             $uname                  = M('account')->where(array('id'=>$v['user_id']))->getField('nickname');
                             $url                    = U('Inspect/satisfaction',array('uname'=>$uname,'kpiTime'=>$v['start_date'].','.$v['end_date']));
                         }
