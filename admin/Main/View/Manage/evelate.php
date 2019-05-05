@@ -54,14 +54,14 @@
 
                             <tr>
                                 <td>{$year}年</td>
-                                <td>{$data.thisYear_zsr}</td>
+                                <td><a href="{:U('Manage/Manage_year')}">{$data.thisYear_zsr}</a></td>
                                 <td>{$data.thisYear_zml}</td>
                                 <td>{$data.thisYear_mll}%</td>
                                 <td rowspan="2">{$elevate}</td>
                             </tr>
                             <tr>
                                 <td>{$year-1}年</td>
-                                <td>{$data.lastYear_zsr}</td>
+                                <td><a href="{:U('Manage/Manage_year',array('year'=>$year-1))}">{$data.lastYear_zsr}</a></td>
                                 <td>{$data.lastYear_zml}</td>
                                 <td>{$data.lastYear_mll}%</td>
                             </tr>
