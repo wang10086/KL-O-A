@@ -648,4 +648,20 @@ class ManageController extends ChartController {
         $this->display();
     }
 
+    public function public_elevate(){
+        $year                   = I('year');
+        $month                  = I('month');
+        if (strlen($month)<2) $month = str_pad($month,2,'0',STR_PAD_LEFT);
+
+        $cycle                  = get_years_cycle($year,$month); //获取今年和去年的考核周期
+        $manage_datas           = get_manage_data($cycle); //获取经营信息
+        $elevate                = ((round($manage_datas['thisYear_mll']/$manage_datas['lastYear_mll'],4)-1)*100).'%';
+
+        $this->data             = $manage_datas;
+        $this->elevate          = $elevate;
+        $this->year             = $year;
+        $this->month            = $month;
+        $this->display('evelate');
+    }
+
  }

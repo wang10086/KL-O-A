@@ -2214,3 +2214,66 @@ function get_yw_department(){
         }
         return $complete;
     }
+
+    /**
+     * 获取今年的考核周期 和 去年的考核周期
+     * @param $year
+     * @param $month
+     */
+    function get_years_cycle($year,$month){
+        $day                                    = 26;
+        $now_day                                = date('d');
+        if ($month.$now_day > 1225){ //今年考核周期
+            $cycle['this_year_start_time']      = strtotime(($year-1).'1226'); ;
+            $cycle['this_year_end_time']        = strtotime(($year-1).'12'.$now_day.date('His'));
+            //$ymd['this_year_start_time']        = ($year-1).'1226'; ;
+            //$ymd['this_year_end_time']          = ($year-1).'12'.$now_day.date('His');
+        }else{
+            $cycle['this_year_start_time']      = strtotime(($year-1).'1226');
+            $cycle['this_year_end_time']        = strtotime($year.$month.$day);
+            //$ymd['this_year_start_time']        = ($year-1).'1226';
+            //$ymd['this_year_end_time']          = $year.$month.$day;
+        }
+
+        //去年考核周期
+        $cycle['last_year_start_time']          = strtotime(($year-2).'1226');
+        if ($now_day > 26){
+            $cycle['last_year_end_time']        = strtotime(($year-1).$month.'26');
+        }else{
+            $cycle['last_year_end_time']        = strtotime(($year-1).$month.date('dHis'));
+        }
+        //$ymd['last_year_start_time']            = ($year-2).'1226';
+        //$ymd['last_year_end_time']              = ($year-1).$month.'26'.date('His');
+        return $cycle;
+    }
+
+    //获取公司 当年 和 上一年 总毛利率
+    function get_manage_data($cycle){
+        $chart_mod                      = D('Chart');
+        $thisYearTimes                  = array();
+        $thisYearTimes['yearBeginTime'] = $cycle['this_year_start_time'];
+        $thisYearTimes['yearEndTime']   = $cycle['this_year_end_time'];
+        $lastYearTimes                  = array();
+        $lastYearTimes['yearBeginTime'] = $cycle['last_year_start_time'];
+        $lastYearTimes['yearEndTime']   = $cycle['last_year_end_time'];
+
+        $yw_departs                     = C('YW_DEPARTS');  //业务部门id
+        $userlists                      = M('account')->where(array('departmentid'=>array('in',$yw_departs)))->getField('id,nickname',true);
+        $userids                        = array_keys($userlists);
+
+        $info                           = array();
+        $info[0]['users']               = $userids;
+        $info[0]['depname']             = '公司';
+        $thisYearData                   = $chart_mod->js_deplist($info,'',$thisYearTimes);
+        $lastYearData                   = $chart_mod->js_deplist($info,'',$lastYearTimes);
+        $data                           = array();
+        $data['thisYear_zsr']           = $thisYearData['heji']['yearzsr'];
+        $data['thisYear_zml']           = $thisYearData['heji']['yearzml'];
+        $data['thisYear_mll']           = $thisYearData['heji']['yearmll'];
+        $data['lastYear_zsr']           = $lastYearData['heji']['yearzsr'];
+        $data['lastYear_zml']           = $lastYearData['heji']['yearzml'];
+        $data['lastYear_mll']           = $lastYearData['heji']['yearmll'];
+        return $data;
+    }
+
+
