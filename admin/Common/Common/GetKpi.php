@@ -1740,6 +1740,7 @@ function get_department_person_score_statis($year='',$month='',$department_id,$c
                     if (($point > '0.'.$i && $point <= '0.'.($i+1)) || ($point > '-0.'.($i+2) && $point <= '-0.'.($i+1))){
                         $score          = $snum - (10*$i);
                         if ($score < 0) $score = 0;
+                        break;
                     }else{
                         $score          = 0;
                     }
@@ -2274,6 +2275,30 @@ function get_yw_department(){
         $data['lastYear_zml']           = $lastYearData['heji']['yearzml'];
         $data['lastYear_mll']           = $lastYearData['heji']['yearmll'];
         return $data;
+    }
+
+    /**
+     * 获取预算准确度
+     * @param $real 实际值
+     * @param $plan 预算值
+     */
+    function get_exact_budget($real,$plan){
+        if ($real < $plan){ //实际值 < 计划值
+            if ($plan == 0){ //计划值为0
+                $res                    = $real - $plan;
+            }else{
+                $res                    = round(($real - $plan)/$plan,4); //(实际值 - 计划值)/计划值
+            }
+        }else{
+            if ($plan == 0){ //计划值为0
+                $res                    = $real - $plan;
+            }elseif ($real > 0 && $plan < 0){ //实际正,计划负
+               $res                     = round(1-(($real - $plan)/$plan),4); // 1-(实际-计划)/计划
+           }else{
+                $res                    = round(($real - $plan)/$plan,4); //(实际值 - 计划值)/计划值
+           }
+        }
+        return $res;
     }
 
 

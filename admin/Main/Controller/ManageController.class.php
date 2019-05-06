@@ -648,6 +648,7 @@ class ManageController extends ChartController {
         $this->display();
     }
 
+    //月度累计毛利率提升比率
     public function public_elevate(){
         $year                   = I('year');
         $month                  = I('month');
@@ -662,6 +663,45 @@ class ManageController extends ChartController {
         $this->year             = $year;
         $this->month            = $month;
         $this->display('evelate');
+    }
+
+    //季度财务预算准确率
+    public function public_kpi_budget(){
+        $year                       = I('year');
+        $month                      = I('month');
+        $uid                        = I('uid');
+
+        $quarter                    = get_quarter($month);
+        $quarter_plan_income_data   = get_quarter_plan_income($year,$quarter);
+        $quarter_plan_income        = $quarter_plan_income_data['logged_income']?$quarter_plan_income_data['logged_income']:0; //获取公司当季度的预算营业收入(营收)
+        $quarter_real_income_data   = get_department_operate('公司',$year,$month); //获取公司当季度实际营业收入(营收)(不包括地接营收)
+        $quarter_real_income        = $quarter_real_income_data['yysr']?$quarter_real_income_data['yysr']:0;
+        $income_avg                 = get_exact_budget($quarter_real_income,$quarter_plan_income);
+        $income_s                   = get_rifht_avg($income_avg,40); //根据平均值求结果分
+
+        //季度利润准确率指标
+        $quarter_plan_profit        = $quarter_plan_income_data['total_profit']?$quarter_plan_income_data['total_profit']:0; //获取公司当季度的预算季度利润
+        $quarter_real_profit        = $quarter_real_income_data['yyml'] - $quarter_real_income_data['rlzycb'] - $quarter_real_income_data['qtfy']; //实际季度利润     = 营业毛利-人力资源成本 - 其他费用
+        $profit_avg                 = get_exact_budget($quarter_real_profit,$quarter_plan_profit);
+        $profit_s                   = get_rifht_avg($profit_avg,60); //根据平均值求结果分
+        $complete                   = ($income_s + $profit_s).'%'; //合计完成率
+
+        $data                       = array();
+        $data['quarter_plan_income']= $quarter_plan_income;
+        $data['quarter_real_income']= $quarter_real_income;
+        $data['income_avg']         = ($income_avg*100).'%';
+        $data['income_s']           = $income_s;
+        $data['quarter_plan_profit']= $quarter_plan_profit;
+        $data['quarter_real_profit']= $quarter_real_profit;
+        $data['profit_avg']         = ($profit_avg*100).'%';
+        $data['profit_s']           = $profit_s;
+        $data['complete']           = $complete;
+
+        $this->year                 = $year;
+        $this->month                = $month;
+        $this->quarter              = $quarter;
+        $this->data                 = $data;
+        $this->display('kpi_budget');
     }
 
  }

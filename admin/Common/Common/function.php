@@ -3249,19 +3249,23 @@ function updatekpi($month,$user){
                             $quart_month            = quarter_month1($monon);
                             $quarter_plan_income_data= get_quarter_plan_income($v['year'],$quarter);
                             $quarter_plan_income    = $quarter_plan_income_data['logged_income']?$quarter_plan_income_data['logged_income']:0; //获取公司当季度的预算营业收入(营收)
-                            $quarter_real_income_data= get_department_operate('公司',$v['year'],$monon); //获取贵公司当季度实际营业收入(营收)(不包括地接营收)
+                            $quarter_real_income_data= get_department_operate('公司',$v['year'],$monon); //获取公司当季度实际营业收入(营收)(不包括地接营收)
                             $quarter_real_income    = $quarter_real_income_data['yysr']?$quarter_real_income_data['yysr']:0;
                             $v1                     = intervalsn($quarter_plan_income,0.10); //定义比较区间
-                            $income_avg             = round(($quarter_real_income - $quarter_plan_income)/$quarter_plan_income,4); //季度营收准确率 (实际-计划)/实际
+                            //$income_avg             = round(($quarter_real_income - $quarter_plan_income)/$quarter_plan_income,4); //季度营收准确率 (实际-计划)/实际
+                            $income_avg             = get_exact_budget($quarter_real_income,$quarter_plan_income);
                             $income_s               = get_rifht_avg($income_avg,40); //根据平均值求结果分
 
                             //季度利润准确率指标
                             $quarter_plan_profit    = $quarter_plan_income_data['total_profit']?$quarter_plan_income_data['total_profit']:0; //获取公司当季度的预算季度利润
                             $quarter_real_profit    = $quarter_real_income_data['yyml'] - $quarter_real_income_data['rlzycb'] - $quarter_real_income_data['qtfy']; //实际季度利润 = 营业毛利-人力资源成本 - 其他费用
-                            $profit_avg             = round(($quarter_real_profit - $quarter_plan_profit)/$quarter_plan_profit,4); //季度利润准确率
+                            //$profit_avg             = round(($quarter_real_profit - $quarter_plan_profit)/$quarter_plan_profit,4); //季度利润准确率
+                            $profit_avg             = get_exact_budget($quarter_real_profit,$quarter_plan_profit);
                             $profit_s               = get_rifht_avg($profit_avg,60); //根据平均值求结果分
-                            $complete               = $income_s + $profit_s; //总分数200(所以除以2)
-                            $url                    = U('Manage/Manage_quarter',array('year'=>$v['year'],'quart'=>$quart_month));
+
+                            $complete               = ($income_s + $profit_s).'%';
+                            //$url                    = U('Manage/Manage_quarter',array('year'=>$v['year'],'quart'=>$quart_month));
+                            $url                    = U('Manage/public_kpi_budget',array('year'=>$v['year'],'month'=>$monon,'uid'=>$v['user_id']));
                         }
 
                         //回款及时率(财务经理)
@@ -3417,7 +3421,9 @@ function get_kpi_data($v,$complete,$url=''){
         }else{
             $rate   = 0;
         }
-    }else{
+    }elseif ($v['quota_id']==194){
+        $rate       = str_replace('%','',$complete);
+    } else{
         $rate       = $v['target'] ? round(($complete / $v['target'])*100,2) : 100;
         $rate       = $rate>100 ? 100 : $rate;
     }
