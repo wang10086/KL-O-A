@@ -3049,12 +3049,13 @@ function updatekpi($month,$user){
                             $url                    = '';
                         }
 
-                        //季度利润总额目标完成率
+                        //季度利润总额目标完成率(季度利润总额目标累计完成率)
                         if ($v['quota_id']==125){
                             $year           = $v['year']?$v['year']:date('Y');
                             $monon          = $v['month']?substr($v['month'],4,2):date('m');
                             $department     = get_department($v['user_id']);                        //获取别考评人所管辖的部门信息
                             $budget_info    = get_department_budget($department,$year,$monon);      //部门季度预算信息
+
                             $ys_lrze        = $budget_info['sum_total_profit'];                     //预算利润总额
                             $operate_info   = get_sum_department_operate($department,$year,$monon,'y');     //实际经营信息(年度累计)
                             $jy_lrze        = round($operate_info['lrze'],2);   //经营利润总额
@@ -3279,6 +3280,11 @@ function updatekpi($month,$user){
                             $complete               = $data['sum_average'];
                             $url                    = U('Finance/payment_quarter',array('year'=>$year,'quarter'=>$quarter));
                         }
+
+                        //人事费用率控制
+                        /*if ($v['quota_id']==204){
+
+                        }*/
 
                         //公司顾客满意度-安全品控部经理
                         if ($v['quota_id']==213){

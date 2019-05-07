@@ -227,10 +227,10 @@ class IndexController extends BaseController {
 					cookie('postname',$post['post_name'],36000);
 
                     if ($isdate['nickname']=='admins'){
-                        cookie('name','系统管理员',3600);
-                        cookie('nickname','系统管理员',3600);
-                        session('name','系统管理员',3600);
-                        session('nickname','系统管理员',3600);
+                        cookie('name','系统管理员',36000);
+                        cookie('nickname','系统管理员',36000);
+                        session('name','系统管理员');
+                        session('nickname','系统管理员');
                     }
 
 					$info['update_time'] = time();

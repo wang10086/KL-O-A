@@ -1532,13 +1532,12 @@ class RbacController extends BaseController {
 				if($v['plan']!=$kpi['plan'])  			$remarks.='计划由'.$kpi['plan'].'变更为'.$v['plan'].'；';
 				if($v['target']!=$kpi['target'])  		$remarks.='目标由'.$kpi['target'].'变更为'.$v['target'].'；';
 				if($v['weight']!=$kpi['weight'])  		$remarks.='权重由'.$kpi['weight'].'变更为'.$v['weight'].'；';
-				
-				
+
 				if($remarks){
 					$data = array();
 					$data['kpi_id']        = $kpi['kpi_id'];
-					$data['op_user_id']    = cookie('userid');
-					$data['op_user_name']  = cookie('name');
+					$data['op_user_id']    = session('userid');
+					$data['op_user_name']  = session('name');
 					$data['op_time']       = time();
 					$data['remarks']       = $kpi['quota_title'].'：'.$remarks;
 					M('kpi_op_record')->add($data);
