@@ -2626,7 +2626,11 @@ class OpController extends BaseController {
 			//判断是否已经确认
 			if($confirm){
                 if($upd_num == 1){
-                    $this->error('您已经修改过一次了,不能反复修改!');
+                    if (in_array(cookie('userid'),array(1,11))){
+                        $res = M('op_team_confirm')->data($info)->where(array('op_id'=>$opid))->save();
+                    }else{
+                        $this->error('您已经修改过一次了,不能反复修改!');
+                    }
                 }else{
                     $info['upd_num']    = 1;    //用来判断修改次数
                     $res = M('op_team_confirm')->data($info)->where(array('op_id'=>$opid))->save();
@@ -2649,7 +2653,8 @@ class OpController extends BaseController {
                     $groupid            = $op['dijie_name'].date('Ymd',$gtime);
                     //团号信息
                     $count_groupids     = M('op')->where(array('group_id'=>array('like','%'.$groupid.'%')))->count();
-                    $new_op['group_id'] = $count_groupids?$groupid.'-'.$count_groupids:$groupid;
+                    $new_op['group_id'] = $count_groupids?$groupid.'-1'.$count_groupids:$groupid;
+
                     $new_op['number']       = $op['number'];
                     $new_op['departure']    = $op['departure'];
                     $new_op['days']         = $op['days'];

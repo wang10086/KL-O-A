@@ -1705,33 +1705,6 @@ function get_department_person_score_statis($year='',$month='',$department_id,$c
     /**
      * 根据平均值求结果分
      */
-    /*function get_rifht_avg($point){
-        if ($point > -0.1 && $point <= 0.1){
-            $score                  = 100;
-        }elseif (($point > 0.1 && $point <= 0.2) || ($point > -0.2 && $point <= -0.1)){
-            $score                  = 90;
-        }elseif (($point > 0.2 && $point <= 0.3) || ($point > -0.3 && $point <= -0.2)){
-            $score                  = 80;
-        }elseif (($point > 0.3 && $point <= 0.4) || ($point > -0.4 && $point <= -0.3)){
-            $score                  = 70;
-        }elseif (($point > 0.4 && $point <= 0.5) || ($point > -0.5 && $point <= -0.4)){
-            $score                  = 60;
-        }elseif (($point > 0.5 && $point <= 0.6) || ($point > -0.6 && $point <= -0.5)){
-            $score                  = 50;
-        }elseif (($point > 0.6 && $point <= 0.7) || ($point > -0.7 && $point <= -0.6)){
-            $score                  = 40;
-        }elseif (($point > 0.7 && $point <= 0.8) || ($point > -0.8 && $point <= -0.7)){
-            $score                  = 30;
-        }elseif (($point > 0.8 && $point <= 0.9) || ($point > -0.9 && $point <= -0.8)){
-            $score                  = 20;
-        }elseif (($point > 0.9 && $point <= 1) || ($point > -1 && $point <= -0.9)){
-            $score                  = 10;
-        }elseif ($point > 1  || $point <= -1){
-            $score                  = 0;
-        }
-        return $score;
-    }*/
-
     function get_rifht_avg($point,$snum){
             if ($point > -0.1 && $point <= 0.1){
                 $score                  = $snum;

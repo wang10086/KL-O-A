@@ -54,15 +54,6 @@
                                 <th class="black" width="80">合计完成率</th>
                             </tr>
 
-                            <!--
-                            $data['quarter_plan_income']= $quarter_plan_income;
-                            $data['quarter_real_income']= $quarter_real_income;
-                            $data['quarter_plan_profit']= $quarter_plan_profit;
-                            $data['quarter_real_profit']= $quarter_real_profit;
-                            $data['income_avg']         = $income_avg;
-                            $data['profit_avg']         = $profit_avg;
-                            -->
-
                             <tr>
                                 <td>季度营收</td>
                                 <td><a href="{:U('Manage/Manage_quarter',array('year'=>$year,'quart'=>$month))}">{$data.quarter_plan_income}</a></td>
