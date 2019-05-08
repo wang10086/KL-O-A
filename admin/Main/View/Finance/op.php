@@ -251,10 +251,15 @@
 			var shouru   = parseInt($('#shouru').val());        //收入
             var maolilv  = toPoint($('#maolilv').val());        //毛利率
             var is_dijie = <?php echo $is_dijie; ?>;            //内部地接毛利率不能大于10%
+            var userid   = <?php echo session('userid'); ?>;
 			if(shouru && renshu){
                 if (is_dijie != 0 && maolilv > 0.1){
-                    art.dialog.alert('该团为内部地接团,毛利额不能超过10%');
-                    return false;
+                    if (userid == 11 || userid == 1){
+                        $('#appsubmint').submit();
+                    }else{
+                        art.dialog.alert('该团为内部地接团,毛利额不能超过10%');
+                        return false;
+                    }
                 }else{
                     $('#appsubmint').submit();
                 }

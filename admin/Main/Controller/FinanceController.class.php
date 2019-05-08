@@ -1671,6 +1671,14 @@ class FinanceController extends BaseController {
                         $url     = U('Finance/audit_nopjk',array('id'=>$jk_id,'audit_usertype'=>$audit_usertype));
                         $user    = '['.$cw_audit_userid.']';
                         send_msg($uid,$title,$content,$url,$user,'');
+
+                        //发送系统消息(给借款人反馈)
+                        $uid     = cookie('userid');
+                        $title   = '您有来自['.$audit_info['ys_audit_username'].']的借款审批回复!';
+                        $content = '借款单号：'.$jkd_id.'，借款金额：'.$jk_info['sum']."，<hr />部门分管领导审核意见：<span class='red'>".$zhuangtai."；".$info['ys_remark']."</span>";
+                        $url     = U('Finance/nopjk_info',array('jkid'=>$jk_id));
+                        $user    = '['.$jk_info['jk_user_id'].']';
+                        send_msg($uid,$title,$content,$url,$user,'');
                     }else{
                         //审核不通过
                         D('Finance')->save_jkd_audit($jk_id,$info['ys_audit_status']);
