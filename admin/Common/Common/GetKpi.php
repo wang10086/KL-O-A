@@ -1703,7 +1703,7 @@ function get_department_person_score_statis($year='',$month='',$department_id,$c
     }
 
     /**
-     * 根据平均值求结果分
+     * 根据平均值求结果分(财务)
      */
     function get_rifht_avg($point,$snum){
             if ($point > -0.1 && $point <= 0.1){
@@ -1719,6 +1719,28 @@ function get_department_person_score_statis($year='',$month='',$department_id,$c
                     }
                 }
             }
+        return $score;
+    }
+
+    /**
+     * 根据平均值求结果分(人事)
+     */
+    function get_sum_avg($point,$snum){
+        if ($point > 0){
+            $score                  = 0;
+        }elseif ($point <= 0 && $point >= -0.5){ //50%
+            $score                  = $snum;
+        } else {
+            for ($i = 5; $i < 10; $i++) {
+                if (($point >= '-0.'.($i+1) && $point < '-0.'.$i)){
+                    $score          = $snum - (20*($i-4));
+                    if ($score < 0) $score = 0;
+                    break;
+                }else{
+                    $score          = 0;
+                }
+            }
+        }
         return $score;
     }
 
@@ -2274,4 +2296,132 @@ function get_yw_department(){
         return $res;
     }
 
+    /**
+     * 公司季度预算信息
+     * @param $userid
+     * @param $month
+     * @return mixed
+     */
+    function get_company_budget($year,$month){
+        $quarter                    = get_quarter($month);  //获取季度信息
+        $quarters                   = get_all_quarters($quarter);
+        $year                       = $year?$year:date("Y");
+        $where                      = array();
+        $where['datetime']          = $year;
+        $where['type']              = array('in',$quarters);
+        $where['logged_department'] = '公司';
+        $field                      = 'sum(employees_number) as sum_employees_number,sum(logged_income) as sum_logged_income,sum(logged_profit) as sum_logged_profit, sum(manpower_cost) as sum_manpower_cost, sum(other_expenses) as sum_other_expenses, sum(total_profit) as sum_total_profit,sum(target_profit) as sum_target_profit';
+        $budget                     = M('manage_input')->where($where)->field($field)->find();
+        return $budget;
+    }
 
+    //获取从年初累计的季度信息
+    function get_all_quarters($quarter){
+        $arrs                       = array(1,2,3,4); //季度
+        $quarters                   = array();
+        foreach ($arrs as $v){
+            if ($v <= $quarter){
+                $quarters[]         = $v;
+            }
+        }
+        return $quarters;
+    }
+
+    /**
+     * 公司经营信息(年度累计)
+     * @param $department
+     * @param $year
+     * @param $month
+     * @param $type 'm'=>月度 'q'=>季度 'y'=>年度
+     * @return array
+     */
+    function get_company_operate($department,$year,$month){
+        $mod                       = D('Manage');
+        //$quart                     = quarter_month1($month);  //季度月份
+        $quarter                   = get_quarter($month); //季度
+
+        $yms                       = year_to_now_yms($year,$quarter);  //获取累计到当前季度(含)的所有月份
+        $times                     = year_to_now_times($year,$quarter);    //获取累计到当前季度(含)的开始及结束时间戳
+
+        $ymd[0]                    = date("Ymd",$times['beginTime']);
+        $ymd[1]                    = date("Ymd",$times['endTime']);
+        $mon                       = not_team_not_share($ymd[0],$ymd[1]);//年度其他费用取出数据(不分摊)
+        $mon_share                 = not_team_share($ymd[0],$ymd[1]);//年度其他费用取出数据(分摊)
+        $otherExpenses             = $mod->department_data($mon,$mon_share);//年度其他费用部门数据
+
+        $number                    = $mod->get_numbers($year,$yms);    //年度平均人数
+        $hr_cost                   = $mod->get_quarter_hr_cost($year,$yms,$times);// 年度部门人力资源成本
+        $profit                    = get_business_sum($year,$yms);// 年度 monthzsr 收入合计   monthzml 毛利合计  monthmll 毛利率
+        $human_affairs             = $mod->human_affairs($hr_cost,$profit);//年度 人事费用率
+        $total_profit              = $mod->total_profit($profit,$hr_cost,$otherExpenses);//年度 利润总额
+
+        $info                      = array();
+        $info['ygrs']              = $number[$department];             //部门员工人数
+        $info['yysr']              = $profit[$department]['monthzsr']; //营业收入
+        $info['yyml']              = $profit[$department]['monthzml']; //营业毛利
+        $info['yymll']             = $profit[$department]['monthmll']; //营业毛利率
+        $info['rlzycb']            = $hr_cost[$department];            //人力资源成本
+        $info['qtfy']              = $otherExpenses[$department]['money'];      //其他费用
+        $info['lrze']              = $total_profit[$department];       //利润总额
+        $info['rsfyl']             = $human_affairs[$department];      //人事费用率
+
+        return $info;
+    }
+
+    /**
+     * 获取年初累计到当前季度所有的月份
+     * @param $year 年
+     * @param $quarter 季度
+     * @return array
+     */
+    function year_to_now_yms($year,$quarter){
+        $yms                        = array();
+      switch ($quarter){
+          case 1:
+              $sum                  = 3;
+              break;
+          case 2:
+              $sum                  = 6;
+              break;
+          case 3:
+              $sum                  = 9;
+              break;
+          case 4:
+              $sum                  = 12;
+              break;
+      }
+
+      for ($i=1;$i<=$sum;$i++){
+          $n                        = $i;
+          if (strlen($n) < 2) $n    = str_pad($n,2,'0',STR_PAD_LEFT);
+          $yms[]                    = $year.$n;
+      }
+      return$yms;
+    }
+
+    /**
+     * 获取累计到当前季度(含)的开始及结束时间戳
+     * @param $year
+     * @param $quarter
+     */
+    function year_to_now_times($year,$quarter){
+        switch ($quarter){
+            case 1:
+                $m                  = '03';
+                break;
+            case 2:
+                $m                  = '06';
+                break;
+            case 3:
+                $m                  = '09';
+                break;
+            case 4:
+                $m                  = '12';
+                break;
+        }
+        $prveyear                   = $year-1;
+        $times                      = array();
+        $times['beginTime']         = strtotime($prveyear.'1226');
+        $times['endTime']           = strtotime($year.$m.'26');
+        return $times;
+    }

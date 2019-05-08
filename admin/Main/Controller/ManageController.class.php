@@ -704,4 +704,41 @@ class ManageController extends ChartController {
         $this->display('kpi_budget');
     }
 
+    //kpi  人事费用率控制
+    public function public_person_cost_rate(){
+
+        $year                   = I('year')?trim(I('year')):date('Y');
+        $month                  = I('month')?trim(I('month')):date('Y');
+        $quarter                = get_quarter($month); //季度
+
+        $budget_info            = get_company_budget($year,$month); //公司季度预算信息
+        $hr_plan                = $budget_info['sum_manpower_cost']; //预算人力资源成本
+        $income                 = $budget_info['sum_logged_income']; //累计预算营收
+        $hr_plan_avg            = round($hr_plan/$income,4); //人事费用率
+
+        $operate_info           = get_company_operate('公司',$year,$month,'y'); //公司经营信息(年度累计)
+        $hr_real                = $operate_info['rlzycb']; //实际人力资源成本
+        $hr_real_avg            = $operate_info['rsfyl']/100; //人事费用率
+        $sum_avg                = $hr_real_avg - $hr_plan_avg;
+
+        $score                  = get_sum_avg($sum_avg,100); //根据平均值求结果分
+        $complete               = $score.'%';
+
+        $data                   = array();
+        $data['plan_hr_cost']   = $hr_plan; //累计预计人力资源成本
+        $data['plan_income']    = $income;  //累计预计营收
+        $data['plan_hr_avg']    = ($hr_plan_avg*100).'%'; //累计预计人事费用率
+
+        $data['real_hr_cost']   = $hr_real; //累计实际人力资源成本
+        $data['real_income']    = $operate_info['yysr'];  //累计实际营收
+        $data['real_hr_avg']    = ($hr_real_avg*100).'%'; //累计实际人事费用率
+        $data['complete']       = $complete;
+
+        $this->year             = $year;
+        $this->month            = $month;
+        $this->quarter          = $quarter;
+        $this->data             = $data;
+        $this->display('kpi_person_cost_rate');
+    }
+
  }
