@@ -76,7 +76,6 @@
                                         <input class="form-control"  type="text"  name="info[email]" value="{$row.email}"/>
                                     </div>-->
                                     
-                                    <if condition="rolemenu(array('Rbac/adduser'))">
                                     <div class="form-group col-md-3">
                                         <label>角色</label>
                                         <select  class="form-control"  name="info[roleid]" required>
@@ -124,7 +123,7 @@
                                     
                                     <div class="form-group col-md-3">
                                         <label>员工状态</label>
-                                        <select class="form-control" name="info[status]">
+                                        <select class="form-control" name="info[status]" onchange="show_expel($(this).val())">
                                         	<option <?php if($row['status']==0){ echo 'selected';}?> value="0">在职</option>
                                             <option <?php if($row['status']==1){ echo 'selected';}?> value="1">离职</option>
                                         </select>
@@ -134,61 +133,67 @@
                                         <label>入职时间</label>
                                         <input class="form-control inputdate"  type="text"  name="info[entry_time]" value="<if condition="$row['entry_time']">{$row.entry_time|date='Y-m-d',###}</if>"/>
                                     </div>
-<!--                                    <div class="form-group col-md-3">-->
-<!--                                        <label>离职时间</label>-->
-<!--                                        <input class="form-control inputdate"  type="text"  name="end_time" value="<if condition="$row['entry_time']">{$row.entry_time|date='Y-m-d',###}</if>" />-->
-<!--                                    </div>-->
 
+                                    <div class="form-group col-md-3" id="end_time">
+                                        <!--<label>离职时间</label>
+                                        <input class="form-control inputdate"  type="text"  name="end_time" value="<if condition="$row['end_time']">{$row.end_time|date='Y-m-d',###}</if>" />-->
+                                    </div>
 
-                                <div class="form-group col-md-3">
-                                    <label>员工类别</label>
-                                    <select class="form-control" name="info[formal]">
-                                        <option value=" ">请选择</option>
-                                        <option <?php if($row['formal']==1){ echo 'selected';}?> value="1">正式员工</option>
-                                        <option <?php if($row['formal']==0){ echo 'selected';}?> value="0">试用员工</option>
-                                        <option <?php if($row['formal']==3){ echo 'selected';}?> value="3">劳务员工</option>
-                                        <option <?php if($row['formal']==4){ echo 'selected';}?> value="4">实习员工</option>
+                                    <div class="form-group col-md-3" id="is_expel">
+                                        <label>是否被本公司开除</label>
+                                        <select class="form-control" name="info[expel]">
+                                            <option value="">请选择</option>
+                                            <option <?php if($row['expel']=='0'){ echo 'selected';}?> value="0">否</option>
+                                            <option <?php if($row['expel']=='1'){ echo 'selected';}?> value="1">是</option>
                                         </select>
-                                </div>
-                                <div class="form-group col-md-3">
-                                    <label>档案所属</label>
-                                    <select class="form-control" name="info[archives]">
-                                        <option <?php if($row['archives']==0){ echo 'selected';}?> value="0">请选择</option>
-                                        <option <?php if($row['archives']==1){ echo 'selected';}?> value="1">中心</option>
-                                        <option <?php if($row['archives']==2){ echo 'selected';}?> value="2">科旅</option>
-                                        <option <?php if($row['archives']==3){ echo 'selected';}?> value="3">科行</option>
-                                        <option <?php if($row['archives']==4){ echo 'selected';}?> value="4">行管局</option>
-                                    </select>
-                                </div>
-                                <div class="form-group col-md-3">
-                                    <label>身份证号</label>
-                                    <input class="form-control"  type="text" name="info[ID_number]"  value="{$row.ID_number}"/>
-                                </div>
+                                    </div>
 
-                                <div class="form-group col-md-3">
-                                    <label>工资卡号</label>
-                                    <input class="form-control"  type="text" name="info[Salary_card_number]"  value="{$row.Salary_card_number}"/>
-                                </div>
 
-                                <div class="form-group col-md-3">
-                                    <label>所属队列</label>
-                                    <select class="form-control" name="info[rank]" required>
-                                        <option value="">请选择</option>
-                                        <option <?php if($row['rank']=='00'){ echo 'selected';}?> value="00">0队列</option>
-                                        <option <?php if($row['rank']=='01'){ echo 'selected';}?> value="01">1队列</option>
-                                        <option <?php if($row['rank']=='02'){ echo 'selected';}?> value="02">2队列</option>
-                                        <option <?php if($row['rank']=='03'){ echo 'selected';}?> value="03">3队列</option>
-                                    </select>
-                                </div>
-                                        
-                                    </if>
+                                    <div class="form-group col-md-3">
+                                        <label>员工类别</label>
+                                        <select class="form-control" name="info[formal]">
+                                            <option value=" ">请选择</option>
+                                            <option <?php if($row['formal']==1){ echo 'selected';}?> value="1">正式员工</option>
+                                            <option <?php if($row['formal']==0){ echo 'selected';}?> value="0">试用员工</option>
+                                            <option <?php if($row['formal']==3){ echo 'selected';}?> value="3">劳务员工</option>
+                                            <option <?php if($row['formal']==4){ echo 'selected';}?> value="4">实习员工</option>
+                                            </select>
+                                    </div>
+                                    <div class="form-group col-md-3">
+                                        <label>档案所属</label>
+                                        <select class="form-control" name="info[archives]">
+                                            <option <?php if($row['archives']==0){ echo 'selected';}?> value="0">请选择</option>
+                                            <option <?php if($row['archives']==1){ echo 'selected';}?> value="1">中心</option>
+                                            <option <?php if($row['archives']==2){ echo 'selected';}?> value="2">科旅</option>
+                                            <option <?php if($row['archives']==3){ echo 'selected';}?> value="3">科行</option>
+                                            <option <?php if($row['archives']==4){ echo 'selected';}?> value="4">行管局</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group col-md-3">
+                                        <label>身份证号</label>
+                                        <input class="form-control"  type="text" name="info[ID_number]"  value="{$row.ID_number}"/>
+                                    </div>
 
-                                    <div class="form-group">&nbsp;</div>
-                                    <div class="form-group">&nbsp;</div>
-                                    <div class="form-group">&nbsp;</div>
-                                        
+                                    <div class="form-group col-md-3">
+                                        <label>工资卡号</label>
+                                        <input class="form-control"  type="text" name="info[Salary_card_number]"  value="{$row.Salary_card_number}"/>
+                                    </div>
 
+                                    <div class="form-group col-md-3">
+                                        <label>所属队列</label>
+                                        <select class="form-control" name="info[rank]" required>
+                                            <option value="">请选择</option>
+                                            <option <?php if($row['rank']=='00'){ echo 'selected';}?> value="00">0队列</option>
+                                            <option <?php if($row['rank']=='01'){ echo 'selected';}?> value="01">1队列</option>
+                                            <option <?php if($row['rank']=='02'){ echo 'selected';}?> value="02">2队列</option>
+                                            <option <?php if($row['rank']=='03'){ echo 'selected';}?> value="03">3队列</option>
+                                        </select>
+                                    </div>
                                     
+                                    <div class="form-group">&nbsp;</div>
+                                    <div class="form-group">&nbsp;</div>
+                                    <div class="form-group">&nbsp;</div>
+
                                 </div><!-- /.box-body -->
                             </div><!-- /.box -->
                             <div id="formsbtn">
@@ -247,6 +252,32 @@
 
 	});
     <?php } ?>
+
+    var end_time_html = `<label>离职时间</label> <input class="form-control inputdate"  type="text"  name="end_time" value="<?php echo $row['end_time']?date('Y-m-d',$row['end_time']):date('Y-m-d',NOW_TIME); ?>" required />`;
+    $(function () {
+        var status          = <?php echo $row['status']?$row['status']:0; ?>; //是否离职
+        if (status == 1){ //离职
+            $('#end_time').show();
+            $('#end_time').html(end_time_html);
+            $('#is_expel').show();
+        }else{
+            $('#end_time').html('');
+            $('#end_time').hide();
+            $('#is_expel').hide();
+        }
+    })
+
+    function show_expel(stu) {
+        if(stu == 1){ //离职
+            $('#is_expel').show();
+            $('#end_time').show();
+            $('#end_time').html(end_time_html);
+        }else{
+            $('#is_expel').hide();
+            $('#end_time').html('');
+            $('#end_time').hide();
+        }
+    }
 
 
     function get_department() {

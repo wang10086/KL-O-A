@@ -141,13 +141,18 @@ class RbacController extends BaseController {
                     $this->error('添加失败：' . $db->getError());
                 }
             }else{
-                $info['update_time'] = time();
-                $info['end_time']   = strtotime($_POST['end_time']);//离职时间
-                $info['departmentid'] = $_POST['departmentid'];//部门id
-                $isedit = $db->data($info)->where(array('id'=>$id))->save();
-                $data = array();
-				$data['role_id']  =  $info['roleid'];
-				$data['user_id']  =  $id;
+                $status                 = $info['status'];
+                if ($status ==1){
+                    $info['end_time']   = 0;
+                }else{
+                    $info['end_time']   = strtotime($_POST['end_time']);//离职时间
+                }
+                $info['update_time']    = time();
+                $info['departmentid']   = $_POST['departmentid'];//部门id
+                $isedit                 = $db->data($info)->where(array('id'=>$id))->save();
+                $data                   = array();
+				$data['role_id']        =  $info['roleid'];
+				$data['user_id']        =  $id;
 				
                 $urdb = M('role_user');
                 $urdb->where("`user_id`='".$id."'")->delete();

@@ -2143,6 +2143,43 @@ class KpiController extends BaseController {
         $this->title            = '实施专家业绩贡献度';
         $this->display('expert_achivement');
     }
+
+    //员工流失率
+    public function public_person_loss(){
+        $start_time             = I('st');
+        $end_time               = I('et');
+        $pin                    = I('pin',1);
+
+        $data                   = get_person_loss($start_time,$end_time);
+        $average                = round($data['$loss_num']/$data['$sum_num'],4);
+        $complete               = ($average*100).'%';
+        $data['complete']       = $complete;
+
+        $this->formal_stu       = array(0=>'<span class="yellow">试用</span>',1=>'<span class="green">正式</span>',3=>'<span class="red">劳务</span>',4=>'<span class="red">实习</span>');
+        $this->status_stu       = array(0=>'<span class="green">正常</span>',1=>'<span class="yellow">停用</span>',2=>'<span class="red">删除</span>');
+        $this->expel_stu        = array(0=>'<font color="#999999">否</font>',1=>'<span class="">是</span>');
+        $this->data             = $data;
+        $this->title            = '员工流失率';
+        $this->pin              = $pin;
+        $this->st               = $start_time;
+        $this->et               = $end_time;
+        $this->display('person_loss');
+    }
+
+    //员工流失率详情
+   /* public function bak__public_person_loss_detail(){
+        $start_time             = I('st');
+        $end_time               = I('et');
+
+        $data                   = get_person_loss($start_time,$end_time);
+        $average                = round($data['$loss_num']/$data['$sum_num'],4);
+        $complete               = ($average*100).'%';
+        $data['complete']       = $complete;
+        var_dump($data);die;
+
+        $this->data             = $data;
+        $this->display('person_loss_detail');
+    }*/
 	
 	public function test(){
 		P(team_new_customers(35,array(strtotime('2018-01-01'),strtotime('2018-01-25'))));

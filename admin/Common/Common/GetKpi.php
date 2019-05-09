@@ -2457,3 +2457,30 @@ function get_yw_department(){
         $times['endTime']           = strtotime($year.$m.'26');
         return $times;
     }
+
+    //员工流失率
+    function get_person_loss($start_time,$end_time){
+        //全部人员信息
+        $where                      = array();
+        $where['id']                = array('gt',10);
+        $where['status']            = array('in',array(0,1));
+        $where['input_time']        = array('lt',$end_time);
+        $where['nickname']          = array('not in',array('孟华华','李岩1','魏春竹1'));
+        $sum_lists                  = M('account')->where($where)->order('id asc')->getField('id,nickname,formal,status,expel',true);
+
+        //本月离职人员
+        $loss                       = array();
+        $loss['status']             = array('in',array(1,2)); //1=>停用,2=>删除
+        $loss['expel']              = 0; //排除公司辞退人员
+        $loss['formal']             = 1; //正式员工
+        $loss['end_time']           = array('between',array($start_time,$end_time));
+        $loss['nickname']           = array('not in',array('孟华华','李岩1','魏春竹1'));
+        $loss_lists                 = M('account')->where($loss)->getField('id,nickname,formal,status,expel',true);
+
+        $data                       = array();
+        $data['sum_num']            = count($sum_lists);
+        $data['loss_num']           = count($loss_lists);
+        $data['sum_lists']          = $sum_lists;
+        $data['loss_lists']         = $loss_lists;
+        return $data;
+    }
