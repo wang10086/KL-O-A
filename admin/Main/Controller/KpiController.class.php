@@ -2113,6 +2113,36 @@ class KpiController extends BaseController {
             $this->error('删除失败');
         }
     }
+
+    //实施专家业绩贡献度(kpi)
+    public function public_expert_achivement(){
+        $year                   = I('year');
+        $month                  = I('month');
+        $start_time             = trim(I('st'));
+        $end_time               = trim(I('et'));
+        $user_id                = I('uid');
+        if ($user_id == 12){ //秦鸣
+            $experts            = array_keys(C('EXPERT')); //实施专家id
+        }else{
+            $experts            = array($user_id);
+        }
+        $data                   = get_sum_gross_profit($experts,$start_time,$end_time);
+        $sum_profit             = $data['sum_profit'];      //毛利总和
+        $sum_base_wages         = $data['sum_base_wages'];  //1.5倍薪资岗位薪资总和
+        $user_lists             = $data['userdata'];
+
+        $wanchenglv             = round($sum_profit/$sum_base_wages,2);
+        $complete               = ($wanchenglv*100).'%';
+        $data['complete']       = $complete;
+
+        $this->lists            = $user_lists;
+        $this->userinfo         = M('account')->where(array('id'=>$user_id))->field('id,nickname')->find();
+        $this->data             = $data;
+        $this->year             = $year;
+        $this->month            = substr($month,4,2);
+        $this->title            = '实施专家业绩贡献度';
+        $this->display('expert_achivement');
+    }
 	
 	public function test(){
 		P(team_new_customers(35,array(strtotime('2018-01-01'),strtotime('2018-01-25'))));

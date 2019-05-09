@@ -913,20 +913,52 @@ function get_gross_profit($userid,$beginTime,$endTime){
     return $data;
 }
 
+    /*//研发专家毛利总额 和 基本工资总和
+        function get_sum_gross_profit($userids,$beginTime,$endTime){
+            $lists                      = array();
+            $base_wages                 = array();
+            foreach ($userids as $v){
+                $lists[$v]              = get_gross_profit($v,$beginTime,$endTime);
+                $base_wages[$v]         = get_wages_info($v);
+            }
+
+            $data                       = array();
+            $sum_profit                 = array_sum(array_column($lists,'self')) + array_sum(array_column($lists,'other')); //毛利总额
+            $sum_base_wages             = array_sum(array_column($base_wages,'otherWages'));    //1.5倍基本工资总和
+
+            $data['sum_profit']         = $sum_profit;
+            $data['sum_base_wages']     = $sum_base_wages;
+            return $data;
+        }*/
+
 //研发专家毛利总额 和 基本工资总和
 function get_sum_gross_profit($userids,$beginTime,$endTime){
     $lists                      = array();
     $base_wages                 = array();
+    $userdata                   = array();
     foreach ($userids as $v){
         $lists[$v]              = get_gross_profit($v,$beginTime,$endTime);
         $base_wages[$v]         = get_wages_info($v);
+        $userdata[$v]['userid'] = $v;
+        $userdata[$v]['uasrname']   = M('account')->where(array('id'=>$v))->getField('nickname');
+        $userdata[$v]['profit']     = $lists[$v]['sale'] + $lists[$v]['other']; //业绩贡献
+        $userdata[$v]['salary']     = $base_wages[$v]['standard_salary'];
+        $userdata[$v]['t_salary']   = $base_wages[$v]['otherWages']; //1.5倍薪资
+        $userdata[$v]['complete']   = (round($userdata[$v]['profit']/$userdata[$v]['t_salary'],2)*100).'%';
     }
 
     $data                       = array();
+    $sum_salary                 = array_sum(array_column($base_wages,'standard_salary'));
     $sum_profit                 = array_sum(array_column($lists,'self')) + array_sum(array_column($lists,'other')); //毛利总额
     $sum_base_wages             = array_sum(array_column($base_wages,'otherWages'));    //1.5倍基本工资总和
+    $wanchenglv                 = round($sum_profit/$sum_base_wages,2);
+    $complete                   = ($wanchenglv*100).'%';
+
     $data['sum_profit']         = $sum_profit;
+    $data['sum_salary']         = $sum_salary;
     $data['sum_base_wages']     = $sum_base_wages;
+    $data['complete']           = $complete;
+    $data['userdata']           = $userdata;
     return $data;
 }
 

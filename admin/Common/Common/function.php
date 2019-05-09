@@ -3165,7 +3165,7 @@ function updatekpi($month,$user){
                             $one_point_five_wages   = $wages_info['otherWages'];                                //1.5倍薪资
                             $wanchenglv             = round($maoli/$one_point_five_wages,2);
                             $complete               = ($wanchenglv*100).'%';
-                            $url                    = '';
+                            $url                    = U('Kpi/public_expert_achivement',array('year'=>$v['year'],'month'=>$v['month'],'st'=>$v['start_date'],'et'=>$v['end_date'],'uid'=>$v['user_id']));
                         }
 
                         //客户对公司产品满意度(研发经理)
@@ -3194,12 +3194,11 @@ function updatekpi($month,$user){
                         if ($v['quota_id']==156){
                             $experts                = array_keys(C('EXPERT'));
                             $data                   = get_sum_gross_profit($experts,$v['start_date'],$v['end_date']);
-                            $sum_profit             = $data['sum_profit'];      //毛利总和
-                            $sum_base_wages         = $data['sum_base_wages'];  //1.5倍薪资岗位薪资总和
+                            //$sum_profit             = $data['sum_profit'];      //毛利总和
+                            //$sum_base_wages         = $data['sum_base_wages'];  //1.5倍薪资岗位薪资总和
 
-                            $wanchenglv             = round($sum_profit/$sum_base_wages,2);
-                            $complete               = ($wanchenglv*100).'%';
-                            $url                    = '';
+                            $complete               = $data['complete'];
+                            $url                    = U('Kpi/public_expert_achivement',array('year'=>$v['year'],'month'=>$v['month'],'st'=>$v['start_date'],'et'=>$v['end_date'],'uid'=>$v['user_id']));
                         }
 
                         //所负责标准化产品的客户满意度 1大类 线路=> 王新月 , 2大类 课程=>彭白鸽 3大类 其他=>秦鸣
