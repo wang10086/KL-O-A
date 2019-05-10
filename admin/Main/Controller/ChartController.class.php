@@ -927,6 +927,68 @@ class ChartController extends BaseController {
         $this->display();
     }
 
+    //
+    public function public_oplist(){
+        $opids          = I('opids');
+        $arr_opids      = $opids?explode(',',$opids):'';
+        $depname        = trim(I('depname'));
+        $db		        = M('op');
+
+        $title	        = I('title');		//项目名称
+        $opid	        = I('id');			//项目编号
+        $oid	        = I('oid');			//项目团号
+        $ou		        = I('ou');			//立项人
+        $kind	        = I('kind');			//类型
+        $cus	        = I('cus');			//客户单位
+        $jd		        = I('jd');			//计调
+
+        $where          = array();
+
+        $where['o.type']                                = 1;
+        $where['o.op_id']                               = array('in',$arr_opids);
+        if($title)			$where['o.project']			= array('like','%'.$title.'%');
+        if($oid)			$where['o.group_id']		= array('like','%'.$oid.'%');
+        if($opid)			$where['o.op_id']			= $opid;
+        if($ou)				$where['o.create_user_name']= $ou;
+        if($kind)			$where['o.kind']			= $kind;
+        if($cus)			$where['o.customer']	    = $cus;
+        if($jd)				$where['a.nickname']		= array('like','%'.$jd.'%');
+
+        $field	        = 'o.*,a.nickname as jidiao';
+        //分页
+        $pagecount		= $db->table('__OP__ as o')->field($field)->join('__OP_AUTH__ as u on u.op_id = o.op_id','LEFT')->join('__ACCOUNT__ as a on a.id = u.line','LEFT')->where($where)->count();
+        $page			= new Page($pagecount, P::PAGE_SIZE);
+        $this->pages	= $pagecount>P::PAGE_SIZE ? $page->show():'';
+
+
+        $lists          = $db->table('__OP__ as o')->field($field)->join('__OP_AUTH__ as u on u.op_id = o.op_id','LEFT')->join('__ACCOUNT__ as a on a.id = u.line','LEFT')->where($where)->limit($page->firstRow . ',' . $page->listRows)->order($this->orders('o.create_time'))->select();
+
+        foreach($lists as $k=>$v){
+
+            //判断项目是否审核通过
+            if($v['audit_status']==0) $lists[$k]['zhuangtai'] = '<span class="blue">未审核</span>';
+            if($v['audit_status']==1) $lists[$k]['zhuangtai'] = '<span class="blue">立项通过</span>';
+            if($v['audit_status']==2) $lists[$k]['zhuangtai'] = '<span class="blue">立项未通过</span>';
+
+            //判断预算是否通过
+            $yusuan = M('op_budget')->where(array('op_id'=>$v['op_id']))->find();
+            if($yusuan && $yusuan['audit_status']==0) $lists[$k]['zhuangtai'] = '<span class="green">已提交预算</span>';
+            if($yusuan['audit_status']==1) $lists[$k]['zhuangtai'] = '<span class="green">预算通过</span>';
+            if($yusuan['audit_status']==2) $lists[$k]['zhuangtai'] = '<span class="green">预算未通过</span>';
+
+            //判断结算是否通过
+            $jiesuan = M('op_settlement')->where(array('op_id'=>$v['op_id']))->find();
+            if($jiesuan && $jiesuan['audit_status']==0) $lists[$k]['zhuangtai'] = '<span class="yellow">已提交结算</span>';
+            if($jiesuan['audit_status']==1) $lists[$k]['zhuangtai'] = '<span class="yellow">完成结算</span>';
+            if($jiesuan['audit_status']==2) $lists[$k]['zhuangtai'] = '<span class="yellow">结算未通过</span>';
+
+        }
+        $this->lists    =  $lists;
+        $this->kinds    =  M('project_kind')->getField('id,name', true);
+        $this->opids    = $opids;
+        $this->depname  = $depname;
+        $this->display('oplist');
+    }
 
 }
 	

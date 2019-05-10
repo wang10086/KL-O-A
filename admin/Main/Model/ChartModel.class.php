@@ -42,12 +42,14 @@ class ChartModel extends Model
             $field[]                = 'sum(b.maoli) as zml';
             $field[]                = '(sum(b.maoli)/sum(b.shouru)) as mll';
 
+            $yearopid_lists         = M()->table('__OP_SETTLEMENT__ as b')->field('o.op_id')->join('__OP__ as o on b.op_id = o.op_id', 'LEFT')->join('__ACCOUNT__ as a on a.id = o.create_user', 'LEFT')->join('__AUDIT_LOG__ as l on l.req_id = b.id', 'LEFT')->join('__OP_TEAM_CONFIRM__ as c on c.op_id=o.op_id', 'left')->where($where)->select();
             $yearlist               = M()->table('__OP_SETTLEMENT__ as b')->field($field)->join('__OP__ as o on b.op_id = o.op_id', 'LEFT')->join('__ACCOUNT__ as a on a.id = o.create_user', 'LEFT')->join('__AUDIT_LOG__ as l on l.req_id = b.id', 'LEFT')->join('__OP_TEAM_CONFIRM__ as c on c.op_id=o.op_id', 'left')->where($where)->order('zsr DESC')->find();
             $lists[$v['id']]['yearxms']     = $yearlist['xms'] ? $yearlist['xms'] : 0;
             $lists[$v['id']]['yearrenshu']  = $yearlist['renshu'] ? $yearlist['renshu'] : 0;
             $lists[$v['id']]['yearzsr']     = $yearlist['zsr'] ? $yearlist['zsr'] : "0.00";
             $lists[$v['id']]['yearzml']     = $yearlist['zml'] ? $yearlist['zml'] : "0.00";
             $lists[$v['id']]['yearmll']     = $yearlist['mll'] ? sprintf("%.2f", $yearlist['mll'] * 100) : "0.00";
+            $lists[$v['id']]['yearopids']   = implode(',',array_column($yearopid_lists,'op_id'));
 
             if ($quartertimes){ //季度
                 $where                  = array();
@@ -62,7 +64,7 @@ class ChartModel extends Model
                 $field[]                = 'sum(b.shouru) as zsr';
                 $field[]                = 'sum(b.maoli) as zml';
                 $field[]                = '(sum(b.maoli)/sum(b.shouru)) as mll';
-
+                $quarteropid_lists      = M()->table('__OP_SETTLEMENT__ as b')->field('o.op_id')->join('__OP__ as o on b.op_id = o.op_id', 'LEFT')->join('__ACCOUNT__ as a on a.id = o.create_user', 'LEFT')->join('__AUDIT_LOG__ as l on l.req_id = b.id', 'LEFT')->join('__OP_TEAM_CONFIRM__ as c on c.op_id=o.op_id', 'left')->where($where)->select();
                 $quarterlist            = M()->table('__OP_SETTLEMENT__ as b')->field($field)->join('__OP__ as o on b.op_id = o.op_id', 'LEFT')->join('__ACCOUNT__ as a on a.id = o.create_user', 'LEFT')->join('__AUDIT_LOG__ as l on l.req_id = b.id', 'LEFT')->join('__OP_TEAM_CONFIRM__ as c on c.op_id=o.op_id', 'left')->where($where)->order('zsr DESC')->find();
 
                 $lists[$v['id']]['quarterxms']      = $quarterlist['xms'] ? $quarterlist['xms'] : 0;
@@ -70,6 +72,7 @@ class ChartModel extends Model
                 $lists[$v['id']]['quarterzsr']      = $quarterlist['zsr'] ? $quarterlist['zsr'] : "0.00";
                 $lists[$v['id']]['quarterzml']      = $quarterlist['zml'] ? $quarterlist['zml'] : "0.00";
                 $lists[$v['id']]['quartermll']      = $quarterlist['mll'] ? sprintf("%.2f", $quarterlist['mll'] * 100) : "0.00";
+                $lists[$v['id']]['quarteropids']    = implode(',',array_column($quarteropid_lists,'op_id'));
             }
 
             if ($month){
@@ -87,6 +90,7 @@ class ChartModel extends Model
                 $field[]                = 'sum(b.maoli) as zml';
                 $field[]                = '(sum(b.maoli)/sum(b.shouru)) as mll';
 
+                $monthopid_lists        = M()->table('__OP_SETTLEMENT__ as b')->field('o.op_id')->join('__OP__ as o on b.op_id = o.op_id', 'LEFT')->join('__ACCOUNT__ as a on a.id = o.create_user', 'LEFT')->join('__AUDIT_LOG__ as l on l.req_id = b.id', 'LEFT')->join('__OP_TEAM_CONFIRM__ as c on c.op_id=o.op_id', 'left')->where($where)->select();
                 $monthlist              = M()->table('__OP_SETTLEMENT__ as b')->field($field)->join('__OP__ as o on b.op_id = o.op_id', 'LEFT')->join('__ACCOUNT__ as a on a.id = o.create_user', 'LEFT')->join('__AUDIT_LOG__ as l on l.req_id = b.id', 'LEFT')->join('__OP_TEAM_CONFIRM__ as c on c.op_id=o.op_id', 'left')->where($where)->order('zsr DESC')->find();
 
                 $lists[$v['id']]['monthxms']    = $monthlist['xms'] ? $monthlist['xms'] : 0;
@@ -94,6 +98,7 @@ class ChartModel extends Model
                 $lists[$v['id']]['monthzsr']    = $monthlist['zsr'] ? $monthlist['zsr'] : "0.00";
                 $lists[$v['id']]['monthzml']    = $monthlist['zml'] ? $monthlist['zml'] : "0.00";
                 $lists[$v['id']]['monthmll']    = $monthlist['mll'] ? sprintf("%.2f", $monthlist['mll'] * 100) : "0.00";
+                $lists[$v['id']]['monthopids']  = implode(',',array_column($monthopid_lists,'op_id'));
             }
             $lists[$v['id']]['users']           = $v['users'];
             $lists[$v['id']]['id']              = $v['id'];
@@ -129,16 +134,19 @@ class ChartModel extends Model
         $dj_heji['yearzsr']         = $dj_yeardata['zsr'];
         $dj_heji['yearzml']         = $dj_yeardata['zml'];
         $dj_heji['yearmll']         = sprintf("%.2f", ($dj_heji['yearzml'] / $dj_heji['yearzsr']) * 100);
+        $dj_heji['yearopids']       = implode(',',$dj_yeardata['opids']);
         $dj_heji['quarterxms']      = $dj_quarterdata['xms'];
         $dj_heji['quarterrenshu']   = $dj_quarterdata['renshu'];
         $dj_heji['quarterzsr']      = $dj_quarterdata['zsr'];
         $dj_heji['quarterzml']      = $dj_quarterdata['zml'];
         $dj_heji['quartermll']      = sprintf("%.2f", ($dj_heji['quarterzml'] / $dj_heji['quarterzsr']) * 100);
+        $dj_heji['quarteropids']    = implode(',',$dj_quarterdata['opids']);
         $dj_heji['monthxms']        = $dj_monthdata['xms'];
         $dj_heji['monthrenshu']     = $dj_monthdata['renshu'];
         $dj_heji['monthzsr']        = $dj_monthdata['zsr'];
         $dj_heji['monthzml']        = $dj_monthdata['zml'];
         $dj_heji['monthmll']        = sprintf("%.2f", ($dj_heji['monthzml'] / $dj_heji['monthzsr']) * 100);
+        $dj_heji['monthopids']      = implode(',',$dj_monthdata['opids']);
 
         $heji                   = array();
         $heji['yearxms']        = array_sum(array_column($lists, 'yearxms'));
@@ -146,16 +154,19 @@ class ChartModel extends Model
         $heji['yearzsr']        = array_sum(array_column($lists, 'yearzsr')) - $dj_yeardata['zsr'];
         $heji['yearzml']        = array_sum(array_column($lists, 'yearzml'));
         $heji['yearmll']        = sprintf("%.2f", ($heji['yearzml'] / $heji['yearzsr']) * 100);
+        $heji['yearopids']      = implode(',',array_filter(array_column($lists,'yearopids')));
         $heji['quarterxms']     = array_sum(array_column($lists, 'quarterxms'));
         $heji['quarterrenshu']  = array_sum(array_column($lists, 'quarterrenshu')) - $dj_quarterdata['renshu'];
         $heji['quarterzsr']     = array_sum(array_column($lists, 'quarterzsr')) - $dj_quarterdata['zsr'];
         $heji['quarterzml']     = array_sum(array_column($lists, 'quarterzml'));
         $heji['quartermll']     = sprintf("%.2f", ($heji['quarterzml'] / $heji['quarterzsr']) * 100);
+        $heji['quarteropids']   = implode(',',array_filter(array_column($lists,'quarteropids')));
         $heji['monthxms']       = array_sum(array_column($lists, 'monthxms'));
         $heji['monthrenshu']    = array_sum(array_column($lists, 'monthrenshu')) - $dj_monthdata['renshu'];
         $heji['monthzsr']       = array_sum(array_column($lists, 'monthzsr')) - $dj_monthdata['zsr'];
         $heji['monthzml']       = array_sum(array_column($lists, 'monthzml'));
         $heji['monthmll']       = sprintf("%.2f", ($heji['monthzml'] / $heji['monthzsr']) * 100);
+        $heji['monthopids']     = implode(',',array_filter(array_column($lists,'monthopids')));
         $lists['heji']          = $heji;
         $lists['dj_heji']       = $dj_heji;
         return $lists;
@@ -170,19 +181,20 @@ class ChartModel extends Model
         $where['l.audit_time']  = array('between', "$beginTime,$endTime");
         $where['b.op_id']       = array('in',$dj_opids);
 
-        $field   = array();
-        $field[] = 'count(o.id) as xms';
-        $field[] = 'sum(c.num_adult) as renshu';
-        $field[] = 'sum(b.shouru) as zsr';
-        $field[] = 'sum(b.maoli) as zml';
-        $field[] = '(sum(b.maoli)/sum(b.shouru)) as mll';
+        $field                  = array();
+        $field[]                = 'count(o.id) as xms';
+        $field[]                = 'sum(c.num_adult) as renshu';
+        $field[]                = 'sum(b.shouru) as zsr';
+        $field[]                = 'sum(b.maoli) as zml';
+        $field[]                = '(sum(b.maoli)/sum(b.shouru)) as mll';
 
-        $yearlist = M()->table('__OP_SETTLEMENT__ as b')->field($field)->join('__OP__ as o on b.op_id = o.op_id', 'LEFT')->join('__ACCOUNT__ as a on a.id = o.create_user', 'LEFT')->join('__AUDIT_LOG__ as l on l.req_id = b.id', 'LEFT')->join('__OP_TEAM_CONFIRM__ as c on c.op_id=o.op_id', 'left')->where($where)->order('zsr DESC')->find();
-        $list['xms'] = $yearlist['xms'] ? $yearlist['xms'] : 0;
-        $list['renshu'] = $yearlist['renshu'] ? $yearlist['renshu'] : 0;
-        $list['zsr'] = $yearlist['zsr'] ? $yearlist['zsr'] : "0.00";
-        $list['zml'] = $yearlist['zml'] ? $yearlist['zml'] : "0.00";
-        $list['mll'] = $yearlist['mll'] ? sprintf("%.2f", $yearlist['mll'] * 100) : "0.00";
+        $yearlist               = M()->table('__OP_SETTLEMENT__ as b')->field($field)->join('__OP__ as o on b.op_id = o.op_id', 'LEFT')->join('__ACCOUNT__ as a on a.id = o.create_user', 'LEFT')->join('__AUDIT_LOG__ as l on l.req_id = b.id', 'LEFT')->join('__OP_TEAM_CONFIRM__ as c on c.op_id=o.op_id', 'left')->where($where)->order('zsr DESC')->find();
+        $list['xms']            = $yearlist['xms'] ? $yearlist['xms'] : 0;
+        $list['renshu']         = $yearlist['renshu'] ? $yearlist['renshu'] : 0;
+        $list['zsr']            = $yearlist['zsr'] ? $yearlist['zsr'] : "0.00";
+        $list['zml']            = $yearlist['zml'] ? $yearlist['zml'] : "0.00";
+        $list['mll']            = $yearlist['mll'] ? sprintf("%.2f", $yearlist['mll'] * 100) : "0.00";
+        $list['opids']          = $dj_opids;
         return $list;
     }
 
@@ -320,12 +332,14 @@ class ChartModel extends Model
             $yearzsr            = $yeardata['zsr'];
             $yearzml            = $yeardata['zml'];
             $yearmll            = $yeardata['mll'];
+            $yearopids          = implode(',',$yeardata['opids']);
 
             $lists[$v['id']]['yearxms']     = $yearxms ? $yearxms : 0;
             $lists[$v['id']]['yearrenshu']  = $yearrenshu ? $yearrenshu : 0;
             $lists[$v['id']]['yearzsr']     = $yearzsr ? $yearzsr : "0.00";
             $lists[$v['id']]['yearzml']     = $yearzml ? $yearzml : "0.00";
             $lists[$v['id']]['yearmll']     = $yearmll ? sprintf("%.2f", $yearmll * 100) : "0.00";
+            $lists[$v['id']]['yearopids']   = $yearopids;
 
             if ($quartertimes){ //季度累计
                 //季度结算的团
@@ -345,12 +359,14 @@ class ChartModel extends Model
                 $quarterzsr     = $quarterdata['zsr'];
                 $quarterzml     = $quarterdata['zml'];
                 $quartermll     = $quarterdata['mll'];
+                $quarteropids   = implode(',',$quarterdata['opids']);
 
                 $lists[$v['id']]['quarterxms']      = $quarterxms ? $quarterxms : 0;
                 $lists[$v['id']]['quarterrenshu']   = $quarterrenshu ? $quarterrenshu : 0;
                 $lists[$v['id']]['quarterzsr']      = $quarterzsr ? $quarterzsr : "0.00";
                 $lists[$v['id']]['quarterzml']      = $quarterzml ? $quarterzml : "0.00";
                 $lists[$v['id']]['quartermll']      = $quartermll ? sprintf("%.2f", $quartermll * 100) : "0.00";
+                $lists[$v['id']]['quarteropids']    = $quarteropids;
             }
 
             if ($month){ //月度累计
@@ -371,12 +387,14 @@ class ChartModel extends Model
                 $monthzsr       = $monthdata['zsr'];
                 $monthzml       = $monthdata['zml'];
                 $monthmll       = $monthdata['mll'];
+                $monthopids     = implode(',',$monthdata['opids']);
 
                 $lists[$v['id']]['monthxms']    = $monthxms ? $monthxms : 0;
                 $lists[$v['id']]['monthrenshu'] = $monthrenshu ? $monthrenshu : 0;
                 $lists[$v['id']]['monthzsr']    = $monthzsr ? $monthzsr : "0.00";
                 $lists[$v['id']]['monthzml']    = $monthzml ? $monthzml : "0.00";
                 $lists[$v['id']]['monthmll']    = $monthmll ? sprintf("%.2f", $monthmll * 100) : "0.00";
+                $lists[$v['id']]['monthopids']  = $monthopids;
             }
             $lists[$v['id']]['users']           = $v['users'];
             $lists[$v['id']]['id']              = $v['id'];
@@ -440,16 +458,19 @@ class ChartModel extends Model
         $dj_heji['yearzsr']         = $dj_yeardata['zsr'];
         $dj_heji['yearzml']         = $dj_yeardata['zml'];
         $dj_heji['yearmll']         = sprintf("%.2f", ($dj_heji['yearzml'] / $dj_heji['yearzsr']) * 100);
+        $dj_heji['yearopids']       = implode(',',$dj_yeardata['opids']);
         $dj_heji['quarterxms']      = $dj_quarterdata['xms'];
         $dj_heji['quarterrenshu']   = $dj_quarterdata['renshu'];
         $dj_heji['quarterzsr']      = $dj_quarterdata['zsr'];
         $dj_heji['quarterzml']      = $dj_quarterdata['zml'];
         $dj_heji['quartermll']      = sprintf("%.2f", ($dj_heji['quarterzml'] / $dj_heji['quarterzsr']) * 100);
+        $dj_heji['quarteropids']    = implode(',',$dj_quarterdata['opids']);
         $dj_heji['monthxms']        = $dj_monthdata['xms'];
         $dj_heji['monthrenshu']     = $dj_monthdata['renshu'];
         $dj_heji['monthzsr']        = $dj_monthdata['zsr'];
         $dj_heji['monthzml']        = $dj_monthdata['zml'];
         $dj_heji['monthmll']        = sprintf("%.2f", ($dj_heji['monthzml'] / $dj_heji['monthzsr']) * 100);
+        $dj_heji['monthopids']      = implode(',',$dj_monthdata['opids']);
 
         $heji                       = array();
         $heji['yearxms']            = array_sum(array_column($lists, 'yearxms'));
@@ -457,16 +478,19 @@ class ChartModel extends Model
         $heji['yearzsr']            = array_sum(array_column($lists, 'yearzsr')) - $dj_heji['yearzsr'];
         $heji['yearzml']            = array_sum(array_column($lists, 'yearzml'));
         $heji['yearmll']            = sprintf("%.2f", ($heji['yearzml'] / $heji['yearzsr']) * 100);
+        $heji['yearopids']          = implode(',',array_filter(array_column($lists,'yearopids')));
         $heji['quarterxms']         = array_sum(array_column($lists, 'quarterxms'));
         $heji['quarterrenshu']      = array_sum(array_column($lists, 'quarterrenshu')) - $dj_heji['quarterrenshu'];
         $heji['quarterzsr']         = array_sum(array_column($lists, 'quarterzsr')) - $dj_heji['quarterzsr'];
         $heji['quarterzml']         = array_sum(array_column($lists, 'quarterzml'));
         $heji['quartermll']         = sprintf("%.2f", ($heji['quarterzml'] / $heji['quarterzsr']) * 100);
+        $heji['quarteropids']       = implode(',',array_filter(array_column($lists,'quarteropids')));
         $heji['monthxms']           = array_sum(array_column($lists, 'monthxms'));
         $heji['monthrenshu']        = array_sum(array_column($lists, 'monthrenshu')) - $dj_heji['monthrenshu'];
         $heji['monthzsr']           = array_sum(array_column($lists, 'monthzsr')) - $dj_heji['monthzsr'];
         $heji['monthzml']           = array_sum(array_column($lists, 'monthzml'));
         $heji['monthmll']           = sprintf("%.2f", ($heji['monthzml'] / $heji['monthzsr']) * 100);
+        $heji['monthopids']         = implode(',',array_filter(array_column($lists,'monthopids')));
         $lists['heji']              = $heji;
         $lists['dj_heji']           = $dj_heji;
 
@@ -510,8 +534,7 @@ class ChartModel extends Model
      * @param array 所有结算id
      * @return array
      */
-    public function get_ysjshz($ysopids, $jsopids)
-    {
+    public function get_ysjshz($ysopids, $jsopids){
         //从预算取值的团
         /*$fromys = array();
         foreach ($ysopids as $value) {
@@ -536,12 +559,18 @@ class ChartModel extends Model
         $yearjslist = M()->table('__OP_SETTLEMENT__ as b')->field($field)->join('__OP__ as o on b.op_id = o.op_id', 'LEFT')->join('__OP_TEAM_CONFIRM__ as c on c.op_id=o.op_id', 'left')->where($jswhere)->order('zsr DESC')->find();
         $yearyslist = M()->table('__OP_BUDGET__ as b')->field($field)->join('__OP__ as o on b.op_id = o.op_id', 'LEFT')->join('__OP_TEAM_CONFIRM__ as c on c.op_id=o.op_id', 'left')->where($yswhere)->order('zsr DESC')->find();
 
-        $data = array();
-        $data['xms'] = $yearjslist['xms'] + $yearyslist['xms'];
+        $opids          = array();
+        if ($ysopids){ foreach ($ysopids as $v){ $opids[] = $v;}}
+        if ($jsopids){ foreach ($jsopids as $v){ $opids[] = $v;}}
+
+        $data           = array();
+        $data['xms']    = $yearjslist['xms'] + $yearyslist['xms'];
         $data['renshu'] = $yearjslist['renshu'] + $yearyslist['renshu'];
-        $data['zsr'] = $yearjslist['zsr'] + $yearyslist['zsr'];
-        $data['zml'] = $yearjslist['zml'] + $yearyslist['zml'];
-        $data['mll'] = $data['zml'] / $data['zsr'];
+        $data['zsr']    = $yearjslist['zsr'] + $yearyslist['zsr'];
+        $data['zml']    = $yearjslist['zml'] + $yearyslist['zml'];
+        $data['mll']    = $data['zml'] / $data['zsr'];
+        //$data['opids']  = array_merge($ysopids,$jsopids);
+        $data['opids']  = $opids;
         return $data;
     }
 
