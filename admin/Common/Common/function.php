@@ -3539,23 +3539,25 @@ function get_role_link($roleid,$rtype = 0){
         $data['history']                    = 0;
         $arr_opids                          = array_column($lists,'op_id');
         foreach ($lists as $k=>$v){
+            if (!$v['cid']) $contract_id    = M('contract')->where(array('op_id'=>$v['op_id']))->getField('id');
+            $v['cid']                       = $v['cid']?$v['cid']:($contract_id?$contract_id:0);
             $show_times                     = get_array_repeats($arr_opids,$v['op_id']);
             $no_sum                         = $v['no'].'/'.$show_times;
             $v['no_sum']                    = $no_sum;
             if ($v['status']==2){
-                $v['stu']           = "<span class='green'>已回款</span>";
+                $v['stu']                   = "<span class='green'>已回款</span>";
             }elseif ($v['status']==1){
-                $v['stu']           = "<span class='yellow'>回款中</span>";
+                $v['stu']                   = "<span class='yellow'>回款中</span>";
             }else{
                 if ($v['return_time']<$end_time){
-                    $v['stu']       = "<span class='red'>未回款</span>";
+                    $v['stu']               = "<span class='red'>未回款</span>";
                     if ($v['return_time'] < $start_time){ //排除当月未回款的团
                         $data['history_list'][] = $v;
                         $data['history']        += $v['amount'];
                         $data['history_return'] += $v['pay_amount'];
                     }
                 }else{
-                    $v['stu']       = "<font color='#999999'>未考核</font>";
+                    $v['stu']               = "<font color='#999999'>未考核</font>";
                 }
             }
 
