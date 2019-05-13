@@ -426,7 +426,7 @@ class ChartModel extends Model
             $dj_q_js_opids  = array_column($dj_q_js_opids,'op_id');
             $in_quarter_opids = array();
             foreach ($dj_opids as $v){
-                if (!in_array($dj_js_opids,$v)){
+                if (!in_array($v,$dj_js_opids)){
                     $in_quarter_opids[] = $v;
                 }
             }
@@ -443,7 +443,7 @@ class ChartModel extends Model
             $dj_m_js_opids  = array_column($dj_m_js_opids,'op_id');
             $in_month_opids = array();
             foreach ($dj_opids as $v){
-                if (!in_array($dj_js_opids,$v)){
+                if (!in_array($v,$dj_js_opids)){
                     $in_month_opids[] = $v;
                 }
             }
