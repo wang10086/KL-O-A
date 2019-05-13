@@ -927,7 +927,7 @@ class ChartController extends BaseController {
         $this->display();
     }
 
-    //
+    //项目分部门汇总(项目数详情)
     public function public_oplist(){
         $opids          = I('opids');
         $arr_opids      = $opids?explode(',',$opids):'';

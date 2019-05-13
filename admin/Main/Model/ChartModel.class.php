@@ -409,10 +409,11 @@ class ChartModel extends Model
         $dj_js_opids    = array_column($dj_js_opids,'op_id');
         $in_year_opids  = array();
         foreach ($dj_opids as $v){
-            if (!in_array($dj_js_opids,$v)){
+            if (!in_array($v,$dj_js_opids)){
                 $in_year_opids[] = $v;
             }
         }
+
         $req_type       = 800;  //预算
         $dj_ys_opids    = $this->get_dj_ys_opids($yearbegintime, $yearendtime, $req_type,$in_year_opids);
         $dj_ys_opids    = array_column($dj_ys_opids,'op_id');
