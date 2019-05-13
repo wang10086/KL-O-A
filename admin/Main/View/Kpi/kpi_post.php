@@ -19,7 +19,7 @@
                             
                                   
                             <div class="btn-group" id="catfont" style="padding-bottom:20px;">
-                            	<?php if($prveyear>2019){ ?>
+                            	<?php if($prveyear>2017){ ?>
                                 <a href="{:U('Kpi/postkpi',array('year'=>$prveyear,'month'=>'01','post'=>$post))}" class="btn btn-default" style="padding:8px 18px;">上一年</a>
                                 <?php } ?>
 								<?php 
