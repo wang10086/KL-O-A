@@ -982,6 +982,11 @@ class ChartController extends BaseController {
             if($jiesuan['audit_status']==1) $lists[$k]['zhuangtai'] = '<span class="yellow">完成结算</span>';
             if($jiesuan['audit_status']==2) $lists[$k]['zhuangtai'] = '<span class="yellow">结算未通过</span>';
 
+            $settlement = M('op_settlement')->where(array('op_id'=>$v['op_id'],'audit_status'=>1))->find();
+            $budget     = M('op_budget')->where(array('op_id'=>$v['op_id'],'audit_status'=>1))->find();
+
+            $lists[$k]['shouru']    = $settlement['shouru']?$settlement['shouru']:$budget['shouru'];
+            $lists[$k]['maoli']     = $settlement['maoli']?$settlement['maoli']:$budget['maoli'];
         }
         $this->lists    =  $lists;
         $this->kinds    =  M('project_kind')->getField('id,name', true);

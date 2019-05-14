@@ -36,8 +36,10 @@
                                         <th class="sorting" data="o.project" width="160">项目名称</th>
                                         <th class="sorting" data="o.number">人数</th>
                                         <th class="sorting" data="o.departure">出行时间</th>
-                                        <th class="sorting" data="o.days">天数</th>
-                                        <th class="sorting" width="80" data="o.destination">目的地</th>
+                                        <!--<th class="sorting" data="o.days">天数</th>
+                                        <th class="sorting" width="80" data="o.destination">目的地</th>-->
+                                        <th class="sorting" data="">收入</th>
+                                        <th class="sorting" data="">毛利</th>
                                         <th class="sorting" width="80" data="o.kind">类型</th>
                                         <th class="sorting" data="a.jidiao">计调</th>
                                         <th class="sorting" data="o.create_user_name">创建者</th>
@@ -50,8 +52,10 @@
                                         <td><div class="tdbox_long"><a href="{:U('Op/plans_follow',array('opid'=>$row['op_id']))}" title="{$row.project}">{$row.project}</a></div></td>
                                         <td>{$row.number}人</td>
                                         <td>{$row.departure}</td>
-                                        <td>{$row.days}天</td>
-                                        <td><div class="tdbox_long" style="width:80px" title="{$row.destination}">{$row.destination}</div></td>
+                                        <!--<td>{$row.days}天</td>
+                                        <td><div class="tdbox_long" style="width:80px" title="{$row.destination}">{$row.destination}</div></td>-->
+                                        <td>{$row.shouru}</td>
+                                        <td>{$row.maoli}</td>
                                         <td><div class="tdbox_long" style="width:80px" title="<?php echo $kinds[$row['kind']]; ?>"><?php echo $kinds[$row['kind']]; ?></div></td>
                                         <td>{$row.jidiao}</td>
                                         <td>{$row.create_user_name}</td>
