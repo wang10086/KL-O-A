@@ -45,7 +45,13 @@
                     </div><!-- /.box-body -->
                 </div><!-- /.box -->
 
-                <include file="jiekuandan" />
+                <div class="box box-warning" style="margin-top:15px;">
+                    <div class="box-header">
+                        <h3 class="box-title">借款单详情</h3>
+                    </div><!-- /.box-header -->
+                    <include file="jiekuandan" />
+                </div><!-- /.box -->
+
 
                 <div class="box box-warning">
                     <div class="box-header">

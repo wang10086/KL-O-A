@@ -22,6 +22,9 @@
                                     <h3 class="box-title">报销单信息</h3>
                                 </div><!-- /.box-header -->
                                 <div class="box-body">
+                                    <?php if ($baoxiao['audit_status'] == 0){ ?>
+                                        <include file="progress_bx" />
+                                    <?php } ?>
                                     <include file="baoxiaodan" />
                                 </div>
                             </div>

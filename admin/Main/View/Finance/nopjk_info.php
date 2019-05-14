@@ -23,7 +23,10 @@
                     </div><!-- /.box-header -->
                     <div class="box-body">
                         <?php if($jiekuan){ ?>
-                                <include file="nop_jiekuandan" />
+                            <?php if ($jiekuan['audit_status'] == 0){ ?>
+                                <include file="progress_jk" />
+                            <?php } ?>
+                            <include file="nop_jiekuandan" />
                         <?php }else{ ?>
                             <div class="content" style="padding-top:40px;">  获取借款信息失败!</div>
                         <?php } ?>

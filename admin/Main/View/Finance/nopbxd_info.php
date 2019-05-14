@@ -25,6 +25,9 @@
                                     </h3>
                                 </div><!-- /.box-header -->
                                 <div class="box-body">
+                                    <?php if ($baoxiao['audit_status'] == 0){ ?>
+                                        <include file="progress_bx" />
+                                    <?php } ?>
                                     <include file="nop_baoxiaodan" />
                                 </div>
                             </div>

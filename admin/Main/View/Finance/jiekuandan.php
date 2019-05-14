@@ -1,6 +1,9 @@
 
 <?php if($jiekuan){ ?>
     <div class="box-body">
+        <?php if ($jiekuan['audit_status'] == 0){ ?>
+        <include file="progress_jk" />
+        <?php } ?>
         <table class="table table-bordered dataTable fontmini" id="tablelist" style="margin-top:10px;">
             <tr role="row" class="orders" >
                 <th class="sorting" width="150" data="title">费用项</th>
