@@ -1941,5 +1941,21 @@ class AjaxController extends Controller {
         }
         $this->ajaxReturn($msg);
     }
+
+    //省市二级联动
+    public function get_city(){
+        $db                     = M('citys');
+        $province               = trim(I('province'));
+        $citys                  = $db->field('id,name')->where(array('pid'=>$province))->select();
+        $this->ajaxReturn($citys);
+    }
+
+    //市县二级联动
+    public function get_country(){
+        $db                     = M('citys');
+        $city                   = trim(I('city'));
+        $country                = $db->field('id,name')->where(array('pid'=>$city))->select();
+        $this->ajaxReturn($country);
+    }
 }
 

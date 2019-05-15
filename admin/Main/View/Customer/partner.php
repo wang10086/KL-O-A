@@ -1,0 +1,122 @@
+<include file="Index:header2" />
+
+            <aside class="right-side">
+                <!-- Content Header (Page header) -->
+                <section class="content-header">
+                    <h1>{$_action_}</h1>
+                    <ol class="breadcrumb">
+                        <li><a href="{:U('Index/index')}"><i class="fa fa-home"></i> 首页</a></li>
+                        <li><a href="{:U('Customer/partner')}"><i class="fa fa-gift"></i> {$_pagetitle_}</a></li>
+                        <li class="active">{$_action_}</li>
+                    </ol>
+                </section>
+
+                <!-- Main content -->
+                <section class="content">
+
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <div class="box box-success">
+                                <div class="box-header">
+                                    <h3 class="box-title">{$_action_}</h3>
+                                    <div class="box-tools pull-right">
+                                    	 <a href="javascript:;" class="btn btn-info btn-sm" onclick="javascript:opensearch('searchtext',700,100);"><i class="fa fa-search"></i> 搜索</a>
+                                        <if condition="rolemenu(array('Customer/partner_edit'))">
+                                            <a href="{:U('Customer/partner_edit')}" class="btn btn-sm btn-success"><i class="fa fa-plus"></i> 录入合伙人</a>
+                                        </if>
+                                    </div>
+                                </div><!-- /.box-header -->
+                                <div class="box-body">
+                                <table class="table table-bordered dataTable fontmini" id="tablelist" style="margin-top:10px;">
+                                    <tr role="row" class="orders" >
+                                    	<!--<th width="40" style="text-align:center;"><input type="checkbox" id="accessdata"/></th>-->
+                                        <th class="sorting" width="60" data="id">ID</th>
+                                        <th class="sorting" data="company_name">合伙人名称</th>
+                                        <th class="sorting" data="">负责人</th>
+                                        <th class="sorting" data="contacts">联系人</th>
+                                        <th class="sorting" data="contacts_phone">联系电话</th>
+                                        <th class="sorting" data="province">合伙人所在地</th>
+                                        <th>独家区域</th>
+                                        <th>保证金</th>
+                                        <th class="sorting" data="cm_name">维护人</th>
+                                        <th class="sorting" data="">合伙人协议</th>
+                                        <if condition="rolemenu(array('Customer/partner_edit'))">
+                                        <th width="50" class="taskOptions">维护</th>
+                                        </if>
+                                        <if condition="rolemenu(array('Customer/del_partner'))">
+                                        <th width="50" class="taskOptions">删除</th>
+                                        </if>
+                                    </tr>
+                                    <foreach name="lists" item="row"> 
+                                    <tr>
+                                    	<td align="center">
+                                        <!--<input type="checkbox"  value="{$row.id}" class="accessdata" />-->
+                                        </td>
+                                        <td>{$row.id}</td>
+                                        <td><a href="{:U('Customer/partner_viwe',array('id'=>$row['id']))}" title="详情">{$row.company_name}</a></td>
+                                        <td>{$row.type}</td>
+                                        <td>{$row.contacts}</td>
+                                        <td>{$row.contacts_phone}</td>
+                                        <td>{$row.province} {$row.city} {$row.county}</td>
+                                        <td>{$row.hezuo}</td>
+                                        <td>{$row.hezuocishu}</td>
+                                        <td>{$row.level}</td>
+                                        <td>{$row.qianli}</td>
+                                        <td>{$row.cm_name}</td>
+                                        <if condition="rolemenu(array('Customer/partner_edit'))">
+                                        <td class="taskOptions">
+                                        <a href="{:U('Customer/partner_edit',array('id'=>$row['id']))}" title="维护" class="btn btn-info btn-smsm"><i class="fa fa-pencil"></i></a>
+                                        </td>
+                                        </if>
+                                        <if condition="rolemenu(array('Customer/delgec'))">
+                                        <td class="taskOptions">
+                                        <button onclick="javascript:ConfirmDel('{:U('Customer/delgec',array('id'=>$row['id']))}')" title="删除" class="btn btn-warning btn-smsm"><i class="fa fa-times"></i></button>
+                                       
+                                        </td>
+                                        </if>
+                                       
+                                    </tr>
+                                    </foreach>					
+                                </table>
+                                </div><!-- /.box-body -->
+                                 <div class="box-footer clearfix">
+                                	<div class="pagestyle">{$pages}</div>
+                                </div>
+                            </div><!-- /.box -->
+
+                        </div><!-- /.col -->
+                     </div>
+
+                </section><!-- /.content -->
+            </aside><!-- /.right-side -->
+            
+            
+            <div id="searchtext">
+                <form action="" method="get" id="searchform">
+                <input type="hidden" name="m" value="Main">
+                <input type="hidden" name="c" value="Customer">
+                <input type="hidden" name="a" value="partner">
+                
+                <div class="form-group col-md-6">
+                    <input type="text" class="form-control" name="keywords" placeholder="合作伙伴名称">
+                </div>
+
+                <div class="form-group col-md-6">
+                    <input type="text" class="form-control" name="keywords" placeholder="联系人">
+                </div>
+                
+                <div class="form-group col-md-6">
+                	<input type="text" class="form-control" name="province" placeholder="省份">
+                </div>
+
+                <div class="form-group col-md-6">
+                    <input type="text" class="form-control" name="keywords" placeholder="维护人">
+                </div>
+                
+                </form>
+            </div>
+            
+            
+			<include file="Index:footer2" />
+            
+            
