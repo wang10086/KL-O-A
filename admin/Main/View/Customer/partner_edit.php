@@ -50,6 +50,18 @@
                                         </div>
 
                                         <div class="form-group col-md-4">
+                                            <label>合伙协议开始时间：</label><input type="text" name="info[start_date]" class="form-control inputdate_a" value="<?php echo $partner['start_date']?date('Y-m-d',$partner['start_date']):''; ?>"/>
+                                        </div>
+
+                                        <div class="form-group col-md-4">
+                                            <label>合伙协议结束时间：</label><input type="text" name="info[end_date]" class="form-control inputdate_a" value="<?php echo $partner['start_date']?date('Y-m-d',$partner['start_date']):''; ?>"/>
+                                        </div>
+
+                                        <div class="form-group col-md-4">
+                                            <label>通讯地址：</label><input type="text" name="info[contacts_address]" class="form-control" value="{$partner.contacts_address}"/>
+                                        </div>
+
+                                        <div class="form-group col-md-4">
                                             <label>负责人：</label><input type="text" name="info[manager]" class="form-control" value="{$partner.manager}"/>
                                         </div>
 
@@ -122,31 +134,10 @@
                                             </select>
                                         </div>
 
-                                        <div class="form-group col-md-4">
+                                        <!--<div class="form-group col-md-4">
                                             <label>保证金：</label>
                                             <input class="form-control" name="info[deposit]" value="{$partner.deposit}" />
-                                        </div>
-
-                                        <!--<script class="resources library" src="__HTML__/js/area.js" type="text/javascript"></script>
-										<script type="text/javascript">
-										var opt0 = ["{$partner.province}","{$partner.city}","{$partner.county}"];//初始值
-										_init_area();
-                                        </script>-->
-
-                                        <!--<div class="form-group col-md-4">
-                                            <label>开发潜力：</label>
-                                            <select  class="form-control"  name="info[qianli]">
-                                            	<option value="">请选择</option>
-                                            	<option value="无太大潜力" <?php /*if($partner['qianli']=='无太大潜力'){ echo 'selected';} */?>>无太大潜力</option>
-                                                <option value="一般潜力" <?php /*if($partner['qianli']=='一般潜力'){ echo 'selected';} */?>>一般潜力</option>
-                                                <option value="潜力较大" <?php /*if($partner['qianli']=='潜力较大'){ echo 'selected';} */?>>潜力较大</option>
-                                                <option value="潜力巨大" <?php /*if($partner['qianli']=='潜力巨大'){ echo 'selected';} */?>>潜力巨大</option>
-                                            </select> 
                                         </div>-->
-                                        <div class="form-group col-md-4">
-                                            <label>通讯地址：</label><input type="text" name="info[contacts_address]" class="form-control" value="{$partner.contacts_address}"/>
-                                        </div>
-                                        
                                         
                                         <div class="form-group col-md-4">
                                             <label>维护人：</label>
@@ -154,10 +145,52 @@
                                             <input type="hidden" id="cm_id" name="info[cm_id]" value="<?php echo $partner['cm_id']?$partner['cm_id']:session('userid');  ?>" />
                                         </div>
 
-                                        <div class="form-group col-md-12">
+                                        <div class="form-group col-md-8">
                                             <!--<label>维护记录：</label><textarea class="form-control" style="height:300px" name="info[remark]">{$partner.remark}</textarea>-->
                                             <label>备注：</label>
                                             <input class="form-control" name="info[remark]" value="{$partner.remark}" />
+                                        </div>
+
+                                        <style>
+                                            #deposit { padding:0 15px;}
+                                            #deposit .form-control{ width:150px; float:left; margin-right:10px; border-radius:0;}
+                                            #deposit .unitbox{ width:150px; margin-right:10px; float:left; clear:none; border:none; padding:0;}
+                                            #deposit .title{ width:22px; float:left; height:30px; line-height:30px; margin-left:-30px; text-align:right;}
+                                            #deposit .userlist { width:100%; height:auto !important; float:left; clear:both; padding-bottom:15px; border-bottom:1px solid #cccccc; margin-top:15px;}
+                                            #deposit .btn{ padding:7px 12px; font-size:12px;}
+                                            #deposit td{ line-height:34px;}
+                                            #deposit_val{ display:none}
+                                            #deposit .total{ color:#333333; font-size:14px;}
+                                            #deposit .longinput{ width:260px;}
+                                        </style>
+
+                                        <div class="content" style="padding-top:0px;">
+                                            <div id="deposit">
+                                                <div class="userlist">
+                                                    <div class="unitbox">保证金（元/年）</div>
+                                                    <div class="unitbox">开始时间</div>
+                                                    <div class="unitbox">结束时间</div>
+                                                    <div class="unitbox longinput">备注</div>
+                                                </div>
+
+                                                <foreach name="costacc" key="k" item="v">
+                                                    <div class="userlist cost_expense" id="costacc_id_b_{$k}">
+                                                        <span class="title"><?php echo $k+1; ?></span>
+                                                        <input type="hidden" name="resid[888{$k}][id]" value="{$v.id}" >
+                                                        <input type="text" class="form-control" name="costacc[888{$k}][title]" value="{$v.title}">
+                                                        <input type="text" class="form-control inputdate_a" name="costacc[888{$k}][unitcost]" value="{$v.unitcost}">
+                                                        <input type="text" class="form-control inputdate_a" name="costacc[888{$k}][amount]" value="{$v.amount}">
+                                                        <input type="text" class="form-control longinput" name="costacc[888{$k}][remark]" value="{$v.remark}">
+                                                        <a href="javascript:;" class="btn btn-danger btn-flat" onclick="delbox('costacc_id_b_{$k}')">删除</a>
+                                                    </div>
+                                                </foreach>
+                                            </div>
+                                            <div id="costacc_val">1</div>
+                                            <div class="form-group col-md-12" id="useraddbtns" style="margin-left:15px;">
+                                                <a href="javascript:;" class="btn btn-success btn-sm" onClick="add_costacc()"><i class="fa fa-fw fa-plus"></i> 新增预算项</a>
+
+                                            </div>
+                                            <div class="form-group">&nbsp;</div>
                                         </div>
 
                                     </div>
@@ -167,50 +200,6 @@
                                     </div>
                                 </div><!-- /.box-body -->
                             </div><!-- /.box -->
-                            
-                            
-                            
-                            <?php if($partner){ ?>
-       						<!--<div class="box box-warning">
-                                <div class="box-header">
-                                    <h3 class="box-title">已结算合作记录</h3>
-                                </div>
-                                <div class="box-body">
-                                    <div class="content">
-                                    	<div class="form-group col-md-12">
-                                        <table class="table table-striped">
-                                            <thead>
-                                                <tr role="row">
-                                                	<th>团号</th>
-                                                    <th>项目名称</th>
-                                                    <th>人数</th>
-                                                    <th>收入</th>
-                                                    <th>毛利</th>
-                                                    <th>毛利率</th>
-                                                    <th>人均毛利</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <foreach name="hezuo" item="v">
-                                                <tr>
-                                                    <td>{$v.group_id}</td>
-                                                    <td>{$v.project}</td>
-                                                    <td>{$v.renshu}</td>
-                                                    <td>{$v.shouru}</td>
-                                                    <td>{$v.maoli}</td>
-                                                    <td>{$v.maolilv}</td>
-                                                    <td>{$v.renjunmaoli}</td>
-                                                </tr>
-                                                </foreach>
-                                            </tbody>
-                                        </table>
-                                        
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>-->
-                            <?php } ?>
-                            
                             
                         </div><!--/.col (right) -->
                     </div>   <!-- /.row -->
@@ -355,4 +344,49 @@
             art_show_msg('城市信息错误',3);
         }
     })
+
+    //新成本核算项
+    function add_costacc(){
+        var i = parseInt($('#costacc_val').text())+1;
+
+        var html = '<div class="userlist cost_expense" id="costacc_'+i+'">' +
+            '<span class="title"></span>' +
+            '<input type="text" class="form-control" name="costacc['+i+'][title]">' +
+            '<input type="text"  class="form-control inputdate_a" name="costacc['+i+'][unitcost]"  value="22">' +
+            '<input type="text" class="form-control inputdate_b" name="costacc['+i+'][amount]" value="">' +
+            '<input type="text" class="form-control longinput" name="costacc['+i+'][remark]">' +
+            '<a href="javascript:;" class="btn btn-danger btn-flat" onclick="delbox(\'costacc_'+i+'\')">删除</a></div>';
+        $('#deposit').append(html);
+        $('#costacc_val').html(i);
+        var newjs   = "__HTML__/comm/laydate/laydate.js";
+        reload_laydate(newjs);
+        reloadAbleJSFn(reload_laydate,newjs);
+    }
+
+    function reload_laydate(file) {
+        alert(file);
+        var head = $("head").remove("script[role='reload_laydate']");
+        $("<scri"+"pt>"+"</scr"+"ipt>").attr({
+            role:'reload_laydate',src:file,type:'text/javascript'}).appendTo(head);
+
+        /*$.getScript(file,function(){
+            newFun('"Checking new script"');//这个函数是在new.js里面的，当点击click后运行这个函数
+        });*/
+
+    }
+
+    function reloadAbleJSFn(id,newJS)
+    {
+        var oldjs = null;
+        var t = null;
+        var oldjs = document.getElementById(id);
+        if(oldjs) oldjs.parentNode.removeChild(oldjs);
+        var scriptObj = document.createElement("script");
+        scriptObj.src = newJS;
+        scriptObj.type = "text/javascript";
+        scriptObj.id = id;
+        document.getElementsByTagName("head")[0].appendChild(scriptObj);
+    }
+
+
 </script>
