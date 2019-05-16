@@ -608,3 +608,14 @@ function print_view(id){
 	document.body.innerHTML=document.getElementById(''+id+'').innerHTML;
 	window.print();
 }
+
+/**
+ * 重新加载js文件[重新加载public.js文件(header2表头)]
+ * @param file 文件名(全路径)
+ * @param className 类名(header头加载时添加类名)
+ */
+function reload_jsFile(file,className) {
+	var head = $("head").remove("script[role='"+className+"']");
+	$("<scri"+"pt>"+"</scr"+"ipt>").attr({
+		role:className,src:file,type:'text/javascript'}).appendTo(head);
+}

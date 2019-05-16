@@ -366,13 +366,7 @@
         $('#deposit').append(html);
         $('#deposit_val').html(i);
         var newjs   = "__HTML__/js/public.js?v=1.0.6";
-        reload_laydate(newjs);
-    }
-
-    function reload_laydate(file) {
-        var head = $("head").remove("script[role='reload_public']");
-        $("<scri"+"pt>"+"</scr"+"ipt>").attr({
-            role:'reload_public',src:file,type:'text/javascript'}).appendTo(head);
+        reload_jsFile(newjs,'reload_public'); //重新加载public.js文件
     }
 
     //移除
