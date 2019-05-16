@@ -584,4 +584,24 @@ class CustomerController extends BaseController {
             $this->error('删除失败');
         }
     }
+
+    //城市合伙人详情
+    public function partner_detail(){
+        $partner_db                 = M('customer_partner'); //合伙人
+        $deposit_db                 = M('customer_deposit'); //保证金
+        $citys_db                   = M('citys');
+        $id                         = I('id');
+        if (!$id) $this->error('获取数据失败');
+        $partner_list               = $partner_db->where(array('id'=>$id))->find();
+        $deposit_list               = $deposit_db->where(array('partner_id'=>$id))->select();
+        $city                       = $citys_db->getField('id,name',true);
+        $partner_list['money']      = array_sum(array_column($deposit_list,'money'));
+
+        $this->level                = array(1=>'省级',2=>'市级',3=>'县/区级');
+        $this->agreement            = array(0=>"<span class='red'>未签订协议</span>",1=>"<span class='green'>已签订协议</span>");
+        $this->partner              = $partner_list;
+        $this->deposit              = $deposit_list;
+        $this->city                 = $city;
+        $this->display();
+    }
 }

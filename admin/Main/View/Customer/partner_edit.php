@@ -202,7 +202,7 @@
                                     </div>
                                     
                                     <div style="width:100%; text-align:center; padding-bottom:40px;">
-                                    <button type="submit" class="btn btn-info btn-lg" id="lrpd">保存</button>
+                                        <!--<button type="submit" class="btn btn-info btn-lg" id="lrpd">保存</button>-->
                                         <a  href="javascript:;" class="btn btn-info btn-lg" onClick="javascript:save('myform','<?php echo U('Customer/public_save'); ?>');">保存</a>
                                     </div>
                                 </div><!-- /.box-body -->

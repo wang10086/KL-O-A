@@ -49,7 +49,7 @@
                                     <foreach name="lists" item="row"> 
                                     <tr>
                                         <td>{$row.id}</td>
-                                        <td align="center"><a href="javascript:;" title="详情">{$row.name}</a></td>
+                                        <td align="center"><a href="{:U('Customer/partner_detail',array('id'=>$row['id']))}" title="详情">{$row.name}</a></td>
                                         <td>{$row.manager}</td>
                                         <td>{$row.contacts}</td>
                                         <td>{$row.contacts_phone}</td>
