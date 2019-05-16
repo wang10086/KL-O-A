@@ -29,19 +29,18 @@
                                 <div class="box-body">
                                 <table class="table table-bordered dataTable fontmini" id="tablelist" style="margin-top:10px;">
                                     <tr role="row" class="orders" >
-                                    	<!--<th width="40" style="text-align:center;"><input type="checkbox" id="accessdata"/></th>-->
                                         <th class="sorting" width="60" data="id">ID</th>
-                                        <th class="sorting" data="company_name">合伙人名称</th>
-                                        <th class="sorting" data="">负责人</th>
+                                        <th class="sorting" data="name">合伙人名称</th>
+                                        <th class="sorting" data="manager">负责人</th>
                                         <th class="sorting" data="contacts">联系人</th>
                                         <th class="sorting" data="contacts_phone">联系电话</th>
                                         <th class="sorting" data="province">合伙人所在地</th>
-                                        <th>独家区域</th>
-                                        <th>保证金</th>
-                                        <th class="sorting" data="cm_name">维护人</th>
+                                        <th class="sorting" data="agent_province">独家区域</th>
+                                        <th class="sorting" data="money">保证金</th>
                                         <th class="sorting" data="">合伙人协议</th>
+                                        <th class="taskOptions" data="cm_name">维护人</th>
                                         <if condition="rolemenu(array('Customer/partner_edit'))">
-                                        <th width="50" class="taskOptions">维护</th>
+                                        <th width="50" class="taskOptions">编辑</th>
                                         </if>
                                         <if condition="rolemenu(array('Customer/del_partner'))">
                                         <th width="50" class="taskOptions">删除</th>
@@ -49,19 +48,15 @@
                                     </tr>
                                     <foreach name="lists" item="row"> 
                                     <tr>
-                                    	<td align="center">
-                                        <!--<input type="checkbox"  value="{$row.id}" class="accessdata" />-->
-                                        </td>
                                         <td>{$row.id}</td>
-                                        <td><a href="{:U('Customer/partner_viwe',array('id'=>$row['id']))}" title="详情">{$row.company_name}</a></td>
-                                        <td>{$row.type}</td>
+                                        <td align="center"><a href="javascript:;" title="详情">{$row.name}</a></td>
+                                        <td>{$row.manager}</td>
                                         <td>{$row.contacts}</td>
                                         <td>{$row.contacts_phone}</td>
-                                        <td>{$row.province} {$row.city} {$row.county}</td>
-                                        <td>{$row.hezuo}</td>
-                                        <td>{$row.hezuocishu}</td>
-                                        <td>{$row.level}</td>
-                                        <td>{$row.qianli}</td>
+                                        <td>{$citys[$row[province]]} {$citys[$row[city]]} {$citys[$row[country]]}</td>
+                                        <td>{$citys[$row[agent_province]]} {$citys[$row[agent_city]]} {$citys[$row[agent_country]]}</td>
+                                        <td>{$row.money}</td>
+                                        <td>{$row.agreement}</td>
                                         <td>{$row.cm_name}</td>
                                         <if condition="rolemenu(array('Customer/partner_edit'))">
                                         <td class="taskOptions">
@@ -70,7 +65,7 @@
                                         </if>
                                         <if condition="rolemenu(array('Customer/delgec'))">
                                         <td class="taskOptions">
-                                        <button onclick="javascript:ConfirmDel('{:U('Customer/delgec',array('id'=>$row['id']))}')" title="删除" class="btn btn-warning btn-smsm"><i class="fa fa-times"></i></button>
+                                        <button onclick="javascript:ConfirmDel('{:U('Customer/del_partner',array('id'=>$row['id']))}')" title="删除" class="btn btn-warning btn-smsm"><i class="fa fa-times"></i></button>
                                        
                                         </td>
                                         </if>

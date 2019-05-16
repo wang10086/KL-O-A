@@ -12,9 +12,10 @@
 
                 <!-- Main content -->
                 <section class="content">
-                <form method="post" action="{:U('Customer/partner_edit')}" name="myform" id="myform">
+                <form method="post" action="{:U('Customer/public_save')}" name="myform" id="myform">
                 <input type="hidden" name="dosubmint" value="1">
-                <input type="hidden" name="gec_id" value="{$partner.id}">
+                <input type="hidden" name="savetype" value="1">
+                <input type="hidden" name="partner_id" value="{$partner.id}">
                 <input type="hidden" name="referer" value="<?php echo $_SERVER['HTTP_REFERER']; ?>" />
                     <div class="row">
                          <!-- right column -->
@@ -54,7 +55,7 @@
                                         </div>
 
                                         <div class="form-group col-md-4">
-                                            <label>合伙协议结束时间：</label><input type="text" name="info[end_date]" class="form-control inputdate_a" value="<?php echo $partner['start_date']?date('Y-m-d',$partner['start_date']):''; ?>"/>
+                                            <label>合伙协议结束时间：</label><input type="text" name="info[end_date]" class="form-control inputdate_a" value="<?php echo $partner['end_date']?date('Y-m-d',$partner['end_date']):''; ?>"/>
                                         </div>
 
                                         <div class="form-group col-md-4">
@@ -90,9 +91,8 @@
                                             <select id="s_province" class="form-control" name="info[province]" required>
                                                 <option class="form-control" value="" selected disabled>请选择</option>
                                                 <foreach name="provinces" key="k" item="v">
-                                                    <option class="form-control" value="{$k}">{$citys[$k]}</option>
+                                                    <option class="form-control" value="{$k}" <?php if ($partner && $partner['province']==$k) echo "selected"; ?>>{$citys[$k]}</option>
                                                 </foreach>
-                                                <!--<option value="{$v}" <?php /*if ($area && ($area['province'] == $v)) echo ' selected'; */?> >{$v}</option>-->
                                             </select>
                                         </div>
                                         
@@ -100,13 +100,23 @@
                                             <label>所在城市：</label>
                                             <select id="s_city" class="form-control" name="info[city]">
                                                 <option class="form-control" value="">请先选择省份</option>
+                                                <?php if ($partner){ ?>
+                                                <foreach name="citys" key="k" item="v">
+                                                    <option class="form-control" value="{$k}" <?php if ($partner && $partner['city']==$k) echo "selected"; ?>>{$citys[$k]}</option>
+                                                </foreach>
+                                                <?php } ?>
                                             </select>
                                         </div>
                                         
                                         <div class="form-group col-md-4">
                                             <label>所在区县：</label>
-                                            <select id="s_county" class="form-control" name="info[county]">
+                                            <select id="s_country" class="form-control" name="info[country]">
                                                 <option class="form-control" value="">请先选择城市</option>
+                                                <?php if ($partner){ ?>
+                                                <foreach name="citys" key="k" item="v">
+                                                    <option class="form-control" value="{$k}" <?php if ($partner && $partner['country']==$k) echo "selected"; ?>>{$citys[$k]}</option>
+                                                </foreach>
+                                                <?php } ?>
                                             </select>
                                         </div>
 
@@ -115,7 +125,7 @@
                                             <select id="agent_province" class="form-control" name="info[agent_province]" required>
                                                 <option class="form-control" value="" selected disabled>请选择</option>
                                                 <foreach name="provinces" key="k" item="v">
-                                                    <option class="form-control" value="{$k}">{$citys[$k]}</option>
+                                                    <option class="form-control" value="{$k}" <?php if ($partner && $partner['agent_province']==$k) echo "selected"; ?>>{$citys[$k]}</option>
                                                 </foreach>
                                             </select>
                                         </div>
@@ -124,13 +134,23 @@
                                             <label>独家城市：</label>
                                             <select id="agent_city" class="form-control" name="info[agent_city]">
                                                 <option class="form-control" value="">请先选择省份</option>
+                                                <?php if ($partner){ ?>
+                                                <foreach name="citys" key="k" item="v">
+                                                    <option class="form-control" value="{$k}" <?php if ($partner && $partner['agent_country']==$k) echo "selected"; ?>>{$citys[$k]}</option>
+                                                </foreach>
+                                                <?php } ?>
                                             </select>
                                         </div>
 
                                         <div class="form-group col-md-4">
                                             <label>独家区县：</label>
-                                            <select id="agent_county" class="form-control" name="info[agent_county]">
+                                            <select id="agent_country" class="form-control" name="info[agent_country]">
                                                 <option class="form-control" value="">请先选择城市</option>
+                                                <?php if ($partner){ ?>
+                                                <foreach name="citys" key="k" item="v">
+                                                    <option class="form-control" value="{$k}" <?php if ($partner && $partner['agent_country']==$k) echo "selected"; ?>>{$citys[$k]}</option>
+                                                </foreach>
+                                                <?php } ?>
                                             </select>
                                         </div>
 
@@ -146,23 +166,9 @@
                                         </div>
 
                                         <div class="form-group col-md-8">
-                                            <!--<label>维护记录：</label><textarea class="form-control" style="height:300px" name="info[remark]">{$partner.remark}</textarea>-->
                                             <label>备注：</label>
                                             <input class="form-control" name="info[remark]" value="{$partner.remark}" />
                                         </div>
-
-                                        <style>
-                                            #deposit { padding:0 15px;}
-                                            #deposit .form-control{ width:150px; float:left; margin-right:10px; border-radius:0;}
-                                            #deposit .unitbox{ width:150px; margin-right:10px; float:left; clear:none; border:none; padding:0;}
-                                            #deposit .title{ width:22px; float:left; height:30px; line-height:30px; margin-left:-30px; text-align:right;}
-                                            #deposit .userlist { width:100%; height:auto !important; float:left; clear:both; padding-bottom:15px; border-bottom:1px solid #cccccc; margin-top:15px;}
-                                            #deposit .btn{ padding:7px 12px; font-size:12px;}
-                                            #deposit td{ line-height:34px;}
-                                            #deposit_val{ display:none}
-                                            #deposit .total{ color:#333333; font-size:14px;}
-                                            #deposit .longinput{ width:260px;}
-                                        </style>
 
                                         <div class="content" style="padding-top:0px;">
                                             <div id="deposit">
@@ -173,21 +179,21 @@
                                                     <div class="unitbox longinput">备注</div>
                                                 </div>
 
-                                                <foreach name="costacc" key="k" item="v">
-                                                    <div class="userlist cost_expense" id="costacc_id_b_{$k}">
+                                                <foreach name="deposit" key="k" item="v">
+                                                    <div class="userlist cost_expense" id="deposit_id_b_{$k}">
                                                         <span class="title"><?php echo $k+1; ?></span>
                                                         <input type="hidden" name="resid[888{$k}][id]" value="{$v.id}" >
-                                                        <input type="text" class="form-control" name="costacc[888{$k}][title]" value="{$v.title}">
-                                                        <input type="text" class="form-control inputdate_a" name="costacc[888{$k}][unitcost]" value="{$v.unitcost}">
-                                                        <input type="text" class="form-control inputdate_a" name="costacc[888{$k}][amount]" value="{$v.amount}">
-                                                        <input type="text" class="form-control longinput" name="costacc[888{$k}][remark]" value="{$v.remark}">
-                                                        <a href="javascript:;" class="btn btn-danger btn-flat" onclick="delbox('costacc_id_b_{$k}')">删除</a>
+                                                        <input type="text" class="form-control" name="deposit_data[888{$k}][money]" value="{$v.money}">
+                                                        <input type="text" class="form-control inputdate_a" name="deposit_data[888{$k}][start_date]" value="<?php echo $v['start_date']?date('Y-m-d',$v['start_date']):''; ?>">
+                                                        <input type="text" class="form-control inputdate_a" name="deposit_data[888{$k}][end_date]" value="<?php echo $v['end_date']?date('Y-m-d',$v['end_date']):''; ?>">
+                                                        <input type="text" class="form-control longinput" name="deposit_data[888{$k}][remark]" value="{$v.remark}">
+                                                        <a href="javascript:;" class="btn btn-danger btn-flat" onclick="delbox('deposit_id_b_{$k}')">删除</a>
                                                     </div>
                                                 </foreach>
                                             </div>
-                                            <div id="costacc_val">1</div>
+                                            <div id="deposit_val" style="display: none">1</div>
                                             <div class="form-group col-md-12" id="useraddbtns" style="margin-left:15px;">
-                                                <a href="javascript:;" class="btn btn-success btn-sm" onClick="add_costacc()"><i class="fa fa-fw fa-plus"></i> 新增预算项</a>
+                                                <a href="javascript:;" class="btn btn-success btn-sm" onClick="add_deposit()"><i class="fa fa-fw fa-plus"></i> 新增预算项</a>
 
                                             </div>
                                             <div class="form-group">&nbsp;</div>
@@ -196,7 +202,8 @@
                                     </div>
                                     
                                     <div style="width:100%; text-align:center; padding-bottom:40px;">
-                                    <button type="submit" class="btn btn-info btn-lg" id="lrpd">保存</button>
+                                    <!--<button type="submit" class="btn btn-info btn-lg" id="lrpd">保存</button>-->
+                                        <a  href="javascript:;" class="btn btn-info btn-lg" onClick="javascript:save('myform','<?php echo U('Customer/public_save'); ?>');">保存</a>
                                     </div>
                                 </div><!-- /.box-body -->
                             </div><!-- /.box -->
@@ -215,8 +222,8 @@
 
 <script type="text/javascript">
     $(function () {
-        var userkey     = '';
-        autocomplete_id();
+        var userkey     = {$userkey};
+        autocomplete_id('cm_name','cm_id',userkey);
     })
 
     //省市联动(所在地)
@@ -230,7 +237,7 @@
                 data : {province:province},
                 success : function (msg) {
                     $("#s_city").empty();
-                    $("#s_county").html('<option class="form-control" value="">请先选择城市</option>');
+                    $("#s_country").html('<option class="form-control" value="">请先选择城市</option>');
                     if (msg.length>0){
                         var count = msg.length;
                         var i= 0;
@@ -261,7 +268,7 @@
                 dataType : 'JSON',
                 data : {city:city},
                 success : function (msg) {
-                    $("#s_county").empty();
+                    $("#s_country").empty();
                     if (msg.length>0){
                         var count = msg.length;
                         var i= 0;
@@ -274,7 +281,7 @@
                         var b="";
                         b+='<option value="" disabled selected>暂无数据</option>';
                     }
-                    $("#s_county").append(b);
+                    $("#s_country").append(b);
                 }
             })
         }else{
@@ -293,7 +300,7 @@
                 data : {province:province},
                 success : function (msg) {
                     $("#agent_city").empty();
-                    $("#agent_county").html('<option class="form-control" value="">请先选择城市</option>');
+                    $("#agent_country").html('<option class="form-control" value="">请先选择城市</option>');
                     if (msg.length>0){
                         var count = msg.length;
                         var i= 0;
@@ -324,7 +331,7 @@
                 dataType : 'JSON',
                 data : {city:city},
                 success : function (msg) {
-                    $("#agent_county").empty();
+                    $("#agent_country").empty();
                     if (msg.length>0){
                         var count = msg.length;
                         var i= 0;
@@ -337,7 +344,7 @@
                         var b="";
                         b+='<option value="" disabled selected>暂无数据</option>';
                     }
-                    $("#agent_county").append(b);
+                    $("#agent_country").append(b);
                 }
             })
         }else{
@@ -346,47 +353,66 @@
     })
 
     //新成本核算项
-    function add_costacc(){
-        var i = parseInt($('#costacc_val').text())+1;
+    function add_deposit(){
+        var i = parseInt($('#deposit_val').text())+1;
 
-        var html = '<div class="userlist cost_expense" id="costacc_'+i+'">' +
+        var html = '<div class="userlist cost_expense" id="deposit_'+i+'">' +
             '<span class="title"></span>' +
-            '<input type="text" class="form-control" name="costacc['+i+'][title]">' +
-            '<input type="text"  class="form-control inputdate_a" name="costacc['+i+'][unitcost]"  value="22">' +
-            '<input type="text" class="form-control inputdate_b" name="costacc['+i+'][amount]" value="">' +
-            '<input type="text" class="form-control longinput" name="costacc['+i+'][remark]">' +
-            '<a href="javascript:;" class="btn btn-danger btn-flat" onclick="delbox(\'costacc_'+i+'\')">删除</a></div>';
+            '<input type="text" class="form-control" name="deposit_data['+i+'][money]">' +
+            '<input type="text"  class="form-control inputdate_a" name="deposit_data['+i+'][start_date]"  value="">' +
+            '<input type="text" class="form-control inputdate_a" name="deposit_data['+i+'][end_date]" value="">' +
+            '<input type="text" class="form-control longinput" name="deposit_data['+i+'][remark]">' +
+            '<a href="javascript:;" class="btn btn-danger btn-flat" onclick="delbox(\'deposit_'+i+'\')">删除</a></div>';
         $('#deposit').append(html);
-        $('#costacc_val').html(i);
-        var newjs   = "__HTML__/comm/laydate/laydate.js";
+        $('#deposit_val').html(i);
+        var newjs   = "__HTML__/js/public.js?v=1.0.6";
         reload_laydate(newjs);
-        reloadAbleJSFn(reload_laydate,newjs);
     }
 
     function reload_laydate(file) {
-        alert(file);
-        var head = $("head").remove("script[role='reload_laydate']");
+        var head = $("head").remove("script[role='reload_public']");
         $("<scri"+"pt>"+"</scr"+"ipt>").attr({
-            role:'reload_laydate',src:file,type:'text/javascript'}).appendTo(head);
-
-        /*$.getScript(file,function(){
-            newFun('"Checking new script"');//这个函数是在new.js里面的，当点击click后运行这个函数
-        });*/
-
+            role:'reload_public',src:file,type:'text/javascript'}).appendTo(head);
     }
 
-    function reloadAbleJSFn(id,newJS)
-    {
-        var oldjs = null;
-        var t = null;
-        var oldjs = document.getElementById(id);
-        if(oldjs) oldjs.parentNode.removeChild(oldjs);
-        var scriptObj = document.createElement("script");
-        scriptObj.src = newJS;
-        scriptObj.type = "text/javascript";
-        scriptObj.id = id;
-        document.getElementsByTagName("head")[0].appendChild(scriptObj);
+    //移除
+    function delbox(obj){
+        $('#'+obj).remove();
     }
 
+    artDialog.alert = function (content, status) {
+        return artDialog({
+            id: 'Alert',
+            icon: status,
+            width:300,
+            height:120,
+            fixed: true,
+            lock: true,
+            time: 1,
+            content: content,
+            ok: true
+        });
+    };
 
+
+    //保存信息
+    function save(id,url){
+        $.ajax({
+            type: "POST",
+            url: url,
+            dataType:'json',
+            data: $('#'+id).serialize(),
+            success:function(data){
+                var num         = data.num;
+                var msg         = data.msg;
+                if(parseInt(num)>0){
+                    art.dialog.alert(msg,'success');
+                }else{
+                    art.dialog.alert(msg,'warning');
+                }
+            }
+        });
+
+        setTimeout("history.go(0)",1000);
+    }
 </script>

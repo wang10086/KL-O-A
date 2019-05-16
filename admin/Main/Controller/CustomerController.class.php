@@ -448,22 +448,140 @@ class CustomerController extends BaseController {
 
     //城市合伙人
     public function partner(){
+        $partner_db                 = M('customer_partner'); //合伙人
+        $deposit_db                 = M('customer_deposit'); //保证金
+        $citys_db                   = M('citys');
 
+        $where                      = array();
+        $where['del_stu']           = array('neq','-1');
 
+        //分页
+        $pagecount = $partner_db->where($where)->count();
+        $page = new Page($pagecount, P::PAGE_SIZE);
+        $this->pages = $pagecount>P::PAGE_SIZE ? $page->show():'';
+
+        $lists                      = $partner_db->where($where)->order($this->orders('id'))->select();
+
+        foreach ($lists as $k=>$v){
+            $deposit_lists          = $deposit_db->where(array('partner_id'=>$v['id']))->select();
+            $money                  = array_sum(array_column($deposit_lists,'money'));
+            if ($v['agreement']==1){ $lists[$k]['agreement'] = "<span class='green'>已签订</span>"; }else{ $lists[$k]['agreement'] = "<span class='red'>未签订</span>"; }
+            $lists[$k]['money']     = $money;
+        }
+
+        $this->lists                = $lists;
+        $this->citys                = $citys_db->getField('id,name',true);
         $this->title('城市合伙人');
         $this->display();
     }
     
     //新增/编辑合伙人信息
     public function partner_edit(){
+        $citys_db                   = M('citys');
+        $partner_db                 = M('customer_partner'); //合伙人
+        $deposit_db                 = M('customer_deposit'); //保证金
+        $id                         = I('id');
+        if ($id){ //编辑
+            $partner                = $partner_db->where(array('id'=>$id))->find();
+            $deposit                = $deposit_db->where(array('partner_id'=>$id))->select();
+            $this->partner          = $partner;
+            $this->deposit          = $deposit;
+        }
 
+        $userkey                    = get_username();
+        $arr_citys                  = $citys_db->getField('id,name',true);
+        $default_province           = $citys_db->where(array('pid'=>0))->getField('id,name',true);
 
-        $arr_citys              = M('citys')->getField('id,name',true);
-        $default_province       = M('citys')->where(array('pid'=>0))->getField('id,name',true);
-        $default_citys          =
-        $this->provinces        = $default_province;
-        $this->citys            = $arr_citys;
+        $this->userkey              = $userkey;
+        $this->provinces            = $default_province;
+        $this->citys                = $arr_citys;
         $this->display();
     }
-    
+
+    public function public_save(){
+        $savetype                           = I('savetype');
+        if (isset($_POST['dosubmint'])){
+            $num                            = 0;
+            if ($savetype == 1){
+                $msg                        = array();
+                $partner_db                 = M('customer_partner'); //合伙人
+                $deposit_db                 = M('customer_deposit'); //保证金
+                $partner_id                 = I('partner_id')?I('partner_id'):0;
+                $info                       = I('info');
+                $deposit_data               = I('deposit_data'); //保证金
+                $resid                      = I('resid');
+
+                if (!$info['name'])     { $msg['num'] = $num; $msg['msg'] = '合伙人名称不能为空'; $this->ajaxReturn($msg); }
+                if (!$info['level'])    { $msg['num'] = $num; $msg['msg'] = '合伙人级别不能为空'; $this->ajaxReturn($msg); }
+                if (!$info['manager'])  { $msg['num'] = $num; $msg['msg'] = '负责人不能为空'; $this->ajaxReturn($msg); }
+                if (!$info['contacts']) { $msg['num'] = $num; $msg['msg'] = '联系人不能为空'; $this->ajaxReturn($msg); }
+                if (!$info['province']) { $msg['num'] = $num; $msg['msg'] = '所在省份信息不能为空'; $this->ajaxReturn($msg); }
+                if (!$info['agent_province']){ $msg['num'] = $num; $msg['msg'] = '独家省份信息不能为空'; $this->ajaxReturn($msg); }
+                if (!$info['cm_id'])    { $msg['num'] = $num; $msg['msg'] = '维护人信息有误'; $this->ajaxReturn($msg); }
+                if (!$info['start_date']){ $msg['num'] = $num; $msg['msg'] = '合伙开始时间不能为空'; $this->ajaxReturn($msg); }
+                if (!$info['end_date']) { $msg['num'] = $num; $msg['msg'] = '合伙结束时间不能为空'; $this->ajaxReturn($msg); }
+
+                $info['start_date']         = strtotime($info['start_date']);
+                $info['end_date']           = strtotime($info['end_date']);
+                $info['create_user_id']     = session('userid');
+                $info['create_user_name']   = session('nickname');
+
+                if ($partner_id){
+                    $res                    = $partner_db->where(array('id'=>$partner_id))->save($info);
+                }else{
+                    $info['create_time']    = NOW_TIME;
+                    $res                    = $partner_db->add($info);
+                    $partner_id             = $res;
+                }
+
+                $delid                      = array();
+                if ($res){
+                    $num++;
+                    if ($deposit_data){
+                        foreach ($deposit_data as $k=>$v){
+                            $data               = array();
+                            $data['partner_id'] = $partner_id;
+                            $data['money']      = trim($v['money']);
+                            $data['start_date'] = strtotime($v['start_date']);
+                            $data['end_date']   = strtotime($v['end_date']);
+                            $data['remark']     = trim($v['remark']);
+                            if ($resid && $resid[$k]['id']){
+                                $result         = $deposit_db->where(array('id'=>$resid[$k]['id']))->save($data);
+                                $delid[]        = $resid[$k]['id'];
+                                if ($result) $num++;
+                            }else{
+                                $result         = $deposit_db->add($data);
+                                $delid[]        = $result;
+                                if ($result) $num++;
+                            }
+                            $del                = $deposit_db->where(array('partner_id'=>$partner_id,'id'=>array('not in',$delid)))->delete();
+                            if ($del) $num++;
+                        }
+                        $msg['num']             = $num;
+                        $msg['msg']             = '保存成功';
+                    }
+                }else{
+                    $msg['num']                 = 0;
+                    $msg['msg']                 = '数据保存失败';
+                }
+            }
+            $this->ajaxReturn($msg);
+        }
+    }
+
+    //删除
+    public function del_partner(){
+        $partner_db                 = M('customer_partner'); //合伙人
+        $id                         = I('id');
+        if($id){
+            $data                   = array();
+            $data['del_stu']        = -1;
+            $res                    = $partner_db->where(array('id'=>$id))->save($data);
+        }
+        if ($res){
+            $this->success('删除成功');
+        }else{
+            $this->error('删除失败');
+        }
+    }
 }

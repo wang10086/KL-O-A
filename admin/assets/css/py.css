@@ -4129,6 +4129,16 @@ th{outline: none;}
 .newStaff{position: absolute; right: 5px;}
 .inline-block{display: inline-block;}
 
+/*城市合伙人*/
+#deposit { padding:0 15px;}
+#deposit .form-control{ width:150px; float:left; margin-right:10px; border-radius:0;}
+#deposit .unitbox{ width:150px; margin-right:10px; float:left; clear:none; border:none; padding:0;}
+#deposit .title{ width:22px; float:left; height:30px; line-height:30px; margin-left:-30px; text-align:right;}
+#deposit .userlist { width:100%; height:auto !important; float:left; clear:both; padding-bottom:15px; border-bottom:1px solid #cccccc; margin-top:15px;}
+#deposit .btn{ padding:7px 12px; font-size:12px;}
+#deposit td{ line-height:34px;}
+#deposit .longinput{ width:260px;}
+
 /*借款报销单审核进度条*/
 .progress-box{width: 100%;height: 50px; line-height: 50px;}
 .progress-line-box-green{display: inline-block; width: 80px; height: 10px; background-color: #008000; border: solid 1px #008000;}
