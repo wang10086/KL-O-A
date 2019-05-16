@@ -534,8 +534,7 @@ class CustomerController extends BaseController {
                     $partner_id             = $res;
                 }
 
-                $delid                      = array();
-                if ($res){
+                if ((!$res && $partner_id) || (!$partner_id && $res)){ //修改 || 增加
                     $num++;
                     if ($deposit_data){
                         foreach ($deposit_data as $k=>$v){
@@ -554,9 +553,10 @@ class CustomerController extends BaseController {
                                 $delid[]        = $result;
                                 if ($result) $num++;
                             }
-                            $del                = $deposit_db->where(array('partner_id'=>$partner_id,'id'=>array('not in',$delid)))->delete();
-                            if ($del) $num++;
                         }
+                        $del                = $deposit_db->where(array('partner_id'=>$partner_id,'id'=>array('not in',$delid)))->delete();
+                        if ($del) $num++;
+
                         $msg['num']             = $num;
                         $msg['msg']             = '保存成功';
                     }
