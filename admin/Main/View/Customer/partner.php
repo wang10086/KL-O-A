@@ -31,13 +31,13 @@
                                     <tr role="row" class="orders" >
                                         <th class="sorting" width="60" data="id">ID</th>
                                         <th class="sorting" data="name">合伙人名称</th>
-                                        <th class="sorting" data="manager">负责人</th>
+                                        <!--<th class="sorting" data="manager">负责人</th>
                                         <th class="sorting" data="contacts">联系人</th>
-                                        <th class="sorting" data="contacts_phone">联系电话</th>
+                                        <th class="sorting" data="contacts_phone">联系电话</th>-->
                                         <th class="sorting" data="province">合伙人所在地</th>
                                         <th class="sorting" data="agent_province">独家区域</th>
                                         <th class="sorting" data="money">保证金</th>
-                                        <th class="sorting" data="">合伙人协议</th>
+                                        <th class="sorting" data="end_date">协议期限</th>
                                         <th class="taskOptions" data="cm_name">维护人</th>
                                         <if condition="rolemenu(array('Customer/partner_edit'))">
                                         <th width="50" class="taskOptions">编辑</th>
@@ -50,17 +50,21 @@
                                     <tr>
                                         <td>{$row.id}</td>
                                         <td align="center"><a href="{:U('Customer/partner_detail',array('id'=>$row['id']))}" title="详情">{$row.name}</a></td>
-                                        <td>{$row.manager}</td>
+                                        <!--<td>{$row.manager}</td>
                                         <td>{$row.contacts}</td>
-                                        <td>{$row.contacts_phone}</td>
+                                        <td>{$row.contacts_phone}</td>-->
                                         <td>{$citys[$row[province]]} {$citys[$row[city]]} {$citys[$row[country]]}</td>
                                         <td>{$citys[$row[agent_province]]} {$citys[$row[agent_city]]} {$citys[$row[agent_country]]}</td>
                                         <td>{$row.money}</td>
-                                        <td>{$row.agreement}</td>
-                                        <td>{$row.cm_name}</td>
+                                        <td>{$row.start_date|date="Y-m-d",###} - <?php if (time() > $row['end_date']){ echo "<span class='red'>".date('Y-m-d',$row['end_date'])."</span>"; }else{ echo date('Y-m-d',$row['end_date']); } ?> </td>
+                                        <td class="taskOptions">{$row.cm_name}</td>
                                         <if condition="rolemenu(array('Customer/partner_edit'))">
                                         <td class="taskOptions">
-                                        <a href="{:U('Customer/partner_edit',array('id'=>$row['id']))}" title="维护" class="btn btn-info btn-smsm"><i class="fa fa-pencil"></i></a>
+                                            <if condition="$row['audit_stu'] neq 2">
+                                                <a href="{:U('Customer/partner_edit',array('id'=>$row['id']))}" title="编辑" class="btn btn-info btn-smsm"><i class="fa fa-pencil"></i></a>
+                                                <else />
+                                                <button href="javascript:;" title="编辑" class="btn btn-disable btn-smsm"><i class="fa fa-pencil"></i></button>
+                                            </if>
                                         </td>
                                         </if>
                                         <if condition="rolemenu(array('Customer/delgec'))">

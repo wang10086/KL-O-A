@@ -22,6 +22,7 @@
                             <div class="box box-warning">
                                 <div class="box-header">
                                     <h3 class="box-title">合伙人资料</h3>
+                                    <h3 class="box-title pull-right" style="font-weight:normal; color:#333333;">审核状态：{$audit_stu[$partner['audit_stu']]} &emsp;
                                 </div><!-- /.box-header -->
                                 <div class="box-body">
                                     <div class="content">
@@ -52,7 +53,7 @@
                                             </div>
 
                                             <div class="form-group col-md-4">
-                                                <label>合伙协议结束时间：<?php if (time() > $partner['end_time']){ echo "<span class='red'>".date('Y-m-d',$partner[end_time])."</span>"; }else{ echo date('Y-m-d',$partner['end_time']); } ?> </label>
+                                                <label>合伙协议结束时间：<?php if (time() > $partner['end_date']){ echo "<span class='red'>".date('Y-m-d',$partner['end_date'])."</span>"; }else{ echo date('Y-m-d',$partner['end_date']); } ?> </label>
                                             </div>
 
                                             <div class="form-group col-md-12">
@@ -62,6 +63,12 @@
                                             <if condition="$partner['remark']">
                                                 <div class="form-group col-md-12">
                                                     <label>备注信息：{$partner.remark}</label>
+                                                </div>
+                                            </if>
+
+                                            <if condition="$partner['audit_remark']">
+                                                <div class="form-group col-md-12">
+                                                    <label>审核备注信息：{$partner.audit_remark}</label>
                                                 </div>
                                             </if>
                                         </div>
@@ -158,8 +165,40 @@
                                     </div>
                                 </div>
                             </div>
-                            
-                            
+
+                            <?php if (in_array(session('userid'),array(1,11)) && $partner['audit_stu']==1){ ?>
+                                <div class="box box-warning">
+                                    <div class="box-header">
+                                        <h3 class="box-title">审核城市合伙人</h3>
+                                    </div><!-- /.box-header -->
+                                    <div class="box-body">
+                                        <div class="content">
+                                            <form method="post" action="{:U('Customer/public_save')}" name="myform1">
+                                                <input type="hidden" name="dosubmint" value="1">
+                                                <input type="hidden" name="savetype" value="3">
+                                                <input type="hidden" name="id" value="{$partner.id}">
+                                                <div class="box-body">
+                                                    <div class="form-group col-md-12" style="margin-top:10px;" id="auditPartnerRadio">
+                                                        <input type="radio" name="info[audit_stu]" value="2" checked> 审核通过
+                                                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                                        <input type="radio" name="info[audit_stu]" value="-1" > 审核不通过
+                                                    </div>
+
+                                                    <div class="form-group col-md-12">
+                                                        <label>备注</label>
+                                                        <textarea class="form-control" name="info[audit_remark]"></textarea>
+                                                    </div>
+
+                                                    <div class="form-group col-md-12"  style="margin-top:20px; padding-bottom:20px; text-align:left;">
+                                                        <button class="btn btn-success">确认提交</button>
+                                                    </div>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            <?php } ?>
+
                         </div><!--/.col (right) -->
                     </div>   <!-- /.row -->
                     </form>
@@ -171,7 +210,7 @@
 </div>
 
 <include file="Index:footer2" />
-<script type="text/javascript"> 
+<script type="text/javascript">
 
 	
 </script>

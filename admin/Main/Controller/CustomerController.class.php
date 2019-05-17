@@ -465,7 +465,7 @@ class CustomerController extends BaseController {
         foreach ($lists as $k=>$v){
             $deposit_lists          = $deposit_db->where(array('partner_id'=>$v['id']))->select();
             $money                  = array_sum(array_column($deposit_lists,'money'));
-            if ($v['agreement']==1){ $lists[$k]['agreement'] = "<span class='green'>已签订</span>"; }else{ $lists[$k]['agreement'] = "<span class='red'>未签订</span>"; }
+            //if ($v['agreement']==1){ $lists[$k]['agreement'] = "<span class='green'>已签订</span>"; }else{ $lists[$k]['agreement'] = "<span class='red'>未签订</span>"; }
             $lists[$k]['money']     = $money;
         }
 
@@ -501,8 +501,10 @@ class CustomerController extends BaseController {
     public function public_save(){
         $savetype                           = I('savetype');
         if (isset($_POST['dosubmint'])){
-            $num                            = 0;
+
+            //添加/编辑合伙人信息
             if ($savetype == 1){
+                $num                        = 0;
                 $msg                        = array();
                 $partner_db                 = M('customer_partner'); //合伙人
                 $deposit_db                 = M('customer_deposit'); //保证金
@@ -525,6 +527,7 @@ class CustomerController extends BaseController {
                 $info['end_date']           = strtotime($info['end_date']);
                 $info['create_user_id']     = session('userid');
                 $info['create_user_name']   = session('nickname');
+                $info['audit_stu']          = 0; //未审核
 
                 if ($partner_id){
                     $res                    = $partner_db->where(array('id'=>$partner_id))->save($info);
@@ -534,7 +537,7 @@ class CustomerController extends BaseController {
                     $partner_id             = $res;
                 }
 
-                if ((!$res && $partner_id) || (!$partner_id && $res)){ //修改 || 增加
+                if ($partner_id || (!$partner_id && $res)){ //修改 || 增加
                     $num++;
                     if ($deposit_data){
                         foreach ($deposit_data as $k=>$v){
@@ -564,8 +567,51 @@ class CustomerController extends BaseController {
                     $msg['num']                 = 0;
                     $msg['msg']                 = '数据保存失败';
                 }
+                $this->ajaxReturn($msg);
             }
-            $this->ajaxReturn($msg);
+
+            //保存提交审核
+            if ($savetype == 2){
+                $db                             = M('customer_partner');
+                $partner_id                     = I('partner_id');
+                if ($partner_id){
+                    $partner                    = $db->where(array('id'=>$partner_id))->find();
+                    $data                       = array();
+                    $data['audit_stu']          = 1; //已提交审核
+                    $res                        = $db->where(array('id'=>$partner_id))->save($data);
+                    if ($res){
+                        //系统消息提醒
+                        $uid     = cookie('userid');
+                        $title   = '您有新的的城市合伙人待审核,城市合伙人名称：'.$partner['name'].'，请及时处理!';
+                        $content = '城市合伙人名称：'.$partner['name'].'；独家区域：'.$partner['agent_province'].$partner['city'].$partner['country'];
+                        $url     = U('Customer/partner_detail',array('id'=>$partner_id));
+                        $user    = '[1]'; //乔总
+                        $roleid  = '';
+                        send_msg($uid,$title,$content,$url,$user,$roleid);
+
+                        $this->success('提交审核成功',U('Customer/partner'));
+                    }else{
+                        $this->error('提交审核失败');
+                    }
+                }else{
+                    $this->error('提交审核失败');
+                }
+            }
+
+            //保存审核城市合伙人
+            if ($savetype==3){
+                $db                             = M('customer_partner'); //合伙人
+                $info                           = I('info');
+                $id                             = I('id');
+                $info['audit_remark']           = trim($info['audit_remark']);
+
+                $res                            = $db->where(array('id'=>$id))->save($info);
+                if ($res){
+                    $this->success('审核成功');
+                }else{
+                    $this->error('数据保存失败');
+                }
+            }
         }
     }
 
@@ -596,7 +642,14 @@ class CustomerController extends BaseController {
         $deposit_list               = $deposit_db->where(array('partner_id'=>$id))->select();
         $city                       = $citys_db->getField('id,name',true);
         $partner_list['money']      = array_sum(array_column($deposit_list,'money'));
+        $audit_stu                  = array(
+            '-1'                    => "<span class='red'>审核未通过</span>",
+            '0'                     => "<span class='yellow'>未提交审核</span>",
+            '1'                     => "<span class='yellow'>待审核</span>",
+            '2'                     => "<span class='green'>审核通过</span>"
+        );
 
+        $this->audit_stu            = $audit_stu;
         $this->level                = array(1=>'省级',2=>'市级',3=>'县/区级');
         $this->agreement            = array(0=>"<span class='red'>未签订协议</span>",1=>"<span class='green'>已签订协议</span>");
         $this->partner              = $partner_list;

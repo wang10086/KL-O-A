@@ -203,13 +203,22 @@
                                     
                                     <div style="width:100%; text-align:center; padding-bottom:40px;">
                                         <!--<button type="submit" class="btn btn-info btn-lg" id="lrpd">保存</button>-->
-                                        <a  href="javascript:;" class="btn btn-info btn-lg" onClick="javascript:save('myform','<?php echo U('Customer/public_save'); ?>');">保存</a>
+                                        <a  href="javascript:;" class="btn btn-info btn-lg" onClick="javascript:save('myform','<?php echo U('Customer/public_save'); ?>');">保存数据</a>
+                                        <?php if ($partner['id'] && in_array($partner['audit_stu'],array(0,-1))){ ?>
+                                            <a  href="javascript:;" class="btn btn-danger btn-lg" onClick="javascript:ConfirmSub('audit_form','确定提交审核吗？');">申请审核</a>
+                                        <?php } ?>
                                     </div>
                                 </div><!-- /.box-body -->
                             </div><!-- /.box -->
                             
                         </div><!--/.col (right) -->
                     </div>   <!-- /.row -->
+                    </form>
+
+                    <form method="post" action="{:U('Customer/public_save')}" id="audit_form"> <!--提交审核-->
+                        <input type="hidden" name="dosubmint" value="1">
+                        <input type="hidden" name="savetype" value="2">
+                        <input type="hidden" name="partner_id" value="{$partner.id}">
                     </form>
                 </section><!-- /.content -->
                 
