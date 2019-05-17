@@ -1922,9 +1922,11 @@ function updatekpi($month,$user){
                             $uid                                = $v['user_id'];
                             $start_time                         = $v['start_date'];
                             $end_time                           = $v['end_date'];
+                            $dj_opids                           = get_djopid();
                             $where                              = array();
                             $where['c.payee']                   = $uid;
                             $where['c.return_time']	            = array('lt',$end_time);
+                            $where['c.op_id']                   = array('not in',$dj_opids);
                             $lists                              = M()->table('__CONTRACT_PAY__ as c')->join('__OP__ as o on o.op_id = c.op_id','left')->join('__OP_TEAM_CONFIRM__ as t on t.op_id=c.op_id','left')->field('c.*,o.group_id,o.project,t.dep_time,t.ret_time')->where($where)->order('c.id desc')->select();
                             $data                               = check_list($lists,$start_time,$end_time);
                             $complete                           = $data['money_back_average'];

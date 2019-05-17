@@ -2484,3 +2484,10 @@ function get_yw_department(){
         $data['loss_lists']         = $loss_lists;
         return $data;
     }
+
+    //获取所有的地接团opid
+    function get_djopid(){
+        $arr                        = M('op')->getField('dijie_opid',true);
+        $opids                      = array_filter($arr);
+        return $opids;
+    }

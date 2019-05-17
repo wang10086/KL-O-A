@@ -2720,47 +2720,17 @@ class FinanceController extends BaseController {
         $title                              = trim(I('title'));
         $group_id                           = trim(I('oid'));
         $opid                               = trim(I('opid'));
+        $dj_opids                           = get_djopid();
         if (!$uid) $this->error('获取数据错误');
         $where                              = array();
         $where['c.payee']                   = $uid;
         $where['c.return_time']	            = array('lt',$end_time);
+        $where['c.op_id']                   = array('not in',$dj_opids);
         if ($title) $where['o.project']     = array('like','%'.$title.'%');
         if ($group_id) $where['o.group_id'] = $group_id;
         if ($opid)  $where['c.op_id']       = $opid;
         $lists                              = M()->table('__CONTRACT_PAY__ as c')->join('__OP__ as o on o.op_id = c.op_id','left')->join('__OP_TEAM_CONFIRM__ as t on t.op_id=c.op_id','left')->field('c.*,o.group_id,o.project,t.dep_time,t.ret_time')->where($where)->order($this->orders('c.id'))->select();
-        /*$data                               = array();
-        $data['this_month_list']            = ''; //计划当月回款
-        $data['history_list']               = ''; //历史欠款
-        $data['this_month']                 = 0;
-        $data['history']                    = 0;
-        foreach ($lists as $k=>$v){
-            if ($v['status']==2){
-                $v['stu']           = "<span class='green'>已回款</span>";
-            }elseif ($v['status']==1){
-                $v['stu']           = "<span class='yellow'>回款中</span>";
-            }else{
-                if ($v['return_time']<$end_time){
-                    $v['stu']       = "<span class='red'>未回款</span>";
-                    if ($v['return_time'] < $start_time){ //排除当月未回款的团
-                        $data['history_list'][] = $v;
-                        $data['history']        += $v['amount'];
-                        $data['history_return'] += $v['pay_amount'];
-                    }
-                }else{
-                    $v['stu']       = "<font color='#999999'>未考核</font>";
-                }
-            }
 
-            if (($v['return_time'] > $start_time && $v['return_time'] < $end_time && $v['status'] != 2) || ($v['pay_time'] > $start_time && $v['pay_time'] < $end_time)){
-                $data['this_month_list'][]  = $v;
-                $data['this_month']         += $v['amount'];
-                if ($v['pay_time'] > $start_time && $v['pay_time'] < $end_time){
-                    $data['this_month_return']  += $v['pay_amount'];
-                }
-            }
-
-        }
-        $data['money_back_average']         = (round($data['this_month_return']/($data['history']+$data['this_month']),4)*100).'%';*/
         $data                               = check_list($lists,$start_time,$end_time);
         if ($pin==0){
             $lists                          = $data['this_month_list'];
