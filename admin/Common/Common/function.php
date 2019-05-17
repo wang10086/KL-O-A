@@ -3401,7 +3401,7 @@ function updatekpi($month,$user){
                         $start_time             = $v['start_date'];
                         $end_time               = $v['end_date'];
                         $data                   = get_partner($user_id,$start_time,$end_time);
-                        $complete               = $data['money'];
+                        $complete               = $data['money']?$data['money']:0;
                         $url                    = U('Customer/public_kpi_partner',array('uid'=>$user_id,'st'=>$start_time,'et'=>$end_time,'target'=>$target));
                     }
 
