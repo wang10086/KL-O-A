@@ -2491,3 +2491,22 @@ function get_yw_department(){
         $opids                      = array_filter($arr);
         return $opids;
     }
+
+    //获取本周期内累计的城市合伙人收入
+    function get_partner($user_id,$start_time,$end_time){
+        $partner_db                 = M('Customer_partner');
+        $deposit_db                 = M('customer_deposit');
+        $partner_ids                = $partner_db->where(array('cm_id'=>$user_id,'audit_stu'=>2))->getField('id',true);
+        $where                      = array();
+        $where['start_date']        = array('between',"$start_time,$end_time");
+        $where['end_date']          = array('between',"$start_time,$end_time");
+        $where['_logic']            = 'or';
+        $map['_complex']            = $where;
+        $map['partner_id']          = array('in',$partner_ids);
+        $lists                      = $deposit_db->where($map)->select();
+
+        $data                       = array();
+        $data['money']              = array_sum(array_column($lists,'money'));
+        $data['lists']              = $lists;
+        return $data;
+    }

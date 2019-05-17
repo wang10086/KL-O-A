@@ -136,7 +136,7 @@
                                                 <option class="form-control" value="">请先选择省份</option>
                                                 <?php if ($partner){ ?>
                                                 <foreach name="citys" key="k" item="v">
-                                                    <option class="form-control" value="{$k}" <?php if ($partner && $partner['agent_country']==$k) echo "selected"; ?>>{$citys[$k]}</option>
+                                                    <option class="form-control" value="{$k}" <?php if ($partner && $partner['agent_city']==$k) echo "selected"; ?>>{$citys[$k]}</option>
                                                 </foreach>
                                                 <?php } ?>
                                             </select>

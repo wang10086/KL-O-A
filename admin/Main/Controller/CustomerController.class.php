@@ -657,4 +657,41 @@ class CustomerController extends BaseController {
         $this->city                 = $city;
         $this->display();
     }
+
+    //kpi
+    public function public_kpi_partner(){
+        $citys_db                   = M('citys');
+        $partner_db                 = M('customer_partner'); //合伙人
+        $deposit_db                 = M('customer_deposit'); //保证金
+        $user_id                    = I('uid');
+        $start_time                 = I('st');
+        $end_time                   = I('et');
+        $target                     = I('target');
+        $data                       = get_partner($user_id,$start_time,$end_time);
+        $partner_ids                = array_unique(array_column($data['lists'],'partner_id'));
+        $deposit_ids                = array_column($data['lists'],'id');
+        $where                      = array();
+        $where['id']                = array('in',$partner_ids);
+        //$where['d.id']              = array('in',$deposit_ids);
+        //$lists                      = M()->table('__CUSTOMER_PARTNER__ as p')->join('__CUSTOMER_DEPOSIT__ as d on d.partner_id=p.id','left')->where($where)->select();
+        $lists                      = $partner_db->where($where)->select();
+        foreach ($lists as $k=>$v){
+            $deposit_lists          = $deposit_db->where(array('partner_id'=>$v['id'],'id'=>array('in',$deposit_ids)))->select();
+            $money                  = array_sum(array_column($deposit_lists,'money'));
+            $lists[$k]['money']     = $money;
+        }
+
+        $info                       = array();
+        $info['target']             = $target;
+        $info['really']             = array_sum(array_column($lists,',money'));
+        $info['complete']           = (round($info['really']/$info['target'],4)*100).'%';
+        $this->lists                = $lists;
+        $this->info                 = $info;
+        $this->citys                = $citys_db->getField('id,name',true);
+        $this->user_id              = $user_id;
+        $this->start_time           = $start_time;
+        $this->end_time             = $end_time;
+        $this->target               = $target;
+        $this->display('kpi_partner');
+    }
 }
