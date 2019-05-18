@@ -55,7 +55,7 @@
                                     <foreach name="lists" item="row">
                                         <tr>
                                             <td class="taskOptions" rowspan="<?php echo $row['row_span_num']+1; ?>">{$row.department}</td>
-                                            <td class="taskOptions"><a href="<?php echo U('Inspect/public_satisfied',array('year'=>$year,'month'=>date('m'),'uid'=>$row['info'][0]['userid'])) ?>">{$row['info'][0]['username']}</a></td>
+                                            <td class="taskOptions"><a href="<?php echo U('Inspect/public_satisfied',array('year'=>$year,'month'=>date('m'),'uid'=>$row['info'][0]['userid'],'st'=>$startTime,'et'=>$endTime)) ?>">{$row['info'][0]['username']}</a></td>
                                             <td class="taskOptions">{$row['info'][0]['op_num']}</td>
                                             <td class="taskOptions">{$row['info'][0]['score_num']}</td>
                                             <td class="taskOptions">{$row['info'][0]['score_average']}</td>
@@ -67,7 +67,7 @@
                                                 <td class="taskOptions"><a href="{:U('Inspect/score_statis',array('year'=>$year,'month'=>date('m')))}">{$row['info'][$i]['username']}</a></td>
                                             <?php }else{ ?>
                                             <tr>
-                                                <td class="taskOptions"><a href="{:U('Inspect/public_satisfied',array('year'=>$year,'month'=>date('m'),'uid'=>$row['info'][$i]['userid']))}">{$row['info'][$i]['username']}</a></td>
+                                                <td class="taskOptions"><a href="{:U('Inspect/public_satisfied',array('year'=>$year,'month'=>date('m'),'uid'=>$row['info'][$i]['userid'],'st'=>$startTime,'et'=>$endTime))}">{$row['info'][$i]['username']}</a></td>
                                             <?php }?>
                                             <td class="taskOptions">{$row['info'][$i]['op_num']}</td>
                                             <td class="taskOptions">{$row['info'][$i]['score_num']}</td>

@@ -509,12 +509,15 @@ class InspectController extends BaseController{
     public function public_satisfied(){
         $year                       = I('year');
         $month                      = (int)I('month');
+        $startTime                  = I('st');
+        $endTime                    = I('et');
         $userid                     = I('uid');
         if (strlen($month)<2) $month= str_pad($month,2,'0',STR_PAD_LEFT);
         $yearMonth                  = $year.$month;
         $gross_margin               = get_gross_margin($yearMonth,$userid,1);  //获取当月月度累计毛利额目标值(如果毛利额目标为0,则不考核)
-        $cycle_times                = get_cycle($yearMonth);
-        $data                       = get_satisfied_kpi_data($userid,$cycle_times['begintime'],$cycle_times['endtime'],$gross_margin);
+        //$cycle_times                = get_cycle($yearMonth);
+        //$data                       = get_satisfied_kpi_data($userid,$cycle_times['begintime'],$cycle_times['endtime'],$gross_margin);
+        $data                       = get_satisfied_kpi_data($userid,$startTime,$endTime,$gross_margin);
         $op_lists                   = $data['shishi_lists'];
 
         $this->data                 = $data;
@@ -588,6 +591,8 @@ class InspectController extends BaseController{
         $this->sum                  = $sum;
         $this->lists                = $data;
         $this->year                 = $year;
+        $this->startTime            = $startTime;
+        $this->endTime              = $endTime;
         $this->display('kpi_score');
     }
 
