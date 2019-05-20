@@ -158,7 +158,7 @@
         var DD_num      = parseInt($('#DD_num').val());
         var EE_num      = parseInt($('#EE_num').val());
         var content     = $('#content').val();
-        var arr         = Array(1,2,3,);
+        var arr         = Array(1,2,3);
         var AA_res      = in_array(AA_num,arr);
         var BB_res      = in_array(BB_num,arr);
         var CC_res      = in_array(CC_num,arr);
