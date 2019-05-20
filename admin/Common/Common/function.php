@@ -3073,36 +3073,6 @@ function updatekpi($month,$user){
                             $sum            = get_sum_kpi_score($departments,$v['start_date'],$v['end_date']); //总合计
                             $complete       = $sum['score_average'];
                             $url            = U('Inspect/public_kpi_score',array('uid'=>$v['user_id'],'st'=>$v['start_date'],'et'=>$v['end_date'],'y'=>$v['year']));
-
-                            /*$users          = get_department_users($v['user_id']);
-                            $userids        = array_keys($users);
-                            $year           = $v['year']?$v['year']:date('Y');
-                            $monon          = $v['month']?substr($v['month'],4,2):date('m');
-                            $average        = get_QCS($userids,$year,$monon);         //季度顾客满意度
-
-                            //无项目的，得0分；有项目，但无调查项目的，得100分。
-                            //本月实际实施团
-                            $where                  = array();
-                            $where['dep_time']      = array('between',array($v['start_date'],$v['end_date']));
-                            $where['user_id']       = array('in',$userids);
-                            $shishi = M('op_team_confirm')->where($where)->getField('op_id',true);
-                            //需要辅导员的团(需要调查)
-                            $where                  = array();
-                            $where['in_begin_day']  = array('between',array($v['start_date'],$v['end_date']));
-                            $where['manager_id']    = array('in',$userids);
-                            $need_guide             = M('op_guide_confirm')->where($where)->count();
-                            //$kpi_opids              = $shishi?implode(',',$shishi):'0';
-                            //$url                    = U('Inspect/score',array('kpi_opids'=>$kpi_opids));
-                            $url                    = U('Inspect/public_kpi_score',array('uid'=>$v['user_id'],'st'=>$v['start_date'],'et'=>$v['end_date'],'y'=>$v['year']));
-
-                            if ($shishi && !$need_guide){
-                                //有项目，但无调查项目的，得100分。
-                                $complete = '100%';
-                            }else{
-                                //平均得分(如果得分>90%,得分100, 如果小于90%,以90%作为满分求百分比)
-                                $complete       = ($average*100).'%';
-
-                            }*/
                         }
 
                         //季度人事费用率
@@ -3403,6 +3373,13 @@ function updatekpi($month,$user){
                         $data                   = get_partner($user_id,$start_time,$end_time);
                         $complete               = $data['money']?$data['money']:0;
                         $url                    = U('Customer/public_kpi_partner',array('uid'=>$user_id,'st'=>$start_time,'et'=>$end_time,'target'=>$target));
+                    }
+
+                    //城市合伙人-满意度
+                    if($v['quota_id']==227){
+
+                        $complete               = '';
+                        $url                    = '';
                     }
 
                    /* }*/
@@ -4695,7 +4672,7 @@ function get_userkey(){
 }
 
 //获取用户信息(用户名)
-function get_username(){
+/*function get_username(){
     $user       = M('account')->field("id,nickname")->where(array('status'=>0))->select();
     $user_key   = array();
     foreach($user as $k=>$v){
@@ -4705,7 +4682,21 @@ function get_username(){
         $user_key[$k]['text']   = $text;
     }
     return json_encode($user_key);
-}
+}*/
+
+    function get_username(){
+        $user       = M('account')->field("id,nickname")->where(array('status'=>0))->select();
+        $user_key   = array();
+        foreach($user as $k=>$v){
+            $text                   = $v['nickname'];
+            $user_key[$k]['id']     = $v['id'];
+            if ($text == '李徵红') { $user_key[$k]['pinyin'] = 'lzh'; }
+            else{ $user_key[$k]['pinyin'] = strtopinyin($text); }
+            $user_key[$k]['text']   = $text;
+        }
+        return json_encode($user_key);
+    }
+
 
 //科普资源信息
 function getScienceRes(){

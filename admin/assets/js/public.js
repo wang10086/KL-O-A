@@ -619,3 +619,38 @@ function reload_jsFile(file,className) {
 	$("<scri"+"pt>"+"</scr"+"ipt>").attr({
 		role:className,src:file,type:'text/javascript'}).appendTo(head);
 }
+
+//将汉字字符串转化为utf-8
+function toUtf8(str) {
+	var out, i, len, c;
+	out = "";
+	len = str.length;
+	for(i = 0; i < len; i++) {
+		c = str.charCodeAt(i);
+		if ((c >= 0x0001) && (c <= 0x007F)) {
+			out += str.charAt(i);
+		} else if (c > 0x07FF) {
+			out += String.fromCharCode(0xE0 | ((c >> 12) & 0x0F));
+			out += String.fromCharCode(0x80 | ((c >> 6) & 0x3F));
+			out += String.fromCharCode(0x80 | ((c >> 0) & 0x3F));
+		} else {
+			out += String.fromCharCode(0xC0 | ((c >> 6) & 0x1F));
+			out += String.fromCharCode(0x80 | ((c >> 0) & 0x3F));
+		}
+	}
+	return out;
+}
+
+//js生成二维码
+function qrcode_js(text,width,height) {
+	var width 	= width?width:111;
+	var height 	= height?height:222;
+
+	$("#code").qrcode({
+		render: "canvas", //table方式
+		width: width, //宽度
+		height: height, //高度
+		text: text //任意内容
+	});
+}
+
