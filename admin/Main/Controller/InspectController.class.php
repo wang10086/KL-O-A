@@ -509,14 +509,16 @@ class InspectController extends BaseController{
     public function public_satisfied(){
         $year                       = I('year');
         $month                      = (int)I('month');
-        $startTime                  = I('st');
-        $endTime                    = I('et');
+        $st                         = I('st'); //kpi考核开始时间
+        $et                         = I('et'); //kpi考核结束时间
         $userid                     = I('uid');
         if (strlen($month)<2) $month= str_pad($month,2,'0',STR_PAD_LEFT);
         $yearMonth                  = $year.$month;
         $gross_margin               = get_gross_margin($yearMonth,$userid,1);  //获取当月月度累计毛利额目标值(如果毛利额目标为0,则不考核)
-        //$cycle_times                = get_cycle($yearMonth);
+        $cycle_times                = get_cycle($yearMonth); //顾客满意度周期
         //$data                       = get_satisfied_kpi_data($userid,$cycle_times['begintime'],$cycle_times['endtime'],$gross_margin);
+        $startTime                  = $st?$st:$cycle_times['begintime'];
+        $endTime                    = $et?$et:$cycle_times['endtime'];
         $data                       = get_satisfied_kpi_data($userid,$startTime,$endTime,$gross_margin);
         $op_lists                   = $data['shishi_lists'];
 
