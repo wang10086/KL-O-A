@@ -1362,7 +1362,7 @@ class KpiController extends BaseController {
 		
 		//操作记录
 		$applist          = M('kpi_op_record')->where(array('kpi_id'=>$kpi['id']))->order('op_time DESC')->select();
-		
+
 		
 		//用户信息
 		$this->user       = M('account')->find($user);
@@ -2180,6 +2180,21 @@ class KpiController extends BaseController {
         $this->data             = $data;
         $this->display('person_loss_detail');
     }*/
+
+   //获取相关二维码
+    public function public_qrcode(){
+        $uid                    = I('uid');
+        $quota_id               = I('quota_id');
+        $year                   = I('year');
+        $month                  = I('month');
+        $type                   = I('type')?I('type'):3; //3=>城市合伙人满意度评价
+        $title                  = trim(I('tit'));
+
+        $server_name            = $_SERVER['SERVER_NAME'];
+        $this->url              = "http://".$server_name.U('Score/kpi_score',array('uid'=>$uid,'quota_id'=>$quota_id,'year'=>$year,'month'=>$month,'type'=>$type,'tit'=>$title));
+        $this->title            = $title;
+        $this->display('qrcode');
+    }
 	
 	public function test(){
 		P(team_new_customers(35,array(strtotime('2018-01-01'),strtotime('2018-01-25'))));
