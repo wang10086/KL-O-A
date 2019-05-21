@@ -4145,3 +4145,29 @@ th{outline: none;}
 .progress-line-box-red{display: inline-block; width: 80px; height: 10px; background-color: #ff0000; border: solid 1px #ff0000;}
 .progress-line-box-gray{display: inline-block; width: 80px; height: 10px; background-color: #E0E0E0; border: solid 1px #E0E0E0;}
 
+/*手机注册*/
+/*#mob-registe-box{width: 100%;}*/
+.mob-loginfrom{  height:auto !important; float:left;  margin: 10px 0 20px 0; padding:40px 40px 40px 0; border-radius:8px; min-height: 13em; background-color: #ffffff; width: 100%;}
+.mob-loginfrom ul li{ width:100%; height:34px; float:left; clear:both; padding:14px 0; position:relative;margin-bottom: 20px;}
+.mob-loginfrom ul li label{ width:25%; float:left; line-height:40px; text-align:right; padding-right:5%; font-size:12px; color: #757575;}
+.mob-loginfrom ul li .text{ width:75%; float:left; border:1px solid #dedede; padding:2px 10px; height:34px; line-height:34px; font-size:12px;}
+.mob-loginfrom ul li .code{ width:48%; float:left; border:1px solid #dedede; padding:2px 10px; height:34px; line-height:34px; font-size:12px;}
+.mob-loginfrom ul li .sendcode{ width:25%; float:left; border:0; color:#fff; background-color:#3d9970; height:35px; line-height:35px; text-align: center;margin-left: 2%; border-radius: 4px; font-size:12px;}
+.mob-loginfrom ul li .sendcode:hover{opacity:.8; }
+.mob-loginfrom ul li .send{ background:#cccccc;}
+.mob-loginfrom ul li span{ height:34px; line-height:34px; position:absolute; top:16px; z-index:100; margin-left: 0;}
+
+.mob-showbox{ width:100%; height:100%; position:fixed; background-color:rgba(0,0,0,0.5); z-index:1000000; display:none;}
+.mob-showbox .showwin{ width:60%; height:200px; position:fixed; top: 0; bottom: 0; left: 0; right: 0; margin: auto; background:#ffffff; z-index:1000001; *! border-radius:4px;}
+.mob-showbox .showwin .showcontent{ width:100%; height:100%; float:left; clear:both; position:relative;text-align:center;}
+.mob-showbox .showwin .showcontent .showclose{ position:absolute; right:20px; top:10px; font-size:18px; color:#333333; cursor:pointer;}
+.mob-showbox .showwin .showcontent .showtitle{ width:80%; height:50px; text-align:center; font-size:16px; color:#0066cc; margin:0 auto; line-height:50px; border-bottom:1px solid #dedede;}
+.mob-showbox .showwin .showcontent .showtext{ width:100%; height:100px; padding:20px; margin: auto; margin-top: 10px; float:left; clear:both; text-align:center; line-height:20px;color:#0066cc;}
+.mob-showbox .showwin .showcontent .btnclose{ float:left; clear:both; width:60px; padding:5px 10px; background:#cccccc; border-radius:4px; margin:20px 140px;color:#ffffff;}
+.mob-loginfrom ul li .yzmcode{ width:130px; height:35px; border-radius:4px; margin-top: -8px;}
+
+.score-tit{ width: 100%;  border-bottom: dashed 1px #A9A9A9; text-align: center; }
+.score-tit h1 { font-size: 20px; font-weight: 600; color: #00a0e9; }
+
+
+

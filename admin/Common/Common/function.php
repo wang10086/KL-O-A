@@ -5173,3 +5173,10 @@ function get_half_year_cycle($year,$month){
             */
         }
     }
+
+    //生产md5加密token , 并存储session中
+    function make_token(){
+        $token                  = md5(uniqid(rand(), true));
+        $_SESSION['token']      = $token;
+        return $token;
+    }

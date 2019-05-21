@@ -46,7 +46,9 @@
         
         <script src="__HTML__/comm/laydate/laydate.js"></script>
         <script src="__HTML__/comm/jquery.autocomplete.min.js"></script>
-		 <script type="text/javascript">
+        <script src="__HTML__/score/lib/jquery.raty.min.js" type="text/javascript"></script>
+
+        <script type="text/javascript">
         	//laydate.skin('molv');
         </script>
 

@@ -15,59 +15,7 @@ class ScoreController extends Controller{
     protected $_pagetitle_  = '评分系统';
     protected $_pagedesc_   = '';
 
-    /*public function login(){
-        $db                 = M('tcs_score_user');
-        if (isset($_POST['dosubmit'])) {
-            $mobile         = I('mobile');
-            $mobile_code    = I('mobile_code');
-            $confirm_id     = I('confirm_id',0);
-            $opid           = I('opid',0);
-
-            //验证手机验证码
-            if ($mobile_code != session('code')) {
-                die(return_msg('n','您输入的手机验证码有误,请重新输入'));
-            }else{
-                $referer        = I('referer')?str_replace('&amp;','&',I('referer')):'';
-                if (!$confirm_id && !$opid) {
-                    die(return_msg('n','获取活动信息失败'));
-                }
-
-                //查看是否已经评价过该项目
-                if ($opid){
-                    $scored = M()->table('__TCS_SCORE_USER__ as u')->join('left join __TCS_SCORE__ as s on s.uid=u.id')->where(array('u.mobile'=>$mobile,'u.op_id'=>$opid))->find();
-                }else{
-                    $scored = M()->table('__TCS_SCORE_USER__ as u')->join('left join __TCS_SCORE__ as s on s.uid=u.id')->where(array('u.mobile'=>$mobile,'u.confirm_id'=>$confirm_id))->find();
-                }
-                if ($scored){
-                    die(return_msg('n','您已经为本次活动评分了,感谢您的参与!'));
-                }
-
-                $info               = array();
-                $info['mobile']     = $mobile;
-                $info['confirm_id'] = $confirm_id;
-                $info['op_id']      = $opid?$opid:M('op_guide_confirm')->where(array('id'=>$confirm_id))->getField('op_id');
-                $info['time']       = NOW_TIME;
-                $res = $db->add($info);
-                if ($res) {
-                    cookie('scoreMobile',$mobile,7200);
-                    cookie('score_uid',$res,7200);
-                    die(return_msg('y','登录成功'));
-                    //die(return_msg('y', "登录成功<script type='text/javascript'> setTimeout('location=\"$referer\"',1000);</script>"));
-                }else{
-                    die(return_msg('n','登录失败'));
-                }
-            }
-        }else{
-            $confirm_id             = I('confirm_id',0);
-            $this->confirm_id       = $confirm_id;
-            $opid                   = I('opid',0);
-            $this->opid             = $opid;
-            $token                  = md5(uniqid(rand(), true));
-            $_SESSION['token']      = $token;
-            $this->token            = $token;
-            $this->display('mob-login');
-        }
-    }
+    /*
 
     public function save_score(){
         if (isset($_POST['dosubmit'])) {
@@ -206,18 +154,82 @@ class ScoreController extends Controller{
 
     /*******************************************************start****************************************************/
 
+    public function login(){
+        $db                 = M('tcs_score_user');
+        if (isset($_POST['dosubmit'])) {
+            $mobile         = I('mobile');
+            $mobile_code    = I('mobile_code');
+            $confirm_id     = I('confirm_id',0);
+            $opid           = I('opid',0);
+
+            //验证手机验证码
+            if ($mobile_code != session('code')) {
+                die(return_msg('n','您输入的手机验证码有误,请重新输入'));
+            }else{
+                $referer        = I('referer')?str_replace('&amp;','&',I('referer')):'';
+                if (!$confirm_id && !$opid) {
+                    die(return_msg('n','获取活动信息失败'));
+                }
+
+                //查看是否已经评价过该项目
+                if ($opid){
+                    $scored = M()->table('__TCS_SCORE_USER__ as u')->join('left join __TCS_SCORE__ as s on s.uid=u.id')->where(array('u.mobile'=>$mobile,'u.op_id'=>$opid))->find();
+                }else{
+                    $scored = M()->table('__TCS_SCORE_USER__ as u')->join('left join __TCS_SCORE__ as s on s.uid=u.id')->where(array('u.mobile'=>$mobile,'u.confirm_id'=>$confirm_id))->find();
+                }
+                if ($scored){
+                    die(return_msg('n','您已经为本次活动评分了,感谢您的参与!'));
+                }
+
+                $info               = array();
+                $info['mobile']     = $mobile;
+                $info['confirm_id'] = $confirm_id;
+                $info['op_id']      = $opid?$opid:M('op_guide_confirm')->where(array('id'=>$confirm_id))->getField('op_id');
+                $info['time']       = NOW_TIME;
+                $res = $db->add($info);
+                if ($res) {
+                    cookie('scoreMobile',$mobile,7200);
+                    cookie('score_uid',$res,7200);
+                    die(return_msg('y','登录成功'));
+                    //die(return_msg('y', "登录成功<script type='text/javascript'> setTimeout('location=\"$referer\"',1000);</script>"));
+                }else{
+                    die(return_msg('n','登录失败'));
+                }
+            }
+        }else{
+            $uid                    = I('uid');
+            $quota_id               = I('quota_id');
+            $year                   = I('year');
+            $month                  = I('month');
+            $type                   = I('type');
+
+            $this->uid              = $uid;
+            $this->quota_id         = $quota_id;
+            $this->year             = $year;
+            $this->month            = $month;
+            $this->type             = $type;
+            //$this->token            = make_token();
+            $this->display('mob-login');
+        }
+    }
+
     //城市合伙人满意度KPI
     public function kpi_score(){
-        $uid                = I('uid');
-        $quota_id           = I('quota_id');
-        $year               = I('year');
-        $month              = I('month');
-        $type               = I('type');
-        $title              = I('tit');
+        $uid                        = I('uid');
+        $quota_id                   = I('quota_id');
+        $year                       = I('year');
+        $month                      = I('month');
+        $type                       = I('type');
+        $title                      = I('tit');
 
 
 
-        $this->title        = $title;
+        $this->uid                  = $uid;
+        $this->quota_id             = $quota_id;
+        $this->year                 = $year;
+        $this->month                = $month;
+        $this->type                 = $type;
+        $this->title                = $title;
         $this->display('kpi_score');
     }
 
