@@ -230,6 +230,7 @@ class ScoreController extends Controller{
         $this->month                = $month;
         $this->type                 = $type;
         $this->title                = $title;
+        $this->SYSTEM_NAME          = '客户满意度';
         $this->display('kpi_score');
     }
 

@@ -3,7 +3,7 @@
 <html>
     <head>
         <meta charset="UTF-8">
-        <title><?php echo P::SYSTEM_NAME; ?></title>
+        <title><?php echo $SYSTEM_NAME?$SYSTEM_NAME:P::SYSTEM_NAME; ?></title>
         <meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>
         <!-- bootstrap 3.0.2 -->
         <link href="__HTML__/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
