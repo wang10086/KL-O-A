@@ -3304,6 +3304,7 @@ function updatekpi($month,$user){
                         //129=>业务人员满意度(研发质量)(魏春竹)
                         if (in_array($v['quota_id'],array(129,155,168,193,206,214,212,218,219))){
                             $data                   = get_company_satisfaction($v);
+
                             //$complete               = get_kpi_satis($v,$data);
                             $complete               = $data['sum_average'];
                             $uname                  = M('account')->where(array('id'=>$v['user_id']))->getField('nickname');
@@ -5179,4 +5180,17 @@ function get_half_year_cycle($year,$month){
         $token                  = md5(uniqid(rand(), true));
         $_SESSION['token']      = $token;
         return $token;
+    }
+
+    /**
+     * @desc  返回错误信息
+     * @param Int  错误代号
+     * @return JSON
+     */
+    function return_msg($code,$msg){
+
+        $data = array();
+        $data['status'] = $code;
+        $data['info']  = $msg;
+        return json_encode($data,JSON_UNESCAPED_UNICODE);
     }

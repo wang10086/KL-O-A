@@ -1957,5 +1957,47 @@ class AjaxController extends Controller {
         $country                = $db->field('id,name')->where(array('pid'=>$city))->select();
         $this->ajaxReturn($country);
     }
+
+    //发送验证码
+    public function send_code(){
+        //获取传递手机号码
+        $mobile = trim(I('mobile'));
+        $token  = I('token');
+        if ($mobile && session('token')==$token){
+            $begin_time         = NOW_TIME-24*3600;
+            $end_time           = NOW_TIME;
+            $where              = array();
+            $where['mobile']    = $mobile;
+            $where['send_time'] = array('between',"$begin_time,$end_time");
+            $times  = M('sms_send_record')->where($where)->count();
+            if ($times >= 10){
+                $data = array();
+                $data['status'] = 'n';
+                $data['info']  = '已超过单日发送数量！';
+            }else{
+                session_start();
+                $code = rand(1000, 9999);
+                $_SESSION['code'] = $code;
+                //设置session过期时间
+                $time = 5*60;
+                setcookie(session_name(),session_id(),time()+$time);
+                $res = sendTemplateSMS($mobile, array($code,5), "219482"); //手机号码，替换内容数组，模板ID
+                if ($res==0) {
+                    $data = array();
+                    $data['status'] = 'y';
+                    $data['info']  = '发送成功！';
+                } else {
+                    $data = array();
+                    $data['status'] = 'n';
+                    $data['info']  = '发送失败！';
+                }
+            }
+        }else{
+            $data           = array();
+            $data['status'] = 'n';
+            $data['info']   = '非法数据！';
+        }
+        $this->ajaxReturn($data);
+    }
 }
 

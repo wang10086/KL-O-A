@@ -1184,12 +1184,12 @@ function get_sum_gross_profit($userids,$beginTime,$endTime){
         $db                         = M('satisfaction');
         $satisfaction_config_db     = M('satisfaction_config');
         $uid                        = $v['user_id'];
-        //$month                      = explode(',',$v['month']);
-        $month                      = substr($v['month'],-6,6);
-        $should_users               = $satisfaction_config_db->where(array('user_id'=>$uid,'month'=>$month))->getField('score_user_id',true); //应评分人员
+        $month                      = explode(',',$v['month']);
+        //$month                      = substr($v['month'],-6,6);
+        $should_users               = $satisfaction_config_db->where(array('user_id'=>$uid,'month'=>array('in',$month)))->getField('score_user_id',true); //应评分人员
 
         $where                      = array();
-        $where['monthly']           = $month;
+        $where['monthly']           = array('in',$month);
         $where['account_id']        = $uid;
         $info                       = $db->where($where)->select();
         $input_userids              = array_column($info,'input_userid'); //已评分人员
