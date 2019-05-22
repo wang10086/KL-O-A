@@ -351,7 +351,7 @@
 
 
 
-                        <if condition="rolemenu(array('Inspect/record','Inspect/edit_ins','Inspect/score','Inspect/score_statis','Inspect/user_kpi_statis'))">
+                        <if condition="rolemenu(array('Inspect/record','Inspect/edit_ins','Inspect/score','Inspect/score_statis','Inspect/user_kpi_statis','Inspect/satisfaction'))">
                         <li class="treeview {:ison(CONTROLLER_NAME, 'Inspect')} {:on('Inspect/satisfaction')} {:on('Inspect/satisfaction_add')}">
                             <a href="javascript:;">
                                 <i class="fa fa-medkit"></i>
