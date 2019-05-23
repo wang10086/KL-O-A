@@ -875,28 +875,64 @@ class ChartController extends BaseController {
 
 
     /**
-     * summary_types 分部门分类型汇总
+     * summary_types 分部门分类型汇总(月度)
      * $year 年 $month 月
      * $type 类型(800=>预算 , 801=>结算)
      */
     public function summary_types(){
         $chart              = D('Chart');
-        $year               = (int)trim(I('year',date('Y')));//默认或传输年份
-        $month              = (int)trim(I('month',date('m')));//默认或传输月份
-        $type               = (int)trim(I('type',800));//默认或传输 预算及结算 已结算 类型
-        $statu              = (int)(I('statu'));//1加年 2 减年
-        if($statu==1){ $year= $year+1;}elseif($statu==2){$year = $year-1;}//1加年 2 减年
 
-        $date               = $chart->year_month_day($year,$month);
-        $time1              = strtotime($date[0]);//月开始时间
-        $time2              = strtotime($date[1]);//月结束时间
-        $department         = $chart->department($year,$time1,$time2,$type);//分部门分类型汇总数据 结算
-        $this->department   = $department[0];//分部门分类型汇总数据
-        $this->count_sum    = $department[1];//总计
+        $year               = trim(I('year',date('Y')));//默认或传输年份
+        $month              = trim(I('month',date('m')));//默认或传输月份
+        $type               = trim(I('type',800));//默认或传输 预算及结算 已结算 类型
+
+        $yw_departs         = C('YW_DEPARTS');  //业务部门id
+        $where              = array();
+        $where['id']        = array('in',$yw_departs);
+        $departments        = M('salary_department')->field('id,department')->where($where)->select();
+
+        $data               = $this->department_type_summary($departments,$year,$month,$type);
+        $dj_data            = $data['dijie'];
+        unset($data['dijie']);
+
+        //var_dump($data);die;
+
+
+        $this->lists        = $data;//分部门分类型汇总数据
+        $this->dijie        = $dj_data;
+        //$this->count_sum    = $department[1];//总计
         $this->month        = $month;
         $this->type         = $type;
         $this->year         = $year;
+        $this->prveyear	    = $year-1;
+        $this->nextyear	    = $year+1;
+
+
+
         $this->display();
+    }
+
+    public function department_type_summary($departments,$year,$month='',$type=800,$quarter=''){
+        $chart_mod                          = D('Chart');
+        $yeartimes                          = get_year_cycle($year);
+        //$yearMonth                          = $month?$year.$month:'';
+        $monthtimes                         = $month?get_cycle($year.$month):'';
+        $quartertimes                       = set_quarter($year,$quarter); //季度 , 备用
+
+        $userlists      			        = array();
+        foreach ($departments as $k=>$v){
+            $userlists[$v['id']]['users']   = M('account')->where(array('departmentid'=>$v['id']))->getField('id',true);
+            $userlists[$v['id']]['id']      = $v['id'];
+            $userlists[$v['id']]['depname'] = $v['department'];
+        }
+
+        if ($type == 800){ //预算及结算分部门分类型汇总
+            $data                            = $chart_mod->ysjs_department_type($userlists,$yeartimes,$monthtimes,$quartertimes);
+        }else{ //结算分部门分类型汇总
+            $data                            = $chart_mod->js_department_type($userlists,$yeartimes,$monthtimes,$quartertimes);
+        }
+
+        return $data;
     }
 
     //项目分季度统计

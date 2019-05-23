@@ -30,10 +30,11 @@
                                 </div><!-- /.box-header -->
                                 <div class="box-body">
                                     <div class="btn-group" id="catfont" style="padding-bottom:5px;">
-                                            <a href="{:U('Chart/summary_types',array('year'=>$year,'month'=>$month,'statu'=>2,'type'=>$type))}" class="btn btn-default" style="padding:8px 18px;">上一年</a>
+                                            <a href="{:U('Chart/summary_types',array('year'=>$prveyear,'month'=>$month,'type'=>$type))}" class="btn btn-default" style="padding:8px 18px;">上一年</a>
 
                                         <?php
                                         for($i=1;$i<13;$i++){
+                                            if (strlen($i)<2){ $i = str_pad($i,2,'0',STR_PAD_LEFT); }
                                             if($month ==$i){
 
                                                 echo '<a href="'.U('Chart/summary_types',array('year'=>$year,'month'=>$i,'type'=>$type)).'" class="btn btn-info" style="padding:8px 18px;">'.$i.'月</a>';
@@ -42,7 +43,7 @@
                                             }
                                         }
                                         ?>
-                                            <a href="{:U('Chart/summary_types',array('year'=>$year,'month'=>$month,'statu'=>1,'type'=>$type))}" class="btn btn-default" style="padding:8px 18px;">下一年</a>
+                                            <a href="{:U('Chart/summary_types',array('year'=>$nextyear,'month'=>$month,'type'=>$type))}" class="btn btn-default" style="padding:8px 18px;">下一年</a>
                                     </div>
 
                                 <table class="table table-bordered dataTable fontmini" id="tablelist" style="margin-top:10px;">
@@ -66,65 +67,45 @@
                                         <td class="taskOptions" data="">毛利率(%)</td>
                                     </tr>
 
-                                    <foreach name="department"  item="dep">
-
-                                        <?php if(count($dep['name'])==0){?>
+                                    <foreach name="lists"  item="row">
                                         <tr>
-                                            <td class="taskOptions"><?php echo $dep['department'];?></td>
-                                            <td class="taskOptions"></td>
-                                            <td class="taskOptions">0</td>
-                                            <td class="taskOptions">0</td>
-                                            <td class="taskOptions">&yen; 0.00</td>
-                                            <td class="taskOptions">&yen; 0.00</td>
-                                            <td class="taskOptions">0.00 %</td>
-                                            <td class="taskOptions">0</td>
-                                            <td class="taskOptions">0</td>
-                                            <td class="taskOptions">&yen; 0.00</td>
-                                            <td class="taskOptions">&yen; 0.00</td>
-                                            <td class="taskOptions">0.00 %</td>
+                                            <td class="taskOptions" rowspan="<?php echo count($row['year_data'])+1; ?>">{$row.depname}</td>
                                         </tr>
-                                        <?php }else{?>
-                                        <tr>
-                                            <th class="taskOptions" rowspan="<?php echo count($dep['name'])+1;?>"><?php echo $dep['department'];?></th>
-                                        </tr>
-                                        <foreach name="dep['name']"  item="d">
-                                        <tr>
-                                            <td class="taskOptions"><?php if($d['type_name']==''){echo '';}else{echo $d['type_name'];}?></td>
-                                            <td class="taskOptions"><?php if($d['year_sum']==''){echo '0';}else{echo $d['year_sum'];}?></td>
-                                            <td class="taskOptions"><?php if($d['year_people_num']==''){echo '0';}else{echo $d['year_people_num'];}?></td>
-                                            <td class="taskOptions">&yen; <?php if($d['year_income']==''){echo '0.00';}else{echo $d['year_income'];}?></td>
-                                            <td class="taskOptions">&yen; <?php if($d['year_profit']==''){echo '0.00';}else{echo $d['year_profit'];}?></td>
-                                            <td class="taskOptions"><?PHP echo sprintf("%.2f",($d['year_profit']/$d['year_income'])*100);?> %</td>
-                                            <td class="taskOptions"><?php if($d['month_sum']==''){echo '0';}else{echo $d['month_sum'];}?></td>
-                                            <td class="taskOptions"><?php if($d['month_people_num']==''){echo '0';}else{echo $d['month_people_num'];}?></td>
-                                            <td class="taskOptions">&yen; <?php if($d['month_income']==''){echo '0.00';}else{echo $d['month_income'];}?></td>
-                                            <td class="taskOptions">&yen; <?php if($d['month_profit']==''){echo '0.00';}else{echo $d['month_profit'];}?></td>
-                                            <td class="taskOptions"><?PHP echo sprintf("%.2f",($d['month_profit']/$d['month_income'])*100);?> %</td>
-                                        </tr>
-                                        </foreach>
-                                        <?php }?>
+                                        <?php foreach ($row['year_data'] as $k=>$v){ ?>
+                                            <tr>
+                                                <td class="taskOptions">{$k}</td>
+                                                <td class="taskOptions">{$v.yearxms}</td>
+                                                <td class="taskOptions">{$v.yearrenshu}</td>
+                                                <td class="taskOptions">{$v.yearzsr}</td>
+                                                <td class="taskOptions">{$v.yearzml}</td>
+                                                <td class="taskOptions">{$v.yearmll}</td>
+                                                <td class="taskOptions">{$row['month_data'][$k]['monthxms']?$row['month_data'][$k]['monthxms']:0}</td>
+                                                <td class="taskOptions">{$row['month_data'][$k]['monthrenshu']?$row['month_data'][$k]['monthrenshu']:0}</td>
+                                                <td class="taskOptions">{$row['month_data'][$k]['monthzsr']?$row['month_data'][$k]['monthzsr']:0}</td>
+                                                <td class="taskOptions">{$row['month_data'][$k]['monthzml']?$row['month_data'][$k]['monthzml']:0}</td>
+                                                <td class="taskOptions">{$row['month_data'][$k]['monthmll']?$row['month_data'][$k]['monthmll']:'0%'}</td>
+                                            </tr>
+                                        <?php } ?>
                                     </foreach>
 
                                         <tr>
-                                            <th class="taskOptions" rowspan='<?php echo count($count_sum)+1; ?>'>合计</th>
+                                            <th class="taskOptions black" rowspan='<?php echo count($dijie['dj_year_data'])+1; ?>'>地接合计</th>
                                         </tr>
-                                        <foreach name="count_sum"  item="c">
+                                        <?php foreach ($dijie['dj_year_data'] as $kk=>$vv){ ?>
                                         <tr>
-                                            <td class="taskOptions"><?php if($c['type_name']==''){echo '';}else{echo $c['type_name'];}?></td>
-                                            <td class="taskOptions"><?php if($c['year_sum']==''){echo '0';}else{echo $c['year_sum'];}?></td>
-                                            <td class="taskOptions"><?php if($c['year_people_num']==''){echo '0';}else{echo $c['year_people_num'];}?></td>
-                                            <td class="taskOptions">&yen; <?php if($c['year_income']==''){echo '0.00';}else{echo $c['year_income'];}?></td>
-                                            <td class="taskOptions">&yen; <?php if($c['year_profit']==''){echo '0.00';}else{echo $c['year_profit'];}?></td>
-                                            <td class="taskOptions"><?PHP echo sprintf("%.2f",($c['year_profit']/$c['year_income'])*100);?> %</td>
-
-
-                                            <td class="taskOptions"><?php if($c['month_sum']==''){echo '0';}else{echo $c['month_sum'];}?></td>
-                                            <td class="taskOptions"><?php if($c['month_people_num']==''){echo '0';}else{echo $c['month_people_num'];}?></td>
-                                            <td class="taskOptions">&yen; <?php if($c['month_income']==''){echo '0.00';}else{echo $c['month_income'];}?></td>
-                                            <td class="taskOptions">&yen; <?php if($c['month_profit']==''){echo '0.00';}else{echo $c['month_profit'];}?></td>
-                                            <td class="taskOptions"><?PHP echo sprintf("%.2f",($c['month_profit']/$c['month_income'])*100);?> %</td>
+                                            <td class="taskOptions">{$kk}</td>
+                                            <td class="taskOptions">{$vv.yearxms}</td>
+                                            <td class="taskOptions">{$vv.yearrenshu}</td>
+                                            <td class="taskOptions">{$vv.yearzsr}</td>
+                                            <td class="taskOptions">{$vv.yearzml}</td>
+                                            <td class="taskOptions">{$vv.yearmll}</td>
+                                            <td class="taskOptions">{$dijie['dj_month_data'][$kk]['monthxms']?$dijie['dj_month_data'][$kk]['monthxms']:0}</td>
+                                            <td class="taskOptions">{$dijie['dj_month_data'][$kk]['monthrenshu']?$dijie['dj_month_data'][$kk]['monthrenshu']:0}</td>
+                                            <td class="taskOptions">{$dijie['dj_month_data'][$kk]['monthzsr']?$dijie['dj_month_data'][$kk]['monthzsr']:0}</td>
+                                            <td class="taskOptions">{$dijie['dj_month_data'][$kk]['monthzml']?$dijie['dj_month_data'][$kk]['monthzml']:0}</td>
+                                            <td class="taskOptions">{$dijie['dj_month_data'][$kk]['monthmll']?$dijie['dj_month_data'][$kk]['monthmll']:'0%'}</td>
                                         </tr>
-                                        </foreach>
+                                        <?php } ?>
 
                                 </table>
                                 </div><!-- /.box-body -->
