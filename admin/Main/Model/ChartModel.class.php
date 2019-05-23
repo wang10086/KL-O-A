@@ -981,7 +981,6 @@ class ChartModel extends Model
         $heji['monthmll']           = sprintf("%.2f", ($heji['monthzml'] / $heji['monthzsr']) * 100);
         $heji['monthopids']         = implode(',',array_filter(array_column($lists,'monthopids')));
         $lists['heji']              = $heji;*/
-       P($lists);
         return $lists;
     }
 
