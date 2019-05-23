@@ -4,7 +4,7 @@
                 <!-- Content Header (Page header) -->
                 <section class="content-header">
                     <h1>
-                        项目分部门分类型汇总（月度）
+                        项目分部门分类型汇总（季度）
                     </h1>
                     <ol class="breadcrumb">
                         <li><a href="{:U('Index/index')}"><i class="fa fa-home"></i> 首页</a></li>
@@ -24,26 +24,24 @@
                                         #chart_btn_group .btn-a{ background-color: #ddd;color: #666;}
                                     </style>
                                     <div class="box-tools btn-group" id = "chart_btn_group">
-                                        <a href="{:U('Chart/summary_types',array('type'=>800,'year'=>$year,'month'=>$month))}" class="btn btn-sm <?php if($type==800){ echo 'btn-info';}else{ echo 'btn-a';} ?>">预算及结算分部门汇总</a>
-                                        <a href="{:U('Chart/summary_types',array('type'=>801,'year'=>$year,'month'=>$month))}" class="btn btn-sm <?php if($type==801){ echo 'btn-info';}else{ echo 'btn-a';} ?>">已结算分部门汇总</a>
+                                        <a href="{:U('Chart/quarter_summary_types',array('type'=>800,'year'=>$year,'quarter'=>$quarter))}" class="btn btn-sm <?php if($type==800){ echo 'btn-info';}else{ echo 'btn-a';} ?>">预算及结算分部门汇总</a>
+                                        <a href="{:U('Chart/quarter_summary_types',array('type'=>801,'year'=>$year,'quarter'=>$quarter))}" class="btn btn-sm <?php if($type==801){ echo 'btn-info';}else{ echo 'btn-a';} ?>">已结算分部门汇总</a>
                                     </div>
                                 </div><!-- /.box-header -->
                                 <div class="box-body">
                                     <div class="btn-group" id="catfont" style="padding-bottom:5px;">
-                                            <a href="{:U('Chart/summary_types',array('year'=>$prveyear,'month'=>$month,'type'=>$type))}" class="btn btn-default" style="padding:8px 18px;">上一年</a>
+                                            <a href="{:U('Chart/quarter_summary_types',array('year'=>$prveyear,'quarter'=>$quarter,'type'=>$type))}" class="btn btn-default" style="padding:8px 18px;">上一年</a>
 
                                         <?php
-                                        for($i=1;$i<13;$i++){
-                                            if (strlen($i)<2){ $i = str_pad($i,2,'0',STR_PAD_LEFT); }
-                                            if($month ==$i){
-
-                                                echo '<a href="'.U('Chart/summary_types',array('year'=>$year,'month'=>$i,'type'=>$type)).'" class="btn btn-info" style="padding:8px 18px;">'.$i.'月</a>';
-                                            }else{
-                                                echo '<a href="'.U('Chart/summary_types',array('year'=>$year,'month'=>$i,'type'=>$type)).'" class="btn btn-default" style="padding:8px 18px;">'.$i.'月</a>';
+                                            for($i=1;$i<5;$i++){
+                                                if($quarter==$i){
+                                                    echo '<a href="'.U('Chart/quarter_summary_types',array('year'=>$year,'quarter'=>$i,'type'=>$type)).'" class="btn btn-info" style="padding:8px 18px;">'.$i.'季度</a>';
+                                                }else{
+                                                    echo '<a href="'.U('Chart/quarter_summary_types',array('year'=>$year,'quarter'=>$i,'type'=>$type)).'" class="btn btn-default" style="padding:8px 18px;">'.$i.'季度</a>';
+                                                }
                                             }
-                                        }
                                         ?>
-                                            <a href="{:U('Chart/summary_types',array('year'=>$nextyear,'month'=>$month,'type'=>$type))}" class="btn btn-default" style="padding:8px 18px;">下一年</a>
+                                            <a href="{:U('Chart/quarter_summary_types',array('year'=>$nextyear,'quarter'=>$quarter,'type'=>$type))}" class="btn btn-default" style="padding:8px 18px;">下一年</a>
                                     </div>
 
                                 <table class="table table-bordered dataTable fontmini" id="tablelist" style="margin-top:10px;">
@@ -51,20 +49,20 @@
                                         <th class="sorting" style="text-align: center;" rowspan="2">部门</th>
                                         <th style="text-align: center;" rowspan="2">业务型态</th>
                                         <th colspan="5" style="text-align: center;">{$year}年累计</th>
-                                        <th colspan="5" style="text-align: center;">{$month}月累计</th>
+                                        <th colspan="5" style="text-align: center;">{$quarter}季度累计</th>
                                     </tr>
 
                                     <tr>
-                                        <td class="taskOptions" data="" >项目数</td>
-                                        <td class="taskOptions" data="">人数</td>
-                                        <td class="taskOptions" data="">收入合计</td>
-                                        <td class="taskOptions" data="">毛利合计</td>
-                                        <td class="taskOptions" data="">毛利率(%)</td>
-                                        <td class="taskOptions" data="">项目数</td>
-                                        <td class="taskOptions" data="" width="">人数</td>
-                                        <td class="taskOptions" data="">收入合计</td>
-                                        <td class="taskOptions" data="">毛利合计</td>
-                                        <td class="taskOptions" data="">毛利率(%)</td>
+                                        <td class="taskOptions">项目数</td>
+                                        <td class="taskOptions">人数</td>
+                                        <td class="taskOptions">收入合计</td>
+                                        <td class="taskOptions">毛利合计</td>
+                                        <td class="taskOptions">毛利率(%)</td>
+                                        <td class="taskOptions">项目数</td>
+                                        <td class="taskOptions">人数</td>
+                                        <td class="taskOptions">收入合计</td>
+                                        <td class="taskOptions">毛利合计</td>
+                                        <td class="taskOptions">毛利率(%)</td>
                                     </tr>
 
                                     <foreach name="lists"  item="row">
@@ -79,11 +77,11 @@
                                                 <td class="taskOptions">{$v.yearzsr}</td>
                                                 <td class="taskOptions">{$v.yearzml}</td>
                                                 <td class="taskOptions">{$v.yearmll}</td>
-                                                <td class="taskOptions">{$row['month_data'][$k]['monthxms']?$row['month_data'][$k]['monthxms']:0}</td>
-                                                <td class="taskOptions">{$row['month_data'][$k]['monthrenshu']?$row['month_data'][$k]['monthrenshu']:0}</td>
-                                                <td class="taskOptions">{$row['month_data'][$k]['monthzsr']?$row['month_data'][$k]['monthzsr']:0}</td>
-                                                <td class="taskOptions">{$row['month_data'][$k]['monthzml']?$row['month_data'][$k]['monthzml']:0}</td>
-                                                <td class="taskOptions">{$row['month_data'][$k]['monthmll']?$row['month_data'][$k]['monthmll']:0}</td>
+                                                <td class="taskOptions">{$row['quarter_data'][$k]['quarterxms']?$row['quarter_data'][$k]['quarterxms']:0}</td>
+                                                <td class="taskOptions">{$row['quarter_data'][$k]['quarterrenshu']?$row['quarter_data'][$k]['quarterrenshu']:0}</td>
+                                                <td class="taskOptions">{$row['quarter_data'][$k]['quarterzsr']?$row['quarter_data'][$k]['quarterzsr']:0}</td>
+                                                <td class="taskOptions">{$row['quarter_data'][$k]['quarterzml']?$row['quarter_data'][$k]['quarterzml']:0}</td>
+                                                <td class="taskOptions">{$row['quarter_data'][$k]['quartermll']?$row['quarter_data'][$k]['quartermll']:0}</td>
                                             </tr>
                                         <?php } ?>
                                     </foreach>
@@ -99,11 +97,11 @@
                                             <td class="taskOptions">{$vv.yearzsr}</td>
                                             <td class="taskOptions">{$vv.yearzml}</td>
                                             <td class="taskOptions">{$vv.yearmll}</td>
-                                            <td class="taskOptions">{$dijie['dj_month_data'][$kk]['monthxms']?$dijie['dj_month_data'][$kk]['monthxms']:0}</td>
-                                            <td class="taskOptions">{$dijie['dj_month_data'][$kk]['monthrenshu']?$dijie['dj_month_data'][$kk]['monthrenshu']:0}</td>
-                                            <td class="taskOptions">{$dijie['dj_month_data'][$kk]['monthzsr']?$dijie['dj_month_data'][$kk]['monthzsr']:0}</td>
-                                            <td class="taskOptions">{$dijie['dj_month_data'][$kk]['monthzml']?$dijie['dj_month_data'][$kk]['monthzml']:0}</td>
-                                            <td class="taskOptions">{$dijie['dj_month_data'][$kk]['monthmll']?$dijie['dj_month_data'][$kk]['monthmll']:0}</td>
+                                            <td class="taskOptions">{$dijie['dj_quarter_data'][$kk]['quarterxms']?$dijie['dj_quarter_data'][$kk]['quarterxms']:0}</td>
+                                            <td class="taskOptions">{$dijie['dj_quarter_data'][$kk]['quarterrenshu']?$dijie['dj_quarter_data'][$kk]['quarterrenshu']:0}</td>
+                                            <td class="taskOptions">{$dijie['dj_quarter_data'][$kk]['quarterzsr']?$dijie['dj_quarter_data'][$kk]['quarterzsr']:0}</td>
+                                            <td class="taskOptions">{$dijie['dj_quarter_data'][$kk]['quarterzml']?$dijie['dj_quarter_data'][$kk]['quarterzml']:0}</td>
+                                            <td class="taskOptions">{$dijie['dj_quarter_data'][$kk]['quartermll']?$dijie['dj_quarter_data'][$kk]['quartermll']:0}</td>
                                         </tr>
                                         <?php } ?>
 
@@ -118,11 +116,11 @@
                                             <td class="taskOptions">{$vv.yearzsr}</td>
                                             <td class="taskOptions">{$vv.yearzml}</td>
                                             <td class="taskOptions">{$vv.yearmll}</td>
-                                            <td class="taskOptions">{$heji['month_data'][$kk]['monthxms']?$heji['month_data'][$kk]['monthxms']:0}</td>
-                                            <td class="taskOptions">{$heji['month_data'][$kk]['monthrenshu']?$heji['month_data'][$kk]['monthrenshu']:0}</td>
-                                            <td class="taskOptions">{$heji['month_data'][$kk]['monthzsr']?$heji['month_data'][$kk]['monthzsr']:0}</td>
-                                            <td class="taskOptions">{$heji['month_data'][$kk]['monthzml']?$heji['month_data'][$kk]['monthzml']:0}</td>
-                                            <td class="taskOptions">{$heji['month_data'][$kk]['monthmll']?$heji['month_data'][$kk]['monthmll']:0}</td>
+                                            <td class="taskOptions">{$heji['quarter_data'][$kk]['quarterxms']?$heji['quarter_data'][$kk]['quarterxms']:0}</td>
+                                            <td class="taskOptions">{$heji['quarter_data'][$kk]['quarterrenshu']?$heji['quarter_data'][$kk]['quarterrenshu']:0}</td>
+                                            <td class="taskOptions">{$heji['quarter_data'][$kk]['quarterzsr']?$heji['quarter_data'][$kk]['quarterzsr']:0}</td>
+                                            <td class="taskOptions">{$heji['quarter_data'][$kk]['quarterzml']?$heji['quarter_data'][$kk]['quarterzml']:0}</td>
+                                            <td class="taskOptions">{$heji['quarter_data'][$kk]['quartermll']?$heji['quarter_data'][$kk]['quartermll']:0}</td>
                                         </tr>
                                     <?php } ?>
 
@@ -133,11 +131,11 @@
                                         <td>{$sum.yearzsr}</td>
                                         <td>{$sum.yearzml}</td>
                                         <td>{$sum.yearmll}</td>
-                                        <td>{$sum.monthxms}</td>
-                                        <td>{$sum.monthrenshu}</td>
-                                        <td>{$sum.monthzsr}</td>
-                                        <td>{$sum.monthzml}</td>
-                                        <td>{$sum.monthmll}</td>
+                                        <td>{$sum.quarterxms}</td>
+                                        <td>{$sum.quarterrenshu}</td>
+                                        <td>{$sum.quarterzsr}</td>
+                                        <td>{$sum.quarterzml}</td>
+                                        <td>{$sum.quartermll}</td>
                                     </tr>
 
                                 </table>

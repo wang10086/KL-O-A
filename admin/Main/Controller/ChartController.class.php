@@ -879,8 +879,6 @@ class ChartController extends BaseController {
      * $type 类型(800=>预算 , 801=>结算)
      */
     public function summary_types(){
-        $chart              = D('Chart');
-
         $year               = trim(I('year',date('Y')));//默认或传输年份
         $month              = trim(I('month',date('m')));//默认或传输月份
         $type               = trim(I('type',800));//默认或传输 预算及结算 已结算 类型
@@ -902,14 +900,11 @@ class ChartController extends BaseController {
         $this->lists        = $data;//分部门分类型汇总数据
         $this->dijie        = $dj_data;
         $this->heji         = $heji;
-        //$this->count_sum    = $department[1];//总计
         $this->month        = $month;
         $this->type         = $type;
         $this->year         = $year;
         $this->prveyear	    = $year-1;
         $this->nextyear	    = $year+1;
-
-
 
         $this->display();
     }
@@ -917,7 +912,6 @@ class ChartController extends BaseController {
     public function department_type_summary($departments,$year,$month='',$type=800,$quarter=''){
         $chart_mod                          = D('Chart');
         $yeartimes                          = get_year_cycle($year);
-        //$yearMonth                          = $month?$year.$month:'';
         $monthtimes                         = $month?get_cycle($year.$month):'';
         $quartertimes                       = set_quarter($year,$quarter); //季度 , 备用
 
@@ -1031,6 +1025,39 @@ class ChartController extends BaseController {
         $this->opids    = $opids;
         $this->depname  = $depname;
         $this->display('oplist');
+    }
+
+    //（月度）
+    public function quarter_summary_types(){
+        $year               = trim(I('year',date('Y')));//默认或传输年份
+        $month              = I('month',date('m'));
+        $quarter		    = I('quarter',get_quarter($month));
+        $type               = trim(I('type',800));//默认或传输 预算及结算 已结算 类型
+
+        $yw_departs         = C('YW_DEPARTS');  //业务部门id
+        $where              = array();
+        $where['id']        = array('in',$yw_departs);
+        $departments        = M('salary_department')->field('id,department')->where($where)->select();
+
+        $data               = $this->department_type_summary($departments,$year,'',$type,$quarter);
+        $dj_data            = $data['dijie']; //地接合计
+        $heji               = $data['heji']; //分部门分类型合计(含地接)
+        $sum                = $data['sum']; //总合计
+        unset($data['dijie']);
+        unset($data['heji']);
+        unset($data['sum']);
+
+        $this->sum          = $sum;
+        $this->lists        = $data;//分部门分类型汇总数据
+        $this->dijie        = $dj_data;
+        $this->heji         = $heji;
+        $this->quarter      = $quarter;
+        $this->type         = $type;
+        $this->year         = $year;
+        $this->prveyear	    = $year-1;
+        $this->nextyear	    = $year+1;
+
+        $this->display();
     }
 
 }
