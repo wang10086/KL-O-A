@@ -892,14 +892,17 @@ class ChartController extends BaseController {
         $departments        = M('salary_department')->field('id,department')->where($where)->select();
 
         $data               = $this->department_type_summary($departments,$year,$month,$type);
-        $dj_data            = $data['dijie'];
+        $dj_data            = $data['dijie']; //地接合计
+        $heji               = $data['heji']; //分部门分类型合计(含地接)
+        $sum                = $data['sum']; //总合计
         unset($data['dijie']);
+        unset($data['heji']);
+        unset($data['sum']);
 
-        //var_dump($data);die;
-
-
+        $this->sum          = $sum;
         $this->lists        = $data;//分部门分类型汇总数据
         $this->dijie        = $dj_data;
+        $this->heji         = $heji;
         //$this->count_sum    = $department[1];//总计
         $this->month        = $month;
         $this->type         = $type;

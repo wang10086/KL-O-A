@@ -83,7 +83,7 @@
                                                 <td class="taskOptions">{$row['month_data'][$k]['monthrenshu']?$row['month_data'][$k]['monthrenshu']:0}</td>
                                                 <td class="taskOptions">{$row['month_data'][$k]['monthzsr']?$row['month_data'][$k]['monthzsr']:0}</td>
                                                 <td class="taskOptions">{$row['month_data'][$k]['monthzml']?$row['month_data'][$k]['monthzml']:0}</td>
-                                                <td class="taskOptions">{$row['month_data'][$k]['monthmll']?$row['month_data'][$k]['monthmll']:'0%'}</td>
+                                                <td class="taskOptions">{$row['month_data'][$k]['monthmll']?$row['month_data'][$k]['monthmll']:0}</td>
                                             </tr>
                                         <?php } ?>
                                     </foreach>
@@ -103,9 +103,42 @@
                                             <td class="taskOptions">{$dijie['dj_month_data'][$kk]['monthrenshu']?$dijie['dj_month_data'][$kk]['monthrenshu']:0}</td>
                                             <td class="taskOptions">{$dijie['dj_month_data'][$kk]['monthzsr']?$dijie['dj_month_data'][$kk]['monthzsr']:0}</td>
                                             <td class="taskOptions">{$dijie['dj_month_data'][$kk]['monthzml']?$dijie['dj_month_data'][$kk]['monthzml']:0}</td>
-                                            <td class="taskOptions">{$dijie['dj_month_data'][$kk]['monthmll']?$dijie['dj_month_data'][$kk]['monthmll']:'0%'}</td>
+                                            <td class="taskOptions">{$dijie['dj_month_data'][$kk]['monthmll']?$dijie['dj_month_data'][$kk]['monthmll']:0}</td>
                                         </tr>
                                         <?php } ?>
+
+                                    <tr>
+                                        <th class="taskOptions black" rowspan='<?php echo count($heji['year_data'])+1; ?>'>合计</th>
+                                    </tr>
+                                    <?php foreach ($heji['year_data'] as $kk=>$vv){ ?>
+                                        <tr>
+                                            <td class="taskOptions">{$kk}</td>
+                                            <td class="taskOptions">{$vv.yearxms}</td>
+                                            <td class="taskOptions">{$vv.yearrenshu}</td>
+                                            <td class="taskOptions">{$vv.yearzsr}</td>
+                                            <td class="taskOptions">{$vv.yearzml}</td>
+                                            <td class="taskOptions">{$vv.yearmll}</td>
+                                            <td class="taskOptions">{$heji['month_data'][$kk]['monthxms']?$heji['month_data'][$kk]['monthxms']:0}</td>
+                                            <td class="taskOptions">{$heji['month_data'][$kk]['monthrenshu']?$heji['month_data'][$kk]['monthrenshu']:0}</td>
+                                            <td class="taskOptions">{$heji['month_data'][$kk]['monthzsr']?$heji['month_data'][$kk]['monthzsr']:0}</td>
+                                            <td class="taskOptions">{$heji['month_data'][$kk]['monthzml']?$heji['month_data'][$kk]['monthzml']:0}</td>
+                                            <td class="taskOptions">{$heji['month_data'][$kk]['monthmll']?$heji['month_data'][$kk]['monthmll']:0}</td>
+                                        </tr>
+                                    <?php } ?>
+
+                                    <tr class="taskOptions black">
+                                        <td colspan="2">总合计</td>
+                                        <td>{$sum.yearxms}</td>
+                                        <td>{$sum.yearrenshu}</td>
+                                        <td>{$sum.yearzsr}</td>
+                                        <td>{$sum.yearzml}</td>
+                                        <td>{$sum.yearmll}</td>
+                                        <td>{$sum.monthxms}</td>
+                                        <td>{$sum.monthrenshu}</td>
+                                        <td>{$sum.monthzsr}</td>
+                                        <td>{$sum.monthzml}</td>
+                                        <td>{$sum.monthmll}</td>
+                                    </tr>
 
                                 </table>
                                 </div><!-- /.box-body -->
