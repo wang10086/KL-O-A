@@ -873,7 +873,6 @@ class ChartController extends BaseController {
         return $lists;
     }
 
-
     /**
      * summary_types 分部门分类型汇总(月度)
      * $year 年 $month 月

@@ -44,6 +44,7 @@ class ChartModel extends Model
 
             $yearopid_lists         = M()->table('__OP_SETTLEMENT__ as b')->field('o.op_id')->join('__OP__ as o on b.op_id = o.op_id', 'LEFT')->join('__ACCOUNT__ as a on a.id = o.create_user', 'LEFT')->join('__AUDIT_LOG__ as l on l.req_id = b.id', 'LEFT')->join('__OP_TEAM_CONFIRM__ as c on c.op_id=o.op_id', 'left')->where($where)->select();
             $yearlist               = M()->table('__OP_SETTLEMENT__ as b')->field($field)->join('__OP__ as o on b.op_id = o.op_id', 'LEFT')->join('__ACCOUNT__ as a on a.id = o.create_user', 'LEFT')->join('__AUDIT_LOG__ as l on l.req_id = b.id', 'LEFT')->join('__OP_TEAM_CONFIRM__ as c on c.op_id=o.op_id', 'left')->where($where)->order('zsr DESC')->find();
+
             $lists[$v['id']]['yearxms']     = $yearlist['xms'] ? $yearlist['xms'] : 0;
             $lists[$v['id']]['yearrenshu']  = $yearlist['renshu'] ? $yearlist['renshu'] : 0;
             $lists[$v['id']]['yearzsr']     = $yearlist['zsr'] ? $yearlist['zsr'] : "0.00";
@@ -842,12 +843,13 @@ class ChartModel extends Model
      */
     function get_type_js_opids($users, $begintime, $endtime, $req_type = 801,$kid)
     {
+        $arr_kid                    = $this->get_kids($kid);
         $where                      = array();
         $where['b.audit_status']    = 1;
         $where['l.req_type']        = $req_type;
         $where['l.audit_time']      = array('between', "$begintime,$endtime");
         $where['a.id']              = array('in', $users);
-        $where['o.kind']            = $kid;
+        $where['o.kind']            = array('in',$arr_kid);
         $lists = M()->table('__OP_SETTLEMENT__ as b')->field('o.op_id')->join('__OP__ as o on b.op_id = o.op_id', 'LEFT')->join('__ACCOUNT__ as a on a.id = o.create_user', 'LEFT')->join('__AUDIT_LOG__ as l on l.req_id = b.id', 'LEFT')->where($where)->select();
 
         return $lists;
@@ -863,12 +865,13 @@ class ChartModel extends Model
      */
     function get_type_ys_opids($users, $begintime, $endtime, $req_type = 800,$opids='',$kid)
     {
+        $arr_kid                    = $this->get_kids($kid);
         $where                      = array();
         $where['b.audit_status']    = 1;
         $where['l.req_type']        = $req_type;
         $where['l.audit_time']      = array('between', "$begintime,$endtime");
         $where['a.id']              = array('in', $users);
-        $where['o.kind']            = $kid;
+        $where['o.kind']            = array('in',$arr_kid);
         if ($opids){ $where['o.op_id']  = array('not in',$opids); }
         $lists = M()->table('__OP_BUDGET__ as b')->field('o.op_id')->join('__OP__ as o on b.op_id = o.op_id', 'LEFT')->join('__ACCOUNT__ as a on a.id = o.create_user', 'LEFT')->join('__AUDIT_LOG__ as l on l.req_id = b.id', 'LEFT')->where($where)->select();
 
@@ -927,11 +930,12 @@ class ChartModel extends Model
      * @param $req_type
      */
     function get_type_dj_js_opids($begintime, $endtime, $req_type,$dj_opids='',$kindid){
+        $arr_kid                            = $this->get_kids($kindid);
         $where                              = array();
         $where['b.audit_status']            = 1;
         $where['l.req_type']                = $req_type;
         $where['l.audit_time']              = array('between', "$begintime,$endtime");
-        $where['o.kind']                    = $kindid;
+        $where['o.kind']                    = array('in',$arr_kid);
         if ($dj_opids){ $where['o.op_id']   = array('in',$dj_opids); }
         $lists = M()->table('__OP_SETTLEMENT__ as b')->field('o.op_id')->join('__OP__ as o on b.op_id = o.op_id', 'LEFT')->join('__ACCOUNT__ as a on a.id = o.create_user', 'LEFT')->join('__AUDIT_LOG__ as l on l.req_id = b.id', 'LEFT')->where($where)->select();
 
@@ -944,11 +948,12 @@ class ChartModel extends Model
      * @param $req_type
      */
     function get_type_dj_ys_opids($begintime, $endtime, $req_type,$in_opids='',$kindid){
+        $arr_kid                            = $this->get_kids($kindid);
         $where                              = array();
         $where['b.audit_status']            = 1;
         $where['l.req_type']                = $req_type;
         $where['l.audit_time']              = array('between', "$begintime,$endtime");
-        $where['o.kind']                    = $kindid;
+        $where['o.kind']                    = array('in',$arr_kid);
         if ($in_opids){ $where['o.op_id']   = array('in',$in_opids); }
         $lists = M()->table('__OP_BUDGET__ as b')->field('o.op_id')->join('__OP__ as o on b.op_id = o.op_id', 'LEFT')->join('__ACCOUNT__ as a on a.id = o.create_user', 'LEFT')->join('__AUDIT_LOG__ as l on l.req_id = b.id', 'LEFT')->where($where)->select();
 
@@ -1058,15 +1063,17 @@ class ChartModel extends Model
         $monthbegintime         = $monthtimes['begintime'];
         $monthendtime           = $monthtimes['endtime'];
         $kinds                  = M('project_kind')->getField('id,name',true);
+
         foreach ($userlists as $k => $v) {
             foreach ($kinds as $kid=>$kvalue) {
+                $arr_kid                 = $this->get_kids($kid);
                 //年度累计
                 $where                   = array();
                 $where['b.audit_status'] = 1;
                 $where['l.req_type']     = 801;
                 $where['l.audit_time']   = array('between', "$yearbegintime,$yearendtime");
                 $where['a.id']           = array('in', $v['users']);
-                $where['o.kind']         = $kid;
+                $where['o.kind']         = array('in',$arr_kid);
 
                 $field   = array();
                 $field[] = 'count(o.id) as xms';
@@ -1093,7 +1100,7 @@ class ChartModel extends Model
                     $where['l.req_type']     = 801;
                     $where['l.audit_time']   = array('between', "$quarterbegintime,$quarterendtime");
                     $where['a.id']           = array('in', $v['users']);
-                    $where['o.kind']         = $kid;
+                    $where['o.kind']         = array('in',$arr_kid);
 
                     $field             = array();
                     $field[]           = 'count(o.id) as xms';
@@ -1121,7 +1128,7 @@ class ChartModel extends Model
                     $where['l.req_type']     = 801;
                     $where['l.audit_time']   = array('between', "$monthbegintime,$monthendtime");
                     $where['a.id']           = array('in', $v['users']);
-                    $where['o.kind']         = $kid;
+                    $where['o.kind']         = array('in',$arr_kid);
 
                     $field   = array();
                     $field[] = 'count(o.id) as xms';
@@ -1147,6 +1154,7 @@ class ChartModel extends Model
                 $lists[$v['id']]['depname'] = $v['depname'];
             }
         }
+
         //地接团信息
         $depart_sum_list    = $lists;
         $dj_opids       = array_filter(M('op')->group('dijie_opid')->getField('dijie_opid',true));
@@ -1261,5 +1269,24 @@ class ChartModel extends Model
         $list['mll']            = $yearlist['mll'] ? sprintf("%.2f", $yearlist['mll'] * 100) : "0.00";
         $list['opids']          = $dj_opids;
         return $list;
+    }
+
+    public function get_kids($kid){
+        $kind_db                = M('project_kind');
+        $kind_ids               = $kind_db->getField('id',true);
+        $last_id                = $kind_db->order('id desc')->getField('id');
+        $del_ids                = array();
+        if ($kid == 3){
+            $del_ids[]          = 3;
+            for ($i=1;$i<$last_id;$i++){
+                if (!in_array($i,$kind_ids)){
+                    $del_ids[]  = $i;
+                }
+            }
+            $arr                = $del_ids;
+        }else{
+            $arr                = array($kid);
+        }
+        return $arr;
     }
 }
