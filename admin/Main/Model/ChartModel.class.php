@@ -747,7 +747,7 @@ class ChartModel extends Model
             $sum_y_val                                              = $this-> get_sum_ysjs($depart_sum_list,$lists['dijie']['dj_year_data'][$kvalue],$kvalue,'y');
             if ($sum_y_val['yearxms']){
                 $lists['heji']['year_data'][$kvalue]['yearxms']     = $sum_y_val['yearxms'] ? $sum_y_val['yearxms'] : 0;
-                $lists['heji']['year_data'][$kvalue]['yearrenshu']  = $sum_y_val['yearrenshu'] ? $sum_y_val['yearrenshu'] : 0;
+                $lists['heji']['year_data'][$kvalue]['yearrenshu']  = $sum_y_val['yearrenshu'] ? $sum_y_val['yearrenshu'] - $lists['dijie']['dj_year_data'][$kvalue]['yearrenshu'] : 0;
                 $lists['heji']['year_data'][$kvalue]['yearzsr']     = $sum_y_val['yearzsr'] ? $sum_y_val['yearzsr'] - $lists['dijie']['dj_year_data'][$kvalue]['yearzsr'] : "0.00";
                 $lists['heji']['year_data'][$kvalue]['yearzml']     = $sum_y_val['yearzml'] ? $sum_y_val['yearzml'] : "0.00";
                 $lists['heji']['year_data'][$kvalue]['yearmll']     = $sum_y_val['yearmll'];
@@ -783,7 +783,7 @@ class ChartModel extends Model
                 $sum_q_val                                              = $this-> get_sum_ysjs($depart_sum_list,$lists['dijie']['dj_quarter_data'][$kvalue],$kvalue,'q');
                 if ($sum_q_val['quarterxms']){
                     $lists['heji']['quarter_data'][$kvalue]['quarterxms']     = $sum_q_val['quarterxms'] ? $sum_q_val['quarterxms'] : 0;
-                    $lists['heji']['quarter_data'][$kvalue]['quarterrenshu']  = $sum_q_val['quarterrenshu'] ? $sum_q_val['quarterrenshu'] : 0;
+                    $lists['heji']['quarter_data'][$kvalue]['quarterrenshu']  = $sum_q_val['quarterrenshu'] ? $sum_q_val['quarterrenshu'] - $lists['dijie']['dj_quarter_data'][$kvalue]['quarterrenshu'] : 0;
                     $lists['heji']['quarter_data'][$kvalue]['quarterzsr']     = $sum_q_val['quarterzsr'] ? $sum_q_val['quarterzsr'] - $lists['dijie']['dj_quarter_data'][$kvalue]['quarterzsr'] : "0.00";
                     $lists['heji']['quarter_data'][$kvalue]['quarterzml']     = $sum_q_val['quarterzml'] ? $sum_q_val['quarterzml'] : "0.00";
                     $lists['heji']['quarter_data'][$kvalue]['quartermll']     = $sum_q_val['quartermll'];
@@ -820,7 +820,7 @@ class ChartModel extends Model
                 $sum_m_val                                                  = $this-> get_sum_ysjs($depart_sum_list,$lists['dijie']['dj_month_data'][$kvalue],$kvalue,'m');
                 if ($sum_m_val['monthxms']){
                     $lists['heji']['month_data'][$kvalue]['monthxms']       = $sum_m_val['monthxms'] ? $sum_m_val['monthxms'] : 0;
-                    $lists['heji']['month_data'][$kvalue]['monthrenshu']    = $sum_m_val['monthrenshu'] ? $sum_m_val['monthrenshu'] : 0;
+                    $lists['heji']['month_data'][$kvalue]['monthrenshu']    = $sum_m_val['monthrenshu'] ? $sum_m_val['monthrenshu'] - $lists['dijie']['dj_month_data'][$kvalue]['monthrenshu'] : 0;
                     $lists['heji']['month_data'][$kvalue]['monthzsr']       = $sum_m_val['monthzsr'] ? $sum_m_val['monthzsr'] - $lists['dijie']['dj_month_data'][$kvalue]['monthzsr'] : "0.00";
                     $lists['heji']['month_data'][$kvalue]['monthzml']       = $sum_m_val['monthzml'] ? $sum_m_val['monthzml'] : "0.00";
                     $lists['heji']['month_data'][$kvalue]['monthmll']       = $sum_m_val['monthmll'];
@@ -1179,7 +1179,7 @@ class ChartModel extends Model
             $sum_y_val                                              = $this-> get_sum_ysjs($depart_sum_list,$lists['dijie']['dj_year_data'][$kvalue],$kvalue,'y');
             if ($sum_y_val['yearxms']){
                 $lists['heji']['year_data'][$kvalue]['yearxms']     = $sum_y_val['yearxms'] ? $sum_y_val['yearxms'] : 0;
-                $lists['heji']['year_data'][$kvalue]['yearrenshu']  = $sum_y_val['yearrenshu'] ? $sum_y_val['yearrenshu'] : 0;
+                $lists['heji']['year_data'][$kvalue]['yearrenshu']  = $sum_y_val['yearrenshu'] ? $sum_y_val['yearrenshu'] - $lists['dijie']['dj_year_data'][$kvalue]['yearrenshu'] : 0;
                 $lists['heji']['year_data'][$kvalue]['yearzsr']     = $sum_y_val['yearzsr'] ? $sum_y_val['yearzsr'] - $lists['dijie']['dj_year_data'][$kvalue]['yearzsr'] : "0.00";
                 $lists['heji']['year_data'][$kvalue]['yearzml']     = $sum_y_val['yearzml'] ? $sum_y_val['yearzml'] : "0.00";
                 $lists['heji']['year_data'][$kvalue]['yearmll']     = $sum_y_val['yearmll'];
@@ -1205,7 +1205,7 @@ class ChartModel extends Model
                 $sum_q_val                                              = $this-> get_sum_ysjs($depart_sum_list,$lists['dijie']['dj_quarter_data'][$kvalue],$kvalue,'q');
                 if ($sum_q_val['quarterxms']){
                     $lists['heji']['quarter_data'][$kvalue]['quarterxms']     = $sum_q_val['quarterxms'] ? $sum_q_val['quarterxms'] : 0;
-                    $lists['heji']['quarter_data'][$kvalue]['quarterrenshu']  = $sum_q_val['quarterrenshu'] ? $sum_q_val['quarterrenshu'] : 0;
+                    $lists['heji']['quarter_data'][$kvalue]['quarterrenshu']  = $sum_q_val['quarterrenshu'] ? $sum_q_val['quarterrenshu'] - $lists['dijie']['dj_quarter_data'][$kvalue]['quarterrenshu'] : 0;
                     $lists['heji']['quarter_data'][$kvalue]['quarterzsr']     = $sum_q_val['quarterzsr'] ? $sum_q_val['quarterzsr'] - $lists['dijie']['dj_quarter_data'][$kvalue]['quarterzsr'] : "0.00";
                     $lists['heji']['quarter_data'][$kvalue]['quarterzml']     = $sum_q_val['quarterzml'] ? $sum_q_val['quarterzml'] : "0.00";
                     $lists['heji']['quarter_data'][$kvalue]['quartermll']     = $sum_q_val['quartermll'];
@@ -1233,7 +1233,7 @@ class ChartModel extends Model
             $sum_m_val                                                  = $this-> get_sum_ysjs($depart_sum_list,$lists['dijie']['dj_month_data'][$kvalue],$kvalue,'m');
             if ($sum_m_val['monthxms']){
                 $lists['heji']['month_data'][$kvalue]['monthxms']       = $sum_m_val['monthxms'] ? $sum_m_val['monthxms'] : 0;
-                $lists['heji']['month_data'][$kvalue]['monthrenshu']    = $sum_m_val['monthrenshu'] ? $sum_m_val['monthrenshu'] : 0;
+                $lists['heji']['month_data'][$kvalue]['monthrenshu']    = $sum_m_val['monthrenshu'] ? $sum_m_val['monthrenshu'] - $lists['dijie']['dj_month_data'][$kvalue]['monthrenshu'] : 0;
                 $lists['heji']['month_data'][$kvalue]['monthzsr']       = $sum_m_val['monthzsr'] ? $sum_m_val['monthzsr'] - $lists['dijie']['dj_month_data'][$kvalue]['monthzsr'] : "0.00";
                 $lists['heji']['month_data'][$kvalue]['monthzml']       = $sum_m_val['monthzml'] ? $sum_m_val['monthzml'] : "0.00";
                 $lists['heji']['month_data'][$kvalue]['monthmll']       = $sum_m_val['monthmll'];
