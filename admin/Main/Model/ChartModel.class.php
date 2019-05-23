@@ -1077,12 +1077,15 @@ class ChartModel extends Model
 
                 $yearopid_lists                                      = M()->table('__OP_SETTLEMENT__ as b')->field('o.op_id')->join('__OP__ as o on b.op_id = o.op_id', 'LEFT')->join('__ACCOUNT__ as a on a.id = o.create_user', 'LEFT')->join('__AUDIT_LOG__ as l on l.req_id = b.id', 'LEFT')->join('__OP_TEAM_CONFIRM__ as c on c.op_id=o.op_id', 'left')->where($where)->select();
                 $yearlist                                            = M()->table('__OP_SETTLEMENT__ as b')->field($field)->join('__OP__ as o on b.op_id = o.op_id', 'LEFT')->join('__ACCOUNT__ as a on a.id = o.create_user', 'LEFT')->join('__AUDIT_LOG__ as l on l.req_id = b.id', 'LEFT')->join('__OP_TEAM_CONFIRM__ as c on c.op_id=o.op_id', 'left')->where($where)->order('zsr DESC')->find();
-                $lists[$v['id']]['year_data'][$kvalue]['yearxms']    = $yearlist['xms'] ? $yearlist['xms'] : 0;
-                $lists[$v['id']]['year_data'][$kvalue]['yearrenshu'] = $yearlist['renshu'] ? $yearlist['renshu'] : 0;
-                $lists[$v['id']]['year_data'][$kvalue]['yearzsr']    = $yearlist['zsr'] ? $yearlist['zsr'] : "0.00";
-                $lists[$v['id']]['year_data'][$kvalue]['yearzml']    = $yearlist['zml'] ? $yearlist['zml'] : "0.00";
-                $lists[$v['id']]['year_data'][$kvalue]['yearmll']    = $yearlist['mll'] ? sprintf("%.2f", $yearlist['mll'] * 100) : "0.00";
-                $lists[$v['id']]['year_data'][$kvalue]['yearopids']  = implode(',', array_column($yearopid_lists, 'op_id'));
+
+                if ($yearlist['xms']){
+                    $lists[$v['id']]['year_data'][$kvalue]['yearxms']    = $yearlist['xms'] ? $yearlist['xms'] : 0;
+                    $lists[$v['id']]['year_data'][$kvalue]['yearrenshu'] = $yearlist['renshu'] ? $yearlist['renshu'] : 0;
+                    $lists[$v['id']]['year_data'][$kvalue]['yearzsr']    = $yearlist['zsr'] ? $yearlist['zsr'] : "0.00";
+                    $lists[$v['id']]['year_data'][$kvalue]['yearzml']    = $yearlist['zml'] ? $yearlist['zml'] : "0.00";
+                    $lists[$v['id']]['year_data'][$kvalue]['yearmll']    = $yearlist['mll'] ? sprintf("%.2f", $yearlist['mll'] * 100) : "0.00";
+                    $lists[$v['id']]['year_data'][$kvalue]['yearopids']  = implode(',', array_column($yearopid_lists, 'op_id'));
+                }
 
                 if ($quartertimes) { //季度
                     $where                   = array();
@@ -1101,12 +1104,14 @@ class ChartModel extends Model
                     $quarteropid_lists = M()->table('__OP_SETTLEMENT__ as b')->field('o.op_id')->join('__OP__ as o on b.op_id = o.op_id', 'LEFT')->join('__ACCOUNT__ as a on a.id = o.create_user', 'LEFT')->join('__AUDIT_LOG__ as l on l.req_id = b.id', 'LEFT')->join('__OP_TEAM_CONFIRM__ as c on c.op_id=o.op_id', 'left')->where($where)->select();
                     $quarterlist       = M()->table('__OP_SETTLEMENT__ as b')->field($field)->join('__OP__ as o on b.op_id = o.op_id', 'LEFT')->join('__ACCOUNT__ as a on a.id = o.create_user', 'LEFT')->join('__AUDIT_LOG__ as l on l.req_id = b.id', 'LEFT')->join('__OP_TEAM_CONFIRM__ as c on c.op_id=o.op_id', 'left')->where($where)->order('zsr DESC')->find();
 
-                    $lists[$v['id']]['quarter_data'][$kvalue]['quarterxms']    = $quarterlist['xms'] ? $quarterlist['xms'] : 0;
-                    $lists[$v['id']]['quarter_data'][$kvalue]['quarterrenshu'] = $quarterlist['renshu'] ? $quarterlist['renshu'] : 0;
-                    $lists[$v['id']]['quarter_data'][$kvalue]['quarterzsr']    = $quarterlist['zsr'] ? $quarterlist['zsr'] : "0.00";
-                    $lists[$v['id']]['quarter_data'][$kvalue]['quarterzml']    = $quarterlist['zml'] ? $quarterlist['zml'] : "0.00";
-                    $lists[$v['id']]['quarter_data'][$kvalue]['quartermll']    = $quarterlist['mll'] ? sprintf("%.2f", $quarterlist['mll'] * 100) : "0.00";
-                    $lists[$v['id']]['quarter_data'][$kvalue]['quarteropids']  = implode(',', array_column($quarteropid_lists, 'op_id'));
+                    if ($quarterlist['xms']){
+                        $lists[$v['id']]['quarter_data'][$kvalue]['quarterxms']    = $quarterlist['xms'] ? $quarterlist['xms'] : 0;
+                        $lists[$v['id']]['quarter_data'][$kvalue]['quarterrenshu'] = $quarterlist['renshu'] ? $quarterlist['renshu'] : 0;
+                        $lists[$v['id']]['quarter_data'][$kvalue]['quarterzsr']    = $quarterlist['zsr'] ? $quarterlist['zsr'] : "0.00";
+                        $lists[$v['id']]['quarter_data'][$kvalue]['quarterzml']    = $quarterlist['zml'] ? $quarterlist['zml'] : "0.00";
+                        $lists[$v['id']]['quarter_data'][$kvalue]['quartermll']    = $quarterlist['mll'] ? sprintf("%.2f", $quarterlist['mll'] * 100) : "0.00";
+                        $lists[$v['id']]['quarter_data'][$kvalue]['quarteropids']  = implode(',', array_column($quarteropid_lists, 'op_id'));
+                    }
                 }
 
                 if ($monthtimes) {
@@ -1128,12 +1133,14 @@ class ChartModel extends Model
                     $monthopid_lists = M()->table('__OP_SETTLEMENT__ as b')->field('o.op_id')->join('__OP__ as o on b.op_id = o.op_id', 'LEFT')->join('__ACCOUNT__ as a on a.id = o.create_user', 'LEFT')->join('__AUDIT_LOG__ as l on l.req_id = b.id', 'LEFT')->join('__OP_TEAM_CONFIRM__ as c on c.op_id=o.op_id', 'left')->where($where)->select();
                     $monthlist       = M()->table('__OP_SETTLEMENT__ as b')->field($field)->join('__OP__ as o on b.op_id = o.op_id', 'LEFT')->join('__ACCOUNT__ as a on a.id = o.create_user', 'LEFT')->join('__AUDIT_LOG__ as l on l.req_id = b.id', 'LEFT')->join('__OP_TEAM_CONFIRM__ as c on c.op_id=o.op_id', 'left')->where($where)->order('zsr DESC')->find();
 
-                    $lists[$v['id']]['month_data'][$kvalue]['monthxms']    = $monthlist['xms'] ? $monthlist['xms'] : 0;
-                    $lists[$v['id']]['month_data'][$kvalue]['monthrenshu'] = $monthlist['renshu'] ? $monthlist['renshu'] : 0;
-                    $lists[$v['id']]['month_data'][$kvalue]['monthzsr']    = $monthlist['zsr'] ? $monthlist['zsr'] : "0.00";
-                    $lists[$v['id']]['month_data'][$kvalue]['monthzml']    = $monthlist['zml'] ? $monthlist['zml'] : "0.00";
-                    $lists[$v['id']]['month_data'][$kvalue]['monthmll']    = $monthlist['mll'] ? sprintf("%.2f", $monthlist['mll'] * 100) : "0.00";
-                    $lists[$v['id']]['month_data'][$kvalue]['monthopids']  = implode(',', array_column($monthopid_lists, 'op_id'));
+                    if ($monthlist['xms']){
+                        $lists[$v['id']]['month_data'][$kvalue]['monthxms']    = $monthlist['xms'] ? $monthlist['xms'] : 0;
+                        $lists[$v['id']]['month_data'][$kvalue]['monthrenshu'] = $monthlist['renshu'] ? $monthlist['renshu'] : 0;
+                        $lists[$v['id']]['month_data'][$kvalue]['monthzsr']    = $monthlist['zsr'] ? $monthlist['zsr'] : "0.00";
+                        $lists[$v['id']]['month_data'][$kvalue]['monthzml']    = $monthlist['zml'] ? $monthlist['zml'] : "0.00";
+                        $lists[$v['id']]['month_data'][$kvalue]['monthmll']    = $monthlist['mll'] ? sprintf("%.2f", $monthlist['mll'] * 100) : "0.00";
+                        $lists[$v['id']]['month_data'][$kvalue]['monthopids']  = implode(',', array_column($monthopid_lists, 'op_id'));
+                    }
                 }
                 $lists[$v['id']]['users']   = $v['users'];
                 $lists[$v['id']]['id']      = $v['id'];
