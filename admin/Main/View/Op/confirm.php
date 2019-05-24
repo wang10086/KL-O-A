@@ -76,6 +76,21 @@
                                 </div>
                             </div>
 
+                            <?php if ($guide_need){ ?>
+                                <div class="box box-warning">
+                                    <div class="box-header">
+                                        <h3 class="box-title">辅导员/教师、专家需求</h3>
+                                    </div><!-- /.box-header -->
+                                    <div class="box-body" >
+                                        <?php if(!$jiesuan && ($op['create_user']==cookie('userid') || C('RBAC_SUPER_ADMIN')==cookie('username') || cookie('roleid')==10)){ ?>
+                                            <include file="confirm_tcs_need_edit" />
+                                        <?php }else{ ?>
+                                            <include file="confirm_tcs_need_read" />
+                                        <?php }?>
+                                    </div>
+                                </div>
+                            <?php } ?>
+
                             <div class="box box-warning">
                                 <div class="box-header">
                                     <h3 class="box-title">资源需求单</h3>
@@ -106,22 +121,6 @@
                                     <div class="form-group">&nbsp;</div>
                                 </div><!-- /.box-body -->
                             </div>
-
-                            <?php if ($guide_need){ ?>
-                            <div class="box box-warning">
-                                <div class="box-header">
-                                    <h3 class="box-title">辅导员/教师、专家需求</h3>
-                                </div><!-- /.box-header -->
-                                <div class="box-body" >
-                                    <?php if(!$jiesuan && ($op['create_user']==cookie('userid') || C('RBAC_SUPER_ADMIN')==cookie('username') || cookie('roleid')==10)){ ?>
-                                        <include file="confirm_tcs_need_edit" />
-                                    <?php }else{ ?>
-                                        <include file="confirm_tcs_need_read" />
-                                    <?php }?>
-                                </div>
-                            </div>
-                            <?php } ?>
-
 
                         </div><!--/.col (right) -->
                     </div>   <!-- /.row -->
