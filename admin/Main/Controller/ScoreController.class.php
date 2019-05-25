@@ -30,7 +30,7 @@ class ScoreController extends Controller{
                 die(return_msg('n','您输入的手机验证码有误,请重新输入'));
             }else{
                 if (!$mobile) { die(return_msg('n','手机号码错误')); }
-                if (!$uid) { die(return_msg('n','获取信息失败')); }
+                if (!$uid) { die(return_msg('n','获取被评分人信息失败')); }
                 $score_record           = $db->where(array('account_id'=>$uid,'mobile'=>$mobile,'monthly'=>$monthly,'status'=>1))->find();
                 if ($score_record){ die(return_msg('n','您本月已完成满意度评价,感谢您的参与!')); }
 
@@ -72,6 +72,7 @@ class ScoreController extends Controller{
         $uid                        = I('uid');
         $title                      = I('tit');
 
+        $this->uid                  = $uid;
         $this->token                = make_token();
         $this->scoreMobile          = session('scoreMobile');
         $this->title                = $title;
