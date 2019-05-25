@@ -26,12 +26,7 @@
             <div class="header">登录评分</div>
             <form method="post" action="{:U('Score/login')}" name="myform" id="myform">
             <input type="hidden" name="dosubmit" value="1" />
-            <input type="hidden" name="referer" value="<?php echo $_SERVER['HTTP_REFERER']; ?>" />
             <input type="hidden" name="uid" value="{$uid}">
-            <input type="hidden" name="quota_id" value="{$quota_id}">
-            <input type="hidden" name="year" value="{$year}">
-            <input type="hidden" name="month" value="{$month}">
-            <input type="hidden" name="type" value="{$type}">
             <div class="sco-box-body">
                 <div class="mob-loginfrom gbg">
                     <ul>
@@ -50,6 +45,7 @@
 
                 <div class="footer" style="margin-top:0;">
                     <button type="submit" class="btn bg-olive btn-block" style="width:80px; margin:0 auto 10px auto;">提交</button>
+                    <!--<button type="submit" class="btn" style="width:80px; margin:0 auto 10px auto;">提交</button>-->
                     <!--<div style="text-align:center"><a href="{:U('Index/login')}">已有账号</a> &nbsp;&nbsp;|&nbsp;&nbsp;<a href="{:U('Index/backpwd')}">找回密码</a>--></div>
                 </div>
 
@@ -65,10 +61,6 @@
 
         <script type="text/javascript">
             uid             = <?php echo $uid?$uid:0; ?>;
-            quota_id        = <?php echo $quota_id?$quota_id:0; ?>;
-            type            = <?php echo $type?$type:0; ?>;
-            year            = {$year};
-            month           = "{$month}";
 
         $(function(){
             $("#myform").Validform({
@@ -85,7 +77,7 @@
                     var obj = eval(data);
                     if(obj.status == 'y'){
                         showmsg('提示', obj.info);
-                        setTimeout("window.location.href='/op.php?m=Main&c=Score&a=index&uid='+uid+'&quota_id='+quota_id+'&year='+year+'&month='+month+'&type='+type",1500);
+                        setTimeout("window.location.href='/index.php?m=Main&c=Score&a=kpi_score&uid='+uid",1500);
                     }else{
                         showmsg('提示',obj.info);
                     }
@@ -128,7 +120,6 @@
                         if(data.status=='n'){
                             showmsg('提示',data.info);
                         }
-                        console.log(data);
                         time();
                     },
                     error:function () {

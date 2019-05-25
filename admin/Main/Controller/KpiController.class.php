@@ -2184,14 +2184,10 @@ class KpiController extends BaseController {
    //获取相关二维码
     public function public_qrcode(){
         $uid                    = I('uid');
-        $quota_id               = I('quota_id');
-        $year                   = I('year');
-        $month                  = I('month');
-        $type                   = I('type')?I('type'):3; //3=>城市合伙人满意度评价
         $title                  = trim(I('tit'));
 
         $server_name            = $_SERVER['SERVER_NAME'];
-        $this->url              = "http://".$server_name.U('Score/kpi_score',array('uid'=>$uid,'quota_id'=>$quota_id,'year'=>$year,'month'=>$month,'type'=>$type,'tit'=>$title));
+        $this->url              = "http://".$server_name.U('Score/kpi_score',array('uid'=>$uid,'tit'=>$title));
         $this->title            = $title;
         $this->display('qrcode');
     }

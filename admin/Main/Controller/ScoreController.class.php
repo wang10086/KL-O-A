@@ -15,28 +15,107 @@ class ScoreController extends Controller{
     protected $_pagetitle_  = '评分系统';
     protected $_pagedesc_   = '';
 
-    /*
 
-    public function save_score(){
+    public function login(){
+        $db                             = M('tcs_score_user');
         if (isset($_POST['dosubmit'])) {
-            $db                 = M('tcs_score');
-            $info               = I('info');
-            $info['uid']        = cookie('score_uid');
-            $info['input_time'] = NOW_TIME;
-            $res = $db->add($info);
-            if ($res){
-                $list       = M()->table('__OP_GUIDE_CONFIRM__ as c')->field('c.id,c.op_id,c.score_num')->join('left join __TCS_SCORE_USER__ as u on c.id=u.confirm_id')->where(array('u.id'=>cookie('score_uid')))->find();
-                $confirm_id = $list['id'];
-                $score_num  = $list['score_num'];
-                $data       = array();
-                $data['score_num'] = $score_num+1;
-                M('op_guide_confirm')->where(array('id'=>$confirm_id))->save($data);
+            $db                         = M('partner_satisfaction');
+            $mobile                     = trim(I('mobile'));
+            $mobile_code                = I('mobile_code');
+            $uid                        = I('uid');
+            $monthly                    = date('Ym');
 
-                $this->success('感谢您的评价',U('Score/scored'));
+            //验证手机验证码
+            if ($mobile_code != session('code')) {
+                die(return_msg('n','您输入的手机验证码有误,请重新输入'));
             }else{
-                $this->error('数据保存失败');
+                if (!$mobile) { die(return_msg('n','手机号码错误')); }
+                if (!$uid) { die(return_msg('n','获取信息失败')); }
+                $score_record           = $db->where(array('account_id'=>$uid,'mobile'=>$mobile,'monthly'=>$monthly,'status'=>1))->find();
+                if ($score_record){ die(return_msg('n','您本月已完成满意度评价,感谢您的参与!')); }
+
+                $register_record        = $db->where(array('account_id'=>$uid,'mobile'=>$mobile,'monthly'=>$monthly))->find(); //已注册,未评分
+                if ($register_record){
+                    $register_id        = $register_record['id'];
+                    $info               = array();
+                    $info['reg_time']   = NOW_TIME;
+                    $db->where(array('id'=>$register_id))->save($info);
+                }else{
+                    $info               = array();
+                    $info['account_id'] = $uid;
+                    $info['mobile']     = $mobile;
+                    $info['monthly']    = $monthly;
+                    $info['reg_time']   = NOW_TIME;
+                    $res = $db->add($info);
+                    $register_id        = $res;
+                }
+
+                if ($register_id) {
+                    session('scoreMobile',$mobile);
+                    session('score_uid',$register_id);
+                    die(return_msg('y','登录成功'));
+                    //die(return_msg('y', "登录成功<script type='text/javascript'> setTimeout('location=\"$referer\"',1000);</script>"));
+                }else{
+                    die(return_msg('n','登录失败'));
+                }
             }
+        }else{
+            $uid                    = I('uid');
+            $this->uid              = $uid;
+            $this->display('mob-login');
         }
+    }
+
+    //城市合伙人满意度KPI
+    public function kpi_score(){
+        $uid                        = I('uid');
+        $title                      = I('tit');
+
+        $this->token                = make_token();
+        $this->scoreMobile          = session('scoreMobile');
+        $this->title                = $title;
+        $this->SYSTEM_NAME          = '客户满意度';
+        $this->display('kpi_score');
+    }
+
+    //保存合伙人满意度评价
+    public function save_score(){
+        $num                        = 0;
+        $data                       = array();
+        if (isset($_POST['dosubmint'])){
+            $db                     = M('partner_satisfaction');
+            $token                  = I('token');
+            $info                   = I('info');
+            $content                = trim(I('content'));
+            $id                     = session('score_uid');
+            if (session('partner_satisfaction')){
+                $msg                = '请勿重复提交数据';
+                $data['num']            = $num;
+                $data['msg']            = $msg;
+                $this->ajaxReturn($data);
+            }
+            if ($token == session('token')){
+                $info['content']    = $content;
+                $info['create_time']= NOW_TIME;
+                $info['status']     = 1;
+                $res                = $db ->where(array('id'=>$id))->save($info);
+                if ($res) {
+                    $num++;
+                    $msg            = '保存成功';
+                    session('partner_satisfaction',1);
+                }else{
+                    $msg            = '保存失败';
+                }
+            }else{
+                $msg                = '非法数据';
+            }
+            $data['num']            = $num;
+            $data['msg']            = $msg;
+        }else{
+            $data['num']            = $num;
+            $data['msg']            = '保存失败';
+        }
+        $this->ajaxReturn($data);
     }
 
     public function noScore(){
@@ -47,7 +126,7 @@ class ScoreController extends Controller{
         $this->display();
     }
 
-    function verify(){
+    /*function verify(){
         //自定义配置项
         $config = array(
             'fontSize'  => 16,
@@ -60,179 +139,6 @@ class ScoreController extends Controller{
         ob_clean();
         $verify = new Verify($config);
         $verify->entry();
-    }
-
-    //注册答题
-    public function registerExam(){
-        if (isset($_POST['dosubmit'])){
-            $name           = trim(I('uname'));
-            $mobile         = trim(I('mobile'));
-            $mobile_code    = trim(I('mobile_code'));
-            $type           = trim(I('type'));
-            $opid           = trim(I('opid'));
-
-            //验证手机验证码
-            if ($mobile_code != session('code')) {
-                die(return_msg('n','您输入的手机验证码有误,请重新输入'));
-            }else {
-                $db                 = M('tcs_exam_user');
-                $info               = array();
-                $info['op_id']      = $opid;
-                $info['name']       = $name;
-                $info['mobile']     = $mobile;
-                $info['type']       = $type;
-                $info['input_time'] = NOW_TIME;
-                $res = $db->add($info);
-                if ($res) {
-                    cookie('examName',$name,7200);
-                    cookie('examMobile',$mobile,7200);
-                    cookie('exam_uid',$res,7200);
-                    session('examName',$name,7200);
-                    session('examMobile',$mobile,7200);
-                    session('exam_uid',$res,7200);
-                    die(return_msg($type,'登录成功'));
-                }else{
-                    die(return_msg('n','登录失败'));
-                }
-            }
-        }else{
-            $this->type         = trim(I('tp'));
-            $this->opid         = trim(I('opid'));
-            $this->display();
-        }
-    }
-
-    public function save_exam(){
-        $token      = I('token');
-        $info       = I('info');
-        $db         = M('tcs_exam');
-        $num        = 0;
-
-        foreach ($info as $k=>$v){
-            if (is_array($v['answer'])){
-                $answer     = implode(',',$v['answer']);
-                $v['answer']= $answer;
-            }
-
-            $data           = array();
-            $data['uid']    = cookie('exam_uid');
-            $data['name']   = cookie('examName');
-            $data['mobile'] = cookie('examMobile');
-            $data['question_id']= $k;
-            $data['answer'] = $v['answer'];
-            $data['type']   = $v['type'];
-            $data['input_time'] = NOW_TIME;
-            $res = $db->add($data);
-            if ($res) $num++;
-        }
-        if ($num !=0){
-            die(return_msg('y','保存成功'));
-        }else{
-            die(return_msg('n','数据保存失败'));
-        }
-    }
-
-    public function QRcode(){
-        $type           = I('tp');
-        $opid           = I('opid');
-        $host           = $_SERVER['SERVER_NAME'];
-        $op             = M('op')->where(array('op_id'=>$opid))->find();
-
-        if ($type == 1) {
-            //辅导员测评系统
-            $url_info   = 'http://'.$host.'/op.php?m=Main&c=Score&a=exam&tp=1&opid='.$opid;
-        }else{
-            //对教务测评系统
-            $url_info   = 'http://'.$host.'/op.php?m=Main&c=Score&a=teacherExam&tp=2&opid='.$opid;
-        }
-        $this->url_info = $url_info;
-        $this->op       = $op;
-
-        $this->display();
     }*/
-
-
-    /*******************************************************start****************************************************/
-
-    public function login(){
-        $db                 = M('tcs_score_user');
-        if (isset($_POST['dosubmit'])) {
-            $mobile         = I('mobile');
-            $mobile_code    = I('mobile_code');
-            $confirm_id     = I('confirm_id',0);
-            $opid           = I('opid',0);
-
-            //验证手机验证码
-            if ($mobile_code != session('code')) {
-                die(return_msg('n','您输入的手机验证码有误,请重新输入'));
-            }else{
-                $referer        = I('referer')?str_replace('&amp;','&',I('referer')):'';
-                if (!$confirm_id && !$opid) {
-                    die(return_msg('n','获取活动信息失败'));
-                }
-
-                //查看是否已经评价过该项目
-                if ($opid){
-                    $scored = M()->table('__TCS_SCORE_USER__ as u')->join('left join __TCS_SCORE__ as s on s.uid=u.id')->where(array('u.mobile'=>$mobile,'u.op_id'=>$opid))->find();
-                }else{
-                    $scored = M()->table('__TCS_SCORE_USER__ as u')->join('left join __TCS_SCORE__ as s on s.uid=u.id')->where(array('u.mobile'=>$mobile,'u.confirm_id'=>$confirm_id))->find();
-                }
-                if ($scored){
-                    die(return_msg('n','您已经为本次活动评分了,感谢您的参与!'));
-                }
-
-                $info               = array();
-                $info['mobile']     = $mobile;
-                $info['confirm_id'] = $confirm_id;
-                $info['op_id']      = $opid?$opid:M('op_guide_confirm')->where(array('id'=>$confirm_id))->getField('op_id');
-                $info['time']       = NOW_TIME;
-                $res = $db->add($info);
-                if ($res) {
-                    cookie('scoreMobile',$mobile,7200);
-                    cookie('score_uid',$res,7200);
-                    die(return_msg('y','登录成功'));
-                    //die(return_msg('y', "登录成功<script type='text/javascript'> setTimeout('location=\"$referer\"',1000);</script>"));
-                }else{
-                    die(return_msg('n','登录失败'));
-                }
-            }
-        }else{
-            $uid                    = I('uid');
-            $quota_id               = I('quota_id');
-            $year                   = I('year');
-            $month                  = I('month');
-            $type                   = I('type');
-
-            $this->uid              = $uid;
-            $this->quota_id         = $quota_id;
-            $this->year             = $year;
-            $this->month            = $month;
-            $this->type             = $type;
-            //$this->token            = make_token();
-            $this->display('mob-login');
-        }
-    }
-
-    //城市合伙人满意度KPI
-    public function kpi_score(){
-        $uid                        = I('uid');
-        $quota_id                   = I('quota_id');
-        $year                       = I('year');
-        $month                      = I('month');
-        $type                       = I('type');
-        $title                      = I('tit');
-
-
-
-        $this->uid                  = $uid;
-        $this->quota_id             = $quota_id;
-        $this->year                 = $year;
-        $this->month                = $month;
-        $this->type                 = $type;
-        $this->title                = $title;
-        $this->SYSTEM_NAME          = '客户满意度';
-        $this->display('kpi_score');
-    }
-
 
 }

@@ -1983,6 +1983,7 @@ function updatekpi($month,$user){
                                 $xiangmu_list	= M()->table('__OP__ as o')->field('o.op_id,c.dep_time')->join('left join __OP_TEAM_CONFIRM__ as c on o.op_id=c.op_id')->where($where)->select();
                                 $xiangmu 		= count($xiangmu_list);
                                 $hetong_list    = array();
+
                                 foreach ($xiangmu_list as $key=>$value){
 
                                     //$time 		= $value['dep_time'] + 6*24*3600;  //出团后5天内完成上传
@@ -1993,6 +1994,8 @@ function updatekpi($month,$user){
                                 $hetong         = count($hetong_list);
                                 $complete       = $xiangmu ? round(($hetong / $xiangmu)*100,2).'%' : 0 .'%';
                             }
+
+
                             $mm                 = substr($v['month'],4,2);
                             $url                = U('Contract/public_month_detail',array('year'=>$v['year'],'month'=>$mm,'uid'=>$v['user_id']));
                         }
@@ -3369,6 +3372,7 @@ function updatekpi($month,$user){
                     //城市合伙人保证金累计额
                     if($v['quota_id']==228){
                         $user_id                = $v['user_id'];
+                        $target                 = $v['target'];
                         $start_time             = $v['start_date'];
                         $end_time               = $v['end_date'];
                         $data                   = get_partner($user_id,$start_time,$end_time);

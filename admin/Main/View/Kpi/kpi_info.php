@@ -93,7 +93,7 @@
                                             <foreach name="lists" key="key" item="row">
                                             <tr>
                                                 <td align="center"><?php echo $key+1; ?></td>
-                                                <td><a href="javascript:;" onClick="kpi({$row.quota_id})">{$row.quota_title}</a> <?php if (in_array($row['quota_id'],array(227))){ echo "<i class='fa  fa-qrcode' title='获取满意度二维码' style='color:#3CF; margin-left:8px; cursor:pointer;' onClick='get_qrcode(`/index.php?m=Main&c=Kpi&a=public_qrcode&uid=$row[user_id]&quota_id=$row[quota_id]&year=$row[year]&month=$row[month]&type=3&tit=$row[quota_title]`)'></i>"; } ?> </td>
+                                                <td><a href="javascript:;" onClick="kpi({$row.quota_id})">{$row.quota_title}</a> <?php if (in_array($row['quota_id'],array(227))){ echo "<i class='fa  fa-qrcode' title='获取满意度二维码' style='color:#3CF; margin-left:8px; cursor:pointer;' onClick='get_qrcode(`/index.php?m=Main&c=Kpi&a=public_qrcode&uid=$row[user_id]&tit=$row[quota_title]`)'></i>"; } ?> </td>
                                                 <td>{$row.start_date|date='Y-m-d',###} 至 {$row.end_date|date='Y-m-d',###}</td>
                                                 <td>{$row.target}</td>
                                                 <td>
