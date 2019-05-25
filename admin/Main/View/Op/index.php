@@ -95,8 +95,20 @@
                                     </foreach>					
                                 </table>
                                 </div><!-- /.box-body -->
+
+                                <style>
+                                    .page-right-print{ display: inline-block; float: right; margin-top: -30px;}
+                                </style>
+
                                  <div class="box-footer clearfix">
-                                	<div class="pagestyle">{$pages}</div>
+                                	<div class="pagestyle">{$pages}
+                                        <div class="page-right-print" style="background-color: #f9f9f9;">
+                                            <if condition="rolemenu(array('Op/export_op'))">
+                                                <!--<a href="{:U('Op/export_op')}" class="btn btn-default"><i class="fa fa-arrow-circle-down"></i> 导出兼职辅导员信息</a>-->
+                                                <a href="javascript:;" class="btn btn-default" onclick="javascript:exportSearch('exportSearchText',500,200);"><i class="fa fa-arrow-circle-down"></i> 导出兼职辅导员信息</a>
+                                            </if>
+                                        </div>
+                                    </div>
                                 </div>
                             </div><!-- /.box -->
 
@@ -173,6 +185,37 @@
                 </form>
             </div>
 
+<div id="exportSearchText" style="display: none">
+    <form action="" method="get" id="searchform">
+        <input type="hidden" name="m" value="Main">
+        <input type="hidden" name="c" value="Op">
+        <input type="hidden" name="a" value="export_op">
+        <input type="hidden" name="pin" value="{$pin}">
+
+        <div class="form-group col-md-12">
+            <input type="text" class="form-control inputdate" name="st" placeholder="开始时间">
+        </div>
+
+        <div class="form-group col-md-12">
+            <input type="text" class="form-control inputdate" name="et" placeholder="结束时间">
+        </div>
+
+        <div class="form-group col-md-12">
+            <select class="form-control" name="kind">
+                <option value="">项目类型</option>
+                <foreach name="kinds" key="k"  item="v">
+                    <option value="{$k}">{$v}</option>
+                </foreach>
+            </select>
+        </div>
+
+        <!--<div class="form-group col-md-12">
+            <input type="text" class="form-control" name="su" placeholder="销售">
+        </div>-->
+
+    </form>
+</div>
+
 <include file="Index:footer2" />
 
 <script>
@@ -229,6 +272,29 @@
             height:400,
             fixed: true,
         });
+    }
+
+    function exportSearch(obj,w,h){
+        art.dialog({
+            content:$('#'+obj).html(),
+            lock:true,
+            title: '选择导出信息',
+            width:w,
+            height:h,
+            okValue: '搜索',
+            ok: function () {
+                $('.aui_content').find('input').filter(function(index) {
+                    return $(this).val() == '';
+                }).remove();
+                $('.aui_content').find('form').submit();
+            },
+            cancelValue:'取消',
+            cancel: function () {
+            }
+        }).show();
+
+        var file_url    = "<?php echo '__HTML__/js/public.js'; ?>";
+        reload_jsFile(file_url,'reload_public');
     }
 
 </script>
