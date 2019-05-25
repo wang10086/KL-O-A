@@ -62,6 +62,7 @@ class ScoreController extends Controller{
         }else{
             $uid                    = I('uid');
             $this->uid              = $uid;
+            $this->token            = make_token();
             $this->display('mob-login');
         }
     }
