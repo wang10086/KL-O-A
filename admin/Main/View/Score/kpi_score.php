@@ -194,8 +194,7 @@
             data: $('#'+id).serialize(),
             success:function(data){
                 if(parseInt(data.num)>0){
-                    alert('aaa');
-                    // art.dialog.alert(data.msg,'success');
+                    art.dialog.alert(data.msg,'success');
                     window.location.href = success_url;
                 }else{
                     art.dialog.alert(data.msg,'warning');
