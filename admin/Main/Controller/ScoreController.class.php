@@ -143,4 +143,21 @@ class ScoreController extends Controller{
         $verify->entry();
     }*/
 
+    //城市合伙人满意度评分详情
+    public function public_partner_satisfaction(){
+        $uid                        = I('uid');
+        $month                      = I('month');
+        $data                       = get_partner_satisfaction($uid,$month);
+        $lists                      = $data['lists'];
+        $number                     = $data['number']; //评分次数
+        $average                    = $data['average'];
+
+        $this->month                = $month;
+        $this->account              = M('account')->where(array('id'=>$uid))->find();
+        $this->lists                = $lists;
+        $this->number               = $number;
+        $this->complete             = ($average*100).'%';
+        $this->display('partner_satisfaction');
+    }
+
 }
