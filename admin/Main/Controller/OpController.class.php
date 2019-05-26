@@ -3365,4 +3365,9 @@ class OpController extends BaseController {
         $this->display();
     }
 
+    //导出excel表
+    public function export_op(){
+        //var_dump(I());die;
+    }
+
 }

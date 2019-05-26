@@ -193,11 +193,11 @@
         <input type="hidden" name="pin" value="{$pin}">
 
         <div class="form-group col-md-12">
-            <input type="text" class="form-control inputdate" name="st" placeholder="开始时间">
+            <input type="text" class="form-control inputdate" name="st" value="<?php echo (date('Y')-1).'-12-26'; ?>" placeholder="开始时间">
         </div>
 
         <div class="form-group col-md-12">
-            <input type="text" class="form-control inputdate" name="et" placeholder="结束时间">
+            <input type="text" class="form-control inputdate" name="et" value="<?php echo date('Y-m-d'); ?>" placeholder="结束时间">
         </div>
 
         <div class="form-group col-md-12">
