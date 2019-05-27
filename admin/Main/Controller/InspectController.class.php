@@ -830,6 +830,7 @@ class InspectController extends BaseController{
 
             $info                       = I('info');
             $data                       = I('data');
+            $info['problem']            = trim(I('problem'));
             $info['content']            = trim(I('content'));
             $info['input_userid']       = session('userid');
             $info['input_username']     = session('name');
@@ -896,7 +897,8 @@ class InspectController extends BaseController{
         $list['monthly']            = $month;
         $list['account_name']       = M('account')->where(array('id'=>$uid))->getField('nickname');
         $dimension                  = $this->get_user_dimension($uid); //获取考核维度
-        $contents                   = array_filter(array_column($info,'content'));
+        //$contents                   = array_filter(array_column($info,'content'));
+        $contents                   = $this->get_contents($info);
         $list['AA']                 = $dimension['AA'];
         $list['BB']                 = $dimension['BB'];
         $list['CC']                 = $dimension['CC'];
@@ -906,6 +908,17 @@ class InspectController extends BaseController{
         $this->list                 = $list;
         $this->contents             = $contents;
         $this->display('satisfaction_detail');
+    }
+
+    public function get_contents($lists){
+        $data                       = array();
+        foreach ($lists as $k => $v){
+            if ($v['problem']){
+                $data[$k]['problem'] = $v['problem'];
+                $data[$k]['content'] = $v['content'];
+            }
+        }
+        return $data;
     }
 
     //评价详情

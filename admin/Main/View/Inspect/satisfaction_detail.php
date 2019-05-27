@@ -29,7 +29,8 @@
         <div class="fromlist">
             <div class="fromtitle">评价内容(全部人员)：</div>
             <foreach name="contents" key="k" item="v">
-                <div class="formtexts">● &nbsp;{$v}</div>
+                <div class="formtexts">● <b>相关问题</b> &nbsp;{$v.problem}</div>
+                <div class="formtexts">&emsp; <b>意见建议</b> &nbsp;{$v.content}</div>
             </foreach>
         </div>
 

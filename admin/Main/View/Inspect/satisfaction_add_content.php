@@ -158,14 +158,15 @@
         var DD_num      = parseInt($('#DD_num').val());
         var EE_num      = parseInt($('#EE_num').val());
         var content     = $('#content').val();
+        var problem     = $('#problem').val();
         var arr         = Array(1,2,3);
         var AA_res      = in_array(AA_num,arr);
         var BB_res      = in_array(BB_num,arr);
         var CC_res      = in_array(CC_num,arr);
         var DD_res      = in_array(DD_num,arr);
         var EE_res      = in_array(EE_num,arr);
-        if ((AA_res || BB_res || CC_res || DD_res || EE_res) && !content){
-            art_show_msg('单项评分低于3分时,必须填写评价内容',3);
+        if ((AA_res || BB_res || CC_res || DD_res || EE_res) && (!content || !problem)){
+            art_show_msg('单项评分低于3分时,必须填写相关问题及改进意见',3);
             return false;
         }
     }

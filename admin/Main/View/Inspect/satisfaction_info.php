@@ -37,6 +37,7 @@
                                         <?php if ($dimension['CC']){ ?><th class="taskOptions" width="80">{$dimension.CC}</th><?php } ?>
                                         <?php if ($dimension['DD']){ ?><th class="taskOptions" width="80">{$dimension.DD}</th><?php } ?>
                                         <?php if ($dimension['EE']){ ?><th class="taskOptions" width="80">{$dimension.EE}</th><?php } ?>
+                                        <th class="taskOptions">相关问题</th>
                                         <th class="taskOptions">评论内容</th>
                                         <if condition="rolemenu(array('Inspect/del_satisfaction'))">
                                         <th class="taskOptions" width="80">删除</th>
@@ -53,7 +54,8 @@
                                         <?php if ($dimension['CC']){ ?><td class="taskOptions">{$row.CC}</td><?php } ?>
                                         <?php if ($dimension['DD']){ ?><td class="taskOptions">{$row.DD}</td><?php } ?>
                                         <?php if ($dimension['EE']){ ?><td class="taskOptions">{$row.EE}</td><?php } ?>
-                                        <td class="taskOptions">{$row.content}</td>
+                                        <td class="taskOptions"><div class="text-overflow-lines" title="{$row.problem}">{$row.problem}</div></td>
+                                        <td class="taskOptions"><div class="text-overflow-lines" title="{$row.content}">{$row.content}</div></td>
 
                                         <if condition="rolemenu(array('Inspect/del_satisfaction'))">
                                         <td class="taskOptions">

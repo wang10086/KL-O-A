@@ -44,7 +44,9 @@ function change_score_content() {
                 if (msg == 1){ //名字和id匹配
                     var html        = '';
                     var arr1        = ['12','13','26','31','39','55','77','114','204']; //12=>秦鸣,13=>杜莹,26=>李岩,31=>魏春竹, 39=>孟华,55=>程小平,77=>王茜,114=>王丹,204=>李徵红
-                    var textarea    = '<textarea name="content" class="form-control" id="content"  rows="2" placeholder="请输入评价内容，要具体，可量化"></textarea> <div class="form-group col-md-12"></div>';
+                    var textarea    = '<div class="form-group col-md-12"> <label>相关问题</label> <input class="form-control" id="problem" name="problem" type="text" placeholder="请输入具体问题"> </div>'+
+                        '<div class="form-group col-md-12"> <label>改进建议</label> <textarea name="content" class="form-control" id="content"  rows="2" placeholder="请输入改进建议，要具体，可量化"></textarea> </div>'+
+                        '<div class="form-group col-md-12"></div>';
                     if (arr1.indexOf(account_id) == '-1'){
                         $('#satisfaction_content').html(noBodyHtml);
                         $('#submit-btn').hide();
