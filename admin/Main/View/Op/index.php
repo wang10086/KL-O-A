@@ -104,8 +104,7 @@
                                 	<div class="pagestyle">{$pages}
                                         <div class="page-right-print" style="background-color: #f9f9f9;">
                                             <if condition="rolemenu(array('Op/export_op'))">
-                                                <!--<a href="{:U('Op/export_op')}" class="btn btn-default"><i class="fa fa-arrow-circle-down"></i> 导出兼职辅导员信息</a>-->
-                                                <a href="javascript:;" class="btn btn-default" onclick="javascript:exportSearch('exportSearchText',500,200);"><i class="fa fa-arrow-circle-down"></i> 导出兼职辅导员信息</a>
+                                                <a href="javascript:;" class="btn btn-default" onclick="javascript:exportSearch('exportSearchText',500,200);"><i class="fa fa-arrow-circle-down"></i> 导出项目预算信息</a>
                                             </if>
                                         </div>
                                     </div>
