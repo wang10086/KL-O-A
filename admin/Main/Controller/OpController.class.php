@@ -2513,6 +2513,9 @@ class OpController extends BaseController {
             M('op_design')->where(array('op_id'=>$opid))->delete();     //委托设计工作交接单
             M('op_work_plans')->where(array('op_id'=>$opid))->delete(); //业务实施计划单
             M('worder')->where(array('op_id'=>$opid))->delete();        //项目工单
+            M('contract')->where(array('op_id'=>$opid))->delete(); //合同
+            M('contract_pay')->where(array('op_id'=>$opid))->delete(); //回款计划
+            M('op_huikuan')->where(array('op_id'=>$opid))->delete(); //回款
 
 			//删除主项目
 			M('op')->delete($id);
