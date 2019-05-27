@@ -3367,7 +3367,20 @@ class OpController extends BaseController {
 
     //导出excel表
     public function export_op(){
-        //var_dump(I());die;
+        $startTime                  = strtotime(I('st'));
+        $endTime                    = strtotime(I('et'));
+        $kind                       = I('kind');
+        $project_kinds              = M('project_kind')->getField('id,name',true);
+
+        $where                      = array();
+        $where['l.audit_time']      = array('between',array($startTime,$endTime));
+        $where['l.dst_status']      = 1;
+        if ($kind) $where['o.kind'] = $kind;
+        $field                      = 'o.project,o.op_id,o.group_id,o.create_user_name,b.budget,b.renshu,b.shouru,b.maoli,b.maolilv';
+        $lists                      = M()->table('__AUDIT_LOG__ as l')->join('__OP_BUDGET__ as b on b.id=l.req_id','left')->join('__OP__ as o on o.op_id=b.op_id','left')->where($where)->field($field)->select();
+
+        $title                      = array('项目名称','项目编号','团号','销售','项目预算','人数','预算收入','预算毛利','预算毛利率');
+        exportexcel($lists,$title,date('Y-m-d',$startTime).'至'.date('Y-m-d',$endTime).$project_kinds[$kind].'已审批预算项目');
     }
 
 }
