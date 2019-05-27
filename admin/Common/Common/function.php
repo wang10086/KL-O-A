@@ -3464,7 +3464,7 @@ function get_kpi_data($v,$complete,$url=''){
         }elseif ($comp < $tar && $comp > 0){
             $rate   = round($comp/$tar,4)*100;
         }else{
-            $rate   = 0;
+            $rate   = round(2-($comp/$tar),4)*100;
         }
     }elseif ($v['quota_id']==194){
         $rate       = str_replace('%','',$complete);
