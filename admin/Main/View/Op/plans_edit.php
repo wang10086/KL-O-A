@@ -48,7 +48,7 @@
 									} ?>
                                     </h3>
                                     <h3 class="box-title pull-right" style="font-weight:normal; color:#333333;"><span class="green">项目编号：{$op.op_id}</span> &nbsp;&nbsp;创建者：{$op.create_user_name}
-                                        <?php if (rolemenu(array('Op/change_op')) && (C('RBAC_SUPER_ADMIN')==cookie('username') || cookie('roleid')==10 || ($change &&$op['create_user']==cookie('userid')))){ ?>
+                                        <?php if (rolemenu(array('Op/change_op')) && (C('RBAC_SUPER_ADMIN')==cookie('username') || in_array(cookie('userid'),array(11,$manager_uid,77)) || ($change &&$op['create_user']==cookie('userid')))){ ?>
                                             <span  style=" border: solid 1px #00acd6; padding: 0 5px; border-radius: 5px; background-color: #00acd6; color: #ffffff; margin-left: 20px" onClick="open_change({$op['op_id']})" title="交接该团" class="">交接该团</span>
                                         <?php } ?>
                                     </h3>

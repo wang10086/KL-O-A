@@ -2541,3 +2541,12 @@ function get_yw_department(){
         $data['lists']              = $lists;
         return $data;
     }
+
+    //获取部门主管信息
+    function get_department_manager($uid){
+        $where                      = array();
+        $where['a.id']              = $uid;
+        $field                      = 'd.department,d.manager_id,d.manager_name';
+        $data                       = M()->table('__ACCOUNT__ as a')->join('__SALARY_DEPARTMENT__ as d on d.id = a.departmentid','left')->field($field)->where($where)->find();
+        return $data;
+    }

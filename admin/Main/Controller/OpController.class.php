@@ -599,6 +599,8 @@ class OpController extends BaseController {
 
         //人员名单关键字
         $this->userkey      = get_username();
+        $department_manager = get_department_manager($op['create_user']); //部门主管
+        $this->manager_uid  = $department_manager['manager_id'];
 
         //研发和资源人员信息(用于前期对研发和资源人员评分)
         $score_data         = $this->get_score_user($opid);
