@@ -1969,7 +1969,7 @@ function updatekpi($month,$user){
 
                         //获取合同签订率（含家长协议书）
                         if($v['quota_id']==5){
-                            //获取当月月度累计毛利额目标值(如果毛利额目标为0,则不考核)
+                            /*//获取当月月度累计毛利额目标值(如果毛利额目标为0,则不考核)
                             $gross_margin                   = get_gross_margin($v['month'],$v['user_id'],1);
                             if ($gross_margin && $gross_margin['monthTarget']==0){
                                 //当月目标为0
@@ -1983,7 +1983,6 @@ function updatekpi($month,$user){
                                 $xiangmu_list	= M()->table('__OP__ as o')->field('o.op_id,c.dep_time')->join('left join __OP_TEAM_CONFIRM__ as c on o.op_id=c.op_id')->where($where)->select();
                                 $xiangmu 		= count($xiangmu_list);
                                 $hetong_list    = array();
-
                                 foreach ($xiangmu_list as $key=>$value){
 
                                     //$time 		= $value['dep_time'] + 6*24*3600;  //出团后5天内完成上传
@@ -1993,8 +1992,16 @@ function updatekpi($month,$user){
                                 }
                                 $hetong         = count($hetong_list);
                                 $complete       = $xiangmu ? round(($hetong / $xiangmu)*100,2).'%' : 0 .'%';
-                            }
+                            }*/
 
+                            $data               = get_user_contract_list($v['user_id'],$v['month'],$v['start_date'],$v['end_date']);
+                            $target             = $data['target'];
+                            $average            = $data['average'];
+                            if (!$target){ //没有任务目标
+                                $complete       = '100%';
+                            }else{
+                                $complete       = $average;
+                            }
 
                             $mm                 = substr($v['month'],4,2);
                             $url                = U('Contract/public_month_detail',array('year'=>$v['year'],'month'=>$mm,'uid'=>$v['user_id']));
