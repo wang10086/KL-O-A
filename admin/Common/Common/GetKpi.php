@@ -2550,3 +2550,40 @@ function get_yw_department(){
         $data                       = M()->table('__ACCOUNT__ as a')->join('__SALARY_DEPARTMENT__ as d on d.id = a.departmentid','left')->field($field)->where($where)->find();
         return $data;
     }
+
+    //判断是不是地接团
+    function is_dijie($opid){
+        $arr_opid                   = get_dijie_opids();
+        $data                       = array();
+        if (in_array($opid,$arr_opid)){
+            $create_op              = M('op')->where(array('dijie_opid'=>$opid))->find(); //发起团信息
+            $data['is_dijie']       = 1;
+            $data['op_id']          = $create_op['op_id'];
+            $data['group_id']       = $create_op['group_id'];
+            $data['project']        = $create_op['project'];
+            $data['create_user_id'] = $create_op['create_user'];
+            $data['create_user_name'] = $create_op['create_user_name'];
+        }else{
+            $data                   = '';
+        }
+        return $data;
+    }
+
+    //所有的内部地接团
+    function get_dijie_opids(){
+        $dijie_opid                 = array_filter(M('op')->getField('dijie_opid',true));
+        return $dijie_opid;
+    }
+
+    //外部客户满意度二维码链接
+    function get_qrcode_url($opid){
+        $dijie_opids                = get_dijie_opids();
+        if(in_array($opid,$dijie_opids)) {
+            $zutuan_data                = is_dijie($opid);
+            $zutuan_opid                = $zutuan_data['op_id'];
+            $qrcode_url                 = 'http://tcs.kexueyou.com/op.php?m=Main&c=Score&a=index&opid='.$zutuan_opid;
+        }else{
+            $qrcode_url                 = 'http://tcs.kexueyou.com/op.php?m=Main&c=Score&a=index&opid='.$opid;
+        }
+        return $qrcode_url;
+    }

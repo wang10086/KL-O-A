@@ -64,6 +64,8 @@
         <script type="text/javascript">
         	//laydate.skin('molv');
         </script>
+        <!--jquery.qrcode-->
+        <script src="__HTML__/js/jquery.qrcode.min.js" type="text/javascript"></script>
 
         <!-- AdminLTE App -->
         <?php echo $__additional_js__; ?>

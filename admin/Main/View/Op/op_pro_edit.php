@@ -83,14 +83,30 @@
     </div>
 
     <div class="form-group col-md-4" id="dijie_or_sale"></div>
+    <?php if ($is_dijie){ ?> <!--内部地接-->
+        <div class="form-group col-md-8">
+            <div class="form-group col-md-12" style="margin-left:-15px;">
+                <label>备注：</label><textarea class="form-control"  name="info[context]">{$op.context}</textarea>
+            </div>
 
-    <div class="form-group col-md-12">
-        <label>备注：</label><textarea class="form-control"  name="info[context]">{$op.context}</textarea>
-    </div>
+            <div class="form-group col-md-12" id="addti_btn">
+                <a  href="javascript:;" class="btn btn-info btn-sm" onClick="javascript:save('save_op_info','<?php echo U('Op/public_save'); ?>',{$op.op_id});">保存</a>
+            </div>
+        </div>
 
-    <div class="form-group col-md-12" id="addti_btn">
-        <a  href="javascript:;" class="btn btn-info btn-sm" onClick="javascript:save('save_op_info','<?php echo U('Op/public_save'); ?>',{$op.op_id});">保存</a>
-    </div>
+        <div class="form-group col-md-4">
+            <label style="width:100%; border-bottom:1px solid #dedede; padding-bottom:10px; font-weight:bold;">内部满意度评分二维码&emsp;<span class="red">(请发送给组团方：{$is_dijie.create_user_name})</span></label>
+            <div id="code"></div>
+        </div>
+    <?php }else{ ?>
+        <div class="form-group col-md-12">
+            <label>备注：</label><textarea class="form-control"  name="info[context]">{$op.context}</textarea>
+        </div>
+
+        <div class="form-group col-md-12" id="addti_btn">
+            <a  href="javascript:;" class="btn btn-info btn-sm" onClick="javascript:save('save_op_info','<?php echo U('Op/public_save'); ?>',{$op.op_id});">保存</a>
+        </div>
+    <?php } ?>
 </form>
 
 <script>

@@ -643,8 +643,8 @@ function toUtf8(str) {
 
 //js生成二维码
 function qrcode_js(text,width,height) {
-	var width 	= width?width:111;
-	var height 	= height?height:222;
+	var width 	= width?width:150;
+	var height 	= height?height:150;
 
 	$("#code").qrcode({
 		render: "canvas", //table方式

@@ -58,10 +58,12 @@ class OpController extends BaseController {
 		$this->pages	= $pagecount>P::PAGE_SIZE ? $page->show():'';
 
 
-		$field	= 'o.*,a.nickname as jidiao';
-		$lists = $db->table('__OP__ as o')->field($field)->join('__OP_AUTH__ as u on u.op_id = o.op_id','LEFT')->join('__ACCOUNT__ as a on a.id = u.line','LEFT')->where($where)->limit($page->firstRow . ',' . $page->listRows)->order($this->orders('o.create_time'))->select();
-
+		$field	        = 'o.*,a.nickname as jidiao';
+		$lists          = $db->table('__OP__ as o')->field($field)->join('__OP_AUTH__ as u on u.op_id = o.op_id','LEFT')->join('__ACCOUNT__ as a on a.id = u.line','LEFT')->where($where)->limit($page->firstRow . ',' . $page->listRows)->order($this->orders('o.create_time'))->select();
+        $dijie_opids    = get_dijie_opids();
 		foreach($lists as $k=>$v){
+            //判断是否成团
+            if ($v['group_id']) { $lists[$k]['group_id'] = '<span class="green">'.$v['group_id'].'</span>'; }else{ $lists[$k]['group_id'] = '未成团'; }
 
 			//判断项目是否审核通过
 			if($v['audit_status']==0) $lists[$k]['zhuangtai'] = '<span class="blue">未审核</span>';
@@ -80,7 +82,13 @@ class OpController extends BaseController {
 			if($jiesuan['audit_status']==1) $lists[$k]['zhuangtai'] = '<span class="yellow">完成结算</span>';
 			if($jiesuan['audit_status']==2) $lists[$k]['zhuangtai'] = '<span class="yellow">结算未通过</span>';
 
+            if ($v['in_dijie'] == 1){
+                $lists[$k]['has_qrcode']        = ''; //无二维码
+            } elseif ($v['group_id']){
+                $lists[$k]['has_qrcode']        = 1; //有二维码
+            }
 		}
+
 		$this->lists   =  $lists;
 		$this->kinds   =  M('project_kind')->getField('id,name', true);
 		$this->pin     = $pin;
@@ -611,7 +619,7 @@ class OpController extends BaseController {
         if ($pingfen) { $this->pingfen  = json_encode($pingfen) ;}
         $this->yanfa        = $yanfa;
         $this->ziyuan       = $ziyuan;
-
+        $this->is_dijie     = is_dijie($opid); //是否是地接团
         $this->display('plans_edit');
 		
 	}
@@ -3364,8 +3372,8 @@ class OpController extends BaseController {
     public function qrcode(){
         $opid           = I('opid');
         $this->title    = M('op')->where(array('op_id'=>$opid))->getField('project');
-        $host           = $_SERVER['SERVER_NAME'];
-        $this->url_info = 'http://tcs.kexueyou.com/op.php?m=Main&c=Score&a=index&opid='.$opid;
+        $qrcode_url     = get_qrcode_url($opid);
+        $this->url_info = $qrcode_url;
 
         $this->display();
     }
@@ -3381,10 +3389,15 @@ class OpController extends BaseController {
         $where['l.audit_time']      = array('between',array($startTime,$endTime));
         $where['l.dst_status']      = 1;
         if ($kind) $where['o.kind'] = $kind;
-        $field                      = 'o.project,o.op_id,o.group_id,o.create_user_name,b.budget,b.renshu,b.shouru,b.maoli,b.maolilv';
-        $lists                      = M()->table('__AUDIT_LOG__ as l')->join('__OP_BUDGET__ as b on b.id=l.req_id','left')->join('__OP__ as o on o.op_id=b.op_id','left')->where($where)->field($field)->select();
+        $field                      = 'o.project,o.op_id,o.group_id,o.create_user_name,b.budget,b.shouru,b.maoli,b.maolilv,s.budget,s.shouru,s.maoli,s.maolilv,s.audit_status';
+        $lists                      = M()->table('__AUDIT_LOG__ as l')->join('__OP_BUDGET__ as b on b.id=l.req_id','left')->join('__OP__ as o on o.op_id=b.op_id','left')->join('__OP_SETTLEMENT__ as s on s.op_id=b.op_id','left')->where($where)->field($field)->select();
+        foreach ($lists as $k=>$v){
+            if ($v['audit_status'] == 1){ $lists[$k]['audit_status'] = '审核通过'; }
+            if ($v['audit_status'] == 2){ $lists[$k]['audit_status'] = '审核未通过'; }
+            if ($v['audit_status'] == 0){ $lists[$k]['audit_status'] = '未提交审核'; }
+        }
 
-        $title                      = array('项目名称','项目编号','团号','销售','项目预算','人数','预算收入','预算毛利','预算毛利率');
+        $title                      = array('项目名称','项目编号','团号','销售','项目预算','预算收入','预算毛利','预算毛利率','项目结算','结算收入','结算毛利','结算毛利率','结算审核状态');
         exportexcel($lists,$title,date('Y-m-d',$startTime).'至'.date('Y-m-d',$endTime).$project_kinds[$kind].'已审批预算项目');
     }
 

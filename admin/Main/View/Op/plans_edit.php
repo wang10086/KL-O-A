@@ -503,6 +503,9 @@
                 }
             })
         });
+
+        var url = 'http://tcs.kexueyou.com/op.php?m=Main&c=Score&a=index&opid='+{$op.op_id};
+        qrcode_js(url,100,100); //加载js二维码
     })
 
 

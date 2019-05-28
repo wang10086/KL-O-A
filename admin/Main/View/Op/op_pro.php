@@ -38,12 +38,35 @@
     <label>客户单位：</label>{$op.customer}
 </div>
 
-<div class="form-group col-md-12"  style="margin-top:20px;">
-    <label style="width:100%; border-bottom:1px solid #dedede; padding-bottom:10px; font-weight:bold;">项目背景</label>
-    <div style="width:100%; margin-top:10px;">{$op.context}</div>
-</div>
+<?php if ($is_dijie){ ?> <!--内部地接-->
+    <div class="form-group col-md-8">
+        <div class="form-group col-md-12"  style="margin-top:20px; margin-left: -15px;">
+            <label style="width:100%; border-bottom:1px solid #dedede; padding-bottom:10px; font-weight:bold;">项目背景</label>
+            <div style="width:100%; margin-top:10px;">{$op.context}</div>
+        </div>
 
-<div class="form-group col-md-12" style="margin-top:20px;">
-    <label style="width:100%; border-bottom:1px solid #dedede; padding-bottom:10px; font-weight:bold;">项目说明</label>
-    <div style="width:100%; margin-top:10px;">{$op.remark}</div>
-</div>
+        <div class="form-group col-md-12" style="margin-top:20px;margin-left: -15px;">
+            <label style="width:100%; border-bottom:1px solid #dedede; padding-bottom:10px; font-weight:bold;">项目说明</label>
+            <div style="width:100%; margin-top:10px;">{$op.remark}</div>
+        </div>
+    </div>
+
+    <div class="form-group col-md-4">
+        <div class="form-group col-md-12" style="margin-top:20px;margin-left: -15px;">
+            <label style="width:100%; border-bottom:1px solid #dedede; padding-bottom:10px; font-weight:bold;">内部满意度评分二维码&emsp;<span class="red">(请发送给组团方：{$is_dijie.create_user_name})</span></label>
+            <div style="width:100%; margin-top:10px;">
+                <div id="code"></div>
+            </div>
+        </div>
+    </div>
+<?php }else{ ?>
+    <div class="form-group col-md-12"  style="margin-top:20px;">
+        <label style="width:100%; border-bottom:1px solid #dedede; padding-bottom:10px; font-weight:bold;">项目背景</label>
+        <div style="width:100%; margin-top:10px;">{$op.context}</div>
+    </div>
+
+    <div class="form-group col-md-12" style="margin-top:20px;">
+        <label style="width:100%; border-bottom:1px solid #dedede; padding-bottom:10px; font-weight:bold;">项目说明</label>
+        <div style="width:100%; margin-top:10px;">{$op.remark}</div>
+    </div>
+<?php } ?>
