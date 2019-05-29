@@ -34,7 +34,7 @@
                                         <th class="sorting" data="o.number">人数</th>
                                         <th class="sorting" data="c.ret_time">活动完成时间</th>
                                          <th class="sorting" data="o.sale_user">业务人员</th>
-                                        <th class="sorting" data="o.guide_manager">调查人员</th>
+                                        <!--<th class="sorting" data="o.guide_manager">调查人员</th>-->
                                         <th class="taskOptions" width="80" data="o.charity_status">满意度状态</th>
                                         <th class="taskOptions" width="80" data="">得分率</th>
                                         <!--<th class="taskOptions" width="80" data="o.zhuize">是否追责</th>-->
@@ -55,7 +55,7 @@
                                             </if>
                                         </td>
                                         <td>{$row.sale_user}</td>
-                                        <td>{$row.guide_manager}</td>
+                                        <!--<td>{$row.guide_manager}</td>-->
                                         <td><div class="tdbox_long" style="width:80px">{$row.charity_status}</div></td>
                                         <td class="taskOptions">{$row.average}</td>
                                         <!--<td>

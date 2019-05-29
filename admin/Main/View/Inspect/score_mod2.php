@@ -30,42 +30,54 @@
                     <!--<th class="sorting" width="80" data="c.in_begin_day">活动日期</th>
                     <th class="sorting" data="c.address">活动地点</th>-->
                     <th>客户联系方式</th>
-                    <?php if (in_array($kind,$score_kind2)){ ?>
-                        <th class="sorting" data="s.before_sell">前期沟通</th>
-                        <th class="sorting" data="s.depth">课程深度</th>
-                        <th class="sorting" data="s.major">课程专业性</th>
-                        <th class="sorting" data="s.interest">课程趣味性</th>
-                        <th class="sorting" data="s.material">材料及设备</th>
-                        <th class="sorting" data="s.teacher">专家/讲师</th>
+                    <?php if (in_array($op_id,$dijie_opids)){ ?>
+                        <th class="sorting" data="s.before_sell">客户沟通</th>
+                        <th class="sorting" data="s.new_media">产品培训</th>
+                        <th class="sorting" data="s.stay">房</th>
+                        <th class="sorting" data="s.food">餐</th>
+                        <th class="sorting" data="s.bus">车</th>
+                        <th class="sorting" data="s.cas_time">中科院资源</th>
+                        <th class="sorting" data="s.travel">常规资源</th>
+                        <th class="sorting" data="s.major">活动实施</th>
                         <th class="sorting" data="s.guide">辅导员</th>
-                        <th class="sorting" data="s.late">迟到早退(教务人员)</th>
-                        <th class="sorting" data="s.manage">管理组织能力(教务人员)</th>
-                        <th class="sorting" data="s.morality">师德仪表(教务人员)</th>
-                    <?php }elseif(in_array($kind,$score_kind3)){ ?>
-                        <th class="sorting" data="s.before_sell">前期沟通</th>
-                        <th class="sorting" data="s.new_media">新媒体推广</th>
-                        <th class="sorting" data="s.major">内容专业性</th>
-                        <th class="sorting" data="s.stay">住宿</th>
-                        <th class="sorting" data="s.food">餐</th>
-                        <th class="sorting" data="s.travel">场地</th>
-                        <th class="sorting" data="s.bus">车</th>
-                        <th class="sorting" data="s.driver">司机服务</th>
-                        <th class="sorting" data="s.guide">辅导员/领队</th>
-                        <th class="sorting" data="s.material">材料及设备</th>
+                        <th class="sorting" data="s.material">持续合作</th>
                     <?php }else{ ?>
-                        <th class="sorting" data="s.before_sell">前期沟通</th>
-                        <th class="sorting" data="s.stay">住宿</th>
-                        <th class="sorting" data="s.food">餐</th>
-                        <th class="sorting" data="s.bus">车</th>
-                        <th class="sorting" data="s.travel">行程安排</th>
-                        <th class="sorting" data="s.content">活动内容</th>
-                        <th class="sorting" data="s.driver">司机服务</th>
-                        <th class="sorting" data="s.guide">辅导员/领队</th>
-                        <th class="sorting" data="s.teacher">教师/专家</th>
-                        <th class="sorting" data="s.teacher">活动时长</th>
-                        <th class="sorting" data="s.teacher">活动完成度</th>
-                        <th class="sorting" data="s.teacher">场地服务</th>
-                    <?php } ?>
+                        <?php if (in_array($kind,$score_kind2)){ ?>
+                            <th class="sorting" data="s.before_sell">前期沟通</th>
+                            <th class="sorting" data="s.depth">课程深度</th>
+                            <th class="sorting" data="s.major">课程专业性</th>
+                            <th class="sorting" data="s.interest">课程趣味性</th>
+                            <th class="sorting" data="s.material">材料及设备</th>
+                            <th class="sorting" data="s.teacher">专家/讲师</th>
+                            <th class="sorting" data="s.guide">辅导员</th>
+                            <th class="sorting" data="s.late">迟到早退(教务人员)</th>
+                            <th class="sorting" data="s.manage">管理组织能力(教务人员)</th>
+                            <th class="sorting" data="s.morality">师德仪表(教务人员)</th>
+                        <?php }elseif(in_array($kind,$score_kind3)){ ?>
+                            <th class="sorting" data="s.before_sell">前期沟通</th>
+                            <th class="sorting" data="s.new_media">新媒体推广</th>
+                            <th class="sorting" data="s.major">内容专业性</th>
+                            <th class="sorting" data="s.stay">住宿</th>
+                            <th class="sorting" data="s.food">餐</th>
+                            <th class="sorting" data="s.travel">场地</th>
+                            <th class="sorting" data="s.bus">车</th>
+                            <th class="sorting" data="s.driver">司机服务</th>
+                            <th class="sorting" data="s.guide">辅导员/领队</th>
+                            <th class="sorting" data="s.material">材料及设备</th>
+                        <?php }else{ ?>
+                            <th class="sorting" data="s.before_sell">前期沟通</th>
+                            <th class="sorting" data="s.stay">住宿</th>
+                            <th class="sorting" data="s.food">餐</th>
+                            <th class="sorting" data="s.bus">车</th>
+                            <th class="sorting" data="s.travel">行程安排</th>
+                            <th class="sorting" data="s.content">活动内容</th>
+                            <th class="sorting" data="s.driver">司机服务</th>
+                            <th class="sorting" data="s.guide">辅导员/领队</th>
+                            <th class="sorting" data="s.teacher">教师/专家</th>
+                            <th class="sorting" data="s.teacher">活动时长</th>
+                            <th class="sorting" data="s.teacher">活动完成度</th>
+                            <th class="sorting" data="s.teacher">场地服务</th>
+                    <?php }} ?>
                     <th>意见建议</th>
                     <!--<th>处理结果</th>-->
                     <th width="40" class="taskOptions">详情</th>
@@ -75,47 +87,59 @@
                         <!--<td><?php /*if ($row['in_begin_day']) echo date('Y-m-d',$row['in_begin_day']).'-'.date('Y-m-d',$row['in_day']); */?></td>
                         <td>{$row.address}</a></td>-->
                         <td>{$row.mobile}</td>
-                        <?php if (in_array($kind,$score_kind2)){ ?>
-                            <td>{$row.before_sell}</td>
-                            <td>{$row.depth}</td>
-                            <td>{$row.major}</td>
-                            <td>{$row.interest}</td>
-                            <td>{$row.material}</td>
-                            <td>{$row.teacher}</td>
-                            <td>{$row.guide}</td>
-                            <td>{$row.late}</td>
-                            <td>{$row.manage}</td>
-                            <td>{$row.morality}</td>
-                        <?php }elseif(in_array($kind,$score_kind3)){ ?>
+                        <?php if (in_array($op_id,$dijie_opids)){ ?>
                             <td>{$row.before_sell}</td>
                             <td>{$row.new_media}</td>
-                            <td>{$row.major}</td>
                             <td>{$row.stay}</td>
                             <td>{$row.food}</td>
-                            <td>{$row.travel}</td>
                             <td>{$row.bus}</td>
-                            <td>{$row.driver}</td>
+                            <td>{$row.cas_time}</td>
+                            <td>{$row.travel}</td>
+                            <td>{$row.major}</td>
                             <td>{$row.guide}</td>
                             <td>{$row.material}</td>
                         <?php }else{ ?>
-                            <td>{$row.before_sell}</td>
-                            <td>{$row.stay}</td>
-                            <td>{$row.food}</td>
-                            <td>{$row.bus}</td>
-                            <td>{$row.travel}</td>
-                            <td>{$row.content}</td>
-                            <td>{$row.driver}</td>
-                            <td>{$row.guide}</td>
-                            <td>{$row.teacher}</td>
-                            <td>{$row.cas_time}</td>
-                            <td>{$row.cas_complete}</td>
-                            <td>{$row.cas_addr}</td>
-                        <?php } ?>
+                            <?php if (in_array($kind,$score_kind2)){ ?>
+                                <td>{$row.before_sell}</td>
+                                <td>{$row.depth}</td>
+                                <td>{$row.major}</td>
+                                <td>{$row.interest}</td>
+                                <td>{$row.material}</td>
+                                <td>{$row.teacher}</td>
+                                <td>{$row.guide}</td>
+                                <td>{$row.late}</td>
+                                <td>{$row.manage}</td>
+                                <td>{$row.morality}</td>
+                            <?php }elseif(in_array($kind,$score_kind3)){ ?>
+                                <td>{$row.before_sell}</td>
+                                <td>{$row.new_media}</td>
+                                <td>{$row.major}</td>
+                                <td>{$row.stay}</td>
+                                <td>{$row.food}</td>
+                                <td>{$row.travel}</td>
+                                <td>{$row.bus}</td>
+                                <td>{$row.driver}</td>
+                                <td>{$row.guide}</td>
+                                <td>{$row.material}</td>
+                            <?php }else{ ?>
+                                <td>{$row.before_sell}</td>
+                                <td>{$row.stay}</td>
+                                <td>{$row.food}</td>
+                                <td>{$row.bus}</td>
+                                <td>{$row.travel}</td>
+                                <td>{$row.content}</td>
+                                <td>{$row.driver}</td>
+                                <td>{$row.guide}</td>
+                                <td>{$row.teacher}</td>
+                                <td>{$row.cas_time}</td>
+                                <td>{$row.cas_complete}</td>
+                                <td>{$row.cas_addr}</td>
+                        <?php }} ?>
                         <td>{$row['suggest']}</td>
                         <!--<td>{$row.status}</td>-->
 
                         <td class="taskOptions">
-                            <button class="btn btn-info btn-smsm" onclick="show_score({$row.id})"><i class="fa fa-bars"></i></button>
+                            <button class="btn btn-info btn-smsm" onclick="show_score({$row.id},{$op_id})"><i class="fa fa-bars"></i></button>
                         </td>
 
                     </tr>
@@ -133,8 +157,8 @@
 
 <script type="text/javascript">
 
-    function show_score(id) {
-        art.dialog.open('index.php?m=Main&c=Inspect&a=public_score_detail&id='+id,{
+    function show_score(id,opid) {
+        art.dialog.open('index.php?m=Main&c=Inspect&a=public_score_detail&id='+id+'&opid='+opid,{
             lock:true,
             title: '客户满意度详情',
             width:800,

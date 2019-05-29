@@ -229,21 +229,9 @@ class InspectController extends BaseController{
         $this->pages	        = $pagecount>P::PAGE_SIZE ? $page->show():'';
 
         $lists                  = M()->table('__OP__ as o')->field('o.*,c.ret_time')->join('left join __OP_TEAM_CONFIRM__ as c on c.op_id=o.op_id')->limit($page->firstRow . ',' . $page->listRows)->where($where)->order($this->orders('o.create_time'))->select();
+
         foreach ($lists as $k=>$v){
-            $op_id              = $v['op_id'];
-            $guide_manager      = M()->table('__OP_GUIDE_CONFIRM__ as c')->field('g.name,c.score_num,c.op_id')->join('left join __GUIDE__ as g on g.id = c.charity_id')->where(array('c.op_id'=>$op_id,'c.charity_id'=>array('neq',0)))->select();
-            $lists[$k]['guide_manager'] = $guide_manager?implode(',',array_unique(array_column($guide_manager,'name'))):'<span class="blue">待定</span>';
-
-            $charity            = $this->public_get_confirm_id($op_id);
-            $count_score        = M()->table('__TCS_SCORE__ as s')->join('__TCS_SCORE_USER__ as u on u.id=s.uid','left')->where(array('u.op_id'=>$v['op_id']))->count();
-
-            if (!$charity && !$count_score){
-                $charity_status = "<span class='red'>未安排</span>";
-            }elseif ($charity && $count_score <1){
-                $charity_status = "<span class='yellow'>已安排调查</span>";
-            }else{
-                $charity_status = "<span class='green'>已完成调查</span>";
-            }
+            $charity_status     = $this->get_satisfied_status($v['op_id'],$v['kind']);
             $lists[$k]["charity_status"] = $charity_status;
 
             //求得分率
@@ -253,6 +241,62 @@ class InspectController extends BaseController{
         }
         $this->lists            = $lists;
         $this->display();
+    }
+
+    //满意度评分状态
+    /*课后一小时、讲座、小课题、中科BOX、实验室建设：不低于1人
+    研学旅行、科学考察、少科院线路40人以内：不低于1人
+    研学旅行、科学考察、少科院线路40-80人以上：不低于3人
+    校园科技节、社会综合实践、亲子旅行、冬夏令营、教师培训、学趣课程：不低于3人*/
+    private function get_satisfied_status($opid,$kind){
+        $num_1              = array(60,61,62,64,67,1,2,3,68,69); //课后一小时;小课题;中科box;专场讲座;实验室建设 (不低于1人) (线路,课程,其它,常规旅游,科学快车)
+        $num_3              = array(56,57,58,59,63,65); //校园科技节;社会综合实践;亲子旅行;冬夏令营;学趣课程;教师培训
+        $num_unsure         = array(54,55,66); //研学旅行;科学考察;少科院线路
+        $num                = M()->table('__TCS_SCORE__ as s')->join('__TCS_SCORE_USER__ as u on u.id=s.uid','left')->where(array('u.op_id'=>$opid))->count();
+        $create_op_day      = substr($opid,0,8);
+        if ($create_op_day <= '20190515'){
+            if ($num >0){ //不低于1人
+                $stu        = "<span class='green'>已评分</span>";
+            }else{
+                $stu        = "<span class='red'>未评分</span>";
+            }
+        }else{
+            if (in_array($kind,$num_1)){
+                if ($num >0){ //不低于1人
+                    $stu        = "<span class='green'>已评分(".$num."/1)</span>";
+                }else{
+                    $stu        = "<span class='red'>未评分</span>";
+                }
+            }elseif (in_array($kind,$num_3)){ //不低于3人
+                if ($num < 1){
+                    $stu        = "<span class='red'>未评分</span>";
+                }elseif ($num >0 && $num <3){
+                    $stu        = "<span class='yellow'>评分中(".$num."/3)</span>";
+                }else{
+                    $stu        = "<span class='green'>已评分(".$num."/3)</span>";
+                }
+            }elseif (in_array($kind,$num_unsure)){
+                //求团人数(从预算中取值)
+                $list           = M('op_budget')->where(array('op_id'=>$opid))->find();
+                $person_num     = $list['renshu'];
+                if ($person_num <= 40){ //不低于1人
+                    if ($num >0){ //不低于1人
+                        $stu        = "<span class='green'>已评分(".$num."/1)</span>";
+                    }else{
+                        $stu        = "<span class='red'>未评分</span>";
+                    }
+                }else{ //不低于3人
+                    if ($num < 1){
+                        $stu        = "<span class='red'>未评分</span>";
+                    }elseif ($num >0 && $num <3){
+                        $stu        = "<span class='yellow'>评分中(".$num."/3)</span>";
+                    }else{
+                        $stu        = "<span class='green'>已评分(".$num."/3)</span>";
+                    }
+                }
+            }
+        }
+        return $stu;
     }
 
     private function get_guide_score($v){
@@ -277,10 +321,10 @@ class InspectController extends BaseController{
         return $average;
     }
 
-    public function public_get_confirm_id($op_id){
+    /*public function public_get_confirm_id($op_id){
         $charity        = M('op_guide_confirm')->where(array('op_id'=>$op_id,'charity_id'=>array('neq',0)))->getField('id',true);
         return $charity;
-    }
+    }*/
 
     public function blame(){
         if (isset($_POST['dosubmint'])){
@@ -374,6 +418,7 @@ class InspectController extends BaseController{
         $visit_lists            = M('op_visit')->where(array('op_id'=>$op_id))->select();
         if ($visit_lists){ $this->return_visit = 1; }
         $this->visit_lists      = $visit_lists;
+        $this->dijie_opids      = get_dijie_opids();
 
 
         $this->display();
@@ -448,6 +493,7 @@ class InspectController extends BaseController{
 
     // @@@NODE-3###score_detail###每条评分详情###
     public function public_score_detail(){
+        $opid               = trim(I('opid'));
         $id                 = I('id');
         $info               = M()->table('__TCS_SCORE__ as s')
             ->field('s.*,u.mobile,o.project,o.kind')
@@ -470,6 +516,8 @@ class InspectController extends BaseController{
         $this->kind         = $kind;
         $this->row          = $info;
         $this->score_stu    = C('SCORE_STU');
+        $this->opid         = $opid;
+        $this->dijie_opids  = get_dijie_opids();
 
         $this->display('score_detail');
     }
@@ -681,7 +729,7 @@ class InspectController extends BaseController{
         $this->display('user_kpi_satisfied');
     }
 
-    // @@@NODE-3###score_info###顾客满意度分项统计记录详情###
+    // @@@NODE-3###public_user_kpi_score_info###顾客满意度分项统计记录详情###
     public function public_user_kpi_score_info(){
         $op_id                      = I('opid');
         $ut                         = trim(I('ut'));
