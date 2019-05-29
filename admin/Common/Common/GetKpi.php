@@ -2582,8 +2582,10 @@ function get_yw_department(){
             $zutuan_data                = is_dijie($opid);
             $zutuan_opid                = $zutuan_data['op_id'];
             $qrcode_url                 = 'http://tcs.kexueyou.com/op.php?m=Main&c=Score&a=index&opid='.$zutuan_opid;
+            //$qrcode_url                 = 'http://www.tcs.com/op.php?m=Main&c=Score&a=index&opid='.$zutuan_opid;
         }else{
             $qrcode_url                 = 'http://tcs.kexueyou.com/op.php?m=Main&c=Score&a=index&opid='.$opid;
+            //$qrcode_url                 = 'http://www.tcs.com/op.php?m=Main&c=Score&a=index&opid='.$opid;
         }
         return $qrcode_url;
     }
