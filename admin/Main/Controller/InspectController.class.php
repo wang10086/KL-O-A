@@ -249,16 +249,16 @@ class InspectController extends BaseController{
     研学旅行、科学考察、少科院线路40-80人以上：不低于3人
     校园科技节、社会综合实践、亲子旅行、冬夏令营、教师培训、学趣课程：不低于3人*/
     private function get_satisfied_status($opid,$kind){
-        $num_1              = array(60,61,62,64,67,1,2,3,68,69); //课后一小时;小课题;中科box;专场讲座;实验室建设 (不低于1人) (线路,课程,其它,常规旅游,科学快车)
-        $num_3              = array(56,57,58,59,63,65); //校园科技节;社会综合实践;亲子旅行;冬夏令营;学趣课程;教师培训
-        $num_unsure         = array(54,55,66); //研学旅行;科学考察;少科院线路
-        $num                = M()->table('__TCS_SCORE__ as s')->join('__TCS_SCORE_USER__ as u on u.id=s.uid','left')->where(array('u.op_id'=>$opid))->count();
-        $create_op_day      = substr($opid,0,8);
+        $num_1                  = array(60,61,62,64,67,1,2,3,68,69); //课后一小时;小课题;中科box;专场讲座;实验室建设 (不低于1人) (线路,课程,其它,常规旅游,科学快车)
+        $num_3                  = array(56,57,58,59,63,65); //校园科技节;社会综合实践;亲子旅行;冬夏令营;学趣课程;教师培训
+        $num_unsure             = array(54,55,66); //研学旅行;科学考察;少科院线路
+        $num                    = M()->table('__TCS_SCORE__ as s')->join('__TCS_SCORE_USER__ as u on u.id=s.uid','left')->where(array('u.op_id'=>$opid))->count();
+        $create_op_day          = substr($opid,0,8);
         if ($create_op_day <= '20190515'){
             if ($num >0){ //不低于1人
-                $stu        = "<span class='green'>已评分</span>";
+                $stu            = "<span class='green'>已评分</span>";
             }else{
-                $stu        = "<span class='red'>未评分</span>";
+                $stu            = "<span class='red'>未评分</span>";
             }
         }else{
             if (in_array($kind,$num_1)){
@@ -281,17 +281,17 @@ class InspectController extends BaseController{
                 $person_num     = $list['renshu'];
                 if ($person_num <= 40){ //不低于1人
                     if ($num >0){ //不低于1人
-                        $stu        = "<span class='green'>已评分(".$num."/1)</span>";
+                        $stu    = "<span class='green'>已评分(".$num."/1)</span>";
                     }else{
-                        $stu        = "<span class='red'>未评分</span>";
+                        $stu    = "<span class='red'>未评分</span>";
                     }
                 }else{ //不低于3人
                     if ($num < 1){
-                        $stu        = "<span class='red'>未评分</span>";
+                        $stu    = "<span class='red'>未评分</span>";
                     }elseif ($num >0 && $num <3){
-                        $stu        = "<span class='yellow'>评分中(".$num."/3)</span>";
+                        $stu    = "<span class='yellow'>评分中(".$num."/3)</span>";
                     }else{
-                        $stu        = "<span class='green'>已评分(".$num."/3)</span>";
+                        $stu    = "<span class='green'>已评分(".$num."/3)</span>";
                     }
                 }
             }
