@@ -3215,7 +3215,7 @@ function updatekpi($month,$user){
                         }
 
                         //院内资源满意度 - 资源管理部经理
-                        if ($v['quota_id']==180){}
+                        //if ($v['quota_id']==180){}
 
                         //渠道累计毛额-市场部经理
                         if ($v['quota_id']==188){
@@ -3395,8 +3395,9 @@ function updatekpi($month,$user){
                         $url                    = U('Customer/public_kpi_partner',array('uid'=>$user_id,'st'=>$start_time,'et'=>$end_time,'target'=>$target));
                     }
 
-                    //城市合伙人-满意度
-                    if($v['quota_id']==227){
+                    //227 => 城市合伙人-满意度
+                    //180 => 院内资源满意度 - 资源管理部经理
+                    if(in_array($v['quota_id'],array(227,180))){
                         $uid                    = $v['user_id'];
                         $month                  = $v['month'];
                         $data                   = get_partner_satisfaction($uid,$month);
