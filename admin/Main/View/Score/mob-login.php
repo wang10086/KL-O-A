@@ -63,7 +63,7 @@
         <script type="text/javascript">
             uid             = <?php echo $uid?$uid:0; ?>;
             quota_id        = <?php echo $quota_id?$quota_id:0; ?>;
-            title           = <?php echo $title; ?>;
+            title           = "<?php echo $title; ?>";
 
         $(function(){
             $("#myform").Validform({
