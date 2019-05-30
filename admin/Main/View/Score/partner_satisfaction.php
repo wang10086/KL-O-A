@@ -28,11 +28,11 @@
                                             <th class="sorting" width="80" data="">评分月份</th>
                                             <th class="sorting" data="">评分时间</th>
                                             <th class="sorting" data="">客户联系方式</th>
-                                            <th class="sorting" data="">客户沟通</th>
-                                            <th class="sorting" data="">产品培训</th>
-                                            <th class="sorting" data="">推广支持</th>
-                                            <th class="sorting" data="">业务实施</th>
-                                            <th class="sorting" data="">持续合作</th>
+                                            <th class="sorting" data="">{$lists[0][AA_title]}</th>
+                                            <th class="sorting" data="">{$lists[0][BB_title]}</th>
+                                            <th class="sorting" data="">{$lists[0][CC_title]}</th>
+                                            <th class="sorting" data="">{$lists[0][DD_title]}</th>
+                                            <th class="sorting" data="">{$lists[0][EE_title]}</th>
                                             <th class="sorting" data="">意见建议</th>
                                         </tr>
                                         <foreach name="lists" item="row">
