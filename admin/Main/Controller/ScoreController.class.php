@@ -23,6 +23,7 @@ class ScoreController extends Controller{
             $mobile                     = trim(I('mobile'));
             $mobile_code                = I('mobile_code');
             $uid                        = I('uid');
+            $quota_id                   = I('quota_id');
             $monthly                    = date('Ym');
 
             //验证手机验证码
@@ -31,7 +32,7 @@ class ScoreController extends Controller{
             }else{
                 if (!$mobile) { die(return_msg('n','手机号码错误')); }
                 if (!$uid) { die(return_msg('n','获取被评分人信息失败')); }
-                $score_record           = $db->where(array('account_id'=>$uid,'mobile'=>$mobile,'monthly'=>$monthly,'status'=>1))->find();
+                $score_record           = $db->where(array('account_id'=>$uid,'quota_id'=>$quota_id,'mobile'=>$mobile,'monthly'=>$monthly,'status'=>1))->find();
                 if ($score_record){ die(return_msg('n','您本月已完成满意度评价,感谢您的参与!')); }
 
                 $register_record        = $db->where(array('account_id'=>$uid,'mobile'=>$mobile,'monthly'=>$monthly))->find(); //已注册,未评分
@@ -46,6 +47,7 @@ class ScoreController extends Controller{
                     $info['mobile']     = $mobile;
                     $info['monthly']    = $monthly;
                     $info['reg_time']   = NOW_TIME;
+                    $info['quota_id']   = $quota_id;
                     $res = $db->add($info);
                     $register_id        = $res;
                 }
@@ -61,7 +63,9 @@ class ScoreController extends Controller{
             }
         }else{
             $uid                    = I('uid');
+            $quota_id               = I('quota_id');
             $this->uid              = $uid;
+            $this->quota_id         = $quota_id;
             $this->token            = make_token();
             $this->display('mob-login');
         }
@@ -71,11 +75,13 @@ class ScoreController extends Controller{
     public function kpi_score(){
         $uid                        = I('uid');
         $title                      = I('tit');
+        $quota_id                   = I('quota_id');
 
         $this->uid                  = $uid;
         $this->token                = make_token();
         $this->scoreMobile          = session('scoreMobile');
-        $this->title                = $title;
+        $this->title                = trim(substr($title,0,strrpos($title,"-")));
+        $this->quota_id             = $quota_id;
         $this->SYSTEM_NAME          = '客户满意度';
         $this->display('kpi_score');
     }

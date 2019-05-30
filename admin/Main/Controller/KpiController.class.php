@@ -2185,9 +2185,10 @@ class KpiController extends BaseController {
     public function public_qrcode(){
         $uid                    = I('uid');
         $title                  = trim(I('tit'));
+        $quota_id               = I('quota_id');
 
         $server_name            = $_SERVER['SERVER_NAME'];
-        $this->url              = "http://".$server_name.U('Score/kpi_score',array('uid'=>$uid,'tit'=>$title));
+        $this->url              = "http://".$server_name.U('Score/kpi_score',array('uid'=>$uid,'tit'=>$title,'quota_id'=>$quota_id));
         $this->title            = $title;
         $this->display('qrcode');
     }

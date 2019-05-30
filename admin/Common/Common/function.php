@@ -3209,6 +3209,14 @@ function updatekpi($month,$user){
                             $url                    = U('Contract/statis',array('year'=>$v['year'],'month'=>$mm));
                         }
 
+                        //院内接待资源方开发 - 资源管理部经理
+                        if ($v['quota_id']==179){
+
+                        }
+
+                        //院内资源满意度 - 资源管理部经理
+                        if ($v['quota_id']==180){}
+
                         //渠道累计毛额-市场部经理
                         if ($v['quota_id']==188){
                             $year           = $v['year']?$v['year']:date('Y');
