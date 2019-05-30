@@ -27,6 +27,7 @@
             <form method="post" action="{:U('Score/login')}" name="myform" id="myform">
             <input type="hidden" name="dosubmit" value="1" />
             <input type="hidden" name="uid" value="{$uid}">
+            <input type="hidden" name="quota_id" value="{$quota_id}">
             <div class="sco-box-body">
                 <div class="mob-loginfrom gbg">
                     <ul>
@@ -61,6 +62,7 @@
 
         <script type="text/javascript">
             uid             = <?php echo $uid?$uid:0; ?>;
+            quota_id        = <?php echo $quota_id?$quota_id:0; ?>
 
         $(function(){
             $("#myform").Validform({
@@ -77,7 +79,7 @@
                     var obj = eval(data);
                     if(obj.status == 'y'){
                         showmsg('提示', obj.info);
-                        setTimeout("window.location.href='/index.php?m=Main&c=Score&a=kpi_score&uid='+uid",1500);
+                        setTimeout("window.location.href='/index.php?m=Main&c=Score&a=kpi_score&uid='+uid+'&quota_id='+quota_id",1500);
                     }else{
                         showmsg('提示',obj.info);
                     }
