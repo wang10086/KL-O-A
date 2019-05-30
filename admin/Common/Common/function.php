@@ -3403,12 +3403,11 @@ function updatekpi($month,$user){
                         $data                   = get_partner_satisfaction($uid,$month);
                         $average                = $data['average']; //平均分
                         $number                 = $data['number']; //评分次数
-                        $complete               = ($data['average']*100).'%';
-                        /*if (!$number || $average>0.9){
+                        if (!$number){
                             $complete           = '100%';
                         }else{
-                            $complete           = (round($average/0.9,2)*100).'%';
-                        }*/
+                            $complete           = ($average*100).'%';
+                        }
 
                         $url                    = U('Score/public_partner_satisfaction',array('uid'=>$uid,'month'=>$month));
                     }
