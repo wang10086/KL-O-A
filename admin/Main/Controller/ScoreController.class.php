@@ -64,8 +64,10 @@ class ScoreController extends Controller{
         }else{
             $uid                    = I('uid');
             $quota_id               = I('quota_id');
+            $title                  = trim(I('title'));
             $this->uid              = $uid;
             $this->quota_id         = $quota_id;
+            $this->title            = $title;
             $this->token            = make_token();
             $this->display('mob-login');
         }

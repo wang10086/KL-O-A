@@ -37,6 +37,7 @@
 <script type="text/javascript">
     var uid         = <?php echo $uid?$uid:0; ?>;
     var quota_id    = <?php echo $quota_id?$quota_id:0; ?>;
+    var title       = <?php echo $title; ?>
     var scoreMobile = <?php echo $scoreMobile?$scoreMobile:0; ?>;
     var host        = "<?php echo $_SERVER['SERVER_NAME']; ?>";
     var dimension   = $('input[name="info[dimension]"]').val();
@@ -56,7 +57,7 @@
     function con_sure(host){
         var a       = confirm('为了防止刷票,请您先使用手机号注册登陆!');
         if (a==true){
-            window.location.href = 'http://'+host+'/index.php?m=Main&c=Score&a=login&uid='+uid+'&quota_id='+quota_id;
+            window.location.href = 'http://'+host+'/index.php?m=Main&c=Score&a=login&uid='+uid+'&quota_id='+quota_id+'&title='+title;
         }else{
             window.location.href = 'http://'+host+'/index.php?m=Main&c=Score&a=noScore';
         }

@@ -62,7 +62,8 @@
 
         <script type="text/javascript">
             uid             = <?php echo $uid?$uid:0; ?>;
-            quota_id        = <?php echo $quota_id?$quota_id:0; ?>
+            quota_id        = <?php echo $quota_id?$quota_id:0; ?>;
+            title           = <?php echo $title; ?>;
 
         $(function(){
             $("#myform").Validform({
@@ -79,7 +80,7 @@
                     var obj = eval(data);
                     if(obj.status == 'y'){
                         showmsg('提示', obj.info);
-                        setTimeout("window.location.href='/index.php?m=Main&c=Score&a=kpi_score&uid='+uid+'&quota_id='+quota_id",1500);
+                        setTimeout("window.location.href='/index.php?m=Main&c=Score&a=kpi_score&uid='+uid+'&quota_id='+quota_id+'&title='+title",1500);
                     }else{
                         showmsg('提示',obj.info);
                     }
