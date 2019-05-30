@@ -37,7 +37,7 @@
 <script type="text/javascript">
     var uid         = <?php echo $uid?$uid:0; ?>;
     var quota_id    = <?php echo $quota_id?$quota_id:0; ?>;
-    var title       = <?php echo $title; ?>
+    var title       = "<?php echo $title; ?>";
     var scoreMobile = <?php echo $scoreMobile?$scoreMobile:0; ?>;
     var host        = "<?php echo $_SERVER['SERVER_NAME']; ?>";
     var dimension   = $('input[name="info[dimension]"]').val();
