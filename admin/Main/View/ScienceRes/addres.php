@@ -29,71 +29,82 @@
                                 </div><!-- /.box-header -->
                                 <div class="box-body">
                                     
-                                        <input type="hidden" name="dosubmit" value="1" />
-                                        <input type="hidden" name="referer" value="<?php echo $_SERVER['HTTP_REFERER']; ?>" />
-                                        <if condition="$row"><input type="hidden" name="id" value="{$row.id}" /></if>
-                                        <!-- text input -->
-                                        
-                                        <div class="form-group col-md-12">
-                                            <label>资源名称</label>
-                                            <input type="text" name="info[title]" id="title" value="{$row.title}"  class="form-control" />
-                                        </div>
-                                        
-                                        <div class="form-group col-md-4">
-                                            <label>资源类型</label>
-                                            <select  class="form-control"  name="info[kind]" required>
-                                            <foreach name="kinds" item="v">
-                                                <option value="{$v.id}" <?php if ($row && ($v['id'] == $row['kind'])) echo ' selected'; ?> >{$v.name}</option>
-                                            </foreach>
-                                            </select>
-                                        </div>
-                                        
-                                        <div class="form-group col-md-4">
-                                            <label>联系人</label>
-                                            <input type="text" name="info[contacts]" id="contacts"   value="{$row.contacts}" class="form-control" />
-                                        </div>
-                                        
-                                        <div class="form-group col-md-4">
-                                            <label>联系人职务</label>
-                                            <input type="text" name="info[contacts_tel]" id="contacts_tel"   value="{$row.contacts_tel}" class="form-control" />
-                                        </div>
-                                        
-                                        <div class="form-group col-md-4">
-                                            <label>所在地区</label>
-                                            <input type="text" name="info[diqu]" id="diqu"   value="{$row.diqu}" class="form-control" />
-                                        </div>
-                                        <div class="form-group col-md-4">
-                                            <label>地址</label>
-                                            <input type="text" name="info[address]" id="address"   value="{$row.address}" class="form-control" />
-                                        </div>
-                                        <div class="form-group col-md-4">
-                                            <label>电话</label>
-                                            <input type="text" name="info[tel]" id="tel" value="{$row.tel}"  class="form-control" />
-                                        </div>
-                                        
-                                        <div class="form-group col-md-12">
-                                            <label><a href="javascript:;" onClick="selectkinds()">选择适用项目类型</a> <span style="color:#999999">(选择后您可以点击删除)</span></label>
-                                            <div id="pro_kinds_text">
-                                            
-                                            <foreach name="deptlist" item="v">
-                                                 <span class="unitbtns" title="点击删除该选项"><input type="hidden" name="business_dept[]" value="{$v.id}"><button type="button" class="btn btn-default btn-sm">{$v.name}</button></span>
-                                            </foreach>
-                                            
-                                            </div>
-                                        </div>
-                                        
-                                        <div class="form-group col-md-12">
-                                            <label>介绍</label>
-                                            <?php 
-											 echo editor('content',$row['content']); 
-											 ?>
-                                        </div>
-                                        
-                                        
-                                        <div class="form-group">&nbsp;</div>
-                                        
+                                    <input type="hidden" name="dosubmit" value="1" />
+                                    <input type="hidden" name="referer" value="<?php echo $_SERVER['HTTP_REFERER']; ?>" />
+                                    <if condition="$row"><input type="hidden" name="id" value="{$row.id}" /></if>
+                                    <!-- text input -->
 
-                                    
+                                    <div class="form-group col-md-8">
+                                        <label>资源名称</label>
+                                        <input type="text" name="info[title]" id="title" value="{$row.title}"  class="form-control" />
+                                    </div>
+
+                                    <div class="form-group col-md-4">
+                                        <label>是否院内</label>
+                                        <select name="" id="" class="form-control">
+                                            <option value="0">否</option>
+                                            <option value="1">是</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="form-group col-md-4">
+                                        <label>资源类型</label>
+                                        <select  class="form-control"  name="info[kind]" required>
+                                        <foreach name="kinds" item="v">
+                                            <option value="{$v.id}" <?php if ($row && ($v['id'] == $row['kind'])) echo ' selected'; ?> >{$v.name}</option>
+                                        </foreach>
+                                        </select>
+                                    </div>
+
+                                    <div class="form-group col-md-4">
+                                        <label>所在地区</label>
+                                        <input type="text" name="info[diqu]" id="diqu"   value="{$row.diqu}" class="form-control" />
+                                    </div>
+                                    <div class="form-group col-md-4">
+                                        <label>地址</label>
+                                        <input type="text" name="info[address]" id="address"   value="{$row.address}" class="form-control" />
+                                    </div>
+
+                                    <?php if (!$row['id'] || $row['id'] && in_array(cookie('userid'),array(11))){ ?>
+                                    <!--<div class="form-group col-md-12">
+                                        <label style="width:100%; border-bottom:1px solid #dedede; padding-bottom:10px; font-weight:bold;"></label>
+                                    </div>-->
+
+                                    <div class="form-group col-md-4">
+                                        <label>联系人</label>
+                                        <input type="text" name="info[contacts]" id="contacts"   value="{$row.contacts}" class="form-control" />
+                                    </div>
+
+                                    <div class="form-group col-md-4">
+                                        <label>联系人职务</label>
+                                        <input type="text" name="info[contacts_tel]" id="contacts_tel"   value="{$row.contacts_tel}" class="form-control" />
+                                    </div>
+
+                                    <div class="form-group col-md-4">
+                                        <label>电话</label>
+                                        <input type="text" name="info[tel]" id="tel" value="{$row.tel}"  class="form-control" />
+                                    </div>
+                                    <?php } ?>
+
+                                    <div class="form-group col-md-12">
+                                        <label><a href="javascript:;" onClick="selectkinds()">选择适用项目类型</a> <span style="color:#999999">(选择后您可以点击删除)</span></label>
+                                        <div id="pro_kinds_text">
+
+                                        <foreach name="deptlist" item="v">
+                                             <span class="unitbtns" title="点击删除该选项"><input type="hidden" name="business_dept[]" value="{$v.id}"><button type="button" class="btn btn-default btn-sm">{$v.name}</button></span>
+                                        </foreach>
+
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group col-md-12">
+                                        <label>介绍</label>
+                                        <?php
+                                         echo editor('content',$row['content']);
+                                         ?>
+                                    </div>
+
+                                    <div class="form-group">&nbsp;</div>
                                 </div><!-- /.box-body -->
                             </div><!-- /.box -->
                             <div id="formsbtn">
