@@ -16,7 +16,30 @@
 
                     <div class="row">
                         <div class="col-xs-12">
-                            <div class="box">
+
+                            <div class="btn-group" id="catfont" style="padding-bottom:5px;">
+                                <?php if($prveyear>2019){ ?>
+                                    <a href="{:U('Kpi/pdca',array('year'=>$prveyear,'month'=>'01','show'=>$show))}" class="btn btn-default" style="padding:8px 18px;">上一年</a>
+                                <?php } ?>
+                                <?php
+                                    for($i=1;$i<13;$i++){
+                                        $par = array();
+                                        $par['year']  = $year;
+                                        $par['month'] = $year.str_pad($i,2,"0",STR_PAD_LEFT);
+                                        $par['show']  = $show;
+                                        if($month==$year.str_pad($i,2,"0",STR_PAD_LEFT)){
+                                            echo '<a href="'.U('Kpi/pdca',$par).'" class="btn btn-info" style="padding:8px 18px;">'.$i.'月</a>';
+                                        }else{
+                                            echo '<a href="'.U('Kpi/pdca',$par).'" class="btn btn-default" style="padding:8px 18px;">'.$i.'月</a>';
+                                        }
+                                    }
+                                ?>
+                                <?php if($year<date('Y')){ ?>
+                                    <a href="{:U('Kpi/pdca',array('year'=>$nextyear,'month'=>'01','show'=>$show))}" class="btn btn-default" style="padding:8px 18px;">下一年</a>
+                                <?php } ?>
+                            </div>
+
+                            <div class="box mt10">
                                 <div class="box-header">
                                 	<div class="kjss">
                                     	<form action="" method="get" id="searchform">
@@ -31,8 +54,8 @@
                                         <button class="btn btn-info btn-sm" style="float:left;"><i class="fa fa-search"></i></button>
                                         </form>
                                     </div>
-                                    <div class="box-tools pull-right">
-                                    	 
+                                    <div class="box-tools pull-right" id="chart_btn_group">
+                                        <a href="javascript:;" onClick="showme(this)" data="{$show}" class="btn <?php if($show==1){ echo 'btn-info';}else{ echo 'btn btn-sm btn-group-header'; } ?>">我的PDCA</a>
                                          <if condition="rolemenu(array('Kpi/addpdca'))">
                                          <a href="javascript:;" onClick="add_pdca()" class="btn btn-sm btn-danger" ><i class="fa fa-plus"></i> 新建PDCA</a>
                                          </if>
@@ -40,36 +63,19 @@
                                     </div>
                                 </div><!-- /.box-header -->
                                 <div class="box-body">
-                                
+
                                     <div class="btn-group" id="catfont" style="padding-bottom:5px;">
-										<?php if($prveyear>2019){ ?>
-                                        <a href="{:U('Kpi/pdca',array('year'=>$prveyear,'month'=>'01','show'=>$show))}" class="btn btn-default" style="padding:8px 18px;">上一年</a>
-                                        <?php } ?>
-                                        <?php 
-                                        for($i=1;$i<13;$i++){
-                                            $par = array();
-											$par['year']  = $year;
-                                            $par['month'] = $year.str_pad($i,2,"0",STR_PAD_LEFT);
-                                            $par['show']  = $show;
-                                            if($month==$year.str_pad($i,2,"0",STR_PAD_LEFT)){
-                                                echo '<a href="'.U('Kpi/pdca',$par).'" class="btn btn-info" style="padding:8px 18px;">'.$i.'月</a>';
-                                            }else{
-                                                echo '<a href="'.U('Kpi/pdca',$par).'" class="btn btn-default" style="padding:8px 18px;">'.$i.'月</a>';
-                                            }
-                                        }
-                                        ?>
-                                        <?php if($year<date('Y')){ ?>
-                                        <a href="{:U('Kpi/pdca',array('year'=>$nextyear,'month'=>'01','show'=>$show))}" class="btn btn-default" style="padding:8px 18px;">下一年</a>
-                                        <?php } ?>
+                                        <a href="{:U('Kpi/pdca',array('year'=>$year,'month'=>$month,'pin'=>0))}" class="btn <?php if(!$pin){ echo "btn-info"; }else{ echo 'btn-default'; } ?>" style="padding:8px 18px;">全部</a>
+                                        <a href="{:U('Kpi/pdca',array('year'=>$year,'month'=>$month,'pin'=>1))}" class="btn <?php if($pin == 1){ echo "btn-info"; }else{ echo 'btn-default'; } ?>" style="padding:8px 18px;">编辑中</a>
+                                        <a href="{:U('Kpi/pdca',array('year'=>$year,'month'=>$month,'pin'=>2))}" class="btn <?php if($pin == 2){ echo "btn-info"; }else{ echo 'btn-default'; } ?>" style="padding:8px 18px;">已申请审批</a>
+                                        <a href="{:U('Kpi/pdca',array('year'=>$year,'month'=>$month,'pin'=>3))}" class="btn <?php if($pin == 3){ echo "btn-info"; }else{ echo 'btn-default'; } ?>" style="padding:8px 18px;">审批通过</a>
+                                        <a href="{:U('Kpi/pdca',array('year'=>$year,'month'=>$month,'pin'=>4))}" class="btn <?php if($pin == 4){ echo "btn-info"; }else{ echo 'btn-default'; } ?>" style="padding:8px 18px;">审批未通过</a>
+                                        <a href="{:U('Kpi/pdca',array('year'=>$year,'month'=>$month,'pin'=>5))}" class="btn <?php if($pin == 5){ echo "btn-info"; }else{ echo 'btn-default'; } ?>" style="padding:8px 18px;">已申请评分</a>
+                                        <a href="{:U('Kpi/pdca',array('year'=>$year,'month'=>$month,'pin'=>6))}" class="btn <?php if($pin == 6){ echo "btn-info"; }else{ echo 'btn-default'; } ?>" style="padding:8px 18px;">已评分</a>
+                                        <!--<a href="{:U('Kpi/pdca',array('year'=>$year,'month'=>$month,'pin'=>7))}" class="btn <?php /*if($pin == 7){ echo "btn-info"; }else{ echo 'btn-default'; } */?>" style="padding:8px 18px;">未填写</a>-->
                                     </div>
-                            
-                                    
-                                    <div class="btn-group" id="catfont" style="float:right;">
-                                        
-                                        <a href="javascript:;" onClick="showme(this)" data="{$show}" class="btn <?php if($show==1){ echo 'btn-info';}else{ echo 'btn-default'; } ?>">我的PDCA</a>
-                                        
-                                    </div>
-                                    <table class="table table-bordered dataTable fontmini" id="tablelist" style="margin-top:10px;">
+
+                                    <table class="table table-bordered dataTable fontmini" id="tablelist">
                                         <tr role="row" class="orders" >
                                             <th width="" class="sorting" data="month">月份</th>
                                             <!-- <th class="sorting" data="title">PDCA描述</th> -->

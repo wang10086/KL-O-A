@@ -147,21 +147,27 @@ class KpiController extends BaseController {
     // @@@NODE-3###pdca###PDCA###
     public function pdca(){
         $this->title('PDCA');
-		$year = I('year',date('Y'));
-		$kpr   = I('kpr');
-		$bkpr  = I('bkpr');
-		$month = I('month','');
-		$show  = I('show',0);
+		$year                   = I('year',date('Y'));
+		$kpr                    = I('kpr');
+		$bkpr                   = I('bkpr');
+		$month                  = I('month','');
+		$show                   = I('show',0);
+        $pin                    = I('pin')?I('pin'):0;
 		
-		if($show) $bkpr = cookie('userid');
+		if($show) $bkpr         = cookie('userid');
+		$db                     = M('pdca');
 		
-		$db = M('pdca');
-		
-		$where = '';
-		$where .= '1 = 1';
-		if($month) $where .= ' AND `month` = '.trim($month); 
-		if($kpr)   $where .= ' AND `eva_user_id` = '.$kpr; 
-		if($bkpr)  $where .= ' AND `tab_user_id` = '.$bkpr; 
+		$where                  = '';
+		$where                  .= '1 = 1';
+		if($month) $where       .= ' AND `month` = '.trim($month);
+		if($kpr)   $where       .= ' AND `eva_user_id` = '.$kpr;
+		if($bkpr)  $where       .= ' AND `tab_user_id` = '.$bkpr;
+        if ($pin ==1)  $where   .= ' AND `status` = 0'; //编辑中
+        if ($pin ==2)  $where   .= ' AND `status` = 1'; //已申请审批
+        if ($pin ==3)  $where   .= ' AND `status` = 2'; //审批通过
+        if ($pin ==4)  $where   .= ' AND `status` = 3'; //审批未通过
+        if ($pin ==5)  $where   .= ' AND `status` = 4'; //已申请评分
+        if ($pin ==6)  $where   .= ' AND `status` = 5'; //已评分
 		/*
 		if(C('RBAC_SUPER_ADMIN')==cookie('username') || cookie('roleid')==10 || cookie('roleid')==14 || cookie('roleid')==28 || cookie('roleid')==43 || cookie('userid')==32 || cookie('userid')==38 || cookie('userid')==12 || cookie('userid')==13  || cookie('userid')==11){}else{
 			$where .= ' AND (`tab_user_id` in ('.Rolerelation(cookie('roleid')).') || `eva_user_id` = '.cookie('userid').')';
@@ -175,6 +181,10 @@ class KpiController extends BaseController {
 		$this->pages = $pagecount>P::PAGE_SIZE ? $page->show():'';
 
         $lists = $db->where($where)->limit($page->firstRow . ',' . $page->listRows)->order($this->orders('month'))->select();
+        //$lists = $db->where($where)->order($this->orders('month'))->select();
+        //$account = M('account')->where(array('id'=>array('gt',10),'status'=>0,'nickname'=>array('not in',array('李岩1','孟华1'))))->select();
+        //var_dump($lists);die;
+
 		foreach($lists as $k=>$v){
 			if($v['total_score']==0){
 				$totalshow = '<font color="#999">未评分</font>';	
@@ -219,7 +229,7 @@ class KpiController extends BaseController {
 		$this->prveyear		= $year-1;
 		$this->nextyear		= $year+1;
 		$this->userkey 		= json_encode($key);
-			
+        $this->pin          = $pin;
 			
 		$this->display('pdca');
     }
