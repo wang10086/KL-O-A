@@ -82,7 +82,7 @@ class ScoreController extends Controller{
         $this->uid                  = $uid;
         $this->token                = make_token();
         $this->scoreMobile          = session('scoreMobile');
-        $this->title                = trim(substr($title,0,strrpos($title,"-")));
+        $this->title                = strpos($title,'-')?trim(substr($title,0,strrpos($title,"-"))):$title ;
         $this->quota_id             = $quota_id;
         $this->SYSTEM_NAME          = '客户满意度';
         $this->display('kpi_score');
