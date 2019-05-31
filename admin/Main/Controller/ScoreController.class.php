@@ -24,7 +24,8 @@ class ScoreController extends Controller{
             $mobile_code                = I('mobile_code');
             $uid                        = I('uid');
             $quota_id                   = I('quota_id');
-            $monthly                    = date('Ym');
+            //$monthly                    = date('Ym');
+            $monthly                    = get_kpi_yearMonth(date('Y'),date('m'));
 
             //验证手机验证码
             if ($mobile_code != session('code')) {
