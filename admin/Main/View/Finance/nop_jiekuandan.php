@@ -50,8 +50,9 @@
                                 <td colspan="3" class=" td">&emsp;借款人签字：<img src="/{$jiekuan.jk_file}" height='35px' alt=""></td>
                             </tr>
                             <tr>
-                                <td colspan="3" class=" td">&emsp;部门主管签字：<span id="ysspr"> <?php if($audit_userinfo['manager_audit_status']==2){echo "<span class='red'>不通过</span>"; }elseif ($audit_userinfo['manager_audit_status']==1){ echo "<img src='/$audit_userinfo[manager_audit_file]' height='35px'>";}; ?></span></td>
-                                <td colspan="3" class=" td">&emsp;财务主管签字：<span id="cwzg"><?php if($audit_userinfo['cw_audit_status']==2){echo "<span class='red'>不通过</span>"; }elseif ($audit_userinfo['cw_audit_status']==1){ echo "<img src='/$audit_userinfo[cw_audit_file]' height='35px'>";}; ?></span></td>
+                                <td colspan="2" class=" td">&emsp;部门主管签字：<span id="ysspr"> <?php if($audit_userinfo['manager_audit_status']==2){echo "<span class='red'>不通过</span>"; }elseif ($audit_userinfo['manager_audit_status']==1){ echo "<img src='/$audit_userinfo[manager_audit_file]' height='35px'>";}; ?></span></td>
+                                <td colspan="2" class=" td">&emsp;部门分管领导签字：<span id="ysspr"> <?php if($audit_userinfo['ys_audit_status']==2){echo "<span class='red'>不通过</span>"; }elseif ($audit_userinfo['ys_audit_status']==1){ echo "<img src='/$audit_userinfo[ys_audit_file]' height='35px'>";}; ?></span></td>
+                                <td colspan="2" class=" td">&emsp;财务主管签字：<span id="cwzg"><?php if($audit_userinfo['cw_audit_status']==2){echo "<span class='red'>不通过</span>"; }elseif ($audit_userinfo['cw_audit_status']==1){ echo "<img src='/$audit_userinfo[cw_audit_file]' height='35px'>";}; ?></span></td>
                             </tr>
                         </table>
                     </div>
