@@ -1980,10 +1980,15 @@ class FinanceController extends BaseController {
                 $bxd_id                 = I('bxd_id');
                 $audit_id               = I('audit_id');
                 $info                   = I('info');
+                $empty_bill             = I('empty_bill');
                 $info['cw_audit_time']  = NOW_TIME;
                 $res                    = $db->where(array('id'=>$audit_id))->save($info);
                 $bxd                    = array();
                 $bxd['bxd_kind']        = I('bxd_kind');
+                if ($empty_bill == 1){ //销账(调到资源管理部)
+                    $bxd['department_id']= 4;
+                    $bxd['department']  = '资源管理部';
+                }
                 M('baoxiao')->where(array('id'=>$bx_id))->save($bxd);
                 $bx_info                = M('baoxiao')->where(array('id'=>$bx_id))->find();
                 $audit_info             = M('baoxiao_audit')->where(array('id'=>$audit_id))->find();

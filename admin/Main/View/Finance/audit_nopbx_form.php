@@ -107,13 +107,13 @@
         <input type="hidden" id="qianzi" value="0">
         <input type="hidden" name="savetype" value="17">
         <div class="content">
-            <div class="form-group col-md-4" id="cy_audit">
+            <div class="form-group col-md-6" id="cy_audit">
                 <p><label>财务主管审核：</label></p>
                 <input type="radio" name="info[cw_audit_status]" value="1" <?php if ($audit_userinfo['cw_audit_status'] == 1){echo 'checked';} ?>> &emsp;通过&emsp;&emsp;&emsp;
                 <input type="radio" name="info[cw_audit_status]" value="2" <?php if ($audit_userinfo['cw_audit_status'] == 2){echo 'checked';} ?>> &emsp;不通过
             </div>
 
-            <div class="form-group col-md-4">
+            <div class="form-group col-md-6">
                 <label>报销单类型：</label>
                 <select class="form-control requir" name="bxdKind" onchange="get_bxd_kind()" required>
                     <option value="">==请选择==</option>
@@ -123,10 +123,18 @@
                 </select>
             </div>
 
-            <div class="form-group col-md-4">
+            <div class="form-group col-md-6">
                 <label>报销单分类：</label>
                 <select class="form-control requir" name="bxd_kind" id="bxd_kind" required>
                     <option value="">==请先选择报销单类型==</option>
+                </select>
+            </div>
+
+            <div class="form-group col-md-6">
+                <label>是否销账：</label>
+                <select class="form-control requir" name="empty_bill">
+                    <option value="0">不销账</option>
+                    <option value="1">销账</option>
                 </select>
             </div>
 
