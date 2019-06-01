@@ -422,7 +422,7 @@ class SalaryModel extends Model
             $data[$k]['welfare']            = $salary_bonus_list['annual_bonus']?$salary_bonus_list['annual_bonus']:'0.00'; //年终奖
             $data[$k]['bonus']              = $salary_bonus_list['foreign_bonus']?$salary_bonus_list['foreign_bonus']:'0.00'; //奖金
             $data[$k]['yearend']            = $salary_bonus_list['year_end_tax']; //年终奖计税
-            $other_income                   = $this->get_other_income($v['id']); //其他收入变动(差额补)
+            $other_income                   = $this->get_other_income($v['id']); //其他收入变动(差额补)AAAA
             $data[$k]['income_token']       = $other_income['income_token']; //其他收入变动token
 
             $salary_subsidy_list            = M('salary_subsidy')->where(array('account_id'=>$v['id']))->order('id desc')->find(); //补贴(住房补贴,外地补贴,电脑补贴)
@@ -515,9 +515,7 @@ class SalaryModel extends Model
 
     //代扣代缴
     public function get_withholding($userid){
-        //$lists                  = M('salary_withholding')->where(array('account_id'=>$userid,'status'=>1))->order('id desc')->select();
-        $token                  = M('salary_withholding')->where(array('account_id'=>$userid))->order('id desc')->getField('token');
-        if ($token) $lists      = M('salary_withholding')->where(array('token'=>$token))->select();
+        $lists                  = M('salary_withholding')->where(array('account_id'=>$userid,'status'=>1))->order('id desc')->select();
         $data                   = array();
         $data['money']          = array_sum(array_column($lists,'money'));
         $data['token']          = $lists[0]['token'];
@@ -531,9 +529,7 @@ class SalaryModel extends Model
      * @return array
      */
     public function get_other_income($userid){
-        //$lists                  = M('salary_income')->where(array('account_id'=>$userid,'status'=>1))->order('id desc')->select();
-        $token                  = M('salary_income')->where(array('account_id'=>$userid))->order('id desc')->getField('income_token');
-        if ($token) $lists      = M('salary_income')->where(array('income_token'=>$token))->select();
+        $lists                  = M('salary_income')->where(array('account_id'=>$userid,'status'=>1))->order('id desc')->select();
         $data                   = array();
         $data['income_money']   = array_sum(array_column($lists,'income_money'));
         $data['income_token']   = $lists[0]['income_token'];
