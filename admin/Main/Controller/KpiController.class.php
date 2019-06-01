@@ -174,38 +174,39 @@ class KpiController extends BaseController {
 		}
 		*/
 		//P($where);
-		
-		//分页
-		$pagecount = $db->where($where)->count();
-		$page = new Page($pagecount, P::PAGE_SIZE);
-		$this->pages = $pagecount>P::PAGE_SIZE ? $page->show():'';
 
-        $lists = $db->where($where)->limit($page->firstRow . ',' . $page->listRows)->order($this->orders('month'))->select();
-        //$lists = $db->where($where)->order($this->orders('month'))->select();
-        //$account = M('account')->where(array('id'=>array('gt',10),'status'=>0,'nickname'=>array('not in',array('李岩1','孟华1'))))->select();
-        //var_dump($lists);die;
+        if ($pin == 7){
+            $lists = $this->get_unpdca($year,$month); //获取未填写pdca用户信息
+        }else{
+            //分页
+            $pagecount = $db->where($where)->count();
+            $page = new Page($pagecount, P::PAGE_SIZE);
+            $this->pages = $pagecount>P::PAGE_SIZE ? $page->show():'';
 
-		foreach($lists as $k=>$v){
-			if($v['total_score']==0){
-				$totalshow = '<font color="#999">未评分</font>';	
-			}else{
-				$yu = 100-$v['total_score'];
-				if($yu){
-					$totalshow = '-'.$yu;	
-				}else{
-					$totalshow = '<font color="#999">无加扣分</font>';
-				}
-			}
-			
-			$lists[$k]['total_score_show']  = $totalshow; 	
-			$lists[$k]['kaoping']      = $v['eva_user_id'] ? '<a href="'.U('Kpi/pdca',array('bkpr'=>$v['eva_user_id'])).'">'.username($v['eva_user_id']).'</a>' : '未评分'; 	
-			
-			//修正品质检查评分
-			qa_score_num($v['tab_user_id'],$v['month']);
-		}
+            $lists = $db->where($where)->limit($page->firstRow . ',' . $page->listRows)->order($this->orders('month'))->select();
+
+            foreach($lists as $k=>$v){
+                if($v['total_score']==0){
+                    $totalshow = '<font color="#999">未评分</font>';
+                }else{
+                    $yu = 100-$v['total_score'];
+                    if($yu){
+                        $totalshow = '-'.$yu;
+                    }else{
+                        $totalshow = '<font color="#999">无加扣分</font>';
+                    }
+                }
+
+                $lists[$k]['total_score_show']  = $totalshow;
+                $lists[$k]['kaoping']      = $v['eva_user_id'] ? '<a href="'.U('Kpi/pdca',array('bkpr'=>$v['eva_user_id'])).'">'.username($v['eva_user_id']).'</a>' : '未评分';
+
+                //修正品质检查评分
+                qa_score_num($v['tab_user_id'],$v['month']);
+            }
+        }
 		
 		$this->show     = $show;
-		$this->lists    = $lists; 
+		$this->lists    = $lists;
 		$this->pdcasta  = C('PDCA_STATUS');
 		
 		
@@ -232,6 +233,30 @@ class KpiController extends BaseController {
         $this->pin          = $pin;
 			
 		$this->display('pdca');
+    }
+
+    //获取未填写pdca的用户
+    public function get_unpdca($year,$month){
+        $month                      = $month?$month:get_kpi_yearMonth($year,date('m'));
+        $where_1                    = array();
+        $where_1['id']              = array('gt',10);
+        $where_1['status']          = 0; //在职
+        $where_1['nickname']        = array('not in',array('李岩1','孟华1','魏春竹1','乔峰','孟华华','刘利'));
+        $field                      = 'id as tab_user_id,nickname,roleid';
+        $account                    = M('account')->where($where_1)->field($field)->select();
+        $pdca_users                 = M('pdca')->where(array('month'=>$month))->getField('tab_user_id',true);
+        $data                       = array();
+        foreach ($account as $k=>$v){
+            if (!in_array($v['tab_user_id'],$pdca_users)){
+                $data[$k]           = $v;
+                $pdca_auth_id       = M('auth')->where(array('role_id'=>$v['roleid']))->getField('pdca_auth');
+                $data[$k]['kaoping']= "<a href='javascript:;'>".username($pdca_auth_id)."</a>";
+                $data[$k]['month']  = $month;
+                $data[$k]['status'] = '-1';
+                $data[$k]['total_score_show']  = '<font color="#999">未评分</font>';
+            }
+        }
+        return $data;
     }
 	
 	

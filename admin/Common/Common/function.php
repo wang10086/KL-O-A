@@ -1841,7 +1841,7 @@ function set_quarter($year,$quarter){
         $year                   = $year?$year:date('Y');
         $month                  = $month?$month:date('m');
         $day                    = date('d');
-        if ($day>1 && $day<26){
+        if ($day>0 && $day<26){
             if (strlen($month)<2) $month= str_pad($month,2,'0',STR_PAD_LEFT);
             $yearMonth          = $year.$month;
         }else{

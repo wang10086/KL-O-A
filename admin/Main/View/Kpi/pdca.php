@@ -72,7 +72,7 @@
                                         <a href="{:U('Kpi/pdca',array('year'=>$year,'month'=>$month,'pin'=>4))}" class="btn <?php if($pin == 4){ echo "btn-info"; }else{ echo 'btn-default'; } ?>" style="padding:8px 18px;">审批未通过</a>
                                         <a href="{:U('Kpi/pdca',array('year'=>$year,'month'=>$month,'pin'=>5))}" class="btn <?php if($pin == 5){ echo "btn-info"; }else{ echo 'btn-default'; } ?>" style="padding:8px 18px;">已申请评分</a>
                                         <a href="{:U('Kpi/pdca',array('year'=>$year,'month'=>$month,'pin'=>6))}" class="btn <?php if($pin == 6){ echo "btn-info"; }else{ echo 'btn-default'; } ?>" style="padding:8px 18px;">已评分</a>
-                                        <!--<a href="{:U('Kpi/pdca',array('year'=>$year,'month'=>$month,'pin'=>7))}" class="btn <?php /*if($pin == 7){ echo "btn-info"; }else{ echo 'btn-default'; } */?>" style="padding:8px 18px;">未填写</a>-->
+                                        <a href="{:U('Kpi/pdca',array('year'=>$year,'month'=>$month,'pin'=>7))}" class="btn <?php if($pin == 7){ echo "btn-info"; }else{ echo 'btn-default'; } ?>" style="padding:8px 18px;">未填写</a>
                                     </div>
 
                                     <table class="table table-bordered dataTable fontmini" id="tablelist">
@@ -83,6 +83,7 @@
                                             <th width="" class="sorting" data="tab_user_id">考评人</th>
                                             <th width="" class="sorting" data="total_score">考评得分</th>
                                             <th width="" class="sorting" data="status">状态</th>
+                                            <?php if ($pin != 7){ ?>
                                             <if condition="rolemenu(array('Kpi/pdcainfo'))">
                                             <th width="50" class="taskOptions">项目</th>
                                             </if>
@@ -92,6 +93,7 @@
                                             <if condition="rolemenu(array('Kpi/delpdca'))">
                                             <th width="50" class="taskOptions">删除</th>
                                             </if>
+                                            <?php } ?>
     
                                         </tr>
                                         <foreach name="lists" item="row"> 
@@ -102,6 +104,7 @@
                                             <td>{$row.kaoping}</td>
                                             <td>{$row.total_score_show}</td>
                                             <td>{$pdcasta.$row[status]}</td>
+                                            <?php if ($pin != 7){ ?>
                                             <if condition="rolemenu(array('Kpi/pdcainfo'))">
                                             <td class="taskOptions">
                                             <a href="{:U('Kpi/pdcainfo',array('id'=>$row['id']))}" title="项目" class="btn btn-success btn-smsm"><i class="fa fa-ellipsis-h"></i></a>
@@ -129,6 +132,7 @@
                                             ?>
                                             </td>
                                             </if>
+                                            <?php } ?>
                                            
                                         </tr>
                                         </foreach>					
