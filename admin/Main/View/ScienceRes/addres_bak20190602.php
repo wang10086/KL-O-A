@@ -88,57 +88,13 @@
 
                                     <div class="form-group col-md-12">
                                         <label><a href="javascript:;" onClick="selectkinds()">选择适用项目类型</a> <span style="color:#999999">(选择后您可以点击删除)</span></label>
-                                        <!--<div id="pro_kinds_text">-->
+                                        <div id="pro_kinds_text">
 
-                                        <!--<foreach name="deptlist" item="v">
+                                        <foreach name="deptlist" item="v">
                                              <span class="unitbtns" title="点击删除该选项"><input type="hidden" name="business_dept[]" value="{$v.id}"><button type="button" class="btn btn-default btn-sm">{$v.name}</button></span>
-                                        </foreach>-->
-                                            <div class="content" id="kindlist" style="display:block; display: none">
-                                                <table class="table table-striped">
-                                                    <thead>
-                                                    <tr>
-                                                        <th width="15%">项目类型</th>
-                                                        <th width="8%">AA</th>
-                                                        <th width="8%">BB</th>
-                                                        <th width="8%">CC</th>
-                                                        <th width="8%">DD</th>
-                                                        <th width="8%">EE</th>
-                                                        <th width="8%">FF</th>
-                                                        <th width="8%">GG</th>
-                                                        <th width="8%">HH</th>
-                                                        <th width="8%">II</th>
-                                                        <th width="80">删除</th>
-                                                    </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                    <foreach name="supplier" item="v">
-                                                        <tr class="expense" id="share_{$v.sid}">
-                                                            <td style="vertical-align:middle">
-                                                                <input type="hidden" name="share[30000{$v.sid}][item]" value="{$v.kind}">
-                                                                <input type="hidden" name="share[30000{$v.sid}][remark]" value="{$v.share_name}">
-                                                                <input type="hidden" name="share[30000{$v.sid}][cost_type]" value="3">
-                                                                <div class="tdbox"><a href="javascript:;" onClick="javascript:;">{$v.department}</a></div>
-                                                            </td>
-                                                            <td>{$v.depart_sum}</td>
-                                                            <td>{$v.remark}</td>
-                                                            <td><a href="javascript:;" class="btn btn-danger btn-flat" onclick="delbox('share_id_{$v.sid}',{$v.sid})">删除</a></td>
-                                                        </tr>
-                                                    </foreach>
-                                                    <tr id="reAddKind">
-                                                        <td><a href="javascript:;" onclick="selectkinds()" class="btn btn-success btn-sm"><i class="fa fa-fw fa-plus"></i>添加项目类型</a></td>
-                                                        <!--<td style="font-size:16px; color:#ff3300;">合计: <span id="shareSum">0.00</span></td>-->
-                                                        <td></td>
-                                                        <td></td>
-                                                    </tr>
+                                        </foreach>
 
-                                                    </tbody>
-                                                    <tfoot>
-
-                                                    </tfoot>
-                                                </table>
-                                            </div>
-
-                                        <!--</div>-->
+                                        </div>
                                     </div>
 
                                     <div class="form-group col-md-12">
@@ -171,28 +127,11 @@
 
 		
 		
-		//closebtns();
+		closebtns();
 		
 
 	});
 
-    /*
-    * ok: function () {
-     var origin = artDialog.open.origin;
-     var departments = this.iframe.contentWindow.gosubmint();
-     var share_html = '';
-     for (var j = 0; j < departments.length; j++) {
-     if (departments[j].department) {
-     var i = parseInt(Math.random()*100000)+j;
-     var aaa = '<input type="hidden" name="share['+i+'][department]" value="'+departments[j].department+'">';
-     share_html += '<tr class="expense" id="share_'+i+'"><td style="vertical-align:middle">'+aaa+departments[j].department+'</td><td><input type="hidden" id="ftje_'+i+'"><input type="text" name="share['+i+'][depart_sum]" onblur="check_total('+i+',$(`#ftje_'+i+'`).val(),$(this).val())" placeholder="分摊金额" value="0.00" class="form-control" /></td><td><input type="text" name="share['+i+'][remark]" value="" class="form-control" /></td><td><a href="javascript:;" class="btn btn-danger btn-flat" onclick="delbox(\'share_'+i+'\','+i+',$(`#ftje_'+i+'`).val())">删除</a></td></tr>';
-     };
-     }
-     $('#kindlist').show();
-     $('#nonetext').hide();
-     $('#kindlist').find('#shareTotal').before(share_html);
-     },
-    * */
 	
 	//选择适用项目类型
 	function selectkinds() {
@@ -209,28 +148,10 @@
 				var i=0;
 				var str = "";
 				for (i=0; i<data.length; i++) {
-                    if (data[i].id){
-                        var j = parseInt(Math.random()*10000)+i;
-                        var aaa = '<input type="hidden" name="info['+j+'][kind_id]" value="'+data[i].id+'"><input type="hidden" name="info['+j+'][kind]" value="'+data[i].kind+'">';
-                        str += '<tr class="expense" id="kind_'+j+'">' +
-                            '<td style="vertical-align:middle">'+aaa+data[i].kind+'</td>' +
-                            '<td><input type="hidden" id="ftje_'+j+'"><input type="text" name="share['+j+'][depart_sum]" onblur="javascript:;" placeholder="" value="" class="form-control" /></td>' +
-                            '<td><input type="text" name="share['+j+'][remark]" value="" class="form-control" /></td>' +
-                            '<td><input type="text" name="share['+j+'][remark]" value="" class="form-control" /></td>' +
-                            '<td><input type="text" name="share['+j+'][remark]" value="" class="form-control" /></td>' +
-                            '<td><input type="text" name="share['+j+'][remark]" value="" class="form-control" /></td>' +
-                            '<td><input type="text" name="share['+j+'][remark]" value="" class="form-control" /></td>' +
-                            '<td><input type="text" name="share['+j+'][remark]" value="" class="form-control" /></td>' +
-                            '<td><input type="text" name="share['+j+'][remark]" value="" class="form-control" /></td>' +
-                            '<td><input type="text" name="share['+j+'][remark]" value="" class="form-control" /></td>' +
-                            '<td><a href="javascript:;" class="btn btn-danger btn-flat" onclick="delbox(\'kind_'+j+'\')">删除</a></td></tr>';
-                    }
-				    /*str = '<span class="unitbtns" title="点击删除该选项"><input type="hidden" name="business_dept[]" value="'+data[i].id+'"><button type="button" class="btn btn-default btn-sm">'+data[i].kind+'</button></span>';
-                    	    $('#pro_kinds_text').append(str);*/
+				    str = '<span class="unitbtns" title="点击删除该选项"><input type="hidden" name="business_dept[]" value="'+data[i].id+'"><button type="button" class="btn btn-default btn-sm">'+data[i].kind+'</button></span>';
+                    	    $('#pro_kinds_text').append(str);
 				}
-				//closebtns();
-                $('#kindlist').show();
-                $('#kindlist').find('#reAddKind').before(str);
+				closebtns();
 			},
 			cancelValue:'取消',
 			cancel: function () {
@@ -239,16 +160,12 @@
 	}
 	
 	
-	/*function closebtns(){
+	function closebtns(){
 	    $('.unitbtns').each(function(index, element) {
               $(this).click(function(){
 		       $(this).remove();
           	  })  
           });	
-	}*/
-
-	function delbox(id) {
-        $('#'+id+'').remove();
-    }
+	}
 
 </script>	
