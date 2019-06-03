@@ -241,7 +241,7 @@ class KpiController extends BaseController {
         $where_1                    = array();
         $where_1['id']              = array('gt',10);
         $where_1['status']          = 0; //在职
-        $where_1['nickname']        = array('not in',array('李岩1','孟华1','魏春竹1','乔峰','孟华华','刘利'));
+        $where_1['nickname']        = array('not in',array('李岩1','孟华1','魏春竹1','乔峰','孟华华','刘利','时羽','叶忆明','李莹'));
         $field                      = 'id as tab_user_id,nickname,roleid';
         $account                    = M('account')->where($where_1)->field($field)->select();
         $pdca_users                 = M('pdca')->where(array('month'=>$month))->getField('tab_user_id',true);

@@ -126,8 +126,7 @@
                                                     <tr id="reAddKind">
                                                         <td><a href="javascript:;" onclick="selectkinds()" class="btn btn-success btn-sm"><i class="fa fa-fw fa-plus"></i>添加项目类型</a></td>
                                                         <!--<td style="font-size:16px; color:#ff3300;">合计: <span id="shareSum">0.00</span></td>-->
-                                                        <td></td>
-                                                        <td></td>
+                                                        <td colspan="9"></td>
                                                     </tr>
 
                                                     </tbody>
