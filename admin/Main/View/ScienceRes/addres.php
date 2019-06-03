@@ -41,7 +41,7 @@
 
                                     <div class="form-group col-md-4">
                                         <label>是否院内</label>
-                                        <select name="" id="" class="form-control">
+                                        <select name="info[in_cas]" class="form-control">
                                             <option value="0">否</option>
                                             <option value="1">是</option>
                                         </select>
