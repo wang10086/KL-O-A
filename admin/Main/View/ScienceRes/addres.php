@@ -98,15 +98,14 @@
                                                     <thead>
                                                     <tr>
                                                         <th width="15%">项目类型</th>
-                                                        <th width="8%">AA</th>
-                                                        <th width="8%">BB</th>
-                                                        <th width="8%">CC</th>
-                                                        <th width="8%">DD</th>
-                                                        <th width="8%">EE</th>
-                                                        <th width="8%">FF</th>
-                                                        <th width="8%">GG</th>
-                                                        <th width="8%">HH</th>
-                                                        <th width="8%">II</th>
+                                                        <th width="10%">适宜人群</th>
+                                                        <th width="10%">活动时长</th>
+                                                        <th width="10%">可实施时间</th>
+                                                        <th width="10%">可接待规模</th>
+                                                        <th width="10%">标准化产品/模块</th>
+                                                        <th width="10%">费用</th>
+                                                        <th width="10%">预约需提前时间</th>
+                                                        <th width="10%">备注</th>
                                                         <th width="80">删除</th>
                                                     </tr>
                                                     </thead>
@@ -215,7 +214,6 @@
                         str += '<tr class="expense" id="kind_'+j+'">' +
                             '<td style="vertical-align:middle">'+aaa+data[i].kind+'</td>' +
                             '<td><input type="hidden" id="ftje_'+j+'"><input type="text" name="share['+j+'][depart_sum]" onblur="javascript:;" placeholder="" value="" class="form-control" /></td>' +
-                            '<td><input type="text" name="share['+j+'][remark]" value="" class="form-control" /></td>' +
                             '<td><input type="text" name="share['+j+'][remark]" value="" class="form-control" /></td>' +
                             '<td><input type="text" name="share['+j+'][remark]" value="" class="form-control" /></td>' +
                             '<td><input type="text" name="share['+j+'][remark]" value="" class="form-control" /></td>' +
