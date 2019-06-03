@@ -15,12 +15,13 @@ class ScienceResController extends BaseController {
     // @@@NODE-3###res###科普资源列表###
     public function res () {
         $this->title('科普资源');
-		
+		$pin          = I('pin',0);
 		$key          = I('key');
 		$type         = I('type');
 		$pro          = I('pro');
 		
 		$where = array();
+        if ($pin == 1){ $where['in_cas'] = 1; }elseif ($pin ==2){ $where['in_cas'] = 0; }
 		$where['1'] = priv_where(P::REQ_TYPE_SCIENCE_RES_V);
 		if($key)      $where['title'] = array('like','%'.$key.'%');
 		if($type)     $where['kind'] = $type;
@@ -39,6 +40,7 @@ class ScienceResController extends BaseController {
                 P::AUDIT_STATUS_NOT_AUDIT   => '待审批',
 				P::AUDIT_STATUS_NOT_PASS    => '未通过',
         );
+        $this->pin      = $pin;
         $this->display('res');
     
     }
@@ -102,8 +104,8 @@ class ScienceResController extends BaseController {
     public function addres(){
         $this->title('新建/修改科普资源');
         
-        $db = M('cas_res');
-        $id = I('id', 0);
+        $db                         = M('cas_res');
+        $id                         = I('id', 0);
 
         if(isset($_POST['dosubmit'])){
         
@@ -134,8 +136,10 @@ class ScienceResController extends BaseController {
             }
             	
         }else{
-            $this->kinds = M('reskind')->where(array('type'=>P::RES_TYPE_SCIENCE))->select();
-            
+            $apply                  = C('APPLY_TO'); //适合人群
+            $this->apply            = $apply;
+            $this->kinds            = M('reskind')->where(array('type'=>P::RES_TYPE_SCIENCE))->select();
+
             if (!$id) {
                 $this->row = false;
             } else {

@@ -28,6 +28,13 @@
                                     </div>
                                 </div><!-- /.box-header -->
                                 <div class="box-body">
+
+                                    <div class="btn-group" id="catfont" style="padding-bottom:5px;">
+                                        <a href="{:U('ScienceRes/res',array('pin'=>0))}" class="btn <?php if(!$pin){ echo "btn-info"; }else{ echo 'btn-default'; } ?>" style="padding:8px 18px;">全部资源</a>
+                                        <a href="{:U('ScienceRes/res',array('pin'=>1))}" class="btn <?php if($pin == 1){ echo "btn-info"; }else{ echo 'btn-default'; } ?>" style="padding:8px 18px;">院内资源</a>
+                                        <a href="{:U('ScienceRes/res',array('pin'=>2))}" class="btn <?php if($pin == 2){ echo "btn-info"; }else{ echo 'btn-default'; } ?>" style="padding:8px 18px;">院外资源</a>
+                                    </div>
+
                                 	<table class="table table-bordered dataTable fontmini" id="tablelist">
                                         <tr role="row" class="orders" >
                                         	<th class="sorting" data="title">资源名称</th>

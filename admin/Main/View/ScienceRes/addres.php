@@ -65,7 +65,7 @@
                                         <input type="text" name="info[address]" id="address"   value="{$row.address}" class="form-control" />
                                     </div>
 
-                                    <?php if (!$row['id'] || $row['id'] && in_array(cookie('userid'),array(11))){ ?>
+                                    <?php if (!$row['id'] || $row['id'] && /*in_array(cookie('userid'),array(11))*/ rolemenu(array('ScienceRes/resContacts'))){ ?>
                                     <!--<div class="form-group col-md-12">
                                         <label style="width:100%; border-bottom:1px solid #dedede; padding-bottom:10px; font-weight:bold;"></label>
                                     </div>-->
@@ -111,21 +111,29 @@
                                                     </thead>
                                                     <tbody>
                                                     <foreach name="supplier" item="v">
-                                                        <tr class="expense" id="share_{$v.sid}">
+                                                        <tr class="expense" id="kind_8888{$v.id}">
                                                             <td style="vertical-align:middle">
-                                                                <input type="hidden" name="share[30000{$v.sid}][item]" value="{$v.kind}">
-                                                                <input type="hidden" name="share[30000{$v.sid}][remark]" value="{$v.share_name}">
-                                                                <input type="hidden" name="share[30000{$v.sid}][cost_type]" value="3">
-                                                                <div class="tdbox"><a href="javascript:;" onClick="javascript:;">{$v.department}</a></div>
+                                                                <input type="hidden" name="data[8888{$v.id}][kind_id]" value="'+data[i].id+'">
+                                                                <input type="hidden" name="data[8888{$v.id}][kind]" value="'+data[i].kind+'">
+                                                                {$row.kind}
                                                             </td>
-                                                            <td>{$v.depart_sum}</td>
-                                                            <td>{$v.remark}</td>
-                                                            <td><a href="javascript:;" class="btn btn-danger btn-flat" onclick="delbox('share_id_{$v.sid}',{$v.sid})">删除</a></td>
-                                                        </tr>
+                                                            <td>
+                                                                <select name="data[8888{$v.id}][apply]" class="form-control">
+                                                                    <foreach name="apply" key='k' item='v'><option value="{$k}">{$v}</option></foreach>
+                                                                </select>
+                                                            </td>
+                                                            <td><input type="text" name="data[8888{$v.id}][time_length]" value="" class="form-control" /></td>
+                                                            <td><input type="text" name="data[8888{$v.id}][use_time]" value="" class="form-control" /></td>
+                                                            <td><input type="text" name="data[8888{$v.id}][scale]" value="" class="form-control" /></td>
+                                                            <td><input type="text" name="data[8888{$v.id}][module]" value="" class="form-control" /></td>
+                                                            <td><input type="text" name="data[8888{$v.id}][money]" value="" class="form-control" /></td>
+                                                            <td><input type="text" name="data[8888{$v.id}][lead_time]" value="" class="form-control" /></td>
+                                                            <td><input type="text" name="data[8888{$v.id}][remark]" value="" class="form-control" /></td>
+                                                            <td><a href="javascript:;" class="btn btn-danger btn-flat" onclick="delbox('kind_'+8888{$v.id})">删除</a></td>
+                                                        </tr>;
                                                     </foreach>
                                                     <tr id="reAddKind">
                                                         <td><a href="javascript:;" onclick="selectkinds()" class="btn btn-success btn-sm"><i class="fa fa-fw fa-plus"></i>添加项目类型</a></td>
-                                                        <!--<td style="font-size:16px; color:#ff3300;">合计: <span id="shareSum">0.00</span></td>-->
                                                         <td colspan="9"></td>
                                                     </tr>
 
@@ -163,34 +171,7 @@
 </div>
             
 <include file="Index:footer2" />
-<script type="text/javascript"> 
-
-	$(document).ready(function() {	
-
-		
-		
-		//closebtns();
-		
-
-	});
-
-    /*
-    * ok: function () {
-     var origin = artDialog.open.origin;
-     var departments = this.iframe.contentWindow.gosubmint();
-     var share_html = '';
-     for (var j = 0; j < departments.length; j++) {
-     if (departments[j].department) {
-     var i = parseInt(Math.random()*100000)+j;
-     var aaa = '<input type="hidden" name="share['+i+'][department]" value="'+departments[j].department+'">';
-     share_html += '<tr class="expense" id="share_'+i+'"><td style="vertical-align:middle">'+aaa+departments[j].department+'</td><td><input type="hidden" id="ftje_'+i+'"><input type="text" name="share['+i+'][depart_sum]" onblur="check_total('+i+',$(`#ftje_'+i+'`).val(),$(this).val())" placeholder="分摊金额" value="0.00" class="form-control" /></td><td><input type="text" name="share['+i+'][remark]" value="" class="form-control" /></td><td><a href="javascript:;" class="btn btn-danger btn-flat" onclick="delbox(\'share_'+i+'\','+i+',$(`#ftje_'+i+'`).val())">删除</a></td></tr>';
-     };
-     }
-     $('#kindlist').show();
-     $('#nonetext').hide();
-     $('#kindlist').find('#shareTotal').before(share_html);
-     },
-    * */
+<script type="text/javascript">
 	
 	//选择适用项目类型
 	function selectkinds() {
@@ -209,23 +190,20 @@
 				for (i=0; i<data.length; i++) {
                     if (data[i].id){
                         var j = parseInt(Math.random()*10000)+i;
-                        var aaa = '<input type="hidden" name="info['+j+'][kind_id]" value="'+data[i].id+'"><input type="hidden" name="info['+j+'][kind]" value="'+data[i].kind+'">';
+                        var aaa = '<input type="hidden" name="data['+j+'][kind_id]" value="'+data[i].id+'"><input type="hidden" name="data['+j+'][kind]" value="'+data[i].kind+'">';
                         str += '<tr class="expense" id="kind_'+j+'">' +
                             '<td style="vertical-align:middle">'+aaa+data[i].kind+'</td>' +
-                            '<td><input type="hidden" id="ftje_'+j+'"><input type="text" name="share['+j+'][depart_sum]" onblur="javascript:;" placeholder="" value="" class="form-control" /></td>' +
-                            '<td><input type="text" name="share['+j+'][remark]" value="" class="form-control" /></td>' +
-                            '<td><input type="text" name="share['+j+'][remark]" value="" class="form-control" /></td>' +
-                            '<td><input type="text" name="share['+j+'][remark]" value="" class="form-control" /></td>' +
-                            '<td><input type="text" name="share['+j+'][remark]" value="" class="form-control" /></td>' +
-                            '<td><input type="text" name="share['+j+'][remark]" value="" class="form-control" /></td>' +
-                            '<td><input type="text" name="share['+j+'][remark]" value="" class="form-control" /></td>' +
-                            '<td><input type="text" name="share['+j+'][remark]" value="" class="form-control" /></td>' +
+                            '<td><select name="data['+j+'][apply]" class="form-control"><foreach name="apply" key='k' item='v'><option value="{$k}">{$v}</option></foreach></select></td>' +
+                            '<td><input type="text" name="data['+j+'][time_length]" value="" class="form-control" /></td>' +
+                            '<td><input type="text" name="data['+j+'][use_time]" value="" class="form-control" /></td>' +
+                            '<td><input type="text" name="data['+j+'][scale]" value="" class="form-control" /></td>' +
+                            '<td><input type="text" name="data['+j+'][module]" value="" class="form-control" /></td>' +
+                            '<td><input type="text" name="data['+j+'][money]" value="" class="form-control" /></td>' +
+                            '<td><input type="text" name="data['+j+'][lead_time]" value="" class="form-control" /></td>' +
+                            '<td><input type="text" name="data['+j+'][remark]" value="" class="form-control" /></td>' +
                             '<td><a href="javascript:;" class="btn btn-danger btn-flat" onclick="delbox(\'kind_'+j+'\')">删除</a></td></tr>';
                     }
-				    /*str = '<span class="unitbtns" title="点击删除该选项"><input type="hidden" name="business_dept[]" value="'+data[i].id+'"><button type="button" class="btn btn-default btn-sm">'+data[i].kind+'</button></span>';
-                    	    $('#pro_kinds_text').append(str);*/
 				}
-				//closebtns();
                 $('#kindlist').show();
                 $('#kindlist').find('#reAddKind').before(str);
 			},
