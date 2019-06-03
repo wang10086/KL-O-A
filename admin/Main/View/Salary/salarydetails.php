@@ -186,7 +186,7 @@
                                         <div class="form-group col-md-4 viwe">
                                             <p>业绩提成(季度)：<?PHP echo sprintf("%.2f",$info['kpi']['total']);?> (元)</p>
                                         </div><br/><br/><br/>
-                                        <h5 style="color:#000000;">&nbsp;&nbsp;&nbsp;&nbsp;其他人员提成（计调、研发、资源）：<?PHP echo sprintf("%.2f",$bonus_list['bonus']);?>（元）</h5><br/>
+                                        <h5 style="color:#000000;">&nbsp;&nbsp;&nbsp;&nbsp;其他人员提成（计调、研发、资源提成或手动录入带团补助）：<?PHP echo sprintf("%.2f",$bonus_list['bonus']);?>（元）</h5><br/>
                                         <div class="form-group col-md-4 viwe">
                                             <p>带团补助（课时费）：<?PHP echo sprintf("%.2f",$wages_list['Subsidy']);?></p>
                                         </div>
