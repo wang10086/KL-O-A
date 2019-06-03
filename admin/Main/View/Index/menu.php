@@ -100,6 +100,19 @@
                                 <i class="fa fa-angle-left pull-right"></i>
                             </a>
                             <ul class="treeview-menu">
+                                <li class="treeview {:on('Product/standard_product')} {:on('Product/standard_module')}">
+                                    <if condition="rolemenu(array('Product/standard_product','Product/standard_module'))">
+                                        <a href=""><i class="fa  fa-indent"></i> 标准化管理</a>
+                                    </if>
+                                    <ul class="treeview-menu">
+                                        <if condition="rolemenu(array('Product/standard_product'))">
+                                            <li class="{:on('Product/standard_product')}"><a href="{:U('Product/standard_product')}"><i class="fa fa-angle-right"></i> 标准化产品</a></li>
+                                        </if>
+                                        <if condition="rolemenu(array('Product/standard_module'))">
+                                            <li class="{:on('Product/standard_module')}"><a href="{:U('Product/standard_module')}"><i class="fa fa-angle-right"></i> 标准化模块</a></li>
+                                        </if>
+                                    </ul>
+                                </li>
 
                                 <if condition="rolemenu(array('Product/tpl'))">
                                     <li class="{:on('Product/tpl')} {:on('Product/addtpl')}"><a href="{:U('Product/tpl')}"><i class="fa fa-angle-right"></i> 产品模板管理</a></li>

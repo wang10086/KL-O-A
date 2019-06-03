@@ -42,8 +42,8 @@
                                     <div class="form-group col-md-4">
                                         <label>是否院内</label>
                                         <select name="info[in_cas]" class="form-control">
-                                            <option value="0">否</option>
-                                            <option value="1">是</option>
+                                            <option value="0" <?php if ($row['in_cas'] ==0) echo 'selected'; ?>>否</option>
+                                            <option value="1" <?php if ($row['in_cas'] ==1) echo 'selected'; ?>>是</option>
                                         </select>
                                     </div>
 
@@ -51,7 +51,7 @@
                                         <label>资源类型</label>
                                         <select  class="form-control"  name="info[kind]" required>
                                         <foreach name="kinds" item="v">
-                                            <option value="{$v.id}" <?php if ($row && ($v['id'] == $row['kind'])) echo ' selected'; ?> >{$v.name}</option>
+                                            <option value="{$v.id}" <?php if ($row && ($v['id'] == $row['kind'])) echo 'selected'; ?> >{$v.name}</option>
                                         </foreach>
                                         </select>
                                     </div>

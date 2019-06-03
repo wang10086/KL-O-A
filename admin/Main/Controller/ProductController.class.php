@@ -1162,6 +1162,21 @@ class ProductController extends BaseController {
         );
         $this->display('res_supplier');
 	}
-	
+
+	//标准化产品
+    public function standard_product(){
+
+        $this->pageTitle                = '标准化管理';
+        $this->title('标准化产品');
+        $this->display();
+    }
+
+    //标准化模块
+    public function standard_module(){
+
+        $this->pageTitle                = '标准化管理';
+        $this->title('标准化模块');
+        $this->display();
+    }
     
 }
