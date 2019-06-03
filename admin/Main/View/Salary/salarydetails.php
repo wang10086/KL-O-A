@@ -202,6 +202,10 @@
                                         <div class="form-group col-md-4 viwe">
                                             <p>年终奖：<?PHP echo sprintf("%.2f",$bonus_list['annual_bonus']);?> </p>
                                         </div>
+
+                                        <div class="form-group col-md-4 viwe">
+                                            <p>季度奖金包：<?PHP echo sprintf("%.2f",$bonus_list['foreign_bonus']);?> </p>
+                                        </div>
                                     </div>
                                     <div class="content" style="margin-left: -25px">
                                         <div class="box-header" >
