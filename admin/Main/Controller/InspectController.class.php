@@ -254,7 +254,7 @@ class InspectController extends BaseController{
         $num_unsure             = array(54,55,66); //研学旅行;科学考察;少科院线路
         $num                    = M()->table('__TCS_SCORE__ as s')->join('__TCS_SCORE_USER__ as u on u.id=s.uid','left')->where(array('u.op_id'=>$opid))->count();
         $create_op_day          = substr($opid,0,8);
-        if ($create_op_day <= '20190515'){
+        if ($create_op_day <= '20190625'){
             if ($num >0){ //不低于1人
                 $stu            = "<span class='green'>已评分</span>";
             }else{
