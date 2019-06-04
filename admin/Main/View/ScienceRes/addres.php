@@ -93,7 +93,7 @@
                                         <!--<foreach name="deptlist" item="v">
                                              <span class="unitbtns" title="点击删除该选项"><input type="hidden" name="business_dept[]" value="{$v.id}"><button type="button" class="btn btn-default btn-sm">{$v.name}</button></span>
                                         </foreach>-->
-                                            <div class="content" id="kindlist" style="display:block; display: none">
+                                            <div class="content" id="kindlist" style="display: none">
                                                 <table class="table table-striped">
                                                     <thead>
                                                     <tr>
@@ -110,27 +110,44 @@
                                                     </tr>
                                                     </thead>
                                                     <tbody>
-                                                    <foreach name="supplier" item="v">
+                                                    <foreach name="kindlist" item="v">
                                                         <tr class="expense" id="kind_8888{$v.id}">
                                                             <td style="vertical-align:middle">
-                                                                <input type="hidden" name="data[8888{$v.id}][kind_id]" value="'+data[i].id+'">
-                                                                <input type="hidden" name="data[8888{$v.id}][kind]" value="'+data[i].kind+'">
-                                                                {$row.kind}
+                                                                <input type="hidden" name="data[8888{$v.id}][id]" value="{$v.id}">
+                                                                <input type="hidden" name="data[8888{$v.id}][kind_id]" value="{$v.kind_id}">
+                                                                <input type="hidden" name="data[8888{$v.id}][kind]" value="{$v.kind}">
+                                                                {$v.kind}
                                                             </td>
                                                             <td>
                                                                 <select name="data[8888{$v.id}][apply]" class="form-control">
-                                                                    <foreach name="apply" key='k' item='v'><option value="{$k}">{$v}</option></foreach>
+                                                                    <foreach name="apply" key='key' item='value'><option value="{$key}" <?php if ($key == $v['apply']) echo "selected"; ?>>{$value}</option></foreach>
                                                                 </select>
                                                             </td>
-                                                            <td><input type="text" name="data[8888{$v.id}][time_length]" value="" class="form-control" /></td>
-                                                            <td><input type="text" name="data[8888{$v.id}][use_time]" value="" class="form-control" /></td>
-                                                            <td><input type="text" name="data[8888{$v.id}][scale]" value="" class="form-control" /></td>
-                                                            <td><input type="text" name="data[8888{$v.id}][module]" value="" class="form-control" /></td>
-                                                            <td><input type="text" name="data[8888{$v.id}][money]" value="" class="form-control" /></td>
-                                                            <td><input type="text" name="data[8888{$v.id}][lead_time]" value="" class="form-control" /></td>
-                                                            <td><input type="text" name="data[8888{$v.id}][remark]" value="" class="form-control" /></td>
+                                                            <td>
+                                                                <select name="data[8888{$v.id}][time_length]]" class="form-control">
+                                                                    <foreach name="time_length" item="vv"><option value="{$vv}" <?php if ($vv == $v['time_length']) echo 'selected'; ?>>{$vv}</option></foreach>
+                                                                </select>
+                                                            </td>
+                                                            <td>
+                                                                <select name="data[8888{$v.id}][use_time]" class="form-control">
+                                                                    <foreach name="use_time" item="value"><option value="{$value}" <?php if($value == $v['use_time']) echo "selected"; ?>>{$value}</option></foreach>
+                                                                </select>
+                                                            </td>
+                                                            <td>
+                                                                <select name="data[8888{$v.id}][scale]" class="form-control">
+                                                                    <foreach name="scale" item="value"><option value="{$value}" <?php if($value == $v['scale']) echo "selected"; ?>>{$value}</option></foreach>
+                                                                </select>
+                                                            </td>
+                                                            <td><input type="text" name="data[8888{$v.id}][module]" value="{$v.module}" class="form-control" /></td>
+                                                            <td><input type="text" name="data[8888{$v.id}][money]" value="{$v.money}" class="form-control" /></td>
+                                                            <td>
+                                                                <select name="data[8888{$v.id}][lead_time]" class="form-control">
+                                                                    <foreach name="lead_time" item="value"><option value="{$value}" <?php if($value == $v['lead_time']) echo "selected"; ?>>{$value}</option></foreach>
+                                                                </select>
+                                                            </td>
+                                                            <td><input type="text" name="data[8888{$v.id}][remark]" value="{$v.remark}" class="form-control" /></td>
                                                             <td><a href="javascript:;" class="btn btn-danger btn-flat" onclick="delbox('kind_'+8888{$v.id})">删除</a></td>
-                                                        </tr>;
+                                                        </tr>
                                                     </foreach>
                                                     <tr id="reAddKind">
                                                         <td><a href="javascript:;" onclick="selectkinds()" class="btn btn-success btn-sm"><i class="fa fa-fw fa-plus"></i>添加项目类型</a></td>
@@ -172,6 +189,12 @@
             
 <include file="Index:footer2" />
 <script type="text/javascript">
+    $(function () {
+        var id = {$row['id']?$row['id']:0};
+        if (id){
+            $('#kindlist').css('display','block');
+        }
+    })
 	
 	//选择适用项目类型
 	function selectkinds() {
@@ -194,12 +217,12 @@
                         str += '<tr class="expense" id="kind_'+j+'">' +
                             '<td style="vertical-align:middle">'+aaa+data[i].kind+'</td>' +
                             '<td><select name="data['+j+'][apply]" class="form-control"><foreach name="apply" key='k' item='v'><option value="{$k}">{$v}</option></foreach></select></td>' +
-                            '<td><input type="text" name="data['+j+'][time_length]" value="" class="form-control" /></td>' +
-                            '<td><input type="text" name="data['+j+'][use_time]" value="" class="form-control" /></td>' +
-                            '<td><input type="text" name="data['+j+'][scale]" value="" class="form-control" /></td>' +
+                            '<td><select name="data['+j+'][time_length]]" class="form-control"><foreach name="time_length" item="vv"><option value="{$vv}">{$vv}</option></foreach></select></td>'+
+                            '<td><select name="data['+j+'][use_time]]" class="form-control"><foreach name="use_time" item="vv"><option value="{$vv}">{$vv}</option></foreach></select></td>'+
+                            '<td><select name="data['+j+'][scale]]" class="form-control"><foreach name="scale" item="vv"><option value="{$vv}">{$vv}</option></foreach></select></td>'+
                             '<td><input type="text" name="data['+j+'][module]" value="" class="form-control" /></td>' +
                             '<td><input type="text" name="data['+j+'][money]" value="" class="form-control" /></td>' +
-                            '<td><input type="text" name="data['+j+'][lead_time]" value="" class="form-control" /></td>' +
+                            '<td><select name="data['+j+'][lead_time]]" class="form-control"><foreach name="lead_time" item="vv"><option value="{$vv}">{$vv}</option></foreach></select></td>'+
                             '<td><input type="text" name="data['+j+'][remark]" value="" class="form-control" /></td>' +
                             '<td><a href="javascript:;" class="btn btn-danger btn-flat" onclick="delbox(\'kind_'+j+'\')">删除</a></td></tr>';
                     }

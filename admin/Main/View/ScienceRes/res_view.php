@@ -21,7 +21,7 @@
                          <!-- right column -->
                         <div class="col-md-12">
                             <!-- general form elements disabled -->
-                            <div class="box">
+                            <div class="box box-success">
                                 <div class="box-header">
                                     <h3 class="box-title">资源属性</h3>
                                 </div><!-- /.box-header -->
@@ -45,6 +45,8 @@
                                         <div class="form-group col-md-4 viwe">
                                             <p>资源地址：{$row.address}</p>
                                         </div>
+
+                                        <?php if (rolemenu(array('ScienceRes/resContacts'))){ ?>
                                         <div class="form-group col-md-4">
                                             <p>联系人：{$row.contacts}</p>
                                         </div>
@@ -54,8 +56,8 @@
                                         <div class="form-group col-md-4 viwe">
                                             <p>联系电话：{$row.tel}</p>
                                         </div>
-										
-                                        
+                                        <?php } ?>
+
                                         <div class="form-group col-md-4 viwe">
                                             <p>审批状态：{$row.showstatus}</p>
                                         </div>
@@ -65,6 +67,11 @@
                                         <div class="form-group col-md-4 viwe">
                                             <p>审批时间：{$row.show_time}</p>
                                         </div>
+
+                                        <!--<div class="form-group col-md-12">
+                                            <label style="width:100%; border-bottom:1px solid #dedede; padding-bottom:10px; font-weight:bold;">适用项目信息</label>
+                                        </div>-->
+
                                         <!--
                                         <div class="form-group col-md-4 viwe">
                                             <p>销售价格：<span class="red">&yen; {$row.sales_price}</span></p>
@@ -79,9 +86,60 @@
                                     
                                 </div><!-- /.box-body -->
                             </div><!-- /.box -->
+
+                            <div class="box box-success">
+                                <div class="box-header">
+                                    <h3 class="box-title">适用项目信息</h3>
+                                </div><!-- /.box-header -->
+                                <div class="box-body">
+                                    <div class="content">
+                                        <div style="width:100%; margin-top: -10px;">
+                                            <table class="table table-striped">
+                                                <thead>
+                                                <tr>
+                                                    <th width="10%">项目类型</th>
+                                                    <th width="10%">适宜人群</th>
+                                                    <th width="10%">活动时长</th>
+                                                    <th width="10%">可实施时间</th>
+                                                    <th width="10%">可接待规模</th>
+                                                    <th width="10%">标准化产品/模块</th>
+                                                    <th width="10%">费用</th>
+                                                    <th width="10%">预约需提前时间</th>
+                                                    <th width="10%">备注</th>
+                                                </tr>
+                                                </thead>
+
+                                                <style>
+
+                                                </style>
+
+                                                <tbody>
+                                                <foreach name="cas_res_kind" item="v">
+                                                    <tr class="expense">
+                                                        <td style="vertical-align:middle">{$v.kind}</td>
+                                                        <td>{$apply[$v['apply']]}</td>
+                                                        <td>{$v.time_length}</td>
+                                                        <td>{$v.use_time}</td>
+                                                        <td>{$v.scale}</td>
+                                                        <td>{$v.module}</td>
+                                                        <td>{$v.money}</td>
+                                                        <td>{$v.lead_time}</td>
+                                                        <td>{$v.remark}</td>
+                                                    </tr>
+                                                </foreach>
+                                                </tbody>
+                                                <tfoot>
+
+                                                </tfoot>
+                                            </table>
+                                        </div>
+                                    </div>
+
+                                </div><!-- /.box-body -->
+                            </div><!-- /.box -->
                             
                             
-                            <div class="box">
+                            <div class="box box-success">
                                 <div class="box-header">
                                     <h3 class="box-title">资源介绍</h3>
                                 </div><!-- /.box-header -->
