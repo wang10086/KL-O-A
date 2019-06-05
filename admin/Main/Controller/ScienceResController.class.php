@@ -301,25 +301,33 @@ class ScienceResController extends BaseController {
 
     public function public_kpi_res () {
         $this->title('科普资源');
-        $ids                    = explode(',',I('ids'));
+        $target                         = I('target',0);
+        $ids                            = explode(',',I('ids'));
 
-        $where                  = array();
-        //$where['1']           = priv_where(P::REQ_TYPE_SCIENCE_RES_V);
-        $where['id']            = array('in',$ids);
+        $where                          = array();
+        //$where['1']                   = priv_where(P::REQ_TYPE_SCIENCE_RES_V);
+        $where['id']                    = array('in',$ids);
 
         //分页
-        $pagecount = M('cas_res')->where($where)->count();
-        $page = new Page($pagecount, P::PAGE_SIZE);
-        $this->pages = $pagecount>P::PAGE_SIZE ? $page->show():'';
+        $pagecount                      = M('cas_res')->where($where)->count();
+        $page                           = new Page($pagecount, P::PAGE_SIZE);
+        $this->pages                    = $pagecount>P::PAGE_SIZE ? $page->show():'';
 
-        $this->reskind = M('reskind')->getField('id,name', true);
-        $this->kinds = M('project_kind')->getField('id,name');
-        $this->lists = M('cas_res')->where($where)->limit($page->firstRow . ',' . $page->listRows)->order($this->orders('input_time'))->select();
-        $this->status = array(
+        $this->reskind                  = M('reskind')->getField('id,name', true);
+        $this->kinds                    = M('project_kind')->getField('id,name');
+        $this->lists                    = M('cas_res')->where($where)->limit($page->firstRow . ',' . $page->listRows)->order($this->orders('input_time'))->select();
+        $this->status                   = array(
             P::AUDIT_STATUS_PASS        => '已通过',
             P::AUDIT_STATUS_NOT_AUDIT   => '待审批',
             P::AUDIT_STATUS_NOT_PASS    => '未通过',
         );
+        $num                            = count($this->lists);
+        $average                        = (round($num/$target,4)*100).'%';
+        $data                           = array();
+        $data['target']                 = $target;
+        $data['num']                    = $num;
+        $data['average']                = $average;
+        $this->data                     = $data;
         $this->display('kpi_res');
 
     }

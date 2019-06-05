@@ -2607,7 +2607,6 @@ function get_yw_department(){
 
         $data                           = array();
         $data['num']                    = count($list);
-        //$data['list']                   = $list;
         $data['res_ids']                = $res_ids;
         return $data;
     }

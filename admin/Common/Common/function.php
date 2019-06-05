@@ -3215,7 +3215,7 @@ function updatekpi($month,$user){
                             $num                    = $res_data['num']; //完成数量
                             $res_ids                = $res_data['res_ids'];
                             $complete               = $num;
-                            $url                    = U('ScienceRes/public_kpi_res',array('ids'=>implode(',',$res_ids)));
+                            $url                    = U('ScienceRes/public_kpi_res',array('ids'=>implode(',',$res_ids),'target'=>$v['target']));
                         }
 
                         //院内资源满意度 - 资源管理部经理

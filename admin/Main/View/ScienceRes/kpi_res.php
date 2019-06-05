@@ -54,8 +54,12 @@
                                             echo $show;
                                             ?>
                                         </tr>
-                                        </foreach>		
-                                        
+                                        </foreach>
+                                        <tr class="black">
+                                            <td colspan="2">目标：{$data.target}</td>
+                                            <td colspan="2">完成：{$data.num}</td>
+                                            <td>完成率：{$data.average}</td>
+                                        </tr>
                                     </table>
                                 
                                 </div><!-- /.box-body -->
