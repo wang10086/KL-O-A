@@ -1772,6 +1772,7 @@ class AjaxController extends Controller {
         $cycle                              = I('cycle');
         $year                               = I('year');
         $month                              = I('month');
+        if (strlen($month) <2) $month       = str_pad($month,2,'0',STR_PAD_LEFT);
         $kpi_month                          = $this->kpi_info($year,$month,$cycle);
         $this->ajaxReturn($kpi_month);
     }

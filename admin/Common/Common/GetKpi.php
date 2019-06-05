@@ -2589,3 +2589,25 @@ function get_yw_department(){
         }
         return $qrcode_url;
     }
+
+    //获取当前考核周期'院内接待资源方开发
+    function get_cas_res($start_time,$end_time){
+        $db                             = M('cas_res');
+        /*$where                          = array();
+        $where['input_time']            = array('between',array($start_time,$end_time));
+        $where['audit_status']          = 1; //审核通过
+        $list                           = $db ->where($where)->select();*/
+
+        $where                          = array();
+        $where['req_type']              = 200; //P::REQ_TYPE_SCIENCE_RES_NEW
+        $where['audit_time']            = array('between',array($start_time,$end_time));
+        $where['dst_status']            = 1;
+        $list                           = M('audit_log')->where($where)->select();
+        $res_ids                        = array_column($list,'req_id');
+
+        $data                           = array();
+        $data['num']                    = count($list);
+        //$data['list']                   = $list;
+        $data['res_ids']                = $res_ids;
+        return $data;
+    }
