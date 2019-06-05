@@ -315,13 +315,14 @@ class ScienceResController extends BaseController {
 
         $this->reskind                  = M('reskind')->getField('id,name', true);
         $this->kinds                    = M('project_kind')->getField('id,name');
-        $this->lists                    = M('cas_res')->where($where)->limit($page->firstRow . ',' . $page->listRows)->order($this->orders('input_time'))->select();
+        $lists                          = M('cas_res')->where($where)->limit($page->firstRow . ',' . $page->listRows)->order($this->orders('input_time'))->select();
+        $this->lists                    = $lists;
         $this->status                   = array(
             P::AUDIT_STATUS_PASS        => '已通过',
             P::AUDIT_STATUS_NOT_AUDIT   => '待审批',
             P::AUDIT_STATUS_NOT_PASS    => '未通过',
         );
-        $num                            = count($this->lists);
+        $num                            = count($lists);
         $average                        = (round($num/$target,4)*100).'%';
         $data                           = array();
         $data['target']                 = $target;
