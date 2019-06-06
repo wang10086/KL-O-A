@@ -56,9 +56,11 @@
 
                                         <div class="form-group col-md-4">
                                             <label>适用人群</label>
-                                            <foreach name="kindssss" key="k" item="v">
-                                                <span class="lm_c"><input type="checkbox" name="kind[]" <?php if(in_array($v['id'],$pkind)){ echo 'checked';} ?>  value="{$v.id}"> {$v.name}</span>
-                                            </foreach>
+                                            <select name="apply" class="form-control">
+                                                <foreach name="apply" key="k" item="v">
+                                                    <option value="{$k}" <?php if ($k == $row['apply']) echo 'selected'; ?>>{$v}</option>
+                                                </foreach>
+                                            </select>
                                         </div>
 
                                         <div class="form-group col-md-12">

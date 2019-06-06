@@ -1168,7 +1168,7 @@ class ProductController extends BaseController {
         $this->pageTitle                = '标准化管理';
         $month                          = date('m');
         $pin                            = I('pin');
-        $year                           = I('year',date('Y'));
+        $year                           = I('year',date('Y')+1);
         $pin                            = $pin?$pin:get_standard_pin($month);
         $ltit                           = get_little_title($year);
 
@@ -1191,9 +1191,10 @@ class ProductController extends BaseController {
     public function add_standard_product(){
         $this->pageTitle                = '标准化管理';
         $pin                            = I('pin');
-        $year                           = date('Y');
+        $year                           = date('Y')+1;
         $apply_times                    = get_little_title($year);
 
+        $this->apply                    = C('APPLY_TO');
         $this->kinds                    = get_project_kinds();
         $this->apply_times              = $apply_times;
         $this->pin                      = $pin;
