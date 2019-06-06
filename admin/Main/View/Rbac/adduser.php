@@ -71,10 +71,10 @@
                                         <input class="form-control"  type="text" name="info[mobile]"  value="{$row.mobile}"/>
                                     </div>
                                    
-                                    <!--<div class="form-group col-md-3">
+                                    <div class="form-group col-md-3">
                                         <label>邮箱</label>
                                         <input class="form-control"  type="text"  name="info[email]" value="{$row.email}"/>
-                                    </div>-->
+                                    </div>
                                     
                                     <div class="form-group col-md-3">
                                         <label>角色</label>
