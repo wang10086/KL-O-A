@@ -99,32 +99,32 @@ class OpController extends BaseController {
     
     // @@@NODE-3###plans###制定出团计划###
     public function plans(){
-		$PinYin = new Pinyin();
+		$PinYin                         = new Pinyin();
 		
 		if(isset($_POST['dosubmint']) && $_POST['dosubmint']){
+            $db                         = M('op');
+            $op_cost_db                 = M('op_cost');
+            $op_guide_db                = M('op_guide');
+            $op_member_db               = M('op_member');
+            $op_supplier_db             = M('op_supplier');
 
-			$db             = M('op');
-			$op_cost_db     = M('op_cost');
-			$op_guide_db    = M('op_guide');
-			$op_member_db   = M('op_member');
-			$op_supplier_db = M('op_supplier');
-
-			$info       = I('info');
-            $guide      = I('guide');
-            $member     = I('member');
-            $cost       = I('cost');
-            $supplier   = I('supplier');
-            $wuzi       = I('wuzi');
-            $province   = I('province');
-            $addr       = I('addr');
-            $info['op_create_user'] = cookie('rolename');
+            $info                       = I('info');
+            $expert                     = I('expert');
+            $guide                      = I('guide');
+            $member                     = I('member');
+            $cost                       = I('cost');
+            $supplier                   = I('supplier');
+            $wuzi                       = I('wuzi');
+            $province                   = I('province');
+            $addr                       = I('addr');
+            $info['op_create_user']     = cookie('rolename');
             if ($info['in_dijie'] == 1) {
-                $info['project'] = '【发起团】'.$info['project'];
+                $info['project']        = '【发起团】'.$info['project'];
             }
 
-            $exe_user_id    = I('exe_user_id');
-            //$exe_user_name  = I('exe_user_name');
-            //$exe_role_ids = I('exe');
+            $exe_user_id                = I('exe_user_id');
+            //$exe_user_name            = I('exe_user_name');
+            //$exe_role_ids             = I('exe');
 
             if(!$info['customer']){
 				$this->error('客户单位不能为空' . $db->getError());	
@@ -133,35 +133,35 @@ class OpController extends BaseController {
 
 			if($info){
 				
-				$opid = opid();
-
-				$info['create_time'] = time();
-                $info['op_id']       = $opid;
-                $info['speed']       = 1;
+				$opid                   = opid();
+                $info['expert']         = implode(',',$expert);
+				$info['create_time']    = time();
+                $info['op_id']          = $opid;
+                $info['speed']          = 1;
                 $info['op_create_date'] = date('Y-m-d',time());
-                $info['destination'] = $province.'--'.$addr;
-				$info['create_user'] = cookie('userid');
+                $info['destination']    = $province.'--'.$addr;
+				$info['create_user']    = cookie('userid');
 				$info['create_user_name'] = cookie('name');
-                $info['audit_status'] = 1; //项目不用审核,默认通过
-				$addok  = $db->add($info);
+                $info['audit_status']   = 1; //项目不用审核,默认通过
+				$addok                  = $db->add($info);
 				//$this->request_audit(P::REQ_TYPE_PROJECT_NEW, $addok);
 
 				if($addok){
-                    $data = array();
-                    $data['hesuan'] = cookie('userid');
-                    $auth = M('op_auth')->where(array('op_id'=>$opid))->find();
+                    $data               = array();
+                    $data['hesuan']     = cookie('userid');
+                    $auth               = M('op_auth')->where(array('op_id'=>$opid))->find();
 
                     if($auth){
                         M('op_auth')->data($data)->where(array('id'=>$auth['id']))->save();
                     }else{
-                        $data['op_id'] = $opid;
+                        $data['op_id']  = $opid;
                         M('op_auth')->add($data);
                     }
 
-					$record = array();
-					$record['op_id']   = $opid;
-					$record['optype']  = 1;
-					$record['explain'] = '项目立项';
+					$record             = array();
+					$record['op_id']    = $opid;
+					$record['optype']   = 1;
+					$record['explain']  = '项目立项';
 					op_record($record);
 					
 					/*
@@ -403,24 +403,24 @@ class OpController extends BaseController {
 		if(!$op){
 			$this->error('项目不存在');	
 		}
-		
-		$pro        = M('product')->find($op['product_id']);
-		$guide      = M()->table('__GUIDE_PAY__ as p')->field('g.*,p.guide_id,p.op_id,p.num,p.price,p.total,p.really_cost,p.remark,k.name as kind')->join('left join __GUIDE__ as g on p.guide_id=g.id')->join('left join __GUIDEKIND__ as k on g.kind=k.id')->where(array('p.op_id'=>$opid))->select();
+
+        $pro        = M('product')->find($op['product_id']);
+        $guide      = M()->table('__GUIDE_PAY__ as p')->field('g.*,p.guide_id,p.op_id,p.num,p.price,p.total,p.really_cost,p.remark,k.name as kind')->join('left join __GUIDE__ as g on p.guide_id=g.id')->join('left join __GUIDEKIND__ as k on g.kind=k.id')->where(array('p.op_id'=>$opid))->select();
         $guide_old  = M('op_cost')->field('remark as name, cost as price, amount as num,total as really_cost')->where(array('op_id'=>$opid,'cost_type'=>2))->select();
         $supplier   = M()->table('__OP_SUPPLIER__ as s')->field('s.id as sid,s.op_id,s.supplier_id,s.supplier_name,s.city,s.kind,s.remark as sremark,c.*')->join('__OP_COST__ as c on c.link_id=s.id')->where(array('s.op_id'=>$opid,'c.op_id'=>$opid,'c.cost_type'=>3))->order('sid')->select();
-		$member     = M('op_member')->where(array('op_id'=>$opid))->order('id')->select();
-		$costlist   = M('op_cost')->where(array('op_id'=>$opid))->order('cost_type')->select();
-		$shouru     = $op['sale_cost']*$op['number'];
-		$chengben   = M('op_cost')->where(array('op_id'=>$opid))->sum('total');
-		$wuzi       = M()->table('__OP_MATERIAL__ as m')->field('c.*,m.*')->join('__OP_COST__ as c on m.id=c.link_id')->where(array('m.op_id'=>$opid,'c.op_id'=>$opid,'c.cost_type'=>4))->order('m.id')->select();
-		$pretium    = M('op_pretium')->where(array('op_id'=>$opid))->order('id')->select();
-		$costacc    = M('op_costacc')->where(array('op_id'=>$opid))->order('id')->select();
-		$yusuan     = M('op_costacc')->where(array('op_id'=>$opid,'status'=>1))->order('id')->select();
+        $member     = M('op_member')->where(array('op_id'=>$opid))->order('id')->select();
+        $costlist   = M('op_cost')->where(array('op_id'=>$opid))->order('cost_type')->select();
+        $shouru     = $op['sale_cost']*$op['number'];
+        $chengben   = M('op_cost')->where(array('op_id'=>$opid))->sum('total');
+        $wuzi       = M()->table('__OP_MATERIAL__ as m')->field('c.*,m.*')->join('__OP_COST__ as c on m.id=c.link_id')->where(array('m.op_id'=>$opid,'c.op_id'=>$opid,'c.cost_type'=>4))->order('m.id')->select();
+        $pretium    = M('op_pretium')->where(array('op_id'=>$opid))->order('id')->select();
+        $costacc    = M('op_costacc')->where(array('op_id'=>$opid))->order('id')->select();
+        $yusuan     = M('op_costacc')->where(array('op_id'=>$opid,'status'=>1))->order('id')->select();
 
-		$opauth     = M('op_auth')->where(array('op_id'=>$opid))->find();
-		$record     = M('op_record')->where(array('op_id'=>$opid))->order('id DESC')->select();
-		$budget     = M('op_budget')->where(array('op_id'=>$opid))->find();
-		$settlement = M('op_settlement')->where(array('op_id'=>$opid))->find();
+        $opauth     = M('op_auth')->where(array('op_id'=>$opid))->find();
+        $record     = M('op_record')->where(array('op_id'=>$opid))->order('id DESC')->select();
+        $budget     = M('op_budget')->where(array('op_id'=>$opid))->find();
+        $settlement = M('op_settlement')->where(array('op_id'=>$opid))->find();
 
         //根据line_id判断是普通线路还是固定线路
         $line_id    = $op['line_id'];
@@ -558,8 +558,9 @@ class OpController extends BaseController {
         $this->dijie_names    = C('DIJIE_NAME');
         $this->change         = M('op')->where(array('dijie_opid'=>$opid))->find();
         $this->expert         = C('expert');
+        $this->op_expert      = explode(',',$op['expert']);
 
-         $product_need         = M()->table('__OP_COSTACC__ as c')->field('c.*,p.from,p.subject_field,p.type as ptype,p.age,p.reckon_mode')->join('left join __PRODUCT__ as p on c.product_id=p.id')->where(array('c.op_id'=>$opid,'c.type'=>5,'c.status'=>0))->select();
+        $product_need         = M()->table('__OP_COSTACC__ as c')->field('c.*,p.from,p.subject_field,p.type as ptype,p.age,p.reckon_mode')->join('left join __PRODUCT__ as p on c.product_id=p.id')->where(array('c.op_id'=>$opid,'c.type'=>5,'c.status'=>0))->select();
          foreach ($product_need as $k=>$v){
              $ages             = explode(',',$v['age']);
              $age_list         = array();
@@ -858,7 +859,6 @@ class OpController extends BaseController {
 			
 			//修改项目基本信息
 			if($opid && $savetype==10 ){
-
 				$op = M('op')->where(array('op_id'=>$opid))->find();
 				if($op['status']=='0' || cookie('userid')==$op['create_user'] || cookie('roleid')==10 || C('RBAC_SUPER_ADMIN')==cookie('username')) {
                     if (in_array($op['in_dijie'],array(0,2)) && $info['in_dijie']==1){
@@ -868,6 +868,8 @@ class OpController extends BaseController {
                         $info['dijie_name'] = '';
                         $info['dijie_opid'] = '';
                     }
+                    $expert                 = I('expert');
+                    $info['expert']         = $expert?implode(',',$expert):0;
 
                     //保存成团
                     $issave = M('op')->data($info)->where(array('op_id' => $opid))->save();

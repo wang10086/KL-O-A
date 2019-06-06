@@ -893,21 +893,34 @@ function get_gross_profit($userid,$beginTime,$endTime){
     //协助销售毛利*0.4
     $where                  = array();
     $where['o.create_user'] = array('neq',$userid);
-    $where['o.expert']      = $userid;
+    //$where['o.expert']      = $userid;
+    $where['o.expert']      = array('neq',0);
     $where['l.req_type']    = 801;
     $where['l.audit_time']  = array('between',array($beginTime,$endTime));
     $where['s.audit_status']= 1;
     $field                  = array();
-    $field[]                = 'sum(s.maoli) as otherSumGrossProfit';
-    $settlement_other       = M()->table('__OP__ as o')
+    $field[]                = 'o.group_id,o.op_id,o.project,o.expert,s.maoli';
+    //$field[]                = 'sum(s.maoli) as otherSumGrossProfit';
+    $settlement_other_lists = M()->table('__OP__ as o')
         ->join('__OP_SETTLEMENT__ as s on s.op_id=o.op_id','left')
         ->join('__AUDIT_LOG__ as l on l.req_id=s.id','left')
         ->where($where)
         ->field($field)
-        ->find();
+        ->select();
+    $otherSumGrossProfit        = 0;
+    if ($settlement_other_lists){
+        foreach ($settlement_other_lists as $v){
+            $experts            = explode(',',$v['expert']);
+            if (in_array($userid,$experts)){
+                $otherSumGrossProfit += $v['maoli'];
+            }
+        }
+    }
+
+
     $data                       = array();
     $data['self']               = $settlement_self['selfSumGrossProfit'];
-    $data['otherSum']           = $settlement_other['otherSumGrossProfit'];
+    $data['otherSum']           = $otherSumGrossProfit;
     $data['other']              = $data['otherSum']*0.4;
     $data['sum']                = $data['self'] + $data['other'];
     return $data;

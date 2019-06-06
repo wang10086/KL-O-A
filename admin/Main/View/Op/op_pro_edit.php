@@ -42,19 +42,6 @@
     </div>
 
     <div class="form-group col-md-4">
-        <!--<label>立项时间：</label><input type="text" name="info[op_create_date]" value="{$op.op_create_date}"class="form-control inputdate_a" />-->
-        <label>协助销售实施专家：</label>
-        <select class="form-control" name="info[expert]">
-            <option value="">==请选择==</option>
-            <foreach name="expert" key="k" item="v">
-                <option value="{$k}" <?php if($op['expert']==$k){ echo 'selected'; } ?>>{$v}</option>
-            </foreach>
-        </select>
-    </div>
-
-
-
-    <div class="form-group col-md-4">
         <label>业务部门：</label>
         <select  class="form-control" name="info[op_create_user]">
         <foreach name="rolelist" key="k" item="v">
@@ -70,7 +57,13 @@
                 <option value="{$v.company_name}" <?php if($op['customer']==$v['company_name']){ echo 'selected';} ?> ><?php echo strtoupper(substr($v['pinyin'], 0, 1 )); ?> - {$v.company_name}</option>
             </foreach>
         </select>
+    </div>
 
+    <div class="form-group col-md-4">
+        <span class="lm_c">协助销售实施专家：</span>
+        <foreach name="expert" key="k" item="v">
+            <span class="lm_c"><input type="checkbox" name="expert[]" value="{$k}" <?php if (in_array($k,$op_expert)) echo "checked"; ?>> {$v}</span>
+        </foreach>
     </div>
 
     <div class="form-group col-md-4">

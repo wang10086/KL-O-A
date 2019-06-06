@@ -100,13 +100,10 @@
                                     </div>
 
                                     <div class="form-group col-md-4">
-                                        <label>协助销售实施专家：</label>
-                                        <select class="form-control" name="info[expert]">
-                                            <option value="">==请选择==</option>
-                                            <foreach name="expert" key="k" item="v">
-                                                <option value="{$k}">{$v}</option>
-                                            </foreach>
-                                        </select>
+                                        <span class="lm_c">协助销售实施专家：</span>
+                                        <foreach name="expert" key="k" item="v">
+                                            <span class="lm_c"><input type="checkbox" name="expert[]" value="{$k}"> {$v}</span>
+                                        </foreach>
                                     </div>
 
                                     <div class="form-group col-md-4">

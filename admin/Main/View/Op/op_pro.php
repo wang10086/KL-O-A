@@ -38,6 +38,15 @@
     <label>客户单位：</label>{$op.customer}
 </div>
 
+<?php if($op_expert){ ?>
+    <div class="form-group col-md-12">
+        <label>协助销售实施专家：</label>
+        <foreach name="op_expert" item="v">
+            {:username($v)} &emsp;
+        </foreach>
+    </div>
+<?php } ?>
+
 <?php if ($is_dijie){ ?> <!--内部地接-->
     <div class="form-group col-md-8">
         <div class="form-group col-md-12"  style="margin-top:20px; margin-left: -15px;">
