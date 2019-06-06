@@ -1170,7 +1170,7 @@ class ProductController extends BaseController {
         $pin                            = I('pin');
         $year                           = I('year',date('Y'));
         $pin                            = $pin?$pin:get_standard_pin($month);
-        $ltit                           = get_little_title($year,$pin);
+        $ltit                           = get_little_title($year);
 
         $this->year                     = $year;
         $this->pin                      = $pin;
@@ -1185,6 +1185,29 @@ class ProductController extends BaseController {
         $this->pageTitle                = '标准化管理';
         $this->title('标准化模块');
         $this->display();
+    }
+
+    //新增标准化产品
+    public function add_standard_product(){
+        $this->pageTitle                = '标准化管理';
+        $pin                            = I('pin');
+        $year                           = date('Y');
+        $apply_times                    = get_little_title($year);
+
+        $this->kinds                    = get_project_kinds();
+        $this->apply_times              = $apply_times;
+        $this->pin                      = $pin;
+        $this->title('标准化产品');
+        $this->display();
+    }
+
+    public function public_save(){
+        $savetype                       = I('savetype');
+        if (isset($_POST['dosubmit'])){
+            if ($savetype == 1){ //保存标准化产品
+                echo '测试ing...';
+            }
+        }
     }
     
 }

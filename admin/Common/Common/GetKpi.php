@@ -2632,7 +2632,7 @@ function get_yw_department(){
         return $pin;
     }
 
-    function get_little_title($year,$pin=0){
+    function get_little_title($year){
         /*switch ($pin){
             case 1:
                 $tit                    = ($year+1).'年春季';
