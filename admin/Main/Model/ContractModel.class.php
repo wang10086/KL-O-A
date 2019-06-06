@@ -24,7 +24,8 @@ class ContractModel extends Model{
         $where['l.audit_time']              = array('between',"$begintime,$endtime");
         $where['o.create_user']             = $sale_user_id;
         $where['b.op_id']                   = array('not in',$dj_opids); //排除地接团
-        $where['c.dep_time']                = array('lt',$endtime-7*24*3600); //5个工作日前
+        //$where['c.dep_time']                = array('lt',$endtime-7*24*3600); //5个工作日前
+        $where['c.dep_time']                = array('lt',$endtime);
         $field                              = 'l.audit_uid,audit_uname,audit_time,c.dep_time,c.ret_time,o.*';
         $lists                              = M()->table('__OP_BUDGET__ as b')->join('__AUDIT_LOG__ as l on l.req_id=b.id','left')->join('__OP__ as o on o.op_id = b.op_id','left')->join('left join __OP_TEAM_CONFIRM__ as c on c.op_id=b.op_id')->field($field)->where($where)->select();
         return $lists;
