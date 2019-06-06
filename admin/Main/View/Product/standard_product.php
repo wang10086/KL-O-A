@@ -23,10 +23,19 @@
                                     <h3 class="box-title">{$_action_}</h3>
                                     <div class="box-tools pull-right">
                                     	<a href="javascript:;" class="btn btn-info btn-sm" onclick="javascript:opensearch('searchtext',600,160);"><i class="fa fa-search"></i> 搜索</a>
-                                        <!--<a href="{:U('Product/addtpl')}" class="btn btn-sm btn-danger"><i class="fa fa-plus"></i> 新建产品模板</a>-->
+                                        <if condition="rolemenu(array('Product/add_standard_product'))">
+                                            <a href="{:U('Product/add_standard_product',array('pin'=>1))}" class="btn btn-sm btn-success"><i class="fa fa-plus"></i> 新建标准化产品</a>
+                                        </if>
                                     </div>
                                 </div><!-- /.box-header -->
                                 <div class="box-body">
+                                    <div class="btn-group" id="catfont">
+                                        <button onClick="javascript:window.location.href='{:U('Product/standard_product',array('pin'=>10))}';" class="btn <?php if($pin==10){ echo 'btn-info';}else{ echo 'btn-default';} ?>">{$ltitle[10]}</button>
+                                        <button onClick="javascript:window.location.href='{:U('Product/standard_product',array('pin'=>1))}';" class="btn <?php if($pin==1){ echo 'btn-info';}else{ echo 'btn-default';} ?>">{$ltitle[1]}</button>
+                                        <button onClick="javascript:window.location.href='{:U('Product/standard_product',array('pin'=>2))}';" class="btn <?php if($pin==2){ echo 'btn-info';}else{ echo 'btn-default';} ?>">{$ltitle[2]}</button>
+                                        <button onClick="javascript:window.location.href='{:U('Product/standard_product',array('pin'=>3))}';" class="btn <?php if($pin==3){ echo 'btn-info';}else{ echo 'btn-default';} ?>">{$ltitle[3]}</button>
+                                        <button onClick="javascript:window.location.href='{:U('Product/standard_product',array('pin'=>4))}';" class="btn <?php if($pin==4){ echo 'btn-info';}else{ echo 'btn-default';} ?>">{$ltitle[4]}</button>
+                                    </div>
                                 
                                 <table class="table table-bordered dataTable fontmini" id="tablelist" style="margin-top:10px;">
                                     <tr role="row" class="orders" >

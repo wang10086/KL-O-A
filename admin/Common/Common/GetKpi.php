@@ -1375,7 +1375,7 @@ function get_sum_gross_profit($userids,$beginTime,$endTime){
         $gross_margin                       = get_gross_margin($yearMonth,$userid,1);  //获取当月月度累计毛利额目标值(如果毛利额目标为0,则不考核)
         $target                             = $gross_margin['monthTarget']; //当月目标值
         //$op_list                            = $mod->get_user_op_list($userid,$begintime,$endtime); //以出团时间为准
-        $op_list                            = $mod->get_budget_list($userid,$begintime,$endtime); //以立项审核通过为准
+        $op_list                            = $mod->get_budget_list($userid,$begintime,$endtime); //以预算审核通过为准
         $op_num 		                    = count($op_list);
         $contract_list                      = array();
         foreach ($op_list as $key=>$value){
@@ -2608,5 +2608,51 @@ function get_yw_department(){
         $data                           = array();
         $data['num']                    = count($list);
         $data['res_ids']                = $res_ids;
+        return $data;
+    }
+
+    //
+    function get_standard_pin($month){
+        $month                          = $month?$month:date('m');
+        if (strlen($month) < 2) $month  = str_pad($month,2,0,STR_PAD_LEFT);
+        switch ($month){
+            case in_array($month,array('01','02')):
+                $pin                    = 3;
+                break;
+            case in_array($month,array('03','04','05','06')):
+                $pin                    = 4;
+                break;
+            case in_array($month,array('07','08')):
+                $pin                    = 1;
+                break;
+            case in_array($month,array('09','10','11','12')):
+                $pin                    = 2;
+                break;
+        }
+        return $pin;
+    }
+
+    function get_little_title($year,$pin=0){
+        /*switch ($pin){
+            case 1:
+                $tit                    = ($year+1).'年春季';
+                break;
+            case 2:
+                $tit                    = ($year+1).'年暑假';
+                break;
+            case 3:
+                $tit                    = ($year).'年秋季';
+                break;
+            case 4:
+                $tit                    = ($year).'年寒假';
+                break;
+        }*/
+        $data                           = array(
+            10                          => '全部',
+            1                           => ($year+1).'年春季',
+            2                           => ($year+1).'年暑假',
+            3                           => $year.'年秋季',
+            4                           => $year.'年寒假'
+        );
         return $data;
     }
