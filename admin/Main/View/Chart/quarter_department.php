@@ -71,12 +71,12 @@
                                     <foreach name="lists" item="row"> 
                                     <tr>
                                         <td class="taskOptions">{$row.depname}</td>
-                                        <td class="taskOptions"><a href="{:U('Chart/public_oplist',array('depname'=>$row['depname'],'opids'=>$row['yearopids']))}">{$row.yearxms}</a></td>
+                                        <td class="taskOptions"><a href="{:U('Chart/public_oplist',$row['yearparameter'])}">{$row.yearxms}</a></td>
                                         <td class="taskOptions">{$row.yearrenshu}</td>
                                         <td class="taskOptions">{$row.yearzsr}</td>
                                         <td class="taskOptions">{$row.yearzml}</td>
                                         <td class="taskOptions">{$row.yearmll}</td>
-                                        <td class="taskOptions"><a href="{:U('Chart/public_oplist',array('depname'=>$row['depname'],'opids'=>$row['quarteropids']))}">{$row.quarterxms}</a></td>
+                                        <td class="taskOptions"><a href="{:U('Chart/public_oplist',$row['quarterparameter'])}">{$row.quarterxms}</a></td>
                                         <td class="taskOptions">{$row.quarterrenshu}</td>
                                         <td class="taskOptions">{$row.quarterzsr}</td>
                                         <td class="taskOptions">{$row.quarterzml}</td>
@@ -85,12 +85,12 @@
                                     </foreach>
                                     <tr>
                                         <td class="taskOptions black" data="">地接合计</td>
-                                        <td class="taskOptions black" data=""><a href="{:U('Chart/public_oplist',array('depname'=>'地接合计','opids'=>$dj_heji['yearopids']))}">{$dj_heji.yearxms}</a></td>
+                                        <td class="taskOptions black" data=""><a href="{:U('Chart/public_oplist',$dj_heji['yearparameter'])}">{$dj_heji.yearxms}</a></td>
                                         <td class="taskOptions black" data="">{$dj_heji.yearrenshu}</td>
                                         <td class="taskOptions black" data="">{$dj_heji.yearzsr}</td>
                                         <td class="taskOptions black" data="">{$dj_heji.yearzml}</td>
                                         <td class="taskOptions black" data="">{$dj_heji.yearmll}</td>
-                                        <td class="taskOptions black" data=""><a href="{:U('Chart/public_oplist',array('depname'=>'地接合计','opids'=>$dj_heji['quarteropids']))}">{$dj_heji.quarterxms}</a></td>
+                                        <td class="taskOptions black" data=""><a href="{:U('Chart/public_oplist',$dj_heji['quarterparameter'])}">{$dj_heji.quarterxms}</a></td>
                                         <td class="taskOptions black" data="" width="">{$dj_heji.quarterrenshu}</td>
                                         <td class="taskOptions black" data="">{$dj_heji.quarterzsr}</td>
                                         <td class="taskOptions black" data="">{$dj_heji.quarterzml}</td>
@@ -98,12 +98,12 @@
                                     </tr>
                                     <tr>
                                         <td class="taskOptions black" data="">合计</td>
-                                        <td class="taskOptions black" data=""><a href="{:U('Chart/public_oplist',array('depname'=>'公司合计','opids'=>$heji['yearopids']))}">{$heji.yearxms}</a></td>
+                                        <td class="taskOptions black" data=""><a href="{:U('Chart/public_oplist',$heji['yearparameter'])}">{$heji.yearxms}</a></td>
                                         <td class="taskOptions black" data="">{$heji.yearrenshu}</td>
                                         <td class="taskOptions black" data="">{$heji.yearzsr}</td>
                                         <td class="taskOptions black" data="">{$heji.yearzml}</td>
                                         <td class="taskOptions black" data="">{$heji.yearmll}</td>
-                                        <td class="taskOptions black" data=""><a href="{:U('Chart/public_oplist',array('depname'=>'公司合计','opids'=>$heji['quarteropids']))}">{$heji.quarterxms}</a></td>
+                                        <td class="taskOptions black" data=""><a href="{:U('Chart/public_oplist',$heji['quarterparameter'])}">{$heji.quarterxms}</a></td>
                                         <td class="taskOptions black" data="" width="">{$heji.quarterrenshu}</td>
                                         <td class="taskOptions black" data="">{$heji.quarterzsr}</td>
                                         <td class="taskOptions black" data="">{$heji.quarterzml}</td>

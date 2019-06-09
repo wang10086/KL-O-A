@@ -83,6 +83,11 @@
                 <input type="hidden" name="a" value="public_oplist">
                 <input type="hidden" name="opids" value="{$opids}">
                 <input type="hidden" name="depname" value="{$depname}">
+                <input type="hidden" name="uids" value="{$uids}">
+                <input type="hidden" name="dj" value="{$dj}">
+                <input type="hidden" name="pin" value="{$pin}">
+                <input type="hidden" name="st" value="{$st}">
+                <input type="hidden" name="et" value="{$et}">
 
                 <div class="form-group col-md-6">
                     <input type="text" class="form-control" name="title" placeholder="项目名称">
