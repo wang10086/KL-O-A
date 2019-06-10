@@ -18,6 +18,30 @@
 
                     <div class="row">
                         <div class="col-xs-12">
+
+                            <div class="btn-group" id="catfont" style="padding-bottom:20px;">
+                                <?php if($prveyear>2019){ ?>
+                                    <a href="{:U('Sale/chart_jd_gross',array('year'=>$prveyear,'uid'=>$uid))}" class="btn btn-default" style="padding:8px 18px;">上一年</a>
+                                <?php } ?>
+                                <?php
+                                    for($i=1;$i<13;$i++){
+                                        if (strlen($i)<2){ $i = str_pad($i,2,'0',STR_PAD_LEFT);}
+                                        $par = array();
+                                        $par['year']  = $year;
+                                        $par['month'] = $i;
+                                        $par['uid']   = $uid;
+                                        if($month==$i){
+                                            echo '<a href="'.U('Sale/chart_jd_gross',$par).'" class="btn btn-info" style="padding:8px 18px;">'.$i.'月</a>';
+                                        }else{
+                                            echo '<a href="'.U('Sale/chart_jd_gross',$par).'" class="btn btn-default" style="padding:8px 18px;">'.$i.'月</a>';
+                                        }
+                                    }
+                                ?>
+                                <?php if($year<date('Y')){ ?>
+                                    <a href="{:U('Sale/chart_jd_gross',array('year'=>$nextyear,'uid'=>$uid))}" class="btn btn-default" style="padding:8px 18px;">下一年</a>
+                                <?php } ?>
+                            </div>
+
                             <div class="box box-warning">
                                 <div class="box-header">
                                     <h3 class="box-title">毛利率统计</h3>
@@ -34,7 +58,7 @@
 
                                     <table class="table table-bordered dataTable fontmini" id="tablelist" style="margin-top:10px;">
                                         <tr role="row" class="orders" >
-                                            <!--<th class="taskOptions">计调人员</th>-->
+                                            <th class="taskOptions">计调人员</th>
                                             <th class="taskOptions">累计操作收入</th>
                                             <th class="taskOptions">最低毛利额</th>
                                             <th class="taskOptions">累计操作毛利</th>
@@ -42,23 +66,23 @@
                                             <th class="taskOptions">毛利率完成率</th>
                                             <th width="80" class="taskOptions">详情</th>
                                             <!--<if condition="rolemenu(array('Sale/plans_info'))">
-                                                <th width="80" class="taskOptions">详情</th>
                                             </if>-->
                                         </tr>
-
-                                        <tr>
-                                            <!--<td></td>-->
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <!--<if condition="rolemenu(array('Sale/plans_follow'))">-->
-                                                <td class="taskOptions">
-                                                    <a href="javascript:;" onclick="art_show_msg('加班开发中...')" title="详情" class="btn btn-info btn-smsm"><i class="fa fa-pencil"></i></a>
-                                                </td>
-                                            <!--</if>-->
-                                        </tr>
+                                        <foreach name="lists" item="row">
+                                            <tr>
+                                                <td class="taskOptions">{$row}</td>
+                                                <td class="taskOptions"></td>
+                                                <td class="taskOptions"></td>
+                                                <td class="taskOptions"></td>
+                                                <td class="taskOptions"></td>
+                                                <td class="taskOptions"></td>
+                                                <!--<if condition="rolemenu(array('Sale/plans_follow'))">-->
+                                                    <td class="taskOptions">
+                                                        <a href="javascript:;" onclick="art_show_msg('加班开发中...')" title="详情" class="btn btn-info btn-smsm"><i class="fa fa-pencil"></i></a>
+                                                    </td>
+                                                <!--</if>-->
+                                            </tr>
+                                        </foreach>
                                     </table>
                                 </div><!-- /.box-body -->
                             </div><!-- /.box -->
