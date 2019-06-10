@@ -291,5 +291,10 @@ class SaleController extends BaseController {
             }
         }
     }
+
+    //
+    public function chart_gross(){
+
+    }
     
 }
