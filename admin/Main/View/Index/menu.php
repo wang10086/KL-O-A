@@ -428,7 +428,7 @@
                         </if>
 
 
-                        <if condition="rolemenu(array('Sale/index','Sale/goods'))">
+                        <if condition="rolemenu(array('Sale/index','Sale/goods','Sale/gross','Sale/edit_gross','Sale/chart_gross'))">
                         <li class="treeview {:ison(CONTROLLER_NAME, 'Sale')}">
                             <a href="javascript:;">
                                 <i class="fa fa-flag"></i>
@@ -436,6 +436,21 @@
                                 <i class="fa fa-angle-left pull-right"></i>
                             </a>
                             <ul class="treeview-menu">
+
+                                <li class="treeview {:on('Sale/gross')} {:on('Sale/edit_gross')} {:on('Sale/chart_gross')}">
+                                    <if condition="rolemenu(array('Sale/gross','Sale/edit_gross','Sale/chart_gross'))">
+                                        <a href=""><i class="fa  fa-money"></i> 毛利率</a>
+                                    </if>
+                                    <ul class="treeview-menu">
+                                        <if condition="rolemenu(array('Sale/chart_gross'))">
+                                            <li class="{:on('Sale/chart_gross')}"><a href="{:U('Sale/chart_gross')}"><i class="fa fa-angle-right"></i> 各计调毛利率统计</a></li>
+                                        </if>
+                                        <if condition="rolemenu(array('Sale/gross'))">
+                                            <li class="{:on('Sale/gross')}"><a href="{:U('Sale/gross')}"><i class="fa fa-angle-right"></i> 设置最低毛利率</a></li>
+                                        </if>
+                                    </ul>
+                                </li>
+
                             	<if condition="rolemenu(array('Sale/index'))">
                                 	<li><a href="{:U('Sale/index')}"><i class="fa fa-angle-right"></i> 出团计划列表</a></li>
                                 </if>

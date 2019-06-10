@@ -250,5 +250,46 @@ class SaleController extends BaseController {
 		
 		echo $num;
 	}
+
+	//最低毛利率
+    public function gross(){
+        //$lists                              = M()->table('__PROJECT_KIND__ as k')->join('__GROSS__ as g on g.kind = k.id','left')->field('k.id,k.name,g.gross,g.input_time,g.input_user_name')->order($this->orders('g.id'))->select();
+        $lists                              = M('project_kind')->field('id,name')->select();
+        foreach($lists as $k=>$v){
+            $data                           = M('gross')->where(array('kind_id'=>$v['id']))->order($this->orders('id'))->find();
+            $lists[$k]['gross']             = $data['gross'];
+            $lists[$k]['input_time']        = $data['input_time'];
+            $lists[$k]['input_user_name']   = $data['input_user_name'];
+        }
+
+        $this->lists                        = $lists;
+        $this->display();
+    }
+
+    public function edit_gross(){
+        $kind_id                            = I('kid');
+        if (!$kind_id) $this->error('获取数据失败');
+        $list                               = M('project_kind')->where(array('id'=>$kind_id))->find();
+        $this->row                          = $list;
+        $this->display();
+    }
+
+    public function public_save(){
+        $savetype                           = I('savetype');
+        if (isset($_POST['dosubmint']) && $savetype){
+
+            //保存最低毛利率
+            if ($savetype == 2){
+                $db                         = M('gross');
+                $info                       = I('info');
+                if (!$info['gross']) $this->error('最低毛利率不能为空');
+                $info['gross']              = trim($info['gross']);
+                $info['input_time']         = NOW_TIME;
+                $info['input_user_id']      = session('userid');
+                $info['input_user_name']    = session('nickname');
+                $db->add($info);
+            }
+        }
+    }
     
 }
