@@ -294,7 +294,10 @@ class SaleController extends BaseController {
 
     //
     public function chart_gross(){
+        $pin                                = I('pin',0);
 
+        $this->pin                          = $pin;
+        $this->display();
     }
     
 }

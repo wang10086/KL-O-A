@@ -443,7 +443,7 @@
                                     </if>
                                     <ul class="treeview-menu">
                                         <if condition="rolemenu(array('Sale/chart_gross'))">
-                                            <li class="{:on('Sale/chart_gross')}"><a href="{:U('Sale/chart_gross')}"><i class="fa fa-angle-right"></i> 各计调毛利率统计</a></li>
+                                            <li class="{:on('Sale/chart_gross')}"><a href="{:U('Sale/chart_gross',array('pin'=>1))}"><i class="fa fa-angle-right"></i> 各计调毛利率统计</a></li>
                                         </if>
                                         <if condition="rolemenu(array('Sale/gross'))">
                                             <li class="{:on('Sale/gross')}"><a href="{:U('Sale/gross')}"><i class="fa fa-angle-right"></i> 设置最低毛利率</a></li>
