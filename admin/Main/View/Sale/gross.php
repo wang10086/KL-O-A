@@ -16,25 +16,6 @@
 
                     <div class="row">
                         <div class="col-xs-12">
-                            <!--<div class="btn-group" id="catfont" style="padding-bottom:20px;">
-                                <?php /*if($prveyear>2018){ */?>
-                                    <a href="{:U('Sale/gross',array('year'=>$prveyear))}" class="btn btn-default" style="padding:8px 18px;">上一年</a>
-                                <?php /*} */?>
-                                <?php
-/*                                    for($i=2018;$i<=date('Y');$i++){
-                                        $par            = array();
-                                        $par['year']    = $i;
-                                        if($year==$i){
-                                            echo '<a href="'.U('Sale/gross',$par).'" class="btn btn-info" style="padding:8px 18px;">'.$i.'月</a>';
-                                        }else{
-                                            echo '<a href="'.U('Sale/gross',$par).'" class="btn btn-default" style="padding:8px 18px;">'.$i.'月</a>';
-                                        }
-                                    }
-                                */?>
-                                <?php /*if($year<date('Y')){ */?>
-                                    <a href="{:U('Sale/gross',array('year'=>$nextyear))}" class="btn btn-default" style="padding:8px 18px;">下一年</a>
-                                <?php /*} */?>
-                            </div>-->
 
                             <div class="box box-warning">
                                 <div class="box-header">
@@ -47,7 +28,7 @@
                                             <th class="taskOptions" width="" data="">业务类型</th>
                                             <th class="taskOptions" width="" data="">最低毛利率</th>
                                             <th class="taskOptions" width="" data="">录入时间</th>
-                                            <if condition="rolemenu(array('Sale/order_viwe'))">
+                                            <if condition="rolemenu(array('Sale/edit_gross'))">
                                                 <th width="80" class="taskOptions">编辑</th>
                                             </if>
                                         </tr>
@@ -56,9 +37,11 @@
                                             <td class="taskOptions">{$row.name}</td>
                                             <td class="taskOptions">{$row.gross}</td>
                                             <td class="taskOptions"><?php if ($row['input_time']){ echo date('Y-m-d H:i:s',$row['input_time']); }?></td>
+                                            <if condition="rolemenu(array('Sale/edit_gross'))">
                                             <td class="taskOptions">
                                                 <a href="javascript:;" onclick="open_edit_gross(`{:U('Sale/edit_gross',array('kid'=>$row['id']))}`)" title="编辑" class="btn btn-info btn-smsm"><i class="fa fa-pencil"></i></a>
                                             </td>
+                                            </if>
                                         </tr>
                                         </foreach>
                                     </table>
