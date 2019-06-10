@@ -32,8 +32,7 @@ class OpController extends BaseController {
 		$cus	= I('cus');			//客户单位
 		$jd		= I('jd');			//计调
 
-		$where = array();
-
+		$where                                          = array();
 		if($title)			$where['o.project']			= array('like','%'.$title.'%');
 		if($oid)			$where['o.group_id']		= array('like','%'.$oid.'%');
 		if($opid)			$where['o.op_id']			= $opid;
@@ -61,7 +60,7 @@ class OpController extends BaseController {
 		$field	        = 'o.*,a.nickname as jidiao';
 		$lists          = $db->table('__OP__ as o')->field($field)->join('__OP_AUTH__ as u on u.op_id = o.op_id','LEFT')->join('__ACCOUNT__ as a on a.id = u.line','LEFT')->where($where)->limit($page->firstRow . ',' . $page->listRows)->order($this->orders('o.create_time'))->select();
         $dijie_opids    = get_dijie_opids();
-		foreach($lists as $k=>$v){
+        foreach($lists as $k=>$v){
             //判断是否成团
             if ($v['group_id']) { $lists[$k]['group_id'] = '<span class="green">'.$v['group_id'].'</span>'; }else{ $lists[$k]['group_id'] = '未成团'; }
 
@@ -82,10 +81,12 @@ class OpController extends BaseController {
 			if($jiesuan['audit_status']==1) $lists[$k]['zhuangtai'] = '<span class="yellow">完成结算</span>';
 			if($jiesuan['audit_status']==2) $lists[$k]['zhuangtai'] = '<span class="yellow">结算未通过</span>';
 
-            if ($v['in_dijie'] == 1){
-                $lists[$k]['has_qrcode']        = ''; //无二维码
-            } elseif ($v['group_id']){
-                $lists[$k]['has_qrcode']        = 1; //有二维码
+            if ($v['group_id']){
+                if (in_array($v['op_id'],$dijie_opids)){
+                    $lists[$k]['has_qrcode']    = ''; //不显示二维码
+                }else{
+                    $lists[$k]['has_qrcode']    = 1;  //显示二维码
+                }
             }
 		}
 
@@ -134,7 +135,7 @@ class OpController extends BaseController {
 			if($info){
 				
 				$opid                   = opid();
-                $info['expert']         = implode(',',$expert);
+                $info['expert']         = $expert?implode(',',$expert):0;
 				$info['create_time']    = time();
                 $info['op_id']          = $opid;
                 $info['speed']          = 1;
@@ -145,7 +146,7 @@ class OpController extends BaseController {
                 $info['audit_status']   = 1; //项目不用审核,默认通过
 				$addok                  = $db->add($info);
 				//$this->request_audit(P::REQ_TYPE_PROJECT_NEW, $addok);
-
+                
 				if($addok){
                     $data               = array();
                     $data['hesuan']     = cookie('userid');
