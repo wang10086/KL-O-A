@@ -59,6 +59,7 @@
                                     <table class="table table-bordered dataTable fontmini" id="tablelist" style="margin-top:10px;">
                                         <tr role="row" class="orders" >
                                             <th class="taskOptions">计调人员</th>
+                                            <th class="taskOptions">业务类型</th>
                                             <th class="taskOptions">累计操作收入</th>
                                             <th class="taskOptions">最低毛利额</th>
                                             <th class="taskOptions">累计操作毛利</th>
@@ -68,20 +69,38 @@
                                             <!--<if condition="rolemenu(array('Sale/plans_info'))">
                                             </if>-->
                                         </tr>
-                                        <foreach name="lists" item="row">
+                                        <foreach name="lists" key="k" item="v">
                                             <tr>
-                                                <td class="taskOptions">{$row}</td>
+                                                <td class="taskOptions" rowspan="<?php echo $v['rowspan']; ?>">{$k}</td>
+                                                <td class="taskOptions">{$v['info']?$v['info'][0]['kind']:$v['合计']['kind']}</td>
+                                                <td class="taskOptions">{$v['info']?$v['info'][0]['shouru']:$v['合计']['shouru']}</td>
                                                 <td class="taskOptions"></td>
-                                                <td class="taskOptions"></td>
-                                                <td class="taskOptions"></td>
+                                                <td class="taskOptions">{$v['info']?$v['info'][0]['maoli']:$v['合计']['maoli']}</td>
                                                 <td class="taskOptions"></td>
                                                 <td class="taskOptions"></td>
                                                 <!--<if condition="rolemenu(array('Sale/plans_follow'))">-->
-                                                    <td class="taskOptions">
-                                                        <a href="javascript:;" onclick="art_show_msg('加班开发中...')" title="详情" class="btn btn-info btn-smsm"><i class="fa fa-pencil"></i></a>
-                                                    </td>
+                                                <td class="taskOptions">
+                                                    <a href="javascript:;" onclick="art_show_msg('加班开发中...')" title="详情" class="btn btn-info btn-smsm"><i class="fa fa-bars"></i></a>
+                                                </td>
                                                 <!--</if>-->
                                             </tr>
+                                            <?php if (count($v['info'])>0){ ?>
+                                            <foreach name="v['info']" key="kk" item="vv">
+                                                <tr <?php if (!$v['info'][($kk+1)]['num']) echo "class='black'" ?>>
+                                                    <td class="taskOptions"><?php echo $v['info'][($kk+1)]['kind']?$v['info'][($kk+1)]['kind']:$v['合计']['kind']; ?></td>
+                                                    <td class="taskOptions"><?php echo $v['info'][($kk+1)]['shouru']?$v['info'][($kk+1)]['shouru']:$v['合计']['shouru']; ?></td>
+                                                    <td class="taskOptions"><?php echo $v['info'][($kk+1)]['']?$v['info'][($kk+1)]['']:$v['合计']['']; ?></td>
+                                                    <td class="taskOptions"><?php echo $v['info'][($kk+1)]['maoli']?$v['info'][($kk+1)]['maoli']:$v['合计']['maoli']; ?></td>
+                                                    <td class="taskOptions"><?php echo $v['info'][($kk+1)]['']?$v['info'][($kk+1)]['']:$v['合计']['']; ?></td>
+                                                    <td class="taskOptions"><?php echo $v['info'][($kk+1)]['']?$v['info'][($kk+1)]['']:$v['合计']['']; ?></td>
+                                                    <!--<if condition="rolemenu(array('Sale/plans_follow'))">-->
+                                                    <td class="taskOptions">
+                                                        <a href="javascript:;" onclick="art_show_msg('加班开发中...')" title="详情" class="btn btn-info btn-smsm"><i class="fa fa-bars"></i></a>
+                                                    </td>
+                                                    <!--</if>-->
+                                                </tr>
+                                            </foreach>
+                                            <?php } ?>
                                         </foreach>
                                     </table>
                                 </div><!-- /.box-body -->

@@ -294,26 +294,32 @@ class SaleController extends BaseController {
 
     //公司毛利率
     public function chart_gross(){
-        $pin                                = I('pin',0);
+        $year                               = I('year',date('Y'));
+        $month                              = I('month',date('m'));
 
-        $this->pin                          = $pin;
+
+        $this->year                         = $year;
+        $this->month                        = $month;
+        $this->prveyear                     = $year-1;
+        $this->nextyear                     = $year+1;
         $this->display();
     }
 
     //各计调毛利率
     public function chart_jd_gross(){
-        $year  = I('year',date('Y'));
-        $month = I('month',date('m'));
-        $user  = I('uid',cookie('userid'));
+        $year                               = I('year',date('Y'));
+        $month                              = I('month',date('m'));
+        $times                              = get_cycle($year.$month);
         $mod                                = D('Sale');
-        $operator                           = array('19'=>'张乾','33'=>'李婷','86'=>'何亚丽','163'=>'陈继媛');
-        $data                               = $mod->get_jd_gross($operator);
+        $operator                           = array('39'=>'孟华','19'=>'张乾','33'=>'李婷','86'=>'何亚丽','163'=>'陈继媛');
+        $settlement_lists                   = $mod->get_all_settlement_lists($times['begintime'],$times['endtime']);
+        $data                               = $mod->get_gross($operator,$settlement_lists);
 
-        $this->lists                        = $operator;
-        $this->year       = $year;
-        $this->month      = $month;
-        $this->prveyear   = $year-1;
-        $this->nextyear   = $year+1;
+        $this->lists                        = $data;
+        $this->year                         = $year;
+        $this->month                        = $month;
+        $this->prveyear                     = $year-1;
+        $this->nextyear                     = $year+1;
         $this->display();
     }
     
