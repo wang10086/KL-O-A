@@ -91,6 +91,7 @@ class SaleModel extends Model{
                 $info['num']            = $num;
                 $info['shouru']         = $shouru;
                 $info['maoli']          = $maoli;
+                $info['maolilv']        = (round($maoli/$shouru,4)*100).'%';
                 $info['opids']          = $opids?implode(',',$opids):'';
                 $info['group_ids']      = $group_ids?implode(',',$group_ids):'';
                 $rowspan++;
@@ -104,6 +105,7 @@ class SaleModel extends Model{
         $data['合计']['num']            = $sum_num;
         $data['合计']['shouru']         = $sum_shouru;
         $data['合计']['maoli']          = $sum_maoli;
+        $data['合计']['maolilv']        = (round($sum_maoli/$sum_shouru,4)*100).'%';
         $data['合计']['opids']          = implode(',', $sum_opids);
         $data['合计']['group_ids']      = implode(',', $sum_group_ids);
         return $data;

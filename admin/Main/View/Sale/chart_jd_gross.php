@@ -76,7 +76,7 @@
                                                 <td class="taskOptions">{$v['info']?$v['info'][0]['shouru']:$v['合计']['shouru']}</td>
                                                 <td class="taskOptions"></td>
                                                 <td class="taskOptions">{$v['info']?$v['info'][0]['maoli']:$v['合计']['maoli']}</td>
-                                                <td class="taskOptions"></td>
+                                                <td class="taskOptions">{$v['info']?$v['info'][0]['maolilv']:$v['合计']['maolilv']}</td>
                                                 <td class="taskOptions"></td>
                                                 <!--<if condition="rolemenu(array('Sale/plans_follow'))">-->
                                                 <td class="taskOptions">
@@ -91,7 +91,7 @@
                                                     <td class="taskOptions"><?php echo $v['info'][($kk+1)]['shouru']?$v['info'][($kk+1)]['shouru']:$v['合计']['shouru']; ?></td>
                                                     <td class="taskOptions"><?php echo $v['info'][($kk+1)]['']?$v['info'][($kk+1)]['']:$v['合计']['']; ?></td>
                                                     <td class="taskOptions"><?php echo $v['info'][($kk+1)]['maoli']?$v['info'][($kk+1)]['maoli']:$v['合计']['maoli']; ?></td>
-                                                    <td class="taskOptions"><?php echo $v['info'][($kk+1)]['']?$v['info'][($kk+1)]['']:$v['合计']['']; ?></td>
+                                                    <td class="taskOptions"><?php echo $v['info'][($kk+1)]['maolilv']?$v['info'][($kk+1)]['maolilv']:$v['合计']['maolilv']; ?></td>
                                                     <td class="taskOptions"><?php echo $v['info'][($kk+1)]['']?$v['info'][($kk+1)]['']:$v['合计']['']; ?></td>
                                                     <!--<if condition="rolemenu(array('Sale/plans_follow'))">-->
                                                     <td class="taskOptions">
