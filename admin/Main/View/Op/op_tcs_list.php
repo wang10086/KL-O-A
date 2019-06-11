@@ -40,8 +40,11 @@
                     <td>{$row.remark}</td>
                     <if condition="rolemenu(array('Op/edit_tcs_need'))">
                         <td class="taskOptions">
-                            <!--<a href="javascript:;" onClick="javascript:{:open_edit_tcs_need($row['cid'],$row['pid'],$op['op_id'])}" ><button onClick="javascript:;" title="修改" class="btn btn-info btn-smsm"><i class="fa fa-pencil"></i></button></a>-->
-                            <a href="javascript:;" onClick="upd_tcs_need({$row.cid},{$row.op_id})" ><button onClick="javascript:;" title="修改" class="btn btn-info btn-smsm"><i class="fa fa-pencil"></i></button></a>
+                            <?php if ($row['guide_status'] == 1){ ?>
+                                <a href="javascript:;" onClick="art_show_msg('该团已安排辅导员,需求信息不可更改')" ><button onClick="javascript:;" title="修改" class="btn btn-default btn-smsm"><i class="fa fa-pencil"></i></button></a>
+                            <?php }else{ ?>
+                                <a href="javascript:;" onClick="upd_tcs_need({$row.cid},{$row.op_id})" ><button onClick="javascript:;" title="修改" class="btn btn-info btn-smsm"><i class="fa fa-pencil"></i></button></a>
+                            <?php } ?>
                         </td>
                     </if>
                 </tr>
