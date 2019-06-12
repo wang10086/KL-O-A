@@ -91,7 +91,7 @@
                                             </if>
                                         </tr>
                                         <tr>
-                                            <th colspan="7" style="text-align: left;padding-left: 20px;">说明：该数据从{$year-1}年12月26日起结算项目统计。</th>
+                                            <th colspan="7" style="text-align: left;padding-left: 20px;">说明：该数据从{$year-1}年12月26日起结算项目统计，本页面数据包含地接团数据。</th>
                                         </tr>
                                     </table>
                                 </div><!-- /.box-body -->

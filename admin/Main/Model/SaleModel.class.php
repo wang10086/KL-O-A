@@ -12,7 +12,7 @@ use Sys\P;
 class SaleModel extends Model{
 
     /**
-     * 获取当前周期内所有结算审核通过的团(以审核时间为准)
+     * 获取当前周期内所有结算审核通过的团(以审核时间为准)(包含内部地接)
      * @param $beginTime
      * @param $endTime
      */
@@ -21,6 +21,25 @@ class SaleModel extends Model{
         $where['s.audit_status']= 1;
         $where['l.req_type']    = 801;
         $where['l.audit_time']  = array('between', "$beginTime,$endTime");
+
+        $field                  = 'o.op_id,o.group_id,o.project,o.create_user_name,o.kind,s.shouru,s.maoli,l.req_uid,l.req_uname';
+
+        $lists                  = M()->table('__OP_SETTLEMENT__ as s')->field($field)->join('__OP__ as o on s.op_id = o.op_id', 'LEFT')->join('__AUDIT_LOG__ as l on l.req_id = s.id', 'LEFT')->where($where)->select();
+        return $lists;
+    }
+
+    /**
+     * 获取当前周期内所有结算审核通过的团(以审核时间为准)(不包含内部地接)
+     * @param $beginTime
+     * @param $endTime
+     */
+    public function get_no_dj_settlement_lists($beginTime,$endTime){
+        $dj_opids               = get_djopid();
+        $where                  = array();
+        $where['s.audit_status']= 1;
+        $where['l.req_type']    = 801;
+        $where['l.audit_time']  = array('between', "$beginTime,$endTime");
+        $where['s.op_id']       = array('not in',$dj_opids);
 
         $field                  = 'o.op_id,o.group_id,o.project,o.create_user_name,o.kind,s.shouru,s.maoli,l.req_uid,l.req_uname';
 

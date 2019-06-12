@@ -295,11 +295,17 @@ class SaleController extends BaseController {
     //公司毛利率
     public function chart_gross(){
         $year                               = I('year',date('Y'));
-        $month                              = I('month',date('m'));
+        $times                              = get_year_cycle($year);
+        $mod                                = D('Sale');
+        $kinds                              = M('project_kind')->getField('id,name',true);
+        $gross_avg                          = $mod->get_gross_avg($kinds,$times['beginTime'],$times['endTime']); //最低毛利率数据
+        $settlement_no_dj_lists             = $mod->get_no_dj_settlement_lists($times['beginTime'],$times['endTime']);
+        $data                               = $mod->get_sum_gross($settlement_no_dj_lists,$kinds,$gross_avg); //获取公司总合计数据
+        $info                               = $data['info'];
+        $info['合计']                       = $data['合计'];
 
-
+        $this->lists                        = $info;
         $this->year                         = $year;
-        $this->month                        = $month;
         $this->prveyear                     = $year-1;
         $this->nextyear                     = $year+1;
         $this->display();
