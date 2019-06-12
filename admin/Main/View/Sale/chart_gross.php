@@ -19,12 +19,12 @@
                     <div class="row">
                         <div class="col-xs-12">
 
-                            <div class="btn-group" id="catfont" style="padding-bottom:20px;">
-                                <?php if($prveyear>2019){ ?>
+                            <!--<div class="btn-group" id="catfont" style="padding-bottom:20px;">
+                                <?php /*if($prveyear>2019){ */?>
                                     <a href="{:U('Sale/chart_gross',array('year'=>$prveyear,'uid'=>$uid))}" class="btn btn-default" style="padding:8px 18px;">上一年</a>
-                                <?php } ?>
+                                <?php /*} */?>
                                 <?php
-                                    for($i=1;$i<13;$i++){
+/*                                    for($i=1;$i<13;$i++){
                                         if (strlen($i)<2){ $i = str_pad($i,2,'0',STR_PAD_LEFT);}
                                         $par = array();
                                         $par['year']  = $year;
@@ -36,11 +36,11 @@
                                             echo '<a href="'.U('Sale/chart_gross',$par).'" class="btn btn-default" style="padding:8px 18px;">'.$i.'月</a>';
                                         }
                                     }
-                                ?>
-                                <?php if($year<date('Y')){ ?>
+                                */?>
+                                <?php /*if($year<date('Y')){ */?>
                                     <a href="{:U('Sale/chart_gross',array('year'=>$nextyear,'uid'=>$uid))}" class="btn btn-default" style="padding:8px 18px;">下一年</a>
-                                <?php } ?>
-                            </div>
+                                <?php /*} */?>
+                            </div>-->
 
                             <div class="box box-warning">
                                 <div class="box-header">
@@ -58,7 +58,7 @@
 
                                     <table class="table table-bordered dataTable fontmini" id="tablelist" style="margin-top:10px;">
                                         <tr role="row" class="orders" >
-                                            <!--<th class="taskOptions">计调人员</th>-->
+                                            <th class="taskOptions">计调人员</th>
                                             <th class="taskOptions">累计操作收入</th>
                                             <th class="taskOptions">最低毛利额</th>
                                             <th class="taskOptions">累计操作毛利</th>
@@ -66,22 +66,38 @@
                                             <th class="taskOptions">毛利率完成率</th>
                                             <th width="80" class="taskOptions">详情</th>
                                             <!--<if condition="rolemenu(array('Sale/plans_info'))">
-                                                <th width="80" class="taskOptions">详情</th>
                                             </if>-->
                                         </tr>
-
-                                        <tr>
-                                            <!--<td></td>-->
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <!--<if condition="rolemenu(array('Sale/plans_follow'))">-->
+                                        <foreach name="lists" key="k" item="v">
+                                            <tr>
+                                                <td class="taskOptions">{$k}</td>
+                                                <td class="taskOptions">{$v['合计']['shouru']}</td>
+                                                <td class="taskOptions">{$v['合计']['low_gross']}</td>
+                                                <td class="taskOptions">{$v['合计']['maoli']}</td>
+                                                <td class="taskOptions">{$v['合计']['maolilv']}</td>
+                                                <td class="taskOptions">{$v['合计']['rate']}</td>
+                                                <!--<if condition="rolemenu(array('Sale/plans_follow'))">-->
                                                 <td class="taskOptions">
                                                     <a href="javascript:;" onclick="art_show_msg('加班开发中...')" title="详情" class="btn btn-info btn-smsm"><i class="fa fa-bars"></i></a>
                                                 </td>
+                                                <!--</if>-->
+                                            </tr>
+                                        </foreach>
+                                        <tr class="black">
+                                            <td class="taskOptions">合计</td>
+                                            <td class="taskOptions">{$sum['合计']['shouru']}</td>
+                                            <td class="taskOptions">{$sum['合计']['low_gross']}</td>
+                                            <td class="taskOptions">{$sum['合计']['maoli']}</td>
+                                            <td class="taskOptions">{$sum['合计']['maolilv']}</td>
+                                            <td class="taskOptions">{$sum['合计']['rate']}</td>
+                                            <!--<if condition="rolemenu(array('Sale/plans_follow'))">-->
+                                            <td class="taskOptions">
+                                                <a href="javascript:;" onclick="art_show_msg('加班开发中...')" title="详情" class="btn btn-info btn-smsm"><i class="fa fa-bars"></i></a>
+                                            </td>
                                             <!--</if>-->
+                                        </tr>
+                                        <tr>
+                                            <th colspan="7" style="text-align: left;padding-left: 20px;">说明：该数据从{$year-1}年12月26日起结算项目统计。</th>
                                         </tr>
                                     </table>
                                 </div><!-- /.box-body -->

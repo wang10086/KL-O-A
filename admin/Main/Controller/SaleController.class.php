@@ -308,18 +308,72 @@ class SaleController extends BaseController {
     //各计调毛利率
     public function chart_jd_gross(){
         $year                               = I('year',date('Y'));
-        $month                              = I('month',date('m'));
-        $times                              = get_cycle($year.$month);
+        $times                              = get_year_cycle($year);
         $mod                                = D('Sale');
-        $operator                           = array('39'=>'孟华','19'=>'张乾','33'=>'李婷','86'=>'何亚丽','163'=>'陈继媛');
-        $settlement_lists                   = $mod->get_all_settlement_lists($times['begintime'],$times['endtime']);
-        $data                               = $mod->get_gross($operator,$settlement_lists);
+        $kinds                              = M('project_kind')->getField('id,name',true);
+        $gross_avg                          = $mod->get_gross_avg($kinds,$times['beginTime'],$times['endTime']); //最低毛利率数据
+        $operator                           = array('39'=>'孟华','19'=>'张乾','33'=>'李婷','86'=>'何亚丽','163'=>'陈继媛','27'=>'殷洪');
+        $settlement_lists                   = $mod->get_all_settlement_lists($times['beginTime'],$times['endTime']);
+        $data                               = $mod->get_gross($operator,$settlement_lists,$kinds,$gross_avg); //各计调数据
+        $sum                                = $mod->get_sum_gross($settlement_lists,$kinds,$gross_avg); //获取公司总合计数据
 
         $this->lists                        = $data;
+        $this->sum                          = $sum;
         $this->year                         = $year;
-        $this->month                        = $month;
         $this->prveyear                     = $year-1;
         $this->nextyear                     = $year+1;
+        $this->display();
+    }
+
+    //计调各业务类型毛利率
+    public function gross_jd_info(){
+        $jd_id                              = I('jid');
+        $jd_name                            = I('jname');
+        $year                               = I('year',date('Y'));
+        $times                              = get_year_cycle($year);
+        $mod                                = D('Sale');
+        $kinds                              = M('project_kind')->getField('id,name',true);
+        $gross_avg                          = $mod->get_gross_avg($kinds,$times['beginTime'],$times['endTime']); //最低毛利率数据
+        $settlement_lists                   = $mod->get_all_settlement_lists($times['beginTime'],$times['endTime']);
+
+        if ($jd_id == '888888' || $jd_name == '公司合计'){
+            $data                           = $mod->get_sum_gross($settlement_lists,$kinds,$gross_avg);
+        }else{
+            $data                           = $mod->get_jd_gross($jd_id,$jd_name,$settlement_lists,$kinds,$gross_avg); //各计调数据
+        }
+        $info                               = $data['info'];
+        $info['合计']                       = $data['合计'];
+        $this->lists                        = $info;
+        $this->year                         = $year;
+        $this->display();
+    }
+
+    //计调业务毛利率项目详情
+    public function gross_op_list(){
+        $mod                                = D('Sale');
+        $opids                              = I('opids')?explode(',',I('opids')):'';
+        $year                               = I('year',date('Y'));
+        $times                              = get_year_cycle($year);
+        $kinds                              = M('project_kind')->getField('id,name',true);
+        $gross_avg                          = $mod->get_gross_avg($kinds,$times['beginTime'],$times['endTime']); //最低毛利率数据
+        $where                              = array();
+        $where['s.op_id']                   = array('in', $opids);
+        $where['l.req_type']                = 801;
+        $field                              = 'o.op_id,o.group_id,o.project,o.create_user_name,o.kind,s.shouru,s.maoli,s.maolilv,l.req_uid,l.req_uname';
+
+        //分页
+        $pagecount                          = M()->table('__OP_SETTLEMENT__ as s')->field($field)->join('__OP__ as o on s.op_id = o.op_id', 'LEFT')->join('__AUDIT_LOG__ as l on l.req_id = s.id', 'LEFT')->where($where)->count();
+        $page                               = new Page($pagecount, P::PAGE_SIZE);
+        $this->pages                        = $pagecount>P::PAGE_SIZE ? $page->show():'';
+
+        $lists                              = M()->table('__OP_SETTLEMENT__ as s')->field($field)->join('__OP__ as o on s.op_id = o.op_id', 'LEFT')->join('__AUDIT_LOG__ as l on l.req_id = s.id', 'LEFT')->where($where)->limit($page->firstRow . ',' . $page->listRows)->select();
+        foreach ($lists as $k=>$v){
+            $lists[$k]['gross']             = $gross_avg[$v['kind']]['gross'];
+            $lists[$k]['low_gross']         = round($v['shouru']*$gross_avg[$v['kind']]['num'],2);
+            $lists[$k]['rate']              = (round($v['maoli']/$lists[$k]['low_gross'],4)*100).'%';
+        }
+
+        $this->lists                        = $lists;
         $this->display();
     }
     
