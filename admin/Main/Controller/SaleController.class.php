@@ -382,5 +382,22 @@ class SaleController extends BaseController {
         $this->lists                        = $lists;
         $this->display();
     }
+
+    //kpi页面
+    public function public_kpi_gross(){
+        $yearMonth                          = I('ym');
+        $user_id                            = I('uid');
+        $times                              = get_cycle($yearMonth);
+        $mod                                = D('Sale');
+        $kinds                              = M('project_kind')->getField('id,name',true);
+        $settlement_lists                   = $mod->get_all_settlement_lists($times['begintime'],$times['endtime']);
+        $gross_avg                          = $mod->get_gross_avg($kinds,$times['begintime'],$times['endtime']); //最低毛利率数据
+        $data                               = $mod->get_jd_gross($user_id,username($user_id),$settlement_lists,$kinds,$gross_avg); //各计调数据
+        $info                               = $data['info'];
+        $info['合计']                       = $data['合计'];
+
+        $this->lists                        = $info;
+        $this->display('gross_kpi');
+    }
     
 }
