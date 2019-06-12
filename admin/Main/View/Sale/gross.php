@@ -26,7 +26,7 @@
                                     <table class="table table-bordered dataTable fontmini" id="tablelist" style="margin-top:10px;">
                                         <tr role="row" class="orders" >
                                             <th class="taskOptions" width="" data="">业务类型</th>
-                                            <th class="taskOptions" width="" data="">最低毛利率</th>
+                                            <th class="taskOptions" width="" data="">最低毛利率(%)</th>
                                             <th class="taskOptions" width="" data="">录入时间</th>
                                             <if condition="rolemenu(array('Sale/edit_gross'))">
                                                 <th width="80" class="taskOptions">编辑</th>
