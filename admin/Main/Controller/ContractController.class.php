@@ -295,71 +295,6 @@ class ContractController extends BaseController {
         $this->display();
     }
 
-    /**
-     * 获取各部门的合同签订率
-     * @param $departments
-     * @param $begintime
-     * @param $endtime
-     * @return array
-     */
-    /*public function get_department_op_list($departments,$begintime,$endtime,$yearMonth){
-        $data                               = array();
-        foreach ($departments as $k=>$v){
-            $data[$k]                       = $this->get_department_contract($v,$begintime,$endtime,$yearMonth);
-        }
-        return $data;
-    }*/
-
-
-    /**
-     * 获取单个部门的合同签订率
-     * @param $op_lists
-     * @param $department
-     * @return array
-     */
-    /*public function get_department_contract($department,$begintime,$endtime,$yearMonth){
-        $data                               = array();
-        $data['id']                         = $department['id'];
-        $data['department']                 = $department['department'];
-
-        $count_lists                        = get_department_businessman($department['id']);
-        $department_op_lists                = array();
-        $department_contract_lists          = array();
-        foreach ($count_lists as $key=>$value){
-            $contract_data          = $this->get_user_contract_list($value['id'],$yearMonth,$begintime,$endtime);
-            if ($contract_data['op_list']){ //项目列表
-                foreach ($contract_data['op_list'] as $opk=>$opv){
-                    $department_op_lists[]  = $opv;
-                }
-            }
-            if ($contract_data['contract_list']){ //合同信息
-                foreach ($contract_data['contract_list'] as $conk=>$conv){
-                    $department_contract_lists[] = $conv;
-                }
-            }
-        }
-
-        $data['department_op_lists']        = $department_op_lists;
-        $data['department_contract_lists']  = $department_contract_lists;
-        $data['op_num']                     = count($department_op_lists); //项目数量
-        $data['contract_num']               = count($department_contract_lists); //合同数量
-        $data['average']                    = $data['op_num']?(round($data['contract_num']/$data['op_num'],4)*100).'%':'100%';
-        return $data;
-    }*/
-
-    /**获取公司合计合同签订率
-     * @param $lists
-     * @return array
-     */
-    /*private function get_contract_sum($lists){
-        $data                               = array();
-        $data['name']                       = '合计';
-        $data['op_num']                     = array_sum(array_column($lists,'op_num'));
-        $data['contract_num']               = array_sum(array_column($lists,'contract_num'));
-        $data['average']                    = $data['op_num']?(round($data['contract_num']/$data['op_num'],4)*100).'%':'100%';
-        return $data;
-    }*/
-
     public function public_department_detail(){
         $year                               = I('year',date("Y"));
         $month                              = I('month',date('m'));
@@ -401,35 +336,6 @@ class ContractController extends BaseController {
         $this->display('month_detail');
     }
 
-    /*private function get_user_contract_list($userid,$yearMonth,$begintime,$endtime){
-        $mod                                = D('contract');
-        $gross_margin                       = get_gross_margin($yearMonth,$userid,1);  //获取当月月度累计毛利额目标值(如果毛利额目标为0,则不考核)
-        $target                             = $gross_margin['monthTarget']; //当月目标值
-        $op_list                            = $mod->get_user_op_list($userid,$begintime,$endtime);
-        $op_num 		                    = count($op_list);
-        $contract_list                      = array();
-        foreach ($op_list as $key=>$value){
-            //出团后5天内完成上传
-            $time 		                    = $value['dep_time'] + 6*24*3600;
-            $list                           = M('contract')->where(array('op_id'=>$value['op_id'],'status'=>1,'confirm_time'=>array('lt',$time)))->find();
-            if ($list){
-                $contract_list[]    = $list;
-                $op_list[$key]['contract_stu'] = "<span class='green'>有合同</span>";
-            }else{
-                $op_list[$key]['contract_stu'] = "<span class='red'>无合同</span>";
-            }
-        }
-        $contract_num                       = count($contract_list);
-        $data                               = array();
-        $data['op_list']                    = $op_list;
-        $data['contract_list']              = $contract_list;
-        $data['op_num']                     = $op_num;
-        $data['contract_num']               = $contract_num;
-        $data['target']                     = $target?$target:'0.00';
-        $data['average']                    = $target?(round($contract_num/$op_num,4)*100).'%':'100%';
-        return $data;
-    }*/
-
     //项目合同
     public function op_list(){
         $opid	                            = I('opid',0);
@@ -461,6 +367,87 @@ class ContractController extends BaseController {
 
         $this->lists                        = $lists;
         $this->display();
+    }
+
+    /*******************************************************************************************************/
+    //合同模板
+    public function contract_tpl(){
+        $this->title('合同模板');
+        $db                         = M('contract_tpl');
+        $tit                        = I('tit')?trim(I('tit')):'';
+        $con                        = I('con')?trim(I('con')):'';
+
+        $where                      = array();
+        if ($tit) $where['title']   = array('like','%'.$tit.'%');
+        if ($con) $where['content'] = array('like','%'.$con.'%');
+
+        //分页
+        $pagecount                  = $db->where($where)->count();
+        $page                       = new Page($pagecount, P::PAGE_SIZE);
+        $this->pages                = $pagecount>P::PAGE_SIZE ? $page->show():'';
+
+        $lists                      = $db->where($where)->limit($page->firstRow . ',' . $page->listRows)->order($this->orders('create_time'))->select();
+        $this->lists                = $lists;
+        $this->display();
+    }
+
+    //新增合同模板
+    public function add_tpl(){
+        $this->title('编辑合同模板');
+        $id                         = I('id',0);
+        if ($id){
+            $info                   = M('contract_tpl')->find($id);
+            $attids                 = $info['fileids']?explode(',',$info['fileids']):'';
+            if ($attids) $files     = M('attachment')->where(array('id'=>array('in',$attids)))->select();
+            $this->files            = $files;
+            $this->row              = $info;
+        }
+
+        $this->display();
+    }
+
+
+    public function add_contract(){
+        $this->title('新建合同');
+
+        $this->display();
+    }
+
+    public function public_save(){
+        $savetype                           = I('savetype');
+        if (isset($_POST['dosubmint']) && $savetype){
+            if ($savetype == 1){ //保存合同模板
+
+                var_dump(I());die;
+
+
+                $db                         = M('contract_tpl');
+                $id                         = I('id',0);
+                $title                      = trim(I('title'));
+                $content                    = trim(I('content'));
+                $fileid                     = I('fileid','');
+                if (!$title)    $this->error('模板标题不能为空');
+                if (!$content)  $this->error('模板内容不能为空');
+                $info                       = array();
+                $info['title']              = stripslashes($title);
+                $info['content']            = stripslashes($content);
+                $info['fileids']            = $fileid?implode(',',$fileid):'';
+                $info['create_user']        = session('userid');
+                $info['create_user_name']   = session('nickname');
+
+                if ($id){
+                    $res                    = $db->where(array('id'=>$id))->save($info);
+                }else{
+                    $info['create_time']    = NOW_TIME;
+                    $res                    = $db->add($info);
+                }
+                if ($res){
+                    $this->success('数据保存成功',U('Contract/contract_tpl'));
+                }else{
+                    $this->error('数据保存失败');
+                }
+            }
+        }
     }
 
 }

@@ -462,7 +462,7 @@
                         </if>
 
 
-                        <if condition="rolemenu(array('Contract/index','Contract/statis','Contract/op_list'))">
+                        <if condition="rolemenu(array('Contract/index','Contract/statis','Contract/op_list','Contract/add_contract','Contract/contract_tpl'))">
                         <li class="treeview {:ison(CONTROLLER_NAME, 'Contract')}">
                             <a href="javascript:;">
                                 <i class="fa fa-book"></i>
@@ -471,6 +471,10 @@
                             </a>
                             <ul class="treeview-menu">
 
+                                <if condition="rolemenu(array('Contract/add_contract'))">
+                                    <li><a href="{:U('Contract/add_contract')}"><i class="fa fa-angle-right"></i> 新建合同</a></li>
+                                </if>
+
                                 <if condition="rolemenu(array('Contract/op_list'))">
                                     <li><a href="{:U('Contract/op_list')}"><i class="fa fa-angle-right"></i> 项目合同</a></li>
                                 </if>
@@ -478,8 +482,13 @@
                             	<if condition="rolemenu(array('Contract/index'))">
                                     <li><a href="{:U('Contract/index')}"><i class="fa fa-angle-right"></i> 合同列表</a></li>
                                 </if>
+
                                 <if condition="rolemenu(array('Contract/statis'))">
                                     <li><a href="{:U('Contract/statis')}"><i class="fa fa-angle-right"></i> 合同统计</a></li>
+                                </if>
+
+                                <if condition="rolemenu(array('Contract/contract_tpl'))">
+                                    <li><a href="{:U('Contract/contract_tpl')}"><i class="fa fa-angle-right"></i> 合同模板</a></li>
                                 </if>
                             </ul>
                         </li>
