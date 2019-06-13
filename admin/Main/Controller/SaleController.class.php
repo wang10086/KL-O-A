@@ -318,8 +318,8 @@ class SaleController extends BaseController {
         $mod                                = D('Sale');
         $kinds                              = M('project_kind')->getField('id,name',true);
         $gross_avg                          = $mod->get_gross_avg($kinds,$times['beginTime'],$times['endTime']); //最低毛利率数据
-        $operator                           = array('39'=>'孟华','19'=>'张乾','33'=>'李婷','86'=>'何亚丽','163'=>'陈继媛','27'=>'殷洪');
         $settlement_lists                   = $mod->get_all_settlement_lists($times['beginTime'],$times['endTime']);
+        $operator                           = array_column($settlement_lists,'req_uname','req_uid');
         $data                               = $mod->get_gross($operator,$settlement_lists,$kinds,$gross_avg); //各计调数据
         $sum                                = $mod->get_sum_gross($settlement_lists,$kinds,$gross_avg); //获取公司总合计数据
 
