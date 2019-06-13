@@ -420,6 +420,22 @@ class ContractController extends BaseController {
         $this->display();
     }
 
+    //删除合同模板
+    public function del_tpl(){
+        $id                         = I('id');
+        if (!$id) $this->error('获取数据信息失败');
+        $db                         = M('contract_tpl');
+        $fileids                    = $db->where(array('id'=>$id))->getField('fileids');
+        if ($fileids) $fileids      = explode(',',$fileids);
+        $res                        = $db->delete($id);
+        M('attachment')->where(array('id'=>array('in',$fileids)))->delete();
+        if ($res){
+            $this->success('删除成功');
+        }else{
+            $this->error('删除失败');
+        }
+    }
+
 
     public function add_contract(){
         $this->title('新建合同');
