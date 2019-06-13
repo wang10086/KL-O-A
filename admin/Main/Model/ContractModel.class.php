@@ -17,7 +17,7 @@ class ContractModel extends Model{
      * @return mixed
      */
     public function get_budget_list($sale_user_id,$begintime,$endtime){
-        $dj_opids                           = array_filter(M('op')->group('dijie_opid')->getField('dijie_opid',true));
+        $dj_opids                           = get_djopid();
         $where                              = array(); //当月预算审核通过的项目
         $where['l.req_type']                = P::REQ_TYPE_BUDGET; //预算申请
         $where['b.audit_status']            = 1; //审批通过
@@ -41,8 +41,8 @@ class ContractModel extends Model{
         $where 							    = array();
         if($userid) $where['o.create_user'] = $userid;
         $where['c.dep_time']			    = array('between',array($begintime,$endtime));
-        $dj_op_ids                          = array_filter(M('op')->getField('dijie_opid',true));
-        $where['o.op_id']                   = array('not in',$dj_op_ids);   //排除地接团
+        $dj_opids                           = get_djopid();
+        $where['o.op_id']                   = array('not in',$dj_opids);   //排除地接团
         $op_list	                        = M()->table('__OP__ as o')->field('o.*,c.dep_time,c.ret_time')->join('left join __OP_TEAM_CONFIRM__ as c on o.op_id=c.op_id')->where($where)->select();
         return $op_list;
     }
