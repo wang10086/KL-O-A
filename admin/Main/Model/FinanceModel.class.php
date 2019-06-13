@@ -246,7 +246,7 @@ class FinanceModel extends Model{
         foreach ($lists as $k=>$v){
             if ($v['status'] ==2){
                 $lists[$k]['huikuan_stu']= "<span class='green'>已回款</span>";
-            }elseif ($v['status'] ==2){
+            }elseif ($v['status'] ==1){
                 $lists[$k]['huikuan_stu']= "<span class='blue'>回款中</span>";
             }else{
                 $lists[$k]['huikuan_stu']= "<span class='red'>未回款</span>";

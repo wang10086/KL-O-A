@@ -2895,6 +2895,8 @@ class FinanceController extends BaseController {
         $money_back_num                     = count($pays); //回款次数
         $num                                = 0;
         $sum                                = 0;
+        $sum_paied                          = $contract_pay_db->where(array('op_id'=>$opid,'status'=>array('in',array(1,2))))->sum('pay_amount');
+        $sum_paied                          = $sum_paied?$sum_paied:0; //已回款金额
         if (is_array($pays)){
             foreach ($pays as $k=>$v){
                 $info                       = array();
@@ -2904,7 +2906,12 @@ class FinanceController extends BaseController {
                 }else{ //最后一次回款
                     $info['amount']         = $should_back_money - $sum;
                     $info['ratio']          = (round($info['amount']/$should_back_money,4)*100).'%';
-                    $info['status']         = 0; //未回款
+                    if ($sum_paied >= $should_back_money){ //已回款金额>=应回款金额
+                        $info['status']     = 2; //已回款
+                    }else{
+                        $status             = in_array($v['status'],array(1,2))?1:0;
+                        $info['status']     = $status; //未回款
+                    }
                 }
                 $res                        = $contract_pay_db->where(array('id'=>$v['id']))->save($info);
                 if ($res) $num++;
