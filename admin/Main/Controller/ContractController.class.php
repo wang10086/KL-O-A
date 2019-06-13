@@ -398,11 +398,25 @@ class ContractController extends BaseController {
         if ($id){
             $info                   = M('contract_tpl')->find($id);
             $attids                 = $info['fileids']?explode(',',$info['fileids']):'';
-            if ($attids) $files     = M('attachment')->where(array('id'=>array('in',$attids)))->select();
+            if ($attids) $files     = get_files($attids);
             $this->files            = $files;
             $this->row              = $info;
         }
 
+        $this->display();
+    }
+
+    //合同模板详情
+    public function tpl_detail(){
+        $this->title('合同模板详情');
+        $id                         = I('id');
+        if (!$id) $this->error('获取数据失败');
+        $list                       = M('contract_tpl')->find($id);
+        $fileids                    = $list['fileids']?explode(',',$list['fileids']):'';
+        if ($fileids) $files        = get_files($fileids);
+
+        $this->list                 = $list;
+        $this->files                = $files;
         $this->display();
     }
 
@@ -417,10 +431,6 @@ class ContractController extends BaseController {
         $savetype                           = I('savetype');
         if (isset($_POST['dosubmint']) && $savetype){
             if ($savetype == 1){ //保存合同模板
-
-                var_dump(I());die;
-
-
                 $db                         = M('contract_tpl');
                 $id                         = I('id',0);
                 $title                      = trim(I('title'));

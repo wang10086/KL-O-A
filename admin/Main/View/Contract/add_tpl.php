@@ -58,8 +58,8 @@
                                             <foreach name="files" item="v">
                                                 <tr id="{$v['id']}"  valign="middle" class="un_upload">
                                                     <td class="iptval">
-                                                        <input type="text" name="filename[]" value="{$v['filename']}" class="form-control file_val" />
-                                                        <input type="hidden" name="fileid[]" value="{$v['id']}">
+                                                        <input type="text" name="newname[{$v['id']}]" value="{$v['filename']}" class="form-control file_val" />
+                                                        <input type="hidden" name="fileid[{$v['id']}]" value="{$v['id']}" class="id_val">
                                                     </td>
                                                     <td> <?php echo round($v[filesize]/1024,2); ?>Kb</td>
                                                     <td>

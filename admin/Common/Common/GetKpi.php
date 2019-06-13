@@ -2669,3 +2669,9 @@ function get_yw_department(){
         );
         return $data;
     }
+
+    function get_files($ids){
+        $db                             = M('attachment');
+        $lists                          = $db->where(array('id'=>array('in',$ids)))->select();
+        return $lists;
+    }
