@@ -82,6 +82,7 @@ class SaleModel extends Model{
         $data                           = array();
         $rowspan                        = 1;
         foreach ($kinds as $kk=>$vv){
+            $arr_kids                   = get_kids($kk);
             $shouru                     = 0;
             $maoli                      = 0;
             $low_gross                  = 0;
@@ -90,7 +91,7 @@ class SaleModel extends Model{
             $num                        = 0;
             foreach ($settlements as $key => $value) {
                 if ($value['req_uid'] == $uid) {
-                    if ($value['kind'] == $kk){
+                    if (in_array($value['kind'],$arr_kids)){
                         //单个业务类型合计
                         $shouru         += $value['shouru'];
                         $maoli          += $value['maoli'];
@@ -160,6 +161,7 @@ class SaleModel extends Model{
         $data                           = array();
         $rowspan                        = 1;
         foreach ($kinds as $k=>$v){
+            $arr_kids                   = get_kids($k);
             $shouru                     = 0;
             $maoli                      = 0;
             $low_gross                  = 0;
@@ -167,7 +169,7 @@ class SaleModel extends Model{
             $group_ids                  = '';
             $num                        = 0;
             foreach ($settlement_lists as $key=>$value){
-                if ($value['kind'] == $k){
+                if (in_array($value['kind'],$arr_kids)){
                     //单个业务类型合计
                     $shouru         += $value['shouru'];
                     $maoli          += $value['maoli'];
@@ -215,6 +217,90 @@ class SaleModel extends Model{
         $data['合计']['group_ids']      = implode(',', $sum_group_ids);
         return $data;
     }
+
+    /**
+     * 获取公司总的毛利相关数据
+     * @param $settlement_no_dj_lists //本周期内结算的团(不包含地接团)
+     * @param $settlement_lists //本周期内结算的团(包含地接团)
+     * @param $kinds 所有业务类型
+     * @param $gross_avg 每种业务类型的最低毛利率
+     */
+    public function get_company_sum_gross($settlement_no_dj_lists,$settlement_lists,$kinds,$gross_avg){
+        $sum_shouru                     = 0;
+        $sum_maoli                      = 0;
+        $sum_low_gross                  = 0;
+        $sum_opids                      = '';
+        $sum_group_ids                  = '';
+        $sum_num                        = 0; //项目数
+        $data                           = array();
+        $rowspan                        = 1;
+        foreach ($kinds as $k=>$v){
+            $arr_kids                   = get_kids($k);
+            $shouru                     = 0;
+            $maoli                      = 0;
+            $low_gross                  = 0;
+            $opids                      = '';
+            $group_ids                  = '';
+            $num                        = 0;
+            foreach ($settlement_no_dj_lists as $key=>$value){ //排除地接的
+                if (in_array($value['kind'],$arr_kids)){
+                    //单个业务类型合计
+                    $shouru         += $value['shouru'];
+
+                    //总合计
+                    $sum_shouru     += $value['shouru'];
+                }
+            }
+
+            foreach ($settlement_lists as $key=>$value){ //所有的结算数据(包含地接)
+                if (in_array($value['kind'],$arr_kids)){
+                    //单个业务类型合计
+                    $maoli          += $value['maoli'];
+                    $low_gross      += $value['shouru']*$gross_avg[$k]['num'];
+                    $opids[]        = $value['op_id'];
+                    $group_ids[]    = $value['group_id'];
+                    $num++;
+
+                    //总合计
+                    $sum_maoli      += $value['maoli'];
+                    $sum_low_gross  += $value['shouru']*$gross_avg[$k]['num'];
+                    $sum_opids[]    = $value['op_id'];
+                    $sum_group_ids[]= $value['group_id'];
+                    $sum_num++;
+                }
+            }
+
+            if ($num){
+                $info                   = array();
+                $info['kind_id']        = $k;
+                $info['kind']           = $v;
+                $info['num']            = $num;
+                $info['shouru']         = $shouru;
+                $info['maoli']          = $maoli;
+                $info['low_gross']      = $low_gross;
+                $info['maolilv']        = (round($maoli/$shouru,4)*100).'%';
+                $info['rate']           = (round($maoli/$low_gross,4)*100).'%';
+                $info['opids']          = $opids?implode(',',$opids):'';
+                $info['group_ids']      = $group_ids?implode(',',$group_ids):'';
+                $rowspan++;
+                $data['info'][]         = $info;
+            }
+        }
+        $data['rowspan']                = $rowspan;
+        $data['合计']['jd_id']          = '888888';
+        $data['合计']['jd']             = '公司合计';
+        $data['合计']['kind']           = '公司合计';
+        $data['合计']['num']            = $sum_num; //总项目包含地接项目
+        $data['合计']['shouru']         = $sum_shouru; //结算收入排除地接收入
+        $data['合计']['maoli']          = $sum_maoli; //毛利包含地接毛利
+        $data['合计']['low_gross']      = $sum_low_gross;
+        $data['合计']['maolilv']        = (round($sum_maoli/$sum_shouru,4)*100).'%';
+        $data['合计']['rate']           = (round($sum_maoli/$sum_low_gross,4)*100).'%';
+        $data['合计']['opids']          = implode(',', $sum_opids);
+        $data['合计']['group_ids']      = implode(',', $sum_group_ids);
+        return $data;
+    }
+
 
     /**
      * 获取所有的毛利率数据

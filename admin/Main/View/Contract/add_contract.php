@@ -22,7 +22,7 @@
                          <!-- right column -->
                         <div class="col-md-12">
                             <!-- general form elements disabled -->
-                            <form method="post" action="{:U('Contract/add')}" name="myform" id="myform" onsubmit="return beforeSubmit(this)">
+                            <form method="post" action="{:U('Contract/public_save')}" name="myform" id="myform" onsubmit="return beforeSubmit(this)">
                             <div class="box box-warning">
                                 <div class="box-header">
                                     <h3 class="box-title">{$_action_}</h3>
@@ -30,7 +30,8 @@
                                 <div class="box-body_bak">
                                     
                                     <input type="hidden" name="dosubmit" value="1" />
-                                    <input type="hidden" name="referer" value="<?php echo $_SERVER['HTTP_REFERER']; ?>" />
+                                    <input type="hidden" name="savetype" value="2">
+                                    <!--<input type="hidden" name="referer" value="<?php /*echo $_SERVER['HTTP_REFERER']; */?>" />-->
                                     <input type="hidden" name="id" value="{$row.id}" />
                                     
                                     <!-- text input -->
@@ -86,6 +87,15 @@
                                     <div class="form-group col-md-4 op-contract">
                                         <label>团号<small>（如无团号信息可暂不填写）</small></label>
                                         <input type="text" name="info[group_id]" value="{$row.group_id}" class="form-control" />
+                                    </div>
+
+                                    <div class="form-group col-md-4 op-contract">
+                                        <label>项目团号</label>
+                                        <div class="input-group">
+                                            <input type="text"  name="info[group_id]" placeholder="团号" class="form-control" value="{$row.group_id}" id="groupid" required>
+                                            <!--<span class="input-group-addon" style="width:32px;"><a href="javascript:;" onClick="getop();" >获取</a></span>-->
+                                            <span class="input-group-addon" style="width:32px;"><a href="javascript:;" onClick="check_contract();" >获取</a></span>
+                                        </div>
                                     </div>
 
                                     <div class="form-group col-md-4 op-contract">
@@ -167,4 +177,50 @@
             $('input[name="info[group_id]"]').val('');
         }
     });
+
+    function check_contract(){
+        var gid = $('#groupid').val();
+        if(gid){
+            $.ajax({
+                type: "POST",
+                url: "{:U('Ajax/get_contract')}",
+                dataType:'json',
+                data: {gid:gid},
+                success:function(data){
+                    if (data){
+                        art_show_msg('该项目合同已存在');
+                        return false;
+                    }else{
+                        getop();
+                    }
+                }
+            });
+        }else{
+            art_show_msg('请输入团号');
+        }
+    }
+
+    function getop(){
+        var gid = $('#groupid').val();
+        if(gid){
+            $.ajax({
+                type: "GET",
+                url: "<?php echo U('Ajax/getop'); ?>",
+                dataType:'json',
+                data: {gid:gid},
+                success:function(data){
+                    if(data){
+                        $('#proname').val(data.project);
+                        $('#number').val(data.renshu);
+                        $('#dep_time').val(data.departure);
+                        $('#contract_amount').val(data.shouru);
+                    }else{
+                        art_show_msg('未获取到项目信息');
+                    }
+                }
+            });
+        }else{
+            art_show_msg('请输入团号');
+        }
+    }
 </script>

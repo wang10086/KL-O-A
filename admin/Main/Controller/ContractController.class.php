@@ -476,6 +476,10 @@ class ContractController extends BaseController {
                     $this->error('数据保存失败');
                 }
             }
+
+            if ($savetype == 2){ //保存填写的基本合同信息
+
+            }
         }
     }
 

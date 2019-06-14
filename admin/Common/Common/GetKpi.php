@@ -2675,3 +2675,26 @@ function get_yw_department(){
         $lists                          = $db->where(array('id'=>array('in',$ids)))->select();
         return $lists;
     }
+
+    /**获取项目类型(解决以前被删除的项目类型对数据的影响)
+     * @param $kid
+     * @return array
+     */
+    function get_kids($kid){
+        $kind_db                = M('project_kind');
+        $kind_ids               = $kind_db->getField('id',true);
+        $last_id                = $kind_db->order('id desc')->getField('id');
+        $del_ids                = array();
+        if ($kid == 3){
+            $del_ids[]          = 3;
+            for ($i=1;$i<$last_id;$i++){
+                if (!in_array($i,$kind_ids)){
+                    $del_ids[]  = $i;
+                }
+            }
+            $arr                = $del_ids;
+        }else{
+            $arr                = array($kid);
+        }
+        return $arr;
+    }
