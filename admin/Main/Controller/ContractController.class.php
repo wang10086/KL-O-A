@@ -439,7 +439,10 @@ class ContractController extends BaseController {
 
     public function add_contract(){
         $this->title('新建合同');
+        $tpl_list                   = M('contract_tpl')->getField('id,title',true);
 
+
+        $this->tpl_list             = $tpl_list;
         $this->display();
     }
 

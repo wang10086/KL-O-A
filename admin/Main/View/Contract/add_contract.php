@@ -27,7 +27,7 @@
                                 <div class="box-header">
                                     <h3 class="box-title">{$_action_}</h3>
                                 </div><!-- /.box-header -->
-                                <div class="box-body">
+                                <div class="box-body_bak">
                                     
                                     <input type="hidden" name="dosubmit" value="1" />
                                     <input type="hidden" name="referer" value="<?php echo $_SERVER['HTTP_REFERER']; ?>" />
@@ -38,22 +38,44 @@
                                     <div class="form-group col-md-12">
                                    		<h2 style="font-size:16px; color:#ff3300; border-bottom:2px solid #dedede; padding-bottom:10px;">合同信息</h2>
                                     </div>
-                                    
-                                    <div class="col-md-4">
-                                        <label>项目团号</label>
-                                        <div class="input-group">
-                                            <input type="text"  name="info[group_id]" placeholder="团号" class="form-control" value="{$row.group_id}" id="groupid" required>
-                                            <!--<span class="input-group-addon" style="width:32px;"><a href="javascript:;" onClick="getop();" >获取</a></span>-->
-                                            <span class="input-group-addon" style="width:32px;"><a href="javascript:;" onClick="check_contract();" >获取</a></span>
+
+                                    <div class="form-group col-md-4">
+                                        <label>合同类型</label>
+                                        <select name="info[type]" class="form-control" id="type">
+                                            <option value="1">团内合同</option>
+                                            <option value="2">非团合同</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="form-group col-md-8 nop-contract">
+                                        <label>合同标题</label>
+                                        <input type="text" class="form-control" name="project">
+                                    </div>
+
+                                    <div class="form-group col-md-4" id="need_tpl_or_not">
+                                        <label>是否选择合同模板：</label>
+                                        <div class="form-control no-border">
+                                            <input type="radio" name="is_tpl" value="1"  <?php if($rad==1){ echo 'checked';} ?>> &nbsp;选择 &#12288;&#12288;
+                                            <input type="radio" name="is_tpl" value="0"  <?php if($rad==0){ echo 'checked';} ?>> &nbsp;不选择
                                         </div>
                                     </div>
-                                    <div class="form-group  col-md-4">
-                                        <label>项目名称</label>
-                                        <input type="text" name="info[pro_name]" class="form-control" id="proname" value="{$row.pro_name}" required />
+
+                                    <div class="form-group col-md-4" id="tpl-box">
+                                        <label>请选择模板</label>
+                                        <select name="info[tpl_id]" class="form-control">
+                                            <option value="">==请选择==</option>
+                                            <foreach name="tpl_list" key="k" item="v">
+                                                <option value="{$k}">{$v}</option>
+                                            </foreach>
+                                        </select>
                                     </div>
+
                                     <div class="form-group col-md-4">
-                                        <label>出团人数</label>
-                                        <input type="text" name="info[number]" id="number"   value="{$row.number}" class="form-control" required />
+                                        <label>是否需要律师审核</label>
+                                        <select name="info[lawyer]" class="form-control">
+                                            <option value="1">需要律师审核</option>
+                                            <option value="2">不需要律师审核</option>
+                                        </select>
                                     </div>
                                     
                                     <div class="form-group col-md-4">
@@ -61,12 +83,17 @@
                                         <input type="text" name="info[contract_amount]" id="contract_amount"   value="{$row.contract_amount}" class="form-control" required />
                                     </div>
                                     
-                                    <div class="form-group col-md-4">
+                                    <div class="form-group col-md-4 op-contract">
+                                        <label>团号<small>（如无团号信息可暂不填写）</small></label>
+                                        <input type="text" name="info[group_id]" value="{$row.group_id}" class="form-control" />
+                                    </div>
+
+                                    <div class="form-group col-md-4 op-contract">
                                         <label>出团时间</label>
                                         <input type="text" name="info[dep_time]" id="dep_time"   value="{$row.dep_time}" class="form-control inputdate" />
                                     </div>
                                     
-                                    <div class="form-group col-md-4">
+                                    <div class="form-group col-md-4 op-contract">
                                         <label>结束时间</label>
                                         <input type="text"  name="info[end_time]" id="end_time"   value="{$row.end_time}" class="form-control inputdate" />
                                     </div>
@@ -79,82 +106,17 @@
                                     
                                     
                             		<div class="form-group col-md-12">
-                                   		<h2 style="font-size:16px; color:#ff3300; border-bottom:2px solid #dedede; padding-bottom:10px;">合同电子扫描件</h2>
+                                   		<h2 style="font-size:16px; color:#ff3300; border-bottom:2px solid #dedede; padding-bottom:10px;">合同相关文件<small>（为了方便后期审核,请尽量上传word类型文件）</small></h2>
                                     </div>
-                                    
+                                    <div class="form-group col-md-12">
                                     {:upload_m('uploadfile','files',$atts,'上传文件')}
-                                    
-                                    
-                                    
-                                    <!--<div class="content" style="padding-top:0px;">
-                                    	<h2 style="font-size:16px; color:#ff3300; border-bottom:2px solid #dedede; padding-bottom:10px;">回款计划</h2>
-                                        <div id="payment">
-                                            <div class="userlist">
-                                                <div class="unitbox_20">回款金额(元)</div>
-                                                <div class="unitbox_20">回款比例(%)</div>
-                                                <div class="unitbox_20">计划回款时间</div>
-                                                <div class="unitbox_40">备注</div>
-                                            </div>
-                                            <?php /*if($pays){ */?>
-                                            <foreach name="pays" key="kk" item="pp"> 
-                                            <div class="userlist" id="pretium_8888{$pp.id}">
-                                                <span class="title"><?php /*echo $kk+1; */?></span>
-                                                <input type="hidden" name="payment[8888{$pp.id}][no]" class="payno"  value="{$pp.no}">
-                                                <input type="hidden" class="form-control" name="payment[8888{$pp.id}][pid]" value="{$pp.id}">
-                                                <div class="f_20">
-                                                    <input type="text" class="form-control" name="payment[8888{$pp.id}][amount]" value="{$pp.amount}">
-                                                </div>
-                                                <div class="f_20">
-                                                    <input type="text" class="form-control" name="payment[8888{$pp.id}][ratio]" value="{$pp.ratio}">
-                                                </div>
-                                                <div class="f_20">
-                                                    <input type="text" class="form-control inputdate"  name="payment[8888{$pp.id}][return_time]" value="<if condition="$pp['return_time']">{$pp.return_time|date='Y-m-d',###}</if>">
-                                                </div>
-                                                <div class="f_40">
-                                                    <input type="text" class="form-control" name="payment[8888{$pp.id}][remarks]" value="{$pp.remark}">
-                                                </div>
-                                               
-                                                <a href="javascript:;" class="btn btn-danger btn-flat" onclick="delbox('pretium_8888{$pp.id}')">删除</a>
-                                            </div>
-                                            </foreach>
-                                            <?php /*}else{ */?>
-                                            <div class="userlist" id="pretium_id">
-                                                <span class="title">1</span>
-                                                <input type="hidden" name="payment[1][no]" class="payno" value="1">
-                                                <div class="f_20">
-                                                    <input type="text" class="form-control" name="payment[1][amount]" value="">
-                                                </div>
-                                                <div class="f_20">
-                                                    <input type="text" class="form-control" name="payment[1][ratio]" value="">
-                                                </div>
-                                                <div class="f_20">
-                                                    <input type="text" class="form-control inputdate"  name="payment[1][return_time]" value="">
-                                                </div>
-                                                <div class="f_40">
-                                                    <input type="text" class="form-control" name="payment[1][remarks]" value="">
-                                                </div>
-                                               
-                                                <a href="javascript:;" class="btn btn-danger btn-flat" onclick="delbox('pretium_id')">删除</a>
-                                            </div>
-                                            <?php /*} */?>
-                                        </div>
-                                        <div id="payment_val">1</div>
-                                        <div class="form-group col-md-12" id="useraddbtns">
-                                            <a href="javascript:;" class="btn btn-success btn-sm" onClick="add_payment()"><i class="fa fa-fw fa-plus"></i> 增加回款信息</a> 
-                                             
-                                        </div>
-                                        <div class="form-group">&nbsp;</div>
-                                    </div>-->
+                                    </div>
 
-                                    <div class="form-group">&nbsp;</div>
+
                                 </div>
-                                    
-                                    
                             </div><!-- /.box -->
-                            
-                            
-                            
-                            <div id="formsbtn">
+
+                            <div class="form-group col-md-12" id="formsbtn">
                             	<button type="submit" class="btn btn-info btn-lg" id="lrpd">保存</button>
                             </div>
                             </form>
@@ -168,105 +130,41 @@
 </div>
             
 <include file="Index:footer2" />
+
 <script type="text/javascript">
-    function check_contract(){
-        var gid = $('#groupid').val();
-        if(gid){
-            $.ajax({
-                type: "POST",
-                url: "{:U('Ajax/get_contract')}",
-                dataType:'json',
-                data: {gid:gid},
-                success:function(data){
-                    if (data){
-                        art_show_msg('该项目合同已存在');
-                        return false;
-                    }else{
-                        getop();
-                    }
+
+    $(function () {
+        $('#tpl-box').hide();
+        //$('.op-contract').hide();
+        $('.nop-contract').hide();
+
+        $('#need_tpl_or_not').find('ins').each(function (index,ele) {
+            $(this).click(function () {
+                let is_tpl      = $(this).prev('input').val();
+                if (is_tpl == 1){ //需要模板
+                    $('#tpl-box').show();
+                    $('select[name="info[tpl_id]"]').attr('required',true);
+                }else{
+                    $('#tpl-box').hide();
+                    $('select[name="info[tpl_id]"]').removeAttr('required');
+                    $('select[name="info[tpl_id]"]').val('');
                 }
-            });
-        }else{
-            art_show_msg('请输入团号');
+            })
+        })
+    })
+
+    $('#type').on('change',function () {
+        let type                = $(this).val();
+        if (type == 1){ //团内合同
+            $('.nop-contract').hide();
+            $('.op-contract').show();
+            $('input[name="project"]').val('');
+        }else{ //非团合同
+            $('.nop-contract').show();
+            $('.op-contract').hide();
+            $('input[name="info[dep_time]"]').val('');
+            $('input[name="info[end_time]"]').val('');
+            $('input[name="info[group_id]"]').val('');
         }
-    }
-
-function getop(){
-	var gid = $('#groupid').val();
-	if(gid){
-		$.ajax({
-			type: "GET",
-			url: "<?php echo U('Ajax/getop'); ?>",
-			dataType:'json', 
-			data: {gid:gid},
-			success:function(data){
-				if(data){
-					$('#proname').val(data.project);
-					$('#number').val(data.renshu);
-					$('#dep_time').val(data.departure);
-					$('#contract_amount').val(data.shouru);
-				}else{
-					art_show_msg('未获取到项目信息'); 
-				}
-			}
-		});	
-   }else{
-	   art_show_msg('请输入团号');  
-   }
-}
-
-
-//新增汇款期
-function add_payment(){
-	var i = parseInt($('#payment_val').text())+1;
-
-	var html = '<div class="userlist" id="pretium_'+i+'">';
-		html += '<span class="title"></span>';
-		html += '<input type="hidden" name="payment['+i+'][no]" class="payno" value="">';
-		html += '<div class="f_20"><input type="text" class="form-control" name="payment['+i+'][amount]" value=""></div>';
-		html += '<div class="f_20"><input type="text" class="form-control" name="payment['+i+'][ratio]" value=""></div>';
-		html += '<div class="f_20"><input type="text" class="form-control inputdate"  name="payment['+i+'][return_time]" value=""></div>';
-		html += '<div class="f_40"><input type="text" class="form-control" name="payment['+i+'][remarks]" value=""></div>';
-		html += '<a href="javascript:;" class="btn btn-danger btn-flat" onclick="delbox(\'pretium_'+i+'\')">删除</a>';
-		html += '</div>';
-	$('#payment').append(html);	
-	$('#payment_val').html(i);
-	orderno();
-	
-	relaydate();
-	
-}
-
-
-	
-	
-
-//编号
-function orderno(){
-	$('#payment').find('.title').each(function(index, element) {
-		$(this).text(parseInt(index)+1);
-	});
-	$('#payment').find('.payno').each(function(index, element) {
-		$(this).val(parseInt(index)+1);
-	});
-}
-
-
-//移除
-function delbox(obj){
-	$('#'+obj).remove();
-	orderno();
-}
-
-//表单提交
-function beforeSubmit(obj){
-    var contract_amount = parseInt($('#contract_amount').val());
-    if (!contract_amount){
-        art_show_msg('合同金额填写有误',3);
-        return false;
-    }else{
-        obj.submit();
-    }
-}
-	
+    });
 </script>

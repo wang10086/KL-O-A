@@ -26,7 +26,7 @@
                         <div class="box-body">
                             <div class="content">
                             	<div class="form-group col-md-12">
-                                    <h2 class="brh3">模板名称：{$list.title}</h2>
+                                    <h2 class="brh3">模板名称：<span class="black">{$list.title}</span></h2>
                                 </div>
                                 <div class="form-group col-md-12">{:html_entity_decode($list['content'], ENT_QUOTES, 'UTF-8')}</div>
                                 
