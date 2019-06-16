@@ -103,13 +103,17 @@ class AjaxController extends Controller {
 	// @@@NODE-3###getop###获取项目数据###
 	public function getop(){
 		
-		$gid	= I('gid','');
+		$gid	                = I('gid','');
 		
-		$where	= array();
+		$where	                = array();
 		$where['o.group_id']	= trim($gid);
-		
-		$op = M()->table('__OP__ as o')->field('o.*,s.renshu,s.shouru')->join('__OP_SETTLEMENT__ as s on s.op_id = o.op_id','LEFT')->where($where)->find();
-		
+
+        //$op                   = M()->table('__OP__ as o')->field('o.*,s.renshu,s.shouru')->join('__OP_SETTLEMENT__ as s on s.op_id = o.op_id','LEFT')->where($where)->find();
+        $field                  = 'o.id,o.project,o.group_id,o.op_id,o.number,o.departure,o.create_user,o.create_user_name,c.dep_time,c.ret_time,s.renshu,s.shouru';
+		$op                     = M()->table('__OP__ as o')->field($field)->join('__OP_TEAM_CONFIRM__ as c on c.op_id=o.op_id','left')->join('__OP_SETTLEMENT__ as s on s.op_id = o.op_id','LEFT')->where($where)->find();
+        $op['dep_time']         = $op['dep_time']?date('Y-m-d',$op['dep_time']):'';
+        $op['ret_time']         = $op['ret_time']?date('Y-m-d',$op['ret_time']):'';
+
 		echo json_encode($op,true);
 		
 	}
@@ -1569,7 +1573,7 @@ class AjaxController extends Controller {
 
     //检查该团是否已创建合同
     public function get_contract(){
-        $group_id       = I('gid');
+        $group_id       = trim(I('gid'));
         $contract       = M()->table('__CONTRACT__ as c')->field('c.*')->join('__OP__ as o on o.op_id = c.op_id')->where(array('o.group_id'=>$group_id))->find();
         $this->ajaxReturn($contract);
     }

@@ -4169,5 +4169,7 @@ th{outline: none;}
 .score-tit{ width: 100%;  border-bottom: dashed 1px #A9A9A9; text-align: center; }
 .score-tit h1 { font-size: 20px; font-weight: 600; color: #00a0e9; }
 
+.little-title{font-size:16px; color:#ff3300; border-bottom:2px solid #dedede; padding-bottom:10px;}
+
 
 
