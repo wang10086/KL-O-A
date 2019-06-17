@@ -214,8 +214,8 @@
                 dataType:'json',
                 data: {gid:gid},
                 success:function(data){
-                    if (data){
-                        art_show_msg('该项目合同已存在');
+                    if (data.stu){
+                        art_show_msg(data.msg,3);
                         return false;
                     }else{
                         getop();
@@ -250,10 +250,6 @@
         }else{
             art_show_msg('请输入团号');
         }
-    }
-    
-    function beforeSubmit() {
-        
     }
 
     artDialog.alert = function (content, status) {
@@ -294,17 +290,18 @@
             success:function(data){
                 if(parseInt(data.num)>0){
                     art.dialog.alert(data.msg,'success');
+                    window.location.href = "{:U('Contract/index')}";
                 }else{
                     art.dialog.alert(data.msg,'warning');
                     return false;
                 }
-
-                console.log(data);
-                return false;
+            },
+            error:function () {
+                alert('error');
             }
         });
 
-        setTimeout("history.go(0)",1000);
+        //setTimeout("history.go(0)",1000);
     }
     
 </script>

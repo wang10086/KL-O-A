@@ -4072,10 +4072,6 @@ function save_aontract_art($releid,$data){
 
         //删除
         $isdel = $db->where($where)->select();
-        var_dump($where);
-        echo "<hr />";
-        echo M()->getlastsql();
-        var_dump($isdel);die;
 
         if($isdel){
             foreach($isdel as $k=>$v){

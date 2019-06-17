@@ -477,72 +477,6 @@ class ContractController extends BaseController {
                 }
             }
 
-            /*
-             //根据团号获取项目信息
-			$op			= M('op')->where(array('group_id'=>$group_id))->find();
-			if(!$op){
-				$this->error('未找到该团的项目信息');
-			}
-			$info['op_id']			= $op['op_id'];
-			$info['update_time']	= time();
-
-			//判断该团是否已创建合同
-			$where	= array();
-			$where['group_id']	= $info['group_id'];
-			$where['id']		= array('neq',$id);
-			$isok	= $db->where($where)->find();
-
-            if(!$id){
-                if (!$isok){
-                    $info['create_user']		= session('userid');
-                    $info['create_user_name']	= session('name');
-                    $info['create_time']		= time();
-                    $save	= $db->add($info);
-                    $cid	= $save;
-
-                    //保存操作记录
-                    $record                 = array();
-                    $record['contract_id']  = $save;
-                    $record['type']         = 1;
-                    $record['explain']      = '新建合同';
-                    contract_record($record);
-
-                    //发送系统消息
-                    $uid     = session('userid');
-                    $title   = '您有来自['.session('name').'--'.$op['project'].']的合同待审核!';
-                    $content = '项目名称：'.$op['project'].'团号：'.$op['group_id'];
-                    $url     = U('Contract/index');
-                    $user    = '[104]'; //段丽华
-                    send_msg($uid,$title,$content,$url,$user,'');
-
-                    //发送短信通知
-                    $mobile  = 13611112021;
-                    sendTemplateSMS($mobile, array(session('name'),$op['project']), "425448"); //手机号码，替换内容数组，模板ID
-                }
-            }else{
-                $save	= $db->data($info)->where(array('id'=>$id))->save();
-               	$cid	= $id;
-
-                //保存操作记录
-                $record                 = array();
-                $record['contract_id']  = $id;
-                $record['type']         = 2;
-                $record['explain']      = '修改合同内容';
-                contract_record($record);
-            }
-			//保存电子扫描件
-			save_aontract_art($cid,$attr);
-
-			//保存分期信息
-			//save_payment($cid,$payment);
-
-			if($save) {
-				$this->success('保存成功！',$referer);
-			} else {
-				$this->error('保存失败：' . $db->getError());
-			}
-             * */
-
             if ($savetype == 2){ //保存填写的基本合同信息
                 $data                       = array();
                 $num                        = 0;
@@ -554,55 +488,74 @@ class ContractController extends BaseController {
                 $info['customer']           = trim($info['customer']);
                 $info['pro_name']           = trim($info['pro_name']);
                 $info['remarks']            = trim($info['remarks']);
-                $info['group_id']           = trim($info['group_id']);
-                $op			                = M('op')->where(array('group_id'=>$info['group_id']))->find();
-                if(!$op){
-                    $data['num']            = $num;
-                    $data['msg']            = '未找到该团的项目信息';
-                    $this->ajaxReturn($data);
-                }
-                $info['op_id']			    = $op['op_id'];
-                $info['update_time']	    = time();
+                $info['group_id']           = trim($info['group_id'])?trim($info['group_id']):'';
+                $info['pro_name']           = trim($info['pro_name'])?trim($info['pro_name']):'';
+                $info['number']             = trim($info['number'])?trim($info['number']):0;
+                if ($info['type'] == 1){ //团内合同
+                    $op			            = M('op')->where(array('group_id'=>$info['group_id']))->find();
+                    if(!$op){
+                        $data['num']        = $num;
+                        $data['msg']        = '未找到该团的项目信息';
+                        $this->ajaxReturn($data);
+                    }
 
-                //判断该团是否已创建合同
-                $where	                    = array();
-                $where['op_id']	            = $info['op_id'];
-                //$where['id']		        = array('neq',$id);
-                $isok	                    = $db->where($where)->find();
-
-                if(!$id){
-                    if (!$isok){
-                        $info['create_time']    = time();
-                        $save	                = $db->add($info);
-                        if ($save)              $num++;
-                        $cid	                = $save;
-
-                        //保存操作记录
-                        $record                 = array();
-                        $record['contract_id']  = $save;
-                        $record['type']         = 1;
-                        $record['explain']      = '新建合同';
-                        contract_record($record);
-
-                        //发送系统消息
-                        $uid     = session('userid');
-                        $title   = '您有来自['.session('name').'--'.$op['project'].']的合同待审核!';
-                        $content = '项目名称：'.$op['project'].'团号：'.$op['group_id'];
-                        $url     = U('Contract/index');
-                        $user    = '[104]'; //段丽华
-                        send_msg($uid,$title,$content,$url,$user,'');
-
-                        //发送短信通知
-                        //$mobile  = 13611112021;
-                        //sendTemplateSMS($mobile, array(session('name'),$op['project']), "425448"); //手机号码，替换内容数组，模板ID
+                    $opid                   = $op['op_id'];
+                    //判断该团是否已创建合同
+                    $where	                = array();
+                    $where['op_id']	        = $opid;
+                    $where['id']		    = array('neq',$id);
+                    $isok	                = $db->where($where)->find();
+                    if ($isok){
+                        $data['num']        = $num;
+                        $data['msg']        = '该项目合同已存在,请勿重复创建';
+                        $this->ajaxReturn($data);
                     }
                 }
 
-                var_dump($num);
-                echo M()->getlastsql();die;
+                $info['op_id']			    = $opid?$opid:'';
+                $info['update_time']	    = time();
+
+                if(!$id && !$isok){
+                    $info['create_time']    = time();
+                    $save	                = $db->add($info);
+                    if ($save)              $num++;
+                    $cid	                = $save;
+                    $explain                = '新建合同';
+                }else{
+                    $info['update_time']    = time();
+                    $save                   = $db->where(array('id'=>$id))->save($info);
+                    if ($save)              $num++;
+                    $cid                    = $id;
+                    $explain                = '修改合同';
+                }
+
+                //保存操作记录
+                $record                     = array();
+                $record['contract_id']      = $cid;
+                $record['type']             = 1;
+                $record['explain']          = $explain;
+                contract_record($record);
+
+                $department_data            = get_department_manager(session('userid'));
+                $manager_id                 = $department_data['manager_id'];
+                //发送系统消息(部门主管)
+                $uid     = session('userid');
+                $title   = '您有来自['.session('nickname').']的合同待审核!';
+                $content = $info['type']==1 ? '合同名称：'.$info['title'].'；项目名称：'.$op['project'].'；团号：'.$op['group_id'] :'合同名称：'.$info['title'] ;
+                $url     = U('Contract/detail',array('id'=>$cid));
+                $user    = '['.$manager_id.']';
+                send_msg($uid,$title,$content,$url,$user,'');
+
+                //发送短信通知
+                //$mobile  = 13611112021;
+                //sendTemplateSMS($mobile, array(session('name'),$op['project']), "425448"); //手机号码，替换内容数组，模板ID
 
                 //保存电子扫描件
-                save_aontract_art($cid,$attr);
+                //save_aontract_art($cid,$attr);
+                save_contract_file($cid,$attr,P::BEFORE_AUDIT); //律师审核前文件
+
+                //保存审核人信息
+                $this->save_audit_info($cid,$info['lawyer'],$department_data);
 
                 //保存分期信息
                 //save_payment($cid,$payment);
@@ -610,6 +563,37 @@ class ContractController extends BaseController {
                 $data['msg']            = '保存成功';
                 $this->ajaxReturn($data);
             }
+        }
+    }
+
+    /**
+     * 保存合同审核人相关信息
+     * @param $cid 合同id
+     * @param $lawyer 是否需要律师审核 1=>需要 2=>不需要
+     * @param $department_data
+     */
+    public function save_audit_info($cid,$lawyer,$department){
+        $db                                 = M('contract_audit');
+        $data                               = array();
+        $data['cid']                        = $cid;
+        $data['manager_userid']             = $department['manager_id']?$department['manager_id']:0; //部门主管
+        $data['manager_username']           = $department['manager_name']?$department['manager_name']:'';
+        if ($lawyer ==1){ //需要律师审核
+            $data['lawyer_userid']          = '1111'; //律师
+            $data['lawyer_username']        = '法律顾问';
+        }else{
+            $data['lawyer_userid']          = 0; //律师
+            $data['lawyer_username']        = '';
+        }
+        $data['boss_userid']                = $department['boss_id']?$department['boss_id']:0; //部门分管领导
+        $data['boss_username']              = $department['boss_name']?$department['boss_name']:'';
+        $data['general_userid']             = 104; //综合部
+        $data['general_username']           = '段丽华';
+        $list                               = $db->where(array('cid'=>$cid))->find();
+        if (!$list){
+            $db->add($data);
+        }else{
+            $db->where(array('id'=>$list['id']))->save($data);
         }
     }
 

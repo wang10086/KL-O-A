@@ -178,8 +178,8 @@
                 dataType:'json',
                 data: {gid:gid},
                 success:function(data){
-                    if (data){
-                        art_show_msg('该项目合同已存在');
+                    if (data.stu){
+                        art_show_msg(data.msg,3);
                         return false;
                     }else{
                         getop();
