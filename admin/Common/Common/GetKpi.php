@@ -1150,7 +1150,7 @@ function get_sum_gross_profit($userids,$beginTime,$endTime){
     //获取顾客满意度不合格数
     function get_score_unqualified_lists($lists){
         $num                        = 0;
-        $unok_arr                   = array(1,2);
+        $unok_arr                   = array(1,2,3);
         $unok_list                  = array();
         foreach ($lists as $k=>$v){
             $zongfen                = 0;
@@ -2559,7 +2559,7 @@ function get_yw_department(){
     function get_department_manager($uid){
         $where                      = array();
         $where['a.id']              = $uid;
-        $field                      = 'd.department,d.manager_id,d.manager_name';
+        $field                      = 'a.id as userid,a.nickname as username,d.*';
         $data                       = M()->table('__ACCOUNT__ as a')->join('__SALARY_DEPARTMENT__ as d on d.id = a.departmentid','left')->field($field)->where($where)->find();
         return $data;
     }

@@ -102,6 +102,11 @@ final class P {
     const UPLOAD_VIDEO              = 3;    //视频文件
     const SIGN_USER                 = 4;    //员工签名
 
+    //合同文件状态
+    const BEFORE_AUDIT              = 1;    //律师审核前合同文件
+    const AFTER_AUDIT               = 2;    //律师审核后合同文件
+    const SURE                      = 3;    //确认版合同文件
+
 }
 
 
