@@ -2664,7 +2664,7 @@ function updatekpi($month,$user){
                             //$department_data            = get_type_user_company_statis($departments,$yearMonth,'jd'); //部门当月合计
                             $company_data               = get_type_user_company_sum_statis($departments,$yearMonth,'jd'); //公司合计
                             $complete                   = $company_data['month_score_average'];
-                            $url                        = U('Inspect/user_kpi_statis',array('year'=>$year,'month'=>$monon,'ut'=>'jd'));
+                            $url                        = U('Inspect/public_user_kpi_statis',array('year'=>$year,'month'=>$monon,'ut'=>'jd'));
                         }
 
 
@@ -3168,7 +3168,7 @@ function updatekpi($month,$user){
                             //$department_data            = get_type_user_company_statis($departments,$yearMonth,'jd'); //部门当月合计
                             $company_data               = get_type_user_company_sum_statis($departments,$yearMonth,'yf'); //公司合计
                             $complete                   = $company_data['month_score_average'];
-                            $url                        = U('Inspect/user_kpi_statis',array('year'=>$year,'month'=>$monon,'ut'=>'yf'));
+                            $url                        = U('Inspect/public_user_kpi_statis',array('year'=>$year,'month'=>$monon,'ut'=>'yf'));
                         }
 
 
@@ -3388,7 +3388,7 @@ function updatekpi($month,$user){
                             //$department_data            = get_type_user_company_statis($departments,$yearMonth,'zy'); //部门当月合计
                             $company_data               = get_type_user_company_sum_statis($departments,$yearMonth,'zy'); //公司合计
                             $complete                   = $company_data['month_score_average'];
-                            $url                        = U('Inspect/user_kpi_statis',array('year'=>$year,'month'=>$monon,'ut'=>'zy'));
+                            $url                        = U('Inspect/public_user_kpi_statis',array('year'=>$year,'month'=>$monon,'ut'=>'zy'));
                         }
 
                     //月度累计毛利率提升比率
@@ -4022,6 +4022,67 @@ function save_aontract_art($releid,$data){
 		}	
 	}
 }
+
+    function save_contract_file($releid,$data,$sudit_stu=0){
+        //处理图片
+        $where                          = array();
+        $where['cid']                   = $releid;
+        $where['audit_stu']             = $sudit_stu;
+
+        $db                             = M('contract_pic');
+        $id                             = array();
+
+        if(is_array($data)){
+            foreach($data['filepath'] as $k=>$v){
+
+                if($data['filepath'][$k]){
+                    //保存数据
+                    $info = array();
+                    $info['cid']        = $releid;
+                    $info['filename']	= $data['filename'][$k];
+                    $info['filepath']  	= $data['filepath'][$k];
+                    $info['fileid']		= $data['id'][$k];
+                    $info['uptime']		= time();
+                    $info['upuser']		= cookie('userid');
+                    $info['upusername']	= cookie('nickname');
+                    $info['audit_stu']  = $sudit_stu;
+
+                    //判断是否存在
+                    $isup               = $db->where(array('cid'=>$releid,'fileid'=>$data['id'][$k]))->find();
+
+                    if($isup){
+                        $issave         = $db->where(array('id'=>$isup['id']))->save($info);
+                        $id[]	        = $isup['id'];
+                    }else{
+                        $id[]	        = $db->add($info);
+                    }
+
+
+                    //更新图片库
+                    if (trim($data['filename'][$k])){
+                        $info               = array();
+                        $info['filename']	= trim($data['filename'][$k]);
+                        M('attachment')->data($info)->where(array('id'=>$data['id'][$k]))->save();
+                    }
+                }
+
+            }
+            $where['id']                = array('not in',implode(',',$id));
+        }
+
+        //删除
+        $isdel = $db->where($where)->select();
+        var_dump($where);
+        echo "<hr />";
+        echo M()->getlastsql();
+        var_dump($isdel);die;
+
+        if($isdel){
+            foreach($isdel as $k=>$v){
+                $db->where(array('id'=>$v['id']))->delete();
+            }
+        }
+    }
 
 
 function get_aontract_res($releid){

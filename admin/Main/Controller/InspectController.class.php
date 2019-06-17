@@ -660,7 +660,7 @@ class InspectController extends BaseController{
     }
 
     //顾客满意度分项统计
-    public function user_kpi_statis(){
+    public function public_user_kpi_statis(){
         $year		                = I('year',date('Y'));
         $month		                = I('month',date('m'));
         $ut                         = trim(I('ut'))?trim(I('ut')):'jd';
@@ -680,7 +680,7 @@ class InspectController extends BaseController{
         $this->month 	            = $month;
         $this->prveyear             = $year-1;
         $this->nextyear             = $year+1;
-        $this->display();
+        $this->display('user_kpi_statis');
     }
 
     //顾客满意度分项统计详情
