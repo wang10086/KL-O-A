@@ -2681,7 +2681,7 @@ class OpController extends BaseController {
                     $new_op['audit_status'] = 1; //默认审核通过
                     $new_op['create_user']  = C('DIJIE_CREATE_USER')[$op['dijie_name']];
                     $new_op['create_user_name'] = M('account')->where(array('id'=>$new_op['create_user']))->getField('nickname');
-                    $new_op['kind']         = $op['kind'];
+                    $new_op['kind']         = $op['kind'] == 83 ? 84 :$op['kind']; //83=>组团研学旅行,84=>地接研学旅行
                     $new_op['sale_user']    = $new_op['create_user_name'];
                     $group                  = M('op')->where(array('op_id'=>$opid))->getField('group_id');
                     $group                  = strtoupper(substr($group,0,4));

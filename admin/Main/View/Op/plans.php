@@ -240,7 +240,22 @@
 
         }
 
-    </script>
-<script type="text/javascript">
+        $('#kind').on('change',function () {
+            var kind    = $(this).val();
+            if (kind == 54 || kind == 84){
+                $('#dijie').children('option[value="2"]').attr('selected',true);
+                $('#dijie').attr('disabled',true);
+            }else if(kind == 83){
+                $('#dijie').children('option[value="1"]').attr('selected',true);
+                $('#dijie').attr('disabled',true);
+                $('#dijie_name').show();
+            }else {
+                $('#dijie').find('option[value="1"]').attr('selected',false);
+                $('#dijie').find('option[value="2"]').attr('selected',false);
+                $('#dijie').children('option:first-child').attr('selected',true).attr('disabled',true);
+                $('#dijie').removeAttr('disabled');
+            }
+            is_or_not_dijie();
+        })
 
-</script>
+    </script>
