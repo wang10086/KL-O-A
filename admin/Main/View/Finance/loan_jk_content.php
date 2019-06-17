@@ -179,7 +179,7 @@
         function check_total(a,oldje=0,newje=0){
             var ftje     = $('#shareSum').html();
             var sum1     = accSub(ftje,oldje);        //数据相减
-            var sum      = accAdd(sum1,newje);        //数据相加
+            var sum      = accAdd(sum1,newje).toFixed(2); //数据相加,保留2位小数
             $('#shareSum').html(sum);
             $('#ftje_'+a).val(newje);
         }
