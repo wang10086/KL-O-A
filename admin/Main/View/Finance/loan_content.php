@@ -278,8 +278,8 @@
             let zmysr    = $('#zmysr_id').val();
             let sbxje    = $('#jiekuanjine').val();
             let sftje    = $('#shareSum').html();
-            let bxje     = parseFloat(sbxje);
-            let ftje     = parseFloat(sftje);
+            let bxje     = parseFloat(sbxje).toFixed(2);
+            let ftje     = parseFloat(sftje).toFixed(2);
             let isShare  = $('#share').find('div[class="iradio_minimal checked"]').find('input[name="info[share]"]').val()
             let company  = $('#company').val();
             let userid   = <?php echo cookie('userid'); ?>;
