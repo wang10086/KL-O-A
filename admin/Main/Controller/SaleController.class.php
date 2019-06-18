@@ -385,7 +385,7 @@ class SaleController extends BaseController {
     }
 
     //kpi页面
-    public function public_kpi_gross(){
+    /*public function public_kpi_gross(){
         $yearMonth                          = I('ym');
         $user_id                            = I('uid');
         $times                              = get_cycle($yearMonth);
@@ -399,6 +399,6 @@ class SaleController extends BaseController {
 
         $this->lists                        = $info;
         $this->display('gross_kpi');
-    }
+    }*/
     
 }

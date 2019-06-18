@@ -3305,15 +3305,15 @@ function updatekpi($month,$user){
 
                         //月度累计各业务综合毛利率完成比率
                         if ($v['quota_id']==210){
-                            $month                      = $v['month'];
-                            $times                      = get_cycle($month);
+                            $username                   = username($v['user_id']);
+                            $times                      = get_year_cycle($v['year']);
                             $mod                        = D('Sale');
                             $kinds                      = M('project_kind')->getField('id,name',true);
-                            $settlement_lists           = $mod->get_all_settlement_lists($times['begintime'],$times['endtime']);
-                            $gross_avg                  = $mod->get_gross_avg($kinds,$times['begintime'],$times['endtime']); //最低毛利率数据
-                            $data                       = $mod->get_jd_gross($v['user_id'],username($v['user_id']),$settlement_lists,$kinds,$gross_avg); //各计调数据
+                            $gross_avg                  = $mod->get_gross_avg($kinds,$times['beginTime'],$times['endTime']); //最低毛利率数据
+                            $settlement_lists           = $mod->get_all_settlement_lists($times['beginTime'],$times['endTime']);
+                            $data                       = $mod->get_jd_gross($v['user_id'],$username,$settlement_lists,$kinds,$gross_avg); //各计调数据
                             $complete                   = $data['合计']['rate'];
-                            $url                        = U('Sale/public_kpi_gross',array('ym'=>$v['month'],'uid'=>$v['user_id']));
+                            $url                        = U('Sale/gross_jd_info',array('year'=>$v['year'],'jid'=>$v['user_id'],'jname'=>username($v['user_id'])));
                         }
 
                         //公司顾客满意度-安全品控部经理
