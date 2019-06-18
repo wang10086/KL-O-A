@@ -3464,7 +3464,7 @@ function updatekpi($month,$user){
 
 function get_kpi_data($v,$complete,$url=''){
     $otherQuota     = array(127); //人事费用率(超过值扣分)
-    $gt100          = array(163,156);
+    $gt100          = array(163);
     $plus_minus     = array(125); //分正负情况,季度利润总额目标完成率
     if (in_array($v['quota_id'],$otherQuota)){
         //不超过既得满分的指标 不能按照 实际/计划计算得分
