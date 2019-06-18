@@ -14,7 +14,8 @@ final class P {
 	const  VERSION         =   "v2.2.0";
 	const  VERSION_CODE    =   "20180107";
 	const  VERSION_NAME    =   "";
-	const  SYSTEM_NAME     =   "科学国旅OA系统";
+	const  SYSTEM_NAME     =   "中科科行OA系统";
+    const  SYS_NAME        =   "中科科行";
     
     
     // 常用参数定义

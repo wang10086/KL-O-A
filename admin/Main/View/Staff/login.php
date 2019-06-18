@@ -24,7 +24,7 @@
     <body class="bg-black">
         <header class="header" style="background-color: #3C8DBC; ">
             <a href="javascript:;" class="logo" style="background-color: #367FA9;color: #ffffff;">
-                科学国旅员工心声
+                {:P::SYS_NAME}员工心声
             </a>
 
             <nav class="navbar navbar-static-top" role="navigation">

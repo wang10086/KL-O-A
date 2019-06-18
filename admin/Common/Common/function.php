@@ -3512,7 +3512,12 @@ function get_kpi_data($v,$complete,$url=''){
     $data['complete']		= $complete;
     $data['complete_rate']	= $rate."%";
     $score                  = round(($rate * $v['weight']) / 100,1);
-    $data['score']			= $score>0 ? ($score > $v['weight'] ? $v['weight'] :$score) :0;
+    if (in_array($v['quota_id'],$gt100)){
+        $data['score']	    = $score>0 ? $score :0;
+        }else{
+
+        $data['score']	    = $score>0 ? ($score > $v['weight'] ? $v['weight'] :$score) :0;
+    }
     //$data['score']          = get_kpi_score($rate,$v['weight'],$v['end_date'],$month);
     $data['score_status']	= 1;
     $data['url']            = $url?$url:'';

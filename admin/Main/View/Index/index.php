@@ -9,7 +9,7 @@
                 <!-- Content Header (Page header) -->
                 <section class="content-header">
                     <h1>
-                        科学国际{$salary_datetime}旅行社OA管理系统<?php echo "<small>&nbsp;版本号：".P::VERSION."</small>"; ?>
+                        {:P::SYS_NAME}OA管理系统<?php echo "<small>&nbsp;版本号：".P::VERSION."</small>"; ?>
                     </h1>
                     <ol class="breadcrumb">
                         <li><a href="{:U('Index/icons')}"><i class="fa fa-home"></i> 首页</a></li>

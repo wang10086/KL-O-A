@@ -79,7 +79,7 @@
     <body class="skin-blue" style="height: 100%">
         <header class="header">
             <a href="{:U('index')}" class="logo">
-                科学国旅员工心声
+                {:P::SYS_NAME}员工心声
             </a>
 
             <nav class="navbar navbar-static-top" role="navigation">
