@@ -263,7 +263,7 @@ class SaleModel extends Model{
                     $num++;
                     if ($k ==84){ //地接研学旅行
                         $shouru     += $value['shouru'];
-                        $sum_shouru += $value['shouru'];
+                        //$sum_shouru += $value['shouru'];
                     }
 
                     //总合计
