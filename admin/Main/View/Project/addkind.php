@@ -43,11 +43,15 @@
                                             <input type="text" name="info[level]" readonly value="<?php echo $father['level'] + 1; ?>" class="form-control" />
                                         </div>
                                         
-                                        <div class="form-group col-md-12">
+                                        <div class="form-group col-md-6">
                                             <label>分类名称</label>
-                                            <input type="text" name="info[name]" value="{$row.name}" class="form-control" />
+                                            <input type="text" name="info[name]" value="{$row.name}" class="form-control" required />
                                         </div>
-                                        
+
+                                        <div class="form-group col-md-6">
+                                            <label>标识字符<small>（名称大写首字母）</small></label>
+                                            <input type="text" name="info[code]" value="{$row.code}" class="form-control" required />
+                                        </div>
                                         
                                         <div class="form-group col-md-12">
                                         	<button type="submit" class="btn btn-success">保存</button>

@@ -46,36 +46,24 @@ class ProjectController extends BaseController {
     // @@@NODE-3###addkind###添加修改项目分类###
     public function addkind() {
         $this->title('添加/修改项目分类');
-
-        $db = M('project_kind');
-        $pid  = I('pid', 0);
-        
-        $id = I('id',0);
-        if ($pid <= 0) {
-            $father = array();
-            $father['level'] = 0;
-            $father['id'] = 0;
-            $father['name'] = '顶级分类';
-        
-        } else {
-            $father = M('project_kind')->find($pid);
-        }
-        
-        $this->father = $father;
+        $db                     = M('project_kind');
+        $id                     = I('id',0);
         
         if(isset($_POST['dosubmit'])){
-        
-            $info = I('info','');
-            	
+            $info               = I('info','');
+            $info['name']       = trim($info['name']);
+            $info['code']       = trim($info['code']);
+            if (!$info['name']) $this->error('类型名称不能为空');
+
             if(!$id){
-                $isadd = $db->add($info);
+                $isadd          = $db->add($info);
                 if($isadd) {
                     $this->success('添加成功！',U('Project/kind'));
                 } else {
                     $this->error('添加失败：' . $db->getError());
                 }
             }else{
-                $isedit = $db->data($info)->where(array('id'=>$id))->save();
+                $isedit         = $db->data($info)->where(array('id'=>$id))->save();
                 if($isedit) {
                     $this->success('修改成功！',U('Project/kind'));
                 } else {
@@ -84,15 +72,20 @@ class ProjectController extends BaseController {
             }
             	
         }else{
-        
-            if (!$id) {
-                $this->row = false;
-            } else {
-                $this->row = $db->find($id);
-                if (!$this->row) {
-                    $this->error('无此数据！', U('Project/kind'));
-                }
+
+            $list                   = $id ? $db->find($id) : false;
+            $pid                    = $list['pid'] ? $list['pid'] : 0;
+            if (!$pid){
+                $father             = array();
+                $father['level']    = 0;
+                $father['id']       = 0;
+                $father['name']     = '顶级分类';
+            }else{
+                $father             = $db->find($pid);
             }
+
+            $this->row              = $list;
+            $this->father           = $father;
             $this->display('addkind');
         }
     }
