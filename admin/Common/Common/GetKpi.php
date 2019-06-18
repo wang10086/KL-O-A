@@ -2630,16 +2630,16 @@ function get_yw_department(){
         if (strlen($month) < 2) $month  = str_pad($month,2,0,STR_PAD_LEFT);
         switch ($month){
             case in_array($month,array('01','02')):
-                $pin                    = 3;
-                break;
-            case in_array($month,array('03','04','05','06')):
-                $pin                    = 4;
-                break;
-            case in_array($month,array('07','08')):
                 $pin                    = 1;
                 break;
-            case in_array($month,array('09','10','11','12')):
+            case in_array($month,array('03','04','05','06')):
                 $pin                    = 2;
+                break;
+            case in_array($month,array('07','08')):
+                $pin                    = 3;
+                break;
+            case in_array($month,array('09','10','11','12')):
+                $pin                    = 4;
                 break;
         }
         return $pin;
@@ -2662,10 +2662,10 @@ function get_yw_department(){
         }*/
         $data                           = array(
             10                          => '全部',
-            1                           => ($year+1).'年春季',
-            2                           => ($year+1).'年暑假',
-            3                           => $year.'年秋季',
-            4                           => $year.'年寒假'
+            1                           => ($year+1).'年寒假',
+            2                           => ($year+1).'年春季',
+            3                           => $year.'年暑假',
+            4                           => $year.'年秋季'
         );
         return $data;
     }
