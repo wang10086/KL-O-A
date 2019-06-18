@@ -58,7 +58,7 @@
                                             </tr>
                                         </foreach>
                                         <tr>
-                                            <th colspan="8" style="text-align: left;padding-left: 20px;">说明：该数据从{$year-1}年12月26日起结算项目统计，本页面数据不包含地接团数据。</th>
+                                            <th colspan="8" style="text-align: left;padding-left: 20px;">说明：该数据从{$year-1}年12月26日起结算项目统计，本页面数据除了“除了地接研学旅行”外,其他项目类型不包含地接团数据。</th>
                                         </tr>
                                     </table>
                                 </div><!-- /.box-body -->

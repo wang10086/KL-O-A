@@ -252,6 +252,7 @@ class SaleModel extends Model{
                 }
             }
 
+
             foreach ($settlement_lists as $key=>$value){ //所有的结算数据(包含地接)
                 if (in_array($value['kind'],$arr_kids)){
                     //单个业务类型合计
@@ -260,6 +261,10 @@ class SaleModel extends Model{
                     $opids[]        = $value['op_id'];
                     $group_ids[]    = $value['group_id'];
                     $num++;
+                    if ($k ==84){ //地接研学旅行
+                        $shouru     += $value['shouru'];
+                        $sum_shouru += $value['shouru'];
+                    }
 
                     //总合计
                     $sum_maoli      += $value['maoli'];
@@ -286,6 +291,7 @@ class SaleModel extends Model{
                 $data['info'][]         = $info;
             }
         }
+
         $data['rowspan']                = $rowspan;
         $data['合计']['jd_id']          = '888888';
         $data['合计']['jd']             = '公司合计';
