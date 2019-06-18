@@ -252,6 +252,41 @@ class ChartModel extends Model
         return $data;
     }
 
+    //获取当月业务人员信息
+    function getMonthUser_business($depart,$yearMonth){
+        //上个月人员信息
+        $lastMonthUser              = M()->table('__SALARY_WAGES_MONTH__ as s')->join('__ACCOUNT__ as a on a.id=s.account_id','left')->join('__POSITION__ as p on p.id=a.position_id')->where(array('s.datetime'=>$yearMonth,'s.department'=>$depart['department'],'p.code'=>array('like','S'.'%')))->getField('s.account_id,s.user_name',true);    //从工资表获取累计业务人员人数
+        $sumMonth                   = count($lastMonthUser);
+
+        //全年人员信息
+        $months                     = $this->getYearMonth($yearMonth);
+        $year                       = substr($yearMonth,0,4);
+        $where                      = array();
+        $where['s.datetime']        = array('in',$months);
+        $where['s.department']      = $depart['department'];
+        $where['p.code']            = array('like','S%');
+        $field                      = 's.account_id,s.user_name,s.department,s.datetime';
+        $yearUser                   = M()->table('__SALARY_WAGES_MONTH__ as s')->join('__ACCOUNT__ as a on a.id=s.account_id','left')->join('__POSITION__ as p on p.id=a.position_id')->where($where)->field($field)->select();
+        if ($depart['id'] == 2){ //市场部(添加贺大伟)(专业岗)
+            $where                  = array();
+            $where['s.datetime']    = array('in',$months);
+            $where['a.nickname']    = '贺大伟';
+            $hdw                    = M()->table('__SALARY_WAGES_MONTH__ as s')->join('__ACCOUNT__ as a on a.id=s.account_id','left')->join('__POSITION__ as p on p.id=a.position_id')->where($where)->field($field)->select();
+            $yearUser               = array_merge($yearUser,$hdw);
+        }
+
+        $countMonth                 = count(array_unique(array_column($yearUser,'datetime')));
+        $sumYearUser                = count($yearUser);         //年总人数
+        $sumYear                    = round($sumYearUser/$countMonth,2); //年平均人数
+        $data                       = array();
+        $data[$yearMonth]['users']  = $lastMonthUser;
+        $data[$yearMonth]['sumMonth'] = $sumMonth;
+        $data['yearUser']           = $yearUser;
+        //$data['sumYear']            = $sumYear;
+        $data['sumYear']            = $sumYearUser;
+        return $data;
+    }
+
     /**
      * 获取本周期年内的月份(上一年12月至本年11月)
      * @param $yearMonth

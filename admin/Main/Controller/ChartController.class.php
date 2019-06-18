@@ -754,7 +754,7 @@ class ChartController extends BaseController {
         $departids      = C('YW_DEPARTS');  //业务部门id
         $post           = M('salary_department')->where(array('id'=>array('in',$departids)))->getField('id,department,manager_name',true);
         foreach($post as $k=>$v){
-            $userInfo               = $mod->getMonthUser($v,$yearMonth);
+            $userInfo               = $mod->getMonthUser_business($v,$yearMonth);
             $lists[$k]				= tplist($v,$times);
             $lists[$k]['rolename']	= $v['department'];
             $lists[$k]['fzr']       = $v['manager_name'];

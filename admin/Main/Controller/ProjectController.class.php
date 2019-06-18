@@ -17,10 +17,10 @@ class ProjectController extends BaseController {
     public function delkind(){
         $this->title('删除项目分类');
         
-        $db = M('project_kind');
-        $id = I('id', -1);
+        $db             = M('project_kind');
+        $id             = I('id', -1);
         
-        $kinds = get_project_kinds();
+        /*$kinds = get_project_kinds();
         
         $where = "id in ($id";
         $flag = 99;
@@ -35,8 +35,10 @@ class ProjectController extends BaseController {
                 break;
             }
         }
-        $where .= ')';
-        $iddel = $db->where($where)->delete();
+        $where .= ')';*/
+        $where          = array();
+        $where['id']    = $id;
+        $iddel          = $db->where($where)->delete();
         $this->success('删除成功！', U('Project/kind'));
     }
     
