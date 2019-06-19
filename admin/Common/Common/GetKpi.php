@@ -2698,3 +2698,66 @@ function get_yw_department(){
         }
         return $arr;
     }
+
+    /**
+     * 获取该周期结算的团
+     * @param $begin_time
+     * @param $end_time
+     * @param $sale_uid 销售id
+     * @param int $jd_uid 计调id
+     * @return mixed
+     */
+    function get_settlement_list($begin_time,$end_time,$sale_uid=0,$jd_uid=0){
+        /*$begin_time = 1516896000;
+        $end_time   = 1532534400;
+        $sale_uid   = 97;*/
+        $where                                  = array();
+        $where['b.audit_status']                = 1;
+        $where['l.req_type']                    = 801;
+        $where['l.audit_time']                  = array('between', "$begin_time,$end_time");
+        if ($sale_uid) $where['o.create_user']  = $sale_uid;
+        if ($jd_uid) $where['l.req_uid']        = $jd_uid;
+        $field                                  = 'o.op_id,o.project,o.group_id,o.create_user,o.create_user_name,b.shouru,b.maoli,l.req_uid,l.req_uname,l.audit_time'; //获取所有该季度结算的团
+        $op_settlement_list                     = M()->table('__OP_SETTLEMENT__ as b')->field($field)->join('__OP__ as o on b.op_id = o.op_id', 'LEFT')->join('__ACCOUNT__ as a on a.id = o.create_user', 'LEFT')->join('__AUDIT_LOG__ as l on l.req_id = b.id', 'LEFT')->where($where)->select();
+        return $op_settlement_list;
+    }
+
+    /**
+     * 获取计调的满意度评分
+     * @param $settlement_lists
+     */
+    function get_jd_satis_chart($settlement_lists){
+        $operator                               = array_unique(array_column($settlement_lists,'req_uname','req_uid'));
+        $data                                   = array();
+        foreach ($operator as $k => $v){
+            $list                               = array();
+            $score_list                         = array();
+            $zongfen                            = 0; //总分
+            $yipingfen                          = 0; //已评分总分
+            $defen                              = 0; //已得分
+            $num                                = 0; //所有团数量
+            $score_num                          = 0; //已评分团数量
+            foreach ($settlement_lists as $key => $value){
+                if ($value['req_uid'] == $k){
+                    $score_list                 = get_jd_op_score($value['op_id']);
+                    $list[]                     = $value;
+                    $num++;
+                }
+            }
+        }
+    }
+
+    /**
+     * 获取计调某个团的评分信息
+     * @param $opid
+     * @return mixed
+     */
+    function get_jd_op_score($opid){
+        $db                                     = M('op_score');
+        $field                                  = 'op_id,pf_id,pf_name,ysjsx,zhunbei,peixun,genjin,yingji,jd_content,jd_uid,jd_uname,jd_score_time';
+        $where                                  = array();
+        $where['op_id']                         = $opid;
+        $where['ysjsx']                         = array('neq',0);
+        $list                                   = $db->where($where)->field($field)->find();
+        return $list;
+    }

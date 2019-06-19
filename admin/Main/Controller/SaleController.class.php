@@ -384,6 +384,24 @@ class SaleController extends BaseController {
         $this->display();
     }
 
+    //计调满意度统计
+    public function satisfaction(){
+        $this->title('满意度统计');
+        $year		                = I('year',date('Y'));
+        $month		                = I('month',date('m'));
+        if (strlen($month)<2) $month= str_pad($month,2,'0',STR_PAD_LEFT);
+        $yearMonth                  = $year.$month;
+        $times                      = get_cycle($yearMonth);
+        $settlement_list            = get_settlement_list($times['begintime'],$times['endtime']); //获取结算的团
+        $satis_data                 = get_jd_satis_chart($settlement_list); //获取计调满意度统计
+
+        $this->year 	            = $year;
+        $this->month 	            = $month;
+        $this->prveyear             = $year-1;
+        $this->nextyear             = $year+1;
+        $this->display();
+    }
+
     //kpi页面
     /*public function public_kpi_gross(){
         $yearMonth                          = I('ym');

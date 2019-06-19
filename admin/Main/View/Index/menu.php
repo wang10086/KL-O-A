@@ -428,7 +428,7 @@
                         </if>
 
 
-                        <if condition="rolemenu(array('Sale/index','Sale/goods','Sale/gross','Sale/edit_gross','Sale/chart_gross'))">
+                        <if condition="rolemenu(array('Sale/index','Sale/goods','Sale/gross','Sale/edit_gross','Sale/chart_gross','Sale/satisfaction'))">
                         <li class="treeview {:ison(CONTROLLER_NAME, 'Sale')}">
                             <a href="javascript:;">
                                 <i class="fa fa-flag"></i>
@@ -436,7 +436,6 @@
                                 <i class="fa fa-angle-left pull-right"></i>
                             </a>
                             <ul class="treeview-menu">
-
                                 <li class="treeview {:on('Sale/gross')} {:on('Sale/edit_gross')} {:on('Sale/chart_gross')} {:on('Sale/chart_jd_gross')}">
                                     <if condition="rolemenu(array('Sale/gross','Sale/edit_gross','Sale/chart_gross','Sale/chart_jd_gross'))">
                                         <a href=""><i class="fa  fa-money"></i> 毛利率</a>
@@ -451,6 +450,9 @@
                                     </ul>
                                 </li>
 
+                                <if condition="rolemenu(array('Sale/satisfaction'))">
+                                    <li><a href="{:U('Sale/satisfaction')}"><i class="fa fa-angle-right"></i> 计调满意度</a></li>
+                                </if>
                             	<if condition="rolemenu(array('Sale/index'))">
                                 	<li><a href="{:U('Sale/index')}"><i class="fa fa-angle-right"></i> 出团计划列表</a></li>
                                 </if>
