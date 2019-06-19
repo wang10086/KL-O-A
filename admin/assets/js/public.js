@@ -654,3 +654,42 @@ function qrcode_js(text,width,height) {
 	});
 }
 
+artDialog.alert = function (content, status) {
+	return artDialog({
+		id: 'Alert',
+		icon: status,
+		width:300,
+		height:120,
+		fixed: true,
+		lock: true,
+		time: 1,
+		content: content,
+		ok: true
+	});
+};
+
+
+//保存信息
+function public_save(id,url){
+	$.ajax({
+		type: "POST",
+		url: url,
+		dataType:'json',
+		data: $('#'+id).serialize(),
+		success:function(data){
+			if(parseInt(data.num)>0){
+				art.dialog.alert(data.msg,'success');
+				//window.location.href = '';
+			}else{
+				art.dialog.alert(data.msg,'warning');
+				return false;
+			}
+		},
+		error:function () {
+			alert('error');
+		}
+	});
+
+	setTimeout("history.go(0)",1000);
+}
+

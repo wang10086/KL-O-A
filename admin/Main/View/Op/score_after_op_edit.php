@@ -22,37 +22,62 @@
                 <div style="width:100%;float:left;">
 
                     <div class="form-group col-md-6">
-                        <label>预算、报价（及时性）：</label>
-                        <div class="demo score">
-                            <div id="ysjsx"></div>
+                        <label>服务态度：</label>
+                        <div class="demo score inline-block"><div id="ysjsx"></div></div>
+                        <div class="form-control no-border star_div">
+                            <span class="sco-star"><input type="radio" name="info[ysjsx]" value="5">&nbsp;非常满意</span>&emsp;&emsp;
+                            <span class="sco-star"><input type="radio" name="info[ysjsx]" value="4">&nbsp;较满意</span>&emsp;&emsp;
+                            <span class="sco-star"><input type="radio" name="info[ysjsx]" value="3">&nbsp;一般</span>&emsp;&emsp;
+                            <span class="sco-star"><input type="radio" name="info[ysjsx]" value="2">&nbsp;不满意</span>&emsp;&emsp;
+                            <span class="sco-star"><input type="radio" name="info[ysjsx]" value="1">&nbsp;非常不满意</span>
                         </div>
                     </div>
 
                     <div class="form-group col-md-6">
                         <label>要素准备（房、餐、车、物资、导游）符合业务要求：</label>
-                        <div class="demo score">
-                            <div id="zhunbei"></div>
+                        <div class="demo score inline-block"><div id="zhunbei"></div></div>
+                        <div class="form-control no-border star_div">
+                            <span class="sco-star"><input type="radio" name="info[zhunbei]" value="5">&nbsp;非常满意</span>&emsp;&emsp;
+                            <span class="sco-star"><input type="radio" name="info[zhunbei]" value="4">&nbsp;较满意</span>&emsp;&emsp;
+                            <span class="sco-star"><input type="radio" name="info[zhunbei]" value="3">&nbsp;一般</span>&emsp;&emsp;
+                            <span class="sco-star"><input type="radio" name="info[zhunbei]" value="2">&nbsp;不满意</span>&emsp;&emsp;
+                            <span class="sco-star"><input type="radio" name="info[zhunbei]" value="1">&nbsp;非常不满意</span>
                         </div>
                     </div>
 
                     <div class="form-group col-md-6">
                         <label>业务人员培训，活动细节交接：</label>
-                        <div class="demo score">
-                            <div id="peixun"></div>
+                        <div class="demo score inline-block"><div id="peixun"></div></div>
+                        <div class="form-control no-border star_div">
+                            <span class="sco-star"><input type="radio" name="info[peixun]" value="5">&nbsp;非常满意</span>&emsp;&emsp;
+                            <span class="sco-star"><input type="radio" name="info[peixun]" value="4">&nbsp;较满意</span>&emsp;&emsp;
+                            <span class="sco-star"><input type="radio" name="info[peixun]" value="3">&nbsp;一般</span>&emsp;&emsp;
+                            <span class="sco-star"><input type="radio" name="info[peixun]" value="2">&nbsp;不满意</span>&emsp;&emsp;
+                            <span class="sco-star"><input type="radio" name="info[peixun]" value="1">&nbsp;非常不满意</span>
                         </div>
                     </div>
 
                     <div class="form-group col-md-6">
-                        <label>活动实施效果跟进及改进：</label>
-                        <div class="demo score">
-                            <div id="genjin"></div>
+                        <label>采购性价比：</label>
+                        <div class="demo score inline-block"><div id="genjin"></div></div>
+                        <div class="form-control no-border star_div">
+                            <span class="sco-star"><input type="radio" name="info[genjin]" value="5">&nbsp;非常高</span>&emsp;&emsp;
+                            <span class="sco-star"><input type="radio" name="info[genjin]" value="4">&nbsp;较高</span>&emsp;&emsp;
+                            <span class="sco-star"><input type="radio" name="info[genjin]" value="3">&nbsp;一般</span>&emsp;&emsp;
+                            <span class="sco-star"><input type="radio" name="info[genjin]" value="2">&nbsp;较低</span>&emsp;&emsp;
+                            <span class="sco-star"><input type="radio" name="info[genjin]" value="1">&nbsp;非常低</span>
                         </div>
                     </div>
 
-                    <div class="form-group col-md-12">
-                        <label>对活动实施过程中突发事件，应 急处理稳妥、及时：</label>
-                        <div class="demo score">
-                            <div id="yingji"></div>
+                    <div class="form-group col-md-6">
+                        <label>对活动实施过程中突发事件，应急处理稳妥、及时：</label>
+                        <div class="demo score inline-block"><div id="yingji"></div></div>
+                        <div class="form-control no-border star_div">
+                            <span class="sco-star"><input type="radio" name="info[yingji]" value="5">&nbsp;非常满意</span>&emsp;&emsp;
+                            <span class="sco-star"><input type="radio" name="info[yingji]" value="4">&nbsp;满意</span>&emsp;&emsp;
+                            <span class="sco-star"><input type="radio" name="info[yingji]" value="3">&nbsp;一般</span>&emsp;&emsp;
+                            <span class="sco-star"><input type="radio" name="info[yingji]" value="2">&nbsp;不满意</span>&emsp;&emsp;
+                            <span class="sco-star"><input type="radio" name="info[yingji]" value="1">&nbsp;非常不满意</span>
                         </div>
                     </div>
 
@@ -63,7 +88,7 @@
                 </div>
             </div>
             <div align="center" class="form-group col-md-12" style="alert:cennter;margin-top: 20px;">
-                <a  href="javascript:;" class="btn btn-info" onClick="javascript:save('save_afterOpScore','<?php echo U('Op/public_save'); ?>');" style="width:60px;">保存</a>
+                <a  href="javascript:;" class="btn btn-info" onClick="javascript:submitBefore();" style="width:60px;">保存</a>
             </div>
         </div>
     </div>
@@ -76,31 +101,50 @@
     $(function() {
         $.fn.raty.defaults.path = "__HTML__/score/lib/img";
         var res = <?php echo $pingfen?$pingfen:0; ?>;
+        init_score_5(res);  //初始化星星图标
+        init_radio_checked(res); //初始化单选
+        init_radio();
+    });
 
+    //初始化评分显示(5各维度)
+    function init_score_5(res) {
         if (res){
             $('#jd_content').html(res.jd_content);
-            /*$('#zy_content').html(res.zy_content);*/
 
-            pingfen('ysjsx',res.ysjsx);       //客户需求匹配度
-            pingfen('zhunbei',res.zhunbei);    //产品创新性(含特色和亮点)
-            pingfen('peixun',res.peixun);        //研发成本控制
-            pingfen('genjin',res.genjin);        //产品可行性及安全性
-            pingfen('yingji',res.yingji);        //配套方案标准化清单的完成性(含材料单、手册、任务卡、折页等)
-            pingfen('times',res.times);        //满足时长
-            pingfen('finish',res.finish);       //项目完成度
-            pingfen('site',res.site);         //场地服务(讲解、停车接待等，不含科研院所)
+            pingfen('ysjsx',res.ysjsx);
+            pingfen('zhunbei',res.zhunbei);
+            pingfen('peixun',res.peixun);
+            pingfen('genjin',res.genjin);
+            pingfen('yingji',res.yingji);
         }else{
-            pingfen('ysjsx',5);       //客户需求匹配度
-            pingfen('zhunbei',5);    //产品创新性(含特色和亮点)
-            pingfen('peixun',5);        //研发成本控制
-            pingfen('genjin',5);        //产品可行性及安全性
-            pingfen('yingji',5);        //配套方案标准化清单的完成性(含材料单、手册、任务卡、折页等)
-            pingfen('times',5);        //满足时长
-            pingfen('finish',5);       //项目完成度
-            pingfen('site',5);         //场地服务(讲解、停车接待等，不含科研院所)
+            pingfen('ysjsx',5);
+            pingfen('zhunbei',5);
+            pingfen('peixun',5);
+            pingfen('genjin',5);
+            pingfen('yingji',5);
         }
+    }
 
-    });
+    //页面初始化下面的内容自动选中
+    function init_radio_checked(res){
+        if (res){
+            $('#save_afterOpScore').find('.star_div').each(function () {
+                $(this).find('input[name="info[ysjsx]"][value="'+res.ysjsx+'"]').parent('div').addClass('checked');
+                $(this).find('input[name="info[zhunbei]"][value="'+res.zhunbei+'"]').parent('div').addClass('checked');
+                $(this).find('input[name="info[peixun]"][value="'+res.peixun+'"]').parent('div').addClass('checked');
+                $(this).find('input[name="info[genjin]"][value="'+res.genjin+'"]').parent('div').addClass('checked');
+                $(this).find('input[name="info[yingji]"][value="'+res.yingji+'"]').parent('div').addClass('checked');
+            })
+        }else{
+            $('#save_afterOpScore').find('.star_div').each(function () {
+                $(this).find('input[name="info[ysjsx]"][value="5"]').parent('div').addClass('checked');
+                $(this).find('input[name="info[zhunbei]"][value="5"]').parent('div').addClass('checked');
+                $(this).find('input[name="info[peixun]"][value="5"]').parent('div').addClass('checked');
+                $(this).find('input[name="info[genjin]"][value="5"]').parent('div').addClass('checked');
+                $(this).find('input[name="info[yingji]"][value="5"]').parent('div').addClass('checked');
+            })
+        }
+    }
 
     function pingfen(id,score) {
         $('#'+id+'_num').val(score);
@@ -108,10 +152,58 @@
             score: score ,
             click: function(score, evt) {
                 //alert('ID: ' + $(this).attr('id') + "\nscore: " + score + "\nevent: " + evt.type)
-                $('#'+id+'_num').val(score);
+                $('#'+id+'_num').val(score); //改变星星
+
+                $('#'+id).parent('.score').next('.star_div').find('input').each(function (index,ele) { //改变下面的radio
+                    var input_val = $(this).val();
+                    if (input_val == score){
+                        $(this).parent('div[class="iradio_minimal"]').addClass('checked');
+                    }else{
+                        $(this).parent('div').removeClass('checked')
+                    }
+                });
             }
         });
     }
 
+    function init_radio(){
+        $('.star_div').find('ins').each(function (index,ele) {
+            $(this).click(function () {
+                var score   = $(this).prev('input').val();
+                var id      = $(this).parents('.star_div').prev('.score').children('div').attr('id');
+                $(this).siblings().attr('checked',false);
+                $(this).siblings().removeClass('checked');
+                pingfen(id,score); //改变星星
+            })
+        })
+    }
 
+    function submitBefore(){
+        var ysjsx_num       = parseInt($('#ysjsx_num').val());
+        var zhunbei_num     = parseInt($('#zhunbei_num').val());
+        var peixun_num      = parseInt($('#peixun_num').val());
+        var genjin_num      = parseInt($('#genjin_num').val());
+        var yingji_num      = parseInt($('#yingji_num').val());
+        var content         = $('#jd_content').val();
+        var arr             = Array(1,2,3);
+        var ysjsx_res       = in_array(ysjsx_num,arr);
+        var zhunbei_res     = in_array(zhunbei_num,arr);
+        var peixun_res      = in_array(peixun_num,arr);
+        var genjin_res      = in_array(genjin_num,arr);
+        var yingji_res      = in_array(yingji_num,arr);
+        if ((ysjsx_res || zhunbei_res || peixun_res || genjin_res || yingji_res) && !content){
+            art_show_msg('单项评分低于3分时,必须填写相关问题及改进意见',3);
+            return false;
+        }
+        public_save('save_afterOpScore','<?php echo U('Op/public_save'); ?>');
+    }
+
+    function in_array(search,array){
+        for(var i in array){
+            if(array[i]==search){
+                return true;
+            }
+        }
+        return false;
+    }
 </script>

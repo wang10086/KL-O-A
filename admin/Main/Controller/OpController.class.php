@@ -1397,6 +1397,12 @@ class OpController extends BaseController {
             //活动结束后对计调的评价
             if ($opid && $savetype==22){
                 $info                   = I('info');
+                if (!$info['jd_uid']){
+                    $data               = array();
+                    $data['num']        = 0;
+                    $data['msg']        = '获取计调信息失败';
+                    $this->ajaxReturn($data);
+                }
                 $info['jd_score_time']  = NOW_TIME;
                 $pingfen                = M('op_score')->where(array('op_id'=>$opid))->find();
                 if ($pingfen){
@@ -1422,6 +1428,12 @@ class OpController extends BaseController {
                 }
 
                 if ($res) $num++;
+                $msg                    = $num > 0 ? '保存成功' : '保存失败';
+
+                $data                   = array();
+                $data['num']            = $num;
+                $data['msg']            = $msg;
+                $this->ajaxReturn($data);
             }
 
             echo $num;
@@ -2709,6 +2721,7 @@ class OpController extends BaseController {
                     $dijie_confirm['user_name']     = $new_op['user_name'];
                     $dijie_confirm['confirm_time']  = NOW_TIME;
                     $opres = M('op')->add($new_op);
+
                     if ($opres) {
                         M('op_team_confirm')->add($dijie_confirm);
                         $data = array();
