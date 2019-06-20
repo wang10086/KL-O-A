@@ -22,28 +22,28 @@
                                 <div class="box-header">
                                     <!--<h3 class="box-title">顾客满意度分项统计</h3>-->
                                     <div class="box-tools btn-group" id = "chart_btn_group">
-                                        <a href="{:U('Inspect/user_kpi_statis',array('year'=>$year,'month'=>$month,'ut'=>'jd'))}" class="btn btn-sm <?php if($usertype=='jd'){ echo 'btn-info';}else{ echo 'btn-group-header';} ?>">计调满意度汇总</a>
-                                        <a href="{:U('Inspect/user_kpi_statis',array('year'=>$year,'month'=>$month,'ut'=>'yf'))}" class="btn btn-sm <?php if($usertype=='yf'){ echo 'btn-info';}else{ echo 'btn-group-header';} ?>">研发满意度汇总</a>
-                                        <a href="{:U('Inspect/user_kpi_statis',array('year'=>$year,'month'=>$month,'ut'=>'zy'))}" class="btn btn-sm <?php if($usertype=='zy'){ echo 'btn-info';}else{ echo 'btn-group-header';} ?>">资源满意度汇总</a>
+                                        <a href="{:U('Inspect/public_user_kpi_statis',array('year'=>$year,'month'=>$month,'ut'=>'jd'))}" class="btn btn-sm <?php if($usertype=='jd'){ echo 'btn-info';}else{ echo 'btn-group-header';} ?>">计调满意度汇总</a>
+                                        <a href="{:U('Inspect/public_user_kpi_statis',array('year'=>$year,'month'=>$month,'ut'=>'yf'))}" class="btn btn-sm <?php if($usertype=='yf'){ echo 'btn-info';}else{ echo 'btn-group-header';} ?>">研发满意度汇总</a>
+                                        <a href="{:U('Inspect/public_user_kpi_statis',array('year'=>$year,'month'=>$month,'ut'=>'zy'))}" class="btn btn-sm <?php if($usertype=='zy'){ echo 'btn-info';}else{ echo 'btn-group-header';} ?>">资源满意度汇总</a>
                                     </div>
                                 </div><!-- /.box-header -->
                                 <div class="box-body">
 
                                     <div class="btn-group" id="catfont" style="padding-bottom:5px;">
                                         <?php if($prveyear>2018){ ?>
-                                            <a href="{:U('Inspect/user_kpi_statis',array('year'=>$prveyear,'month'=>$month,'ut'=>$usertype))}" class="btn btn-default" style="padding:8px 18px;">上一年</a>
+                                            <a href="{:U('Inspect/public_user_kpi_statis',array('year'=>$prveyear,'month'=>$month,'ut'=>$usertype))}" class="btn btn-default" style="padding:8px 18px;">上一年</a>
                                         <?php } ?>
                                         <?php
                                         for($i=1;$i<13;$i++){
                                             if($year.$month==$year.str_pad($i,2,"0",STR_PAD_LEFT)){
-                                                echo '<a href="'.U('Inspect/user_kpi_statis',array('year'=>$year,'month'=>$i,'ut'=>$usertype)).'" class="btn btn-info" style="padding:8px 18px;">'.$i.'月</a>';
+                                                echo '<a href="'.U('Inspect/public_user_kpi_statis',array('year'=>$year,'month'=>$i,'ut'=>$usertype)).'" class="btn btn-info" style="padding:8px 18px;">'.$i.'月</a>';
                                             }else{
-                                                echo '<a href="'.U('Inspect/user_kpi_statis',array('year'=>$year,'month'=>$i,'ut'=>$usertype)).'" class="btn btn-default" style="padding:8px 18px;">'.$i.'月</a>';
+                                                echo '<a href="'.U('Inspect/public_user_kpi_statis',array('year'=>$year,'month'=>$i,'ut'=>$usertype)).'" class="btn btn-default" style="padding:8px 18px;">'.$i.'月</a>';
                                             }
                                         }
                                         ?>
                                         <?php if($year<date('Y')){ ?>
-                                            <a href="{:U('Inspect/user_kpi_statis',array('year'=>$nextyear,'month'=>'01','ut'=>$usertype))}" class="btn btn-default" style="padding:8px 18px;">下一年</a>
+                                            <a href="{:U('Inspect/public_user_kpi_statis',array('year'=>$nextyear,'month'=>'01','ut'=>$usertype))}" class="btn btn-default" style="padding:8px 18px;">下一年</a>
                                         <?php } ?>
                                     </div>
 

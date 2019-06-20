@@ -394,12 +394,60 @@ class SaleController extends BaseController {
         $times                      = get_cycle($yearMonth);
         $settlement_list            = get_settlement_list($times['begintime'],$times['endtime']); //获取结算的团
         $satis_data                 = get_jd_satis_chart($settlement_list); //获取计调满意度统计
+        $total_statis_data          = get_company_jd_statis($settlement_list); //获取公司总的计调满意度信息
+        $lists                      = $satis_data;
+        $lists['合计']              = $total_statis_data;
 
+        $this->lists                = $lists;
         $this->year 	            = $year;
         $this->month 	            = $month;
         $this->prveyear             = $year-1;
         $this->nextyear             = $year+1;
         $this->display();
+    }
+
+    //计调满意度详情页
+    public function public_jd_satisfaction_detail(){
+        $this->title('计调满意度详情');
+        $year                       = I('year',date('Y'));
+        $month                      = I('month',date('m'));
+        $jd_uid                     = I('jd_uid',0);
+        $jd_name                    = I('jd_name','');
+        if (strlen($month)<2) $month= str_pad($month,2,'0',STR_PAD_LEFT);
+        $yearMonth                  = $year.$month;
+        $times                      = get_cycle($yearMonth);
+        $settlement_list            = get_settlement_list($times['begintime'],$times['endtime']); //获取结算的团
+        //$satis_data                 = get_jd_satis_chart($settlement_list); //获取计调满意度统计
+        if ($jd_name == '合计'){
+            $list                   = get_company_jd_statis($settlement_list);
+        }else{
+            $list                   = get_jd_satis($jd_uid,$settlement_list);
+            $list['jd_name']        = $jd_name;
+        }
+        /**
+         *   'op_id' => string '201905060005' (length=12)
+        'pf_id' => string '111' (length=3)
+        'pf_name' => string '乔娜丽' (length=9)
+        '' => string '5' (length=1)
+        '' => string '5' (length=1)
+        '' => string '5' (length=1)
+        'genjin' => string '5' (length=1)
+        'yingji' => string '5' (length=1)
+        'jd_content' => string '' (length=0)
+        'jd_uid' => string '163' (length=3)
+        'jd_uname' => string '陈继媛' (length=9)
+        'jd_score_time' => string '1560853270' (length=10)
+         */
+        foreach ($list['list'] as $k=>$v){
+            foreach ($list['score_list'] as $value){
+                if ($value['op_id'] == $v['op_id']){
+                    $zongfen        = $value['ysjsx'] + $value['zhunbei'] + $value[''] + $value[''] + $value[''];
+                }
+            }
+        }
+
+        $this->list                 = $list;
+        $this->display('jd_satisfaction_detail');
     }
 
     //kpi页面

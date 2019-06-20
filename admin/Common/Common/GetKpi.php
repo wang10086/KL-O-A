@@ -2708,9 +2708,6 @@ function get_yw_department(){
      * @return mixed
      */
     function get_settlement_list($begin_time,$end_time,$sale_uid=0,$jd_uid=0){
-        /*$begin_time = 1516896000;
-        $end_time   = 1532534400;
-        $sale_uid   = 97;*/
         $where                                  = array();
         $where['b.audit_status']                = 1;
         $where['l.req_type']                    = 801;
@@ -2730,21 +2727,51 @@ function get_yw_department(){
         $operator                               = array_unique(array_column($settlement_lists,'req_uname','req_uid'));
         $data                                   = array();
         foreach ($operator as $k => $v){
-            $list                               = array();
-            $score_list                         = array();
-            $zongfen                            = 0; //总分
-            $yipingfen                          = 0; //已评分总分
-            $defen                              = 0; //已得分
-            $num                                = 0; //所有团数量
-            $score_num                          = 0; //已评分团数量
-            foreach ($settlement_lists as $key => $value){
-                if ($value['req_uid'] == $k){
-                    $score_list                 = get_jd_op_score($value['op_id']);
-                    $list[]                     = $value;
-                    $num++;
+            $data[$k]                           = get_jd_satis($k,$settlement_lists);
+            $data[$k]['jd_uid']                 = $k;
+            $data[$k]['jd_name']                = $v;
+        }
+        return $data;
+    }
+
+    /**
+     * 获取单个计调的满意度数据
+     * @param $uid
+     * @param $lists
+     */
+    function get_jd_satis($uid,$lists){
+        $list                               = array(); //总操作的的团
+        $score_list                         = array();  //已评分的团
+        $zongfen                            = 0; //总分
+        $yipingfen                          = 0; //已评分总分
+        $defen                              = 0; //已得分
+        $num                                = 0; //所有团数量
+        $score_num                          = 0; //已评分团数量
+        foreach ($lists as $key => $value){
+            if ($value['req_uid'] == $uid){
+                $s_list                     = get_jd_op_score($value['op_id']);
+                $list[]                     = $value;
+                if ($s_list) {
+                    $score_list[]           = $s_list;
+                    $score_num++;
+                    $defen                  += $s_list['ysjsx'] + $s_list['zhunbei'] + $s_list['peixun'] + $s_list['genjin'] + $s_list['yingji'];
+                    $yipingfen              += 5*5; //5各维度,每个维度5颗星
                 }
+                $zongfen                    += 5*5;
+                $num++;
             }
         }
+        $data                               = array();
+        $data['zongfen']                    = $zongfen;
+        $data['yipingfen']                  = $yipingfen;
+        $data['defen']                      = $defen;
+        $data['num']                        = $num;
+        $data['score_num']                  = $score_num;
+        $data['score_average']              = (round($defen/$yipingfen,4)*100).'%'; //已评分得分
+        $data['sum_average']                = (round($defen/$zongfen,4)*100).'%'; //合计得分(包含未评分的)
+        $data['score_list']                 = $score_list;
+        $data['list']                       = $list;
+        return $data;
     }
 
     /**
@@ -2760,4 +2787,40 @@ function get_yw_department(){
         $where['ysjsx']                         = array('neq',0);
         $list                                   = $db->where($where)->field($field)->find();
         return $list;
+    }
+
+    /**
+     * 获取公司总的计调满意度信息
+     * @param $lists
+     */
+    function get_company_jd_statis($lists){
+        $score_list                         = array();  //已评分的团
+        $zongfen                            = 0; //总分
+        $yipingfen                          = 0; //已评分总分
+        $defen                              = 0; //已得分
+        $num                                = 0; //所有团数量
+        $score_num                          = 0; //已评分团数量
+        foreach ($lists as $key => $value){
+            $s_list                         = get_jd_op_score($value['op_id']);
+            if ($s_list) {
+                $score_list[]               = $s_list;
+                $score_num++;
+                $defen                      += $s_list['ysjsx'] + $s_list['zhunbei'] + $s_list['peixun'] + $s_list['genjin'] + $s_list['yingji'];
+                $yipingfen                  += 5*5; //5各维度,每个维度5颗星
+            }
+            $zongfen                        += 5*5;
+            $num++;
+        }
+        $data                               = array();
+        $data['zongfen']                    = $zongfen;
+        $data['yipingfen']                  = $yipingfen;
+        $data['defen']                      = $defen;
+        $data['num']                        = $num;
+        $data['score_num']                  = $score_num;
+        $data['score_average']              = (round($defen/$yipingfen,4)*100).'%'; //已评分得分
+        $data['sum_average']                = (round($defen/$zongfen,4)*100).'%'; //合计得分(包含未评分的)
+        $data['score_list']                 = $score_list;
+        $data['list']                       = $lists;
+        $data['jd_name']                    = '合计';
+        return $data;
     }

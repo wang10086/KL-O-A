@@ -43,29 +43,22 @@
                                     </div>
 
                                 <table class="table table-bordered dataTable fontmini" id="tablelist" style="margin-top:10px;">
-                                    <tr>
+                                    <tr role="row">
                                         <th class="sorting" style="text-align: center;">姓名</th>
-                                        <td class="taskOptions" data="">项目数</td>
-                                        <td class="taskOptions" data="">已调查项目数</td>
-                                        <td class="taskOptions" data="">已调查满意度</td>
-                                        <td class="taskOptions" data="">总满意度</td>
+                                        <th class="taskOptions" data="">项目数</th>
+                                        <th class="taskOptions" data="">已评分项目数</th>
+                                        <th class="taskOptions" data="">已评分满意度</th>
+                                        <th class="taskOptions" data="">总满意度</th>
                                     </tr>
                                     <foreach name="lists" item="row"> 
-                                    <tr>
-                                        <td class="taskOptions"></td>
-                                        <td class="taskOptions">{$row.month_op_num}</td>
-                                        <td class="taskOptions">{$row.month_score_num}</td>
-                                        <td class="taskOptions">{$row.month_score_average}</td>
-                                        <td class="taskOptions">{$row.month_average}</td>
+                                    <tr <?php if ($row['jd_name']=='合计') echo "class='black'"; ?>>
+                                        <td class="taskOptions"><a href="{:U('Sale/public_jd_satisfaction_detail',array('year'=>$year,'month'=>$month,'jd_uid'=>$row['jd_uid'],'jd_name'=>$row['jd_name']))}">{$row.jd_name}</a></td>
+                                        <td class="taskOptions">{$row.num}</td>
+                                        <td class="taskOptions">{$row.score_num}</td>
+                                        <td class="taskOptions">{$row.score_average}</td>
+                                        <td class="taskOptions">{$row.sum_average}</td>
                                     </tr>
                                     </foreach>
-                                    <tr class="black">
-                                        <td class="taskOptions" data="">合计</td>
-                                        <td class="taskOptions">{$company.month_op_num}</td>
-                                        <td class="taskOptions">{$company.month_score_num}</td>
-                                        <td class="taskOptions">{$company.month_score_average}</td>
-                                        <td class="taskOptions">{$company.month_average}</td>
-                                    </tr>
                                 </table>
                                 </div><!-- /.box-body -->
                                  <div class="box-footer clearfix">

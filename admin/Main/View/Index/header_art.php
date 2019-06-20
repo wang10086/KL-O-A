@@ -55,10 +55,10 @@
         <!-- AdminLTE App -->
         <?php echo $__additional_js__; ?>
         <?php echo $__additional_jscode__ ?>
+        <script src="__HTML__/js/artDialog.js"></script>
         <script src="__HTML__/js/public.js?v=1.0.6" type="text/javascript"></script>
         <script src="__HTML__/js/py/app.js" type="text/javascript"></script>
-        <script src="__HTML__/js/artDialog.js"></script> 
-        <script src="__HTML__/js/iframeTools.js"></script> 
+        <script src="__HTML__/js/iframeTools.js"></script>
         <script src="__HTML__/comm/plupload/plupload.full.min.js" type="text/javascript"></script>
         <script src="__HTML__/comm/charts/highcharts.js" type="text/javascript"></script>
 		<script src="__HTML__/comm/charts/modules/exporting.js" type="text/javascript"></script>
