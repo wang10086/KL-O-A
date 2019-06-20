@@ -28,11 +28,11 @@
                                         <tr role="row" class="orders" >
                                             <th class="taskOptions">团号</th>
                                             <th class="taskOptions">项目名称</th>
-                                            <th class="taskOptions">结算收入</th>
-                                            <th class="taskOptions">最低毛利额</th>
-                                            <th class="taskOptions">结算毛利</th>
-                                            <th class="taskOptions">结算毛利率</th>
-                                            <th class="taskOptions">毛利率完成率</th>
+                                            <th class="taskOptions"></th>
+                                            <th class="taskOptions"></th>
+                                            <th class="taskOptions"></th>
+                                            <th class="taskOptions"></th>
+                                            <th class="taskOptions"></th>
                                         </tr>
                                         <foreach name="lists" key="k" item="v">
                                             <tr>
