@@ -44,7 +44,7 @@
                                     <!--<include file="evaluate_edit" />-->
                                     <include file="score_after_op_edit" />
                                     <?php }else{ ?>
-                                    <include file="evaluate_read" />	
+                                    <include file="score_after_op_read" />
                                     <?php }?>
                                     
                                 </div>
