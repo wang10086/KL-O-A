@@ -91,7 +91,10 @@
                                             </if>
                                         </tr>
                                         <tr>
-                                            <th colspan="7" style="text-align: left;padding-left: 20px;">说明：该数据从{$year-1}年12月26日起结算项目统计，本页面数据包含地接团数据。</th>
+                                            <td colspan="7" style="text-align: left;padding-left: 20px;">
+                                                <p>说明：1、该数据从{$year-1}年12月26日起结算项目统计，本页面数据包含地接团数据。</p>
+                                                <p>&emsp;&emsp;&emsp;2、各计调统计数据中不包括“南北极合作”项目和“其他”项目；公司合计数据中包括“南北极合作”项目和“其他”项目。</p>
+                                            </td>
                                         </tr>
                                     </table>
                                 </div><!-- /.box-body -->

@@ -342,12 +342,13 @@ class SaleController extends BaseController {
         $mod                                = D('Sale');
         $kinds                              = M('project_kind')->getField('id,name',true);
         $gross_avg                          = $mod->get_gross_avg($kinds,$times['beginTime'],$times['endTime']); //最低毛利率数据
-        $settlement_lists                   = $mod->get_special_settlement_lists($times['beginTime'],$times['endTime']); //不包含"其他"和"南北极"
+        $settlement_lists                   = $mod->get_all_settlement_lists($times['beginTime'],$times['endTime']); //所有结算的团
+        $special_settlement_lists           = $mod->get_special_settlement_lists($times['beginTime'],$times['endTime']); //不包含"其他"和"南北极"
 
         if ($jd_id == '888888' || $jd_name == '公司合计'){
             $data                           = $mod->get_sum_gross($settlement_lists,$kinds,$gross_avg);
         }else{
-            $data                           = $mod->get_jd_gross($jd_id,$jd_name,$settlement_lists,$kinds,$gross_avg); //各计调数据
+            $data                           = $mod->get_jd_gross($jd_id,$jd_name,$special_settlement_lists,$kinds,$gross_avg); //各计调数据
         }
         $info                               = $data['info'];
         $info['合计']                       = $data['合计'];
