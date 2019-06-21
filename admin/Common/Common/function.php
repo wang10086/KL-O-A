@@ -3406,7 +3406,7 @@ function updatekpi($month,$user){
                         $monon                  = substr($v['month'],-2,2);
 
                         $cycle                  = get_years_cycle($year,$monon); //获取今年和去年的考核周期
-                        $manage_datas           = get_manage_data($cycle); //获取经营信息
+                        $manage_datas           = get_special_manage_data($cycle); //获取经营信息
                         $complete               = ((round($manage_datas['thisYear_mll']/$manage_datas['lastYear_mll'],4)-1)*100).'%';
                         $url                    = U('Manage/public_elevate',array('year'=>$year,'month'=>$monon));
                     }
