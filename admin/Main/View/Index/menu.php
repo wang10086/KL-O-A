@@ -451,14 +451,14 @@
                                 </li>
 
                                 <if condition="rolemenu(array('Sale/satisfaction'))">
-                                    <li><a href="{:U('Sale/satisfaction')}"><i class="fa fa-angle-right"></i> 计调满意度</a></li>
+                                    <li><a href="{:U('Sale/satisfaction')}"><i class="fa fa-angle-right"></i> 计调内部满意度</a></li>
                                 </if>
-                            	<if condition="rolemenu(array('Sale/index'))">
+                            	<!--<if condition="rolemenu(array('Sale/index'))">
                                 	<li><a href="{:U('Sale/index')}"><i class="fa fa-angle-right"></i> 出团计划列表</a></li>
                                 </if>
                                 <if condition="rolemenu(array('Sale/order'))">
                                 	<li><a href="{:U('Sale/order')}"><i class="fa fa-angle-right"></i> 销售记录</a></li>
-                                </if>
+                                </if>-->
                             </ul>
                         </li>
                         </if>
