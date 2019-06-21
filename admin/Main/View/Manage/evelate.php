@@ -66,9 +66,14 @@
                                 <td>{$data.lastYear_mll}%</td>
                             </tr>
                             <tr>
-                                <td colspan="11" style="text-align: left;padding-left: 20px;">说明：
-                                    {$year}年数据取自{$year-1}年12月26日至{$year}年{$month}月<?php if (date('d') > 26){ echo '26'; }else{ echo date('d'); }; ?>日所有已结算项目数据；
-                                    {$year-1}年数据取自{$year-2}年12月26日至{$year-1}年{$month}月<?php if (date('d') > 26){ echo '26'; }else{ echo date('d'); }; ?>日所有已结算项目数据。
+                                <td colspan="11" style="text-align: left;padding-left: 20px;">
+                                    <p>
+                                        说明：
+                                        1、{$year}年数据取自{$year-1}年12月26日至{$year}年{$month}月<?php if (date('d') > 26){ echo '26'; }else{ echo date('d'); }; ?>日所有已结算项目数据；
+                                        {$year-1}年数据取自{$year-2}年12月26日至{$year-1}年{$month}月<?php if (date('d') > 26){ echo '26'; }else{ echo date('d'); }; ?>日所有已结算项目数据。
+                                    </p>
+                                    <p>&emsp;&emsp;&emsp;2、截止目前，{$year}年总收入{$company_data.thisYear_zsr}元，总毛利{$company_data.thisYear_zml}，毛利率{$company_data.thisYear_mll}%。</p>
+                                    <p>&emsp;&emsp;&emsp;3、表中{$year}年数据不包括“南北极合作”项目和“其他”项目。</p>
                                 </td>
                             </tr>
                         </table><br><br>

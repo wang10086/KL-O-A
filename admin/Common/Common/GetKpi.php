@@ -2267,13 +2267,9 @@ function get_yw_department(){
         if ($month.$now_day > 1225){ //今年考核周期
             $cycle['this_year_start_time']      = strtotime(($year-1).'1226'); ;
             $cycle['this_year_end_time']        = strtotime(($year-1).'12'.$now_day.date('His'));
-            //$ymd['this_year_start_time']        = ($year-1).'1226'; ;
-            //$ymd['this_year_end_time']          = ($year-1).'12'.$now_day.date('His');
         }else{
             $cycle['this_year_start_time']      = strtotime(($year-1).'1226');
             $cycle['this_year_end_time']        = strtotime($year.$month.$day);
-            //$ymd['this_year_start_time']        = ($year-1).'1226';
-            //$ymd['this_year_end_time']          = $year.$month.$day;
         }
 
         //去年考核周期
@@ -2283,8 +2279,6 @@ function get_yw_department(){
         }else{
             $cycle['last_year_end_time']        = strtotime(($year-1).$month.date('dHis'));
         }
-        //$ymd['last_year_start_time']            = ($year-2).'1226';
-        //$ymd['last_year_end_time']              = ($year-1).$month.'26'.date('His');
         return $cycle;
     }
 
@@ -2315,6 +2309,90 @@ function get_yw_department(){
         $data['lastYear_zml']           = $lastYearData['heji']['yearzml'];
         $data['lastYear_mll']           = $lastYearData['heji']['yearmll'];
         return $data;
+    }
+
+    function get_special_manage_data($cycle){
+        $chart_mod                      = D('Chart');
+        $thisYearTimes                  = array();
+        $thisYearTimes['yearBeginTime'] = $cycle['this_year_start_time'];
+        $thisYearTimes['yearEndTime']   = $cycle['this_year_end_time'];
+        $lastYearTimes                  = array();
+        $lastYearTimes['yearBeginTime'] = $cycle['last_year_start_time'];
+        $lastYearTimes['yearEndTime']   = $cycle['last_year_end_time'];
+
+        $yw_departs                     = C('YW_DEPARTS');  //业务部门id
+        $userlists                      = M('account')->where(array('departmentid'=>array('in',$yw_departs)))->getField('id,nickname',true);
+        $userids                        = array_keys($userlists);
+
+        $info                           = array();
+        $info[0]['users']               = $userids;
+        $info[0]['depname']             = '公司';
+        $thisYearData                   = special_js_deplist($info,$thisYearTimes['yearBeginTime'],$thisYearTimes['yearEndTime']);
+        $lastYearData                   = special_js_deplist($info,$lastYearTimes['yearBeginTime'],$lastYearTimes['yearEndTime']);
+        $data                           = array();
+        $data['thisYear_zsr']           = $thisYearData['heji']['yearzsr'];
+        $data['thisYear_zml']           = $thisYearData['heji']['yearzml'];
+        $data['thisYear_mll']           = $thisYearData['heji']['yearmll'];
+        $data['lastYear_zsr']           = $lastYearData['heji']['yearzsr'];
+        $data['lastYear_zml']           = $lastYearData['heji']['yearzml'];
+        $data['lastYear_mll']           = $lastYearData['heji']['yearmll'];
+        return $data;
+    }
+
+    function special_js_deplist($userlists, $begin_time,$end_time){
+        $chart_mod                      = D('Chart');
+        $lists                      = array();
+        foreach ($userlists as $k => $v) {
+            //年度累计
+            $where                  = array();
+            $where['b.audit_status']= 1;
+            $where['l.req_type']    = 801;
+            $where['l.audit_time']  = array('between', "$begin_time,$end_time");
+            $where['a.id']          = array('in', $v['users']);
+            if ($begin_time >= strtotime('20181226')){ //2019年以后的团排除其他和南北极合作
+                $where['o.kind']    = array('not in',array(3,86));
+            }
+
+            $field                  = array();
+            $field[]                = 'count(o.id) as xms';
+            $field[]                = 'sum(c.num_adult) as renshu';
+            $field[]                = 'sum(b.shouru) as zsr';
+            $field[]                = 'sum(b.maoli) as zml';
+            $field[]                = '(sum(b.maoli)/sum(b.shouru)) as mll';
+
+            $yearlist               = M()->table('__OP_SETTLEMENT__ as b')->field($field)->join('__OP__ as o on b.op_id = o.op_id', 'LEFT')->join('__ACCOUNT__ as a on a.id = o.create_user', 'LEFT')->join('__AUDIT_LOG__ as l on l.req_id = b.id', 'LEFT')->join('__OP_TEAM_CONFIRM__ as c on c.op_id=o.op_id', 'left')->where($where)->order('zsr DESC')->find();
+
+            $lists['all']['yearxms']     = $yearlist['xms'] ? $yearlist['xms'] : 0;
+            $lists['all']['yearrenshu']  = $yearlist['renshu'] ? $yearlist['renshu'] : 0;
+            $lists['all']['yearzsr']     = $yearlist['zsr'] ? $yearlist['zsr'] : "0.00";
+            $lists['all']['yearzml']     = $yearlist['zml'] ? $yearlist['zml'] : "0.00";
+            $lists['all']['yearmll']     = $yearlist['mll'] ? sprintf("%.2f", $yearlist['mll'] * 100) : "0.00";
+        }
+
+        //地接团信息
+        $dj_opids       = get_djopid();
+        //地接年累计
+        $req_type       = 801;  //结算
+        $dj_js_opids    = $chart_mod->get_dj_js_opids($begin_time, $end_time, $req_type,$dj_opids);
+        $dj_js_opids    = array_column($dj_js_opids,'op_id');
+        $dj_yeardata    = $chart_mod->get_dj_js_info($begin_time,$end_time,$dj_js_opids);
+
+        $dj_heji                    = array();
+        $dj_heji['yearxms']         = $dj_yeardata['xms'];
+        $dj_heji['yearrenshu']      = $dj_yeardata['renshu'];
+        $dj_heji['yearzsr']         = $dj_yeardata['zsr'];
+        $dj_heji['yearzml']         = $dj_yeardata['zml'];
+        $dj_heji['yearmll']         = sprintf("%.2f", ($dj_heji['yearzml'] / $dj_heji['yearzsr']) * 100);
+
+        $heji                       = array();
+        $heji['yearxms']            = array_sum(array_column($lists, 'yearxms'));
+        $heji['yearrenshu']         = array_sum(array_column($lists, 'yearrenshu')) - $dj_yeardata['renshu'];
+        $heji['yearzsr']            = array_sum(array_column($lists, 'yearzsr')) - $dj_yeardata['zsr'];
+        $heji['yearzml']            = array_sum(array_column($lists, 'yearzml'));
+        $heji['yearmll']            = sprintf("%.2f", ($heji['yearzml'] / $heji['yearzsr']) * 100);
+        $lists['heji']              = $heji;
+        $lists['dj_heji']           = $dj_heji;
+        return $lists;
     }
 
     /**
