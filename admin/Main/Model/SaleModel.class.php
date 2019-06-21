@@ -48,6 +48,25 @@ class SaleModel extends Model{
     }
 
     /**
+     *  获取当前周期内所有结算审核通过的团(以审核时间为准)(包含内部地接,不包含其他和'南北极项目')
+     * @param $beginTime
+     * @param $endTime
+     * @return mixed
+     */
+    public function get_special_settlement_lists($beginTime,$endTime){
+        $where                  = array();
+        $where['s.audit_status']= 1;
+        $where['l.req_type']    = 801;
+        $where['l.audit_time']  = array('between', "$beginTime,$endTime");
+        $where['o.kind']        = array('not in',array(3,86));
+
+        $field                  = 'o.op_id,o.group_id,o.project,o.create_user_name,o.kind,s.shouru,s.maoli,l.req_uid,l.req_uname';
+
+        $lists                  = M()->table('__OP_SETTLEMENT__ as s')->field($field)->join('__OP__ as o on s.op_id = o.op_id', 'LEFT')->join('__AUDIT_LOG__ as l on l.req_id = s.id', 'LEFT')->where($where)->select();
+        return $lists;
+    }
+
+    /**
      * 求每个计调的最低毛利率(以结算为准)
      * @param $operator 计调列表
      * @param $settlements 所有的已结算类表

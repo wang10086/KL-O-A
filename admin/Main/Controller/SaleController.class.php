@@ -319,9 +319,10 @@ class SaleController extends BaseController {
         $mod                                = D('Sale');
         $kinds                              = M('project_kind')->getField('id,name',true);
         $gross_avg                          = $mod->get_gross_avg($kinds,$times['beginTime'],$times['endTime']); //最低毛利率数据
-        $settlement_lists                   = $mod->get_all_settlement_lists($times['beginTime'],$times['endTime']);
+        $settlement_lists                   = $mod->get_all_settlement_lists($times['beginTime'],$times['endTime']); //所有结算的团
+        $special_settlement_lists           = $mod->get_special_settlement_lists($times['beginTime'],$times['endTime']); //不包含"其他"和"南北极"
         $operator                           = array_column($settlement_lists,'req_uname','req_uid');
-        $data                               = $mod->get_gross($operator,$settlement_lists,$kinds,$gross_avg); //各计调数据
+        $data                               = $mod->get_gross($operator,$special_settlement_lists,$kinds,$gross_avg); //各计调数据
         $sum                                = $mod->get_sum_gross($settlement_lists,$kinds,$gross_avg); //获取公司总合计数据
 
         $this->lists                        = $data;
@@ -341,7 +342,7 @@ class SaleController extends BaseController {
         $mod                                = D('Sale');
         $kinds                              = M('project_kind')->getField('id,name',true);
         $gross_avg                          = $mod->get_gross_avg($kinds,$times['beginTime'],$times['endTime']); //最低毛利率数据
-        $settlement_lists                   = $mod->get_all_settlement_lists($times['beginTime'],$times['endTime']);
+        $settlement_lists                   = $mod->get_special_settlement_lists($times['beginTime'],$times['endTime']); //不包含"其他"和"南北极"
 
         if ($jd_id == '888888' || $jd_name == '公司合计'){
             $data                           = $mod->get_sum_gross($settlement_lists,$kinds,$gross_avg);
