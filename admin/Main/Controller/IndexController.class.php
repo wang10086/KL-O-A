@@ -311,6 +311,21 @@ class IndexController extends BaseController {
 		
 		P($ywdata);
 	}
-	
+
+
+	public function test(){
+        $kinds              = M('project_kind')->getField('id',true);
+        $op_kinds           = array_unique(M('op')->getField('kind',true));
+
+        $data               = array();
+        $data['kind']       = 3;
+
+        $where              = array();
+        $where['kind']      = array('not in',$kinds);
+        $res                = M('op')->where($where)->save($data);
+        echo M()->getlastsql();
+        var_dump($res);die;
+        //UPDATE `oa_op` SET `kind`=3 WHERE `kind` NOT IN ('3','54','56','57','60','61','63','64','65','67','68','69','82','83','84','85')
+    }
 	
 }
