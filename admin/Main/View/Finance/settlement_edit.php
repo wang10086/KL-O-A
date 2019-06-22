@@ -196,7 +196,7 @@
                 <input type="text" name="info[shouru]" id="shouru" class="form-control" value="{$should_back_money}" onBlur="lilv()" />
             <?php }else{ ?>
                 <?php if ($op['create_time'] < strtotime('20190101')){ ?> <!--兼容之前的旧数据手动填写-->
-                    <input type="text" name="info[shouru]" id="shouru" class="form-control" value="{$should_back_money}" onBlur="lilv()" />
+                    <input type="text" name="info[shouru]" id="shouru" class="form-control" value="{$settlement.shouru}" onBlur="lilv()" />
                 <?php }else{ ?>
                     <input type="text" name="info[shouru]" id="shouru" class="form-control" value="{$should_back_money}" onBlur="lilv()" readonly />
                 <?php } ?>
