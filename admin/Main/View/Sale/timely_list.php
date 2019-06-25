@@ -28,7 +28,7 @@
                                             <th class="taskOptions" width="60">序号</th>
                                             <th class="taskOptions" style="min-width: 100px;">工作项目</th>
                                             <th class="taskOptions">内容</th>
-                                            <!--<th class="taskOptions">衡量方法</th>-->
+                                            <th class="taskOptions">衡量方法</th>
                                             <if condition="rolemenu(array('Sale/timely_edit'))">
                                             <th width="60" class="taskOptions">编辑</th>
                                             </if>
@@ -41,7 +41,7 @@
                                                 <td class="taskOptions">{$v['id']}</td>
                                                 <td class="taskOptions">{$v['title']}</td>
                                                 <td class="">{$v['content']}</td>
-                                                <!--<td class="taskOptions">{$v['rules']}</td>-->
+                                                <td class="">{$v['rules']}</td>
                                                 <if condition="rolemenu(array('Sale/timely_edit'))">
                                                 <td class="taskOptions">
                                                     <a href="javascript:;" onclick="edit_timely({$v.id})" title="编辑" class="btn btn-info btn-smsm"><i class="fa fa-pencil"></i></a>
