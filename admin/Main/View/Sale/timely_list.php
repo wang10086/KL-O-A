@@ -40,7 +40,7 @@
                                             <tr>
                                                 <td class="taskOptions">{$v['id']}</td>
                                                 <td class="taskOptions">{$v['title']}</td>
-                                                <td class="taskOptions">{$v['content']}</td>
+                                                <td class="">{$v['content']}</td>
                                                 <!--<td class="taskOptions">{$v['rules']}</td>-->
                                                 <if condition="rolemenu(array('Sale/timely_edit'))">
                                                 <td class="taskOptions">
