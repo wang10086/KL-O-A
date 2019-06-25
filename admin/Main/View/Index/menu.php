@@ -428,7 +428,7 @@
                         </if>
 
 
-                        <if condition="rolemenu(array('Sale/index','Sale/goods','Sale/gross','Sale/edit_gross','Sale/chart_gross','Sale/satisfaction'))">
+                        <if condition="rolemenu(array('Sale/index','Sale/goods','Sale/gross','Sale/edit_gross','Sale/chart_gross','Sale/satisfaction','Sale/timely'))">
                         <li class="treeview {:ison(CONTROLLER_NAME, 'Sale')}">
                             <a href="javascript:;">
                                 <i class="fa fa-flag"></i>
@@ -453,6 +453,11 @@
                                 <if condition="rolemenu(array('Sale/satisfaction'))">
                                     <li><a href="{:U('Sale/satisfaction')}"><i class="fa fa-angle-right"></i> 计调内部满意度</a></li>
                                 </if>
+
+                                <if condition="rolemenu(array('Sale/timely'))">
+                                    <li><a href="{:U('Sale/timely')}"><i class="fa fa-angle-right"></i> 计调工作及时率</a></li>
+                                </if>
+
                             	<!--<if condition="rolemenu(array('Sale/index'))">
                                 	<li><a href="{:U('Sale/index')}"><i class="fa fa-angle-right"></i> 出团计划列表</a></li>
                                 </if>

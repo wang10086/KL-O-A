@@ -274,24 +274,6 @@ class SaleController extends BaseController {
         $this->display();
     }
 
-    public function public_save(){
-        $savetype                           = I('savetype');
-        if (isset($_POST['dosubmint']) && $savetype){
-
-            //保存最低毛利率
-            if ($savetype == 2){
-                $db                         = M('gross');
-                $info                       = I('info');
-                if (!$info['gross']) $this->error('最低毛利率不能为空');
-                $info['gross']              = trim($info['gross']);
-                $info['input_time']         = NOW_TIME;
-                $info['input_user_id']      = session('userid');
-                $info['input_user_name']    = session('nickname');
-                $db->add($info);
-            }
-        }
-    }
-
     //公司毛利率
     public function chart_gross(){
         $year                               = I('year',date('Y'));
@@ -442,7 +424,107 @@ class SaleController extends BaseController {
         $this->display('jd_satisfaction_detail');
     }
 
-    //kpi页面
+    //计调工作及时性\
+    public function timely(){
+        $this->title('计调工作及时率');
+        $pin                        = I('pin',0);
+        $year		                = I('year',date('Y'));
+        $month		                = I('month',date('m'));
+        if (strlen($month)<2) $month= str_pad($month,2,'0',STR_PAD_LEFT);
+        $yearMonth                  = $year.$month;
+        $times                      = get_cycle($yearMonth);
+        $mod                        = D('Sale');
+        $timely                     = $mod -> get_timely();
+
+        $this->pin                  = $pin;
+        $this->year 	            = $year;
+        $this->month 	            = $month;
+        $this->prveyear             = $year-1;
+        $this->nextyear             = $year+1;
+        $this->display();
+    }
+
+    //基调及时率考核指标
+    public function timely_list(){
+        $this->title('及时率指标管理');
+        $mod                        = D('Sale');
+        $lists                      = $mod->get_timely();
+
+        $this->lists                = $lists;
+        $this->display();
+    }
+
+    //配置计调及时率考核指标
+    public function timely_edit(){
+        $db                         = M('operator_timely');
+        $id                         = I('id','');
+        if ($id){
+            $list                   = $db->find($id);
+            $list['title']          = htmlspecialchars_decode($list['title']);
+            $list['content']        = htmlspecialchars_decode($list['content']);
+            $list['rules']          = htmlspecialchars_decode($list['rules']);
+            $this->list             = $list;
+        }
+
+        $this->display();
+    }
+
+    //删除
+    public function timely_del(){
+        $id                                 = I('id');
+        if (!$id) $this->error('获取数据错误');
+        $db                                 = M('operator_timely');
+        $data                               = array();
+        $data['status']                     = 1; //删除
+        $where                              = array();
+        $where['id']                        = $id;
+        $res                                = $db->where($where)->save($data);
+        if ($res){
+            $this->success('删除成功');
+        }else{
+            $this->error('删除失败');
+        }
+    }
+
+    public function public_save(){
+        $savetype                           = I('savetype');
+        if (isset($_POST['dosubmint']) && $savetype){
+
+            //保存最低毛利率
+            if ($savetype == 2){
+                $db                         = M('gross');
+                $info                       = I('info');
+                if (!$info['gross']) $this->error('最低毛利率不能为空');
+                $info['gross']              = trim($info['gross']);
+                $info['input_time']         = NOW_TIME;
+                $info['input_user_id']      = session('userid');
+                $info['input_user_name']    = session('nickname');
+                $db->add($info);
+            }
+
+            //保存计调及时率指标
+            if ($savetype == 3){
+                $db                         = M('operator_timely');
+                $id                         = I('id');
+                $info                       = I('info');
+                $info['title']              = htmlspecialchars($info['title']);
+                $info['content']            = htmlspecialchars($info['content']);
+
+                if ($id){
+                    $where                  = array();
+                    $where['id']            = $id;
+                    $res                    = $db->where($where)->save($info);
+                }else{
+                    $res                    = $db->add($info);
+                }
+
+                echo '<script>window.top.location.reload();</script>';
+            }
+        }
+    }
+
+
+    //kpi页面_把控0190618
     /*public function public_kpi_gross(){
         $yearMonth                          = I('ym');
         $user_id                            = I('uid');
@@ -458,5 +540,6 @@ class SaleController extends BaseController {
         $this->lists                        = $info;
         $this->display('gross_kpi');
     }*/
+
     
 }

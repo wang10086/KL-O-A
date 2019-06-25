@@ -344,4 +344,18 @@ class SaleModel extends Model{
         }
         return $data;
     }
+
+    //
+    public function get_timely(){
+        $db                             = M('operator_timely');
+        $where                          = array();
+        $where['status']                = 0; //正常使用
+        $list                           = $db->where($where)->select();
+        foreach ($list as $k=>$v){
+            $list[$k]['title']          = htmlspecialchars_decode($v['title']);
+            $list[$k]['content']        = htmlspecialchars_decode($v['content']);
+            $list[$k]['rules']          = htmlspecialchars_decode($v['rules']);
+        }
+        return $list;
+    }
 }

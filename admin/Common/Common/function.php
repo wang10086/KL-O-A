@@ -5342,3 +5342,6 @@ function get_half_year_cycle($year,$month){
         }
         return ($action != 'DECODE' ? base64_encode($code) : $code);
     }
+
+
+    
