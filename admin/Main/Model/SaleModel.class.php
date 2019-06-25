@@ -363,6 +363,6 @@ class SaleModel extends Model{
     public function get_timely_data($startTime,$endTime,$uid=''){
         $timely                         = $this -> get_timely();
         $timely_tit                     = array_column($timely,'title');
-        $baojia_lists                   = get_baojia_list($startTime,$endTime,$uid);
+        $costacc_lists                  = get_costacc_list($startTime,$endTime,$uid);
     }
 }
