@@ -363,6 +363,8 @@ class SaleModel extends Model{
     public function get_timely_data($startTime,$endTime,$uid=''){
         $timely                         = $this -> get_timely();
         $timely_tit                     = array_column($timely,'title');
-        $costacc_lists                  = get_costacc_list($startTime,$endTime,$uid);
+        $costacc_data                   = get_costacc_data($startTime,$endTime,'报价及时性',$uid);
+        $budget_data                    = get_budget_data($startTime,$endTime,'预算及时性',$uid);
+        $settlement_data                = get_settlement_data($startTime,$endTime,'结算及时性',$uid);
     }
 }

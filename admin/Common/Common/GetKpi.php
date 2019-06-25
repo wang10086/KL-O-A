@@ -2792,7 +2792,7 @@ function get_yw_department(){
         $where['l.audit_time']                  = array('between', "$begin_time,$end_time");
         if ($sale_uid) $where['o.create_user']  = $sale_uid;
         if ($jd_uid) $where['l.req_uid']        = $jd_uid;
-        $field                                  = 'o.op_id,o.project,o.group_id,o.create_user,o.create_user_name,b.shouru,b.maoli,l.req_uid,l.req_uname,l.audit_time'; //获取所有该季度结算的团
+        $field                                  = 'o.op_id,o.project,o.group_id,o.create_user,o.create_user_name,b.shouru,b.maoli,l.req_uid,l.req_uname,l.req_time,l.audit_time'; //获取所有该季度结算的团
         $op_settlement_list                     = M()->table('__OP_SETTLEMENT__ as b')->field($field)->join('__OP__ as o on b.op_id = o.op_id', 'LEFT')->join('__ACCOUNT__ as a on a.id = o.create_user', 'LEFT')->join('__AUDIT_LOG__ as l on l.req_id = b.id', 'LEFT')->where($where)->select();
         return $op_settlement_list;
     }
@@ -2904,11 +2904,127 @@ function get_yw_department(){
     }
 
     /**
-     * 获取本周期报价团的信息
+     *  获取本周期报价及时性
      * @param $startTime
      * @param $endTime
+     * @param string $title
      * @param string $uid
+     * @return array
      */
-    function get_costacc_list($startTime,$endTime,$uid=''){
+    function get_costacc_data($startTime,$endTime,$title='',$uid=''){
+        $where                              = array();
+        if ($uid){ $where['c.input_user_id']= $uid; }
+        $where['c.create_time']             = array('between',"$startTime,$endTime");
+        $field                              = 'o.group_id,o.project,o.create_time as op_create_time,c.*';
+        $costacc_list                       = M()->table('__OP_COSTACC_RES__ as c')->join('__OP__ as o on o.op_id=c.op_id','left')->where($where)->field($field)->select();
+        $ok_list                            = array();
+        $sum_num                            = 0;
+        $ok_num                             = 0;
+        foreach ($costacc_list as $k=>$v){
+            $sum_num++;
+            $ok_time                        = strtotime(getAfterWorkDay(3,$v['op_create_time'])); //立项后3个工作日
+            $costacc_list[$k]['ok_time']    = $ok_time;
+            if ($v['create_time'] <= $costacc_list[$k]['ok_time']){
+                $v['ok_time']               = $ok_time;
+                $ok_list[]                  = $v;
+                $ok_num++;
+            }
+        }
 
+        $data                               = array();
+        $data['title']                      = $title;
+        $data['sum_num']                    = $sum_num;
+        $data['ok_num']                     = $ok_num;
+        $data['average']                    = (round($ok_num/$sum_num,4)*100).'%';
+        $data['sum_list']                   = $costacc_list;
+        $data['ok_list']                    = $ok_list;
+        return $data;
+    }
+
+    /**
+     *  获取本周期预算及时性
+     * @param $startTime
+     * @param $endTime
+     * @param string $title
+     * @param string $uid
+     * @return array
+     */
+    function get_budget_data($startTime,$endTime,$title='',$uid=''){
+        $budget_list                        = get_budget_list($startTime,$endTime,'',$uid);
+        $ok_list                            = array();
+        $sum_num                            = 0;
+        $ok_num                             = 0;
+
+        foreach ($budget_list as $k=>$v){
+            $sum_num++;
+            $ok_time                        = $v['req_time'] + (3*24*3600); //req_time 提交时间
+            $budget_list[$k]['ok_time']     = $ok_time;
+            if ($v['dep_time'] >= $ok_time){
+                $v['ok_time']               = $ok_time;
+                $ok_list[]                  = $v;
+                $ok_num++;
+            }
+        }
+        $data                               = array();
+        $data['title']                      = $title;
+        $data['sum_num']                    = $sum_num;
+        $data['ok_num']                     = $ok_num;
+        $data['average']                    = (round($ok_num/$sum_num,4)*100).'%';
+        $data['sum_list']                   = $budget_list;
+        $data['ok_list']                    = $ok_list;
+        return $data;
+    }
+
+    /**
+     * 获取该周期结算的团
+     * @param $begin_time
+     * @param $end_time
+     * @param $sale_uid 销售id
+     * @param int $jd_uid 计调id
+     * @return mixed
+     */
+    function get_budget_list($begin_time,$end_time,$sale_uid=0,$jd_uid=0){
+        $where                                  = array();
+        $where['b.audit_status']                = 1;
+        $where['l.req_type']                    = 800;
+        $where['l.audit_time']                  = array('between', "$begin_time,$end_time");
+        if ($sale_uid) $where['o.create_user']  = $sale_uid;
+        if ($jd_uid) $where['l.req_uid']        = $jd_uid;
+        $field                                  = 'o.op_id,o.project,o.group_id,o.create_user,o.create_user_name,b.shouru,b.maoli,l.req_uid,l.req_uname,l.req_time,l.audit_time,c.dep_time,c.ret_time'; //获取所有该季度结算的团
+        $op_budget_list                         = M()->table('__OP_BUDGET__ as b')->field($field)->join('__OP__ as o on b.op_id = o.op_id', 'LEFT')->join('__ACCOUNT__ as a on a.id = o.create_user', 'LEFT')->join('__AUDIT_LOG__ as l on l.req_id = b.id', 'LEFT')->join('__OP_TEAM_CONFIRM__ as c on c.op_id=b.op_id','left')->where($where)->select();
+        return $op_budget_list;
+    }
+
+    /**
+     *  获取本周期结算及时性
+     * @param $startTime
+     * @param $endTime
+     * @param string $title
+     * @param string $uid
+     * @return array
+     */
+    function get_settlement_data($startTime,$endTime,$title='',$uid=''){
+        $settlement_list                    = get_settlement_list($startTime,$endTime,'',$uid);
+        $ok_list                            = array();
+        $sum_num                            = 0;
+        $ok_num                             = 0;
+
+        foreach ($settlement_list as $k=>$v){
+            $sum_num++;
+            $ok_time                        = $v['req_time'] + (3*24*3600); //req_time 提交时间
+            $settlement_list[$k]['ok_time']     = $ok_time;
+            if ($v['dep_time'] >= $ok_time){
+                $v['ok_time']               = $ok_time;
+                $ok_list[]                  = $v;
+                $ok_num++;
+            }
+        }
+        $data                               = array();
+        $data['title']                      = $title;
+        $data['sum_num']                    = $sum_num;
+        $data['ok_num']                     = $ok_num;
+        $data['average']                    = (round($ok_num/$sum_num,4)*100).'%';
+        $data['sum_list']                   = $settlement_list;
+        $data['ok_list']                    = $ok_list;
+        return $data;
     }
