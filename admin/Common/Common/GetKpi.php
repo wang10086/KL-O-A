@@ -2902,3 +2902,13 @@ function get_yw_department(){
         $data['jd_name']                    = '合计';
         return $data;
     }
+
+    /**
+     * 获取本周期报价团的信息
+     * @param $startTime
+     * @param $endTime
+     * @param string $uid
+     */
+    function get_costacc_list($startTime,$endTime,$uid=''){
+
+    }

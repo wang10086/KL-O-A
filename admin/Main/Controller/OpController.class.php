@@ -2521,7 +2521,8 @@ class OpController extends BaseController {
 			M('op_budget')->where(array('op_id'=>$opid))->delete();
 			M('op_cost')->where(array('op_id'=>$opid))->delete();
 			M('op_costacc')->where(array('op_id'=>$opid))->delete();
-			M('op_guide')->where(array('op_id'=>$opid))->delete();
+            M('op_costacc_res')->where(array('op_id'=>$opid))->delete();
+            M('op_guide')->where(array('op_id'=>$opid))->delete();
 			M('op_line_days')->where(array('op_id'=>$opid))->delete();
 			M('op_material')->where(array('op_id'=>$opid))->delete();
 			M('op_partake')->where(array('op_id'=>$opid))->delete();

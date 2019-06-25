@@ -206,45 +206,66 @@ class FinanceController extends BaseController {
 	//@@@NODE-3###save_costacc###保存成本核算###
     public function save_costacc(){
 		
-		$db              = M('op_costacc');
-		$opid            = I('opid');
-		$costacc         = I('costacc');
-		$info            = I('info');
-		$resid           = I('resid');
-		$referer         = I('referer');
-        $guideprice      = I('guideprice');
-		$num             = 0;
+		$db                     = M('op_costacc');
+        $op_auth_db             = M('op_auth');
+		$opid                   = I('opid');
+		$costacc                = I('costacc');
+		$info                   = I('info');
+		$resid                  = I('resid');
+		$referer                = I('referer');
+        $guideprice             = I('guideprice');
+		$num                    = 0;
         if(!$costacc){
-            $costacc = array();
+            $costacc            = array();
             foreach ($guideprice as $v){
-                $costacc[] = $v;
+                $costacc[]      = $v;
             }
         }
 
         //保存成本核算
 		if($opid && $costacc){
-			
-			$delid = array();
+			$delid              = array();
 			foreach($costacc as $k=>$v){
-				$data = array();
-				$data = $v;
-				$data['op_id'] = $opid;
+				$data           = array();
+				$data           = $v;
+				$data['op_id']  = $opid;
 				$data['status'] = 0;
 				if($resid && $resid[$k]['id']){
-					$edits = $db->data($data)->where(array('id'=>$resid[$k]['id']))->save();
-					$delid[] = $resid[$k]['id'];
+					$edits      = $db->data($data)->where(array('id'=>$resid[$k]['id']))->save();
+					$delid[]    = $resid[$k]['id'];
 					$num++;
 				}else{
-					$savein = $db->add($data);
-					$delid[] = $savein;
+					$savein     = $db->add($data);
+					$delid[]    = $savein;
 					if($savein) $num++;
 				}
-			}	
+			}
+            $del = $db->where(array('op_id'=>$opid,'status'=>0,'id'=>array('not in',$delid)))->delete();
+            if($del) $num++;
 			
 			M('op')->data($info)->where(array('op_id'=>$opid))->save();
-			
-			$del = $db->where(array('op_id'=>$opid,'status'=>0,'id'=>array('not in',$delid)))->delete();
-			if($del) $num++;
+            $auth               = array();
+            $auth['hesuan']     = session('userid');
+            if (!in_array(session('userid'),array(1,11))){
+                $op_auth_db->where(array('op_id'=>$opid))->save($auth);
+            }
+
+            $cres                           = array();
+            $cres['op_id']                  = $opid;
+            $cres['costacc']                = $info['costacc']?trim($info['costacc']):0;
+            $cres['costacc_min_price']      = $info['costacc_min_price']?trim($info['costacc_min_price']):0;
+            $cres['costacc_max_price']      = $info['costacc_max_price']?trim($info['costacc_max_price']):0;
+            $cres['input_user_id']          = session('userid');
+            $cres['input_user_name']        = session('nickname');
+            $costacc_res_db                 = M('op_costacc_res');
+            $res                            = $costacc_res_db->where(array('op_id'=>$opid))->find();
+            if ($res){
+                $cres['update_time']        = NOW_TIME;
+                $costacc_res_db->where(array('id'=>$res['id']))->save($cres);
+            }else{
+                $cres['create_time']        = NOW_TIME;
+                $costacc_res_db->add($cres);
+            }
 		}
 		
 		if($num){

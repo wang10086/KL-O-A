@@ -434,7 +434,7 @@ class SaleController extends BaseController {
         $yearMonth                  = $year.$month;
         $times                      = get_cycle($yearMonth);
         $mod                        = D('Sale');
-        $timely                     = $mod -> get_timely();
+        $data                       = $mod->get_timely_data($times['begintime'],$times['endtime']);
 
         $this->pin                  = $pin;
         $this->year 	            = $year;

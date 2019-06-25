@@ -358,4 +358,11 @@ class SaleModel extends Model{
         }
         return $list;
     }
+
+    //获取计调的及时率
+    public function get_timely_data($startTime,$endTime,$uid=''){
+        $timely                         = $this -> get_timely();
+        $timely_tit                     = array_column($timely,'title');
+        $baojia_lists                   = get_baojia_list($startTime,$endTime,$uid);
+    }
 }
