@@ -5344,4 +5344,3 @@ function get_half_year_cycle($year,$month){
     }
 
 
-    

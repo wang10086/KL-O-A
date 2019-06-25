@@ -507,8 +507,9 @@ class SaleController extends BaseController {
                 $db                         = M('operator_timely');
                 $id                         = I('id');
                 $info                       = I('info');
-                $info['title']              = htmlspecialchars($info['title']);
-                $info['content']            = htmlspecialchars($info['content']);
+                $info['title']              = htmlspecialchars(trim($info['title']));
+                $info['content']            = htmlspecialchars(trim($info['content']));
+                $info['rules']              = htmlspecialchars(trim($info['rules']));
 
                 if ($id){
                     $where                  = array();
