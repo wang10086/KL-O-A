@@ -366,5 +366,9 @@ class SaleModel extends Model{
         $costacc_data                   = get_costacc_data($startTime,$endTime,'报价及时性',$uid);
         $budget_data                    = get_budget_data($startTime,$endTime,'预算及时性',$uid);
         $settlement_data                = get_settlement_data($startTime,$endTime,'结算及时性',$uid);
+
+        $data[]                         = $costacc_data;
+        $data[]                         = $budget_data;
+        return $data;
     }
 }

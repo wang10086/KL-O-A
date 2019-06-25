@@ -436,6 +436,7 @@ class SaleController extends BaseController {
         $mod                        = D('Sale');
         $data                       = $mod->get_timely_data($times['begintime'],$times['endtime']);
 
+        $this->lists                = $data;
         $this->pin                  = $pin;
         $this->year 	            = $year;
         $this->month 	            = $month;

@@ -65,15 +65,15 @@
                                         </tr>
                                         <foreach name="lists" key="k" item="v">
                                             <tr>
-                                                <td class="taskOptions"></td>
-                                                <td class="taskOptions"></td>
-                                                <td class="taskOptions"></td>
-                                                <td class="taskOptions"></td>
-                                                <td class="taskOptions"></td>
-                                                <td class="taskOptions"></td>
+                                                <td class="taskOptions">{$k+1}</td>
+                                                <td class="taskOptions">{$v.title}</td>
+                                                <td class="taskOptions">{$v.content}</td>
+                                                <td class="taskOptions">{$v.sum_num}</td>
+                                                <td class="taskOptions">{$v.ok_num}</td>
+                                                <td class="taskOptions">{$v.average}</td>
                                                 <if condition="rolemenu(array('Sale/gross_op_list'))">
                                                 <td class="taskOptions">
-                                                    <a href="{:U('Sale/gross_op_list',array('opids'=>$v['opids']))}" title="详情" class="btn btn-info btn-smsm"><i class="fa fa-bars"></i></a>
+                                                    <a href="javascript:;" onclick="art_show_msg('加班开发中...')" title="详情" class="btn btn-info btn-smsm"><i class="fa fa-bars"></i></a>
                                                 </td>
                                                 </if>
                                             </tr>
