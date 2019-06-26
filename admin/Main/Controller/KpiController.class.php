@@ -150,7 +150,7 @@ class KpiController extends BaseController {
 		$year                   = I('year',date('Y'));
 		$kpr                    = I('kpr');
 		$bkpr                   = I('bkpr');
-		$month                  = I('month','');
+		$month                  = I('month',date('Ym'));
 		$show                   = I('show',0);
         $pin                    = I('pin')?I('pin'):0;
 		
