@@ -362,13 +362,77 @@ class SaleModel extends Model{
     //获取计调的及时率
     public function get_timely_data($startTime,$endTime,$uid=''){
         $timely                         = $this -> get_timely();
-        $timely_tit                     = array_column($timely,'title');
-        $costacc_data                   = get_costacc_data($startTime,$endTime,'报价及时性',$uid);
-        $budget_data                    = get_budget_data($startTime,$endTime,'预算及时性',$uid);
-        $settlement_data                = get_settlement_data($startTime,$endTime,'结算及时性',$uid);
+        $timely                         = array_column($timely,'content','title');
+        $costacc_data                   = get_costacc_data($startTime,$endTime,'报价及时性',$timely['报价及时性'],$uid);
+        $budget_data                    = get_budget_data($startTime,$endTime,'预算及时性',$timely['预算及时性'],$uid);
+        $settlement_data                = get_settlement_data($startTime,$endTime,'结算及时性',$timely['结算及时性'],$uid);
+        $reimbursement_data             = get_reimbursement_data($startTime,$endTime,'报账及时性',$timely['报账及时性'],$uid);
 
         $data[]                         = $costacc_data;
         $data[]                         = $budget_data;
+        $data[]                         = $settlement_data;
+        $data[]                         = $reimbursement_data;
         return $data;
     }
+
+    //获取计调及时率合计
+    public function get_sum_timely($data){
+        $sum_num                        = array_sum(array_column($data,'sum_num'));
+        $ok_num                         = array_sum(array_column($data,'ok_num'));
+        $average                        = $sum_num ? (round($ok_num/$sum_num,4)*100).'%' : '100%';
+        $info                           = array();
+        $info['title']                  = '合计';
+        $info['sum_num']                = $sum_num;
+        $info['ok_num']                 = $ok_num;
+        $info['average']                = $average;
+        return $info;
+    }
+
+    /**
+     * 获取本周期计调人员信息(已计算数据为准)
+     * @param $startTime
+     * @param $endTime
+     */
+    public function get_operator($startTime,$endTime){
+        $settlement_lists                   = $this->get_all_settlement_lists($startTime,$endTime); //所有结算的团
+        $operator                           = array_column($settlement_lists,'req_uname','req_uid');
+        return $operator;
+    }
+
+    //计调及时率详情
+    public function get_timely_type($title,$startTime,$endTime,$uid=0){
+        $timely                         = $this -> get_timely();
+        $timely                         = array_column($timely,'content','title');
+        switch ($title){
+            case '报价及时性':
+                $info                   = get_costacc_data($startTime,$endTime,$title,$timely[$title],$uid);
+                $data                   = $info['sum_list'];
+                break;
+            case '预算及时性':
+                $info                   = get_budget_data($startTime,$endTime,$title,$timely[$title],$uid);
+                $data                   = $info['sum_list'];
+                break;
+            case '结算及时性':
+                $info                   = get_settlement_data($startTime,$endTime,$title,$timely[$title],$uid);
+                $data                   = $info['sum_list'];
+                break;
+            case '报账及时性':
+                $info                   = get_reimbursement_data($startTime,$endTime,$title,$timely[$title],$uid);
+                $data                   = $info['sum_list'];
+                break;
+            /*default: //合计
+                $data                   = $this->get_sum_timely_lists($startTime,$endTime,$uid='');*/
+        }
+        return $data;
+    }
+
+    //计调及时率详情页合计数据
+    /*private function get_sum_timely_lists($startTime,$endTime,$uid=''){
+        $data                           = $this->get_timely_data($startTime,$endTime,$uid='');
+        $lists                          = array();
+        foreach ($data as $v){
+            $lists[$v['title']]         = $v['sum_list'];
+        }
+        return $lists;
+    }*/
 }

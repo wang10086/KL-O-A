@@ -427,7 +427,6 @@ class SaleController extends BaseController {
     //计调工作及时性\
     public function timely(){
         $this->title('计调工作及时率');
-        $pin                        = I('pin',0);
         $year		                = I('year',date('Y'));
         $month		                = I('month',date('m'));
         if (strlen($month)<2) $month= str_pad($month,2,'0',STR_PAD_LEFT);
@@ -435,9 +434,10 @@ class SaleController extends BaseController {
         $times                      = get_cycle($yearMonth);
         $mod                        = D('Sale');
         $data                       = $mod->get_timely_data($times['begintime'],$times['endtime']);
+        $sum_data                   = $mod->get_sum_timely($data);
 
+        $this->sum                  = $sum_data;
         $this->lists                = $data;
-        $this->pin                  = $pin;
         $this->year 	            = $year;
         $this->month 	            = $month;
         $this->prveyear             = $year-1;
@@ -523,6 +523,75 @@ class SaleController extends BaseController {
                 echo '<script>window.top.location.reload();</script>';
             }
         }
+    }
+
+    //各计调操作及时率
+    public function operator_timely(){
+        $this->title('计调工作及时率');
+
+        $year		                = I('year',date('Y'));
+        $month		                = I('month',date('m'));
+        if (strlen($month)<2) $month= str_pad($month,2,'0',STR_PAD_LEFT);
+        $yearMonth                  = $year.$month;
+        $times                      = get_cycle($yearMonth);
+        $mod                        = D('Sale');
+        $operator                   = $mod->get_operator($times['begintime'],$times['endtime']); //获取本周期计调人员信息
+        $data                       = $this->get_jd_timely($operator,$times['begintime'],$times['endtime']);
+        //$sum_data                   = $mod->get_sum_timely($data);
+
+        //$this->sum                  = $sum_data;
+        //P($data);die;
+        $this->lists                = $data;
+        $this->year 	            = $year;
+        $this->month 	            = $month;
+        $this->prveyear             = $year-1;
+        $this->nextyear             = $year+1;
+
+        $this->display();
+    }
+
+    /**
+     * 获取每个计调的每项工作及时率
+     * @param $operator 所有的计调
+     * @param $startTime
+     * @param $endTime
+     * @return array
+     */
+    public function get_jd_timely($operator,$startTime,$endTime){
+        $mod                        = D('Sale');
+        $data                       = array();
+        foreach ($operator as $k=>$v){
+            $info                   = $mod->get_timely_data($startTime,$endTime,$k);
+            $info['合计']           = $mod->get_sum_timely($info);
+            $data[$v]['info']       = $info;
+            $data[$v]['uid']        = $k;
+            $data[$v]['name']       = $v;
+            $data[$v]['row_span']   = count($info)+1;
+        }
+        return $data;
+    }
+
+    //详情页
+    public function public_timely_detail(){
+        $this->title('计调工作及时率详情');
+        $mod                        = D('Sale');
+        $timely                     = $mod -> get_timely();
+        $timely                     = array_column($timely,'title');
+        $title                      = trim(I('tit'));
+        $title                      = ($title == '合计')?$timely[0]:$title;
+        $year                       = I('year',date('Y'));
+        $month                      = I('month',date('m'));
+        $uid                        = I('uid','');
+        if (strlen($month)<2) $month= str_pad($month,2,'0',STR_PAD_LEFT);
+        $yearMonth                  = $year.$month;
+        $times                      = get_cycle($yearMonth);
+        $data                       = $mod->get_timely_type($title,$times['begintime'],$times['endtime'],$uid);
+
+        $this->uid                  = $uid;
+        $this->timely               = $timely;
+        $this->lists                = $data;
+        $this->title                = $title;
+        $this->display('timely_detail');
     }
 
 

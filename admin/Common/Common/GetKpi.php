@@ -2911,7 +2911,7 @@ function get_yw_department(){
      * @param string $uid
      * @return array
      */
-    function get_costacc_data($startTime,$endTime,$title='',$uid=''){
+    function get_costacc_data($startTime,$endTime,$title='',$content='',$uid=''){
         $where                              = array();
         if ($uid){ $where['c.input_user_id']= $uid; }
         $where['c.create_time']             = array('between',"$startTime,$endTime");
@@ -2924,18 +2924,21 @@ function get_yw_department(){
             $sum_num++;
             $ok_time                        = strtotime(getAfterWorkDay(3,$v['op_create_time'])); //立项后3个工作日
             $costacc_list[$k]['ok_time']    = $ok_time;
+            $costacc_list[$k]['type']       = $title;
             if ($v['create_time'] <= $costacc_list[$k]['ok_time']){
                 $v['ok_time']               = $ok_time;
                 $ok_list[]                  = $v;
+                $costacc_list[$k]['is_ok']  = 1;
                 $ok_num++;
             }
         }
 
         $data                               = array();
         $data['title']                      = $title;
+        $data['content']                    = $content;
         $data['sum_num']                    = $sum_num;
         $data['ok_num']                     = $ok_num;
-        $data['average']                    = (round($ok_num/$sum_num,4)*100).'%';
+        $data['average']                    = $sum_num ? (round($ok_num/$sum_num,4)*100).'%' : '100%';
         $data['sum_list']                   = $costacc_list;
         $data['ok_list']                    = $ok_list;
         return $data;
@@ -2949,7 +2952,7 @@ function get_yw_department(){
      * @param string $uid
      * @return array
      */
-    function get_budget_data($startTime,$endTime,$title='',$uid=''){
+    function get_budget_data($startTime,$endTime,$title='',$content='',$uid=''){
         $budget_list                        = get_budget_list($startTime,$endTime,'',$uid);
         $ok_list                            = array();
         $sum_num                            = 0;
@@ -2959,17 +2962,20 @@ function get_yw_department(){
             $sum_num++;
             $ok_time                        = $v['req_time'] + (3*24*3600); //req_time 提交时间
             $budget_list[$k]['ok_time']     = $ok_time;
+            $budget_list[$k]['type']        = $title;
             if ($v['dep_time'] >= $ok_time){
                 $v['ok_time']               = $ok_time;
                 $ok_list[]                  = $v;
+                $budget_list[$k]['is_ok']   = 1;
                 $ok_num++;
             }
         }
         $data                               = array();
         $data['title']                      = $title;
+        $data['content']                    = $content;
         $data['sum_num']                    = $sum_num;
         $data['ok_num']                     = $ok_num;
-        $data['average']                    = (round($ok_num/$sum_num,4)*100).'%';
+        $data['average']                    = $sum_num ? (round($ok_num/$sum_num,4)*100).'%' : '100%';
         $data['sum_list']                   = $budget_list;
         $data['ok_list']                    = $ok_list;
         return $data;
@@ -3003,28 +3009,73 @@ function get_yw_department(){
      * @param string $uid
      * @return array
      */
-    function get_settlement_data($startTime,$endTime,$title='',$uid=''){
+    function get_settlement_data($startTime,$endTime,$title='',$content='',$uid=''){
         $settlement_list                    = get_settlement_list($startTime,$endTime,'',$uid);
         $ok_list                            = array();
         $sum_num                            = 0;
         $ok_num                             = 0;
 
         foreach ($settlement_list as $k=>$v){
+           //回款审核时间
+            $where                          = array();
+            $where['h.op_id']               = $v['op_id'];
+            $where['h.audit_status']        = 1; //审核通过
+            $where['l.req_type']            = 802; //回款
+            $field                          = 'h.op_id,l.req_time,l.audit_time';
+            $back_money_data                = M()->table('__OP_HUIKUAN__ as h')->join('__AUDIT_LOG__ as l on l.req_id = h.id','left')->where($where)->field($field)->order('h.id desc')->find();
+            $back_money_time                = $back_money_data['audit_time'];
+
+            $ok_time                        = strtotime(getAfterWorkDay(10,$back_money_time));
             $sum_num++;
-            $ok_time                        = $v['req_time'] + (3*24*3600); //req_time 提交时间
-            $settlement_list[$k]['ok_time']     = $ok_time;
-            if ($v['dep_time'] >= $ok_time){
+            $settlement_list[$k]['ok_time'] = $ok_time;
+            $settlement_list[$k]['type']    = $title;
+            if ($v['req_time'] <= $ok_time){ //req_time 提交时间
                 $v['ok_time']               = $ok_time;
                 $ok_list[]                  = $v;
+                $settlement_list[$k]['is_ok']= 1;
                 $ok_num++;
             }
         }
         $data                               = array();
         $data['title']                      = $title;
+        $data['content']                    = $content;
         $data['sum_num']                    = $sum_num;
         $data['ok_num']                     = $ok_num;
-        $data['average']                    = (round($ok_num/$sum_num,4)*100).'%';
+        $data['average']                    = $sum_num ? (round($ok_num/$sum_num,4)*100).'%' : '100%';
         $data['sum_list']                   = $settlement_list;
+        $data['ok_list']                    = $ok_list;
+        return $data;
+    }
+
+
+    /**
+     *  获取本周期报账及时性
+     * @param $startTime
+     * @param $endTime
+     * @param string $title
+     * @param string $uid
+     * @return array
+     * reimbursement
+     */
+    function get_reimbursement_data($startTime,$endTime,$title='',$content='',$uid=''){
+        //$reimbursement_list                 = get_reimbursement_list($startTime,$endTime,'',$uid);
+        $reimbursement_list                 = '';
+        $ok_list                            = array();
+        $sum_num                            = 0;
+        $ok_num                             = 0;
+
+        foreach ($reimbursement_list as $k=>$v){
+            $reimbursement_list[$k]['ok_time']= '';
+            $reimbursement_list[$k]['type'] = $title;
+            $reimbursement_list[$k]['is_ok']= 1;
+        }
+        $data                               = array();
+        $data['title']                      = $title;
+        $data['content']                    = $content;
+        $data['sum_num']                    = $sum_num;
+        $data['ok_num']                     = $ok_num;
+        $data['average']                    = $sum_num ? (round($ok_num/$sum_num,4)*100).'%' : '100%';
+        $data['sum_list']                   = $reimbursement_list;
         $data['ok_list']                    = $ok_list;
         return $data;
     }
