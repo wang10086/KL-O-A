@@ -149,7 +149,8 @@ class OpController extends BaseController {
                 
 				if($addok){
                     $data               = array();
-                    $data['hesuan']     = cookie('userid');
+                    $data['hesuan']     = session('userid');
+                    $data['line']       = session('userid');
                     $auth               = M('op_auth')->where(array('op_id'=>$opid))->find();
 
                     if($auth){
@@ -1602,20 +1603,19 @@ class OpController extends BaseController {
 
     //@@@NODE-3###assign_yusuan###指派人员跟进项目预算###
     public function assign_yusuan(){
-        $opid       = I('opid');
-        $info       = I('info');
-        $user       =  M('account')->getField('id,nickname', true);
+        $opid               = I('opid');
+        $info               = I('info');
+        $user               =  M('account')->getField('id,nickname', true);
 
         if(isset($_POST['dosubmit']) && $info){
 
-            $data = array();
+            $data           = array();
             $data['yusuan'] = $info;
             $data['jiesuan']= $info;
-            $data['line']   = $info;
-            $auth = M('op_auth')->where(array('op_id'=>$opid))->find();
+            $auth           = M('op_auth')->where(array('op_id'=>$opid))->find();
 
             //创建工单
-            $thing  = "行程方案";
+            $thing          = "行程方案";
             //project_worder($info,$opid,$thing);
 
             if($auth){
@@ -2725,9 +2725,10 @@ class OpController extends BaseController {
 
                     if ($opres) {
                         M('op_team_confirm')->add($dijie_confirm);
-                        $data = array();
+                        $data           = array();
                         $data['hesuan'] = $new_op['create_user'];
-                        $auth = M('op_auth')->where(array('op_id'=>$new_op['op_id']))->find();
+                        $data['line']   = $new_op['create_user'];
+                        $auth           = M('op_auth')->where(array('op_id'=>$new_op['op_id']))->find();
 
                         if($auth){
                             M('op_auth')->data($data)->where(array('id'=>$auth['id']))->save();
