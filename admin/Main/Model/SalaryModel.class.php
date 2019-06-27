@@ -569,7 +569,7 @@ class SalaryModel extends Model
         if (in_array($userinfo['id'],$last_quarter_kpi_score_users)){ //kpi从上个季度取值
             $use3                              = $this->get_last_quarter_kpi_score($userinfo,$datetime);
         }else{
-            $use3                               = trim(str_replace(array('<font color="#999999">','</font>','无加扣分','<span class="red">','</span>','<span>','<font color="#ff9900">','未完成评分','+'),"",$user[0]['total_kpi_score']));//KPI
+            $use3                               = trim(str_replace(array('<font color="#999999">','</font>','无加扣分','<span class="red">','</span>','<span>','<font color="#ff9900">','未完成评分','<span class="green">','+'),"",$user[0]['total_kpi_score']));//KPI
         }
         $money                                  = ($salary['standard_salary']/10)*$salary['performance_salary'];//绩效金额
         $base_money                             = ($salary['standard_salary']/10)*$salary['basic_salary'];    //基本工资
