@@ -1,213 +1,309 @@
 <include file="Index:header2" />
 
 
-
-            <aside class="right-side">
+			<aside class="right-side">
                 <!-- Content Header (Page header) -->
                 <section class="content-header">
                     <h1>
-                        {$pageTitle}
+                       {$_action_}
                         <small>{$_pagedesc_}</small>
                     </h1>
                     <ol class="breadcrumb">
                         <li><a href="{:U('Index/index')}"><i class="fa fa-home"></i> 首页</a></li>
-                        <li><a href="{:U('Product/standard_product')}"><i class="fa fa-gift"></i> {$pageTitle}</a></li>
+                        <li><a href="{:U('Product/standard_product')}"><i class="fa fa-gift"></i> {$_pagetitle_}</a></li>
                         <li class="active">{$_action_}</li>
                     </ol>
                 </section>
 
                 <!-- Main content -->
                 <section class="content">
-                
                     <div class="row">
                          <!-- right column -->
                         <div class="col-md-12">
                             <!-- general form elements disabled -->
                             <form method="post" action="{:U('Product/public_save')}" name="myform" id="myform">
-                			<input type="hidden" name="dosubmit" value="1">
-                            <input type="hidden" name="savetype" value="1">
-                			<input type="hidden" name="id" value="{$id}" >
                             <div class="box box-warning">
                                 <div class="box-header">
-                                    <h3 class="box-title">{$_action_}</h3>
-                                    <div class="box-tools pull-right"> </div>
+                                    <h3 class="box-title">编辑标准化产品</h3>
                                 </div><!-- /.box-header -->
                                 <div class="box-body">
-                                    <div class="content">
-                                        <div class="form-group col-md-8">
-                                        <label>产品名称：</label>
-                                             <input class="form-control" type="text" id="pname" name="name" value="{$row.name}" />
-                                        </div>
+                                    <input type="hidden" name="dosubmit" value="1">
+                                    <input type="hidden" name="savetype" value="1">
+                                    <input type="hidden" name="id" value="{$id}" >
+                                   <!-- <input type="hidden" name="dosubmit" value="1" />
+                                    <input type="hidden" name="referer" value="<?php /*echo $_SERVER['HTTP_REFERER']; */?>" />
+                                    <input type="hidden" name="business_dept" value="{$business_dept}">
+                                    <if condition="$row"><input type="hidden" name="id" value="{$row.id}" /></if>-->
+                                    <if condition="$row">
+                                        <input type="hidden" name="info[input_uname]" value="{$row.input_uname}" class="form-control"  />
+                                    <else />
+                                        <input type="hidden" name="info[input_uname]" value="{:session('nickname')}" class="form-control"  />
+                                    </if>
 
-                                        <div class="form-group col-md-4">
-                                            <label>使用时间：</label>
-                                            <select class="form-control" name="apply_time">
-                                                <option value="" selected disabled>==请选择==</option>
-                                                <foreach name="apply_times" key="k" item="v">
-                                                    <option value="{$v}" <?php if ($pin == $k) echo 'selected'; ?>>{$v}</option>
-                                                </foreach>
-                                            </select>
-                                        </div>
+                                    <div class="form-group col-md-8">
+                                        <label>产品模块名称</label>
+                                        <input type="text" name="info[title]" id="title" value="{$row.title}"  class="form-control" required />
+                                    </div>
 
-                                        <div class="form-group col-md-4">
-                                            <label>价格：</label>
-                                            <input class="form-control" type="text" name="info[price]" value="{$row.price}" />
-                                        </div>
-
-                                        <div class="form-group col-md-4">
-                                            <label>适用人群</label>
-                                            <select name="apply" class="form-control">
-                                                <foreach name="apply" key="k" item="v">
-                                                    <option value="{$k}" <?php if ($k == $row['apply']) echo 'selected'; ?>>{$v}</option>
-                                                </foreach>
-                                            </select>
-                                        </div>
-
-                                        <div class="form-group col-md-12">
-                                            <span class="lm_c black">适用项目类型</span>
-                                            <foreach name="kinds" key="k" item="v">
-                                                <span class="lm_c"><input type="checkbox" name="kind[]" <?php if(in_array($v['id'],$pkind)){ echo 'checked';} ?>  value="{$v.id}"> {$v.name}</span>
+                                    <!--<div class="form-group col-md-6">
+                                        <label>类别</label>
+                                        <select  class="form-control"  name="info[type]">
+                                            <option value="0">请选择</option>
+                                            <foreach name="product_type" key="k" item="v">
+                                                <option value="{$k}" <?php /*if ($row && ($k == $row['type'])) echo ' selected'; */?> >{$v}</option>
                                             </foreach>
-                                        </div>
+                                        </select>
+                                    </div>-->
 
-                                        <!--<div class="form-group" style="padding: 0 15px;">
-                                        <label style="width: 100%;">已选中产品：</label>
-                                               <table id="flistmodel" class="table table-bordered" >
-                                               <tr valign="middle">
-                                                    <th style="text-align: center;" width="80">ID</th>
-                                                    <th style="text-align: center;">产品名称</th>
-                                                    <th style="text-align: center;">科学领域</th>
-                                                    <th style="text-align: center;">适用年龄</th>
-                                                    <th style="text-align: center;">操作</th>
-                                                </tr>   
-                                                
-                                                <foreach name="pids" item="v">
-                                                <tr id="pid_{$v.id}" valign="middle">
-                                                    <td align="center">{$v.id}<input type="hidden" name="pids[]" value="{$v.id}" /></td>
-                                                    <td align="center">{$v.title}</td>
-                                                    <td align="center">{:C('SUBJECT_FIELD.'.$v['subject_field'])}</td>
-                                                    <td align="center">{:C('AGE_LIST.'.$v['age'])}</td>
-                                                    <td align="center"><a class="btn btn-danger btn-xs " href="javascript:;" onclick="removeLine('pid_{$v.id}');"><i class="fa fa-times"></i>删除</a></td>
-                                                </tr> 
-                                                
-                                                </foreach> 
-                                               
-                                                </table>
-                                                <a href="javascript:;" class="btn btn-success btn-sm" style="margin-top:15px;" onClick="selectmodel()">选择包含产品</a>
-                                         </div>-->
-	                            	</div>
-                              </div><!-- /.box-body -->
-                          
-                              
-                           </div><!-- /.box -->     
-                           
-                           
-                           <div class="box box-warning">
-                                <div class="box-header">
-                                    <h3 class="box-title">上传附件</h3>
+                                    <!---------------------------------------------------------->
+                                    <div class="form-group col-md-4">
+                                        <label>使用时间：</label>
+                                        <select class="form-control" name="apply_time">
+                                            <option value="" selected disabled>==请选择==</option>
+                                            <foreach name="apply_times" key="k" item="v">
+                                                <option value="{$v}" <?php if ($pin == $k) echo 'selected'; ?>>{$v}</option>
+                                            </foreach>
+                                        </select>
+                                    </div>
+
+                                    <div class="form-group col-md-4">
+                                        <label>是否是标准化产品：</label>
+                                        <select class="form-control" name="" required>
+                                            <option value="" selected disabled>==请选择==</option>
+                                            <option value="1" <?php if ($pin == 1) echo 'selected'; ?>>标准化</option>
+                                            <option value="2" <?php if ($pin == 2) echo 'selected'; ?>>非标准化</option>
+                                        </select>
+                                    </div>
+
+                                    <!--<div class="form-group col-md-4">
+                                        <label>价格：</label>
+                                        <input class="form-control" type="text" name="info[price]" value="{$row.price}" />
+                                    </div>-->
+
+                                    <div class="form-group col-md-4">
+                                        <label>适用人群</label>
+                                        <select name="apply" class="form-control">
+                                            <foreach name="apply" key="k" item="v">
+                                                <option value="{$k}" <?php if ($k == $row['apply']) echo 'selected'; ?>>{$v}</option>
+                                            </foreach>
+                                        </select>
+                                    </div>
+
+                                    <div class="form-group col-md-4">
+                                        <label>科学领域</label>
+                                        <select  class="form-control"  name="info[subject_field]">
+                                            <option value="0">请选择</option>
+                                            <foreach name="subject_fields" key="k" item="v">
+                                                <option value="{$k}" <?php if ($row && ($k == $row['subject_field'])) echo ' selected'; ?> >{$v}</option>
+                                            </foreach>
+                                        </select>
+                                    </div>
+
+                                    <div class="form-group col-md-4">
+                                        <label>来源</label>
+                                        <select  class="form-control"  name="info[from]">
+                                            <option value="0">请选择</option>
+                                            <foreach name="product_from" key="k" item="v">
+                                                <option value="{$k}" <?php if ($row && ($k == $row['from'])) echo ' selected'; ?> >{$v}</option>
+                                            </foreach>
+                                        </select>
+                                    </div>
+
+                                    <div class="form-group col-md-4">
+                                        <label>核算模式</label>
+                                        <select  class="form-control"  name="info[reckon_mode]" id="reckon_mode">
+                                            <option value="" selected disabled>==请选择==</option>
+                                            <option value="1" <?php if ($row['reckon_mode'] == 1) echo 'selected'; ?> >按项目核算</option>
+                                            <option value="2" <?php if ($row['reckon_mode'] == 2) echo 'selected'; ?> >按人数核算</option>
+                                            <option value="3" <?php if ($row['reckon_mode'] == 3) echo 'selected'; ?> >按批次核算(100人/批)</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="form-group col-md-4">
+                                        <label>参考成本价</label>
+                                        <input class="form-control" type="text" name="info[price]" value="{$row.price}" />
+                                    </div>
+
+                                    <div class="form-group col-md-12">
+                                        <span class="lm_c black">适用项目类型</span>
+                                        <foreach name="kinds" key="k" item="v">
+                                            <span class="lm_c"><input type="checkbox" name="kind[]" <?php if(in_array($v['id'],$pkind)){ echo 'checked';} ?>  value="{$v.id}"> {$v.name}</span>
+                                        </foreach>
+                                    </div>
+                                    <!---------------------------------------------------------->
+
+                                    <div class="form-group col-md-12"></div>
+
+                                    <div class="form-group col-md-12">
+                                        <label>产品简介</label>
+                                        <?php echo editor('content',$row['content']); ?>
+                                    </div>
                                     
+                                    <div class="form-group">&nbsp;</div>
+                                    
+                                </div><!-- /.box-body -->
+                                
+                                
+                            </div><!-- /.box -->
+                            
+                            
+                            <div class="box box-warning">
+                                <div class="box-header">
+                                    <h3 class="box-title">配套物资清单</h3>
                                 </div>
                                 <div class="box-body">
                                     <div class="content">
-                                    	<div class="form-group col-md-12">
-                                            <table id="flist" class="table" style="margin-top:10px;">
-                                                <foreach name="atts" item="v">
-                                                <tr id="aid_{$v.id}" valign="middle"> 
-                                                    <td><input type="text" name="newname[{$v.id}]" value="{$v.filename}" class="form-control"  /></td>
-                                                    <td width="10%">{:fsize($v['filesize'])}</td>
-                                                    <td width="30%">
-                                                        <div class="progress sm"> 
-                                                            <div class="progress-bar progress-bar-aqua" rel="aid_{$v.id}"  role="progressbar" style="width: 100%;"  aria-valuemin="0" aria-valuemax="100">
-                                                            </div>
-                                                        </div>
-                                                    </td>
-                                                    <td width="15%"><a class="btn btn-danger btn-xs " href="javascript:;" onclick="removeThisFile('aid_{$v.id}');"><i class="fa fa-times"></i>删除</a>&nbsp;&nbsp;&nbsp;&nbsp; <a class="btn btn-success btn-xs " href="{$v.filepath}" onclick=""><i class="fa fa-download"></i>下载</a></td>
-                                                </tr>        
-                                                </foreach>  
-                                            </table>
-                                             
-                                            <a href="javascript:;" id="pickupfile" class="btn btn-success btn-sm"><i class="fa fa-upload"></i> 上传附件</a>
-                                            <div id="container" style="display:none;">
-                                                <foreach name="atts" item="v">
-                                                <input type="hidden" rel="aid_{$v.id}" name="resfiles[]" value="{$v.id}" />
-                                                </foreach>
+                                        <div class="content" style="padding-top:0px;">
+                                            <div class="form-group col-md-12" id="productlist" style="display:block;">
+                                                <table class="table table-striped">
+                                                    <thead>
+                                                    <tr>
+                                                        <th width="100">模块</th>
+                                                        <th width="80">类别</th>
+                                                        <th width="120">科学领域</th>
+                                                        <th width="80">来源</th>
+                                                        <th width="120">适合年龄</th>
+                                                        <th width="100">核算方式</th>
+                                                        <th width="100">参考价</th>
+                                                        <th width="20">&nbsp;</th>
+                                                        <th width="50">数量</th>
+                                                        <th width="100">参考费用</th>
+                                                        <th width="80">删除</th>
+                                                    </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                    <foreach name="product_need" item="v">
+                                                        <tr class="expense" id="product_id_{$v.id}">
+                                                            <td><input type="hidden" name="resid[2000{$v.id}][id]" value="{$v.id}" >
+                                                                <input type="hidden" name="costacc[20000{$v.id}][type]" value="{$v.type}">
+                                                                <input type="hidden" name="costacc[20000{$v.id}][title]" value="{$v.title}">
+                                                                <input type="hidden" name="costacc[20000{$v.id}][product_id]" value="{$v.product_id}">
+                                                                <a href="javascript:;" onClick="open_product({$v.product_id},{$v.product.title})">{$v.title}</a></td>
+                                                            <td>{$product_type[$v[ptype]]}</td>
+                                                            <td>{$subject_fields[$v[subject_field]]}</td>
+                                                            <td>{$product_from[$v[from]]}</td>
+                                                            <td>{$v.age_list}</td>
+                                                            <td>{$reckon_mode[$v[reckon_mode]]}</td>
+                                                            <td><input type="text" name="costacc[20000{$v.id}][unitcost]" placeholder="价格" value="{$v.unitcost}" class="form-control min_input cost" readonly /></td>
+                                                            <td><span>X</span></td>
+                                                            <td><input type="text" name="costacc[20000{$v.id}][amount]" placeholder="数量" value="{$v.amount}" class="form-control min_input amount" /></td>
+                                                            <td class="total">&yen;{$v.total}</td>
+                                                            <td><a href="javascript:;" class="btn btn-danger btn-flat" onclick="delbox('product_id_{$v.id}')">删除</a></td></tr>
+                                                        </tr>
+                                                    </foreach>
+                                                    </tbody>
+                                                    <tfoot>
+                                                    <tr>
+                                                        <td align="left" colspan="11">
+                                                            <a href="javascript:;" class="btn btn-success btn-sm" style="margin-left:-8px;"  onClick="selectproduct(56)"><i class="fa fa-fw  fa-plus"></i> 选择产品模块</a>
+                                                            <a  href="javascript:;" class="btn btn-info btn-sm" onClick="javascript:save('save_product','<?php echo U('Op/public_save'); ?>',{$op.op_id});">保存</a>
+                                                        </td>
+                                                    </tr>
+                                                    </tfoot>
+                                                </table>
+                                                <!--</div>-->
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                           
-                           <div class="box-footer clearfix">
-                                <div style="width:100%; text-align:center;">
-	                            <button type="submit" class="btn btn-info btn-lg" id="lrpd" onclick="return checkForm();">保存</button>
-	                            </div>
-                           </div>
-                             
-                          </form>
+                            
+                            
+                            <div class="box box-warning">
+                                <div class="box-header">
+                                    <h3 class="box-title">上传资料</h3>
+                                </div>
+                                <div class="box-body">
+                                    <div class="content">
+                                        <div class="form-group col-md-12">
+                                            <label class="upload_label">上传原理及实施要求</label>
+                                            {:upload_m('theory_file','theory_files',$theory,'上传原理及实施要求','theory_box','theory','文件名称')}
+                                            <span style="line-height:30px; margin-left:15px; margin-top:15px; color:#999999;">请选择小于80M的文件，支持JPG / GIF / PNG / DOC / XLS / PDF / ZIP / RAR文件类型</span>
+                                            <div id="theory_box"></div>
+                                        </div>
+
+                                        <div class="form-group col-md-12">
+                                            <label class="upload_label">上传图片</label>
+                                            {:upload_m('pic_file','pic_files',$pic,'上传图片','pic_box','pic','图片名称')}
+                                            <span style="line-height:30px; margin-left:15px; margin-top:15px; color:#999999;">请选择不超过3张图片文件</span>
+                                            <div id="pic_box"></div>
+                                        </div>
+
+                                        <div class="form-group col-md-12">
+                                        <label class="upload_label">上传相关视频</label>
+                                        {:upload_m('video_file','video_files',$video,'&nbsp;上传视频资料','video_box','video','视频名称')}
+                                        <span style="line-height:30px; margin-left:15px; margin-top:15px; color:#999999;">请选择小于80M的文件，支持JPG / GIF / PNG / DOC / XLS / PDF / ZIP / RAR文件类型</span>
+                                        <div id="video_box"></div>
+                                        </div>
+
+                                    	<!--<div class="form-group col-md-12">
+                                            <label class="upload_label">上传相关附件</label>
+                                            <table id="flist" class="table" style="margin-top:10px;">
+                                            	<tr>
+                                                	<th align="left" width="45%">文件名称</th>
+                                                    <th align="left" width="10%">大小</th>
+                                                    <th align="left" width="30%">上传进度</th>
+                                                    <th align="left" width="15%">操作</th>
+                                                </tr>
+                                                <foreach name="atts" item="v">
+                                                <tr id="aid_{$v.id}" valign="middle"> 
+                                                    <td><input type="text" name="newname[{$v.id}]" value="{$v.filename}" class="form-control"  /></td>
+                                                    <td>{:fsize($v['filesize'])}</td>
+                                                    <td>
+                                                        <div class="progress sm"> 
+                                                            <div class="progress-bar progress-bar-aqua" rel="aid_{$v.id}"  role="progressbar" style="width: 100%;"  aria-valuemin="0" aria-valuemax="100">
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                    <td><a class="btn btn-danger btn-xs " href="javascript:;" onclick="removeThisFile('aid_{$v.id}');"><i class="fa fa-times"></i>删除</a>&nbsp;&nbsp;&nbsp;&nbsp; <a class="btn btn-success btn-xs " href="{$v.filepath}" onclick=""><i class="fa fa-download"></i>下载</a></td>
+                                                </tr>        
+                                                </foreach>  
+                                            </table>
+                                             
+                                            <a href="javascript:;" id="pickupfile" class="btn btn-success btn-sm" style="margin-top:15px;"><i class="fa fa-upload"></i> 上传附件</a>
+                                            <div id="container" style="display:none;">
+                                                <foreach name="atts" item="v">
+                                                <input type="hidden" rel="aid_{$v.id}" name="resfiles[]" value="{$v.id}" />
+                                                </foreach>
+                                            </div>
+                                        </div>-->
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <div id="formsbtn">
+                            	<button type="submit" class="btn btn-info btn-lg" id="lrpd">保存</button>
+                            </div>
+                            </form> 
                         </div><!--/.col (right) -->
                     </div>   <!-- /.row -->
-                   
                 </section><!-- /.content -->
                 
             </aside><!-- /.right-side -->
-			
+
   </div>
 </div>
 
 <include file="Index:footer2" />
+
 <script type="text/javascript"> 
 
-	//重新选择模板
-	function selectmodel() {
-		art.dialog.open('<?php echo U('Product/select_product'); ?>',{
-			lock:true,
-			title: '选择产品',
-			width:860,
-			height:500,
-			okValue: '提交',
-			fixed: true,
-			ok: function () {
-				var origin = artDialog.open.origin;
-				var pro = this.iframe.contentWindow.gosubmint();
-				var i=0;
-				var str = "";
-				for (i=0; i<pro.length; i++) {
-					str = '<tr id="pid_'+ pro[i].id + '" valign="middle">'
-		                +  '    <td align="center">' + pro[i].id + '<input type="hidden" name="pids[]" value="'+ pro[i].id +'" /></td>'
-		                +  '    <td align="center">' + pro[i].title + '</td>'
-		                +  '    <td align="center">' + pro[i].subject + '</td>'
-		                +  '    <td align="center">' + pro[i].age + '</td>'
-		                +  '    <td align="center"><a class="btn btn-danger btn-xs " href="javascript:;" onclick="removeLine(\'pid_' + pro[i].id + '\');"><i class="fa fa-times"></i>删除</a></td>'
-		                +  '</tr>';  
-                    $('#flistmodel').append(str);
-				}
-				
-			},
-			cancelValue:'取消',
-			cancel: function () {
-			}
-		});	
-	}
+	$(document).ready(function() {
+       /* //是否需要辅导员/教师/专家
+        $('#product_hesuan').find('ins').each(function(index, element) {
+            $(this).click(function(){
+                if(index==0){
+                    $('#hesuan_result').html('<input type="text" class="under-line-input" name="info[sales_price]" id="produce_price" value="{$row.sales_price}" >元/项');
+                }else if (index==1){
+                    $('#hesuan_result').html('<input type="text" class="under-line-input" name="info[sales_price]" id="produce_price" value="{$row.sales_price}" >元/人');
+                }else if (index==2){
+                    $('#hesuan_result').html('<input type="text" class="under-line-input" name="info[sales_price]" id="produce_price" value="{$row.sales_price}" >元/批');
+                }
+            })
+        });*/
 
-	function removeLine (s) {
-        $('#' + s).empty().remove();
-	}
-
-	function checkForm() {
-        if ($('#pname').val() == "") {
-            alert('名称不能为空！');
-            return false;
-        }
-        /*if ($('input[name^=pids]').length == 0) {
-            alert('请至少选择一个产品!');
-            return false;
-        }*/
-        return true;
-	}
-	
-	
-	$(document).ready(function() {	
-
+		//$('#supplierlist').show();
 		var uploader = new plupload.Uploader({
 			runtimes : 'html5,flash,silverlight,html4',
 			browse_button : 'pickupfile', // you can pass in id...
@@ -222,9 +318,11 @@
 			
 			filters : {
 				max_file_size : '100mb',
+				/*
 				mime_types: [
 					{title : "Files", extensions : "jpg,jpeg,png,zip,rar,7z,doc,docx,ppt,pptx,xls,xlsx,txt,pdf,pdfx"}
 				]
+				*/
 			},
 
 			init: {
@@ -279,9 +377,7 @@
 		});
 
 		uploader.init();
-		
-
-	});
+    });
 
 	function removeThisFile(fid) {
 		if (confirm('确定要删除此附件吗？')) {
@@ -290,35 +386,57 @@
 		}
 	}
 	
-	
-	//新增物资
-	function add_material(){
-		var i = parseInt($('#material_val').text())+1;
-
-		var html = '<div class="userlist" id="material_'+i+'"><span class="title"></span><input type="text" class="form-control longinput" name="material['+i+'][material]"><input type="text" class="form-control longinput" name="material['+i+'][spec]" value=""><input type="text" class="form-control amount" name="material['+i+'][amount]" value="1"><input type="text" class="form-control" name="material['+i+'][unitprice]"><input type="text" class="form-control longinput" name="material['+i+'][channel]" value=""><input type="text" class="form-control longinput" name="material['+i+'][remarks]"><a href="javascript:;" class="btn btn-danger btn-flat" onclick="delbox(\'material_'+i+'\')">删除</a></div>';
-		$('#material').append(html);	
-		$('#material_val').html(i);
-		orderno();
-	}
-	
-	//编号
-	function orderno(){
-		$('#mingdan').find('.title').each(function(index, element) {
-            $(this).text(parseInt(index)+1);
-        });
-		$('#material').find('.title').each(function(index, element) {
-            $(this).text(parseInt(index)+1);
-        });	
-	}
-	
 	//移除
 	function delbox(obj){
 		$('#'+obj).remove();
-		orderno();
 	}
+
+    //选择校园科技节产品
+    function selectproduct() {
+        art.dialog.open("<?php echo U('Op/select_module',array('opid'=>$opid)); ?>",{
+            lock:true,
+            title: '选择产品模块',
+            width:1000,
+            height:500,
+            okValue: '提交',
+            fixed: true,
+            ok: function () {
+                var origin = artDialog.open.origin;
+                var product = this.iframe.contentWindow.gosubmint();
+                var product_html = '';
+                for (var j = 0; j < product.length; j++) {
+                    if (product[j].id) {
+                        var i = parseInt(Math.random()*100000)+j;
+                        var costacc = '<input type="hidden" name="costacc['+i+'][type]" value="5">' +
+                            '<input type="hidden" name="costacc['+i+'][title]" value="'+product[j].title+'">' +
+                            '<input type="hidden" name="costacc['+i+'][product_id]" value="'+product[j].id+'">';
+                        product_html += '<tr class="expense" id="product_'+i+'">' +
+                            '<td>'+costacc+ '<a href="javascript:;" onClick="open_product('+product[j].id+',\''+product[j].title+'\')">'+product[j].title+'</a></td>' +
+                            '<td>'+product[j].type+'</td>' +
+                            '<td>'+product[j].subject_fields+'</td>' +
+                            '<td>'+product[j].from+'</td>' +
+                            '<td>'+product[j].age+'</td>' +
+                            '<td>'+product[j].reckon_mode+'</td>' +
+                            '<td><input type="text" name="costacc['+i+'][unitcost]" placeholder="价格" value="'+product[j].sales_price+'" class="form-control min_input cost" readonly /></td>' +
+                            '<td><span>X</span></td>' +
+                            '<td><input type="text" name="costacc['+i+'][amount]" placeholder="数量" value="1" class="form-control min_input amount" /></td>' +
+                            '<td class="total">&yen;'+product[j].sales_price*1+'</td>' +
+                            '<td><a href="javascript:;" class="btn btn-danger btn-flat" onclick="delbox(\'product_'+i+'\')">删除</a></td></tr>';
+                    };
+                }
+                $('#productlist').show();
+                $('#nonetext').hide();
+                $('#productlist').find('tbody').append(product_html);
+                //total();
+            },
+            cancelValue:'取消',
+            cancel: function () {
+            }
+        });
+    }
+	
+
 </script>	
-
-
      
 
 

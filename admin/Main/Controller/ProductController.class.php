@@ -27,12 +27,13 @@ class ProductController extends BaseController {
 		$db           = M('product');
 		$this->pro    = $pro;
 		$where        = array();
-		if($key)    $where['p.title']           = array('like','%'.$key.'%');
-		if($pro)    $where['p.business_dept']   = array('like','%'.$pro.'%');
-		if($age)    $where['p.age']             = array('like','%'.$age.'%');
+        if($key)    $where['p.title']           = array('like','%'.$key.'%');
+        if($pro)    $where['p.business_dept']   = array('like','%'.$pro.'%');
+        if($age)    $where['p.age']             = array('like','%'.$age.'%');
         if($type)   $where['p.type']            = array('eq',$type);
         if($from)   $where['p.from']            = array('eq',$from);
         if($fields) $where['p.subject_field']   = array('eq',$fields);
+        $where['p.disting']                     = 0; //0=>老数据, 1=>新数据
 
 		$business_depts = C('BUSINESS_DEPT');
         $page = new Page($db->table('__PRODUCT__ as p')->where($where)->count(), P::PAGE_SIZE);
@@ -1190,10 +1191,13 @@ class ProductController extends BaseController {
     //新增标准化产品
     public function add_standard_product(){
         $this->pageTitle                = '标准化管理';
+        $this->title('标准化产品');
         $pin                            = I('pin');
         $year                           = date('Y')+1;
         $apply_times                    = get_little_title($year);
 
+        $this->subject_fields           = C('SUBJECT_FIELD');
+        $this->product_from             = C('PRODUCT_FROM');
         $this->apply                    = C('APPLY_TO');
         $this->kinds                    = get_project_kinds();
         $this->apply_times              = $apply_times;
