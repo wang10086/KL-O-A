@@ -535,12 +535,9 @@ class SaleController extends BaseController {
         $yearMonth                  = $year.$month;
         $times                      = get_cycle($yearMonth);
         $mod                        = D('Sale');
-        $operator                   = $mod->get_operator($times['begintime'],$times['endtime']); //获取本周期计调人员信息
+        $operator                   = $mod->get_operator(); //获取计调人员信息
         $data                       = $this->get_jd_timely($operator,$times['begintime'],$times['endtime']);
-        //$sum_data                   = $mod->get_sum_timely($data);
 
-        //$this->sum                  = $sum_data;
-        //P($data);die;
         $this->lists                = $data;
         $this->year 	            = $year;
         $this->month 	            = $month;

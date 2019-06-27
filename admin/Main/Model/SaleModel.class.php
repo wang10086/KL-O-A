@@ -388,14 +388,14 @@ class SaleModel extends Model{
         return $info;
     }
 
-    /**
-     * 获取本周期计调人员信息(已计算数据为准)
-     * @param $startTime
-     * @param $endTime
-     */
-    public function get_operator($startTime,$endTime){
-        $settlement_lists                   = $this->get_all_settlement_lists($startTime,$endTime); //所有结算的团
-        $operator                           = array_column($settlement_lists,'req_uname','req_uid');
+    //获取计调信息
+    public function get_operator(){
+        $jd_roles                       = array(29,31,42,116); //29=>计调专员 , 31=>计调操作经理 ,42=>南京计调专员, 116=>京区计调中心
+        $where                          = array();
+        $where['roleid']                = array('in',$jd_roles);
+        $where['status']                = array('in',array(0,1));
+        $where['nickname']              = array('not in',array('孟华华'));
+        $operator                       = M('account')->where($where)->getField('id,nickname',true);
         return $operator;
     }
 
