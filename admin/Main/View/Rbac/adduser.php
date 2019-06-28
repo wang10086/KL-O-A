@@ -187,6 +187,7 @@
                                             <option <?php if($row['rank']=='01'){ echo 'selected';}?> value="01">1队列</option>
                                             <option <?php if($row['rank']=='02'){ echo 'selected';}?> value="02">2队列</option>
                                             <option <?php if($row['rank']=='03'){ echo 'selected';}?> value="03">3队列</option>
+                                            <option <?php if($row['rank']=='04'){ echo 'selected';}?> value="04">4队列</option>
                                         </select>
                                     </div>
                                     

@@ -396,6 +396,9 @@
                                         <if condition="rolemenu(array('Inspect/public_user_kpi_statis'))">
                                             <li class="{:on('Inspect/public_user_kpi_statis')}"><a href="{:U('Inspect/public_user_kpi_statis')}"><i class="fa fa-angle-right"></i> 顾客满意度分项统计</a></li>
                                         </if>
+                                        <if condition="rolemenu(array('Inspect/unqualify'))">
+                                            <li class="{:on('Inspect/unqualify')}"><a href="{:U('Inspect/unqualify')}"><i class="fa fa-angle-right"></i> 不合格处理率</a></li>
+                                        </if>
                                     </ul>
                                 </li>
                                 <if condition="rolemenu(array('Inspect/satisfaction'))">
