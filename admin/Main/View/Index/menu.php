@@ -364,17 +364,18 @@
 
 
 
-                        <if condition="rolemenu(array('Inspect/record','Inspect/edit_ins','Inspect/score','Inspect/score_statis','Inspect/public_user_kpi_statis','Inspect/satisfaction'))">
-                        <li class="treeview {:ison(CONTROLLER_NAME, 'Inspect')} {:on('Inspect/satisfaction')} {:on('Inspect/satisfaction_add')}">
+                        <if condition="rolemenu(array('Kpi/qa','Inspect/record','Inspect/edit_ins','Inspect/score','Inspect/score_statis','Inspect/public_user_kpi_statis','Inspect/satisfaction'))">
+                        <li class="treeview {:ison(CONTROLLER_NAME, 'Inspect')} {:on('Kpi/qa')} {:on('Kpi/addqa')} {:on('Inspect/satisfaction')} {:on('Inspect/satisfaction_add')}">
                             <a href="javascript:;">
                                 <i class="fa fa-medkit"></i>
                                 <span>品控巡检</span>
                                 <i class="fa fa-angle-left pull-right"></i>
                             </a>
                             <ul class="treeview-menu">
-                                <if condition="rolemenu(array('Inspect/edit_ins'))">
-                                	<li><a href="{:U('Inspect/edit_ins')}"><i class="fa fa-angle-right"></i> 发布巡检记录</a></li>
+                                <if condition="rolemenu(array('Kpi/qa'))">
+                                    <li><a href="{:U('Kpi/qa')}"><i class="fa fa-angle-right"></i> 品质检查</a></li>
                                 </if>
+
                                 <if condition="rolemenu(array('Inspect/record'))">
                                 	<li><a href="{:U('Inspect/record')}"><i class="fa fa-angle-right"></i> 巡检记录</a></li>
                                 </if>
@@ -745,7 +746,7 @@
                                 </if>
 
 
-                                <if condition="rolemenu(array('Kpi/pdca','Kpi/qa','kpi/pdcaresult','kpi/postkpi'))">
+                                <if condition="rolemenu(array('Kpi/pdca','kpi/pdcaresult','kpi/postkpi'))">
                                     <li class="treeview {:ison(CONTROLLER_NAME, 'Kpi')}">
                                         <a href="javascript:;">
                                             <i class="fa fa-trophy"></i>
@@ -758,9 +759,6 @@
                                             </if>
                                             <if condition="rolemenu(array('Kpi/pdca'))">
                                                 <li><a href="{:U('Kpi/pdca')}"><i class="fa fa-angle-right"></i> PDCA</a></li>
-                                            </if>
-                                            <if condition="rolemenu(array('Kpi/qa'))">
-                                                <li><a href="{:U('Kpi/qa')}"><i class="fa fa-angle-right"></i> 品质检查</a></li>
                                             </if>
                                             <li><a href="{:U('Kpi/postkpi')}"><i class="fa fa-angle-right"></i> KPI</a></li>
                                             <if condition="rolemenu(array('Kpi/crux'))">

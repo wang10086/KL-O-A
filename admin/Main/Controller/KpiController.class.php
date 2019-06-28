@@ -849,12 +849,13 @@ class KpiController extends BaseController {
 	public function addqa(){
 		
 		if(isset($_POST['dosubmit'])){
-			
-			
-			$editid   = I('editid');
-			$info     = I('info');
-			$qadata   = I('qadata');
-			
+
+			$editid                 = I('editid');
+			$info                   = I('info');
+			$qadata                 = I('qadata');
+
+            $info['title']          = trim($info['title']);
+			if (!$info['title'])    $this->error('标题不能为空');
 			
 			//获取相关人员信息
 			if($info['rp_user_name']){
