@@ -1111,4 +1111,20 @@ class InspectController extends BaseController{
         }
     }
 
+    //不合格处理率
+    public function unqualify(){
+        $this->title('不合格处理率');
+        $year		                = I('year',date('Y'));
+        $month		                = I('month',date('m'));
+        if (strlen($month)<2) $month= str_pad($month,2,'0',STR_PAD_LEFT);
+        $yearMonth                  = $year.$month;
+        $times                      = get_cycle($yearMonth);
+
+        $this->year 	            = $year;
+        $this->month 	            = $month;
+        $this->prveyear             = $year-1;
+        $this->nextyear             = $year+1;
+        $this->display();
+    }
+
 }
