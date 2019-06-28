@@ -588,6 +588,8 @@ class SaleController extends BaseController {
         $this->timely               = $timely;
         $this->lists                = $data;
         $this->title                = $title;
+        $this->year                 = $year;
+        $this->month                = $month;
         $this->display('timely_detail');
     }
 

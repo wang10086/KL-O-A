@@ -35,7 +35,7 @@
                                             <th class="taskOptions" width="60">序号</th>
                                             <th class="taskOptions">团号</th>
                                             <th class="taskOptions">项目名称</th>
-                                            <th class="taskOptions">指标</th>
+                                            <th class="taskOptions">销售</th>
                                             <th class="taskOptions">状态</th>
                                         </tr>
                                         <foreach name="lists" key="k" item="v">
@@ -43,7 +43,7 @@
                                                 <td class="taskOptions">{$k+1}</td>
                                                 <td class="taskOptions">{$v.group_id}</td>
                                                 <td class="taskOptions" style="max-width: 150px;"><a href="{:U('Op/plans_follow',array('opid'=>$v['op_id']))}">{$v.project}</a></td>
-                                                <td class="taskOptions">{$v.type}</td>
+                                                <td class="taskOptions">{$v.create_user_name}</td>
                                                 <td class="taskOptions"><?php echo $v['is_ok']?'<span class="green">正常</span>':'<span class="red">超时</span>'; ?></td>
                                             </tr>
                                         </foreach>
