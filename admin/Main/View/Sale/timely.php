@@ -58,9 +58,7 @@
                                             <th class="taskOptions">工作项目数</th>
                                             <th class="taskOptions">及时数</th>
                                             <th class="taskOptions">及时率</th>
-                                            <if condition="rolemenu(array('Sale/public_timely_detail'))">
                                             <th width="80" class="taskOptions">详情</th>
-                                            </if>
                                         </tr>
                                         <foreach name="lists" key="k" item="v">
                                             <tr>
