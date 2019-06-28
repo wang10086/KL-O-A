@@ -53,15 +53,16 @@ class BaseController extends Controller {
 		}
 		
 		
-		$this->_cssaddon = array();
-		$this->_scriptaddon = array();
-		$this->_jscode = array();
+		$this->_cssaddon                = array();
+		$this->_scriptaddon             = array();
+		$this->_jscode                  = array();
 		
-		$this->__additional_css__    = '';
-		$this->__additional_js__     = '';
-		$this->__additional_jscode__ = '';
+		$this->__additional_css__       = '';
+		$this->__additional_js__        = '';
+		$this->__additional_jscode__    = '';
 		
-		$this->_sum_audit = $this->get_sum_audit();
+		$this->_sum_audit               = $this->get_sum_audit();
+        $this->_no_read_cas_res         = $this->get_no_read_res(P::UNREAD_CAS_RES);
 		
 		$this->assign('_pagetitle_', $this->_pagetitle_);
 		$this->assign('_pagedesc_',  $this->_pagedesc_);
@@ -408,6 +409,19 @@ class BaseController extends Controller {
 
         }
 
+        //审核科普资源
+        if ($row['req_type'] == P::REQ_TYPE_SCIENCE_RES_NEW  && $dst_status == P::AUDIT_STATUS_PASS){
+            $user_list                          = get_company_user();
+            $data                               = array();
+            $data['type']                       = P::UNREAD_CAS_RES;
+            $data['req_id']                     = $row['req_id'];
+            $data['userids']                    = implode(',',array_column($user_list,'id'));
+            $data['create_time']                = NOW_TIME;
+            $data['read_type']                  = 0;
+            M('unread')->add($data);
+
+        }
+
         return M('audit_log')->where('id='.$id)->save($data);
     }
 
@@ -589,6 +603,43 @@ class BaseController extends Controller {
         }
         $_SESSION['file_sum']               = $sun;//保存缓存
         return $sun;
+    }
+
+    /**
+     * 未查看的资源
+     * @param $type 类型
+     * @return int
+     */
+    protected final function get_no_read_res($type){
+        $db                                 = M('unread');
+        $where                              = ' type = '.$type.' and ';
+        $where                              .= ' read_type = 0 ';
+        $lists                              = $db ->where($where)->select();
+        $num                                = 0;
+        foreach ($lists as $k=>$v){
+            $user_ids                       = explode(',',$v['userids']);
+            if (in_array(session('userid'),$user_ids)){
+                $num++;
+            }
+        }
+        return $num;
+    }
+
+    /**查看资源
+     * @param $req_id
+     * @param $type
+     */
+    protected final function read_res($req_id,$type){
+        $db                                 = M('unread');
+        $where                              = ' type = '.$type.' and ';
+        $where                              .= ' req_id = '.$req_id;
+        $list                               = $db ->where($where)->find();
+        $user_ids                           = explode(',',$list['userids']);
+        foreach ($user_ids as $k =>$v){
+            if ($v == session('userid')) unset($user_ids[$k]);
+        }
+        $userids                            = implode(',',$user_ids);
+        $db -> where('id = '.$list['id'])->setField('userids',$userids);
     }
 }
 

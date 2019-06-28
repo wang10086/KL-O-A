@@ -108,6 +108,9 @@ final class P {
     const AFTER_AUDIT               = 2;    //律师审核后合同文件
     const SURE                      = 3;    //确认版合同文件
 
+    //未读内容表 unread表
+    const UNREAD_CAS_RES            = 1;    //未读科普资源信息
+
 }
 
 

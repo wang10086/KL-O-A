@@ -153,6 +153,7 @@
                                 </div>
                                 <div class="box-body">
                                     <div class="content">
+                                        <label class="black"  style="display: block; border-bottom: solid 2px green;">包含产品模块</label>
                                         <div class="content" style="padding-top:0px;">
                                             <div class="form-group col-md-12" id="productlist" style="display:block;">
                                                 <table class="table table-striped">

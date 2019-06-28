@@ -3111,3 +3111,13 @@ function get_yw_department(){
         $data['ok_list']                    = $ok_list;
         return $data;
     }
+
+    //获取公司全部人员信息
+    function get_company_user(){
+        $where                      = array();
+        $where['id']                = array('gt',10);
+        $where['status']            = array('in',array(0,1));
+        $where['nickname']          = array('not in',array('孟华华','李岩1','魏春竹1'));
+        $lists                      = M('account')->where($where)->order('id asc')->getField('id,nickname,formal,status,expel',true);
+        return $lists;
+    }

@@ -6,7 +6,7 @@
                     <h1>{$_action_}</h1>
                     <ol class="breadcrumb">
                         <li><a href="{:U('Index/index')}"><i class="fa fa-home"></i> 首页</a></li>
-                        <li><a href="javascript:;"><i class="fa fa-gift"></i> 品控巡检</a></li>
+                        <li><a href="javascript:;"><i class="fa fa-gift"></i> 顾客满意度</a></li>
                         <li class="active">{$_action_}</li>
                     </ol>
                 </section>

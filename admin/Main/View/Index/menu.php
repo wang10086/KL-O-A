@@ -154,13 +154,14 @@
                             <a href="javascript:;">
                                 <i class="fa fa-archive"></i>
                                 <span>资源管理</span>
+                                <if condition="$_no_read_cas_res"><small class="badge pull-right bg-red" style="margin-right:10px;">{$_no_read_cas_res}</small></if>
                                 <i class="fa fa-angle-left pull-right"></i>
                             </a>
                             <ul class="treeview-menu">
 
                               	<if condition="rolemenu(array('ScienceRes/res','ScienceRes/addres','ScienceRes/reskind'))">
                                 <li class="treeview {:on('ScienceRes')}">
-                                    <a href=""><i class="fa  fa-flag"></i> 科普资源</a>
+                                    <a href=""><i class="fa  fa-flag"></i> 科普资源<if condition="$_no_read_cas_res"><small class="badge pull-right bg-red" style="margin-right:10px;">{$_no_read_cas_res}</small></if></a>
                                     <ul class="treeview-menu">
                                     	 <if condition="rolemenu(array('ScienceRes/addres'))">
                                          <li class="{:on('ScienceRes/addres')}"><a href="{:U('ScienceRes/addres')}"><i class="fa fa-angle-right"></i> 新增科普资源</a></li>
