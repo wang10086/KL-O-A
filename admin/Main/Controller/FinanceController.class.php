@@ -653,8 +653,8 @@ class FinanceController extends BaseController {
         $this->dijie_shouru     = $dijie_shouru?$dijie_shouru:0;
 
         //检查先回款,在做结算  //已回款金额
-        //$money_back             = $mod->check_money_back($opid);
-        //$this->yihuikuan        = $money_back;
+        $money_back             = $mod->check_money_back($opid);
+        $this->yihuikuan        = $money_back;
 
         $this->display('settlement');
     }
@@ -803,7 +803,6 @@ class FinanceController extends BaseController {
         $this->should_back_money= $budget_list['should_back_money']?$budget_list['should_back_money']:$budget_list['shouru'];
         $is_dijie               = M('op')->where(array('dijie_opid'=>$opid))->getField('op_id');
         $this->is_dijie         = $is_dijie?$is_dijie:0;
-        //var_dump($this->is_dijie);die;
 		$this->display('huikuan');
 	}
 	
