@@ -88,32 +88,6 @@ class FinanceModel extends Model{
     }
 
     /**
-     * 判断该团是否已完成回款(按照合同金额)
-     * @param $opid
-     * @return int
-     */
-    public function check_money_back($opid){
-        $huikuan_lists          = M('op_huikuan')->where(array('op_id'=>$opid,'audit_status'=>1))->select();
-        $yihuikuan              = array_sum(array_column($huikuan_lists,'huikuan'));
-
-        //合同金额
-        //$contract_amount        = M('contract')->where(array('op_id'=>$opid,'status'=>1))->getField('contract_amount');
-        //应回款金额
-        $contract_pay_lists     = M('contract_pay')->where(array('op_id'=>$opid))->select();
-        $contract_amount        = array_sum(array_column($contract_pay_lists,'amount'));
-        //地接团结算不受回款限制
-        $dijie_opids            = get_dijie_opids();
-        //暂未排除未立合同的项目
-
-        if (($yihuikuan >= $contract_amount || in_array($opid,$dijie_opids)) && $contract_pay_lists){ //(&& $contract_pay_lists)以免2019年以前的数据干扰
-            $money_back         = 1;    //已回款
-        }else{
-            $money_back         = 0;    //未回款
-        }
-        return $money_back;
-    }
-
-    /**
      * 从预算获取该团的信息,带至结算页面
      * @param $op           团信息
      * @param $is_zutuan    是否是内部地接 1=>是 0=>否

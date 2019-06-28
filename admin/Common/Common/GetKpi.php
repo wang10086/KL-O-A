@@ -3010,42 +3010,74 @@ function get_yw_department(){
      * @return array
      */
     function get_settlement_data($startTime,$endTime,$title='',$content='',$uid=''){
-        $settlement_list                    = get_settlement_list($startTime,$endTime,'',$uid);
-        $ok_list                            = array();
-        $sum_num                            = 0;
-        $ok_num                             = 0;
-
+        $settlement_list                        = get_settlement_list($startTime,$endTime,'',$uid);
+        $ok_list                                = array();
+        $sum_num                                = 0;
+        $ok_num                                 = 0;
+        $sum_list                               = array();
         foreach ($settlement_list as $k=>$v){
-           //回款审核时间
-            $where                          = array();
-            $where['h.op_id']               = $v['op_id'];
-            $where['h.audit_status']        = 1; //审核通过
-            $where['l.req_type']            = 802; //回款
-            $field                          = 'h.op_id,l.req_time,l.audit_time';
-            $back_money_data                = M()->table('__OP_HUIKUAN__ as h')->join('__AUDIT_LOG__ as l on l.req_id = h.id','left')->where($where)->field($field)->order('h.id desc')->find();
-            $back_money_time                = $back_money_data['audit_time'];
+            //判断是否完全回款
+            $money_back_stu                     = check_money_back($v['op_id']);
+            if ($money_back_stu == 1){ //已全部回款
+                //回款审核时间
+                $where                          = array();
+                $where['h.op_id']               = $v['op_id'];
+                $where['h.audit_status']        = 1; //审核通过
+                $where['l.req_type']            = 802; //回款
+                $field                          = 'h.op_id,l.req_time,l.audit_time';
+                $back_money_data                = M()->table('__OP_HUIKUAN__ as h')->join('__AUDIT_LOG__ as l on l.req_id = h.id','left')->where($where)->field($field)->order('h.id desc')->find();
+                $back_money_time                = $back_money_data['audit_time'];
 
-            $ok_time                        = strtotime(getAfterWorkDay(10,$back_money_time));
-            $sum_num++;
-            $settlement_list[$k]['ok_time'] = $ok_time;
-            $settlement_list[$k]['type']    = $title;
-            if ($v['req_time'] <= $ok_time){ //req_time 提交时间
-                $v['ok_time']               = $ok_time;
-                $ok_list[]                  = $v;
-                $settlement_list[$k]['is_ok']= 1;
-                $ok_num++;
+                $ok_time                        = strtotime(getAfterWorkDay(10,$back_money_time));
+                $sum_num++;
+                $v['ok_time']                   = $ok_time;
+                $v['type']                      = $title;
+                if ($v['req_time'] <= $ok_time){ //req_time 提交时间
+                    $v['ok_time']               = $ok_time;
+                    $ok_list[]                  = $v;
+                    $v['is_ok']                 = 1;
+                    $ok_num++;
+                }
+                $sum_list[]                     = $v;
             }
         }
-        $data                               = array();
-        $data['title']                      = $title;
-        $data['content']                    = $content;
-        $data['sum_num']                    = $sum_num;
-        $data['ok_num']                     = $ok_num;
-        $data['average']                    = $sum_num ? (round($ok_num/$sum_num,4)*100).'%' : '100%';
-        $data['sum_list']                   = $settlement_list;
-        $data['ok_list']                    = $ok_list;
+
+        $data                                   = array();
+        $data['title']                          = $title;
+        $data['content']                        = $content;
+        $data['sum_num']                        = $sum_num;
+        $data['ok_num']                         = $ok_num;
+        $data['average']                        = $sum_num ? (round($ok_num/$sum_num,4)*100).'%' : '100%';
+        $data['sum_list']                       = $sum_list;
+        $data['ok_list']                        = $ok_list;
         return $data;
     }
+
+    /**
+     * 判断该团是否已完成回款(按照应回款金额)
+     * @param $opid
+     * @return int
+     */
+    function check_money_back($opid){
+    $huikuan_lists          = M('op_huikuan')->where(array('op_id'=>$opid,'audit_status'=>1))->select();
+    $yihuikuan              = array_sum(array_column($huikuan_lists,'huikuan'));
+
+    //合同金额
+    //$contract_amount        = M('contract')->where(array('op_id'=>$opid,'status'=>1))->getField('contract_amount');
+    //应回款金额
+    $contract_pay_lists     = M('contract_pay')->where(array('op_id'=>$opid))->select();
+    $contract_amount        = array_sum(array_column($contract_pay_lists,'amount'));
+    //地接团结算不受回款限制
+    $dijie_opids            = get_dijie_opids();
+    //暂未排除未立合同的项目
+
+    if (($yihuikuan >= $contract_amount || in_array($opid,$dijie_opids)) && $contract_pay_lists){ //(&& $contract_pay_lists)以免2019年以前的数据干扰
+        $money_back         = 1;    //已回款
+    }else{
+        $money_back         = 0;    //未回款
+    }
+    return $money_back;
+}
 
 
     /**

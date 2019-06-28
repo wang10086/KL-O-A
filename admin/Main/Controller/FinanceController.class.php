@@ -653,7 +653,7 @@ class FinanceController extends BaseController {
         $this->dijie_shouru     = $dijie_shouru?$dijie_shouru:0;
 
         //检查先回款,在做结算  //已回款金额
-        $money_back             = $mod->check_money_back($opid);
+        $money_back             = check_money_back($opid);
         $this->yihuikuan        = $money_back;
 
         $this->display('settlement');
