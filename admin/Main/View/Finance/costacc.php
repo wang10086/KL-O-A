@@ -186,6 +186,17 @@
             from.submit();
         }
     }*/
+
+	function submintform() {
+        let costacc_min_price   = parseInt($('input[name="info[costacc_min_price]"]').val());
+        let costacc_max_price   = parseInt($('input[name="info[costacc_max_price]"]').val());
+        if (!costacc_min_price || !costacc_max_price){
+            art.dialog.alert('报价信息填写有误','warning');
+            return false;
+        }else{
+            $('#myform').submit();
+        }
+	}
 </script>
 
      
