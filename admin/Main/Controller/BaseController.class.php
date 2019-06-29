@@ -412,13 +412,13 @@ class BaseController extends Controller {
         //审核科普资源
         if ($row['req_type'] == P::REQ_TYPE_SCIENCE_RES_NEW  && $dst_status == P::AUDIT_STATUS_PASS){
             $user_list                          = get_company_user();
-            $data                               = array();
-            $data['type']                       = P::UNREAD_CAS_RES;
-            $data['req_id']                     = $row['req_id'];
-            $data['userids']                    = implode(',',array_column($user_list,'id'));
-            $data['create_time']                = NOW_TIME;
-            $data['read_type']                  = 0;
-            M('unread')->add($data);
+            $read                               = array();
+            $read['type']                       = P::UNREAD_CAS_RES;
+            $read['req_id']                     = $row['req_id'];
+            $read['userids']                    = implode(',',array_column($user_list,'id'));
+            $read['create_time']                = NOW_TIME;
+            $read['read_type']                  = 0;
+            M('unread')->add($read);
 
         }
 
@@ -640,6 +640,18 @@ class BaseController extends Controller {
         }
         $userids                            = implode(',',$user_ids);
         $db -> where('id = '.$list['id'])->setField('userids',$userids);
+    }
+
+    /**
+     * 删除资源
+     * @param $id
+     * @param $type
+     */
+    protected final function del_read($id,$type){
+        $db                                 = M('unread');
+        $where                              = ' req_id = '.$id.' and ';
+        $where                              .= ' type = '.$type;
+        $db->where($where)->delete();
     }
 }
 

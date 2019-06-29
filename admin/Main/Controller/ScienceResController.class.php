@@ -99,6 +99,7 @@ class ScienceResController extends BaseController {
         $cas_res_kind_db    = M('cas_res_kind');
         $id                 = I('id', -1);
         $iddel              = $db->delete($id);
+        $this->del_read($id,P::UNREAD_CAS_RES);
         $this->success('删除成功！');
     }
     
