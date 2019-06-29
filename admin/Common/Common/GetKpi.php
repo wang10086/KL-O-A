@@ -2724,22 +2724,36 @@ function get_yw_department(){
     }
 
     function get_little_title($year){
-        /*switch ($pin){
+        /*$data                           = array();
+        $data[0]                        = '全部';
+        switch ($pin){
             case 1:
-                $tit                    = ($year+1).'年春季';
+                $data[1]                = ($year+1).'年寒假';
+                $data[2]                = ($year+1).'年春季';
+                $data[3]                = $year.'年暑假';
+                $data[4]                = $year.'年秋季';
                 break;
             case 2:
-                $tit                    = ($year+1).'年暑假';
+                $data[1]                = ($year+1).'年寒假';
+                $data[2]                = ($year+1).'年春季';
+                $data[3]                = ($year+1).'年暑假';
+                $data[4]                = $year.'年秋季';
                 break;
             case 3:
-                $tit                    = ($year).'年秋季';
+                $data[1]                = ($year+1).'年寒假';
+                $data[2]                = ($year+1).'年春季';
+                $data[3]                = ($year+1).'年暑假';
+                $data[4]                = ($year+1).'年秋季';
                 break;
             case 4:
-                $tit                    = ($year).'年寒假';
+                $data[1]                = ($year+2).'年寒假';
+                $data[2]                = ($year+1).'年春季';
+                $data[3]                = ($year+1).'年暑假';
+                $data[4]                = ($year+1).'年秋季';
                 break;
         }*/
         $data                           = array(
-            10                          => '全部',
+            0                           => '全部',
             1                           => ($year+1).'年寒假',
             2                           => ($year+1).'年春季',
             3                           => $year.'年暑假',

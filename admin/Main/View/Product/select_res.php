@@ -81,36 +81,17 @@
        
         <section class="content">
         	<div id="selectbox">
-            <form action="{:U('Product/select_product')}" method="get" id="feedbackform">
+            <form action="{:U('Product/select_res')}" method="get" id="feedbackform">
             <input type="hidden" name="m" value="Main">
             <input type="hidden" name="c" value="Product">
             <input type="hidden" name="a" value="select_tpl">
-            <!--
-            <select class="form-control" name="business">
-                <option value="">业务部门</option>
-                <foreach name="business_depts" key="k" item="v">
-                <option value="{$k}" <?php if($business==$k){ echo 'selected';} ?>>{$v}</option>
-                </foreach>
-            </select>
-            <select class="form-control" name="subject">
-                <option value="">科学领域</option>
-                <foreach name="subject_fields" key="k" item="v">
-                <option value="{$k}" <?php if($subject==$k){ echo 'selected';} ?>>{$v}</option>
-                </foreach>
-            </select>
-            <select class="form-control" name="age">
-                <option value="">适用年龄</option>
-                <foreach name="ages" key="k" item="v">
-                <option value="{$k}" <?php if($age==$k){ echo 'selected';} ?>>{$v}</option>
-                </foreach>
-            </select>
-            -->
-            <input type="text" class="form-control" name="key"  placeholder="关键字" value="{$keywords}">
+            <input type="hidden" name="a" value="select_res">
+
+            <input type="text" class="form-control" name="tit"  placeholder="关键字">
+            <input type="text" class="form-control" name="con"  placeholder="关键字">
             <select class="form-control" name="bus">
-                <option value="0">适用项目类型</option>
-                <foreach name="business_depts" key="k" item="v">
-                <option value="{$k}">{$v}</option>
-                </foreach>
+                <option value="0">院外</option>
+                <option value="1">院内</option>
             </select>
                     
             <button type="submit" class="btn btn-success">搜索</button>
@@ -121,9 +102,9 @@
                 <tr role="row" class="orders" >
                 	<th width="40" style="text-align:center">选择</th>
                     <th width="40" class="sorting" data="p.id">编号</th>
-                    <th class="sorting" data="p.title">模块名称</th>
-                    <th class="sorting" data="p.business_dept">适用项目类型</th>
-                    <th class="sorting" data="p.input_uname">专家</th>
+                    <th class="sorting" data="p.title">名称</th>
+                    <th class="sorting" data="p.in_cas">性质</th>
+                    <th class="sorting" data="p.diqu">所在地</th>
                 </tr>
                 <foreach name="lists" item="row">
                     <tr class="productlist">
@@ -131,13 +112,12 @@
                         <input type="checkbox"  name="product[]" value="{$row.id}">
                         <input type="hidden" name="id" value="{$row.id}">
                         <input type="hidden" name="title" value="{$row.title}">
-                        <input type="hidden" name="input_uname" value="{$row.input_uname}">
+                        <input type="hidden" name="in_cas" value="{$row.in_cas}">
                         </td>
                         <td>{$row.id}</td>          
-                        <td><a href="{:U('Product/model_view', array('id'=>$row['id']))}" title="{$row.title}" target="_blank">{$row.title}</a></td>
-                        <td>{$row.dept}</td>
-                        <td>{$row.input_uname}</td>
-                        
+                        <td><a href="{:U('ScienceRes/res_view', array('id'=>$row['id']))}" title="{$row.title}" target="_blank">{$row.title}</a></td>
+                        <td>{$in_cas[$row['in_cas']]}</td>
+                        <td>{$row.diqu}</td>
                     </tr>
                 </foreach>										
             </table>

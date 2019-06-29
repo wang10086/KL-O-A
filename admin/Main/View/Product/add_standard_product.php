@@ -125,6 +125,11 @@
                                     </div>
 
                                     <div class="form-group col-md-12">
+                                        <label>配套物资清单</label>
+                                        <input class="form-control" type="text" name="info[]" value="{$row.}" />
+                                    </div>
+
+                                    <div class="form-group col-md-12">
                                         <span class="lm_c black">适用项目类型</span>
                                         <foreach name="kinds" key="k" item="v">
                                             <span class="lm_c"><input type="checkbox" name="kind[]" <?php if(in_array($v['id'],$pkind)){ echo 'checked';} ?>  value="{$v.id}"> {$v.name}</span>
@@ -149,11 +154,10 @@
                             
                             <div class="box box-warning">
                                 <div class="box-header">
-                                    <h3 class="box-title">配套物资清单</h3>
+                                    <h3 class="box-title">包含产品模块</h3>
                                 </div>
                                 <div class="box-body">
                                     <div class="content">
-                                        <label class="black"  style="display: block; border-bottom: solid 2px green;">包含产品模块</label>
                                         <div class="content" style="padding-top:0px;">
                                             <div class="form-group col-md-12" id="productlist" style="display:block;">
                                                 <table class="table table-striped">
@@ -172,7 +176,7 @@
                                                         <th width="80">删除</th>
                                                     </tr>
                                                     </thead>
-                                                    <tbody>
+                                                    <tbody id="product_tbody">
                                                     <foreach name="product_need" item="v">
                                                         <tr class="expense" id="product_id_{$v.id}">
                                                             <td><input type="hidden" name="resid[2000{$v.id}][id]" value="{$v.id}" >
@@ -196,8 +200,57 @@
                                                     <tfoot>
                                                     <tr>
                                                         <td align="left" colspan="11">
-                                                            <a href="javascript:;" class="btn btn-success btn-sm" style="margin-left:-8px;"  onClick="selectproduct(56)"><i class="fa fa-fw  fa-plus"></i> 选择产品模块</a>
-                                                            <a  href="javascript:;" class="btn btn-info btn-sm" onClick="javascript:save('save_product','<?php echo U('Op/public_save'); ?>',{$op.op_id});">保存</a>
+                                                            <a href="javascript:;" class="btn btn-success btn-sm" style="margin-left:-8px;"  onClick="selectproduct()"><i class="fa fa-fw  fa-plus"></i> 选择产品模块</a>
+                                                            <!--<a  href="javascript:;" class="btn btn-info btn-sm" onClick="javascript:save('save_product','<?php /*echo U('Op/public_save'); */?>',{$op.op_id});">保存</a>-->
+                                                        </td>
+                                                    </tr>
+                                                    </tfoot>
+                                                </table>
+                                                <!--</div>-->
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="box box-warning">
+                                <div class="box-header">
+                                    <h3 class="box-title">包含资源模块</h3>
+                                </div>
+                                <div class="box-body">
+                                    <div class="content">
+                                        <div class="content" style="padding-top:0px;">
+                                            <div class="form-group col-md-12" id="reslist" style="display:block;">
+                                                <table class="table table-striped">
+                                                    <thead>
+                                                    <tr>
+                                                        <th width="50%">资源名称</th>
+                                                        <th width="15%">类型</th>
+                                                        <th width="15%">所在地</th>
+                                                        <th width="10%">来源</th>
+                                                        <th width="80">删除</th>
+                                                    </tr>
+                                                    </thead>
+                                                    <tbody id="res_tbody">
+                                                    <foreach name="res_need" item="v">
+                                                        <tr class="expense" id="res_id_{$v.id}">
+                                                            <td><input type="hidden" name="resid[2000{$v.id}][id]" value="{$v.id}" >
+                                                                <input type="hidden" name="costacc[20000{$v.id}][type]" value="{$v.type}">
+                                                                <input type="hidden" name="costacc[20000{$v.id}][title]" value="{$v.title}">
+                                                                <input type="hidden" name="costacc[20000{$v.id}][res_id]" value="{$v.res_id}">
+                                                                <a href="javascript:;" onClick="open_res({$v.res_id},{$v.res.title})">{$v.title}</a></td>
+                                                            <td>{$res_type[$v[ptype]]}</td>
+                                                            <td>{$subject_fields[$v[subject_field]]}</td>
+                                                            <td>{$res_from[$v[from]]}</td>
+                                                            <td><a href="javascript:;" class="btn btn-danger btn-flat" onclick="delbox('res_id_{$v.id}')">删除</a></td></tr>
+                                                        </tr>
+                                                    </foreach>
+                                                    </tbody>
+                                                    <tfoot>
+                                                    <tr>
+                                                        <td align="left" colspan="11">
+                                                            <a href="javascript:;" class="btn btn-success btn-sm" style="margin-left:-8px;"  onClick="selectres()"><i class="fa fa-fw  fa-plus"></i> 选择资源模块</a>
+                                                            <!--<a  href="javascript:;" class="btn btn-info btn-sm" onClick="javascript:save('save_res','<?php /*echo U('Op/public_save'); */?>',{$op.op_id});">保存</a>-->
                                                         </td>
                                                     </tr>
                                                     </tfoot>
@@ -426,8 +479,8 @@
                     };
                 }
                 $('#productlist').show();
-                $('#nonetext').hide();
-                $('#productlist').find('tbody').append(product_html);
+                //$('#nonetext').hide();
+                $('#productlist').find('#product_tbody').append(product_html);
                 //total();
             },
             cancelValue:'取消',
@@ -435,7 +488,44 @@
             }
         });
     }
-	
+
+    //选择资源模块
+    function selectres() {
+        art.dialog.open("<?php echo U('Product/public_select_res',array('opid'=>$opid)); ?>",{
+            lock:true,
+            title: '选择产品模块',
+            width:1000,
+            height:500,
+            okValue: '提交',
+            fixed: true,
+            ok: function () {
+                var origin = artDialog.open.origin;
+                var res = this.iframe.contentWindow.gosubmint();
+                var res_html = '';
+                for (var j = 0; j < res.length; j++) {
+                    if (res[j].id) {
+                        var i = parseInt(Math.random()*100000)+j;
+                        var costacc = '<input type="hidden" name="costacc['+i+'][type]" value="5">' +
+                            '<input type="hidden" name="costacc['+i+'][title]" value="'+res[j].title+'">' +
+                            '<input type="hidden" name="costacc['+i+'][res_id]" value="'+res[j].id+'">';
+                        res_html += '<tr class="expense" id="res_'+i+'">' +
+                            '<td>'+costacc+ '<a href="javascript:;" onClick="">'+res[j].title+'</a></td>' +
+                            '<td>'+res[j].type+'</td>' +
+                            '<td>'+res[j].type+'</td>' +
+                            '<td>'+res[j].subject_fields+'</td>' +
+                            '<td><a href="javascript:;" class="btn btn-danger btn-flat" onclick="delbox(\'res_'+i+'\')">删除</a></td></tr>';
+                    };
+                }
+                $('#reslist').show();
+                //$('#nonetext').hide();
+                $('#reslist').find('#res_tbody').append(res_html);
+                //total();
+            },
+            cancelValue:'取消',
+            cancel: function () {
+            }
+        });
+    }
 
 </script>	
      

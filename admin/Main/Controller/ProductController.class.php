@@ -1206,6 +1206,20 @@ class ProductController extends BaseController {
         $this->display();
     }
 
+    //
+    public function public_select_res(){
+        $db                             = M('cas_res');
+        $where                          = array();
+        $where['audit_status']          = 1;
+        $lists                          = $db->where($where)->order($this->orders('id'))->select();
+        $this->lists                    = $lists;
+        $this->in_cas                   = array(
+            0                           => '院外',
+            1                           => '院内',
+        );
+        $this->display('select_res');
+    }
+
     public function public_save(){
         $savetype                       = I('savetype');
         if (isset($_POST['dosubmit'])){
