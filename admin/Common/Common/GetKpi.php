@@ -2702,63 +2702,52 @@ function get_yw_department(){
         return $data;
     }
 
-    //
-    function get_standard_pin($month){
-        $month                          = $month?$month:date('m');
-        if (strlen($month) < 2) $month  = str_pad($month,2,0,STR_PAD_LEFT);
+    function get_little_title($year,$month=''){
+        $month                          = $month?str_pad($month,2,'0',STR_PAD_LEFT):date('m');
+        $data                           = array();
+        $data[0]['title']               = '全部';
         switch ($month){
-            case in_array($month,array('01','02')):
-                $pin                    = 1;
+            case in_array($month,array('01','02')): //寒假
+                $data[1]['title']       = ($year+1).'年寒假';
+                $data[1]['year']        = $year+1;
+                $data[2]['title']       = ($year+1).'年春季';
+                $data[2]['year']        = $year+1;
+                $data[3]['title']       = $year.'年暑假';
+                $data[3]['year']        = $year;
+                $data[4]['title']       = $year.'年秋季';
+                $data[4]['year']        = $year;
                 break;
-            case in_array($month,array('03','04','05','06')):
-                $pin                    = 2;
+            case in_array($month,array('03','04','05','06')): //春季
+                $data[1]['title']       = ($year+1).'年寒假';
+                $data[1]['year']        = $year+1;
+                $data[2]['title']       = ($year+1).'年春季';
+                $data[2]['year']        = $year+1;
+                $data[3]['title']       = ($year+1).'年暑假';
+                $data[3]['year']        = $year+1;
+                $data[4]['title']       = $year.'年秋季';
+                $data[4]['year']        = $year;
                 break;
-            case in_array($month,array('07','08')):
-                $pin                    = 3;
+            case in_array($month,array('07','08')): //暑假
+                $data[1]['title']       = ($year+1).'年寒假';
+                $data[1]['year']        = $year+1;
+                $data[2]['title']       = ($year+1).'年春季';
+                $data[2]['year']        = $year+1;
+                $data[3]['title']       = ($year+1).'年暑假';
+                $data[3]['year']        = $year+1;
+                $data[4]['title']       = ($year+1).'年秋季';
+                $data[4]['year']        = $year+1;
                 break;
-            case in_array($month,array('09','10','11','12')):
-                $pin                    = 4;
+            case in_array($month,array('09','10','11','12')): //秋季
+                $data[1]['title']       = ($year+2).'年寒假';
+                $data[1]['year']        = $year+2;
+                $data[2]['title']       = ($year+1).'年春季';
+                $data[1]['year']        = $year+1;
+                $data[3]['title']       = ($year+1).'年暑假';
+                $data[1]['year']        = $year+1;
+                $data[4]['title']       = ($year+1).'年秋季';
+                $data[1]['year']        = $year+1;
                 break;
         }
-        return $pin;
-    }
-
-    function get_little_title($year){
-        /*$data                           = array();
-        $data[0]                        = '全部';
-        switch ($pin){
-            case 1:
-                $data[1]                = ($year+1).'年寒假';
-                $data[2]                = ($year+1).'年春季';
-                $data[3]                = $year.'年暑假';
-                $data[4]                = $year.'年秋季';
-                break;
-            case 2:
-                $data[1]                = ($year+1).'年寒假';
-                $data[2]                = ($year+1).'年春季';
-                $data[3]                = ($year+1).'年暑假';
-                $data[4]                = $year.'年秋季';
-                break;
-            case 3:
-                $data[1]                = ($year+1).'年寒假';
-                $data[2]                = ($year+1).'年春季';
-                $data[3]                = ($year+1).'年暑假';
-                $data[4]                = ($year+1).'年秋季';
-                break;
-            case 4:
-                $data[1]                = ($year+2).'年寒假';
-                $data[2]                = ($year+1).'年春季';
-                $data[3]                = ($year+1).'年暑假';
-                $data[4]                = ($year+1).'年秋季';
-                break;
-        }*/
-        $data                           = array(
-            0                           => '全部',
-            1                           => ($year+1).'年寒假',
-            2                           => ($year+1).'年春季',
-            3                           => $year.'年暑假',
-            4                           => $year.'年秋季'
-        );
         return $data;
     }
 

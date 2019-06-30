@@ -30,11 +30,11 @@
                                 </div><!-- /.box-header -->
                                 <div class="box-body">
                                     <div class="btn-group" id="catfont">
-                                        <button onClick="javascript:window.location.href='{:U('Product/standard_product',array('pin'=>0))}';" class="btn <?php if($pin==0){ echo 'btn-info';}else{ echo 'btn-default';} ?>">{$ltitle[0]}</button>
-                                        <button onClick="javascript:window.location.href='{:U('Product/standard_product',array('pin'=>1))}';" class="btn <?php if($pin==1){ echo 'btn-info';}else{ echo 'btn-default';} ?>">{$ltitle[1]}</button>
-                                        <button onClick="javascript:window.location.href='{:U('Product/standard_product',array('pin'=>2))}';" class="btn <?php if($pin==2){ echo 'btn-info';}else{ echo 'btn-default';} ?>">{$ltitle[2]}</button>
-                                        <button onClick="javascript:window.location.href='{:U('Product/standard_product',array('pin'=>3))}';" class="btn <?php if($pin==3){ echo 'btn-info';}else{ echo 'btn-default';} ?>">{$ltitle[3]}</button>
-                                        <button onClick="javascript:window.location.href='{:U('Product/standard_product',array('pin'=>4))}';" class="btn <?php if($pin==4){ echo 'btn-info';}else{ echo 'btn-default';} ?>">{$ltitle[4]}</button>
+                                        <button onClick="javascript:window.location.href='{:U('Product/standard_product',array('pin'=>0))}';" class="btn <?php if($pin==0){ echo 'btn-info';}else{ echo 'btn-default';} ?>">{$ltitle[0]['title']}</button>
+                                        <button onClick="javascript:window.location.href='{:U('Product/standard_product',array('pin'=>1))}';" class="btn <?php if($pin==1){ echo 'btn-info';}else{ echo 'btn-default';} ?>">{$ltitle[1]['title']}</button>
+                                        <button onClick="javascript:window.location.href='{:U('Product/standard_product',array('pin'=>2))}';" class="btn <?php if($pin==2){ echo 'btn-info';}else{ echo 'btn-default';} ?>">{$ltitle[2]['title']}</button>
+                                        <button onClick="javascript:window.location.href='{:U('Product/standard_product',array('pin'=>3))}';" class="btn <?php if($pin==3){ echo 'btn-info';}else{ echo 'btn-default';} ?>">{$ltitle[3]['title']}</button>
+                                        <button onClick="javascript:window.location.href='{:U('Product/standard_product',array('pin'=>4))}';" class="btn <?php if($pin==4){ echo 'btn-info';}else{ echo 'btn-default';} ?>">{$ltitle[4]['title']}</button>
                                     </div>
                                 
                                 <table class="table table-bordered dataTable fontmini" id="tablelist" style="margin-top:10px;">

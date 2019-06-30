@@ -61,7 +61,7 @@
                                         <select class="form-control" name="apply_time">
                                             <option value="" selected disabled>==请选择==</option>
                                             <foreach name="apply_times" key="k" item="v">
-                                                <option value="{$v}" <?php if ($pin == $k) echo 'selected'; ?>>{$v}</option>
+                                                <option value="{$v}" <?php if ($pin == $k) echo 'selected'; ?>>{$v['title']}</option>
                                             </foreach>
                                         </select>
                                     </div>
@@ -265,11 +265,11 @@
                             
                             <div class="box box-warning">
                                 <div class="box-header">
-                                    <h3 class="box-title">上传资料</h3>
+                                    <h3 class="box-title">上传相关附件</h3>
                                 </div>
                                 <div class="box-body">
                                     <div class="content">
-                                        <div class="form-group col-md-12">
+                                        <!--<div class="form-group col-md-12">
                                             <label class="upload_label">上传原理及实施要求</label>
                                             {:upload_m('theory_file','theory_files',$theory,'上传原理及实施要求','theory_box','theory','文件名称')}
                                             <span style="line-height:30px; margin-left:15px; margin-top:15px; color:#999999;">请选择小于80M的文件，支持JPG / GIF / PNG / DOC / XLS / PDF / ZIP / RAR文件类型</span>
@@ -288,10 +288,10 @@
                                         {:upload_m('video_file','video_files',$video,'&nbsp;上传视频资料','video_box','video','视频名称')}
                                         <span style="line-height:30px; margin-left:15px; margin-top:15px; color:#999999;">请选择小于80M的文件，支持JPG / GIF / PNG / DOC / XLS / PDF / ZIP / RAR文件类型</span>
                                         <div id="video_box"></div>
-                                        </div>
+                                        </div>-->
 
-                                    	<!--<div class="form-group col-md-12">
-                                            <label class="upload_label">上传相关附件</label>
+                                    	<div class="form-group col-md-12">
+                                            <!--<label class="upload_label">上传相关附件</label>-->
                                             <table id="flist" class="table" style="margin-top:10px;">
                                             	<tr>
                                                 	<th align="left" width="45%">文件名称</th>
@@ -320,7 +320,7 @@
                                                 <input type="hidden" rel="aid_{$v.id}" name="resfiles[]" value="{$v.id}" />
                                                 </foreach>
                                             </div>
-                                        </div>-->
+                                        </div>
                                     </div>
                                 </div>
                             </div>

@@ -1168,10 +1168,9 @@ class ProductController extends BaseController {
     public function standard_product(){
         $this->pageTitle                = '标准化管理';
         $month                          = date('m');
-        $pin                            = I('pin');
-        $year                           = I('year',date('Y')+1);
-        $pin                            = $pin?$pin:get_standard_pin($month);
-        $ltit                           = get_little_title($year);
+        $pin                            = I('pin',0);
+        $year                           = I('year',date('Y'));
+        $ltit                           = get_little_title($year,$month);
 
         $this->year                     = $year;
         $this->pin                      = $pin;
