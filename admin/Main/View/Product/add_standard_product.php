@@ -30,11 +30,6 @@
                                     <input type="hidden" name="dosubmit" value="1">
                                     <input type="hidden" name="savetype" value="1">
                                     <input type="hidden" name="id" value="{$id}" >
-                                    <if condition="$row">
-                                        <input type="hidden" name="info[input_uname]" value="{$row.input_uname}" class="form-control"  />
-                                    <else />
-                                        <input type="hidden" name="info[input_uname]" value="{:session('nickname')}" class="form-control"  />
-                                    </if>
 
                                     <div class="form-group col-md-8">
                                         <label>产品模块名称</label>
@@ -54,10 +49,10 @@
 
                                     <div class="form-group col-md-4">
                                         <label>是否是标准化产品：</label>
-                                        <select class="form-control" name="" required>
+                                        <select class="form-control" name="info[standard]" required>
                                             <option value="" selected disabled>==请选择==</option>
-                                            <option value="1" <?php if ($pin == 1) echo 'selected'; ?>>标准化</option>
-                                            <option value="2" <?php if ($pin == 2) echo 'selected'; ?>>非标准化</option>
+                                            <option value="1" <?php if ($row['standard'] == 1) echo 'selected'; ?>>标准化</option>
+                                            <option value="2" <?php if ($row['standard'] == 2) echo 'selected'; ?>>非标准化</option>
                                         </select>
                                     </div>
 
@@ -65,7 +60,7 @@
                                         <label>适用人群</label>
                                         <select name="apply" class="form-control">
                                             <foreach name="apply" key="k" item="v">
-                                                <option value="{$k}" <?php if ($k == $row['apply']) echo 'selected'; ?>>{$v}</option>
+                                                <option value="{$k}" <?php if ($k == $row['age']) echo 'selected'; ?>>{$v}</option>
                                             </foreach>
                                         </select>
                                     </div>
@@ -102,18 +97,18 @@
 
                                     <div class="form-group col-md-4">
                                         <label>参考成本价</label>
-                                        <input class="form-control" type="text" name="info[price]" value="{$row.price}" />
+                                        <input class="form-control" type="text" name="info[sales_price]" value="{$row.sales_price}" />
                                     </div>
 
                                     <div class="form-group col-md-12">
                                         <label>配套物资清单</label>
-                                        <input class="form-control" type="text" name="info[]" value="{$row.}" />
+                                        <input class="form-control" type="text" name="info[matching]" value="{$row.matching}" />
                                     </div>
 
                                     <div class="form-group col-md-12">
                                         <span class="lm_c black">适用项目类型</span>
                                         <foreach name="kinds" key="k" item="v">
-                                            <span class="lm_c"><input type="checkbox" name="kind[]" <?php if(in_array($v['id'],$pkind)){ echo 'checked';} ?>  value="{$v.id}"> {$v.name}</span>
+                                            <span class="lm_c"><input type="checkbox" name="business_dept[]" <?php if(in_array($v['id'],$business_dept)){ echo 'checked';} ?>  value="{$v.id}"> {$v.name}</span>
                                         </foreach>
                                     </div>
                                     <!---------------------------------------------------------->
@@ -452,15 +447,11 @@
                 var cost = $(this).val();
                 var amount = $(this).parent().parent().find('.amount').val();
                 $(this).parent().parent().find('.total').html('&yen;'+accMul(cost,amount));
-                //$(this).parent().parent().find('.cost_cost').val(cost);
-                //$(this).parent().parent().find('.totalval').val(accMul(cost,amount));
             });
             $(this).find('.amount').blur(function(){
                 var amount = $(this).val();
                 var cost = $(this).parent().parent().find('.cost').val();
                 $(this).parent().parent().find('.total').html('&yen;'+accMul(cost,amount));
-                //$(this).parent().parent().find('.cost_amount').val(amount);
-                //$(this).parent().parent().find('.totalval').val(accMul(cost,amount));
             });
         });
     }

@@ -102,6 +102,7 @@ class ProductController extends BaseController {
             $info['business_dept'] = $business_dept;
             $info['age']        = implode(',',array_unique($age));
             $info['supplier']   = implode(',',array_unique($res));
+            $info['disting']    = 0;
             $id                 = I('id');
 
             //上传文件
@@ -122,13 +123,8 @@ class ProductController extends BaseController {
             foreach ($video_ids as $k=>$v){
                 $resfiles[]   = $v;
             }
-            $aids       = implode(',', $resfiles);
-
-            if ($aids) {
-                $info['att_id'] = $aids;
-            } else {
-                $info['att_id'] = '';
-            }
+            $aids               = implode(',', $resfiles);
+            $info['att_id']     = $aids?$aids:'';
 
             if ($id) {
                 $isadd = $id;
@@ -421,39 +417,40 @@ class ProductController extends BaseController {
     // @@@NODE-3###select_product###建模板时选择产品###
     public function select_product(){
     	
-		$key          = I('key');
-		$status       = I('status','-1');
-		$pro          = I('pro');
-		$zj           = I('zj');
-		$age          = I('age');
+		$key                                    = I('key');
+		$status                                 = I('status','-1');
+		$pro                                    = I('pro');
+		$zj                                     = I('zj');
+		$age                                    = I('age');
 		
-		$db = M('product');
-		$this->status = $status;
-		$where = array();
+		$db                                     = M('product');
+		$this->status                           = $status;
+		$where                                  = array();
 		if($this->status != '-1') $where['p.audit_status'] = $this->status;
-		if($key)    $where['p.title'] = array('like','%'.$key.'%');
-		if($pro)    $where['p.business_dept'] = array('like','%'.$pro.'%');
-		if($age)    $where['p.age'] = array('like','%'.$age.'%');
-		if($zj)     $where['p.input_uname'] = array('like','%'.$zj.'%');
+		if($key)    $where['p.title']           = array('like','%'.$key.'%');
+		if($pro)    $where['p.business_dept']   = array('like','%'.$pro.'%');
+		if($age)    $where['p.age']             = array('like','%'.$age.'%');
+		if($zj)     $where['p.input_uname']     = array('like','%'.$zj.'%');
+        $where['disting']                       = 0;
 		
-		$business_depts = C('BUSINESS_DEPT');
-        $page = new Page($db->table('__PRODUCT__ as p')->where($where)->count(), P::PAGE_SIZE);
-        $this->pages = $page->show();
-		$lists = $db->table('__PRODUCT__ as p')->field('p.*')->where($where)->limit($page->firstRow . ',' . $page->listRows)->order($this->orders('p.id'))->select();
-		$kinds = M('project_kind')->getField('id,name');
+		$business_depts                         = C('BUSINESS_DEPT');
+        $page                                   = new Page($db->table('__PRODUCT__ as p')->where($where)->count(), P::PAGE_SIZE);
+        $this->pages                            = $page->show();
+		$lists                                  = $db->table('__PRODUCT__ as p')->field('p.*')->where($where)->limit($page->firstRow . ',' . $page->listRows)->order($this->orders('p.id'))->select();
+		$kinds                                  = M('project_kind')->getField('id,name');
 		foreach($lists as $k=>$v){
-			$depts = explode(',',$v['business_dept']);
-			$deptval = array();
+			$depts                              = explode(',',$v['business_dept']);
+			$deptval                            = array();
 			foreach($depts as $kk=>$vv){
-				$deptval[] = $kinds[$vv];
+				$deptval[]                      = $kinds[$vv];
 			}
 			
-			$lists[$k]['dept'] = implode(',',$deptval);	
+			$lists[$k]['dept']                  = implode(',',$deptval);
 		}
-		$this->lists = $lists;
+		$this->lists                            = $lists;
 		
-		$this->ages           = C('AGE_LIST');
-		$this->kinds  = $kinds;
+		$this->ages                             = C('AGE_LIST');
+		$this->kinds                            = $kinds;
     	$this->display('select_product');
     	
     }
@@ -1229,8 +1226,44 @@ class ProductController extends BaseController {
         $savetype                       = I('savetype');
         if (isset($_POST['dosubmit'])){
             if ($savetype == 1){ //保存标准化产品
+                $db                     = M('product');
+                $id                     = I('id',0);
+                $info                   = I('info');
+                $apply_time             = trim(I('apply_time'));
+                $info['age']            = I('age');
+                $business_dept          = I('business_dept');
+                $info['business_dept']  = implode(',',$business_dept);
+                $info['content']        = trim(I('content'));
+                $product_model          = I('costacc'); //包含产品模块
+                $cas_res_ids            = I('res_ids'); //包含资源模块
+                $resfiles               = I('resfiles');
+                $info['att_id']         = implode(',',$resfiles);
+                $info['apply_year']     = $apply_time?substr($apply_time,0,4):0;
+                $info['apply_time']     = $apply_time?substr($apply_time,-1):0;
+                $info['disting']        = 1; //标准化数据
 
-                //var_dump(I());
+                $cas                    = array();
+                foreach ($cas_res_ids as $k=>$v){
+                    $cas[]              = $v['res_id'];
+                }
+                $info['cas_res_ids']    = implode(',',$cas);
+                if ($id){
+                    $where              = array();
+                    $where['id']        = $id;
+                    $res                = $db->where($where)->save($info);
+                }else{
+                    $info['input_time'] = NOW_TIME;
+                    $info['input_user'] = session('userid');
+                    $info['input_uname']= session('nickname');
+                    $res                = $db ->add($info);
+                }
+
+                if ($res){
+
+                    echo "保存成功...";
+                }else{
+                    $this->error('数据保存失败');
+                }
             }
         }
     }
