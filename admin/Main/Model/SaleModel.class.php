@@ -345,23 +345,9 @@ class SaleModel extends Model{
         return $data;
     }
 
-    //
-    public function get_timely(){
-        $db                             = M('operator_timely');
-        $where                          = array();
-        $where['status']                = 0; //正常使用
-        $list                           = $db->where($where)->select();
-        foreach ($list as $k=>$v){
-            $list[$k]['title']          = htmlspecialchars_decode($v['title']);
-            $list[$k]['content']        = htmlspecialchars_decode($v['content']);
-            $list[$k]['rules']          = htmlspecialchars_decode($v['rules']);
-        }
-        return $list;
-    }
-
     //获取计调的及时率
     public function get_timely_data($startTime,$endTime,$uid=''){
-        $timely                         = $this -> get_timely();
+        $timely                         = get_timely(1); //1=>计调操作及时性
         $timely                         = array_column($timely,'content','title');
         $costacc_data                   = get_costacc_data($startTime,$endTime,'报价及时性',$timely['报价及时性'],$uid);
         $budget_data                    = get_budget_data($startTime,$endTime,'预算及时性',$timely['预算及时性'],$uid);
@@ -401,7 +387,7 @@ class SaleModel extends Model{
 
     //计调及时率详情
     public function get_timely_type($title,$startTime,$endTime,$uid=0){
-        $timely                         = $this -> get_timely();
+        $timely                         = get_timely(1); //1=>计调操作及时性
         $timely                         = array_column($timely,'content','title');
         switch ($title){
             case '报价及时性':

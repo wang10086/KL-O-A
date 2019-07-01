@@ -448,8 +448,7 @@ class SaleController extends BaseController {
     //基调及时率考核指标
     public function timely_list(){
         $this->title('及时率指标管理');
-        $mod                        = D('Sale');
-        $lists                      = $mod->get_timely();
+        $lists                      = get_timely(1);
 
         $this->lists                = $lists;
         $this->display();
@@ -457,7 +456,7 @@ class SaleController extends BaseController {
 
     //配置计调及时率考核指标
     public function timely_edit(){
-        $db                         = M('operator_timely');
+        $db                         = M('quota');
         $id                         = I('id','');
         if ($id){
             $list                   = $db->find($id);
@@ -472,14 +471,9 @@ class SaleController extends BaseController {
 
     //删除
     public function timely_del(){
-        $id                                 = I('id');
+        $id                         = I('id');
         if (!$id) $this->error('获取数据错误');
-        $db                                 = M('operator_timely');
-        $data                               = array();
-        $data['status']                     = 1; //删除
-        $where                              = array();
-        $where['id']                        = $id;
-        $res                                = $db->where($where)->save($data);
+        $res                        = timely_quota_del($id);
         if ($res){
             $this->success('删除成功');
         }else{
@@ -505,12 +499,14 @@ class SaleController extends BaseController {
 
             //保存计调及时率指标
             if ($savetype == 3){
-                $db                         = M('operator_timely');
+                $db                         = M('quota');
                 $id                         = I('id');
                 $info                       = I('info');
                 $info['title']              = htmlspecialchars(trim($info['title']));
                 $info['content']            = htmlspecialchars(trim($info['content']));
                 $info['rules']              = htmlspecialchars(trim($info['rules']));
+                $info['type']               = 1; //1=>计调操作及时率
+                if (!$info['title'])        $this->error('指标标题不能为空');
 
                 if ($id){
                     $where                  = array();
@@ -572,7 +568,7 @@ class SaleController extends BaseController {
     public function public_timely_detail(){
         $this->title('计调工作及时率详情');
         $mod                        = D('Sale');
-        $timely                     = $mod -> get_timely();
+        $timely                     = get_timely(1);
         $timely                     = array_column($timely,'title');
         $title                      = trim(I('tit'));
         $title                      = ($title == '合计')?$timely[0]:$title;

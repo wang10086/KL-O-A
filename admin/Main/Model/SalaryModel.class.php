@@ -444,7 +444,7 @@ class SalaryModel extends Model
             $specialdeduction               = round($specialdeduction_list['children_education'] + $specialdeduction_list['continue_education'] + $specialdeduction_list['health'] + $specialdeduction_list['buy_house'] + $specialdeduction_list['rent_house'] + $specialdeduction_list['support_older'],2); //专项附加扣除合计
             $data[$k]['specialdeduction']   = $specialdeduction?$specialdeduction:'0.00'; //专项附加扣除合计
             $data[$k]['specialdeduction_id']= $specialdeduction_list['id']?$specialdeduction_list['id']:'0';
-            //本月计税工资 = (应发工资 - 个人保险合计 - 专项附加扣除 - 个人免征额) + [其他补助(差额补)]
+            //本月计税工资 = (应发工资 - 个人保险合计 - 专项附加扣除 - 个人免征额) + [其他补助(差额补)]           -   【社保补缴】
             $data[$k]['tax_counting']       = round(($data[$k]['Should_distributed'] - $data[$k]['insurance_Total'] - $data[$k]['specialdeduction'] - 5000) + $data[$k]['Other'],2); //本月计税工资 = (应发工资 - 个人保险合计 - 专项附加扣除 - 个人免征额5000) + [其他补助(差额补)]
             $individual_tax_info            = $this->get_personal_income_tax($v['id']); //个人所得税AAAA
             $data[$k]['individual_id']      = $individual_tax_info['id']?$individual_tax_info['id']:'0';

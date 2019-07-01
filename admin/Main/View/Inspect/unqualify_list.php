@@ -3,7 +3,7 @@
             <aside class="right-side">
                 <!-- Content Header (Page header) -->
                 <section class="content-header">
-                    <h1>{$_action_} <small>计调及时率</small></h1>
+                    <h1>{$_action_} <small>不合格处理率</small></h1>
                     <ol class="breadcrumb">
                         <li><a href="{:U('Index/index')}"><i class="fa fa-home"></i> 首页</a></li>
                         <li><a href="javascript:;"><i class="fa fa-gift"></i> 数据统计</a></li>
@@ -19,7 +19,7 @@
                                 <div class="box-header">
                                     <h3 class="box-title">{$_action_}</h3>
                                     <div class="box-tools pull-right">
-                                        <a href="javascript:;" onclick="edit_timely(0)" class="btn btn-info btn-sm">添加考核指标管理</a>
+                                        <a href="javascript:;" onclick="edit_unqualify(0)" class="btn btn-info btn-sm">添加考核指标</a>
                                     </div>
                                 </div><!-- /.box-header -->
                                 <div class="box-body">
@@ -44,12 +44,12 @@
                                                 <td class="">{$v['rules']}</td>
                                                 <if condition="rolemenu(array('Sale/timely_edit'))">
                                                 <td class="taskOptions">
-                                                    <a href="javascript:;" onclick="edit_timely({$v.id})" title="编辑" class="btn btn-info btn-smsm"><i class="fa fa-pencil"></i></a>
+                                                    <a href="javascript:;" onclick="edit_unqualify({$v.id})" title="编辑" class="btn btn-info btn-smsm"><i class="fa fa-pencil"></i></a>
                                                 </td>
                                                 </if>
                                                 <if condition="rolemenu(array('Sale/timely_del'))">
                                                 <td class="taskOptions">
-                                                    <a href="javascript:;" onclick="ConfirmDel(`<?php echo U('Sale/timely_del',array('id'=>$v['id'])); ?>`)" title="删除" class="btn btn-warning btn-smsm"><i class="fa fa-times"></i></a>
+                                                    <a href="javascript:;" onclick="ConfirmDel(`<?php echo U('Inspect/unqualify_del',array('id'=>$v['id'])); ?>`)" title="删除" class="btn btn-warning btn-smsm"><i class="fa fa-times"></i></a>
                                                 </td>
                                                 </if>
                                             </tr>
@@ -68,10 +68,10 @@
 
 <script>
     //编辑计调及时率考核指标
-    function edit_timely(id) {
-        art.dialog.open('index.php?m=Main&c=Sale&a=timely_edit&id='+id,{
+    function edit_unqualify(id) {
+        art.dialog.open('index.php?m=Main&c=Inspect&a=unqualify_edit&id='+id,{
             lock:true,
-            title: '配置计调及时率考核指标',
+            title: '配置不合格处理率考核指标',
             width:800,
             height:400,
             okVal: '提交',

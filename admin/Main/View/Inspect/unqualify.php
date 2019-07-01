@@ -42,7 +42,10 @@
                                 <div class="box-header">
                                     <h3 class="box-title">{$_action_}</h3>
                                     <div class="box-tools pull-right">
-                                        <!--<a href="javascript:;" class="btn btn-info btn-sm">考核指标管理</a>-->
+                                        <if condition="role">
+
+                                        </if>
+                                        <a href="{:U('Inspect/unqualify_list')}" class="btn btn-info btn-sm">考核指标管理</a>
                                     </div>
                                 </div><!-- /.box-header -->
                                 <div class="box-body">
@@ -54,9 +57,12 @@
 
                                     <table class="table table-bordered dataTable fontmini" id="tablelist" style="margin-top:10px;">
                                         <tr role="row" class="orders" >
-                                            <th class="taskOptions">不合格项目数</th>
-                                            <th class="taskOptions">已处理项目数</th>
-                                            <th class="taskOptions">不合格处理率</th>
+                                            <th class="taskOptions" width="60">序号</th>
+                                            <th class="taskOptions">工作项目</th>
+                                            <th class="taskOptions">内容及时限</th>
+                                            <th class="taskOptions">不合格数</th>
+                                            <th class="taskOptions">处理数</th>
+                                            <th class="taskOptions">处理率</th>
                                             <th width="80" class="taskOptions">详情</th>
                                         </tr>
                                         <foreach name="lists" key="k" item="v">

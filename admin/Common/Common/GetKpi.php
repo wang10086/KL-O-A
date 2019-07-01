@@ -3124,3 +3124,33 @@ function get_yw_department(){
         $lists                      = M('account')->where($where)->order('id asc')->getField('id,nickname,formal,status,expel',true);
         return $lists;
     }
+
+    /**
+     * 相关指标
+     * @param $type 1=>计调操作及时性指标 2=>不合格处理率指标
+     * @return mixed
+     */
+    function get_timely($type=0){
+        $db                             = M('quota');
+        $where                          = array();
+        $where['status']                = 0; //正常使用
+        $where['type']                  = $type;
+        $list                           = $db->where($where)->select();
+        foreach ($list as $k=>$v){
+            $list[$k]['title']          = htmlspecialchars_decode($v['title']);
+            $list[$k]['content']        = htmlspecialchars_decode($v['content']);
+            $list[$k]['rules']          = htmlspecialchars_decode($v['rules']);
+        }
+        return $list;
+    }
+
+    //删除相关指标
+    function timely_quota_del($id){
+        $db                             = M('quota');
+        $data                           = array();
+        $data['status']                 = 1; //删除
+        $where                          = array();
+        $where['id']                    = $id;
+        $res                            = $db->where($where)->save($data);
+        return $res;
+    }

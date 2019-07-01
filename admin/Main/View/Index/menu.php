@@ -154,7 +154,9 @@
                             <a href="javascript:;">
                                 <i class="fa fa-archive"></i>
                                 <span>资源管理</span>
+                                <if condition="rolemenu(array('ScienceRes/res'))">
                                 <if condition="$_no_read_cas_res"><small class="badge pull-right bg-red" style="margin-right:10px;">{$_no_read_cas_res}</small></if>
+                                </if>
                                 <i class="fa fa-angle-left pull-right"></i>
                             </a>
                             <ul class="treeview-menu">
@@ -397,13 +399,13 @@
                                         <if condition="rolemenu(array('Inspect/public_user_kpi_statis'))">
                                             <li class="{:on('Inspect/public_user_kpi_statis')}"><a href="{:U('Inspect/public_user_kpi_statis')}"><i class="fa fa-angle-right"></i> 顾客满意度分项统计</a></li>
                                         </if>
-                                        <if condition="rolemenu(array('Inspect/unqualify'))">
-                                            <li class="{:on('Inspect/unqualify')}"><a href="{:U('Inspect/unqualify')}"><i class="fa fa-angle-right"></i> 不合格处理率</a></li>
-                                        </if>
                                     </ul>
                                 </li>
                                 <if condition="rolemenu(array('Inspect/satisfaction'))">
                                     <li><a href="{:U('Inspect/satisfaction')}"><i class="fa fa-angle-right"></i> 内部人员满意度</a></li>
+                                </if>
+                                <if condition="rolemenu(array('Inspect/unqualify'))">
+                                    <li class="{:on('Inspect/unqualify')}"><a href="{:U('Inspect/unqualify')}"><i class="fa fa-angle-right"></i> 不合格处理率</a></li>
                                 </if>
                             </ul>
                         </li>

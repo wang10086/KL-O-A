@@ -1127,4 +1127,92 @@ class InspectController extends BaseController{
         $this->display();
     }
 
+    //不合格率指标
+    public function unqualify_list(){
+        $this->title('考核指标管理');
+        $lists                      = get_timely(2);
+        $this->lists                = $lists;
+        $this->display();
+    }
+
+    //编辑不合格处理率指标
+    public function unqualify_edit(){
+        $db                         = M('quota');
+        $id                         = I('id');
+        if ($id){
+            $list                   = $db->find($id);
+            $list['title']          = htmlspecialchars_decode($list['title']);
+            $list['content']        = htmlspecialchars_decode($list['content']);
+            $list['rules']          = htmlspecialchars_decode($list['rules']);
+            $this->list             = $list;
+        }
+        $this->display();
+    }
+
+    //删除指标
+    public function unqualify_del(){
+        $id                         = I('id');
+        if (!$id) $this->error('获取数据错误');
+        $res                        = timely_quota_del($id);
+        if ($res){
+            $this->success('删除成功');
+        }else{
+            $this->error('删除失败');
+        }
+    }
+
+    /*
+     * //详情页
+    public function public_timely_detail(){
+        $this->title('计调工作及时率详情');
+        $mod                        = D('Sale');
+        $timely                     = $mod -> get_timely();
+        $timely                     = array_column($timely,'title');
+        $title                      = trim(I('tit'));
+        $title                      = ($title == '合计')?$timely[0]:$title;
+        $year                       = I('year',date('Y'));
+        $month                      = I('month',date('m'));
+        $uid                        = I('uid','');
+        if (strlen($month)<2) $month= str_pad($month,2,'0',STR_PAD_LEFT);
+        $yearMonth                  = $year.$month;
+        $times                      = get_cycle($yearMonth);
+        $data                       = $mod->get_timely_type($title,$times['begintime'],$times['endtime'],$uid);
+
+        $this->uid                  = $uid;
+        $this->timely               = $timely;
+        $this->lists                = $data;
+        $this->title                = $title;
+        $this->year                 = $year;
+        $this->month                = $month;
+        $this->display('timely_detail');
+    }
+     * */
+
+    public function public_save(){
+        $savetype                   = I('savetype');
+        if (isset($_POST['dosubmint']) && $savetype){
+
+            //保存不合格指标
+            if ($savetype == 1){
+                $db                 = M('quota');
+                $id                 = I('id');
+                $info               = I('info');
+                $info['title']      = htmlspecialchars(trim($info['title']));
+                $info['content']    = htmlspecialchars(trim($info['content']));
+                $info['rules']      = htmlspecialchars(trim($info['rules']));
+                $info['type']       = 2; //2=>不合格处理率
+                if(!$info['title']) $this->error('指标标题不能为空');
+
+                if ($id) {
+                    $where          = array();
+                    $where['id']    = $id;
+                    $res            = $db->where($where)->save($info);
+                }else{
+                    $res            = $db->add($info);
+                }
+
+                echo '<script>window.top.location.reload();</script>';
+            }
+        }
+    }
 }
