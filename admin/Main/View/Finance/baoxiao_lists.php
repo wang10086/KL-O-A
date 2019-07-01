@@ -79,7 +79,7 @@
                                                     </if>
                                                 </td>
                                             </if>
-                                            <td><?php echo $row['jkd_ids']?$row['jkd_ids']:'暂无借款单信息'; ?></td>
+                                            <td><div class="text-overflow-lines-300"><?php echo $row['jkd_ids']?$row['jkd_ids']:'暂无借款单信息'; ?></div></td>
                                             <td>
                                                 <if condition="$row.bxd_type eq 1"> <!--团内借款报销-->
                                                     <div class="text-overflow-lines"><a href="{:U('Finance/baoxiaodan_info',array('id'=>$row['id']))}" title="{$row.description}">{$row.description}</a></div>
