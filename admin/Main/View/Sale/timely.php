@@ -42,8 +42,9 @@
                                 <div class="box-header">
                                     <h3 class="box-title">{$_action_}</h3>
                                     <div class="box-tools pull-right">
-                                        <!--<a href="javascript:;" onclick="edit_timely()" class="btn btn-info btn-sm">考核指标管理</a>-->
-                                        <a href="{:U('Sale/timely_list')}" class="btn btn-info btn-sm">考核指标管理</a>
+                                        <if condition="rolemenu(array('Sale/timely_list'))">
+                                            <a href="{:U('Sale/timely_list')}" class="btn btn-info btn-sm">考核指标管理</a>
+                                        </if>
                                     </div>
                                 </div><!-- /.box-header -->
                                 <div class="box-body">

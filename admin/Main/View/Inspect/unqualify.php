@@ -42,10 +42,9 @@
                                 <div class="box-header">
                                     <h3 class="box-title">{$_action_}</h3>
                                     <div class="box-tools pull-right">
-                                        <if condition="role">
-
+                                        <if condition="rolemenu(array('Inspect/unqualify_list'))">
+                                            <a href="{:U('Inspect/unqualify_list')}" class="btn btn-info btn-sm">考核指标管理</a>
                                         </if>
-                                        <a href="{:U('Inspect/unqualify_list')}" class="btn btn-info btn-sm">考核指标管理</a>
                                     </div>
                                 </div><!-- /.box-header -->
                                 <div class="box-body">

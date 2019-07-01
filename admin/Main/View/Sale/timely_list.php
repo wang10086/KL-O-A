@@ -19,7 +19,9 @@
                                 <div class="box-header">
                                     <h3 class="box-title">{$_action_}</h3>
                                     <div class="box-tools pull-right">
-                                        <a href="javascript:;" onclick="edit_timely(0)" class="btn btn-info btn-sm">添加考核指标管理</a>
+                                        <if condition="rolemenu(array('Sale/timely_edit'))">
+                                            <a href="javascript:;" onclick="edit_timely(0)" class="btn btn-info btn-sm">添加考核指标管理</a>
+                                        </if>
                                     </div>
                                 </div><!-- /.box-header -->
                                 <div class="box-body">
