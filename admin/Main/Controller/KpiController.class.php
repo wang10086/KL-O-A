@@ -793,7 +793,7 @@ class KpiController extends BaseController {
 	
 	// @@@NODE-3###addpdca###品质检查###
 	public function qa(){
-		$this->title('品质检查');
+		$this->title('品质报告');
 		 
 		$db = M('qaqc');
 		$this->year		= I('year',date('Y'));
@@ -2233,7 +2233,12 @@ class KpiController extends BaseController {
 		P(team_new_customers(35,array(strtotime('2018-01-01'),strtotime('2018-01-25'))));
 	}
 
+    //发布品质报告
+    public function public_addqa(){
 
+
+        $this->display('addqa_public');
+    }
 
 	
 	

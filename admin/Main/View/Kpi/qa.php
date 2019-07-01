@@ -163,7 +163,7 @@
 	function add_qa(id) {
 		art.dialog.open('index.php?m=Main&c=Kpi&a=addqa&id='+id,{
 			lock:true,
-			title: '发布品质检查信息',
+			title: '发布品质报告信息',
 			width:1000,
 			height:480,
 			okValue: '提交',
@@ -182,7 +182,7 @@
 	function qadetail(id) {
 		art.dialog.open('index.php?m=Main&c=Kpi&a=qadetail&id='+id,{
 			lock:true,
-			title: '品质检查详情',
+			title: '品质报告详情',
 			width:800,
 			height:'90%',
 			fixed: true,

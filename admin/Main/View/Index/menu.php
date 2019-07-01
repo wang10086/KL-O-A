@@ -358,7 +358,6 @@
                             </a>
                         </li>
 
-
                         <li class="{:ison(CONTROLLER_NAME, 'Work')}">
                             <a href="{:U('Work/record')}">
                                 <i class="fa fa-file"></i> <span>工作记录</span>
@@ -366,24 +365,22 @@
                         </li>
 
 
-
                         <if condition="rolemenu(array('Kpi/qa','Inspect/record','Inspect/edit_ins','Inspect/score','Inspect/score_statis','Inspect/public_user_kpi_statis','Inspect/satisfaction','Inspect/unqualify'))">
-                        <li class="treeview {:ison(CONTROLLER_NAME, 'Inspect')} {:on('Kpi/qa')} {:on('Kpi/addqa')} {:on('Inspect/satisfaction')} {:on('Inspect/satisfaction_add')}">
+                        <li class="treeview {:ison(CONTROLLER_NAME, 'Inspect')} {:on('Kpi/public_addqa')} {:on('Kpi/qa')} {:on('Kpi/addqa')} {:on('Inspect/satisfaction')} {:on('Inspect/satisfaction_add')}">
                             <a href="javascript:;">
                                 <i class="fa fa-medkit"></i>
                                 <span>品控巡检</span>
                                 <i class="fa fa-angle-left pull-right"></i>
                             </a>
                             <ul class="treeview-menu">
+                                <li><a href="{:U('Kpi/public_addqa')}"><i class="fa fa-angle-right"></i> 发布品质报告</a></li>
+
                                 <if condition="rolemenu(array('Kpi/qa'))">
-                                    <li><a href="{:U('Kpi/qa')}"><i class="fa fa-angle-right"></i> 品质检查</a></li>
+                                    <li><a href="{:U('Kpi/qa')}"><i class="fa fa-angle-right"></i> 品质报告</a></li>
                                 </if>
 
-                                <if condition="rolemenu(array('Inspect/record'))">
+                                <!--<if condition="rolemenu(array('Inspect/record'))">
                                 	<li><a href="{:U('Inspect/record')}"><i class="fa fa-angle-right"></i> 巡检记录</a></li>
-                                </if>
-                                <!--<if condition="rolemenu(array('Inspect/score'))">
-                                    <li><a href="{:U('Inspect/score')}"><i class="fa fa-angle-right"></i> 顾客满意度</a></li>
                                 </if>-->
                                 <li class="treeview {:on('Inspect/score')} {:on('Inspect/score_statis')} {:on('Inspect/public_user_kpi_statis')}">
                                     <if condition="rolemenu(array('Inspect/score','Inspect/score_statis','Inspect/public_user_kpi_statis'))">
