@@ -38,7 +38,7 @@
                                         </tr>
                                         <foreach name="lists" key="k" item="v">
                                             <tr>
-                                                <td class="taskOptions">{$v['id']}</td>
+                                                <td class="taskOptions">{$k+1}</td>
                                                 <td class="taskOptions">{$v['title']}</td>
                                                 <td class="">{$v['content']}</td>
                                                 <td class="">{$v['rules']}</td>

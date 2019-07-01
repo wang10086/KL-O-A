@@ -1161,33 +1161,6 @@ class InspectController extends BaseController{
         }
     }
 
-    /*
-     * //详情页
-    public function public_timely_detail(){
-        $this->title('计调工作及时率详情');
-        $mod                        = D('Sale');
-        $timely                     = $mod -> get_timely();
-        $timely                     = array_column($timely,'title');
-        $title                      = trim(I('tit'));
-        $title                      = ($title == '合计')?$timely[0]:$title;
-        $year                       = I('year',date('Y'));
-        $month                      = I('month',date('m'));
-        $uid                        = I('uid','');
-        if (strlen($month)<2) $month= str_pad($month,2,'0',STR_PAD_LEFT);
-        $yearMonth                  = $year.$month;
-        $times                      = get_cycle($yearMonth);
-        $data                       = $mod->get_timely_type($title,$times['begintime'],$times['endtime'],$uid);
-
-        $this->uid                  = $uid;
-        $this->timely               = $timely;
-        $this->lists                = $data;
-        $this->title                = $title;
-        $this->year                 = $year;
-        $this->month                = $month;
-        $this->display('timely_detail');
-    }
-     * */
-
     public function public_save(){
         $savetype                   = I('savetype');
         if (isset($_POST['dosubmint']) && $savetype){
