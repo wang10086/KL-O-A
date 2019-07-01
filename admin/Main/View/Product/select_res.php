@@ -71,7 +71,8 @@
 					var obj = {};
 					obj.id             = $(element).find("input[name=id]").val();
 					obj.title          = $(element).find("input[name=title]").val();
-					obj.input_uname    = $(element).find("input[name=input_uname]").val();
+					obj.diqu           = $(element).find("input[name=diqu]").val();
+                    obj.in_cas         = $(element).find("input[name=in_cas]").val();
 					rs.push(obj);
 				}
 			});
@@ -81,14 +82,14 @@
        
         <section class="content">
         	<div id="selectbox">
-            <form action="{:U('Product/select_res')}" method="get" id="feedbackform">
+            <form action="{:U('Product/public_select_res')}" method="get" id="feedbackform">
             <input type="hidden" name="m" value="Main">
             <input type="hidden" name="c" value="Product">
-            <input type="hidden" name="a" value="select_res">
+            <input type="hidden" name="a" value="public_select_res">
 
-            <input type="text" class="form-control" name="tit"  placeholder="关键字">
-            <input type="text" class="form-control" name="con"  placeholder="关键字">
-            <select class="form-control" name="bus">
+            <input type="text" class="form-control" name="tit"  placeholder="资源名称">
+            <input type="text" class="form-control" name="con"  placeholder="资源内容关键字">
+            <select class="form-control" name="in_cas">
                 <option value="0">院外</option>
                 <option value="1">院内</option>
             </select>
@@ -111,7 +112,8 @@
                         <input type="checkbox"  name="product[]" value="{$row.id}">
                         <input type="hidden" name="id" value="{$row.id}">
                         <input type="hidden" name="title" value="{$row.title}">
-                        <input type="hidden" name="in_cas" value="{$row.in_cas}">
+                        <input type="hidden" name="diqu" value="{$row.diqu}">
+                        <input type="hidden" name="in_cas" value="{$in_cas[$row['in_cas']]}">
                         </td>
                         <td>{$row.id}</td>          
                         <td><a href="{:U('ScienceRes/res_view', array('id'=>$row['id']))}" title="{$row.title}" target="_blank">{$row.title}</a></td>

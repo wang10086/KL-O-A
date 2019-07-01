@@ -1208,8 +1208,14 @@ class ProductController extends BaseController {
     //
     public function public_select_res(){
         $db                             = M('cas_res');
+        $title                          = trim(I('tit'));
+        $content                        = trim(I('content'));
+        $in_cas                         = I('in_cas');
         $where                          = array();
         $where['audit_status']          = 1;
+        if ($title) $where['title']     = array('like','%'.$title.'%');
+        if ($content) $where['content'] = array('like','%'.$content.'%');
+        if ($in_cas) $where['in_cas']   = $in_cas;
         $lists                          = $db->where($where)->order($this->orders('id'))->select();
         $this->lists                    = $lists;
         $this->in_cas                   = array(
@@ -1223,7 +1229,8 @@ class ProductController extends BaseController {
         $savetype                       = I('savetype');
         if (isset($_POST['dosubmit'])){
             if ($savetype == 1){ //保存标准化产品
-                echo '测试ing...';
+
+                //var_dump(I());
             }
         }
     }

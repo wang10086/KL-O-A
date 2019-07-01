@@ -30,10 +30,6 @@
                                     <input type="hidden" name="dosubmit" value="1">
                                     <input type="hidden" name="savetype" value="1">
                                     <input type="hidden" name="id" value="{$id}" >
-                                   <!-- <input type="hidden" name="dosubmit" value="1" />
-                                    <input type="hidden" name="referer" value="<?php /*echo $_SERVER['HTTP_REFERER']; */?>" />
-                                    <input type="hidden" name="business_dept" value="{$business_dept}">
-                                    <if condition="$row"><input type="hidden" name="id" value="{$row.id}" /></if>-->
                                     <if condition="$row">
                                         <input type="hidden" name="info[input_uname]" value="{$row.input_uname}" class="form-control"  />
                                     <else />
@@ -45,23 +41,13 @@
                                         <input type="text" name="info[title]" id="title" value="{$row.title}"  class="form-control" required />
                                     </div>
 
-                                    <!--<div class="form-group col-md-6">
-                                        <label>类别</label>
-                                        <select  class="form-control"  name="info[type]">
-                                            <option value="0">请选择</option>
-                                            <foreach name="product_type" key="k" item="v">
-                                                <option value="{$k}" <?php /*if ($row && ($k == $row['type'])) echo ' selected'; */?> >{$v}</option>
-                                            </foreach>
-                                        </select>
-                                    </div>-->
-
                                     <!---------------------------------------------------------->
                                     <div class="form-group col-md-4">
                                         <label>使用时间：</label>
                                         <select class="form-control" name="apply_time">
                                             <option value="" selected disabled>==请选择==</option>
                                             <foreach name="apply_times" key="k" item="v">
-                                                <option value="{$v}" <?php if ($pin == $k) echo 'selected'; ?>>{$v['title']}</option>
+                                                <option value="{$v['year']}">{$v['title']}</option>
                                             </foreach>
                                         </select>
                                     </div>
@@ -74,11 +60,6 @@
                                             <option value="2" <?php if ($pin == 2) echo 'selected'; ?>>非标准化</option>
                                         </select>
                                     </div>
-
-                                    <!--<div class="form-group col-md-4">
-                                        <label>价格：</label>
-                                        <input class="form-control" type="text" name="info[price]" value="{$row.price}" />
-                                    </div>-->
 
                                     <div class="form-group col-md-4">
                                         <label>适用人群</label>
@@ -138,17 +119,12 @@
                                     <!---------------------------------------------------------->
 
                                     <div class="form-group col-md-12"></div>
-
                                     <div class="form-group col-md-12">
                                         <label>产品简介</label>
                                         <?php echo editor('content',$row['content']); ?>
                                     </div>
-                                    
                                     <div class="form-group">&nbsp;</div>
-                                    
                                 </div><!-- /.box-body -->
-                                
-                                
                             </div><!-- /.box -->
                             
                             
@@ -225,19 +201,15 @@
                                                     <thead>
                                                     <tr>
                                                         <th width="50%">资源名称</th>
-                                                        <th width="15%">类型</th>
-                                                        <th width="15%">所在地</th>
-                                                        <th width="10%">来源</th>
+                                                        <th width="18%">性质</th>
+                                                        <th width="18%">所在地</th>
                                                         <th width="80">删除</th>
                                                     </tr>
                                                     </thead>
                                                     <tbody id="res_tbody">
                                                     <foreach name="res_need" item="v">
                                                         <tr class="expense" id="res_id_{$v.id}">
-                                                            <td><input type="hidden" name="resid[2000{$v.id}][id]" value="{$v.id}" >
-                                                                <input type="hidden" name="costacc[20000{$v.id}][type]" value="{$v.type}">
-                                                                <input type="hidden" name="costacc[20000{$v.id}][title]" value="{$v.title}">
-                                                                <input type="hidden" name="costacc[20000{$v.id}][res_id]" value="{$v.res_id}">
+                                                            <td><input type="hidden" name="res_ids[2000{$v.id}][id]" value="{$v.id}" >
                                                                 <a href="javascript:;" onClick="open_res({$v.res_id},{$v.res.title})">{$v.title}</a></td>
                                                             <td>{$res_type[$v[ptype]]}</td>
                                                             <td>{$subject_fields[$v[subject_field]]}</td>
@@ -291,7 +263,6 @@
                                         </div>-->
 
                                     	<div class="form-group col-md-12">
-                                            <!--<label class="upload_label">上传相关附件</label>-->
                                             <table id="flist" class="table" style="margin-top:10px;">
                                             	<tr>
                                                 	<th align="left" width="45%">文件名称</th>
@@ -344,20 +315,6 @@
 <script type="text/javascript"> 
 
 	$(document).ready(function() {
-       /* //是否需要辅导员/教师/专家
-        $('#product_hesuan').find('ins').each(function(index, element) {
-            $(this).click(function(){
-                if(index==0){
-                    $('#hesuan_result').html('<input type="text" class="under-line-input" name="info[sales_price]" id="produce_price" value="{$row.sales_price}" >元/项');
-                }else if (index==1){
-                    $('#hesuan_result').html('<input type="text" class="under-line-input" name="info[sales_price]" id="produce_price" value="{$row.sales_price}" >元/人');
-                }else if (index==2){
-                    $('#hesuan_result').html('<input type="text" class="under-line-input" name="info[sales_price]" id="produce_price" value="{$row.sales_price}" >元/批');
-                }
-            })
-        });*/
-
-		//$('#supplierlist').show();
 		var uploader = new plupload.Uploader({
 			runtimes : 'html5,flash,silverlight,html4',
 			browse_button : 'pickupfile', // you can pass in id...
@@ -445,7 +402,7 @@
 		$('#'+obj).remove();
 	}
 
-    //选择校园科技节产品
+    //选择产品模块
     function selectproduct() {
         art.dialog.open("<?php echo U('Op/select_module',array('opid'=>$opid)); ?>",{
             lock:true,
@@ -479,13 +436,32 @@
                     };
                 }
                 $('#productlist').show();
-                //$('#nonetext').hide();
                 $('#productlist').find('#product_tbody').append(product_html);
-                //total();
+                total();
             },
             cancelValue:'取消',
             cancel: function () {
             }
+        });
+    }
+
+    //更新价格与数量
+    function total(){
+        $('.expense').each(function(index, element) {
+            $(this).find('.cost').blur(function(){
+                var cost = $(this).val();
+                var amount = $(this).parent().parent().find('.amount').val();
+                $(this).parent().parent().find('.total').html('&yen;'+accMul(cost,amount));
+                //$(this).parent().parent().find('.cost_cost').val(cost);
+                //$(this).parent().parent().find('.totalval').val(accMul(cost,amount));
+            });
+            $(this).find('.amount').blur(function(){
+                var amount = $(this).val();
+                var cost = $(this).parent().parent().find('.cost').val();
+                $(this).parent().parent().find('.total').html('&yen;'+accMul(cost,amount));
+                //$(this).parent().parent().find('.cost_amount').val(amount);
+                //$(this).parent().parent().find('.totalval').val(accMul(cost,amount));
+            });
         });
     }
 
@@ -505,25 +481,19 @@
                 for (var j = 0; j < res.length; j++) {
                     if (res[j].id) {
                         var i = parseInt(Math.random()*100000)+j;
-                        var costacc = '<input type="hidden" name="costacc['+i+'][type]" value="5">' +
-                            '<input type="hidden" name="costacc['+i+'][title]" value="'+res[j].title+'">' +
-                            '<input type="hidden" name="costacc['+i+'][res_id]" value="'+res[j].id+'">';
+                        var res_ids = '<input type="hidden" name="res_ids['+i+'][res_id]" value="'+res[j].id+'">';
                         res_html += '<tr class="expense" id="res_'+i+'">' +
-                            '<td>'+costacc+ '<a href="javascript:;" onClick="">'+res[j].title+'</a></td>' +
-                            '<td>'+res[j].type+'</td>' +
-                            '<td>'+res[j].type+'</td>' +
-                            '<td>'+res[j].subject_fields+'</td>' +
+                            '<td>'+res_ids+ '<a href="javascript:;" onClick="">'+res[j].title+'</a></td>' +
+                            '<td>'+res[j].in_cas+'</td>' +
+                            '<td>'+res[j].diqu+'</td>' +
                             '<td><a href="javascript:;" class="btn btn-danger btn-flat" onclick="delbox(\'res_'+i+'\')">删除</a></td></tr>';
                     };
                 }
                 $('#reslist').show();
-                //$('#nonetext').hide();
                 $('#reslist').find('#res_tbody').append(res_html);
-                //total();
             },
             cancelValue:'取消',
-            cancel: function () {
-            }
+            cancel: function () {}
         });
     }
 
