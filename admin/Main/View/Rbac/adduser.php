@@ -261,6 +261,7 @@
             $('#end_time').show();
             $('#end_time').html(end_time_html);
             $('#is_expel').show();
+            reload_jsFile('__HTML__/js/public.js','reload_public');
         }else{
             $('#end_time').html('');
             $('#end_time').hide();
@@ -273,6 +274,7 @@
             $('#is_expel').show();
             $('#end_time').show();
             $('#end_time').html(end_time_html);
+            reload_jsFile('__HTML__/js/public.js','reload_public');
         }else{
             $('#is_expel').hide();
             $('#end_time').html('');

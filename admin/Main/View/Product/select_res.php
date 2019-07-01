@@ -84,7 +84,6 @@
             <form action="{:U('Product/select_res')}" method="get" id="feedbackform">
             <input type="hidden" name="m" value="Main">
             <input type="hidden" name="c" value="Product">
-            <input type="hidden" name="a" value="select_tpl">
             <input type="hidden" name="a" value="select_res">
 
             <input type="text" class="form-control" name="tit"  placeholder="关键字">

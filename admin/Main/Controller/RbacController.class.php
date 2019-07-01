@@ -115,7 +115,7 @@ class RbacController extends BaseController {
         $db = M('account');
     
         if(isset($_POST['dosubmit'])){
-         
+
             $info = I('info','');
             $id = I('id',0);
 			$referer = I('referer','');
@@ -142,11 +142,7 @@ class RbacController extends BaseController {
                 }
             }else{
                 $status                 = $info['status'];
-                if ($status ==1){
-                    $info['end_time']   = 0;
-                }else{
-                    $info['end_time']   = strtotime($_POST['end_time']);//离职时间
-                }
+                $info['end_time']       = strtotime($_POST['end_time']);//离职时间
                 $info['update_time']    = time();
                 $info['departmentid']   = $_POST['departmentid'];//部门id
                 $isedit                 = $db->data($info)->where(array('id'=>$id))->save();
