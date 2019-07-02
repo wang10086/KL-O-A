@@ -50,8 +50,9 @@
                                         <label>是否是标准化产品：</label>
                                         <select class="form-control" name="info[standard]" required>
                                             <option value="" selected disabled>==请选择==</option>
-                                            <option value="1" <?php if ($row['standard'] == 1) echo 'selected'; ?>>标准化</option>
-                                            <option value="2" <?php if ($row['standard'] == 2) echo 'selected'; ?>>非标准化</option>
+                                            <foreach name="standard" key="k" item="v">
+                                                <option value="{$k}" <?php if ($row['standard'] == $k) echo 'selected'; ?>>{$v}</option>
+                                            </foreach>
                                         </select>
                                     </div>
 
@@ -88,9 +89,9 @@
                                         <label>核算模式</label>
                                         <select  class="form-control"  name="info[reckon_mode]" id="reckon_mode">
                                             <option value="" selected disabled>==请选择==</option>
-                                            <option value="1" <?php if ($row['reckon_mode'] == 1) echo 'selected'; ?> >按项目核算</option>
-                                            <option value="2" <?php if ($row['reckon_mode'] == 2) echo 'selected'; ?> >按人数核算</option>
-                                            <option value="3" <?php if ($row['reckon_mode'] == 3) echo 'selected'; ?> >按批次核算(100人/批)</option>
+                                            <foreach name="reckon_mode" key="k" item="v">
+                                                <option value="{$k}" <?php if ($row['reckon_mode'] == $k) echo 'selected'; ?> >{$v}</option>
+                                            </foreach>
                                         </select>
                                     </div>
 

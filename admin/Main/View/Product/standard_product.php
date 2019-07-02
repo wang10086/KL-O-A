@@ -54,7 +54,7 @@
                                     </tr>
                                     <foreach name="lists" item="row">
                                         <tr>
-                                            <td>{$row.title}</td>
+                                            <td><a href="{:U('Product/standard_product_detail',array('id'=>$row['id']))}">{$row.title}</a></td>
                                             <td>{$subject_fields[$row[subject_field]]}</td>
                                             <td>{$apply[$row[age]]}</td>
                                             <td style="max-width: 300px">{$row.kinds}</td>

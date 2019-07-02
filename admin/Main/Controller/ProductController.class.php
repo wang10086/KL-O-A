@@ -1252,6 +1252,8 @@ class ProductController extends BaseController {
             $this->apply_time           = $list['apply_year'].'-'.$list['apply_time'];
         }
 
+        $this->standard                 = C('STANDARD');
+        $this->reckon_mode              = C('RECKON_MODE');
         $this->subject_fields           = C('SUBJECT_FIELD');
         $this->product_from             = C('PRODUCT_FROM');
         $this->apply                    = C('APPLY_TO');
@@ -1263,7 +1265,65 @@ class ProductController extends BaseController {
         $this->display();
     }
 
-    //
+    //标准化产品(详情)
+    public function standard_product_detail($id=0){
+        $this->title('标准化产品详情');
+        $id                             = I('id')?I('id'):$id;
+        $db                             = M('product');
+        $product_use_db                 = M('product_use');
+        $cas_db                         = M('cas_res');
+        $list                           = $db->where(array('id'=>$id))->find();
+        $product_use_list               = $product_use_db->where(array('pid'=>$id))->select();
+        $cas_list                       = $cas_db->where(array('id'=>array('in',explode(',',$list['cas_res_ids']))))->select();
+        $atts                           = get_res(0,0,explode(',',$list['att_id']));
+
+        $business_dept                  = explode(',',$list['business_dept']);
+        $kinds                          = get_project_kinds();
+        $str                            = array();
+        foreach ($kinds as $kk=>$vv){
+            if (in_array($kk,$business_dept)){
+                $str[]                  = $vv['name'];
+            }
+        }
+        $list['dept']                   = implode(',',$str);
+
+        $where                          = array();   //审核状态
+        $where['req_type']              = P::REQ_TYPE_PRODUCT_NEW;
+        $where['req_id']                = $id;
+        $audit                          = M('audit_log')->where($where)->find();
+        if($audit['dst_status']==0){
+            $show                       = '未审批';
+            $show_user                  = '未审批';
+            $show_time                  = '等待审批';
+        }else if($audit['dst_status']==1){
+            $show                       = '已通过';
+            $show_user                  = $audit['audit_uname'];
+            $show_time                  = date('Y-m-d H:i:s',$audit['audit_time']);
+        }else if($audit['dst_status']==2){
+            $show                       = '未通过';
+            $show_user                  = $audit['audit_uname'];
+            $show_time                  = date('Y-m-d H:i:s',$audit['audit_time']);
+        }
+        $list['showstatus']             = $show;
+        $list['show_user']              = $show_user;
+        $list['show_time']              = $show_time;
+        $this->in_cas                   = array(
+            0                           => '院外',
+            1                           => '院内',
+        );
+        $this->row                      = $list;
+        $this->product_use_list         = $product_use_list;
+        $this->cas_list                 = $cas_list;
+        $this->atts                     = $atts;
+        $this->reckon_mode              = C('RECKON_MODE');
+        $this->standard                 = C('STANDARD');
+        $this->subject_fields           = C('SUBJECT_FIELD');
+        $this->product_from             = C('PRODUCT_FROM');
+        $this->apply                    = C('APPLY_TO');
+        $this->display();
+    }
+
+    //选择科普资源(弹框)
     public function public_select_res(){
         $db                             = M('cas_res');
         $title                          = trim(I('tit'));
