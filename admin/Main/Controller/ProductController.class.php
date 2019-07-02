@@ -80,6 +80,7 @@ class ProductController extends BaseController {
 		$db = M('product');
 		$id = I('id', -1);
 		$iddel = $db->delete($id);
+        M('product_use')->where(array('pid'=>$id))->delete();
 		$this->success('删除成功！');	
     }
     
@@ -1168,6 +1169,46 @@ class ProductController extends BaseController {
         $pin                            = I('pin',0);
         $year                           = I('year',date('Y'));
         $ltit                           = get_little_title($year,$month);
+        $db                             = M('product');
+        $tit                            = trim(I('key'));
+        $kind                           = I('kind');
+        $age                            = I('age');
+        $app_time                       = get_apply_time($ltit,$pin);
+        $apply_year                     = $app_time['ayear'];
+        $apply_time                     = $app_time['atime'];
+
+        $where                          = array();
+        $where['disting']               = 1;
+        if ($apply_year) $where['apply_year'] = $apply_year;
+        if ($apply_time) $where['apply_time'] = $apply_time;
+        if ($tit) $where['title']       = array('like','%'.$tit.'%');
+        if ($kind) $where['business_dept'] = array('like','%'.$kind.'%');
+        if ($age) $where['age']         = $age;
+
+        $count                          = $db->table('__PRODUCT__ as p')->where($where)->count();
+        $page                           = new Page($count, P::PAGE_SIZE);
+        $this->pages                    = $page->show();
+        $lists                          = $db->table('__PRODUCT__ as p')->field('p.*')->where($where)->limit($page->firstRow . ',' . $page->listRows)->order($this->orders('p.id'))->select();
+        $kinds                          = M('project_kind')->getField('id,name');
+
+        foreach ($lists as $k=>$v){
+            $str                        = array();
+            $business_dept              = explode(',',$v['business_dept']);
+            foreach ($kinds as $kk=>$vv){
+                if (in_array($kk,$business_dept)){
+                    $str[]              = $vv;
+                }
+            }
+            $lists[$k]['kinds']         = implode(',',$str);
+        }
+
+        $this->lists                    = $lists;
+        $this->pfrom                    = C('PRODUCT_FROM');
+        $this->kinds                    = $kinds;
+        $this->apply                    = C('APPLY_TO');
+        $this->subject_fields           = C('SUBJECT_FIELD');
+        $this->ayear                    = $apply_year;
+        $this->atime                    = $apply_time;
 
         $this->year                     = $year;
         $this->pin                      = $pin;
@@ -1184,13 +1225,32 @@ class ProductController extends BaseController {
         $this->display();
     }
 
-    //新增标准化产品
+    //新增/编辑标准化产品
     public function add_standard_product(){
         $this->pageTitle                = '标准化管理';
+        $id                             = I('id');
         $this->title('标准化产品');
         $pin                            = I('pin');
-        $year                           = date('Y')+1;
+        $year                           = date('Y');
         $apply_times                    = get_little_title($year);
+
+        if ($id){
+            $list                       = M('product')->where(array('id'=>$id))->find();
+            $model_lists                = M('product_use')->where(array('pid'=>$id))->select();
+            $res_ids                    = explode(',',$list['cas_res_ids']);
+            $res_need                   = M('cas_res')->where(array('id'=>array('in',$res_ids)))->select();
+            $this->res_need             = $res_need;
+            $this->row                  = $list;
+            $this->product_need         = $model_lists;
+            $this->business_dept        = explode(',',$list['business_dept']);
+            $this->in_cas               = array(
+                0                       => '院外',
+                1                       => '院内',
+            );
+            $atts                       = get_res(0,0,explode(',',$list['att_id']));
+            $this->atts                 = $atts;
+            $this->apply_time           = $list['apply_year'].'-'.$list['apply_time'];
+        }
 
         $this->subject_fields           = C('SUBJECT_FIELD');
         $this->product_from             = C('PRODUCT_FROM');
@@ -1198,6 +1258,7 @@ class ProductController extends BaseController {
         $this->kinds                    = get_project_kinds();
         $this->apply_times              = $apply_times;
         $this->pin                      = $pin;
+        $this->id                       = $id;
         $this->title('标准化产品');
         $this->display();
     }
@@ -1237,6 +1298,7 @@ class ProductController extends BaseController {
                 $product_model          = I('costacc'); //包含产品模块
                 $cas_res_ids            = I('res_ids'); //包含资源模块
                 $resfiles               = I('resfiles');
+                $resetid                = I('resetid');
                 $info['att_id']         = implode(',',$resfiles);
                 $info['apply_year']     = $apply_time?substr($apply_time,0,4):0;
                 $info['apply_time']     = $apply_time?substr($apply_time,-1):0;
@@ -1251,16 +1313,39 @@ class ProductController extends BaseController {
                     $where              = array();
                     $where['id']        = $id;
                     $res                = $db->where($where)->save($info);
+                    $pid                = $id;
                 }else{
                     $info['input_time'] = NOW_TIME;
                     $info['input_user'] = session('userid');
                     $info['input_uname']= session('nickname');
                     $res                = $db ->add($info);
+                    $pid                = $res;
+                    $a = $this->request_audit(P::REQ_TYPE_PRODUCT_NEW, $pid);
                 }
 
                 if ($res){
-
-                    echo "保存成功...";
+                    if ($product_model){ //保存相关产品模块
+                        $product_use_db         = M('product_use');
+                        $del_ids                = array();
+                        foreach ($product_model as $k=>$v){
+                            $data               = array();
+                            $data['pid']        = $pid;
+                            $data['product_id'] = $v['product_id'];
+                            $data['title']      = $v['title'];
+                            $data['unitcost']   = $v['unitcost'];
+                            $data['amount']     = $v['amount'];
+                            $data['total']      = $v['total'];
+                            if ($v['id']){
+                                $res            = $product_use_db->where(array('id'=>$v['id']))->save($data);
+                                $del_ids[]      = $v['id'];
+                            }else{
+                                $res            = $product_use_db->add($data);
+                                $del_ids[]      = $res;
+                            }
+                        }
+                        $product_use_db->where(array('pid'=>$pid,'id'=>array('not in',$del_ids)))->delete();
+                    }
+                    $this->success('数据保存成功');
                 }else{
                     $this->error('数据保存失败');
                 }

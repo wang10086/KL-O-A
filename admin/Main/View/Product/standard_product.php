@@ -45,23 +45,38 @@
                                         <th>适用项目类型</th>
                                         <th >产品报价</th>
                                         <th>审批状态</th>
-                                        <th width="80">编辑</th>
-                                        <th width="80">删除</th>
+                                        <if condition="rolemenu(array('Product/add_standard_product'))">
+                                        <th width="60">编辑</th>
+                                        </if>
+                                        <if condition="rolemenu(array('Product/del'))">
+                                        <th width="60">删除</th>
+                                        </if>
                                     </tr>
                                     <foreach name="lists" item="row">
                                         <tr>
-                                            <td>{$row.id}</td>
-                                            <td>{$row.tpl_name}</td>
+                                            <td>{$row.title}</td>
+                                            <td>{$subject_fields[$row[subject_field]]}</td>
+                                            <td>{$apply[$row[age]]}</td>
+                                            <td style="max-width: 300px">{$row.kinds}</td>
+                                            <td>{$row.sales_price}</td>
                                             <td>
-                                            <?php foreach ($row['product'] as $v) { 
-                                            echo '<span class="col-md-3"> '.$v[id].' - '.$v['title'].'</span>';
-                                            }?>
+                                                <?php
+                                                    if($row['audit_status']== P::AUDIT_STATUS_NOT_AUDIT){
+                                                        $show  = '等待审批';
+                                                    }else if($row['audit_status'] == P::AUDIT_STATUS_PASS){
+                                                        $show  = '<span class="green">通过</span>';
+                                                    }else if($row['audit_status'] == P::AUDIT_STATUS_NOT_PASS){
+                                                        $show  = '<span class="red">不通过</span>';
+                                                    }
+                                                    echo $show;
+                                                ?>
                                             </td>
-                                            <td>
-                                            <button onClick="javascript:window.location.href='{:U('Product/addtpl',array('id'=>$row['id']))}';" title="修改" class="btn btn-info btn-smsm"><i class="fa fa-pencil"></i></button>
-                                            &nbsp;&nbsp;
-                                            <button onClick="javascript:ConfirmDel('{:U('Product/deltpl',array('id'=>$row['id']))}')" title="删除" class="btn btn-warning btn-smsm"><i class="fa fa-times"></i></button>
-                                            </td>
+                                            <if condition="rolemenu(array('Product/add_standard_product'))">
+                                            <td><button onClick="javascript:window.location.href='{:U('Product/add_standard_product',array('id'=>$row['id']))}';" title="修改" class="btn btn-info btn-smsm"><i class="fa fa-pencil"></i></button></td>
+                                            </if>
+                                            <if condition="rolemenu(array('Product/del'))">
+                                            <td><button onClick="javascript:ConfirmDel('{:U('Product/del',array('id'=>$row['id']))}')" title="删除" class="btn btn-warning btn-smsm"><i class="fa fa-times"></i></button></td>
+                                            </if>
                                         </tr>
                                     </foreach>										
                                 </table>
@@ -88,9 +103,9 @@
             </div>
 
             <div class="form-group col-md-12">
-                <select class="form-control" name="type">
-                    <option value="">类别</option>
-                    <foreach name="ptype" key="k" item="v">
+                <select class="form-control" name="kind">
+                    <option value="">适用项目类型</option>
+                    <foreach name="kinds" key="k" item="v">
                         <option value="{$k}">{$v}</option>
                     </foreach>
                 </select>

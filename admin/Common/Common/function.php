@@ -420,10 +420,20 @@ function save_add_res($module,$releid,$data){
 
 }
 
-function get_res($module,$releid){
+    /**
+     * @param int $module
+     * @param int $releid
+     * @param array $ids
+     * @return mixed
+     */
+function get_res($module=0,$releid=0,$ids=array()){
 	//获取默认素材
-	$attid = array();
-	$attachment = M('attachment')->where(array('module'=>$module,'rel_id'=>$releid))->select();  //
+	$attid                          = array();
+    $where                          = array();
+    if ($module) $where['module']   = $module;
+    if ($releid) $where['rel_id']   = $releid;
+    if ($ids) $where['id']          = array('in',$ids);
+	$attachment = M('attachment')->where($where)->select();  //
 	foreach($attachment as $v){
 		$attid[] = 	$v['id'];
 	}

@@ -2751,6 +2751,18 @@ function get_yw_department(){
         return $data;
     }
 
+    function get_apply_time($title,$pin=0){
+        $data                           = array();
+        if (in_array($pin,array(1,2,3,4))){
+            $data['ayear']              = substr($title[$pin]['year'],0,4);
+            $data['atime']              = substr($title[$pin]['year'],-1);
+        }else{
+            $data['ayear']              = '0';
+            $data['atime']              = '0';
+        }
+        return $data;
+    }
+
     function get_files($ids){
         $db                             = M('attachment');
         $lists                          = $db->where(array('id'=>array('in',$ids)))->select();

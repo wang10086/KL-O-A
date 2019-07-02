@@ -36,13 +36,12 @@
                                         <input type="text" name="info[title]" id="title" value="{$row.title}"  class="form-control" required />
                                     </div>
 
-                                    <!---------------------------------------------------------->
                                     <div class="form-group col-md-4">
                                         <label>使用时间：</label>
                                         <select class="form-control" name="apply_time">
                                             <option value="" selected disabled>==请选择==</option>
                                             <foreach name="apply_times" key="k" item="v">
-                                                <option value="{$v['year']}">{$v['title']}</option>
+                                                <option value="{$v['year']}" <?php if($apply_time == $v['year']){ echo "selected"; } ?>>{$v['title']}</option>
                                             </foreach>
                                         </select>
                                     </div>
@@ -58,7 +57,7 @@
 
                                     <div class="form-group col-md-4">
                                         <label>适用人群</label>
-                                        <select name="apply" class="form-control">
+                                        <select name="info[age]" class="form-control">
                                             <foreach name="apply" key="k" item="v">
                                                 <option value="{$k}" <?php if ($k == $row['age']) echo 'selected'; ?>>{$v}</option>
                                             </foreach>
@@ -111,7 +110,6 @@
                                             <span class="lm_c"><input type="checkbox" name="business_dept[]" <?php if(in_array($v['id'],$business_dept)){ echo 'checked';} ?>  value="{$v.id}"> {$v.name}</span>
                                         </foreach>
                                     </div>
-                                    <!---------------------------------------------------------->
 
                                     <div class="form-group col-md-12"></div>
                                     <div class="form-group col-md-12">
@@ -150,10 +148,11 @@
                                                     <tbody id="product_tbody">
                                                     <foreach name="product_need" item="v">
                                                         <tr class="expense" id="product_id_{$v.id}">
-                                                            <td><input type="hidden" name="resid[2000{$v.id}][id]" value="{$v.id}" >
-                                                                <input type="hidden" name="costacc[20000{$v.id}][type]" value="{$v.type}">
+                                                            <td><input type="hidden" name="resetid[2000{$v.id}][id]" value="{$v.id}" >
+                                                                <input type="hidden" name="costacc[20000{$v.id}][id]" value="{$v.id}">
                                                                 <input type="hidden" name="costacc[20000{$v.id}][title]" value="{$v.title}">
                                                                 <input type="hidden" name="costacc[20000{$v.id}][product_id]" value="{$v.product_id}">
+                                                                <input type="hidden" name="costacc[20000{$v.id}][total]" value="{$v.total}">
                                                                 <a href="javascript:;" onClick="open_product({$v.product_id},{$v.product.title})">{$v.title}</a></td>
                                                             <td>{$product_type[$v[ptype]]}</td>
                                                             <td>{$subject_fields[$v[subject_field]]}</td>
@@ -204,11 +203,10 @@
                                                     <tbody id="res_tbody">
                                                     <foreach name="res_need" item="v">
                                                         <tr class="expense" id="res_id_{$v.id}">
-                                                            <td><input type="hidden" name="res_ids[2000{$v.id}][id]" value="{$v.id}" >
+                                                            <td><input type="hidden" name="res_ids[2000{$v.id}][res_id]" value="{$v.id}" >
                                                                 <a href="javascript:;" onClick="open_res({$v.res_id},{$v.res.title})">{$v.title}</a></td>
-                                                            <td>{$res_type[$v[ptype]]}</td>
-                                                            <td>{$subject_fields[$v[subject_field]]}</td>
-                                                            <td>{$res_from[$v[from]]}</td>
+                                                            <td>{$in_cas[$v[in_cas]]}</td>
+                                                            <td>{$v[diqu]}</td>
                                                             <td><a href="javascript:;" class="btn btn-danger btn-flat" onclick="delbox('res_id_{$v.id}')">删除</a></td></tr>
                                                         </tr>
                                                     </foreach>
@@ -413,9 +411,9 @@
                 for (var j = 0; j < product.length; j++) {
                     if (product[j].id) {
                         var i = parseInt(Math.random()*100000)+j;
-                        var costacc = '<input type="hidden" name="costacc['+i+'][type]" value="5">' +
-                            '<input type="hidden" name="costacc['+i+'][title]" value="'+product[j].title+'">' +
-                            '<input type="hidden" name="costacc['+i+'][product_id]" value="'+product[j].id+'">';
+                        var costacc = '<input type="hidden" name="costacc['+i+'][title]" value="'+product[j].title+'">' +
+                            '<input type="hidden" name="costacc['+i+'][product_id]" value="'+product[j].id+'">'+
+                            '<input type="hidden" name="costacc['+i+'][total]" class="totalval" />';
                         product_html += '<tr class="expense" id="product_'+i+'">' +
                             '<td>'+costacc+ '<a href="javascript:;" onClick="open_product('+product[j].id+',\''+product[j].title+'\')">'+product[j].title+'</a></td>' +
                             '<td>'+product[j].type+'</td>' +
@@ -447,11 +445,13 @@
                 var cost = $(this).val();
                 var amount = $(this).parent().parent().find('.amount').val();
                 $(this).parent().parent().find('.total').html('&yen;'+accMul(cost,amount));
+                $(this).parent().parent().find('.totalval').val(accMul(cost,amount));
             });
             $(this).find('.amount').blur(function(){
                 var amount = $(this).val();
                 var cost = $(this).parent().parent().find('.cost').val();
                 $(this).parent().parent().find('.total').html('&yen;'+accMul(cost,amount));
+                $(this).parent().parent().find('.totalval').val(accMul(cost,amount));
             });
         });
     }
