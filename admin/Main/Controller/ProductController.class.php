@@ -464,6 +464,7 @@ class ProductController extends BaseController {
 		$where = array();
 		$where['p.id'] = $id;
 		$row =  $db->table('__PRODUCT__ as p')->field('p.*')->where($where)->find();
+        if ($row['disting'] == 1){ $this->standard_product_detail($id); die;}
 		
 		if($row){
 			$where = array();
@@ -1320,7 +1321,7 @@ class ProductController extends BaseController {
         $this->subject_fields           = C('SUBJECT_FIELD');
         $this->product_from             = C('PRODUCT_FROM');
         $this->apply                    = C('APPLY_TO');
-        $this->display();
+        $this->display('standard_product_detail');
     }
 
     //选择科普资源(弹框)

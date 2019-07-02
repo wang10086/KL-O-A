@@ -70,7 +70,7 @@
                                                 <td class="taskOptions">{$v.ok_num}</td>
                                                 <td class="taskOptions">{$v.average}</td>
                                                 <td class="taskOptions">
-                                                    <a href="{:U('Sale/Sale/public_timely_detail',array('tit'=>$v['title'],'year'=>$year,'month'=>$month))}" title="详情" class="btn btn-info btn-smsm"><i class="fa fa-bars"></i></a>
+                                                    <a href="{:U('Sale/public_timely_detail',array('tit'=>$v['title'],'year'=>$year,'month'=>$month))}" title="详情" class="btn btn-info btn-smsm"><i class="fa fa-bars"></i></a>
                                                 </td>
                                             </tr>
                                         </foreach>
@@ -80,7 +80,7 @@
                                             <td class="taskOptions">{$sum.ok_num}</td>
                                             <td class="taskOptions">{$sum.average}</td>
                                             <td class="taskOptions">
-                                                <a href="{:U('Sale/Sale/public_timely_detail',array('tit'=>'合计','year'=>$year,'month'=>$month))}" title="详情" class="btn btn-info btn-smsm"><i class="fa fa-bars"></i></a>
+                                                <a href="{:U('Sale/public_timely_detail',array('tit'=>'合计','year'=>$year,'month'=>$month))}" title="详情" class="btn btn-info btn-smsm"><i class="fa fa-bars"></i></a>
                                             </td>
                                         </tr>
                                     </table>
