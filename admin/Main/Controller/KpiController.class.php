@@ -888,24 +888,26 @@ class KpiController extends BaseController {
 			//执行保存
 			if($editid){
 				
-				$qaqc    = M('qaqc')->find($editid);
+				$qaqc                           = M('qaqc')->find($editid);
+                $explain                        = '编辑品质检查';
 				
 				if($qaqc['status']==0 && ( C('RBAC_SUPER_ADMIN')==cookie('username') || cookie('roleid')==10 ||  cookie('userid')==$qaqc['inc_user_id'])) {
 					
-					$addinfo = M('qaqc')->data($info)->where(array('id'=>$editid))->save();
-					$qaqc    = M('qaqc')->find($editid);
-					$qaqcid  = $editid;
-					$status  = $qaqc['status'];
+					$addinfo                    = M('qaqc')->data($info)->where(array('id'=>$editid))->save();
+					$qaqc                       = M('qaqc')->find($editid);
+					$qaqcid                     = $editid;
+					$status                     = $qaqc['status'];
 				}else{
 					$this->error('您没有权限修改该信息');		
 				}
 			}else{
-				$info['create_time']       = time();
-				$info['status']            = 0;
-				$info['inc_user_id']       = cookie('userid');
-				$info['inc_user_name']     = cookie('name');
-				$qaqcid  = M('qaqc')->add($info);
-				$status  = 0;
+				$info['create_time']            = time();
+				$info['status']                 = 0;
+				$info['inc_user_id']            = cookie('userid');
+				$info['inc_user_name']          = cookie('name');
+				$qaqcid                         = M('qaqc')->add($info);
+				$status                         = 0;
+                $explain                        = '新建品质检查';
 			}
 			
 			
@@ -915,23 +917,23 @@ class KpiController extends BaseController {
 			}
 			foreach($qadata as $k=>$v){
 				if($v['user_name']){
-					$user = getuserinfo($v['user_name']);	
-					$data = array();
-					$data['qaqc_id']      = $qaqcid;
-					$data['user_id']      = $user['userid'];
-					$data['user_name']    = $v['user_name'];
-					$data['type']  		  = $v['type'];
-					$data['month']  	  = $info['month'];
-					$data['score']  	  = $v['score'];
-					$data['remark']  	  = $v['remark'];
-					$data['status']       = $status;
-					$data['update_time']  = time();
+					$user                       = getuserinfo($v['user_name']);
+					$data                       = array();
+					$data['qaqc_id']            = $qaqcid;
+					$data['user_id']            = $user['userid'];
+					$data['user_name']          = $v['user_name'];
+					$data['type']  		        = $v['type'];
+					$data['month']  	        = $info['month'];
+					$data['score']  	        = $v['score'];
+					$data['remark']  	        = $v['remark'];
+					$data['status']             = $status;
+					$data['update_time']        = time();
 					
 					//判断是否存在
-					$where = array();
-					$where['qaqc_id']      = $qaqcid;
-					$where['user_id']      = $v['user_name'];
-					$is = M('qaqc_user')->where($where)->find();
+					$wher                       = array();
+					$where['qaqc_id']           = $qaqcid;
+					$where['user_id']           = $v['user_name'];
+					$is                         = M('qaqc_user')->where($where)->find();
 					if(!$is){
 						M('qaqc_user')->add($data);	
 					}
@@ -939,8 +941,13 @@ class KpiController extends BaseController {
 					
 				}
 			}
-			
-			
+
+            //保存操作记录
+            $record                             = array();
+            $record['qaqc_id']                  = $editid;
+            $record['explain']                  = $explain;
+            $record['type']                     = 1;
+            record($record);
 			
 			$this->success('信息已保存！',I('referer'));
 			

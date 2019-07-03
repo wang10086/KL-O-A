@@ -66,6 +66,7 @@
                                         <if condition="rolemenu(array('Kpi/addqa'))">
                                         <th width="50" class="taskOptions">编辑</th>
                                         </if>
+                                        <th width="50" class="taskOptions">跟进</th>
                                         <if condition="rolemenu(array('Kpi/appqa'))">
                                         <th width="50" class="taskOptions">审核</th>
                                         </if>
@@ -95,6 +96,9 @@
                                         ?>
                                         </td>
                                         </if>
+
+                                        <td></td>
+
                                         <if condition="rolemenu(array('Kpi/appqa'))">
                                         <td class="taskOptions">
                                         <?php 
