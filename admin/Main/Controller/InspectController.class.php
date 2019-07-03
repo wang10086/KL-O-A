@@ -240,6 +240,7 @@ class InspectController extends BaseController{
 
         }
         $this->lists            = $lists;
+        $this->is_kpi_det       = $kpi_opids ? 1 : '';
         $this->display();
     }
 

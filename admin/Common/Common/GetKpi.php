@@ -1138,10 +1138,10 @@ function get_sum_gross_profit($userids,$beginTime,$endTime){
     /**
      * 获取月度公司顾客满意度,本周期评分情况
      */
-    function get_month_satisfaction($v){
+    function get_month_satisfaction($beginTime,$endTime){
         //获取周期所有评分信息
         $where                  = array();
-        $where['s.input_time']	= array('between',array($v['start_date'],$v['end_date']));
+        $where['s.input_time']	= array('between',array($beginTime,$endTime));
         $lists                  = M()->table('__TCS_SCORE__ as s')->field('u.op_id,s.input_time,o.kind,s.id as sid,s.before_sell,s.new_media,s.stay,s.travel,s.content,s.food,s.bus,s.driver,s.guide,s.teacher,s.depth,s.major,s.interest,s.material,s.late,s.manage,s.morality,s.cas_time,s.cas_complete,s.cas_addr')->join('join __TCS_SCORE_USER__ as u on u.id = s.uid','left')->join('__OP__ as o on o.op_id = u.op_id','left')->where($where)->select();
 
         return $lists;
@@ -1169,6 +1169,9 @@ function get_sum_gross_profit($userids,$beginTime,$endTime){
             if ($v['major']         !=0) $zongfen += 5;
             if ($v['interest']      !=0) $zongfen += 5;
             if ($v['material']      !=0) $zongfen += 5;
+            if ($v['late']          !=0) $zongfen += 5;
+            if ($v['manage']        !=0) $zongfen += 5;
+            if ($v['morality']      !=0) $zongfen += 5;
             if ($v['cas_time']      !=0) $zongfen += 5;
             if ($v['cas_complete']  !=0) $zongfen += 5;
             if ($v['cas_addr']      !=0) $zongfen += 5;
@@ -3165,4 +3168,163 @@ function get_yw_department(){
         $where['id']                    = $id;
         $res                            = $db->where($where)->save($data);
         return $res;
+    }
+
+    /**
+     *  单项顾客满意度(不合格处理率)排除总满意度小于90%的团
+     * @param $startTime
+     * @param $endTime
+     * @param string $title
+     * @param string $uid
+     * @return array
+     */
+    function get_unqualify_lg3_data($startTime,$endTime,$title='',$content=''){
+        $unqualify_data                     = get_lg3_list($startTime,$endTime);
+        $sum_list                           = array();
+        $sum_opid                           = array();
+        $sum_num                            = 0;
+        $ok_list                            = array();
+        $ok_opid                            = array();
+        $ok_num                             = 0;
+
+        foreach ($unqualify_data as $k=>$v){
+            $sum_num++;
+            $sum_list[]                     = $v;
+            $sum_opid[]                     = $v['op_id'];
+        }
+        $data                               = array();
+        $data['title']                      = $title;
+        $data['content']                    = $content;
+        $data['sum_num']                    = $sum_num;
+        $data['sum_list']                   = $sum_list;
+        $data['sum_opid']                   = $sum_opid;
+        $data['ok_num']                     = $ok_num;
+        $data['ok_list']                    = $ok_list;
+        $data['ok_opid']                    = $ok_opid;
+        $data['average']                    = $sum_num ? (round($ok_num/$sum_num,4)*100).'%' : '100%';
+        return $data;
+    }
+
+    //少于三星或低于60分；10个工作日处理完成
+    function get_lg3_list($startTime,$endTime){
+        //排除总满意度小于90%的团
+        $lg90percent_data                   = get_unqualify_lg_90percent_data($startTime,$endTime);
+        $lg90percent_opids                  = $lg90percent_data['sum_opid'];
+
+        $where                              = array();
+        $where['s.input_time']	            = array('between',array($startTime,$endTime));
+        $where['u.op_id']                   = array('not in',$lg90percent_opids);
+        $score_lists                        = M()->table('__TCS_SCORE__ as s')->field('u.op_id,s.input_time,o.kind,s.id as sid,s.before_sell,s.new_media,s.stay,s.travel,s.content,s.food,s.bus,s.driver,s.guide,s.teacher,s.depth,s.major,s.interest,s.material,s.late,s.manage,s.morality,s.cas_time,s.cas_complete,s.cas_addr')->join('join __TCS_SCORE_USER__ as u on u.id = s.uid','left')->join('__OP__ as o on o.op_id = u.op_id','left')->where($where)->select();
+
+        $unok_arr                           = array(1,2,3);
+        foreach ($score_lists as $k=>$v){
+            $zongfen                = 0;
+            $defen                  = $v['before_sell']+$v['new_media']+$v['stay']+$v['travel']+$v['content']+$v['food']+$v['bus']+$v['driver']+$v['guide']+$v['teacher']+$v['depth']+$v['major']+$v['interest']+$v['material']+$v['late']+$v['manage']+$v['morality']+$v['cas_time']+$v['cas_complete']+$v['cas_addr'];
+            if ($v['before_sell']   !=0) $zongfen += 5;
+            if ($v['new_media']     !=0) $zongfen += 5;
+            if ($v['stay']          !=0) $zongfen += 5;
+            if ($v['food']          !=0) $zongfen += 5;
+            if ($v['bus']           !=0) $zongfen += 5;
+            if ($v['travel']        !=0) $zongfen += 5;
+            if ($v['content']       !=0) $zongfen += 5;
+            if ($v['driver']        !=0) $zongfen += 5;
+            if ($v['guide']         !=0) $zongfen += 5;
+            if ($v['teacher']       !=0) $zongfen += 5;
+            if ($v['depth']         !=0) $zongfen += 5;
+            if ($v['major']         !=0) $zongfen += 5;
+            if ($v['interest']      !=0) $zongfen += 5;
+            if ($v['material']      !=0) $zongfen += 5;
+            if ($v['late']          !=0) $zongfen += 5;
+            if ($v['manage']        !=0) $zongfen += 5;
+            if ($v['morality']      !=0) $zongfen += 5;
+            if ($v['cas_time']      !=0) $zongfen += 5;
+            if ($v['cas_complete']  !=0) $zongfen += 5;
+            if ($v['cas_addr']      !=0) $zongfen += 5;
+            $score                  = round($defen/$zongfen,2);
+            //单项少于3颗星或低于60分
+            if ($score < 0.8 || (in_array($v['before_sell'],$unok_arr) || in_array($v['new_media'],$unok_arr) || in_array($v['stay'],$unok_arr) || in_array($v['travel'],$unok_arr) || in_array($v['content'],$unok_arr) || in_array($v['food'],$unok_arr) || in_array($v['bus'],$unok_arr) || in_array($v['driver'],$unok_arr) || in_array($v['guide'],$unok_arr) || in_array($v['teacher'],$unok_arr) || in_array($v['depth'],$unok_arr) || in_array($v['major'],$unok_arr) || in_array($v['interest'],$unok_arr) || in_array($v['material'],$unok_arr) || in_array($v['late'],$unok_arr) || in_array($v['manage'],$unok_arr) || in_array($v['morality'],$unok_arr) || in_array($v['cas_time'],$unok_arr) || in_array($v['cas_complete'],$unok_arr) || in_array($v['cas_addr'],$unok_arr))){
+                $unok_list[$k]['score']         = $score;
+                $unok_list[$k]['op_id']         = $v['op_id'];
+            }
+        }
+        return $unok_list;
+    }
+
+    /**
+     *  项目顾客满意度(不合格处理率)
+     * @param $startTime
+     * @param $endTime
+     * @param string $title
+     * @param string $uid
+     * @return array
+     */
+    function get_unqualify_lg_90percent_data($startTime,$endTime,$title='',$content=''){
+        $unqualify_data                     = get_lg_90percent_list($startTime,$endTime);
+        $sum_list                           = array();
+        $sum_opid                           = array();
+        $sum_num                            = 0;
+        $ok_list                            = array();
+        $ok_opid                            = array();
+        $ok_num                             = 0;
+
+        foreach ($unqualify_data as $k=>$v){
+            $sum_num++;
+            $sum_list[]                     = $v;
+            $sum_opid[]                     = $v['op_id'];
+        }
+        $data                               = array();
+        $data['title']                      = $title;
+        $data['content']                    = $content;
+        $data['sum_num']                    = $sum_num;
+        $data['sum_list']                   = $sum_list;
+        $data['sum_opid']                   = $sum_opid;
+        $data['ok_num']                     = $ok_num;
+        $data['ok_list']                    = $ok_list;
+        $data['ok_opid']                    = $ok_opid;
+        $data['average']                    = $sum_num ? (round($ok_num/$sum_num,4)*100).'%' : '100%';
+        return $data;
+    }
+
+    //项目顾客满意度(以项目为基数)	低于90%；10个工作日处理完成
+    function get_lg_90percent_list($startTime,$endTime){
+        $score_lists                        = get_month_satisfaction($startTime,$endTime); //总评分列表
+        $op_ids                             = array_unique(array_column($score_lists,'op_id'));
+
+        $unok_list                          = array();
+        foreach ($op_ids as $value){
+            $zongfen                        = 0;
+            $defen                          = 0;
+            foreach ($score_lists as $k=>$v){
+                if ($v['op_id'] == $value){
+                    $defen                  += $v['before_sell']+$v['new_media']+$v['stay']+$v['travel']+$v['content']+$v['food']+$v['bus']+$v['driver']+$v['guide']+$v['teacher']+$v['depth']+$v['major']+$v['interest']+$v['material']+$v['late']+$v['manage']+$v['morality']+$v['cas_time']+$v['cas_complete']+$v['cas_addr'];
+                    if ($v['before_sell']   !=0) $zongfen += 5;
+                    if ($v['new_media']     !=0) $zongfen += 5;
+                    if ($v['stay']          !=0) $zongfen += 5;
+                    if ($v['food']          !=0) $zongfen += 5;
+                    if ($v['bus']           !=0) $zongfen += 5;
+                    if ($v['travel']        !=0) $zongfen += 5;
+                    if ($v['content']       !=0) $zongfen += 5;
+                    if ($v['driver']        !=0) $zongfen += 5;
+                    if ($v['guide']         !=0) $zongfen += 5;
+                    if ($v['teacher']       !=0) $zongfen += 5;
+                    if ($v['depth']         !=0) $zongfen += 5;
+                    if ($v['major']         !=0) $zongfen += 5;
+                    if ($v['interest']      !=0) $zongfen += 5;
+                    if ($v['material']      !=0) $zongfen += 5;
+                    if ($v['late']          !=0) $zongfen += 5;
+                    if ($v['manage']        !=0) $zongfen += 5;
+                    if ($v['morality']      !=0) $zongfen += 5;
+                    if ($v['cas_time']      !=0) $zongfen += 5;
+                    if ($v['cas_complete']  !=0) $zongfen += 5;
+                    if ($v['cas_addr']      !=0) $zongfen += 5;
+                }
+            }
+            $score                          = round($defen/$zongfen,2);
+            if ($score < 0.8){ //单团满意度得分低于90%计入不合格
+                $unok_list[$value]['score'] = $score;
+                $unok_list[$value]['op_id'] = $value;
+            }
+        }
+
+        return $unok_list;
     }

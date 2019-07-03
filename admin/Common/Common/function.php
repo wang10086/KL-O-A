@@ -3377,7 +3377,7 @@ function updatekpi($month,$user){
 
                         //不合格处理率-安全品控部经理
                         if ($v['quota_id']==215){
-                            $score_lists            = get_month_satisfaction($v); //总评分列表
+                            $score_lists            = get_month_satisfaction($v['start_date'],$v['end_date']); //总评分列表
                             $unok_lists             = get_score_unqualified_lists($score_lists); //不合格评分列表
                             $unok_opids             = array_unique(array_column($unok_lists,'op_id'));
                             $unok_num               = count($unok_opids);
