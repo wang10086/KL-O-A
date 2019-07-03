@@ -1048,6 +1048,18 @@ function opid($day=''){
 	return $opid;
 }
 
+function record($info){
+    $data            = $info;
+    $data['uname']   = cookie('name');
+    $data['time']    = time();
+    $isok            = M('record')->add($data);
+    if($isok){
+        return true;
+    }else{
+        return false;
+    }
+}
+
 
 function op_record($info){
 	$data = array();

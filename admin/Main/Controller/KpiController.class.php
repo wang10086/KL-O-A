@@ -882,7 +882,7 @@ class KpiController extends BaseController {
 			}else{
 				$info['ac_user_id']  = 0;
 			}
-			
+
 			
 			
 			//执行保存
@@ -2039,80 +2039,6 @@ class KpiController extends BaseController {
         $this->display();
     }
 
-    public function public_save(){
-        $savetype                           = trim(I('savetype'));
-        if (isset($_POST['dosubmint']) && $savetype){
-            //保存关键事项
-            if ($savetype == 1){
-                $mod                        = D('Kpi');
-                $db                         = M('kpi_crux');
-                $id                         = I('id');
-                $info                       = I('info');
-                $where                      = array();
-                $where['user_id']           = $info['user_id'];
-                $where['month']             = $info['month'];
-                $where['quota_id']          = 216;
-                $kpi_more_info              = M('kpi_more')->where($where)->find();
-                $info['kpi_id']             = $kpi_more_info['kpi_id'];
-                $info['kpi_more_id']        = $kpi_more_info['id'];
-                $info['standard']           = trim($info['standard']);
-                $info['title']              = trim($info['title']);
-                $info['content']            = trim($info['content']);
-
-                if ($info['year'] && $info['month'] && $info['kpi_id'] && $info['kpi_more_id']){
-                    if ($id){
-                        $res                = $db->where(array('id'=>$id))->save($info);
-                        $operation          = '修改';
-                    }else{
-                        $info['create_user_id']   = session('userid');
-                        $info['create_user_name'] = session('nickname');
-                        $info['create_time']= NOW_TIME;
-                        $res                = $db->add($info);
-                        $operation          = '添加';
-                    }
-                }
-
-                if ($res){
-                    $this->msg              = '<span class="green">保存成功</span>';
-                    $this->time             = 1000;
-                    $record                 = $operation.'关键事项：'.$info['title'];
-                    $mod->save_kpi_record($info['kpi_id'],$record); //保存操作记录
-                }else{
-                    $this->msg              = '<span class="red">保存失败</span>';
-                    $this->time             = 3000;
-                }
-                $this->display('audit_ok');
-            }
-
-            //保存关键事项评分
-            if ($savetype == 2){
-                $mod                        = D('Kpi');
-                $db                         = M('kpi_crux');
-                $id                         = I('id');
-                $info                       = I('info');
-                $info['score']              = trim(str_replace('%','',$info['score']));
-                $info['audit_suggest']      = trim($info['audit_suggest']);
-                $info['audit_user_id']      = session('userid');
-                $info['audit_user_name']    = session('nickname');
-                $info['audit_time']         = NOW_TIME;
-                $info['status']             = 1; //已审批
-                if ($id) $res               = $db->where(array('id'=>$id))->save($info);
-                if ($res){
-                    $this->msg              = '<span class="green">保存成功</span>';
-                    $this->time             = 1000;
-
-                    $list                   = $db->find($id);
-                    $record                 = '关键事项评分：'.$list['title'].'--'.$info['score'].'分';
-                    $mod->save_kpi_record($list['kpi_id'],$record); //保存操作记录
-                }else{
-                    $this->msg              = '<span class="red">保存失败</span>';
-                    $this->time             = 3000;
-                }
-                $this->display('audit_ok');
-            }
-        }
-    }
-
     //关键事项评分
     public function scorecrux(){
         $mod                                = D('Kpi');
@@ -2235,11 +2161,122 @@ class KpiController extends BaseController {
 
     //发布品质报告
     public function public_addqa(){
+        $this->title('发布品质报告');
 
-
+        $this->qaqc_type        = C('QAQC_TYPE');
         $this->display('addqa_public');
     }
 
+    public function public_save(){
+        $savetype                           = trim(I('savetype'));
+        if (isset($_POST['dosubmint']) && $savetype){
+            //保存关键事项
+            if ($savetype == 1){
+                $mod                        = D('Kpi');
+                $db                         = M('kpi_crux');
+                $id                         = I('id');
+                $info                       = I('info');
+                $where                      = array();
+                $where['user_id']           = $info['user_id'];
+                $where['month']             = $info['month'];
+                $where['quota_id']          = 216;
+                $kpi_more_info              = M('kpi_more')->where($where)->find();
+                $info['kpi_id']             = $kpi_more_info['kpi_id'];
+                $info['kpi_more_id']        = $kpi_more_info['id'];
+                $info['standard']           = trim($info['standard']);
+                $info['title']              = trim($info['title']);
+                $info['content']            = trim($info['content']);
+
+                if ($info['year'] && $info['month'] && $info['kpi_id'] && $info['kpi_more_id']){
+                    if ($id){
+                        $res                = $db->where(array('id'=>$id))->save($info);
+                        $operation          = '修改';
+                    }else{
+                        $info['create_user_id']   = session('userid');
+                        $info['create_user_name'] = session('nickname');
+                        $info['create_time']= NOW_TIME;
+                        $res                = $db->add($info);
+                        $operation          = '添加';
+                    }
+                }
+
+                if ($res){
+                    $this->msg              = '<span class="green">保存成功</span>';
+                    $this->time             = 1000;
+                    $record                 = $operation.'关键事项：'.$info['title'];
+                    $mod->save_kpi_record($info['kpi_id'],$record); //保存操作记录
+                }else{
+                    $this->msg              = '<span class="red">保存失败</span>';
+                    $this->time             = 3000;
+                }
+                $this->display('audit_ok');
+            }
+
+            //保存关键事项评分
+            if ($savetype == 2){
+                $mod                        = D('Kpi');
+                $db                         = M('kpi_crux');
+                $id                         = I('id');
+                $info                       = I('info');
+                $info['score']              = trim(str_replace('%','',$info['score']));
+                $info['audit_suggest']      = trim($info['audit_suggest']);
+                $info['audit_user_id']      = session('userid');
+                $info['audit_user_name']    = session('nickname');
+                $info['audit_time']         = NOW_TIME;
+                $info['status']             = 1; //已审批
+                if ($id) $res               = $db->where(array('id'=>$id))->save($info);
+                if ($res){
+                    $this->msg              = '<span class="green">保存成功</span>';
+                    $this->time             = 1000;
+
+                    $list                   = $db->find($id);
+                    $record                 = '关键事项评分：'.$list['title'].'--'.$info['score'].'分';
+                    $mod->save_kpi_record($list['kpi_id'],$record); //保存操作记录
+                }else{
+                    $this->msg              = '<span class="red">保存失败</span>';
+                    $this->time             = 3000;
+                }
+                $this->display('audit_ok');
+            }
+
+            //保存品质检查基本信息
+            if ($savetype == 3){
+                $db                         = M('qaqc');
+                $id                         = I('id');
+                $info                       = I('info');
+                $info['title']              = trim($info['title']);
+                $info['fd_date']            = trim($info['fd_date']);
+                $info['fd_content']         = trim($info['fd_content']);
+                if (!$info['title'])        $this->error('标题不能为空');
+                if (!$info['fd_date'])      $this->error('发现日期不能为空');
+                if (!$info['type'])         $this->error('巡检类型不能为空');
+                if (!$info['fd_content'])   $this->error('问题描述不能为空');
+
+                $info['fd_user_id']         = session('userid'); //发现者
+                $info['fd_user_name']       = session('nickname');
+                $info['inc_user_id']        = session('userid'); //发布者
+                $info['inc_user_name']      = session('nickname');
+                $info['create_time']        = NOW_TIME;
+                if ($id){
+                    $res                    = $db->where(array('id'=>$id))->save($info);
+                    $qaqc_id                = $id;
+                    $explain                = '编辑品质检查';
+                }else{
+                    $res                    = $db->add($info);
+                    $qaqc_id                = $res;
+                    $explain                = '新建品质检查';
+                }
+
+                //保存操作记录
+                $record                     = array();
+                $record['qaqc_id']          = $qaqc_id;
+                $record['explain']          = $explain;
+                $record['type']             = 1;
+                record($record);
+                $res ? $this->success('数据保存成功') : $this->error('数据保存失败');
+            }
+        }
+    }
 	
 	
 	
