@@ -14,7 +14,6 @@
 
                 <!-- Main content -->
                 <section class="content">
-                
                     <div class="row">
                          <!-- right column -->
                         <div class="col-md-12">

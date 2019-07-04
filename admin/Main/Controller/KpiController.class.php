@@ -954,30 +954,22 @@ class KpiController extends BaseController {
 		
 		}else{
 			
-			$id = I('id','');
+			$id                                 = I('id','');
 			if($id){
-				$this->row      = M('qaqc')->find($id);
-				$this->userlist = M('qaqc_user')->where(array('qaqc_id'=>$id))->select();
+				$list                           = M('qaqc')->find($id);
+				$this->row                      = $list;
+				$this->userlist                 = M('qaqc_user')->where(array('qaqc_id'=>$id))->select();
 				
 			}
 			
 			//整理关键字
-			$role = M('role')->GetField('id,role_name',true);
-			$user =  M('account')->where(array('status'=>0))->select();
-			$key = array();
-			foreach($user as $k=>$v){
-				$text = $v['nickname'].'-'.$role[$v['roleid']];
-				$key[$k]['id']         = $v['id'];
-				$key[$k]['user_name']  = $v['nickname'];
-				$key[$k]['pinyin']     = strtopinyin($text);
-				$key[$k]['text']       = $text;
-				$key[$k]['role']       = $v['roleid'];
-				$key[$k]['role_name']  = $role[$v['roleid']];
-			}
-			$this->userkey =  json_encode($key);	
-			
-			$this->display('addqaqc');
-		
+            $this->userkey                      = get_userkey();
+
+            if ($list && $list['kind'] == 1){
+                $this->display('addqa_public');
+            }else{
+                $this->display('addqaqc');
+            }
 		}
 	}
 	
@@ -2178,7 +2170,9 @@ class KpiController extends BaseController {
         $id                                 = I('id',0);
         if (!$id) $this->error('获取数据失败');
         $list                               = $db->where(array('id'=>$id))->find();
+        $userlist                           = M('qaqc_user')->where(array('qaqc_id'=>$id))->select();
 
+        $this->userlist                     = $userlist;
         $this->userkey                      = get_userkey();
         $this->row                          = $list;
         $this->qaqc_type                    = C('QAQC_TYPE');
@@ -2275,6 +2269,7 @@ class KpiController extends BaseController {
                 $info['inc_user_id']        = session('userid'); //发布者
                 $info['inc_user_name']      = session('nickname');
                 $info['create_time']        = NOW_TIME;
+                $info['kind']               = 1; //公司其他人员发布的信息,需要品控部跟进
                 if ($id){
                     $res                    = $db->where(array('id'=>$id))->save($info);
                     $qaqc_id                = $id;
@@ -2296,9 +2291,64 @@ class KpiController extends BaseController {
 
             //保存品控巡检跟进
             if ($savetype == 4){
-                var_dump(I());die;
+                $db                         = M('qaqc');
+                $num                        = 0;
+                $editid                     = I('editid');
+                $info                       = I('info');
+                $qadata                     = I('qadata');
+                if (!$editid) $this->error('保存数据失败');
+
+                //获取相关人员信息
+                $info['rp_user_id']         = $info['rp_user_name'] ? getuserinfo($info['rp_user_name'])['userid'] : 0;
+                $info['ld_user_id']         = $info['ld_user_name'] ? getuserinfo($info['ld_user_name'])['userid'] : 0;
+
+                $info['chen']                   = trim($info['chen']);
+                $info['reason']                 = trim($info['reason']);
+                $info['verif']                  = trim($info['verif']);
+                $info['status']                 = 3; //已跟进处理,待审核
+                $info['handle_time']            = NOW_TIME;
+                $res                            = $db -> where(array('id'=>$editid))->save($info);
+                if ($res) $num++;
+
+                //保存相关人员信息
+                if(M('qaqc_user')->where(array('qaqc_id'=>$editid))->find()){
+                    M('qaqc_user')->where(array('qaqc_id'=>$editid))->delete();
+                }
+                foreach($qadata as $k=>$v){
+                    if($v['user_name']){
+                        $user                       = getuserinfo($v['user_name']);
+                        $data                       = array();
+                        $data['qaqc_id']            = $editid;
+                        $data['user_id']            = $user['userid'];
+                        $data['user_name']          = $v['user_name'];
+                        $data['type']  		        = $v['type'];
+                        $data['month']  	        = $info['month'];
+                        $data['score']  	        = $v['score'];
+                        $data['remark']  	        = $v['remark'];
+                        $data['status']             = 0;
+                        $data['update_time']        = time();
+
+                        //判断是否存在
+                        $where                      = array();
+                        $where['qaqc_id']           = $editid;
+                        $where['user_id']           = $v['user_name'];
+                        $is                         = M('qaqc_user')->where($where)->find();
+                        if(!$is){
+                            M('qaqc_user')->add($data);
+                        }
+                    }
+                }
+
+                //保存操作记录
+                $record                             = array();
+                $record['qaqc_id']                  = $editid;
+                $record['explain']                  = '跟进处理巡检记录';
+                $record['type']                     = 1;
+                record($record);
+
+                $this->success('信息已保存！',I('referer')?I('referer'):U('Kpi/qa'));
+
             }
-            die('bbb');
         }
     }
 

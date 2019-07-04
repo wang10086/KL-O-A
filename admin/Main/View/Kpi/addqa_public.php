@@ -43,7 +43,7 @@
                                         </div>
 
                                         <div class="form-group col-md-6">
-                                            <label>发现日期：</label><input type="text" name="info[fd_date]" class="form-control inputdate"  value="<?php if($row['fd_date']){ echo date('Y-m-d',$row['fd_date']);} ?>" required />
+                                            <label>发现日期：</label><input type="text" name="info[fd_date]" class="form-control inputdate"  value="{$row.fd_date}" required />
                                         </div>
 
                                         <div class="form-group box-float-6">

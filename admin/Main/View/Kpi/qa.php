@@ -66,7 +66,9 @@
                                         <if condition="rolemenu(array('Kpi/addqa'))">
                                         <th width="50" class="taskOptions">编辑</th>
                                         </if>
+                                        <if condition="rolemenu(array('Kpi/handle'))">
                                         <th width="50" class="taskOptions">跟进</th>
+                                        </if>
                                         <if condition="rolemenu(array('Kpi/appqa'))">
                                         <th width="50" class="taskOptions">审核</th>
                                         </if>
@@ -87,24 +89,28 @@
                                         <td><if condition="$row['create_time']">{$row.create_time|date='Y-m-d H:i',###}</if></td>
                                         <if condition="rolemenu(array('Kpi/addqa'))">
                                         <td class="taskOptions">
-                                        <?php 
+                                        <?php
                                         if($row['status']==0 && ( C('RBAC_SUPER_ADMIN')==cookie('username') || cookie('roleid')==10 ||  cookie('userid')==$row['inc_user_id'])) {
                                         ?>
                                         <a href="{:U('Kpi/addqa',array('id'=>$row['id']))}"  title="修改" class="btn btn-info btn-smsm"><i class="fa fa-pencil"></i></a>
-                                        <?php 
+                                        <?php
                                         }
                                         ?>
                                         </td>
                                         </if>
 
-                                        <td class="taskOptions">
-                                            <a href="{:U('Kpi/handle',array('id'=>$row['id']))}" title="跟进" class="btn btn-info btn-smsm"><i class="fa fa-wrench"></i></a>
-                                        </td>
+                                        <if condition="rolemenu(array('Kpi/handle'))">
+                                            <td class="taskOptions">
+                                                <?php if (rolemenu(array('Kpi/handle')) && in_array($row['status'],array(0,3))){ ?>
+                                                    <a href="{:U('Kpi/handle',array('id'=>$row['id']))}" title="跟进" class="btn btn-info btn-smsm"><i class="fa fa-wrench"></i></a>
+                                                <?php } ?>
+                                            </td>
+                                        </if>
 
                                         <if condition="rolemenu(array('Kpi/appqa'))">
                                         <td class="taskOptions">
-                                        <?php 
-                                        if($row['status']==0 && ( C('RBAC_SUPER_ADMIN')==cookie('username') || cookie('roleid')==10 || cookie('userid')==38 || cookie('userid')==32 || cookie('userid')==12 || cookie('userid')==13 ) ) {
+                                        <?php
+                                        if((($row['status']==0 && $row['kind']==0) || ($row['status']==3 && $row['kind']==1)) && ( C('RBAC_SUPER_ADMIN')==cookie('username') || cookie('roleid')==10 || cookie('userid')==38 || cookie('userid')==32 || cookie('userid')==12 || cookie('userid')==13 ) ) {
                                         ?>
                                         <a href="{:U('Kpi/appqa',array('id'=>$row['id']))}"  title="审核" class="btn btn-success btn-smsm"><i class="fa fa-check"></i></a>
                                         <?php 
