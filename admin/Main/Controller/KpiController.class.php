@@ -1066,11 +1066,15 @@ class KpiController extends BaseController {
 				$source_id   = $qaqcid;
 				send_notice($title,$content,$url,$source,$source_id);
 			}
-			
+
+            //保存操作记录
+            $record                             = array();
+            $record['qaqc_id']                  = $editid;
+            $record['explain']                  = '审核巡检记录';
+            $record['type']                     = 1;
+            record($record);
 			
 			$this->success('已审批！',I('referer'));
-			
-		
 		}else{
 			
 			$id = I('id','');
@@ -1154,7 +1158,13 @@ class KpiController extends BaseController {
 		
 		
 		M('notice')->where(array('source'=>1,'source_id'=>$id))->delete();
-		
+
+        //保存操作记录
+        $record                             = array();
+        $record['qaqc_id']                  = $id;
+        $record['explain']                  = '撤销巡检记录';
+        $record['type']                     = 1;
+        record($record);
 		
 		$this->success('撤销成功！');
 		
@@ -2278,6 +2288,19 @@ class KpiController extends BaseController {
                     $res                    = $db->add($info);
                     $qaqc_id                = $res;
                     $explain                = '新建品质检查';
+
+                    //系统消息提醒
+                    $where                  = array();
+                    $where['status']        = 0; //在职
+                    $where['roleid']        = 60; //安全品控部经理
+                    $resive_uid             = M('account')->where($where)->getField('id');
+                    $uid                    = session('userid');
+                    $title                  = '您有来自【'.session('nickname').'】的品质检查信息，请及时跟进!';
+                    $content                = '品质报告：'.$info['title'];
+                    $url                    = U('Kpi/handle',array('id'=>$res));
+                    $user                   = '['.$resive_uid.']';
+                    $roleid                 = '';
+                    send_msg($uid,$title,$content,$url,$user,$roleid);
                 }
 
                 //保存操作记录

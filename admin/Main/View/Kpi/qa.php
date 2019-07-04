@@ -101,7 +101,7 @@
 
                                         <if condition="rolemenu(array('Kpi/handle'))">
                                             <td class="taskOptions">
-                                                <?php if (rolemenu(array('Kpi/handle')) && in_array($row['status'],array(0,3))){ ?>
+                                                <?php if (rolemenu(array('Kpi/handle')) && in_array($row['status'],array(0,3)) && $row['kind'] ==1){ ?>
                                                     <a href="{:U('Kpi/handle',array('id'=>$row['id']))}" title="跟进" class="btn btn-info btn-smsm"><i class="fa fa-wrench"></i></a>
                                                 <?php } ?>
                                             </td>
