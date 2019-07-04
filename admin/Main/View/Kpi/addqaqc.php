@@ -19,7 +19,7 @@
                          <!-- right column -->
                         <div class="col-md-12">
                             <!-- general form elements disabled -->
-                            <form method="post" action="{:U('Kpi/addqa')}" name="myform" id="myform">
+                            <form method="post" action="{:U('Kpi/addqa')}" name="myform" id="myform" onsubmit="return submitBefore()">
                 			<input type="hidden" name="dosubmit" value="1">
                 			<input type="hidden" name="editid" value="{$row.id}" >
                             <input type="hidden" name="referer" value="<?php echo $_SERVER['HTTP_REFERER']; ?>" />
@@ -30,14 +30,36 @@
                                 </div><!-- /.box-header -->
                                 <div class="box-body">
                                     <div class="content">
-                                        <div class="form-group box-float-8">
+                                        <div class="form-group box-float-12">
                                             <label>标题</label> 
                                             <input type="text" name="info[title]" value="{$row.title}" class="form-control" placeholder="如：关于对某某的某原因的奖惩" />
                                         </div>
+
                                         <div class="form-group box-float-4">
                                             <label>计入绩效月份</label> 
                                             <input type="text" name="info[month]"  value="{$row.month}"  class="form-control monthly"/>
                                         </div>
+
+                                        <div class="form-group box-float-4">
+                                            <label>记录属性</label>
+                                            <select name="info[is_op]" class="form-control"  onchange="show_op($(this).val())" required>
+                                                <option value="" selected disabled>==请选择==</option>
+                                                <option value="0" <?php if ($row['is_op'] == 0) echo 'selected'; ?>>非团巡检</option>
+                                                <option value="1" <?php if ($row['is_op'] == 1) echo 'selected'; ?>>团内巡检</option>
+                                            </select>
+                                        </div>
+
+                                        <div class="form-group box-float-4" id="noop">
+                                            <label>记录人员</label>
+                                            <input type="text"   name="" value="{:session('nickname')}" class="form-control" readonly />
+                                        </div>
+
+                                        <div class="form-group box-float-4" id="isop">
+                                            <label>团号</label>
+                                            <input type="text" name="info[group_id]" value="{$row.group_id}" class="form-control" onblur="check_group_id($(this).val())" />
+                                            <input type="hidden" name="info[op_id]" value="{$row.op_id}" id="op_id">
+                                        </div>
+
                                         <div class="form-group box-float-4">
                                             <label>责任人员</label>
                                             <input type="text"   name="info[rp_user_name]" value="{$row.rp_user_name}" class="form-control selectuser" />
@@ -68,7 +90,6 @@
                                             <label>陪同人员</label>
                                             <input type="text" name="info[ac_user_name]" value="{$row.ac_user_name}"  class="form-control selectuser" />
                                         </div>
-                                        
                                         
                                         <div class="form-group box-float-12">
                                             <label>相关事实陈述及适用规定条款</label>
@@ -145,7 +166,7 @@
                            
                            <div class="box-footer clearfix">
                                 <div style="width:100%; text-align:center;">
-	                            <button type="submit" class="btn btn-info btn-lg" id="lrpd" onclick="return checkForm();">保存</button>
+	                            <button type="submit" class="btn btn-info btn-lg" id="lrpd" >保存</button>
 	                            </div>
 	                            
                               </div>
@@ -166,6 +187,18 @@
 
 	$(document).ready(function(e) {
         selectuser();
+
+        let group_id    = "<?php echo $row['group_id']?$row['group_id']:0; ?>";
+        if (group_id){
+            $('#isop').show();
+            $('#noop').hide();
+            $('#isop').attr('required',true);
+        }else{
+            $('#isop').hide();
+            $('#noop').show();
+            $('#isop').removeAttr('required');
+            $('#op_id').val('');
+        }
     });
 	
 	function selectuser(){
@@ -217,6 +250,51 @@
 		$('#'+obj).remove();
 		orderno();
 	}
+
+	function show_op(res) {
+        if (res == 1){
+            $('#noop').hide();
+            $('#isop').show();
+            $('#isop').attr('required',true);
+        }else{
+            $('#isop').hide();
+            $('#noop').show();
+            $('#isop').removeAttr('required');
+        }
+    }
+
+    function check_group_id(group_id) {
+        if (group_id){
+            $.ajax({
+                type : "POST",
+                url  : "<?php echo U('Ajax/get_opid') ?>",
+                dataType : 'json',
+                data : {group_id:group_id},
+                success : function (opid) {
+                    if (opid){
+                       $('#op_id').val(opid);
+                    }else{
+                        art_show_msg('团号填写错误',3);
+                    }
+                },
+                error : function(){
+                    art_show_msg('连接失败',3);
+                    return false;
+                }
+            });
+        }else {
+            art_show_msg('请输入如团号',3);
+            return false;
+        }
+    }
+
+    function submitBefore() {
+        var title   = $('input[name="info[title]"]').val().trim();
+        var isop    = $('select[name="info[is_op]"]').val();
+        var opid    = $('#op_id').val();
+        if (!title) { art_show_msg('标题不能为空',3); return false; }
+        if (isop == 1 && !opid) {  art_show_msg('团号信息错误',3); return false;  }
+    }
 	
 </script>	
 

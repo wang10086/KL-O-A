@@ -856,6 +856,12 @@ class KpiController extends BaseController {
 
             $info['title']          = trim($info['title']);
 			if (!$info['title'])    $this->error('标题不能为空');
+            if ($info['is_op'] == 0){
+                $info['group_id']   = 0;
+                $info['op_id']      = 0;
+            }else{
+                if (!$info['op_id']) $this->error('团号信息错误');
+            }
 			
 			//获取相关人员信息
 			if($info['rp_user_name']){

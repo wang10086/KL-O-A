@@ -1622,7 +1622,7 @@ class AjaxController extends Controller {
     }
 
     public function get_opid(){
-        $group_id   = I('group_id');
+        $group_id   = trim(I('group_id'));
         $opid       = M('op')->where(array('group_id'=>$group_id))->getField('op_id');
         $this->ajaxReturn($opid);
     }
