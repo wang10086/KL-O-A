@@ -1060,6 +1060,14 @@ function record($info){
     }
 }
 
+function get_public_record($field,$id){
+    $db                 = M('record');
+    $where              = array();
+    $where[$field]      = $id;
+    $lists              = $db->where($where)->select();
+    return $lists;
+}
+
 
 function op_record($info){
 	$data = array();

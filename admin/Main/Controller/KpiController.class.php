@@ -950,7 +950,7 @@ class KpiController extends BaseController {
 
             //保存操作记录
             $record                             = array();
-            $record['qaqc_id']                  = $editid;
+            $record['qaqc_id']                  = $qaqcid;
             $record['explain']                  = $explain;
             $record['type']                     = 1;
             record($record);
@@ -1139,7 +1139,8 @@ class KpiController extends BaseController {
 			$this->userlist    = M('qaqc_user')->where(array('qaqc_id'=>$id))->select();
 			
 			$this->pdca        = M('pdca')->find($row['pdcaid']);
-			
+            $record_list       = get_public_record('qaqc_id',$id);
+            $this->records     = $record_list;
 		}else{
 			echo '<script>art_show_msgd(\'品质检查信息不存在\');</script>';	
 		}

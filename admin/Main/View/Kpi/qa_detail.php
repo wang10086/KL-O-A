@@ -61,6 +61,25 @@
             	</foreach>
             </table>
         </div>
+
+        <?php if ($row['id'] > 97 ){ ?>
+        <div style="margin:15px; ">
+            <table class="table" >
+                <tr>
+                    <th style="border-bottom:2px solid #f39c12; font-weight:bold;" width="160">操作时间</th>
+                    <th style="border-bottom:2px solid #f39c12; font-weight:bold;" width="100">操作人</th>
+                    <th style="border-bottom:2px solid #f39c12; font-weight:bold;" width="500">操作说明</th>
+                </tr>
+                <foreach name="records" item="v">
+                    <tr>
+                        <td style="padding:20px 0 0 0">{$v.time|date='Y-m-d H:i:s',###}</td>
+                        <td style="padding:20px 0 0 0">{$v.uname}</td>
+                        <td style="padding:20px 0 0 0">{$v.explain}</td>
+                    </tr>
+                </foreach>
+            </table>
+        </div>
+        <?php } ?>
                              
     </div>                  
     
