@@ -2152,26 +2152,37 @@ class KpiController extends BaseController {
 
    //获取相关二维码
     public function public_qrcode(){
-        $uid                    = I('uid');
-        $title                  = trim(I('tit'));
-        $quota_id               = I('quota_id');
+        $uid                                = I('uid');
+        $title                              = trim(I('tit'));
+        $quota_id                           = I('quota_id');
 
-        $server_name            = $_SERVER['SERVER_NAME'];
-        $this->url              = "http://".$server_name.U('Score/kpi_score',array('uid'=>$uid,'tit'=>$title,'quota_id'=>$quota_id));
-        $this->title            = $title;
+        $server_name                        = $_SERVER['SERVER_NAME'];
+        $this->url                          = "http://".$server_name.U('Score/kpi_score',array('uid'=>$uid,'tit'=>$title,'quota_id'=>$quota_id));
+        $this->title                        = $title;
         $this->display('qrcode');
     }
-	
-	public function test(){
-		P(team_new_customers(35,array(strtotime('2018-01-01'),strtotime('2018-01-25'))));
-	}
 
     //发布品质报告
     public function public_addqa(){
         $this->title('发布品质报告');
 
-        $this->qaqc_type        = C('QAQC_TYPE');
+        $this->userkey                      = get_userkey();
+        $this->qaqc_type                    = C('QAQC_TYPE');
         $this->display('addqa_public');
+    }
+
+    //跟进处理
+    public function handle(){
+        $this->title('品质检查跟进处理');
+        $db                                 = M('qaqc');
+        $id                                 = I('id',0);
+        if (!$id) $this->error('获取数据失败');
+        $list                               = $db->where(array('id'=>$id))->find();
+
+        $this->userkey                      = get_userkey();
+        $this->row                          = $list;
+        $this->qaqc_type                    = C('QAQC_TYPE');
+        $this->display();
     }
 
     public function public_save(){
@@ -2282,9 +2293,19 @@ class KpiController extends BaseController {
                 record($record);
                 $res ? $this->success('数据保存成功') : $this->error('数据保存失败');
             }
+
+            //保存品控巡检跟进
+            if ($savetype == 4){
+                var_dump(I());die;
+            }
+            die('bbb');
         }
     }
-	
-	
+
+
+
+    public function test(){
+        P(team_new_customers(35,array(strtotime('2018-01-01'),strtotime('2018-01-25'))));
+    }
 	
 }

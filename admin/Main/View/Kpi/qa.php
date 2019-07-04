@@ -97,7 +97,9 @@
                                         </td>
                                         </if>
 
-                                        <td></td>
+                                        <td class="taskOptions">
+                                            <a href="{:U('Kpi/handle',array('id'=>$row['id']))}" title="跟进" class="btn btn-info btn-smsm"><i class="fa fa-wrench"></i></a>
+                                        </td>
 
                                         <if condition="rolemenu(array('Kpi/appqa'))">
                                         <td class="taskOptions">

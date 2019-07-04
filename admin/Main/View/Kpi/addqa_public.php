@@ -28,7 +28,7 @@
                                 <div class="box-body">
                                     <div class="content">
 
-                                        <div class="form-group col-md-12">
+                                        <div class="form-group col-md-6">
                                             <label>巡检标题：</label><input type="text" name="info[title]" class="form-control" value="{$row.title}" required />
                                         </div>
 
@@ -46,9 +46,11 @@
                                             <label>发现日期：</label><input type="text" name="info[fd_date]" class="form-control inputdate"  value="<?php if($row['fd_date']){ echo date('Y-m-d',$row['fd_date']);} ?>" required />
                                         </div>
 
-                                        <!--<div class="form-group col-md-6">
-                                            <label>相关部门：</label><input type="text" name="info[liable_uname]" class="form-control keywords_user"  value="{$row.liable_uname}" required />
-                                        </div>-->
+                                        <div class="form-group box-float-6">
+                                            <label>陪同人员</label>
+                                            <input type="text" name="info[ac_user_name]" value="{$row.ac_user_name}" id="ac_user_name" class="form-control" />
+                                            <input type="hidden" name="info[ac_user_id]" value="{$row.ac_user_id}"  id="ac_user_id" class="form-control" />
+                                        </div>
                                         
                                         <div class="form-group col-md-12">
                                             <label>问题描述：</label>
@@ -79,64 +81,9 @@
 
 <script>
 	$(document).ready(function(e) {
-		
-		
 		var keywords = <?php echo $userkey; ?>;
-		
-		$(".keywords_user").autocomplete(keywords, {
-			 matchContains: true,
-			 highlightItem: false,
-			 formatItem: function(row, i, max, term) {
-				 return '<span style=" display:none">'+row.pinyin+'</span>'+row.text;
-			 },
-			 formatResult: function(row) {
-				 return row.user_name;
-			 }
-		}).result(function(event, item) {
-		   $('#user_id').val(item.id);
-		   $('#dept_id').val(item.role);
-		   $('#dept_name').val(item.role_name);
-		});
-		
-	
-		$('#problemcheckbox').find('ins').each(function(index, element) {
-			$(this).click(function(){
-				if(index==0){
-					$('.problembox').hide();
-				}else{
-					$('.problembox').show();
-				}
-			})
-		});
-		
-		/*
-		$('#issolvecheckbox').find('ins').each(function(index, element) {
-			$(this).click(function(){
-				if(index==0){
-					$('.issolvebox').hide();
-				}else{
-					$('.issolvebox').show();
-				}
-			})
-		});
-		*/
+        autocomplete_id('ac_user_name','ac_user_id',keywords);
 	});
-       
-        
-	
-	function selectkinds(obj){
-		var k = $(obj).val();
-		if(k==1){
-			$('.ins_bus').show();
-			$('.ins_dept').hide();
-		}else{
-			$('.ins_bus').hide();
-			$('.ins_dept').show();
-		}
-	}
-	
-	
-	
-	
+
 </script>
 		

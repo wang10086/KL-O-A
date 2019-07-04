@@ -2503,13 +2503,10 @@ class FinanceController extends BaseController {
         $this->record   = D('Finance')->get_record($jiekuan['jkd_id']);
 
         //审核人信息
-        if ($jiekuan['manager_userid']==cookie('userid')){
-            $this->audit_usertype = 1;  //部门负责人
-        }elseif($jiekuan['ys_audit_userid']==cookie('userid')){
-            $this->audit_usertype = 2;  //部门分管领导
-        }elseif ($jiekuan['cw_audit_userid']==cookie('userid')){
-            $this->audit_usertype = 3;
-        }
+        if ($jiekuan['cw_audit_userid']==cookie('userid') && $audit_userinfo['cw_audit_status'] == 0) $this->audit_usertype = 3;    //财务
+        if ($jiekuan['ys_audit_userid']==cookie('userid') && $audit_userinfo['ys_audit_status'] == 0) $this->audit_usertype = 2;    //部门分管领导
+        if ($jiekuan['manager_userid']==cookie('userid') && $audit_userinfo['manager_audit_status'] == 0) $this->audit_usertype = 1; //部门主管
+
         $this->company  = C('COMPANY');
         $this->display();
     }

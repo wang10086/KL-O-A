@@ -29,7 +29,7 @@ function autocomplete_id(username,userid,keywords){
 			return '<span style=" display:none">'+row.pinyin+'</span>'+row.text;
 		},
 		formatResult: function(row) {
-			return row.text;
+			return row.user_name;
 		}
 	}).result(function (event, item) {
 		$("#"+userid+"").val(item.id);
