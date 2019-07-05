@@ -3210,6 +3210,7 @@ function get_yw_department(){
         $data['sum_opid']                   = $sum_opid;
         $data['ok_list']                    = $ok_list;
         $data['sum_list']                   = $sum_list;
+        $data['url']                        = U('Inspect/public_unqualify_detail',array('isop'=>1,'opids'=>implode(',',$sum_opid)));
         return $data;
     }
 
@@ -3309,6 +3310,7 @@ function get_yw_department(){
         $data['sum_opid']                   = $sum_opid;
         $data['ok_list']                    = $ok_list;
         $data['sum_list']                   = $sum_list;
+        $data['url']                        = U('Inspect/public_unqualify_detail',array('isop'=>1,'opids'=>implode(',',$sum_opid)));
         return $data;
     }
 
@@ -3414,8 +3416,10 @@ function get_yw_department(){
         $sum_num                            = 0;
         $ok_list                            = array();
         $ok_num                             = 0;
+        $ids                                = array();
 
         foreach ($unqualify_data as $k=>$v){
+            $ids[]                          = $v['id'];
             $sum_num++;
             $sum_list[]                     = $v;
             if ($v['handle_time'] != 0){ //跟进处理时间不为0
@@ -3431,6 +3435,7 @@ function get_yw_department(){
         $data['average']                    = $sum_num ? (round($ok_num/$sum_num,4)*100).'%' : '100%';
         $data['ok_list']                    = $ok_list;
         $data['sum_list']                   = $sum_list;
+        $data['url']                        = U('Inspect/public_unqualify_detail',array('ids'=>implode(',',$ids)));
         return $data;
     }
 
@@ -3455,8 +3460,10 @@ function get_yw_department(){
         $sum_num                            = 0;
         $ok_list                            = array();
         $ok_num                             = 0;
+        $ids                                = array();
 
         foreach ($unqualify_data as $k=>$v){
+            $ids[]                          = $v['id'];
             $sum_num++;
             $sum_list[]                     = $v;
             if ($v['handle_time'] != 0){ //跟进处理时间不为0
@@ -3472,6 +3479,7 @@ function get_yw_department(){
         $data['average']                    = $sum_num ? (round($ok_num/$sum_num,4)*100).'%' : '100%';
         $data['ok_list']                    = $ok_list;
         $data['sum_list']                   = $sum_list;
+        $data['url']                        = U('Inspect/public_unqualify_detail',array('ids'=>implode(',',$ids)));
         return $data;
     }
 
@@ -3496,8 +3504,10 @@ function get_yw_department(){
         $sum_num                            = 0;
         $ok_list                            = array();
         $ok_num                             = 0;
+        $ids                                = array();
 
         foreach ($unqualify_data as $k=>$v){
+            $ids[]                          = $v['id'];
             $sum_num++;
             $sum_list[]                     = $v;
             if ($v['handle_time'] != 0){ //跟进处理时间不为0
@@ -3513,6 +3523,7 @@ function get_yw_department(){
         $data['average']                    = $sum_num ? (round($ok_num/$sum_num,4)*100).'%' : '100%';
         $data['ok_list']                    = $ok_list;
         $data['sum_list']                   = $sum_list;
+        $data['url']                        = U('Inspect/public_unqualify_detail',array('ids'=>implode(',',$ids)));
         return $data;
     }
 
@@ -3537,8 +3548,10 @@ function get_yw_department(){
         $sum_num                            = 0;
         $ok_list                            = array();
         $ok_num                             = 0;
+        $ids                                = array();
 
         foreach ($unqualify_data as $k=>$v){
+            $ids[]                          = $v['id'];
             $sum_num++;
             $sum_list[]                     = $v;
             if ($v['handle_time'] != 0){ //跟进处理时间不为0
@@ -3554,6 +3567,7 @@ function get_yw_department(){
         $data['average']                    = $sum_num ? (round($ok_num/$sum_num,4)*100).'%' : '100%';
         $data['ok_list']                    = $ok_list;
         $data['sum_list']                   = $sum_list;
+        $data['url']                        = U('Inspect/public_unqualify_detail',array('ids'=>implode(',',$ids)));
         return $data;
     }
 

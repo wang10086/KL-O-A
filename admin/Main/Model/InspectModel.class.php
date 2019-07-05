@@ -71,14 +71,6 @@ class InspectModel extends Model{
      * @return array
      */
     public function get_unqualify_data($startTime,$endTime){
-        /*
-         * '单项顾客满意度' => string '少于三星或低于60分；10个工作日处理完成' (length=55)
-          '项目顾客满意度' => string '低于90%；10个工作日处理完成' (length=38)
-          '顾客有效投诉' => string '是指外部顾客对公司的有效投诉；10个工作日处理完成' (length=71)
-          '安全责任事故' => string '是指发生人身伤亡或财产损失在2000元以上的责任事故；10个工作日处理完成' (length=99)
-          '公司内部有效投诉' => string '是指公司员工对他人或他部门的有效投诉；5个工作日处理完成' (length=82)
-          '品质检查' => string '安全品控部品质检查、公司组织的专项检查和各级领导发现的不合格项目；5个工作日处理完成' (length=124)
-         * */
         $quota                          = get_timely(2); //1=>不合格处理率
         $quota                          = array_column($quota,'content','title');
         $data1                          = get_unqualify_lg3_data($startTime,$endTime,'单项顾客满意度',$quota['单项顾客满意度']);
@@ -108,6 +100,39 @@ class InspectModel extends Model{
         $info['ok_num']                 = $ok_num;
         $info['average']                = $average;
         return $info;
+    }
+
+    //获取团内的不合格处理详情
+    public function get_op_unqualify_list($opids=''){
+        if ($opids) $opids              = explode(',',$opids);
+        $where                          = array();
+        $where['o.op_id']               = array('in',$opids);
+        $field                          = 'o.op_id,o.group_id,o.project,o.create_user_name,q.id as qaqc_id,q.title,q.status,q.handle_time,q.ex_time';
+        $op_lists                       = M()->table('__OP__ as o')->join('__QAQC__ as q on q.op_id = o.op_id','left')->where($where)->field($field)->select();
+        foreach ($op_lists as $k=>$v){
+            if (!$v['qaqc_id']){
+                $op_lists[$k]['show_stu']= '<span class="red">未处理</span>';
+            }else{
+                $op_lists[$k]['show_stu']= '<span class="green">已处理</span>';
+            }
+        }
+        return $op_lists;
+    }
+
+    //获取非团的不合格处理详情
+    public function get_nop_unqualify_list($ids=''){
+        if ($ids) $opids                = explode(',',$ids);
+        $where                          = array();
+        $where['id']                    = array('in',$ids);
+        $lists                          = M('qaqc')->where($where)->select();
+        foreach ($lists as $k=>$v){
+            if ($v['handle_time'] == 0){
+                $lists[$k]['show_stu']  = '<span class="red">未处理</span>';
+            }else{
+                $lists[$k]['show_stu']  = '<span class="green">已处理</span>';
+            }
+        }
+        return $lists;
     }
 
 }

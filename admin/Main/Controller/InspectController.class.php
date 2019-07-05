@@ -1167,6 +1167,25 @@ class InspectController extends BaseController{
         }
     }
 
+    //不合格处理率详情
+    public function public_unqualify_detail(){
+        $this->title('不合格处理率详情');
+        $isop                   = I('isop','');
+        $opids                  = I('opids','');
+        $ids                    = I('ids','');
+        $mod                    = D('Inspect');
+
+        if ($isop){ //团内
+            $lists              = $mod -> get_op_unqualify_list($opids);
+            $this->lists        = $lists;
+            $this->display('unqualify_detail_op');
+        }else{
+            $lists              = $mod -> get_nop_unqualify_list($ids);
+            $this->lists        = $lists;
+            $this->display('unqualify_detail_nop');
+        }
+    }
+
     public function public_save(){
         $savetype                   = I('savetype');
         if (isset($_POST['dosubmint']) && $savetype){

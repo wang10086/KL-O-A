@@ -73,8 +73,7 @@
                                                 <td class="taskOptions">{$v.ok_num}</td>
                                                 <td class="taskOptions">{$v.average}</td>
                                                 <td class="taskOptions">
-                                                    <!--<a href="{:U('Sale/public_timely_detail',array('tit'=>$v['title'],'year'=>$year,'month'=>$month))}" title="详情" class="btn btn-info btn-smsm"><i class="fa fa-bars"></i></a>-->
-                                                    <a href="javascript:;" title="详情" class="btn btn-info btn-smsm"><i class="fa fa-bars"></i></a>
+                                                    <a href="{$v.url}" title="详情" class="btn btn-info btn-smsm"><i class="fa fa-bars"></i></a>
                                                 </td>
                                             </tr>
                                         </foreach>
