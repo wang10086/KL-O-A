@@ -121,7 +121,7 @@
                                         <if condition="rolemenu(array('Kpi/revoke'))">
                                         <td class="taskOptions">
                                         <?php 
-                                        if($row['status']==1 && ( C('RBAC_SUPER_ADMIN')==cookie('username') || cookie('roleid')==10 || cookie('userid')==38 || cookie('userid')==32 || cookie('userid')==12 || cookie('userid')==13 || cookie('userid')==26 ) ) {
+                                        if(($row['status']==1 && in_array(cookie('userid'),array(12,13,26,38,32))) ||(C('RBAC_SUPER_ADMIN')==cookie('username') || cookie('roleid')==10)) {
                                         ?>
                                         <button onClick="javascript:ConfirmDel('{:U('Kpi/revoke',array('id'=>$row['id']))}','您真的要撤销吗？')" title="删除" class="btn btn-warning btn-smsm"><i class="fa fa-reply"></i></button>
                                         <?php 

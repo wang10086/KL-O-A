@@ -3179,29 +3179,37 @@ function get_yw_department(){
      * @return array
      */
     function get_unqualify_lg3_data($startTime,$endTime,$title='',$content=''){
-        $unqualify_data                     = get_lg3_list($startTime,$endTime);
+        $unqualify_data                     = get_lg3_list($startTime,$endTime); //十个工作日前的不合格团
         $sum_list                           = array();
         $sum_opid                           = array();
         $sum_num                            = 0;
         $ok_list                            = array();
         $ok_opid                            = array();
         $ok_num                             = 0;
+        $solve_lists                        = get_solve_op_list($startTime,$endTime);
 
         foreach ($unqualify_data as $k=>$v){
             $sum_num++;
             $sum_list[]                     = $v;
             $sum_opid[]                     = $v['op_id'];
+            foreach ($solve_lists as $key=>$value){
+                if ($v['op_id'] == $value['op_id']){
+                    $ok_num++;
+                    $ok_list[]              = $value;
+                    $ok_opid[]              = $value['op_id'];
+                }
+            }
         }
         $data                               = array();
         $data['title']                      = $title;
         $data['content']                    = $content;
         $data['sum_num']                    = $sum_num;
-        $data['sum_list']                   = $sum_list;
-        $data['sum_opid']                   = $sum_opid;
         $data['ok_num']                     = $ok_num;
-        $data['ok_list']                    = $ok_list;
-        $data['ok_opid']                    = $ok_opid;
         $data['average']                    = $sum_num ? (round($ok_num/$sum_num,4)*100).'%' : '100%';
+        $data['ok_opid']                    = $ok_opid;
+        $data['sum_opid']                   = $sum_opid;
+        $data['ok_list']                    = $ok_list;
+        $data['sum_list']                   = $sum_list;
         return $data;
     }
 
@@ -3211,8 +3219,14 @@ function get_yw_department(){
         $lg90percent_data                   = get_unqualify_lg_90percent_data($startTime,$endTime);
         $lg90percent_opids                  = $lg90percent_data['sum_opid'];
 
+        //获取10个工作日前的考核周期
+        $n                                  = 12;
+        $before_work_day                    = get_before_work_day($n,$startTime,$endTime);
+        $work_startTime                     = $before_work_day['startTime'];
+        $work_endTime                       = $before_work_day['endTime'];
+
         $where                              = array();
-        $where['s.input_time']	            = array('between',array($startTime,$endTime));
+        $where['s.input_time']	            = array('between',array($work_startTime,$work_endTime));
         $where['u.op_id']                   = array('not in',$lg90percent_opids);
         $score_lists                        = M()->table('__TCS_SCORE__ as s')->field('u.op_id,s.input_time,o.kind,s.id as sid,s.before_sell,s.new_media,s.stay,s.travel,s.content,s.food,s.bus,s.driver,s.guide,s.teacher,s.depth,s.major,s.interest,s.material,s.late,s.manage,s.morality,s.cas_time,s.cas_complete,s.cas_addr')->join('join __TCS_SCORE_USER__ as u on u.id = s.uid','left')->join('__OP__ as o on o.op_id = u.op_id','left')->where($where)->select();
 
@@ -3259,31 +3273,45 @@ function get_yw_department(){
      * @return array
      */
     function get_unqualify_lg_90percent_data($startTime,$endTime,$title='',$content=''){
-        $unqualify_data                     = get_lg_90percent_list($startTime,$endTime);
+        //获取10个工作日前的考核周期
+        $n                                  = 12;
+        $before_work_day                    = get_before_work_day($n,$startTime,$endTime);
+        $work_startTime                     = $before_work_day['startTime'];
+        $work_endTime                       = $before_work_day['endTime'];
+        $unqualify_data                     = get_lg_90percent_list($work_startTime,$work_endTime); //十个工作日前的不合格团
         $sum_list                           = array();
         $sum_opid                           = array();
         $sum_num                            = 0;
         $ok_list                            = array();
         $ok_opid                            = array();
         $ok_num                             = 0;
+        $solve_lists                        = get_solve_op_list($startTime,$endTime);
 
         foreach ($unqualify_data as $k=>$v){
             $sum_num++;
             $sum_list[]                     = $v;
             $sum_opid[]                     = $v['op_id'];
+            foreach ($solve_lists as $key=>$value){
+                if ($v['op_id'] == $value['op_id']){
+                    $ok_num++;
+                    $ok_list[]              = $value;
+                    $ok_opid[]              = $value['op_id'];
+                }
+            }
         }
         $data                               = array();
         $data['title']                      = $title;
         $data['content']                    = $content;
         $data['sum_num']                    = $sum_num;
-        $data['sum_list']                   = $sum_list;
-        $data['sum_opid']                   = $sum_opid;
         $data['ok_num']                     = $ok_num;
-        $data['ok_list']                    = $ok_list;
-        $data['ok_opid']                    = $ok_opid;
         $data['average']                    = $sum_num ? (round($ok_num/$sum_num,4)*100).'%' : '100%';
+        $data['ok_opid']                    = $ok_opid;
+        $data['sum_opid']                   = $sum_opid;
+        $data['ok_list']                    = $ok_list;
+        $data['sum_list']                   = $sum_list;
         return $data;
     }
+
 
     //项目顾客满意度(以项目为基数)	低于90%；10个工作日处理完成
     function get_lg_90percent_list($startTime,$endTime){
@@ -3328,3 +3356,204 @@ function get_yw_department(){
 
         return $unok_list;
     }
+
+    /**
+     * 获取几个工作日前的日期
+     * @param int $n
+     * @param $startTime
+     * @param $endTime
+     * @return array
+     */
+    function get_before_work_day($n=0,$startTime,$endTime){
+        $data                               = array();
+        $data['startTime']                  = $startTime - (60*60*$n);
+        $data['endTime']                    = $endTime - (60*60*$n);
+        return $data;
+    }
+
+    //获取已处理的所有不合格项目
+    function get_solve_op_list(){
+        $db                                 = M('qaqc');
+        $where                              = array();
+        $where['is_op']                     = 1;
+        //$where['status']                    = 1; //审核通过
+        $field                              = 'id,title,is_op,group_id,op_id,month,type,status,handle_time,ex_time';
+        $list                               = $db ->where($where)->field($field)->select();
+        return $list;
+    }
+
+    //获取本周期内的不合格数据
+    function get_unqualify_nop_list($type=0,$startTime,$endTime){
+        $db                                 = M('qaqc');
+        $where                              = array();
+        $where['type']                      = $type;
+        $where['create_time']               = array('between',array($startTime,$endTime));
+        $field                              = 'id,title,is_op,group_id,op_id,month,type,status,handle_time,ex_time';
+        $list                               = $db ->where($where)->field($field)->select();
+        return $list;
+    }
+
+    /**
+     * 顾客有效投诉
+     * @param $startTime
+     * @param $endTime
+     * @param string $title
+     * @param string $content
+     * @return array
+     */
+    function get_complaint_data($startTime,$endTime,$title='',$content=''){
+        //获取10个工作日前的考核周期
+        $n                                  = 12;
+        $before_work_day                    = get_before_work_day($n,$startTime,$endTime);
+        $work_startTime                     = $before_work_day['startTime'];
+        $work_endTime                       = $before_work_day['endTime'];
+        $type                               = 3; //C('QAQC_TYPE')=>'顾客投诉'
+        $unqualify_data                     = get_unqualify_nop_list($type,$work_startTime,$work_endTime); //十个工作日前的顾客有效投诉
+
+        $sum_list                           = array();
+        $sum_num                            = 0;
+        $ok_list                            = array();
+        $ok_num                             = 0;
+
+        foreach ($unqualify_data as $k=>$v){
+            $sum_num++;
+            $sum_list[]                     = $v;
+            if ($v['handle_time'] != 0){ //跟进处理时间不为0
+                $ok_num++;
+                $ok_list[]              = $v;
+            }
+        }
+        $data                               = array();
+        $data['title']                      = $title;
+        $data['content']                    = $content;
+        $data['sum_num']                    = $sum_num;
+        $data['ok_num']                     = $ok_num;
+        $data['average']                    = $sum_num ? (round($ok_num/$sum_num,4)*100).'%' : '100%';
+        $data['ok_list']                    = $ok_list;
+        $data['sum_list']                   = $sum_list;
+        return $data;
+    }
+
+    /**
+     * 安全责任事故
+     * @param $startTime
+     * @param $endTime
+     * @param string $title
+     * @param string $content
+     * @return array
+     */
+    function get_safe_data($startTime,$endTime,$title='',$content=''){
+        //获取10个工作日前的考核周期
+        $n                                  = 12;
+        $before_work_day                    = get_before_work_day($n,$startTime,$endTime);
+        $work_startTime                     = $before_work_day['startTime'];
+        $work_endTime                       = $before_work_day['endTime'];
+        $type                               = 4; //C('QAQC_TYPE')=>'安全责任事故'
+        $unqualify_data                     = get_unqualify_nop_list($type,$work_startTime,$work_endTime); //十个工作日前的安全责任事故
+
+        $sum_list                           = array();
+        $sum_num                            = 0;
+        $ok_list                            = array();
+        $ok_num                             = 0;
+
+        foreach ($unqualify_data as $k=>$v){
+            $sum_num++;
+            $sum_list[]                     = $v;
+            if ($v['handle_time'] != 0){ //跟进处理时间不为0
+                $ok_num++;
+                $ok_list[]              = $v;
+            }
+        }
+        $data                               = array();
+        $data['title']                      = $title;
+        $data['content']                    = $content;
+        $data['sum_num']                    = $sum_num;
+        $data['ok_num']                     = $ok_num;
+        $data['average']                    = $sum_num ? (round($ok_num/$sum_num,4)*100).'%' : '100%';
+        $data['ok_list']                    = $ok_list;
+        $data['sum_list']                   = $sum_list;
+        return $data;
+    }
+
+    /**
+     * 公司内部有效投诉
+     * @param $startTime
+     * @param $endTime
+     * @param string $title
+     * @param string $content
+     * @return array
+     */
+    function get_company_complaint_data($startTime,$endTime,$title='',$content=''){
+        //获取5个工作日前的考核周期
+        $n                                  = 7;
+        $before_work_day                    = get_before_work_day($n,$startTime,$endTime);
+        $work_startTime                     = $before_work_day['startTime'];
+        $work_endTime                       = $before_work_day['endTime'];
+        $type                               = 5; //C('QAQC_TYPE')=>'公司内部有效投诉'
+        $unqualify_data                     = get_unqualify_nop_list($type,$work_startTime,$work_endTime); //5个工作日前的公司内部有效投诉
+
+        $sum_list                           = array();
+        $sum_num                            = 0;
+        $ok_list                            = array();
+        $ok_num                             = 0;
+
+        foreach ($unqualify_data as $k=>$v){
+            $sum_num++;
+            $sum_list[]                     = $v;
+            if ($v['handle_time'] != 0){ //跟进处理时间不为0
+                $ok_num++;
+                $ok_list[]              = $v;
+            }
+        }
+        $data                               = array();
+        $data['title']                      = $title;
+        $data['content']                    = $content;
+        $data['sum_num']                    = $sum_num;
+        $data['ok_num']                     = $ok_num;
+        $data['average']                    = $sum_num ? (round($ok_num/$sum_num,4)*100).'%' : '100%';
+        $data['ok_list']                    = $ok_list;
+        $data['sum_list']                   = $sum_list;
+        return $data;
+    }
+
+    /**
+     * 品质检查
+     * @param $startTime
+     * @param $endTime
+     * @param string $title
+     * @param string $content
+     * @return array
+     */
+    function get_company_qaqc_data($startTime,$endTime,$title='',$content=''){
+        //获取5个工作日前的考核周期
+        $n                                  = 7;
+        $before_work_day                    = get_before_work_day($n,$startTime,$endTime);
+        $work_startTime                     = $before_work_day['startTime'];
+        $work_endTime                       = $before_work_day['endTime'];
+        $type                               = 6; //C('QAQC_TYPE')=>'品质检查'
+        $unqualify_data                     = get_unqualify_nop_list($type,$work_startTime,$work_endTime); //5个工作日前的品质检查
+
+        $sum_list                           = array();
+        $sum_num                            = 0;
+        $ok_list                            = array();
+        $ok_num                             = 0;
+
+        foreach ($unqualify_data as $k=>$v){
+            $sum_num++;
+            $sum_list[]                     = $v;
+            if ($v['handle_time'] != 0){ //跟进处理时间不为0
+                $ok_num++;
+                $ok_list[]              = $v;
+            }
+        }
+        $data                               = array();
+        $data['title']                      = $title;
+        $data['content']                    = $content;
+        $data['sum_num']                    = $sum_num;
+        $data['ok_num']                     = $ok_num;
+        $data['average']                    = $sum_num ? (round($ok_num/$sum_num,4)*100).'%' : '100%';
+        $data['ok_list']                    = $ok_list;
+        $data['sum_list']                   = $sum_list;
+        return $data;
+    }
+

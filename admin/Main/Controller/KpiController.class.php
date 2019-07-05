@@ -911,6 +911,7 @@ class KpiController extends BaseController {
 				$info['status']                 = 0;
 				$info['inc_user_id']            = cookie('userid');
 				$info['inc_user_name']          = cookie('name');
+                $info['handle_time']            = NOW_TIME;
 				$qaqcid                         = M('qaqc')->add($info);
 				$status                         = 0;
                 $explain                        = '新建品质检查';

@@ -64,7 +64,12 @@ class InspectModel extends Model{
         return $data;
     }
 
-    //不合格处理率
+    /**
+     * 不合格处理率 (优先算低于90%的团 , 然后少于3星或低于60分的团)
+     * @param $startTime
+     * @param $endTime
+     * @return array
+     */
     public function get_unqualify_data($startTime,$endTime){
         /*
          * '单项顾客满意度' => string '少于三星或低于60分；10个工作日处理完成' (length=55)
@@ -78,10 +83,10 @@ class InspectModel extends Model{
         $quota                          = array_column($quota,'content','title');
         $data1                          = get_unqualify_lg3_data($startTime,$endTime,'单项顾客满意度',$quota['单项顾客满意度']);
         $data2                          = get_unqualify_lg_90percent_data($startTime,$endTime,'项目顾客满意度',$quota['项目顾客满意度']);
-        $data3                          = get_reimbursement_data($startTime,$endTime,'顾客有效投诉',$quota['顾客有效投诉']);
-        $data4                          = get_reimbursement_data($startTime,$endTime,'安全责任事故',$quota['安全责任事故']);
-        $data5                          = get_reimbursement_data($startTime,$endTime,'公司内部有效投诉',$quota['公司内部有效投诉']);
-        $data6                          = get_reimbursement_data($startTime,$endTime,'品质检查',$quota['品质检查']);
+        $data3                          = get_complaint_data($startTime,$endTime,'顾客有效投诉',$quota['顾客有效投诉']);
+        $data4                          = get_safe_data($startTime,$endTime,'安全责任事故',$quota['安全责任事故']);
+        $data5                          = get_company_complaint_data($startTime,$endTime,'公司内部有效投诉',$quota['公司内部有效投诉']);
+        $data6                          = get_company_qaqc_data($startTime,$endTime,'品质检查',$quota['品质检查']);
 
         $data[]                         = $data1;
         $data[]                         = $data2;
