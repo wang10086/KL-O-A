@@ -970,6 +970,7 @@ class KpiController extends BaseController {
 			
 			//整理关键字
             $this->userkey                      = get_userkey();
+            $this->qaqc_type                    = C('QAQC_TYPE');
 
             if ($list && $list['kind'] == 1){
                 $this->display('addqa_public');
