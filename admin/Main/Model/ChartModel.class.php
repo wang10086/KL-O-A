@@ -22,6 +22,7 @@ class ChartModel extends Model
     public function js_deplist($userlists, $month='', $yeartimes, $pin = 0,$quartertimes='')
     {
 
+        $Ym                         = $month;
         $monthtime                  = intval($month);
         $month                      = get_cycle($monthtime, 26);
         $quarterbegintime           = $quartertimes['begin_time'];
@@ -54,6 +55,13 @@ class ChartModel extends Model
             $lists[$v['id']]['yearparameter'] = array('uids'=>implode(',',$v['users']),'depid'=>$v['id'],'depname'=>$v['depname'],'pin'=>$pin,'st'=>$yeartimes[yearBeginTime],'et'=>$yeartimes[yearEndTime]);
 
             if ($quartertimes){ //季度
+                if ($v['id'] == 6 && (date('Ym',$quartertimes['end_time']) == '201906')){ //京区业务中心数据调整
+                    $quarterendtime     += 10*24*3600;
+                }
+                if ($v['id'] == 6 && (date('Ym',$quartertimes['begin_time']) == '201906')){ //京区业务中心数据调整
+                    $quarterbegintime   += 10*24*3600;
+                }
+
                 $where                  = array();
                 $where['b.audit_status']= 1;
                 $where['l.req_type']    = 801;
@@ -75,10 +83,12 @@ class ChartModel extends Model
                 $lists[$v['id']]['quarterzml']      = $quarterlist['zml'] ? $quarterlist['zml'] : "0.00";
                 $lists[$v['id']]['quartermll']      = $quarterlist['mll'] ? sprintf("%.2f", $quarterlist['mll'] * 100) : "0.00";
                 $lists[$v['id']]['quarteropids']    = implode(',',array_column($quarteropid_lists,'op_id'));
-                $lists[$v['id']]['quarterparameter'] = array('uids'=>implode(',',$v['users']),'depid'=>$v['id'],'depname'=>$v['depname'],'pin'=>$pin,'st'=>$quarterbegintime,'et'=>$quarterendtime);
+                $lists[$v['id']]['quarterparameter']= array('uids'=>implode(',',$v['users']),'depid'=>$v['id'],'depname'=>$v['depname'],'pin'=>$pin,'st'=>$quarterbegintime,'et'=>$quarterendtime);
             }
 
             if ($month){
+               if ($Ym == 201906) $month['endtime']  += 10*24*3600;
+               if ($Ym == 201907) $month['begintime']+= 10*24*3600;
                 //查询月度
                 $where                  = array();
                 $where['b.audit_status']= 1;

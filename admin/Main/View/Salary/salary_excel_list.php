@@ -198,14 +198,14 @@
                     </div><!-- /.box-body -->
 
                     <div style="margin-top:2em;text-align:center;" id="shr_qianzi"><br><br><br><br>
-                        <?php if($status==1 && session('userid')== 77){?>
+                        <?php if($status==1 && session('userid')== 77){ ?>
                             <a  class="btn btn-info salary_excel1_submit" style="width:10em;margin-top:2em;" onclick="show_qianzi(0)">提交审核</a>
                         <?php }?>
-                        <?php if($status==2 && session('userid') == 55){?>
+                        <?php if($status==2 && session('userid') == 55){ ?>
                             <a  class="btn btn-info salary_excel1_submit1" style="width:10em;margin-top:2em;" onclick="show_qianzi(1)">提交批准</a>
                             <a  class="btn btn-info salary_excel1_submit2" style="width:10em;margin-top:2em;" onclick="show_qianzi(2)">驳回</a>
                         <?php }?>
-                        <?php if($status==3 && session('userid') == 11){?>
+                        <?php if($status==3 && session('userid') == 11){ ?>
                             <a  class="btn btn-info salary_excel1_submit3" style="width:10em;margin-top:2em;" onclick="show_qianzi(3)">批准</a>
                             <a  class="btn btn-info salary_excel1_submit2" style="width:10em;margin-top:2em;" onclick="show_qianzi(2)">驳回</a>
                         <?php }?>

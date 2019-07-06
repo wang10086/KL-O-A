@@ -1302,10 +1302,13 @@ class AjaxController extends Controller {
         }
         $res4                           = M('salary_sign')->where(array('datetime'=>$datetime))->save($sign); //签字
         if ($res1 && $res2 && $res3 && $res4){
+            //set_after_salary_kpi();
             $_SESSION['salary_satus']   = '';
             $data['num']                = 1;
             $data['msg']                = "审核成功!";
         }
+         set_after_salary_kpi();
+
         $this->ajaxReturn($data);
     }
 
