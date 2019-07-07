@@ -1307,7 +1307,7 @@ class AjaxController extends Controller {
             $data['num']                = 1;
             $data['msg']                = "审核成功!";
         //}
-         set_after_salary_kpi();
+         //set_after_salary_kpi($datetime);
 
         $this->ajaxReturn($data);
     }
@@ -2017,6 +2017,12 @@ class AjaxController extends Controller {
             $data['info']   = '非法数据！';
         }
         $this->ajaxReturn($data);
+    }
+
+    //工资审核完成后重置KPI数据
+    public function reset_after_salary_kpi(){
+        $datetime                   = I('datetime');
+        set_after_salary_kpi($datetime);
     }
 }
 

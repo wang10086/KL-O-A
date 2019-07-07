@@ -372,7 +372,8 @@
             success: function (data) {
                 alert(data.msg);
                 if (data.num == 1) {
-                    window.location.reload();
+                    set_after_salary_kpi();
+                    //window.location.reload();
                 }
                 return false;
             }
@@ -394,6 +395,22 @@
                     window.location.reload();
                 }
                 return false;
+            }
+        });
+    }
+
+    function set_after_salary_kpi() {
+        $.ajax({
+            type: "POST",
+            url:  "{:U('Ajax/reset_after_salary_kpi')}",
+            data: {datetime : datetime},
+            dataType: "json",
+            success: function (data) {
+                alert('KPI数据更新成功');
+                window.location.reload();
+            },
+            error:function () {
+                alert('error');
             }
         });
     }

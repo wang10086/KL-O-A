@@ -767,7 +767,15 @@ function  business_kpi($year,$month,$type){
     return $listdatas;
 }
 
-//chartController
+
+    /**
+     * //chartController
+     * @param $departments
+     * @param $year
+     * @param $month
+     * @param int $pin 0预算 1结算
+     * @return mixed
+     */
 function count_lists($departments,$year,$month,$pin=0){
     $yearBegin      			= ($year-1).'1226';
     $yearEnd        			= $year.'1226';

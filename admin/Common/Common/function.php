@@ -3527,6 +3527,12 @@ function get_kpi_data($v,$complete,$url=''){
         $target     = $v['target']; //目标
         $comp       = $v['complete'];
         $rate       = get_plus_minus_data($target,$comp);
+
+        /*var_dump($target);
+        var_dump($complete);
+        var_dump($rate);
+        echo "<hr />";*/
+
     }elseif ($v['quota_id'] == 204){
         $avg        = str_replace('%','',$complete)/100;
         $rate       = get_sum_avg($avg,100); //根据平均值求结果分
@@ -5390,104 +5396,110 @@ function get_half_year_cycle($year,$month){
      * 194 => 季度财务预算准确率(财务经理)
      * 204 => 人事费用率控制(人力经理)
      */
-    function set_after_salary_kpi(){
-    $datetime                       = I('datetime');
-    $quota_id                       = array(125,127,194,204);
-    $kpi_more_db                    = M('kpi_more');
-    $where                          = array();
-    $where['month']                 = array('like','%'.$datetime);
-    $where['quota_id']              = array('in',$quota_id);
-    $list                           = $kpi_more_db ->where($where)->select();
-    //$list = M()->table('__KPI_MORE__ as m')->join('__ACCOUNT__ as a on a.id = m.user_id','left')->where($where)->field('a.nickname,m.*')->select();
-    foreach ($list as $k => $v){
-        if ($v['quota_id'] == 125){ //季度利润总额目标累计完成率
-            $kpi_complete           = $v['complete']; //KPI季度利润总额完成数据
-            $person_pay             = get_true_person_pay($v['user_id'],$datetime); //所管辖部门的当月人力资源成本
-            $complete               = $kpi_complete - $person_pay;
-            $data                   = get_kpi_data($v,$complete,$v['url']);
-        }elseif ($v['quota_id'] ==127){ //季度人事费用率
-            $year                   = $v['year']?$v['year']:date('Y');
-            $monon                  = $v['month']?substr($v['month'],4,2):date('m');
-            $department             = get_department($v['user_id']);
-            $budget_info            = get_department_budget($department,$year,$monon);      //部门季度预算信息 总人数+总收入+总毛利+人力资源+其他费用+利润总额
-            $ys_rsfyl               = (round($budget_info['sum_manpower_cost']/$budget_info['sum_logged_income'],4)*100).'%';  //预算人事费用率 (人力资源成本/营业收入)
-            $operate_info           = get_sum_department_operate($department,$year,$monon,'q');     //实际经营信息(季度)
-            $jy_rsfyl               = $operate_info['rsfyl'].'%';                               //经营人事费用率
-            $complete               = $jy_rsfyl;
-            $data                   = get_kpi_data($v,$complete,$v['url']);
-        }elseif ($v['quota_id'] ==194){ //季度财务预算准确率
-            $weight                 = $v['weight'];
-            //季度营收准确率指标
-            $monon                  = substr($v['month'],4,2);
-            $quarter                = get_quarter($monon);
-            $quart_month            = quarter_month1($monon);
-            $quarter_plan_income_data= get_quarter_plan_income($v['year'],$quarter);
-            $quarter_plan_income    = $quarter_plan_income_data['logged_income']?$quarter_plan_income_data['logged_income']:0; //获取公司当季度的预算营业收入(营收)
-            $quarter_real_income_data= get_department_operate('公司',$v['year'],$monon); //获取公司当季度实际营业收入(营收)(不包括地接营收)
-            $quarter_real_income    = $quarter_real_income_data['yysr']?$quarter_real_income_data['yysr']:0;
-            $v1                     = intervalsn($quarter_plan_income,0.10); //定义比较区间
-            //$income_avg             = round(($quarter_real_income - $quarter_plan_income)/$quarter_plan_income,4); //季度营收准确率 (实际-计划)/实际
-            $income_avg             = get_exact_budget($quarter_real_income,$quarter_plan_income);
-            $income_s               = get_rifht_avg($income_avg,40); //根据平均值求结果分
+    function set_after_salary_kpi($datetime){
+        $year                           = substr($datetime,0,4);
+        $month                          = substr($datetime,-2);
+        $department_profit_lists        = get_add_month_profit($year,$month); //公司从年初到当前月各部门累计经营信息
+        $quota_id                       = array(125,127,194,204);
+        $kpi_more_db                    = M('kpi_more');
+        $where                          = array();
+        $where['month']                 = array('like','%'.$datetime);
+        $where['quota_id']              = array('in',$quota_id);
+        $list                           = $kpi_more_db ->where($where)->select();
+        foreach ($list as $k => $v){
+            if ($v['quota_id'] == 125){ //季度利润总额目标累计完成率
+                $complete               = get_new_lrze_complete($v['user_id'],$department_profit_lists);
+                $data                   = get_kpi_data($v,$complete,$v['url']);
+            }elseif ($v['quota_id'] ==127){ //季度人事费用率
+                $year                   = $v['year']?$v['year']:date('Y');
+                $monon                  = $v['month']?substr($v['month'],4,2):date('m');
+                $department             = get_department($v['user_id']);
+                $budget_info            = get_department_budget($department,$year,$monon);      //部门季度预算信息 总人数+总收入+总毛利+人力资源+其他费用+利润总额
+                $ys_rsfyl               = (round($budget_info['sum_manpower_cost']/$budget_info['sum_logged_income'],4)*100).'%';  //预算人事费用率 (人力资源成本/营业收入)
+                $operate_info           = get_sum_department_operate($department,$year,$monon,'q');     //实际经营信息(季度)
+                $jy_rsfyl               = $operate_info['rsfyl'].'%';                               //经营人事费用率
+                $complete               = $jy_rsfyl;
+                $data                   = get_kpi_data($v,$complete,$v['url']);
+            }elseif ($v['quota_id'] ==194){ //季度财务预算准确率
+                //$weight                 = $v['weight'];
+                //季度营收准确率指标
+                $monon                  = substr($v['month'],4,2);
+                $quarter                = get_quarter($monon);
+                //$quart_month            = quarter_month1($monon);
+                $quarter_plan_income_data= get_quarter_plan_income($v['year'],$quarter);
+                $quarter_plan_income    = $quarter_plan_income_data['logged_income']?$quarter_plan_income_data['logged_income']:0; //获取公司当季度的预算营业收入(营收)
+                $quarter_real_income_data= get_department_operate('公司',$v['year'],$monon); //获取公司当季度实际营业收入(营收)(不包括地接营收)
+                $quarter_real_income    = $quarter_real_income_data['yysr']?$quarter_real_income_data['yysr']:0;
+                //$v1                     = intervalsn($quarter_plan_income,0.10); //定义比较区间
+                $income_avg             = get_exact_budget($quarter_real_income,$quarter_plan_income);
+                $income_s               = get_rifht_avg($income_avg,40); //根据平均值求结果分
 
-            //季度利润准确率指标
-            $quarter_plan_profit    = $quarter_plan_income_data['total_profit']?$quarter_plan_income_data['total_profit']:0; //获取公司当季度的预算季度利润
-            $quarter_real_profit    = $quarter_real_income_data['yyml'] - $quarter_real_income_data['rlzycb'] - $quarter_real_income_data['qtfy']; //实际季度利润 = 营业毛利-人力资源成本 - 其他费用
-            //$profit_avg             = round(($quarter_real_profit - $quarter_plan_profit)/$quarter_plan_profit,4); //季度利润准确率
-            $profit_avg             = get_exact_budget($quarter_real_profit,$quarter_plan_profit);
-            $profit_s               = get_rifht_avg($profit_avg,60); //根据平均值求结果分
-            $complete               = ($income_s + $profit_s).'%';
-            $data                   = get_kpi_data($v,$complete,$v['url']);
-        }elseif ($v['quota_id'] ==204){ //人事费用率控制
-            $year                   = $v['year']?$v['year']:date('Y');
-            $monon                  = $v['month']?substr($v['month'],4,2):date('m');
-            $budget_info            = get_company_budget($year,$monon); //公司季度预算信息
-            $hr_plan                = $budget_info['sum_manpower_cost']; //预算人力资源成本
-            $income                 = $budget_info['sum_logged_income']; //累计预算营收
-            $hr_plan_avg            = round($hr_plan/$income,4); //人事费用率
+                //季度利润准确率指标
+                $quarter_plan_profit    = $quarter_plan_income_data['total_profit']?$quarter_plan_income_data['total_profit']:0; //获取公司当季度的预算季度利润
+                $quarter_real_profit    = $quarter_real_income_data['yyml'] - $quarter_real_income_data['rlzycb'] - $quarter_real_income_data['qtfy']; //实际季度利润 = 营业毛利-人力资源成本 - 其他费用
+                $profit_avg             = get_exact_budget($quarter_real_profit,$quarter_plan_profit);
+                $profit_s               = get_rifht_avg($profit_avg,60); //根据平均值求结果分
+                $complete               = ($income_s + $profit_s).'%';
+                $data                   = get_kpi_data($v,$complete,$v['url']);
+            }elseif ($v['quota_id'] ==204){ //人事费用率控制
+                $year                   = $v['year']?$v['year']:date('Y');
+                $monon                  = $v['month']?substr($v['month'],4,2):date('m');
+                $budget_info            = get_company_budget($year,$monon); //公司季度预算信息
+                $hr_plan                = $budget_info['sum_manpower_cost']; //预算人力资源成本
+                $income                 = $budget_info['sum_logged_income']; //累计预算营收
+                $hr_plan_avg            = round($hr_plan/$income,4); //人事费用率
 
-            $operate_info           = get_company_operate('公司',$year,$monon); //公司经营信息(年度累计)
-            $hr_real                = $operate_info['rlzycb']; //实际人力资源成本
-            $hr_real_avg            = $operate_info['rsfyl']/100; //人事费用率
-            $sum_avg                = $hr_real_avg - $hr_plan_avg;
-            $complete               = ($sum_avg*100).'%';
-            $data                   = get_kpi_data($v,$complete,$v['url']);
-        }
+                $operate_info           = get_company_operate('公司',$year,$monon); //公司经营信息(年度累计)
+                $hr_real                = $operate_info['rlzycb']; //实际人力资源成本
+                $hr_real_avg            = $operate_info['rsfyl']/100; //人事费用率
+                $sum_avg                = $hr_real_avg - $hr_plan_avg;
+                $complete               = ($sum_avg*100).'%';
+                $data                   = get_kpi_data($v,$complete,$v['url']);
+            }
 
-        if ($data){
-            M('kpi_more')->data($data)->where(array('id'=>$v['id']))->save();
-            //合计总分
-            $total	= M('kpi_more')->field('score,weight,score_status')->where(array('kpi_id'=>$v['kpi_id']))->sum('score');
-            $issave	= M('kpi')->data(array('score'=>$total))->where(array('id'=>$v['kpi_id']))->save();
+            if ($data){
+                M('kpi_more')->data($data)->where(array('id'=>$v['id']))->save();
+                //合计总分
+                $total	= M('kpi_more')->field('score,weight,score_status')->where(array('kpi_id'=>$v['kpi_id']))->sum('score');
+                $issave	= M('kpi')->data(array('score'=>$total))->where(array('id'=>$v['kpi_id']))->save();
+            }
         }
     }
-}
 
-
-    //获取所管辖部门的人事费用率
-    function get_true_person_pay($user_id,$datetime){
-    $salary_department_db       = M('salary_departmen_count');
-    switch ($user_id){
-        case 32:  //王总
-            $departments        = C('MANAGER_WANG');
-            break;
-        case 38: //杨总
-            $departments        = C('MANAGER_YANG');
-            break;
-        default:
-            $acc                = array();
-            $acc['a.id']        = $user_id;
-            $department         = M()->table('__ACCOUNT__ as a')->join('__SALARY_DEPARTMENT__ as d on d.id = a.departmentid')->where($acc)->getField('department');
-            $departments        = array($department);
+    //
+    function get_add_month_profit($year,$month){
+        $yw_departs                     = C('YW_DEPARTS');  //业务部门id
+        $where                          = array();
+        $where['id']                    = array('in',$yw_departs);
+        $departments                    = M('salary_department')->field('id,department')->where($where)->select();
+        $data                           = array();
+        foreach ($departments as $value){
+            $data[$value['id']]         = get_company_operate($value['department'],$year,$month);
+            $data[$value['id']]['department'] = $value['department'];
+        }
+        return $data;
     }
-    $where                      = array();
-    $where['datetime']          = $datetime;
-    $where['department']        = array('in',$departments);
-    $where['status']            = 4; //批准成功
-    $field                      = 'sum(Should_distributed) as sum';
-    $sum_pay                    = $salary_department_db->where($where)->field($field)->find();
-    $sum                        = $sum_pay['sum'];
-    return $sum;
-}
+
+    //获取所管辖部门的利润总额
+    function get_new_lrze_complete($user_id,$lists){
+        switch ($user_id){
+            case 32:  //王总
+                $departments            = C('MANAGER_WANG');
+                break;
+            case 38: //杨总
+                $departments            = C('MANAGER_YANG');
+                break;
+            default:
+                $departments            = get_department($user_id);
+        }
+
+        $sum                            = 0;
+        foreach ($lists as $k =>$v){
+            if (in_array($v['department'],$departments)){
+                $sum                    += $v['lrze'];
+            }
+        }
+        return $sum;
+    }
 
 
