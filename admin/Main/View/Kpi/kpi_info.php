@@ -70,7 +70,7 @@
                                         <div class="box-body table-responsive no-padding">
                                         <table class="table table-bordered dataTable fontmini" id="tablelist" style="margin-top:10px;">
                                             <tr role="row" class="orders" >
-                                                <th width="50">序号<!--<a href="{:U('Kpi/aaa',array('datetime'=>201906))}">aaaaa</a>--></th>
+                                                <th width="50">序号</th>
                                                 <th style="min-width: 10rem;">指标名称</th>
                                                 <th width="180">周期</th>
                                                 <th width="100">目标</th>

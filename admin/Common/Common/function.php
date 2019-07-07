@@ -3527,12 +3527,6 @@ function get_kpi_data($v,$complete,$url=''){
         $target     = $v['target']; //目标
         $comp       = $v['complete'];
         $rate       = get_plus_minus_data($target,$comp);
-
-        /*var_dump($target);
-        var_dump($complete);
-        var_dump($rate);
-        echo "<hr />";*/
-
     }elseif ($v['quota_id'] == 204){
         $avg        = str_replace('%','',$complete)/100;
         $rate       = get_sum_avg($avg,100); //根据平均值求结果分
