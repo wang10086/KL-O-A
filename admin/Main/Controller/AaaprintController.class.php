@@ -5,7 +5,7 @@ use Sys\P;
 ulib('Page');
 use Sys\Page;
 
-class AaaprintController extends BaseController {
+class AaaprintController extends BasepubController {
 
 
     public function index(){
@@ -604,7 +604,8 @@ class AaaprintController extends BaseController {
     }
 
 
-    public function test(){
+    // 带的所有的团信息
+    public function testA(){
         $where                  = array();
         $where['p.guide_id']    = 1272;
         $where['p.status']      = 2;
@@ -618,5 +619,28 @@ class AaaprintController extends BaseController {
         $title = array('团号','名称','金额','时间');
 
         exportexcel($data,$title,'赵洋');
+    }
+
+
+    //某个周期内所有的结算的团
+    public function testB(){
+        $this->title('导出结算信息');
+        if (isset($_POST['dosubmint'])){
+            $starttime              = strtotime(I('st'));
+            $endtime                = strtotime(I('et'));
+            //查询月度
+            $where                  = array();
+            $where['b.audit_status']= 1;
+            $where['l.req_type']    = 801;
+            $where['l.audit_time']  = array('between', "$starttime,$endtime");
+
+            $field                  = 'o.op_id,o.group_id,o.project,a.nickname,b.shouru,b.maoli,b.maolilv';
+            $lists                  = M()->table('__OP_SETTLEMENT__ as b')->field($field)->join('__OP__ as o on b.op_id = o.op_id', 'LEFT')->join('__ACCOUNT__ as a on a.id = o.create_user', 'LEFT')->join('__AUDIT_LOG__ as l on l.req_id = b.id', 'LEFT')->join('__OP_TEAM_CONFIRM__ as c on c.op_id=o.op_id', 'left')->where($where)->order('o.create_time asc')->select();
+            $title                  = array('项目编号','团号','项目名称','业务人员','收入','毛利','毛利率');
+            $table_name             = date('Y-m-d',$starttime).'至'.date('Y-m-d',$endtime).'所有结算团信息(已结算审批时间为准)';
+            exportexcel($lists,$title,$table_name);
+        }else{
+            $this->display();
+        }
     }
 }
