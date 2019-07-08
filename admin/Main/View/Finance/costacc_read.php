@@ -3,7 +3,7 @@
         <h3 class="box-title">成本核算</h3>
     </div><!-- /.box-header -->
     <div class="box-body">
-    	<?php if($op['line_id'] || $op['produ']){ ?>
+    	<?php /*if($op['line_id'] || $op['produ']){ */?>
         <div class="content" style="padding-top:0px;">
         	
             <table class="table table-striped" id="font-14-p">
@@ -57,9 +57,9 @@
         <div class="content no-print">
         	<button class="btn btn-default" onclick="window.print();"><i class="fa fa-print"></i> 打印</button>
         </div>
-        <?php }else{
+        <?php /*}else{
 			echo '<div class="content" style="margin-left:15px;">请先确认行程方案，再核算成本！</div>';	
-		} ?>
+		} */?>
     </div>
 </div>
 

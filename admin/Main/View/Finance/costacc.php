@@ -64,7 +64,8 @@
                                 </div><!-- /.box-body -->
                             </div><!-- /.box -->
                             
-                            <?php if($budget['audit']==0 && ($op['line_id'] || $productList)){ ?>
+                            <?php /*if($budget['audit']==0 && ($op['line_id'] || $productList)){ */?>
+                            <?php if($budget['audit']==0){ ?>
                             	<include file="costacc_edit" />
                             <?php }else{ ?>
                             	<include file="costacc_read" />

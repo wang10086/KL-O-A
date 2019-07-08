@@ -147,11 +147,11 @@
                                     	
                                         <div class="content" style="padding-top:40px;">
                                         	<?php if(!$costacc){ 
-												if(!$op['line_id']){
+												/*if(!$op['line_id']){
 													echo '<div class="form-group col-md-4">请先确认行程方案！</div>';
-												}else{
+												}else{*/
 													echo '<div class="form-group col-md-4">尚未核算成本，<a href="'.U('Finance/costacc',array('opid'=>$op['op_id'])).'">立即核算</a>！</div>';
-												}
+												/*}*/
 											}else{ ?>
                                             <div class="form-group col-md-4">
                                                 <label>成本价格：{$op.costacc} {$op.costacc_unit}</label>
