@@ -7,6 +7,7 @@
                     <ol class="breadcrumb">
                         <li><a href="{:U('Index/index')}"><i class="fa fa-home"></i> 首页</a></li>
                         <li><a href="{:U('Kpi/qa')}"><i class="fa fa-gift"></i> 品质报告</a></li>
+                        <li><a href="javascript:;"><i class="fa fa-gift"></i> 不合格报告</a></li>
                     </ol>
                 </section>
 
@@ -23,17 +24,17 @@
                             
                             <div class="box box-warning">
                                 <div class="box-header">
-                                    <h3 class="box-title">编辑品质报告</h3>
+                                    <h3 class="box-title">编辑不合格报告</h3>
                                 </div>
                                 <div class="box-body">
                                     <div class="content">
 
                                         <div class="form-group col-md-6">
-                                            <label>巡检标题：</label><input type="text" name="info[title]" class="form-control" value="{$row.title}" required />
+                                            <label>报告标题：</label><input type="text" name="info[title]" class="form-control" value="{$row.title}" required />
                                         </div>
 
                                         <div class="form-group col-md-6">
-                                            <label>巡检类型：</label>
+                                            <label>报告类型：</label>
                                             <select class="form-control" name="info[type]" required>
                                                 <option value="" selected disabled>==请选择==</option>
                                                 <foreach name="qaqc_type" item="v" key="k">
@@ -58,7 +59,7 @@
                                         </div>
                                         
                                         <div class="form-group">&nbsp;</div>
-                                        <!--{:upload_m('uploadfile','files',$atts,'上传巡检资料')}-->
+                                        <!--{:upload_m('uploadfile','files',$atts,'上传报告资料')}-->
                                         
                                     </div>
                                 </div>

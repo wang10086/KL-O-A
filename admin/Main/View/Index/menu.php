@@ -373,7 +373,7 @@
                                 <i class="fa fa-angle-left pull-right"></i>
                             </a>
                             <ul class="treeview-menu">
-                                <li><a href="{:U('Kpi/public_addqa')}"><i class="fa fa-angle-right"></i> 发布品质报告</a></li>
+                                <li><a href="{:U('Kpi/public_addqa')}"><i class="fa fa-angle-right"></i> 发布不合格报告</a></li>
 
                                 <if condition="rolemenu(array('Kpi/qa'))">
                                     <li><a href="{:U('Kpi/qa')}"><i class="fa fa-angle-right"></i> 品质报告</a></li>
