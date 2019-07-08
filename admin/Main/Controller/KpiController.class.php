@@ -2175,7 +2175,7 @@ class KpiController extends BaseController {
 
     //发布品质报告
     public function public_addqa(){
-        $this->title('发布品质报告');
+        $this->title('不合格报告');
 
         $this->userkey                      = get_userkey();
         $this->qaqc_type                    = C('QAQC_TYPE');
