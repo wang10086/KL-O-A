@@ -47,10 +47,16 @@
                                             <label>发现日期：</label><input type="text" name="info[fd_date]" class="form-control inputdate"  value="{$row.fd_date}" required />
                                         </div>
 
-                                        <div class="form-group box-float-6">
+                                        <!--<div class="form-group box-float-6">
                                             <label>陪同人员</label>
                                             <input type="text" name="info[ac_user_name]" value="{$row.ac_user_name}" id="ac_user_name" class="form-control" />
                                             <input type="hidden" name="info[ac_user_id]" value="{$row.ac_user_id}"  id="ac_user_id" class="form-control" />
+                                        </div>-->
+
+                                        <div class="form-group box-float-6">
+                                            <label>发现人员</label>
+                                            <input type="text" name="info[inc_user_name]" value="{$row['inc_user_name']?$row['inc_user_name']:session('nickname') }" class="form-control" readonly />
+                                            <input type="hidden" name="info[inc_user_id]" value="{$row['inc_user_id']?$row['inc_user_id']:session('userid') }"  class="form-control" />
                                         </div>
                                         
                                         <div class="form-group col-md-12">
