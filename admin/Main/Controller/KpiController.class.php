@@ -793,36 +793,36 @@ class KpiController extends BaseController {
 	
 	// @@@NODE-3###addpdca###品质检查###
 	public function qa(){
-		$this->title('品质报告');
-		 
-		$db = M('qaqc');
-		$this->year		= I('year',date('Y'));
-		//$this->type   = intval(I('type',2));
-		$this->uid		= I('uid',0);
-		$this->month	= I('month');
-		$this->user   	= I('user','');
-		
-		/*
-		if($this->type < 0 || $this->type >2){
-			$this->error('数据不存在');	
-		}
-		*/
-		
-		if($this->uid || $this->user){
-			$where = array();
+        $pin                                        = I('pin',1);
+        $pgtit                                      = $pin==1?'品质报告':($pin==2?'不合格报告':'全部');
+        $this->title($pgtit);
+        $title                                      = trim(I('tit'));
+        $db                                         = M('qaqc');
+		$this->year		                            = I('year',date('Y'));
+		$this->uid		                            = I('uid',0);
+		$this->month	                            = I('month');
+		$this->user   	                            = I('user','');
+
+        $where = array();
+        if($this->uid || $this->user){
+            if ($pin)          $where['q.kind']     = $pin;
+            if ($title)        $where['q.title']    = array('like','%'.$title.'%');
 			if($this->user)    $where['a.nickname'] = trim($this->user);
-			if($this->uid)     $where['u.user_id'] = $this->uid;
-			if($this->month)   $where['q.month'] = $this->month;
-			$lists		= M()->table('__QAQC_USER__ as u')->field('q.*')->join('__QAQC__ as q on q.id = u.qaqc_id')->join('__ACCOUNT__ as a on a.id = u.user_id')->where($where)->order($this->orders('id'))->group('u.qaqc_id')->select();
+			if($this->uid)     $where['u.user_id']  = $this->uid;
+			if($this->month)   $where['q.month']    = $this->month;
+			$lists		                            = M()->table('__QAQC_USER__ as u')->field('q.*')->join('__QAQC__ as q on q.id = u.qaqc_id')->join('__ACCOUNT__ as a on a.id = u.user_id')->where($where)->order($this->orders('id'))->group('u.qaqc_id')->select();
 			
 		}else{
-			$where = array();
-			if($this->month)   $where['month'] = $this->month;
-			$pagecount		= $db->where($where)->count();
-			$page			= new Page($pagecount, P::PAGE_SIZE);
-			$this->pages 	= $pagecount>P::PAGE_SIZE ? $page->show():'';
-			$lists			= $db->where($where)->limit($page->firstRow . ',' . $page->listRows)->order($this->orders('id'))->select();
+            if ($pin)          $where['kind']       = $pin;
+            if ($title)        $where['title']      = array('like','%'.$title.'%');
+			if($this->month)   $where['month']      = $this->month;
+			$pagecount		                        = $db->where($where)->count();
+			$page			                        = new Page($pagecount, P::PAGE_SIZE);
+			$this->pages 	                        = $pagecount>P::PAGE_SIZE ? $page->show():'';
+			$lists			                        = $db->where($where)->limit($page->firstRow . ',' . $page->listRows)->order($this->orders('id'))->select();
 		}
+		//echo M()->getlastsql();
+        //die;
 		
 		$stastr = array(
 			'0' => '<span>未审核</span>',
@@ -833,13 +833,14 @@ class KpiController extends BaseController {
 		
         
 		foreach($lists as $k=>$v){
-			//$lists[$k]['score']      = $v['status'] ? '-'.$v['red_score']:'+'.$v['inc_score']; 	
-			$lists[$k]['statusstr']  = $stastr[$v['status']]; 	
+			//$lists[$k]['score']                   = $v['status'] ? '-'.$v['red_score']:'+'.$v['inc_score'];
+			$lists[$k]['statusstr']                 = $stastr[$v['status']];
 		}
-		
-		$this->lists    = $lists; 
-		$this->prveyear	= $this->year-1;
-		$this->nextyear	= $this->year+1;
+
+		$this->pin                                  = $pin;
+		$this->lists                                = $lists;
+		$this->prveyear	                            = $this->year-1;
+		$this->nextyear	                            = $this->year+1;
 		$this->display('qa');	
 	}
 	
@@ -912,8 +913,9 @@ class KpiController extends BaseController {
 				$info['inc_user_id']            = cookie('userid');
 				$info['inc_user_name']          = cookie('name');
                 $info['handle_time']            = NOW_TIME;
-				$qaqcid                         = M('qaqc')->add($info);
-				$status                         = 0;
+                $info['kind']                   = 1;
+                $qaqcid                         = M('qaqc')->add($info);
+                $status                         = 0;
                 $explain                        = '新建品质检查';
 			}
 			
@@ -973,7 +975,7 @@ class KpiController extends BaseController {
             $this->userkey                      = get_userkey();
             $this->qaqc_type                    = C('QAQC_TYPE');
 
-            if ($list && $list['kind'] == 1){
+            if ($list && $list['kind'] == 2){
                 $this->display('addqa_public');
             }else{
                 $this->display('addqaqc');
@@ -2288,15 +2290,15 @@ class KpiController extends BaseController {
                 $info['inc_user_id']        = session('userid'); //发布者
                 $info['inc_user_name']      = session('nickname');
                 $info['create_time']        = NOW_TIME;
-                $info['kind']               = 1; //公司其他人员发布的信息,需要品控部跟进
                 if ($id){
                     $res                    = $db->where(array('id'=>$id))->save($info);
                     $qaqc_id                = $id;
-                    $explain                = '编辑品质检查';
+                    $explain                = '编辑不合格报告';
                 }else{
+                    $info['kind']           = 2; //公司其他人员发布的信息,需要品控部跟进
                     $res                    = $db->add($info);
                     $qaqc_id                = $res;
-                    $explain                = '新建品质检查';
+                    $explain                = '新建不合格报告';
 
                     //系统消息提醒
                     $where                  = array();
@@ -2304,7 +2306,7 @@ class KpiController extends BaseController {
                     $where['roleid']        = 60; //安全品控部经理
                     $resive_uid             = M('account')->where($where)->getField('id');
                     $uid                    = session('userid');
-                    $title                  = '您有来自【'.session('nickname').'】的品质检查信息，请及时跟进!';
+                    $title                  = '您有来自【'.session('nickname').'】的不合格报告信息，请及时跟进!';
                     $content                = '品质报告：'.$info['title'];
                     $url                    = U('Kpi/handle',array('id'=>$res));
                     $user                   = '['.$resive_uid.']';

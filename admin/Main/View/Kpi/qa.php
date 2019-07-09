@@ -16,24 +16,33 @@
 
                     <div class="row">
                         <div class="col-xs-12">
+
+                            <div class="btn-group" id="catfont" style="padding-bottom:20px;">
+                                <!--<a href="{:U('Kpi/qa',array('pin'=>0))}" class="btn <?php /*if($pin==0){ echo 'btn-info';}else{ echo 'btn-default';} */?>">全部</a>-->
+                                <a href="{:U('Kpi/qa',array('pin'=>1))}" class="btn <?php if($pin==1){ echo 'btn-info';}else{ echo 'btn-default';} ?>">品质报告</a>
+                                <a href="{:U('Kpi/qa',array('pin'=>2))}" class="btn <?php if($pin==2){ echo 'btn-info';}else{ echo 'btn-default';} ?>">不合格报告</a>
+                            </div>
+
                             <div class="box">
                                 <div class="box-header">
                                     <h3 class="box-title">{$_action_}</h3>
                                     <div class="box-tools pull-right">
                                     	 <a href="javascript:;" class="btn btn-info btn-sm" onclick="javascript:opensearch('searchtext',600,120);"><i class="fa fa-search"></i> 搜索</a>
-                                         <if condition="rolemenu(array('Kpi/addqa'))">
-                                         <a href="{:U('Kpi/addqa')}" class="btn btn-danger btn-sm" ><i class="fa fa-plus"></i> 发布</a>
-                                         </if>
+                                         <?php if (rolemenu(array('Kpi/addqa')) && $pin==1){ ?>
+                                             <a href="{:U('Kpi/addqa')}" class="btn btn-danger btn-sm" ><i class="fa fa-plus"></i> 发布</a>
+                                         <?php }elseif($pin==2){ ?>
+                                             <a href="{:U('Kpi/public_addqa')}" class="btn btn-danger btn-sm" ><i class="fa fa-plus"></i> 发布</a>
+                                         <?php } ?>
                                          
                                     </div>
                                 </div><!-- /.box-header -->
                                 <div class="box-body">
-                                	<!--
-                                	<div class="btn-group" id="catfont" style="padding-bottom:5px;">
-										<?php if($prveyear>2017){ ?>
+
+                                	<!--<div class="btn-group" id="catfont" style="padding-bottom:5px;">
+										<?php /*if($prveyear>2017){ */?>
                                         <a href="{:U('Kpi/qa',array('year'=>$prveyear,'month'=>'01','user'=>$user,'uid'=>$uid))}" class="btn btn-default" style="padding:8px 18px;">上一年</a>
-                                        <?php } ?>
-                                        <?php 
+                                        <?php /*} */?>
+                                        <?php /*
                                         for($i=1;$i<13;$i++){
                                             $par = array();
 											$par['year']  	= $year;
@@ -46,12 +55,12 @@
                                                 echo '<a href="'.U('Kpi/qa',$par).'" class="btn btn-default" style="padding:8px 18px;">'.$i.'月</a>';
                                             }
                                         }
-                                        ?>
-                                        <?php if($year<date('Y')){ ?>
+                                        */?>
+                                        <?php /*if($year<date('Y')){ */?>
                                         <a href="{:U('Kpi/qa',array('year'=>$nextyear,'month'=>'01','user'=>$user,'uid'=>$uid))}" class="btn btn-default" style="padding:8px 18px;">下一年</a>
-                                        <?php } ?>
-                                    </div>
-                                    -->
+                                        <?php /*} */?>
+                                    </div>-->
+
                                 <table class="table table-bordered dataTable fontmini" id="tablelist">
                                     <tr role="row" class="orders" >
                                         <th class="sorting" width="60" data="id">ID</th>
@@ -66,7 +75,7 @@
                                         <if condition="rolemenu(array('Kpi/addqa'))">
                                         <th width="50" class="taskOptions">编辑</th>
                                         </if>
-                                        <if condition="rolemenu(array('Kpi/handle'))">
+                                        <if condition="rolemenu(array('Kpi/handle')) && $pin == 2">
                                         <th width="50" class="taskOptions">跟进</th>
                                         </if>
                                         <if condition="rolemenu(array('Kpi/appqa'))">
@@ -92,25 +101,23 @@
                                         <?php
                                         if($row['status']==0 && ( C('RBAC_SUPER_ADMIN')==cookie('username') || cookie('roleid')==10 ||  cookie('userid')==$row['inc_user_id'])) {
                                         ?>
-                                        <a href="{:U('Kpi/addqa',array('id'=>$row['id']))}"  title="修改" class="btn btn-info btn-smsm"><i class="fa fa-pencil"></i></a>
+                                        <a href="{:U('Kpi/addqa',array('id'=>$row['id']))}"  title="编辑" class="btn btn-info btn-smsm"><i class="fa fa-pencil"></i></a>
                                         <?php
                                         }
                                         ?>
                                         </td>
                                         </if>
 
-                                        <if condition="rolemenu(array('Kpi/handle'))">
+                                        <?php if (rolemenu(array('Kpi/handle'))  && $pin == 2 && in_array($row['status'],array(0,3)) && $row['kind'] ==2){ ?>
                                             <td class="taskOptions">
-                                                <?php if (rolemenu(array('Kpi/handle')) && in_array($row['status'],array(0,3)) && $row['kind'] ==1){ ?>
                                                     <a href="{:U('Kpi/handle',array('id'=>$row['id']))}" title="跟进" class="btn btn-info btn-smsm"><i class="fa fa-wrench"></i></a>
-                                                <?php } ?>
                                             </td>
-                                        </if>
+                                        <?php } ?>
 
                                         <if condition="rolemenu(array('Kpi/appqa'))">
                                         <td class="taskOptions">
                                         <?php
-                                        if((($row['status']==0 && $row['kind']==0) || ($row['status']==3 && $row['kind']==1)) && ( C('RBAC_SUPER_ADMIN')==cookie('username') || cookie('roleid')==10 || cookie('userid')==38 || cookie('userid')==32 || cookie('userid')==12 || cookie('userid')==13 ) ) {
+                                        if((($row['status']==0 && $row['kind']==1) || ($row['status']==3 && $row['kind']==2)) && ( C('RBAC_SUPER_ADMIN')==cookie('username') || cookie('roleid')==10 || cookie('userid')==38 || cookie('userid')==32 || cookie('userid')==12 || cookie('userid')==13 ) ) {
                                         ?>
                                         <a href="{:U('Kpi/appqa',array('id'=>$row['id']))}"  title="审核" class="btn btn-success btn-smsm"><i class="fa fa-check"></i></a>
                                         <?php 
@@ -152,9 +159,13 @@
                 <input type="hidden" name="m" value="Main">
                 <input type="hidden" name="c" value="Kpi">
                 <input type="hidden" name="a" value="qa">
+                <input type="hidden" name="pin" value="{$pin}">
                 
                 <div class="form-group col-md-4">
-                    <input type="text" class="form-control" name="month" placeholder="月份">
+                    <input type="text" class="form-control" name="tit" placeholder="标题">
+                </div>
+                <div class="form-group col-md-4">
+                    <input type="text" class="form-control" name="month" placeholder="绩效月份">
                 </div>
                 
                 <div class="form-group col-md-4">
