@@ -188,7 +188,7 @@
 	$(document).ready(function(e) {
         selectuser();
 
-        let group_id    = "<?php echo $row['group_id']?$row['group_id']:0; ?>";
+        let group_id    = "<?php echo $row['group_id']?$row['group_id']:''; ?>";
         if (group_id){
             $('#isop').show();
             $('#noop').hide();
