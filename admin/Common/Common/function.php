@@ -3397,11 +3397,10 @@ function updatekpi($month,$user){
 
                         //不合格处理率-安全品控部经理
                         if ($v['quota_id']==215){
-                            $score_lists            = get_month_satisfaction($v['start_date'],$v['end_date']); //总评分列表
+                            /*$score_lists            = get_month_satisfaction($v['start_date'],$v['end_date']); //总评分列表
                             $unok_lists             = get_score_unqualified_lists($score_lists); //不合格评分列表
                             $unok_opids             = array_unique(array_column($unok_lists,'op_id'));
                             $unok_num               = count($unok_opids);
-
                             $visit_list             = get_visit($unok_opids); //回访记录
                             $visit_num              = count($visit_list);
                             if (!$unok_num){
@@ -3412,7 +3411,13 @@ function updatekpi($month,$user){
                             $complete               = ($average*100).'%';
                             //$opids                  = implode(',',array_unique(array_column($score_lists,'op_id'))); //所有的项目
                             $unok_opids             = implode(',',$unok_opids); //不合格项目
-                            $url                    = U('Inspect/score',array('kpi_opids'=>$unok_opids));
+                            $url                    = U('Inspect/score',array('kpi_opids'=>$unok_opids));*/
+
+                            $mod                    = D('Inspect');
+                            $data                   = $mod->get_unqualify_data($v['start_date'],$v['end_date']);
+                            $sum_data               = $mod->get_sum_timely($data);
+                            $complete               = $sum_data['average'];
+                            $url                    = U('Inspect/unqualify');
                         }
 
                         //上级领导组织对本月度关键事项绩效评价
