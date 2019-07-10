@@ -35,7 +35,7 @@
                             <i class="fa fa-bars rights"></i>
                         </div>
                         <div style="margin-top:15px;">
-                             <div class="col-lg-3 col-xs-6">
+                             <div class="col-lg-2 col-xs-6">
                                 <!-- small box -->
                                 <div class="small-box bg-aqua">
                                     <div class="inner">
@@ -49,7 +49,7 @@
                                 </div>
                             </div><!-- ./col -->
                             
-                             <div class="col-lg-3 col-xs-6">
+                             <div class="col-lg-2 col-xs-6">
                                 <!-- small box -->
                                 <div class="small-box bg-green">
                                     <div class="inner">
@@ -65,7 +65,7 @@
                             
                             
                             
-                            <div class="col-lg-3 col-xs-6">
+                            <div class="col-lg-2 col-xs-6">
                                 <!-- small box -->
                                 <div class="small-box bg-yellow">
                                     <div class="inner">
@@ -81,7 +81,7 @@
                             
                             
                             
-                            <div class="col-lg-3 col-xs-6">
+                            <div class="col-lg-2 col-xs-6">
                                 <!-- small box -->
                                 <div class="small-box bg-red">
                                     <div class="inner">
@@ -92,6 +92,34 @@
                                         <i class="ion ion-document-text"></i>
                                     </div>
                                     <a href="{:U('Rights/index',array('status'=>0))}" class="small-box-footer">查看详情 <i class="fa fa-arrow-circle-right"></i></a>
+                                </div>
+                            </div><!-- ./col -->
+
+                            <div class="col-lg-2 col-xs-6">
+                                <!-- small box -->
+                                <div class="small-box bg-blue">
+                                    <div class="inner">
+                                        <h3>8888</h3>
+                                        <p>城市合伙人数量</p>
+                                    </div>
+                                    <div class="icon">
+                                        <i class="ion ion-arrow-graph-up-right"></i>
+                                    </div>
+                                    <a href="javascript:;" onclick="art_show_msg('加班开发中...',3)" class="small-box-footer">查看详情 <i class="fa fa-arrow-circle-right"></i></a>
+                                </div>
+                            </div><!-- ./col -->
+
+                            <div class="col-lg-2 col-xs-6">
+                                <!-- small box -->
+                                <div class="small-box bg-teal">
+                                    <div class="inner">
+                                        <h3>8</h3>
+                                        <p>本月新增城市合伙人</p>
+                                    </div>
+                                    <div class="icon">
+                                        <i class="ion ion-person-add"></i>
+                                    </div>
+                                    <a href="javascript:;" onclick="art_show_msg('加班开发中...',3)" class="small-box-footer">查看详情 <i class="fa fa-arrow-circle-right"></i></a>
                                 </div>
                             </div><!-- ./col -->
                         
