@@ -112,9 +112,9 @@
                                             <tr role="row" class="orders" >
                                                 <th class="sorting" width="60" data="id">ID</th>
                                                 <th class="sorting" data="title">标题</th>
-                                                <th width="80" class="sorting" data="type">报告类型</th>
+                                                <th class="sorting" data="type">报告类型</th>
                                                 <th width="80" class="sorting" data="inc_user_name">报告人员</th>
-                                                <th width="80" class="sorting" data="status">状态</th>
+                                                <th width="120" class="sorting" data="status">状态</th>
                                                 <th width="120" class="create_time" data="create_time">发布时间</th>
                                                 <if condition="rolemenu(array('Kpi/addqa'))">
                                                     <th width="50" class="taskOptions">编辑</th>
