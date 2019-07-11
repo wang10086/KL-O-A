@@ -95,64 +95,68 @@
                                             <label>纠正措施及验证</label>
                                             <textarea class="form-control" style="height:90px;" name="info[verif]">{$row.verif}</textarea>
                                         </div>
+
+                                        <div class="form-group box-float-12 mt20">
+                                            <label>处理意见</label> &emsp;
+                                            <input type="radio" name="info[suggest]" <?php if ($row['suggest']==1) echo "checked" ?> value="1"> &nbsp;建议撤销 &#12288;
+                                            <input type="radio" name="info[suggest]" <?php if ($row['suggest']==2) echo "checked" ?> value="2"> &nbsp;建议观察 &#12288;
+                                            <input type="radio" name="info[suggest]" <?php if ($row['suggest']==3) echo "checked" ?> value="3"> &nbsp;建议不合格处理
+                                        </div>
 	                            	</div>
                               </div><!-- /.box-body -->
-                          
-                              
                            </div><!-- /.box -->     
-                           
-                           
+
                            <div class="box box-warning">
-                                <div class="box-header">
-                                    <h3 class="box-title">奖惩实施</h3>
-                                </div>
-                                <div class="box-body">
-                                    <div class="content">
-                                    	<div class="content" style="padding-top:0px; margin-top:-20px;"> 
-                                            <div id="qaqclist">
-                                                <div class="userlist">
-                                                    <div class="unitbox us">奖惩人员</div>
-                                                    <div class="unitbox">奖惩类型</div>
-                                                    <div class="unitbox">分数</div>
-                                                    <div class="unitbox bz">备注</div>
-                                                </div>
-                                                <?php if($userlist){ ?>
-                                                <foreach name="userlist" key="k" item="v">
-                                                <div class="userlist" id="userlist_{$v.id}">
-                                                    <span class="title"><?php echo $k+1; ?></span>
-                                                   <input type="text" class="form-control selectuser us" name="qadata[888{$v.id}][user_name]" value="{$v.user_name}">
-                                                    <select class="form-control" name="qadata[888{$v.id}][type]">
-                                                    	<option value="0" <?php if($v['type']==0){ echo 'selected';} ?>>惩罚</option>
-                                                        <option value="1" <?php if($v['type']==1){ echo 'selected';} ?>>奖励</option>
-                                                    </select>
-                                                    <input type="text" class="form-control" name="qadata[888{$v.id}][score]" value="{$v.score}">
-                                                    <input type="text" class="form-control bz" name="qadata[888{$v.id}][remark]" value="{$v.remark}">
-                                                    <a href="javascript:;" class="btn btn-danger btn-flat" onclick="delbox('userlist_{$v.id}')">删除</a>
-                                                </div>
-                                                </foreach>
-                                                <?php }else{ ?>
-                                                <div class="userlist" id="delone">
-                                                    <span class="title">1</span>
-                                                    <input type="text" class="form-control selectuser us" name="qadata[0][user_name]" value="">
-                                                    <select class="form-control" name="qadata[0][type]">
-                                                    	<option value="0">惩罚</option>
-                                                        <option value="1">奖励</option>
-                                                    </select>
-                                                    <input type="text" class="form-control" name="qadata[0][score]" value="">
-                                                    <input type="text" class="form-control bz" name="qadata[0][remark]" value="">
-                                                    <a href="javascript:;" class="btn btn-danger btn-flat" onclick="delbox('delone')">删除</a>
-                                                </div>
-                                                <?php } ?>
-                                            </div>
-                                            <div id="qaqclist_val">1</div>
-                                            <div class="form-group col-md-12" id="useraddbtns">
-                                                <a href="javascript:;" class="btn btn-success btn-sm" onClick="add_qauser()"><i class="fa fa-fw fa-plus"></i> 新增人员</a> 
-                                            </div>
-                                            <div class="form-group">&nbsp;</div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                               <div class="box-header">
+                                   <h3 class="box-title">奖惩实施</h3>
+                               </div>
+                               <div class="box-body">
+                                   <div class="content">
+                                       <div class="content" style="padding-top:0px; margin-top:-20px;">
+                                           <div id="qaqclist">
+                                               <div class="userlist">
+                                                   <div class="unitbox us">奖惩人员</div>
+                                                   <div class="unitbox">奖惩类型</div>
+                                                   <div class="unitbox">分数</div>
+                                                   <div class="unitbox bz">备注</div>
+                                               </div>
+                                               <?php if($userlist){ ?>
+                                                   <foreach name="userlist" key="k" item="v">
+                                                       <div class="userlist" id="userlist_{$v.id}">
+                                                           <span class="title"><?php echo $k+1; ?></span>
+                                                           <input type="text" class="form-control selectuser us" name="qadata[888{$v.id}][user_name]" value="{$v.user_name}">
+                                                           <select class="form-control" name="qadata[888{$v.id}][type]">
+                                                               <option value="0" <?php if($v['type']==0){ echo 'selected';} ?>>惩罚</option>
+                                                               <option value="1" <?php if($v['type']==1){ echo 'selected';} ?>>奖励</option>
+                                                           </select>
+                                                           <input type="text" class="form-control" name="qadata[888{$v.id}][score]" value="{$v.score}">
+                                                           <input type="text" class="form-control bz" name="qadata[888{$v.id}][remark]" value="{$v.remark}">
+                                                           <a href="javascript:;" class="btn btn-danger btn-flat" onclick="delbox('userlist_{$v.id}')">删除</a>
+                                                       </div>
+                                                   </foreach>
+                                               <?php }else{ ?>
+                                                   <div class="userlist" id="delone">
+                                                       <span class="title">1</span>
+                                                       <input type="text" class="form-control selectuser us" name="qadata[0][user_name]" value="">
+                                                       <select class="form-control" name="qadata[0][type]">
+                                                           <option value="0">惩罚</option>
+                                                           <option value="1">奖励</option>
+                                                       </select>
+                                                       <input type="text" class="form-control" name="qadata[0][score]" value="">
+                                                       <input type="text" class="form-control bz" name="qadata[0][remark]" value="">
+                                                       <a href="javascript:;" class="btn btn-danger btn-flat" onclick="delbox('delone')">删除</a>
+                                                   </div>
+                                               <?php } ?>
+                                           </div>
+                                           <div id="qaqclist_val">1</div>
+                                           <div class="form-group col-md-12" id="useraddbtns">
+                                               <a href="javascript:;" class="btn btn-success btn-sm" onClick="add_qauser()"><i class="fa fa-fw fa-plus"></i> 新增人员</a>
+                                           </div>
+                                           <div class="form-group">&nbsp;</div>
+                                       </div>
+                                   </div>
+                               </div>
+                           </div>
                            
                            <div class="box-footer clearfix">
                                 <div style="width:100%; text-align:center;">

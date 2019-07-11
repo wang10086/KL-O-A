@@ -796,6 +796,7 @@ class KpiController extends BaseController {
         $pin                                        = I('pin',1);
         $pgtit                                      = $pin==1?'品质报告':($pin==2?'不合格报告':'全部');
         $this->title($pgtit);
+        $type                                       = I('type');
         $title                                      = trim(I('tit'));
         $db                                         = M('qaqc');
 		$this->year		                            = I('year',date('Y'));
@@ -805,29 +806,32 @@ class KpiController extends BaseController {
 
         $where = array();
         if($this->uid || $this->user){
-            if ($pin)          $where['q.kind']     = $pin;
+            if ($pin)          $where['q.kind']     = $pin==1?1:array('in',array(0,2));
             if ($title)        $where['q.title']    = array('like','%'.$title.'%');
+            if ($type)         $where['q.type']     = $type;
 			if($this->user)    $where['a.nickname'] = trim($this->user);
 			if($this->uid)     $where['u.user_id']  = $this->uid;
 			if($this->month)   $where['q.month']    = $this->month;
 			$lists		                            = M()->table('__QAQC_USER__ as u')->field('q.*')->join('__QAQC__ as q on q.id = u.qaqc_id')->join('__ACCOUNT__ as a on a.id = u.user_id')->where($where)->order($this->orders('id'))->group('u.qaqc_id')->select();
 			
 		}else{
-            if ($pin)          $where['kind']       = $pin;
+            if ($pin)          $where['kind']       = $pin==1?1:array('in',array(0,2));
             if ($title)        $where['title']      = array('like','%'.$title.'%');
+            if ($type)         $where['type']       = $type;
 			if($this->month)   $where['month']      = $this->month;
 			$pagecount		                        = $db->where($where)->count();
 			$page			                        = new Page($pagecount, P::PAGE_SIZE);
 			$this->pages 	                        = $pagecount>P::PAGE_SIZE ? $page->show():'';
 			$lists			                        = $db->where($where)->limit($page->firstRow . ',' . $page->listRows)->order($this->orders('id'))->select();
 		}
-		//echo M()->getlastsql();
-        //die;
 		
 		$stastr = array(
 			'0' => '<span>未审核</span>',
 			'1' => '<span class="green">审核通过</span>',
 			'2' => '<span class="red">审核未过</span>',
+            '3' => '<span class="yellow">未提交</span>',
+            '4' => '<span class="red">未处理</span>',
+            '5' => '<span class="">已处理,未审核</span>',
 		);
 		
 		
@@ -837,6 +841,7 @@ class KpiController extends BaseController {
 			$lists[$k]['statusstr']                 = $stastr[$v['status']];
 		}
 
+		$this->qaqc_type                            = C('QAQC_TYPE');
 		$this->pin                                  = $pin;
 		$this->lists                                = $lists;
 		$this->prveyear	                            = $this->year-1;
@@ -975,7 +980,8 @@ class KpiController extends BaseController {
             $this->userkey                      = get_userkey();
             $this->qaqc_type                    = C('QAQC_TYPE');
 
-            if ($list && $list['kind'] == 2){
+            if ($list && in_array($list['kind'],array(0,2))){
+                $this->title('不合格报告');
                 $this->display('addqa_public');
             }else{
                 $this->display('addqaqc');
@@ -2179,7 +2185,7 @@ class KpiController extends BaseController {
     public function public_addqa(){
         $this->title('不合格报告');
 
-        $this->userkey                      = get_userkey();
+        //$this->userkey                      = get_userkey();
         $this->qaqc_type                    = C('QAQC_TYPE');
         $this->display('addqa_public');
     }
@@ -2295,23 +2301,11 @@ class KpiController extends BaseController {
                     $qaqc_id                = $id;
                     $explain                = '编辑不合格报告';
                 }else{
-                    $info['kind']           = 2; //公司其他人员发布的信息,需要品控部跟进
+                    $info['kind']           = 2; //公司其他人员发布的信息,需要品控部跟进(暂时保存)
+                    $info['status']         = 3; //未提交(未申请品控跟进)
                     $res                    = $db->add($info);
                     $qaqc_id                = $res;
                     $explain                = '新建不合格报告';
-
-                    //系统消息提醒
-                    $where                  = array();
-                    $where['status']        = 0; //在职
-                    $where['roleid']        = 60; //安全品控部经理
-                    $resive_uid             = M('account')->where($where)->getField('id');
-                    $uid                    = session('userid');
-                    $title                  = '您有来自【'.session('nickname').'】的不合格报告信息，请及时跟进!';
-                    $content                = '品质报告：'.$info['title'];
-                    $url                    = U('Kpi/handle',array('id'=>$res));
-                    $user                   = '['.$resive_uid.']';
-                    $roleid                 = '';
-                    send_msg($uid,$title,$content,$url,$user,$roleid);
                 }
 
                 //保存操作记录
@@ -2320,7 +2314,7 @@ class KpiController extends BaseController {
                 $record['explain']          = $explain;
                 $record['type']             = 1;
                 record($record);
-                $res ? $this->success('数据保存成功') : $this->error('数据保存失败');
+                $res ? $this->success('数据保存成功',U('Kpi/addqa',array('id'=>$qaqc_id))) : $this->error('数据保存失败');
             }
 
             //保存品控巡检跟进
@@ -2339,7 +2333,7 @@ class KpiController extends BaseController {
                 $info['chen']                   = trim($info['chen']);
                 $info['reason']                 = trim($info['reason']);
                 $info['verif']                  = trim($info['verif']);
-                $info['status']                 = 3; //已跟进处理,待审核
+                $info['status']                 = 5; //已跟进处理,待审核
                 $info['handle_time']            = NOW_TIME;
                 $res                            = $db -> where(array('id'=>$editid))->save($info);
                 if ($res) $num++;
@@ -2382,6 +2376,42 @@ class KpiController extends BaseController {
 
                 $this->success('信息已保存！',I('referer')?I('referer'):U('Kpi/qa'));
 
+            }
+
+            //保存申请品控巡检跟进信息
+            if($savetype ==5){
+                $id                         = I('id',0);
+                $db                         = M('qaqc');
+                $where                      = array();
+                $where['id']                = $id;
+                $data                       = array();
+                $data['status']             = 4; //未处理(已提交)
+                $res                        = $db->where($where)->save($data);
+
+                if ($res){
+                    //系统消息提醒
+                    $where                  = array();
+                    $where['status']        = 0; //在职
+                    $where['roleid']        = 60; //安全品控部经理
+                    $resive_uid             = M('account')->where($where)->getField('id');
+                    $uid                    = session('userid');
+                    $title                  = '您有来自【'.session('nickname').'】的不合格报告信息，请及时跟进!';
+                    $content                = '品质报告：'.$info['title'];
+                    $url                    = U('Kpi/handle',array('id'=>$id));
+                    $user                   = '['.$resive_uid.']';
+                    $roleid                 = '';
+                    send_msg($uid,$title,$content,$url,$user,$roleid);
+
+                    //保存操作记录
+                    $record                 = array();
+                    $record['qaqc_id']      = $id;
+                    $record['explain']      = '申请品控跟进';
+                    $record['type']         = 1;
+                    record($record);
+                    $this->success('提交成功',U('Kpi/qa',array('pin'=>2)));
+                }else{
+                    $this->error('提交失败');
+                }
             }
         }
     }

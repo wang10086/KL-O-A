@@ -72,9 +72,9 @@
                 </tr>
                 <foreach name="records" item="v">
                     <tr>
-                        <td style="padding:20px 0 0 0">{$v.time|date='Y-m-d H:i:s',###}</td>
-                        <td style="padding:20px 0 0 0">{$v.uname}</td>
-                        <td style="padding:20px 0 0 0">{$v.explain}</td>
+                        <td style="padding:20px 0 0; border-top:0px;">{$v.time|date='Y-m-d H:i:s',###}</td>
+                        <td style="padding:20px 0 0; border-top:0px;">{$v.uname}</td>
+                        <td style="padding:20px 0 0; border-top:0px;">{$v.explain}</td>
                     </tr>
                 </foreach>
             </table>
