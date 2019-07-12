@@ -1105,13 +1105,12 @@ class KpiController extends BaseController {
 			if($id){
 				$this->row      = M('qaqc')->find($id);
 				$this->userlist = M('qaqc_user')->where(array('qaqc_id'=>$id))->select();
-				
-				if(C('RBAC_SUPER_ADMIN')!=cookie('username') && cookie('roleid')!=10){
+				if (in_array($this->row['status'],array(1,2))){ $this->error('该信息已被'.$this->row['ex_user_name'].'审批'); }
+				/*if(C('RBAC_SUPER_ADMIN')!=cookie('username') && cookie('roleid')!=10){
 					if($this->row['status']!=0) {
 						$this->error('该信息已审批');	
 					}
-				}
-				
+				}*/
 			}
 			
 			//整理关键字
