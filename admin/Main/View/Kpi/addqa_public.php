@@ -77,7 +77,7 @@
                                 <div class="content">
                                     <form method="post" action="{:U('Kpi/public_save')}" name="myform" id="appsubmint">
                                         <input type="hidden" name="dosubmint" value="1">
-                                        <input type="hidden" name="savetype" value="5">
+                                        <input type="hidden" name="savetype" value="4">
                                         <input type="hidden" name="id" value="{$row.id}">
                                     </form>
 

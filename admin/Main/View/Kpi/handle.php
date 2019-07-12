@@ -20,7 +20,7 @@
                             <!-- general form elements disabled -->
                             <form method="post" action="{:U('Kpi/public_save')}" name="myform" id="myform">
                 			<input type="hidden" name="dosubmint" value="1">
-                                <input type="hidden" name="savetype" value="4">
+                                <input type="hidden" name="savetype" value="5">
                 			<input type="hidden" name="editid" value="{$row.id}" >
                             <input type="hidden" name="referer" value="<?php echo $_SERVER['HTTP_REFERER']; ?>" />
 

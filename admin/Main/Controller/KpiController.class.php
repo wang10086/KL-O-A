@@ -2329,8 +2329,44 @@ class KpiController extends BaseController {
                 $res ? $this->success('数据保存成功',U('Kpi/addqa',array('id'=>$qaqc_id))) : $this->error('数据保存失败');
             }
 
+            //保存申请品控巡检跟进信息
+            if($savetype == 4){
+                $id                         = I('id',0);
+                $db                         = M('qaqc');
+                $where                      = array();
+                $where['id']                = $id;
+                $data                       = array();
+                $data['status']             = 4; //未处理(已提交)
+                $res                        = $db->where($where)->save($data);
+
+                if ($res){
+                    //系统消息提醒
+                    $where                  = array();
+                    $where['status']        = 0; //在职
+                    $where['roleid']        = 60; //安全品控部经理
+                    $resive_uid             = M('account')->where($where)->getField('id');
+                    $uid                    = session('userid');
+                    $title                  = '您有来自【'.session('nickname').'】的不合格报告信息，请及时跟进!';
+                    $content                = '品质报告：'.$info['title'];
+                    $url                    = U('Kpi/handle',array('id'=>$id));
+                    $user                   = '['.$resive_uid.']';
+                    $roleid                 = '';
+                    send_msg($uid,$title,$content,$url,$user,$roleid);
+
+                    //保存操作记录
+                    $record                 = array();
+                    $record['qaqc_id']      = $id;
+                    $record['explain']      = '申请品控跟进';
+                    $record['type']         = 1;
+                    record($record);
+                    $this->success('提交成功',U('Kpi/qa',array('pin'=>2)));
+                }else{
+                    $this->error('提交失败');
+                }
+            }
+
             //保存品控巡检跟进
-            if ($savetype == 4){
+            if ($savetype == 5){
                 $db                         = M('qaqc');
                 $num                        = 0;
                 $editid                     = I('editid');
@@ -2387,43 +2423,6 @@ class KpiController extends BaseController {
                 record($record);
 
                 $this->success('信息已保存！',I('referer')?I('referer'):U('Kpi/qa'));
-
-            }
-
-            //保存申请品控巡检跟进信息
-            if($savetype == 5){
-                $id                         = I('id',0);
-                $db                         = M('qaqc');
-                $where                      = array();
-                $where['id']                = $id;
-                $data                       = array();
-                $data['status']             = 4; //未处理(已提交)
-                $res                        = $db->where($where)->save($data);
-
-                if ($res){
-                    //系统消息提醒
-                    $where                  = array();
-                    $where['status']        = 0; //在职
-                    $where['roleid']        = 60; //安全品控部经理
-                    $resive_uid             = M('account')->where($where)->getField('id');
-                    $uid                    = session('userid');
-                    $title                  = '您有来自【'.session('nickname').'】的不合格报告信息，请及时跟进!';
-                    $content                = '品质报告：'.$info['title'];
-                    $url                    = U('Kpi/handle',array('id'=>$id));
-                    $user                   = '['.$resive_uid.']';
-                    $roleid                 = '';
-                    send_msg($uid,$title,$content,$url,$user,$roleid);
-
-                    //保存操作记录
-                    $record                 = array();
-                    $record['qaqc_id']      = $id;
-                    $record['explain']      = '申请品控跟进';
-                    $record['type']         = 1;
-                    record($record);
-                    $this->success('提交成功',U('Kpi/qa',array('pin'=>2)));
-                }else{
-                    $this->error('提交失败');
-                }
             }
 
             //保存申请领导审核
