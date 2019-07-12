@@ -75,18 +75,14 @@
 
                             <div id="formsbtn" style="padding-bottom:10px;">
                                 <div class="content">
-                                    <?php if($audit['dst_status']!=1){ ?>
-                                        <form method="post" action="{:U('Kpi/public_save')}" name="myform" id="appsubmint">
-                                            <input type="hidden" name="dosubmint" value="1">
-                                            <input type="hidden" name="savetype" value="5">
-                                            <input type="hidden" name="id" value="{$row.id}">
-                                        </form>
+                                    <form method="post" action="{:U('Kpi/public_save')}" name="myform" id="appsubmint">
+                                        <input type="hidden" name="dosubmint" value="1">
+                                        <input type="hidden" name="savetype" value="5">
+                                        <input type="hidden" name="id" value="{$row.id}">
+                                    </form>
 
-                                        <button type="button" onClick="check_myform()" class="btn btn-info btn-lg" style=" padding-left:40px; padding-right:40px; margin-right:10px;">保存</button>
-                                        <button type="button" onClick="submit_check()" class="btn btn-success btn-lg" style=" padding-left:40px; padding-right:40px; margin-left:10px;">申请审批</button>
-
-
-                                    <?php } ?>
+                                    <button type="button" onClick="check_myform()" class="btn btn-info btn-lg" style=" padding-left:40px; padding-right:40px; margin-right:10px;">保存</button>
+                                    <button type="button" onClick="submit_check()" class="btn btn-success btn-lg" style=" padding-left:40px; padding-right:40px; margin-left:10px;">提交</button>
                                 </div>
                             </div>
 

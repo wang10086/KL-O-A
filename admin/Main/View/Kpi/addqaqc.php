@@ -19,7 +19,7 @@
                          <!-- right column -->
                         <div class="col-md-12">
                             <!-- general form elements disabled -->
-                            <form method="post" action="{:U('Kpi/addqa')}" name="myform" id="myform" onsubmit="return submitBefore()">
+                            <form method="post" action="{:U('Kpi/addqa')}" name="myform" id="myform">
                 			<input type="hidden" name="dosubmit" value="1">
                 			<input type="hidden" name="editid" value="{$row.id}" >
                             <input type="hidden" name="referer" value="<?php echo $_SERVER['HTTP_REFERER']; ?>" />
@@ -42,7 +42,7 @@
 
                                         <div class="form-group box-float-4">
                                             <label>记录属性</label>
-                                            <select name="info[is_op]" class="form-control"  onchange="show_op($(this).val())" required>
+                                            <select name="info[is_op]" class="form-control"  onchange="show_op($(this).val())" id="is_op" required>
                                                 <option value="" selected disabled>==请选择==</option>
                                                 <option value="0" <?php if ($row['is_op'] == 0) echo 'selected'; ?>>非团巡检</option>
                                                 <option value="1" <?php if ($row['is_op'] == 1) echo 'selected'; ?>>团内巡检</option>
@@ -164,14 +164,25 @@
                                 </div>
                             </div>
                            
-                           <div class="box-footer clearfix">
+                           <!--<div class="box-footer clearfix">
                                 <div style="width:100%; text-align:center;">
 	                            <button type="submit" class="btn btn-info btn-lg" id="lrpd" >保存</button>
 	                            </div>
-	                            
-                              </div>
-                             
+                           </div>-->
                           </form>
+
+                            <div id="formsbtn" style="padding-bottom:10px;">
+                                <div class="content">
+                                    <form method="post" action="{:U('Kpi/public_save')}" name="myform" id="appsubmint">
+                                        <input type="hidden" name="dosubmint" value="1">
+                                        <input type="hidden" name="savetype" value="6">
+                                        <input type="hidden" name="id" value="{$row.id}">
+                                    </form>
+
+                                    <button type="button" onClick="submitBefore()" class="btn btn-info btn-lg" style=" padding-left:40px; padding-right:40px; margin-right:10px;">保存</button>
+                                    <button type="button" onClick="submit_check()" class="btn btn-success btn-lg" style=" padding-left:40px; padding-right:40px; margin-left:10px;">提交</button>
+                                </div>
+                            </div>
                         </div><!--/.col (right) -->
                     </div>   <!-- /.row -->
                    
@@ -199,7 +210,28 @@
             $('#isop').removeAttr('required');
             $('#op_id').val('');
         }
+        check_from_inspect();
     });
+
+    //检查是否是从不合格处理页面进入
+    function check_from_inspect() {
+        let group_id    = "<?php echo $group_id?$group_id:''; ?>";
+        let op_id       = "<?php echo $opid?$opid:''; ?>"
+        if(group_id){
+            $('input[name="info[group_id]"]').val(group_id).attr('readonly',true);
+            $('#op_id').val(op_id);
+            $('#isop').show();
+            $('#noop').hide();
+            $('#isop').attr('required',true);
+            $('#is_op').attr('readonly',true).attr('disabled',true);
+
+            $('#is_op').find('option').each(function (index,ele) {
+                let val = $(this).val();
+                $(this).removeAttr('selected',false);
+                if (val == 1){ $(this).attr('selected',true); }
+            })
+        };
+    }
 	
 	function selectuser(){
 		var keywords = <?php echo $userkey; ?>;	
@@ -294,6 +326,13 @@
         var opid    = $('#op_id').val();
         if (!title) { art_show_msg('标题不能为空',3); return false; }
         if (isop == 1 && !opid) {  art_show_msg('团号信息错误',3); return false;  }
+        $('#myform').submit();
+    }
+
+    function submit_check() {
+        var id              = $('input[name="id"]').val();
+        if (!id){            art_show_msg('保存后才可提交',3); return false;  }
+        $('#appsubmint').submit();
     }
 	
 </script>	

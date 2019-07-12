@@ -83,7 +83,7 @@
                                                     <if condition="rolemenu(array('Kpi/appqa'))">
                                                         <td class="taskOptions">
                                                             <?php
-                                                                if(rolemenu(array('Kpi/appqa')) && (($row['status']==0 && $row['kind']==1) || ($row['status']==5 && $row['kind']==2))) {
+                                                                if(rolemenu(array('Kpi/appqa')) && $row['status']==6) {
                                                                     ?>
                                                                     <a href="{:U('Kpi/appqa',array('id'=>$row['id']))}"  title="审核" class="btn btn-success btn-smsm"><i class="fa fa-check"></i></a>
                                                                     <?php
@@ -120,11 +120,11 @@
                                                     <th width="50" class="taskOptions">编辑</th>
                                                 </if>
                                                 <if condition="rolemenu(array('Kpi/handle')) && in_array($pin,array(0,2))">
-                                                    <th width="50" class="taskOptions">跟进</th>
+                                                    <th width="50" class="taskOptions">处理</th>
                                                 </if>
-                                                <if condition="rolemenu(array('Kpi/appqa'))">
+                                                <!--<if condition="rolemenu(array('Kpi/appqa'))">
                                                     <th width="50" class="taskOptions">审核</th>
-                                                </if>
+                                                </if>-->
                                                 <if condition="rolemenu(array('Kpi/revoke'))">
                                                     <th width="50" class="taskOptions">撤销</th>
                                                 </if>
@@ -152,22 +152,22 @@
                                                     <?php if (rolemenu(array('Kpi/handle'))){ ?>
                                                         <td class="taskOptions">
                                                             <?php if (in_array($row['status'],array(4,5)) && $row['kind'] ==2){ ?>
-                                                                <a href="{:U('Kpi/handle',array('id'=>$row['id']))}" title="跟进" class="btn btn-info btn-smsm"><i class="fa fa-wrench"></i></a>
+                                                                <a href="{:U('Kpi/handle',array('id'=>$row['id']))}" title="处理" class="btn btn-info btn-smsm"><i class="fa fa-wrench"></i></a>
                                                             <?php } ?>
                                                         </td>
                                                     <?php  } ?>
 
-                                                    <if condition="rolemenu(array('Kpi/appqa'))">
+                                                    <!--<if condition="rolemenu(array('Kpi/appqa'))">
                                                         <td class="taskOptions">
                                                             <?php
-                                                                if(rolemenu(array('Kpi/appqa')) && (($row['status']==0 && $row['kind']==1) || ($row['status']==5 && $row['kind']==2))) {
-                                                                    ?>
+/*                                                                if(rolemenu(array('Kpi/appqa')) && (($row['status']==0 && $row['kind']==1) || ($row['status']==5 && $row['kind']==2))) {
+                                                                    */?>
                                                                     <a href="{:U('Kpi/appqa',array('id'=>$row['id']))}"  title="审核" class="btn btn-success btn-smsm"><i class="fa fa-check"></i></a>
                                                                     <?php
-                                                                }
-                                                            ?>
+/*                                                                }
+                                                            */?>
                                                         </td>
-                                                    </if>
+                                                    </if>-->
                                                     <if condition="rolemenu(array('Kpi/revoke'))">
                                                         <td class="taskOptions">
                                                             <?php

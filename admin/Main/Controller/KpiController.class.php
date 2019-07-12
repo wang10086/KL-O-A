@@ -826,12 +826,13 @@ class KpiController extends BaseController {
 		}
 		
 		$stastr = array(
-			'0' => '<span>未审核</span>',
+			'0' => '<span>未提交</span>',
 			'1' => '<span class="green">审核通过</span>',
 			'2' => '<span class="red">审核未过</span>',
             '3' => '<span class="yellow">未提交</span>',
             '4' => '<span class="red">未处理</span>',
-            '5' => '<span class="">已处理,未审核</span>',
+            '5' => '<span class="blue">处理中...</span>',
+            '6' => '<span class="yellow">待审批</span>'
 		);
 		
 		
@@ -855,12 +856,12 @@ class KpiController extends BaseController {
 	public function addqa(){
 		
 		if(isset($_POST['dosubmit'])){
-
 			$editid                 = I('editid');
 			$info                   = I('info');
 			$qadata                 = I('qadata');
 
             $info['title']          = trim($info['title']);
+            $info['is_op']          = $info['op_id'] ? 1 : 0;
 			if (!$info['title'])    $this->error('标题不能为空');
             if ($info['is_op'] == 0){
                 $info['group_id']   = 0;
@@ -973,8 +974,15 @@ class KpiController extends BaseController {
 				$list                           = M('qaqc')->find($id);
 				$this->row                      = $list;
 				$this->userlist                 = M('qaqc_user')->where(array('qaqc_id'=>$id))->select();
-				
 			}
+
+			//从不合格处理率页面进入
+			$group_id                           = I('gid','');
+            $opid                               = I('opid','');
+            if ($group_id){
+                $this->group_id                 = $group_id;
+                $this->opid                     = $opid;
+            }
 			
 			//整理关键字
             $this->userkey                      = get_userkey();
@@ -1129,12 +1137,16 @@ class KpiController extends BaseController {
 	
 	// @@@NODE-3###qadetail###查看品质检查详情###
 	public function qadetail(){
-		
-		$stastr = array(
-			'0' => '<span>未审核</span>',
-			'1' => '<span class="green">审核通过</span>',
-			'2' => '<span class="red">审核未过</span>',
-		);
+
+        $stastr = array(
+            '0' => '<span>未提交</span>',
+            '1' => '<span class="green">审核通过</span>',
+            '2' => '<span class="red">审核未过</span>',
+            '3' => '<span class="yellow">未提交</span>',
+            '4' => '<span class="red">未处理</span>',
+            '5' => '<span class="blue">处理中...</span>',
+            '6' => '<span class="yellow">待审批</span>'
+        );
 		
 		$id = I('id','');
 		if($id){
@@ -2379,7 +2391,7 @@ class KpiController extends BaseController {
             }
 
             //保存申请品控巡检跟进信息
-            if($savetype ==5){
+            if($savetype == 5){
                 $id                         = I('id',0);
                 $db                         = M('qaqc');
                 $where                      = array();
@@ -2409,6 +2421,41 @@ class KpiController extends BaseController {
                     $record['type']         = 1;
                     record($record);
                     $this->success('提交成功',U('Kpi/qa',array('pin'=>2)));
+                }else{
+                    $this->error('提交失败');
+                }
+            }
+
+            //保存申请领导审核
+            if ($savetype == 6){
+                $id                         = I('id',0);
+                $db                         = M('qaqc');
+                $where                      = array();
+                $where['id']                = $id;
+                $data                       = array();
+                $data['kind']               = 1;
+                $data['status']             = 6; //已提交,待审批
+                $res                        = $db->where($where)->save($data);
+                $qaqc_title                 = $db->where($where)->getField('title');
+
+                if ($res){
+                    //系统消息提醒
+                    $resive_uid             = 38; //杨开玖
+                    $uid                    = session('userid');
+                    $title                  = '您有来自【'.session('nickname').'】的不合格报告信息待审核，请及时审核!';
+                    $content                = '品质报告：'.$qaqc_title;
+                    $url                    = U('Kpi/appqa',array('id'=>$id));
+                    $user                   = '['.$resive_uid.']';
+                    $roleid                 = '';
+                    send_msg($uid,$title,$content,$url,$user,$roleid);
+
+                    //保存操作记录
+                    $record                 = array();
+                    $record['qaqc_id']      = $id;
+                    $record['explain']      = '申请审核';
+                    $record['type']         = 1;
+                    record($record);
+                    $this->success('提交成功',U('Kpi/qa',array('pin'=>1)));
                 }else{
                     $this->error('提交失败');
                 }

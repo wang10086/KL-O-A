@@ -27,7 +27,11 @@
                                         <th class="sorting" data="o.group_id">团号</th>
                                         <th class="sorting" data="o.project">项目名称</th>
                                         <th class="sorting" data="show_stu">处理状态</th>
-                                        <th class="sorting" data="title">处理信息</th>
+                                        <th class="taskOptions">报告时间</th>
+                                        <th class="taskOptions">完成时间</th>
+                                        <if condition="rolemenu(array('Kpi/addqa'))">
+                                        <th class="taskOptions" width="80">处理</th>
+                                        </if>
                                     </tr>
 
                                     <foreach name="lists" item="row"> 
@@ -36,7 +40,11 @@
                                         <td>{$row.group_id}</td>
                                         <td><a href="{:U('Inspect/score_info',array('opid'=>$row['op_id']))}" title="满意度详情">{$row.project}</a></td>
                                         <td>{$row.show_stu}</td>
-                                        <td><a href="javascript:;" onClick="qadetail({$row.id})" >{$row.title}</a></td>
+                                        <td></td>
+                                        <td></td>
+                                        <if condition="rolemenu(array('Kpi/addqa'))">
+                                        <td class="taskOptions"><a href="{:U('Kpi/addqa',array('opid'=>$row['op_id'],'gid'=>$row['group_id']))}" title="处理" class="btn btn-info btn-smsm"><i class="fa fa-wrench"></i></a></td>
+                                        </if>
                                     </tr>
                                     </foreach>					
                                 </table>

@@ -60,7 +60,7 @@
                                             <th class="taskOptions">工作项目</th>
                                             <th class="taskOptions">内容及时限</th>
                                             <th class="taskOptions">不合格数</th>
-                                            <th class="taskOptions">处理数</th>
+                                            <th class="taskOptions">及时处理数</th>
                                             <th class="taskOptions">处理率</th>
                                             <th width="80" class="taskOptions">详情</th>
                                         </tr>

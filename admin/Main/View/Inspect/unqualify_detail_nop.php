@@ -28,6 +28,11 @@
                                         <th class="sorting" data="inc_user_name">录入人员</th>
                                         <th class="sorting" data="create_time">录入日期</th>
                                         <th class="sorting" data="show_stu">处理状态</th>
+                                        <th class="taskOptions">报告时间</th>
+                                        <th class="taskOptions">完成时间</th>
+                                        <if condition="rolemenu(array('Kpi/handle'))">
+                                        <th class="taskOptions" width="80">处理</th>
+                                        </if>
                                     </tr>
 
                                     <foreach name="lists" item="row"> 
@@ -37,6 +42,11 @@
                                         <td>{$row.inc_user_name}</td>
                                         <td>{$row.create_time|date="Y-m-d",###}</td>
                                         <td>{$row.show_stu}</td>
+                                        <td></td>
+                                        <td></td>
+                                        <if condition="rolemenu(array('Kpi/handle'))">
+                                            <td class="taskOptions"><a href="{:U('Kpi/handle',array('id'=>$row['id']))}" title="处理" class="btn btn-info btn-smsm"><i class="fa fa-wrench"></i></a></td>
+                                        </if>
                                     </tr>
                                     </foreach>					
                                 </table>

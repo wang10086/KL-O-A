@@ -158,14 +158,26 @@
                                </div>
                            </div>
                            
-                           <div class="box-footer clearfix">
+                           <!--<div class="box-footer clearfix">
                                 <div style="width:100%; text-align:center;">
 	                            <button type="submit" class="btn btn-info btn-lg" id="lrpd" onclick="return checkForm();">保存</button>
 	                            </div>
-	                            
-                              </div>
-                             
+                          </div>-->
                           </form>
+
+                            <div id="formsbtn" style="padding-bottom:10px;">
+                                <div class="content">
+                                    <form method="post" action="{:U('Kpi/public_save')}" name="myform" id="appsubmint">
+                                        <input type="hidden" name="dosubmint" value="1">
+                                        <input type="hidden" name="savetype" value="6">
+                                        <input type="hidden" name="id" value="{$row.id}">
+                                    </form>
+
+                                    <button type="button" onClick="$('#myform').submit()" class="btn btn-info btn-lg" style=" padding-left:40px; padding-right:40px; margin-right:10px;">保存</button>
+                                    <button type="button" onClick="$('#appsubmint').submit()" class="btn btn-success btn-lg" style=" padding-left:40px; padding-right:40px; margin-left:10px;">提交</button>
+                                </div>
+                            </div>
+
                         </div><!--/.col (right) -->
                     </div>   <!-- /.row -->
                    
