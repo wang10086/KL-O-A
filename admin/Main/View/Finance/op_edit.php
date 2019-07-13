@@ -121,7 +121,7 @@
                             <input type="hidden" name="payment[8888{$pp.id}][no]" class="payno"  value="{$pp.no}">
                             <input type="hidden" class="form-control" name="payment[8888{$pp.id}][pid]" value="{$pp.id}">
                             <div class="f_15">
-                                <input type="text" class="form-control" name="payment[8888{$pp.id}][amount]" onblur="check_ratio('8888'+{$pp.id},$(this).val())" value="{$pp.amount}">
+                                <input type="text" class="form-control money_back_amount" name="payment[8888{$pp.id}][amount]" onblur="check_ratio('8888'+{$pp.id},$(this).val())" value="{$pp.amount}">
                             </div>
                             <div class="f_15">
                                 <input type="text" class="form-control" name="payment[8888{$pp.id}][ratio]" value="{$pp.ratio}">
@@ -155,7 +155,7 @@
                         <span class="title">1</span>
                         <input type="hidden" name="payment[1][no]" class="payno" value="1">
                         <div class="f_15">
-                            <input type="text" class="form-control" name="payment[1][amount]" onblur="check_ratio($(this).parent('div').prev().val(),$(this).val())" value="">
+                            <input type="text" class="form-control money_back_amount" name="payment[1][amount]" onblur="check_ratio($(this).parent('div').prev().val(),$(this).val())" value="">
                         </div>
                         <div class="f_15">
                             <input type="text" class="form-control" name="payment[1][ratio]" value="">

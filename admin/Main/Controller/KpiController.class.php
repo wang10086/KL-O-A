@@ -1183,10 +1183,10 @@ class KpiController extends BaseController {
         M('qaqc')->where(array('id'=>$id))->save($data);
 		
 		//撤销评分
-		$list = M('qaqc_user')->where(array('qaqc_id'=>$id))->select();
+        M('qaqc_user')->where(array('qaqc_id'=>$id))->save($data);
+        $list = M('qaqc_user')->where(array('qaqc_id'=>$id))->select();
 		foreach($list as $k=>$v){
 			//修正绩效评分
-			M('qaqc_user')->where(array('id'=>$v['id']))->save($data);
 			qa_score_num($v['user_id'],$v['month']);
 		}
 		

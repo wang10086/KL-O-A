@@ -97,7 +97,8 @@
                                         <div id="formsbtn" style="padding-bottom:20px; margin-top:10px;color:#ff3300;">当审核未被通过时，请调整预算后可能会被通过哦</div>
                                         
                                         
-                                        <button type="button" onClick="$('#save_appcost').submit()" class="btn btn-info btn-lg" style=" padding-left:40px; padding-right:40px; margin-right:10px;">保存预算</button>
+                                        <!--<button type="button" onClick="$('#save_appcost').submit()" class="btn btn-info btn-lg" style=" padding-left:40px; padding-right:40px; margin-right:10px;">保存预算</button>-->
+                                        <button type="button" onClick="check_appcost()" class="btn btn-info btn-lg" style=" padding-left:40px; padding-right:40px; margin-right:10px;">保存预算</button>
                                         <button type="button" onClick="appcost()" class="btn btn-success btn-lg" style=" padding-left:40px; padding-right:40px; margin-left:10px;">申请审批</button>
                                 
                                         
@@ -166,7 +167,7 @@
         var html = '<div class="userlist" id="pretium_'+i+'">';
         html += '<span class="title"></span>';
         html += '<input type="hidden" name="payment['+i+'][no]" class="payno" value="">';
-        html += '<div class="f_15"><input type="text" class="form-control" name="payment['+i+'][amount]" onblur="check_ratio('+i+',$(this).val())" value=""></div>';
+        html += '<div class="f_15"><input type="text" class="form-control money_back_amount" name="payment['+i+'][amount]" onblur="check_ratio('+i+',$(this).val())" value=""></div>';
         html += '<div class="f_15"><input type="text" class="form-control" name="payment['+i+'][ratio]" value=""></div>';
         html += '<div class="f_15"><input type="text" class="form-control inputdate"  name="payment['+i+'][return_time]" value=""></div>';
         html += '<div class="f_15"><select class="form-control" name="payment['+i+'][company]"><foreach name="company" key="k" item="v"><option value="{$k}">{$v}</option></foreach></select></div>';
@@ -294,6 +295,18 @@
             $('input[name="payment['+num+'][ratio]"]').val(average);
         }
 
+    }
+    
+    function check_appcost() {
+        var dijie   = {$is_dijie};
+        var shouru  = $('#shouru').val().trim();
+        if (!shouru || shouru==0){ art_show_msg('收入不能为空',3); return false; }
+        var money_return_plan = 0;
+        $('#payment').find('.money_back_amount').each(function () {
+            money_return_plan += parseInt($(this).val());
+        })
+        if (money_return_plan != shouru && dijie == 0){ art_show_msg('请确保回款总金额和收入一致',3); return false; }
+        $('#save_appcost').submit();
     }
 
 </script>

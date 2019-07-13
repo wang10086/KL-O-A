@@ -1,5 +1,5 @@
-<form method="post" action="{:U('Finance/save_costacc')}" name="myform" id="myform" onsubmit="return submintform()">
-<!--<form method="post" action="{:U('Finance/save_costacc')}" name="myform" onsubmit="return beforeSubmit(this)">-->
+<form method="post" action="{:U('Finance/save_costacc')}" name="myform" id="myform">
+<!--<form method="post" action="{:U('Finance/save_costacc')}" name="myform" id="myform" onsubmit="return submintform()">-->
 <input type="hidden" name="dosubmint" value="1">
 <input type="hidden" name="opid" value="{$op.op_id}">
 <input type="hidden" name="referer" value="<?php echo $_SERVER['HTTP_REFERER']; ?>" />
@@ -137,7 +137,8 @@
 
 
 <div id="formsbtn" style="padding-bottom:10px;">
-    <button type="submit" class="btn btn-info btn-lg" id="lrpd">保存</button>
+    <!--<button type="submit" class="btn btn-info btn-lg" id="lrpd">保存</button>-->
+    <a type="button" onclick="submintform()" class="btn btn-info btn-lg" id="lrpd">保存</a>
 </div>
 
 </form>
