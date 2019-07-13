@@ -1752,6 +1752,7 @@ function qa_score_num($user,$month){
 		$where['month']      = $month;
 		$where['status']     = 1;
 		$where['type']       = 1;
+        $where['suggest']    = 3;
 		$inc_score = M('qaqc_user')->field('score')->where($where)->sum('score');
 		
 		//获取扣分情况
@@ -1760,6 +1761,7 @@ function qa_score_num($user,$month){
 		$where['month']      = $month;
 		$where['status']     = 1;
 		$where['type']       = 0;
+        $where['suggest']    = 3;
 		$red_score = M('qaqc_user')->field('score')->where($where)->sum('score');
 		
 		//总分

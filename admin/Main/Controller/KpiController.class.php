@@ -812,6 +812,7 @@ class KpiController extends BaseController {
 			if($this->user)    $where['a.nickname'] = trim($this->user);
 			if($this->uid)     $where['u.user_id']  = $this->uid;
 			if($this->month)   $where['q.month']    = $this->month;
+            $where['u.status']                      = array('neq','-1');
 			$lists		                            = M()->table('__QAQC_USER__ as u')->field('q.*')->join('__QAQC__ as q on q.id = u.qaqc_id')->join('__ACCOUNT__ as a on a.id = u.user_id')->where($where)->order($this->orders('id'))->group('u.qaqc_id')->select();
 			
 		}else{
@@ -819,6 +820,7 @@ class KpiController extends BaseController {
             if ($title)        $where['title']      = array('like','%'.$title.'%');
             if ($type)         $where['type']       = $type;
 			if($this->month)   $where['month']      = $this->month;
+            $where['status']                        = array('neq','-1');
 			$pagecount		                        = $db->where($where)->count();
 			$page			                        = new Page($pagecount, P::PAGE_SIZE);
 			$this->pages 	                        = $pagecount>P::PAGE_SIZE ? $page->show():'';
@@ -1040,8 +1042,8 @@ class KpiController extends BaseController {
 				$info['ex_user_name']     = cookie('name');
 				$info['ex_time']          = time();
 			}
-			
-			
+
+
 			//执行保存
 			$addinfo = M('qaqc')->data($info)->where(array('id'=>$editid))->save();
 			$qaqc    = M('qaqc')->find($editid);
@@ -1065,6 +1067,7 @@ class KpiController extends BaseController {
 					$data['remark']  	  = $v['remark'];
 					$data['status']       = $status;
 					$data['update_time']  = time();
+                    $data['suggest']      = $info['suggest']?$info['suggest']:0;
 					
 					//判断是否存在
 					$where = array();
@@ -1081,7 +1084,7 @@ class KpiController extends BaseController {
 				}
 			}
 			
-			if($info['status']==1){
+			if($info['status']==1 && $info['suggest']==3){ //审核通过&&建议不合格处理
 				//发送公告
 				$title       = $info['title'];
 				$content     = $info['chen'].'<br>'.$info['reason'].'<br>'.$info['verif'];
@@ -1172,15 +1175,18 @@ class KpiController extends BaseController {
 	
 	// @@@NODE-3###revoke###撤销品质检查信息###
 	public function revoke(){
-		$id = I('id','');
-		
-		M('qaqc')->delete($id);
+		$id                     = I('id','');
+
+        $data                   = array();
+        $data['status']         = '-1';
+		//M('qaqc')->delete($id);
+        M('qaqc')->where(array('id'=>$id))->save($data);
 		
 		//撤销评分
 		$list = M('qaqc_user')->where(array('qaqc_id'=>$id))->select();
 		foreach($list as $k=>$v){
 			//修正绩效评分
-			M('qaqc_user')->where(array('id'=>$v['id']))->delete();
+			M('qaqc_user')->where(array('id'=>$v['id']))->save($data);
 			qa_score_num($v['user_id'],$v['month']);
 		}
 		
@@ -2336,6 +2342,7 @@ class KpiController extends BaseController {
                 $where['id']                = $id;
                 $data                       = array();
                 $data['status']             = 4; //未处理(已提交)
+                $data['create_time']        = NOW_TIME;
                 $res                        = $db->where($where)->save($data);
 
                 if ($res){

@@ -40,8 +40,8 @@
                                         <td>{$row.group_id}</td>
                                         <td><a href="{:U('Inspect/score_info',array('opid'=>$row['op_id']))}" title="满意度详情">{$row.project}</a></td>
                                         <td>{$row.show_stu}</td>
-                                        <td></td>
-                                        <td></td>
+                                        <td class="taskOptions">{$row.input_time|date="Y-m-d H:i:s",###}</td>
+                                        <td class="taskOptions"><?php echo $row['ex_time']?date('Y-m-d H:i:s'):'<font color="#999999">未完成</font>'; ?></td>
                                         <if condition="rolemenu(array('Kpi/addqa'))">
                                         <td class="taskOptions"><a href="{:U('Kpi/addqa',array('opid'=>$row['op_id'],'gid'=>$row['group_id']))}" title="处理" class="btn btn-info btn-smsm"><i class="fa fa-wrench"></i></a></td>
                                         </if>

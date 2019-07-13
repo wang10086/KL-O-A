@@ -103,33 +103,44 @@ class InspectModel extends Model{
     }
 
     //获取团内的不合格处理详情
-    public function get_op_unqualify_list($opids=''){
-        if ($opids) $opids              = explode(',',$opids);
-        $where                          = array();
-        $where['o.op_id']               = array('in',$opids);
-        $field                          = 'o.op_id,o.group_id,o.project,o.create_user_name,q.id as qaqc_id,q.title,q.status,q.handle_time,q.ex_time';
-        $op_lists                       = M()->table('__OP__ as o')->join('__QAQC__ as q on q.op_id = o.op_id','left')->where($where)->field($field)->select();
+    public function get_op_unqualify_list($type,$startTime,$endTime){
+        if ($type == 1){
+            $op_lists                   = get_lg3_list($startTime,$endTime);
+        }elseif ($type == 2){
+            $op_lists                   = get_lg_90percent_list($startTime,$endTime);
+        }
+
         foreach ($op_lists as $k=>$v){
+            $where                      = array();
+            $where['o.op_id']           = $v['op_id'];
+            $field                      = 'o.op_id,o.group_id,o.project,o.create_user_name,u.mobile,u.time,q.ex_user_name,q.ex_time';
+            $list                       = M()->table('__OP__ as o')->join('__TCS_SCORE_USER__ as u on u.op_id=o.op_id','left')->join('__QAQC__ as q on q.op_id=o.op_id','left')->where($where)->field($field)->find();
             if (!$v['qaqc_id']){
                 $op_lists[$k]['show_stu']= '<span class="red">未处理</span>';
             }else{
                 $op_lists[$k]['show_stu']= '<span class="green">已处理</span>';
             }
+            $op_lists[$k]['group_id']    = $list['group_id'];
+            $op_lists[$k]['project']     = $list['project'];
+            $op_lists[$k]['create_user'] = $list['create_user_name'];
+            $op_lists[$k]['mobile']      = $list['mobile'];
+            $op_lists[$k]['input_time']  = $list['time'];
+            $op_lists[$k]['ex_user_name']= $list['ex_user_name'];
+            $op_lists[$k]['ex_time']     = $list['ex_time'];
         }
         return $op_lists;
     }
 
     //获取非团的不合格处理详情
     public function get_nop_unqualify_list($ids=''){
-        if ($ids) $opids                = explode(',',$ids);
         $where                          = array();
         $where['id']                    = array('in',$ids);
         $lists                          = M('qaqc')->where($where)->select();
         foreach ($lists as $k=>$v){
-            if ($v['handle_time'] == 0){
-                $lists[$k]['show_stu']  = '<span class="red">未处理</span>';
-            }else{
+            if (in_array($v['status'],array(1,2))){
                 $lists[$k]['show_stu']  = '<span class="green">已处理</span>';
+            }else{
+                $lists[$k]['show_stu']  = '<span class="red">未处理</span>';
             }
         }
         return $lists;

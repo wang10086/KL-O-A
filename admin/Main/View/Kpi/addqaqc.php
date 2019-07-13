@@ -105,6 +105,13 @@
                                             <label>纠正措施及验证</label>
                                             <textarea class="form-control" style="height:90px;" name="info[verif]">{$row.verif}</textarea>
                                         </div>
+
+                                        <div class="form-group box-float-12 mt20" id="suggest">
+                                            <label>处理意见</label> &emsp;
+                                            <input type="radio" name="info[suggest]" <?php if ($row['suggest']==1) echo "checked" ?> value="1"> &nbsp;建议撤销 &#12288;
+                                            <input type="radio" name="info[suggest]" <?php if ($row['suggest']==2) echo "checked" ?> value="2"> &nbsp;建议观察 &#12288;
+                                            <input type="radio" name="info[suggest]" <?php if ($row['suggest']==3) echo "checked" ?> value="3"> &nbsp;建议不合格处理
+                                        </div>
 	                            	</div>
                               </div><!-- /.box-body -->
                           
@@ -326,6 +333,20 @@
         var opid    = $('#op_id').val();
         if (!title) { art_show_msg('标题不能为空',3); return false; }
         if (isop == 1 && !opid) {  art_show_msg('团号信息错误',3); return false;  }
+
+        //建议处理方式，必选
+        var suggest;
+        var suggest1;
+        $('#suggest').find('ins').each(function () {
+            if ($(this).parent('div').attr("aria-checked") == 'true'){
+                suggest     = $(this).prev('input[name="info[suggest]"]').val();
+            }
+            if ($(this).prev('input').attr('checked') == 'checked'){ //编辑时数据带入
+                suggest1    = $(this).prev('input[name="info[suggest]"]').val();
+            }
+        })
+        if (!suggest && !suggest1){ art_show_msg('请选择建议处理方式',3); return false; }
+
         $('#myform').submit();
     }
 

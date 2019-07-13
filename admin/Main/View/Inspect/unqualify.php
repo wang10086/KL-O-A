@@ -81,11 +81,10 @@
                                             <td class="taskOptions" colspan="3">合计</td>
                                             <td class="taskOptions">{$sum.sum_num}</td>
                                             <td class="taskOptions">{$sum.ok_num}</td>
-                                            <td class="taskOptions">{$sum.average}</td>
-                                            <td class="taskOptions">
-                                                <!--<a href="{:U('Sale/public_timely_detail',array('tit'=>'合计','year'=>$year,'month'=>$month))}" title="详情" class="btn btn-info btn-smsm"><i class="fa fa-bars"></i></a>-->
+                                            <td colspan="2" class="taskOptions">{$sum.average}</td>
+                                            <!--<td class="taskOptions">
                                                 <a href="javascript:;" title="详情" class="btn btn-info btn-smsm"><i class="fa fa-bars"></i></a>
-                                            </td>
+                                            </td>-->
                                         </tr>
                                     </table>
                                 </div><!-- /.box-body -->

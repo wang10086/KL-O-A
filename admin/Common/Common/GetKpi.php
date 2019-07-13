@@ -3218,7 +3218,7 @@ function get_yw_department(){
         $data['sum_opid']                   = $sum_opid;
         $data['ok_list']                    = $ok_list;
         $data['sum_list']                   = $sum_list;
-        $data['url']                        = U('Inspect/public_unqualify_detail',array('isop'=>1,'opids'=>implode(',',$sum_opid)));
+        $data['url']                        = U('Inspect/public_unqualify_detail',array('isop'=>1,'st'=>$startTime,'et'=>$endTime,'tp'=>1));
         return $data;
     }
 
@@ -3237,7 +3237,8 @@ function get_yw_department(){
         $where                              = array();
         $where['s.input_time']	            = array('between',array($work_startTime,$work_endTime));
         $where['u.op_id']                   = array('not in',$lg90percent_opids);
-        $score_lists                        = M()->table('__TCS_SCORE__ as s')->field('u.op_id,s.input_time,o.kind,s.id as sid,s.before_sell,s.new_media,s.stay,s.travel,s.content,s.food,s.bus,s.driver,s.guide,s.teacher,s.depth,s.major,s.interest,s.material,s.late,s.manage,s.morality,s.cas_time,s.cas_complete,s.cas_addr')->join('join __TCS_SCORE_USER__ as u on u.id = s.uid','left')->join('__OP__ as o on o.op_id = u.op_id','left')->where($where)->select();
+        $field                              = 'u.op_id,s.input_time,o.kind,s.id as sid,s.before_sell,s.new_media,s.stay,s.travel,s.content,s.food,s.bus,s.driver,s.guide,s.teacher,s.depth,s.major,s.interest,s.material,s.late,s.manage,s.morality,s.cas_time,s.cas_complete,s.cas_addr';
+        $score_lists                        = M()->table('__TCS_SCORE__ as s')->field($field)->join('join __TCS_SCORE_USER__ as u on u.id = s.uid','left')->join('__OP__ as o on o.op_id = u.op_id','left')->where($where)->select();
 
         $unok_arr                           = array(1,2,3);
         foreach ($score_lists as $k=>$v){
@@ -3268,6 +3269,7 @@ function get_yw_department(){
             if ($score < 0.8 || (in_array($v['before_sell'],$unok_arr) || in_array($v['new_media'],$unok_arr) || in_array($v['stay'],$unok_arr) || in_array($v['travel'],$unok_arr) || in_array($v['content'],$unok_arr) || in_array($v['food'],$unok_arr) || in_array($v['bus'],$unok_arr) || in_array($v['driver'],$unok_arr) || in_array($v['guide'],$unok_arr) || in_array($v['teacher'],$unok_arr) || in_array($v['depth'],$unok_arr) || in_array($v['major'],$unok_arr) || in_array($v['interest'],$unok_arr) || in_array($v['material'],$unok_arr) || in_array($v['late'],$unok_arr) || in_array($v['manage'],$unok_arr) || in_array($v['morality'],$unok_arr) || in_array($v['cas_time'],$unok_arr) || in_array($v['cas_complete'],$unok_arr) || in_array($v['cas_addr'],$unok_arr))){
                 $unok_list[$k]['score']         = $score;
                 $unok_list[$k]['op_id']         = $v['op_id'];
+                $unok_list[$k]['input_time']    = $v['input_time'];
             }
         }
         return $unok_list;
@@ -3318,7 +3320,8 @@ function get_yw_department(){
         $data['sum_opid']                   = $sum_opid;
         $data['ok_list']                    = $ok_list;
         $data['sum_list']                   = $sum_list;
-        $data['url']                        = U('Inspect/public_unqualify_detail',array('isop'=>1,'opids'=>implode(',',$sum_opid)));
+        //$data['url']                        = U('Inspect/public_unqualify_detail',array('isop'=>1,'st'=>$startTime,'et'=>$endTime,'tp'=>2,'opids'=>implode(',',$sum_opid)));
+        $data['url']                        = U('Inspect/public_unqualify_detail',array('isop'=>1,'st'=>$startTime,'et'=>$endTime,'tp'=>2));
         return $data;
     }
 
@@ -3361,6 +3364,7 @@ function get_yw_department(){
             if ($score < 0.8){ //单团满意度得分低于90%计入不合格
                 $unok_list[$value]['score'] = $score;
                 $unok_list[$value]['op_id'] = $value;
+                $unok_list[$value]['input_time'] = $v['input_time'];
             }
         }
 
@@ -3398,7 +3402,7 @@ function get_yw_department(){
         $where                              = array();
         $where['type']                      = $type;
         $where['create_time']               = array('between',array($startTime,$endTime));
-        $field                              = 'id,title,is_op,group_id,op_id,month,type,status,handle_time,ex_time';
+        $field                              = 'id,title,is_op,group_id,op_id,month,type,status,create_time,handle_time,ex_time';
         $list                               = $db ->where($where)->field($field)->select();
         return $list;
     }
@@ -3430,7 +3434,7 @@ function get_yw_department(){
             $ids[]                          = $v['id'];
             $sum_num++;
             $sum_list[]                     = $v;
-            if ($v['handle_time'] != 0){ //跟进处理时间不为0
+            if ($v['ex_time'] != 0){ //跟进处理时间不为0
                 $ok_num++;
                 $ok_list[]              = $v;
             }
@@ -3474,7 +3478,7 @@ function get_yw_department(){
             $ids[]                          = $v['id'];
             $sum_num++;
             $sum_list[]                     = $v;
-            if ($v['handle_time'] != 0){ //跟进处理时间不为0
+            if ($v['ex_time'] != 0){ //跟进处理时间不为0
                 $ok_num++;
                 $ok_list[]              = $v;
             }
@@ -3518,7 +3522,7 @@ function get_yw_department(){
             $ids[]                          = $v['id'];
             $sum_num++;
             $sum_list[]                     = $v;
-            if ($v['handle_time'] != 0){ //跟进处理时间不为0
+            if ($v['ex_time'] != 0){ //跟进处理时间不为0
                 $ok_num++;
                 $ok_list[]              = $v;
             }
@@ -3562,7 +3566,7 @@ function get_yw_department(){
             $ids[]                          = $v['id'];
             $sum_num++;
             $sum_list[]                     = $v;
-            if ($v['handle_time'] != 0){ //跟进处理时间不为0
+            if ($v['ex_time'] != 0){ //跟进处理时间不为0
                 $ok_num++;
                 $ok_list[]              = $v;
             }

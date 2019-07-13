@@ -1171,12 +1171,15 @@ class InspectController extends BaseController{
     public function public_unqualify_detail(){
         $this->title('不合格处理率详情');
         $isop                   = I('isop','');
-        $opids                  = I('opids','');
+        //$opids                  = I('opids','');
         $ids                    = I('ids','');
+        $startTime              = I('st',0);
+        $endTime                = I('et',0);
+        $type                   = I('tp',0);
         $mod                    = D('Inspect');
 
         if ($isop){ //团内
-            $lists              = $mod -> get_op_unqualify_list($opids);
+            $lists              = $mod -> get_op_unqualify_list($type,$startTime,$endTime);
             $this->lists        = $lists;
             $this->display('unqualify_detail_op');
         }else{

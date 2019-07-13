@@ -96,7 +96,7 @@
                                             <textarea class="form-control" style="height:90px;" name="info[verif]">{$row.verif}</textarea>
                                         </div>
 
-                                        <div class="form-group box-float-12 mt20">
+                                        <div class="form-group box-float-12 mt20" id="suggest">
                                             <label>处理意见</label> &emsp;
                                             <input type="radio" name="info[suggest]" <?php if ($row['suggest']==1) echo "checked" ?> value="1"> &nbsp;建议撤销 &#12288;
                                             <input type="radio" name="info[suggest]" <?php if ($row['suggest']==2) echo "checked" ?> value="2"> &nbsp;建议观察 &#12288;
@@ -173,7 +173,7 @@
                                         <input type="hidden" name="id" value="{$row.id}">
                                     </form>
 
-                                    <button type="button" onClick="$('#myform').submit()" class="btn btn-info btn-lg" style=" padding-left:40px; padding-right:40px; margin-right:10px;">保存</button>
+                                    <button type="button" onClick="submitBefore()" class="btn btn-info btn-lg" style=" padding-left:40px; padding-right:40px; margin-right:10px;">保存</button>
                                     <button type="button" onClick="$('#appsubmint').submit()" class="btn btn-success btn-lg" style=" padding-left:40px; padding-right:40px; margin-left:10px;">提交</button>
                                 </div>
                             </div>
@@ -244,6 +244,23 @@
 		$('#'+obj).remove();
 		orderno();
 	}
+
+    function submitBefore() {
+        //建议处理方式，必选
+        var suggest;
+        var suggest1;
+        $('#suggest').find('ins').each(function () {
+            if ($(this).parent('div').attr("aria-checked") == 'true'){
+                suggest     = $(this).prev('input[name="info[suggest]"]').val();
+            }
+            if ($(this).prev('input').attr('checked') == 'checked'){ //编辑时数据带入
+                suggest1    = $(this).prev('input[name="info[suggest]"]').val();
+            }
+        })
+        if (!suggest && !suggest1){ art_show_msg('请选择建议处理方式',3); return false; }
+
+        $('#myform').submit();
+    }
 	
 </script>	
 
