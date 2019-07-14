@@ -99,13 +99,13 @@
                                 <!-- small box -->
                                 <div class="small-box bg-blue">
                                     <div class="inner">
-                                        <h3>8888</h3>
+                                        <h3>{$sum_partner}</h3>
                                         <p>城市合伙人数量</p>
                                     </div>
                                     <div class="icon">
                                         <i class="ion ion-arrow-graph-up-right"></i>
                                     </div>
-                                    <a href="javascript:;" onclick="art_show_msg('加班开发中...',3)" class="small-box-footer">查看详情 <i class="fa fa-arrow-circle-right"></i></a>
+                                    <a href="{:U('Customer/partner')}" class="small-box-footer">查看详情 <i class="fa fa-arrow-circle-right"></i></a>
                                 </div>
                             </div><!-- ./col -->
 
@@ -113,13 +113,13 @@
                                 <!-- small box -->
                                 <div class="small-box bg-teal">
                                     <div class="inner">
-                                        <h3>8</h3>
+                                        <h3>{$new_partner}</h3>
                                         <p>本月新增城市合伙人</p>
                                     </div>
                                     <div class="icon">
                                         <i class="ion ion-person-add"></i>
                                     </div>
-                                    <a href="javascript:;" onclick="art_show_msg('加班开发中...',3)" class="small-box-footer">查看详情 <i class="fa fa-arrow-circle-right"></i></a>
+                                    <a href="{:U('Customer/partner')}" class="small-box-footer">查看详情 <i class="fa fa-arrow-circle-right"></i></a>
                                 </div>
                             </div><!-- ./col -->
                         

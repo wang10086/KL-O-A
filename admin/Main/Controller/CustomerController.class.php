@@ -456,9 +456,9 @@ class CustomerController extends BaseController {
         $where['del_stu']           = array('neq','-1');
 
         //分页
-        $pagecount = $partner_db->where($where)->count();
-        $page = new Page($pagecount, P::PAGE_SIZE);
-        $this->pages = $pagecount>P::PAGE_SIZE ? $page->show():'';
+        $pagecount                  = $partner_db->where($where)->count();
+        $page                       = new Page($pagecount, P::PAGE_SIZE);
+        $this->pages                = $pagecount>P::PAGE_SIZE ? $page->show():'';
 
         $lists                      = $partner_db->where($where)->order($this->orders('id'))->select();
 

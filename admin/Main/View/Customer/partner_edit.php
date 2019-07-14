@@ -410,12 +410,13 @@
                 var msg         = data.msg;
                 if(parseInt(num)>0){
                     art.dialog.alert(msg,'success');
+                    setTimeout("history.go(0)",1000);
                 }else{
                     art.dialog.alert(msg,'warning');
+                    return false;
                 }
             }
         });
 
-        setTimeout("history.go(0)",1000);
     }
 </script>
