@@ -1761,7 +1761,7 @@ function get_department_person_score_statis($year='',$month='',$department_id,$c
     /**
      * 根据平均值求结果分(财务)
      */
-    function get_rifht_avg($point,$snum){
+    /*function get_rifht_avg($point,$snum){ //bak_20190715
             if ($point > -0.1 && $point <= 0.1){
                 $score                  = $snum;
             }else {
@@ -1775,6 +1775,12 @@ function get_department_person_score_statis($year='',$month='',$department_id,$c
                     }
                 }
             }
+        return $score;
+    }*/
+
+    function get_rifht_avg($point,$snum){
+        $score                      = round($point * $snum,2);
+        $score                      = $score < 0 ? 0 : ($score > $snum ? $snum : $score);
         return $score;
     }
 

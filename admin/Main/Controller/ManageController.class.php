@@ -681,7 +681,7 @@ class ManageController extends ChartController {
         $quarter_real_income        = $quarter_real_income_data['yysr']?$quarter_real_income_data['yysr']:0;
         $income_offset              = get_exact_budget($quarter_real_income,$quarter_plan_income); //偏差值
         $income_avg                 = get_exact_avg($income_offset,$target); //根据偏差值和合格范围获取完成率
-        $income_s                   = get_rifht_avg($income_offset,40); //根据平均值求结果分
+        $income_s                   = get_rifht_avg($income_avg,40); //根据平均值求结果分
         //var_dump($income_offset);
 
         //季度利润准确率指标
@@ -689,19 +689,19 @@ class ManageController extends ChartController {
         $quarter_real_profit        = $quarter_real_income_data['yyml'] - $quarter_real_income_data['rlzycb'] - $quarter_real_income_data['qtfy']; //实际季度利润     = 营业毛利-人力资源成本 - 其他费用
         $profit_offset              = get_exact_budget($quarter_real_profit,$quarter_plan_profit); //偏差值
         $profit_avg                 = get_exact_avg($profit_offset,$target); //根据偏差值和合格范围获取完成率
-        $profit_s                   = get_rifht_avg($profit_offset,60); //根据平均值求结果分
+        $profit_s                   = get_rifht_avg($profit_avg,60); //根据平均值求结果分
         $complete                   = ($income_s + $profit_s).'%'; //合计完成率
 
         $data                       = array();
         $data['quarter_plan_income']= $quarter_plan_income;
         $data['quarter_real_income']= $quarter_real_income;
         $data['income_offset']      = ($income_offset*100).'%';
-        $data['income_avg']         = ($income_avg*100).'%';
+        $data['income_avg']         = $income_avg > 0 ? ($income_avg*100).'%' : '0%';
         $data['income_s']           = $income_s;
         $data['quarter_plan_profit']= $quarter_plan_profit;
         $data['quarter_real_profit']= $quarter_real_profit;
         $data['profit_offset']      = ($profit_offset*100).'%';
-        $data['profit_avg']         = ($profit_avg*100).'%';
+        $data['profit_avg']         = $profit_avg > 0 ? ($profit_avg*100).'%' : '0%';
         $data['profit_s']           = $profit_s;
         $data['complete']           = $complete;
 
