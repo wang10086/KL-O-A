@@ -45,11 +45,13 @@
                                         <td class="taskOptions">{$row.create_time|date='Y-m-d H:i:s',###}</td>
                                         <td class="taskOptions"><?php echo $row['ex_time']?date('Y-m-d H:i:s'):'<font color="#999999">未完成</font>'; ?></td>
                                         <if condition="rolemenu(array('Kpi/handle'))">
+                                        <td class="taskOptions">
                                             <?php if (in_array($row['status'],array(1,2))){ ?>
-                                                <td class="taskOptions"><a href="javascript:;" title="已处理" class="btn btn-default btn-smsm"><i class="fa fa-wrench"></i></a></td>
+                                                <a href="javascript:;" onclick="qadetail({$row.id})" title="详情" class="btn btn-default btn-smsm"><i class="fa fa-bars"></i></a>
                                             <?php }else{ ?>
-                                                <td class="taskOptions"><a href="{:U('Kpi/handle',array('id'=>$row['id']))}" title="处理" class="btn btn-info btn-smsm"><i class="fa fa-wrench"></i></a></td>
+                                                <a href="{:U('Kpi/handle',array('id'=>$row['id']))}" title="处理" class="btn btn-info btn-smsm"><i class="fa fa-wrench"></i></a>
                                             <?php } ?>
+                                        </td>
                                         </if>
                                     </tr>
                                     </foreach>					

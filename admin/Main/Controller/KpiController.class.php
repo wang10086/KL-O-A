@@ -984,6 +984,9 @@ class KpiController extends BaseController {
             if ($group_id){
                 $this->group_id                 = $group_id;
                 $this->opid                     = $opid;
+                $row                            = M('qaqc')->where(array('op_id'=>$opid))->find();
+                $this->row                      = $row;
+                $this->userlist                 = M('qaqc_user')->where(array('qaqc_id'=>$row['id']))->select();
             }
 			
 			//整理关键字
@@ -1149,6 +1152,11 @@ class KpiController extends BaseController {
             '5' => '<span class="blue">处理中...</span>',
             '6' => '<span class="yellow">待审批</span>'
         );
+        $suggest= array(
+            '1' => '<span class="green">撤销</span>',
+            '2' => '<span class="yellow">观察</span>',
+            '3' => '<span class="red">品质检查</span>',
+        );
 		
 		$id = I('id','');
 		if($id){
@@ -1165,6 +1173,7 @@ class KpiController extends BaseController {
 			$this->pdca        = M('pdca')->find($row['pdcaid']);
             $record_list       = get_public_record('qaqc_id',$id);
             $this->records     = $record_list;
+            $this->suggest     = $suggest;
 		}else{
 			echo '<script>art_show_msgd(\'品质检查信息不存在\');</script>';	
 		}

@@ -25,6 +25,7 @@
             <!-- <div class="form-group box-float-4" style="padding-left:0;">发现人员：{$row.fd_user_name}</div> -->
             <div class="form-group box-float-4" style="padding-left:0;">发现时间：{$row.fd_date}</div>
             <div class="form-group box-float-4" style="padding-left:0;">陪同人员：{$row.ac_user_name}</div>
+            <div class="form-group box-float-4" style="padding-left:0;">建议处理意见：{$suggest[$row['suggest']]}</div>
         </div>
         
         <div class="fromlist nobor" style="margin-top:10px;">
@@ -41,7 +42,8 @@
             <div class="fromtitle">纠正措施验证：</div>
             <div class="formtexts">{$row.verif}</div>
         </div>
-        
+
+        <?php if ($userlist){ ?>
         <div id="qaqclist" style="margin:15px; ">
         	<table class="table" style="border-top:2px solid #f39c12; " >
                 <tr>
@@ -61,9 +63,10 @@
             	</foreach>
             </table>
         </div>
+        <?php } ?>
 
         <?php if ($row['id'] > 97 ){ ?>
-        <div style="margin:15px; ">
+        <div style="margin:20px 15px; ">
             <table class="table" >
                 <tr>
                     <th style="border-bottom:2px solid #f39c12; font-weight:bold;" width="160">操作时间</th>

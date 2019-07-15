@@ -129,6 +129,8 @@ class InspectModel extends Model{
             $op_lists[$k]['input_time']  = $list['time'];
             $op_lists[$k]['ex_user_name']= $list['ex_user_name'];
             $op_lists[$k]['ex_time']     = $list['ex_time'];
+            $op_lists[$k]['status']      = $list['status'];
+            $op_lists[$k]['qaqc_id']     = $list['qaqc_id'];
         }
         return $op_lists;
     }
