@@ -2407,11 +2407,12 @@ function get_yw_department(){
     }
 
     /**
-     * 获取预算准确度
+     * 获取预算准确度偏差值
      * @param $real 实际值
      * @param $plan 预算值
+     * 偏差值 = [(完成数据 - 预算数据)/|预算数据绝对值|]*100%
      */
-    function get_exact_budget($real,$plan){
+    /*function get_exact_budget($real,$plan){ //bak20190715
         if ($real < $plan){ //实际值 < 计划值
             if ($plan == 0){ //计划值为0
                 $res                    = $real - $plan;
@@ -2427,6 +2428,28 @@ function get_yw_department(){
                 $res                    = round(($real - $plan)/$plan,4); //(实际值 - 计划值)/计划值
            }
         }
+        return $res;
+    }*/
+    function get_exact_budget($real,$plan){
+        if ($plan == 0){
+            $res                    = $real - $plan;
+        }else{
+            $UNSIGNED_PLAN          = str_replace('-','',$plan); //预算数据的绝对值
+            $res                    = round(($real - $plan)/$UNSIGNED_PLAN,4);
+        }
+        return $res;
+    }
+
+    /**
+     * 根据偏差值和合格范围获取完成率
+     * @param $offset //偏差值
+     * @param $target //目标范围
+     * 完成率 = [(1-(|偏差值| - |合格范围|))/|合格范围|]
+     */
+    function get_exact_avg($offset,$target=0){
+        $UNSIGNED_OFFSET            = str_replace(array('+','-','±'),'',$offset); //偏差值的绝对值
+        $UNSIGNED_TARGET            = str_replace(array('+','-','±','%'),'',$target)/100; //合格范围的绝对值(转换成小数)
+        $res                        = 1 - (round(($UNSIGNED_OFFSET - $UNSIGNED_TARGET)/$UNSIGNED_TARGET,4));
         return $res;
     }
 

@@ -49,7 +49,7 @@
                                 <th class="black">完成数据</th>
                                 <th class="black">偏差</th>
                                 <th class="black" width="80">合格范围</th>
-                                <th class="black">完成率</th>
+                                <th class="black" width="80">完成率</th>
                                 <th class="black" width="80">分值(分)</th>
                                 <th class="black" width="80">得分(分)</th>
                                 <th class="black" width="80">合计完成率</th>
@@ -59,9 +59,9 @@
                                 <td>季度营收</td>
                                 <td><a href="{:U('Manage/Manage_quarter',array('year'=>$year,'quart'=>$month))}">{$data.quarter_plan_income}</a></td>
                                 <td>{$data.quarter_real_income}</td>
+                                <td>{$data.income_offset}</td>
+                                <td rowspan="2">{$target}</td>
                                 <td>{$data.income_avg}</td>
-                                <td rowspan="2">±10%</td>
-                                <td></td>
                                 <td>40</td>
                                 <td>{$data.income_s}</td>
                                 <td rowspan="2">{$data.complete}</td>
@@ -70,8 +70,8 @@
                                 <td>季度利润</td>
                                 <td><a href="{:U('Manage/Manage_quarter',array('year'=>$year,'quart'=>$month))}">{$data.quarter_plan_profit}</a></td>
                                 <td>{$data.quarter_real_profit}</td>
+                                <td>{$data.profit_offset}</td>
                                 <td>{$data.profit_avg}</td>
-                                <td></td>
                                 <td>60</td>
                                 <td>{$data.profit_s}</td>
                             </tr>

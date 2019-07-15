@@ -3310,7 +3310,7 @@ function updatekpi($month,$user){
 
                             $complete               = ($income_s + $profit_s).'%';
                             //$url                    = U('Manage/Manage_quarter',array('year'=>$v['year'],'quart'=>$quart_month));
-                            $url                    = U('Manage/public_kpi_budget',array('year'=>$v['year'],'month'=>$monon,'uid'=>$v['user_id']));
+                            $url                    = U('Manage/public_kpi_budget',array('year'=>$v['year'],'month'=>$monon,'uid'=>$v['user_id'],'tg'=>$v['target']));
                         }
 
                         //回款及时率(财务经理)
