@@ -985,7 +985,7 @@ class KpiController extends BaseController {
                 $this->group_id                 = $group_id;
                 $this->opid                     = $opid;
                 $row                            = M('qaqc')->where(array('op_id'=>$opid))->find();
-                $this->row                      = $row;
+                $this->row                      = $list?$list:$row;
                 $this->userlist                 = M('qaqc_user')->where(array('qaqc_id'=>$row['id']))->select();
             }
 			
