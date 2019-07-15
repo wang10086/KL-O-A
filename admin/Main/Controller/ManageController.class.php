@@ -691,17 +691,17 @@ class ManageController extends ChartController {
         $profit_avg                 = get_exact_avg($profit_offset,$target); //根据偏差值和合格范围获取完成率
         $profit_s                   = get_rifht_avg($profit_avg,60); //根据平均值求结果分
         $complete                   = ($income_s + $profit_s).'%'; //合计完成率
-
+        
         $data                       = array();
         $data['quarter_plan_income']= $quarter_plan_income;
         $data['quarter_real_income']= $quarter_real_income;
         $data['income_offset']      = ($income_offset*100).'%';
-        $data['income_avg']         = $income_avg > 0 ? ($income_avg*100).'%' : '0%';
+        $data['income_avg']         = $income_avg < 0 ? '0%' : ($income_avg > 1 ? '100%' : ($income_avg*100).'%');
         $data['income_s']           = $income_s;
         $data['quarter_plan_profit']= $quarter_plan_profit;
         $data['quarter_real_profit']= $quarter_real_profit;
         $data['profit_offset']      = ($profit_offset*100).'%';
-        $data['profit_avg']         = $profit_avg > 0 ? ($profit_avg*100).'%' : '0%';
+        $data['profit_avg']         = $profit_avg < 0 ? '0%' : ($profit_avg > 1 ? '100%' : ($profit_avg*100).'%');
         $data['profit_s']           = $profit_s;
         $data['complete']           = $complete;
 
