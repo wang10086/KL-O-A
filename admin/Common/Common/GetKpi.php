@@ -3201,7 +3201,7 @@ function get_yw_department(){
             $sum_list[]                     = $v;
             $sum_opid[]                     = $v['op_id'];
             foreach ($solve_lists as $key=>$value){
-                if ($v['op_id'] == $value['op_id']){
+                if ($v['op_id'] == $value['op_id'] && in_array($value['status'],array(1,2))){
                     $ok_num++;
                     $ok_list[]              = $value;
                     $ok_opid[]              = $value['op_id'];
