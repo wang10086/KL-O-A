@@ -3303,7 +3303,7 @@ function get_yw_department(){
             $sum_list[]                     = $v;
             $sum_opid[]                     = $v['op_id'];
             foreach ($solve_lists as $key=>$value){
-                if ($v['op_id'] == $value['op_id']){
+                if ($v['op_id'] == $value['op_id']  && in_array($value['status'],array(1,2))){
                     $ok_num++;
                     $ok_list[]              = $value;
                     $ok_opid[]              = $value['op_id'];
@@ -3434,7 +3434,7 @@ function get_yw_department(){
             $ids[]                          = $v['id'];
             $sum_num++;
             $sum_list[]                     = $v;
-            if ($v['ex_time'] != 0){ //跟进处理时间不为0
+            if ($v['ex_time'] != 0 && in_array($v['status'],array(1,2))){ //跟进处理时间不为0
                 $ok_num++;
                 $ok_list[]              = $v;
             }
@@ -3478,7 +3478,7 @@ function get_yw_department(){
             $ids[]                          = $v['id'];
             $sum_num++;
             $sum_list[]                     = $v;
-            if ($v['ex_time'] != 0){ //跟进处理时间不为0
+            if ($v['ex_time'] != 0  && in_array($v['status'],array(1,2))){ //跟进处理时间不为0
                 $ok_num++;
                 $ok_list[]              = $v;
             }
@@ -3522,7 +3522,7 @@ function get_yw_department(){
             $ids[]                          = $v['id'];
             $sum_num++;
             $sum_list[]                     = $v;
-            if ($v['ex_time'] != 0){ //跟进处理时间不为0
+            if ($v['ex_time'] != 0 && in_array($v['status'],array(1,2))){ //跟进处理时间不为0
                 $ok_num++;
                 $ok_list[]              = $v;
             }
@@ -3566,7 +3566,7 @@ function get_yw_department(){
             $ids[]                          = $v['id'];
             $sum_num++;
             $sum_list[]                     = $v;
-            if ($v['ex_time'] != 0){ //跟进处理时间不为0
+            if ($v['ex_time'] != 0  && in_array($v['status'],array(1,2))){ //跟进处理时间不为0
                 $ok_num++;
                 $ok_list[]              = $v;
             }
