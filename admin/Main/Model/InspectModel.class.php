@@ -113,9 +113,9 @@ class InspectModel extends Model{
         foreach ($op_lists as $k=>$v){
             $where                      = array();
             $where['o.op_id']           = $v['op_id'];
-            $field                      = 'o.op_id,o.group_id,o.project,o.create_user_name,u.mobile,u.time,q.ex_user_name,q.ex_time';
+            $field                      = 'o.op_id,o.group_id,o.project,o.create_user_name,u.mobile,u.time,q.id as qaqc_id,q.ex_user_name,q.ex_time';
             $list                       = M()->table('__OP__ as o')->join('__TCS_SCORE_USER__ as u on u.op_id=o.op_id','left')->join('__QAQC__ as q on q.op_id=o.op_id','left')->where($where)->field($field)->find();
-            if (!$v['qaqc_id']){
+            if (!$list['qaqc_id']){
                 $op_lists[$k]['show_stu']= '<span class="red">未处理</span>';
             }else{
                 $op_lists[$k]['show_stu']= '<span class="green">已处理</span>';
@@ -136,6 +136,7 @@ class InspectModel extends Model{
         $where                          = array();
         $where['id']                    = array('in',$ids);
         $lists                          = M('qaqc')->where($where)->select();
+
         foreach ($lists as $k=>$v){
             if (in_array($v['status'],array(1,2))){
                 $lists[$k]['show_stu']  = '<span class="green">已处理</span>';

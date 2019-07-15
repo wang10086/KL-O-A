@@ -2452,7 +2452,7 @@ class KpiController extends BaseController {
                     $url                    = U('Kpi/appqa',array('id'=>$id));
                     $user                   = '['.$resive_uid.']';
                     $roleid                 = '';
-                    send_msg($uid,$title,$content,$url,$user,$roleid);
+                    //send_msg($uid,$title,$content,$url,$user,$roleid);
 
                     //保存操作记录
                     $record                 = array();
