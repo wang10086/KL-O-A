@@ -2085,7 +2085,7 @@ function updatekpi($month,$user){
                             $url        = '';
                         }
 
-                        //报价、预算、结算、报账及时性-计调专员
+                        //报价、预算、结算、报账及时性-计调专员 计调工作及时性-计调专员
                         if ($v['quota_id']==14){
                             $monon                          = substr($v['month'],4,2);
                             $mod                            = D('Sale');

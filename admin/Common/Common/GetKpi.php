@@ -3037,7 +3037,7 @@ function get_yw_department(){
     }
 
     /**
-     * 获取该周期结算的团
+     * 获取该周期预算的团
      * @param $begin_time
      * @param $end_time
      * @param $sale_uid 销售id
@@ -3051,7 +3051,7 @@ function get_yw_department(){
         $where['l.audit_time']                  = array('between', "$begin_time,$end_time");
         if ($sale_uid) $where['o.create_user']  = $sale_uid;
         if ($jd_uid) $where['l.req_uid']        = $jd_uid;
-        $field                                  = 'o.op_id,o.project,o.group_id,o.create_user,o.create_user_name,b.shouru,b.maoli,l.req_uid,l.req_uname,l.req_time,l.audit_time,c.dep_time,c.ret_time'; //获取所有该季度结算的团
+        $field                                  = 'o.op_id,o.project,o.group_id,o.create_user,o.create_user_name,b.shouru,b.maoli,l.req_uid,l.req_uname,l.req_time,l.audit_time,c.dep_time,c.ret_time'; //获取所有该周期预算的团
         $op_budget_list                         = M()->table('__OP_BUDGET__ as b')->field($field)->join('__OP__ as o on b.op_id = o.op_id', 'LEFT')->join('__ACCOUNT__ as a on a.id = o.create_user', 'LEFT')->join('__AUDIT_LOG__ as l on l.req_id = b.id', 'LEFT')->join('__OP_TEAM_CONFIRM__ as c on c.op_id=b.op_id','left')->where($where)->select();
         return $op_budget_list;
     }

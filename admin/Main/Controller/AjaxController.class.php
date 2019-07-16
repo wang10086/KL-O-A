@@ -2024,5 +2024,41 @@ class AjaxController extends Controller {
         $datetime                   = I('datetime');
         set_after_salary_kpi($datetime);
     }
+
+    public function check_group_id(){
+        $group_id                   = I('group_id');
+        $id                         = I('id');
+        if (!$id){
+            $res                    = M('op_team_confirm')->where(array('group_id'=>$group_id))->find();
+            if ($res){
+                $num                = '-1';
+                $msg                = '该团号已存在';
+            }else{
+                $num                = 1;
+                $msg                = 'ok';
+            }
+        }else{
+            $info                   = M('op_team_confirm')->where(array('id'=>$id))->find();
+            if ($group_id == $info['group_id']){
+                $num                = 1;
+                $msg                = 'ok';
+            }else{
+                $res                = M('op_team_confirm')->where(array('group_id'=>$group_id))->find();
+                if ($res){
+                    $num            = '-1';
+                    $msg            = '该团号已存在';
+                }else{
+                    $num            = 1;
+                    $msg            = 'ok';
+                }
+            }
+        }
+
+
+        $data                       = array();
+        $data['num']                = $num;
+        $data['msg']                = $msg;
+        $this->ajaxReturn($data);
+    }
 }
 

@@ -2624,26 +2624,28 @@ class OpController extends BaseController {
 
 	// @@@NODE-3###confirm###出团确认###
 	public  function confirm(){
-		$opid = I('opid');
+		$opid                       = I('opid');
 		if(!$opid) $this->error('项目不存在');	
 		
-		$where = array();
-		$where['op_id'] = $opid;
-		$op				= M('op')->where($where)->find();
-		$confirm		= M('op_team_confirm')->where($where)->find();
-        $upd_num        = $confirm['upd_num'];
+		$where                      = array();
+		$where['op_id']             = $opid;
+		$op				            = M('op')->where($where)->find();
+		$confirm		            = M('op_team_confirm')->where($where)->find();
+        $upd_num                    = $confirm['upd_num'];
 
 		if(isset($_POST['dosubmit']) && $_POST['dosubmit']){
 
-			$info	    = I('info');
-            $data       = I('data');
+			$info	                = I('info');
+            $data                   = I('data');
 
 			//判断团号是否可用
-			$where = array();
-			$where['group_id']	= $info['group_id'];
-			$where['op_id']		= array('neq',$opid);
-			$check				= M('op')->where($where)->find();
-			if($check)  $this->error($info['group_id'].'团号已存在');	 
+			$where                  = array();
+			$where['group_id']	    = $info['group_id'];
+			$where['op_id']		    = array('neq',$opid);
+			$check				    = M('op')->where($where)->find();
+			if($check)              $this->error($info['group_id'].'团号已存在');
+            if (!$info['dep_time']) $this->error('出团时间不能为空');
+            if (!$info['ret_time']) $this->error('返回时间不能为空');
 
 			$info['op_id']			= $opid;
             $info['group_id']       = trim($info['group_id']);
