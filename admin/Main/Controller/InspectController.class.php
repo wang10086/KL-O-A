@@ -1112,7 +1112,7 @@ class InspectController extends BaseController{
         }
     }
 
-    //不合格处理率
+    //不合格处理率(公司)
     public function unqualify(){
         $this->title('不合格处理率');
         $year		                = I('year',date('Y'));
@@ -1178,6 +1178,7 @@ class InspectController extends BaseController{
         $type                   = I('tp',0);
         $mod                    = D('Inspect');
 
+        $this->type             = $type;
         if ($isop){ //团内
             $lists              = $mod -> get_op_unqualify_list($type,$startTime,$endTime);
             $this->lists        = $lists;
@@ -1187,6 +1188,25 @@ class InspectController extends BaseController{
             $this->lists        = $lists;
             $this->display('unqualify_detail_nop');
         }
+    }
+
+    //不合格处理率(员工)
+    public function unqualify_staff(){
+        $this->title('不合格处理率');
+        $year		                = I('year',date('Y'));
+        $month		                = I('month',date('m'));
+        if (strlen($month)<2) $month= str_pad($month,2,'0',STR_PAD_LEFT);
+        $yearMonth                  = $year.$month;
+        $mod                        = D('Inspect');
+        $data                       = $mod->get_unqualify_staff_data($yearMonth);
+
+        $this->lists                = $data;
+        $this->year 	            = $year;
+        $this->month 	            = $month;
+        $this->prveyear             = $year-1;
+        $this->nextyear             = $year+1;
+
+        $this->display();
     }
 
     public function public_save(){

@@ -47,7 +47,7 @@
                                         <?php if (in_array($row['status'],array(1,2))){ ?>
                                             <a href="javascript:;" onClick="qadetail({$row.qaqc_id})" title="详情" class="btn btn-default btn-smsm"><i class="fa fa-bars"></i></a>
                                         <?php }else{ ?>
-                                            <a href="{:U('Kpi/addqa',array('opid'=>$row['op_id'],'gid'=>$row['group_id']))}" title="处理" class="btn btn-info btn-smsm"><i class="fa fa-wrench"></i></a>
+                                            <a href="{:U('Kpi/addqa',array('opid'=>$row['op_id'],'gid'=>$row['group_id'],'tp'=>$type))}" title="处理" class="btn btn-info btn-smsm"><i class="fa fa-wrench"></i></a>
                                         <?php } ?>
                                         </td>
                                         </if>

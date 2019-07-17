@@ -154,6 +154,10 @@
                                         <input class="form-control" type="text" name="info[matching]" value="{$row.matching}" />
                                     </div>-->
 
+                                    <div class="">
+
+                                    </div>
+
                                     <div class="form-group col-md-12">
                                         <span class="lm_c black">适用项目类型</span>
                                         <foreach name="kinds" key="k" item="v">

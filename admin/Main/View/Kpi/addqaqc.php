@@ -30,9 +30,23 @@
                                 </div><!-- /.box-header -->
                                 <div class="box-body">
                                     <div class="content">
-                                        <div class="form-group box-float-12">
+                                        <div class="form-group box-float-8">
                                             <label>标题</label> 
                                             <input type="text" name="info[title]" value="{$row.title}" class="form-control" placeholder="如：关于对某某的某原因的奖惩" />
+                                        </div>
+
+                                        <div class="form-group col-md-4">
+                                            <label>报告类型：</label>
+                                            <select class="form-control" name="info[type]" required>
+                                                <option value="" selected disabled>==请选择==</option>
+                                                <?php if ($type){ ?>
+                                                    <option value="1" <?php if($type == 1){ echo 'selected';} ?> >单项顾客满意度</option>
+                                                    <option value="2" <?php if($type == 2){ echo 'selected';} ?> >项目顾客满意度</option>
+                                                <?php } ?>
+                                                <foreach name="qaqc_type" item="v" key="k">
+                                                    <option value="{$k}" <?php if($k==$row['type']){ echo 'selected';} ?> >{$v}</option>
+                                                </foreach>
+                                            </select>
                                         </div>
 
                                         <div class="form-group box-float-4">

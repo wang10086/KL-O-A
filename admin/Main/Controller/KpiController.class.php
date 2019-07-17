@@ -856,8 +856,7 @@ class KpiController extends BaseController {
 	
 	// @@@NODE-3###addpdca###发布品质检查###
 	public function addqa(){
-		
-		if(isset($_POST['dosubmit'])){
+        if(isset($_POST['dosubmit'])){
 			$editid                 = I('editid');
 			$info                   = I('info');
 			$qadata                 = I('qadata');
@@ -970,8 +969,9 @@ class KpiController extends BaseController {
 			
 		
 		}else{
-			
+
 			$id                                 = I('id','');
+            $type                               = I('tp',0);
 			if($id){
 				$list                           = M('qaqc')->find($id);
 				$this->row                      = $list;
@@ -992,6 +992,7 @@ class KpiController extends BaseController {
 			//整理关键字
             $this->userkey                      = get_userkey();
             $this->qaqc_type                    = C('QAQC_TYPE');
+            $this->type                         = $type?$type:($row['type']?$row['type']:0);
 
             if ($list && in_array($list['kind'],array(0,2))){
                 $this->title('不合格报告');

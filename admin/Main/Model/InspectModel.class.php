@@ -65,7 +65,7 @@ class InspectModel extends Model{
     }
 
     /**
-     * 不合格处理率 (优先算低于90%的团 , 然后少于3星或低于60分的团)
+     * 不合格处理率(公司) (优先算低于90%的团 , 然后少于3星或低于60分的团)
      * @param $startTime
      * @param $endTime
      * @return array
@@ -147,6 +147,32 @@ class InspectModel extends Model{
             }else{
                 $lists[$k]['show_stu']  = '<span class="red">未处理</span>';
             }
+        }
+        return $lists;
+    }
+
+    /**
+     * 不合格处理率(员工)
+     * @param $startTime
+     * @param $endTime
+     * @return array
+     */
+    public function get_unqualify_staff_data($yearMonth){
+        $where                          = array();
+        $where['u.month']               = $yearMonth;
+        $where['u.status']              = 1; //审核通过
+        $field                          = 'u.user_id,u.user_name,u.type,u.month,u.score,u.remark,q.id as qaqc_id,q.type as qaqc_type,q.ex_time';
+        $lists                          = M()->table('__QAQC_USER__ as u')->join('__QAQC__ as q on q.id=u.qaqc_id','left')->where($where)->field($field)->select();
+        $types                          = M('quota')->getField('id,title,content',true);
+        foreach ($lists as $k=>$v){
+            foreach ($types as $key=>$value){
+                if ($v['qaqc_type'] == $value['id']){
+                    $lists[$k]['title'] = $value['title'];
+                    $lists[$k]['content']= $value['content'];
+                }
+            }
+            $sign                       = $v['type'] ==1 ? '+' : '-'; //1=>奖励, 0=>惩罚
+            $lists[$k]['audit_res']     = $sign.$v['score'];
         }
         return $lists;
     }

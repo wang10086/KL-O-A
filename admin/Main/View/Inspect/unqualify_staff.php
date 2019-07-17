@@ -19,7 +19,7 @@
 
                             <div class="btn-group" id="catfont" style="padding-bottom:20px;">
                                 <?php if($prveyear>2017){ ?>
-                                    <a href="{:U('Inspect/unqualify',array('year'=>$prveyear,'month'=>'01'))}" class="btn btn-default" style="padding:8px 18px;">上一年</a>
+                                    <a href="{:U('Inspect/unqualify_staff',array('year'=>$prveyear,'month'=>'01'))}" class="btn btn-default" style="padding:8px 18px;">上一年</a>
                                 <?php } ?>
                                 <?php
                                     for($i=1;$i<13;$i++){
@@ -27,14 +27,14 @@
                                         $par['year']    = $year;
                                         $par['month']   = str_pad($i,2,"0",STR_PAD_LEFT);
                                         if($month==$i){
-                                            echo '<a href="'.U('Inspect/unqualify',$par).'" class="btn btn-info" style="padding:8px 18px;">'.$i.'月</a>';
+                                            echo '<a href="'.U('Inspect/unqualify_staff',$par).'" class="btn btn-info" style="padding:8px 18px;">'.$i.'月</a>';
                                         }else{
-                                            echo '<a href="'.U('Inspect/unqualify',$par).'" class="btn btn-default" style="padding:8px 18px;">'.$i.'月</a>';
+                                            echo '<a href="'.U('Inspect/unqualify_staff',$par).'" class="btn btn-default" style="padding:8px 18px;">'.$i.'月</a>';
                                         }
                                     }
                                 ?>
                                 <?php if($year<date('Y')){ ?>
-                                    <a href="{:U('Inspect/unqualify',array('year'=>$nextyear,'month'=>'01'))}" class="btn btn-default" style="padding:8px 18px;">下一年</a>
+                                    <a href="{:U('Inspect/unqualify_staff',array('year'=>$nextyear,'month'=>'01'))}" class="btn btn-default" style="padding:8px 18px;">下一年</a>
                                 <?php } ?>
                             </div>
 
@@ -56,36 +56,25 @@
 
                                     <table class="table table-bordered dataTable fontmini" id="tablelist" style="margin-top:10px;">
                                         <tr role="row" class="orders" >
-                                            <th class="taskOptions" width="60">序号</th>
+                                            <th class="taskOptions" width="80">姓名</th>
                                             <th class="taskOptions">工作项目</th>
                                             <th class="taskOptions">内容及时限</th>
-                                            <th class="taskOptions">不合格数</th>
-                                            <th class="taskOptions">及时处理数</th>
-                                            <th class="taskOptions">处理率</th>
+                                            <th class="taskOptions">处理结果</th>
+                                            <th class="taskOptions">处理时间</th>
                                             <th width="80" class="taskOptions">详情</th>
                                         </tr>
                                         <foreach name="lists" key="k" item="v">
                                             <tr>
-                                                <td class="taskOptions">{$k+1}</td>
+                                                <td class="taskOptions">{$v.user_name}</td>
                                                 <td class="taskOptions">{$v.title}</td>
                                                 <td class="taskOptions" style="max-width: 150px;">{$v.content}</td>
-                                                <td class="taskOptions">{$v.sum_num}</td>
-                                                <td class="taskOptions">{$v.ok_num}</td>
-                                                <td class="taskOptions">{$v.average}</td>
+                                                <td class="taskOptions">{$v.audit_res}分</td>
+                                                <td class="taskOptions">{$v.ex_time|date='Y-m-d H:i:s',###}</td>
                                                 <td class="taskOptions">
-                                                    <a href="{$v.url}" title="详情" class="btn btn-info btn-smsm"><i class="fa fa-bars"></i></a>
+                                                    <a href="javascript:;" onclick="qadetail({$v.qaqc_id})" title="详情" class="btn btn-info btn-smsm"><i class="fa fa-bars"></i></a>
                                                 </td>
                                             </tr>
                                         </foreach>
-                                        <tr class="black">
-                                            <td class="taskOptions" colspan="3">合计</td>
-                                            <td class="taskOptions">{$sum.sum_num}</td>
-                                            <td class="taskOptions">{$sum.ok_num}</td>
-                                            <td colspan="2" class="taskOptions">{$sum.average}</td>
-                                            <!--<td class="taskOptions">
-                                                <a href="javascript:;" title="详情" class="btn btn-info btn-smsm"><i class="fa fa-bars"></i></a>
-                                            </td>-->
-                                        </tr>
                                     </table>
                                 </div><!-- /.box-body -->
                             </div><!-- /.box -->
@@ -97,3 +86,17 @@
             </aside><!-- /.right-side -->
 
 <include file="Index:footer2" />
+
+<script type="text/javascript">
+    //查看详情
+    function qadetail(id) {
+        art.dialog.open('index.php?m=Main&c=Kpi&a=qadetail&id='+id,{
+            lock:true,
+            title: '品质报告详情',
+            width:800,
+            height:'90%',
+            fixed: true,
+
+        });
+    }
+</script>
