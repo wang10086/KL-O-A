@@ -46,12 +46,61 @@
                                         </select>
                                     </div>
 
+                                    <!--<div class="form-group col-md-6">
+                                        <label>实施省份</label>
+                                        <input type="text" name="info[title]" id="title" value="{$row.title}"  class="form-control" required />
+                                    </div>
+
+                                    <div class="form-group col-md-6">
+                                        <label>实施城市</label>
+                                        <input type="text" name="info[title]" id="title" value="{$row.title}"  class="form-control" required />
+                                    </div>-->
+
                                     <div class="form-group col-md-4">
+                                        <label>所在省份：</label>
+                                        <select id="s_province" class="form-control" name="info[province]" required>
+                                            <option class="form-control" value="" selected disabled>请选择</option>
+                                            <foreach name="provinces" key="k" item="v">
+                                                <option class="form-control" value="{$k}" <?php if ($partner && $partner['province']==$k) echo "selected"; ?>>{$citys[$k]}</option>
+                                            </foreach>
+                                        </select>
+                                    </div>
+
+                                    <div class="form-group col-md-4">
+                                        <label>所在城市：</label>
+                                        <select id="s_city" class="form-control" name="info[city]">
+                                            <option class="form-control" value="">请先选择省份</option>
+                                            <?php if ($partner){ ?>
+                                                <foreach name="citys" key="k" item="v">
+                                                    <option class="form-control" value="{$k}" <?php if ($partner && $partner['city']==$k) echo "selected"; ?>>{$citys[$k]}</option>
+                                                </foreach>
+                                            <?php } ?>
+                                        </select>
+                                    </div>
+
+                                    <div class="form-group col-md-4">
+                                        <label>产品负责人：</label>
+                                        <input type="text" name="info[]" id="" value="{$row.}"  class="form-control" required />
+                                    </div>
+
+                                    <!--<div class="form-group col-md-4">
+                                        <label>所在区县：</label>
+                                        <select id="s_country" class="form-control" name="info[country]">
+                                            <option class="form-control" value="">请先选择城市</option>
+                                            <?php /*if ($partner){ */?>
+                                                <foreach name="citys" key="k" item="v">
+                                                    <option class="form-control" value="{$k}" <?php /*if ($partner && $partner['country']==$k) echo "selected"; */?>>{$citys[$k]}</option>
+                                                </foreach>
+                                            <?php /*} */?>
+                                        </select>
+                                    </div>-->
+
+                                    <!--<div class="form-group col-md-4">
                                         <label>是否是标准化产品：</label>
                                         <select class="form-control" name="info[standard]" required>
                                             <option value="" selected disabled>==请选择==</option>
                                             <foreach name="standard" key="k" item="v">
-                                                <option value="{$k}" <?php if ($row['standard'] == $k) echo 'selected'; ?>>{$v}</option>
+                                                <option value="{$k}" <?php /*if ($row['standard'] == $k) echo 'selected'; */?>>{$v}</option>
                                             </foreach>
                                         </select>
                                     </div>
@@ -60,7 +109,7 @@
                                         <label>适用人群</label>
                                         <select name="info[age]" class="form-control">
                                             <foreach name="apply" key="k" item="v">
-                                                <option value="{$k}" <?php if ($k == $row['age']) echo 'selected'; ?>>{$v}</option>
+                                                <option value="{$k}" <?php /*if ($k == $row['age']) echo 'selected'; */?>>{$v}</option>
                                             </foreach>
                                         </select>
                                     </div>
@@ -70,7 +119,7 @@
                                         <select  class="form-control"  name="info[subject_field]">
                                             <option value="0">请选择</option>
                                             <foreach name="subject_fields" key="k" item="v">
-                                                <option value="{$k}" <?php if ($row && ($k == $row['subject_field'])) echo ' selected'; ?> >{$v}</option>
+                                                <option value="{$k}" <?php /*if ($row && ($k == $row['subject_field'])) echo ' selected'; */?> >{$v}</option>
                                             </foreach>
                                         </select>
                                     </div>
@@ -80,7 +129,7 @@
                                         <select  class="form-control"  name="info[from]">
                                             <option value="0">请选择</option>
                                             <foreach name="product_from" key="k" item="v">
-                                                <option value="{$k}" <?php if ($row && ($k == $row['from'])) echo ' selected'; ?> >{$v}</option>
+                                                <option value="{$k}" <?php /*if ($row && ($k == $row['from'])) echo ' selected'; */?> >{$v}</option>
                                             </foreach>
                                         </select>
                                     </div>
@@ -90,7 +139,7 @@
                                         <select  class="form-control"  name="info[reckon_mode]" id="reckon_mode">
                                             <option value="" selected disabled>==请选择==</option>
                                             <foreach name="reckon_mode" key="k" item="v">
-                                                <option value="{$k}" <?php if ($row['reckon_mode'] == $k) echo 'selected'; ?> >{$v}</option>
+                                                <option value="{$k}" <?php /*if ($row['reckon_mode'] == $k) echo 'selected'; */?> >{$v}</option>
                                             </foreach>
                                         </select>
                                     </div>
@@ -103,7 +152,7 @@
                                     <div class="form-group col-md-12">
                                         <label>配套物资清单</label>
                                         <input class="form-control" type="text" name="info[matching]" value="{$row.matching}" />
-                                    </div>
+                                    </div>-->
 
                                     <div class="form-group col-md-12">
                                         <span class="lm_c black">适用项目类型</span>
@@ -309,6 +358,9 @@
 <script type="text/javascript"> 
 
 	$(document).ready(function() {
+
+        art_show_msg('开发中...',2);
+
 		var uploader = new plupload.Uploader({
 			runtimes : 'html5,flash,silverlight,html4',
 			browse_button : 'pickupfile', // you can pass in id...
@@ -488,6 +540,69 @@
             cancel: function () {}
         });
     }
+
+    //省市联动(所在地)
+    $('#s_province').change(function () {
+        var province    = $(this).val();
+        if (province){
+            $.ajax({
+                type : 'POST',
+                url : "<?php echo U('Ajax/get_city'); ?>",
+                dataType : 'JSON',
+                data : {province:province},
+                success : function (msg) {
+                    $("#s_city").empty();
+                    $("#s_country").html('<option class="form-control" value="">请先选择城市</option>');
+                    if (msg.length>0){
+                        var count = msg.length;
+                        var i= 0;
+                        var b="";
+                        b+='<option value="" disabled selected>请选择</option>';
+                        for(i=0;i<count;i++){
+                            b+="<option value='"+msg[i].id+"'>"+msg[i].name+"</option>";
+                        }
+                    }else{
+                        var b="";
+                        b+='<option value="" disabled selected>暂无数据</option>';
+                    }
+                    $("#s_city").append(b);
+                }
+            })
+        }else{
+            art_show_msg('省份信息错误',3);
+        }
+    })
+
+    //市县联动(所在地)
+    /*$('#s_city').change(function () {
+        var city     = $(this).val();
+        if (city){
+            $.ajax({
+                type : 'POST',
+                url : "<?php echo U('Ajax/get_country'); ?>",
+                dataType : 'JSON',
+                data : {city:city},
+                success : function (msg) {
+                    $("#s_country").empty();
+                    if (msg.length>0){
+                        var count = msg.length;
+                        var i= 0;
+                        var b="";
+                        b+='<option value="" disabled selected>请选择</option>';
+                        for(i=0;i<count;i++){
+                            b+="<option value='"+msg[i].id+"'>"+msg[i].name+"</option>";
+                        }
+                    }else{
+                        var b="";
+                        b+='<option value="" disabled selected>暂无数据</option>';
+                    }
+                    $("#s_country").append(b);
+                }
+            })
+        }else{
+            art_show_msg('城市信息错误',3);
+        }
+    })*/
 
 </script>	
      

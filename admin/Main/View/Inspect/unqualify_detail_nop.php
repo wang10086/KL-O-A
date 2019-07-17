@@ -43,7 +43,7 @@
                                         <td>{$row.create_time|date="Y-m-d",###}</td>
                                         <td>{$row.show_stu}</td>
                                         <td class="taskOptions">{$row.create_time|date='Y-m-d H:i:s',###}</td>
-                                        <td class="taskOptions"><?php echo $row['ex_time']?date('Y-m-d H:i:s'):'<font color="#999999">未完成</font>'; ?></td>
+                                        <td class="taskOptions"><?php echo $row['ex_time']?date('Y-m-d H:i:s',$row['ex_time']):'<font color="#999999">未完成</font>'; ?></td>
                                         <if condition="rolemenu(array('Kpi/handle'))">
                                         <td class="taskOptions">
                                             <?php if (in_array($row['status'],array(1,2))){ ?>

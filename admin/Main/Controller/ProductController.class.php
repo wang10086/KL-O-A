@@ -1253,15 +1253,24 @@ class ProductController extends BaseController {
             $this->apply_time           = $list['apply_year'].'-'.$list['apply_time'];
         }
 
-        $this->standard                 = C('STANDARD');
-        $this->reckon_mode              = C('RECKON_MODE');
-        $this->subject_fields           = C('SUBJECT_FIELD');
-        $this->product_from             = C('PRODUCT_FROM');
-        $this->apply                    = C('APPLY_TO');
+        //$this->standard                 = C('STANDARD');
+        //$this->reckon_mode              = C('RECKON_MODE');
+        //$this->subject_fields           = C('SUBJECT_FIELD');
+        //$this->product_from             = C('PRODUCT_FROM');
+        //$this->apply                    = C('APPLY_TO');
         $this->kinds                    = get_project_kinds();
         $this->apply_times              = $apply_times;
         $this->pin                      = $pin;
         $this->id                       = $id;
+
+        $citys_db                       = M('citys');
+        $arr_citys                      = $citys_db->getField('id,name',true);
+        $default_province               = $citys_db->where(array('pid'=>0))->getField('id,name',true);
+
+        $this->userkey                  = get_username();
+        $this->provinces                = $default_province;
+        $this->citys                    = $arr_citys;
+
         $this->title('标准化产品');
         $this->display();
     }

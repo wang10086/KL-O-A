@@ -628,6 +628,7 @@ class AaaprintController extends BasepubController {
         if (isset($_POST['dosubmint'])){
             $starttime              = strtotime(I('st'));
             $endtime                = strtotime(I('et'));
+            if (!$starttime || !$endtime){ $this->error('时间格式错误'); }
             //查询月度
             $where                  = array();
             $where['b.audit_status']= 1;
@@ -650,6 +651,7 @@ class AaaprintController extends BasepubController {
         if (isset($_POST['dosubmint'])){
             $starttime              = strtotime(I('st'));
             $endtime                = strtotime(I('et'));
+            if (!$starttime || !$endtime){ $this->error('时间格式错误'); }
             //本周期预算审核通过的团
             $where                  = array();
             $where['l.audit_time']  = array('between',array($starttime,$endtime));
