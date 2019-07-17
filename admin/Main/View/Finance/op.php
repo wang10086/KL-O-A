@@ -74,13 +74,21 @@
                                         <?php if ($dijie_shouru && $audit['dst_status']!=1  && (!$jd || in_array(cookie('userid'),array($jd,1,11)))){ ?>
                                             <include file="op_edit" />
                                         <?php }else{ ?>
-                                            <include file="op_read" />
+                                            <?php if ($dijie_shouru && in_array(cookie('userid'),array(1,11))){ ?>
+                                                <include file="op_edit" />
+                                            <?php }else{ ?>
+                                                <include file="op_read" />
+                                            <?php } ?>
                                         <?php } ?>
                                     <?php }else{ ?>
                                         <?php if($audit['dst_status']!=1 && (!$jd || in_array(cookie('userid'),array($jd,1,11)))){ ?>
-                                        <include file="op_edit" />
+                                            <include file="op_edit" />
                                         <?php }else{ ?>
-                                        <include file="op_read" />
+                                            <?php if (in_array(cookie('userid'),array(1,11))){ ?>
+                                                <include file="op_edit" />
+                                            <?php }else{ ?>
+                                                <include file="op_read" />
+                                            <?php } ?>
                                     <?php } } ?>
                                 </div>
                             </div>
