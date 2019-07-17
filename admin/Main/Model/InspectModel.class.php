@@ -163,10 +163,11 @@ class InspectModel extends Model{
         $where['u.status']              = 1; //审核通过
         $field                          = 'u.user_id,u.user_name,u.type,u.month,u.score,u.remark,q.id as qaqc_id,q.type as qaqc_type,q.ex_time';
         $lists                          = M()->table('__QAQC_USER__ as u')->join('__QAQC__ as q on q.id=u.qaqc_id','left')->where($where)->field($field)->select();
-        $types                          = M('quota')->getField('id,title,content',true);
+        $types                          = M('quota')->where(array('type'=>2))->getField('id,title,content',true);
         foreach ($lists as $k=>$v){
+            $quota_id                   = $this->get_quota_id($v['qaqc_type']);
             foreach ($types as $key=>$value){
-                if ($v['qaqc_type'] == $value['id']){
+                if ($quota_id == $value['id']){
                     $lists[$k]['title'] = $value['title'];
                     $lists[$k]['content']= $value['content'];
                 }
@@ -175,6 +176,30 @@ class InspectModel extends Model{
             $lists[$k]['audit_res']     = $sign.$v['score'];
         }
         return $lists;
+    }
+
+    public function get_quota_id($type){
+        switch ($type){
+            case 1:
+                $qid                    = 6;
+                break;
+            case 2:
+                $qid                    = 7;
+                break;
+            case 3:
+                $qid                    = 8;
+                break;
+            case 4:
+                $qid                    = 9;
+                break;
+            case 5:
+                $qid                    = 10;
+                break;
+            case 6:
+                $qid                    = 11;
+                break;
+        }
+        return $qid;
     }
 
 }
