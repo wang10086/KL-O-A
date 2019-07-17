@@ -676,7 +676,7 @@ class AaaprintController extends BasepubController {
                 }
             }
             $title                  = array('项目编号','团号','项目名称','业务人员','计调');
-            $table_name             = date('Y-m-d',$starttime).'至'.date('Y-m-d',$endtime).'所有已审批预算,未审批结算团信息';
+            $table_name             = date('Y-m-d',$starttime).'至'.date('Y-m-d',$endtime).'已预算未结算项目';
             exportexcel($new_arr,$title,$table_name);
         }else{
             $this->display();
