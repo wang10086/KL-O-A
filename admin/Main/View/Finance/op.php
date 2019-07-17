@@ -96,7 +96,7 @@
                                             
                             <div id="formsbtn" style="padding-bottom:10px;">
                                 <div class="content">
-                                    <?php if($audit['dst_status']!=1){ ?>
+                                    <?php if($audit['dst_status']!=1 || in_array(cookie('userid'),array(1,11))){ ?>
                                         <form method="post" action="{:U('Finance/appcost')}" name="myform" id="appsubmint">
                                         <input type="hidden" name="dosubmit" value="1">
                                         <input type="hidden" name="opid" value="{$op.op_id}">
