@@ -76,7 +76,7 @@
                                             </if>
                                         </table>
                                         </div>
-                                        <?php if (in_array(cookie('userid'),array(1,11,55))){ ?> <!--乔总+财务-->
+                                        <?php if (in_array(cookie('userid'),array(1,11,55,$budget_audit_uid))){ ?> <!--乔总+财务+预算审核人-->
                                             <form action="{:U('Finance/public_save')}" method="post">
                                                 <input type="hidden" name="savetype" value="20">
                                                 <input type="hidden" name="dosubmint" value="1">

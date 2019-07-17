@@ -261,4 +261,19 @@ class FinanceModel extends Model{
 
         return $res;
     }
+
+    /**
+     * 获取预算审核人id
+     * @param $opid
+     */
+    public function get_budget_audit_uid($opid){
+        $type                               = P::REQ_TYPE_BUDGET;
+        $where                              = array();
+        $where['l.req_type']                = $type;
+        $where['b.op_id']                   = $opid;
+        $field                              = '';
+        $list                               = M()->table('__AUDIT_LOG__ as l')->join('__OP_BUDGET__ as b on b.id=l.req_id','left')->where($where)->find();
+        $audit_uid                          = $list['audit_uid'];
+        return $audit_uid;
+    }
 }

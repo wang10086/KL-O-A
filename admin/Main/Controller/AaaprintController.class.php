@@ -621,8 +621,8 @@ class AaaprintController extends BasepubController {
         exportexcel($data,$title,'赵洋');
     }
 
-
-    //某个周期内所有的结算的团
+    //http://oa.kexueyou.com/index.php?m=Main&c=Aaaprint&a=testB
+    //某个周期内所有的结算的团(已结算审批时间为准)
     public function testB(){
         $this->title('导出结算信息');
         if (isset($_POST['dosubmint'])){
