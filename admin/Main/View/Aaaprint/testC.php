@@ -12,12 +12,11 @@
 
             <!-- Main content -->
             <section class="content">
-            <form method="post" action="{:U('Aaaprint/testB')}" name="myform" id="save_plans">
+            <form method="post" action="{:U('Aaaprint/testC')}" name="myform" id="save_plans">
             <input type="hidden" name="dosubmint" value="1">
                 <div class="row">
                      <!-- right column -->
                     <div class="col-md-12">
-
 
                         <div class="box box-warning">
                             <div class="box-header">
@@ -52,8 +51,3 @@
 </div>
 
 <include file="Index:footer2" />
-    <!--<script type="text/javascript">
-        laydate.render({
-            elem: '.inputdate',theme: '#0099CC',type: 'datetime'
-        });
-    </script>-->

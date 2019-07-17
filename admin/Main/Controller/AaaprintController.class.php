@@ -643,4 +643,43 @@ class AaaprintController extends BasepubController {
             $this->display();
         }
     }
+
+    //获取某个周期内所有已做预算,未做结算的团
+    public function testC(){
+        $this->title('导出预算已通过,未做结算的团');
+        if (isset($_POST['dosubmint'])){
+            $starttime              = strtotime(I('st'));
+            $endtime                = strtotime(I('et'));
+            //本周期预算审核通过的团
+            $where                  = array();
+            $where['l.audit_time']  = array('between',array($starttime,$endtime));
+            $where['l.req_type']    = P::REQ_TYPE_BUDGET;
+            $where['l.dst_status']  = 1;
+            $field                  = 'b.name,b.op_id,l.req_uname,l.audit_uname';
+            $lists                  = M()->table('__AUDIT_LOG__ as l')->join('__OP_BUDGET__ as b on b.id=l.req_id','left')->field($field)->where($where)->select();
+
+            $new_arr                = array();
+            foreach ($lists as $k=>$v){
+                //查看结算状态
+                $where              = array();
+                $where['s.op_id']   = $v['op_id'];
+                $where['l.req_type']= P::REQ_TYPE_SETTLEMENT;
+                $where['l.dst_status']= 1;
+                $sett               = M()->table('__OP_SETTLEMENT__ as s')->join('__AUDIT_LOG__ as l on l.req_id=s.id','left')->where($where)->find();
+                if ($sett['dst_status'] != 1 && $v['op_id']){ //结算审核未通过
+                    $where          = array();
+                    $where['op_id'] = $v['op_id'];
+                    $field          = 'op_id,group_id,project,sale_user';
+                    $data           = M('op')->where($where)->field($field)->find();
+                    $data['req_uname'] = $v['req_uname'];
+                    $new_arr[]      = $data;
+                }
+            }
+            $title                  = array('项目编号','团号','项目名称','业务人员','计调');
+            $table_name             = date('Y-m-d',$starttime).'至'.date('Y-m-d',$endtime).'所有已审批预算,未审批结算团信息';
+            exportexcel($new_arr,$title,$table_name);
+        }else{
+            $this->display();
+        }
+    }
 }
