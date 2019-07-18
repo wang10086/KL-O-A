@@ -39,7 +39,7 @@
                                         <p>流失人数：{$data.loss_num}</p>
                                     </div>
                                     <div class="form-group col-md-4">
-                                        <p>员工流失率：{$data.complete}</p>
+                                        <p>员工流失率：{$data.average}</p>
                                     </div>
                                 </div>
 

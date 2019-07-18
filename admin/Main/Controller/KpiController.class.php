@@ -2162,12 +2162,12 @@ class KpiController extends BaseController {
     //员工流失率
     public function public_person_loss(){
         $pin                    = I('pin',1);
-        $suids                  = I('suids');
-        $luids                  = I('luids');
+        $suids                  = trim(I('suids'));
+        $luids                  = trim(I('luids'));
         $sum_uids               = $suids ? explode(',',$suids) : '';
         $loss_uids              = $luids ? explode(',',$luids) : '';
-        $sum_num                = count($sum_uids);
-        $loss_num               = count($loss_uids);
+        $sum_num                = $sum_uids ? count($sum_uids) : 0 ;
+        $loss_num               = $loss_uids? count($loss_uids): 0 ;
         if ($pin == 1){
             $uids               = $sum_uids;
             $pagecount          = $sum_num;
@@ -2188,7 +2188,7 @@ class KpiController extends BaseController {
         $data                   = array();
         $data['sum_num']        = $sum_num;
         $data['loss_num']       = $loss_num;
-        $data['complete']       = ($sum_num==0 || $loss_num==0) ? '100%' : (round($loss_num/$sum_num,4)*100).'%';
+        $data['average']        = ($sum_num==0 || $loss_num==0) ? '0%' : (round($loss_num/$sum_num,4)*100).'%';
 
         $this->lists            = $lists;
         $this->formal_stu       = array(0=>'<span class="yellow">试用</span>',1=>'<span class="green">正式</span>',3=>'<span class="red">劳务</span>',4=>'<span class="red">实习</span>');
