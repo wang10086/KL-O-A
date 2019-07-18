@@ -109,32 +109,36 @@ class RbacController extends BaseController {
 	
     // @@@NODE-3###adduser###添加用户###
     public function adduser(){
-    
         $this->title('添加/修改用户');
-         
-        $db = M('account');
-    
+        $db                             = M('account');
+        $account_detail_db              = M('account_detail');
         if(isset($_POST['dosubmit'])){
 
-            $info = I('info','');
-            $id = I('id',0);
-			$referer = I('referer','');
-			
-			$info['entry_time']	= $info['entry_time'] ? strtotime($info['entry_time']) : 0;
+            $info                       = I('info','');
+            $id                         = I('id',0);
+			$referer                    = I('referer','');
+			$info['entry_time']	        = $info['entry_time'] ? strtotime($info['entry_time']) : 0;
+            $grade                      = I('grade','');
 			
             if(!$id){
-				$passwordinfo		= password(I('password_1'));
-				$info['password']	= $passwordinfo['password'];
-				$info['encrypt']	= $passwordinfo['encrypt'];
-                $info['input_time'] = time();
-                $info['ip']			= get_client_ip();
-                $info['end_time']   = strtotime($_POST['end_time']);//离职时间
-                $info['departmentid'] = $_POST['departmentid'];//部门id
-                $isadd = $db->add($info);
+				$passwordinfo		    = password(I('password_1'));
+				$info['password']	    = $passwordinfo['password'];
+				$info['encrypt']	    = $passwordinfo['encrypt'];
+                $info['input_time']     = time();
+                $info['ip']			    = get_client_ip();
+                $info['end_time']       = strtotime($_POST['end_time']);//离职时间
+                $info['departmentid']   = $_POST['departmentid'];//部门id
+                $isadd                  = $db->add($info);
                 if($isadd) {
-                    $data = array();
-                    $data['role_id']  =  $info['roleid'];
-                    $data['user_id']  =  $isadd;
+                    if ($grade){ //保存分表信息
+                        $udetail                = array();
+                        $udetail['account_id']  = $isadd;
+                        $udetail['grade']       = $grade;
+                        $account_detail_db->add($udetail);
+                    }
+                    $data               = array();
+                    $data['role_id']    =  $info['roleid'];
+                    $data['user_id']    =  $isadd;
                     M('role_user')->add($data);
                     $this->success('添加成功！',$referer);
                 } else {
@@ -150,29 +154,45 @@ class RbacController extends BaseController {
 				$data['role_id']        =  $info['roleid'];
 				$data['user_id']        =  $id;
 				
-                $urdb = M('role_user');
+                $urdb                   = M('role_user');
                 $urdb->where("`user_id`='".$id."'")->delete();
                 $urdb->add($data);
+
+                $detail_list            = $account_detail_db->where(array('account_id'=>$id))->find();
+                if ($detail_list){
+                    $udetail            = array();
+                    $udetail['grade']   = $grade;
+                    $account_detail_db->where(array('id'=>$detail_list['id']))->save($udetail);
+                }else{
+                    if ($grade){
+                        $udetail                = array();
+                        $udetail['account_id']  = $id;
+                        $udetail['grade']       = $grade;
+                        $account_detail_db->add($udetail);
+                    }
+                }
     
                 $this->success('修改成功！',$referer);
             }
             	
         }else{
-            $id = I('id', 0);
+            $id                         = I('id', 0);
             	
-            $this->roles    = M('role')->where(array('id'=>array('gt',3),'status'=>1))->select();
-			$this->posts    = M('posts')->GetField('id,post_name',true);
-            $this->position = M('position')->getField('id,position_name',true);
-            $department     = M('salary_department')->select();//新添加部门
+            $this->roles                = M('role')->where(array('id'=>array('gt',3),'status'=>1))->select();
+			$this->posts                = M('posts')->GetField('id,post_name',true);
+            $this->position             = M('position')->getField('id,position_name',true);
+            $department                 = M('salary_department')->select();//新添加部门
             	
             if (!$id) {
-                $this->pagetitle = '新增用户';
-                $this->row = false;
-                $this->userrole = array();
+                $this->pagetitle        = '新增用户';
+                $this->row              = false;
+                $this->userrole         = array();
             } else {
-                $this->pagetitle = '修改资料';
-                $this->row = $db->find($id);
-                $this->userrole = M('role_user')->where("`user_id`='".$id."'")->getField('role_id', true);
+                $this->pagetitle        = '修改资料';
+                //$this->row              = $db->find($id);
+                $field                  = 'a.*,d.grade';
+                $this->row              = M()->table('__ACCOUNT__ as a')->join('__ACCOUNT_DETAIL__ as d on d.account_id=a.id','left')->where(array('a.id'=>$id))->field($field)->find();
+                $this->userrole         = M('role_user')->where("`user_id`='".$id."'")->getField('role_id', true);
                 if (!$this->row) {
                     $this->error('查无此人！', U('Rbac/index'));
                 }

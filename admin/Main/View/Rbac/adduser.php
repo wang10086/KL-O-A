@@ -190,6 +190,18 @@
                                             <option <?php if($row['rank']=='04'){ echo 'selected';}?> value="04">4队列</option>
                                         </select>
                                     </div>
+
+                                    <div class="form-group col-md-3">
+                                        <label>绩效考评结果等级</label>
+                                        <select class="form-control" name="grade">
+                                            <option value="" >请选择</option>
+                                            <option <?php if($row['grade']=='A'){ echo 'selected';}?> value="A">A级</option>
+                                            <option <?php if($row['grade']=='B'){ echo 'selected';}?> value="B">B级</option>
+                                            <option <?php if($row['grade']=='C'){ echo 'selected';}?> value="C">C级</option>
+                                            <option <?php if($row['grade']=='D'){ echo 'selected';}?> value="D">D级</option>
+                                            <option <?php if($row['grade']=='E'){ echo 'selected';}?> value="E">E级</option>
+                                        </select>
+                                    </div>
                                     
                                     <div class="form-group">&nbsp;</div>
                                     <div class="form-group">&nbsp;</div>
