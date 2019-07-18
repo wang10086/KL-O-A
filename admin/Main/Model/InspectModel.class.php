@@ -19,11 +19,13 @@ class InspectModel extends Model{
         $get_score_CC                   = 0;
         $get_score_DD                   = 0;
         $get_score_EE                   = 0;
+        $get_score_FF                   = 0;
         $sum_score_AA                   = 0; //总分
         $sum_score_BB                   = 0;
         $sum_score_CC                   = 0;
         $sum_score_DD                   = 0;
         $sum_score_EE                   = 0;
+        $sum_score_FF                   = 0;
         $get_score_total                = 0; //合计得分
         $sum_score_total                = 0; //合计总分
         foreach ($info as $k=>$v){ //已评分部分
@@ -32,12 +34,14 @@ class InspectModel extends Model{
             $get_score_CC               += $v['CC'];
             $get_score_DD               += $v['DD'];
             $get_score_EE               += $v['EE'];
+            $get_score_FF               += $v['FF'];
             if($v['AA']){ $sum_score_AA += 5; $sum_score_total+= 5; }
             if($v['BB']){ $sum_score_BB += 5; $sum_score_total+= 5; }
             if($v['CC']){ $sum_score_CC += 5; $sum_score_total+= 5; }
             if($v['DD']){ $sum_score_DD += 5; $sum_score_total+= 5; }
             if($v['EE']){ $sum_score_EE += 5; $sum_score_total+= 5; }
-            $get_score_total            += $v['AA'] + $v['BB'] + $v['CC'] + $v['DD'] + $v['EE'];
+            if($v['FF']){ $sum_score_FF += 5; $sum_score_total+= 5; }
+            $get_score_total            += $v['AA'] + $v['BB'] + $v['CC'] + $v['DD'] + $v['EE'] + $v['FF'];
         }
 
         foreach ($unscore_userids as $kk=>$vv){ //未评分部分,每项只得50%分数
@@ -46,11 +50,13 @@ class InspectModel extends Model{
             if ($get_score_CC){ $get_score_CC += 2.5; $get_score_total += 2.5; }
             if ($get_score_DD){ $get_score_DD += 2.5; $get_score_total += 2.5; }
             if ($get_score_EE){ $get_score_EE += 2.5; $get_score_total += 2.5; }
+            if ($get_score_FF){ $get_score_FF += 2.5; $get_score_total += 2.5; }
             if ($sum_score_AA){ $sum_score_AA += 5;   $sum_score_total += 5; } //总分
             if ($sum_score_BB){ $sum_score_BB += 5;   $sum_score_total += 5; }
             if ($sum_score_CC){ $sum_score_CC += 5;   $sum_score_total += 5; }
             if ($sum_score_DD){ $sum_score_DD += 5;   $sum_score_total += 5; }
             if ($sum_score_EE){ $sum_score_EE += 5;   $sum_score_total += 5; }
+            if ($sum_score_FF){ $sum_score_FF += 5;   $sum_score_total += 5; }
         }
 
         $data                           = array();
@@ -59,6 +65,7 @@ class InspectModel extends Model{
         $data['average_CC']             = $get_score_CC/$sum_score_CC?(round($get_score_CC/$sum_score_CC,2)*100).'%':'';
         $data['average_DD']             = $get_score_DD/$sum_score_DD?(round($get_score_DD/$sum_score_DD,2)*100).'%':'';
         $data['average_EE']             = $get_score_EE/$sum_score_EE?(round($get_score_EE/$sum_score_EE,2)*100).'%':'';
+        $data['average_FF']             = $get_score_FF/$sum_score_FF?(round($get_score_FF/$sum_score_FF,2)*100).'%':'';
         $data['sum_average']            = round($get_score_total/$sum_score_total,2)?(round($get_score_total/$sum_score_total,2)*100).'%':'50%';
         $data['score_account_name']     = implode(',',array_column($info,'input_username'));
         return $data;

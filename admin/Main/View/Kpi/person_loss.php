@@ -47,15 +47,21 @@
                                     <tr role="row" class="orders" >
                                         <th class="taskOptions">姓名</th>
                                         <th class="taskOptions">员工类别</th>
+                                        <th class="taskOptions">绩效考评结果等级</th>
                                         <th class="taskOptions">状态</th>
-                                        <th class="taskOptions">是否被开除</th>
+                                        <if condition="$pin eq 2">
+                                            <th class="taskOptions">是否被开除</th>
+                                        </if>
                                     </tr>
                                     <foreach name="lists" item="row">
                                         <tr  class="taskOptions">
                                             <td>{$row.nickname}</td>
                                             <td>{$formal_stu[$row['formal']]}</td>
+                                            <td>{$row.grade}级</td>
                                             <td>{$status_stu[$row['status']]}</td>
-                                            <td>{$expel_stu[$row['expel']]}</td>
+                                            <if condition="$pin eq 2">
+                                                <td>{$expel_stu[$row['expel']]}</td>
+                                            </if>
                                         </tr>
                                     </foreach>
                                 </table>

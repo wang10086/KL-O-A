@@ -151,12 +151,37 @@
         }
     }
 
+    //初始化评分显示(6个维度)
+    function init_score_6() {
+        $.fn.raty.defaults.path = "__HTML__/score/lib/img";
+        var res = <?php echo $pingfen?$pingfen:0; ?>;
+
+        if (res){
+            $('#content').html(res.content);
+
+            pingfen('AA',res.AA);
+            pingfen('BB',res.BB);
+            pingfen('CC',res.CC);
+            pingfen('DD',res.DD);
+            pingfen('EE',res.EE);
+            pingfen('FF',res.FF);
+        }else{
+            pingfen('AA',5);
+            pingfen('BB',5);
+            pingfen('CC',5);
+            pingfen('DD',5);
+            pingfen('EE',5);
+            pingfen('FF',5);
+        }
+    }
+
     function submitBefore(){
         var AA_num      = parseInt($('#AA_num').val());
         var BB_num      = parseInt($('#BB_num').val());
         var CC_num      = parseInt($('#CC_num').val());
         var DD_num      = parseInt($('#DD_num').val());
         var EE_num      = parseInt($('#EE_num').val());
+        var FF_num      = parseInt($('#FF_num').val());
         var content     = $('#content').val();
         var problem     = $('#problem').val();
         var arr         = Array(1,2,3);
@@ -165,10 +190,19 @@
         var CC_res      = in_array(CC_num,arr);
         var DD_res      = in_array(DD_num,arr);
         var EE_res      = in_array(EE_num,arr);
-        if ((AA_res || BB_res || CC_res || DD_res || EE_res) && (!content || !problem)){
+        var FF_res      = in_array(FF_num,arr);
+        if ((AA_res || BB_res || CC_res || DD_res || EE_res || FF_res) && (!content || !problem)){
             art_show_msg('单项评分低于3分时,必须填写相关问题及改进意见',3);
             return false;
         }
+
+        var account_id  = $('#account_id').val();
+        if (!account_id){
+            art_show_msg('人员信息错误',3);
+            return false;
+        }
+
+        $('#myForm').submit();
     }
 
     function in_array(search,array){
@@ -182,3 +216,5 @@
 
 
 </script>
+
+

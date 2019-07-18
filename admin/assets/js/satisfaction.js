@@ -1,5 +1,4 @@
 
-
 function pingfen(id,score) {
     $('#'+id+'_num').val(score);
     $('#'+id).raty({
@@ -24,7 +23,7 @@ function pingfen(id,score) {
 
 $('#account_id').change(function(){
     change_score_content();
-    });
+});
 
 $('#account_name').change(function () {
     change_score_content();
@@ -242,9 +241,9 @@ function change_score_content() {
                             })
                         }else if(account_id == 77){ //人事经理(王茜)
                             var content = '<div class="form-group col-md-6">'+
-                                '<input type="hidden" name="info[dimension]" value="4"> <!--考核维度-->'+
-                                '<input type="hidden" name="data[AA]" value="及时性">'+
-                                '<label>及时性：</label>'+
+                                '<input type="hidden" name="info[dimension]" value="6"> <!--考核维度-->'+
+                                '<input type="hidden" name="data[AA]" value="工作及时性">'+
+                                '<label>工作及时性：</label>'+
                                 '<div class="demo score inline-block"><div id="AA"></div></div>'+
                                 '<div class="form-control no-border star_div">'+
                                 '<span class="sco-star"><input type="radio" name=info[AA] value="5">&nbsp;非常满意</span>&emsp;&emsp;'+
@@ -254,8 +253,8 @@ function change_score_content() {
                                 '<span class="sco-star"><input type="radio" name=info[AA] value="1">&nbsp;非常不满意</span>'+
                                 '</div></div>'+
                                 '<div class="form-group col-md-6">'+
-                                '<input type="hidden" name="data[BB]" value="态度">'+
-                                '<label>态度：</label>'+
+                                '<input type="hidden" name="data[BB]" value="工作态度">'+
+                                '<label>工作态度：</label>'+
                                 '<div class="demo score inline-block"><div id="BB"></div></div>'+
                                 '<div class="form-control no-border star_div">'+
                                 '<span class="sco-star"><input type="radio" name=info[BB] value="5">&nbsp;非常满意</span>&emsp;&emsp;'+
@@ -285,11 +284,33 @@ function change_score_content() {
                                 '<span class="sco-star"><input type="radio" name=info[DD] value="3">&nbsp;一般</span>&emsp;&emsp;'+
                                 '<span class="sco-star"><input type="radio" name=info[DD] value="2">&nbsp;不符合</span>&emsp;&emsp;'+
                                 '<span class="sco-star"><input type="radio" name=info[DD] value="1">&nbsp;很差</span>'+
+                                '</div></div>'+
+                                '<div class="form-group col-md-6">'+
+                                '<input type="hidden" name="data[EE]" value="办公环境需求符合度">'+
+                                '<label>办公环境需求符合度：</label>'+
+                                '<div class="demo score inline-block"><div id="EE"></div></div>'+
+                                '<div class="form-control no-border star_div">'+
+                                '<span class="sco-star"><input type="radio" name=info[EE] value="5">&nbsp;非常满意</span>&emsp;&emsp;'+
+                                '<span class="sco-star"><input type="radio" name=info[EE] value="4">&nbsp;满意</span>&emsp;&emsp;'+
+                                '<span class="sco-star"><input type="radio" name=info[EE] value="3">&nbsp;一般</span>&emsp;&emsp;'+
+                                '<span class="sco-star"><input type="radio" name=info[EE] value="2">&nbsp;不满意</span>&emsp;&emsp;'+
+                                '<span class="sco-star"><input type="radio" name=info[EE] value="1">&nbsp;非常不满意</span>'+
+                                '</div></div>'+
+                                '<div class="form-group col-md-6">'+
+                                '<input type="hidden" name="data[FF]" value="企业文化及氛围">'+
+                                '<label>企业文化及氛围：</label>'+
+                                '<div class="demo score inline-block"><div id="FF"></div></div>'+
+                                '<div class="form-control no-border star_div">'+
+                                '<span class="sco-star"><input type="radio" name=info[FF] value="5">&nbsp;非常满意</span>&emsp;&emsp;'+
+                                '<span class="sco-star"><input type="radio" name=info[FF] value="4">&nbsp;满意</span>&emsp;&emsp;'+
+                                '<span class="sco-star"><input type="radio" name=info[FF] value="3">&nbsp;一般</span>&emsp;&emsp;'+
+                                '<span class="sco-star"><input type="radio" name=info[FF] value="2">&nbsp;不满意</span>&emsp;&emsp;'+
+                                '<span class="sco-star"><input type="radio" name=info[FF] value="1">&nbsp;非常不满意</span>'+
                                 '</div></div>';
                             var html = content + textarea;
                             $('#satisfaction_content').html(html);
                             $('#submit-btn').show();
-                            init_score_4();
+                            init_score_6();
                             init_radio();
                             return false;
                         }else if(account_id == 13){ //综合部经理(杜莹)
@@ -710,12 +731,12 @@ function init_radio(){
 }
 
 
-function submitBefore() {
-    var account_id      = $('#account_id').val();
-    if (!account_id){
-        art_show_msg('人员信息错误');
-        return false;
-    }else{
-        $('#myForm').submit();
-    }
-}
+/*function submitBefore() {
+ var account_id      = $('#account_id').val();
+ if (!account_id){
+ art_show_msg('人员信息错误');
+ return false;
+ }else{
+ $('#myForm').submit();
+ }
+ }*/

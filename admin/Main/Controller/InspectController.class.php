@@ -862,6 +862,7 @@ class InspectController extends BaseController{
             $lists[$k]['average_CC']    = $average_data['average_CC'];
             $lists[$k]['average_DD']    = $average_data['average_DD'];
             $lists[$k]['average_EE']    = $average_data['average_EE'];
+            $lists[$k]['average_FF']    = $average_data['average_FF'];
             $lists[$k]['sum_average']   = $average_data['sum_average'];
             $lists[$k]['score_accounts']= $average_data['score_account_name'];
             $lists[$k]['unscore_users'] = implode(',',$unscore_user_lists);
@@ -876,7 +877,6 @@ class InspectController extends BaseController{
         $satisfaction_config_db         = M('satisfaction_config');
         $score_dimension_db             = M('score_dimension');
         if (isset($_POST['dosubmint']) && $_POST['dosubmint']){
-
             $info                       = I('info');
             $data                       = I('data');
             $info['problem']            = trim(I('problem'));
@@ -953,6 +953,7 @@ class InspectController extends BaseController{
         $list['CC']                 = $dimension['CC'];
         $list['DD']                 = $dimension['DD'];
         $list['EE']                 = $dimension['EE'];
+        $list['FF']                 = $dimension['FF'];
         $list['unscore_users']      = implode(',',$unscore_user_lists);
         $this->list                 = $list;
         $this->contents             = $contents;
@@ -983,6 +984,7 @@ class InspectController extends BaseController{
             $lists[$k]['CC']        = $v['CC']?$v['CC']:'<font color="#999999">未考核</font>';
             $lists[$k]['DD']        = $v['DD']?$v['DD']:'<font color="#999999">未考核</font>';
             $lists[$k]['EE']        = $v['EE']?$v['EE']:'<font color="#999999">未考核</font>';
+            $lists[$k]['FF']        = $v['FF']?$v['FF']:'<font color="#999999">未考核</font>';
             $lists[$k]['average']   = $this->get_one_sattisfaction_average($v);
         }
 
@@ -993,23 +995,25 @@ class InspectController extends BaseController{
 
     //获取单词评分的内部满意度
     private function get_one_sattisfaction_average($info){
-        $get_score                  = $info['AA'] + $info['BB'] + $info['CC'] + $info['DD'] + $info['EE']; //得分
+        $get_score                  = $info['AA'] + $info['BB'] + $info['CC'] + $info['DD'] + $info['EE'] + $info['FF']; //得分
         $sum_score                  = 0; //总分
         if ($info['AA']) $sum_score += 5;
         if ($info['BB']) $sum_score += 5;
         if ($info['CC']) $sum_score += 5;
         if ($info['DD']) $sum_score += 5;
         if ($info['EE']) $sum_score += 5;
+        if ($info['FF']) $sum_score += 5;
         $average                    = (round($get_score/$sum_score,2)*100).'%';
         return $average;
     }
 
     public function get_user_dimension($uid){
         $db                         = M('score_dimension');
-        $list1                      = $db->where(array('account_id'=>array('eq',$uid),trim('EE')=>array('neq','')))->order($this->orders('id'))->find(); //五项
-        $list2                      = $db->where(array('account_id'=>array('eq',$uid),trim('DD')=>array('neq','')))->order($this->orders('id'))->find(); //四项
-        $list3                      = $db->where(array('account_id'=>array('eq',$uid),trim('CC')=>array('neq','')))->order($this->orders('id'))->find(); //三项
-        $list                       = $list1?$list1:($list2?$list2:$list3);
+        $list1                      = $db->where(array('account_id'=>array('eq',$uid),trim('FF')=>array('neq','')))->order($this->orders('id'))->find(); //六项
+        $list2                      = $db->where(array('account_id'=>array('eq',$uid),trim('EE')=>array('neq','')))->order($this->orders('id'))->find(); //五项
+        $list3                      = $db->where(array('account_id'=>array('eq',$uid),trim('DD')=>array('neq','')))->order($this->orders('id'))->find(); //四项
+        $list4                      = $db->where(array('account_id'=>array('eq',$uid),trim('CC')=>array('neq','')))->order($this->orders('id'))->find(); //三项
+        $list                       = $list1?$list1:($list2?$list2:($list3?$list3:$list4));
         return $list;
     }
 

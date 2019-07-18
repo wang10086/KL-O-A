@@ -24,6 +24,7 @@
             <?php if ($list['average_CC']){ ?> <div class="form-group box-float-6" style="padding-left:0;">{$list.CC}：{$list.average_CC}&nbsp;分</div> <?php } ?>
             <?php if ($list['average_DD']){ ?> <div class="form-group box-float-6" style="padding-left:0;">{$list.DD}：{$list.average_DD}&nbsp;分</div> <?php } ?>
             <?php if ($list['average_EE']){ ?> <div class="form-group box-float-6" style="padding-left:0;">{$list.EE}：{$list.average_EE}&nbsp;分</div> <?php } ?>
+            <?php if ($list['average_FF']){ ?> <div class="form-group box-float-6" style="padding-left:0;">{$list.FF}：{$list.average_FF}&nbsp;分</div> <?php } ?>
         </div>
 
         <div class="fromlist">
