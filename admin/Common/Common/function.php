@@ -3317,7 +3317,8 @@ function updatekpi($month,$user){
                             $loss_num       = $data['loss_num'];
                             $average        = round($loss_num/$sum_num,4);
                             $complete       = ($average*100).'%';
-                            $url            = U('Kpi/public_person_loss',array('year'=>$v['year'],'month'=>$v['month'],'st'=>$v['start_date'],'et'=>$v['end_date']));
+                            //$url            = U('Kpi/public_person_loss',array('year'=>$v['year'],'month'=>$v['month'],'st'=>$v['start_date'],'et'=>$v['end_date']));
+                            $url            = U('Kpi/public_person_loss',array('suids'=>$data['sum_uids'],'luids'=>$data['loss_uids']));
                         }
 
                         //月度累计各业务综合毛利率完成比率

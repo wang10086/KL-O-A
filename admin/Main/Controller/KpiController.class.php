@@ -2161,40 +2161,47 @@ class KpiController extends BaseController {
 
     //员工流失率
     public function public_person_loss(){
-        $start_time             = I('st');
-        $end_time               = I('et');
         $pin                    = I('pin',1);
+        $suids                  = I('suids');
+        $luids                  = I('luids');
+        $sum_uids               = $suids ? explode(',',$suids) : '';
+        $loss_uids              = $luids ? explode(',',$luids) : '';
+        $sum_num                = count($sum_uids);
+        $loss_num               = count($loss_uids);
+        if ($pin == 1){
+            $uids               = $sum_uids;
+            $pagecount          = $sum_num;
+        }elseif ($pin == 2){
+            $uids               = $loss_uids;
+            $pagecount          = $loss_num;
+        }
 
-        $data                   = get_person_loss($start_time,$end_time);
-        $average                = round($data['$loss_num']/$data['$sum_num'],4);
-        $complete               = ($average*100).'%';
-        $data['complete']       = $complete;
+        $pagecount		        = $pagecount;
+        $page			        = new Page($pagecount, P::PAGE_SIZE);
+        $this->pages	        = $pagecount>P::PAGE_SIZE ? $page->show():'';
 
+        $where                  = array();
+        $where['a.id']          = array('in',$uids);
+        $field                  = 'a.id,a.nickname,a.formal,a.status,a.expel,d.grade';
+        $lists                  = M()->table('__ACCOUNT__ as a')->join('__ACCOUNT_DETAIL__ as d on d.account_id=a.id','left')->where($where)->limit($page->firstRow . ',' . $page->listRows)->field($field)->select();
+
+        $data                   = array();
+        $data['sum_num']        = $sum_num;
+        $data['loss_num']       = $loss_num;
+        $data['complete']       = ($sum_num==0 || $loss_num==0) ? '100%' : (round($loss_num/$sum_num,4)*100).'%';
+
+        $this->lists            = $lists;
         $this->formal_stu       = array(0=>'<span class="yellow">试用</span>',1=>'<span class="green">正式</span>',3=>'<span class="red">劳务</span>',4=>'<span class="red">实习</span>');
         $this->status_stu       = array(0=>'<span class="green">正常</span>',1=>'<span class="yellow">停用</span>',2=>'<span class="red">删除</span>');
         $this->expel_stu        = array(0=>'<font color="#999999">否</font>',1=>'<span class="">是</span>');
         $this->data             = $data;
         $this->title            = '员工流失率';
         $this->pin              = $pin;
-        $this->st               = $start_time;
-        $this->et               = $end_time;
+        $this->suids            = $suids;
+        $this->luids            = $luids;
         $this->display('person_loss');
     }
 
-    //员工流失率详情
-   /* public function bak__public_person_loss_detail(){
-        $start_time             = I('st');
-        $end_time               = I('et');
-
-        $data                   = get_person_loss($start_time,$end_time);
-        $average                = round($data['$loss_num']/$data['$sum_num'],4);
-        $complete               = ($average*100).'%';
-        $data['complete']       = $complete;
-        var_dump($data);die;
-
-        $this->data             = $data;
-        $this->display('person_loss_detail');
-    }*/
 
    //获取相关二维码
     public function public_qrcode(){
