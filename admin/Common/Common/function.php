@@ -3170,15 +3170,6 @@ function updatekpi($month,$user){
 
                         //客户对公司产品满意度(研发经理)
                         if($v['quota_id']==154){
-                            /*$average_data           = get_satisfaction_average($v['start_date'],$v['end_date']);
-                            $average                = $average_data['average'];
-                            $num                    = $average_data['num'];
-                            if ($average > 0.9 || !$num){
-                                $complete           = 100;
-                            }else{
-                                $complete           = round(($v['target']/0.9)*$average,2).'%';
-                            }
-                            $url                    = '';*/
                             $year                       = $v['year'];
                             $monon                      = substr($v['month'],4,2);
                             $yearMonth                  = $year.$monon;
@@ -3366,22 +3357,6 @@ function updatekpi($month,$user){
 
                         //不合格处理率-安全品控部经理
                         if ($v['quota_id']==215){
-                            /*$score_lists            = get_month_satisfaction($v['start_date'],$v['end_date']); //总评分列表
-                            $unok_lists             = get_score_unqualified_lists($score_lists); //不合格评分列表
-                            $unok_opids             = array_unique(array_column($unok_lists,'op_id'));
-                            $unok_num               = count($unok_opids);
-                            $visit_list             = get_visit($unok_opids); //回访记录
-                            $visit_num              = count($visit_list);
-                            if (!$unok_num){
-                                $average            = 1;
-                            }else{
-                                $average            = round($visit_num/$unok_num,4);
-                            }
-                            $complete               = ($average*100).'%';
-                            //$opids                  = implode(',',array_unique(array_column($score_lists,'op_id'))); //所有的项目
-                            $unok_opids             = implode(',',$unok_opids); //不合格项目
-                            $url                    = U('Inspect/score',array('kpi_opids'=>$unok_opids));*/
-
                             $mod                    = D('Inspect');
                             $data                   = $mod->get_unqualify_data($v['start_date'],$v['end_date']);
                             $sum_data               = $mod->get_sum_timely($data);
@@ -3454,10 +3429,17 @@ function updatekpi($month,$user){
                         $url                    = U('Score/public_partner_satisfaction',array('uid'=>$uid,'month'=>$month));
                     }
 
+                    //业务岗人员比率(人事部经理)
+                    if ($v['quota_id']==230){
+                        $data                   = get_sales_ratio();
+                        $complete               = (round($data['sale_num']/$data['sum_num'],4)*100).'%';
+                        $url                    = U('Kpi/public_sales_ratio',array('ym'=>$v['month'],'sum_ids'=>$data['sum_ids'],'sale_ids'=>$data['sale_ids']));
+                    }
+
                    /* }*/
 
                     //已实现自动获取指标值
-                    $auto_quta	= array(1,2,3,4,5,6,81,8,9,10,11,14,15,16,17,18,20,23,26,21,24,27,32,37,19,22,25,28,33,38,42,45,103,56,113,92,29,34,39,46,102,55,57,58,59,84,87,89,90,111,107,83,66,54,44,12,112,108,100,96,95,65,114,86,85,64,63,62,53,52,41,40,49,80,48,91,79,47,36,35,31,30,82,110,106,99,94,67,124,125,126,127,128,129,130,131,132,133,134,135,136,137,138,139,140,141,143,144,145,146,147,148,149,150,151,154,155,156,158,160,161,162,163,165,167,168,179,180,193,194,195,204,205,206,210,212,213,214,215,216,217,218,219,225,226,227,228,229);
+                    $auto_quta	= array(1,2,3,4,5,6,81,8,9,10,11,14,15,16,17,18,20,23,26,21,24,27,32,37,19,22,25,28,33,38,42,45,103,56,113,92,29,34,39,46,102,55,57,58,59,84,87,89,90,111,107,83,66,54,44,12,112,108,100,96,95,65,114,86,85,64,63,62,53,52,41,40,49,80,48,91,79,47,36,35,31,30,82,110,106,99,94,67,124,125,126,127,128,129,130,131,132,133,134,135,136,137,138,139,140,141,143,144,145,146,147,148,149,150,151,154,155,156,158,160,161,162,163,165,167,168,179,180,193,194,195,204,205,206,210,212,213,214,215,216,217,218,219,225,226,227,228,229,230);
 
                     //计算完成率并保存数据
                     if(in_array($v['quota_id'],$auto_quta)){

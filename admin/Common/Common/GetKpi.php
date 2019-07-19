@@ -2593,7 +2593,7 @@ function get_yw_department(){
     function get_person_loss($start_time,$end_time){
         /*指标=（重点关注员工）离职人数/所有重点关注员工人数×100%
         重点关注员工是指：上年年末绩效考评结果等级为A、B、C类员工*/
-        $user_names                 = array('孟华华','李岩1','魏春竹1','石曼1','王爱1','彭白鸽1','王旭1','郑志江1','杨晓旺1');
+        $user_names                 = C('NOT_SELECT_USER');
         //全部人员信息
         $where                      = array();
         $where['a.id']              = array('gt',10);
@@ -3619,3 +3619,35 @@ function get_yw_department(){
         return $data;
     }
 
+    //获取业务人员所占比例
+    function get_sales_ratio(){
+        $db                                 = M('account');
+        $not_select_users                   = C('NOT_SELECT_USER');
+        //所有人员信息
+        $where                              = array();
+        $where['nickname']                  = array('not in',$not_select_users);
+        $where['id']                        = array('gt',10);
+        $where['status']                    = 0;
+        $lists                              = $db->field('id,nickname')->where($where)->select();
+
+        //业务人员信息
+        $position_ids                       = M('position')->where(array('code'=>array('like','S%')))->getField('id',true);
+        $where                              = array();
+        $where['nickname']                  = array('not in',$not_select_users);
+        $where['id']                        = array('gt',10);
+        $where['status']                    = 0;
+        $where['position_id']               = array('in',$position_ids);
+        $sale_lists                         = $db->field('id,nickname')->where($where)->select();
+
+        $sum_num                            = count($lists);
+        $sale_num                           = count($sale_lists);
+
+        $data                               = array();
+        $data['sum_num']                    = $sum_num;
+        $data['sale_num']                   = $sale_num;
+        $data['sum_ids']                    = implode(',',array_column($lists,'id'));
+        $data['sale_ids']                   = implode(',',array_column($sale_lists,'id'));
+        $data['sum_lists']                  = $lists;
+        $data['sale_lists']                 = $sale_lists;
+        return $data;
+    }

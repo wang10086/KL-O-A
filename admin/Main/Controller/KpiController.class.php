@@ -2485,6 +2485,44 @@ class KpiController extends BaseController {
         }
     }
 
+    //业务岗人员比率KPI详情页(人事经理)
+    public function public_sales_ratio(){
+        $pin                                = I('pin',1);
+        $yearMonth                          = I('ym');
+        $sum_id                             = I('sum_ids');
+        $sale_id                            = I('sale_ids');
+        $sum_ids                            = $sum_id?explode(',',$sum_id):array();
+        $sale_ids                           = $sale_id?explode(',',$sale_id):array();
+        $departments                        = M('salary_department')->getField('id,department',true);
+        $positions                          = M('position')->getField('id,position_name',true);
+
+        $where                              = array();
+        $where['id']                        = $pin==1 ? array('in',$sum_ids) : array('in',$sale_ids);
+
+        $pagecount		                    = M('account')->where($where)->order($this->orders('id'))->count();
+        $page			                    = new Page($pagecount, P::PAGE_SIZE);
+        $this->pages	                    = $pagecount>P::PAGE_SIZE ? $page->show():'';
+
+        $lists                              = M('account')->where($where)->order($this->orders('id'))->limit($page->firstRow . ',' . $page->listRows)->select();
+        foreach ($lists as $k=>$v){
+            if (in_array($v['id'],$sale_ids)){
+                $lists[$k]['isSale']        = '<span class="green">业务</span>';
+            }else{
+                $lists[$k]['isSale']        = '<font color="#999">非业务</font>';
+            }
+            $lists[$k]['department']        = $departments[$v['departmentid']];
+            $lists[$k]['position']          = $v['position_id'] ? $positions[$v['position_id']] : '';
+        }
+
+        $this->lists                        = $lists;
+        $this->pin                          = $pin;
+        $this->yearMonth                    = $yearMonth;
+        $this->sum_ids                      = $sum_id;
+        $this->sale_ids                     = $sale_id;
+        $this->title('业务岗人员比率');
+        $this->display('sales_ratio');
+    }
+
 
     public function aaa(){
         set_after_salary_kpi(201906);
