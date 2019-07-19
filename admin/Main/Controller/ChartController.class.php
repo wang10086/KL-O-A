@@ -1051,8 +1051,9 @@ class ChartController extends BaseController {
         }else{ //已结算
             $data                               = $mod->get_js_detail_data($arr_uids,$startTime,$endTime,$dj);
         }
-        $opids                                  = $data['opids'];
-        $arr_opids                              = $opids?explode(',',$opids):'';
+        $ys_opids                               = $data['ysopids']?explode(',',$data['ysopids']):array();
+        $js_opids                               = $data['jsopids']?explode(',',$data['jsopids']):array();
+        $arr_opids                              = array_merge($ys_opids,$js_opids);
 
         $where                                  = array();
         $where['o.type']                        = 1;
@@ -1093,11 +1094,14 @@ class ChartController extends BaseController {
             if($jiesuan['audit_status']==1) $lists[$k]['zhuangtai'] = '<span class="yellow">完成结算</span>';
             if($jiesuan['audit_status']==2) $lists[$k]['zhuangtai'] = '<span class="yellow">结算未通过</span>';
 
-            $settlement = M('op_settlement')->where(array('op_id'=>$v['op_id'],'audit_status'=>1))->find();
-            $budget     = M('op_budget')->where(array('op_id'=>$v['op_id'],'audit_status'=>1))->find();
+            if (in_array($v['op_id'],$js_opids)){
+                $list   = M('op_settlement')->where(array('op_id'=>$v['op_id'],'audit_status'=>1))->find();
+            }elseif (in_array($v['op_id'],$ys_opids)){
+                $list   = M('op_budget')->where(array('op_id'=>$v['op_id'],'audit_status'=>1))->find();
+            }
 
-            $lists[$k]['shouru']    = $settlement['shouru']?$settlement['shouru']:$budget['shouru'];
-            $lists[$k]['maoli']     = $settlement['maoli']?$settlement['maoli']:$budget['maoli'];
+            $lists[$k]['shouru']    = $list['shouru']?$list['shouru']:'0.00';
+            $lists[$k]['maoli']     = $list['maoli']?$list['maoli']:'0.00';
         }
         $this->lists    =  $lists;
         $this->kinds    =  M('project_kind')->getField('id,name', true);
@@ -1106,7 +1110,7 @@ class ChartController extends BaseController {
         $this->pin      = $pin;
         $this->st       = $startTime;
         $this->et       = $endTime;
-        $this->opids    = $opids;
+        //$this->opids    = $opids;
         $this->depname  = $depname;
         $this->display('oplist');
     }

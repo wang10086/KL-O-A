@@ -623,9 +623,10 @@ class ChartModel extends Model
         $yearjslist = M()->table('__OP_SETTLEMENT__ as b')->field($field)->join('__OP__ as o on b.op_id = o.op_id', 'LEFT')->join('__OP_TEAM_CONFIRM__ as c on c.op_id=o.op_id', 'left')->where($jswhere)->order('zsr DESC')->find();
         $yearyslist = M()->table('__OP_BUDGET__ as b')->field($field)->join('__OP__ as o on b.op_id = o.op_id', 'LEFT')->join('__OP_TEAM_CONFIRM__ as c on c.op_id=o.op_id', 'left')->where($yswhere)->order('zsr DESC')->find();
 
-        $opids          = array();
-        if ($ysopids){ foreach ($ysopids as $v){ $opids[] = $v;}}
-        if ($jsopids){ foreach ($jsopids as $v){ $opids[] = $v;}}
+        $ys_opids       = array();
+        $js_opids       = array();
+        if ($ysopids){ foreach ($ysopids as $v){ $ys_opids[] = $v;}}
+        if ($jsopids){ foreach ($jsopids as $v){ $js_opids[] = $v;}}
 
         $data           = array();
         $data['xms']    = $yearjslist['xms'] + $yearyslist['xms'];
@@ -634,7 +635,8 @@ class ChartModel extends Model
         $data['zml']    = $yearjslist['zml'] + $yearyslist['zml'];
         $data['mll']    = $data['zml'] / $data['zsr'];
         //$data['opids']  = array_merge($ysopids,$jsopids);
-        $data['opids']  = $opids;
+        $data['ys_opids']= $ys_opids;
+        $data['js_opids']= $js_opids;
         return $data;
     }
 
@@ -1371,7 +1373,8 @@ class ChartModel extends Model
         $zsr                    = $data['zsr'];
         $zml                    = $data['zml'];
         $mll                    = $data['mll'];
-        $opids                  = implode(',',$data['opids']);
+        $ys_opids               = implode(',',$data['ys_opids']);
+        $js_opids               = implode(',',$data['js_opids']);
 
         $data                   = array();
         $data['xms']            = $xms ? $xms : 0;
@@ -1379,7 +1382,8 @@ class ChartModel extends Model
         $data['zsr']            = $zsr ? $zsr : "0.00";
         $data['zml']            = $zml ? $zml : "0.00";
         $data['mll']            = $mll ? sprintf("%.2f", $mll * 100) : "0.00";
-        $data['opids']          = $opids;
+        $data['ysopids']        = $ys_opids;
+        $data['jsopids']        = $js_opids;
         return $data;
     }
 

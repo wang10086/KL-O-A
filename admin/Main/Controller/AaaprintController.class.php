@@ -678,8 +678,45 @@ class AaaprintController extends BasepubController {
                 }
             }
             $title                  = array('项目编号','团号','项目名称','业务人员','计调');
-            $table_name             = date('Y-m-d',$starttime).'至'.date('Y-m-d',$endtime).'已预算未结算项目';
+            $table_name             = date('Y-m-d',$starttime).'至'.date('Y-m-d',$endtime).'已预算未结算项目C';
             exportexcel($new_arr,$title,$table_name);
+        }else{
+            $this->display();
+        }
+    }
+
+    //获取某个周期内所有已做预算的团(不管结算状态)
+    public function testD(){
+        $this->title('导出所有预算已通过的团');
+        if (isset($_POST['dosubmint'])){
+            $starttime              = strtotime(I('st'));
+            $endtime                = strtotime(I('et'));
+            if (!$starttime || !$endtime){ $this->error('时间格式错误'); }
+            //本周期预算审核通过的团
+            $where                  = array();
+            $where['l.audit_time']  = array('between',array($starttime,$endtime));
+            $where['l.req_type']    = P::REQ_TYPE_BUDGET;
+            $where['l.dst_status']  = 1;
+            $field                  = 'b.op_id,o.group_id,b.name,o.sale_user,l.req_uname';
+            $lists                  = M()->table('__AUDIT_LOG__ as l')->join('__OP_BUDGET__ as b on b.id=l.req_id','left')->join('__OP__ as o on o.op_id=b.op_id','left')->field($field)->where($where)->select();
+
+            foreach ($lists as $k=>$v){
+                //查看结算状态
+                $where              = array();
+                $where['s.op_id']   = $v['op_id'];
+                $where['l.req_type']= P::REQ_TYPE_SETTLEMENT;
+                $where['l.dst_status']= 1;
+                $sett               = M()->table('__OP_SETTLEMENT__ as s')->join('__AUDIT_LOG__ as l on l.req_id=s.id','left')->where($where)->find();
+                if ($sett['dst_status'] != 1 && $v['op_id']){ //结算审核未通过
+                    $lists[$k]['sett_stu'] = '请注意,该团未结算';
+                }else{
+                    $lists[$k]['sett_stu'] = date('Y-m-d H:i:s',$sett['audit_time']);
+                }
+            }
+
+            $title                  = array('项目编号','团号','项目名称','业务人员','计调','结算审批时间');
+            $table_name             = date('Y-m-d',$starttime).'至'.date('Y-m-d',$endtime).'已完成预算项目D';
+            exportexcel($lists,$title,$table_name);
         }else{
             $this->display();
         }
