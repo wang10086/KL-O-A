@@ -1903,7 +1903,7 @@ function updatekpi($month,$user){
         $quto   = M('kpi_more')->where($where)->select();
         if($quto){
             foreach($quto as $k=>$v){
-                $v['end_date']   = $v['end_date']+86400;
+                $v['end_date']   = date('d',$v['end_date'])==25 ? $v['end_date']+86400 : $v['end_date'];
                 if($v['automatic']==0){
                     /*if (in_array($v['user_id'],C('KPI_QUARTER')) && $v['month']>201903){ */
                     /*if (in_array($v['quota_id'],C('QUARTER_QUOTA_ID')) && $v['month']>201903){
@@ -3205,7 +3205,7 @@ function updatekpi($month,$user){
                             $url                    = '';
                         }
 
-                        //项目合同签订率-综合部经理
+                        //项目合同签订率-人资综合部经理
                         if ($v['quota_id']==167){
                             $yw_departs             = C('YW_DEPARTS_KPI');  //业务部门id
                             $where                  = array();
