@@ -232,7 +232,9 @@
 	//检查是否全部回款
     function check_huikuan(){
         var yihuikuan  = <?php echo $yihuikuan?$yihuikuan:0; ?>;
-        if (yihuikuan){
+        var is_dijie   = {$is_dijie};
+
+        if (yihuikuan || (!yihuikuan && is_dijie)){
             $('#appsubmint').submit();
         }else{
             art_show_msg('该团未全部回款',5);
