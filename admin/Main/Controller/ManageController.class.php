@@ -105,7 +105,7 @@ class ManageController extends ChartController {
         $departments                 = M('salary_department')->field('id,department')->where($where)->select();
         //预算及结算分部门汇总
         $listdatas                   = $this->count_lists($departments,$year,$month,$type);//1 结算 0预算
-        return $listdatas;die;
+        return $listdatas;
     }
 
     /**  monthzsr 收入合计   monthzml 毛利合计  monthmll 毛利率

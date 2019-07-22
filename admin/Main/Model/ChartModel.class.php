@@ -21,14 +21,17 @@ class ChartModel extends Model
      */
     public function js_deplist($userlists, $month='', $yeartimes, $pin = 0,$quartertimes='')
     {
-
         $Ym                         = $month;
         $monthtime                  = intval($month);
         $month                      = get_cycle($monthtime, 26);
-        $quarterbegintime           = $quartertimes['begin_time'];
-        $quarterendtime             = $quartertimes['end_time'];
+        //$quarterbegintime           = $quartertimes['begin_time'];
+        //$quarterendtime             = $quartertimes['end_time'];
         $lists                      = array();
         foreach ($userlists as $k => $v) {
+            $quarterbegintime       = $quartertimes['begin_time'];
+            $quarterendtime         = $quartertimes['end_time'];
+            $monthBeginTime         = $month['begintime'];
+            $monthEndTime           = $month['endtime'];
             //年度累计
             $where                  = array();
             $where['b.audit_status']= 1;
@@ -87,13 +90,13 @@ class ChartModel extends Model
             }
 
             if ($month){
-               if ($Ym == 201906) $month['endtime']  += 10*24*3600;
-               if ($Ym == 201907) $month['begintime']+= 10*24*3600;
+               if ($Ym == 201906) $monthEndTime     += 10*24*3600; //京区业务中心2019年06月手动延长统计10天 $v['id'] = 6 =>京区业务中心
+               if ($Ym == 201907) $monthBeginTime   += 10*24*3600; //京区业务中心2019年07月手动推迟统计10天
                 //查询月度
                 $where                  = array();
                 $where['b.audit_status']= 1;
                 $where['l.req_type']    = 801;
-                $where['l.audit_time']  = array('between', "$month[begintime],$month[endtime]");
+                $where['l.audit_time']  = array('between', "$monthBeginTime,$monthEndTime");
                 $where['a.id']          = array('in', $v['users']);
 
                 $field                  = array();
