@@ -93,9 +93,9 @@
                                                 </foreach>
                                             <?php /*} */?>
                                         </select>
-                                    </div>-->
+                                    </div>
 
-                                    <!--<div class="form-group col-md-4">
+                                    <div class="form-group col-md-4">
                                         <label>是否是标准化产品：</label>
                                         <select class="form-control" name="info[standard]" required>
                                             <option value="" selected disabled>==请选择==</option>
@@ -167,7 +167,7 @@
 
                                     <div class="form-group col-md-12"></div>
                                     <div class="form-group col-md-12">
-                                        <label>产品简介</label>
+                                        <label>产品特色</label>
                                         <?php echo editor('content',$row['content']); ?>
                                     </div>
                                     <div class="form-group">&nbsp;</div>
@@ -175,7 +175,7 @@
                             </div><!-- /.box -->
                             
                             
-                            <div class="box box-warning">
+                            <!--<div class="box box-warning">
                                 <div class="box-header">
                                     <h3 class="box-title">包含产品模块</h3>
                                 </div>
@@ -225,12 +225,10 @@
                                                     <tr>
                                                         <td align="left" colspan="11">
                                                             <a href="javascript:;" class="btn btn-success btn-sm" style="margin-left:-8px;"  onClick="selectproduct()"><i class="fa fa-fw  fa-plus"></i> 选择产品模块</a>
-                                                            <!--<a  href="javascript:;" class="btn btn-info btn-sm" onClick="javascript:save('save_product','<?php /*echo U('Op/public_save'); */?>',{$op.op_id});">保存</a>-->
                                                         </td>
                                                     </tr>
                                                     </tfoot>
                                                 </table>
-                                                <!--</div>-->
                                             </div>
                                         </div>
                                     </div>
@@ -269,12 +267,54 @@
                                                     <tr>
                                                         <td align="left" colspan="11">
                                                             <a href="javascript:;" class="btn btn-success btn-sm" style="margin-left:-8px;"  onClick="selectres()"><i class="fa fa-fw  fa-plus"></i> 选择资源模块</a>
-                                                            <!--<a  href="javascript:;" class="btn btn-info btn-sm" onClick="javascript:save('save_res','<?php /*echo U('Op/public_save'); */?>',{$op.op_id});">保存</a>-->
                                                         </td>
                                                     </tr>
                                                     </tfoot>
                                                 </table>
-                                                <!--</div>-->
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>-->
+
+                            <div class="box box-warning">
+                                <div class="box-header">
+                                    <h3 class="box-title">产品内容</h3>
+                                </div>
+                                <div class="box-body">
+                                    <div class="content">
+                                        <div class="content" style="padding-top:0px;">
+                                            <div class="form-group col-md-12" id="reslist" style="display:block;">
+                                                <table class="table table-striped">
+                                                    <thead>
+                                                    <tr>
+                                                        <th width="15%">时间</th>
+                                                        <th width="15%">课程主题</th>
+                                                        <th width="20%">课程内容</th>
+                                                        <th width="15%">可选模块</th>
+                                                        <th width="">备注</th>
+                                                        <th width="80">删除</th>
+                                                    </tr>
+                                                    </thead>
+                                                    <tbody id="res_tbody">
+                                                    <foreach name="res_need" item="v">
+                                                        <tr class="expense" id="res_id_{$v.id}">
+                                                            <td><input type="hidden" name="res_ids[2000{$v.id}][res_id]" value="{$v.id}" >
+                                                                <a href="javascript:;" onClick="open_res({$v.res_id},{$v.res.title})">{$v.title}</a></td>
+                                                            <td>{$in_cas[$v[in_cas]]}</td>
+                                                            <td>{$v[diqu]}</td>
+                                                            <td><a href="javascript:;" class="btn btn-danger btn-flat" onclick="delbox('res_id_{$v.id}')">删除</a></td></tr>
+                                                        </tr>
+                                                    </foreach>
+                                                    </tbody>
+                                                    <tfoot>
+                                                    <!--<tr>
+                                                        <td align="left" colspan="11">
+                                                            <a href="javascript:;" class="btn btn-success btn-sm" style="margin-left:-8px;"  onClick="selectres()"><i class="fa fa-fw  fa-plus"></i> 选择资源模块</a>
+                                                        </td>
+                                                    </tr>-->
+                                                    </tfoot>
+                                                </table>
                                             </div>
                                         </div>
                                     </div>
@@ -363,7 +403,7 @@
 
 	$(document).ready(function() {
 
-        art_show_msg('开发中...',2);
+        //art_show_msg('开发中...',2);
 
 		var uploader = new plupload.Uploader({
 			runtimes : 'html5,flash,silverlight,html4',
