@@ -93,6 +93,18 @@
                     <div class="form-group col-md-4">
                         <p>辅导员：{$average.guide}&emsp;分</p>
                     </div>
+
+                    <div class="form-group col-md-4">
+                        <p>迟到早退(教务人员)：{$average.late}&emsp;分</p>
+                    </div>
+
+                    <div class="form-group col-md-4">
+                        <p>管理组织能力(教务人员)：{$average.manage}&emsp;分</p>
+                    </div>
+
+                    <div class="form-group col-md-4">
+                        <p>师德仪表(教务人员)：{$average.morality}&emsp;分</p>
+                    </div>
                 <?php }elseif(in_array($kind,$score_kind3)){ ?>
                     <div class="form-group col-md-4">
                         <p>前期沟通：{$average.before_sell}&emsp;分</p>

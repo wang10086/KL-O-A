@@ -441,6 +441,9 @@ class InspectController extends BaseController{
         $major_num                  = 0;
         $interest_num               = 0;
         $material_num               = 0;
+        $late_num                   = 0;
+        $manage_num                 = 0;
+        $morality_num               = 0;
         $cas_time_num               = 0;
         $cas_complete_num           = 0;
         $cas_addr_num               = 0;
@@ -462,6 +465,9 @@ class InspectController extends BaseController{
             if($v['major'])         $major_num++;
             if($v['interest'])      $interest_num++;
             if($v['material'])      $material_num++;
+            if($v['late'])          $late_num++;
+            if($v['manage'])        $manage_num++;
+            if($v['morality'])      $morality_num++;
             if($v['cas_time'])      $cas_time_num++;
             if($v['cas_complete'])  $cas_complete_num++;
             if($v['cas_addr'])      $cas_addr_num++;
@@ -483,6 +489,9 @@ class InspectController extends BaseController{
         $average['major']           = round(array_sum(array_column($lists,'major'))/$major_num,2);
         $average['interest']        = round(array_sum(array_column($lists,'interest'))/$interest_num,2);
         $average['material']        = round(array_sum(array_column($lists,'material'))/$material_num,2);
+        $average['late']            = round(array_sum(array_column($lists,'late'))/$late_num,2);
+        $average['manage']          = round(array_sum(array_column($lists,'manage'))/$manage_num,2);
+        $average['morality']        = round(array_sum(array_column($lists,'morality'))/$morality_num,2);
         $average['cas_time']        = round(array_sum(array_column($lists,'cas_time'))/$cas_time_num,2);
         $average['cas_complete']    = round(array_sum(array_column($lists,'cas_complete'))/$cas_complete_num,2);
         $average['cas_addr']        = round(array_sum(array_column($lists,'cas_addr'))/$cas_addr_num,2);
