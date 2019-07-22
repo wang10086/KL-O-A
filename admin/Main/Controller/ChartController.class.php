@@ -1048,12 +1048,15 @@ class ChartController extends BaseController {
 
         if ($pin == 0){ //预算及结算
             $data                               = $mod->get_ysjs_detail_data($arr_uids,$startTime,$endTime,$dj);
+            $ys_opids                           = $data['ysopids']?explode(',',$data['ysopids']):array();
+            $js_opids                           = $data['jsopids']?explode(',',$data['jsopids']):array();
+            $arr_opids                          = array_merge($ys_opids,$js_opids);
         }else{ //已结算
             $data                               = $mod->get_js_detail_data($arr_uids,$startTime,$endTime,$dj);
+            $ys_opids                           = $data['ysopids']?explode(',',$data['ysopids']):array();
+            $js_opids                           = $data['opids']?explode(',',$data['opids']):array();
+            $arr_opids                          = array_merge($ys_opids,$js_opids);
         }
-        $ys_opids                               = $data['ysopids']?explode(',',$data['ysopids']):array();
-        $js_opids                               = $data['jsopids']?explode(',',$data['jsopids']):array();
-        $arr_opids                              = array_merge($ys_opids,$js_opids);
 
         $where                                  = array();
         $where['o.type']                        = 1;

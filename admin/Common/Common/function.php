@@ -3089,7 +3089,7 @@ function updatekpi($month,$user){
                             $ys_lrze        = $budget_info['sum_total_profit'];                     //预算利润总额
                             $operate_info   = get_sum_department_operate($department,$year,$monon,'y');     //实际经营信息(年度累计)
                             $jy_lrze        = round($operate_info['lrze'],2);   //经营利润总额
-                            $quart          = quarter_month1($monon);
+                            //$quart          = quarter_month1($monon);
                             //$url            = U('manage/Manage_quarter',array('year'=>$v['year'],'quart'=>$quart));
                             $url            = U('Manage/Manage_year',array('year'=>$v['year']));
                             $complete       = $jy_lrze;
