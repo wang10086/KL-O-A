@@ -3667,3 +3667,16 @@ function get_yw_department(){
         $data['sale_lists']                 = $sale_lists;
         return $data;
     }
+
+
+    /**
+     * 求某一个项目类型的毛利率
+     * @param $opid
+     */
+    function get_grossProftRate($opid){
+        $where                              = array();
+        $where['o.op_id']                   = $opid;
+        $list                               = M()->table('__OP__ as o')->join('__GROSS__ as g on g.kind_id=o.kind','left')->where($where)->order('g.id desc')->field('g.gross')->find();
+        $rate                               = $list['gross'];
+        return $rate;
+    }

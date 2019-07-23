@@ -235,11 +235,38 @@
         var is_dijie   = {$is_dijie};
 
         if (yihuikuan || (!yihuikuan && is_dijie)){
-            $('#appsubmint').submit();
+           checkGrossRate();
         }else{
             art_show_msg('该团未全部回款',5);
             return false;
         }
+    }
+
+    //检查最低毛利率
+    function checkGrossRate() {
+        var opid        = {$op['op_id']};
+        var maolilv     = $('#maolilv').val();
+        if (!maolilv) { art_show_msg('毛利率不能为空',3); return false; }
+
+        $.ajax({
+            type : 'POST',
+            url  : "{:U('Ajax/checkGrossRate')}",
+            data : {opid:opid, maolilv:maolilv},
+            success : function(data){
+                if (data.stu == 1){
+                     $('#appsubmint').submit();
+                }else if(data.stu == 2){
+                    if (confirm(data.msg)){ //未达到规定毛利率
+                         $('#appsubmint').submit();
+                    }else{
+                        return false;
+                    }
+                }
+            },
+            error : function(){
+                alert('msg error');
+            }
+        })
     }
 </script>
 

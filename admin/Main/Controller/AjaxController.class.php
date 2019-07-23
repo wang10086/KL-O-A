@@ -2060,5 +2060,27 @@ class AjaxController extends Controller {
         $data['msg']                = $msg;
         $this->ajaxReturn($data);
     }
+
+    //检查每种项目类型最低毛利率
+    public function checkGrossRate(){
+        $op_id                      = I('opid');
+        $maolilv                    = I('maolilv');
+        $rate                       = get_grossProftRate($op_id);
+
+        $real_rate                  = round(str_replace('%','',$maolilv)/100,4);
+        $should_rate                = round(str_replace('%','',$rate)/100,4);
+
+        $data                       = array();
+        if ($real_rate >= $should_rate){ //正常
+            $stu                    = 1;
+            $msg                    = '';
+        }else{ //实际毛利率小于目标毛利率
+            $stu                    = 2;
+            $msg                    = '当前毛利率低于该项目类型毛利率'.$rate.',本次提交信息将由总经理复审';
+        }
+        $data['stu']                = $stu;
+        $data['msg']                = $msg;
+        $this->ajaxReturn($data);
+    }
 }
 

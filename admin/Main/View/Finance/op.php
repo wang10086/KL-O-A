@@ -264,13 +264,15 @@
 			if(shouru && renshu){
                 if (is_dijie != 0 && maolilv > 0.1){
                     if (userid == 11){
-                        $('#appsubmint').submit();
+                        //$('#appsubmint').submit();
+                        checkGrossRate();
                     }else{
                         art.dialog.alert('该团为内部地接团,毛利额不能超过10%');
                         return false;
                     }
                 }else{
-                    $('#appsubmint').submit();
+                    //$('#appsubmint').submit();
+                    checkGrossRate();
                 }
 			}else{
 				alert('请填写人数和预算收入');
@@ -306,8 +308,8 @@
     }
     
     function check_appcost() {
-        var dijie   = {$is_dijie};
-        var shouru  = $('#shouru').val().trim();
+        var dijie           = {$is_dijie};
+        var shouru          = $('#shouru').val().trim();
         if (!shouru || shouru==0){ art_show_msg('收入不能为空',3); return false; }
         var money_return_plan = 0;
         $('#payment').find('.money_back_amount').each(function () {
@@ -315,6 +317,33 @@
         })
         if (money_return_plan != shouru && dijie == 0){ art_show_msg('请确保回款总金额和收入一致',3); return false; }
         $('#save_appcost').submit();
+    }
+
+    //检查最低毛利率
+    function checkGrossRate() {
+        var opid        = {$op['op_id']};
+        var maolilv     = $('#maolilv').val();
+        if (!maolilv) { art_show_msg('毛利率不能为空',3); return false; }
+
+        $.ajax({
+            type : 'POST',
+            url  : "{:U('Ajax/checkGrossRate')}",
+            data : {opid:opid, maolilv:maolilv},
+            success : function(data){
+                if (data.stu == 1){
+                    $('#appsubmint').submit();
+                }else if(data.stu == 2){
+                    if (confirm(data.msg)){ //未达到规定毛利率
+                        $('#appsubmint').submit();
+                    }else{
+                        return false;
+                    }
+                }
+            },
+            error : function(){
+                alert('msg error');
+            }
+        })
     }
 
 </script>
