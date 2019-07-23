@@ -3277,6 +3277,7 @@ function get_yw_department(){
         $score_lists                        = M()->table('__TCS_SCORE__ as s')->field($field)->join('join __TCS_SCORE_USER__ as u on u.id = s.uid','left')->join('__OP__ as o on o.op_id = u.op_id','left')->where($where)->select();
 
         $unok_arr                           = array(1,2,3);
+        $unok_opids                         = array();
         foreach ($score_lists as $k=>$v){
             $zongfen                = 0;
             $defen                  = $v['before_sell']+$v['new_media']+$v['stay']+$v['travel']+$v['content']+$v['food']+$v['bus']+$v['driver']+$v['guide']+$v['teacher']+$v['depth']+$v['major']+$v['interest']+$v['material']+$v['late']+$v['manage']+$v['morality']+$v['cas_time']+$v['cas_complete']+$v['cas_addr'];
@@ -3302,7 +3303,8 @@ function get_yw_department(){
             if ($v['cas_addr']      !=0) $zongfen += 5;
             $score                  = round($defen/$zongfen,2);
             //单项少于3颗星或低于60分
-            if ($score < 0.8 || (in_array($v['before_sell'],$unok_arr) || in_array($v['new_media'],$unok_arr) || in_array($v['stay'],$unok_arr) || in_array($v['travel'],$unok_arr) || in_array($v['content'],$unok_arr) || in_array($v['food'],$unok_arr) || in_array($v['bus'],$unok_arr) || in_array($v['driver'],$unok_arr) || in_array($v['guide'],$unok_arr) || in_array($v['teacher'],$unok_arr) || in_array($v['depth'],$unok_arr) || in_array($v['major'],$unok_arr) || in_array($v['interest'],$unok_arr) || in_array($v['material'],$unok_arr) || in_array($v['late'],$unok_arr) || in_array($v['manage'],$unok_arr) || in_array($v['morality'],$unok_arr) || in_array($v['cas_time'],$unok_arr) || in_array($v['cas_complete'],$unok_arr) || in_array($v['cas_addr'],$unok_arr))){
+            if (!in_array($v['op_id'],$unok_opids) && ($score < 0.8 || (in_array($v['before_sell'],$unok_arr) || in_array($v['new_media'],$unok_arr) || in_array($v['stay'],$unok_arr) || in_array($v['travel'],$unok_arr) || in_array($v['content'],$unok_arr) || in_array($v['food'],$unok_arr) || in_array($v['bus'],$unok_arr) || in_array($v['driver'],$unok_arr) || in_array($v['guide'],$unok_arr) || in_array($v['teacher'],$unok_arr) || in_array($v['depth'],$unok_arr) || in_array($v['major'],$unok_arr) || in_array($v['interest'],$unok_arr) || in_array($v['material'],$unok_arr) || in_array($v['late'],$unok_arr) || in_array($v['manage'],$unok_arr) || in_array($v['morality'],$unok_arr) || in_array($v['cas_time'],$unok_arr) || in_array($v['cas_complete'],$unok_arr) || in_array($v['cas_addr'],$unok_arr)))){
+                $unok_opids[]                   = $v['op_id'];
                 $unok_list[$k]['score']         = $score;
                 $unok_list[$k]['op_id']         = $v['op_id'];
                 $unok_list[$k]['input_time']    = $v['input_time'];
