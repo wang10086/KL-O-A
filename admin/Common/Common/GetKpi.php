@@ -1,5 +1,6 @@
 <?php
 
+
     /**将上个季度的考核结果扶植到当季度
      * @param $arr
      */
@@ -3077,31 +3078,30 @@ function get_yw_department(){
         $sum_num                                = 0;
         $ok_num                                 = 0;
         $sum_list                               = array();
+        $dj_opids                               = get_dijie_opids();
         foreach ($settlement_list as $k=>$v){
-            //判断是否完全回款
-            $money_back_stu                     = check_money_back($v['op_id']);
-            if ($money_back_stu == 1){ //已全部回款
-                //回款审核时间
-                $where                          = array();
-                $where['h.op_id']               = $v['op_id'];
-                $where['h.audit_status']        = 1; //审核通过
-                $where['l.req_type']            = 802; //回款
-                $field                          = 'h.op_id,l.req_time,l.audit_time';
-                $back_money_data                = M()->table('__OP_HUIKUAN__ as h')->join('__AUDIT_LOG__ as l on l.req_id = h.id','left')->where($where)->field($field)->order('h.id desc')->find();
-                $back_money_time                = $back_money_data['audit_time'];
+            //$money_back_stu                   = check_money_back($v['op_id']); //判断是否完全回款
+            $confirm_data                       = M('op_team_confirm')->field('op_id,dep_time,ret_time')->where(array('op_id'=>$v['op_id']))->find();
+            $confirm_ok_time                    = strtotime(getAfterWorkDay(10,$confirm_data['ret_time'])); //返回后10个工作日
 
-                $ok_time                        = strtotime(getAfterWorkDay(10,$back_money_time));
-                $sum_num++;
-                $v['ok_time']                   = $ok_time;
-                $v['type']                      = $title;
-                if ($v['req_time'] <= $ok_time){ //req_time 提交时间
-                    $v['ok_time']               = $ok_time;
-                    $ok_list[]                  = $v;
-                    $v['is_ok']                 = 1;
-                    $ok_num++;
-                }
-                $sum_list[]                     = $v;
+            if (in_array($v['op_id'],$dj_opids)){  //内部地接团(项目实施后10个工作日完成--已成团确认返回时间为准 ,10个工作日)
+                $v['begin_time']                = $confirm_data['ret_time'];
+                $v['is_dj']                     = 1;
+                $ok_time                        = $confirm_ok_time;
+            }else{  //其他团(项目完成且收回全款 取日期靠后者 ,10个工作日)
+                $money_back_time_data           = get_money_back_time($v['op_id']);
+                $v['begin_time']                = $confirm_data['ret_time'] > $money_back_time_data['audit_time'] ? $confirm_data['ret_time'] : $money_back_time_data['audit_time'];
+                $ok_time                        = strtotime(getAfterWorkDay(10,$v['begin_time'])); //回款后10个工作日
             }
+
+            if ($v['req_time'] <= $ok_time){
+                $v['is_ok']                     = 1;
+                $ok_num++;
+                $ok_list[]                      = $v;
+            }
+
+            $sum_num++;
+            $sum_list[]                         = $v;
         }
 
         $data                                   = array();
@@ -3113,6 +3113,20 @@ function get_yw_department(){
         $data['sum_list']                       = $sum_list;
         $data['ok_list']                        = $ok_list;
         return $data;
+    }
+
+    /**
+     * 获取回款审核通过时间(最后一次回款时间)
+     * @param $opid
+     */
+    function get_money_back_time($opid){
+        $where                                  = array();
+        $where['h.op_id']                       = $opid;
+        $where['h.audit_status']                = 1;
+        $where['l.req_type']                    = 802; //P::REQ_TYPE_HUIKUAN 项目回款申请
+        $field                                  = 'h.op_id,h.name,h.huikuan,l.audit_uname,l.audit_time';
+        $list                                   = M()->table('__OP_HUIKUAN__ as h')->join('__AUDIT_LOG__ as l on l.req_id=h.id','left')->where($where)->field($field)->order('h.id desc')->find();
+        return $list;
     }
 
     /**
