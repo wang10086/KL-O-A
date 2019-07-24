@@ -13,12 +13,13 @@
                 <option value="3" <?php if($type==10){echo 'selected';}?>>调整员工医保比例</option>
                 <option value="4" <?php if($type==11){echo 'selected';}?>>调整公司社保/公积金比例</option>
                 <option value="5" <?php if($type==12){echo 'selected';}?>>调整公司医保比例</option>
+                <option value="10" <?php if($type==17){echo 'selected';}?>>社保补缴</option>
             </select>
 
         </div>
     </div>
     <div class="box-body">
-        <div class="btn-group"><br>
+        <div class="content"><br>
 
                 <!-- 调整社保/医保基数-->
             <div id="table_salary_insurance1" >
@@ -196,8 +197,7 @@
                 </div>
             </div>
 
-            <!-- 调整公司医保比例
-            -->
+            <!-- 调整公司医保比例-->
             <div id="table_salary_insurance5" style="display: none;">
                 <div style="float: left;margin-left: 2em;">
                     <label>选择人员：</label>
@@ -246,6 +246,44 @@
                 </div>
             </div>
 
+            <!--社保补缴-->
+            <div id="table_salary_insurance10" style="display: none;">
+                <div>
+                    <label>选择人员：</label>
+                    <a href="javascript:;" class="btn btn-info btn-sm" onclick="javascript:opensearch('searchtext',700,180);autocomp('nickname');"><i class="fa fa-search"></i> 搜索</a> (提示: 选择不到人员或基本信息不完整、错误时，请在“员工管理”->"人员管理"页面添加或编辑信息)<br><br>
+                    <table class="table table-bordered"  style="margin-top:10px;">
+                        <tr role="row" class="orders">
+                            <th class="taskOptions" width="80" rowspan="2">ID</th>
+                            <th class="taskOptions" width="15%" rowspan="2">员工姓名</th>
+                            <th class="taskOptions" width="15%" rowspan="2">员工部门</th>
+                            <th class="taskOptions" width="15%" rowspan="2">员工岗位</th>
+                            <th class="taskOptions" width="40%" colspan="2">社保补缴</th>
+                            <th class="taskOptions" width="" rowspan="2">操作</th>
+                        </tr>
+                        <tr>
+                            <th class="taskOptions">原数据</th>
+                            <th class="taskOptions">现数据</th>
+                        </tr>
+
+                        <foreach name="lists" item="lst">
+                            <tr>
+                                <td class="salary_table_insurance">{$lst.aid}</td>
+                                <td>{$lst.nickname}</td>
+                                <td>{$lst.department}</td>
+                                <td>{$lst.post_name}</td>
+                                <td width="18%"></td>
+                                <td width="22%"><input type="text" class="form-control" value="{$lst.insurance.aaa}" /></td>
+                                <td> <input type="button" class="form-control" value="添加" onclick="art_show_msg('加班开发中...',2)" style="background-color:#00acd6;font-size:1em;" /></td>
+                            </tr>
+                        </foreach>
+                    </table>
+                    <!--<div><h6 style="color:red;width:40em;"><b>医疗比例以百分比为标准; 例如: 0.03</b></h6></div>-->
+                    <div class="box-footer clearfix">
+                        <div class="pagestyle">{$pages}</div>
+                    </div>
+
+                </div>
+            </div>
 
 
         </div>
