@@ -71,7 +71,7 @@
                                 </div><!-- /.box-header -->
                                 <div class="box-body">
                                     <?php if($is_zutuan == 1){ ?>
-                                        <?php if ($dijie_shouru && $audit['dst_status']!=1  && (!$jd || in_array(cookie('userid'),array($jd,1,11)))){ ?>
+                                        <?php if ($dijie_shouru && !in_array($audit['dst_status'],array(1,3))  && (!$jd || in_array(cookie('userid'),array($jd,1,11)))){ ?>
                                             <include file="op_edit" />
                                         <?php }else{ ?>
                                             <?php if ($dijie_shouru && in_array(cookie('userid'),array(1,11))){ ?>
@@ -81,7 +81,7 @@
                                             <?php } ?>
                                         <?php } ?>
                                     <?php }else{ ?>
-                                        <?php if($audit['dst_status']!=1 && (!$jd || in_array(cookie('userid'),array($jd,1,11)))){ ?>
+                                        <?php if(!in_array($audit['dst_status'],array(1,3)) && (!$jd || in_array(cookie('userid'),array($jd,1,11)))){ ?>
                                             <include file="op_edit" />
                                         <?php }else{ ?>
                                             <?php if (in_array(cookie('userid'),array(1,11))){ ?>
@@ -96,7 +96,7 @@
                                             
                             <div id="formsbtn" style="padding-bottom:10px;">
                                 <div class="content">
-                                    <?php if($audit['dst_status']!=1 || in_array(cookie('userid'),array(1,11))){ ?>
+                                    <?php if(!in_array($audit['dst_status'],array(1,3)) || in_array(cookie('userid'),array(1,11))){ ?>
                                         <form method="post" action="{:U('Finance/appcost')}" name="myform" id="appsubmint">
                                         <input type="hidden" name="dosubmit" value="1">
                                         <input type="hidden" name="opid" value="{$op.op_id}">

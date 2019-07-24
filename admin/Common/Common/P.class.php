@@ -45,6 +45,7 @@ final class P {
     const AUDIT_STATUS_NOT_AUDIT  = 0;  //待审批
     const AUDIT_STATUS_PASS       = 1;  //审批通过
 	const AUDIT_STATUS_NOT_PASS   = 2;  //审批不通过
+    const AUDIT_STATUS_MORE_AUDIT = 3;  //第一次审核通过,待复审
 	
 	const USER_TYPE_TEMP       = 2;  //临时用户
 	const USER_TYPE_PART       = 1;  //兼职用户

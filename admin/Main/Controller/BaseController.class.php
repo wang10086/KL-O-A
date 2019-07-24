@@ -316,6 +316,40 @@ class BaseController extends Controller {
             $record['optype']  = 10;
             if($dst_status == P::AUDIT_STATUS_PASS){
                 $record['explain'] = '预算审核通过';
+
+                //判断预算毛利率是否达到指定标准
+                $maolilv            = $dstdata['maolilv'];
+                $rate               = get_grossProftRate($dstdata['op_id']); //该项目类型应该最低毛利率
+
+                $real_rate          = round(str_replace('%','',$maolilv)/100,4);
+                $should_rate        = round(str_replace('%','',$rate)/100,4);
+
+                if (($real_rate < $should_rate) && !in_array(session('userid'),array(11))) { //实际毛利率低于目标毛利率
+                    //修改审核结果状态
+                    $data['dst_status'] = P::AUDIT_STATUS_MORE_AUDIT;
+                    M()->table('__' . strtoupper($row['req_table']) . '__')
+                        ->where('id='.$row['req_id'])->setField('audit_status', P::AUDIT_STATUS_MORE_AUDIT);
+                    $record['explain'] = '预算毛利率未达标,待复批';
+                    ////_bak20190724
+                    /*$should_audit_uid   = 11;
+                    $audit_more_id      = do_audit_more($id,$should_audit_uid);
+
+                    if ($audit_more_id){
+                        //修改审核结果状态
+                        $data['dst_status'] = P::AUDIT_STATUS_MORE_AUDIT;
+                        M()->table('__' . strtoupper($row['req_table']) . '__')
+                            ->where('id='.$row['req_id'])->setField('audit_status', P::AUDIT_STATUS_MORE_AUDIT);
+
+                        //发送系统消息
+                        $op         = M('op')->where(array('op_id'=>$dstdata['op_id']))->field('op_id,project,group_id,create_user_name')->find();
+                        $uid        = cookie('userid');
+                        $title      = '您有预算毛利率较低的团待复审,团号['.$op['group_id'].'],请及时处理!';
+                        $content    = '项目名称：'.$op['project'].'，团号：'.$op['group_id'].'，业务：'.$op['create_user_name'];
+                        $url        = U('Right/audit_more',array('id'=>$audit_more_id));
+                        $user       = '['.$should_audit_uid.']';
+                        send_msg($uid,$title,$content,$url,$user,'');
+                    }*/
+                }
             }else{
                 $record['explain'] = '预算审核未通过';
             }
@@ -362,6 +396,21 @@ class BaseController extends Controller {
             $record['optype']  = 10;
             if($dst_status == P::AUDIT_STATUS_PASS){
                 $record['explain'] = '结算审核通过';
+
+                //判断预算毛利率是否达到指定标准
+                $maolilv            = $dstdata['maolilv'];
+                $rate               = get_grossProftRate($dstdata['op_id']); //该项目类型应该最低毛利率
+
+                $real_rate          = round(str_replace('%','',$maolilv)/100,4);
+                $should_rate        = round(str_replace('%','',$rate)/100,4);
+
+                if (($real_rate < $should_rate) && !in_array(session('userid'),array(11))) { //实际毛利率低于目标毛利率
+                    //修改审核结果状态
+                    $data['dst_status'] = P::AUDIT_STATUS_MORE_AUDIT;
+                    M()->table('__' . strtoupper($row['req_table']) . '__')
+                        ->where('id='.$row['req_id'])->setField('audit_status', P::AUDIT_STATUS_MORE_AUDIT);
+                    $record['explain'] = '结算毛利率未达标,待复批';
+                }
             }else{
                 $record['explain'] = '结算审核未通过';
             }

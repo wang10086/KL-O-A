@@ -31,6 +31,9 @@
                                         <button onClick="javascript:window.location.href='{:U('Rights/index',array('status'=>'-1'))}';" class="btn <?php if($status=='-1'){ echo 'btn-info';}else{ echo 'btn-default';} ?>">所有的</button>
                                         <button onClick="javascript:window.location.href='{:U('Rights/index',array('status'=>0))}';" class="btn <?php if($status==0){ echo 'btn-info';}else{ echo 'btn-default';} ?>">未审核</button>
                                         <button onClick="javascript:window.location.href='{:U('Rights/index',array('status'=>1))}';" class="btn <?php if($status==1){ echo 'btn-info';}else{ echo 'btn-default';} ?>">已通过审核</button>
+                                        <?php if (in_array(session('userid'),array(1,11))){ ?>
+                                        <button onClick="javascript:window.location.href='{:U('Rights/index',array('status'=>3))}';" class="btn <?php if($status==3){ echo 'btn-info';}else{ echo 'btn-default';} ?>">待复审</button>
+                                        <?php } ?>
                                         <button onClick="javascript:window.location.href='{:U('Rights/index',array('status'=>2))}';" class="btn <?php if($status==2){ echo 'btn-info';}else{ echo 'btn-default';} ?>">未通过审核</button>
                                        
                                     </div>

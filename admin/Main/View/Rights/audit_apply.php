@@ -16,6 +16,9 @@
                         <?php if ($return_money_stu && $return_money_stu == '-1'){ ?> <!--预算-->
                             <p class="red">回款计划不合规定,请您关注；请您根据实际情况,按尽早收回全款原则予以审批！</p>
                         <?php } ?>
+                        <?php if ($gross_rate_warning){ ?>
+                            <p class="red">当前毛利率低于该项目类型最低毛利率({$gross_rate})，本次审核通过后将由总经理复审！</p>
+                        <?php } ?>
                         <input type="radio" name="info[dst_status]" value="<?php echo P::AUDIT_STATUS_PASS ;?>"> 审批通过 &nbsp;&nbsp;&nbsp;&nbsp;
                         <input type="radio" name="info[dst_status]" value="<?php echo P::AUDIT_STATUS_NOT_PASS ;?>"> 审批不通过
                         

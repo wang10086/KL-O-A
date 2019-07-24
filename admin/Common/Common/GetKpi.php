@@ -3680,3 +3680,28 @@ function get_yw_department(){
         $rate                               = $list['gross'];
         return $rate;
     }
+
+    //_bak20190724
+    /*//二次审核
+    function do_audit_more($id,$should_audit_uid){
+        $row                    = M('audit_log')->find($id);
+        $audit_more_db          = M('audit_more');
+        $mdata                  = array();
+        $mdata['audit_log_id']  = $id;
+        $mdata['req_type']      = $row['req_type'];
+        $mdata['req_id']        = $row['req_id'];
+        $mdata['req_table']     = $row['req_table'];
+        $mdata['req_uid']       = session('userid');
+        $mdata['req_uname']     = session('nickname');
+        $mdata['req_time']      = NOW_TIME;
+        $mdata['should_audit_uid'] = $should_audit_uid;
+        $more_list              = $audit_more_db->where(array('audit_log_id'=>$id))->find();
+        if ($more_list){
+            $audit_more_id      = $more_list['id'];
+            $res                = $audit_more_db -> where(array('id'=>$audit_more_id))->save($mdata);
+        }else{
+            $res                = $audit_more_db->add($mdata);
+            $audit_more_id      = $res;
+        }
+        return $audit_more_id;
+    }*/

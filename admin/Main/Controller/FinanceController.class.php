@@ -80,7 +80,12 @@ class FinanceController extends BaseController {
 			$show_user = $audit['audit_uname'];
 			$show_reason = $audit['audit_reason'];
 			$show_time = date('Y-m-d H:i:s',$audit['audit_time']);
-		}
+		}else if($audit['dst_status']==3){
+            $show = '<span class="yellow">毛利率未达标,待领导复批</span>';
+            $show_user = $audit['audit_uname'];
+            $show_reason = $audit['audit_reason'];
+            $show_time = date('Y-m-d H:i:s',$audit['audit_time']);
+        }
 		$op['showstatus'] = $show;
 		$op['show_user']  = $show_user;
 		$op['show_time']  = $show_time;
@@ -624,6 +629,11 @@ class FinanceController extends BaseController {
             $show_user          = $audit['audit_uname'];
             $show_reason        = $audit['audit_reason'];
             $show_time          = date('Y-m-d H:i:s',$audit['audit_time']);
+        }else if($audit['dst_status']==3){
+            $show = '<span class="yellow">毛利率未达标,待领导复批</span>';
+            $show_user = $audit['audit_uname'];
+            $show_reason = $audit['audit_reason'];
+            $show_time = date('Y-m-d H:i:s',$audit['audit_time']);
         }
         $op['showstatus']       = $show;
         $op['show_user']        = $show_user;

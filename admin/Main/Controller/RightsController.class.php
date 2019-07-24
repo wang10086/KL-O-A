@@ -21,6 +21,7 @@ class RightsController extends BaseController {
 		$where = '';
         if($this->status=='1') $where .= "dst_status = 1 and ";
 		if($this->status=='2') $where .= "dst_status = 2 and ";
+		if($this->status=='3') $where .= "dst_status = 3 and ";
 		if($this->status=='0') $where .= "dst_status = 0 and ";
 		$where .= " ( instr(concat(',',audit_roleid,','), ',". session('roleid') .",') > 0 or 1=" .session('roleid').") " ;
         $adb = M('audit_log');
@@ -173,11 +174,29 @@ class RightsController extends BaseController {
             $this->id   = I('id');
             $list       = M('audit_log')->where("id=".$this->id)->find();
             $this->req_type = $list['req_type'];
-            if ($list['req_type']==P::REQ_TYPE_BUDGET){ //(审核预算)判断回款信息
-                $return_list            = M("$list[req_table]")->where(array('id'=>$list['req_id']))->find();
-                $mod                    = D('Finance');
-                $res                    = $mod->get_backMoneyPlans($return_list['op_id']); //判断是否超时
-                $this->return_money_stu = $res;
+
+            if (in_array($list['req_type'],array(P::REQ_TYPE_BUDGET,P::REQ_TYPE_SETTLEMENT))){
+                $return_list                = M("$list[req_table]")->where(array('id'=>$list['req_id']))->find();
+                if ($list['req_type']==P::REQ_TYPE_BUDGET){ //(审核预算)判断回款信息
+                    $mod                    = D('Finance');
+                    $res                    = $mod->get_backMoneyPlans($return_list['op_id']); //判断是否超时
+                    $this->return_money_stu = $res;
+                }
+
+                //判断毛利率是否达到规定数据
+                $opid                       = $return_list['op_id'];
+                $maolilv                    = $return_list['maolilv']; //实际毛利率
+                $rate                       = get_grossProftRate($opid); //应该毛利率
+
+                $real_rate                  = round(str_replace('%','',$maolilv)/100,4);
+                $should_rate                = round(str_replace('%','',$rate)/100,4);
+
+                if ($real_rate >= $should_rate){ //正常
+                }else{ //实际毛利率小于目标毛利率
+                    $this->gross_rate_warning = 1;
+                    $this->gross_rate       = $rate;
+                }
+
             }
             $this->display('audit_apply');
         }
