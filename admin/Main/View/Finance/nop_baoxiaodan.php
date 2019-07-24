@@ -156,7 +156,7 @@
         if (isqianzi == 1){
             $('#jiekuanform').submit();
         }else{
-            art_show_msg('请完善审核信息');
+            art_show_msg('请完善签字信息');
             return false;
         }
     }
