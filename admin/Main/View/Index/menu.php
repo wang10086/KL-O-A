@@ -198,18 +198,21 @@
                                 </if>
 
 
-                                <if condition="rolemenu(array('GuideRes/res','GuideRes/addres','GuideRes/reskind'))">
+                                <if condition="rolemenu(array('GuideRes/res','GuideRes/addres','GuideRes/reskind','GuideRes/timely'))">
                                 <li class="treeview  {:on('GuideRes')}">
                                     <a href=""><i class="fa fa-female"></i> 导游辅导员</a>
                                     <ul class="treeview-menu">
                                     	<!--<if condition="rolemenu(array('GuideRes/addres'))">
                                         <li class="{:on('GuideRes/addres')} "><a href="{:U('GuideRes/addres')}"><i class="fa fa-angle-right"></i> 新增导游辅导员</a></li>
                                         </if>-->
+                                        <if condition="rolemenu(array('GuideRes/timely'))">
+                                            <li class="{:on('GuideRes/timely')} {:on('GuideRes/')} "><a href="{:U('GuideRes/timely')}"><i class="fa fa-angle-right"></i> 教务操作及时率</a></li>
+                                        </if>
                                         <if condition="rolemenu(array('GuideRes/res'))">
-                                        <li class="{:on('GuideRes/res')} {:on('GuideRes/res_view')} "><a href="{:U('GuideRes/res')}"><i class="fa fa-angle-right"></i> 导游辅导员管理</a></li>
+                                            <li class="{:on('GuideRes/res')} {:on('GuideRes/res_view')} "><a href="{:U('GuideRes/res')}"><i class="fa fa-angle-right"></i> 导游辅导员管理</a></li>
                                         </if>
                                         <if condition="rolemenu(array('GuideRes/reskind'))">
-                                        <li class="{:on('GuideRes/reskind')} {:on('GuideRes/addreskind')} "><a href="{:U('GuideRes/reskind')}"><i class="fa fa-angle-right"></i> 导游辅导员分类</a></li>
+                                            <li class="{:on('GuideRes/reskind')} {:on('GuideRes/addreskind')} "><a href="{:U('GuideRes/reskind')}"><i class="fa fa-angle-right"></i> 导游辅导员分类</a></li>
                                         </if>
                                         <if condition="rolemenu(array('GuideRes/price'))">
                                             <li class="{:on('GuideRes/price')} {:on('GuideRes/addprice')} "><a href="{:U('GuideRes/price')}"><i class="fa fa-angle-right"></i> 导游辅导员价格体系</a></li>
@@ -217,7 +220,6 @@
                                     </ul>
                                 </li>
                                 </if>
-
                             </ul>
                         </li>
 

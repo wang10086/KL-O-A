@@ -15,29 +15,28 @@ class GuideResController extends BaseController {
     // @@@NODE-3###res###导游辅导员列表###
     public function res () {
         $this->title('导游辅导员');
-		$key          = I('key');
-		$type         = I('type');
-		$sex         = I('sex');
-		$where = array();
-		$where['1'] = priv_where(P::REQ_TYPE_GUIDE_RES_V);
-		if($key)      $where['name'] = array('like','%'.$key.'%');
-		if($type)     $where['kind'] = $type;
-		if($sex)     $where['sex'] = $sex;
+		$key                            = I('key');
+		$type                           = I('type');
+		$sex                            = I('sex');
+		$where                          = array();
+		$where['1']                     = priv_where(P::REQ_TYPE_GUIDE_RES_V);
+		$where['name']                  = trim($key) ? array('like','%'.$key.'%') : array('neq','');
+		if($type)    $where['kind']     = $type;
+		if($sex)     $where['sex']      = $sex;
 		
 		//分页
-		$pagecount = M('guide')->where($where)->count();
-		$page = new Page($pagecount, P::PAGE_SIZE);
-		$this->pages = $pagecount>P::PAGE_SIZE ? $page->show():'';
+		$pagecount                      = M('guide')->where($where)->count();
+		$page                           = new Page($pagecount, P::PAGE_SIZE);
+		$this->pages                    = $pagecount>P::PAGE_SIZE ? $page->show():'';
         
-        $this->reskind = M('guidekind')->getField('id,name', true);
-        $this->lists = M('guide')->where($where)->limit($page->firstRow . ',' . $page->listRows)->order($this->orders('input_time'))->select();
-        $this->status = array(
-                P::AUDIT_STATUS_PASS        => '已通过',
-                P::AUDIT_STATUS_NOT_AUDIT   => '待审批',
-				P::AUDIT_STATUS_NOT_PASS    => '未通过',
+        $this->reskind                  = M('guidekind')->getField('id,name', true);
+        $this->lists                    = M('guide')->where($where)->limit($page->firstRow . ',' . $page->listRows)->order($this->orders('input_time'))->select();
+        $this->status                   = array(
+            P::AUDIT_STATUS_PASS        => '已通过',
+            P::AUDIT_STATUS_NOT_AUDIT   => '待审批',
+            P::AUDIT_STATUS_NOT_PASS    => '未通过',
         );
         $this->display('res');
-    
     }
 	
 	
@@ -441,5 +440,107 @@ class GuideResController extends BaseController {
         $id = I('id');
         $iddel = $db->delete($id);
         $this->success('删除成功！');
+    }
+
+    //教务管理及时性(公司)
+    public function timely(){
+        $this->title('教务管理及时性');
+        $year		                = I('year',date('Y'));
+        $month		                = I('month',date('m'));
+        if (strlen($month)<2) $month= str_pad($month,2,'0',STR_PAD_LEFT);
+        $yearMonth                  = $year.$month;
+        $times                      = get_cycle($yearMonth);
+        $mod                        = D('GuideRes');
+        //$data                       = $mod->get_timely_data($times['begintime'],$times['endtime']);
+        //$sum_data                   = $mod->get_sum_timely($data);
+
+        $this->sum                  = $sum_data;
+        $this->lists                = $data;
+        $this->year 	            = $year;
+        $this->month 	            = $month;
+        $this->prveyear             = $year-1;
+        $this->nextyear             = $year+1;
+        $this->display();
+    }
+
+    //各教务管理及时性
+    public function operator_timely(){
+        $this->title('教务管理及时性');
+        $year		                = I('year',date('Y'));
+        $month		                = I('month',date('m'));
+        if (strlen($month)<2) $month= str_pad($month,2,'0',STR_PAD_LEFT);
+        $yearMonth                  = $year.$month;
+        $times                      = get_cycle($yearMonth);
+        $users                      = C('EDU_MANAGE_USERS');
+
+        $this->lists                = $users;
+        $this->year 	            = $year;
+        $this->month 	            = $month;
+        $this->prveyear             = $year-1;
+        $this->nextyear             = $year+1;
+        $this->display();
+    }
+
+    //
+    public function timely_list(){
+        $this->title('教务及时率指标管理');
+        $lists                      = get_timely(3);
+
+        $this->lists                = $lists;
+        $this->display();
+    }
+
+    //配置教务及时率考核指标
+    public function timely_edit(){
+        $db                         = M('quota');
+        $id                         = I('id','');
+        if ($id){
+            $list                   = $db->find($id);
+            $list['title']          = htmlspecialchars_decode($list['title']);
+            $list['content']        = htmlspecialchars_decode($list['content']);
+            $list['rules']          = htmlspecialchars_decode($list['rules']);
+            $this->list             = $list;
+        }
+
+        $this->display();
+    }
+
+    //删除
+    public function timely_del(){
+        $id                         = I('id');
+        if (!$id) $this->error('获取数据错误');
+        $res                        = timely_quota_del($id);
+        if ($res){
+            $this->success('删除成功');
+        }else{
+            $this->error('删除失败');
+        }
+    }
+
+    public function public_save(){
+        $savetype                   = I('savetype');
+        if (isset($_POST['dosubmint']) && $savetype){
+            //保存教务操作及时率指标
+            if ($savetype == 2){
+                $db                         = M('quota');
+                $id                         = I('id');
+                $info                       = I('info');
+                $info['title']              = htmlspecialchars(trim($info['title']));
+                $info['content']            = htmlspecialchars(trim($info['content']));
+                $info['rules']              = htmlspecialchars(trim($info['rules']));
+                $info['type']               = 3; //3=>教务操作及时率
+                if (!$info['title'])        $this->error('指标标题不能为空');
+
+                if ($id){
+                    $where                  = array();
+                    $where['id']            = $id;
+                    $res                    = $db->where($where)->save($info);
+                }else{
+                    $res                    = $db->add($info);
+                }
+
+                echo '<script>window.top.location.reload();</script>';
+            }
+        }
     }
 }
