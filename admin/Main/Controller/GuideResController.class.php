@@ -442,9 +442,9 @@ class GuideResController extends BaseController {
         $this->success('删除成功！');
     }
 
-    //教务管理及时性(公司)
+    //教务操作及时率(公司)
     public function timely(){
-        $this->title('教务管理及时性');
+        $this->title('教务操作及时率');
         $year		                = I('year',date('Y'));
         $month		                = I('month',date('m'));
         if (strlen($month)<2) $month= str_pad($month,2,'0',STR_PAD_LEFT);
@@ -463,9 +463,9 @@ class GuideResController extends BaseController {
         $this->display();
     }
 
-    //各教务管理及时性
+    //各教务操作及时率
     public function operator_timely(){
-        $this->title('教务管理及时性');
+        $this->title('教务操作及时率');
         $year		                = I('year',date('Y'));
         $month		                = I('month',date('m'));
         if (strlen($month)<2) $month= str_pad($month,2,'0',STR_PAD_LEFT);
@@ -505,7 +505,7 @@ class GuideResController extends BaseController {
         $this->display();
     }
 
-    //删除
+    //删除教务及时率考核指标
     public function timely_del(){
         $id                         = I('id');
         if (!$id) $this->error('获取数据错误');
