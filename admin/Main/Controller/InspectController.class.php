@@ -579,7 +579,7 @@ class InspectController extends BaseController{
         $endTime                    = $et?$et:$cycle_times['endtime'];
         $data                       = get_satisfied_kpi_data($userid,$startTime,$endTime,$gross_margin);
         $op_lists                   = $data['shishi_lists'];
-
+        
         $this->data                 = $data;
         $this->lists                = $op_lists;
         $this->year                 = $year;

@@ -1242,7 +1242,7 @@ function get_sum_gross_profit($userids,$beginTime,$endTime){
         //当月实施的团
         $where                          = array();
         $start_time                     = $start_time - 4*24*3600; //4天前实施的团
-        $end_time                       = $end_time - 4*24*3600;
+        $end_time                       = ($end_time - 4*24*3600)-1;
         $where['c.ret_time']            = array('between',array($start_time,$end_time));
         $where['o.create_user']         = $userid;
         $shishi_true_num                = M()->table('__OP_TEAM_CONFIRM__ as c')->join('__OP__ as o on o.op_id = c.op_id','left')->where($where)->count();
