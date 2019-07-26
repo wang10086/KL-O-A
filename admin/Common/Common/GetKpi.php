@@ -3705,3 +3705,46 @@ function get_yw_department(){
         }
         return $audit_more_id;
     }*/
+
+    //专家/辅导员确认核实及时性
+    function get_guide_sure_data($startTime,$endTime,$title='',$content='',$uid){
+
+    }
+
+    /**
+     * function get_unqualify_lg3_data($startTime,$endTime,$title='',$content=''){
+    $unqualify_data                     = get_lg3_list($startTime,$endTime); //十个工作日前的不合格团
+    $sum_list                           = array();
+    $sum_opid                           = array();
+    $sum_num                            = 0;
+    $ok_list                            = array();
+    $ok_opid                            = array();
+    $ok_num                             = 0;
+    $solve_lists                        = get_solve_op_list($startTime,$endTime);
+
+    foreach ($unqualify_data as $k=>$v){
+    $sum_num++;
+    $sum_list[]                     = $v;
+    $sum_opid[]                     = $v['op_id'];
+    foreach ($solve_lists as $key=>$value){
+    if ($v['op_id'] == $value['op_id'] && in_array($value['status'],array(1,2))){
+    $ok_num++;
+    $ok_list[]              = $value;
+    $ok_opid[]              = $value['op_id'];
+    }
+    }
+    }
+    $data                               = array();
+    $data['title']                      = $title;
+    $data['content']                    = $content;
+    $data['sum_num']                    = $sum_num;
+    $data['ok_num']                     = $ok_num;
+    $data['average']                    = $sum_num ? (round($ok_num/$sum_num,4)*100).'%' : '100%';
+    $data['ok_opid']                    = $ok_opid;
+    $data['sum_opid']                   = $sum_opid;
+    $data['ok_list']                    = $ok_list;
+    $data['sum_list']                   = $sum_list;
+    $data['url']                        = U('Inspect/public_unqualify_detail',array('isop'=>1,'st'=>$startTime,'et'=>$endTime,'tp'=>1));
+    return $data;
+    }
+     */

@@ -13,17 +13,12 @@ class GuideResModel extends Model{
 
     //获取计调的及时率
     public function get_timely_data($startTime,$endTime,$uid=''){
-        $timely                         = get_timely(1); //1=>计调操作及时性
+        $timely                         = get_timely(3); //3=>教务操作及时性
         $timely                         = array_column($timely,'content','title');
-        $costacc_data                   = get_costacc_data($startTime,$endTime,'及时性',$timely['及时性'],$uid);
-        $budget_data                    = get_budget_data($startTime,$endTime,'及时性',$timely['及时性'],$uid);
-        $settlement_data                = get_settlement_data($startTime,$endTime,'及时性',$timely['及时性'],$uid);
-        $reimbursement_data             = get_reimbursement_data($startTime,$endTime,'及时性',$timely['及时性'],$uid);
+        $guide_sure_data                = get_guide_sure_data($startTime,$endTime,'专家/辅导员确认核实及时性',$timely['专家/辅导员确认核实及时性'],$uid);
+        //var_dump($guide_sure_data);
 
-        $data[]                         = $costacc_data;
-        $data[]                         = $budget_data;
-        $data[]                         = $settlement_data;
-        $data[]                         = $reimbursement_data;
+        $data[]                         = $guide_sure_data;
         return $data;
     }
 

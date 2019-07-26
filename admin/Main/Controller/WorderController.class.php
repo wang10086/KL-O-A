@@ -800,4 +800,34 @@ class WorderController extends BaseController{
             $this->display();
         }
     }
+
+    //更改工单计划完成时间
+    public function public_change_plan_time(){
+        if (isset($_POST['dosubmint'])){
+            $id                 = I('id');
+            $oldTime            = I('oldTime');
+            $plan_complete_time = I('plan_complete_time');
+            $db                 = M('worder');
+            $info               = array();
+            $info['plan_complete_time'] = strtotime($plan_complete_time);
+            //if (!in_array(cookie('userid'),array(1,11))){
+                $info['upd_num']= 1;
+           // }
+            $res                = $db ->where(array('id'=>$id))->save($info);
+            if ($res){
+                //工单操作记录
+                $record              = array();
+                $record['worder_id'] = $id;
+                $record['type']      = 0;
+                $record['explain']   = '修改工单计划完成时间,原计划完成时间'.date('Y-m-d',$oldTime).',现计划完成时间'.$plan_complete_time;
+                worder_record($record);
+            }
+        }else{
+            $id                 = I('id');
+            if (!$id) $this->error('获取工单信息失败');
+            $list               = M('worder')->find($id);
+            $this->list         = $list;
+            $this->display('change_plan_time');
+        }
+    }
 }

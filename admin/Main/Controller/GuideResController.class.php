@@ -451,8 +451,10 @@ class GuideResController extends BaseController {
         $yearMonth                  = $year.$month;
         $times                      = get_cycle($yearMonth);
         $mod                        = D('GuideRes');
-        //$data                       = $mod->get_timely_data($times['begintime'],$times['endtime']);
+        $data                       = $mod->get_timely_data($times['begintime'],$times['endtime']);
         //$sum_data                   = $mod->get_sum_timely($data);
+
+
 
         $this->sum                  = $sum_data;
         $this->lists                = $data;

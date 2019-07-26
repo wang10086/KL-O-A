@@ -18,6 +18,12 @@
                      <div class="box box-warning" style="margin-top:15px;">
                         <div class="box-header">
                             <h3 class="box-title">工单信息</h3>
+
+                            <h3 class="box-title pull-right" style="font-weight:normal; color:#333333;">
+                                <?php if ((C('RBAC_SUPER_ADMIN')==cookie('username') || cookie('userid') == 11 ) || (cookie('userid')==$info['ini_user_id'] && $info['upd_num']==0 )){ ?>
+                                    <span  style=" border: solid 1px #00acd6; padding: 0 5px; border-radius: 5px; background-color: #00acd6; color: #ffffff; margin-left: 20px" onClick="change_worder_plan_time()" title="更改计划完成时间">更改计划完成时间</span>
+                                <?php } ?>
+                            </h3>
                         </div><!-- /.box-header -->
                         <div class="box-body">
                             <div class="content">
@@ -435,5 +441,25 @@
                 $("input[name='unfinished']").val(msg.unfinished);
             }
         })
+    }
+
+    //更改工单计划完成时间
+    function change_worder_plan_time () {
+        art.dialog.open('<?php echo U('Worder/public_change_plan_time',array('id'=>$info['id'])) ?>', {
+            lock:true,
+            id: 'change',
+            title: '更改工单计划完成时间',
+            width:600,
+            height:300,
+            okValue: '提交',
+            ok: function () {
+                this.iframe.contentWindow.gosubmint();
+                location.reload();
+                return false;
+            },
+            cancelValue:'取消',
+            cancel: function () {
+            }
+        });
     }
 </script>
