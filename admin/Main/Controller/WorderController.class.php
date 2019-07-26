@@ -275,8 +275,9 @@ class WorderController extends BaseController{
 
         $opid       = I('id');
         $info       = I('info');
-        $user       =  M('account')->getField('id,nickname', true);
-        $ini_user_id=  M('worder')->where(array('id'=>$opid))->getField('ini_user_id');
+        $user       = M('account')->getField('id,nickname', true);
+        $worder     = M('worder')->where(array('id'=>$opid))->find();
+        $ini_user_id= $worder['ini_user_id'];
 
         if(isset($_POST['dosubmit']) && $info){
 
@@ -336,7 +337,9 @@ class WorderController extends BaseController{
                 $record['explain']   = '拒绝该工单';
                 worder_record($record);
             }else{
-                $info['response_time']  = NOW_TIME;
+                $info['response_time']      = NOW_TIME;
+                $num                        = I('use_time') ? (int)I('use_time') : '';
+                if($num) $info['plan_complete_time'] = strtotime(getAfterWorkDay($num,$worder['create_time']));
 
                 //工单操作记录
                 $record = array();

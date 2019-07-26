@@ -37,6 +37,7 @@
                                         <div class="form-group col-md-4">
                                             <label>工单类型：</label>
                                             <select  class="form-control"  name="info[worder_type]" id="worder_type" onchange="chechWorderType()" required>
+                                                <option value="">===请选择=</option>
                                             <foreach name="worder_type" key="k" item="v">
                                                 <option value="{$k}">{$v}</option>
                                             </foreach>
@@ -210,10 +211,12 @@
 
         //检验表单
         function beforeSubmit(form){
-            var urgent = $("input[name=info['urgent']]:checked").val()
-            var u_cause= $("#urgent_cause").val();
             var worder_type = $('#worder_type').val();
-            var op_id = $("#op_id").val();
+            if (!worder_type) { art_show_msg('请选择工单类型'); return false; }
+            var urgent      = $("input[name=info['urgent']]:checked").val()
+            var u_cause     = $("#urgent_cause").val();
+            var worder_type = $('#worder_type').val();
+            var op_id       = $("#op_id").val();
             if (urgent==1 && u_cause == ''){
                 art_show_msg("工单紧急原因不能为空!",3);
                 return false;
