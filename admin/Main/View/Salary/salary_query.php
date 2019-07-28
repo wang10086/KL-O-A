@@ -368,22 +368,27 @@
 
     $('.salary_insurance_butt').click(function(){ //添加数据 五险一金
         var url         = "index.php?m=Main&c=Ajax&a=Ajax_Insurance_Query";
-        var account_id  = $(this).parents('tr').find('.salary_table_insurance').text();//uid
-        var injury      = $(this).parents('tr').find('.salary_insurance_injury').val();//生育/工伤/医疗 基数
-        var pension     = $(this).parents('tr').find('.salary_insurance_pension').val();//养老/失业 基数
-        var ratio       = $(this).parents('tr').find('.salary_insurance_ratio').val();//公积金 基数
-        var stat        = $(this).parents('tr').find('.status').val();//状态
-        var big_price       = $(this).parents('tr').find('.salary_insurance_price').val();//大额医疗
+        var account_id  = $(this).parents('tr').find('.salary_table_insurance').text(); //uid
+        var injury      = $(this).parents('tr').find('.salary_insurance_injury').val(); //工伤 基数
+        var medical     = $(this).parents('tr').find('.salary_insurance_medical').val(); //生育/医疗 基数
+        var pension     = $(this).parents('tr').find('.salary_insurance_pension').val(); //养老/失业 基数
+        var ratio       = $(this).parents('tr').find('.salary_insurance_ratio').val(); //公积金 基数
+        var stat        = $(this).parents('tr').find('.status').val(); //状态
+        var big_price   = $(this).parents('tr').find('.salary_insurance_price').val(); //大额医疗
+        var ss_subsidy  = $(this).parents('tr').find('.social_security_subsidy').val(); //社保补缴
+
         $.ajax({
             type: "post",
             url: url, //url
             data: {
                 'account_id': account_id,
-                'injury_base': injury,
-                'pension_base': pension,
-                'accumulation_fund_base': ratio,
+                'injury_base': injury ? injury : 0,
+                'medical_care_base':medical ? medical : 0,
+                'pension_base': pension ? pension : 0,
+                'accumulation_fund_base': ratio ? ratio : 0,
                 'statu':stat,
-                'big_price':big_price,
+                'big_price':big_price ? big_price : 0,
+                'social_security_subsidy':ss_subsidy ? ss_subsidy : 0,
             },
             dataType: "json", //数据格式
             success: function (data) {

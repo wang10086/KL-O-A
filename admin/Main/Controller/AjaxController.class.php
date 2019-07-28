@@ -550,7 +550,9 @@ class AjaxController extends Controller {
         $statu                                      = (int)(code_number(trim($_POST['statu'])));//状态
         $where['account_id']                        = (int)(code_number(trim($_POST['account_id'])));//用户id
         $injury_base                                = code_number(trim($_POST['injury_base']));
+        $medical_care_base                          = code_number(trim($_POST['medical_care_base']));
         $pension_base                               = code_number(trim($_POST['pension_base']));
+        $social_security_subsidy                    = code_number(trim(I('social_security_subsidy'))); //社保补缴
         if($statu == 3){//当状态是3时,有两个值
         }else{
             $accumulation_fund_base                 = code_number(trim($_POST['accumulation_fund_base']));
@@ -558,7 +560,7 @@ class AjaxController extends Controller {
                 $big_price                          = code_number(trim($_POST['big_price']));
             }
         }
-        $this->salary_statu($statu,$where,$injury_base,$pension_base,$accumulation_fund_base,$big_price);
+        $this->salary_statu($statu,$where,$injury_base,$pension_base,$accumulation_fund_base,$big_price,$medical_care_base,$social_security_subsidy);
 
     }
 
@@ -601,14 +603,14 @@ class AjaxController extends Controller {
     /**
      * salary_statu 五险一金判断是否要更改还是添加
      */
-    protected function salary_statu($statu,$where,$injury_base,$pension_base,$accumulation_fund_base,$big_price){
+    protected function salary_statu($statu,$where,$injury_base,$pension_base,$accumulation_fund_base,$big_price,$medical_care_base=0,$social_security_subsidy=0){
         if($statu == 1){
-            $add['birth_base']                      = $injury_base;//生育 基数(个人)
-            $add['company_birth_base']              = $injury_base;//生育 基数(公司)
             $add['injury_base']                     = $injury_base;//工伤 基数(个人)
             $add['company_injury_base']             = $injury_base;//工伤 基数(公司)
-            $add['medical_care_base']               = $injury_base;//医疗 基数(个人)
-            $add['company_medical_care_base']       = $injury_base;//医疗 基数(公司)
+            $add['birth_base']                      = $medical_care_base;//生育 基数(个人)
+            $add['company_birth_base']              = $medical_care_base;//生育 基数(公司)
+            $add['medical_care_base']               = $medical_care_base;//医疗 基数(个人)
+            $add['company_medical_care_base']       = $medical_care_base;//医疗 基数(公司)
             $add['pension_base']                    = $pension_base;//养老 基数(个人)
             $add['company_pension_base']            = $pension_base;//养老 基数(公司)
             $add['unemployment_base']               = $pension_base;//失业 基数(个人)
@@ -635,6 +637,9 @@ class AjaxController extends Controller {
             $add['company_birth_ratio']             = $pension_base;//生育 比例(公司)
             $add['company_injury_ratio']            = $accumulation_fund_base;//工伤 比例(公司)
             $add['company_big_price']               = $big_price;//大额 比例(公司)
+        }
+        if ($statu == 6){
+            $add['social_security_subsidy']        = $social_security_subsidy; //社保补缴
         }
         $insurance                                  = M('salary_insurance')->where($where)->order('id desc')->find();
 
@@ -666,6 +671,7 @@ class AjaxController extends Controller {
             $data['company_big_price']              = $add['company_big_price']?$add['company_big_price']:$insurance['company_big_price'];
             $data['birth_ratio']                    = $add['birth_ratio']?$add['birth_ratio']:$insurance['birth_ratio'];
             $data['injury_ratio']                   = $add['injury_ratio']?$add['injury_ratio']:$insurance['injury_ratio'];
+            $data['social_security_subsidy']        = $add['social_security_subsidy']?$add['social_security_subsidy']:$insurance['social_security_subsidy'];
             if((int)$insurance['status'] ==  1){ //判断能否修改
                 $cont                               = "修改";
                 $id['id']                           = $insurance['id'];

@@ -28,30 +28,40 @@
                     <a href="javascript:;" class="btn btn-info btn-sm" onclick="javascript:opensearch('searchtext',700,180);autocomp('nickname');"><i class="fa fa-search"></i> 搜索</a> (提示: 选择不到人员或基本信息不完整、错误时，请在“员工管理”->"人员管理"页面添加或编辑信息)<br><br>
                     <table class="table table-bordered"  style="margin-top:10px;">
                         <tr role="row" class="orders">
-                            <th class="sorting" data="op_id"  style="width:6em;">ID</th>
-                            <th class="sorting" data="group_id" style="width:8em;">员工姓名</th>
-                            <th class="sorting" data="group_id" style="width:8em;">员工部门</th>
-                            <th class="sorting" data="project" style="width:8em;">员工岗位</th>
-                            <th class="sorting" data="number" style="width:14em;">生育/工伤/医疗原基数</th>
-                            <th class="sorting" data="number" style="width:14em;">生育/工伤/医疗现基数</th>
-                            <th class="sorting" data="shouru" style="width:11em;">养老/失业原基数</th>
-                            <th class="sorting" data="shouru" style="width:11em;">养老/失业现基数</th>
-                            <th class="sorting" data="number" style="width:11em;">公积金原基数</th>
-                            <th class="sorting" data="number" style="width:10em;">公积金现基数</th>
-                            <th class="sorting" data="shouru" style="width:10em;">操作</th>
+                            <th class="taskOptions" width="60" rowspan="2">ID</th>
+                            <th class="taskOptions" width="80" rowspan="2">员工姓名</th>
+                            <th class="taskOptions" width="100" rowspan="2">员工部门</th>
+                            <th class="taskOptions" width="100" rowspan="2">员工岗位</th>
+                            <th class="taskOptions" width="18%" colspan="2">工伤</th>
+                            <th class="taskOptions" width="18%" colspan="2">生育/医疗</th>
+                            <th class="taskOptions" width="18%" colspan="2">养老/失业</th>
+                            <th class="taskOptions" width="18%" colspan="2">公积金</th>
+                            <th class="taskOptions" width="" rowspan="2">操作</th>
+                        </tr>
+                        <tr class="orders">
+                            <th class="taskOptions" width="8%">原基数</th>
+                            <th class="taskOptions" width="10%">现基数</th>
+                            <th class="taskOptions" width="8%">原基数</th>
+                            <th class="taskOptions" width="10%">现基数</th>
+                            <th class="taskOptions" width="8%">原基数</th>
+                            <th class="taskOptions" width="10%">现基数</th>
+                            <th class="taskOptions" width="8%">原基数</th>
+                            <th class="taskOptions" width="10%">现基数</th>
                         </tr>
 
                         <foreach name="lists" item="lst">
                             <tr>
-                                <td class="salary_table_insurance">{$lst.aid}</td>
-                                <td>{$lst.nickname}</td>
-                                <td>{$lst.department}</td>
-                                <td>{$lst.post_name}</td>
-                                <td>{$lst.insurance.injury_base}</td>
+                                <td class="taskOptions salary_table_insurance">{$lst.aid}</td>
+                                <td class="taskOptions">{$lst.nickname}</td>
+                                <td class="taskOptions">{$lst.department}</td>
+                                <td class="taskOptions">{$lst.post_name}</td>
+                                <td class="taskOptions">{$lst.insurance.injury_base}</td>
                                 <td><input type="text" style="float:left;" class="form-control salary_insurance_injury" value="{$lst.insurance.injury_base}" /></td>
-                                <td>{$lst.insurance.pension_base}</td>
+                                <td class="taskOptions">{$lst.insurance.medical_care_base}</td>
+                                <td><input type="text" style="float:left;" class="form-control salary_insurance_medical" value="{$lst.insurance.medical_care_base}" /></td>
+                                <td class="taskOptions">{$lst.insurance.pension_base}</td>
                                 <td><input type="text" style="float:left;" class="form-control salary_insurance_pension" value="{$lst.insurance.pension_base}" /></td>
-                                <td>{$lst.insurance.accumulation_fund_base}</td>
+                                <td class="taskOptions">{$lst.insurance.accumulation_fund_base}</td>
                                 <td><input type="text" style="float:left;" class="form-control salary_insurance_ratio" value="{$lst.insurance.accumulation_fund_base}" /></td>
                                 <input type="hidden" class="status" value="1">
                                 <td> <input type="button" class="form-control salary_insurance_butt" value="添加" style="background-color:#00acd6;font-size:1em;" /></td>
@@ -271,9 +281,10 @@
                                 <td>{$lst.nickname}</td>
                                 <td>{$lst.department}</td>
                                 <td>{$lst.post_name}</td>
-                                <td width="18%"></td>
-                                <td width="22%"><input type="text" class="form-control" value="{$lst.insurance.aaa}" /></td>
-                                <td> <input type="button" class="form-control" value="添加" onclick="art_show_msg('加班开发中...',2)" style="background-color:#00acd6;font-size:1em;" /></td>
+                                <td width="18%">{$lst.insurance.social_security_subsidy}</td>
+                                <td width="22%"><input type="text" class="form-control social_security_subsidy" value="{$lst.insurance.social_security_subsidy}" /></td>
+                                <input type="hidden" class="status" value="6">
+                                <td> <input type="button" class="form-control salary_insurance_butt" value="添加" style="background-color:#00acd6;font-size:1em;" /></td>
                             </tr>
                         </foreach>
                     </table>

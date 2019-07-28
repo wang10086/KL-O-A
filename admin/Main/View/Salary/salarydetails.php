@@ -215,13 +215,16 @@
                                             <table class="table table-bordered dataTable fontmini" id="tablelist1" style="text-align: center">
                                                 <tr role="row" class="orders">
                                                     <th></th>
-                                                    <th style="text-align: center">生育保险</th>
-                                                    <th style="text-align: center">工伤保险</th>
-                                                    <th style="text-align: center">养老保险</th>
-                                                    <th style="text-align: center">医疗保险</th>
-                                                    <th style="text-align: center">大额医疗</th>
-                                                    <th style="text-align: center">失业保险</th>
-                                                    <th style="text-align: center">公积金</th>
+                                                    <th class="taskOptions">生育保险</th>
+                                                    <th class="taskOptions">工伤保险</th>
+                                                    <th class="taskOptions">养老保险</th>
+                                                    <th class="taskOptions">医疗保险</th>
+                                                    <th class="taskOptions">大额医疗</th>
+                                                    <th class="taskOptions">失业保险</th>
+                                                    <th class="taskOptions">公积金</th>
+                                                    <if condition="$insurance_list.social_security_subsidy neq 0">
+                                                        <th class="taskOptions">社保补缴</th>
+                                                    </if>
                                                 </tr>
                                                 <tr>
                                                     <td>基数</td>
@@ -232,6 +235,9 @@
                                                     <td style="text-align: center">---</td>
                                                     <td>{$insurance_list.unemployment_base}</td>
                                                     <td>{$insurance_list.accumulation_fund_base}</td>
+                                                    <if condition="$insurance_list.social_security_subsidy neq 0">
+                                                        <td></td>
+                                                    </if>
                                                 </tr>
                                                 <tr>
                                                     <td>比例</td>
@@ -242,6 +248,9 @@
                                                     <td style="text-align: center">---</td>
                                                     <td>{$insurance_list.unemployment_ratio}</td>
                                                     <td>{$insurance_list.accumulation_fund_ratio}</td>
+                                                    <if condition="$insurance_list.social_security_subsidy neq 0">
+                                                        <td></td>
+                                                    </if>
                                                 </tr>
                                                 <tr class="salary_details_personal_money">
                                                     <td>金额</td>
@@ -252,6 +261,9 @@
                                                     <td>{$insurance_list.big_price}</td>
                                                     <td><?php echo $insurance_list['unemployment_base']*$insurance_list['unemployment_ratio'];?></td>
                                                     <td><?php echo round($insurance_list['accumulation_fund_base']*$insurance_list['accumulation_fund_ratio']);?></td>
+                                                    <if condition="$insurance_list.social_security_subsidy neq 0">
+                                                        <td>{$insurance_list['social_security_subsidy']}</td>
+                                                    </if>
                                                 </tr>
                                             </table>
                                         </div>
