@@ -593,6 +593,9 @@ class AjaxController extends Controller {
             $content        = $cont."：公司医疗比例:".$add['company_medical_care_ratio'].";公司生育比例:".$add['company_birth_ratio'].";公司工伤比例:".$add['company_injury_ratio'].";公司大额比例:".$add['company_big_price']." （元）" ;
 
         }
+        if ($statu == 6){ //调整社保补缴
+            $content        = $cont."：社保补缴：".$add['social_security_subsidy'];
+        }
         $info               = salary_info(11,$content);
         $sum                = 1;
         $msg                = $cont."数据成功!";
@@ -684,7 +687,7 @@ class AjaxController extends Controller {
                 $oinsurance_w                       = M('salary_insurance')->add($data);
             }
         }else{
-            if($statu<6 && 0<$statu){
+            if($statu<7 && 0<$statu){
                 $cont                               = "添加";
                 $add['account_id']                  = $where['account_id'];
                 $add['createtime']                  = time();
