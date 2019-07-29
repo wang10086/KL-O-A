@@ -3435,7 +3435,7 @@ function get_yw_department(){
         $data['startTime']                  = $startTime - (24*60*60*$n);
         $data['endTime']                    = $endTime - (24*60*60*$n);
 
-        //从7月份开始计数, 下面这句可删除
+        //从2019年7月份开始计数, 下面这句可删除
         $st                                 = strtotime('20190626');
         $data['startTime']                  = $data['startTime'] < $st ? $st : $data['startTime'];
         return $data;
