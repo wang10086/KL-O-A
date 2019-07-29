@@ -16,7 +16,6 @@ class GuideResModel extends Model{
         $timely                         = get_timely(3); //3=>教务操作及时性
         $timely                         = array_column($timely,'content','title');
         $guide_sure_data                = get_guide_sure_data($startTime,$endTime,'专家/辅导员确认核实及时性',$timely['专家/辅导员确认核实及时性'],$uid);
-        //var_dump($guide_sure_data);
 
         $data[]                         = $guide_sure_data;
         return $data;
@@ -70,6 +69,10 @@ class GuideResModel extends Model{
         }
         return $data;
     }*/
+
+
+
+
 
 
 }

@@ -519,6 +519,37 @@ class GuideResController extends BaseController {
         }
     }
 
+    //教务及时性(详情页)
+    public function public_timely_detail(){
+        $this->pagetitle            = '教务操作及时率';
+        $this->title(I('tit') ? trim(I('tit')) : '教务操作及时率');
+        $year		                = I('year',date('Y'));
+        $month		                = I('month',date('m'));
+        if (strlen($month)<2) $month= str_pad($month,2,'0',STR_PAD_LEFT);
+        $yearMonth                  = $year.$month;
+        $times                      = get_cycle($yearMonth);
+        $type                       = I('type');
+        $data                       = $this->get_timely_data($times['begintime'],$times['endtime'],$type);
+        $lists                      = $data['sum_lists'];
+
+        //$this->uid                  = $uid;
+        $this->lists                = $lists;
+        //$this->title                = $title;
+        $this->type                 = $type;
+        $this->year                 = $year;
+        $this->month                = $month;
+        $this->display('timely_detail');
+    }
+
+    public function get_timely_data($startTime,$endTime,$type=0){
+        switch ($type){
+            case 1:
+                $data               = get_guide_sure_data($startTime,$endTime);
+            break;
+        }
+        return $data;
+    }
+
     public function public_save(){
         $savetype                   = I('savetype');
         if (isset($_POST['dosubmint']) && $savetype){

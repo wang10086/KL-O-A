@@ -3712,8 +3712,61 @@ function get_yw_department(){
 
     //专家/辅导员确认核实及时性
     function get_guide_sure_data($startTime,$endTime,$title='',$content='',$uid){
-
+        $field                              = 'c.*,o.group_id,o.project,a.nickname';
+        $lists                              = M()->table('__OP_GUIDE_CONFIRM__ as c')->join('__OP__ as o on o.op_id=c.op_id','left')->join('__ACCOUNT__ as a on a.id=c.heshi_oa_uid','left')->field($field)->order('c.id desc')->limit(1000)->select(); //全部数据
+        $this_month_sum_lists               = array();
+        $this_month_ok_lists                = array();
+        $sum_num                            = 0;
+        $ok_num                             = 0;
+        foreach ($lists as $k=>$v){
+            $time                           = $v['in_day'] - 7*24*3600; //活动结束5个工作日前
+            if ($time < $endTime && $time >= $startTime){ //所有当月应核实项目
+                if ($v['tcs_stu'] ==5){
+                    if($v['heshi_time'] <= ($v['in_day'] + 5*24*3600)){ //当月已核实 && 核实时间符合要求
+                        $v['stau']          = "<span class='green'>正常</span>";
+                        $this_month_ok_lists[]  = $v;
+                        $ok_num++;
+                    }else{
+                        $v['stau']          = "<span class='yellow'>已核实,超时</span>";
+                    }
+                }else{
+                    $v['stau']              = "<span class='red'>未核实</span>";
+                }
+                $this_month_sum_lists[]     = $v;
+                $sum_num++;
+            }
+        }
+        $data                               = array();
+        $data['sum_num']                    = $sum_num;
+        $data['ok_num']                     = $ok_num;
+        $data['average']                    = (round($ok_num/$sum_num,4)*100).'%';
+        $data['type']                       = 1;
+        $data['title']                      = $title;
+        $data['content']                    = $content;
+        $data['sum_lists']                  = $this_month_sum_lists;
+        $data['ok_lists']                   = $this_month_ok_lists;
+        return $data;
     }
+
+    /*
+     * function get_guide_sure_data($startTime,$endTime,$title='',$content='',$uid){
+        //$uid            = 174 ; //李亚楠
+        //$uid            = 46 ; //张淼
+        //$uid            = 124 ; //刘雨
+        //$uid            = 115 ; //桂小佩
+
+        //当月所有的已核实项目
+        $where                              = array();
+        $where['tcs_stu']                   = 5;
+        $where['heshi_time']                = array('between',"$startTime,$endTime");
+        if ($uid) $where['heshi_oa_uid']    = $uid;
+        $lists                              = M('op_guide_confirm')->where($where)->select();
+       // var_dump($lists);die;
+    }
+     *
+     * */
+
+
 
     /**
      * function get_unqualify_lg3_data($startTime,$endTime,$title='',$content=''){
