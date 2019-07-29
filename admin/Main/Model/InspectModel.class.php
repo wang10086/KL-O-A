@@ -114,7 +114,9 @@ class InspectModel extends Model{
         if ($type == 1){
             $op_lists                   = get_lg3_list($startTime,$endTime);
         }elseif ($type == 2){
-            $op_lists                   = get_lg_90percent_list($startTime,$endTime);
+            //$op_lists                   = get_lg_90percent_list($startTime,$endTime);
+            $data                       = get_unqualify_lg_90percent_data($startTime,$endTime);
+            $op_lists                   = $data['sum_list'];
         }
 
         foreach ($op_lists as $k=>$v){

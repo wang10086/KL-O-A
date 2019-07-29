@@ -3432,8 +3432,12 @@ function get_yw_department(){
      */
     function get_before_work_day($n=0,$startTime,$endTime){
         $data                               = array();
-        $data['startTime']                  = $startTime - (60*60*$n);
-        $data['endTime']                    = $endTime - (60*60*$n);
+        $data['startTime']                  = $startTime - (24*60*60*$n);
+        $data['endTime']                    = $endTime - (24*60*60*$n);
+
+        //从7月份开始计数, 下面这句可删除
+        $st                                 = strtotime('20190626');
+        $data['startTime']                  = $data['startTime'] < $st ? $st : $data['startTime'];
         return $data;
     }
 
