@@ -3723,7 +3723,7 @@ function get_yw_department(){
      * @param $endTime
      * @param string $title
      * @param string $content
-     * @param $uid
+     * @param $type
      * @return array
      */
     function get_guide_sure_data($startTime,$endTime,$title='',$content='',$type=1){
@@ -3768,7 +3768,7 @@ function get_yw_department(){
      * @param $endTime
      * @param string $title
      * @param string $content
-     * @param $uid
+     * @param $type
      * @return array
      */
     function get_guide_dispatch_data($startTime,$endTime,$title='',$content='',$type=2){
@@ -3814,17 +3814,27 @@ function get_yw_department(){
      * @param $endTime
      * @param string $title
      * @param string $content
-     * @param $uid
+     * @param $type
      * @return array
      */
-    function get_guide_train_data ($startTime,$endTime,$title='',$content='',$type=3){
+    function get_guide_train_data ($startTime,$endTime,$title='',$content='',$type=3,$uids){
         $lists                              = get_guide_confirm_list();
         $this_month_sum_lists               = array();
         $this_month_ok_lists                = array();
         $sum_num                            = 0;
         $ok_num                             = 0;
 
+        foreach ($lists as $k=>$v){ //教务人员至少在业务实施前1天，完成对所有专家/辅导员培训工作。
+            $time                           = $v['in_begin_day'] - 1*24*3600; //活动实施前2天
+            if ($time < $endTime && $time >= $startTime){ //所有当月应培训项目
+                $this_month_sum_lists[]     = $v;
+                $sum_num++;
+            }
+        }
 
+        //培训次数
+        $train_lists                        = get_train_data($startTime,$endTime,$uids);
+        $ok_num                             = count($train_lists);
 
         $data                               = array();
         $data['sum_num']                    = $sum_num;
@@ -3834,8 +3844,19 @@ function get_yw_department(){
         $data['title']                      = $title;
         $data['content']                    = $content;
         $data['sum_lists']                  = $this_month_sum_lists;
-        $data['ok_lists']                   = $this_month_ok_lists;
+        $data['ok_lists']                   = $train_lists;
         return $data;
+    }
+
+    //获取教务当月培训的记录
+    function get_train_data($startTime,$endTime,$uids){
+        $db                                 = M('cour_ppt');
+        $where                              = array();
+        //$where['create_time']               = array('between',array($startTime,$endTime));
+        $where['lecture_date']               = array('between',array($startTime,$endTime));
+        $where['lecturer_uid']              = array('in',$uids);
+        $lists                              = $db->where($where)->select();
+        return $lists;
     }
 
     /*******************************************************************/
@@ -3961,60 +3982,3 @@ function get_yw_department(){
         return $data;
     }
 
-    /*
-     * function get_guide_sure_data($startTime,$endTime,$title='',$content='',$uid){
-        //$uid            = 174 ; //李亚楠
-        //$uid            = 46 ; //张淼
-        //$uid            = 124 ; //刘雨
-        //$uid            = 115 ; //桂小佩
-
-        //当月所有的已核实项目
-        $where                              = array();
-        $where['tcs_stu']                   = 5;
-        $where['heshi_time']                = array('between',"$startTime,$endTime");
-        if ($uid) $where['heshi_oa_uid']    = $uid;
-        $lists                              = M('op_guide_confirm')->where($where)->select();
-       // var_dump($lists);die;
-    }
-     *
-     * */
-
-
-
-    /**
-     * function get_unqualify_lg3_data($startTime,$endTime,$title='',$content=''){
-    $unqualify_data                     = get_lg3_list($startTime,$endTime); //十个工作日前的不合格团
-    $sum_list                           = array();
-    $sum_opid                           = array();
-    $sum_num                            = 0;
-    $ok_list                            = array();
-    $ok_opid                            = array();
-    $ok_num                             = 0;
-    $solve_lists                        = get_solve_op_list($startTime,$endTime);
-
-    foreach ($unqualify_data as $k=>$v){
-    $sum_num++;
-    $sum_list[]                     = $v;
-    $sum_opid[]                     = $v['op_id'];
-    foreach ($solve_lists as $key=>$value){
-    if ($v['op_id'] == $value['op_id'] && in_array($value['status'],array(1,2))){
-    $ok_num++;
-    $ok_list[]              = $value;
-    $ok_opid[]              = $value['op_id'];
-    }
-    }
-    }
-    $data                               = array();
-    $data['title']                      = $title;
-    $data['content']                    = $content;
-    $data['sum_num']                    = $sum_num;
-    $data['ok_num']                     = $ok_num;
-    $data['average']                    = $sum_num ? (round($ok_num/$sum_num,4)*100).'%' : '100%';
-    $data['ok_opid']                    = $ok_opid;
-    $data['sum_opid']                   = $sum_opid;
-    $data['ok_list']                    = $ok_list;
-    $data['sum_list']                   = $sum_list;
-    $data['url']                        = U('Inspect/public_unqualify_detail',array('isop'=>1,'st'=>$startTime,'et'=>$endTime,'tp'=>1));
-    return $data;
-    }
-     */

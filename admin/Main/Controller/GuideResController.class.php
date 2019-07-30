@@ -543,7 +543,7 @@ class GuideResController extends BaseController {
     //教务及时性(公司详情页)
     public function public_company_timely_detail(){
         $this->pagetitle            = '教务操作及时率';
-        $this->title(I('tit') ? trim(I('tit')) : '教务操作及时率');
+        $title                      = I('tit');
         $year		                = I('year',date('Y'));
         $month		                = I('month',date('m'));
         if (strlen($month)<2) $month= str_pad($month,2,'0',STR_PAD_LEFT);
@@ -553,8 +553,10 @@ class GuideResController extends BaseController {
         $data                       = $this->get_timely_data($times['begintime'],$times['endtime'],$type);
         $lists                      = $data['sum_lists'];
 
+        $this->title                = $title;
         $this->lists                = $lists;
         $this->type                 = $type;
+        $this->pin                  = I('pin',1);
         $this->year                 = $year;
         $this->month                = $month;
         $this->display('timely_company_detail');
@@ -567,6 +569,9 @@ class GuideResController extends BaseController {
                 break;
             case 2:
                 $data               = get_guide_dispatch_data($startTime,$endTime);
+                break;
+            case 3:
+                $data               = get_guide_train_data($startTime,$endTime);
                 break;
         }
         return $data;
@@ -624,5 +629,27 @@ class GuideResController extends BaseController {
                 echo '<script>window.top.location.reload();</script>';
             }
         }
+    }
+
+    public function public_cour_pptlist(){
+        $this->pagetitle            = '教务操作及时率';
+        $title                      = I('tit');
+        $year		                = I('year',date('Y'));
+        $month		                = I('month',date('m'));
+        if (strlen($month)<2) $month= str_pad($month,2,'0',STR_PAD_LEFT);
+        $yearMonth                  = $year.$month;
+        $times                      = get_cycle($yearMonth);
+        $type                       = I('type');
+        $uids                       = array_keys(C('EDU_MANAGE_USERS'));
+        $lists                      = get_train_data($times['begintime'],$times['endtime'],$uids);
+        //var_dump($lists);die;
+
+        $this->title                = $title;
+        $this->lists                = $lists;
+        $this->type                 = $type;
+        $this->pin                  = I('pin',2);
+        $this->year                 = $year;
+        $this->month                = $month;
+        $this->display('timely_cour_pptlist');
     }
 }

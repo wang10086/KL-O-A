@@ -6,7 +6,7 @@
                     <h1>{$pagetitle}</h1>
                     <ol class="breadcrumb">
                         <li><a href="{:U('Index/index')}"><i class="fa fa-home"></i> 首页</a></li>
-                        <li><a href="javascript:;"><i class="fa fa-gift"></i> 数据统计</a></li>
+                        <li><a href="javascript:;"><i class="fa fa-gift"></i> 导游辅导员</a></li>
                         <li class="active">{$pagetitle}</li>
                     </ol>
                 </section>
@@ -19,10 +19,18 @@
 
                             <div class="box box-warning">
                                 <div class="box-header">
-                                    <h3 class="box-title">{$_action_}</h3>
+                                    <h3 class="box-title">{$title}</h3>
                                     <h3 class="box-title pull-right" style="font-weight:normal; color:#333333;"></h3>
                                 </div><!-- /.box-header -->
                                 <div class="box-body">
+
+                                    <?php if($type==3){ ?>
+                                    <div class="btn-group" id="catfont">
+                                        <a href="{:U('GuideRes/public_company_timely_detail',array('year'=>$year,'month'=>$month,'tit'=>$title,'type'=>3,'pin'=>1))}" class="btn <?php if($pin==1){ echo 'btn-info';}else{ echo 'btn-default';} ?>">应培训项目</a>
+                                        <a href="{:U('GuideRes/public_cour_pptlist',array('year'=>$year,'month'=>$month,'tit'=>$title,'type'=>3,'pin'=>2))}" class="btn <?php if($pin==2){ echo 'btn-info';}else{ echo 'btn-default';} ?>">培训列表</a>
+                                    </div>
+                                    <?php } ?>
+
                                     <table class="table table-bordered dataTable fontmini" id="tablelist" style="margin-top:10px;">
                                         <tr role="row" class="orders" >
                                             <th class="taskOptions" width="60">序号</th>
