@@ -19,10 +19,17 @@
 
                             <div class="box box-warning">
                                 <div class="box-header">
-                                    <h3 class="box-title">{$_action_}</h3>
-                                    <h3 class="box-title pull-right" style="font-weight:normal; color:#333333;"></h3>
+                                    <h3 class="box-title">{$title}</h3>
+                                    <h3 class="box-title pull-right" style="font-weight:normal; color:#333333; margin-right: 20px;">教务:{$uname}</h3>
                                 </div><!-- /.box-header -->
                                 <div class="box-body">
+
+                                    <div class="btn-group" id="catfont">
+                                        <foreach name="timely" item="v">
+                                            <a href="{:U('GuideRes/public_timely_detail',array('year'=>$year,'month'=>$month,'tit'=>$v,'uid'=>$uid))}" class="btn <?php if($title==$v){ echo 'btn-info';}else{ echo 'btn-default';} ?>">{$v}</a>
+                                        </foreach>
+                                    </div>
+
                                     <table class="table table-bordered dataTable fontmini" id="tablelist" style="margin-top:10px;">
                                         <tr role="row" class="orders" >
                                             <th class="taskOptions" width="60">序号</th>
@@ -31,7 +38,6 @@
                                             <?php if ($type==1){ ?>
                                                 <th class="taskOptions">结束时间</th>
                                                 <th class="taskOptions">核实时间</th>
-                                                <th class="taskOptions">核实人员</th>
                                             <?php } ?>
                                             <?php if ($type==2){ ?>
                                                 <th class="taskOptions">实施时间</th>
@@ -47,7 +53,6 @@
                                                 <?php if ($type==1){ ?>
                                                     <td class="taskOptions">{$v.in_day|date='Y-m-d',###}</td>
                                                     <td class="taskOptions"><?php echo $v['heshi_time'] ? date('Y-m-d',$v['heshi_time']) : "<font color='#999'>未核实</font>" ?></td>
-                                                    <td class="taskOptipons">{$v['nickname']}</td>
                                                 <?php } ?>
                                                 <?php if ($type==2){ ?>
                                                     <td class="taskOptions">{$v.in_begin_day|date='Y-m-d',###}</td>

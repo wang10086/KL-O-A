@@ -16,7 +16,6 @@
 
                     <div class="row">
                         <div class="col-xs-12">
-
                             <div class="box box-warning">
                                 <div class="box-header">
                                     <h3 class="box-title">{$_action_}</h3>
@@ -41,7 +40,7 @@
                                         <foreach name="lists" key="k" item="v">
                                             <tr>
                                                 <td class="taskOptions">{$k+1}</td>
-                                                <td class="taskOptions">{$v.group_id}</td>
+                                                <td class="taskOptions"><?php echo $v['group_id'] ? $v['group_id'] : "<font class='#999'>未成团</font>"; ?></td>
                                                 <td class="taskOptions" style="max-width: 150px;"><a href="{:U('Op/plans_follow',array('opid'=>$v['op_id']))}">{$v.project}</a></td>
                                                 <td class="taskOptions">{$v.create_user_name}</td>
                                                 <td class="taskOptions"><?php echo $v['is_ok']?'<span class="green">正常</span>':'<span class="red">超时</span>'; ?></td>

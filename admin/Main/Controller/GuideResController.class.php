@@ -452,9 +452,7 @@ class GuideResController extends BaseController {
         $times                      = get_cycle($yearMonth);
         $mod                        = D('GuideRes');
         $data                       = $mod->get_timely_data($times['begintime'],$times['endtime']);
-        //$sum_data                   = $mod->get_sum_timely($data);
-
-
+        $sum_data                   = $mod->get_sum_timely($data);
 
         $this->sum                  = $sum_data;
         $this->lists                = $data;
@@ -497,7 +495,7 @@ class GuideResController extends BaseController {
         $data                       = array();
         foreach ($operator as $k=>$v){
             $info                   = $mod->get_user_timely_data($startTime,$endTime,$k);
-            //$info['合计']           = $mod->get_sum_timely($info);
+            $info['合计']           = $mod->get_sum_timely($info);
             $data[$v]['info']       = $info;
             $data[$v]['uid']        = $k;
             $data[$v]['name']       = $v;
@@ -555,9 +553,7 @@ class GuideResController extends BaseController {
         $data                       = $this->get_timely_data($times['begintime'],$times['endtime'],$type);
         $lists                      = $data['sum_lists'];
 
-        //$this->uid                  = $uid;
         $this->lists                = $lists;
-        //$this->title                = $title;
         $this->type                 = $type;
         $this->year                 = $year;
         $this->month                = $month;
@@ -579,19 +575,24 @@ class GuideResController extends BaseController {
     //教务及时性(各教务详情页)
     public function public_timely_detail(){
         $this->pagetitle            = '教务操作及时率';
-        $this->title(I('tit') ? trim(I('tit')) : '教务操作及时率');
+        $title                      = trim(I('tit'));
         $year		                = I('year',date('Y'));
         $month		                = I('month',date('m'));
         if (strlen($month)<2) $month= str_pad($month,2,'0',STR_PAD_LEFT);
         $yearMonth                  = $year.$month;
         $times                      = get_cycle($yearMonth);
-        $type                       = I('type');
-        $data                       = $this->get_timely_data($times['begintime'],$times['endtime'],$type);
+        $uid                        = I('uid');
+        $mod                        = D('GuideRes');
+        $data                       = $mod->get_timely_type($title,$times['begintime'],$times['endtime'],$uid);
         $lists                      = $data['sum_lists'];
+        $type                       = $data['type'];
 
-        //$this->uid                  = $uid;
+        $timely                     = get_timely(3); //3=>教务操作及时性
+        $this->uname                = username($uid);
+        $this->timely               = array_column($timely,'title');
+        $this->uid                  = $uid;
         $this->lists                = $lists;
-        //$this->title                = $title;
+        $this->title                = $title;
         $this->type                 = $type;
         $this->year                 = $year;
         $this->month                = $month;
