@@ -472,15 +472,38 @@ class GuideResController extends BaseController {
         $month		                = I('month',date('m'));
         if (strlen($month)<2) $month= str_pad($month,2,'0',STR_PAD_LEFT);
         $yearMonth                  = $year.$month;
+        $mod                        = D('GuideRes');
         $times                      = get_cycle($yearMonth);
         $users                      = C('EDU_MANAGE_USERS');
+        $data                       = $this->get_jw_timely_data($users,$times['begintime'],$times['endtime']);
 
-        $this->lists                = $users;
+        $this->lists                = $data;
         $this->year 	            = $year;
         $this->month 	            = $month;
         $this->prveyear             = $year-1;
         $this->nextyear             = $year+1;
         $this->display();
+    }
+
+    /**
+     * 获取每个教务的每项工作及时率
+     * @param $operator 所有的教务
+     * @param $startTime
+     * @param $endTime
+     * @return array
+     */
+    public function get_jw_timely_data($operator,$startTime,$endTime){
+        $mod                        = D('GuideRes');
+        $data                       = array();
+        foreach ($operator as $k=>$v){
+            $info                   = $mod->get_user_timely_data($startTime,$endTime,$k);
+            //$info['合计']           = $mod->get_sum_timely($info);
+            $data[$v]['info']       = $info;
+            $data[$v]['uid']        = $k;
+            $data[$v]['name']       = $v;
+            $data[$v]['row_span']   = count($info)+1;
+        }
+        return $data;
     }
 
     //
@@ -519,7 +542,41 @@ class GuideResController extends BaseController {
         }
     }
 
-    //教务及时性(详情页)
+    //教务及时性(公司详情页)
+    public function public_company_timely_detail(){
+        $this->pagetitle            = '教务操作及时率';
+        $this->title(I('tit') ? trim(I('tit')) : '教务操作及时率');
+        $year		                = I('year',date('Y'));
+        $month		                = I('month',date('m'));
+        if (strlen($month)<2) $month= str_pad($month,2,'0',STR_PAD_LEFT);
+        $yearMonth                  = $year.$month;
+        $times                      = get_cycle($yearMonth);
+        $type                       = I('type');
+        $data                       = $this->get_timely_data($times['begintime'],$times['endtime'],$type);
+        $lists                      = $data['sum_lists'];
+
+        //$this->uid                  = $uid;
+        $this->lists                = $lists;
+        //$this->title                = $title;
+        $this->type                 = $type;
+        $this->year                 = $year;
+        $this->month                = $month;
+        $this->display('timely_company_detail');
+    }
+
+    public function get_timely_data($startTime,$endTime,$type=0){
+        switch ($type){
+            case 1:
+                $data               = get_guide_sure_data($startTime,$endTime);
+                break;
+            case 2:
+                $data               = get_guide_dispatch_data($startTime,$endTime);
+                break;
+        }
+        return $data;
+    }
+
+    //教务及时性(各教务详情页)
     public function public_timely_detail(){
         $this->pagetitle            = '教务操作及时率';
         $this->title(I('tit') ? trim(I('tit')) : '教务操作及时率');
@@ -539,15 +596,6 @@ class GuideResController extends BaseController {
         $this->year                 = $year;
         $this->month                = $month;
         $this->display('timely_detail');
-    }
-
-    public function get_timely_data($startTime,$endTime,$type=0){
-        switch ($type){
-            case 1:
-                $data               = get_guide_sure_data($startTime,$endTime);
-            break;
-        }
-        return $data;
     }
 
     public function public_save(){

@@ -62,20 +62,14 @@
                                         </tr>
                                         <foreach name="lists" key="k" item="v">
                                             <tr>
-                                                <td class="taskOptions" rowspan="{$v.row_span}">{$v}</td>
-                                                <td></td>
-                                                <td></td>
-                                                <td></td>
-                                                <td></td>
-                                                <td></td>
-                                                <td></td>
+                                                <td class="taskOptions" rowspan="{$v.row_span}">{$v.name}</td>
                                             </tr>
-                                            <?php /*foreach ($v['info'] as $value){ */?><!--
-                                                <tr <?php /*if ($value['title'] == '合计'){ echo 'class="black"'; } */?>>
-                                                    <td class="taskOptions" <?php /*if ($value['title'] == '合计'){ echo 'colspan="2"'; } */?>>{$value.title}</td>
-                                                    <?php /*if ($value['title'] != '合计'){ */?>
-                                                    <td class="taskOptions" style="max-width: 150px;">{$value.content}</td>
-                                                    <?php /*} */?>
+                                            <?php foreach ($v['info'] as $value){ ?>
+                                                <tr <?php if ($value['title'] == '合计'){ echo 'class="black"'; } ?>>
+                                                    <td class="taskOptions" <?php if ($value['title'] == '合计'){ echo 'colspan="2"'; } ?>>{$value.title}</td>
+                                                    <?php if ($value['title'] != '合计'){ ?>
+                                                        <td class="taskOptions" style="max-width: 150px;">{$value.content}</td>
+                                                    <?php } ?>
                                                     <td class="taskOptions">{$value.sum_num}</td>
                                                     <td class="taskOptions">{$value.ok_num}</td>
                                                     <td class="taskOptions">{$value.average}</td>
@@ -83,7 +77,7 @@
                                                         <a href="{:U('GuideRes/public_timely_detail',array('year'=>$year,'month'=>$month,'tit'=>$value['title'],'uid'=>$v['uid']))}" title="详情" class="btn btn-info btn-smsm"><i class="fa fa-bars"></i></a>
                                                     </td>
                                                 </tr>
-                                            --><?php /*} */?>
+                                            <?php } ?>
                                         </foreach>
                                     </table>
                                 </div><!-- /.box-body -->

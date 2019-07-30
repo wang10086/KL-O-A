@@ -3710,10 +3710,24 @@ function get_yw_department(){
         return $audit_more_id;
     }*/
 
-    //专家/辅导员确认核实及时性
-    function get_guide_sure_data($startTime,$endTime,$title='',$content='',$uid){
+    //获取所有的辅导员需求信息(最近1000条数据)
+    function get_guide_confirm_list(){
         $field                              = 'c.*,o.group_id,o.project,a.nickname';
         $lists                              = M()->table('__OP_GUIDE_CONFIRM__ as c')->join('__OP__ as o on o.op_id=c.op_id','left')->join('__ACCOUNT__ as a on a.id=c.heshi_oa_uid','left')->field($field)->order('c.id desc')->limit(1000)->select(); //全部数据
+        return $lists;
+    }
+
+    /**
+     * 专家/辅导员确认核实及时性(公司)
+     * @param $startTime
+     * @param $endTime
+     * @param string $title
+     * @param string $content
+     * @param $uid
+     * @return array
+     */
+    function get_guide_sure_data($startTime,$endTime,$title='',$content='',$type=1){
+        $lists                              = get_guide_confirm_list();
         $this_month_sum_lists               = array();
         $this_month_ok_lists                = array();
         $sum_num                            = 0;
@@ -3740,7 +3754,206 @@ function get_yw_department(){
         $data['sum_num']                    = $sum_num;
         $data['ok_num']                     = $ok_num;
         $data['average']                    = (round($ok_num/$sum_num,4)*100).'%';
-        $data['type']                       = 1;
+        $data['type']                       = $type;
+        $data['title']                      = $title;
+        $data['content']                    = $content;
+        $data['sum_lists']                  = $this_month_sum_lists;
+        $data['ok_lists']                   = $this_month_ok_lists;
+        return $data;
+    }
+
+    /**
+     * 专家/辅导员调度及时性(公司)
+     * @param $startTime
+     * @param $endTime
+     * @param string $title
+     * @param string $content
+     * @param $uid
+     * @return array
+     */
+    function get_guide_dispatch_data($startTime,$endTime,$title='',$content='',$type=2){
+        $lists                              = get_guide_confirm_list();
+        $this_month_sum_lists               = array();
+        $this_month_ok_lists                = array();
+        $sum_num                            = 0;
+        $ok_num                             = 0;
+        foreach ($lists as $k=>$v){ //教务人员在业务人员确认需求后5个工作日内，但须在活动实施前2天完成所有确认需求的专家/辅导员
+            $time                           = $v['in_begin_day'] - 2*24*3600; //活动实施前2天
+            if ($time < $endTime && $time >= $startTime){ //所有当月应调度项目
+                if ($v['tcs_stu'] >2){ //3=>已安排人员
+                    if ($v['first_dispatch_time'] < $time){ //首次调度时间
+                        $v['stau']          = "<span class='green'>正常</span>";
+                        $this_month_ok_lists[]  = $v;
+                        $ok_num++;
+                    }else{
+                        $v['stau']          = "<span class='yellow'>已调度,超时</span>";
+                    }
+                }else{
+                    $v['stau']              = "<span class='red'>未调度</span>";
+                }
+                $this_month_sum_lists[]     = $v;
+                $sum_num++;
+            }
+        }
+
+        $data                               = array();
+        $data['sum_num']                    = $sum_num;
+        $data['ok_num']                     = $ok_num;
+        $data['average']                    = (round($ok_num/$sum_num,4)*100).'%';
+        $data['type']                       = $type;
+        $data['title']                      = $title;
+        $data['content']                    = $content;
+        $data['sum_lists']                  = $this_month_sum_lists;
+        $data['ok_lists']                   = $this_month_ok_lists;
+        return $data;
+    }
+
+    /**
+     * 专家/辅导员培训工作及时性(公司)
+     * @param $startTime
+     * @param $endTime
+     * @param string $title
+     * @param string $content
+     * @param $uid
+     * @return array
+     */
+    function get_guide_train_data ($startTime,$endTime,$title='',$content='',$type=3){
+        $lists                              = get_guide_confirm_list();
+        $this_month_sum_lists               = array();
+        $this_month_ok_lists                = array();
+        $sum_num                            = 0;
+        $ok_num                             = 0;
+
+
+
+        $data                               = array();
+        $data['sum_num']                    = $sum_num;
+        $data['ok_num']                     = $ok_num;
+        $data['average']                    = (round($ok_num/$sum_num,4)*100).'%';
+        $data['type']                       = $type; //专家/辅导员培训工作及时性
+        $data['title']                      = $title;
+        $data['content']                    = $content;
+        $data['sum_lists']                  = $this_month_sum_lists;
+        $data['ok_lists']                   = $this_month_ok_lists;
+        return $data;
+    }
+
+    /*******************************************************************/
+    /**
+     * 专家/辅导员确认核实及时性(各教务)
+     * @param $startTime
+     * @param $endTime
+     * @param string $title
+     * @param string $content
+     * @param $uid
+     * @param $type
+     * @return array
+     */
+    function get_jw_sure_data($startTime,$endTime,$title='',$content='',$uid,$type=1){
+        //教务本周期核实的团
+        $where                              = array();
+        $where['c.tcs_stu']                 = 5;
+        $where['c.heshi_oa_uid']            = $uid;
+        $where['c.heshi_time']              = array('between',array($startTime,$endTime));
+        $lists                              = M()->table('__OP_GUIDE_CONFIRM__ as c')->join('__OP__ as o on o.op_id=c.op_id','left')->field('c.*,o.group_id,o.project')->where($where)->select(); //全部数据
+
+        $this_month_sum_lists               = array();
+        $this_month_ok_lists                = array();
+        $sum_num                            = 0;
+        $ok_num                             = 0;
+        foreach ($lists as $k=>$v){
+            $time                           = $v['in_day'] + 7*24*3600; //活动结束5个工作日前
+            if ($v['heshi_time'] <= $time){
+                $v['stau']                  = "<span class='green'>正常</span>";
+                $this_month_ok_lists[]      = $v;
+                $ok_num++;
+            }else{
+                $v['stau']                  = "<span class='yellow'>已核实,超时</span>";
+            }
+            $this_month_sum_lists[]         = $v;
+            $sum_num++;
+        }
+        $data                               = array();
+        $data['sum_num']                    = $sum_num;
+        $data['ok_num']                     = $ok_num;
+        $data['average']                    = (round($ok_num/$sum_num,4)*100).'%';
+        $data['type']                       = $type;
+        $data['title']                      = $title;
+        $data['content']                    = $content;
+        $data['sum_lists']                  = $this_month_sum_lists;
+        $data['ok_lists']                   = $this_month_ok_lists;
+        return $data;
+    }
+
+    /**
+     * 专家/辅导员调度及时性(各教务)
+     * @param $startTime
+     * @param $endTime
+     * @param string $title
+     * @param string $content
+     * @param $uid
+     * @param $type
+     * @return array
+     */
+    function get_jw_dispatch_data($startTime,$endTime,$title='',$content='',$uid,$type=2){
+        //教务本周期调度的团
+        $where                              = array();
+        $where['c.tcs_stu']                 = array('in',array(3,4,5,6));
+        $where['c.first_dispatch_oa_uid']   = $uid;
+        $where['c.first_dispatch_time']     = array('between',array($startTime,$endTime));
+        $lists                              = M()->table('__OP_GUIDE_CONFIRM__ as c')->join('__OP__ as o on o.op_id=c.op_id','left')->field('c.*,o.group_id,o.project')->where($where)->select(); //全部数据
+
+        $this_month_sum_lists               = array();
+        $this_month_ok_lists                = array();
+        $sum_num                            = 0;
+        $ok_num                             = 0;
+        foreach ($lists as $k=>$v){ //教务人员在业务人员确认需求后5个工作日内，但须在活动实施前2天完成所有确认需求的专家/辅导员
+            $time                           = $v['in_begin_day'] - 2*24*3600; //活动实施前2天
+            if ($v['first_dispatch_time'] <= $time){
+                $v['stau']                  = "<span class='green'>正常</span>";
+                $this_month_ok_lists[]      = $v;
+                $ok_num++;
+            }else{
+                $v['stau']                  = "<span class='yellow'>已调度,超时</span>";
+            }
+            $this_month_sum_lists[]         = $v;
+            $sum_num++;
+        }
+
+        $data                               = array();
+        $data['sum_num']                    = $sum_num;
+        $data['ok_num']                     = $ok_num;
+        $data['average']                    = (round($ok_num/$sum_num,4)*100).'%';
+        $data['type']                       = $type;
+        $data['title']                      = $title;
+        $data['content']                    = $content;
+        $data['sum_lists']                  = $this_month_sum_lists;
+        $data['ok_lists']                   = $this_month_ok_lists;
+        return $data;
+    }
+
+    /**
+     * 专家/辅导员培训工作及时性(各教务)
+     * @param $startTime
+     * @param $endTime
+     * @param string $title
+     * @param string $content
+     * @param $uid
+     * @param $type
+     * @return array
+     */
+    function get_jw_train_data ($startTime,$endTime,$title='',$content='',$uid,$type=3){
+        $lists                              = get_guide_confirm_list();
+        $this_month_sum_lists               = array();
+        $this_month_ok_lists                = array();
+        $sum_num                            = 0;
+        $ok_num                             = 0;
+
+        $data                               = array();
+        $data['sum_num']                    = $sum_num;
+        $data['ok_num']                     = $ok_num;
+        $data['average']                    = (round($ok_num/$sum_num,4)*100).'%';
+        $data['type']                       = $type;
         $data['title']                      = $title;
         $data['content']                    = $content;
         $data['sum_lists']                  = $this_month_sum_lists;

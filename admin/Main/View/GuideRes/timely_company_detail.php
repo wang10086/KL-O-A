@@ -51,7 +51,7 @@
                                                 <?php } ?>
                                                 <?php if ($type==2){ ?>
                                                     <td class="taskOptions">{$v.in_begin_day|date='Y-m-d',###}</td>
-                                                    <td class="taskOptions"><?php echo $v['first_dispatch_time'] ? date('Y-m-d',$v['first_dispatch_time']) : "<font color='#999'>未核实</font>" ?></td>
+                                                    <td class="taskOptions"><?php echo $v['first_dispatch_time'] ? date('Y-m-d',$v['first_dispatch_time']) : "<font color='#999'>无数据</font>" ?></td>
                                                 <?php } ?>
                                                 <td class="taskOptions">{$v.stau}</td>
                                             </tr>

@@ -70,7 +70,7 @@
                                                 <td class="taskOptions">{$v.ok_num}</td>
                                                 <td class="taskOptions">{$v.average}</td>
                                                 <td class="taskOptions">
-                                                    <a href="{:U('GuideRes/public_timely_detail',array('tit'=>$v['title'],'year'=>$year,'month'=>$month,'type'=>$v['type']))}" title="详情" class="btn btn-info btn-smsm"><i class="fa fa-bars"></i></a>
+                                                    <a href="{:U('GuideRes/public_company_timely_detail',array('tit'=>$v['title'],'year'=>$year,'month'=>$month,'type'=>$v['type']))}" title="详情" class="btn btn-info btn-smsm"><i class="fa fa-bars"></i></a>
                                                 </td>
                                             </tr>
                                         </foreach>
@@ -78,11 +78,10 @@
                                             <td class="taskOptions" colspan="3">合计</td>
                                             <td class="taskOptions">{$sum.sum_num}</td>
                                             <td class="taskOptions">{$sum.ok_num}</td>
-                                            <td class="taskOptions">{$sum.average}</td>
-                                            <td class="taskOptions">
-                                                <!--<a href="{:U('GuideRes/public_timely_detail',array('tit'=>'合计','year'=>$year,'month'=>$month))}" title="详情" class="btn btn-info btn-smsm"><i class="fa fa-bars"></i></a>-->
-                                                <a href="javascript:;" onclick="art_show_msg('加班开发中...')" title="详情" class="btn btn-info btn-smsm"><i class="fa fa-bars"></i></a>
-                                            </td>
+                                            <td class="taskOptions" colspan="2">{$sum.average}</td>
+                                            <!--<td class="taskOptions">
+                                                <a href="{:U('GuideRes/public_company_timely_detail',array('tit'=>'合计','year'=>$year,'month'=>$month))}" title="详情" class="btn btn-info btn-smsm"><i class="fa fa-bars"></i></a>
+                                            </td>-->
                                         </tr>
                                     </table>
                                 </div><!-- /.box-body -->
