@@ -451,7 +451,9 @@ class GuideResController extends BaseController {
         $yearMonth                  = $year.$month;
         $times                      = get_cycle($yearMonth);
         $mod                        = D('GuideRes');
-        $data                       = $mod->get_timely_data($times['begintime'],$times['endtime']);
+        $users                      = $mod->get_jiaowu();
+        $uids                       = array_keys($users);
+        $data                       = $mod->get_timely_data($times['begintime'],$times['endtime'],$uids);
         $sum_data                   = $mod->get_sum_timely($data);
 
         $this->sum                  = $sum_data;
@@ -472,7 +474,7 @@ class GuideResController extends BaseController {
         $yearMonth                  = $year.$month;
         $mod                        = D('GuideRes');
         $times                      = get_cycle($yearMonth);
-        $users                      = C('EDU_MANAGE_USERS');
+        $users                      = $mod->get_jiaowu();
         $data                       = $this->get_jw_timely_data($users,$times['begintime'],$times['endtime']);
 
         $this->lists                = $data;
@@ -485,21 +487,24 @@ class GuideResController extends BaseController {
 
     /**
      * 获取每个教务的每项工作及时率
-     * @param $operator 所有的教务
+     * @param $users 所有的教务
      * @param $startTime
      * @param $endTime
      * @return array
      */
-    public function get_jw_timely_data($operator,$startTime,$endTime){
-        $mod                        = D('GuideRes');
-        $data                       = array();
-        foreach ($operator as $k=>$v){
-            $info                   = $mod->get_user_timely_data($startTime,$endTime,$k);
-            $info['合计']           = $mod->get_sum_timely($info);
-            $data[$v]['info']       = $info;
-            $data[$v]['uid']        = $k;
-            $data[$v]['name']       = $v;
-            $data[$v]['row_span']   = count($info)+1;
+    public function get_jw_timely_data($users,$startTime,$endTime){
+        $mod                            = D('GuideRes');
+        $data                           = array();
+        foreach ($users as $k=>$v){
+            $uid                        = array($k);
+            $info                       = $mod->get_timely_data($startTime,$endTime,$uid);
+            $info['合计']               = $mod->get_sum_timely($info);
+            if ($info['合计']['sum_num']){
+                $data[$v]['info']       = $info;
+                $data[$v]['uid']        = $k;
+                $data[$v]['name']       = $v;
+                $data[$v]['row_span']   = count($info)+1;
+            }
         }
         return $data;
     }
@@ -541,7 +546,7 @@ class GuideResController extends BaseController {
     }
 
     //教务及时性(公司详情页)
-    public function public_company_timely_detail(){
+    /*public function public_company_timely_detail(){
         $this->pagetitle            = '教务操作及时率';
         $title                      = I('tit');
         $year		                = I('year',date('Y'));
@@ -560,7 +565,7 @@ class GuideResController extends BaseController {
         $this->year                 = $year;
         $this->month                = $month;
         $this->display('timely_company_detail');
-    }
+    }*/
 
     public function get_timely_data($startTime,$endTime,$type=0){
         switch ($type){
@@ -586,8 +591,9 @@ class GuideResController extends BaseController {
         if (strlen($month)<2) $month= str_pad($month,2,'0',STR_PAD_LEFT);
         $yearMonth                  = $year.$month;
         $times                      = get_cycle($yearMonth);
-        $uid                        = I('uid');
         $mod                        = D('GuideRes');
+        $users                      = $mod->get_jiaowu();
+        $uid                        = I('uid')?I('uid'):array_keys($users);
         $data                       = $mod->get_timely_type($title,$times['begintime'],$times['endtime'],$uid);
         $lists                      = $data['sum_lists'];
         $type                       = $data['type'];
@@ -631,7 +637,7 @@ class GuideResController extends BaseController {
         }
     }
 
-    public function public_cour_pptlist(){
+    /*public function public_cour_pptlist(){
         $this->pagetitle            = '教务操作及时率';
         $title                      = I('tit');
         $year		                = I('year',date('Y'));
@@ -651,5 +657,5 @@ class GuideResController extends BaseController {
         $this->year                 = $year;
         $this->month                = $month;
         $this->display('timely_cour_pptlist');
-    }
+    }*/
 }

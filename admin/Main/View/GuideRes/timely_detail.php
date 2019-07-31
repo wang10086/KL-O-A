@@ -43,6 +43,11 @@
                                                 <th class="taskOptions">实施时间</th>
                                                 <th class="taskOptions">调度时间</th>
                                             <?php } ?>
+                                            <?php if ($type==3){ ?>
+                                                <th class="taskOptions">出团时间</th>
+                                                <th class="taskOptions">培训时间</th>
+                                                <th class="taskOptions">培训标题</th>
+                                            <?php } ?>
                                             <th class="taskOptions">状态</th>
                                         </tr>
                                         <foreach name="lists" key="k" item="v">
@@ -57,6 +62,11 @@
                                                 <?php if ($type==2){ ?>
                                                     <td class="taskOptions">{$v.in_begin_day|date='Y-m-d',###}</td>
                                                     <td class="taskOptions"><?php echo $v['first_dispatch_time'] ? date('Y-m-d',$v['first_dispatch_time']) : "<font color='#999'>未核实</font>" ?></td>
+                                                <?php } ?>
+                                                <?php if($type==3){ ?>
+                                                    <td class="taskOptions">{$v.dep_time|date="Y-m-d",###}</td>
+                                                    <td class="taskOptions"><?php echo $v['lecture_date']?date('Y-m-d',$v['lecture_date']):"<font color='#999'>未培训</font>" ?></td>
+                                                    <td class="taskOptions"><?php echo $v['cour_title']?$v['cour_title']:"<font color='#999'>未培训</font>" ?></td>
                                                 <?php } ?>
                                                 <td class="taskOptions">{$v.stau}</td>
                                             </tr>

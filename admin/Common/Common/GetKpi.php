@@ -249,12 +249,13 @@ function get_fdyzqx($user,$start_date,$end_date){
 }
 
 /*
+ * bak_20190731
  * 辅导员管理及时率
  * 1.员工id
  * 2.本周期开始时间
  * 3.本周期结束时间
  * */
-function get_fdyjsl($user,$start_date,$end_date){
+/*function get_fdyjsl($user,$start_date,$end_date){
     //辅导员本月调度总团数
     $before_where                   = array();
     $before_where['manager_id']     = $user;
@@ -267,15 +268,6 @@ function get_fdyjsl($user,$start_date,$end_date){
 
     $zongxiangmu            = array();
     $hegexiangmu            = array();
-    /*foreach ($before_lists as $k=>$v){
-        $timeaa             = $v['in_begin_day']-$v['set_guide_time'];
-        $timebb             = 7*24*3600;     //活动实施前7天完成辅导员安排
-        //if ($timeaa >= $timebb){
-        if ($timeaa >= 0){                   //活动开始前安排
-            $hegexiangmu[]  = $v;            //合格团数
-        }
-        $zongxiangmu[]      = $v;
-    }*/
 
     foreach ($after_lists as $kk=>$vv){
         $timeaa             = $vv['heshi_time']-$vv['daiheshi_time'];
@@ -296,7 +288,7 @@ function get_fdyjsl($user,$start_date,$end_date){
     $data['hegeshu']        = $hegeshu;
     $data['hegelv']         = $hegelv;
     return $data;
-}
+}*/
 
 
 /*
@@ -3711,11 +3703,11 @@ function get_yw_department(){
     }*/
 
     //获取所有的辅导员需求信息(最近1000条数据)
-    function get_guide_confirm_list(){
+    /*function get_guide_confirm_list(){
         $field                              = 'c.*,o.group_id,o.project,a.nickname';
         $lists                              = M()->table('__OP_GUIDE_CONFIRM__ as c')->join('__OP__ as o on o.op_id=c.op_id','left')->join('__ACCOUNT__ as a on a.id=c.heshi_oa_uid','left')->field($field)->order('c.id desc')->limit(1000)->select(); //全部数据
         return $lists;
-    }
+    }*/
 
     /**
      * 专家/辅导员确认核实及时性(公司)
@@ -3726,7 +3718,7 @@ function get_yw_department(){
      * @param $type
      * @return array
      */
-    function get_guide_sure_data($startTime,$endTime,$title='',$content='',$type=1){
+    /*function get_guide_sure_data($startTime,$endTime,$title='',$content='',$type=1){
         $lists                              = get_guide_confirm_list();
         $this_month_sum_lists               = array();
         $this_month_ok_lists                = array();
@@ -3760,7 +3752,7 @@ function get_yw_department(){
         $data['sum_lists']                  = $this_month_sum_lists;
         $data['ok_lists']                   = $this_month_ok_lists;
         return $data;
-    }
+    }*/
 
     /**
      * 专家/辅导员调度及时性(公司)
@@ -3771,7 +3763,7 @@ function get_yw_department(){
      * @param $type
      * @return array
      */
-    function get_guide_dispatch_data($startTime,$endTime,$title='',$content='',$type=2){
+    /*function get_guide_dispatch_data($startTime,$endTime,$title='',$content='',$type=2){
         $lists                              = get_guide_confirm_list();
         $this_month_sum_lists               = array();
         $this_month_ok_lists                = array();
@@ -3806,7 +3798,7 @@ function get_yw_department(){
         $data['sum_lists']                  = $this_month_sum_lists;
         $data['ok_lists']                   = $this_month_ok_lists;
         return $data;
-    }
+    }*/
 
     /**
      * 专家/辅导员培训工作及时性(公司)
@@ -3817,7 +3809,7 @@ function get_yw_department(){
      * @param $type
      * @return array
      */
-    function get_guide_train_data ($startTime,$endTime,$title='',$content='',$type=3,$uids){
+    /*function get_guide_train_data ($startTime,$endTime,$title='',$content='',$type=3,$uids){
         $lists                              = get_guide_confirm_list();
         $this_month_sum_lists               = array();
         $this_month_ok_lists                = array();
@@ -3846,18 +3838,18 @@ function get_yw_department(){
         $data['sum_lists']                  = $this_month_sum_lists;
         $data['ok_lists']                   = $train_lists;
         return $data;
-    }
+    }*/
 
-    //获取教务当月培训的记录
+   /* //获取教务当月培训的记录
     function get_train_data($startTime,$endTime,$uids){
         $db                                 = M('cour_ppt');
         $where                              = array();
         //$where['create_time']               = array('between',array($startTime,$endTime));
-        $where['lecture_date']               = array('between',array($startTime,$endTime));
+        $where['lecture_date']              = array('between',array($startTime,$endTime));
         $where['lecturer_uid']              = array('in',$uids);
         $lists                              = $db->where($where)->select();
         return $lists;
-    }
+    }*/
 
     /*******************************************************************/
     /**
@@ -3866,15 +3858,15 @@ function get_yw_department(){
      * @param $endTime
      * @param string $title
      * @param string $content
-     * @param $uid
+     * @param $uids
      * @param $type
      * @return array
      */
-    function get_jw_sure_data($startTime,$endTime,$title='',$content='',$uid,$type=1){
+    function get_guide_sure_data($startTime,$endTime,$title='',$content='',$uids,$type=1){
         //教务本周期核实的团
         $where                              = array();
         $where['c.tcs_stu']                 = 5;
-        $where['c.heshi_oa_uid']            = $uid;
+        $where['c.heshi_oa_uid']            = array('in',$uids);
         $where['c.heshi_time']              = array('between',array($startTime,$endTime));
         $lists                              = M()->table('__OP_GUIDE_CONFIRM__ as c')->join('__OP__ as o on o.op_id=c.op_id','left')->field('c.*,o.group_id,o.project')->where($where)->select(); //全部数据
 
@@ -3912,15 +3904,15 @@ function get_yw_department(){
      * @param $endTime
      * @param string $title
      * @param string $content
-     * @param $uid
+     * @param $uids
      * @param $type
      * @return array
      */
-    function get_jw_dispatch_data($startTime,$endTime,$title='',$content='',$uid,$type=2){
+    function get_guide_dispatch_data($startTime,$endTime,$title='',$content='',$uids,$type=2){
         //教务本周期调度的团
         $where                              = array();
         $where['c.tcs_stu']                 = array('in',array(3,4,5,6));
-        $where['c.first_dispatch_oa_uid']   = $uid;
+        $where['c.first_dispatch_oa_uid']   = array('in',$uids);
         $where['c.first_dispatch_time']     = array('between',array($startTime,$endTime));
         $lists                              = M()->table('__OP_GUIDE_CONFIRM__ as c')->join('__OP__ as o on o.op_id=c.op_id','left')->field('c.*,o.group_id,o.project')->where($where)->select(); //全部数据
 
@@ -3959,16 +3951,44 @@ function get_yw_department(){
      * @param $endTime
      * @param string $title
      * @param string $content
-     * @param $uid
+     * @param $uids
      * @param $type
      * @return array
      */
-    function get_jw_train_data ($startTime,$endTime,$title='',$content='',$uid,$type=3){
-        $lists                              = get_guide_confirm_list();
+    function get_guide_train_data ($startTime,$endTime,$title='',$content='',$uids,$type=3){
+        //教务本周期调度的团
+        $where                              = array();
+        $where['c.tcs_stu']                 = array('in',array(3,4,5,6));
+        $where['c.first_dispatch_oa_uid']   = array('in',$uids);
+        $where['c.first_dispatch_time']     = array('between',array($startTime,$endTime));
+        $lists                              = M()->table('__OP_GUIDE_CONFIRM__ as c')->join('__OP__ as o on o.op_id=c.op_id','left')->join('__OP_TEAM_CONFIRM__ as t on t.op_id=c.op_id','left')->field('c.*,t.dep_time,o.group_id,o.project')->group('c.op_id')->where($where)->select(); //全部数据
+
         $this_month_sum_lists               = array();
         $this_month_ok_lists                = array();
         $sum_num                            = 0;
         $ok_num                             = 0;
+        foreach ($lists as $k=>$v){ //教务人员至少在业务实施前1天，完成对所有专家/辅导员培训工作
+            $time                           = $v['dep_time'] - 1*24*3600; //活动实施前1天(时间以成团确认实际出发时间为准)
+            $cwhere                         = array();
+            //$cwhere['lecturer_uid']         = array('in',$uids);
+            $cwhere['op_id']                = $v['op_id'];
+            $cour_list                      = M('cour_ppt')->where($cwhere)->find();
+            if ($cour_list){
+                if ($cour_list['lecture_date'] <= $time){
+                    $v['stau']              = "<span class='green'>正常</span>";
+                    $this_month_ok_lists[]  = $v;
+                    $ok_num++;
+                }else{
+                    $v['stau']              = "<span class='yellow'>已培训,超时</span>";
+                }
+                $v['lecture_date']          = $cour_list['lecture_date'];
+                $v['cour_title']            = $cour_list['ppt_title'];
+            }else{
+                $v['stau']                  = "<span class='red'>未培训</span>";
+            }
+            $this_month_sum_lists[]         = $v;
+            $sum_num++;
+        }
 
         $data                               = array();
         $data['sum_num']                    = $sum_num;

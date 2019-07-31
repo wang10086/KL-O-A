@@ -2091,5 +2091,29 @@ class AjaxController extends Controller {
         $data['msg']                = $msg;
         $this->ajaxReturn($data);
     }
+
+    public function get_cour_info(){
+        $group_id                   = trim(I('group_id'));
+        $userid                     = trim(I('userid'));
+        $opid                       = M('op')->where(array('group_id'=>$group_id))->getField('op_id');
+        if ($opid){
+            $cour_info              = M('cour_ppt')->where(array('op_id'=>$opid,'lecturer_uid'=>$userid))->find();
+            if ($cour_info){
+                $num                = '-1';
+                $msg                = '您已为该团上传过培训记录,无需重复上传';
+            }else{
+                $num                = 1;
+                $msg                = 'ok';
+            }
+        }else{
+            $num                    = '-1';
+            $msg                    = '团号错误';
+        }
+        $data                       = array();
+        $data['num']                = $num;
+        $data['msg']                = $msg;
+        $data['opid']               = $opid;
+        $this->ajaxReturn($data);
+    }
 }
 

@@ -18,7 +18,7 @@
                 <!-- Main content -->
                 <section class="content">
                     <div class="row">
-                        <form method="post" action="{:U('Cour/ppt_add')}" name="myform" id="myform">
+                        <form method="post" action="{:U('Cour/ppt_add')}" name="myform" id="myform" onsubmit="return check_myform()">
                         <input type="hidden" name="dosubmint" value="1" />
                         <input type="hidden" name="referer" value="<?php echo $_SERVER['HTTP_REFERER']; ?>" />
                         <!-- right column -->
@@ -30,7 +30,7 @@
                                 </div>
                                 <div class="box-body" style="padding-top:20px;" id="form_tip">
                                     <!-- text input -->
-                                    <div class="form-group col-md-8">
+                                    <div class="form-group col-md-12">
                                         <label>标题</label>
                                         <input type="text" value="" name="info[ppt_title]" id="courtitle"  class="form-control" />
                                     </div>
@@ -42,6 +42,20 @@
                                             <option value="{$k}">{$v}</option>
                                             </foreach>
                                         </select>
+                                    </div>
+
+                                    <div class="form-group col-md-4">
+                                        <label>性质</label>
+                                        <select name="info[type]" class="form-control" onchange="check_ctype($(this).val())" required>
+                                            <option value="1">团内培训</option>
+                                            <option value="2">非团培训</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="form-group col-md-4" id="typeDiv">
+                                        <label>团号</label>
+                                        <input type="text" value="" name="info[group_id]" id="group_id" onblur="check_cour($(this).val())"  class="form-control" required />
+                                        <input type="hidden" value="" name="info[op_id]" id="opid"  class="form-control"/>
                                     </div>
                                     
                                     <div class="form-group col-md-4">
@@ -99,24 +113,64 @@
         <include file="Index:footer2" />
         
 		<script type="text/javascript">
-		function task_tag(){
-			
-			var i = parseInt($('#task_tag_val').text())+1;
-			
-			var html = '<div class="col-md-2 pd" id="tag_'+i+'"><div class="input-group"><input type="text" placeholder="标签" name="tag[]" class="form-control"><span class="input-group-addon" style="width:32px;"><a href="javascript:;"  onClick="deltag(\'tag_'+i+'\')">X</a></span></div></div>';
-			
-			$('#task_tag_list').append(html);	
-			$('#task_tag_val').html(i);
-		}
-		
-		
-		function deltag(obj){
-			$('#'+obj).remove();
-		}
-		
-		
-		
-		
+            $(function () {
+                //alert(123);
+            })
+
+            function task_tag(){
+                var i = parseInt($('#task_tag_val').text())+1;
+                var html = '<div class="col-md-2 pd" id="tag_'+i+'"><div class="input-group"><input type="text" placeholder="标签" name="tag[]" class="form-control"><span class="input-group-addon" style="width:32px;"><a href="javascript:;"  onClick="deltag(\'tag_'+i+'\')">X</a></span></div></div>';
+                $('#task_tag_list').append(html);
+                $('#task_tag_val').html(i);
+            }
+
+            function deltag(obj){
+                $('#'+obj).remove();
+            }
+
+            function check_ctype(type) {
+                var group_html = '<label>团号</label> <input type="text" value="" name="info[group_id]" id="group_id" onblur="check_cour($(this).val())" class="form-control" required /> <input type="hidden" value="" name="info[op_id]" id="opid"  class="form-control"/>';
+                var uname_html = '<label>讲师</label> <input type="text" value="{:session('nickname')}" name="info[lecturer_uname]"  class="form-control" readonly />'
+                if (type == 1){ //团内
+                    $('#typeDiv').html(group_html);
+                }else{
+                    $('#typeDiv').html(uname_html);
+                }
+            }
+
+            function check_cour(group_id) {
+                var userid          = {:session('userid')};
+                if (group_id){
+                    $.ajax({
+                        type: 'POST',
+                        url : "{:U('Ajax/get_cour_info')}",
+                        data: {group_id:group_id,userid:userid},
+                        dateType: 'JSON',
+                        success: function (data) {
+                            console.log(data);
+                            if (data.num==1){
+                                $('#opid').val(data.opid);
+                            }else{
+                                art_show_msg(data.msg,2);
+                                return false;
+                            }
+                        }
+                    })
+                }else{
+                    art_show_msg('请输入团号信息',2);
+                    return false;
+                }
+            }
+
+            function check_myform(){
+                var title           = $('#courtitle').val().trim();
+                var type            = $('select[name="info[type]"]').val();
+                var opid            = $('#opid').val();
+                if (!title){ art_show_msg('培训标题不能为空',2); return false; }
+                if (type==1 && !opid){ art_show_msg('团号信息输入有误',2); return false; }
+                $('#myform').submit();
+            }
+
 		</script>
         
         

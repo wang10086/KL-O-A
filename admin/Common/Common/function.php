@@ -2830,16 +2830,15 @@ function updatekpi($month,$user){
                         //辅导员/教师管理及时率(京区业务中心教务)
                         if ($v['quota_id']==132){
                             //辅导员管理及时率
-                            $jishilv_data       = get_fdyjsl($user,$v['start_date'],$v['end_date']);
+                            /*$jishilv_data       = get_fdyjsl($user,$v['start_date'],$v['end_date']);  bak_20190731
                             $zongshu            = $jishilv_data['zongshu'];
-                            $jishilv            = $jishilv_data['hegelv'];
-
-                            if($jishilv >= 1 || !$zongshu){
-                                $complete	= 100;
-                            }else{
-                                $complete	= ($jishilv*100).'%';
-                            }
-                            $url            = '';
+                            $jishilv            = $jishilv_data['hegelv'];*/
+                            $monon              = substr($v['month'],-2);
+                            $mod                = D('GuideRes');
+                            $data               = $mod->get_timely_data($v['start_date'],$v['end_date'],$v['user_id']);
+                            $sum_data           = $mod->get_sum_timely($data);
+                            $complete           = $sum_data['average'];
+                            $url                = U('GuideRes/operator_timely',array('year'=>$v['year'],'month'=>$monon));
                         }
 
                         //辅导员/教师管理满意度(京区业务中心教务)

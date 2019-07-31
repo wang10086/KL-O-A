@@ -421,12 +421,12 @@ $config = array(
        '31'         => '魏春竹',
     ),
 
-    //教务人员
+    /*//教务人员
     'EDU_MANAGE_USERS'  =>array(
         '124'       => '刘雨',
         '46'        => '张淼',
         '115'       => '桂小佩'
-    )
+    )*/
 );
 
 return array_merge($config, $dblink);

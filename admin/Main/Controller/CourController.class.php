@@ -282,7 +282,7 @@ class CourController extends BaseController {
 				$info['create_time'] 	= time();
 				$info['update_time'] 	= time();
 				$info['lecturer_uid']   = cookie('userid');
-				$info['lecturer_uname'] = cookie('name');
+				$info['lecturer_uname'] = $info['lecturer_uname'] ? $info['lecturer_uname'] : cookie('name');
 				$info['lecture_date'] 	= $info['lecture_date'] ? strtotime($info['lecture_date']) : 0;
 				
 				$add = M('cour_ppt')->add($info);	
