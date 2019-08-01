@@ -498,7 +498,7 @@ class ExportController extends BaseController {
 
 		$expdata  = array();
 		$datalist = $db->table('__OP_SETTLEMENT__ as b')->field('b.*,o.project,o.group_id,o.number,o.customer,o.create_user_name,o.destination,o.days,o.remark,l.audit_time')->join('__OP__ as o on b.op_id = o.op_id','LEFT')->join('__AUDIT_LOG__ as l on l.req_id = b.id','LEFT')->join('__ACCOUNT__ as a on a.id = o.create_user','LEFT')->where($where)->limit($page->firstRow . ',' . $page->listRows)->order('l.audit_time DESC')->select();
-		foreach($datalist as $k=>$v){
+        foreach($datalist as $k=>$v){
 
 			$title    = array();
 			//团号
@@ -548,7 +548,7 @@ class ExportController extends BaseController {
 
 			//结算时间
 			$title[] = '结算时间';
-			$expdata[$k]['create_time'] = date('Y-m-d',$v['create_time']);
+			$expdata[$k]['audit_time'] = date('Y-m-d',$v['audit_time']);
 
 
 		}

@@ -1,12 +1,11 @@
-    <div class="content" id="save_afterOpScore">
-        <label class="lit-title" style="width: 98%;margin: 0 1%">请对计调人员作出评价
-            <if condition="$jidiao['user_name']">
-                <span style="float: right;clear: both;font-weight: normal;">计调负责人：{$jidiao.user_name}</span>
-            </if>
-        </label>
-        <div class="content">
+<div class="box box-warning" style="margin-top:15px;">
+    <div class="box-header">
+        <h3 class="box-title">对教务人员评价</h3>
+        <h3 class="box-title pull-right" style="font-weight: normal; color: #000; margin-right: 20px;">教务负责人：{$jidiao.user_name}</h3>
+    </div><!-- /.box-header -->
+    <div class="box-body">
+        <div class="content" id="save_afterOpScore">
             <div style="width:100%;float:left;">
-
                 <div class="form-group col-md-6">
                     <label>服务态度：</label>
                     <div class="demo score inline-block"><div id="ysjsx"></div></div>
@@ -67,13 +66,14 @@
                     </div>
                 </div>
             </div>
-        </div>
 
-        <label class="lit-title" style="width: 98%;margin: 0 1%">评价内容</label>
-        <div class="content">
-            <div class="form-group col-md-12" id="jd_content">{$info.jd_content}</div>
+            <label class="lit-title" style="width: 98%;margin: 0 1%">评价内容</label>
+            <div class="content">
+                <div class="form-group col-md-12" id="jd_content">{$info.jd_content}</div>
+            </div>
         </div>
     </div>
+</div>
 
 
 <script type="text/javascript">

@@ -27,7 +27,7 @@ class ContractController extends BaseController {
 		
 		$where = array();
 		if($key)		$where['pro_name']		= array('like','%'.$key.'%');
-		if($opid)	$where['op_id']			= $opid;
+		if($opid)	    $where['op_id']			= $opid;
 		if($gid)		$where['group_id']		= $gid;
 		if($cid)		$where['contract_id']	= array('like','%'.$cid.'%');
 		
