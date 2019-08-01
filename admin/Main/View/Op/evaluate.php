@@ -30,31 +30,17 @@
                                 <if condition="rolemenu(array('Finance/huikuan'))"><a href="{:U('Finance/huikuan',array('opid'=>$op['op_id']))}" class="btn btn-default">项目回款</a></if>
                                 <if condition="rolemenu(array('Op/evaluate'))"><a href="{:U('Op/evaluate',array('opid'=>$op['op_id']))}" class="btn btn-info">项目评价</a></if>
                             </div>
-                            
-                            
-                            
-                            
-                            <div class="box box-warning" style="margin-top:15px;">
-                                <div class="box-header">
-                                    <h3 class="box-title">项目评价</h3>
-                                </div><!-- /.box-header -->
-                                <div class="box-body">
-                                
-									<?php if(cookie('roleid')==10 || cookie('userid')==$op['create_user'] || C('RBAC_SUPER_ADMIN')==cookie('username') ){ ?>
-                                    <!--<include file="evaluate_edit" />-->
-                                    <include file="score_after_op_edit" />
-                                    <?php }else{ ?>
-                                    <include file="score_after_op_read" />
-                                    <?php }?>
-                                    
-                                </div>
-                            </div>
+
+                            <?php if(cookie('roleid')==10 || cookie('userid')==$op['create_user'] || C('RBAC_SUPER_ADMIN')==cookie('username') ){ ?>
+                            <!--<include file="evaluate_edit" />-->
+                            <include file="score_after_op_edit" />
+                            <?php }else{ ?>
+                            <include file="score_after_op_read" />
+                            <?php }?>
                             
                         </div><!--/.col (right) -->
                     </div>   <!-- /.row -->
-                    
                 </section><!-- /.content -->
-                
             </aside><!-- /.right-side -->
 			
   </div>

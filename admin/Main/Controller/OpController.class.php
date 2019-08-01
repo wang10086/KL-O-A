@@ -638,15 +638,15 @@ class OpController extends BaseController {
         $ziyuan             = array();
         $ziyuan['user_id']  = $pingfen['zy_uid']?$pingfen['zy_uid']:($ziyuan_info['assign_id']?$ziyuan_info['assign_id']:$ziyuan_info['exe_user_id']);
         $ziyuan['user_name']= $pingfen['zy_uname']?$pingfen['zy_uname']:($ziyuan_info['assign_name']?$ziyuan_info['assign_name']:$ziyuan_info['exe_user_name']);
-        $jidiao             = array();
+        /*$jidiao             = array();
         $jidiao['user_id']  = $pingfen['ji_uid']?$pingfen['ji_uid']:($jidiao_info['id']?$jidiao_info['id']:0);
-        $jidiao['user_name']= $pingfen['ji_uname']?$pingfen['ji_uname']:($jidiao_info['nickname']?$jidiao_info['nickname']:'');
+        $jidiao['user_name']= $pingfen['ji_uname']?$pingfen['ji_uname']:($jidiao_info['nickname']?$jidiao_info['nickname']:'');*/
 
         $data               = array();
         $data['pingfen']    = $pingfen;
         $data['yanfa']      = $yanfa;
         $data['ziyuan']     = $ziyuan;
-        $data['jidiao']     = $jidiao;
+        //$data['jidiao']     = $jidiao;
         return $data;
     }
 	
@@ -1396,7 +1396,7 @@ class OpController extends BaseController {
             }
 
             //活动结束后对计调的评价
-            if ($opid && $savetype==22){
+            /*if ($opid && $savetype==22){
                 $info                   = I('info');
                 if (!$info['jd_uid']){
                     $data               = array();
@@ -1435,7 +1435,60 @@ class OpController extends BaseController {
                 $data['num']            = $num;
                 $data['msg']            = $msg;
                 $this->ajaxReturn($data);
+            }*/
+
+            if ($opid && $savetype==23){
+                $eval_db                = M('op_eval');
+                $eval_tit_db            = M('op_eval_title');
+                $opid                   = I('opid');
+                $info                   = I('info');
+                $data                   = I('data');
+                $account_id             = $info['account_id'];
+                $code                   = get_op_eval_code($info['type']);
+                $returnMsg              = array();
+                if (!$account_id){
+                    $returnMsg['num']   = 0;
+                    $returnMsg['msg']   = '获取'.$code.'信息失败';
+                    $this->ajaxReturn($returnMsg);
+                }
+
+                $info['op_id']          = $opid;
+                $info['input_userid']   = session('userid');
+                $info['input_username'] = session('nickname');
+                $info['create_time']    = NOW_TIME;
+
+                $list                   = get_op_score_data($opid,$info['type']);
+                if ($list){
+                    $res                = $eval_db ->where(array('id'=>$list['id']))->save($info);
+                    $eval_id            = $list['id'];
+                    $explain            = '修改'.$code.'评分信息';
+                }else{
+                    $res                = $eval_db->add($info);
+                    $eval_id            = $res;
+                    $explain            = '填写'.$code.'评分信息';
+                }
+
+                if ($res){
+                    $num++;
+                    $data['eval_id']    = $eval_id;
+                    $data['op_id']      = $opid;
+                    $list ? $eval_tit_db->where(array('eval_id'=>$list['id']))->save($data) : $eval_tit_db->add($data);
+
+                    $record             = array();
+                    $record['op_id']    = $opid;
+                    $record['optype']   = 4;
+                    $record['explain']  = $explain;
+                    op_record($record);
+
+                    $returnMsg['num']   = 1;
+                    $returnMsg['msg']   = $code.'评分成功';
+                }else{
+                    $returnMsg['num']   = 0;
+                    $returnMsg['msg']   = $code.'评分失败';
+                }
+                $this->ajaxReturn($returnMsg);
             }
+
 
             echo $num;
         }
@@ -3119,106 +3172,37 @@ class OpController extends BaseController {
 	
 	
 	// @@@NODE-3###evaluate###项目评价###
-    /*public function evaluate(){
-		
-		$opid = I('opid');
-		if(!$opid) $this->error('项目不存在');	
-		
-		$where = array();
-		$where['op_id'] = $opid;
-		$op				= M('op')->where($where)->find();
-		
-		
-		if(isset($_POST['dosubmit']) && $_POST['dosubmit']){
-			
-			$info	= I('info');
-			
-			if(!$info[1]['evaluate']) 	$this->error('产品评价内容不能为空！');
-            if(!$info[2]['evaluate']) 	$this->error('计调评价内容不能为空！');
-            if(!$info[3]['evaluate']) 	$this->error('资源评价内容不能为空！');
-            if(!$info[4]['evaluate']) 	$this->error('物资评价内容不能为空！');
-			
-			//保存
-			foreach($info as $k=>$v){
-				
-				$data = array();
-				$data['op_id']			= $v['op_id'];
-				$data['eval_type']		= $v['eval_type'];
-				$data['liable_uid']		= $v['liable_uid'];
-				$data['liable_uname']	= $v['liable_uname'];
-				$data['score']			= $v['score'];
-				$data['evaluate']		= $v['evaluate'];
-				$data['eval_uid']		= cookie('userid');
-				$data['eval_uname']		= cookie('name');
-				$data['eval_time']		= time();
-				
-				$eval = M('op_eval')->where(array('op_id'=>$v['op_id'],'eval_type'=>$v['eval_type']))->find();
-				if($eval){
-					M('op_eval')->data($data)->where(array('op_id'=>$v['op_id'],'eval_type'=>$v['eval_type']))->save();
-				}else{
-					M('op_eval')->add($data);
-				}	
-			}
-			
-			
-			$this->success('保存成功！');
-		
-		}else{
-			
-			$this->kinds	= M('project_kind')->getField('id,name', true);
-			$this->op		= $op;
-
-			$auth = M('op_auth')->where(array('op_id'=>$opid))->find();
-			//获取产品负责人信息
-			
-			$cp['uid'] 		= '';
-			$cp['uname'] 	= '';
-			
-			//获取计调负责人信息
-			$jd['uid'] 		= $auth['line'];
-			$jd['uname'] 	= username($auth['line']);
-			
-			//获取物资负责人信息
-			$wz['uid'] 		= $auth['res'];
-			$wz['uname'] 	= username($auth['res']);
-			
-			//获取资源负责人信息
-			$zy['uid'] 		= $auth['material'];
-			$zy['uname'] 	= username($auth['material']);
-			
-			$this->cp 		= $cp;
-			$this->jd 		= $jd;
-			$this->wz 		= $wz;
-			$this->zy 		= $zy;
-			
-			
-			$this->cpv 		= M('op_eval')->where(array('op_id'=>$opid,'eval_type'=>1))->find();
-			$this->jdv 		= M('op_eval')->where(array('op_id'=>$opid,'eval_type'=>2))->find();
-			$this->zyv 		= M('op_eval')->where(array('op_id'=>$opid,'eval_type'=>3))->find();
-			$this->wzv 		= M('op_eval')->where(array('op_id'=>$opid,'eval_type'=>4))->find();
-			
-			$this->cps 		= $this->cpv ? $this->cpv['score'] : 100;
-			$this->jds 		= $this->jdv ? $this->jdv['score'] : 100;
-			$this->zys 		= $this->zyv ? $this->zyv['score'] : 100;
-			$this->wzs 		= $this->wzv ? $this->wzv['score'] : 100;
-			
-			$this->confirm 	= $confirm; 
-			$this->display('evaluate');
-		}
-		
-    }*/
     public function evaluate(){
         $opid               = I('opid');
+        $op                 = M('op')->where(array('op_id'=>$opid))->find();
 
-        //计调人员人员信息(对计调人员人员评分)
+        /*//计调人员人员信息(对计调人员人员评分)
         $score_data         = $this->get_score_user($opid);
-        $this->op           = M('op')->where(array('op_id'=>$opid))->find();
+
         $this->jidiao       = $score_data['jidiao'];
         $pingfen            = $score_data['pingfen'];
-        if ($pingfen['ysjsx']){ $this->pingfen = json_encode($pingfen); };
+        if ($pingfen['ysjsx']){ $this->pingfen = json_encode($pingfen); };*/
 
+        $op_guide_list      = M('op_guide_confirm')->where(array('op_id'=>$opid))->find();
+        $jd_score           = get_op_score_data($opid,1);
+        $jw_score           = get_op_score_data($opid,2);
+        $jd_id              = $jd_score['account_id'] ? $jd_score['account_id'] : M('op_auth')->where(array('op_id'=>$opid))->getField('hesuan');
+        $jw_id              = $jw_score['account_id'] ? $jw_score['account_id'] : ($op_guide_list['first_dispatch_oa_uid']?$op_guide_list['first_dispatch_oa_uid']:$op_guide_list['heshi_oa_uid']);
+        $jd                 = array();
+        $jd['user_id']      = $jd_id;
+        $jd['user_name']    = username($jd_id);
+        $jw                 = array();
+        $jw['user_id']      = $jw_id;
+        $jw['user_name']    = username($jw_id);
+
+        $this->jd_score     = $jd_score ? json_encode($jd_score) : '';
+        $this->jw_score     = $jw_score ? json_encode($jw_score) : '';
+        $this->jidiao       = $jd;
+        $this->jiaowu       = $jw;
+        $this->op           = $op;
         $this->display();
     }
+
 
     //修改辅导员需求信息
     public function edit_tcs_need(){

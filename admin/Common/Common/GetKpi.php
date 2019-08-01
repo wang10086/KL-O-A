@@ -4002,3 +4002,25 @@ function get_yw_department(){
         return $data;
     }
 
+
+    function get_op_eval_code($type){
+        switch ($type){
+            case 1:
+                $code                       = '计调';
+                break;
+            case 2:
+                $code                       = '教务';
+                break;
+        }
+        return $code;
+    }
+
+    function get_op_score_data($opid,$type){
+        $where                              = array();
+        $where['e.op_id']                   = $opid;
+        $where['e.type']                    = $type;
+        $field                              = 'e.*,t.AA as TAA,t.BB as TBB,t.CC as TCC,t.DD as TDD,t.EE as TEE';
+        $list                               = M()->table('__OP_EVAL__ as e')->join('__OP_EVAL_TITLE__ as t on t.eval_id=e.id','left')->where($where)->field($field)->find();
+        return $list;
+    }
+
