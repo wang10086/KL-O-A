@@ -193,7 +193,7 @@ class SalaryModel extends Model
 
         /************************************start***************************************/
         //201904调工资 , 基本工资取上个月数据(5月份删除此项)
-        $salary                       = M('salary_wages_month')->where(array('account_id'=>$user['id'],'status'=>4,'datetime'=>'201903'))->getField('standard');
+        //$salary                       = M('salary_wages_month')->where(array('account_id'=>$user['id'],'status'=>4,'datetime'=>'201903'))->getField('standard');
         /*************************************end****************************************/
         foreach ($sale_configs as $k=>$v){
             if ($user['id'] == 59){ //李保罗
@@ -231,7 +231,7 @@ class SalaryModel extends Model
         $data['quarter_profit']                 = $sum_profit;  //季度毛利
         $data['target']                         = $target;      //目标值
         if (in_array($pay_month,array('01','04','07','10'))) {   //季度后一个月发放该季度提成
-            if ($user['departmentid']==15){ //常规旅游中心
+            if ($user['departmentid']==15 || (int)$salary==0){ //常规旅游中心
                 $data['quarter_royalty'] = '0.00';
             }else{
                 $data['quarter_royalty'] = $royalty;     //季度提成

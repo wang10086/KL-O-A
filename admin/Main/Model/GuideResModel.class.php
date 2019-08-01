@@ -21,20 +21,6 @@ class GuideResModel extends Model{
         return $users;
     }
 
-    /*//获取计调的及时率(公司)
-    public function get_timely_data($startTime,$endTime,$uids=''){
-        $timely                         = get_timely(3); //3=>教务操作及时性
-        $timely                         = array_column($timely,'content','title');
-        $guide_sure_data                = get_guide_sure_data($startTime,$endTime,'专家/辅导员确认核实及时性',$timely['专家/辅导员确认核实及时性'],1);
-        $guide_dispatch_data            = get_guide_dispatch_data($startTime,$endTime,'专家/辅导员调度安排及时性',$timely['专家/辅导员调度安排及时性'],2);
-        $guide_train_data               = get_guide_train_data($startTime,$endTime,'专家/辅导员培训工作及时性',$timely['专家/辅导员培训工作及时性'],3,$uids);
-
-        $data[]                         = $guide_sure_data;
-        $data[]                         = $guide_dispatch_data;
-        $data[]                         = $guide_train_data;
-        return $data;
-    }*/
-
     //获取计调的及时率
     public function get_timely_data($startTime,$endTime,$uid=array()){
         $timely                         = get_timely(3); //3=>教务操作及时性

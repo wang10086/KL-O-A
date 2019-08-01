@@ -545,28 +545,6 @@ class GuideResController extends BaseController {
         }
     }
 
-    //教务及时性(公司详情页)
-    /*public function public_company_timely_detail(){
-        $this->pagetitle            = '教务操作及时率';
-        $title                      = I('tit');
-        $year		                = I('year',date('Y'));
-        $month		                = I('month',date('m'));
-        if (strlen($month)<2) $month= str_pad($month,2,'0',STR_PAD_LEFT);
-        $yearMonth                  = $year.$month;
-        $times                      = get_cycle($yearMonth);
-        $type                       = I('type');
-        $data                       = $this->get_timely_data($times['begintime'],$times['endtime'],$type);
-        $lists                      = $data['sum_lists'];
-
-        $this->title                = $title;
-        $this->lists                = $lists;
-        $this->type                 = $type;
-        $this->pin                  = I('pin',1);
-        $this->year                 = $year;
-        $this->month                = $month;
-        $this->display('timely_company_detail');
-    }*/
-
     public function get_timely_data($startTime,$endTime,$type=0){
         switch ($type){
             case 1:
@@ -637,25 +615,4 @@ class GuideResController extends BaseController {
         }
     }
 
-    /*public function public_cour_pptlist(){
-        $this->pagetitle            = '教务操作及时率';
-        $title                      = I('tit');
-        $year		                = I('year',date('Y'));
-        $month		                = I('month',date('m'));
-        if (strlen($month)<2) $month= str_pad($month,2,'0',STR_PAD_LEFT);
-        $yearMonth                  = $year.$month;
-        $times                      = get_cycle($yearMonth);
-        $type                       = I('type');
-        $uids                       = array_keys(C('EDU_MANAGE_USERS'));
-        $lists                      = get_train_data($times['begintime'],$times['endtime'],$uids);
-        //var_dump($lists);die;
-
-        $this->title                = $title;
-        $this->lists                = $lists;
-        $this->type                 = $type;
-        $this->pin                  = I('pin',2);
-        $this->year                 = $year;
-        $this->month                = $month;
-        $this->display('timely_cour_pptlist');
-    }*/
 }
