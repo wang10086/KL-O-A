@@ -185,7 +185,8 @@ function get_zhuanhualv($user,$start_date,$end_date){
  * 2.本周期开始时间
  * 3.本周期结束时间
  * */
-function get_jw_myd($user,$start_date,$end_date){
+//bak_20190802
+/*function get_jw_myd($user,$start_date,$end_date){
     //本月以评分的总项目
     $where                  = array();
     $where['c.manager_id']  = $user;
@@ -211,7 +212,7 @@ function get_jw_myd($user,$start_date,$end_date){
     $data['hegeshu']        = count($hegexiangmu);
     $data['hegelv']         = round($data['hegeshu']/$data['zongshu'],2);
     return $data;
-}
+}*/
 
 /*
  * 辅导员管理准确性
@@ -3863,17 +3864,19 @@ function get_yw_department(){
     //获取该周期调度(打分)信息(已核实时间为准)
     function get_guide_confirm_list($startTime,$endTime,$uid=''){
         $where                              = array();
-        $where['heshi_time']                = array('between',array($startTime,$endTime));
-        if ($uid) $where['heshi_oa_uid']    = $uid;
-        $op_lists                           = M('op_guide_confirm')->where($where)->select();
-        return $op_lists;
+        $where['c.heshi_time']              = array('between',array($startTime,$endTime));
+        if ($uid) $where['c.heshi_oa_uid']  = $uid;
+        $field                              = 'c.*,o.group_id,o.project,o.create_user_name';
+        $lists                              = M()->table('__OP_GUIDE_CONFIRM__ as c')->join('__OP__ as o on o.op_id=c.op_id','left')->where($where)->field($field)->select();
+        return $lists;
     }
 
     //获取教务满意度统计数据
     function get_jw_satis_chart($lists,$type=2){
         $sum_num                                = 0;
         $score_num                              = 0;
-        $zongfen                                = 0;
+        $sum_zongfen                            = 0;
+        $score_zongfen                          = 0;
         $defen                                  = 0;
         foreach ($lists as $k=>$v){
             $eval                               = M('op_eval')->where(array('op_id'=>$v['op_id'],'type'=>$type))->find();
@@ -3893,16 +3896,18 @@ function get_yw_department(){
                 $op_zongfen                     = 5*$eval['dimension']; //考核维度
                 $lists[$k]['average']           = (round($op_defen/$op_zongfen,4)*100).'%';
                 $score_num++;
-                $defen                          = $eval['AA'] + $eval['BB'] + $eval['CC'] + $eval['DD'] + $eval['EE'];
-                $zongfen                        = 5*$eval['dimension'];
+                $defen                          += $eval['AA'] + $eval['BB'] + $eval['CC'] + $eval['DD'] + $eval['EE'];
+                $score_zongfen                  += 5*$eval['dimension'];
             }
             $sum_num++;
+            $sum_zongfen                        += 5*$eval['dimension'];
         }
 
         $data                                   = array();
         $data['sum_num']                        = $sum_num;
         $data['score_num']                      = $score_num;
-        $data['average']                        = (round($defen/$zongfen,4)*100).'%';
+        $data['score_average']                  = (round($defen/$score_zongfen,4)*100).'%';
+        $data['sum_average']                    = (round($defen/$sum_zongfen,4)*100).'%';
         $data['lists']                          = $lists;
         return $data;
     }

@@ -600,10 +600,9 @@ class GuideResController extends BaseController {
 
         $jw_satis_data              = $this->get_jw_data($guide_list,2); //2=>教务
         $total_statis_data          = get_jw_satis_chart($guide_list,2); //获取公司总的教务满意度信息
+        $total_statis_data['uname'] = '合计';
         $lists                      = $jw_satis_data;
         $lists['合计']              = $total_statis_data;
-
-        //var_dump($lists);die;
 
         $this->lists                = $lists;
         $this->year 	            = $year;
@@ -616,8 +615,8 @@ class GuideResController extends BaseController {
     public function get_jw_data($lists,$type){
         $uids                       = array_filter(array_unique(array_column($lists,'heshi_oa_uid')));
         $data                       = array();
-        $user_lists                 = array();
         foreach ($uids as $k=>$v){
+            $user_lists             = array();
             foreach ($lists as $key=>$value){
                 if ($value['heshi_oa_uid'] == $v){
                     $user_lists[]   = $value;
@@ -629,6 +628,23 @@ class GuideResController extends BaseController {
             $data[]                 = $chart;
         }
         return $data;
+    }
+
+    public function public_jw_satisfaction_detail(){
+        $this->title('教务满意度详情');
+        $year                       = I('year',date('Y'));
+        $month                      = I('month',date('m'));
+        if (strlen($month)<2) $month= str_pad($month,2,'0',STR_PAD_LEFT);
+        $yearMonth                  = $year.$month;
+        $times                      = get_cycle($yearMonth);
+        $uid                        = I('uid',0);
+        $lists                      = get_guide_confirm_list($times['begintime'],$times['endtime'],$uid);
+        $data                       = get_jw_satis_chart($lists,2);
+        $lists                      = $data['lists'];
+
+        $this->lists                = $lists;
+        $this->data                 = $data;
+        $this->display('jw_satisfaction_detail');
     }
 
     public function public_save(){

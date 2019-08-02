@@ -51,9 +51,9 @@
                                         <th class="taskOptions" data="">总满意度</th>
                                     </tr>
                                     <foreach name="lists" item="row"> 
-                                    <tr <?php if ($row['jd_name']=='合计') echo "class='black'"; ?>>
-                                        <td class="taskOptions"><a href="{:U('GuideRes/public_jd_satisfaction_detail',array('year'=>$year,'month'=>$month,'jd_uid'=>$row['jd_uid'],'jd_name'=>$row['jd_name']))}">{$row.jd_name}</a></td>
-                                        <td class="taskOptions">{$row.num}</td>
+                                    <tr <?php if ($row['uname']=='合计') echo "class='black'"; ?>>
+                                        <td class="taskOptions"><a href="{:U('GuideRes/public_jw_satisfaction_detail',array('year'=>$year,'month'=>$month,'uid'=>$row['uid']))}">{$row.uname}</a></td>
+                                        <td class="taskOptions">{$row.sum_num}</td>
                                         <td class="taskOptions">{$row.score_num}</td>
                                         <td class="taskOptions">{$row.score_average}</td>
                                         <td class="taskOptions">{$row.sum_average}</td>
