@@ -588,6 +588,49 @@ class GuideResController extends BaseController {
         $this->display('timely_detail');
     }
 
+    //教务内部满意度
+    public function satisfaction(){
+        $this->title('满意度统计');
+        $year		                = I('year',date('Y'));
+        $month		                = I('month',date('m'));
+        if (strlen($month)<2) $month= str_pad($month,2,'0',STR_PAD_LEFT);
+        $yearMonth                  = $year.$month;
+        $times                      = get_cycle($yearMonth);
+        $guide_list                 = get_guide_confirm_list($times['begintime'],$times['endtime']); //获取调度核实信息
+
+        $jw_satis_data              = $this->get_jw_data($guide_list,2); //2=>教务
+        $total_statis_data          = get_jw_satis_chart($guide_list,2); //获取公司总的教务满意度信息
+        $lists                      = $jw_satis_data;
+        $lists['合计']              = $total_statis_data;
+
+        //var_dump($lists);die;
+
+        $this->lists                = $lists;
+        $this->year 	            = $year;
+        $this->month 	            = $month;
+        $this->prveyear             = $year-1;
+        $this->nextyear             = $year+1;
+        $this->display();
+    }
+
+    public function get_jw_data($lists,$type){
+        $uids                       = array_filter(array_unique(array_column($lists,'heshi_oa_uid')));
+        $data                       = array();
+        $user_lists                 = array();
+        foreach ($uids as $k=>$v){
+            foreach ($lists as $key=>$value){
+                if ($value['heshi_oa_uid'] == $v){
+                    $user_lists[]   = $value;
+                }
+            }
+            $chart                  = get_jw_satis_chart($user_lists,$type);
+            $chart['uid']           = $v;
+            $chart['uname']         = username($v);
+            $data[]                 = $chart;
+        }
+        return $data;
+    }
+
     public function public_save(){
         $savetype                   = I('savetype');
         if (isset($_POST['dosubmint']) && $savetype){

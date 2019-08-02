@@ -208,6 +208,9 @@
                                         <if condition="rolemenu(array('GuideRes/timely'))">
                                             <li class="{:on('GuideRes/timely')} {:on('GuideRes/')} "><a href="{:U('GuideRes/timely')}"><i class="fa fa-angle-right"></i> 教务操作及时率</a></li>
                                         </if>
+                                        <if condition="rolemenu(array('GuideRes/satisfaction'))">
+                                            <li><a href="{:U('GuideRes/satisfaction')}"><i class="fa fa-angle-right"></i> 教务内部满意度</a></li>
+                                        </if>
                                         <if condition="rolemenu(array('GuideRes/res'))">
                                             <li class="{:on('GuideRes/res')} {:on('GuideRes/res_view')} "><a href="{:U('GuideRes/res')}"><i class="fa fa-angle-right"></i> 导游辅导员管理</a></li>
                                         </if>
