@@ -1480,7 +1480,7 @@ class OpController extends BaseController {
                     $record['explain']  = $explain;
                     op_record($record);
 
-                    $returnMsg['num']   = 1;
+                    $returnMsg['num']   = $num;
                     $returnMsg['msg']   = $code.'评分成功';
                 }else{
                     $returnMsg['num']   = 0;
@@ -3176,17 +3176,10 @@ class OpController extends BaseController {
         $opid               = I('opid');
         $op                 = M('op')->where(array('op_id'=>$opid))->find();
 
-        /*//计调人员人员信息(对计调人员人员评分)
-        $score_data         = $this->get_score_user($opid);
-
-        $this->jidiao       = $score_data['jidiao'];
-        $pingfen            = $score_data['pingfen'];
-        if ($pingfen['ysjsx']){ $this->pingfen = json_encode($pingfen); };*/
-
         $op_guide_list      = M('op_guide_confirm')->where(array('op_id'=>$opid))->find();
         $jd_score           = get_op_score_data($opid,1);
         $jw_score           = get_op_score_data($opid,2);
-        $jd_id              = $jd_score['account_id'] ? $jd_score['account_id'] : M('op_auth')->where(array('op_id'=>$opid))->getField('hesuan');
+        $jd_id              = $jd_score['account_id'] ? $jd_score['account_id'] : M('op_auth')->where(array('op_id'=>$opid))->getField('yusuan');
         $jw_id              = $jw_score['account_id'] ? $jw_score['account_id'] : ($op_guide_list['first_dispatch_oa_uid']?$op_guide_list['first_dispatch_oa_uid']:$op_guide_list['heshi_oa_uid']);
         $jd                 = array();
         $jd['user_id']      = $jd_id;
