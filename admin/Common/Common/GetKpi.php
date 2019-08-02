@@ -2882,12 +2882,12 @@ function get_yw_department(){
         $score_num                          = 0; //已评分团数量
         foreach ($lists as $key => $value){
             if ($value['req_uid'] == $uid){
-                $s_list                     = get_jd_op_score($value['op_id']);
+                $s_list                     = get_op_score_data($value['op_id'],1); //1=>计调
                 $list[]                     = $value;
                 if ($s_list) {
                     $score_list[]           = $s_list;
                     $score_num++;
-                    $defen                  += $s_list['ysjsx'] + $s_list['zhunbei'] + $s_list['peixun'] + $s_list['genjin'] + $s_list['yingji'];
+                    $defen                  += $s_list['AA'] + $s_list['BB'] + $s_list['CC'] + $s_list['DD'] + $s_list['EE'];
                     $yipingfen              += 5*5; //5各维度,每个维度5颗星
                 }
                 $zongfen                    += 5*5;
@@ -2912,7 +2912,7 @@ function get_yw_department(){
      * @param $opid
      * @return mixed
      */
-    function get_jd_op_score($opid){
+    /*function get_jd_op_score($opid){
         $db                                     = M('op_score');
         $field                                  = 'op_id,pf_id,pf_name,ysjsx,zhunbei,peixun,genjin,yingji,jd_content,jd_uid,jd_uname,jd_score_time';
         $where                                  = array();
@@ -2920,7 +2920,7 @@ function get_yw_department(){
         $where['ysjsx']                         = array('neq',0);
         $list                                   = $db->where($where)->field($field)->find();
         return $list;
-    }
+    }*/
 
     /**
      * 获取公司总的计调满意度信息
@@ -2934,11 +2934,11 @@ function get_yw_department(){
         $num                                = 0; //所有团数量
         $score_num                          = 0; //已评分团数量
         foreach ($lists as $key => $value){
-            $s_list                         = get_jd_op_score($value['op_id']);
+            $s_list                         = get_op_score_data($value['op_id'],1); //1=>计调
             if ($s_list) {
                 $score_list[]               = $s_list;
                 $score_num++;
-                $defen                      += $s_list['ysjsx'] + $s_list['zhunbei'] + $s_list['peixun'] + $s_list['genjin'] + $s_list['yingji'];
+                $defen                      += $s_list['AA'] + $s_list['BB'] + $s_list['CC'] + $s_list['DD'] + $s_list['EE'];
                 $yipingfen                  += 5*5; //5各维度,每个维度5颗星
             }
             $zongfen                        += 5*5;

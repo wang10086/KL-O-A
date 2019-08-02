@@ -2,7 +2,10 @@
 <div class="box box-warning" style="margin-top:15px;">
     <div class="box-header">
         <h3 class="box-title">对计调人员评价</h3>
-        <h3 class="box-title pull-right" style="font-weight: normal; color: #000; margin-right: 20px;">计调负责人：{$jidiao.user_name}</h3>
+        <h3 class="box-title pull-right" style="font-weight: normal; margin-right: 20px;">
+            <span class="green">评分状态：<?php if ($jd_score){ echo '<span class="green">已评分</span>'; }else{ echo "<span class='red'>未评分</span>"; } ?></span>
+            <span style="color: #000; margin-left: 20px;"> 计调负责人：{$jidiao.user_name}</span>
+        </h3>
     </div><!-- /.box-header -->
     <div class="box-body">
         <form method="post" action="<?php echo U('Op/public_save'); ?>" id="save_jd_afterOpScore">
@@ -104,7 +107,10 @@
     <div class="box box-warning" style="margin-top:15px;">
         <div class="box-header">
             <h3 class="box-title">对教务人员评价</h3>
-            <h3 class="box-title pull-right" style="font-weight: normal; color: #000; margin-right: 20px;">教务负责人：{$jiaowu.user_name}</h3>
+            <h3 class="box-title pull-right" style="font-weight: normal; color: #000; margin-right: 20px;">
+                <span class="green">评分状态：<?php if ($jw_score){ echo '<span class="green">已评分</span>'; }else{ echo "<span class='red'>未评分</span>"; } ?></span>
+                <span style="color: #000; margin-left: 20px;"> 教务负责人：{$jiaowu.user_name}</span>
+            </h3>
         </div><!-- /.box-header -->
         <div class="box-body">
             <form method="post" action="<?php echo U('Op/public_save'); ?>" id="save_jw_afterOpScore">

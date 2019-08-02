@@ -412,8 +412,8 @@ class SaleController extends BaseController {
         foreach ($list['list'] as $k=>$v){
             foreach ($list['score_list'] as $value){
                 if ($value['op_id'] == $v['op_id']){
-                    $defen          = $value['ysjsx'] + $value['zhunbei'] + $value['peixun'] + $value['genjin'] + $value['yingji'];
-                    $zongfen        = 5*5;
+                    $defen          = $value['AA'] + $value['BB'] + $value['CC'] + $value['DD'] + $value['EE'];
+                    $zongfen        = 5*$value['dimension'];
                     $list['list'][$k]['average']    = (round($defen/$zongfen,4)*100).'%';
                 }
             }
