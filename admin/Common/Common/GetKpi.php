@@ -3370,7 +3370,7 @@ function get_yw_department(){
     }
 
 
-    //项目顾客满意度(以项目为基数)	低于90%；10个工作日处理完成
+    //项目顾客满意度(以项目为基数)	低于80%；10个工作日处理完成
     function get_lg_90percent_list($startTime,$endTime){
         $score_lists                        = get_month_satisfaction($startTime,$endTime); //总评分列表
         $op_ids                             = array_unique(array_column($score_lists,'op_id'));
@@ -3408,10 +3408,9 @@ function get_yw_department(){
             if ($score < 0.8){ //单团满意度得分低于90%计入不合格
                 $unok_list[$value]['score'] = $score;
                 $unok_list[$value]['op_id'] = $value;
-                $unok_list[$value]['input_time'] = $v['input_time'];
+                $unok_list[$value]['input_time'] = M()->table('__TCS_SCORE_USER__ as u')->join('__TCS_SCORE__ as s on s.uid=u.id')->where(array('u.op_id'=>$value))->order('u.id desc')->getField('s.input_time');
             }
         }
-
         return $unok_list;
     }
 
