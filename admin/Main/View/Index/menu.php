@@ -198,7 +198,7 @@
                                 </if>
 
 
-                                <if condition="rolemenu(array('GuideRes/res','GuideRes/addres','GuideRes/reskind','GuideRes/timely'))">
+                                <if condition="rolemenu(array('GuideRes/res','GuideRes/addres','GuideRes/reskind','GuideRes/timely','GuideRes/satisfaction'))">
                                 <li class="treeview  {:on('GuideRes')}">
                                     <a href=""><i class="fa fa-female"></i> 导游辅导员</a>
                                     <ul class="treeview-menu">
