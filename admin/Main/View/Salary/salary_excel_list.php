@@ -366,8 +366,13 @@
             success: function (data) {
                 alert(data.msg);
                 if (data.num == 1) {
-                    set_after_salary_kpi();
-                    //window.location.reload();
+                    var str             = datetime.toString();
+                    var monon           = str.substr(4,2);
+                    if (monon == '03' || monon == '06' || monon == '09' || monon == '12'){
+                        set_after_salary_kpi();
+                    }else{
+                        window.location.reload();
+                    }
                 }
                 return false;
             }
