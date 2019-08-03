@@ -26,8 +26,17 @@
                             <div class="box-body">
                                 <div class="content">
 
-                                    <div class="form-group col-md-4">
+                                    <div class="form-group col-md-12">
                                         <label>项目名称(学校名称 + 地点 + 项目类型)：</label><input type="text" name="info[project]" class="form-control" required />
+                                    </div>
+
+                                    <div class="form-group col-md-4" style="clear: right;">
+                                        <label>行程方案</label>
+                                        <input type="text" name="line_title" class="form-control" style="width: 75%;">
+                                        <input type="hidden" name="line_id">
+                                        <span style="display: inline-block; float: right; margin-top: -31px; margin-left: -10px; width: 20%">
+                                            <a  href="javascript:;" class="btn btn-success btn-sm" onClick="selectmodel()">获取线路</a>
+                                        </span>
                                     </div>
 
                                     <div class="form-group col-md-4">
@@ -257,5 +266,35 @@
             }
             is_or_not_dijie();
         })
+
+        //重新选择模板
+        function selectmodel() {
+            art.dialog.open('<?php echo U('Op/select_product'); ?>',{
+                lock:true,
+                title: '选择行程线路',
+                width:1000,
+                height:500,
+                okValue: '提交',
+                fixed: true,
+                ok: function () {
+                    var origin      = artDialog.open.origin;
+                    var line_data   = this.iframe.contentWindow.gosubmint();
+                    /*var slt = '<h4>行程来源：<a href="<?php echo U('Product/view_line'); ?>&id='+pro[0].id+'" target="" id="travelcom">'+pro[0].title+'</a><input type="hidden" name="line_id" value="'+pro[0].id+'" ></h4>';
+                    $('#task_title').html(slt);
+
+                    $.get("<?php echo U('Op/public_ajax_line'); ?>",{id:pro[0].id}, function(result){
+                        $("#task_timu").html(result);
+                    });*/
+                    var title       = line_data[0].title;
+                    var line_id     = line_data[0].id;
+                    $('input[name="line_title"]').val(title);
+                    $('input[name="line_id"]').val(line_id);
+
+                },
+                cancelValue:'取消',
+                cancel: function () {
+                }
+            });
+        }
 
     </script>

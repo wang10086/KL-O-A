@@ -2140,8 +2140,8 @@ class OpController extends BaseController {
 		if($key)    $where['title'] = array('like','%'.$key.'%');
 		if($mdd)    $where['dest']  = array('like','%'.$mdd.'%');
 		
-		
-        $page = new Page($db->where($where)->count(),25);
+		$pagecount   = $db->where($where)->count();
+        $page = new Page($pagecount,25);
         $this->pages = $pagecount>25 ? $page->show():'';
 		$this->lists = $db->where($where)->limit($page->firstRow . ',' . $page->listRows)->order($this->orders('input_time'))->select();
 		$this->kindlist = M('project_kind')->select();

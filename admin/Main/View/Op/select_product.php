@@ -67,7 +67,6 @@
                 </foreach>										
             </table>
             </form>
-            </div><!-- /.box-body -->
             <div class="box-footer clearfix">
                 <div class="pagestyle">{$pages}</div>
             </div>
