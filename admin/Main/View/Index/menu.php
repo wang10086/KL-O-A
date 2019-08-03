@@ -961,7 +961,7 @@
 
 
 
-                        <if condition="rolemenu(array('Rbac/node','Rbac/audit_config','Rbac/respriv_project','Rbac/respriv_product','Rbac/respriv_science','Rbac/respriv_supplier','Rbac/respriv_guide','Rbac/kpi_quota','Rbac/kpi_users'))">
+                        <if condition="rolemenu(array('Rbac/node','Rbac/audit_config','Rbac/respriv_project','Rbac/respriv_product','Rbac/respriv_science','Rbac/respriv_supplier','Rbac/respriv_guide','Rbac/pdca_auth','Rbac/worder_auth','Finance/jk_audit_user','Op/saleConfig','Rbac/kpi_quota','Rbac/kpi_users'))">
                             <li class="treeview {:on('Rbac/node')} {:on('Rbac/audit_config')} {:on('Rbac/respriv_project')} {:on('Rbac/respriv_product')} {:on('Rbac/respriv_science')} {:on('Rbac/respriv_supplier')} {:on('Rbac/respriv_guide')}">
                                 <a href="javascript:;">
                                     <i class="fa fa-cog"></i>
