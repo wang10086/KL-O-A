@@ -33,7 +33,7 @@
                                     <div class="form-group col-md-4" style="clear: right;">
                                         <label>行程方案</label>
                                         <input type="text" name="line_title" class="form-control" style="width: 75%;">
-                                        <input type="hidden" name="line_id">
+                                        <input type="hidden" name="info[line_id]">
                                         <span style="display: inline-block; float: right; margin-top: -31px; margin-left: -10px; width: 20%">
                                             <a  href="javascript:;" class="btn btn-success btn-sm" onClick="selectmodel()">获取线路</a>
                                         </span>
@@ -156,8 +156,7 @@
                         </div><!-- /.box -->
 
                         <div style="width:100%; text-align:center;">
-                            <button type="submit" class="btn btn-info btn-lg" id="lrpd">我要立项</button>
-                            <!--<a  href="javascript:;" class="btn btn-info btn-lg" id="lrpd" onClick="javascript:save('save_plans','<?php /*echo U('Op/plans'); */?>');">我要立项</a>-->
+                            <button type="button" onclick="save_form('save_plans')" class="btn btn-info btn-lg" id="lrpd">我要立项</button>
                         </div>
 
                     </div><!--/.col (right) -->
@@ -279,22 +278,44 @@
                 ok: function () {
                     var origin      = artDialog.open.origin;
                     var line_data   = this.iframe.contentWindow.gosubmint();
-                    /*var slt = '<h4>行程来源：<a href="<?php echo U('Product/view_line'); ?>&id='+pro[0].id+'" target="" id="travelcom">'+pro[0].title+'</a><input type="hidden" name="line_id" value="'+pro[0].id+'" ></h4>';
-                    $('#task_title').html(slt);
-
-                    $.get("<?php echo U('Op/public_ajax_line'); ?>",{id:pro[0].id}, function(result){
-                        $("#task_timu").html(result);
-                    });*/
                     var title       = line_data[0].title;
                     var line_id     = line_data[0].id;
                     $('input[name="line_title"]').val(title);
-                    $('input[name="line_id"]').val(line_id);
+                    $('input[name="info[line_id]"]').val(line_id);
 
                 },
                 cancelValue:'取消',
                 cancel: function () {
                 }
             });
+        }
+
+        function save_form(id) {
+            var project     = $('input[name="info[project]"]').val().trim();
+            var line_id     = $('input[name="info[line_id]"]').val();
+            var apply_to    = $('select[name="info[apply_to]"]').val();
+            var kind        = $('select[name="info[kind]"]').val();
+            var number      = $('input[name="info[number]"]').val();
+            var departure   = $('input[name="info[departure]"]').val();
+            var days        = $('input[name="info[days]"]').val();
+            var province    = $('select[name="province"]').val();
+            var addr        = $('input[name="addr"]').val();
+            var customer    = $('select[name="info[customer]"]').val();
+            var in_dijie    = $('select[name="info[in_dijie]"]').val();
+
+            if (!project)   { art_show_msg('项目名称不能为空',3); return false; }
+            if (!line_id)   { art_show_msg('线路选择有误',3); return false; }
+            if (!apply_to)  { art_show_msg('适合人群不能为空',3); return false; }
+            if (!kind)      { art_show_msg('项目类型不能为空',3); return false; }
+            if (!kind)      { art_show_msg('项目类型不能为空',3); return false; }
+            if (!number)    { art_show_msg('预计人数不能为空',3); return false; }
+            if (!departure) { art_show_msg('计划出团日期不能为空',3); return false; }
+            if (!days)      { art_show_msg('行程天数不能为空',3); return false; }
+            if (!province)  { art_show_msg('目的地省份不能为空',3); return false; }
+            if (!addr)      { art_show_msg('详细地址不能为空',3); return false; }
+            if (!customer)  { art_show_msg('客户单位不能为空',3); return false; }
+            if (!in_dijie)  { art_show_msg('是否内部地接不能为空',3); return false; }
+            $('#'+id).submit();
         }
 
     </script>

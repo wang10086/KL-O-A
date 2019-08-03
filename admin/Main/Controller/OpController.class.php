@@ -127,10 +127,8 @@ class OpController extends BaseController {
             //$exe_user_name            = I('exe_user_name');
             //$exe_role_ids             = I('exe');
 
-            if(!$info['customer']){
-				$this->error('客户单位不能为空' . $db->getError());	
-				die();	
-			}
+            if (!$info['customer']){ $this->error('客户单位不能为空' . $db->getError()); }
+            if (!$info['line_id']) { $this->error('行程方案不能为空'); }
 
 			if($info){
 				
