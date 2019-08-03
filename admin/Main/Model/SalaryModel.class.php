@@ -97,16 +97,16 @@ class SalaryModel extends Model
         $list                           = M('salary_sign')->where(array('datetime'=>$datetime))->find();
         $sign_db                        = M('user_sign');
         $data                           = array();
-        if (!$list || $list['examine_status']==1){ //待人事提交
+        if (!$list || $list['submission_status']==1){ //待人事提交
             $data['status']             = 1;
-        }elseif ($list['examine_status']==2 && $list['submission_status']==1 && $list['approval_status']==1){ //待财务审核
+        }elseif ($list['submission_status']==2 && $list['examine_status']==1 && $list['approval_status']==1){ //待财务审核
             $data['status']             = 2;
             $data['url1']               = $sign_db->where(array('user_id'=>77))->getField('file_url'); //人事签字
-        }elseif ($list['examine_status']==2 && $list['submission_status']==2 && $list['approval_status']==1){ //待总经理审核
+        }elseif ($list['submission_status']==2 && $list['examine_status']==2 && $list['approval_status']==1){ //待总经理审核
             $data['status']             = 3;
             $data['url1']               = $sign_db->where(array('user_id'=>77))->getField('file_url'); //人事签字
             $data['url2']               = $sign_db->where(array('user_id'=>55))->getField('file_url'); //财务签字
-        }elseif ($list['examine_status']==2 && $list['submission_status']==2 && $list['approval_status']==2) { //已全部签字
+        }elseif ($list['submission_status']==2 && $list['examine_status']==2 && $list['approval_status']==2) { //已全部签字
             $data['status']             = 4;
             $data['url1']               = $sign_db->where(array('user_id'=>77))->getField('file_url'); //人事签字
             $data['url2']               = $sign_db->where(array('user_id'=>55))->getField('file_url'); //财务签字

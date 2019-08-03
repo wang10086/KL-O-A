@@ -294,20 +294,14 @@
                     data: {'individual_tax':content, 'uid':id,'datetime':datetime},
                     dataType: "json", //数据格式
                     success: function (data) {
-                        /*if (data.num == 1) {*/
                             alert(data.msg);
                             return false;
-                        /*}else {
-                            alert(data.msg);
-                            return false;
-                        }*/
                     }
                 });
             });
         }
     });
 
-    /*************************************start*******************************************************/
     //人事提交审核数据
     function salary_excel1_submit(){
         var personWagesLists            = `<?php echo json_encode($personWagesLists); ?>`;
@@ -414,153 +408,6 @@
             }
         });
     }
-    /***************************************end*******************************************************/
-
-    /*//    提交审核数据
-    function salary_excel1_submit(){
-        var count           = new Array();
-        var content         = new Array();
-        var totals_num      = new Array();
-        var url             = "index.php?m=Main&c=Ajax&a=Ajax_salary_details_add";
-        $('.excel_list_money1').each(function(){
-            $(this).children('td').each(function(){
-                var cont    = $(this).text();
-                count       += cont + ',';
-            });
-        });
-        $('.excel_list_money2').each(function(){
-            $(this).children('td').each(function(){
-                var sum    = $(this).text();
-                content    += sum + ',';
-            });
-        });
-        $('.excel_list_money3').each(function(){
-            $(this).children('td').each(function(){
-                var num    = $(this).text();
-                totals_num += num + ',';
-            });
-        });
-
-        $.ajax({
-            type: "POST",
-            url: url, //url
-            data: {
-                'content'       :count,
-                'datetime'      :"<?php echo $time;?>",
-                'coutdepartment':content,
-                'totals_num'    :totals_num,
-            },
-            dataType: "json", //数据格式
-            success: function (data) {
-                if (data.sum == 1) {
-                    alert('提交审核成功！');
-                    window.location.reload();
-                    return false;
-                }
-                if (data.sum == 0) {
-                    alert('提交审核失败！');
-                    return false;
-                }
-            }
-        });
-    }
-
-    //提交批准
-    function salary_excel1_submit1(){
-        var wages_month_id ="";
-        var departmen_id ="";
-        $('.list_salary_detail1').each(function(){
-            var text = $(this).text();
-            wages_month_id +=text+',';
-        });
-        $('.list_salary_detail2').each(function(){
-            var txt = $(this).text();
-            departmen_id +=txt+',';
-        });
-        var count_money_id = $('.list_salary_detail3').text();
-        $.ajax({
-            type: "POST",
-            url:  "index.php?m=Main&c=Ajax&a=Ajax_salary_details_upgrade",
-            data: {
-                'wages_month_id' : wages_month_id,
-                'departmen_id' : departmen_id,
-                'count_money_id' : count_money_id,
-                'status':3,
-            },
-            dataType: "json", //数据格式
-            success: function (data) {
-                if (data.sum == 1) {
-                    alert('提交批准成功!');
-                    window.location.reload();
-                    return false;
-                }
-                if (data.sum == 0) {
-                    alert('提交批准失败!');
-                    return false;
-                }
-            }
-        });
-    }
-
-    //批准
-    function salary_excel1_submit3(){
-        var wages_month_id ="";
-        var departmen_id ="";
-        $('.list_salary_detail1').each(function(){
-            var text = $(this).text();
-            wages_month_id +=text+',';
-        });
-        $('.list_salary_detail2').each(function(){
-            var txt = $(this).text();
-            departmen_id +=txt+',';
-        });
-        var count_money_id = $('.list_salary_detail3').text();
-        $.ajax({
-            type: "POST",
-            url:  "index.php?m=Main&c=Ajax&a=Ajax_salary_details_upgrade",
-            data: {
-                'wages_month_id' : wages_month_id,
-                'departmen_id' : departmen_id,
-                'count_money_id' : count_money_id,
-                'status':4,
-            },
-            dataType: "json", //数据格式
-            success: function (data) {
-                if (data.sum == 1) {
-                    alert('批准成功!');
-                    window.location.reload();
-                    return false;
-                }
-                if (data.sum == 0) {
-                    alert('批准失败!');
-                    return false;
-                }
-            }
-        });
-    }
-    //驳回
-    function salary_excel1_submit2(){
-        $.ajax({
-            type: "POST",
-            url:  "index.php?m=Main&c=Ajax&a=post_error",
-            data: {
-                'datetime' : datetime,
-                'status':1,
-            },
-            dataType: "json", //数据格式
-            success: function (data) {
-                if (data.sum == 1) {
-                    alert('驳回成功!');
-                    window.location.reload();
-                    return false;
-                }
-                if (data.sum == 0) {
-                    alert('驳回失败!');
-                    return false;
-                }
-            }
-        });
-    }*/
 
 
     //表格单双变色

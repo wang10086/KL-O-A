@@ -947,7 +947,7 @@ class AjaxController extends Controller {
         $companyLists['createtime']         = NOW_TIME;
         $companyLists['examine_user_id']    = session('userid');
         $companyLists['status']             = 2;
-        $cres                   = M('salary_count_money')->add($companyLists);
+        $cres                               = M('salary_count_money')->add($companyLists);
         if ($cres) $c_num++;
         if ($p_num && $d_num && $c_num){
             $remsg['num']       = 1;
@@ -958,275 +958,6 @@ class AjaxController extends Controller {
         }
         $this->ajaxReturn($remsg);
     }
-
-    //保存提交审核数据(刘金垒)
-    /*public function Ajax_salary_details_add(){
-
-        $user_id = $_SESSION['userid'];
-        if($user_id==77 || $user_id==1){
-        }else{
-            $sum                            = 0;
-            $msg                            = "您的权限不足!请联系管理员！";
-            echo json_encode(array('sum' => $sum, 'msg' => $msg));die;
-        }
-        $datetime                           = trim($_POST['datetime']);//表数据时间
-        if($datetime=="" || $datetime ==null || $datetime==false){
-            $datetime                       = datetime(date('Y'),date('m'),date('d'),1);
-        }
-        $content                        = trim($_POST['content']);//去除左右空字符 提交申请表数据
-        $coutdepartment                 = trim($_POST['coutdepartment']);//去除左右空字符 提交申请表部门数据
-        $total                          = trim($_POST['totals_num']);//去除左右空字符 提交申请表所有数据
-        $count                          = explode(",",str_replace(array("¥"),"",$content));//去除特殊字符并分隔
-        $partment                       = explode(",",str_replace(array("¥"),"",$coutdepartment));//去除特殊字符并分隔
-        $tol                            = explode(",",str_replace(array("¥"),"",$total));//去除特殊字符并分隔
-        array_pop($count);                array_pop($partment);        array_pop($tol);
-        $cont                           = count($count);//计算数量
-        $partment_num                   = count($partment);//计算数量
-        $pan = M('salary_wages_month')->where('datetime='.$datetime)->find();
-        if($pan){
-            $sum                        = 0;
-            $msg                        = "$datetime!";
-            echo json_encode(array('sum' => $sum, 'msg' => $msg));die;
-        }
-        for($i=0;$i<$cont/42;$i++){//计算没多少条一个数组
-            for($num=$i*42;$num<42*$i+42;$num++){//计算分组字段的长度
-                $array[$i][$num%42] = $count[$num];//[数组数量][多少条的数据]
-            }
-        }
-        foreach($array as $key => $val){
-            trim($val);
-            $add['account_id']          = $val[0];      $add['user_name']           = $val[1];      $add['post_name']       = $val[2];      $add['department']          = $val[3];
-            $add['standard']            = $val[4];      $add['basic_salary']        = $val[5];      $add['withdrawing']     = $val[6];      $add['performance_salary']  = $val[7];
-            $add['Achievements_withdrawing']= $val[8];  $add['total']               = $val[9];      $add['bonus']           = $val[10];     $add['housing_subsidy']     = $val[11];
-            $add['Other']               = $val[12];     $add['Should_distributed']  = $val[13];     $add['medical_care']    = $val[14];     $add['pension_ratio']       = $val[15];
-            $add['unemployment']        = $val[16];     $add['accumulation_fund']   = $val[17];     $add['insurance_Total'] = $val[18];     $add['tax_counting']        = $val[20];
-            $add['personal_tax']        = $val[21];     $add['summoney']            = $val[22];     $add['Labour']          = $val[23];     $add['real_wages']          = $val[24];
-            $add['salary_id']           = $val[25];     $add['attendance_id']       = $val[26];     $add['bonus_id']        = $val[27];     $add['income_token']        = $val[28];
-            $add['insurance_id']        = $val[29];     $add['subsidy_id']          = $val[30];     $add['withholding_token']= $val[31];    $add['total_score_show']    = $val[32];
-            $add['show_qa_score']       = $val[33];     $add['sum_total_score']     = $val[34];     $add['target']          = $val[35];     $add['complete']            = $val[36];
-            $add['yearend']             = $val[37];     $add['Subsidy']             = $val[38];     $add['datetime']        = $datetime;    $add['welfare']             = $val[39];
-            $add['labour_id']           = $val[40];     $add['specialdeduction_id'] = $val[41];     $add['specialdeduction']= $val[19];
-            $add['status']              = 2;            $add['createtime']          = time();
-            $add                            = array_filter($add);
-            $month = M('salary_wages_month')->add($add);
-            if(!$month){
-                $sum                        = 0;
-                $msg                        = "数据提交失败!请重新提交!";
-                echo json_encode(array('sum' => $sum, 'msg' => $msg));die;
-            }else{
-                $status['status'] = 2;
-                $salary_w                   = M('salary')->where(array('id='.$add['salary_id']))->save($status);
-                $attendance_w               = M('salary_attendance')->where(array('id='.$add['attendance_id']))->save($status);
-
-                $generate_month             = datetime(date('Y'),date('m'),date('d'),1);//获取当前年月
-                $guide_id                   = user_table($add['account_id']);
-                $bonus_extract              = Acquisition_Team_Subsidy($generate_month,$guide_id['guide_id']);//带团补助
-                $bonussave['status']        = 2;
-                $bonussave['extract']       = $bonus_extract;
-                $bonus_w                    = M('salary_bonus')->where(array('id='.$add['bonus_id']))->save($bonussave);
-
-                $income_w                   = M('salary_income')->where(array('income_token='.$add['income_token']))->save($status);
-                $insurance_w                = M('salary_insurance')->where(array('id='.$add['insurance_id']))->save($status);
-                $subsidy_w                  = M('salary_subsidy')->where(array('id='.$add['subsidy_id']))->save($status);
-                $labour_w                   = M('salary_labour')->where(array('id='.$add['labour_id']))->save($status);
-                $withholding_w              = M('salary_withholding')->where(array('token='.$add['withholding_token']))->save($status);
-                $specialdeduction           = M('salary_specialdeduction')->where(array('id'=>$add['specialdeduction_id']))->save($status);
-            }
-        }
-        for($n=0;$n<$partment_num/23;$n++){//计算没多少条一个数组
-            for($sum=$n*23;$sum<23*$n+23;$sum++){//计算分组字段的长度
-                $arr[$n][$sum%23] = $partment[$sum];//[数组数量][多少条的数据]
-            }
-        }
-        foreach($arr as $k => $v){
-            $where['name']           = $v[0]; $where['department']        = $v[1]; $where['standard_salary']= $v[2];    $where['basic']       = $v[3];
-            $where['withdrawing']    = $v[4]; $where['performance_salary']= $v[5]; $where['count_money']    = $v[6];    $where['total']       = $v[7];
-            $where['bonus']          = $v[8]; $where['housing_subsidy']   = $v[9]; $where['Other']          = $v[10];   $where['Should']      = $v[11];
-            $where['care']           = $v[12];$where['pension']           = $v[13];$where['unemployment']   = $v[14];   $where['accumulation']= $v[15];
-            $where['insurance_Total']= $v[16];$where['specialdeduction']  = $v[17];$where['tax_counting']   = $v[18];   $where['personal_tax']= $v[19];
-            $where['summoney']      = $v[20]; $where['Labour']            = $v[21];$where['real_wages']     = $v[22];   $where['datetime']    = $datetime;
-            $where['createtime']    = time(); $where['status']         = 2;
-            $depart_tol              = M('salary_departmen_count')->add($where);
-            if(!$depart_tol){
-                $sum                 = 0;
-                $msg                 = "数据提交失败!请重新提交!";
-                echo json_encode(array('sum' => $sum, 'msg' => $msg));die;
-            }
-        }
-        $save['name']               = $tol[0]; $save['standard_salary']   = $tol[1];  $save['basic']       = $tol[2];  $save['withdrawing']    = $tol[3];
-        $save['performance_salary'] = $tol[4]; $save['count_money']       = $tol[5];  $save['total']       = $tol[6];  $save['bonus']          = $tol[7];
-        $save['housing_subsidy']    = $tol[8]; $save['Other']             = $tol[9];  $save['Should']      = $tol[10]; $save['care']           = $tol[11];
-        $save['pension']            = $tol[12];$save['unemployment']      = $tol[13]; $save['accumulation']= $tol[14]; $save['insurance_Total']= $tol[15];
-        $save['specialdeduction']   = $tol[16];$save['tax_counting']      = $tol[17]; $save['personal_tax']= $tol[18]; $save['summoney']       = $tol[19];
-        $save['Labour']             = $tol[20];$save['real_wages']        = $tol[21]; $save['datetime']    = $datetime;
-        $save['createtime']         = time();  $save['status']            = 2;
-        $save['examine_user_id']    = $user_id;
-        $money = M('salary_count_money')->add($save);
-        if($money){
-            $_SESSION['salary_satus'] = '';
-            $sum                    = 1;
-            $msg                    = "提交审核成功!";
-            echo json_encode(array('sum' => $sum, 'msg' => $msg));die;
-        }
-        $sum                        = 0;
-        $msg                        = "数据提交失败!请重新提交!";
-        echo json_encode(array('sum' => $sum, 'msg' => $msg));die;
-    }*/
-
-    /**
-     * Ajax_salary_sign 签字验证(刘金垒)
-     */
-    /*public function Ajax_salary_sign(){
-        $userid['password']                 = md5(trim($_POST['pwd']));
-        $status                             = trim($_POST['status']);
-        $userid['user_id']                  = $_SESSION['userid'];
-        $datetime                           = trim($_POST['datetime']);
-        $sign                               = M('user_sign')->where($userid)->find();
-        if($sign){
-            if($status==0){
-                $add['createtime']          = time();
-                $add['submission_user_id']  = $userid['user_id'];
-                $add['datetime']            = $datetime;
-                $add['submission_status']   = 2;
-            }elseif($status==1){
-                $add['examine_user_id']     = $userid['user_id'];
-                $add['examine_status']      = 2;
-            }elseif($status==2){
-                $time                       = M('salary_sign')->where('datetime='.$datetime)->delete();
-                if($time){
-                    echo json_encode(array('sum' => 1));die;
-                }else{
-                    echo json_encode(array('sum' => 0));die;
-                }
-            }elseif($status==3){
-                $add['approval_user_id']    = $userid['user_id'];
-                $add['approval_status']     = 2;
-            }
-            $time                           = M('salary_sign')->where('datetime='.$datetime)->find();
-
-            if($time){
-                $sign1                      = M('salary_sign')->where('id='.$time['id'])->save($add);
-            }else{
-                $sign1                      = M('salary_sign')->add($add);
-            }
-            if($sign1){
-                echo json_encode(array('sum' => 1));die;
-            }else{
-                echo json_encode(array('sum' => 0));die;
-            }
-        }else{
-            echo json_encode(array('sum' => 0));die;
-        }
-    }*/
-
-    //财务审核通过签字（刘金垒）
-    /*public function Ajax_salary_details_upgrade(){
-        $user_id = (int)$_SESSION['userid'];
-        if($user_id==11 ||$user_id==55 || $user_id==1){
-        }else{
-            $sum                            = 0;
-            $msg                            = "您的权限不足!请联系管理员！";
-            echo json_encode(array('sum' => $sum, 'msg' => $msg));die;
-        }
-        $wages_month_id                     = explode(',',trim($_POST['wages_month_id']));
-        $departmen_id                       = explode(',',trim($_POST['departmen_id']));
-        $count_money_id                     = trim($_POST['count_money_id']);
-        $status ['status']                  = trim($_POST['status']);
-        array_pop($wages_month_id);array_pop($departmen_id);
-        foreach($wages_month_id as $key =>$val ){
-            $id ['id']                      = $val;
-            $oa_salary_wages_month          = M('salary_wages_month')->where($id)->save($status);
-            //修改个税
-            $wages_mont1                    = M('salary_wages_month')->where($id)->find();
-            if($wages_mont1 && $user_id==11){
-                $user_table                  = M('salary_individual_tax')->where('account_id='.$wages_mont1['account_id'])->order('id DESC')->find();
-                if($user_table && $user_table['statu']==1){
-                    $save1['statu']         = 2;
-                    M('salary_individual_tax')->where('id='.$user_table['id'])->save($save1);
-                }
-            }
-        }
-        foreach($departmen_id as $k => $v ){
-            $where ['id']                   = $v;
-            $departmen_count                = M('salary_departmen_count')->where($where)->save($status);
-        }
-        if($user_id==11){
-            $status['approval_time']        = time();
-            $status['approval_user_id']     = $user_id;
-        }elseif($user_id==55){
-            $status['submission_time']      = time();
-            $status['submission_user_id']   = $user_id;
-        }
-        $count_money                        = M('salary_count_money')->where('id='.$count_money_id)->save($status);
-        if($count_money){
-            $sum                            = 1;
-            $_SESSION['salary_satus']       = '';
-            if($user_id==11){$msg = "批准成功!";}elseif($user_id==55){$msg = "提交批准成功!";}
-        }else{
-            if($user_id==11){$msg = "批准失败!";}elseif($user_id==55){$msg = "提交批准失败!";}
-            $sum                            = 0;
-        }
-        echo json_encode(array('sum' =>1, 'msg' => $msg));die;
-    }*/
-
-    //驳回(刘金垒)
-    /*
-     public function post_error(){
-        $datetime['datetime']           = trim($_POST['datetime']);
-        $status ['status']              = $_POST['status'];
-        $wages_query                    =  M('salary_wages_month')->where($datetime)->select();
-        foreach($wages_query as $key => $val){
-            $att['id']                  =  $val['attendance_id'];
-            $stat['status']             = 1;
-            $bonus['id']                = $val['bonus_id'];
-            $income['income_token']     = $val['income_token'];
-            $labou['id']                = $val['labour_id'];
-            $subsid['id']               = $val['subsidy_id'];
-            $withh['withholding_token'] = $val['withholding_token'];
-            $specialdeduction_id        = $val['specialdeduction_id'];
-
-            if(!empty($att['id'])){
-                $table1 = M('salary_attendance')->where($att)->save($stat);
-                if(!$table1){}else{}
-            }
-            if(!empty($bonus['id'])){
-                $table2 = M('oa_salary_bonus')->where($bonus)->save($stat);
-                if(!$table2){}else{}
-            }
-            if(!empty($income['income_token'])){
-                $table3 = M('oa_salary_income')->where($income)->save($stat);
-                if(!$table3){}else{}
-            }
-            if(!empty($labou['id'])){
-                $table4 = M('oa_salary_labour')->where($labou)->save($stat);
-                if(!$table4){}else{}
-            }
-            if(!empty($subsid['id'])){
-                $table5 = M('oa_salary_subsidy')->where($subsid)->save($stat);
-                if(!$table5){}else{}
-            }
-            if(!empty($withh['withholding_token'])){
-                $table6 = M('oa_salary_withholding')->where($withh)->save($stat);
-                if(!$table6){}else{}
-            }
-            if ($specialdeduction_id){
-                M('salary_specialdeduction')->where(array('id'=>$specialdeduction_id))->save($stat);
-            }
-        }
-        $wages_month_del                = M('salary_wages_month')->where($datetime)->delete();
-        $departmen_count                = M('salary_departmen_count')->where($datetime)->delete();
-        $count_money                    = M('salary_count_money')->where($datetime)->delete();
-        if($count_money && $departmen_count && $wages_month_del){
-            $sum                        = 1;
-            $msg                        = "驳回成功!";
-            echo json_encode(array('sum' => $sum, 'msg' => $msg));die;
-        }else{
-            $sum                        = 0;
-            $msg                        = "驳回失败!";
-            echo json_encode(array('sum' => $sum, 'msg' => $msg));die;
-        }
-    }
-     */
 
     /**
      * 工资签字审核
@@ -1239,29 +970,29 @@ class AjaxController extends Controller {
         $datetime                               = trim($_POST['datetime']);
         $sign                                   = M('user_sign')->where($userid)->find();
         if($sign){
-            if ($status==2){ //驳回
-                $res                            = $db->where(array('datetime'=>$datetime))->delete();
-            }else{ //批准
-                $data                           = array();
-                if ($status==0){ //人事提交
-                    $data['examine_user_id']    = $userid['user_id'];
-                    $data['examine_status']     = 2;
-                }elseif ($status==1){ //财务审核通过
-                    $data['submission_user_id'] = $userid['user_id'];
-                }elseif ($status==3){
-                    $data['approval_user_id']   = $userid['user_id'];
-                }
 
-                $list                           = $db->where(array('datetime'=>$datetime))->find();
-                if ($list){
-                    $res                        = $db->where(array('datetime'=>$datetime))->save($data);
-                }else{
-                    $data['createtime']         = NOW_TIME;
-                    $data['datetime']           = $datetime;
-                    $res                        = $db->add($data);
-                }
+            $data                               = array();
+            if ($status==0){ //人事提交
+                $data['submission_user_id']     = $userid['user_id'];
+                $data['submission_status']      = 2;
+            }elseif ($status==1){ //财务审核通过
+                $data['examine_user_id']        = $userid['user_id'];
+                $data['examine_status']         = 2;
+            }elseif ($status==3){
+                $data['approval_user_id']       = $userid['user_id'];
+                $data['approval_status']        = 2;
             }
-            if ($res){
+
+            $list                               = $db->where(array('datetime'=>$datetime))->find();
+            if ($list){
+                $res                            = $db->where(array('datetime'=>$datetime))->save($data);
+            }else{
+                $data['createtime']             = NOW_TIME;
+                $data['datetime']               = $datetime;
+                $res                            = $db->add($data);
+            }
+
+            if ($res || $status==2){ //$status==2 驳回
                 $sum                            = 1;
             }else{
                 $sum                            = 0;
@@ -1301,22 +1032,12 @@ class AjaxController extends Controller {
             $save['approval_time']      = NOW_TIME;
         }
         $res3                           = M('salary_count_money')->where($where)->save($save); //公司合计
-        $sign                           = array();
-        if ($status==3) { //财务审核
-            $sign['submission_user_id'] = session('userid');
-            $sign['submission_status']  = 2;
-        }elseif ($status==4) { //总经理审核
-            $sign['approval_user_id']   = session('userid');
-            $sign['approval_status']    = 2;
-        }
-        $res4                           = M('salary_sign')->where(array('datetime'=>$datetime))->save($sign); //签字
-        //if ($res1 && $res2 && $res3 && $res4){
-            //set_after_salary_kpi();
-            $_SESSION['salary_satus']   = '';
+
+        if ($res1 && $res2 && $res3){
+            session('salary_satus',null);
             $data['num']                = 1;
             $data['msg']                = "审核成功!";
-        //}
-         //set_after_salary_kpi($datetime);
+        }
 
         $this->ajaxReturn($data);
     }
