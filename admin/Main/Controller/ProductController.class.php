@@ -1224,7 +1224,7 @@ class ProductController extends BaseController {
         $this->pageTitle                = '标准化管理';
         $id                             = I('id');
         $this->title('标准化产品');
-        $pin                            = I('pin');
+        //$pin                            = I('pin');
         $year                           = date('Y');
         $apply_times                    = get_little_title($year);
 
@@ -1253,7 +1253,7 @@ class ProductController extends BaseController {
         //$this->apply                    = C('APPLY_TO');
         $this->kinds                    = get_project_kinds();
         $this->apply_times              = $apply_times;
-        $this->pin                      = $pin;
+        //$this->pin                      = $pin;
         $this->id                       = $id;
 
         $citys_db                       = M('citys');

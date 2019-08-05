@@ -87,17 +87,6 @@
                                         </div>
                                     </div>
 
-                                    <!--<div class="form-group col-md-12">
-                                        <label><a href="javascript:;" onClick="selectkinds()">选择适用项目类型</a> <span style="color:#999999">(选择后您可以点击删除)</span></label>
-                                        <div id="pro_kinds_text">
-
-                                        <foreach name="deptlist" item="v">
-                                             <span class="unitbtns" title="点击删除该选项"><input type="hidden" name="business_dept[]" value="{$v.id}"><button type="button" class="btn btn-default btn-sm">{$v.name}</button></span>
-                                        </foreach>
-
-                                        </div>
-                                    </div>-->
-
                                     <div class="form-group col-md-12"></div>
 
                                     <div class="form-group col-md-12">

@@ -46,16 +46,6 @@
                                         </select>
                                     </div>
 
-                                    <!--<div class="form-group col-md-6">
-                                        <label>实施省份</label>
-                                        <input type="text" name="info[title]" id="title" value="{$row.title}"  class="form-control" required />
-                                    </div>
-
-                                    <div class="form-group col-md-6">
-                                        <label>实施城市</label>
-                                        <input type="text" name="info[title]" id="title" value="{$row.title}"  class="form-control" required />
-                                    </div>-->
-
                                     <div class="form-group col-md-4">
                                         <label>所在省份：</label>
                                         <select id="s_province" class="form-control" name="info[province]" required>
@@ -83,81 +73,6 @@
                                         <input type="text" name="info[]" id="" value="{$row.}"  class="form-control" required />
                                     </div>
 
-                                    <!--<div class="form-group col-md-4">
-                                        <label>所在区县：</label>
-                                        <select id="s_country" class="form-control" name="info[country]">
-                                            <option class="form-control" value="">请先选择城市</option>
-                                            <?php /*if ($partner){ */?>
-                                                <foreach name="citys" key="k" item="v">
-                                                    <option class="form-control" value="{$k}" <?php /*if ($partner && $partner['country']==$k) echo "selected"; */?>>{$citys[$k]}</option>
-                                                </foreach>
-                                            <?php /*} */?>
-                                        </select>
-                                    </div>
-
-                                    <div class="form-group col-md-4">
-                                        <label>是否是标准化产品：</label>
-                                        <select class="form-control" name="info[standard]" required>
-                                            <option value="" selected disabled>==请选择==</option>
-                                            <foreach name="standard" key="k" item="v">
-                                                <option value="{$k}" <?php /*if ($row['standard'] == $k) echo 'selected'; */?>>{$v}</option>
-                                            </foreach>
-                                        </select>
-                                    </div>
-
-                                    <div class="form-group col-md-4">
-                                        <label>适用人群</label>
-                                        <select name="info[age]" class="form-control">
-                                            <foreach name="apply" key="k" item="v">
-                                                <option value="{$k}" <?php /*if ($k == $row['age']) echo 'selected'; */?>>{$v}</option>
-                                            </foreach>
-                                        </select>
-                                    </div>
-
-                                    <div class="form-group col-md-4">
-                                        <label>科学领域</label>
-                                        <select  class="form-control"  name="info[subject_field]">
-                                            <option value="0">请选择</option>
-                                            <foreach name="subject_fields" key="k" item="v">
-                                                <option value="{$k}" <?php /*if ($row && ($k == $row['subject_field'])) echo ' selected'; */?> >{$v}</option>
-                                            </foreach>
-                                        </select>
-                                    </div>
-
-                                    <div class="form-group col-md-4">
-                                        <label>来源</label>
-                                        <select  class="form-control"  name="info[from]">
-                                            <option value="0">请选择</option>
-                                            <foreach name="product_from" key="k" item="v">
-                                                <option value="{$k}" <?php /*if ($row && ($k == $row['from'])) echo ' selected'; */?> >{$v}</option>
-                                            </foreach>
-                                        </select>
-                                    </div>
-
-                                    <div class="form-group col-md-4">
-                                        <label>核算模式</label>
-                                        <select  class="form-control"  name="info[reckon_mode]" id="reckon_mode">
-                                            <option value="" selected disabled>==请选择==</option>
-                                            <foreach name="reckon_mode" key="k" item="v">
-                                                <option value="{$k}" <?php /*if ($row['reckon_mode'] == $k) echo 'selected'; */?> >{$v}</option>
-                                            </foreach>
-                                        </select>
-                                    </div>
-
-                                    <div class="form-group col-md-4">
-                                        <label>参考成本价</label>
-                                        <input class="form-control" type="text" name="info[sales_price]" value="{$row.sales_price}" />
-                                    </div>
-
-                                    <div class="form-group col-md-12">
-                                        <label>配套物资清单</label>
-                                        <input class="form-control" type="text" name="info[matching]" value="{$row.matching}" />
-                                    </div>-->
-
-                                    <div class="">
-
-                                    </div>
-
                                     <div class="form-group col-md-12">
                                         <span class="lm_c black">适用项目类型</span>
                                         <foreach name="kinds" key="k" item="v">
@@ -173,111 +88,8 @@
                                     <div class="form-group">&nbsp;</div>
                                 </div><!-- /.box-body -->
                             </div><!-- /.box -->
-                            
-                            
+
                             <!--<div class="box box-warning">
-                                <div class="box-header">
-                                    <h3 class="box-title">包含产品模块</h3>
-                                </div>
-                                <div class="box-body">
-                                    <div class="content">
-                                        <div class="content" style="padding-top:0px;">
-                                            <div class="form-group col-md-12" id="productlist" style="display:block;">
-                                                <table class="table table-striped">
-                                                    <thead>
-                                                    <tr>
-                                                        <th width="100">模块</th>
-                                                        <th width="80">类别</th>
-                                                        <th width="120">科学领域</th>
-                                                        <th width="80">来源</th>
-                                                        <th width="120">适合年龄</th>
-                                                        <th width="100">核算方式</th>
-                                                        <th width="100">参考价</th>
-                                                        <th width="20">&nbsp;</th>
-                                                        <th width="50">数量</th>
-                                                        <th width="100">参考费用</th>
-                                                        <th width="80">删除</th>
-                                                    </tr>
-                                                    </thead>
-                                                    <tbody id="product_tbody">
-                                                    <foreach name="product_need" item="v">
-                                                        <tr class="expense" id="product_id_{$v.id}">
-                                                            <td><input type="hidden" name="resetid[2000{$v.id}][id]" value="{$v.id}" >
-                                                                <input type="hidden" name="costacc[20000{$v.id}][id]" value="{$v.id}">
-                                                                <input type="hidden" name="costacc[20000{$v.id}][title]" value="{$v.title}">
-                                                                <input type="hidden" name="costacc[20000{$v.id}][product_id]" value="{$v.product_id}">
-                                                                <input type="hidden" name="costacc[20000{$v.id}][total]" value="{$v.total}">
-                                                                <a href="javascript:;" onClick="open_product({$v.product_id},{$v.product.title})">{$v.title}</a></td>
-                                                            <td>{$product_type[$v[ptype]]}</td>
-                                                            <td>{$subject_fields[$v[subject_field]]}</td>
-                                                            <td>{$product_from[$v[from]]}</td>
-                                                            <td>{$v.age_list}</td>
-                                                            <td>{$reckon_mode[$v[reckon_mode]]}</td>
-                                                            <td><input type="text" name="costacc[20000{$v.id}][unitcost]" placeholder="价格" value="{$v.unitcost}" class="form-control min_input cost" readonly /></td>
-                                                            <td><span>X</span></td>
-                                                            <td><input type="text" name="costacc[20000{$v.id}][amount]" placeholder="数量" value="{$v.amount}" class="form-control min_input amount" /></td>
-                                                            <td class="total">&yen;{$v.total}</td>
-                                                            <td><a href="javascript:;" class="btn btn-danger btn-flat" onclick="delbox('product_id_{$v.id}')">删除</a></td></tr>
-                                                        </tr>
-                                                    </foreach>
-                                                    </tbody>
-                                                    <tfoot>
-                                                    <tr>
-                                                        <td align="left" colspan="11">
-                                                            <a href="javascript:;" class="btn btn-success btn-sm" style="margin-left:-8px;"  onClick="selectproduct()"><i class="fa fa-fw  fa-plus"></i> 选择产品模块</a>
-                                                        </td>
-                                                    </tr>
-                                                    </tfoot>
-                                                </table>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="box box-warning">
-                                <div class="box-header">
-                                    <h3 class="box-title">包含资源模块</h3>
-                                </div>
-                                <div class="box-body">
-                                    <div class="content">
-                                        <div class="content" style="padding-top:0px;">
-                                            <div class="form-group col-md-12" id="reslist" style="display:block;">
-                                                <table class="table table-striped">
-                                                    <thead>
-                                                    <tr>
-                                                        <th width="50%">资源名称</th>
-                                                        <th width="18%">性质</th>
-                                                        <th width="18%">所在地</th>
-                                                        <th width="80">删除</th>
-                                                    </tr>
-                                                    </thead>
-                                                    <tbody id="res_tbody">
-                                                    <foreach name="res_need" item="v">
-                                                        <tr class="expense" id="res_id_{$v.id}">
-                                                            <td><input type="hidden" name="res_ids[2000{$v.id}][res_id]" value="{$v.id}" >
-                                                                <a href="javascript:;" onClick="open_res({$v.res_id},{$v.res.title})">{$v.title}</a></td>
-                                                            <td>{$in_cas[$v[in_cas]]}</td>
-                                                            <td>{$v[diqu]}</td>
-                                                            <td><a href="javascript:;" class="btn btn-danger btn-flat" onclick="delbox('res_id_{$v.id}')">删除</a></td></tr>
-                                                        </tr>
-                                                    </foreach>
-                                                    </tbody>
-                                                    <tfoot>
-                                                    <tr>
-                                                        <td align="left" colspan="11">
-                                                            <a href="javascript:;" class="btn btn-success btn-sm" style="margin-left:-8px;"  onClick="selectres()"><i class="fa fa-fw  fa-plus"></i> 选择资源模块</a>
-                                                        </td>
-                                                    </tr>
-                                                    </tfoot>
-                                                </table>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>-->
-
-                            <div class="box box-warning">
                                 <div class="box-header">
                                     <h3 class="box-title">产品内容</h3>
                                 </div>
@@ -308,18 +120,78 @@
                                                     </foreach>
                                                     </tbody>
                                                     <tfoot>
-                                                    <!--<tr>
-                                                        <td align="left" colspan="11">
-                                                            <a href="javascript:;" class="btn btn-success btn-sm" style="margin-left:-8px;"  onClick="selectres()"><i class="fa fa-fw  fa-plus"></i> 选择资源模块</a>
-                                                        </td>
-                                                    </tr>-->
+
                                                     </tfoot>
                                                 </table>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
+                            </div>-->
+                                <style>
+                                    #standardProduct{ padding:0; margin-top:-20px;}
+                                    #standardProduct .form-control{ width:110px; float:left; margin-right:10px; border-radius:0;}
+                                    #standardProduct .unitbox{ float:left; clear:none; border:none; padding:0; line-height:42px;}
+                                    #standardProduct .title{ width:22px; float:left; height:30px; line-height:30px; margin-left:-30px; text-align:right; position:relative; z-index:100;}
+                                    #standardProduct .userlist { width:100%; height:auto !important; float:left; clear:both; padding-bottom:15px; border-bottom:1px solid #cccccc; margin-top:15px;}
+                                    #standardProduct .btn{ padding:7px 12px; font-size:12px;}
+                                    #standardProduct td{ line-height:34px;}
+                                    #material_val{ display:none}
+                                    #standardProduct .material_name{ width:17%;margin-right: 10px;}
+                                    #standardProduct .longinput{ width:90px;}
+                                </style>
+
+                                <div class="box box-warning">
+                                    <div class="box-header">
+                                        <h3 class="box-title">产品内容</h3>
+                                    </div>
+                                    <div class="box-body">
+                                        <div class="content">
+                                            <div class="content" style="padding-top:0px;">
+                                                <div id="standardProduct">
+                                                    <div class="userlist" id="material_id">
+                                                        <div class="unitbox material_name">时间</div>
+                                                        <div class="unitbox material_name">课程主题</div>
+                                                        <div class="unitbox material_name">课程内容</div>
+                                                        <div class="unitbox material_name">可选模块</div>
+                                                        <div class="unitbox material_name">备注</div>
+                                                    </div>
+                                                    <?php if($material){ ?>
+                                                        <foreach name="material" key="k" item="v">
+                                                            <div class="userlist" id="material_id_{$v.id}">
+                                                                <span class="title"><?php echo $k+1; ?></span>
+                                                                <input type="hidden" name="resid[888{$v.id}][id]" value="{$v.id}" >
+                                                                <input type="text" class="form-control material_name" name="material[888{$v.id}][material]" value="{$v.material}">
+                                                                <input type="text" class="form-control material_name" name="material[888{$v.id}][spec]" value="{$v.spec}">
+                                                                <input type="text" class="form-control material_name" name="material[888{$v.id}][amount]" value="{$v.amount}">
+                                                                <input type="text" class="form-control material_name" name="material[888{$v.id}][unitprice]" value="{$v.unitprice}">
+                                                                <input type="text" class="form-control total" name="material[888{$v.id}][total]" value="{$v.total}" onfocus="selectproduct()">
+                                                                <input type="text" class="form-control material_name" name="material[888{$v.id}][remarks]" value="{$v.remarks}">
+                                                                <a href="javascript:;" class="btn btn-danger btn-flat" onclick="delbox('material_id_{$v.id}')">删除</a>
+                                                            </div>
+                                                        </foreach>
+                                                    <?php }else{ ?>
+                                                        <div class="userlist" id="material_id">
+                                                            <span class="title">1</span>
+                                                            <input type="text" class="form-control material_name" name="material[0][material]">
+                                                            <input type="text" class="form-control material_name" name="material[0][spec]">
+                                                            <input type="text" class="form-control material_name" name="material[0][amount]">
+                                                            <input type="text" class="form-control material_name" name="material[0][unitprice]" onfocus="selectproduct()">
+                                                            <input type="text" class="form-control material_name" name="material[0][remarks]">
+                                                            <a href="javascript:;" class="btn btn-danger btn-flat" onclick="delbox('material_id')">删除</a>
+                                                        </div>
+                                                    <?php } ?>
+                                                </div>
+                                                <div id="material_val">0</div>
+
+                                                <a href="javascript:;" class="btn btn-success btn-sm" style="margin-top:15px;" onClick="add_material()"><i class="fa fa-fw fa-plus"></i> 新增内容</a>
+
+                                                <div class="form-group">&nbsp;</div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
                             
                             
                             <div class="box box-warning">
@@ -328,27 +200,6 @@
                                 </div>
                                 <div class="box-body">
                                     <div class="content">
-                                        <!--<div class="form-group col-md-12">
-                                            <label class="upload_label">上传原理及实施要求</label>
-                                            {:upload_m('theory_file','theory_files',$theory,'上传原理及实施要求','theory_box','theory','文件名称')}
-                                            <span style="line-height:30px; margin-left:15px; margin-top:15px; color:#999999;">请选择小于80M的文件，支持JPG / GIF / PNG / DOC / XLS / PDF / ZIP / RAR文件类型</span>
-                                            <div id="theory_box"></div>
-                                        </div>
-
-                                        <div class="form-group col-md-12">
-                                            <label class="upload_label">上传图片</label>
-                                            {:upload_m('pic_file','pic_files',$pic,'上传图片','pic_box','pic','图片名称')}
-                                            <span style="line-height:30px; margin-left:15px; margin-top:15px; color:#999999;">请选择不超过3张图片文件</span>
-                                            <div id="pic_box"></div>
-                                        </div>
-
-                                        <div class="form-group col-md-12">
-                                        <label class="upload_label">上传相关视频</label>
-                                        {:upload_m('video_file','video_files',$video,'&nbsp;上传视频资料','video_box','video','视频名称')}
-                                        <span style="line-height:30px; margin-left:15px; margin-top:15px; color:#999999;">请选择小于80M的文件，支持JPG / GIF / PNG / DOC / XLS / PDF / ZIP / RAR文件类型</span>
-                                        <div id="video_box"></div>
-                                        </div>-->
-
                                     	<div class="form-group col-md-12">
                                             <table id="flist" class="table" style="margin-top:10px;">
                                             	<tr>
@@ -385,7 +236,8 @@
 
 
                             <div id="formsbtn">
-                            	<button type="submit" class="btn btn-info btn-lg" id="lrpd">保存</button>
+                            	<!--<button type="submit" class="btn btn-info btn-lg" id="lrpd">保存</button>-->
+                            	<button type="button" onclick="art_show_msg('加班开发中...',3)" class="btn btn-info btn-lg" id="lrpd">保存</button>
                             </div>
                             </form> 
                         </div><!--/.col (right) -->
@@ -402,9 +254,6 @@
 <script type="text/javascript"> 
 
 	$(document).ready(function() {
-
-        //art_show_msg('开发中...',2);
-
 		var uploader = new plupload.Uploader({
 			runtimes : 'html5,flash,silverlight,html4',
 			browse_button : 'pickupfile', // you can pass in id...
@@ -486,6 +335,31 @@
             $('input[rel=' + fid +']').remove();
 		}
 	}
+
+    //新增物资
+    function add_material(){
+        var i = parseInt($('#material_val').text())+1;
+
+        var html = '<div class="userlist" id="material_'+i+'">' +
+            '<span class="title"></span>' +
+            '<input type="text" class="form-control material_name" name="material['+i+'][material]">' +
+            '<input type="text" class="form-control material_name" name="material['+i+'][spec]" value="">' +
+            '<input type="text" class="form-control material_name" name="material['+i+'][amount]">' +
+            '<input type="text" class="form-control material_name" name="material['+i+'][unitprice]" onfocus="selectproduct()">' +
+            '<input type="text" class="form-control material_name" name="material['+i+'][remarks]">' +
+            '<a href="javascript:;" class="btn btn-danger btn-flat" onclick="delbox(\'material_'+i+'\')">删除</a>' +
+            '</div>';
+        $('#standardProduct').append(html);
+        $('#material_val').html(i);
+        orderno();
+    }
+
+    //编号
+    function orderno(){
+        $('#standardProduct').find('.title').each(function(index, element) {
+            $(this).text(parseInt(index)+1);
+        });
+    }
 	
 	//移除
 	function delbox(obj){
@@ -550,38 +424,6 @@
                 $(this).parent().parent().find('.total').html('&yen;'+accMul(cost,amount));
                 $(this).parent().parent().find('.totalval').val(accMul(cost,amount));
             });
-        });
-    }
-
-    //选择资源模块
-    function selectres() {
-        art.dialog.open("<?php echo U('Product/public_select_res',array('opid'=>$opid)); ?>",{
-            lock:true,
-            title: '选择产品模块',
-            width:1000,
-            height:500,
-            okValue: '提交',
-            fixed: true,
-            ok: function () {
-                var origin = artDialog.open.origin;
-                var res = this.iframe.contentWindow.gosubmint();
-                var res_html = '';
-                for (var j = 0; j < res.length; j++) {
-                    if (res[j].id) {
-                        var i = parseInt(Math.random()*100000)+j;
-                        var res_ids = '<input type="hidden" name="res_ids['+i+'][res_id]" value="'+res[j].id+'">';
-                        res_html += '<tr class="expense" id="res_'+i+'">' +
-                            '<td>'+res_ids+ '<a href="javascript:;" onClick="">'+res[j].title+'</a></td>' +
-                            '<td>'+res[j].in_cas+'</td>' +
-                            '<td>'+res[j].diqu+'</td>' +
-                            '<td><a href="javascript:;" class="btn btn-danger btn-flat" onclick="delbox(\'res_'+i+'\')">删除</a></td></tr>';
-                    };
-                }
-                $('#reslist').show();
-                $('#reslist').find('#res_tbody').append(res_html);
-            },
-            cancelValue:'取消',
-            cancel: function () {}
         });
     }
 

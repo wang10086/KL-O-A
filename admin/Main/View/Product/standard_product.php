@@ -24,7 +24,8 @@
                                     <div class="box-tools pull-right">
                                     	<a href="javascript:;" class="btn btn-info btn-sm" onclick="javascript:opensearch('searchtext',600,160);"><i class="fa fa-search"></i> 搜索</a>
                                         <if condition="rolemenu(array('Product/add_standard_product'))">
-                                            <a href="{:U('Product/add_standard_product',array('pin'=>$pin))}" class="btn btn-sm btn-success"><i class="fa fa-plus"></i> 新建标准化产品</a>
+                                            <!--<a href="{:U('Product/add_standard_product',array('pin'=>$pin))}" class="btn btn-sm btn-success"><i class="fa fa-plus"></i> 新建标准化产品</a>-->
+                                            <a href="{:U('Product/add_standard_product')}" class="btn btn-sm btn-success"><i class="fa fa-plus"></i> 新建标准化产品</a>
                                         </if>
                                     </div>
                                 </div><!-- /.box-header -->
