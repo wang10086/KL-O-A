@@ -178,10 +178,10 @@
                                         </div><!-- /.box-header --><br>
                                         <h5 style="color:#FF3333">业务人员提成</h5><br/>
                                         <div class="form-group col-md-4 viwe">
-                                            <p>目标任务(季度)：<?PHP echo $wages_list['target'];?> (元)</p>
+                                            <p>目标任务(季度)：<?PHP echo $royalty['target'];?> (元)</p>
                                         </div>
                                         <div class="form-group col-md-4 viwe">
-                                            <p>完成(季度)：<?PHP echo sprintf("%.2f",$info['kpi']['complete']);?> (元)</p>
+                                            <p>完成(季度)：<?PHP echo sprintf("%.2f",$royalty['quarter_profit']);?> (元)</p>
                                         </div>
                                         <div class="form-group col-md-4 viwe">
                                             <p>业绩提成(季度)：<?PHP echo $wages_list['total'];?> (元)</p>

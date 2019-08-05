@@ -1807,6 +1807,8 @@ class SalaryController extends BaseController {
         $subsidy_list                           = M('salary_subsidy')->where(array('id'=>array('in',$wages_list['subsidy_id'])))->find(); //补贴
         $income_list                            = M('salary_income')->where(array('income_token'=>array('in',$wages_list['income_token'])))->select(); //其他收入
         $withholding_list                       = M('salary_withholding')->where(array('token'=>array('in',$wages_list['withholding_token'])))->select(); //代扣代缴
+        $salary                                 = M('salary')->where(array('account_id'=>$account_list['id']))->order('id desc')->find();
+        $royalty                                = $mod->get_royalty($account_list,$wages_list['datetime'],$salary['standard_salary']); //目标,提成
 
         $this->pdca_id                          = M('pdca')->where(array('tab_user_id'=>$wages_list['account_id'],'month'=>$wages_list['datetime']))->getField();
         $this->department                       = M('salary_department')->getField('id,department',true);
@@ -1822,6 +1824,7 @@ class SalaryController extends BaseController {
         $this->subsidy_list                     = $subsidy_list; //补贴
         $this->income_list                      = $income_list;  //其他收入
         $this->withholding_list                 = $withholding_list; //代扣代缴
+        $this->royalty                          = $royalty;
         $this->display();
     }
 }
