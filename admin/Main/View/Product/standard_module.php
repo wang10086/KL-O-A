@@ -24,18 +24,10 @@
                                     <h3 class="box-title">{$_action_}</h3>
                                     <div class="box-tools pull-right">
                                     	<a href="javascript:;" class="btn btn-info btn-sm" onclick="javascript:opensearch('searchtext',600,160);"><i class="fa fa-search"></i> 搜索</a>
-                                        <?php if ($pro){ ?>
-                                            <a href="{:U('Product/add',array('business_dept'=>$pro))}" class="btn btn-sm btn-danger"><i class="fa fa-plus"></i> 新建产品模块</a>
-                                        <?php } ?>
+                                        <a href="{:U('Product/add_standard_module')}" class="btn btn-sm btn-success"><i class="fa fa-plus"></i> 新建标准化模块</a>
                                     </div>
                                 </div><!-- /.box-header -->
                                 <div class="box-body">
-                                <!--<div class="btn-group" id="catfont">
-                                   <a href="{:U('Product/index')}" class="btn <?php /*if($pro==''){ echo 'btn-info';}else{ echo 'btn-default';} */?>">全部产品</a>
-                                    <foreach name="business_dept" key="k" item="v">
-                                        <a href="{:U('Product/index',array('pro'=>$k))}" class="btn <?php /*if($pro==$k){ echo 'btn-info';}else{ echo 'btn-default';} */?>">{$v}</a>
-                                    </foreach>
-                                </div>-->
                                 <table class="table table-bordered dataTable fontmini" id="tablelist" style="margin-top:10px;">
                                     <tr role="row" class="orders" >
                                         <th class="sorting" data="p.id">ID</th>
@@ -44,13 +36,7 @@
                                         <th class="sorting" data="p.subject_field" style="width: 100px;">科学领域</th>
                                         <th class="sorting" data="p.from">来源</th>
                                         <th class="sorting" data="p.age">适用年龄</th>
-                                        <?php /*if ($pro){ */?><!--
-                                            <th class="sorting">核算方式</th>
-                                        <?php /*}else{ */?>
-                                            <th class="sorting">业务类型</th>
-                                        --><?php /*} */?>
                                         <th class="sorting">参考单价</th>
-                                        <!--<th class="sorting">数量</th>-->
                                         <th class="sorting" data="p.sales_price">参考成本价</th>
                                         <th class="sorting" data="p.input_uname">研发人员</th>
                                         <th>审批状态</th>
@@ -77,9 +63,6 @@
                                                     {$row['dept']}
                                                 <?php } ?>
                                             </td>
-
-                                            <!--<td></td>
-                                            <td></td>-->
                                             <td>{$row.sales_price}</td>
                                             <td>{$row.input_uname}</td>
                                             <?php
@@ -95,7 +78,7 @@
                                             
                                             <if condition="rolemenu(array('Product/add'))">
                                             <td class="taskOptions">
-                                            <button onClick="javascript:window.location.href='{:U('Product/add',array('id'=>$row['id'],'business_dept'=>$pro))}';" title="修改" class="btn btn-info btn-smsm"><i class="fa fa-pencil"></i></button>
+                                            <button onClick="javascript:window.location.href='{:U('Product/add_standard_module',array('id'=>$row['id']))}';" title="修改" class="btn btn-info btn-smsm"><i class="fa fa-pencil"></i></button>
                                             </td>
                                             </if>
                                             <if condition="rolemenu(array('Product/del'))">

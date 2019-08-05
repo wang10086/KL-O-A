@@ -6,7 +6,7 @@
                 <section class="content-header">
                     <h1>
                         产品模块管理
-                        <small>{$_pagedesc_}</small>
+                        <small>{$_action_}</small>
                     </h1>
                     <ol class="breadcrumb">
                         <li><a href="{:U('Index/index')}"><i class="fa fa-home"></i> 首页</a></li>
@@ -21,16 +21,16 @@
                          <!-- right column -->
                         <div class="col-md-12">
                             <!-- general form elements disabled -->
-                            <form method="post" action="{:U('Product/add')}" name="myform" id="myform">
+                            <form method="post" action="{:U('Product/public_save')}" name="myform" id="myform">
                             <div class="box box-warning">
                                 <div class="box-header">
-                                    <h3 class="box-title">编辑产品模块</h3>
+                                    <h3 class="box-title">{$_action_}</h3>
                                 </div><!-- /.box-header -->
                                 <div class="box-body">
                                     <input type="hidden" name="dosubmit" value="1" />
+                                    <input type="hidden" name="savetype" value="2" />
                                     <input type="hidden" name="referer" value="<?php echo $_SERVER['HTTP_REFERER']; ?>" />
-                                    <input type="hidden" name="business_dept" value="{$business_dept}">
-                                    <input type="hidden" name="info[standard]" value="2">  <!--非标准化-->
+                                    <input type="hidden" name="info[standard]" value="1" />  <!--标准化-->
                                     <if condition="$row"><input type="hidden" name="id" value="{$row.id}" /></if>
                                     <input type="hidden" name="info[input_uname]" value="<?php echo $row['input_uname'] ? $row['input_uname'] : session('nickname'); ?>" class="form-control"  />
 
@@ -78,24 +78,23 @@
                                         </div>
                                     </div>
 
-                                    <?php if ($pro_kind){ ?>
-                                        <div class="form-group col-md-12">
-                                        <label>项目类型</label>
-                                            <div>
-                                                <foreach name="kinds" item="v">
-                                                    <span class="mr20" style="display: inline-block;line-height: 30px;"><input type="radio" name="pro"  value="{$v['id']}" <?php if($row['business_dept']==$v['id'])  echo "checked"; ?>> &nbsp;{$v['name']}</span>
-                                                </foreach>
-                                            </div>
+                                    <div class="form-group col-md-12">
+                                    <label>项目类型</label>
+                                        <div>
+                                            <foreach name="kinds" item="v">
+                                                <span class="mr20" style="display: inline-block;line-height: 30px;"><input type="radio" name="business_dept"  value="{$v['id']}" <?php if($row['business_dept']==$v['id'])  echo "checked"; ?>> &nbsp;{$v['name']}</span>
+                                            </foreach>
                                         </div>
-                                    <?php } ?>
+                                    </div>
+
                                     <!--<div class="form-group col-md-12">
                                         <label><a href="javascript:;" onClick="selectkinds()">选择适用项目类型</a> <span style="color:#999999">(选择后您可以点击删除)</span></label>
                                         <div id="pro_kinds_text">
-                                        
+
                                         <foreach name="deptlist" item="v">
                                              <span class="unitbtns" title="点击删除该选项"><input type="hidden" name="business_dept[]" value="{$v.id}"><button type="button" class="btn btn-default btn-sm">{$v.name}</button></span>
                                         </foreach>
-                                        
+
                                         </div>
                                     </div>-->
 
@@ -105,34 +104,6 @@
                                         <label>产品简介</label>
                                         <?php echo editor('content',$row['content']); ?>
                                     </div>
-
-                                    <!-- <div class="form-group col-md-12">
-                                    <table class="table table-striped" id="supplierlist" >
-                                    	<thead>
-                                            <tr role="row">
-                                                <th>资源名称</th>
-                                                <th width="100">资源类型</th>
-                                                <th width="200">所在地</th>
-                                                <th width="60">删除</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                        	<foreach name="supplier" key="k" item="v">
-                                            <tr id="supplier_{$v.id}">
-                                                <td><input type="hidden" name="res[]" value="{$v.id}"><a href="{:U('ScienceRes/res_view',array('id'=>$v['id']))}" target="_blank">{$v.title}</a></td>
-                                                <td><?php echo $reskind[$v['kind']]; ?></td>
-                                                <td>{$v.diqu}</td>
-                                                <td><a href="javascript:;" class="btn btn-danger btn-flat" onclick="delbox('supplier_{$v.id}')">删除</a></td>
-                                            </tr>
-                                            </foreach>
-                                        </tbody>
-                                    </table>
-                                    </div>
-                                    
-                                    <div class="form-group col-md-12" >
-                                        <a href="javascript:;" class="btn btn-success btn-sm" style="margin-top:15px;" onclick="add_supplier()"><i class="fa fa-fw fa-plus"></i> 关联科普资源</a>
-                                    </div>-->
-                                    
                                     <div class="form-group">&nbsp;</div>
                                     
                                 </div><!-- /.box-body -->
@@ -245,7 +216,6 @@
                             <div class="box box-warning">
                                 <div class="box-header">
                                     <h3 class="box-title">上传资料</h3>
-                                    
                                 </div>
                                 <div class="box-body">
                                     <div class="content">

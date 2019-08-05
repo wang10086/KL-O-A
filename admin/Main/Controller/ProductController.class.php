@@ -17,16 +17,17 @@ class ProductController extends BaseController {
     public function index(){
         $this->title('产品模块列表');
 		
-		$key          = I('key');
-		$pro          = I('pro');
-        $type         = I('type');
-        $fields       = I('subject_field');
-        $from         = I('from');
-		$age          = I('age');
+		$key                                    = I('key');
+		$pro                                    = I('pro');
+        $type                                   = I('type');
+        $fields                                 = I('subject_field');
+        $from                                   = I('from');
+		$age                                    = I('age');
 
-		$db           = M('product');
-		$this->pro    = $pro;
-		$where        = array();
+		$db                                     = M('product');
+		$this->pro                              = $pro;
+		$where                                  = array();
+        $where['standard']                      = 2; //非标准化
         if($key)    $where['p.title']           = array('like','%'.$key.'%');
         if($pro)    $where['p.business_dept']   = array('like','%'.$pro.'%');
         if($age)    $where['p.age']             = array('like','%'.$age.'%');
@@ -35,40 +36,40 @@ class ProductController extends BaseController {
         if($fields) $where['p.subject_field']   = array('eq',$fields);
         $where['p.disting']                     = 0; //0=>老数据, 1=>新数据
 
-		$business_depts = C('BUSINESS_DEPT');
-        $page = new Page($db->table('__PRODUCT__ as p')->where($where)->count(), P::PAGE_SIZE);
-        $this->pages = $page->show();
-		$lists = $db->table('__PRODUCT__ as p')->field('p.*')->where($where)->limit($page->firstRow . ',' . $page->listRows)->order($this->orders('p.id'))->select();
-        $kinds = M('project_kind')->getField('id,name');
-        $ages  = C('AGE_LIST');
+		$business_depts                         = C('BUSINESS_DEPT');
+        $page                                   = new Page($db->table('__PRODUCT__ as p')->where($where)->count(), P::PAGE_SIZE);
+        $this->pages                            = $page->show();
+		$lists                                  = $db->table('__PRODUCT__ as p')->field('p.*')->where($where)->limit($page->firstRow . ',' . $page->listRows)->order($this->orders('p.id'))->select();
+        $kinds                                  = M('project_kind')->getField('id,name');
+        $ages                                   = C('AGE_LIST');
         foreach($lists as $k=>$v){
-			$depts          = explode(',',$v['business_dept']);
-			$deptval        = array();
+			$depts                              = explode(',',$v['business_dept']);
+			$deptval                            = array();
 			foreach($depts as $kk=>$vv){
-				$deptval[]  = $kinds[$vv];
+				$deptval[]                      = $kinds[$vv];
 			}
-            $age            = explode(',',$v['age']);
-            $in_ages        = array();
+            $age                                = explode(',',$v['age']);
+            $in_ages                            = array();
             foreach($age as $kk=>$vv){
-                $in_ages[]  = $ages[$vv];
+                $in_ages[]                      = $ages[$vv];
             }
-			$lists[$k]['dept']      = implode(',',$deptval);
-			$lists[$k]['in_ages']   = implode(',',$in_ages);
+			$lists[$k]['dept']                  = implode(',',$deptval);
+			$lists[$k]['in_ages']               = implode(',',$in_ages);
 		}
 
-		$this->lists    = $lists;
-        $this->ptype    = C('PRODUCT_TYPE');
-        $this->pfrom    = C('PRODUCT_FROM');
-        $this->kinds    = $kinds;
-        $this->ages     = C('AGE_LIST');
-        $this->reckon_mode      = C('RECKON_MODE');
-        $this->subject_fields   = C('SUBJECT_FIELD');
+		$this->lists                            = $lists;
+        $this->ptype                            = C('PRODUCT_TYPE');
+        $this->pfrom                            = C('PRODUCT_FROM');
+        $this->kinds                            = $kinds;
+        $this->ages                             = C('AGE_LIST');
+        $this->reckon_mode                      = C('RECKON_MODE');
+        $this->subject_fields                   = C('SUBJECT_FIELD');
 
         //导航栏
-        $kind_ids       = array(54,55,56,60,61,62);
-        $where          = array();
-        $where['id']    = array('in',$kind_ids);
-        $this->business_dept = M('project_kind')->where($where)->getField('id,name');
+        $kind_ids                               = array(54,55,56,60,61,62);
+        $where                                  = array();
+        $where['id']                            = array('in',$kind_ids);
+        $this->business_dept                    = M('project_kind')->where($where)->getField('id,name');
 
 		$this->display('index');
     }
@@ -1218,14 +1219,6 @@ class ProductController extends BaseController {
         $this->display();
     }
 
-    //标准化模块
-    public function standard_module(){
-
-        $this->pageTitle                = '标准化管理';
-        $this->title('标准化模块');
-        $this->display();
-    }
-
     //新增/编辑标准化产品
     public function add_standard_product(){
         $this->pageTitle                = '标准化管理';
@@ -1353,44 +1346,171 @@ class ProductController extends BaseController {
         $this->display('select_res');
     }
 
+    //标准化模块
+    public function standard_module(){
+        $this->pageTitle                = '标准化管理';
+        $this->title('标准化模块');
+
+        $key                                    = I('key');
+        $pro                                    = I('pro');
+        $type                                   = I('type');
+        $fields                                 = I('subject_field');
+        $from                                   = I('from');
+        $age                                    = I('age');
+
+        $db                                     = M('product');
+        $this->pro                              = $pro;
+        $where                                  = array();
+        $where['standard']                      = 1; //标准化
+        if($key)    $where['p.title']           = array('like','%'.$key.'%');
+        if($pro)    $where['p.business_dept']   = array('like','%'.$pro.'%');
+        if($age)    $where['p.age']             = array('like','%'.$age.'%');
+        if($type)   $where['p.type']            = array('eq',$type);
+        if($from)   $where['p.from']            = array('eq',$from);
+        if($fields) $where['p.subject_field']   = array('eq',$fields);
+        $where['p.disting']                     = 0; //0=>老数据, 1=>新数据
+
+        $page                                   = new Page($db->table('__PRODUCT__ as p')->where($where)->count(), P::PAGE_SIZE);
+        $this->pages                            = $page->show();
+        $lists                                  = $db->table('__PRODUCT__ as p')->field('p.*')->where($where)->limit($page->firstRow . ',' . $page->listRows)->order($this->orders('p.id'))->select();
+        $kinds                                  = M('project_kind')->getField('id,name');
+        $ages                                   = C('AGE_LIST');
+        foreach($lists as $k=>$v){
+            $depts                              = explode(',',$v['business_dept']);
+            $deptval                            = array();
+            foreach($depts as $kk=>$vv){
+                $deptval[]                      = $kinds[$vv];
+            }
+            $age                                = explode(',',$v['age']);
+            $in_ages                            = array();
+            foreach($age as $kk=>$vv){
+                $in_ages[]                      = $ages[$vv];
+            }
+            $lists[$k]['dept']                  = implode(',',$deptval);
+            $lists[$k]['in_ages']               = implode(',',$in_ages);
+        }
+
+        $this->lists                            = $lists;
+        $this->ptype                            = C('PRODUCT_TYPE');
+        $this->pfrom                            = C('PRODUCT_FROM');
+        $this->kinds                            = $kinds;
+        $this->ages                             = C('AGE_LIST');
+        $this->reckon_mode                      = C('RECKON_MODE');
+        $this->subject_fields                   = C('SUBJECT_FIELD');
+
+        //导航栏
+        $kind_ids                               = array(54,55,56,60,61,62);
+        $where                                  = array();
+        $where['id']                            = array('in',$kind_ids);
+        $this->business_dept                    = M('project_kind')->where($where)->getField('id,name');
+        $this->display();
+    }
+
+
+    public function add_standard_module(){
+        $this->title('标准化模块');
+        $id                  = I('id');
+        $business_dept       = I('business_dept');
+        $this->row           = M('product')->find($id);
+        $this->business_dept = $business_dept?$business_dept:$this->row['business_dept'];
+        if (($business_dept != $this->row['business_dept'] && $this->row['business_dept']) || (!$this->row['business_dept'] && !$business_dept)){
+            $this->pro_kind  = 1;
+        }
+
+        if($this->row){
+            if ($this->row['att_id']) {
+                $theory       = get_res(P::UPLOAD_THEORY,$id);
+                $pic          = get_res(P::UPLOAD_PIC,$id);
+                $video        = get_res(P::UPLOAD_VIDEO,$id);
+                $this->theory = array_column($theory,'id');
+                $this->pic    = array_column($pic,'id');
+                $this->video  = array_column($video,'id');
+            } else {
+                $this->theory = false;
+                $this->pic    = false;
+                $this->video  = false;
+            }
+
+            $this->material = M('product_material')->where(array('product_id'=>$id))->select();
+
+            $depts = explode(',',$this->row['business_dept']);
+            $kinds = M('project_kind')->getField('id,name');
+            $deptlist = array();
+            foreach($depts as $k=>$v){
+                $deptlist[$k]['id'] = $v;
+                $deptlist[$k]['name'] = $kinds[$v];
+            }
+
+            $ages = explode(',',$this->row['age']);
+            $ageval = C('AGE_LIST');
+            $agelist = array();
+            foreach($ages as $k=>$v){
+                $agelist[$k]['id'] = $v;
+                $agelist[$k]['name'] = $ageval[$v];
+            }
+
+
+            $sp = array();
+            $sp['id'] = array('IN',$this->row['supplier']);
+            $this->supplier = M('cas_res')->where($sp)->select();
+            $this->reskind = M('reskind')->getField('id,name', true);
+            $this->deptlist = unique_arr($deptlist);
+            $this->agelist  = unique_arr($agelist);
+
+
+        }
+
+        //物料关键字
+        $key =  M('material')->field('id,pinyin,material')->where(array('asset'=>0))->select();
+        if($key) $this->keywords =  json_encode($key);
+
+        $this->product_from   = C('PRODUCT_FROM');
+        $this->product_type   = C('PRODUCT_TYPE');
+        $this->subject_fields = C('SUBJECT_FIELD');
+        $this->projects       = M('project')->where(array('status'=>1))->select();
+        $this->kinds          = M('project_kind')->field('id,name')->select();
+
+        $this->display();
+    }
+
     public function public_save(){
-        $savetype                       = I('savetype');
+        $savetype                               = I('savetype');
         if (isset($_POST['dosubmit'])){
             if ($savetype == 1){ //保存标准化产品
-                $db                     = M('product');
-                $id                     = I('id',0);
-                $info                   = I('info');
-                $apply_time             = trim(I('apply_time'));
-                $info['age']            = I('age');
-                $business_dept          = I('business_dept');
-                $info['business_dept']  = implode(',',$business_dept);
-                $info['content']        = trim(I('content'));
-                $product_model          = I('costacc'); //包含产品模块
-                $cas_res_ids            = I('res_ids'); //包含资源模块
-                $resfiles               = I('resfiles');
-                $resetid                = I('resetid');
-                $info['att_id']         = implode(',',$resfiles);
-                $info['apply_year']     = $apply_time?substr($apply_time,0,4):0;
-                $info['apply_time']     = $apply_time?substr($apply_time,-1):0;
-                $info['disting']        = 1; //标准化数据
+                $db                             = M('product');
+                $id                             = I('id',0);
+                $info                           = I('info');
+                $apply_time                     = trim(I('apply_time'));
+                $info['age']                    = I('age');
+                $business_dept                  = I('business_dept');
+                $info['business_dept']          = implode(',',$business_dept);
+                $info['content']                = trim(I('content'));
+                $product_model                  = I('costacc'); //包含产品模块
+                $cas_res_ids                    = I('res_ids'); //包含资源模块
+                $resfiles                       = I('resfiles');
+                $resetid                        = I('resetid');
+                $info['att_id']                 = implode(',',$resfiles);
+                $info['apply_year']             = $apply_time?substr($apply_time,0,4):0;
+                $info['apply_time']             = $apply_time?substr($apply_time,-1):0;
+                $info['disting']                = 1; //标准化数据
 
-                $cas                    = array();
+                $cas                            = array();
                 foreach ($cas_res_ids as $k=>$v){
-                    $cas[]              = $v['res_id'];
+                    $cas[]                      = $v['res_id'];
                 }
-                $info['cas_res_ids']    = implode(',',$cas);
+                $info['cas_res_ids']            = implode(',',$cas);
                 if ($id){
-                    $where              = array();
-                    $where['id']        = $id;
-                    $res                = $db->where($where)->save($info);
-                    $pid                = $id;
+                    $where                      = array();
+                    $where['id']                = $id;
+                    $res                        = $db->where($where)->save($info);
+                    $pid                        = $id;
                 }else{
-                    $info['input_time'] = NOW_TIME;
-                    $info['input_user'] = session('userid');
-                    $info['input_uname']= session('nickname');
-                    $res                = $db ->add($info);
-                    $pid                = $res;
-                    $a = $this->request_audit(P::REQ_TYPE_PRODUCT_NEW, $pid);
+                    $info['input_time']         = NOW_TIME;
+                    $info['input_user']         = session('userid');
+                    $info['input_uname']        = session('nickname');
+                    $res                        = $db ->add($info);
+                    $pid                        = $res;
+                    $this->request_audit(P::REQ_TYPE_PRODUCT_NEW, $pid);
                 }
 
                 if ($res){
@@ -1418,6 +1538,107 @@ class ProductController extends BaseController {
                     $this->success('数据保存成功');
                 }else{
                     $this->error('数据保存失败');
+                }
+            }
+
+            if ($savetype == 2){ //保存标准化模块
+                $attdb                          = M('attachment');
+                $info                           = I('info');
+                $referer                        = I('referer');
+                $material                       = I('material');
+                $resid                          = I('resid');
+                $business_dept                  = I('business_dept');   //模块类型
+                $age                            = I('age');
+                $res                            = I('res');
+                $info['content']                = stripslashes($_POST['content']);
+                $info['business_dept']          = $business_dept;
+                $info['age']                    = implode(',',array_unique($age));
+                $info['supplier']               = implode(',',array_unique($res));
+                $info['disting']                = 0;
+                $info['business_dept']          = $business_dept;
+                $id                             = I('id');
+
+                //上传文件
+                $theory                         = I('theory');  //原理及实施要求
+                $pic                            = I('pic');     //图片
+                $video                          = I('video');   //视频
+                $theory_ids                     = $theory['id'];
+                $pic_ids                        = $pic['id'];
+                $video_ids                      = $video['id'];
+                //$resfiles                     = array_merge($theory_ids,$pic_ids,$video_ids);
+                $resfiles                       = array();
+                foreach ($theory_ids as $k=>$v){
+                    $resfiles[]                 = $v;
+                }
+                foreach ($pic_ids as $k=>$v){
+                    $resfiles[]                 = $v;
+                }
+                foreach ($video_ids as $k=>$v){
+                    $resfiles[]                 = $v;
+                }
+                $aids                           = implode(',', $resfiles);
+                $info['att_id']                 = $aids?$aids:'';
+
+                if ($id) {
+                    $isadd                      = $id;
+                    //修改
+                    M('product')->where("id=$id")->data($info)->save();
+
+                    //修改物资信息
+                    $delid                      = array();
+                    foreach($material as $k=>$v){
+                        $data                   = array();
+                        $data                   = $v;
+                        $data['material']       = trim($v['material']);
+                        if($data['material']){
+                            if($resid && $resid[$k]['id']){
+                                $edits          = M('product_material')->data($data)->where(array('id'=>$resid[$k]['id']))->save();
+                                $delid[]        = $resid[$k]['id'];
+                            }else{
+                                $data['product_id']             = $id;
+                                $delid[]        = M('product_material')->add($data);
+                            }
+                        }
+                    }
+
+                    $where                      = array();
+                    $where['product_id']        = $id;
+                    if($delid) $where['id']     = array('not in',$delid);
+                    $del                        = M('product_material')->where($where)->delete();
+
+                } else {
+
+                    //保存
+                    $info['input_user']         = session('userid');
+                    $info['input_uname']        = session('nickname');
+                    $info['input_time']         = time();
+
+                    $isadd                      = M('product')->add($info);
+                    $this->request_audit(P::REQ_TYPE_PRODUCT_NEW, $isadd);
+
+                    //保存物资信息
+                    foreach($material as $k=>$v){
+                        $data                   = array();
+                        $data                   = $v;
+                        $data['product_id']     = $isadd;
+                        if($data['material']){
+                            M('product_material')->add($data);
+                        }
+                    }
+
+                }
+
+                if ($isadd){
+                    //保存上传标题图片
+                    save_res(P::UPLOAD_PIC,$isadd,$pic,1);
+                    //保存上传附件(原理及实施要求)
+                    save_res(P::UPLOAD_THEORY,$isadd,$theory,1);
+                    //保存视频文件
+                    save_res(P::UPLOAD_VIDEO,$isadd,$video,1);
+
+                    $this->success('保存成功！', $referer);
+                }else{
+                    $this->success('保存失败！');
                 }
             }
         }
