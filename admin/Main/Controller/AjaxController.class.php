@@ -971,25 +971,27 @@ class AjaxController extends Controller {
         $sign                                   = M('user_sign')->where($userid)->find();
         if($sign){
 
-            $data                               = array();
-            if ($status==0){ //人事提交
-                $data['submission_user_id']     = $userid['user_id'];
-                $data['submission_status']      = 2;
-            }elseif ($status==1){ //财务审核通过
-                $data['examine_user_id']        = $userid['user_id'];
-                $data['examine_status']         = 2;
-            }elseif ($status==3){
-                $data['approval_user_id']       = $userid['user_id'];
-                $data['approval_status']        = 2;
-            }
+            if (in_array($status,array(0,1,3))){
+                $data                               = array();
+                if ($status==0){ //人事提交
+                    $data['submission_user_id']     = $userid['user_id'];
+                    $data['submission_status']      = 2;
+                }elseif ($status==1){ //财务审核通过
+                    $data['examine_user_id']        = $userid['user_id'];
+                    $data['examine_status']         = 2;
+                }elseif ($status==3){
+                    $data['approval_user_id']       = $userid['user_id'];
+                    $data['approval_status']        = 2;
+                }
 
-            $list                               = $db->where(array('datetime'=>$datetime))->find();
-            if ($list){
-                $res                            = $db->where(array('datetime'=>$datetime))->save($data);
-            }else{
-                $data['createtime']             = NOW_TIME;
-                $data['datetime']               = $datetime;
-                $res                            = $db->add($data);
+                $list                               = $db->where(array('datetime'=>$datetime))->find();
+                if ($list){
+                    $res                            = $db->where(array('datetime'=>$datetime))->save($data);
+                }else{
+                    $data['createtime']             = NOW_TIME;
+                    $data['datetime']               = $datetime;
+                    $res                            = $db->add($data);
+                }
             }
 
             if ($res || $status==2){ //$status==2 驳回
@@ -1090,7 +1092,7 @@ class AjaxController extends Controller {
         $title   = '您的'.$datetime['datetime'].'月的系统工资被'.cookie('nickname').'驳回，请及时处理!';
         $content = '您的'.$datetime['datetime'].'月的系统工资被'.cookie('nickname').'驳回，请及时处理!';
         $url     = U('Salary/salary_excel_list',array('datetime'=>$datetime['datetime']));
-        $user    = 77; //王茜
+        $user    = '[77]'; //王茜
         $roleid  = '';
         send_msg($uid,$title,$content,$url,$user,$roleid);
 
