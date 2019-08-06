@@ -181,7 +181,19 @@ class WorderController extends BaseController{
             if($v['status']==-1)    $lists[$k]['sta'] = '拒绝或无效工单';
             if($v['status']==-2)    $lists[$k]['sta'] = '已撤销';
             if($v['status']==-3)    $lists[$k]['sta'] = '<span class="red">需要做二次修改</span>';
+
+            if (in_array($v['status'],array('-1','-2'))){
+                if ($v['status']==-1)   $lists[$k]['com_stu']   = '<font color="#999">拒绝或无效工单</font>';
+                if ($v['status']==-2)   $lists[$k]['com_stu']   = '<font color="#999">已撤销</font>';
+            }else{
+                if ($v['ini_confirm_time'] <= $v['plan_complete_time']){
+                    $lists[$k]['com_stu'] = '<span class="green">未超时</span>';
+                }else{
+                    $lists[$k]['com_stu'] = '<span class="red">已超时</span>';
+                }
+            }
         }
+
         $this->lists        = $lists;
         $this->worder_type  = $worder_type;
         $this->pin          = $pin;

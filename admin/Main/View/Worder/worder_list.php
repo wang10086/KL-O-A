@@ -23,7 +23,7 @@
                                     <h3 class="box-title">工单计划列表</h3>
                                     <div class="box-tools pull-right">
                                     	 <a href="javascript:;" class="btn btn-info btn-sm" onclick="javascript:opensearch('searchtext',800,160);"><i class="fa fa-search"></i> 搜索</a>
-                                         <a href="{:U('Worder/new_worder')}" class="btn btn-sm btn-danger"><i class="fa fa-plus"></i> 新建工单</a>
+                                         <a href="{:U('Worder/new_worder')}" class="btn btn-sm btn-success"><i class="fa fa-plus"></i> 新建工单</a>
                                     </div>
                                 </div><!-- /.box-header -->
                                 <div class="box-body">
@@ -45,9 +45,9 @@
                                         <th class="sorting" width="80"  data="assign_name">执行人姓名</th>
                                         <th class="sorting" width="80" data="status">工单状态</th>
                                         <th class="sorting" width="125">工单创建时间</th>
-                                        <!--<th class="sorting" width="125">工单完成时间</th>-->
-                                        <th class="sorting" width="40" class="taskOptions">详情</th>
-                                        <th class="sorting" width="40" class="taskOptions">修改</th>
+                                        <th class="taskOptions" width="125">完成状态</th>
+                                        <th class="taskOptions" width="40">详情</th>
+                                        <th class="taskOptions" width="40">修改</th>
                                         <if condition="rolemenu(array('Worder/del_worder'))">
                                         <th width="40" class="taskOptions">删除</th>
                                         </if> 
@@ -62,12 +62,7 @@
                                         <td><?php echo $row['assign_name']?$row['assign_name']:"<span class=\"yellow\">未指派</span>"; ?></td>
                                         <td>{$row.sta}</td>
                                         <td>{$row.create_time|date='Y-m-d H:i:s',###}</td>
-                                        <!--<if condition="$row.complete_time eq 0">
-                                            <td>未完成</td>
-                                            <else />
-                                            <td>{$row.complete_time|date='Y-m-d H:i:s',###}</td>
-                                        </if>-->
-
+                                        <td class="taskOptions">{$row.com_stu}</td>
                                         <td class="taskOptions">
                                             <button onClick="javascript:window.location.href='{:U('Worder/worder_info',array('id'=>$row['id']))}';" title="详情" class="btn btn-success  btn-smsm"><i class="fa  fa-building-o"></i></button>
                                         </td>
