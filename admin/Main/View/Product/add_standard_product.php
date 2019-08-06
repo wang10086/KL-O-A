@@ -28,7 +28,7 @@
                                 </div><!-- /.box-header -->
                                 <div class="box-body">
                                     <input type="hidden" name="dosubmit" value="1">
-                                    <input type="hidden" name="savetype" value="1">
+                                    <input type="hidden" name="savetype" value="3">
                                     <input type="hidden" name="id" value="{$id}" >
 
                                     <div class="form-group col-md-8">
@@ -71,6 +71,7 @@
                                     <div class="form-group col-md-4">
                                         <label>产品负责人：</label>
                                         <input type="text" name="info[]" id="" value="{$row.}"  class="form-control" required />
+                                        <input type="hidden" name="info[]">
                                     </div>
 
                                     <div class="form-group col-md-12">
@@ -89,56 +90,7 @@
                                 </div><!-- /.box-body -->
                             </div><!-- /.box -->
 
-                            <!--<div class="box box-warning">
-                                <div class="box-header">
-                                    <h3 class="box-title">产品内容</h3>
-                                </div>
-                                <div class="box-body">
-                                    <div class="content">
-                                        <div class="content" style="padding-top:0px;">
-                                            <div class="form-group col-md-12" id="reslist" style="display:block;">
-                                                <table class="table table-striped">
-                                                    <thead>
-                                                    <tr>
-                                                        <th width="15%">时间</th>
-                                                        <th width="15%">课程主题</th>
-                                                        <th width="20%">课程内容</th>
-                                                        <th width="15%">可选模块</th>
-                                                        <th width="">备注</th>
-                                                        <th width="80">删除</th>
-                                                    </tr>
-                                                    </thead>
-                                                    <tbody id="res_tbody">
-                                                    <foreach name="res_need" item="v">
-                                                        <tr class="expense" id="res_id_{$v.id}">
-                                                            <td><input type="hidden" name="res_ids[2000{$v.id}][res_id]" value="{$v.id}" >
-                                                                <a href="javascript:;" onClick="open_res({$v.res_id},{$v.res.title})">{$v.title}</a></td>
-                                                            <td>{$in_cas[$v[in_cas]]}</td>
-                                                            <td>{$v[diqu]}</td>
-                                                            <td><a href="javascript:;" class="btn btn-danger btn-flat" onclick="delbox('res_id_{$v.id}')">删除</a></td></tr>
-                                                        </tr>
-                                                    </foreach>
-                                                    </tbody>
-                                                    <tfoot>
-
-                                                    </tfoot>
-                                                </table>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>-->
                                 <style>
-                                    #standardProduct{ padding:0; margin-top:-20px;}
-                                    #standardProduct .form-control{ width:110px; float:left; margin-right:10px; border-radius:0;}
-                                    #standardProduct .unitbox{ float:left; clear:none; border:none; padding:0; line-height:42px;}
-                                    #standardProduct .title{ width:22px; float:left; height:30px; line-height:30px; margin-left:-30px; text-align:right; position:relative; z-index:100;}
-                                    #standardProduct .userlist { width:100%; height:auto !important; float:left; clear:both; padding-bottom:15px; border-bottom:1px solid #cccccc; margin-top:15px;}
-                                    #standardProduct .btn{ padding:7px 12px; font-size:12px;}
-                                    #standardProduct td{ line-height:34px;}
-                                    #material_val{ display:none}
-                                    #standardProduct .material_name{ width:17%;margin-right: 10px;}
-                                    #standardProduct .longinput{ width:90px;}
                                 </style>
 
                                 <div class="box box-warning">
@@ -149,42 +101,43 @@
                                         <div class="content">
                                             <div class="content" style="padding-top:0px;">
                                                 <div id="standardProduct">
-                                                    <div class="userlist" id="material_id">
-                                                        <div class="unitbox material_name">时间</div>
-                                                        <div class="unitbox material_name">课程主题</div>
-                                                        <div class="unitbox material_name">课程内容</div>
-                                                        <div class="unitbox material_name">可选模块</div>
-                                                        <div class="unitbox material_name">备注</div>
+                                                    <div class="userlist" id="product_id">
+                                                        <div class="unitbox name_box">时间</div>
+                                                        <div class="unitbox name_box">课程主题</div>
+                                                        <div class="unitbox name_box">课程内容</div>
+                                                        <div class="unitbox name_box">可选模块</div>
+                                                        <div class="unitbox name_box">备注</div>
                                                     </div>
-                                                    <?php if($material){ ?>
-                                                        <foreach name="material" key="k" item="v">
-                                                            <div class="userlist" id="material_id_{$v.id}">
+                                                    <?php if($product){ ?>
+                                                        <foreach name="product" key="k" item="v">
+                                                            <div class="userlist" id="product_id_{$v.id}">
                                                                 <span class="title"><?php echo $k+1; ?></span>
-                                                                <input type="hidden" name="resid[888{$v.id}][id]" value="{$v.id}" >
-                                                                <input type="text" class="form-control material_name" name="material[888{$v.id}][material]" value="{$v.material}">
-                                                                <input type="text" class="form-control material_name" name="material[888{$v.id}][spec]" value="{$v.spec}">
-                                                                <input type="text" class="form-control material_name" name="material[888{$v.id}][amount]" value="{$v.amount}">
-                                                                <input type="text" class="form-control material_name" name="material[888{$v.id}][unitprice]" value="{$v.unitprice}">
-                                                                <input type="text" class="form-control total" name="material[888{$v.id}][total]" value="{$v.total}" onfocus="selectproduct()">
-                                                                <input type="text" class="form-control material_name" name="material[888{$v.id}][remarks]" value="{$v.remarks}">
-                                                                <a href="javascript:;" class="btn btn-danger btn-flat" onclick="delbox('material_id_{$v.id}')">删除</a>
+                                                                <input type="hidden" name="resid[888{$v.id}][id]" value="{$v.id}" />
+                                                                <input type="hidden" name="product[888{$v.id}][product_id]" id="888{$v.id}_pid" value="{$v['product_id']}" />
+                                                                <input type="text" class="form-control name_box" name="product[888{$v.id}][product]" value="{$v.product}" />
+                                                                <input type="text" class="form-control name_box" name="product[888{$v.id}][spec]" value="{$v.spec}" />
+                                                                <input type="text" class="form-control name_box" name="product[888{$v.id}][amount]" value="{$v.amount}" />
+                                                                <input type="text" class="form-control name_box" name="product[888{$v.id}][unitprice]" value="{$v.unitprice}" id="888{$v.id}_pname" onfocus="selectproduct(888{$v.id})" />
+                                                                <input type="text" class="form-control name_box" name="product[888{$v.id}][remarks]" value="{$v.remarks}">
+                                                                <a href="javascript:;" class="btn btn-danger btn-flat" onclick="delbox('product_id_{$v.id}')">删除</a>
                                                             </div>
                                                         </foreach>
                                                     <?php }else{ ?>
-                                                        <div class="userlist" id="material_id">
+                                                        <div class="userlist" id="product_id_0">
                                                             <span class="title">1</span>
-                                                            <input type="text" class="form-control material_name" name="material[0][material]">
-                                                            <input type="text" class="form-control material_name" name="material[0][spec]">
-                                                            <input type="text" class="form-control material_name" name="material[0][amount]">
-                                                            <input type="text" class="form-control material_name" name="material[0][unitprice]" onfocus="selectproduct()">
-                                                            <input type="text" class="form-control material_name" name="material[0][remarks]">
-                                                            <a href="javascript:;" class="btn btn-danger btn-flat" onclick="delbox('material_id')">删除</a>
+                                                            <input type="hidden" name="product[0][product_id]" id="0_pid" />
+                                                            <input type="text" class="form-control name_box" name="product[0][product]" />
+                                                            <input type="text" class="form-control name_box" name="product[0][spec]" />
+                                                            <input type="text" class="form-control name_box" name="product[0][amount]" />
+                                                            <input type="text" class="form-control name_box" name="product[0][unitprice]" id="0_pname" onfocus="selectproduct(0)" />
+                                                            <input type="text" class="form-control name_box" name="product[0][remarks]">
+                                                            <a href="javascript:;" class="btn btn-danger btn-flat" onclick="delbox('product_id_0')">删除</a>
                                                         </div>
                                                     <?php } ?>
                                                 </div>
-                                                <div id="material_val">0</div>
+                                                <div id="product_val">0</div>
 
-                                                <a href="javascript:;" class="btn btn-success btn-sm" style="margin-top:15px;" onClick="add_material()"><i class="fa fa-fw fa-plus"></i> 新增内容</a>
+                                                <a href="javascript:;" class="btn btn-success btn-sm" style="margin-top:15px;" onClick="add_product()"><i class="fa fa-fw fa-plus"></i> 新增内容</a>
 
                                                 <div class="form-group">&nbsp;</div>
                                             </div>
@@ -236,8 +189,7 @@
 
 
                             <div id="formsbtn">
-                            	<!--<button type="submit" class="btn btn-info btn-lg" id="lrpd">保存</button>-->
-                            	<button type="button" onclick="art_show_msg('加班开发中...',3)" class="btn btn-info btn-lg" id="lrpd">保存</button>
+                            	<button type="submit" class="btn btn-info btn-lg" id="lrpd">保存</button>
                             </div>
                             </form> 
                         </div><!--/.col (right) -->
@@ -337,20 +289,20 @@
 	}
 
     //新增物资
-    function add_material(){
-        var i = parseInt($('#material_val').text())+1;
-
-        var html = '<div class="userlist" id="material_'+i+'">' +
-            '<span class="title"></span>' +
-            '<input type="text" class="form-control material_name" name="material['+i+'][material]">' +
-            '<input type="text" class="form-control material_name" name="material['+i+'][spec]" value="">' +
-            '<input type="text" class="form-control material_name" name="material['+i+'][amount]">' +
-            '<input type="text" class="form-control material_name" name="material['+i+'][unitprice]" onfocus="selectproduct()">' +
-            '<input type="text" class="form-control material_name" name="material['+i+'][remarks]">' +
-            '<a href="javascript:;" class="btn btn-danger btn-flat" onclick="delbox(\'material_'+i+'\')">删除</a>' +
-            '</div>';
+    function add_product(){
+        var i = parseInt($('#product_val').text())+1;
+        var html = '<div class="userlist" id="product_id_'+i+'">' +
+        '<span class="title"></span>' +
+        '<input type="hidden" name="product['+i+'][product_id]" id="'+i+'_pid" />'+
+        '<input type="text" class="form-control name_box" name="product['+i+'][product]">' +
+        '<input type="text" class="form-control name_box" name="product['+i+'][spec]" value="">' +
+        '<input type="text" class="form-control name_box" name="product['+i+'][amount]">' +
+        '<input type="text" class="form-control name_box" name="product['+i+'][unitprice]" id="'+i+'_pname" onfocus="selectproduct('+i+')">' +
+        '<input type="text" class="form-control name_box" name="product['+i+'][remarks]">' +
+        '<a href="javascript:;" class="btn btn-danger btn-flat" onclick="delbox(\'product_id_'+i+'\')">删除</a>' +
+        '</div>';
         $('#standardProduct').append(html);
-        $('#material_val').html(i);
+        $('#product_val').html(i);
         orderno();
     }
 
@@ -367,8 +319,8 @@
 	}
 
     //选择产品模块
-    function selectproduct() {
-        art.dialog.open("<?php echo U('Op/select_module',array('opid'=>$opid)); ?>",{
+    function selectproduct(num) {
+        art.dialog.open("<?php echo U('Product/select_product_module',array('id'=>$id)); ?>",{
             lock:true,
             title: '选择产品模块',
             width:1000,
@@ -378,30 +330,10 @@
             ok: function () {
                 var origin = artDialog.open.origin;
                 var product = this.iframe.contentWindow.gosubmint();
-                var product_html = '';
-                for (var j = 0; j < product.length; j++) {
-                    if (product[j].id) {
-                        var i = parseInt(Math.random()*100000)+j;
-                        var costacc = '<input type="hidden" name="costacc['+i+'][title]" value="'+product[j].title+'">' +
-                            '<input type="hidden" name="costacc['+i+'][product_id]" value="'+product[j].id+'">'+
-                            '<input type="hidden" name="costacc['+i+'][total]" class="totalval" />';
-                        product_html += '<tr class="expense" id="product_'+i+'">' +
-                            '<td>'+costacc+ '<a href="javascript:;" onClick="open_product('+product[j].id+',\''+product[j].title+'\')">'+product[j].title+'</a></td>' +
-                            '<td>'+product[j].type+'</td>' +
-                            '<td>'+product[j].subject_fields+'</td>' +
-                            '<td>'+product[j].from+'</td>' +
-                            '<td>'+product[j].age+'</td>' +
-                            '<td>'+product[j].reckon_mode+'</td>' +
-                            '<td><input type="text" name="costacc['+i+'][unitcost]" placeholder="价格" value="'+product[j].sales_price+'" class="form-control min_input cost" readonly /></td>' +
-                            '<td><span>X</span></td>' +
-                            '<td><input type="text" name="costacc['+i+'][amount]" placeholder="数量" value="1" class="form-control min_input amount" /></td>' +
-                            '<td class="total">&yen;'+product[j].sales_price*1+'</td>' +
-                            '<td><a href="javascript:;" class="btn btn-danger btn-flat" onclick="delbox(\'product_'+i+'\')">删除</a></td></tr>';
-                    };
-                }
-                $('#productlist').show();
-                $('#productlist').find('#product_tbody').append(product_html);
-                total();
+                var product_id = product.id;
+                var product_title = product.title;
+                $('#'+num+'_pid').val(product_id);
+                $('#'+num+'_pname').val(product_title);
             },
             cancelValue:'取消',
             cancel: function () {

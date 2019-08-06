@@ -1473,6 +1473,57 @@ class ProductController extends BaseController {
         $this->display();
     }
 
+    //选择产品模块(单选)
+    public function select_product_module(){
+        $opid                                       = I('opid');
+        $key                                        = I('key');
+        $type                                       = I('type');
+        $subject_field                              = I('subject_field');
+        $from                                       = I('from');
+        $kind                                       = M('op')->where(array('op_id'=>$opid))->getField('kind');
+
+        $db                                         = M('product');
+        $this->opid                                 = $opid;
+        $where                                      = array();
+        $where['audit_status']                      = 1;
+        $where['standard']                          = 2; //非标准化
+        if($kind)   $where['business_dept']         = $kind;
+        if($key)    $where['title']                 = array('like','%'.$key.'%');
+        if ($type)  $where['type']                  = array('eq',$type);
+        if ($from)  $where['from']                  = array('eq',$type);
+        if ($subject_field)  $where['subject_field']= array('eq',$subject_field);
+
+        $pagecount                                  = $db->where($where)->count();
+        $page                                       = new Page($pagecount,25);
+        $this->pages                                = $pagecount>25 ? $page->show():'';
+        $lists                                      = $db->where($where)->limit($page->firstRow . ',' . $page->listRows)->order($this->orders('input_time'))->select();
+
+        $ageval                                     = C('AGE_LIST');
+        $reckon_mode                                = C('RECKON_MODE');
+        foreach ($lists as $k=>$v){
+            $agelist                                = array();
+            $ages                                   = explode(',',$v['age']);
+
+            foreach($ageval as $key=>$value){
+                if (in_array($key,$ages)){
+                    $agelist[]                      = $value;
+                }
+            }
+            $lists[$k]['agelist']                   = implode(',',$agelist);
+            $lists[$k]['reckon_modelist']           = $reckon_mode[$v['reckon_mode']]?$reckon_mode[$v['reckon_mode']]:"<span class='red'>未定</span>";
+            if (!$v['sales_price']) $lists[$k]['sales_price'] = '0.00';
+        }
+
+        $this->lists                                = $lists;
+        $this->product_type                         = C('PRODUCT_TYPE');
+        $this->subject_fields                       = C('SUBJECT_FIELD');
+        $this->product_from                         = C('PRODUCT_FROM');
+        $this->ages                                 = C('AGE_LIST');
+        $this->kindlist                             = M('project_kind')->select();
+
+        $this->display('select_product_module');
+    }
+
     public function public_save(){
         $savetype                               = I('savetype');
         if (isset($_POST['dosubmit'])){
@@ -1640,6 +1691,11 @@ class ProductController extends BaseController {
                 }else{
                     $this->success('保存失败！');
                 }
+            }
+
+            //保存标准化产品
+            if ($savetype == 3){
+                echo '加班开发中...';
             }
         }
     }
