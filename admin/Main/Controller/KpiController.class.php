@@ -905,7 +905,7 @@ class KpiController extends BaseController {
 				$qaqc                           = M('qaqc')->find($editid);
                 $explain                        = '编辑品质检查';
 				
-				if(!in_array($qaqc['status'],array(1,2)) && ( C('RBAC_SUPER_ADMIN')==cookie('username') || cookie('roleid')==10 ||  cookie('userid')==$qaqc['inc_user_id'])) {
+				if(!in_array($qaqc['status'],array(1)) && ( C('RBAC_SUPER_ADMIN')==cookie('username') || cookie('roleid')==10 ||  cookie('userid')==$qaqc['inc_user_id'])) {
 					
 					$addinfo                    = M('qaqc')->data($info)->where(array('id'=>$editid))->save();
 					$qaqc                       = M('qaqc')->find($editid);

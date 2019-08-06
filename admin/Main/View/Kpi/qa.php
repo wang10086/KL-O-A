@@ -70,13 +70,9 @@
                                                     <td><if condition="$row['create_time']">{$row.create_time|date='Y-m-d H:i',###}</if></td>
                                                     <if condition="rolemenu(array('Kpi/addqa'))">
                                                         <td class="taskOptions">
-                                                            <?php
-                                                                if(in_array($row['status'],array(0,3)) && ( C('RBAC_SUPER_ADMIN')==cookie('username') || cookie('roleid')==10 ||  cookie('userid')==$row['inc_user_id'])) {
-                                                                    ?>
-                                                                    <a href="{:U('Kpi/addqa',array('id'=>$row['id']))}"  title="编辑" class="btn btn-info btn-smsm"><i class="fa fa-pencil"></i></a>
-                                                                    <?php
-                                                                }
-                                                            ?>
+                                                            <?php if(in_array($row['status'],array(0,3,2)) && ( C('RBAC_SUPER_ADMIN')==cookie('username') || cookie('roleid')==10 ||  cookie('userid')==$row['inc_user_id'])) { ?>
+                                                                <a href="{:U('Kpi/addqa',array('id'=>$row['id']))}"  title="编辑" class="btn btn-info btn-smsm"><i class="fa fa-pencil"></i></a>
+                                                            <?php } ?>
                                                         </td>
                                                     </if>
 
