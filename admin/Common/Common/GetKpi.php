@@ -3912,4 +3912,53 @@ function get_yw_department(){
         return $data;
     }
 
+    /**
+     * 获取部门相关审核人信息
+     * 部门主管,预算审核人,分管领导
+     * @param int $uid
+     * @return mixed
+     */
+    function get_manage_uid($uid=0){
+        $where                                  = array();
+        $where['a.id']                          = $uid;
+        $field                                  = 'a.id as uid,a.nickname,a.roleid,d.id as department_id,d.department,d.letter,d.jk_audit_user_id,d.jk_audit_user_name,d.manager_id,d.manager_name,d.boss_id,d.boss_name';
+        $data                                   = M()->table('__ACCOUNT__ as a')->join('__SALARY_DEPARTMENT__ as d on d.id=a.departmentid','left')->where($where)->field($field)->find();
+        return $data;
+    }
 
+    //获取工单状态信息
+    function get_worder_stu($lists){
+        $sum_num                    = 0;
+        $ok_num                     = 0;
+        foreach($lists as $k=>$v){
+            $sum_num++;
+            //判断工单状态
+            if($v['status']==0)     $lists[$k]['sta'] = '<span class="red">未响应</span>';
+            if($v['status']==1)     $lists[$k]['sta'] = '<span class="yellow">执行部门已响应</span>';
+            if($v['status']==2)     $lists[$k]['sta'] = '<span class="blue">执行部门已确认完成</span>';
+            if($v['status']==3)     $lists[$k]['sta'] = '<span class="green">发起人已确认完成</span>';
+            if($v['status']==-1)    $lists[$k]['sta'] = '拒绝或无效工单';
+            if($v['status']==-2)    $lists[$k]['sta'] = '已撤销';
+            if($v['status']==-3)    $lists[$k]['sta'] = '<span class="red">需要做二次修改</span>';
+
+            if (in_array($v['status'],array('-1','-2'))){
+                $ok_num++;
+                if ($v['status']==-1)   $lists[$k]['com_stu']   = '<font color="#999">拒绝或无效工单</font>';
+                if ($v['status']==-2)   $lists[$k]['com_stu']   = '<font color="#999">已撤销</font>';
+            }else{
+                if ($v['ini_confirm_time'] <= $v['plan_complete_time']){
+                    $lists[$k]['com_stu'] = '<span class="green">未超时</span>';
+                    $ok_num++;
+                }else{
+                    $lists[$k]['com_stu'] = '<span class="red">已超时</span>';
+                }
+            }
+        }
+
+        $data                       = array();
+        $data['sum_num']            = $sum_num;
+        $data['ok_num']             = $ok_num;
+        $data['average']            = (round($ok_num/$sum_num,4)*100).'%';
+        $data['sum_lists']          = $lists;
+        return $data;
+    }

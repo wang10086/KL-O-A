@@ -4401,7 +4401,7 @@ function get_roleid($id=0){
 	$where['pid']          = $id;
 	$list = $db->where($where)->order('`id` ASC')->select();
 	$str_level++;
-	$aaa 	= array();
+	$rold_id 	= array();
 	if($list){
 		foreach($list as $k =>$v){
 			$list[$k]['str_level'] = $str_level;
@@ -4412,9 +4412,9 @@ function get_roleid($id=0){
 	}
 
 	foreach ($str as $key=>$value){
-		$aaa[] 	= $value['id'];
+		$rold_id[] 	= $value['id'];
 	}
-	return $aaa;
+	return $rold_id;
 	//return $str;
 
 }

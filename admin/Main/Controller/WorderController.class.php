@@ -21,19 +21,19 @@ class WorderController extends BaseController{
             $exe_info       = I('exe_info');
 
             $info['status']         = 0;
-            $info['ini_user_id']    = cookie('userid');
-            $info['ini_user_name']  = cookie('name');
-            $info['ini_dept_id']    = cookie('roleid');
-            $info['ini_dept_name']  = cookie('rolename');
+            $info['ini_user_id']    = session('userid');
+            $info['ini_user_name']  = session('name');
+            $info['ini_dept_id']    = session('roleid');
+            $info['ini_dept_name']  = session('rolename');
             $info['create_time']    = NOW_TIME;
             $attr                   = I('attr'); //获取上传文件
 
             //审核加急工单(公司副经理审批 , 每人每月不超过三条)
             //求每个部门的紧急工单审核人(每个领导所管辖的roleid)
             $urgent                 = $info['urgent'];
-            $yang                   = get_roleid(13);   //杨总
-            $qin                    = get_roleid(14);   //秦总
-            $wang                   = get_roleid(54);   //王总
+            $audit_urgent_data      = get_manage_uid(session('userid'));
+            $audit_urgent_uid       = $audit_urgent_data['boss_id'];
+
             $role_id                = cookie('roleid');
             $count                  = array();
             $count['ini_user_id']   = cookie('userid');
@@ -87,18 +87,11 @@ class WorderController extends BaseController{
 
                         //如果是加急工单 ,向对应的领导发送系统消息
                         if ($urgent == 1){
-                            if (in_array($role_id,$yang)){
-                                $exe_uid        = 38;
-                            }elseif (in_array($role_id,$qin)){
-                                $exe_uid        = 12;
-                            }else{
-                                $exe_uid        = 32;
-                            }
                             $uid     = cookie('userid');
                             $title   = '您有来自['.$info['ini_dept_name'].'--'.$info['ini_user_name'].']申请的加急工单待审核!';
                             $content = $info['worder_content'];
                             $url     = U('worder/worder_info',array('id'=>$res));
-                            $user    = '['.$exe_uid.']';
+                            $user    = '['.$audit_urgent_uid.']';
                             send_msg($uid,$title,$content,$url,$user,'');
                         }
 
@@ -842,4 +835,74 @@ class WorderController extends BaseController{
             $this->display('change_plan_time');
         }
     }
+
+
+    //工单统计(公司统计)
+    public function worder_chart(){
+        $this->title('工单统计');
+        $db                         = M('worder');
+        $year                       = I('year',date('Y'));
+        $month                      = I('month',date('m'));
+        if (strlen($month)<2) $month= str_pad($month,2,'0',STR_PAD_LEFT);
+        $yearMonth                  = $year.$month;
+        $times                      = get_cycle($yearMonth);
+        $pin                        = I('pin',0);
+        $title                      = trim(I('tit'));
+
+        $where                      = array();
+        $where['plan_complete_time']= array('between',array($times['begintime'],$times['endtime']));
+        if ($title) $where['worder_title'] = array('like','%'.$title.'%');
+
+        //分页
+        $count_lists                = $db->where($where)->select();
+        $pagecount		            = count($count_lists);
+        $page			            = new Page($pagecount, P::PAGE_SIZE);
+        $this->pages	            = $pagecount>P::PAGE_SIZE ? $page->show():'';
+        $lists                      = $db->where($where)->limit($page->firstRow . ',' . $page->listRows)->order($this->orders('create_time'))->select();
+        $count_stu_data             = get_worder_stu($count_lists); //合计
+        $page_stu_data              = get_worder_stu($lists); //当前页
+
+        $this->data                 = $count_stu_data;
+        $this->lists                = $page_stu_data['sum_lists'];
+        $this->pin                  = $pin;
+        $this->year 	            = $year;
+        $this->month                = $month;
+        $this->prveyear	            = $year-1;
+        $this->nextyear	            = $year+1;
+        $this->display();
+    }
+
+    //工单统计(员工统计)
+    public function public_worder_account_chart(){
+        $this->title('工单统计');
+        $db                         = M('worder');
+        $year                       = I('year',date('Y'));
+        $month                      = I('month',date('m'));
+        if (strlen($month)<2) $month= str_pad($month,2,'0',STR_PAD_LEFT);
+        $yearMonth                  = $year.$month;
+        $times                      = get_cycle($yearMonth);
+        $pin                        = I('pin',0);
+
+        $where                      = array();
+        $where['plan_complete_time']= array('between',array($times['begintime'],$times['endtime']));
+
+       /* //分页
+        $count_lists                = $db->where($where)->select();
+        $pagecount		            = count($count_lists);
+        $page			            = new Page($pagecount, P::PAGE_SIZE);
+        $this->pages	            = $pagecount>P::PAGE_SIZE ? $page->show():'';
+        $lists                      = $db->where($where)->limit($page->firstRow . ',' . $page->listRows)->order($this->orders('create_time'))->select();
+        $count_stu_data             = get_worder_stu($count_lists); //合计
+        $page_stu_data              = get_worder_stu($lists); //当前页*/
+
+        $this->data                 = $count_stu_data;
+        $this->lists                = $page_stu_data['sum_lists'];
+        $this->pin                  = $pin;
+        $this->year 	            = $year;
+        $this->month                = $month;
+        $this->prveyear	            = $year-1;
+        $this->nextyear	            = $year+1;
+        $this->display('worder_account_chart');
+    }
+
 }

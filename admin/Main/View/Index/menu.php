@@ -828,9 +828,9 @@
                                     <!--<if condition="rolemenu(array('worder/project'))">
                                         <li><a href="{:U('worder/project')}"><i class="fa fa-angle-right"></i> 项目工单</a></li>
                                     </if>-->
-                                    <!--
-                                    <li><a href="javascript:;" onClick="art_show_msg('加班开发中，稍后呈现...',5)"><i class="fa fa-angle-right"></i> KPI</a></li>
-                                    -->
+                                    <if condition="rolemenu(array('worder/worder_chart'))">
+                                        <li><a href="{:U('worder/worder_chart')}"><i class="fa fa-angle-right"></i> 工单统计</a></li>
+                                    </if>
                                 </ul>
                             </li>
                         </if>
