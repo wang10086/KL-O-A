@@ -53,7 +53,7 @@
 
                                 <table class="table table-bordered dataTable fontmini" id="tablelist" style="margin-top:10px;">
                                     <tr role="row" class="orders" >
-                                        <th class="taskOptions" width="60" data="id">ID</th>
+                                        <th class="taskOptions" width="60" data="id">人员ID</th>
                                         <th class="taskOptions" width="120" data="">姓名</th>
                                         <th class="taskOptions" width="80" data="">工单数量</th>
                                         <th class="taskOptions" width="80" data="">及时数量</th>
