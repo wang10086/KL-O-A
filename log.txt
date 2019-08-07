@@ -3608,3 +3608,35 @@ response body = <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
     </TemplateSMS>
 </Response>
 
+request body = <TemplateSMS>
+                    <to>13611112021</to> 
+                    <appId>8a216da85fe1c856015fe6752889020d</appId>
+                    <templateId>425448</templateId>
+                    <datas><data>乔娜丽</data><data>夜探博物馆第二十八期</data></datas>
+                  </TemplateSMS>
+request url = https://app.cloopen.com:8883/2013-12-26/Accounts/8a216da85fb86db0015fc55b96d6004d/SMS/TemplateSMS?sig=0BC536E3ACDBE8181E2E8067E4D86A99
+response body = <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Response>
+    <statusCode>000000</statusCode>
+    <TemplateSMS>
+        <smsMessageSid>1df5ea78cf8b4c40892ee451fb824525</smsMessageSid>
+        <dateCreated>20190807101231</dateCreated>
+    </TemplateSMS>
+</Response>
+
+request body = <TemplateSMS>
+                    <to>13611112021</to> 
+                    <appId>8a216da85fe1c856015fe6752889020d</appId>
+                    <templateId>425448</templateId>
+                    <datas><data>乔娜丽</data><data>8.12-16走进中科院少年科学探索营</data></datas>
+                  </TemplateSMS>
+request url = https://app.cloopen.com:8883/2013-12-26/Accounts/8a216da85fb86db0015fc55b96d6004d/SMS/TemplateSMS?sig=A68FA8F4CDD600C13AE7E837D2AB8789
+response body = <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Response>
+    <statusCode>000000</statusCode>
+    <TemplateSMS>
+        <smsMessageSid>01c23a7699134f89a1bcf35434c42b02</smsMessageSid>
+        <dateCreated>20190807101419</dateCreated>
+    </TemplateSMS>
+</Response>
+
