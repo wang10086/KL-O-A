@@ -3960,7 +3960,7 @@ function get_yw_department(){
         $data['user_name']          = $user_name;
         $data['sum_num']            = $sum_num;
         $data['ok_num']             = $ok_num;
-        $data['average']            = (round($ok_num/$sum_num,4)*100).'%';
+        $data['average']            = $sum_num>0 ? (round($ok_num/$sum_num,4)*100).'%' : '100%';
         $data['sum_lists']          = $lists;
         return $data;
     }

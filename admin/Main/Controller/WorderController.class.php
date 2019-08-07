@@ -902,4 +902,31 @@ class WorderController extends BaseController{
         $this->display('worder_account_chart');
     }
 
+    //个人完成详情页
+    public function public_worder_stu_detail(){
+        $db                         = M('worder');
+        $year                       = I('year',date('Y'));
+        $month                      = I('month',date('m'));
+        if (strlen($month)<2) $month= str_pad($month,2,'0',STR_PAD_LEFT);
+        $yearMonth                  = $year.$month;
+        $times                      = get_cycle($yearMonth);
+        $uid                        = I('uid');
+        if (!$uid) $this->error('获取数据失败');
+
+        $where                      = array();
+        $where['plan_complete_time']= array('between',array($times['begintime'],$times['endtime']));
+        $count_lists                = $db->where($where)->select();
+
+        $uids                       = array($uid);
+        $account_stu_data           = get_account_worder_stu_data($uids,$count_lists);
+        $lists                      = $account_stu_data['sum_lists'];
+
+        $this->lists                = $lists;
+        $this->data                 = $account_stu_data;
+        $this->year                 = $year;
+        $this->month                = $month;
+        $this->uid                  = $uid;
+        $this->display('worder_stu_detail');
+    }
+
 }
