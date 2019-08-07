@@ -1,9 +1,0 @@
-/.gitignore
-/temp
-/upload
-/.settings
-/.buildpath
-/.project
-/admin/Common/Conf/db_config.php
-.idea/
-log.txt
