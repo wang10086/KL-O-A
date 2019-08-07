@@ -48,10 +48,12 @@
                                 </div><!-- /.box-header -->
                                 <div class="box-body">
 
-                                <div class="btn-group" id="catfont">
-                                    <a href="{:U('Worder/worder_chart',array('year'=>$year,'month'=>$month,'pin'=>0))}" class="btn <?php if($pin==0){ echo 'btn-info';}else{ echo 'btn-default';} ?>">公司</a>
-                                    <a href="{:U('Worder/public_worder_account_chart',array('year'=>$year,'month'=>$month,'pin'=>1))}" class="btn <?php if($pin==1){ echo 'btn-info';}else{ echo 'btn-default';} ?>">员工</a>
-                                </div>
+                                <if condition="rolemenu(array('Worder/worder_chart'))">
+                                    <div class="btn-group" id="catfont">
+                                        <a href="{:U('Worder/worder_chart',array('year'=>$year,'month'=>$month,'pin'=>0))}" class="btn <?php if($pin==0){ echo 'btn-info';}else{ echo 'btn-default';} ?>">公司</a>
+                                        <a href="{:U('Worder/public_worder_account_chart',array('year'=>$year,'month'=>$month,'pin'=>1))}" class="btn <?php if($pin==1){ echo 'btn-info';}else{ echo 'btn-default';} ?>">员工</a>
+                                    </div>
+                                </if>
 
                                 <table class="table table-bordered dataTable fontmini" id="tablelist" style="margin-top:10px;">
                                     <tr role="row" class="orders" >

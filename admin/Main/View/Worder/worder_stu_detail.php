@@ -46,28 +46,41 @@
                                 </div><!-- /.box-header -->
                                 <div class="box-body">
 
-                                <table class="table table-bordered dataTable fontmini" id="tablelist" style="margin-top:10px;">
-                                    <tr role="row" class="orders" >
-                                        <th class="taskOptions" width="60" data="">ID</th>
-                                        <th class="taskOptions" width="120" data="">姓名</th>
-                                        <th class="taskOptions" width="80" data="">工单数量</th>
-                                        <th class="taskOptions" width="80" data="">及时数量</th>
-                                        <th class="taskOptions" width="80"  data="">及时率</th>
-                                        <th class="taskOptions" width="40">详情</th>
-                                    </tr>
-                                    <foreach name="lists" item="row">
-                                    <tr>
-                                        <td class="taskOptions">{$row.user_id}</td>
-                                        <td class="taskOptions"><a href="{:U('Worder/public_')}">{$row.user_name}</a></td>
-                                        <td class="taskOptions">{$row.sum_num}</td>
-                                        <td class="taskOptions">{$row.ok_num}</td>
-                                        <td class="taskOptions">{$row.average}</td>
-                                        <td class="taskOptions">
-                                            <button onClick="javascript:window.location.href='javascript:;'" title="详情" class="btn btn-success  btn-smsm"><i class="fa  fa-building-o"></i></button>
-                                        </td>
-                                    </tr>
-                                    </foreach>
-                                </table>
+                                    <table class="table table-bordered dataTable fontmini" id="tablelist" style="margin-top:10px;">
+                                        <tr role="row" class="orders" >
+                                            <th class="sorting" width="60" data="id">ID</th>
+                                            <th class="sorting" width="120" data="worder_title">工单标题</th>
+                                            <th class="sorting" width="80" data="worder_type">工单类型</th>
+                                            <th class="sorting" width="80" data="init_user_name">发起人姓名</th>
+                                            <th class="sorting" width="80"  data="exe_user_name">接收人姓名</th>
+                                            <th class="sorting" width="80"  data="assign_name">执行人姓名</th>
+                                            <th class="sorting" width="80" data="status">工单状态</th>
+                                            <th class="sorting" width="125">工单创建时间</th>
+                                            <th class="taskOptions" width="125">完成状态</th>
+                                            <th class="taskOptions" width="40">详情</th>
+                                        </tr>
+                                        <foreach name="lists" item="row">
+                                            <tr>
+                                                <td>{$row.id}<if condition="($row.urgent eq 2) and (in_array($row.status,array(0,1,2)))"><small class="badge pull-right bg-red" style="margin-right:4px;">加急</small></if></td>
+                                                <td><a href="{:U('Worder/worder_info',array('id'=>$row['id']))}">{$row.worder_title}</a></td>
+                                                <td>{$worder_type[$row[worder_type]]}</td>
+                                                <td>{$row.ini_user_name}</td>
+                                                <td>{$row.exe_user_name}</td>
+                                                <td><?php echo $row['assign_name']?$row['assign_name']:"<span class=\"yellow\">未指派</span>"; ?></td>
+                                                <td>{$row.sta}</td>
+                                                <td>{$row.create_time|date='Y-m-d H:i:s',###}</td>
+                                                <td class="taskOptions">{$row.com_stu}</td>
+                                                <td class="taskOptions">
+                                                    <button onClick="javascript:window.location.href='{:U('Worder/worder_info',array('id'=>$row['id']))}';" title="详情" class="btn btn-success  btn-smsm"><i class="fa  fa-building-o"></i></button>
+                                                </td>
+                                            </tr>
+                                        </foreach>
+                                        <tr class="black">
+                                            <td colspan="3">合计：{$data[0]['sum_num']}</td>
+                                            <td colspan="4">及时数：{$data[0]['ok_num']}</td>
+                                            <td colspan="3">及时率：{$data[0]['average']}</td>
+                                        </tr>
+                                    </table>
                                 </div><!-- /.box-body -->
                                  <div class="box-footer clearfix">
                                 	<div class="pagestyle">{$pages}</div>

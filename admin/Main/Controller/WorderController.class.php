@@ -875,17 +875,13 @@ class WorderController extends BaseController{
     //工单统计(员工统计)
     public function public_worder_account_chart(){
         $this->title('工单统计');
-        $db                         = M('worder');
         $year                       = I('year',date('Y'));
         $month                      = I('month',date('m'));
         if (strlen($month)<2) $month= str_pad($month,2,'0',STR_PAD_LEFT);
         $yearMonth                  = $year.$month;
-        $times                      = get_cycle($yearMonth);
         $pin                        = I('pin',0);
 
-        $where                      = array();
-        $where['plan_complete_time']= array('between',array($times['begintime'],$times['endtime']));
-        $count_lists                = $db->where($where)->select();
+        $count_lists                = get_count_worder_lists($yearMonth);
         $uids                       = array();
         foreach ($count_lists as $k=>$v){
             $uids[]                 = ($v['exe_user_id'] && !$v['assign_id']) ? $v['exe_user_id'] : $v['assign_id'];
@@ -904,22 +900,17 @@ class WorderController extends BaseController{
 
     //个人完成详情页
     public function public_worder_stu_detail(){
-        $db                         = M('worder');
         $year                       = I('year',date('Y'));
         $month                      = I('month',date('m'));
         if (strlen($month)<2) $month= str_pad($month,2,'0',STR_PAD_LEFT);
         $yearMonth                  = $year.$month;
-        $times                      = get_cycle($yearMonth);
         $uid                        = I('uid');
         if (!$uid) $this->error('获取数据失败');
 
-        $where                      = array();
-        $where['plan_complete_time']= array('between',array($times['begintime'],$times['endtime']));
-        $count_lists                = $db->where($where)->select();
-
+        $count_lists                = get_count_worder_lists($yearMonth);
         $uids                       = array($uid);
         $account_stu_data           = get_account_worder_stu_data($uids,$count_lists);
-        $lists                      = $account_stu_data['sum_lists'];
+        $lists                      = $account_stu_data[0]['sum_lists'];
 
         $this->lists                = $lists;
         $this->data                 = $account_stu_data;

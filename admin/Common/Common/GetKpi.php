@@ -3966,6 +3966,20 @@ function get_yw_department(){
     }
 
     /**
+     * 获取某个周期的所有工单数量
+     * @param $yearMonth
+     * @return mixed
+     */
+    function get_count_worder_lists($yearMonth){
+        $db                         = M('worder');
+        $times                      = get_cycle($yearMonth);
+        $where                      = array();
+        $where['plan_complete_time']= array('between',array($times['begintime'],$times['endtime']));
+        $worder_lists               = $db->where($where)->select();
+        return $worder_lists;
+    }
+
+    /**
      * 获取某个人的工单完成状态
      * @param $uids
      * @param $lists
