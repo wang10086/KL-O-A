@@ -53,22 +53,23 @@
 
                                 <table class="table table-bordered dataTable fontmini" id="tablelist" style="margin-top:10px;">
                                     <tr role="row" class="orders" >
-                                        <th class="taskOptions" width="60" data="id">ID</th>
+                                        <th class="taskOptions" width="60" data="">ID</th>
                                         <th class="taskOptions" width="120" data="">姓名</th>
                                         <th class="taskOptions" width="80" data="">工单数量</th>
                                         <th class="taskOptions" width="80" data="">及时数量</th>
                                         <th class="taskOptions" width="80"  data="">及时率</th>
                                         <th class="taskOptions" width="40">详情</th>
                                     </tr>
-                                    <foreach name="lists" item="row"> 
+                                    <foreach name="lists" item="row">
+                                        <?php /*var_dump($row);die; */?>
                                     <tr>
-                                        <td>{$row.id}<if condition="($row.urgent eq 2) and (in_array($row.status,array(0,1,2)))"><small class="badge pull-right bg-red" style="margin-right:4px;">加急</small></if></td>
-                                        <td><a href="{:U('Worder/worder_info',array('id'=>$row['id']))}">{$row.worder_title}</a></td>
-                                        <td>{$worder_type[$row[worder_type]]}</td>
-                                        <td>{$row.ini_user_name}</td>
-                                        <td>{$row.exe_user_name}</td>
+                                        <td class="taskOptions">{$row.user_id}</td>
+                                        <td class="taskOptions"><a href="javascript:;">{$row.user_name}</a></td>
+                                        <td class="taskOptions">{$row.sum_num}</td>
+                                        <td class="taskOptions">{$row.ok_num}</td>
+                                        <td class="taskOptions">{$row.average}</td>
                                         <td class="taskOptions">
-                                            <button onClick="javascript:window.location.href='{:U('Worder/worder_info',array('id'=>$row['id']))}';" title="详情" class="btn btn-success  btn-smsm"><i class="fa  fa-building-o"></i></button>
+                                            <button onClick="javascript:window.location.href='javascript:;'" title="详情" class="btn btn-success  btn-smsm"><i class="fa  fa-building-o"></i></button>
                                         </td>
                                     </tr>
                                     </foreach>

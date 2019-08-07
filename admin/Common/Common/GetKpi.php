@@ -3927,7 +3927,7 @@ function get_yw_department(){
     }
 
     //获取工单状态信息
-    function get_worder_stu($lists){
+    function get_worder_stu($lists,$uid=0){
         $sum_num                    = 0;
         $ok_num                     = 0;
         foreach($lists as $k=>$v){
@@ -3954,11 +3954,34 @@ function get_yw_department(){
                 }
             }
         }
-
+        $user_name                  = $uid ? username($uid) : '';
         $data                       = array();
+        $data['user_id']            = $uid;
+        $data['user_name']          = $user_name;
         $data['sum_num']            = $sum_num;
         $data['ok_num']             = $ok_num;
         $data['average']            = (round($ok_num/$sum_num,4)*100).'%';
         $data['sum_lists']          = $lists;
+        return $data;
+    }
+
+    /**
+     * 获取某个人的工单完成状态
+     * @param $uids
+     * @param $lists
+     * @return mixed
+     */
+    function get_account_worder_stu_data($uids,$lists){
+        foreach ($uids as $key=>$value){
+            $user_worders           = array();
+            foreach ($lists as $k=>$v){
+                $exe_uid            = ($v['exe_user_id'] && !$v['assign_id']) ? $v['exe_user_id'] : $v['assign_id'];
+                if ($exe_uid == $value){
+                    $user_worders[] = $v;
+                }
+            }
+            $user_data              = get_worder_stu($user_worders,$value);
+            $data[]                 = $user_data;
+        }
         return $data;
     }

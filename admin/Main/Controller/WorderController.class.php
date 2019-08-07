@@ -885,18 +885,15 @@ class WorderController extends BaseController{
 
         $where                      = array();
         $where['plan_complete_time']= array('between',array($times['begintime'],$times['endtime']));
-
-       /* //分页
         $count_lists                = $db->where($where)->select();
-        $pagecount		            = count($count_lists);
-        $page			            = new Page($pagecount, P::PAGE_SIZE);
-        $this->pages	            = $pagecount>P::PAGE_SIZE ? $page->show():'';
-        $lists                      = $db->where($where)->limit($page->firstRow . ',' . $page->listRows)->order($this->orders('create_time'))->select();
-        $count_stu_data             = get_worder_stu($count_lists); //合计
-        $page_stu_data              = get_worder_stu($lists); //当前页*/
+        $uids                       = array();
+        foreach ($count_lists as $k=>$v){
+            $uids[]                 = ($v['exe_user_id'] && !$v['assign_id']) ? $v['exe_user_id'] : $v['assign_id'];
+        }
+        $uids                       = array_filter(array_unique($uids));
+        $account_stu_data           = get_account_worder_stu_data($uids,$count_lists);
 
-        $this->data                 = $count_stu_data;
-        $this->lists                = $page_stu_data['sum_lists'];
+        $this->lists                = $account_stu_data;
         $this->pin                  = $pin;
         $this->year 	            = $year;
         $this->month                = $month;
