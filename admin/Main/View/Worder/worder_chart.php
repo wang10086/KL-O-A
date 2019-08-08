@@ -65,6 +65,7 @@
                                         <th class="sorting" width="80" data="status">工单状态</th>
                                         <th class="sorting" width="125">工单创建时间</th>
                                         <th class="taskOptions" width="125">完成状态</th>
+                                        <th class="taskOptions" width="80">满意度</th>
                                         <th class="taskOptions" width="40">详情</th>
                                     </tr>
                                     <foreach name="lists" item="row"> 
@@ -77,6 +78,7 @@
                                         <td>{$row.sta}</td>
                                         <td>{$row.create_time|date='Y-m-d H:i:s',###}</td>
                                         <td class="taskOptions">{$row.com_stu}</td>
+                                        <td class="taskOptions">{$row.}</td>
                                         <td class="taskOptions">
                                             <button onClick="javascript:window.location.href='{:U('Worder/worder_info',array('id'=>$row['id']))}';" title="详情" class="btn btn-success  btn-smsm"><i class="fa  fa-building-o"></i></button>
                                         </td>
@@ -85,7 +87,7 @@
                                     <tr class="black">
                                         <td colspan="3">合计：{$data.sum_num}</td>
                                         <td colspan="4">及时数：{$data.ok_num}</td>
-                                        <td colspan="3">及时率：{$data.average}</td>
+                                        <td colspan="4">及时率：{$data.average}</td>
                                     </tr>
                                 </table>
                                 </div><!-- /.box-body -->

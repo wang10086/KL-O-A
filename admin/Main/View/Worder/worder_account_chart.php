@@ -60,6 +60,7 @@
                                         <th class="taskOptions" width="80">工单数量</th>
                                         <th class="taskOptions" width="80">及时数量</th>
                                         <th class="taskOptions" width="80">及时率</th>
+                                        <th class="taskOptions" width="80">满意度</th>
                                         <th class="taskOptions" width="40">详情</th>
                                     </tr>
                                     <foreach name="lists" item="row">
@@ -69,6 +70,7 @@
                                         <td class="taskOptions">{$row.sum_num}</td>
                                         <td class="taskOptions">{$row.ok_num}</td>
                                         <td class="taskOptions">{$row.average}</td>
+                                        <td class="taskOptions">{$row.}</td>
                                         <td class="taskOptions">
                                             <button onClick="javascript:window.location.href=`{:U('Worder/public_worder_stu_detail',array('year'=>$year,'month'=>$month,'uid'=>$row['user_id']))}`" title="详情" class="btn btn-success  btn-smsm"><i class="fa  fa-building-o"></i></button>
                                         </td>
