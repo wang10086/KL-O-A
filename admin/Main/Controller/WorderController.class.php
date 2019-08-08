@@ -230,12 +230,12 @@ class WorderController extends BaseController{
 
     //查看工单详情
     public function worder_info(){
-        $id             = I('id');
-        $db             = M('worder');
-        $info           = $db->where(array('id'=>$id))->find();
-        $roleid         = cookie('roleid');
-        $this->dept_list= M('worder_dept')->field("id,pro_title")->select();
-        $this->record   = M('worder_record')->where(array('worder_id'=>$id))->order('id DESC')->select();
+        $id                         = I('id');
+        $db                         = M('worder');
+        $info                       = $db->where(array('id'=>$id))->find();
+        $roleid                     = cookie('roleid');
+        $this->dept_list            = M('worder_dept')->field("id,pro_title")->select();
+        $this->record               = M('worder_record')->where(array('worder_id'=>$id))->order('id DESC')->select();
 
         //判断工单类型
         if($info['worder_type']==0) $info['type'] = '维修工单';
@@ -255,25 +255,30 @@ class WorderController extends BaseController{
 
         if ($info['urgent']==1)     $info['urgent_stu'] = "<span class='yellow'>申请加急,未审核</span>";
         if ($info['urgent']==2)     $info['urgent_stu'] = "<span class='red'>加急工单</span>";
+        $pfwhere                    = array();
+        $pfwhere['s.kind']          = P::SCORE_KIND_WORDER;
+        $pfwhere['s.pub_id']        = $id;
+        $field                      = 's.*,d.AA as aat,d.BB as bbt,d.CC as cct,d.DD as ddt,d.EE as eet';
+        $pingfen                    = M()->table('__SATISFACTION__ as s')->join('__SCORE_DIMENSION__ as d on d.satisfaction_id=s.id','left')->field($field)->where($pfwhere)->find();
 
-        $this->ids      = array_unique(M('worder_dept')->getfield("dept_id",true));
-        $this->info     = $info;
-        $this->atts     = get_res(P::WORDER_INI,$id);
-        $this->exe_atts = get_res(P::WORDER_EXE,$id);
-        $wd_id          = $info['wd_id'];
+        $this->ids                  = array_unique(M('worder_dept')->getfield("dept_id",true));
+        $this->info                 = $info;
+        $this->atts                 = get_res(P::WORDER_INI,$id);
+        $this->exe_atts             = get_res(P::WORDER_EXE,$id);
+        $wd_id                      = $info['wd_id'];
         if ($wd_id != 0){
-            $dept           = M('worder_dept')->where(array('id'=>$wd_id))->find();
-            if ($dept['type']==0) $dept['n_type'] = '成熟产品';
-            if ($dept['type']==1) $dept['n_type'] = '新产品';
-            if ($dept['type']==2) $dept['n_type'] = '定制产品';
-            $this->dept     = $dept;
+            $dept                   = M('worder_dept')->where(array('id'=>$wd_id))->find();
+            if ($dept['type']==0)   $dept['n_type'] = '成熟产品';
+            if ($dept['type']==1)   $dept['n_type'] = '新产品';
+            if ($dept['type']==2)   $dept['n_type'] = '定制产品';
+            $this->dept             = $dept;
         }
         //执行人岗位
-        $exe_user_id    = $info['assign_id']?$info['assign_id']:$info['exe_user_id'];
-        $post_id        = M()->table('__ACCOUNT__ as a')->join('__POSTS__ as p on p.id = a.postid','left')->where(array('a.id'=>$exe_user_id))->getField('p.id');
-        $this->post_id  = $post_id;
-        $pingfen        = M('worder_score')->where(array('worder_id'=>$id))->find();
-        $this->pingfen  = json_encode($pingfen);
+        $exe_user_id                = $info['assign_id']?$info['assign_id']:$info['exe_user_id'];
+        $post_id                    = M()->table('__ACCOUNT__ as a')->join('__POSTS__ as p on p.id          = a.postid','left')->where(array('a.id'=>$exe_user_id))->getField('p.id');
+        $this->post_id              = $post_id;
+        //$pingfen                  = M('worder_score')->where(array('worder_id'=>$id))->find();
+        $this->pingfen              = json_encode($pingfen);
         $this->display();
 
     }
@@ -409,37 +414,104 @@ class WorderController extends BaseController{
         }
     }
 
+
+    /**
+     * CREATE TABLE `oa_satisfaction` (
+    `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+    `` int(11) NOT NULL DEFAULT '0' COMMENT '关联的相关id, kind=>2,工单id',
+    `type` tinyint(4) NOT NULL DEFAULT '0' COMMENT '评分类型 : 0=>其他 ,1=>研发',
+    `kind` tinyint(4) NOT NULL DEFAULT '0' COMMENT '评分类型 ; 1=>内部人员满意度评分,2=>工单评分',
+    `account_id` int(11) NOT NULL COMMENT '被评分人id',
+    `account_name` varchar(24) NOT NULL COMMENT '被评分人name',
+    `input_userid` int(11) NOT NULL DEFAULT '0' COMMENT '评分人员id',
+    `input_username` varchar(20) NOT NULL COMMENT '评分人员名称',
+    `monthly` char(6) NOT NULL DEFAULT '' COMMENT '年月',
+    `has_rd` tinyint(4) NOT NULL DEFAULT '0' COMMENT '本部门有无相关岗位(两种评分页面) 0=>无 , 1=>有',
+    `problem` varchar(200) DEFAULT NULL COMMENT '问题',
+    `content` varchar(200) NOT NULL DEFAULT '' COMMENT '评价内容',
+    `` int(11) NOT NULL DEFAULT '0',
+    `dimension` tinyint(4) NOT NULL DEFAULT '0' COMMENT '考核维度',
+    `AA` tinyint(4) NOT NULL DEFAULT '0' COMMENT '内部人员评分结果,字段名请针对score_dimension表中用户id和对应字段',
+    `BB` tinyint(4) NOT NULL DEFAULT '0' COMMENT '内部人员评分结果,字段名请针对score_dimension表中用户id和对应字段',
+    `CC` tinyint(4) NOT NULL DEFAULT '0' COMMENT '内部人员评分结果,字段名请针对score_dimension表中用户id和对应字段',
+    `DD` tinyint(4) NOT NULL DEFAULT '0' COMMENT '内部人员评分结果,字段名请针对score_dimension表中用户id和对应字段',
+    `EE` tinyint(4) NOT NULL DEFAULT '0' COMMENT '	内部人员评分结果,字段名请针对score_dimension表中用户id和对应字段',
+    `FF` tinyint(4) NOT NULL DEFAULT '0' COMMENT '内部人员评分结果,字段名请针对score_dimension表中用户id和对应字段',
+    PRIMARY KEY (`id`),
+    KEY `account_id` (`account_id`)
+    ) ENGINE=InnoDB AUTO_INCREMENT=279 DEFAULT CHARSET=utf8 COMMENT='内部员工评价表';
+     */
+
+    /**
+     * D:\o2o\oa\admin\Main\Controller\WorderController.class.php:445:
+    array (size=6)
+    'dosubmint' => string '1' (length=1)
+    'id' => string '1727' (length=4)
+    'info' =>
+        array (size=1)
+        'status' => string '-3' (length=2)
+    'sco' =>
+        array (size=9)
+        'bpfr_id' => string '164' (length=3)
+        'bpfr_name' => string '杜莹' (length=6)
+        'AA' => string '3' (length=1)
+        'BB' => string '4' (length=1)
+        'CC' => string '5' (length=1)
+        'DD' => string '3' (length=1)
+        'EE' => string '2' (length=1)
+        'dimension' => string '5' (length=1)
+        'content' => string 'ceshicehsi测试' (length=16)
+    'data' =>
+        array (size=5)
+        'AA' => string '文字准确度' (length=15)
+        'BB' => string '图片准确性' (length=15)
+        'CC' => string '文章要素完整性' (length=21)
+        'DD' => string '设计考虑用户使用习惯、各类推广牵引效果、情感及体验感受' (length=81)
+        'EE' => string '即时掌握相关热点，匹配专题策划、 活动，提高客户成交率' (length=79)
+    'score' => string '2' (length=1)
+     */
     //发起人确认工单执行
     public function audit_resure(){
         if (isset($_POST['dosubmint'])) {
-            $id     = I('id');
-            $info   = I('info');
-            $sco    = I('sco');
-            $info['ini_confirm_time']  = NOW_TIME;
-            $exe_user_id    = M('worder')->where(array('id'=>$id))->getfield('exe_user_id');
-            $score_info     = M('worder_score')->where(array('worder_id'=>$id))->find();
+            $worder_db                  = M('worder');
+            $score_db                   = M('satisfaction'); //评分表
+            $score_dimension_db         = M('score_dimension'); //评分维度表
+            $id                         = I('id');
+            $info                       = I('info');
+            $sco                        = I('sco');
+            $data                       = I('data');
+            $info['ini_confirm_time']   = NOW_TIME;
+            $exe_user_id                = M('worder')->where(array('id'=>$id))->getfield('exe_user_id');
+            $score_info                 = M('satisfaction')->where(array('pub_id'=>$id,'kind'=>P::SCORE_KIND_WORDER))->find();
 
             //保存评分信息
             if ($sco){
-                $sco['worder_id']   = $id;
-                $sco['pfr_id']      = cookie('userid');
-                $sco['pfr_name']    = cookie('nickname');
-                $sco['input_time']  = NOW_TIME;
+                $sco['pub_id']          = $id;
+                $sco['kind']            = P::SCORE_KIND_WORDER;
+                $sco['input_userid']    = cookie('userid');
+                $sco['input_username']  = cookie('nickname');
+                $sco['create_time']     = NOW_TIME;
+                $data['account_id']     = $sco['account_id'];
+                $data['account_name']   = $sco['account_name'];
                 if ($score_info){
-                    M('worder_score')->where(array('worder_id'=>$id))->save($sco);
+                    $res                = $score_db->where(array('worder_id'=>$id))->save($sco);
+                    $data['satisfaction_id']= $score_info['id'];
+                    $score_dimension_db->where(array('id'=>$score_info['id']))->save($data);
                 }else{
-                    M('worder_score')->add($sco);
+                    $res                = $score_db->add($sco);
+                    $data['satisfaction_id']= $res;
+                    $score_dimension_db->add($data);
                 }
             }
 
             if ($info['status'] == 3){
-                $res    = M('worder')->where("id = '$id'")->save($info);
-                if ($res){
+                $result                 = M('worder')->where("id = '$id'")->save($info);
+                if ($result){
                     //工单操作记录
-                    $record = array();
-                    $record['worder_id'] = $id;
-                    $record['type']      = 6;
-                    $record['explain']   = '发起人确认该工单已完成';
+                    $record             = array();
+                    $record['worder_id']= $id;
+                    $record['type']     = 6;
+                    $record['explain']  = '发起人确认该工单已完成';
                     worder_record($record);
 
                     $this->success('操作成功!');
@@ -452,21 +524,21 @@ class WorderController extends BaseController{
                 $info['complete_time']  = 0;
                 $info['assign_id']      = 0;
                 $info['assign_name']    = null;
-                $res    = M('worder')->where("id = '$id'")->save($info);
+                $res                    = M('worder')->where("id = '$id'")->save($info);
                 if ($res){
                     //工单操作记录
-                    $record = array();
-                    $record['worder_id'] = $id;
-                    $record['type']      = -3;
-                    $record['explain']   = '该工单需要二次执行';
+                    $record             = array();
+                    $record['worder_id']= $id;
+                    $record['type']     = -3;
+                    $record['explain']  = '该工单需要二次执行';
                     worder_record($record);
 
                     //发送系统通知消息
-                    $uid     = cookie('userid');
-                    $title   = '您有来自['.cookie('rolename').'--'.cookie('name').']返回的需要修改的工单!';
-                    $content = '';
-                    $url     = U('Worder/worder_info',array('id'=>$id));
-                    $user    = '['.$exe_user_id.']';
+                    $uid                = cookie('userid');
+                    $title              = '您有来自['.cookie('rolename').'--'.cookie('name').']返回的需要修改的工单!';
+                    $content            = '';
+                    $url                = U('Worder/worder_info',array('id'=>$id));
+                    $user               = '['.$exe_user_id.']';
                     send_msg($uid,$title,$content,$url,$user,'');
                     $this->success('操作成功!');
                 }else{

@@ -310,7 +310,6 @@
                                 <form method="post" action="{:U('Worder/revoke')}" name="myform" >
                                     <input type="hidden" name="dosubmint" value="1">
                                     <input type="hidden" name="id" value="{$info.id}">
-
                                     <div class="form-group col-md-12" style="margin-top:10px;">
                                         <div class="checkboxlist" id="applycheckbox" style="margin-top:10px;">
                                             <input type="checkbox" name="info[status]" value="-2" > &#12288;撤销该工单
@@ -328,7 +327,6 @@
                                 <form method="post" action="{:U('Worder/audit_resure')}" name="myform" onsubmit="submitBefore()" >
                                     <input type="hidden" name="dosubmint" value="1">
                                     <input type="hidden" name="id" value="{$info.id}">
-
                                     <div class="form-group col-md-12" style="margin-top:10px;">
                                         <div class="checkboxlist" id="applycheckbox" style="margin-top:10px;">
                                             <input type="radio" name="info[status]" checked value="3" > 该工单已执行完毕
