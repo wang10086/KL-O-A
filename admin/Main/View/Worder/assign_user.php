@@ -48,11 +48,11 @@
             <input type="text" class="form-control" name="key"  placeholder="关键字" value="">
             <button type="submit" class="btn btn-success">搜索</button>
             </form>
-            
             </div>
             
-            <form method="post" action="{:U('Worder/assign_user')}" name="myform" id="gosub">
-            <input type="hidden" name="dosubmit" value="1">
+            <form method="post" action="{:U('Worder/public_save')}" name="myform" id="gosub">
+            <input type="hidden" name="dosubmint" value="1">
+            <input type="hidden" name="savetype" value="2">
             <input type="hidden" name="id" value="{$opid}">
             <table class="table table-bordered dataTable fontmini" id="tablelist" style="margin-top:10px;">
                 <tr role="row" class="orders" >

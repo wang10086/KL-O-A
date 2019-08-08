@@ -280,105 +280,20 @@ class WorderController extends BaseController{
 
     //执行人响应工单并指派工单
     public function assign_user(){
-
-        $opid       = I('id');
-        $info       = I('info');
-        $user       = M('account')->getField('id,nickname', true);
-        $worder     = M('worder')->where(array('id'=>$opid))->find();
-        $ini_user_id= $worder['ini_user_id'];
-
-        if(isset($_POST['dosubmit']) && $info){
-
-            //保存指派人信息
-            $assign_name        = M('account')->where(array('id'=>$info))->getField('nickname');
-            $data               = array();
-            $data['assign_id']  = $info;
-            $data['assign_name']= $assign_name;
-            $data['response_time'] = NOW_TIME;
-            //$data['status']     = 1;//执行部门已响应
-
-            $res = M('worder')->where(array('id'=>$opid))->save($data);
-            if ($res){
-                //工单操作记录
-                $record = array();
-                $record['worder_id'] = $opid;
-                $record['type']     = 3;
-                $record['explain']  = '指派['.$assign_name.']为工单执行人';
-                worder_record($record);
-
-                //发送系统通知消息
-                $uid     = cookie('userid');
-                $title   = '您有来自['.cookie('rolename').'--'.cookie('name').']指派的负责项目工单待执行!';
-                $content = '';
-                $url     = U('Worder/worder_info',array('id'=>$opid));
-                $user    = '['.$info.']';
-                send_msg($uid,$title,$content,$url,$user,'');
-                $this->success('已指派负责人!');
-                //echo '<script>setTimeout(window.top.art.dialog({id:"closeart"}).close(),2000);</script>';
-                echo '<script>window.top.location.reload();</script>';
-
-            }
-
-        }elseif (isset($_POST['do_exe'])){
-
-            $info                   = I('info');
-            $unfinished             = I('unfinished');
-            $info['unfinished']     = $unfinished;
-            if ($info['status'] == -1){
-                //被拒绝工单 , 工单完成
-                $info['response_time']  = NOW_TIME;
-                $info['complete_time']  = NOW_TIME;
-                $info['ini_confirm_time']=NOW_TIME;
-
-                //发送系统通知消息
-                $uid     = cookie('userid');
-                $title   = '您有来自['.cookie('rolename').'--'.cookie('name').']的工单信息反馈!';
-                $content = '';
-                $url     = U('Worder/worder_info',array('id'=>$opid));
-                $user    = '['.$ini_user_id.']';
-                send_msg($uid,$title,$content,$url,$user,'');
-
-                //工单操作记录
-                $record = array();
-                $record['worder_id'] = $opid;
-                $record['type']      = -2;
-                $record['explain']   = '拒绝该工单';
-                worder_record($record);
-            }else{
-                $info['response_time']      = NOW_TIME;
-                $num                        = I('use_time') ? (int)I('use_time') : '';
-                if($num) $info['plan_complete_time'] = strtotime(getAfterWorkDay($num,$worder['create_time']));
-
-                //工单操作记录
-                $record = array();
-                $record['worder_id'] = $opid;
-                $record['type']      = 2;
-                $record['explain']   = '响应该工单';
-                worder_record($record);
-            }
-            $res = M('worder')->where(array('id'=>$opid))->save($info);
-            if ($res){
-                $this->success("已响应该工单");
-            }else{
-                $this->error("保存数据失败");
-            }
-
-        }else{
-
-            //用户列表
-            $key = I('key');
-            $db = M('account');
-            $where = array();
-            $where['id'] = array('gt',3);
-            if($key) $where['nickname'] = array('like','%'.$key.'%');
-            $pagecount = $db->where($where)->count();
-            $page = new Page($pagecount,6);
-            $this->pages = $pagecount>6 ? $page->show():'';
-            $this->lists = $db->where($where)->limit($page->firstRow . ',' . $page->listRows)->order($this->orders('roleid'))->select();
-            $this->role  = M('role')->getField('id,role_name', true);
-            $this->opid  = $opid;
-            $this->display('assign_user');
-        }
+        $opid                       = I('id');
+        //用户列表
+        $key                        = I('key');
+        $db                         = M('account');
+        $where                      = array();
+        $where['id']                = array('gt',3);
+        if($key) $where['nickname'] = array('like','%'.$key.'%');
+        $pagecount                  = $db->where($where)->count();
+        $page                       = new Page($pagecount,6);
+        $this->pages                = $pagecount>6 ? $page->show():'';
+        $this->lists                = $db->where($where)->limit($page->firstRow . ',' . $page->listRows)->order($this->orders('roleid'))->select();
+        $this->role                 = M('role')->getField('id,role_name', true);
+        $this->opid                 = $opid;
+        $this->display('assign_user');
     }
 
     //修改工单
@@ -561,48 +476,6 @@ class WorderController extends BaseController{
         }
     }
 
-    //项目工单
-    /*public function project(){
-        $this->title('工单管理');
-        $db                         = M('worder');
-        $worder_title               = I('worder_title');
-        $worder_content             = I('worder_content');
-        $pin                        = I('pin')?I('pin'):0;
-
-        $where                      = array();
-        $where['worder_type']       = array('eq',P::WORDER_PROJECT);
-
-        if ($worder_title)          $where['worder_title']        = array('like','%'.$worder_title.'%');
-        if ($worder_content)        $where['worder_content']      = array('like','%'.$worder_content.'%');
-        if ($pin==101)			    $where['o.create_user']		  = cookie('userid');
-
-        //分页
-        $pagecount		= $db->where($where)->count();
-        $page			= new Page($pagecount, P::PAGE_SIZE);
-        $this->pages	= $pagecount>P::PAGE_SIZE ? $page->show():'';
-
-        $lists          = $db->where($where)->limit($page->firstRow . ',' . $page->listRows)->order($this->orders('create_time'))->select();
-        foreach($lists as $k=>$v){
-            //判断工单类型
-            if($v['worder_type']==0) $lists[$k]['type'] = '维修工单';
-            if($v['worder_type']==1) $lists[$k]['type'] = '管理工单';
-            if($v['worder_type']==2) $lists[$k]['type'] = '质量工单';
-            if($v['worder_type']==3) $lists[$k]['type'] = '其他工单';
-            if($v['worder_type']==100)$lists[$k]['type']= '项目工单';
-
-            //判断工单状态
-            if($v['status']==0)     $lists[$k]['sta'] = '<span class="red">未响应</span>';
-            if($v['status']==1)     $lists[$k]['sta'] = '<span class="yellow">执行部门已响应</span>';
-            if($v['status']==2)     $lists[$k]['sta'] = '<span class="yellow">执行部门已确认完成</span>';
-            if($v['status']==3)     $lists[$k]['sta'] = '<span class="green">发起人已确认完成</span>';
-            if($v['status']==-1)    $lists[$k]['sta'] = '拒绝或无效工单';
-            if($v['status']==-2)    $lists[$k]['sta'] = '已撤销';
-            if($v['status']==-3)    $lists[$k]['sta'] = '<span class="red">需要做二次修改</span>';
-        }
-        $this->lists    = $lists;
-        $this->pin      = $pin;
-        $this->display();
-    }*/
 
     //各部门工单项列表
     public function dept_worder_list(){
@@ -921,6 +794,93 @@ class WorderController extends BaseController{
         $this->month                = $month;
         $this->uid                  = $uid;
         $this->display('worder_stu_detail');
+    }
+
+    public function public_save(){
+        $savetype                               = I('savetype');
+
+        $opid                                   = I('id');
+        $info                                   = I('info');
+        $user                                   = M('account')->getField('id,nickname', true);
+        $worder                                 = M('worder')->where(array('id'=>$opid))->find();
+        $ini_user_id                            = $worder['ini_user_id'];
+
+        if (isset($_POST['dosubmint']) && $savetype){
+            //保存工单确认信息
+            if ($savetype == 1){
+                $info                           = I('info');
+                $unfinished                     = I('unfinished');
+                $info['unfinished']             = $unfinished;
+                if ($info['status'] == -1){
+                    //被拒绝工单 , 工单完成
+                    $info['response_time']      = NOW_TIME;
+                    $info['complete_time']      = NOW_TIME;
+                    $info['ini_confirm_time']   = NOW_TIME;
+
+                    //发送系统通知消息
+                    $uid                        = cookie('userid');
+                    $title                      = '您有来自['.cookie('rolename').'--'.cookie('name').']的工单信息反馈!';
+                    $content                    = '';
+                    $url                        = U('Worder/worder_info',array('id'=>$opid));
+                    $user                       = '['.$ini_user_id.']';
+                    send_msg($uid,$title,$content,$url,$user,'');
+
+                    $record_type                = -2;
+                    $record_explain             = '拒绝该工单';
+                }else{
+                    $info['response_time']      = NOW_TIME;
+                    $num                        = I('use_time') ? (int)I('use_time') : '';
+                    if($num) $info['plan_complete_time'] = strtotime(getAfterWorkDay($num,$worder['create_time']));
+                    $record_type                = 2;
+                    $record_explain             = '响应该工单';
+                }
+
+                //工单操作记录
+                $record                         = array();
+                $record['worder_id']            = $opid;
+                $record['type']                 = $record_type;
+                $record['explain']              = $record_explain;
+                worder_record($record);
+
+                $res                            = M('worder')->where(array('id'=>$opid))->save($info);
+                if ($res){
+                    $this->success("已响应该工单");
+                }else{
+                    $this->error("保存数据失败");
+                }
+            }
+
+            //保存指派人信息
+            if ($savetype == 2){
+                $assign_name                    = M('account')->where(array('id'=>$info))->getField('nickname');
+                $data                           = array();
+                $data['assign_id']              = $info;
+                $data['assign_name']            = $assign_name;
+                $data['response_time']          = NOW_TIME;
+                //$data['status']               = 1;//执行部门已响应
+
+                $res                            = M('worder')->where(array('id'=>$opid))->save($data);
+                if ($res){
+                    //工单操作记录
+                    $record                     = array();
+                    $record['worder_id']        = $opid;
+                    $record['type']             = 3;
+                    $record['explain']          = '指派['.$assign_name.']为工单执行人';
+                    worder_record($record);
+
+                    //发送系统通知消息
+                    $uid                        = cookie('userid');
+                    $title                      = '您有来自['.cookie('rolename').'--'.cookie('name').']指派的负责项目工单待执行!';
+                    $content                    = '';
+                    $url                        = U('Worder/worder_info',array('id'=>$opid));
+                    $user                       = '['.$info.']';
+                    send_msg($uid,$title,$content,$url,$user,'');
+                    $this->success('已指派负责人!');
+                    echo '<script>window.top.location.reload();</script>';
+
+                }
+            }
+        }
     }
 
 }

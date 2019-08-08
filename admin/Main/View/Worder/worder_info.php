@@ -185,8 +185,9 @@
                         <div class="box-body" style="padding-top:20px;" id="form_tip">
 
                                 <?php if ($info['status']==0 || $info['status']==-3){ ?>
-                                <form method="post" action="{:U('Worder/assign_user')}" name="myform" id="save_huikuan">
-                                <input type="hidden" name="do_exe" value="1">
+                                <form method="post" action="{:U('Worder/public_save')}" name="myform">
+                                <input type="hidden" name="dosubmint" value="1">
+                                <input type="hidden" name="savetype" value="1">
                                 <input type="hidden" name="id" value="{$info.id}">
                                 <input type="hidden" name="unfinished" value="">
                                 <input type="hidden" name="referer" value="<?php echo $_SERVER['HTTP_REFERER']; ?>" />
