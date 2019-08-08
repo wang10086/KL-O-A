@@ -831,7 +831,7 @@ class InspectController extends BaseController{
         $mod                            = D('Inspect');
         $db                             = M('satisfaction');
         $satisfaction_config_db         = M('satisfaction_config');
-        $satisfaction_lists             = $db->where(array('monthly'=>$yearMonth))->select(); //所有的已评分列表
+        $satisfaction_lists             = $db->where(array('monthly'=>$yearMonth,'kind'=>P::SCORE_KIND_ACCOUNT))->select(); //所有的已评分列表
         $should_users_lists             = $satisfaction_config_db->where(array('month'=>$yearMonth))->select(); //所有当月应评分信息
         $user_lists                     = array_keys(C('SATISFACTION_USERS'));
 
@@ -892,6 +892,7 @@ class InspectController extends BaseController{
             $info['content']            = trim(I('content'));
             $info['input_userid']       = session('userid');
             $info['input_username']     = session('name');
+            $info['kind']               = P::SCORE_KIND_ACCOUNT;
             $info['create_time']        = NOW_TIME;
             $info['monthly']            = trim(I('monthly'));
             if (!$info['monthly']) $this->error('考核月份不能为空');
@@ -938,6 +939,7 @@ class InspectController extends BaseController{
         if (!$uid) $this->error('获取数据失败');
 
         $where                      = array();
+        $where['kind']              = P::SCORE_KIND_ACCOUNT;
         $where['monthly']           = $month;
         $where['account_id']        = $uid;
         $info                       = $db->where($where)->select();
@@ -986,7 +988,7 @@ class InspectController extends BaseController{
         $month                      = trim(I('month'));
         $dimension                  = $this->get_user_dimension($uid); //获取考核维度
         $db                         = M('satisfaction');
-        $lists                      = $db->where(array('account_id'=>$uid,'monthly'=>$month))->select();
+        $lists                      = $db->where(array('account_id'=>$uid,'monthly'=>$month,'kind'=>P::SCORE_KIND_ACCOUNT))->select();
         foreach ($lists as $k=>$v){
             $lists[$k]['AA']        = $v['AA']?$v['AA']:'<font color="#999999">未考核</font>';
             $lists[$k]['BB']        = $v['BB']?$v['BB']:'<font color="#999999">未考核</font>';

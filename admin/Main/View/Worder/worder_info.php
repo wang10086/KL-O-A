@@ -356,7 +356,9 @@
                     <div class="box box-warning">
                         <div class="box-header">
                             <h3 class="box-title">工单评分信息</h3>
+                            <?php if ($pingfen && $pingfen != 'null'){ ?>
                             <h3 class="box-title pull-right" style="font-weight:normal; color:#333333;">被评分人：<span id="bpfr"></span></h3>
+                            <?php } ?>
                         </div>
                         <div class="box-body">
                             <include file="score_read" />
