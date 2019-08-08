@@ -836,17 +836,24 @@ class KpiController extends BaseController {
             '5' => '<span class="blue">处理中...</span>',
             '6' => '<span class="yellow">待审批</span>'
 		);
-		
-		
-        
+
+		$new_lists                                  = array();
+        $authority_uids                             = array(1,11,38,26,173);//11乔总,38杨总,26李岩,173蔡金龙
 		foreach($lists as $k=>$v){
-			//$lists[$k]['score']                   = $v['status'] ? '-'.$v['red_score']:'+'.$v['inc_score'];
-			$lists[$k]['statusstr']                 = $stastr[$v['status']];
+			//$lists[$k]['statusstr']                 = $stastr[$v['status']];
+            $v['statusstr']                         = $stastr[$v['status']];
+            if (in_array(session('userid'),$authority_uids)){
+                $new_lists[]                        = $v;
+            }else{
+                if ($v['status'] ==1){ //审核通过
+                    $new_lists[]                    = $v;
+                }
+            }
 		}
 
 		$this->qaqc_type                            = C('QAQC_TYPE');
 		$this->pin                                  = $pin;
-		$this->lists                                = $lists;
+		$this->lists                                = $new_lists;
 		$this->prveyear	                            = $this->year-1;
 		$this->nextyear	                            = $this->year+1;
 		$this->display('qa');	
