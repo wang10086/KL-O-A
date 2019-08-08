@@ -59,7 +59,6 @@
                                     <tr role="row" class="orders" >
                                         <th class="sorting" width="60" data="id">ID</th>
                                         <th class="sorting" width="120" data="worder_title">工单标题</th>
-                                        <th class="sorting" width="80" data="worder_type">工单类型</th>
                                         <th class="sorting" width="80" data="init_user_name">发起人姓名</th>
                                         <th class="sorting" width="80"  data="exe_user_name">接收人姓名</th>
                                         <th class="sorting" width="80"  data="assign_name">执行人姓名</th>
@@ -72,7 +71,6 @@
                                     <tr>
                                         <td>{$row.id}<if condition="($row.urgent eq 2) and (in_array($row.status,array(0,1,2)))"><small class="badge pull-right bg-red" style="margin-right:4px;">加急</small></if></td>
                                         <td><a href="{:U('Worder/worder_info',array('id'=>$row['id']))}">{$row.worder_title}</a></td>
-                                        <td>{$worder_type[$row[worder_type]]}</td>
                                         <td>{$row.ini_user_name}</td>
                                         <td>{$row.exe_user_name}</td>
                                         <td><?php echo $row['assign_name']?$row['assign_name']:"<span class=\"yellow\">未指派</span>"; ?></td>

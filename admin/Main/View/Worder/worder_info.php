@@ -58,9 +58,9 @@
                                         </if>
                                     </tr>
 
-                                    <if condition="$info['urgent'] eq 1">
+                                    <if condition="in_array($info['urgent'],array(1,2))">
                                         <tr>
-                                            <td width="33.33%">是否加急: <span style="color: red">加急工单</span></td>
+                                            <td width="33.33%">是否加急: {$info['urgent_stu']}</td>
                                             <td colspan="2">加急原因: {$info.urgent_cause}</td>
                                         </tr>
                                     </if>

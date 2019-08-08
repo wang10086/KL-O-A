@@ -253,6 +253,9 @@ class WorderController extends BaseController{
         if($info['status']==-2)     $info['sta'] = '已撤销';
         if($info['status']==-3)     $info['sta'] = '<span class="red">需要做二次修改</span>';
 
+        if ($info['urgent']==1)     $info['urgent_stu'] = "<span class='yellow'>申请加急,未审核</span>";
+        if ($info['urgent']==2)     $info['urgent_stu'] = "<span class='red'>加急工单</span>";
+
         $this->ids      = array_unique(M('worder_dept')->getfield("dept_id",true));
         $this->info     = $info;
         $this->atts     = get_res(P::WORDER_INI,$id);
