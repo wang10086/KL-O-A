@@ -2695,8 +2695,6 @@ class OpController extends BaseController {
 			$where['op_id']		    = array('neq',$opid);
 			$check				    = M('op')->where($where)->find();
 			if($check)              $this->error($info['group_id'].'团号已存在');
-            if (!$info['dep_time']) $this->error('出团时间不能为空');
-            if (!$info['ret_time']) $this->error('返回时间不能为空');
 
 			$info['op_id']			= $opid;
             $info['group_id']       = trim($info['group_id']);
@@ -2705,6 +2703,13 @@ class OpController extends BaseController {
 			$info['dep_time']		= $info['dep_time'] ? strtotime($info['dep_time']) : 0;
 			$info['ret_time']		= $info['ret_time'] ? strtotime($info['ret_time']) : 0;
 			$info['confirm_time']	= time();
+
+            if (!$info['group_id']) $this->error('团号填写有误');
+            if (!$info['dep_time'] || $info['dep_time']==0) $this->error('出团时间填写有误');
+            if (!$info['ret_time'] || $info['ret_time']==0) $this->error('返回时间填写有误');
+            if (!is_numeric($info['days']) || $info['days']==0)$this->error('实际天数填写有误');
+            if (!is_numeric($info['num_adult']) || $info['num_adult']==0) $this->error('出团成人人数格式错误');
+            if (!is_numeric($info['num_children']) || $info['num_children']==0) $this->error('出团儿童人数格式错误');
 			//判断是否已经确认
 			if($confirm){
                 if($upd_num == 1){
