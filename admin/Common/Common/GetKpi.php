@@ -3928,9 +3928,15 @@ function get_yw_department(){
 
     //获取工单状态信息
     function get_worder_stu($lists,$uid=0){
-        $sum_num                    = 0;
-        $ok_num                     = 0;
+        $worder_ids                 = array_column($lists,'id');
+        $score_lists                = getWorderScore($worder_ids);
+        $sum_num                    = 0; //工单总数
+        $ok_num                     = 0; //合格工单数
         foreach($lists as $k=>$v){
+            $sum_zongfen            = 0; //合计总分
+            $sum_defen              = 0; //合计得分
+            $worder_zongfen         = 0; //该工单总分
+            $worder_defen           = 0; //该工单得分
             $sum_num++;
             //判断工单状态
             if($v['status']==0)     $lists[$k]['sta'] = '<span class="red">未响应</span>';
@@ -3953,16 +3959,44 @@ function get_yw_department(){
                     $lists[$k]['com_stu'] = '<span class="red">已超时</span>';
                 }
             }
+
+            //得分
+            foreach ($score_lists as $sk=>$sv){
+                $sum_zongfen        += $sv['dimension']*5;
+                $sum_defen          += $sv['AA'] + $sv['BB'] + $sv['CC'] + $sv['DD'] + $sv['EE'];
+                if ($sv['pub_id']==$v['id']){
+                    $worder_zongfen = $sv['dimension'] * 5;
+                    $worder_defen   = $sv['AA'] + $sv['BB'] + $sv['CC'] + $sv['DD'] + $sv['EE'];
+                    $lists[$k]['score_avg'] = (round($worder_defen/$worder_zongfen,4)*100).'%';
+                }
+            }
+            $lists[$k]['score_avg'] = $lists[$k]['score_avg'] ? $lists[$k]['score_avg'] : "<font color='#999'>未评分</font>";
         }
+
         $user_name                  = $uid ? username($uid) : '';
         $data                       = array();
         $data['user_id']            = $uid;
         $data['user_name']          = $user_name;
         $data['sum_num']            = $sum_num;
         $data['ok_num']             = $ok_num;
-        $data['average']            = $sum_num>0 ? (round($ok_num/$sum_num,4)*100).'%' : '100%';
+        $data['average']            = $sum_num>0 ? (round($ok_num/$sum_num,4)*100).'%' : '100%'; //及时率
+        $data['score_avg']          = $sum_num>0 ? (round($sum_defen/$sum_zongfen,4)*100).'%' : '100%'; //已评分满意度
         $data['sum_lists']          = $lists;
         return $data;
+    }
+
+    /**
+     * 获取所有工单的评分信息
+     * @param $worderids
+     * @return mixed
+     */
+    function getWorderScore($worderids){
+        $where                      = array();
+        $where['s.kind']            = 2; //P::SCORE_KIND_WORDER
+        $where['s.pub_id']          = array('in',$worderids);
+        $field                      = 's.*,d.AA as TAA,d.BB as TBB,d.CC as TCC,d.DD as TDD,d.EE as TEE';
+        $lists                      = M()->table('__SATISFACTION__ as s')->join('__SCORE_DIMENSION__ as d on d.satisfaction_id=s.id','left')->where($where)->field($field)->select();
+        return $lists;
     }
 
     /**

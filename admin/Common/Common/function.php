@@ -2735,7 +2735,7 @@ function updatekpi($month,$user){
                             $url            = U('Inspect/public_satisfied',array('year'=>$v['year'],'month'=>$mm,'uid'=>$v['user_id']));
                         }
 
-                        //业务人员满意度（京区业务中心研发)
+                        /*//业务人员满意度（京区业务中心研发)
                         //if (in_array($v['quota_id'],array(129,158))){
                         if (in_array($v['quota_id'],array(158))){
                             $where = array();
@@ -2752,7 +2752,7 @@ function updatekpi($month,$user){
                                 $complete	= (round($hegelv/0.9,2)*100).'%';
                             }
                             $url            = '';
-                        }
+                        }*/
 
                         //工作及时率(京区业务中心)(工单)
                         if (in_array($v['quota_id'],array(130,136,148,150,186))){
@@ -3013,18 +3013,15 @@ function updatekpi($month,$user){
                             $url                    = '';
                         }
 
-                        //工作质量('平面设计')151
-                        if ($v['quota_id']==151){
-                            $score_date             = get_worder_score($user,$v['start_date'],$v['end_date'],5);
-                            $pingfencishu           = $score_date['pingfencishu'];
-                            $hegelv                 = $score_date['hegelv'];
-
-                            if ($hegelv >= 1 || !$pingfencishu){
-                                $complete           = 100;
-                            }else{
-                                $complete           = round(($hegelv*100)/72,2)*100;
-                            }
-                            $url                    = '';
+                        //工单满意度 151工=>作质量('平面设计') 158=>业务部门定制产品内部满意度 162=>研发专员对产品研发专业支持满意度
+                        if (in_array($v['quota_id'],array(151,158,162))){
+                            //及时率
+                            $uids                   = array($user);
+                            $lists                  = get_count_worder_lists($v['month']);
+                            $jishilv_data           = get_account_worder_stu_data($uids,$lists);
+                            $complete               = $jishilv_data[0]['score_avg'];
+                            $monon                  = substr($v['month'],-2);
+                            $url                    = U('Worder/public_worder_account_chart',array('year'=>$v['year'],'month'=>$monon,'pin'=>1));
                         }
 
                         //季度利润总额目标完成率(季度利润总额目标累计完成率)
@@ -3091,7 +3088,7 @@ function updatekpi($month,$user){
                             $url            = '';
                         }
 
-                        //研发专员对产品研发专业支持满意度
+                        /*//研发专员对产品研发专业支持满意度
                         if ($v['quota_id']==162){
                             $score_date             = get_worder_score($user,$v['start_date'],$v['end_date'],3,1);
                             $pingfencishu           = $score_date['pingfencishu'];
@@ -3103,7 +3100,7 @@ function updatekpi($month,$user){
                                 $complete           = (round(($hegelv*100)/90,2)*100).'%';
                             }
                             $url                    = '';
-                        }
+                        }*/
 
                         //业绩贡献度
                         if ($v['quota_id']==163){
