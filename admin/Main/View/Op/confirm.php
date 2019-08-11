@@ -460,7 +460,7 @@
                 var tcs_title = '<div class="userlist form-title" id="tcs_title">'+$('#tcs_title').html()+'</div>';
                 $('#tcs').html(tcs_title);
                 $('#tcs').append(con);
-                get_gpk();
+               // get_gpk();
             }
         })
 

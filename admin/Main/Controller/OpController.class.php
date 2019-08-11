@@ -1009,24 +1009,25 @@ class OpController extends BaseController {
 
             //保存辅导员/教师,专家具体需求信息
             if($opid && $savetype==13 ){
-
                 $data           = I('data');
                 $in_day         = I('in_day');
                 $tcs_time       = I('tcs_time');
-                $address        = I('address');
+                $address        = trim(I('address'));
                 $confirm_id     = I('confirm_id');
-                if (!$in_day || !$address) $this->error('请填写出行日期和出行时间');
                 $in_begin_day   = substr($in_day,0,10);
                 $in_end_day     = substr($in_day,13,10);
-                $tcs_begin_time = $in_end_day.' '.substr($tcs_time,0,8);
-                $tcs_end_time   = $in_end_day.' '.substr($tcs_time,11,8);
+                //$tcs_begin_time = $in_end_day.' '.substr($tcs_time,0,8);
+                //$tcs_end_time   = $in_end_day.' '.substr($tcs_time,11,8);
                 $info['in_begin_day']   = strtotime($in_begin_day);
                 $info['in_day']         = strtotime($in_end_day);
-                $info['tcs_begin_time'] = strtotime($tcs_begin_time)?strtotime($tcs_begin_time):strtotime($in_begin_day);
-                $info['tcs_end_time']   = strtotime($tcs_end_time)?strtotime($tcs_end_time):strtotime($in_end_day);
+                //$info['tcs_begin_time'] = strtotime($tcs_begin_time)?strtotime($tcs_begin_time):strtotime($in_begin_day);
+                //$info['tcs_end_time']   = strtotime($tcs_end_time)?strtotime($tcs_end_time):strtotime($in_end_day);
                 $info['address']        = $address;
                 $info['op_id']          = $opid;
                 $info['tcs_stu']        = 2;    //已确认需求(已成团)
+
+                if ($info['in_begin_day'] <= 0 || $info['in_day'] <=0 || ($info['in_begin_day'] > $info['in_day']))  $this->error('请正确填写出行时间');
+                if (!$info['address']) $this->error('请填写实施地点');
 
                 if ($data){
                     if ($confirm_id){
