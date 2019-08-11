@@ -32,7 +32,7 @@
                                     <input type="hidden" name="id" value="{$id}" >
 
                                     <div class="form-group col-md-8">
-                                        <label>产品模块名称</label>
+                                        <label>标准产品名称</label>
                                         <input type="text" name="info[title]" id="title" value="{$row.title}"  class="form-control" required />
                                     </div>
 
