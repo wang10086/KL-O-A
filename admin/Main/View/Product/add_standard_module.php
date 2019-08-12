@@ -35,7 +35,7 @@
                                     <input type="hidden" name="info[input_uname]" value="<?php echo $row['input_uname'] ? $row['input_uname'] : session('nickname'); ?>" class="form-control"  />
 
                                     <div class="form-group col-md-6">
-                                        <label>产品模块名称</label>
+                                        <label>标准模块名称</label>
                                         <input type="text" name="info[title]" id="title" value="{$row.title}"  class="form-control" required />
                                     </div>
 
@@ -94,11 +94,83 @@
                                         <?php echo editor('content',$row['content']); ?>
                                     </div>
                                     <div class="form-group">&nbsp;</div>
-                                    
                                 </div><!-- /.box-body -->
-                                
-                                
                             </div><!-- /.box -->
+
+                                <style>
+                                    /*标准化模块*/
+                                    #standardModule{ padding:0; margin-top:-20px;}
+                                    #standardModule .form-control{ width:110px; float:left; margin-right:10px; border-radius:0;}
+                                    #standardModule .unitbox{ float:left; clear:none; border:none; padding:0; line-height:42px;}
+                                    #standardModule .title{ width:22px; float:left; height:30px; line-height:30px; margin-left:-30px; text-align:right; position:relative; z-index:100;}
+                                    #standardModule .userlist { width:100%; height:auto !important; float:left; clear:both; padding-bottom:15px; border-bottom:1px solid #cccccc; margin-top:15px;}
+                                    #standardModule .btn{ padding:7px 12px; font-size:12px;}
+                                    #standardModule td{ line-height:34px;}
+                                    #product_val{ display:none}
+                                    #standardModule .name_box{ width:14%;margin-right: 10px;}
+                                </style>
+
+                            <div class="box box-warning">
+                                <div class="box-header">
+                                    <h3 class="box-title">模块内容</h3>
+                                </div>
+                                <div class="box-body">
+                                    <div class="content">
+                                        <div class="content" style="padding-top:0px;">
+                                            <div id="standardModule">
+                                                <div class="userlist" id="product_id">
+                                                    <div class="unitbox name_box">活动</div>
+                                                    <div class="unitbox name_box">时长</div>
+                                                    <div class="unitbox name_box">模块内容</div>
+                                                    <div class="unitbox name_box">实施要求</div>
+                                                    <div class="unitbox name_box">配套资料</div>
+                                                    <div class="unitbox name_box">备注</div>
+                                                </div>
+                                                <?php if($product){ ?>
+                                                    <foreach name="product" key="k" item="v">
+                                                        <div class="userlist" id="product_id_{$v.id}">
+                                                            <span class="title"><?php echo $k+1; ?></span>
+                                                            <input type="hidden" name="resid[888{$v.id}][id]" value="{$v.id}" />
+                                                            <input type="hidden" name="product[888{$v.id}][product_id]" id="888{$v.id}_pid" value="{$v['product_id']}" />
+                                                            <input type="text" class="form-control name_box" name="product[888{$v.id}][product]" value="{$v.product}" />
+                                                            <input type="text" class="form-control name_box" name="product[888{$v.id}][spec]" value="{$v.spec}" />
+                                                            <input type="text" class="form-control name_box" name="product[888{$v.id}][amount]" value="{$v.amount}" />
+                                                            <!--<input type="text" class="form-control name_box" name="product[888{$v.id}][unitprice]" value="{$v.unitprice}" id="888{$v.id}_pname" onfocus="selectproduct(888{$v.id})" />-->
+                                                            <input type="text" class="form-control name_box" name="product[888{$v.id}][]" value="{$v.}" />
+                                                            <input type="text" class="form-control name_box" name="product[888{$v.id}][]" value="{$v.}" />
+                                                            <input type="text" class="form-control name_box" name="product[888{$v.id}][remarks]" value="{$v.remarks}">
+                                                            <a href="javascript:;" class="btn btn-danger btn-flat" onclick="delbox('product_id_{$v.id}')">删除</a>
+                                                        </div>
+                                                    </foreach>
+                                                <?php }else{ ?>
+                                                    <div class="userlist" id="product_id_0">
+                                                        <span class="title">1</span>
+                                                        <input type="hidden" name="product[0][product_id]" id="0_pid" />
+                                                        <input type="text" class="form-control name_box" name="product[0][product]" />
+                                                        <input type="text" class="form-control name_box" name="product[0][spec]" />
+                                                        <input type="text" class="form-control name_box" name="product[0][amount]" />
+                                                        <!--<input type="text" class="form-control name_box" name="product[0][unitprice]" id="0_pname" onfocus="selectproduct(0)" />-->
+                                                        <span class="form-control name_box" style="border: 1px solid red">
+                                                            {:standart_product_upload_m('file_1','files_1','','&nbsp;上传实施要求','box_1','','实施要求')}
+                                                        </span>
+
+                                                        <!--<input type="text" class="form-control name_box" name="product[888{$v.id}][]" value="{$v.}" />-->
+                                                        <input type="text" class="form-control name_box" name="product[888{$v.id}][]" value="{$v.}" />
+                                                        <input type="text" class="form-control name_box" name="product[0][remarks]">
+                                                        <a href="javascript:;" class="btn btn-danger btn-flat" onclick="delbox('product_id_0')">删除</a>
+                                                    </div>
+                                                <?php } ?>
+                                            </div>
+                                            <div id="product_val">0</div>
+
+                                            <a href="javascript:;" class="btn btn-success btn-sm" style="margin-top:15px;" onClick="add_product()"><i class="fa fa-fw fa-plus"></i> 新增内容</a>
+
+                                            <div class="form-group">&nbsp;</div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
                             
                             
                             <div class="box box-warning">
@@ -400,15 +472,35 @@
 		orderno();
 		keywords();
 	}
+
+    //新增 模块内容
+    function add_product(){
+        var i = parseInt($('#product_val').text())+1;
+        var html = '<div class="userlist" id="product_id_'+i+'">' +
+            '<span class="title"></span>' +
+            '<input type="hidden" name="product['+i+'][product_id]" id="'+i+'_pid" />'+
+            '<input type="text" class="form-control name_box" name="product['+i+'][product]">' +
+            '<input type="text" class="form-control name_box" name="product['+i+'][spec]" value="">' +
+            '<input type="text" class="form-control name_box" name="product['+i+'][amount]">' +
+           /* '<input type="text" class="form-control name_box" name="product['+i+'][unitprice]" id="'+i+'_pname" onfocus="selectproduct('+i+')">' +*/
+            '<input type="text" class="form-control name_box" name="product['+i+'][]">' +
+            '<input type="text" class="form-control name_box" name="product['+i+'][]">' +
+            '<input type="text" class="form-control name_box" name="product['+i+'][remarks]">' +
+            '<a href="javascript:;" class="btn btn-danger btn-flat" onclick="delbox(\'product_id_'+i+'\')">删除</a>' +
+            '</div>';
+        $('#standardModule').append(html);
+        $('#product_val').html(i);
+        orderno();
+    }
 	
 	//编号
 	function orderno(){
-		$('#mingdan').find('.title').each(function(index, element) {
+		$('#standardModule').find('.title').each(function(index, element) {
             $(this).text(parseInt(index)+1);
         });
 		$('#material').find('.title').each(function(index, element) {
             $(this).text(parseInt(index)+1);
-        });	
+        });
 	}
 	
 	//移除
@@ -560,7 +652,91 @@
 			 }
 		});	
 	}
-	
+
+    function upload_standard_file(id,cont){
+        var uploader = new plupload.Uploader({
+            runtimes : 'html5,flash,silverlight,html4',
+            browse_button : id, //'pickupfile', // you can pass in id...
+            container: document.getElementById(cont), // ... or DOM Element itself
+            url : "op.php?m=Main&c=Attachment&a=upload_file", //"{:U('Attachment/upload_file')}",
+            //flash_swf_url : '__HTML__/comm/plupload/Moxie.swf',
+            //silverlight_xap_url : '__HTML__/comm/plupload/Moxie.xap',
+            multiple_queues:false,
+            multipart_params: {
+                catid: 1
+            },
+
+            filters : {
+                max_file_size : '100mb',
+                /*
+                 mime_types: [
+                 {title : "Files", extensions : "jpg,jpeg,png,zip,rar,7z,doc,docx,ppt,pptx,xls,xlsx,txt,pdf,pdfx"}
+                 ]
+                 */
+            },
+
+            init: {
+                PostInit: function() {
+                    //$('div.moxie-shim').width(104).height(67);
+                },
+
+                FilesAdded: function(up, files) {
+                    plupload.each(files, function(file) {
+                        var time = new Date();
+                        var month = time.getMonth() +1;
+                        if (month < 10) month = "0" + month;
+
+                        var t = time.getFullYear()+ "/"+ month + "/" + time.getDate()+ " "+time.getHours()+ ":"+ time.getMinutes() + ":" +time.getSeconds();
+                        $('#flist').append(
+                            '<div class="form-group col-md-3" id="' + file.id + '" >'
+                            + '<div class="uploadlist">'
+                            + '<a class="openfile" target="_blank"><div class="upimg"></div></a>'
+                            + '<input type="text" name="attr[filename][]" placeholder="文件名称" value="'+ file.name +'" class="form-control" />'
+                            + '<a class="openfile" target="_blank"><div class="ext"></div></a>'
+                            + '<div class="size">' + plupload.formatSize(file.size) +'</div>'
+                            + '<div class="jindu"><div class="progress sm"><div class="progress-bar progress-bar-aqua" rel="'+ file.id +'"  role="progressbar"  aria-valuemin="0" aria-valuemax="100"></div></div></div>'
+                            + '<span class="dels" onclick="removeThisFile(\''+ file.id +'\');">X</span>'
+                            + '</div>'
+                            + '</div>'
+                        );
+
+                    });
+
+                    uploader.start();
+
+                },
+
+                FileUploaded: function(up, file, res) {
+                    var rs = eval('(' + res.response +')');
+                    if (rs.rs ==  'ok') {
+                        if(rs.ext=='JPG' || rs.ext=='PNG' || rs.ext=='GIF'){
+                            $('#'+file.id).find('.upimg').attr('style','background-image:url('+rs.thumb+')');
+                        }else{
+                            $('#'+file.id).find('.upimg').attr('style','background-color:#00a65a;');
+                            $('#'+file.id).find('.ext').text(rs.ext);
+                        }
+                        $('#'+file.id).find('.openfile').attr('href',rs.fileurl);
+                        $('#'+file.id).append('<input type="hidden" name="attr[id][]" value="' + rs.aid + '" />');
+                    } else {
+                        alert('上传文件失败，请重试');
+                    }
+
+                },
+
+                UploadProgress: function(up, file) {
+                    $('div[rel=' + file.id + ']').css('width', file.percent + '%');
+                },
+
+                Error: function(up, err) {
+                    alert(err.code + ": " + err.message);
+                }
+            }
+        });
+
+        uploader.init();
+    }
+
+
 
 </script>	
      

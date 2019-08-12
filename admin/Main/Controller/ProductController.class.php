@@ -1241,7 +1241,7 @@ class ProductController extends BaseController {
             $this->apply_time           = $list['apply_year'].'-'.$list['apply_time'];
         }
 
-        $standard_ids                   = array(54,56,57,82);
+        $standard_ids                   = C('STANDARD_PRODUCT_KIND_IDS');
         $this->kinds                    = get_standard_project_kinds($standard_ids);
         $this->apply_times              = $apply_times;
         $this->id                       = $id;
@@ -1399,67 +1399,64 @@ class ProductController extends BaseController {
 
     public function add_standard_module(){
         $this->title('标准化模块');
-        $id                  = I('id');
-        $business_dept       = I('business_dept');
-        $this->row           = M('product')->find($id);
-        $this->business_dept = $business_dept?$business_dept:$this->row['business_dept'];
+        $id                             = I('id');
+        $business_dept                  = I('business_dept');
+        $this->row                      = M('product')->find($id);
+        $this->business_dept            = $business_dept?$business_dept:$this->row['business_dept'];
         if (($business_dept != $this->row['business_dept'] && $this->row['business_dept']) || (!$this->row['business_dept'] && !$business_dept)){
-            $this->pro_kind  = 1;
+            $this->pro_kind             = 1;
         }
 
         if($this->row){
             if ($this->row['att_id']) {
-                $theory       = get_res(P::UPLOAD_THEORY,$id);
-                $pic          = get_res(P::UPLOAD_PIC,$id);
-                $video        = get_res(P::UPLOAD_VIDEO,$id);
-                $this->theory = array_column($theory,'id');
-                $this->pic    = array_column($pic,'id');
-                $this->video  = array_column($video,'id');
+                $theory                 = get_res(P::UPLOAD_THEORY,$id);
+                $pic                    = get_res(P::UPLOAD_PIC,$id);
+                $video                  = get_res(P::UPLOAD_VIDEO,$id);
+                $this->theory           = array_column($theory,'id');
+                $this->pic              = array_column($pic,'id');
+                $this->video            = array_column($video,'id');
             } else {
-                $this->theory = false;
-                $this->pic    = false;
-                $this->video  = false;
+                $this->theory           = false;
+                $this->pic              = false;
+                $this->video            = false;
             }
 
-            $this->material = M('product_material')->where(array('product_id'=>$id))->select();
+            $this->material             = M('product_material')->where(array('product_id'=>$id))->select();
 
-            $depts = explode(',',$this->row['business_dept']);
-            $kinds = M('project_kind')->getField('id,name');
-            $deptlist = array();
+            $depts                      = explode(',',$this->row['business_dept']);
+            $kinds                      = M('project_kind')->getField('id,name');
+            $deptlist                   = array();
             foreach($depts as $k=>$v){
-                $deptlist[$k]['id'] = $v;
-                $deptlist[$k]['name'] = $kinds[$v];
+                $deptlist[$k]['id']     = $v;
+                $deptlist[$k]['name']   = $kinds[$v];
             }
 
-            $ages = explode(',',$this->row['age']);
-            $ageval = C('AGE_LIST');
-            $agelist = array();
+            $ages                       = explode(',',$this->row['age']);
+            $ageval                     = C('AGE_LIST');
+            $agelist                    = array();
             foreach($ages as $k=>$v){
-                $agelist[$k]['id'] = $v;
-                $agelist[$k]['name'] = $ageval[$v];
+                $agelist[$k]['id']      = $v;
+                $agelist[$k]['name']    = $ageval[$v];
             }
-
 
             $sp = array();
-            $sp['id'] = array('IN',$this->row['supplier']);
-            $this->supplier = M('cas_res')->where($sp)->select();
-            $this->reskind = M('reskind')->getField('id,name', true);
-            $this->deptlist = unique_arr($deptlist);
-            $this->agelist  = unique_arr($agelist);
-
-
+            $sp['id']                   = array('IN',$this->row['supplier']);
+            $this->supplier             = M('cas_res')->where($sp)->select();
+            $this->reskind              = M('reskind')->getField('id,name', true);
+            $this->deptlist             = unique_arr($deptlist);
+            $this->agelist              = unique_arr($agelist);
         }
 
         //物料关键字
-        $key =  M('material')->field('id,pinyin,material')->where(array('asset'=>0))->select();
-        if($key) $this->keywords =  json_encode($key);
+        $key                            =  M('material')->field('id,pinyin,material')->where(array('asset'=>0))->select();
+        if($key) $this->keywords        =  json_encode($key);
+        $standard_ids                   = C('STANDARD_PRODUCT_KIND_IDS');
+        $this->kinds                    = get_standard_project_kinds($standard_ids);
 
-        $this->product_from   = C('PRODUCT_FROM');
-        $this->product_type   = C('PRODUCT_TYPE');
-        $this->subject_fields = C('SUBJECT_FIELD');
-        $this->projects       = M('project')->where(array('status'=>1))->select();
-        $this->kinds          = M('project_kind')->field('id,name')->select();
-
+        $this->product_from             = C('PRODUCT_FROM');
+        $this->product_type             = C('PRODUCT_TYPE');
+        $this->subject_fields           = C('SUBJECT_FIELD');
+        $this->projects                 = M('project')->where(array('status'=>1))->select();
         $this->display();
     }
 

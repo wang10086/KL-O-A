@@ -75,10 +75,13 @@
                                     </div>
 
                                     <div class="form-group col-md-12">
-                                        <span class="lm_c black">适用项目类型</span>
-                                        <foreach name="kinds" key="k" item="v">
-                                            <span class="lm_c"><input type="checkbox" name="business_dept[]" <?php if(in_array($v['id'],$business_dept)){ echo 'checked';} ?>  value="{$v.id}"> {$v.name}</span>
-                                        </foreach>
+                                        <!--<span class="lm_c black">适用项目类型</span>-->
+                                        <label>适用项目类型</label>
+                                        <div>
+                                            <foreach name="kinds" key="k" item="v">
+                                                <span class="lm_c"><input type="radio" name="business_dept" <?php if($business_dept == $v['id']){ echo 'checked';} ?>  value="{$v.id}"> {$v.name}</span>
+                                            </foreach>
+                                        </div>
                                     </div>
 
                                     <div class="form-group col-md-12">
@@ -89,61 +92,58 @@
                                 </div><!-- /.box-body -->
                             </div><!-- /.box -->
 
-                                <style>
-                                </style>
-
-                                <div class="box box-warning">
-                                    <div class="box-header">
-                                        <h3 class="box-title">产品内容</h3>
-                                    </div>
-                                    <div class="box-body">
-                                        <div class="content">
-                                            <div class="content" style="padding-top:0px;">
-                                                <div id="standardProduct">
-                                                    <div class="userlist" id="product_id">
-                                                        <div class="unitbox name_box">时间</div>
-                                                        <div class="unitbox name_box">课程主题</div>
-                                                        <div class="unitbox name_box">课程内容</div>
-                                                        <div class="unitbox name_box">可选模块</div>
-                                                        <div class="unitbox name_box">备注</div>
-                                                    </div>
-                                                    <?php if($product){ ?>
-                                                        <foreach name="product" key="k" item="v">
-                                                            <div class="userlist" id="product_id_{$v.id}">
-                                                                <span class="title"><?php echo $k+1; ?></span>
-                                                                <input type="hidden" name="resid[888{$v.id}][id]" value="{$v.id}" />
-                                                                <input type="hidden" name="product[888{$v.id}][product_id]" id="888{$v.id}_pid" value="{$v['product_id']}" />
-                                                                <input type="text" class="form-control name_box" name="product[888{$v.id}][product]" value="{$v.product}" />
-                                                                <input type="text" class="form-control name_box" name="product[888{$v.id}][spec]" value="{$v.spec}" />
-                                                                <input type="text" class="form-control name_box" name="product[888{$v.id}][amount]" value="{$v.amount}" />
-                                                                <input type="text" class="form-control name_box" name="product[888{$v.id}][unitprice]" value="{$v.unitprice}" id="888{$v.id}_pname" onfocus="selectproduct(888{$v.id})" />
-                                                                <input type="text" class="form-control name_box" name="product[888{$v.id}][remarks]" value="{$v.remarks}">
-                                                                <a href="javascript:;" class="btn btn-danger btn-flat" onclick="delbox('product_id_{$v.id}')">删除</a>
-                                                            </div>
-                                                        </foreach>
-                                                    <?php }else{ ?>
-                                                        <div class="userlist" id="product_id_0">
-                                                            <span class="title">1</span>
-                                                            <input type="hidden" name="product[0][product_id]" id="0_pid" />
-                                                            <input type="text" class="form-control name_box" name="product[0][product]" />
-                                                            <input type="text" class="form-control name_box" name="product[0][spec]" />
-                                                            <input type="text" class="form-control name_box" name="product[0][amount]" />
-                                                            <input type="text" class="form-control name_box" name="product[0][unitprice]" id="0_pname" onfocus="selectproduct(0)" />
-                                                            <input type="text" class="form-control name_box" name="product[0][remarks]">
-                                                            <a href="javascript:;" class="btn btn-danger btn-flat" onclick="delbox('product_id_0')">删除</a>
-                                                        </div>
-                                                    <?php } ?>
+                            <div class="box box-warning">
+                                <div class="box-header">
+                                    <h3 class="box-title">产品内容</h3>
+                                </div>
+                                <div class="box-body">
+                                    <div class="content">
+                                        <div class="content" style="padding-top:0px;">
+                                            <div id="standardProduct">
+                                                <div class="userlist" id="product_id">
+                                                    <div class="unitbox name_box">时间</div>
+                                                    <div class="unitbox name_box">课程主题</div>
+                                                    <div class="unitbox name_box">课程内容</div>
+                                                    <div class="unitbox name_box">可选模块</div>
+                                                    <div class="unitbox name_box">备注</div>
                                                 </div>
-                                                <div id="product_val">0</div>
-
-                                                <a href="javascript:;" class="btn btn-success btn-sm" style="margin-top:15px;" onClick="add_product()"><i class="fa fa-fw fa-plus"></i> 新增内容</a>
-
-                                                <div class="form-group">&nbsp;</div>
+                                                <?php if($product){ ?>
+                                                    <foreach name="product" key="k" item="v">
+                                                        <div class="userlist" id="product_id_{$v.id}">
+                                                            <span class="title"><?php echo $k+1; ?></span>
+                                                            <input type="hidden" name="resid[888{$v.id}][id]" value="{$v.id}" />
+                                                            <input type="hidden" name="product[888{$v.id}][product_id]" id="888{$v.id}_pid" value="{$v['product_id']}" />
+                                                            <input type="text" class="form-control name_box" name="product[888{$v.id}][product]" value="{$v.product}" />
+                                                            <input type="text" class="form-control name_box" name="product[888{$v.id}][spec]" value="{$v.spec}" />
+                                                            <input type="text" class="form-control name_box" name="product[888{$v.id}][amount]" value="{$v.amount}" />
+                                                            <input type="text" class="form-control name_box" name="product[888{$v.id}][unitprice]" value="{$v.unitprice}" id="888{$v.id}_pname" onfocus="selectproduct(888{$v.id})" />
+                                                            <input type="text" class="form-control name_box" name="product[888{$v.id}][remarks]" value="{$v.remarks}">
+                                                            <a href="javascript:;" class="btn btn-danger btn-flat" onclick="delbox('product_id_{$v.id}')">删除</a>
+                                                        </div>
+                                                    </foreach>
+                                                <?php }else{ ?>
+                                                    <div class="userlist" id="product_id_0">
+                                                        <span class="title">1</span>
+                                                        <input type="hidden" name="product[0][product_id]" id="0_pid" />
+                                                        <input type="text" class="form-control name_box" name="product[0][product]" />
+                                                        <input type="text" class="form-control name_box" name="product[0][spec]" />
+                                                        <input type="text" class="form-control name_box" name="product[0][amount]" />
+                                                        <input type="text" class="form-control name_box" name="product[0][unitprice]" id="0_pname" onfocus="selectproduct(0)" />
+                                                        <input type="text" class="form-control name_box" name="product[0][remarks]">
+                                                        <a href="javascript:;" class="btn btn-danger btn-flat" onclick="delbox('product_id_0')">删除</a>
+                                                    </div>
+                                                <?php } ?>
                                             </div>
+                                            <div id="product_val">0</div>
 
+                                            <a href="javascript:;" class="btn btn-success btn-sm" style="margin-top:15px;" onClick="add_product()"><i class="fa fa-fw fa-plus"></i> 新增内容</a>
+
+                                            <div class="form-group">&nbsp;</div>
                                         </div>
+
                                     </div>
                                 </div>
+                            </div>
                             
                             
                             <div class="box box-warning">

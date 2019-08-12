@@ -5399,4 +5399,64 @@ function get_half_year_cycle($year,$month){
         return $sum;
     }
 
+    /**
+     * 产品模块管理(标准化管理定制文件上传)
+     * @param $obj
+     * @param $cont
+     * @param string $attr
+     * @param string $btn
+     * @param string $showbox
+     * @param string $formname
+     * @param string $filename
+     * @return string
+     */
+    function standart_product_upload_m($obj,$cont,$attr='',$btn='上传',$showbox="flist",$formname="attr",$filename="文件名称"){
+
+        $html = '';
+        $html .= '<a href="javascript:;" id="'.$obj.'" class="btn btn-success btn-sm" style="margin:0 0 0 0;"><i class="fa fa-upload"></i> '.$btn.'</a>';
+
+        $html .= '<div class="" style=" padding:10px 0; display:inline;"  id="flist" >';
+
+        if($attr){
+
+            //查找
+            $where = array();
+            $where['id']  = array('in',$attr);
+            $attrlist = M('attachment')->where($where)->select();
+
+            foreach($attrlist as $k=>$v){
+                $size = format_bytes($v['filesize']);
+                $ext  = strtoupper($v['fileext']);
+                $html .= '<div class="form-group col-md-3" style="display:inline;" id="aid_'.$v['id'].'" >';
+                $html .= '<input type="hidden" name="'.$formname.'[id][]" value="'.$v['id'].'" />';
+                $html .= '<input type="hidden" name="'.$formname.'[filepath][]" value="'.$v['filepath'].'" />';
+                $html .= '<div class="uploadlist" style="display:inline;">';
+                /*if($ext=='JPG' || $ext=='PNG' || $ext=='GIF'){
+                    $bg = 'style="background-image:url('.thumb($v['filepath']).')"';
+                    $html .= '<a href="'.$v['filepath'].'" target="_blank"><div class="ext"></div></a>';
+                }else{
+                    $bg = 'style="background-color:#00a65a"';
+                    $html .= '<a href="'.$v['filepath'].'" target="_blank"><div class="ext">'.$ext.'</div></a>';
+                }
+                $html .= '<a href="'.$v['filepath'].'" target="_blank"><div class="upimg" '.$bg.'></div></a>';*/
+                $html .= '<input type="text" name="'.$formname.'[filename][]" value="'.$v['filename'].'" placeholder="'.$filename.'" class="form-control" />';
+               /* $html .= '<div class="size">'.$size.'</div>';*/
+                $html .= '<div class="jindu"  style="display:inline;" ><div class="progress sm"  style="display:inline;" ><div class="progress-bar progress-bar-aqua" rel="o_1bjn0q9lj1qjg1mmj1d43mf5qrp8" role="progressbar" aria-valuemin="0" aria-valuemax="100" style="width: 100%;"></div></div></div>';
+                $html .= '<span class="dels" onclick="removeThisFile(\'aid_'.$v['id'].'\');">X</span>';
+                $html .= '</div>';
+                $html .= '</div>';
+            }
+        }
+
+        $html .= '</div>';
+        $html .= '<div id="'.$cont.'" style="display:none;"></div>';
+        $html .= '<script>';
+        $html .= '$(document).ready(function() {';
+        $html .= 'upload_standard_file(\''.$obj.'\',\''.$cont.'\',\''.$showbox.'\',\''.$formname.'\',\''.$filename.'\');';
+        $html .= '});';
+        $html .= '</script>';
+
+        return $html;
+    }
+
 
