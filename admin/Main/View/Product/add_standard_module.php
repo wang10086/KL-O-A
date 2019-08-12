@@ -22,80 +22,80 @@
                         <div class="col-md-12">
                             <!-- general form elements disabled -->
                             <form method="post" action="{:U('Product/public_save')}" name="myform" id="myform">
-                            <div class="box box-warning">
-                                <div class="box-header">
-                                    <h3 class="box-title">{$_action_}</h3>
-                                </div><!-- /.box-header -->
-                                <div class="box-body">
-                                    <input type="hidden" name="dosubmit" value="1" />
-                                    <input type="hidden" name="savetype" value="2" />
-                                    <input type="hidden" name="referer" value="<?php echo $_SERVER['HTTP_REFERER']; ?>" />
-                                    <input type="hidden" name="info[standard]" value="1" />  <!--标准化-->
-                                    <if condition="$row"><input type="hidden" name="id" value="{$row.id}" /></if>
-                                    <input type="hidden" name="info[input_uname]" value="<?php echo $row['input_uname'] ? $row['input_uname'] : session('nickname'); ?>" class="form-control"  />
+                                <div class="box box-warning">
+                                    <div class="box-header">
+                                        <h3 class="box-title">{$_action_}</h3>
+                                    </div><!-- /.box-header -->
+                                    <div class="box-body">
+                                        <input type="hidden" name="dosubmit" value="1" />
+                                        <input type="hidden" name="savetype" value="2" />
+                                        <input type="hidden" name="referer" value="<?php echo $_SERVER['HTTP_REFERER']; ?>" />
+                                        <input type="hidden" name="info[standard]" value="1" />  <!--标准化-->
+                                        <if condition="$row"><input type="hidden" name="id" value="{$row.id}" /></if>
+                                        <input type="hidden" name="info[input_uname]" value="<?php echo $row['input_uname'] ? $row['input_uname'] : session('nickname'); ?>" class="form-control"  />
 
-                                    <div class="form-group col-md-6">
-                                        <label>标准模块名称</label>
-                                        <input type="text" name="info[title]" id="title" value="{$row.title}"  class="form-control" required />
-                                    </div>
-
-                                    <div class="form-group col-md-6">
-                                        <label>类别</label>
-                                        <select  class="form-control"  name="info[type]">
-                                            <option value="0">请选择</option>
-                                            <foreach name="product_type" key="k" item="v">
-                                                <option value="{$k}" <?php if ($row && ($k == $row['type'])) echo ' selected'; ?> >{$v}</option>
-                                            </foreach>
-                                        </select>
-                                    </div>
-
-                                    <div class="form-group col-md-6">
-                                        <label>科学领域</label>
-                                        <select  class="form-control"  name="info[subject_field]">
-                                        <option value="0">请选择</option>
-                                        <foreach name="subject_fields" key="k" item="v">
-                                            <option value="{$k}" <?php if ($row && ($k == $row['subject_field'])) echo ' selected'; ?> >{$v}</option>
-                                        </foreach>
-                                        </select>
-                                    </div>
-
-                                    <div class="form-group col-md-6">
-                                        <label>来源</label>
-                                        <select  class="form-control"  name="info[from]">
-                                            <option value="0">请选择</option>
-                                            <foreach name="product_from" key="k" item="v">
-                                                <option value="{$k}" <?php if ($row && ($k == $row['from'])) echo ' selected'; ?> >{$v}</option>
-                                            </foreach>
-                                        </select>
-                                    </div>
-                                    
-                                    <div class="form-group col-md-12">
-                                        <label><a href="javascript:;" onClick="selectages()">选择适用年龄</a> <span style="color:#999999">(选择后您可以点击删除)</span></label>
-                                        <div id="pro_ages_text">
-                                        <foreach name="agelist" item="v">
-                                             <span class="unitbtns" title="点击删除该选项"><input type="hidden" name="age[]" value="{$v.id}"><button type="button" class="btn btn-default btn-sm">{$v.name}</button></span>
-                                        </foreach>
+                                        <div class="form-group col-md-6">
+                                            <label>标准模块名称</label>
+                                            <input type="text" name="info[title]" id="title" value="{$row.title}"  class="form-control" required />
                                         </div>
-                                    </div>
 
-                                    <div class="form-group col-md-12">
-                                    <label>项目类型</label>
-                                        <div>
-                                            <foreach name="kinds" item="v">
-                                                <span class="mr20" style="display: inline-block;line-height: 30px;"><input type="radio" name="business_dept"  value="{$v['id']}" <?php if($row['business_dept']==$v['id'])  echo "checked"; ?>> &nbsp;{$v['name']}</span>
-                                            </foreach>
+                                        <div class="form-group col-md-6">
+                                            <label>类别</label>
+                                            <select  class="form-control"  name="info[type]">
+                                                <option value="0">请选择</option>
+                                                <foreach name="product_type" key="k" item="v">
+                                                    <option value="{$k}" <?php if ($row && ($k == $row['type'])) echo ' selected'; ?> >{$v}</option>
+                                                </foreach>
+                                            </select>
                                         </div>
-                                    </div>
 
-                                    <div class="form-group col-md-12"></div>
+                                        <div class="form-group col-md-6">
+                                            <label>科学领域</label>
+                                            <select  class="form-control"  name="info[subject_field]">
+                                            <option value="0">请选择</option>
+                                            <foreach name="subject_fields" key="k" item="v">
+                                                <option value="{$k}" <?php if ($row && ($k == $row['subject_field'])) echo ' selected'; ?> >{$v}</option>
+                                            </foreach>
+                                            </select>
+                                        </div>
 
-                                    <div class="form-group col-md-12">
-                                        <label>产品简介</label>
-                                        <?php echo editor('content',$row['content']); ?>
-                                    </div>
-                                    <div class="form-group">&nbsp;</div>
-                                </div><!-- /.box-body -->
-                            </div><!-- /.box -->
+                                        <div class="form-group col-md-6">
+                                            <label>来源</label>
+                                            <select  class="form-control"  name="info[from]">
+                                                <option value="0">请选择</option>
+                                                <foreach name="product_from" key="k" item="v">
+                                                    <option value="{$k}" <?php if ($row && ($k == $row['from'])) echo ' selected'; ?> >{$v}</option>
+                                                </foreach>
+                                            </select>
+                                        </div>
+
+                                        <div class="form-group col-md-12">
+                                            <label><a href="javascript:;" onClick="selectages()">选择适用年龄</a> <span style="color:#999999">(选择后您可以点击删除)</span></label>
+                                            <div id="pro_ages_text">
+                                            <foreach name="agelist" item="v">
+                                                 <span class="unitbtns" title="点击删除该选项"><input type="hidden" name="age[]" value="{$v.id}"><button type="button" class="btn btn-default btn-sm">{$v.name}</button></span>
+                                            </foreach>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group col-md-12">
+                                        <label>项目类型</label>
+                                            <div>
+                                                <foreach name="kinds" item="v">
+                                                    <span class="mr20" style="display: inline-block;line-height: 30px;"><input type="radio" name="business_dept"  value="{$v['id']}" <?php if($row['business_dept']==$v['id'])  echo "checked"; ?>> &nbsp;{$v['name']}</span>
+                                                </foreach>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group col-md-12"></div>
+
+                                        <div class="form-group col-md-12">
+                                            <label>产品简介</label>
+                                            <?php echo editor('content',$row['content']); ?>
+                                        </div>
+                                        <div class="form-group">&nbsp;</div>
+                                    </div><!-- /.box-body -->
+                                </div><!-- /.box -->
 
                                 <style>
                                     /*标准化模块*/
