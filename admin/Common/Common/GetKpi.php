@@ -4033,3 +4033,16 @@ function get_yw_department(){
         }
         return $data;
     }
+
+    /**
+     * 获取标准化的产品类型
+     * @param string $kids
+     * @return mixed
+     */
+    function get_standard_project_kinds($kids=''){
+        $db                         = M('project_kind');
+        $where                      = array();
+        $kids ? $where['id']        = array('in',$kids) :'';
+        $list                       = $db->where($where)->select();
+        return $list;
+    }

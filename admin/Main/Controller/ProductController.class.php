@@ -1224,36 +1224,26 @@ class ProductController extends BaseController {
         $this->pageTitle                = '标准化管理';
         $id                             = I('id');
         $this->title('标准化产品');
-        //$pin                            = I('pin');
         $year                           = date('Y');
         $apply_times                    = get_little_title($year);
 
         if ($id){
             $list                       = M('product')->where(array('id'=>$id))->find();
-            $model_lists                = M('product_use')->where(array('pid'=>$id))->select();
-            $res_ids                    = explode(',',$list['cas_res_ids']);
-            $res_need                   = M('cas_res')->where(array('id'=>array('in',$res_ids)))->select();
-            $this->res_need             = $res_need;
             $this->row                  = $list;
-            $this->product_need         = $model_lists;
+            //$model_lists                = M('product_use')->where(array('pid'=>$id))->select();
+            //$res_ids                    = explode(',',$list['cas_res_ids']);
+            //$res_need                   = M('cas_res')->where(array('id'=>array('in',$res_ids)))->select();
+            //$this->res_need             = $res_need;
+            //$this->product_need         = $model_lists;
             $this->business_dept        = explode(',',$list['business_dept']);
-            $this->in_cas               = array(
-                0                       => '院外',
-                1                       => '院内',
-            );
             $atts                       = get_res(0,0,explode(',',$list['att_id']));
             $this->atts                 = $atts;
             $this->apply_time           = $list['apply_year'].'-'.$list['apply_time'];
         }
 
-        //$this->standard                 = C('STANDARD');
-        //$this->reckon_mode              = C('RECKON_MODE');
-        //$this->subject_fields           = C('SUBJECT_FIELD');
-        //$this->product_from             = C('PRODUCT_FROM');
-        //$this->apply                    = C('APPLY_TO');
-        $this->kinds                    = get_project_kinds();
+        $standard_ids                   = array(54,56,57,82);
+        $this->kinds                    = get_standard_project_kinds($standard_ids);
         $this->apply_times              = $apply_times;
-        //$this->pin                      = $pin;
         $this->id                       = $id;
 
         $citys_db                       = M('citys');

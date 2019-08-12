@@ -70,8 +70,8 @@
 
                                     <div class="form-group col-md-4">
                                         <label>产品负责人：</label>
-                                        <input type="text" name="info[]" id="" value="{$row.}"  class="form-control" required />
-                                        <input type="hidden" name="info[]">
+                                        <input type="text" name="info[auth_user_name]" id="auth_user_name" value="{$row.auth_user_name}"  class="form-control" required />
+                                        <input type="hidden" name="info[auth_user_id]" id="auth_user_id" value="{$row.auth_user_id}" />
                                     </div>
 
                                     <div class="form-group col-md-12">
@@ -81,7 +81,6 @@
                                         </foreach>
                                     </div>
 
-                                    <div class="form-group col-md-12"></div>
                                     <div class="form-group col-md-12">
                                         <label>产品特色</label>
                                         <?php echo editor('content',$row['content']); ?>
@@ -206,6 +205,9 @@
 <script type="text/javascript"> 
 
 	$(document).ready(function() {
+        var keywords        = {$userkey};
+        autocomplete_id('auth_user_name','auth_user_id',keywords);
+
 		var uploader = new plupload.Uploader({
 			runtimes : 'html5,flash,silverlight,html4',
 			browse_button : 'pickupfile', // you can pass in id...
@@ -219,7 +221,7 @@
 			},
 			
 			filters : {
-				max_file_size : '100mb',
+				max_file_size : '50mb',
 				/*
 				mime_types: [
 					{title : "Files", extensions : "jpg,jpeg,png,zip,rar,7z,doc,docx,ppt,pptx,xls,xlsx,txt,pdf,pdfx"}
