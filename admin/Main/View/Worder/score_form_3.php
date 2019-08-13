@@ -11,28 +11,28 @@
         <input type="hidden" id="CC_num" name="sco[CC]" value="" />
         <input type="hidden" id="DD_num" name="sco[DD]" value="" />
         <input type="hidden" name="sco[dimension]" value="4">
-        <div class="form-group col-md-4">
+        <div class="form-group col-md-3">
             <input type="hidden" name="data[AA]" value="定制产品专业质量" />
             <label>定制产品专业质量：</label>
             <div class="demo score">
                 <div id="AA"></div>
             </div>
         </div>
-        <div class="form-group col-md-4">
+        <div class="form-group col-md-3">
             <input type="hidden" name="data[BB]" value="及时性" />
             <label>及时性：</label>
             <div class="demo score">
                 <div id="BB"></div>
             </div>
         </div>
-        <div class="form-group col-md-4">
+        <div class="form-group col-md-3">
             <input type="hidden" name="data[CC]" value="服务态度" />
             <label>服务态度：</label>
             <div class="demo score">
                 <div id="CC"></div>
             </div>
         </div>
-        <div class="form-group col-md-4">
+        <div class="form-group col-md-3">
             <input type="hidden" name="data[DD]" value="培训与指导" />
             <label>培训与指导：</label>
             <div class="demo score">
