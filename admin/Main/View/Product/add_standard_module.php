@@ -97,19 +97,6 @@
                                     </div><!-- /.box-body -->
                                 </div><!-- /.box -->
 
-                                <style>
-                                    /*标准化模块*/
-                                    #standardModule{ padding:0; margin-top:-20px;}
-                                    #standardModule .form-control{ width:110px; float:left; margin-right:10px; border-radius:0;}
-                                    #standardModule .unitbox{ float:left; clear:none; border:none; padding:0; line-height:42px;}
-                                    #standardModule .title{ width:22px; float:left; height:30px; line-height:30px; margin-left:-30px; text-align:right; position:relative; z-index:100;}
-                                    #standardModule .userlist { width:100%; height:auto !important; float:left; clear:both; padding-bottom:15px; border-bottom:1px solid #cccccc; margin-top:15px;}
-                                    #standardModule .btn{ padding:7px 12px; font-size:12px;}
-                                    #standardModule td{ line-height:34px;}
-                                    #product_val{ display:none}
-                                    #standardModule .name_box{ width:14%;margin-right: 10px;}
-                                </style>
-
                             <div class="box box-warning">
                                 <div class="box-header">
                                     <h3 class="box-title">模块内容</h3>
@@ -126,35 +113,33 @@
                                                     <div class="unitbox name_box">配套资料</div>
                                                     <div class="unitbox name_box">备注</div>
                                                 </div>
-                                                <?php if($product){ ?>
-                                                    <foreach name="product" key="k" item="v">
+                                                <?php if($modules){ ?>
+                                                    <foreach name="modules" key="k" item="v">
                                                         <div class="userlist" id="product_id_{$v.id}">
                                                             <span class="title"><?php echo $k+1; ?></span>
-                                                            <input type="hidden" name="resid[888{$v.id}][id]" value="{$v.id}" />
-                                                            <input type="hidden" name="product[888{$v.id}][product_id]" id="888{$v.id}_pid" value="{$v['product_id']}" />
-                                                            <input type="text" class="form-control name_box" name="product[888{$v.id}][product]" value="{$v.product}" />
-                                                            <input type="text" class="form-control name_box" name="product[888{$v.id}][spec]" value="{$v.spec}" />
-                                                            <input type="text" class="form-control name_box" name="product[888{$v.id}][amount]" value="{$v.amount}" />
-                                                            <!--<input type="text" class="form-control name_box" name="product[888{$v.id}][unitprice]" value="{$v.unitprice}" id="888{$v.id}_pname" onfocus="selectproduct(888{$v.id})" />-->
-                                                            <input type="text" class="form-control name_box" name="product[888{$v.id}][]" value="{$v.}" />
-                                                            <input type="text" class="form-control name_box" name="product[888{$v.id}][]" value="{$v.}" />
-                                                            <input type="text" class="form-control name_box" name="product[888{$v.id}][remarks]" value="{$v.remarks}">
+                                                            <input type="hidden" name="mresid[888{$v.id}][id]" value="{$v.id}" />
+                                                            <input type="hidden" name="product[888{$v.id}][implement_fid]" id="888{$v.id}_implement_fid" value="{$v['implement_fid']}" />
+                                                            <input type="hidden" name="product[888{$v.id}][res_fid]" id="888{$v.id}_res_fid" value="{$v['res_fid']}" />
+                                                            <input type="text" class="form-control name_box" name="product[888{$v.id}][title]" value="{$v.title}" />
+                                                            <input type="text" class="form-control name_box" name="product[888{$v.id}][length]" value="{$v.length}" />
+                                                            <input type="text" class="form-control name_box" name="product[888{$v.id}][content]" value="{$v.content}" />
+                                                            <input type="text" class="form-control name_box" name="product[888{$v.id}][implement_fname]" value="{$v.implement_fname}" id="888{$v.id}_implement_fname" onfocus="get_file(888{$v.id},'implement',304)" />
+                                                            <input type="text" class="form-control name_box" name="product[888{$v.id}][res_fname]" value="{$v.res_fname}" id="888{$v.id}_res_fname" onfocus="get_file(888{$v.id},'res',305)" />
+                                                            <input type="text" class="form-control name_box" name="product[888{$v.id}][remark]" value="{$v.remark}">
                                                             <a href="javascript:;" class="btn btn-danger btn-flat" onclick="delbox('product_id_{$v.id}')">删除</a>
                                                         </div>
                                                     </foreach>
                                                 <?php }else{ ?>
                                                     <div class="userlist" id="product_id_0">
                                                         <span class="title">1</span>
-                                                        <input type="hidden" name="product[0][product_id]" id="0_pid" />
-                                                        <input type="text" class="form-control name_box" name="product[0][product]" />
-                                                        <input type="text" class="form-control name_box" name="product[0][spec]" />
-                                                        <input type="text" class="form-control name_box" name="product[0][amount]" />
-                                                        <!--<input type="text" class="form-control name_box" name="product[0][unitprice]" id="0_pname" onfocus="selectproduct(0)" />-->
-                                                       <!-- <span class="form-control name_box" style="border: 1px solid red"></span>-->
-
-                                                        <input type="text" class="form-control name_box" name="product[888{$v.id}][]" value="{$v.}" />
-                                                        <input type="text" class="form-control name_box" name="product[888{$v.id}][]" value="{$v.}" />
-                                                        <input type="text" class="form-control name_box" name="product[0][remarks]">
+                                                        <input type="hidden" name="product[0][implement_fid]" id="0_implement_fid" />
+                                                        <input type="hidden" name="product[0][res_fid]" id="0_res_fid" />
+                                                        <input type="text" class="form-control name_box" name="product[0][title]" />
+                                                        <input type="text" class="form-control name_box" name="product[0][length]" />
+                                                        <input type="text" class="form-control name_box" name="product[0][content]" />
+                                                        <input type="text" class="form-control name_box" name="product[0][implement_fname]" id="0_implement_fname" onfocus="get_file(0,'implement',304)" />
+                                                        <input type="text" class="form-control name_box" name="product[0][res_fname]" id="0_res_fname" onfocus="get_file(0,'res',305)" />
+                                                        <input type="text" class="form-control name_box" name="product[0][remark]">
                                                         <a href="javascript:;" class="btn btn-danger btn-flat" onclick="delbox('product_id_0')">删除</a>
                                                     </div>
                                                 <?php } ?>
@@ -241,7 +226,7 @@
                                                 </div>
                                                 </foreach>
                                                 <?php }else{ ?>
-                                                <div class="userlist" id="material_id">
+                                                <div class="userlist" id="material_id_0">
                                                     <span class="title">1</span>
                                                     <input type="text" class="form-control material_name" name="material[0][material]" onblur="check_ptype()">
                                                     <input type="text" class="form-control longinput" name="material[0][spec]">
@@ -256,7 +241,7 @@
                                                     </select>
                                                     <input type="text" class="form-control longinput" name="material[0][channel]">
                                                     <input type="text" class="form-control longinput" name="material[0][remarks]">
-                                                    <a href="javascript:;" class="btn btn-danger btn-flat" onclick="delbox('material_id')">删除</a>
+                                                    <a href="javascript:;" class="btn btn-danger btn-flat" onclick="delbox('material_id_0')">删除</a>
                                                 </div>
                                                 <?php } ?>
                                             </div>
@@ -353,6 +338,7 @@
 <script type="text/javascript"> 
 
 	$(document).ready(function() {
+        keywords();
         //是否需要辅导员/教师/专家
         $('#product_hesuan').find('ins').each(function(index, element) {
             $(this).click(function(){
@@ -476,14 +462,14 @@
         var i = parseInt($('#product_val').text())+1;
         var html = '<div class="userlist" id="product_id_'+i+'">' +
             '<span class="title"></span>' +
-            '<input type="hidden" name="product['+i+'][product_id]" id="'+i+'_pid" />'+
-            '<input type="text" class="form-control name_box" name="product['+i+'][product]">' +
-            '<input type="text" class="form-control name_box" name="product['+i+'][spec]" value="">' +
-            '<input type="text" class="form-control name_box" name="product['+i+'][amount]">' +
-           /* '<input type="text" class="form-control name_box" name="product['+i+'][unitprice]" id="'+i+'_pname" onfocus="selectproduct('+i+')">' +*/
-            '<input type="text" class="form-control name_box" name="product['+i+'][]">' +
-            '<input type="text" class="form-control name_box" name="product['+i+'][]">' +
-            '<input type="text" class="form-control name_box" name="product['+i+'][remarks]">' +
+            '<input type="hidden" name="product['+i+'][implement_fid]" id="'+i+'_implement_fid" />'+
+            '<input type="hidden" name="product['+i+'][res_fid]" id="'+i+'_res_fid" />'+
+            '<input type="text" class="form-control name_box" name="product['+i+'][title]">' +
+            '<input type="text" class="form-control name_box" name="product['+i+'][length]">' +
+            '<input type="text" class="form-control name_box" name="product['+i+'][content]">' +
+            '<input type="text" class="form-control name_box" name="product['+i+'][implement_fname]" id="'+i+'_implement_fname" onfocus="get_file('+i+',`implement`,304)">' +
+            '<input type="text" class="form-control name_box" name="product['+i+'][res_fname]" id="'+i+'_res_fname" onfocus="get_file('+i+',`res`,305)">' +
+            '<input type="text" class="form-control name_box" name="product['+i+'][remark]">' +
             '<a href="javascript:;" class="btn btn-danger btn-flat" onclick="delbox(\'product_id_'+i+'\')">删除</a>' +
             '</div>';
         $('#standardModule').append(html);
@@ -597,8 +583,8 @@
 	
 	
 	//选择适用项目类型
-	function selectkinds() {
-		art.dialog.open('<?php echo U('Product/select_kinds'); ?>',{
+	/*function selectkinds() {
+		art.dialog.open("{:U('Product/select_kinds');}",{
 			lock:true,
 			title: '选择适用项目类型',
 			width:600,
@@ -620,7 +606,7 @@
 			cancel: function () {
 			}
 		});	
-	}
+	}*/
 	
 	
 	function closebtns(){
@@ -630,11 +616,6 @@
           	  })  
           });	
 	}
-	
-	
-	$(document).ready(function() {	
-		keywords();
-	})
 	
 	//关键字联想
 	function keywords(){
@@ -650,6 +631,29 @@
 			 }
 		});	
 	}
+
+    //选择实施要求文件
+    function get_file(num,code,pid) {
+        art.dialog.open("/index.php?m=Main&c=Product&a=public_select_implement_file&pid="+pid,{
+            lock:true,
+            title: '选择实施要求文件',
+            width:1000,
+            height:500,
+            okVal: '提交',
+            fixed: true,
+            ok: function () {
+                var origin      = artDialog.open.origin;
+                var file        = this.iframe.contentWindow.gosubmint();
+                var file_id     = file.id;
+                var file_name   = file.title;
+                $('#'+num+'_'+code+'_fid').val(file_id);
+                $('#'+num+'_'+code+'_fname').val(file_name);
+            },
+            cancelValue:'取消',
+            cancel: function () {
+            }
+        });
+    }
 
 
 </script>	

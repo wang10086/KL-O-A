@@ -107,6 +107,46 @@
                                 </div><!-- /.box-body -->
                             </div><!-- /.box -->
                             <?php } ?>
+
+                            <!--相关产品模块-->
+                            <?php if($modules){ ?>
+                                <div class="box">
+                                    <div class="box-header">
+                                        <h3 class="box-title">相关模块</h3>
+                                    </div><!-- /.box-header -->
+                                    <div class="box-body">
+                                        <div class="content" style="margin-top:-10px;">
+
+                                            <table class="table table-striped" id="supplierlist" >
+                                                <thead>
+                                                <tr role="row">
+                                                    <th>活动</th>
+                                                    <th>时长</th>
+                                                    <th>模块内容</th>
+                                                    <th>实施要求(文件)</th>
+                                                    <th>配套资料(文件)</th>
+                                                    <th>备注</th>
+                                                </tr>
+                                                </thead>
+                                                <tbody>
+                                                <foreach name="modules" key="k" item="v">
+                                                    <tr">
+                                                        <td>{$v.title}</td>
+                                                        <td>{$v.length}</td>
+                                                        <td>{$v.content}</td>
+                                                        <td><div class="text-overflow-lines-1-w-20rem"><a href="{$v.implement_furl}" title="下载" target="_blank">{$v.implement_fname}</a></div></td>
+                                                        <td><div class="text-overflow-lines-1-w-20rem"><a href="{$v.res_furl}" title="下载" target="_blank">{$v.res_fname}</a></div></td>
+                                                        <td>{$v.remark}</td>
+                                                    </tr>
+                                                </foreach>
+                                                </tbody>
+                                            </table>
+
+                                        </div>
+
+                                    </div><!-- /.box-body -->
+                                </div><!-- /.box -->
+                            <?php } ?>
                             
                             
                             <?php if($row['supplier']){ ?>

@@ -4180,8 +4180,18 @@ th{outline: none;}
 
 .score-tit{ width: 100%;  border-bottom: dashed 1px #A9A9A9; text-align: center; }
 .score-tit h1 { font-size: 20px; font-weight: 600; color: #00a0e9; }
-
 .little-title{font-size:16px; color:#ff3300; border-bottom:2px solid #dedede; padding-bottom:10px;}
+
+/*标准化模块*/
+#standardModule{ padding:0; margin-top:-20px;}
+#standardModule .form-control{ width:110px; float:left; margin-right:10px; border-radius:0;}
+#standardModule .unitbox{ float:left; clear:none; border:none; padding:0; line-height:42px;}
+#standardModule .title{ width:22px; float:left; height:30px; line-height:30px; margin-left:-30px; text-align:right; position:relative; z-index:100;}
+#standardModule .userlist { width:100%; height:auto !important; float:left; clear:both; padding-bottom:15px; border-bottom:1px solid #cccccc; margin-top:15px;}
+#standardModule .btn{ padding:7px 12px; font-size:12px;}
+#standardModule td{ line-height:34px;}
+#product_val{ display:none}
+#standardModule .name_box{ width:14%;margin-right: 10px;}
 
 
 
