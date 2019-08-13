@@ -150,11 +150,9 @@
                                                         <input type="text" class="form-control name_box" name="product[0][spec]" />
                                                         <input type="text" class="form-control name_box" name="product[0][amount]" />
                                                         <!--<input type="text" class="form-control name_box" name="product[0][unitprice]" id="0_pname" onfocus="selectproduct(0)" />-->
-                                                        <span class="form-control name_box" style="border: 1px solid red">
-                                                            {:standart_product_upload_m('file_1','files_1','','&nbsp;上传实施要求','box_1','','实施要求')}
-                                                        </span>
+                                                       <!-- <span class="form-control name_box" style="border: 1px solid red"></span>-->
 
-                                                        <!--<input type="text" class="form-control name_box" name="product[888{$v.id}][]" value="{$v.}" />-->
+                                                        <input type="text" class="form-control name_box" name="product[888{$v.id}][]" value="{$v.}" />
                                                         <input type="text" class="form-control name_box" name="product[888{$v.id}][]" value="{$v.}" />
                                                         <input type="text" class="form-control name_box" name="product[0][remarks]">
                                                         <a href="javascript:;" class="btn btn-danger btn-flat" onclick="delbox('product_id_0')">删除</a>
@@ -652,90 +650,6 @@
 			 }
 		});	
 	}
-
-    function upload_standard_file(id,cont){
-        var uploader = new plupload.Uploader({
-            runtimes : 'html5,flash,silverlight,html4',
-            browse_button : id, //'pickupfile', // you can pass in id...
-            container: document.getElementById(cont), // ... or DOM Element itself
-            url : "op.php?m=Main&c=Attachment&a=upload_file", //"{:U('Attachment/upload_file')}",
-            //flash_swf_url : '__HTML__/comm/plupload/Moxie.swf',
-            //silverlight_xap_url : '__HTML__/comm/plupload/Moxie.xap',
-            multiple_queues:false,
-            multipart_params: {
-                catid: 1
-            },
-
-            filters : {
-                max_file_size : '100mb',
-                /*
-                 mime_types: [
-                 {title : "Files", extensions : "jpg,jpeg,png,zip,rar,7z,doc,docx,ppt,pptx,xls,xlsx,txt,pdf,pdfx"}
-                 ]
-                 */
-            },
-
-            init: {
-                PostInit: function() {
-                    //$('div.moxie-shim').width(104).height(67);
-                },
-
-                FilesAdded: function(up, files) {
-                    plupload.each(files, function(file) {
-                        var time = new Date();
-                        var month = time.getMonth() +1;
-                        if (month < 10) month = "0" + month;
-
-                        var t = time.getFullYear()+ "/"+ month + "/" + time.getDate()+ " "+time.getHours()+ ":"+ time.getMinutes() + ":" +time.getSeconds();
-                        $('#flist').append(
-                            '<div class="form-group col-md-3" id="' + file.id + '" >'
-                            + '<div class="uploadlist">'
-                            + '<a class="openfile" target="_blank"><div class="upimg"></div></a>'
-                            + '<input type="text" name="attr[filename][]" placeholder="文件名称" value="'+ file.name +'" class="form-control" />'
-                            + '<a class="openfile" target="_blank"><div class="ext"></div></a>'
-                            + '<div class="size">' + plupload.formatSize(file.size) +'</div>'
-                            + '<div class="jindu"><div class="progress sm"><div class="progress-bar progress-bar-aqua" rel="'+ file.id +'"  role="progressbar"  aria-valuemin="0" aria-valuemax="100"></div></div></div>'
-                            + '<span class="dels" onclick="removeThisFile(\''+ file.id +'\');">X</span>'
-                            + '</div>'
-                            + '</div>'
-                        );
-
-                    });
-
-                    uploader.start();
-
-                },
-
-                FileUploaded: function(up, file, res) {
-                    var rs = eval('(' + res.response +')');
-                    if (rs.rs ==  'ok') {
-                        if(rs.ext=='JPG' || rs.ext=='PNG' || rs.ext=='GIF'){
-                            $('#'+file.id).find('.upimg').attr('style','background-image:url('+rs.thumb+')');
-                        }else{
-                            $('#'+file.id).find('.upimg').attr('style','background-color:#00a65a;');
-                            $('#'+file.id).find('.ext').text(rs.ext);
-                        }
-                        $('#'+file.id).find('.openfile').attr('href',rs.fileurl);
-                        $('#'+file.id).append('<input type="hidden" name="attr[id][]" value="' + rs.aid + '" />');
-                    } else {
-                        alert('上传文件失败，请重试');
-                    }
-
-                },
-
-                UploadProgress: function(up, file) {
-                    $('div[rel=' + file.id + ']').css('width', file.percent + '%');
-                },
-
-                Error: function(up, err) {
-                    alert(err.code + ": " + err.message);
-                }
-            }
-        });
-
-        uploader.init();
-    }
-
 
 
 </script>	

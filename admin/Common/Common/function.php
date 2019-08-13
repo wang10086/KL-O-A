@@ -2735,27 +2735,8 @@ function updatekpi($month,$user){
                             $url            = U('Inspect/public_satisfied',array('year'=>$v['year'],'month'=>$mm,'uid'=>$v['user_id']));
                         }
 
-                        /*//业务人员满意度（京区业务中心研发)
-                        //if (in_array($v['quota_id'],array(129,158))){
-                        if (in_array($v['quota_id'],array(158))){
-                            $where = array();
-                            $where['create_time']	= array('between',array($v['start_date'],$v['end_date']));
-                            $where['yf_uid']        = $user;
-                            $lists = M('op_score')->field('match,innovate,cost,safe,ptfa')->where($where)->select();
-
-                            //合格率>0.9(满分)
-                            $hegelv = get_hegelv($lists,5);
-
-                            if($hegelv>0.9 || !$lists){
-                                $complete	= 100;
-                            }else{
-                                $complete	= (round($hegelv/0.9,2)*100).'%';
-                            }
-                            $url            = '';
-                        }*/
-
-                        //工作及时率(京区业务中心)(工单)
-                        if (in_array($v['quota_id'],array(130,136,148,150,186))){
+                        //工单及时性 (工单)
+                        if (in_array($v['quota_id'],array(130,136,148,150,186,231))){
                             //及时率
                             $uids                   = array($user);
                             $lists                  = get_count_worder_lists($v['month']);
@@ -3013,8 +2994,8 @@ function updatekpi($month,$user){
                             $url                    = '';
                         }
 
-                        //工单满意度 151工=>作质量('平面设计') 158=>业务部门定制产品内部满意度 162=>研发专员对产品研发专业支持满意度
-                        if (in_array($v['quota_id'],array(151,158,162))){
+                        //工单满意度 151工=>作质量('平面设计') 158=>业务部门定制产品内部满意度 162=>研发专员对产品研发专业支持满意度 232=>工单满意度
+                        if (in_array($v['quota_id'],array(151,158,162,232))){
                             //及时率
                             $uids                   = array($user);
                             $lists                  = get_count_worder_lists($v['month']);
@@ -3087,20 +3068,6 @@ function updatekpi($month,$user){
                             }
                             $url            = '';
                         }
-
-                        /*//研发专员对产品研发专业支持满意度
-                        if ($v['quota_id']==162){
-                            $score_date             = get_worder_score($user,$v['start_date'],$v['end_date'],3,1);
-                            $pingfencishu           = $score_date['pingfencishu'];
-                            $hegelv                 = $score_date['hegelv'];
-
-                            if ($hegelv >= 1 || !$pingfencishu){
-                                $complete           = (100).'%';
-                            }else{
-                                $complete           = (round(($hegelv*100)/90,2)*100).'%';
-                            }
-                            $url                    = '';
-                        }*/
 
                         //业绩贡献度
                         if ($v['quota_id']==163){
@@ -3384,7 +3351,7 @@ function updatekpi($month,$user){
                    /* }*/
 
                     //已实现自动获取指标值
-                    $auto_quta	= array(1,2,3,4,5,6,81,8,9,10,11,14,15,16,17,18,20,23,26,21,24,27,32,37,19,22,25,28,33,38,42,45,103,56,113,92,29,34,39,46,102,55,57,58,59,84,87,89,90,111,107,83,66,54,44,12,112,108,100,96,95,65,114,86,85,64,63,62,53,52,41,40,49,80,48,91,79,47,36,35,31,30,82,110,106,99,94,67,124,125,126,127,128,129,130,131,132,133,134,135,136,137,138,139,140,141,143,144,145,146,147,148,149,150,151,154,155,156,158,160,161,162,163,165,167,168,179,180,186,193,194,195,204,205,206,210,212,213,214,215,216,217,218,219,225,226,227,228,229,230);
+                    $auto_quta	= array(1,2,3,4,5,6,81,8,9,10,11,14,15,16,17,18,20,23,26,21,24,27,32,37,19,22,25,28,33,38,42,45,103,56,113,92,29,34,39,46,102,55,57,58,59,84,87,89,90,111,107,83,66,54,44,12,112,108,100,96,95,65,114,86,85,64,63,62,53,52,41,40,49,80,48,91,79,47,36,35,31,30,82,110,106,99,94,67,124,125,126,127,128,129,130,131,132,133,134,135,136,137,138,139,140,141,143,144,145,146,147,148,149,150,151,154,155,156,158,160,161,162,163,165,167,168,179,180,186,193,194,195,204,205,206,210,212,213,214,215,216,217,218,219,225,226,227,228,229,230,231,232);
 
                     //计算完成率并保存数据
                     if(in_array($v['quota_id'],$auto_quta)){
@@ -5397,66 +5364,6 @@ function get_half_year_cycle($year,$month){
             }
         }
         return $sum;
-    }
-
-    /**
-     * 产品模块管理(标准化管理定制文件上传)
-     * @param $obj
-     * @param $cont
-     * @param string $attr
-     * @param string $btn
-     * @param string $showbox
-     * @param string $formname
-     * @param string $filename
-     * @return string
-     */
-    function standart_product_upload_m($obj,$cont,$attr='',$btn='上传',$showbox="flist",$formname="attr",$filename="文件名称"){
-
-        $html = '';
-        $html .= '<a href="javascript:;" id="'.$obj.'" class="btn btn-success btn-sm" style="margin:0 0 0 0;"><i class="fa fa-upload"></i> '.$btn.'</a>';
-
-        $html .= '<div class="" style=" padding:10px 0; display:inline;"  id="flist" >';
-
-        if($attr){
-
-            //查找
-            $where = array();
-            $where['id']  = array('in',$attr);
-            $attrlist = M('attachment')->where($where)->select();
-
-            foreach($attrlist as $k=>$v){
-                $size = format_bytes($v['filesize']);
-                $ext  = strtoupper($v['fileext']);
-                $html .= '<div class="form-group col-md-3" style="display:inline;" id="aid_'.$v['id'].'" >';
-                $html .= '<input type="hidden" name="'.$formname.'[id][]" value="'.$v['id'].'" />';
-                $html .= '<input type="hidden" name="'.$formname.'[filepath][]" value="'.$v['filepath'].'" />';
-                $html .= '<div class="uploadlist" style="display:inline;">';
-                /*if($ext=='JPG' || $ext=='PNG' || $ext=='GIF'){
-                    $bg = 'style="background-image:url('.thumb($v['filepath']).')"';
-                    $html .= '<a href="'.$v['filepath'].'" target="_blank"><div class="ext"></div></a>';
-                }else{
-                    $bg = 'style="background-color:#00a65a"';
-                    $html .= '<a href="'.$v['filepath'].'" target="_blank"><div class="ext">'.$ext.'</div></a>';
-                }
-                $html .= '<a href="'.$v['filepath'].'" target="_blank"><div class="upimg" '.$bg.'></div></a>';*/
-                $html .= '<input type="text" name="'.$formname.'[filename][]" value="'.$v['filename'].'" placeholder="'.$filename.'" class="form-control" />';
-               /* $html .= '<div class="size">'.$size.'</div>';*/
-                $html .= '<div class="jindu"  style="display:inline;" ><div class="progress sm"  style="display:inline;" ><div class="progress-bar progress-bar-aqua" rel="o_1bjn0q9lj1qjg1mmj1d43mf5qrp8" role="progressbar" aria-valuemin="0" aria-valuemax="100" style="width: 100%;"></div></div></div>';
-                $html .= '<span class="dels" onclick="removeThisFile(\'aid_'.$v['id'].'\');">X</span>';
-                $html .= '</div>';
-                $html .= '</div>';
-            }
-        }
-
-        $html .= '</div>';
-        $html .= '<div id="'.$cont.'" style="display:none;"></div>';
-        $html .= '<script>';
-        $html .= '$(document).ready(function() {';
-        $html .= 'upload_standard_file(\''.$obj.'\',\''.$cont.'\',\''.$showbox.'\',\''.$formname.'\',\''.$filename.'\');';
-        $html .= '});';
-        $html .= '</script>';
-
-        return $html;
     }
 
 

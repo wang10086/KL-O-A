@@ -6,8 +6,13 @@
             <?php }elseif($post_id ==102 ){ ?>
                 <!--京区业务中心微信运营专员-->
                 <include file="score_form_2" />
-            <?php }elseif(in_array($post_id,array(63,64))){ ?>
-                <!--研发部实施专家-->
+            <?php }elseif(in_array($post_id,array(63,64,96,80))){ ?>
+                <!--研发部
+                63=>研发部实施专家
+                64=>研发部研发专员
+                96=>南京项目部研发专员
+                80=>京区业务中心研发专员
+                -->
                 <include file="score_form_3" />
             <?php } ?>
 

@@ -19,6 +19,12 @@
                 <div id="CC"></div>
             </div>
         </div>
+        <div class="form-group col-md-4">
+            <label>培训与指导：</label>
+            <div class="demo score">
+                <div id="DD"></div>
+            </div>
+        </div>
         <div class="form-group col-md-12"></div>
         <label>评价内容</label>
         <textarea name="sco[content]" class="form-control" id="content"  rows="2" placeholder="评价内容"></textarea>

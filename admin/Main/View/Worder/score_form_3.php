@@ -9,7 +9,8 @@
         <input type="hidden" id="AA_num" name="sco[AA]" value="" />
         <input type="hidden" id="BB_num" name="sco[BB]" value="" />
         <input type="hidden" id="CC_num" name="sco[CC]" value="" />
-        <input type="hidden" name="sco[dimension]" value="3">
+        <input type="hidden" id="DD_num" name="sco[DD]" value="" />
+        <input type="hidden" name="sco[dimension]" value="4">
         <div class="form-group col-md-4">
             <input type="hidden" name="data[AA]" value="定制产品专业质量" />
             <label>定制产品专业质量：</label>
@@ -29,6 +30,13 @@
             <label>服务态度：</label>
             <div class="demo score">
                 <div id="CC"></div>
+            </div>
+        </div>
+        <div class="form-group col-md-4">
+            <input type="hidden" name="data[DD]" value="培训与指导" />
+            <label>培训与指导：</label>
+            <div class="demo score">
+                <div id="DD"></div>
             </div>
         </div>
         <textarea name="sco[content]" class="form-control" id="content"  rows="2" placeholder="请输入对该工单评价内容"></textarea>
