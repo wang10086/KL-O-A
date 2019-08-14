@@ -400,23 +400,7 @@ class ManageController extends ChartController {
 
     /**
      * Manage_input 季度数据录入与修改
-     * $mod->quarter_month 自动获取季度
      */
-    /*public function Manage_save(){
-        $mod               = D('Manage');
-        $date_Y['year']    = date('Y');
-        $datetime          = $mod->quarter_month($date_Y);//获取季度预算
-        $statu             = $mod->manage_input_statu('manage_input',$datetime);
-        if($statu==1){
-            $this->success('数据更新成功!',U('Manage/Manage_quarter_w'));die;
-        }elseif($statu==2){
-            $this->error('数据更新失败!',U('Manage/Manage_quarter_w'));die;
-        }elseif($statu==3){
-            $this->error('数据已存在！当前不支持更改！',U('Manage/Manage_quarter_w'));die;
-        }
-    }*/
-
-    //录入季度数据
     public function Manage_save(){
         $mod                = D('Manage');
         $data               = I();

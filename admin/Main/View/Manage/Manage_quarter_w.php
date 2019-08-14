@@ -193,7 +193,7 @@
                                         <td><input type="text" name="target_profit" class="form-control manage_num8" placeholder="例如：500.23 或 500"></td>
                                         <td><input type="text" name="personnel" class="form-control manage_num7" placeholder="例如：50.23 或 50"></td>
                                         <td>
-                                            <!--<input type="submit" value="保存" style="background-color:#00acd6;font-size:1.5em;">-->
+                                            <!--<input type="submit" value="保存AAA" style="background-color:#00acd6;font-size:1.5em;">-->
                                             <a  href="javascript:;" class="btn btn-info btn-sm" onClick="javascript:save('saveManage','<?php echo U('Manage/Manage_save'); ?>');">保存</a>
                                         </td>
                                     </form>

@@ -1577,7 +1577,9 @@ class AjaxController extends Controller {
         $where['datetime']      = $year;
         $where['type']          = $type;
         $where['logged_department'] = $department;
-        $where['statu']         = array('in',array(1,3)); //1=>未审核, 3=>审核不通过
+        if (!in_array(session('userid'),array(11))) { //非乔总修改数据
+            $where['statu']     = array('in',array(1,3)); //1=>未审核, 3=>审核不通过
+        }
         $list                   = $db->where($where)->find();
         $this->ajaxReturn($list);
     }

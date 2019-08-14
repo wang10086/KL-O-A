@@ -673,6 +673,7 @@ class ManageModel extends Model{
         $type                           = $info['type'];
         $num                            = 0;
         $save_data                      = array();
+
         if (!$year || !$type || !$info['department']){
             $save_data['stu']           = $num;
             $save_data['msg']           = '数据错误';
@@ -695,39 +696,44 @@ class ManageModel extends Model{
         $data['target_profit']          = trim($info['target_profit']); //目标利润
         $data['personnel_cost_rate']    = trim($info['personnel']);//人事费用率
         $data['type']                   = trim($info['type']); //1-4季度 , 5年度
-        $data['statu']                  = 1; //待提交审核
 
-        //$list1                          = $this->get_not_upd_manage($data['datetime'],$data['type']);
-        //if ($list1){
-        //  $msg                        = '数据暂不支持修改';
-        //}else{
-            $where2                     = array();
-            $where2['datetime']         = $data['datetime'];
-            $where2['type']             = $data['type'];
-            $where2['logged_department']= $data['logged_department'];
+        $where2                         = array();
+        $where2['datetime']             = $data['datetime'];
+        $where2['type']                 = $data['type'];
+        $where2['logged_department']    = $data['logged_department'];
+
+        if (in_array(session('userid'),array(11))){ //乔总修改数据
+            $list2                      = $db->where($where2)->find();
+            if (!$list2){
+                $data['statu']          = 1; //待提交审核
+                $result                 = $db->add($data);
+            }else{
+                $result                 = $db->where(array('id'=>$list2['id']))->save($data);
+            }
+            if ($result) $num++;
+        }else{
             $where2['statu']            = array('in',array(1,3)); //1=>待提交审核, 3=>审核不通过
             $list2                      = $db->where($where2)->find();
+            $data['statu']              = 1; //待提交审核
             if (!$list2){
                 $res                    = $db->add($data);
             }else{
                 $res                    = $db->where($where2)->save($data);
             }
-            if ($res){
-                if (in_array($info['type'],1,2,3,4)){ $cycle=$info['type'].'季度'; }else{ $cycle='年度'; }
-                //发送系统通知
-                $uid     = cookie('userid');
-                $title   = '您有来自'.session('username').'提交的'.$info['year'].'年'.$cycle.'预算报表待审核';
-                $content = '';
-                $url     = U('Manage/Manage_quarter_w',array('year'=>$info['year'],'type'=>$info['type']));
-                $user    = '[11]'; //乔总
-                send_msg($uid,$title,$content,$url,$user,'');
+        }
+        if ($res){
+            if (in_array($info['type'],1,2,3,4)){ $cycle=$info['type'].'季度'; }else{ $cycle='年度'; }
+            //发送系统通知
+            $uid     = cookie('userid');
+            $title   = '您有来自'.session('username').'提交的'.$info['year'].'年'.$cycle.'预算报表待审核';
+            $content = '';
+            $url     = U('Manage/Manage_quarter_w',array('year'=>$info['year'],'type'=>$info['type']));
+            $user    = '[11]'; //乔总
+            send_msg($uid,$title,$content,$url,$user,'');
 
-                $num++;
-                $msg                    = '保存数据成功';
-            }else{
-                $msg                    = '保存数据失败';
-            }
-        //}
+            $num++;
+        }
+        $msg                            = $num ? '数据保存成功' : '数据保存失败';
         $save_data['stu']               = $num;
         $save_data['msg']               = $msg;
         return $save_data;
@@ -1470,15 +1476,19 @@ class ManageModel extends Model{
     public function get_upd_department($year,$type){
         $db                         = M('manage_input');
         $all_departments            = C('department1');
-        $where                      = array();
-        $where['datetime']          = $year;
-        $where['type']              = $type;
-        $where['statu']             = array('in',array(2,4)); //2=>待审核, 4=>审核通过
-        $unupd_departments          = $db->where($where)->getField('logged_department',true); //不可修改的部门
-        $data                       = array();
-        foreach ($all_departments as $v){
-            if (!in_array($v,$unupd_departments)){
-                $data[]             = $v;
+        if (in_array(session('userid'),array(11))){ //乔总
+            $data                   = $all_departments;
+        }else{
+            $where                  = array();
+            $where['datetime']      = $year;
+            $where['type']          = $type;
+            $where['statu']         = array('in',array(2,4)); //2=>待审核, 4=>审核通过
+            $unupd_departments      = $db->where($where)->getField('logged_department',true); //不可修改的部门
+            $data                   = array();
+            foreach ($all_departments as $v){
+                if (!in_array($v,$unupd_departments)){
+                    $data[]         = $v;
+                }
             }
         }
         return $data;
