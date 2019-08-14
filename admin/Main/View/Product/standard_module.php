@@ -32,12 +32,11 @@
                                     <tr role="row" class="orders" >
                                         <th class="sorting" data="p.id">ID</th>
                                         <th width="200" class="sorting" data="p.title">模块名称</th>
-                                        <th class="sorting" data="p.type">类别</th>
                                         <th class="sorting" data="p.subject_field" style="width: 100px;">科学领域</th>
-                                        <th class="sorting" data="p.from">来源</th>
                                         <th class="sorting" data="p.age">适用年龄</th>
-                                        <th class="sorting">参考单价</th>
-                                        <th class="sorting" data="p.sales_price">参考成本价</th>
+                                        <th class="sorting">相关资源</th>
+                                        <th class="sorting">适用项目</th>
+                                        <th class="sorting">总时长</th>
                                         <th class="sorting" data="p.input_uname">研发人员</th>
                                         <th>审批状态</th>
                                         
@@ -52,18 +51,11 @@
                                         <tr>
                                             <td>{$row.id}</td>
                                             <td><div style="width:200px;"><a href="{:U('Product/view', array('id'=>$row['id']))}" title="{$row.title}">{$row.title}</a></div></td>
-                                            <td>{$ptype[$row['type']]}</td>
                                             <td>{$subject_fields[$row[subject_field]]}</td>
-                                            <td>{$pfrom[$row['from']]}</td>
                                             <td>{$row['in_ages']}</td>
-                                            <td>
-                                                <?php if ($pro){ ?>
-                                                    {$reckon_mode[$row[reckon_mode]]}
-                                                <?php }else{ ?>
-                                                    {$row['dept']}
-                                                <?php } ?>
-                                            </td>
-                                            <td>{$row.sales_price}</td>
+                                            <td></td>
+                                            <td>{$row.}</td>
+                                            <td>{$row.}</td>
                                             <td>{$row.input_uname}</td>
                                             <?php
                                             if($row['audit_status']== P::AUDIT_STATUS_NOT_AUDIT){

@@ -39,15 +39,15 @@
                                             <input type="text" name="info[title]" id="title" value="{$row.title}"  class="form-control" required />
                                         </div>
 
-                                        <div class="form-group col-md-6">
+                                        <!--<div class="form-group col-md-6">
                                             <label>类别</label>
                                             <select  class="form-control"  name="info[type]">
                                                 <option value="0">请选择</option>
                                                 <foreach name="product_type" key="k" item="v">
-                                                    <option value="{$k}" <?php if ($row && ($k == $row['type'])) echo ' selected'; ?> >{$v}</option>
+                                                    <option value="{$k}" <?php /*if ($row && ($k == $row['type'])) echo ' selected'; */?> >{$v}</option>
                                                 </foreach>
                                             </select>
-                                        </div>
+                                        </div>-->
 
                                         <div class="form-group col-md-6">
                                             <label>科学领域</label>
@@ -60,14 +60,26 @@
                                         </div>
 
                                         <div class="form-group col-md-6">
+                                            <label>相关资源</label>
+                                            <input type="text" name="info[res_name]" id="res_name" value="{$row.res_name}" onfocus="get_res()" class="form-control" />
+                                            <input type="hidden" name="info[res_id]" id="res_id" value="{$row.res_id}"  class="form-control" required />
+                                        </div>
+
+                                        <div class="form-group col-md-6">
+                                            <label>产品负责人</label>
+                                            <input type="text" name="info[auth_name]" id="auth_name" value="{$row.auth_name}" class="form-control" />
+                                            <input type="hidden" name="info[auth_id]" id="auth_id" value="{$row.auth_id}"  class="form-control" required />
+                                        </div>
+
+                                        <!--<div class="form-group col-md-6">
                                             <label>来源</label>
                                             <select  class="form-control"  name="info[from]">
                                                 <option value="0">请选择</option>
                                                 <foreach name="product_from" key="k" item="v">
-                                                    <option value="{$k}" <?php if ($row && ($k == $row['from'])) echo ' selected'; ?> >{$v}</option>
+                                                    <option value="{$k}" <?php /*if ($row && ($k == $row['from'])) echo ' selected'; */?> >{$v}</option>
                                                 </foreach>
                                             </select>
-                                        </div>
+                                        </div>-->
 
                                         <div class="form-group col-md-12">
                                             <label><a href="javascript:;" onClick="selectages()">选择适用年龄</a> <span style="color:#999999">(选择后您可以点击删除)</span></label>
@@ -82,7 +94,7 @@
                                         <label>项目类型</label>
                                             <div>
                                                 <foreach name="kinds" item="v">
-                                                    <span class="mr20" style="display: inline-block;line-height: 30px;"><input type="radio" name="business_dept"  value="{$v['id']}" <?php if($row['business_dept']==$v['id'])  echo "checked"; ?>> &nbsp;{$v['name']}</span>
+                                                    <span class="mr20" style="display: inline-block;line-height: 30px;"><input type="checkbox" name="business_dept[]"  value="{$v['id']}" <?php if(in_array($v['id'],explode(',',$row['business_dept'])))  echo "checked"; ?>> &nbsp;{$v['name']}</span>
                                                 </foreach>
                                             </div>
                                         </div>
@@ -107,7 +119,7 @@
                                             <div id="standardModule">
                                                 <div class="userlist" id="product_id">
                                                     <div class="unitbox name_box">活动</div>
-                                                    <div class="unitbox name_box">时长</div>
+                                                    <div class="unitbox name_box">时长(单位：小时)</div>
                                                     <div class="unitbox name_box">模块内容</div>
                                                     <div class="unitbox name_box">实施要求</div>
                                                     <div class="unitbox name_box">配套资料</div>
@@ -115,13 +127,13 @@
                                                 </div>
                                                 <?php if($modules){ ?>
                                                     <foreach name="modules" key="k" item="v">
-                                                        <div class="userlist" id="product_id_{$v.id}">
+                                                        <div class="userlist moduleList" id="product_id_{$v.id}">
                                                             <span class="title"><?php echo $k+1; ?></span>
                                                             <input type="hidden" name="mresid[888{$v.id}][id]" value="{$v.id}" />
                                                             <input type="hidden" name="product[888{$v.id}][implement_fid]" id="888{$v.id}_implement_fid" value="{$v['implement_fid']}" />
                                                             <input type="hidden" name="product[888{$v.id}][res_fid]" id="888{$v.id}_res_fid" value="{$v['res_fid']}" />
                                                             <input type="text" class="form-control name_box" name="product[888{$v.id}][title]" value="{$v.title}" />
-                                                            <input type="text" class="form-control name_box" name="product[888{$v.id}][length]" value="{$v.length}" />
+                                                            <input type="text" class="form-control name_box time_length" name="product[888{$v.id}][length]" value="{$v.length}" onblur="time_length_total()" />
                                                             <input type="text" class="form-control name_box" name="product[888{$v.id}][content]" value="{$v.content}" />
                                                             <input type="text" class="form-control name_box" name="product[888{$v.id}][implement_fname]" value="{$v.implement_fname}" id="888{$v.id}_implement_fname" onfocus="get_file(888{$v.id},'implement',304)" />
                                                             <input type="text" class="form-control name_box" name="product[888{$v.id}][res_fname]" value="{$v.res_fname}" id="888{$v.id}_res_fname" onfocus="get_file(888{$v.id},'res',305)" />
@@ -130,12 +142,12 @@
                                                         </div>
                                                     </foreach>
                                                 <?php }else{ ?>
-                                                    <div class="userlist" id="product_id_0">
+                                                    <div class="userlist moduleList" id="product_id_0">
                                                         <span class="title">1</span>
                                                         <input type="hidden" name="product[0][implement_fid]" id="0_implement_fid" />
                                                         <input type="hidden" name="product[0][res_fid]" id="0_res_fid" />
                                                         <input type="text" class="form-control name_box" name="product[0][title]" />
-                                                        <input type="text" class="form-control name_box" name="product[0][length]" />
+                                                        <input type="text" class="form-control name_box time_length" name="product[0][length]" onblur="time_length_total()" />
                                                         <input type="text" class="form-control name_box" name="product[0][content]" />
                                                         <input type="text" class="form-control name_box" name="product[0][implement_fname]" id="0_implement_fname" onfocus="get_file(0,'implement',304)" />
                                                         <input type="text" class="form-control name_box" name="product[0][res_fname]" id="0_res_fname" onfocus="get_file(0,'res',305)" />
@@ -144,9 +156,19 @@
                                                     </div>
                                                 <?php } ?>
                                             </div>
+                                            <div id="costacc_sum">
+                                                    <div class="userlist">
+                                                        <div class="unitbox"></div>
+                                                        <div class="unitbox"></div>
+                                                        <div class="unitbox" style="  text-align:right;">合计</div>
+                                                        <div class="unitbox" id="timeLength">aaa</div>
+                                                        <div class="unitbox longinput"></div>
+                                                    </div>
+                                                </div>
                                             <div id="product_val">0</div>
-
+                                            <div class="form-group col-md-12" id="useraddbtns" style="margin-left:15px;">
                                             <a href="javascript:;" class="btn btn-success btn-sm" style="margin-top:15px;" onClick="add_product()"><i class="fa fa-fw fa-plus"></i> 新增内容</a>
+                                            </div>
 
                                             <div class="form-group">&nbsp;</div>
                                         </div>
@@ -338,7 +360,10 @@
 <script type="text/javascript"> 
 
 	$(document).ready(function() {
+        var userkey         = {$userkey};
+        autocomplete_id('auth_name','auth_id',userkey);
         keywords();
+        time_length_total();
         //是否需要辅导员/教师/专家
         $('#product_hesuan').find('ins').each(function(index, element) {
             $(this).click(function(){
@@ -464,17 +489,18 @@
             '<span class="title"></span>' +
             '<input type="hidden" name="product['+i+'][implement_fid]" id="'+i+'_implement_fid" />'+
             '<input type="hidden" name="product['+i+'][res_fid]" id="'+i+'_res_fid" />'+
-            '<input type="text" class="form-control name_box" name="product['+i+'][title]">' +
-            '<input type="text" class="form-control name_box" name="product['+i+'][length]">' +
-            '<input type="text" class="form-control name_box" name="product['+i+'][content]">' +
-            '<input type="text" class="form-control name_box" name="product['+i+'][implement_fname]" id="'+i+'_implement_fname" onfocus="get_file('+i+',`implement`,304)">' +
-            '<input type="text" class="form-control name_box" name="product['+i+'][res_fname]" id="'+i+'_res_fname" onfocus="get_file('+i+',`res`,305)">' +
-            '<input type="text" class="form-control name_box" name="product['+i+'][remark]">' +
+            '<input type="text" class="form-control name_box" name="product['+i+'][title]" />' +
+            '<input type="text" class="form-control name_box time_length" name="product['+i+'][length]" onblur="time_length_total()" />' +
+            '<input type="text" class="form-control name_box" name="product['+i+'][content]" />' +
+            '<input type="text" class="form-control name_box" name="product['+i+'][implement_fname]" id="'+i+'_implement_fname" onfocus="get_file('+i+',`implement`,304)" />' +
+            '<input type="text" class="form-control name_box" name="product['+i+'][res_fname]" id="'+i+'_res_fname" onfocus="get_file('+i+',`res`,305)" />' +
+            '<input type="text" class="form-control name_box" name="product['+i+'][remark]" />' +
             '<a href="javascript:;" class="btn btn-danger btn-flat" onclick="delbox(\'product_id_'+i+'\')">删除</a>' +
             '</div>';
         $('#standardModule').append(html);
         $('#product_val').html(i);
         orderno();
+        time_length_total();
     }
 	
 	//编号
@@ -491,6 +517,7 @@
 	function delbox(obj){
 		$('#'+obj).remove();
 		orderno();
+        time_length_total();
 	}
 	
 	//更新价格与数量
@@ -619,7 +646,7 @@
 	
 	//关键字联想
 	function keywords(){
-		var keywords = <?php echo $keywords; ?>;
+		var keywords = <?php echo $material_key; ?>;
 		$(".material_name").autocomplete(keywords, {
 			 matchContains: true,
 			 highlightItem: false,
@@ -653,6 +680,40 @@
             cancel: function () {
             }
         });
+    }
+
+    //选择科普资源
+    function get_res(){
+        art.dialog.open("/index.php?m=Main&c=Product&a=public_select_res",{
+            lock:true,
+            title: '选择实施要求文件',
+            width:1000,
+            height:500,
+            okVal: '提交',
+            fixed: true,
+            ok: function () {
+                var origin      = artDialog.open.origin;
+                var res        = this.iframe.contentWindow.gosubmint();
+                var res_id     = res.id;
+                var res_name   = res.title;
+                $('#'+'res_id').val(res_id);
+                $('#'+'res_name').val(res_name);
+            },
+            cancelValue:'取消',
+            cancel: function () {
+            }
+        });
+    }
+
+    //更新总时长
+    function time_length_total(){
+        var timeLength = 0;
+        $('.time_length').each(function(index, element) {
+            let time    = parseFloat($(this).val()) ? parseFloat($(this).val()) : 0;
+            timeLength += time;
+        });
+
+        $('#timeLength').html(timeLength.toFixed(2) + '&emsp;小时');
     }
 
 

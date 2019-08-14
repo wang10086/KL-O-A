@@ -65,17 +65,19 @@
 
 		<script type="text/javascript">
         window.gosubmint= function(){
-			//var rs = new Array();
-            var obj = {};
-            $('.productlist').each(function(index, element) {
-				if ($(element).find(".iradio_minimal").attr('aria-checked')=='true') {
+			var rs = new Array();
+			$('.productlist').each(function(index, element) {
+				if ($(element).find(".icheckbox_minimal").attr('aria-checked')=='true') {
+					var obj = {};
 					obj.id             = $(element).find("input[name=id]").val();
 					obj.title          = $(element).find("input[name=title]").val();
-					//rs.push(obj);
+					obj.diqu           = $(element).find("input[name=diqu]").val();
+                    obj.in_cas         = $(element).find("input[name=in_cas]").val();
+					rs.push(obj);
 				}
 			});
-            return obj;
-		 }
+			return rs;		
+		 } 
         </script>
        
         <section class="content">
@@ -87,6 +89,10 @@
 
             <input type="text" class="form-control" name="tit"  placeholder="资源名称">
             <input type="text" class="form-control" name="con"  placeholder="资源内容关键字">
+            <select class="form-control" name="in_cas">
+                <option value="0">院外</option>
+                <option value="1">院内</option>
+            </select>
                     
             <button type="submit" class="btn btn-success">搜索</button>
             </form>
@@ -103,9 +109,11 @@
                 <foreach name="lists" item="row">
                     <tr class="productlist">
                     	<td align="center">
-                        <input type="radio"  name="product" value="{$row.id}">
+                        <input type="checkbox"  name="product[]" value="{$row.id}">
                         <input type="hidden" name="id" value="{$row.id}">
                         <input type="hidden" name="title" value="{$row.title}">
+                        <input type="hidden" name="diqu" value="{$row.diqu}">
+                        <input type="hidden" name="in_cas" value="{$in_cas[$row['in_cas']]}">
                         </td>
                         <td>{$row.id}</td>          
                         <td><a href="{:U('ScienceRes/res_view', array('id'=>$row['id']))}" title="{$row.title}" target="_blank">{$row.title}</a></td>

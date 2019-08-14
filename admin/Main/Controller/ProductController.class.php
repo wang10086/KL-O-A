@@ -1331,13 +1331,14 @@ class ProductController extends BaseController {
         $db                             = M('cas_res');
         $title                          = trim(I('tit'));
         $content                        = trim(I('content'));
-        $in_cas                         = I('in_cas');
         $where                          = array();
         $where['audit_status']          = 1;
         if ($title) $where['title']     = array('like','%'.$title.'%');
         if ($content) $where['content'] = array('like','%'.$content.'%');
-        if ($in_cas) $where['in_cas']   = $in_cas;
-        $lists                          = $db->where($where)->order($this->orders('id'))->select();
+        $pageCount                      = $db->where($where)->count();
+        $page                           = new page($pageCount,P::PAGE_SIZE);
+        $this->pages                    = $pageCount > P::PAGE_SIZE ? $page->show() : '';
+        $lists                          = $db->where($where)->limit($page->firstRow.','.$page->listRows)->order($this->orders('id'))->select();
         $this->lists                    = $lists;
         $this->in_cas                   = array(
             0                           => '院外',
@@ -1391,11 +1392,11 @@ class ProductController extends BaseController {
         }
 
         $this->lists                            = $lists;
-        $this->ptype                            = C('PRODUCT_TYPE');
-        $this->pfrom                            = C('PRODUCT_FROM');
+        /*$this->ptype                            = C('PRODUCT_TYPE');*/
+        /*$this->pfrom                            = C('PRODUCT_FROM');*/
         $this->kinds                            = $kinds;
         $this->ages                             = C('AGE_LIST');
-        $this->reckon_mode                      = C('RECKON_MODE');
+        /*$this->reckon_mode                      = C('RECKON_MODE');*/
         $this->subject_fields                   = C('SUBJECT_FIELD');
 
         //导航栏
@@ -1459,10 +1460,10 @@ class ProductController extends BaseController {
 
         //物料关键字
         $key                            =  M('material')->field('id,pinyin,material')->where(array('asset'=>0))->select();
-        if($key) $this->keywords        =  json_encode($key);
+        if($key) $this->material_key    =  json_encode($key);
         $standard_ids                   = C('STANDARD_PRODUCT_KIND_IDS');
         $this->kinds                    = get_standard_project_kinds($standard_ids);
-
+        $this->userkey                  = get_username();
         $this->product_from             = C('PRODUCT_FROM');
         $this->product_type             = C('PRODUCT_TYPE');
         $this->subject_fields           = C('SUBJECT_FIELD');
@@ -1614,6 +1615,7 @@ class ProductController extends BaseController {
                 $resid                          = I('resid');
                 $mresid                         = I('mresid');
                 $business_dept                  = I('business_dept');   //模块类型
+
                 $age                            = I('age');
                 $res                            = I('res');
                 $product                        = I('product'); //模块内容
@@ -1622,7 +1624,7 @@ class ProductController extends BaseController {
                 $info['age']                    = implode(',',array_unique($age));
                 $info['supplier']               = implode(',',array_unique($res));
                 $info['disting']                = 0;
-                $info['business_dept']          = $business_dept;
+                $info['business_dept']          = implode(',',$business_dept);;
                 $id                             = I('id');
 
                 //上传文件

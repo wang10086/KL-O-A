@@ -487,9 +487,9 @@
                             </a>
                             <ul class="treeview-menu">
 
-                                <if condition="rolemenu(array('Contract/add_contract'))">
+                                <!--<if condition="rolemenu(array('Contract/add_contract'))">
                                     <li><a href="{:U('Contract/add_contract')}"><i class="fa fa-angle-right"></i> 新建合同</a></li>
-                                </if>
+                                </if>-->
 
                                 <if condition="rolemenu(array('Contract/op_list'))">
                                     <li><a href="{:U('Contract/op_list')}"><i class="fa fa-angle-right"></i> 项目合同</a></li>
