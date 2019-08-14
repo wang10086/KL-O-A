@@ -1619,13 +1619,15 @@ class ProductController extends BaseController {
                 $age                            = I('age');
                 $res                            = I('res');
                 $product                        = I('product'); //模块内容
-                $info['content']                = stripslashes($_POST['content']);
+                $info['title']                  = trim($info['title']);
+                $info['content']                = stripslashes(trim($_POST['content']));
                 $info['business_dept']          = $business_dept;
                 $info['age']                    = implode(',',array_unique($age));
                 $info['supplier']               = implode(',',array_unique($res));
                 $info['disting']                = 0;
                 $info['business_dept']          = implode(',',$business_dept);;
                 $id                             = I('id');
+                if (!$info['title']){           $this->error('模块名称不能为空!'); }
 
                 //上传文件
                 $theory                         = I('theory');  //原理及实施要求
@@ -1709,7 +1711,6 @@ class ProductController extends BaseController {
                     $info['input_time']         = time();
 
                     $isadd                      = M('product')->add($info);
-                    $this->request_audit(P::REQ_TYPE_PRODUCT_NEW, $isadd);
 
                     //保存物资信息
                     foreach($material as $k=>$v){
@@ -1750,6 +1751,19 @@ class ProductController extends BaseController {
                 }else{
                     $this->success('保存失败！');
                 }
+            }
+
+            //标准化模块申请审批
+            if ($savetype == 4){
+                $product_id                     = trim(I('product_id'));
+                if (!$product_id){              $this->error('获取数据失败'); }
+                $where                          = array();
+                $where['req_type']              = P::REQ_TYPE_PRODUCT_NEW;
+                $where['req_id']                = $product_id;
+                $list                           = M('audit_log')->where($where)->find();
+                if ($list){                     $this->error('您已经提交审核过了,请勿重复提交'); }
+                $res                            = $this->request_audit(P::REQ_TYPE_PRODUCT_NEW, $product_id) ;
+                $res ? $this->success('提交成功') : $this->error('提交申请失败');
             }
 
             //保存标准化产品

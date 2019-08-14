@@ -22,18 +22,18 @@
                         <div class="col-md-12">
                             <!-- general form elements disabled -->
                             <form method="post" action="{:U('Product/public_save')}" name="myform" id="myform">
+                                <input type="hidden" name="dosubmit" value="1" />
+                                <input type="hidden" name="savetype" value="2" />
+                                <input type="hidden" name="referer" value="<?php echo $_SERVER['HTTP_REFERER']; ?>" />
+                                <input type="hidden" name="info[standard]" value="1" />  <!--标准化-->
+                                <if condition="$row"><input type="hidden" name="id" value="{$row.id}" /></if>
+                                <input type="hidden" name="info[input_uname]" value="<?php echo $row['input_uname'] ? $row['input_uname'] : session('nickname'); ?>" class="form-control"  />
+
                                 <div class="box box-warning">
                                     <div class="box-header">
                                         <h3 class="box-title">{$_action_}</h3>
                                     </div><!-- /.box-header -->
                                     <div class="box-body">
-                                        <input type="hidden" name="dosubmit" value="1" />
-                                        <input type="hidden" name="savetype" value="2" />
-                                        <input type="hidden" name="referer" value="<?php echo $_SERVER['HTTP_REFERER']; ?>" />
-                                        <input type="hidden" name="info[standard]" value="1" />  <!--标准化-->
-                                        <if condition="$row"><input type="hidden" name="id" value="{$row.id}" /></if>
-                                        <input type="hidden" name="info[input_uname]" value="<?php echo $row['input_uname'] ? $row['input_uname'] : session('nickname'); ?>" class="form-control"  />
-
                                         <div class="form-group col-md-6">
                                             <label>标准模块名称</label>
                                             <input type="text" name="info[title]" id="title" value="{$row.title}"  class="form-control" required />
@@ -109,7 +109,7 @@
                                     </div><!-- /.box-body -->
                                 </div><!-- /.box -->
 
-                            <div class="box box-warning">
+                                <div class="box box-warning">
                                 <div class="box-header">
                                     <h3 class="box-title">模块内容</h3>
                                 </div>
@@ -175,10 +175,10 @@
 
                                     </div>
                                 </div>
-                            </div>
+                                </div>
                             
                             
-                            <div class="box box-warning">
+                                <div class="box box-warning">
                                 <div class="box-header">
                                     <h3 class="box-title">材料及价格</h3>
                                 </div>
@@ -279,7 +279,7 @@
                             </div>
                             
                             
-                            <div class="box box-warning">
+                                <div class="box box-warning">
                                 <div class="box-header">
                                     <h3 class="box-title">上传资料</h3>
                                 </div>
@@ -340,12 +340,19 @@
                                     </div>
                                 </div>
                             </div>
+                            </form>
 
-
-                            <div id="formsbtn">
-                            	<button type="submit" class="btn btn-info btn-lg" id="lrpd">保存</button>
+                            <div id="formsbtn" style="padding-bottom:10px;">
+                                <div class="content">
+                                    <form method="post" action="{:U('Product/public_save')}" name="auditform" id="appsubmint">
+                                        <input type="hidden" name="dosubmit" value="1">
+                                        <input type="hidden" name="savetype" value="4">
+                                        <input type="hidden" name="product_id" value="{$row.id}">
+                                    </form>
+                                    <button type="button" onClick="check_myform()" class="btn btn-info btn-lg" style=" padding-left:40px; padding-right:40px; margin-right:10px;">保存</button>
+                                    <button type="button" onClick="apply_audit()" class="btn btn-success btn-lg" style=" padding-left:40px; padding-right:40px; margin-left:10px;">申请审批</button>
+                                </div>
                             </div>
-                            </form> 
                         </div><!--/.col (right) -->
                     </div>   <!-- /.row -->
                 </section><!-- /.content -->
@@ -548,7 +555,6 @@
         });
 	}
 
-	
 	//选择适用年龄
 	function selectages() {
 		art.dialog.open('<?php echo U('Product/select_ages'); ?>',{
@@ -574,7 +580,6 @@
 			}
 		});	
 	}
-	
 	
 	//关联科普资源
 	function add_supplier() {
@@ -606,9 +611,7 @@
 			}
 		});	
 	}
-	
-	
-	
+
 	//选择适用项目类型
 	/*function selectkinds() {
 		art.dialog.open("{:U('Product/select_kinds');}",{
@@ -634,8 +637,7 @@
 			}
 		});	
 	}*/
-	
-	
+
 	function closebtns(){
 	    $('.unitbtns').each(function(index, element) {
               $(this).click(function(){
@@ -716,6 +718,23 @@
         $('#timeLength').html(timeLength.toFixed(2) + '&emsp;小时');
     }
 
+    //保存
+    function check_myform() {
+        let title           = $('#title').val().trim();
+        let res_id          = $('#res_id').val();
+        let auth_id         = $('#auth_id').val();
+        if (!title){                    art_show_msg('模块名称不能为空',3);    return false; }
+        if (!res_id || res_id == 0){    art_show_msg('相关资源信息错误',3);    return false; }
+        if (!auth_id || auth_id == 0){  art_show_msg('产品负责人信息错误',3);  return false; }
+        $('#myform').submit();
+    }
+
+    //提交审核审核
+    function apply_audit(){
+        let product_id      = $('input[name="product_id"]').val();
+        if (!product_id) {  art_show_msg('请先保存内容',3); return false;  }
+        $('#appsubmint').submit();
+    }
 
 </script>	
      
