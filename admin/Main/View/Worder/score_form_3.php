@@ -10,33 +10,41 @@
         <input type="hidden" id="BB_num" name="sco[BB]" value="" />
         <input type="hidden" id="CC_num" name="sco[CC]" value="" />
         <input type="hidden" id="DD_num" name="sco[DD]" value="" />
-        <input type="hidden" name="sco[dimension]" value="4">
-        <div class="form-group col-md-3">
-            <input type="hidden" name="data[AA]" value="定制产品专业质量" />
-            <label>定制产品专业质量：</label>
+        <input type="hidden" id="EE_num" name="sco[EE]" value="" />
+        <input type="hidden" name="sco[dimension]" value="5">
+        <div class="form-group col-md-4">
+            <input type="hidden" name="data[AA]" value="顾客需求匹配度" />
+            <label>顾客需求匹配度：</label>
             <div class="demo score">
                 <div id="AA"></div>
             </div>
         </div>
-        <div class="form-group col-md-3">
-            <input type="hidden" name="data[BB]" value="及时性" />
-            <label>及时性：</label>
+        <div class="form-group col-md-4">
+            <input type="hidden" name="data[BB]" value="产品创新性（含特色和亮点）" />
+            <label>产品创新性（含特色和亮点）：</label>
             <div class="demo score">
                 <div id="BB"></div>
             </div>
         </div>
-        <div class="form-group col-md-3">
-            <input type="hidden" name="data[CC]" value="服务态度" />
-            <label>服务态度：</label>
+        <div class="form-group col-md-4">
+            <input type="hidden" name="data[CC]" value="产品成本控制" />
+            <label>产品成本控制：</label>
             <div class="demo score">
                 <div id="CC"></div>
             </div>
         </div>
-        <div class="form-group col-md-3">
-            <input type="hidden" name="data[DD]" value="培训与指导" />
-            <label>培训与指导：</label>
+        <div class="form-group col-md-4">
+            <input type="hidden" name="data[DD]" value="产品可行性及安全性" />
+            <label>产品可行性及安全性：</label>
             <div class="demo score">
                 <div id="DD"></div>
+            </div>
+        </div>
+        <div class="form-group col-md-4">
+            <input type="hidden" name="data[EE]" value="配套方案标准化清单的完成性（含材料单、手册、任务卡、折页等）" />
+            <label>配套方案标准化清单的完成性（含材料单、手册、任务卡、折页等）：</label>
+            <div class="demo score">
+                <div id="EE"></div>
             </div>
         </div>
         <textarea name="sco[content]" class="form-control" id="content"  rows="2" placeholder="请输入对该工单评价内容"></textarea>
