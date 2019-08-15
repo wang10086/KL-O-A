@@ -1255,7 +1255,6 @@ function get_sum_gross_profit($userids,$beginTime,$endTime){
                 $op_average_data                = get_manyidu($lists);
                 $shishi_lists[$k]['score_stu']  = '<span class="green">已评分</span>';
                 $shishi_lists[$k]['score_num']  = count($lists);
-                //$shishi_lists[$k]['op_average'] = $op_average_data >= 0.9?'100%':((round($op_average_data*100/90,2))*100).'%'; //平均得分(如果得分>90%,得分100, 如果小于90%,以90%作为满分求百分比)
                 $shishi_lists[$k]['op_average'] = ($op_average_data*100).'%';
                 $shishi_lists[$k]['customerServiceAverage'] = getCustomerServiceAverage($lists);
                 foreach ($lists as $key=>$value){
