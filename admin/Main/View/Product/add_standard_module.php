@@ -91,7 +91,7 @@
                                         </div>
 
                                         <div class="form-group col-md-12">
-                                        <label>项目类型</label>
+                                        <label>适用项目类型</label>
                                             <div>
                                                 <foreach name="kinds" item="v">
                                                     <span class="mr20" style="display: inline-block;line-height: 30px;"><input type="checkbox" name="business_dept[]"  value="{$v['id']}" <?php if(in_array($v['id'],explode(',',$row['business_dept'])))  echo "checked"; ?>> &nbsp;{$v['name']}</span>
@@ -102,7 +102,7 @@
                                         <div class="form-group col-md-12"></div>
 
                                         <div class="form-group col-md-12">
-                                            <label>产品简介</label>
+                                            <label>模块简介</label>
                                             <?php echo editor('content',$row['content']); ?>
                                         </div>
                                         <div class="form-group">&nbsp;</div>
@@ -180,7 +180,7 @@
                             
                                 <div class="box box-warning">
                                 <div class="box-header">
-                                    <h3 class="box-title">材料及价格</h3>
+                                    <h3 class="box-title">模块成本核算</h3>
                                 </div>
                                 <div class="box-body">
                                     <div class="content">
@@ -217,13 +217,13 @@
 
                                             <div id="material">
                                                 <div class="userlist" id="material_id">
-                                                    <div class="unitbox material_name">材料名称</div>
+                                                    <div class="unitbox material_name">费用项</div>
                                                     <div class="unitbox longinput">规格</div>
+                                                    <div class="unitbox material_name">单价</div>
                                                     <div class="unitbox material_name">数量</div>
-                                                    <div class="unitbox material_name">参考单价</div>
                                                     <div class="unitbox material_name">合计价格</div>
                                                     <div class="unitbox material_name">类型</div>
-                                                    <div class="unitbox longinput">购买途径</div>
+                                                    <div class="unitbox longinput">供方</div>
                                                     <div class="unitbox longinput">备注</div>
                                                 </div>
                                                 <?php if($material){ ?>
@@ -233,14 +233,13 @@
                                                     <input type="hidden" name="resid[888{$v.id}][id]" value="{$v.id}" >
                                                     <input type="text" class="form-control material_name" name="material[888{$v.id}][material]" value="{$v.material}">
                                                     <input type="text" class="form-control longinput" name="material[888{$v.id}][spec]" value="{$v.spec}">
-                                                    <input type="text" class="form-control amount" name="material[888{$v.id}][amount]" value="{$v.amount}" onblur="total()">
                                                     <input type="text" class="form-control cost" name="material[888{$v.id}][unitprice]" value="{$v.unitprice}" onblur="total()">
+                                                    <input type="text" class="form-control amount" name="material[888{$v.id}][amount]" value="{$v.amount}" onblur="total()">
                                                     <input type="text" class="form-control total" name="material[888{$v.id}][total]" value="{$v.total}">
                                                     <select class="form-control"  name="material[888{$v.id}][type]" >
-                                                        <option value="1" <?php if($v['type']==1){ echo 'selected';} ?> >物资</option>
-                                                        <option value="2" <?php if($v['type']==2){ echo 'selected';} ?> >专家辅导员</option>
-                                                        <option value="3" <?php if($v['type']==3){ echo 'selected';} ?> >合格供方</option>
-                                                        <option value="4" <?php if($v['type']==4){ echo 'selected';} ?> >其他</option>
+                                                        <foreach name="cost_type" key="k" item="v">
+                                                            <option value="{$k}" <?php if ($v['type']==$k){ echo 'selected'; } ?>>{$v}</option>
+                                                        </foreach>
                                                     </select>
                                                     <input type="text" class="form-control longinput" name="material[888{$v.id}][channel]" value="{$v.channel}">
                                                     <input type="text" class="form-control longinput" name="material[888{$v.id}][remarks]" value="{$v.remarks}">
@@ -252,14 +251,13 @@
                                                     <span class="title">1</span>
                                                     <input type="text" class="form-control material_name" name="material[0][material]" onblur="check_ptype()">
                                                     <input type="text" class="form-control longinput" name="material[0][spec]">
-                                                    <input type="text" class="form-control amount" name="material[0][amount]" onblur="total()">
                                                     <input type="text" class="form-control cost" name="material[0][unitprice]" onblur="total()">
+                                                    <input type="text" class="form-control amount" name="material[0][amount]" onblur="total()">
                                                     <input type="text" class="form-control total" name="material[0][total]">
                                                     <select class="form-control"  name="material[888{$v.id}][type]" >
-                                                        <option value="1" <?php if($v['type']==1){ echo 'selected';} ?> >物资</option>
-                                                        <option value="2" <?php if($v['type']==2){ echo 'selected';} ?> >专家辅导员</option>
-                                                        <option value="3" <?php if($v['type']==3){ echo 'selected';} ?> >合格供方</option>
-                                                        <option value="4" <?php if($v['type']==4){ echo 'selected';} ?> >其他</option>
+                                                        <foreach name="cost_type" key="k" item="v">
+                                                            <option value="{$k}" <?php if ($v['type']==$k){ echo 'selected'; } ?>>{$v}</option>
+                                                        </foreach>
                                                     </select>
                                                     <input type="text" class="form-control longinput" name="material[0][channel]">
                                                     <input type="text" class="form-control longinput" name="material[0][remarks]">
@@ -482,7 +480,22 @@
 	function add_material(){
 		var i = parseInt($('#material_val').text())+1;
 
-		var html = '<div class="userlist" id="material_'+i+'"><span class="title"></span><input type="text" class="form-control material_name" name="material['+i+'][material]"><input type="text" class="form-control longinput" name="material['+i+'][spec]" value=""><input type="text" class="form-control amount" name="material['+i+'][amount]" onblur="total()"><input type="text" class="form-control cost" name="material['+i+'][unitprice]" onblur="total()"><input type="text" class="form-control total" name="material['+i+'][total]"><select class="form-control"  name="material['+i+'][type]" ><option value="1">物资</option><option value="2">专家辅导员</option><option value="3">合格供方</option><option value="4">其他</option></select><input type="text" class="form-control longinput" name="material['+i+'][channel]" value=""><input type="text" class="form-control longinput" name="material['+i+'][remarks]"><a href="javascript:;" class="btn btn-danger btn-flat" onclick="delbox(\'material_'+i+'\')">删除</a></div>';
+		var html = '<div class="userlist" id="material_'+i+'">' +
+            '<span class="title"></span>' +
+            '<input type="text" class="form-control material_name" name="material['+i+'][material]">' +
+            '<input type="text" class="form-control longinput" name="material['+i+'][spec]" value="">' +
+            '<input type="text" class="form-control cost" name="material['+i+'][unitprice]" onblur="total()">' +
+            '<input type="text" class="form-control amount" name="material['+i+'][amount]" onblur="total()">' +
+            '<input type="text" class="form-control total" name="material['+i+'][total]">' +
+            '<select class="form-control"  name="material['+i+'][type]" >' +
+            '<foreach name="cost_type" key="k" item="v">'+
+            '<option value="{$k}" <?php if ($v["type"]==$k){ echo "selected"; } ?>>{$v}</option>'+
+            '</foreach>'+
+            '</select>' +
+            '<input type="text" class="form-control longinput" name="material['+i+'][channel]" value="">' +
+            '<input type="text" class="form-control longinput" name="material['+i+'][remarks]">' +
+            '<a href="javascript:;" class="btn btn-danger btn-flat" onclick="delbox(\'material_'+i+'\')">删除</a>' +
+            '</div>';
 		$('#material').append(html);	
 		$('#material_val').html(i);
 		orderno();
