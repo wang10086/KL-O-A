@@ -1467,6 +1467,7 @@ class ProductController extends BaseController {
         $this->product_from             = C('PRODUCT_FROM');
         $this->product_type             = C('PRODUCT_TYPE');
         $this->subject_fields           = C('SUBJECT_FIELD');
+        $this->cost_type                = C('COST_TYPE');
         $this->projects                 = M('project')->where(array('status'=>1))->select();
         $this->display();
     }
