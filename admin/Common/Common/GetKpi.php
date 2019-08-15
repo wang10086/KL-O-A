@@ -1244,6 +1244,7 @@ function get_sum_gross_profit($userids,$beginTime,$endTime){
 
         $score_lists                    = array();
         $score_num                      = 0; //评分的团个数
+        $customerService_lists          = array();
         foreach ($shishi_lists as $k=>$v){
             //获取当月已评分的团
             $where                      = array();
@@ -1256,7 +1257,9 @@ function get_sum_gross_profit($userids,$beginTime,$endTime){
                 $shishi_lists[$k]['score_num']  = count($lists);
                 //$shishi_lists[$k]['op_average'] = $op_average_data >= 0.9?'100%':((round($op_average_data*100/90,2))*100).'%'; //平均得分(如果得分>90%,得分100, 如果小于90%,以90%作为满分求百分比)
                 $shishi_lists[$k]['op_average'] = ($op_average_data*100).'%';
+                $shishi_lists[$k]['customerServiceAverage'] = getCustomerServiceAverage($lists);
                 foreach ($lists as $key=>$value){
+                    $customerService_lists[]    = $value;
                     $score_lists[]              = $value;
                 }
             }else{ //未评分
@@ -1282,14 +1285,29 @@ function get_sum_gross_profit($userids,$beginTime,$endTime){
             $complete = ($average*100).'%';
         }
 
+        //客服满意度
+        $customerServiceAverage         = ($userid == 59) ? getCustomerServiceAverage($customerService_lists) :'';
         $data                           = array();
         $data['op_num']                 = count($shishi_lists);
         $data['score_num']              = $score_num;
         $data['score_average']          = $score_num?$score_average:'100%'; //已调查团的满意度
+        $data['customerServiceAverage'] = $customerServiceAverage;
         $data['complete']               = $complete; //所有顾客满意度(包括未调查)
         $data['shishi_lists']           = $shishi_lists;
         $data['score_lists']            = $score_lists;
         return $data;
+    }
+
+    //获取客服满意度得分
+    function getCustomerServiceAverage($lists){
+        $totalScore                     = 0; //客服总分
+        $getScore                       = 0; //客服总得分
+        foreach ($lists as $k =>$v){
+            $getScore                   += $v['before_sell'];
+            $totalScore                 += $v['before_sell'] ? 5 : 0;
+        }
+        $average                        = $totalScore != 0 ? (round($getScore/$totalScore,4)*100).'%' : '100%';
+        return $average;
     }
 
     function get_year_settlement_start_time($year){

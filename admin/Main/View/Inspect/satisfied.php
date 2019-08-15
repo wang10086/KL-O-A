@@ -36,6 +36,9 @@
                                          <th class="sorting" data="o.sale_user">业务人员</th>
                                         <th class="sorting" data="o.guide_manager">调查人员</th>
                                         <th class="taskOptions" width="80" data="o.charity_status">满意度状态</th>
+                                        <if condition="$uid eq 59">
+                                            <th class="taskOptions" width="80" data="">客服满意度</th>
+                                        </if>
                                         <th class="taskOptions" width="80" data="">得分率</th>
                                         <if condition="rolemenu(array('Inspect/score_info'))">
                                         <th class="taskOptions">详情</th>
@@ -52,6 +55,9 @@
                                         <td>{$row.sale_user}</td>
                                         <td>{$row.guide_manager}</td>
                                         <td><div class="tdbox_long taskOptions" style="width:80px">{$row.score_stu}</div></td>
+                                        <if condition="$uid eq 59">
+                                            <td class="taskOptions"><?php echo $row['customerServiceAverage']?$row['customerServiceAverage']:'<font color="#999">未评分</font>'; ?></td>
+                                        </if>
                                         <td class="taskOptions">{$row.op_average}</td>
                                         <if condition="rolemenu(array('Inspect/score_info'))">
                                         <td class="taskOptions">
@@ -64,6 +70,9 @@
                                         <td colspan="2">项目总数：{$data.op_num}</td>
                                         <td colspan="3">已调查项目数/项目总数：<?php echo $data['score_num'].'/'.$data['op_num']; ?></td>
                                         <td colspan="3">已调查顾客满意度：{$data.score_average}</td>
+                                        <if condition="$uid eq 59">
+                                        <td class="taskOptions">{$data.customerServiceAverage}</td>
+                                        </if>
                                         <td colspan="2">总顾客满意度：{$data.complete}</td>
                                     </tr>
                                 </table>

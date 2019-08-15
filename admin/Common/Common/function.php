@@ -2924,22 +2924,13 @@ function updatekpi($month,$user){
                             $url        = '';
                         }
 
-                        //客户满意度(客服)(58=>亲子旅行,59=>冬夏令营,63=>学趣课程)
+                        //客户满意度(客服)(只提取李保罗的团的前期客服满意度)
                         if ($v['quota_id']==144){
-                            //获取当月已评分的相关团
-                            $kinds                  = array(58,59,63);
-                            $field                  = 'before_sell';
-                            $manyidu_data           = get_kfmyd($v['start_date'],$v['end_date'],$kinds,$field,1);
-                            $pingfencishu           = $manyidu_data['pingfencishu'];
-                            $hegelv                 = $manyidu_data['hegelv'];
-
-                            if ($hegelv >= 0.9 && !$pingfencishu){
-                                $complete = 100;
-                            }else{
-                                $score    = (round($hegelv*100/90,2))*100;
-                                $complete = $score;
-                            }
-                            $url          = '';
+                            $uid                        = 59; //京区业务中心客服取李保罗团的顾客满意度数据
+                            $gross_margin               = get_gross_margin($yearMonth,$uid,1);  //获取当月月度累计毛利额目标值(如果毛利额目标为0,则不考核)
+                            $data                       = get_satisfied_kpi_data($uid,$v['start_date'],$v['end_date'],$gross_margin);
+                            $complete                   = $data['customerServiceAverage'];
+                            $url                        = U('Inspect/public_satisfied',array('st'=>$v['start_date'],'et'=>$v['end_date'],'uid'=>$uid));
                         }
 
                         //工作及时性(客服)(工单)
