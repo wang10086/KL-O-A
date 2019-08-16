@@ -236,12 +236,12 @@
                                                     <input type="text" class="form-control cost" name="material[888{$v.id}][unitprice]" value="{$v.unitprice}" onblur="total()">
                                                     <input type="text" class="form-control amount" name="material[888{$v.id}][amount]" value="{$v.amount}" onblur="total()">
                                                     <input type="text" class="form-control total" name="material[888{$v.id}][total]" value="{$v.total}">
-                                                    <select class="form-control"  name="material[888{$v.id}][type]" >
+                                                    <select class="form-control"  name="material[888{$v.id}][type]" onchange="check_material_type(888{$v.id},$(this).val())" >
                                                         <foreach name="cost_type" key="k" item="v">
                                                             <option value="{$k}" <?php if ($v['type']==$k){ echo 'selected'; } ?>>{$v}</option>
                                                         </foreach>
                                                     </select>
-                                                    <input type="text" class="form-control longinput" name="material[888{$v.id}][channel]" value="{$v.channel}">
+                                                    <span id="888{$v.id}_channel"><input type="text" class="form-control longinput" name="material[888{$v.id}][channel]" value="{$v.channel}"></span>
                                                     <input type="text" class="form-control longinput" name="material[888{$v.id}][remarks]" value="{$v.remarks}">
                                                     <a href="javascript:;" class="btn btn-danger btn-flat" onclick="delbox('material_id_{$v.id}')">删除</a>
                                                 </div>
@@ -254,12 +254,12 @@
                                                     <input type="text" class="form-control cost" name="material[0][unitprice]" onblur="total()">
                                                     <input type="text" class="form-control amount" name="material[0][amount]" onblur="total()">
                                                     <input type="text" class="form-control total" name="material[0][total]">
-                                                    <select class="form-control"  name="material[888{$v.id}][type]" >
+                                                    <select class="form-control"  name="material[888{$v.id}][type]" onchange="check_material_type(0,$(this).val())">
                                                         <foreach name="cost_type" key="k" item="v">
                                                             <option value="{$k}" <?php if ($v['type']==$k){ echo 'selected'; } ?>>{$v}</option>
                                                         </foreach>
                                                     </select>
-                                                    <input type="text" class="form-control longinput" name="material[0][channel]">
+                                                    <span id="0_channel"><input type="text" class="form-control longinput" name="material[0][channel]"></span>
                                                     <input type="text" class="form-control longinput" name="material[0][remarks]">
                                                     <a href="javascript:;" class="btn btn-danger btn-flat" onclick="delbox('material_id_0')">删除</a>
                                                 </div>
@@ -487,12 +487,12 @@
             '<input type="text" class="form-control cost" name="material['+i+'][unitprice]" onblur="total()">' +
             '<input type="text" class="form-control amount" name="material['+i+'][amount]" onblur="total()">' +
             '<input type="text" class="form-control total" name="material['+i+'][total]">' +
-            '<select class="form-control"  name="material['+i+'][type]" >' +
+            '<select class="form-control"  name="material['+i+'][type]" onchange="check_material_type('+i+',$(this).val())">' +
             '<foreach name="cost_type" key="k" item="v">'+
             '<option value="{$k}" <?php if ($v["type"]==$k){ echo "selected"; } ?>>{$v}</option>'+
             '</foreach>'+
             '</select>' +
-            '<input type="text" class="form-control longinput" name="material['+i+'][channel]" value="">' +
+            '<span id="'+i+'_channel"><input type="text" class="form-control longinput" name="material['+i+'][channel]" value=""></span>' +
             '<input type="text" class="form-control longinput" name="material['+i+'][remarks]">' +
             '<a href="javascript:;" class="btn btn-danger btn-flat" onclick="delbox(\'material_'+i+'\')">删除</a>' +
             '</div>';
@@ -720,6 +720,29 @@
         });
     }
 
+    //选择合格供方
+    function get_supplierRes(){
+        art.dialog.open("/index.php?m=Main&c=Product&a=public_select_supplierRes",{
+            lock:true,
+            title: '选择合格供方',
+            width:1000,
+            height:500,
+            okVal: '提交',
+            fixed: true,
+            ok: function () {
+                var origin      = artDialog.open.origin;
+                var res        = this.iframe.contentWindow.gosubmint();
+                var res_id     = res.id;
+                var res_name   = res.title;
+                $('#'+'res_id').val(res_id);
+                $('#'+'res_name').val(res_name);
+            },
+            cancelValue:'取消',
+            cancel: function () {
+            }
+        });
+    }
+
     //更新总时长
     function time_length_total(){
         var timeLength = 0;
@@ -747,6 +770,20 @@
         let product_id      = $('input[name="product_id"]').val();
         if (!product_id) {  art_show_msg('请先保存内容',3); return false;  }
         $('#appsubmint').submit();
+    }
+
+    //根据不同的类型调整不同的供方
+    function check_material_type(num,type) {
+        var pub_html            = '<input type="text" class="form-control longinput" name="material['+num+'][channel]" value="">';
+        var res_html            = '<input type="text" class="form-control longinput" name="material['+num+'][channel]" value="" onfocus="get_res()">';
+        var supplierRes_html    = '<input type="text" class="form-control longinput" name="material['+num+'][channel]" value="" onfocus="get_supplierRes()">'
+        if (type==6){ //研究所台站
+            $('#'+num+'_channel').html(res_html);
+        }else if(type==3){ //合格供方
+            $('#'+num+'_channel').html(supplierRes_html);
+        }else{
+            $('#'+num+'_channel').html(pub_html);
+        }
     }
 
 </script>	

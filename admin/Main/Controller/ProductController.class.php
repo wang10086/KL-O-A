@@ -1540,6 +1540,23 @@ class ProductController extends BaseController {
         $this->display('select_implement_file');
     }
 
+    //选择科普资源(弹框)
+    public function public_select_supplierRes(){
+        $db                             = M('supplier');
+        $title                          = trim(I('tit'));
+        $content                        = trim(I('content'));
+        $where                          = array();
+        $where['audit_status']          = 1;
+        if ($title) $where['title']     = array('like','%'.$title.'%');
+        if ($content) $where['content'] = array('like','%'.$content.'%');
+        $pageCount                      = $db->where($where)->count();
+        $page                           = new page($pageCount,P::PAGE_SIZE);
+        $this->pages                    = $pageCount > P::PAGE_SIZE ? $page->show() : '';
+        $lists                          = $db->where($where)->limit($page->firstRow.','.$page->listRows)->order($this->orders('id'))->select();
+        $this->lists                    = $lists;
+        $this->display('select_supplierRes');
+    }
+
     public function public_save(){
         $savetype                               = I('savetype');
         if (isset($_POST['dosubmit'])){
