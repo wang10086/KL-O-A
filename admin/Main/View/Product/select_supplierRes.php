@@ -67,10 +67,10 @@
         window.gosubmint= function(){
 			//var rs = new Array();
             var obj = {};
-            $('.productlist').each(function(index, element) {
+            $('.supplierRes').each(function(index, element) {
 				if ($(element).find(".iradio_minimal").attr('aria-checked')=='true') {
 					obj.id             = $(element).find("input[name=id]").val();
-					obj.title          = $(element).find("input[name=title]").val();
+					obj.name           = $(element).find("input[name=name]").val();
 					//rs.push(obj);
 				}
 			});
@@ -84,7 +84,7 @@
             <input type="hidden" name="m" value="Main">
             <input type="hidden" name="c" value="Product">
             <input type="hidden" name="a" value="public_select_supplierRes">
-
+            <input type="hidden" name="kind" value="{$kind}">
             <input type="text" class="form-control" name="name"  placeholder="合格供方名称">
             <input type="text" class="form-control" name="city"  placeholder="所在城市">
             <button type="submit" class="btn btn-success">搜索</button>
@@ -97,19 +97,19 @@
                     <th width="40" class="sorting" data="p.id">编号</th>
                     <th class="sorting" data="p.name">名称</th>
                     <th class="sorting" data="p.city">城市</th>
-                    <th class="sorting" data="p.diqu">所在地</th>
+                    <th class="sorting" data="p.kind">类型</th>
                 </tr>
                 <foreach name="lists" item="row">
-                    <tr class="productlist">
+                    <tr class="supplierRes">
                     	<td align="center">
                         <input type="radio"  name="product" value="{$row.id}">
                         <input type="hidden" name="id" value="{$row.id}">
                         <input type="hidden" name="name" value="{$row.name}">
                         </td>
-                        <td>{$row.name}</td>
-                        <td><a href="{:U('ScienceRes/res_view', array('id'=>$row['id']))}" title="{$row.title}" target="_blank">{$row.title}</a></td>
-                        <td>{$in_cas[$row['in_cas']]}</td>
-                        <td>{$row.diqu}</td>
+                        <td>{$row.id}</td>
+                        <td><a href="{:U('SupplierRes/res_view', array('id'=>$row['id']))}" title="{$row.name}" target="_blank">{$row.name}</a></td>
+                        <td>{$row.prov} - {$row.city}</td>
+                        <td>{$supplierkind[$row['kind']]}</td>
                     </tr>
                 </foreach>										
             </table>

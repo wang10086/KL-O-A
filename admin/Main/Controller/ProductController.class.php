@@ -1543,17 +1543,21 @@ class ProductController extends BaseController {
     //选择科普资源(弹框)
     public function public_select_supplierRes(){
         $db                             = M('supplier');
-        $title                          = trim(I('tit'));
-        $content                        = trim(I('content'));
+        $name                           = trim(I('name'));
+        $city                           = trim(I('city'));
+        $kind                           = I('kind',0);
         $where                          = array();
         $where['audit_status']          = 1;
-        if ($title) $where['title']     = array('like','%'.$title.'%');
-        if ($content) $where['content'] = array('like','%'.$content.'%');
+        if ($name) $where['name']       = array('like','%'.$name.'%');
+        if ($city) $where['_string']    = "(prov like '%$city%') or (city like '%$city%')";
+        if ($kind) $where['kind']       = $kind;
         $pageCount                      = $db->where($where)->count();
         $page                           = new page($pageCount,P::PAGE_SIZE);
         $this->pages                    = $pageCount > P::PAGE_SIZE ? $page->show() : '';
         $lists                          = $db->where($where)->limit($page->firstRow.','.$page->listRows)->order($this->orders('id'))->select();
         $this->lists                    = $lists;
+        $this->supplierkind             = M('supplierkind')->getField('id,name',true);
+        $this->kind                     = $kind;
         $this->display('select_supplierRes');
     }
 
