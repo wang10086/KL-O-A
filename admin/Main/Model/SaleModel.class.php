@@ -376,7 +376,7 @@ class SaleModel extends Model{
 
     //获取计调信息
     public function get_operator(){
-        $jd_roles                       = array(29,31,42,116); //29=>计调专员 , 31=>计调操作经理 ,42=>南京计调专员, 116=>京区计调中心
+        $jd_roles                       = array(29,31,38,42,116); //29=>计调专员 , 31=>计调操作经理,38=>京区业务中心计调主管 ,42=>南京计调专员, 116=>京区计调中心
         $where                          = array();
         $where['roleid']                = array('in',$jd_roles);
         $where['status']                = array('in',array(0,1));
