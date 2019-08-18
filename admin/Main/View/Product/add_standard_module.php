@@ -272,12 +272,9 @@
                                                 <?php } ?>
                                             </div>
                                             <div id="material_val">0</div>
-                                            
-                                            <a href="javascript:;" class="btn btn-success btn-sm" style="margin-top:15px;" onClick="add_material()"><i class="fa fa-fw fa-plus"></i> 新增物资</a> 
-                                            
+                                            <a href="javascript:;" class="btn btn-success btn-sm" style="margin-top:15px;" onClick="add_material()"><i class="fa fa-fw fa-plus"></i> 新增物资</a>
                                             <div class="form-group">&nbsp;</div>
                                         </div>
-                                       
                                     </div>
                                 </div>
                             </div>
