@@ -1542,22 +1542,36 @@ class ProductController extends BaseController {
 
     //选择科普资源(弹框)
     public function public_select_supplierRes(){
-        $db                             = M('supplier');
-        $name                           = trim(I('name'));
-        $city                           = trim(I('city'));
-        $kind                           = I('kind',0);
-        $where                          = array();
-        $where['audit_status']          = 1;
-        if ($name) $where['name']       = array('like','%'.$name.'%');
-        if ($city) $where['_string']    = "(prov like '%$city%') or (city like '%$city%')";
-        if ($kind) $where['kind']       = $kind;
-        $pageCount                      = $db->where($where)->count();
-        $page                           = new page($pageCount,P::PAGE_SIZE);
-        $this->pages                    = $pageCount > P::PAGE_SIZE ? $page->show() : '';
-        $lists                          = $db->where($where)->limit($page->firstRow.','.$page->listRows)->order($this->orders('id'))->select();
-        $this->lists                    = $lists;
-        $this->supplierkind             = M('supplierkind')->getField('id,name',true);
-        $this->kind                     = $kind;
+        $db                                 = M('supplier');
+        $name                               = trim(I('name'));
+        $city                               = trim(I('city'));
+        $costType                           = I('costType',0);
+        $kind                               = I('kind') ? I('kind') : get_supplierkind($costType);
+        if ($kind ==8){ //研究所台站不从合格供方取值 , 从资源库取值 cas_res
+            $where                          = array();
+            $where['audit_status']          = 1;
+            if ($name) $where['title']      = array('like','%'.$name.'%');
+            if ($city) $where['_string']    = "(diqu like '%$city%') or (address like '%$city%')";
+            $pageCount                      = $db->where($where)->count();
+            $page                           = new page($pageCount,P::PAGE_SIZE);
+            $this->pages                    = $pageCount > P::PAGE_SIZE ? $page->show() : '';
+            $field                          = 'id,title as name, diqu as prov,address as city';
+            $lists                          = M('cas_res')->where($where)->limit($page->firstRow.','.$page->listRows)->order($this->orders('id'))->field($field)->select();
+            foreach ($lists as $k=>$v){     $lists[$k]['kind'] = 8; } //研究所台站
+        }else{
+            $where                          = array();
+            $where['audit_status']          = 1;
+            if ($name) $where['name']       = array('like','%'.$name.'%');
+            if ($city) $where['_string']    = "(prov like '%$city%') or (city like '%$city%')";
+            if ($kind) $where['kind']       = $kind;
+            $pageCount                      = $db->where($where)->count();
+            $page                           = new page($pageCount,P::PAGE_SIZE);
+            $this->pages                    = $pageCount > P::PAGE_SIZE ? $page->show() : '';
+            $lists                          = $db->where($where)->limit($page->firstRow.','.$page->listRows)->order($this->orders('id'))->select();
+        }
+        $this->lists                        = $lists;
+        $this->supplierkind                 = M('supplierkind')->getField('id,name',true);
+        $this->kind                         = $kind;
         $this->display('select_supplierRes');
     }
 

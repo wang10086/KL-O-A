@@ -724,9 +724,9 @@
     }
 
     //选择合格供方
-    function get_supplierRes(num,kind){
-        var kind               = kind ? kind : 0;
-        art.dialog.open("/index.php?m=Main&c=Product&a=public_select_supplierRes&kind="+kind,{
+    function get_supplierRes(num,costType){
+        var costType            = costType ? costType : 0;
+        art.dialog.open("/index.php?m=Main&c=Product&a=public_select_supplierRes&costType="+costType,{
             lock:true,
             title: '选择合格供方',
             width:1000,
@@ -778,11 +778,11 @@
     }
 
     //根据不同的类型调整不同的供方
-    function check_material_type(num,type) {
+    function check_material_type(num,costType) {
         var pub_html            = '<input type="text" class="form-control longinput" name="material['+num+'][channel]" value="">';
         var res_html            = '<input type="hidden" id= "'+num+'_supplierRes_id" name="material['+num+'][supplierRes_id]" value="">'+
-                                '<input type="text" id="'+num+'_supplierRes_name" class="form-control longinput" name="material['+num+'][channel]" value="" onfocus="get_supplierRes('+num+',8)">'; //研究所台站
-        if (type==6){ //研究所台站
+                                '<input type="text" id="'+num+'_supplierRes_name" class="form-control longinput" name="material['+num+'][channel]" value="" onfocus="get_supplierRes('+num+','+costType+')">'; //研究所台站
+        if (costType==6){ //研究所台站
             $('#'+num+'_channel').html(res_html);
         }else{
             $('#'+num+'_channel').html(pub_html);

@@ -4063,3 +4063,43 @@ function get_yw_department(){
         $list                       = $db->where($where)->select();
         return $list;
     }
+
+    /**
+     * 合格供方类型 C('COST_TYPE') 转化 oa_supplierkind
+     * @param $costType C('COST_TYPE')
+     * @return $supplier_id oa_supplierkind id
+     */
+    function get_supplierkind($costType){
+        switch ($costType){
+            case 1: //物资
+                $supplier_id            = 7;
+                break;
+            case 6: //研究所台站
+                $supplier_id            = 8;
+                break;
+            case 7: //旅游车队
+                $supplier_id            = 3;
+                break;
+            case 8: //酒店
+                $supplier_id            = 1;
+                break;
+            case 9: //地接社
+                $supplier_id            = 4;
+                break;
+            case 10: //餐厅
+                $supplier_id            = 6;
+                break;
+            case 11: //景点
+                $supplier_id            = 5;
+                break;
+            case 12: //票务
+                $supplier_id            = 5;
+                break;
+            case 4: //其他
+                $supplier_id            = 9;
+                break;
+            default:
+                $supplier_id            = 0;
+        }
+        return $supplier_id;
+    }
