@@ -53,11 +53,11 @@
                                             <td><div style="width:200px;"><a href="{:U('Product/view', array('id'=>$row['id']))}" title="{$row.title}">{$row.title}</a></div></td>
                                             <td>{$subject_fields[$row[subject_field]]}</td>
                                             <td>{$row['in_ages']}</td>
-                                            <td>{$row.res_name}</td>
-                                            <td>{$row.dept}</td>
+                                            <td class="taskOptions">{$row.res_name}</td>
+                                            <td class="taskOptions">{$row.dept}</td>
                                             <td class="taskOptions">{$row.time_length}</td>
                                             <td class="taskOptions">{$row.input_uname}</td>
-                                            <td  class="taskOptions">
+                                            <td class="taskOptions">
                                                 <?php
                                                     if($row['audit_status']== '-1'){
                                                         $show  = '<span class="yellow">未提交审批</span>';
