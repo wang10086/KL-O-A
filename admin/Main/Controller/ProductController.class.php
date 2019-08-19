@@ -34,7 +34,7 @@ class ProductController extends BaseController {
         if($type)   $where['p.type']            = array('eq',$type);
         if($from)   $where['p.from']            = array('eq',$from);
         if($fields) $where['p.subject_field']   = array('eq',$fields);
-        $where['p.disting']                     = 0; //0=>老数据, 1=>新数据
+        //$where['p.disting']                     = 0; //0=>老数据, 1=>新数据
 
 		$business_depts                         = C('BUSINESS_DEPT');
         $page                                   = new Page($db->table('__PRODUCT__ as p')->where($where)->count(), P::PAGE_SIZE);
@@ -109,7 +109,7 @@ class ProductController extends BaseController {
             $info['business_dept'] = $business_dept;
             $info['age']        = implode(',',array_unique($age));
             $info['supplier']   = implode(',',array_unique($res));
-            $info['disting']    = 0;
+            //$info['disting']    = 0;
             $id                 = I('id');
 
             //上传文件
@@ -438,7 +438,7 @@ class ProductController extends BaseController {
 		if($pro)    $where['p.business_dept']   = array('like','%'.$pro.'%');
 		if($age)    $where['p.age']             = array('like','%'.$age.'%');
 		if($zj)     $where['p.input_uname']     = array('like','%'.$zj.'%');
-        $where['disting']                       = 0;
+        //$where['disting']                       = 0;
 		
 		$business_depts                         = C('BUSINESS_DEPT');
         $page                                   = new Page($db->table('__PRODUCT__ as p')->where($where)->count(), P::PAGE_SIZE);
@@ -459,8 +459,9 @@ class ProductController extends BaseController {
 		$this->ages                             = C('AGE_LIST');
 		$this->kinds                            = $kinds;
     	$this->display('select_product');
-    	
     }
+
+
 	// @@@NODE-3###view###产品模块详情###
     public function view () {
         $this->title('产品模块详情');
@@ -492,10 +493,7 @@ class ProductController extends BaseController {
 			$row['showstatus']                  = $show;
 			$row['show_user']                   = $show_user;
 			$row['show_time']                   = $show_time;
-			
-			
-			
-			
+
 			$depts                              = explode(',',$row['business_dept']);
 			$kinds                              = M('project_kind')->getField('id,name');
 			$deptlist                           = array();
@@ -1190,7 +1188,7 @@ class ProductController extends BaseController {
         $apply_time                     = $app_time['atime'];
 
         $where                          = array();
-        $where['disting']               = 1;
+        //$where['disting']               = 1;
         if ($apply_year) $where['apply_year'] = $apply_year;
         if ($apply_time) $where['apply_time'] = $apply_time;
         if ($tit) $where['title']       = array('like','%'.$tit.'%');
@@ -1362,7 +1360,7 @@ class ProductController extends BaseController {
         if($key)    $where['p.title']           = array('like','%'.$key.'%');
         if($age)    $where['p.age']             = array('like','%'.$age.'%');
         if($fields) $where['p.subject_field']   = array('eq',$fields);
-        $where['p.disting']                     = 0; //0=>老数据, 1=>新数据
+        //$where['p.disting']                     = 0; //0=>老数据, 1=>新数据
 
         $pageCount                              = $db->table('__PRODUCT__ as p')->where($where)->count();
         $page                                   = new Page($pageCount, P::PAGE_SIZE);
@@ -1617,7 +1615,7 @@ class ProductController extends BaseController {
                 $info['att_id']                 = implode(',',$resfiles);
                 $info['apply_year']             = $apply_time?substr($apply_time,0,4):0;
                 $info['apply_time']             = $apply_time?substr($apply_time,-1):0;
-                $info['disting']                = 1; //标准化数据
+                //$info['disting']                = 1; //标准化数据
 
                 $cas                            = array();
                 foreach ($cas_res_ids as $k=>$v){
@@ -1684,7 +1682,7 @@ class ProductController extends BaseController {
                 $info['business_dept']          = $business_dept;
                 $info['age']                    = implode(',',array_unique($age));
                 $info['supplier']               = implode(',',array_unique($res));
-                $info['disting']                = 0;
+                //$info['disting']                = 0;
                 $info['business_dept']          = implode(',',$business_dept);;
                 $id                             = I('id');
                 if (!$info['title']){           $this->error('模块名称不能为空!'); }
