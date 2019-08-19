@@ -227,26 +227,26 @@
                                                     <div class="unitbox longinput">备注</div>
                                                 </div>
                                                 <?php if($material){ ?>
-                                                <foreach name="material" key="k" item="v">
-                                                <div class="userlist" id="material_id_{$v.id}">
-                                                    <span class="title"><?php echo $k+1; ?></span>
-                                                    <input type="hidden" name="resid[888{$v.id}][id]" value="{$v.id}" >
-                                                    <input type="text" class="form-control material_name" name="material[888{$v.id}][material]" value="{$v.material}">
-                                                    <input type="text" class="form-control longinput" name="material[888{$v.id}][spec]" value="{$v.spec}">
-                                                    <input type="text" class="form-control cost" name="material[888{$v.id}][unitprice]" value="{$v.unitprice}" onblur="total()">
-                                                    <input type="text" class="form-control amount" name="material[888{$v.id}][amount]" value="{$v.amount}" onblur="total()">
-                                                    <input type="text" class="form-control total" name="material[888{$v.id}][total]" value="{$v.total}">
-                                                    <select class="form-control"  name="material[888{$v.id}][type]" onchange="check_material_type(888{$v.id},$(this).val())" >
+                                                <foreach name="material" key="mk" item="mv">
+                                                <div class="userlist" id="material_id_{$mv.id}">
+                                                    <span class="title"><?php echo $mk+1; ?></span>
+                                                    <input type="hidden" name="resid[888{$mv.id}][id]" value="{$mv.id}" >
+                                                    <input type="text" class="form-control material_name" name="material[888{$mv.id}][material]" value="{$mv.material}">
+                                                    <input type="text" class="form-control longinput" name="material[888{$mv.id}][spec]" value="{$mv.spec}">
+                                                    <input type="text" class="form-control cost" name="material[888{$mv.id}][unitprice]" value="{$mv.unitprice}" onblur="total()">
+                                                    <input type="text" class="form-control amount" name="material[888{$mv.id}][amount]" value="{$mv.amount}" onblur="total()">
+                                                    <input type="text" class="form-control total" name="material[888{$mv.id}][total]" value="{$mv.total}">
+                                                    <select class="form-control"  name="material[888{$mv.id}][type]" onchange="check_material_type(888{$mv.id},$(this).val())" >
                                                         <foreach name="cost_type" key="key" item="value">
-                                                            <option value="{$key}" <?php if ($v['type']==$key){ echo 'selected'; } ?>>{$value}</option>
+                                                            <option value="{$key}" <?php if ($mv['type']==$key){ echo 'selected'; } ?>>{$value}</option>
                                                         </foreach>
                                                     </select>
-                                                    <span id="888{$v.id}_channel">
-                                                        <input type="hidden" id="[888{$v.id}]_supplierRes_id" name="material[888{$v.id}][supplierRes_id]" value="{$v.supplierRes_id}">
-                                                        <input type="text" id="[888{$v.id}]_supplierRes_name" class="form-control longinput" name="material[888{$v.id}][channel]" value="{$v.channel}">
+                                                    <span id="888{$mv.id}_channel">
+                                                        <input type="hidden" id="[888{$mv.id}]_supplierRes_id" name="material[888{$mv.id}][supplierRes_id]" value="{$mv.supplierRes_id}">
+                                                        <input type="text" id="[888{$mv.id}]_supplierRes_name" class="form-control longinput" name="material[888{$mv.id}][channel]" value="{$mv.channel}">
                                                     </span>
-                                                    <input type="text" class="form-control longinput" name="material[888{$v.id}][remarks]" value="{$v.remarks}">
-                                                    <a href="javascript:;" class="btn btn-danger btn-flat" onclick="delbox('material_id_{$v.id}')">删除</a>
+                                                    <input type="text" class="form-control longinput" name="material[888{$mv.id}][remarks]" value="{$mv.remarks}">
+                                                    <a href="javascript:;" class="btn btn-danger btn-flat" onclick="delbox('material_id_{$mv.id}')">删除</a>
                                                 </div>
                                                 </foreach>
                                                 <?php }else{ ?>
@@ -257,7 +257,7 @@
                                                     <input type="text" class="form-control cost" name="material[0][unitprice]" onblur="total()">
                                                     <input type="text" class="form-control amount" name="material[0][amount]" onblur="total()">
                                                     <input type="text" class="form-control total" name="material[0][total]">
-                                                    <select class="form-control"  name="material[888{$v.id}][type]" onchange="check_material_type(0,$(this).val())">
+                                                    <select class="form-control"  name="material[0][type]" onchange="check_material_type(0,$(this).val())">
                                                         <foreach name="cost_type" key="k" item="v">
                                                             <option value="{$k}" <?php if ($v['type']==$k){ echo 'selected'; } ?>>{$v}</option>
                                                         </foreach>

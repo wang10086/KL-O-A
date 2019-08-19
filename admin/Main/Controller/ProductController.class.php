@@ -470,7 +470,7 @@ class ProductController extends BaseController {
 		$where                                  = array();
 		$where['p.id']                          = $id;
 		$row                                    =  $db->table('__PRODUCT__ as p')->field('p.*')->where($where)->find();
-        if ($row['disting'] == 1){ $this->standard_product_detail($id); die;}
+        if ($row['standard'] == 1){ $this->standard_product_detail($id); die;}
 		
 		if($row){
 			$where                              = array();
@@ -1212,7 +1212,7 @@ class ProductController extends BaseController {
             $lists[$k]['kinds']         = implode(',',$str);
         }
 
-        $this->lists                    = $lists;
+        //$this->lists                    = $lists;
         $this->pfrom                    = C('PRODUCT_FROM');
         $this->kinds                    = $kinds;
         $this->apply                    = C('APPLY_TO');
@@ -1268,7 +1268,7 @@ class ProductController extends BaseController {
 
     //标准化产品(详情)
     public function standard_product_detail($id=0){
-        $this->title('标准化产品详情');
+        /*$this->title('标准化产品详情');
         $id                             = I('id')?I('id'):$id;
         $db                             = M('product');
         $product_use_db                 = M('product_use');
@@ -1308,19 +1308,54 @@ class ProductController extends BaseController {
         $list['showstatus']             = $show;
         $list['show_user']              = $show_user;
         $list['show_time']              = $show_time;
-        $this->in_cas                   = array(
-            0                           => '院外',
-            1                           => '院内',
-        );
         $this->row                      = $list;
         $this->product_use_list         = $product_use_list;
         $this->cas_list                 = $cas_list;
         $this->atts                     = $atts;
-        $this->reckon_mode              = C('RECKON_MODE');
         $this->standard                 = C('STANDARD');
         $this->subject_fields           = C('SUBJECT_FIELD');
-        $this->product_from             = C('PRODUCT_FROM');
-        $this->apply                    = C('APPLY_TO');
+        $this->apply                    = C('APPLY_TO');*/
+
+        $this->title('标准化产品详情');
+        $id                             = I('id')?I('id'):$id;
+        $db                             = M('product');
+        $list                           = $db->find($id);
+        $module_lists                   = M('product_module')->where(array('product_id'=>$id))->select(); //模块内容
+        $material_lists                 = M('product_material')->where(array('product_id'=>$id))->select(); // 模块成本核算
+        $audit_data                     = $list['audit_status'] != '-1' ? M('audit_log')->where(array('req_id'=>$id,'req_type'=>P::REQ_TYPE_PRODUCT_NEW))->find() : '';
+        $project_kinds                  = get_project_kinds();
+        $age_lists                      = C('AGE_LIST');
+        $business_depts                 = explode(',',$list['business_dept']);
+        $ages                           = explode(',',$list['age']);
+        $dept_data                      = array();
+        $age_data                       = array();
+        foreach ($project_kinds as $k=>$v){
+            if (in_array($v['id'],$business_depts)){
+                $dept_data[]            = $v['name'];
+            }
+        }
+        foreach ($age_lists as $ak=>$av){
+            if (in_array($ak,$ages)){
+                $age_data[]             = $av;
+            }
+        }
+        $list['dept']                   = implode(',',$dept_data);
+        $list['ages']                   = implode(',',$age_data);
+        $list['audit_uname']            = $audit_data ? $audit_data['audit_uname'] :'<font color="#999">暂未审核</font>';
+        $list['audit_time']             = $audit_data ? date('Y-m-d H:i',$audit_data['audit_time']) :'<font color="#999">暂未审核</font>';
+        $audit_status                   = array(
+            '-1'                        => "<span class='yellow'>未提交审核</span>",
+            '0'                         => "<span class=''>待审核</span>",
+            '1'                         => "<span class='green'>审核通过</span>",
+            '2'                         => "<span class='red'>审核不通过</span>"
+        );
+
+        $this->row                      = $list;
+        $this->module_lists             = $module_lists;
+        $this->material_lists           = $material_lists;
+        $this->reckon_mode              = C('RECKON_MODE'); //核算方式
+        $this->subject_fields           = C('SUBJECT_FIELD'); //科学领域
+        $this->audit_status             = $audit_status;
         $this->display('standard_product_detail');
     }
 
@@ -1668,7 +1703,6 @@ class ProductController extends BaseController {
             if ($savetype == 2){
                 $attdb                          = M('attachment');
                 $info                           = I('info');
-                $referer                        = I('referer');
                 $material                       = I('material');
                 $resid                          = I('resid');
                 $mresid                         = I('mresid');
@@ -1715,14 +1749,14 @@ class ProductController extends BaseController {
 
                     //修改物资信息
                     $delid                      = array();
-                    foreach($material as $k=>$v){
+                    foreach($material as $mk=>$mv){
                         $data                   = array();
-                        $data                   = $v;
-                        $data['material']       = trim($v['material']);
+                        $data                   = $mv;
+                        $data['material']       = trim($mv['material']);
                         if($data['material']){
                             if($resid && $resid[$k]['id']){
-                                $edits          = M('product_material')->data($data)->where(array('id'=>$resid[$k]['id']))->save();
-                                $delid[]        = $resid[$k]['id'];
+                                $edits          = M('product_material')->data($data)->where(array('id'=>$resid[$mk]['id']))->save();
+                                $delid[]        = $resid[$mk]['id'];
                             }else{
                                 $data['product_id']     = $id;
                                 $delid[]        = M('product_material')->add($data);
@@ -1748,7 +1782,7 @@ class ProductController extends BaseController {
                         $data['remark']         = trim($data['remark']);
                         if ($data['title']){
                             if($mresid && $mresid[$kk]['id']){
-                                $edits          = M('product_module')->data($data)->where(array('id'=>$mresid[$k]['id']))->save();
+                                $edits          = M('product_module')->data($data)->where(array('id'=>$mresid[$kk]['id']))->save();
                                 $mdel_id[]      = $mresid[$kk]['id'];
                             }else{
                                 $data['product_id']             = $id;
@@ -1804,7 +1838,7 @@ class ProductController extends BaseController {
                     //保存视频文件
                     save_res(P::UPLOAD_VIDEO,$isadd,$video,1);
 
-                    $this->success('保存成功！', $referer);
+                    $this->success('保存成功！', U('Product/add_standard_module',array('id'=>$isadd)));
                 }else{
                     $this->success('保存失败！');
                 }

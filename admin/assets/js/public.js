@@ -654,7 +654,7 @@ function qrcode_js(text,width,height) {
 	});
 }
 
-artDialog.alert = function (content, status) {
+/*artDialog.alert = function (content, status) {
 	return artDialog({
 		id: 'Alert',
 		icon: status,
@@ -666,7 +666,7 @@ artDialog.alert = function (content, status) {
 		content: content,
 		ok: true
 	});
-};
+};*/
 
 
 //保存信息

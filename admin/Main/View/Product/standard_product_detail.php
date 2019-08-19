@@ -24,21 +24,22 @@
                             <div class="box box-success">
                                 <div class="box-header">
                                     <h3 class="box-title">产品模块介绍</h3>
+                                    <h3 class="box-title pull-right" style="font-weight:normal; color:#333333;"></h3>
                                 </div><!-- /.box-header -->
                                 <div class="box-body">
                                 	
                                     <div class="content">
 
                                         <div class="form-group col-md-12 viwe">
-                                            <p>产品名称：{$row.title}</p>
+                                            <p>标准模块名称：{$row.title}</p>
                                         </div>
 
-                                        <div class="form-group col-md-12 viwe">
+                                        <div class="form-group col-md-4 viwe">
                                             <p>适用项目：{$row.dept}</p>
                                         </div>
                                         
-                                        <div class="form-group col-md-12 viwe">
-                                            <p>适用年龄：{$apply[$row['age']]}</p>
+                                        <div class="form-group col-md-4 viwe">
+                                            <p>适用年龄：{$row['ages']}</p>
                                         </div>
 
                                         <div class="form-group col-md-4 viwe">
@@ -48,17 +49,9 @@
                                         <div class="form-group col-md-4 viwe">
                                             <p>参考成本价：<span class="red">&yen; {$row.sales_price}</span></p>
                                         </div>
-                                        
-                                        <div class="form-group col-md-4 viwe">
-                                            <p>是否标准化：{$standard[$row['standard']]}</p>
-                                        </div>
 
                                         <div class="form-group col-md-4 viwe">
                                             <p>科学领域：{$subject_fields[$row[subject_field]]}</p>
-                                        </div>
-
-                                        <div class="form-group col-md-4 viwe">
-                                            <p>产品来源：{$product_from[$row['from']]}</p>
                                         </div>
 
                                         <div class="form-group col-md-4 viwe">
@@ -66,13 +59,13 @@
                                         </div>
 
                                         <div class="form-group col-md-4 viwe">
-                                            <p>审批状态：{$row.showstatus}</p>
+                                            <p>审批状态：{$audit_status[$row['audit_status']]}</p>
                                         </div>
                                         <div class="form-group col-md-4 viwe">
-                                            <p>审批人：{$row.show_user}</p>
+                                            <p>审批人：{$row.audit_uname}</p>
                                         </div>
                                         <div class="form-group col-md-4 viwe">
-                                            <p>审批时间：{$row.show_time}</p>
+                                            <p>审批时间：{$row.audit_time}</p>
                                         </div>
 
                                         <div class="form-group col-md-12">
@@ -90,22 +83,26 @@
                                     <h3 class="box-title">包含产品模块</h3>
                                 </div>
                                 <div class="box-body">
-                                    <?php if($product_use_list){ ?>
+                                    <?php if($module_lists){ ?>
                                         <table class="table table-bordered dataTable fontmini" id="tablelist">
                                             <tr role="row" class="orders" >
                                                 <th style="width: 50px">编号</th>
                                                 <th>产品名称</th>
-                                                <th>数量</th>
-                                                <th>参考单价</th>
-                                                <th>总价</th>
+                                                <th>活动时长</th>
+                                                <th>模块内容</th>
+                                                <th>实施要求</th>
+                                                <th>配套资料</th>
+                                                <th>备注</th>
                                             </tr>
-                                            <foreach name="product_use_list" key="k" item="row">
+                                            <foreach name="module_lists" key="k" item="row">
                                                 <tr>
                                                     <td><?php echo $k+1; ?></td>
                                                     <td>{$row.title}</td>
-                                                    <td>{$row.amount}</td>
-                                                    <td>&yen;{$row.unitcost}</td>
-                                                    <td>&yen;{$row.total}</td>
+                                                    <td>{$row.length} 小时</td>
+                                                    <td>{$row.content}</td>
+                                                    <td>{$row.}</td>
+                                                    <td>{$row.}</td>
+                                                    <td>{$row.remark}</td>
                                                 </tr>
                                             </foreach>
                                         </table>
@@ -115,23 +112,33 @@
                             
                             <div class="box box-success">
                                 <div class="box-header">
-                                    <h3 class="box-title">包含资源模块</h3>
+                                    <h3 class="box-title">模块成本核算</h3>
                                 </div>
                                 <div class="box-body">
-                                	<?php if($cas_list){ ?>
+                                	<?php if($material_lists){ ?>
                                 	<table class="table table-bordered dataTable fontmini" id="tablelist">
                                     	<tr role="row" class="orders" >
                                             <th style="width: 50px">编号</th>
-                                            <th>资源名称</th>
-                                            <th>性质</th>
-                                            <th>所在地区</th>
+                                            <th>费用项</th>
+                                            <th>规格</th>
+                                            <th>单价</th>
+                                            <th>数量</th>
+                                            <th>合计价格</th>
+                                            <th>类型</th>
+                                            <th>供方</th>
+                                            <th>备注</th>
                                         </tr>
-                                        <foreach name="cas_list" key="k" item="row">
+                                        <foreach name="material_lists" key="k" item="row">
                                         <tr>
                                             <td><?php echo $k+1; ?></td>
-                                            <td>{$row.title}</td>
-                                            <td>{$in_cas[$row[in_cas]]}</td>
-                                            <td>{$row.diqu}</td>
+                                            <td>{$row.material}</td>
+                                            <td>{$row.spec}</td>
+                                            <td>{$row.unitprice}</td>
+                                            <td>{$row.amount}</td>
+                                            <td>&yen;{$row.total}</td>
+                                            <td>{$row.type}</td>
+                                            <td>{$row.supplierRes_id}</td>
+                                            <td>{$row.remarks}</td>
                                         </tr>
                                         </foreach>
                                     </table>
