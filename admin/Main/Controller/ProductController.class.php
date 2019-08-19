@@ -1349,30 +1349,24 @@ class ProductController extends BaseController {
 
     //标准化模块
     public function standard_module(){
-        $this->pageTitle                = '标准化管理';
+        $this->pageTitle                        = '标准化管理';
         $this->title('标准化模块');
 
         $key                                    = I('key');
-        $pro                                    = I('pro');
-        $type                                   = I('type');
         $fields                                 = I('subject_field');
-        $from                                   = I('from');
         $age                                    = I('age');
 
         $db                                     = M('product');
-        $this->pro                              = $pro;
         $where                                  = array();
         $where['standard']                      = 1; //标准化
         if($key)    $where['p.title']           = array('like','%'.$key.'%');
-        if($pro)    $where['p.business_dept']   = array('like','%'.$pro.'%');
         if($age)    $where['p.age']             = array('like','%'.$age.'%');
-        if($type)   $where['p.type']            = array('eq',$type);
-        if($from)   $where['p.from']            = array('eq',$from);
         if($fields) $where['p.subject_field']   = array('eq',$fields);
         $where['p.disting']                     = 0; //0=>老数据, 1=>新数据
 
-        $page                                   = new Page($db->table('__PRODUCT__ as p')->where($where)->count(), P::PAGE_SIZE);
-        $this->pages                            = $page->show();
+        $pageCount                              = $db->table('__PRODUCT__ as p')->where($where)->count();
+        $page                                   = new Page($pageCount, P::PAGE_SIZE);
+        $this->pages                            = $pageCount > P::PAGE_SIZE ? $page->show():'';
         $lists                                  = $db->table('__PRODUCT__ as p')->field('p.*')->where($where)->limit($page->firstRow . ',' . $page->listRows)->order($this->orders('p.id'))->select();
         $kinds                                  = M('project_kind')->getField('id,name');
         $ages                                   = C('AGE_LIST');
@@ -1389,21 +1383,14 @@ class ProductController extends BaseController {
             }
             $lists[$k]['dept']                  = implode(',',$deptval);
             $lists[$k]['in_ages']               = implode(',',$in_ages);
+            $time_length_lists                  = M('product_module')->where(array('product_id'=>$v['id']))->getField('length',true);
+            $lists[$k]['time_length']           = array_sum($time_length_lists);
         }
 
         $this->lists                            = $lists;
-        /*$this->ptype                            = C('PRODUCT_TYPE');*/
-        /*$this->pfrom                            = C('PRODUCT_FROM');*/
         $this->kinds                            = $kinds;
         $this->ages                             = C('AGE_LIST');
-        /*$this->reckon_mode                      = C('RECKON_MODE');*/
         $this->subject_fields                   = C('SUBJECT_FIELD');
-
-        //导航栏
-        $kind_ids                               = array(54,55,56,60,61,62);
-        $where                                  = array();
-        $where['id']                            = array('in',$kind_ids);
-        $this->business_dept                    = M('project_kind')->where($where)->getField('id,name');
         $this->display();
     }
 
@@ -1575,10 +1562,46 @@ class ProductController extends BaseController {
         $this->display('select_supplierRes');
     }
 
+    //选择标准化模块
+    public function public_select_standard_module(){
+        $db                                         = M('product');
+        $key                                        = trim(I('key',''));
+        $subject_field                              = I('subject_field');
+        $projectKind                                = I('projectKind');
+        $where                                      = array();
+        $where['audit_status']                      = P::AUDIT_STATUS_PASS;
+        $where['standard']                          = 1; //标准化
+        if($key)            $where['title']         = array('like','%'.$key.'%');
+        if ($subject_field) $where['subject_field'] = array('eq',$subject_field);
+        if ($projectKind)   $where['business_dept'] = array('like','%'.$projectKind.'%');
+        $pagecount                                  = $db->where($where)->count();
+        $page                                       = new Page($pagecount,25);
+        $this->pages                                = $pagecount>25 ? $page->show():'';
+        $lists                                      = $db->where($where)->limit($page->firstRow . ',' . $page->listRows)->order($this->orders('input_time'))->select();
+
+        $ageval                                     = C('AGE_LIST');
+        foreach ($lists as $k=>$v){
+            $agelist                                = array();
+            $ages                                   = explode(',',$v['age']);
+            foreach($ageval as $key=>$value){
+                if (in_array($key,$ages)){
+                    $agelist[]                      = $value;
+                }
+            }
+            $lists[$k]['agelist']                   = implode(',',$agelist);
+        }
+        $this->lists                                = $lists;
+        $this->projectKind                          = $projectKind;
+        $this->subject_fields                       = C('SUBJECT_FIELD');
+        $this->kindlist                             = M('project_kind')->select();
+        $this->display('select_standard_module');
+    }
+
     public function public_save(){
         $savetype                               = I('savetype');
         if (isset($_POST['dosubmit'])){
-            if ($savetype == 1){ //保存标准化产品
+            //保存标准化产品
+            if ($savetype == 1){
                 $db                             = M('product');
                 $id                             = I('id',0);
                 $info                           = I('info');
@@ -1643,7 +1666,8 @@ class ProductController extends BaseController {
                 }
             }
 
-            if ($savetype == 2){ //保存标准化模块
+            //保存标准化模块
+            if ($savetype == 2){
                 $attdb                          = M('attachment');
                 $info                           = I('info');
                 $referer                        = I('referer');
@@ -1702,7 +1726,7 @@ class ProductController extends BaseController {
                                 $edits          = M('product_material')->data($data)->where(array('id'=>$resid[$k]['id']))->save();
                                 $delid[]        = $resid[$k]['id'];
                             }else{
-                                $data['product_id']             = $id;
+                                $data['product_id']     = $id;
                                 $delid[]        = M('product_material')->add($data);
                             }
                         }
@@ -1740,12 +1764,11 @@ class ProductController extends BaseController {
                     $del                        = M('product_module')->where($where)->delete();
 
                 } else {
-
                     //保存
                     $info['input_user']         = session('userid');
                     $info['input_uname']        = session('nickname');
                     $info['input_time']         = time();
-
+                    $info['audit_status']       = '-1'; //未提交审核
                     $isadd                      = M('product')->add($info);
 
                     //保存物资信息
@@ -1793,6 +1816,9 @@ class ProductController extends BaseController {
             if ($savetype == 4){
                 $product_id                     = trim(I('product_id'));
                 if (!$product_id){              $this->error('获取数据失败'); }
+                $data                           = array();
+                $data['audit_status']           = 0; //已提交,待审核
+                $res                            = M('product')->where(array('id'=>$product_id))->save($data);
                 $where                          = array();
                 $where['req_type']              = P::REQ_TYPE_PRODUCT_NEW;
                 $where['req_id']                = $product_id;

@@ -34,10 +34,10 @@
                                         <th width="200" class="sorting" data="p.title">模块名称</th>
                                         <th class="sorting" data="p.subject_field" style="width: 100px;">科学领域</th>
                                         <th class="sorting" data="p.age">适用年龄</th>
-                                        <th class="sorting">相关资源</th>
-                                        <th class="sorting">适用项目</th>
-                                        <th class="sorting">总时长</th>
-                                        <th class="sorting" data="p.input_uname">研发人员</th>
+                                        <th class="taskOptions">相关资源</th>
+                                        <th class="taskOptions">适用项目</th>
+                                        <th class="taskOptions">总时长(小时)</th>
+                                        <th class="taskOptions" data="p.input_uname">研发人员</th>
                                         <th>审批状态</th>
                                         
                                         <if condition="rolemenu(array('Product/add'))">
@@ -53,20 +53,24 @@
                                             <td><div style="width:200px;"><a href="{:U('Product/view', array('id'=>$row['id']))}" title="{$row.title}">{$row.title}</a></div></td>
                                             <td>{$subject_fields[$row[subject_field]]}</td>
                                             <td>{$row['in_ages']}</td>
-                                            <td></td>
-                                            <td>{$row.}</td>
-                                            <td>{$row.}</td>
-                                            <td>{$row.input_uname}</td>
-                                            <?php
-                                            if($row['audit_status']== P::AUDIT_STATUS_NOT_AUDIT){
-                                                $show  = '<td>等待审批</td>';	
-                                            }else if($row['audit_status'] == P::AUDIT_STATUS_PASS){
-                                                $show  = '<td><span class="green">通过</span></td>';	
-                                            }else if($row['audit_status'] == P::AUDIT_STATUS_NOT_PASS){
-                                                $show  = '<td><span class="red">不通过</span></td>';	
-                                            }
-                                            echo $show;
-                                            ?>
+                                            <td>{$row.res_name}</td>
+                                            <td>{$row.dept}</td>
+                                            <td class="taskOptions">{$row.time_length}</td>
+                                            <td class="taskOptions">{$row.input_uname}</td>
+                                            <td  class="taskOptions">
+                                                <?php
+                                                    if($row['audit_status']== '-1'){
+                                                        $show  = '<span class="yellow">未提交审批</span>';
+                                                    }else if($row['audit_status']== P::AUDIT_STATUS_NOT_AUDIT){
+                                                        $show  = '等待审批';
+                                                    }else if($row['audit_status'] == P::AUDIT_STATUS_PASS){
+                                                        $show  = '<span class="green">通过</span>';
+                                                    }else if($row['audit_status'] == P::AUDIT_STATUS_NOT_PASS){
+                                                        $show  = '<span class="red">不通过</span>';
+                                                    }
+                                                    echo $show;
+                                                ?>
+                                            </td>
                                             
                                             <if condition="rolemenu(array('Product/add'))">
                                             <td class="taskOptions">
@@ -99,33 +103,14 @@
                 <input type="hidden" name="m" value="Main">
                 <input type="hidden" name="c" value="Product">
                 <input type="hidden" name="a" value="standard_module">
-                <input type="hidden" name="pro" value="{$pro}">
                 <div class="form-group col-md-12">
                     <input type="text" class="form-control" name="key" placeholder="关键字">
-                </div>
-                
-                <div class="form-group col-md-6">
-                    <select class="form-control" name="type">
-                        <option value="">类别</option>
-                        <foreach name="ptype" key="k" item="v">
-                        <option value="{$k}">{$v}</option>
-                        </foreach>
-                    </select>
                 </div>
 
                 <div class="form-group col-md-6">
                     <select class="form-control" name="subject_field">
                         <option value="">领域</option>
                         <foreach name="subject_fields" key="k" item="v">
-                            <option value="{$k}">{$v}</option>
-                        </foreach>
-                    </select>
-                </div>
-
-                <div class="form-group col-md-6">
-                    <select class="form-control" name="from">
-                        <option value="">来源</option>
-                        <foreach name="pfrom" key="k" item="v">
                             <option value="{$k}">{$v}</option>
                         </foreach>
                     </select>

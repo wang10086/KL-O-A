@@ -74,8 +74,7 @@
                                         <input type="hidden" name="info[auth_user_id]" id="auth_user_id" value="{$row.auth_user_id}" />
                                     </div>
 
-                                    <div class="form-group col-md-12">
-                                        <!--<span class="lm_c black">适用项目类型</span>-->
+                                    <div class="form-group col-md-12" id="applyProjectKind">
                                         <label>适用项目类型</label>
                                         <div>
                                             <foreach name="kinds" key="k" item="v">
@@ -116,7 +115,8 @@
                                                             <input type="text" class="form-control name_box" name="product[888{$v.id}][product]" value="{$v.product}" />
                                                             <input type="text" class="form-control name_box" name="product[888{$v.id}][spec]" value="{$v.spec}" />
                                                             <input type="text" class="form-control name_box" name="product[888{$v.id}][amount]" value="{$v.amount}" />
-                                                            <input type="text" class="form-control name_box" name="product[888{$v.id}][unitprice]" value="{$v.unitprice}" id="888{$v.id}_pname" onfocus="selectproduct(888{$v.id})" />
+                                                            <!--<input type="text" class="form-control name_box" name="product[888{$v.id}][unitprice]" value="{$v.unitprice}" id="888{$v.id}_pname" onfocus="selectproduct(888{$v.id})" />-->
+                                                            <input type="text" class="form-control name_box" name="product[888{$v.id}][unitprice]" value="{$v.unitprice}" id="888{$v.id}_pname" onfocus="checkProjectKind(888{$v.id})" />
                                                             <input type="text" class="form-control name_box" name="product[888{$v.id}][remarks]" value="{$v.remarks}">
                                                             <a href="javascript:;" class="btn btn-danger btn-flat" onclick="delbox('product_id_{$v.id}')">删除</a>
                                                         </div>
@@ -128,7 +128,8 @@
                                                         <input type="text" class="form-control name_box" name="product[0][product]" />
                                                         <input type="text" class="form-control name_box" name="product[0][spec]" />
                                                         <input type="text" class="form-control name_box" name="product[0][amount]" />
-                                                        <input type="text" class="form-control name_box" name="product[0][unitprice]" id="0_pname" onfocus="selectproduct(0)" />
+                                                        <!--<input type="text" class="form-control name_box" name="product[0][unitprice]" id="0_pname" onfocus="selectproduct(0)" />-->
+                                                        <input type="text" class="form-control name_box" name="product[0][unitprice]" id="0_pname" onfocus="checkProjectKind(0)" />
                                                         <input type="text" class="form-control name_box" name="product[0][remarks]">
                                                         <a href="javascript:;" class="btn btn-danger btn-flat" onclick="delbox('product_id_0')">删除</a>
                                                     </div>
@@ -299,7 +300,8 @@
         '<input type="text" class="form-control name_box" name="product['+i+'][product]">' +
         '<input type="text" class="form-control name_box" name="product['+i+'][spec]" value="">' +
         '<input type="text" class="form-control name_box" name="product['+i+'][amount]">' +
-        '<input type="text" class="form-control name_box" name="product['+i+'][unitprice]" id="'+i+'_pname" onfocus="selectproduct('+i+')">' +
+        /*'<input type="text" class="form-control name_box" name="product['+i+'][unitprice]" id="'+i+'_pname" onfocus="selectproduct('+i+')">' +*/
+        '<input type="text" class="form-control name_box" name="product['+i+'][unitprice]" id="'+i+'_pname" onfocus="checkProjectKind('+i+')">' +
         '<input type="text" class="form-control name_box" name="product['+i+'][remarks]">' +
         '<a href="javascript:;" class="btn btn-danger btn-flat" onclick="delbox(\'product_id_'+i+'\')">删除</a>' +
         '</div>';
@@ -320,9 +322,43 @@
 		$('#'+obj).remove();
 	}
 
-    //选择产品模块
+    /*//选择产品模块
     function selectproduct(num) {
         art.dialog.open("<?php echo U('Product/select_product_module',array('id'=>$id)); ?>",{
+            lock:true,
+            title: '选择产品模块',
+            width:1000,
+            height:500,
+            okValue: '提交',
+            fixed: true,
+            ok: function () {
+                var origin = artDialog.open.origin;
+                var product = this.iframe.contentWindow.gosubmint();
+                var product_id = product.id;
+                var product_title = product.title;
+                $('#'+num+'_pid').val(product_id);
+                $('#'+num+'_pname').val(product_title);
+            },
+            cancelValue:'取消',
+            cancel: function () {
+            }
+        });
+    }*/
+
+    //根据适用项目类型获取相应标准化产品模块
+    function checkProjectKind(num){
+        var projectKind = $('#applyProjectKind').find('ins').parent('div[aria-checked="true"]').children('input[name="business_dept"]').val();
+        if (!projectKind){
+            art_show_msg('请先选择适用项目类型',3);
+            return false;
+        }else{
+            select_standard_module(num,projectKind);
+        }
+    }
+
+    //选择标准化模块
+    function select_standard_module(num,projectKind) {
+        art.dialog.open("/index.php?m=Main&c=Product&a=public_select_standard_module&projectKind="+projectKind,{
             lock:true,
             title: '选择产品模块',
             width:1000,
