@@ -288,7 +288,7 @@
 										<?php  } ?>
                                         </h3>
                                     </div>
-                                    <?php  if(rolemenu(array('Op/public_save'))  && $budget['audit_status']==1 && $settlement['audit']!=1 && ($opauth['material']==cookie('userid') || C('RBAC_SUPER_ADMIN')==cookie('username') || rolemenu(array('Op/assign_res')))){ ?>
+                                    <?php  if(rolemenu(array('Op/public_save'))  && $budget['audit_status']==1 && $settlement['audit']!=1 && ($opauth['material']==session('userid') || C('RBAC_SUPER_ADMIN')==session('username') || rolemenu(array('Op/assign_res')))){ ?>
                                     <include file="op_res_material_edit" />
                                     <?php  }else{ ?>
                                     <include file="op_res_material" />

@@ -106,7 +106,7 @@
                                     </if>
                                     <ul class="treeview-menu">
                                         <if condition="rolemenu(array('Product/standard_product'))">
-                                            <li class="{:on('Product/standard_product')}"><a href="{:U('Product/standard_product')}"><i class="fa fa-angle-right"></i> 标准化产品</a></li>
+                                            <li class="{:on('Product/standard_product')} {:on('Product/add_standard_product')}"><a href="{:U('Product/standard_product')}"><i class="fa fa-angle-right"></i> 标准化产品</a></li>
                                         </if>
                                         <if condition="rolemenu(array('Product/standard_module'))">
                                             <li class="{:on('Product/standard_module')} {:on('Product/view')} {:on('Product/add_standard_module')}"><a href="{:U('Product/standard_module')}"><i class="fa fa-angle-right"></i> 标准化模块</a></li>

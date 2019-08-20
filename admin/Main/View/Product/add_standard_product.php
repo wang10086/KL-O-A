@@ -28,7 +28,7 @@
                                 </div><!-- /.box-header -->
                                 <div class="box-body">
                                     <input type="hidden" name="dosubmit" value="1">
-                                    <input type="hidden" name="savetype" value="3">
+                                    <input type="hidden" name="savetype" value="1">
                                     <input type="hidden" name="id" value="{$id}" >
 
                                     <div class="form-group col-md-8">
@@ -69,8 +69,8 @@
 
                                     <div class="form-group col-md-4">
                                         <label>产品负责人：</label>
-                                        <input type="text" name="info[auth_user_name]" id="auth_user_name" value="{$row.auth_user_name}"  class="form-control" required />
-                                        <input type="hidden" name="info[auth_user_id]" id="auth_user_id" value="{$row.auth_user_id}" />
+                                        <input type="text" name="info[auth_name]" id="auth_name" value="{$row.auth_name}"  class="form-control" required />
+                                        <input type="hidden" name="info[auth_id]" id="auth_id" value="{$row.auth_id}" />
                                     </div>
 
                                     <div class="form-group col-md-12" id="applyProjectKind">
@@ -313,7 +313,7 @@
 
 	$(document).ready(function() {
         var keywords        = {$userkey};
-        autocomplete_id('auth_user_name','auth_user_id',keywords);
+        autocomplete_id('auth_name','auth_id',keywords);
         check_hesuan(); //核算模式
 
 		var uploader = new plupload.Uploader({
@@ -636,12 +636,12 @@
         let title           = $('#title').val().trim();
         let province        = $('#s_province').val();
         let city            = $('#s_city').val();
-        let auth_user_id    = $('#auth_user_id').val();
+        let auth_id         = $('#auth_id').val();
 
         if (!title){        art_show_msg('模块名称不能为空',3);    return false; }
         if (!province){     art_show_msg('所在省份不能为空',3);    return false; }
         if (!city){         art_show_msg('所在城市不能为空',3);    return false; }
-        if (!auth_user_id){ art_show_msg('产品负责人信息错误',3);  return false; }
+        if (!auth_id){ art_show_msg('产品负责人信息错误',3);  return false; }
         $('#myform').submit();
     }
 
