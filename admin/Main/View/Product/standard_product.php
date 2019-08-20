@@ -41,8 +41,6 @@
                                 <table class="table table-bordered dataTable fontmini" id="tablelist" style="margin-top:10px;">
                                     <tr role="row" class="orders" >
                                         <th>产品名称</th>
-                                        <th>所属领域</th>
-                                        <th>适合人群</th>
                                         <th>适用项目类型</th>
                                         <th >产品报价</th>
                                         <th>审批状态</th>
@@ -56,13 +54,13 @@
                                     <foreach name="lists" item="row">
                                         <tr>
                                             <td><a href="{:U('Product/standard_product_detail',array('id'=>$row['id']))}">{$row.title}</a></td>
-                                            <td>{$subject_fields[$row[subject_field]]}</td>
-                                            <td>{$apply[$row[age]]}</td>
                                             <td style="max-width: 300px">{$row.kinds}</td>
                                             <td>{$row.sales_price}</td>
                                             <td>
                                                 <?php
-                                                    if($row['audit_status']== P::AUDIT_STATUS_NOT_AUDIT){
+                                                    if($row['audit_status']== '-1'){
+                                                        $show  = '<span class="yellow">未提交审批</span>';
+                                                    }else if($row['audit_status']== P::AUDIT_STATUS_NOT_AUDIT){
                                                         $show  = '等待审批';
                                                     }else if($row['audit_status'] == P::AUDIT_STATUS_PASS){
                                                         $show  = '<span class="green">通过</span>';

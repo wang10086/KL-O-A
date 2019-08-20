@@ -200,9 +200,9 @@
                                                                 </foreach>
                                                             </select>
                                                             <span id="888{$mv.id}_channel">
-                                                <input type="hidden" id="[888{$mv.id}]_supplierRes_id" name="material[888{$mv.id}][supplierRes_id]" value="{$mv.supplierRes_id}">
-                                                <input type="text" id="[888{$mv.id}]_supplierRes_name" class="form-control longinput" name="material[888{$mv.id}][channel]" value="{$mv.channel}">
-                                            </span>
+                                                                <input type="hidden" id="[888{$mv.id}]_supplierRes_id" name="material[888{$mv.id}][supplierRes_id]" value="{$mv.supplierRes_id}">
+                                                                <input type="text" id="[888{$mv.id}]_supplierRes_name" class="form-control longinput" name="material[888{$mv.id}][channel]" value="{$mv.channel}">
+                                                            </span>
                                                             <input type="text" class="form-control longinput" name="material[888{$mv.id}][remarks]" value="{$mv.remarks}">
                                                             <a href="javascript:;" class="btn btn-danger btn-flat" onclick="delbox('material_id_{$mv.id}')">删除</a>
                                                         </div>

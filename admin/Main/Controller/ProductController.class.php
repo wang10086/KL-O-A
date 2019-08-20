@@ -1174,31 +1174,28 @@ class ProductController extends BaseController {
 
 	//标准化产品
     public function standard_product(){
-        $this->pageTitle                = '标准化管理';
+        $this->pageTitle                = '标准化产品';
         $month                          = date('m');
         $pin                            = I('pin',0);
         $year                           = I('year',date('Y'));
         $ltit                           = get_little_title($year,$month);
-        $db                             = M('product');
+        $db                             = M('producted');
         $tit                            = trim(I('key'));
         $kind                           = I('kind');
-        $age                            = I('age');
         $app_time                       = get_apply_time($ltit,$pin);
         $apply_year                     = $app_time['ayear'];
         $apply_time                     = $app_time['atime'];
 
         $where                          = array();
-        //$where['disting']               = 1;
         if ($apply_year) $where['apply_year'] = $apply_year;
         if ($apply_time) $where['apply_time'] = $apply_time;
         if ($tit) $where['title']       = array('like','%'.$tit.'%');
         if ($kind) $where['business_dept'] = array('like','%'.$kind.'%');
-        if ($age) $where['age']         = $age;
 
-        $count                          = $db->table('__PRODUCT__ as p')->where($where)->count();
+        $count                          = $db->where($where)->count();
         $page                           = new Page($count, P::PAGE_SIZE);
-        $this->pages                    = $page->show();
-        $lists                          = $db->table('__PRODUCT__ as p')->field('p.*')->where($where)->limit($page->firstRow . ',' . $page->listRows)->order($this->orders('p.id'))->select();
+        $this->pages                    = $count > P::PAGE_SIZE ? $page->show() : '';
+        $lists                          = $db->where($where)->limit($page->firstRow . ',' . $page->listRows)->order($this->orders('id'))->select();
         $kinds                          = M('project_kind')->getField('id,name');
 
         foreach ($lists as $k=>$v){
@@ -1212,7 +1209,7 @@ class ProductController extends BaseController {
             $lists[$k]['kinds']         = implode(',',$str);
         }
 
-        //$this->lists                    = $lists;
+        $this->lists                    = $lists;
         $this->pfrom                    = C('PRODUCT_FROM');
         $this->kinds                    = $kinds;
         $this->apply                    = C('APPLY_TO');
@@ -1592,6 +1589,7 @@ class ProductController extends BaseController {
         if (isset($_POST['dosubmit']) && $savetype){
             //保存标准化产品
             if ($savetype == 1){
+                $db                             = M('producted');
                 $info                           = I('info');
                 $id                             = I('id') ? I('id') : 0;
                 $apply_time                     = I('apply_time') ? I('apply_time') :0;
@@ -1601,14 +1599,17 @@ class ProductController extends BaseController {
                 $info['apply_time']             = strlen($apply_time) > 4 ? substr($apply_time,-1) : 0;
                 $info['business_dept']          = $business_dept;
                 $info['content']                = $content;
-                echo "加班开发中...";
-                var_dump($apply_time);
-                echo "<hr />";
-                var_dump($business_dept);
-                echo "<hr />";
-                var_dump($content);
-                echo "<hr />";
-                P($info);
+                if ($id){
+                    $res                        = $db->where(array('id'=>$id))->save($info);
+                }else{
+                    $res                        = $db->add($info);
+                }
+
+                if ($res){
+                    P('success..');
+                }else{
+                    P('error!');
+                }
 
                 /*$db                             = M('product');
                 $id                             = I('id',0);
