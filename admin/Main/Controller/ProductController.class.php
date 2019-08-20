@@ -1249,6 +1249,9 @@ class ProductController extends BaseController {
             $this->apply_time           = $list['apply_year'].'-'.$list['apply_time'];
         }
 
+        //物料关键字
+        $key                            =  M('material')->field('id,pinyin,material')->where(array('asset'=>0))->select();
+        if($key) $this->material_key    =  json_encode($key);
         $standard_ids                   = C('STANDARD_PRODUCT_KIND_IDS');
         $this->kinds                    = get_standard_project_kinds($standard_ids);
         $this->apply_times              = $apply_times;
@@ -1261,14 +1264,14 @@ class ProductController extends BaseController {
         $this->userkey                  = get_username();
         $this->provinces                = $default_province;
         $this->citys                    = $arr_citys;
-
+        $this->cost_type                = C('COST_TYPE');
         $this->title('标准化产品');
         $this->display();
     }
 
     //标准化产品(详情)
     public function standard_product_detail($id=0){
-        $this->title('标准化产品详情');
+        $this->title('标准化模块详情');
         $id                             = I('id')?I('id'):$id;
         $db                             = M('product');
         $list                           = $db->find($id);
@@ -1302,7 +1305,7 @@ class ProductController extends BaseController {
             '2'                         => "<span class='red'>审核不通过</span>"
         );
         $atts                           = get_res(0,0,explode(',',$list['att_id']));
-
+        $this->files                    = M('files')->getField('id,file_path',true);
         $this->atts                     = $atts;
         $this->row                      = $list;
         $this->module_lists             = $module_lists;

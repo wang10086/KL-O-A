@@ -144,6 +144,99 @@
                                     </div>
                                 </div>
                             </div>
+
+                            <div class="box box-warning">
+                                <div class="box-header">
+                                    <h3 class="box-title">产品成本核算</h3>
+                                </div>
+                                <div class="box-body">
+                                    <div class="content">
+                                        <div class="content" style="padding-top:0px;">
+
+                                            <div class="form-group">
+                                                <label>核算模式</label>
+                                                <div class="produce_hesuan" id="product_hesuan">
+                                                    <span><input type="radio" class="hesuan_type mt10" name="info[reckon_mode]" value="1" <?php if($row['reckon_mode']==1){ echo 'checked';} ?>>&#12288;按项目核算</span>
+                                                    <span class="ml20"><input type="radio"  name="info[reckon_mode]" value="2" <?php if($row['reckon_mode']==2){ echo 'checked';} ?>>&#12288;按人数核算</span>
+                                                    <span class="ml20"><input type="radio"  name="info[reckon_mode]" value="3" <?php if($row['reckon_mode']==3){ echo 'checked';} ?>>&#12288;按批次核算(100人/批)</span>
+                                                    <?php if($row && $row['sales_price']){ ?>
+                                                        <?php if($row['reckon_mode']==1){ ?>
+                                                            <span class="ml50" id="hesuan_result"><input type="text" class="under-line-input" name="info[sales_price]" id="produce_price" value="{$row.sales_price}">元/项</span>
+                                                        <?php }elseif($row['reckon_mode']==2){ ?>
+                                                            <span class="ml50" id="hesuan_result"><input type="text" class="under-line-input" name="info[sales_price]" id="produce_price" value="{$row.sales_price}">元/人</span>
+                                                        <?php }elseif($row['reckon_mode']==3){ ?>
+                                                            <span class="ml50" id="hesuan_result"><input type="text" class="under-line-input" name="info[sales_price]" id="produce_price" value="{$row.sales_price}">元/批</span>
+                                                        <?php } ?>
+                                                    <?php }else{ ?>
+                                                        <span class="ml50" id="hesuan_result"></span>
+                                                    <?php } ?>
+                                                </div>
+                                            </div>
+
+                                            <div id="material">
+                                                <div class="userlist" id="material_id">
+                                                    <div class="unitbox material_name">费用项</div>
+                                                    <div class="unitbox longinput">规格</div>
+                                                    <div class="unitbox material_name">单价</div>
+                                                    <div class="unitbox material_name">数量</div>
+                                                    <div class="unitbox material_name">合计价格</div>
+                                                    <div class="unitbox material_name">类型</div>
+                                                    <div class="unitbox longinput">供方</div>
+                                                    <div class="unitbox longinput">备注</div>
+                                                </div>
+                                                <?php if($material){ ?>
+                                                    <foreach name="material" key="mk" item="mv">
+                                                        <div class="userlist" id="material_id_{$mv.id}">
+                                                            <span class="title"><?php echo $mk+1; ?></span>
+                                                            <input type="hidden" name="resid[888{$mv.id}][id]" value="{$mv.id}" >
+                                                            <input type="text" class="form-control material_name" name="material[888{$mv.id}][material]" value="{$mv.material}">
+                                                            <input type="text" class="form-control longinput" name="material[888{$mv.id}][spec]" value="{$mv.spec}">
+                                                            <input type="text" class="form-control cost" name="material[888{$mv.id}][unitprice]" value="{$mv.unitprice}" onblur="total()">
+                                                            <input type="text" class="form-control amount" name="material[888{$mv.id}][amount]" value="{$mv.amount}" onblur="total()">
+                                                            <input type="text" class="form-control total" name="material[888{$mv.id}][total]" value="{$mv.total}">
+                                                            <select class="form-control"  name="material[888{$mv.id}][type]" onchange="check_material_type(888{$mv.id},$(this).val())" >
+                                                                <foreach name="cost_type" key="key" item="value">
+                                                                    <option value="{$key}" <?php if ($mv['type']==$key){ echo 'selected'; } ?>>{$value}</option>
+                                                                </foreach>
+                                                            </select>
+                                                            <span id="888{$mv.id}_channel">
+                                                <input type="hidden" id="[888{$mv.id}]_supplierRes_id" name="material[888{$mv.id}][supplierRes_id]" value="{$mv.supplierRes_id}">
+                                                <input type="text" id="[888{$mv.id}]_supplierRes_name" class="form-control longinput" name="material[888{$mv.id}][channel]" value="{$mv.channel}">
+                                            </span>
+                                                            <input type="text" class="form-control longinput" name="material[888{$mv.id}][remarks]" value="{$mv.remarks}">
+                                                            <a href="javascript:;" class="btn btn-danger btn-flat" onclick="delbox('material_id_{$mv.id}')">删除</a>
+                                                        </div>
+                                                    </foreach>
+                                                <?php }else{ ?>
+                                                    <div class="userlist" id="material_id_0">
+                                                        <span class="title">1</span>
+                                                        <input type="text" class="form-control material_name" name="material[0][material]" onblur="check_ptype()">
+                                                        <input type="text" class="form-control longinput" name="material[0][spec]">
+                                                        <input type="text" class="form-control cost" name="material[0][unitprice]" onblur="total()">
+                                                        <input type="text" class="form-control amount" name="material[0][amount]" onblur="total()">
+                                                        <input type="text" class="form-control total" name="material[0][total]">
+                                                        <select class="form-control"  name="material[0][type]" onchange="check_material_type(0,$(this).val())">
+                                                            <foreach name="cost_type" key="k" item="v">
+                                                                <option value="{$k}" <?php if ($v['type']==$k){ echo 'selected'; } ?>>{$v}</option>
+                                                            </foreach>
+                                                        </select>
+                                                        <span id="0_channel">
+                                                <input type="hidden" id="0_supplierRes_id" name="material[0][supplierRes_id]" value="">
+                                                <input type="text" id="0_supplierRes_name" class="form-control longinput" name="material[0][channel]">
+                                            </span>
+                                                        <input type="text" class="form-control longinput" name="material[0][remarks]">
+                                                        <a href="javascript:;" class="btn btn-danger btn-flat" onclick="delbox('material_id_0')">删除</a>
+                                                    </div>
+                                                <?php } ?>
+                                            </div>
+                                            <div id="material_val">0</div>
+                                            <a href="javascript:;" class="btn btn-success btn-sm" style="margin-top:15px;" onClick="add_material()"><i class="fa fa-fw fa-plus"></i> 新增物资</a>
+                                            <div class="form-group">&nbsp;</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
                             <div class="box box-warning">
                                 <div class="box-header">
                                     <h3 class="box-title">上传相关附件</h3>
@@ -212,6 +305,7 @@
 	$(document).ready(function() {
         var keywords        = {$userkey};
         autocomplete_id('auth_user_name','auth_user_id',keywords);
+        check_hesuan(); //核算模式
 
 		var uploader = new plupload.Uploader({
 			runtimes : 'html5,flash,silverlight,html4',
@@ -464,6 +558,70 @@
         }
     })*/
 
+    //检查核算模式
+    function check_ptype(){
+        var hesuan_result = $('#hesuan_result').html();
+        if(hesuan_result==''){
+            alert('请选择核算模式');
+        }
+    }
+
+    //核算模式
+    function check_hesuan(){
+        $('#product_hesuan').find('ins').each(function(index, element) {
+            $(this).click(function(){
+                if(index==0){
+                    $('#hesuan_result').html('<input type="text" class="under-line-input" name="info[sales_price]" id="produce_price" value="{$row.sales_price}" >元/项');
+                }else if (index==1){
+                    $('#hesuan_result').html('<input type="text" class="under-line-input" name="info[sales_price]" id="produce_price" value="{$row.sales_price}" >元/人');
+                }else if (index==2){
+                    $('#hesuan_result').html('<input type="text" class="under-line-input" name="info[sales_price]" id="produce_price" value="{$row.sales_price}" >元/批');
+                }
+            })
+        });
+    }
+
+    //新增物资
+    function add_material(){
+        var i = parseInt($('#material_val').text())+1;
+
+        var html = '<div class="userlist" id="material_'+i+'">' +
+            '<span class="title"></span>' +
+            '<input type="text" class="form-control material_name" name="material['+i+'][material]">' +
+            '<input type="text" class="form-control longinput" name="material['+i+'][spec]" value="">' +
+            '<input type="text" class="form-control cost" name="material['+i+'][unitprice]" onblur="total()">' +
+            '<input type="text" class="form-control amount" name="material['+i+'][amount]" onblur="total()">' +
+            '<input type="text" class="form-control total" name="material['+i+'][total]">' +
+            '<select class="form-control"  name="material['+i+'][type]" onchange="check_material_type('+i+',$(this).val())">' +
+            '<foreach name="cost_type" key="k" item="v">'+
+            '<option value="{$k}" <?php if ($v["type"]==$k){ echo "selected"; } ?>>{$v}</option>'+
+            '</foreach>'+
+            '</select>' +
+            '<span id="'+i+'_channel"><input type="text" class="form-control longinput" name="material['+i+'][channel]" value=""></span>' +
+            '<input type="text" class="form-control longinput" name="material['+i+'][remarks]">' +
+            '<a href="javascript:;" class="btn btn-danger btn-flat" onclick="delbox(\'material_'+i+'\')">删除</a>' +
+            '</div>';
+        $('#material').append(html);
+        $('#material_val').html(i);
+        orderno();
+        keywords();
+    }
+
+    //关键字联想
+    function keywords(){
+        var keywords = <?php echo $material_key; ?>;
+        $(".material_name").autocomplete(keywords, {
+            matchContains: true,
+            highlightItem: false,
+            formatItem: function(row, i, max, term) {
+                return '<span style=" display:none">'+row.pinyin+'</span>'+row.material;
+            },
+            formatResult: function(row) {
+                return row.material;
+            }
+        });
+    }
+
     //保存
     function check_myform() {
         let title           = $('#title').val().trim();
@@ -483,6 +641,42 @@
         let id              = $('input[name="id"]').val();
         if (!id) {  art_show_msg('请先保存内容',3); return false;  }
         ConfirmSub('appsubmint','确认申请审批吗？');
+    }
+
+    //根据不同的类型调整不同的供方
+    function check_material_type(num,costType) {
+        var pub_html            = '<input type="text" class="form-control longinput" name="material['+num+'][channel]" value="">';
+        var res_html            = '<input type="hidden" id= "'+num+'_supplierRes_id" name="material['+num+'][supplierRes_id]" value="">'+
+            '<input type="text" id="'+num+'_supplierRes_name" class="form-control longinput" name="material['+num+'][channel]" value="" onfocus="get_supplierRes('+num+','+costType+')">'; //研究所台站
+        if (costType==6){ //研究所台站
+            $('#'+num+'_channel').html(res_html);
+        }else{
+            $('#'+num+'_channel').html(pub_html);
+        }
+    }
+
+    //选择合格供方
+    function get_supplierRes(num,costType){
+        var costType            = costType ? costType : 0;
+        art.dialog.open("/index.php?m=Main&c=Product&a=public_select_supplierRes&costType="+costType,{
+            lock:true,
+            title: '选择合格供方',
+            width:1000,
+            height:500,
+            okVal: '提交',
+            fixed: true,
+            ok: function () {
+                var origin     = artDialog.open.origin;
+                var supplierRes= this.iframe.contentWindow.gosubmint();
+                var res_id     = supplierRes.id;
+                var res_name   = supplierRes.name;
+                $('#'+num+'_supplierRes_id').val(res_id);
+                $('#'+num+'_supplierRes_name').val(res_name);
+            },
+            cancelValue:'取消',
+            cancel: function () {
+            }
+        });
     }
 
 </script>	

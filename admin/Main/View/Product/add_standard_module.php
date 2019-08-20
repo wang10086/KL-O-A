@@ -372,18 +372,7 @@
         autocomplete_id('auth_name','auth_id',userkey);
         keywords();
         time_length_total();
-        //是否需要辅导员/教师/专家
-        $('#product_hesuan').find('ins').each(function(index, element) {
-            $(this).click(function(){
-                if(index==0){
-                    $('#hesuan_result').html('<input type="text" class="under-line-input" name="info[sales_price]" id="produce_price" value="{$row.sales_price}" >元/项');
-                }else if (index==1){
-                    $('#hesuan_result').html('<input type="text" class="under-line-input" name="info[sales_price]" id="produce_price" value="{$row.sales_price}" >元/人');
-                }else if (index==2){
-                    $('#hesuan_result').html('<input type="text" class="under-line-input" name="info[sales_price]" id="produce_price" value="{$row.sales_price}" >元/批');
-                }
-            })
-        });
+        check_hesuan(); //核算模式
 
 		$('#supplierlist').show();
 		var uploader = new plupload.Uploader({
@@ -399,7 +388,7 @@
 			},
 			
 			filters : {
-				max_file_size : '100mb',
+				max_file_size : '50mb',
 				/*
 				mime_types: [
 					{title : "Files", extensions : "jpg,jpeg,png,zip,rar,7z,doc,docx,ppt,pptx,xls,xlsx,txt,pdf,pdfx"}
@@ -477,6 +466,21 @@
         if(hesuan_result==''){
             alert('请选择核算模式');
         }
+    }
+
+    //核算模式
+    function check_hesuan(){
+        $('#product_hesuan').find('ins').each(function(index, element) {
+            $(this).click(function(){
+                if(index==0){
+                    $('#hesuan_result').html('<input type="text" class="under-line-input" name="info[sales_price]" id="produce_price" value="{$row.sales_price}" >元/项');
+                }else if (index==1){
+                    $('#hesuan_result').html('<input type="text" class="under-line-input" name="info[sales_price]" id="produce_price" value="{$row.sales_price}" >元/人');
+                }else if (index==2){
+                    $('#hesuan_result').html('<input type="text" class="under-line-input" name="info[sales_price]" id="produce_price" value="{$row.sales_price}" >元/批');
+                }
+            })
+        });
     }
 	
 	//新增物资
@@ -663,19 +667,19 @@
 	}
 	
 	//关键字联想
-	function keywords(){
-		var keywords = <?php echo $material_key; ?>;
-		$(".material_name").autocomplete(keywords, {
-			 matchContains: true,
-			 highlightItem: false,
-			 formatItem: function(row, i, max, term) {
-			 	 return '<span style=" display:none">'+row.pinyin+'</span>'+row.material;
-			 },
-			 formatResult: function(row) {
-				 return row.material;
-			 }
-		});	
-	}
+    function keywords(){
+        var keywords = <?php echo $material_key; ?>;
+        $(".material_name").autocomplete(keywords, {
+            matchContains: true,
+            highlightItem: false,
+            formatItem: function(row, i, max, term) {
+                return '<span style=" display:none">'+row.pinyin+'</span>'+row.material;
+            },
+            formatResult: function(row) {
+                return row.material;
+            }
+        });
+    }
 
     //选择实施要求文件
     function get_file(num,code,pid) {
@@ -740,7 +744,6 @@
                 var res_name   = supplierRes.name;
                 $('#'+num+'_supplierRes_id').val(res_id);
                 $('#'+num+'_supplierRes_name').val(res_name);
-                console.log(supplierRes);
             },
             cancelValue:'取消',
             cancel: function () {
