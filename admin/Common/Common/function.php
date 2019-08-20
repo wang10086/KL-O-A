@@ -3484,8 +3484,8 @@ function get_role_link($roleid,$rtype = 0){
      */
     function check_list($lists,$start_time,$end_time){
         $data                               = array();
-        $data['this_month_list']            = ''; //计划当月回款
-        $data['history_list']               = ''; //历史欠款
+        $data['this_month_list']            = array(); //计划当月回款
+        $data['history_list']               = array(); //历史欠款
         $data['this_month']                 = 0;
         $data['history']                    = 0;
         $arr_opids                          = array_column($lists,'op_id');

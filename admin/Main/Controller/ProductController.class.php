@@ -288,7 +288,7 @@ class ProductController extends BaseController {
 		$where = array();
 		if($this->status != '-1') $where['p.audit_status'] = $this->status;
 		if($key)    $where['p.title'] = array('like','%'.$key.'%');
-		if($pro)    $where['p.project_id'] = $pro;
+		//if($pro)    $where['p.project_id'] = $pro;
 		if($bus)    $where['p.business_dept'] = $bus;
 		//if($sub)    $where['p.subject_field'] = $sub;
 		if($age)    $where['p.age'] = $age;

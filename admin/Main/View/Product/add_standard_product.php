@@ -239,6 +239,15 @@
 
                             <div class="box box-warning">
                                 <div class="box-header">
+                                    <h3 class="box-title">定价政策</h3>
+                                </div>
+                                <div class="box-body">
+                                    <div style="padding:25px;">内容开发中...</div>
+                                </div>
+                            </div>
+
+                            <div class="box box-warning">
+                                <div class="box-header">
                                     <h3 class="box-title">上传相关附件</h3>
                                 </div>
                                 <div class="box-body">
