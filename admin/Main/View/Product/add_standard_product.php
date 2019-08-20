@@ -242,7 +242,7 @@
                                     <h3 class="box-title">定价政策</h3>
                                 </div>
                                 <div class="box-body">
-                                    <div style="padding:25px;">内容开发中...</div>
+                                    <div style="padding:25px;">暂无定价政策</div>
                                 </div>
                             </div>
 

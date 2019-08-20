@@ -1589,10 +1589,28 @@ class ProductController extends BaseController {
 
     public function public_save(){
         $savetype                               = I('savetype');
-        if (isset($_POST['dosubmit'])){
+        if (isset($_POST['dosubmit']) && $savetype){
             //保存标准化产品
             if ($savetype == 1){
-                $db                             = M('product');
+                $info                           = I('info');
+                $id                             = I('id') ? I('id') : 0;
+                $apply_time                     = I('apply_time') ? I('apply_time') :0;
+                $business_dept                  = I('business_dept');
+                $content                        = trim(I('content'));
+                $info['apply_year']             = strlen($apply_time) > 4 ? substr($apply_time,0,4) : 0;
+                $info['apply_time']             = strlen($apply_time) > 4 ? substr($apply_time,-1) : 0;
+                $info['business_dept']          = $business_dept;
+                $info['content']                = $content;
+                echo "加班开发中...";
+                var_dump($apply_time);
+                echo "<hr />";
+                var_dump($business_dept);
+                echo "<hr />";
+                var_dump($content);
+                echo "<hr />";
+                P($info);
+
+                /*$db                             = M('product');
                 $id                             = I('id',0);
                 $info                           = I('info');
                 $apply_time                     = trim(I('apply_time'));
@@ -1653,7 +1671,7 @@ class ProductController extends BaseController {
                     $this->success('数据保存成功');
                 }else{
                     $this->error('数据保存失败');
-                }
+                }*/
             }
 
             //保存标准化模块
