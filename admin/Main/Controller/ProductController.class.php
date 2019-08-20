@@ -1349,7 +1349,9 @@ class ProductController extends BaseController {
             '1'                         => "<span class='green'>审核通过</span>",
             '2'                         => "<span class='red'>审核不通过</span>"
         );
+        $atts                           = get_res(0,0,explode(',',$list['att_id']));
 
+        $this->atts                     = $atts;
         $this->row                      = $list;
         $this->module_lists             = $module_lists;
         $this->material_lists           = $material_lists;
