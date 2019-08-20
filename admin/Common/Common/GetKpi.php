@@ -2764,6 +2764,7 @@ function get_yw_department(){
         $month                          = $month?str_pad($month,2,'0',STR_PAD_LEFT):date('m');
         $data                           = array();
         $data[0]['title']               = '全部';
+        $data[0]['year']                = 0;
         switch ($month){
             case in_array($month,array('01','02')): //寒假
                 $data[1]['title']       = ($year+1).'年寒假';

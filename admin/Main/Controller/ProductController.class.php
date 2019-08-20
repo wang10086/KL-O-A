@@ -1268,54 +1268,6 @@ class ProductController extends BaseController {
 
     //标准化产品(详情)
     public function standard_product_detail($id=0){
-        /*$this->title('标准化产品详情');
-        $id                             = I('id')?I('id'):$id;
-        $db                             = M('product');
-        $product_use_db                 = M('product_use');
-        $cas_db                         = M('cas_res');
-        $list                           = $db->where(array('id'=>$id))->find();
-        $product_use_list               = $product_use_db->where(array('pid'=>$id))->select();
-        $cas_list                       = $cas_db->where(array('id'=>array('in',explode(',',$list['cas_res_ids']))))->select();
-        $atts                           = get_res(0,0,explode(',',$list['att_id']));
-
-        $business_dept                  = explode(',',$list['business_dept']);
-        $kinds                          = get_project_kinds();
-        $str                            = array();
-        foreach ($kinds as $kk=>$vv){
-            if (in_array($kk,$business_dept)){
-                $str[]                  = $vv['name'];
-            }
-        }
-        $list['dept']                   = implode(',',$str);
-
-        $where                          = array();   //审核状态
-        $where['req_type']              = P::REQ_TYPE_PRODUCT_NEW;
-        $where['req_id']                = $id;
-        $audit                          = M('audit_log')->where($where)->find();
-        if($audit['dst_status']==0){
-            $show                       = '未审批';
-            $show_user                  = '未审批';
-            $show_time                  = '等待审批';
-        }else if($audit['dst_status']==1){
-            $show                       = '已通过';
-            $show_user                  = $audit['audit_uname'];
-            $show_time                  = date('Y-m-d H:i:s',$audit['audit_time']);
-        }else if($audit['dst_status']==2){
-            $show                       = '未通过';
-            $show_user                  = $audit['audit_uname'];
-            $show_time                  = date('Y-m-d H:i:s',$audit['audit_time']);
-        }
-        $list['showstatus']             = $show;
-        $list['show_user']              = $show_user;
-        $list['show_time']              = $show_time;
-        $this->row                      = $list;
-        $this->product_use_list         = $product_use_list;
-        $this->cas_list                 = $cas_list;
-        $this->atts                     = $atts;
-        $this->standard                 = C('STANDARD');
-        $this->subject_fields           = C('SUBJECT_FIELD');
-        $this->apply                    = C('APPLY_TO');*/
-
         $this->title('标准化产品详情');
         $id                             = I('id')?I('id'):$id;
         $db                             = M('product');
@@ -1341,8 +1293,8 @@ class ProductController extends BaseController {
         }
         $list['dept']                   = implode(',',$dept_data);
         $list['ages']                   = implode(',',$age_data);
-        $list['audit_uname']            = $audit_data ? $audit_data['audit_uname'] :'<font color="#999">暂未审核</font>';
-        $list['audit_time']             = $audit_data ? date('Y-m-d H:i',$audit_data['audit_time']) :'<font color="#999">暂未审核</font>';
+        $list['audit_uname']            = !in_array($list['audit_status'],array('-1',0)) ? $audit_data['audit_uname'] :'<font color="#999">暂未审核</font>';
+        $list['audit_time']             = !in_array($list['audit_status'],array('-1',0)) ? date('Y-m-d H:i',$audit_data['audit_time']) :'<font color="#999">暂未审核</font>';
         $audit_status                   = array(
             '-1'                        => "<span class='yellow'>未提交审核</span>",
             '0'                         => "<span class=''>待审核</span>",

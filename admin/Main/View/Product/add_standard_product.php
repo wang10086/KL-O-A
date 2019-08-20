@@ -39,7 +39,6 @@
                                     <div class="form-group col-md-4">
                                         <label>使用时间：</label>
                                         <select class="form-control" name="apply_time">
-                                            <option value="" selected disabled>==请选择==</option>
                                             <foreach name="apply_times" key="k" item="v">
                                                 <option value="{$v['year']}" <?php if($apply_time == $v['year']){ echo "selected"; } ?>>{$v['title']}</option>
                                             </foreach>
@@ -145,8 +144,6 @@
                                     </div>
                                 </div>
                             </div>
-                            
-                            
                             <div class="box box-warning">
                                 <div class="box-header">
                                     <h3 class="box-title">上传相关附件</h3>
@@ -186,12 +183,19 @@
                                     </div>
                                 </div>
                             </div>
+                            </form>
 
-
-                            <div id="formsbtn">
-                            	<button type="submit" class="btn btn-info btn-lg" id="lrpd">保存</button>
+                            <div id="formsbtn" style="padding-bottom:10px;">
+                                <div class="content">
+                                    <form method="post" action="{:U('Product/public_save')}" name="auditform" id="appsubmint">
+                                        <input type="hidden" name="dosubmit" value="1">
+                                        <input type="hidden" name="savetype" value="5">
+                                        <input type="hidden" name="product_id" value="{$row.id}">
+                                    </form>
+                                    <button type="button" onClick="check_myform()" class="btn btn-info btn-lg" style=" padding-left:40px; padding-right:40px; margin-right:10px;">保存</button>
+                                    <button type="button" onClick="apply_audit()" class="btn btn-success btn-lg" style=" padding-left:40px; padding-right:40px; margin-left:10px;">申请审批</button>
+                                </div>
                             </div>
-                            </form> 
                         </div><!--/.col (right) -->
                     </div>   <!-- /.row -->
                 </section><!-- /.content -->
@@ -459,6 +463,27 @@
             art_show_msg('城市信息错误',3);
         }
     })*/
+
+    //保存
+    function check_myform() {
+        let title           = $('#title').val().trim();
+        let province        = $('#s_province').val();
+        let city            = $('#s_city').val();
+        let auth_user_id    = $('#auth_user_id').val();
+
+        if (!title){        art_show_msg('模块名称不能为空',3);    return false; }
+        if (!province){     art_show_msg('所在省份不能为空',3);    return false; }
+        if (!city){         art_show_msg('所在城市不能为空',3);    return false; }
+        if (!auth_user_id){ art_show_msg('产品负责人信息错误',3);  return false; }
+        $('#myform').submit();
+    }
+
+    //提交审核审核
+    function apply_audit(){
+        let id              = $('input[name="id"]').val();
+        if (!id) {  art_show_msg('请先保存内容',3); return false;  }
+        ConfirmSub('appsubmint','确认申请审批吗？');
+    }
 
 </script>	
      
