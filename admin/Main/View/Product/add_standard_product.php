@@ -291,8 +291,8 @@
                                 <div class="content">
                                     <form method="post" action="{:U('Product/public_save')}" name="auditform" id="appsubmint">
                                         <input type="hidden" name="dosubmit" value="1">
-                                        <input type="hidden" name="savetype" value="5">
-                                        <input type="hidden" name="product_id" value="{$row.id}">
+                                        <input type="hidden" name="savetype" value="3">
+                                        <input type="hidden" name="producted_id" value="{$row.id}">
                                     </form>
                                     <button type="button" onClick="check_myform()" class="btn btn-info btn-lg" style=" padding-left:40px; padding-right:40px; margin-right:10px;">保存</button>
                                     <button type="button" onClick="apply_audit()" class="btn btn-success btn-lg" style=" padding-left:40px; padding-right:40px; margin-left:10px;">申请审批</button>

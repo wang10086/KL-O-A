@@ -1707,6 +1707,7 @@ class ProductController extends BaseController {
                     if ($res) $num++;
 
                 }else{
+                    $info['audit_status']               = '-1';
                     $info['input_uname']                = session('username');
                     $info['input_user']                 = session('userid');
                     $info['input_time']                 = NOW_TIME;
@@ -1981,9 +1982,20 @@ class ProductController extends BaseController {
                 $res ? $this->success('提交成功') : $this->error('提交申请失败');
             }
 
-            //保存标准化产品
+            //审核标准化产品
             if ($savetype == 3){
-                echo '加班开发中...';
+                $producted_id                   = I('producted_id');
+                if (!$producted_id){            $this->error('获取数据失败'); }
+                $data                           = array();
+                $data['audit_status']           = 0; //已提交,待审核
+                $res                            = M('producted')->where(array('id'=>$producted_id))->save($data);
+                $where                          = array();
+                $where['req_type']              = P::REQ_TYPE_PRODUCTED;
+                $where['req_id']                = $producted_id;
+                $list                           = M('audit_log')->where($where)->find();
+                if ($list){                     $this->error('您已经提交审核过了,请勿重复提交'); }
+                $res                            = $this->request_audit(P::REQ_TYPE_PRODUCTED, $producted_id) ;
+                $res ? $this->success('提交成功') : $this->error('提交申请失败');
             }
         }
     }

@@ -63,6 +63,7 @@ final class P {
 	const REQ_TYPE_PRODUCT_U          = 103;  // 产品使用权限	
 	const REQ_TYPE_PRODUCT_LINE       = 104;  // 产品线路审核	
 	const REQ_TYPE_PRODUCT_MODEL      = 105;  // 新产品模板审核
+    const REQ_TYPE_PRODUCTED          = 106;  // 新标准产品审核
 	const REQ_TYPE_SCIENCE_RES_NEW    = 200;  // 新科普资源审核  
 	const REQ_TYPE_SCIENCE_RES_V      = 201;  // 申请科普资源访问权限
 	const REQ_TYPE_SCIENCE_RES_D      = 202;  // 申请科普资源下载权限
