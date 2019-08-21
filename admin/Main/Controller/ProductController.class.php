@@ -1251,6 +1251,8 @@ class ProductController extends BaseController {
         $default_province               = $citys_db->where(array('pid'=>0))->getField('id,name',true);
         $default_citys                  = $list['province'] ? $citys_db->where(array('pid'=>$list['province']))->getField('id,name',true) : '';
 
+        $this->product                  = M('producted_module')->where(array('producted_id'=>$id))->select();
+        $this->material                 = M('producted_material')->where(array('producted_id'=>$id))->select();
         $this->userkey                  = get_username();
         $this->provinces                = $default_province;
         $this->citys                    = $default_citys;
@@ -1578,30 +1580,135 @@ class ProductController extends BaseController {
     }
 
     public function public_save(){
-        $savetype                               = I('savetype');
+        $savetype                                       = I('savetype');
+        $num                                            = 0;
         if (isset($_POST['dosubmit']) && $savetype){
             //保存标准化产品
             if ($savetype == 1){
-                $db                             = M('producted');
-                $info                           = I('info');
-                $id                             = I('id') ? I('id') : 0;
-                $apply_time                     = I('apply_time') ? I('apply_time') :0;
-                $business_dept                  = I('business_dept');
-                $content                        = trim(I('content'));
-                $info['apply_year']             = strlen($apply_time) > 4 ? substr($apply_time,0,4) : 0;
-                $info['apply_time']             = strlen($apply_time) > 4 ? substr($apply_time,-1) : 0;
-                $info['business_dept']          = $business_dept;
-                $info['content']                = $content;
+                $db                                     = M('producted');
+                $producted_module_db                    = M('producted_module');
+                $producted_material_db                  = M('producted_material');
+                $info                                   = I('info');
+                $product                                = I('product');
+                $material                               = I('material');
+                $respid                                 = I('respid');
+                $resmid                                 = I('resmid');
+                $id                                     = I('id') ? I('id') : 0;
+                $apply_time                             = I('apply_time') ? I('apply_time') :0;
+                $business_dept                          = I('business_dept');
+                $content                                = trim(I('content'));
+                $info['apply_year']                     = strlen($apply_time) > 4 ? substr($apply_time,0,4) : 0;
+                $info['apply_time']                     = strlen($apply_time) > 4 ? substr($apply_time,-1) : 0;
+                $info['business_dept']                  = $business_dept;
+                $info['content']                        = $content;
+
                 if ($id){
-                    $res                        = $db->where(array('id'=>$id))->save($info);
+                    $res                                = $db->where(array('id'=>$id))->save($info);
+                    if ($res) $num++;
+                    $delpid                             = array();
+                    foreach ($product as $k=>$v){ //修改产品内容
+                        $data                           = array();
+                        $data['date']                   = trim($v['date']);
+                        $data['title']                  = trim($v['title']);
+                        $data['content']                = trim($v['content']);
+                        $data['module_id']              = $v['module_id'] ? $v['module_id'] : 0 ;
+                        $data['module']                 = trim($v['module']);
+                        $data['remark']                 = trim($v['remark']);
+                        if ($data['title']){
+                            if ($respid && $respid[$k]['id']){
+                                $res                    = $producted_module_db->where(array('id'=>$respid[$k]['id']))->save($data);
+                                $delpid[]               = $respid[$k]['id'];
+                                if ($res) $num++;
+                            }else{
+                                $data['producted_id']   = $id;
+                                $res                    = $producted_module_db->add($data);
+                                $delpid[]               = $res;
+                                if ($res) $num++;
+                            }
+                        }
+                    }
+                    $where                              = array();
+                    $where['id']                        = array('not in',$delpid);
+                    $where['producted_id']              = $id;
+                    $res                                = $producted_module_db->where($where)->delete();
+                    if ($res) $num++;
+                    $delmid                             = array();
+                    foreach ($material as $mk=>$mv){ //修改成本核算
+                        $data                           = array();
+                        $data['material_id']            = $mv['material_id'] ? $mv['material_id'] : 0;
+                        $data['material']               = trim($mv['material']);
+                        $data['spec']                   = trim($mv['spec']); //规格
+                        $data['unitprice']              = $mv['unitprice'];
+                        $data['amount']                 = $mv['amount'];
+                        $data['total']                  = $mv['total'];
+                        $data['type']                   = $mv['type'];
+                        $data['supplierRes_id']         = $mv['supplierRes_id'] ? $mv['supplierRes_id'] : 0;
+                        $data['channel']                = $mv['channel'];
+                        $data['remark']                 = $mv['remark'];
+                        if ($data['material']){
+                            if ($resmid && $resmid[$mk]['id']){
+                                $res                    = $producted_material_db->where(array('id'=>$resmid[$mk]['id']))->save($data);
+                                $delmid[]               = $resmid[$mk]['id'];
+                                if ($res) $num++;
+                            }else{
+                                $data['producted_id']   = $id;
+                                $res                    = $producted_material_db->add($data);
+                                $delmid[]               = $res;
+                                if ($res) $num++;
+                            }
+                        }
+                    }
+                    //die;
+                    $where                              = array();
+                    $where['id']                        = array('not in',$delmid);
+                    $where['producted_id']              = $id;
+                    $res                                = $producted_material_db->where($where)->delete();
+                    if ($res) $num++;
+
                 }else{
-                    $res                        = $db->add($info);
+                    $producted_id                       = $db->add($info);
+                    if ($producted_id){
+                        $num++;
+                        foreach ($product as $k =>$v){  //保存产品内容
+                            if (trim($v['title'])){
+                                $data                   = array();
+                                $data['producted_id']   = $producted_id;
+                                $data['date']           = trim($v['date']);
+                                $data['title']          = trim($v['title']);
+                                $data['content']        = trim($v['content']);
+                                $data['module_id']      = $v['module_id'] ? $v['module_id'] : 0 ;
+                                $data['module']         = trim($v['module']);
+                                $data['remark']         = trim($v['remark']);
+                                $pres                   = $producted_module_db->add($data);
+                                if ($pres) $num++;
+                            }
+                        }
+
+                        foreach ($material as $mk=>$mv){
+                            if (trim($mv['material'])){ //保存成本核算
+                                $data                   = array();
+                                $data['producted_id']   = $producted_id;
+                                $data['material_id']    = $mv['material_id'] ? $mv['material_id'] : 0;
+                                $data['material']       = trim($mv['material']);
+                                $data['spec']           = trim($mv['spec']); //规格
+                                $data['unitprice']      = $mv['unitprice'];
+                                $data['amount']         = $mv['amount'];
+                                $data['total']          = $mv['total'];
+                                $data['type']           = $mv['type'];
+                                $data['supplierRes_id'] = $mv['supplierRes_id'];
+                                $data['channel']        = $mv['channel'];
+                                $data['remark']         = $mv['remark'];
+                                $mres                   = $producted_material_db->add($data);
+                                if ($mres) $num++;
+                            }
+                        }
+                    }
                 }
 
-                if ($res){
-                    P('success..');
+                if ($num){
+                    $this->success('保存成功', U('Product/add_standard_product',array('id'=>1)));
                 }else{
-                    P('error!');
+                    $this->error('数据保存失败');
                 }
 
                 /*$db                             = M('product');
@@ -1723,7 +1830,7 @@ class ProductController extends BaseController {
                         $data                   = $mv;
                         $data['material']       = trim($mv['material']);
                         if($data['material']){
-                            if($resid && $resid[$k]['id']){
+                            if($resid && $resid[$mk]['id']){
                                 $edits          = M('product_material')->data($data)->where(array('id'=>$resid[$mk]['id']))->save();
                                 $delid[]        = $resid[$mk]['id'];
                             }else{

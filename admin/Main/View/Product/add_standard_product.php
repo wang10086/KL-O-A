@@ -107,29 +107,27 @@
                                                 </div>
                                                 <?php if($product){ ?>
                                                     <foreach name="product" key="k" item="v">
-                                                        <div class="userlist" id="product_id_{$v.id}">
+                                                        <div class="userlist" id="product_id_888{$v.id}">
                                                             <span class="title"><?php echo $k+1; ?></span>
-                                                            <input type="hidden" name="resid[888{$v.id}][id]" value="{$v.id}" />
-                                                            <input type="hidden" name="product[888{$v.id}][product_id]" id="888{$v.id}_pid" value="{$v['product_id']}" />
-                                                            <input type="text" class="form-control name_box" name="product[888{$v.id}][product]" value="{$v.product}" />
-                                                            <input type="text" class="form-control name_box" name="product[888{$v.id}][spec]" value="{$v.spec}" />
-                                                            <input type="text" class="form-control name_box" name="product[888{$v.id}][amount]" value="{$v.amount}" />
-                                                            <!--<input type="text" class="form-control name_box" name="product[888{$v.id}][unitprice]" value="{$v.unitprice}" id="888{$v.id}_pname" onfocus="selectproduct(888{$v.id})" />-->
-                                                            <input type="text" class="form-control name_box" name="product[888{$v.id}][unitprice]" value="{$v.unitprice}" id="888{$v.id}_pname" onfocus="checkProjectKind(888{$v.id})" />
-                                                            <input type="text" class="form-control name_box" name="product[888{$v.id}][remarks]" value="{$v.remarks}">
-                                                            <a href="javascript:;" class="btn btn-danger btn-flat" onclick="delbox('product_id_{$v.id}')">删除</a>
+                                                            <input type="hidden" name="respid[888{$v.id}][id]" value="{$v.id}" />
+                                                            <input type="hidden" name="product[888{$v.id}][module_id]" id="888{$v.id}_pid" value="{$v['module_id']}" />
+                                                            <input type="text" class="form-control name_box" name="product[888{$v.id}][date]" value="{$v.date}" />
+                                                            <input type="text" class="form-control name_box" name="product[888{$v.id}][title]" value="{$v.title}" />
+                                                            <input type="text" class="form-control name_box" name="product[888{$v.id}][content]" value="{$v.content}" />
+                                                            <input type="text" class="form-control name_box" name="product[888{$v.id}][module]" value="{$v.module}" id="888{$v.id}_pname" onfocus="checkProjectKind(888{$v.id})" />
+                                                            <input type="text" class="form-control name_box" name="product[888{$v.id}][remark]" value="{$v.remark}">
+                                                            <a href="javascript:;" class="btn btn-danger btn-flat" onclick="delbox('product_id_888{$v.id}')">删除</a>
                                                         </div>
                                                     </foreach>
                                                 <?php }else{ ?>
                                                     <div class="userlist" id="product_id_0">
                                                         <span class="title">1</span>
-                                                        <input type="hidden" name="product[0][product_id]" id="0_pid" />
-                                                        <input type="text" class="form-control name_box" name="product[0][product]" />
-                                                        <input type="text" class="form-control name_box" name="product[0][spec]" />
-                                                        <input type="text" class="form-control name_box" name="product[0][amount]" />
-                                                        <!--<input type="text" class="form-control name_box" name="product[0][unitprice]" id="0_pname" onfocus="selectproduct(0)" />-->
-                                                        <input type="text" class="form-control name_box" name="product[0][unitprice]" id="0_pname" onfocus="checkProjectKind(0)" />
-                                                        <input type="text" class="form-control name_box" name="product[0][remarks]">
+                                                        <input type="hidden" name="product[0][module_id]" id="0_pid" />
+                                                        <input type="text" class="form-control name_box" name="product[0][date]" />
+                                                        <input type="text" class="form-control name_box" name="product[0][title]" />
+                                                        <input type="text" class="form-control name_box" name="product[0][content]" />
+                                                        <input type="text" class="form-control name_box" name="product[0][module]" id="0_pname" onfocus="checkProjectKind(0)" />
+                                                        <input type="text" class="form-control name_box" name="product[0][remark]">
                                                         <a href="javascript:;" class="btn btn-danger btn-flat" onclick="delbox('product_id_0')">删除</a>
                                                     </div>
                                                 <?php } ?>
@@ -186,10 +184,11 @@
                                                 </div>
                                                 <?php if($material){ ?>
                                                     <foreach name="material" key="mk" item="mv">
-                                                        <div class="userlist" id="material_id_{$mv.id}">
+                                                        <div class="userlist materialLists" id="material_id_888{$mv.id}">
                                                             <span class="title"><?php echo $mk+1; ?></span>
-                                                            <input type="hidden" name="resid[888{$mv.id}][id]" value="{$mv.id}" >
-                                                            <input type="text" class="form-control material_name" name="material[888{$mv.id}][material]" value="{$mv.material}">
+                                                            <input type="hidden" name="resmid[888{$mv.id}][id]" value="{$mv.id}" >
+                                                            <input type="hidden" class="form-control" id="[888{$mv.id}]_material_id" name="material[888{$mv.id}][material_id]" value="{$mv.material_id}">
+                                                            <input type="text" class="form-control material_name" id="[888{$mv.id}]_material_name" name="material[888{$mv.id}][material]" value="{$mv.material}" onfocus="keywords(888{$mv.id})">
                                                             <input type="text" class="form-control longinput" name="material[888{$mv.id}][spec]" value="{$mv.spec}">
                                                             <input type="text" class="form-control cost" name="material[888{$mv.id}][unitprice]" value="{$mv.unitprice}" onblur="total()">
                                                             <input type="text" class="form-control amount" name="material[888{$mv.id}][amount]" value="{$mv.amount}" onblur="total()">
@@ -203,14 +202,15 @@
                                                                 <input type="hidden" id="[888{$mv.id}]_supplierRes_id" name="material[888{$mv.id}][supplierRes_id]" value="{$mv.supplierRes_id}">
                                                                 <input type="text" id="[888{$mv.id}]_supplierRes_name" class="form-control longinput" name="material[888{$mv.id}][channel]" value="{$mv.channel}">
                                                             </span>
-                                                            <input type="text" class="form-control longinput" name="material[888{$mv.id}][remarks]" value="{$mv.remarks}">
-                                                            <a href="javascript:;" class="btn btn-danger btn-flat" onclick="delbox('material_id_{$mv.id}')">删除</a>
+                                                            <input type="text" class="form-control longinput" name="material[888{$mv.id}][remark]" value="{$mv.remark}">
+                                                            <a href="javascript:;" class="btn btn-danger btn-flat" onclick="delbox('material_id_888{$mv.id}')">删除</a>
                                                         </div>
                                                     </foreach>
                                                 <?php }else{ ?>
-                                                    <div class="userlist" id="material_id_0">
+                                                    <div class="userlist materialLists" id="material_id_0">
                                                         <span class="title">1</span>
-                                                        <input type="text" class="form-control material_name" name="material[0][material]" onblur="check_ptype()">
+                                                        <input type="hidden" class="form-control" id="0_material_id" name="material[0][material_id]">
+                                                        <input type="text" class="form-control material_name" id="0_material_name" name="material[0][material]" onblur="check_ptype()">
                                                         <input type="text" class="form-control longinput" name="material[0][spec]">
                                                         <input type="text" class="form-control cost" name="material[0][unitprice]" onblur="total()">
                                                         <input type="text" class="form-control amount" name="material[0][amount]" onblur="total()">
@@ -224,7 +224,7 @@
                                                 <input type="hidden" id="0_supplierRes_id" name="material[0][supplierRes_id]" value="">
                                                 <input type="text" id="0_supplierRes_name" class="form-control longinput" name="material[0][channel]">
                                             </span>
-                                                        <input type="text" class="form-control longinput" name="material[0][remarks]">
+                                                        <input type="text" class="form-control longinput" name="material[0][remark]">
                                                         <a href="javascript:;" class="btn btn-danger btn-flat" onclick="delbox('material_id_0')">删除</a>
                                                     </div>
                                                 <?php } ?>
@@ -315,7 +315,7 @@
         var key_words        = {$userkey};
         autocomplete_id('auth_name','auth_id',key_words);
         check_hesuan(); //核算模式
-        keywords();
+        keywords(0);
 
 		var uploader = new plupload.Uploader({
 			runtimes : 'html5,flash,silverlight,html4',
@@ -404,13 +404,12 @@
         var i = parseInt($('#product_val').text())+1;
         var html = '<div class="userlist" id="product_id_'+i+'">' +
         '<span class="title"></span>' +
-        '<input type="hidden" name="product['+i+'][product_id]" id="'+i+'_pid" />'+
-        '<input type="text" class="form-control name_box" name="product['+i+'][product]">' +
-        '<input type="text" class="form-control name_box" name="product['+i+'][spec]" value="">' +
-        '<input type="text" class="form-control name_box" name="product['+i+'][amount]">' +
-        /*'<input type="text" class="form-control name_box" name="product['+i+'][unitprice]" id="'+i+'_pname" onfocus="selectproduct('+i+')">' +*/
-        '<input type="text" class="form-control name_box" name="product['+i+'][unitprice]" id="'+i+'_pname" onfocus="checkProjectKind('+i+')">' +
-        '<input type="text" class="form-control name_box" name="product['+i+'][remarks]">' +
+        '<input type="hidden" name="product['+i+'][module_id]" id="'+i+'_pid" />'+
+        '<input type="text" class="form-control name_box" name="product['+i+'][date]">' +
+        '<input type="text" class="form-control name_box" name="product['+i+'][title]" value="">' +
+        '<input type="text" class="form-control name_box" name="product['+i+'][content]">' +
+        '<input type="text" class="form-control name_box" name="product['+i+'][module]" id="'+i+'_pname" onfocus="checkProjectKind('+i+')">' +
+        '<input type="text" class="form-control name_box" name="product['+i+'][remark]">' +
         '<a href="javascript:;" class="btn btn-danger btn-flat" onclick="delbox(\'product_id_'+i+'\')">删除</a>' +
         '</div>';
         $('#standardProduct').append(html);
@@ -455,7 +454,7 @@
 
     //根据适用项目类型获取相应标准化产品模块
     function checkProjectKind(num){
-        var projectKind = $('#applyProjectKind').find('ins').parent('div[aria-checked="true"]').children('input[name="business_dept"]').val();
+        var projectKind = $('#applyProjectKind').find('ins').parent('div[class="iradio_minimal checked"]').children('input[name="business_dept"]').val();
         if (!projectKind){
             art_show_msg('请先选择适用项目类型',3);
             return false;
@@ -489,19 +488,29 @@
 
     //更新价格与数量
     function total(){
-        $('.expense').each(function(index, element) {
+        $('.materialLists').each(function(index, element) {
+            var hesuan_sum = 0;
             $(this).find('.cost').blur(function(){
                 var cost = $(this).val();
-                var amount = $(this).parent().parent().find('.amount').val();
-                $(this).parent().parent().find('.total').html('&yen;'+accMul(cost,amount));
-                $(this).parent().parent().find('.totalval').val(accMul(cost,amount));
+                var amount = $(this).parent().find('.amount').val();
+                $(this).parent().find('.total').val(accMul(cost,amount));
+
+                $('.total').each(function(index, element) {
+                    hesuan_sum += parseFloat($(this).val());
+                    $('#produce_price').val(hesuan_sum);
+                });
             });
             $(this).find('.amount').blur(function(){
                 var amount = $(this).val();
-                var cost = $(this).parent().parent().find('.cost').val();
-                $(this).parent().parent().find('.total').html('&yen;'+accMul(cost,amount));
-                $(this).parent().parent().find('.totalval').val(accMul(cost,amount));
+                var cost = $(this).parent().find('.cost').val();
+                $(this).parent().find('.total').val(accMul(cost,amount));
+
+                $('.total').each(function(index, element) {
+                    hesuan_sum += parseFloat($(this).val());
+                    $('#produce_price').val(hesuan_sum);
+                });
             });
+
         });
     }
 
@@ -595,9 +604,10 @@
     function add_material(){
         var i = parseInt($('#material_val').text())+1;
 
-        var html = '<div class="userlist" id="material_'+i+'">' +
+        var html = '<div class="userlist materialLists" id="material_'+i+'">' +
             '<span class="title"></span>' +
-            '<input type="text" class="form-control material_name" name="material['+i+'][material]">' +
+            '<input type="hidden" class="form-control" id="'+i+'_material_id" name="material['+i+'][material_id]">' +
+            '<input type="text" class="form-control material_name" id="'+i+'_material_name" name="material['+i+'][material]">' +
             '<input type="text" class="form-control longinput" name="material['+i+'][spec]" value="">' +
             '<input type="text" class="form-control cost" name="material['+i+'][unitprice]" onblur="total()">' +
             '<input type="text" class="form-control amount" name="material['+i+'][amount]" onblur="total()">' +
@@ -608,17 +618,17 @@
             '</foreach>'+
             '</select>' +
             '<span id="'+i+'_channel"><input type="text" class="form-control longinput" name="material['+i+'][channel]" value=""></span>' +
-            '<input type="text" class="form-control longinput" name="material['+i+'][remarks]">' +
+            '<input type="text" class="form-control longinput" name="material['+i+'][remark]">' +
             '<a href="javascript:;" class="btn btn-danger btn-flat" onclick="delbox(\'material_'+i+'\')">删除</a>' +
             '</div>';
         $('#material').append(html);
         $('#material_val').html(i);
         orderno();
-        keywords();
+        keywords(i);
     }
 
     //关键字联想
-    function keywords(){
+    function keywords(num){
         var keywords = <?php echo $material_key; ?>;
         $(".material_name").autocomplete(keywords, {
             matchContains: true,
@@ -629,6 +639,8 @@
             formatResult: function(row) {
                 return row.material;
             }
+        }).result(function (event, item) {
+            $("#"+num+"_material_id").val(item.id);
         });
     }
 
