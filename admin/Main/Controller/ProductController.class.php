@@ -1261,7 +1261,7 @@ class ProductController extends BaseController {
         $this->display();
     }
 
-    //标准化产品(详情)
+    //标准化模块(详情)
     public function standard_product_detail($id=0){
         $this->title('标准化模块详情');
         $id                             = I('id')?I('id'):$id;
@@ -1306,6 +1306,45 @@ class ProductController extends BaseController {
         $this->subject_fields           = C('SUBJECT_FIELD'); //科学领域
         $this->audit_status             = $audit_status;
         $this->display('standard_product_detail');
+    }
+
+    //标准化产品(详情)
+    public function standard_producted_detail($id=0){
+        $this->title('标准化产品详情');
+        $id                             = I('id')?I('id'):$id;
+        $db                             = M('producted');
+        $list                           = $db->find($id);
+        $module_lists                   = M('producted_module')->where(array('producted_id'=>$id))->select(); //模块内容
+        $material_lists                 = M('producted_material')->where(array('producted_id'=>$id))->select(); // 模块成本核算
+        $audit_data                     = $list['audit_status'] != '-1' ? M('audit_log')->where(array('req_id'=>$id,'req_type'=>P::REQ_TYPE_PRODUCT_NEW))->find() : '';
+        $project_kinds                  = get_project_kinds();
+        $business_depts                 = explode(',',$list['business_dept']);
+        $dept_data                      = array();
+        $age_data                       = array();
+        foreach ($project_kinds as $k=>$v){
+            if (in_array($v['id'],$business_depts)){
+                $dept_data[]            = $v['name'];
+            }
+        }
+        $list['dept']                   = implode(',',$dept_data);
+        $list['ages']                   = implode(',',$age_data);
+        $list['audit_uname']            = !in_array($list['audit_status'],array('-1',0)) ? $audit_data['audit_uname'] :'<font color="#999">暂未审核</font>';
+        $list['audit_time']             = !in_array($list['audit_status'],array('-1',0)) ? date('Y-m-d H:i',$audit_data['audit_time']) :'<font color="#999">暂未审核</font>';
+        $audit_status                   = array(
+            '-1'                        => "<span class='yellow'>未提交审核</span>",
+            '0'                         => "<span class=''>待审核</span>",
+            '1'                         => "<span class='green'>审核通过</span>",
+            '2'                         => "<span class='red'>审核不通过</span>"
+        );
+        $atts                           = get_res(0,0,explode(',',$list['att_id']));
+        $this->files                    = M('files')->getField('id,file_path',true);
+        $this->atts                     = $atts;
+        $this->row                      = $list;
+        $this->module_lists             = $module_lists;
+        $this->material_lists           = $material_lists;
+        $this->reckon_mode              = C('RECKON_MODE'); //核算方式
+        $this->audit_status             = $audit_status;
+        $this->display('standard_producted_detail');
     }
 
     //选择科普资源(弹框)
@@ -1593,6 +1632,8 @@ class ProductController extends BaseController {
                 $material                               = I('material');
                 $respid                                 = I('respid');
                 $resmid                                 = I('resmid');
+                $newname                                = I('newname');
+                $resfiles                               = I('resfiles');
                 $id                                     = I('id') ? I('id') : 0;
                 $apply_time                             = I('apply_time') ? I('apply_time') :0;
                 $business_dept                          = I('business_dept');
@@ -1601,6 +1642,7 @@ class ProductController extends BaseController {
                 $info['apply_time']                     = strlen($apply_time) > 4 ? substr($apply_time,-1) : 0;
                 $info['business_dept']                  = $business_dept;
                 $info['content']                        = $content;
+                $info['att_id']                         = $resfiles ? implode(',',$resfiles) : '';
 
                 if ($id){
                     $res                                = $db->where(array('id'=>$id))->save($info);
@@ -1658,7 +1700,6 @@ class ProductController extends BaseController {
                             }
                         }
                     }
-                    //die;
                     $where                              = array();
                     $where['id']                        = array('not in',$delmid);
                     $where['producted_id']              = $id;
@@ -1666,6 +1707,9 @@ class ProductController extends BaseController {
                     if ($res) $num++;
 
                 }else{
+                    $info['input_uname']                = session('username');
+                    $info['input_user']                 = session('userid');
+                    $info['input_time']                 = NOW_TIME;
                     $producted_id                       = $db->add($info);
                     if ($producted_id){
                         $num++;
@@ -1705,6 +1749,7 @@ class ProductController extends BaseController {
                     }
                 }
 
+                set_files_new_name($newname); //更改文件名
                 if ($num){
                     $this->success('保存成功', U('Product/add_standard_product',array('id'=>1)));
                 }else{

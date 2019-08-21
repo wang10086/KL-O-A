@@ -53,7 +53,7 @@
                                     </tr>
                                     <foreach name="lists" item="row">
                                         <tr>
-                                            <td><a href="{:U('Product/standard_product_detail',array('id'=>$row['id']))}">{$row.title}</a></td>
+                                            <td><a href="{:U('Product/standard_producted_detail',array('id'=>$row['id']))}">{$row.title}</a></td>
                                             <td style="max-width: 300px">{$row.kinds}</td>
                                             <td>{$row.sales_price}</td>
                                             <td>

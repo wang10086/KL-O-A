@@ -5365,4 +5365,13 @@ function get_half_year_cycle($year,$month){
         return $sum;
     }
 
+    //文件重新命名
+    function set_files_new_name($files){
+        $db                             = M('attachment');
+        foreach ($files as $k=>$v){
+            $data                       = array();
+            $data['filename']           = $v;
+            $db->where(array('id'=>$k))->save($data);
+        }
+    }
 
