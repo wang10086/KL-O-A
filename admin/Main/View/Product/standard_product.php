@@ -47,7 +47,7 @@
                                         <if condition="rolemenu(array('Product/add_standard_product'))">
                                         <th width="60">编辑</th>
                                         </if>
-                                        <if condition="rolemenu(array('Product/del_p'))">
+                                        <if condition="rolemenu(array('Product/del_prodected'))">
                                         <th width="60">删除</th>
                                         </if>
                                     </tr>
@@ -73,8 +73,8 @@
                                             <if condition="rolemenu(array('Product/add_standard_product'))">
                                             <td><button onClick="javascript:window.location.href='{:U('Product/add_standard_product',array('id'=>$row['id']))}';" title="修改" class="btn btn-info btn-smsm"><i class="fa fa-pencil"></i></button></td>
                                             </if>
-                                            <if condition="rolemenu(array('Product/del_p'))">
-                                            <td><button onClick="javascript:ConfirmDel('{:U('Product/del_P',array('id'=>$row['id']))}')" title="删除" class="btn btn-warning btn-smsm"><i class="fa fa-times"></i></button></td>
+                                            <if condition="rolemenu(array('Product/del_prodected'))">
+                                            <td><button onClick="javascript:ConfirmDel('{:U('Product/del_prodected',array('id'=>$row['id']))}')" title="删除" class="btn btn-warning btn-smsm"><i class="fa fa-times"></i></button></td>
                                             </if>
                                         </tr>
                                     </foreach>										
