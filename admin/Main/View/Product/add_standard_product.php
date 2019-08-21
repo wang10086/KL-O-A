@@ -50,7 +50,7 @@
                                         <select id="s_province" class="form-control" name="info[province]" required>
                                             <option class="form-control" value="" selected disabled>请选择</option>
                                             <foreach name="provinces" key="k" item="v">
-                                                <option class="form-control" value="{$k}" <?php if ($partner && $partner['province']==$k) echo "selected"; ?>>{$citys[$k]}</option>
+                                                <option class="form-control" value="{$k}" <?php if ($row && $row['province']==$k) echo "selected"; ?>>{$provinces[$k]}</option>
                                             </foreach>
                                         </select>
                                     </div>
@@ -59,9 +59,9 @@
                                         <label>所在城市：</label>
                                         <select id="s_city" class="form-control" name="info[city]">
                                             <option class="form-control" value="">请先选择省份</option>
-                                            <?php if ($partner){ ?>
+                                            <?php if ($row){ ?>
                                                 <foreach name="citys" key="k" item="v">
-                                                    <option class="form-control" value="{$k}" <?php if ($partner && $partner['city']==$k) echo "selected"; ?>>{$citys[$k]}</option>
+                                                    <option class="form-control" value="{$k}" <?php if ($row && $row['city']==$k) echo "selected"; ?>>{$citys[$k]}</option>
                                                 </foreach>
                                             <?php } ?>
                                         </select>
@@ -77,7 +77,7 @@
                                         <label>适用项目类型</label>
                                         <div>
                                             <foreach name="kinds" key="k" item="v">
-                                                <span class="lm_c"><input type="radio" name="business_dept" <?php if($business_dept == $v['id']){ echo 'checked';} ?>  value="{$v.id}"> {$v.name}</span>
+                                                <span class="lm_c"><input type="radio" name="business_dept" <?php if($row['business_dept'] == $v['id']){ echo 'checked';} ?>  value="{$v.id}"> {$v.name}</span>
                                             </foreach>
                                         </div>
                                     </div>
@@ -312,9 +312,10 @@
 <script type="text/javascript"> 
 
 	$(document).ready(function() {
-        var keywords        = {$userkey};
-        autocomplete_id('auth_name','auth_id',keywords);
+        var key_words        = {$userkey};
+        autocomplete_id('auth_name','auth_id',key_words);
         check_hesuan(); //核算模式
+        keywords();
 
 		var uploader = new plupload.Uploader({
 			runtimes : 'html5,flash,silverlight,html4',

@@ -1226,21 +1226,15 @@ class ProductController extends BaseController {
 
     //新增/编辑标准化产品
     public function add_standard_product(){
-        $this->pageTitle                = '标准化管理';
         $id                             = I('id');
         $this->title('标准化产品');
         $year                           = date('Y');
         $apply_times                    = get_little_title($year);
 
         if ($id){
-            $list                       = M('product')->where(array('id'=>$id))->find();
+            $this->id                   = $id;
+            $list                       = M('producted')->where(array('id'=>$id))->find();
             $this->row                  = $list;
-            //$model_lists                = M('product_use')->where(array('pid'=>$id))->select();
-            //$res_ids                    = explode(',',$list['cas_res_ids']);
-            //$res_need                   = M('cas_res')->where(array('id'=>array('in',$res_ids)))->select();
-            //$this->res_need             = $res_need;
-            //$this->product_need         = $model_lists;
-            $this->business_dept        = explode(',',$list['business_dept']);
             $atts                       = get_res(0,0,explode(',',$list['att_id']));
             $this->atts                 = $atts;
             $this->apply_time           = $list['apply_year'].'-'.$list['apply_time'];
@@ -1252,15 +1246,14 @@ class ProductController extends BaseController {
         $standard_ids                   = C('STANDARD_PRODUCT_KIND_IDS');
         $this->kinds                    = get_standard_project_kinds($standard_ids);
         $this->apply_times              = $apply_times;
-        $this->id                       = $id;
 
         $citys_db                       = M('citys');
-        $arr_citys                      = $citys_db->getField('id,name',true);
         $default_province               = $citys_db->where(array('pid'=>0))->getField('id,name',true);
+        $default_citys                  = $list['province'] ? $citys_db->where(array('pid'=>$list['province']))->getField('id,name',true) : '';
 
         $this->userkey                  = get_username();
         $this->provinces                = $default_province;
-        $this->citys                    = $arr_citys;
+        $this->citys                    = $default_citys;
         $this->cost_type                = C('COST_TYPE');
         $this->title('标准化产品');
         $this->display();

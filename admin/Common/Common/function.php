@@ -224,13 +224,21 @@ function ison ($str, $val, $yes = 'active', $no =''){
     return ck($str, $val, $yes, $no);
 }
 
-
+/*打印数组用于调试*/
 function P($var, $stop = true){
 	header("Content-Type: text/html;charset=utf-8"); 
     echo '<pre>';
 	print_r($var);
 	echo '</pre>';
 	if ($stop) die();	
+}
+
+function var_d($var, $stop = false){
+    header("Content-Type: text/html;charset=utf-8");
+    echo '<pre>';
+    var_dump($var);
+    echo '</pre>';
+    if ($stop) die();
 }
 
 
