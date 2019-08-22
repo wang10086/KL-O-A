@@ -28,6 +28,12 @@
                                     </div>
                                 </div><!-- /.box-header -->
                                 <div class="box-body">
+
+                                    <div class="btn-group" id="catfont" style="padding-bottom:5px;">
+                                        <a href="{:U('SupplierRes/res',array('pin'=>0))}" class="btn <?php if(!$pin){ echo "btn-info"; }else{ echo 'btn-default'; } ?>" style="padding:8px 18px;">全部供方</a>
+                                        <a href="{:U('SupplierRes/res',array('pin'=>1))}" class="btn <?php if($pin == 1){ echo "btn-info"; }else{ echo 'btn-default'; } ?>" style="padding:8px 18px;">合格供方</a>
+                                    </div>
+
                                 	<table class="table table-bordered dataTable fontmini" id="tablelist">
                                         <tr role="row" class="orders" >
                                         	<th class="sorting" data="name">供方名称</th>
@@ -104,6 +110,7 @@
             <input type="hidden" name="m" value="Main">
             <input type="hidden" name="c" value="SupplierRes">
             <input type="hidden" name="a" value="res">
+            <input type="hidden" name="pin" value="{$pin}">
             <div class="form-group col-md-12">
                 <input type="text" class="form-control" name="key" placeholder="关键字">
             </div>

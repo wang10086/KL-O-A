@@ -9,41 +9,37 @@ use Sys\Page;
 // @@@NODE-2###SupplierRes###合格供方管理###
 class SupplierResController extends BaseController {
     
-    protected $_pagetitle_ = '合格供方管理';
-    protected $_pagedesc_  = '录入、修改、删除合格供方资源数据';
+    protected $_pagetitle_              = '合格供方管理';
+    protected $_pagedesc_               = '录入、修改、删除合格供方资源数据';
      
     // @@@NODE-3###res###合格供方列表###
     public function res () {
         $this->title('合格供方');
+        $pin                            = I('pin') ? I('pin') : 0 ;
+		$key                            = trim(I('key'));
+		$type                           = trim(I('type'));
+		$city                           = trim(I('city'));
 		
-		$key          = I('key');
-		$type         = I('type');
-		$city         = I('city');
-		
-		$where = array();
-		$where['1'] = priv_where(P::REQ_TYPE_SUPPLIER_RES_V);
-		if($key)      $where['name'] = array('like','%'.$key.'%');
-		if($type)     $where['kind'] = $type;
-		if($city)     $where['city'] = array('like','%'.$city.'%');
+		$where                          = array();
+		$where['1']                     = priv_where(P::REQ_TYPE_SUPPLIER_RES_V);
+        //if ($pin)  $where['']           = '';
+		if ($key)  $where['name']       = array('like','%'.$key.'%');
+		if ($type) $where['kind']       = $type;
+		if ($city) $where['city']       = array('like','%'.$city.'%');
 		
 		//分页
-		$pagecount = M('supplier')->where($where)->count();
-        //品控部经理添加读取列表权限
-        if (cookie('roleid')==47){
-            $pagecount = M('supplier')->where(1)->count();
-        }
-		$page = new Page($pagecount, P::PAGE_SIZE);
-		$this->pages = $pagecount>P::PAGE_SIZE ? $page->show():'';
+		$pagecount                      = M('supplier')->where($where)->count();
+		$page                           = new Page($pagecount, P::PAGE_SIZE);
+		$this->pages                    = $pagecount>P::PAGE_SIZE ? $page->show():'';
         
-        $this->reskind = M('supplierkind')->getField('id,name', true);
-        $this->lists = M('supplier')->where($where)->limit($page->firstRow . ',' . $page->listRows)->order($this->orders('input_time'))->select();
-
-		//P(M('supplier')->getLastSql());
+        $this->reskind                  = M('supplierkind')->getField('id,name', true);
+        $this->lists                    = M('supplier')->where($where)->limit($page->firstRow . ',' . $page->listRows)->order($this->orders('input_time'))->select();
         $this->status = array(
-                P::AUDIT_STATUS_PASS        => '已通过',
-                P::AUDIT_STATUS_NOT_AUDIT   => '待审批',
-				P::AUDIT_STATUS_NOT_PASS    => '未通过',
+            P::AUDIT_STATUS_PASS        => '已通过',
+            P::AUDIT_STATUS_NOT_AUDIT   => '待审批',
+            P::AUDIT_STATUS_NOT_PASS    => '未通过',
         );
+        $this->pin                      = $pin;
         $this->display('res');
     
     }

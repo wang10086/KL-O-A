@@ -181,17 +181,17 @@
 
                                 <if condition="rolemenu(array('SupplierRes/res','SupplierRes/addres','SupplierRes/reskind'))">
                                 <li class="treeview  {:on('SupplierRes')}">
-                                    <a href=""><i class="fa fa-plane"></i> 合格供方</a>
+                                    <a href=""><i class="fa fa-plane"></i> 供方管理</a>
                                     <ul class="treeview-menu">
 
                                          <if condition="rolemenu(array('SupplierRes/addres'))">
-                                         <li class="{:on('SupplierRes/addres')}"><a href="{:U('SupplierRes/addres')}"><i class="fa fa-angle-right"></i> 新增合格供方</a></li>
+                                         <li class="{:on('SupplierRes/addres')}"><a href="{:U('SupplierRes/addres')}"><i class="fa fa-angle-right"></i> 新增供方</a></li>
                                          </if>
 
                                     	 <if condition="rolemenu(array('SupplierRes/res','SupplierRes/res_view'))">
-                                         <li class="{:on('SupplierRes/res')} {:on('SupplierRes/res_view')}"><a href="{:U('SupplierRes/res')}"><i class="fa fa-angle-right"></i> 合格供方管理</a></li>      									 </if>
+                                         <li class="{:on('SupplierRes/res')} {:on('SupplierRes/res_view')}"><a href="{:U('SupplierRes/res')}"><i class="fa fa-angle-right"></i> 供方清单</a></li>      									 </if>
                                          <if condition="rolemenu(array('SupplierRes/reskind','SupplierRes/addreskind'))">
-                                         <li class="{:on('SupplierRes/reskind')} {:on('SupplierRes/addreskind')} "><a href="{:U('SupplierRes/reskind')}"><i class="fa fa-angle-right"></i> 合格供方分类</a></li>
+                                         <li class="{:on('SupplierRes/reskind')} {:on('SupplierRes/addreskind')} "><a href="{:U('SupplierRes/reskind')}"><i class="fa fa-angle-right"></i> 供方分类</a></li>
                                          </if>
                                      </ul>
                                 </li>
