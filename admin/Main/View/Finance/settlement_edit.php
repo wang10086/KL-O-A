@@ -3,7 +3,7 @@
 <input type="hidden" name="opid" value="{$op.op_id}">
 <input type="hidden" name="referer" value="<?php echo $_SERVER['HTTP_REFERER']; ?>" />
 <div class="content" style="padding-top:0px;">
-    <div id="costacc">
+    <div id="setcostacc">
         <div class="userlist">
             <div class="unitbox">费用项</div>
             <div class="unitbox">单价</div>
@@ -12,6 +12,29 @@
             <div class="unitbox">类型</div>
             <div class="unitbox longinput">备注</div>
         </div>
+
+        <style>
+            #setcostacc { padding:0 15px;}
+            #setcostacc .form-control{ width:100px; float:left; margin-right:10px; border-radius:0;}
+            #setcostacc .unitbox{ width:100px; margin-right:10px; float:left; clear:none; border:none; padding:0;}
+            #setcostacc .title{ width:22px; float:left; height:30px; line-height:30px; margin-left:-30px; text-align:right;}
+            #setcostacc .userlist { width:100%; height:auto !important; float:left; clear:both; padding-bottom:15px; border-bottom:1px solid #cccccc; margin-top:15px;}
+            #setcostacc .input-group{ width:auto; float:left; height:34px; margin-right:10px; background:#ffffff; }
+            #setcostacc .input-group span{ border:1px solid #cccccc; width:40px; background:#ffffff; }
+            #setcostacc .input-group span.rr{margin-left:-1px;}
+            #setcostacc .input-group span input{ margin-left:5px;}
+            #setcostacc .btn{ padding:7px 12px; font-size:12px;}
+            #setcostacc td{ line-height:34px;}
+            #setcostacc_val{ display:none}
+            #setcostacc .total{ color:#333333; font-size:14px;}
+            #setcostacc .longinput{ width:200px;}
+            #setcostacc_sum { padding:0 15px;}
+            #setcostacc_sum .unitbox{ width:120px; margin-right:10px; float:left; clear:none; border:none; padding:0;}
+            /*#costaccsum{ color:#ff3300; font-size:18px; margin-top:18px;}
+            #costaccsum_red{ color:#ff3300; font-size:18px; margin-top:18px;}*/
+        </style>
+
+
         <?php if($jiesuan){ ?>
         <foreach name="jiesuan" key="k" item="v">
             <?php if($v['type']==2){ ?>
@@ -19,7 +42,12 @@
                     <?php if (cookie('userid')==11){ ?>
                         <span class="title"></span>
                         <input type="hidden" name="resid[2222{$k}][id]" value="{$v.id}" >
-                        <input type="text" class="form-control" name="costacc[2222{$k}][title]" value="{$v.title}" >
+                        <input type="text" class="form-control" name="costacc[2222{$k}][title]" value="{$v.title}" list="2222{$k}_cost_title">
+                        <datalist id="2222{$k}_cost_title">
+                            <foreach name="op_cost_type" item="ct">
+                                <option value="{$ct}" label="" />
+                            </foreach>
+                        </datalist>
                         <input type="text" class="form-control cost" name="costacc[2222{$k}][unitcost]" value="{$v.unitcost}" >
                         <input type="text" class="form-control amount" name="costacc[2222{$k}][amount]" value="{$v.amount}" >
                         <input type="text" class="form-control totalval" name="costacc[2222{$k}][total]" value="{$v.total}" >
@@ -49,7 +77,12 @@
                 <div class="userlist cost_expense" id="costacc_id_js_{$k}">
                     <span class="title"></span>
                     <input type="hidden" name="resid[2222{$k}][id]" value="{$v.id}" >
-                    <input type="text" class="form-control" name="costacc[2222{$k}][title]" value="{$v.title}">
+                    <input type="text" class="form-control" name="costacc[2222{$k}][title]" value="{$v.title}" list="2222{$k}_cost_title">
+                    <datalist id="2222{$k}_cost_title">
+                        <foreach name="op_cost_type" item="ct">
+                            <option value="{$ct}" label="" />
+                        </foreach>
+                    </datalist>
                     <input type="text" class="form-control cost" name="costacc[2222{$k}][unitcost]" value="{$v.unitcost}">
                     <input type="text" class="form-control amount" name="costacc[2222{$k}][amount]" value="{$v.amount}">
                     <input type="text" class="form-control totalval" name="costacc[2222{$k}][total]" value="{$v.total}">
@@ -71,7 +104,12 @@
             <div class="userlist cost_expense" id="costacc_id_aa_{$k}">
                 <span class="title"></span>
                 <input type="hidden" name="resid[888{$k}][id]" value="0" >
-                <input type="text" class="form-control" name="costacc[888{$k}][title]" value="{$v.title}">
+                <input type="text" class="form-control" name="costacc[888{$k}][title]" value="{$v.title}" list="888{$k}_cost_title">
+                <datalist id="888{$k}_cost_title">
+                    <foreach name="op_cost_type" item="ct">
+                        <option value="{$ct}" label="" />
+                    </foreach>
+                </datalist>
                 <input type="text" class="form-control cost" name="costacc[888{$k}][unitcost]" value="{$v.unitcost}">
                 <input type="text" class="form-control amount" name="costacc[888{$k}][amount]" value="{$v.amount}">
                 <input type="text" class="form-control totalval" name="costacc[888{$k}][total]" value="{$v.total}">
@@ -89,7 +127,12 @@
                 <div class="userlist cost_expense" id="costacc_id_ac_{$k}">
                     <span class="title"></span>
                     <input type="hidden" name="resid[7777{$k}][id]" value="0" >
-                    <input type="text" class="form-control" name="costacc[7777{$k}][title]" value="{$v.title}">
+                    <input type="text" class="form-control" name="costacc[7777{$k}][title]" value="{$v.title}" list="7777{$k}_cost_title">
+                    <datalist id="7777{$k}_cost_title">
+                        <foreach name="op_cost_type" item="ct">
+                            <option value="{$ct}" label="" />
+                        </foreach>
+                    </datalist>
                     <input type="text" class="form-control cost" name="costacc[7777{$k}][unitcost]" value="{$v.unitcost}">
                     <input type="text" class="form-control amount" name="costacc[7777{$k}][amount]" value="{$v.amount}">
                     <input type="text" class="form-control totalval" name="costacc[7777{$k}][total]" value="{$v.total}">
@@ -121,7 +164,12 @@
         <div class="userlist cost_expense" id="costacc_id_a_{$k}">
             <span class="title"></span>
             <input type="hidden" name="resid[7777{$k}][id]" value="0" >
-            <input type="text" class="form-control" name="costacc[7777{$k}][title]" value="{$v.title}">
+            <input type="text" class="form-control" name="costacc[7777{$k}][title]" value="{$v.title}" list="7777{$k}_cost_title">
+            <datalist id="7777{$k}_cost_title">
+                <foreach name="op_cost_type" item="ct">
+                    <option value="{$ct}" label="" />
+                </foreach>
+            </datalist>
             <input type="text" class="form-control cost" name="costacc[7777{$k}][unitcost]" value="{$v.unitcost}">
             <input type="text" class="form-control amount" name="costacc[7777{$k}][amount]" value="{$v.amount}">
             <input type="text" class="form-control totalval" name="costacc[7777{$k}][total]" value="{$v.total}">
@@ -135,31 +183,10 @@
         </div>
         <?php } ?>
         </foreach>
-        
-        
         <?php } ?>
-        
-        <!--<foreach name="qita" key="k" item="v">
-        <div class="userlist cost_expense" id="costacc_id_x_{$k}">
-            <span class="title"></span>
-            <input type="hidden" name="resid[4444{$k}][id]" value="0" >
-            <input type="text" class="form-control" name="costacc[4444{$k}][title]" value="{$v.title}">
-            <input type="text" class="form-control cost" name="costacc[4444{$k}][unitcost]" value="{$v.unitcost}">
-            <input type="text" class="form-control amount" name="costacc[4444{$k}][amount]" value="{$v.amount}">
-            <input type="text" class="form-control totalval" name="costacc[4444{$k}][total]" value="{$v.total}">
-            <select class="form-control"  name="costacc[4444{$k}][type]" >
-                <option value="1">物资</option>
-                <option value="2">专家辅导员</option>
-                <option value="3">合格供方</option>
-                <option value="4" selected>其他</option>
-                <option value="5">产品模块</option>
-            </select>
-            <input type="text" class="form-control longinput" name="costacc[4444{$k}][remark]" value="{$v.remark}">
-            <a href="javascript:;" class="btn btn-danger btn-flat" onclick="delbox('costacc_id_x_{$k}')">删除</a>
-        </div>
-        </foreach>-->
+
     </div>
-    <div id="costacc_sum">
+    <div id="setcostacc_sum">
         <div class="userlist">
             <div class="unitbox"></div>
             <div class="unitbox"></div>

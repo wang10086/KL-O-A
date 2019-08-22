@@ -31,53 +31,6 @@
                 <div class="form-group col-md-12">
                     <div class="form-group mt20">请先选择被考评人员！</div>
                 </div>
-                <!--<div class="form-group col-md-6">
-                    <label>支撑服务态度：</label>
-                    <div class="demo score inline-block"><div id="AA"></div></div>
-                    <div class="form-control no-border star_div">
-                        <span class="sco-star"><input type="radio" name="info[AA]" value="5">&nbsp;非常满意</span>&emsp;&emsp;
-                        <span class="sco-star"><input type="radio" name="info[AA]" value="4">&nbsp;满意</span>&emsp;&emsp;
-                        <span class="sco-star"><input type="radio" name="info[AA]" value="3">&nbsp;较满意</span>&emsp;&emsp;
-                        <span class="sco-star"><input type="radio" name="info[AA]" value="2">&nbsp;一般</span>&emsp;&emsp;
-                        <span class="sco-star"><input type="radio" name="info[AA]" value="1">&nbsp;不满意</span>
-                    </div>
-                </div>
-
-                <div class="form-group col-md-6">
-                    <label>支撑服务效果：</label>
-                    <div class="demo score inline-block"><div id="BB"></div></div>
-                    <div class="form-control no-border star_div">
-                        <span class="sco-star"><input type="radio" name="info[BB]" value="5">&nbsp;非常满意</span>&emsp;&emsp;
-                        <span class="sco-star"><input type="radio" name="info[BB]" value="4">&nbsp;满意</span>&emsp;&emsp;
-                        <span class="sco-star"><input type="radio" name="info[BB]" value="3">&nbsp;较满意</span>&emsp;&emsp;
-                        <span class="sco-star"><input type="radio" name="info[BB]" value="2">&nbsp;一般</span>&emsp;&emsp;
-                        <span class="sco-star"><input type="radio" name="info[BB]" value="1">&nbsp;不满意</span>
-                    </div>
-                </div>
-
-                <div class="form-group col-md-6">
-                    <label>支撑服务及时性：</label>
-                    <div class="demo score inline-block"><div id="CC"></div></div>
-                    <div class="form-control no-border star_div">
-                        <span class="sco-star"><input type="radio" name="info[CC]" value="5">&nbsp;非常满意</span>&emsp;&emsp;
-                        <span class="sco-star"><input type="radio" name="info[CC]" value="4">&nbsp;满意</span>&emsp;&emsp;
-                        <span class="sco-star"><input type="radio" name="info[CC]" value="3">&nbsp;较满意</span>&emsp;&emsp;
-                        <span class="sco-star"><input type="radio" name="info[CC]" value="2">&nbsp;一般</span>&emsp;&emsp;
-                        <span class="sco-star"><input type="radio" name="info[CC]" value="1">&nbsp;不满意</span>
-                    </div>
-                </div>
-
-                <div class="form-group col-md-6">
-                    <label>公正及合理性：</label>
-                    <div class="demo score inline-block"><div id="DD"></div></div>
-                    <div class="form-control no-border star_div">
-                        <span class="sco-star"><input type="radio" name="info[DD]" value="5">&nbsp;非常满意</span>&emsp;&emsp;
-                        <span class="sco-star"><input type="radio" name="info[DD]" value="4">&nbsp;满意</span>&emsp;&emsp;
-                        <span class="sco-star"><input type="radio" name="info[DD]" value="3">&nbsp;较满意</span>&emsp;&emsp;
-                        <span class="sco-star"><input type="radio" name="info[DD]" value="2">&nbsp;一般</span>&emsp;&emsp;
-                        <span class="sco-star"><input type="radio" name="info[DD]" value="1">&nbsp;不满意</span>
-                    </div>
-                </div>-->
             </div>
         </div>
 
