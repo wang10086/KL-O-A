@@ -1618,9 +1618,19 @@ class ProductController extends BaseController {
         $this->display('select_standard_module');
     }
 
+    //删除标准化产品
+    public function del_prodected(){
+        $id                                         = I('id');
+        if (!$id){ $this->error('删除数据失败'); }
+        M('producted')->where(array('id'=>$id))->delete();
+        M('producted_material')->where(array('producted_id'=>$id))->delete();
+        M('producted_module')->where(array('producted_id'=>$id))->delete();
+        $this->success('删除成功');
+    }
+
     public function public_save(){
-        $savetype                                       = I('savetype');
-        $num                                            = 0;
+        $savetype                                   = I('savetype');
+        $num                                        = 0;
         if (isset($_POST['dosubmit']) && $savetype){
             //保存标准化产品
             if ($savetype == 1){
@@ -1645,6 +1655,7 @@ class ProductController extends BaseController {
                 $info['att_id']                         = $resfiles ? implode(',',$resfiles) : '';
 
                 if ($id){
+                    $producted_id                       = $id;
                     $res                                = $db->where(array('id'=>$id))->save($info);
                     if ($res) $num++;
                     $delpid                             = array();
@@ -1752,7 +1763,7 @@ class ProductController extends BaseController {
 
                 set_files_new_name($newname); //更改文件名
                 if ($num){
-                    $this->success('保存成功', U('Product/add_standard_product',array('id'=>1)));
+                    $this->success('保存成功', U('Product/add_standard_product',array('id'=>$producted_id)));
                 }else{
                     $this->error('数据保存失败');
                 }

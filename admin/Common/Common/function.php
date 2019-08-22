@@ -188,7 +188,7 @@ function statustr($status){
 }
 
 
-function merge_node($node, $access, $pid = 0) {
+function merge_node($node='', $access='', $pid = 0) {
 	$arr = array();
 	foreach ($node as $v) {
 		if (is_array($access)) {
