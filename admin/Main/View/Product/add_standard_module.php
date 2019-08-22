@@ -136,7 +136,7 @@
                                                             <input type="text" class="form-control name_box time_length" name="product[888{$v.id}][length]" value="{$v.length}" onblur="time_length_total()" />
                                                             <input type="text" class="form-control name_box" name="product[888{$v.id}][content]" value="{$v.content}" />
                                                             <input type="text" class="form-control name_box" name="product[888{$v.id}][implement_fname]" value="{$v.implement_fname}" id="888{$v.id}_implement_fname" onfocus="get_file(888{$v.id},'implement',304)" />
-                                                            <input type="text" class="form-control name_box" name="product[888{$v.id}][res_fname]" value="{$v.res_fname}" id="888{$v.id}_res_fname" onfocus="get_file(888{$v.id},'res',305)" />
+                                                            <input type="text" class="form-control name_box" name="product[888{$v.id}][res_fname]" value="{$v.res_fname}" id="888{$v.id}_res_fname" onfocus="get_more_file(888{$v.id},'res',305)" />
                                                             <input type="text" class="form-control name_box" name="product[888{$v.id}][remark]" value="{$v.remark}">
                                                             <a href="javascript:;" class="btn btn-danger btn-flat" onclick="delbox('product_id_{$v.id}')">删除</a>
                                                         </div>
@@ -150,7 +150,7 @@
                                                         <input type="text" class="form-control name_box time_length" name="product[0][length]" onblur="time_length_total()" />
                                                         <input type="text" class="form-control name_box" name="product[0][content]" />
                                                         <input type="text" class="form-control name_box" name="product[0][implement_fname]" id="0_implement_fname" onfocus="get_file(0,'implement',304)" />
-                                                        <input type="text" class="form-control name_box" name="product[0][res_fname]" id="0_res_fname" onfocus="get_file(0,'res',305)" />
+                                                        <input type="text" class="form-control name_box" name="product[0][res_fname]" id="0_res_fname" onfocus="get_more_file(0,'res',305)" />
                                                         <input type="text" class="form-control name_box" name="product[0][remark]">
                                                         <a href="javascript:;" class="btn btn-danger btn-flat" onclick="delbox('product_id_0')">删除</a>
                                                     </div>
@@ -520,7 +520,7 @@
             '<input type="text" class="form-control name_box time_length" name="product['+i+'][length]" onblur="time_length_total()" />' +
             '<input type="text" class="form-control name_box" name="product['+i+'][content]" />' +
             '<input type="text" class="form-control name_box" name="product['+i+'][implement_fname]" id="'+i+'_implement_fname" onfocus="get_file('+i+',`implement`,304)" />' +
-            '<input type="text" class="form-control name_box" name="product['+i+'][res_fname]" id="'+i+'_res_fname" onfocus="get_file('+i+',`res`,305)" />' +
+            '<input type="text" class="form-control name_box" name="product['+i+'][res_fname]" id="'+i+'_res_fname" onfocus="get_more_file('+i+',`res`,305)" />' +
             '<input type="text" class="form-control name_box" name="product['+i+'][remark]" />' +
             '<a href="javascript:;" class="btn btn-danger btn-flat" onclick="delbox(\'product_id_'+i+'\')">删除</a>' +
             '</div>';
@@ -681,9 +681,32 @@
         });
     }
 
-    //选择实施要求文件
+    //选择实施要求文件(单个文件)
     function get_file(num,code,pid) {
         art.dialog.open("/index.php?m=Main&c=Product&a=public_select_implement_file&pid="+pid,{
+            lock:true,
+            title: '选择实施要求文件',
+            width:1000,
+            height:500,
+            okVal: '提交',
+            fixed: true,
+            ok: function () {
+                var origin      = artDialog.open.origin;
+                var file        = this.iframe.contentWindow.gosubmint();
+                var file_id     = file.id;
+                var file_name   = file.title;
+                $('#'+num+'_'+code+'_fid').val(file_id);
+                $('#'+num+'_'+code+'_fname').val(file_name);
+            },
+            cancelValue:'取消',
+            cancel: function () {
+            }
+        });
+    }
+
+    //选择实施要求文件(多个文件)
+    function get_more_file(num,code,pid) {
+        art.dialog.open("/index.php?m=Main&c=Product&a=public_select_implement_file_checkBox&pid="+pid,{
             lock:true,
             title: '选择实施要求文件',
             width:1000,

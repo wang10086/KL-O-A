@@ -101,7 +101,12 @@
                                                     <td>{$row.length} 小时</td>
                                                     <td>{$row.content}</td>
                                                     <td><a href="{$files[$row['implement_fid']]}" title="{$row.implement_fname}" target="_blank">{$row.implement_fname}</a></td>
-                                                    <td><a href="{$files[$row['res_fid']]}" title="{$row.res_fname}" target="_blank">{$row.res_fname}</a></td>
+                                                    <td>
+                                                        <!--<a href="{$files[$row['res_fid']]}" title="{$row.res_fname}" target="_blank">{$row.res_fname}</a>-->
+                                                        <?php foreach ($row['resFiles'] as $file){ ?>
+                                                            <span style="display: block"><a href="{$file.file_path}" target="_blank">{$file.file_name}</a></span>
+                                                        <?php } ?>
+                                                    </td>
                                                     <td>{$row.remark}</td>
                                                 </tr>
                                             </foreach>

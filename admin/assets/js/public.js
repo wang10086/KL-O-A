@@ -693,3 +693,10 @@ function public_save(id,url){
 	setTimeout("history.go(0)",1000);
 }
 
+//去除最后一个指定字符
+function del_last_str(str) {
+	if(str.substr(str.length-1,str.length)==",") {
+		str=str.substr(0,str.length-1);
+	}
+	return str;
+}

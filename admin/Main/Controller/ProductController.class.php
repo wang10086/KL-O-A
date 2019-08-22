@@ -1286,6 +1286,11 @@ class ProductController extends BaseController {
                 $age_data[]             = $av;
             }
         }
+        foreach ($module_lists as $k=>$v){
+            $resFileIds                 = explode(',',$v['res_fid']);
+            $resFiles                   = M('files')->where(array('id'=>array('in',$resFileIds)))->select();
+            $module_lists[$k]['resFiles']= $resFiles;
+        }
         $list['dept']                   = implode(',',$dept_data);
         $list['ages']                   = implode(',',$age_data);
         $list['audit_uname']            = !in_array($list['audit_status'],array('-1',0)) ? $audit_data['audit_uname'] :'<font color="#999">暂未审核</font>';
@@ -1531,7 +1536,7 @@ class ProductController extends BaseController {
         $this->display('select_product_module');
     }
 
-    //选择文件
+    //选择文件(单选)
     public function public_select_implement_file(){
         $db                                         = M('files');
         $pid                                        = I('pid',0); //304=>业务规范 304=>产品资料
@@ -1546,6 +1551,23 @@ class ProductController extends BaseController {
         $this->lists                                = $lists;
         $this->pid                                  = $pid;
         $this->display('select_implement_file');
+    }
+
+    //选择文件(多选)
+    public function public_select_implement_file_checkBox(){
+        $db                                         = M('files');
+        $pid                                        = I('pid',0); //304=>业务规范 304=>产品资料
+        $key                                        = trim(I('key'));
+        $uname                                      = trim(I('uname'));
+        $where                                      = array();
+        $where['pid']                               = $pid;
+        if ($key) $where['file_name']               = array('like','%'.$key.'%');
+        if ($uname) $where['est_user']              = $uname;
+        $lists                                      = $db->where($where)->select();
+
+        $this->lists                                = $lists;
+        $this->pid                                  = $pid;
+        $this->display('select_implement_file_checkBox');
     }
 
     //选择科普资源(弹框)
