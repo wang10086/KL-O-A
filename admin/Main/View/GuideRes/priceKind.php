@@ -1,15 +1,5 @@
 <include file="Index:header2" />
 
-<!--<style type="text/css">
-    .l-dialog-content{overflow-y:hidden}
-    .aui_icon{overflow-y:hidden}
-    .aui_main{overflow-y:hidden}
-    .aui_content{overflow-y:hidden}
-    html {overflow: hidden;margin:0px;padding:0px;}
-    body{overflow:scroll;
-        overflow-x:hidden;}
-</style>-->
-
             <aside class="right-side">
                 <!-- Content Header (Page header) -->
                 <section class="content-header">
@@ -34,7 +24,6 @@
                                     <h3 class="box-title">费用分类</h3>
                                     <div class="box-tools pull-right">
                                     	 <a href="javascript:;" class="btn btn-info btn-sm" onclick="javascript:opensearch('searchtext',600,160);"><i class="fa fa-search"></i> 搜索</a>
-                                         <!--<a href="{:U('GuideRes/addprice')}" class="btn btn-sm btn-danger"><i class="fa fa-plus"></i> </a>-->
                                          <a href="javascript:;" onClick="javascript:{:open_priceKind()}" class="btn btn-sm btn-danger"><i class="fa fa-plus"></i> 新建资源</a>
                                     </div>
                                 </div><!-- /.box-header -->

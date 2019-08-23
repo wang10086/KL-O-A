@@ -3402,4 +3402,42 @@ class OpController extends BaseController {
         exportexcel($lists,$title,date('Y-m-d',$startTime).'至'.date('Y-m-d',$endTime).$project_kinds[$kind].'已审批预算项目');
     }
 
+    //结算费用项
+    public function op_cost_type(){
+        $this->title('结算费用项');
+        $db                         = M('op_cost_type');
+        //分页
+		$pagecount		            = $db->count();
+		$page			            = new Page($pagecount, P::PAGE_SIZE);
+		$this->pages	            = $pagecount>P::PAGE_SIZE ? $page->show():'';
+        
+        $lists                      = $db->limit($page->firstRow . ',' . $page->listRows)->order($this->orders('id'))->select();
+        $this->lists                = $lists;
+        $this->display('cost_type');
+    }
+
+    //编辑费用结算项
+    public function edit_cost_type(){
+        $db                         = M('op_cost_type');
+        if (isset($_POST['dosubmint'])){
+            $id                     = I('id');
+            $data                   = array();
+            $data['name']           = trim(I('name')) ? trim(I('name')) : $this->error('结算项不能为空');
+            $res                    = $id ? $db->where(array('id'=>$id))->save($data) : $db -> add($data);
+        }else{
+            $id                     = I('id');
+            $list                   = $id ? $db->find($id) : '';
+            $this->row              = $list;
+            $this->display();
+        }
+    }
+
+    //删除费用结算项
+    public function del_cost_type(){
+        $id                         = I('id');
+        $db                         = M('op_cost_type');
+        $res                        = $db->where(array('id'=>$id))->delete();
+        $del                        = $res ? $this->success('删除数据成功') : $this->error('删除失败');
+    }
+
 }

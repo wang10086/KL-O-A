@@ -437,8 +437,8 @@
                         </if>
 
 
-                        <if condition="rolemenu(array('Sale/index','Sale/goods','Sale/gross','Sale/edit_gross','Sale/chart_gross','Sale/satisfaction','Sale/timely'))">
-                        <li class="treeview {:ison(CONTROLLER_NAME, 'Sale')}">
+                        <if condition="rolemenu(array('Sale/index','Sale/goods','Sale/gross','Sale/edit_gross','Sale/chart_gross','Sale/satisfaction','Sale/timely','Op/op_cost_type'))">
+                        <li class="treeview {:ison(CONTROLLER_NAME, 'Sale')} {:on('Op/op_cost_type')}">
                             <a href="javascript:;">
                                 <i class="fa fa-flag"></i>
                                 <span>计调操作</span>
@@ -465,6 +465,10 @@
 
                                 <if condition="rolemenu(array('Sale/timely'))">
                                     <li><a href="{:U('Sale/timely')}"><i class="fa fa-angle-right"></i> 计调工作及时率</a></li>
+                                </if>
+
+                                <if condition="rolemenu(array('Op/op_cost_type'))">
+                                    <li><a href="{:U('Op/op_cost_type')}"><i class="fa fa-angle-right"></i> 结算费用项</a></li>
                                 </if>
 
                             	<!--<if condition="rolemenu(array('Sale/index'))">
