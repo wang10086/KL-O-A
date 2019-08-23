@@ -630,10 +630,10 @@ class FinanceController extends BaseController {
             $show_reason        = $audit['audit_reason'];
             $show_time          = date('Y-m-d H:i:s',$audit['audit_time']);
         }else if($audit['dst_status']==3){
-            $show = '<span class="yellow">毛利率未达标,待领导复批</span>';
-            $show_user = $audit['audit_uname'];
-            $show_reason = $audit['audit_reason'];
-            $show_time = date('Y-m-d H:i:s',$audit['audit_time']);
+            $show               = '<span class="yellow">毛利率未达标,待领导复批</span>';
+            $show_user          = $audit['audit_uname'];
+            $show_reason        = $audit['audit_reason'];
+            $show_time          = date('Y-m-d H:i:s',$audit['audit_time']);
         }
         $op['showstatus']       = $show;
         $op['show_user']        = $show_user;
@@ -661,7 +661,7 @@ class FinanceController extends BaseController {
         $this->cost_type        = C('COST_TYPE');
         $this->is_zutuan        = $is_zutuan;
         $this->dijie_shouru     = $dijie_shouru?$dijie_shouru:0;
-        $this->op_cost_type     = C('OP_COST_TYPE');
+        $this->op_cost_type     = M('op_cost_type')->getField('name',true);
         //检查先回款,在做结算  //已回款金额
         $money_back             = check_money_back($opid);
         $this->yihuikuan        = $money_back;

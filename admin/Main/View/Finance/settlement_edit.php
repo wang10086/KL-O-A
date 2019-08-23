@@ -249,7 +249,7 @@
                         </foreach>
                     </select>
                     <input type="hidden" class="form-control" name="costacc[7777{$k}][supplier_id]" value="{$v.supplier_id}" id="7777{$k}_supplierRes_id">
-                    <input type="text" class="form-control" name="costacc[7777{$k}][supplier_name]" value="{$v.supplier_name}" id="7777{$k}_supplierRes_name" onfocus="get_supplierRes(7777{$k})" readonly>
+                    <input type="text" class="form-control" name="costacc[7777{$k}][supplier_name]" value="{$v.supplier_name}" id="7777{$k}_supplierRes_name" onfocus="get_supplierRes(7777{$k})" readonly disabled>
                     <input type="text" class="form-control longinput" name="costacc[7777{$k}][remark]" value="{$v.remark}" readonly>
                 </div>
                 <?php } ?>

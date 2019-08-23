@@ -261,7 +261,7 @@ $config = array(
     'EXPERT'                =>array('16'=>'黄鑫磊','18'=>'戴明'),
 
     //项目预结算费用项
-    'OP_COST_TYPE'          =>array('税点','奖金包'),
+    //'OP_COST_TYPE'          =>array('税点','奖金包'),
 
     //满意度状态
     'SCORE_STU'     =>array(
