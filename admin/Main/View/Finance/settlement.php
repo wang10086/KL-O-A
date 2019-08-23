@@ -136,7 +136,7 @@
             '<input type="text" class="form-control longinput" name="costacc['+i+'][remark]">' +
             '<a href="javascript:;" class="btn btn-danger btn-flat" onclick="delbox(\'costacc_'+i+'\')">删除</a>' +
             '</div>';
-		$('#costacc').append(html);	
+		$('#setcostacc').append(html);
 		$('#costacc_val').html(i);
 		orderno();
 		cost_total();
