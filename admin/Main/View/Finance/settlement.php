@@ -44,7 +44,6 @@
                                             </tr>
                                         </table>
                                     </div>
-                                    
                                 </div><!-- /.box-body -->
                             </div><!-- /.box -->
                         	
@@ -69,8 +68,7 @@
                                         <?php } } ?>
                                 </div>
                             </div>
-                            
-                                            
+                                     
                             <div id="formsbtn" style="padding-bottom:10px;">
                                 <div class="content">
                                     <?php if(!in_array($audit['dst_status'],array(1,3)) || cookie('userid')==11){ ?>
@@ -80,29 +78,19 @@
                                         </form>
                                         
                                         <div id="formsbtn" style="padding-bottom:20px; margin-top:10px; color:#ff3300;">请确认各项结算费用是否正确，请务必确认，不可反复提交申请</div>
-                                        
                                         <button type="button" onClick="$('#save_settlement').submit()" class="btn btn-info btn-lg" style=" padding-left:40px; padding-right:40px; margin-right:10px;">保存结算</button>
                                         <!--<button type="button" onClick="$('#appsubmint').submit()" class="btn btn-success btn-lg" style=" padding-left:40px; padding-right:40px; margin-left:10px;">申请审批</button>-->
                                         <button type="button" onClick="check_huikuan()" class="btn btn-success btn-lg" style=" padding-left:40px; padding-right:40px; margin-left:10px;">申请审批</button>
 
-                                        
-                                        
                                     <?php } ?>
                                 </div>    
                             </div>
-                            
-                            
-
-                            
                             <?php } ?> 
                             
                         </div><!--/.col (right) -->
                     </div>   <!-- /.row -->
-                    
                 </section><!-- /.content -->
-                
             </aside><!-- /.right-side -->
-			
   </div>
 </div>
 
@@ -133,6 +121,8 @@
             '<option value="{$k}">{$v}</option>'+
             '</foreach>'+
             '</select>' +
+            '<input type="hidden" class="form-control" name="costacc['+i+'][supplier_id]" id="'+i+'_supplierRes_id">'+
+            '<input type="text" class="form-control" name="costacc['+i+'][supplier_name]" id="'+i+'_supplierRes_name" onfocus="get_supplierRes('+i+')">'+
             '<input type="text" class="form-control longinput" name="costacc['+i+'][remark]">' +
             '<a href="javascript:;" class="btn btn-danger btn-flat" onclick="delbox(\'costacc_'+i+'\')">删除</a>' +
             '</div>';
@@ -270,6 +260,30 @@
                 alert('msg error');
             }
         })
+    }
+
+    //选择合格供方
+    function get_supplierRes(num,costType=0){
+        var costType            = costType ? costType : 0;
+        art.dialog.open("/index.php?m=Main&c=Product&a=public_select_supplierRes&costType="+costType,{
+            lock:true,
+            title: '选择合格供方',
+            width:1000,
+            height:500,
+            okVal: '提交',
+            fixed: true,
+            ok: function () {
+                var origin     = artDialog.open.origin;
+                var supplierRes= this.iframe.contentWindow.gosubmint();
+                var res_id     = supplierRes.id;
+                var res_name   = supplierRes.name;
+                $('#'+num+'_supplierRes_id').val(res_id);
+                $('#'+num+'_supplierRes_name').val(res_name);
+            },
+            cancelValue:'取消',
+            cancel: function () {
+            }
+        });
     }
 </script>
 
