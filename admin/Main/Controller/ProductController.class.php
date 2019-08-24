@@ -1582,7 +1582,7 @@ class ProductController extends BaseController {
             $where['audit_status']          = 1;
             if ($name) $where['title']      = array('like','%'.$name.'%');
             if ($city) $where['_string']    = "(diqu like '%$city%') or (address like '%$city%')";
-            $pageCount                      = $db->where($where)->count();
+            $pageCount                      = M('cas_res')->where($where)->count();
             $page                           = new page($pageCount,P::PAGE_SIZE);
             $this->pages                    = $pageCount > P::PAGE_SIZE ? $page->show() : '';
             $field                          = 'id,title as name, diqu as prov,address as city';

@@ -107,7 +107,7 @@
 
 		var html = '<div class="userlist cost_expense" id="costacc_'+i+'">' +
             '<span class="title"></span>' +
-            '<input type="text" class="form-control" name="costacc['+i+'][title]" list="'+i+'_cost_title">' +
+            '<input type="text" class="form-control" name="costacc['+i+'][title]" list="'+i+'_cost_title" onblur="check_title('+i+',$(this).val())">' +
             '<datalist id="'+i+'_cost_title">'+
             '<foreach name="op_cost_type" item="ct">'+
             '<option value="{$ct}" label="" />'+
@@ -116,7 +116,7 @@
             '<input type="text"  class="form-control cost" name="costacc['+i+'][unitcost]"  value="0">' +
             '<input type="text" class="form-control amount" name="costacc['+i+'][amount]" value="1">' +
             '<input type="text" class="form-control totalval" name="costacc['+i+'][total]"  value="0">' +
-            '<select class="form-control"  name="costacc['+i+'][type]" >' +
+            '<select class="form-control"  name="costacc['+i+'][type]" id="'+i+'_costacc_type" onchange="set_supplier_null('+i+')">' +
             '<foreach name="cost_type" key="k" item="v">'+
             '<option value="{$k}">{$v}</option>'+
             '</foreach>'+
@@ -263,8 +263,9 @@
     }
 
     //选择合格供方
-    function get_supplierRes(num,costType=0){
-        var costType            = costType ? costType : 0;
+    function get_supplierRes(num){
+        let costType    = $('#'+num+'_costacc_type').val();
+        if (!costType || costType==0){ art_show_msg('请先选择费用项类型'); return false; }
         art.dialog.open("/index.php?m=Main&c=Product&a=public_select_supplierRes&costType="+costType,{
             lock:true,
             title: '选择合格供方',
@@ -284,6 +285,26 @@
             cancel: function () {
             }
         });
+    }
+
+    //清空合格供方
+    function set_supplier_null(num){
+        $('#'+num+'_supplierRes_id').val('');
+        $('#'+num+'_supplierRes_name').val('');
+    }
+
+    //检查费用项  判断是否需要选择合格供方
+    function check_title(num,title){
+        let costTypeStr     = "{$op_cost_type_str}";
+        let costTypeArr     = new Array();
+        costTypeArr         = costTypeStr.split(','); //分割字符串
+        if (in_array(title,costTypeArr)){
+            $('#'+num+'_supplierRes_id').val('');
+            $('#'+num+'_supplierRes_name').val('');
+            $('#'+num+'_supplierRes_name').attr({'readonly':true,'disabled':true});
+        }else{
+            $('#'+num+'_supplierRes_name').attr({'readonly':false,'disabled':false});
+        }
     }
 </script>
 

@@ -700,3 +700,13 @@ function del_last_str(str) {
 	}
 	return str;
 }
+
+//js 检测某个字符串是否在数组中
+function in_array(str,array){
+    for(var i in array){
+        if(array[i]==str){
+            return true;
+        }
+    }
+    return false;
+}

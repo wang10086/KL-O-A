@@ -123,7 +123,7 @@
                     <?php if (cookie('userid') == 11) { ?>
                     <span class="title"></span>
                     <input type="hidden" name="resid[2222{$k}][id]" value="{$v.id}">
-                    <input type="text" class="form-control" name="costacc[2222{$k}][title]" value="{$v.title}" list="2222{$k}_cost_title">
+                    <input type="text" class="form-control" name="costacc[2222{$k}][title]" value="{$v.title}" list="2222{$k}_cost_title" onblur="check_title(2222{$k},$(this).val())">
                     <datalist id="2222{$k}_cost_title">
                         <foreach name="op_cost_type" item="ct">
                             <option value="{$ct}" label="" />
@@ -132,7 +132,7 @@
                     <input type="text" class="form-control cost" name="costacc[2222{$k}][unitcost]" value="{$v.unitcost}">
                     <input type="text" class="form-control amount" name="costacc[2222{$k}][amount]" value="{$v.amount}">
                     <input type="text" class="form-control totalval" name="costacc[2222{$k}][total]" value="{$v.total}">
-                    <select class="form-control" name="costacc[2222{$k}][type]">
+                    <select class="form-control" name="costacc[2222{$k}][type]" id="2222{$k}_costacc_type" onchange="set_supplier_null(2222{$k})">
                         <foreach name="kind" key="kk" item="vv">
                             <option value="{$kk}" <?php if ($kk == $v['type']) { echo 'selected'; } ?>>{$vv}</option>
                         </foreach>
@@ -144,17 +144,17 @@
                     <?php } else { ?>
                     <span class="title"></span>
                     <input type="hidden" name="resid[2222{$k}][id]" value="{$v.id}">
-                    <input type="text" class="form-control" name="costacc[2222{$k}][title]" value="{$v.title}" readonly>
+                    <input type="text" class="form-control" name="costacc[2222{$k}][title]" value="{$v.title}" onblur="check_title(2222{$k},$(this).val())" readonly disabled>
                     <input type="text" class="form-control cost" name="costacc[2222{$k}][unitcost]" value="{$v.unitcost}" readonly>
                     <input type="text" class="form-control amount" name="costacc[2222{$k}][amount]" value="{$v.amount}" readonly>
                     <input type="text" class="form-control totalval" name="costacc[2222{$k}][total]" value="{$v.total}" readonly>
-                    <select class="form-control" name="costacc[2222{$k}][type]">
+                    <select class="form-control" name="costacc[2222{$k}][type]" id="2222{$k}_costacc_type" onchange="set_supplier_null(2222{$k})">
                         <foreach name="kind" key="kk" item="vv">
                             <option value="{$kk}" <?php if ($kk == $v['type']) { echo 'selected'; } ?>>{$vv}</option>
                         </foreach>
                     </select>
                     <input type="hidden" class="form-control" name="costacc[2222{$k}][supplier_id]" value="{$v.supplier_id}" id="2222{$k}_supplierRes_id">
-                    <input type="text" class="form-control" name="costacc[2222{$k}][supplier_name]" value="{$v.supplier_name}" id="2222{$k}_supplierRes_name" onfocus="get_supplierRes(2222{$k})" readonly>
+                    <input type="text" class="form-control" name="costacc[2222{$k}][supplier_name]" value="{$v.supplier_name}" id="2222{$k}_supplierRes_name" onfocus="get_supplierRes(2222{$k})" readonly disabled>
                     <input type="text" class="form-control longinput" name="costacc[2222{$k}][remark]" value="{$v.remark}">
                     <?php } ?>
                 </div>
@@ -162,7 +162,7 @@
                 <div class="userlist cost_expense" id="costacc_id_js_{$k}">
                     <span class="title"></span>
                     <input type="hidden" name="resid[2222{$k}][id]" value="{$v.id}">
-                    <input type="text" class="form-control" name="costacc[2222{$k}][title]" value="{$v.title}" list="2222{$k}_cost_title">
+                    <input type="text" class="form-control" name="costacc[2222{$k}][title]" value="{$v.title}" list="2222{$k}_cost_title" onblur="check_title(2222{$k},$(this).val())">
                     <datalist id="2222{$k}_cost_title">
                         <foreach name="op_cost_type" item="ct">
                             <option value="{$ct}" label="" />
@@ -171,7 +171,7 @@
                     <input type="text" class="form-control cost" name="costacc[2222{$k}][unitcost]" value="{$v.unitcost}">
                     <input type="text" class="form-control amount" name="costacc[2222{$k}][amount]" value="{$v.amount}">
                     <input type="text" class="form-control totalval" name="costacc[2222{$k}][total]" value="{$v.total}">
-                    <select class="form-control" name="costacc[2222{$k}][type]">
+                    <select class="form-control" name="costacc[2222{$k}][type]" id="2222{$k}_costacc_type" onchange="set_supplier_null(2222{$k})">
                         <foreach name="kind" key="kk" item="vv">
                             <option value="{$kk}" <?php if ($kk == $v['type']) { echo 'selected'; } ?>>{$vv}</option>
                         </foreach>
@@ -191,7 +191,7 @@
                 <div class="userlist cost_expense" id="costacc_id_aa_{$k}">
                     <span class="title"></span>
                     <input type="hidden" name="resid[888{$k}][id]" value="0">
-                    <input type="text" class="form-control" name="costacc[888{$k}][title]" value="{$v.title}" list="888{$k}_cost_title">
+                    <input type="text" class="form-control" name="costacc[888{$k}][title]" value="{$v.title}" list="888{$k}_cost_title" onblur="check_title(888{$k},$(this).val())">
                     <datalist id="888{$k}_cost_title">
                         <foreach name="op_cost_type" item="ct">
                             <option value="{$ct}" label="" />
@@ -200,7 +200,7 @@
                     <input type="text" class="form-control cost" name="costacc[888{$k}][unitcost]" value="{$v.unitcost}">
                     <input type="text" class="form-control amount" name="costacc[888{$k}][amount]" value="{$v.amount}">
                     <input type="text" class="form-control totalval" name="costacc[888{$k}][total]" value="{$v.total}">
-                    <select class="form-control" name="costacc[888{$k}][type]">
+                    <select class="form-control" name="costacc[888{$k}][type]" id="888{$k}_costacc_type" onchange="set_supplier_null(888{$k})">
                         <foreach name="kind" key="kk" item="vv">
                             <option value="{$kk}" <?php if ($kk == $v['type']) { echo 'selected'; } ?>>{$vv}</option>
                         </foreach>
@@ -216,7 +216,7 @@
                 <div class="userlist cost_expense" id="costacc_id_ac_{$k}">
                     <span class="title"></span>
                     <input type="hidden" name="resid[7777{$k}][id]" value="0">
-                    <input type="text" class="form-control" name="costacc[7777{$k}][title]" value="{$v.title}" list="7777{$k}_cost_title">
+                    <input type="text" class="form-control" name="costacc[7777{$k}][title]" value="{$v.title}" list="7777{$k}_cost_title" onblur="check_title(7777{$k},$(this).val())">
                     <datalist id="7777{$k}_cost_title">
                         <foreach name="op_cost_type" item="ct">
                             <option value="{$ct}" label="" />
@@ -225,7 +225,7 @@
                     <input type="text" class="form-control cost" name="costacc[7777{$k}][unitcost]" value="{$v.unitcost}">
                     <input type="text" class="form-control amount" name="costacc[7777{$k}][amount]" value="{$v.amount}">
                     <input type="text" class="form-control totalval" name="costacc[7777{$k}][total]" value="{$v.total}">
-                    <select class="form-control" name="costacc[7777{$k}][type]">
+                    <select class="form-control" name="costacc[7777{$k}][type]" id="7777{$k}_costacc_type" onchange="set_supplier_null(7777{$k})">
                         <foreach name="cost_type" key="kk" item="vv">
                             <option value="{$kk}" <?php if ($v['type'] == $kk) { echo "selected"; } ?>>{$vv}</option>
                         </foreach>
@@ -239,11 +239,11 @@
                 <div class="userlist cost_expense" id="costacc_id_ac_{$k}">
                     <span class="title"></span>
                     <input type="hidden" name="resid[7777{$k}][id]" value="0">
-                    <input type="text" class="form-control" name="costacc[7777{$k}][title]" value="{$v.title}" readonly>
+                    <input type="text" class="form-control" name="costacc[7777{$k}][title]" value="{$v.title}" onblur="check_title(7777{$k},$(this).val())" readonly disabled>
                     <input type="text" class="form-control cost" name="costacc[7777{$k}][unitcost]" value="{$v.unitcost}" readonly>
                     <input type="text" class="form-control amount" name="costacc[7777{$k}][amount]" value="{$v.amount}" readonly>
                     <input type="text" class="form-control totalval" name="costacc[7777{$k}][total]" value="{$v.total}" readonly>
-                    <select class="form-control" name="costacc[7777{$k}][type]">
+                    <select class="form-control" name="costacc[7777{$k}][type]" id="7777{$k}_costacc_type" onchange="set_supplier_null(7777{$k})">
                         <foreach name="cost_type" key="kk" item="vv">
                             <option value="{$kk}" <?php if ($v['type'] == $kk) { echo "selected"; } ?>>{$vv}</option>
                         </foreach>
@@ -257,7 +257,7 @@
                 <div class="userlist cost_expense" id="costacc_id_a_{$k}">
                     <span class="title"></span>
                     <input type="hidden" name="resid[7777{$k}][id]" value="0">
-                    <input type="text" class="form-control" name="costacc[7777{$k}][title]" value="{$v.title}" list="7777{$k}_cost_title">
+                    <input type="text" class="form-control" name="costacc[7777{$k}][title]" value="{$v.title}" list="7777{$k}_cost_title" onblur="check_title(7777{$k},$(this).val())">
                     <datalist id="7777{$k}_cost_title">
                         <foreach name="op_cost_type" item="ct">
                             <option value="{$ct}" label="" />
@@ -266,13 +266,13 @@
                     <input type="text" class="form-control cost" name="costacc[7777{$k}][unitcost]" value="{$v.unitcost}">
                     <input type="text" class="form-control amount" name="costacc[7777{$k}][amount]" value="{$v.amount}">
                     <input type="text" class="form-control totalval" name="costacc[7777{$k}][total]" value="{$v.total}">
-                    <select class="form-control" name="costacc[7777{$k}][type]">
+                    <select class="form-control" name="costacc[7777{$k}][type]" id="7777{$k}_costacc_type" onchange="set_supplier_null(7777{$k})">
                         <foreach name="cost_type" key="kk" item="vv">
                             <option value="{$kk}" <?php if ($v['type'] == $kk) { echo "selected"; } ?>>{$vv}</option>
                         </foreach>
                     </select>
                     <input type="hidden" class="form-control" name="costacc[7777{$k}][supplier_id]" value="{$v.supplier_id}" id="7777{$k}_supplierRes_id">
-                    <input type="text" class="form-control" name="costacc[7777{$k}][supplier_name]" value="{$v.supplier_name}" id="7777{$k}_supplierRes_name" onfocus="get_supplierRes(7777{$k})" onfocus="get_supplierRes(7777{$k})">
+                    <input type="text" class="form-control" name="costacc[7777{$k}][supplier_name]" value="{$v.supplier_name}" id="7777{$k}_supplierRes_name" onfocus="get_supplierRes(7777{$k})">
                     <input type="text" class="form-control longinput" name="costacc[7777{$k}][remark]" value="{$v.remark}">
                     <a href="javascript:;" class="btn btn-danger btn-flat" onclick="delbox('costacc_id_a_{$k}')">删除</a>
                 </div>

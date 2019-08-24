@@ -662,6 +662,7 @@ class FinanceController extends BaseController {
         $this->is_zutuan        = $is_zutuan;
         $this->dijie_shouru     = $dijie_shouru?$dijie_shouru:0;
         $this->op_cost_type     = M('op_cost_type')->getField('name',true);
+        $this->op_cost_type_str = implode(',',$this->op_cost_type);
         //检查先回款,在做结算  //已回款金额
         $money_back             = check_money_back($opid);
         $this->yihuikuan        = $money_back;
