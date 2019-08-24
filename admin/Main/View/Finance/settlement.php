@@ -297,8 +297,9 @@
     function check_title(num,title){
         let costTypeStr     = "{$op_cost_type_str}";
         let costTypeArr     = new Array();
+        let tit             = title.trim();
         costTypeArr         = costTypeStr.split(','); //分割字符串
-        if (in_array(title,costTypeArr)){
+        if (in_array(tit,costTypeArr)){
             $('#'+num+'_supplierRes_id').val('');
             $('#'+num+'_supplierRes_name').val('');
             $('#'+num+'_supplierRes_name').attr({'readonly':true,'disabled':true});
