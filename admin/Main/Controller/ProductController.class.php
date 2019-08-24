@@ -1310,6 +1310,9 @@ class ProductController extends BaseController {
         $this->reckon_mode              = C('RECKON_MODE'); //核算方式
         $this->subject_fields           = C('SUBJECT_FIELD'); //科学领域
         $this->audit_status             = $audit_status;
+        $this->cost_type                = C('COST_TYPE');
+        $this->scienceRes               = M('cas_res')->getField('id,title',true);
+        $this->supplierRes              = M('supplier')->getField('id,name as title',true);
         $this->display('standard_product_detail');
     }
 

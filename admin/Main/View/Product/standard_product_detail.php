@@ -141,8 +141,8 @@
                                             <td>{$row.unitprice}</td>
                                             <td>{$row.amount}</td>
                                             <td>&yen;{$row.total}</td>
-                                            <td>{$row.type}</td>
-                                            <td>{$row.supplierRes_id}</td>
+                                            <td>{$cost_type[$row['type']]}</td>
+                                            <td>{$row.channel}</td>
                                             <td>{$row.remarks}</td>
                                         </tr>
                                         </foreach>
