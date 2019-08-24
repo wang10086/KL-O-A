@@ -29,7 +29,7 @@
                 <?php }else{ ?>
                 <foreach name="costacc" key="k" item="v">
                 <?php
-                if($v['cost_type']==4){
+                if($v['cost_type']==1){
                     $shiyong = $v['m_outsum']-$v['m_returnsum'];
                     $jieyong = $v['m_returnsum'];
                     if($shiyong){
@@ -66,7 +66,7 @@
                         <td width="150">&yen; {$v.cost}</td>
                         <td width="150">{$v.amount}</td>
                         <td width="150">&yen; {$v.total}</td>
-                        <td width="150"><?php echo $costtype[$v['cost_type']] ?></td>
+                        <td width="150"><?php echo $kind[$v['cost_type']] ?></td>
                         <td>{$v.beizhu}</td>
                     </tr>
 

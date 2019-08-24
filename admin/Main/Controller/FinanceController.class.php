@@ -94,7 +94,8 @@ class FinanceController extends BaseController {
         $pays                 = $mod->get_money_back_lists($opid); //回款计划
         $this->pays           = $pays;
         $this->jd             = $mod->get_jidiao($opid);
-		$this->kind           = C('COST_TYPE');
+		//$this->kind           = C('COST_TYPE');
+		$this->kind           = M('supplierkind')->getField('id,name',true);
 		$this->op             = $op;
 		$this->budget         = $budget;
 		$this->audit          = $audit;
@@ -193,7 +194,8 @@ class FinanceController extends BaseController {
         }
 
         $this->guide_price      = $guide_price;
-		$this->kind				= C('COST_TYPE');
+		//$this->kind				= C('COST_TYPE');
+		$this->kind				= M('supplierkind')->getField('id,name',true);
 		$this->op				= $op;
 		$this->budget			= $budget;
 		$this->costacc			= $costacc;
@@ -643,8 +645,8 @@ class FinanceController extends BaseController {
         $is_dijie               = M('op')->where(array('dijie_opid'=>$opid))->getField('op_id');
         $this->is_dijie         = $is_dijie?$is_dijie:0;
         $dijie_shouru           = $mod->get_landAcquisitionAgency_money($op,P::REQ_TYPE_SETTLEMENT);   //801 获取地接结算收入
-        $this->kind				= C('COST_TYPE');
-        $this->costtype			= array('1'=>'其他','2'=>'专家辅导员','3'=>'合格供方','4'=>'物资');
+        $this->kind				= M('supplierkind')->getField('id,name',true);
+        //$this->costtype			= array('1'=>'其他','2'=>'专家辅导员','3'=>'合格供方','4'=>'物资');
         $budget_list            = M('op_budget')->where(array('op_id'=>$opid))->find();
         $this->should_back_money= $is_dijie?$settlement['shouru']:($budget_list['should_back_money']?$budget_list['should_back_money']:$budget['shouru']); //回款金额(带入结算收入)
         $this->op				= $op;
@@ -658,7 +660,7 @@ class FinanceController extends BaseController {
         $this->subject_fields	= C('SUBJECT_FIELD');
         $this->ages 			= C('AGE_LIST');
         $this->kinds			=  M('project_kind')->getField('id,name', true);
-        $this->cost_type        = C('COST_TYPE');
+        //$this->cost_type        = C('COST_TYPE');
         $this->is_zutuan        = $is_zutuan;
         $this->dijie_shouru     = $dijie_shouru?$dijie_shouru:0;
         $this->op_cost_type     = M('op_cost_type')->getField('name',true);
@@ -1082,7 +1084,8 @@ class FinanceController extends BaseController {
         $this->departments  = $departments;
         $this->budget       = $budget;
         $this->costacc      = $costacc;
-        $this->kind         = C('COST_TYPE');
+        //$this->kind         = C('COST_TYPE');
+        $this->kind         = M('supplierkind')->getField('id,name',true);
         $this->jk_type      = C('JIEKUAN_TYPE');
         $this->audit_yusuan = $audit_yusuan;
         $this->op           = $op;
@@ -2367,7 +2370,8 @@ class FinanceController extends BaseController {
 
         $this->opid     = $opid;
         $this->lists    = $lists;
-        $this->ctype    = C('COST_TYPE');
+        //$this->ctype    = C('COST_TYPE');
+        $this->ctype    = M('supplierkind')->getField('id,name',true);
         $this->display('select_ys');
     }
 
@@ -2688,7 +2692,8 @@ class FinanceController extends BaseController {
         $op['show_time']  = $show_time;
         $op['show_reason']  = $show_reason;
 
-        $this->kind           = C('COST_TYPE');
+        //$this->kind           = C('COST_TYPE');
+        $this->kind           = M('supplierkind')->getField('id,name',true);
         $this->op             = $op;
         $this->budget         = $budget;
         $this->kinds          =  M('project_kind')->getField('id,name', true);

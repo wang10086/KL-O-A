@@ -124,7 +124,7 @@
                     <input type="text" class="form-control amount" name="costacc[7777{$k}][amount]" value="{$v.amount}">
                     <input type="text" class="form-control totalval" name="costacc[7777{$k}][total]" value="{$v.total}">
                     <select class="form-control" name="costacc[7777{$k}][type]" id="7777{$k}_costacc_type" onchange="set_supplier_null(7777{$k})">
-                        <foreach name="cost_type" key="kk" item="vv">
+                        <foreach name="kind" key="kk" item="vv">
                             <option value="{$kk}" <?php if ($v['type'] == $kk) { echo "selected"; } ?>>{$vv}</option>
                         </foreach>
                     </select>
@@ -142,7 +142,7 @@
                     <input type="text" class="form-control amount" name="costacc[7777{$k}][amount]" value="{$v.amount}" readonly>
                     <input type="text" class="form-control totalval" name="costacc[7777{$k}][total]" value="{$v.total}" readonly>
                     <select class="form-control" name="costacc[7777{$k}][type]" id="7777{$k}_costacc_type" onchange="set_supplier_null(7777{$k})">
-                        <foreach name="cost_type" key="kk" item="vv">
+                        <foreach name="kind" key="kk" item="vv">
                             <option value="{$kk}" <?php if ($v['type'] == $kk) { echo "selected"; } ?>>{$vv}</option>
                         </foreach>
                     </select>
@@ -165,7 +165,7 @@
                     <input type="text" class="form-control amount" name="costacc[7777{$k}][amount]" value="{$v.amount}">
                     <input type="text" class="form-control totalval" name="costacc[7777{$k}][total]" value="{$v.total}">
                     <select class="form-control" name="costacc[7777{$k}][type]" id="7777{$k}_costacc_type" onchange="set_supplier_null(7777{$k})">
-                        <foreach name="cost_type" key="kk" item="vv">
+                        <foreach name="kind" key="kk" item="vv">
                             <option value="{$kk}" <?php if ($v['type'] == $kk) { echo "selected"; } ?>>{$vv}</option>
                         </foreach>
                     </select>
