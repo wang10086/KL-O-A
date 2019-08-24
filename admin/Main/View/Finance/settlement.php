@@ -100,6 +100,16 @@
 	$(document).ready(function(e) {
         cost_total();
 		orderno();
+
+        $('.cost_expense').each(function(index, element) {
+            var title           = $(this).find('.costTitle').val().trim();
+            let costTypeStr     = "{$op_cost_type_str}";
+            let costTypeArr     = new Array();
+            costTypeArr         = costTypeStr.split(','); //分割字符串
+            if (in_array(title,costTypeArr)){
+                $(this).find('.supplier-name-class').attr({'readonly':true,'disabled':true});
+            }
+        })
     });
 	//新成本核算项
 	function add_costacc(){
