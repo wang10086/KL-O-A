@@ -42,7 +42,7 @@
                     <?php } else { ?>
                     <span class="title"></span>
                     <input type="hidden" name="resid[2222{$k}][id]" value="{$v.id}">
-                    <input type="text" class="form-control" name="costacc[2222{$k}][title]" value="{$v.title}" onblur="check_title(2222{$k},$(this).val())" readonly disabled>
+                    <input type="text" class="form-control" name="costacc[2222{$k}][title]" value="{$v.title}" onblur="check_title(2222{$k},$(this).val())" readonly>
                     <input type="text" class="form-control cost" name="costacc[2222{$k}][unitcost]" value="{$v.unitcost}" readonly>
                     <input type="text" class="form-control amount" name="costacc[2222{$k}][amount]" value="{$v.amount}" readonly>
                     <input type="text" class="form-control totalval" name="costacc[2222{$k}][total]" value="{$v.total}" readonly>
@@ -137,7 +137,7 @@
                 <div class="userlist cost_expense" id="costacc_id_ac_{$k}">
                     <span class="title"></span>
                     <input type="hidden" name="resid[7777{$k}][id]" value="0">
-                    <input type="text" class="form-control" name="costacc[7777{$k}][title]" value="{$v.title}" onblur="check_title(7777{$k},$(this).val())" readonly disabled>
+                    <input type="text" class="form-control" name="costacc[7777{$k}][title]" value="{$v.title}" onblur="check_title(7777{$k},$(this).val())" readonly>
                     <input type="text" class="form-control cost" name="costacc[7777{$k}][unitcost]" value="{$v.unitcost}" readonly>
                     <input type="text" class="form-control amount" name="costacc[7777{$k}][amount]" value="{$v.amount}" readonly>
                     <input type="text" class="form-control totalval" name="costacc[7777{$k}][total]" value="{$v.total}" readonly>
