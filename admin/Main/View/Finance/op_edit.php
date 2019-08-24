@@ -44,7 +44,6 @@
         <div id="costacc_val">1</div>
         <div class="form-group col-md-12" id="useraddbtns" style="margin-left:15px;">
             <a href="javascript:;" class="btn btn-success btn-sm" onClick="add_costacc()"><i class="fa fa-fw fa-plus"></i> 新增预算项</a>
-
         </div>
         <div class="form-group">&nbsp;</div>
     </div>
