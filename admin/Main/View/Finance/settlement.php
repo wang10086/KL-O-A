@@ -276,7 +276,7 @@
     function get_supplierRes(num){
         let costType    = $('#'+num+'_costacc_type').val();
         if (!costType || costType==0){ art_show_msg('请先选择费用项类型'); return false; }
-        art.dialog.open("/index.php?m=Main&c=Product&a=public_select_supplierRes&costType="+costType,{
+        art.dialog.open("/index.php?m=Main&c=Product&a=public_select_supplierRes&kind="+costType,{
             lock:true,
             title: '选择合格供方',
             width:1000,

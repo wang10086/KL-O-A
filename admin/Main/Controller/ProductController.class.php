@@ -1577,7 +1577,9 @@ class ProductController extends BaseController {
         $name                               = trim(I('name'));
         $city                               = trim(I('city'));
         $costType                           = I('costType',0);
-        $kind                               = I('kind') ? I('kind') : get_supplierkind($costType);
+        //$kind                               = I('kind') ? I('kind') : get_supplierkind($costType);
+        $kind                               = I('kind',0);
+
         if ($kind ==8){ //研究所台站不从合格供方取值 , 从资源库取值 cas_res
             $where                          = array();
             $where['audit_status']          = 1;
@@ -1793,69 +1795,6 @@ class ProductController extends BaseController {
                 }else{
                     $this->error('数据保存失败');
                 }
-
-                /*$db                             = M('product');
-                $id                             = I('id',0);
-                $info                           = I('info');
-                $apply_time                     = trim(I('apply_time'));
-                $info['age']                    = I('age');
-                $business_dept                  = I('business_dept');
-                $info['business_dept']          = implode(',',$business_dept);
-                $info['content']                = trim(I('content'));
-                $product_model                  = I('costacc'); //包含产品模块
-                $cas_res_ids                    = I('res_ids'); //包含资源模块
-                $resfiles                       = I('resfiles');
-                $resetid                        = I('resetid');
-                $info['att_id']                 = implode(',',$resfiles);
-                $info['apply_year']             = $apply_time?substr($apply_time,0,4):0;
-                $info['apply_time']             = $apply_time?substr($apply_time,-1):0;
-                //$info['disting']                = 1; //标准化数据
-
-                $cas                            = array();
-                foreach ($cas_res_ids as $k=>$v){
-                    $cas[]                      = $v['res_id'];
-                }
-                $info['cas_res_ids']            = implode(',',$cas);
-                if ($id){
-                    $where                      = array();
-                    $where['id']                = $id;
-                    $res                        = $db->where($where)->save($info);
-                    $pid                        = $id;
-                }else{
-                    $info['input_time']         = NOW_TIME;
-                    $info['input_user']         = session('userid');
-                    $info['input_uname']        = session('nickname');
-                    $res                        = $db ->add($info);
-                    $pid                        = $res;
-                    $this->request_audit(P::REQ_TYPE_PRODUCT_NEW, $pid);
-                }
-
-                if ($res){
-                    if ($product_model){ //保存相关产品模块
-                        $product_use_db         = M('product_use');
-                        $del_ids                = array();
-                        foreach ($product_model as $k=>$v){
-                            $data               = array();
-                            $data['pid']        = $pid;
-                            $data['product_id'] = $v['product_id'];
-                            $data['title']      = $v['title'];
-                            $data['unitcost']   = $v['unitcost'];
-                            $data['amount']     = $v['amount'];
-                            $data['total']      = $v['total'];
-                            if ($v['id']){
-                                $res            = $product_use_db->where(array('id'=>$v['id']))->save($data);
-                                $del_ids[]      = $v['id'];
-                            }else{
-                                $res            = $product_use_db->add($data);
-                                $del_ids[]      = $res;
-                            }
-                        }
-                        $product_use_db->where(array('pid'=>$pid,'id'=>array('not in',$del_ids)))->delete();
-                    }
-                    $this->success('数据保存成功');
-                }else{
-                    $this->error('数据保存失败');
-                }*/
             }
 
             //保存标准化模块

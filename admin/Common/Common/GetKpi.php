@@ -4070,7 +4070,7 @@ function get_yw_department(){
      * @param $costType C('COST_TYPE')
      * @return $supplier_id oa_supplierkind id
      */
-    function get_supplierkind($costType){
+    /* function get_supplierkind($costType){
         switch ($costType){
             case 1: //物资
                 $supplier_id            = 7;
@@ -4103,4 +4103,4 @@ function get_yw_department(){
                 $supplier_id            = 0;
         }
         return $supplier_id;
-    }
+    } */
