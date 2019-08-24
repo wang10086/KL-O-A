@@ -79,6 +79,7 @@
         </script>
        
         <section class="content">
+            <p class="res">提示：如果搜索不到相关供方，请及时 <a href="{$add_res_url}" target="_blank">添加供方</a> !</p>
         	<div id="selectbox">
             <form action="{:U('Product/public_select_supplierRes')}" method="get" id="feedbackform">
             <input type="hidden" name="m" value="Main">

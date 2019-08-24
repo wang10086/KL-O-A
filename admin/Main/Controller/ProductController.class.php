@@ -1588,6 +1588,7 @@ class ProductController extends BaseController {
             $field                          = 'id,title as name, diqu as prov,address as city';
             $lists                          = M('cas_res')->where($where)->limit($page->firstRow.','.$page->listRows)->order($this->orders('id'))->field($field)->select();
             foreach ($lists as $k=>$v){     $lists[$k]['kind'] = 8; } //研究所台站
+            $add_res_url                    = U('ScienceRes/addres');
         }else{
             $where                          = array();
             $where['audit_status']          = 1;
@@ -1598,7 +1599,9 @@ class ProductController extends BaseController {
             $page                           = new page($pageCount,P::PAGE_SIZE);
             $this->pages                    = $pageCount > P::PAGE_SIZE ? $page->show() : '';
             $lists                          = $db->where($where)->limit($page->firstRow.','.$page->listRows)->order($this->orders('id'))->select();
+            $add_res_url                    = U('SupplierRes/addres');
         }
+        $this->add_res_url                  = $add_res_url;
         $this->lists                        = $lists;
         $this->supplierkind                 = M('supplierkind')->getField('id,name',true);
         $this->kind                         = $kind;

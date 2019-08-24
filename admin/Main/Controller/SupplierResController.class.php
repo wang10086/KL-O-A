@@ -109,28 +109,43 @@ class SupplierResController extends BaseController {
     public function addres(){
         $this->title('新建/修改合格供方');
         
-        $db = M('supplier');
-        $id = I('id', 0);
+        $db                             = M('supplier');
+        $id                             = I('id', 0);
 
         if(isset($_POST['dosubmit'])){
-        
-            $info  = I('info');
-            $referer = I('referer');
-			$info['desc'] = stripslashes($_POST['content']);
+            $info                       = I('info');
+            $referer                    = I('referer');
+            $info['name']               = trim($info['name']);
+            $info['country']            = trim($info['country']);
+            $info['prov']               = trim($info['prov']);
+            $info['city']               = trim($info['city']);
+            $info['contact']            = trim($info['contact']);
+            $info['tel']                = trim($info['tel']);
+            $info['desc']               = stripslashes($_POST['content']);
+
+            if (!$info['name'])         $this->error('供方名称不能为空!');      
+            if (!$info['country'])      $this->error('供方国家不能为空!');
+            if (!$info['kind'])         $this->error('供方分类不能为空!');
+            if (!$info['prov'])         $this->error('供方省份不能为空!');
+            if (!$info['city'])         $this->error('供方所在城市不能为空!');
+            if (!$info['contact'])      $this->error('供方联系人不能为空!');
+            if (!$info['tel'])          $this->error('供方联系电话不能为空!');
+            if (!$info['desc'])         $this->error('供方介绍不能为空!');
 			
             if(!$id){
-				$info['input_uid'] = session('userid');
-				$info['input_uname'] = session('nickname');
-				$info['input_time']  = time(); 
-                $isadd = $db->add($info);
+				$info['input_uid']      = session('userid');
+				$info['input_uname']    = session('nickname');
+                $info['input_time']     = time(); 
+                $info['audit_status']   = 1; //不用审核
+                $isadd                  = $db->add($info);
                 if($isadd) {
-                    $this->request_audit(P::REQ_TYPE_SUPPLIER_RES_NEW, $isadd);
+                    //$this->request_audit(P::REQ_TYPE_SUPPLIER_RES_NEW, $isadd);
                     $this->success('添加成功！',$referer);
                 } else {
                     $this->error('添加失败：' . $db->getError());
                 }
             }else{
-                $isedit = $db->data($info)->where(array('id'=>$id))->save();
+                $isedit                 = $db->data($info)->where(array('id'=>$id))->save();
                 if($isedit) {
                     $this->success('修改成功！',$referer);
                 } else {
@@ -139,12 +154,12 @@ class SupplierResController extends BaseController {
             }
             	
         }else{
-            $this->kinds = M('supplierkind')->where(array('type'=>P::RES_TYPE_SUPPLIER))->select();
+            $this->kinds                = M('supplierkind')->where(array('type'=>P::RES_TYPE_SUPPLIER))->select();
             
             if (!$id) {
-                $this->row = false;
+                $this->row              = false;
             } else {
-                $this->row = $db->find($id);
+                $this->row              = $db->find($id);
                 if (!$this->row) {
                     $this->error('无此数据！', U('SupplierRes/res'));
                 }

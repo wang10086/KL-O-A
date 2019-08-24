@@ -36,7 +36,7 @@
                                     
                                     <div class="form-group col-md-12">
                                         <label>供方名称</label>
-                                        <input type="text" name="info[name]" id="title" value="{$row.name}"  class="form-control" />
+                                        <input type="text" name="info[name]" id="title" value="{$row.name}"  class="form-control" required />
                                     </div>
                                     
                                     <div class="form-group col-md-4">
@@ -55,20 +55,20 @@
                                     
                                     <div class="form-group col-md-4">
                                         <label>省份</label>
-                                        <input type="text" name="info[prov]" id="prov"   value="{$row.prov}" class="form-control" />
+                                        <input type="text" name="info[prov]" id="prov"   value="{$row.prov}" class="form-control" required />
                                     </div>
                                     
                                     <div class="form-group col-md-4">
                                         <label>所在城市</label>
-                                        <input type="text" name="info[city]" id="city"   value="{$row.city}" class="form-control" />
+                                        <input type="text" name="info[city]" id="city"   value="{$row.city}" class="form-control" required />
                                     </div>
                                     <div class="form-group col-md-4">
                                         <label>联系人</label>
-                                        <input type="text" name="info[contact]" id="contact"   value="{$row.contact}" class="form-control" />
+                                        <input type="text" name="info[contact]" id="contact"   value="{$row.contact}" class="form-control" required />
                                     </div>
                                     <div class="form-group col-md-4">
                                         <label>联系电话</label>
-                                        <input type="text" name="info[tel]" id="tel" value="{$row.tel}"  class="form-control" />
+                                        <input type="text" name="info[tel]" id="tel" value="{$row.tel}"  class="form-control" required />
                                     </div>
                                     
                                     
