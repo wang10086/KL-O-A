@@ -1583,7 +1583,7 @@ class ProductController extends BaseController {
         //$kind                               = I('kind') ? I('kind') : get_supplierkind($costType);
         $kind                               = I('kind',0);
 
-        if ($kind ==8){ //研究所台站不从合格供方取值 , 从资源库取值 cas_res
+        if ($kind ==6){ //研究所台站不从合格供方取值 , 从资源库取值 cas_res
             $where                          = array();
             $where['audit_status']          = 1;
             if ($name) $where['title']      = array('like','%'.$name.'%');
@@ -1593,7 +1593,7 @@ class ProductController extends BaseController {
             $this->pages                    = $pageCount > P::PAGE_SIZE ? $page->show() : '';
             $field                          = 'id,title as name, diqu as prov,address as city';
             $lists                          = M('cas_res')->where($where)->limit($page->firstRow.','.$page->listRows)->order($this->orders('id'))->field($field)->select();
-            foreach ($lists as $k=>$v){     $lists[$k]['kind'] = 8; } //研究所台站
+            foreach ($lists as $k=>$v){     $lists[$k]['kind'] = 6; } //研究所台站
             $add_res_url                    = U('ScienceRes/addres');
         }else{
             $where                          = array();
