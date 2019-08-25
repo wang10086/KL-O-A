@@ -680,7 +680,7 @@
     //选择合格供方
     function get_supplierRes(num,costType){
         var costType            = costType ? costType : 0;
-        art.dialog.open("/index.php?m=Main&c=Product&a=public_select_supplierRes&costType="+costType,{
+        art.dialog.open("/index.php?m=Main&c=Product&a=public_select_supplierRes&kind="+costType,{
             lock:true,
             title: '选择合格供方',
             width:1000,
