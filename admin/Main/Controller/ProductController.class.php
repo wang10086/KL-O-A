@@ -1256,7 +1256,8 @@ class ProductController extends BaseController {
         $this->userkey                  = get_username();
         $this->provinces                = $default_province;
         $this->citys                    = $default_citys;
-        $this->cost_type                = C('COST_TYPE');
+        //$this->cost_type                = C('COST_TYPE');
+        $this->cost_type                = M('supplierkind')->getField('id,name',true);
         $this->title('标准化产品');
         $this->display();
     }
@@ -1310,7 +1311,8 @@ class ProductController extends BaseController {
         $this->reckon_mode              = C('RECKON_MODE'); //核算方式
         $this->subject_fields           = C('SUBJECT_FIELD'); //科学领域
         $this->audit_status             = $audit_status;
-        $this->cost_type                = C('COST_TYPE');
+        //$this->cost_type                = C('COST_TYPE');
+        $this->cost_type                = M('supplierkind')->getField('id,name',true);
         $this->display('standard_product_detail');
     }
 
@@ -1481,7 +1483,8 @@ class ProductController extends BaseController {
         $this->product_from             = C('PRODUCT_FROM');
         $this->product_type             = C('PRODUCT_TYPE');
         $this->subject_fields           = C('SUBJECT_FIELD');
-        $this->cost_type                = C('COST_TYPE');
+        //$this->cost_type                = C('COST_TYPE');
+        $this->cost_type                = M('supplierkind')->getField('id,name',true);
         $this->projects                 = M('project')->where(array('status'=>1))->select();
         $this->display();
     }
