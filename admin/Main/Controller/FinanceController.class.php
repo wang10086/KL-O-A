@@ -637,11 +637,22 @@ class FinanceController extends BaseController {
             $show_reason        = $audit['audit_reason'];
             $show_time          = date('Y-m-d H:i:s',$audit['audit_time']);
         }
+
+        $op_cost_type           = M('op_cost_type')->getField('name',true);
+        //求未填写合格供方的数据(辅导员和op_c(ost_type表中的数据不用填写合格供方)
+        $noSupplierResData      = array();
+        foreach($jiesuan as $k=>$v){
+            if($v['type'] != 2 &&  !in_array($v['title'],$op_cost_type) && !$v['supplier_id']){
+                $noSupplierResData[] = $v;
+            }
+        }
+
         $op['showstatus']       = $show;
         $op['show_user']        = $show_user;
         $op['show_time']        = $show_time;
         $op['show_reason']      = $show_reason;
 
+        $this->noSupplierResNum = count($noSupplierResData);
         $is_dijie               = M('op')->where(array('dijie_opid'=>$opid))->getField('op_id');
         $this->is_dijie         = $is_dijie?$is_dijie:0;
         $dijie_shouru           = $mod->get_landAcquisitionAgency_money($op,P::REQ_TYPE_SETTLEMENT);   //801 获取地接结算收入
@@ -663,8 +674,8 @@ class FinanceController extends BaseController {
         //$this->cost_type        = C('COST_TYPE');
         $this->is_zutuan        = $is_zutuan;
         $this->dijie_shouru     = $dijie_shouru?$dijie_shouru:0;
-        $this->op_cost_type     = M('op_cost_type')->getField('name',true);
-        $this->op_cost_type_str = implode(',',$this->op_cost_type);
+        $this->op_cost_type     = $op_cost_type;
+        $this->op_cost_type_str = implode(',',$op_cost_type);
         //检查先回款,在做结算  //已回款金额
         $money_back             = check_money_back($opid);
         $this->yihuikuan        = $money_back;
@@ -706,7 +717,6 @@ class FinanceController extends BaseController {
 				}
 			}	
 			
-			
 			if($settlement){
 				M('op_settlement')->data($info)->where(array('id'=>$settlement))->save();
 			}else{
@@ -734,8 +744,10 @@ class FinanceController extends BaseController {
 
 	//@@@NODE-3###appsettlement###结算申请###
 	public function appsettlement(){
-		$op_id = I('opid');
+		$op_id 					= I('opid');
 		if(isset($_POST['dosubmit'])){	
+			$noSupplierResNum	= I('noSupplierResNum');
+		if ($noSupplierResNum) { $this->error('您有结算项未填写合格供方'); }
 			//判断是否重复申请
 			$ifok = M('op_settlement')->where(array('op_id'=>$op_id))->find();
 			if($ifok['audit_status']!=1){

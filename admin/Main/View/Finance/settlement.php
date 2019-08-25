@@ -75,6 +75,7 @@
                                         <form method="post" action="{:U('Finance/appsettlement')}" name="myform" id="appsubmint">
                                         <input type="hidden" name="dosubmit" value="1">
                                         <input type="hidden" name="opid" value="{$op.op_id}">
+                                        <input type="hidden" name="noSupplierResNum" value="{$noSupplierResNum}">
                                         </form>
                                         
                                         <div id="formsbtn" style="padding-bottom:20px; margin-top:10px; color:#ff3300;">请确认各项结算费用是否正确，请务必确认，不可反复提交申请</div>
@@ -234,6 +235,8 @@
 
 	//检查是否全部回款
     function check_huikuan(){
+        var noSupplierResNum = {$noSupplierResNum};
+        if(noSupplierResNum){ art_show_msg('您有结算项未填写合格供方',3); return false; }
         var yihuikuan  = <?php echo $yihuikuan?$yihuikuan:0; ?>;
         var is_dijie   = {$is_dijie};
 
