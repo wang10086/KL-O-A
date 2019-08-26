@@ -513,22 +513,24 @@ class FinanceController extends BaseController {
 		}
 		
 		if($num){
-			$record = array();
-			$record['op_id']   = $opid;
-			$record['optype']  = 8;
-			$record['explain'] = '保存预算';
+			$record                 = array();
+			$record['op_id']        = $opid;
+			$record['optype']       = 8;
+			$record['explain']      = '保存预算';
 			op_record($record);
 
-            $auth_line      = M('op_auth')->where(array('op_id'=>$opid))->find();
-            $auth           = array();
-            $auth['line']   = cookie('userid');
-            $auth['yusuan'] = cookie('userid');
-            $auth['material'] = cookie('userid');
-            if ($auth_line){
-                M('op_auth')->where(array('op_id'=>$opid))->save($auth);
-            }else{
-                $auth['op_id'] = $opid;
-                M('op_auth')->add($auth);
+            if (!in_array(session('userid'),array(1,11))){
+                $auth_line          = M('op_auth')->where(array('op_id'=>$opid))->find();
+                $auth               = array();
+                $auth['line']       = cookie('userid');
+                $auth['yusuan']     = cookie('userid');
+                $auth['material']   = cookie('userid');
+                if ($auth_line){
+                    M('op_auth')->where(array('op_id'=>$opid))->save($auth);
+                }else{
+                    $auth['op_id']  = $opid;
+                    M('op_auth')->add($auth);
+                }
             }
 
 			$this->success('保存成功！');   
