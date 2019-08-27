@@ -130,7 +130,7 @@ class SupplierResController extends BaseController {
             if (!$info['city'])         $this->error('供方所在城市不能为空!');
             if (!$info['contact'])      $this->error('供方联系人不能为空!');
             if (!$info['tel'])          $this->error('供方联系电话不能为空!');
-            if (!$info['desc'])         $this->error('供方介绍不能为空!');
+            //if (!$info['desc'])         $this->error('供方介绍不能为空!');
 			
             if(!$id){
 				$info['input_uid']      = session('userid');
@@ -154,8 +154,11 @@ class SupplierResController extends BaseController {
             }
             	
         }else{
-            $this->kinds                = M('supplierkind')->where(array('type'=>P::RES_TYPE_SUPPLIER))->select();
-            
+            $where                      = array();
+            $where['type']              = P::RES_TYPE_SUPPLIER;
+            $where['id']                = array('not in',array(2,6)); //排除专家辅导员 和 研究所台站
+            $this->kinds                = M('supplierkind')->where($where)->select();
+
             if (!$id) {
                 $this->row              = false;
             } else {

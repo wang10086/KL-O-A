@@ -27,8 +27,15 @@
                                 <div class="box-header">
                                     <h3 class="box-title">{$_action_}</h3>
                                 </div><!-- /.box-header -->
+                                <div class="form-group col-md-12 mt10">
+                                    <div class="callout callout-danger mb-0">
+                                        <h4>提示！</h4>
+                                        <p>1、供方名称应完整、准确，否则影响报销事项！</p>
+                                        <p>2、“供方分类”应准确，否则影响结算时对供方选择！</p>
+                                    </div>
+                                </div>
+
                                 <div class="box-body">
-                                    
                                     <input type="hidden" name="dosubmit" value="1" />
                                     <input type="hidden" name="referer" value="<?php echo $_SERVER['HTTP_REFERER']; ?>" />
                                     <if condition="$row"><input type="hidden" name="id" value="{$row.id}" /></if>
