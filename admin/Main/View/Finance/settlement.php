@@ -128,7 +128,7 @@
             '<input type="text" class="form-control amount" name="costacc['+i+'][amount]" value="1">' +
             '<input type="text" class="form-control totalval" name="costacc['+i+'][total]"  value="0">' +
             '<select class="form-control"  name="costacc['+i+'][type]" id="'+i+'_costacc_type" onchange="set_supplier_null('+i+')">' +
-            '<foreach name="cost_type" key="k" item="v">'+
+            '<foreach name="kind" key="k" item="v">'+
             '<option value="{$k}">{$v}</option>'+
             '</foreach>'+
             '</select>' +
