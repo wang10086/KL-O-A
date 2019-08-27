@@ -13,7 +13,7 @@ class SupplierResController extends BaseController {
     protected $_pagedesc_               = '录入、修改、删除合格供方资源数据';
      
     // @@@NODE-3###res###合格供方列表###
-    public function res () {
+    public function res() {
         $this->title('合格供方');
         $pin                            = I('pin') ? I('pin') : 0 ;
 		$key                            = trim(I('key'));
@@ -108,7 +108,6 @@ class SupplierResController extends BaseController {
     // @@@NODE-3###addres###新建合格供方###
     public function addres(){
         $this->title('新建/修改合格供方');
-        
         $db                             = M('supplier');
         $id                             = I('id', 0);
 
@@ -250,12 +249,20 @@ class SupplierResController extends BaseController {
     // @@@NODE-3###delreskind###删除合格供方分类###
     public function delreskind(){
         $this->title('删除合格供方分类');
-        $db = M('supplierkind');
-        $id = I('id', -1);
-        $iddel = $db->delete($id);
+        $db         = M('supplierkind');
+        $id         = I('id', -1);
+        $iddel      = $db->delete($id);
         $this->success('删除成功！');
     }
-    
+
+    //资源统计
+    public function chart(){
+        $this->title('资源统计');
+        $pin                    = I('pin',0);
+
+        $this->pin              = $pin;
+        $this->display();
+    }
     
 
     

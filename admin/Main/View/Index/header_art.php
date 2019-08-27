@@ -8,7 +8,9 @@
         <!-- bootstrap 3.0.2 -->
         <link href="__HTML__/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
         <!-- font Awesome -->
-        <link href="__HTML__/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
+        <!--<link href="__HTML__/css/font-awesome.min.css" rel="stylesheet" type="text/css" />-->
+        <!-- font Awesome 4.7.0-->
+        <link href="__HTML__/css/font-awesome-4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
         <!-- Ionicons -->
         <link href="__HTML__/css/ionicons.min.css" rel="stylesheet" type="text/css" />
         <!-- jquery-ui style -->

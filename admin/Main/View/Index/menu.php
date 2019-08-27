@@ -223,6 +223,10 @@
                                     </ul>
                                 </li>
                                 </if>
+
+                                <if condition="rolemenu(array('SupplierRes/chart'))">
+                                    <li><a href="{:U('SupplierRes/chart')}"><i class="fa fa-bar-chart treeview {:on('SupplierRes/chart')} {:on('SupplierRes')}"></i> 资源统计</a></li>
+                                </if>
                             </ul>
                         </li>
 
