@@ -21,24 +21,23 @@
                         <div class="col-xs-12">
 
                             <div class="btn-group" id="catfont" style="padding-bottom:5px;">
-                                <?php if($prveyear>2018){ ?>
-                                    <a href="{:U('SupplierRes/chart',array('year'=>$prveyear,'month'=>'01','pin'=>$pin))}" class="btn btn-default" style="padding:8px 18px;">上一年</a>
+                                <?php if($prveyear>2019){ ?>
+                                    <a href="{:U('SupplierRes/chart_supplier',array('year'=>$prveyear,'month'=>'01'))}" class="btn btn-default" style="padding:8px 18px;">上一年</a>
                                 <?php } ?>
                                 <?php
                                     for($i=1;$i<13;$i++){
-                                        $par            = array();
-                                        $par['year']    = $year;
-                                        $par['month']   = str_pad($i,2,"0",STR_PAD_LEFT);
-                                        $par['pin']     = $pin;
+                                        $par = array();
+                                        $par['year']  = $year;
+                                        $par['month'] = str_pad($i,2,"0",STR_PAD_LEFT);
                                         if($month==str_pad($i,2,"0",STR_PAD_LEFT)){
-                                            echo '<a href="'.U('SupplierRes/chart',$par).'" class="btn btn-info" style="padding:8px 18px;">'.$i.'月</a>';
+                                            echo '<a href="'.U('SupplierRes/chart_supplier',$par).'" class="btn btn-info" style="padding:8px 18px;">'.$i.'月</a>';
                                         }else{
-                                            echo '<a href="'.U('SupplierRes/chart',$par).'" class="btn btn-default" style="padding:8px 18px;">'.$i.'月</a>';
+                                            echo '<a href="'.U('SupplierRes/chart_supplier',$par).'" class="btn btn-default" style="padding:8px 18px;">'.$i.'月</a>';
                                         }
                                     }
                                 ?>
                                 <?php if($year<date('Y')){ ?>
-                                    <a href="{:U('SupplierRes/chart',array('year'=>$nextyear,'month'=>'01','pin'=>$pin))}" class="btn btn-default" style="padding:8px 18px;">下一年</a>
+                                    <a href="{:U('SupplierRes/chart_supplier',array('year'=>$nextyear,'month'=>'01'))}" class="btn btn-default" style="padding:8px 18px;">下一年</a>
                                 <?php } ?>
                             </div>
 
@@ -55,46 +54,31 @@
 
                                 	<table class="table table-bordered dataTable fontmini" id="tablelist">
                                         <tr role="row" class="orders" >
-                                        	<th class="sorting" data="name">资源名称</th>
-                                            <th class="sorting" data="kind"></th>
-                                            <th class="sorting" data="country"></th>
-                                            <th class="sorting" data="prov"></th>
+                                        	<th class="taskOptions" rowspan="2">供方类型</th>
+                                            <th class="taskOptions" colspan="4">{$year}年01月-{$month}月累计</th>
+                                            <th class="taskOptions" colspan="4">{$year}年{$month}月累计</th>
                                         </tr>
-                                        <foreach name="lists" item="row">                      
+                                        <tr class="orders">
+                                            <th class="taskOptions">项目数</th>
+                                            <th class="taskOptions">结算金额</th>
+                                            <th class="taskOptions">报销笔数</th>
+                                            <th class="taskOptions">报销金额</th>
+                                            <th class="taskOptions">项目数</th>
+                                            <th class="taskOptions">结算金额</th>
+                                            <th class="taskOptions">报销笔数</th>
+                                            <th class="taskOptions">报销金额</th>
+                                        </tr>
+                                        <foreach name="supplierKinds" item="row">
                                         <tr>
-                                            <td><a href="{:U('SupplierRes/res_view', array('id'=>$row['id']))}">{$row.name}</a></td>
-                                            <td><?php echo $reskind[$row['kind']]; ?></td>
-                                            <td>{$row.country}</td>
-                                            <td>{$row.prov}</td>
-                                            <td>{$row.city}</td>
-                                            <td><if condition="$row['input_time']">{$row.input_time|date='Y-m-d H:i:s',###}</if></td>
-                                            <td>{$row.input_uname}</td>
-                                            <?php 
-                                            if($row['audit_status']== P::AUDIT_STATUS_NOT_AUDIT){
-                                                $show  = '<td>等待审批</td>';	
-                                            }else if($row['audit_status'] == P::AUDIT_STATUS_PASS){
-                                                $show  = '<td><span class="green">通过</span></td>';	
-                                            }else if($row['audit_status'] == P::AUDIT_STATUS_NOT_PASS){
-                                                $show  = '<td><span class="red">不通过</span></td>';	
-                                            }
-                                            echo $show;
-                                            ?>
-                                            
-                                            <if condition="rolemenu(array('SupplierRes/addres'))">
-                                            <td class="taskOptions">
-                                            
-                                            <button onClick="javascript:window.location.href='{:U('SupplierRes/addres',array('id'=>$row['id']))}';" title="修改" class="btn btn-info btn-smsm"><i class="fa fa-pencil"></i></button>
-                                            
-                                            <!--
-                                            <button onClick="openform('{:U('Rights/grant',array('res'=>'cas_res','resid'=>$row['id']))}');" title="修改" class="btn btn-info btn-smsm"><i class="fa fa-pencil"></i></button>
-                                            -->
-                                            </td>
-                                            </if>
-                                            <if condition="rolemenu(array('SupplierRes/delres'))">
-                                            <td class="taskOptions">
-                                            <button onClick="javascript:ConfirmDel('{:U('SupplierRes/delres',array('id'=>$row['id']))}')" title="删除" class="btn btn-warning btn-smsm"><i class="fa fa-times"></i></button>
-                                            </td>
-                                            </if>
+                                            <td class="taskOptions"><a href="javascript:;">{$row}</a></td>
+                                            <td class="taskOptions"></td>
+                                            <td class="taskOptions"></td>
+                                            <td class="taskOptions"></td>
+                                            <td class="taskOptions"></td>
+                                            <td class="taskOptions"></td>
+                                            <td class="taskOptions"></td>
+                                            <td class="taskOptions"></td>
+                                            <td class="taskOptions"></td>
                                         </tr>
                                         </foreach>		
                                         

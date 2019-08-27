@@ -258,13 +258,34 @@ class SupplierResController extends BaseController {
     //资源统计
     public function chart(){
         $this->title('资源统计');
-        $pin                    = I('pin',0);
+        $year                   = I('year',date('Y'));
+        $month                  = I('month',date('m'));
+        $pin                    = I('pin',1);
 
+        $this->month  		    = $month;
+        $this->year 		    = $year;
+        $this->prveyear		    = $year-1;
+        $this->nextyear		    = $year+1;
         $this->pin              = $pin;
         $this->display();
     }
-    
 
+    //资源统计
+    public function chart_supplier(){
+        $this->title('资源统计');
+        $year                   = I('year',date('Y'));
+        $month                  = I('month',date('m'));
+        $where                  = array();
+        $where['id']            = array('not in',array(2,6));
+        $supplierKinds          = M('supplierkind')->where($where)->getField('id,name');
+
+        $this->supplierKinds    = $supplierKinds;
+        $this->month  		    = $month;
+        $this->year 		    = $year;
+        $this->prveyear		    = $year-1;
+        $this->nextyear		    = $year+1;
+        $this->display();
+    }
     
     
     
