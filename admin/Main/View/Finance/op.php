@@ -121,7 +121,19 @@
 	function add_costacc(){
 		var i = parseInt($('#costacc_val').text())+1;
 
-		var html = '<div class="userlist cost_expense" id="costacc_'+i+'"><span class="title"></span><input type="text" class="form-control" name="costacc['+i+'][title]"><input type="text"  class="form-control cost" name="costacc['+i+'][unitcost]"  value="0"><input type="text" class="form-control amount" name="costacc['+i+'][amount]" value="1"><input type="text" class="form-control totalval" name="costacc['+i+'][total]"  value="0"><select class="form-control"  name="costacc['+i+'][type]" ><option value="1">物资</option><option value="2">专家辅导员</option><option value="3">合格供方</option><option value="4">其他</option></select><input type="text" class="form-control longinput" name="costacc['+i+'][remark]"><a href="javascript:;" class="btn btn-danger btn-flat" onclick="delbox(\'costacc_'+i+'\')">删除</a></div>';
+		var html = '<div class="userlist cost_expense" id="costacc_'+i+'">' +
+            '<span class="title"></span>' +
+            '<input type="text" class="form-control" name="costacc['+i+'][title]">' +
+            '<input type="text"  class="form-control cost" name="costacc['+i+'][unitcost]"  value="0">' +
+            '<input type="text" class="form-control amount" name="costacc['+i+'][amount]" value="1">' +
+            '<input type="text" class="form-control totalval" name="costacc['+i+'][total]"  value="0">' +
+            '<select class="form-control"  name="costacc['+i+'][type]" >' +
+            '<foreach name="kind" key="k" item="v">'+
+            '<option value="{$k}">{$v}</option>'+
+            '</foreach>'+
+            '</select><input type="text" class="form-control longinput" name="costacc['+i+'][remark]">' +
+            '<a href="javascript:;" class="btn btn-danger btn-flat" onclick="delbox(\'costacc_'+i+'\')">删除</a>' +
+            '</div>';
 		$('#costacc').append(html);	
 		$('#costacc_val').html(i);
 		orderno();
