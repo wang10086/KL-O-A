@@ -3484,7 +3484,7 @@ function get_role_link($roleid,$rtype = 0){
 
     /**
      * Finance(Controller)
-     * 获取当月回款及历史欠款信息(汇款及时率)
+     * 获取当月回款及历史欠款信息(回款及时率)
      * @param $lists
      * @param $start_time
      * @param $end_time
@@ -3497,13 +3497,19 @@ function get_role_link($roleid,$rtype = 0){
         $data['this_month']                 = 0;
         $data['history']                    = 0;
         $arr_opids                          = array_column($lists,'op_id');
+        $stu_arr                            = array(
+            '2'                             => "<span class='green'>已回款</span>",
+            '1'                             => "<span class='yellow'>回款中</span>",
+            '0'                             => "<span class='red'>未回款</span>"
+        );
         foreach ($lists as $k=>$v){
             if (!$v['cid']) $contract_id    = M('contract')->where(array('op_id'=>$v['op_id']))->getField('id');
             $v['cid']                       = $v['cid']?$v['cid']:($contract_id?$contract_id:0);
             $show_times                     = get_array_repeats($arr_opids,$v['op_id']);
             $no_sum                         = $v['no'].'/'.$show_times;
             $v['no_sum']                    = $no_sum;
-            if ($v['status']==2){
+            $v['stu']                       = $stu_arr[$v['status']];
+            /*if ($v['status']==2){
                 $v['stu']                   = "<span class='green'>已回款</span>";
             }elseif ($v['status']==1){
                 $v['stu']                   = "<span class='yellow'>回款中</span>";
@@ -3518,16 +3524,21 @@ function get_role_link($roleid,$rtype = 0){
                 }else{
                     $v['stu']               = "<font color='#999999'>未考核</font>";
                 }
+            }*/
+
+            if ($v['status']==0 && ($v['return_time'] < $start_time)){ //历史欠款
+                $data['history_list'][] = $v;
+                $data['history']        += $v['amount'];
+                $data['history_return'] += $v['pay_amount'];
             }
 
-            if (($v['return_time'] > $start_time && $v['return_time'] < $end_time && $v['status'] != 2) || ($v['pay_time'] > $start_time && $v['pay_time'] < $end_time)){
+            if (($v['return_time'] > $start_time && $v['return_time'] < $end_time) || ($v['pay_time'] > $start_time && $v['pay_time'] < $end_time)){
                 $data['this_month_list'][]  = $v;
                 $data['this_month']         += $v['amount'];
-                if ($v['pay_time'] > $start_time && $v['pay_time'] < $end_time){
+                if (($v['pay_time'] >= $start_time && $v['pay_time'] < $end_time) || ($v['pay_time'] < $start_time && in_array($v['status'],array(1,2)))){
                     $data['this_month_return']  += $v['pay_amount'];
                 }
             }
-
         }
         $data['money_back_average']         = ($data['history']+$data['this_month'])?(round($data['this_month_return']/($data['history']+$data['this_month']),4)*100).'%':'100%';
         return $data;

@@ -440,7 +440,8 @@ class BaseController extends Controller {
                         $paydata['status']	= 1;
                     }
                     $paydata['pay_amount']	= $pay_amount;
-                    $paydata['pay_time']		= $dstdata['huikuan_time'];
+                    //$paydata['pay_time']		= $dstdata['huikuan_time'];
+                    $paydata['pay_time']		= NOW_TIME;
 
                     M('contract_pay')->where(array('id'=>$dstdata['payid']))->data($paydata)->save();
 
