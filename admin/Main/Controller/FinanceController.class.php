@@ -697,7 +697,7 @@ class FinanceController extends BaseController {
 		$referer		= I('referer');
 		$settlement		= I('settlement',0);
 		$num			= 0;
-		
+
 		//保存预算
 		if($opid && $costacc){
 

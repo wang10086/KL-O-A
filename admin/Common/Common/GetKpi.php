@@ -2600,6 +2600,21 @@ function get_yw_department(){
         return $times;
     }
 
+    /**
+     * 获取从年初到当前月份的周期
+     * @param $year
+     * @param $month
+     * @return array
+     */
+    function year_to_now_month($year,$month){
+        $beginTime                  = strtotime(($year-1).'1226');
+        $endTime                    = strtotime($year.$month.'26');
+        $data                       = array();
+        $data['beginTime']          = $beginTime;
+        $data['endTime']            = $endTime;
+        return $data;
+    }
+
     //员工流失率
     function get_person_loss($start_time,$end_time){
         /*指标=（重点关注员工）离职人数/所有重点关注员工人数×100%

@@ -51,6 +51,7 @@
                                 <div class="box-body">
 
                                     <include file="navigate" />
+                                    <p>提示：以下数据从已完成结算和报销数据中采集,每月周期为上月26日-本月25日！</p>
 
                                 	<table class="table table-bordered dataTable fontmini" id="tablelist">
                                         <tr role="row" class="orders" >

@@ -273,11 +273,14 @@ class SupplierResController extends BaseController {
     //资源统计
     public function chart_supplier(){
         $this->title('资源统计');
+        $mod                    = D('Supplier');
         $year                   = I('year',date('Y'));
         $month                  = I('month',date('m'));
         $where                  = array();
         $where['id']            = array('not in',array(2,6));
         $supplierKinds          = M('supplierkind')->where($where)->getField('id,name');
+
+        $data                   = $mod -> get_supplier_chart($supplierKinds,$year,$month);
 
         $this->supplierKinds    = $supplierKinds;
         $this->month  		    = $month;

@@ -127,13 +127,8 @@ class ContractController extends BaseController {
 			
 			//保存分期信息
 			//save_payment($cid,$payment);
-			
-			if($save) {
-				$this->success('保存成功！',$referer);
-			} else {
-				$this->error('保存失败：' . $db->getError());
-			}
-            	
+
+            $this->success('保存成功！',$referer);
         }else{
 			
             if (!$id) {
