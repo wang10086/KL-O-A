@@ -1840,5 +1840,10 @@ class AjaxController extends Controller {
         $data['opid']               = $opid;
         $this->ajaxReturn($data);
     }
+
+    //初始化(更新所有人员KPI信息)
+    public function auto_init_kpi(){
+        auto_init_kpi();
+    }
 }
 

@@ -5393,7 +5393,7 @@ function get_half_year_cycle($year,$month){
         $where['id']                = array('gt',10);
         $userlist                   = M('account')->field('id,nickname,roleid,postid,kpi_cycle')->where($where)->select();
 
-        if (!cookie('autoInitKpiTime')){
+        //if (!cookie('autoInitKpiTime')){
             foreach($userlist as $k=>$v){
                 //获取该用户KPI
                 $year               = date('Y');
@@ -5404,5 +5404,8 @@ function get_half_year_cycle($year,$month){
                 //更新数据
                 updatekpi($yearMonth,$user_id);
             }
-        }
+        //}
+        $test           = array();
+        $test['time']   = NOW_TIME;
+        M('aatest')->add($test);
     }
