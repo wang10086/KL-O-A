@@ -55,13 +55,13 @@
                                 </div><!-- /.box-header -->
                                 <div class="box-body">
                                     <?php if($is_zutuan == 1){ ?>
-                                        <?php if ($dijie_shouru && !in_array($audit['dst_status'],array(1,3))){ ?>
+                                        <?php if (($dijie_shouru && !in_array($audit['dst_status'],array(1,3))) || session('userid')==11){ ?>
                                             <include file="settlement_edit" />
                                         <?php }else{ ?>
                                             <include file="settlement_read" />
                                         <?php } ?>
                                     <?php }else{ ?>
-                                        <?php if(!in_array($audit['dst_status'],array(1,3)) || cookie('userid')==11){ ?>
+                                        <?php if(!in_array($audit['dst_status'],array(1,3)) || session('userid')==11){ ?>
                                             <include file="settlement_edit" />
                                         <?php }else{ ?>
                                             <include file="settlement_read" />

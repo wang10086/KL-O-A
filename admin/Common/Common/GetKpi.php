@@ -1420,7 +1420,7 @@ function get_sum_gross_profit($userids,$beginTime,$endTime){
             $list2                          = M('contract')->where(array('op_id'=>$value['op_id'],'status'=>1))->find(); //查看截止当期有无合同
 
             if ($list){
-                $contract_list[]    = $list;
+                $contract_list[]               = $list;
                 $op_list[$key]['contract_confirm_time'] = $list['confirm_time'];
                 $op_list[$key]['contract_stu'] = "<span class='green'>有合同</span>";
             }elseif (!$list && $list2){
