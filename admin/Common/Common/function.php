@@ -5386,3 +5386,23 @@ function get_half_year_cycle($year,$month){
         }
     }
 
+    //初始化(更新所有人员KPI信息)
+    function auto_init_kpi(){
+        $where                      = array();
+        $where['status']		    = 0;
+        $where['id']                = array('gt',10);
+        $userlist                   = M('account')->field('id,nickname,roleid,postid,kpi_cycle')->where($where)->select();
+
+        if (!cookie('autoInitKpiTime')){
+            foreach($userlist as $k=>$v){
+                //获取该用户KPI
+                $year               = date('Y');
+                $month              = date('m');
+                $yearMonth          = get_kpi_yearMonth($year,$month);
+                $user_id	        = $v['id'];
+                cookie('autoInitKpiTime',1,3600);
+                //更新数据
+                updatekpi($yearMonth,$user_id);
+            }
+        }
+    }

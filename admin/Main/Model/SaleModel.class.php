@@ -95,8 +95,8 @@ class SaleModel extends Model{
         $sum_shouru                     = 0;
         $sum_maoli                      = 0;
         $sum_low_gross                  = 0;
-        $sum_opids                      = '';
-        $sum_group_ids                  = '';
+        $sum_opids                      = array();
+        $sum_group_ids                  = array();
         $sum_num                        = 0; //项目数
         $data                           = array();
         $rowspan                        = 1;
@@ -105,8 +105,8 @@ class SaleModel extends Model{
             $shouru                     = 0;
             $maoli                      = 0;
             $low_gross                  = 0;
-            $opids                      = '';
-            $group_ids                  = '';
+            $opids                      = array();
+            $group_ids                  = array();
             $num                        = 0;
             foreach ($settlements as $key => $value) {
                 if ($value['req_uid'] == $uid) {

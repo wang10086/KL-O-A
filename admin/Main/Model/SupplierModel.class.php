@@ -18,11 +18,24 @@ class SupplierModel extends Model{
         $year_sett_lists                = $this->get_cycle_settlement_lists($yearToMonthCycle['beginTime'],$yearToMonthCycle['endTime']);
         $month_opids                    = array_unique(array_column($month_sett_lists,'op_id'));
         $year_opids                     = array_unique(array_column($year_sett_lists,'op_id'));
-
-        $month_lists                    = $this->get_costacc_lists($month_opids);
-        $year_lists                     = $this->get_costacc_lists($year_opids);
+        $month_costacc_lists            = $this->get_costacc_lists($month_opids); //月度结算详情列表
+        $year_costacc_lists             = $this->get_costacc_lists($year_opids);  //年度结算详情列表
+        $month_expense_list             = $this->get_expense_lists($month_opids); //报销单信息
+        $year_expense_list              = $this->get_expense_lists($year_opids);  //报销单信息
+        $monthOpids                     = array();
+        $yearOpids                      = array();
+        $month_op_num                   = 0;
+        $year_op_num                    = 0;
+        $month_total                    = 0;
+        $year_total                     = 0;
+        /*$month_expense_num              = 0; //报销笔数
+        $year_expense_num               = 0; //报销笔数*/
+        $month_expense_title            = 0; //报销金额
+        $year_expense_title             = 0; //报销金额
         foreach ($supplierKinds as $k=>$v){
+            foreach ($month_costacc_lists as $mk=>$mv){
 
+            }
         }
     }
 
@@ -52,6 +65,20 @@ class SupplierModel extends Model{
         $where['op_id']                 = array('in',$opids);
         $where['status']                = 2; //结算
         $lists                          = M('op_costacc')->where($where)->select();
+        return $lists;
+    }
+
+    /**
+     * 报销单信息
+     * @param $opids
+     * @return mixed
+     */
+    public function get_expense_lists($opids){
+        $where                          = array();
+        $where['b.audit_status']        = 1;
+        $where['d.op_id']               = array('in',$opids);
+        $field                          = 'b.sum,b.sum_chinese,b.description,b.payee,b.bank_name,b.card_num,b.bx_user,d.*';
+        $lists                          = M()->table('__BAOXIAO_DETAIL__ as d')->join('__BAOXIAO__ as b on b.id=d.bx_id','left')->where($where)->field($field)->select();
         return $lists;
     }
 

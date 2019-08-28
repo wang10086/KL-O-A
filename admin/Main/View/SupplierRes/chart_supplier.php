@@ -56,24 +56,20 @@
                                 	<table class="table table-bordered dataTable fontmini" id="tablelist">
                                         <tr role="row" class="orders" >
                                         	<th class="taskOptions" rowspan="2">供方类型</th>
-                                            <th class="taskOptions" colspan="4">{$year}年01月-{$month}月累计</th>
-                                            <th class="taskOptions" colspan="4">{$year}年{$month}月累计</th>
+                                            <th class="taskOptions" colspan="3">{$year}年01月-{$month}月累计</th>
+                                            <th class="taskOptions" colspan="3">{$year}年{$month}月累计</th>
                                         </tr>
                                         <tr class="orders">
                                             <th class="taskOptions">项目数</th>
                                             <th class="taskOptions">结算金额</th>
-                                            <th class="taskOptions">报销笔数</th>
                                             <th class="taskOptions">报销金额</th>
                                             <th class="taskOptions">项目数</th>
                                             <th class="taskOptions">结算金额</th>
-                                            <th class="taskOptions">报销笔数</th>
                                             <th class="taskOptions">报销金额</th>
                                         </tr>
                                         <foreach name="supplierKinds" item="row">
                                         <tr>
                                             <td class="taskOptions"><a href="javascript:;">{$row}</a></td>
-                                            <td class="taskOptions"></td>
-                                            <td class="taskOptions"></td>
                                             <td class="taskOptions"></td>
                                             <td class="taskOptions"></td>
                                             <td class="taskOptions"></td>
