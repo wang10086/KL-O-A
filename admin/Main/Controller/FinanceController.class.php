@@ -658,7 +658,8 @@ class FinanceController extends BaseController {
         $is_dijie               = M('op')->where(array('dijie_opid'=>$opid))->getField('op_id');
         $this->is_dijie         = $is_dijie?$is_dijie:0;
         $dijie_shouru           = $mod->get_landAcquisitionAgency_money($op,P::REQ_TYPE_SETTLEMENT);   //801 获取地接结算收入
-        $this->kind				= M('supplierkind')->getField('id,name',true);
+        $this->kind				= M('supplierkind')->where(array('id'=>array('neq',2)))->getField('id,name',true);
+        $this->kind_all		    = M('supplierkind')->getField('id,name',true);
         //$this->costtype			= array('1'=>'其他','2'=>'专家辅导员','3'=>'合格供方','4'=>'物资');
         $budget_list            = M('op_budget')->where(array('op_id'=>$opid))->find();
         $this->should_back_money= $is_dijie?$settlement['shouru']:($budget_list['should_back_money']?$budget_list['should_back_money']:$budget['shouru']); //回款金额(带入结算收入)

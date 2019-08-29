@@ -21,7 +21,7 @@
                         <td width="150">&yen; {$v.unitcost}</td>
                         <td width="150">{$v.amount}</td>
                         <td width="150">&yen; {$v.total}</td>
-                        <td width="150"><?php echo $kind[$v['type']] ?></td>
+                        <td width="150"><?php echo $kind_all[$v['type']] ?></td>
                         <td>{$v.remark}</td>
                     </tr>
 

@@ -31,9 +31,10 @@
                     <input type="text" class="form-control amount" name="costacc[2222{$k}][amount]" value="{$v.amount}">
                     <input type="text" class="form-control totalval" name="costacc[2222{$k}][total]" value="{$v.total}">
                     <select class="form-control" name="costacc[2222{$k}][type]" id="2222{$k}_costacc_type" onchange="set_supplier_null(2222{$k})">
-                        <foreach name="kind" key="kk" item="vv">
-                            <option value="{$kk}" <?php if ($kk == $v['type']) { echo 'selected'; } ?>>{$vv}</option>
-                        </foreach>
+                        <!--<foreach name="kind" key="kk" item="vv">
+                            <option value="{$kk}" <?php /*if ($kk == $v['type']) { echo 'selected'; } */?>>{$vv}</option>
+                        </foreach>-->
+                        <option value="2" selected>专家辅导员</option>
                     </select>
                     <input type="hidden" class="form-control" name="costacc[2222{$k}][supplier_id]" value="{$v.supplier_id}" id="2222{$k}_supplierRes_id">
                     <input type="text" class="form-control supplier-name-class" name="costacc[2222{$k}][supplier_name]" value="{$v.supplier_name}" id="2222{$k}_supplierRes_name" onfocus="get_supplierRes(2222{$k})">
@@ -47,9 +48,10 @@
                     <input type="text" class="form-control amount" name="costacc[2222{$k}][amount]" value="{$v.amount}" readonly>
                     <input type="text" class="form-control totalval" name="costacc[2222{$k}][total]" value="{$v.total}" readonly>
                     <select class="form-control" name="costacc[2222{$k}][type]" id="2222{$k}_costacc_type" onchange="set_supplier_null(2222{$k})">
-                        <foreach name="kind" key="kk" item="vv">
-                            <option value="{$kk}" <?php if ($kk == $v['type']) { echo 'selected'; } ?>>{$vv}</option>
-                        </foreach>
+                        <!--<foreach name="kind" key="kk" item="vv">
+                            <option value="{$kk}" <?php /*if ($kk == $v['type']) { echo 'selected'; } */?>>{$vv}</option>
+                        </foreach>-->
+                        <option value="2" selected>专家辅导员</option>
                     </select>
                     <input type="hidden" class="form-control" name="costacc[2222{$k}][supplier_id]" value="{$v.supplier_id}" id="2222{$k}_supplierRes_id">
                     <input type="text" class="form-control supplier-name-class" name="costacc[2222{$k}][supplier_name]" value="{$v.supplier_name}" id="2222{$k}_supplierRes_name" onfocus="get_supplierRes(2222{$k})" readonly disabled>
@@ -124,9 +126,10 @@
                     <input type="text" class="form-control amount" name="costacc[7777{$k}][amount]" value="{$v.amount}">
                     <input type="text" class="form-control totalval" name="costacc[7777{$k}][total]" value="{$v.total}">
                     <select class="form-control" name="costacc[7777{$k}][type]" id="7777{$k}_costacc_type" onchange="set_supplier_null(7777{$k})">
-                        <foreach name="kind" key="kk" item="vv">
-                            <option value="{$kk}" <?php if ($v['type'] == $kk) { echo "selected"; } ?>>{$vv}</option>
-                        </foreach>
+                        <!--<foreach name="kind" key="kk" item="vv">
+                            <option value="{$kk}" <?php /*if ($v['type'] == $kk) { echo "selected"; } */?>>{$vv}</option>
+                        </foreach>-->
+                        <option value="2" selected>专家辅导员</option>
                     </select>
                     <input type="hidden" class="form-control" name="costacc[7777{$k}][supplier_id]" value="{$v.supplier_id}" id="7777{$k}_supplierRes_id">
                     <input type="text" class="form-control supplier-name-class" name="costacc[7777{$k}][supplier_name]" value="{$v.supplier_name}" id="7777{$k}_supplierRes_name" onfocus="get_supplierRes(7777{$k})">
@@ -142,9 +145,10 @@
                     <input type="text" class="form-control amount" name="costacc[7777{$k}][amount]" value="{$v.amount}" readonly>
                     <input type="text" class="form-control totalval" name="costacc[7777{$k}][total]" value="{$v.total}" readonly>
                     <select class="form-control" name="costacc[7777{$k}][type]" id="7777{$k}_costacc_type" onchange="set_supplier_null(7777{$k})">
-                        <foreach name="kind" key="kk" item="vv">
-                            <option value="{$kk}" <?php if ($v['type'] == $kk) { echo "selected"; } ?>>{$vv}</option>
-                        </foreach>
+                        <!--<foreach name="kind" key="kk" item="vv">
+                            <option value="{$kk}" <?php /*if ($v['type'] == $kk) { echo "selected"; } */?>>{$vv}</option>
+                        </foreach>-->
+                        <option value="2" selected>专家辅导员</option>
                     </select>
                     <input type="hidden" class="form-control" name="costacc[7777{$k}][supplier_id]" value="{$v.supplier_id}" id="7777{$k}_supplierRes_id">
                     <input type="text" class="form-control supplier-name-class" name="costacc[7777{$k}][supplier_name]" value="{$v.supplier_name}" id="7777{$k}_supplierRes_name" onfocus="get_supplierRes(7777{$k})" readonly disabled>
