@@ -67,15 +67,15 @@
                                             <th class="taskOptions">结算金额</th>
                                             <th class="taskOptions">报销金额</th>
                                         </tr>
-                                        <foreach name="supplierKinds" item="row">
+                                        <foreach name="data" item="row">
                                         <tr>
-                                            <td class="taskOptions"><a href="javascript:;">{$row}</a></td>
-                                            <td class="taskOptions"></td>
-                                            <td class="taskOptions"></td>
-                                            <td class="taskOptions"></td>
-                                            <td class="taskOptions"></td>
-                                            <td class="taskOptions"></td>
-                                            <td class="taskOptions"></td>
+                                            <td class="taskOptions"><a href="javascript:;">{$row.kindName}</a></td>
+                                            <td class="taskOptions">{$row.year_op_num}</td>
+                                            <td class="taskOptions">{$row.year_total}</td>
+                                            <td class="taskOptions">{$row.}</td>
+                                            <td class="taskOptions">{$row.month_op_num}</td>
+                                            <td class="taskOptions">{$row.month_total}</td>
+                                            <td class="taskOptions">{$row.}</td>
                                         </tr>
                                         </foreach>		
                                         

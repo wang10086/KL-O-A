@@ -282,6 +282,7 @@ class SupplierResController extends BaseController {
 
         $data                   = $mod -> get_supplier_chart($supplierKinds,$year,$month);
 
+        $this->data             = $data;
         $this->supplierKinds    = $supplierKinds;
         $this->month  		    = $month;
         $this->year 		    = $year;

@@ -20,23 +20,53 @@ class SupplierModel extends Model{
         $year_opids                     = array_unique(array_column($year_sett_lists,'op_id'));
         $month_costacc_lists            = $this->get_costacc_lists($month_opids); //月度结算详情列表
         $year_costacc_lists             = $this->get_costacc_lists($year_opids);  //年度结算详情列表
-        $month_expense_list             = $this->get_expense_lists($month_opids); //报销单信息
-        $year_expense_list              = $this->get_expense_lists($year_opids);  //报销单信息
+        $month_expense_list             = $this->get_expense_lists($month_opids); //报销单详情信息
+        $year_expense_list              = $this->get_expense_lists($year_opids);  //报销单详情信息
         $monthOpids                     = array();
         $yearOpids                      = array();
-        $month_op_num                   = 0;
+        $month_op_num                   = 0; //项目数
         $year_op_num                    = 0;
-        $month_total                    = 0;
-        $year_total                     = 0;
-        /*$month_expense_num              = 0; //报销笔数
-        $year_expense_num               = 0; //报销笔数*/
         $month_expense_title            = 0; //报销金额
         $year_expense_title             = 0; //报销金额
+        $month_costacc_opids            = array();
+        $year_costacc_opids             = array();
+        $data                           = array();
         foreach ($supplierKinds as $k=>$v){
-            foreach ($month_costacc_lists as $mk=>$mv){
-
+            $month_total                        = 0;
+            $year_total                         = 0;
+            foreach ($month_costacc_lists as $mk=>$mv){ //月度项目数 月度结算金额
+                if ($mv['type']==$k){
+                    if(!in_array($mv['op_id'],$month_costacc_opids)){
+                        $month_costacc_opids[]  = $mv['op_id'];
+                        $month_op_num++;
+                    }
+                    $month_total                += $mv['total'];
+                }
             }
+
+            foreach ($year_costacc_lists as $yk=>$yv){ //年度项目数 年度结算金额
+                if ($yv['type']==$k){
+                    if(!in_array($yv['op_id'],$year_costacc_opids)){
+                        $year_costacc_opids[]   = $yv['op_id'];
+                        $year_op_num++;
+                    }
+                    $year_total                 += $yv['total'];
+                }
+            }
+
+            foreach ($month_expense_list as $mlk=>$mlv){
+                //if($mlv[''])
+            }
+
+            $data[$k]['kid']            = $k;
+            $data[$k]['kindName']       = $v;
+            $data[$k]['month_op_num']   = $month_op_num;
+            $data[$k]['year_op_num']    = $year_op_num;
+            $data[$k]['month_total']    = $month_total;
+            $data[$k]['year_total']     = $year_total;
         }
+        $data                           = multi_array_sort($data,'year_total');
+        return $data;
     }
 
     /**
