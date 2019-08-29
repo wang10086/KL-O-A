@@ -31,10 +31,10 @@
                                     </div>
 
                                     <div class="form-group col-md-4" style="clear: right;">
-                                        <label>行程方案</label>
-                                        <input type="text" name="line_title" class="form-control" style="width: 75%;">
+                                        <label style="display: block">行程方案</label>
+                                        <input type="text" name="line_title" class="form-control" style="width: 75%; display: inline-block;">
                                         <input type="hidden" name="info[line_id]">
-                                        <span style="display: inline-block; float: right; margin-top: -31px; margin-left: -10px; width: 20%">
+                                        <span style="display: inline-block; width: 20%">
                                             <a  href="javascript:;" class="btn btn-success btn-sm" onClick="selectmodel()">获取线路</a>
                                         </span>
                                     </div>
