@@ -54,10 +54,6 @@ class SupplierModel extends Model{
                 }
             }
 
-            foreach ($month_expense_list as $mlk=>$mlv){
-                //if($mlv[''])
-            }
-
             $data[$k]['kid']            = $k;
             $data[$k]['kindName']       = $v;
             $data[$k]['month_op_num']   = $month_op_num;
