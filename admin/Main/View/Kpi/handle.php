@@ -61,6 +61,11 @@
                                 </div><!-- /.box-header -->
                                 <div class="box-body">
                                     <div class="content">
+                                        <div class="form-group box-float-12">
+                                            <label>标题</label>
+                                            <input type="text" name="info[title]" value="{$row.title}"  class="form-control" />
+                                        </div>
+
                                         <div class="form-group box-float-6">
                                             <label>责任人员</label>
                                             <input type="text"   name="info[rp_user_name]" value="{$row.rp_user_name}" class="form-control selectuser" />
