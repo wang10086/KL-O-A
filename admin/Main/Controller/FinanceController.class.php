@@ -1364,6 +1364,10 @@ class FinanceController extends BaseController {
                 $type           = I('type');
                 $total          = I('total');
 
+                if (!$info['department_id']){ $this->error('报销部门不能为空'); }
+                if (!$info['company']){ $this->error('账单分类不能为空'); }
+                if (!$info['supplierid'] || !trim($info['payee'])){ $this->error('受款单位信息错误'); }
+
                 $info['bxd_id']         = make_num('TNBX','baoxiao','bxd_id');
                 $info['opids']          = implode(',',array_unique(array_column($loan_lists,'op_id')));
                 $info['group_ids']      = implode(',',array_unique(array_column($loan_lists,'group_id')));
@@ -2354,6 +2358,7 @@ class FinanceController extends BaseController {
 
         $departids          = array(2,6,7,12,13,14,15,16,17);
         $departments        = M('salary_department')->where(array('id'=>array('in',$departids)))->select();
+        $this->kind			= M('supplierkind')->getField('id,name',true);
         $this->departments  = $departments;
         $this->jk_type      = C('JIEKUAN_TYPE');
         $this->company      = C('COMPANY');

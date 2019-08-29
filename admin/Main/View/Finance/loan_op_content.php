@@ -112,13 +112,24 @@
                     </select>
                 </div>
 
+                <div class="form-group col-md-6">
+                    <label>供方类型：<span class="red">(请正确选择供方类型，以免影响受款单位)</span></label>
+                    <select name="info[supplierkid]" class="form-control" required>
+                        <foreach name="kind" key="k" item="v">
+                            <option value="{$k}" <?php if ($list['supplierkid']==$k) echo 'selected'; ?>>{$v}</option>
+                        </foreach>
+                    </select>
+                </div>
+
+                <div class="form-group col-md-6">
+                    <label>受款单位：</label>
+                    <input type="hidden" name="info[supplierid]" id="supplierRes_id" value="{$list.supplierid}">
+                    <input type="text" name="info[payee]" id="supplierRes_name" class="form-control" value="{$list.payee}" onfocus="get_supplierRes()" required>
+                </div>
+
                 <div class="form-group col-md-12">
                     <label>用途说明：</label>
                     <textarea class="form-control" name="info[description]">{$list.description}</textarea>
-                </div>
-                <div class="form-group col-md-12 zp_show hk_show">
-                    <label>受款单位：</label>
-                    <input type="text" name="info[payee]" class="form-control zhipiao huikuan" value="{$list.payee}">
                 </div>
 
                 <div class="form-group col-md-6 hk_show">
@@ -157,7 +168,7 @@
                     $('.huikuan').removeAttr('required');
                     $('.hk_show').hide();
                     $('.zp_show').show();
-                    $('.zhipiao').attr('required','true');
+                    //$('.zhipiao').attr('required','true');
                 }else if(type == 3){ //汇款
                     $('.hk_show').show();
                     $('.huikuan').attr('required','true');
@@ -352,11 +363,16 @@
     }
 
     function submitBefore() {
+        var department_id   = $('#department_id').val();
+        var supplierRes_id  = $('#supplierRes_id').val();
+        var supplierRes_name= $('#supplierRes_name').val().trim();
         var isqianzi = $('#qianzi').val();
+        if (!department_id){ art_show_msg('请选择报销部门'); return false; }
+        if (!supplierRes_id || !supplierRes_name){ art_show_msg('受款单位填写错误'); return false; }
         if (isqianzi == 1){
             $('#jiekuanform').submit();
         }else{
-            art_show_msg('请完善报销信息');
+            art_show_msg('签字密码错误');
             return false;
         }
     }
@@ -399,6 +415,31 @@
         });
 
         setTimeout("history.go(0)",1000);
+    }
+
+    //选择合格供方
+    function get_supplierRes(num){
+        let supplierKind        = $('select[name="info[supplierkid]"]').val();
+        if (!supplierKind || supplierKind==0){ art_show_msg('请先选择供方类型'); return false; }
+        art.dialog.open("/index.php?m=Main&c=Product&a=public_select_supplierRes&kind="+supplierKind,{
+            lock:true,
+            title: '选择合格供方',
+            width:1000,
+            height:500,
+            okVal: '提交',
+            fixed: true,
+            ok: function () {
+                var origin     = artDialog.open.origin;
+                var supplierRes= this.iframe.contentWindow.gosubmint();
+                var res_id     = supplierRes.id;
+                var res_name   = supplierRes.name;
+                $('#supplierRes_id').val(res_id);
+                $('#supplierRes_name').val(res_name);
+            },
+            cancelValue:'取消',
+            cancel: function () {
+            }
+        });
     }
 
 </script>
