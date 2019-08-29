@@ -95,10 +95,10 @@
             <table class="table table-bordered dataTable fontmini" id="tablelist" style="margin-top:10px;">
                 <tr role="row" class="orders" >
                 	<th width="40" style="text-align:center">选择</th>
-                    <th width="40" class="sorting" data="p.id">编号</th>
-                    <th class="sorting" data="p.name">名称</th>
-                    <th class="sorting" data="p.city">城市</th>
-                    <th class="sorting" data="p.kind">类型</th>
+                    <th width="40" class="sorting" data="id">编号</th>
+                    <th class="">名称</th>
+                    <th class="">城市</th>
+                    <th class="">类型</th>
                 </tr>
                 <foreach name="lists" item="row">
                     <tr class="supplierRes">
