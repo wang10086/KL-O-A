@@ -60,12 +60,12 @@ class InspectModel extends Model{
         }
 
         $data                           = array();
-        $data['average_AA']             = $get_score_AA/$sum_score_AA?(round($get_score_AA/$sum_score_AA,2)*100).'%':'';
-        $data['average_BB']             = $get_score_BB/$sum_score_BB?(round($get_score_BB/$sum_score_BB,2)*100).'%':'';
-        $data['average_CC']             = $get_score_CC/$sum_score_CC?(round($get_score_CC/$sum_score_CC,2)*100).'%':'';
-        $data['average_DD']             = $get_score_DD/$sum_score_DD?(round($get_score_DD/$sum_score_DD,2)*100).'%':'';
-        $data['average_EE']             = $get_score_EE/$sum_score_EE?(round($get_score_EE/$sum_score_EE,2)*100).'%':'';
-        $data['average_FF']             = $get_score_FF/$sum_score_FF?(round($get_score_FF/$sum_score_FF,2)*100).'%':'';
+        $data['average_AA']             = $sum_score_AA?(round($get_score_AA/$sum_score_AA,2)*100).'%':'';
+        $data['average_BB']             = $sum_score_BB?(round($get_score_BB/$sum_score_BB,2)*100).'%':'';
+        $data['average_CC']             = $sum_score_CC?(round($get_score_CC/$sum_score_CC,2)*100).'%':'';
+        $data['average_DD']             = $sum_score_DD?(round($get_score_DD/$sum_score_DD,2)*100).'%':'';
+        $data['average_EE']             = $sum_score_EE?(round($get_score_EE/$sum_score_EE,2)*100).'%':'';
+        $data['average_FF']             = $sum_score_FF?(round($get_score_FF/$sum_score_FF,2)*100).'%':'';
         $data['sum_average']            = round($get_score_total/$sum_score_total,2)?(round($get_score_total/$sum_score_total,2)*100).'%':'50%';
         $data['score_account_name']     = implode(',',array_column($info,'input_username'));
         return $data;
