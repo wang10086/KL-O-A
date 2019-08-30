@@ -228,7 +228,7 @@ class ExportController extends BaseController {
         if(!$settlement || $settlement['audit_status']!=1 ) $this->error('结算未审批通过');
 
         $op           = M('op')->where($where)->find();
-        $costacc         = M('op_costacc')->field('title,unitcost,amount,total,remark')->where(array('op_id'=>$opid,'status'=>2))->order('id')->select();
+        $costacc         = M('op_costacc')->field('title,unitcost,amount,total,supplier_name,remark')->where(array('op_id'=>$opid,'status'=>2))->order('id')->select();
 
         $filename = $op['group_id'].'结算表';
 
@@ -258,6 +258,7 @@ class ExportController extends BaseController {
             $data['C'.$i]  = $v['amount'];  //数量
             $data['D'.$i]  = $v['unitcost'];  //单价
             $data['E'.$i]  = $v['total'];  //合计
+            $data['G'.$i]  = $v['supplier_name']; //供方
             $data['k'.$i]  = $v['remark'];  //备注
             $i++;
             $j++;

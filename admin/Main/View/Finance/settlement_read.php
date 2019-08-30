@@ -10,6 +10,7 @@
                     <th width="">数量</th>
                     <th width="">合计</th>
                     <th width="">类型</th>
+                    <th width="">供方</th>
                     <th width="">备注</th>
                 </tr>
             </thead>
@@ -22,6 +23,7 @@
                         <td width="150">{$v.amount}</td>
                         <td width="150">&yen; {$v.total}</td>
                         <td width="150"><?php echo $kind_all[$v['type']] ?></td>
+                        <td width="200">{$v.supplier_name}</td>
                         <td>{$v.remark}</td>
                     </tr>
 
@@ -78,6 +80,7 @@
                     <td></td>
                     <td></td>
                     <td style="font-size:16px; color:#ff3300;">&yen; {$settlement.budget}</td>
+                    <td></td>
                     <td></td>
                     <td></td>
                 </tr>
