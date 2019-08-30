@@ -72,10 +72,10 @@
                                             <td class="taskOptions"><a href="{:U('SupplierRes/public_chart_supplier_detail',array('year'=>$year,'month'=>$month,'kid'=>$row['kid']))}">{$row.kindName}</a></td>
                                             <td class="taskOptions">{$row.year_op_num}</td>
                                             <td class="taskOptions">{$row.year_total}</td>
-                                            <td class="taskOptions">{$row.}</td>
+                                            <td class="taskOptions">{$row.year_expense_total}</td>
                                             <td class="taskOptions">{$row.month_op_num}</td>
                                             <td class="taskOptions">{$row.month_total}</td>
-                                            <td class="taskOptions">{$row.}</td>
+                                            <td class="taskOptions">{$row.month_expense_total}</td>
                                         </tr>
                                         </foreach>		
                                         

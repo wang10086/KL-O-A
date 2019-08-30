@@ -42,7 +42,7 @@
                             <div class="box box-success mt10">
                                 <div class="box-header">
                                     <h3 class="box-title">{$_action_}</h3>
-                                    <h3 class="box-title pull-right" style="font-weight: normal; color: #333333; margin-right: 10px;"> <span >{:$supplierKinds[$kid]}</span> </h3>
+                                    <h3 class="box-title pull-right" style="font-weight: normal; color: #333333; margin-right: 10px;"> <span >供方分类：{$supplierKind['name']}</span> </h3>
                                 </div><!-- /.box-header -->
                                 <div class="box-body">
                                     <!--<p>提示：以下数据从已完成结算和报销数据中采集,每月周期为上月26日-本月25日！</p>-->
@@ -63,13 +63,13 @@
                                         </tr>
                                         <foreach name="data" item="row">
                                         <tr>
-                                            <td class="taskOptions"><a href="{:U('SupplierRes/public_chart_supplier_detail',array('year'=>$year,'month'=>$month,'kid'=>$row['kindId']))}">{$row.kindName}</a></td>
+                                            <td class="taskOptions"><a href="{:U('SupplierRes/publi_chart_supplier_detail',array('year'=>$year,'month'=>$month,'sid'=>$row['supplierId']))}">{$row.supplierName}</a></td>
                                             <td class="taskOptions">{$row.year_op_num}</td>
                                             <td class="taskOptions">{$row.year_total}</td>
-                                            <td class="taskOptions">{$row.}</td>
+                                            <td class="taskOptions">{$row.month_expense_total}</td>
                                             <td class="taskOptions">{$row.month_op_num}</td>
                                             <td class="taskOptions">{$row.month_total}</td>
-                                            <td class="taskOptions">{$row.}</td>
+                                            <td class="taskOptions">{$row.year_expense_total}</td>
                                         </tr>
                                         </foreach>		
                                         

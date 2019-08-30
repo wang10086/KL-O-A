@@ -294,12 +294,15 @@ class SupplierResController extends BaseController {
     //供方统计详情页
     public function public_chart_supplier_detail(){
         $this->title('供方统计详情');
+        $mod                    = D('Supplier');
         $year                   = I('year',date('Y'));
         $month                  = I('month',date('m'));
         $kid                    = I('kid',0);
-        $supplierKinds          = M('supplierkind')->getField('id,name',true);
+        $supplierKind           = M('supplierkind')->where(array('id'=>$kid))->field('id,name')->find();
+        $data                   = $mod -> get_supplier_lists($supplierKind,$year,$month);
 
-        $this->supplierKinds    = $supplierKinds;
+        $this->data             = $data;
+        $this->supplierKind     = $supplierKind;
         $this->kid              = $kid;
         $this->year             = $year;
         $this->month            = $month;

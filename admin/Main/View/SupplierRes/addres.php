@@ -111,7 +111,7 @@
 
 	$(document).ready(function() {	
 
-		$('#myform').validate();
+		//$('#myform').validate();
 
 		var uploader = new plupload.Uploader({
 			runtimes : 'html5,flash,silverlight,html4',
