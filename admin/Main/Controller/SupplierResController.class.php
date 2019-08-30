@@ -127,7 +127,7 @@ class SupplierResController extends BaseController {
             if (!$info['kind'])         $this->error('供方分类不能为空!');
             if (!$info['prov'])         $this->error('供方省份不能为空!');
             if (!$info['city'])         $this->error('供方所在城市不能为空!');
-            if (!$info['contact'])      $this->error('供方联系人不能为空!');
+            if (!$info['contact'] && $info['kind'] != 11) $this->error('供方联系人不能为空!'); //排除景点
             if (!$info['tel'])          $this->error('供方联系电话不能为空!');
             //if (!$info['desc'])         $this->error('供方介绍不能为空!');
 			

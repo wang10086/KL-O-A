@@ -18,25 +18,20 @@ class SupplierModel extends Model{
         $year_sett_lists                = $this->get_cycle_settlement_lists($yearToMonthCycle['beginTime'],$yearToMonthCycle['endTime']);
         $month_opids                    = array_unique(array_column($month_sett_lists,'op_id'));
         $year_opids                     = array_unique(array_column($year_sett_lists,'op_id'));
-        $month_costacc_lists            = $this->get_costacc_lists($month_opids); //月度结算详情列表
-        $year_costacc_lists             = $this->get_costacc_lists($year_opids);  //年度结算详情列表
-        //$monthOpids                     = array();
-        //$yearOpids                      = array();
-        $month_op_num                   = 0; //项目数
-        $year_op_num                    = 0;
-        $month_costacc_opids            = array();
-        $year_costacc_opids             = array();
         $data                           = array();
         foreach ($supplierKinds as $k=>$v){
-            /*P($k,false);
-            P($v,false);
-            echo "<hr />";*/
-            $month_expense_list                 = $this->get_expense_lists($k,$monthCycle['begintime'],$monthCycle['endtime']); //报销单详情信息
-            $year_expense_list                  = $this->get_expense_lists($k,$yearToMonthCycle['beginTime'],$yearToMonthCycle['endTime']);  //报销单详情信息
-            $month_total                        = 0;
-            $year_total                         = 0;
-            $month_expense_total                = 0; //报销金额
-            $year_expense_total                 = 0; //报销金额
+            $month_costacc_lists        = $this->get_costacc_lists($k,$month_opids); //月度结算详情列表
+            $year_costacc_lists         = $this->get_costacc_lists($k,$year_opids);  //年度结算详情列表
+            $month_expense_list         = $this->get_expense_lists($k,$monthCycle['begintime'],$monthCycle['endtime']); //报销单详情信息
+            $year_expense_list          = $this->get_expense_lists($k,$yearToMonthCycle['beginTime'],$yearToMonthCycle['endTime']);  //报销单详情信息
+            $month_op_num               = 0; //项目数
+            $year_op_num                = 0;
+            $month_total                = 0;
+            $year_total                 = 0;
+            $month_expense_total        = 0; //报销金额
+            $year_expense_total         = 0; //报销金额
+            $month_costacc_opids        = array();
+            $year_costacc_opids         = array();
             foreach ($month_costacc_lists as $mk=>$mv){ //月度项目数 月度结算金额
                 if ($mv['type']==$k){
                     if(!in_array($mv['op_id'],$month_costacc_opids)){
@@ -99,10 +94,11 @@ class SupplierModel extends Model{
      * @param $opids
      * @return mixed
      */
-    public function get_costacc_lists($opids,$supplier_id=0){
+    public function get_costacc_lists($supplierKind,$opids,$supplier_id=0){
         $where                          = array();
         $where['op_id']                 = array('in',$opids);
         $where['status']                = 2; //结算
+        $where['type']                  = $supplierKind;
         $where['supplier_id']           = array('neq',0);
         if ($supplier_id) $where['type']= $supplier_id;
         $lists                          = M('op_costacc')->where($where)->select();
@@ -138,8 +134,8 @@ class SupplierModel extends Model{
         $year_sett_lists                = $this->get_cycle_settlement_lists($yearToMonthCycle['beginTime'],$yearToMonthCycle['endTime']);
         $month_opids                    = array_unique(array_column($month_sett_lists,'op_id'));
         $year_opids                     = array_unique(array_column($year_sett_lists,'op_id'));
-        $month_costacc_lists            = $this->get_costacc_lists($month_opids,$supplierKind['id']); //月度结算详情列表
-        $year_costacc_lists             = $this->get_costacc_lists($year_opids,$supplierKind['id']);  //年度结算详情列表
+        $month_costacc_lists            = $this->get_costacc_lists($supplierKind,$month_opids,$supplierKind['id']); //月度结算详情列表
+        $year_costacc_lists             = $this->get_costacc_lists($supplierKind,$year_opids,$supplierKind['id']);  //年度结算详情列表
         $month_supplier_list            = array_column($month_costacc_lists,'supplier_name','supplier_id');
         $year_supplier_list             = array_column($year_costacc_lists,'supplier_name','supplier_id');
         $month_expense_list             = $this->get_expense_lists($supplierKind,$monthCycle['begintime'],$monthCycle['endtime']); //报销单详情信息
@@ -186,6 +182,7 @@ class SupplierModel extends Model{
                 }
             }
 
+            $data[$k]['Kid']                = $supplierKind['id'];
             $data[$k]['supplierId']         = $k;
             $data[$k]['supplierName']       = $v;
             $data[$k]['month_op_num']       = $month_op_num;

@@ -63,8 +63,13 @@
                                         </tr>
                                         <foreach name="data" item="row">
                                         <tr>
-                                            <!--<td class="taskOptions"><a href="{:U('SupplierRes/publi_chart_supplier_detail',array('year'=>$year,'month'=>$month,'sid'=>$row['supplierId']))}">{$row.supplierName}</a></td>-->
-                                            <td class="taskOptions"><a href="javascript:;" onclick="art_show_msg('开发中...',3)">{$row.supplierName}</a></td>
+                                            <td class="taskOptions">
+                                                <?php if ($row['kid'] ==6){ ?> <!--研究所台站-->
+                                                    <a href="{:U('ScienceRes/res_view',array('id'=>$row['supplierId']))}">{$row.supplierName}</a>
+                                                <?php }else{ ?>
+                                                    <a href="{:U('SupplierRes/res_view',array('id'=>$row['supplierId']))}">{$row.supplierName}</a>
+                                                <?php } ?>
+                                            </td>
                                             <td class="taskOptions">{$row.year_op_num}</td>
                                             <td class="taskOptions">{$row.year_total}</td>
                                             <td class="taskOptions">{$row.month_expense_total}</td>
