@@ -49,44 +49,64 @@ class SupplierResController extends BaseController {
     public function res_view () {
         $this->title('合格供方');
 		
-		$id = I('id',0);
-		$where = array('type' => P::RES_TYPE_SUPPLIER);
+		$id                                 = I('id',0);
+		$where                              = array('type' => P::RES_TYPE_SUPPLIER);
 
-        $this->reskind = M('supplierkind')->getField('id,name', true);
-        $row = M('supplier')->find($id);
+        $this->reskind                      = M('supplierkind')->getField('id,name', true);
+        $row                                = M('supplier')->find($id);
 		
 		if($row){
-			$where = array();
-			$where['req_type'] = P::REQ_TYPE_SUPPLIER_RES_NEW;
-			$where['req_id']   = $id;
-			$audit = M('audit_log')->where($where)->find();
+			$where                          = array();
+			$where['req_type']              = P::REQ_TYPE_SUPPLIER_RES_NEW;
+			$where['req_id']                = $id;
+			$audit                          = M('audit_log')->where($where)->find();
 			if($audit['dst_status']==0){
-				$show = '未审批';
-				$show_user = '未审批';
-				$show_time = '等待审批';
+				$show                       = '未审批';
+				$show_user                  = '未审批';
+				$show_time                  = '等待审批';
 			}else if($audit['dst_status']==1){
-				$show = '已通过';
-				$show_user = $audit['audit_uname'];
-				$show_time = date('Y-m-d H:i:s',$audit['audit_time']);
+				$show                       = '已通过';
+				$show_user                  = $audit['audit_uname'];
+				$show_time                  = date('Y-m-d H:i:s',$audit['audit_time']);
 			}else if($audit['dst_status']==2){
-				$show = '未通过';
-				$show_user = $audit['audit_uname'];
-				$show_time = date('Y-m-d H:i:s',$audit['audit_time']);
+				$show                       = '未通过';
+				$show_user                  = $audit['audit_uname'];
+				$show_time                  = date('Y-m-d H:i:s',$audit['audit_time']);
 			}
-			$row['showstatus'] = $show;
-			$row['show_user']  = $show_user;
-			$row['show_time']  = $show_time;
+			$row['showstatus']              = $show;
+			$row['show_user']               = $show_user;
+			$row['show_time']               = $show_time;
 		}else{
 			$this->error('产品模板不存在' . $db->getError());	
 		}
-		$this->row = $row;
+		$this->row                          = $row;
 		
-        $this->status = array(
+        $this->status                       = array(
                 P::AUDIT_STATUS_PASS        => '已通过',
                 P::AUDIT_STATUS_NOT_AUDIT   => '待审批',
 				P::AUDIT_STATUS_NOT_PASS    => '未通过',
         );
-		
+
+        //合作记录
+        $cwhere                             = array();
+        $cwhere['type']                     = $row['kind'];
+        $cwhere['supplier_id']              = $id;
+        $cwhere['status']                   = 2;
+        $field                              = array();
+        $field[]                            = 'op_id';
+        $field[]                            = 'sum(total) as total';
+        $lists                              = M('op_costacc')->where($cwhere)->field($field)->group('op_id')->select();
+        $opids                              = array_unique(array_column($lists,'op_id'));
+        $oplist                             = M()->table('__OP__ as o')->join('__OP_SETTLEMENT__ as s on s.op_id=o.op_id','left')->where(array('o.op_id'=>array('in',$opids)))->order($this->orders('o.id'))->field('o.*,s.audit_status as saudit_status')->select();
+        foreach ($oplist as $k=>$v){
+            foreach ($lists as $key=>$value){
+                if ($value['op_id']==$v['op_id']){
+                    $oplist[$k]['settlement_total'] = $value['total'];
+                }
+            }
+        }
+        $this->oplist                       = $oplist;
+
 		if(I('viewtype')){
 			$this->display('res_view_win');
 		}else{
