@@ -680,6 +680,13 @@ class CustomerController extends BaseController {
         $this->display();
     }
 
+    //城市合伙人地图
+    public function partner_map(){
+        $this->title('城市合伙人');
+
+        $this->display('map');
+    }
+
     //kpi
     public function public_kpi_partner(){
         $citys_db                   = M('citys');
