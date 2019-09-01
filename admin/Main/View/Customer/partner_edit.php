@@ -121,6 +121,12 @@
                                         </div>
 
                                         <div class="form-group col-md-4">
+                                            <label>维护人：</label>
+                                            <input type="text" class="form-control" id="cm_name" name="info[cm_name]" value="<?php echo $partner['cm_name']?$partner['cm_name']:session('nickname'); ?>" />
+                                            <input type="hidden" id="cm_id" name="info[cm_id]" value="<?php echo $partner['cm_id']?$partner['cm_id']:session('userid');  ?>" />
+                                        </div>
+
+                                        <div class="form-group col-md-4">
                                             <label>独家省份：</label>
                                             <select id="agent_province" class="form-control" name="info[agent_province]" required>
                                                 <option class="form-control" value="" selected disabled>请选择</option>
@@ -142,30 +148,26 @@
                                             </select>
                                         </div>
 
-                                        <div class="form-group col-md-4">
+                                        <div class="form-group col-md-12" id="agent_country" style="display:  <?php if (!$default_agent_country){ echo 'none'; } ?>">
                                             <label>独家区县：</label>
-                                            <select id="agent_country" class="form-control" name="info[agent_country]">
-                                                <option class="form-control" value=""><?php echo $default_agent_city ? '请选择' : '请先选择城市'; ?> </option>
-                                                <?php if ($partner){ ?>
-                                                <foreach name="default_agent_country" key="k" item="v">
-                                                    <option class="form-control" value="{$k}" <?php if ($partner && $partner['agent_country']==$k) echo "selected"; ?>>{$citys[$k]}</option>
-                                                </foreach>
-                                                <?php } ?>
-                                            </select>
+                                            <foreach name="default_agent_country" key="k" item="v">
+                                                <span style="display: inline-block; margin-right: 20px;"><input type="checkbox" name="agent_country[]" value="{$k}" <?php if (in_array($k,$agent_country)){ echo "checked"; } ?>>&nbsp;{$v}</span>
+                                            </foreach>
                                         </div>
 
                                         <!--<div class="form-group col-md-4">
-                                            <label>保证金：</label>
-                                            <input class="form-control" name="info[deposit]" value="{$partner.deposit}" />
+                                            <label>独家区县：</label>
+                                            <select id="agent_country" class="form-control" name="info[agent_country]">
+                                                <option class="form-control" value=""><?php /*echo $default_agent_city ? '请选择' : '请先选择城市'; */?> </option>
+                                                <?php /*if ($partner){ */?>
+                                                <foreach name="default_agent_country" key="k" item="v">
+                                                    <option class="form-control" value="{$k}" <?php /*if ($partner && $partner['agent_country']==$k) echo "selected"; */?>>{$citys[$k]}</option>
+                                                </foreach>
+                                                <?php /*} */?>
+                                            </select>
                                         </div>-->
-                                        
-                                        <div class="form-group col-md-4">
-                                            <label>维护人：</label>
-                                            <input type="text" class="form-control" id="cm_name" name="info[cm_name]" value="<?php echo $partner['cm_name']?$partner['cm_name']:session('nickname'); ?>" />
-                                            <input type="hidden" id="cm_id" name="info[cm_id]" value="<?php echo $partner['cm_id']?$partner['cm_id']:session('userid');  ?>" />
-                                        </div>
 
-                                        <div class="form-group col-md-8">
+                                        <div class="form-group col-md-12">
                                             <label>备注：</label>
                                             <input class="form-control" name="info[remark]" value="{$partner.remark}" />
                                         </div>
@@ -202,7 +204,7 @@
                                     </div>
                                     
                                     <div style="width:100%; text-align:center; padding-bottom:40px;">
-                                        <!--<button type="submit" class="btn btn-info btn-lg" id="lrpd">保存</button>-->
+                                        <!--<button type="submit" class="btn btn-info btn-lg" id="lrpd">保存test</button>-->
                                         <a  href="javascript:;" class="btn btn-info btn-lg" onClick="javascript:save('myform','<?php echo U('Customer/public_save'); ?>');">保存数据</a>
                                         <?php if ($partner['id'] && in_array($partner['audit_stu'],array(0,-1))){ ?>
                                             <a  href="javascript:;" class="btn btn-danger btn-lg" onClick="javascript:ConfirmSub('audit_form','确定提交审核吗？');">申请审核</a>
@@ -309,7 +311,8 @@
                 data : {province:province},
                 success : function (msg) {
                     $("#agent_city").empty();
-                    $("#agent_country").html('<option class="form-control" value="">请先选择城市</option>');
+                    //$("#agent_country").html('<option class="form-control" value="">请先选择城市</option>');
+                    $('#agent_country').html('');
                     if (msg.length>0){
                         var count = msg.length;
                         var i= 0;
@@ -326,12 +329,46 @@
                 }
             })
         }else{
+            var b = '<option class="form-control" value="">请先选择省份</option>';
+            $("#agent_city").append(b);
+            $('#agent_country').html('');
             art_show_msg('省份信息错误',3);
         }
     })
 
-    //市县联动(代理地)
     $('#agent_city').change(function () {
+        let city     = $(this).val();
+        if (city){
+            $.ajax({
+                type : 'POST',
+                url : "<?php echo U('Ajax/get_country'); ?>",
+                dataType : 'JSON',
+                data : {city:city},
+                success : function (msg) {
+                    let html  = '';
+                    let count = msg ? msg.length : 0;
+                    if (count>0){
+                        $('#agent_country').attr('style',{'display':'block'});
+                        let i = 0;
+                        html += '<label>独家区县：</label>';
+                        for (i=0;i<count;i++){
+                        html += '<span style="display: inline-block; margin-right: 20px;"><input type="checkbox" name="agent_country[]" value="'+msg[i].id+'" >&nbsp;'+msg[i].name+'</span>';
+                        }
+                    } else {
+                        $('#agent_country').html('');
+                        return false;
+                    }
+                    $('#agent_country').html(html);
+                }
+            })
+        } else{
+            art_show_msg('城市信息错误',3);
+            return false;
+        }
+    });
+
+    //市县联动(代理地 三级联动)
+    /*$('#agent_city').change(function () {
         var city     = $(this).val();
         if (city){
             $.ajax({
@@ -359,7 +396,7 @@
         }else{
             art_show_msg('城市信息错误',3);
         }
-    })
+    })*/
 
     //新成本核算项
     function add_deposit(){

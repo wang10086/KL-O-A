@@ -494,6 +494,7 @@ class CustomerController extends BaseController {
             $this->default_agent_city = $default_agent_city;
             $this->default_country  = $default_country;
             $this->default_agent_country = $default_agent_country;
+            $this->agent_country    = $partner['agent_country'] ? explode(',',$partner['agent_country']) : '';
         }
 
         $userkey                    = get_username();
@@ -529,8 +530,10 @@ class CustomerController extends BaseController {
                 $deposit_db                 = M('customer_deposit'); //保证金
                 $partner_id                 = I('partner_id')?I('partner_id'):0;
                 $info                       = I('info');
+                $agent_country              = I('agent_country','');
                 $deposit_data               = I('deposit_data'); //保证金
                 $resid                      = I('resid');
+                $info['agent_country']      = $agent_country ? implode(',',$agent_country) : '';
 
                 if (!trim($info['name']))   { $msg['num'] = $num; $msg['msg'] = '合伙人名称不能为空'; $this->ajaxReturn($msg); }
                 if (!$info['level'])        { $msg['num'] = $num; $msg['msg'] = '合伙人级别不能为空'; $this->ajaxReturn($msg); }
