@@ -484,18 +484,37 @@ class CustomerController extends BaseController {
         if ($id){ //编辑
             $partner                = $partner_db->where(array('id'=>$id))->find();
             $deposit                = $deposit_db->where(array('partner_id'=>$id))->select();
+            $default_city           = $partner['province'] != 0 ? $this->get_pid_citys($partner['province']) : '';
+            $default_agent_city     = $partner['agent_province'] != 0 ? $this->get_pid_citys($partner['agent_province']) : '';
+            $default_country        = $partner['city'] != 0 ? $this->get_pid_citys($partner['city']) : '';
+            $default_agent_country  = $partner['agent_city'] != 0 ? $this->get_pid_citys($partner['agent_city']) : '';
             $this->partner          = $partner;
             $this->deposit          = $deposit;
+            $this->default_city     = $default_city;
+            $this->default_agent_city = $default_agent_city;
+            $this->default_country  = $default_country;
+            $this->default_agent_country = $default_agent_country;
         }
 
         $userkey                    = get_username();
         $arr_citys                  = $citys_db->getField('id,name',true);
-        $default_province           = $citys_db->where(array('pid'=>0))->getField('id,name',true);
+        $default_province           = $this->get_pid_citys(0);
 
         $this->userkey              = $userkey;
         $this->provinces            = $default_province;
         $this->citys                = $arr_citys;
         $this->display();
+    }
+
+    //根据pid 获取城市信息
+    public function get_pid_citys($pid){
+        $citys_db                   = M('citys');
+        if($pid == 0 || $pid){
+            $data                   = $citys_db->where(array('pid'=>$pid))->getField('id,name',true);
+        }else{
+            $data                   = array();
+        }
+        return $data;
     }
 
     public function public_save(){
@@ -513,15 +532,15 @@ class CustomerController extends BaseController {
                 $deposit_data               = I('deposit_data'); //保证金
                 $resid                      = I('resid');
 
-                if (!$info['name'])     { $msg['num'] = $num; $msg['msg'] = '合伙人名称不能为空'; $this->ajaxReturn($msg); }
-                if (!$info['level'])    { $msg['num'] = $num; $msg['msg'] = '合伙人级别不能为空'; $this->ajaxReturn($msg); }
-                if (!$info['manager'])  { $msg['num'] = $num; $msg['msg'] = '负责人不能为空'; $this->ajaxReturn($msg); }
-                if (!$info['contacts']) { $msg['num'] = $num; $msg['msg'] = '联系人不能为空'; $this->ajaxReturn($msg); }
-                if (!$info['province']) { $msg['num'] = $num; $msg['msg'] = '所在省份信息不能为空'; $this->ajaxReturn($msg); }
+                if (!trim($info['name']))   { $msg['num'] = $num; $msg['msg'] = '合伙人名称不能为空'; $this->ajaxReturn($msg); }
+                if (!$info['level'])        { $msg['num'] = $num; $msg['msg'] = '合伙人级别不能为空'; $this->ajaxReturn($msg); }
+                if (!trim($info['manager'])){ $msg['num'] = $num; $msg['msg'] = '负责人不能为空'; $this->ajaxReturn($msg); }
+                if (!$info['contacts'])     { $msg['num'] = $num; $msg['msg'] = '联系人不能为空'; $this->ajaxReturn($msg); }
+                if (!$info['province'])     { $msg['num'] = $num; $msg['msg'] = '所在省份信息不能为空'; $this->ajaxReturn($msg); }
                 if (!$info['agent_province']){ $msg['num'] = $num; $msg['msg'] = '独家省份信息不能为空'; $this->ajaxReturn($msg); }
-                if (!$info['cm_id'])    { $msg['num'] = $num; $msg['msg'] = '维护人信息有误'; $this->ajaxReturn($msg); }
-                if (!$info['start_date']){ $msg['num'] = $num; $msg['msg'] = '合伙开始时间不能为空'; $this->ajaxReturn($msg); }
-                if (!$info['end_date']) { $msg['num'] = $num; $msg['msg'] = '合伙结束时间不能为空'; $this->ajaxReturn($msg); }
+                if (!$info['cm_id'])        { $msg['num'] = $num; $msg['msg'] = '维护人信息有误'; $this->ajaxReturn($msg); }
+                if (!trim($info['start_date'])){ $msg['num'] = $num; $msg['msg'] = '合伙开始时间不能为空'; $this->ajaxReturn($msg); }
+                if (!trim($info['end_date'])){ $msg['num'] = $num; $msg['msg'] = '合伙结束时间不能为空'; $this->ajaxReturn($msg); }
 
                 $info['start_date']         = strtotime($info['start_date']);
                 $info['end_date']           = strtotime($info['end_date']);

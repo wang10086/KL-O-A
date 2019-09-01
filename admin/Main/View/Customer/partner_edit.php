@@ -101,7 +101,7 @@
                                             <select id="s_city" class="form-control" name="info[city]">
                                                 <option class="form-control" value="">请先选择省份</option>
                                                 <?php if ($partner){ ?>
-                                                <foreach name="citys" key="k" item="v">
+                                                <foreach name="default_city" key="k" item="v">
                                                     <option class="form-control" value="{$k}" <?php if ($partner && $partner['city']==$k) echo "selected"; ?>>{$citys[$k]}</option>
                                                 </foreach>
                                                 <?php } ?>
@@ -113,7 +113,7 @@
                                             <select id="s_country" class="form-control" name="info[country]">
                                                 <option class="form-control" value="">请先选择城市</option>
                                                 <?php if ($partner){ ?>
-                                                <foreach name="citys" key="k" item="v">
+                                                <foreach name="default_country" key="k" item="v">
                                                     <option class="form-control" value="{$k}" <?php if ($partner && $partner['country']==$k) echo "selected"; ?>>{$citys[$k]}</option>
                                                 </foreach>
                                                 <?php } ?>
@@ -135,7 +135,7 @@
                                             <select id="agent_city" class="form-control" name="info[agent_city]">
                                                 <option class="form-control" value="">请先选择省份</option>
                                                 <?php if ($partner){ ?>
-                                                <foreach name="citys" key="k" item="v">
+                                                <foreach name="default_agent_city" key="k" item="v">
                                                     <option class="form-control" value="{$k}" <?php if ($partner && $partner['agent_city']==$k) echo "selected"; ?>>{$citys[$k]}</option>
                                                 </foreach>
                                                 <?php } ?>
@@ -145,9 +145,9 @@
                                         <div class="form-group col-md-4">
                                             <label>独家区县：</label>
                                             <select id="agent_country" class="form-control" name="info[agent_country]">
-                                                <option class="form-control" value="">请先选择城市</option>
+                                                <option class="form-control" value=""><?php echo $default_agent_city ? '请选择' : '请先选择城市'; ?> </option>
                                                 <?php if ($partner){ ?>
-                                                <foreach name="citys" key="k" item="v">
+                                                <foreach name="default_agent_country" key="k" item="v">
                                                     <option class="form-control" value="{$k}" <?php if ($partner && $partner['agent_country']==$k) echo "selected"; ?>>{$citys[$k]}</option>
                                                 </foreach>
                                                 <?php } ?>
