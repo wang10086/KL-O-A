@@ -678,7 +678,7 @@ class CustomerController extends BaseController {
     }
 
     //城市合伙人地图
-    public function partner_map(){
+    public function public_partner_map(){
         $this->title('城市合伙人');
         $city_data                  = M('citys')->field('id,name,pid')->select();
         //$customer_data              = M('customer_partner')->where(array('audit_stu'=>2))->select();
@@ -702,7 +702,7 @@ class CustomerController extends BaseController {
         $this->citys                = $citys;
         $this->city_pinyin          = $city_pinyin;
         $this->data                 = json_encode($data);
-        $this->display('mapp');
+        $this->display('map');
     }
 
 
