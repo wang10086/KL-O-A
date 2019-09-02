@@ -60,7 +60,7 @@
                                             <p>联系电话：{$row.tel}</p>
                                         </div>
 
-                                        <div class="form-group col-md-4 viwe">
+                                        <!--<div class="form-group col-md-4 viwe">
                                             <p>审批状态：{$row.showstatus}</p>
                                         </div>
                                         <div class="form-group col-md-4 viwe">
@@ -68,9 +68,7 @@
                                         </div>
                                         <div class="form-group col-md-4 viwe">
                                             <p>审批时间：{$row.show_time}</p>
-                                        </div>
-                         
-                                        
+                                        </div>-->
                                     </div>
                                     
                                 </div><!-- /.box-body -->

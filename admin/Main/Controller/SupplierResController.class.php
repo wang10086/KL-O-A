@@ -50,12 +50,11 @@ class SupplierResController extends BaseController {
         $this->title('合格供方');
 		
 		$id                                 = I('id',0);
-		$where                              = array('type' => P::RES_TYPE_SUPPLIER);
-
         $this->reskind                      = M('supplierkind')->getField('id,name', true);
         $row                                = M('supplier')->find($id);
-		
-		if($row){
+
+		//$where                              = array('type' => P::RES_TYPE_SUPPLIER);
+		/*if($row){ //不用审核
 			$where                          = array();
 			$where['req_type']              = P::REQ_TYPE_SUPPLIER_RES_NEW;
 			$where['req_id']                = $id;
@@ -78,7 +77,7 @@ class SupplierResController extends BaseController {
 			$row['show_time']               = $show_time;
 		}else{
 			$this->error('产品模板不存在' . $db->getError());	
-		}
+		}*/
 		$this->row                          = $row;
 		
         $this->status                       = array(
@@ -89,13 +88,14 @@ class SupplierResController extends BaseController {
 
         //合作记录
         $cwhere                             = array();
-        $cwhere['type']                     = $row['kind'];
-        $cwhere['supplier_id']              = $id;
-        $cwhere['status']                   = 2;
+        $cwhere['c.type']                   = $row['kind'];
+        $cwhere['c.supplier_id']            = $id;
+        $cwhere['c.status']                 = 2;
+        $cwhere['s.audit_status']           = 1;
         $field                              = array();
-        $field[]                            = 'op_id';
-        $field[]                            = 'sum(total) as total';
-        $lists                              = M('op_costacc')->where($cwhere)->field($field)->group('op_id')->select();
+        $field[]                            = 'c.op_id,s.audit_status';
+        $field[]                            = 'sum(c.total) as total';
+        $lists                              = M()->table('__OP_COSTACC__ as c')->join('__OP_SETTLEMENT__ as s on s.op_id=c.op_id','left')->where($cwhere)->field($field)->group('op_id')->select();
         $opids                              = array_unique(array_column($lists,'op_id'));
         $oplist                             = M()->table('__OP__ as o')->join('__OP_SETTLEMENT__ as s on s.op_id=o.op_id','left')->where(array('o.op_id'=>array('in',$opids)))->order($this->orders('o.id'))->field('o.*,s.audit_status as saudit_status')->select();
         foreach ($oplist as $k=>$v){

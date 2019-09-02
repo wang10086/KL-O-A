@@ -140,14 +140,15 @@ class SupplierModel extends Model{
         $year_supplier_list             = array_column($year_costacc_lists,'supplier_name','supplier_id');
         $month_expense_list             = $this->get_expense_lists($supplierKind,$monthCycle['begintime'],$monthCycle['endtime']); //报销单详情信息
         $year_expense_list              = $this->get_expense_lists($supplierKind,$yearToMonthCycle['beginTime'],$yearToMonthCycle['endTime']);  //报销单详情信息
-        $month_op_num                   = 0; //项目数
-        $year_op_num                    = 0;
-        $month_expense_total            = 0; //报销金额
-        $year_expense_total             = 0; //报销金额
-        $month_costacc_opids            = array();
-        $year_costacc_opids             = array();
+
         $data                           = array();
         foreach ($year_supplier_list as $k=>$v){
+            $month_op_num                       = 0; //项目数
+            $year_op_num                        = 0;
+            $month_expense_total                = 0; //报销金额
+            $year_expense_total                 = 0; //报销金额
+            $month_costacc_opids                = array();
+            $year_costacc_opids                 = array();
             $month_total                        = 0;
             $year_total                         = 0;
             foreach ($month_costacc_lists as $mk=>$mv){ //月度项目数 月度结算金额
