@@ -18,47 +18,44 @@ class CustomerController extends BaseController {
 	// @@@NODE-3###o2o###支撑服务校记录###
     public function o2o(){
         $this->title('支撑服务校记录');
+
+		$db                 = M('customer_gec');
+		$keywords           = I('keywords');
+		$type               = I('type');
+		$cm                 = I('cm');
+		$address            = I('address');
+		$province           = I('province');
+		$city               = I('city');
+		$county             = I('county');
+		$level              = I('level');
+		$qianli             = I('qianli');
 		
-		
-		$db = M('customer_gec');
-		$keywords     = I('keywords');
-		$type         = I('type');
-		$cm           = I('cm');
-		$address      = I('address');
-		$province     = I('province');
-		$city         = I('city');
-		$county       = I('county');
-		$level        = I('level');
-		$qianli       = I('qianli');
-		
-		$where = array();
+		$where              = array();
 		$where['status']	= 1;
 		$where['com']		= 1;
-		if($keywords)    $where['company_name'] = array('like','%'.$keywords.'%');
-		if($type)        $where['type'] = $type;
-		if($address)     $where['contacts_address'] = array('like','%'.$address.'%');
-		if($cm)          $where['cm_name'] = array('like','%'.$cm.'%');
-		if($province)    $where['province'] = array('like','%'.$province.'%');
-		if($city)        $where['city'] = array('like','%'.$city.'%');
-		if($county)      $where['county'] = array('like','%'.$county.'%');
-		if($level)       $where['level'] = array('like','%'.$level.'%');
-		if($qianli)      $where['qianli'] = array('like','%'.$qianli.'%');
+		if($keywords)       $where['company_name'] = array('like','%'.$keywords.'%');
+		if($type)           $where['type'] = $type;
+		if($address)        $where['contacts_address'] = array('like','%'.$address.'%');
+		if($cm)             $where['cm_name'] = array('like','%'.$cm.'%');
+		if($province)       $where['province'] = array('like','%'.$province.'%');
+		if($city)           $where['city'] = array('like','%'.$city.'%');
+		if($county)         $where['county'] = array('like','%'.$county.'%');
+		if($level)          $where['level'] = array('like','%'.$level.'%');
+		if($qianli)         $where['qianli'] = array('like','%'.$qianli.'%');
 		
 		//分页
-		$pagecount = $db->where($where)->count();
-		$page = new Page($pagecount, P::PAGE_SIZE);
-		$this->pages = $pagecount>P::PAGE_SIZE ? $page->show():'';
+		$pagecount          = $db->where($where)->count();
+		$page               = new Page($pagecount, P::PAGE_SIZE);
+		$this->pages        = $pagecount>P::PAGE_SIZE ? $page->show():'';
 
-        $lists = $db->where($where)->limit($page->firstRow . ',' . $page->listRows)->order($this->orders('create_time'))->select();
+        $lists              = $db->where($where)->limit($page->firstRow . ',' . $page->listRows)->order($this->orders('create_time'))->select();
 		foreach($lists as $k=>$v){
-			$hz = M('op')->where(array('customer'=>$v['company_name'],'audit_status'=>1))->order('create_time DESC')->find();	
+			$hz             = M('op')->where(array('customer'=>$v['company_name'],'audit_status'=>1))->order('create_time DESC')->find();
 			$lists[$k]['hezuo'] = $hz['create_time'] ? '<a href="'.U('Op/index',array('cus'=>$v['company_name'])).'">'.date('Y-m-d',$hz['create_time']).'</a>' : '无结算记录';
 			$lists[$k]['hezuocishu'] = $hz['create_time'] ? M('op')->where(array('customer'=>$v['company_name'],'audit_status'=>1))->count() : '';	
 		}
-		
-		
-		$this->lists   = $lists;
-		
+
+		$this->lists        = $lists;
 		$this->display('o2o');
     }
 	

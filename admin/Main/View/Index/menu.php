@@ -311,8 +311,8 @@
                                             <li class="{:on('Customer/partner')} {:on('Customer/partner_edit')}"><a href="{:U('Customer/partner')}"><i class="fa fa-angle-right"></i> 城市合伙人</a></li>
                                         </if>
                                         <if condition="rolemenu(array('Customer/partner_map'))">
-<!--                                            <li class="{:on('Customer/partner_map')} {:on('Customer/partner_map')} "><a href="{:U('Customer/partner_map')}"><i class="fa fa-angle-right"></i> 合伙人地图</a></li>-->
-                                            <li class="{:on('Customer/partner_map')} {:on('Customer/partner_map')} "><a href="javascript:;" onclick="art_show_msg('加班开发中...',3)"><i class="fa fa-angle-right"></i> 合伙人地图</a></li>
+                                            <li class="{:on('Customer/partner_map')} {:on('Customer/partner_map')} "><a href="{:U('Customer/partner_map')}"><i class="fa fa-angle-right"></i> 合伙人分布</a></li>
+                                            <!--<li class="{:on('Customer/partner_map')} {:on('Customer/partner_map')} "><a href="javascript:;" onclick="art_show_msg('加班开发中...',3)"><i class="fa fa-angle-right"></i> 合伙人分布</a></li>-->
                                         </if>
                                     </ul>
                                 </li>
