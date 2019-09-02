@@ -680,7 +680,7 @@ class CustomerController extends BaseController {
     //城市合伙人地图
     public function partner_map(){
         $this->title('城市合伙人');
-
+        
         $this->display('map');
     }
 

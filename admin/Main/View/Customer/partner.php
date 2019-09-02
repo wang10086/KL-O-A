@@ -20,6 +20,7 @@
                                 <div class="box-header">
                                     <h3 class="box-title">{$_action_}</h3>
                                     <div class="box-tools pull-right">
+                                    	 <a href="{:U('Customer/partner_map')}" class="btn btn-primary btn-sm"><i class="fa fa-map-marker"></i> 合伙人分布</a>
                                     	 <a href="javascript:;" class="btn btn-info btn-sm" onclick="javascript:opensearch('searchtext',700,100);"><i class="fa fa-search"></i> 搜索</a>
                                         <if condition="rolemenu(array('Customer/partner_edit'))">
                                             <a href="{:U('Customer/partner_edit')}" class="btn btn-sm btn-success"><i class="fa fa-plus"></i> 录入合伙人</a>
