@@ -681,7 +681,7 @@ class CustomerController extends BaseController {
     public function partner_map(){
         $this->title('城市合伙人');
 
-        $this->display('map');
+        $this->display('mapp');
     }
 
     //kpi

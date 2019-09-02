@@ -232,7 +232,7 @@
 
     // 展示对应的省
     function showProvince(pName, Chinese_) {
-      //这写省份的js都是通过在线构建工具生成的，保存在本地，需要时加载使用即可，最好不要一开始全部直接引入。
+      //这写省份的js都是通过在线构建工具生成的，保存在本地，需要时加载使用即可，最好不要一开始全部直接引入。\
       loadBdScript('$' + pName + 'JS', './js/map/province/' + pName + '.js', function () {
         initEcharts(Chinese_);
       });
