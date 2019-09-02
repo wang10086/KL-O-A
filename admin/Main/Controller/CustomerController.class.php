@@ -680,9 +680,25 @@ class CustomerController extends BaseController {
     //城市合伙人地图
     public function partner_map(){
         $this->title('城市合伙人');
+        $city_data                  = M('citys')->field('id,name')->select();
+        $num = 1;
+        $data                       = array();
+        foreach ($city_data as $k=>$v){
+            $city_data[$k]['pinyin']= get_all_pinyin($v['name']);
+            //$city_data[$k]['num']   = $num++;
+            $data[$k]['name']       = $v['name'];
+            $data[$k]['value']      = $num++;
+        }
+        $citys                      = json_encode(array_column($city_data,'name'));
+        $city_pinyin                = json_encode(array_column($city_data,'pinyin'));
+       // P($city_data);
 
+        $this->citys                = $citys;
+        $this->city_pinyin          = $city_pinyin;
+        $this->data                 = json_encode($data);
         $this->display('mapp');
     }
+
 
     //kpi
     public function public_kpi_partner(){
