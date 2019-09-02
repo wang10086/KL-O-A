@@ -50,8 +50,7 @@
     option = null;
 
     var data = [
-        {name: '北京', value: 100}
-        /*{name: '海门', value: 9},
+        {name: '海门', value: 9},
         {name: '鄂尔多斯', value: 12},
         {name: '招远', value: 12},
         {name: '舟山', value: 12},
@@ -240,7 +239,7 @@
         {name: '菏泽', value: 194},
         {name: '合肥', value: 229},
         {name: '武汉', value: 273},
-        {name: '大庆', value: 279}*/
+        {name: '大庆', value: 279}
     ];
 
     //var geoCoordMap = {$coordinate};
