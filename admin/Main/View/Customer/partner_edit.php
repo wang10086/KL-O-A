@@ -24,7 +24,7 @@
                                 <div class="box-header">
                                     <h3 class="box-title">合伙人管理</h3>
                                     <h3 class="box-title pull-right" style="font-weight:normal; color:#333333;">
-                                        <?php if (rolemenu(array('Customer/change_cm'))){ ?>
+                                        <?php if (rolemenu(array('Customer/change_cm')) && $partner['id']){ ?>
                                             <span  style=" border: solid 1px #00acd6; padding: 0 5px; border-radius: 5px; background-color: #00acd6; color: #ffffff; margin-left: 20px" onClick="open_change()" title="交接维护人" class="">交接维护人</span>
                                         <?php } ?>
                                     </h3>
