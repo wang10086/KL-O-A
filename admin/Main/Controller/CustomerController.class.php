@@ -743,7 +743,7 @@ class CustomerController extends BaseController {
         $this->display('kpi_partner');
     }
 
-    //交接城市合伙人
+    //交接城市合伙人维护人
     public function change_cm(){
         $db                         = M('customer_partner');
         if (isset($_POST['dosubmit'])){
