@@ -152,10 +152,39 @@
                                    
                                 </div><!-- /.box-body -->
                             </div><!-- /.box -->
-                            
-                            
-                            
-                            
+
+                            <div class="box">
+                                <div class="box-header">
+                                    <h3 class="box-title">合作记录</h3>
+                                    <div class="box-tools pull-right"></div>
+                                </div>
+                                <div class="box-body">
+                                    <table class="table table-bordered dataTable fontmini" id="tablelist">
+                                        <tr role="row" class="orders" >
+                                            <th class="sorting" data="op_id">项目编号</th>
+                                            <th class="" data="group_id">团号</th>
+                                            <th class="" data="project">项目名称</th>
+                                            <th class="" data="sale_user">销售</th>
+                                            <th class="" data="">结算状态</th>
+                                            <th class="">结算金额</th>
+                                        </tr>
+                                        <foreach name="oplist" item="row">
+                                            <tr>
+                                                <td>{$row.op_id}</td>
+                                                <td>{$row.group_id}</td>
+                                                <td><a href="{:U('Finance/settlement', array('opid'=>$row['op_id']))}">{$row.project}</a></td>
+                                                <td>{$row.sale_user}</td>
+                                                <td>{$status[$row[saudit_status]]}</td>
+                                                <td>{$row.settlement_total}</td>
+                                            </tr>
+                                        </foreach>
+                                    </table>
+                                </div>
+                                <div class="box-footer clearfix">
+                                    <div class="pagestyle">{$pages}</div>
+                                </div>
+                            </div>
+
                         </div><!--/.col (right) -->
                     </div>   <!-- /.row -->
                 </section><!-- /.content -->

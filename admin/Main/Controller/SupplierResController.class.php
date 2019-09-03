@@ -86,27 +86,7 @@ class SupplierResController extends BaseController {
 				P::AUDIT_STATUS_NOT_PASS    => '未通过',
         );
 
-        //合作记录
-        $cwhere                             = array();
-        $cwhere['c.type']                   = $row['kind'];
-        $cwhere['c.supplier_id']            = $id;
-        $cwhere['c.status']                 = 2;
-        $cwhere['s.audit_status']           = 1;
-        $field                              = array();
-        $field[]                            = 'c.op_id,s.audit_status';
-        $field[]                            = 'sum(c.total) as total';
-        $lists                              = M()->table('__OP_COSTACC__ as c')->join('__OP_SETTLEMENT__ as s on s.op_id=c.op_id','left')->where($cwhere)->field($field)->group('op_id')->select();
-        $opids                              = array_unique(array_column($lists,'op_id'));
-        $oplist                             = M()->table('__OP__ as o')->join('__OP_SETTLEMENT__ as s on s.op_id=o.op_id','left')->where(array('o.op_id'=>array('in',$opids)))->order($this->orders('o.id'))->field('o.*,s.audit_status as saudit_status')->select();
-        foreach ($oplist as $k=>$v){
-            foreach ($lists as $key=>$value){
-                if ($value['op_id']==$v['op_id']){
-                    $oplist[$k]['settlement_total'] = $value['total'];
-                }
-            }
-        }
-        $this->oplist                       = $oplist;
-
+        $this->oplist                       = get_supplier_op_lists($id,$row['kind']); //合作记录
 		if(I('viewtype')){
 			$this->display('res_view_win');
 		}else{

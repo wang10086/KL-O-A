@@ -87,6 +87,8 @@ class ScienceResController extends BaseController {
 				P::AUDIT_STATUS_NOT_PASS    => '未通过',
         );
         $this->read_res($id,P::UNREAD_CAS_RES); //查看资源
+
+        $this->oplist                       = get_supplier_op_lists($id,6); //合作记录 6=>研究所台站
         $this->display('res_view');
     
     }

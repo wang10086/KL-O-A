@@ -4081,41 +4081,29 @@ function get_yw_department(){
     }
 
     /**
-     * 合格供方类型 C('COST_TYPE') 转化 oa_supplierkind
-     * @param $costType C('COST_TYPE')
-     * @return $supplier_id oa_supplierkind id
+     * 求合格供方合作记录
+     * @param $resid
+     * @param $resKid
+     * @return mixed
      */
-    /* function get_supplierkind($costType){
-        switch ($costType){
-            case 1: //物资
-                $supplier_id            = 7;
-                break;
-            case 6: //研究所台站
-                $supplier_id            = 8;
-                break;
-            case 7: //旅游车队
-                $supplier_id            = 3;
-                break;
-            case 8: //酒店
-                $supplier_id            = 1;
-                break;
-            case 9: //地接社
-                $supplier_id            = 4;
-                break;
-            case 10: //餐厅
-                $supplier_id            = 6;
-                break;
-            case 11: //景点
-                $supplier_id            = 5;
-                break;
-            case 12: //票务
-                $supplier_id            = 5;
-                break;
-            case 4: //其他
-                $supplier_id            = 9;
-                break;
-            default:
-                $supplier_id            = 0;
+    function get_supplier_op_lists($resid,$resKid){
+        $cwhere                             = array();
+        $cwhere['c.type']                   = $resKid;
+        $cwhere['c.supplier_id']            = $resid;
+        $cwhere['c.status']                 = 2;
+        $cwhere['s.audit_status']           = 1;
+        $field                              = array();
+        $field[]                            = 'c.op_id,s.audit_status';
+        $field[]                            = 'sum(c.total) as total';
+        $lists                              = M()->table('__OP_COSTACC__ as c')->join('__OP_SETTLEMENT__ as s on s.op_id=c.op_id','left')->where($cwhere)->field($field)->group('op_id')->select();
+        $opids                              = array_unique(array_column($lists,'op_id'));
+        $oplist                             = M()->table('__OP__ as o')->join('__OP_SETTLEMENT__ as s on s.op_id=o.op_id','left')->where(array('o.op_id'=>array('in',$opids)))->order('o.id desc')->field('o.*,s.audit_status as saudit_status')->select();
+        foreach ($oplist as $k=>$v){
+            foreach ($lists as $key=>$value){
+                if ($value['op_id']==$v['op_id']){
+                    $oplist[$k]['settlement_total'] = $value['total'];
+                }
+            }
         }
-        return $supplier_id;
-    } */
+        return $oplist;
+    }
