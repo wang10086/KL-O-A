@@ -2115,11 +2115,8 @@ class OpController extends BaseController {
 		$list = M()->table('__OP_MATERIAL__ as m')->field('c.*,m.*')->join('__OP_COST__ as c on m.material=c.remark')->where(array('m.op_id'=>$opid,'c.op_id'=>$opid,'c.cost_type'=>4))->order('m.id')->select();
 		
 		foreach($list as $v){
-			
 			echo '<tr class="expense" id="wuzi_nid_'.$v['id'].'"><td><input type="hidden" name="cost['.(20000+$v['id']).'][item]" value="物资费"><input type="hidden" name="cost['.(20000+$v['id']).'][cost_type]" value="4"><input type="hidden" name="cost['.(20000+$v['id']).'][relevant_id]" value="'.$v['material_id'].'"><input type="hidden" name="cost['.(20000+$v['id']).'][remark]" value="'.$v['material'].'"><input type="hidden" name="resid['.(20000+$v['id']).'][id]" value="'.$v['id'].'"><input type="hidden" name="wuzi['.(20000+$v['id']).'][material]" value="'.$v['material'].'"><input type="hidden" name="wuzi['.(20000+$v['id']).'][material_id]" value="'.$v['material_id'].'">'.$v['material'].'</td><td><input type="text" name="cost['.(20000+$v['id']).'][cost]" value="'.$v['cost'].'" placeholder="价格" class="form-control min_input cost"></td><td><span>X</span></td><td><input type="text" name="cost['.(20000+$v['id']).'][amount]" value="'.$v['amount'].'" placeholder="数量" class="form-control min_input amount"></td><td class="total">¥'.($v['cost']*$v['amount']).'</td><td><input type="text" name="wuzi['.(20000+$v['id']).'][remarks]" value="'.$v['remarks'].'" class="form-control"></td><td><a href="javascript:;" class="btn btn-danger btn-flat" onclick="delbox(\'wuzi_nid_'.$v['id'].'\')">删除</a></td></tr>';
-			
 		}
-		
 	}
 
 	// @@@NODE-3###select_product###选择产品模板###

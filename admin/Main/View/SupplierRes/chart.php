@@ -21,15 +21,14 @@
                         <div class="col-xs-12">
 
                             <div class="btn-group" id="catfont" style="padding-bottom:5px;">
-                                <?php if($prveyear>2018){ ?>
-                                    <a href="{:U('SupplierRes/chart',array('year'=>$prveyear,'month'=>'01','pin'=>$pin))}" class="btn btn-default" style="padding:8px 18px;">上一年</a>
+                                <?php if($prveyear>2019){ ?>
+                                    <a href="{:U('SupplierRes/chart',array('year'=>$prveyear,'month'=>'01'))}" class="btn btn-default" style="padding:8px 18px;">上一年</a>
                                 <?php } ?>
                                 <?php
                                     for($i=1;$i<13;$i++){
-                                        $par            = array();
-                                        $par['year']    = $year;
-                                        $par['month']   = str_pad($i,2,"0",STR_PAD_LEFT);
-                                        $par['pin']     = $pin;
+                                        $par = array();
+                                        $par['year']  = $year;
+                                        $par['month'] = str_pad($i,2,"0",STR_PAD_LEFT);
                                         if($month==str_pad($i,2,"0",STR_PAD_LEFT)){
                                             echo '<a href="'.U('SupplierRes/chart',$par).'" class="btn btn-info" style="padding:8px 18px;">'.$i.'月</a>';
                                         }else{
@@ -38,7 +37,7 @@
                                     }
                                 ?>
                                 <?php if($year<date('Y')){ ?>
-                                    <a href="{:U('SupplierRes/chart',array('year'=>$nextyear,'month'=>'01','pin'=>$pin))}" class="btn btn-default" style="padding:8px 18px;">下一年</a>
+                                    <a href="{:U('SupplierRes/chart',array('year'=>$nextyear,'month'=>'01'))}" class="btn btn-default" style="padding:8px 18px;">下一年</a>
                                 <?php } ?>
                             </div>
 
@@ -51,50 +50,32 @@
                                 </div><!-- /.box-header -->
                                 <div class="box-body">
 
-                                    <include file="navigate" />
+                                    <!--<include file="navigate" />-->
+                                    <p>提示：以下数据从已完成结算和报销数据中采集,每月周期为上月26日-本月25日！</p>
 
                                 	<table class="table table-bordered dataTable fontmini" id="tablelist">
                                         <tr role="row" class="orders" >
-                                        	<th class="sorting" data="name">资源名称</th>
-                                            <th class="sorting" data="kind"></th>
-                                            <th class="sorting" data="country"></th>
-                                            <th class="sorting" data="prov"></th>
+                                        	<th class="taskOptions" rowspan="2">供方类型</th>
+                                            <th class="taskOptions" colspan="3">{$year}年01月-{$month}月累计</th>
+                                            <th class="taskOptions" colspan="3">{$year}年{$month}月累计</th>
                                         </tr>
-                                        <foreach name="lists" item="row">                      
+                                        <tr class="orders">
+                                            <th class="taskOptions">项目数</th>
+                                            <th class="taskOptions">结算金额</th>
+                                            <th class="taskOptions">报销金额</th>
+                                            <th class="taskOptions">项目数</th>
+                                            <th class="taskOptions">结算金额</th>
+                                            <th class="taskOptions">报销金额</th>
+                                        </tr>
+                                        <foreach name="data" item="row">
                                         <tr>
-                                            <td><a href="{:U('SupplierRes/res_view', array('id'=>$row['id']))}">{$row.name}</a></td>
-                                            <td><?php echo $reskind[$row['kind']]; ?></td>
-                                            <td>{$row.country}</td>
-                                            <td>{$row.prov}</td>
-                                            <td>{$row.city}</td>
-                                            <td><if condition="$row['input_time']">{$row.input_time|date='Y-m-d H:i:s',###}</if></td>
-                                            <td>{$row.input_uname}</td>
-                                            <?php 
-                                            if($row['audit_status']== P::AUDIT_STATUS_NOT_AUDIT){
-                                                $show  = '<td>等待审批</td>';	
-                                            }else if($row['audit_status'] == P::AUDIT_STATUS_PASS){
-                                                $show  = '<td><span class="green">通过</span></td>';	
-                                            }else if($row['audit_status'] == P::AUDIT_STATUS_NOT_PASS){
-                                                $show  = '<td><span class="red">不通过</span></td>';	
-                                            }
-                                            echo $show;
-                                            ?>
-                                            
-                                            <if condition="rolemenu(array('SupplierRes/addres'))">
-                                            <td class="taskOptions">
-                                            
-                                            <button onClick="javascript:window.location.href='{:U('SupplierRes/addres',array('id'=>$row['id']))}';" title="修改" class="btn btn-info btn-smsm"><i class="fa fa-pencil"></i></button>
-                                            
-                                            <!--
-                                            <button onClick="openform('{:U('Rights/grant',array('res'=>'cas_res','resid'=>$row['id']))}');" title="修改" class="btn btn-info btn-smsm"><i class="fa fa-pencil"></i></button>
-                                            -->
-                                            </td>
-                                            </if>
-                                            <if condition="rolemenu(array('SupplierRes/delres'))">
-                                            <td class="taskOptions">
-                                            <button onClick="javascript:ConfirmDel('{:U('SupplierRes/delres',array('id'=>$row['id']))}')" title="删除" class="btn btn-warning btn-smsm"><i class="fa fa-times"></i></button>
-                                            </td>
-                                            </if>
+                                            <td class="taskOptions"><a href="{:U('SupplierRes/public_chart_detail',array('year'=>$year,'month'=>$month,'kid'=>$row['kid']))}">{$row.kindName}</a></td>
+                                            <td class="taskOptions">{$row.year_op_num}</td>
+                                            <td class="taskOptions">{$row.year_total}</td>
+                                            <td class="taskOptions">{$row.year_expense_total}</td>
+                                            <td class="taskOptions">{$row.month_op_num}</td>
+                                            <td class="taskOptions">{$row.month_total}</td>
+                                            <td class="taskOptions">{$row.month_expense_total}</td>
                                         </tr>
                                         </foreach>		
                                         
@@ -113,48 +94,5 @@
             </aside><!-- /.right-side -->
 
         <include file="Index:footer2" />
-        
-        <!--<div id="searchtext">
-            <form action="" method="get" id="searchform">
-            <input type="hidden" name="m" value="Main">
-            <input type="hidden" name="c" value="SupplierRes">
-            <input type="hidden" name="a" value="res">
-            <input type="hidden" name="pin" value="{$pin}">
-            <div class="form-group col-md-12">
-                <input type="text" class="form-control" name="key" placeholder="关键字">
-            </div>
-            
-            <div class="form-group col-md-6">
-                <input type="text" class="form-control" name="city" placeholder="城市">
-            </div>
 
-            <div class="form-group col-md-6">
-                <select class="form-control" name="type">
-                    <option value="0">供方类型</option>
-                    <foreach name="reskind" key="k" item="v">
-                    <option value="{$k}">{$v}</option>
-                    </foreach>
-                </select>
-            </div>
-            </form>
-        </div>-->
-        
-        <!--<script type="text/javascript">
-                function openform(obj){
-                    art.dialog.open(obj,{
-                        lock:true,
-                        id:'respriv',
-                        title: '权限分配',
-                        width:600,
-                        height:300,
-                        okValue: '提交',
-                        ok: function () {
-                            this.iframe.contentWindow.myform.submit();
-                            return false;
-                        },
-                        cancelValue:'取消',
-                        cancel: function () {
-                        }
-                    });	
-                } 
-        </script>-->
+

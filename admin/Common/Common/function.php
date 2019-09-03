@@ -4908,6 +4908,31 @@ function getScienceRes(){
         return $arr;
     }
 
+    /**
+     * 二维数组分页
+     * @param $arr      二维数组
+     * @param $p        页数,第几页
+     * @param $count    每页显示条数
+     * @return mixed
+     */
+    function arr_page($arr,$p,$count){
+        if (empty($p)){
+            $p = 1;
+        }
+
+        if (empty($count)){
+            $count = 20;
+        }
+
+        $start = ($p-1)*$count;
+        for ($i=$start;$i<$start+$count;$i++){
+            if (!empty($arr[$i])){
+                $new_arr[$i] = $arr[$i];
+            }
+        }
+        return $new_arr;
+    }
+
 /**
  * 根据月份获取季度
  * @param $month

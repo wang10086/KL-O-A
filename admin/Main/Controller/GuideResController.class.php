@@ -87,11 +87,17 @@ class GuideResController extends BaseController {
         $this->cost     = $cost;
 
         //出团记录
-        $opids = M('guide as g')->join("left join oa_op_guide as o on o.guide_id = g.id ")->where(array('g.id'=>$id))->field('o.op_id')->select();
-        $opids = array_column($opids,'op_id');
-        foreach ($opids as $v){
+        //$opids = M('guide as g')->join("left join oa_op_guide as o on o.guide_id = g.id ")->where(array('g.id'=>$id))->field('o.op_id')->select();
+        //$opids = array_column($opids,'op_id');
+        /*foreach ($opids as $v){
             $guide      = M()->table('__OP_GUIDE__ as g')->field('g.*,c.cost,c.really_cost,c.upd_remark,p.group_id,p.project,s.audit_status')->join('__OP_COST__ as c on c.link_id=g.id')->join("left join __OP__ as p on p.op_id = g.op_id")->join("left join __OP_SETTLEMENT__ as s on s.op_id = g.op_id")->where(array('c.remark'=>$row['name']))->select();
-        }
+        }*/
+        //分页
+        $pagecount                      = M()->table('__OP_GUIDE__ as g')->field('g.*,c.cost,c.really_cost,c.upd_remark,p.group_id,p.project,s.audit_status')->join('__OP_COST__ as c on c.link_id=g.id')->join("left join __OP__ as p on p.op_id = g.op_id")->join("left join __OP_SETTLEMENT__ as s on s.op_id = g.op_id")->where(array('c.remark'=>$row['name']))->count();
+        $page                           = new Page($pagecount, P::PAGE_SIZE);
+        $this->pages                    = $pagecount>P::PAGE_SIZE ? $page->show():'';
+
+        $guide                          = M()->table('__OP_GUIDE__ as g')->field('g.*,c.cost,c.really_cost,c.upd_remark,p.group_id,p.project,s.audit_status')->join('__OP_COST__ as c on c.link_id=g.id')->join("left join __OP__ as p on p.op_id = g.op_id")->join("left join __OP_SETTLEMENT__ as s on s.op_id = g.op_id")->where(array('c.remark'=>$row['name']))->limit($page->firstRow . ',' . $page->listRows)->order($this->orders('p.id'))->select();
         foreach ($guide as $k=>$v){
             if ($v['audit_status']==0) $guide[$k]['stu']  = '<span class="yellow">已提交结算</span>';
             if ($v['audit_status']==1) $guide[$k]['stu']  = '<span class="green">完成结算</span>';

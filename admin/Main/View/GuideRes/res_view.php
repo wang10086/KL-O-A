@@ -93,7 +93,7 @@
                                         </div>
 
 
-                                        <div class="content" style="padding-top:0px;">
+                                        <div class="form-group col-md-12 content" style="padding-top:0px;">
                                             <div id="costium">
                                                 <div class="userlist form-title">
                                                     <div class="costbox">所属分类</div>
@@ -111,10 +111,7 @@
                                             </div>
                                             <div class="form-group">&nbsp;</div>
                                         </div>
-
-
                                     </div>
-                                    
                                 </div><!-- /.box-body -->
                             </div><!-- /.box -->
                             
@@ -138,8 +135,6 @@
                                     <h3 class="box-title">出团记录</h3>
                                 </div><!-- /.box-header -->
                                 <div class="box-body">
-
-
                                     <div class="content" style="margin-top:10px;">
                                         <table class="table table-bordered dataTable fontmini" id="tablelist">
                                             <tr role="row" class="orders" >
@@ -151,18 +146,15 @@
                                                 <th class="sorting" data="really_cost">实际提成</th>
                                                 <th class="sorting" data="remark">备注</th>
 
-                                                <if condition="rolemenu(array('GuideRes/upd_cost'))">
+                                                <!--<if condition="rolemenu(array('GuideRes/upd_cost'))">
                                                     <th width="60" class="taskOptions">编辑</th>
-                                                </if>
-                                                <!--<if condition="rolemenu(array(''))">
-                                                    <th width="60" class="taskOptions">删除</th>
                                                 </if>-->
                                             </tr>
                                             <foreach name="guide" item="row">
                                                 <tr>
                                                     <td>{$row.op_id}</td>
                                                     <td>{$row.group_id}</td>
-                                                    <td><a href="javascript:;">{$row.project}</a></td>
+                                                    <td><a href="{:U('Finance/settlement',array('opid'=>$row['op_id']))}">{$row.project}</a></td>
                                                     <td>{$row.stu}</td>
                                                     <td>¥{$row.cost}</td>
                                                     <if condition="$row[really_cost] eq $row[cost]">
@@ -172,23 +164,19 @@
                                                     </if>
                                                     <td>{$row.remark}</td>
 
-                                                    <if condition="rolemenu(array('GuideRes/upd_cost'))">
+                                                    <!--<if condition="rolemenu(array('GuideRes/upd_cost'))">
                                                         <td class="taskOptions">
                                                             <button onClick="javascript:{:open_cost($row['op_id'],$row['cost'],$row['name'])}" title="编辑" class="btn btn-info btn-smsm"><i class="fa fa-pencil"></i></button>
                                                         </td>
-                                                    </if>
-                                                    <!--<if condition="rolemenu(array('GuideRes/del'))">
-                                                        <td class="taskOptions">
-                                                            <button onClick="javascript:ConfirmDel('{:U('GuideRes/del',array('id'=>$row['id']))}');" title="删除" class="btn btn-warning btn-smsm"><i class="fa fa-times"></i></button>
-                                                        </td>
                                                     </if>-->
-
                                                 </tr>
                                             </foreach>
                                         </table>
                                     </div>
-
                                 </div><!-- /.box-body -->
+                                <div class="box-footer clearfix">
+                                    <div class="pagestyle">{$pages}</div>
+                                </div>
                             </div><!-- /.box -->
                             
                             

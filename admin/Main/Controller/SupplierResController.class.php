@@ -276,7 +276,7 @@ class SupplierResController extends BaseController {
     }
 
     //资源统计
-    public function chart(){
+    /*public function chart(){
         $this->title('资源统计');
         $year                   = I('year',date('Y'));
         $month                  = I('month',date('m'));
@@ -288,18 +288,16 @@ class SupplierResController extends BaseController {
         $this->nextyear		    = $year+1;
         $this->pin              = $pin;
         $this->display();
-    }
+    }*/
 
     //资源统计
-    public function chart_supplier(){
+    public function chart(){
         $this->title('资源统计');
         $mod                    = D('Supplier');
         $year                   = I('year',date('Y'));
         $month                  = I('month',date('m'));
         $where                  = array();
-        $where['id']            = array('not in',array(2,6));
         $supplierKinds          = M('supplierkind')->where($where)->getField('id,name',true);
-
         $data                   = $mod -> get_supplier_chart($supplierKinds,$year,$month);
 
         $this->data             = $data;
@@ -312,14 +310,25 @@ class SupplierResController extends BaseController {
     }
 
     //供方统计详情页
-    public function public_chart_supplier_detail(){
+    public function public_chart_detail(){
         $this->title('供方统计详情');
         $mod                    = D('Supplier');
         $year                   = I('year',date('Y'));
         $month                  = I('month',date('m'));
         $kid                    = I('kid',0);
         $supplierKind           = M('supplierkind')->where(array('id'=>$kid))->field('id,name')->find();
-        $data                   = $mod -> get_supplier_lists($supplierKind,$year,$month);
+        if ($supplierKind['id'] == 2){
+            $data               = $mod -> get_guide_supplier_lists($supplierKind,$year,$month);
+        }else{
+            $data               = $mod -> get_supplier_lists($supplierKind,$year,$month);
+        }
+
+        //分页
+        $p                              = I('p',1);
+        $pagecount                      = count($data);
+        $page                           = new Page($pagecount, P::PAGE_SIZE);
+        $this->pages                    = $pagecount>P::PAGE_SIZE ? $page->show():'';
+        $data                           = arr_page($data,$p,20);
 
         $this->data             = $data;
         $this->supplierKind     = $supplierKind;
@@ -328,8 +337,7 @@ class SupplierResController extends BaseController {
         $this->month            = $month;
         $this->prveyear         = $year-1;
         $this->nextyear         = $year+1;
-        $this->display('chart_supplier_detail');
+        $this->display('chart_detail');
     }
-    
     
 }

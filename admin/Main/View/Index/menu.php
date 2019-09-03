@@ -224,8 +224,8 @@
                                 </li>
                                 </if>
 
-                                <if condition="rolemenu(array('SupplierRes/chart','SupplierRes/chart_supplier'))">
-                                    <li class="{:on('SupplierRes/chart')} {:on('SupplierRes/chart_supplier')}"><a href="{:U('SupplierRes/chart')}"><i class="fa fa-bar-chart"></i> 资源统计</a></li>
+                                <if condition="rolemenu(array('SupplierRes/chart'))">
+                                    <li class="{:on('SupplierRes/chart')}"><a href="{:U('SupplierRes/chart')}"><i class="fa fa-bar-chart"></i> 资源统计</a></li>
                                 </if>
                             </ul>
                         </li>
