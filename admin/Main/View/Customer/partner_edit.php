@@ -47,8 +47,8 @@
 
                                         <div class="form-group col-md-4">
                                             <label>销售人员：</label>
-                                            <input type="text" class="form-control" id="sale_name" name="info[sale_name]" value="<?php echo $partner['sale_name']?$partner['sale_name']:session('nickname'); ?>" />
-                                            <input type="hidden" id="sale_id" name="info[sale_id]" value="<?php echo $partner['sale_id']?$partner['sale_id']:session('userid');  ?>" />
+                                            <input type="text" class="form-control" id="sale_name" name="info[sale_name]" value="{$partner.sale_name}" />
+                                            <input type="hidden" id="sale_id" name="info[sale_id]" value="{$partner.sale_id}" />
                                         </div>
 
                                         <div class="form-group col-md-4">
