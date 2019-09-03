@@ -604,7 +604,7 @@ class CustomerController extends BaseController {
                         $title   = '您有新的的城市合伙人待审核,城市合伙人名称：'.$partner['name'].'，请及时处理!';
                         $content = '城市合伙人名称：'.$partner['name'].'；独家区域：'.$partner['agent_province'].$partner['city'].$partner['country'];
                         $url     = U('Customer/partner_detail',array('id'=>$partner_id));
-                        $user    = '[1]'; //乔总
+                        $user    = '[32]'; //王凯
                         $roleid  = '';
                         send_msg($uid,$title,$content,$url,$user,$roleid);
 
@@ -741,5 +741,22 @@ class CustomerController extends BaseController {
         $this->end_time             = $end_time;
         $this->target               = $target;
         $this->display('kpi_partner');
+    }
+
+    //交接城市合伙人
+    public function change_cm(){
+        $db                         = M('customer_partner');
+        if (isset($_POST['dosubmit'])){
+            $id                     = I('id');
+            $info                   = I('info');
+            $res                    = $db->where(array('id'=>$id))->save($info);
+            echo '<script>window.top.location.reload();</script>';
+        }else{
+            $id                     = I('id');
+            $list                   = $db->where(array('id'=>$id))->find();
+            $this->list             = $list;
+            $this->userkey          = get_username();
+            $this->display();
+        }
     }
 }

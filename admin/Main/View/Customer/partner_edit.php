@@ -23,31 +23,38 @@
                             <div class="box box-warning">
                                 <div class="box-header">
                                     <h3 class="box-title">合伙人管理</h3>
+                                    <h3 class="box-title pull-right" style="font-weight:normal; color:#333333;">
+                                        <?php if (rolemenu(array('Op/change_op'))){ ?>
+                                            <span  style=" border: solid 1px #00acd6; padding: 0 5px; border-radius: 5px; background-color: #00acd6; color: #ffffff; margin-left: 20px" onClick="open_change()" title="交接维护人" class="">交接维护人</span>
+                                        <?php } ?>
+                                    </h3>
                                 </div><!-- /.box-header -->
                                 <div class="box-body">
                                     <div class="content">
                                     	
-                                        <div class="form-group col-md-4">
+                                        <div class="form-group col-md-12">
                                             <label>合伙人名称：</label><input type="text" name="info[name]" class="form-control" value="{$partner.name}"/>
                                         </div>
-                                        
-                                        <div class="form-group col-md-4">
-                                            <label>合伙人级别：</label>
-                                            <select  class="form-control"  name="info[level]">
-                                            	<option value="" selected disabled>==请选择==</option>
-                                                <option value="1" <?php if($partner['level']=='1'){ echo 'selected';} ?>>省级</option>
-                                                <option value="2" <?php if($partner['level']=='2'){ echo 'selected';} ?>>市级</option>
-                                                <option value="3" <?php if($partner['level']=='3'){ echo 'selected';} ?>>区/县级</option>
-                                            </select> 
-                                        </div>
-                                        
+
                                         <div class="form-group col-md-4">
                                             <label>是否签订合伙人协议：</label>
                                             <select  class="form-control"  name="info[agreement]">
-                                            	<option value="" selected disabled>==请选择==</option>
-                                            	<option value="1" <?php if($partner['agreement']=='1'){ echo 'selected';} ?>>已签订</option>
+                                                <option value="" selected disabled>==请选择==</option>
+                                                <option value="1" <?php if($partner['agreement']=='1'){ echo 'selected';} ?>>已签订</option>
                                                 <option value="0" <?php if($partner['agreement']=='0'){ echo 'selected';} ?>>未签订</option>
                                             </select>
+                                        </div>
+
+                                        <div class="form-group col-md-4">
+                                            <label>销售人员：</label>
+                                            <input type="text" class="form-control" id="sale_name" name="info[sale_name]" value="<?php echo $partner['sale_name']?$partner['sale_name']:session('nickname'); ?>" />
+                                            <input type="hidden" id="sale_id" name="info[sale_id]" value="<?php echo $partner['sale_id']?$partner['sale_id']:session('userid');  ?>" />
+                                        </div>
+
+                                        <div class="form-group col-md-4">
+                                            <label>维护人：</label>
+                                            <input type="text" class="form-control" id="cm_name" name="info[cm_name]" value="{$partner.cm_name}" />
+                                            <input type="hidden" id="cm_id" name="info[cm_id]" value="{$partner.cm_id}" />
                                         </div>
 
                                         <div class="form-group col-md-4">
@@ -121,9 +128,13 @@
                                         </div>
 
                                         <div class="form-group col-md-4">
-                                            <label>维护人：</label>
-                                            <input type="text" class="form-control" id="cm_name" name="info[cm_name]" value="<?php echo $partner['cm_name']?$partner['cm_name']:session('nickname'); ?>" />
-                                            <input type="hidden" id="cm_id" name="info[cm_id]" value="<?php echo $partner['cm_id']?$partner['cm_id']:session('userid');  ?>" />
+                                            <label>合伙人级别：</label>
+                                            <select  class="form-control"  name="info[level]">
+                                                <option value="" selected disabled>==请选择==</option>
+                                                <option value="1" <?php if($partner['level']=='1'){ echo 'selected';} ?>>省级</option>
+                                                <option value="2" <?php if($partner['level']=='2'){ echo 'selected';} ?>>市级</option>
+                                                <option value="3" <?php if($partner['level']=='3'){ echo 'selected';} ?>>区/县级</option>
+                                            </select>
                                         </div>
 
                                         <div class="form-group col-md-4">
@@ -234,8 +245,30 @@
 <script type="text/javascript">
     $(function () {
         var userkey     = {$userkey};
+        private_autocomplete_id('sale_name','sale_id',userkey);
         autocomplete_id('cm_name','cm_id',userkey);
     })
+
+    function private_autocomplete_id(username,userid,keywords){
+        var cm_name     = $('#cm_name').val().trim();
+        var cm_id       = $('#cm_id').val();
+        $("#"+username+"").autocomplete(keywords, {
+            matchContains: true,
+            highlightItem: false,
+            formatItem: function(row, i, max, term) {
+                return '<span style=" display:none">'+row.pinyin+'</span>'+row.text;
+            },
+            formatResult: function(row) {
+                return row.text;
+            }
+        }).result(function (event, item) {
+            $("#"+userid+"").val(item.id);
+            if (!cm_id){
+                $('#cm_id').val(item.id);
+                $('#cm_name').val(item.text);
+            }
+        });
+    }
 
     //省市联动(所在地)
     $('#s_province').change(function () {
@@ -455,5 +488,25 @@
             }
         });
 
+    }
+
+    //交接维护人
+    function open_change () {
+        art.dialog.open('<?php echo U('Customer/change_cm',array('id'=>$partner['id'])) ?>', {
+            lock:true,
+            id: 'change',
+            title: '交接维护人',
+            width:600,
+            height:300,
+            okValue: '提交',
+            ok: function () {
+                this.iframe.contentWindow.gosubmint();
+                //location.reload();
+                return false;
+            },
+            cancelValue:'取消',
+            cancel: function () {
+            }
+        });
     }
 </script>

@@ -1032,7 +1032,7 @@
             okValue: '提交',
             ok: function () {
                 this.iframe.contentWindow.gosubmint();
-                location.reload();
+                //location.reload();
                 return false;
             },
             cancelValue:'取消',
