@@ -84,7 +84,12 @@
                                            <?php if(rolemenu(array('Op/select_module')) && $settlement['audit']!=1 && ($op['create_user']==cookie('userid') ||C('RBAC_SUPER_ADMIN')==cookie('username') ||cookie('roleid')==10)){ ?>
                                                 <include file="op_product_edit" />
                                            <?php }else{ ?>
-                                               <include file="op_product_read" />
+                                               <?php if ($product_need){ ?>
+                                                   <include file="op_product_read" />
+                                               <?php } ?>
+                                               <?php if($op['line_id']){ ?>
+                                                   <include file="op_line" />
+                                               <?php } ?>
                                            <?php } ?>
                                        <?php }else{ ?>
                                            <?php if(rolemenu(array('Op/public_save_line')) && $settlement['audit']!=1  && ($opauth['line']==cookie('userid')|| C('RBAC_SUPER_ADMIN')==cookie('username') ||rolemenu(array('Op/assign_line')))){ ?>

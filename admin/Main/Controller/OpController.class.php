@@ -2130,17 +2130,17 @@ class OpController extends BaseController {
 		$kind         = I('kind','-1');
 		$mdd          = I('mdd');
 
-		$db = M('product_line');
+		$db           = M('product_line');
 		$this->status = $status;
 		$this->kind   = $kind;
-		$where = array();
+		$where        = array();
 		if($this->status != '-1') $where['audit_status'] = $this->status;
 		if($this->kind != '-1')   $where['kind'] = $this->kind;
 		if($key)    $where['title'] = array('like','%'.$key.'%');
 		if($mdd)    $where['dest']  = array('like','%'.$mdd.'%');
 		
 		$pagecount   = $db->where($where)->count();
-        $page = new Page($pagecount,25);
+        $page        = new Page($pagecount,25);
         $this->pages = $pagecount>25 ? $page->show():'';
 		$this->lists = $db->where($where)->limit($page->firstRow . ',' . $page->listRows)->order($this->orders('input_time'))->select();
 		$this->kindlist = M('project_kind')->select();
