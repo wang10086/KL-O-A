@@ -109,10 +109,6 @@
                                                 </tr>
                                                 </thead>
 
-                                                <style>
-
-                                                </style>
-
                                                 <tbody>
                                                 <foreach name="cas_res_kind" item="v">
                                                     <tr class="expense">
@@ -137,23 +133,19 @@
 
                                 </div><!-- /.box-body -->
                             </div><!-- /.box -->
-                            
-                            
+
                             <div class="box box-success">
                                 <div class="box-header">
                                     <h3 class="box-title">资源介绍</h3>
                                 </div><!-- /.box-header -->
                                 <div class="box-body">
-                                	
-                                    
                                     <div class="content" style="margin-top:10px;">
                                     	<div class="form-group col-md-12 viwe">{$row.content}</div>
                                     </div>
-                                   
                                 </div><!-- /.box-body -->
                             </div><!-- /.box -->
 
-                            <div class="box">
+                            <div class="box box-success">
                                 <div class="box-header">
                                     <h3 class="box-title">合作记录</h3>
                                     <div class="box-tools pull-right"></div>

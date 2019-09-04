@@ -3393,6 +3393,18 @@ function updatekpi($month,$user){
                         $url                    = U('Kpi/public_sales_ratio',array('ym'=>$v['month'],'sum_ids'=>$data['sum_ids'],'sale_ids'=>$data['sale_ids']));
                     }
 
+                    //工作负荷率
+                    if ($v['quota_id']==233){
+                        $end_time               = $v['end_date'] -1;
+                        $worder_lists           = get_workload_worders($v['user_id'],$v['start_date'],$end_time); //求所有响应时间或者计划完成时间在本周期的工单信息
+                        $work_day_data          = get_cycle_work_day_data($v['start_date'],$end_time);
+                        $workload_data          = get_workload_data($worder_lists,$work_day_data,$v['start_date'],$end_time); //求工时信息
+                        $workDayNum             = $work_day_data['workDayNum'] * 8; //当月应工作日*8hours
+                        $workLoadDayNum         = $workload_data['workLoadDayNum'] * 8;
+                        $complete               = (round($workLoadDayNum/$workDayNum,4)*100).'%';
+                        $url                    = '';
+                    }
+
                    /* }*/
 
                     //已实现自动获取指标值
@@ -4224,19 +4236,14 @@ function intervalsn($value,$ratio){
 	return $return;
 }
 
-
-
-/*
- * 获取某个工作日之后的日期
- * 1.n个工作日
- * 2.开始时间
- * */
-function getAfterWorkDay($n,$start_time = NOW_TIME){
-    $n = $n+1; //结束日期是0:0:0,所以加一天
-	//节假日
-	$holiday=[
-	    '2019-01-01','2019-01-05','2019-01-06','2019-01-12','2019-01-13','2019-01-19','2019-01-20','2019-01-26','2019-01-27',
-	    '2019-02-04','2019-02-05','2019-02-06','2019-02-07','2019-02-08','2019-02-09','2019-02-10','2019-02-16','2019-02-17','2019-02-23','2019-02-24',
+    /**
+     * 节假日
+     * @return array
+     */
+function get_holidays(){
+    $holiday=[
+        '2019-01-01','2019-01-05','2019-01-06','2019-01-12','2019-01-13','2019-01-19','2019-01-20','2019-01-26','2019-01-27',
+        '2019-02-04','2019-02-05','2019-02-06','2019-02-07','2019-02-08','2019-02-09','2019-02-10','2019-02-16','2019-02-17','2019-02-23','2019-02-24',
         '2019-03-02','2019-03-03','2019-03-09','2019-03-10','2019-03-16','2019-03-17','2019-03-23','2019-03-24','2019-03-30','2019-03-31',
         '2019-04-05','2019-04-06','2019-04-07','2019-04-13','2019-04-14','2019-04-20','2019-04-21','2019-04-27',
         '2019-05-01','2019-05-02','2019-05-03','2019-05-04','2019-05-11','2019-05-12','2019-05-18','2019-05-19','2019-05-25','2019-05-26',
@@ -4248,11 +4255,23 @@ function getAfterWorkDay($n,$start_time = NOW_TIME){
         '2019-11-02','2019-11-03','2019-11-09','2019-11-10','2019-11-16','2019-11-17','2019-11-23','2019-11-24','2019-11-30',
         '2019-12-01','2019-12-07','2019-12-08','2019-12-14','2019-12-15','2019-12-21','2019-12-22','2019-12-28','2019-12-29'
     ];
-	$time=$start_time;
+    return $holiday;
+}
+
+/*
+ * 获取某个工作日之后的日期
+ * 1.n个工作日
+ * 2.开始时间
+ * */
+function getAfterWorkDay($n,$start_time = NOW_TIME){
+    $n          = $n+1; //结束日期是0:0:0,所以加一天
+	//节假日
+	$holiday    = get_holidays();
+	$time       =$start_time;
 	$start_timestamp=$time;
 
 	//计算两个工作日后的时间
-	$t = afterWorkDay($start_timestamp,$n,$holiday);
+	$t          = afterWorkDay($start_timestamp,$n,$holiday);
 	return $t;
 }
 

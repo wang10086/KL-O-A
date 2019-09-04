@@ -4107,3 +4107,91 @@ function get_yw_department(){
         }
         return $oplist;
     }
+
+    /**
+     * 求所有响应时间或者计划完成时间在本周期的工单信息
+     * @param $uid
+     * @param int $startTime
+     * @param int $endTime
+     * @return mixed
+     */
+    function get_workload_worders($uid,$startTime=0,$endTime=0){
+        $where                  = array();
+        $where['status']        = array('not in',array(-1,-2)); //-1拒绝, -2=>撤销
+        $where['_string']       = "((assign_id = $uid) OR (exe_user_id = $uid and assign_id = 0)) AND ((response_time between $startTime and $endTime) OR (plan_complete_time between $startTime and $endTime))";
+        $lists  = M()->table('__WORDER__ as w')->field('w.*,d.use_time')->join('__WORDER_DEPT__ as d on d.id=w.wd_id','left')->where($where)->select();
+        foreach ($lists as $k=>$v){
+            $lists[$k]['str_plan_complete_time'] = date('Y-m-d',$v['plan_complete_time']);
+            $lists[$k]['str_response_time']      = date('Y-m-d',$v['response_time']);
+        }
+        return $lists;
+    }
+
+    //求工时信息
+    function get_workload_data($lists,$work_day_data,$startTime,$endTime){
+        $workDay                = $work_day_data['workDay'];
+        $workLoadDayNum         = 0; //工作天数
+        foreach ($lists as $k=>$v){
+            //比较工单响应时间 和 计划完成时间
+            /*if ($v['response_time'] < $startTime && $v['plan_complete_time'] < $endTime){ //上周期提需求,本周期完成
+                $worderDayNum   = get_worder_day_num($workDay,$v['response_time'],$v['plan_complete_time']);
+                $num            = $worderDayNum - 1; //去尾
+            }elseif ($v['response_time'] > $startTime && $v['plan_complete_time'] > $endTime){ //本周期提需求,下周期完成
+                $worderDayNum   = get_worder_day_num($workDay,$v['response_time'],$v['plan_complete_time']);
+                $num            = $worderDayNum - 1; //掐头
+            }else{ //本周期提需求,本周期完成
+                $worderDayNum   = get_worder_day_num($workDay,$v['response_time'],$v['plan_complete_time']);
+                $num            = $worderDayNum - 1;
+            }*/
+            $worderDayNum       = get_worder_day_num($workDay,$v['response_time'],$v['plan_complete_time']);
+            $num                = $worderDayNum - 1;
+            $num                = $num < 0 ? 0 : $num;
+            $workLoadDayNum     += $num;
+            $lists[$k]['worderDayNum'] = $num;
+        }
+        $data                   = array();
+        $data['workLoadDayNum'] = $workLoadDayNum;
+        $data['lists']          = $lists;
+        return $data;
+    }
+
+    function get_worder_day_num($workDay,$startTime,$endTime){
+        $middle                 = $startTime;
+        $num                    = 0;
+        while ($middle <= $endTime){
+            $str_day            = date('Y-m-d',$middle);
+            if (in_array($str_day,$workDay)){
+                $num++;
+            }
+            $middle             = strtotime('+1 day',$middle);
+        }
+        return $num;
+    }
+
+    /**
+     * 获取本周期的工作日天数,工作日,节假日
+     * @param $startTime
+     * @param $endTime
+     * @return array
+     */
+    function get_cycle_work_day_data($startTime,$endTime){
+        $holidays               = get_holidays();
+        $middle                 = $startTime;
+        $num                    = 0;
+        $work_day               = array();
+        while ($middle <= $endTime){
+            $str_day            = date('Y-m-d',$middle);
+            if (!in_array($str_day,$holidays)){
+                $num++;
+                $work_day[]     = $str_day;
+            }
+            $middle             = strtotime('+1 day',$middle);
+        }
+        $data                   = array();
+        $data['workDayNum']     = $num;
+        $data['workDay']        = $work_day;
+        $data['holiday']        = $holidays;
+        return $data;
+    }
+
+
