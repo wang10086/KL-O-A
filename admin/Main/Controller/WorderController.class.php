@@ -414,62 +414,6 @@ class WorderController extends BaseController{
         }
     }
 
-
-    /**
-     * CREATE TABLE `oa_satisfaction` (
-    `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
-    `` int(11) NOT NULL DEFAULT '0' COMMENT '关联的相关id, kind=>2,工单id',
-    `type` tinyint(4) NOT NULL DEFAULT '0' COMMENT '评分类型 : 0=>其他 ,1=>研发',
-    `kind` tinyint(4) NOT NULL DEFAULT '0' COMMENT '评分类型 ; 1=>内部人员满意度评分,2=>工单评分',
-    `account_id` int(11) NOT NULL COMMENT '被评分人id',
-    `account_name` varchar(24) NOT NULL COMMENT '被评分人name',
-    `input_userid` int(11) NOT NULL DEFAULT '0' COMMENT '评分人员id',
-    `input_username` varchar(20) NOT NULL COMMENT '评分人员名称',
-    `monthly` char(6) NOT NULL DEFAULT '' COMMENT '年月',
-    `has_rd` tinyint(4) NOT NULL DEFAULT '0' COMMENT '本部门有无相关岗位(两种评分页面) 0=>无 , 1=>有',
-    `problem` varchar(200) DEFAULT NULL COMMENT '问题',
-    `content` varchar(200) NOT NULL DEFAULT '' COMMENT '评价内容',
-    `` int(11) NOT NULL DEFAULT '0',
-    `dimension` tinyint(4) NOT NULL DEFAULT '0' COMMENT '考核维度',
-    `AA` tinyint(4) NOT NULL DEFAULT '0' COMMENT '内部人员评分结果,字段名请针对score_dimension表中用户id和对应字段',
-    `BB` tinyint(4) NOT NULL DEFAULT '0' COMMENT '内部人员评分结果,字段名请针对score_dimension表中用户id和对应字段',
-    `CC` tinyint(4) NOT NULL DEFAULT '0' COMMENT '内部人员评分结果,字段名请针对score_dimension表中用户id和对应字段',
-    `DD` tinyint(4) NOT NULL DEFAULT '0' COMMENT '内部人员评分结果,字段名请针对score_dimension表中用户id和对应字段',
-    `EE` tinyint(4) NOT NULL DEFAULT '0' COMMENT '	内部人员评分结果,字段名请针对score_dimension表中用户id和对应字段',
-    `FF` tinyint(4) NOT NULL DEFAULT '0' COMMENT '内部人员评分结果,字段名请针对score_dimension表中用户id和对应字段',
-    PRIMARY KEY (`id`),
-    KEY `account_id` (`account_id`)
-    ) ENGINE=InnoDB AUTO_INCREMENT=279 DEFAULT CHARSET=utf8 COMMENT='内部员工评价表';
-     */
-
-    /**
-     * D:\o2o\oa\admin\Main\Controller\WorderController.class.php:445:
-    array (size=6)
-    'dosubmint' => string '1' (length=1)
-    'id' => string '1727' (length=4)
-    'info' =>
-        array (size=1)
-        'status' => string '-3' (length=2)
-    'sco' =>
-        array (size=9)
-        'bpfr_id' => string '164' (length=3)
-        'bpfr_name' => string '杜莹' (length=6)
-        'AA' => string '3' (length=1)
-        'BB' => string '4' (length=1)
-        'CC' => string '5' (length=1)
-        'DD' => string '3' (length=1)
-        'EE' => string '2' (length=1)
-        'dimension' => string '5' (length=1)
-        'content' => string 'ceshicehsi测试' (length=16)
-    'data' =>
-        array (size=5)
-        'AA' => string '文字准确度' (length=15)
-        'BB' => string '图片准确性' (length=15)
-        'CC' => string '文章要素完整性' (length=21)
-        'DD' => string '设计考虑用户使用习惯、各类推广牵引效果、情感及体验感受' (length=81)
-        'EE' => string '即时掌握相关热点，匹配专题策划、 活动，提高客户成交率' (length=79)
-    'score' => string '2' (length=1)
-     */
     //发起人确认工单执行
     public function audit_resure(){
         if (isset($_POST['dosubmint'])) {
@@ -866,6 +810,30 @@ class WorderController extends BaseController{
         $this->month                = $month;
         $this->uid                  = $uid;
         $this->display('worder_stu_detail');
+    }
+
+    //工作负荷率
+    public function public_workload(){
+        $this->title('工作负荷率');
+        $uid                        = I('uid');
+        $startTime                  = I('st',0);
+        $endTime                    = I('et',0);
+        $endTime                    = $endTime -1;
+        $worder_lists               = get_workload_worders($uid,$startTime,$endTime); //求所有响应时间或者计划完成时间在本周期的工单信息
+        $work_day_data              = get_cycle_work_day_data($startTime,$endTime);
+        $workload_data              = get_workload_data($worder_lists,$work_day_data,$startTime,$endTime); //求工时信息
+        $workDayNum                 = $work_day_data['workDayNum']; //当月应工作日*8hours
+        $workLoadDayNum             = $workload_data['workLoadDayNum'];
+        $data                       = array();
+        $data['userid']             = $uid;
+        $data['username']           = username($uid);
+        $data['workDayNum']         = $workDayNum;
+        $data['workLoadDayNum']     = $workLoadDayNum;
+        $data['complete']           = (round($workLoadDayNum/$workDayNum,4)*100).'%';
+        $this->lists                = $workload_data['lists'];
+        $this->data                 = $data;
+
+        $this->display('workload');
     }
 
     public function public_save(){

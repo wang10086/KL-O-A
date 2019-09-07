@@ -41,8 +41,8 @@
             </div>
         </div>
         <div class="form-group col-md-4">
-            <input type="hidden" name="data[EE]" value="配套方案标准化清单的完成性（含材料单、手册、任务卡、折页等）" />
-            <label>配套方案标准化清单的完成性（含材料单、手册、任务卡、折页等）：</label>
+            <input type="hidden" name="data[EE]" value="工单内容完成度（含材料单、手册、任务卡、折页等）" />
+            <label>工单内容完成度（含材料单、手册、任务卡、折页等）：</label>
             <div class="demo score">
                 <div id="EE"></div>
             </div>

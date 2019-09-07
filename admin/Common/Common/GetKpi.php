@@ -4133,18 +4133,28 @@ function get_yw_department(){
         $workLoadDayNum         = 0; //工作天数
         foreach ($lists as $k=>$v){
             //比较工单响应时间 和 计划完成时间
-            /*if ($v['response_time'] < $startTime && $v['plan_complete_time'] < $endTime){ //上周期提需求,本周期完成
+            if ($v['response_time'] < $startTime && $v['plan_complete_time'] < $endTime){ //上周期提需求,本周期完成
                 $worderDayNum   = get_worder_day_num($workDay,$v['response_time'],$v['plan_complete_time']);
-                $num            = $worderDayNum - 1; //去尾
+                $num            = $worderDayNum; //去尾
             }elseif ($v['response_time'] > $startTime && $v['plan_complete_time'] > $endTime){ //本周期提需求,下周期完成
                 $worderDayNum   = get_worder_day_num($workDay,$v['response_time'],$v['plan_complete_time']);
                 $num            = $worderDayNum - 1; //掐头
             }else{ //本周期提需求,本周期完成
                 $worderDayNum   = get_worder_day_num($workDay,$v['response_time'],$v['plan_complete_time']);
-                $num            = $worderDayNum - 1;
-            }*/
-            $worderDayNum       = get_worder_day_num($workDay,$v['response_time'],$v['plan_complete_time']);
-            $num                = $worderDayNum - 1;
+                $num            = $worderDayNum;
+            }
+            /*$worderDayNum       = get_worder_day_num($workDay,$v['response_time'],$v['plan_complete_time']);
+            $num                = $worderDayNum - 1;*/
+
+            //判断工单状态
+            if($v['status']==0)     $lists[$k]['sta'] = '<span class="red">未响应</span>';
+            if($v['status']==1)     $lists[$k]['sta'] = '<span class="yellow">执行部门已响应</span>';
+            if($v['status']==2)     $lists[$k]['sta'] = '<span class="blue">执行部门已确认完成</span>';
+            if($v['status']==3)     $lists[$k]['sta'] = '<span class="green">发起人已确认完成</span>';
+            if($v['status']==-1)    $lists[$k]['sta'] = '拒绝或无效工单';
+            if($v['status']==-2)    $lists[$k]['sta'] = '已撤销';
+            if($v['status']==-3)    $lists[$k]['sta'] = '<span class="red">需要做二次修改</span>';
+
             $num                = $num < 0 ? 0 : $num;
             $workLoadDayNum     += $num;
             $lists[$k]['worderDayNum'] = $num;
