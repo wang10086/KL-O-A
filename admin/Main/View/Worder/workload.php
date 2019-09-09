@@ -27,28 +27,30 @@
 
                                 <table class="table table-bordered dataTable fontmini" id="tablelist" style="margin-top:10px;">
                                     <tr role="row" class="orders" >
-                                        <th class="" width="60" data="id">id</th>
+                                        <th class="taskOptions" width="60" data="id">ID</th>
                                         <th class="" width="120" data="worder_title">工单标题</th>
                                         <th class="" width="80" data="init_user_name">发起人姓名</th>
                                         <th class="" width="80" data="status">工单状态</th>
                                         <th class="" width="125">工单响应时间</th>
                                         <th class="" width="125">工单计划时间</th>
-                                        <th class="" width="80">本周期需工作日(天)</th>
+                                        <th class="" width="80">所需工时(小时)</th>
+                                        <!--<th class="" width="80">本周期需工作工时(小时)</th>-->
                                     </tr>
                                     <foreach name="lists" item="row"> 
                                     <tr>
-                                        <td>{$row.id}<if condition="($row.urgent eq 2) and (in_array($row.status,array(0,1,2)))"><small class="badge pull-right bg-red" style="margin-right:4px;">加急</small></if></td>
+                                        <td class="taskOptions">{$row.id}</td>
                                         <td><a href="{:U('Worder/worder_info',array('id'=>$row['id']))}">{$row.worder_title}</a></td>
                                         <td>{$row.ini_user_name}</td>
                                         <td>{$row.sta}</td>
                                         <td>{$row.response_time|date='Y-m-d H:i:s',###}</td>
                                         <td>{$row.plan_complete_time|date='Y-m-d H:i:s',###}</td>
-                                        <td class="taskOptions">{$row.worderDayNum}</td>
+                                        <td class="taskOptions">{$row.hour}</td>
+                                        <!--<td class="taskOptions">{$row.worderHourNum}</td>-->
                                     </tr>
                                     </foreach>
                                     <tr class="black">
-                                        <td colspan="2">本周期工作日: {$data.workDayNum} 天</td>
-                                        <td colspan="2">工单工作日: {$data.workLoadDayNum} 天</td>
+                                        <td colspan="2">本周期工时: {$data.workHourNum} 小时</td>
+                                        <td colspan="2">工单工时: {$data.workLoadHourNum} 小时</td>
                                         <td colspan="3">工作负荷度:{$data.complete}</td>
                                     </tr>
                                 </table>

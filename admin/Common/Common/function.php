@@ -3399,9 +3399,9 @@ function updatekpi($month,$user){
                         $worder_lists           = get_workload_worders($v['user_id'],$v['start_date'],$end_time); //求所有响应时间或者计划完成时间在本周期的工单信息
                         $work_day_data          = get_cycle_work_day_data($v['start_date'],$end_time);
                         $workload_data          = get_workload_data($worder_lists,$work_day_data,$v['start_date'],$end_time); //求工时信息
-                        $workDayNum             = $work_day_data['workDayNum'] * 8; //当月应工作日*8hours
-                        $workLoadDayNum         = $workload_data['workLoadDayNum'] * 8;
-                        $complete               = (round($workLoadDayNum/$workDayNum,4)*100).'%';
+                        $workHourNum            = $work_day_data['workDayNum'] * 8; //当月应工作日*8hours
+                        $workLoadHourNum        = $workload_data['workLoadHourNum'];
+                        $complete               = (round($workLoadHourNum/$workHourNum,4)*100).'%';
                         $url                    = U('Worder/public_workload',array('uid'=>$v['user_id'],'st'=>$v['start_date'],'et'=>$end_time));
                     }
 

@@ -822,14 +822,14 @@ class WorderController extends BaseController{
         $worder_lists               = get_workload_worders($uid,$startTime,$endTime); //求所有响应时间或者计划完成时间在本周期的工单信息
         $work_day_data              = get_cycle_work_day_data($startTime,$endTime);
         $workload_data              = get_workload_data($worder_lists,$work_day_data,$startTime,$endTime); //求工时信息
-        $workDayNum                 = $work_day_data['workDayNum']; //当月应工作日*8hours
-        $workLoadDayNum             = $workload_data['workLoadDayNum'];
+        $workDayNum                 = $work_day_data['workDayNum'];
+        $workLoadHourNum            = $workload_data['workLoadHourNum'];
         $data                       = array();
         $data['userid']             = $uid;
         $data['username']           = username($uid);
-        $data['workDayNum']         = $workDayNum;
-        $data['workLoadDayNum']     = $workLoadDayNum;
-        $data['complete']           = (round($workLoadDayNum/$workDayNum,4)*100).'%';
+        $data['workHourNum']        = $workDayNum * 8; //当月应工作日*8hours
+        $data['workLoadHourNum']    = $workLoadHourNum;
+        $data['complete']           = (round($workLoadHourNum/$data['workHourNum'],4)*100).'%';
         $this->lists                = $workload_data['lists'];
         $this->data                 = $data;
 
@@ -849,6 +849,7 @@ class WorderController extends BaseController{
             //保存工单确认信息
             if ($savetype == 1){
                 $info                           = I('info');
+                $info['hour']                   = (float)$info['hour'] ? (float)$info['hour'] : $this->error('完成该工单所需工时填写错误');
                 $unfinished                     = I('unfinished');
                 $info['unfinished']             = $unfinished;
                 if ($info['status'] == -1){

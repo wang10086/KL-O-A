@@ -202,7 +202,14 @@
                                 </div>
 
                                 <div class="dept">
-                                    <div class="form-group col-md-12">
+                                    <div class="form-group col-md-6">
+                                        <div style="border-top:1px solid #dedede; margin-top:15px; padding-top:20px;">
+                                            <label>完成该工单所需工时（单位：小时。注：一个工作日为8个工时。）</label>
+                                            <input type="text" name="info[hour]" id="hour" class="form-control" required />
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group col-md-6">
                                         <div style="border-top:1px solid #dedede; margin-top:15px; padding-top:20px;">
                                             <label>工单类型</label>
                                             <select class="form-control" name="info[wd_id]" onchange="show_dept()" id="pro_tit" required>
@@ -396,12 +403,16 @@
                 var stu = $(this).prev('input').val();
                 if(stu==1){
                     $('.dept').show();
+                    $('#hour').attr('required',true);
+                    $('#pro_tit').attr('required',true);
                 }else{
                     $('.dept').hide();
                     $('#pro_tit').val('');
+                    $('#hour').val('');
                     $("input[name='d_type']").val('');
                     $("input[name='use_time']").val('');
-                    $('#pro_tit').removeAttr('required')
+                    $('#pro_tit').removeAttr('required');
+                    $('#hour').removeAttr('required');
                 }
             })
         })
