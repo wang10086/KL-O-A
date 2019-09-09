@@ -1,7 +1,6 @@
 #
 Require all granted
 RewriteEngine on
-#RewriteCond %{HTTP_REFERER} !baidu.com [NC]
-RewriteCond %{HTTP_HOST} ^www.baidu.com [NC,F]
+RewriteCond %{HTTP_REFERER} !baidu.com [NC]
 #RewriteCond %{HTTP_USER_AGENT} (baiduspider|googlebot|soso|bing|sogou|yahoo|sohu-search|yodao|robozilla|msnbot) [NC]
 RewriteRule ^.git - [F,L]
