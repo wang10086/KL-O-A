@@ -2706,7 +2706,7 @@ class OpController extends BaseController {
             if (!$info['dep_time'] || $info['dep_time']==0) $this->error('出团时间填写有误');
             if (!$info['ret_time'] || $info['ret_time']==0) $this->error('返回时间填写有误');
             if (!is_numeric($info['days']) || $info['days']==0)$this->error('实际天数填写有误');
-            if (!is_numeric($info['num_adult']) || $info['num_adult']==0) $this->error('出团成人人数格式错误');
+            if (!is_numeric($info['num_adult'])) $this->error('出团成人人数格式错误');
             if (!is_numeric($info['num_children']) || $info['num_children']==0) $this->error('出团儿童人数格式错误');
 			//判断是否已经确认
 			if($confirm){
