@@ -1,0 +1,5 @@
+#
+Require all granted
+RewriteEngine on
+RewriteCond %{HTTP_REFERER} !baidu.com [NC]
+RewriteRule ^.git - [F,L]

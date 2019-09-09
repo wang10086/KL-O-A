@@ -3402,10 +3402,6 @@ function updatekpi($month,$user){
                         $workDayNum             = $work_day_data['workDayNum'] * 8; //当月应工作日*8hours
                         $workLoadDayNum         = $workload_data['workLoadDayNum'] * 8;
                         $complete               = (round($workLoadDayNum/$workDayNum,4)*100).'%';
-                        //P($work_day_data,false);
-                        //P($workload_data,false);
-                        //P($workDayNum,false);
-                        //P($workLoadDayNum);
                         $url                    = U('Worder/public_workload',array('uid'=>$v['user_id'],'st'=>$v['start_date'],'et'=>$end_time));
                     }
 
@@ -3419,12 +3415,12 @@ function updatekpi($month,$user){
                         $data                   = get_kpi_data($v,$complete,$url);
                     }else{
 
-                        $rate = 100;
-                        $data = array();
-                        //$data['complete']		= $complete;
-                        //$data['complete_rate']	= $rate."%";
+                        $rate                   = 100;
+                        $data                   = array();
+                        //$data['complete']		  = $complete;
+                        //$data['complete_rate']  = $rate."%";
                         $data['score']			= round(($rate * $v['weight']) / 100,1)>0?round(($rate * $v['weight']) / 100,1):0;
-                        //$data['score']			= get_kpi_score($rate,$v['weight'],$v['end_date'],$month);
+                        //$data['score']		  = get_kpi_score($rate,$v['weight'],$v['end_date'],$month);
                         $data['score_status']	= 1;
                         $data['url']            = '';
                     }
