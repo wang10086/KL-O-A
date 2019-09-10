@@ -292,10 +292,10 @@
                                 </li>
                                 <li>
                                     <a href="javascript:;" onClick="art_show_msg('加班开发中，稍后呈现...',5)"><i class="fa fa-angle-right"></i> 部门工作手册</a>
-                                </li>-->
+                                </li>
                                 <li class="{:on('File/instruction')}">
                                     <a href="{:U('File/instruction',array('pid'=>45))}"><i class="fa fa-angle-right"></i> 岗位作业指导书</a>
-                                </li>
+                                </li>-->
                             </ul>
                         </li>
                         </if>
