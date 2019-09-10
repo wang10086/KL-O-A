@@ -848,7 +848,6 @@ class WorderController extends BaseController{
             //保存工单确认信息
             if ($savetype == 1){
                 $info                           = I('info');
-                $info['hour']                   = (float)$info['hour'] ? (float)$info['hour'] : $this->error('完成该工单所需工时填写错误');
                 $unfinished                     = I('unfinished');
                 $info['unfinished']             = $unfinished;
                 if ($info['status'] == -1){
@@ -869,6 +868,7 @@ class WorderController extends BaseController{
                     $record_explain             = '拒绝该工单';
                 }else{
                     $info['response_time']      = NOW_TIME;
+                    $info['hour']               = (float)$info['hour'] ? (float)$info['hour'] : $this->error('完成该工单所需工时填写错误');
                     $num                        = I('use_time') ? (int)I('use_time') : '';
                     if($num) $info['plan_complete_time'] = strtotime(getAfterWorkDay($num,$worder['create_time']));
                     $record_type                = 2;
