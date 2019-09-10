@@ -164,7 +164,6 @@ class WorderController extends BaseController{
         $this->pages	            = $pagecount>P::PAGE_SIZE ? $page->show():'';
 
         $lists                      = $db->where($where)->limit($page->firstRow . ',' . $page->listRows)->order($this->orders('create_time'))->select();
-
         foreach($lists as $k=>$v){
             //判断工单状态
             if($v['status']==0)     $lists[$k]['sta'] = '<span class="red">未响应</span>';
@@ -179,7 +178,7 @@ class WorderController extends BaseController{
                 if ($v['status']==-1)   $lists[$k]['com_stu']   = '<font color="#999">拒绝或无效工单</font>';
                 if ($v['status']==-2)   $lists[$k]['com_stu']   = '<font color="#999">已撤销</font>';
             }else{
-                if ($v['ini_confirm_time'] <= $v['plan_complete_time']){
+                if (($v['ini_confirm_time'] <= $v['plan_complete_time'] && $v['ini_confirm_time'] != 0) || (NOW_TIME < $v['plan_complete_time'] && $v['ini_confirm_time'] == 0)){
                     $lists[$k]['com_stu'] = '<span class="green">未超时</span>';
                 }else{
                     $lists[$k]['com_stu'] = '<span class="red">已超时</span>';

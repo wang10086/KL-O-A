@@ -34,7 +34,7 @@
                                         <th class="" width="125">工单响应时间</th>
                                         <th class="" width="125">工单计划时间</th>
                                         <th class="" width="80">所需工时(小时)</th>
-                                        <!--<th class="" width="80">本周期需工作工时(小时)</th>-->
+                                        <th class="" width="80">本周期需工作工时(小时)</th>
                                     </tr>
                                     <foreach name="lists" item="row"> 
                                     <tr>
@@ -45,12 +45,12 @@
                                         <td>{$row.response_time|date='Y-m-d H:i:s',###}</td>
                                         <td>{$row.plan_complete_time|date='Y-m-d H:i:s',###}</td>
                                         <td class="taskOptions">{$row.hour}</td>
-                                        <!--<td class="taskOptions">{$row.worderHourNum}</td>-->
+                                        <td class="taskOptions">{$row.thisMonthHourNum}</td>
                                     </tr>
                                     </foreach>
                                     <tr class="black">
                                         <td colspan="2">本周期工时: {$data.workHourNum} 小时</td>
-                                        <td colspan="2">工单工时: {$data.workLoadHourNum} 小时</td>
+                                        <td colspan="3">工单工时: {$data.workLoadHourNum} 小时</td>
                                         <td colspan="3">工作负荷度:{$data.complete}</td>
                                     </tr>
                                 </table>

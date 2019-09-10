@@ -4116,36 +4116,43 @@ function get_yw_department(){
      * @return mixed
      */
     function get_workload_worders($uid,$startTime=0,$endTime=0){
+        $st                     = $startTime != 0 ? strtotime('-1 month',$startTime) : $startTime;
         $where                  = array();
         $where['status']        = array('not in',array(-1,-2)); //-1拒绝, -2=>撤销
         //$where['_string']       = "((assign_id = $uid) OR (exe_user_id = $uid and assign_id = 0)) AND ((response_time between $startTime and $endTime) OR (plan_complete_time between $startTime and $endTime))";
-        $where['_string']       = "((assign_id = $uid) OR (exe_user_id = $uid and assign_id = 0)) AND (response_time between $startTime and $endTime)";
-        $lists  = M()->table('__WORDER__ as w')->field('w.*,d.use_time')->join('__WORDER_DEPT__ as d on d.id=w.wd_id','left')->where($where)->select();
-        //foreach ($lists as $k=>$v){
-        //    $lists[$k]['str_plan_complete_time'] = date('Y-m-d',$v['plan_complete_time']);
-        //    $lists[$k]['str_response_time']      = date('Y-m-d',$v['response_time']);
-        //}
+        $where['_string']       = "((assign_id = $uid) OR (exe_user_id = $uid and assign_id = 0)) AND ((response_time between $st and $endTime) OR (plan_complete_time between $startTime and $endTime))";
+        $lists  = M()->table('__WORDER__ as w')->field('w.*,d.use_time')->join('__WORDER_DEPT__ as d on d.id=w.wd_id','left')->where($where)->order('id desc')->select();
+        foreach ($lists as $k=>$v){
+            $lists[$k]['str_plan_complete_time'] = date('Y-m-d',$v['plan_complete_time']);
+            $lists[$k]['str_response_time']      = date('Y-m-d',$v['response_time']);
+        }
         return $lists;
     }
 
     //求工时信息
     function get_workload_data($lists,$work_day_data,$startTime,$endTime){
-        $workDay                = $work_day_data['workDay'];
-        $workLoadHourNum        = 0; //工作天数
+        $workDay                = $work_day_data['workDay']; //所有的工作日
+        $workLoadHourNum        = 0; //总工时
         foreach ($lists as $k=>$v){
-            //比较工单响应时间 和 计划完成时间
-            /*if ($v['response_time'] < $startTime && $v['plan_complete_time'] < $endTime){ //上周期提需求,本周期完成
-                $worderDayNum   = get_worder_day_num($workDay,$v['response_time'],$v['plan_complete_time']);
-                $num            = $worderDayNum; //去尾
-            }elseif ($v['response_time'] > $startTime && $v['plan_complete_time'] > $endTime){ //本周期提需求,下周期完成
-                $worderDayNum   = get_worder_day_num($workDay,$v['response_time'],$v['plan_complete_time']);
-                $num            = $worderDayNum - 1; //掐头
+            //按照工时求计划完成时间
+            $worderHoursOverTime= getWorderHoursOverTime($v['response_time'],$v['hour']);
+
+            if ($v['response_time'] < $startTime && $worderHoursOverTime < $endTime){ //上周期提需求,本周期完成
+                $worderDayData  = get_worder_day_num($workDay,$v['response_time'],$worderHoursOverTime);
+                $worderDayNum   = ($worderDayData['work_day_num'] -1) < 0 ? 0 : ($worderDayData['work_day_num'] -1);
+                $float_day_hour = $worderDayData['float_day_hour'];
+                $hours          = ($worderDayNum * 8) + $float_day_hour;
+            }elseif ($v['response_time'] > $startTime && $worderHoursOverTime > $endTime){ //本周期提需求,下周期完成
+                $worderDayData  = get_worder_day_num($workDay,$v['response_time'],$worderHoursOverTime);
+                $worderDayNum   = ($worderDayData['work_day_num'] -1) < 0 ? 0 : ($worderDayData['work_day_num'] -1);
+                $float_day_hour = $worderDayData['float_day_hour'];
+                $hours          = ($worderDayNum * 8);
             }else{ //本周期提需求,本周期完成
-                $worderDayNum   = get_worder_day_num($workDay,$v['response_time'],$v['plan_complete_time']);
-                $num            = $worderDayNum;
+                $worderDayData  = get_worder_day_num($workDay,$v['response_time'],$worderHoursOverTime);
+                $worderDayNum   = ($worderDayData['work_day_num'] -1) < 0 ? 0 : ($worderDayData['work_day_num'] -1);
+                $float_day_hour = $worderDayData['float_day_hour'];
+                $hours          = ($worderDayNum * 8) + $float_day_hour;
             }
-            $num                = $num < 0 ? 0 : $num;
-            */
 
             //判断工单状态
             if($v['status']==0)     $lists[$k]['sta'] = '<span class="red">未响应</span>';
@@ -4156,15 +4163,28 @@ function get_yw_department(){
             if($v['status']==-2)    $lists[$k]['sta'] = '已撤销';
             if($v['status']==-3)    $lists[$k]['sta'] = '<span class="red">需要做二次修改</span>';
 
-            $workLoadHourNum    += $v['hour'];
-            $lists[$k]['worderHourNum'] = $v['hour'];
+            $workLoadHourNum                += $hours;
+            $lists[$k]['worderHourNum']     = $v['hour'];
+            $lists[$k]['thisMonthHourNum']  = $hours;
         }
         $data                   = array();
-        $data['workLoadHourNum']= $workLoadHourNum;
+        $data['workLoadHourNum']= $workLoadHourNum; //工单所需总工时
         $data['lists']          = $lists;
-        //echo "<hr />";
-        //P($data);
         return $data;
+    }
+
+    /**
+     * 根据工单工时求计划完成时间
+     * @param $response_time 响应时间
+     * @param $hour 工时
+     */
+    function getWorderHoursOverTime($response_time,$hour){
+        $hourDays               = round($hour/8,2);
+        $dayData                = explode('.',$hourDays);
+        $intTime                = getafterWorkDay($dayData[0],$response_time);
+        $floatTime              = $dayData[1] ? (9+(8*('0.'.$dayData[1])))*3600 : 0;
+        $overTime               = strtotime($intTime) + $floatTime;
+        return $overTime;
     }
 
     function get_worder_day_num($workDay,$startTime,$endTime){
@@ -4174,10 +4194,15 @@ function get_yw_department(){
             $str_day            = date('Y-m-d',$middle);
             if (in_array($str_day,$workDay)){
                 $num++;
+                $hour           = date('H',$endTime);
             }
             $middle             = strtotime('+1 day',$middle);
         }
-        return $num;
+        $float_hour             = (int)$hour != 0 ? $hour-9 : 0;
+        $data                   = array();
+        $data['work_day_num']   = $num;
+        $data['float_day_hour'] = $float_hour;
+        return $data;
     }
 
     /**
