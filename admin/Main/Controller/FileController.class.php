@@ -6,7 +6,7 @@ use Sys\P;
 ulib('Page');
 use Sys\Page;
 
-class FileController extends Controller {
+class FileController extends BasepubController {
     public function index ()
     {
         die();
@@ -250,6 +250,27 @@ class FileController extends Controller {
         $this->posts            = M('posts')->where(array('post_name'=>array('neq','')))->select(); //岗位
 
         $this->display('Files/instruction');
+    }
+
+    //公司通用
+    public function companyFile(){
+        $this->title('公司通用文件');
+
+        $this->display('Files/companyFile');
+    }
+
+    //部门通用
+    public function departmentFile(){
+        $this->title('部门通用文件');
+
+        $this->display('Files/departmentFile');
+    }
+
+    //岗位专用
+    public function postFile(){
+        $this->title('岗位专用文件');
+
+        $this->display('Files/postFile');
     }
     
 }

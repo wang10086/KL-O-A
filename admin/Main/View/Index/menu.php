@@ -252,27 +252,6 @@
                                         </a>
                                     </li>
                                 </if>
-                                    <li>
-                                        <a href="javascript:;" onClick="art_show_msg('加班开发中，稍后呈现...',5)">
-                                            <i class="fa fa-angle-right">
-                                            </i> 公司管理手册
-                                        </a>
-                                    </li>
-                                   <!-- <li class="{:on('File/company')}"><a href="{:U('File/company',array('pid'=>43))}"><i class="fa fa-angle-right"></i> 公司管理手册</a></li>-->
-                                <if condition="rolemenu(array('Files/index'))">
-                                    <li>
-                                        <a href="javascript:;" onClick="art_show_msg('加班开发中，稍后呈现...',5)">
-                                            <i class="fa fa-angle-right">
-                                            </i> 部门工作手册
-                                        </a>
-                                    </li>
-                                    <!--<li class="{:on('Files/index')}"><a href="{:U('Files/index',array('pid'=>44))}"><i class="fa fa-angle-right"></i> 部门工作手册</a></li>-->
-                                </if>
-                                    <li class="{:on('File/instruction')}"><a href="{:U('File/instruction',array('pid'=>45))}">
-                                            <i class="fa fa-angle-right">
-                                            </i> 岗位作业指导书
-                                        </a>
-                                    </li>
                                 <if condition="rolemenu(array('Approval/Approval_Index','Approval/Approval_list','Approval/approval_table','Approval/Approval_Upload','Approval/file_upload','Approval/Approval_Update','Approval/file_change','Approval/add_final_judgment','Approval/add_annotation'))">
 
                                     <li class="{:on('Approval/Approval_Index')}{:on('Approval/Approval_list')}{:on('Approval/approval_table')}{:on('Approval/Approval_Upload')}{:on('Approval/file_upload')}{:on('Approval/Approval_Update')}{:on('Approval/file_change')}{:on('Approval/add_final_judgment')}{:on('Approval/add_annotation')}">
@@ -286,6 +265,37 @@
                                         </a>
                                     </li>
                                 </if>
+
+                                <li class="treeview {:on('File/companyFile')} {:on('File/departmentFile')} {:on('File/postFile')}">
+                                    <!--<if condition="rolemenu(array('File/companyFile','File/departmentFile','File/postFile'))">
+                                        <a href="javascript:;"><i class="fa  fa-file"></i> 我的文件</a>
+                                    </if>-->
+                                    <a href="javascript:;"><i class="fa  fa-file"></i> 我的文件</a>
+                                    <ul class="treeview-menu">
+                                        <li class="{:on('File/companyFile')}"><a href="{:U('File/companyFile')}"><i class="fa fa-angle-right"></i> 公司通用</a></li>
+                                        <li class="{:on('File/departmentFile')}"><a href="{:U('File/departmentFile')}"><i class="fa fa-angle-right"></i> 部门通用</a></li>
+                                        <li class="{:on('File/postFile')}"><a href="{:U('File/postFile')}"><i class="fa fa-angle-right"></i> 岗位专用</a></li>
+                                        <!--<if condition="rolemenu(array('File/companyFile'))">
+                                            <li class="{:on('File/companyFile')}"><a href="{:U('File/companyFile')}"><i class="fa fa-angle-right"></i> 公司通用</a></li>
+                                        </if>
+                                        <if condition="rolemenu(array('File/departmentFile'))">
+                                            <li class="{:on('File/departmentFile')}"><a href="{:U('File/departmentFile')}"><i class="fa fa-angle-right"></i> 部门通用</a></li>
+                                        </if>
+                                        <if condition="rolemenu(array('File/postFile'))">
+                                            <li class="{:on('File/postFile')}"><a href="{:U('File/postFile')}"><i class="fa fa-angle-right"></i> 岗位专用</a></li>
+                                        </if>-->
+                                    </ul>
+                                </li>
+
+                                <!--<li>
+                                    <a href="javascript:;" onClick="art_show_msg('加班开发中，稍后呈现...',5)"><i class="fa fa-angle-right"></i> 公司管理手册</a>
+                                </li>
+                                <li>
+                                    <a href="javascript:;" onClick="art_show_msg('加班开发中，稍后呈现...',5)"><i class="fa fa-angle-right"></i> 部门工作手册</a>
+                                </li>-->
+                                <li class="{:on('File/instruction')}">
+                                    <a href="{:U('File/instruction',array('pid'=>45))}"><i class="fa fa-angle-right"></i> 岗位作业指导书</a>
+                                </li>
                             </ul>
                         </li>
                         </if>
