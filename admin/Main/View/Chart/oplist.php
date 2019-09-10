@@ -50,7 +50,8 @@
                                         <td>{$row.op_id}</td>
                                         <td><?php if($row['status']==1){ echo "<span class='green'>".$row['group_id']."</span>";}elseif($row['status']==2){ echo "<span class='red' title='".$row['nogroup']."'>不成团</span>";}else{ echo '未成团';} ?></td>
                                         <td><div class="tdbox_long"><a href="{:U('Op/plans_follow',array('opid'=>$row['op_id']))}" title="{$row.project}">{$row.project}</a></div></td>
-                                        <td>{$row.number}人</td>
+                                        <!--<td>{$row.number}</td>-->
+                                        <td>{$row.renshu}</td>
                                         <td>{$row.departure}</td>
                                         <!--<td>{$row.days}天</td>
                                         <td><div class="tdbox_long" style="width:80px" title="{$row.destination}">{$row.destination}</div></td>-->

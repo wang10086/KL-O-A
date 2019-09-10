@@ -1077,7 +1077,6 @@ class ChartController extends BaseController {
 
 
         $lists          = $db->table('__OP__ as o')->field($field)->join('__OP_AUTH__ as u on u.op_id = o.op_id','LEFT')->join('__ACCOUNT__ as a on a.id = u.line','LEFT')->where($where)->limit($page->firstRow . ',' . $page->listRows)->order($this->orders('o.create_time'))->select();
-
         foreach($lists as $k=>$v){
 
             //判断项目是否审核通过
@@ -1105,6 +1104,7 @@ class ChartController extends BaseController {
 
             $lists[$k]['shouru']    = $list['shouru']?$list['shouru']:'0.00';
             $lists[$k]['maoli']     = $list['maoli']?$list['maoli']:'0.00';
+            $lists[$k]['renshu']    = $list['renshu']?$list['renshu']:0;
         }
         $this->lists    =  $lists;
         $this->kinds    =  M('project_kind')->getField('id,name', true);
