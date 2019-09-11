@@ -43,7 +43,7 @@
                         <div class="col-xs-12">
                             <div class="box box-warning">
                                 <div class="box-header">
-                                    <h3 class="box-title">部门职责</h3>
+                                    <h3 class="box-title"><?php echo $pin ? $fileTags[$pin] : '全部文件'; ?></h3>
                                     <div class="box-tools pull-right">
                                         <a href="javascript:;" class="btn btn-info btn-sm" onclick="javascript:opensearch('searchtext',500,150);"><i class="fa fa-search"></i> 搜索</a>
                                     </div>
@@ -67,11 +67,11 @@
                                         <th width="100" class="sorting" data="est_user">创建者</th>
                                         <th width="160" class="sorting" data="est_time">创建时间</th>
                                     </tr>
-                                    <foreach name="zhize" item="row">
+                                    <foreach name="lists" item="row">
                                     <tr>
                                     	<td align="center">{$row.id}</td>
                                         <td><a href="{$row.file_path}" target="_blank">{$row.file_name}</a></td>
-                                        <td>{$row.file_type}</td>
+                                        <td>{$fileTags[$row['file_tag']]}</td>
                                         <td><if condition="$row['file_ext']">{$row.file_ext}</if></td>
                                         <td><if condition="$row['file_size']">{:fsize($row['file_size'])}</if></td>
                                         <td>{$row.est_user}</td>
@@ -81,7 +81,7 @@
                                 </table>
                                 </div><!-- /.box-body -->
                                  <div class="box-footer clearfix">
-                                	<div class="pagestyle">{$zhize_pages}</div>
+                                	<div class="pagestyle">{$pages}</div>
                                 </div>
                             </div><!-- /.box -->
                         </div><!-- /.col -->
@@ -95,10 +95,12 @@
         <input type="hidden" name="c" value="File">
         <input type="hidden" name="a" value="companyFile">
         <input type="hidden" name="pin" value="{$pin}">
+        <input type="hidden" name="department" value="{$department}">
+        <input type="hidden" name="posts" value="{$posts}">
 
         <div class="form-group col-md-12"></div>
         <div class="form-group col-md-12">
-            <input type="text" class="form-control" name="title" placeholder="文件名称">
+            <input type="text" class="form-control" name="fileName" placeholder="文件名称">
         </div>
     </form>
 </div>

@@ -67,11 +67,11 @@
                                         <th width="100" class="sorting" data="est_user">创建者</th>
                                         <th width="160" class="sorting" data="est_time">创建时间</th>
                                     </tr>
-                                    <foreach name="zhize" item="row">
+                                    <foreach name="lists" item="row">
                                     <tr>
                                     	<td align="center">{$row.id}</td>
                                         <td><a href="{$row.file_path}" target="_blank">{$row.file_name}</a></td>
-                                        <td>{$row.file_type}</td>
+                                        <td>{$fileTags[$row['file_tag']]}</td>
                                         <td><if condition="$row['file_ext']">{$row.file_ext}</if></td>
                                         <td><if condition="$row['file_size']">{:fsize($row['file_size'])}</if></td>
                                         <td>{$row.est_user}</td>
@@ -81,7 +81,7 @@
                                 </table>
                                 </div><!-- /.box-body -->
                                  <div class="box-footer clearfix">
-                                	<div class="pagestyle">{$zhize_pages}</div>
+                                	<div class="pagestyle">{$pages}</div>
                                 </div>
                             </div><!-- /.box -->
                         </div><!-- /.col -->
@@ -95,6 +95,8 @@
         <input type="hidden" name="c" value="File">
         <input type="hidden" name="a" value="postFile">
         <input type="hidden" name="pin" value="{$pin}">
+        <input type="hidden" name="department" value="{$department}">
+        <input type="hidden" name="posts" value="{$posts}">
 
         <div class="form-group col-md-12"></div>
         <div class="form-group col-md-12">
@@ -107,9 +109,6 @@
 <include file="Index:footer2" />
 
 <script type="text/javascript">
-    /*$(function () {
-        get_depart();
-    })*/
 
     function get_depart() {
         var departmentid = $('#department').val();

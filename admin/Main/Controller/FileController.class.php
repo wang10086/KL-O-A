@@ -255,37 +255,134 @@ class FileController extends BasepubController {
     //公司通用
     public function companyFile(){
         $this->title('公司通用文件');
-        $file_type              = C('FILE_TAG')[1];
-        $pin                    = I('pin',0);
+        $db                             = M('files');
+        $file_type                      = C('FILE_TAG')[1];
+        $pin                            = I('pin',0);
+        $department                     = I('department',0);
+        $posts                          = I('posts',0);
+        $fileName                       = trim(I('fileName'));
+        $fileTags                       = $this->get_file_tag();
+        $file_tags                      = array_keys($file_type);
 
-        $this->departments      = M('salary_department')->getField('id,department',true);           //部门
-        $this->pin              = $pin;
-        $this->file_type        = $file_type;
+        $where                          = array();
+        $where['file_type']             = 1; //文件
+        $where['file_tag']              = $pin ? $pin : array('in',$file_tags);
+        if ($fileName) $where['file_name']  = array('like','%'.$fileName.'%');
+        if (cookie('roleid')==10 || C('RBAC_SUPER_ADMIN')==cookie('username')){
+            $department                     = $department ? '['.$department.']' : '['.session('department').']';
+            $posts                          = $posts ? '['.$posts.']' : '['.session('posts').']';
+            $where['_string']               = "(department like '%$department%') OR ( posts like '%$posts%')";
+        }else{
+            $department                     = '['.session('department').']';
+            $posts                          = '['.session('posts').']';
+            $where['_string']               = "(department like '%$department%') OR ( posts like '%$posts%')";
+        }
+
+        $pagecount                      = $db->where($where)->count();
+        $page                           = new Page($pagecount, P::PAGE_SIZE);
+        $this->pages                    = $pagecount>P::PAGE_SIZE ? $page->show():'';
+        $lists                          = $db->where($where)->limit($page->firstRow.','.$page->listRows)->order($this->orders('est_time'))->select();
+
+        $this->lists                    = $lists;
+        $this->departments              = M('salary_department')->getField('id,department',true);
+        $this->department               = $department;
+        $this->posts                    = $posts;
+        $this->pin                      = $pin;
+        $this->fileTags                 = $fileTags;
+        $this->file_type                = $file_type;
         $this->display('Files/companyFile');
     }
 
     //部门通用
     public function departmentFile(){
         $this->title('部门通用文件');
-        $file_type              = C('FILE_TAG')[2];
-        $pin                    = I('pin',0);
+        $db                             = M('files');
+        $file_type                      = C('FILE_TAG')[2];
+        $pin                            = I('pin',0);
+        $department                     = I('department',0);
+        $posts                          = I('posts',0);
+        $fileName                       = trim(I('fileName'));
+        $fileTags                       = $this->get_file_tag();
+        $file_tags                      = array_keys($file_type);
 
-        $this->departments      = M('salary_department')->getField('id,department',true);           //部门
-        $this->pin              = $pin;
-        $this->file_type        = $file_type;
+        $where                          = array();
+        $where['file_type']             = 1; //文件
+        $where['file_tag']              = $pin ? $pin : array('in',$file_tags);
+        if ($fileName) $where['file_name']  = array('like','%'.$fileName.'%');
+        if (cookie('roleid')==10 || C('RBAC_SUPER_ADMIN')==cookie('username')){
+            $department                     = $department ? '['.$department.']' : '['.session('department').']';
+            $posts                          = $posts ? '['.$posts.']' : '['.session('posts').']';
+            $where['department']            = array('like','%'.$department.'%');
+            $where['posts']                 = array('like','%'.$posts.'%');
+        }else{
+            $department                     = '['.session('department').']';
+            //$posts                          = '['.session('posts').']';
+            $where['department']            = array('like','%'.$department.'%');
+            //$where['posts']                 = array('like','%'.$posts.'%');
+        }
+
+        $pagecount                      = $db->where($where)->count();
+        $page                           = new Page($pagecount, P::PAGE_SIZE);
+        $this->pages                    = $pagecount>P::PAGE_SIZE ? $page->show():'';
+        $lists                          = $db->where($where)->limit($page->firstRow.','.$page->listRows)->order($this->orders('est_time'))->select();
+
+        $this->lists                    = $lists;
+        $this->departments              = M('salary_department')->getField('id,department',true);
+        $this->department               = $department;
+        $this->posts                    = $posts;
+        $this->pin                      = $pin;
+        $this->fileTags                 = $fileTags;
+        $this->file_type                = $file_type;
         $this->display('Files/departmentFile');
     }
 
     //岗位专用
     public function postFile(){
         $this->title('岗位专用文件');
-        $file_type              = C('FILE_TAG')[3];
-        $pin                    = I('pin',0);
+        $db                             = M('files');
+        $file_type                      = C('FILE_TAG')[3];
+        $pin                            = I('pin',0);
+        $department                     = I('department',0);
+        $posts                          = I('posts',0);
+        $fileName                       = trim(I('fileName'));
+        $fileTags                       = $this->get_file_tag();
+        $file_tags                      = array_keys($file_type);
 
-        $this->departments      = M('salary_department')->getField('id,department',true);           //部门
-        $this->pin              = $pin;
-        $this->file_type        = $file_type;
+        $where                          = array();
+        $where['file_type']             = 1; //文件
+        $where['file_tag']              = $pin ? $pin : array('in',$file_tags);
+        if ($fileName) $where['file_name']  = array('like','%'.$fileName.'%');
+        if (cookie('roleid')==10 || C('RBAC_SUPER_ADMIN')==cookie('username')){
+            $department                     = $department ? '['.$department.']' : '['.session('department').']';
+            $posts                          = $posts ? '['.$posts.']' : '['.session('posts').']';
+            $where['department']            = array('like','%'.$department.'%');
+            $where['posts']                 = array('like','%'.$posts.'%');
+        }else{
+            //$department                     = '['.session('department').']';
+            $posts                          = '['.session('posts').']';
+            //$where['department']            = array('like','%'.$department.'%');
+            $where['posts']                 = array('like','%'.$posts.'%');
+        }
+
+        $pagecount                      = $db->where($where)->count();
+        $page                           = new Page($pagecount, P::PAGE_SIZE);
+        $this->pages                    = $pagecount>P::PAGE_SIZE ? $page->show():'';
+        $lists                          = $db->where($where)->limit($page->firstRow.','.$page->listRows)->order($this->orders('est_time'))->select();
+
+        $this->lists                    = $lists;
+        $this->departments              = M('salary_department')->getField('id,department',true);
+        $this->department               = $department;
+        $this->posts                    = $posts;
+        $this->pin                      = $pin;
+        $this->fileTags                 = $fileTags;
+        $this->file_type                = $file_type;
         $this->display('Files/postFile');
+    }
+
+    public function get_file_tag(){
+        $file_tag               = C('FILE_TAG');
+        $new_array              = $file_tag[1] + $file_tag[2] + $file_tag[3];
+        return $new_array;
     }
 
     public function exportTest(){
