@@ -283,7 +283,7 @@ class FileController extends BasepubController {
             $data[$k]['file_name']  = trim($v['file_name']);
             $data[$k]['create_time']= date('Y-m-d H:i:s',$v['est_time']);
         }
-        $title                  = array('文件名称,上传时间');
+        $title                  = array('文件名称','上传时间');
         exportexcel($data,$title,'文件信息');
     }
     
