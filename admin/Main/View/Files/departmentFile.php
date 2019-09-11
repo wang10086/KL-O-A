@@ -43,7 +43,7 @@
                         <div class="col-xs-12">
                             <div class="box box-warning">
                                 <div class="box-header">
-                                    <h3 class="box-title">部门职责</h3>
+                                    <h3 class="box-title"><?php echo $pin ? $fileTags[$pin] : '全部文件'; ?></h3>
                                     <div class="box-tools pull-right">
                                         <a href="javascript:;" class="btn btn-info btn-sm" onclick="javascript:opensearch('searchtext',500,150);"><i class="fa fa-search"></i> 搜索</a>
                                     </div>
