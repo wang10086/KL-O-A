@@ -195,7 +195,7 @@ class FileController extends BasepubController {
     }
 
     //岗位作业指导书
-    public function instruction(){
+    /*public function instruction(){
 
         $department         = I('department');
         $posts              = I('posts');
@@ -250,7 +250,7 @@ class FileController extends BasepubController {
         $this->posts            = M('posts')->where(array('post_name'=>array('neq','')))->select(); //岗位
 
         $this->display('Files/instruction');
-    }
+    }*/
 
     //公司通用
     public function companyFile(){
