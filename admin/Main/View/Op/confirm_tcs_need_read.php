@@ -2,8 +2,7 @@
     <label class="lit-title" >需求记录</label>
     <table class="table table-bordered dataTable fontmini" id="tablelist" style="margin-top:10px;">
         <tr role="row" class="orders" >
-            <th class="sorting" data="" width="80">日期</th>
-            <th class="sorting" data="">活动时间</th>
+            <th class="sorting" data="" width="">活动时间</th>
             <th class="sorting" data="">活动地点</th>
             <th class="sorting" data="">职务信息</th>
             <!--<th class="sorting" data="">职能类型</th>-->
@@ -17,8 +16,7 @@
             <tr>
                 <input type="hidden" name="price_id" value="{$row.id}">
                 <input type="hidden" name="confirm_id" value="{$row.confirm_id}">
-                <td>{$row.in_day|date='Y-m-d',###}</td>
-                <td>{$row.tcs_begin_time|date='H:i:s',###}--{$row.tcs_end_time|date='H:i:s',###}</td>
+                <td>{$row.in_begin_day|date='Y-m-d',###}--{$row.in_day|date='Y-m-d',###}</td>
                 <td>{$row.address}</td>
                 <td>{$row.gkname}</td>
                 <!--<td>{$row.gpkname}</td>-->

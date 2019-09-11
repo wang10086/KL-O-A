@@ -48,9 +48,24 @@
 
                     <div class="col-md-12 mt10">
                         <lebal class="upload-lebal">文件类型</lebal>
-                        <foreach name="file_tag" key="k" item="v">
-                            <span class="lebal-span"><input type="radio" value="{$k}" name="file_tag"> &nbsp;{$v}</span>
-                        </foreach>
+                        <div class="col-md-12">
+                            <span class="mr20">公司文件：</span>
+                            <foreach name="file_tag[1]" key="k" item="v">
+                                <span class="lebal-span"><input type="radio" value="{$k}" name="file_tag"> &nbsp;{$v}</span>
+                            </foreach>
+                        </div>
+                        <div class="col-md-12">
+                            <span class="mr20">部门文件：</span>
+                            <foreach name="file_tag[2]" key="k" item="v">
+                                <span class="lebal-span"><input type="radio" value="{$k}" name="file_tag"> &nbsp;{$v}</span>
+                            </foreach>
+                        </div>
+                        <div class="col-md-12">
+                            <span class="mr20">岗位文件：</span>
+                            <foreach name="file_tag[3]" key="k" item="v">
+                                <span class="lebal-span"><input type="radio" value="{$k}" name="file_tag"> &nbsp;{$v}</span>
+                            </foreach>
+                        </div>
                     </div>
 
                     <div class="form-group col-md-12"></div>

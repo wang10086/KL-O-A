@@ -134,8 +134,8 @@ class FilesController extends BaseController {
 	// @@@NODE-3###addres###上传界面###
     public function upload(){
 		
-		$this->pid    = I('pid',0);
-		$this->level  = I('level',1);
+		$this->pid          = I('pid',0);
+		$this->level        = I('level',1);
         $this->department   = M('salary_department')->getField('id,department',true);           //部门
         $this->posts        = M('posts')->where(array('post_name'=>array('neq','')))->select(); //岗位
         $this->file_tag     = C('FILE_TAG');
