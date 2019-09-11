@@ -15,7 +15,7 @@
                 <!-- Main content -->
                 <section class="content">
                     <if condition="C('RBAC_SUPER_ADMIN')==cookie('username') || cookie('roleid')==10">
-                        <form action="{:U('File/instruction')}" method="post">
+                        <form action="{:U('File/companyFile')}" method="post">
                             <div class="col-xs-12 content-neck">
                                 <div class="content-neck-body">
                                     <lebal>部门</lebal>&emsp14;
