@@ -275,15 +275,6 @@
                                         <li class="{:on('File/companyFile')}"><a href="{:U('File/companyFile')}"><i class="fa fa-angle-right"></i> 公司通用</a></li>
                                         <li class="{:on('File/departmentFile')}"><a href="{:U('File/departmentFile')}"><i class="fa fa-angle-right"></i> 部门通用</a></li>
                                         <li class="{:on('File/postFile')}"><a href="{:U('File/postFile')}"><i class="fa fa-angle-right"></i> 岗位专用</a></li>
-                                        <!--<if condition="rolemenu(array('File/companyFile'))">
-                                            <li class="{:on('File/companyFile')}"><a href="{:U('File/companyFile')}"><i class="fa fa-angle-right"></i> 公司通用</a></li>
-                                        </if>
-                                        <if condition="rolemenu(array('File/departmentFile'))">
-                                            <li class="{:on('File/departmentFile')}"><a href="{:U('File/departmentFile')}"><i class="fa fa-angle-right"></i> 部门通用</a></li>
-                                        </if>
-                                        <if condition="rolemenu(array('File/postFile'))">
-                                            <li class="{:on('File/postFile')}"><a href="{:U('File/postFile')}"><i class="fa fa-angle-right"></i> 岗位专用</a></li>
-                                        </if>-->
                                     </ul>
                                 </li>
 

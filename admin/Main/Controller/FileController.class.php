@@ -255,7 +255,9 @@ class FileController extends BasepubController {
     //公司通用
     public function companyFile(){
         $this->title('公司通用文件');
+        $pin                    = I('pin',0);
 
+        $this->pin              = $pin;
         $this->display('Files/companyFile');
     }
 
@@ -271,6 +273,18 @@ class FileController extends BasepubController {
         $this->title('岗位专用文件');
 
         $this->display('Files/postFile');
+    }
+
+    public function exportTest(){
+        $db                     = M('files');
+        $lists                  = $db->where(array('file_type'=>1))->field('file_name,est_time')->order('est_time asc')->select();
+        $data                   = array();
+        foreach ($lists as $k=>$v){
+            $data[$k]['file_name']  = trim($v['file_name']);
+            $data[$k]['create_time']= date('Y-m-d H:i:s',$v['est_time']);
+        }
+        $title                  = array('文件名称,上传时间');
+        exportexcel($data,$title,'文件信息');
     }
     
 }
