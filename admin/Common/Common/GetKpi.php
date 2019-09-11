@@ -3748,7 +3748,7 @@ function get_yw_department(){
         $data                               = array();
         $data['sum_num']                    = $sum_num;
         $data['ok_num']                     = $ok_num;
-        $data['average']                    = (round($ok_num/$sum_num,4)*100).'%';
+        $data['average']                    = $sum_num ? (round($ok_num/$sum_num,4)*100).'%' : '0%';
         $data['type']                       = $type;
         $data['title']                      = $title;
         $data['content']                    = $content;
@@ -3795,7 +3795,7 @@ function get_yw_department(){
         $data                               = array();
         $data['sum_num']                    = $sum_num;
         $data['ok_num']                     = $ok_num;
-        $data['average']                    = (round($ok_num/$sum_num,4)*100).'%';
+        $data['average']                    = $sum_num ? (round($ok_num/$sum_num,4)*100).'%' : '0%';
         $data['type']                       = $type;
         $data['title']                      = $title;
         $data['content']                    = $content;
@@ -3852,7 +3852,7 @@ function get_yw_department(){
         $data                               = array();
         $data['sum_num']                    = $sum_num;
         $data['ok_num']                     = $ok_num;
-        $data['average']                    = (round($ok_num/$sum_num,4)*100).'%';
+        $data['average']                    = $sum_num ? (round($ok_num/$sum_num,4)*100).'%' : '0%';
         $data['type']                       = $type;
         $data['title']                      = $title;
         $data['content']                    = $content;

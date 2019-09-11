@@ -29,7 +29,9 @@
 
                                 <div class="content-neck-body">
                                     <lebal>岗位</lebal>&emsp14;
-                                    <select name="posts" id="posts"></select>
+                                    <select name="posts" id="posts">
+                                        <option value="">请先选择部门</option>
+                                    </select>
                                 </div>
 
                                 <input type="submit" class="btn btn-info search-btn" value="确定">
@@ -50,10 +52,9 @@
 
                                 <div class="btn-group" id="catfont">
                                     <a href="{:U('File/companyFile',array('pin'=>0))}" class="btn <?php if($pin==0){ echo 'btn-info';}else{ echo 'btn-default';} ?>">全部文件</a>
-                                    <a href="{:U('File/companyFile',array('pin'=>1))}" class="btn <?php if($pin==1){ echo 'btn-info';}else{ echo 'btn-default';} ?>">公司制度</a>
-                                    <a href="{:U('File/companyFile',array('pin'=>2))}" class="btn <?php if($pin==2){ echo 'btn-info';}else{ echo 'btn-default';} ?>">管理规程</a>
-                                    <a href="{:U('File/companyFile',array('pin'=>3))}" class="btn <?php if($pin==3){ echo 'btn-info';}else{ echo 'btn-default';} ?>">业务规范</a>
-                                    <a href="{:U('File/companyFile',array('pin'=>4))}" class="btn <?php if($pin==4){ echo 'btn-info';}else{ echo 'btn-default';} ?>">产品资料</a>
+                                    <foreach name="file_type" key="k" item="v">
+                                        <a href="{:U('File/companyFile',array('pin'=>$k))}" class="btn <?php if($pin==$k){ echo 'btn-info';}else{ echo 'btn-default';} ?>">{$v}</a>
+                                    </foreach>
                                 </div>
 
                                 <table class="table table-bordered dataTable fontmini" id="tablelist" style="margin-top:10px;">
@@ -83,7 +84,6 @@
                                 	<div class="pagestyle">{$zhize_pages}</div>
                                 </div>
                             </div><!-- /.box -->
-
                         </div><!-- /.col -->
                      </div>
                 </section><!-- /.content -->
@@ -106,9 +106,9 @@
 <include file="Index:footer2" />
 
 <script type="text/javascript">
-    $(function () {
+    /*$(function () {
         get_depart();
-    })
+    })*/
 
     function get_depart() {
         var departmentid = $('#department').val();

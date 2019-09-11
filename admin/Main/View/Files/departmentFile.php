@@ -29,7 +29,9 @@
 
                                 <div class="content-neck-body">
                                     <lebal>岗位</lebal>&emsp14;
-                                    <select name="posts" id="posts"></select>
+                                    <select name="posts" id="posts">
+                                        <option value="">请先选择部门</option>
+                                    </select>
                                 </div>
 
                                 <input type="submit" class="btn btn-info search-btn" value="确定">
@@ -42,15 +44,19 @@
                             <div class="box box-warning">
                                 <div class="box-header">
                                     <h3 class="box-title">部门职责</h3>
+                                    <div class="box-tools pull-right">
+                                        <a href="javascript:;" class="btn btn-info btn-sm" onclick="javascript:opensearch('searchtext',500,150);"><i class="fa fa-search"></i> 搜索</a>
+                                    </div>
                                 </div><!-- /.box-header -->
-
                                 <div class="box-body">
-                                <!--<div class="fileRoute">
-                                	<a href="{:U('Files/index')}" class="file_tips">文件管理</a>
-                                    <foreach name="dir_path" item="v">
-                                    &gt; <a href="{:U('Files/index',array('pid'=>$v['id']))}" class="file_tips">{$v.file_name}</a>
+
+                                <div class="btn-group" id="catfont">
+                                    <a href="{:U('File/departmentFile',array('pin'=>0))}" class="btn <?php if($pin==0){ echo 'btn-info';}else{ echo 'btn-default';} ?>">全部文件</a>
+                                    <foreach name="file_type" key="k" item="v">
+                                        <a href="{:U('File/departmentFile',array('pin'=>$k))}" class="btn <?php if($pin==$k){ echo 'btn-info';}else{ echo 'btn-default';} ?>">{$v}</a>
                                     </foreach>
-                                </div>-->
+                                </div>
+
                                 <table class="table table-bordered dataTable fontmini" id="tablelist" style="margin-top:10px;">
                                     <tr role="row" class="orders" >
                                     	<th width="40" style="text-align:center;">ID</th>
@@ -78,132 +84,31 @@
                                 	<div class="pagestyle">{$zhize_pages}</div>
                                 </div>
                             </div><!-- /.box -->
-
                         </div><!-- /.col -->
                      </div>
-
-                    <div class="row">
-                        <div class="col-xs-12">
-                            <div class="box box-warning">
-                                <div class="box-header">
-                                    <h3 class="box-title">岗位说明</h3>
-                                </div><!-- /.box-header -->
-                                <div class="box-body">
-                                    <table class="table table-bordered dataTable fontmini" id="tablelist" style="margin-top:10px;">
-                                        <tr role="row" class="orders" >
-                                            <th width="40" style="text-align:center;">ID</th>
-                                            <th class="sorting" data="file_name">文件名称</th>
-                                            <th width="100" class="sorting" data="file_type">文件类型</th>
-                                            <th width="100" class="sorting" data="file_ext">文件格式</th>
-                                            <th width="100" class="sorting" data="file_size">文件大小</th>
-                                            <th width="100" class="sorting" data="est_user">创建者</th>
-                                            <th width="160" class="sorting" data="est_time">创建时间</th>
-                                        </tr>
-                                        <foreach name="shuoming" item="row">
-                                            <tr>
-                                                <td align="center">{$row.id}</td>
-                                                <td><a href="{$row.file_path}" target="_blank">{$row.file_name}</a></td>
-                                                <td>{$row.file_type}</td>
-                                                <td><if condition="$row['file_ext']">{$row.file_ext}</if></td>
-                                                <td><if condition="$row['file_size']">{:fsize($row['file_size'])}</if></td>
-                                                <td>{$row.est_user}</td>
-                                                <td>{$row.est_time|date='Y-m-d H:i:s',###}</td>
-                                            </tr>
-                                        </foreach>
-                                    </table>
-                                </div><!-- /.box-body -->
-                                <div class="box-footer clearfix">
-                                    <div class="pagestyle">{$shuoming_pages}</div>
-                                </div>
-                            </div><!-- /.box -->
-                        </div><!-- /.col -->
-                    </div>
-
-                    <div class="row">
-                        <div class="col-xs-12">
-                            <div class="box box-warning">
-                                <div class="box-header">
-                                    <h3 class="box-title">相关规程</h3>
-                                </div><!-- /.box-header -->
-                                <div class="box-body">
-                                    <table class="table table-bordered dataTable fontmini" id="tablelist" style="margin-top:10px;">
-                                        <tr role="row" class="orders" >
-                                            <th width="40" style="text-align:center;">ID</th>
-                                            <th class="sorting" data="file_name">文件名称</th>
-                                            <th width="100" class="sorting" data="file_type">文件类型</th>
-                                            <th width="100" class="sorting" data="file_ext">文件格式</th>
-                                            <th width="100" class="sorting" data="file_size">文件大小</th>
-                                            <th width="100" class="sorting" data="est_user">创建者</th>
-                                            <th width="160" class="sorting" data="est_time">创建时间</th>
-                                        </tr>
-                                        <foreach name="guicheng" item="row">
-                                            <tr>
-                                                <td align="center">{$row.id}</td>
-                                                <td><a href="{$row.file_path}" target="_blank">{$row.file_name}</a></td>
-                                                <td>{$row.file_type}</td>
-                                                <td><if condition="$row['file_ext']">{$row.file_ext}</if></td>
-                                                <td><if condition="$row['file_size']">{:fsize($row['file_size'])}</if></td>
-                                                <td>{$row.est_user}</td>
-                                                <td>{$row.est_time|date='Y-m-d H:i:s',###}</td>
-                                            </tr>
-                                        </foreach>
-                                    </table>
-                                </div><!-- /.box-body -->
-                                <div class="box-footer clearfix">
-                                    <div class="pagestyle">{$guicheng_pages}</div>
-                                </div>
-                            </div><!-- /.box -->
-                        </div><!-- /.col -->
-                    </div>
-
-                    <div class="row">
-                        <div class="col-xs-12">
-                            <div class="box box-warning">
-                                <div class="box-header">
-                                    <h3 class="box-title">相关制度</h3>
-                                </div><!-- /.box-header -->
-                                <div class="box-body">
-                                    <table class="table table-bordered dataTable fontmini" id="tablelist" style="margin-top:10px;">
-                                        <tr role="row" class="orders" >
-                                            <th width="40" style="text-align:center;">ID</th>
-                                            <th class="sorting" data="file_name">文件名称</th>
-                                            <th width="100" class="sorting" data="file_type">文件类型</th>
-                                            <th width="100" class="sorting" data="file_ext">文件格式</th>
-                                            <th width="100" class="sorting" data="file_size">文件大小</th>
-                                            <th width="100" class="sorting" data="est_user">创建者</th>
-                                            <th width="160" class="sorting" data="est_time">创建时间</th>
-                                        </tr>
-                                        <foreach name="zhidu" item="row">
-                                            <tr>
-                                                <td align="center">{$row.id}</td>
-                                                <td><a href="{$row.file_path}" target="_blank">{$row.file_name}</a></td>
-                                                <td>{$row.file_type}</td>
-                                                <td><if condition="$row['file_ext']">{$row.file_ext}</if></td>
-                                                <td><if condition="$row['file_size']">{:fsize($row['file_size'])}</if></td>
-                                                <td>{$row.est_user}</td>
-                                                <td>{$row.est_time|date='Y-m-d H:i:s',###}</td>
-                                            </tr>
-                                        </foreach>
-                                    </table>
-                                </div><!-- /.box-body -->
-                                <div class="box-footer clearfix">
-                                    <div class="pagestyle">{$zhidu_pages}</div>
-                                </div>
-                            </div><!-- /.box -->
-                        </div><!-- /.col -->
-                    </div>
-
                 </section><!-- /.content -->
             </aside><!-- /.right-side -->
 
+<div id="searchtext">
+    <form action="" method="get" id="searchform">
+        <input type="hidden" name="m" value="Main">
+        <input type="hidden" name="c" value="File">
+        <input type="hidden" name="a" value="departmentFile">
+        <input type="hidden" name="pin" value="{$pin}">
 
+        <div class="form-group col-md-12"></div>
+        <div class="form-group col-md-12">
+            <input type="text" class="form-control" name="title" placeholder="文件名称">
+        </div>
+    </form>
+</div>
 
 <include file="Index:footer2" />
 
 <script type="text/javascript">
-    $(function () {
+    /*$(function () {
         get_depart();
-    })
+    })*/
 
     function get_depart() {
         var departmentid = $('#department').val();

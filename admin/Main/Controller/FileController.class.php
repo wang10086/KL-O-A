@@ -255,23 +255,36 @@ class FileController extends BasepubController {
     //公司通用
     public function companyFile(){
         $this->title('公司通用文件');
+        $file_type              = C('FILE_TYPE')[1];
         $pin                    = I('pin',0);
 
+        $this->departments      = M('salary_department')->getField('id,department',true);           //部门
         $this->pin              = $pin;
+        $this->file_type        = $file_type;
         $this->display('Files/companyFile');
     }
 
     //部门通用
     public function departmentFile(){
         $this->title('部门通用文件');
+        $file_type              = C('FILE_TYPE')[2];
+        $pin                    = I('pin',0);
 
+        $this->departments      = M('salary_department')->getField('id,department',true);           //部门
+        $this->pin              = $pin;
+        $this->file_type        = $file_type;
         $this->display('Files/departmentFile');
     }
 
     //岗位专用
     public function postFile(){
         $this->title('岗位专用文件');
+        $file_type              = C('FILE_TYPE')[3];
+        $pin                    = I('pin',0);
 
+        $this->departments      = M('salary_department')->getField('id,department',true);           //部门
+        $this->pin              = $pin;
+        $this->file_type        = $file_type;
         $this->display('Files/postFile');
     }
 
