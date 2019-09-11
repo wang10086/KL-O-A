@@ -311,13 +311,13 @@ class FileController extends BasepubController {
         if ($fileName) $where['file_name']  = array('like','%'.$fileName.'%');
         if (cookie('roleid')==10 || C('RBAC_SUPER_ADMIN')==cookie('username')){
             $department                     = $department ? '['.$department.']' : '['.session('department').']';
-            $posts                          = $posts ? '['.$posts.']' : '['.session('posts').']';
             $where['department']            = array('like','%'.$department.'%');
-            $where['posts']                 = array('like','%'.$posts.'%');
+            //$posts                          = $posts ? '['.$posts.']' : '['.session('posts').']';
+            //$where['posts']                 = array('like','%'.$posts.'%');
         }else{
             $department                     = '['.session('department').']';
-            //$posts                          = '['.session('posts').']';
             $where['department']            = array('like','%'.$department.'%');
+            //$posts                          = '['.session('posts').']';
             //$where['posts']                 = array('like','%'.$posts.'%');
         }
 
@@ -353,14 +353,14 @@ class FileController extends BasepubController {
         $where['file_tag']              = $pin ? $pin : array('in',$file_tags);
         if ($fileName) $where['file_name']  = array('like','%'.$fileName.'%');
         if (cookie('roleid')==10 || C('RBAC_SUPER_ADMIN')==cookie('username')){
-            $department                     = $department ? '['.$department.']' : '['.session('department').']';
+            //$department                     = $department ? '['.$department.']' : '['.session('department').']';
+            //$where['department']            = array('like','%'.$department.'%');
             $posts                          = $posts ? '['.$posts.']' : '['.session('posts').']';
-            $where['department']            = array('like','%'.$department.'%');
             $where['posts']                 = array('like','%'.$posts.'%');
         }else{
             //$department                     = '['.session('department').']';
-            $posts                          = '['.session('posts').']';
             //$where['department']            = array('like','%'.$department.'%');
+            $posts                          = '['.session('posts').']';
             $where['posts']                 = array('like','%'.$posts.'%');
         }
 
