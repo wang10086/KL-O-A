@@ -27,49 +27,39 @@
                         </div><!-- /.box-header -->
                         <div class="box-body">
                             <div class="content">
-                                <div class="form-group col-md-12">
-                                <table width="100%" id="font-14" rules="none" border="0" cellpadding="0" cellspacing="0" style="margin-top:-15px;">
-                                    <tr>
-                                        <td colspan="3">工单名称：{$info.worder_title}</td>
-                                    </tr>
-                                    <tr>
-                                        <td width="33.33%">工单类型 : {$info.type}</td>
-                                        <td width="33.33%">发起时间：{$info.create_time|date='Y-m-d H:i:s',###}</td>
-                                        <if condition="$info['op_id']">
-                                            <td width="33.33%">项目编号:{$info.op_id}</td>
-                                        </if>
-                                    </tr>
-                                    <tr>
-                                        <td width="33.33%">发起者姓名：{$info.ini_user_name}</td>
-                                        <td width="33.33%">发起者职务：{$info.ini_dept_name}</td>
-                                        <td width="33.33%">计划完成时间：{$info.plan_complete_time|date='Y-m-d H:i:s',###}</td>
-                                    </tr>
-                                    <tr>
-                                        <td width="33.33%">执行者姓名：{$info.exe_user_name}</td>
-                                        <td width="33.33%">执行部门：{$info.exe_dept_name}</td>
-                                        <if condition="$info['assign_name']">
-                                            <td width="33.33%">被指派者名字：{$info['assign_name']}</td>
-                                        </if>
-                                    </tr>
-                                    <tr>
-                                        <if condition="$dept">
-                                            <td width="33.33%">工单项名称：{$dept.pro_title}</td>
-                                            <td width="33.33%">工单项类型：{$dept.n_type}</td>
-                                        </if>
-                                    </tr>
+                                <div class="form-group col-md-8"> 工单名称：{$info.worder_title} </div>
+                                <div class="form-group col-md-4"> 工单状态：{$info.sta} </div>
 
-                                    <if condition="in_array($info['urgent'],array(1,2))">
-                                        <tr>
-                                            <td width="33.33%">是否加急: {$info['urgent_stu']}</td>
-                                            <td colspan="2">加急原因: {$info.urgent_cause}</td>
-                                        </tr>
-                                    </if>
+                                <div class="form-group col-md-4"> 工单类型 : {$info.type} </div>
+                                <if condition="$info['op_id']">
+                                    <div class="form-group col-md-4"> 发起时间：{$info.create_time|date='Y-m-d H:i:s',###} </div>
+                                    <div class="form-group col-md-4"> 项目编号:{$info.op_id} </div>
+                                <else />
+                                    <div class="form-group col-md-8"> 发起时间：{$info.create_time|date='Y-m-d H:i:s',###} </div>
+                                </if>
+                                <div class="form-group col-md-4"> 发起者姓名：{$info.ini_user_name} </div>
+                                <div class="form-group col-md-4"> 计划完成时间：{$info.plan_complete_time|date='Y-m-d H:i:s',###} </div>
+                                <div class="form-group col-md-4"> 所需工时：{$info.hour} 小时 </div>
 
-                                    <if condition="$info['exe_reply_content'] neq null">
-                                        <tr><td colspan="3">执行人响应工单回复：{$info.exe_reply_content}</td></tr>
-                                    </if>
-                                </table>
-                                </div>
+                                <div class="form-group col-md-4"> 执行者姓名：{$info.exe_user_name} </div>
+                                <div class="form-group col-md-4"> 执行部门：{$info.exe_dept_name} </div>
+                                <div class="form-group col-md-4"> 被指派者名字：<?php echo $info['assign_name'] ? $info['assign_name'] : '<font color="#999">未指派</font>';?> </div>
+
+                                <if condition="$dept">
+                                    <div class="form-group col-md-6">工单项名称：{$dept.pro_title}</div>
+                                    <div class="form-group col-md-6">工单项类型：{$dept.n_type}</div>
+                                </if>
+
+                                <if condition="in_array($info['urgent'],array(1,2))">
+                                    <tr>
+                                        <div class="form-group col-md-6">是否加急: {$info['urgent_stu']}</div>
+                                        <div class="form-group col-md-6">加急原因: {$info.urgent_cause}</div>
+                                    </tr>
+                                </if>
+
+                                <if condition="$info['exe_reply_content'] neq null">
+                                    <div class="form-group col-md-12">执行人响应工单回复：{$info.exe_reply_content}</div>
+                                </if>
 
                                 <div class="form-group col-md-12">
                                     <h2 style="font-size:16px; border-bottom:2px solid #dedede; padding-bottom:10px;">工单内容</h2>
@@ -78,9 +68,9 @@
                                     {$info.worder_content}
                                 </div>
 
-                                <div class="form-group col-md-12">
-                                        <h2 class="brh3" style="font-size:16px; border-bottom:2px solid #dedede; padding-bottom:10px;">工单状态<span style="float:right; font-size: 14px">{$info.sta}</span></h2>
-                                </div>
+                                <!--<div class="form-group col-md-12">
+                                    <h2 class="brh3" style="font-size:16px; border-bottom:2px solid #dedede; padding-bottom:10px;">工单状态<span style="float:right; font-size: 14px">{$info.sta}</span></h2>
+                                </div>-->
                                 <div class="form-group col-md-12">
                                     <if condition="$info['exe_complete_content'] neq null">
                                         <tr><td colspan="3">执行人完成工单回复：{$info.exe_complete_content}</td></tr>
