@@ -117,6 +117,9 @@
 	$(document).ready(function(e) {
         cost_total();
     });
+    /*$('.costaccType').change(function () {
+        console.log('aa');
+    })*/
 	//新成本核算项
 	function add_costacc(){
 		var i = parseInt($('#costacc_val').text())+1;
@@ -127,7 +130,7 @@
             '<input type="text"  class="form-control cost" name="costacc['+i+'][unitcost]"  value="0">' +
             '<input type="text" class="form-control amount" name="costacc['+i+'][amount]" value="1">' +
             '<input type="text" class="form-control totalval" name="costacc['+i+'][total]"  value="0">' +
-            '<select class="form-control"  name="costacc['+i+'][type]" >' +
+            '<select class="form-control costaccType"  name="costacc['+i+'][type]" >' +
             '<foreach name="kind" key="k" item="v">'+
             '<option value="{$k}">{$v}</option>'+
             '</foreach>'+
@@ -187,68 +190,93 @@
         relaydate();
     }
 
-	//更新成本核算
-	function cost_total(){
-        var costaccsum = get_costaccsum();
+    //更新成本核算
+    function cost_total(){
+        var costaccsum      = get_costaccsum();
 
-		$('#costaccsum').html('&yen; '+costaccsum.toFixed(2));	
-		$('#costaccsumval').val(costaccsum.toFixed(2));	
-		lilv();
-	}
+        $('#costaccsum').html('&yen; '+costaccsum.toFixed(2));
+        $('#costaccsumval').val(costaccsum.toFixed(2));
+        lilv();
+        untraffic_lilv();
+    }
 
-	function get_costaccsum() {
-        var costaccsum = 0;
+    function untraffic_lilv() {
+        var chengben = parseFloat($('#untraffic_sum').val());   //成本(不包含大交通)
+        var shouru   = parseFloat($('#shouru').val());        //收入
+
+        //毛利(不包含大交通)
+        if(shouru && chengben){
+            var maoli    = accSub(shouru,chengben).toFixed(2);
+            $('#untraffic_maoli').val(maoli);
+        }
+
+        //毛利率(不包含大交通)
+        if(maoli && shouru){
+            var maolilv    = accDiv(maoli,shouru).toFixed(4);
+            $('#untraffic_maolilv').val(accMul(maolilv,100)+'%');
+        }
+    }
+
+    function get_costaccsum() {
+        var costaccsum          = 0;
+        var untraffic_sum       = 0; //不含大交通合计
         $('.cost_expense').each(function(index, element) {
             $(this).find('.cost').blur(function(){
-                var cost = $(this).val();
-                var amount = $(this).parent().find('.amount').val();
-                var ct = accMul(cost,amount);
+                var cost        = $(this).val();
+                var amount      = $(this).parent().find('.amount').val();
+                var ct          = accMul(cost,amount);
                 $(this).parent().find('.totalval').val(ct.toFixed(2));
                 cost_total();
             });
             $(this).find('.amount').blur(function(){
-                var amount = $(this).val();
-                var cost = $(this).parent().find('.cost').val();
-                var ct = accMul(cost,amount);
+                var amount      = $(this).val();
+                var cost        = $(this).parent().find('.cost').val();
+                var ct          = accMul(cost,amount);
                 $(this).parent().find('.totalval').val(ct.toFixed(2));
-                cost_total()
+                cost_total();
             });
+            $(this).find('.costaccType').change(function () {
+                cost_total();
+            })
+
+            var costacctype     = $(this).find('.costaccType').val();
+            var untraffictotalval = costacctype == 12 ? 0 : $(this).find('.totalval').val();
+            untraffic_sum       += parseFloat(untraffictotalval);
         });
+        $('#untraffic_sum').val(untraffic_sum);
         $('.totalval').each(function(index, element) {
             costaccsum += parseFloat($(this).val());
         });
         return costaccsum;
     }
-	
-	
-	
-	//更新利率
-	function lilv(){
-		var chengben = parseFloat($('#costaccsumval').val());   //成本
-		var renshu   = parseInt($('#renshu').val());        //人数
-		var shouru   = parseFloat($('#shouru').val());        //收入
+
+    //更新利率
+    function lilv(){
+        var chengben = parseFloat($('#costaccsumval').val());   //成本
+        var renshu   = parseInt($('#renshu').val());        //人数
+        var shouru   = parseFloat($('#shouru').val());        //收入
         var should_back_money = "{$budget.should_back_money}"?"{$budget.should_back_money}":shouru;
-		$('#sum_money_return').html(should_back_money);
+        $('#sum_money_return').html(should_back_money);
 
-		//毛利
-		if(shouru && chengben){
-			var maoli    = accSub(shouru,chengben).toFixed(2);
-			$('#maoli').val(maoli);
-		}
+        //毛利
+        if(shouru && chengben){
+            var maoli    = accSub(shouru,chengben).toFixed(2);
+            $('#maoli').val(maoli);
+        }
 
-		//毛利率
-		if(maoli && shouru){
-			var maolilv    = accDiv(maoli,shouru).toFixed(4);
-			$('#maolilv').val(accMul(maolilv,100)+'%');
-		}
-		
-		//人均成本
-		if(maoli && renshu){
-			var renjunmaoli       = accDiv(maoli,renshu).toFixed(2);
-			$('#renjunmaoli').val(renjunmaoli);
-		}
-		
-	}
+        //毛利率
+        if(maoli && shouru){
+            var maolilv    = accDiv(maoli,shouru).toFixed(4);
+            $('#maolilv').val(accMul(maolilv,100)+'%');
+        }
+
+        //人均成本
+        if(maoli && renshu){
+            var renjunmaoli       = accDiv(maoli,renshu).toFixed(2);
+            $('#renjunmaoli').val(renjunmaoli);
+        }
+
+    }
 	
 	
 	
@@ -321,12 +349,13 @@
     function checkGrossRate() {
         var opid        = {$op['op_id']};
         var maolilv     = $('#maolilv').val();
+        var untraffic_maolilv = $('#untraffic_maolilv').val(); //不含大交通毛利率
         if (!maolilv) { art_show_msg('毛利率不能为空',3); return false; }
 
         $.ajax({
             type : 'POST',
             url  : "{:U('Ajax/checkGrossRate')}",
-            data : {opid:opid, maolilv:maolilv},
+            data : {opid:opid, maolilv:untraffic_maolilv},
             success : function(data){
                 if (data.stu == 1){
                     $('#appsubmint').submit();

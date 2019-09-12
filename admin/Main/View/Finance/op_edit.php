@@ -21,7 +21,7 @@
                 <input type="text" class="form-control cost" name="costacc[888{$k}][unitcost]" value="{$v.unitcost}">
                 <input type="text" class="form-control amount" name="costacc[888{$k}][amount]" value="{$v.amount}">
                 <input type="text" class="form-control totalval" name="costacc[888{$k}][total]" value="{$v.total}">
-                <select class="form-control"  name="costacc[888{$k}][type]" >
+                <select class="form-control costaccType"  name="costacc[888{$k}][type]" >
                     <foreach name="kind" key="kk" item="vv">
                     <option value="{$kk}" <?php if($kk==$v['type']){ echo 'selected';} ?> >{$vv}</option>
                     </foreach>
@@ -55,42 +55,52 @@
         <input type="hidden" name="info[op_id]" value="{$op.op_id}" />
         <input type="hidden" name="info[name]" value="{$op.project}" />
         <input type="hidden" name="info[budget]" id="costaccsumval" value="{$op.costacc}" />
+        <input type="hidden" name="info[untraffic_sum]" id="untraffic_sum" value="{$budget.untraffic_sum}" />
         <input type="hidden" name="budget" value="{$budget.id}" />
         <div style="width:100%; float:left;">
-            <div class="form-group col-md-4">
+            <div class="form-group col-md-3">
                 <label>人数：</label>
                 <input type="text" name="info[renshu]" id="renshu" class="form-control" value="<?php if($budget['renshu']){ echo $budget['renshu'];}else{ echo $op['number'];} ?>" onBlur="lilv()" />
             </div>
 
-            <div class="form-group col-md-4">
+            <div class="form-group col-md-3">
                 <label>预算收入：</label>
-                <input type="text" name="info[shouru]" id="shouru" class="form-control" value="<?php if($budget['shouru']){ echo $budget['shouru'];}else{ echo 0;} ?>" onBlur="lilv()"/>
+                <input type="text" name="info[shouru]" id="shouru" class="form-control" value="<?php if($budget['shouru']){ echo $budget['shouru'];}else{ echo 0;} ?>" onBlur="lilv(),untraffic_lilv()"/>
             </div>
 
-            <div class="form-group col-md-4">
+            <div class="form-group col-md-3">
                 <label>收入性质：</label>
                 <div style="margin-top:5px;">
                     <input type="checkbox" name="xinzhi[]" <?php if(in_array('单位',$budget['xz'])){ echo 'checked';} ?> value="单位"> 单位 &nbsp;&nbsp;
                     <input type="checkbox" name="xinzhi[]" <?php if(in_array('个人',$budget['xz'])){ echo 'checked';} ?> value="个人"> 个人 &nbsp;&nbsp;
                     <input type="checkbox" name="xinzhi[]" <?php if(in_array('政府',$budget['xz'])){ echo 'checked';} ?> value="政府"> 政府 &nbsp;&nbsp;
                 </div>
-
             </div>
-        </div>
-        <div style="width:100%;float:left; padding-bottom:50px;">
-            <div class="form-group col-md-4">
+
+            <div class="form-group col-md-3">
                 <label>毛利：</label>
                 <input type="text" name="info[maoli]" id="maoli" class="form-control" value="{$budget.maoli}" />
             </div>
-
-            <div class="form-group col-md-4">
+        </div>
+        <div style="width:100%;float:left; padding-bottom:50px;">
+            <div class="form-group col-md-3">
                 <label>毛利率：</label>
                 <input type="text" name="info[maolilv]" id="maolilv" class="form-control" value="{$budget.maolilv}" />
             </div>
 
-            <div class="form-group col-md-4">
+            <div class="form-group col-md-3">
                 <label>人均毛利：</label>
                 <input type="text" name="info[renjunmaoli]" id="renjunmaoli" class="form-control" value="{$budget.renjunmaoli}" />
+            </div>
+
+            <div class="form-group col-md-3">
+                <label>毛利(不含大交通)：</label>
+                <input type="text" name="info[untraffic_maoli]" id="untraffic_maoli" class="form-control" value="{$budget.untraffic_maoli}" />
+            </div>
+
+            <div class="form-group col-md-3">
+                <label>毛利率(不含大交通)：</label>
+                <input type="text" name="info[untraffic_maolilv]" id="untraffic_maolilv" class="form-control" value="{$budget.untraffic_maolilv}" />
             </div>
         </div>
     </div>
@@ -209,5 +219,9 @@
             <?php } ?>
         </table>
     </div>
+
+<script type="text/javascript">
+
+</script>
 
 

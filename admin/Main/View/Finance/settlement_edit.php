@@ -30,7 +30,7 @@
                     <input type="text" class="form-control cost" name="costacc[2222{$k}][unitcost]" value="{$v.unitcost}">
                     <input type="text" class="form-control amount" name="costacc[2222{$k}][amount]" value="{$v.amount}">
                     <input type="text" class="form-control totalval" name="costacc[2222{$k}][total]" value="{$v.total}">
-                    <select class="form-control" name="costacc[2222{$k}][type]" id="2222{$k}_costacc_type" onchange="set_supplier_null(2222{$k})">
+                    <select class="form-control costaccType" name="costacc[2222{$k}][type]" id="2222{$k}_costacc_type" onchange="set_supplier_null(2222{$k})">
                         <!--<foreach name="kind" key="kk" item="vv">
                             <option value="{$kk}" <?php /*if ($kk == $v['type']) { echo 'selected'; } */?>>{$vv}</option>
                         </foreach>-->
@@ -47,7 +47,7 @@
                     <input type="text" class="form-control cost" name="costacc[2222{$k}][unitcost]" value="{$v.unitcost}" readonly>
                     <input type="text" class="form-control amount" name="costacc[2222{$k}][amount]" value="{$v.amount}" readonly>
                     <input type="text" class="form-control totalval" name="costacc[2222{$k}][total]" value="{$v.total}" readonly>
-                    <select class="form-control" name="costacc[2222{$k}][type]" id="2222{$k}_costacc_type" onchange="set_supplier_null(2222{$k})">
+                    <select class="form-control costaccType" name="costacc[2222{$k}][type]" id="2222{$k}_costacc_type" onchange="set_supplier_null(2222{$k})">
                         <!--<foreach name="kind" key="kk" item="vv">
                             <option value="{$kk}" <?php /*if ($kk == $v['type']) { echo 'selected'; } */?>>{$vv}</option>
                         </foreach>-->
@@ -71,7 +71,7 @@
                     <input type="text" class="form-control cost" name="costacc[2222{$k}][unitcost]" value="{$v.unitcost}">
                     <input type="text" class="form-control amount" name="costacc[2222{$k}][amount]" value="{$v.amount}">
                     <input type="text" class="form-control totalval" name="costacc[2222{$k}][total]" value="{$v.total}">
-                    <select class="form-control" name="costacc[2222{$k}][type]" id="2222{$k}_costacc_type" onchange="set_supplier_null(2222{$k})">
+                    <select class="form-control costaccType" name="costacc[2222{$k}][type]" id="2222{$k}_costacc_type" onchange="set_supplier_null(2222{$k})">
                         <foreach name="kind" key="kk" item="vv">
                             <option value="{$kk}" <?php if ($kk == $v['type']) { echo 'selected'; } ?>>{$vv}</option>
                         </foreach>
@@ -100,7 +100,7 @@
                     <input type="text" class="form-control cost" name="costacc[888{$k}][unitcost]" value="{$v.unitcost}">
                     <input type="text" class="form-control amount" name="costacc[888{$k}][amount]" value="{$v.amount}">
                     <input type="text" class="form-control totalval" name="costacc[888{$k}][total]" value="{$v.total}">
-                    <select class="form-control" name="costacc[888{$k}][type]" id="888{$k}_costacc_type" onchange="set_supplier_null(888{$k})">
+                    <select class="form-control costaccType" name="costacc[888{$k}][type]" id="888{$k}_costacc_type" onchange="set_supplier_null(888{$k})">
                         <foreach name="kind" key="kk" item="vv">
                             <option value="{$kk}" <?php if ($kk == $v['type']) { echo 'selected'; } ?>>{$vv}</option>
                         </foreach>
@@ -125,7 +125,7 @@
                     <input type="text" class="form-control cost" name="costacc[7777{$k}][unitcost]" value="{$v.unitcost}">
                     <input type="text" class="form-control amount" name="costacc[7777{$k}][amount]" value="{$v.amount}">
                     <input type="text" class="form-control totalval" name="costacc[7777{$k}][total]" value="{$v.total}">
-                    <select class="form-control" name="costacc[7777{$k}][type]" id="7777{$k}_costacc_type" onchange="set_supplier_null(7777{$k})">
+                    <select class="form-control costaccType" name="costacc[7777{$k}][type]" id="7777{$k}_costacc_type" onchange="set_supplier_null(7777{$k})">
                         <!--<foreach name="kind" key="kk" item="vv">
                             <option value="{$kk}" <?php /*if ($v['type'] == $kk) { echo "selected"; } */?>>{$vv}</option>
                         </foreach>-->
@@ -144,7 +144,7 @@
                     <input type="text" class="form-control cost" name="costacc[7777{$k}][unitcost]" value="{$v.unitcost}" readonly>
                     <input type="text" class="form-control amount" name="costacc[7777{$k}][amount]" value="{$v.amount}" readonly>
                     <input type="text" class="form-control totalval" name="costacc[7777{$k}][total]" value="{$v.total}" readonly>
-                    <select class="form-control" name="costacc[7777{$k}][type]" id="7777{$k}_costacc_type" onchange="set_supplier_null(7777{$k})">
+                    <select class="form-control costaccType" name="costacc[7777{$k}][type]" id="7777{$k}_costacc_type" onchange="set_supplier_null(7777{$k})">
                         <!--<foreach name="kind" key="kk" item="vv">
                             <option value="{$kk}" <?php /*if ($v['type'] == $kk) { echo "selected"; } */?>>{$vv}</option>
                         </foreach>-->
@@ -168,7 +168,7 @@
                     <input type="text" class="form-control cost" name="costacc[7777{$k}][unitcost]" value="{$v.unitcost}">
                     <input type="text" class="form-control amount" name="costacc[7777{$k}][amount]" value="{$v.amount}">
                     <input type="text" class="form-control totalval" name="costacc[7777{$k}][total]" value="{$v.total}">
-                    <select class="form-control" name="costacc[7777{$k}][type]" id="7777{$k}_costacc_type" onchange="set_supplier_null(7777{$k})">
+                    <select class="form-control costaccType" name="costacc[7777{$k}][type]" id="7777{$k}_costacc_type" onchange="set_supplier_null(7777{$k})">
                         <foreach name="kind" key="kk" item="vv">
                             <option value="{$kk}" <?php if ($v['type'] == $kk) { echo "selected"; } ?>>{$vv}</option>
                         </foreach>
@@ -204,13 +204,14 @@
         <input type="hidden" name="info[name]" value="{$op.project}" />
         <input type="hidden" name="settlement" value="{$settlement.id}" />
         <input type="hidden" name="info[budget]" id="costaccsumval" value="">
+        <input type="hidden" name="info[untraffic_sum]" id="untraffic_sum" value="{$budget.untraffic_sum}" />
         <div style="width:100%; float:left;">
-            <div class="form-group col-md-4">
+            <div class="form-group col-md-3">
                 <label>实际人数：</label>
                 <input type="text" name="info[renshu]" id="renshu" class="form-control" value="{$settlement.renshu}" onBlur="lilv()" />
             </div>
 
-            <div class="form-group col-md-4">
+            <div class="form-group col-md-3">
                 <label>实际收入：</label>
                 <?php if ($is_dijie) { ?>
                 <input type="text" name="info[shouru]" id="shouru" class="form-control" value="{$should_back_money}" onBlur="lilv()" />
@@ -223,14 +224,14 @@
                 <?php } ?>
                 <?php } ?>
             </div>
-            <div class="form-group col-md-4">
-                <!--
-            <label>是否签订合同：</label>
-            <select class="form-control" name="info[hetong]">
-            	<option value="0" <?php if ($settlement['hetong'] == 0) { echo 'selected'; } ?> >未签订合同</option>
-                <option value="1" <?php if ($settlement['hetong'] == 1) { echo 'selected'; } ?>>已签订合同</option>
-            </select>
-            -->
+            <div class="form-group col-md-3">
+                <label>毛利(不含大交通)：</label>
+                <input type="text" name="info[untraffic_maoli]" id="untraffic_maoli" class="form-control" value="{$budget.untraffic_maoli}" />
+            </div>
+
+            <div class="form-group col-md-3">
+                <label>毛利率(不含大交通)：</label>
+                <input type="text" name="info[untraffic_maolilv]" id="untraffic_maolilv" class="form-control" value="{$budget.untraffic_maolilv}" />
             </div>
         </div>
         <div style="width:100%;float:left;">
