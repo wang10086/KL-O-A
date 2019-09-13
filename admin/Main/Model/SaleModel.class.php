@@ -22,7 +22,7 @@ class SaleModel extends Model{
         $where['l.req_type']    = 801;
         $where['l.audit_time']  = array('between', "$beginTime,$endTime");
 
-        $field                  = 'o.op_id,o.group_id,o.project,o.create_user_name,o.kind,s.shouru,s.maoli,l.req_uid,l.req_uname';
+        $field                  = 'o.op_id,o.group_id,o.project,o.create_user_name,o.kind,s.shouru,s.maoli,s.untraffic_maoli,l.req_uid,l.req_uname';
 
         $lists                  = M()->table('__OP_SETTLEMENT__ as s')->field($field)->join('__OP__ as o on s.op_id = o.op_id', 'LEFT')->join('__AUDIT_LOG__ as l on l.req_id = s.id', 'LEFT')->where($where)->select();
         return $lists;
@@ -41,7 +41,7 @@ class SaleModel extends Model{
         $where['l.audit_time']  = array('between', "$beginTime,$endTime");
         $where['s.op_id']       = array('not in',$dj_opids);
 
-        $field                  = 'o.op_id,o.group_id,o.project,o.create_user_name,o.kind,s.shouru,s.maoli,l.req_uid,l.req_uname';
+        $field                  = 'o.op_id,o.group_id,o.project,o.create_user_name,o.kind,s.shouru,s.maoli,s.untraffic_maoli,l.req_uid,l.req_uname';
 
         $lists                  = M()->table('__OP_SETTLEMENT__ as s')->field($field)->join('__OP__ as o on s.op_id = o.op_id', 'LEFT')->join('__AUDIT_LOG__ as l on l.req_id = s.id', 'LEFT')->where($where)->select();
         return $lists;
@@ -60,7 +60,7 @@ class SaleModel extends Model{
         $where['l.audit_time']  = array('between', "$beginTime,$endTime");
         $where['o.kind']        = array('not in',array(3,86));
 
-        $field                  = 'o.op_id,o.group_id,o.project,o.create_user_name,o.kind,s.shouru,s.maoli,l.req_uid,l.req_uname';
+        $field                  = 'o.op_id,o.group_id,o.project,o.create_user_name,o.kind,s.shouru,s.maoli,s.untraffic_maoli,l.req_uid,l.req_uname';
 
         $lists                  = M()->table('__OP_SETTLEMENT__ as s')->field($field)->join('__OP__ as o on s.op_id = o.op_id', 'LEFT')->join('__AUDIT_LOG__ as l on l.req_id = s.id', 'LEFT')->where($where)->select();
         return $lists;
@@ -94,6 +94,7 @@ class SaleModel extends Model{
     public function get_jd_gross($uid,$uname,$settlements,$kinds,$gross_avg){
         $sum_shouru                     = 0;
         $sum_maoli                      = 0;
+        $sum_untraffic_maoli            = 0;
         $sum_low_gross                  = 0;
         $sum_opids                      = array();
         $sum_group_ids                  = array();
@@ -104,6 +105,7 @@ class SaleModel extends Model{
             $arr_kids                   = get_kids($kk);
             $shouru                     = 0;
             $maoli                      = 0;
+            $untraffic_maoli            = 0;
             $low_gross                  = 0;
             $opids                      = array();
             $group_ids                  = array();
@@ -114,6 +116,7 @@ class SaleModel extends Model{
                         //单个业务类型合计
                         $shouru         += $value['shouru'];
                         $maoli          += $value['maoli'];
+                        $untraffic_maoli+= $value['untraffic_maoli'];
                         $low_gross      += $value['shouru']*$gross_avg[$kk]['num'];
                         $opids[]        = $value['op_id'];
                         $group_ids[]    = $value['group_id'];
@@ -122,6 +125,7 @@ class SaleModel extends Model{
                         //总合计
                         $sum_shouru     += $value['shouru'];
                         $sum_maoli      += $value['maoli'];
+                        $sum_untraffic_maoli += $value['untraffic_maoli'];
                         $sum_low_gross  += $value['shouru']*$gross_avg[$kk]['num'];
                         $sum_opids[]    = $value['op_id'];
                         $sum_group_ids[]= $value['group_id'];
@@ -142,6 +146,9 @@ class SaleModel extends Model{
                 $info['low_gross']      = $low_gross;
                 $info['maolilv']        = (round($maoli/$shouru,4)*100).'%';
                 $info['rate']           = (round($maoli/$low_gross,4)*100).'%';
+                $info['untraffic_maoli']= $untraffic_maoli;
+                $info['untraffic_maolilv'] = (round($untraffic_maoli/$shouru,4)*100).'%';
+                $info['untraffic_rate'] = (round($untraffic_maoli/$low_gross,4)*100).'%';
                 $info['opids']          = $opids?implode(',',$opids):'';
                 $info['group_ids']      = $group_ids?implode(',',$group_ids):'';
                 $rowspan++;
@@ -159,6 +166,9 @@ class SaleModel extends Model{
         $data['合计']['low_gross']      = $sum_low_gross;
         $data['合计']['maolilv']        = (round($sum_maoli/$sum_shouru,4)*100).'%';
         $data['合计']['rate']           = (round($sum_maoli/$sum_low_gross,4)*100).'%';
+        $data['合计']['untraffic_maoli']= $sum_untraffic_maoli;
+        $data['合计']['untraffic_maolilv'] = (round($sum_untraffic_maoli/$sum_shouru,4)*100).'%';
+        $data['合计']['untraffic_rate'] = (round($sum_untraffic_maoli/$sum_low_gross,4)*100).'%';
         $data['合计']['opids']          = implode(',', $sum_opids);
         $data['合计']['group_ids']      = implode(',', $sum_group_ids);
         return $data;
@@ -173,9 +183,10 @@ class SaleModel extends Model{
     public function get_sum_gross($settlement_lists,$kinds,$gross_avg){
         $sum_shouru                     = 0;
         $sum_maoli                      = 0;
+        $sum_untraffic_maoli            = 0;
         $sum_low_gross                  = 0;
-        $sum_opids                      = '';
-        $sum_group_ids                  = '';
+        $sum_opids                      = array();
+        $sum_group_ids                  = array();
         $sum_num                        = 0; //项目数
         $data                           = array();
         $rowspan                        = 1;
@@ -183,15 +194,17 @@ class SaleModel extends Model{
             $arr_kids                   = get_kids($k);
             $shouru                     = 0;
             $maoli                      = 0;
+            $untraffic_maoli            = 0;
             $low_gross                  = 0;
-            $opids                      = '';
-            $group_ids                  = '';
+            $opids                      = array();
+            $group_ids                  = array();
             $num                        = 0;
             foreach ($settlement_lists as $key=>$value){
                 if (in_array($value['kind'],$arr_kids)){
                     //单个业务类型合计
                     $shouru         += $value['shouru'];
                     $maoli          += $value['maoli'];
+                    $untraffic_maoli+= $value['untraffic_maoli'];
                     $low_gross      += $value['shouru']*$gross_avg[$k]['num'];
                     $opids[]        = $value['op_id'];
                     $group_ids[]    = $value['group_id'];
@@ -200,6 +213,7 @@ class SaleModel extends Model{
                     //总合计
                     $sum_shouru     += $value['shouru'];
                     $sum_maoli      += $value['maoli'];
+                    $sum_untraffic_maoli += $value['untraffic_maoli'];
                     $sum_low_gross  += $value['shouru']*$gross_avg[$k]['num'];
                     $sum_opids[]    = $value['op_id'];
                     $sum_group_ids[]= $value['group_id'];
@@ -216,6 +230,9 @@ class SaleModel extends Model{
                 $info['low_gross']      = $low_gross;
                 $info['maolilv']        = (round($maoli/$shouru,4)*100).'%';
                 $info['rate']           = (round($maoli/$low_gross,4)*100).'%';
+                $info['untraffic_maoli']= $untraffic_maoli;
+                $info['untraffic_maolilv'] = (round($untraffic_maoli/$shouru,4)*100).'%';
+                $info['untraffic_rate'] = (round($untraffic_maoli/$low_gross,4)*100).'%';
                 $info['opids']          = $opids?implode(',',$opids):'';
                 $info['group_ids']      = $group_ids?implode(',',$group_ids):'';
                 $rowspan++;
@@ -232,6 +249,9 @@ class SaleModel extends Model{
         $data['合计']['low_gross']      = $sum_low_gross;
         $data['合计']['maolilv']        = (round($sum_maoli/$sum_shouru,4)*100).'%';
         $data['合计']['rate']           = (round($sum_maoli/$sum_low_gross,4)*100).'%';
+        $data['合计']['untraffic_maoli']= $sum_untraffic_maoli;
+        $data['合计']['untraffic_maolilv'] = (round($sum_untraffic_maoli/$sum_shouru,4)*100).'%';
+        $data['合计']['untraffic_rate'] = (round($sum_untraffic_maoli/$sum_low_gross,4)*100).'%';
         $data['合计']['opids']          = implode(',', $sum_opids);
         $data['合计']['group_ids']      = implode(',', $sum_group_ids);
         return $data;
@@ -247,9 +267,10 @@ class SaleModel extends Model{
     public function get_company_sum_gross($settlement_no_dj_lists,$settlement_lists,$kinds,$gross_avg){
         $sum_shouru                     = 0;
         $sum_maoli                      = 0;
+        $sum_untraffic_maoli            = 0;
         $sum_low_gross                  = 0;
-        $sum_opids                      = '';
-        $sum_group_ids                  = '';
+        $sum_opids                      = array();
+        $sum_group_ids                  = array();
         $sum_num                        = 0; //项目数
         $data                           = array();
         $rowspan                        = 1;
@@ -257,9 +278,10 @@ class SaleModel extends Model{
             $arr_kids                   = get_kids($k);
             $shouru                     = 0;
             $maoli                      = 0;
+            $untraffic_maoli            = 0;
             $low_gross                  = 0;
-            $opids                      = '';
-            $group_ids                  = '';
+            $opids                      = array();
+            $group_ids                  = array();
             $num                        = 0;
             foreach ($settlement_no_dj_lists as $key=>$value){ //排除地接的
                 if (in_array($value['kind'],$arr_kids)){
@@ -276,6 +298,7 @@ class SaleModel extends Model{
                 if (in_array($value['kind'],$arr_kids)){
                     //单个业务类型合计
                     $maoli          += $value['maoli'];
+                    $untraffic_maoli+= $value['untraffic_maoli'];
                     $low_gross      += $value['shouru']*$gross_avg[$k]['num'];
                     $opids[]        = $value['op_id'];
                     $group_ids[]    = $value['group_id'];
@@ -287,6 +310,7 @@ class SaleModel extends Model{
 
                     //总合计
                     $sum_maoli      += $value['maoli'];
+                    $sum_untraffic_maoli += $value['untraffic_maoli'];
                     $sum_low_gross  += $value['shouru']*$gross_avg[$k]['num'];
                     $sum_opids[]    = $value['op_id'];
                     $sum_group_ids[]= $value['group_id'];
@@ -304,6 +328,9 @@ class SaleModel extends Model{
                 $info['low_gross']      = $low_gross;
                 $info['maolilv']        = (round($maoli/$shouru,4)*100).'%';
                 $info['rate']           = (round($maoli/$low_gross,4)*100).'%';
+                $info['untraffic_maoli']= $untraffic_maoli;
+                $info['untraffic_maolilv'] = (round($untraffic_maoli/$shouru,4)*100).'%';
+                $info['untraffic_rate'] = (round($untraffic_maoli/$low_gross,4)*100).'%';
                 $info['opids']          = $opids?implode(',',$opids):'';
                 $info['group_ids']      = $group_ids?implode(',',$group_ids):'';
                 $rowspan++;
@@ -321,6 +348,9 @@ class SaleModel extends Model{
         $data['合计']['low_gross']      = $sum_low_gross;
         $data['合计']['maolilv']        = (round($sum_maoli/$sum_shouru,4)*100).'%';
         $data['合计']['rate']           = (round($sum_maoli/$sum_low_gross,4)*100).'%';
+        $data['合计']['untraffic_maoli']= $sum_untraffic_maoli;
+        $data['合计']['untraffic_maolilv'] = (round($sum_untraffic_maoli/$sum_shouru,4)*100).'%';
+        $data['合计']['untraffic_rate'] = (round($sum_untraffic_maoli/$sum_low_gross,4)*100).'%';
         $data['合计']['opids']          = implode(',', $sum_opids);
         $data['合计']['group_ids']      = implode(',', $sum_group_ids);
         return $data;

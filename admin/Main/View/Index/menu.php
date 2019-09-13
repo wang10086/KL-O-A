@@ -463,13 +463,13 @@
                                 <i class="fa fa-angle-left pull-right"></i>
                             </a>
                             <ul class="treeview-menu">
-                                <li class="treeview {:on('Sale/gross')} {:on('Sale/edit_gross')} {:on('Sale/chart_gross')} {:on('Sale/chart_jd_gross')}">
+                                <li class="treeview {:on('Sale/gross')} {:on('Sale/edit_gross')} {:on('Sale/chart_gross')} {:on('Sale/chart_jd_gross')} {:on('Sale/gross_jd_info')} {:on('Sale/gross_op_list')}">
                                     <if condition="rolemenu(array('Sale/gross','Sale/edit_gross','Sale/chart_gross','Sale/chart_jd_gross'))">
                                         <a href=""><i class="fa  fa-money"></i> 毛利率</a>
                                     </if>
                                     <ul class="treeview-menu">
                                         <if condition="rolemenu(array('Sale/chart_gross'))">
-                                            <li class="{:on('Sale/chart_gross')}"><a href="{:U('Sale/chart_gross')}"><i class="fa fa-angle-right"></i> 毛利率统计</a></li>
+                                            <li class="{:on('Sale/chart_gross')} {:on('Sale/chart_jd_gross')} {:on('Sale/gross_jd_info')} {:on('Sale/gross_op_list')}"><a href="{:U('Sale/chart_gross')}"><i class="fa fa-angle-right"></i> 毛利率统计</a></li>
                                         </if>
                                         <if condition="rolemenu(array('Sale/gross'))">
                                             <li class="{:on('Sale/gross')}"><a href="{:U('Sale/gross')}"><i class="fa fa-angle-right"></i> 设置最低毛利率</a></li>

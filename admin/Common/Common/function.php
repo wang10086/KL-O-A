@@ -3277,6 +3277,7 @@ function updatekpi($month,$user){
                             $kinds                      = M('project_kind')->getField('id,name',true);
                             $gross_avg                  = $mod->get_gross_avg($kinds,$times['beginTime'],$times['endTime']); //最低毛利率数据
                             $settlement_lists           = $mod->get_special_settlement_lists($times['beginTime'],$times['endTime']); //不包含"其他"和"南北极"
+                            //P($settlement_lists);
                             $data                       = $mod->get_jd_gross($v['user_id'],$username,$settlement_lists,$kinds,$gross_avg); //各计调数据
                             $complete                   = $data['合计']['rate'];
                             $url                        = U('Sale/gross_jd_info',array('year'=>$v['year'],'jid'=>$v['user_id'],'jname'=>username($v['user_id'])));

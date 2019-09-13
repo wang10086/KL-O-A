@@ -28,10 +28,17 @@
 
                                     <table class="table table-bordered dataTable fontmini" id="tablelist" style="margin-top:10px;">
                                         <tr role="row" class="orders" >
-                                            <th class="taskOptions">团号</th>
-                                            <th class="taskOptions">项目名称</th>
-                                            <th class="taskOptions">结算收入</th>
-                                            <th class="taskOptions">最低毛利额</th>
+                                            <th class="taskOptions" rowspan="2">团号</th>
+                                            <th class="taskOptions" rowspan="2">项目名称</th>
+                                            <th class="taskOptions" rowspan="2">结算收入</th>
+                                            <th class="taskOptions" rowspan="2">最低毛利额</th>
+                                            <th class="taskOptions" colspan="3">包含大交通</th>
+                                            <th class="taskOptions" colspan="3">不包含大交通</th>
+                                        </tr>
+                                        <tr role="row" class="orders" >
+                                            <th class="taskOptions">结算毛利</th>
+                                            <th class="taskOptions">结算毛利率</th>
+                                            <th class="taskOptions">毛利率完成率</th>
                                             <th class="taskOptions">结算毛利</th>
                                             <th class="taskOptions">结算毛利率</th>
                                             <th class="taskOptions">毛利率完成率</th>
@@ -45,6 +52,9 @@
                                                 <td class="taskOptions">{$v['maoli']}</td>
                                                 <td class="taskOptions">{$v['maolilv']}</td>
                                                 <td class="taskOptions">{$v['rate']}</td>
+                                                <td class="taskOptions">{$v['untraffic_maoli']}</td>
+                                                <td class="taskOptions">{$v['untraffic_maolilv']}</td>
+                                                <td class="taskOptions">{$v['untraffic_rate']}</td>
                                             </tr>
                                         </foreach>
                                     </table>

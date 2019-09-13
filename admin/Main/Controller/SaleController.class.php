@@ -327,6 +327,8 @@ class SaleController extends BaseController {
         $settlement_lists                   = $mod->get_all_settlement_lists($times['beginTime'],$times['endTime']); //所有结算的团
         $special_settlement_lists           = $mod->get_special_settlement_lists($times['beginTime'],$times['endTime']); //不包含"其他"和"南北极"
 
+        //P($special_settlement_lists);
+
         if ($jd_id == '888888' || $jd_name == '公司合计'){
             $data                           = $mod->get_sum_gross($settlement_lists,$kinds,$gross_avg);
         }else{
@@ -350,7 +352,7 @@ class SaleController extends BaseController {
         $where                              = array();
         $where['s.op_id']                   = array('in', $opids);
         $where['l.req_type']                = 801;
-        $field                              = 'o.op_id,o.group_id,o.project,o.create_user_name,o.kind,s.shouru,s.maoli,s.maolilv,l.req_uid,l.req_uname';
+        $field                              = 'o.op_id,o.group_id,o.project,o.create_user_name,o.kind,s.shouru,s.maoli,s.maolilv,s.untraffic_maoli,s.untraffic_maolilv,l.req_uid,l.req_uname';
 
         //分页
         $pagecount                          = M()->table('__OP_SETTLEMENT__ as s')->field($field)->join('__OP__ as o on s.op_id = o.op_id', 'LEFT')->join('__AUDIT_LOG__ as l on l.req_id = s.id', 'LEFT')->where($where)->count();
@@ -362,6 +364,7 @@ class SaleController extends BaseController {
             $lists[$k]['gross']             = $gross_avg[$v['kind']]['gross'];
             $lists[$k]['low_gross']         = round($v['shouru']*$gross_avg[$v['kind']]['num'],2);
             $lists[$k]['rate']              = (round($v['maoli']/$lists[$k]['low_gross'],4)*100).'%';
+            $lists[$k]['untraffic_rate']    = (round($v['untraffic_maoli']/$lists[$k]['low_gross'],4)*100).'%';
         }
 
         $this->lists                        = $lists;
