@@ -44,12 +44,12 @@
 			<include file="Index:footer2" />
 
 <script>
-    const myChart = echarts.init(document.getElementById('china-map'));
-    const oBack = document.getElementById("back");
+    var myChart = echarts.init(document.getElementById('china-map'));
+    var oBack = document.getElementById("back");
 
-    const provinces = {$city_pinyin};
-    const provincesText = {$citys};
-    const seriesData = {$data};
+    var provinces = {$city_pinyin};
+    var provincesText = {$citys};
+    var seriesData = {$data};
 
     oBack.onclick = function () {
         initEcharts("china", "中国");
@@ -59,6 +59,8 @@
 
     // 初始化echarts
     function initEcharts(pName, Chinese_) {
+        console.log(pName+'aaaa');
+        console.log(Chinese_+'bbbb');
         //var tmpSeriesData = pName === "china" ? seriesData : [];
         var tmpSeriesData =  seriesData ;
 
@@ -74,6 +76,7 @@
             tooltip: {
                 trigger: 'item',
                 formatter: function (params) {
+                    console.log(params);
                     return params.name + ' : ' + params.value + ' 个';
                 }
             },
