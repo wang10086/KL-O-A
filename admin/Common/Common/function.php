@@ -5485,6 +5485,9 @@ function get_half_year_cycle($year,$month){
             case '重庆':
                 $data               = 'chongqing';
                 break;
+            case '西藏':
+                $data               = 'xizang';
+                break;
             default:
                 $data               = strtoAllpinyin($str);
         }
