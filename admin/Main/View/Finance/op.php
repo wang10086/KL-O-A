@@ -44,13 +44,10 @@
                                             </tr>
                                         </table>
                                     </div>
-                                    
                                 </div><!-- /.box-body -->
                             </div><!-- /.box -->
-                            
-                        	
+
                             <?php if($op['audit_status']==1 && $costacc){ ?>
-                            
                             <div class="box box-warning">
                                 <div class="box-header">
                                     <h3 class="box-title">项目预算</h3>
@@ -78,8 +75,7 @@
                                     <?php } } ?>
                                 </div>
                             </div>
-                            
-                                            
+
                             <div id="formsbtn" style="padding-bottom:10px;">
                                 <div class="content">
                                     <?php if(!in_array($audit['dst_status'],array(1,3)) || in_array(cookie('userid'),array(1,11))){ ?>
@@ -87,25 +83,18 @@
                                         <input type="hidden" name="dosubmit" value="1">
                                         <input type="hidden" name="opid" value="{$op.op_id}">
                                         </form>
-                                        
                                         <div id="formsbtn" style="padding-bottom:20px; margin-top:10px;color:#ff3300;">当审核未被通过时，请调整预算后可能会被通过哦</div>
-                                        
-                                        
                                         <!--<button type="button" onClick="$('#save_appcost').submit()" class="btn btn-info btn-lg" style=" padding-left:40px; padding-right:40px; margin-right:10px;">保存预算</button>-->
                                         <button type="button" onClick="check_appcost()" class="btn btn-info btn-lg" style=" padding-left:40px; padding-right:40px; margin-right:10px;">保存预算</button>
                                         <button type="button" onClick="appcost()" class="btn btn-success btn-lg" style=" padding-left:40px; padding-right:40px; margin-left:10px;">申请审批</button>
-                                
-                                        
                                     <?php } ?>
                                 </div>    
                             </div>
-                            <?php } ?> 
-                            
+                            <?php } ?>
                         </div><!--/.col (right) -->
                     </div>   <!-- /.row -->
                     
                 </section><!-- /.content -->
-                
             </aside><!-- /.right-side -->
 			
   </div>

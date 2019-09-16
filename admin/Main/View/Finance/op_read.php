@@ -51,6 +51,11 @@
                     <td>毛利率：{$budget.maolilv}</td>
                     <td>人均毛利：{$budget.renjunmaoli}</td>
                 </tr>
+                <tr>
+                    <td width="33.33%">实际收入(不含大交通)：{$budget.untraffic_shouru}</td>
+                    <td width="33.33%">毛利率(不含大交通)：{$budget.untraffic_maolilv}</td>
+                    <td width="33.33%"></td>
+                </tr>
             </table>
 
         </div>
