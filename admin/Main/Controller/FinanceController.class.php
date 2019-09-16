@@ -700,17 +700,22 @@ class FinanceController extends BaseController {
 		$settlement		= I('settlement',0);
 		$num			= 0;
 
-		//保存预算
+		//保存结算
 		if($opid && $costacc){
+            $del       = $db->where(array('op_id'=>$opid,'status'=>2,'type'=>2))->delete();
+            if($del) $num++;
 
-			$delid = array();
+			//$delid = array();
 			foreach($costacc as $k=>$v){
 				$data = array();
 				$data = $v;
 				$data['op_id'] = $opid;
 				$data['status'] = 2;
+                $savein = $db->add($data);
+                //$delid[] = $savein;
+                if($savein) $num++;
 					
-				if($resid && $resid[$k]['id']>0){
+				/*if($resid && $resid[$k]['id']>0){
 					$edits = $db->data($data)->where(array('id'=>$resid[$k]['id']))->save();
 					$delid[] = $resid[$k]['id'];
 					$num++;
@@ -718,8 +723,8 @@ class FinanceController extends BaseController {
 					$savein = $db->add($data);
 					$delid[] = $savein;
 					if($savein) $num++;
-				}
-			}	
+				}*/
+			}
 			
 			if($settlement){
 				M('op_settlement')->data($info)->where(array('id'=>$settlement))->save();
@@ -728,8 +733,8 @@ class FinanceController extends BaseController {
 				M('op_settlement')->add($info);
 			}
 			
-			$del = $db->where(array('op_id'=>$opid,'status'=>2,'id'=>array('not in',$delid)))->delete();
-			if($del) $num++;
+			//$del = $db->where(array('op_id'=>$opid,'status'=>2,'id'=>array('not in',$delid)))->delete();
+			//if($del) $num++;
 		}
 		
 		if($num){
