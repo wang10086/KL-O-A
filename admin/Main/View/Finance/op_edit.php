@@ -101,7 +101,7 @@
 
             <div class="form-group col-md-3">
                 <label>毛利率(不含大交通)：</label>
-                <input type="text" name="info[untraffic_maolilv]" id="untraffic_maolilv" class="form-control" value="{$budget.untraffic_maolilv}" />
+                <input type="text" name="info[untraffic_maolilv]" id="untraffic_maolilv" class="form-control" value="{$budget.untraffic_maolilv}" readonly />
             </div>
         </div>
     </div>
