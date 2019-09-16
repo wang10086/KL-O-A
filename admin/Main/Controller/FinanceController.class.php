@@ -682,6 +682,7 @@ class FinanceController extends BaseController {
         //检查先回款,在做结算  //已回款金额
         $money_back             = check_money_back($opid);
         $this->yihuikuan        = $money_back;
+        $this->guide            = M()->table('__GUIDE_PAY__ as p')->field('g.name as title,p.op_id,p.num,p.price,p.total,p.really_cost,p.remark')->join('left join __GUIDE__ as g on p.guide_id=g.id')->where(array('p.op_id'=>$opid,'p.status'=>2))->select();
 
         $this->display('settlement');
     }
