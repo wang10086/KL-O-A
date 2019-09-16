@@ -306,6 +306,7 @@ class SaleController extends BaseController {
         $operator                           = array_column($settlement_lists,'req_uname','req_uid');
         $data                               = $mod->get_gross($operator,$special_settlement_lists,$kinds,$gross_avg); //各计调数据
         $sum                                = $mod->get_sum_gross($settlement_lists,$kinds,$gross_avg); //获取公司总合计数据
+        //P($data);
 
         $this->lists                        = $data;
         $this->sum                          = $sum;
@@ -352,7 +353,7 @@ class SaleController extends BaseController {
         $where                              = array();
         $where['s.op_id']                   = array('in', $opids);
         $where['l.req_type']                = 801;
-        $field                              = 'o.op_id,o.group_id,o.project,o.create_user_name,o.kind,s.shouru,s.maoli,s.maolilv,s.untraffic_maoli,s.untraffic_maolilv,l.req_uid,l.req_uname';
+        $field                              = 'o.op_id,o.group_id,o.project,o.create_user_name,o.kind,s.shouru,s.maoli,s.maolilv,s.untraffic_shouru,s.untraffic_maolilv,l.req_uid,l.req_uname';
 
         //分页
         $pagecount                          = M()->table('__OP_SETTLEMENT__ as s')->field($field)->join('__OP__ as o on s.op_id = o.op_id', 'LEFT')->join('__AUDIT_LOG__ as l on l.req_id = s.id', 'LEFT')->where($where)->count();
@@ -363,8 +364,10 @@ class SaleController extends BaseController {
         foreach ($lists as $k=>$v){
             $lists[$k]['gross']             = $gross_avg[$v['kind']]['gross'];
             $lists[$k]['low_gross']         = round($v['shouru']*$gross_avg[$v['kind']]['num'],2);
-            $lists[$k]['rate']              = (round($v['maoli']/$lists[$k]['low_gross'],4)*100).'%';
-            $lists[$k]['untraffic_rate']    = (round($v['untraffic_maoli']/$lists[$k]['low_gross'],4)*100).'%';
+            $lists[$k]['untraffic_low_gross']= round($v['untraffic_shouru']*$gross_avg[$v['kind']]['num'],2);
+            $lists[$k]['rate']              = $lists[$k]['low_gross'] ? (round($v['maoli']/$lists[$k]['low_gross'],4)*100).'%' : '0%';
+            $lists[$k]['untraffic_rate']    = (int)$lists[$k]['untraffic_low_gross'] ? (round($v['maoli']/$lists[$k]['untraffic_low_gross'],4)*100).'%' : '0%';
+            $lists[$k]['untraffic_maolilv'] = $v['untraffic_maolilv'] ? $v['untraffic_maolilv'] : '0%';
         }
 
         $this->lists                        = $lists;

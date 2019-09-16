@@ -34,17 +34,16 @@
                                             <th class="taskOptions" rowspan="2">项目数</th>
                                             <th class="taskOptions" rowspan="2">累计结算收入</th>
                                             <th class="taskOptions" rowspan="2">最低毛利额</th>
-                                            <th class="taskOptions" colspan="3">包含大交通</th>
-                                            <th class="taskOptions" colspan="3">不包含大交通</th>
+                                            <th class="taskOptions" rowspan="2">累计操作毛利</th>
+                                            <th class="taskOptions" colspan="2">包含大交通</th>
+                                            <th class="taskOptions" colspan="2">不包含大交通</th>
                                             <if condition="rolemenu(array('Sale/gross_op_list'))">
                                             <th width="80" class="taskOptions" rowspan="2">详情</th>
                                             </if>
                                         </tr>
                                         <tr role="row" class="orders" >
-                                            <th class="taskOptions">累计操作毛利</th>
                                             <th class="taskOptions">累计操作毛利率</th>
                                             <th class="taskOptions">毛利率完成率</th>
-                                            <th class="taskOptions">累计操作毛利</th>
                                             <th class="taskOptions">累计操作毛利率</th>
                                             <th class="taskOptions">毛利率完成率</th>
                                         </tr>
@@ -57,7 +56,7 @@
                                                 <td class="taskOptions">{$v['maoli']}</td>
                                                 <td class="taskOptions">{$v['maolilv']}</td>
                                                 <td class="taskOptions">{$v['rate']}</td>
-                                                <td class="taskOptions">{$v['untraffic_maoli']}</td>
+                                                <!--<td class="taskOptions">{$v['untraffic_maoli']}</td>-->
                                                 <td class="taskOptions">{$v['untraffic_maolilv']}</td>
                                                 <td class="taskOptions">{$v['untraffic_rate']}</td>
                                                 <if condition="rolemenu(array('Sale/gross_op_list'))">
@@ -68,7 +67,7 @@
                                             </tr>
                                         </foreach>
                                         <tr>
-                                            <th colspan="11" style="text-align: left;padding-left: 20px;">说明：该数据从{$year-1}年12月26日起结算项目统计，本页面数据除了“除了地接研学旅行”外,其他项目类型不包含地接团数据。</th>
+                                            <th colspan="10" style="text-align: left;padding-left: 20px;">说明：该数据从{$year-1}年12月26日起结算项目统计，本页面数据除了“除了地接研学旅行”外,其他项目类型不包含地接团数据。</th>
                                         </tr>
                                     </table>
                                 </div><!-- /.box-body -->
