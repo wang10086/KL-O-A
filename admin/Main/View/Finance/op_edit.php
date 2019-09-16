@@ -94,8 +94,9 @@
             </div>
 
             <div class="form-group col-md-3">
-                <label>毛利(不含大交通)：</label>
-                <input type="text" name="info[untraffic_maoli]" id="untraffic_maoli" class="form-control" value="{$budget.untraffic_maoli}" />
+                <label>收入(不含大交通)：</label>
+                <!--<input type="text" name="info[untraffic_maoli]" id="untraffic_maoli" class="form-control" value="{$budget.untraffic_maoli}" />-->
+                <input type="text" name="info[untraffic_shouru]" id="untraffic_shouru" class="form-control" value="{$budget.untraffic_shouru}" readonly />
             </div>
 
             <div class="form-group col-md-3">
