@@ -705,14 +705,14 @@ class FinanceController extends BaseController {
             $del       = $db->where(array('op_id'=>$opid,'status'=>2,'type'=>2))->delete();
             if($del) $num++;
 
-			//$delid = array();
+			$delid = array();
 			foreach($costacc as $k=>$v){
 				$data = array();
 				$data = $v;
 				$data['op_id'] = $opid;
 				$data['status'] = 2;
                 $savein = $db->add($data);
-                //$delid[] = $savein;
+                $delid[] = $savein;
                 if($savein) $num++;
 					
 				/*if($resid && $resid[$k]['id']>0){
@@ -733,8 +733,8 @@ class FinanceController extends BaseController {
 				M('op_settlement')->add($info);
 			}
 			
-			//$del = $db->where(array('op_id'=>$opid,'status'=>2,'id'=>array('not in',$delid)))->delete();
-			//if($del) $num++;
+			$del = $db->where(array('op_id'=>$opid,'status'=>2,'id'=>array('not in',$delid)))->delete();
+			if($del) $num++;
 		}
 		
 		if($num){
