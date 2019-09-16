@@ -700,13 +700,10 @@ class CustomerController extends BaseController {
         }
         $citys                      = json_encode(array_column($city_data,'name'));
         $city_pinyin                = json_encode(array_column($city_data,'pinyin'));
-        //P($city_data,false);
-        //P($data);
 
         $this->citys                = $citys;
         $this->city_pinyin          = $city_pinyin;
         $this->data                 = json_encode($data);
-        //$this->display('map');
         $this->display('map');
     }
 
