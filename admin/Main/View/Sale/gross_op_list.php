@@ -45,7 +45,7 @@
                                         <foreach name="lists" key="k" item="v">
                                             <tr>
                                                 <td class="sorting">{$v['group_id']}</td>
-                                                <td class="sorting"><a href="{:U('Op/plans_follow',array('opid'=>$v['op_id']))}">{$v['project']}</a></td>
+                                                <td class="sorting"><a href="{:U('Finance/settlement',array('opid'=>$v['op_id']))}">{$v['project']}</a></td>
                                                 <td class="taskOptions">{$v['shouru']}</td>
                                                 <td class="taskOptions">{$v['low_gross']}</td>
                                                 <td class="taskOptions">{$v['maoli']}</td>

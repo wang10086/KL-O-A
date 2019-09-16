@@ -93,12 +93,18 @@
             <tr>
                 <td width="33.33%">实际人数：{$settlement.renshu}</td>
                 <td width="33.33%">实际收入：{$settlement.shouru}</td>
+                <td width="33.33%">实际收入：{$settlement.shouru}</td>
                 <td width="33.33%"><!-- 合同签订：<?php if($settlement['hetong']){ echo '已签订';}else{ echo '未签订';} ?> --></td>
             </tr>
             <tr>
                 <td width="33.33%">毛利：{$settlement.maoli}</td>
                 <td width="33.33%">毛利率：{$settlement.maolilv}</td>
                 <td width="33.33%">人均毛利：{$settlement.renjunmaoli}</td>
+            </tr>
+            <tr>
+                <td width="33.33%">实际收入(不含大交通)：{$settlement.untraffic_shouru}</td>
+                <td width="33.33%">毛利率(不含大交通)：{$settlement.untraffic_maolilv}</td>
+                <td width="33.33%"></td>
             </tr>
         </table>
     </div>
