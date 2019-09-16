@@ -18,9 +18,9 @@
                 <!--专家辅导员-->
             <foreach name="guide" key="k" item="v">
                 <div class="userlist cost_expense" id="costacc_id_jsg_{$k}">
+                    <!--<input type="hidden" name="resid[666{$k}][id]" value="{$v.id}">-->
                     <?php if (cookie('userid') == 11) { ?>
                     <span class="title"></span>
-                    <input type="hidden" name="resid[666{$k}][id]" value="{$v.id}">
                     <input type="text" class="form-control costTitle" name="costacc[666{$k}][title]" value="{$v.title}" list="666{$k}_cost_title" onblur="check_title(666{$k},$(this).val())">
                     <datalist id="666{$k}_cost_title">
                         <foreach name="op_cost_type" item="ct">
@@ -39,7 +39,6 @@
                     <a href="javascript:;" class="btn btn-danger btn-flat" onclick="delbox('costacc_id_jsg_{$k}')">删除</a>
                     <?php } else { ?>
                     <span class="title"></span>
-                    <input type="hidden" name="resid[666{$k}][id]" value="{$v.id}">
                     <input type="text" class="form-control costTitle" name="costacc[666{$k}][title]" value="{$v.title}" onblur="check_title(666{$k},$(this).val())" readonly>
                     <input type="text" class="form-control cost" name="costacc[666{$k}][unitcost]" value="{$v.price}" readonly>
                     <input type="text" class="form-control amount" name="costacc[666{$k}][amount]" value="{$v.num}" readonly>
