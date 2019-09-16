@@ -16,40 +16,40 @@
             
             <?php if ($jiesuan) { ?>
                 <!--专家辅导员-->
-            <foreach name="guide"  item="v">
-                <div class="userlist cost_expense" id="costacc_id_jsg_666{$k}">
+            <foreach name="guide" key="k" item="v">
+                <div class="userlist cost_expense" id="costacc_id_jsg_{$k}">
                     <?php if (cookie('userid') == 11) { ?>
                     <span class="title"></span>
-                    <input type="hidden" name="resid[2222{$k}][id]" value="{$v.id}">
-                    <input type="text" class="form-control costTitle" name="costacc[2222{$k}][title]" value="{$v.title}" list="2222{$k}_cost_title" onblur="check_title(2222{$k},$(this).val())">
-                    <datalist id="2222{$k}_cost_title">
+                    <input type="hidden" name="resid[666{$k}][id]" value="{$v.id}">
+                    <input type="text" class="form-control costTitle" name="costacc[666{$k}][title]" value="{$v.title}" list="666{$k}_cost_title" onblur="check_title(666{$k},$(this).val())">
+                    <datalist id="666{$k}_cost_title">
                         <foreach name="op_cost_type" item="ct">
                             <option value="{$ct}" label="" />
                         </foreach>
                     </datalist>
-                    <input type="text" class="form-control cost" name="costacc[2222{$k}][unitcost]" value="{$v.price}">
-                    <input type="text" class="form-control amount" name="costacc[2222{$k}][amount]" value="{$v.num}">
-                    <input type="text" class="form-control totalval" name="costacc[2222{$k}][total]" value="{$v.really_cost}">
-                    <select class="form-control costaccType" name="costacc[2222{$k}][type]" id="2222{$k}_costacc_type" onchange="set_supplier_null(2222{$k})">
+                    <input type="text" class="form-control cost" name="costacc[666{$k}][unitcost]" value="{$v.price}">
+                    <input type="text" class="form-control amount" name="costacc[666{$k}][amount]" value="{$v.num}">
+                    <input type="text" class="form-control totalval" name="costacc[666{$k}][total]" value="{$v.really_cost}">
+                    <select class="form-control costaccType" name="costacc[666{$k}][type]" id="666{$k}_costacc_type" onchange="set_supplier_null(666{$k})">
                         <option value="2" selected>专家辅导员</option>
                     </select>
-                    <input type="hidden" class="form-control" name="costacc[2222{$k}][supplier_id]" value="{$v.supplier_id}" id="2222{$k}_supplierRes_id">
-                    <input type="text" class="form-control supplier-name-class" name="costacc[2222{$k}][supplier_name]" value="{$v.supplier_name}" id="2222{$k}_supplierRes_name" onfocus="get_supplierRes(2222{$k})">
-                    <input type="text" class="form-control longinput" name="costacc[2222{$k}][remark]" value="{$v.remark}">
-                    <a href="javascript:;" class="btn btn-danger btn-flat" onclick="delbox('costacc_id_jsg_666{$k}')">删除</a>
+                    <input type="hidden" class="form-control" name="costacc[666{$k}][supplier_id]" value="{$v.supplier_id}" id="666{$k}_supplierRes_id">
+                    <input type="text" class="form-control supplier-name-class" name="costacc[666{$k}][supplier_name]" value="{$v.supplier_name}" id="666{$k}_supplierRes_name" onfocus="get_supplierRes(666{$k})">
+                    <input type="text" class="form-control longinput" name="costacc[666{$k}][remark]" value="{$v.remark}">
+                    <a href="javascript:;" class="btn btn-danger btn-flat" onclick="delbox('costacc_id_jsg_{$k}')">删除</a>
                     <?php } else { ?>
                     <span class="title"></span>
-                    <input type="hidden" name="resid[2222{$k}][id]" value="{$v.id}">
-                    <input type="text" class="form-control costTitle" name="costacc[2222{$k}][title]" value="{$v.title}" onblur="check_title(2222{$k},$(this).val())" readonly>
-                    <input type="text" class="form-control cost" name="costacc[2222{$k}][unitcost]" value="{$v.price}" readonly>
-                    <input type="text" class="form-control amount" name="costacc[2222{$k}][amount]" value="{$v.num}" readonly>
-                    <input type="text" class="form-control totalval" name="costacc[2222{$k}][total]" value="{$v.really_cost}" readonly>
-                    <select class="form-control costaccType" name="costacc[2222{$k}][type]" id="2222{$k}_costacc_type" onchange="set_supplier_null(2222{$k})">
+                    <input type="hidden" name="resid[666{$k}][id]" value="{$v.id}">
+                    <input type="text" class="form-control costTitle" name="costacc[666{$k}][title]" value="{$v.title}" onblur="check_title(666{$k},$(this).val())" readonly>
+                    <input type="text" class="form-control cost" name="costacc[666{$k}][unitcost]" value="{$v.price}" readonly>
+                    <input type="text" class="form-control amount" name="costacc[666{$k}][amount]" value="{$v.num}" readonly>
+                    <input type="text" class="form-control totalval" name="costacc[666{$k}][total]" value="{$v.really_cost}" readonly>
+                    <select class="form-control costaccType" name="costacc[666{$k}][type]" id="666{$k}_costacc_type" onchange="set_supplier_null(666{$k})">
                         <option value="2" selected>专家辅导员</option>
                     </select>
-                    <input type="hidden" class="form-control" name="costacc[2222{$k}][supplier_id]" value="{$v.supplier_id}" id="2222{$k}_supplierRes_id">
-                    <input type="text" class="form-control supplier-name-class" name="costacc[2222{$k}][supplier_name]" value="{$v.supplier_name}" id="2222{$k}_supplierRes_name" onfocus="get_supplierRes(2222{$k})" readonly disabled>
-                    <input type="text" class="form-control longinput" name="costacc[2222{$k}][remark]" value="{$v.remark}">
+                    <input type="hidden" class="form-control" name="costacc[666{$k}][supplier_id]" value="{$v.supplier_id}" id="666{$k}_supplierRes_id">
+                    <input type="text" class="form-control supplier-name-class" name="costacc[666{$k}][supplier_name]" value="{$v.supplier_name}" id="666{$k}_supplierRes_name" onfocus="get_supplierRes(666{$k})" readonly disabled>
+                    <input type="text" class="form-control longinput" name="costacc[666{$k}][remark]" value="{$v.remark}">
                     <?php } ?>
                 </div>
             </foreach>
@@ -59,7 +59,7 @@
                 <!--<div class="userlist cost_expense" id="costacc_id_jsg_{$k}">
                     <?php /*if (cookie('userid') == 11) { */?>
                     <span class="title"></span>
-                    <input type="hidden" name="resid[2222{$k}][id]" value="{$v.id}">
+                    <input type="hidden" name="resid[666{$k}][id]" value="{$v.id}">
                     <input type="text" class="form-control costTitle" name="costacc[2222{$k}][title]" value="{$v.title}" list="2222{$k}_cost_title" onblur="check_title(2222{$k},$(this).val())">
                     <datalist id="2222{$k}_cost_title">
                         <foreach name="op_cost_type" item="ct">
