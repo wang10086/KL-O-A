@@ -700,5 +700,45 @@ class SalaryModel extends Model
 
     }
 
+    /**
+     * 获取公司五险一金合计
+     * @param int $id //五险一金表id
+     * @return array
+     */
+    public function get_insurance_data($id=0){
+        $db                                 = M('salary_insurance');
+        $list                               = $db->where(array('id'=>$id))->find();
+        $person_cost                        = ($list['birth_ratio']*$list['birth_base']) + ($list['injury_ratio']*$list['injury_base']) +($list['pension_ratio']*$list['pension_base']) + ($list['medical_care_ratio']*$list['medical_care_base']) +($list['unemployment_ratio']*$list['unemployment_base']) + ($list['accumulation_fund_ratio']*$list['accumulation_fund_base']) + $list['big_price'] + $list['social_security_subsidy']; //+ 大病医疗 + 社保补缴（个人）
+        $company_cost                       = ($list['company_birth_ratio']*$list['company_birth_base']) + ($list['company_injury_ratio']*$list['company_injury_base']) +($list['company_pension_ratio']*$list['company_pension_base']) + ($list['company_medical_care_ratio']*$list['company_medical_care_base']) +($list['company_unemployment_ratio']*$list['company_unemployment_base']) + ($list['company_accumulation_fund_ratio']*$list['company_accumulation_fund_base']) + $list['company_big_price'];
+        $data                               = array();
+        $data['person_cost']                = $person_cost;
+        $data['company_cost']               = $company_cost;
+        return $data;
+    }
+
+    /**
+     * 获取部门五险一金合计
+     * @param $account_ids 当月人员ID
+     * @param $department 部门名称
+     * @param $wagesList 当月工资表
+     */
+    public function get_department_insurance_data($account_ids,$department,$wagesList){
+        $department_id                      = M('salary_department')->where(array('department'=>$department))->getField('id');
+        $accounts                           = M('account')->where(array('departmentid'=>$department_id,'id'=>array('in',$account_ids)))->getField('id',true);
+        $person_cost                        = 0;
+        $company_cost                       = 0;
+        foreach ($wagesList as $k=>$v){
+            if (in_array($v['account_id'],$accounts)){
+                $data                       = $this->get_insurance_data($v['insurance_id']);
+                $person_cost                += $data['person_cost'];
+                $company_cost               += $data['company_cost'];
+            }
+        }
+        $data                               = array();
+        $data['person_cost']                = $person_cost;
+        $data['company_cost']               = $company_cost;
+        return $data;
+    }
+
 }
 ?>
