@@ -1087,6 +1087,7 @@ class SalaryController extends BaseController {
         foreach ($personWagesLists as $k=>$v){ //个人
             $account_ids[]                  = $v['account_id'];
             $insurance_data                 = $mod->get_insurance_data($v['insurance_id']);
+            $company_insurance_data         += $insurance_data['company_cost'];
             $excelLists[$num][0]            = $v['account_id'];
             $excelLists[$num][1]            = $v['user_name'];
             $excelLists[$num][2]            = $v['post_name'];
@@ -1121,7 +1122,6 @@ class SalaryController extends BaseController {
 
         foreach ($departmentWagesLists as $v){ //部门合计
             $department_insurance_data      = $mod->get_department_insurance_data($account_ids,$v['department'],$account_wages_list);
-            $company_insurance_data         += $department_insurance_data['company_cost'];
             $excelLists[$num][0]            = $v['name'];
             $excelLists[$num][1]            = '';
             $excelLists[$num][2]            = '';
