@@ -30,18 +30,19 @@
                                         <tr role="row" class="orders" >
                                             <th class="taskOptions" rowspan="2">业务类型</th>
                                             <th class="taskOptions" rowspan="2">项目数</th>
-                                            <th class="taskOptions" rowspan="2">累计结算收入</th>
                                             <th class="taskOptions" rowspan="2">最低毛利额</th>
                                             <th class="taskOptions" rowspan="2">累计操作毛利</th>
                                             <th class="taskOptions" colspan="2">包含大交通</th>
-                                            <th class="taskOptions" colspan="2">不含大交通</th>
+                                            <th class="taskOptions" colspan="3">不含大交通</th>
                                             <if condition="rolemenu(array('Sale/gross_op_list'))">
                                                 <th width="80" class="taskOptions" rowspan="2">详情</th>
                                             </if>
                                         </tr>
                                         <tr role="row" class="orders" >
+                                            <th class="taskOptions">累计结算收入</th>
                                             <th class="taskOptions">累计操作毛利率</th>
-                                            <th class="taskOptions">毛利率完成率</th>
+                                            <!--<th class="taskOptions">毛利率完成率</th>-->
+                                            <th class="taskOptions">累计结算收入</th>
                                             <th class="taskOptions">累计操作毛利率</th>
                                             <th class="taskOptions">毛利率完成率</th>
                                         </tr>
@@ -49,11 +50,12 @@
                                             <tr <?php if (in_array($v['kind'],array('合计','公司合计'))) echo 'class="black"'; ?>>
                                                 <td class="taskOptions">{$v['kind']}</td>
                                                 <td class="taskOptions">{$v['num']}</td>
-                                                <td class="taskOptions">{$v['shouru']}</td>
                                                 <td class="taskOptions">{$v['low_gross']}</td>
                                                 <td class="taskOptions">{$v['maoli']}</td>
+                                                <td class="taskOptions">{$v['shouru']}</td>
                                                 <td class="taskOptions">{$v['maolilv']}</td>
-                                                <td class="taskOptions">{$v['rate']}</td>
+                                                <!--<td class="taskOptions">{$v['rate']}</td>-->
+                                                <td class="taskOptions">{$v['untraffic_shouru']}</td>
                                                 <td class="taskOptions">{$v['untraffic_maolilv']}</td>
                                                 <td class="taskOptions">{$v['untraffic_rate']}</td>
                                                 <if condition="rolemenu(array('Sale/gross_op_list'))">

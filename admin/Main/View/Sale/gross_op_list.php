@@ -30,15 +30,16 @@
                                         <tr role="row" class="orders" >
                                             <th class="taskOptions" rowspan="2">团号</th>
                                             <th class="taskOptions" rowspan="2">项目名称</th>
-                                            <th class="taskOptions" rowspan="2">结算收入</th>
                                             <th class="taskOptions" rowspan="2">最低毛利额</th>
                                             <th class="taskOptions" rowspan="2">结算毛利</th>
                                             <th class="taskOptions" colspan="2">包含大交通</th>
-                                            <th class="taskOptions" colspan="2">不包含大交通</th>
+                                            <th class="taskOptions" colspan="3">不包含大交通</th>
                                         </tr>
                                         <tr role="row" class="orders" >
+                                            <th class="taskOptions">结算收入</th>
                                             <th class="taskOptions">结算毛利率</th>
-                                            <th class="taskOptions">毛利率完成率</th>
+                                            <!--<th class="taskOptions">毛利率完成率</th>-->
+                                            <th class="taskOptions">结算收入</th>
                                             <th class="taskOptions">结算毛利率</th>
                                             <th class="taskOptions">毛利率完成率</th>
                                         </tr>
@@ -46,11 +47,12 @@
                                             <tr>
                                                 <td class="sorting">{$v['group_id']}</td>
                                                 <td class="sorting"><a href="{:U('Finance/settlement',array('opid'=>$v['op_id']))}">{$v['project']}</a></td>
-                                                <td class="taskOptions">{$v['shouru']}</td>
                                                 <td class="taskOptions">{$v['low_gross']}</td>
                                                 <td class="taskOptions">{$v['maoli']}</td>
+                                                <td class="taskOptions">{$v['shouru']}</td>
                                                 <td class="taskOptions">{$v['maolilv']}</td>
-                                                <td class="taskOptions">{$v['rate']}</td>
+                                                <!--<td class="taskOptions">{$v['rate']}</td>-->
+                                                <td class="taskOptions">{$v['untraffic_shouru']}</td>
                                                 <td class="taskOptions">{$v['untraffic_maolilv']}</td>
                                                 <td class="taskOptions">{$v['untraffic_rate']}</td>
                                             </tr>

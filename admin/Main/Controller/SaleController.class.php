@@ -359,12 +359,14 @@ class SaleController extends BaseController {
 
         $lists                              = M()->table('__OP_SETTLEMENT__ as s')->field($field)->join('__OP__ as o on s.op_id = o.op_id', 'LEFT')->join('__AUDIT_LOG__ as l on l.req_id = s.id', 'LEFT')->where($where)->limit($page->firstRow . ',' . $page->listRows)->select();
         foreach ($lists as $k=>$v){
+            $op_untraffic_shouru            = (int)$v['untraffic_shouru'] ? $v['untraffic_shouru'] : $v['shouru'];
             $lists[$k]['gross']             = $gross_avg[$v['kind']]['gross'];
             $lists[$k]['low_gross']         = round($v['shouru']*$gross_avg[$v['kind']]['num'],2);
-            $lists[$k]['untraffic_low_gross']= round($v['untraffic_shouru']*$gross_avg[$v['kind']]['num'],2);
-            $lists[$k]['rate']              = $lists[$k]['low_gross'] ? (round($v['maoli']/$lists[$k]['low_gross'],4)*100).'%' : '0%';
+            $lists[$k]['untraffic_low_gross']= round($op_untraffic_shouru*$gross_avg[$v['kind']]['num'],2);
+            /*$lists[$k]['rate']              = $lists[$k]['low_gross'] ? (round($v['maoli']/$lists[$k]['low_gross'],4)*100).'%' : '0%';*/
+            $lists[$k]['untraffic_shouru']  = $op_untraffic_shouru;
             $lists[$k]['untraffic_rate']    = (int)$lists[$k]['untraffic_low_gross'] ? (round($v['maoli']/$lists[$k]['untraffic_low_gross'],4)*100).'%' : '0%';
-            $lists[$k]['untraffic_maolilv'] = $v['untraffic_maolilv'] ? $v['untraffic_maolilv'] : '0%';
+            $lists[$k]['untraffic_maolilv'] = $v['untraffic_maolilv'] ? $v['untraffic_maolilv'] : $v['maolilv'];
         }
 
         $this->lists                        = $lists;
