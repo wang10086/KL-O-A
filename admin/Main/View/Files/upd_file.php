@@ -40,6 +40,7 @@
                 <div class=" content ">
                     <div class="col-md-12" id="departmentid">
                         <lebal class="upload-lebal">所属部门<span></span></lebal>
+                        <span class="lebal-span" style="margin-right: 6px"><input type="checkbox" id="departmentcheckbox" value="all"> &nbsp;全选</span>
                         <foreach name="department" key="k" item="v">
                             <span class="lebal-span"><input type="checkbox" value="{$k}" name="department[]" class="departmentcheckbox" <?php if (in_array($k,$file['department'])) {echo 'checked';} ?>> &nbsp;{$v}</span>
                         </foreach>
@@ -202,27 +203,50 @@
 	
 			uploader.init();
             reload();
+            initdepartment(); //初始化部门信息
+        });
 
-            var departmentids = "<?php echo $departmentids; ?>";
+        //初始化部门信息
+        function initdepartment(){
+            //$('#postid').html('');
+            let departmentids = "<?php echo $departmentids; ?>";
+
             $('#departmentid').find('ins').each(function(index, element) {
                 $(this).click(function(){
-                    var departmentid = '['+$(this).prev().val()+']';
+                    let departmentid = '['+$(this).prev().val()+']';
                     if (departmentids.indexOf(departmentid) !='-1') {
-                        departmentids = departmentids.replace(departmentid+',','')
+                        if(departmentid == '[all]'){ //全部反选
+                            $('.departmentcheckbox').parent('div').attr('aria-checked','false').removeClass('checked');
+                            departmentids   = '';
+                        }else{ //单选
+                            departmentids = departmentids.replace(departmentid+',','')
+                        }
                     }else{
-                        departmentids += '['+$(this).prev().val()+'],';
+                        if(departmentid == '[all]'){  //全选
+                            if($(this).parent('div').attr('aria-checked','true')){
+                                $('.departmentcheckbox').parent('div').attr('aria-checked','true').addClass('checked');
+                                $('#departmentid').find('ins').each(function (index,element) {
+                                    if($(this).parent('div').hasClass('checked')){
+                                        departmentids += '['+$(this).prev().val()+'],';
+                                    }
+                                })
+                            }
+                        }else{ //单选
+                            departmentids   += '['+$(this).prev().val()+'],';
+                        }
                     }
+
                     $.ajax({
                         type: 'POST',
                         url: "{:U('Ajax/get_posts')}",
                         dataType: 'JSON',
                         data: {departmentids: departmentids},
                         success: function (msg) {
-                            var html = '<lebal class="upload-lebal">所属岗位<span></span></lebal>';
+                            let html = '<lebal class="upload-lebal">所属岗位<span></span></lebal>';
                             if (msg) {
                                 html += '<span class="lebal-span"><input type="checkbox" id="postscheckbox" class="delem-checkbox"> &nbsp;全选</span>'
-                                for (var i = 0; i<msg.length; i++) {
-                                    html += '<span class="lebal-span"><input type="checkbox" value="'+msg[i].id+'" name="posts[]" class="postscheckbox delem-checkbox "> &nbsp;'+msg[i].post_name+'</span>';
+                                for (let i = 0; i<msg.length; i++) {
+                                    html += '<span class="lebal-span"><input type="checkbox" value="'+msg[i].id+'" name="posts[]" class="postscheckbox delem-checkbox"> &nbsp;'+msg[i].post_name+'</span>';
                                 }
                             }else{
                                 html += '<span class="lebal-span" style="margin-right: 10px">暂无岗位信息!</span>'
@@ -237,17 +261,17 @@
                     })
                 })
             });
-				
-        });
+        }
 
         function reload(){
+
             //所属部门
-            /*$('#departmentcheckbox').on('ifChecked', function() {
+            $('#departmentcheckbox').on('ifChecked', function() {
              $('.departmentcheckbox').iCheck('check');
              });
              $('#departmentcheckbox').on('ifUnchecked', function() {
              $('.departmentcheckbox').iCheck('uncheck');
-             });*/
+             });
 
             //所属岗位
             $('#postscheckbox').on('ifChecked', function() {

@@ -427,8 +427,8 @@ class FilesController extends BaseController {
             $file['department'] = str_replace(']','',$file['department']);
             $file['posts']      = str_replace('[','',$file['posts']);
             $file['posts']      = str_replace(']','',$file['posts']);
-            $file['department'] = explode(',',$file['department']);
-            $file['posts']      = explode(',',$file['posts']);
+            $file['department'] = array_filter(explode(',',$file['department']));
+            $file['posts']      = array_filter(explode(',',$file['posts']));
             $this->file         = $file;
             $this->posts        = M('posts')->where(array('departmentid'=>array('in',$file['department'])))->select();
             $arr_departmentid   = $file['department'];

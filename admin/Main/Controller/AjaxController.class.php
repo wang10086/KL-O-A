@@ -873,6 +873,7 @@ class AjaxController extends Controller {
         $arr            = array_filter(explode(',',$departmentids));
         $arr            = str_replace('[','',$arr);
         $arr            = str_replace(']','',$arr);
+        $arr            = array_filter($arr);
         $db             = M('posts');
         $lists          = $db->field('id,post_name')->where(array('departmentid'=>array('in',$arr)))->select();
         $this->ajaxReturn($lists);
