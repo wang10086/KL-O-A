@@ -47,7 +47,11 @@
                     </div>
                     <div class="col-md-12 mt10" id="postid">
                         <lebal class="upload-lebal">所属岗位<span></span></lebal>
-                        <span class="lebal-span" style="margin-right: 6px"><input type="checkbox" id="postscheckbox"> &nbsp;全选</span>
+                        <if condition="$posts">
+                            <span class="lebal-span" style="margin-right: 6px"><input type="checkbox" id="postscheckbox"> &nbsp;全选</span>
+                            <else />
+                            <span class="lebal-span" style="margin-right: 10px">暂无岗位信息!</span>
+                        </if>
                         <foreach name="posts" key="k" item="v">
                             <span class="lebal-span"><input type="checkbox" value="{$v['id']}" name="posts[]" class="postscheckbox" <?php if (in_array($v['id'],$file['posts'])) echo "checked"; ?>> &nbsp;{$v['post_name']}</span>
                         </foreach>
