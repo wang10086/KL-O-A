@@ -57,9 +57,10 @@ class OpController extends BaseController {
 		$this->pages	= $pagecount>P::PAGE_SIZE ? $page->show():'';
 
 
-		$field	        = 'o.*,a.nickname as jidiao';
-		$lists          = $db->table('__OP__ as o')->field($field)->join('__OP_AUTH__ as u on u.op_id = o.op_id','LEFT')->join('__ACCOUNT__ as a on a.id = u.line','LEFT')->where($where)->limit($page->firstRow . ',' . $page->listRows)->order($this->orders('o.create_time'))->select();
+		$field	        = 'o.*,a.nickname as jidiao,c.dep_time';
+		$lists          = $db->table('__OP__ as o')->field($field)->join('__OP_AUTH__ as u on u.op_id = o.op_id','LEFT')->join('__ACCOUNT__ as a on a.id = u.line','LEFT')->join('__OP_TEAM_CONFIRM__ as c on c.op_id=o.op_id','LEFT')->where($where)->limit($page->firstRow . ',' . $page->listRows)->order($this->orders('o.create_time'))->select();
         $dijie_opids    = get_dijie_opids();
+
         foreach($lists as $k=>$v){
             //判断是否成团
             if ($v['group_id']) { $lists[$k]['group_id'] = '<span class="green">'.$v['group_id'].'</span>'; }else{ $lists[$k]['group_id'] = '未成团'; }

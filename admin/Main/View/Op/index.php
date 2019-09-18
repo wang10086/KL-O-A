@@ -72,7 +72,7 @@
                                         <td><?php if($row['sale_cost']){ ?>&yen;{$row.sale_cost}<?php } ?></td>
                                         <td><?php if($row['peer_cost']){ ?>&yen;{$row.peer_cost}<?php } ?></td>
                                         -->
-                                        <td>{$row.departure}</td>
+                                        <td><?php echo $row['dep_time'] ? date('Y-m-d',$row['dep_time']) : "<font color='#999'>$row[departure]</font>"; ?></td>
                                         <td>{$row.days}天</td>
                                         <td><div class="tdbox_long" style="width:80px" title="{$row.destination}">{$row.destination}</div></td>
                                         <td><div class="tdbox_long" style="width:80px" title="<?php echo $kinds[$row['kind']]; ?>"><?php echo $kinds[$row['kind']]; ?></div></td>
