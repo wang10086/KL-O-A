@@ -52,11 +52,17 @@
 
     <div class="form-group col-md-4">
         <label>客户单位：</label>
-        <select  name="info[customer]" class="form-control">
+        <!--<select  name="info[customer]" class="form-control">
             <foreach name="geclist"  item="v">
-                <option value="{$v.company_name}" <?php if($op['customer']==$v['company_name']){ echo 'selected';} ?> ><?php echo strtoupper(substr($v['pinyin'], 0, 1 )); ?> - {$v.company_name}</option>
+                <option value="{$v.company_name}" <?php /*if($op['customer']==$v['company_name']){ echo 'selected';} */?> ><?php /*echo strtoupper(substr($v['pinyin'], 0, 1 )); */?> - {$v.company_name}</option>
             </foreach>
-        </select>
+        </select>-->
+        <input type="text" class="form-control" name="info[customer]" value="{$op.customer}" list="customer" />
+        <datalist id="customer">
+            <foreach name="geclist" item="v">
+                <option value="{$v}" label="" />
+            </foreach>
+        </datalist>
     </div>
 
     <div class="form-group col-md-4">
@@ -97,7 +103,7 @@
         </div>
 
         <div class="form-group col-md-12" id="addti_btn">
-            <a  href="javascript:;" class="btn btn-info btn-sm" onClick="javascript:save('save_op_info','<?php echo U('Op/public_save'); ?>',{$op.op_id});">保存</a>
+            <a  href="javascript:;" class="btn btn-info btn-sm" onClick="javascript:public_save('save_op_info','<?php echo U('Op/public_save'); ?>',{$op.op_id});">保存</a>
         </div>
     <?php } ?>
 </form>

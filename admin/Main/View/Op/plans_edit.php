@@ -42,8 +42,6 @@
                                 </div><!-- /.box-header -->
                                 <div class="box-body">
                                     <div class="content">
-                                    
-                                        
                                         <div class="form-group col-md-4 viwe">
                                             <p>审批状态：{$op.showstatus}</p>
                                         </div>

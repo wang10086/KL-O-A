@@ -100,12 +100,19 @@
 <!--
                                         <input type="text" name="info[customer]" id="customer_name" value="" placeholder="您可以输入客户单位名称拼音首字母检索" class="form-control" />
 -->
-                                        <select  name="info[customer]" class="form-control" required>
+                                        <!--<select  name="info[customer]" class="form-control" required>
                                             <option value="" selected disabled>请选择客户单位</option>
                                             <foreach name="geclist"  item="v">
-                                                <option value="{$v.company_name}"><?php echo strtoupper(substr($v['pinyin'], 0, 1 )); ?> - {$v.company_name}</option>
+                                                <option value="{$v.company_name}"><?php /*echo strtoupper(substr($v['pinyin'], 0, 1 )); */?> - {$v.company_name}</option>
                                             </foreach>
-                                        </select>
+                                        </select>-->
+
+                                        <input type="text" class="form-control" name="info[customer]" value="" list="customer" />
+                                        <datalist id="customer">
+                                            <foreach name="geclist" item="v">
+                                                <option value="{$v}" label="" />
+                                            </foreach>
+                                        </datalist>
                                     </div>
 
                                     <div class="form-group col-md-4">
@@ -291,17 +298,23 @@
         }
 
         function save_form(id) {
-            var project     = $('input[name="info[project]"]').val().trim();
-            var line_id     = $('input[name="info[line_id]"]').val();
-            var apply_to    = $('select[name="info[apply_to]"]').val();
-            var kind        = $('select[name="info[kind]"]').val();
-            var number      = $('input[name="info[number]"]').val();
-            var departure   = $('input[name="info[departure]"]').val();
-            var days        = $('input[name="info[days]"]').val();
-            var province    = $('select[name="province"]').val();
-            var addr        = $('input[name="addr"]').val();
-            var customer    = $('select[name="info[customer]"]').val();
-            var in_dijie    = $('select[name="info[in_dijie]"]').val();
+            let project     = $('input[name="info[project]"]').val().trim();
+            let line_id     = $('input[name="info[line_id]"]').val();
+            let apply_to    = $('select[name="info[apply_to]"]').val();
+            let kind        = $('select[name="info[kind]"]').val();
+            let number      = $('input[name="info[number]"]').val();
+            let departure   = $('input[name="info[departure]"]').val();
+            let days        = $('input[name="info[days]"]').val();
+            let province    = $('select[name="province"]').val();
+            let addr        = $('input[name="addr"]').val();
+            let customer    = $('input[name="info[customer]"]').val();
+            let in_dijie    = $('select[name="info[in_dijie]"]').val();
+
+            let geclist     = <?php echo $geclist_str; ?>;
+            let customer_num = 0;
+            if (in_array(customer,geclist)){
+                customer_num++;
+            }
 
             if (!project)   { art_show_msg('项目名称不能为空',3); return false; }
             if (!line_id)   { art_show_msg('线路选择有误',3); return false; }
@@ -313,7 +326,7 @@
             if (!days)      { art_show_msg('行程天数不能为空',3); return false; }
             if (!province)  { art_show_msg('目的地省份不能为空',3); return false; }
             if (!addr)      { art_show_msg('详细地址不能为空',3); return false; }
-            if (!customer)  { art_show_msg('客户单位不能为空',3); return false; }
+            if (!customer_num){ art_show_msg('客户单位填写错误',3); return false; }
             if (!in_dijie)  { art_show_msg('是否内部地接不能为空',3); return false; }
             $('#'+id).submit();
         }

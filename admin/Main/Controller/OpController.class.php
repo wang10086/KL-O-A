@@ -1,5 +1,6 @@
 <?php
 namespace Main\Controller;
+use FontLib\Table\Type\post;
 use Sys\P;
 
 ulib('Page');
@@ -125,10 +126,8 @@ class OpController extends BaseController {
             }
 
             $exe_user_id                = I('exe_user_id');
-            //$exe_user_name            = I('exe_user_name');
-            //$exe_role_ids             = I('exe');
-
-            if (!$info['customer']){ $this->error('客户单位不能为空' . $db->getError()); }
+            $customer                   = $this->get_customerlist();
+            if (!in_array($info['customer'],$customer)){ $this->error('客户单位填写错误' . $db->getError()); }
             if (!$info['line_id']) { $this->error('行程方案不能为空'); }
 
 			if($info){
@@ -250,25 +249,6 @@ class OpController extends BaseController {
 			}
 			
 		}else{
-			
-			//客户名称关键字
-			$where = array();
-			if(C('RBAC_SUPER_ADMIN')==cookie('username') || cookie('roleid')==10 || cookie('roleid')==28 || cookie('roleid')==11 || cookie('roleid')==30){
-				$where['company_name'] = array('neq','');
-			}else{
-				$where['company_name'] = array('neq','');
-				$where['cm_id'] = array('in',Rolerelation(cookie('roleid')));
-			}
-		
-			$key =  M('customer_gec')->field('id,pinyin,company_name')->where($where)->group("company_name")->order('pinyin ASC')->select();
-			foreach($key as $v){
-				if(!$v['pinyin']){
-					$company_name = iconv("utf-8","gb2312",trim($v['company_name']));
-					$pinyin = strtolower($PinYin->getFirstPY($company_name));	
-					M('customer_gec')->data(array('pinyin'=>$pinyin))->where(array('id'=>$v['id']))->save();
-				}
-			}
-			//if($key) $this->keywords =  json_encode($key);
             //固定线路
             $linelist   = M('product_line')->field('id,title,pinyin')->where(array('type'=>2))->select();
             foreach ($linelist as $v){
@@ -282,7 +262,9 @@ class OpController extends BaseController {
 
             $this->userkey     = get_userkey();
             $this->provinces   = M('provinces')->getField('id,name',true);
-			$this->geclist     = M('customer_gec')->field('id,pinyin,company_name')->where($where)->group("company_name")->order('pinyin ASC')->select();
+			$geclist           = $this->get_customerlist(1,$PinYin); //客户名称关键字
+			$this->geclist     = $geclist;
+			$this->geclist_str = json_encode($geclist,true);
 			$this->kinds       = get_project_kinds();
 			$this->userlist    =  M('account')->where('`id`>3')->getField('id,nickname', true);
 			$this->rolelist    =  M('role')->where('`id`>10')->getField('id,role_name', true);
@@ -292,6 +274,37 @@ class OpController extends BaseController {
 			$this->title('出团计划');
 			$this->display('plans');
 		}
+    }
+
+    /**
+     * 获取客户名称关键字(整理客户信息)
+     * @param string $type 1=>'更新相关数据'
+     * @return mixed
+     */
+    public function get_customerlist($type='',$PinYin=''){
+        //客户名称关键字
+        $where = array();
+        if(C('RBAC_SUPER_ADMIN')==cookie('username') || in_array(cookie('roleid'),array(10,11,28,30))){
+            $where['company_name'] = array('neq','');
+        }else{
+            $where['company_name'] = array('neq','');
+            $where['cm_id'] = array('in',Rolerelation(cookie('roleid')));
+        }
+
+        if ($type){
+            $key =  M('customer_gec')->field('id,pinyin,company_name')->where($where)->group("company_name")->order('pinyin ASC')->select();
+            foreach($key as $v){
+                if(!$v['pinyin']){
+                    $company_name = iconv("utf-8","gb2312",trim($v['company_name']));
+                    $pinyin = strtolower($PinYin->getFirstPY($company_name));
+                    M('customer_gec')->data(array('pinyin'=>$pinyin))->where(array('id'=>$v['id']))->save();
+                }
+            }
+        }
+
+        //$data                 = M('customer_gec')->field('id,pinyin,company_name')->where($where)->group("company_name")->order('pinyin ASC')->select();
+        $data                   = M('customer_gec')->where($where)->group("company_name")->order('pinyin ASC')->getField('company_name',true);
+        return $data;
     }
     
 	
@@ -605,7 +618,7 @@ class OpController extends BaseController {
 			$where['company_name'] = array('neq','');
 			$where['cm_id'] = array('in',Rolerelation(cookie('roleid')));
 		}
-		$this->geclist     = M('customer_gec')->field('id,pinyin,company_name')->where($where)->group("company_name")->order('pinyin ASC')->select();
+		$this->geclist     = $this->get_customerlist();
 
         //人员名单关键字
         $this->userkey      = get_username();
@@ -860,6 +873,18 @@ class OpController extends BaseController {
 			
 			//修改项目基本信息
 			if($opid && $savetype==10 ){
+			    $returnMsg              = array();
+			    $customer               = $this->get_customerlist();
+			    if (!in_array($info['customer'],$customer)){
+			        $returnMsg['num']   = $num;
+			        $returnMsg['msg']   = '客户单位输入错误';
+			        $this->ajaxReturn($returnMsg);
+                }
+			    if ($info['in_dijie'] == 1 && !trim($info['dijie_name'])){
+                    $returnMsg['num']   = $num;
+                    $returnMsg['msg']   = '地接单位名称错误';
+                    $this->ajaxReturn($returnMsg);
+                }
 				$op = M('op')->where(array('op_id'=>$opid))->find();
 				if($op['status']=='0' || cookie('userid')==$op['create_user'] || cookie('roleid')==10 || C('RBAC_SUPER_ADMIN')==cookie('username')) {
                     if (in_array($op['in_dijie'],array(0,2)) && $info['in_dijie']==1){
@@ -877,13 +902,18 @@ class OpController extends BaseController {
                     if ($issave) $num++;
                 }
 				if($num){
-					$record = array();
-					$record['op_id']   = $opid;
-					$record['optype']  = 1;
-					$record['explain'] = '修改项目基本信息';
+				    $msg                = '数据保存成功';
+					$record             = array();
+					$record['op_id']    = $opid;
+					$record['optype']   = 1;
+					$record['explain']  = '修改项目基本信息';
 					op_record($record);
-				}
-
+				}else{
+				    $msg                = '数据保存失败';
+                }
+                $returnMsg['num']   = $num;
+                $returnMsg['msg']   = $msg;
+                $this->ajaxReturn($returnMsg);
 			}
 				
 			//保存价格
