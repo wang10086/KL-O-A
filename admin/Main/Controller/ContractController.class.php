@@ -9,7 +9,7 @@ use Sys\Page;
 
 // @@@NODE-2###Contract###合同管理###
 class ContractController extends BaseController {
-    
+
     protected $_pagetitle_ = '合同管理';
     protected $_pagedesc_  = '';
 
@@ -17,67 +17,67 @@ class ContractController extends BaseController {
     // @@@NODE-3###index###合同列表###
     public function index(){
         $this->title('合同管理');
-		
+
 		$db		= M('contract');
-		
+
 		$opid	= I('opid',0);
 		$gid	= I('gid',0);
 		$cid	= I('cid','');
 		$key	= I('key','');
-		
+
 		$where = array();
 		if($key)		$where['pro_name']		= array('like','%'.$key.'%');
 		if($opid)	    $where['op_id']			= $opid;
 		if($gid)		$where['group_id']		= $gid;
 		if($cid)		$where['contract_id']	= array('like','%'.$cid.'%');
-		
+
 		if(!rolemenu(array('Contract/confirm'))){
 			$where['create_user']	= cookie('userid');
 		}
-		
+
 		//分页
 		$pagecount = $db->where($where)->count();
 		$page = new Page($pagecount, P::PAGE_SIZE);
 		$this->pages = $pagecount>P::PAGE_SIZE ? $page->show():'';
 
         $lists = $db->where($where)->limit($page->firstRow . ',' . $page->listRows)->order($this->orders('create_time'))->select();
-		
+
 		foreach($lists as $k=>$v){
-			$lists[$k]['strstatus']	= $v['status'] ? '<span class="green">已确认</span>' : '<span class="red">未确认</span>';	
+			$lists[$k]['strstatus']	= $v['status'] ? '<span class="green">已确认</span>' : '<span class="red">未确认</span>';
 		}
-		
+
 		$this->lists = $lists;
 		$this->display('index');
     }
-	
-    
 
-	
+
+
+
 	// @@@NODE-3###add###创建合同###
     public function add(){
         $this->title('新建/修改合同信息');
-        
+
         $db = M('contract');
         $id = I('id', 0);
-		
+
 
         if(isset($_POST['dosubmit'])){
-			
+
             $info		= I('info');
 			$attr		= I('attr');
             $referer	= I('referer');
 			$payment	= I('payment');
             $group_id   = trim($info['group_id']);
-			
-			
+
+
 			//根据团号获取项目信息
 			$op			= M('op')->where(array('group_id'=>$group_id))->find();
 			if(!$op){
-				$this->error('未找到该团的项目信息');	
+				$this->error('未找到该团的项目信息');
 			}
 			$info['op_id']			= $op['op_id'];
 			$info['update_time']	= time();
-			
+
 			//判断该团是否已创建合同
 			$where	= array();
 			$where['group_id']	= $info['group_id'];
@@ -124,13 +124,13 @@ class ContractController extends BaseController {
             }
 			//保存电子扫描件
 			save_aontract_art($cid,$attr);
-			
+
 			//保存分期信息
 			//save_payment($cid,$payment);
 
             $this->success('保存成功！',$referer);
         }else{
-			
+
             if (!$id) {
                 $this->row	= false;
             } else {
@@ -138,43 +138,43 @@ class ContractController extends BaseController {
 				$this->atts = get_aontract_res($id);
 				$this->pays = M('contract_pay')->where(array('cid'=>$id))->order('id asc')->select();
             }
-			
+
             $this->display('add');
         }
-        
-        
+
+
     }
-	
-	
-	
+
+
+
 	// @@@NODE-3###detail###合同详情###
     public function detail(){
-		
+
 		$this->title('合同详情');
-		
+
 		$db = M('contract');
         $id = I('id', 0);
-		
+
 		$row = $db->find($id);
 		if(!$id || !$row){
 			$this->error('合同信息不存在');
 		}else{
-			
+
 			$gbsta = array('1'=>'合同已返回综合部','2'=>'合同已返回财务部');
-			
+
 			$opid = $row['op_id'];
-			
-			
+
+
 			$op             = M('op')->where(array('op_id'=>$opid))->find();
 			$settlement     = M('op_settlement')->where(array('op_id'=>$opid))->find();
 			$huikuan        = M('op_huikuan')->where(array('op_id'=>$opid))->order('id DESC')->select();
 			foreach($huikuan as $k=>$v){
-				
+
 				$show        = '';
 				$show_user   = '';
 				$show_time   = '';
 				$show_reason = '';
-				
+
 				$where = array();
 				$where['req_type'] = P::REQ_TYPE_HUIKUAN;
 				$where['req_id']   = $v['id'];
@@ -198,13 +198,13 @@ class ContractController extends BaseController {
 				$huikuan[$k]['show_time']    = $show_time;
 				$huikuan[$k]['show_reason']  = $show_reason;
 			}
-			
+
 			$settlement['yihuikuan'] = $settlement['huikuan'] ? $settlement['huikuan']  : '0.00';
-	
+
 			$this->op				= $op;
 			$this->settlement		= $settlement;
 			$this->kinds			= M('project_kind')->getField('id,name', true);
-			$this->huikuan			= $huikuan; 
+			$this->huikuan			= $huikuan;
 			$this->atts				= M('contract_pic')->where(array('cid'=>$id))->order('id asc')->select();
 			//$this->pays				= M('contract_pay')->where(array('cid'=>$id))->order('id asc')->select();
 			//$this->huikuanlist		= M('contract_pay')->where(array('cid'=>$id,'status'=>array('neq','2')))->order('id asc')->select();
@@ -222,22 +222,22 @@ class ContractController extends BaseController {
 			$this->display('detail');
 		}
 	}
-	
-	
-	
+
+
+
 	// @@@NODE-3###confirm###合同确认###
     public function confirm(){
-		
+
 		$db = M('contract');
-		
+
 		if(isset($_POST['dosubmint'])){
 			$id		= I('id', 0);
-			
+
 			$info	= I('info');
 			$status = I('status',0);
 			$seal	= I('seal',0);
 			$gbs	= I('gbs',0);
-			
+
 			$row	= $db->find($id);
 			if($id && $row){
 				$info['status']				= $status;
@@ -259,14 +259,14 @@ class ContractController extends BaseController {
                 } else {
                     $this->error('保存确认失败：' . $db->getError());
                 }
-				
+
 			}else{
 				$this->error('合同信息不存在');
 			}
 		}
 	}
-	
-	//合同统计
+
+	//合同统计(月度)
     public function statis(){
         $year		                        = I('year',date('Y'));
         $month	                            = I('month',date('m'));
@@ -329,6 +329,78 @@ class ContractController extends BaseController {
         $this->month                        = $month;
         $this->uid                          = $uid;
         $this->display('month_detail');
+    }
+
+    //合同统计(季度)
+    public function statis_quarter(){
+        $year		                        = I('year',date('Y'));
+        $month	                            = I('month',date('m'));
+        $quarter                            = I('quarter') ? I('quarter') : get_quarter($month);
+        $times                              = $year.$month;
+        $yw_departs                         = C('YW_DEPARTS_KPI');  //业务部门id
+        $where                              = array();
+        $where['id']                        = array('in',$yw_departs);
+        $departments                        = M('salary_department')->field('id,department')->where($where)->select();
+        $cycle_times                        = get_quarter_cycle_time($year,$quarter);
+        $lists                              = get_department_op_list($departments,$cycle_times['begin_time'],$cycle_times['end_time'],$times);
+        $sum                                = get_contract_sum($lists);
+
+        $this->sum                          = $sum;
+        $this->lists                        = $lists;
+        $this->departments                  = $departments;
+        $this->year		                    = I('year',date('Y'));
+        $this->quarter                      = $quarter;
+        $this->month                        = $month;
+        $this->prveyear	                    = $year-1;
+        $this->nextyear	                    = $year+1;
+        $this->display();
+    }
+
+    public function public_department_quarter_detail(){
+        $year                               = I('year',date("Y"));
+        $month                              = I('month',date('m'));
+        if (strlen($month)<2) $month        = str_pad($month,2,'0',STR_PAD_LEFT);
+        $yearMonth                          = $year.$month;
+        $quarter                            = I('quarter') ? I('quarter') : get_quarter($month);
+        $cycle_times                        = get_quarter_cycle_time($year,$quarter);
+        $department_id                      = I('id');
+
+        $count_lists                        = get_department_businessman($department_id);
+        $data                               = array();
+        foreach ($count_lists as $key=>$value){
+            $contract_data                  = get_user_contract_list($value['id'],$yearMonth,$cycle_times['begin_time'],$cycle_times['end_time']);
+            $contract_data['user_id']       = $value['id'];
+            $contract_data['user_name']     = $value['nickname'];
+            $data[$key]                     = $contract_data;
+        }
+        $this->lists                        = $data;
+        $this->year                         = $year;
+        $this->month                        = $month;
+        $this->quarter                      = $quarter;
+        $this->prveyear	                    = $year-1;
+        $this->nextyear	                    = $year+1;
+        $this->department_info              = M('salary_department')->where(array('id'=>$department_id))->find();
+        $this->display('department_quarter_detail');
+    }
+
+    public function public_quarter_detail(){
+        $year                               = I('year');
+        $month                              = I('month');
+        if (strlen($month)<2) $month        = str_pad($month,2,'0',STR_PAD_LEFT);
+        $quarter                            = I('quarter') ? I('quarter') : get_quarter($month);
+        $uid                                = I('uid');
+        $cycle_times                        = get_quarter_cycle_time($year,$quarter);
+        $yearMonth                          = $year.$month;
+        $data                               = get_user_contract_list($uid,$yearMonth,$cycle_times['begin_time'],$cycle_times['end_time']);
+        $op_list                            = $data['op_list'];
+
+        $this->data                         = $data;
+        $this->lists                        = $op_list;
+        $this->year                         = $year;
+        $this->quarter                      = $quarter;
+        $this->month                        = $month;
+        $this->uid                          = $uid;
+        $this->display('quarter_detail');
     }
 
     //项目合同

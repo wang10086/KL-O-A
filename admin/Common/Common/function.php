@@ -1,6 +1,6 @@
 <?php
 // 加载参数类
-import ('P', COMMON_PATH . 'Common/'); 
+import ('P', COMMON_PATH . 'Common/');
 use App\P;
 ulib('Pinyin');
 use Sys\Pinyin;
@@ -21,13 +21,13 @@ function ulib ($class) {
 function redis($key,$val=null){
 	//global $redis_server;
 	//if (!$redis_server) {
-	   $redis_server = new \Redis();	
+	   $redis_server = new \Redis();
 	   $redis_server->connect( C('REDIS_HOST'), C('REDIS_PORT'));
 		//$redis_server->auth(ccc);
 	//}
 	if($val){
-		$redis_server->set($key, $val);	
-		
+		$redis_server->set($key, $val);
+
 	}else{
 		 $val = $redis_server->get($key);
 	}
@@ -79,16 +79,16 @@ function random($length, $chars = '0123456789') {
  * @return 1为有权限显示、0为无权限显示
  */
 function rolemenu($obj){
-	
-	
+
+
 	$menu = array();
 	//默认样式
-	$style =  0;	
+	$style =  0;
 	//判断是否为开发者权限
 	if(session(C('ADMIN_AUTH_KEY'))){
 		$style = 1;
 	}else{
-		
+
 		foreach($obj as $bb=>$unit){
 			$text = strtoupper($unit);
 			if($_SESSION['_ACCESS_LIST']){
@@ -99,20 +99,20 @@ function rolemenu($obj){
 						}
 					}
 					if(in_array($text,$menu)){
-						$style = 1;	
+						$style = 1;
 					}
 				}
 			}
 		}
-		
+
 	}
 
-	return $style;	
+	return $style;
 }
 
 //用户关系递归
-function Userrelation($id = 0) { 
-    global $str; 
+function Userrelation($id = 0) {
+    global $str;
 	$db = M('admin');
 	$guanxibiao = $db->field('id,parentid')->where(array('parentid'=>$id))->select();
     if($guanxibiao){
@@ -120,13 +120,13 @@ function Userrelation($id = 0) {
             $str .= $row['id']. ",";
             Userrelation($row['id']);
 		}
-    } 
-    return $str; 
-} 
+    }
+    return $str;
+}
 
 //角色关系递归
-function Rolerelation($id = 0,$type = 0) { 
-    global $str; 
+function Rolerelation($id = 0,$type = 0) {
+    global $str;
 	$db = M('role');
 	$guanxibiao = $db->field('id,pid')->where(array('pid'=>$id))->select();
     if($guanxibiao){
@@ -134,35 +134,35 @@ function Rolerelation($id = 0,$type = 0) {
             $str .= $row['id']. ",";
             Rolerelation($row['id']);
 		}
-    } 
-	
+    }
+
 	if($type==1){
 		 $str .= $id. ",";
 	}
-	
+
 	$role = trim($str,',');
-	
+
 	//返回用户ID
 	$user = array();
-	$user = M('account')->where(array('roleid'=>array('in',$role)))->Getfield('id',true);	
+	$user = M('account')->where(array('roleid'=>array('in',$role)))->Getfield('id',true);
 	if($type==0){
 		$user[] = cookie('userid');
 	}
 	$data = implode(',',$user);
-		
-	
+
+
 	//if($type){
-		
+
 	//}else{
 		//返回角色ID
-		//$data = $role;	
+		//$data = $role;
 	//}
-    return $data; 
-} 
+    return $data;
+}
 
 //渠道关系递归
-function Dealerrelation($id = 0) { 
-    global $str; 
+function Dealerrelation($id = 0) {
+    global $str;
 	$db = M('dealer');
 	$guanxibiao = $db->field('id,parentid')->where(array('parentid'=>$id))->select();
     if($guanxibiao){
@@ -170,9 +170,9 @@ function Dealerrelation($id = 0) {
             $str .= $row['id']. ",";
             Dealerrelation($row['id']);
 		}
-    } 
-    return $str; 
-} 
+    }
+    return $str;
+}
 
 /**
 * 状态输出
@@ -192,11 +192,11 @@ function merge_node($node='', $access='', $pid = 0) {
 	$arr = array();
 	foreach ($node as $v) {
 		if (is_array($access)) {
-	        $v['access'] = in_array($v['id'], $access) ? 1 : 0;	
+	        $v['access'] = in_array($v['id'], $access) ? 1 : 0;
 	    }
 	    if ($v['pid'] == $pid) {
 		    $v['child'] = merge_node($node, $access, $v['id']);
-			$arr[] = $v;	
+			$arr[] = $v;
 		}
 	}
 	return $arr;
@@ -226,11 +226,11 @@ function ison ($str, $val, $yes = 'active', $no =''){
 
 /*打印数组用于调试*/
 function P($var, $stop = true){
-	header("Content-Type: text/html;charset=utf-8"); 
+	header("Content-Type: text/html;charset=utf-8");
     echo '<pre>';
 	print_r($var);
 	echo '</pre>';
-	if ($stop) die();	
+	if ($stop) die();
 }
 
 function var_d($var, $stop = false){
@@ -249,21 +249,21 @@ function editor($editor_name, $default = '', $editor_id = '') {
 	$str = '';
 	if(!defined('EDITOR_INIT')) {
 		$str .= '<script type="text/javascript" src="' .__ROOT__. '/admin/assets/comm/ckeditor/ckeditor.js"></script>';
-				
+
 		define('EDITOR_INIT', 1);
-	}     
+	}
 	if (empty($editor_id)) $editor_id = preg_replace("/\[\]/", "_", $editor_name);
 	return $str.'<textarea class="ckeditor" name="'.$editor_name.'" id="'.$editor_id.'" >'.$default.'</textarea>';
 }
 
 function upload_image($name,$uptext = '上传图片', $default = '', $multi = true) {
-    $str = '';    
+    $str = '';
 	if (!defined('INIT_UPLOAD_IMAGE')) {
 		  $str .= '<script type="text/javascript" src="' .__ROOT__. '/admin/assets/comm/upfile.js"></script>';
 		  //$str .= '<link rel="stylesheet" href="'. __ASSETS__. 'css/upload_img.css" />';
 		  define('INIT_UPLOAD_IMAGE', 1);
 	}
-	
+
 	$show = '';
 	$values = array();
 	if (!empty($default)) {
@@ -292,14 +292,14 @@ function upload_image($name,$uptext = '上传图片', $default = '', $multi = tr
 			}
 		}
 	}
-	
+
 	$close = $multi ? '<div class="closeimg"><a href="javascript:;" onclick="javascript:g_remove_img(this);" class="iclose"></a></div>' : '';
 	$arr = $multi ? '[]' : '';
 	foreach($values as $row) {
-		$show .= '<div class="oneimg">'.$close.'<div class="imgdiv"><div class="outline"><img src="'.$row['thumb'].'"  height="60" alt="点击查看大图" onclick="g_open_big(\''.$row['imgurl'] .'\');" /></div></div><div style="display:none"><input type="checkbox" name="'.$name.'[id]'.$arr.'" value="'.$row['id'].'" checked="checked"/><input type="checkbox" name="'.$name.'[imgurl]'.$arr.'" value="'.$row['imgurl'].'" checked="checked"  /><input type="checkbox" name="'.$name.'[thumb]'.$arr.'" value="'.$row['thumb'].'" checked="checked"/></div></div>';	
-		
+		$show .= '<div class="oneimg">'.$close.'<div class="imgdiv"><div class="outline"><img src="'.$row['thumb'].'"  height="60" alt="点击查看大图" onclick="g_open_big(\''.$row['imgurl'] .'\');" /></div></div><div style="display:none"><input type="checkbox" name="'.$name.'[id]'.$arr.'" value="'.$row['id'].'" checked="checked"/><input type="checkbox" name="'.$name.'[imgurl]'.$arr.'" value="'.$row['imgurl'].'" checked="checked"  /><input type="checkbox" name="'.$name.'[thumb]'.$arr.'" value="'.$row['thumb'].'" checked="checked"/></div></div>';
+
 	}
-	
+
 	$str .= '
 			<table rules="none" border="0" cellpadding="0" cellspacing="0" class="upload_table">
 			<tr>
@@ -317,25 +317,25 @@ function upload_image($name,$uptext = '上传图片', $default = '', $multi = tr
 				</td>
 			</tr>
 		</table>';
-	
+
 	return $str;
 }
 
 
 function upload_m($obj,$cont,$attr='',$btn='上传',$showbox="flist",$formname="attr",$filename="文件名称"){
-	
+
 	$html = '';
 	$html .= '<a href="javascript:;" id="'.$obj.'" class="btn btn-success btn-sm" style="margin:-10px 0 0 15px;"><i class="fa fa-upload"></i> '.$btn.'</a>';
-    
+
 	$html .= '<div class="form-group col-md-12" style=" padding:10px 0;"  id="flist" >';
-	
+
 	if($attr){
-		
+
 		//查找
 		$where = array();
 		$where['id']  = array('in',$attr);
 		$attrlist = M('attachment')->where($where)->select();
-			
+
 		foreach($attrlist as $k=>$v){
 			$size = format_bytes($v['filesize']);
 			$ext  = strtoupper($v['fileext']);
@@ -344,12 +344,12 @@ function upload_m($obj,$cont,$attr='',$btn='上传',$showbox="flist",$formname="
 			$html .= '<input type="hidden" name="'.$formname.'[filepath][]" value="'.$v['filepath'].'" />';
 			$html .= '<div class="uploadlist">';
 			if($ext=='JPG' || $ext=='PNG' || $ext=='GIF'){
-				$bg = 'style="background-image:url('.thumb($v['filepath']).')"';  
+				$bg = 'style="background-image:url('.thumb($v['filepath']).')"';
 				$html .= '<a href="'.$v['filepath'].'" target="_blank"><div class="ext"></div></a>';
 			}else{
-				$bg = 'style="background-color:#00a65a"';  
+				$bg = 'style="background-color:#00a65a"';
 				$html .= '<a href="'.$v['filepath'].'" target="_blank"><div class="ext">'.$ext.'</div></a>';
-			}	
+			}
 			$html .= '<a href="'.$v['filepath'].'" target="_blank"><div class="upimg" '.$bg.'></div></a>';
 			$html .= '<input type="text" name="'.$formname.'[filename][]" value="'.$v['filename'].'" placeholder="'.$filename.'" class="form-control" />';
 			$html .= '<div class="size">'.$size.'</div>';
@@ -358,8 +358,8 @@ function upload_m($obj,$cont,$attr='',$btn='上传',$showbox="flist",$formname="
 			$html .= '</div>';
 			$html .= '</div>';
 		}
-	}						
-	
+	}
+
 	$html .= '</div>';
 	$html .= '<div id="'.$cont.'" style="display:none;"></div>';
 	$html .= '<script>';
@@ -367,7 +367,7 @@ function upload_m($obj,$cont,$attr='',$btn='上传',$showbox="flist",$formname="
 	$html .= 'upload_multi_file(\''.$obj.'\',\''.$cont.'\',\''.$showbox.'\',\''.$formname.'\',\''.$filename.'\');';
 	$html .= '});';
 	$html .= '</script>';
-	
+
 	return $html;
 }
 
@@ -451,29 +451,29 @@ function get_res($module=0,$releid=0,$ids=array()){
 
 
 function get_upload_m($attr=''){
-	
+
 	$html = '';
 	$html .= '<div  id="flist" >';
-	
+
 	if($attr){
-		
+
 		//查找
 		$where = array();
 		$where['id']  = array('in',$attr);
 		$attrlist = M('attachment')->where($where)->select();
-			
+
 		foreach($attrlist as $k=>$v){
 			$size = format_bytes($v['filesize']);
 			$ext  = strtoupper($v['fileext']);
 			$html .= '<div class="form-group col-md-3" id="aid_'.$v['id'].'" >';
 			$html .= '<div class="downloadlist">';
 			if($ext=='JPG' || $ext=='PNG' || $ext=='GIF'){
-				$bg = 'style="background-image:url('.thumb($v['filepath']).')"';  
+				$bg = 'style="background-image:url('.thumb($v['filepath']).')"';
 				$html .= '<a href="'.$v['filepath'].'" target="_blank"><div class="ext"></div></a>';
 			}else{
-				$bg = 'style="background-color:#00a65a"';  
+				$bg = 'style="background-color:#00a65a"';
 				$html .= '<a href="'.$v['filepath'].'" target="_blank"><div class="ext">'.$ext.'</div></a>';
-			}	
+			}
 			$html .= '<a href="'.$v['filepath'].'" target="_blank"><div class="upimg" '.$bg.'></div></a>';
 			$html .= '<div class="filename">'.$v['filename'].'</div>';
 			//$html .= '<div class="size">'.$size.'</div>';
@@ -484,21 +484,21 @@ function get_upload_m($attr=''){
 			$html .= '</div>';
 			$html .= '</div>';
 		}
-	}						
-	
+	}
+
 	$html .= '</div>';
-	
-	
+
+
 	return $html;
 }
 
 
 
-function format_bytes($size) { 
-	$units = array(' B', ' KB', ' MB', ' GB', ' TB'); 
-	for ($i = 0; $size >= 1024 && $i < 4; $i++) $size /= 1024; 
-	return round($size).$units[$i]; 
-} 
+function format_bytes($size) {
+	$units = array(' B', ' KB', ' MB', ' GB', ' TB');
+	for ($i = 0; $size >= 1024 && $i < 4; $i++) $size /= 1024;
+	return round($size).$units[$i];
+}
 
 /**
  * 生成缩略图函数
@@ -507,35 +507,35 @@ function format_bytes($size) {
  * @param  $height 缩略图高度
  * @param  $autocut 是否自动裁剪 默认不裁剪，当高度或宽度有一个数值为0是，自动关闭
  * @param  $smallpic 无图片是默认图片路径
-*/ 
+*/
 function thumb($img, $width = 80, $height = 60 ,$autocut = 1, $nopic = 'images/nopic.jpg') {
 
 	if(empty($img)) return __ASSETS__ . DS . $nopic;   //判断原图路径是否输入
 
 	if(!extension_loaded('gd') || strpos($img, '://')) return $img;
-    
+
 	$root_path =  __ROOT__ . DS ;
 	if (strpos($img, $root_path) === 0) {
 	    $img_replace = substr_replace($img, '', 0, strlen($root_path));
 	} else {
 	    $img_replace = $img;
 	}
-	
+
 	if(!file_exists($img_replace)) return  __ASSETS__ . DS . $nopic; //判断原图是否存在
 
 	$newimg = dirname($img_replace).'/thumb_'.$width.'_'.$height.'_'.basename($img_replace);   //缩略图路径
 
 	if(file_exists($newimg)) return $newimg;  //如果缩略图存在则直接输入
-	
-	$image = new \Think\Image(); 
+
+	$image = new \Think\Image();
 	$image->open($img_replace);
-    
+
 	if ($autocut) {
         $image->thumb($width, $height,\Think\Image::IMAGE_THUMB_CENTER)->save($newimg);
 	} else {
         $image->thumb($width, $height)->save($newimg);
 	}
-    
+
 	return $newimg;
 }
 
@@ -553,7 +553,7 @@ function exportexcel($data=array(),$title=array(),$filename='export'){
 	 for($i='A'; $i!='YZ'; $i++) {
 		 $cols[] = $i;
 	 }
-     
+
      ulib('PHPExcel');
 
     $cacheMethod = \PHPExcel_CachedObjectStorageFactory::cache_in_memory_gzip;
@@ -564,7 +564,7 @@ function exportexcel($data=array(),$title=array(),$filename='export'){
     $objPHPExcel->setActiveSheetIndex(0);
     $sheet = $objPHPExcel->getActiveSheet();
     $sheet->getDefaultColumnDimension()->setWidth(20);
-    
+
 
     $n = 1;
     if (!empty($title)) {
@@ -599,7 +599,7 @@ function exportexcel($data=array(),$title=array(),$filename='export'){
     header("Expires: 0");
     $objWriter = \PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
     $objWriter->save('php://output');
-     
+
 }
 
 
@@ -620,17 +620,17 @@ function model_exportexcel($data=array(),$filename='export',$model){
 	//获取当前活动的表
 	$objActSheet=$objPHPExcel->getActiveSheet();
 	$objActSheet->setTitle($filename);//设置excel的标题
-	
+
 	foreach($data as $k=>$v){
 		$objActSheet->setCellValue($k,$v);
 	}
-	
+
 	//导出
 	$filename = iconv('utf-8',"gb2312",$filename);//转换名称编码，防止乱码
 	//header ( 'Content-Type: application/vnd.ms-excel;charset=utf-8' );
 	//header ( 'Content-Disposition: attachment;filename="' . $filename . '.xls"' ); //”‘.$filename.’.xls”
    // header ( 'Cache-Control: max-age=0');
-	
+
 	ob_end_clean();
 	header("Content-type:application/octet-stream");
 	header("Accept-Ranges:bytes");
@@ -639,10 +639,10 @@ function model_exportexcel($data=array(),$filename='export',$model){
 	header("Pragma: no-cache");
 	header("Expires: 0");
 
-	
+
 	$objWriter = \PHPExcel_IOFactory::createWriter ( $objPHPExcel, 'Excel5' ); //在内存中准备一个excel2003文件
 	$objWriter->save ('php://output');
-     
+
 }
 
 
@@ -651,45 +651,45 @@ function model_exportexcel($data=array(),$filename='export',$model){
  * @param array $file
  */
 function importexcel($filePath){
-	
+
 	ulib('PHPExcel');
-	
-	$PHPExcel = new \PHPExcel(); 
-	
-	/**默认用excel2007读取excel，若格式不对，则用之前的版本进行读取*/ 
-	$PHPReader = new \PHPExcel_Reader_Excel2007(); 
-	if(!$PHPReader->canRead($filePath)){ 
-		$PHPReader = new \PHPExcel_Reader_Excel5(); 
-		if(!$PHPReader->canRead($filePath)){ 
-			echo 'no Excel'; 
-			return ; 
-		} 
-	} 
-	
-	$PHPExcel = $PHPReader->load($filePath); 
-	/**读取excel文件中的第一个工作表*/ 
-	$currentSheet = $PHPExcel->getSheet(0); 
-	/**取得最大的列号*/ 
-	$allColumn = $currentSheet->getHighestColumn(); 
-	/**取得一共有多少行*/ 
-	$allRow = $currentSheet->getHighestRow(); 
-	/**从第二行开始输出，因为excel表中第一行为列名*/ 
-	
+
+	$PHPExcel = new \PHPExcel();
+
+	/**默认用excel2007读取excel，若格式不对，则用之前的版本进行读取*/
+	$PHPReader = new \PHPExcel_Reader_Excel2007();
+	if(!$PHPReader->canRead($filePath)){
+		$PHPReader = new \PHPExcel_Reader_Excel5();
+		if(!$PHPReader->canRead($filePath)){
+			echo 'no Excel';
+			return ;
+		}
+	}
+
+	$PHPExcel = $PHPReader->load($filePath);
+	/**读取excel文件中的第一个工作表*/
+	$currentSheet = $PHPExcel->getSheet(0);
+	/**取得最大的列号*/
+	$allColumn = $currentSheet->getHighestColumn();
+	/**取得一共有多少行*/
+	$allRow = $currentSheet->getHighestRow();
+	/**从第二行开始输出，因为excel表中第一行为列名*/
+
 	$data = array();
-	for($currentRow = 1;$currentRow <= $allRow;$currentRow++){ 
-		/**从第A列开始输出*/ 
+	for($currentRow = 1;$currentRow <= $allRow;$currentRow++){
+		/**从第A列开始输出*/
 		$cont = array();
-		for($currentColumn= 'A';$currentColumn<= $allColumn; $currentColumn++){ 
-			$val = $currentSheet->getCellByColumnAndRow(ord($currentColumn) - 65,$currentRow)->getValue();/**ord()将字符转为十进制数*/ 
+		for($currentColumn= 'A';$currentColumn<= $allColumn; $currentColumn++){
+			$val = $currentSheet->getCellByColumnAndRow(ord($currentColumn) - 65,$currentRow)->getValue();/**ord()将字符转为十进制数*/
 			$cont[] = $val;
-			/**如果输出汉字有乱码，则需将输出内容用iconv函数进行编码转换，如下将gb2312编码转为utf-8编码输出*/ 
+			/**如果输出汉字有乱码，则需将输出内容用iconv函数进行编码转换，如下将gb2312编码转为utf-8编码输出*/
 			//$cont[] = iconv('utf-8','gb2312', $val);
-		} 
+		}
 		$data[] = $cont;
-	} 
-	
+	}
+
 	return $data;
-     
+
 }
 
 
@@ -709,7 +709,7 @@ function send_mail ($to,  $name,  $subject = '', $body = '', $attachment = null)
     $config = C('EMAIL_CONFIG');
 
 	 ulib('PHPMailer.PHPMailerAutoload');
-    
+
     $mail             = new \PHPMailer(); //PHPMailer对象
     $mail->CharSet    = 'UTF-8'; //设定邮件编码，默认ISO-8859-1，如果发中文此项必须设置，否则乱码
     $mail->IsSMTP();  // 设定使用SMTP服务
@@ -954,26 +954,26 @@ function on ($str, $css = ' active') {
 
 /**
  * @brief  检查当前用户资源权限配置，生成where过滤条件
- * @param string $tb 
+ * @param string $tb
  * @param string $priv = v,d,u
  * return 返回 生成的where条件
  */
 function get_priv_condition($tb, $priv = 'v', $short_name = null) {
-    
+
     if (session(C('ADMIN_AUTH_KEY')) || session('userid') == 1) return '1';
     if (!$short_name) $short_name = $tb;
     $roleid = M('role_user')->where('user_id='.session('userid'))->getField('role_id');
     $str = " (select substring(GROUP_CONCAT(${$priv} order by resid desc),1,1)
             from oa_rights where roleid=${roleid} and restable = '${tb}'
             and ({$short_name}.id = oa_rights.resid or oa_rights.resid = 0)) ";
-            
+
     return $str;
 
 }
 
 
 function priv_where($req_type, $short_name = null) {
-    
+
     if (session(C('ADMIN_AUTH_KEY')) || session('userid') == 1) return '1';
     $cfg  = M('audit_field')->where("req_type=$req_type")->find();
     $tb   = $cfg['table'];
@@ -997,7 +997,7 @@ function fsize($size) {
     for ($i = 0; $size > $mod; $i++) {
         $size /= $mod;
     }
-    
+
     return round($size, 1) . ' ' . $units[$i];
 }
 
@@ -1084,9 +1084,9 @@ function op_record($info){
 	$data['op_time'] = time();
 	$isok = M('op_record')->add($data);
 	if($isok){
-		return true;	
+		return true;
 	}else{
-		return false;	
+		return false;
 	}
 }
 
@@ -1147,8 +1147,8 @@ function unique_arr($array,$field='name'){
 	if($array){
 		foreach($array as $k=>$v){
 			if($v['id']){
-				$unitid[$v['id']]['id']   = $v['id'];	
-				$unitid[$v['id']]['name'] = $v[$field];	
+				$unitid[$v['id']]['id']   = $v['id'];
+				$unitid[$v['id']]['name'] = $v[$field];
 			}
 		}
 	}
@@ -1178,26 +1178,26 @@ function unique_arr($array,$field='name'){
 
 //获取任意日期的月第一天和最后一天
 function month_phase($date){
-	
-	if(strlen($date)==6) $date = $date.'01'; 
-	
+
+	if(strlen($date)==6) $date = $date.'01';
+
 	$data = array();
 	$data['start'] = strtotime(date('Y-m-01', strtotime($date)).' 00:00:00');
 	$data['end']   = strtotime(date('Y-m-d', strtotime(date('Y-m-01', strtotime($date)) . ' +1 month -1 day')).' 23:59:59');
 	$data['month'] = date('Ym', strtotime($date));
-	
+
 	//上个月
 	$data['prevmonth'] = date('Ym', ($data['start']-(86400*3)));
-	
+
 	//下个月
 	$data['nextmonth'] = date('Ym', ($data['end']+(86400*3)));
-	
+
 	return $data;
 }
 
 
 //角色下所有的用户
-function Roleinuser($id = 0,$check='role') { 
+function Roleinuser($id = 0,$check='role') {
 	global $$check;
 	$db = M('role');
 	$guanxibiao = $db->field('id,pid')->where(array('pid'=>$id))->select();
@@ -1206,19 +1206,19 @@ function Roleinuser($id = 0,$check='role') {
             $roid[] = $row['id'];
             Roleinuser($row['id'],$check);
 		}
-    } 
+    }
 	//返回用户ID
  	$roid[] = $id;
-	$userlist = M('account')->where(array('roleid'=>array('in',implode(',',$roid))))->Getfield('id',true);	
-    return implode(',',$userlist); 
-} 
+	$userlist = M('account')->where(array('roleid'=>array('in',implode(',',$roid))))->Getfield('id',true);
+    return implode(',',$userlist);
+}
 
 
 //获取用户信息
 function getuserinfo($user){
 	if($user){
 		$role = M('role')->GetField('id,role_name',true);
-		$user = M('account')->field('id as userid,nickname,roleid')->where('`id`="'.$user.'" OR `nickname` = "'.trim($user).'"')->find();	
+		$user = M('account')->field('id as userid,nickname,roleid')->where('`id`="'.$user.'" OR `nickname` = "'.trim($user).'"')->find();
 		$user['role_name'] = $role[$user['roleid']];
 		return $user;
 	}
@@ -1227,19 +1227,19 @@ function getuserinfo($user){
 
 //项目数量统计
 function op_sum($date,$type=1,$dept){
-	
+
 	$db  = M();
-	$day = month_phase($date);	
+	$day = month_phase($date);
 	//京区校外
 	$where = array();
 	if($dept) $where['o.create_user'] = array('in',Roleinuser($dept));
 	if($type==1){
-		$where['o.create_time'] = array('between',array($day['start'],$day['end']));	
+		$where['o.create_time'] = array('between',array($day['start'],$day['end']));
 	}else if($type==2){
-		$where['o.create_time'] = array('between',array($day['start'],$day['end']));	
+		$where['o.create_time'] = array('between',array($day['start'],$day['end']));
 		$where['o.group_id']    = array('neq','');
 	}else if($type==3){
-		$where['a.audit_time']  = array('between',array($day['start'],$day['end']));	
+		$where['a.audit_time']  = array('between',array($day['start'],$day['end']));
 		$where['b.audit']       = 1;
 	}
 	$sum = $db->table('__OP__ as o')->join('__OP_SETTLEMENT__ as b on b.op_id = o.op_id','LEFT')->join('__AUDIT_LOG__ as a on a.req_id = b.id and a.req_type = 801','LEFT')->where($where)->count();
@@ -1250,63 +1250,63 @@ function op_sum($date,$type=1,$dept){
 
 //项目提成统计
 function op_tc($date,$type=1,$dept){
-	
+
 	$db  = M();
 	$day = month_phase($date);
-	
+
 	if($type==1){
-		$keywords = '计调提成';	
+		$keywords = '计调提成';
 	}else if($type==2){
-		$keywords = '研发提成';	
+		$keywords = '研发提成';
 	}
 	//京区校外
 	$where = array();
 	if($dept) $where['o.create_user'] = array('in',Roleinuser($dept));
-	$where['a.audit_time']  = array('between',array($day['start'],$day['end']));	
+	$where['a.audit_time']  = array('between',array($day['start'],$day['end']));
 	$where['b.audit']       = 1;
 	$where['c.status']      = 2;
 	$where['c.title']       = array('like','%'.$keywords.'%');
-	
+
 	$sum = $db->table('__OP_COSTACC__ as c')->join('__OP__ as o on o.op_id = c.op_id')->join('__OP_SETTLEMENT__ as b on b.op_id = c.op_id','LEFT')->join('__AUDIT_LOG__ as a on a.req_id = b.id and a.req_type = 801','LEFT')->where($where)->sum('c.total');
 	return $sum;
 }
 
 //项目提成统计
 function ticheng($year,$type=1){
-		
+
 	$db   = M();
-	
+
 	$jqxw    = array();
 	$jqxn    = array();
 	$jwyw    = array();
 	$cgly    = array();
 	$zong    = array();
-	
-	for($i=1;$i<=12;$i++){	
+
+	for($i=1;$i<=12;$i++){
 		$date = $year.'-'.$i.'-01';
-		
+
 		//京区校外
 		$jqxwsum = op_tc($date,$type,33);
 		$jqxw[]  = $jqxwsum ? floatval($jqxwsum) : 0;
-		
+
 		//京区校内
 		$jqxnsum = op_tc($date,$type,35);
 		$jqxn[]  = $jqxnsum ? floatval($jqxnsum) : 0;
-		
+
 		//京外业务
 		$jwywsum = op_tc($date,$type,18);
 		$jwyw[]  = $jwywsum ? floatval($jwywsum) : 0;
-		
+
 		//常规旅游
 		$cglysum = op_tc($date,$type,19);
 		$cgly[]  = $cglysum ? floatval($cglysum) : 0;
-		
+
 		//总计
 		$zongsum = op_tc($date,$type,0);
 		$zong[]  = $zongsum ? floatval($zongsum) : 0;
-		
+
 	}
-	
+
 	$rs = array();
 	$rs[0]['name'] = '京区校内';
 	$rs[0]['data'] = $jqxn;
@@ -1318,54 +1318,54 @@ function ticheng($year,$type=1){
 	$rs[3]['data'] = $cgly;
 	$rs[4]['name'] = '总计';
 	$rs[4]['data'] = $zong;
-	
+
 	return json_encode($rs);
-	
-	
+
+
 }
 
 //项目收入
 function op_income($date,$type=1,$dept=0,$kind=0){
-	
+
 	$db  = M();
-	$day = month_phase($date);	
+	$day = month_phase($date);
 	//京区校外
-	
+
 	if($type==1){
-		$field = 'b.shouru';	
+		$field = 'b.shouru';
 	}else{
-		$field = 'b.maoli';	
+		$field = 'b.maoli';
 	}
-	
+
 	$sum = 0;
 	//结算的项目
 	$where = array();
 	if($dept) $where['o.create_user'] = array('in',Roleinuser($dept));
 	if($kind) $where['o.kind']        = $kind;
-	$where['a.audit_time']  = array('between',array($day['start'],$day['end']));	
+	$where['a.audit_time']  = array('between',array($day['start'],$day['end']));
 	$where['b.audit']       = 1;
 	$sum += $db->table('__OP__ as o')
 			->join('__OP_SETTLEMENT__ as b on b.op_id = o.op_id','LEFT')
 			->join('__AUDIT_LOG__ as a on a.req_id = b.id and a.req_type = 801','LEFT')
 			->where($where)->sum($field);
-	
+
 	//未结算的项目
 	$where = array();
 	if($dept) $where['o.create_user'] = array('in',Roleinuser($dept));
-	$where['a.audit_time']  = array('between',array($day['start'],$day['end']));	
+	$where['a.audit_time']  = array('between',array($day['start'],$day['end']));
 	$where['b.audit']       = 1;
 	$where['s.audit']       = array('neq','1');
-	
+
 	$sum += $db->table('__OP__ as o')
 			->join('__OP_SETTLEMENT__ as s on s.op_id = o.op_id','LEFT')
 			->join('__OP_BUDGET__ as b on b.op_id = o.op_id','LEFT')
 			->join('__AUDIT_LOG__ as a on a.req_id = b.id and a.req_type = 800','LEFT')
 			->where($where)
 			->sum($field);
-	
-	
-	
-		   
+
+
+
+
 	return $sum;
 }
 
@@ -1376,7 +1376,7 @@ function business($bumen,$year,$type=1){
 	$html = array();
 	foreach($kind as $k=>$v){
 		$unitdata = array();
-		for($i=1;$i<=12;$i++){	
+		for($i=1;$i<=12;$i++){
 			$sum = op_income($year.'-'.$i.'-01',$type,0,$v['id']);
 			$unitdata[]  = $sum ? intval($sum) : 0;
 		}
@@ -1385,11 +1385,11 @@ function business($bumen,$year,$type=1){
 		}else{
 			$html[] = '{name:\''.trim(trim($v['name'],$bumen),'-').'\',data:['.implode(',',$unitdata).'],visible: false}';
 		}
-		
+
 	}
-	
+
 	return '['.implode(',',$html).']';
-	
+
 }
 
 
@@ -1397,35 +1397,35 @@ function business($bumen,$year,$type=1){
 
 //项目收入
 function op_cycle($date,$dept=0,$kind=0){
-	
+
 	$db  = M();
-	$day = month_phase($date);	
+	$day = month_phase($date);
 	//京区校外
-	
-	
+
+
 	$sum = 0;
 	//结算的项目
 	$where = array();
 	//if($dept) $where['o.create_user'] = array('in',Roleinuser($dept));
 	if($kind) $where['o.kind']        = $kind;
-	$where['a.audit_time']  = array('between',array($day['start'],$day['end']));	
+	$where['a.audit_time']  = array('between',array($day['start'],$day['end']));
 	$where['b.audit']       = 1;
-	
+
 	$field = '(a.audit_time-o.create_time)/86400 as days';
 	$lists = $db->field($field)->table('__OP__ as o')
 			->join('__OP_SETTLEMENT__ as b on b.op_id = o.op_id','LEFT')
 			->join('__AUDIT_LOG__ as a on a.req_id = b.id and a.req_type = 801','LEFT')
 			->where($where)->select();
-	
-	
+
+
 	$i=0;
 	foreach($lists as $k=>$v){
 		$sum += $v['days'];
 		$i++;
 	}
-	
-	
-		   
+
+
+
 	return round($sum/$i);
 }
 
@@ -1436,7 +1436,7 @@ function cycle($bumen,$year,$type=1){
 	$html = array();
 	foreach($kind as $k=>$v){
 		$unitdata = array();
-		for($i=1;$i<=12;$i++){	
+		for($i=1;$i<=12;$i++){
 			$sum = op_cycle($year.'-'.$i.'-01',0,$v['id']);
 			$unitdata[]  = $sum ? intval($sum) : 0;
 		}
@@ -1445,11 +1445,11 @@ function cycle($bumen,$year,$type=1){
 		}else{
 			$html[] = '{name:\''.trim(trim($v['name'],$bumen),'-').'\',data:['.implode(',',$unitdata).'],visible: false}';
 		}
-		
+
 	}
-	
+
 	return '['.implode(',',$html).']';
-	
+
 }
 
 
@@ -1472,27 +1472,27 @@ function return_success($success = '成功'){
 
 
 function getTree($pid=0){
-	
-	global $str; 
-	global $str_level; 
-	
+
+	global $str;
+	global $str_level;
+
 	$str_level = $str_level ? $str_level : 0;
-	 
+
 	$db = M('files');
 	$where = array();
 	$where['pid']          = $pid;
 	$where['file_type']    = 0;
 	//权限识别
 	if (C('RBAC_SUPER_ADMIN') != cookie('userid')){
-		
+
 		$userid = cookie('userid');
 		$roleid = cookie('roleid');
-		
+
 		$where['_string'] = ' (auth_group like "%'.$roleid.'%")  OR ( auth_user like "%'.$userid.'")   OR ( est_user_id = '.$userid.') ';
-			
+
 	}
-		
-	
+
+
 	$list = $db->where($where)->order('`id` ASC')->select();
 	$str_level++;
 	if($list){
@@ -1501,16 +1501,16 @@ function getTree($pid=0){
 			$str[] = $list[$k];
 			getTree($v['id']);
 		}
-		
+
 	}
-	
+
 	return $str;
-	
+
 }
 
 
 function fortext($no,$html='&nbsp;&nbsp;&nbsp;&nbsp;',$bu='├'){
-	
+
 	$return = '';
 	for($i=1;$i<=$no;$i++){
 		$return .= $html;
@@ -1522,77 +1522,77 @@ function fortext($no,$html='&nbsp;&nbsp;&nbsp;&nbsp;',$bu='├'){
 
 //获取文件路径
 function file_dir($fid){
-	
-	global $dir; 
-	global $dir_level; 
-	
+
+	global $dir;
+	global $dir_level;
+
 	$dir_level = $dir_level ? $dir_level : 10000;
-	
+
 	$db = M('files');
-	
+
 	//获取文件名
 	$data = $db->where(array('id'=>$fid))->find();
 	$dir[$dir_level]['id']        =  $data['id'];
 	$dir[$dir_level]['file_name'] =  $data['file_name'];
-	
+
 	$dir_level--;
-	
+
 	if($data['pid']!=0){
 		file_dir($data['pid']);
 	}
 	/*
 	$data = $db->where(array('id'=>$fid))->find();
 	$list = $db->where(array('id'=>$data['pid']))->find();
-	
+
 	if($list){
 		$dir[$list['id']] = $list['file_name'];
-	
+
 		if($list['pid']){
 			file_dir($list['pid']);
 		}
 	}
 	*/
-	
+
 	ksort($dir);
-	
+
 	return $dir;
-	 	
+
 }
 
 
 function up_file_level($fid){
-	
+
 	$db = M('files');
-	
-	
+
+
 	$data = $db->find($fid);
-	
+
 	if($data){
 		//修正自身等级
 		if($data['pid']){
 			$upfile = $db->find($data['pid']);
 			$level  = $upfile['level']+1;
-			
+
 		}else{
-			$level = 1;	
+			$level = 1;
 		}
 		$db->data(array('level'=>$level))->where(array('id'=>$fid))->save();
-		
+
 		//查询是否有下级目录
 		$nextfile = $db->where(array('pid'=>$fid))->select();
 		foreach($nextfile as $k=>$v){
-			up_file_level($v['id']);	
+			up_file_level($v['id']);
 		}
-	
-		
+
+
 	}else{
-		$db->data(array('level'=>1))->where(array('pid'=>0))->save();	
-		
+		$db->data(array('level'=>1))->where(array('pid'=>0))->save();
+
 		$nextfile = $db->where(array('pid'=>0))->select();
 		foreach($nextfile as $k=>$v){
-			up_file_level($v['id']);	
+			up_file_level($v['id']);
 		}
-		
+
 	}
 }
 
@@ -1609,7 +1609,7 @@ function up_file_level($fid){
 //获取用户姓名
 function username($userid){
 	if($userid){
-		$user = M('account')->find($userid);	
+		$user = M('account')->find($userid);
 		return $user['nickname'];
 	}else{
         return '';
@@ -1629,9 +1629,9 @@ function send_msg($send,$title,$content,$url='',$user,$role=''){
 	$data['receive_role']	 = $role;
 	$add = M('message')->add($data);
 	if($add){
-		return $add;	
+		return $add;
 	}else{
-		return 0;		
+		return 0;
 	}
 }
 
@@ -1641,18 +1641,18 @@ function read_msg($msg_id){
 	$data = array();
 	$data['user_id']		 = cookie('userid');
 	$data['msg_id']		 	 = $msg_id;
-	
+
 	$isread = M('message_read')->where($data)->find();
 	if(!$isread){
 		$data['read_time']	 	 = time();
 		$add = M('message_read')->add($data);
 		if($add){
-			return $add;	
+			return $add;
 		}else{
-			return 0;		
+			return 0;
 		}
 	}else{
-		return 0;		
+		return 0;
 	}
 }
 
@@ -1662,13 +1662,13 @@ function del_msg($msg_id){
 	$data = array();
 	$data['user_id']		 = cookie('userid');
 	$data['msg_id']		 	 = $msg_id;
-	
+
 	$isread = M('message_read')->where($data)->find();
 	if(!$isread){
 		$data['read_time']	 = time();
 		$data['del']	 	 = 1;
 		M('message_read')->add($data);
-		
+
 	}else{
 		M('message_read')->where(array('id'=>$isread['id']))->data(array('del'=>1))->save();
 	}
@@ -1679,11 +1679,11 @@ function del_msg($msg_id){
 function no_read(){
 	$read     = M('message_read')->where(array('user_id'=>cookie('userid')))->Getfield('msg_id',true);
 	$readstr  = implode(',',$read);
-			
+
 	$where = '(receive_user like "%['.cookie('userid').']%"  OR  receive_role like "%['.cookie('roleid').']%") ';
 	if($readstr) $where .= ' AND id NOT IN ('.$readstr.')';
-			
-	$count = M('message')->where($where)->count();	
+
+	$count = M('message')->where($where)->count();
 	return $count;
 }
 
@@ -1699,14 +1699,14 @@ function send_notice($title,$content,$url='',$source=0,$source_id=0,$userid=0,$u
 	$data['link_url']	 	 = $url;
 	$data['source']	         = $source;
 	$data['source_id']	     = $source_id;
-	
+
 	//判断是否重复
 	if(!M('notice')->where(array('source'=>$source,'source_id'=>$source_id))->find()){
 		$add = M('notice')->add($data);
 		if($add){
-			return $add;	
+			return $add;
 		}else{
-			return 0;		
+			return 0;
 		}
 	}
 }
@@ -1767,11 +1767,11 @@ function strtopinyin($str){
 
 //创建PDCA
 function addpdca($user,$month){
-	
+
 	if($user && $month){
 		//判断PDCA是否存在、
 		$pdca = M('pdca')->where(array('tab_user_id'=>$user,'month'=>$month))->find();
-		
+
 		//获取用户信息
 		$us   = M('account')->find($user);
 		if(!$pdca){
@@ -1784,22 +1784,22 @@ function addpdca($user,$month){
 			$info['tab_time']     = time();
 			$pdcaid = M('pdca')->add($info);
 		}else{
-			$pdcaid = $pdca['id'];	
+			$pdcaid = $pdca['id'];
 		}
 	}else{
-		$pdcaid = 0;	
+		$pdcaid = 0;
 	}
-	
+
 	return $pdcaid;
 }
 
 
 function qa_score_num($user,$month){
-	
+
 	if($user && $month){
-	
+
 		$pdcaid = addpdca($user,$month);
-		
+
 		//获取加分情况
 		$where = array();
 		$where['user_id']    = $user;
@@ -1808,7 +1808,7 @@ function qa_score_num($user,$month){
 		$where['type']       = 1;
         $where['suggest']    = 3;
 		$inc_score = M('qaqc_user')->field('score')->where($where)->sum('score');
-		
+
 		//获取扣分情况
 		$where = array();
 		$where['user_id']    = $user;
@@ -1817,22 +1817,22 @@ function qa_score_num($user,$month){
 		$where['type']       = 0;
         $where['suggest']    = 3;
 		$red_score = M('qaqc_user')->field('score')->where($where)->sum('score');
-		
+
 		//总分
 		$sum = $inc_score - $red_score;
-		
+
 		$data = array();
 		$data['total_qa_score']  = $sum;
-		
+
 		$where = array();
 		$where['tab_user_id'] = $user;
 		$where['month'] = $month;
 		M('pdca')->data($data)->where($where)->save();
-		
-		return true;	
-		
+
+		return true;
+
 	}else{
-		return false;	
+		return false;
 	}
 
 
@@ -1841,13 +1841,13 @@ function qa_score_num($user,$month){
 
 function show_score($score){
 	if($score==0){
-		$return   = '<font color="#999999">无加扣分</font>';	
+		$return   = '<font color="#999999">无加扣分</font>';
 	}elseif($score<0){
 		$return   = '<span class="red">'.$score.'<span>';
 	}else{
 		$return   = '<span class="green">+'.$score.'<span>';
 	}
-	
+
 	return $return;
 }
 
@@ -1857,39 +1857,39 @@ function show_score($score){
 function getthemonth($date,$type=0){
 	$firstday = date('Y-m-01', strtotime($date));
 	$lastday = date('Y-m-d', strtotime("$firstday +1 month -1 day"));
-	
+
 	if($type==0){
 		return array(strtotime($firstday), strtotime($lastday)+86399);
 	}else{
 		return array($firstday, $lastday);
 	}
-   
-} 
+
+}
 
 //获取月度周期
 function set_month($date,$type=0){
 	$year   = substr($date,0,4);
 	$month  = substr($date,4,2);
-	
+
 	//开始日期
 	$enddate = $year.'-'.$month.'-25'.' 00:00:00';
 
 	if($month == '01'){
 		$year = $year-1;
-		$prvemonth = '12';	
+		$prvemonth = '12';
 	}else{
-		$prvemonth = $month-1;	
+		$prvemonth = $month-1;
 	}
-	
+
 	//结束日期
 	$startdate = $year.'-'.sprintf('%02s', $prvemonth).'-26'.' 00:00:00';
-	
+
 	if($type){
 		$return = array($startdate,$enddate);
 	}else{
 		$return = array(strtotime($startdate),strtotime($enddate));
 	}
-	
+
 	return $return;
 }
 
@@ -3172,7 +3172,7 @@ function updatekpi($month,$user){
                             $sum                    = get_contract_sum($lists);
                             $complete               = $sum['average'];
                             $mm                     = substr($v['month'],4,2);
-                            $url                    = U('Contract/statis',array('year'=>$v['year'],'month'=>$mm));
+                            $url                    = $v['user_id'] == 77 ? U('Contract/statis_quarter',array('year'=>$v['year'],'month'=>$mm)) : U('Contract/statis',array('year'=>$v['year'],'month'=>$mm));
                         }
 
                         //院内接待资源方开发 - 资源管理部经理
@@ -3514,19 +3514,19 @@ function get_kpi_data($v,$complete,$url=''){
 }*/
 
 function get_role_link($roleid,$rtype = 0){
-	
+
 	global $rolegroup;
-	
+
 	$role = M('role')->find($roleid);
-	
-	$rolegroup[$role['id']] = $role['role_name'];	
-		
+
+	$rolegroup[$role['id']] = $role['role_name'];
+
 	if($role['pid']!=0){
 		get_role_link($role['pid']);
 	}
-	
+
 	$return = array_reverse($rolegroup,true);
-	
+
 	if($rtype){
 		return $return;
 	}else{
@@ -3535,7 +3535,7 @@ function get_role_link($roleid,$rtype = 0){
 			$rid[] = '['.$k.']';
 		}
 		return implode(',',$rid);
-		
+
 	}
 
 }
@@ -3604,61 +3604,61 @@ function get_role_link($roleid,$rtype = 0){
 
 
 function update_user_role($id){
-	
+
 	$db = M('account');
-	
+
 	$user = $db->field('id,roleid,group_role')->find($id);
-	
+
 	$info = array();
 	$info['group_role'] = get_role_link($user['roleid']);
-	
+
 	$save = $db->data($info)->where(array('id'=>$id))->save();
 	if($save){
-		return 0;	
+		return 0;
 	}else{
-		return 1;	
+		return 1;
 	}
-	
+
 }
 
 
 function update_userlist_role(){
-	
+
 	$db = M('account');
-	
+
 	$user = $db->field('id,roleid,group_role')->select();
-	
+
 	$i = 0;
 	foreach($user as $v){
-		
+
 		$save = update_user_role($v['id']);
 		global $rolegroup;
 		$rolegroup = array();
 		if($save==0){
-			$i++;	
+			$i++;
 		}
-		
+
 	}
-	
+
 	return $i;
-	
+
 }
 
 //获取上月25至本月25时间戳
 /*function twentyfive(){
 	$today = date('d',time());
 	if($today<25){
-		$firstday		= date("Y-m-25",strtotime('-1 month')); 
+		$firstday		= date("Y-m-25",strtotime('-1 month'));
 		$lastday		= date("Y-m-25",time());
 	}else{
 		$firstday		= date("Y-m-25",time());
-		$lastday		= date("Y-m-25",strtotime('+1 month')); 
+		$lastday		= date("Y-m-25",strtotime('+1 month'));
 	}
-	
+
 	if($firstday<'2018-01-01') $firstday = '2018-01-01';
 	$firsttime		= strtotime($firstday);
 	$lasttime		= strtotime($lastday)+86399;
-	
+
 	$return = array();
 	$return[0] = $firsttime;
 	$return[1] = $lasttime;
@@ -3710,7 +3710,7 @@ function get_cycle($yearmonth,$day=26){
 
 //统计部门数据
 function tplist($department,$times){
-	
+
 	$db	                            = M('op');
     $users                          = M('account')->where(array('departmentid'=>$department['id']))->getField('id',true);
     $num                            = count($users);    //获取部门人数
@@ -3725,7 +3725,7 @@ function tplist($department,$times){
 		$where['l.audit_time']		= array('gt',strtotime('2018-01-01'));
 	}
 	$where['a.id']					= array('in',implode(',',$users));
-	
+
 	$field                          = array();
 	$field[]                        =  'sum(b.shouru) as zsr';
 	$field[]                        =  'sum(b.maoli) as zml';
@@ -3733,14 +3733,14 @@ function tplist($department,$times){
 	$lists                          = $db->table('__OP_SETTLEMENT__ as b')->field($field)->join('__OP__ as o on b.op_id = o.op_id','LEFT')->join('__ACCOUNT__ as a on a.id = o.create_user','LEFT')->join('__AUDIT_LOG__ as l on l.req_id = b.id','LEFT')->where($where)->order('zsr DESC')->find();
 
 	$lists['mll']			        = $lists['zml']>0 ?  sprintf("%.2f",$lists['mll']*100) : '0.00';
-	
+
 	$lists['zsr'] 			        = $lists['zsr'] ? $lists['zsr'] : '0.00';
 	$lists['zml'] 			        = $lists['zml'] ? $lists['zml'] : '0.00';
 	$lists['rjzsr']			        = sprintf("%.2f",$lists['zsr']/$num);
 	$lists['rjzml']			        = sprintf("%.2f",$lists['zml']/$num);
 	$lists['rjmll']			        = $lists['zml'] ? sprintf("%.2f",($lists['rjzml']/$lists['rjzsr'])*100) : '0.00';
 
-	
+
 	//查询月度
 	$month = twentyfive();
 	$where = array();
@@ -3748,13 +3748,13 @@ function tplist($department,$times){
 	$where['a.id']				    = array('in',implode(',',$users));
 	$where['l.req_type']		    = 801;
 	$where['l.audit_time']		    = array('between',array($month[0],$month[1]));
-	
+
 	$field                          = array();
 	$field[]                        =  'sum(b.shouru) as ysr';
 	$field[]                        =  'sum(b.maoli) as yml';
 	$field[]                        =  '(sum(b.maoli)/sum(b.shouru)) as yll';
 	$users                          = $db->table('__OP_SETTLEMENT__ as b')->field($field)->join('__OP__ as o on b.op_id = o.op_id','LEFT')->join('__AUDIT_LOG__ as l on l.req_id = b.id','LEFT')->join('__ACCOUNT__ as a on a.id = o.create_user','LEFT')->where($where)->find();
-	
+
 	$users['ysr'] 		            = $users['ysr'] ? $users['ysr'] : '0.00';
 	$users['yml'] 		            = $users['yml'] ? $users['yml'] : '0.00';
 	$users['yll'] 		            = $users['yml']>0 ? sprintf("%.4f",$users['yll'])*100 : '0.00';
@@ -3770,7 +3770,7 @@ function tplist($department,$times){
 
 //获取某时间段个人业绩
 function personal_income($userid,$time,$yearTime){
-	
+
 	$month = twentyfive();
 
 	//查询月度
@@ -3778,66 +3778,66 @@ function personal_income($userid,$time,$yearTime){
 	$where['b.audit_status']	= 1;
 	$where['o.create_user']		= $userid;
 	$where['a.req_type']		= 801;
-	
+
 	if($time == 0){
 		$where['a.audit_time']		= array('between',$yearTime);
 	}else{
-		$where['a.audit_time']		= array('between',$month); 
+		$where['a.audit_time']		= array('between',$month);
 	}
-	
+
 	$field = array();
 	$field[] =  'sum(b.shouru) as zsr';
 	$field[] =  'sum(b.maoli) as zml';
 	$field[] =  '(sum(b.maoli)/sum(b.shouru)) as mll';
 	$users = M()->table('__OP_SETTLEMENT__ as b')->field($field)->join('__OP__ as o on b.op_id = o.op_id','LEFT')->join('__AUDIT_LOG__ as a on a.req_id = b.id','LEFT')->where($where)->find();
-	
+
 	$lists = array();
-	$lists['zsr'] 		=  $users['zsr'] ? $users['zsr'] : '0.00';	
-	$lists['zml'] 		=  $users['zml'] ? $users['zml'] : '0.00';		
-	$lists['mll'] 		=  $users['zml']>0 ? sprintf("%.4f",$users['mll'])*100 : '0.00';	
-	
-	return $lists;	
+	$lists['zsr'] 		=  $users['zsr'] ? $users['zsr'] : '0.00';
+	$lists['zml'] 		=  $users['zml'] ? $users['zml'] : '0.00';
+	$lists['mll'] 		=  $users['zml']>0 ? sprintf("%.4f",$users['mll'])*100 : '0.00';
+
+	return $lists;
 }
 
 
 
 //统计大业务部数据
 function business_dept_data($roleid,$times){
-	
+
 	$db			= M('op');
 	$roles		= M('role')->GetField('id,role_name',true);
-	
+
 	$postmore	= C('POST_TEAM_MORE_ALL');
-	
+
 	//获取部门人数
 	$where = array();
 	$where['roleid'] = array('in',$postmore[$roleid]);
 	$where['status'] = array('eq',0);
-	$users = M('account')->where($where)->select();	
+	$users = M('account')->where($where)->select();
 	$num   = count($users);
 	$ulist = array();
 	foreach($users as $k=>$v){
 		$ulist[] = $v['id'];
 	}
-	
+
 	//查询结算数据
 	$where = array();
 	$where['b.audit_status']		= 1;
 	$where['l.req_type']			= 801;
 	$where['l.audit_time']			= array('between',$times);
 	$where['a.id']					= array('in',implode(',',$ulist));
-	
+
 	$field = array();
 	$field[] =  'sum(b.shouru) as zsr';
 	$field[] =  'sum(b.maoli) as zml';
 	$field[] =  '(sum(b.maoli)/sum(b.shouru)) as mll';
-	
-	$lists = $db->table('__OP_SETTLEMENT__ as b')->field($field)->join('__OP__ as o on b.op_id = o.op_id','LEFT')->join('__ACCOUNT__ as a on a.id = o.create_user','LEFT')->join('__AUDIT_LOG__ as l on l.req_id = b.id','LEFT')->where($where)->order('zsr DESC')->find();
-	
-	$lists['mll']			= $lists['zml']>0 ?  sprintf("%.2f",$lists['mll']*100) : '0.00';	
-	
 
-	
+	$lists = $db->table('__OP_SETTLEMENT__ as b')->field($field)->join('__OP__ as o on b.op_id = o.op_id','LEFT')->join('__ACCOUNT__ as a on a.id = o.create_user','LEFT')->join('__AUDIT_LOG__ as l on l.req_id = b.id','LEFT')->where($where)->order('zsr DESC')->find();
+
+	$lists['mll']			= $lists['zml']>0 ?  sprintf("%.2f",$lists['mll']*100) : '0.00';
+
+
+
 	return $lists;
 }
 
@@ -3845,12 +3845,12 @@ function business_dept_data($roleid,$times){
 
 //获取自己下属员工ID
 function get_branch_user(){
-	
+
 	$post = M('posts')->GetField('id,post_name',true);
-	
+
 	//获取自己的岗位信息
 	$me = M('account')->find(cookie('userid'));
-	
+
 	//获取属于员工信息
 	$where = array();
 	/*
@@ -3858,16 +3858,16 @@ function get_branch_user(){
 		$where['group_role']	= array('like','%['.cookie('roleid').']%');
 	}
 	*/
-	
-	
+
+
 	$where['status']		= 0;
 	$userlist = M('account')->field('id,nickname,roleid,postid')->where($where)->order('postid ASC')->select();
 	$uid = array();
 	$pid = array();
 	$dpid = '';
-	
+
 	foreach($userlist as $k=>$v){
-		$uid[]	= $v['id'];	
+		$uid[]	= $v['id'];
 		if($v['postid']){
 			$pid[$v['postid']]	= $post[$v['postid']];
 		}
@@ -3875,48 +3875,48 @@ function get_branch_user(){
 			$dpid = 	$v['postid'];
 		}
 	}
-	
+
 	$return = array();
 	$return['uid']	= $uid;
 	$return['pid']	= $pid;
 	$return['dpid']	= $me['postid'] ? $me['postid'] : $dpid;
-	
+
 	return $return;
-	
-	
+
+
 }
 
 
 
 //统计部门时间段内新增客户数量
 function team_new_customers($roleid,$times){
-	
+
 	$db			= M();
 	$postmore	= C('POST_TEAM_MORE');
 	$asstime	= $times[0]-(86400*365);
-					
+
 	//获取至考核开始日期司龄1年以上的业务人员数
 	$where = array();
 	$where['roleid']		= array('in',$postmore[$roleid]);
 	$where['status']		= 0;
 	$where['entry_time']	= array('lt',$asstime);
-	$old					= M('account')->where($where)->GetField('id',true);	
+	$old					= M('account')->where($where)->GetField('id',true);
 	$oldnum					= count($old) ? count($old) : 0;
-	
+
 	//获取至考核开始日期司龄1年以下的业务人员数
 	$where = array();
 	$where['roleid']		= array('in',$postmore[$roleid]);
 	$where['status']		= 0;
 	$where['entry_time']	= array('gt',$asstime);
-	$young					= M('account')->where($where)->GetField('id',true);	
+	$young					= M('account')->where($where)->GetField('id',true);
 	$youngnum				= count($young) ? count($young) : 0;
-	
+
 	//应该成交的新客户数
 	$mubiao = ($oldnum*1*3)+($youngnum*0.5*3);
-				
+
 	//部门总人员名单
 	$ulist	= array_merge($old, $young);
-	
+
 	//查询结算数据
 	$where = array();
 	$where['b.audit_status']		= 1;
@@ -3925,11 +3925,11 @@ function team_new_customers($roleid,$times){
 	$where['a.id']					= array('in',implode(',',$ulist));
 	$field 							= 'o.customer';
 	$lists = $db->table('__OP_SETTLEMENT__ as b')->field($field)->join('__OP__ as o on b.op_id = o.op_id','LEFT')->join('__ACCOUNT__ as a on a.id = o.create_user','LEFT')->join('__AUDIT_LOG__ as l on l.req_id = b.id','LEFT')->where($where)->group($field)->select();
-	
+
 	$xinzeng = 0;
 	$erci    = 0;
 	foreach($lists as $k=>$v){
-		
+
 		//查询该客户在考核前以前有没有产生过项目
 		$where = array();
 		$where['b.audit_status']		= 1;
@@ -3944,8 +3944,8 @@ function team_new_customers($roleid,$times){
 			$xinzeng++;
 		}
 	}
-	
-	
+
+
 	$return = array();
 	$return['suoyou'] 	= count($lists);
 	$return['mubiao'] 	= $mubiao;
@@ -3953,9 +3953,9 @@ function team_new_customers($roleid,$times){
 	$return['erci'] 	= $erci;
 	$return['ratio'] 	= sprintf("%.4f",($xinzeng/$mubiao))*100;
 	$return['reratio'] 	= sprintf("%.4f",($erci/count($lists)))*100;
-	
+
 	return $return;
-	
+
 }
 
 
@@ -3964,51 +3964,51 @@ function save_aontract_art($releid,$data){
 	//处理图片
 	$where = array();
 	$where['cid']  = $releid;
-	
+
 	$db = M('contract_pic');
 	$id = array();
-	
+
 	if(is_array($data)){
 		foreach($data['filepath'] as $k=>$v){
-			
+
 			if($data['filepath'][$k]){
 				//保存数据
-				$info = array();	
-				$info['cid']        = $releid; 
-				$info['filename']	= $data['filename'][$k]; 
-				$info['filepath']  	= $data['filepath'][$k]; 
-				$info['fileid']		= $data['id'][$k]; 
-				$info['uptime']		= time(); 
-				$info['upuser']		= cookie('userid'); 
-				$info['upusername']	= cookie('nickname'); 
-				
+				$info = array();
+				$info['cid']        = $releid;
+				$info['filename']	= $data['filename'][$k];
+				$info['filepath']  	= $data['filepath'][$k];
+				$info['fileid']		= $data['id'][$k];
+				$info['uptime']		= time();
+				$info['upuser']		= cookie('userid');
+				$info['upusername']	= cookie('nickname');
+
 				//判断是否存在
 				$isup = $db->where(array('cid'=>$releid,'fileid'=>$data['id'][$k]))->find();
-				
+
 				if($isup){
 					$issave = $db->where(array('id'=>$isup['id']))->save($info);
 					$id[]	= $isup['id'];
 				}else{
-					$id[]	= $db->add($info);	
+					$id[]	= $db->add($info);
 				}
-				
-				
+
+
 				//更新图片库
 				$info = array();
-				$info['filename']	= $data['filename'][$k]; 
+				$info['filename']	= $data['filename'][$k];
 				M('attachment')->data($info)->where(array('id'=>$data['id'][$k]))->save();
 			}
-			
+
 		}
 		$where['id']     = array('not in',implode(',',$id));
 	}
-	
+
 	//删除
 	$isdel = $db->where($where)->select();
 	if($isdel){
 		foreach($isdel as $k=>$v){
 			$db->where(array('id'=>$v['id']))->delete();
-		}	
+		}
 	}
 }
 
@@ -4083,54 +4083,54 @@ function get_aontract_res($releid){
 
 
 function save_payment($releid,$data){
-	
+
 	//获取合同信息
 	$contract	= M('contract')->find($releid);
 	$op			= M('op')->where(array('op_id'=>$contract['op_id']))->find();
-	
+
 	//处理图片
 	$where = array();
 	$where['cid']  = $releid;
-	
+
 	$db = M('contract_pay');
 	$id = array();
-	
+
 	if(is_array($data)){
 		foreach($data as $k=>$v){
-			
-			
-			
+
+
+
 			//保存数据
-			$info = array();	
-			$info['cid']			= $releid; 
-			$info['no']			= $v['no']; 
-			$info['pro_name']	= $contract['pro_name']; 
-			$info['op_id']  		= $contract['op_id']; 
-			$info['amount']		= $v['amount']; 
-			$info['ratio']		= $v['ratio']; 
-			$info['return_time']	= strtotime($v['return_time']); 
-			$info['remark']		= $v['remarks']; 
+			$info = array();
+			$info['cid']			= $releid;
+			$info['no']			= $v['no'];
+			$info['pro_name']	= $contract['pro_name'];
+			$info['op_id']  		= $contract['op_id'];
+			$info['amount']		= $v['amount'];
+			$info['ratio']		= $v['ratio'];
+			$info['return_time']	= strtotime($v['return_time']);
+			$info['remark']		= $v['remarks'];
 			$info['userid'] 		= cookie('userid');
 			$info['payee']		= $op['create_user'];
-			
+
 			if($v['pid']){
 				$issave = $db->where(array('id'=>$v['pid']))->save($info);
 				$id[]	= $v['pid'];
 			}else{
 				$info['create_time'] 	= time();
-				$id[]	= $db->add($info);	
+				$id[]	= $db->add($info);
 			}
-			
+
 		}
 		$where['id']     = array('not in',implode(',',$id));
 	}
-	
+
 	//删除
 	$isdel = $db->where($where)->select();
 	if($isdel){
 		foreach($isdel as $k=>$v){
 			$db->where(array('id'=>$v['id']))->delete();
-		}	
+		}
 	}
 }
 
@@ -4144,9 +4144,9 @@ function isimg($path){
 		if(in_array($ext,$extlist)){
 			return 0;
 		}else{
-			return $ext;	
+			return $ext;
 		}
-	}	
+	}
 }
 
 
@@ -4191,39 +4191,39 @@ function project_worder($exe_user_id,$pro_id,$thing){
 
 //获取某个员工某项工作记录数
 function user_work_record($user,$month,$type){
-	
+
 	$db 	= M('work_record');
-	
+
 	$where 	= array();
 	$where['status'] 	= 0;
 	$where['month'] 	= $month;
 	$where['user_id'] 	= $user;
-	
+
 	if(is_array($type)){
 		$where['typeinfo'] 	= array('in',$type);
 	} else {
 		$where['typeinfo'] 	= $type;
 	}
-	
+
 	$sum 	= $db->where($where)->count();
-	
+
 	return $sum;
 }
 
 
 //获取某个员工某项工作记录数
 function user_work($user,$month,$type){
-	
+
 	$db 	= M('work_record');
-	
+
 	$where 	= array();
 	$where['status'] 	= 0;
 	$where['month'] 		= $month;
 	$where['user_id'] 	= $user;
 	$where['type'] 		= $type;
-	
+
 	$sum 	= $db->where($where)->count();
-	
+
 	return $sum;
 }
 
@@ -4373,11 +4373,11 @@ function numTrmb($num){
 function absdata($val,$goal){
 	$score = abs(($val-$goal)/$goal)*100;
 	if($score<=10){
-		return 100;	
+		return 100;
 	}else if($score>10 && $score<15){
-		return 80;	
+		return 80;
 	}else{
-		return 0;	
+		return 0;
 	}
 }
 
@@ -4413,19 +4413,19 @@ function get_roleid($id=0){
 
 
 function kpilock($month,$uid){
-	
+
 	$uname = username($uid);
-	
-	
+
+
 	$where = array();
 	$where['month']	 	= $month;
 	$where['user_id']	= $uid;
 
 	$save = M('kpi_more')->where($where)->data(array('automatic'=>1))->save();
-	
+
 	if($save){
-	
-		
+
+
 		$data	= array();
 		$data['month']		= $month;
 		$data['uid']		= $uid;
@@ -4434,14 +4434,14 @@ function kpilock($month,$uid){
 		$data['op_uid']		= cookie('userid');
 		$data['op_uname']	= cookie('name');
 		$data['remarks']	= $uname.'【'.$month.'】KPI数据已锁定！';
-		
+
 		M('kpi_lock_record')->add($data);
-		
-		
+
+
 		return true;
-	
+
 	}else{
-		return false;	
+		return false;
 	}
 
 }
@@ -4985,6 +4985,17 @@ function get_quarter($month){
  */
 function getQuarterlyCicle($year,$month){
     $quarter    = get_quarter($month); //获取季度信息
+    $data       = get_quarter_cycle_time($year,$quarter);
+    return $data;
+}
+
+/**
+ * 获取季度考核周期
+ * @param $year
+ * @param $quarter 季度
+ * @return array
+ */
+function get_quarter_cycle_time($year,$quarter){
     $data       = array();
     switch ($quarter){
         case 1:

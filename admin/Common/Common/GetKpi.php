@@ -1436,7 +1436,7 @@ function get_sum_gross_profit($userids,$beginTime,$endTime){
         $data['op_num']                     = $op_num;
         $data['contract_num']               = $contract_num;
         $data['target']                     = $target?$target:'0.00';
-        $data['average']                    = $target?(round($contract_num/$op_num,4)*100).'%':'100%';
+        $data['average']                    = $target?($op_num ? (round($contract_num/$op_num,4)*100).'%' : '0%'):'100%';
         return $data;
     }
 

@@ -3,7 +3,7 @@
             <aside class="right-side">
                 <!-- Content Header (Page header) -->
                 <section class="content-header">
-                    <h1>合同统计<small>月度统计</small></h1>
+                    <h1>合同统计<small>季度统计</small></h1>
                     <ol class="breadcrumb">
                         <li><a href="{:U('Index/index')}"><i class="fa fa-home"></i> 首页</a></li>
                         <li><a href="javascript:;"><i class="fa fa-gift"></i> {$_pagetitle_}</a></li>
@@ -13,12 +13,11 @@
 
                 <!-- Main content -->
                 <section class="content">
-
                     <div class="row">
                         <div class="col-xs-12">
                             <div class="btn-group" id="catfont" style="padding-bottom:20px;">
                                 <a href="{:U('Contract/statis')}" class="btn <?php echo ACTION_NAME == 'statis' ? 'btn-info' : 'btn-default';  ?>" style="padding:8px 18px;">月度</a>
-                                <a href="{:U('Contract/statis_quarter')}" class="btn <?php echo ACTION_NAME == 'statis_quater' ? 'btn-info' : 'btn-default';  ?>" style="padding:8px 18px;">季度</a>
+                                <a href="{:U('Contract/statis_quarter')}" class="btn <?php echo ACTION_NAME == 'statis_quarter' ? 'btn-info' : 'btn-default';  ?>" style="padding:8px 18px;">季度</a>
                             </div>
 
                             <div class="box box-warning">
@@ -30,22 +29,22 @@
 
                                     <div class="btn-group" id="catfont" style="padding-bottom:20px;">
                                         <?php if($prveyear>2017){ ?>
-                                            <a href="{:U('Contract/statis',array('year'=>$prveyear,'month'=>'01'))}" class="btn btn-default" style="padding:8px 18px;">上一年</a>
+                                            <a href="{:U('Contract/statis_quarter',array('year'=>$prveyear,'month'=>'01'))}" class="btn btn-default" style="padding:8px 18px;">上一年</a>
                                         <?php } ?>
                                         <?php
-                                        for($i=1;$i<13;$i++){
+                                        for($i=1;$i<5;$i++){
                                             $par = array();
                                             $par['year']  = $year;
-                                            $par['month'] = str_pad($i,2,"0",STR_PAD_LEFT);
-                                            if($month==$i){
-                                                echo '<a href="'.U('Contract/statis',$par).'" class="btn btn-info" style="padding:8px 18px;">'.$i.'月</a>';
+                                            $par['quarter'] = $i;
+                                            if($quarter==$i){
+                                                echo '<a href="'.U('Contract/statis_quarter',$par).'" class="btn btn-info" style="padding:8px 18px;">'.$i.'季度</a>';
                                             }else{
-                                                echo '<a href="'.U('Contract/statis',$par).'" class="btn btn-default" style="padding:8px 18px;">'.$i.'月</a>';
+                                                echo '<a href="'.U('Contract/statis_quarter',$par).'" class="btn btn-default" style="padding:8px 18px;">'.$i.'季度</a>';
                                             }
                                         }
                                         ?>
                                         <?php if($year<date('Y')){ ?>
-                                            <a href="{:U('Contract/statis',array('year'=>$nextyear,'month'=>'01'))}" class="btn btn-default" style="padding:8px 18px;">下一年</a>
+                                            <a href="{:U('Contract/statis_quarter',array('year'=>$nextyear,'month'=>'01'))}" class="btn btn-default" style="padding:8px 18px;">下一年</a>
                                         <?php } ?>
                                     </div>
 
@@ -59,7 +58,7 @@
                                         </tr>
                                         <foreach name="lists" item="row">
                                         <tr>
-                                            <td class="taskOptions"><a href="{:U('Contract/public_department_detail',array('year'=>$year,'month'=>$month,'id'=>$row[id]))}" title="查看部门合同信息">{$row.department}</a></td>
+                                            <td class="taskOptions"><a href="{:U('Contract/public_department_quarter_detail',array('year'=>$year,'quarter'=>$quarter,'month'=>$month,'id'=>$row[id]))}" title="查看部门合同信息">{$row.department}</a></td>
                                             <td class="taskOptions">{$row.op_num}</td>
                                             <td class="taskOptions">{$row.contract_num}</td>
                                             <td class="taskOptions">{$row.}</td>
