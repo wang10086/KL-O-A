@@ -8,10 +8,10 @@ use Sys\Page;
 
 // @@@NODE-2###GuideRes###导游辅导员管理###
 class GuideResController extends BaseController {
-    
+
     protected $_pagetitle_ = '导游辅导员管理';
     protected $_pagedesc_  = '录入、修改、删除导游辅导员资源数据';
-     
+
     // @@@NODE-3###res###导游辅导员列表###
     public function res () {
         $this->title('导游辅导员');
@@ -23,12 +23,12 @@ class GuideResController extends BaseController {
 		$where['name']                  = trim($key) ? array('like','%'.$key.'%') : array('neq','');
 		if($type)    $where['kind']     = $type;
 		if($sex)     $where['sex']      = $sex;
-		
+
 		//分页
 		$pagecount                      = M('guide')->where($where)->count();
 		$page                           = new Page($pagecount, P::PAGE_SIZE);
 		$this->pages                    = $pagecount>P::PAGE_SIZE ? $page->show():'';
-        
+
         $this->reskind                  = M('guidekind')->getField('id,name', true);
         $this->lists                    = M('guide')->where($where)->limit($page->firstRow . ',' . $page->listRows)->order($this->orders('input_time'))->select();
         $this->status                   = array(
@@ -38,12 +38,12 @@ class GuideResController extends BaseController {
         );
         $this->display('res');
     }
-	
-	
+
+
 	// @@@NODE-3###res_view###导游辅导员详情###
     public function res_view () {
         $this->title('导游辅导员');
-		
+
 		$id = I('id',0);
 
         $this->reskind = M('guidekind')->getField('id,name', true);
@@ -71,10 +71,10 @@ class GuideResController extends BaseController {
 			$row['show_user']  = $show_user;
 			$row['show_time']  = $show_time;
 		}else{
-			$this->error('导游/辅导员不存在' . $db->getError());	
+			$this->error('导游/辅导员不存在' . $db->getError());
 		}
 		$this->row = $row;
-		
+
         $this->status = array(
                 P::AUDIT_STATUS_PASS        => '已通过',
                 P::AUDIT_STATUS_NOT_AUDIT   => '待审批',
@@ -113,10 +113,10 @@ class GuideResController extends BaseController {
 		}else{
         	$this->display('res_view');
 		}
-    
+
     }
-    
-    
+
+
     // @@@NODE-3###delres###删除导游辅导员###
     public function delres(){
         $this->title('删除导游辅导员');
@@ -125,11 +125,11 @@ class GuideResController extends BaseController {
         $iddel = $db->delete($id);
         $this->success('删除成功！');
     }
-    
+
     // @@@NODE-3###addres###新建导游辅导员###
     public function addres(){
         $this->title('新建/修改导游辅导员');
-        
+
         $db             = M('guide');
         $guide_price_db = M('guide_price');
         $id             = I('id', 0);
@@ -162,7 +162,7 @@ class GuideResController extends BaseController {
                     $this->error('修改失败：' . $db->getError());
                 }
             }
-            	
+
         }else{
             $this->kinds      = M('guidekind')->where(array('type'=>P::RES_TYPE_GUIDE))->select();
             $this->pro_kinds  = get_project_kinds();
@@ -183,52 +183,52 @@ class GuideResController extends BaseController {
 
             $this->display('addres');
         }
-        
-        
+
+
     }
-    
-    
+
+
     // @@@NODE-3###reskind###导游辅导员分类列表###
     public function reskind () {
         $this->title('导游辅导员分类');
         $where = array('type' => P::RES_TYPE_GUIDE);
-        
+
         $this->lists = M('guidekind')->where($where)->select();
-        
+
         $this->display('reskind');
-        
+
     }
-    
-    
+
+
     // @@@NODE-3###addreskind###添加导游辅导员分类###
     public function addreskind () {
         $this->title('添加/修改导游辅导员分类');
         $where = array('type' => P::RES_TYPE_GUIDE);
-    
+
         $db = M('guidekind');
-        
+
         $pid  = I('pid', 0);
-        
+
         $id = I('id',0);
         if ($pid <= 0) {
             $father = array();
             $father['level'] = 0;
             $father['id'] = 0;
             $father['name'] = '顶级分类';
-        
+
         } else {
             $father = M('guidekind')->find($pid);
         }
-        
-        
+
+
         $this->father = $father;
-        
+
         if(isset($_POST['dosubmit'])){
-        
+
             $info = I('info','');
             $info['level'] = 1;
             $info['pid'] = 0;
-            
+
             if(!$id){
                 $isadd = $db->add($info);
                 if($isadd) {
@@ -244,9 +244,9 @@ class GuideResController extends BaseController {
                     $this->error('修改失败：' . $db->getError());
                 }
             }
-            	
+
         }else{
-        
+
             if (!$id) {
                 $this->row = false;
             } else {
@@ -257,10 +257,10 @@ class GuideResController extends BaseController {
             }
             $this->display('addreskind');
         }
-    
+
     }
-    
-    
+
+
     // @@@NODE-3###delreskind###删除导游辅导员分类###
     public function delreskind(){
         $this->title('删除导游辅导员分类');
