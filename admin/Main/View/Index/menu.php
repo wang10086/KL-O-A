@@ -12,7 +12,7 @@
                             <a href="#"><?php echo cookie('postname')?cookie('postname'):cookie('rolename');  ?></a>
                         </div>
                     </div>
-                    
+
                     <!-- sidebar menu: : style can be found in sidebar.less -->
                     <ul class="sidebar-menu">
 
@@ -248,7 +248,7 @@
                                 	<li class="{:on('Files/index')}">
                                         <a href="{:U('Files/index')}">
                                             <i class="fa fa-angle-right">
-                                            </i> 文件管理  
+                                            </i> 文件管理
                                         </a>
                                     </li>
                                 </if>
@@ -776,7 +776,7 @@
                                 </if>
 
 
-                                <if condition="rolemenu(array('Kpi/pdca','kpi/pdcaresult','kpi/postkpi'))">
+                                <if condition="rolemenu(array('Kpi/pdca','kpi/pdcaresult','kpi/postkpi','Inspect/satisfaction_config'))">
                                     <li class="treeview {:ison(CONTROLLER_NAME, 'Kpi')}">
                                         <a href="javascript:;">
                                             <i class="fa fa-trophy"></i>
@@ -801,30 +801,22 @@
                                     </li>
                                 </if>
 
-                                <!--<if condition="rolemenu(array('Cour/courlist','Cour/courtype','Cour/pptlist'))">
-                                    <li class="treeview {:ison(CONTROLLER_NAME, 'Cour')}">
+                                <if condition="rolemenu(array('Rbac/chart_personnel'))">
+                                    <li class="treeview {:on('Rbac/chart_personnel')} {:on('Rbac/')}">
                                         <a href="javascript:;">
-                                            <i class="fa fa-file-text"></i>
-                                            <span>培训管理</span>
-                                            <i class="fa fa-angle-left pull-right"></i>
+                                            <i class="fa fa-calculator"></i>
+                                            <span>数据统计</span>
                                         </a>
                                         <ul class="treeview-menu">
-                                            <if condition="rolemenu(array('Cour/courlist'))">
-                                                <li><a href="{:U('Cour/courlist')}"><i class="fa fa-angle-right"></i> 培训课件</a></li>
+                                            <if condition="rolemenu(array('Rbac/chart_personnel'))">
+                                                <li><a href="{:U('Rbac/chart_personnel')}"><i class="fa fa-angle-right"></i> 员工统计</a></li>
                                             </if>
-
-                                            <if condition="rolemenu(array('Cour/courtype'))">
-                                                <li><a href="{:U('Cour/courtype')}"><i class="fa fa-angle-right"></i> 课件类型</a></li>
+                                            <if condition="rolemenu(array('Kpi/pdca'))">
+                                                <li><a href="JavaScript:;" onclick="art_show_msg('加班开发中...')"><i class="fa fa-angle-right"></i> 人力成本统计</a></li>
                                             </if>
-
-                                            <if condition="rolemenu(array('Cour/pptlist'))">
-                                                <li><a href="{:U('Cour/pptlist')}"><i class="fa fa-angle-right"></i> 培训记录</a></li>
-                                            </if>
-
                                         </ul>
                                     </li>
-                                </if>-->
-
+                                </if>
                             </ul>
                         </li>
 

@@ -12,18 +12,18 @@ class RbacController extends BaseController {
 
     protected $_pagetitle_ = '组织结构和权限';
     protected $_pagedesc_  = '设置系统用户、部门和权限等';
-    
+
     // @@@NODE-3###index###用户列表###
     public function index(){
-    	
+
 		//更新角色列表
 		update_userlist_role();
-		
+
         $this->title('用户列表');
-    
+
         $db = D('account');
        	$where = array();
-		
+
 		if(rolemenu(array('Rbac/adduser'))){
 			$key            = I('key','');
             $departmentid   = I('departmentid',0);
@@ -44,15 +44,15 @@ class RbacController extends BaseController {
 		}else{
 			$where['id']    = cookie('userid');
 		}
-		
-		
+
+
 		//分页
 		$pagecount          = $db->where($where)->count();
 		$page               = new Page($pagecount, P::PAGE_SIZE);
 		$this->pages        = $pagecount>P::PAGE_SIZE ? $page->show():'';
-		
+
         $this->users        = $db->relation(true)->where($where)->order($this->orders('id'))->limit($page->firstRow . ',' . $page->listRows)->select();
-		
+
 		$this->roles        = M('role')->where(array('id'=>array('gt',3),'status'=>1))->GetField('id,role_name',true);
 		$this->posts        = M('posts')->GetField('id,post_name',true);
         $this->department   = M('salary_department')->getField('id,department',true);
@@ -91,22 +91,22 @@ class RbacController extends BaseController {
         echo M()->getlastsql();
         var_dump($ids);die;
     }*/
-    
-	
+
+
 	public function public_checkname_ajax(){
 		$username = I('username',0);
-		
+
 		//判断会员是否存在
 		$db = M('account');
 		if($db->where(array('username'=>$username))->select()) {
 			exit('0');
 		}else {
 			exit('1');
-		}	
+		}
 	}
-	
-    
-	
+
+
+
     // @@@NODE-3###adduser###添加用户###
     public function adduser(){
         $this->title('添加/修改用户');
@@ -119,7 +119,7 @@ class RbacController extends BaseController {
 			$referer                    = I('referer','');
 			$info['entry_time']	        = $info['entry_time'] ? strtotime($info['entry_time']) : 0;
             $grade                      = I('grade','');
-			
+
             if(!$id){
 				$passwordinfo		    = password(I('password_1'));
 				$info['password']	    = $passwordinfo['password'];
@@ -153,7 +153,7 @@ class RbacController extends BaseController {
                 $data                   = array();
 				$data['role_id']        =  $info['roleid'];
 				$data['user_id']        =  $id;
-				
+
                 $urdb                   = M('role_user');
                 $urdb->where("`user_id`='".$id."'")->delete();
                 $urdb->add($data);
@@ -171,18 +171,18 @@ class RbacController extends BaseController {
                         $account_detail_db->add($udetail);
                     }
                 }
-    
+
                 $this->success('修改成功！',$referer);
             }
-            	
+
         }else{
             $id                         = I('id', 0);
-            	
+
             $this->roles                = M('role')->where(array('id'=>array('gt',3),'status'=>1))->select();
 			$this->posts                = M('posts')->GetField('id,post_name',true);
             $this->position             = M('position')->getField('id,position_name',true);
             $department                 = M('salary_department')->select();//新添加部门
-            	
+
             if (!$id) {
                 $this->pagetitle        = '新增用户';
                 $this->row              = false;
@@ -202,7 +202,7 @@ class RbacController extends BaseController {
             $this->display('adduser');
         }
     }
-    
+
     // @@@NODE-3###deluser###删除用户###
     public function deluser(){
         $this->title('删除用户');
@@ -213,33 +213,33 @@ class RbacController extends BaseController {
         }
         $iddel = $db->data(array('status'=>2))->where(array('id'=>$id))->save();
         $this->success('删除成功！', U('Rbac/index'));
-    
+
     }
-    
+
     // @@@NODE-3###password###修改密码###
     public function password(){
         $this->title('修改密码');
         $db = M('account');
-    
+
         if(isset($_POST['dosubmit'])){
             $id = I('id',0);
 			$passwordinfo = password(I('password_1'));
 			$info['password'] = $passwordinfo['password'];
 			$info['encrypt'] = $passwordinfo['encrypt'];
-					
+
 			$referer = I('referer');
-            	
+
             //if($_SESSION['code'] != I('code')) {
             //    $this->error('验证码错误！');
             //}
-            	
+
             $isedit = $db->data($info)->where(array('id'=>$id))->save();
             if($isedit) {
                 $this->success('修改成功！',$referer);
             } else {
                 $this->error('修改失败：' . $db->getError());
             }
-            	
+
         }else{
             $id = I('id', 0);
             if (!$id) $this->error('非法操作！', U('Rbac/index'));
@@ -248,7 +248,7 @@ class RbacController extends BaseController {
             $this->display('password');
         }
     }
-    
+
     // @@@NODE-3###role###部门列表###
     public function role() {
         $this->title('部门列表');
@@ -260,12 +260,12 @@ class RbacController extends BaseController {
          //$this->pagetitle = '角色';
          $this->pages = $page->show();
          $allroles = $db->where($where)->order('pid,id')->limit($page->firstRow . ',' . $page->listRows)->select();
-    
+
          $role_by_id  = array();
          foreach ($allroles as $row) {
          $role_by_id[$row['id']] = $row;
          }
-    
+
          $roles = merge_node($role_by_id, null);
          sort_node($roles, $new);
         */
@@ -273,16 +273,16 @@ class RbacController extends BaseController {
         $this->pages = '';
         $this->display('role');
     }
-	
-	
-	
-    
+
+
+
+
     // @@@NODE-3###addrole###添加部门###
     public function addrole() {
         $this->title('添加/修改部门');
         $db = M('role');
         $pid  = I('pid', 10);
-    
+
         $id = I('id',0);
         if ($id == 10 || $pid < 10) {
             $father = array();
@@ -290,21 +290,21 @@ class RbacController extends BaseController {
             $father['id'] = 0;
             $father['name'] = 'null';
             $father['role_name'] = '无';
-    
+
         } else {
             $father = M('role')->find($pid);
         }
-    
+
         $this->father = $father;
-    
+
         if(isset($_POST['dosubmit'])){
-    
+
             $info = I('info','');
             $info['remark'] = $info['role_name'];
-			
+
 			$uplevel = M('role')->field('level')->find($info['pid']);
 			$info['level'] = $uplevel['level']+1;
-            	
+
             if(!$id){
                 $isadd = $db->add($info);
                 if($isadd) {
@@ -320,9 +320,9 @@ class RbacController extends BaseController {
                     $this->error('修改失败：' . $db->getError());
                 }
             }
-            	
+
         }else{
-    
+
             if (!$id) {
                 $this->pagetitle = '新增部门';
                 $this->row = false;
@@ -333,23 +333,23 @@ class RbacController extends BaseController {
                     $this->error('无此数据！', U('Rbac/role'));
                 }
             }
-			
+
 			$this->rolelist = M('role')->where('`id`>3 and `id`!='.$id)->select();
             $this->display('addrole');
         }
     }
-    
+
     // @@@NODE-3###delrole###删除部门###
     public function delrole() {
         $this->title('删除部门');
-         
+
         $db = M('role');
         $id = I('id', -1);
         if ($id <= 4) {
             $this->error("角色不能删除！");
         }
         $roles = get_roles();
-    
+
         $where = "id in ($id";
         $flag = 99;
         for ($i = 0; $i < count($roles); $i++ ) {
@@ -367,9 +367,9 @@ class RbacController extends BaseController {
         $iddel = $db->where($where)->delete();
         $this->success('删除成功！', U('Rbac/role'));
     }
-    
-    
-    
+
+
+
     public function node() {
         $this->title('结点列表');
         //import ('ORG.Util.Page');
@@ -381,10 +381,10 @@ class RbacController extends BaseController {
         $rs = $db->order('level asc, sort desc')->select();
         $this->pagetitle = '节点';
         $this->nodes = merge_node($rs);
-        	
+
         $this->display('node');
     }
-    
+
     public function delnode() {
         $this->title('删除结点');
         $db = M('node');
@@ -392,22 +392,22 @@ class RbacController extends BaseController {
         $iddel = $db->delete($id);
         $this->success('删除成功！', U('Rbac/node'));
     }
-    
+
     public function addnode() {
         $this->title('添加结点');
         $db = M('node');
         if(isset($_POST['dosubmit'])){
-            	
+
             //if($_SESSION['code'] != I('code')) {
             //    $this->error('验证码错误！');
             //}
             $info = I('info','');
             $id = I('id',0);
-            	
+
             if(!$id){
                 $info['pid'] = I('pid',0);
                 $info['level'] = I('level',1);
-    
+
                 $isadd = $db->add($info);
                 if($isadd) {
                     $this->success('添加成功！');
@@ -416,7 +416,7 @@ class RbacController extends BaseController {
                 }
             }else{
                 $info['id'] = $id;
-    
+
                 $isedit = $db->save($info);
                 if($isedit) {
                     $this->success('修改成功！',U('Rbac/node'));
@@ -424,12 +424,12 @@ class RbacController extends BaseController {
                     $this->error('修改失败：' . $db->getError());
                 }
             }
-            	
+
         }else{
             $id = I('id', 0);
             $this->level = I('level', 1);
             $this->pid = I('pid', 0);
-            	
+
             if ($this->level > 1) {
                 $this->prnt = $db->find($this->pid);
             } else {
@@ -460,17 +460,17 @@ class RbacController extends BaseController {
             $this->display('addnode');
         }
     }
-    
-    
+
+
     // @@@NODE-3###priv###分配角色权限###
     public function priv() {
         $this->title('分配角色权限');
         if (isset($_POST['dosubmit'])) {
-    
+
             $access = I('access');
             $roleid = I('roleid');
             $db = M('access');
-            	
+
             $db->where("`role_id`='".$roleid."'")->delete();
             $data = array();
             foreach($access as $row) {
@@ -491,41 +491,41 @@ class RbacController extends BaseController {
             } else {
                 $this->error('保存失败！');
             }
-            	
+
         } else {
             $roleid = I('roleid');
             if (!$roleid) $this->error('非法操作！', U('Rbac/role'));
             $this->roleid = $roleid;
-            	
+
             $role = M('role')->find($roleid);
             $this->rolename = $role['remark'];
-            	
+
             $access  = M('access')->where("`role_id`='".$roleid."'")->getField('node_id', true);
-            	
+
             $rs = M('node')->order('level asc, sort desc')->select();
             $this->nodes = merge_node($rs, $access);
             $this->pagetitle = '配置权限';
             $this->display('priv');
         }
     }
-    
+
 
     // @@@NODE-3###respriv_science###科普资源默认权限设置###
     public function respriv_science(){
         $this->title('科普资源默认权限设置');
-    
+
         $db = M('rights');
-    
+
         $restable = 'cas_res';
         $resid    = '0';
-    
+
         if (isset($_POST['dosubmit'])) {
             $roles = I('roles');
             $info = $_POST['info'];
-    
+
             $db->where("restable='$restable' and resid='$resid'")->delete();
             $alldata = array();
-    
+
             foreach ($roles as $row) {
                 $data = array();
                 $data['input_user'] = session('userid');
@@ -540,43 +540,43 @@ class RbacController extends BaseController {
                 $data['u']        = isset($info[$row][u]) ? $info[$row][u] : 0;
                 $alldata[] = $data;
             }
-    
+
             $db->addAll($alldata);
-    
+
             $this->success('操作成功！');
-    
+
         } else {
-    
+
             $this->rights = M('rights')->where("restable='$restable' and resid='$resid'")
             ->getField('roleid,v,d,u', true);
-    
+
             $this->roles = get_roles();
             $this->res   = $restable;
             $this->resid = $resid;
-    
+
             $this->display('respriv_science');
         }
-    
+
     }
-    
-    
-    
+
+
+
     // @@@NODE-3###respriv_supplier###合格供方默认权限设置###
     public function respriv_supplier(){
         $this->title('合格供方默认权限设置');
-    
+
         $db = M('rights');
-    
+
         $restable = 'supplier';
         $resid    = '0';
-    
+
         if (isset($_POST['dosubmit'])) {
             $roles = I('roles');
             $info = $_POST['info'];
-    
+
             $db->where("restable='$restable' and resid='$resid'")->delete();
             $alldata = array();
-    
+
             foreach ($roles as $row) {
                 $data = array();
                 $data['input_user'] = session('userid');
@@ -591,43 +591,43 @@ class RbacController extends BaseController {
                 $data['u']        = isset($info[$row][u]) ? $info[$row][u] : 0;
                 $alldata[] = $data;
             }
-    
+
             $db->addAll($alldata);
-    
+
             $this->success('操作成功！');
-    
+
         } else {
-    
+
             $this->rights = M('rights')->where("restable='$restable' and resid='$resid'")
             ->getField('roleid,v,d,u', true);
-    
+
             $this->roles = get_roles();
             $this->res   = $restable;
             $this->resid = $resid;
-    
+
             $this->display('respriv_supplier');
         }
-    
+
     }
 
-    
-    
+
+
     // @@@NODE-3###respriv_guide###导游辅导员默认权限设置###
     public function respriv_guide(){
         $this->title('导游辅导员默认权限设置');
-    
+
         $db = M('rights');
-    
+
         $restable = 'guide';
         $resid    = '0';
-    
+
         if (isset($_POST['dosubmit'])) {
             $roles = I('roles');
             $info = $_POST['info'];
-    
+
             $db->where("restable='$restable' and resid='$resid'")->delete();
             $alldata = array();
-    
+
             foreach ($roles as $row) {
                 $data = array();
                 $data['input_user'] = session('userid');
@@ -642,23 +642,23 @@ class RbacController extends BaseController {
                 $data['u']        = isset($info[$row][u]) ? $info[$row][u] : 0;
                 $alldata[] = $data;
             }
-    
+
             $db->addAll($alldata);
-    
+
             $this->success('操作成功！');
-    
+
         } else {
-    
+
             $this->rights = M('rights')->where("restable='$restable' and resid='$resid'")
             ->getField('roleid,v,d,u', true);
-    
+
             $this->roles = get_roles();
             $this->res   = $restable;
             $this->resid = $resid;
-    
+
             $this->display('respriv_guide');
         }
-    
+
     }
 
 
@@ -667,19 +667,19 @@ class RbacController extends BaseController {
     // @@@NODE-3###respriv_product###产品默认权限设置###
     public function respriv_product(){
         $this->title('产品默认权限设置');
-    
+
         $db = M('rights');
-    
+
         $restable = 'product';
         $resid    = '0';
-    
+
         if (isset($_POST['dosubmit'])) {
             $roles = I('roles');
             $info = $_POST['info'];
-    
+
             $db->where("restable='$restable' and resid='$resid'")->delete();
             $alldata = array();
-    
+
             foreach ($roles as $row) {
                 $data = array();
                 $data['input_user'] = session('userid');
@@ -694,42 +694,42 @@ class RbacController extends BaseController {
                 $data['u']        = isset($info[$row][u]) ? $info[$row][u] : 0;
                 $alldata[] = $data;
             }
-    
+
             $db->addAll($alldata);
-    
+
             $this->success('操作成功！');
-    
+
         } else {
-    
+
             $this->rights = M('rights')->where("restable='$restable' and resid='$resid'")
             ->getField('roleid,v,d,u', true);
-    
+
             $this->roles = get_roles();
             $this->res   = $restable;
             $this->resid = $resid;
-    
+
             $this->display('respriv_product');
         }
-    
+
     }
-    
-    
+
+
     // @@@NODE-3###respriv_project###项目默认权限设置###
     public function respriv_project(){
         $this->title('项目默认权限设置');
-    
+
         $db = M('rights');
-    
+
         $restable = 'project';
         $resid    = '0';
-    
+
         if (isset($_POST['dosubmit'])) {
             $roles = I('roles');
             $info = $_POST['info'];
-    
+
             $db->where("restable='$restable' and resid='$resid'")->delete();
             $alldata = array();
-    
+
             foreach ($roles as $row) {
                 $data = array();
                 $data['input_user'] = session('userid');
@@ -744,41 +744,41 @@ class RbacController extends BaseController {
                 $data['u']        = isset($info[$row][u]) ? $info[$row][u] : 0;
                 $alldata[] = $data;
             }
-    
+
             $db->addAll($alldata);
-    
+
             $this->success('操作成功！');
-    
+
         } else {
-    
+
             $this->rights = M('rights')->where("restable='$restable' and resid='$resid'")
             ->getField('roleid,v,d,u', true);
-    
+
             $this->roles = get_roles();
             $this->res   = $restable;
             $this->resid = $resid;
-    
+
             $this->display('respriv_project');
         }
-    
+
     }
-    
+
 
     // @@@NODE-3###audit_config###资源审核设置###
     public function audit_config () {
         $this->title('资源审核设置');
-    
-        
+
+
         $db = M('audit_config');
         $this->req_types = M('audit_field')->getField('req_type,name', true);
-        
+
         if (isset($_POST['dosubmit'])) {
             $info = I('info');
             $all = array();
             M('audit_config')->where('1=1')->delete();
-            
+
             foreach ($info as $k => $v) {
-                
+
                 foreach ($v as $kk => $vv) {
                     $data = array();
                     $data['audit_roleid'] = $k;
@@ -786,17 +786,17 @@ class RbacController extends BaseController {
                     $all[] = $data;
                 }
             }
-            
+
             // 超级管理员拥有所有审核权限
-            
-            
+
+
             foreach ($this->req_types as $k => $v) {
                 $all[] = array('audit_roleid'=>1, 'req_type'=>$k);
             }
-            
+
             M('audit_config')->addAll($all);
             $this->success('操作成功！');
-            
+
         } else {
             $this->roles = get_roles();
             $conf = M('audit_config')->select();
@@ -807,59 +807,59 @@ class RbacController extends BaseController {
             $this->rights = $rights;
             $this->display('audit_config');
         }
-        
-    }
-    
 
-    
-    
-    
-    
+    }
+
+
+
+
+
+
     public function init_nodes () {
         $db = M('node');
         //$db->where("remark <> 'sys'")->delete();
-         
+
         $files = glob(dirname(__FILE__)."/*Controller.class.php");
         $info = array(
                 'status'   => 1,
                 'remark'   => '',
                 'sort'     => 0,
         );
-         
+
         foreach ($files as $f) {
             $str = file_get_contents($f);
-            
+
             if (!preg_match_all('/@@@NODE-([2])###([a-zA-Z_0-9]+)###(.*?)###/u', $str, $match, PREG_SET_ORDER)) {
                 continue;
             }
             $info = array();
-            
+
             $info['level'] = 2;
             $info['name']  = $match[0][2];
             $info['pid']   = 1;
-            
+
             $isadd = $db->where($info)->find();
-            
+
             $info['title']  = $match[0][3];
             $info['status'] = 1;
-            
+
             if ($isadd) {
                 $db->data($info)->save();
-                $pid = $isadd['id'];   
+                $pid = $isadd['id'];
             } else {
                 $pid = $db->add($info);
             }
-            
+
             if (preg_match_all('/@@@NODE-([3])###([a-zA-Z_0-9]+)###(.*?)###/u', $str, $match, PREG_SET_ORDER)) {
                 for ($i=0; $i < count($match); $i++) {
                     $info = array();
-                    
+
                     $info['level'] = 3;
                     $info['name']  = $match[$i][2];
                     $info['pid']   = $pid;
-                                       
+
 					$isadd = $db->where($info)->find();
-					
+
 					$info['title']  = $match[$i][3];
 					$info['status'] = 1;
 					if($isadd){
@@ -872,28 +872,28 @@ class RbacController extends BaseController {
                 echo $f . '<br>';
                 flush();
             }
-             
+
         }
         echo "init nodes done! <br>";
     }
-    
-    
-/*	
+
+
+/*
     public function role() {
 
 		$db = M('role');
 		$page = new Page($db->count(), PAGE_NUM);
 		$this->pages = $page->show();
-		
-		$this->roles = $db->order($this->orders())->limit($page->firstRow . ',' . $page->listRows)->select();	
-	    $this->display('role');		
+
+		$this->roles = $db->order($this->orders())->limit($page->firstRow . ',' . $page->listRows)->select();
+	    $this->display('role');
 	}
-	
+
 	public function addrole() {
 
 		$db = M('role');
 		if(isset($_POST['dosubmit'])){
-			
+
 			$info = I('info','');
 			$id = I('id',0);
 			if(!$id){
@@ -909,52 +909,52 @@ class RbacController extends BaseController {
 					$this->success('修改成功！',I('referer',''));
 				} else {
 					$this->error('修改失败：' . $db->getError(),I('referer',''));
-				}	
-			}	
-			
+				}
+			}
+
 		}else{
 			$id = I('id', 0);
-			
+
 			if (!$id) {
-				$this->pagetitle = '新增角色';	
+				$this->pagetitle = '新增角色';
 				$this->row = false;
 			} else {
 				$this->pagetitle = '修改角色';
-				$this->row = $db->find($id);	
+				$this->row = $db->find($id);
 				if (!$this->row) {
-				    $this->error('无此数据！',I('referer',''));	
+				    $this->error('无此数据！',I('referer',''));
 				}
 			}
 			$this->rolelist = $db->select();
 			$this->display('addrole');
-		}	
+		}
 	}
-	
-	
-	
+
+
+
 	public function node() {
 		$this->node_show = 'class="active"';
 		$db = M('node');
 		$rs = $db->order('level asc, sort desc')->select();
 		$this->pagetitle = '节点';
 		$this->nodes = merge_node($rs);
-			
-	    $this->display('node');		
+
+	    $this->display('node');
 	}
-	
-	
-	
+
+
+
 	public function addnode() {
 		$db = M('node');
 		if(isset($_POST['dosubmit'])){
-			
+
 			$info = I('info','');
 			$id = I('id',0);
-			
+
 			if(!$id){
 				$info['pid'] = I('pid',0);
 				$info['level'] = I('level',1);
-				
+
 				$isadd = $db->add($info);
 				if($isadd) {
 					$this->success('添加成功！',I('referer',''));
@@ -963,22 +963,22 @@ class RbacController extends BaseController {
 				}
 			}else{
 				$info['id'] = $id;
-				
+
 				$isedit = $db->save($info);
 				if($isedit) {
 					$this->success('修改成功！',I('referer',''));
 				} else {
 					$this->error('修改失败：' . $db->getError(),I('referer',''));
-				}	
-			}	
-			
+				}
+			}
+
 		}else{
 			$id = I('id', 0);
 			$this->level = I('level', 1);
 			$this->pid = I('pid', 0);
-			
+
 			if ($this->level > 1) {
-			    $this->prnt = $db->find($this->pid);	
+			    $this->prnt = $db->find($this->pid);
 			} else {
 				$this->prnt = false;
 			}
@@ -992,20 +992,20 @@ class RbacController extends BaseController {
 				    break;
 				case 3:
 				    $this->type = '方法';
-				    break;	
+				    break;
 			}
 			if (!$id) {
-				$this->pagetitle = '新增' . $this->type;	
+				$this->pagetitle = '新增' . $this->type;
 				$this->row = false;
 			} else {
-				$this->pagetitle = '修改' . $this->type;	
-				$this->row = $db->find($id);	
+				$this->pagetitle = '修改' . $this->type;
+				$this->row = $db->find($id);
 				if (!$this->row) {
-				    $this->error('无此数据！',I('referer',''));	
+				    $this->error('无此数据！',I('referer',''));
 				}
 			}
 			$this->display('addnode');
-		}	
+		}
 	}
 
 	public function priv() {
@@ -1015,7 +1015,7 @@ class RbacController extends BaseController {
 			$access = I('access');
 			$roleid = I('roleid');
 			$db = M('access');
-			
+
 			$db->where("`role_id`='".$roleid."'")->delete();
 			$data = array();
 			foreach($access as $row) {
@@ -1027,36 +1027,36 @@ class RbacController extends BaseController {
 				);
 			}
 			if ($db->addAll($data)) {
-			    $this->success('权限配置成功！',I('referer',''));	
+			    $this->success('权限配置成功！',I('referer',''));
 			} else {
 				$this->error('保存失败！',I('referer',''));
 			}
-			
+
 		} else {
 		    $roleid = I('roleid');
 			if (!$roleid) $this->error('非法操作！',I('referer',''));
 			$this->roleid = $roleid;
-			
+
 			$role = M('role')->find($roleid);
 			$this->rolename = $role['remark'].'('.$role['name'].')';
-			
+
 			$access  = M('access')->where("`role_id`='".$roleid."'")->getField('node_id', true);
-			
+
 			$rs = M('node')->order('level asc, sort desc')->select();
 		    $this->nodes = merge_node($rs, $access);
 	        $this->pagetitle = '配置权限';
-	        $this->display('priv');	
+	        $this->display('priv');
 		}
 	}
-	
+
 	*/
-    
-	
-	
+
+
+
 	// @@@NODE-3###pdca_auth###PDCA评分人设置###
     public function pdca_auth() {
         $this->title('PDCA评分人设置');
-        
+
         $roles =  get_roles();
 		foreach($roles as $k=>$v){
 			$auth = M('auth')->where(array('role_id'=>$v['id']))->find();
@@ -1066,28 +1066,28 @@ class RbacController extends BaseController {
         $this->pages = '';
         $this->display('pdca_auth');
     }
-    
-	
-	
+
+
+
 	// @@@NODE-3###pdca_auth###指定PDCA评分人###
     public function op_pdca_auth() {
         if(isset($_POST['dosubmint'])){
-			
+
 			$info      = I('info');
-				
+
 			//判断数据是否存在
 			if(M('auth')->where(array('role_id'=>$info['role_id']))->find()){
 				$addinfo = M('auth')->data($info)->where(array('role_id'=>$info['role_id']))->save();
 			}else{
 				$addinfo = M('auth')->add($info);
 			}
-			
+
 			echo '<script>window.top.location.reload();</script>';
-			
-		
-		
+
+
+
 		}else{
-			
+
 			$id = I('id','');
 			if($id){
 				$this->role = M('role')->find($id);
@@ -1098,8 +1098,8 @@ class RbacController extends BaseController {
 				}
 				$this->row = $row;
 			}
-			
-			
+
+
 			//整理关键字
 			$role = M('role')->GetField('id,role_name',true);
 			$user =  M('account')->select();
@@ -1113,13 +1113,13 @@ class RbacController extends BaseController {
 				$key[$k]['role']       = $v['roleid'];
 				$key[$k]['role_name']  = $role[$v['roleid']];
 			}
-			
-			$this->userkey =  json_encode($key);	
-			
+
+			$this->userkey =  json_encode($key);
+
 			$this->roles   =  get_roles();
-			
+
 			$this->display('op_pdca_auth');
-		
+
 		}
     }
 
@@ -1207,10 +1207,10 @@ class RbacController extends BaseController {
         }
     }
 
-	
+
 	// @@@NODE-3###kpi_quota###KPI指标管理###
     public function kpi_quota(){
-    	
+
         $this->title('KPI指标管理');
         $db 	                        = M('kpi_config');
 		$auto 	                        = I('auto');
@@ -1219,38 +1219,38 @@ class RbacController extends BaseController {
 		$where 	                        = array();
         if ($tit) $where['quota_title'] = array('like','%'.$tit.'%');
         if ($con) $where['quota_content']= array('like','%'.$con.'%');
-		
+
 		if($auto==1){
 			$where['id'] = array('not in',array(1,2,3,4,5,6,81,8,9,10,11,15,16,18,20,23,26,21,24,27,32,37,19,22,25,28,33,38,42,45,103,56,113,92,29,34,39,46,102,55,57,58,59,84,87,89,90,111,107,83,66,54,44,12,112,108,100,96,95,65,114,86,85,64,63,62,53,52,41,40,49,80,48,91,79,47,36,35,31,30,82,110,106,99,94,67));
 		}else if($auto==2){
 			$where['id'] = array('in',array(101,97,67)); //array('in',array(91,79,47,36,35,31,30)); ////array('in',array(91,79,47,36,35,31,30));
 		}
-		
+
 		//分页
 		$pagecount      = $db->where($where)->count();
 		$page           = new Page($pagecount, P::PAGE_SIZE);
 		$this->pages    = $pagecount>P::PAGE_SIZE ? $page->show():'';
-		
+
         $this->datalist = $db->where($where)->order($this->orders('id'))->limit($page->firstRow . ',' . $page->listRows)->select();
         $this->display('kpi_quota');
     }
-    
-    
-	
+
+
+
     // @@@NODE-3###add_quota###编辑指标###
     public function add_quota(){
-    
+
         $this->title('编辑指标');
-         
+
         $db = M('kpi_config');
-    
+
         if(isset($_POST['dosubmit'])){
-            	
+
             $info    = I('info','');
             $id      = I('editid',0);
 			$referer = I('referer','');
 			$info['create_time'] = time();
-			
+
             if(!$id){
                 $save = $db->add($info);
             }else{
@@ -1261,31 +1261,31 @@ class RbacController extends BaseController {
 			}else{
 				$this->error('保存失败！',$referer);
 			}
-			 
-            	
+
+
         }else{
             $id = I('id', 0);
             if($id) $this->row = $db->find($id);
             $this->display('add_quota');
         }
     }
-    
-	
+
+
 	public function del_quota() {
         $db = M('kpi_config');
         $id = I('id', -1);
         $iddel = $db->delete($id);
         $this->success('删除成功！', U('Rbac/kpi_quota'));
     }
-	
-	
-	
-	
+
+
+
+
 	 // @@@NODE-3###rolequto###选择角色适用KPI指标范围###
     public function rolequto() {
         $this->title('选择KPI考核指标');
         if (isset($_POST['dosubmit'])) {
-    
+
             $quto    = I('quto');
             $postid  = I('postid');
          	$referer = I('referer','');
@@ -1297,66 +1297,66 @@ class RbacController extends BaseController {
 				$data['quotaid']	 = $v;
 				M('kpi_post_quota')->add($data);
 			}
-			
+
 			$this->success('已成功保存！',$referer);
-            	
+
         } else {
             $postid = I('postid');
             if (!$postid) $this->error('非法操作！', U('Rbac/post'));
             $this->postid = $postid;
-            	
+
             $post = M('posts')->find($postid);
             $this->postname = $post['post_name'];
-			
-			
+
+
 			$selected = M('kpi_post_quota')->where(array('postid'=>$postid))->select();
             if($selected){
 				$sel = array();
 				foreach($selected as $k=>$v){
 					$sel[] = $v['quotaid'];
-				}	
+				}
 				$this->sel = $sel;
 			}
-            	
+
             $this->datalist  = M('kpi_config')->select();
             $this->display('rolequto');
         }
     }
-	
-	
-	
+
+
+
 	// @@@NODE-3###post###岗位管理###
     public function post(){
-    
+
         $this->title('岗位管理');
-    
+
         $db = M('posts');
-       
+
 		//分页
 		$pagecount = $db->where($where)->count();
 		$page = new Page($pagecount, P::PAGE_SIZE);
 		$this->pages = $pagecount>P::PAGE_SIZE ? $page->show():'';
-		
+
         $this->datalist = $db->where($where)->order($this->orders('id'))->limit($page->firstRow . ',' . $page->listRows)->select();
         $this->department   = M('salary_department')->getField('id,department',true);
         $this->display('post');
     }
-    
-	
+
+
 	// @@@NODE-3###addpost###编辑岗位###
     public function addpost(){
-    
+
         $this->title('编辑指标');
-         
+
         $db = M('posts');
-    
+
         if(isset($_POST['dosubmit'])){
-            	
+
             $info    = I('info','');
             $id      = I('editid',0);
 			$referer = I('referer','');
-			
-			
+
+
             if(!$id){
                 $save = $db->add($info);
             }else{
@@ -1367,8 +1367,8 @@ class RbacController extends BaseController {
 			}else{
 				$this->error('保存失败！',$referer);
 			}
-			 
-            	
+
+
         }else{
             $id = I('id', 0);
             if($id) $this->row  = $db->find($id);
@@ -1376,34 +1376,34 @@ class RbacController extends BaseController {
             $this->display('addpost');
         }
     }
-	
-	
+
+
 	// @@@NODE-3###kpi_users###配置KPI数据###
 	public function kpi_users(){
 		$this->title('配置KPI目标数据');
-		
+
 		$db  = M('account');
 		$key      = I('key','');
 		$role     = I('role',0);
 		$post     = I('post',0);
-		
+
 		$where = array();
 		$where['status'] = array('neq',2);
 		$where['id'] = array('gt',3);
 		if($key)  $where['nickname'] = array('like','%'.$key.'%');
 		if($role) $where['roleid']  = $role;
 		if($post) $where['postid']  = $post;
-		
-		
+
+
 		$pagecount   = $db->where($where)->count();
 		$page        = new Page($pagecount, P::PAGE_SIZE);
 		$this->pages = $pagecount>P::PAGE_SIZE ? $page->show():'';
-		
+
 		$role = M('role')->GetField('id,role_name',true);
-		
+
 		$userlist = $db->where($where)->order($this->orders('id'))->limit($page->firstRow . ',' . $page->listRows)->select();
 		foreach($userlist as $k=>$v){
-			$userlist[$k]['rolename'] = $role[$v['roleid']];	
+			$userlist[$k]['rolename'] = $role[$v['roleid']];
 		}
 		$this->userlist = $userlist;
 		$this->postlist = M('posts')->GetField('id,post_name',true);
@@ -1412,9 +1412,9 @@ class RbacController extends BaseController {
 		$this->pid      = $post;
 		$this->display('kpiuser');
 	}
-	
-	
-	
+
+
+
 	// @@@NODE-3###kpi_data###配置KPI数据###
 	public function kpi_data(){
 		$this->title('配置KPI目标数据');
@@ -1443,11 +1443,11 @@ class RbacController extends BaseController {
 			$kpi = M('kpi')->where($where)->find();
 		}
 
-		
-		$kpi['kaoping']      = $kpi['mk_user_id'] ? username($kpi['mk_user_id']) : '未评分'; 	
-		$kpi['score']        = $kpi['score'] ? $kpi['score'].'分' : '未评分'; 	
-		$kpi['status_str']   = $sta[$kpi['status']]; 	
-		
+
+		$kpi['kaoping']      = $kpi['mk_user_id'] ? username($kpi['mk_user_id']) : '未评分';
+		$kpi['score']        = $kpi['score'] ? $kpi['score'].'分' : '未评分';
+		$kpi['status_str']   = $sta[$kpi['status']];
+
 		//考核指标
 		$lists = M('kpi_more')->where(array('kpi_id'=>$kpi['id']))->select();
 		foreach($lists as $K=>$v){
@@ -1456,12 +1456,12 @@ class RbacController extends BaseController {
 
 		//审核记录
 		$applist          = M('kpi_op_record')->where(array('kpi_id'=>$kpi['id']))->order('op_time DESC')->select();
-		
+
 		//用户信息
 		$post             = M('posts')->GetField('id,post_name',true);
 		$userinfo             = M('account')->find($user);
 		$userinfo['postname'] = $userinfo['postid'] ? $post[$userinfo['postid']] : '<span class="red">未配置岗位</span>';
-		
+
 		$this->user       = $userinfo;
 		$this->uid        = $user;
 		$this->year       = $year;
@@ -1519,7 +1519,7 @@ class RbacController extends BaseController {
         }
         return $yearMonth;
     }
-	
+
 	// @@@NODE-3###save_kpi_data###保存KPI指标数据###
 	public function save_kpi_data(){
 		$id = I('id','');
@@ -1536,16 +1536,16 @@ class RbacController extends BaseController {
             $acc['kpi_cycle']   = $cycle;
             M('account')->where(array('id'=>$account_id))->save($acc);*/
 			foreach($info as $k=>$v){
-				
+
 				//获取原记录
 				$kpi = M('kpi_more')->find($k);
-				
+
 				//保存新数据
 				$v['start_date'] = strtotime($v['start_date']);
 				$v['end_date']   = strtotime($v['end_date']);
                 //$v['cycle']      = $cycle;
 				M('kpi_more')->data($v)->where(array('id'=>$k))->save();
-				
+
 				//保存更新记录
 				$remarks = '';
 				if($v['start_date']!=$kpi['start_date']) $remarks.='考核开始日期由'.date('Y-m-d',$kpi['start_date']).'变更为'.date('Y-m-d',$v['start_date']).'；';
@@ -1563,50 +1563,50 @@ class RbacController extends BaseController {
 					$data['remarks']       = $kpi['quota_title'].'：'.$remarks;
 					M('kpi_op_record')->add($data);
 				}
-				
+
 			}
 		}
-		
+
 		$this->success('保存成功！');
-		
+
 	}
-	
-    
-	
+
+
+
 	// @@@NODE-3###del_kpi_data###删除考核指标###
 	public function del_kpi_data(){
 		$id = I('id','');
-		
+
 		M('kpi_more')->delete($id);
-		
-		
+
+
 		$this->success('删除成功！');
-		
+
 	}
-	
-	
+
+
 	// @@@NODE-3###kpi_lockdata###锁定KPI数据###
 	public function kpi_lockdata(){
-		
+
 		$role = M('role')->GetField('id,role_name',true);
 		$user =  M('account')->where(array('status'=>0))->select();
-			
+
 		if(isset($_POST['dosubmit'])){
-			
-			
+
+
 			$month 		= I('month',0);
 			$type 		= I('type',0);
 			$uname 		= I('uname','');
 			$uid 		= I('uid',0);
 			$referer 	= I('referer');
-			
+
 			$tm			= date('Ym');
-			
-			
+
+
 			//校验
-			
+
 			$exe = 0;
-			
+
 			//if(!$month || $month>=$tm)  	$this->error('月份未填写或超出！');
 			if(!$month)  	$this->error('月份未填写或超出！');
 			if($type){
@@ -1622,15 +1622,15 @@ class RbacController extends BaseController {
 			if($exe){
 				$this->success('已成功锁定'.$exe.'人数据！');
 			}else{
-				$this->error('没有可锁定数据！');	
+				$this->error('没有可锁定数据！');
 			}
-			
-			
-			
-			
+
+
+
+
 		}else{
-		
-			
+
+
 			$key = array();
 			foreach($user as $k=>$v){
 				$text = $v['nickname'].'-'.$role[$v['roleid']];
@@ -1641,16 +1641,38 @@ class RbacController extends BaseController {
 				$key[$k]['role']       = $v['roleid'];
 				$key[$k]['role_name']  = $role[$v['roleid']];
 			}
-			
-			$this->userkey =  json_encode($key);	
-			
-			
+
+			$this->userkey =  json_encode($key);
+
+
 			$this->record = M('kpi_lock_record')->limit('100')->order('id DESC')->select();
-			
+
 			$this->display('kpi_lockdata');
-		
+
 		}
-		
-		
+
+
 	}
+
+	//数据统计--员工统计
+    public function chart_personnel(){
+        $this->title('员工统计');
+        $this->pagetitle                = '数据统计';
+        $key                            = trim(I('key'));
+
+        $where                          = array();
+        $where['status']                = array('neq',2);
+        $where['id']                    = array('gt',3);
+        if($key)  $where['nickname']    = array('like','%'.$key.'%');
+
+        //分页
+        $pagecount                      = M('account')->where($where)->order('id asc')->count();
+        $page                           = new Page($pagecount, P::PAGE_SIZE);
+        $this->pages                    = $pagecount>P::PAGE_SIZE ? $page->show():'';
+
+        $lists                          = M('account')->where($where)->limit($page->firstRow.','.$page->listRows)->order('id asc')->select();
+
+        $this->lists                    = $lists;
+        $this->display();
+    }
 }
