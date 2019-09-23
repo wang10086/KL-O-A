@@ -66,7 +66,7 @@ class InspectModel extends Model{
         $data['average_DD']             = $sum_score_DD?(round($get_score_DD/$sum_score_DD,2)*100).'%':'';
         $data['average_EE']             = $sum_score_EE?(round($get_score_EE/$sum_score_EE,2)*100).'%':'';
         $data['average_FF']             = $sum_score_FF?(round($get_score_FF/$sum_score_FF,2)*100).'%':'';
-        $data['sum_average']            = round($get_score_total/$sum_score_total,2)?(round($get_score_total/$sum_score_total,2)*100).'%':'50%';
+        $data['sum_average']            = $sum_score_total?(round($get_score_total/$sum_score_total,2)*100).'%':'50%';
         $data['score_account_name']     = implode(',',array_column($info,'input_username'));
         return $data;
     }
