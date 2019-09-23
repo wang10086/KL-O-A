@@ -3,5 +3,4 @@ Require all granted
 RewriteEngine on
 
 #禁止获取Git仓库目录
-RewriteRule ^.git - [F,L]
 RewriteRule ^.git/* - [F,L]
