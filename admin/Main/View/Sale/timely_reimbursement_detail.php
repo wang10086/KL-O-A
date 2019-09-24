@@ -30,8 +30,13 @@
                                             <th class="taskOptions" width="60">序号</th>
                                             <th class="taskOptions">团号</th>
                                             <th class="taskOptions">项目名称</th>
-                                            <th class="taskOptions">销售</th>
+                                            <th class="taskOptions">结算时间</th>
+                                            <th class="taskOptions">报账时间</th>
+                                            <th class="taskOptions">结算收入</th>
+                                            <th class="taskOptions">结算毛利</th>
+                                            <!--<th class="taskOptions">销售</th>-->
                                             <th class="taskOptions">状态</th>
+                                            <th class="taskOptions">报账</th>
                                         </tr>
                                         <foreach name="lists" key="k" item="v">
                                             <tr>

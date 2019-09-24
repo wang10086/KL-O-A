@@ -302,8 +302,3 @@
     </div>
 
 </form>
-
-<script type="text/javascript">
-
-    
-</script>

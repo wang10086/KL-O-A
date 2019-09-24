@@ -1658,21 +1658,15 @@ class RbacController extends BaseController {
     public function chart_personnel(){
         $this->title('员工统计');
         $this->pagetitle                = '数据统计';
-        $key                            = trim(I('key'));
+        $year		                    = I('year',date('Y'));
+        $month		                    = I('month',date('m'));
 
-        $where                          = array();
-        $where['status']                = array('neq',2);
-        $where['id']                    = array('gt',3);
-        if($key)  $where['nickname']    = array('like','%'.$key.'%');
-
-        //分页
-        $pagecount                      = M('account')->where($where)->order('id asc')->count();
-        $page                           = new Page($pagecount, P::PAGE_SIZE);
-        $this->pages                    = $pagecount>P::PAGE_SIZE ? $page->show():'';
-
-        $lists                          = M('account')->where($where)->limit($page->firstRow.','.$page->listRows)->order('id asc')->select();
-
-        $this->lists                    = $lists;
+        $this->year 	                = $year;
+        $this->month 	                = $month;
+        $this->prveyear	                = $year-1;
+        $this->nextyear	                = $year+1;
         $this->display();
     }
+
+
 }

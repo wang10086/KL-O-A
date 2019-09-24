@@ -594,23 +594,31 @@ class SaleController extends BaseController {
         $this->display('timely_detail');
     }
 
+    //报账及时性
+    public function public_reimbursement_detail(){
+        $this->title('计调工作及时率详情');
+        $mod                        = D('Sale');
+        $timely                     = get_timely(1);
+        $timely                     = array_column($timely,'title');
+        $title                      = trim(I('tit'));
+        $title                      = ($title == '合计')?$timely[0]:$title;
+        $year                       = I('year',date('Y'));
+        $month                      = I('month',date('m'));
+        $uid                        = I('uid','');
+        if (strlen($month)<2) $month= str_pad($month,2,'0',STR_PAD_LEFT);
+        $yearMonth                  = $year.$month;
+        $times                      = get_cycle($yearMonth);
+        //$data                       = $mod->get_timely_type($title,$times['begintime'],$times['endtime'],$uid);
 
-    //kpi页面_把控0190618
-    /*public function public_kpi_gross(){
-        $yearMonth                          = I('ym');
-        $user_id                            = I('uid');
-        $times                              = get_cycle($yearMonth);
-        $mod                                = D('Sale');
-        $kinds                              = M('project_kind')->getField('id,name',true);
-        $settlement_lists                   = $mod->get_all_settlement_lists($times['begintime'],$times['endtime']);
-        $gross_avg                          = $mod->get_gross_avg($kinds,$times['begintime'],$times['endtime']); //最低毛利率数据
-        $data                               = $mod->get_jd_gross($user_id,username($user_id),$settlement_lists,$kinds,$gross_avg); //各计调数据
-        $info                               = $data['info'];
-        $info['合计']                       = $data['合计'];
+        $this->uid                  = $uid;
+        $this->timely               = $timely;
+        //$this->lists                = $data;
+        $this->title                = $title;
+        $this->year                 = $year;
+        $this->month                = $month;
 
-        $this->lists                        = $info;
-        $this->display('gross_kpi');
-    }*/
+        $this->display('timely_reimbursement_detail');
+    }
 
     
 }
