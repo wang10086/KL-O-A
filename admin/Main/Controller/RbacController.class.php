@@ -119,6 +119,7 @@ class RbacController extends BaseController {
 			$referer                    = I('referer','');
 			$info['entry_time']	        = $info['entry_time'] ? strtotime($info['entry_time']) : 0;
             $grade                      = I('grade','');
+            $udetail                    = I('udetail');
 
             if(!$id){
 				$passwordinfo		    = password(I('password_1'));
@@ -130,10 +131,8 @@ class RbacController extends BaseController {
                 $info['departmentid']   = $_POST['departmentid'];//部门id
                 $isadd                  = $db->add($info);
                 if($isadd) {
-                    if ($grade){ //保存分表信息
-                        $udetail                = array();
+                    if ($udetail){ //保存分表信息
                         $udetail['account_id']  = $isadd;
-                        $udetail['grade']       = $grade;
                         $account_detail_db->add($udetail);
                     }
                     $data               = array();
@@ -160,14 +159,10 @@ class RbacController extends BaseController {
 
                 $detail_list            = $account_detail_db->where(array('account_id'=>$id))->find();
                 if ($detail_list){
-                    $udetail            = array();
-                    $udetail['grade']   = $grade;
                     $account_detail_db->where(array('id'=>$detail_list['id']))->save($udetail);
                 }else{
-                    if ($grade){
-                        $udetail                = array();
+                    if ($udetail){
                         $udetail['account_id']  = $id;
-                        $udetail['grade']       = $grade;
                         $account_detail_db->add($udetail);
                     }
                 }
@@ -190,7 +185,7 @@ class RbacController extends BaseController {
             } else {
                 $this->pagetitle        = '修改资料';
                 //$this->row              = $db->find($id);
-                $field                  = 'a.*,d.grade';
+                $field                  = 'a.*,d.grade,d.bonusType';
                 $this->row              = M()->table('__ACCOUNT__ as a')->join('__ACCOUNT_DETAIL__ as d on d.account_id=a.id','left')->where(array('a.id'=>$id))->field($field)->find();
                 $this->userrole         = M('role_user')->where("`user_id`='".$id."'")->getField('role_id', true);
                 if (!$this->row) {
