@@ -193,24 +193,13 @@
 
                                     <div class="form-group col-md-3">
                                         <label>绩效考评结果等级</label>
-                                        <select class="form-control" name="udetail[grade]">
+                                        <select class="form-control" name="grade">
                                             <option value="" >请选择</option>
                                             <option <?php if($row['grade']=='A'){ echo 'selected';}?> value="A">A级</option>
                                             <option <?php if($row['grade']=='B'){ echo 'selected';}?> value="B">B级</option>
                                             <option <?php if($row['grade']=='C'){ echo 'selected';}?> value="C">C级</option>
                                             <option <?php if($row['grade']=='D'){ echo 'selected';}?> value="D">D级</option>
                                             <option <?php if($row['grade']=='E'){ echo 'selected';}?> value="E">E级</option>
-                                        </select>
-                                    </div>
-
-                                    <div class="form-group col-md-3">
-                                        <label>奖金发放方式</label>
-                                        <select class="form-control" name="udetail[bonusType]">
-                                            <option value="" >请选择</option>
-                                            <option <?php if($row['bonusType']=='1'){ echo 'selected';}?> value="1">年终奖</option>
-                                            <option <?php if($row['bonusType']=='2'){ echo 'selected';}?> value="2">业绩提成</option>
-                                            <option <?php if($row['bonusType']=='3'){ echo 'selected';}?> value="3">奖金包</option>
-                                            <option <?php if($row['bonusType']=='0'){ echo 'selected';}?> value="0">无奖金</option>
                                         </select>
                                     </div>
                                     

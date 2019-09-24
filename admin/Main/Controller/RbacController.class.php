@@ -119,7 +119,6 @@ class RbacController extends BaseController {
 			$referer                    = I('referer','');
 			$info['entry_time']	        = $info['entry_time'] ? strtotime($info['entry_time']) : 0;
             $grade                      = I('grade','');
-            $udetail                    = I('udetail');
 
             if(!$id){
 				$passwordinfo		    = password(I('password_1'));
@@ -131,8 +130,10 @@ class RbacController extends BaseController {
                 $info['departmentid']   = $_POST['departmentid'];//部门id
                 $isadd                  = $db->add($info);
                 if($isadd) {
-                    if ($udetail){ //保存分表信息
+                    if ($grade){ //保存分表信息
+                        $udetail                = array();
                         $udetail['account_id']  = $isadd;
+                        $udetail['grade']       = $grade;
                         $account_detail_db->add($udetail);
                     }
                     $data               = array();
@@ -159,10 +160,14 @@ class RbacController extends BaseController {
 
                 $detail_list            = $account_detail_db->where(array('account_id'=>$id))->find();
                 if ($detail_list){
+                    $udetail            = array();
+                    $udetail['grade']   = $grade;
                     $account_detail_db->where(array('id'=>$detail_list['id']))->save($udetail);
                 }else{
-                    if ($udetail){
+                    if ($grade){
+                        $udetail                = array();
                         $udetail['account_id']  = $id;
+                        $udetail['grade']       = $grade;
                         $account_detail_db->add($udetail);
                     }
                 }
@@ -185,7 +190,7 @@ class RbacController extends BaseController {
             } else {
                 $this->pagetitle        = '修改资料';
                 //$this->row              = $db->find($id);
-                $field                  = 'a.*,d.grade,d.bonusType';
+                $field                  = 'a.*,d.grade';
                 $this->row              = M()->table('__ACCOUNT__ as a')->join('__ACCOUNT_DETAIL__ as d on d.account_id=a.id','left')->where(array('a.id'=>$id))->field($field)->find();
                 $this->userrole         = M('role_user')->where("`user_id`='".$id."'")->getField('role_id', true);
                 if (!$this->row) {
@@ -1653,21 +1658,15 @@ class RbacController extends BaseController {
     public function chart_personnel(){
         $this->title('员工统计');
         $this->pagetitle                = '数据统计';
-        $key                            = trim(I('key'));
+        $year		                    = I('year',date('Y'));
+        $month		                    = I('month',date('m'));
 
-        $where                          = array();
-        $where['status']                = array('neq',2);
-        $where['id']                    = array('gt',3);
-        if($key)  $where['nickname']    = array('like','%'.$key.'%');
-
-        //分页
-        $pagecount                      = M('account')->where($where)->order('id asc')->count();
-        $page                           = new Page($pagecount, P::PAGE_SIZE);
-        $this->pages                    = $pagecount>P::PAGE_SIZE ? $page->show():'';
-
-        $lists                          = M('account')->where($where)->limit($page->firstRow.','.$page->listRows)->order('id asc')->select();
-
-        $this->lists                    = $lists;
+        $this->year 	                = $year;
+        $this->month 	                = $month;
+        $this->prveyear	                = $year-1;
+        $this->nextyear	                = $year+1;
         $this->display();
     }
+
+
 }
