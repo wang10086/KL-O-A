@@ -315,7 +315,7 @@ function change_score_content() {
                             return false;
                         }else if(account_id == 13){ //综合部经理(杜莹)
                             var content = '<div class="form-group col-md-6">'+
-                                '<input type="hidden" name="info[dimension]" value="5"> <!--考核维度-->'+
+                                '<input type="hidden" name="info[dimension]" value="4"> <!--考核维度-->'+
                                 '<input type="hidden" name="data[AA]" value="及时性">'+
                                 '<label>及时性：</label>'+
                                 '<div class="demo score inline-block"><div id="AA"></div></div>'+
@@ -349,8 +349,8 @@ function change_score_content() {
                                 '<span class="sco-star"><input type="radio" name=info[CC] value="1">&nbsp;很低</span>'+
                                 '</div></div>'+
                                 '<div class="form-group col-md-6">'+
-                                '<input type="hidden" name="data[DD]" value="办公环境及条件符合度">'+
-                                '<label>办公环境及条件符合度：</label>'+
+                                '<input type="hidden" name="data[DD]" value="工作要求准确性">'+
+                                '<label>工作要求准确性：</label>'+
                                 '<div class="demo score inline-block"><div id="DD"></div></div>'+
                                 '<div class="form-control no-border star_div">'+
                                 '<span class="sco-star"><input type="radio" name=info[DD] value="5">&nbsp;超出需求</span>&emsp;&emsp;'+
@@ -358,22 +358,11 @@ function change_score_content() {
                                 '<span class="sco-star"><input type="radio" name=info[DD] value="3">&nbsp;一般</span>&emsp;&emsp;'+
                                 '<span class="sco-star"><input type="radio" name=info[DD] value="2">&nbsp;满足部分需求</span>&emsp;&emsp;'+
                                 '<span class="sco-star"><input type="radio" name=info[DD] value="1">&nbsp;完全不满足需求</span>'+
-                                '</div></div>'+
-                                '<div class="form-group col-md-6">'+
-                                '<input type="hidden" name="data[EE]" value="企业文化及氛围">'+
-                                '<label>企业文化及氛围：</label>'+
-                                '<div class="demo score inline-block"><div id="EE"></div></div>'+
-                                '<div class="form-control no-border star_div">'+
-                                '<span class="sco-star"><input type="radio" name=info[EE] value="5">&nbsp;非常满意</span>&emsp;&emsp;'+
-                                '<span class="sco-star"><input type="radio" name=info[EE] value="4">&nbsp;满意</span>&emsp;&emsp;'+
-                                '<span class="sco-star"><input type="radio" name=info[EE] value="3">&nbsp;一般</span>&emsp;&emsp;'+
-                                '<span class="sco-star"><input type="radio" name=info[EE] value="2">&nbsp;不满意</span>&emsp;&emsp;'+
-                                '<span class="sco-star"><input type="radio" name=info[EE] value="1">&nbsp;非常不满意</span>'+
                                 '</div></div>';
                             var html = content + textarea;
                             $('#satisfaction_content').html(html);
                             $('#submit-btn').show();
-                            init_score_5();
+                            init_score_4();
                             init_radio();
                             return false;
                         }else if(account_id == 55){ //财务经理(程小平)
