@@ -14,9 +14,10 @@ final class P {
 	const  VERSION         =   "v2.2.0";
 	const  VERSION_CODE    =   "20180107";
 	const  VERSION_NAME    =   "";
-	const  SYSTEM_NAME     =   "中科科OA系统";
-    const  SYS_NAME        =   "中科科行";
-    
+	const  SYSTEM_NAME     =   "中科 科行OA系统";
+    //const  SYS_NAME        =   "中科科行";
+    const  SYS_NAME        =   "";
+
     
     // 常用参数定义
     const  YES            =    1;   // 是

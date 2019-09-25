@@ -43,7 +43,7 @@
                                     <h3 class="box-title">评分记录</h3>
                                     <div class="box-tools pull-right">
                                         <!--<a href="javascript:;" class="btn btn-info btn-sm" onclick="javascript:opensearch('searchtext',400,160);"><i class="fa fa-search"></i> 搜索</a>-->
-                                        <?php if (in_array(date('d'),array(20,21,22,23,24,25))){ ?>
+                                        <?php if (in_array(date('d'),array(20,21,22,23,24))){ ?>
                                             <a href="{:U('Inspect/satisfaction_add')}" class="btn btn-sm btn-success"><i class="fa fa-plus"></i> 评分</a>
                                         <?php }else{ ?>
                                             <a href="javascript:;" onclick="art_show_msg('请于每月20至24日进行内部人员满意度评分')" class="btn btn-sm btn-default"><span style="color: grey"><i class="fa fa-plus"></i>评分</span></a>
