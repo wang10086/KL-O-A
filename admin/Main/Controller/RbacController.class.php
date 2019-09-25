@@ -1660,6 +1660,11 @@ class RbacController extends BaseController {
         $this->pagetitle                = '数据统计';
         $year		                    = I('year',date('Y'));
         $month		                    = I('month',date('m'));
+        $thisMonths                     = get_sum_months($year,$month,1); //当月月份
+        $sumMonth                       = get_sum_months($year,$month,2); //从年初累计月份
+
+        $mod                            = D('Rbac');
+        $thisMonthData                  = $mod->get_chart_personnel($thisMonths);
 
         $this->year 	                = $year;
         $this->month 	                = $month;

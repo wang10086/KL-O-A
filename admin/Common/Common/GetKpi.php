@@ -4231,4 +4231,28 @@ function get_yw_department(){
         return $data;
     }
 
+    /**
+     * 获取相关月份信息
+     * @param $year
+     * @param $month
+     * @param $type //1=>当月, 2=>从年初累计,
+     * @return array
+     */
+    function get_sum_months($year,$month,$type){
+        $month                  = strlen($month) < 2 ? str_pad($month,2,'0',STR_PAD_LEFT) : $month;
+        $data                   = array();
+        switch ($type){
+            case 1: //当月
+                $data[]         = $year.$month;
+                break;
+            case 2: //从1月累计到当月
+                $num            = intval($month);
+                for ($i=1;$i<=$num;$i++){
+                    $newMonth   = strlen($i) < 2 ?str_pad($i,2,'0',STR_PAD_LEFT) : $month;
+                    $data[]     = $year.$newMonth;
+                }
+                break;
+        }
+        return $data;
+    }
 
