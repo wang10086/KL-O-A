@@ -68,134 +68,26 @@
                                             <th class="taskOptions" width="80">详情</th>
                                         </if>
                                     </tr>
-                                    <tr>
-                                        <td class="taskOptions" rowspan="10">{$month}月</td>
-                                        <td class="taskOptions">员工人数</td>
-                                        <td class="taskOptions"></td>
-                                        <td class="taskOptions"></td>
-                                        <td class="taskOptions"></td>
-                                        <td class="taskOptions"></td>
-                                        <td class="taskOptions"></td>
-                                        <td class="taskOptions"></td>
-                                        <td class="taskOptions"></td>
-                                        <td class="taskOptions"></td>
-                                        <td class="taskOptions"></td>
-                                        <td class="taskOptions"></td>
-                                        <td class="taskOptions"></td>
-                                    </tr>
-                                    <tr>
-                                        <td class="taskOptions">管理岗</td>
-                                        <td class="taskOptions"></td>
-                                        <td class="taskOptions"></td>
-                                        <td class="taskOptions"></td>
-                                        <td class="taskOptions"></td>
-                                        <td class="taskOptions"></td>
-                                        <td class="taskOptions"></td>
-                                        <td class="taskOptions"></td>
-                                        <td class="taskOptions"></td>
-                                        <td class="taskOptions"></td>
-                                        <td class="taskOptions"></td>
-                                        <td class="taskOptions"></td>
-                                    </tr>
-                                    <tr>
-                                        <td class="taskOptions">业务岗</td>
-                                        <td class="taskOptions"></td>
-                                        <td class="taskOptions"></td>
-                                        <td class="taskOptions"></td>
-                                        <td class="taskOptions"></td>
-                                        <td class="taskOptions"></td>
-                                        <td class="taskOptions"></td>
-                                        <td class="taskOptions"></td>
-                                        <td class="taskOptions"></td>
-                                        <td class="taskOptions"></td>
-                                        <td class="taskOptions"></td>
-                                        <td class="taskOptions"></td>
-                                    </tr>
-                                    <tr>
-                                        <td class="taskOptions">研发岗</td>
-                                        <td class="taskOptions"></td>
-                                        <td class="taskOptions"></td>
-                                        <td class="taskOptions"></td>
-                                        <td class="taskOptions"></td>
-                                        <td class="taskOptions"></td>
-                                        <td class="taskOptions"></td>
-                                        <td class="taskOptions"></td>
-                                        <td class="taskOptions"></td>
-                                        <td class="taskOptions"></td>
-                                        <td class="taskOptions"></td>
-                                        <td class="taskOptions"></td>
-                                    </tr>
-                                    <tr>
-                                        <td class="taskOptions">专业岗</td>
-                                        <td class="taskOptions"></td>
-                                        <td class="taskOptions"></td>
-                                        <td class="taskOptions"></td>
-                                        <td class="taskOptions"></td>
-                                        <td class="taskOptions"></td>
-                                        <td class="taskOptions"></td>
-                                        <td class="taskOptions"></td>
-                                        <td class="taskOptions"></td>
-                                        <td class="taskOptions"></td>
-                                        <td class="taskOptions"></td>
-                                        <td class="taskOptions"></td>
-                                    </tr>
-                                    <tr>
-                                        <td class="taskOptions">其他岗位</td>
-                                        <td class="taskOptions"></td>
-                                        <td class="taskOptions"></td>
-                                        <td class="taskOptions"></td>
-                                        <td class="taskOptions"></td>
-                                        <td class="taskOptions"></td>
-                                        <td class="taskOptions"></td>
-                                        <td class="taskOptions"></td>
-                                        <td class="taskOptions"></td>
-                                        <td class="taskOptions"></td>
-                                        <td class="taskOptions"></td>
-                                        <td class="taskOptions"></td>
-                                    </tr>
-                                    <tr>
-                                        <td class="taskOptions">年终奖</td>
-                                        <td class="taskOptions"></td>
-                                        <td class="taskOptions"></td>
-                                        <td class="taskOptions"></td>
-                                        <td class="taskOptions"></td>
-                                        <td class="taskOptions"></td>
-                                        <td class="taskOptions"></td>
-                                        <td class="taskOptions"></td>
-                                        <td class="taskOptions"></td>
-                                        <td class="taskOptions"></td>
-                                        <td class="taskOptions"></td>
-                                        <td class="taskOptions"></td>
-                                    </tr>
-                                    <tr>
-                                        <td class="taskOptions">业务提成</td>
-                                        <td class="taskOptions"></td>
-                                        <td class="taskOptions"></td>
-                                        <td class="taskOptions"></td>
-                                        <td class="taskOptions"></td>
-                                        <td class="taskOptions"></td>
-                                        <td class="taskOptions"></td>
-                                        <td class="taskOptions"></td>
-                                        <td class="taskOptions"></td>
-                                        <td class="taskOptions"></td>
-                                        <td class="taskOptions"></td>
-                                        <td class="taskOptions"></td>
-                                    </tr>
-                                    <tr>
-                                        <td class="taskOptions">奖金包</td>
-                                        <td class="taskOptions"></td>
-                                        <td class="taskOptions"></td>
-                                        <td class="taskOptions"></td>
-                                        <td class="taskOptions"></td>
-                                        <td class="taskOptions"></td>
-                                        <td class="taskOptions"></td>
-                                        <td class="taskOptions"></td>
-                                        <td class="taskOptions"></td>
-                                        <td class="taskOptions"></td>
-                                        <td class="taskOptions"></td>
-                                        <td class="taskOptions"></td>
-                                    </tr>
-                                    <tr>
+                                    <foreach name="thisMonthData" key="k" item="v">
+                                        <tr>
+                                            <?php if ($k=='员工人数'){ ?>
+                                            <td class="taskOptions" rowspan="10">{$month}月</td>
+                                            <?php } ?>
+                                            <td class="taskOptions">{$k}</td>
+                                            <td class="taskOptions">{$v['company']}</td>
+                                            <td class="taskOptions"></td>
+                                            <td class="taskOptions"></td>
+                                            <td class="taskOptions"></td>
+                                            <td class="taskOptions"></td>
+                                            <td class="taskOptions"></td>
+                                            <td class="taskOptions"></td>
+                                            <td class="taskOptions"></td>
+                                            <td class="taskOptions"></td>
+                                            <td class="taskOptions"></td>
+                                            <td class="taskOptions"></td>
+                                        </tr>
+                                    </foreach>
+                                    <!--<tr>
                                         <td class="taskOptions">无奖金</td>
                                         <td class="taskOptions"></td>
                                         <td class="taskOptions"></td>
@@ -208,7 +100,7 @@
                                         <td class="taskOptions"></td>
                                         <td class="taskOptions"></td>
                                         <td class="taskOptions"></td>
-                                    </tr>
+                                    </tr>-->
                                 </table>
                                 </div><!-- /.box-body -->
                                 <div class="box-footer clearfix">

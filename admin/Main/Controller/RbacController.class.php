@@ -1670,6 +1670,7 @@ class RbacController extends BaseController {
         $this->month 	                = $month;
         $this->prveyear	                = $year-1;
         $this->nextyear	                = $year+1;
+        $this->thisMonthData            = $thisMonthData;
         $this->display();
     }
 
