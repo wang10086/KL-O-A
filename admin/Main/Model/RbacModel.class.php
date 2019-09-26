@@ -14,11 +14,11 @@
             $department_arr             = C('department1'); //部门
             $department_info            = $this->get_department_info($department_arr);
 
-            //P($department_info);
             $data                       = array();
             foreach ($department_info as $k => $v){
                 $staff_data             = $this->get_staff_data($months,$v); //员工人数
-                $position_data          = $this->get_position_data($staff_data['list'],$months); //岗位人数信息
+                $really_months          = array_unique(array_column($staff_data['list'],'datetime'));
+                $position_data          = $this->get_position_data($staff_data['list'],$really_months); //岗位人数信息
 
                 $data['员工人数'][$k] = $staff_data['avg_num'];
                 $data['管理岗'][$k]   = $position_data['M']['avg_num'];
@@ -31,7 +31,6 @@
                 $data['奖金包'][$k]   = $position_data['award']['avg_num'];
                 $data['无奖金'][$k]   = $position_data['noAward']['avg_num'];
             }
-
             return $data;
         }
 
@@ -66,7 +65,6 @@
 
         //员工人数
         public function get_staff_data($months,$departments=0){
-            $month_num                  = count($months);
             $where                      = array();
             if ($departments != 0){ $where['a.departmentid'] = array('in',$departments); }
             $where['s.datetime']        = array('in',$months);
@@ -82,6 +80,7 @@
                                             ->where($where)
                                             ->field($field)
                                             ->select();
+            $month_num                  = count(array_unique(array_column($lists,'datetime')));
             $data                       = array();
             $data['avg_num']            = round(count($lists)/$month_num,2);
             $data['list']               = $lists;

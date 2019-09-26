@@ -20,7 +20,7 @@
                         <div class="col-xs-12">
                             <div class="box box-warning">
                                 <div class="box-header">
-                                    <h3 class="box-title">员工统计</h3>
+                                    <h3 class="box-title">{$year}年员工统计</h3>
                                     <if condition="rolemenu(array('Rbac/adduser'))">
                                     <div class="box-tools pull-right">
                                     	<!--<a href="javascript:;" class="btn btn-info btn-sm" onclick="javascript:opensearch('searchtext',400,120);"><i class="fa fa-search"></i> 搜索</a>-->
@@ -86,7 +86,7 @@
                                     <foreach name="sumMonthData" key="k" item="v">
                                         <tr>
                                             <?php if ($k=='员工人数'){ ?>
-                                                <td class="taskOptions" rowspan="10">{$month}月</td>
+                                                <td class="taskOptions" rowspan="10">{$year}年01月 - {$month}月</td>
                                             <?php } ?>
                                             <td class="taskOptions">{$k}</td>
                                             <td class="taskOptions">{$v['公司']}</td>
