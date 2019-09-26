@@ -1659,12 +1659,14 @@ class RbacController extends BaseController {
 
         $mod                            = D('Rbac');
         $thisMonthData                  = $mod->get_chart_personnel($thisMonths);
+        $sumMonthData                   = $mod->get_chart_personnel($sumMonth);
 
         $this->year 	                = $year;
         $this->month 	                = $month;
         $this->prveyear	                = $year-1;
         $this->nextyear	                = $year+1;
         $this->thisMonthData            = $thisMonthData;
+        $this->sumMonthData             = $sumMonthData;
         $this->display();
     }
 

@@ -30,7 +30,7 @@
                                 <div class="box-body">
 
                                 <div class="btn-group" id="catfont" style="padding-bottom:5px;">
-                                    <?php if($prveyear>2019){ ?>
+                                    <?php if($prveyear>2018){ ?>
                                         <a href="{:U('Rbac/chart_personnel',array('year'=>$prveyear,'month'=>'01'))}" class="btn btn-default" style="padding:8px 18px;">上一年</a>
                                     <?php } ?>
                                     <?php
@@ -64,9 +64,6 @@
                                         <th class="taskOptions">市场部(业务)</th>
                                         <th class="taskOptions">常规业务中心</th>
                                         <th class="taskOptions">机关部门</th>
-                                        <if condition="rolemenu(array('Rbac/adduser'))">
-                                            <th class="taskOptions" width="80">详情</th>
-                                        </if>
                                     </tr>
                                     <foreach name="thisMonthData" key="k" item="v">
                                         <tr>
@@ -74,33 +71,36 @@
                                             <td class="taskOptions" rowspan="10">{$month}月</td>
                                             <?php } ?>
                                             <td class="taskOptions">{$k}</td>
-                                            <td class="taskOptions">{$v['company']}</td>
-                                            <td class="taskOptions"></td>
-                                            <td class="taskOptions"></td>
-                                            <td class="taskOptions"></td>
-                                            <td class="taskOptions"></td>
-                                            <td class="taskOptions"></td>
-                                            <td class="taskOptions"></td>
-                                            <td class="taskOptions"></td>
-                                            <td class="taskOptions"></td>
-                                            <td class="taskOptions"></td>
-                                            <td class="taskOptions"></td>
+                                            <td class="taskOptions">{$v['公司']}</td>
+                                            <td class="taskOptions">{$v['京区业务中心']}</td>
+                                            <td class="taskOptions">{$v['京外业务中心']}</td>
+                                            <td class="taskOptions">{$v['南京项目部']}</td>
+                                            <td class="taskOptions">{$v['武汉项目部']}</td>
+                                            <td class="taskOptions">{$v['沈阳项目部']}</td>
+                                            <td class="taskOptions">{$v['长春项目部']}</td>
+                                            <td class="taskOptions">{$v['市场部']}</td>
+                                            <td class="taskOptions">{$v['常规业务中心']}</td>
+                                            <td class="taskOptions">{$v['机关部门']}</td>
                                         </tr>
                                     </foreach>
-                                    <!--<tr>
-                                        <td class="taskOptions">无奖金</td>
-                                        <td class="taskOptions"></td>
-                                        <td class="taskOptions"></td>
-                                        <td class="taskOptions"></td>
-                                        <td class="taskOptions"></td>
-                                        <td class="taskOptions"></td>
-                                        <td class="taskOptions"></td>
-                                        <td class="taskOptions"></td>
-                                        <td class="taskOptions"></td>
-                                        <td class="taskOptions"></td>
-                                        <td class="taskOptions"></td>
-                                        <td class="taskOptions"></td>
-                                    </tr>-->
+                                    <foreach name="sumMonthData" key="k" item="v">
+                                        <tr>
+                                            <?php if ($k=='员工人数'){ ?>
+                                                <td class="taskOptions" rowspan="10">{$month}月</td>
+                                            <?php } ?>
+                                            <td class="taskOptions">{$k}</td>
+                                            <td class="taskOptions">{$v['公司']}</td>
+                                            <td class="taskOptions">{$v['京区业务中心']}</td>
+                                            <td class="taskOptions">{$v['京外业务中心']}</td>
+                                            <td class="taskOptions">{$v['南京项目部']}</td>
+                                            <td class="taskOptions">{$v['武汉项目部']}</td>
+                                            <td class="taskOptions">{$v['沈阳项目部']}</td>
+                                            <td class="taskOptions">{$v['长春项目部']}</td>
+                                            <td class="taskOptions">{$v['市场部']}</td>
+                                            <td class="taskOptions">{$v['常规业务中心']}</td>
+                                            <td class="taskOptions">{$v['机关部门']}</td>
+                                        </tr>
+                                    </foreach>
                                 </table>
                                 </div><!-- /.box-body -->
                                 <div class="box-footer clearfix">
