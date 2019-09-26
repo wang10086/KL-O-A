@@ -869,7 +869,7 @@ class WorderController extends BaseController{
                 }else{
                     $info['response_time']      = NOW_TIME;
                     $info['hour']               = (float)$info['hour'] ? (float)$info['hour'] : $this->error('完成该工单所需工时填写错误');
-                    $num                        = I('use_time') ? (int)I('use_time') : '';
+                    $num                        = I('use_time') ? (int)I('use_time') : 0;
                     if($num) $info['plan_complete_time'] = strtotime(getAfterWorkDay($num,NOW_TIME));
                     $record_type                = 2;
                     $record_explain             = '响应该工单';
