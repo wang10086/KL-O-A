@@ -68,8 +68,7 @@ class BaseController extends Controller {
 		$this->assign('_pagedesc_',  $this->_pagedesc_);
 		$this->assign('_action_',    $this->_action_);
 		$this->assign('_sum_audit',    $this->_sum_audit);
-        //(date('d')==25 && date('H') >=18) ? auto_init_kpi() : ''; //每月25日18点后更新KPI
-		
+
     }
     
     /*

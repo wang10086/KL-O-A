@@ -14,10 +14,6 @@ class KpiController extends BaseController {
 
 	// @@@NODE-3###pdcaresult###考评结果###
     public function pdcaresult(){
-        $autoRefresh        = trim(I('autoRefresh'));
-        if ($autoRefresh){
-            auto_init_kpi();    //初始化所有用户KPI数据
-        }
         $this->title('绩效考评结果');
 
 		$year		= I('year',date('Y'));

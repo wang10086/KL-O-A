@@ -784,7 +784,6 @@
                                         </a>
                                         <ul class="treeview-menu">
                                             <if condition="rolemenu(array('Kpi/pdcaresult'))">
-                                                <!--<li><a href="{:U('Kpi/pdcaresult',array('autoRefresh'=>1))}"><i class="fa fa-angle-right"></i> 绩效考评结果</a></li>-->
                                                 <li><a href="{:U('Kpi/pdcaresult')}"><i class="fa fa-angle-right"></i> 绩效考评结果</a></li>
                                             </if>
                                             <if condition="rolemenu(array('Kpi/pdca'))">
