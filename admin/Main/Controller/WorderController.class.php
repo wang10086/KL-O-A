@@ -163,7 +163,7 @@ class WorderController extends BaseController{
         $page			            = new Page($pagecount, P::PAGE_SIZE);
         $this->pages	            = $pagecount>P::PAGE_SIZE ? $page->show():'';
 
-        $lists                      = $db->where($where)->limit($page->firstRow . ',' . $page->listRows)->order($this->orders('create_time'))->select();
+        $lists                      = $db->where($where)->limit($page->firstRow . ',' . $page->listRows)->order($this->orders('id'))->select();
         foreach($lists as $k=>$v){
             //判断工单状态
             if($v['status']==0)     $lists[$k]['sta'] = '<span class="red">未响应</span>';
@@ -870,7 +870,7 @@ class WorderController extends BaseController{
                     $info['response_time']      = NOW_TIME;
                     $info['hour']               = (float)$info['hour'] ? (float)$info['hour'] : $this->error('完成该工单所需工时填写错误');
                     $num                        = I('use_time') ? (int)I('use_time') : '';
-                    if($num) $info['plan_complete_time'] = strtotime(getAfterWorkDay($num,$worder['create_time']));
+                    if($num) $info['plan_complete_time'] = strtotime(getAfterWorkDay($num,NOW_TIME));
                     $record_type                = 2;
                     $record_explain             = '响应该工单';
                 }
