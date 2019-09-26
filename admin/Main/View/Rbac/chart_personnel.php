@@ -61,7 +61,7 @@
                                         <th class="taskOptions">武汉项目部</th>
                                         <th class="taskOptions">沈阳项目部</th>
                                         <th class="taskOptions">长春项目部</th>
-                                        <th class="taskOptions">市场部(业务)</th>
+                                        <th class="taskOptions">市场部</th>
                                         <th class="taskOptions">常规业务中心</th>
                                         <th class="taskOptions">机关部门</th>
                                     </tr>
