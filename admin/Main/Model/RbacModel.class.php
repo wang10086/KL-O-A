@@ -82,7 +82,7 @@
                                             ->select();
             $month_num                  = count(array_unique(array_column($lists,'datetime')));
             $data                       = array();
-            $data['avg_num']            = round(count($lists)/$month_num,2);
+            $data['avg_num']            = $month_num ? round(count($lists)/$month_num,2) : 0;
             $data['list']               = $lists;
             return $data;
         }
@@ -158,11 +158,11 @@
             $percentageMonthNum         = count(array_filter(array_unique($percentageMonth)));
             $noAwardMonthNum            = count(array_filter(array_unique($noAwardMonth)));
 
-            $M['avg_num']               = round($M['num']/$month_num,2); //月平均人数
-            $S['avg_num']               = round($S['num']/$month_num,2);
-            $T['avg_num']               = round($T['num']/$month_num,2);
-            $P['avg_num']               = round($P['num']/$month_num,2);
-            $other['avg_num']           = round($other['num']/$month_num,2);
+            $M['avg_num']               = $month_num ? round($M['num']/$month_num,2) : 0; //月平均人数
+            $S['avg_num']               = $month_num ? round($S['num']/$month_num,2) : 0;
+            $T['avg_num']               = $month_num ? round($T['num']/$month_num,2) : 0;
+            $P['avg_num']               = $month_num ? round($P['num']/$month_num,2) : 0;
+            $other['avg_num']           = $month_num ? round($other['num']/$month_num,2) : 0;
             $yearEndBonus['avg_num']    = $yearEndBonusMonthNum ? round($yearEndBonusNum/$yearEndBonusMonthNum,2) : 0; //年终奖平均人数
             $award['avg_num']           = $awardMonthNum ? round($awardNum/$awardMonthNum) : 0;
             $percentage['avg_num']      = $percentageMonthNum ? round($percentageNum/$percentageMonthNum) : 0;
