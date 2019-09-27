@@ -4118,9 +4118,10 @@ function get_yw_department(){
     function get_workload_worders($uid,$startTime=0,$endTime=0){
         $st                     = $startTime != 0 ? strtotime('-1 month',$startTime) : $startTime;
         $where                  = array();
-        $where['status']        = array('not in',array(-1,-2)); //-1拒绝, -2=>撤销
+        $where['w.status']        = array('not in',array(-1,-2)); //-1拒绝, -2=>撤销
+
         //$where['_string']       = "((assign_id = $uid) OR (exe_user_id = $uid and assign_id = 0)) AND ((response_time between $startTime and $endTime) OR (plan_complete_time between $startTime and $endTime))";
-        $where['_string']       = "((assign_id = $uid) OR (exe_user_id = $uid and assign_id = 0)) AND ((response_time between $st and $endTime) OR (plan_complete_time between $startTime and $endTime))";
+        $where['_string']       = "((w.assign_id = $uid) OR (w.exe_user_id = $uid and w.assign_id = 0)) AND ((w.response_time between $st and $endTime) OR (w.plan_complete_time between $startTime and $endTime))";
         $lists  = M()->table('__WORDER__ as w')->field('w.*,d.use_time')->join('__WORDER_DEPT__ as d on d.id=w.wd_id','left')->where($where)->order('id desc')->select();
         foreach ($lists as $k=>$v){
             $lists[$k]['str_plan_complete_time'] = date('Y-m-d',$v['plan_complete_time']);
@@ -4133,25 +4134,26 @@ function get_yw_department(){
     function get_workload_data($lists,$work_day_data,$startTime,$endTime){
         $workDay                = $work_day_data['workDay']; //所有的工作日
         $workLoadHourNum        = 0; //总工时
+        $new_list               = array();
         foreach ($lists as $k=>$v){
             //按照工时求计划完成时间
             $worderHoursOverTime= getWorderHoursOverTime($v['response_time'],$v['hour']);
 
             if ($v['response_time'] < $startTime && $worderHoursOverTime < $endTime){ //上周期提需求,本周期完成
                 $worderDayData  = get_worder_day_num($workDay,$v['response_time'],$worderHoursOverTime);
-                $worderDayNum   = ($worderDayData['work_day_num'] -1) < 0 ? 0 : ($worderDayData['work_day_num'] -1);
+                $worderDayNum   = $worderDayData['work_day_num'];
                 $float_day_hour = $worderDayData['float_day_hour'];
-                $hours          = ($worderDayNum * 8) + $float_day_hour;
+                $hours          = ($v['hour'] < 8) ? $float_day_hour : (($worderDayNum * 8) + $float_day_hour <= $v['hour'] ? ($worderDayNum * 8) + $float_day_hour : $v['hour']);
             }elseif ($v['response_time'] > $startTime && $worderHoursOverTime > $endTime){ //本周期提需求,下周期完成
                 $worderDayData  = get_worder_day_num($workDay,$v['response_time'],$worderHoursOverTime);
-                $worderDayNum   = ($worderDayData['work_day_num'] -1) < 0 ? 0 : ($worderDayData['work_day_num'] -1);
+                $worderDayNum   = $worderDayData['work_day_num'];
                 $float_day_hour = $worderDayData['float_day_hour'];
-                $hours          = ($worderDayNum * 8);
+                $hours          = ($v['hour'] < 8) ? $float_day_hour : (($worderDayNum * 8) <= $v['hour'] ? ($worderDayNum * 8) : $v['hour']);
             }else{ //本周期提需求,本周期完成
                 $worderDayData  = get_worder_day_num($workDay,$v['response_time'],$worderHoursOverTime);
-                $worderDayNum   = ($worderDayData['work_day_num'] -1) < 0 ? 0 : ($worderDayData['work_day_num'] -1);
+                $worderDayNum   = $worderDayData['work_day_num'];
                 $float_day_hour = $worderDayData['float_day_hour'];
-                $hours          = ($worderDayNum * 8) + $float_day_hour;
+                $hours          = ($v['hour'] < 8) ? $float_day_hour : (($worderDayNum * 8) + $float_day_hour <= $v['hour'] ? ($worderDayNum * 8) + $float_day_hour : $v['hour']);
             }
 
             //判断工单状态
@@ -4163,13 +4165,17 @@ function get_yw_department(){
             if($v['status']==-2)    $lists[$k]['sta'] = '已撤销';
             if($v['status']==-3)    $lists[$k]['sta'] = '<span class="red">需要做二次修改</span>';
 
-            $workLoadHourNum                += $hours;
-            $lists[$k]['worderHourNum']     = $v['hour'];
-            $lists[$k]['thisMonthHourNum']  = $hours;
+            $workLoadHourNum                        += $hours;
+            if ($hours){
+                $new_list[$k]                       = $v;
+                $new_list[$k]['worderHourNum']      = $v['hour'];
+                $new_list[$k]['thisMonthHourNum']   = $hours;
+            }
         }
+
         $data                   = array();
         $data['workLoadHourNum']= $workLoadHourNum; //工单所需总工时
-        $data['lists']          = $lists;
+        $data['lists']          = $new_list;
         return $data;
     }
 
@@ -4183,7 +4189,7 @@ function get_yw_department(){
         $dayData                = explode('.',$hourDays);
         $intTime                = getafterWorkDay($dayData[0],$response_time);
         $floatTime              = $dayData[1] ? (9+(8*('0.'.$dayData[1])))*3600 : 0;
-        $overTime               = strtotime($intTime) + $floatTime;
+        $overTime               = ($hour < 8) ? (strtotime($intTime) + $floatTime) :(strtotime($intTime) + $floatTime) - (24*3600); //getafterWorkDay默认添加一天 , 这里应该减去
         return $overTime;
     }
 
