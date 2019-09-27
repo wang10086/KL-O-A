@@ -71,16 +71,16 @@
                                             <td class="taskOptions" rowspan="10">{$month}月</td>
                                             <?php } ?>
                                             <td class="taskOptions">{$k}</td>
-                                            <td class="taskOptions">{$v['公司']}</td>
-                                            <td class="taskOptions">{$v['京区业务中心']}</td>
-                                            <td class="taskOptions">{$v['京外业务中心']}</td>
-                                            <td class="taskOptions">{$v['南京项目部']}</td>
-                                            <td class="taskOptions">{$v['武汉项目部']}</td>
-                                            <td class="taskOptions">{$v['沈阳项目部']}</td>
-                                            <td class="taskOptions">{$v['长春项目部']}</td>
-                                            <td class="taskOptions">{$v['市场部']}</td>
-                                            <td class="taskOptions">{$v['常规业务中心']}</td>
-                                            <td class="taskOptions">{$v['机关部门']}</td>
+                                            <td class="taskOptions"><a href="{:U('Rbac/public_chart_personnel_detail',array('year'=>$year,'month'=>$month,'uids'=>$v['公司']['uids']))}">{$v['公司']['num']}</a></td>
+                                            <td class="taskOptions"><a href="{:U('Rbac/public_chart_personnel_detail',array('year'=>$year,'month'=>$month,'uids'=>$v['京区业务中心']['uids']))}">{$v['京区业务中心']['num']}</a></td>
+                                            <td class="taskOptions"><a href="{:U('Rbac/public_chart_personnel_detail',array('year'=>$year,'month'=>$month,'uids'=>$v['京外业务中心']['uids']))}">{$v['京外业务中心']['num']}</a></td>
+                                            <td class="taskOptions"><a href="{:U('Rbac/public_chart_personnel_detail',array('year'=>$year,'month'=>$month,'uids'=>$v['南京项目部']['uids']))}">{$v['南京项目部']['num']}</a></td>
+                                            <td class="taskOptions"><a href="{:U('Rbac/public_chart_personnel_detail',array('year'=>$year,'month'=>$month,'uids'=>$v['武汉项目部']['uids']))}">{$v['武汉项目部']['num']}</a></td>
+                                            <td class="taskOptions"><a href="{:U('Rbac/public_chart_personnel_detail',array('year'=>$year,'month'=>$month,'uids'=>$v['沈阳项目部']['uids']))}">{$v['沈阳项目部']['num']}</a></td>
+                                            <td class="taskOptions"><a href="{:U('Rbac/public_chart_personnel_detail',array('year'=>$year,'month'=>$month,'uids'=>$v['长春项目部']['uids']))}">{$v['长春项目部']['num']}</a></td>
+                                            <td class="taskOptions"><a href="{:U('Rbac/public_chart_personnel_detail',array('year'=>$year,'month'=>$month,'uids'=>$v['市场部']['uids']))}">{$v['市场部']['num']}</a></td>
+                                            <td class="taskOptions"><a href="{:U('Rbac/public_chart_personnel_detail',array('year'=>$year,'month'=>$month,'uids'=>$v['常规业务中心']['uids']))}">{$v['常规业务中心']['num']}</a></td>
+                                            <td class="taskOptions"><a href="{:U('Rbac/public_chart_personnel_detail',array('year'=>$year,'month'=>$month,'uids'=>$v['机关部门']['uids']))}">{$v['机关部门']['num']}</a></td>
                                         </tr>
                                     </foreach>
                                     <foreach name="sumMonthData" key="k" item="v">
@@ -89,16 +89,16 @@
                                                 <td class="taskOptions" rowspan="10">{$year}年01月 - {$month}月</td>
                                             <?php } ?>
                                             <td class="taskOptions">{$k}</td>
-                                            <td class="taskOptions">{$v['公司']}</td>
-                                            <td class="taskOptions">{$v['京区业务中心']}</td>
-                                            <td class="taskOptions">{$v['京外业务中心']}</td>
-                                            <td class="taskOptions">{$v['南京项目部']}</td>
-                                            <td class="taskOptions">{$v['武汉项目部']}</td>
-                                            <td class="taskOptions">{$v['沈阳项目部']}</td>
-                                            <td class="taskOptions">{$v['长春项目部']}</td>
-                                            <td class="taskOptions">{$v['市场部']}</td>
-                                            <td class="taskOptions">{$v['常规业务中心']}</td>
-                                            <td class="taskOptions">{$v['机关部门']}</td>
+                                            <td class="taskOptions">{$v['公司']['num']}</td>
+                                            <td class="taskOptions">{$v['京区业务中心']['num']}</td>
+                                            <td class="taskOptions">{$v['京外业务中心']['num']}</td>
+                                            <td class="taskOptions">{$v['南京项目部']['num']}</td>
+                                            <td class="taskOptions">{$v['武汉项目部']['num']}</td>
+                                            <td class="taskOptions">{$v['沈阳项目部']['num']}</td>
+                                            <td class="taskOptions">{$v['长春项目部']['num']}</td>
+                                            <td class="taskOptions">{$v['市场部']['num']}</td>
+                                            <td class="taskOptions">{$v['常规业务中心']['num']}</td>
+                                            <td class="taskOptions">{$v['机关部门']['num']}</td>
                                         </tr>
                                     </foreach>
                                 </table>

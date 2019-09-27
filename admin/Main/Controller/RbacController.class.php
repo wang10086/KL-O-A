@@ -1670,5 +1670,33 @@ class RbacController extends BaseController {
         $this->display();
     }
 
+    //数据统计--员工统计详情
+    public function public_chart_personnel_detail(){
+        $uid                            = I('uids');
+        $uids                           = $uid ? explode(',',$uid) : '';
+        $year                           = I('year');
+        $month                          = I('month');
+        $departmentid                   = I('departmentid',0);
+        $key                            = I('key','');
 
+        //P($_GET);
+
+        $where                          = array();
+        $where['id']                    = array('in',$uids);
+        if ($key) $where['nickname']    = array('like','%'.$key.'%');
+        if ($departmentid) $where['departmentid'] = $departmentid;
+
+        $pagecount                      = M()->table('__ACCOUNT__ as a')->where($where)->count();
+        $page                           = new Page($pagecount, P::PAGE_SIZE);
+        $this->pages                    = $pagecount>P::PAGE_SIZE ? $page->show():'';
+        $lists                          = M()->table('__ACCOUNT__ as a')->where($where)->order($this->orders('id'))->limit($page->firstRow.','.$page->listRows)->select();
+
+        $this->departments              = M('salary_department')->getField('id,department',true);
+        $this->posts                    = M('posts')->getField('id,post_name',true);
+        $this->lists                    = $lists;
+        $this->uids                     = $uid;
+        $this->year                     = $year;
+        $this->month                    = $month;
+        $this->display('chart_personnel_detail');
+    }
 }

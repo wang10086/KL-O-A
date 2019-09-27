@@ -20,16 +20,29 @@
                 $really_months          = array_unique(array_column($staff_data['list'],'datetime'));
                 $position_data          = $this->get_position_data($staff_data['list'],$really_months); //岗位人数信息
 
-                $data['员工人数'][$k] = $staff_data['avg_num'];
-                $data['管理岗'][$k]   = $position_data['M']['avg_num'];
-                $data['业务岗'][$k]   = $position_data['S']['avg_num'];
-                $data['研发岗'][$k]   = $position_data['P']['avg_num'];
-                $data['专业岗'][$k]   = $position_data['T']['avg_num'];
-                $data['其他岗位'][$k] = $position_data['other']['num'];
-                $data['年终奖'][$k]   = $position_data['yearEndBonus']['avg_num'];
-                $data['业务提成'][$k] = $position_data['percentage']['avg_num'];
-                $data['奖金包'][$k]   = $position_data['award']['avg_num'];
-                $data['无奖金'][$k]   = $position_data['noAward']['avg_num'];
+                $data['员工人数'][$k]['num']   = $staff_data['avg_num'];
+                $data['管理岗'][$k]['num']     = $position_data['M']['avg_num'];
+                $data['业务岗'][$k]['num']     = $position_data['S']['avg_num'];
+                $data['研发岗'][$k]['num']     = $position_data['P']['avg_num'];
+                $data['专业岗'][$k]['num']     = $position_data['T']['avg_num'];
+                //$data['其他岗位'][$k]['num']  = $position_data['other']['num'];
+                $data['其他岗位'][$k]['num']   = $position_data['other']['avg_num'];
+                $data['年终奖'][$k]['num']     = $position_data['yearEndBonus']['avg_num'];
+                $data['业务提成'][$k]['num']   = $position_data['percentage']['avg_num'];
+                $data['奖金包'][$k]['num']     = $position_data['award']['avg_num'];
+                $data['无奖金'][$k]['num']     = $position_data['noAward']['avg_num'];
+
+                $data['员工人数'][$k]['uids']   = $staff_data['uids'];
+                $data['管理岗'][$k]['uids']    = $position_data['M']['uids'];
+                $data['业务岗'][$k]['uids']    = $position_data['S']['uids'];
+                $data['研发岗'][$k]['uids']    = $position_data['P']['uids'];
+                $data['专业岗'][$k]['uids']    = $position_data['T']['uids'];
+                //$data['其他岗位'][$k]['uids'] = $position_data['other']['num'];
+                $data['其他岗位'][$k]['uids']  = $position_data['other']['avg_num'];
+                $data['年终奖'][$k]['uids']    = $position_data['yearEndBonus']['uids'];
+                $data['业务提成'][$k]['uids']  = $position_data['percentage']['uids'];
+                $data['奖金包'][$k]['uids']    = $position_data['award']['uids'];
+                $data['无奖金'][$k]['uids']    = $position_data['noAward']['uids'];
             }
             return $data;
         }
@@ -70,19 +83,18 @@
             $where['s.datetime']        = array('in',$months);
             $where['s.status']          = 4;
             $where['s.user_name']       = array('notlike','%1');
-            //$field                      = 's.id,s.account_id,s.user_name,s.department,s.datetime,s.post_name,s.total,a.position_id,d.bonusType,p.position_name,p.code,b.foreign_bonus,b.annual_bonus';
             $field                      = 's.id,s.account_id,s.user_name,s.department,s.datetime,s.post_name,s.total,a.position_id,d.bonusType,p.position_name,p.code';
             $lists                      = M()->table('__SALARY_WAGES_MONTH__ as s')
                                             ->join('__ACCOUNT__ as a on a.id=s.account_id','left')
                                             ->join('__ACCOUNT_DETAIL__ as d on d.account_id = s.account_id','left')
                                             ->join('__POSITION__ as p on p.id=a.position_id','left')
-                                            //->join('__SALARY_BONUS__ as b on b.id=s.bonus_id','left')
                                             ->where($where)
                                             ->field($field)
                                             ->select();
             $month_num                  = count(array_unique(array_column($lists,'datetime')));
             $data                       = array();
             $data['avg_num']            = $month_num ? round(count($lists)/$month_num,2) : 0;
+            $data['uids']               = implode(',',array_column($lists,'account_id'));
             $data['list']               = $lists;
             return $data;
         }
@@ -167,6 +179,16 @@
             $award['avg_num']           = $awardMonthNum ? round($awardNum/$awardMonthNum) : 0;
             $percentage['avg_num']      = $percentageMonthNum ? round($percentageNum/$percentageMonthNum) : 0;
             $noAward['avg_num']         = $noAwardMonthNum ? round($noAwardNum/$noAwardMonthNum) : 0;
+
+            $M['uids']                  = implode(',',array_column($M['list'],'account_id'));
+            $S['uids']                  = implode(',',array_column($S['list'],'account_id'));
+            $T['uids']                  = implode(',',array_column($T['list'],'account_id'));
+            $P['uids']                  = implode(',',array_column($P['list'],'account_id'));
+            $other['uids']              = implode(',',array_column($other['list'],'account_id'));
+            $yearEndBonus['uids']       = implode(',',array_column($yearEndBonus,'account_id'));
+            $award['uids']              = implode(',',array_column($award,'account_id'));
+            $percentage['uids']         = implode(',',array_column($percentage,'account_id'));
+            $noAward['uids']            = implode(',',array_column($noAward,'account_id'));
 
             $data                       = array();
             $data['M']                  = $M;
