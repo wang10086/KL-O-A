@@ -97,7 +97,6 @@
                                                                 }
                                                             ?>
                                                         </td>
-
                                                     </if>
 
                                                 </tr>
@@ -118,12 +117,9 @@
                                                 <if condition="rolemenu(array('Kpi/handle')) && in_array($pin,array(0,2))">
                                                     <th width="50" class="taskOptions">处理</th>
                                                 </if>
-                                                <!--<if condition="rolemenu(array('Kpi/appqa'))">
-                                                    <th width="50" class="taskOptions">审核</th>
-                                                </if>-->
-                                                <if condition="rolemenu(array('Kpi/revoke'))">
-                                                    <th width="50" class="taskOptions">撤销</th>
-                                                </if>
+                                                <?php if (rolemenu(array('Kpi/revoke'))){ ?>
+                                                <th width="50" class="taskOptions">撤销</th>
+                                                <?php } ?>
                                             </tr>
                                             <foreach name="lists" item="row">
                                                 <tr>
@@ -153,29 +149,13 @@
                                                         </td>
                                                     <?php  } ?>
 
-                                                    <!--<if condition="rolemenu(array('Kpi/appqa'))">
+                                                    <?php if (rolemenu(array('Kpi/revoke'))){ ?>
                                                         <td class="taskOptions">
-                                                            <?php
-/*                                                                if(rolemenu(array('Kpi/appqa')) && (($row['status']==0 && $row['kind']==1) || ($row['status']==5 && $row['kind']==2))) {
-                                                                    */?>
-                                                                    <a href="{:U('Kpi/appqa',array('id'=>$row['id']))}"  title="审核" class="btn btn-success btn-smsm"><i class="fa fa-check"></i></a>
-                                                                    <?php
-/*                                                                }
-                                                            */?>
+                                                            <?php if((in_array($row['status'],array(0,1,3,4,5,6)) && in_array(cookie('userid'),array(1,11,26,38,32))) ||(cookie('userid')==$row['inc_user_id'] && in_array($row['status'],array(0,3)))) { ?>
+                                                                <button onClick="javascript:ConfirmDel('{:U('Kpi/revoke',array('id'=>$row['id']))}','您真的要撤销吗？')" title="删除" class="btn btn-warning btn-smsm"><i class="fa fa-reply"></i></button>
+                                                            <?php } ?>
                                                         </td>
-                                                    </if>-->
-                                                    <if condition="rolemenu(array('Kpi/revoke'))">
-                                                        <td class="taskOptions">
-                                                            <?php
-                                                                if(($row['status']==1 && in_array(cookie('userid'),array(12,13,26,38,32))) ||(C('RBAC_SUPER_ADMIN')==cookie('username') || cookie('roleid')==10)) {
-                                                                    ?>
-                                                                    <button onClick="javascript:ConfirmDel('{:U('Kpi/revoke',array('id'=>$row['id']))}','您真的要撤销吗？')" title="删除" class="btn btn-warning btn-smsm"><i class="fa fa-reply"></i></button>
-                                                                    <?php
-                                                                }
-                                                            ?>
-                                                        </td>
-
-                                                    </if>
+                                                    <?php } ?>
 
                                                 </tr>
                                             </foreach>

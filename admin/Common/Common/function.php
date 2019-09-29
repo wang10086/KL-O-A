@@ -1943,17 +1943,28 @@ function set_quarter($year,$quarter){
         return $yearMonth;
     }
 
+    /*function get_last_month_salary($month){
+        $where                  = array();
+        $where['datetime']      = $month;
+        $where['status']        = 4; //已批准
+        $list                   = M('salary_wages_month')->where($where)->find();
+        return $list;
+    }*/
 
 
 function updatekpi($month,$user){
     $kpi_cycle          = M('account')->where(array('id'=>$user))->getField('kpi_cycle');
     $cycle_arr_month    = get_kpi_refresh_yearMonth($month,$kpi_cycle);
+    $arr_length         = count($cycle_arr_month);
+    $lastMonth          = $cycle_arr_month[$arr_length-1];
+    $cycle_end_time     = strtotime($lastMonth.'26');
+    //$lastMonthSalary    = get_last_month_salary($lastMonth);
 
 	$where = array();
     $where['month']   = array('like','%'.$month.'%');
     $where['user_id'] = $user;
 
-    if (($kpi_cycle == 1 && ($month==date('Ym') && date('d')<26) || ($month==(date('Ym')+1) && date('d')>25)) || (in_array($kpi_cycle,array(2,3,4)) && in_array(date('Ym'),$cycle_arr_month))){   //只刷新当前月份,避免老数据刷新  区分考核周期月度,季度半年度...
+    if (($kpi_cycle == 1 && ($month==date('Ym') && date('d')<26) || ($month==(date('Ym')+1) && date('d')>25)) || (in_array($kpi_cycle,array(2,3,4)) && in_array(date('Ym'),$cycle_arr_month) && NOW_TIME < $cycle_end_time)){   //只刷新当前月份,避免老数据刷新  区分考核周期月度,季度半年度...
         $quto   = M('kpi_more')->where($where)->select();
         if($quto){
             foreach($quto as $k=>$v){
