@@ -31,12 +31,13 @@
                                 <div class="box-body">
 								<table class="table table-bordered dataTable fontmini" id="tablelist">
                                     <tr role="row" class="orders" >
-                                        <th class="sorting" width="80" data="id">ID</th>
-                                        <th class="sorting" data="nickname">姓名</th>
-                                        <th class="sorting" data="departmentid">部门</th>
-                                        <th class="sorting" data="postid">岗位</th>
-                                        <th class="sorting" data="entry_time">入职时间</th>
-                                        <th class="sorting" data="status">状态</th>
+                                        <th class="sorting" width="80" data="a.id">ID</th>
+                                        <th class="sorting" data="a.nickname">姓名</th>
+                                        <th class="sorting" data="a.departmentid">部门</th>
+                                        <th class="sorting" data="a.postid">岗位</th>
+                                        <th class="sorting" data="a.entry_time">入职时间</th>
+                                        <th class="sorting" data="a.status">状态</th>
+                                        <th class="sorting" data="s.standard">工资信息</th>
                                     </tr>
                                     <foreach name="lists" item="row">
                                         <tr>
@@ -46,6 +47,7 @@
                                             <td>{$posts[$row['postid']]}</td>
                                             <td><if condition="$row['entry_time']">{$row.entry_time|date='Y-m-d',###}</if></td>
                                             <td><?php if($row['status']==0){ echo '<span class="green">正常</span>';}else{ echo '<span class="red">停用</span>';} ?></td>
+                                            <td>{$row.standard}</td>
                                         </tr>
                                     </foreach>										
                                 </table>

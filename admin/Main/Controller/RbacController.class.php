@@ -1679,17 +1679,17 @@ class RbacController extends BaseController {
         $departmentid                   = I('departmentid',0);
         $key                            = I('key','');
 
-        //P($_GET);
-
         $where                          = array();
-        $where['id']                    = array('in',$uids);
-        if ($key) $where['nickname']    = array('like','%'.$key.'%');
-        if ($departmentid) $where['departmentid'] = $departmentid;
+        $where['a.id']                  = array('in',$uids);
+        $where['s.datetime']            = $year.$month;
+        if ($key) $where['a.nickname']  = array('like','%'.$key.'%');
+        if ($departmentid) $where['a.departmentid'] = $departmentid;
+        $field                          = 'a.*,s.standard';
 
-        $pagecount                      = M()->table('__ACCOUNT__ as a')->where($where)->count();
+        $pagecount                      = M()->table('__ACCOUNT__ as a')->join('__SALARY_WAGES_MONTH__ as s on s.account_id = a.id','left')->where($where)->field($field)->count();
         $page                           = new Page($pagecount, P::PAGE_SIZE);
         $this->pages                    = $pagecount>P::PAGE_SIZE ? $page->show():'';
-        $lists                          = M()->table('__ACCOUNT__ as a')->where($where)->order($this->orders('id'))->limit($page->firstRow.','.$page->listRows)->select();
+        $lists                          = M()->table('__ACCOUNT__ as a')->join('__SALARY_WAGES_MONTH__ as s on s.account_id = a.id','left')->where($where)->field($field)->order($this->orders('a.id'))->limit($page->firstRow.','.$page->listRows)->select();
 
         $this->departments              = M('salary_department')->getField('id,department',true);
         $this->posts                    = M('posts')->getField('id,post_name',true);
