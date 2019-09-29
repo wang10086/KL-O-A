@@ -800,7 +800,7 @@ class KpiController extends BaseController {
 			'1' => '<span class="green">审核通过</span>',
 			'2' => '<span class="red">审核未过</span>',
             '3' => '<span class="yellow">未提交</span>',
-            '4' => '<span class="red">未处理</span>',
+            '4' => '<span class="red">待处理</span>',
             '5' => '<span class="blue">处理中...</span>',
             '6' => '<span class="yellow">待审批</span>'
 		);
@@ -808,12 +808,11 @@ class KpiController extends BaseController {
 		$new_lists                                  = array();
         $authority_uids                             = array(1,11,38,26,173);//11乔总,38杨总,26李岩,173蔡金龙
 		foreach($lists as $k=>$v){
-			//$lists[$k]['statusstr']                 = $stastr[$v['status']];
             $v['statusstr']                         = $stastr[$v['status']];
             if (in_array(session('userid'),$authority_uids)){
                 $new_lists[]                        = $v;
             }else{
-                if ($v['status'] ==1){ //审核通过
+                if (($pin == 1 && $v['status'] ==1) || ($pin == 2 && session('userid') == $v['inc_user_id'])){ //审核通过
                     $new_lists[]                    = $v;
                 }
             }
@@ -1124,7 +1123,7 @@ class KpiController extends BaseController {
             '1' => '<span class="green">审核通过</span>',
             '2' => '<span class="red">审核未过</span>',
             '3' => '<span class="yellow">未提交</span>',
-            '4' => '<span class="red">未处理</span>',
+            '4' => '<span class="red">待处理</span>',
             '5' => '<span class="blue">处理中...</span>',
             '6' => '<span class="yellow">待审批</span>'
         );

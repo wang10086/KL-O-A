@@ -27,8 +27,13 @@
             <div class="form-group box-float-4" style="padding-left:0;">陪同人员：{$row.ac_user_name}</div>
             <div class="form-group box-float-4" style="padding-left:0;">建议处理意见：{$suggest[$row['suggest']]}</div>
         </div>
-        
+
         <div class="fromlist nobor" style="margin-top:10px;">
+            <div class="fromtitle">问题描述：</div>
+            <div class="formtexts">{$row.fd_content}</div>
+        </div>
+        
+        <div class="fromlist" style="margin-top:10px;">
             <div class="fromtitle">相关事实陈述及适用规定条款：</div>
             <div class="formtexts">{$row.chen}</div>
         </div>
