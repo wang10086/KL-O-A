@@ -571,7 +571,6 @@ class SaleController extends BaseController {
 
     //详情页
     public function public_timely_detail(){
-        $this->title('计调工作及时率详情');
         $mod                        = D('Sale');
         $timely                     = get_timely(1);
         $timely                     = array_column($timely,'title');
@@ -591,12 +590,12 @@ class SaleController extends BaseController {
         $this->title                = $title;
         $this->year                 = $year;
         $this->month                = $month;
+        $this->title($title);
         $this->display('timely_detail');
     }
 
     //报账及时性
     public function public_reimbursement_detail(){
-        $this->title('计调工作及时率详情');
         $mod                        = D('Sale');
         $timely                     = get_timely(1);
         $timely                     = array_column($timely,'title');
@@ -608,7 +607,7 @@ class SaleController extends BaseController {
         if (strlen($month)<2) $month= str_pad($month,2,'0',STR_PAD_LEFT);
         $yearMonth                  = $year.$month;
         $times                      = get_cycle($yearMonth);
-        //$data                       = $mod->get_timely_type($title,$times['begintime'],$times['endtime'],$uid);
+        $data                       = $mod->get_timely_type($title,$times['begintime'],$times['endtime'],$uid);
 
         $this->uid                  = $uid;
         $this->timely               = $timely;
@@ -616,9 +615,8 @@ class SaleController extends BaseController {
         $this->title                = $title;
         $this->year                 = $year;
         $this->month                = $month;
-
+        $this->title($title);
         $this->display('timely_reimbursement_detail');
     }
-
     
 }

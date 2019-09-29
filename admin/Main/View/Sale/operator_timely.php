@@ -74,7 +74,11 @@
                                                     <td class="taskOptions">{$value.ok_num}</td>
                                                     <td class="taskOptions">{$value.average}</td>
                                                     <td class="taskOptions">
+                                                        <?php if ($value['title'] == '报账及时性'){ ?>
+                                                        <a href="{:U('Sale/public_reimbursement_detail',array('year'=>$year,'month'=>$month,'tit'=>$value['title'],'uid'=>$v['uid']))}" title="详情" class="btn btn-info btn-smsm"><i class="fa fa-bars"></i></a>
+                                                        <?php }else{ ?>
                                                         <a href="{:U('Sale/public_timely_detail',array('year'=>$year,'month'=>$month,'tit'=>$value['title'],'uid'=>$v['uid']))}" title="详情" class="btn btn-info btn-smsm"><i class="fa fa-bars"></i></a>
+                                                        <?php } ?>
                                                     </td>
                                                 </tr>
                                             <?php } ?>

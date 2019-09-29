@@ -1,6 +1,5 @@
 <?php
 
-
     /**将上个季度的考核结果扶植到当季度
      * @param $arr
      */
@@ -3192,7 +3191,7 @@ function get_yw_department(){
      * reimbursement
      */
     function get_reimbursement_data($startTime,$endTime,$title='',$content='',$uid=''){
-        //$reimbursement_list                 = get_reimbursement_list($startTime,$endTime,'',$uid);
+        $reimbursement_list                 = get_reimbursement_list($startTime,$endTime,$uid);
         $reimbursement_list                 = '';
         $ok_list                            = array();
         $sum_num                            = 0;
@@ -3212,6 +3211,30 @@ function get_yw_department(){
         $data['sum_list']                   = $reimbursement_list;
         $data['ok_list']                    = $ok_list;
         return $data;
+    }
+
+    /**
+     * 获取所有本周期应报账的团
+     * @param $startTime
+     * @param $endTime
+     * @param $uid
+     */
+    function get_reimbursement_list($startTime,$endTime,$uid){
+        $where                              = array();
+        $where['l.dst_status']              = 1; //审核通过
+        $where['l.req_type']                = 801;
+        if ($uid) $where['l.req_uid']       = $uid;
+        $field                              = 'l.req_uid,l.req_uname,l.req_time,l.audit_uid,l.audit_uname,l.audit_time,s.*';
+        $sum_settlement_lists               = M()->table('__AUDIT_LOG__ as l')->join('__OP_SETTLEMENT__ as s on s.id=l.req_id')->where($where)->field($field)->order('l.id DESC')->limit(500)->select();
+        $lists                              = array();
+        foreach ($sum_settlement_lists as $k =>$v){
+            //求结算审核通过后20个工作日
+            $afterTwentyWorkDayTime         = strtotime(getAfterWorkDay(20,$v['audit_time']));
+            if ($afterTwentyWorkDayTime > $startTime && $afterTwentyWorkDayTime <= $endTime){
+                $lists[]                    = $v;
+            }
+        }
+        return $lists;
     }
 
     //获取公司全部人员信息

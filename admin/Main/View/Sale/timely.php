@@ -70,7 +70,11 @@
                                                 <td class="taskOptions">{$v.ok_num}</td>
                                                 <td class="taskOptions">{$v.average}</td>
                                                 <td class="taskOptions">
+                                                    <?php if ($v['title'] == '报账及时性'){ ?>
+                                                    <a href="{:U('Sale/public_reimbursement_detail',array('tit'=>$v['title'],'year'=>$year,'month'=>$month))}" title="详情" class="btn btn-info btn-smsm"><i class="fa fa-bars"></i></a>
+                                                    <?php }else{ ?>
                                                     <a href="{:U('Sale/public_timely_detail',array('tit'=>$v['title'],'year'=>$year,'month'=>$month))}" title="详情" class="btn btn-info btn-smsm"><i class="fa fa-bars"></i></a>
+                                                    <?php } ?>
                                                 </td>
                                             </tr>
                                         </foreach>
