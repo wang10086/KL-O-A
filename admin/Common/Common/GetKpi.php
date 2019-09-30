@@ -3187,21 +3187,48 @@ function get_yw_department(){
      * @param $endTime
      * @param string $title
      * @param string $uid
-     * @return array
+     * @return array,
      * reimbursement
      */
     function get_reimbursement_data($startTime,$endTime,$title='',$content='',$uid=''){
-        $reimbursement_list                 = get_reimbursement_list($startTime,$endTime,$uid);
-        $reimbursement_list                 = '';
+        $where                              = array();
+        $where['l.dst_status']              = 1; //审核通过
+        $where['l.req_type']                = 801;
+        if ($uid) $where['l.req_uid']       = $uid;
+        $field                              = 'l.req_uid,l.req_uname,l.req_time,l.audit_uid,l.audit_uname,l.audit_time,o.group_id,o.project,o.sale_user,s.*';
+        $sum_settlement_lists               = M()->table('__AUDIT_LOG__ as l')->join('__OP_SETTLEMENT__ as s on s.id=l.req_id')->join('__OP__ as o on o.op_id=s.op_id')->where($where)->field($field)->order('l.id DESC')->limit(500)->select();
+        $reimbursement_list                 = array();
         $ok_list                            = array();
         $sum_num                            = 0;
         $ok_num                             = 0;
+        foreach ($sum_settlement_lists as $k =>$v){
+            //求结算审核通过后20个工作日
+            $afterTwentyWorkDayTime         = strtotime(getAfterWorkDay(20,$v['audit_time']));
+            if ($afterTwentyWorkDayTime > $startTime && $afterTwentyWorkDayTime <= $endTime){
+                if ($v['reimbursement_status'] ==1){
+                    if ($v['reimbursement_time']<$endTime){
+                        $v['reimbursement_stu'] = "<span class='green'>已销账</span>";
+                        //$v['is_ok']             = 1;
+                        $ok_list[]              = $v;
+                        $ok_num++;
+                    }else{
+                        $v['reimbursement_stu'] = "<span class='yellow'>已销账,超时</span>";
+                    }
+                }else{
+                    $v['reimbursement_stu'] = "<span class='red'>未销账</span>";
+                }
+                $V['type']                  = $title;
+                $reimbursement_list[]       = $v;
+                $sum_num++;
+            }
 
-        foreach ($reimbursement_list as $k=>$v){
+        }
+
+        /*foreach ($reimbursement_list as $k=>$v){
             $reimbursement_list[$k]['ok_time']= '';
             $reimbursement_list[$k]['type'] = $title;
             $reimbursement_list[$k]['is_ok']= 1;
-        }
+        }*/
         $data                               = array();
         $data['title']                      = $title;
         $data['content']                    = $content;
@@ -3213,29 +3240,6 @@ function get_yw_department(){
         return $data;
     }
 
-    /**
-     * 获取所有本周期应报账的团
-     * @param $startTime
-     * @param $endTime
-     * @param $uid
-     */
-    function get_reimbursement_list($startTime,$endTime,$uid){
-        $where                              = array();
-        $where['l.dst_status']              = 1; //审核通过
-        $where['l.req_type']                = 801;
-        if ($uid) $where['l.req_uid']       = $uid;
-        $field                              = 'l.req_uid,l.req_uname,l.req_time,l.audit_uid,l.audit_uname,l.audit_time,s.*';
-        $sum_settlement_lists               = M()->table('__AUDIT_LOG__ as l')->join('__OP_SETTLEMENT__ as s on s.id=l.req_id')->where($where)->field($field)->order('l.id DESC')->limit(500)->select();
-        $lists                              = array();
-        foreach ($sum_settlement_lists as $k =>$v){
-            //求结算审核通过后20个工作日
-            $afterTwentyWorkDayTime         = strtotime(getAfterWorkDay(20,$v['audit_time']));
-            if ($afterTwentyWorkDayTime > $startTime && $afterTwentyWorkDayTime <= $endTime){
-                $lists[]                    = $v;
-            }
-        }
-        return $lists;
-    }
 
     //获取公司全部人员信息
     function get_company_user(){
