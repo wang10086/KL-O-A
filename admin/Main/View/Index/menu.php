@@ -800,8 +800,8 @@
                                     </li>
                                 </if>
 
-                                <if condition="rolemenu(array('Rbac/chart_personnel'))">
-                                    <li class="treeview {:on('Rbac/chart_personnel')} {:on('Rbac/')}">
+                                <if condition="rolemenu(array('Rbac/chart_personnel','Rbac/HR_cost'))">
+                                    <li class="treeview {:on('Rbac/chart_personnel')} {:on('Rbac/HR_cost')}">
                                         <a href="javascript:;">
                                             <i class="fa fa-calculator"></i>
                                             <span>数据统计</span>
@@ -810,8 +810,8 @@
                                             <if condition="rolemenu(array('Rbac/chart_personnel'))">
                                                 <li><a href="{:U('Rbac/chart_personnel')}"><i class="fa fa-angle-right"></i> 员工统计</a></li>
                                             </if>
-                                            <if condition="rolemenu(array('Kpi/pdca'))">
-                                                <li><a href="JavaScript:;" onclick="art_show_msg('加班开发中...')"><i class="fa fa-angle-right"></i> 人力成本统计</a></li>
+                                            <if condition="rolemenu(array('Kpi/HR_cost'))">
+                                                <li><a href="{:U('Rbac/HR_cost')}"><i class="fa fa-angle-right"></i> 人力成本统计</a></li>
                                             </if>
                                         </ul>
                                     </li>

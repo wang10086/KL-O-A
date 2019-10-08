@@ -83,7 +83,8 @@
             $where['s.datetime']        = array('in',$months);
             $where['s.status']          = 4;
             $where['s.user_name']       = array('notlike','%1');
-            $field                      = 's.id,s.account_id,s.user_name,s.department,s.datetime,s.post_name,s.total,a.position_id,d.bonusType,p.position_name,p.code';
+            //$field                      = 's.id,s.account_id,s.user_name,s.department,s.datetime,s.post_name,s.total,a.position_id,d.bonusType,p.position_name,p.code';
+            $field                      = 's.*,a.position_id,d.bonusType,p.position_name,p.code';
             $lists                      = M()->table('__SALARY_WAGES_MONTH__ as s')
                                             ->join('__ACCOUNT__ as a on a.id=s.account_id','left')
                                             ->join('__ACCOUNT_DETAIL__ as d on d.account_id = s.account_id','left')
@@ -201,6 +202,46 @@
             $data['percentage']         = $percentage;
             $data['noAward']            = $noAward;
             return $data;
+        }
+
+        public function get_sum_hr_cost($months){
+            $department_arr                     = C('department1'); //部门
+            $department_info                    = $this->get_department_info($department_arr);
+
+            $data                               = array();
+            foreach ($department_info as $k => $v){
+                $staff_data                     = $this->get_staff_data($months,$v); //员工人数
+                $post_salary[$k]                = $this->get_post_salary($staff_data['list']); //岗位薪酬
+                $bonus                          = $this->get_bonus($staff_data['list']); //奖金
+            }
+
+            $data['postSalary']                 = $post_salary;
+            return $data;
+        }
+
+        //获取员工岗位薪酬
+        public function get_post_salary($salaryList){
+            $data                               = array();
+            $data['sum']                        = 0;
+            $data['basic_salary']               = 0;
+            $data['performance_salary']         = 0;
+            foreach ($salaryList as $k=>$v){
+                $data['basic_salary']           += $v['basic_salary'];
+                $data['performance_salary']     += $v['performance_salary'];
+                $data['really_basic_salary']    += $v['basic_salary']; //实发基本工资
+                $data['really_performance_salary']+= ($v['performance_salary'] - $v['withdrawing'] + $v['Achievements_withdrawing']); //实发绩效工资 = 标准绩效工资  - 考勤扣款 + 绩效增减
+                $data['sum']                    += ($v['basic_salary']+($v['performance_salary'] - $v['withdrawing'] + $v['Achievements_withdrawing']));
+            }
+            return $data;
+        }
+
+        //获取奖金
+        public function get_bonus($salaryList){
+            $data                               = array();
+            $data['sum']                        = 0;
+            $data['royalty']                    = 0; //业绩提成
+            $data['bonus']                      = 0; //奖金包
+            $data['yearEndBonus']               = 0; //年终奖
         }
 
     }

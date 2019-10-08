@@ -1699,4 +1699,32 @@ class RbacController extends BaseController {
         $this->month                    = $month;
         $this->display('chart_personnel_detail');
     }
+
+    //人力成本统计
+    public function HR_cost(){
+        $this->title('人力成本统计');
+        $this->pagetitle                = '数据统计';
+        $year		                    = I('year',date('Y'));
+        $month		                    = I('month',date('m'));
+        $thisMonths                     = get_sum_months($year,$month,1); //当月月份
+        $sumMonth                       = get_sum_months($year,$month,2); //从年初累计月份
+
+        $mod                            = D('Rbac');
+        //$thisMonthData                  = $mod->get_chart_personnel($thisMonths);
+        //$sumMonthData                   = $mod->get_chart_personnel($sumMonth);
+
+        $thisMonthData                  = $mod->get_sum_hr_cost($thisMonths);
+        $this->thisMonthPostSalary      = $thisMonthData['postSalary'];
+
+
+        //P($this->thisMonthPostSalary);
+        $this->year 	                = $year;
+        $this->month 	                = $month;
+        $this->prveyear	                = $year-1;
+        $this->nextyear	                = $year+1;
+        $this->thisMonthData            = $thisMonthData;
+        $this->sumMonthData             = $sumMonthData;
+        $this->display();
+
+    }
 }

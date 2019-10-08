@@ -21,11 +21,6 @@
                             <div class="box box-warning">
                                 <div class="box-header">
                                     <h3 class="box-title">{$year}年员工统计</h3>
-                                    <if condition="rolemenu(array('Rbac/adduser'))">
-                                    <div class="box-tools pull-right">
-                                    	<!--<a href="javascript:;" class="btn btn-info btn-sm" onclick="javascript:opensearch('searchtext',400,120);"><i class="fa fa-search"></i> 搜索</a>-->
-                                    </div>
-                                    </if>
                                 </div><!-- /.box-header -->
                                 <div class="box-body">
 
