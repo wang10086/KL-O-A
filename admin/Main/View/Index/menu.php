@@ -810,7 +810,7 @@
                                             <if condition="rolemenu(array('Rbac/chart_personnel'))">
                                                 <li><a href="{:U('Rbac/chart_personnel')}"><i class="fa fa-angle-right"></i> 员工统计</a></li>
                                             </if>
-                                            <if condition="rolemenu(array('Kpi/HR_cost'))">
+                                            <if condition="rolemenu(array('Rbac/HR_cost'))">
                                                 <li><a href="{:U('Rbac/HR_cost')}"><i class="fa fa-angle-right"></i> 人力成本统计</a></li>
                                             </if>
                                         </ul>
