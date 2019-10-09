@@ -216,11 +216,15 @@
                 $post_salary[$k]                = $this->get_post_salary($staff_data['list'])['salary']; //岗位薪酬
                 $bonus[$k]                      = $this->get_post_salary($staff_data['list'])['bonus']; //奖金
                 $subsidy[$k]                    = $this->get_post_salary($staff_data['list'])['subsidy']; //补助
+                $insurance[$k]                  = $this->get_post_salary($staff_data['list'])['insurance']; //公司五险一金
+                $sum[$k]                        = $this->get_post_salary($staff_data['list'])['sum']; //合计
             }
 
             $data['postSalary']                 = $post_salary;
             $data['bonus']                      = $bonus;
             $data['subsidy']                    = $subsidy;
+            $data['insurance']                  = $insurance;
+            $data['sum']                        = $sum;
             return $data;
         }
 
@@ -243,43 +247,43 @@
             $subsidy['computer_subsidy']        = 0; //电脑补助
             $subsidy['foreign_subsidy']         = 0; //外地补助
             $subsidy['other_subsidy']           = 0; //其他收入变动
+            $insurance                          = array(); //公司五险一金
+            $insurance['sum']                   = 0;
+            $insurance['fiveRisks']             = 0; //公司五险
+            $insurance['oneFund']               = 0; //公司一金
             foreach ($salaryList as $k=>$v){
+                //岗位薪酬
                 $data['basic_salary']           += $v['basic_salary'];
                 $data['performance_salary']     += $v['performance_salary'];
                 $data['really_basic_salary']    += $v['basic_salary']; //实发基本工资
                 $data['really_performance_salary']+= ($v['performance_salary'] - $v['withdrawing'] + $v['Achievements_withdrawing']); //实发绩效工资 = 标准绩效工资  - 考勤扣款 + 绩效增减
                 $data['sum']                    += ($v['basic_salary']+($v['performance_salary'] - $v['withdrawing'] + $v['Achievements_withdrawing']));
+                //奖金
                 $bonus['royalty']               += $v['total']; //业绩提成
                 $bonus['bonus']                 += $v['foreign_bonus']; //奖金包
                 $bonus['yearEndBonus']          += $v['annual_bonus']; //年终奖
                 $bonus['sum']                   += $v['total'] + $v['foreign_bonus'] + $v['annual_bonus'];
+                //补助
                 $subsidy['op_subsidy']          += $v['Subsidy']; //带团补助
                 $subsidy['computer_subsidy']    += $v['computer_subsidy']; //电脑补助
                 $subsidy['foreign_subsidy']     += $v['foreign_subsidies']; //外地补助
                 $subsidy['other_subsidy']       += $v['Other']; //其他收入变动
                 $subsidy['sum']                 += $v['Subsidy'] + $v['computer_subsidy'] + $v['foreign_subsidies'] + $v['Other'];
+                //公司五险一金
+                $insuranceList                  = M('salary_insurance')->where(array('id'=>$v['insurance_id']))->find();
+                $insurance['fiveRisks']         += ($insuranceList['company_birth_ratio'] * $insuranceList['company_birth_base']) + ($insuranceList['company_injury_ratio'] * $insuranceList['company_injury_base']) + ($insuranceList['company_pension_ratio'] * $insuranceList['company_pension_base']) + ($insuranceList['company_medical_care_ratio'] * $insuranceList['company_medical_care_base']) + ($insuranceList['company_unemployment_ratio'] * $insuranceList['company_unemployment_base']);
+                $insurance['oneFund']           += ($insuranceList['company_accumulation_fund_ratio'] * $insuranceList['company_accumulation_fund_base']);
+                $insurance['sum']               += ($insuranceList['company_birth_ratio'] * $insuranceList['company_birth_base']) + ($insuranceList['company_injury_ratio'] * $insuranceList['company_injury_base']) + ($insuranceList['company_pension_ratio'] * $insuranceList['company_pension_base']) + ($insuranceList['company_medical_care_ratio'] * $insuranceList['company_medical_care_base']) + ($insuranceList['company_unemployment_ratio'] * $insuranceList['company_unemployment_base']) + ($insuranceList['company_accumulation_fund_ratio'] * $insuranceList['company_accumulation_fund_base']);
             }
             $arr                                = array();
             $arr['salary']                      = $data;
             $arr['bonus']                       = $bonus;
             $arr['subsidy']                     = $subsidy;
+            $arr['insurance']                   = $insurance;
+            $arr['sum']                         = $data['sum'] + $bonus['sum'] + $subsidy['sum'] + $insurance['sum'];
             return $arr;
         }
 
-        //获取补助 带团补助 + 电脑补助 + 外地补助 + 其他收入变动
-        /*public function get_subsidy($salaryList){
-            $data                               = array();
-            $data['sum']                        = 0;
-            $data['op_subsidy']                 = 0; //带团补助
-            $data['computer_subsidy']           = 0; //电脑补助
-            $data['foreign_subsidy']            = 0; //外地补助
-            $data['other_subsidy']              = 0; //其他收入变动
-            foreach ($salaryList as $k=>$v){
-                $other                          = M('salary_income')->where(array('income_token'=>$v['income_token']))->field('sum(income_money) as sum_salary_income')->find();
-                if ($other['sum_salary_income'] ==663.25){ P($other,false); p($v); }
-            }
-
-        }*/
 
     }
 

@@ -1710,13 +1710,12 @@ class RbacController extends BaseController {
         $sumMonth                       = get_sum_months($year,$month,2); //从年初累计月份
 
         $mod                            = D('Rbac');
-        //$thisMonthData                  = $mod->get_chart_personnel($thisMonths);
-        //$sumMonthData                   = $mod->get_chart_personnel($sumMonth);
-
         $thisMonthData                  = $mod->get_sum_hr_cost($thisMonths);
+        $this->thisMonthSum             = $thisMonthData['sum']; //当月合计
         $this->thisMonthPostSalary      = $thisMonthData['postSalary']; //岗位薪酬
         $this->thisMonthBonus           = $thisMonthData['bonus']; //奖金
         $this->thisMonthSubsidy         = $thisMonthData['subsidy']; //补助
+        $this->thisMonthInsurance       = $thisMonthData['insurance']; //公司五险一金
 
 
         $this->year 	                = $year;

@@ -47,7 +47,7 @@
 
 								<table class="table table-bordered dataTable" id="tablelist">
                                     <tr role="row" class="orders" >
-                                        <th class="taskOptions" width="80">周期</th>
+                                        <!--<th class="taskOptions" width="80">周期</th>-->
                                         <th class="taskOptions">类别</th>
                                         <th class="taskOptions">细项</th>
                                         <th class="taskOptions">公司</th>
@@ -62,7 +62,20 @@
                                         <th class="taskOptions">机关部门</th>
                                     </tr>
                                     <tr>
-                                        <td class="taskOptions" rowspan="17">{$month}月</td>
+                                        <td class="taskOptions" colspan="2">{$month}月合计</td>
+                                        <td class="taskOptions">{$thisMonthSum['公司']}</td>
+                                        <td class="taskOptions">{$thisMonthSum['京区业务中心']}</td>
+                                        <td class="taskOptions">{$thisMonthSum['京外业务中心']}</td>
+                                        <td class="taskOptions">{$thisMonthSum['南京项目部']}</td>
+                                        <td class="taskOptions">{$thisMonthSum['武汉项目部']}</td>
+                                        <td class="taskOptions">{$thisMonthSum['沈阳项目部']}</td>
+                                        <td class="taskOptions">{$thisMonthSum['长春项目部']}</td>
+                                        <td class="taskOptions">{$thisMonthSum['市场部']}</td>
+                                        <td class="taskOptions">{$thisMonthSum['常规业务中心']}</td>
+                                        <td class="taskOptions">{$thisMonthSum['机关部门']}</td>
+                                    </tr>
+                                    <tr>
+                                        <!--<td class="taskOptions" rowspan="17">{$month}月</td>-->
                                         <td class="taskOptions" rowspan="5">岗位薪酬</td>
                                         <td class="taskOptions">合计</td>
                                         <td class="taskOptions">{$thisMonthPostSalary['公司']['sum']}</td>
@@ -252,6 +265,48 @@
                                         <td class="taskOptions">{$thisMonthSubsidy['机关部门']['other_subsidy']}</td>
                                     </tr>
 
+                                    <!--公司五险一金-->
+                                    <tr>
+                                        <td class="taskOptions" rowspan="3">公司五险一金</td>
+                                        <td class="taskOptions">合计</td>
+                                        <td class="taskOptions">{$thisMonthInsurance['公司']['sum']}</td>
+                                        <td class="taskOptions">{$thisMonthInsurance['京区业务中心']['sum']}</td>
+                                        <td class="taskOptions">{$thisMonthInsurance['京外业务中心']['sum']}</td>
+                                        <td class="taskOptions">{$thisMonthInsurance['南京项目部']['sum']}</td>
+                                        <td class="taskOptions">{$thisMonthInsurance['武汉项目部']['sum']}</td>
+                                        <td class="taskOptions">{$thisMonthInsurance['沈阳项目部']['sum']}</td>
+                                        <td class="taskOptions">{$thisMonthInsurance['长春项目部']['sum']}</td>
+                                        <td class="taskOptions">{$thisMonthInsurance['市场部']['sum']}</td>
+                                        <td class="taskOptions">{$thisMonthInsurance['常规业务中心']['sum']}</td>
+                                        <td class="taskOptions">{$thisMonthInsurance['机关部门']['sum']}</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="taskOptions">公司五险</td>
+                                        <td class="taskOptions">{$thisMonthInsurance['公司']['fiveRisks']}</td>
+                                        <td class="taskOptions">{$thisMonthInsurance['京区业务中心']['fiveRisks']}</td>
+                                        <td class="taskOptions">{$thisMonthInsurance['京外业务中心']['fiveRisks']}</td>
+                                        <td class="taskOptions">{$thisMonthInsurance['南京项目部']['fiveRisks']}</td>
+                                        <td class="taskOptions">{$thisMonthInsurance['武汉项目部']['fiveRisks']}</td>
+                                        <td class="taskOptions">{$thisMonthInsurance['沈阳项目部']['fiveRisks']}</td>
+                                        <td class="taskOptions">{$thisMonthInsurance['长春项目部']['fiveRisks']}</td>
+                                        <td class="taskOptions">{$thisMonthInsurance['市场部']['fiveRisks']}</td>
+                                        <td class="taskOptions">{$thisMonthInsurance['常规业务中心']['fiveRisks']}</td>
+                                        <td class="taskOptions">{$thisMonthInsurance['机关部门']['fiveRisks']}</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="taskOptions">公司一金</td>
+                                        <td class="taskOptions">{$thisMonthInsurance['公司']['oneFund']}</td>
+                                        <td class="taskOptions">{$thisMonthInsurance['京区业务中心']['oneFund']}</td>
+                                        <td class="taskOptions">{$thisMonthInsurance['京外业务中心']['oneFund']}</td>
+                                        <td class="taskOptions">{$thisMonthInsurance['南京项目部']['oneFund']}</td>
+                                        <td class="taskOptions">{$thisMonthInsurance['武汉项目部']['oneFund']}</td>
+                                        <td class="taskOptions">{$thisMonthInsurance['沈阳项目部']['oneFund']}</td>
+                                        <td class="taskOptions">{$thisMonthInsurance['长春项目部']['oneFund']}</td>
+                                        <td class="taskOptions">{$thisMonthInsurance['市场部']['oneFund']}</td>
+                                        <td class="taskOptions">{$thisMonthInsurance['常规业务中心']['oneFund']}</td>
+                                        <td class="taskOptions">{$thisMonthInsurance['机关部门']['oneFund']}</td>
+                                    </tr>
+
                                 </table>
                                 </div><!-- /.box-body -->
                                 <div class="box-footer clearfix">
@@ -262,18 +317,5 @@
                      </div>
                 </section><!-- /.content -->
             </aside><!-- /.right-side -->
-
-
-            <div id="searchtext">
-                <form action="" method="get" id="searchform">
-                <input type="hidden" name="m" value="Main">
-                <input type="hidden" name="c" value="Rbac">
-                <input type="hidden" name="a" value="HR_cost">
-                <div class="form-group col-md-12"></div>
-                <div class="form-group col-md-12">
-                    <input type="text" class="form-control" name="key" placeholder="人员名称关键字">
-                </div>
-                </form>
-            </div>
 
 <include file="Index:footer2" />
