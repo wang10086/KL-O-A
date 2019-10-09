@@ -1704,13 +1704,15 @@ class RbacController extends BaseController {
     public function HR_cost(){
         $this->title('人力成本统计');
         $this->pagetitle                = '数据统计';
+        $pin                            = I('pin',0);
         $year		                    = I('year',date('Y'));
         $month		                    = I('month',date('m'));
         $thisMonths                     = get_sum_months($year,$month,1); //当月月份
-        $sumMonth                       = get_sum_months($year,$month,2); //从年初累计月份
+        $sumMonths                      = get_sum_months($year,$month,2); //从年初累计月份
 
+        $months                         = $pin==1 ? $sumMonths : $thisMonths;
         $mod                            = D('Rbac');
-        $thisMonthData                  = $mod->get_sum_hr_cost($thisMonths);
+        $thisMonthData                  = $mod->get_sum_hr_cost($months);
         $this->thisMonthSum             = $thisMonthData['sum']; //当月合计
         $this->thisMonthPostSalary      = $thisMonthData['postSalary']; //岗位薪酬
         $this->thisMonthBonus           = $thisMonthData['bonus']; //奖金
@@ -1723,8 +1725,9 @@ class RbacController extends BaseController {
         $this->prveyear	                = $year-1;
         $this->nextyear	                = $year+1;
         $this->thisMonthData            = $thisMonthData;
-        $this->sumMonthData             = $sumMonthData;
+        $this->pin                      = $pin;
         $this->display();
-
     }
+
+
 }

@@ -255,9 +255,9 @@
                 //岗位薪酬
                 $data['basic_salary']           += $v['basic_salary'];
                 $data['performance_salary']     += $v['performance_salary'];
-                $data['really_basic_salary']    += $v['basic_salary']; //实发基本工资
-                $data['really_performance_salary']+= ($v['performance_salary'] - $v['withdrawing'] + $v['Achievements_withdrawing']); //实发绩效工资 = 标准绩效工资  - 考勤扣款 + 绩效增减
-                $data['sum']                    += ($v['basic_salary']+($v['performance_salary'] - $v['withdrawing'] + $v['Achievements_withdrawing']));
+                $data['really_basic_salary']    += ($v['basic_salary'] - $v['withdrawing']); //实发基本工资 = 标准基本工资 - 考勤扣款
+                $data['really_performance_salary']+= ($v['performance_salary'] + $v['Achievements_withdrawing']); //实发绩效工资 = 标准绩效工资 + 绩效增减
+                $data['sum']                    += ($v['basic_salary'] - $v['withdrawing']) +($v['performance_salary'] + $v['Achievements_withdrawing']);
                 //奖金
                 $bonus['royalty']               += $v['total']; //业绩提成
                 $bonus['bonus']                 += $v['foreign_bonus']; //奖金包

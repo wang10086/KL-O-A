@@ -33,6 +33,7 @@
                                             $par = array();
                                             $par['year']  	= $year;
                                             $par['month'] 	= str_pad($i,2,"0",STR_PAD_LEFT);
+                                            $par['pin']     = $pin;
                                             if($month==str_pad($i,2,"0",STR_PAD_LEFT)){
                                                 echo '<a href="'.U('Rbac/HR_cost',$par).'" class="btn btn-info" style="padding:8px 18px;">'.$i.'月</a>';
                                             }else{
@@ -45,9 +46,13 @@
                                     <?php } ?>
                                 </div>
 
+                                    <div class="btn-group" id="catfont" style="padding-bottom:5px; float: right;clear: both;">
+                                        <a href="{:U('Rbac/HR_cost',array('year'=>$year,'month'=>$month,'pin'=>0))}" class="btn <?php echo $pin==0 ? 'btn-info' : 'btn-default'; ?>" style="padding:8px 18px;">月度统计</a>
+                                        <a href="{:U('Rbac/HR_cost',array('year'=>$year,'month'=>$month,'pin'=>1))}" class="btn <?php echo $pin==1 ? 'btn-info' : 'btn-default'; ?>" style="padding:8px 18px;">月度累计统计</a>
+                                    </div>
+
 								<table class="table table-bordered dataTable" id="tablelist">
                                     <tr role="row" class="orders" >
-                                        <!--<th class="taskOptions" width="80">周期</th>-->
                                         <th class="taskOptions">类别</th>
                                         <th class="taskOptions">细项</th>
                                         <th class="taskOptions">公司</th>
@@ -62,7 +67,7 @@
                                         <th class="taskOptions">机关部门</th>
                                     </tr>
                                     <tr>
-                                        <td class="taskOptions" colspan="2">{$month}月合计</td>
+                                        <td class="taskOptions" colspan="2"><?php echo $pin==1 ? "01月 - $month月合计" : "$month月合计"; ?>{$month}月合计</td>
                                         <td class="taskOptions">{$thisMonthSum['公司']}</td>
                                         <td class="taskOptions">{$thisMonthSum['京区业务中心']}</td>
                                         <td class="taskOptions">{$thisMonthSum['京外业务中心']}</td>
@@ -75,7 +80,6 @@
                                         <td class="taskOptions">{$thisMonthSum['机关部门']}</td>
                                     </tr>
                                     <tr>
-                                        <!--<td class="taskOptions" rowspan="17">{$month}月</td>-->
                                         <td class="taskOptions" rowspan="5">岗位薪酬</td>
                                         <td class="taskOptions">合计</td>
                                         <td class="taskOptions">{$thisMonthPostSalary['公司']['sum']}</td>
