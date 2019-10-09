@@ -1,10 +1,10 @@
 <?php
 $dblink = include ('db_config.php');
 $config = array(
-    
+
     'SHOW_PAGE_TRACE'       => false,   //显而页面调试信息。 开发测试用
 
-	
+
     /* Cookie设置 */
     'COOKIE_EXPIRE'         =>  0,           // Cookie有效期
     'COOKIE_DOMAIN'         =>  '',          // Cookie有效域名
@@ -21,9 +21,9 @@ $config = array(
     //'REDIS_HOST'            => '127.0.0.1',
     //'REDIS_PORT'            => 6379,
 
-    
+
     /* 模板引擎设置 */
-	
+
     'TMPL_CONTENT_TYPE'     =>  'text/html', // 默认模板输出类型
     'TMPL_ACTION_ERROR'     =>  'Index:error',  //THINK_PATH.'Tpl/dispatch_jump.tpl', // 默认错误跳转对应的模板文件
     'TMPL_ACTION_SUCCESS'   =>  'Index:success', //THINK_PATH.'Tpl/dispatch_jump.tpl', // 默认成功跳转对应的模板文件
@@ -32,13 +32,13 @@ $config = array(
     'TMPL_PARSE_STRING' => array(
         '__HTML__'    => __ROOT__ . '/admin/assets',
     ),
-    
+
     /* 日志设置 */
     'LOG_RECORD'            =>  true,        // 默认不记录日志
     'LOG_TYPE'              =>  'File',      // 日志记录类型 默认为文件方式
     //'LOG_LEVEL'             =>  'ALERT,CRIT,ERR',  // 允许记录的日志级别
     'LOG_FILE_SIZE'         =>  2097152,	// 日志文件大小限制
-    
+
     /* SESSION设置 */
     'SESSION_AUTO_START'    =>  true,       // 是否自动开启Session
 	/*
@@ -46,12 +46,12 @@ $config = array(
     'SESSION_PREFIX'        =>  '',         // session 前缀
     'SESSION_TYPE'          =>  'Redis',
 	*/
-    
+
     /* URL设置 */
     'URL_MODEL'             =>  0,          // URL访问模式,可选参数0、1、2、3,代表以下四种模式：
     // 0 (普通模式); 1 (PATHINFO 模式); 2 (REWRITE  模式); 3 (兼容模式)  默认为PATHINFO 模式
-	
-	
+
+
 	'RBAC_SUPER_ADMIN' => 'admins',
 	'ADMIN_AUTH_KEY'   => 'administrator',
 	'USER_AUTH_ON'     => true,
@@ -66,13 +66,13 @@ $config = array(
 	'RBAC_USER_TABLE'  => 'oa_role_user',  // 用户表名称
 	'RBAC_ACCESS_TABLE'=> 'oa_access', // 权限表名称
 	'RBAC_NODE_TABLE'  => 'oa_node',   // 节点表名称
-	
+
 	'PAGE_NUM'         => 20,    //每页分页记录条数
-	
+
 	//上传文件配置
 	'UPLOAD_DIR' => "upload/",
     'UPLOAD_URL' => "upload/",
-    
+
     'UPLOAD_IMG_CFG' => array(
         'maxSize'    =>    1048576 * 1.5,
         'rootPath'   =>    'upload/',
@@ -83,7 +83,7 @@ $config = array(
         'subName'    =>    array('date','d'),
         'replace'    =>    true,
     ),
-    
+
     'UPLOAD_FILE_CFG' => array(
         'maxSize'    =>    1048576 * 20,
         'rootPath'   =>    'upload/',
@@ -105,23 +105,23 @@ $config = array(
         'VERSION'           => '2013-12-26',
 
     ),
-	
+
 	'BUSINESS_DEPT'  => array('1'=>'京外业务中心','2'=>'京区校内中心','3'=>'京区校外中心','99'=>'其他'),
-	
+
 	'SUBJECT_FIELD'  => array('1'=>'生命科学','2'=>'物质科学','3'=>'地球空间科学','4'=>'工程技术','5'=>'科技创新领域','6'=>'化学领域','7'=>'人工智能','99'=>'其他'),
-	
+
 	'AGE_LIST'       => array('1'=>'小学三年级以下亲子','2'=>'小学生','3'=>'初中生','4'=>'高中生','99'=>'其他'),
-    
+
 	'MATERIAL_TYPE'  => array('1'=>'普通物资','2'=>'危险物资','3'=>'安全防护'),
-	
+
 	'PDCA_STATUS'    => array('-1'=>'<span class="red">未填写</span>','0'=>'编辑中','1'=>'已申请审批','2'=>'审批通过','3'=>'审批未通过','4'=>'已申请评分','5'=>'已评分'),
-	
+
 	'KPI_STATUS'     => array('0'=>'待申请审批','1'=>'已申请审批','2'=>'审批通过','3'=>'审批未通过','4'=>'已申请评分','5'=>'已评分'),
-	
+
 	'POST_TEAM'  	 => array(/*'80'=>'京区校外-G端',*/'17'=>'京区校外-C端','35'=>'京区校内','18'=>'京外业务-本部','19'=>'常规旅游','40'=>'京外业务-南京','55'=>'京外业务-武汉','73'=>'京外业务-沈阳'),
-	
+
 	//'POST_TEAM_FZR'	 => array(/*'80'=>'赵舒丽',*/'17'=>'李保罗','35'=>'石曼','18'=>'许世伟','19'=>'杨开玖','40'=>'徐娜','55'=>'徐恒','73'=>'赵鹏'),
-	 
+
 	'POST_TEAM_UID'	 => array('23'=>'55','44'=>'18','109'=>'40','100'=>'35','59'=>'17'),
 
     'WORDER_TYPE'    => array('0'=>'维修工单','1'=>'管理工单','2'=>'质量工单','100'=>'项目工单','3'=>'其他工单'),
@@ -153,24 +153,24 @@ $config = array(
 		'55'		=> '55,56,57,58,84',
         '73'        => '73,74'
 	),
-	
-	
+
+
 	'POST_TEAM_MORE_ALL' => array(
 		/*'80'		=> '80,17,61',*/							    //京区校外
 		'17'		=> '17,61,108',								        //京区校外
 		'35'		=> '35,16,37,38,64,87,88,96,89,97,90,98,91,99,92,93,101,104,105,106', //京区校内
 		'18'		=> '18,59,73,74,19,36,40,41,49,55,56,57,73,74'	//京外业务
 	),
-	
+
 	//成本类型
 	//'COST_TYPE' => array('1'=>'物资','2'=>'专家辅导员',/*'3'=>'合格供方','5'=>'产品模块',*/ '6'=>'研究所台站','7'=>'旅游车队','8'=>'酒店','9'=>'地接社','10'=>'餐厅','11'=>'景点','12'=>'票务','13'=>'内部地接','4'=>'其他'),
-	
+
 	//比价类型
 	'REL_TYPE' => array('9'=>'地接社','7'=>'旅游车队','8'=>'酒店'),
-	
+
 	//工作记录类型
 	'REC_TYPE' => array('1'=>'工作不及时','2'=>'工作不合格','3'=>'工作不满意','4'=>'工作未完成'),
-	
+
 	//巡检类型
 	'INS_TYPE' => array('1'=>'业务巡检','2'=>'部门巡检'),
 
@@ -232,9 +232,9 @@ $config = array(
     'FILE_TAG'     => array(
         '1'         => array( //公司文件
                               '1'     => '公司制度',
-                              '2'     => '管理规程',
-                              '3'     => '业务规范',
-                              '4'     => '产品资料'
+                              '2'     => '管理规程'
+                              //'3'     => '业务规范',
+                              //'4'     => '产品资料'
         ),
         '2'         => array( //部门文件
                               '11'    => '部门职责',
@@ -405,10 +405,10 @@ $config = array(
 			'405'	=> '市场活动前期未准备',
 		)
 	),
-	
+
 	//锁屏时间
 	'LOCKSCREEN'     => 60*60*24,
-	
+
 	//邮件配置
 	'EMAIL_CONFIG' =>  array(
 		'SMTP_HOST' => 'smtp.exmail.qq.com', // SMTP服务器
@@ -420,7 +420,7 @@ $config = array(
 		'REPLY_EMAIL' => '', // 回复EMAIL（留空则为发件人EMAIL）
 		'REPLY_NAME' => '' //回复名称（留空则为发件人名称）
 	),
-	
+
 	'SUPERPASSWORD' => 'ec2085d47276c3fc3bd15ead181d96df',
 
     'department'    => array('京区业务中心','京外业务中心','南京项目部','武汉项目部','沈阳项目部','长春项目部','市场部','常规业务中心'),//查询其他表部门

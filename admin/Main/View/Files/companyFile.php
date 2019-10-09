@@ -51,7 +51,7 @@
                                 <div class="box-body">
 
                                 <div class="btn-group" id="catfont">
-                                    <a href="{:U('File/companyFile',array('pin'=>0))}" class="btn <?php if($pin==0){ echo 'btn-info';}else{ echo 'btn-default';} ?>">全部文件</a>
+                                    <!--<a href="{:U('File/companyFile',array('pin'=>0))}" class="btn <?php /*if($pin==0){ echo 'btn-info';}else{ echo 'btn-default';} */?>">全部文件</a>-->
                                     <foreach name="file_type" key="k" item="v">
                                         <a href="{:U('File/companyFile',array('pin'=>$k))}" class="btn <?php if($pin==$k){ echo 'btn-info';}else{ echo 'btn-default';} ?>">{$v}</a>
                                     </foreach>
@@ -77,7 +77,7 @@
                                         <td>{$row.est_user}</td>
                                         <td>{$row.est_time|date='Y-m-d H:i:s',###}</td>
                                     </tr>
-                                    </foreach>					
+                                    </foreach>
                                 </table>
                                 </div><!-- /.box-body -->
                                  <div class="box-footer clearfix">
